@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/10/14 15:19:24  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.7  2003/09/22 19:47:14  neilg
  * change Grammar::putElemDecl(XMLElementDecl, bool) so that it does not require the Grammar object to be const.  Also, mark findOrAddGrammar as being dangerous in multithreaded situations
  *
@@ -106,6 +109,8 @@
 #include <xercesc/framework/XMLEntityDecl.hpp>
 #include <xercesc/framework/XMLNotationDecl.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 class XMLGrammarDescription;
@@ -114,7 +119,7 @@ class XMLGrammarDescription;
 // This abstract class specifies the interface for a Grammar
 //
 
-class VALIDATORS_EXPORT Grammar : public XMemory
+class VALIDATORS_EXPORT Grammar : public XSerializable, public XMemory
 {
 public:
 
@@ -247,6 +252,11 @@ public:
 
     virtual void                    setGrammarDescription( XMLGrammarDescription*) = 0;
     virtual XMLGrammarDescription*  getGrammarDescription() const = 0;
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(Grammar)
 
 protected :
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/10/14 15:22:28  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.11  2003/10/05 02:08:05  neilg
  * Because it makes grammars un-sharable between parsers running on multiple threads, xsi:type should not be handled by modifying element declarations.  Modifying implementation so it no longer relies on this kind of behaviour; marking methods as deprecated which imply that xsi:type will be handled in this way.  Once their behaviour is handled elsewhere, these methods should eventually be removed
  *
@@ -408,6 +411,174 @@ SchemaAttDef* SchemaElementDecl::getAttDef(const XMLCh* const baseName, const in
 
     // If no complex type, then return a null
     return 0;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(SchemaElementDecl)
+
+void SchemaElementDecl::serialize(XSerializeEngine& serEng)
+{
+
+    XMLElementDecl::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        serEng<<(int)fModelType;
+
+        DatatypeValidator::storeDV(serEng, fDatatypeValidator);
+
+        serEng<<fEnclosingScope;
+        serEng<<fFinalSet;
+        serEng<<fBlockSet;
+        serEng<<fMiscFlags;
+
+        serEng.writeString(fDefaultValue);
+
+        serEng<<fComplexTypeInfo;
+
+        /***
+         *
+         * Serialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
+         *
+         */
+        if (serEng.needToWriteTemplateObject(fAttDefs))
+        {
+            int itemNumber = 0;
+
+            RefHash2KeysTableOfEnumerator<SchemaAttDef> e(fAttDefs);
+            while (e.hasMoreElements())
+            {
+                e.nextElement();
+                itemNumber++;
+            }
+
+            serEng<<itemNumber;
+
+            e.Reset();
+            while (e.hasMoreElements())
+            {
+                SchemaAttDef& curAttDef = e.nextElement();
+                curAttDef.serialize(serEng);
+            }
+
+        }
+
+
+        serEng<<fXsiComplexTypeInfo;
+
+        DatatypeValidator::storeDV(serEng, (DatatypeValidator*)fXsiSimpleTypeInfo);
+
+        /***
+         * 
+         * Serialize RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
+         *
+         */
+        if (serEng.needToWriteTemplateObject(fIdentityConstraints))
+        {
+            int vectorLength = fIdentityConstraints->size();
+            serEng<<vectorLength;
+
+            for ( int i = 0 ; i < vectorLength; i++)
+            {
+                IdentityConstraint::storeIC(serEng, fIdentityConstraints->elementAt(i));
+            }
+        }
+
+        serEng<<fAttWildCard;
+        serEng<<fSubstitutionGroupElem;
+        serEng<<(int)fValidity;
+        serEng<<(int)fValidation;
+        serEng<<fSeenValidation;
+        serEng<<fSeenNoValidation;
+        serEng<<fHadContent;
+            
+    }
+    else
+    {
+        int i;
+        serEng>>i;
+        fModelType = (ModelTypes)i;
+
+        fDatatypeValidator = DatatypeValidator::loadDV(serEng);
+
+        serEng>>fEnclosingScope;
+        serEng>>fFinalSet;
+        serEng>>fBlockSet;
+        serEng>>fMiscFlags;
+
+        serEng.readString(fDefaultValue);
+
+        serEng>>fComplexTypeInfo;
+
+        /***
+         *
+         * DeSerialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
+         *
+         */
+        if (serEng.needToReadTemplateObject((void**)&fAttDefs))
+        {
+            if (!fAttDefs)
+            {
+                fAttDefs = new (getMemoryManager())RefHash2KeysTableOf<SchemaAttDef>(3, true, getMemoryManager());
+            }
+
+            serEng.registerTemplateObject(fAttDefs);
+
+            int itemNumber = 0;
+            serEng>>itemNumber;
+
+            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+            {
+                SchemaAttDef*  data = new SchemaAttDef();
+                data->serialize(serEng);            
+                fAttDefs->put(data->getAttName()->getLocalPart(), data->getId(), data);                
+            }
+         }
+
+        serEng>>fXsiComplexTypeInfo;
+
+        fXsiSimpleTypeInfo = DatatypeValidator::loadDV(serEng);
+
+        /***
+         *
+         * DeSerialize RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
+         *
+         */
+        if (serEng.needToReadTemplateObject((void**)&fIdentityConstraints))
+        {
+            if (!fIdentityConstraints)
+            {
+                fIdentityConstraints = new (getMemoryManager()) RefVectorOf<IdentityConstraint>(8, true, getMemoryManager());
+            }
+
+            serEng.registerTemplateObject(fIdentityConstraints);
+
+            int vectorLength = 0;
+            serEng>>vectorLength;
+            for ( int i = 0 ; i < vectorLength; i++)
+            {            
+                IdentityConstraint* node = IdentityConstraint::loadIC(serEng);                    ;
+                fIdentityConstraints->addElement(node);
+            }
+        }
+
+        serEng>>fAttWildCard;
+        serEng>>fSubstitutionGroupElem;
+
+        serEng>>i;
+        fValidity = (PSVIDefs::Validity)i;
+
+        serEng>> i;
+        fValidation = (PSVIDefs::Validation)i;
+        serEng>>fSeenValidation;
+        serEng>>fSeenNoValidation;
+        serEng>>fHadContent;
+
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

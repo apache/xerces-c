@@ -74,9 +74,11 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/validators/schema/SchemaAttDef.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
-class VALIDATORS_EXPORT XercesAttGroupInfo : public XMemory
+class VALIDATORS_EXPORT XercesAttGroupInfo : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -111,6 +113,11 @@ public:
     //  Query methods
     // -----------------------------------------------------------------------
     bool containsAttribute(const XMLCh* const name, const unsigned int uri);
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XercesAttGroupInfo)
 
 private:
     // -----------------------------------------------------------------------

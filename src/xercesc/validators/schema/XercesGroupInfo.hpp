@@ -74,6 +74,8 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -83,7 +85,7 @@ class ContentSpecNode;
 class XSDLocator;
 
 
-class VALIDATORS_EXPORT XercesGroupInfo : public XMemory
+class VALIDATORS_EXPORT XercesGroupInfo : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -113,6 +115,11 @@ public:
     void setLocator(XSDLocator* const aLocator);
     void setBaseGroup(XercesGroupInfo* const baseGroup);
     void setCheckElementConsistency(const bool aValue);
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XercesGroupInfo)
 
 private:
     // -----------------------------------------------------------------------

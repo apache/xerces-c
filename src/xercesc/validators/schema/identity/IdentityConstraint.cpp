@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/14 15:24:23  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.5  2003/10/01 16:32:42  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -87,6 +90,13 @@
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+
+//since we need to dynamically created each and every derivatives 
+//during deserialization by XSerializeEngine>>Derivative, we got
+//to include all hpp
+#include <xercesc/validators/schema/identity/IC_Unique.hpp>
+#include <xercesc/validators/schema/identity/IC_Key.hpp>
+#include <xercesc/validators/schema/identity/IC_KeyRef.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -177,6 +187,123 @@ void IdentityConstraint::cleanUp() {
     fMemoryManager->deallocate(fElemName);//delete [] fElemName;
     delete fFields;
     delete fSelector;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_NOCREATE(IdentityConstraint)
+
+void IdentityConstraint::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+        serEng.writeString(fIdentityConstraintName);
+        serEng.writeString(fElemName);
+
+        serEng<<fSelector;
+
+        /***
+         *
+         * Serialize RefVectorOf<IC_Field>* fFields;
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fFields))
+        {
+            int vectorLength = fFields->size();
+            serEng<<vectorLength;
+
+            for ( int i = 0 ; i < vectorLength; i++)
+            {
+                serEng<<fFields->elementAt(i);
+            }
+        }
+    
+    }
+    else
+    {
+
+        serEng.readString(fIdentityConstraintName);
+        serEng.readString(fElemName);
+
+        serEng>>fSelector;
+
+        /***
+         *
+         * Deserialize RefVectorOf<IC_Field>* fFields;
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fFields))
+        {
+            if (!fFields)
+            {
+                fFields = new (fMemoryManager) RefVectorOf<IC_Field>(8, true, fMemoryManager);
+            }
+
+            serEng.registerTemplateObject(fFields);
+
+            int vectorLength = 0;
+            serEng>>vectorLength;
+            for ( int i = 0 ; i < vectorLength; i++)
+            {     
+                IC_Field* data;
+                serEng>>data;
+                fFields->addElement(data);
+            }
+        }
+
+    }
+
+}  
+
+void IdentityConstraint::storeIC(XSerializeEngine&         serEng
+                               , IdentityConstraint* const ic)
+{
+    if (ic)
+    {
+        serEng<<(int) ic->getType();
+        serEng<<ic;
+    }
+    else
+    {
+        serEng<<(int) UNKNOWN;
+    }
+
+}
+
+IdentityConstraint* IdentityConstraint::loadIC(XSerializeEngine& serEng)
+{
+
+    int type;
+    serEng>>type;
+
+    switch((ICType)type)
+    {
+    case UNIQUE: 
+        IC_Unique* ic_unique;
+        serEng>>ic_unique;
+        return ic_unique;
+        break;
+    case KEY:
+        IC_Key* ic_key;
+        serEng>>ic_key;
+        return ic_key;
+        break;
+    case KEYREF: 
+        IC_KeyRef* ic_keyref;
+        serEng>>ic_keyref;
+        return ic_keyref;
+        break;
+    case UNKNOWN:
+        return 0;
+        break;
+    default: //we treat this same as UnKnown
+        return 0;
+        break;
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

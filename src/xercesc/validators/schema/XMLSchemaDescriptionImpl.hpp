@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/10/14 15:22:28  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.2  2003/07/31 17:14:27  peiyongz
  * Grammar embed grammar description
  *
@@ -179,6 +182,13 @@ public :
       */	
     virtual void                   setAttributes(XMLAttDef* const);          
     //@}
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLSchemaDescriptionImpl)
+
+    XMLSchemaDescriptionImpl(MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager);
 
 private :
     // -----------------------------------------------------------------------

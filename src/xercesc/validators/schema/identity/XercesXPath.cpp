@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/10/14 15:24:23  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.9  2003/10/01 16:32:42  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -159,6 +162,33 @@ XercesNodeTest::XercesNodeTest(const XercesNodeTest& other)
 {
 }
 
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XercesNodeTest)
+
+void XercesNodeTest::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+        serEng<<fType;
+        serEng<<fName;
+    }
+    else
+    {
+        serEng>>fType;
+        serEng>>fName;
+    }
+}
+
+XercesNodeTest::XercesNodeTest(MemoryManager* const manager)
+:fType(UNKNOWN)
+,fName(0)
+{
+}
+
 // ---------------------------------------------------------------------------
 //  XercesNodeTest: Operators
 // ---------------------------------------------------------------------------
@@ -240,6 +270,32 @@ bool XercesStep::operator!=(const XercesStep& other) const {
     return !operator==(other);
 }
 
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XercesStep)
+
+void XercesStep::serialize(XSerializeEngine& serEng)
+{
+    if (serEng.isStoring())
+    {
+        serEng<<fAxisType;
+        serEng<<fNodeTest;
+    }
+    else
+    {
+        serEng>>fAxisType;
+        serEng>>fNodeTest;
+    }
+}
+
+XercesStep::XercesStep(MemoryManager* const manager)
+:fAxisType(UNKNOWN)
+,fNodeTest(0)
+{
+}
+
 // ---------------------------------------------------------------------------
 //  XercesLocationPath: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -269,6 +325,66 @@ bool XercesLocationPath::operator==(const XercesLocationPath& other) const {
 bool XercesLocationPath::operator!=(const XercesLocationPath& other) const {
 
     return !operator==(other);
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XercesLocationPath)
+
+void XercesLocationPath::serialize(XSerializeEngine& serEng)
+{
+    if (serEng.isStoring())
+    {
+        /***
+         *
+         * Serialize RefVectorOf<XercesStep>* fSteps;
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fSteps))
+        {
+            int vectorLength = fSteps->size();
+            serEng<<vectorLength;
+
+            for ( int i = 0 ; i < vectorLength; i++)
+            {
+                serEng<<fSteps->elementAt(i);
+            }
+        }
+
+    }
+    else
+    {
+        /***
+         *
+         * Deserialize RefVectorOf<XercesStep>* fSteps;
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fSteps))
+        {
+            if (!fSteps)
+            {
+                fSteps = new (serEng.getMemoryManager()) RefVectorOf<XercesStep>(8, true, serEng.getMemoryManager());
+            }
+
+            serEng.registerTemplateObject(fSteps);
+
+            int vectorLength = 0;
+            serEng>>vectorLength;
+            for ( int i = 0 ; i < vectorLength; i++)
+            {            
+                XercesStep* data;
+                serEng>>data;
+                fSteps->addElement(data);
+            }
+        }
+    }
+}
+
+XercesLocationPath::XercesLocationPath(MemoryManager* const manager)
+:fSteps(0)
+{
 }
 
 // ---------------------------------------------------------------------------
@@ -624,6 +740,77 @@ void XercesXPath::parseExpression(XMLStringPool* const stringPool,
 
     fLocationPaths->addElement(new (fMemoryManager) XercesLocationPath(stepsVector));
     janSteps.orphan();
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XercesXPath)
+
+void XercesXPath::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+        serEng<<fEmptyNamespaceId;
+        serEng.writeString(fExpression);
+
+        /***
+         *
+         * Serialize RefVectorOf<XercesLocationPath>* fLocationPaths;
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fLocationPaths))
+        {
+            int vectorLength = fLocationPaths->size();
+            serEng<<vectorLength;
+
+            for ( int i = 0 ; i < vectorLength; i++)
+            {
+                serEng<<fLocationPaths->elementAt(i);
+            }
+        }
+
+    }
+    else
+    {
+        serEng>>fEmptyNamespaceId;
+        serEng.readString(fExpression);
+
+        /***
+         *
+         * Deserialize RefVectorOf<XercesLocationPath>* fLocationPaths;
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fLocationPaths))
+        {
+            if (!fLocationPaths)
+            {
+                fLocationPaths = new (fMemoryManager) RefVectorOf<XercesLocationPath>(8, true, fMemoryManager);
+            }
+
+            serEng.registerTemplateObject(fLocationPaths);
+
+            int vectorLength = 0;
+            serEng>>vectorLength;
+            for ( int i = 0 ; i < vectorLength; i++)
+            {            
+                XercesLocationPath* data;
+                serEng>>data;
+                fLocationPaths->addElement(data);
+            }
+        }
+
+    }
+}
+
+XercesXPath::XercesXPath(MemoryManager* const manager)
+:fEmptyNamespaceId(0)
+,fExpression(0)
+,fLocationPaths(0)
+,fMemoryManager(manager)
+{
 }
 
 // ---------------------------------------------------------------------------

@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.4  2003/10/14 15:19:24  peiyongz
+# Implementation of Serialization/Deserialization
+#
 # Revision 1.3  2002/09/17 21:24:19  peiyongz
 # RPM for Xerces2.1.0, patch from Thomas Woerner (thomas@linux.de)
 #
@@ -137,6 +140,7 @@ VALIDATORS_COMMON_CPP_OBJECTS = \
 	ContentLeafNameTypeVector.$(TO) \
 	ContentSpecNode.$(TO) \
 	DFAContentModel.$(TO) \
+	Grammar.$(TO) \
 	GrammarResolver.$(TO) \
 	MixedContentModel.$(TO) \
 	SimpleContentModel.$(TO)

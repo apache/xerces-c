@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/10/14 15:17:47  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.2  2003/07/31 17:03:19  peiyongz
  * locationHint incrementally added
  *
@@ -87,7 +90,7 @@ public :
       * virtual destructor
       *
       */
-    virtual ~XMLSchemaDescription(){};
+    virtual ~XMLSchemaDescription();
     //@}
 
     // -----------------------------------------------------------------------
@@ -195,14 +198,17 @@ public :
     virtual void                       setAttributes(XMLAttDef* const) = 0;
     //@}	          
 	          
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLSchemaDescription)
+
 protected :
     // -----------------------------------------------------------------------
     /**  Hidden Constructors */
     // -----------------------------------------------------------------------
     //@{
-    XMLSchemaDescription(MemoryManager* const memMgr)
-    :XMLGrammarDescription(memMgr)
-    {};
+    XMLSchemaDescription(MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager);
     //@}
 
 private :

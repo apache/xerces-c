@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/10/14 15:22:28  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.13  2003/10/05 02:08:05  neilg
  * Because it makes grammars un-sharable between parsers running on multiple threads, xsi:type should not be handled by modifying element declarations.  Modifying implementation so it no longer relies on this kind of behaviour; marking methods as deprecated which imply that xsi:type will be handled in this way.  Once their behaviour is handled elsewhere, these methods should eventually be removed
  *
@@ -394,6 +397,11 @@ public :
     void addIdentityConstraint(IdentityConstraint* const ic);
     unsigned int getIdentityConstraintCount() const;
     IdentityConstraint* getIdentityConstraintAt(unsigned int index) const;
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(SchemaElementDecl)
 
 private :
     // -----------------------------------------------------------------------

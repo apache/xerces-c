@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/10/14 15:17:47  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.1  2003/06/20 18:37:39  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -81,7 +84,7 @@ public :
       * virtual destructor
       *
       */
-    virtual ~XMLDTDDescription(){};
+    virtual ~XMLDTDDescription();
     //@}
 
     // -----------------------------------------------------------------------
@@ -116,14 +119,17 @@ public :
 
     //@}
     
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLDTDDescription)
+
 protected :
     // -----------------------------------------------------------------------
     /**  Hidden Constructors */
     // -----------------------------------------------------------------------
     //@{
-    XMLDTDDescription(MemoryManager* const memMgr)
-    :XMLGrammarDescription(memMgr)
-    {};
+    XMLDTDDescription(MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager);
     //@}
 
 private :

@@ -1,7 +1,8 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +27,7 @@
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
  *    software without prior written permission. For written
- *    permission, please contact apache\@apache.org.
+ *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
@@ -47,94 +48,34 @@
  * ====================================================================
  *
  * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
- * Business Machines, Inc., http://www.ibm.com .  For more information
- * on the Apache Software Foundation, please see
+ * individuals on behalf of the Apache Software Foundation and was
+ * originally based on software copyright (c) 2001, International
+ * Business Machines, Inc., http://www.apache.org.  For more
+ * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
 
 /*
- * $Log$
- * Revision 1.2  2003/10/14 15:20:42  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.1  2003/06/20 18:39:33  peiyongz
- * Stateless Grammar Pool :: Part I
- *
  * $Id$
+ * $Log$
+ * Revision 1.1  2003/10/14 15:19:24  peiyongz
+ * Implementation of Serialization/Deserialization
  *
  */
 
-
-// ---------------------------------------------------------------------------
-//  Includes
-// ---------------------------------------------------------------------------
-#include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
+#include <xercesc/validators/common/Grammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-// ---------------------------------------------------------------------------
-//  XMLDTDDescriptionImpl: constructor and destructor
-// ---------------------------------------------------------------------------
-XMLDTDDescriptionImpl::XMLDTDDescriptionImpl(const XMLCh* const   rootName
-                                           , MemoryManager* const memMgr)
-:XMLDTDDescription(memMgr)
-,fRootName(0)
-{
-    if (rootName)
-        fRootName = XMLString::replicate(rootName, memMgr);
-}
-
-XMLDTDDescriptionImpl::~XMLDTDDescriptionImpl()
-{
-    if (fRootName)
-        XMLGrammarDescription::getMemoryManager()->deallocate((void*)fRootName);
-}
-             
-const XMLCh* XMLDTDDescriptionImpl::getGrammarKey() const
-{
-    return getRootName();
-}
-              
-const XMLCh* XMLDTDDescriptionImpl::getRootName() const
-{ 
-    return fRootName; 
-}
-
-void XMLDTDDescriptionImpl::setRootName(const XMLCh* const rootName)
-{
-    if (fRootName)
-        XMLGrammarDescription::getMemoryManager()->deallocate((void*)fRootName);   
-
-    fRootName = XMLString::replicate(rootName, XMLGrammarDescription::getMemoryManager()); 
-}        
 
 /***
  * Support for Serialization/De-serialization
  ***/
 
-IMPL_XSERIALIZABLE_TOCREATE(XMLDTDDescriptionImpl)
+IMPL_XSERIALIZABLE_NOCREATE(Grammar)
 
-void XMLDTDDescriptionImpl::serialize(XSerializeEngine& serEng)
+void Grammar::serialize(XSerializeEngine& serEng)
 {
-    XMLDTDDescription::serialize(serEng);
-
-    if (serEng.isStoring())
-    {
-        serEng.writeString(fRootName);
-    }
-    else
-    {
-        serEng.readString((XMLCh*&)fRootName);
-    }
-
-}
-
-XMLDTDDescriptionImpl::XMLDTDDescriptionImpl(MemoryManager* const memMgr)
-:XMLDTDDescription(memMgr)
-,fRootName(0)
-{
+    //no data
 }
 
 XERCES_CPP_NAMESPACE_END

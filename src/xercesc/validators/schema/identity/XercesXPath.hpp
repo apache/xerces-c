@@ -69,6 +69,8 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/ValueVectorOf.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -78,7 +80,7 @@ class XMLStringPool;
 class NamespaceScope;
 
 
-class VALIDATORS_EXPORT XercesNodeTest : public XMemory
+class VALIDATORS_EXPORT XercesNodeTest : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -88,7 +90,8 @@ public:
         QNAME = 1,
         WILDCARD = 2,
         NODE = 3,
-        NAMESPACE= 4
+        NAMESPACE= 4,
+        UNKNOWN
     };
 
     // -----------------------------------------------------------------------
@@ -115,6 +118,13 @@ public:
     short getType() const { return fType; }
     QName* getName() const { return fName; }
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XercesNodeTest)
+
+    XercesNodeTest(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
 private:
     // -----------------------------------------------------------------------
     //  Data members
@@ -127,7 +137,7 @@ private:
 /**
   * A location path step comprised of an axis and node test.
   */
-class VALIDATORS_EXPORT XercesStep : public XMemory
+class VALIDATORS_EXPORT XercesStep : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -137,7 +147,8 @@ public:
         CHILD = 1,
         ATTRIBUTE = 2,
         SELF = 3,
-        DESCENDANT = 4
+        DESCENDANT = 4,
+        UNKNOWN
     };
 
     // -----------------------------------------------------------------------
@@ -160,6 +171,13 @@ public:
     unsigned short getAxisType() const { return fAxisType; }
     XercesNodeTest* getNodeTest() const { return fNodeTest; }
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XercesStep)
+
+    XercesStep(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
 private:
     // -----------------------------------------------------------------------
     //  Data members
@@ -172,7 +190,7 @@ private:
 /**
   * A location path representation for an XPath expression.
   */
-class VALIDATORS_EXPORT XercesLocationPath : public XMemory
+class VALIDATORS_EXPORT XercesLocationPath : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -194,6 +212,13 @@ public:
     void addStep(XercesStep* const aStep);
     XercesStep* getStep(const unsigned int index) const;
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XercesLocationPath)
+
+    XercesLocationPath(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators
@@ -208,7 +233,7 @@ private:
 };
 
 
-class VALIDATORS_EXPORT XercesXPath : public XMemory
+class VALIDATORS_EXPORT XercesXPath : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -292,6 +317,13 @@ public:
     //  Constructors/Destructor
     // -----------------------------------------------------------------------
     RefVectorOf<XercesLocationPath>* getLocationPaths() const;
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XercesXPath)
+
+    XercesXPath(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private:
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/14 15:22:28  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.6  2003/05/18 14:02:08  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -123,6 +126,79 @@ void XercesGroupInfo::setLocator(XSDLocator* const aLocator) {
         delete fLocator;
 
     fLocator = aLocator;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XercesGroupInfo)
+
+void XercesGroupInfo::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {   
+        serEng<<fCheckElementConsistency;
+        serEng<<fScope;
+        serEng<<fContentSpec;
+
+        /***
+         *
+         * Serialize RefVectorOf<SchemaElementDecl>* fElements;
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fElements))
+        {
+            int vectorLength = fElements->size();
+            serEng<<vectorLength;
+
+            for ( int i = 0 ; i < vectorLength; i++)
+            {
+                serEng<<fElements->elementAt(i);
+            }
+        }
+
+        serEng<<fBaseGroup;
+
+        //don't serialize     XSDLocator* fLocator;
+    }
+    else
+    {
+        serEng>>fCheckElementConsistency;
+        serEng>>fScope;
+        serEng>>fContentSpec;
+
+        /***
+         * 
+         * Deserialize RefVectorOf<SchemaElementDecl>*    fElements;
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fElements))
+        {
+            if (!fElements)
+            {
+                fElements = new (serEng.getMemoryManager()) RefVectorOf<SchemaElementDecl>(8, true, serEng.getMemoryManager());
+            }
+
+            serEng.registerTemplateObject(fElements);
+
+            int vectorLength = 0;
+            serEng>>vectorLength;
+            for ( int i = 0 ; i < vectorLength; i++)
+            {            
+                SchemaElementDecl* node;
+                serEng>>node;
+                fElements->addElement(node);
+            }
+        }
+
+        serEng>>fBaseGroup;
+
+        //don't serialize     XSDLocator* fLocator;
+        fLocator = 0;
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/10/14 15:20:42  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.9  2003/09/22 19:49:02  neilg
  * implement change to Grammar::putElem(XMLElementDecl, bool).  If Grammars are used only to hold declared objects, there will be no need for the fElemNonDeclPool tables; make Grammar implementations lazily create them only if the application requires them (which good cpplications should not.)
  *
@@ -294,6 +297,98 @@ void DTDGrammar::setGrammarDescription( XMLGrammarDescription* gramDesc)
 XMLGrammarDescription*  DTDGrammar::getGrammarDescription() const
 {
     return fGramDesc;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(DTDGrammar)
+
+void DTDGrammar::serialize(XSerializeEngine& serEng)
+{
+
+    Grammar::serialize(serEng);
+
+/***
+    NameIdPool<DTDElementDecl>*       fElemDeclPool;
+    NameIdPool<DTDElementDecl>*       fElemNonDeclPool;
+    NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
+    NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
+    unsigned int                      fRootElemId;
+    bool                              fValidated;
+    XMLDTDDescription*                fGramDesc;
+***/
+
+    if (serEng.isStoring())
+    {
+        //don't serialize fDefaultEntities
+
+        /***
+         *
+         * Serialize NameIdPool<DTDElementDecl>*       fElemDeclPool;
+         *
+         ***/
+
+        /***
+         *
+         * Serialize NameIdPool<DTDElementDecl>*       fElemNonDeclPool;
+         * TODO: will this data member removed?
+         ***/
+
+        /***
+         *
+         * Serialize NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
+         *
+         ***/
+
+        /***
+         *
+         * Serialize NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
+         *
+         ***/
+
+        serEng<<fRootElemId;
+        serEng<<fValidated;
+        serEng<<fGramDesc;
+
+    }
+    else
+    {
+
+       /***
+         *
+         * Deserialize NameIdPool<DTDElementDecl>*       fElemDeclPool;
+         * 
+         ***/
+
+       /***
+         *
+         * Deserialize NameIdPool<DTDElementDecl>*       fElemNonDeclPool;
+         * TODO: will this data member removed?
+         ***/
+
+        /***
+         *
+         * Deserialize NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
+         *
+         ***/
+
+        /***
+         *
+         * Deerialize NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
+         *
+         ***/
+
+        serEng>>fRootElemId;
+        serEng>>fValidated;
+
+        XMLDTDDescriptionImpl* gramDesc;
+        serEng>>gramDesc;
+        fGramDesc = gramDesc;
+
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

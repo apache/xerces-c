@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/10/14 15:20:42  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.1  2003/06/20 18:39:33  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -113,6 +116,13 @@ public :
     virtual void                   setRootName(const XMLCh* const rootName);
     //@}
     
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLDTDDescriptionImpl)
+
+    XMLDTDDescriptionImpl(MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager);
+
 private :
     // -----------------------------------------------------------------------
     /** name  Unimplemented copy constructor and operator= */

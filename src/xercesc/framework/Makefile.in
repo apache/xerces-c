@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.14  2003/10/14 15:17:47  peiyongz
+# Implementation of Serialization/Deserialization
+#
 # Revision 1.13  2003/10/10 16:23:29  peiyongz
 # Implementation of Serialization/Deserialization
 #
@@ -217,12 +220,15 @@ FRAMEWORK_CPP_OBJECTS = \
 	XMLBuffer.$(TO) \
 	XMLBufferMgr.$(TO) \
 	XMLContentModel.$(TO) \
+	XMLDTDDescription.$(TO) \
 	XMLElementDecl.$(TO) \
 	XMLEntityDecl.$(TO) \
 	XMLFormatter.$(TO) \
+	XMLGrammarDescription.$(TO) \
 	XMLNotationDecl.$(TO) \
 	XMLRecognizer.$(TO) \
 	XMLRefInfo.$(TO) \
+	XMLSchemaDescription.$(TO) \
 	XMLValidator.$(TO)
 
 all::	includes $(FRAMEWORK_CPP_OBJECTS) psvi

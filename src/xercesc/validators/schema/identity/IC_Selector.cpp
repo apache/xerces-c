@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/14 15:24:23  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.5  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -197,6 +200,35 @@ XPathMatcher* IC_Selector::createMatcher(FieldActivator* const fieldActivator,
                                          MemoryManager* const manager) {
 
     return new (manager) SelectorMatcher(fXPath, this, fieldActivator, initialDepth, manager);
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(IC_Selector)
+
+void IC_Selector::serialize(XSerializeEngine& serEng)
+{
+    if (serEng.isStoring())
+    {
+        serEng<<fXPath;
+        
+        IdentityConstraint::storeIC(serEng, fIdentityConstraint);
+    }
+    else
+    {
+        serEng>>fXPath;
+
+        fIdentityConstraint = IdentityConstraint::loadIC(serEng);
+    }
+
+}
+
+IC_Selector::IC_Selector(MemoryManager* const )
+:fXPath(0)
+,fIdentityConstraint(0)
+{
 }
 
 XERCES_CPP_NAMESPACE_END

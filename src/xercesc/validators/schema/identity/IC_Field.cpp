@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/14 15:24:23  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.4  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -82,6 +85,8 @@
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
+
+#include <xercesc/validators/schema/identity/IdentityConstraint.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -153,6 +158,38 @@ XPathMatcher* IC_Field::createMatcher(ValueStore* const valueStore,
                                       MemoryManager* const manager) {
 
     return new (manager) FieldMatcher(fXPath, this, valueStore, manager);
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(IC_Field)
+
+void IC_Field::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+        serEng<<fMayMatch;
+        serEng<<fXPath;
+        
+        IdentityConstraint::storeIC(serEng, fIdentityConstraint);
+    }
+    else
+    {
+        serEng>>fMayMatch;
+        serEng>>fXPath;
+
+        fIdentityConstraint = IdentityConstraint::loadIC(serEng);
+    }
+
+}
+
+IC_Field::IC_Field(MemoryManager* const )
+:fXPath(0)
+,fIdentityConstraint(0)
+{
 }
 
 XERCES_CPP_NAMESPACE_END

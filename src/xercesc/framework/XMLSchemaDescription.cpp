@@ -54,15 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/*
- * $Log$
- * Revision 1.2  2003/10/14 15:20:42  peiyongz
- * Implementation of Serialization/Deserialization
- *
- * Revision 1.1  2003/06/20 18:39:33  peiyongz
- * Stateless Grammar Pool :: Part I
- *
+/**
  * $Id$
+ * $Log$
+ * Revision 1.1  2003/10/14 15:16:58  peiyongz
+ * Implementation of Serialization/Deserialization
  *
  */
 
@@ -70,71 +66,31 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
+#include <xercesc/framework/XMLSchemaDescription.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-// ---------------------------------------------------------------------------
-//  XMLDTDDescriptionImpl: constructor and destructor
-// ---------------------------------------------------------------------------
-XMLDTDDescriptionImpl::XMLDTDDescriptionImpl(const XMLCh* const   rootName
-                                           , MemoryManager* const memMgr)
-:XMLDTDDescription(memMgr)
-,fRootName(0)
+XMLSchemaDescription::~XMLSchemaDescription()
 {
-    if (rootName)
-        fRootName = XMLString::replicate(rootName, memMgr);
 }
 
-XMLDTDDescriptionImpl::~XMLDTDDescriptionImpl()
+XMLSchemaDescription::XMLSchemaDescription(MemoryManager* const memMgr)
+:XMLGrammarDescription(memMgr)
 {
-    if (fRootName)
-        XMLGrammarDescription::getMemoryManager()->deallocate((void*)fRootName);
 }
-             
-const XMLCh* XMLDTDDescriptionImpl::getGrammarKey() const
-{
-    return getRootName();
-}
-              
-const XMLCh* XMLDTDDescriptionImpl::getRootName() const
-{ 
-    return fRootName; 
-}
-
-void XMLDTDDescriptionImpl::setRootName(const XMLCh* const rootName)
-{
-    if (fRootName)
-        XMLGrammarDescription::getMemoryManager()->deallocate((void*)fRootName);   
-
-    fRootName = XMLString::replicate(rootName, XMLGrammarDescription::getMemoryManager()); 
-}        
 
 /***
  * Support for Serialization/De-serialization
  ***/
 
-IMPL_XSERIALIZABLE_TOCREATE(XMLDTDDescriptionImpl)
+IMPL_XSERIALIZABLE_NOCREATE(XMLSchemaDescription)
 
-void XMLDTDDescriptionImpl::serialize(XSerializeEngine& serEng)
+void XMLSchemaDescription::serialize(XSerializeEngine& serEng)
 {
-    XMLDTDDescription::serialize(serEng);
+    XMLGrammarDescription::serialize(serEng);
 
-    if (serEng.isStoring())
-    {
-        serEng.writeString(fRootName);
-    }
-    else
-    {
-        serEng.readString((XMLCh*&)fRootName);
-    }
-
-}
-
-XMLDTDDescriptionImpl::XMLDTDDescriptionImpl(MemoryManager* const memMgr)
-:XMLDTDDescription(memMgr)
-,fRootName(0)
-{
+    //no data
 }
 
 XERCES_CPP_NAMESPACE_END
+

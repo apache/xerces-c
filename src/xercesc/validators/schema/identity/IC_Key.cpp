@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/10/14 15:24:23  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.3  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -83,12 +86,30 @@ XERCES_CPP_NAMESPACE_BEGIN
 IC_Key::IC_Key(const XMLCh* const identityConstraintName,
                const XMLCh* const elemName,
 			   MemoryManager* const manager)
-    : IdentityConstraint(identityConstraintName, elemName, manager)
+:IdentityConstraint(identityConstraintName, elemName, manager)
 {
 }
 
 
 IC_Key::~IC_Key()
+{
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(IC_Key)
+
+void IC_Key::serialize(XSerializeEngine& serEng)
+{
+    IdentityConstraint::serialize(serEng);
+
+    //no data
+}
+
+IC_Key::IC_Key(MemoryManager* const manager)
+:IdentityConstraint(0, 0, manager)
 {
 }
 

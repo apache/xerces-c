@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/10/14 15:22:28  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.12  2003/10/10 16:25:40  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -928,10 +931,20 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         serEng<<fAttList;
 
         /***
-         * TO DO: once SchemaElementDecl is done
+         * 
          * Serialize RefVectorOf<SchemaElementDecl>*    fElements;
          *
          ***/
+        if (serEng.needToWriteTemplateObject(fElements))
+        {
+            int vectorLength = fElements->size();
+            serEng<<vectorLength;
+
+            for ( int i = 0 ; i < vectorLength; i++)
+            {
+                serEng<<fElements->elementAt(i);
+            }
+        }
 
         /***
          *
@@ -984,9 +997,32 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
           *   
           ***/
 
-        serEng<<*fContentSpecOrgURI;
-        serEng<<fUniqueURI;
-        serEng<<fContentSpecOrgURISize;
+        /***
+         * 
+         * fContentSpecOrgURI:     start of the array
+         * fContentSpecOrgURISize: size of the array
+         * fUniqueURI:             the current last element in the array
+         *
+         * TODO: could we treat this the same way as fContentModel?
+         *
+         ***/
+        if (fContentSpecOrgURI)
+        {
+            serEng<<(int)1;
+            serEng<<fContentSpecOrgURISize;
+            serEng<<fUniqueURI;
+
+            unsigned int* tempURI = fContentSpecOrgURI;
+            for (unsigned int i = 0 ; i < fUniqueURI; i++)
+            {
+                serEng<<*tempURI;
+                tempURI++;
+            }
+        }
+        else
+        {
+            serEng<<(int)0;
+        }
 
         /***
          *  don't serialize
@@ -1010,8 +1046,8 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         serEng>>fContentType;
 
         serEng.readString(fTypeName);
-        serEng.writeString(fTypeLocalName);
-        serEng.writeString(fTypeUri);
+        serEng.readString(fTypeLocalName);
+        serEng.readString(fTypeUri);
 
         fBaseDatatypeValidator = DatatypeValidator::loadDV(serEng);
         fDatatypeValidator     = DatatypeValidator::loadDV(serEng);
@@ -1022,10 +1058,28 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         serEng>>fAttList;
 
         /***
-         * TO DO: once SchemaElementDecl is done
+         * 
          * Deserialize RefVectorOf<SchemaElementDecl>*    fElements;
          *
          ***/
+        if (serEng.needToReadTemplateObject((void**)&fElements))
+        {
+            if (!fElements)
+            {
+                fElements = new (fMemoryManager) RefVectorOf<SchemaElementDecl>(8, true, fMemoryManager);
+            }
+
+            serEng.registerTemplateObject(fElements);
+
+            int vectorLength = 0;
+            serEng>>vectorLength;
+            for ( int i = 0 ; i < vectorLength; i++)
+            {            
+                SchemaElementDecl* node;
+                serEng>>node;
+                fElements->addElement(node);
+            }
+        }
 
         /***
          *
@@ -1083,17 +1137,42 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
           *   fFormattedModel;
           *   
           ***/
+         fContentModel   = 0;
+         fFormattedModel = 0;
 
-        fContentModel   = 0;
-        fFormattedModel = 0;
+        /***
+         * 
+         * fContentSpecOrgURI:     start of the array
+         * fContentSpecOrgURISize: size of the array
+         * fUniqueURI:             the current last element in the array
+         *
+         * TODO: could we treat this the same way as fContentModel?
+         *
+         ***/
+         int i;
+         serEng>>i;
 
-        unsigned int i;
+         if (i==1)
+         {
+            serEng>>fContentSpecOrgURISize;
+            serEng>>fUniqueURI;
 
-        serEng>>i;
-        *fContentSpecOrgURI = i;
+            if (!fContentSpecOrgURI)
+            {
+                fContentSpecOrgURI = (unsigned int*) fMemoryManager->allocate
+                    (fContentSpecOrgURISize * sizeof(unsigned int)); 
+            }
 
-        serEng>>fUniqueURI;
-        serEng>>fContentSpecOrgURISize;
+            unsigned int* tempURI = fContentSpecOrgURI;
+            for (unsigned int i = 0 ; i < fUniqueURI; i++)
+            {
+                unsigned int val;
+                serEng>>val;
+                *tempURI = val;
+                tempURI++;
+            }
+         }
+         //else do nothing             
 
         /***
          *  don't serialize

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/10/14 15:22:28  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.9  2003/09/22 19:49:03  neilg
  * implement change to Grammar::putElem(XMLElementDecl, bool).  If Grammars are used only to hold declared objects, there will be no need for the fElemNonDeclPool tables; make Grammar implementations lazily create them only if the application requires them (which good cpplications should not.)
  *
@@ -299,6 +302,11 @@ public:
     (
         XMLElementDecl* const elemDecl
     )   const;
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(SchemaGrammar)
 
 private:
 

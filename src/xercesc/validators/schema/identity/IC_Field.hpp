@@ -67,6 +67,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/identity/XPathMatcher.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -75,7 +77,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class ValueStore;
 
 
-class VALIDATORS_EXPORT IC_Field : public XMemory
+class VALIDATORS_EXPORT IC_Field : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -108,6 +110,13 @@ public:
     // -----------------------------------------------------------------------
     XPathMatcher* createMatcher(ValueStore* const valueStore,
                                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(IC_Field)
+
+    IC_Field(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private:
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/10/14 15:17:47  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.1  2003/06/20 18:37:39  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -69,9 +72,11 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLPARSER_EXPORT XMLGrammarDescription : public XMemory
+class XMLPARSER_EXPORT XMLGrammarDescription : public XSerializable, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -82,7 +87,7 @@ public :
       * virtual destructor
       *
       */
-    virtual ~XMLGrammarDescription(){};
+    virtual ~XMLGrammarDescription();
     //@}
 
     // -----------------------------------------------------------------------
@@ -104,15 +109,17 @@ public :
     
     inline MemoryManager*          getMemoryManager() const;
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLGrammarDescription)
+
 protected :
     // -----------------------------------------------------------------------
     /**  Hidden Constructors */
     // -----------------------------------------------------------------------
     //@{
-    XMLGrammarDescription(MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager)
-    :fMemMgr(memMgr)
-    {
-    };
+    XMLGrammarDescription(MemoryManager* const memMgr = XMLPlatformUtils::fgMemoryManager);
     //@}
 
 private :

@@ -72,6 +72,8 @@
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -79,16 +81,17 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 class IC_Selector;
 
-class VALIDATORS_EXPORT IdentityConstraint : public XMemory
+class VALIDATORS_EXPORT IdentityConstraint : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Constants
     // -----------------------------------------------------------------------
-    enum {
+    enum ICType {
         UNIQUE = 0,
         KEY = 1,
-        KEYREF = 2
+        KEYREF = 2,
+        UNKNOWN
     };
 
     // -----------------------------------------------------------------------
@@ -122,6 +125,16 @@ public:
     void addField(IC_Field* const field);
     const IC_Field* getFieldAt(const unsigned int index) const;
     IC_Field* getFieldAt(const unsigned int index);
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(IdentityConstraint)
+
+	static void                storeIC(XSerializeEngine&         serEng
+                                     , IdentityConstraint* const ic);
+
+	static IdentityConstraint* loadIC(XSerializeEngine& serEng);
 
 protected:
     // -----------------------------------------------------------------------

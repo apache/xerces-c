@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/10/14 15:24:23  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.3  2003/05/15 18:59:34  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -89,6 +92,24 @@ IC_Unique::IC_Unique(const XMLCh* const identityConstraintName,
 
 
 IC_Unique::~IC_Unique()
+{
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(IC_Unique)
+
+void IC_Unique::serialize(XSerializeEngine& serEng)
+{
+    IdentityConstraint::serialize(serEng);
+
+    //no data
+}
+
+IC_Unique::IC_Unique(MemoryManager* const manager)
+:IdentityConstraint(0, 0, manager)
 {
 }
 

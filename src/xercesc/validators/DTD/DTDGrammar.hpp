@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/10/14 15:20:42  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.10  2003/09/22 19:49:02  neilg
  * implement change to Grammar::putElem(XMLElementDecl, bool).  If Grammars are used only to hold declared objects, there will be no need for the fElemNonDeclPool tables; make Grammar implementations lazily create them only if the application requires them (which good cpplications should not.)
  *
@@ -262,6 +265,11 @@ public:
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
     static void reinitDfltEntities();
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(DTDGrammar)
 
 private:
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/10/14 15:22:28  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.3  2003/07/31 17:14:27  peiyongz
  * Grammar embed grammar description
  *
@@ -194,6 +197,104 @@ void XMLSchemaDescriptionImpl::setAttributes(XMLAttDef* const attDefs)
     // XMLAttDef is part of the grammar that this description refers to
     // so we reference to it instead of adopting/owning/cloning.
     fAttributes = attDefs; 
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XMLSchemaDescriptionImpl)
+
+void XMLSchemaDescriptionImpl::serialize(XSerializeEngine& serEng)
+{
+    XMLSchemaDescription::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        serEng<<(int)fContextType;       
+        serEng.writeString(fNamespace);
+
+        /***
+         * 
+         * Serialize RefArrayVectorOf<XMLCh>*               fLocationHints;
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fLocationHints))
+        {
+            int enumLength = fLocationHints->size();
+            serEng<<enumLength;
+
+            for ( int i = 0 ; i < enumLength; i++)
+            {            
+                serEng.writeString(fLocationHints->elementAt(i));
+            }
+        }
+
+        QName* tempQName = (QName*)fTriggeringComponent;
+        serEng<<tempQName;
+        tempQName = (QName*)fEnclosingElementName;
+        serEng<<tempQName;
+
+        XMLAttDef* tempAttDef = (XMLAttDef*)fAttributes;
+        serEng<<tempAttDef;
+    }
+
+    else
+    {
+        int i;
+        serEng>>i;
+
+        fContextType = (ContextType)i;       
+        serEng.readString((XMLCh*&)fNamespace);
+
+        /***
+         *
+         *  Deserialize RefArrayVectorOf<XMLCh>    fLocationHints     
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fLocationHints))
+        {
+            if (!fLocationHints)
+            {
+                fLocationHints = new (XMLGrammarDescription::getMemoryManager()) RefArrayVectorOf<XMLCh>(4, true, XMLGrammarDescription::getMemoryManager());
+            }
+
+            serEng.registerTemplateObject(fLocationHints);
+
+            int enumLength = 0;
+            serEng>>enumLength;
+            for ( int i = 0; i < enumLength; i++)
+            {
+                XMLCh* enumVal;
+                serEng.readString(enumVal);
+                fLocationHints->addElement(enumVal);
+            }
+        }
+
+        QName* tempQName;
+        serEng>>tempQName;
+        fTriggeringComponent = tempQName;
+
+        serEng>>tempQName;
+        fEnclosingElementName = tempQName;
+
+        XMLAttDef* tempAttDef;
+        serEng>>tempAttDef;
+        fAttributes=tempAttDef;
+
+    }
+
+}
+
+XMLSchemaDescriptionImpl::XMLSchemaDescriptionImpl(MemoryManager* const memMgr)
+:XMLSchemaDescription(memMgr)
+,fContextType(CONTEXT_UNKNOWN)
+,fNamespace(0)
+,fLocationHints(0)
+,fTriggeringComponent(0)
+,fEnclosingElementName(0)
+,fAttributes(0) 
+{
 }
 
 XERCES_CPP_NAMESPACE_END

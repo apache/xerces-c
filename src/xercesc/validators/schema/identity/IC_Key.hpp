@@ -85,6 +85,13 @@ public:
     // -----------------------------------------------------------------------
     short getType() const;
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(IC_Key)
+
+    IC_Key(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators

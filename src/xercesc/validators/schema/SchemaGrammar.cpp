@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/10/14 15:22:28  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.9  2003/10/01 16:32:42  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -313,6 +316,130 @@ void SchemaGrammar::setGrammarDescription( XMLGrammarDescription* gramDesc)
 XMLGrammarDescription* SchemaGrammar::getGrammarDescription() const
 {
     return fGramDesc;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(SchemaGrammar)
+
+void SchemaGrammar::serialize(XSerializeEngine& serEng)
+{
+
+    Grammar::serialize(serEng);
+
+    /***
+    XMLCh*                                 fTargetNamespace;
+    RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
+    RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
+    RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
+    NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
+    RefHashTableOf<XMLAttDef>*             fAttributeDeclRegistry;
+    RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
+    RefHashTableOf<XercesGroupInfo>*       fGroupInfoRegistry;
+    RefHashTableOf<XercesAttGroupInfo>*    fAttGroupInfoRegistry;
+    NamespaceScope*                        fNamespaceScope;
+    RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
+    RefHashTableOf<XMLRefInfo>*            fIDRefList;
+    MemoryManager*                         fMemoryManager;
+    bool                                   fValidated;
+    DatatypeValidatorFactory               fDatatypeRegistry;
+    XMLSchemaDescription*                  fGramDesc;
+    ***/
+
+    if (serEng.isStoring())
+    {
+        serEng.writeString(fTargetNamespace);
+
+        /***
+         *
+         * Serialize RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fElemDeclPool))
+        {
+            int itemNumber = 0;
+            RefHash3KeysIdPoolEnumerator<SchemaElementDecl> e(fElemDeclPool);
+
+            while (e.hasMoreElements())
+            {
+                e.nextElement();
+                itemNumber++;
+            }
+
+            serEng<<itemNumber;
+
+            e.Reset();
+            while (e.hasMoreElements())
+            {
+                SchemaElementDecl& curElem = e.nextElement();
+                curElem.serialize(serEng);
+            }
+
+        }
+
+        /***
+         *
+         * Serialize RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
+         * TODO: will this data be removed
+         ***/
+        if (serEng.needToWriteTemplateObject(fElemDeclPool))
+        {
+            int itemNumber = 0;
+            RefHash3KeysIdPoolEnumerator<SchemaElementDecl> e(fElemDeclPool);
+
+            while (e.hasMoreElements())
+            {
+                e.nextElement();
+                itemNumber++;
+            }
+
+            serEng<<itemNumber;
+
+            e.Reset();
+            while (e.hasMoreElements())
+            {
+                SchemaElementDecl& curElem = e.nextElement();
+                curElem.serialize(serEng);
+            }
+
+        }
+
+        /***
+         *
+         * Serialize RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
+         *
+         ***/
+    }
+    else
+    {
+        /***
+         *
+         * Deserialize RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fElemDeclPool))
+        {
+            if (!fElemDeclPool)
+            {
+                fElemDeclPool = new (serEng.getMemoryManager()) RefHash3KeysIdPool<SchemaElementDecl>(109, true, 128, serEng.getMemoryManager());
+            }
+
+            serEng.registerTemplateObject(fElemDeclPool);
+
+            int itemNumber = 0;
+            serEng>>itemNumber;
+
+            for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+            {               
+                SchemaElementDecl*  elemDecl = new (fMemoryManager) SchemaElementDecl(fMemoryManager);
+                elemDecl->serialize(serEng);
+                fElemDeclPool->put(elemDecl->getBaseName(), elemDecl->getURI(), elemDecl->getEnclosingScope(), elemDecl);
+            }
+        }
+
+    }
 }
 
 XERCES_CPP_NAMESPACE_END
