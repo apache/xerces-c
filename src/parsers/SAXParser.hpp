@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/01/12 21:23:41  tng
+ * Documentation Enhancement: explain values of Val_Scheme
+ *
  * Revision 1.9  2000/08/02 18:05:15  jpolast
  * changes required for sax2
  * (changed private members to protected)
@@ -233,6 +236,7 @@ public :
       * validation scheme set on this parser.
       *
       * @return The ValSchemes value current set on this parser.
+      * @see #setValidationScheme
       */
     ValSchemes getValidationScheme() const;
 
@@ -288,11 +292,16 @@ public :
     /**
       * This method allows users to set the validation scheme to be used
       * by this parser. The value is one of the ValSchemes enumerated values
-      * defined by this class.
+      * defined by this class:
+      *
+      * <br>  Val_Never  - turn off validation
+      * <br>  Val_Always - turn on validation
+      * <br>  Val_Auto   - turn on validation if any internal/external
+      *                  DTD subset have been seen
       *
       * <p>The parser's default state is: Val_Auto.</p>
       *
-      * @param newState The new validation scheme to use.
+      * @param newScheme The new validation scheme to use.
       *
       * @see #getValidationScheme
       */

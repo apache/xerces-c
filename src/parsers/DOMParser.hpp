@@ -219,6 +219,7 @@ public :
       * validation scheme set on this parser.
       *
       * @return The ValSchemes value current set on this parser.
+      * @see #setValidationScheme
       */
     ValSchemes getValidationScheme() const;
 
@@ -441,11 +442,16 @@ public :
     /**
       * This method allows users to set the validation scheme to be used
       * by this parser. The value is one of the ValSchemes enumerated values
-      * defined by this class.
+      * defined by this class:
+      *
+      * <br>  Val_Never  - turn off validation
+      * <br>  Val_Always - turn on validation
+      * <br>  Val_Auto   - turn on validation if any internal/external
+      *                  DTD subset have been seen
       *
       * <p>The parser's default state is: Val_Auto.</p>
       *
-      * @param newState The new validation scheme to use.
+      * @param newScheme The new validation scheme to use.
       *
       * @see #getValidationScheme
       */
