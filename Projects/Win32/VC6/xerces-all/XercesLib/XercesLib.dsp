@@ -1739,6 +1739,22 @@ SOURCE=..\..\..\..\..\src\validators\common\SimpleContentModel.hpp
 # PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\datatype\AbstractNumericFacetValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\AbstractNumericFacetValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\AbstractNumericValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\AbstractNumericValidator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\datatype\AbstractStringValidator.cpp
 # End Source File
 # Begin Source File

@@ -186,6 +186,8 @@ USEUNIT("..\..\..\..\..\src\validators\common\DFAContentModel.cpp");
 USEUNIT("..\..\..\..\..\src\validators\common\GrammarResolver.cpp");
 USEUNIT("..\..\..\..\..\src\validators\common\MixedContentModel.cpp");
 USEUNIT("..\..\..\..\..\src\validators\common\SimpleContentModel.cpp");
+USEUNIT("..\..\..\..\..\src\validators\datatype\AbstractNumericFacetValidator.cpp");
+USEUNIT("..\..\..\..\..\src\validators\datatype\AbstractNumericValidator.cpp");
 USEUNIT("..\..\..\..\..\src\validators\datatype\AbstractStringValidator.cpp");
 USEUNIT("..\..\..\..\..\src\validators\datatype\AnySimpleTypeDatatypeValidator.cpp");
 USEUNIT("..\..\..\..\..\src\validators\datatype\AnyURIDatatypeValidator.cpp");

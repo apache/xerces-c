@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.21  2001/10/01 16:14:22  peiyongz
+# DTV Reorganization:new classes: AbstractNumericFactValidator/ AbstractNumericValidator
+#
 # Revision 1.20  2001/09/25 16:08:26  peiyongz
 # DTV Reorganization: Create native NameDTV and NCNameDTV
 #
@@ -163,6 +166,8 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	AnyURIDatatypeValidator.hpp \
 	IDREFDatatypeValidator.hpp \
 	AnySimpleTypeDatatypeValidator.hpp \
+	AbstractNumericFacetValidator.hpp \
+	AbstractNumericValidator.hpp \
 	AbstractStringValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
@@ -190,6 +195,8 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	AnyURIDatatypeValidator.$(TO) \
 	IDREFDatatypeValidator.$(TO) \
 	AnySimpleTypeDatatypeValidator.$(TO) \
+	AbstractNumericFacetValidator.$(TO) \
+	AbstractNumericValidator.$(TO) \
 	AbstractStringValidator.$(TO)
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)
