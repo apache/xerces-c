@@ -116,6 +116,8 @@ public:
 		VARIANT			 m_NextVar;
 	};
 
+	typedef iterator const_iterator;
+
 	NodeContainerImpl()
 		:m_NextNodeIndex(0)
 		,m_pIXMLDOMDocument(NULL)

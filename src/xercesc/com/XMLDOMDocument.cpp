@@ -926,13 +926,15 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 			// try appending baseurl if exists
 			_bstr_t baseURL;
 			if (S_OK == GetBaseURL(baseURL)) {
+				TCHAR szCurFile[MAX_PATH];
+				_tcscpy(szCurFile, m_FileName);
 				// change any backslashes to slashes
-				LPTSTR loc = _tcschr(m_FileName,_T('\\'));
+				LPTSTR loc = _tcschr(szCurFile,_T('\\'));
 				while (loc != NULL) {
 					*loc = _T('/');
-					loc = _tcschr(m_FileName,_T('\\'));
+					loc = _tcschr(szCurFile,_T('\\'));
 				}
-				m_FileName = baseURL + _T("/") + m_FileName;
+				m_FileName = baseURL + _T("/") + szCurFile;
 			}
 			else {
 				TCHAR szCurDir[MAX_PATH];
