@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 34;
+	objectVersion = 38;
 	objects = {
 		014CEA460018CE2711CA2923 = {
 			buildRules = (
@@ -42,7 +42,7 @@
 		0249A662FF388D9811CA2CEA = {
 			children = (
 				0249A663FF388D9811CA2CEA,
-				F55DDD9E00BDA99C01000001,
+				F58FFD7402C67EF401A80065,
 			);
 			isa = PBXGroup;
 			name = "External Frameworks and Libraries";
@@ -100,8 +100,9 @@
 				F54F8B8E00F8F37F01000001,
 			);
 			isa = PBXGroup;
-			name = Source;
-			refType = 4;
+			name = SAX2Print;
+			path = ../../../../../samples/SAX2Print;
+			refType = 2;
 		};
 		08FB779FFE84155DC02AAC07 = {
 			buildPhases = (
@@ -111,7 +112,7 @@
 				08FB77A5FE84155DC02AAC07,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = ../../../../../lib/;
+				FRAMEWORK_SEARCH_PATHS = "../../../../../lib/ /Volumes/Rock/Users/jberry/Projects/xml-apache/xml-xerces/c/lib";
 				HEADER_SEARCH_PATHS = ../../../../../src/;
 				INSTALL_PATH = "$(HOME)/bin";
 				LIBRARY_SEARCH_PATHS = "";
@@ -139,7 +140,6 @@
 				F54F8B9000F8F37F01000001,
 			);
 			isa = PBXHeadersBuildPhase;
-			name = Headers;
 		};
 		08FB77A1FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -148,23 +148,20 @@
 				F54F8B9200F8F37F01000001,
 			);
 			isa = PBXSourcesBuildPhase;
-			name = Sources;
 		};
 		08FB77A3FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
 			files = (
 				0249A664FF388D9811CA2CEA,
-				F55DDD9F00BDA99C01000001,
+				F58FFD7602C67EF401A80065,
 			);
 			isa = PBXFrameworksBuildPhase;
-			name = "Frameworks & Libraries";
 		};
 		08FB77A5FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
 			files = (
 			);
 			isa = PBXRezBuildPhase;
-			name = "ResourceManager Resources";
 		};
 //080
 //081
@@ -196,27 +193,23 @@
 //F54
 		F54F8B8B00F8F37F01000001 = {
 			isa = PBXFileReference;
-			name = SAX2Print.cpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/samples/SAX2Print/SAX2Print.cpp";
-			refType = 0;
+			path = SAX2Print.cpp;
+			refType = 4;
 		};
 		F54F8B8C00F8F37F01000001 = {
 			isa = PBXFileReference;
-			name = SAX2Print.hpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/samples/SAX2Print/SAX2Print.hpp";
-			refType = 0;
+			path = SAX2Print.hpp;
+			refType = 4;
 		};
 		F54F8B8D00F8F37F01000001 = {
 			isa = PBXFileReference;
-			name = SAX2PrintHandlers.cpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/samples/SAX2Print/SAX2PrintHandlers.cpp";
-			refType = 0;
+			path = SAX2PrintHandlers.cpp;
+			refType = 4;
 		};
 		F54F8B8E00F8F37F01000001 = {
 			isa = PBXFileReference;
-			name = SAX2PrintHandlers.hpp;
-			path = "/Volumes/Wipo/Users/jberry/Projects/xml-apache/xml-xerces/c/samples/SAX2Print/SAX2PrintHandlers.hpp";
-			refType = 0;
+			path = SAX2PrintHandlers.hpp;
+			refType = 4;
 		};
 		F54F8B8F00F8F37F01000001 = {
 			fileRef = F54F8B8C00F8F37F01000001;
@@ -242,14 +235,14 @@
 			settings = {
 			};
 		};
-		F55DDD9E00BDA99C01000001 = {
+		F58FFD7402C67EF401A80065 = {
 			isa = PBXFrameworkReference;
 			name = Xerces.framework;
-			path = ../../../../../obj/Xerces.framework;
+			path = ../../../../../lib/Xerces.framework;
 			refType = 2;
 		};
-		F55DDD9F00BDA99C01000001 = {
-			fileRef = F55DDD9E00BDA99C01000001;
+		F58FFD7602C67EF401A80065 = {
+			fileRef = F58FFD7402C67EF401A80065;
 			isa = PBXBuildFile;
 			settings = {
 			};

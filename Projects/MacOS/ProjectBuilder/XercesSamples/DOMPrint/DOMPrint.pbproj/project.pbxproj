@@ -3,13 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 34;
+	objectVersion = 38;
 	objects = {
 		00C89B0EFFA938BB7F000001 = {
 			isa = PBXFrameworkReference;
 			name = Xerces.framework;
-			path = ../../lib/Xerces.framework;
-			refType = 4;
+			path = ../../../../../lib/Xerces.framework;
+			refType = 2;
 		};
 		00C89B0FFFA938BB7F000001 = {
 			fileRef = 00C89B0EFFA938BB7F000001;
@@ -128,6 +128,10 @@
 				02DDAA62FF8BF5E17F000001,
 				02DDAA63FF8BF5E17F000001,
 				02DDAA64FF8BF5E17F000001,
+				F58FFD0602C4FB8D01A80065,
+				F58FFD0702C4FB8D01A80065,
+				F58FFD0802C4FB8D01A80065,
+				F58FFD0902C4FB8D01A80065,
 			);
 			isa = PBXGroup;
 			name = Source;
@@ -166,18 +170,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				02DDAA65FF8BF5E17F000001,
+				F58FFD0B02C4FB8D01A80065,
+				F58FFD0D02C4FB8D01A80065,
 			);
 			isa = PBXHeadersBuildPhase;
-			name = Headers;
 		};
 		08FB77A1FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
 			files = (
 				02DDAA66FF8BF5E17F000001,
 				02DDAA67FF8BF5E17F000001,
+				F58FFD0A02C4FB8D01A80065,
+				F58FFD0C02C4FB8D01A80065,
 			);
 			isa = PBXSourcesBuildPhase;
-			name = Sources;
 		};
 		08FB77A3FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
@@ -186,14 +192,12 @@
 				00C89B0FFFA938BB7F000001,
 			);
 			isa = PBXFrameworksBuildPhase;
-			name = "Frameworks & Libraries";
 		};
 		08FB77A5FE84155DC02AAC07 = {
 			buildActionMask = 2147483647;
 			files = (
 			);
 			isa = PBXRezBuildPhase;
-			name = "ResourceManager Resources";
 		};
 //080
 //081
@@ -241,6 +245,60 @@
 			};
 			isa = PBXBuildStyle;
 			name = Deployment;
+		};
+//320
+//321
+//322
+//323
+//324
+//F50
+//F51
+//F52
+//F53
+//F54
+		F58FFD0602C4FB8D01A80065 = {
+			isa = PBXFileReference;
+			path = DOMPrintErrorHandler.cpp;
+			refType = 4;
+		};
+		F58FFD0702C4FB8D01A80065 = {
+			isa = PBXFileReference;
+			path = DOMPrintErrorHandler.hpp;
+			refType = 4;
+		};
+		F58FFD0802C4FB8D01A80065 = {
+			isa = PBXFileReference;
+			path = DOMPrintFilter.cpp;
+			refType = 4;
+		};
+		F58FFD0902C4FB8D01A80065 = {
+			isa = PBXFileReference;
+			path = DOMPrintFilter.hpp;
+			refType = 4;
+		};
+		F58FFD0A02C4FB8D01A80065 = {
+			fileRef = F58FFD0602C4FB8D01A80065;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F58FFD0B02C4FB8D01A80065 = {
+			fileRef = F58FFD0702C4FB8D01A80065;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F58FFD0C02C4FB8D01A80065 = {
+			fileRef = F58FFD0802C4FB8D01A80065;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F58FFD0D02C4FB8D01A80065 = {
+			fileRef = F58FFD0902C4FB8D01A80065;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 	};
 	rootObject = 08FB7793FE84155DC02AAC07;
