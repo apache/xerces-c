@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/12/13 21:16:52  peiyongz
+ * Fix: Invalid Argument to FreeLibrary (Hint: 0x0000000)
+ *
  * Revision 1.11  2001/10/25 16:26:39  tng
  * [Bug 4213] BinHTTPURLInputStream initialisation not thread safe.  By Mark Weaver.
  *
@@ -202,6 +205,7 @@ void BinHTTPURLInputStream::Cleanup() {
 	{
 		if(gWSACleanup) (*gWSACleanup)();
 		gWSACleanup = NULL;
+		FreeLibrary(gWinsockLib);
 		gWinsockLib = NULL;
 		gWSgethostbyname = NULL;
 		gWSinet_addr = NULL;
@@ -213,7 +217,7 @@ void BinHTTPURLInputStream::Cleanup() {
 		gWSrecv = NULL;
 		gWSshutdown = NULL;
 		gWSclosesocket = NULL;
-		FreeLibrary(gWinsockLib);
+
       fInitialized = false;
       delete fInitMutex;
       fInitMutex = 0;
