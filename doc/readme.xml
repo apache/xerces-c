@@ -9,17 +9,19 @@
         &XercesCName; makes it easy to give your application the ability to read and write
         <jump href="http://www.w3.org/XML/">XML</jump> data.
         A shared library is provided for parsing, generating, manipulating, and validating XML
-        documents. &XercesCName; is faithful to the
+        documents.
+        </p>
+        <p>&XercesCName; is faithful to the
         <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump> recommendation
         and associated standards (
         <jump href="http://www.w3.org/TR/REC-DOM-Level-1/">DOM 1.0</jump>,
         <jump href="http://www.w3.org/TR/DOM-Level-2-Core/">DOM 2.0</jump>.
         <jump href="http://sax.sourceforge.net/?selected=sax1">SAX 1.0</jump>,
         <jump href="http://sax.sourceforge.net/">SAX 2.0</jump>,
-		<jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>).
-        &XercesCName; &XercesCVersion; also provides an implementation of a subset of the
-        <jump href="http://www.w3.org/TR/xmlschema-0/">Schema</jump>.
-        The parser provides high performance, modularity, and scalability.
+        <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>, and
+        <jump href="http://www.w3.org/XML/Schema.html">W3C's XML Schema recommendation version 1.0</jump>.)
+        </p>
+        <p>The parser provides high performance, modularity, and scalability.
         Source code, samples and API documentation are provided with the parser. For
         portability, care has been taken to make minimal use of templates,
         no RTTI, no C++ namespaces and minimal use of #ifdefs.</p>
@@ -47,9 +49,10 @@
             <jump href="http://www.w3.org/TR/REC-DOM-Level-1/">DOM (Level 1.0)</jump>,
             <jump href="http://www.w3.org/TR/DOM-Level-2-Core/">DOM (Level 2.0)</jump>,
             <jump href="http://sax.sourceforge.net/">SAX/SAX2</jump>,
-            <jump href="http://www.w3.org/TR/REC-xml-names/">Namespace</jump> specifications.</li>
-            <li>Experimental <jump href="http://www.w3.org/TR/xmlschema-0/">Schema</jump> subset support</li>
-			<li>Source code, samples, and documentation is provided.</li>
+            <jump href="http://www.w3.org/TR/REC-xml-names/">Namespace</jump>, and
+            <jump href="http://www.w3.org/XML/Schema.html">W3C's XML Schema recommendation version 1.0</jump>
+            specifications.</li>
+            <li>Source code, samples, and documentation is provided.</li>
             <li>Programmatic generation and validation of XML</li>
             <li>Pluggable catalogs, validators and encodings</li>
             <li>High performance</li>
