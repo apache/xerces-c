@@ -3476,11 +3476,11 @@ void IGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
             ? PSVIElement::VALIDITY_INVALID : PSVIElement::VALIDITY_VALID;
     }
 
-    XSTypeDefinition* typeDef = (fPSVIElemContext.fCurrentDV)
-        ? (XSTypeDefinition*) fModel->getXSObject(fPSVIElemContext.fCurrentDV)
-        : (fPSVIElemContext.fCurrentTypeInfo)
-            ? (XSTypeDefinition*) fModel->getXSObject(fPSVIElemContext.fCurrentTypeInfo)
-            : 0;
+    XSTypeDefinition* typeDef = 0;
+    if (fPSVIElemContext.fCurrentTypeInfo)
+        typeDef = (XSTypeDefinition*) fModel->getXSObject(fPSVIElemContext.fCurrentTypeInfo);
+    else if (fPSVIElemContext.fCurrentDV)
+        typeDef = (XSTypeDefinition*) fModel->getXSObject(fPSVIElemContext.fCurrentDV);
 
     XMLCh* canonicalValue = 0;
     if (fPSVIElemContext.fNormalizedValue )
