@@ -1432,6 +1432,15 @@ void IGXMLScanner::scanDocTypeDecl()
                 fDTDGrammar = (DTDGrammar*) grammar;
                 fGrammar = fDTDGrammar;
                 fValidator->setGrammar(fGrammar);
+                // If we don't report at least the external subset boundaries,
+                // an advanced document handler cannot know when the DTD end,
+                // since we've already sent a doctype decl that indicates there's
+                // there's an external subset.
+                if (fDocTypeHandler)
+                {
+                    fDocTypeHandler->startExtSubset();
+                    fDocTypeHandler->endExtSubset();
+                }
                 // should not be modifying cached grammars!
                 /********
                 rootDecl = (DTDElementDecl*) fGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);

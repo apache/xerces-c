@@ -981,6 +981,15 @@ void DGXMLScanner::scanDocTypeDecl()
                 fDTDGrammar = (DTDGrammar*) grammar;
                 fGrammar = fDTDGrammar;
                 fValidator->setGrammar(fGrammar);
+                // If we don't report at least the external subset boundaries,
+                // an advanced document handler cannot know when the DTD end,
+                // since we've already sent a doctype decl that indicates there's
+                // there's an external subset.
+                if (fDocTypeHandler)
+                {
+                    fDocTypeHandler->startExtSubset();
+                    fDocTypeHandler->endExtSubset();
+                }
                 // we *cannot* identify the root element on 
                 // cached grammars; else we risk breaking multithreaded
                 // applications.  - NG
