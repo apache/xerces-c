@@ -50,7 +50,6 @@
 
 		<p>To set you LIBPATH (on AIX for example), you would type:</p>
 <source>export LIBPATH=&XercesCInstallDir;/lib:$LIBPATH</source>
-		<p>&#160;</p>
 
 		<s3 title="&XercesCName; Samples">
 			<ul>
