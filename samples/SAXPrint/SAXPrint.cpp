@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/05/31 18:36:26  rahulj
+ * Matched the command line options supported by DOMPrint.
+ *
  * Revision 1.10  2000/04/12 22:58:27  roddey
  * Added support for 'auto validate' mode.
  *
@@ -118,7 +121,7 @@
 //
 //  encodingName
 //      The encoding we are to output in. If not set on the command line,
-//      then it is defaulted to UTF-8.
+//      then it is defaulted to LATIN1.
 //
 //  xmlFile
 //      The path to the file to parser. Set via command line.
@@ -128,8 +131,8 @@
 //      can be set via the -v= command.
 // ---------------------------------------------------------------------------
 static bool                     doNamespaces    = false;
-static const char*              encodingName    = "UTF-8";
-static XMLFormatter::UnRepFlags unRepFlags      = XMLFormatter::UnRep_Fail;
+static const char*              encodingName    = "LATIN1";
+static XMLFormatter::UnRepFlags unRepFlags      = XMLFormatter::UnRep_CharRef;
 static char*                    xmlFile         = 0;
 static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 
@@ -141,15 +144,19 @@ static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 static void usage()
 {
     cout <<  "\nUsage: SAXPrint [options] file\n"
-         <<  "   This program prints the data returned by the various SAX\n"
-         <<  "   handlers for the specified input file.\n\n"
-         <<  "   Options:\n"
-         <<  "     -u=xxx      Handle unrepresentable chars [fail* | rep | ref]\n"
-         <<  "     -v=xxx      Validation scheme [never | always | auto*]\n"
-         <<  "     -n          Enable namespace processing.\n"
-         <<  "     -x=XXX      Use a particular encoding for output (UTF-8*).\n"
-         <<  "     -?          Show this help\n\n"
-         <<  "  * = Default if not provided explicitly\n"
+             "This program prints the data returned by the various SAX\n"
+             "handlers for the specified input file. Options are NOT case\n"
+             "sensitive.\n\n"
+             "Options:\n"
+             "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]\n"
+             "    -v=xxx      Validation scheme [never | auto*]\n"
+             "    -n          Enable namespace processing.\n"
+             "    -x=XXX      Use a particular encoding for output (LATIN1*).\n"
+             "    -?          Show this help\n\n"
+             "  * = Default if not provided explicitly\n\n"
+             "The parser has intrinsic support for the following encodings:\n"
+             "    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,\n"
+             "    WINDOWS-1252, IBM1140, IBM037\n"
          <<  endl;
 }
 
@@ -177,6 +184,7 @@ int main(int argC, char* argV[])
     if (argC < 2)
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 1;
     }
 
@@ -184,6 +192,7 @@ int main(int argC, char* argV[])
     if ((argC == 2) && !strcmp(argV[1], "-?"))
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 2;
     }
 
@@ -201,8 +210,6 @@ int main(int argC, char* argV[])
 
             if (!strcmp(parm, "never"))
                 valScheme = SAXParser::Val_Never;
-            else if (!strcmp(parm, "always"))
-                valScheme = SAXParser::Val_Always;
             else if (!strcmp(parm, "auto"))
                 valScheme = SAXParser::Val_Auto;
             else
