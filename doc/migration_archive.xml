@@ -2,9 +2,136 @@
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="Migration Archive">
-    <s2 title="Migrating from XML4C 2.x to &XercesCName; &XercesPreCVersion;">
-       <p>This document is a discussion of the technical differences between
-       XML4C 2.x code base and the new &XercesCName; &XercesPreCVersion; code base.</p>
+    <s2 title="Migrating from &XercesCName; &XercesCVersion140; to &XercesCName; &XercesCVersion152;">
+      <p>The following section is a discussion of the technical differences between
+      &XercesCName; &XercesCVersion140; code base and the &XercesCName; &XercesCVersion152; code base.</p>
+
+      <p>Topics discussed are:</p>
+      <ul>
+        <li><link anchor="GenImprovements2">General Improvements</link></li>
+        <ul>
+            <li><link anchor="Compliance2">Compliance</link></li>
+            <li><link anchor="BugFixes2">Bug Fixes</link></li>
+            <li><link anchor="Speed2">Speed</link></li>
+        </ul>
+        <li><link anchor="Changes2">Changes required to migrate to &XercesCName; &XercesCVersion152;</link></li>
+        <ul>
+            <li><link anchor="Reorganization2">Validator directory Reorganization</link></li>
+            <li><link anchor="DTDValidator2">DTDValidator</link></li>
+        </ul>
+        <li><link anchor="NewFeatures2">New features in &XercesCName; &XercesCVersion152;</link></li>
+        <ul>
+            <li><link anchor="Schema2">Schema Subset Support</link></li>
+            <li><link anchor="IDOM2">Experiemental IDOM</link></li>
+        </ul>
+      </ul>
+    </s2>
+
+    <anchor name="GenImprovements2"/>
+    <s2 title="General Improvements">
+
+        <p>The new version is improved in many ways. Some general improvements
+        are: significantly better conformance to the XML spec, cleaner
+        internal architecture, many bug fixes, and faster speed.</p>
+
+        <anchor name="Compliance2"/>
+        <s3 title="Compliance">
+            <p>Except for a couple of the very obscure (mostly related to
+            the 'standalone' mode), this version should be quite compliant
+            to <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump>. It also
+            tracks the latest changes to DOM, SAX and Namespace Specification.
+            We have more than a thousand tests, some collected from various
+            public sources and some IBM generated, which are used to do
+            regression testing. The C++ parser is now passing all but a
+            handful of them.</p>
+        </s3>
+
+        <anchor name="BugFixes2"/>
+        <s3 title="Bug Fixes">
+            <p>This version has many bug fixes since last release.
+            Some of these were reported by users and some were brought up by
+            way of the conformance testing.</p>
+        </s3>
+
+        <anchor name="Speed2"/>
+        <s3 title="Speed">
+            <p>Much work was done to speed up this version. Some of the
+            new features, such as experiemental IDOM ended
+            up eating up some of these gains, but overall the new version
+            is significantly faster than previous versions, even while doing
+            more.</p>
+        </s3>
+    </s2>
+
+
+    <anchor name="Changes2"/>
+    <s2 title="Changes required to migrate to &XercesCName; &XercesCVersion152;">
+
+        <p>There are some architectural changes between the &XercesCName;
+           &XercesCVersion140; and the &XercesCName; &XercesCVersion152; releases
+           of the parser, and as a result, some code has undergone restructuring
+           as shown below. </p>
+
+        <anchor name="Reorganization2"/>
+        <s3 title="Validator directory Reorganization">
+            <ul>
+              <li>common content model files such as DFAContentModel ...
+                  are moved to a new directory called src/validators/common</li>
+              <li>DTD related files are moved to a new directory called src/validators/DTD</li>
+              <li>new directory src/validators/Datatype is created to store all datatype validators</li>
+              <li>new directory src/validators/schema is created to store Schema related files</li>
+            </ul>
+        </s3>
+
+        <anchor name="DTDValidator2"/>
+        <s3 title="DTDValidator">
+            <p> DTDValidator was design to scan, validate and store the DTD in &XercesCName; &XercesCVersion140;
+                or earlier. In &XercesCName; &XercesCVersion152;, this process is broken down into three components:
+            </p>
+            <ul>
+              <li>new class DTDScanner - to scan the DTD</li>
+              <li>new class DTDGrammar - to store the DTD Grammar</li>
+              <li>DTDValidator - to validate the DTD only</li>
+            </ul>
+        </s3>
+
+    </s2>
+
+    <anchor name="NewFeatures2"/>
+    <s2 title="New features in &XercesCName; &XercesCVersion152;">
+        <p>Schema subset support and an experimental IDOM are available
+           in this release.
+        </p>
+        <anchor name="Schema2"/>
+        <s3 title="Schema Subset Support">
+            <ul>
+              <li>New function "setDoSchema" is added to DOM/SAX parser.</li>
+              <li>New feature "http://apache.org/xml/features/validation/schema" is recognized by SAX2XMLReader.</li>
+              <li>New classes such as SchemaValidator, TraverseSchema ... are added.</li>
+              <li>The Scanner is enhanced to process schema.</li>
+              <li>New sample data files personal-schema.xml and personal.xsd.</li>
+              <li>New command line option "-s" for samples.</li>
+            </ul>
+            <p>
+               See <jump href="schema.html">the Schema page</jump> for details.
+            </p>
+        </s3>
+
+        <anchor name="IDOM2"/>
+        <s3 title="Experiemental IDOM">
+           <p>The experimental IDOM API is a new design of the C++ DOM API. If you would like
+              to migrate from DOM to the experimental IDOM, please refer to
+              <jump href="program.html#IDOMProgGuide">
+              IDOM programming guide.</jump> Please note that this experimental IDOM API is only
+              a prototype and is subject to change.
+           </p>
+        </s3>
+
+    </s2>
+
+    <s2 title="Migrating from XML4C 2.x to &XercesCName; &XercesCVersion140;">
+       <p>The following section is a discussion of the technical differences between
+       XML4C 2.x code base and the new &XercesCName; &XercesCVersion140; code base.</p>
 
        <p>Topics discussed are:</p>
        <ul>
@@ -14,7 +141,7 @@
             <li><link anchor="BugFixes">Bug Fixes</link></li>
             <li><link anchor="Speed">Speed</link></li>
         </ul>
-        <li><link anchor="Summary">Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesPreCVersion;</link></li>
+        <li><link anchor="Summary">Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesCVersion140;</link></li>
         <li><link anchor="Samples">The Samples</link></li>
         <li><link anchor="ParserClasses">Parser Classes</link></li>
         <li><link anchor="DOMLevel2">DOM Level 2 support</link></li>
@@ -68,15 +195,15 @@
 
 
     <anchor name="Summary"/>
-    <s2 title="Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesPreCVersion;">
+    <s2 title="Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesCVersion140;">
 
         <p>As mentioned, there are some major architectural changes
-        between the 2.3.x and &XercesCName; &XercesPreCVersion; releases
+        between the 2.3.x and &XercesCName; &XercesCVersion140; releases
         of the parser, and as a result the code has undergone
         significant restructuring. The list below mentions the public
         api's which existed in 2.3.x and no longer exist in
-        &XercesCName; &XercesPreCVersion;. It also mentions the
-        &XercesCName; &XercesPreCVersion; api which will give you the
+        &XercesCName; &XercesCVersion140;. It also mentions the
+        &XercesCName; &XercesCVersion140; api which will give you the
         same functionality.  Note: This list is not exhaustive. The
         API docs (and ultimately the header files) supplement this
         information.</p>

@@ -2,136 +2,90 @@
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
 <s1 title="Migration">
-    <s2 title="Migrating from &XercesCName; &XercesPreCVersion; to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; &XercesCVersion152; to &XercesCName; &XercesCVersion;">
       <p>This document is a discussion of the technical differences between
-      &XercesCName; &XercesPreCVersion; code base and the new &XercesCName; &XercesCVersion; code base.</p>
+      &XercesCName; &XercesCVersion152; code base and the &XercesCName; &XercesCVersion; code base.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="GenImprovements">General Improvements</link></li>
-        <ul>
-            <li><link anchor="Compliance">Compliance</link></li>
-            <li><link anchor="BugFixes">Bug Fixes</link></li>
-            <li><link anchor="Speed">Speed</link></li>
-        </ul>
-        <li><link anchor="Changes">Changes required to migrate to &XercesCName; &XercesCVersion;</link></li>
-        <ul>
-            <li><link anchor="Reorganization">Validator directory Reorganization</link></li>
-            <li><link anchor="DTDValidator">DTDValidator</link></li>
-        </ul>
         <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="API">Public API Changes in &XercesCName; &XercesCVersion;</link></li>
         <ul>
-            <li><link anchor="Schema">Schema Subset Support</link></li>
-            <li><link anchor="IDOM">Experiemental IDOM</link></li>
+            <li><link anchor="NewAPI">New Public API</link></li>
+            <li><link anchor="ModifiedAPI">Public API Modified</link></li>
+            <li><link anchor="DeprecatedAPI">Deprecated Public API</link></li>
         </ul>
       </ul>
     </s2>
 
-    <anchor name="GenImprovements"/>
-    <s2 title="General Improvements">
-
-        <p>The new version is improved in many ways. Some general improvements
-        are: significantly better conformance to the XML spec, cleaner
-        internal architecture, many bug fixes, and faster speed.</p>
-
-        <anchor name="Compliance"/>
-        <s3 title="Compliance">
-            <p>Except for a couple of the very obscure (mostly related to
-            the 'standalone' mode), this version should be quite compliant
-            to <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump>. It also
-            tracks the latest changes to DOM, SAX and Namespace Specification.
-            We have more than a thousand tests, some collected from various
-            public sources and some IBM generated, which are used to do
-            regression testing. The C++ parser is now passing all but a
-            handful of them.</p>
-        </s3>
-
-        <anchor name="BugFixes"/>
-        <s3 title="Bug Fixes">
-            <p>This version has many bug fixes since last release.
-            Some of these were reported by users and some were brought up by
-            way of the conformance testing.</p>
-        </s3>
-
-        <anchor name="Speed"/>
-        <s3 title="Speed">
-            <p>Much work was done to speed up this version. Some of the
-            new features, such as experiemental IDOM ended
-            up eating up some of these gains, but overall the new version
-            is significantly faster than previous versions, even while doing
-            more.</p>
-        </s3>
-    </s2>
-
-
-    <anchor name="Changes"/>
-    <s2 title="Changes required to migrate to &XercesCName; &XercesCVersion;">
-
-        <p>There are some architectural changes between the &XercesCName;
-           &XercesPreCVersion; and the &XercesCName; &XercesCVersion; releases
-           of the parser, and as a result, some code has undergone restructuring
-           as shown below. </p>
-
-        <anchor name="Reorganization"/>
-        <s3 title="Validator directory Reorganization">
-            <ul>
-              <li>common content model files such as DFAContentModel ...
-                  are moved to a new directory called src/validators/common</li>
-              <li>DTD related files are moved to a new directory called src/validators/DTD</li>
-              <li>new directory src/validators/Datatype is created to store all datatype validators</li>
-              <li>new directory src/validators/schema is created to store Schema related files</li>
-            </ul>
-        </s3>
-
-        <anchor name="DTDValidator"/>
-        <s3 title="DTDValidator">
-            <p> DTDValidator was design to scan, validate and store the DTD in &XercesCName; &XercesPreCVersion;
-                or earlier. In &XercesCName; &XercesCVersion;, this process is broken down into three components:
-            </p>
-            <ul>
-              <li>new class DTDScanner - to scan the DTD</li>
-              <li>new class DTDGrammar - to store the DTD Grammar</li>
-              <li>DTDValidator - to validate the DTD only</li>
-            </ul>
-        </s3>
-
-    </s2>
-
     <anchor name="NewFeatures"/>
     <s2 title="New features in &XercesCName; &XercesCVersion;">
-        <p>Schema subset support and an experimental IDOM are available
-           in this release.
-        </p>
-        <anchor name="Schema"/>
-        <s3 title="Schema Subset Support">
+      <ul>
+        <li>Full Schema support is available in this release.
+            See <jump href="schema.html">the Schema page</jump> for details.</li>
+        <li>New sample SEnumVal to show how to enumerate the markup decls in a Schema Grammar is added.</li>
+      </ul>
+    </s2>
+
+    <anchor name="API"/>
+    <s2 title="Public API Changes in &XercesCName; &XercesCVersion;">
+
+        <p>The following lists the public API changes between the &XercesCName;
+           &XercesCVersion152; and the &XercesCName; &XercesCVersion; releases
+           of the parser. </p>
+
+        <anchor name="NewAPI"/>
+        <s3 title="New Public API">
             <ul>
-              <li>New function "setDoSchema" is added to DOM/SAX parser.</li>
-              <li>New feature "http://apache.org/xml/features/validation/schema" is recognized by SAX2XMLReader.</li>
-              <li>New classes such as SchemaValidator, TraverseSchema ... are added.</li>
-              <li>The Scanner is enhanced to process schema.</li>
-              <li>New sample data files personal-schema.xml and personal.xsd.</li>
-              <li>New command line option "-s" for samples.</li>
+              <li>It should not be a fatal error if a schema InputSource is not found.
+                  Add the following new methods:</li>
+                <ul>
+                   <li>const bool InputSource::getIssueFatalErrorIfNotFound() const</li>
+                   <li>void InputSource::setIssueFatalErrorIfNotFound(const bool flag</li>
+                </ul>
+              <li>To support schemaLocation and noNamespaceSchemaLocation to be specified outside the
+                  instance document, the following new methods are added:</li>
+              <ul>
+                <li>XMLCh* DOMParser::getExternalSchemaLocation() const</li>
+                <li>XMLCh* DOMParser::getExternalNoNamespaceSchemaLocation() const</li>
+                <li>void DOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)</li>
+                <li>void DOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)</li>
+                <li>XMLCh* IDOMParser::getExternalSchemaLocation() const</li>
+                <li>XMLCh* IDOMParser::getExternalNoNamespaceSchemaLocation() const</li>
+                <li>void IDOMParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)</li>
+                <li>void IDOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)</li>
+                <li>XMLCh* SAXParser::getExternalSchemaLocation() const</li>
+                <li>XMLCh* SAXParser::getExternalNoNamespaceSchemaLocation() const</li>
+                <li>void SAXParser::setExternalSchemaLocation(const XMLCh* const schemaLocation)</li>
+                <li>void SAXParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)</li>
+                <li>and the following properties are recognized by SAX2XMLReader:</li>
+                <ul>
+                   <li>http://apache.org/xml/properties/schema/external-schemaLocation</li>
+                   <li>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation</li>
+                </ul>
+              </ul>
             </ul>
-            <p>
-               See <jump href="schema.html">the Schema page</jump> for details.
-            </p>
         </s3>
 
-        <anchor name="IDOM"/>
-        <s3 title="Experiemental IDOM">
-           <p>The experimental IDOM API is a new design of the C++ DOM API. If you would like
-              to migrate from DOM to the experimental IDOM, please refer to
-              <jump href="program.html#IDOMProgGuide">
-              IDOM programming guide.</jump> Please note that this experimental IDOM API is only
-              a prototype and is subject to change.
-           </p>
+        <anchor name="ModifiedAPI"/>
+        <s3 title="Pulic API Modified">
+            <ul>
+              <li>To support Identity Constraint, the enum constance values in XMLAttDef::DefAttTypes has been re-ordered.</li>
+            </ul>
+        </s3>
+
+        <anchor name="DeprecatedAPI"/>
+        <s3 title="Deprecated Pulic API">
+            <ul>
+              <li>Root Element check is moved from XMLValidator to XMLScanner.  Thus XMLValidator::checkRootElement() is deprecated.</li>
+            </ul>
         </s3>
 
     </s2>
 
     <s2 title="Migration Archive">
 
-       <p>For migration information from XML4C 2.x to &XercesCName; &XercesPreCVersion;,
+       <p>For migration information to &XercesCName; &XercesCVersion152; or earlier,
           please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
 
     </s2>

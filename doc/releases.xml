@@ -3,12 +3,174 @@
 
 <s1 title="Releases">
 
-<s2 title="&XercesCName; Latest Nightly Build">
+<s2 title="&XercesCName; Version 1.6.0: December 6, 2001">
 <table>
     <tr>
         <td>Date</td>
         <td>Contributor</td>
         <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2001-12-06</td>
+        <td>Khaled Noaman</td>
+        <td>Schema: Add Identity Constraint(Key, KeyRef, Unique, Selector, Field, and Partial XPath Support). <br/>
+            Add XPathSymbols, <br/>
+            XPathMatcherStack, <br/>
+            XPathMatcher, <br/>
+            XPathException, <br/>
+            XercesXPath, <br/>
+            ValueStoreCache, <br/>
+            ValueStore, <br/>
+            IdentityConstraint, <br/>
+            IC_Unique, <br/>
+            IC_Selector, <br/>
+            IC_KeyRef, <br/>
+            IC_Key, <br/>
+            IC_Field, <br/>
+            FieldValueMap, <br/>
+            FieldActivator. <br/>
+            Support Particle Derivation Constraint Checking.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-06</td>
+        <td>PeiYong Zhang</td>
+        <td>DatatypeValidator:<br/>
+             Support DateTimeValidator, <br/>
+             DateTimeDatatypeValidator, <br/>
+             DateDatatypeValidator, <br/>
+             TimeDatatypeValidator, <br/>
+             DayDatatypeValidator, <br/>
+             MonthDatatypeValidator, <br/>
+             MonthDayDatatypeValidator, <br/>
+             YearDatatypeValidator, <br/>
+             YearMonthDatatypeValidator, <br/>
+             DurationDatatypeValidator. <br/>
+             Add SchemaDataTimeException, <br/>
+             XMLAbstractDoubleFloat, <br/>
+             XMLDateTime.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-26</td>
+        <td>Don Mastrovito</td>
+        <td>BCB4 can use wchar_t.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-23</td>
+        <td>Tinny Ng</td>
+        <td>Support ICU 2.0.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-23</td>
+        <td>Tinny Ng</td>
+        <td>Eliminate Warning from Solaris Forte C++:
+            Warning (Anachronism): Formal argument start_routine of type extern "C".
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-23</td>
+        <td>Tinny Ng</td>
+        <td>Eliminate Warning from Solaris Forte C++:
+            Warning: String literal converted to char* in initialization.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-23</td>
+        <td>Tinny Ng</td>
+        <td>Eliminate Warning from AIX xlC 3.6:1540-399.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-23</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 4655] config.status be included in all future binary releases.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-23</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 4873] ICU 2.0 breaks Xerces 1.5.2 build.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-22</td>
+        <td>PeiYong Zhang</td>
+        <td>Eliminate Visual C++ compiler warning C4273.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-22</td>
+        <td>PeiYong Zhang</td>
+        <td>Schema: Allow "0.0" to be a valid lexcial representation of ZERO.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-21</td>
+        <td>Peter A. Volchek and PeiYong Zhang</td>
+        <td>Add sample SEnumVal.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-21</td>
+        <td>Tinny Ng</td>
+        <td>New method InputSource::get/setIssueFatalErrorIfNotFound to tell the parser
+            whether to issue fatal error or not if cannot find it (the InputSource).
+            This is required for schema processing as it shouldn't be a fatal error if the
+            schema is not found.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-20</td>
+        <td>Tinny Ng</td>
+        <td>Allow schemaLocation and noNamespaceSchemaLocation to be specified outside the
+            instance document.  New methods setExternalSchemaLocation and
+            setExternalNoNamespaceSchemaLocation are added (for SAX2, two new properties are added).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-19</td>
+        <td>PeiYong Zhang</td>
+        <td>XMLFloat and XMLDouble boundary Values updated.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-16</td>
+        <td>Tinny Ng</td>
+        <td>Add test case InitTermTest to test XMLPlatformUtils:Initialize/Terminate() pair.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-16</td>
+        <td>Khaled Noaman</td>
+        <td>Design change: GeneralAttributeCheck is not longer a singleton class.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-15</td>
+        <td>Khaled Noaman</td>
+        <td>Re-organize constant values in XMLAttDef.
+        </td>
     </tr>
 
     <tr>
@@ -22,7 +184,7 @@
     <tr>
         <td>2001-11-13</td>
         <td>Tinny Ng</td>
-        <td>Update documentation for DefaultHandler and DOMParser.
+        <td>Update documentation for SAX2XMLReader, DefaultHandler and DOMParser.
         </td>
     </tr>
 
@@ -72,50 +234,9 @@
     </tr>
 
     <tr>
-        <td>2001-11-07</td>
-        <td>PeiYong Zhang</td>
-        <td>DatatypeValidator:<br/>
-             Support DateTimeValidator, <br/>
-             DateTimeDatatypeValidator, <br/>
-             DateDatatypeValidator, <br/>
-             TimeDatatypeValidator, <br/>
-             DayDatatypeValidator, <br/>
-             MonthDatatypeValidator, <br/>
-             MonthDayDatatypeValidator, <br/>
-             YearDatatypeValidator, <br/>
-             YearMonthDatatypeValidator, <br/>
-             DurationDatatypeValidator. <br/>
-             Add SchemaDataTimeException, <br/>
-             XMLDateTime.
-        </td>
-    </tr>
-
-    <tr>
         <td>2001-11-06</td>
         <td>Khaled Noaman</td>
         <td>[Bug 4644] Memory leak in schema traverser.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2001-11-02</td>
-        <td>Khaled Noaman</td>
-        <td>Schema: Add Identity Constraint(Key, KeyRef, Unique, Selector, Field, and Partial XPath Support). <br/>
-            Add XPathSymbols, <br/>
-            XPathMatcherStack, <br/>
-            XPathMatcher, <br/>
-            XPathException, <br/>
-            XercesXPath, <br/>
-            ValueStoreCache, <br/>
-            ValueStore, <br/>
-            IdentityConstraint, <br/>
-            IC_Unique, <br/>
-            IC_Selector, <br/>
-            IC_KeyRef, <br/>
-            IC_Key, <br/>
-            IC_Field, <br/>
-            FieldValueMap, <br/>
-            FieldActivator.
         </td>
     </tr>
 
@@ -1683,7 +1804,7 @@
 
 <s2 title="Release Archive">
 
-    <p> For release information about &XercesCName; &XercesPreCVersion; or earlier,
+    <p> For release information about &XercesCName; 1.4.0 or earlier,
         please refer to <jump href="releases_archive.html">Release Archive</jump>.
     </p>
 </s2>

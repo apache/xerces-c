@@ -2,7 +2,8 @@
 
 <!ENTITY XercesCFullName      "Xerces C++ Parser">            <!-- fullproductname -->
 <!ENTITY XercesCName          "Xerces-C++">                   <!-- productname -->
-<!ENTITY XercesPreCVersion    "1.4.0">                        <!-- versionnumber -->
+<!ENTITY XercesCVersion140    "1.4.0">                        <!-- versionnumber -->
+<!ENTITY XercesCVersion152    "1.5.2">                        <!-- versionnumber -->
 <!ENTITY XercesCVersion       "1.6.0">                        <!-- versionnumber -->
 <!ENTITY XercesCProjectName   "Xerces">                       <!-- projectname -->
 <!ENTITY XercesCInstallDir    "xerces-c1_6_0">                <!-- installdirname -->
