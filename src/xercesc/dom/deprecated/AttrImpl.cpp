@@ -132,7 +132,7 @@ AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
         {
             if(value.str != null)
             {
-                *(value.str) == null;
+                *(value.str) = null;
                 delete value.str;
                 value.str = null;
             }
@@ -161,7 +161,7 @@ AttrImpl::~AttrImpl() {
         // DOMString* and setting the value field to null
         if(value.str != null) 
         {
-            *(value.str) == null;
+            *(value.str) = null;
             delete value.str;
             value.str = null;
         }
