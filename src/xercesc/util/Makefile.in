@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.20  2002/11/22 14:55:32  tng
+# 390: Uniconv390 support.  Patch by Chris Larsson and Stephen Dulin.
+#
 # Revision 1.19  2002/11/20 18:29:50  tng
 # Make install should also copy the netaccessormodule header
 #
@@ -350,7 +353,11 @@ else
   		    	    ifeq (${TRANSCODER},IconvGNU)
 			        TRANSCODERMODULE=IconvGNU
 			    else
-		                TRANSCODERMODULE=Iconv
+          		        ifeq (${TRANSCODER},Uniconv390)
+        			    TRANSCODERMODULE=Uniconv390
+        		        else
+        		            TRANSCODERMODULE=Iconv
+          		        endif
   		            endif
   		        endif
 		    endif
@@ -549,6 +556,9 @@ all:: includes $(UTIL_CPP_OBJECTS) platforms transcoders \
 includes:: pubheaders $(C_FILES)
 	${MAKE} -C Platforms $@
 	${MAKE} -C Transcoders/$(TRANSCODERMODULE) $@
+ifeq (${TRANSCODERMODULE},Uniconv390)
+	${MAKE} -C Transcoders/ICU $@
+endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
 ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@
@@ -562,6 +572,9 @@ platforms::
 
 
 transcoders::
+ifeq (${TRANSCODERMODULE},Uniconv390)
+	${MAKE} -C Transcoders/ICU
+endif
 	${MAKE} -C Transcoders/$(TRANSCODERMODULE)
 
 
@@ -622,6 +635,9 @@ clean::
 	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(UTIL_CPP_OBJECTS))
 	${MAKE} -C Platforms $@
 	${MAKE} -C Transcoders/$(TRANSCODERMODULE) $@
+ifeq (${TRANSCODERMODULE},Uniconv390)
+	${MAKE} -C Transcoders/ICU $@
+endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
 ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@
@@ -638,6 +654,9 @@ distclean:: clean
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(C_FILES))
 	${MAKE} -C Platforms $@
 	${MAKE} -C Transcoders/$(TRANSCODERMODULE) $@
+ifeq (${TRANSCODERMODULE},Uniconv390)
+	${MAKE} -C Transcoders/ICU $@
+endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
 ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@
@@ -651,6 +670,9 @@ install::
 	$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)
 	${MAKE} -C Platforms $@
 	${MAKE} -C Transcoders/$(TRANSCODERMODULE) $@
+ifeq (${TRANSCODERMODULE},Uniconv390)
+	${MAKE} -C Transcoders/ICU $@
+endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@
 ifneq (${NETACCESSORMODULE},FileOnly)
 	${MAKE} -C NetAccessors/$(NETACCESSORMODULE) $@

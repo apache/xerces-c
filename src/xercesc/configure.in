@@ -113,6 +113,7 @@ util/Transcoders/Cygwin/Makefile \
 util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
+util/Transcoders/Uniconv390/Makefile \
 util/Transcoders/Iconv400/Makefile \
 util/Transcoders/IconvFBSD/Makefile \
 util/Transcoders/IconvGNU/Makefile \

@@ -265,7 +265,7 @@ Usage: runConfigure "options"
        -d (specifies that you want to build debug version)
        -m &lt;message loader&gt; can be 'inmem', 'icu', 'MsgFile' or 'iconv'
        -n &lt;net accessor&gt; can be 'fileonly', 'libwww', 'socket' or 'native'
-       -t &lt;transcoder&gt; can be 'icu', 'Iconv400', 'Iconv390', 'IconvFBSD' or 'native'
+       -t &lt;transcoder&gt; can be 'icu', 'Iconv400', 'Iconv390', 'Uniconv390', 'IconvFBSD' or 'native'
        -r &lt;thread option&gt; can be 'pthread' or 'dce' (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'
        -b &lt;bitsToBuild&gt; (accepts '64', '32')
        -l &lt;extra linker options&gt;
@@ -323,6 +323,7 @@ creating util/Makefile
 creating util/Transcoders/ICU/Makefile
 creating util/Transcoders/Iconv/Makefile
 creating util/Transcoders/Iconv390/Makefile
+creating util/Transcoders/Uniconv390/Makefile
 creating util/Transcoders/Iconv400/Makefile
 creating util/Transcoders/IconvFBSD/Makefile
 creating util/Transcoders/MacOSUnicodeConverter/Makefile

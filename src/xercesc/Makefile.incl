@@ -443,7 +443,16 @@ ifeq (${TRANSCODER}, ICU)
     ALLLIBS = ${ICUROOT}/lib/libicuuc22.0.x
     endif
 else
-    ALLLIBS =
+ifeq (${TRANSCODER}, Uniconv390)
+## OS390BATCH
+    ifeq (${OS390BATCH},1)
+	 ALLLIBS = "//'${LOADEXP}(IXM22UCX)'"
+    else
+	 ALLLIBS = ${ICUROOT}/lib/libicuuc22.0.x
+    endif
+else
+	 ALLLIBS =
+endif
 endif
 EXTRA_LINK_OPTIONS =
 SHLIBSUFFIX=.dll

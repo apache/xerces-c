@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,81 +55,39 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2002/11/22 14:56:47  tng
- * 390: Uniconv390 support.  Patch by Chris Larsson and Stephen Dulin.
- *
- * Revision 1.4  2002/11/11 14:08:01  tng
- * Fix: UConverter should be declared outside xerces-c++ namespace
- *
- * Revision 1.3  2002/11/04 15:14:33  tng
- * C++ Namespace Support.
- *
- * Revision 1.2  2002/04/09 15:44:00  knoaman
- * Add lower case string support.
- *
- * Revision 1.1.1.1  2002/02/01 22:22:36  peiyongz
- * sane_include
- *
- * Revision 1.10  2000/03/18 00:00:03  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.9  2000/03/02 19:55:34  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.8  2000/02/06 07:48:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.7  2000/01/25 22:49:56  roddey
- * Moved the supportsSrcOfs() method from the individual transcoder to the
- * transcoding service, where it should have been to begin with.
- *
- * Revision 1.6  2000/01/25 19:19:08  roddey
- * Simple addition of a getId() method to the xcode and netacess abstractions to
- * allow each impl to give back an id string.
- *
- * Revision 1.5  2000/01/19 23:21:11  abagchi
- * Made this file compatible with ICU 1.4
- *
- * Revision 1.4  2000/01/19 00:58:07  roddey
- * Update to support new ICU 1.4 release.
- *
- * Revision 1.3  1999/12/18 00:22:32  roddey
- * Changes to support the new, completely orthagonal, transcoder architecture.
- *
- * Revision 1.2  1999/12/15 19:43:45  roddey
- * Now implements the new transcoding abstractions, with separate interface
- * classes for XML transcoders and local code page transcoders.
- *
- * Revision 1.1.1.1  1999/11/09 01:06:08  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:34  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
-#ifndef ICUTRANSSERVICE_HPP
-#define ICUTRANSSERVICE_HPP
+#ifndef UNICONV390TRANSSERVICE_HPP
+#define UNICONV390TRANSSERVICE_HPP
 
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/TransService.hpp>
-
-struct UConverter;
+#include <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
+#include "uniconv.h"
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLUTIL_EXPORT ICUTransService : public XMLTransService
+typedef struct uniconvconverter {
+   XMLMutex               fMutex;
+   uniconv_t                fIconv390DescriptorFrom;
+   uniconv_t                fIconv390DescriptorTo;
+} uniconvconverter_t;
+
+typedef struct uniconvcaseconverter {
+   XMLMutex  fcaseMutex;
+   uniconv_t ftoupperhand;
+   uniconv_t ftolowerhand;
+} uniconvcaseconverter_t;
+
+class XMLUTIL_EXPORT Uniconv390TransService : public XMLTransService
 {
 public :
-    friend class Uniconv390TransService;
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ICUTransService();
-    ~ICUTransService();
+    Uniconv390TransService();
+    ~Uniconv390TransService();
 
 
     // -----------------------------------------------------------------------
@@ -159,7 +117,6 @@ public :
     virtual void upperCase(XMLCh* const toUpperCase) const;
     virtual void lowerCase(XMLCh* const toLowerCase) const;
 
-
 protected :
     // -----------------------------------------------------------------------
     //  Protected virtual methods
@@ -176,25 +133,28 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    ICUTransService(const ICUTransService&);
-    void operator=(const ICUTransService&);
+    Uniconv390TransService(const Uniconv390TransService&);
+    void operator=(const Uniconv390TransService&);
+    ICUTransService * fICUService;
+    XMLLCPTranscoder* fLCPTranscoder;
+    uniconvcaseconverter_t *fCaseConverter;
 };
 
 
 
-class XMLUTIL_EXPORT ICUTranscoder : public XMLTranscoder
+class XMLUTIL_EXPORT Uniconv390Transcoder : public XMLTranscoder
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ICUTranscoder
+    Uniconv390Transcoder
     (
         const   XMLCh* const        encodingName
-        ,       UConverter* const   toAdopt
+        ,        uniconvconverter_t* const   toAdopt
         , const unsigned int        blockSize
     );
-    ~ICUTranscoder();
+    ~Uniconv390Transcoder();
 
 
     // -----------------------------------------------------------------------
@@ -231,42 +191,32 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    ICUTranscoder();
-    ICUTranscoder(const ICUTranscoder&);
-    void operator=(const ICUTranscoder&);
+    Uniconv390Transcoder();
+    Uniconv390Transcoder(const Uniconv390Transcoder&);
+    void operator=(const Uniconv390Transcoder&);
 
+    ICUTranscoder * fICUTranscoder;
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fConverter
-    //      This is a pointer to the ICU converter that this transcoder
+    //      This is a pointer to the converter structure that this transcoder
     //      uses.
     //
-    //  fFixed
-    //      This is set to true if the encoding is a fixed size one. This
-    //      can be used to optimize some operations.
-    //
-    //  fSrcOffsets
-    //      This is an array of longs, which are allocated to the size of
-    //      the trancoding block (if any) indicated in the ctor. It is used
-    //      to get the character offsets from ICU, which are then translated
-    //      into an array of char sizes for return.
     // -----------------------------------------------------------------------
-    UConverter*     fConverter;
-    bool            fFixed;
-    XMLUInt32*      fSrcOffsets;
+    uniconvconverter_t *fConverter;
 };
 
 
-class XMLUTIL_EXPORT ICULCPTranscoder : public XMLLCPTranscoder
+class XMLUTIL_EXPORT Uniconv390LCPTranscoder : public XMLLCPTranscoder
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ICULCPTranscoder(UConverter* const toAdopt);
-    ~ICULCPTranscoder();
+    Uniconv390LCPTranscoder( uniconvconverter_t* const toAdopt);
+    ~Uniconv390LCPTranscoder();
 
 
     // -----------------------------------------------------------------------
@@ -300,23 +250,20 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    ICULCPTranscoder();
-    ICULCPTranscoder(const ICULCPTranscoder&);
-    void operator=(const ICULCPTranscoder&);
+    Uniconv390LCPTranscoder();
+    Uniconv390LCPTranscoder(const Uniconv390LCPTranscoder&);
+    void operator=(const Uniconv390LCPTranscoder&);
 
+    ICULCPTranscoder * fICULCPTranscoder;
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fConverter
-    //      This is a pointer to the ICU converter that this transcoder
+    //      This is a pointer to the converter structure that this transcoder
     //      uses.
-    //
-    //  fMutex
-    //      We have to synchronize threaded calls to the converter.
     // -----------------------------------------------------------------------
-    UConverter*     fConverter;
-    XMLMutex        fMutex;
+    uniconvconverter_t *fConverter;
 };
 
 XERCES_CPP_NAMESPACE_END
