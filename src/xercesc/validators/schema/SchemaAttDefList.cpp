@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/20 11:46:28  gareth
+ * Pass in memory manager to constructors and use for creation of enumerators.
+ *
  * Revision 1.5  2003/10/17 21:17:12  peiyongz
  * using XTemplateSerializer
  *
@@ -92,11 +95,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  SchemaAttDefList: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SchemaAttDefList::SchemaAttDefList(RefHash2KeysTableOf<SchemaAttDef>* const listToUse)
-:fEnum(0)
+SchemaAttDefList::SchemaAttDefList(RefHash2KeysTableOf<SchemaAttDef>* const listToUse, MemoryManager* const manager)
+: XMLAttDefList(manager)
+,fEnum(0)
 ,fList(listToUse)
 {
-    fEnum = new RefHash2KeysTableOfEnumerator<SchemaAttDef>(listToUse);
+    fEnum = new (getMemoryManager()) RefHash2KeysTableOfEnumerator<SchemaAttDef>(listToUse);
 }
 
 SchemaAttDefList::~SchemaAttDefList()
@@ -200,7 +204,7 @@ void SchemaAttDefList::serialize(XSerializeEngine& serEng)
 
         if (!fEnum && fList)
         {
-            fEnum = new RefHash2KeysTableOfEnumerator<SchemaAttDef>(fList);
+            fEnum = new (getMemoryManager()) RefHash2KeysTableOfEnumerator<SchemaAttDef>(fList);
         }
     }
 

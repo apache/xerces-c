@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/20 11:46:28  gareth
+ * Pass in memory manager to constructors and use for creation of enumerators.
+ *
  * Revision 1.4  2003/10/10 16:25:40  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -106,7 +109,8 @@ public :
     // -----------------------------------------------------------------------
     SchemaAttDefList
     (
-        RefHash2KeysTableOf<SchemaAttDef>* const    listToUse
+         RefHash2KeysTableOf<SchemaAttDef>* const    listToUse,
+         MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~SchemaAttDefList();

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/20 11:46:28  gareth
+ * Pass in memory manager to constructors and use for creation of enumerators.
+ *
  * Revision 1.4  2003/10/17 21:14:30  peiyongz
  * using XTemplateSerializer
  *
@@ -89,7 +92,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
-
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -97,11 +99,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DTDAttDefList: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DTDAttDefList::DTDAttDefList(RefHashTableOf<DTDAttDef>* const listToUse)
-:fEnum(0)
+DTDAttDefList::DTDAttDefList(RefHashTableOf<DTDAttDef>* const listToUse, MemoryManager* const manager)
+: XMLAttDefList(manager)
+,fEnum(0)
 ,fList(listToUse)
 {
-    fEnum = new RefHashTableOfEnumerator<DTDAttDef>(listToUse);
+    fEnum = new (getMemoryManager()) RefHashTableOfEnumerator<DTDAttDef>(listToUse);
 }
 
 DTDAttDefList::~DTDAttDefList()
@@ -203,7 +206,7 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
 
         if (!fEnum && fList)
         {
-            fEnum = new RefHashTableOfEnumerator<DTDAttDef>(fList);
+             fEnum = new (getMemoryManager()) RefHashTableOfEnumerator<DTDAttDef>(fList);
         }
     }
 
@@ -211,7 +214,8 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
 
 	
 DTDAttDefList::DTDAttDefList(MemoryManager* const manager)
-:fEnum(0)
+: XMLAttDefList(manager)
+,fEnum(0)
 ,fList(0)
 {
 }

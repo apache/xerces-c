@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/10/20 11:46:28  gareth
+ * Pass in memory manager to constructors and use for creation of enumerators.
+ *
  * Revision 1.4  2003/10/10 16:24:51  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -116,7 +119,8 @@ public :
     // -----------------------------------------------------------------------
     DTDAttDefList
     (
-        RefHashTableOf<DTDAttDef>* const    listToUse
+        RefHashTableOf<DTDAttDef>* const    listToUse,
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~DTDAttDefList();
