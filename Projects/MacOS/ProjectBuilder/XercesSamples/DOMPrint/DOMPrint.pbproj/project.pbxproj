@@ -1,0 +1,210 @@
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 30;
+	objects = {
+		00C8D4EAFF90D0F17F000001 = {
+			isa = PBXFrameworkReference;
+			path = Xerces.framework;
+			refType = 3;
+		};
+		00C8D4EBFF90D0F17F000001 = {
+			fileRef = 00C8D4EAFF90D0F17F000001;
+			isa = PBXBuildFile;
+			settings = {
+				INCLUDED_OSS = (
+					MACOS,
+					WINDOWS,
+					PDOUNIX,
+				);
+			};
+		};
+		0249A660FF388D4511CA2CEA = {
+			isa = PBXExecutableFileReference;
+			path = DOMPrint;
+			refType = 3;
+		};
+		0249A662FF388D9811CA2CEA = {
+			children = (
+				0249A663FF388D9811CA2CEA,
+				00C8D4EAFF90D0F17F000001,
+			);
+			isa = PBXGroup;
+			name = "External Frameworks and Libraries";
+			refType = 4;
+		};
+		0249A663FF388D9811CA2CEA = {
+			isa = PBXFileReference;
+			name = "libstdc++.a";
+			path = "/usr/lib/libstdc++.a";
+			refType = 0;
+		};
+		0249A664FF388D9811CA2CEA = {
+			fileRef = 0249A663FF388D9811CA2CEA;
+			isa = PBXBuildFile;
+			settings = {
+				INCLUDED_OSS = (
+					MACOS,
+					WINDOWS,
+					PDOUNIX,
+				);
+			};
+		};
+		02DDAA62FF8BF5E17F000001 = {
+			isa = PBXFileReference;
+			path = DOMPrint.cpp;
+			refType = 4;
+		};
+		02DDAA63FF8BF5E17F000001 = {
+			isa = PBXFileReference;
+			path = DOMTreeErrorReporter.hpp;
+			refType = 4;
+		};
+		02DDAA64FF8BF5E17F000001 = {
+			isa = PBXFileReference;
+			path = DOMTreeErrorReporter.cpp;
+			refType = 4;
+		};
+		02DDAA65FF8BF5E17F000001 = {
+			fileRef = 02DDAA63FF8BF5E17F000001;
+			isa = PBXBuildFile;
+			settings = {
+				INCLUDED_OSS = (
+					MACOS,
+					WINDOWS,
+					PDOUNIX,
+				);
+			};
+		};
+		02DDAA66FF8BF5E17F000001 = {
+			fileRef = 02DDAA62FF8BF5E17F000001;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Debug,
+				);
+				INCLUDED_OSS = (
+					MACOS,
+					WINDOWS,
+					PDOUNIX,
+				);
+			};
+		};
+		02DDAA67FF8BF5E17F000001 = {
+			fileRef = 02DDAA64FF8BF5E17F000001;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Debug,
+				);
+				INCLUDED_OSS = (
+					MACOS,
+					WINDOWS,
+					PDOUNIX,
+				);
+			};
+		};
+		08FB7793FE84155DC02AAC07 = {
+			isa = PBXProject;
+			mainGroup = 08FB7794FE84155DC02AAC07;
+			projectDirPath = .;
+			targets = (
+				08FB779FFE84155DC02AAC07,
+			);
+		};
+		08FB7794FE84155DC02AAC07 = {
+			children = (
+				08FB7795FE84155DC02AAC07,
+				0249A662FF388D9811CA2CEA,
+				1AB674ADFE9D54B511CA2CBB,
+			);
+			isa = PBXGroup;
+			name = DOMPrint;
+			path = ../../../../../samples/DOMPrint;
+			refType = 2;
+		};
+		08FB7795FE84155DC02AAC07 = {
+			children = (
+				02DDAA62FF8BF5E17F000001,
+				02DDAA63FF8BF5E17F000001,
+				02DDAA64FF8BF5E17F000001,
+			);
+			isa = PBXGroup;
+			name = Source;
+			path = "";
+			refType = 4;
+		};
+		08FB779FFE84155DC02AAC07 = {
+			buildPhases = (
+				08FB77A0FE84155DC02AAC07,
+				08FB77A1FE84155DC02AAC07,
+				08FB77A3FE84155DC02AAC07,
+				08FB77A5FE84155DC02AAC07,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "";
+				HEADER_SEARCH_PATHS = ../../../../../src/;
+				LIBRARY_SEARCH_PATHS = "";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			conditionalBuildSettings = {
+			};
+			dependencies = (
+			);
+			isa = PBXToolTarget;
+			name = DOMPrint;
+			productName = DOMPrint;
+			productReference = 0249A660FF388D4511CA2CEA;
+			shouldUseHeadermap = 1;
+		};
+		08FB77A0FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				02DDAA65FF8BF5E17F000001,
+			);
+			isa = PBXHeadersBuildPhase;
+			name = Headers;
+		};
+		08FB77A1FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				02DDAA66FF8BF5E17F000001,
+				02DDAA67FF8BF5E17F000001,
+			);
+			isa = PBXSourcesBuildPhase;
+			name = Sources;
+		};
+		08FB77A3FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+				0249A664FF388D9811CA2CEA,
+				00C8D4EBFF90D0F17F000001,
+			);
+			isa = PBXFrameworksBuildPhase;
+			name = "Frameworks & Libraries";
+		};
+		08FB77A5FE84155DC02AAC07 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			name = "ResourceManager Resources";
+		};
+		1AB674ADFE9D54B511CA2CBB = {
+			children = (
+				0249A660FF388D4511CA2CEA,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+		};
+	};
+	rootObject = 08FB7793FE84155DC02AAC07;
+}
