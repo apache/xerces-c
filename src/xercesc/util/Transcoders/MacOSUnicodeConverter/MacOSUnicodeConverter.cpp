@@ -655,13 +655,11 @@ MacOSTranscoder::transcodeFrom(  const  XMLByte* const			srcData
     	&bytesProduced,
     	reinterpret_cast<UniCharArrayPtr>(toFill));
 		
-	if (status == kTECUsedFallbacksStatus)
+	if (status == kTECOutputBufferFullStatus || status == kTECUsedFallbacksStatus)
 		status = noErr;
     	
     if (status != noErr)
-    {
         ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
-    }
 	
 	std::size_t charsProduced = bytesProduced / sizeof(UniChar);
 	
@@ -773,14 +771,6 @@ MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
                 , getEncodingName()
             );
     	}
-    	
-    	// These were removed because we actually have succeeded in transcoding part of
-    	// the string; this logic should probably be changed to deal with non-transcodable
-    	// text somehow; if options != UnRep_Throw, and we zero these values, we get in
-    	// to an infinite loop and hang the machine
-    	
-    	//totalCharsConsumed = 0;
-    	//totalCharsProduced = 0;
     }
     	
     charsEaten = totalCharsConsumed;
