@@ -2650,6 +2650,10 @@ bool XMLScanner::scanStartTag(bool& gotData)
         // If the elem stack is empty, then it was an empty root
         if (isRoot)
             gotData = false;
+        else {
+            // Restore the validation flag
+            fValidate = fElemStack.getValidationFlag();
+        }
     }
 
     //
@@ -3176,6 +3180,9 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             }
 
             fValidator->setGrammar(fGrammar);
+
+            // Restore the validation flag
+            fValidate = fElemStack.getValidationFlag();
         }
     }
 
