@@ -55,55 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.10  2000/05/09 00:22:27  andyh
- * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
- * allocated memory; memory leak checking tools will no longer report
- * that leaks exist.  (DOM GetElementsByTagID temporarily removed
- * as part of this.)
- *
- * Revision 1.9  2000/04/25 20:27:44  aruna1
- * DOM_XMLDecl type node introduced to get the information of the
- * XML Declaration in a document and store it part of the tree
- *
- * Revision 1.8  2000/04/19 02:25:03  aruna1
- * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
- *
- * Revision 1.7  2000/03/03 01:29:30  roddey
- * Added a scanReset()/parseReset() method to the scanner and
- * parsers, to allow for reset after early exit from a progressive parse.
- * Added calls to new Terminate() call to all of the samples. Improved
- * documentation in SAX and DOM parsers.
- *
- * Revision 1.6  2000/03/02 19:53:40  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/06 07:47:18  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/01/29 00:39:08  andyh
- * Redo synchronization in DOMStringHandle allocator.  There
- * was a bug in the use of Compare and Swap.  Switched to mutexes.
- *
- * Changed a few plain deletes to delete [].
- *
- * Revision 1.3  1999/12/03 00:14:52  andyh
- * Removed transcoding stuff, replaced with DOMString::transcode.
- *
- * Tweaked xml encoding= declaration to say ISO-8859-1.  Still wrong,
- * but not as wrong as utf-8
- *
- * Revision 1.2  1999/11/12 02:14:05  rahulj
- * It now validates when the -v option is specified.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:51  twl
- * Initial checkin
- *
- * Revision 1.7  1999/11/08 20:43:35  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -142,7 +94,6 @@
 #include <parsers/DOMParser.hpp>
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DomMemDebug.hpp>
 #include "DOMTreeErrorReporter.hpp"
 #include <string.h>
 #include <stdlib.h>
