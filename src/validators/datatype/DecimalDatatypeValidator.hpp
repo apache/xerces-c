@@ -56,16 +56,20 @@
 
 /*
  * $Id$
+ * $Log$
+ * Revision 1.7  2001/10/01 16:16:38  peiyongz
+ * DTV Reorganization:derived from AbstractNumericValidator
+ *
  */
 
 #if !defined(DECIMAL_DATATYPEVALIDATOR_HPP)
 #define DECIMAL_DATATYPEVALIDATOR_HPP
 
-#include <validators/datatype/DatatypeValidator.hpp>
+#include <validators/datatype/AbstractNumericValidator.hpp>
 #include <util/RefVectorOf.hpp>
 #include <util/XMLBigDecimal.hpp>
 
-class VALIDATORS_EXPORT DecimalDatatypeValidator : public DatatypeValidator
+class VALIDATORS_EXPORT DecimalDatatypeValidator : public AbstractNumericValidator
 {
 public:
 
@@ -87,24 +91,6 @@ public:
 	//@}
 
     // -----------------------------------------------------------------------
-    // Validation methods
-    // -----------------------------------------------------------------------
-    /** @name Validation Function */
-    //@{
-
-    /**
-     * validate that a string matches the boolean datatype
-     * @param content A string containing the content to be validated
-     *
-     * @exception throws InvalidDatatypeException if the content is
-     * is not valid.
-     */
-
-	void validate(const XMLCh* const content);
-
-    //@}
-
-    // -----------------------------------------------------------------------
     // Compare methods
     // -----------------------------------------------------------------------
     /** @name Compare Function */
@@ -117,7 +103,7 @@ public:
      * @param content2
      * @return
      */
-    int compare(const XMLCh* const, const XMLCh* const);
+    virtual int compare(const XMLCh* const, const XMLCh* const);
 
     //@}
 
@@ -129,51 +115,67 @@ public:
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
+protected:
+
+// -----------------------------------------------------------------------
+// ctor provided to be used by derived classes
+// -----------------------------------------------------------------------
+    DecimalDatatypeValidator(DatatypeValidator*            const baseValidator
+                           , RefHashTableOf<KVStringPair>* const facets
+                           , const int                           finalSet
+                           , const ValidatorType                 type);
+
+    inline void init(RefVectorOf<XMLCh>*           const enums);
+
+// -----------------------------------------------------------------------
+// Abstract interface from AbstractNumericFacetValidator
+// -----------------------------------------------------------------------
+    
+    virtual void assignAdditionalFacet(const XMLCh* const key
+                                     , const XMLCh* const value);
+
+    virtual void inheritAdditionalFacet();
+
+    virtual void checkAdditionalFacetConstraints() const;
+
+    virtual void checkAdditionalFacetConstraintsBase() const;
+
+    virtual int  compareValues(const XMLNumber* const lValue
+                             , const XMLNumber* const rValue);
+
+    virtual void  setMaxInclusive(const XMLCh* const);
+
+    virtual void  setMaxExclusive(const XMLCh* const);
+
+    virtual void  setMinInclusive(const XMLCh* const);
+
+    virtual void  setMinExclusive(const XMLCh* const);
+
+    virtual void  setEnumeration();
+
+// -----------------------------------------------------------------------
+// Abstract interface from AbstractNumericValidator
+// -----------------------------------------------------------------------
+
+    virtual void checkContent( const XMLCh* const content, bool asBase);
+
 private:
-
-    void checkContent( const XMLCh* const content, bool asBase);
-
-    void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
-
-    void cleanUp();
 
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------
 
-    unsigned int                    getTotalDigits() const;
+    inline unsigned int                    getTotalDigits() const;
 
-    unsigned int                    getFractionDigits() const;
-
-    XMLBigDecimal* const            getMaxInclusive() const;
-
-    XMLBigDecimal* const            getMaxExclusive() const;
-
-    XMLBigDecimal* const            getMinInclusive() const;
-
-    XMLBigDecimal* const            getMinExclusive() const;
-
-    RefVectorOf<XMLBigDecimal>*     getEnumeration() const;
+    inline unsigned int                    getFractionDigits() const;
 
 // -----------------------------------------------------------------------
 // Setter methods
 // -----------------------------------------------------------------------
 
-    void  setTotalDigits(unsigned int);
+    inline void  setTotalDigits(unsigned int);
 
-    void  setFractionDigits(unsigned int);
-
-    void  setMaxInclusive(XMLBigDecimal* const);
-
-    void  setMaxExclusive(XMLBigDecimal* const);
-
-    void  setMinInclusive(XMLBigDecimal* const);
-
-    void  setMinExclusive(XMLBigDecimal* const);
-
-    void  setEnumeration(RefVectorOf<XMLBigDecimal>* );
+    inline void  setFractionDigits(unsigned int);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -181,133 +183,40 @@ private:
     // -----------------------------------------------------------------------
 	 unsigned int         fTotalDigits;
 	 unsigned int         fFractionDigits;
-     bool                 fEnumerationInherited;
-
-     XMLBigDecimal*       fMaxInclusive;
-     XMLBigDecimal*       fMaxExclusive;
-     XMLBigDecimal*       fMinInclusive;
-     XMLBigDecimal*       fMinExclusive;
-
-     RefVectorOf<XMLBigDecimal>*  fEnumeration;    // save the actual value
 
 };
 
-// -----------------------------------------------------------------------
-// Compare methods
-// -----------------------------------------------------------------------
-inline int DecimalDatatypeValidator::compare(const XMLCh* const lValue
-                                           , const XMLCh* const rValue)
+void DecimalDatatypeValidator::init(RefVectorOf<XMLCh>*   const enums)
 {
-    return XMLBigDecimal::compareValues(new XMLBigDecimal(lValue)
-                                      , new XMLBigDecimal(rValue));
-}
-
-inline DatatypeValidator* DecimalDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new DecimalDatatypeValidator(this, facets, enums, finalSet);
-}
-
-inline void DecimalDatatypeValidator::validate( const XMLCh* const content)
-{
-    checkContent(content, false);
-}
-
-inline void DecimalDatatypeValidator::cleanUp()
-{
-    delete fMaxInclusive;
-    delete fMaxExclusive;
-    delete fMinInclusive;
-    delete fMinExclusive;
-
-    //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
-        delete fEnumeration;
+    AbstractNumericValidator::init(enums);
 }
 
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------
 
-inline unsigned int DecimalDatatypeValidator::getTotalDigits() const
+unsigned int DecimalDatatypeValidator::getTotalDigits() const
 {
     return fTotalDigits;
 }
 
-inline unsigned int DecimalDatatypeValidator::getFractionDigits() const
+unsigned int DecimalDatatypeValidator::getFractionDigits() const
 {
     return fFractionDigits;
-}
-
-inline XMLBigDecimal* const DecimalDatatypeValidator::getMaxInclusive() const
-{
-    return fMaxInclusive;
-}
-
-inline XMLBigDecimal* const DecimalDatatypeValidator::getMaxExclusive() const
-{
-    return fMaxExclusive;
-}
-
-inline XMLBigDecimal* const DecimalDatatypeValidator::getMinInclusive() const
-{
-    return fMinInclusive;
-}
-
-inline XMLBigDecimal* const DecimalDatatypeValidator::getMinExclusive() const
-{
-    return fMinExclusive;
-}
-
-inline RefVectorOf<XMLBigDecimal>* DecimalDatatypeValidator::getEnumeration() const
-{
-    return fEnumeration;
 }
 
 // -----------------------------------------------------------------------
 // Setter methods
 // -----------------------------------------------------------------------
 
-inline void DecimalDatatypeValidator::setTotalDigits(unsigned int newTotalDigits)
+void DecimalDatatypeValidator::setTotalDigits(unsigned int newTotalDigits)
 {
     fTotalDigits = newTotalDigits;
 }
 
-inline void DecimalDatatypeValidator::setFractionDigits(unsigned int newFractionDigits)
+void DecimalDatatypeValidator::setFractionDigits(unsigned int newFractionDigits)
 {
     fFractionDigits = newFractionDigits;
-}
-
-inline void  DecimalDatatypeValidator::setMaxInclusive(XMLBigDecimal* const newMaxInclusive)
-{
-    if (fMaxInclusive) delete fMaxInclusive;
-    fMaxInclusive = newMaxInclusive;
-}
-
-inline void  DecimalDatatypeValidator::setMaxExclusive(XMLBigDecimal* const newMaxExclusive)
-{
-    if (fMaxExclusive) delete fMaxExclusive;
-    fMaxExclusive = newMaxExclusive;
-}
-
-inline void  DecimalDatatypeValidator::setMinInclusive(XMLBigDecimal* const newMinInclusive)
-{
-    if (fMinInclusive) delete fMinInclusive;
-    fMinInclusive = newMinInclusive;
-}
-
-inline void  DecimalDatatypeValidator::setMinExclusive(XMLBigDecimal* const newMinExclusive)
-{
-    if (fMinExclusive) delete fMinExclusive;
-    fMinExclusive = newMinExclusive;
-}
-
-inline void  DecimalDatatypeValidator::setEnumeration(RefVectorOf<XMLBigDecimal>* newEnum)
-{
-    if (fEnumeration) delete fEnumeration;
-    fEnumeration = newEnum;
 }
 
 /**
