@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/02 20:46:32  aruna1
+ * sax2 changes
+ *
  * Revision 1.1  2000/08/02 18:04:41  jpolast
  * initial checkin of sax2 implemenation
  * submitted by Simon Fell (simon@fell.com)
@@ -69,7 +72,7 @@
 
 #include <parsers/SAXParser.hpp>
 #include <sax/Parser.hpp>
-#include <framework/xmlbuffer.hpp>
+#include <framework/XMLBuffer.hpp>
 #include <internal/VecAttributesImpl.hpp>
 #include <sax2/SAX2XMLReader.hpp>
 #include <util/RefStackOf.hpp>
