@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/07/04 18:20:18  tng
+ * [Bug 10253] Bugfix for the IconvFBSD transcoder.   Patch from Max Gotlib.
+ *
  * Revision 1.4  2002/04/11 15:38:05  knoaman
  * String lower case support for FreeBSD by Max Gotlib
  *
@@ -105,12 +108,14 @@ typedef struct __IconvFBSDEncoding {
 
 static const IconvFBSDEncoding	gIconvFBSDEncodings[] = {
     { "ucs-2-internal",		2,	LITTLE_ENDIAN },
+    { "ucs2-internal",		2,	LITTLE_ENDIAN },
     { "ucs-4-internal",		4,	LITTLE_ENDIAN },
+    { "ucs4-internal",		4,	LITTLE_ENDIAN },
     { "UNICODELITTLE",		2,	LITTLE_ENDIAN },
     { "UNICODEBIG",		2,	BIG_ENDIAN },
     { "iso-10646-ucs-2",	4,	BIG_ENDIAN },
     { "iso-10646-ucs-4",	4,	BIG_ENDIAN },
-    { "iso-10646-utf-16",	2,	BIG_ENDIAN },
+    /* { "iso-10646-utf-16",	2,	BIG_ENDIAN }, */
     { NULL, 0, 	0 }
 };
 
@@ -451,6 +456,7 @@ bool	IconvFBSDCD::isSpace(const XMLCh toCheck) const
 {
     if (toCheck <= 0x7F)
 	return isspace(toCheck);
+
     char	wcbuf[fUChSize * 2];
     char	tmpArr[4];
 
@@ -924,8 +930,10 @@ IconvFBSDLCPTranscoder::calcRequiredSize (const char* const srcText)
 	char		*pTmpArr = tmpWideArr;
 	const char	*ptr = srcText + srcLen - len;
 	size_t	rc = iconvFrom(ptr, &len, &pTmpArr, gTempBuffArraySize);
-	if (rc == (size_t) -1 && errno != E2BIG)
-	    return 0;
+	if (rc == (size_t) -1 && errno != E2BIG) {
+	    ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+	    /* return 0; */
+	}
 	rc = pTmpArr - (char *) tmpWideArr;
 	totalLen += rc;
 	if (rc == 0 || len == 0)
@@ -998,7 +1006,8 @@ IconvFBSDLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 	if (rc == (size_t) -1 && errno != E2BIG) {
 	    if (wBufPtr)
 		delete [] wBufPtr;
-	    return 0;
+	    ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+	    /* return 0; */
 	}
 	rc = pTmpArr - tmpBuff;
 	totalLen += rc;
@@ -1454,12 +1463,11 @@ unsigned int	IconvFBSDTranscoder::transcodeFrom
     for (size_t cnt = 0; cnt < maxChars && srcLen; cnt++) {
 	size_t	rc = iconvFrom(startSrc, &srcLen, &orgTarget, uChSize());
 	if (rc == (size_t)-1) {
-	    if (errno != E2BIG) {
+	    if (errno != E2BIG || prevSrcLen == srcLen) {
 		if (wBufPtr)
 		    delete [] wBufPtr;
 		ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
 	    }
-	    break;
 	}
 	charSizes[cnt] = prevSrcLen - srcLen;
 	prevSrcLen = srcLen;
