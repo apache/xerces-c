@@ -7,11 +7,6 @@
 # This configure script is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
 
-# $Log$
-# Revision 1.1  2000/01/31 22:21:53  aruna1
-# initial checkin
-#
-#
 # Defaults:
 ac_help=
 ac_default_prefix=/usr/local
@@ -1444,6 +1439,8 @@ ac_given_INSTALL="$INSTALL"
 trap 'rm -fr `echo "Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/DOMTest/Makefile \
+DOM/Traversal/Makefile \
+EncodingTest/Makefile \
 ThreadTest/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
@@ -1537,6 +1534,8 @@ cat >> $CONFIG_STATUS <<EOF
 CONFIG_FILES=\${CONFIG_FILES-"Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/DOMTest/Makefile \
+DOM/Traversal/Makefile \
+EncodingTest/Makefile \
 ThreadTest/Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
