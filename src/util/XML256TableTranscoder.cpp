@@ -252,5 +252,13 @@ XMLByte XML256TableTranscoder::xlatOneTo(const XMLCh toXlat) const
             return fToTable[midOfs].extCh;
         }
     }   while (lowOfs + 1 < hiOfs);
+
+    // Check the high end of the range otherwise the
+    // last item in the table may never be found.
+        if (toXlat == fToTable[hiOfs].intCh)
+        {
+            return fToTable[hiOfs].extCh;
+        }
+
     return 0;
 }
