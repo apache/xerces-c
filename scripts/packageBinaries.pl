@@ -701,12 +701,6 @@ if ( ($platform =~ m/AIX/i)      ||
             psystem ("$MAKE");                           # This will take a long time!
             psystem ("$MAKE install");                  # Make this separate since this breaks on Solaris
        
-            # on AIX, create '.a' version for building libxerces-c
-            if ( $platform eq "aix") {
-                psystem("ln -s $ICUROOT/lib/libicudata30.0.so $ICUROOT/lib/libicudata30.a");
-                psystem("ln -s $ICUROOT/lib/libicuuc30.0.so   $ICUROOT/lib/libicuuc30.a");
-            }
-
         } #opt_j
 
         #
@@ -809,13 +803,10 @@ if ( ($platform =~ m/AIX/i)      ||
             psystem("find . -name 'libXercesMessages.sl.25.0' -exec ln -s {} libXercesMessages.sl.25 \\;");
             psystem("find . -name 'libXercesMessages.sl.25'   -exec ln -s {} libXercesMessages.sl \\;");            
 
-            # on AIX            
-            if ( $platform eq "aix") {
-                psystem("cp -f $XERCESCROOT/lib/libXercesMessages25.0.a .");
-                psystem("ln -s libXercesMessages25.0.a libXercesMessages25.a ");
-                psystem("ln -s libXercesMessages25.a   libXercesMessages.a   ");
-            }        
-                    
+            psystem("cp -f $XERCESCROOT/lib/libXercesMessages25.0.a .");
+            psystem("find . -name 'libXercesMessages25.0.a'   -exec ln -s {} libXercesMessages25.a \\;");
+            psystem("find . -name 'libXercesMessages25.a'     -exec ln -s {} libXercesMessages.a \\;");
+                               
         }        	
 
     }
@@ -1117,18 +1108,22 @@ sub copyICUOnUNIX() {
         #
         # copy icudata dll
         # For ICU 2.6:
-        # on AIX,              it is called libicudata30.0.so
-        # on Solaris/Linux, it is called libicudata.so.30.0
+        # on AIX,              it is called libicudata30.0.a
+        # on Solaris/Linux,    it is called libicudata.so.30.0
         # on HP,               it is called libicudata.sl.30.0
         #
         psystem("rm -f libicudata*");
         psystem("cp -f $ICUROOT/lib/libicudata30.0.so .");
+        psystem("cp -f $ICUROOT/lib/libicudata30.0.a .");        
         psystem("cp -f $ICUROOT/lib/libicudata.so.30.0 .");
         psystem("cp -f $ICUROOT/lib/libicudata.sl.30.0 .");
         
         psystem("find . -name 'libicudata30.0.so' -exec ln -s {} libicudata.so \\;");
         psystem("find . -name 'libicudata30.0.so' -exec ln -s {} libicudata30.so \\;");
 
+        psystem("find . -name 'libicudata30.0.a'  -exec ln -s {} libicudata.a \\;");
+        psystem("find . -name 'libicudata30.0.a'  -exec ln -s {} libicudata30.a \\;");
+        
         psystem("find . -name 'libicudata.so.30.0' -exec ln -s {} libicudata.so \\;");
         psystem("find . -name 'libicudata.so.30.0' -exec ln -s {} libicudata.so.30 \\;");
 
@@ -1137,30 +1132,28 @@ sub copyICUOnUNIX() {
 
         #
         # copy icuuc dll
-        # on AIX,              it is called libicuuc30.0.so
-        # on Solaris/Linux, it is called libicuuc.so.30.0
+        # on AIX,              it is called libicuuc30.0.a
+        # on Solaris/Linux,    it is called libicuuc.so.30.0
         # on HP,               it is called libicuuc.sl.30.0
         #
         psystem("rm -f libicuuc*");
         psystem("cp -f $ICUROOT/lib/libicuuc30.0.so .");
+        psystem("cp -f $ICUROOT/lib/libicuuc30.0.a  .");        
         psystem("cp -f $ICUROOT/lib/libicuuc.so.30.0  .");
         psystem("cp -f $ICUROOT/lib/libicuuc.sl.30.0  .");
         
         psystem("find . -name 'libicuuc30.0.so' -exec ln -s {} libicuuc.so \\;");
         psystem("find . -name 'libicuuc30.0.so' -exec ln -s {} libicuuc30.so \\;");
         
+        psystem("find . -name 'libicuuc30.0.a'  -exec ln -s {} libicuuc.a \\;");
+        psystem("find . -name 'libicuuc30.0.a'  -exec ln -s {} libicuuc30.a \\;");
+                
         psystem("find . -name 'libicuuc.so.30.0' -exec ln -s {} libicuuc.so \\;");
         psystem("find . -name 'libicuuc.so.30.0' -exec ln -s {} libicuuc.so.30 \\;");
 
         psystem("find . -name 'libicuuc.sl.30.0' -exec ln -s {} libicuuc.sl \\;");
         psystem("find . -name 'libicuuc.sl.30.0' -exec ln -s {} libicuuc.sl.30 \\;");
-        
-        # on AIX, copy '.a' version
-        if ( $platform eq "aix") {
-            psystem("ln -s libicudata30.so libicudata30.a");
-            psystem("ln -s libicuuc30.so   libicuuc30.a");
-        }        	
-        
+               
 }
 
 	
