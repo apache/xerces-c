@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/10/25 21:54:50  peiyongz
+ * Apply XMLRegisterCleanup
+ *
  * Revision 1.6  2001/09/27 14:54:20  peiyongz
  * DTV Reorganization: derived from XMLNumber
  *
@@ -148,6 +151,11 @@ public:
 
     static int            compareValues(const XMLDouble* const lValue
                                       , const XMLDouble* const rValue);
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitXMLDouble();   
 
 private:
 

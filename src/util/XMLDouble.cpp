@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2001/10/25 21:54:50  peiyongz
+ * Apply XMLRegisterCleanup
+ *
  * Revision 1.12  2001/09/20 13:11:41  knoaman
  * Regx  + misc. fixes
  *
@@ -101,7 +104,7 @@
 // ---------------------------------------------------------------------------
 #include <util/XMLDouble.hpp>
 #include <util/PlatformUtils.hpp>
-#include <util/XMLDeleterFor.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/NumberFormatException.hpp>
@@ -196,10 +199,12 @@ static const XMLCh DBL_MIN_NEGATIVE[] =
 // They are all "Inclusive value"
 //
 
-static XMLDouble*  maxNegativeValue;
-static XMLDouble*  minNegativeValue;
-static XMLDouble*  minPositiveValue;
-static XMLDouble*  maxPositiveValue;
+static XMLDouble*  maxNegativeValue = 0;
+static XMLDouble*  minNegativeValue = 0;
+static XMLDouble*  minPositiveValue = 0;
+static XMLDouble*  maxPositiveValue = 0;
+
+static XMLRegisterCleanup XMLDoubleCleanup;
 
 /***
  *   Algo:
@@ -314,28 +319,11 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
         isInitialized = true;  // set first to avoid recursion
 
         maxNegativeValue = new XMLDouble(DBL_MAX_NEGATIVE);
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<XMLDouble>(maxNegativeValue)
-        );
-
         minNegativeValue = new XMLDouble(DBL_MIN_NEGATIVE);
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<XMLDouble>(minNegativeValue)
-        );
-
         minPositiveValue = new XMLDouble(DBL_MIN_POSITIVE);
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<XMLDouble>(minPositiveValue)
-        );
-
         maxPositiveValue = new XMLDouble(DBL_MAX_POSITIVE);
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<XMLDouble>(maxPositiveValue)
-        );
+
+        XMLDoubleCleanup.registerCleanup(reinitXMLDouble);
     }
 
     //
@@ -537,3 +525,23 @@ int XMLDouble::compareSpecial(const XMLDouble* const specialValue
     }
 }
 
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void XMLDouble::reinitXMLDouble() {
+
+    isInitialized = false;
+
+    delete maxNegativeValue;
+    maxNegativeValue = 0;
+
+    delete minNegativeValue;
+    minNegativeValue = 0;
+
+    delete minPositiveValue;
+    minPositiveValue = 0;
+
+    delete maxPositiveValue;
+    maxPositiveValue = 0;
+
+}

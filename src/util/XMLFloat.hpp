@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/10/25 21:54:50  peiyongz
+ * Apply XMLRegisterCleanup
+ *
  * Revision 1.4  2001/09/27 14:54:20  peiyongz
  * DTV Reorganization: derived from XMLNumber
  *
@@ -143,6 +146,11 @@ public:
 
     static int            compareValues(const XMLFloat* const lValue
                                       , const XMLFloat* const rValue);
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitXMLFloat();   
 
 private:
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/10/25 21:54:50  peiyongz
+ * Apply XMLRegisterCleanup
+ *
  * Revision 1.9  2001/09/20 13:11:41  knoaman
  * Regx  + misc. fixes
  *
@@ -93,7 +96,7 @@
 // ---------------------------------------------------------------------------
 #include <util/XMLFloat.hpp>
 #include <util/PlatformUtils.hpp>
-#include <util/XMLDeleterFor.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/NumberFormatException.hpp>
@@ -184,10 +187,12 @@ static const XMLCh FLT_MIN_NEGATIVE[] =
 // They are all "Inclusive value"
 //
 
-static XMLFloat*  maxNegativeValue;
-static XMLFloat*  minNegativeValue;
-static XMLFloat*  minPositiveValue;
-static XMLFloat*  maxPositiveValue;
+static XMLFloat*  maxNegativeValue = 0;
+static XMLFloat*  minNegativeValue = 0;
+static XMLFloat*  minPositiveValue = 0;
+static XMLFloat*  maxPositiveValue = 0;
+
+static XMLRegisterCleanup XMLFloatCleanup;
 
 /***
  *   Algo:
@@ -302,28 +307,11 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
         isInitialized = true;  // set first to avoid recursion
 
         maxNegativeValue = new XMLFloat(FLT_MAX_NEGATIVE);
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<XMLFloat>(maxNegativeValue)
-        );
-
         minNegativeValue = new XMLFloat(FLT_MIN_NEGATIVE);
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<XMLFloat>(minNegativeValue)
-        );
-
         minPositiveValue = new XMLFloat(FLT_MIN_POSITIVE);
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<XMLFloat>(minPositiveValue)
-        );
-
         maxPositiveValue = new XMLFloat(FLT_MAX_POSITIVE);
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<XMLFloat>(maxPositiveValue)
-        );
+
+        XMLFloatCleanup.registerCleanup(reinitXMLFloat);
     }
 
     //
@@ -525,3 +513,23 @@ int XMLFloat::compareSpecial(const XMLFloat* const specialValue
     }
 }
 
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void XMLFloat::reinitXMLFloat() {
+
+    isInitialized = false;
+
+    delete maxNegativeValue;
+    maxNegativeValue = 0;
+
+    delete minNegativeValue;
+    minNegativeValue = 0;
+
+    delete minPositiveValue;
+    minPositiveValue = 0;
+
+    delete maxPositiveValue;
+    maxPositiveValue = 0;
+
+}
