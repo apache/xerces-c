@@ -73,7 +73,7 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
         It should create a directory like '<code>$HOME/&XercesCSrcInstallDir;</code>'.</p>
 
         <p>Extract the ICU files into the same directory
-        where you have installed &XercesCName;, sources. After extraction, there
+        where you have installed &XercesCName; sources. After extraction, there
         should be a new directory '<code>$HOME/icu</code>' which contains all the ICU
         source files.</p>
 
