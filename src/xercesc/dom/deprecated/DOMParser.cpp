@@ -154,7 +154,7 @@ void DOMParser::initialize()
 }
 
 void DOMParser::cleanUp()
-{    
+{
     delete fNodeStack;
     delete fScanner;
     delete fGrammarResolver;
@@ -273,6 +273,11 @@ bool DOMParser::getCalculateSrcOfs() const
     return fScanner->getCalculateSrcOfs();
 }
 
+bool DOMParser::getStandardUriConformant() const
+{
+    return fScanner->getStandardUriConformant();
+}
+
 unsigned int DOMParser::getSrcOffset() const
 {
     return fScanner->getSrcOffset();
@@ -375,6 +380,11 @@ void DOMParser::useCachedGrammarInParse(const bool newState)
 void DOMParser::setCalculateSrcOfs(const bool newState)
 {
     fScanner->setCalculateSrcOfs(newState);
+}
+
+void DOMParser::setStandardUriConformant(const bool newState)
+{
+    fScanner->setStandardUriConformant(newState);
 }
 
 void DOMParser::useScanner(const XMLCh* const scannerName)
