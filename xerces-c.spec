@@ -93,7 +93,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(-,root,root)
-%doc LICENSE.txt STATUS credits.txt Readme.html doc/
+%doc LICENSE NOTICE STATUS credits.txt Readme.html doc/
 
 %changelog
 * Fri Jun  6 2003 Tuan Hoang <tqhoang@bigfoot.com>
