@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/09 02:15:28  abagchi
+ * Documented destructor
+ *
  * Revision 1.3  2000/02/06 07:47:58  rahulj
  * Year 2K copyright swat.
  *
@@ -108,6 +111,9 @@ class BinInputStream;
   * around beyond the call.</p>
   *
   * $Log$
+  * Revision 1.4  2000/02/09 02:15:28  abagchi
+  * Documented destructor
+  *
   * Revision 1.3  2000/02/06 07:47:58  rahulj
   * Year 2K copyright swat.
   *
@@ -130,7 +136,14 @@ public:
     // -----------------------------------------------------------------------
     //  All constructors are hidden, just the destructor is available
     // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
+  /**
+    * Destructor
+    *
+    */
     virtual ~InputSource();
+    //@}
 
 
     // -----------------------------------------------------------------------
