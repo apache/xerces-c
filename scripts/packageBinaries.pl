@@ -183,19 +183,19 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         $PlatformName = 'Win64';
     }
       
-    if ($opt_x eq "" || $opt_x =~ m/VC6/ )
+    if ($opt_x eq "" || $opt_x =~ m/VC6/i )
     {
         $DevStudioVer = "6.0";
         $VCBuildDir     = "VC6"; 
         $ProjectDir      = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
     }
-    elsif ($opt_x =~ m/VC7/ ) 
+    elsif ($opt_x =~ m/VC7/i ) 
     {
         $DevStudioVer = "7.0";
         $VCBuildDir     = "VC7"; 
         $ProjectDir      = "$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all";
     }
-    elsif ($opt_x =~ m/ecl/ || $opt_x =~ m/icl/ )
+    elsif ($opt_x =~ m/ecl/i || $opt_x =~ m/icl/i )
     {
         $DevStudioVer = "6.1";
         $VCBuildDir     = "VC6"; 
@@ -205,7 +205,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     else
     {
         print ("Error: Invalid compilers used \n");
-        print ("-x <C++ compiler name> VC6, CV7, ecl and icl \n");        
+        print ("-x <C++ compiler name> VC6, VC7, ecl and icl \n");        
         exit(1);            	    	
     }
 
