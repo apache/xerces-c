@@ -71,38 +71,22 @@ class XMLUTIL_EXPORT XMLBigDecimal : public XMLNumber
 {
 public:
 
-	/**
-	 * Constructs a newly allocated <code>XMLBigDecimal</code> object that
-	 * represents the value represented by the string.
-	 *
-	 * @param      strValue the <code>String</code> to be converted to an
-	 *                      <code>XMLBigDecimal</code>.
-	 * @exception  NumberFormatException  if the <code>String</code> does not
-	 *               contain a parsable XMLBigDecimal.
-	 */
+    /**
+     * Constructs a newly allocated <code>XMLBigDecimal</code> object that
+     * represents the value represented by the string.
+     *
+     * @param      strValue the <code>String</code> to be converted to an
+     *                      <code>XMLBigDecimal</code>.
+     * @exception  NumberFormatException  if the <code>String</code> does not
+     *               contain a parsable XMLBigDecimal.
+     */
 
     XMLBigDecimal(const XMLCh* const strValue);
 
     ~XMLBigDecimal();
 
-    XMLBigDecimal(const XMLBigDecimal& toCopy);
-
-	/**
-	 * Constructs a newly allocated <code>XMLBigDecimal</code> object
-	 * from an existing XMLBigDecimal with an extra Exponent.
-	 */
-    XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent);
-
-    static void           parseBigDecimal(const XMLCh* const strValue
-                                        , XMLCh* const       retValue
-                                        , unsigned int&      scaleValue);
-
     static int            compareValues(const XMLBigDecimal* const lValue
                                       , const XMLBigDecimal* const rValue);
-
-    static void           matchScale(XMLBigDecimal* const lValue
-                                   , XMLBigDecimal* const rValue);
-
 
     virtual XMLCh*        toString() const;
     
@@ -112,63 +96,70 @@ public:
 
     virtual int           getSign() const;
 
-    XMLBigInteger*        getValue() const;
+    const XMLCh*          getValue() const;
 
     unsigned int          getScale() const;
 
     unsigned int          getTotalDigit() const;
 
-
-
-	/**
-	 * Compares this object to the specified object.
-	 * The result is <code>true</code> if and only if the argument is not
-	 * <code>null</code> and is an <code>XMLBigDecimal</code> object that contains
-	 * the same <code>int</code> value as this object.
-	 *
-	 * @param   toCompare   the object to compare with.
-	 * @return  <code>true</code> if the objects are the same;
-	 *          <code>false</code> otherwise.
-	 */
-	bool operator==(const XMLBigDecimal& toCompare) const;
+    /**
+     * Compares this object to the specified object.
+     *
+     * @param   toCompare   the object to compare with.
+     * @return  <code>-1</code> value is less than other's
+     *          <code>0</code>  value equals to other's
+     *          <code>+1</code> value is greater than other's
+     */
+     int toCompare(const XMLBigDecimal& other) const;
 
 private:
-
-    void         reScale(unsigned int newValue);
-
+    void  parseBigDecimal(const XMLCh* const strValue);
+    void  cleanUp();
+    
+    // -----------------------------------------------------------------------
+    //  Unimplemented contstructors and operators
+    // -----------------------------------------------------------------------       
+    XMLBigDecimal(const XMLBigDecimal& other);
+    XMLBigDecimal& operator=(const XMLBigDecimal& other);        
+    
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fIntVal
-    //     the XMLBigInteger holding the value of this BigDecimal.
+    //  fSign
+    //     sign
     //
-	//  fScale
+    //  fTotalDigits
+    //     the total number of didits 
+    //
+    //  fScale
     //     the number of digits to the right of the decimal point
     //
-	//  fRawData
-	//     to preserve the original string used to construct this object,
-	//     needed for pattern matching.
-	//
+    //  fIntVal
+    //     The value of this BigDecimal, w/o
+    //         leading whitespace, leading zero
+    //         decimal point
+    //         trailing zero, trailing whitespace
+    //
+    //  fRawData
+    //     to preserve the original string used to construct this object,
+    //     needed for pattern matching.
+    //
     // -----------------------------------------------------------------------
 
-	XMLBigInteger*   fIntVal;
-	unsigned int     fScale;
-    XMLCh*           fRawData;
-};
+    int          fSign;
+    unsigned int fTotalDigits;
+    unsigned int fScale;
 
-inline XMLBigDecimal::~XMLBigDecimal()
-{
-    delete fIntVal;
-	if (fRawData)
-		delete [] fRawData;
-}
+    XMLCh*       fIntVal;    
+    XMLCh*       fRawData;
+};
 
 inline int XMLBigDecimal::getSign() const
 {
-    return fIntVal->getSign();
+    return fSign;
 }
 
-inline XMLBigInteger* XMLBigDecimal::getValue() const
+inline const XMLCh* XMLBigDecimal::getValue() const
 {
     return fIntVal;
 }
@@ -180,12 +171,25 @@ inline unsigned int XMLBigDecimal::getScale() const
 
 inline unsigned int XMLBigDecimal::getTotalDigit() const
 {
-    return fIntVal->getTotalDigit();
+    return fTotalDigits;
 }
 
-inline bool XMLBigDecimal::operator==(const XMLBigDecimal& toCompare) const
+inline XMLCh*  XMLBigDecimal::getRawData() const
 {
-    return ( XMLBigInteger::compareValues(this->fIntVal, toCompare.fIntVal) == 0 ? true : false);
+    return fRawData;
+}
+
+inline const XMLCh*  XMLBigDecimal::getFormattedString() const
+{
+    return fRawData;
+}
+
+//
+// The caller needs to de-allocate the memory allocated by this function
+//
+inline XMLCh*  XMLBigDecimal::toString() const
+{
+    return XMLString::replicate(fRawData);
 }
 
 XERCES_CPP_NAMESPACE_END

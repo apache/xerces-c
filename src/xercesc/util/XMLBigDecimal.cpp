@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/04/29 18:13:36  peiyongz
+ * cut link to XMLBigInteger, patch from Khaled Noaman
+ *
  * Revision 1.6  2003/02/25 17:24:18  peiyongz
  * Schema Errata: E2-44 totalDigits/fractDigits
  *
@@ -124,114 +127,49 @@ XERCES_CPP_NAMESPACE_BEGIN
  * Any extraneous characters (including whitespace) will result in
  * a NumberFormatException.
 
- * since parseBigDecimal and XMLBigInteger() may throw exception,
+ * since parseBigDecimal()  may throw exception,
  * caller of XMLBigDecimal need to catch it.
 //
 **/
 
 XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue)
-:fIntVal(0)
+:fSign(0)
+,fTotalDigits(0)
 ,fScale(0)
+,fIntVal(0)
 ,fRawData(0)
 {
-    if (!strValue)
+    if ((!strValue) || (!*strValue))
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
 
-    XMLCh* ret_value = new XMLCh[XMLString::stringLen(strValue)+1];
-    ArrayJanitor<XMLCh> janName(ret_value);
-
-    parseBigDecimal(strValue, ret_value, fScale);
-
-    fIntVal = new XMLBigInteger(ret_value);
-	fRawData = XMLString::replicate(strValue);
-}
-
-XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy)
-:fIntVal(0)
-,fScale(toCopy.getScale())
-,fRawData(0)
-{
-    //invoke XMLBigInteger' copy ctor
-    fIntVal = new XMLBigInteger(*(toCopy.getValue()));
-	fRawData = XMLString::replicate(toCopy.fRawData);
-}
-
-XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent)
-:fIntVal(0)
-,fScale(toCopy.getScale())
-,fRawData(0)
-{
-    //invoke XMLBigInteger' copy ctor
-    fIntVal = new XMLBigInteger(*(toCopy.getValue()));
-
-    if ( addExponent > 0 )
+    try
     {
-        if (fScale >= (unsigned int)addExponent)
-        {
-            fScale -= addExponent;   //decrease scale
-        }
-        else
-        {
-            fIntVal->multiply(addExponent - fScale);
-            fScale = 0;
-        }
-
+        parseBigDecimal(strValue);
+        fRawData = XMLString::replicate(strValue);
     }
-    else // addExponent <= 0
+    catch(...)
     {
-        //fScale += abs(addExponent);
-        fScale -= addExponent;    //increase scale
+        cleanUp();
+        throw;
     }
-
-
-	// KNOWN defect
-	//   We need to adjust the decimal point with respect to the addExponent.
-    //
-	// REVISIT:
-	//   Since this ctor is only invoked by AbstractDoubleFloat::compareValues()
-	//   to generate temporaries for comparison and destructed after that,
-	//   no toString() would be applied to these temporaries, and therefore
-	//   this defect does NOT matter, for now.
-	//
-	fRawData = XMLString::replicate(toCopy.fRawData);
 }
 
-/***
-   *
-   *  Leading and trailing whitespaces are allowed, and trimmed
-   *
-   *  Only one and either of (+,-) after the leading whitespace, before
-   *  any other characters are allowed, '+' removed
-   *
-   *  '.' allowed and removed
-
-   *  return status: void
-   *  retBuffer: w/o leading and/or trailing whitespace
-   *             w/o '+' and containning one '-' if any
-   *             w/o leading zero
-   *             w/o '.'
-   *
-   *  scalevalue: indicate the number of digits, right to
-   *              the '.'
-   *
-   *  see XMLBigInteger::parseBigInteger();
-   *      XMLString::textToBin();
-   *
-   *  "    +000203.456"            "203456"
-   *  "    -000203.456"            "-203456"
-   *  "    -000.456"               "-456"
-   *
-***/
-
-void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
-                                  , XMLCh* const retBuffer
-                                  , unsigned int & scaleValue)
+XMLBigDecimal::~XMLBigDecimal()
 {
-    scaleValue = 0;
+    cleanUp();
+}
 
-    // If no string, then its a failure
-    if ((!toConvert) || (!*toConvert))
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+void XMLBigDecimal::cleanUp()
+{
+    if (fIntVal)
+        delete [] fIntVal;
+
+    if (fRawData)
+        XMLString::release(&fRawData);
+}
+
+void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert)
+{
 
     // Scan past any whitespace. If we hit the end, then return failure
     const XMLCh* startPtr = toConvert;
@@ -246,23 +184,36 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
     while (XMLPlatformUtils::fgTransService->isSpace(*(endPtr - 1)))
         endPtr--;
 
-    //
-    //  Work through what remains and convert each char to a digit.
-    //
-    XMLCh* retPtr = retBuffer;
-    //
     // '+' or '-' is allowed only at the first position
-    //
+    fSign = 1;
     if (*startPtr == chDash)
     {
-        *retPtr = chDash;  // copy the '-'
+        fSign = -1;
         startPtr++;
-        retPtr++;
     }
     else if (*startPtr == chPlus)
+    {
         startPtr++;        // skip the '+'
+    }
 
-    // Leading zero will be taken care by BigInteger
+    // remove leading zeros
+    while (*startPtr == chDigit_0)
+        startPtr++;
+
+    // containning zero, only zero, nothing but zero
+    // it is a zero, indeed
+    if (!*startPtr)
+    {
+        fSign = 0;
+        fIntVal = new XMLCh[1];
+        fIntVal[0] = chNull;
+        return;
+    }
+
+    fIntVal = new XMLCh[endPtr - startPtr + 1];
+    XMLCh* retPtr = fIntVal;
+
+    // Scan data
     bool   dotSignFound = false;
     while (startPtr < endPtr)
     {
@@ -271,7 +222,7 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
             if (dotSignFound == false)
             {
                 dotSignFound = true;
-                scaleValue = endPtr - startPtr - 1;
+                fScale = endPtr - startPtr - 1;
                 startPtr++;
                 continue;
             }
@@ -284,9 +235,8 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
             ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
 
         // copy over
-        *retPtr = *startPtr;
-        retPtr++;
-        startPtr++;
+        *retPtr++ = *startPtr++;
+        fTotalDigits++;
     }
 
     /***
@@ -298,106 +248,78 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert
         normalization: remove all trailing zero after the '.'
                        and adjust the scaleValue as well.
     ***/
-    while (( scaleValue > 0 )           && 
-           ( *(retPtr-1) == chDigit_0 )  )          
+    while ((fScale > 0) && (*(retPtr-1) == chDigit_0))          
     {
         retPtr--;
-        scaleValue--;
+        fScale--;
+        fTotalDigits--;
     }
 
-    *retPtr = 0;   //terminated
+    *retPtr = chNull;   //terminated
     return;
 }
 
-/**
- * Returns -1, 0 or 1 as lValue is less than, equal to, or greater
- * than rValue.  Two BigDecimals that are equal in value but have a
- * different scale (e.g., 2.0, 2.00) are considered equal by this method.
-**/
-int XMLBigDecimal::compareValues(const XMLBigDecimal* const lValue
-                               , const XMLBigDecimal* const rValue)
+
+int XMLBigDecimal::compareValues( const XMLBigDecimal* const lValue
+                                , const XMLBigDecimal* const rValue)
 {
     if ((!lValue) || (!rValue) )
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_null_ptr);
+        	
+    return lValue->toCompare(*rValue);
+}                                
 
-    /* Optimization: would run fine without the next three lines */
-	int sigDiff = lValue->getSign() - rValue->getSign();
-	if (sigDiff != 0)
-	    return (sigDiff > 0 ? 1 : -1);
+/**
+ * Returns -1, 0 or 1 as this is less than, equal to, or greater
+ * than rValue.  
+ * 
+ * This method is based on the fact, that parsebigDecimal() would eliminate
+ * unnecessary leading/trailing zeros. 
+**/
+int XMLBigDecimal::toCompare(const XMLBigDecimal& other) const
+{
+    /***
+     * different sign
+     */
+    int lSign = this->getSign();
+    if (lSign != other.getSign())
+        return (lSign > other.getSign() ? 1 : -1);
 
-    //
-	// If signs match, scale and compare intVals
-    // since matchScale will destructively change the scale
-    // we make a copy for both
-    //
-    if (lValue->getScale() != rValue->getScale())
+    /***
+     * same sign, zero
+     */
+    if (lSign == 0)    // optimization
+        return 0;
+
+    /***
+     * same sign, non-zero
+     */
+    unsigned int lIntDigit = this->getTotalDigit() - this->getScale();
+    unsigned int rIntDigit = other.getTotalDigit() - other.getScale();
+
+    if (lIntDigit > rIntDigit)
     {
-        XMLBigDecimal lTemp = *lValue;
-  	    XMLBigDecimal rTemp = *rValue;
+        return 1 * lSign;
+    }
+    else if (lIntDigit < rIntDigit)
+    {
+        return -1 * lSign;
+    }
+    else  // compare fraction
+    {
+        int res = XMLString::compareString
+        ( this->getValue()
+        , other.getValue()
+        );
 
-	    matchScale(&lTemp, &rTemp);
-        return XMLBigInteger::compareValues(lTemp.getValue(), rTemp.getValue());
+        if (res > 0)
+            return 1 * lSign;
+        else if (res < 0)
+            return -1 * lSign;
+        else
+            return 0;
     }
 
-    return XMLBigInteger::compareValues(lValue->getValue(), rValue->getValue());
-}
-
-/*
- * If the scales of lValue and rValue differ, rescale (destructively)
- * the lower-scaled BigDecimal so they match.
- *
- * rescale the lower-scaled will not lose precision.
- *
-*/
-void XMLBigDecimal::matchScale(XMLBigDecimal* const lValue
-                             , XMLBigDecimal* const rValue)
-{
-	if (lValue->getScale() < rValue->getScale())
-	    lValue->reScale(rValue->getScale());
-	else
-    if (lValue->getScale() > rValue->getScale())
-	    rValue->reScale(lValue->getScale());
-}
-
-
-void XMLBigDecimal::reScale(unsigned int newScale)
-{
-	if (newScale < 0)
-        return;
-
-	/* Handle the easy cases */
-	if (newScale == this->getScale())
-	    return;
-	else if (newScale > this->getScale())
-    {
-        fIntVal->multiply(newScale - this->getScale());
-        fScale = newScale;
-    }
-	else /* scale < this.scale */
-    {
-        fIntVal->divide(this->getScale() - newScale);
-        fScale = newScale;
-	}
-
-    return;
-}
-
-XMLCh*  XMLBigDecimal::getRawData() const
-{
-    return fRawData;
-}
-
-const XMLCh*  XMLBigDecimal::getFormattedString() const
-{
-    return fRawData;
-}
-
-//
-// The caller needs to de-allocate the memory allocated by this function
-//
-XMLCh*  XMLBigDecimal::toString() const
-{
-    return XMLString::replicate(fRawData);
 }
 
 XERCES_CPP_NAMESPACE_END
