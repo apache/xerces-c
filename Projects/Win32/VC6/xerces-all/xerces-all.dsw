@@ -348,6 +348,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "MemHandlerTest"=".\MemHandlerTest\MemHandlerTest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "XercesLib"=".\XercesLib\XercesLib.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -424,6 +439,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name ThreadTest
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name MemHandlerTest
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name XercesLib

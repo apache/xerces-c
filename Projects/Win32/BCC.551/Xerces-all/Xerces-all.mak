@@ -17,7 +17,7 @@ MakeBuildDirs: MakeBuildDirs.bat
 MAKEN = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f
 PROJECTNAMES = XercesLib DOMCount DOMPrint SAXCount SAXPrint SAX2Count SAX2Print \
   DOMTest DOMMemTest DOMRangeTest DOMTraversal EncodingTest InitTermTest \
-  ThreadTest
+  ThreadTest MemHandlerTest
 
 !include ..\..\..\..\version.incl
 XERCESVER=$(VER)
@@ -93,6 +93,11 @@ InitTermTest: InitTermTest\InitTermTest.mak
   cd ..
 
 ThreadTest: ThreadTest\ThreadTest.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
+  cd ..
+
+MemHandlerTest: MemHandlerTest\MemHandlerTest.mak
   cd $<
   $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
   cd ..

@@ -36,12 +36,12 @@ ALL :
 
 !ELSE 
 
-ALL : "DeprecatedDOMCount - Win64 Release" "DOMTraversalTest - Win64 Release" "DOMTypeInfoTest - Win64 Release" "XercesLib - Win64 Release" "ThreadTest - Win64 Release" "StdInParse - Win64 Release" "SEnumVal - Win64 Release" "SAXPrint - Win64 Release" "SAXCount - Win64 Release" "SAX2Print - Win64 Release" "SAX2Count - Win64 Release" "Redirect - Win64 Release" "RangeTest - Win64 Release" "PParse - Win64 Release" "MemParse - Win64 Release" "InitTermTest - Win64 Release" "EnumVal - Win64 Release" "EncodingTest - Win64 Release" "DOMTest - Win64 Release" "DOMPrint - Win64 Release" "DOMMemTest - Win64 Release" "DOMCount - Win64 Release" "CreateDOMDocument - Win64 Release" 
+ALL : "DeprecatedDOMCount - Win64 Release" "DOMTraversalTest - Win64 Release" "DOMTypeInfoTest - Win64 Release" "XercesLib - Win64 Release" "ThreadTest - Win64 Release" "MemHandlerTest - Win64 Release" "StdInParse - Win64 Release" "SEnumVal - Win64 Release" "SAXPrint - Win64 Release" "SAXCount - Win64 Release" "SAX2Print - Win64 Release" "SAX2Count - Win64 Release" "Redirect - Win64 Release" "RangeTest - Win64 Release" "PParse - Win64 Release" "MemParse - Win64 Release" "InitTermTest - Win64 Release" "EnumVal - Win64 Release" "EncodingTest - Win64 Release" "DOMTest - Win64 Release" "DOMPrint - Win64 Release" "DOMMemTest - Win64 Release" "DOMCount - Win64 Release" "CreateDOMDocument - Win64 Release" 
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"CreateDOMDocument - Win32 ReleaseCLEAN" "DOMCount - Win32 ReleaseCLEAN" "DOMMemTest - Win32 ReleaseCLEAN" "DOMPrint - Win32 ReleaseCLEAN" "DOMTest - Win32 ReleaseCLEAN" "EncodingTest - Win32 ReleaseCLEAN" "EnumVal - Win32 ReleaseCLEAN" "InitTermTest - Win32 ReleaseCLEAN" "MemParse - Win32 ReleaseCLEAN" "PParse - Win32 ReleaseCLEAN" "RangeTest - Win32 ReleaseCLEAN" "Redirect - Win32 ReleaseCLEAN" "SAX2Count - Win32 ReleaseCLEAN" "SAX2Print - Win32 ReleaseCLEAN" "SAXCount - Win32 ReleaseCLEAN" "SAXPrint - Win32 ReleaseCLEAN" "SEnumVal - Win32 ReleaseCLEAN" "StdInParse - Win32 ReleaseCLEAN" "ThreadTest - Win32 ReleaseCLEAN" "XercesLib - Win32 ReleaseCLEAN" "DOMTraversalTest - Win32 ReleaseCLEAN" "DOMTypeInfoTest - Win32 ReleaseCLEAN" "DeprecatedDOMCount - Win32 ReleaseCLEAN" 
+CLEAN :"CreateDOMDocument - Win32 ReleaseCLEAN" "DOMCount - Win32 ReleaseCLEAN" "DOMMemTest - Win32 ReleaseCLEAN" "DOMPrint - Win32 ReleaseCLEAN" "DOMTest - Win32 ReleaseCLEAN" "EncodingTest - Win32 ReleaseCLEAN" "EnumVal - Win32 ReleaseCLEAN" "InitTermTest - Win32 ReleaseCLEAN" "MemParse - Win32 ReleaseCLEAN" "PParse - Win32 ReleaseCLEAN" "RangeTest - Win32 ReleaseCLEAN" "Redirect - Win32 ReleaseCLEAN" "SAX2Count - Win32 ReleaseCLEAN" "SAX2Print - Win32 ReleaseCLEAN" "SAXCount - Win32 ReleaseCLEAN" "SAXPrint - Win32 ReleaseCLEAN" "SEnumVal - Win32 ReleaseCLEAN" "StdInParse - Win32 ReleaseCLEAN" "ThreadTest - Win32 ReleaseCLEAN" "MemHandlerTest - Win32 ReleaseCLEAN" "XercesLib - Win32 ReleaseCLEAN" "DOMTraversalTest - Win32 ReleaseCLEAN" "DOMTypeInfoTest - Win32 ReleaseCLEAN" "DeprecatedDOMCount - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -996,6 +996,16 @@ MTL_PROJ=
    $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\ThreadTest.mak" CFG="ThreadTest - Win32 Release" RECURSE=1 CLEAN 
    cd "..\all"
 
+"MemHandlerTest - Win32 Release" : 
+   cd "..\MemHandlerTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\MemHandlerTest.mak" CFG="MemHandlerTest - Win32 Release" 
+   cd "..\all"
+
+"MemHandlerTest - Win32 ReleaseCLEAN" : 
+   cd "..\MemHandlerTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\MemHandlerTest.mak" CFG="MemHandlerTest - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\all"
+
 !ELSEIF  "$(CFG)" == "all - Win32 Debug"
 
 "ThreadTest - Win32 Debug" : 
@@ -1006,6 +1016,16 @@ MTL_PROJ=
 "ThreadTest - Win32 DebugCLEAN" : 
    cd "..\ThreadTest"
    $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\ThreadTest.mak" CFG="ThreadTest - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\all"
+
+"MemHandlerTest - Win32 Debug" : 
+   cd "..\MemHandlerTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\MemHandlerTest.mak" CFG="MemHandlerTest - Win32 Debug" 
+   cd "..\all"
+
+"MemHandlerTest - Win32 DebugCLEAN" : 
+   cd "..\MemHandlerTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\MemHandlerTest.mak" CFG="MemHandlerTest - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\all"
 
 !ELSEIF  "$(CFG)" == "all - Win64 Debug"
@@ -1020,6 +1040,16 @@ MTL_PROJ=
    $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\ThreadTest.mak" CFG="ThreadTest - Win64 Debug" RECURSE=1 CLEAN 
    cd "..\all"
 
+"MemHandlerTest - Win64 Debug" : 
+   cd "..\MemHandlerTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\MemHandlerTest.mak" CFG="MemHandlerTest - Win64 Debug" 
+   cd "..\all"
+
+"MemHandlerTest - Win64 DebugCLEAN" : 
+   cd "..\MemHandlerTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\MemHandlerTest.mak" CFG="MemHandlerTest - Win64 Debug" RECURSE=1 CLEAN 
+   cd "..\all"
+
 !ELSEIF  "$(CFG)" == "all - Win64 Release"
 
 "ThreadTest - Win64 Release" : 
@@ -1030,6 +1060,16 @@ MTL_PROJ=
 "ThreadTest - Win64 ReleaseCLEAN" : 
    cd "..\ThreadTest"
    $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\ThreadTest.mak" CFG="ThreadTest - Win64 Release" RECURSE=1 CLEAN 
+   cd "..\all"
+
+"MemHandlerTest - Win64 Release" : 
+   cd "..\MemHandlerTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\MemHandlerTest.mak" CFG="MemHandlerTest - Win64 Release" 
+   cd "..\all"
+
+"MemHandlerTest - Win64 ReleaseCLEAN" : 
+   cd "..\MemHandlerTest"
+   $(MAKE) CPP=$(CPP)  /$(MAKEFLAGS) /F ".\MemHandlerTest.mak" CFG="MemHandlerTest - Win64 Release" RECURSE=1 CLEAN 
    cd "..\all"
 
 !ENDIF 
