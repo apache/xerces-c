@@ -425,6 +425,36 @@
 
             <p/>
 
+            <anchor name="use-cached"/>
+            <table>
+                <tr><td colspan="2"><em>useCachedGrammarInParse</em></td></tr>
+                <tr><td><em>true:</em></td><td></td></tr>
+                <tr><td><em>false:</em></td><td></td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td>The getter function for this method is called isUsingCachedGrammarInParse</td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="cache-grammar">cacheGrammarFromParse</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="cache-grammar"/>
+            <table>
+                <tr><td colspan="2"><em>cacheGrammarFromParse</em></td></tr>
+                <tr><td><em>true:</em></td><td></td></tr>
+                <tr><td><em>false:</em></td><td></td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td>The getter function for this method is called isCachingGrammarFromParse</td></tr>
+                <tr><td><em>note:</em></td><td> If set to true, the useCachedGrammarInParse
+                is also set to true automatically.</td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="use-cached">useCachedGrammarInParse</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
         </s3>
 
         <anchor name="XercesDOMProperties"/>
@@ -933,12 +963,31 @@
 
             <p/>
 
+            <anchor name="builder-use-cached"/>
             <table>
-                <tr><td colspan="2"><em>http://apache.org/xml/features/validation/reuse-grammar</em></td></tr>
-                <tr><td><em>true:</em></td><td> The parser will reuse grammar information from previous parse in subsequent parses. </td></tr>
-                <tr><td><em>false:</em></td><td> The parser will not reuse any grammar information. </td></tr>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/validation/use-cachedGrammarInParse</em></td></tr>
+                <tr><td><em>true:</em></td><td></td></tr>
+                <tr><td><em>false:</em></td><td></td></tr>
                 <tr><td><em>default:</em></td><td> false </td></tr>
-                <tr><td><em>note:</em></td><td> The subsequent xml files cannot have any DTD internal subset. </td></tr>
+                <tr><td><em>note:</em></td><td></td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-cache-grammar">http://apache.org/xml/features/validation/cache-grammarFromParse</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="builder-cache-grammar"/>
+            <table>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/validation/cache-grammarFromParse</em></td></tr>
+                <tr><td><em>true:</em></td><td></td></tr>
+                <tr><td><em>false:</em></td><td></td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> If set to true, the http://apache.org/xml/features/validation/use-cachedGrammarInParse
+                is also set to true automatically.</td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="builder-use-cached">http://apache.org/xml/features/validation/use-cachedGrammarInParse</link>
+                </td></tr>
             </table>
 
             <p/>

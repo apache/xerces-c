@@ -74,7 +74,7 @@
     <ul>
       <li><jump href="program-others.html#Schema">Schema Support</jump></li>
       <li><jump href="program-others.html#Progressive">Progressive Parsing</jump></li>
-      <li><jump href="program-others.html#ReuseGrammar">Reuse Grammar</jump></li>
+      <li><jump href="program-others.html#GrammarCache">Preparsing Grammar and Grammar Caching</jump></li>
       <li><jump href="program-others.html#LoadableMessageText">Loadable Message Text</jump></li>
       <li><jump href="program-others.html#PluggableTranscoders">Pluggable Transcoders</jump></li>
     </ul>

@@ -282,6 +282,36 @@ MySAXHandler::fatalError(const SAXParseException&amp; exception)
 
             <p/>
 
+            <anchor name="use-cached"/>
+            <table>
+                <tr><td colspan="2"><em>useCachedGrammarInParse</em></td></tr>
+                <tr><td><em>true:</em></td><td></td></tr>
+                <tr><td><em>false:</em></td><td></td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td>The getter function for this method is called isUsingCachedGrammarInParse</td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="cache-grammar">cacheGrammarFromParse</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
+            <anchor name="cache-grammar"/>
+            <table>
+                <tr><td colspan="2"><em>cacheGrammarFromParse</em></td></tr>
+                <tr><td><em>true:</em></td><td></td></tr>
+                <tr><td><em>false:</em></td><td></td></tr>
+                <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td>The getter function for this method is called isCachingGrammarFromParse</td></tr>
+                <tr><td><em>note:</em></td><td> If set to true, the useCachedGrammarInParse
+                is also set to true automatically.</td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="use-cached">useCachedGrammarInParse</link>
+                </td></tr>
+            </table>
+
+            <p/>
+
             <table>
                 <tr><td colspan="2"><em>void setExternalSchemaLocation(const XMLCh* const)</em></td></tr>
                 <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that

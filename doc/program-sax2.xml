@@ -299,28 +299,35 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 
             <p/>
 
-            <anchor name="reuse-grammar"/>
+            <anchor name="use-cached"/>
             <table>
-                <tr><td colspan="2"><em>http://apache.org/xml/features/validation/reuse-grammar</em></td></tr>
-                <tr><td><em>true:</em></td><td> The parser will reuse grammar information from previous parse in subsequent parses. </td></tr>
-                <tr><td><em>false:</em></td><td> The parser will not reuse any grammar information. </td></tr>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/validation/use-cachedGrammarInParse</em></td></tr>
+                <tr><td><em>true:</em></td><td></td></tr>
+                <tr><td><em>false:</em></td><td></td></tr>
                 <tr><td><em>default:</em></td><td> false </td></tr>
-                <tr><td><em>note:</em></td><td> The subsequent xml files cannot have any DTD internal subset. </td></tr>
+                <tr><td><em>note:</em></td><td></td></tr>
+                <tr><td><em>see:</em></td><td>
+                <link anchor="cache-grammar">http://apache.org/xml/features/validation/cache-grammarFromParse</link>
+                </td></tr>
             </table>
 
             <p/>
 
+            <anchor name="cache-grammar"/>
             <table>
-                <tr><td colspan="2"><em>http://apache.org/xml/features/validation/reuse-validator</em> (deprecated) <br/>
-                 Please use <link anchor="reuse-grammar">http://apache.org/xml/features/validation/reuse-grammar</link>.
-                </td></tr>
-                <tr><td><em>true:</em></td><td> The parser will reuse grammar information from previous parses in subsequent parses. </td></tr>
-                <tr><td><em>false:</em></td><td> The parser will not reuse any grammar information. </td></tr>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/validation/cache-grammarFromParse</em></td></tr>
+                <tr><td><em>true:</em></td><td></td></tr>
+                <tr><td><em>false:</em></td><td></td></tr>
                 <tr><td><em>default:</em></td><td> false </td></tr>
+                <tr><td><em>note:</em></td><td> If set to true, the http://apache.org/xml/features/validation/use-cachedGrammarInParse
+                is also set to true automatically.</td></tr>
                 <tr><td><em>see:</em></td><td>
-                <link anchor="reuse-grammar">http://apache.org/xml/features/validation/reuse-grammar</link>
+                <link anchor="use-cached">http://apache.org/xml/features/validation/use-cachedGrammarInParse</link>
                 </td></tr>
             </table>
+
+            <p/>
+
             </s4>
         </s3>
 

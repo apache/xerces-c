@@ -88,57 +88,29 @@ while (gotMore &amp;&amp; !handler.getDone())
 
     </s2>
 
-    <anchor name="ReuseGrammar"/>
-    <s2 title="Reuse Grammar">
-
-        <p>Sometimes applications want to use the same grammar to validate various XML documents.
-           Instead of re-processing the same grammar again and again during each parse,
-           &XercesCName; provides a means to reuse the grammar in the last parse.
+    <anchor name="GrammarCache"/>
+    <s2 title="Preparsing Grammar and Grammar Caching">
+        <p>&XercesCName; &XercesCVersion; provides a new function to pre-parse the grammar so that users
+           can check for any syntax or error before using the grammar.  Users can also optionally
+           cached these pre-parsed grammars for later use during actual parsing.
         </p>
         <p>Here is an example:</p>
-
 <source>
-
-      XercesDOMParser parser;
-
-      // this is the first parse, just usual code as you do normal parse
-      // "firstXmlFile" has a grammar (schema or DTD) specified.
-      parser.parse(firstXmlFile);
-
-      // this is the second parse, by setting second parameter to true,
-      // the parser will reuse the grammar in the last parse
-      // (i.e. the one in  "firstXmlFile")
-      // to validate the second "anotherXmlFile".  Any grammar that is
-      // specified in anotherXmlFile is IGNORED.
-      //
-      // Note: The anotherXmlFile cannot have any DTD internal subset.
-      parser.parse(anotherXmlFile, true);
-
 </source>
-
-        <p>Here is another example using SAX2 XMLReader:</p>
-
+        <p>Besides caching the pre-parsed grammar, users can also cache any grammars encountered
+           during parse.
+        </p>
+        <p>Here is an example:</p>
 <source>
-
-      SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
-
-      // this is the first parse, just usual code as you do normal parse
-      // "firstXmlFile" has a grammar (schema or DTD) specified.
-      parser->parse(xmlFile);
-
-      // this is the second parse, by setting the feature
-      //    http://apache.org/xml/features/validation/reuse-grammar
-      // to true, the parser will reuse the grammar in the last parse
-      // (i.e. the one in  "firstXmlFile")
-      // to validate the second "anotherXmlFile".  Any grammar that is
-      // specified in anotherXmlFile is IGNORED.
-      //
-      // Note: The anotherXmlFile cannot have any DTD internal subset.
-      parser->setFeature(XMLUni::fgXercesReuseGrammar, true)
-      parser->parse(anotherXmlFile);
-
 </source>
-
+        <p>Here is an example how to use these cached grammars:
+        </p>
+<source>
+</source>
+        <p>There are some limitations about caching and using cached grammars:</p>
+           <ul>
+              <li></li>
+           </ul>
     </s2>
 
     <anchor name="LoadableMessageText"/>
