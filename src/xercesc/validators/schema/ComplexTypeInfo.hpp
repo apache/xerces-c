@@ -133,6 +133,11 @@ public:
     const XMLCh*             getFormattedContentModel ()   const;
     XSDLocator*              getLocator() const;
 
+    /**
+     * returns true if this type is anonymous
+     **/
+    bool getAnonymous() const;
+
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
@@ -156,6 +161,11 @@ public:
     void addElement(SchemaElementDecl* const toAdd);
     void setContentModel(XMLContentModel* const newModelToAdopt);
     void setLocator(XSDLocator* const aLocator);
+
+    /**
+     * sets this type to be anonymous
+     **/
+    void setAnonymous();    
 
     // -----------------------------------------------------------------------
     //  Helper methods
@@ -227,6 +237,7 @@ private:
     unsigned int                       fContentSpecOrgURISize;
     RefVectorOf<ContentSpecNode>*      fSpecNodesToDelete;
     XSDLocator*                        fLocator;
+    bool                               fAnonymous; 
 };
 
 // ---------------------------------------------------------------------------
@@ -379,6 +390,9 @@ inline XSDLocator* ComplexTypeInfo::getLocator() const
     return fLocator;
 }
 
+inline bool ComplexTypeInfo::getAnonymous() const {
+    return fAnonymous;
+}
 
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Setter methods
@@ -489,6 +503,11 @@ ComplexTypeInfo::setContentModel(XMLContentModel* const newModelToAdopt)
     fContentModel = newModelToAdopt;
 }
 
+
+
+inline void ComplexTypeInfo::setAnonymous() {
+    fAnonymous = true;
+}
 
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Helper methods

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/12/19 14:04:05  gareth
+ * get/set methods to see if the represented type is anonymous. Patch by Peter Volchek.
+ *
  * Revision 1.4  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -197,6 +200,7 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fContentSpecOrgURISize(16)
     , fSpecNodesToDelete(0)
     , fLocator(0)
+    , fAnonymous(false)
 {
 
 }

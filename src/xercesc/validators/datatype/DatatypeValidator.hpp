@@ -200,6 +200,16 @@ public:
       */
 	virtual const RefArrayVectorOf<XMLCh>* getEnumString() const = 0;
 
+    /**
+     * returns true if this type is anonymous
+     **/
+    bool getAnonymous() const;
+
+    /**
+     * sets this type to be anonymous
+     **/
+    void setAnonymous();    
+    
     //@}
 
     // -----------------------------------------------------------------------
@@ -361,8 +371,10 @@ private:
     //      {base type definition} cannot specify a value for a specific
     //      facet.
     //
+    //  fAnonymous
+    //      true if this type is anonynous
+    //
     // -----------------------------------------------------------------------
-
     int                           fFinalSet;
     int                           fFacetsDefined;
     int                           fFixed;
@@ -371,6 +383,7 @@ private:
 	RefHashTableOf<KVStringPair>* fFacets;
     XMLCh*                        fPattern;
     RegularExpression*            fRegex;
+    bool                          fAnonymous; 
 };
 
 
@@ -492,6 +505,15 @@ inline bool DatatypeValidator::isAtomic() const {
 
     return true;
 }
+
+inline void DatatypeValidator::setAnonymous() {
+    fAnonymous = true;
+}
+
+inline bool DatatypeValidator::getAnonymous() const {
+    return fAnonymous;
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

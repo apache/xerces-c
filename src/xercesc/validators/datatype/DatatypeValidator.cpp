@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/12/19 14:03:10  gareth
+ * get/set methods to see if the represented type is anonymous. Patch by Peter Volchek.
+ *
  * Revision 1.3  2002/11/04 14:53:28  tng
  * C++ Namespace Support.
  *
@@ -112,6 +115,7 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
     , fFacets(facets)
     , fPattern(0)
     , fRegex(0)
+    , fAnonymous(false)
 {
 }
 
