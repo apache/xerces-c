@@ -6423,7 +6423,7 @@ void TraverseSchema::checkEnumerationRequiredNotation(const DOMElement* const el
 XercesGroupInfo* TraverseSchema::processGroupRef(const DOMElement* const elem,
                                                  const XMLCh* const refName) {
 
-    if (XUtil::getFirstChildElement(elem) != 0) {
+    if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0) {
         reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::NoContentForRef, SchemaSymbols::fgELT_GROUP);
     }
 
@@ -6533,7 +6533,7 @@ TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
                                          const XMLCh* const refName,
                                          ComplexTypeInfo* const typeInfo) {
 
-    if (XUtil::getFirstChildElement(elem) != 0) {
+if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0) {
         reportSchemaError(elem ,XMLUni::fgValidityDomain, XMLValid::NoContentForRef, SchemaSymbols::fgELT_ATTRIBUTEGROUP);
     }
 
