@@ -412,8 +412,11 @@ void DOMNamedNodeMapImpl::cloneContent(const DOMNamedNodeMapImpl *srcmap)
             fNodes->reset();
         else
         {
-            DOMDocument *doc = fOwnerNode->getOwnerDocument();
-            fNodes = new (doc) DOMNodeVector(doc, srcmap->fNodes->size());
+            XMLSize_t size = srcmap->fNodes->size();
+            if(size > 0) {
+                DOMDocument *doc = fOwnerNode->getOwnerDocument();
+                fNodes = new (doc) DOMNodeVector(doc, size);
+            }
         }
 
         for (XMLSize_t i = 0; i < srcmap->fNodes->size(); i++)
