@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/20 17:52:14  knoaman
+ * PSVI: store element declaration (leaf nodes)
+ *
  * Revision 1.9  2003/11/07 17:08:11  knoaman
  * For PSVI support, distinguish wildcard elements with namespace lists.
  *
@@ -200,9 +203,11 @@ public :
         , Any_NS = 8
         , All = 9
         , Any_NS_Choice = 20
+        , ModelGroupSequence = 21
         , Any_Lax = 22
         , Any_Other_Lax = 23
         , Any_NS_Lax = 24
+        , ModelGroupChoice = 36
         , Any_Skip = 38
         , Any_Other_Skip = 39
         , Any_NS_Skip = 40
@@ -218,6 +223,11 @@ public :
     ContentSpecNode
     (
         QName* const toAdopt
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    ContentSpecNode
+    (
+        XMLElementDecl* const elemDecl
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     ContentSpecNode
@@ -243,6 +253,8 @@ public :
     // -----------------------------------------------------------------------
     QName* getElement();
     const QName* getElement() const;
+    XMLElementDecl* getElementDecl();
+    const XMLElementDecl* getElementDecl() const;
     ContentSpecNode* getFirst();
     const ContentSpecNode* getFirst() const;
     ContentSpecNode* getSecond();
@@ -327,6 +339,7 @@ private :
     // -----------------------------------------------------------------------
     MemoryManager*      fMemoryManager;
     QName*              fElement;
+    XMLElementDecl*     fElementDecl;
     ContentSpecNode*    fFirst;
     ContentSpecNode*    fSecond;
     NodeTypes           fType;
@@ -343,6 +356,7 @@ inline ContentSpecNode::ContentSpecNode(MemoryManager* const manager) :
 
     fMemoryManager(manager)
     , fElement(0)
+    , fElementDecl(0)
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
@@ -359,6 +373,7 @@ ContentSpecNode::ContentSpecNode(QName* const element,
 
     fMemoryManager(manager)
     , fElement(0)
+    , fElementDecl(0)
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
@@ -372,12 +387,32 @@ ContentSpecNode::ContentSpecNode(QName* const element,
 }
 
 inline
+ContentSpecNode::ContentSpecNode(XMLElementDecl* const elemDecl,
+                                 MemoryManager* const manager) :
+
+    fMemoryManager(manager)
+    , fElement(0)
+    , fElementDecl(elemDecl)
+    , fFirst(0)
+    , fSecond(0)
+    , fType(ContentSpecNode::Leaf)
+    , fAdoptFirst(true)
+    , fAdoptSecond(true)
+    , fMinOccurs(1)
+    , fMaxOccurs(1)
+{
+    if (elemDecl)
+        fElement = new (manager) QName(*(elemDecl->getElementName()));
+}
+
+inline
 ContentSpecNode::ContentSpecNode( QName* const element
                                 , const bool copyQName
                                 , MemoryManager* const manager) :
 
     fMemoryManager(manager)
     , fElement(0)
+    , fElementDecl(0)
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
@@ -407,6 +442,7 @@ ContentSpecNode::ContentSpecNode(const  NodeTypes              type
 
     fMemoryManager(manager)
     , fElement(0)
+    , fElementDecl(0)
     , fFirst(firstAdopt)
     , fSecond(secondAdopt)
     , fType(type)
@@ -442,6 +478,16 @@ inline QName* ContentSpecNode::getElement()
 inline const QName* ContentSpecNode::getElement() const
 {
     return fElement;
+}
+
+inline XMLElementDecl* ContentSpecNode::getElementDecl()
+{
+    return fElementDecl;
+}
+
+inline const XMLElementDecl* ContentSpecNode::getElementDecl() const
+{
+    return fElementDecl;
 }
 
 inline ContentSpecNode* ContentSpecNode::getFirst()

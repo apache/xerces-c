@@ -78,30 +78,27 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy) :
     fMemoryManager(toCopy.fMemoryManager)
+    , fElement(0)
+    , fElementDecl(toCopy.fElementDecl)
+    , fFirst(0)
+    , fSecond(0)
+    , fType(toCopy.fType)
+    , fAdoptFirst(true)
+    , fAdoptSecond(true)
+    , fMinOccurs(toCopy.fMinOccurs)
+    , fMaxOccurs(toCopy.fMaxOccurs)
 {
     const QName* tempElement = toCopy.getElement();
     if (tempElement)
         fElement = new (fMemoryManager) QName(*tempElement);
-    else
-        fElement = 0;
 
     const ContentSpecNode *tmp = toCopy.getFirst();
     if (tmp)
         fFirst = new (fMemoryManager) ContentSpecNode(*tmp);
-    else
-        fFirst = 0;
 
     tmp = toCopy.getSecond();
     if (tmp)
         fSecond = new (fMemoryManager) ContentSpecNode(*tmp);
-    else
-        fSecond = 0;
-
-    fType = toCopy.getType();
-    fAdoptFirst = true;
-    fAdoptSecond = true;
-    fMinOccurs = toCopy.getMinOccurs();
-    fMaxOccurs = toCopy.getMaxOccurs();
 }
 
 // ---------------------------------------------------------------------------
@@ -134,7 +131,7 @@ static void formatNode( const   ContentSpecNode* const      curNode
     }
 
     // Now handle our type
-    switch(curType)
+    switch(curType & 0x0f)
     {
         case ContentSpecNode::Leaf :
             if (curNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
@@ -171,7 +168,6 @@ static void formatNode( const   ContentSpecNode* const      curNode
             break;
 
         case ContentSpecNode::Choice :
-        case ContentSpecNode::Any_NS_Choice:
             if (parentType != curType)
                 bufToFill.append(chOpenParen);
             formatNode(first, curType, bufToFill);
@@ -233,7 +229,7 @@ int ContentSpecNode::getMinTotalRange() const {
 
     int min = fMinOccurs;
 
-    if (fType == ContentSpecNode::Sequence
+    if ((fType & 0x0f) == ContentSpecNode::Sequence
         || fType == ContentSpecNode::All
         || (fType & 0x0f) == ContentSpecNode::Choice) {
 
@@ -265,7 +261,7 @@ int ContentSpecNode::getMaxTotalRange() const {
          return SchemaSymbols::XSD_UNBOUNDED;
     }
 
-    if (fType == ContentSpecNode::Sequence
+    if ((fType & 0x0f) == ContentSpecNode::Sequence
         || fType == ContentSpecNode::All
         || (fType & 0x0f) == ContentSpecNode::Choice) {
 
