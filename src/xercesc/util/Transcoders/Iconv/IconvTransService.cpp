@@ -256,7 +256,7 @@ void IconvTransService::lowerCase(XMLCh* const toLowerCase) const
 //  IconvLCPTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
 unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText
-                                                  , MemoryManager* const manager)
+                                                  , MemoryManager* const)
 {
     if (!srcText)
         return 0;

@@ -238,7 +238,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
 }
 
 FileHandle XMLPlatformUtils::openFile(const char* const fileName
-                                      , MemoryManager* const manager)
+                                      , MemoryManager* const)
 {
     FileHandle retVal = (FILE*)fopen( fileName , "rb" );
 
@@ -256,7 +256,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
 }
 
 FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
-                                             , MemoryManager* const manager)
+                                             , MemoryManager* const)
 {
     return fopen( fileName , "wb" );
 }
@@ -542,7 +542,7 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 #endif // APP_NO_THREADS
 
-FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const manager)
+FileHandle XMLPlatformUtils::openStdInHandle(MemoryManager* const)
 {
     return (FileHandle)fdopen(dup(0), "rb");
 }

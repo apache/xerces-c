@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/02/05 18:08:38  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.20  2004/01/29 11:52:31  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -825,7 +828,7 @@ inline const XMLCh* SchemaElementDecl::getDOMTypeInfoUri() const {
 //  SchemaElementDecl: Setter methods
 // ---------------------------------------------------------------------------
 inline void
-SchemaElementDecl::setElemId(unsigned int elemId)
+SchemaElementDecl::setElemId(unsigned int)
 {
     //there is not getElemId so this is not needed. mark deprecated.
     //fElemId = elemId;

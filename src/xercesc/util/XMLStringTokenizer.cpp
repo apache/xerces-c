@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/02/05 18:08:38  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2004/01/29 11:48:47  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -134,7 +137,7 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
     : fOffset(0)
     , fStringLen(XMLString::stringLen(srcStr))
     , fString(XMLString::replicate(srcStr, manager))
-    , fDelimeters(XMLString::replicate(delim, fMemoryManager))
+    , fDelimeters(XMLString::replicate(delim, manager))
     , fTokens(0)
     , fMemoryManager(manager)
 {
