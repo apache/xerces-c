@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2001/06/25 13:01:49  knoaman
+ * Add constraint checking on elements in complex types to prevent same
+ * element names from having different definitions - use substitueGroups.
+ *
  * Revision 1.4  2000/07/31 19:18:25  jpolast
  * bug fix in removeAll() to zero out all the pointers.
  *
@@ -236,6 +240,18 @@ template <class TElem> void RefVectorOf<TElem>::removeLastElement()
 
     if (fAdoptedElems)
         delete fElemList[fCurCount];
+}
+
+template <class TElem> 
+bool RefVectorOf<TElem>::containsElement(const TElem* const toCheck) {
+
+    for (unsigned int i = 0; i < fCurCount; i++) {
+        if (fElemList[i] == toCheck) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
