@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/11/05 21:15:16  peiyongz
+ * generate correct <locale>.txt file
+ *
  * Revision 1.1  2002/09/30 22:09:28  peiyongz
  * To generate icu resource file (in text) for error message.
  *
@@ -207,7 +210,28 @@ void ICUResBundFormatter::startOutput(const   XMLCh* const    locale
     const unsigned int bufSize = 4095;
     XMLCh tmpBuf[bufSize + 1];
 
-    swprintf(tmpBuf, L"%s/%s_%s.Msg", outPath, L"root", locale);
+    //
+    // we got to comform to locale specs
+    // that is en_US
+    //
+    XMLCh tempLocale[bufSize+1];
+    XMLCh tempLan[64];
+    int lang_end = XMLString::indexOf(locale, chUnderscore);
+    if (lang_end != -1)
+    {
+        XMLString::subString(tempLan, locale, 0, lang_end);
+        tempLan[lang_end] = 0;
+        XMLString::lowerCase(tempLan);
+        XMLString::copyString(tempLocale, tempLan);
+        tempLocale[lang_end] = 0;
+        XMLString::catString(&(tempLocale[lang_end]), &(locale[lang_end]));
+    }
+    else
+    {
+        XMLString::copyString(tempLocale, locale);
+    }
+
+    swprintf(tmpBuf, L"%s/%s.txt", outPath, tempLocale);
     fOutFl = _wfopen(tmpBuf, L"wt");
     if (!fOutFl)
     {
@@ -216,6 +240,6 @@ void ICUResBundFormatter::startOutput(const   XMLCh* const    locale
     }
 
     // Set the message delimiter
-    fwprintf(fOutFl, L"root { \n");
+    fwprintf(fOutFl, L"%s { \n", tempLocale);
 
 }
