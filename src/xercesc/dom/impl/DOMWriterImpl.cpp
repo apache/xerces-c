@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.36  2003/05/14 16:20:13  gareth
+ * Fix to problem with multiple default namespace attributes being serialized. Patch by Alberto Massari.
+ *
  * Revision 1.35  2003/05/12 16:08:11  gareth
  * fix to #18832. Corrected serilization with regards to namespace nodes. Patch by Alby Massari.
  *
@@ -1001,8 +1004,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                     {
                         if(XMLString::equals(ns, s_xmlnsURI)) 
                         {
-                            if(namespaceMap->containsKey((void*)attribute->getLocalName()))
-                                continue;
+			                const XMLCh* nsPrefix = attribute->getLocalName();
+                            if(XMLString::equals(attribute->getNodeName(),s_xmlns))
+								nsPrefix = XMLUni::fgZeroLenString;
+							if(namespaceMap->containsKey((void*)nsPrefix))
+								continue;
                             namespaceMap->put((void*)attribute->getLocalName(),(XMLCh*)attribute->getNodeValue());
                         }
                         else if(!XMLString::equals(ns, s_xmlURI)) 
