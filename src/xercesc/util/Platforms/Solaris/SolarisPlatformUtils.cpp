@@ -146,7 +146,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     }
     catch(...)
     {
-        panic(XMLPlatformUtils::Panic_NoDefTranscoder);
+        panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
     return retVal;
 }
