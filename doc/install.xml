@@ -124,4 +124,47 @@ setenv XERCESC_NLS_HOME=$XERCESCROOT/lib
 
       </s3>
    </s2>
+
+    <s2 title="Cygwin">
+      <s3 title="Source distribution">
+        <p>The &XercesCName; source is available in the source distribution.
+        </p>
+        <p>Install the &XercesCName; source distribution &XercesCSrcInstallDir;.tar.gz by extracting the files
+           from the compressed archive.</p>
+<source>
+tar -xvzf &XercesCSrcInstallDir;.tar.gz
+</source>
+        <p>This creates a &apos;&XercesCSrcInstallDir;&apos; sub-directory
+		containing the &XercesCName; source distribution. </p>
+
+        <p>If you need to build the &XercesCName; source after installation,
+        please follow the <jump href="build.html">Build Instructions</jump>.</p>
+
+      </s3>
+      <s3 title="Binary distribution">
+		  <p>Install the binary distribution by running
+			  <jump href="http://www.cygwin.com">Cygwin</jump> setup.exe.
+			  When you reach the "Packages" step of the Cygwin Setup wizard,
+			  expand the "Devel" category, then click in the "New" column next
+			  to "xerces-c-devel" until it reads "&XercesCVersion;-X".</p>
+
+		  <p>This will install the necessary libraries and include files
+			  for the &XercesCName; binary distribution.</p>
+
+		  <p>If you wish to run programs linked to &XercesCName; that were
+			  built in the Cygwin environment, you need to add your Cygwin
+			  "bin" directory to your Windows PATH environment variable.
+			  In typical Cygwin installations, the bin directory is in the
+			  Cygwin directory on the drive that windows is installed on.
+			  For instance, if windows is installed to C:\WINNT\System32,
+			  Your Cygwin bin directory may be "C:\cygwin\bin".</p>
+
+		  <p>The binary distribution has the built parser library.  Sample
+			  executables may be available in a future release on the
+			  Cygwin platform.  In the meantime, they may be built from the
+			  source distribution by following the
+			  <jump href="build.html">Build Instructions</jump> for
+			  "Building samples".</p>
+      </s3>
+   </s2>
 </s1>

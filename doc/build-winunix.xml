@@ -107,6 +107,33 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
 
         </s3>
     </s2>
+    <anchor name="CygWin"/>
+    <s2 title="Building &XercesCName; on Windows using Cygwin">
+        <p><em>Do not jump into the build directly before reading this.</em></p>
+
+		<p>&XercesCName; may be built in the
+		<jump href="http://www.cygwin.com">Cygwin</jump> environment for use
+		by Cygwin applications.  As with the <jump href="#UNIX">UNIX</jump>
+		platforms, &XercesCName; on Cygwin uses
+		<jump href="http://www.gnu.org">GNU</jump> tools.  Therefore, with a
+		couple of notable exceptions, &XercesCName; on Cygwin is built using
+		the same instructions as the UNIX platforms.  The build environment
+		variable XERCESCROOT must be set to the proper path containing the
+		&XercesCName; sources and runConfigure must be run with the
+		"-pcygwin -cgcc -xg++" arguments.</p>
+	
+		<p>Note that Cygwin is different from the UNIX platforms in the way
+		that it finds libraries at run time.  While UNIX platforms may use the
+		environment variable LD_LIBRARY_PATH, Cygwin uses the PATH environment
+		variable.</p>
+
+		<p>There is an issue with the
+		<jump href="http://www.gnu.org/software/gcc/gcc.html">gcc/g++</jump>
+		compiler version 2.95, where C++ exceptions thrown from a dll will
+		cause the application to crash, regardless of whether there is a "catch"
+		statement.  This bug doesn't occur in tests using gcc 3.1 or 3.2, so it
+		is recommended that you use gcc 3.1 or higher.</p>
+    </s2>
 
     <anchor name="UNIX"/>
     <s2 title="Building &XercesCName; on UNIX platforms">
@@ -116,7 +143,7 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
         <jump href="http://www.gnu.org/software/make/make.html">GNU Make</jump>
         to build the system. You must first make sure you
         have these tools installed on your system before proceeding.
-        If you don not have required tools, ask your system administrator
+        If you do not have required tools, ask your system administrator
         to get them for you. These tools are free under the GNU Public License
         and may be obtained from the
         <jump href="http://www.gnu.org">Free Software Foundation</jump>.</p>
