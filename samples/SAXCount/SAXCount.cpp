@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.26  2002/11/08 16:19:05  peiyongz
+* no message
+*
 * Revision 1.25  2002/11/07 18:31:04  peiyongz
 * command line option for "locale"
 *
@@ -170,7 +173,6 @@ void usage()
             "    -n          Enable namespace processing. Defaults to off.\n"
             "    -s          Enable schema processing. Defaults to off.\n"
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
-            "    -special:nel  Recognize nel \n"
             "    -locale=ll_CC specify the locale, default: en_US \n"
 		    "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
