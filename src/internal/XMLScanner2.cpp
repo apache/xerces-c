@@ -2615,6 +2615,7 @@ void XMLScanner::scanComment()
     //  than just a name.
     //
     States curState = InText;
+    bool gotLeadingSurrogate = false;
     while (true)
     {
         // Get the next character
@@ -2627,18 +2628,36 @@ void XMLScanner::scanComment()
             ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
         }
 
-        // Make sure its a valid XML character
-        if (!XMLReader::isXMLChar(nextCh))
+        // Check for correct surrogate pairs
+        if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
         {
-            XMLCh tmpBuf[9];
-            XMLString::binToText
-            (
-                nextCh
-                , tmpBuf
-                , 8
-                , 16
-            );
-            emitError(XMLErrs::InvalidCharacter, tmpBuf);
+            if (gotLeadingSurrogate)
+                emitError(XMLErrs::Expected2ndSurrogateChar);
+            else
+                gotLeadingSurrogate = true;
+        }
+        else
+        {
+            if (gotLeadingSurrogate)
+            {
+                if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
+                    emitError(XMLErrs::Expected2ndSurrogateChar);
+            }
+            // Its got to at least be a valid XML character
+            else if (!XMLReader::isXMLChar(nextCh)) {
+
+                XMLCh tmpBuf[9];
+                XMLString::binToText
+                (
+                    nextCh
+                    , tmpBuf
+                    , 8
+                    , 16
+                );
+                emitError(XMLErrs::InvalidCharacter, tmpBuf);
+            }
+
+            gotLeadingSurrogate = false;
         }
 
         if (curState == InText)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2001/12/14 20:21:37  knoaman
+ * Add surrogate support to comments and processing instrunctions.
+ *
  * Revision 1.22  2001/12/06 17:51:18  tng
  * Performance Enhancement. The ContentSpecNode constructor always copied the QName
  * that was passed to it.  Added a second constructor that allows the QName to be just assigned, not copied.
@@ -884,11 +887,9 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
                     if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
                         fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
                 }
-                gotLeadingSurrogate = false;
-
                 // Its got to at least be a valid XML character
-                if (!XMLReader::isXMLChar(nextCh))
-                {
+                else if (!XMLReader::isXMLChar(nextCh)) {
+
                     XMLCh tmpBuf[9];
                     XMLString::binToText
                     (
@@ -904,6 +905,8 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
                         , tmpBuf
                     );
                 }
+
+                gotLeadingSurrogate = false;
             }
 
             //
@@ -1384,6 +1387,7 @@ void DTDScanner::scanComment()
     //  two here, since its to be used for stuff that is potentially longer
     //  than just a name.
     //
+    bool   gotLeadingSurrogate = false;
     States curState = InText;
     while (true)
     {
@@ -1397,18 +1401,36 @@ void DTDScanner::scanComment()
             ThrowXML(UnexpectedEOFException, XMLExcepts::Gen_UnexpectedEOF);
         }
 
-        // Make sure its a valid XML character
-        if (!XMLReader::isXMLChar(nextCh))
+        // Check for correct surrogate pairs
+        if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
         {
-            XMLCh tmpBuf[9];
-            XMLString::binToText
-            (
-                nextCh
-                , tmpBuf
-                , 8
-                , 16
-            );
-            fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
+            if (gotLeadingSurrogate)
+                fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
+            else
+                gotLeadingSurrogate = true;
+        }
+        else
+        {
+            if (gotLeadingSurrogate)
+            {
+                if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
+                    fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
+            }
+            // Its got to at least be a valid XML character
+            else if (!XMLReader::isXMLChar(nextCh)) {
+
+                XMLCh tmpBuf[9];
+                XMLString::binToText
+                (
+                    nextCh
+                    , tmpBuf
+                    , 8
+                    , 16
+                );
+                fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
+            }
+
+            gotLeadingSurrogate = false;
         }
 
         if (curState == InText)
@@ -3629,6 +3651,8 @@ void DTDScanner::scanPI()
         // Skip any leading spaces
         fReaderMgr->skipPastSpaces();
 
+        bool gotLeadingSurrogate = false;
+
         // It does have a target, so lets move on to deal with that.
         while (1)
         {
@@ -3649,18 +3673,36 @@ void DTDScanner::scanPI()
                     break;
             }
 
-            // Watch for invalid chars but try to keep going
-            if (!XMLReader::isXMLChar(nextCh))
+            // Check for correct surrogate pairs
+            if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
             {
-                XMLCh tmpBuf[9];
-                XMLString::binToText
-                (
-                    nextCh
-                    , tmpBuf
-                    , 8
-                    , 16
-                );
-                fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                if (gotLeadingSurrogate)
+                    fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
+                else
+                    gotLeadingSurrogate = true;
+            }
+             else
+            {
+                if (gotLeadingSurrogate)
+                {
+                    if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
+                        fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
+                }
+                // Its got to at least be a valid XML character
+                else if (!XMLReader::isXMLChar(nextCh)) {
+
+                    XMLCh tmpBuf[9];
+                    XMLString::binToText
+                    (
+                        nextCh
+                        , tmpBuf
+                        , 8
+                        , 16
+                    );
+                    fScanner->emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                }
+
+                gotLeadingSurrogate = false;
             }
             bbTarget.append(nextCh);
         }

@@ -2066,6 +2066,8 @@ void XMLScanner::scanPI()
         // Skip any leading spaces
         fReaderMgr.skipPastSpaces();
 
+        bool gotLeadingSurrogate = false;
+
         // It does have a target, so lets move on to deal with that.
         while (1)
         {
@@ -2086,18 +2088,36 @@ void XMLScanner::scanPI()
                     break;
             }
 
-            // Watch for invalid chars but try to keep going
-            if (!XMLReader::isXMLChar(nextCh))
+            // Check for correct surrogate pairs
+            if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
             {
-                XMLCh tmpBuf[9];
-                XMLString::binToText
-                (
-                    nextCh
-                    , tmpBuf
-                    , 8
-                    , 16
-                );
-                emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                if (gotLeadingSurrogate)
+                    emitError(XMLErrs::Expected2ndSurrogateChar);
+                else
+                    gotLeadingSurrogate = true;
+            }
+             else
+            {
+                if (gotLeadingSurrogate)
+                {
+                    if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
+                }
+                // Its got to at least be a valid XML character
+                else if (!XMLReader::isXMLChar(nextCh)) {
+
+                    XMLCh tmpBuf[9];
+                    XMLString::binToText
+                    (
+                        nextCh
+                        , tmpBuf
+                        , 8
+                        , 16
+                    );
+                    emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                }
+
+                gotLeadingSurrogate = false;
             }
 
             bbTarget.append(nextCh);
