@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/04/20 15:30:49  peiyongz
+ * to generate code for private default constructor
+ *
  * Revision 1.18  2003/05/14 19:11:34  gareth
  * Added code creation for new method that returns error serverity the DOM way.
  *
@@ -707,6 +710,7 @@ int Xlat_main(int argC, XMLCh** argV)
                 //                
                 fwprintf(outHeader, L"// This file is generated, don't edit it!!\n\n");
                 fwprintf(outHeader, L"#if !defined(ERRHEADER_%s)\n", xmlStrToPrintable(errNameSpace) );
+                releasePrintableStr                
                 fwprintf(outHeader, L"#define ERRHEADER_%s\n\n", xmlStrToPrintable(errNameSpace) );
                 releasePrintableStr
 
@@ -918,6 +922,14 @@ int Xlat_main(int argC, XMLCh** argV)
 
                 }
 
+                // the private default ctor
+                fwprintf(outHeader, L"\n");
+                fwprintf(outHeader, L"private:\n");
+                fwprintf(outHeader, L"    // -----------------------------------------------------------------------\n");
+                fwprintf(outHeader, L"    //  Unimplemented constructors and operators\n");
+                fwprintf(outHeader, L"    // -----------------------------------------------------------------------\n");
+                fwprintf(outHeader, L"    %s();\n", xmlStrToPrintable(errNameSpace));
+                releasePrintableStr
 
                 // And close out the class declaration, the namespace declaration and the header file
                 fwprintf(outHeader, L"};\n\n");
