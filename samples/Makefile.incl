@@ -205,6 +205,16 @@ EXTRA_LINK_OPTIONS=${EXTRA_LIBS}
 SHLIBSUFFIX=.dll
 endif
 
+#=============== INTERIX SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, INTERIX)
+CMP= -c ${CXXFLAGS} 
+CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -D_ALL_SOURCE 
+LINK =  ${COMPILER} -D${PLATFORM} ${LDFLAGS} 
+PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
+EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
+SHLIBSUFFIX=.so
+endif
+
 #=============== MINGW SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, MINGW)
 CMP= -c ${CXXFLAGS} -fexceptions
