@@ -236,9 +236,55 @@ static const XMLCh PATH_SEPARATORS[] =
 };
 
 // ---------------------------------------------------------------------------
-//  XMLUri: Constructors and initialization methods
+//  XMLUri: Constructors and Helper methods
 // ---------------------------------------------------------------------------
+// ctor# 2
+XMLUri::XMLUri(const XMLCh* const uriSpec)
+:fScheme(0)
+,fUserInfo(0)
+,fHost(0)
+,fPort(-1)
+,fPath(0)
+,fQueryString(0)
+,fFragment(0)
+{
+    try {
+        initialize((XMLUri *)0, uriSpec);
+    }
+    catch (...)
+    {
+        cleanUp();
+        throw;
+    }
+}
+
+// ctor# 7 relative ctor
+XMLUri::XMLUri(const XMLUri* const      baseURI
+                    , const XMLCh* const       uriSpec)
+:fScheme(0)
+,fUserInfo(0)
+,fHost(0)
+,fPort(-1)
+,fPath(0)
+,fQueryString(0)
+,fFragment(0)
+{
+    try {
+        initialize(baseURI, uriSpec);
+    }
+    catch (...)
+    {
+        cleanUp();
+        throw;
+    }
+}
+
 XMLUri::~XMLUri()
+{
+    cleanUp();
+}
+
+void XMLUri::cleanUp()
 {
     if (getScheme())
         delete[] fScheme;
@@ -802,14 +848,14 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             fFragment = new XMLCh[index - start + 1];
             XMLString::subString(fFragment, uriSpec, start, index);
         }
-        else 
+        else
         {
             // RFC 2396, 4.0. URI Reference
             // URI-reference = [absoulteURI | relativeURI] [# fragment]
             //
             // RFC 2396, 4.1. Fragment Identifier
-            // fragment = *uric 
-            // 
+            // fragment = *uric
+            //
             // empty fragment is valid
             fFragment = 0;
         }

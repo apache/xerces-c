@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/08/23 20:45:24  tng
+ * .Memory leak fix: XMLUri data not deleted if constructor failed.
+ *
  * Revision 1.2  2002/02/20 18:17:02  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -430,6 +433,12 @@ private:
      */
      void initializePath(const XMLCh* const uriSpec);
 
+     /**
+      * cleanup the data variables
+      *
+      */
+     void cleanUp();
+
     // -----------------------------------------------------------------------
     //  Data members
     //
@@ -448,37 +457,6 @@ private:
     XMLCh*          fFragment;
 
 };
-
-// ---------------------------------------------------------------------------
-//  XMLUri: Public operators
-// ---------------------------------------------------------------------------
-
-// ctor# 2
-inline XMLUri::XMLUri(const XMLCh* const uriSpec)
-:fScheme(0)
-,fUserInfo(0)
-,fHost(0)
-,fPort(-1)
-,fPath(0)
-,fQueryString(0)
-,fFragment(0)
-{
-    initialize((XMLUri *)0, uriSpec);
-}
-
-// ctor# 7 relative ctor
-inline XMLUri::XMLUri(const XMLUri* const      baseURI
-                    , const XMLCh* const       uriSpec)
-:fScheme(0)
-,fUserInfo(0)
-,fHost(0)
-,fPort(-1)
-,fPath(0)
-,fQueryString(0)
-,fFragment(0)
-{
-    initialize(baseURI, uriSpec);
-}
 
 // ---------------------------------------------------------------------------
 //  XMLUri: Getter methods
