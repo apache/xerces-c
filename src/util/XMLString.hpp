@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/05/03 20:34:35  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.18  2001/05/03 19:17:35  knoaman
  * TraverseSchema Part II.
  *
@@ -1092,6 +1095,13 @@ public:
       */
     static RefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc);
 
+    /** Find is the string appears in the enum list
+      * @param toFind the string to be found
+      * @param enumList the list
+      * return true if found
+      */
+    static bool isInList(const XMLCh* const toFind, const XMLCh* const enumList);
+
     //@}
 
     /** @name Formatting functions */
@@ -1228,7 +1238,7 @@ inline bool XMLString::endsWith(const XMLCh* const toTest,
 
     unsigned int suffixLen = XMLString::stringLen(suffix);
 
-    return regionMatches(toTest, XMLString::stringLen(toTest) - suffixLen, 
+    return regionMatches(toTest, XMLString::stringLen(toTest) - suffixLen,
                          suffix, 0, suffixLen);
 }
 

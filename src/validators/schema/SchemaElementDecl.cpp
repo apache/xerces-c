@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/03 20:34:42  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.6  2001/05/03 19:17:59  knoaman
  * TraverseSchema Part II.
  *
@@ -103,8 +106,9 @@ SchemaElementDecl::SchemaElementDecl() :
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fSubstitutionGroupName(0)
-    , fTypeFromAnotherSchemaURI(0)    
+    , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
+    , fAttDefs(0)
 {
 }
 
@@ -124,6 +128,7 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     , fSubstitutionGroupName(0)
     , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
+    , fAttDefs(0)
 {
     setElementName(prefix, localPart, uriId);
 }
@@ -142,6 +147,7 @@ SchemaElementDecl::SchemaElementDecl(QName* const                  elementName
     , fSubstitutionGroupName(0)
     , fTypeFromAnotherSchemaURI(0)
     , fComplexTypeInfo(0)
+    , fAttDefs(0)
 {
     setElementName(elementName);
 }
@@ -150,6 +156,7 @@ SchemaElementDecl::~SchemaElementDecl()
 {
     delete [] fDefaultValue;
     delete [] fSubstitutionGroupName;
+    delete fAttDefs;
 }
 
 
@@ -164,7 +171,37 @@ XMLAttDef* SchemaElementDecl::findAttr(const XMLCh* const    qName
                                      , bool&           wasAdded) const
 {
     if (fComplexTypeInfo == 0) {
-        return 0;
+        if (options == XMLElementDecl::AddIfNotFound) {
+            SchemaAttDef* retVal = 0;
+
+            // If no att list exist yet, then create one
+            if (!fAttDefs) {
+                // Use a hash modulus of 29 and tell it owns its elements
+                ((SchemaElementDecl*)this)->fAttDefs = new RefHash2KeysTableOf<SchemaAttDef>(29, true);
+            }
+
+            retVal = fAttDefs->get(baseName, uriId);
+
+            // Fault it in if not found and ask to add it
+            if (!retVal)
+            {
+                // And add a default attribute for this name
+                retVal = new SchemaAttDef(prefix, baseName, uriId);
+                retVal->setElemId(getId());
+                fAttDefs->put((void*)baseName, uriId, retVal);
+
+                wasAdded = true;
+            }
+             else
+            {
+                wasAdded = false;
+            }
+            return retVal;
+        }
+        else {
+            wasAdded = false;
+            return 0;
+        }
     }
 
     return fComplexTypeInfo->findAttr(qName, uriId, baseName, prefix, options, wasAdded);

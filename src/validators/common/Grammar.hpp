@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/03 20:34:40  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.2  2001/04/19 18:17:31  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -80,9 +83,29 @@
 class VALIDATORS_EXPORT Grammar
 {
 public:
+
+    // -----------------------------------------------------------------------
+    //  Class Specific Types
+    //
+    //  DTDGrammarType    - Indicate this Grammar is built from a DTD.
+    //  SchemaGrammarType - Indicate this Grammar is built from a Schema.
+    //
+    //  TOP_LEVEL_SCOPE - outermost scope level (i.e. global) of a declaration.
+    //                    For DTD, all element decls and attribute decls always
+    //                    have TOP_LEVEL_SCOPE.  For schema, it may varies if
+    //                    it is inside a complex type.
+    //
+    //  UNKNOWN_SCOPE   - unknown scope level.  None of the decls should have this.
+    //
+    // -----------------------------------------------------------------------
     enum GrammarType {
         DTDGrammarType
       , SchemaGrammarType
+    };
+
+    enum {
+         UNKNOWN_SCOPE = -2
+       , TOP_LEVEL_SCOPE = -1
     };
 
     // -----------------------------------------------------------------------

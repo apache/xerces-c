@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/03 20:34:45  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.3  2001/04/19 18:17:40  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -98,15 +101,20 @@ public:
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setXsiTypeAttValue(const XMLCh* const xsiTypeAttValue);
     void setGrammarResolver(GrammarResolver* grammarResolver);
+
+    void setXsiType(const XMLCh* const        prefix
+      , const XMLCh* const        localPart
+	   , const unsigned int        uriId);
+
+    void setNillable(bool isNil);
 
     // -----------------------------------------------------------------------
     //  Implementation of the XMLValidator interface
     // -----------------------------------------------------------------------
     virtual int checkContent
     (
-        const   unsigned int    elemId
+        XMLElementDecl* const   elemDecl
         , QName** const         children
         , const unsigned int    childCount
     );
@@ -132,8 +140,13 @@ public:
 
     virtual void validateAttrValue
     (
-        const   XMLAttDef&                  attDef
+        const   XMLAttDef*                  attDef
         , const XMLCh* const                attrValue
+    );
+
+    virtual void validateElement
+    (
+        const   XMLElementDecl*             elemDef
     );
 
     virtual Grammar* getGrammar();
@@ -159,24 +172,23 @@ private:
     //  Private data members
     //
     // -----------------------------------------------------------------------
-    //  The following comes from the Scanner
+    //  The following comes from or set by the Scanner
     //  fSchemaGrammar
     //      The current schema grammar used by the validator
     //
     //  fGrammarResolver
     //      All the schema grammar stored
     //
-    //  fXsiTypeAttValue
+    //  fXsiType
     //      Store the Schema Type Attribute Value if schema type is specified
     //
+    //  fNil
+    //      Indicates if Nillable has been set
     // -----------------------------------------------------------------------
     //  The following used internally in the validator
     //
     //  fXsiTypeValidator
     //      The validator used for xsi type validation
-    //
-    //  fCurrentDV
-    //      Current DataTypeValidator used by the validator
     //
     //  fDatatypeBuffer
     //      Buffer for simple type element string content
@@ -190,14 +202,13 @@ private:
     // -----------------------------------------------------------------------
     SchemaGrammar* fSchemaGrammar;
     GrammarResolver* fGrammarResolver;
-    const XMLCh* fXsiTypeAttValue;
+    QName* fXsiType;
+    bool fNil;
 
     DatatypeValidator* fXsiTypeValidator;
-    DatatypeValidator* fCurrentDV;
 
     bool fBufferDatatype;
     XMLBuffer fDatatypeBuffer;
-    bool fFirstChunk;
     bool fTrailing;
 };
 
@@ -205,12 +216,20 @@ private:
 // ---------------------------------------------------------------------------
 //  SchemaValidator: Setter methods
 // ---------------------------------------------------------------------------
-inline void SchemaValidator::setXsiTypeAttValue(const XMLCh* const xsiTypeAttValue) {
-    fXsiTypeAttValue = xsiTypeAttValue;
-}
-
 inline void SchemaValidator::setGrammarResolver(GrammarResolver* grammarResolver) {
     fGrammarResolver = grammarResolver;
+}
+
+inline void SchemaValidator::setXsiType(const XMLCh* const        prefix
+      , const XMLCh* const        localPart
+	   , const unsigned int        uriId)
+{
+    delete fXsiType;
+    fXsiType = new QName(prefix, localPart, uriId);
+}
+
+inline void SchemaValidator::setNillable(bool isNil) {
+    fNil = isNil;
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/03 20:34:43  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.2  2001/04/19 17:43:19  knoaman
  * More schema implementation classes.
  *
@@ -177,6 +180,7 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+    RefHash3KeysIdPoolEnumerator<SchemaElementDecl> getElemEnumerator() const;
     const XMLCh* getTargetNamespace() const;
     XMLCh* getTargetNamespace() ;
     RefHashTableOf<XMLAttDef>* getAttributeDeclRegistry() const;
@@ -236,6 +240,12 @@ private:
 // ---------------------------------------------------------------------------
 //  SchemaGrammar: Getter methods
 // ---------------------------------------------------------------------------
+inline RefHash3KeysIdPoolEnumerator<SchemaElementDecl>
+SchemaGrammar::getElemEnumerator() const
+{
+    return RefHash3KeysIdPoolEnumerator<SchemaElementDecl>(fElemDeclPool);
+}
+
 inline XMLCh* SchemaGrammar::getTargetNamespace() {
     return fTargetNamespace;
 }
@@ -249,7 +259,7 @@ inline RefHashTableOf<XMLAttDef>* SchemaGrammar::getAttributeDeclRegistry() cons
     return fAttributeDeclRegistry;
 }
 
-inline RefHashTableOf<ComplexTypeInfo>* 
+inline RefHashTableOf<ComplexTypeInfo>*
 SchemaGrammar::getComplexTypeRegistry() const {
 
     return fComplexTypeRegistry;
@@ -272,7 +282,7 @@ inline void SchemaGrammar::setTargetNamespace(const XMLCh* const targetNamespace
     fTargetNamespace = XMLString::replicate(targetNamespace);
 }
 
-inline void 
+inline void
 SchemaGrammar::setAttributeDeclRegistry(RefHashTableOf<XMLAttDef>* const attReg) {
 
     fAttributeDeclRegistry = attReg;
@@ -284,7 +294,7 @@ SchemaGrammar::setComplexTypeRegistry(RefHashTableOf<ComplexTypeInfo>* const oth
     fComplexTypeRegistry = other;
 }
 
-inline void 
+inline void
 SchemaGrammar::setDatatypeRegistry(DatatypeValidatorFactory* const dvRegistry) {
 
     fDatatypeRegistry = dvRegistry;

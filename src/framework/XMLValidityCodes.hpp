@@ -89,11 +89,12 @@ public :
       , NilAttrNotEmpty                    = 76
       , FixedDifferentFromActual           = 77
       , NoDatatypeValidatorForAttribute    = 78
-      , E_HighBounds                       = 79
-      , W_LowBounds                        = 80
-      , W_HighBounds                       = 81
-      , F_LowBounds                        = 82
-      , F_HighBounds                       = 83
+      , GenericError                       = 79
+      , E_HighBounds                       = 80
+      , W_LowBounds                        = 81
+      , W_HighBounds                       = 82
+      , F_LowBounds                        = 83
+      , F_HighBounds                       = 84
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

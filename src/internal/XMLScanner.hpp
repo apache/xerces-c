@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/05/03 20:34:29  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.15  2001/05/03 19:09:09  knoaman
  * Support Warning/Error/FatalError messaging.
  * Validity constraints errors are treated as errors, with the ability by user to set
@@ -367,6 +370,21 @@ public :
 
     const XMLCh* getURIText(const   unsigned int    uriId) const;
 
+    /**
+      * This method separate the passed QName into prefix
+      * and local part, and then return the URI id by resolving
+      * the prefix.
+      *
+      * mode: Indicate if this QName comes from an Element or Attribute
+      */
+    unsigned int resolveQName
+    (
+        const   XMLCh* const        qName
+        ,       XMLBuffer&          nameBufToFill
+        ,       XMLBuffer&          prefixBufToFill
+        , const ElemStack::MapModes mode
+    );
+
     /* tell if the validator comes from user */
     bool isValidatorFromUser();
 
@@ -492,13 +510,6 @@ private :
         ,       XMLBuffer&          toFill
     );
 
-    unsigned int resolveQName
-    (
-        const   XMLCh* const        qName
-        ,       XMLBuffer&          nameBufToFill
-        ,       XMLBuffer&          prefixBufToFill
-        , const ElemStack::MapModes mode
-    );
     unsigned int resolvePrefix
     (
         const   XMLCh* const        prefix

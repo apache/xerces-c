@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/03 20:34:39  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.4  2001/04/19 18:17:29  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -205,79 +208,6 @@ private :
     NodeTypes           fType;
 };
 
-
-// ---------------------------------------------------------------------------
-//  ContentSpecNode: Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline ContentSpecNode::ContentSpecNode() :
-
-    fElement(0)
-    , fFirst(0)
-    , fSecond(0)
-    , fType(ContentSpecNode::Leaf)
-{
-    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
-}
-
-inline
-ContentSpecNode::ContentSpecNode(QName* const element) :
-
-    fElement(0)
-    , fFirst(0)
-    , fSecond(0)
-    , fType(ContentSpecNode::Leaf)
-{
-    if (!element)
-        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
-    else
-        fElement = new QName(element);
-}
-
-inline
-ContentSpecNode::ContentSpecNode(const  NodeTypes               type
-                                ,       ContentSpecNode* const  firstAdopt
-                                ,       ContentSpecNode* const  secondAdopt) :
-
-    fElement(0)
-    , fFirst(firstAdopt)
-    , fSecond(secondAdopt)
-    , fType(type)
-{
-    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
-}
-
-inline
-ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
-{
-    const QName* tempElement = toCopy.getElement();
-    if (tempElement)
-        fElement = new QName(*tempElement);
-    else
-        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
-
-    const ContentSpecNode *tmp = toCopy.getFirst();
-    if (!tmp)
-        fFirst = new ContentSpecNode(*tmp);
-    else
-        fFirst = 0;
-
-    tmp = toCopy.getSecond();
-    if (!tmp)
-        fSecond = new ContentSpecNode(*tmp);
-    else
-        fSecond = 0;
-
-    fType = toCopy.getType();
-}
-
-inline ContentSpecNode::~ContentSpecNode()
-{
-    // Delete our children, which cause recursive cleanup
-    delete fFirst;
-    delete fSecond;
-    delete fElement;
-}
-
 // ---------------------------------------------------------------------------
 //  ContentSpecNode: Getter methods
 // ---------------------------------------------------------------------------
@@ -354,6 +284,79 @@ inline void ContentSpecNode::setSecond(ContentSpecNode* const toAdopt)
 inline void ContentSpecNode::setType(const NodeTypes type)
 {
     fType = type;
+}
+
+
+// ---------------------------------------------------------------------------
+//  ContentSpecNode: Constructors and Destructor
+// ---------------------------------------------------------------------------
+inline ContentSpecNode::ContentSpecNode() :
+
+    fElement(0)
+    , fFirst(0)
+    , fSecond(0)
+    , fType(ContentSpecNode::Leaf)
+{
+    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+}
+
+inline
+ContentSpecNode::ContentSpecNode(QName* const element) :
+
+    fElement(0)
+    , fFirst(0)
+    , fSecond(0)
+    , fType(ContentSpecNode::Leaf)
+{
+    if (!element)
+        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+    else
+        fElement = new QName(element);
+}
+
+inline
+ContentSpecNode::ContentSpecNode(const  NodeTypes               type
+                                ,       ContentSpecNode* const  firstAdopt
+                                ,       ContentSpecNode* const  secondAdopt) :
+
+    fElement(0)
+    , fFirst(firstAdopt)
+    , fSecond(secondAdopt)
+    , fType(type)
+{
+    fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+}
+
+inline
+ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
+{
+    const QName* tempElement = toCopy.getElement();
+    if (tempElement)
+        fElement = new QName(*tempElement);
+    else
+        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+
+    const ContentSpecNode *tmp = toCopy.getFirst();
+    if (!tmp)
+        fFirst = new ContentSpecNode(*tmp);
+    else
+        fFirst = 0;
+
+    tmp = toCopy.getSecond();
+    if (!tmp)
+        fSecond = new ContentSpecNode(*tmp);
+    else
+        fSecond = 0;
+
+    fType = toCopy.getType();
+}
+
+inline ContentSpecNode::~ContentSpecNode()
+{
+    // Delete our children, which cause recursive cleanup
+    delete fFirst;
+    delete fSecond;
+    delete fElement;
 }
 
 #endif

@@ -55,8 +55,17 @@
 #
 #
 # $Log$
+# Revision 1.8  2001/05/03 20:34:42  tng
+# Schema: SchemaValidator update
+#
 # Revision 1.7  2001/05/03 19:17:57  knoaman
 # TraverseSchema Part II.
+#
+# Revision 1.6  2001/04/19 17:43:14  knoaman
+# More schema implementation classes.
+#
+# Revision 1.5  2001/04/04 18:02:04  tng
+# Schema: include failure on Unix for XUtil.cpp.  Fixed by Pei Yong Zhang.
 #
 # Revision 1.4  2001/03/30 16:06:00  tng
 # Schema: XUtil, added by Pei Yong Zhang

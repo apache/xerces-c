@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/05/03 20:34:22  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.13  2001/04/19 18:16:52  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -336,7 +339,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       *
       * @return The URI Id of the element decl, or the emptyNamespaceId if not applicable.
       */
-    const int getURI() const;
+    const unsigned int getURI() const;
 
     /** Get the QName of this element type.
       *
@@ -366,7 +369,7 @@ class XMLPARSER_EXPORT XMLElementDecl
       * internally but still allow the outside world to do simple stuff with
       * them.
       *
-      * @return A const pointer to the element's content model, via the basic
+      * @return A pointer to the element's content model, via the basic
       * abstract content model type.
       */
     XMLContentModel* getContentModel();
@@ -604,7 +607,7 @@ inline XMLCh* XMLElementDecl::getBaseName()
     return fElementName->getLocalPart();
 }
 
-inline const int XMLElementDecl::getURI() const
+inline const unsigned int XMLElementDecl::getURI() const
 {
     return fElementName->getURI();
 }

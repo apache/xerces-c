@@ -75,7 +75,10 @@
 #include <util/UnexpectedEOFException.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
+#include <util/XMLURL.hpp>
 #include <sax/InputSource.hpp>
+#include <framework/LocalFileInputSource.hpp>
+#include <framework/URLInputSource.hpp>
 #include <framework/XMLErrorReporter.hpp>
 #include <framework/XMLDocumentHandler.hpp>
 #include <framework/XMLEntityHandler.hpp>
@@ -87,9 +90,11 @@
 #include <parsers/DOMParser.hpp>
 #include <dom/DOM_DOMException.hpp>
 #include <sax/EntityResolver.hpp>
+#include <validators/common/ContentLeafNameTypeVector.hpp>
 #include <validators/datatype/DatatypeValidator.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 #include <validators/schema/SchemaGrammar.hpp>
+#include <validators/schema/TraverseSchema.hpp>
 
 
 
@@ -202,7 +207,8 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //
         const bool isNSAttr = (uriId == fXMLNSNamespaceId)
                               || (uriId == fXMLNamespaceId)
-                              || !XMLString::compareString(suffPtr, XMLUni::fgXMLNSString);
+                              || !XMLString::compareString(suffPtr, XMLUni::fgXMLNSString)
+                              || !XMLString::compareString(getURIText(uriId), SchemaSymbols::fgURI_XSI);
 
 
         //
@@ -217,7 +223,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  the uriID/name and the raw QName buffer, since we don't know
             //  how the derived validator and its elements store attributes.
             //
-            bool wasAdded;
+            bool wasAdded = false;
             XMLAttDef* attDef = elemDecl.findAttr
             (
                 curPair->getKey()
@@ -313,13 +319,15 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
                     {
                         // normalize the attribute according to schema whitespace facet
+                        XMLBuffer toFill;
                         DatatypeValidator* tempDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
-                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), normBuf);
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), toFill);
+                        normBuf.set(toFill.getRawBuffer());
                     }
 
                     fValidator->validateAttrValue
                     (
-                        *attDef
+                        attDef
                         , normBuf.getRawBuffer()
                     );
                 }
@@ -407,9 +415,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //
         // Check after all specified attrs are scanned
         // (1) report error for REQUIRED attrs that are missing (V_TAGc)
-        // (2) check that FIXED attrs have matching value (V_TAGd)
-        // (3) add default attrs (FIXED and NOT_FIXED)
-        // (4) (schema) report error for PROHIBITED attrs that are present (V_TAGc)
+        // (2) add default attrs if missing (FIXED and NOT_FIXED)
         //
         XMLAttDefList& attDefList = elemDecl.getAttDefList();
         while (attDefList.hasMoreElements())
@@ -420,6 +426,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
             if (!curDef.getProvided())
             {
+                //the attributes is not provided
                 if (fValidate)
                 {
                     // If we are validating and its required, then an error
@@ -461,25 +468,39 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         fValidator->faultInAttr(*curAtt, curDef);
                         fAttrList->addElement(curAtt);
                     }
-                     else
+                    else
                     {
                         curAtt = fAttrList->elementAt(retCount);
                         fValidator->faultInAttr(*curAtt, curDef);
                     }
 
-                    //
-                    //  Map the new attribute's prefix to a URI id and store
-                    //  that in the attribute object.
-                    //
-                    curAtt->setURIId
-                    (
-                        resolvePrefix(curAtt->getPrefix(), ElemStack::Mode_Attribute)
-                    );
+                    if (fGrammar->getGrammarType() == Grammar::DTDGrammarType)
+                    {
+                        //
+                        //  Map the new attribute's prefix to a URI id and store
+                        //  that in the attribute object.
+                        //
+                        curAtt->setURIId
+                        (
+                            resolvePrefix(curAtt->getPrefix(), ElemStack::Mode_Attribute)
+                        );
+                    }
 
                     // Indicate it was not explicitly specified and bump count
                     curAtt->setSpecified(false);
                     retCount++;
                 }
+            }
+            else
+            {
+                //attribute is provided
+                // (schema) report error for PROHIBITED attrs that are present (V_TAGc)
+                if (defType == XMLAttDef::Prohibited)
+                    fValidator->emitError
+                    (
+                        XMLValid::ProhibitedAttributePresent
+                        , curDef.getFullName()
+                    );
             }
         }
     }
@@ -695,74 +716,6 @@ XMLScanner::resolvePrefix(  const   XMLCh* const        prefix
 }
 
 
-unsigned int
-XMLScanner::resolveQName(   const   XMLCh* const        qName
-                            ,       XMLBuffer&          nameBuf
-                            ,       XMLBuffer&          prefixBuf
-                            , const ElemStack::MapModes mode)
-{
-    // Reset both target buffers in case we don't get anything for either
-    nameBuf.reset();
-    prefixBuf.reset();
-
-    //
-    //  Lets split out the qName into a URI and name buffer first. The URI
-    //  can be empty.
-    //
-    const int colonPos = XMLString::indexOf(qName, chColon);
-    unsigned int uriId = 0;
-    if (colonPos == -1)
-    {
-        //
-        //  Its all name with no prefix, so put the whole thing into the name
-        //  buffer. Then map the empty string to a URI, since the empty string
-        //  represents the default namespace. This will either return some
-        //  explicit URI which the default namespace is mapped to, or the
-        //  the default global namespace.
-        //
-        nameBuf.append(qName);
-        bool unknown;
-        uriId = fElemStack.mapPrefixToURI(prefixBuf.getRawBuffer(), mode, unknown);
-
-        #if defined(XERCES_DEBUG)
-        if (unknown)
-        {
-            // <TBD> This one should never be unknown
-        }
-        #endif
-    }
-     else
-    {
-        //
-        //  Copy the chars up to but not including the colon into the prefix
-        //  buffer.
-        //
-        prefixBuf.append(qName, colonPos);
-
-        // And copy over the rest of the chars to the name buffer
-        nameBuf.append(&qName[colonPos+1]);
-
-        //
-        //  Watch for the special namespace prefixes. We always map these to
-        //  special URIs. 'xml' gets mapped to the official URI that its defined
-        //  to map to by the NS spec. xmlns gets mapped to a special place holder
-        //  URI that we define (so that it maps to something checkable.)
-        //
-        if (!XMLString::compareString(prefixBuf.getRawBuffer(), XMLUni::fgXMLNSString))
-            uriId = fXMLNSNamespaceId;
-        else if (!XMLString::compareString(prefixBuf.getRawBuffer(), XMLUni::fgXMLString))
-            uriId = fXMLNamespaceId;
-        else
-        {
-            bool unknown;
-            uriId = fElemStack.mapPrefixToURI(prefixBuf.getRawBuffer(), mode, unknown);
-            if (unknown)
-                emitError(XMLErrs::UnknownPrefix, prefixBuf.getRawBuffer());
-        }
-    }
-    return uriId;
-}
-
 //
 //  This method will reset the scanner data structures, and related plugged
 //  in stuff, for a new scan session. We get the input source for the primary
@@ -785,7 +738,7 @@ void XMLScanner::scanReset(const InputSource& src)
 
         resetEntityDeclPool();
         if (fDoNamespaces)
-            resetURIPool();
+            resetURIStringPool();
 
         // create a default validator
         if (fValidate) {
@@ -900,6 +853,7 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
     // Get the raw data we need for the callback
     const XMLCh* rawBuf = toSend.getRawBuffer();
     const unsigned int len = toSend.getLen();
+    XMLBuffer toFill;
 
     //
     //  We do different things according to whether we are validating or
@@ -950,8 +904,8 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
                 {
                     // normalize the character according to schema whitespace facet
                     DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
-                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toSend);
-                    rawBuf = toSend.getRawBuffer();
+                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toFill);
+                    rawBuf = toFill.getRawBuffer();
                 }
 
                 if (fDocHandler)
@@ -1122,10 +1076,10 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
     bool seeXsi = false;
 
     //  Schema prefix xxx (e.g. xmlns:xxx="http://www.w3.org/2000/10/XMLSchema-instance")
-    const XMLCh* fXsiPrefix;
+    XMLBuffer fXsiPrefix;
 
-    //  Schema type
-    const XMLCh* fXsiType;
+    //  Schema Xsi Type yyyy (e.g. xsi:type="yyyyy")
+    XMLBuffer fXsiType;
 
     //
     //  Make an initial pass through the list and find any xmlns attributes or
@@ -1156,7 +1110,7 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
 
             // if the schema URI is seen in the the valuePtr, set the boolean seeXsi
             if (!XMLString::compareString(valuePtr, SchemaSymbols::fgURI_XSI)) {
-                fXsiPrefix = suffPtr;
+                fXsiPrefix.set(suffPtr);
                 seeXsi = true;
             }
         }
@@ -1178,19 +1132,32 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
 
             // if schema URI has been seen, scan for the schema location and uri
             // and resolve the schema grammar; or scan for schema type
-            if (!XMLString::compareString(prefPtr, fXsiPrefix)) {
+            if (!XMLString::compareString(prefPtr, fXsiPrefix.getRawBuffer())) {
                 if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
                     parseSchemaLocation(valuePtr);
                 else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
                     resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
                 else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_TYPE))
-                    fXsiType = valuePtr;
+                    fXsiType.set(valuePtr);
+                else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgATT_NILLABLE)) {
+                    if (fValidator) {
+                        if (!XMLString::compareString(valuePtr, SchemaSymbols::fgATTVAL_TRUE))
+                            ((SchemaValidator*)fValidator)->setNillable(true);
+                    }
+                }
             }
         }
 
         if (fValidator) {
-            if (fXsiType)
-                ((SchemaValidator*)fValidator)->setXsiTypeAttValue(fXsiType);
+            if (!fXsiType.isEmpty()) {
+                unsigned int uriId = resolveQName (
+                      fXsiType.getRawBuffer()
+                    , fNameBuf
+                    , fPrefixBuf
+                    , ElemStack::Mode_Element
+                );
+                ((SchemaValidator*)fValidator)->setXsiType(fPrefixBuf.getRawBuffer(), fNameBuf.getRawBuffer(), uriId);
+            }
         }
     }
 }
@@ -1247,8 +1214,73 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         parser.setErrorHandler(fErrorHandler);
         parser.setEntityResolver(fEntityResolver);
 
+        // Create a buffer for expanding the system id
+        XMLBuffer expSysId;
+
+        //
+        //  Allow the entity handler to expand the system id if they choose
+        //  to do so.
+        //
+        if (fEntityHandler)
+        {
+            if (!fEntityHandler->expandSystemId(loc, expSysId))
+                expSysId.set(loc);
+        }
+         else
+        {
+            expSysId.set(loc);
+        }
+
+        // Call the entity resolver interface to get an input source
+        InputSource* srcToFill = 0;
+        if (fEntityResolver)
+        {
+            srcToFill = fEntityResolver->resolveEntity
+            (
+                XMLUni::fgZeroLenString
+                , expSysId.getRawBuffer()
+            );
+        }
+
+        //
+        //  If they didn't create a source via the entity resolver, then we
+        //  have to create one on our own.
+        //
+        if (!srcToFill)
+        {
+            ReaderMgr::LastExtEntityInfo lastInfo;
+            fReaderMgr.getLastExtEntityInfo(lastInfo);
+
+            try
+            {
+                XMLURL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
+                if (urlTmp.isRelative())
+                {
+                    ThrowXML
+                    (
+                        MalformedURLException
+                        , XMLExcepts::URL_NoProtocolPresent
+                    );
+                }
+                srcToFill = new URLInputSource(urlTmp);
+            }
+
+            catch(const MalformedURLException&)
+            {
+                // Its not a URL, so lets assume its a local file name.
+                srcToFill = new LocalFileInputSource
+                (
+                    lastInfo.systemId
+                    , expSysId.getRawBuffer()
+                );
+            }
+        }
+
+        // Put a janitor on the input source
+        Janitor<InputSource> janSrc(srcToFill);
+
         try {
-            parser.parse( loc );
+            parser.parse( *srcToFill) ;
         }
         catch (const XMLException& e)
         {
@@ -1267,7 +1299,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         DOM_Document  document = parser.getDocument(); //Our Grammar
 
         DOM_Element root = document.getDocumentElement();// This is what we pass to TraverserSchema
-        if (root.getNodeName().equals(SchemaSymbols::fgELT_SCHEMA)) {
+        if (fValidate && root.isNull()) {
             fValidator->emitError(XMLValid::SchemaRootError, loc);
         }
         else
@@ -1276,13 +1308,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
                 fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
 
             grammar = new SchemaGrammar();
-            grammar->setTargetNamespace(root.getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE).rawBuffer());
-
-            // pass parser's entity resolver (local Resolver), which also has reference to user's
-            // entity resolver, and also can fall-back to entityhandler's expandSystemId()
-//          TraverseSchema traverseSchema;
-//          traverseSchema.TraverseSchema(root, grammar, source.getSystemId());
-            fGrammarResolver->putGrammar(grammar->getTargetNamespace(), grammar);
+            TraverseSchema traverseSchema(root, fURIStringPool, grammar, fGrammarResolver, this, fValidator, uri, fEntityResolver);
         }
     }
     fGrammar = grammar;
@@ -2536,6 +2562,8 @@ bool XMLScanner::switchGrammar(int newGrammarNameSpaceIndex)
         return false;
     else {
         fGrammar = tempGrammar;
+        if (fValidator)
+            fValidator->setGrammar(fGrammar);
         return true;
     }
 }
@@ -2551,6 +2579,79 @@ bool XMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
         return false;
     else {
         fGrammar = tempGrammar;
+        if (fValidator)
+            fValidator->setGrammar(fGrammar);
         return true;
     }
+}
+
+// check if we should skip or lax the validation of the element
+// if skip - no validation
+// if lax - validate only if the element if found
+
+bool XMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector* cv)
+{
+    bool skipThisOne = false;
+    bool laxThisOne = false;
+    unsigned int elementURI = element->getURI();
+
+    if (cv) {
+        for (unsigned int i=0; i < cv->getLeafCount(); i++) {
+            QName* fElemMap = cv->getLeafNameAt(i);
+            unsigned int uri = fElemMap->getURI();
+            ContentSpecNode::NodeTypes type = cv->getLeafTypeAt(i);
+
+            if (type == ContentSpecNode::Leaf) {
+                if ((uri == elementURI)
+                   && !(XMLString::compareString(fElemMap->getLocalPart(), element->getLocalPart())))
+                    break;
+            } else if (type == ContentSpecNode::Any) {
+                if (uri == fEmptyNamespaceId || uri == elementURI)
+                    break;
+            } else if (type == ContentSpecNode::Any_Local) {
+                if (elementURI == fEmptyNamespaceId)
+                    break;
+            } else if (type == ContentSpecNode::Any_Other) {
+                if (uri != elementURI)
+                    break;
+            } else if (type == ContentSpecNode::Any_Skip) {
+                if (uri == fEmptyNamespaceId || uri == elementURI) {
+                    skipThisOne = true;
+                    break;
+                }
+            } else if (type == ContentSpecNode::Any_Local_Skip) {
+                if (elementURI == fEmptyNamespaceId) {
+                    skipThisOne = true;
+                    break;
+                }
+            } else if (type == ContentSpecNode::Any_Other_Skip) {
+                if (uri != elementURI) {
+                    skipThisOne = true;
+                    break;
+                }
+            } else if (type == ContentSpecNode::Any_Lax) {
+                if (uri == fEmptyNamespaceId || uri == elementURI) {
+                    laxThisOne = true;
+                    break;
+                }
+            } else if (type == ContentSpecNode::Any_Local_Lax) {
+                if (elementURI == fEmptyNamespaceId) {
+                    laxThisOne = true;
+                    break;
+                }
+            } else if (type == ContentSpecNode::Any_Other_Lax) {
+                if (uri != elementURI) {
+                    laxThisOne = true;
+                    break;
+                }
+            }
+        } // for
+    } // if
+
+    if (skipThisOne) {
+        fValidate = false;
+        fElemStack.setValidationFlag(fValidate);
+    }
+
+    return laxThisOne;
 }

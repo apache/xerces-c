@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/05/03 20:34:33  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.10  2001/03/30 16:46:57  tng
  * Schema: Use setDoSchema instead of setSchemaValidation which makes more sense.
  *
@@ -379,10 +382,14 @@ void SAX2XMLReaderImpl::setErrorHandler(ErrorHandler* const handler)
     //  error reporter on the scanner.
     //
     fErrorHandler = handler;
-    if (fErrorHandler)
+    if (fErrorHandler) {
         fScanner->setErrorReporter(this);
-     else
+        fScanner->setErrorHandler(fErrorHandler);
+    }
+    else {
         fScanner->setErrorReporter(0);
+        fScanner->setErrorHandler(0);
+    }
 }
 
 
@@ -395,10 +402,14 @@ void SAX2XMLReaderImpl::setLexicalHandler(LexicalHandler* const handler)
 void SAX2XMLReaderImpl::setEntityResolver(EntityResolver* const resolver)
 {
     fEntityResolver = resolver;
-    if (fEntityResolver)
+    if (fEntityResolver) {
         fScanner->setEntityHandler(this);
-    else
+        fScanner->setEntityResolver(fEntityResolver);
+    }
+    else {
         fScanner->setEntityHandler(0);
+        fScanner->setEntityResolver(0);
+    }
 }
 
 void SAX2XMLReaderImpl::parse (const   InputSource&    source)

@@ -3258,3 +3258,72 @@ bool XMLScanner::getURIText(  const   unsigned int    uriId
     uriBufToFill.set(value);
     return true;
 }
+
+unsigned int
+XMLScanner::resolveQName(   const   XMLCh* const        qName
+                            ,       XMLBuffer&          nameBuf
+                            ,       XMLBuffer&          prefixBuf
+                            , const ElemStack::MapModes mode)
+{
+    // Reset both target buffers in case we don't get anything for either
+    nameBuf.reset();
+    prefixBuf.reset();
+
+    //
+    //  Lets split out the qName into a URI and name buffer first. The URI
+    //  can be empty.
+    //
+    const int colonPos = XMLString::indexOf(qName, chColon);
+    unsigned int uriId = 0;
+    if (colonPos == -1)
+    {
+        //
+        //  Its all name with no prefix, so put the whole thing into the name
+        //  buffer. Then map the empty string to a URI, since the empty string
+        //  represents the default namespace. This will either return some
+        //  explicit URI which the default namespace is mapped to, or the
+        //  the default global namespace.
+        //
+        nameBuf.append(qName);
+        bool unknown;
+        uriId = fElemStack.mapPrefixToURI(prefixBuf.getRawBuffer(), mode, unknown);
+
+        #if defined(XERCES_DEBUG)
+        if (unknown)
+        {
+            // <TBD> This one should never be unknown
+        }
+        #endif
+    }
+     else
+    {
+        //
+        //  Copy the chars up to but not including the colon into the prefix
+        //  buffer.
+        //
+        prefixBuf.append(qName, colonPos);
+
+        // And copy over the rest of the chars to the name buffer
+        nameBuf.append(&qName[colonPos+1]);
+
+        //
+        //  Watch for the special namespace prefixes. We always map these to
+        //  special URIs. 'xml' gets mapped to the official URI that its defined
+        //  to map to by the NS spec. xmlns gets mapped to a special place holder
+        //  URI that we define (so that it maps to something checkable.)
+        //
+        if (!XMLString::compareString(prefixBuf.getRawBuffer(), XMLUni::fgXMLNSString))
+            uriId = fXMLNSNamespaceId;
+        else if (!XMLString::compareString(prefixBuf.getRawBuffer(), XMLUni::fgXMLString))
+            uriId = fXMLNamespaceId;
+        else
+        {
+            bool unknown;
+            uriId = fElemStack.mapPrefixToURI(prefixBuf.getRawBuffer(), mode, unknown);
+            if (unknown)
+                emitError(XMLErrs::UnknownPrefix, prefixBuf.getRawBuffer());
+        }
+    }
+    return uriId;
+}
+

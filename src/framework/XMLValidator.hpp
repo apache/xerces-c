@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.12  2001/05/03 20:34:22  tng
+  * Schema: SchemaValidator update
+  *
   * Revision 1.11  2001/04/19 18:16:53  tng
   * Schema: SchemaValidator update, and use QName in Content Model
   *
@@ -110,6 +113,7 @@
 class ReaderMgr;
 class XMLBuffer;
 class XMLBufferMgr;
+class XMLElementDecl;
 class XMLEntityHandler;
 class XMLErrorReporter;
 class XMLMsgLoader;
@@ -181,7 +185,7 @@ public:
       */
     virtual int checkContent
     (
-        const   unsigned int    elemId
+        XMLElementDecl* const   elemDecl
         , QName** const         children
         , const unsigned int    childCount
     ) = 0;
@@ -251,8 +255,20 @@ public:
       */
     virtual void validateAttrValue
     (
-        const   XMLAttDef&                  attDef
+        const   XMLAttDef*                  attDef
         , const XMLCh* const                attrValue
+    ) = 0;
+
+    /**
+      * The derived class should apply any rules to the passed element decl
+      * that are above and beyond those defined by XML 1.0.
+      *
+      * If the value breaks any rules as defined by the derived class, it
+      * should just issue errors as usual.
+      */
+    virtual void validateElement
+    (
+        const   XMLElementDecl*             elemDef
     ) = 0;
 
     /**

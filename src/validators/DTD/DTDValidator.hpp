@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/05/03 20:34:37  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.9  2001/04/19 18:17:23  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -127,7 +130,7 @@ public:
     // -----------------------------------------------------------------------
     virtual int checkContent
     (
-        const   unsigned int    elemId
+        XMLElementDecl* const   elemDecl
         , QName** const         children
         , const unsigned int    childCount
     );
@@ -153,8 +156,12 @@ public:
 
     virtual void validateAttrValue
     (
-        const   XMLAttDef&                  attDef
+        const   XMLAttDef*                  attDef
         , const XMLCh* const                attrValue
+    );
+    virtual void validateElement
+    (
+        const   XMLElementDecl*             elemDef
     );
     virtual Grammar* getGrammar();
     virtual void setGrammar(Grammar* aGrammar);
@@ -190,6 +197,10 @@ inline Grammar* DTDValidator::getGrammar() {
 
 inline void DTDValidator::setGrammar(Grammar* aGrammar) {
     fDTDGrammar = (DTDGrammar*) aGrammar;
+}
+
+inline void DTDValidator::validateElement (const   XMLElementDecl* elemDef) {
+    // no special DTD Element validation
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/03 20:34:28  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.6  2001/04/19 18:16:58  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -166,6 +169,9 @@ public :
         PrefMapElem*        fMap;
         unsigned int        fMapCapacity;
         unsigned int        fMapCount;
+
+        bool                fValidationFlag;
+        int                 fCurrentScope;
     };
 
     enum MapModes
@@ -199,6 +205,11 @@ public :
     const StackElem* topElement() const;
     void setElement(XMLElementDecl* const toSet, const unsigned int readerNum);
 
+    void setValidationFlag(bool validationFlag);
+    bool getValidationFlag();
+
+    void setCurrentScope(int currentScope);
+    int getCurrentScope();
 
     // -----------------------------------------------------------------------
     //  Prefix map methods
@@ -303,6 +314,28 @@ private :
 inline bool ElemStack::isEmpty() const
 {
     return (fStackTop == 0);
+}
+
+inline bool ElemStack::getValidationFlag()
+{
+    return fStack[fStackTop-1]->fValidationFlag;
+}
+
+inline void ElemStack::setValidationFlag(bool validationFlag)
+{
+    fStack[fStackTop-1]->fValidationFlag = validationFlag;
+    return;
+}
+
+inline int ElemStack::getCurrentScope()
+{
+    return fStack[fStackTop-1]->fCurrentScope;
+}
+
+inline void ElemStack::setCurrentScope(int currentScope)
+{
+    fStack[fStackTop-1]->fCurrentScope = currentScope;
+    return;
 }
 
 #endif

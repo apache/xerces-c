@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/03 20:34:36  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.4  2001/04/23 18:54:35  tng
  * Reuse grammar should allow users to use any stored element decl as root.  Fixed by Erik Rydgren.
  *
@@ -597,7 +600,7 @@ void DTDScanner::scanAttListDecl()
     //  Find this element's declaration. If it has not been declared yet,
     //  we will force one into the list, but not mark it as declared.
     //
-    DTDElementDecl* elemDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbName.getRawBuffer(), 0);
+    DTDElementDecl* elemDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
     if (!elemDecl)
     {
         //
@@ -1049,7 +1052,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
         //  this element, then use it. Else, we have to fault in an element
         //  decl, marked as created because of being in a content model.
         //
-        XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), 0);
+        XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
         if (!decl)
         {
             decl = new DTDElementDecl(bufToUse.getRawBuffer(), fEmptyNamespaceId);
@@ -1218,7 +1221,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                     //  fault in an element decl, marked as created because
                     //  of being in a content model.
                     //
-                    XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), 0);
+                    XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bufToUse.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
                     if (!decl)
                     {
                         decl = new DTDElementDecl(bufToUse.getRawBuffer(), fEmptyNamespaceId);
@@ -1554,7 +1557,7 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     DTDElementDecl* rootDecl;
     if (reuseGrammar)
     {
-        rootDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), 0);
+        rootDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
         if (fScanner->getDoValidation())
         {
             if (!rootDecl)
@@ -1810,7 +1813,7 @@ void DTDScanner::scanElementDecl()
     }
 
     // Look this guy up in the element decl pool
-    DTDElementDecl* decl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbName.getRawBuffer(), 0);
+    DTDElementDecl* decl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
 
     //
     //  If it does not exist, then we need to create it. If it does and
@@ -3317,7 +3320,7 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
             //  this element, then use it. Else, we have to fault in an element
             //  decl, marked as created because of being in a content model.
             //
-            XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, nameBuf.getRawBuffer(), 0);
+            XMLElementDecl* decl = fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, nameBuf.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
             if (!decl)
             {
                 decl = new DTDElementDecl(nameBuf.getRawBuffer(), fEmptyNamespaceId);

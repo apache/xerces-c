@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/03 20:34:43  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.5  2001/05/03 19:18:01  knoaman
  * TraverseSchema Part II.
  *
@@ -243,6 +246,13 @@ private :
     //  fComplexTypeInfo
     //      Stores complex type information
     //      (no need to delete - handled by schema grammar)
+    //
+    //  fAttDefs
+    //      The list of attributes that are faulted in for this element
+    //      when ComplexTypeInfo does not exist.  We want to keep track
+    //      of these faulted in attributes to avoid duplicate redundant
+    //      error.
+
     // -----------------------------------------------------------------------
     ModelTypes                     fModelType;
     DatatypeValidator*             fDatatypeValidator;
@@ -255,6 +265,7 @@ private :
     XMLCh*                         fSubstitutionGroupName;
     XMLCh*                         fTypeFromAnotherSchemaURI;
     ComplexTypeInfo*               fComplexTypeInfo;
+    RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
 };
 
 // ---------------------------------------------------------------------------

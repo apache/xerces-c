@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/03 20:34:41  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.1  2001/04/19 17:43:14  knoaman
  * More schema implementation classes.
  *
@@ -76,7 +79,7 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fDerivedBy(0)
     , fBlockSet(0)
     , fFinalSet(0)
-    , fScopeDefined(-1)
+    , fScopeDefined(Grammar::TOP_LEVEL_SCOPE)
     , fElementId(XMLElementDecl::fgInvalidElemId)
     , fTypeName(0)
     , fBaseDatatypeValidator(0)
@@ -110,7 +113,7 @@ void ComplexTypeInfo::addAttDef(SchemaAttDef* const toAdd) {
     // Tell this guy the element id of its parent (us)
     toAdd->setElemId(getElementId());
 
-    fAttDefs->put((void*)(toAdd->getAttName()->getLocalPart()), 
+    fAttDefs->put((void*)(toAdd->getAttName()->getLocalPart()),
                           toAdd->getAttName()->getURI(), toAdd);
 }
 
@@ -148,7 +151,7 @@ XMLAttDefList& ComplexTypeInfo::getAttDefList() const
 void ComplexTypeInfo::faultInAttDefList() const
 {
     // Use a hash modulus of 29 and tell it owns its elements
-    ((ComplexTypeInfo*)this)->fAttDefs = 
+    ((ComplexTypeInfo*)this)->fAttDefs =
                     new RefHash2KeysTableOf<SchemaAttDef>(29, true);
 }
 

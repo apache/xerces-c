@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/05/03 20:34:28  tng
+ * Schema: SchemaValidator update
+ *
  * Revision 1.9  2001/04/19 18:16:57  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -100,6 +103,7 @@
 #include <util/NoSuchElementException.hpp>
 #include <framework/XMLElementDecl.hpp>
 #include <internal/ElemStack.hpp>
+#include <validators/common/Grammar.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -170,6 +174,8 @@ unsigned int ElemStack::addLevel()
     fStack[fStackTop]->fReaderNum = 0xFFFFFFFF;
     fStack[fStackTop]->fChildCount = 0;
     fStack[fStackTop]->fMapCount = 0;
+    fStack[fStackTop]->fValidationFlag = false;
+    fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
 
     // Bump the top of stack
     fStackTop++;
@@ -200,6 +206,8 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
     fStack[fStackTop]->fReaderNum = 0xFFFFFFFF;
     fStack[fStackTop]->fChildCount = 0;
     fStack[fStackTop]->fMapCount = 0;
+    fStack[fStackTop]->fValidationFlag = false;
+    fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
 
     // And store the new stuff
     fStack[fStackTop]->fThisElement = toSet;

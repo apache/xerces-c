@@ -69,81 +69,6 @@
 #include <internal/XMLScanner.hpp>
 #include <validators/DTD/DTDValidator.hpp>
 
-
-// ---------------------------------------------------------------------------
-//  Local const data
-//
-//  These are the text for the require char refs that must always be present.
-//  We init these into the entity pool upon construction.
-// ---------------------------------------------------------------------------
-static const XMLCh gAmp[] = { chLatin_a, chLatin_m, chLatin_p, chNull };
-static const XMLCh gLT[] = { chLatin_l, chLatin_t, chNull };
-static const XMLCh gGT[] = { chLatin_g, chLatin_t, chNull };
-static const XMLCh gQuot[] = { chLatin_q, chLatin_u, chLatin_o, chLatin_t, chNull };
-static const XMLCh gApos[] = { chLatin_a, chLatin_p, chLatin_o, chLatin_s, chNull };
-
-
-
-// ---------------------------------------------------------------------------
-//  Local methods
-// ---------------------------------------------------------------------------
-
-//
-//  This method is called when we get a notation or enumeration type attribute
-//  to validate. We have to confirm that the passed value to find is one of
-//  the values in the passed list. The list is a space separated string of
-//  values to match against.
-//
-static bool isInList(const XMLCh* const toFind, const XMLCh* const enumList)
-{
-    //
-    //  We loop through the values in the list via this outer loop. We end
-    //  when we hit the end of the enum list or get a match.
-    //
-    const XMLCh* listPtr = enumList;
-    const unsigned int findLen = XMLString::stringLen(toFind);
-    while (*listPtr)
-    {
-        unsigned int testInd;
-        for (testInd = 0; testInd < findLen; testInd++)
-        {
-            //
-            //  If they don't match, then reset and try again. Note that
-            //  hitting the end of the current item will cause a mismatch
-            //  because there can be no spaces in the toFind string.
-            //
-            if (listPtr[testInd] != toFind[testInd])
-                break;
-        }
-
-        //
-        //  If we went the distance, see if we matched. If we did, the current
-        //  list character has to be null or space.
-        //
-        if (testInd == findLen)
-        {
-            if ((listPtr[testInd] == chSpace) || !listPtr[testInd])
-                return true;
-        }
-
-        // Run the list pointer up to the next substring
-        while ((*listPtr != chSpace) && *listPtr)
-            listPtr++;
-
-        // If we hit the end, then we failed
-        if (!*listPtr)
-            return false;
-
-        // Else move past the space and try again
-        listPtr++;
-    }
-
-    // We never found it
-    return false;
-}
-
-
-
 // ---------------------------------------------------------------------------
 //  DTDValidator: Constructors and Destructor
 // ---------------------------------------------------------------------------
@@ -163,15 +88,14 @@ DTDValidator::~DTDValidator()
 // ---------------------------------------------------------------------------
 //  DTDValidator: Implementation of the XMLValidator interface
 // ---------------------------------------------------------------------------
-int DTDValidator::checkContent( const unsigned int  elemId
-                              , QName** const       children
-                              , const unsigned int  childCount)
+int DTDValidator::checkContent(XMLElementDecl* const elemDecl
+                              , QName** const        children
+                              , const unsigned int   childCount)
 {
     //
     //  Look up the element id in our element decl pool. This will get us
     //  the element decl in our own way of looking at them.
     //
-    DTDElementDecl* elemDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(elemId);
     if (!elemDecl)
         ThrowXML(RuntimeException, XMLExcepts::Val_InvalidElemId);
 
@@ -179,7 +103,7 @@ int DTDValidator::checkContent( const unsigned int  elemId
     //  Get the content spec type of this element. This will tell us what
     //  to do to validate it.
     //
-    const DTDElementDecl::ModelTypes modelType = elemDecl->getModelType();
+    const DTDElementDecl::ModelTypes modelType = ((DTDElementDecl*) elemDecl)->getModelType();
 
     if (modelType == DTDElementDecl::Empty)
     {
@@ -289,7 +213,7 @@ bool DTDValidator::requiresNamespaces() const
 
 
 void
-DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
+DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
                                 , const XMLCh* const    attrValue)
 {
     //
@@ -297,11 +221,11 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
     //  order to simplify the code below, which will reference them very
     //  often.
     //
-    const XMLAttDef::AttTypes       type = attDef.getType();
-    const XMLAttDef::DefAttTypes    defType = attDef.getDefaultType();
-    const XMLCh* const              valueText = attDef.getValue();
-    const XMLCh* const              fullName = attDef.getFullName();
-    const XMLCh* const              enumList = attDef.getEnumeration();
+    const XMLAttDef::AttTypes       type = attDef->getType();
+    const XMLAttDef::DefAttTypes    defType = attDef->getDefaultType();
+    const XMLCh* const              valueText = attDef->getValue();
+    const XMLCh* const              fullName = attDef->getFullName();
+    const XMLCh* const              enumList = attDef->getEnumeration();
 
     //
     //  If the default type is fixed, then make sure the passed value maps
@@ -501,7 +425,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
             //  the notation pool (after the DTD is parsed), then obviously
             //  this value will be legal since it matches one of them.
             //
-            if (!isInList(pszTmpVal, enumList))
+            if (!XMLString::isInList(pszTmpVal, enumList))
                 emitError(XMLValid::DoesNotMatchEnumList, fullName);
         }
 
@@ -662,7 +586,7 @@ void DTDValidator::preContentValidation(bool reuseGrammar)
             {
                 validateAttrValue
                 (
-                    curAttDef
+                    &curAttDef
                     , curAttDef.getValue()
                 );
             }
