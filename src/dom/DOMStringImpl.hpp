@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 05:46:31  andyh
+ * Change offsets and lengths form signed to unsigned
+ *
  * Revision 1.3  2000/01/29 00:39:08  andyh
  * Redo synchronization in DOMStringHandle allocator.  There
  * was a bug in the use of Compare and Swap.  Switched to mutexes.
@@ -92,11 +95,11 @@
 class   DOMStringData
 {
 public:
-    int                 fBufferLength;
+    unsigned int        fBufferLength;
     int                 fRefCount;
     XMLCh               fData[1];
     
-    static DOMStringData *allocateBuffer(int length);
+    static DOMStringData *allocateBuffer(unsigned int length);
     inline void         addRef();
     inline void         removeRef();
 };
@@ -104,7 +107,7 @@ public:
 class  DOMStringHandle
 {
 public:
-            int              fLength;
+            unsigned int     fLength;
             int              fRefCount;
             DOMStringData    *fDSData;
 
@@ -113,7 +116,7 @@ public:
 private:
     static  void *freeListPtr;
 public:
-    static  DOMStringHandle  *createNewStringHandle(int bufLength);
+    static  DOMStringHandle  *createNewStringHandle(unsigned int bufLength);
             DOMStringHandle  *cloneStringHandle();
     inline  void             addRef();
     inline  void             removeRef();

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/04 05:46:31  andyh
+ * Change offsets and lengths form signed to unsigned
+ *
  * Revision 1.2  2000/01/05 01:16:06  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -104,11 +107,11 @@ public:
                 NOT_FOUND_ERR        = 8,
                 NOT_SUPPORTED_ERR    = 9,
                 INUSE_ATTRIBUTE_ERR  = 10,
-		INVALID_STATE_ERR    = 11,
-		SYNTAX_ERR	     = 12,
-		INVALID_MODIFICATION_ERR    = 13,
-		NAMESPACE_ERR	     = 14,
-		INVALID_ACCESS_ERR   = 15
+                INVALID_STATE_ERR    = 11,
+	        	SYNTAX_ERR	     = 12,
+        		INVALID_MODIFICATION_ERR    = 13,
+        		NAMESPACE_ERR	     = 14,
+        		INVALID_ACCESS_ERR   = 15
         };
 public:
     /** @name Constructors and assignment operator */

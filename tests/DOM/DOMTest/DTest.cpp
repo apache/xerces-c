@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/04 05:46:31  andyh
+ * Change offsets and lengths form signed to unsigned
+ *
  * Revision 1.5  2000/02/04 01:50:13  aruna1
  * TreeWalker and NodeIterator changes
  *
@@ -93,6 +96,9 @@
  
 /**
  * $Log$
+ * Revision 1.6  2000/02/04 05:46:31  andyh
+ * Change offsets and lengths form signed to unsigned
+ *
  * Revision 1.5  2000/02/04 01:50:13  aruna1
  * TreeWalker and NodeIterator changes
  *
@@ -917,7 +923,9 @@ void DTest::testCharacterData(DOM_Document document)
 
 //!! Throws INDEX_SIZE_ERR ********************
     EXCEPTIONSTEST(charData.deleteData(-1, 5), DOM_DOMException::INDEX_SIZE_ERR, OK, 101 );
-    EXCEPTIONSTEST(charData.deleteData(2, -1), DOM_DOMException::INDEX_SIZE_ERR, OK, 102 );
+    // Test 102 is not an error because the -1 parameter is an unsigned value, and counts
+    //   that exceed the length of the string are allowed.
+//    EXCEPTIONSTEST(charData.deleteData(2, -1), DOM_DOMException::INDEX_SIZE_ERR, OK, 102 );
     EXCEPTIONSTEST(charData.deleteData(100, 5), DOM_DOMException::INDEX_SIZE_ERR, OK,103 );
     
     EXCEPTIONSTEST(charData.insertData(-1, "Stuff inserted"), DOM_DOMException::INDEX_SIZE_ERR, OK, 104 );
@@ -953,7 +961,7 @@ void DTest::testCharacterData(DOM_Document document)
 
 
 
-/**
+/** 
  * This method tests ChildNodeList methods for the XML DOM implementation
  * version 2.0 10/12/98
  * @param document org.w3c.dom.DOM_Document
