@@ -13,6 +13,13 @@
 
     <tr>
         <td>2001-12-14</td>
+        <td>Khaled Noaman</td>
+        <td>Add surrogate support to comments and processing instructions.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-14</td>
         <td>Tinny Ng</td>
         <td>Performance: Do not transcode twice in DOMString constructor.
         </td>
@@ -41,7 +48,7 @@
 
     <tr>
         <td>2001-12-13</td>
-        <td>Khaled Noamanc</td>
+        <td>Khaled Noaman</td>
         <td>[Bug 5410] non-schema &lt;attribute&gt; attributes cause error.
         </td>
     </tr>
