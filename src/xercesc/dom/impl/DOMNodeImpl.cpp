@@ -98,11 +98,16 @@ const unsigned short DOMNodeImpl::TOBERELEASED = 0x1<<12;
 // -----------------------------------------------------------------------
 //  Reset the singleton gEmptyNodeList
 // -----------------------------------------------------------------------
-static DOMNodeListImpl *gEmptyNodeList;  // make a singleton empty node list
+static DOMNodeListImpl *gEmptyNodeList = 0;  // make a singleton empty node list
+static XMLMutex* gEmptyNodeListMutex = 0;
+
 static void reinitEmptyNodeList()
 {
     delete gEmptyNodeList;
     gEmptyNodeList = 0;
+
+    delete gEmptyNodeListMutex;
+    gEmptyNodeListMutex = 0;
 }
 
 // -----------------------------------------------------------------------
@@ -149,21 +154,31 @@ DOMNamedNodeMap * DOMNodeImpl::getAttributes() const {
 
 
 DOMNodeList *DOMNodeImpl::getChildNodes() const {
+
     static XMLRegisterCleanup emptyNodeListCleanup;
 
-    if (gEmptyNodeList == 0)
+    if (!gEmptyNodeList)
     {
-        DOMNodeList *t = new DOMNodeListImpl(0);
-        if (XMLPlatformUtils::compareAndSwap((void **)&gEmptyNodeList, t, 0) != 0)
+        if (!gEmptyNodeListMutex)
         {
-            delete t;
-        }
-        else
-        {
-            emptyNodeListCleanup.registerCleanup(reinitEmptyNodeList);
+            XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
+			
+            if (!gEmptyNodeListMutex)
+                gEmptyNodeListMutex = new XMLMutex;
         }
 
+        // Use a faux scope to synchronize while we do this
+        {
+            XMLMutexLock lock(gEmptyNodeListMutex);
+
+            if (!gEmptyNodeList)
+            {
+                gEmptyNodeList = new DOMNodeListImpl(0);
+                emptyNodeListCleanup.registerCleanup(reinitEmptyNodeList);
+            }
+        }
     }
+
     return (DOMNodeList *)gEmptyNodeList;
 };
 
