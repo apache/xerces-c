@@ -3,7 +3,7 @@
 
 <s1 title="Releases">
 
-<s2 title="Xerces-C Version 1.1.0: February 14, 2000">
+<s2 title="Xerces-C Version 1.1.0: February 28, 2000">
         <ul>
         <li>Simplified platform support (removed need to support local standard output streams or to find the location of the parser DLL/SharedLib.)</li>
 				<li>Added support for the NetAccessor plug in abstraction, which allows the parser to support HTTP/FTP based data sources</li>
