@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/10 20:38:46  abagchi
+ * Added docs for equality operators
+ *
  * Revision 1.5  2000/02/06 07:47:30  rahulj
  * Year 2K copyright swat.
  *
@@ -161,21 +164,44 @@ public:
     //@{
 
     /**
-      *  Equality operator.  Note that compares whether two node list
+      *  Equality operator.
+      *  Compares whether two node list
       *  variables refer to the same underlying node list.  It does
       *  not compare the contents of the node lists themselves.
+      *
+      *  @param other The value to be compared
+      *  @return Returns true if node list refers to same underlying node list
       */
     bool operator == (const DOM_NodeList &other) const;
 
+    /**
+     *  Use this comparison operator to test whether a Node List reference
+     *  is null.
+     *
+     *  @param nullPtr The value to be compared, which must be 0 or null.
+     *  @return Returns true if node list reference is null
+     */
+    bool operator == (const DOM_NullPtr *nullPtr) const;
+
      /**
-      *  Equality operator.  Note that compares whether two node list
+      *  Inequality operator.
+      *  Compares whether two node list
       *  variables refer to the same underlying node list.  It does
       *  not compare the contents of the node lists themselves.
+      *
+      *  @param other The value to be compared
+      *  @return Returns true if node list refers to a different underlying node list
       */
     bool operator != (const DOM_NodeList &other) const;
 
-   bool operator == (const DOM_NullPtr *nullPtr) const;
-   bool operator != (const DOM_NullPtr *nullPtr) const; 
+    /**
+     *  Use this comparison operator to test whether a Node List reference
+     *  is not null.
+     *
+     *  @param nullPtr The value to be compared, which must be 0 or null.
+     *  @return Returns true if node list reference is not null
+     */
+    bool operator != (const DOM_NullPtr *nullPtr) const; 
     //@}
 
 
