@@ -76,11 +76,44 @@
 
        <anchor name="DOMMemMgmt"/>
        <s3 title="Memory Management">
-         <p>The C++ DOM implementation requires users to call the DOM release() function
-            to indicate the release of any orphaned Node from the application.
-            Please see <jump href="ApacheDOMC++Binding.html#release">
-            Apache Recommended DOM C++ binding</jump> for details.</p>
-         <p>For example</p>
+         <p>The C++ DOM implementation provides a release() method for releasing any "orphaned"
+         resources that were created through createXXXX factory method.
+         Memory for any returned object are owned by implementation.  Please see
+         <jump href="ApacheDOMC++Binding.html#release"> Apache Recommended DOM C++ binding</jump>
+         for details.</p>
+
+         <s4 title="Objects created by DOMImplementation::createXXXX">
+         <p>Users <em>must</em> call the release() function when finished using any objects that
+            were created by the DOMImplementation::createXXXX (e.g. DOMBuilder, DOMWriter, DOMDocument,
+            DOMDocumentType).</p>
+
+         <p>Acesss to a released object will lead to unexpected behaviour.</p>
+
+         <note>When a DOMDocument is released, all its associated children AND any objects it owned
+            (e.g. DOMRange, DOMTreeWalker, DOMNodeIterator or any orphaned nodes) will also be released.
+         </note>
+         <note>If such DOMDocumentType object has been inserted into a DOMDocument and thus has a owner,
+            then it will be released automatically when its owner document is released.
+         </note>
+         </s4>
+
+         <s4 title="Objects created by DOMDocument::createXXXX">
+         <p>Users <em>can</em> call the release() function to indicate the release of any orphaned nodes.
+            When an orphaned Node is released, its associated children will also be released.
+            Acesss to a released Node will lead to unexpected behaviour.   These orphaned Nodes will
+            eventually be released, if not already done so, when its owner document is released</p>
+            <note>DOMException::INVALID_ACCESS_ERR will be raised if this Node has a parent (has a owner).</note>
+         </s4>
+
+         <s4 title="Objects created by DOMDocumentRange::createRange or DOMDocumentTraversal::createXXXX">
+         <p>Users <em>can</em> call release() function when finished using the DOMRange,
+            DOMNodeIterator, DOMTreeWalker.
+            Acesss to a released object will lead to unexpected behaviour.   These objects will
+            eventually be released, if not already done so, when its root node is released
+         </p>
+         </s4>
+
+         <p>Here is an example</p>
          <source>
     //
     //  Create a small document tree
@@ -108,11 +141,11 @@
         DOMText*       textNode = doc->createTextNode(tempStr);
         e1->appendChild(textNode);
 
-        // call release() to release the resource associated with the range after done
+        // optionally, call release() to release the resource associated with the range after done
         DOMRange* range = doc->createRange();
         range->release();
 
-        // removedElement is an orphaned node, call release() to release associated resource
+        // removedElement is an orphaned node, optionally call release() to release associated resource
         DOMElement* removedElement = root->removeChild(e2);
         removedElement->release();
 
@@ -120,7 +153,7 @@
         XMLString::transcode("*", tempStr, 99);
         DOMNodeList*    nodeList = doc->getElementsByTagName(tempStr);
 
-        // done with the document, call release() to release the entire document resources
+        // done with the document, must call release() to release the entire document resources
         doc->release();
     };
          </source>
