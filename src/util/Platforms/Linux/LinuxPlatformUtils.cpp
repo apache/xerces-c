@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/05/10 20:40:44  lehors
+ * built-in buffer limit could be smaller than system limit,
+ * we now use PATH_MAX instead - patch from Christian Schuhegger - bug #1158
+ *
  * Revision 1.17  2000/07/25 22:29:55  aruna1
  * Char definitions in XMLUni moved to XMLUniDefs
  *
@@ -534,7 +538,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     ArrayJanitor<char> janText(newSrc);
 
     // Use a local buffer that is big enough for the largest legal path
-    char *absPath = new char[1024];
+    char *absPath = new char[PATH_MAX];
     // get the absolute path 
     char* retPath = realpath(newSrc, absPath);  
     ArrayJanitor<char> janText2(retPath);
