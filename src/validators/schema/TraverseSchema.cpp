@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/06/06 21:16:13  knoaman
+ * Display error when 'whiteSpace' facet value is not collapse.
+ *
  * Revision 1.17  2001/06/05 15:21:15  knoaman
  * Display error when attribute type is not found.
  *
@@ -2169,8 +2172,18 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                 else {
 
                     fBuffer.set(attValue.rawBuffer(), attValueLen);
-                    facets->put((void*) facetStr,
-                                new KVStringPair(facetStr,fBuffer.getRawBuffer()));
+
+                    const XMLCh* attVal = fBuffer.getRawBuffer();
+
+                    if (!XMLString::compareString(facetStr, SchemaSymbols::fgELT_WHITESPACE)
+                        && baseValidator->getType() != DatatypeValidator::String
+                        && XMLString::compareString(attVal, SchemaSymbols::fgWS_COLLAPSE) != 0) {
+                        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::WS_CollapseExpected,
+                                          attVal);
+                    }
+                    else {
+                        facets->put((void*) facetStr, new KVStringPair(facetStr, attVal));
+                    }
                 }
             }
 
