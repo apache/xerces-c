@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/05/29 11:18:37  gareth
+ * Added macros in so we can determine whether to do things like iostream as opposed to iostream.h and whether to use std:: or not.
+ *
  * Revision 1.14  2003/05/12 09:44:19  gareth
  * Port to NetBSD. Patch by Hiramatsu Yoshifumi.
  *
@@ -451,6 +454,15 @@ typedef XMLUInt32           UCS4Ch;
     #define XERCES_CPP_NAMESPACE_USE
     #define XERCES_CPP_NAMESPACE_QUALIFIER
 #endif
+
+#if defined(XERCES_STD_NAMESPACE)
+	#define XERCES_USING_STD(NAME) using std :: NAME;
+	#define XERCES_STD_QUALIFIER  std ::
+#else
+	#define XERCES_USING_STD(NAME)
+	#define XERCES_STD_QUALIFIER 
+#endif
+
 
 // ---------------------------------------------------------------------------
 //  Set up the import/export keyword  for our core projects. The

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/05/29 11:18:37  gareth
+ * Added macros in so we can determine whether to do things like iostream as opposed to iostream.h and whether to use std:: or not.
+ *
  * Revision 1.6  2003/01/24 20:20:22  tng
  * Add method flush to XMLFormatTarget
  *
@@ -80,7 +83,12 @@
  */
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
+
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -92,7 +100,7 @@ StdOutFormatTarget::~StdOutFormatTarget()
 
 void StdOutFormatTarget::flush()
 {
-    cout.flush();
+    XERCES_STD_QUALIFIER cout.flush();
 }
 
 void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
@@ -104,8 +112,8 @@ void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
         // Without the cast, it was printing the pointer value in hex.
         // Quite annoying, considering every other platform printed
         // the string with the explicit cast to char* below.
-    cout.write((char *) toWrite, (int) count);
-    cout.flush();
+    XERCES_STD_QUALIFIER cout.write((char *) toWrite, (int) count);
+    XERCES_STD_QUALIFIER cout.flush();
 
 }
 

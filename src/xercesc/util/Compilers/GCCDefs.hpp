@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/29 11:18:37  gareth
+ * Added macros in so we can determine whether to do things like iostream as opposed to iostream.h and whether to use std:: or not.
+ *
  * Revision 1.6  2002/11/18 20:38:11  tng
  * [Bug 14612] GCCDefs clashes with cygwin's string.h for stricmp and strnicmp.
  *
@@ -197,6 +200,10 @@ typedef int             XMLInt32;
 #define XERCES_DEBUG
 #endif
 
+#if __GNUC__ >= 3
+#define XERCES_NEW_IOSTREAMS
+#define XERCES_STD_NAMESPACE
+#endif
 
 // ---------------------------------------------------------------------------
 //  Provide some common string ops that are different/notavail on GCC

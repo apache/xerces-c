@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/29 11:18:37  gareth
+ * Added macros in so we can determine whether to do things like iostream as opposed to iostream.h and whether to use std:: or not.
+ *
  * Revision 1.7  2002/11/04 14:45:20  tng
  * C++ Namespace Support.
  *
@@ -204,6 +207,10 @@ typedef int             XMLInt32;
 #define XERCES_DEBUG
 #endif
 
+#if _MSV_VER > 1300
+#define XERCES_NEW_IOSTREAMS
+#define XERCES_STD_NAMESPACE
+#endif
 
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the Visual C++ version of the
