@@ -71,6 +71,8 @@
 
 #include <xercesc/dom/DOM.hpp>
 
+XERCES_CPP_NAMESPACE_USE
+
 void clearFileInfoMemory();
 
 //------------------------------------------------------------------------------

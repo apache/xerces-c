@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/11/05 21:46:20  tng
+ * Explicit code using namespace in application.
+ *
  * Revision 1.8  2002/02/01 22:41:17  peiyongz
  * sane_include
  *
@@ -94,6 +97,8 @@
 
 #include    <xercesc/sax/HandlerBase.hpp>
 #include    <xercesc/framework/XMLFormatter.hpp>
+
+XERCES_CPP_NAMESPACE_USE
 
 class SAXPrintHandlers : public HandlerBase, private XMLFormatTarget
 {

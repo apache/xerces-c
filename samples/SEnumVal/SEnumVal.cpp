@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2002/11/05 21:46:20  tng
+ * Explicit code using namespace in application.
+ *
  * Revision 1.12  2002/07/12 15:51:52  knoaman
  * Retrieve the root grammar instead of using the validator.
  * Modify the way we print substitution group info.
@@ -105,6 +108,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+XERCES_CPP_NAMESPACE_USE
 
 // ---------------------------------------------------------------------------
 //  Forward references

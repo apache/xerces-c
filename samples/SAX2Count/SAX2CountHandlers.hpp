@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/05 21:46:20  tng
+ * Explicit code using namespace in application.
+ *
  * Revision 1.4  2002/02/01 22:38:52  peiyongz
  * sane_include
  *
@@ -77,6 +80,8 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/sax2/Attributes.hpp>
 #include <xercesc/sax2/DefaultHandler.hpp>
+
+XERCES_CPP_NAMESPACE_USE
 
 class SAX2CountHandlers : public DefaultHandler
 {

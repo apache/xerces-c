@@ -79,6 +79,8 @@
 #include <xercesc/dom/DOM.hpp>
 #include <stdio.h>
 
+XERCES_CPP_NAMESPACE_USE
+
 static int gTestsFailed = 0;
 static int gTestsRun    = 0;
 static XercesDOMParser* parser = 0;

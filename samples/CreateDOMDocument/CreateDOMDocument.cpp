@@ -72,6 +72,8 @@
 #include <xercesc/dom/DOM.hpp>
 #include <iostream.h>
 
+XERCES_CPP_NAMESPACE_USE
+
 // ---------------------------------------------------------------------------
 //  This is a simple class that lets us do easy (though not terribly efficient)
 //  trancoding of char* data to XMLCh data.

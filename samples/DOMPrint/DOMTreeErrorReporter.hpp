@@ -63,6 +63,8 @@
 #include <iostream.h>
 
 
+XERCES_CPP_NAMESPACE_USE
+
 
 class DOMTreeErrorReporter : public ErrorHandler
 {

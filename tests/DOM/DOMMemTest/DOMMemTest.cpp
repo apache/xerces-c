@@ -72,6 +72,8 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 
 
+XERCES_CPP_NAMESPACE_USE
+
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
 void tassert(bool c, const char *file, int line)

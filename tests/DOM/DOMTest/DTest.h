@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/11/05 21:47:35  tng
+ * Explicit code using namespace in application.
+ *
  * Revision 1.10  2002/11/04 15:23:43  tng
  * C++ Namespace Support.
  *
@@ -95,9 +98,12 @@
 //  define null for compatibility with original Java source code.
 #define null 0
 
+XERCES_CPP_NAMESPACE_USE
+
 XERCES_CPP_NAMESPACE_BEGIN
 class XercesDOMParser;
 XERCES_CPP_NAMESPACE_END
+
 
 class DOMTest {
 public:

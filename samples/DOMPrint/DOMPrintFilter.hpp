@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/11/05 21:46:19  tng
+ * Explicit code using namespace in application.
+ *
  * Revision 1.3  2002/06/04 14:22:51  peiyongz
  * Implement setter/getter from DOMWriterFilter
  *
@@ -77,6 +80,8 @@
 #define DOMPrintFilter_HEADER_GUARD_
 
 #include <xercesc/dom/DOMWriterFilter.hpp>
+
+XERCES_CPP_NAMESPACE_USE
 
 class DOMPrintFilter : public DOMWriterFilter {
 public:
@@ -102,7 +107,7 @@ private:
 	DOMPrintFilter(const DOMPrintFilter&);
 	DOMPrintFilter & operator = (const DOMPrintFilter&);
 
-	unsigned long fWhatToShow;   
+	unsigned long fWhatToShow;
 
 };
 

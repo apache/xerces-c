@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2002/11/05 21:46:19  tng
+ * Explicit code using namespace in application.
+ *
  * Revision 1.17  2002/04/17 20:18:08  tng
  * [Bug 7493] The word "occured" is misspelled and it is a global error.
  *
@@ -124,6 +127,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+XERCES_CPP_NAMESPACE_USE
 
 // ---------------------------------------------------------------------------
 //  Forward references

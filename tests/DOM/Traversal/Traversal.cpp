@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.13  2002/11/05 21:47:36  tng
+ * Explicit code using namespace in application.
+ *
  * Revision 1.12  2002/06/25 16:23:16  tng
  * DOM L3: use release()
  *
@@ -117,6 +120,8 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
+
+XERCES_CPP_NAMESPACE_USE
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 

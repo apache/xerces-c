@@ -64,6 +64,8 @@
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <iostream.h>
 
+XERCES_CPP_NAMESPACE_USE
+
 XERCES_CPP_NAMESPACE_BEGIN
 class SAXParseException;
 XERCES_CPP_NAMESPACE_END

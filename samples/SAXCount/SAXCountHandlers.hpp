@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/11/05 21:46:20  tng
+ * Explicit code using namespace in application.
+ *
  * Revision 1.6  2002/11/04 15:23:03  tng
  * C++ Namespace Support.
  *
@@ -86,6 +89,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/sax/HandlerBase.hpp>
+
+XERCES_CPP_NAMESPACE_USE
 
 XERCES_CPP_NAMESPACE_BEGIN
 class AttributeList;
