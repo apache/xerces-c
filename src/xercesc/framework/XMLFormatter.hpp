@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/30 16:29:16  tng
+ * [Bug 8550] No explanation of XMLFormatter escape options.
+ *
  * Revision 1.2  2002/06/21 19:31:23  peiyongz
  * getTranscoder() added;
  *
@@ -105,7 +108,7 @@ class XMLTranscoder;
 /**
  *  This class provides the basic formatting capabilities that are required
  *  to turn the Unicode based XML data from the parsers into a form that can
- *  be used on non-Unicode based systems, i.e. into local or generic text
+ *  be used on non-Unicode based systems, that is, into local or generic text
  *  encodings.
  *
  *  A number of flags are provided to control whether various optional
@@ -117,6 +120,83 @@ public:
     // -----------------------------------------------------------------------
     //  Class types
     // -----------------------------------------------------------------------
+    /** @name Public Contants */
+    //@{
+    /**
+     * EscapeFlags - Different styles of escape flags to control various formatting.
+     *
+     * <p><code>NoEscapes:</code>
+     * No character needs to be escaped.   Just write them out as is.</p>
+     * <p><code>StdEscapes:</code>
+     * The following characters need to be escaped:</p>
+     * <table border='1'>
+     * <tr>
+     * <td>character</td>
+     * <td>should be escaped and written as</td>
+     * </tr>
+     * <tr>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;</td>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;amp;</td>
+     * </tr>
+     * <tr>
+     * <td valign='top' rowspan='1' colspan='1'>&gt;</td>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;gt;</td>
+     * </tr>
+     * <tr>
+     * <td valign='top' rowspan='1' colspan='1'>&quot;</td>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;quot;</td>
+     * </tr>
+     * <tr>
+     * <td valign='top' rowspan='1' colspan='1'>&lt;</td>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;lt;</td>
+     * </tr>
+     * <tr>
+     * <td valign='top' rowspan='1' colspan='1'>&apos;</td>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;apos;</td>
+     * </tr>
+     * </table>
+     * <p><code>AttrEscapes:</code>
+     * The following characters need to be escaped:</p>
+     * <table border='1'>
+     * <tr>
+     * <td>character</td>
+     * <td>should be escaped and written as</td>
+     * </tr>
+     * <tr>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;</td>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;amp;</td>
+     * </tr>
+     * <tr>
+     * <td valign='top' rowspan='1' colspan='1'>&gt;</td>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;gt;</td>
+     * </tr>
+     * <tr>
+     * <td valign='top' rowspan='1' colspan='1'>&quot;</td>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;quot;</td>
+     * </tr>
+     * </table>
+     * <p><code>CharEscapes:</code>
+     * The following characters need to be escaped:</p>
+     * <table border='1'>
+     * <tr>
+     * <td>character</td>
+     * <td>should be escaped and written as</td>
+     * </tr>
+     * <tr>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;</td>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;amp;</td>
+     * </tr>
+     * <tr>
+     * <td valign='top' rowspan='1' colspan='1'>&gt;</td>
+     * <td valign='top' rowspan='1' colspan='1'>&amp;gt;</td>
+     * </tr>
+     * </table>
+     * <p><code>EscapeFlags_Count:</code>
+     * Special value, do not use directly.</p>
+     * <p><code>DefaultEscape:</code>
+     * Special value, do not use directly.</p>
+     *
+     */
     enum EscapeFlags
     {
         NoEscapes
@@ -129,6 +209,22 @@ public:
         , DefaultEscape     = 999
     };
 
+    /**
+     * UnRepFlags
+     *
+     * The unrepresentable flags that indicate how to react when a
+     * character cannot be represented in the target encoding.
+     *
+     * <p><code>UnRep_Fail:</code>
+     * Fail the operation.</p>
+     * <p><code>UnRep_CharRef:</code>
+     * Display the unrepresented character as reference.</p>
+     * <p><code>UnRep_CharRef:</code>
+     * Replace the unrepresented character with the replacement character.</p>
+     * <p><code>DefaultUnRep:</code>
+     * Special value, do not use directly.</p>
+     *
+     */
     enum UnRepFlags
     {
         UnRep_Fail
@@ -137,11 +233,20 @@ public:
 
         , DefaultUnRep      = 999
     };
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+    /** @name Constructor and Destructor */
+    //@{
+    /**
+     * @param outEncoding the encoding for the formatted content
+     * @param target      the formatTarget where the formatted content is written to
+     * @param escapeFlags the escape style for certain character
+     * @param unrepFlags  the reaction to unrepresentable character
+     */
     XMLFormatter
     (
         const   XMLCh* const            outEncoding
@@ -159,11 +264,21 @@ public:
     );
 
     ~XMLFormatter();
+    //@}
 
 
     // -----------------------------------------------------------------------
     //  Formatting methods
     // -----------------------------------------------------------------------
+    /** @name Formatting methods */
+    //@{
+    /**
+     * @param toFormat the string to be formatted
+     * @param count    length of the string
+     * @param escapeFlags the escape style for formatting toFormat
+     * @param unrepFlags the reaction for any unrepresentable character in toFormat
+     *
+     */
     void formatBuf
     (
         const   XMLCh* const    toFormat
@@ -172,6 +287,9 @@ public:
         , const UnRepFlags      unrepFlags = DefaultUnRep
     );
 
+    /**
+     * @see formatBuf
+     */
     XMLFormatter& operator<<
     (
         const   XMLCh* const    toFormat
@@ -181,37 +299,64 @@ public:
     (
         const   XMLCh           toFormat
     );
-
+    //@}
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+    /** @name Getter methods */
+    //@{
+    /**
+     * @return return the encoding set for the formatted content
+     */
+
     const XMLCh* getEncodingName() const;
 
+    /**
+     * @return return the transcoder used internally for transcoding the formatter conent
+     */
     inline const XMLTranscoder*   getTranscoder() const;
+    //@}
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+    /** @name Setter methods */
+    //@{
+    /**
+     * @param newFlags set the escape style for the follow-on formatted content
+     */
     void setEscapeFlags
     (
         const   EscapeFlags     newFlags
     );
 
+    /**
+     * @param newFlags set the reaction for unrepresentable character
+     */
     void setUnRepFlags
     (
         const   UnRepFlags      newFlags
     );
 
+    /**
+     * @param newFlags set the escape style for the follow-on formatted content
+     * @see setEscapeFlags
+     */
     XMLFormatter& operator<<
     (
         const   EscapeFlags     newFlags
     );
 
+    /**
+     * @param newFlags set the reaction for unrepresentable character
+     * @see setUnRepFlags
+     */
     XMLFormatter& operator<<
     (
         const   UnRepFlags      newFlags
     );
+    //@}
 
 
 private :
