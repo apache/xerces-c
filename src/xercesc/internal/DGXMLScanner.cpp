@@ -1387,15 +1387,8 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
             }
             else
             {
-                unsigned int *curCountPtr = fUndeclaredAttrRegistry->get(namePtr);
-                if(!curCountPtr)
-                {
-                    curCountPtr = getNewUIntPtr();
-                     *curCountPtr = fElemCount;
-                    fUndeclaredAttrRegistry->put((void *)namePtr, curCountPtr);
-                }
-                else if(*curCountPtr < fElemCount)
-                    *curCountPtr = fElemCount;
+                if(!fUndeclaredAttrRegistry->containsKey(namePtr))
+                    fUndeclaredAttrRegistry->put((void *)namePtr, 0);
                 else
                 {
                     emitError

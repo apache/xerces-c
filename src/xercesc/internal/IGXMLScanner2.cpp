@@ -315,15 +315,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 if(fGrammarType == Grammar::DTDGrammarType) 
                 {
-                    unsigned int *curCountPtr = fUndeclaredAttrRegistry->get(namePtr);
-                    if(!curCountPtr)
-                    {
-                        curCountPtr = getNewUIntPtr();
-                        *curCountPtr = fElemCount;
-                        fUndeclaredAttrRegistry->put((void *)namePtr, curCountPtr);
-                    }
-                    else if(*curCountPtr < fElemCount)
-                        *curCountPtr = fElemCount;
+                    if(!fUndeclaredAttrRegistry->containsKey(namePtr))
+                        fUndeclaredAttrRegistry->put((void *)namePtr, 0);
                     else
                     {
                         emitError
@@ -336,15 +329,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 }
                 else // schema grammar
                 {
-                    unsigned int *curCountPtr = fUndeclaredAttrRegistryNS->get(suffPtr, uriId);
-                    if(!curCountPtr)
-                    {
-                        curCountPtr = getNewUIntPtr();
-                        *curCountPtr = fElemCount;
-                        fUndeclaredAttrRegistryNS->put((void *)suffPtr, uriId, curCountPtr);
-                    }
-                    else if(*curCountPtr < fElemCount)
-                        *curCountPtr = fElemCount;
+                    if(!fUndeclaredAttrRegistryNS->containsKey(suffPtr, uriId))
+                        fUndeclaredAttrRegistryNS->put((void *)suffPtr, uriId, 0);
                     else
                     {
                         emitError
