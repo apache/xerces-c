@@ -96,7 +96,6 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
-#include <iostream>
 XERCES_CPP_NAMESPACE_BEGIN
 
 
@@ -771,7 +770,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
     };
 
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
- 
+
        XMLBufBid bbURI(&fBufMgr);
         XMLBuffer& bufURI = bbURI.getBuffer();
         XMLCh* namespaceURI = 0;
@@ -927,7 +926,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                                                                                   qualifiedName);   // qualified name
 
                         DOMAttr* remAttr = elemImpl->setDefaultAttributeNodeNS(insertAttr);
-                        if (remAttr) 
+                        if (remAttr)
                             remAttr->release();
 
                         if (attr->getValue() != 0)
@@ -943,7 +942,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                         insertAttr = (DOMAttrImpl *) fDocument->createAttribute(attr->getFullName());
 
                         DOMNode* remAttr = elemImpl->setDefaultAttributeNode(insertAttr);
-                        if (remAttr) 
+                        if (remAttr)
                             remAttr->release();
 
                         //need to do this before the get as otherwise we overwrite any value in the attr
@@ -952,7 +951,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                                 insertAttr->setValue(attr->getValue());
                                 insertAttr->setSpecified(false);
                             }
-                        
+
                         if(insertAttr) {
                             insertAttr = (DOMAttrImpl *)(elemImpl->getAttributeNode(attr->getFullName()));
                             insertAttr->setTypeInfo(attr->getDOMTypeInfoName(), attr->getDOMTypeInfoUri());
@@ -985,7 +984,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
     fWithinElement = true;
 
     // If an empty element, do end right now (no endElement() will be called)
-    if (isEmpty) 
+    if (isEmpty)
         endElement(elemDecl, urlId, isRoot, elemPrefix);
 }
 
