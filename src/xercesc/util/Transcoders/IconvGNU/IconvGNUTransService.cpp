@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/02/25 14:53:24  peiyongz
+ * Bug#27209: Xerces 2.5.0 does not build with option -t IconvGNU because of syntax errors!
+ *
  * Revision 1.11  2003/12/24 15:24:15  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -1154,7 +1157,7 @@ bool IconvGNULCPTranscoder::transcode(const   char* const    toTranscode
     size_t    rc = iconvFrom(toTranscode, &flen, &ptr, len);
     if (rc == (size_t)-1) {
         if (wBufPtr)
-            XMLPlatformUtils::manager->deallocate(wBufPtr);//delete [] wBufPtr;
+            manager->deallocate(wBufPtr);//delete [] wBufPtr;
         return false;
     }
 
