@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/06/25 16:05:24  tng
+ * DOM L3: move the operator delete to DOMDocumentImpl.hpp
+ *
  * Revision 1.5  2002/05/28 12:57:17  tng
  * Fix typo.
  *
@@ -212,18 +215,6 @@ const char* const Xerces_DLLName = "xerces-c_" Xerces_DLLVersionStr "D";
 const char* const Xerces_DLLName = "xerces-c_" Xerces_DLLVersionStr;
 #endif
 
-// ---------------------------------------------------------------------------
-//  For DOM:
-//  Bypass compiler warning:
-//    no matching operator delete found; memory will not be freed if initialization throws an exception
-// ---------------------------------------------------------------------------
-#if _MSC_VER >= 1200 /* VC++ 6.0 */
-class DOMDocument;
-inline void operator delete(void* ptr, DOMDocument *doc)
-{
-    return;
-}
-#endif
 
 #endif //VCPPDEFS_HPP
 
