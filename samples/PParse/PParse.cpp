@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/10/19 18:52:04  tng
+ * Since PParse can take any XML file as input file, it shouldn't hardcode to expect 16 elements.
+ * Change it to work similar to SAXCount which just prints the number of elements, characters, attributes ... etc.
+ * And other modification for consistent help display and return code across samples.
+ *
  * Revision 1.10  2001/08/01 19:11:01  tng
  * Add full schema constraint checking flag to the samples and the parser.
  *
@@ -160,20 +165,21 @@ static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    cout <<  "\nUsage: PParse [options] <file>\n\n"
-         <<  "This sample program demonstrates the progressive parse capabilities of\n"
-	     <<  "the parser system. It allows you to do a scanFirst() call followed by\n"
-         <<  "a loop which calls scanNext(). You can drop out when you've found what\n"
-         <<  "ever it is you want. In our little test, our event handler looks for\n"
-         <<  "16 new elements then sets a flag to indicate its found what it wants.\n"
-         <<  "At that point, our progressive parse loop exits.\n\n"
-         <<  "Options:\n"
-         <<  "      -v=xxx        - Validation scheme [always | never | auto*]\n"
-         <<  "      -n            - Enable namespace processing [default is off]\n"
-         <<  "      -s            - Enable schema processing [default is off]\n"
-         <<  "      -f            - Enable full schema constraint checking [default is off]\n"
-         <<  "      -?            - Show this help (must be the only parameter)\n\n"
-         <<  "  * = Default if not provided explicitly\n"
+    cout << "\nUsage:\n"
+            "    PParse [options] <XML file>\n\n"
+            "This program demonstrates the progressive parse capabilities of\n"
+	         "the parser system. It allows you to do a scanFirst() call followed by\n"
+            "a loop which calls scanNext(). You can drop out when you've found what\n"
+            "ever it is you want. In our little test, our event handler looks for\n"
+            "16 new elements then sets a flag to indicate its found what it wants.\n"
+            "At that point, our progressive parse loop exits.\n\n"
+            "Options:\n"
+            "      -v=xxx        - Validation scheme [always | never | auto*].\n"
+            "      -n            - Enable namespace processing [default is off].\n"
+            "      -s            - Enable schema processing [default is off].\n"
+            "      -f            - Enable full schema constraint checking [default is off].\n"
+            "      -?            - Show this help.\n\n"
+            "  * = Default if not provided explicitly.\n"
          <<  endl;
 }
 
@@ -197,19 +203,12 @@ int main(int argC, char* argV[])
          return 1;
     }
 
-
     // Check command line and extract arguments.
     if (argC < 2)
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 1;
-    }
-
-    // Watch for special case help request
-    if (!strcmp(argV[1], "-?"))
-    {
-        usage();
-        return 2;
     }
 
     // See if non validating dom parser configuration is requested.
@@ -220,8 +219,15 @@ int main(int argC, char* argV[])
         if (argV[parmInd][0] != '-')
             break;
 
-        if (!strncmp(argV[parmInd], "-v=", 3)
-        ||  !strncmp(argV[parmInd], "-V=", 3))
+        // Watch for special case help request
+        if (!strcmp(argV[parmInd], "-?"))
+        {
+            usage();
+            XMLPlatformUtils::Terminate();
+            return 2;
+        }
+         else if (!strncmp(argV[parmInd], "-v=", 3)
+              ||  !strncmp(argV[parmInd], "-V=", 3))
         {
             const char* const parm = &argV[parmInd][3];
 
@@ -234,6 +240,7 @@ int main(int argC, char* argV[])
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -252,10 +259,10 @@ int main(int argC, char* argV[])
         {
             schemaFullChecking = true;
         }
-         else
+        else
         {
-            usage();
-            return 1;
+            cerr << "Unknown option '" << argV[parmInd]
+                << "', ignoring it\n" << endl;
         }
     }
 
@@ -266,10 +273,11 @@ int main(int argC, char* argV[])
     if (parmInd + 1 != argC)
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 1;
     }
     xmlFile = argV[parmInd];
-
+    int errorCount = 0;
 
     //
     //  Create a SAX parser object to use and create our SAX event handlers
@@ -289,14 +297,17 @@ int main(int argC, char* argV[])
     //  loop, we look and see if the handler has found what its looking
     //  for. When it does, we fall out then.
     //
+    unsigned long duration;
     try
     {
         // Create a progressive scan token
         XMLPScanToken token;
 
+        const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
         if (!parser.parseFirst(xmlFile, token))
         {
             cerr << "scanFirst() failed\n" << endl;
+            XMLPlatformUtils::Terminate();
             return 1;
         }
 
@@ -305,9 +316,13 @@ int main(int argC, char* argV[])
         //  or hit the end.
         //
         bool gotMore = true;
-        while (gotMore && !handler.getDone())
+        while (gotMore && !parser.getErrorCount())
             gotMore = parser.parseNext(token);
 
+        const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
+        duration = endMillis - startMillis;
+
+        errorCount = parser.getErrorCount();
         //
         //  Reset the parser. In this simple progrma, since we just exit
         //  now, its not technically required. But, in programs which
@@ -324,17 +339,25 @@ int main(int argC, char* argV[])
              << "Exception message is: \n"
              << StrX(toCatch.getMessage())
              << "\n" << endl;
-        return -1;
+        XMLPlatformUtils::Terminate();
+        return 4;
     }
 
-    if (handler.getDone())
-        cout << "Got the required 16 elements\n" << endl;
-    else
-        cout << "Did not get the required 16 elements\n" << endl;
+
+    if (!errorCount) {
+        cout << xmlFile << ": " << duration << " ms ("
+            << handler.getElementCount() << " elems, "
+            << handler.getAttrCount() << " attrs, "
+            << handler.getSpaceCount() << " spaces, "
+            << handler.getCharacterCount() << " chars)" << endl;
+    }
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
-    return 0;
+    if (errorCount > 0)
+        return 4;
+    else
+        return 0;
 }
 

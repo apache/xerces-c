@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/10/19 18:52:04  tng
+ * Since PParse can take any XML file as input file, it shouldn't hardcode to expect 16 elements.
+ * Change it to work similar to SAXCount which just prints the number of elements, characters, attributes ... etc.
+ * And other modification for consistent help display and return code across samples.
+ *
  * Revision 1.3  2000/03/02 19:53:44  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -84,12 +89,42 @@ public :
     PParseHandlers();
     ~PParseHandlers();
 
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    unsigned int getElementCount() const
+    {
+        return fElementCount;
+    }
+
+    unsigned int getAttrCount() const
+    {
+        return fAttrCount;
+    }
+
+    unsigned int getCharacterCount() const
+    {
+        return fCharacterCount;
+    }
+
+    bool getSawErrors() const
+    {
+        return fSawErrors;
+    }
+
+    unsigned int getSpaceCount() const
+    {
+        return fSpaceCount;
+    }
+
 
     // -----------------------------------------------------------------------
-    //  Implementations of the SAX DocumentHandler interface
+    //  Handlers for the SAX DocumentHandler interface
     // -----------------------------------------------------------------------
     void startElement(const XMLCh* const name, AttributeList& attributes);
-
+    void characters(const XMLCh* const chars, const unsigned int length);
+    void ignorableWhitespace(const XMLCh* const chars, const unsigned int length);
+    void resetDocument();
 
 
     // -----------------------------------------------------------------------
@@ -100,29 +135,25 @@ public :
     void fatalError(const SAXParseException& exception);
 
 
-    // -----------------------------------------------------------------------
-    //  Getter methods
-    // -----------------------------------------------------------------------
-    bool getDone() const;
-
-
-private :
+    private:
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fCount
-    //      This is a counter that we use to count elements. When it hits
-    //      16, we set our done flag.
+    //  fAttrCount
+    //  fCharacterCount
+    //  fElementCount
+    //  fSpaceCount
+    //      These are just counters that are run upwards based on the input
+    //      from the document handlers.
     //
-    //  fDone
-    //      This flag is set once we find what we are looking for.
+    //  fSawErrors
+    //      This is set by the error handlers, and is queryable later to
+    //      see if any errors occured.
     // -----------------------------------------------------------------------
-    unsigned int    fCount;
-    bool            fDone;
+    unsigned int    fAttrCount;
+    unsigned int    fCharacterCount;
+    unsigned int    fElementCount;
+    unsigned int    fSpaceCount;
+    bool            fSawErrors;
 };
 
-
-inline bool PParseHandlers::getDone() const
-{
-    return fDone;
-}
