@@ -5,37 +5,6 @@
 	};
 	objectVersion = 39;
 	objects = {
-		014CEA460018CE2711CA2923 = {
-			buildRules = (
-			);
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_VERSION = 2.x;
-				OPTIMIZATION_CFLAGS = "-O0";
-			};
-			isa = PBXBuildStyle;
-			name = "Development GCC2";
-		};
-		014CEA470018CE2711CA2923 = {
-			buildRules = (
-			);
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_VERSION = 2.x;
-			};
-			isa = PBXBuildStyle;
-			name = "Deployment GCC2";
-		};
-//010
-//011
-//012
-//013
-//014
-//020
-//021
-//022
-//023
-//024
 		0249A662FF388D9811CA2CEA = {
 			children = (
 				90153B7D0573CA6700DAD394,
@@ -59,8 +28,6 @@
 			buildSettings = {
 			};
 			buildStyles = (
-				014CEA460018CE2711CA2923,
-				014CEA470018CE2711CA2923,
 				F57843050313FA0D01A80065,
 				F57843060313FA1301A80065,
 			);
