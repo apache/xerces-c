@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/10/15 18:15:02  knoaman
+ * [Bug 13490]: - new[]/delete mismatch in RangeToken.cpp
+ *
  * Revision 1.4  2002/05/27 11:46:53  tng
  * Fix compilation error.  The definition should match declaration.
  *
@@ -125,7 +128,7 @@ RangeToken::RangeToken(const unsigned short tokType) : Token(tokType)
 
 RangeToken::~RangeToken() {
 
-    delete fMap;
+    delete [] fMap;
     delete[] fRanges;
 }
 
@@ -158,7 +161,7 @@ void RangeToken::setRangeValues(XMLInt32* const rangeValues, const unsigned int 
     if (fRanges) {
 
         if (fMap) {
-            delete fMap;
+            delete [] fMap;
             fMap = 0;
         }
 
