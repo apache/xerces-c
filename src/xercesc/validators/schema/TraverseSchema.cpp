@@ -2643,10 +2643,6 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
     const XMLCh* publicId = getElementAttValue(elem, SchemaSymbols::fgATT_PUBLIC);
     const XMLCh* systemId = getElementAttValue(elem, SchemaSymbols::fgATT_SYSTEM);
 
-    if ((!publicId || !*publicId) && (!systemId || !*systemId)) {
-        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::Notation_InvalidDecl, name);
-    }
-
     fNotationRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)),
                            fTargetNSURI, 0);
 

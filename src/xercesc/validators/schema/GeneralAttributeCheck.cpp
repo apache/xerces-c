@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/12/10 16:58:22  knoaman
+ * Schema Errata E1-16.
+ *
  * Revision 1.9  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -756,7 +759,7 @@ void GeneralAttributeCheck::initCharFlagTable()
     // "notation"
     attList[E_Notation][A_ID] = Att_Optional | DV_ID;
     attList[E_Notation][A_Name] = Att_Required;
-    attList[E_Notation][A_Public] = Att_Required;
+    attList[E_Notation][A_Public] = Att_Optional;
     attList[E_Notation][A_System] = Att_Optional | DV_AnyURI;
 
     // "pattern"
