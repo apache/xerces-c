@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/09 02:12:21  abagchi
+ * Added getValue docs
+ *
  * Revision 1.3  2000/02/06 07:47:57  rahulj
  * Year 2K copyright swat.
  *
@@ -124,6 +127,9 @@
   * implementation for use by parser or application writers.
   *
   * $Log$
+  * Revision 1.4  2000/02/09 02:12:21  abagchi
+  * Added getValue docs
+  *
   * Revision 1.3  2000/02/06 07:47:57  rahulj
   * Year 2K copyright swat.
   *
@@ -226,7 +232,8 @@ public:
     * @return The attribute value as a string, or
     *         null if the index is out of range.
     * @see #getLength
-    * @see #getValue(String)
+    * @see #getValue(XMLCh*)
+    * @see #getValue(char *)
     */
     virtual const XMLCh* getValue(const unsigned int index) const = 0;
 
@@ -259,8 +266,25 @@ public:
     * @return The attribute value as a string, or null if
     *         no such attribute exists.
     * @see #getValue(int)
+    * @see #getValue(char *)
     */
     virtual const XMLCh* getValue(const XMLCh* const name) const = 0;
+
+  /**
+    * Return the value of an attribute in the list (by name).
+    *
+    * The return value is the same as the return value for
+    * getValue(int).
+    *
+    * If the attribute name has a namespace prefix in the document,
+    * the application must include the prefix here.
+    *
+    * @param name The name of the attribute in the list.
+    * @return The attribute value as a string, or null if
+    *         no such attribute exists.
+    * @see #getValue(int)
+    * @see #getValue(XMLCh*)
+    */
     virtual const XMLCh* getValue(const char* const name) const = 0;
     //@}
 
