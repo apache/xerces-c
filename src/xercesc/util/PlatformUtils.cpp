@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/11/24 17:07:53  knoaman
+ * Reset memory manager in Terminate
+ *
  * Revision 1.12  2003/11/17 14:50:29  knoaman
  * Fix for bug 23930 by Ronald  Landheer-Cieslak.
  *
@@ -407,14 +410,12 @@ void XMLPlatformUtils::Terminate()
 
     // de-allocate default memory manager
     if (fgMemMgrAdopted)
-    {
         delete fgMemoryManager;
-        fgMemoryManager = 0;
-    }
     else
-    {
         fgMemMgrAdopted = true;
-    }
+
+    // set memory manager to 0
+    fgMemoryManager = 0
 
     // And say we are no longer initialized
     gInitFlag = 0;
