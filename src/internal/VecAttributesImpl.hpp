@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/09 22:11:17  jpolast
+ * changes to allow const instances of the sax2
+ * Attributes class.
+ *
  * Revision 1.1  2000/08/02 18:09:14  jpolast
  * initial checkin: attributes vector needed for
  * Attributes class as defined by sax2 spec
@@ -88,7 +92,7 @@ public :
     // -----------------------------------------------------------------------
     virtual unsigned int getLength() const ;
 
-	virtual const XMLCh* getURI(const unsigned int index) ;
+	virtual const XMLCh* getURI(const unsigned int index) const;
     virtual const XMLCh* getLocalName(const unsigned int index) const ;
     virtual const XMLCh* getQName(const unsigned int index) const ;
     virtual const XMLCh* getType(const unsigned int index) const ;
@@ -151,7 +155,7 @@ private :
     unsigned int                fCount;
     const RefVectorOf<XMLAttr>* fVector;
 	const XMLValidator *		fValidator ;
-	XMLBuffer					fURIBuffer ;
+	//XMLBuffer				    fURIBuffer ;
 };
 
 #endif // ! VECATTRIBUTESIMPL_HPP

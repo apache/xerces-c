@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/09 22:11:16  jpolast
+ * changes to allow const instances of the sax2
+ * Attributes class.
+ *
  * Revision 1.1  2000/08/02 18:09:14  jpolast
  * initial checkin: attributes vector needed for
  * Attributes class as defined by sax2 spec
@@ -102,14 +106,19 @@ unsigned int VecAttributesImpl::getLength() const
     return fCount;
 }
 
-const XMLCh* VecAttributesImpl::getURI(const unsigned int index) 
+const XMLCh* VecAttributesImpl::getURI(const unsigned int index) const
 {
-	// this func really needs to be const, like the rest, not sure how we
-	// make it const and re-use the fURIBuffer member variable
+	// since this func really needs to be const, like the rest, not sure how we
+	// make it const and re-use the fURIBuffer member variable.  we're currently
+	// creating a buffer each time you need a URI.  there has to be a better
+	// way to do this...
+
+	//XMLBuffer tempBuf;
     if (index >= fCount)
         ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::AttrList_BadIndex);
-    fValidator->getURIText(fVector->elementAt(index)->getURIId(), fURIBuffer) ;
-	return fURIBuffer.getRawBuffer() ;
+    //fValidator->getURIText(fVector->elementAt(index)->getURIId(), tempBuf) ;
+	//return tempBuf.getRawBuffer() ;
+	return fValidator->getURIText(fVector->elementAt(index)->getURIId());
 }
 
 const XMLCh* VecAttributesImpl::getLocalName(const unsigned int index) const 
