@@ -56,6 +56,14 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/12/22 01:06:08  jasons
+ * Made the destructors virtual for:
+ *
+ * * ~RefHash2KeysTableOfEnumerator
+ * * ~RefHash3KeysIdPoolEnumerator
+ *
+ * This fixes bug #5514
+ *
  * Revision 1.3  2001/06/04 13:45:04  tng
  * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
  *
@@ -250,7 +258,7 @@ public :
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum, const bool adopt = false);
-    ~RefHash3KeysIdPoolEnumerator();
+    virtual ~RefHash3KeysIdPoolEnumerator();
 
 
     // -----------------------------------------------------------------------
