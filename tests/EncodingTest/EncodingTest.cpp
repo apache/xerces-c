@@ -106,6 +106,8 @@ void ParseErrorHandler::error(const SAXParseException& e)
     fprintf(stderr, "\nError at file \"%s\", line %d, char %d:  %s\n",
         XMLString::transcode(e.getSystemId()), e.getLineNumber(),
         e.getColumnNumber(), XMLString::transcode(e.getMessage()));
+    throw e;
+    
 };
 
 void ParseErrorHandler::fatalError(const SAXParseException& e)
@@ -113,7 +115,7 @@ void ParseErrorHandler::fatalError(const SAXParseException& e)
     fprintf(stderr, "\nFatal Error at file \"%s\", line %d, char %d:  %s\n",
         XMLString::transcode(e.getSystemId()), e.getLineNumber(),
         e.getColumnNumber(), XMLString::transcode(e.getMessage()));
-    throw;
+    throw e;
 };
 
 void ParseErrorHandler::warning(const SAXParseException& e)
@@ -121,6 +123,8 @@ void ParseErrorHandler::warning(const SAXParseException& e)
     fprintf(stderr, "\nWarning at file \"%s\", line %d, char %d:  %s\n",
         XMLString::transcode(e.getSystemId()), e.getLineNumber(),
         e.getColumnNumber(), XMLString::transcode(e.getMessage()));
+    throw e;
+    
 };
 
 
@@ -147,6 +151,12 @@ static DOM_Document parseFile(char *fileName)
         //   there is no need to output another one here.
         return DOM_Document();  // A null document.
     }
+
+	catch (...)
+	{
+		fprintf(stderr, "Unexpected Exception thrown by parse.\n");
+		return DOM_Document();
+	}
     return parser.getDocument();
 }
 
@@ -267,6 +277,8 @@ static bool  processTestFile(DOMString fileName)
     DOMString elData;
     for (child=data.getFirstChild(); child != 0; child= child.getNextSibling())
     {
+		if (child.getNodeType() == DOM_Node::COMMENT_NODE)
+			continue;
         if (! (child.getNodeType() == DOM_Node::TEXT_NODE ||
                child.getNodeType() == DOM_Node::CDATA_SECTION_NODE ||
                child.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE)) 
@@ -296,13 +308,15 @@ static bool  processTestFile(DOMString fileName)
     DOMString rawUData;
     for (child=udata.getFirstChild(); child != 0; child= child.getNextSibling())
     {
+        if (child.getNodeType() == DOM_Node::COMMENT_NODE)
+            continue;
         if (! (child.getNodeType() == DOM_Node::TEXT_NODE ||
-               child.getNodeType() == DOM_Node::CDATA_SECTION_NODE ||
-               child.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE)) 
+            child.getNodeType() == DOM_Node::CDATA_SECTION_NODE ||
+            child.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE)) 
         {
-               fprintf(stderr, "Test file \"%s\": udata element contains unexpected children.",
-                    cFileName);
-               return false;
+            fprintf(stderr, "Test file \"%s\": udata element contains unexpected children.",
+                cFileName);
+            return false;
         }
         rawUData += ((DOM_CharacterData &)child).getData();
     };
