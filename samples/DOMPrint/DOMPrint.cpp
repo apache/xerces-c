@@ -424,7 +424,7 @@ int main(int argC, char* argV[])
     parser->setValidationScheme(gValScheme);
     parser->setDoNamespaces(gDoNamespaces);
     parser->setDoSchema(gDoSchema);
-    ErrorHandler *errReporter = new DOMTreeErrorReporter();
+    DOMTreeErrorReporter *errReporter = new DOMTreeErrorReporter();
     parser->setErrorHandler(errReporter);
     parser->setCreateEntityReferenceNodes(gDoCreate);
     parser->setToCreateXMLDeclTypeNode(true);
@@ -462,7 +462,7 @@ int main(int argC, char* argV[])
 
 
     // If the parse was successful, output the document data from the DOM tree
-    if (!errorsOccured)
+    if (!errorsOccured && !errReporter->getSawErrors())
     {
         DOM_Node doc = parser->getDocument();
         DOMPrintFormatTarget* formatTarget = new DOMPrintFormatTarget();

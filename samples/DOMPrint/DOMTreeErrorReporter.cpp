@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/04 19:01:05  tng
+ * DOMPrint fix.  Check error before continuing.
+ *
  * Revision 1.7  2001/05/03 15:59:32  tng
  * Schema: samples update with schema
  *
@@ -110,6 +113,7 @@ void DOMTreeErrorReporter::warning(const SAXParseException&)
 
 void DOMTreeErrorReporter::error(const SAXParseException& toCatch)
 {
+    fSawErrors = true;
     cerr << "Error at file \"" << DOMString(toCatch.getSystemId())
 		 << "\", line " << toCatch.getLineNumber()
 		 << ", column " << toCatch.getColumnNumber()
@@ -118,6 +122,7 @@ void DOMTreeErrorReporter::error(const SAXParseException& toCatch)
 
 void DOMTreeErrorReporter::fatalError(const SAXParseException& toCatch)
 {
+    fSawErrors = true;
     cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId())
 		 << "\", line " << toCatch.getLineNumber()
 		 << ", column " << toCatch.getColumnNumber()
