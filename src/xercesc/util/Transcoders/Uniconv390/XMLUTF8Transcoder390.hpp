@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/06/30 19:04:17  peiyongz
+ * XML1.0-3rd Edition: UTF_8
+ *
  * Revision 1.3  2004/04/22 22:46:46  neilg
  * not all 390 processors support the new transcoding instructions; this patch makes Xerces work there as well.  Thanks to Steve Dulin
  *
@@ -69,6 +72,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/TransService.hpp>
+#include <xercesc/util/UTFDataFormatException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -126,12 +130,36 @@ public :
 
 
 private :
+
+    inline void checkTrailingBytes(
+                                    const XMLByte      toCheck
+                                  , const unsigned int trailingBytes
+                                  , const unsigned int position       
+                                  ) const;
+
+private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLUTF8Transcoder390(const XMLUTF8Transcoder390&);
     XMLUTF8Transcoder390& operator=(const XMLUTF8Transcoder390&);
 };
+
+inline 
+void XMLUTF8Transcoder390::checkTrailingBytes(const XMLByte      toCheck
+                                            , const unsigned int trailingBytes
+                                            , const unsigned int position) const
+{
+
+    if((toCheck & 0xC0) != 0x80) 
+    {
+        char len[2]  = {(char)(trailingBytes+0x31), 0};
+        char pos[2]  = {(char)(position+0x31), 0};
+        char byte[2] = {toCheck,0};
+        ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len, getMemoryManager());
+    }
+
+}
 
 XERCES_CPP_NAMESPACE_END
 
