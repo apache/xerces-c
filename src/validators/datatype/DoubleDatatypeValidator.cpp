@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/21 18:42:53  peiyongz
+ * Bugzilla# 2816: cleanUp() declared with external linkage and called
+ *                          before defined as inline
+ *
  * Revision 1.2  2001/08/15 18:08:44  peiyongz
  * Fix to potential leakage in strEnumeration
  *
@@ -81,6 +85,22 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
+DoubleDatatypeValidator::DoubleDatatypeValidator()
+:DatatypeValidator(0, 0, 0, DatatypeValidator::Double)
+, fEnumerationInherited(false)
+, fMaxInclusive(0)
+, fMaxExclusive(0)
+, fMinInclusive(0)
+, fMinExclusive(0)
+, fEnumeration(0)
+{
+}
+
+DoubleDatatypeValidator::~DoubleDatatypeValidator()
+{
+    cleanUp();
+}
+
 DoubleDatatypeValidator::DoubleDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets

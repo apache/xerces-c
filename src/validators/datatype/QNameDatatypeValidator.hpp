@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/21 18:42:53  peiyongz
+ * Bugzilla# 2816: cleanUp() declared with external linkage and called
+ *                          before defined as inline
+ *
  * Revision 1.1  2001/07/06 20:20:15  peiyongz
  * QNameDTV
  *
@@ -191,24 +195,6 @@ private:
      RefVectorOf<XMLCh>*  fEnumeration;
 
 };
-
-// ---------------------------------------------------------------------------
-//  Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline QNameDatatypeValidator::QNameDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::QName)
-,fLength(0)
-,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
-,fMinLength(0)
-,fEnumerationInherited(false)
-,fEnumeration(0)
-{
-}
-
-inline QNameDatatypeValidator::~QNameDatatypeValidator()
-{
-    cleanUp();
-}
 
 // -----------------------------------------------------------------------
 // Getter methods

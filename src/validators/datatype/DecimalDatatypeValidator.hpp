@@ -193,24 +193,6 @@ private:
 
 };
 
-inline DecimalDatatypeValidator::DecimalDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::Decimal)
-, fTotalDigits(0)
-, fFractionDigits(0)
-, fEnumerationInherited(false)
-, fMaxInclusive(0)
-, fMaxExclusive(0)
-, fMinInclusive(0)
-, fMinExclusive(0)
-, fEnumeration(0)
-{
-}
-
-inline DecimalDatatypeValidator::~DecimalDatatypeValidator()
-{
-    cleanUp();
-}
-
 // -----------------------------------------------------------------------
 // Compare methods
 // -----------------------------------------------------------------------

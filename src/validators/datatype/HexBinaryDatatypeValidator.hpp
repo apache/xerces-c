@@ -189,23 +189,6 @@ private:
 
 };
 
-// ---------------------------------------------------------------------------
-//  Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline HexBinaryDatatypeValidator::HexBinaryDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::HexBinary)
-,fLength(0)
-,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
-,fMinLength(0)
-,fEnumerationInherited(false)
-,fEnumeration(0)
-{}
-
-inline HexBinaryDatatypeValidator::~HexBinaryDatatypeValidator()
-{
-    cleanUp();
-}
-
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------

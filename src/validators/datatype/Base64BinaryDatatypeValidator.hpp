@@ -189,23 +189,6 @@ private:
 
 };
 
-// ---------------------------------------------------------------------------
-//  Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline Base64BinaryDatatypeValidator::Base64BinaryDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::Base64Binary)
-,fLength(0)
-,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
-,fMinLength(0)
-,fEnumerationInherited(false)
-,fEnumeration(0)
-{}
-
-inline Base64BinaryDatatypeValidator::~Base64BinaryDatatypeValidator()
-{
-    cleanUp();
-}
-
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------

@@ -188,24 +188,6 @@ private:
      RefVectorOf<XMLCh>*  fEnumeration;
 };
 
-// ---------------------------------------------------------------------------
-//  Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline StringDatatypeValidator::StringDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::String)
-,fLength(0)
-,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
-,fMinLength(0)
-,fEnumerationInherited(false)
-,fWhiteSpace(DatatypeValidator::PRESERVE)
-,fEnumeration(0)
-{}
-
-inline StringDatatypeValidator::~StringDatatypeValidator()
-{
-    cleanUp();
-}
-
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------

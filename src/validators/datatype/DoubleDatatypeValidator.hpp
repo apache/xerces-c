@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/21 18:42:53  peiyongz
+ * Bugzilla# 2816: cleanUp() declared with external linkage and called
+ *                          before defined as inline
+ *
  * Revision 1.1  2001/07/24 13:59:03  peiyongz
  * DoubleDTV
  *
@@ -186,22 +190,6 @@ private:
      RefVectorOf<XMLDouble>*  fEnumeration;    // save the actual value
 
 };
-
-inline DoubleDatatypeValidator::DoubleDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::Double)
-, fEnumerationInherited(false)
-, fMaxInclusive(0)
-, fMaxExclusive(0)
-, fMinInclusive(0)
-, fMinExclusive(0)
-, fEnumeration(0)
-{
-}
-
-inline DoubleDatatypeValidator::~DoubleDatatypeValidator()
-{
-    cleanUp();
-}
 
 // -----------------------------------------------------------------------
 // Compare methods

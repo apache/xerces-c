@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/21 18:42:53  peiyongz
+ * Bugzilla# 2816: cleanUp() declared with external linkage and called
+ *                          before defined as inline
+ *
  * Revision 1.1  2001/07/26 20:42:16  peiyongz
  * FloatDatatypeValidator
  *
@@ -187,22 +191,6 @@ private:
      RefVectorOf<XMLFloat>*  fEnumeration;    // save the actual value
 
 };
-
-inline FloatDatatypeValidator::FloatDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::Float)
-, fEnumerationInherited(false)
-, fMaxInclusive(0)
-, fMaxExclusive(0)
-, fMinInclusive(0)
-, fMinExclusive(0)
-, fEnumeration(0)
-{
-}
-
-inline FloatDatatypeValidator::~FloatDatatypeValidator()
-{
-    cleanUp();
-}
 
 // -----------------------------------------------------------------------
 // Compare methods

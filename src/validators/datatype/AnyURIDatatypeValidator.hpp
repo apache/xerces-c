@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/21 18:42:53  peiyongz
+ * Bugzilla# 2816: cleanUp() declared with external linkage and called
+ *                          before defined as inline
+ *
  * Revision 1.2  2001/08/10 16:21:19  peiyongz
  * use XMLUri instead of XMLURL
  *
@@ -198,25 +202,6 @@ private:
      XMLUri              *fTempURI;   
 
 };
-
-// ---------------------------------------------------------------------------
-//  Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline AnyURIDatatypeValidator::AnyURIDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::AnyURI)
-,fLength(0)
-,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
-,fMinLength(0)
-,fEnumerationInherited(false)
-,fEnumeration(0)
-,fTempURI(0)
-{
-}
-
-inline AnyURIDatatypeValidator::~AnyURIDatatypeValidator()
-{
-    cleanUp();
-}
 
 // -----------------------------------------------------------------------
 // Compare methods

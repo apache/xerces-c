@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/21 18:42:54  peiyongz
+ * Bugzilla# 2816: cleanUp() declared with external linkage and called
+ *                          before defined as inline
+ *
  * Revision 1.2  2001/08/14 22:11:56  peiyongz
  * new exception message added
  *
@@ -80,6 +84,18 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
+UnionDatatypeValidator::UnionDatatypeValidator()
+:DatatypeValidator(0, 0, 0, DatatypeValidator::Union)
+,fEnumerationInherited(false)
+,fEnumeration(0)
+,fMemberTypeValidators(0)
+{}
+
+UnionDatatypeValidator::~UnionDatatypeValidator()
+{
+    cleanUp();
+}
+
 UnionDatatypeValidator::UnionDatatypeValidator(
                         RefVectorOf<DatatypeValidator>* const memberTypeValidators
                       , const int                                         finalSet)

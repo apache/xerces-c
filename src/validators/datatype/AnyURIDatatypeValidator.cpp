@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/08/21 18:42:53  peiyongz
+ * Bugzilla# 2816: cleanUp() declared with external linkage and called
+ *                          before defined as inline
+ *
  * Revision 1.3  2001/08/14 22:11:56  peiyongz
  * new exception message added
  *
@@ -96,6 +100,22 @@ static const XMLCh BASE_URI[] =
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
+AnyURIDatatypeValidator::AnyURIDatatypeValidator()
+:DatatypeValidator(0, 0, 0, DatatypeValidator::AnyURI)
+,fLength(0)
+,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
+,fMinLength(0)
+,fEnumerationInherited(false)
+,fEnumeration(0)
+,fTempURI(0)
+{
+}
+
+AnyURIDatatypeValidator::~AnyURIDatatypeValidator()
+{
+    cleanUp();
+}
+
 AnyURIDatatypeValidator::AnyURIDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets

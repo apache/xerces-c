@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/08/21 18:42:53  peiyongz
+ * Bugzilla# 2816: cleanUp() declared with external linkage and called
+ *                          before defined as inline
+ *
  * Revision 1.7  2001/06/20 17:56:47  peiyongz
  * support for "fixed" option on constrainning facets
  *
@@ -96,6 +100,20 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
+Base64BinaryDatatypeValidator::Base64BinaryDatatypeValidator()
+:DatatypeValidator(0, 0, 0, DatatypeValidator::Base64Binary)
+,fLength(0)
+,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
+,fMinLength(0)
+,fEnumerationInherited(false)
+,fEnumeration(0)
+{}
+
+Base64BinaryDatatypeValidator::~Base64BinaryDatatypeValidator()
+{
+    cleanUp();
+}
+
 Base64BinaryDatatypeValidator::Base64BinaryDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets     

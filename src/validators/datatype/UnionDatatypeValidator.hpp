@@ -57,8 +57,9 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.3  2001/08/16 14:41:38  knoaman
- * implementation of virtual methods.
+ * Revision 1.4  2001/08/21 18:42:54  peiyongz
+ * Bugzilla# 2816: cleanUp() declared with external linkage and called
+ *                          before defined as inline
  *
  * Revision 1.2  2001/07/24 21:23:40  tng
  * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
@@ -118,10 +119,6 @@ public:
     // -----------------------------------------------------------------------
     /** @name Getter Functions */
     //@{
-    /**
-      * Returns whether the type is atomic or not
-      */
-    virtual bool isAtomic() const;
 
     //@}
 
@@ -140,17 +137,6 @@ public:
      */
 
 	void validate(const XMLCh* const content);
-
-    /**
-      * Checks whether a given type can be used as a substitute
-      *
-      * @param  toCheck    A datatype validator of the type to be used as a
-      *                    substitute
-      *
-      * To be redefined in UnionDatatypeValidator
-      */
-
-    virtual bool isSubstitutableBy(const DatatypeValidator* const toCheck);
 
     //@}
 
@@ -212,21 +198,6 @@ private:
      RefVectorOf<DatatypeValidator>*  fMemberTypeValidators;
 };
 
-// ---------------------------------------------------------------------------
-//  Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline UnionDatatypeValidator::UnionDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::Union)
-,fEnumerationInherited(false)
-,fEnumeration(0)
-,fMemberTypeValidators(0)
-{}
-
-inline UnionDatatypeValidator::~UnionDatatypeValidator()
-{
-    cleanUp();
-}
-
 inline DatatypeValidator* UnionDatatypeValidator::newInstance(
                                       DatatypeValidator*            const baseValidator
                                     , RefHashTableOf<KVStringPair>* const facets
@@ -283,37 +254,6 @@ RefVectorOf<DatatypeValidator>* UnionDatatypeValidator::getMemberTypeValidators(
 
     return thisdv->fMemberTypeValidators;
 }
-
-inline bool UnionDatatypeValidator::isAtomic() const {
-
-    unsigned int memberSize = fMemberTypeValidators->size();
-
-    for (unsigned int i=0; i < memberSize; i++) {
-        if (!fMemberTypeValidators->elementAt(i)->isAtomic()) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-inline bool UnionDatatypeValidator::isSubstitutableBy(const DatatypeValidator* const toCheck) {
-
-    if (toCheck == this) {
-        return true;
-    }
-
-    unsigned int memberSize = fMemberTypeValidators->size();
-
-    for (unsigned int i=0; i < memberSize; i++) {
-        if (fMemberTypeValidators->elementAt(i)->isSubstitutableBy(toCheck)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 /**
   * End of file UnionDatatypeValidator.hpp
   */
