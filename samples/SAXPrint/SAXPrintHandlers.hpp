@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/10/10 23:55:59  andyh
+ * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
+ * output to multi-byte encodings.
+ *
  * Revision 1.6  2000/04/06 19:09:52  roddey
  * Some more improvements to output formatting. Now it will correctly
  * handle doing the 'replacement char' style of dealing with chars
@@ -108,6 +112,13 @@ public:
     void writeChars
     (
         const   XMLByte* const  toWrite
+    );
+
+    void writeChars
+    (
+        const   XMLByte* const  toWrite
+        , const unsigned int    count
+        , XMLFormatter* const   formatter
     );
 
 

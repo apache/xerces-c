@@ -192,12 +192,18 @@ public:
     // -----------------------------------------------------------------------
     void writeChars(const   XMLByte* const  toWrite)
     {
+    }
+
+    void writeChars(const   XMLByte* const  toWrite,
+                    const   unsigned int    count,
+                            XMLFormatter *  formatter)
+    {
         // Surprisingly, Solaris was the only platform on which
         // required the char* cast to print out the string correctly.
         // Without the cast, it was printing the pointer value in hex.
         // Quite annoying, considering every other platform printed
         // the string with the explicit cast to char* below.
-        cout << (char *) toWrite;
+        cout.write((char *) toWrite, (int) count);
     }
 
 private:

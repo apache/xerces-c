@@ -155,6 +155,12 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
     , fGTRef(0)
     , fLTRef(0)
     , fQuoteRef(0)
+
+    , fAposLen(0)
+    , fAmpLen(0)
+    , fGTLen(0)
+    , fLTLen(0)
+    , fQuoteLen(0)
 {
     // Transcode the encoding string
     fOutEncoding = XMLString::transcode(outEncoding);
@@ -319,8 +325,9 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
             // If we get any bytes out, then write them
             if (outBytes)
             {
-                fTmpBuf[outBytes] = 0;
-                fTarget->writeChars(fTmpBuf);
+                fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
+                fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
+                fTarget->writeChars(fTmpBuf, outBytes, this);
             }
 
             // And bump up our pointer
@@ -376,8 +383,9 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
                 // If we get any bytes out, then write them
                 if (outBytes)
                 {
-                    fTmpBuf[outBytes] = 0;
-                    fTarget->writeChars(fTmpBuf);
+                    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
+                    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
+                    fTarget->writeChars(fTmpBuf, outBytes, this);
                 }
 
                 // And bump up our pointer
@@ -389,26 +397,33 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
                 //  Ok, so we've hit a char that must be escaped. So do
                 //  this one specially.
                 //
+                const XMLByte * theChars;
+                unsigned int count = 0;
                 switch(*srcPtr)
                 {
                     case chAmpersand :
-                        fTarget->writeChars(getAmpRef());
+                        theChars = getAmpRef(count);
+                        fTarget->writeChars(theChars, count, this);
                         break;
 
                     case chSingleQuote :
-                        fTarget->writeChars(getAposRef());
+                        theChars = getAposRef(count);
+                        fTarget->writeChars(theChars, count, this);
                         break;
 
                     case chDoubleQuote :
-                        fTarget->writeChars(getQuoteRef());
+                        theChars = getQuoteRef(count);
+                        fTarget->writeChars(theChars, count, this);
                         break;
 
                     case chCloseAngle :
-                        fTarget->writeChars(getGTRef());
+                        theChars = getGTRef(count);
+                        fTarget->writeChars(theChars, count, this);
                         break;
 
                     case chOpenAngle :
-                        fTarget->writeChars(getLTRef());
+                        theChars = getLTRef(count);
+                        fTarget->writeChars(theChars, count, this);
                         break;
 
                     default:
@@ -442,12 +457,15 @@ XMLFormatter& XMLFormatter::operator<<(const XMLCh toFormat)
 
 
 // ---------------------------------------------------------------------------
-//  XMLFormatter: Private helper methosd
+//  XMLFormatter: Private helper methods
 // ---------------------------------------------------------------------------
-const XMLByte* XMLFormatter::getAposRef()
+const XMLByte* XMLFormatter::getAposRef(unsigned int & count)
 {
     if (fAposRef)
+    {
+        count = fAposLen;
         return fAposRef;
+    }
 
     unsigned int charsEaten;
     const unsigned int outBytes = fXCoder->transcodeTo
@@ -459,17 +477,22 @@ const XMLByte* XMLFormatter::getAposRef()
         , charsEaten
         , XMLTranscoder::UnRep_Throw
     );
-    fTmpBuf[outBytes] = 0;
+    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
+    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
    
-    ((XMLFormatter*)this)->fAposRef = new XMLByte[outBytes + 1];
-    memcpy(fAposRef, fTmpBuf, outBytes + 1);
+    ((XMLFormatter*)this)->fAposRef = new XMLByte[outBytes + 4];
+    memcpy(fAposRef, fTmpBuf, outBytes + 4);
+    count = fAposLen = outBytes;
     return fAposRef;
 }
 
-const XMLByte* XMLFormatter::getAmpRef()
+const XMLByte* XMLFormatter::getAmpRef(unsigned int & count)
 {
     if (fAmpRef)
+    {
+        count = fAmpLen;
         return fAmpRef;
+    }
 
     unsigned int charsEaten;
     const unsigned int outBytes = fXCoder->transcodeTo
@@ -481,17 +504,22 @@ const XMLByte* XMLFormatter::getAmpRef()
         , charsEaten
         , XMLTranscoder::UnRep_Throw
     );
-    fTmpBuf[outBytes] = 0;
+    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
+    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
    
-    ((XMLFormatter*)this)->fAmpRef = new XMLByte[outBytes + 1];
-    memcpy(fAmpRef, fTmpBuf, outBytes + 1);
+    ((XMLFormatter*)this)->fAmpRef = new XMLByte[outBytes + 4];
+    memcpy(fAmpRef, fTmpBuf, outBytes + 4);
+    count = fAmpLen = outBytes;
     return fAmpRef;
 }
 
-const XMLByte* XMLFormatter::getGTRef()
+const XMLByte* XMLFormatter::getGTRef(unsigned int & count)
 {
     if (fGTRef)
+    {
+        count = fGTLen;
         return fGTRef;
+    }
 
     unsigned int charsEaten;
     const unsigned int outBytes = fXCoder->transcodeTo
@@ -503,17 +531,22 @@ const XMLByte* XMLFormatter::getGTRef()
         , charsEaten
         , XMLTranscoder::UnRep_Throw
     );
-    fTmpBuf[outBytes] = 0;
+    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
+    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
    
-    ((XMLFormatter*)this)->fGTRef = new XMLByte[outBytes + 1];
-    memcpy(fGTRef, fTmpBuf, outBytes + 1);
+    ((XMLFormatter*)this)->fGTRef = new XMLByte[outBytes + 4];
+    memcpy(fGTRef, fTmpBuf, outBytes + 4);
+    count = fGTLen = outBytes;
     return fGTRef;
 }
 
-const XMLByte* XMLFormatter::getLTRef()
+const XMLByte* XMLFormatter::getLTRef(unsigned int & count)
 {
     if (fLTRef)
+    {
+        count = fLTLen;
         return fLTRef;
+    }
 
     unsigned int charsEaten;
     const unsigned int outBytes = fXCoder->transcodeTo
@@ -525,17 +558,22 @@ const XMLByte* XMLFormatter::getLTRef()
         , charsEaten
         , XMLTranscoder::UnRep_Throw
     );
-    fTmpBuf[outBytes] = 0;
+    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
+    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
    
-    ((XMLFormatter*)this)->fLTRef = new XMLByte[outBytes + 1];
-    memcpy(fLTRef, fTmpBuf, outBytes + 1);
+    ((XMLFormatter*)this)->fLTRef = new XMLByte[outBytes + 4];
+    memcpy(fLTRef, fTmpBuf, outBytes + 4);
+    count = fLTLen = outBytes;
     return fLTRef;
 }
 
-const XMLByte* XMLFormatter::getQuoteRef()
+const XMLByte* XMLFormatter::getQuoteRef(unsigned int & count)
 {
     if (fQuoteRef)
+    {
+        count = fQuoteLen;
         return fQuoteRef;
+    }
 
     unsigned int charsEaten;
     const unsigned int outBytes = fXCoder->transcodeTo
@@ -547,10 +585,12 @@ const XMLByte* XMLFormatter::getQuoteRef()
         , charsEaten
         , XMLTranscoder::UnRep_Throw
     );
-    fTmpBuf[outBytes] = 0;
+    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
+    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
    
-    ((XMLFormatter*)this)->fQuoteRef = new XMLByte[outBytes + 1];
-    memcpy(fQuoteRef, fTmpBuf, outBytes + 1);
+    ((XMLFormatter*)this)->fQuoteRef = new XMLByte[outBytes + 4];
+    memcpy(fQuoteRef, fTmpBuf, outBytes + 4);
+    count = fQuoteLen = outBytes;
     return fQuoteRef;
 }
 
@@ -632,4 +672,14 @@ void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
             }
         }
     }
+}
+
+// ---------------------------------------------------------------------------
+//  XMLFormatTarget: default writeChars() implementation
+// ---------------------------------------------------------------------------
+void XMLFormatTarget::writeChars(const   XMLByte* const toWrite
+                                , const unsigned int    count
+                                , XMLFormatter* const   formatter)
+{
+  writeChars(toWrite);
 }

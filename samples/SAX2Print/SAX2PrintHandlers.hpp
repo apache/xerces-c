@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/10/10 23:55:55  andyh
+ * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
+ * output to multi-byte encodings.
+ *
  * Revision 1.2  2000/08/09 22:20:39  jpolast
  * updates for changes to sax2 core functionality.
  *
@@ -89,6 +93,13 @@ public:
     void writeChars
     (
         const   XMLByte* const  toWrite
+    );
+
+    void writeChars
+    (
+        const   XMLByte* const  toWrite
+        , const unsigned int    count
+        , XMLFormatter* const   formatter
     );
 
 

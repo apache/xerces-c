@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/10/10 23:55:53  andyh
+ * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
+ * output to multi-byte encodings.
+ *
  * Revision 1.2  2000/08/09 22:20:38  jpolast
  * updates for changes to sax2 core functionality.
  *
@@ -138,13 +142,19 @@ SAX2PrintHandlers::~SAX2PrintHandlers()
 // ---------------------------------------------------------------------------
 void SAX2PrintHandlers::writeChars(const XMLByte* const toWrite)
 {
+}
+
+void SAX2PrintHandlers::writeChars(const XMLByte* const toWrite,
+                                   const unsigned int count,
+                                   XMLFormatter* const formatter)
+{
     // For this one, just dump them to the standard output
     // Surprisingly, Solaris was the only platform on which
     // required the char* cast to print out the string correctly.
     // Without the cast, it was printing the pointer value in hex.
     // Quite annoying, considering every other platform printed
     // the string with the explicit cast to char* below.
-    cout << (char *) toWrite;
+  cout.write((char *) toWrite, (int) count);
 	cout.flush();
 }
 

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/10/10 23:54:58  andyh
+ * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
+ * output to multi-byte encodings.
+ *
  * Revision 1.5  2000/04/07 01:01:56  roddey
  * Fixed an error message so that it indicated the correct radix for the rep
  * token. Get all of the basic output formatting functionality in place for
@@ -220,11 +224,11 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    const XMLByte* getAposRef();
-    const XMLByte* getAmpRef();
-    const XMLByte* getGTRef();
-    const XMLByte* getLTRef();
-    const XMLByte* getQuoteRef();
+    const XMLByte* getAposRef(unsigned int & count);
+    const XMLByte* getAmpRef(unsigned int & count);
+    const XMLByte* getGTRef(unsigned int & count);
+    const XMLByte* getLTRef(unsigned int & count);
+    const XMLByte* getQuoteRef(unsigned int & count);
 
     void specialFormat
     (
@@ -275,13 +279,18 @@ private :
     XMLFormatTarget*            fTarget;
     UnRepFlags                  fUnRepFlags;
     XMLTranscoder*              fXCoder;
-    XMLByte                     fTmpBuf[kTmpBufSize + 1];
+    XMLByte                     fTmpBuf[kTmpBufSize + 4];
 
     XMLByte*                    fAposRef;
+    unsigned int                fAposLen;
     XMLByte*                    fAmpRef;
+    unsigned int                fAmpLen;
     XMLByte*                    fGTRef;
+    unsigned int                fGTLen;
     XMLByte*                    fLTRef;
+    unsigned int                fLTLen;
     XMLByte*                    fQuoteRef;
+    unsigned int                fQuoteLen;
 };
 
 
@@ -301,6 +310,13 @@ public:
     (
         const   XMLByte* const  toWrite
     ) = 0;
+
+    virtual void writeChars
+    (
+        const   XMLByte* const      toWrite
+        , const unsigned int        count
+        ,       XMLFormatter* const formatter
+    );
 
 
 protected :
