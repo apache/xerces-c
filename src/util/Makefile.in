@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.10  2000/01/19 17:37:24  abagchi
+# Removed the streaming classes
+#
 # Revision 1.9  2000/01/15 01:26:17  rahulj
 # Added support for HTTP to the parser using libWWW 5.2.8.
 # Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
@@ -156,9 +159,9 @@ UTIL_CPP_PUBHEADERS = \
 	RefStackOf.hpp \
 	RefVectorOf.hpp \
 	RuntimeException.hpp \
-	StdOut.hpp \
 	StringPool.hpp \
 	TextOutputStream.hpp \
+	TransENameMap.hpp \
 	TransService.hpp \
 	TranscodingException.hpp \
 	UTFDataFormatException.hpp \
@@ -195,6 +198,7 @@ C_FILES = \
 	RefHashTableOf.c \
 	RefStackOf.c \
 	RefVectorOf.c \
+	TransENameMap.c \
 	ValueArrayOf.c \
 	ValueStackOf.c \
 	ValueVectorOf.c
@@ -208,7 +212,6 @@ UTIL_CPP_OBJECTS = \
 	KVStringPair.o \
 	Mutexes.o \
 	PlatformUtils.o \
-	StdOut.o \
 	StringPool.o \
 	TextOutputStream.o \
 	XMLURL.o \

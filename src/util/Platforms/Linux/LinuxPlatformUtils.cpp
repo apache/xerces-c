@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/19 17:37:48  abagchi
+ * Removed the streaming classes
+ *
  * Revision 1.5  2000/01/14 02:04:43  abagchi
  * Introduced getFullPath() and weavePath()
  *
@@ -169,35 +172,11 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 }
 
 
-// -----------------------------------------------------------------------
-//  Standard out/error support
-// -----------------------------------------------------------------------
-
-void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
-{
-    WriteCharStr(stderr, toWrite);
-}
-void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
-{
-    WriteUStrStdErr(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
-{
-    WriteUStrStdOut(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
-{
-    WriteCharStr(stdout, toWrite);
-}
-
-
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
 
 static XMLMutex atomicOpsMutex;
-
-
 
 void XMLPlatformUtils::platformInit()
 {
@@ -208,73 +187,6 @@ void XMLPlatformUtils::platformInit()
     // mutex creation that must be broken.
 
     atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
-
-    // Here you would also set the fgLibLocation global variable
-    // XMLPlatformUtils::fgLibLocation is the variable to be set
-
-    static const char*  sharedLibEnvVar = "LD_LIBRARY_PATH";
-    char*               libraryPath = 0;
-    char                libName[256];
-
-    // Construct the library name from the global variables
-
-    strcpy(libName, XML4C_DLLName);
-    strcat(libName, gXML4CVersionStr);
-    strcat(libName, ".so");
-
-    char* libEnvVar = getenv(sharedLibEnvVar);
-    char* libPath = NULL;
-
-    if (libEnvVar == NULL)
-    {
-        panic(XMLPlatformUtils::Panic_CantFindLib);
-    }
-
-    //
-    // Its necessary to create a copy because strtok() modifies the
-    // string as it returns tokens. We don't want to modify the string
-    // returned to by getenv().
-    //
-
-    libPath = new char[strlen(libEnvVar) + 1];
-    strcpy(libPath, libEnvVar);
-
-
-    // First do the searching process for the first directory listing
-
-    char*  allPaths = libPath;
-    char*  libPathName;
-
-    while ((libPathName = strtok(allPaths, ":")) != NULL)
-    {
-        FILE*  dummyFptr = 0;
-        allPaths = 0;
-
-        char* libfile = new char[strlen(libPathName) + strlen(libName) + 2];
-        strcpy(libfile, libPathName);
-        strcat(libfile, "/");
-        strcat(libfile, libName);
-
-        dummyFptr = (FILE *) fopen(libfile, "rb");
-        delete [] libfile;
-        if (dummyFptr != NULL)
-        {
-            fclose(dummyFptr);
-            libraryPath = new char[strlen(libPathName)+1];
-            strcpy((char *) libraryPath, libPathName);
-            break;
-        }
-
-    } // while
-
-    delete libPath;
-
-    XMLPlatformUtils::fgLibLocation = libraryPath;
-
-    if (XMLPlatformUtils::fgLibLocation == NULL)
-    {
-        panic(XMLPlatformUtils::Panic_CantFindLib);
-    }
 }
 
 XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
@@ -794,4 +706,114 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 }
 
 #endif // APP_NO_THREADS
+
+
+
+
+// ======================================================================
+// This is the software attic. It contains stuff no longer used.
+// Don't look at it unless you have a ladder.
+// ======================================================================
+/**************** Beginning of code attic *******************************
+
+// -----------------------------------------------------------------------
+//  Standard out/error support
+// -----------------------------------------------------------------------
+ 
+void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
+{
+  WriteCharStr(stderr, toWrite);
+}
+void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
+{
+   WriteUStrStdErr(toWrite);
+}
+void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
+{
+   WriteUStrStdOut(toWrite);
+}
+void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
+{
+   WriteCharStr(stdout, toWrite);
+}
+
+void XMLPlatformUtils::platformInit()
+{
+    //
+    // The atomicOps mutex needs to be created early.
+    // Normally, mutexes are created on first use, but there is a
+    // circular dependency between compareAndExchange() and
+    // mutex creation that must be broken.
+
+    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+
+    // Here you would also set the fgLibLocation global variable
+    // XMLPlatformUtils::fgLibLocation is the variable to be set
+
+    static const char*  sharedLibEnvVar = "LD_LIBRARY_PATH";
+    char*               libraryPath = 0;
+    char                libName[256];
+
+    // Construct the library name from the global variables
+
+    strcpy(libName, XML4C_DLLName);
+    strcat(libName, gXML4CVersionStr);
+    strcat(libName, ".so");
+
+    char* libEnvVar = getenv(sharedLibEnvVar);
+    char* libPath = NULL;
+
+    if (libEnvVar == NULL)
+    {
+        panic(XMLPlatformUtils::Panic_CantFindLib);
+    }
+
+    //
+    // Its necessary to create a copy because strtok() modifies the
+    // string as it returns tokens. We don't want to modify the string
+    // returned to by getenv().
+    //
+
+    libPath = new char[strlen(libEnvVar) + 1];
+    strcpy(libPath, libEnvVar);
+
+
+    // First do the searching process for the first directory listing
+
+    char*  allPaths = libPath;
+    char*  libPathName;
+
+    while ((libPathName = strtok(allPaths, ":")) != NULL)
+    {
+        FILE*  dummyFptr = 0;
+        allPaths = 0;
+
+        char* libfile = new char[strlen(libPathName) + strlen(libName) + 2];
+        strcpy(libfile, libPathName);
+        strcat(libfile, "/");
+        strcat(libfile, libName);
+
+        dummyFptr = (FILE *) fopen(libfile, "rb");
+        delete [] libfile;
+        if (dummyFptr != NULL)
+        {
+            fclose(dummyFptr);
+            libraryPath = new char[strlen(libPathName)+1];
+            strcpy((char *) libraryPath, libPathName);
+            break;
+        }
+
+    } // while
+
+    delete libPath;
+
+    XMLPlatformUtils::fgLibLocation = libraryPath;
+
+    if (XMLPlatformUtils::fgLibLocation == NULL)
+    {
+        panic(XMLPlatformUtils::Panic_CantFindLib);
+    }
+}
+
+********************* End of code attic *******************************/
 
