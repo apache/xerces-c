@@ -531,7 +531,7 @@ void DOMRangeImpl::selectNode(const DOMNode* refNode)
         fEndContainer = parent;
 
         XMLSize_t i = 0;
-        for (DOMNode* n = parent->getFirstChild(); n!=0, n!=refNode; n = n->getNextSibling()) {
+        for (DOMNode* n = parent->getFirstChild(); n!=0 && n!=refNode; n = n->getNextSibling()) {
             i++;
         }
 
