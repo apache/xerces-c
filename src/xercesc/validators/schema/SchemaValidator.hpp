@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/01/09 22:34:54  tng
+ * [Bug 14955] error validating parser.
+ *
  * Revision 1.10  2002/11/07 21:57:37  tng
  * Fix the following Schema Test Failures:
  * 1. Typo when comparing miscFlags with FIXED
@@ -155,20 +158,6 @@ public:
     virtual ~SchemaValidator();
 
     // -----------------------------------------------------------------------
-    //  Setter methods
-    // -----------------------------------------------------------------------
-    void setGrammarResolver(GrammarResolver* grammarResolver);
-
-    void setXsiType(const XMLCh* const        prefix
-      , const XMLCh* const        localPart
-       , const unsigned int        uriId);
-
-    void setNillable(bool isNil);
-    void setErrorReporter(XMLErrorReporter* const errorReporter);
-    void setExitOnFirstFatal(const bool newValue);
-    void setDatatypeBuffer(const XMLCh* const value);
-
-    // -----------------------------------------------------------------------
     //  Implementation of the XMLValidator interface
     // -----------------------------------------------------------------------
     virtual int checkContent
@@ -224,6 +213,24 @@ public:
     // -----------------------------------------------------------------------
     void normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill);
 
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
+    void setGrammarResolver(GrammarResolver* grammarResolver);
+
+    void setXsiType(const XMLCh* const        prefix
+      , const XMLCh* const        localPart
+       , const unsigned int        uriId);
+
+    void setNillable(bool isNil);
+    void setErrorReporter(XMLErrorReporter* const errorReporter);
+    void setExitOnFirstFatal(const bool newValue);
+    void setDatatypeBuffer(const XMLCh* const value);
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    ComplexTypeInfo* getCurrentTypeInfo() const;
 
 private:
     // -----------------------------------------------------------------------
@@ -394,6 +401,15 @@ inline void SchemaValidator::setExitOnFirstFatal(const bool newValue) {
 inline void SchemaValidator::setDatatypeBuffer(const XMLCh* const value)
 {
     fDatatypeBuffer.append(value);
+}
+
+// ---------------------------------------------------------------------------
+//  SchemaValidator: Getter methods
+// ---------------------------------------------------------------------------
+inline ComplexTypeInfo* SchemaValidator::getCurrentTypeInfo() const {
+    if (fTypeStack->empty())
+        return 0;
+    return fTypeStack->peek();
 }
 
 // ---------------------------------------------------------------------------

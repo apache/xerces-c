@@ -958,6 +958,9 @@ void SGXMLScanner::scanEndTag(bool& gotData)
 
         // reset xsi:type ComplexTypeInfo
         ((SchemaElementDecl*)topElem->fThisElement)->setXsiComplexTypeInfo(0);
+        if (!isRoot)
+            ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->setXsiComplexTypeInfo(
+                 ((SchemaValidator*)fValidator)->getCurrentTypeInfo());
 
         // call matchers and de-activate context
         int oldCount = fMatcherStack->getMatcherCount();
@@ -1532,6 +1535,9 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
             // reset xsi:type ComplexTypeInfo
             ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
+            if (!isRoot)
+                ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->setXsiComplexTypeInfo(
+                     ((SchemaValidator*)fValidator)->getCurrentTypeInfo());
 
             // call matchers and de-activate context
             int oldCount = fMatcherStack->getMatcherCount();
