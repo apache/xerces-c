@@ -19,7 +19,7 @@
 		You are encouraged to read this document for a better 
 		understanding of the SAX API in &XercesCName;.</p>
 		
-	    <p><em><jump href="../apiDocs/index.html">Click here for the &XercesCName; API documentation.</jump></em></p>
+	    <p><em><jump href="apiDocs/index.html">Click here for the &XercesCName; API documentation.</jump></em></p>
 		
 	    <note>The API documentation is automatically generated using 
 		<jump href="http://www.zib.de/Visual/software/doc++/index.html">DOC++</jump>.</note>

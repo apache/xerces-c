@@ -4,7 +4,7 @@
 <s1 title="&XercesCName; Samples">
 
     <s2 title="Building the Samples">
-    <p>&XercesCName; comes packaged with nine sample applications that
+    <p>&XercesCName; comes packaged with ten sample applications that
     demonstrate salient features of the parser using simple
     applications written on top of the SAX and DOM APIs provided by
     the parser.</p>
