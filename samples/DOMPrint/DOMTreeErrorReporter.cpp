@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,45 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.10  2002/02/01 22:35:33  peiyongz
- * sane_include
- *
- * Revision 1.9  2001/05/11 13:24:53  tng
- * Copyright update.
- *
- * Revision 1.8  2001/05/04 19:01:05  tng
- * DOMPrint fix.  Check error before continuing.
- *
- * Revision 1.7  2001/05/03 15:59:32  tng
- * Schema: samples update with schema
- *
- * Revision 1.6  2000/08/24 22:36:22  andyh
- * Fix DOMPrint crash when input xml file is not found.
- *
- * Revision 1.5  2000/05/15 22:31:06  andyh
- * Replace #include<memory.h> with <string.h> everywhere.
- *
- * Revision 1.4  2000/03/02 19:53:40  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:47:18  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  1999/12/03 00:14:53  andyh
- * Removed transcoding stuff, replaced with DOMString::transcode.
- *
- * Tweaked xml encoding= declaration to say ISO-8859-1.  Still wrong,
- * but not as wrong as utf-8
- *
- * Revision 1.1.1.1  1999/11/09 01:09:51  twl
- * Initial checkin
- *
- * Revision 1.6  1999/11/08 20:43:35  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -104,10 +66,6 @@
 #include <iostream.h>
 #include <stdlib.h>
 #include <string.h>
-#include <xercesc/dom/DOMString.hpp>
-
-// Global streaming operator for DOMString is defined in DOMPrint.cpp
-extern ostream& operator<<(ostream& target, const DOMString& s);
 
 
 void DOMTreeErrorReporter::warning(const SAXParseException&)
@@ -120,19 +78,19 @@ void DOMTreeErrorReporter::warning(const SAXParseException&)
 void DOMTreeErrorReporter::error(const SAXParseException& toCatch)
 {
     fSawErrors = true;
-    cerr << "Error at file \"" << DOMString(toCatch.getSystemId())
+    cerr << "Error at file \"" << StrX(toCatch.getSystemId())
 		 << "\", line " << toCatch.getLineNumber()
 		 << ", column " << toCatch.getColumnNumber()
-         << "\n   Message: " << DOMString(toCatch.getMessage()) << endl;
+         << "\n   Message: " << StrX(toCatch.getMessage()) << endl;
 }
 
 void DOMTreeErrorReporter::fatalError(const SAXParseException& toCatch)
 {
     fSawErrors = true;
-    cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId())
+    cerr << "Fatal Error at file \"" << StrX(toCatch.getSystemId())
 		 << "\", line " << toCatch.getLineNumber()
 		 << ", column " << toCatch.getColumnNumber()
-         << "\n   Message: " << DOMString(toCatch.getMessage()) << endl;
+         << "\n   Message: " << StrX(toCatch.getMessage()) << endl;
 }
 
 void DOMTreeErrorReporter::resetErrors()

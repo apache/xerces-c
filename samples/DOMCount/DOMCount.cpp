@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,12 +64,15 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/sax/SAXException.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
-#include <xercesc/parsers/DOMParser.hpp>
-#include <xercesc/dom/DOM_DOMException.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
 #include "DOMCount.hpp"
 #include <string.h>
 #include <stdlib.h>
 #include <fstream.h>
+
 
 
 
@@ -78,7 +81,7 @@
 //  tree for the specified input file. It then walks the tree and counts
 //  the number of elements. The element count is then printed.
 // ---------------------------------------------------------------------------
-void usage()
+static void usage()
 {
     cout << "\nUsage:\n"
             "    DOMCount [options] <XML file | List file>\n\n"
@@ -97,6 +100,31 @@ void usage()
 }
 
 
+
+// ---------------------------------------------------------------------------
+//
+//  Recursively Count up the total number of child Elements under the specified Node.
+//
+// ---------------------------------------------------------------------------
+static int countChildElements(DOMNode *n)
+{
+    DOMNode *child;
+    int count = 0;
+    if (n) {
+        if (n->getNodeType() == DOMNode::ELEMENT_NODE)
+            count++;
+        for (child = n->getFirstChild(); child != 0; child=child->getNextSibling())
+            count += countChildElements(child);
+    }
+    return count;
+}
+
+
+// ---------------------------------------------------------------------------
+//
+//   main
+//
+// ---------------------------------------------------------------------------
 int main(int argC, char* argV[])
 {
     // Initialize the XML4C system
@@ -120,13 +148,13 @@ int main(int argC, char* argV[])
         return 1;
     }
 
-    const char*              xmlFile = 0;
-    DOMParser::ValSchemes    valScheme = DOMParser::Val_Auto;
-    bool                     doNamespaces       = false;
-    bool                     doSchema           = false;
-    bool                     schemaFullChecking = false;
-    bool                     doList = false;
-    bool                     errorOccurred = false;
+    const char*               xmlFile = 0;
+    XercesDOMParser::ValSchemes    valScheme = XercesDOMParser::Val_Auto;
+    bool                      doNamespaces       = false;
+    bool                      doSchema           = false;
+    bool                      schemaFullChecking = false;
+    bool                      doList = false;
+    bool                      errorOccurred = false;
 
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
@@ -148,14 +176,15 @@ int main(int argC, char* argV[])
             const char* const parm = &argV[argInd][3];
 
             if (!strcmp(parm, "never"))
-                valScheme = DOMParser::Val_Never;
+                valScheme = XercesDOMParser::Val_Never;
             else if (!strcmp(parm, "auto"))
-                valScheme = DOMParser::Val_Auto;
+                valScheme = XercesDOMParser::Val_Auto;
             else if (!strcmp(parm, "always"))
-                valScheme = DOMParser::Val_Always;
+                valScheme = XercesDOMParser::Val_Always;
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
+                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -193,11 +222,12 @@ int main(int argC, char* argV[])
     if (argInd != argC - 1)
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 1;
     }
 
     // Instantiate the DOM parser.
-    DOMParser* parser = new DOMParser;
+    XercesDOMParser* parser = new XercesDOMParser;
     parser->setValidationScheme(valScheme);
     parser->setDoNamespaces(doNamespaces);
     parser->setDoSchema(doSchema);
@@ -250,6 +280,7 @@ int main(int argC, char* argV[])
         try
         {
             const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
+            parser->resetDocumentPool();
             parser->parse(xmlFile);
             const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
             duration = endMillis - startMillis;
@@ -263,7 +294,7 @@ int main(int argC, char* argV[])
             errorOccurred = true;
             continue;
         }
-        catch (const DOM_DOMException& toCatch)
+        catch (const DOMException& toCatch)
         {
             cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
                  << "DOMException code is:  \n"
@@ -289,17 +320,23 @@ int main(int argC, char* argV[])
         }
          else
         {
-            DOM_Document doc = parser->getDocument();
-            unsigned int elementCount = doc.getElementsByTagName("*").getLength();
+            DOMDocument *doc = parser->getDocument();
+            unsigned int elementCount = 0;
+            if (doc) {
+                elementCount = countChildElements((DOMNode*)doc->getDocumentElement());
+                // test getElementsByTagName and getLength
+                XMLCh xa[] = {chAsterisk, chNull};
+                if (elementCount != doc->getElementsByTagName(xa)->getLength()) {
+                    cout << "\nErrors occurred, element count is wrong\n" << endl;
+                    errorOccurred = true;
+                }
+            }
 
             // Print out the stats that we collected and time taken.
             cout << xmlFile << ": " << duration << " ms ("
                  << elementCount << " elems)." << endl;
         }
     }
-
-    if (doList)
-        fin.close();
 
     //
     //  Delete the parser itself.  Must be done prior to calling Terminate, below.
@@ -309,12 +346,17 @@ int main(int argC, char* argV[])
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
+    if (doList)
+        fin.close();
+
     if (errorOccurred)
         return 4;
     else
         return 0;
-
 }
+
+
+
 
 
 DOMCountErrorHandler::DOMCountErrorHandler() :

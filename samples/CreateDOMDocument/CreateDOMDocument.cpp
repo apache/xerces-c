@@ -55,39 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2002/02/04 18:46:33  tng
- * Memory leak fix in samples / test cases.
- *
- * Revision 1.8  2002/02/01 22:34:31  peiyongz
- * sane_include
- *
- * Revision 1.7  2001/10/26 11:55:46  tng
- * Nest entire test in an inner block for reference counting to recover all document storage when this block exits before XMLPlatformUtils::Terminate is called.
- *
- * Revision 1.6  2001/10/19 19:02:42  tng
- * [Bug 3909] return non-zero an exit code when error was encounted.
- * And other modification for consistent help display and return code across samples.
- *
- * Revision 1.5  2000/03/02 19:53:39  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/06 07:47:17  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.3  2000/01/19 00:17:50  rahulj
- * Added makefile for unix builds. Fixed the comments and usage
- * string.
- *
- * Revision 1.2  2000/01/18 23:57:35  rahulj
- * Now exploting C++ features to compact the sample code.
- *
- * Revision 1.1  2000/01/18 23:22:18  rahulj
- * Added new sample to illustrate how to create a DOM tree in
- * memory.
- *
+ * $Id$
  */
 
 /*
@@ -144,7 +112,7 @@ int main(int argC, char* argV[])
          //  Nest entire test in an inner block.
          //     Reference counting should recover all document
          //     storage when this block exits.
-        //  The tree we create below is the same that the DOMParser would
+        //  The tree we create below is the same that the XercesDOMParser would
         //  have created, except that no whitespace text nodes would be created.
 
         // <company>
@@ -153,39 +121,53 @@ int main(int argC, char* argV[])
         //     <developedBy>Apache Software Foundation</developedBy>
         // </company>
 
-        DOM_DOMImplementation impl;
+        XMLCh tempStr[4000];
+        XMLString::transcode("company", tempStr, 3999);
 
-        DOM_Document doc = impl.createDocument(
+        DOMImplementation* impl =  DOMImplementation::getImplementation();
+
+        DOMDocument* doc = impl->createDocument(
                     0,                    // root element namespace URI.
-                    "company",            // root element name
-                    DOM_DocumentType());  // document type object (DTD).
+                    tempStr,            // root element name
+                    0);                   // document type object (DTD).
 
-        DOM_Element rootElem = doc.getDocumentElement();
+        DOMElement* rootElem = doc->getDocumentElement();
 
-        DOM_Element  prodElem = doc.createElement("product");
-        rootElem.appendChild(prodElem);
+        XMLString::transcode("product", tempStr, 3999);
+        DOMElement*  prodElem = doc->createElement(tempStr);
+        rootElem->appendChild(prodElem);
 
-        DOM_Text    prodDataVal = doc.createTextNode("Xerces-C");
-        prodElem.appendChild(prodDataVal);
+        XMLString::transcode("Xerces-C", tempStr, 3999);
+        DOMText*    prodDataVal = doc->createTextNode(tempStr);
+        prodElem->appendChild(prodDataVal);
 
-        DOM_Element  catElem = doc.createElement("category");
-        rootElem.appendChild(catElem);
-        catElem.setAttribute("idea", "great");
+        XMLString::transcode("category", tempStr, 3999);
+        DOMElement*  catElem = doc->createElement(tempStr);
+        rootElem->appendChild(catElem);
 
-        DOM_Text    catDataVal = doc.createTextNode("XML Parsing Tools");
-        catElem.appendChild(catDataVal);
+        XMLCh tempStr2[4000];
+        XMLString::transcode("idea", tempStr, 3999);
+        XMLString::transcode("great", tempStr2, 3999);
+        catElem->setAttribute(tempStr, tempStr2);
 
-        DOM_Element  devByElem = doc.createElement("developedBy");
-        rootElem.appendChild(devByElem);
+        XMLString::transcode("XML Parsing Tools", tempStr, 3999);
+        DOMText*    catDataVal = doc->createTextNode(tempStr);
+        catElem->appendChild(catDataVal);
 
-        DOM_Text    devByDataVal = doc.createTextNode("Apache Software Foundation");
-        devByElem.appendChild(devByDataVal);
+        XMLString::transcode("developedBy", tempStr, 3999);
+        DOMElement*  devByElem = doc->createElement(tempStr);
+        rootElem->appendChild(devByElem);
+
+        XMLString::transcode("Apache Software Foundation", tempStr, 3999);
+        DOMText*    devByDataVal = doc->createTextNode(tempStr);
+        devByElem->appendChild(devByDataVal);
 
         //
         // Now count the number of elements in the above DOM tree.
         //
 
-        unsigned int elementCount = doc.getElementsByTagName("*").getLength();
+        XMLString::transcode("*", tempStr, 3999);
+        unsigned int elementCount = doc->getElementsByTagName(tempStr)->getLength();
         cout << "The tree just created contains: " << elementCount
              << " elements." << endl;
 
