@@ -78,8 +78,6 @@
 #include <fstream.h>
 
 
-
-
 // ---------------------------------------------------------------------------
 //  This is a simple program which invokes the DOMParser to build a DOM
 //  tree for the specified input file. It then walks the tree and counts
@@ -122,7 +120,6 @@ static int countChildElements(DOMNode *n)
     }
     return count;
 }
-
 
 // ---------------------------------------------------------------------------
 //
@@ -278,13 +275,18 @@ int main(int argC, char* argV[])
 
     // the input is a list file
     if (doList)
-        fin.open(argV[argInd]);
+        fin.open(argV[argInd],ios::nocreate);
+
+    if (fin.fail()) {
+        cerr <<"Cannot open the list file: " << argV[argInd] << endl;
+        return 2;
+    }
 
     while (more)
     {
         char fURI[1000];
         //initialize the array to zeros
-        memset(fURI,0,strlen(fURI));
+        memset(fURI,0,sizeof(fURI));
 
         if (doList) {
             if (! fin.eof() ) {

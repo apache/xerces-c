@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.20  2002/11/01 22:05:57  tng
+* Samples/Test update: Issue error if the list file failed to open.
+*
 * Revision 1.19  2002/09/27 19:24:57  tng
 * Samples Fix: wrong length in memset
 *
@@ -315,13 +318,18 @@ int main(int argC, char* argV[])
 
     // the input is a list file
     if (doList)
-        fin.open(argV[argInd]);
+        fin.open(argV[argInd],ios::nocreate);
+
+    if (fin.fail()) {
+        cerr <<"Cannot open the list file: " << argV[argInd] << endl;
+        return 2;
+    }
 
     while (more)
     {
         char fURI[1000];
         //initialize the array to zeros
-        memset(fURI,0,strlen(fURI));
+        memset(fURI,0,sizeof(fURI));
 
         if (doList) {
             if (! fin.eof() ) {
