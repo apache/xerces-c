@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.9  2001/08/08 12:12:32  tng
+* Print the file name only if doList is on.
+*
 * Revision 1.8  2001/08/03 15:08:17  tng
 * close the list file.
 *
@@ -271,8 +274,10 @@ int main(int argC, char* argV[])
                 fin.getline (fURI, sizeof(fURI));
                 if (!*fURI)
                     continue;
-                else
+                else {
                     xmlFile = fURI;
+                    cerr << "==Parsing== " << xmlFile << endl;
+                }
             }
             else
                 break;
@@ -281,8 +286,6 @@ int main(int argC, char* argV[])
             xmlFile = argV[argInd];
             more = false;
         }
-
-        cerr << "==Parsing== " << xmlFile << endl;
 
         //reset error count first
         handler.resetErrors();
