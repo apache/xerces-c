@@ -382,14 +382,15 @@ catch (const XMLException&amp; toCatch) {
 
     <a>
 
-      <p>If you are using the native DOM classes, the function <code>setExpandEntityReferences</code> controls how entities appear in the DOM tree. When
-        setExpandEntityReferences is set to false (the default), an occurrence of an
+      <p>If you are using the native DOM classes, the function <code>setCreateEntityReferenceNodes</code>
+        controls how entities appear in the DOM tree. When
+        setCreateEntityReferenceNodes is set to true (the default), an occurrence of an
         entity reference in the XML document will be represented by a subtree with an
         EntityReference node at the root whose children represent the entity expansion.
         Entity expansion will be a DOM tree representing the structure of the entity
         expansion, not a text node containing the entity expansion as text.</p>
 
-      <p>If setExpandEntityReferences is true, an entity reference in the XML
+      <p>If setCreateEntityReferenceNodes is false, an entity reference in the XML
         document is represented by only the nodes that represent the entity expansion.
         The DOM tree will not contain any entityReference nodes.</p>
 

@@ -299,16 +299,8 @@ public :
 
     /** Get the 'include entity references' flag
       *
-      * This flag  specifies whether the parser is
+      * This method returns the flag that specifies whether the parser is
       * creating entity reference nodes in the DOM tree being produced.
-      * When the 'create' flag is
-      * true, the DOM tree will contain entity reference nodes.
-      * When the 'create' flag is false, no entity reference nodes
-      * are included in the DOM tree.
-      * <p>The replacement text
-      * of the entity is included in either case, either as a
-      * child of the Entity Reference node or in place at the location
-      * of the reference.
       *
       * @return  The state of the create entity reference node
       *               flag.
@@ -483,16 +475,18 @@ public :
       * This method allows the user to specify whether the parser should
       * create entity reference nodes in the DOM tree being produced.
       * When the 'create' flag is
-      * true, the DOM tree constains entity reference nodes.
-      * When the 'create' flag is false, no entity reference nodes
-      * are included in the DOM tree.
+      * true, the parser will create EntityReference nodes in the DOM tree.
+      * The EntityReference nodes and their child nodes will be read-only.
+      * When the 'create' flag is false, no EntityReference nodes will be created.
       * <p>The replacement text
       * of the entity is included in either case, either as a
       * child of the Entity Reference node or in place at the location
       * of the reference.
+      * <p>The default value is 'true'.
       *
       * @param create The new state of the create entity reference nodes
       *               flag.
+      * @see #getCreateEntityReferenceNodes
       */
     void setCreateEntityReferenceNodes(const bool create);
 
@@ -1250,9 +1244,11 @@ public :
       * entity. When the 'do expansion' flag is false, the DOM tree
       * contains an extra entity reference node, whose children is the
       * sub tree of the replacement text.
+      * <p>The default value is 'false'.
       *
       * @param expand The new state of the expand entity reference
       *               flag.
+      * @see #setCreateEntityReferenceNodes
       */
     void setExpandEntityReferences(const bool expand);
 
@@ -1266,6 +1262,8 @@ public :
       *         the parser, 'false' otherwise.
       *
       * @see #setExpandEntityReferences
+      * @see #setCreateEntityReferenceNodes
+      * @see #getCreateEntityReferenceNodes
       */
     bool getExpandEntityReferences() const;
 
@@ -1551,7 +1549,7 @@ inline const EntityResolver* DOMParser::getEntityResolver() const
 
 inline bool DOMParser::getExpandEntityReferences() const
 {
-    return fCreateEntityReferenceNodes;
+    return !fCreateEntityReferenceNodes;
 }
 inline bool DOMParser::getCreateEntityReferenceNodes() const
 {
@@ -1579,7 +1577,7 @@ inline bool DOMParser::getToCreateXMLDeclTypeNode() const
 // ---------------------------------------------------------------------------
 inline void DOMParser::setExpandEntityReferences(const bool expand)
 {
-    fCreateEntityReferenceNodes = expand;
+    fCreateEntityReferenceNodes = !expand;
 }
 
 inline void DOMParser::setCreateEntityReferenceNodes(const bool create)

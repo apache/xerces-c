@@ -99,7 +99,7 @@ DOMParser::DOMParser(XMLValidator* const valToAdopt) :
 
 fErrorHandler(0)
 , fEntityResolver(0)
-, fCreateEntityReferenceNodes(false)
+, fCreateEntityReferenceNodes(true)
 , fToCreateXMLDeclTypeNode(false)
 , fIncludeIgnorableWhitespace(true)
 , fNodeStack(0)

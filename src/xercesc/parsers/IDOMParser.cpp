@@ -105,7 +105,7 @@ IDOMParser::IDOMParser(XMLValidator* const valToAdopt) :
 
 fErrorHandler(0)
 , fEntityResolver(0)
-, fCreateEntityReferenceNodes(false)
+, fCreateEntityReferenceNodes(true)
 , fIncludeIgnorableWhitespace(true)
 , fNodeStack(0)
 , fScanner(0)
