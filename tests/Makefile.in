@@ -82,6 +82,8 @@ OSVER = @osver@
 ifeq (${PLATFORM},HPUX)
   ifeq (${OSVER}, HPUX10)
       all:	threadtest ithreadtest encodingtest traversal itraversal
+  else
+      all:	domidtest dommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest inittermtest
   endif
 else
     all:	domidtest dommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest inittermtest
