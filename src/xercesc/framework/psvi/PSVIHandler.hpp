@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.5  2003/11/28 05:13:45  neilg
+  * remove passing of prefixes in PSVIHandler
+  *
   * Revision 1.4  2003/11/25 14:20:21  neilg
   * clean up usage of const in PSVIHandler
   *
@@ -115,7 +118,6 @@ public:
     (
         const   XMLCh* const            localName 
         , const XMLCh* const            uri
-        , const XMLCh* const            prefix
         ,       PSVIElement *           elementInfo
     ) = 0;
 
@@ -135,7 +137,6 @@ public:
     (
         const   XMLCh* const            localName 
         , const XMLCh* const            uri
-        , const XMLCh* const            prefix
         ,       PSVIAttributeList *     psviAttributes
     ) = 0;
 
