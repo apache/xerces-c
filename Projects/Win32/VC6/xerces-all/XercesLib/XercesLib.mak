@@ -204,6 +204,7 @@ CLEAN :
 	-@erase "$(INTDIR)\Match.obj"
 	-@erase "$(INTDIR)\MemBufFormatTarget.obj"
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
+	-@erase "$(INTDIR)\MemoryManagerArrayImpl.obj"
 	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
 	-@erase "$(INTDIR)\ModifierToken.obj"
@@ -465,6 +466,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
+	"$(INTDIR)\MemoryManagerArrayImpl.obj" \
 	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
@@ -846,6 +848,7 @@ CLEAN :
 	-@erase "$(INTDIR)\Match.obj"
 	-@erase "$(INTDIR)\MemBufFormatTarget.obj"
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
+	-@erase "$(INTDIR)\MemoryManagerArrayImpl.obj"	
 	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
 	-@erase "$(INTDIR)\ModifierToken.obj"
@@ -1109,6 +1112,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
+	"$(INTDIR)\MemoryManagerArrayImpl.obj" \
 	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
@@ -1490,6 +1494,7 @@ CLEAN :
 	-@erase "$(INTDIR)\Match.obj"
 	-@erase "$(INTDIR)\MemBufFormatTarget.obj"
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
+	-@erase "$(INTDIR)\MemoryManagerArrayImpl.obj"
 	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
 	-@erase "$(INTDIR)\ModifierToken.obj"
@@ -1753,6 +1758,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
+	"$(INTDIR)\MemoryManagerArrayImpl.obj" \
 	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
@@ -2134,6 +2140,7 @@ CLEAN :
 	-@erase "$(INTDIR)\Match.obj"
 	-@erase "$(INTDIR)\MemBufFormatTarget.obj"
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
+	-@erase "$(INTDIR)\MemoryManagerArrayImpl.obj"
 	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
 	-@erase "$(INTDIR)\ModifierToken.obj"
@@ -2396,6 +2403,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
+	"$(INTDIR)\MemoryManagerArrayImpl.obj" \
 	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
