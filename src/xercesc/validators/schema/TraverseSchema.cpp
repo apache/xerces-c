@@ -393,11 +393,6 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     fSchemaInfo = currInfo;
     fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);
     fSchemaInfo->addSchemaInfo(fSchemaInfo, SchemaInfo::INCLUDE);
-
-    if (!XMLString::equals(schemaRoot->getLocalName(), SchemaSymbols::fgELT_SCHEMA)) {
-        reportSchemaError(schemaRoot, XMLUni::fgXMLErrDomain, XMLErrs::InvalidXMLSchemaRoot);
-    }
-
     traverseSchemaHeader(schemaRoot);
 
     // preprocess chidren
@@ -406,6 +401,11 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
 
 void TraverseSchema::traverseSchemaHeader(const DOMElement* const schemaRoot) {
+
+    // Make sure that the root element is <xsd:schema>
+    if (!XMLString::equals(schemaRoot->getLocalName(), SchemaSymbols::fgELT_SCHEMA)) {
+        reportSchemaError(schemaRoot, XMLUni::fgXMLErrDomain, XMLErrs::InvalidXMLSchemaRoot);
+    }
 
     // -----------------------------------------------------------------------
     // Check Attributes
@@ -578,11 +578,6 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
                                  fSchemaInfo->getTargetNSURI(), fSchemaInfo);
             fPreprocessedNodes->put((void*) elem, fSchemaInfo);
             saveInfo->addSchemaInfo(fSchemaInfo, SchemaInfo::INCLUDE);
-
-            if (!XMLString::equals(root->getLocalName(), SchemaSymbols::fgELT_SCHEMA)) {
-                reportSchemaError(root,  XMLUni::fgXMLErrDomain, XMLErrs::InvalidXMLSchemaRoot);
-            }
-
             traverseSchemaHeader(root);
             preprocessChildren(root);
             fSchemaInfo = saveInfo;
