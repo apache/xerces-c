@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/12/30 21:35:46  neilg
+ * even if there are no grammars to add to an XSModel, the S4S grammar must be included
+ *
  * Revision 1.16  2003/12/29 16:15:42  knoaman
  * More PSVI updates
  *
@@ -214,27 +217,30 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
     }
 
     // Now loop through all of the NamespaceItem's
-    // First, we add S4S namespace
+    // First, we add S4S namespace (irrespective of whether we have any grammars)
+    namespaceItem = new (manager) XSNamespaceItem
+    (
+        this, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, manager
+    );
+
+    fNamespaceStringList->addElement
+    (
+        XMLString::replicate(SchemaSymbols::fgURI_SCHEMAFORSCHEMA,manager)
+    );
+    fXSNamespaceItemList->addElement(namespaceItem);
+    fHashNamespace->put
+    (
+        (void*) SchemaSymbols::fgURI_SCHEMAFORSCHEMA
+        , namespaceItem
+    );
+    fDeleteNamespace->addElement(namespaceItem);
+    addS4SToXSModel
+    (
+        getNamespaceItem(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+        , namespaceItem->fGrammar->getDatatypeRegistry()->getBuiltInRegistry()
+    );
+
     unsigned int numberOfNamespaces = fXSNamespaceItemList->size();
-    if (numberOfNamespaces)
-    {
-        namespaceItem = new (manager) XSNamespaceItem
-        (
-            this, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, manager
-        );
-
-        fNamespaceStringList->addElement
-        (
-            XMLString::replicate(SchemaSymbols::fgURI_SCHEMAFORSCHEMA,manager)
-        );
-        fXSNamespaceItemList->addElement(namespaceItem);
-        fHashNamespace->put
-        (
-            (void*) SchemaSymbols::fgURI_SCHEMAFORSCHEMA
-            , namespaceItem
-        );
-    }
-
     for (unsigned int j = 0; j < numberOfNamespaces; j++)
         addGrammarToXSModel(fXSNamespaceItemList->elementAt(j));
 }
@@ -380,7 +386,7 @@ XSModel::XSModel( XSModel *baseModel
     }
 
     // Add S4S namespace if needed
-    if (numberOfNamespacesToAdd && !fAddedS4SGrammar)
+    if (!fAddedS4SGrammar)
     {
         XSNamespaceItem* namespaceItem = new (manager) XSNamespaceItem
         (
@@ -397,6 +403,11 @@ XSModel::XSModel( XSModel *baseModel
             (void*) SchemaSymbols::fgURI_SCHEMAFORSCHEMA , namespaceItem
         );
         fDeleteNamespace->addElement(namespaceItem);
+        addS4SToXSModel
+        (
+            getNamespaceItem(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+            , namespaceItem->fGrammar->getDatatypeRegistry()->getBuiltInRegistry()
+        );
     }
 
     // Now loop through all of the newly created NamespaceItem's
@@ -516,16 +527,6 @@ XSModel::addS4SToXSModel(XSNamespaceItem* const namespaceItem,
 
 void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
 {
-    // populate S4S namespace if needed
-    if (!fAddedS4SGrammar)
-    {
-        addS4SToXSModel
-        (
-            getNamespaceItem(SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
-            , namespaceItem->fGrammar->getDatatypeRegistry()->getBuiltInRegistry()
-        );
-    }
-
     // Loop through top-level attribute declarations in the grammar...
     RefHashTableOfEnumerator<XMLAttDef> attrEnum = RefHashTableOfEnumerator<XMLAttDef> (namespaceItem->fGrammar->getAttributeDeclRegistry(), false, fMemoryManager);
     while (attrEnum.hasMoreElements())
