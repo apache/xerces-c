@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.32  2003/04/02 03:14:42  peiyongz
+ * Bug#18594: DOMWriter does not recognize Document Fragment
+ *
  * Revision 1.31  2003/03/16 05:42:04  peiyongz
  * Bug#17983 Formatter does not escape control characters
  *
@@ -832,6 +835,21 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             *fFormatter << gXMLDecl_SDDecl << st << gXMLDecl_separator;
 
             *fFormatter << gXMLDecl_endtag;
+
+            DOMNode *child = nodeToWrite->getFirstChild();
+            while( child != 0)
+            {
+                processNode(child, level);
+                child = child->getNextSibling();
+            }
+            printNewLine();
+            break;
+        }
+
+    case DOMNode::DOCUMENT_FRAGMENT_NODE:
+        {
+           
+            setURCharRef();
 
             DOMNode *child = nodeToWrite->getFirstChild();
             while( child != 0)
