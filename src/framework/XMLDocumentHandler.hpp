@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.3  2000/02/09 19:47:27  abagchi
+  * Added docs for startElement
+  *
   * Revision 1.2  2000/02/06 07:47:48  rahulj
   * Year 2K copyright swat.
   *
@@ -168,8 +171,10 @@ public:
       * endElement() event, but not necessarily the other way around. For
       * empty tags, there is only a startElement() call.
       *
-      * @param elementName The name of the element whose end tag was just
+      * @param elementDecl The name of the element whose end tag was just
       *                    parsed.
+      * @param uriId   The ID of the URI in the URI pool (only valid if 
+      *                name spaces is enabled)
       * @param isRoot  Indicates if this is the root element.
       */
     virtual void endElement
@@ -233,6 +238,22 @@ public:
       */
     virtual void startDocument() = 0;
 
+    /**
+      * This method is called when scanner encounters the start of an element tag.
+      * All elements must always have a startElement() tag. Empty tags will
+      * only have the startElement() tag and no endElement() tag.
+      *
+      * @param elementDecl The name of the element whose start tag was just
+      *                    parsed.
+      * @param uriId   The ID of the URI in the URI pool (only valid if 
+      *                name spaces is enabled)
+      * @param prefixName  The string representing the prefix name
+      * @param attrList List of attributes in the element
+      * @param attrCount Count of the attributes in the element
+      * @param isEmpty Indicates if the element is empty
+      * @param isRoot  Indicates if this is the root element.
+      *
+      */
     virtual void startElement
     (
         const   XMLElementDecl&         elemDecl
