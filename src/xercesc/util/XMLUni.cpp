@@ -1009,8 +1009,8 @@ const XMLCh XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation[] =
     ,   chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
-//Xerces: http://apache.org/xml/features/dom/adoptDOMDocument
-const XMLCh XMLUni::fgXercesAdoptDOMDocument[] =
+//Xerces: http://apache.org/xml/features/dom/user-adopts-DOMDocument
+const XMLCh XMLUni::fgXercesUserAdoptsDOMDocument[] =
 {
         chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
     ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
@@ -1018,7 +1018,9 @@ const XMLCh XMLUni::fgXercesAdoptDOMDocument[] =
     ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
     ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
     ,   chForwardSlash, chLatin_d, chLatin_o, chLatin_m, chForwardSlash
-    ,   chLatin_a, chLatin_d, chLatin_o, chLatin_p, chLatin_t, chLatin_D, chLatin_O, chLatin_M
+    ,   chLatin_u, chLatin_s, chLatin_e, chLatin_r, chDash
+    ,   chLatin_a, chLatin_d, chLatin_o, chLatin_p, chLatin_t, chLatin_s, chDash
+    ,   chLatin_D, chLatin_O, chLatin_M
     ,   chLatin_d, chLatin_o, chLatin_c, chLatin_u, chLatin_m, chLatin_e, chLatin_n, chLatin_t, chNull
 };
 

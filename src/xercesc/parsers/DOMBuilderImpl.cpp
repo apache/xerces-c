@@ -205,7 +205,7 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
     	  setValidationSchemaFullChecking(state);
     }
-    else if ((XMLString::compareIString(name, XMLUni::fgXercesAdoptDOMDocument) == 0) && state)
+    else if ((XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) && state)
     {
     	  adoptDocument();
     }

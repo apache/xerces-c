@@ -92,8 +92,8 @@
          <note>When a DOMDocument is released, all its associated children AND any objects it owned
             (e.g. DOMRange, DOMTreeWalker, DOMNodeIterator or any orphaned nodes) will also be released.
          </note>
-         <note>If such DOMDocumentType object has been inserted into a DOMDocument and thus has a owner,
-            then it will be released automatically when its owner document is released.
+         <note>When a DOMDocumentType has been inserted into a DOMDocument and thus has a owner,
+            it will then be released automatically when its owner document is released.
          </note>
          </s4>
 
@@ -102,14 +102,16 @@
             When an orphaned Node is released, its associated children will also be released.
             Acesss to a released Node will lead to unexpected behaviour.   These orphaned Nodes will
             eventually be released, if not already done so, when its owner document is released</p>
-            <note>DOMException::INVALID_ACCESS_ERR will be raised if this Node has a parent (has a owner).</note>
+
+            <note>DOMException::INVALID_ACCESS_ERR will be raised if releasing a Node that has a parent
+            (has a owner).</note>
          </s4>
 
          <s4 title="Objects created by DOMDocumentRange::createRange or DOMDocumentTraversal::createXXXX">
          <p>Users <em>can</em> call release() function when finished using the DOMRange,
             DOMNodeIterator, DOMTreeWalker.
             Acesss to a released object will lead to unexpected behaviour.   These objects will
-            eventually be released, if not already done so, when its root node is released
+            eventually be released, if not already done so, when its owner document is released
          </p>
          </s4>
 
@@ -942,7 +944,7 @@
             <p/>
 
             <table>
-                <tr><td colspan="2"><em>http://apache.org/xml/features/dom/adoptDOMDocument</em></td></tr>
+                <tr><td colspan="2"><em>http://apache.org/xml/features/dom/user-adopts-DOMDocument</em></td></tr>
                 <tr><td><em>true:</em></td><td> The caller will adopt the DOMDocument that is returned from
                 the parse method and thus is responsible to call DOMDocument::release() to release the
                 associated memory.  The parser will not release it.   The ownership is transferred
