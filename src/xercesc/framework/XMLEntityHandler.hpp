@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.7  2003/10/30 21:37:31  knoaman
+  * Enhanced Entity Resolver Support. Thanks to David Cargill.
+  *
   * Revision 1.6  2003/03/07 18:08:10  tng
   * Return a reference instead of void for operator=
   *
@@ -113,7 +116,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class InputSource;
 class XMLBuffer;
-
+class XMLResourceIdentifier;
 
 /**
  *  This abstract class is a callback mechanism for the scanner. By creating
@@ -187,6 +190,9 @@ public:
       * application specific entity resolution. This method is defined
       * by SAX 1.0 API.
       *
+      * <i>Only one resolveEntity method will be used.  If both setEntityResolver and 
+      * setXMLEntityResolver are called, then the last one is used.</i>
+      *
       * @param publicId A const pointer to a Unicode string representing the
       *                 public id of the entity just parsed.
       * @param systemId A const pointer to a Unicode string representing the
@@ -204,6 +210,26 @@ public:
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
         , const XMLCh* const    baseURI = 0
+    ) = 0;
+
+    /**
+      * This method allows the entity handler to provide customized
+      * application specific entity resolution. 
+      *
+      * <i>Only one resolveEntity method will be used.  If both setEntityResolver and 
+      * setXMLEntityResolver are called, then the last one is used.</i>
+      *
+      * @param resourceIdentifier An object containing the type of
+      *        resource to be resolved and the associated data members
+      *        corresponding to this type.
+      * @return The value returned by the resolveEntity method or
+      *         NULL otherwise to indicate no processing was done.
+      *         The returned InputSource is owned by the parser which is
+      *         responsible to clean up the memory.
+      */
+    virtual InputSource* resolveEntity
+    (
+        XMLResourceIdentifier* resourceIdentifier
     ) = 0;
 
     /**

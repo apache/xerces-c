@@ -83,6 +83,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLEntityResolver.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -100,6 +101,7 @@ AbstractDOMParser(valToAdopt, manager, gramPool)
 , fValidation(false)
 , fErrorHandler(0)
 , fEntityResolver(0)
+, fXMLEntityResolver(0)
 , fFilter(0)
 , fCharsetOverridesXMLEncoding(true)
 , fUserAdoptsDocument(false)
@@ -133,6 +135,19 @@ void DOMBuilderImpl::setEntityResolver(DOMEntityResolver* const handler)
     fEntityResolver = handler;
     if (fEntityResolver) {
         getScanner()->setEntityHandler(this);
+        fXMLEntityResolver = 0;
+    }
+    else {
+        getScanner()->setEntityHandler(0);
+    }
+}
+
+void DOMBuilderImpl::setXMLEntityResolver(XMLEntityResolver* const handler)
+{
+    fXMLEntityResolver = handler;
+    if (fXMLEntityResolver) {
+        getScanner()->setEntityHandler(this);
+        fEntityResolver = 0;
     }
     else {
         getScanner()->setEntityHandler(0);
@@ -533,6 +548,27 @@ DOMBuilderImpl::resolveEntity(const XMLCh* const publicId,
             return new Wrapper4DOMInputSource(is, true, getMemoryManager());
     }
 
+    return 0;
+}
+
+InputSource*
+DOMBuilderImpl::resolveEntity( XMLResourceIdentifier* resourceIdentifier )
+{
+    //
+    //  Just map it to the SAX entity resolver. If there is not one installed,
+    //  return a null pointer to cause the default resolution.
+    //
+    if (fEntityResolver) {
+        DOMInputSource* is = fEntityResolver->resolveEntity(resourceIdentifier->getPublicId(),
+                                                            resourceIdentifier->getSystemId(), 
+                                                            resourceIdentifier->getBaseURI());
+        if (is)
+            return new Wrapper4DOMInputSource(is, true, getMemoryManager());    
+    }
+    if (fXMLEntityResolver) {
+        return(fXMLEntityResolver->resolveEntity(resourceIdentifier));    
+    }
+    
     return 0;
 }
 

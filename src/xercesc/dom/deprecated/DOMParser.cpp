@@ -97,6 +97,7 @@
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLEntityResolver.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -114,6 +115,7 @@ DOMParser::DOMParser( XMLValidator* const   valToAdopt
     , fParseInProgress(false)
     , fWithinElement(false)
     , fEntityResolver(0)
+    , fXMLEntityResolver(0)
     , fErrorHandler(0)
     , fNodeStack(0)
     , fScanner(0)
@@ -321,6 +323,19 @@ void DOMParser::setEntityResolver(EntityResolver* const handler)
 {
     fEntityResolver = handler;
     if (fEntityResolver) {
+        fScanner->setEntityHandler(this);
+        fXMLEntityResolver = 0;
+    }
+    else {
+        fScanner->setEntityHandler(0);
+    }
+}
+
+void DOMParser::setXMLEntityResolver(XMLEntityResolver* const handler)
+{
+    fXMLEntityResolver = handler;
+    if (fXMLEntityResolver) {
+        fEntityResolver = 0;
         fScanner->setEntityHandler(this);
     }
     else {
@@ -611,7 +626,19 @@ DOMParser::resolveEntity(const XMLCh* const publicId,
     return 0;
 }
 
-
+InputSource* DOMParser::resolveEntity(XMLResourceIdentifier* resourceIdentifier) 
+{
+    //
+    //  Just map it to the SAX entity resolver. If there is not one installed,
+    //  return a null pointer to cause the default resolution.
+    //
+    if (fEntityResolver)
+        return fEntityResolver->resolveEntity(resourceIdentifier->getPublicId(), 
+                                                resourceIdentifier->getSystemId());
+    if (fXMLEntityResolver)
+        return fXMLEntityResolver->resolveEntity(resourceIdentifier);
+    return 0;
+}
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Implementation of XMLDocumentHandler interface

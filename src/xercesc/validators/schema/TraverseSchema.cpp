@@ -92,6 +92,7 @@
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/impl/XSDElementNSImpl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLEntityResolver.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -510,7 +511,8 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     // Resolve schema location
     // ------------------------------------------------------------------
-    InputSource*         srcToFill = resolveSchemaLocation(schemaLocation);
+    InputSource* srcToFill = resolveSchemaLocation(schemaLocation,
+            XMLResourceIdentifier::SchemaInclude);
     Janitor<InputSource> janSrc(srcToFill);
 
     // Nothing to do
@@ -683,21 +685,23 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     const XMLCh* schemaLocation = getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION);
 
-    if (!schemaLocation || !*schemaLocation) {
-        return;
-    }
+    //if (!schemaLocation || !*schemaLocation) {
+    //    return;
+    //}
+    // With new XMLEntityResolver, it may resolve the nameSpace so call resolveSchemaLocation...
 
     // ------------------------------------------------------------------
     // Resolve schema location
     // ------------------------------------------------------------------
-    InputSource*         srcToFill = resolveSchemaLocation(schemaLocation);
-    Janitor<InputSource> janSrc(srcToFill);
+    InputSource* srcToFill = resolveSchemaLocation(schemaLocation,
+            XMLResourceIdentifier::SchemaImport, nameSpace);
 
     // Nothing to do
     if (!srcToFill) {
         return;
     }
 
+    Janitor<InputSource> janSrc(srcToFill);
     const XMLCh* importURL = srcToFill->getSystemId();
     SchemaInfo* importSchemaInfo = 0;
 
@@ -6409,22 +6413,31 @@ void TraverseSchema::defaultComplexTypeInfo(ComplexTypeInfo* const typeInfo) {
 }
 
 
-InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
+InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc,
+                                const XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType,
+                                const XMLCh* const nameSpace) {
 
     // ------------------------------------------------------------------
     // Create an input source
     // ------------------------------------------------------------------
     InputSource* srcToFill = 0;
-    normalizeURI(loc, fBuffer);
+    XMLCh* normalizedURI = 0;
+    if (loc) {
+        normalizeURI(loc, fBuffer);
+        normalizedURI = fBuffer.getRawBuffer();
+    }
 
-    const XMLCh* normalizedURI = fBuffer.getRawBuffer();
     if (fEntityHandler){
-        srcToFill = fEntityHandler->resolveEntity(XMLUni::fgZeroLenString, normalizedURI);
+        XMLResourceIdentifier resourceIdentifier(resourceIdentitiferType,
+                            normalizedURI, nameSpace);
+        srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
 
     //  If they didn't create a source via the entity resolver, then we
-    //  have to create one on our own.
-    if (!srcToFill) {
+    //  have to create one on our own if we have the schemaLocation (with
+    //  the update resolveEntity accepting nameSpace, a schemImport could
+    //  pass a null schemaLocation)
+    if (!srcToFill && loc) {
 
         try {
 
@@ -7595,7 +7608,8 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
     // ------------------------------------------------------------------
     // Resolve schema location
     // ------------------------------------------------------------------
-    InputSource*         srcToFill = resolveSchemaLocation(schemaLocation);
+    InputSource*         srcToFill = resolveSchemaLocation(schemaLocation,
+                                        XMLResourceIdentifier::SchemaRedefine);
     Janitor<InputSource> janSrc(srcToFill);
 
     // Nothing to do

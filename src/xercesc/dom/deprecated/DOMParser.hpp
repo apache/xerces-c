@@ -66,7 +66,6 @@
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
-
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 #include "DOM_Document.hpp"
@@ -83,6 +82,7 @@ class XMLValidator;
 class Grammar;
 class GrammarResolver;
 class XMLGrammarPool;
+class XMLEntityResolver;
 
 /**
   * This class implements the Document Object Model (DOM) interface.
@@ -204,6 +204,24 @@ public :
       * @return A const pointer to the installed entity resolver object.
       */
     const EntityResolver* getEntityResolver() const;
+
+    /** Get a pointer to the entity resolver
+      *
+      * This method returns the installed entity resolver.  If no resolver
+      * has been installed, then it will be a zero pointer.
+      *
+      * @return The pointer to the installed entity resolver object.
+      */
+    XMLEntityResolver* getXMLEntityResolver();
+
+    /** Get a const pointer to the entity resolver
+      *
+      * This method returns the installed entity resolver. If no resolver
+      * has been installed, then it will be a zero pointer.
+      *
+      * @return A const pointer to the installed entity resolver object.
+      */
+    const XMLEntityResolver* getXMLEntityResolver() const;
 
     /** Get a const reference to the underlying scanner
       *
@@ -494,8 +512,9 @@ public :
       * can trap and potentially redirect references to external
       * entities.
       *
-      * <i>Any previously set resolver is merely dropped, since the parser
-      * does not own them.</i>
+      * <i>Any previously set entity resolver is merely dropped, since the parser
+      * does not own them.  If both setEntityResolver and setXMLEntityResolver
+      * are called, then the last one is used.</i>
       *
       * @param handler  A const pointer to the user supplied entity
       *                 resolver.
@@ -503,6 +522,24 @@ public :
       * @see #getEntityResolver
       */
     void setEntityResolver(EntityResolver* const handler);
+
+    /** Set the entity resolver
+      *
+      * This method allows applications to install their own entity
+      * resolver. By installing an entity resolver, the applications
+      * can trap and potentially redirect references to external
+      * entities.
+      *
+      * <i>Any previously set entity resolver is merely dropped, since the parser
+      * does not own them.  If both setEntityResolver and setXMLEntityResolver
+      * are called, then the last one is used.</i>
+      *
+      * @param handler  A const pointer to the user supplied entity
+      *                 resolver.
+      *
+      * @see #getXMLEntityResolver
+      */
+    void setXMLEntityResolver(XMLEntityResolver* const handler);
 
     /** Set the 'do namespaces' flag
       *
@@ -1230,6 +1267,8 @@ public :
       * implement 'redirection' via this callback. This method is also
       * borrowed from the SAX specification.
       *
+      * @deprecated This method is no longer called (the other resolveEntity one is).
+      *
       * @param publicId A const pointer to a Unicode string representing the
       *                 public id of the entity just parsed.
       * @param systemId A const pointer to a Unicode string representing the
@@ -1249,6 +1288,27 @@ public :
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
         , const XMLCh* const    baseURI = 0
+    );
+
+    /** Resolve a public/system id
+      *
+      * This method allows a user installed entity handler to further
+      * process any pointers to external entities. The applications can
+      * implement 'redirection' via this callback.  
+      *
+      * @param resourceIdentifier An object containing the type of
+      *        resource to be resolved and the associated data members
+      *        corresponding to this type.
+      * @return The value returned by the user installed resolveEntity
+      *         method or NULL otherwise to indicate no processing was done.
+      *         The returned InputSource is owned by the parser which is
+      *         responsible to clean up the memory.
+      * @see XMLEntityHandler
+      * @see XMLEntityResolver
+      */
+    virtual InputSource* resolveEntity
+    (
+        XMLResourceIdentifier* resourceIdentifier
     );
 
     /** Handle a 'start input source' event
@@ -1753,6 +1813,7 @@ private :
     DOM_Node                fCurrentNode;
     DOM_Document            fDocument;
     EntityResolver*         fEntityResolver;
+    XMLEntityResolver*      fXMLEntityResolver;
     ErrorHandler*           fErrorHandler;
     ValueStackOf<DOM_Node>* fNodeStack;
     XMLScanner*             fScanner;
@@ -1811,6 +1872,16 @@ inline const ErrorHandler* DOMParser::getErrorHandler() const
 inline EntityResolver* DOMParser::getEntityResolver()
 {
     return fEntityResolver;
+}
+
+inline XMLEntityResolver* DOMParser::getXMLEntityResolver()
+{
+    return fXMLEntityResolver;
+}
+
+inline const XMLEntityResolver* DOMParser::getXMLEntityResolver() const
+{
+    return fXMLEntityResolver;
 }
 
 inline const EntityResolver* DOMParser::getEntityResolver() const

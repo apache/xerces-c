@@ -79,6 +79,7 @@
 #include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLEntityResolver.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -94,6 +95,7 @@ XercesDOMParser::XercesDOMParser( XMLValidator* const   valToAdopt
 AbstractDOMParser(valToAdopt, manager, gramPool)
 , fErrorHandler(0)
 , fEntityResolver(0)
+, fXMLEntityResolver(0)
 {
 }
 
@@ -158,6 +160,19 @@ void XercesDOMParser::setEntityResolver(EntityResolver* const handler)
     fEntityResolver = handler;
     if (fEntityResolver) {
         getScanner()->setEntityHandler(this);
+        fXMLEntityResolver = 0;
+    }
+    else {
+        getScanner()->setEntityHandler(0);
+    }
+}
+
+void XercesDOMParser::setXMLEntityResolver(XMLEntityResolver* const handler)
+{
+    fXMLEntityResolver = handler;
+    if (fXMLEntityResolver) {
+        getScanner()->setEntityHandler(this);
+        fEntityResolver = 0;
     }
     else {
         getScanner()->setEntityHandler(0);
@@ -248,6 +263,22 @@ XercesDOMParser::resolveEntity(const XMLCh* const publicId,
     //
     if (fEntityResolver)
         return fEntityResolver->resolveEntity(publicId, systemId);
+    return 0;
+}
+
+InputSource*
+XercesDOMParser::resolveEntity(XMLResourceIdentifier* resourceIdentifier)
+{
+    //
+    //  Just map it to the SAX entity resolver. If there is not one installed,
+    //  return a null pointer to cause the default resolution.
+    //
+    if (fEntityResolver)
+        return fEntityResolver->resolveEntity(resourceIdentifier->getPublicId(), 
+                                                resourceIdentifier->getSystemId());
+    if (fXMLEntityResolver)
+        return fXMLEntityResolver->resolveEntity(resourceIdentifier);
+
     return 0;
 }
 

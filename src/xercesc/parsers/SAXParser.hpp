@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2003/10/30 21:37:31  knoaman
+ * Enhanced Entity Resolver Support. Thanks to David Cargill.
+ *
  * Revision 1.25  2003/10/20 13:41:10  amassari
  * Added getGrammarResolver API
  *
@@ -256,6 +259,8 @@ class XMLValidator;
 class Grammar;
 class GrammarResolver;
 class XMLGrammarPool;
+class XMLEntityResolver;
+class XMLResourceIdentifier;
 
 /**
   * This class implements the SAX 'Parser' interface and should be
@@ -356,6 +361,22 @@ public :
       * @return A const pointer to the installed entity resolver object.
       */
     const EntityResolver* getEntityResolver() const;
+
+    /**
+      * This method returns the installed entity resolver. Suitable
+      * for 'lvalue' usages.
+      *
+      * @return The pointer to the installed entity resolver object.
+      */
+    XMLEntityResolver* getXMLEntityResolver();
+
+    /**
+      * This method returns the installed entity resolver. Suitable
+      * for 'rvalue' usages.
+      *
+      * @return A const pointer to the installed entity resolver object.
+      */
+    const XMLEntityResolver* getXMLEntityResolver() const;
 
     /**
       * This method returns the installed error handler. Suitable
@@ -1266,6 +1287,10 @@ public :
       * parser. It allows applications to trap and redirect calls to
       * external entities.
       *
+      * <i>Any previously set entity resolver is merely dropped, since the parser
+      * does not own them.  If both setEntityResolver and setXMLEntityResolver
+      * are called, then the last one is used.</i>
+      *
       * @param resolver A pointer to the entity resolver to be called
       *                 when the parser comes across references to
       *                 entities in the XML file.
@@ -1273,6 +1298,24 @@ public :
       * @see Parser#setEntityResolver
       */
     virtual void setEntityResolver(EntityResolver* const resolver);
+
+    /**
+      * This method installs the user specified entity resolver on the
+      * parser. It allows applications to trap and redirect calls to
+      * external entities.
+      *
+      * <i>Any previously set entity resolver is merely dropped, since the parser
+      * does not own them.  If both setEntityResolver and setXMLEntityResolver
+      * are called, then the last one is used.</i>
+      *
+      * @param resolver A pointer to the entity resolver to be called
+      *                 when the parser comes across references to
+      *                 entities in the XML file.
+      *
+      * @see Parser#setXMLEntityResolver
+      */
+    virtual void setXMLEntityResolver(XMLEntityResolver* const resolver);
+
     //@}
 
 
@@ -1627,6 +1670,8 @@ public :
       * can implement 'redirection' via this callback. The driver
       * should call the SAX EntityHandler 'resolveEntity' method.
       *
+      * @deprecated This method is no longer called (the other resolveEntity one is).
+      *
       * @param publicId A const pointer to a Unicode string representing the
       *                 public id of the entity just parsed.
       * @param systemId A const pointer to a Unicode string representing the
@@ -1646,6 +1691,27 @@ public :
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
         , const XMLCh* const    baseURI = 0
+    );
+
+    /** Resolve a public/system id
+      *
+      * This method allows a user installed entity handler to further
+      * process any pointers to external entities. The applications can
+      * implement 'redirection' via this callback.  
+      *
+      * @param resourceIdentifier An object containing the type of
+      *        resource to be resolved and the associated data members
+      *        corresponding to this type.
+      * @return The value returned by the user installed resolveEntity
+      *         method or NULL otherwise to indicate no processing was done.
+      *         The returned InputSource is owned by the parser which is
+      *         responsible to clean up the memory.
+      * @see XMLEntityHandler
+      * @see XMLEntityResolver
+      */
+    virtual InputSource* resolveEntity
+    (
+        XMLResourceIdentifier* resourceIdentifier
     );
 
     /**
@@ -2036,6 +2102,7 @@ private:
     DocumentHandler*     fDocHandler;
     DTDHandler*          fDTDHandler;
     EntityResolver*      fEntityResolver;
+    XMLEntityResolver*   fXMLEntityResolver;
     ErrorHandler*        fErrorHandler;
     XMLDocumentHandler** fAdvDHList;
     XMLScanner*          fScanner;
@@ -2064,6 +2131,16 @@ inline const DocumentHandler* SAXParser::getDocumentHandler() const
 inline EntityResolver* SAXParser::getEntityResolver()
 {
     return fEntityResolver;
+}
+
+inline XMLEntityResolver* SAXParser::getXMLEntityResolver()
+{
+    return fXMLEntityResolver;
+}
+
+inline const XMLEntityResolver* SAXParser::getXMLEntityResolver() const
+{
+    return fXMLEntityResolver;
 }
 
 inline const EntityResolver* SAXParser::getEntityResolver() const

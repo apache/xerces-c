@@ -847,6 +847,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLEBCDICTranscoder.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLEntityResolver.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLEnumerator.hpp
 # End Source File
 # Begin Source File
@@ -900,6 +904,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLNumber.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLNumber.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLResourceIdentifier.hpp
 # End Source File
 # Begin Source File
 

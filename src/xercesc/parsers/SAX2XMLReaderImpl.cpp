@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2003/10/30 21:37:31  knoaman
+ * Enhanced Entity Resolver Support. Thanks to David Cargill.
+ *
  * Revision 1.28  2003/10/01 16:32:38  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -306,6 +309,7 @@
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLEntityResolver.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -333,6 +337,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
     , fPrefixCounts(0)
     , fDTDHandler(0)
     , fEntityResolver(0)
+    , fXMLEntityResolver(0)
     , fErrorHandler(0)
     , fLexicalHandler(0)
     , fDeclHandler(0)
@@ -599,6 +604,19 @@ void SAX2XMLReaderImpl::setEntityResolver(EntityResolver* const resolver)
     fEntityResolver = resolver;
     if (fEntityResolver) {
         fScanner->setEntityHandler(this);
+        fXMLEntityResolver = 0;
+    }
+    else {
+        fScanner->setEntityHandler(0);
+    }
+}
+
+void SAX2XMLReaderImpl::setXMLEntityResolver(XMLEntityResolver* const resolver)
+{
+    fXMLEntityResolver = resolver;
+    if (fXMLEntityResolver) {
+        fScanner->setEntityHandler(this);
+        fEntityResolver = 0;
     }
     else {
         fScanner->setEntityHandler(0);
@@ -1395,7 +1413,21 @@ InputSource* SAX2XMLReaderImpl::resolveEntity(   const   XMLCh* const    publicI
     return 0;
 }
 
+InputSource* SAX2XMLReaderImpl::resolveEntity(XMLResourceIdentifier* resourceIdentifier)
+{
+    //
+    //  Just map it to the SAX entity resolver. If there is not one installed,
+    //  return a null pointer to cause the default resolution.
+    //
+    if (fEntityResolver)
+        return fEntityResolver->resolveEntity(resourceIdentifier->getPublicId(), 
+                                                resourceIdentifier->getSystemId());
+    if (fXMLEntityResolver)
+        return fXMLEntityResolver->resolveEntity(resourceIdentifier);
 
+    return 0;
+}
+ 
 void SAX2XMLReaderImpl::startInputSource(const InputSource&)
 {
     // Nothing to do for this one

@@ -91,6 +91,7 @@
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
 #include <xercesc/validators/schema/XSDDOMParser.hpp>
 #include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
+#include <xercesc/util/XMLResourceIdentifier.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -1391,8 +1392,9 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
             if (!fEntityHandler->expandSystemId(normalizedURI, expSysId))
                 expSysId.set(normalizedURI);
 
-            srcToFill = fEntityHandler->resolveEntity( XMLUni::fgZeroLenString
-                                                     , expSysId.getRawBuffer());
+            XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::SchemaGrammar,
+                            expSysId.getRawBuffer(), uri);
+            srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
         }
         else
         {
@@ -1566,8 +1568,9 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId)
         if (!fEntityHandler->expandSystemId(sysId, expSysId))
             expSysId.set(sysId);
 
-        srcToFill = fEntityHandler->resolveEntity( XMLUni::fgZeroLenString
-                                                 , expSysId.getRawBuffer());
+        XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
+                            expSysId.getRawBuffer());
+        srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
     else
     {

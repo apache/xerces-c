@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2003/10/30 21:37:31  knoaman
+ * Enhanced Entity Resolver Support. Thanks to David Cargill.
+ *
  * Revision 1.22  2003/06/20 18:55:54  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -246,6 +249,7 @@ class LexicalHandler;
 class DeclHandler;
 class GrammarResolver;
 class XMLGrammarPool;
+class XMLResourceIdentifier;
 
 /**
   * This class implements the SAX2 'XMLReader' interface and should be
@@ -315,6 +319,13 @@ public :
       * @return A pointer to the installed entity resolver object.
       */
     virtual EntityResolver* getEntityResolver() const ;
+
+    /**
+      * This method returns the installed entity resolver.
+      *
+      * @return A pointer to the installed entity resolver object.
+      */
+    virtual XMLEntityResolver* getXMLEntityResolver() const ;
 
     /**
       * This method returns the installed error handler.
@@ -400,11 +411,33 @@ public :
     * in the middle of a parse, and the SAX parser must begin using
     * the new resolver immediately.
     *
+    * <i>Any previously set entity resolver is merely dropped, since the parser
+    * does not own them.  If both setEntityResolver and setXMLEntityResolver
+    * are called, then the last one is used.</i>
+    *
     * @param resolver The object for resolving entities.
     * @see EntityResolver#EntityResolver
     * @see DefaultHandler#DefaultHandler
     */
     virtual void setEntityResolver(EntityResolver* const resolver) ;
+    
+  /** Set the entity resolver
+    *
+    * This method allows applications to install their own entity
+    * resolver. By installing an entity resolver, the applications
+    * can trap and potentially redirect references to external
+    * entities.
+    *
+    * <i>Any previously set entity resolver is merely dropped, since the parser
+    * does not own them.  If both setEntityResolver and setXMLEntityResolver
+    * are called, then the last one is used.</i>
+    *
+    * @param resolver  A const pointer to the user supplied entity
+    *                  resolver.
+    *
+    * @see #getXMLEntityResolver
+    */
+    virtual void setXMLEntityResolver(XMLEntityResolver* const resolver) ;
 
   /**
     * Allow an application to register an error event handler.
@@ -1409,6 +1442,8 @@ public :
       * can implement 'redirection' via this callback. The driver
       * should call the SAX EntityHandler 'resolveEntity' method.
       *
+      * @deprecated This method is no longer called (the other resolveEntity one is).
+      *
       * @param publicId A const pointer to a Unicode string representing the
       *                 public id of the entity just parsed.
       * @param systemId A const pointer to a Unicode string representing the
@@ -1428,6 +1463,27 @@ public :
         const   XMLCh* const    publicId
         , const XMLCh* const    systemId
         , const XMLCh* const    baseURI = 0
+    );
+
+    /** Resolve a public/system id
+      *
+      * This method allows a user installed entity handler to further
+      * process any pointers to external entities. The applications can
+      * implement 'redirection' via this callback.  
+      *
+      * @param resourceIdentifier An object containing the type of
+      *        resource to be resolved and the associated data members
+      *        corresponding to this type.
+      * @return The value returned by the user installed resolveEntity
+      *         method or NULL otherwise to indicate no processing was done.
+      *         The returned InputSource is owned by the parser which is
+      *         responsible to clean up the memory.
+      * @see XMLEntityHandler
+      * @see XMLEntityResolver
+      */
+    virtual InputSource* resolveEntity
+    (
+        XMLResourceIdentifier* resourceIdentifier
     );
 
     /**
@@ -1798,13 +1854,14 @@ private :
     unsigned int                fElemDepth;
     unsigned int                fAdvDHCount;
     unsigned int                fAdvDHListSize;
-    VecAttributesImpl		fAttrList ;
-    ContentHandler*		fDocHandler ;
+    VecAttributesImpl		    fAttrList ;
+    ContentHandler*		        fDocHandler ;
     RefVectorOf<XMLAttr>*       fTempAttrVec ;
     RefStackOf<XMLBuffer> *     fPrefixes ;
     ValueStackOf<unsigned int>* fPrefixCounts ;
     DTDHandler*                 fDTDHandler;
     EntityResolver*             fEntityResolver;
+    XMLEntityResolver*          fXMLEntityResolver;
     ErrorHandler*               fErrorHandler;
     LexicalHandler*             fLexicalHandler;
     DeclHandler*                fDeclHandler;
@@ -1815,7 +1872,7 @@ private :
     XMLValidator*               fValidator;
     MemoryManager*              fMemoryManager;
     XMLGrammarPool*             fGrammarPool;
-    XMLBufferMgr		fStringBuffers;
+    XMLBufferMgr		        fStringBuffers;
 	
     // -----------------------------------------------------------------------
     // internal function used to set the state of the parser
@@ -1844,6 +1901,11 @@ inline DTDHandler* SAX2XMLReaderImpl::getDTDHandler() const
 inline EntityResolver* SAX2XMLReaderImpl::getEntityResolver() const
 {
 	return fEntityResolver;
+}
+
+inline XMLEntityResolver* SAX2XMLReaderImpl::getXMLEntityResolver() const
+{
+	return fXMLEntityResolver;
 }
 
 inline ErrorHandler* SAX2XMLReaderImpl::getErrorHandler() const

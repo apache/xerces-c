@@ -85,6 +85,7 @@
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLResourceIdentifier.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -3191,8 +3192,9 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
             if (!fEntityHandler->expandSystemId(normalizedURI, expSysId))
                 expSysId.set(normalizedURI);
 
-            srcToFill = fEntityHandler->resolveEntity( XMLUni::fgZeroLenString
-                                                     , expSysId.getRawBuffer());
+            XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::SchemaGrammar,
+                            expSysId.getRawBuffer(), uri);
+            srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
         }
         else
         {
@@ -3343,8 +3345,9 @@ InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
         if (!fEntityHandler->expandSystemId(sysId, expSysId))
             expSysId.set(sysId);
 
-        srcToFill = fEntityHandler->resolveEntity( XMLUni::fgZeroLenString
-                                                 , expSysId.getRawBuffer());
+        XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
+                            expSysId.getRawBuffer());
+        srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
     else
     {

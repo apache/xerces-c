@@ -79,6 +79,7 @@
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLResourceIdentifier.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -1585,7 +1586,9 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
     InputSource* srcToUse = 0;
 
     if (fEntityHandler){
-        srcToUse = fEntityHandler->resolveEntity(XMLUni::fgZeroLenString, systemId);
+        XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
+                            systemId);
+        srcToUse = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
 
     //  First we try to parse it as a URL. If that fails, we assume its

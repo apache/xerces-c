@@ -79,6 +79,7 @@
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/internal/ReaderMgr.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLResourceIdentifier.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -527,11 +528,9 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
     srcToFill = 0;
     if (fEntityHandler)
     {
-        srcToFill = fEntityHandler->resolveEntity
-        (
-            pubId
-            , expSysId.getRawBuffer()
-        );
+        XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
+                            expSysId.getRawBuffer(), XMLUni::fgZeroLenString, pubId);
+        srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
 
     //
@@ -637,11 +636,9 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
     srcToFill = 0;
     if (fEntityHandler)
     {
-        srcToFill = fEntityHandler->resolveEntity
-        (
-            pubId
-            , expSysId.getRawBuffer()
-        );
+        XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
+                            expSysId.getRawBuffer(), XMLUni::fgZeroLenString, pubId, baseURI);
+        srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
 
     //

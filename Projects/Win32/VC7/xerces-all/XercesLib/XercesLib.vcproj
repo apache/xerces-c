@@ -420,6 +420,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLEBCDICTranscoder.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLEntityResolver.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLEnumerator.hpp">
 			</File>
 			<File
@@ -460,6 +463,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLNumber.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLResourceIdentifier.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLString.cpp">

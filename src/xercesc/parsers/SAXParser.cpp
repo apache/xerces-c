@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2003/10/30 21:37:31  knoaman
+ * Enhanced Entity Resolver Support. Thanks to David Cargill.
+ *
  * Revision 1.26  2003/10/01 16:32:38  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -268,6 +271,7 @@
 #include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLEntityResolver.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -287,6 +291,7 @@ SAXParser::SAXParser( XMLValidator* const   valToAdopt
     , fDocHandler(0)
     , fDTDHandler(0)
     , fEntityResolver(0)
+    , fXMLEntityResolver(0)
     , fErrorHandler(0)
     , fAdvDHList(0)
     , fScanner(0)
@@ -804,13 +809,24 @@ void SAXParser::setEntityResolver(EntityResolver* const resolver)
     fEntityResolver = resolver;
     if (fEntityResolver) {
         fScanner->setEntityHandler(this);
+        fXMLEntityResolver = 0;
     }
     else {
         fScanner->setEntityHandler(0);
     }
 }
 
-
+void SAXParser::setXMLEntityResolver(XMLEntityResolver* const resolver)
+{
+    fXMLEntityResolver = resolver;
+    if (fXMLEntityResolver) {
+        fScanner->setEntityHandler(this);
+        fEntityResolver = 0;
+    }
+    else {
+        fScanner->setEntityHandler(0);
+    }
+}
 
 // ---------------------------------------------------------------------------
 //  SAXParser: Progressive parse methods
@@ -1348,6 +1364,19 @@ SAXParser::resolveEntity(   const   XMLCh* const    publicId
     // Just map to the SAX entity resolver handler
     if (fEntityResolver)
         return fEntityResolver->resolveEntity(publicId, systemId);
+    return 0;
+}
+
+
+InputSource*
+SAXParser::resolveEntity(  XMLResourceIdentifier* resourceIdentifier )
+{
+    // Just map to the SAX entity resolver handler
+    if (fEntityResolver)
+        return fEntityResolver->resolveEntity(resourceIdentifier->getPublicId(), 
+                                                resourceIdentifier->getSystemId());
+    if (fXMLEntityResolver)
+        return fXMLEntityResolver->resolveEntity(resourceIdentifier);
     return 0;
 }
 

@@ -79,6 +79,7 @@
 #include <xercesc/validators/DTD/DTDScanner.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/XMLResourceIdentifier.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -2380,8 +2381,9 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
         if (!fEntityHandler->expandSystemId(sysId, expSysId))
             expSysId.set(sysId);
 
-        srcToFill = fEntityHandler->resolveEntity( XMLUni::fgZeroLenString
-                                                 , expSysId.getRawBuffer());
+        XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
+                            expSysId.getRawBuffer());
+        srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
     else
     {

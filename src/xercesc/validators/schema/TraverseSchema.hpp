@@ -82,6 +82,7 @@
 #include <xercesc/validators/schema/SchemaInfo.hpp>
 #include <xercesc/validators/schema/GeneralAttributeCheck.hpp>
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
+#include <xercesc/util/XMLResourceIdentifier.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -525,7 +526,12 @@ private:
       * Resolve a schema location attribute value to an input source.
       * Caller to delete the returned object.
       */
-    InputSource* resolveSchemaLocation(const XMLCh* const loc);
+    InputSource* resolveSchemaLocation
+    (
+        const XMLCh* const loc
+        , const XMLResourceIdentifier::ResourceIdentifierType resourceIdentitiferType
+        , const XMLCh* const nameSpace=0
+    );
 
     void restoreSchemaInfo(SchemaInfo* const toRestore,
                            SchemaInfo::ListType const aListType = SchemaInfo::INCLUDE,
