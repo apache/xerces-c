@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/28 20:54:06  tng
+ * Schema: allocate a fDTDValidator, fSchemaValidator explicitly to avoid wrong cast
+ *
  * Revision 1.6  2001/05/11 13:27:09  tng
  * Copyright update.
  *
@@ -1602,27 +1605,6 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     if(!reuseGrammar) {
         if (fScanner->getValidationScheme() == XMLScanner::Val_Auto)
             fScanner->setDoValidation(true);
-
-        // set up the Validator if validating
-        if(fScanner->getDoValidation()) {
-            if (fScanner->getValidator()) {
-                if (!fScanner->getValidator()->handlesDTD())
-                {
-                    // the fValidator is from user
-                    if (fScanner->isValidatorFromUser())
-                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
-                    else {
-                        // the fValidator is created by the Scanner, replace it with proper Validator
-                        fScanner->setValidator( new DTDValidator() );
-                        fScanner->getValidator()->setGrammar(fDTDGrammar);
-                    }
-                }
-            }
-            else {
-                fScanner->setValidator( new DTDValidator() );
-                fScanner->getValidator()->setGrammar(fDTDGrammar);
-            }
-        }
     }
 
 

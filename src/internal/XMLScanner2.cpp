@@ -740,48 +740,44 @@ void XMLScanner::scanReset(const InputSource& src)
         if (fDoNamespaces)
             resetURIStringPool();
 
-        // create a default validator
-        if (fValidate) {
-            if (!fValidator)
-                setValidator(new DTDValidator());
+        // create a default grammar first
+        if (fValidatorFromUser) {
+            if (fValidator->handlesDTD()) {
+                fGrammar = new DTDGrammar();
+            }
+            else {
+                fGrammar = new SchemaGrammar();
+            }
+        }
+        else {
+            // set fValidator as fDTDValidator
+            fValidator = fDTDValidator;
+            fGrammar = new DTDGrammar();
         }
 
-        // create a default grammar first
-        fGrammar = new DTDGrammar();
         fGrammarResolver->putGrammar(XMLUni::fgZeroLenString, fGrammar);
-
-        if (fValidator)
-            fValidator->setGrammar(fGrammar);
-
+        fValidator->setGrammar(fGrammar);
     }
     else {
         // reusing grammar, thus the fGrammar must pre-exist already
-        // if validating, make sure the validator handles this reuse grammar type
-        if (fValidate) {
-            if (fValidator) {
-                if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
-                    if (fValidatorFromUser)
-                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
-                    else
-                        setValidator(new SchemaValidator());
-                }
-                else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
-                    if (fValidatorFromUser)
-                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
-                    else
-                        setValidator(new DTDValidator());
-                }
-            }
+        // make sure the validator handles this reuse grammar type
+        if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
+            if (fValidatorFromUser)
+                ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
             else {
-                if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
-                    setValidator(new SchemaValidator());
-                else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType)
-                    setValidator(new DTDValidator());
+                fValidator = fSchemaValidator;
             }
-
-            if (!fValidator->getGrammar())
-                fValidator->setGrammar(fGrammar);
         }
+        else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
+            if (fValidatorFromUser)
+                ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+            else {
+                fValidator = fDTDValidator;
+            }
+        }
+
+        if (!fValidator->getGrammar())
+            fValidator->setGrammar(fGrammar);
     }
 
 
@@ -1181,22 +1177,15 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         fElemStack.setValidationFlag(fValidate);
     }
 
-    // set up the SchemaValidator if validating
-    if(fValidate) {
-        if (fValidator) {
-            if (!fValidator->handlesSchema())
-            {
-                // the fValidator is from user
-                if (fValidatorFromUser)
-                    ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
-                else {
-                    // the fValidator is created by the Scanner, replace it with a SchemaValidator
-                    setValidator(new SchemaValidator());
-                }
-            }
+    // we have seen a schema, so set up the fValidator as fSchemaValidator
+    if (!fValidator->handlesSchema())
+    {
+        if (fValidatorFromUser) {
+            // the fValidator is from user
+            ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
         }
         else {
-            setValidator(new SchemaValidator());
+            fValidator = fSchemaValidator;
         }
     }
 
@@ -1307,8 +1296,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         }
     }
     fGrammar = grammar;
-    if (fValidate)
-        fValidator->setGrammar(fGrammar);
+    fValidator->setGrammar(fGrammar);
 }
 
 // ---------------------------------------------------------------------------
@@ -2557,8 +2545,22 @@ bool XMLScanner::switchGrammar(int newGrammarNameSpaceIndex)
         return false;
     else {
         fGrammar = tempGrammar;
-        if (fValidator)
-            fValidator->setGrammar(fGrammar);
+        if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
+            if (fValidatorFromUser)
+                ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+            else {
+                fValidator = fSchemaValidator;
+            }
+        }
+        else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
+            if (fValidatorFromUser)
+                ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+            else {
+                fValidator = fDTDValidator;
+            }
+        }
+
+        fValidator->setGrammar(fGrammar);
         return true;
     }
 }
@@ -2574,8 +2576,22 @@ bool XMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
         return false;
     else {
         fGrammar = tempGrammar;
-        if (fValidator)
-            fValidator->setGrammar(fGrammar);
+        if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
+            if (fValidatorFromUser)
+                ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+            else {
+                fValidator = fSchemaValidator;
+            }
+        }
+        else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
+            if (fValidatorFromUser)
+                ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+            else {
+                fValidator = fDTDValidator;
+            }
+        }
+
+        fValidator->setGrammar(fGrammar);
         return true;
     }
 }

@@ -172,6 +172,8 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fStandalone(false)
     , fValidate(false)
     , fValidator(valToAdopt)
+    , fDTDValidator(0)
+    , fSchemaValidator(0)
     , fValidatorFromUser(false)
     , fValScheme(Val_Never)
     , fDoSchema(false)
@@ -190,7 +192,11 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
 
    if (fValidator) {
        fValidatorFromUser = true;
-       initValidator();
+       initValidator(fValidator);
+   }
+   else {
+       //use fDTDValidator as the default validator
+       fValidator = fDTDValidator;
    }
 }
 
@@ -219,6 +225,8 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fStandalone(false)
     , fValidate(false)
     , fValidator(valToAdopt)
+    , fDTDValidator(0)
+    , fSchemaValidator(0)
     , fValidatorFromUser(false)
     , fValScheme(Val_Never)
     , fDoSchema(false)
@@ -235,9 +243,13 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
 {
    commonInit();
 
-   if (fValidator){
+   if (valToAdopt){
        fValidatorFromUser = true;
-       initValidator();
+       initValidator(fValidator);
+   }
+   else {
+       //use fDTDValidator as the default validator
+       fValidator = fDTDValidator;
    }
 }
 
@@ -246,7 +258,12 @@ XMLScanner::~XMLScanner()
     delete fAttrList;
     delete fIDRefList;
     delete fRawAttrList;
-    delete fValidator;
+    if (fValidatorFromUser)
+        delete fValidator;
+
+    delete fDTDValidator;
+    delete fSchemaValidator;
+
     delete fEntityDeclPool;
 
     //fGrammarResolver will delete the fGrammar as well
@@ -860,25 +877,31 @@ void XMLScanner::commonInit()
     fGrammarResolver = new GrammarResolver();
 
     resetEntityDeclPool();
+
+    //  Create the Validator and init them
+    fDTDValidator = new DTDValidator();
+    initValidator(fDTDValidator);
+    fSchemaValidator = new SchemaValidator();
+    initValidator(fSchemaValidator);
 }
 
 
 
-void XMLScanner::initValidator() {
+void XMLScanner::initValidator(XMLValidator* theValidator) {
     //
     //  Tell the validator about the stuff it needs to know in order to
     //  do its work.
     //
-    fValidator->setScannerInfo(this, &fReaderMgr, &fBufMgr);
-    fValidator->setErrorReporter(fErrorReporter);
+    theValidator->setScannerInfo(this, &fReaderMgr, &fBufMgr);
+    theValidator->setErrorReporter(fErrorReporter);
 
     //  So lets ask the validator whether it requires namespaces or not. If it
     //  does, we have to override the namespace enablement flag.
-    if (fValidator->requiresNamespaces() && !fDoNamespaces)
+    if (theValidator->requiresNamespaces() && !fDoNamespaces)
         setDoNamespaces(true);
 
-    if (fValidator->handlesSchema())
-        ((SchemaValidator*) fValidator)->setGrammarResolver(fGrammarResolver);
+    if (theValidator->handlesSchema())
+        ((SchemaValidator*) theValidator)->setGrammarResolver(fGrammarResolver);
 }
 
 void XMLScanner::resetEntityDeclPool() {
@@ -1683,15 +1706,23 @@ void XMLScanner::scanEndTag(bool& gotData)
     if (gotData) {
         if (fDoNamespaces) {
             // Restore the grammar
-            const ElemStack::StackElem* topElem2 = fElemStack.topElement();
-            XMLBuffer bufURI;
-            getURIText(topElem2->fThisElement->getURI(), bufURI);
-            if (!switchGrammar(bufURI.getRawBuffer()) && fValidate)
-                fValidator->emitError
-                (
-                    XMLValid::GrammarNotFound
-                    , bufURI.getRawBuffer()
-                );
+            fGrammar = fElemStack.getCurrentGrammar();
+            if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
+                if (fValidatorFromUser)
+                    ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                else {
+                    fValidator = fSchemaValidator;
+                }
+            }
+            else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
+                if (fValidatorFromUser)
+                    ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+                else {
+                    fValidator = fDTDValidator;
+                }
+            }
+
+            fValidator->setGrammar(fGrammar);
         }
 
         // Restore the validation flag
@@ -1967,6 +1998,11 @@ void XMLScanner::scanProlog()
                 }
                  else if (fReaderMgr.skippedString(XMLUni::fgDocTypeString))
                 {
+                    if (!fReuseGrammar && fValidatorFromUser && !fValidator->handlesDTD())
+                    {
+                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+                    }
+
                     //
                     //  We have a doc type. So, create a DTDScanner and
                     //  store the Grammar in DTDGrammar.
@@ -2780,80 +2816,48 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     XMLElementDecl* elemDecl;
 
     if (uriId != fEmptyNamespaceId) {
-        XMLBuffer bufURI;
-        getURIText(uriId, bufURI);
-        if (!switchGrammar(bufURI.getRawBuffer()) && fValidate && !laxThisOne)
-        {
-            fValidator->emitError
-            (
-                XMLValid::GrammarNotFound
-                , bufURI.getRawBuffer()
-            );
-        }
-        elemDecl = fGrammar->getElemDecl
-                   (
-                      uriId
-                    , fNameBuf.getRawBuffer()
-                    , fQNameBuf.getRawBuffer()
-                    , currentScope
-                    );
-        if (!elemDecl) {
-            // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
-            elemDecl = fGrammar->findOrAddElemDecl
-            (
-                uriId
-                , fNameBuf.getRawBuffer()
-                , fPrefixBuf.getRawBuffer()
-                , fQNameBuf.getRawBuffer()
-                , Grammar::TOP_LEVEL_SCOPE
-                , wasAdded
-            );
-        }
-    }
-    else
-    {
-        //the element has no prefix,
-        //thus it is either a non-qualified element defined in current targetNS
-        //or an element that is defined in the globalNS
-        elemDecl = fGrammar->getElemDecl
-                   (
-                      uriId
-                    , fNameBuf.getRawBuffer()
-                    , fQNameBuf.getRawBuffer()
-                    , currentScope
-                    );
-
-        if (!elemDecl) {
-            // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
-            elemDecl = fGrammar->getElemDecl
-                       (
-                          uriId
-                        , fNameBuf.getRawBuffer()
-                        , fQNameBuf.getRawBuffer()
-                        , Grammar::TOP_LEVEL_SCOPE
-                        );
-        }
-
-        if (!elemDecl)
-        {
-            if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate && !laxThisOne)
+        if (fURIStringPool->getId(fGrammar->getTargetNamespace()) != uriId) {
+            // switch grammar first
+            XMLBuffer bufURI;
+            getURIText(uriId, bufURI);
+            if (!switchGrammar(bufURI.getRawBuffer()) && fValidate && !laxThisOne)
             {
                 fValidator->emitError
                 (
                     XMLValid::GrammarNotFound
-                    , XMLUni::fgZeroLenString
+                    , bufURI.getRawBuffer()
                 );
             }
+        }
+        elemDecl = fGrammar->getElemDecl
+                   (
+                      uriId
+                    , fNameBuf.getRawBuffer()
+                    , fQNameBuf.getRawBuffer()
+                    , currentScope
+                    );
 
-            elemDecl = fGrammar->getElemDecl
-                       (
-                          uriId
-                        , fNameBuf.getRawBuffer()
-                        , fQNameBuf.getRawBuffer()
-                        , currentScope
-                        );
+        if (!elemDecl) {
+            if (currentScope != Grammar::TOP_LEVEL_SCOPE) {
+                // Not found in specified uri
+                // try emptyNamesapce see if element should be un-qualified.
+                elemDecl = fGrammar->getElemDecl
+                           (
+                               fEmptyNamespaceId
+                               , fNameBuf.getRawBuffer()
+                               , fQNameBuf.getRawBuffer()
+                               , currentScope
+                           );
+            }
 
-            if (!elemDecl) {
+            if (elemDecl) {
+                fValidator->emitError
+                (
+                    XMLValid::ElementNotUnQualified
+                    , elemDecl->getFullName()
+                );
+            }
+            else {
                 // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
                 elemDecl = fGrammar->findOrAddElemDecl
                 (
@@ -2864,6 +2868,75 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                     , Grammar::TOP_LEVEL_SCOPE
                     , wasAdded
                 );
+            }
+        }
+    }
+    else
+    {
+        //the element has no prefix,
+        //thus it is either a non-qualified element defined in current targetNS
+        //or an element that is defined in the globalNS
+
+        //try unqualifed first
+        elemDecl = fGrammar->getElemDecl
+                   (
+                      uriId
+                    , fNameBuf.getRawBuffer()
+                    , fQNameBuf.getRawBuffer()
+                    , currentScope
+                    );
+
+        if (!elemDecl) {
+            // Not found in specified uri
+            // use target namespace URI id to see if element needs to be fully qualified.
+            elemDecl = fGrammar->getElemDecl
+                       (
+                           fURIStringPool->getId(fGrammar->getTargetNamespace())
+                           , fNameBuf.getRawBuffer()
+                           , fQNameBuf.getRawBuffer()
+                           , currentScope
+                       );
+
+            if (elemDecl) {
+                fValidator->emitError
+                (
+                    XMLValid::ElementNotQualified
+                    , elemDecl->getFullName()
+                );
+            }
+            else {
+                //still not found, now try globalNS
+                if (fURIStringPool->getId(fGrammar->getTargetNamespace()) != fEmptyNamespaceId) {
+                    if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate && !laxThisOne)
+                    {
+                        fValidator->emitError
+                        (
+                            XMLValid::GrammarNotFound
+                            , XMLUni::fgZeroLenString
+                        );
+                    }
+                }
+
+                elemDecl = fGrammar->getElemDecl
+                           (
+                              uriId
+                            , fNameBuf.getRawBuffer()
+                            , fQNameBuf.getRawBuffer()
+                            , currentScope
+                            );
+
+                if (!elemDecl) {
+                    // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
+                    elemDecl = fGrammar->findOrAddElemDecl
+                    (
+                        uriId
+                        , fNameBuf.getRawBuffer()
+                        , fPrefixBuf.getRawBuffer()
+                        , fQNameBuf.getRawBuffer()
+                        , Grammar::TOP_LEVEL_SCOPE
+                        , wasAdded
+                    );
+                }
             }
         }
     }
@@ -2926,6 +2999,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             currentScope = typeinfo->getScopeDefined();
         fElemStack.setCurrentScope(currentScope);
     }
+    fElemStack.setCurrentGrammar(fGrammar);
 
     //
     //  If this is the first element and we are validating, check the root
@@ -2997,16 +3071,24 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         else
         {
             // Restore the grammar
-            const ElemStack::StackElem* topElem = fElemStack.topElement();
-            XMLBuffer bufURI;
-            getURIText(topElem->fThisElement->getURI(), bufURI);
-            if (!switchGrammar(bufURI.getRawBuffer()) && fValidate)
-                fValidator->emitError
-                (
-                    XMLValid::GrammarNotFound
-                    , bufURI.getRawBuffer()
-                );
-         }
+            fGrammar = fElemStack.getCurrentGrammar();
+            if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
+                if (fValidatorFromUser)
+                    ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                else {
+                    fValidator = fSchemaValidator;
+                }
+            }
+            else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
+                if (fValidatorFromUser)
+                    ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
+                else {
+                    fValidator = fDTDValidator;
+                }
+            }
+
+            fValidator->setGrammar(fGrammar);
+        }
     }
 
     // If we have a document handler, then tell it about this start tag

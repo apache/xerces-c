@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/05/28 20:55:02  tng
+ * Schema: allocate a fDTDValidator, fSchemaValidator explicitly to avoid wrong cast
+ *
  * Revision 1.18  2001/05/11 15:17:28  tng
  * Schema: Nillable fixes.
  *
@@ -326,16 +329,6 @@ public :
     unsigned int getEmptyNamespaceId() const;
 
     /**
-      * When namespaces are enabled, any elements whose names have no prefix
-      * are mapped to a global namespace. This is the URL id for the URL
-      * to which those names are mapped. It has no official standard text,
-      * but the parser must use some id here.
-      *
-      * @return The URL pool id of the URL for the global namespace.
-      */
-    unsigned int getGlobalNamespaceId() const;
-
-    /**
       * When a prefix is found that has not been mapped, an error is issued.
       * However, if the parser has been instructed not to stop on the first
       * fatal error, it needs to be able to continue. To do so, it will map
@@ -488,7 +481,7 @@ private :
     //  Private helper methods
     // -----------------------------------------------------------------------
     void commonInit();
-    void initValidator();
+    void initValidator(XMLValidator* theValidator);
     void resetEntityDeclPool();
     void resetURIStringPool();
 
@@ -691,6 +684,14 @@ private :
     //  fValidator
     //      The installed validator. We look at them via the abstract
     //      validator interface, and don't know what it actual is.
+    //      Either point to user's installed validator, or fDTDValidator
+    //      or fSchemaValidator.
+    //
+    //  fDTDValidator
+    //      The DTD validator instance.
+    //
+    //  fSchemaValidator
+    //      The Schema validator instance.
     //
     //  fValidatorFromUser
     //      This flag indicates whether the validator was installed from
@@ -778,6 +779,8 @@ private :
     bool                        fStandalone;
     bool                        fValidate;
     XMLValidator*               fValidator;
+    DTDValidator*               fDTDValidator;
+    SchemaValidator*            fSchemaValidator;
     bool                        fValidatorFromUser;
     ValSchemes                  fValScheme;
     bool                        fDoSchema;
@@ -991,6 +994,8 @@ inline void XMLScanner::setDoNamespaces(const bool doNamespaces)
 inline void XMLScanner::setErrorReporter(XMLErrorReporter* const errHandler)
 {
     fErrorReporter = errHandler;
+    fDTDValidator->setErrorReporter(fErrorReporter);
+    fSchemaValidator->setErrorReporter(fErrorReporter);
 }
 
 inline void XMLScanner::setErrorHandler(ErrorHandler* const handler)
@@ -1033,9 +1038,11 @@ inline void XMLScanner::setValidationScheme(const ValSchemes newScheme)
 
 inline void XMLScanner::setValidator(XMLValidator* const valToAdopt)
 {
-    delete fValidator;
+    if (fValidatorFromUser)
+        delete fValidator;
     fValidator = valToAdopt;
-    initValidator();
+    fValidatorFromUser = true;
+    initValidator(fValidator);
 }
 
 inline void XMLScanner::setDoSchema(const bool doSchema)
