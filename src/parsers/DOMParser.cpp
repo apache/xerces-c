@@ -60,6 +60,9 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.16  2000/04/18 18:44:51  roddey
+* Change "const static" to "static const" Bug #120
+*
 * Revision 1.15  2000/04/12 22:58:29  roddey
 * Added support for 'auto validate' mode.
 *
@@ -607,7 +610,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
         elem = fDocument.createElementNS(namespaceURI, elemDecl.getFullName());
         ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
         for (unsigned int index = 0; index < attrCount; ++index) {
-            const static XMLCh XMLNS[] = {
+            static const XMLCh XMLNS[] = {
             chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull
             };
             const XMLAttr* oneAttrib = attrList.elementAt(index);
