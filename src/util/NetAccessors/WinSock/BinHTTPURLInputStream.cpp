@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/10/24 20:17:54  tng
+ * [Bug 3813] BinHTTPURLInputStream has weak HTTP request capabilities.  By Kevin Philips.
+ *
  * Revision 1.8  2001/10/24 20:03:03  tng
  * [Bug 2305] Include <stdlib.h> to BinHTTPURLInputStream.cpp.  By Peter A. Volchek.
  *
@@ -349,7 +352,8 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
 
     if (queryAsCharStar != 0)
     {
-        fBuffer[strlen(fBuffer)] = chQuestion;
+        // Tack on a ? before the fragment
+        strcat(fBuffer,"?");
         strcat(fBuffer, queryAsCharStar);
     }
 
