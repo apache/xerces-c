@@ -151,7 +151,7 @@ void DOMParser::initialize()
     fScanner->setGrammarResolver(fGrammarResolver);
     fScanner->setURIStringPool(fURIStringPool);
 
-    fNodeStack = new (fMemoryManager) ValueStackOf<DOM_Node>(64, fMemoryManager);
+    fNodeStack = new (fMemoryManager) ValueStackOf<DOM_Node>(64, fMemoryManager, true);
     this->reset();
 }
 
