@@ -72,6 +72,8 @@ $platform = <PLATFORM>;
 chomp($platform);
 close (PLATFORM);
 
+# 
+
 #set platform variable if on windows 64bit
 my $return_code = system( "ls" );
 if ($return_code != 0)
@@ -802,20 +804,11 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 #  UNIX builds happen here ...
 #
 if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeOS/i) ||
-     ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) || ($platform =~ m/ptx/i) ) {
+     ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) || ($platform =~ m/ptx/i) ||
+	 ($platform =~ m/Darwin/i) ) {
 
     # Echo the current PATH to see what compiler it picks up
     psystem ("echo PATH=$ENV{'PATH'}");
-
-    # Set defaults for platform-independent options.
-    if ($opt_m eq "") {$opt_m = "inmem";   # In memory  message loader.
-    }
-    if ($opt_n eq "") {$opt_n = "socket";  # Socket based net accessor.
-    }
-    if ($opt_t eq "") {$opt_t = "native";  # Native transcoding service.
-    }
-    if ($opt_b eq "") {$opt_b = "32";      # bitstobuild.
-    }
 
     # Set defaults for platform-specific options.
     if ($platform =~ m/AIX/i) {
@@ -832,6 +825,20 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         	$ENV{'LIBPATH'}="$ICUROOT/lib:$ENV{'LIBPATH'}";
         }
         psystem ("echo LIBPATH=$ENV{'LIBPATH'}");
+    }
+	#	Mac OS X
+    if ($platform =~ m/Darwin/i) {
+        $platform = "macosx";
+		
+		# Set option defaults
+        if ($opt_c eq "")	{$opt_c = 'cc'; }
+        if ($opt_x eq "")	{$opt_x = 'g++'; }
+        if ($opt_n eq "") 	{$opt_n = 'native'; }		# native net accessor
+        if ($opt_t eq "")	{$opt_t = 'native'; }		# native transcoder
+		
+		# Code for mac os specific tools
+		if ($TAR eq "")		{ $TAR = 'gnutar'; }
+		if ($MAKE eq "")	{ $MAKE = 'make'; }
     }
     if ($platform eq 'HP-UX') {
         # Find out the operating system version from 'uname -r'
@@ -929,6 +936,16 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         }
         $XMLINSTALL = $ENV{'XMLINSTALL'};
     }
+
+    # Set defaults for platform-independent options.
+    if ($opt_m eq "")	{$opt_m = "inmem"; }   # In memory  message loader.
+    if ($opt_n eq "")	{$opt_n = "socket"; }  # Socket based net accessor.
+    if ($opt_t eq "")	{$opt_t = "native"; }  # Native transcoding service.
+    if ($opt_b eq "")	{$opt_b = "32"; }      # bitstobuild.
+	
+	# Set defaults for platform tools
+	if ($TAR eq "")		{ $TAR = 'tar'; }
+	if ($MAKE eq "")	{ $MAKE = 'gmake'; }
 
     # Check if the target directories already exist or not
     if (-e $targetdir.".tar") {
@@ -1029,7 +1046,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         $ENV{'ICU_DATA'} = "$ICUROOT/data";
         if ($platform =~ m/ptx/i) {
             psystem ("chmod +x runConfigureICU");
-            psystem ("runConfigureICU PTX");
+            psystem ("./runConfigureICU PTX");
         } else {
         # set the 32 bit or 64 bit
             if ($opt_b eq "32") {
@@ -1039,17 +1056,17 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
                 psystem ("$icuCompileFlags configure --prefix=$ICUROOT");
             }
         }
-        psystem ("gmake clean"); # Clean up the build, may want to comment this line out!
-        psystem ("rm -f $ICUROOT/data/*.o"); # gmake clean is not enough
+        psystem ("$MAKE clean"); # Clean up the build, may want to comment this line out!
+        psystem ("rm -f $ICUROOT/data/*.o"); # make clean is not enough
         psystem ("rm -f $ICUROOT/data/*.c"); # same for .c files
-        psystem ("gmake");       # This will take a long time!
-        psystem ("gmake install"); # Make this separate since this breaks on Solaris
+        psystem ("$MAKE");       # This will take a long time!
+        psystem ("$MAKE install"); # Make this separate since this breaks on Solaris
 
         # Please check if the following needs any change in Version 1.5
         # For the antiquated CC compiler under HPUX, we need to invoke
-        # gmake one extra time to generate the .cnv files.
+        # make one extra time to generate the .cnv files.
         # if ( ($platform =~ m/hp-/i) && ($opt_x eq 'CC') ) {
-        #   system ("gmake");
+        #   system ("$MAKE");
         # }
     }
 
@@ -1066,13 +1083,13 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     psystem ("chmod +x run* con* install-sh");
 
     if (length($opt_r) > 0) {
-        psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r -b$opt_b");
+        psystem ("./runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r -b$opt_b");
     } else {
-        psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -b$opt_b");
+        psystem ("./runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -b$opt_b");
     }
 
-    psystem ("gmake clean");     # May want to comment this line out to speed up
-    psystem ("gmake");
+    psystem ("$MAKE clean");     # May want to comment this line out to speed up
+    psystem ("$MAKE");
 
     # Move ICU libs into lib dir, so samples will link.  This matches the structure of
     #   the eventual binary packaging, even though we are doing it in the build directory.
@@ -1126,17 +1143,17 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     print("\n\nBuild the samples ...\n");
     pchdir ("$XERCESCROOT/samples");
     psystem ("chmod +x run* con* install-sh");
-    psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -b$opt_b");
-    psystem ("gmake clean");     # May want to comment this line out to speed up
-    psystem ("gmake");
+    psystem ("./runConfigure -p$platform -c$opt_c -x$opt_x -b$opt_b");
+    psystem ("$MAKE clean");     # May want to comment this line out to speed up
+    psystem ("$MAKE");
 
     # Next build the tests
     print("\n\nBuild the tests ...\n");
     pchdir ("$XERCESCROOT/tests");
     psystem ("chmod +x run* con* install-sh");
-    psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -b$opt_b");
-    psystem ("gmake clean");     # May want to comment this line out to speed up
-    psystem ("gmake");
+    psystem ("./runConfigure -p$platform -c$opt_c -x$opt_x -b$opt_b");
+    psystem ("$MAKE clean");     # May want to comment this line out to speed up
+    psystem ("$MAKE");
 
     pchdir ($targetdir);
 
@@ -1219,6 +1236,13 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         psystem("cp -f $XERCESCROOT/lib/libxerces-c22.0.so .");
         psystem("ln -s libxerces-c22.0.so libxerces-c22.so  ");
         psystem("ln -s libxerces-c22.so   libxerces-c.so    ");
+    }
+
+	# Mac OS X
+    if ((-e "$XERCESCROOT/lib/libxerces-c.dylib.22.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.dylib.22.0 .");
+        psystem("ln -s libxerces-c.dylib.22.0 libxerces-c.dylib.22 ");
+        psystem("ln -s libxerces-c.dylib.22   libxerces-c.dylib    ");
     }
 
     # Populate the Message Catalog Files
@@ -1352,7 +1376,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     $zipname = $targetdir . ".tar";
     $platformzipname = $zipname;
 
-    psystem ("tar -cvf $platformzipname $zipfiles");
+    psystem ("$TAR -cvf $platformzipname $zipfiles");
 
     # Finally compress the files
     print ("Compressing $platformzipname ...\n");
