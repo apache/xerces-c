@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/10/31 22:16:58  peiyongz
+ * to serialize/deserialize data member
+ *
  * Revision 1.13  2003/10/02 19:21:06  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -631,6 +634,18 @@ void DecimalDatatypeValidator::serialize(XSerializeEngine& serEng)
     }
 
     AbstractNumericValidator::serialize(serEng);
+
+    //don't serialize XMLBigDecimal*       
+    if (serEng.isStoring())
+    {
+        serEng<<fTotalDigits;
+        serEng<<fFractionDigits;
+    }
+    else
+    {
+        serEng>>fTotalDigits;
+        serEng>>fFractionDigits;
+    }
 
 }
 
