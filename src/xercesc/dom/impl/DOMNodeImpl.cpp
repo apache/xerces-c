@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -365,27 +365,10 @@ bool DOMNodeImpl::hasAttributes() const {
 
 
 
-static const XMLCh s_xml[] = {chLatin_x, chLatin_m, chLatin_l, chNull};
-static const XMLCh s_xmlURI[] =    // "http://www.w3.org/XML/1998/namespace"
-    { chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash, chForwardSlash,
-      chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w, chDigit_3, chPeriod,
-      chLatin_o, chLatin_r, chLatin_g, chForwardSlash, chLatin_X, chLatin_M, chLatin_L, chForwardSlash,
-      chDigit_1, chDigit_9, chDigit_9, chDigit_8, chForwardSlash,
-      chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e,
-      chNull};
-static const XMLCh s_xmlns[] = {chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
-static const XMLCh s_xmlnsURI[] = // "http://www.w3.org/2000/xmlns/"
-    {  chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash, chForwardSlash,
-       chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w, chDigit_3, chPeriod,
-       chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-       chDigit_2, chDigit_0, chDigit_0, chDigit_0, chForwardSlash,
-       chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chForwardSlash, chNull};
-
-
-const XMLCh *DOMNodeImpl::getXmlString()      {return s_xml;};
-const XMLCh *DOMNodeImpl::getXmlURIString()   {return s_xmlURI;};
-const XMLCh *DOMNodeImpl::getXmlnsString()    {return s_xmlns;};
-const XMLCh *DOMNodeImpl::getXmlnsURIString() {return s_xmlnsURI;};
+const XMLCh *DOMNodeImpl::getXmlString()      {return XMLUni::fgXMLString;};
+const XMLCh *DOMNodeImpl::getXmlURIString()   {return XMLUni::fgXMLURIName;};
+const XMLCh *DOMNodeImpl::getXmlnsString()    {return XMLUni::fgXMLNSString;};
+const XMLCh *DOMNodeImpl::getXmlnsURIString() {return XMLUni::fgXMLNSURIName;};
 
 //Return a URI mapped from the given prefix and namespaceURI as below
 //    prefix   namespaceURI    output
@@ -399,34 +382,16 @@ const XMLCh *DOMNodeImpl::getXmlnsURIString() {return s_xmlnsURI;};
 const XMLCh* DOMNodeImpl::mapPrefix(const XMLCh *prefix,
                                      const XMLCh *namespaceURI, short nType)
 {
-
-    static const XMLCh s_xml[] = {chLatin_x, chLatin_m, chLatin_l, chNull};
-    static const XMLCh s_xmlURI[] =    // "http://www.w3.org/XML/1998/namespace"
-    { chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash, chForwardSlash,
-      chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w, chDigit_3, chPeriod,
-      chLatin_o, chLatin_r, chLatin_g, chForwardSlash, chLatin_X, chLatin_M, chLatin_L, chForwardSlash,
-      chDigit_1, chDigit_9, chDigit_9, chDigit_8, chForwardSlash,
-      chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e,
-      chNull};
-    static const XMLCh s_xmlns[] = {chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
-    static const XMLCh s_xmlnsURI[] = // "http://www.w3.org/2000/xmlns/"
-    {  chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash, chForwardSlash,
-       chLatin_w, chLatin_w, chLatin_w, chPeriod, chLatin_w, chDigit_3, chPeriod,
-       chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-       chDigit_2, chDigit_0, chDigit_0, chDigit_0, chForwardSlash,
-       chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chForwardSlash, chNull};
-
-
     if (prefix == 0)
         return namespaceURI;
 
-    if (XMLString::equals(prefix, s_xml))  {
-        if (XMLString::equals(namespaceURI, s_xmlURI))
-            return s_xmlURI;
+    if (XMLString::equals(prefix, XMLUni::fgXMLString))  {
+        if (XMLString::equals(namespaceURI, XMLUni::fgXMLURIName))
+            return XMLUni::fgXMLURIName;
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
-    } else if (nType == DOMNode::ATTRIBUTE_NODE && XMLString::equals(prefix, s_xmlns)) {
-        if (XMLString::equals(namespaceURI, s_xmlnsURI))
-            return s_xmlnsURI;
+    } else if (nType == DOMNode::ATTRIBUTE_NODE && XMLString::equals(prefix, XMLUni::fgXMLNSString)) {
+        if (XMLString::equals(namespaceURI, XMLUni::fgXMLNSURIName))
+            return XMLUni::fgXMLNSURIName;
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
     } else if (namespaceURI == 0 || *namespaceURI == 0) {
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
@@ -594,10 +559,10 @@ const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* const namespaceURI,
 
                 ns = attr->getNamespaceURI();
 
-                if (ns != 0 && XMLString::equals(ns, s_xmlnsURI)) {
+                if (ns != 0 && XMLString::equals(ns, XMLUni::fgXMLNSURIName)) {
                     // DOM Level 2 nodes
-                    if ((useDefault && XMLString::equals(attr->getNodeName(), s_xmlns)) ||
-                        (attrPrefix != 0 && XMLString::equals(attrPrefix, s_xmlns)) &&
+                    if ((useDefault && XMLString::equals(attr->getNodeName(), XMLUni::fgXMLNSString)) ||
+                        (attrPrefix != 0 && XMLString::equals(attrPrefix, XMLUni::fgXMLNSString)) &&
                         XMLString::equals(value, namespaceURI)) {
                         const XMLCh* localname= attr->getLocalName();
                         const XMLCh* foundNamespace = el->lookupNamespaceURI(localname);
@@ -644,14 +609,14 @@ const XMLCh* DOMNodeImpl::lookupNamespaceURI(const XMLCh* specifiedPrefix) const
                     const XMLCh *value = attr->getNodeValue();
                     ns = attr->getNamespaceURI();
 
-                    if (ns != 0 && XMLString::equals(ns, s_xmlnsURI)) {
+                    if (ns != 0 && XMLString::equals(ns, XMLUni::fgXMLNSURIName)) {
                         // at this point we are dealing with DOM Level 2 nodes only
                         if (specifiedPrefix == 0 &&
-                            XMLString::equals(attr->getNodeName(), s_xmlns)) {
+                            XMLString::equals(attr->getNodeName(), XMLUni::fgXMLNSString)) {
                             // default namespace
                             return value;
                         } else if (attrPrefix != 0 &&
-                                   XMLString::equals(attrPrefix, s_xmlns) &&
+                                   XMLString::equals(attrPrefix, XMLUni::fgXMLNSString) &&
                                    XMLString::equals(attr->getLocalName(), specifiedPrefix)) {
                             // non default namespace
                             return value;
@@ -1083,7 +1048,7 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
 
         if (thisNode->hasAttributes()) {
             DOMElement *elem = (DOMElement *)thisNode;
-            DOMNode *attr = elem->getAttributeNodeNS(s_xmlnsURI, s_xmlns);
+            DOMNode *attr = elem->getAttributeNodeNS(XMLUni::fgXMLNSURIName, XMLUni::fgXMLNSString);
             if (attr != 0) {
                 const XMLCh *value = attr->getNodeValue();
                 return XMLString::equals(namespaceURI, value);

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,9 +84,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 //                     (Static constructors can not be safely used because
 //                      of order of initialization dependencies.)
 // ------------------------------------------------------------
-static const XMLCh  gXML[] =      // Points to "XML"
-        {chLatin_X, chLatin_M, chLatin_L, chNull};
-
 static const XMLCh  g1_0[] =     // Points to "1.0"
         {chDigit_1, chPeriod, chDigit_0, chNull};
 static const XMLCh  g2_0[] =      // Points to "2.0"
@@ -99,7 +96,7 @@ static const XMLCh  gTrav[] =     // Points to "Traversal"
 static const XMLCh  gCore[] =     // Points to "Core"
         {chLatin_C, chLatin_o, chLatin_r, chLatin_e, chNull};
 static const XMLCh  gRange[] =     // Points to "Range"
-        {chLatin_R, chLatin_a, chLatin_n, chLatin_g, chLatin_e, 0};
+        {chLatin_R, chLatin_a, chLatin_n, chLatin_g, chLatin_e, chNull};
 static const XMLCh  gLS[] =     // Points to "LS"
         {chLatin_L, chLatin_S, chNull};
 
@@ -212,7 +209,7 @@ bool  DOMImplementationImpl::hasFeature(const  XMLCh * feature,  const  XMLCh * 
     bool version3_0 = XMLString::equals(version, g3_0);
 
     // Currently, we support only XML Level 1 version 1.0
-    if (XMLString::compareIString(feature, gXML) == 0
+    if (XMLString::compareIString(feature, XMLUni::fgXMLString) == 0
         && (anyVersion || version1_0 || version2_0))
         return true;
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002,2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002,2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -827,9 +827,6 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 {
     DOMElement     *elem;
     DOMElementImpl *elemImpl;
-    static const XMLCh XMLNS[] = {
-    chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull
-    };
 
     static const XMLCh XSI[] = {
     chLatin_x, chLatin_s, chLatin_i, chNull
@@ -873,7 +870,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
             unsigned int attrURIId = oneAttrib -> getURIId();
             namespaceURI = 0;
             bool foundXMLNS = false;
-            if (XMLString::equals(oneAttrib -> getName(), XMLNS)) {   //for xmlns=...
+            if (XMLString::equals(oneAttrib -> getName(), XMLUni::fgXMLNSString)) {   //for xmlns=...
                 attrURIId = fScanner->getXMLNSNamespaceId();
                 foundXMLNS = true;
             }
@@ -967,7 +964,7 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                     unsigned int uriId = fScanner->resolveQName(qualifiedName, prefixBuf, ElemStack::Mode_Attribute, colonPos);
 
                     const XMLCh* namespaceURI = 0;
-                    if (XMLString::equals(qualifiedName, XMLNS))    //for xmlns=...
+                    if (XMLString::equals(qualifiedName, XMLUni::fgXMLNSString))    //for xmlns=...
                         uriId = fScanner->getXMLNSNamespaceId();
                     if (uriId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
                         namespaceURI = fScanner->getURIText(uriId);

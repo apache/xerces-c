@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -168,16 +168,11 @@ short DOMElementImpl::getNodeType() const {
 
 const XMLCh * DOMElementImpl::getAttribute(const XMLCh *nam) const
 {
-    static const XMLCh emptyString[]  = {0};
-    DOMNode * attr=0;
+    DOMNode * attr = fAttributes->getNamedItem(nam);
+    if (attr)
+        return attr->getNodeValue();
 
-    attr=fAttributes->getNamedItem(nam);
-
-    const XMLCh *retString = emptyString;
-    if (attr != 0)
-        retString = attr->getNodeValue();
-
-    return retString;
+    return XMLUni::fgZeroLenString;
 };
 
 
