@@ -80,6 +80,7 @@ MODULE = internal
 
 INTERNAL_CPP_PUBHEADERS = \
 	BinFileOutputStream.hpp \
+	BinMemOutputStream.hpp \
 	CharTypeTables.hpp \
 	DGXMLScanner.hpp \
 	ElemStack.hpp \
@@ -114,6 +115,7 @@ INTERNAL_C_FILES =
 
 INTERNAL_CPP_OBJECTS = \
 	BinFileOutputStream.$(TO) \
+	BinMemOutputStream.$(TO) \
 	DGXMLScanner.$(TO) \
 	ElemStack.$(TO) \
 	IGXMLScanner.$(TO) \
