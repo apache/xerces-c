@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/01/13 18:29:41  knoaman
+ * Return proper scanner name.
+ *
  * Revision 1.1  2002/12/09 15:45:13  knoaman
  * Initial check-in.
  *
@@ -237,7 +240,7 @@ private :
 
 inline const XMLCh* DGXMLScanner::getName() const
 {
-    return XMLUni::fgIGScanner;
+    return XMLUni::fgDGScanner;
 }
 
 
