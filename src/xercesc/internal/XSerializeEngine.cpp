@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.22  2004/11/08 03:56:47  peiyongz
+ * setting/getting Storer level
+ *
  * Revision 1.21  2004/10/27 20:38:52  peiyongz
  * Optimized alignment for various data types
  *
@@ -161,6 +164,7 @@ XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
                                  , XMLGrammarPool* const   gramPool
                                  , unsigned long           bufSize)
 :fStoreLoad(mode_Load)
+,fStorerLevel(0)
 ,fGrammarPool(gramPool)
 ,fInputStream(inStream)
 ,fOutputStream(0)
@@ -185,6 +189,7 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
                                  , XMLGrammarPool* const   gramPool
                                  , unsigned long           bufSize)
 :fStoreLoad(mode_Store)
+,fStorerLevel(0)
 ,fGrammarPool(gramPool)
 ,fInputStream(0)
 ,fOutputStream(outStream)
@@ -212,6 +217,7 @@ XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
                                  , MemoryManager* const    manager
                                  , unsigned long           bufSize)
 :fStoreLoad(mode_Load)
+,fStorerLevel(0)
 ,fGrammarPool(0)
 ,fInputStream(inStream)
 ,fOutputStream(0)
@@ -236,6 +242,7 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
                                  , MemoryManager* const    manager
                                  , unsigned long           bufSize)
 :fStoreLoad(mode_Store)
+,fStorerLevel(0)
 ,fGrammarPool(0)
 ,fInputStream(0)
 ,fOutputStream(outStream)

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/11/08 03:56:47  peiyongz
+ * setting/getting Storer level
+ *
  * Revision 1.20  2004/10/27 20:38:52  peiyongz
  * Optimized alignment for various data types
  *
@@ -100,6 +103,7 @@ class XSerializedObjectId;
 class BinOutputStream;
 class BinInputStream;
 class XMLGrammarPool;
+class XMLGrammarPoolImpl;
 class XMLStringPool;
 
 class XMLUTIL_EXPORT XSerializeEngine
@@ -256,6 +260,20 @@ public:
       *
       ***/
     MemoryManager* getMemoryManager() const;
+
+    /***
+      *
+      *  Get the storer level (the level of the serialize engine
+      *  which created the binary stream that this serialize engine
+      *  is loading).
+      *
+      *  The level returned is meaningful only when
+      *  the engine isLoading.
+      *
+      *  Return: level
+      *
+      ***/
+    inline unsigned short getStorerLevel() const;
 
     /***
       *
@@ -699,6 +717,12 @@ private:
     //  fStoreLoad: 
     //               Indicator: storing(serialization) or loading(de-serialization)
     //
+    //  fStorerLevel:
+    //              The level of the serialize engine which created the binary 
+    //              stream that this serialize engine is loading
+    //
+    //              It is set by GrammarPool when loading
+    //
     //  fGrammarPool:
     //               Thw owning GrammarPool which instantiate this SerializeEngine 
     //               instance
@@ -735,7 +759,9 @@ private:
     //
     //  fMapCount:
     // -------------------------------------------------------------------------------
-    const short                            fStoreLoad;  
+    const short                            fStoreLoad;
+    short                                  fStorerLevel;
+
     XMLGrammarPool*  const                 fGrammarPool;
     BinInputStream*  const                 fInputStream;
     BinOutputStream* const                 fOutputStream;
@@ -775,6 +801,9 @@ private:
      *   object counter
      ***/
 	XSerializedObjectId_t                  fObjectCount;
+
+    //to allow grammar pool to set storer level when loading
+    friend class XMLGrammarPoolImpl;
 };
 
 inline bool XSerializeEngine::isStoring() const
@@ -866,6 +895,12 @@ inline
 const unsigned long XSerializeEngine::getBufCount() const
 {
     return fBufCount;
+}
+
+inline 
+unsigned short XSerializeEngine::getStorerLevel() const
+{
+    return fStorerLevel;
 }
 
 /***
