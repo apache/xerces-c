@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/07/19 17:46:42  tng
+ * Enable those derived dataype like nonPositiveinteger, negativeInteger ... etc.
+ *
  * Revision 1.16  2001/07/13 14:10:33  peiyongz
  * UnionDTV
  *
@@ -136,13 +139,13 @@
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Local const data
 // ---------------------------------------------------------------------------
-const XMLCh fgTokPattern[] = 
-{ 
+const XMLCh fgTokPattern[] =
+{
     chBackSlash, chLatin_c, chPlus, chNull
 };
 
 //"([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]+)(-[a-zA-Z]+)*"
-const XMLCh fgLangPattern[] = 
+const XMLCh fgLangPattern[] =
 {
     chOpenParen, chOpenSquare, chLatin_a, chDash, chLatin_z, chLatin_A, chDash,
     chLatin_Z, chCloseSquare, chOpenCurly, chDigit_2, chCloseCurly, chPipe,
@@ -169,7 +172,7 @@ const XMLCh fgNCNamePattern[] =
     chColon, chCloseSquare, chCloseSquare, chAsterisk, chNull
 };
 
-const XMLCh fgValueZero[] = 
+const XMLCh fgValueZero[] =
 {
     chDigit_0, chNull
 };
@@ -179,7 +182,7 @@ const XMLCh fgNegOne[] =
     chDash, chDigit_1, chNull
 };
 
-const XMLCh fgValueOne[] = 
+const XMLCh fgValueOne[] =
 {
     chDigit_1, chNull
 };
@@ -345,7 +348,7 @@ void DatatypeValidatorFactory::initializeDTDRegistry()
 
 
         // Create 'IDREFS' datatype validator
-	    createDatatypeValidator(XMLUni::fgIDRefsString, 
+	    createDatatypeValidator(XMLUni::fgIDRefsString,
                     getDatatypeValidator(XMLUni::fgIDRefString), 0, 0, true, 0, false);
 
         // Create 'ENTITIES' datatype validator
@@ -360,7 +363,7 @@ void DatatypeValidatorFactory::initializeDTDRegistry()
                     new KVStringPair(SchemaSymbols::fgELT_WHITESPACE, SchemaSymbols::fgWS_COLLAPSE));
 
         // Create 'NMTOKEN' datatype validator
-        createDatatypeValidator(XMLUni::fgNmTokenString, 
+        createDatatypeValidator(XMLUni::fgNmTokenString,
                     getDatatypeValidator(SchemaSymbols::fgDT_STRING),facets, 0, false, 0, false);
 
         // Create 'NMTOKENS' datatype validator
@@ -383,7 +386,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
     }
 
 
-        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BOOLEAN, 
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_BOOLEAN,
                        new BooleanDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DECIMAL,
                        new DecimalDatatypeValidator());
@@ -405,7 +408,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DURATION,
                        new DurationDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DAY,
-                       new DayDatatypeValidator()); 
+                       new DayDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_TIME,
                        new TimeDatatypeValidator());
         */
@@ -441,7 +444,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         facets->put((void*) SchemaSymbols::fgELT_PATTERN,
                     new KVStringPair(SchemaSymbols::fgELT_PATTERN, fgLangPattern));
 
-        createDatatypeValidator(SchemaSymbols::fgDT_LANGUAGE, 
+        createDatatypeValidator(SchemaSymbols::fgDT_LANGUAGE,
                       getDatatypeValidator(SchemaSymbols::fgDT_TOKEN),
                       facets, 0, false, 0, false);
 
@@ -475,14 +478,13 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                       getDatatypeValidator(SchemaSymbols::fgDT_DECIMAL),
                       facets, 0, false, 0, false);
 
-/*
         // Create 'nonPositiveInteger' datatype validator
         facets = new RefHashTableOf<KVStringPair>(2);
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
                     new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgValueZero));
 
-        createDatatypeValidator(SchemaSymbols::fgDT_NONPOSITIVEINTEGER, 
+        createDatatypeValidator(SchemaSymbols::fgDT_NONPOSITIVEINTEGER,
                       getDatatypeValidator(SchemaSymbols::fgDT_INTEGER),
                       facets, 0, false, 0, false);
 
@@ -492,7 +494,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
 			        new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE,fgNegOne));
 
-        createDatatypeValidator(SchemaSymbols::fgDT_NEGATIVEINTEGER, 
+        createDatatypeValidator(SchemaSymbols::fgDT_NEGATIVEINTEGER,
                       getDatatypeValidator(SchemaSymbols::fgDT_NONPOSITIVEINTEGER),
                       facets, 0, false, 0, false);
 
@@ -525,11 +527,11 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
                     new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgShortMaxInc));
-        facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE, 
+        facets->put((void*) SchemaSymbols::fgELT_MININCLUSIVE,
                     new KVStringPair(SchemaSymbols::fgELT_MININCLUSIVE, fgShortMinInc));
 
         createDatatypeValidator(SchemaSymbols::fgDT_SHORT,
-                      getDatatypeValidator(SchemaSymbols::fgDT_INT),                                
+                      getDatatypeValidator(SchemaSymbols::fgDT_INT),
                       facets, 0, false, 0 ,false);
 
         // Create 'byte' datatype validator
@@ -543,7 +545,6 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         createDatatypeValidator(SchemaSymbols::fgDT_BYTE,
                       getDatatypeValidator(SchemaSymbols::fgDT_SHORT),
                       facets, 0, false, 0, false);
-*/
 
         // Create 'nonNegativeInteger' datatype validator
         facets = new RefHashTableOf<KVStringPair>(2);
@@ -555,7 +556,6 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                       getDatatypeValidator(SchemaSymbols::fgDT_INTEGER),
                       facets, 0, false, 0, false);
 
-/*
         // Create 'unsignedLong' datatype validator
         facets = new RefHashTableOf<KVStringPair>(2);
 
@@ -582,7 +582,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         facets->put((void*) SchemaSymbols::fgELT_MAXINCLUSIVE,
                     new KVStringPair(SchemaSymbols::fgELT_MAXINCLUSIVE, fgUShortMaxInc));
 
-        createDatatypeValidator(SchemaSymbols::fgDT_USHORT, 
+        createDatatypeValidator(SchemaSymbols::fgDT_USHORT,
                       getDatatypeValidator(SchemaSymbols::fgDT_UINT),
                       facets, 0, false, 0, false);
 
@@ -618,7 +618,6 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         // Create 'gYear' datatype validator
 
         // Create 'gMonth' datatype validator
-*/
 
         fRegistryExpanded = 2;
 }
@@ -626,8 +625,8 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: factory methods
 // ---------------------------------------------------------------------------
-DatatypeValidator* 
-DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName, 
+DatatypeValidator*
+DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
 		                                          DatatypeValidator* const baseValidator,
                                                   RefHashTableOf<KVStringPair>* const facets,
                                                   RefVectorOf<XMLCh>* const enums,
@@ -662,7 +661,7 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
             if (value != 0) {
                 facets->removeKey(SchemaSymbols::fgELT_WHITESPACE);
             }
-        } 
+        }
 
         datatypeValidator = baseValidator->newInstance(baseValidator, facets, enums, finalSet);
     }
