@@ -364,6 +364,8 @@
 				02058DA2FF8AF8CD7F000001,
 				F5F38FB3039FA5DB01A80066,
 				F5F38FB4039FA5DB01A80066,
+				90EF59D804D99CF800DC5A2D,
+				90EF59D904D99CF800DC5A2D,
 				F58FFC7D02C4ED6101A80065,
 				02058DA3FF8AF8CD7F000001,
 				02058DA4FF8AF8CD7F000001,
@@ -708,7 +710,6 @@
 				02058DF7FF8AF8CD7F000001,
 				02058DF9FF8AF8CD7F000001,
 				02058DFAFF8AF8CD7F000001,
-				02058E11FF8AF8CD7F000001,
 				02058E12FF8AF8CD7F000001,
 				02058E13FF8AF8CD7F000001,
 				F5A6C93801B968C801000102,
@@ -1051,12 +1052,6 @@
 			);
 			isa = PBXGroup;
 			path = NetAccessors;
-			refType = 4;
-		};
-		02058E11FF8AF8CD7F000001 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = NoDefTranscoderException.hpp;
 			refType = 4;
 		};
 		02058E12FF8AF8CD7F000001 = {
@@ -2054,14 +2049,6 @@
 		};
 		02058F51FF8AF8CD7F000001 = {
 			fileRef = 02058DF9FF8AF8CD7F000001;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-				);
-			};
-		};
-		02058F5AFF8AF8CD7F000001 = {
-			fileRef = 02058E11FF8AF8CD7F000001;
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
@@ -3075,7 +3062,6 @@
 				02058F4FFF8AF8CD7F000001,
 				02058F50FF8AF8CD7F000001,
 				02058F51FF8AF8CD7F000001,
-				02058F5AFF8AF8CD7F000001,
 				02058F5BFF8AF8CD7F000001,
 				02058F5CFF8AF8CD7F000001,
 				02058F61FF8AF8CD7F000001,
@@ -3430,6 +3416,9 @@
 				9019E70A045C3CE10095DDBE,
 				90F9913D047B1E0100A80080,
 				90F99141047B1E7800A80080,
+				90EF59D304D99C0B00DC5A2D,
+				90EF59D704D99CC200DC5A2D,
+				90EF59DB04D99CF800DC5A2D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3745,6 +3734,9 @@
 				9019E709045C3CE10095DDBE,
 				90F9913C047B1E0100A80080,
 				90F99140047B1E7800A80080,
+				90EF59D204D99C0B00DC5A2D,
+				90EF59D604D99CC200DC5A2D,
+				90EF59DA04D99CF800DC5A2D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4153,6 +4145,8 @@
 				20965424008111847F000001,
 				20965425008111847F000001,
 				20965426008111847F000001,
+				90EF59D004D99C0B00DC5A2D,
+				90EF59D104D99C0B00DC5A2D,
 			);
 			isa = PBXGroup;
 			path = DTD;
@@ -4284,6 +4278,8 @@
 				F5CA376A02634A7E01A80064,
 				F58FFC1502C4EBE001A80065,
 				F58FFC1602C4EBE001A80065,
+				90EF59D404D99CC200DC5A2D,
+				90EF59D504D99CC200DC5A2D,
 			);
 			isa = PBXGroup;
 			path = schema;
@@ -4835,6 +4831,78 @@
 		};
 		90E0251B03E9FE2200136FE6 = {
 			fileRef = 90E0251A03E9FE2200136FE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90EF59D004D99C0B00DC5A2D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = XMLDTDDescriptionImpl.cpp;
+			refType = 4;
+		};
+		90EF59D104D99C0B00DC5A2D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = XMLDTDDescriptionImpl.hpp;
+			refType = 4;
+		};
+		90EF59D204D99C0B00DC5A2D = {
+			fileRef = 90EF59D004D99C0B00DC5A2D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90EF59D304D99C0B00DC5A2D = {
+			fileRef = 90EF59D104D99C0B00DC5A2D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90EF59D404D99CC200DC5A2D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = XMLSchemaDescriptionImpl.cpp;
+			refType = 4;
+		};
+		90EF59D504D99CC200DC5A2D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = XMLSchemaDescriptionImpl.hpp;
+			refType = 4;
+		};
+		90EF59D604D99CC200DC5A2D = {
+			fileRef = 90EF59D404D99CC200DC5A2D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90EF59D704D99CC200DC5A2D = {
+			fileRef = 90EF59D504D99CC200DC5A2D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90EF59D804D99CF800DC5A2D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = XMLGrammarPoolImpl.cpp;
+			refType = 4;
+		};
+		90EF59D904D99CF800DC5A2D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = XMLGrammarPoolImpl.hpp;
+			refType = 4;
+		};
+		90EF59DA04D99CF800DC5A2D = {
+			fileRef = 90EF59D804D99CF800DC5A2D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90EF59DB04D99CF800DC5A2D = {
+			fileRef = 90EF59D904D99CF800DC5A2D;
 			isa = PBXBuildFile;
 			settings = {
 			};
