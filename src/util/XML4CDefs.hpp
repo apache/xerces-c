@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/14 00:52:06  roddey
+ * Updated the version information for the next release, i.e. 1.1.0
+ *
  * Revision 1.5  1999/12/17 01:28:53  rahulj
  * Merged in changes submitted for UnixWare 7 port. Platform
  * specific files are still missing.
@@ -87,12 +90,12 @@
 //  These are updated for every build. They must be at the top because they
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
-#define XML4C_DLLVersionStr "1_0"
-static const char* const    gXML4CVersionStr = "1_0";
-static const char* const    gXML4CFullVersionStr = "1_0_1";
+#define XML4C_DLLVersionStr "1_1"
+static const char* const    gXML4CVersionStr = "1_1";
+static const char* const    gXML4CFullVersionStr = "1_1_0";
 static const unsigned int   gXML4CMajVersion = 1;
-static const unsigned int   gXML4CMinVersion = 0;
-static const unsigned int   gXML4CRevision   = 1;
+static const unsigned int   gXML4CMinVersion = 1;
+static const unsigned int   gXML4CRevision   = 0;
 
 
 // ---------------------------------------------------------------------------
