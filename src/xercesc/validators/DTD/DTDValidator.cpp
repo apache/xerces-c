@@ -236,6 +236,8 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
     if (type == XMLAttDef::CData)
         return;
 
+
+
     // An empty string cannot be valid for any of the other types
     if (!attrValue[0])
     {
@@ -335,6 +337,14 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
                 }
                 break;
             }
+
+            // Now this attribute can be of type
+            //     ID, IDREF, IDREFS, ENTITY, ENTITIES, NOTATION, NMTOKEN, NMTOKENS, ENUMERATION
+            //  All these must be valid XMLName
+            // If namespace is enabled, colon is not allowed in the first 6
+
+            if (getScanner()->getDoNamespaces() && *valPtr == chColon && firstNameChar)
+                getScanner()->emitError(XMLErrs::ColonNotLegalWithNS);
 
             if (!XMLReader::isNameChar(*valPtr))
             {
