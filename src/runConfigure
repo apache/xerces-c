@@ -423,6 +423,13 @@ export CXXFLAGS
 CFLAGS="$compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
 export CFLAGS
 
+# gcc crashes if optimisation is turned on in a Tru64 environment
+if [ $platform = "tru64" -a $CXX = "g++" ]; then
+    CXXFLAGS=`echo $CXXFLAGS | sed -e 's/-O[0-9]*//g'`
+    CFLAGS=`echo $CXXFLAGS | sed -e 's/-O[0-9]*//g'`
+    export CXXFLAGS CFLAGS
+fi
+
 LDFLAGS="$linkeroptions"
 export LDFLAGS
 

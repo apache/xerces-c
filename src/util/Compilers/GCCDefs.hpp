@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/02/08 14:15:33  tng
+ * enable COMPAQ Tru64 UNIX machines to build xerces-c with gcc (tested using COMPAQ gcc version2.95.2 19991024 (release) and Tru64 V5.0 1094).  Added by Martin Kalen.
+ *
  * Revision 1.11  2000/10/17 00:52:00  andyh
  * Change XMLCh back to unsigned short on all platforms.
  *
@@ -137,6 +140,7 @@ typedef unsigned int    XMLUInt32;
 // ---------------------------------------------------------------------------
 //  Provide some common string ops that are different/notavail on GCC
 // ---------------------------------------------------------------------------
+#if !defined(XML_TRU64) && !defined(XML_GCC)
 inline char toupper(const char toUpper)
 {
     if ((toUpper >= 'a') && (toUpper <= 'z'))
@@ -150,6 +154,7 @@ inline char tolower(const char toLower)
         return char(toLower + 0x20);
     return toLower;
 }
+#endif
 
 int stricmp(const char* const str1, const char* const  str2);
 int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/02/08 14:15:33  tng
+ * enable COMPAQ Tru64 UNIX machines to build xerces-c with gcc (tested using COMPAQ gcc version2.95.2 19991024 (release) and Tru64 V5.0 1094).  Added by Martin Kalen.
+ *
  * Revision 1.11  2001/01/25 19:17:06  tng
  * const should be used instead of static const.  Fixed by Khaled Noaman.
  *
@@ -296,7 +299,7 @@ const unsigned int   gXercesRevision   = 0;
 #include	<util/Compilers/OS400SetDefs.hpp>
 #endif
 
-#if defined(XML_TRU64)
+#if defined(XML_DECCXX)
 #include	<util/Compilers/DECCXXDefs.hpp>
 #endif
 

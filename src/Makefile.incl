@@ -358,15 +358,25 @@ endif
 
 #=============== TRU64 SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, TRU64)
-PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${XERCESCROOT}/.cxx_repository
-MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -ptr ${XERCESCROOT}/.cxx_repository
-MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
-ifeq (${TRANSCODER}, ICU)
+  SHLIBSUFFIX=.so
+  MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
+  ifeq (${CXX}, g++)
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
+    PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
+    ifeq (${TRANSCODER}, ICU)
+      ALLLIBS = ${LIBS} -licu-uc -licudata -lc -lrt
+    else
+      ALLLIBS = ${LIBS} -lc -lrt
+    endif
+  else
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -ptr ${XERCESCROOT}/.cxx_repository
+    PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${XERCESCROOT}/.cxx_repository
+    ifeq (${TRANSCODER}, ICU)
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -licudata -lc -lrt
-else
+    else
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc -lrt
-endif
-SHLIBSUFFIX=.so
+    endif
+  endif
 endif
 
 ###################### STANDARD TOOLS #############################
