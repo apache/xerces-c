@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:17  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:25  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:17  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:31  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -81,12 +84,12 @@ NodeVector::NodeVector()
 	init(10);
 };
 
-NodeVector::NodeVector(int size) {
+NodeVector::NodeVector(unsigned int size) {
 	init(size);
 };
 
 
-void NodeVector::init(int size) {
+void NodeVector::init(unsigned int size) {
 	assert(size > 0);
 	data = new NodeImpl *[size];
 	assert(data != 0);
@@ -109,12 +112,12 @@ void NodeVector::addElement(NodeImpl *elem) {
 
 void NodeVector::checkSpace() {
 	if (nextFreeSlot == allocatedSize) {
-        int grow= allocatedSize/2;
-        if (grow < 50) grow = 50;
-		int newAllocatedSize = allocatedSize + grow;
+                unsigned int grow = allocatedSize/2;
+                if (grow < 50) grow = 50;
+		unsigned int newAllocatedSize = allocatedSize + grow;
 		NodeImpl **newData = new NodeImpl *[newAllocatedSize];
 		assert(newData != 0);
-		for (int i=0; i<allocatedSize; i++) {
+		for (unsigned int i=0; i<allocatedSize; i++) {
 			newData[i] = data[i];
 		};
 		delete [] data;
@@ -124,7 +127,7 @@ void NodeVector::checkSpace() {
 };
 
 	
-NodeImpl *NodeVector::elementAt(int index) {
+NodeImpl *NodeVector::elementAt(unsigned int index) {
 	return data[index];
 };
 
@@ -135,8 +138,8 @@ NodeImpl *NodeVector::lastElement() {
 };
 
 
-void NodeVector::insertElementAt(NodeImpl *elem, int index) {
-	int i;
+void NodeVector::insertElementAt(NodeImpl *elem, unsigned int index) {
+	unsigned int i;
 
 	assert(index <= nextFreeSlot);
 	assert(index >= 0);
@@ -151,10 +154,10 @@ void NodeVector::insertElementAt(NodeImpl *elem, int index) {
 };
 
 
-void NodeVector::removeElementAt(int index) {
+void NodeVector::removeElementAt(unsigned int index) {
 	assert (index >= 0);
 	assert(index < nextFreeSlot);
-	for (int i=index; i<nextFreeSlot-1; ++i) {
+	for (unsigned int i=index; i<nextFreeSlot-1; ++i) {
 		data[i] = data[i+1];
 	}
 	--nextFreeSlot;
@@ -164,14 +167,14 @@ void NodeVector::reset() {
 	nextFreeSlot = 0;
 };
 
-void NodeVector::setElementAt(NodeImpl *elem, int index) {
+void NodeVector::setElementAt(NodeImpl *elem, unsigned int index) {
 	assert(index >= 0);
 	assert(index < nextFreeSlot);
 	data[index] = elem;
 };
 
 
-int	NodeVector::size() {
+unsigned int NodeVector::size() {
 	return nextFreeSlot;
 };
 		 

@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:01  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:28  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:01  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:20  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -67,24 +70,6 @@
 #include "DOM_NodeIterator.hpp"
 #include "NodeIteratorImpl.hpp"
 #include "RefCountedImpl.hpp"
-
-
-
-// Constants for whatToShow...
-
-const int DOM_NodeIterator::SHOW_ALL				= 0xFFFF;
-const int DOM_NodeIterator::SHOW_ELEMENT			= 0x00000001;
-const int DOM_NodeIterator::SHOW_ATTRIBUTE			= 0x00000002;
-const int DOM_NodeIterator::SHOW_TEXT				= 0x00000004;
-const int DOM_NodeIterator::SHOW_CDATA_SECTION			= 0x00000008;
-const int DOM_NodeIterator::SHOW_ENTITY_REFERENCE		= 0x00000010;
-const int DOM_NodeIterator::SHOW_ENTITY				= 0x00000020;
-const int DOM_NodeIterator::SHOW_PROCESSING_INSTRUCTION		= 0x00000040;
-const int DOM_NodeIterator::SHOW_COMMENT			= 0x00000080;
-const int DOM_NodeIterator::SHOW_DOCUMENT			= 0x00000100;
-const int DOM_NodeIterator::SHOW_DOCUMENT_TYPE			= 0x00000200;
-const int DOM_NodeIterator::SHOW_DOCUMENT_FRAGMENT		= 0x00000400;
-const int DOM_NodeIterator::SHOW_NOTATION			= 0x00000800;
 
 
 
@@ -170,14 +155,22 @@ void DOM_NodeIterator::detach ()
 
 
 
-int DOM_NodeIterator::getWhatToShow ()
+unsigned long DOM_NodeIterator::getWhatToShow ()
 {
 	  return fImpl->getWhatToShow();
 }
 
 
-DOM_NodeFilter     DOM_NodeIterator::getFilter() {
+DOM_NodeFilter*     DOM_NodeIterator::getFilter() {
     return fImpl->getFilter();
+}
+
+/** Get the expandEntity reference flag. */
+bool DOM_NodeIterator::getExpandEntityReferences()
+{
+    if (fImpl !=0)
+        return fImpl->getExpandEntityReferences();
+    return false;
 }
 
 

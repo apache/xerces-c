@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/04 01:49:26  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.4  2000/01/22 01:38:30  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -166,7 +169,7 @@ public:
     virtual NodeListImpl *getChildNodes();
     virtual NodeImpl * getFirstChild();
     virtual NodeImpl * getLastChild();
-    virtual int getLength();
+    virtual unsigned int getLength();
     virtual NodeImpl * getNextSibling();
     virtual DOMString getNodeName();
     virtual short getNodeType();
@@ -178,7 +181,7 @@ public:
     virtual bool        hasChildNodes();
     virtual NodeImpl    *insertBefore(NodeImpl *newChild, NodeImpl *refChild);
     static  bool        isKidOK(NodeImpl *parent, NodeImpl *child);
-    virtual NodeImpl    *item(unsigned long index);
+    virtual NodeImpl    *item(unsigned int index);
     virtual void        referenced();
     virtual NodeImpl    * removeChild(NodeImpl *oldChild);
     virtual NodeImpl    *replaceChild(NodeImpl *newChild, NodeImpl *oldChild);

@@ -56,6 +56,9 @@
 
 /**
 * $Log$
+* Revision 1.5  2000/02/04 01:49:27  aruna1
+* TreeWalker and NodeIterator changes
+*
 * Revision 1.4  2000/01/24 23:35:18  rahulj
 * Fixed the compiler warning generated under Solaris.
 * Matched the api signature in the base class NodeImpl.hpp.
@@ -222,9 +225,9 @@ NodeImpl *EntityReferenceImpl::getLastChild()
 *
 * @return org.w3c.dom.NodeList
 */
-int EntityReferenceImpl::getLength()
+unsigned int EntityReferenceImpl::getLength()
 {
-    int length = NodeImpl::getLength();
+    unsigned int length = NodeImpl::getLength();
     
 #if (0)                 // Till we add entity nodes to the doc root element.
     
@@ -280,7 +283,7 @@ bool EntityReferenceImpl::isEntityReference()
 *
 * @return org.w3c.dom.NodeList
 */
-NodeImpl *EntityReferenceImpl::item(unsigned long  index) {
+NodeImpl *EntityReferenceImpl::item(unsigned int index) {
     synchronize();
     return NodeImpl::item(index);
 }

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:29  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  2000/01/05 01:16:07  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -204,25 +207,14 @@ DOM_EntityReference    DOM_Document::createEntityReference(const DOMString &name
 };
 
 
-DOM_NodeIterator       DOM_Document::createNodeIterator(DOM_Node root, short whatToShow, DOM_NodeFilter filter) {
-        return DOM_NodeIterator(DocumentImpl::createNodeIterator(root, whatToShow, filter, 0L));
+DOM_NodeIterator       DOM_Document::createNodeIterator(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion) {
+        return DOM_NodeIterator(DocumentImpl::createNodeIterator(root, whatToShow, filter, entityReferenceExpansion));
 };
 
 
-DOM_TreeWalker DOM_Document::createTreeWalker(DOM_Node root, short whatToShow, DOM_NodeFilter filter) {
-	return DOM_TreeWalker(DocumentImpl::createTreeWalker(root, whatToShow, filter, 0L));
+DOM_TreeWalker DOM_Document::createTreeWalker(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion) {
+    return DOM_TreeWalker(DocumentImpl::createTreeWalker(root, whatToShow, filter, entityReferenceExpansion));
 };
-
-
-DOM_NodeIterator DOM_Document::createNodeIterator(DOM_Node root, short whatToShow, NodeFilterImpl* filterThatWillBeAdopted) {
-	return DOM_NodeIterator(DocumentImpl::createNodeIterator(root, whatToShow, 0, filterThatWillBeAdopted));
-};
-
-
-DOM_TreeWalker DOM_Document::createTreeWalker(DOM_Node root, short whatToShow, NodeFilterImpl* filterThatWillBeAdopted) {
-	return DOM_TreeWalker(DocumentImpl::createTreeWalker(root, whatToShow, 0, filterThatWillBeAdopted));
-};
-
 
 
 DOM_NodeList DOM_Document::getElementsByTagName(const DOMString &tagname) const  {

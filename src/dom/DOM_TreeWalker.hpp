@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:05  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:27  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:05  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:22  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -76,45 +79,32 @@ class TreeWalkerImpl;
 class CDOM_EXPORT DOM_TreeWalker {
 
     public:
-			// Constants for whatToShow
-			static const int             SHOW_ALL;
-			static const int             SHOW_ELEMENT;
-			static const int             SHOW_ATTRIBUTE;
-			static const int             SHOW_TEXT;
-			static const int             SHOW_CDATA_SECTION;
-			static const int             SHOW_ENTITY_REFERENCE;
-			static const int             SHOW_ENTITY;
-			static const int             SHOW_PROCESSING_INSTRUCTION;
-			static const int             SHOW_COMMENT;
-			static const int             SHOW_DOCUMENT;
-			static const int             SHOW_DOCUMENT_TYPE;
-			static const int             SHOW_DOCUMENT_FRAGMENT;
-			static const int             SHOW_NOTATION;
+			
 
-      DOM_TreeWalker ();
-      DOM_TreeWalker (TreeWalkerImpl* impl);
-      DOM_TreeWalker(const DOM_TreeWalker &other);
-      DOM_TreeWalker & operator = (const DOM_TreeWalker &other);
-      DOM_TreeWalker & operator = (const DOM_NullPtr *val);
-     ~DOM_TreeWalker();
-      bool operator == (const DOM_TreeWalker & other)const;
-      bool operator == (const DOM_NullPtr *other) const;
-      bool operator != (const DOM_TreeWalker & other) const;
-      bool operator != (const DOM_NullPtr * other) const;
+    DOM_TreeWalker ();
+    DOM_TreeWalker (TreeWalkerImpl* impl);
+    DOM_TreeWalker(const DOM_TreeWalker &other);
+    DOM_TreeWalker & operator = (const DOM_TreeWalker &other);
+    DOM_TreeWalker & operator = (const DOM_NullPtr *val);
+    ~DOM_TreeWalker();
+    bool operator == (const DOM_TreeWalker & other)const;
+    bool operator == (const DOM_NullPtr *other) const;
+    bool operator != (const DOM_TreeWalker & other) const;
+    bool operator != (const DOM_NullPtr * other) const;
 
-			virtual int								getWhatToShow();
-			virtual DOM_NodeFilter					getFilter();
-			virtual DOM_Node						getCurrentNode();
-			virtual void							setCurrentNode(DOM_Node currentNode);
-			virtual DOM_Node						parentNode();
-			virtual DOM_Node						firstChild();
-			virtual DOM_Node						lastChild();
-			virtual DOM_Node						previousSibling();
-			virtual DOM_Node						nextSibling();
-			virtual DOM_Node						previousNode();
-			virtual DOM_Node						nextNode();
+    unsigned long   				getWhatToShow();
+    DOM_NodeFilter*					getFilter();
+    DOM_Node						getCurrentNode();
+    void							setCurrentNode(DOM_Node currentNode);
+    DOM_Node						parentNode();
+    DOM_Node						firstChild();
+    DOM_Node						lastChild();
+    DOM_Node						previousSibling();
+    DOM_Node						nextSibling();
+    DOM_Node						previousNode();
+    DOM_Node						nextNode();
 
-			virtual void							detach();
+    void							detach();
 
     private:
       TreeWalkerImpl*                 fImpl;

@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:27  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  2000/01/24 23:35:18  rahulj
  * Fixed the compiler warning generated under Solaris.
  * Matched the api signature in the base class NodeImpl.hpp.
@@ -103,10 +106,10 @@ public:
     virtual NodeListImpl *getChildNodes();
     virtual NodeImpl *getFirstChild();
     virtual NodeImpl *getLastChild();
-    virtual int getLength();
+    virtual unsigned int getLength();
     virtual bool hasChildNodes();
     virtual bool isEntityReference();
-    virtual NodeImpl *item(unsigned long index);
+    virtual NodeImpl *item(unsigned int index);
     virtual void setNodeValue(const DOMString &);
     virtual void setReadOnly(bool readOnly,bool deep);
     virtual void synchronize();

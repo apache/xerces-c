@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/04 01:49:25  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.2  1999/12/21 07:47:07  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -95,7 +98,7 @@ public:
     virtual ~TextImpl();
     virtual NodeImpl *cloneNode(bool deep);
     virtual bool isTextImpl();
-    virtual TextImpl *splitText(int offset);
+    virtual TextImpl *splitText(unsigned int offset);
 };
 
 #endif

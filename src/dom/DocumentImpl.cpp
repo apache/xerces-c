@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/04 01:49:30  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.6  2000/01/22 01:38:30  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -302,14 +305,14 @@ TextImpl *DocumentImpl::createTextNode(const DOMString &data)
 };
 
 
-NodeIteratorImpl* DocumentImpl::createNodeIterator (DOM_Node root, short whatToShow, DOM_NodeFilter filter, NodeFilterImpl* fi)
+NodeIteratorImpl* DocumentImpl::createNodeIterator (DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion)
 {
 		// Create the node iterator implementation object.
 		//	Add it to the vector of iterators that must be synchronized when a node is deleted.
 		//	The vector of iterators is kept in the "owner document" if there is one. If there isn't one, I assume that root is the
 		//	owner document.
 
-    NodeIteratorImpl* iter = new NodeIteratorImpl(root, whatToShow, filter, fi);
+    NodeIteratorImpl* iter = new NodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
     DOM_Document doc = root.getOwnerDocument();
     DocumentImpl* impl;
 
@@ -328,11 +331,11 @@ NodeIteratorImpl* DocumentImpl::createNodeIterator (DOM_Node root, short whatToS
 }
 
 
-TreeWalkerImpl* DocumentImpl::createTreeWalker (DOM_Node root, short whatToShow, DOM_NodeFilter filter, NodeFilterImpl* fi)
+TreeWalkerImpl* DocumentImpl::createTreeWalker (DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion)
 {
 		// See notes for createNodeIterator...
 
-    TreeWalkerImpl* twi = new TreeWalkerImpl(root, whatToShow, filter, fi);
+    TreeWalkerImpl* twi = new TreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
     DOM_Document doc = root.getOwnerDocument();
     DocumentImpl* impl;
 
@@ -486,7 +489,7 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
 		newelement = createElementNS(source->getNamespaceURI(), source->getNodeName());
             NamedNodeMapImpl *srcattr=source->getAttributes();
             if(srcattr!=null)
-                for(int i=0;i<srcattr->getLength();++i)
+                for(unsigned int i=0;i<srcattr->getLength();++i)
 		{
 		    AttrImpl *attr = (AttrImpl *) srcattr->item(i);
 		    if (attr -> getSpecified())	//not a default attribute

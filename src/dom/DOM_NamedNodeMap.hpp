@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:28  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  2000/01/22 01:38:29  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -203,7 +206,7 @@ public:
     *   <code>NamedNodeMap</code>, or <code>null</code> if that is not a valid 
     *   index.
     */
-    DOM_Node               item(unsigned long index);
+    DOM_Node               item(unsigned int index);
 
     //@}
     /** @name Get functions. */
@@ -225,7 +228,7 @@ public:
     * The range of valid child node indices is 
     * 0 to <code>length-1</code> inclusive. 
     */
-    int                    getLength();
+    unsigned int           getLength() const;
 
     //@}
     /** @name Functions to change the node collection. */

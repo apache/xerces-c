@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/04 01:49:26  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.4  2000/01/22 01:38:30  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -123,9 +126,9 @@ public:
     virtual NamedNodeMapImpl *cloneMap();
     static  void            addRef(NamedNodeMapImpl *);
     virtual int             findNamePoint(const DOMString &name);
-    virtual int             getLength();
+    virtual unsigned int    getLength();
     virtual NodeImpl        *getNamedItem(const DOMString &name);
-    virtual NodeImpl        *item(unsigned long index);
+    virtual NodeImpl        *item(unsigned int index);
     virtual void            removeAll();
     virtual NodeImpl        *removeNamedItem(const DOMString &name);
     static  void            removeRef(NamedNodeMapImpl *);

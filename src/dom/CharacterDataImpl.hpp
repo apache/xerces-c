@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:30  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  1999/12/21 07:47:06  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -104,13 +107,13 @@ public:
     virtual ~CharacterDataImpl();
     virtual void appendData(const DOMString &data);
     virtual NodeImpl *cloneNode(bool deep);
-    virtual void deleteData(int offset, int count);
+    virtual void deleteData(unsigned int offset, unsigned int count);
     virtual DOMString &getData();
-    virtual int getCharDataLength();
-    virtual void insertData(int offset, const DOMString &data);
-    virtual void replaceData(int offset, int count, const DOMString &data);
+    virtual unsigned int getCharDataLength();
+    virtual void insertData(unsigned int offset, const DOMString &data);
+    virtual void replaceData(unsigned int offset, unsigned int count, const DOMString &data);
     virtual void setData(const DOMString &arg);
-    virtual DOMString substringData(int offset, int count);
+    virtual DOMString substringData(unsigned int offset, unsigned int count);
     
 };
 

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/04 01:49:29  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.2  1999/12/03 00:11:22  andyh
  * Added DOMString.clone() to node parameters in and out of the DOM,
  * where they had been missed.
@@ -118,14 +121,14 @@ void DOM_CharacterData::setData(const DOMString &data){
 
 
 
-int  DOM_CharacterData::getLength() const
+unsigned int DOM_CharacterData::getLength() const
 {
     return ((CharacterDataImpl *)fImpl)->getCharDataLength();
 };
 
 
 
-DOMString DOM_CharacterData::substringData(int offset, int count) const
+DOMString DOM_CharacterData::substringData(unsigned int offset, unsigned int count) const
 {
     return ((CharacterDataImpl *)fImpl)->substringData(offset, count);
 };
@@ -139,20 +142,20 @@ void DOM_CharacterData::appendData(const DOMString &arg)
 
 
 
-void DOM_CharacterData::insertData(int offset, const DOMString &arg){
+void DOM_CharacterData::insertData(unsigned int offset, const DOMString &arg){
     ((CharacterDataImpl *)fImpl)->insertData(offset, arg);
 };
 
 
 
 
-void DOM_CharacterData::deleteData(int offset, int count)
+void DOM_CharacterData::deleteData(unsigned int offset, unsigned int count)
 {
     ((CharacterDataImpl *)fImpl)->deleteData(offset, count);
 };
 
 
-void DOM_CharacterData::replaceData(int offset, int count, const DOMString &arg)
+void DOM_CharacterData::replaceData(unsigned int offset, unsigned int count, const DOMString &arg)
 {
     ((CharacterDataImpl *)fImpl)->replaceData(offset, count, arg);
 };

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:28  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  2000/01/22 01:38:29  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -163,13 +166,13 @@ DOM_Node DOM_NamedNodeMap::removeNamedItem(const DOMString &name)
 };
 
 
-DOM_Node DOM_NamedNodeMap::item(unsigned long index)
+DOM_Node DOM_NamedNodeMap::item(unsigned int index)
 {
     return DOM_Node(fImpl->item(index));
 };
 
 
-int     DOM_NamedNodeMap::getLength()
+unsigned int DOM_NamedNodeMap::getLength() const
 {
     return fImpl->getLength();
 };

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/04 01:49:26  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.4  1999/11/30 21:16:25  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -89,9 +92,10 @@
 //////////////////////////////////////////////////////////////////////
 
 NodeIteratorImpl::NodeIteratorImpl ()
+: fDetached(false),
+    fNodeFilter(0)
 {
-	fDetached = false;
-}
+}	
 
 NodeIteratorImpl::~NodeIteratorImpl ()
 {
@@ -105,31 +109,43 @@ void NodeIteratorImpl::detach ()
 }
 
 
-NodeIteratorImpl::NodeIteratorImpl (DOM_Node root, int whatToShow, DOM_NodeFilter nodeFilter, NodeFilterImpl* fi)
+NodeIteratorImpl::NodeIteratorImpl (
+                                    DOM_Node root, 
+                                    unsigned long whatToShow, 
+                                    DOM_NodeFilter* nodeFilter,
+                                    bool expandEntityRef)
+:   fDetached(false),
+    fRoot(root),
+    fCurrentNode(0),
+    fWhatToShow(whatToShow),
+    fNodeFilter(nodeFilter),
+    fForward(true),
+    fExpandEntityReferences(expandEntityRef)
 {
-	fDetached = false;
-    fRoot = root;
-    fCurrentNode = 0;
-    fWhatToShow = whatToShow;
-    fNodeFilter = nodeFilter;
+	
+}
 
-    if (fi != 0L) {
-        DOM_NodeFilter nf(fi);
-        fNodeFilter = nf;
-    }
 
-	fForward = true;
+NodeIteratorImpl::NodeIteratorImpl ( const NodeIteratorImpl& toCopy)
+    :   fDetached(toCopy.fDetached),
+    fRoot(toCopy.fRoot),
+    fCurrentNode(toCopy.fCurrentNode),
+    fWhatToShow(toCopy.fWhatToShow),
+    fNodeFilter(toCopy.fNodeFilter),
+    fForward(toCopy.fForward),
+    fExpandEntityReferences(toCopy.fExpandEntityReferences)
+{
 }
 
 
 NodeIteratorImpl& NodeIteratorImpl::operator= (const NodeIteratorImpl& other) {
-    fRoot = other.fRoot;
-    fCurrentNode = other.fRoot;
-    fWhatToShow = other.fWhatToShow;
-    fNodeFilter = other.fNodeFilter;
-    fForward = other.fForward;
-	fDetached = other.fDetached;
-
+    fRoot                   = other.fRoot;
+    fCurrentNode            = other.fRoot;
+    fWhatToShow             = other.fWhatToShow;
+    fNodeFilter             = other.fNodeFilter;
+    fForward                = other.fForward;
+	fDetached               = other.fDetached;
+    fExpandEntityReferences = other.fExpandEntityReferences;
     return *this;
 }
 
@@ -141,27 +157,22 @@ NodeIteratorImpl& NodeIteratorImpl::operator= (const NodeIteratorImpl& other) {
 
 /** Return the whatToShow value */
 
-int NodeIteratorImpl::getWhatToShow () {
+unsigned long NodeIteratorImpl::getWhatToShow () {
     return fWhatToShow;
 }
 
 
 /** Return the filter */
 
-DOM_NodeFilter NodeIteratorImpl::getFilter () {
+DOM_NodeFilter* NodeIteratorImpl::getFilter () {
     return fNodeFilter;
 }
 
-
-void NodeIteratorImpl::setWhatToShow (int what) {
-  fWhatToShow = what;
+/** Get the expandEntity reference flag. */
+bool NodeIteratorImpl::getExpandEntityReferences()
+{
+    return fExpandEntityReferences;
 }
-
-
-void NodeIteratorImpl::setFilter (DOM_NodeFilter filter) {
-  fNodeFilter = filter;
-}
-
 
 /** Return the next DOM_Node in the Iterator. The node is the next node in
  *  depth-first order which also passes the filter, and whatToShow.
@@ -270,7 +281,7 @@ bool NodeIteratorImpl::acceptNode (DOM_Node node) {
         return ((fWhatToShow & ((1 << node.getNodeType()) - 1)) != 0);
     } else {
         return ((fWhatToShow & ((1 << node.getNodeType()) - 1)) != 0 )
-            && fNodeFilter.acceptNode(node) == DOM_NodeFilter::ACCEPT;
+            && fNodeFilter->acceptNode(node) == DOM_NodeFilter::FILTER_ACCEPT;
     }
 }
 

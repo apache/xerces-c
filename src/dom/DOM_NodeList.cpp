@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/04 01:49:27  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.2  2000/01/22 01:38:29  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -145,13 +148,13 @@ bool DOM_NodeList::operator != (const DOM_NullPtr *nullPtr) const
 
 
 
-DOM_Node  DOM_NodeList::item(unsigned long index) const
+DOM_Node  DOM_NodeList::item(unsigned int index) const
 {
     return DOM_Node(fImpl->item(index));
 };
 
 
-int       DOM_NodeList::getLength() const
+unsigned int DOM_NodeList::getLength() const
 {
     return fImpl->getLength();
 };

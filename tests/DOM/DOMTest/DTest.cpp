@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/04 01:50:13  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.4  2000/01/29 00:39:09  andyh
  * Redo synchronization in DOMStringHandle allocator.  There
  * was a bug in the use of Compare and Swap.  Switched to mutexes.
@@ -90,6 +93,9 @@
  
 /**
  * $Log$
+ * Revision 1.5  2000/02/04 01:50:13  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.4  2000/01/29 00:39:09  andyh
  * Redo synchronization in DOMStringHandle allocator.  There
  * was a bug in the use of Compare and Swap.  Switched to mutexes.
@@ -855,7 +861,7 @@ void DTest::testCharacterData(DOM_Document document)
     }
     //  printf("This node's partially deleted data is: " + charData.getData());
 
-    int length = 10;
+    unsigned int length = 10;
     if (!(length == charData.getLength()))
     {
         printf("Warning!!! DOM_CharacterData's 'getLength' failed to work properly!\n");

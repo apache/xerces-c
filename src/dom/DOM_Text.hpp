@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/04 01:49:27  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.2  2000/01/05 01:16:08  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -173,7 +176,7 @@ class CDOM_EXPORT DOM_Text: public DOM_CharacterData {
      *   than the number of characters in <code>data</code>.
      *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      */
-    DOM_Text splitText(int offset);
+    DOM_Text splitText(unsigned int offset);
     //@}
 
 protected:

@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:30  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  2000/01/22 01:38:29  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -113,8 +116,8 @@ public:
                         DeepNodeListImpl(NodeImpl *rootNode,	//DOM Level 2
 			    const DOMString &namespaceURI, const DOMString &localName);
     virtual             ~DeepNodeListImpl();
-    virtual int         getLength();
-    virtual NodeImpl    *item(unsigned long index);
+    virtual unsigned int getLength();
+    virtual NodeImpl    *item(unsigned int index);
 private:
     virtual NodeImpl    *nextMatchingElementAfter(NodeImpl *current);
     virtual void        unreferenced();

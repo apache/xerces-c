@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:30  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  1999/12/03 00:11:22  andyh
  * Added DOMString.clone() to node parameters in and out of the DOM,
  * where they had been missed.
@@ -113,7 +116,7 @@ NodeImpl *CharacterDataImpl::cloneNode(bool deep)
 };
 
 
-void CharacterDataImpl::deleteData(int offset, int count)
+void CharacterDataImpl::deleteData(unsigned int offset, unsigned int count)
 {
     if (readOnly)
         throw DOM_DOMException(
@@ -131,7 +134,7 @@ void CharacterDataImpl::deleteData(int offset, int count)
     //{
     //      throw DOM_DOMException(DOMException.INDEX_SIZE_ERR, null);
     
-    int len = value.length();
+    unsigned int len = value.length();  //assert(value.length() >= 0)
     if (offset < 0 || offset >= len)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
     
@@ -156,21 +159,22 @@ DOMString &CharacterDataImpl::getData()
 //                      all of the names are correct from an external API
 //                      point of view.
 //
-int CharacterDataImpl::getCharDataLength()
+unsigned int CharacterDataImpl::getCharDataLength()
 {
-    return value.length();
+    return value.length();  //assert(value.length() >= 0)
 };
 
 
 
-void CharacterDataImpl::insertData(int offset, const DOMString &data) 
+void CharacterDataImpl::insertData(unsigned int offset, const DOMString &data) 
 {
     
     if (readOnly)
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    if (offset<0 || offset>value.length())
+    unsigned int len = value.length();  //assert(value.length() >= 0)
+    if (offset<0 || offset>len)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
     
     value.insertData(offset, data);
@@ -178,7 +182,7 @@ void CharacterDataImpl::insertData(int offset, const DOMString &data)
 
 
 
-void CharacterDataImpl::replaceData(int offset, int count, const DOMString &data)
+void CharacterDataImpl::replaceData(unsigned int offset, unsigned int count, const DOMString &data)
 {
     if (readOnly)
         throw DOM_DOMException(
@@ -201,10 +205,11 @@ void CharacterDataImpl::setData(const DOMString &arg)
 
 
 
-DOMString CharacterDataImpl::substringData(int offset, int count)
+DOMString CharacterDataImpl::substringData(unsigned int offset, unsigned int count)
 {
     
-    if(count < 0 || offset < 0 || offset > value.length()-1)
+    unsigned int len = value.length();  //assert(value.length() >= 0)
+    if(count < 0 || offset < 0 || offset >= len)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR,null);
     
     return value.substringData(offset, count);

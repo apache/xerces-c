@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:20  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:24  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:20  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:34  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -81,71 +84,78 @@ class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
     // implementation will still work.
 
     /** Public constructor */
-    TreeWalkerImpl (DOM_Node root, int whatToShow, DOM_NodeFilter nodeFilter, NodeFilterImpl* nfi);
+    TreeWalkerImpl (
+        DOM_Node root, 
+        unsigned long whatToShow, 
+        DOM_NodeFilter* nodeFilter,
+        bool expandEntityRef);
     TreeWalkerImpl (const TreeWalkerImpl& twi);
     TreeWalkerImpl& operator= (const TreeWalkerImpl& twi);
 
     /** Return the whatToShow value */
-    virtual int getWhatToShow ();
+    unsigned long  getWhatToShow ();
 
     /** Return the NodeFilter */
-    virtual DOM_NodeFilter getFilter ();
+    DOM_NodeFilter* getFilter ();
 
-	virtual void detach ();
+	void detach ();
 
     /** Return the current DOM_Node. */
-    virtual DOM_Node getCurrentNode ();
+    DOM_Node getCurrentNode ();
 
     /** Return the current Node. */
-    virtual void setCurrentNode (DOM_Node node);
+    void setCurrentNode (DOM_Node node);
 
     /** Return the parent Node from the current node,
      *  after applying filter, whatToshow.
      *  If result is not null, set the current Node.
      */
-    virtual DOM_Node parentNode ();
+    DOM_Node parentNode ();
 
     /** Return the first child Node from the current node,
      *  after applying filter, whatToshow.
      *  If result is not null, set the current Node.
      */
 
-    virtual DOM_Node firstChild ();
+    DOM_Node firstChild ();
 
     /** Return the last child Node from the current node,
      *  after applying filter, whatToshow.
      *  If result is not null, set the current Node.
      */
 
-    virtual DOM_Node lastChild ();
+    DOM_Node lastChild ();
 
     /** Return the previous sibling Node from the current node,
      *  after applying filter, whatToshow.
      *  If result is not null, set the current Node.
      */
 
-    virtual DOM_Node previousSibling ();
+    DOM_Node previousSibling ();
 
     /** Return the next sibling Node from the current node,
      *  after applying filter, whatToshow.
      *  If result is not null, set the current Node.
      */
-    virtual DOM_Node nextSibling ();
+    DOM_Node nextSibling ();
     /** Return the previous Node from the current node,
      *  after applying filter, whatToshow.
      *  If result is not null, set the current Node.
      */
-    virtual DOM_Node previousNode ();
+    DOM_Node previousNode ();
 
     /** Return the next Node from the current node,
      *  after applying filter, whatToshow.
      *  If result is not null, set the current Node.
      */
-    virtual DOM_Node nextNode ();
+    DOM_Node nextNode ();
 
-    virtual void unreferenced ();
+    void unreferenced ();
+    
+    /** Get the expandEntity reference flag. */
+    bool getExpandEntityReferences();
 
-	protected:
+protected:
 
     /** Internal function.
      *  Return the parent Node, from the input node
@@ -185,19 +195,22 @@ class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
     /** The node is accepted if it passes the whatToShow and the filter. */
     short acceptNode (DOM_Node node);
 
-		
-	private:
+    		
+private:
     /** The whatToShow mask. */
-    int fWhatToShow;
+    unsigned long fWhatToShow;
 
     /** The NodeFilter reference. */
-    DOM_NodeFilter fNodeFilter;
+    DOM_NodeFilter* fNodeFilter;
 
     /** The current Node. */
     DOM_Node fCurrentNode;
 
     /** The root Node. */
     DOM_Node fRoot;
+
+    /** The expandEntity reference flag. */
+    bool fExpandEntityReferences;
 
 	bool fDetached;
 };

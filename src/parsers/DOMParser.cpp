@@ -61,6 +61,9 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.6  2000/02/04 01:49:50  aruna1
+* TreeWalker and NodeIterator changes
+*
 * Revision 1.5  2000/02/03 18:43:24  roddey
 * Incorrect use of 'inline' inside the cpp file. Its wrong, and it also prevents
 * export on some platforms.
@@ -518,7 +521,6 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
     DOM_Element elem;
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
         unsigned int globalNSid = fValidator -> getGlobalNamespaceId();
-        unsigned int xmlnsNSid = fValidator -> getXMLNSNamespaceId();
         XMLBuffer buf;
         DOMString namespaceURI = 0;
         if (urlId != globalNSid) {	//TagName has a prefix
@@ -530,8 +532,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
             const XMLAttr* oneAttrib = attrList.elementAt(index);
             unsigned int attrURIId = oneAttrib -> getURIId();
             namespaceURI = 0;
-            if (attrURIId != globalNSid && attrURIId != xmlnsNSid) {
-                //Attribute Name has a prefix != "xmlns"
+            if (attrURIId != globalNSid) {	//TagName has a prefix
                 fValidator -> getURIText(attrURIId, buf);   //get namespaceURI
                 namespaceURI = DOMString(buf.getRawBuffer());
             }

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/04 01:49:26  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.6  2000/01/22 01:38:30  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -141,7 +144,7 @@ NamedNodeMapImpl *NamedNodeMapImpl::cloneMap()
     if (nodes != null)
     {
         newmap->nodes = new NodeVector(nodes->size());
-        for (int i = 0; i < nodes->size(); ++i)
+        for (unsigned int i = 0; i < nodes->size(); ++i)
         {
             NodeImpl *n = nodes->elementAt(i)->cloneNode(deep);
             n->owned = true;
@@ -231,7 +234,7 @@ int NamedNodeMapImpl::findNamePoint(const DOMString &name)
 
 
 
-int NamedNodeMapImpl::getLength()
+unsigned int NamedNodeMapImpl::getLength()
 {
     reconcileDefaults();
     return (nodes != null) ? nodes->size() : 0;
@@ -263,11 +266,11 @@ NodeImpl * NamedNodeMapImpl::getNamedItem(const DOMString &name)
 
 
 
-NodeImpl * NamedNodeMapImpl::item(unsigned long index)
+NodeImpl * NamedNodeMapImpl::item(unsigned int index)
 {
     reconcileDefaults();
-    return (nodes != null && index < (unsigned long) nodes->size()) ?
-        (NodeImpl *) (nodes->elementAt((int) index)) : null;
+    return (nodes != null && index < nodes->size()) ?
+        (NodeImpl *) (nodes->elementAt(index)) : null;
 };
 
 
@@ -496,7 +499,7 @@ NamedNodeMapImpl *NamedNodeMapImpl::exportNode(DocumentImpl *docImpl)
     if (nodes != null)
     {
         newmap->nodes = new NodeVector(nodes->size());
-        for (int i = 0; i < nodes->size(); ++i)
+        for (unsigned int i = 0; i < nodes->size(); ++i)
         {
             NodeImpl *n = docImpl->importNode(nodes->elementAt(i), deep);
             n->owned = true;

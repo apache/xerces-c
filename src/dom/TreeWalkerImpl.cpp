@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:25  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  1999/11/30 21:16:26  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -79,39 +82,42 @@
 
 
 /** constructor */
-TreeWalkerImpl::TreeWalkerImpl (DOM_Node root, int whatToShow, DOM_NodeFilter nodeFilter, NodeFilterImpl* twi) {
-    fCurrentNode = root;
-    fRoot = root;
-    fWhatToShow = whatToShow;
-    fNodeFilter = nodeFilter;
-    nodeRefCount = 0;
-	fDetached = false;
+TreeWalkerImpl::TreeWalkerImpl (
+                                DOM_Node root, 
+                                unsigned long whatToShow, 
+                                DOM_NodeFilter* nodeFilter, 
+                                bool expandEntityRef) 
+:   fCurrentNode(root), 
+    fRoot(root),
+    fWhatToShow(whatToShow),
+    fNodeFilter(nodeFilter),
+    fDetached(false),
+    fExpandEntityReferences(expandEntityRef)
 
-    if (twi != 0L) {
-        DOM_NodeFilter nf(twi);
-        fNodeFilter = nf;
-    }
+{
 }
 
 
-TreeWalkerImpl::TreeWalkerImpl (const TreeWalkerImpl& twi) {
-    fCurrentNode = twi.fCurrentNode;
-    fRoot = twi.fRoot;
-    fWhatToShow = twi.fWhatToShow;
-    fNodeFilter = twi.fNodeFilter;
-    nodeRefCount = 0;
-	fDetached = false;
+TreeWalkerImpl::TreeWalkerImpl (const TreeWalkerImpl& twi) 
+: fCurrentNode(twi.fCurrentNode),
+    fRoot(twi.fRoot),
+    fWhatToShow(twi.fWhatToShow),
+    fNodeFilter(twi.fNodeFilter),
+    fDetached(false),
+    fExpandEntityReferences(twi.fExpandEntityReferences)
+{
 }
 
 
 TreeWalkerImpl& TreeWalkerImpl::operator= (const TreeWalkerImpl& twi) {
     if (this != &twi)
     {
-        fCurrentNode = twi.fCurrentNode;
-        fRoot = twi.fRoot;
-        fWhatToShow = twi.fWhatToShow;
-        fNodeFilter = twi.fNodeFilter;
-		fDetached = twi.fDetached;
+        fCurrentNode            = twi.fCurrentNode;
+        fRoot                   = twi.fRoot;
+        fWhatToShow             = twi.fWhatToShow;
+        fNodeFilter             = twi.fNodeFilter;
+		fDetached               = twi.fDetached;
+        fExpandEntityReferences = twi.fExpandEntityReferences;
     }
 
     return *this;
@@ -150,15 +156,21 @@ void TreeWalkerImpl::unreferenced()
 
 
 /** Return the whatToShow value */
-int TreeWalkerImpl::getWhatToShow () {
+unsigned long TreeWalkerImpl::getWhatToShow () {
     return fWhatToShow;
 }
 
 
 /** Return the NodeFilter */
-DOM_NodeFilter TreeWalkerImpl::getFilter () {
+DOM_NodeFilter* TreeWalkerImpl::getFilter () {
     return fNodeFilter;
 }
+
+/** Get the expandEntity reference flag. */
+bool TreeWalkerImpl::getExpandEntityReferences() {
+    return fExpandEntityReferences;
+}
+
 
 
 /** Return the current Node. */
@@ -387,9 +399,9 @@ DOM_Node TreeWalkerImpl::getParentNode (DOM_Node node) {
     DOM_Node newNode = node.getParentNode();
     if (newNode.isNull())  return result;
 
-    int accept = acceptNode(newNode);
+    short accept = acceptNode(newNode);
 
-    if (accept == DOM_NodeFilter::ACCEPT)
+    if (accept == DOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
     else
     {
@@ -421,21 +433,21 @@ DOM_Node TreeWalkerImpl::getNextSibling (DOM_Node node) {
 
         if (newNode.isNull() || node == fRoot)  return result;
 
-        int parentAccept = acceptNode(newNode);
+        short parentAccept = acceptNode(newNode);
 
-        if (parentAccept == DOM_NodeFilter::SKIP) {
+        if (parentAccept == DOM_NodeFilter::FILTER_SKIP) {
             return getNextSibling(newNode);
         }
 
         return result;
     }
 
-    int accept = acceptNode(newNode);
+    short accept = acceptNode(newNode);
 
-    if (accept == DOM_NodeFilter::ACCEPT)
+    if (accept == DOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
     else
-    if (accept == DOM_NodeFilter::SKIP) {
+    if (accept == DOM_NodeFilter::FILTER_SKIP) {
         DOM_Node fChild =  getFirstChild(newNode);
         if (fChild.isNull()) {
             return getNextSibling(newNode);
@@ -470,21 +482,21 @@ DOM_Node TreeWalkerImpl::getPreviousSibling (DOM_Node node) {
         newNode = node.getParentNode();
         if (newNode.isNull() || node == fRoot)  return result;
 
-        int parentAccept = acceptNode(newNode);
+        short parentAccept = acceptNode(newNode);
 
-        if (parentAccept == DOM_NodeFilter::SKIP) {
+        if (parentAccept == DOM_NodeFilter::FILTER_SKIP) {
             return getPreviousSibling(newNode);
         }
 
         return result;
     }
 
-    int accept = acceptNode(newNode);
+    short accept = acceptNode(newNode);
 
-    if (accept == DOM_NodeFilter::ACCEPT)
+    if (accept == DOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
     else
-    if (accept == DOM_NodeFilter::SKIP) {
+    if (accept == DOM_NodeFilter::FILTER_SKIP) {
         DOM_Node fChild =  getLastChild(newNode);
         if (fChild.isNull()) {
             return getPreviousSibling(newNode);
@@ -516,12 +528,12 @@ DOM_Node TreeWalkerImpl::getFirstChild (DOM_Node node) {
     DOM_Node newNode = node.getFirstChild();
     if (newNode.isNull())  return result;
 
-    int accept = acceptNode(newNode);
+    short accept = acceptNode(newNode);
 
-    if (accept == DOM_NodeFilter::ACCEPT)
+    if (accept == DOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
     else
-    if (accept == DOM_NodeFilter::SKIP
+    if (accept == DOM_NodeFilter::FILTER_SKIP
         && newNode.hasChildNodes())
     {
         return getFirstChild(newNode);
@@ -550,12 +562,12 @@ DOM_Node TreeWalkerImpl::getLastChild (DOM_Node node) {
     DOM_Node newNode = node.getLastChild();
     if (newNode.isNull())  return result;
 
-    int accept = acceptNode(newNode);
+    short accept = acceptNode(newNode);
 
-    if (accept == DOM_NodeFilter::ACCEPT)
+    if (accept == DOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
     else
-    if (accept == DOM_NodeFilter::SKIP
+    if (accept == DOM_NodeFilter::FILTER_SKIP
         && newNode.hasChildNodes())
     {
         return getLastChild(newNode);
@@ -578,22 +590,22 @@ short TreeWalkerImpl::acceptNode (DOM_Node node) {
     if (fNodeFilter == 0) {
         if ( ( fWhatToShow & (1 << (node.getNodeType() - 1))) != 0)
         {
-            return DOM_NodeFilter::ACCEPT;
+            return DOM_NodeFilter::FILTER_ACCEPT;
         }
         else
         {
-            return DOM_NodeFilter::SKIP;
+            return DOM_NodeFilter::FILTER_SKIP;
         }
     } else {
         // REVISIT: This logic is unclear from the spec!
         if ((fWhatToShow & (1 << (node.getNodeType() - 1))) != 0 ) {
-            return fNodeFilter.acceptNode(node);
+            return fNodeFilter->acceptNode(node);
         } else {
             // what to show has failed!
-            if (fNodeFilter.acceptNode(node) == DOM_NodeFilter::REJECT) {
-                return DOM_NodeFilter::REJECT;
+            if (fNodeFilter->acceptNode(node) == DOM_NodeFilter::FILTER_REJECT) {
+                return DOM_NodeFilter::FILTER_REJECT;
             } else {
-                return DOM_NodeFilter::SKIP;
+                return DOM_NodeFilter::FILTER_SKIP;
             }
         }
     }

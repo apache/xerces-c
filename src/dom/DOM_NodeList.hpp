@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:27  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  2000/01/22 01:38:29  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -186,14 +189,14 @@ public:
      *   <code>NodeList</code>, or <code>null</code> if that is not a valid 
      *   index.
      */
-    DOM_Node  item(unsigned long index) const;
+    DOM_Node  item(unsigned int index) const;
 
     /**
      * Returns the number of nodes in the list. 
      *
      * The range of valid child node indices is 0 to <code>length-1</code> inclusive. 
      */
-    int       getLength() const;
+    unsigned int getLength() const;
     //@}
 
 protected:

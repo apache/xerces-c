@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:49  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:29  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:49  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:13  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -166,7 +169,7 @@ public:
    * This may have the value 
    * zero, i.e., <code>CharacterData</code> nodes may be empty.
    */
-  int                getLength() const;
+  unsigned int       getLength() const;
   /**
    * Extracts a range of data from the node.
    *
@@ -182,8 +185,8 @@ public:
    *   <br>DOMSTRING_SIZE_ERR: Raised if the specified range of text does not 
    *   fit into a <code>DOMString</code>.
    */
-  DOMString          substringData(int offset, 
-                                   int count) const;
+  DOMString          substringData(unsigned int offset, 
+                                   unsigned int count) const;
     //@}
     /** @name Functions that set or change data. */
     //@{
@@ -207,7 +210,7 @@ public:
    *   than the number of characters in <code>data</code>.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  void               insertData(int offset, const  DOMString &arg);
+  void               insertData(unsigned int offset, const  DOMString &arg);
   /**
    * Remove a range of characters from the node. 
    *
@@ -224,8 +227,8 @@ public:
    *   specified <code>count</code> is negative.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  void               deleteData(int offset, 
-                                       int count);
+  void               deleteData(unsigned int offset, 
+                                unsigned int count);
   /**
    * Replace the characters starting at the specified character offset with 
    * the specified string.
@@ -244,8 +247,8 @@ public:
    *   specified <code>count</code> is negative.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  void               replaceData(int offset, 
-                                 int count, 
+  void               replaceData(unsigned int offset, 
+                                 unsigned int count, 
                                  const DOMString &arg);
 
   /**

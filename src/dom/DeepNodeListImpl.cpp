@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/04 01:49:30  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.2  2000/01/22 01:38:29  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -110,7 +113,7 @@ DeepNodeListImpl::~DeepNodeListImpl()
 };
 
 
-int DeepNodeListImpl::getLength()
+unsigned int DeepNodeListImpl::getLength()
 {
     // Preload all matching elements. (Stops when we run out of subtree!)
     item(INT_MAX);
@@ -129,7 +132,7 @@ int DeepNodeListImpl::getLength()
 // irrelevant ones.  Doing so in a really useful manner would seem
 // to involve a tree-walk in its own right, or maintaining our data
 // in a parallel tree.
-NodeImpl *DeepNodeListImpl::item(unsigned long index)
+NodeImpl *DeepNodeListImpl::item(unsigned int index)
 {
     NodeImpl *thisNode;
     
@@ -139,7 +142,7 @@ NodeImpl *DeepNodeListImpl::item(unsigned long index)
         changes=rootNode->changes;
     }
     
-    if(index< (unsigned long) nodes->size())      // In the cache
+    if(index< nodes->size())      // In the cache
         return nodes->elementAt((int) index);
     else                        // Not yet seen
     {
@@ -148,7 +151,7 @@ NodeImpl *DeepNodeListImpl::item(unsigned long index)
         else
             thisNode=nodes->lastElement();
 
-        while(thisNode!=null && index >= (unsigned long) nodes->size() && thisNode!=null)
+        while(thisNode!=null && index >= nodes->size() && thisNode!=null)
         {
             thisNode=nextMatchingElementAfter(thisNode);
             if(thisNode!=null)

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/04 01:49:28  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.4  2000/01/22 01:38:29  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -350,27 +353,15 @@ public:
      * Creates a NodeIterator object.   (DOM2)
      */
 
-    static DOM_NodeIterator       createNodeIterator(DOM_Node root, short whatToShow, DOM_NodeFilter  filter);
+    DOM_NodeIterator       createNodeIterator(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter*  filter, bool entityReferenceExpansion);
 
-    // Same as above, but conveniently allows a pointer to an implementation of a filter to be passed. This filter will be
-    //  wrapped internally by a DOM_NodeFilter, and when you get the filter from the interator/walker, you will get a
-    //  DOM_NodeFilter object.
-    static DOM_NodeIterator       createNodeIterator(DOM_Node root, short whatToShow, NodeFilterImpl* filterThatWillBeAdopted);
-
-
-    /**
+     /**
      * Creates a TreeWalker object.   (DOM2)
      */
 
-    static DOM_TreeWalker         createTreeWalker(DOM_Node root, short whatToShow, DOM_NodeFilter  filter);
+    DOM_TreeWalker         createTreeWalker(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter*  filter, bool entityReferenceExpansion);
 
-    // Same as above, but conveniently allows a pointer to an implementation of a filter to be passed. This filter will be
-    //  wrapped internally by a DOM_NodeFilter, and when you get the filter from the interator/walker, you will get a
-    //  DOM_NodeFilter object.
-    static DOM_TreeWalker         createTreeWalker(DOM_Node root, short whatToShow, NodeFilterImpl* filterThatWillBeAdopted);
-
-
-	//@}
+    //@}
     /** @name Getter functions */
     //@{
     /**

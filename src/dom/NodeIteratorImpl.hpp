@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:16  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:26  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:16  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:30  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -83,25 +86,33 @@ class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 
 	public:
 		virtual ~NodeIteratorImpl ();
-		NodeIteratorImpl (DOM_Node root, int whatToShow, DOM_NodeFilter nodeFilter, NodeFilterImpl* fi);
-		NodeIteratorImpl& operator= (const NodeIteratorImpl& other);
-		virtual int getWhatToShow ();
-		virtual DOM_NodeFilter getFilter ();
+		NodeIteratorImpl (
+            DOM_Node root, 
+            unsigned long whatToShow, 
+            DOM_NodeFilter* nodeFilter,
+            bool expandEntityRef);
 
-		void setWhatToShow (int what);
-		void setFilter (DOM_NodeFilter filter);
+        NodeIteratorImpl ( const NodeIteratorImpl& toCopy);
+		
+        NodeIteratorImpl& operator= (const NodeIteratorImpl& other);
+		
+        unsigned long getWhatToShow ();
+		DOM_NodeFilter* getFilter ();
 
-		virtual DOM_Node nextNode ();
-		virtual DOM_Node previousNode ();
-		virtual bool acceptNode (DOM_Node node);
-		virtual DOM_Node matchNodeOrParent (DOM_Node node);
-		virtual DOM_Node nextNode (DOM_Node node, bool visitChildren);
-		virtual DOM_Node previousNode (DOM_Node node);
-		virtual void removeNode (DOM_Node node);
+		DOM_Node nextNode ();
+		DOM_Node previousNode ();
+		bool acceptNode (DOM_Node node);
+		DOM_Node matchNodeOrParent (DOM_Node node);
+		DOM_Node nextNode (DOM_Node node, bool visitChildren);
+		DOM_Node previousNode (DOM_Node node);
+		void removeNode (DOM_Node node);
 
-		virtual void unreferenced();
+		void unreferenced();
 
-		virtual void detach ();
+		void detach ();
+
+        /** Get the expandEntity reference flag. */
+        bool getExpandEntityReferences();
 
 
 	private:
@@ -112,10 +123,13 @@ class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 		DOM_Node fRoot;
 
 		/** The whatToShow mask. */
-		int fWhatToShow;
+		unsigned long fWhatToShow;
 
 		/** The NodeFilter reference. */
-		DOM_NodeFilter fNodeFilter;
+		DOM_NodeFilter* fNodeFilter;
+
+        /** The expandEntity reference flag. */
+        bool  fExpandEntityReferences;
 
 		bool fDetached;
 
@@ -140,6 +154,7 @@ class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 		 *  </pre>
 		 */
 		bool fForward;
+
 
 };
 

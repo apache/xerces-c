@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:00  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:28  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:00  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:19  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -69,71 +72,15 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "DOM_NodeFilter.hpp"
-#include "NodeFilterImpl.hpp"
 
 
 DOM_NodeFilter::DOM_NodeFilter() {
-    fImpl = 0;
-}
-
-
-DOM_NodeFilter::DOM_NodeFilter(NodeFilterImpl *impl) {
-    fImpl = impl;
-    RefCountedImpl::addRef(fImpl);
-}
-
-
-DOM_NodeFilter::DOM_NodeFilter(const DOM_NodeFilter &other){
-    fImpl = other.fImpl;
-    RefCountedImpl::addRef(fImpl);
-}
-
-
-DOM_NodeFilter & DOM_NodeFilter::operator = (const DOM_NodeFilter &other) {
-    if (this->fImpl != other.fImpl)
-    {
-        RefCountedImpl::removeRef(this->fImpl);
-        this->fImpl = other.fImpl;
-        RefCountedImpl::addRef(this->fImpl);
-    }
-    return *this;
-}
-
-
-DOM_NodeFilter & DOM_NodeFilter::operator = (const DOM_NullPtr *other) {
-    RefCountedImpl::removeRef(this->fImpl);
-    this->fImpl = 0;
-    return *this;
+    
 }
 
 
 DOM_NodeFilter::~DOM_NodeFilter() {
-    RefCountedImpl::removeRef(this->fImpl);
-    fImpl = 0;
+   
 }
 
 
-bool DOM_NodeFilter::operator == (const DOM_NodeFilter &other) const {
-    return this->fImpl == other.fImpl;
-}
-
-
-bool DOM_NodeFilter::operator != (const DOM_NodeFilter &other) const {
-    return this->fImpl != other.fImpl;
-}
-
-
-bool DOM_NodeFilter::operator == (const DOM_NullPtr *nullPtr) const
-{
-    return this->fImpl == 0;
-}
-
-
-bool DOM_NodeFilter::operator != (const DOM_NullPtr *nullPtr) const {
-    return this->fImpl != 0;
-}
-
-
-DOM_NodeFilter::FilterAction DOM_NodeFilter::acceptNode (DOM_Node node) {
-    return this->fImpl->acceptNode(node);
-}

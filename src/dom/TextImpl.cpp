@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/04 01:49:25  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.2  1999/11/30 21:16:26  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -107,12 +110,13 @@ NodeImpl *TextImpl::cloneNode(bool deep)
 };
 
 
-TextImpl *TextImpl::splitText(int offset)
+TextImpl *TextImpl::splitText(unsigned int offset)
 {
         if (readOnly)
                 throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-        if (offset < 0 || offset > value.length() - 1)
+	unsigned int len = value.length();  //assert(value.length() >= 0)
+        if (offset < 0 || offset >= len)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
                 
         TextImpl *newText = 

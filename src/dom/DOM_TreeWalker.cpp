@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:05  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:27  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:05  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:22  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -69,19 +72,6 @@
 #include "TreeWalkerImpl.hpp"
 
 
-const int DOM_TreeWalker::SHOW_ALL             = 0x0000FFFF;
-const int DOM_TreeWalker::SHOW_ELEMENT         = 0x00000001;
-const int DOM_TreeWalker::SHOW_ATTRIBUTE       = 0x00000002;
-const int DOM_TreeWalker::SHOW_TEXT            = 0x00000004;
-const int DOM_TreeWalker::SHOW_CDATA_SECTION   = 0x00000008;
-const int DOM_TreeWalker::SHOW_ENTITY_REFERENCE = 0x00000010;
-const int DOM_TreeWalker::SHOW_ENTITY          = 0x00000020;
-const int DOM_TreeWalker::SHOW_PROCESSING_INSTRUCTION = 0x00000040;
-const int DOM_TreeWalker::SHOW_COMMENT         = 0x00000080;
-const int DOM_TreeWalker::SHOW_DOCUMENT        = 0x00000100;
-const int DOM_TreeWalker::SHOW_DOCUMENT_TYPE   = 0x00000200;
-const int DOM_TreeWalker::SHOW_DOCUMENT_FRAGMENT = 0x00000400;
-const int DOM_TreeWalker::SHOW_NOTATION        = 0x00000800;
 
 
 
@@ -160,12 +150,12 @@ bool       DOM_TreeWalker::operator == (const DOM_NullPtr * other) const
 
 
 
-int											DOM_TreeWalker::getWhatToShow() {
+unsigned long		DOM_TreeWalker::getWhatToShow() {
     return fImpl->getWhatToShow();
 }
 
 
-DOM_NodeFilter					DOM_TreeWalker::getFilter() {
+DOM_NodeFilter*					DOM_TreeWalker::getFilter() {
     return fImpl->getFilter();
 }
 

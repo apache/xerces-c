@@ -58,6 +58,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:26  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  2000/01/22 01:38:30  andyh
  * Remove compiler warnings in DOM impl classes
  *
@@ -97,8 +100,8 @@ protected:
     NodeListImpl();
 public:
     virtual             ~NodeListImpl();
-    virtual NodeImpl *  item(unsigned long index) = 0;
-    virtual int         getLength() = 0;
+    virtual NodeImpl *  item(unsigned int index) = 0;
+    virtual unsigned int getLength() = 0;
 };
 
 #endif

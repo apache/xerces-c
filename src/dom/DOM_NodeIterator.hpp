@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:01  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:28  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:01  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:20  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -76,21 +79,7 @@ class CDOM_EXPORT DOM_NodeIterator
 {
 	public:
     // Constants for whatToShow...
-
-    static const int            SHOW_ALL;
-    static const int            SHOW_ELEMENT;
-    static const int            SHOW_ATTRIBUTE;
-    static const int            SHOW_TEXT;
-    static const int            SHOW_CDATA_SECTION;
-    static const int            SHOW_ENTITY_REFERENCE;
-    static const int            SHOW_ENTITY;
-    static const int            SHOW_PROCESSING_INSTRUCTION;
-    static const int            SHOW_COMMENT;
-    static const int            SHOW_DOCUMENT;
-    static const int            SHOW_DOCUMENT_TYPE;
-    static const int            SHOW_DOCUMENT_FRAGMENT;
-    static const int            SHOW_NOTATION;
-
+     
     DOM_NodeIterator ();
     DOM_NodeIterator (NodeIteratorImpl* impl);
     DOM_NodeIterator(const DOM_NodeIterator &other);
@@ -102,12 +91,16 @@ class CDOM_EXPORT DOM_NodeIterator
     bool operator != (const DOM_NodeIterator & other) const;
     bool operator != (const DOM_NullPtr * other) const;
 
-    virtual int                 getWhatToShow();
+    unsigned long       getWhatToShow();
 
-    virtual DOM_NodeFilter      getFilter();
-    virtual DOM_Node            nextNode();
-    virtual DOM_Node            previousNode();
-	virtual void				detach();
+    DOM_NodeFilter*      getFilter();
+    DOM_Node            nextNode();
+    DOM_Node            previousNode();
+	void				detach();
+
+    /** Get the expandEntity reference flag. */
+    bool getExpandEntityReferences();
+
 
     private:
       NodeIteratorImpl*                 fImpl;

@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/04 01:49:30  aruna1
+ * TreeWalker and NodeIterator changes
+ *
  * Revision 1.3  2000/01/05 01:16:08  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -157,8 +160,8 @@ public:
     virtual NodeImpl            *removeChild(NodeImpl *oldChild);
     virtual void                setNodeValue(const DOMString & x);
     virtual void                unreferenced();
-    static  NodeIteratorImpl*   createNodeIterator(DOM_Node root, short whatToShow, DOM_NodeFilter filter, NodeFilterImpl* fi);
-    static  TreeWalkerImpl*     createTreeWalker(DOM_Node root, short whatToShow, DOM_NodeFilter filter, NodeFilterImpl* fi);
+    static  NodeIteratorImpl*   createNodeIterator(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion);
+    static  TreeWalkerImpl*     createTreeWalker(DOM_Node root, unsigned long whatToShow, DOM_NodeFilter* filter, bool entityReferenceExpansion);
 
     //Introduced in DOM Level 2
     virtual NodeImpl            *importNode(NodeImpl *source, bool deep);

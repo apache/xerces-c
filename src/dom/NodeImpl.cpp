@@ -56,6 +56,9 @@
 
 /**
 * $Log$
+* Revision 1.9  2000/02/04 01:49:26  aruna1
+* TreeWalker and NodeIterator changes
+*
 * Revision 1.8  2000/01/22 01:38:30  andyh
 * Remove compiler warnings in DOM impl classes
 *
@@ -102,11 +105,17 @@
 #include "DOM_Node.hpp"
 #include "DOM_DOMImplementation.hpp"
 #include "DOMString.hpp"
+#include "DStringPool.hpp"
 #include "DocumentImpl.hpp"
 #include "stdio.h"
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
 #include "TextImpl.hpp"
+
+static DOMString *s_xml = null;
+static DOMString *s_xmlURI = null;
+static DOMString *s_xmlns = null;
+static DOMString *s_xmlnsURI = null;
 
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
                    const DOMString &nam,  short nTyp,
@@ -143,7 +152,8 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
                    const DOMString &fNamespaceURI, const DOMString &qualifiedName, short nTyp,
                    bool isLeafNod, const DOMString &initValue)
 {
-    static const DOMString xmlns("xmlns");  //need to revisit static initializer
+    DOMString xmlns = DStringPool::getStaticString("xmlns", &s_xmlns);
+    DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/", &s_xmlnsURI);
     // Do we want to add isLeafNode to this? How about initial value?
     this->ownerDocument=ownerDoc;
 
@@ -160,10 +170,14 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
     if (qNameLen == 0 || count > 1 || index == 0 || index == qNameLen-1)
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
+    bool xmlnsAlone = false;	//true if attribute name is "xmlns"
     if (count == 0) {	//count == 0 && index == -1
-        if (nType == DOM_Node::ATTRIBUTE_NODE && this->name.equals(xmlns) &&
-            fNamespaceURI != null && fNamespaceURI.length() != 0)
-	    throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+        if (nTyp == DOM_Node::ATTRIBUTE_NODE && this->name.equals(xmlns)) {
+	    if (fNamespaceURI != null && fNamespaceURI.length() != 0 &&
+		!fNamespaceURI.equals(xmlnsURI))
+		throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+	    xmlnsAlone = true;
+	}
 	this -> prefix = null;
 	this -> localName = this -> name;
     } else {	//count == 1 && 0 < index < qNameLen-1
@@ -171,7 +185,7 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 	this -> localName = this->name.substringData(index+1, qNameLen-index-1);
     }
 
-    const DOMString& URI = mapPrefix(prefix, fNamespaceURI, nTyp);
+    const DOMString& URI = xmlnsAlone ? xmlnsURI : mapPrefix(prefix, fNamespaceURI, nTyp);
     this -> namespaceURI = URI == null ? DOMString(null) : URI.clone();
 
     this->nType=nTyp;
@@ -329,8 +343,8 @@ NodeImpl * NodeImpl::getLastChild()
 }; 
 
 
-int NodeImpl::getLength() {
-    int count = 0;
+unsigned int NodeImpl::getLength() {
+    unsigned int count = 0;
     NodeImpl *node = firstChild;
     while(node != null)
     {
@@ -543,9 +557,9 @@ tree structure is legal.
   
   
   
-  NodeImpl *NodeImpl::item(unsigned long index) {
+  NodeImpl *NodeImpl::item(unsigned int index) {
       NodeImpl *node = firstChild;
-      for(unsigned long i=0; i<index && node!=null; ++i)
+      for(unsigned int i=0; i<index && node!=null; ++i)
           node = node->nextSibling;
       return node;
   };
@@ -725,9 +739,9 @@ DOMString NodeImpl::getLocalName()
 
 void NodeImpl::setPrefix(const DOMString &fPrefix)
 {
-    static const DOMString xml("xml");
-    static const DOMString xmlURI("http://www.w3.org/XML/1998/namespace");
-    static const DOMString xmlns("xmlns");
+    DOMString xml = DStringPool::getStaticString("xml", &s_xml);
+    DOMString xmlURI = DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace", &s_xmlURI);
+    DOMString xmlns = DStringPool::getStaticString("xmlns", &s_xmlns);
 
     if (readOnly)
 	throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
@@ -765,23 +779,20 @@ void NodeImpl::setPrefix(const DOMString &fPrefix)
 const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
 	const DOMString &namespaceURI, short nType)
 {
-    //The constants below are duplicates of those in setPrefix().
-    //However, there is a static initializer problem if they are
-    //defined outside of each function.  Need to work on this later.
-    static const DOMString xml("xml");
-    static const DOMString xmlURI("http://www.w3.org/XML/1998/namespace");
-    static const DOMString xmlns("xmlns");
-    static const DOMString xmlnsURI("http://www.w3.org/2000/xmlns/");
+    DOMString xml = DStringPool::getStaticString("xml", &s_xml);
+    DOMString xmlURI = DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace", &s_xmlURI);
+    DOMString xmlns = DStringPool::getStaticString("xmlns", &s_xmlns);
+    DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/", &s_xmlnsURI);
 
     if (prefix == null)
 	return namespaceURI;
     if (prefix.equals(xml)) {
 	if (namespaceURI == null || namespaceURI.length() == 0 || namespaceURI.equals(xmlURI))
-	    return xmlURI;
+	    return *s_xmlURI;
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     } else if (nType == DOM_Node::ATTRIBUTE_NODE && prefix.equals(xmlns)) {
 	if (namespaceURI == null || namespaceURI.length() == 0 || namespaceURI.equals(xmlnsURI))
-	    return xmlnsURI;
+	    return *s_xmlnsURI;
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     } else
 	return namespaceURI;

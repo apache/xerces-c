@@ -58,8 +58,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:17  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:25  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:17  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:31  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -83,23 +86,23 @@ class NodeImpl;
 class  NodeVector {
 private:
     NodeImpl        **data;
-    int             allocatedSize;
-    int             nextFreeSlot;
-    void            init(int size);
+    unsigned int    allocatedSize;
+    unsigned int    nextFreeSlot;
+    void            init(unsigned int size);
     void            checkSpace();
     
 public:
     NodeVector();
-    NodeVector(int size);
+    NodeVector(unsigned int size);
     ~NodeVector();
     
-    int             size();
-    NodeImpl        *elementAt(int index);
+    unsigned int    size();
+    NodeImpl        *elementAt(unsigned int index);
     NodeImpl        *lastElement();
     void            addElement(NodeImpl *);
-    void            insertElementAt(NodeImpl *, int index);
-    void            setElementAt(NodeImpl *val, int index);
-    void            removeElementAt(int index);
+    void            insertElementAt(NodeImpl *, unsigned int index);
+    void            setElementAt(NodeImpl *val, unsigned int index);
+    void            removeElementAt(unsigned int index);
     void            reset();
 };
 

@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:04  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:27  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:04  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:22  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -104,7 +107,7 @@ DOM_Text & DOM_Text::operator = (const DOM_NullPtr *other)
 };
 
 
-DOM_Text DOM_Text::splitText(int offset)
+DOM_Text DOM_Text::splitText(unsigned int offset)
 {
         return DOM_Text(((TextImpl *)fImpl)->splitText(offset));
 };

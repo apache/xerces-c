@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:00  twl
- * Initial revision
+ * Revision 1.2  2000/02/04 01:49:28  aruna1
+ * TreeWalker and NodeIterator changes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:00  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:19  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -86,25 +89,33 @@ class NodeFilterImpl;
 class CDOM_EXPORT DOM_NodeFilter
 {
 	public:
-		enum FilterAction {ACCEPT, REJECT, SKIP};
-
-    DOM_NodeFilter (NodeFilterImpl* refCountedFilter);
+		enum FilterAction {FILTER_ACCEPT, FILTER_REJECT, FILTER_SKIP};
+        enum ShowType {
+            SHOW_ALL                       = 0x0000FFFF,
+            SHOW_ELEMENT                   = 0x00000001,
+            SHOW_ATTRIBUTE                 = 0x00000002,
+            SHOW_TEXT                      = 0x00000004,
+            SHOW_CDATA_SECTION             = 0x00000008,
+            SHOW_ENTITY_REFERENCE          = 0x00000010,
+            SHOW_ENTITY                    = 0x00000020,
+            SHOW_PROCESSING_INSTRUCTION    = 0x00000040,
+            SHOW_COMMENT                   = 0x00000080,
+            SHOW_DOCUMENT                  = 0x00000100,
+            SHOW_DOCUMENT_TYPE             = 0x00000200,
+            SHOW_DOCUMENT_FRAGMENT         = 0x00000400,
+            SHOW_NOTATION                  = 0x00000800
+        };
 
     DOM_NodeFilter();
+    virtual ~DOM_NodeFilter();
+    virtual short acceptNode (DOM_Node node) =0;
+
+private:
     DOM_NodeFilter(const DOM_NodeFilter &other);
     DOM_NodeFilter & operator = (const DOM_NodeFilter &other);
-    DOM_NodeFilter & operator = (const DOM_NullPtr *val);
-    ~DOM_NodeFilter();
     bool operator == (const DOM_NodeFilter &other) const;
     bool operator != (const DOM_NodeFilter &other) const;
 
-    bool operator == (const DOM_NullPtr *nullPtr) const;
-    bool operator != (const DOM_NullPtr *nullPtr) const;
-
-		virtual FilterAction acceptNode (DOM_Node node);
-
-  private:
-    NodeFilterImpl*   fImpl;
 };
 
 #endif
