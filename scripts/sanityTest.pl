@@ -72,6 +72,9 @@
 
 $os     = $ARGV[0];
 
+# flush output
+$| = 1;
+
 if (lc($os) eq "win") {
     $pathsep = "\\";
 }
