@@ -182,7 +182,7 @@ Usage: runConfigure "options"
        -h (to get help on the above commands)</source>
 
             <note>&XercesCName; builds as a standalone library and also as a library
-            dependent on IBM's International Classes for Unicode (ICU). For simplicity,
+            dependent on International Components for Unicode (ICU). For simplicity,
             the following discussion only targets standalone builds.</note>
 
             <p>One of the common ways to build &XercesCName; is as follows:</p>
@@ -460,7 +460,7 @@ gmake</source>
     <s2 title="How to Build ICU">
         <p>As mentioned earlier, &XercesCName; may be built in stand-alone mode using
         native encoding support and also using ICU where you get support for 100's
-        of encodings. ICU stands for International Classes for Unicode and is an
+        of encodings. ICU stands for International Components for Unicode and is an
         open source distribution from IBM. You can get
         <jump href="http://www10.software.ibm.com/developerworks/opensource/icu/project/">ICU libraries</jump> from
         <jump href="http://www.ibm.com/developerWorks">IBM's developerWorks site</jump>
