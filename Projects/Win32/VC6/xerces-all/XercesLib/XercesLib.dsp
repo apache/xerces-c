@@ -456,6 +456,10 @@ SOURCE=..\..\..\..\..\src\util\HashBase.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\HashCMStateSet.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\HashPtr.cpp
 # End Source File
 # Begin Source File
@@ -725,6 +729,10 @@ SOURCE=..\..\..\..\..\src\util\XMLIBM1140Transcoder.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLIBM1140Transcoder.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLInteger.hpp
 # End Source File
 # Begin Source File
 
