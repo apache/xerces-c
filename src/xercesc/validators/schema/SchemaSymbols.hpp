@@ -132,9 +132,7 @@ public :
     static const XMLCh fgATT_MEMBERTYPES[];
     static const XMLCh fgATT_BLOCK[];
     static const XMLCh fgATT_BLOCKDEFAULT[];
-    static const XMLCh fgATT_CONTENT[];
     static const XMLCh fgATT_DEFAULT[];
-    static const XMLCh fgATT_DERIVEDBY[];
     static const XMLCh fgATT_ELEMENTFORMDEFAULT[];
     static const XMLCh fgATT_SUBSTITUTIONGROUP[];
     static const XMLCh fgATT_FINAL[];

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/27 19:39:25  knoaman
+ * remove unused constants.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
+ * sane_include
  *
  * Revision 1.14  2001/11/07 19:20:01  peiyongz
  * DateTime Port
@@ -470,20 +473,9 @@ const XMLCh SchemaSymbols::fgATT_BLOCKDEFAULT[] =
     chLatin_e, chLatin_f, chLatin_a, chLatin_u, chLatin_l, chLatin_t, chNull
 };
 
-const XMLCh SchemaSymbols::fgATT_CONTENT[] =
-{
-    chLatin_c, chLatin_o, chLatin_n, chLatin_t, chLatin_e, chLatin_n, chLatin_t, chNull
-};
-
 const XMLCh SchemaSymbols::fgATT_DEFAULT[] =
 {
     chLatin_d, chLatin_e, chLatin_f, chLatin_a, chLatin_u, chLatin_l, chLatin_t, chNull
-};
-
-const XMLCh SchemaSymbols::fgATT_DERIVEDBY[] =
-{
-    chLatin_d, chLatin_e, chLatin_r, chLatin_i, chLatin_v, chLatin_e,
-    chLatin_d, chLatin_B, chLatin_y, chNull
 };
 
 const XMLCh SchemaSymbols::fgATT_ELEMENTFORMDEFAULT[] =
