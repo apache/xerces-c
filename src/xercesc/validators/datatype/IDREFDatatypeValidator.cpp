@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/11/12 20:31:33  peiyongz
+ * Using ValidationContext to validate()
+ *
  * Revision 1.6  2003/09/30 18:17:53  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -108,7 +111,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 IDREFDatatypeValidator::IDREFDatatypeValidator(MemoryManager* const manager)
 :StringDatatypeValidator(0, 0, 0, DatatypeValidator::IDREF, manager)
-,fIDRefList(0)
 {}
 
 IDREFDatatypeValidator::IDREFDatatypeValidator(
@@ -118,7 +120,6 @@ IDREFDatatypeValidator::IDREFDatatypeValidator(
                                          , const int                           finalSet
                                          , MemoryManager* const                manager)
 :StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::IDREF, manager)
-,fIDRefList(0)
 {
     init(enums);
 }
@@ -144,42 +145,27 @@ IDREFDatatypeValidator::IDREFDatatypeValidator(
                         , const ValidatorType                 type
                         , MemoryManager* const                manager)
 :StringDatatypeValidator(baseValidator, facets, finalSet, type, manager)
-,fIDRefList(0)
 {
     // do not invoke init() here!!!
 }
 
-void IDREFDatatypeValidator::validate(const XMLCh* const content)
+void IDREFDatatypeValidator::validate(const XMLCh*             const content
+                                    ,       ValidationContext* const context)
 {
     // use StringDatatypeValidator (which in turn, invoke
     // the baseValidator) to validate content against
     // facets if any.
     //
-    StringDatatypeValidator::validate(content);
+    StringDatatypeValidator::validate(content, context);
 
     // this is different from java, since we always add, while
     // in java, it is done as told. REVISIT.
     //
-    if (fIDRefList)
-        addIdRef(content);
-}
-
-//
-// Add an IDREF to the fIDRefList
-//
-void IDREFDatatypeValidator::addIdRef(const XMLCh* const content)
-{
-    XMLRefInfo* find = fIDRefList->get(content);
-    if (!find)
+    if (context)
     {
-        find = new (fMemoryManager) XMLRefInfo(content, false, false, fMemoryManager);
-        fIDRefList->put((void*)find->getRefName(), find);
+        context->addIdRef(content);
     }
 
-    //
-    //  Mark it used
-    //
-    find->setUsed(true);
 }
 
 void IDREFDatatypeValidator::checkValueSpace(const XMLCh* const content)

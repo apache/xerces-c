@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/11/12 20:31:33  peiyongz
+ * Using ValidationContext to validate()
+ *
  * Revision 1.6  2003/09/30 18:17:53  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -110,7 +113,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 IDDatatypeValidator::IDDatatypeValidator(MemoryManager* const manager)
 :StringDatatypeValidator(0, 0, 0, DatatypeValidator::ID, manager)
-,fIDRefList(0)
 {}
 
 IDDatatypeValidator::IDDatatypeValidator(
@@ -120,7 +122,6 @@ IDDatatypeValidator::IDDatatypeValidator(
                         , const int                           finalSet
                         , MemoryManager* const                manager)
 :StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ID, manager)
-,fIDRefList(0)
 {
     init(enums);
 }
@@ -146,47 +147,25 @@ IDDatatypeValidator::IDDatatypeValidator(
                         , const ValidatorType                 type
                         , MemoryManager* const                manager)
 :StringDatatypeValidator(baseValidator, facets, finalSet, type, manager)
-,fIDRefList(0)
 {
     // do not invoke init() here!!!
 }
 
-void IDDatatypeValidator::validate(const XMLCh* const content)
+void IDDatatypeValidator::validate(const XMLCh*             const content
+                                 ,       ValidationContext* const context)
 {
     // use StringDatatypeValidator (which in turn, invoke
     // the baseValidator) to validate content against
     // facets if any.
     //
-    StringDatatypeValidator::validate(content);
+    StringDatatypeValidator::validate(content, context);
 
     // storing IDs to the global ID table
-    if (fIDRefList)
-        addId(content);
-}
-
-void IDDatatypeValidator::addId(const XMLCh * const content)
-{
-
-    XMLRefInfo* find = fIDRefList->get(content);
-    if (find)
+    if (context)
     {
-        if (find->getDeclared())
-        {
-            ThrowXML1(InvalidDatatypeValueException
-                    , XMLExcepts::VALUE_ID_Not_Unique
-                    , content);
-        }
-    }
-     else
-    {
-        find = new (fMemoryManager) XMLRefInfo(content, false, false, fMemoryManager);
-        fIDRefList->put((void*)find->getRefName(), find);
+        context->addId(content);
     }
 
-    //
-    //  Mark it declared
-    //
-    find->setDeclared(true);
 }
 
 void IDDatatypeValidator::checkValueSpace(const XMLCh* const content)

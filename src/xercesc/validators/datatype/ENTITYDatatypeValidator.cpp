@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/11/12 20:31:33  peiyongz
+ * Using ValidationContext to validate()
+ *
  * Revision 1.7  2003/09/30 18:17:53  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -115,7 +118,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 ENTITYDatatypeValidator::ENTITYDatatypeValidator(MemoryManager* const manager)
 :StringDatatypeValidator(0, 0, 0, DatatypeValidator::ENTITY, manager)
-,fEntityDeclPool(0)
 {}
 
 ENTITYDatatypeValidator::ENTITYDatatypeValidator(
@@ -125,7 +127,6 @@ ENTITYDatatypeValidator::ENTITYDatatypeValidator(
                         , const int                           finalSet
                         , MemoryManager* const                manager)
 :StringDatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::ENTITY, manager)
-,fEntityDeclPool(0)
 {
     init(enums);
 }
@@ -153,40 +154,23 @@ int ENTITYDatatypeValidator::compare(const XMLCh* const lValue
     return ( XMLString::equals(lValue, rValue)? 0 : -1);
 }
 
-void ENTITYDatatypeValidator::validate(const XMLCh* const content)
+void ENTITYDatatypeValidator::validate(const XMLCh*             const content
+                                     ,       ValidationContext* const context)
 {
     // use StringDatatypeValidator (which in turn, invoke
     // the baseValidator) to validate content against
     // facets if any.
     //
-    StringDatatypeValidator::validate(content);
+    StringDatatypeValidator::validate(content, context);
 
     //
     // parse the entity iff an EntityDeclPool is provided
     //
-    if (fEntityDeclPool)
+    if (context)
     {
-        DTDEntityDecl* decl = fEntityDeclPool->getByKey(content);
-
-        if (!decl                ||
-            (!decl->isUnparsed())  )
-        {
-            ThrowXML1(InvalidDatatypeValueException
-                    , XMLExcepts::VALUE_ENTITY_Invalid
-                    , content);
-        }
-
-    }
-    else {
-        ThrowXML1
-        (
-            InvalidDatatypeValueException
-            , XMLExcepts::VALUE_ENTITY_Invalid
-            , content
-        );
+        context->checkEntity(content);
     }
 
-    return;
 }
 
 void ENTITYDatatypeValidator::checkValueSpace(const XMLCh* const content)
