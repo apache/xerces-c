@@ -253,8 +253,12 @@ ifeq (${MESSAGELOADER}, ICU)
     ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc30 -licudata30 -lXercesMessages25
 endif
 
-PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
-
+ifeq (${CXXVER}, v5compat)
+   PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE -qnamemangling=v5
+else
+   PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE -qnamemangling=ansi
+endif
+    
 ifeq (${BITSTOBUILD}, 64)
     MAKE_SHARED = makeC++SharedLib_r -p 5000 ${LDFLAGS} -X64
     MAKE_SHARED_C = makeC++SharedLib_r -p 5000 ${LDFLAGS} -X64

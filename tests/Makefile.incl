@@ -155,7 +155,13 @@ endif
 
 #================= AIX SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, AIX)
-CMP= -c ${CXXFLAGS} -qnotempinc
+
+ifeq (${CXXVER}, v5compat)
+   CMP= -c ${CXXFLAGS} -qnotempinc -qnamemangling=v5   
+else
+   CMP= -c ${CXXFLAGS} -qnotempinc -qnamemangling=ansi
+endif
+
 CC=${COMPILER} -D${PLATFORM}
 LINK =  ${COMPILER} ${LDFLAGS}
 # the compiler knows about this two

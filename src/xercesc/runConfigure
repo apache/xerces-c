@@ -92,7 +92,7 @@ usage()
             [required; no default]"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc or ecc) 
             [default is make default; cc for gnu make]"
-    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, aCC05, xlC_r, QCC, 
+    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, aCC05, xlC_r, xlC_rv5compat, QCC, 
             icc or ecc) [default is make default; g++ for gnu make]"
     echo "       -d (specifies that you want to build debug version)
             [default: no debug]"
@@ -661,10 +661,15 @@ export NETACCESSOR
 #
 
 case $cppcompiler in
+   xlC_rv5compat)
+      CXX="xlC_r"
+      CXXVER="v5compat"
+      ;;
+      
    xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx | ecc | QCC )
       CXX="$cppcompiler"
       ;;
-      
+    
    aCC05)
       CXX="aCC"
       CXXVER="aCC05"

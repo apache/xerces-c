@@ -497,8 +497,13 @@ if ( ($platform =~ m/AIX/i)      ||
         if ($opt_c eq "") {$opt_c = "xlc_r"; }
         if ($opt_x eq "") {$opt_x = "xlC_r"; }
 
-        $icu_cxxflags = '"-w -O2 -qmaxmem=-1"';
-        $icu_cflags = '"-w -O2 -qmaxmem=-1"';
+        if ($opt_x eq "xlC_rv5compat") {
+            $icu_cxxflags = '"-w -O2 -qmaxmem=-1 -qnamemangling=v5"';
+            $icu_cflags   = '"-w -O2 -qmaxmem=-1 -qnamemangling=v5"';        	
+        } else {
+            $icu_cxxflags = '"-w -O2 -qmaxmem=-1"';
+            $icu_cflags = '"-w -O2 -qmaxmem=-1"';
+        }
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LIBPATH'}="$ICUROOT/lib:$XERCESCROOT/lib:$ENV{'LIBPATH'}";
@@ -704,8 +709,21 @@ if ( ($platform =~ m/AIX/i)      ||
                 }
                 else {
                     psystem ("CC=$opt_c CXX=$cXX CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT");
-                }                                   
+                }         
+           }elsif ($platform eq 'aix') {
 
+                my $cXX = $opt_x;                 
+                if ($opt_x eq "xlC_rv5compat") {
+                    $cXX = "xlC_r";
+                }
+
+                if ($opt_b eq "32") {
+                    psystem ("CC=$opt_c CXX=$cXX CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT --disable-64bit-libs");
+                }
+                else {
+                    psystem ("CC=$opt_c CXX=$cXX CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT");
+                }
+                                                    
             } else {
             # set the 32 bit or 64 bit
                 if ($opt_b eq "32") {
