@@ -933,5 +933,37 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
+  <faq title="Why do I get link error saying icudata library not found when building with ICU?">
+
+    <q>Why do I get link error saying icudata library not found when building with ICU?</q>
+
+    <a>
+       <p>There is a bug in the Makefile of ICU 1.7, 1.8 and 1.8.1.  The link created during
+          ICU installation in $ICUROOT is, for example,
+       </p>
+
+       <p>icudata.so@ -> icudt17l.so
+       </p>
+
+       <p>instead of
+       </p>
+
+       <p>libicudata.so@ -> libicudt17l.so <br/>
+       </p>
+
+       <p>Therefore the -licudata doesn't work.  To bypass the problem, please manually create the
+          following link:
+       </p>
+
+       <p>libicudata.so@ -> libicudt17l.so
+       </p>
+
+       <p>This problem has been fixed in ICU 2.0.
+       </p>
+
+
+    </a>
+  </faq>
+
 
 </faqs>
