@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/12 00:16:23  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
  * Revision 1.3  1999/12/18 00:18:10  roddey
  * More changes to support the new, completely orthagonal support for
  * intrinsic encodings.
@@ -293,6 +297,18 @@ public:
                 XMLCh* const    target
         , const XMLCh* const    src
         , const unsigned int    maxChars
+    );
+
+    static const XMLCh* findAny
+    (
+        const   XMLCh* const    toSearch
+        , const XMLCh* const    searchList
+    );
+
+    static XMLCh* findAny
+    (
+                XMLCh* const    toSearch
+        , const XMLCh* const    searchList
     );
 
     static unsigned int hash

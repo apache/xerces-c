@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/12 00:15:04  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
  * Revision 1.2  1999/12/15 19:48:03  roddey
  * Changed to use new split of transcoder interfaces into XML transcoders and
  * LCP transcoders, and implementation of intrinsic transcoders as pluggable
@@ -212,7 +216,6 @@ public :
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    void setBasePath(const XMLCh* const path);
     void setEntityHandler(XMLEntityHandler* const newHandler);
     void setThrowEOE(const bool newValue);
 
@@ -227,10 +230,6 @@ private :
 
     // -----------------------------------------------------------------------
     //  Private data members
-    //
-    //  fBasePath
-    //      This is the base path from which all other relative references
-    //      are based. Its passed on to us from the scanner.
     //
     //  fCurEntity
     //      This is the current top of stack entity. We pull it off the stack
@@ -266,7 +265,6 @@ private :
     //      of entities in the int/ext subsets, so it will turn this flag off
     //      until it gets into the content usually.
     // -----------------------------------------------------------------------
-    XMLCh*                      fBasePath;
     XMLEntityDecl*              fCurEntity;
     XMLReader*                  fCurReader;
     XMLEntityHandler*           fEntityHandler;
@@ -355,12 +353,6 @@ inline void ReaderMgr::skipPastChar(const XMLCh toSkipPast)
         if ((nextCh == toSkipPast) || !nextCh)
             break;
     }
-}
-
-inline void ReaderMgr::setBasePath(const XMLCh* const path)
-{
-    delete [] fBasePath;
-    fBasePath = XMLString::replicate(path);
 }
 
 inline void ReaderMgr::setEntityHandler(XMLEntityHandler* const newHandler)

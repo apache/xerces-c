@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:45  twl
- * Initial revision
+ * Revision 1.2  2000/01/12 00:15:39  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:45  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:01  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -74,8 +78,52 @@
 
 
 // ---------------------------------------------------------------------------
-//  InputSource: Constructors and Destructor
+//  InputSource: Destructor
 // ---------------------------------------------------------------------------
+InputSource::~InputSource()
+{
+    delete [] fEncoding;
+    delete [] fPublicId;
+    delete [] fSystemId;
+}
+
+
+// ---------------------------------------------------------------------------
+//  InputSource: Setter methods
+// ---------------------------------------------------------------------------
+void InputSource::setEncoding(const XMLCh* const encodingStr)
+{
+    delete [] fEncoding;
+    fEncoding = XMLString::replicate(encodingStr);
+}
+
+
+void InputSource::setPublicId(const XMLCh* const publicId)
+{
+    delete [] fPublicId;
+    fPublicId = XMLString::replicate(publicId);
+}
+
+
+void InputSource::setSystemId(const XMLCh* const systemId)
+{
+    delete [] fSystemId;
+    fSystemId = XMLString::replicate(systemId);
+}
+
+
+
+// ---------------------------------------------------------------------------
+//  InputSource: Hidden Constructors
+// ---------------------------------------------------------------------------
+InputSource::InputSource() :
+
+    fEncoding(0)
+    , fPublicId(0)
+    , fSystemId(0)
+{
+}
+
 InputSource::InputSource(const XMLCh* const systemId) :
 
     fEncoding(0)
@@ -108,35 +156,4 @@ InputSource::InputSource(const  char* const systemId
     , fPublicId(XMLString::transcode(publicId))
     , fSystemId(XMLString::transcode(systemId))
 {
-}
-
-InputSource::~InputSource()
-{
-    delete [] fEncoding;
-    delete [] fPublicId;
-    delete [] fSystemId;
-}
-
-
-// ---------------------------------------------------------------------------
-//  InputSource: Setter methods
-// ---------------------------------------------------------------------------
-void InputSource::setEncoding(const XMLCh* const encodingStr)
-{
-    delete [] fEncoding;
-    fEncoding = XMLString::replicate(encodingStr);
-}
-
-
-void InputSource::setPublicId(const XMLCh* const publicId)
-{
-    delete [] fPublicId;
-    fPublicId = XMLString::replicate(publicId);
-}
-
-
-void InputSource::setSystemId(const XMLCh* const systemId)
-{
-    delete [] fSystemId;
-    fSystemId = XMLString::replicate(systemId);
 }

@@ -61,6 +61,10 @@
  *  are created and added to the DOM tree.
  *
  * $Log$
+ * Revision 1.3  2000/01/12 00:15:22  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
  * Revision 1.2  2000/01/05 01:16:11  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -82,7 +86,6 @@
 #include <sax/SAXParseException.hpp>
 #include <framework/XMLNotationDecl.hpp>
 #include <util/IOException.hpp>
-#include <internal/URLInputSource.hpp>
 #include <internal/XMLScanner.hpp>
 #include <validators/DTD/DTDValidator.hpp>
 #include <parsers/DOMParser.hpp>
@@ -210,13 +213,7 @@ void DOMParser::parse(const InputSource& source, const bool reuseValidator)
         fParseInProgress = false;
     }
 
-    catch(const SAXException&)
-    {
-        fParseInProgress = false;
-        throw;
-    }
-
-    catch(const XMLException&)
+    catch(...)
     {
         fParseInProgress = false;
         throw;
@@ -225,14 +222,42 @@ void DOMParser::parse(const InputSource& source, const bool reuseValidator)
 
 void DOMParser::parse(const XMLCh* const systemId, const bool reuseValidator)
 {
-    // Just call the URL input source version
-    parse(URLInputSource(systemId), reuseValidator);
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+
+    try
+    { 
+        fParseInProgress = true;
+        fScanner->scanDocument(systemId, reuseValidator);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
 }
 
 void DOMParser::parse(const char* const systemId, const bool reuseValidator)
 {
-    // Just call the URL input source version
-    parse(URLInputSource(systemId), reuseValidator);
+    // Avoid multiple entrance
+    if (fParseInProgress)
+        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+
+    try
+    { 
+        fParseInProgress = true;
+        fScanner->scanDocument(systemId, reuseValidator);
+        fParseInProgress = false;
+    }
+
+    catch(...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
 }
 
 
@@ -244,16 +269,28 @@ bool DOMParser::parseFirst( const   XMLCh* const    systemId
                             ,       XMLPScanToken&  toFill
                             , const bool            reuseValidator)
 {
-    // Call the other version with a URL input source
-    return parseFirst(URLInputSource(systemId), toFill, reuseValidator);
+    //
+    //  Avoid multiple entrance. We cannot enter here while a regular parse
+    //  is in progress.
+    //
+    if (fParseInProgress)
+        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+
+    return fScanner->scanFirst(systemId, toFill, reuseValidator);
 }
 
 bool DOMParser::parseFirst( const   char* const         systemId
                             ,       XMLPScanToken&      toFill
                             , const bool                reuseValidator)
 {
-    // Call the other version with a URL input source
-    return parseFirst(URLInputSource(systemId), toFill, reuseValidator);
+    //
+    //  Avoid multiple entrance. We cannot enter here while a regular parse
+    //  is in progress.
+    //
+    if (fParseInProgress)
+        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+
+    return fScanner->scanFirst(systemId, toFill, reuseValidator);
 }
 
 bool DOMParser::parseFirst( const   InputSource&    source

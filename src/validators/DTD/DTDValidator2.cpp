@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/12 00:17:07  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
  * Revision 1.3  1999/12/04 01:13:16  roddey
  * Fixed the logic for checking for PIs that start with 'xml'. It was doing doing "if (stringICompare()) "
  * instead of "if (!stringICompare()).
@@ -83,12 +87,12 @@
 #include <util/UnexpectedEOFException.hpp>
 #include <util/URL.hpp>
 #include <util/XMLUni.hpp>
+#include <sax/InputSource.hpp>
 #include <framework/XMLBufferMgr.hpp>
 #include <framework/XMLDocumentHandler.hpp>
 #include <framework/XMLElementDecl.hpp>
 #include <framework/XMLEntityHandler.hpp>
 #include <framework/XMLNotationDecl.hpp>
-#include <internal/URLInputSource.hpp>
 #include <internal/EndOfEntityException.hpp>
 #include <internal/ReaderMgr.hpp>
 #include <internal/XMLScanner.hpp>

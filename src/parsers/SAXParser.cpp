@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/12 00:15:22  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
  * Revision 1.2  1999/12/15 19:57:48  roddey
  * Got rid of redundant 'const' on boolean return value. Some compilers choke
  * on this and its useless.
@@ -78,7 +82,6 @@
 #include <sax/ErrorHandler.hpp>
 #include <sax/EntityResolver.hpp>
 #include <sax/SAXParseException.hpp>
-#include <internal/URLInputSource.hpp>
 #include <internal/XMLScanner.hpp>
 #include <parsers/SAXParser.hpp>
 #include <validators/DTD/DTDValidator.hpp>
@@ -258,19 +261,13 @@ void SAXParser::parse(const InputSource& source, const bool reuseValidator)
         ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
 
     try
-    { 
+    {
         fParseInProgress = true;
         fScanner->scanDocument(source, reuseValidator);
         fParseInProgress = false;
     }
 
-    catch (const SAXException&)
-    {
-        fParseInProgress = false;
-        throw;
-    }
-
-    catch (const XMLException&)
+    catch (...)
     {
         fParseInProgress = false;
         throw;
@@ -279,18 +276,42 @@ void SAXParser::parse(const InputSource& source, const bool reuseValidator)
 
 void SAXParser::parse(const XMLCh* const systemId, const bool reuseValidator)
 {
+    // Avoid multiple entrance
     if (fParseInProgress)
         ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
 
-    parse(URLInputSource(systemId), reuseValidator);
+    try
+    {
+        fParseInProgress = true;
+        fScanner->scanDocument(systemId, reuseValidator);
+        fParseInProgress = false;
+    }
+
+    catch (...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
 }
 
 void SAXParser::parse(const char* const systemId, const bool reuseValidator)
 {
+    // Avoid multiple entrance
     if (fParseInProgress)
         ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
 
-    parse(URLInputSource(systemId), reuseValidator);
+    try
+    {
+        fParseInProgress = true;
+        fScanner->scanDocument(systemId, reuseValidator);
+        fParseInProgress = false;
+    }
+
+    catch (...)
+    {
+        fParseInProgress = false;
+        throw;
+    }
 }
 
 void SAXParser::setDocumentHandler(DocumentHandler* const handler)
@@ -365,16 +386,28 @@ bool SAXParser::parseFirst( const   XMLCh* const    systemId
                             ,       XMLPScanToken&  toFill
                             , const bool            reuseValidator)
 {
-    // Call the other version with a URL input source
-    return parseFirst(URLInputSource(systemId), toFill, reuseValidator);
+    //
+    //  Avoid multiple entrance. We cannot enter here while a regular parse
+    //  is in progress.
+    //
+    if (fParseInProgress)
+        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+
+    return fScanner->scanFirst(systemId, toFill, reuseValidator);
 }
 
 bool SAXParser::parseFirst( const   char* const     systemId
                             ,       XMLPScanToken&  toFill
                             , const bool            reuseValidator)
 {
-    // Call the other version with a URL input source
-    return parseFirst(URLInputSource(systemId), toFill, reuseValidator);
+    //
+    //  Avoid multiple entrance. We cannot enter here while a regular parse
+    //  is in progress.
+    //
+    if (fParseInProgress)
+        ThrowXML(IOException, XML4CExcepts::Gen_ParseInProgress);
+
+    return fScanner->scanFirst(systemId, toFill, reuseValidator);
 }
 
 bool SAXParser::parseFirst( const   InputSource&    source

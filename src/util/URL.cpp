@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:04:20  twl
- * Initial revision
+ * Revision 1.2  2000/01/12 00:16:22  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:04:20  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:45:16  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -72,7 +76,9 @@
 #include <util/Janitor.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/RuntimeException.hpp>
+#include <util/TransService.hpp>
 #include <util/URL.hpp>
+#include <util/XMLNetAccessor.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
 
@@ -89,7 +95,6 @@ struct TypeEntry
 {
     URL::Protocols  protocol;
     const XMLCh*    prefix;
-    bool            supported;
 };
 
 
@@ -112,26 +117,17 @@ struct TypeEntry
 // ---------------------------------------------------------------------------
 static const XMLCh  gFileString[] =
 {
-        chLatin_f, chLatin_i, chLatin_l, chLatin_e, chColon
-    ,   chForwardSlash, chForwardSlash, chNull
+        chLatin_f, chLatin_i, chLatin_l, chLatin_e, chNull
 };
 
 static const XMLCh gFTPString[]  =
 {
-        chLatin_f, chLatin_t, chLatin_p, chColon, chForwardSlash
-    ,   chForwardSlash, chNull
-};
-
-static const XMLCh gGopherString[]  =
-{
-        chLatin_g, chLatin_o, chLatin_p, chLatin_h, chLatin_e
-    ,   chLatin_r, chColon, chForwardSlash, chForwardSlash, chNull
+        chLatin_f, chLatin_t, chLatin_p, chNull
 };
 
 static const XMLCh gHTTPString[] =
 {
-        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon
-    ,   chForwardSlash, chForwardSlash, chNull
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chNull
 };
 
 static const XMLCh gLocalHostString[] =
@@ -140,60 +136,17 @@ static const XMLCh gLocalHostString[] =
     ,   chLatin_h, chLatin_o, chLatin_s, chLatin_t, chNull
 };
 
-static const XMLCh gMailToString[]  =
-{
-        chLatin_m, chLatin_a, chLatin_i, chLatin_l, chLatin_t
-    ,   chLatin_o, chColon, chForwardSlash, chForwardSlash, chNull
-};
-
-static const XMLCh gNewsString[] =
-{
-        chLatin_n, chLatin_e, chLatin_w, chLatin_s, chColon
-    ,   chForwardSlash, chForwardSlash, chNull
-};
-
-static const XMLCh gNNTPString[] =
-{
-        chLatin_n, chLatin_n, chLatin_t, chLatin_p, chColon
-    ,   chForwardSlash, chForwardSlash, chNull
-};
-
-static const XMLCh gTelnetString[]  =
-{
-        chLatin_t, chLatin_e, chLatin_l, chLatin_n, chLatin_e
-    ,   chLatin_t, chColon, chForwardSlash, chForwardSlash, chNull
-};
-
-static const XMLCh gWaisString[]  =
-{
-        chLatin_w, chLatin_a, chLatin_i, chLatin_s, chColon
-    ,   chForwardSlash, chForwardSlash, chNull
-};
-
-static const XMLCh gProsperoString[]  =
-{
-        chLatin_p, chLatin_r, chLatin_o, chLatin_s, chLatin_p
-    ,   chLatin_e, chLatin_r, chLatin_o, chColon, chForwardSlash
-    ,   chForwardSlash, chNull
-};
-
 static TypeEntry gTypeList[URL::Protocols_Count] = 
 {
-        { URL::File     , gFileString       , true }
-    ,   { URL::HTTP     , gHTTPString       , false }
-    ,   { URL::FTP      , gFTPString        , false }
-    ,   { URL::Gopher   , gGopherString     , false }
-    ,   { URL::MailTo   , gMailToString     , false }
-    ,   { URL::News     , gNewsString       , false }
-    ,   { URL::NNTP     , gNNTPString       , false }
-    ,   { URL::Telnet   , gTelnetString     , false }
-    ,   { URL::Wais     , gWaisString       , false }
-    ,   { URL::Prospero , gProsperoString   , false }
+        { URL::File     , gFileString }
+    ,   { URL::HTTP     , gHTTPString }
+    ,   { URL::FTP      , gFTPString  }
 };
+static const unsigned int gTypeListSize = sizeof(gTypeList) / sizeof(gTypeList[0]);
 
 // !!! Keep these up to date with list above!
-static const unsigned int gMaxProtoLen = 11;
-static const unsigned int gMaxColonPos = gMaxProtoLen - 3;
+static const unsigned int gMaxProtoLen = 4;
+
 
 
 // ---------------------------------------------------------------------------
@@ -224,23 +177,140 @@ static unsigned int xlatHexDigit(const XMLCh toXlat)
 
 
 // ---------------------------------------------------------------------------
+//  URL: Public, static methods
+// ---------------------------------------------------------------------------
+URL::Protocols URL::lookupByName(const XMLCh* const protoName)
+{
+    for (unsigned int index = 0; index < gTypeListSize; index++)
+    {
+        if (!XMLString::compareIString(gTypeList[index].prefix, protoName))
+            return gTypeList[index].protocol;
+    }
+    return URL::Unknown;
+}
+
+
+
+// ---------------------------------------------------------------------------
 //  URL: Constructors and Destructor
 // ---------------------------------------------------------------------------
 URL::URL() :
 
-    fFullURL(0)
+    fFragment(0)
     , fHost(0)
+    , fPassword(0)
     , fPath(0)
-    , fProtocol(URL::File)
+    , fProtocol(URL::Unknown)
+    , fQuery(0)
+    , fUser(0)
+    , fURLText(0)
 {
+}
+
+URL::URL(const  XMLCh* const    baseURL
+        , const XMLCh* const    relativeURL) :
+
+    fFragment(0)
+    , fHost(0)
+    , fPassword(0)
+    , fPath(0)
+    , fProtocol(URL::Unknown)
+    , fQuery(0)
+    , fUser(0)
+    , fURLText(0)
+{
+    setURL(baseURL, relativeURL);
+}
+
+URL::URL(const  XMLCh* const    baseURL
+        , const char* const     relativeURL) :
+
+    fFragment(0)
+    , fHost(0)
+    , fPassword(0)
+    , fPath(0)
+    , fProtocol(URL::Unknown)
+    , fQuery(0)
+    , fUser(0)
+    , fURLText(0)
+{
+    XMLCh* tmpRel = XMLString::transcode(relativeURL);
+    ArrayJanitor<XMLCh> janRel(tmpRel);
+    setURL(baseURL, tmpRel);
+}
+
+URL::URL(const  URL&            baseURL
+        , const XMLCh* const    relativeURL) :
+
+    fFragment(0)
+    , fHost(0)
+    , fPassword(0)
+    , fPath(0)
+    , fProtocol(URL::Unknown)
+    , fQuery(0)
+    , fUser(0)
+    , fURLText(0)
+{
+    setURL(baseURL, relativeURL);
+}
+
+URL::URL(const  URL&        baseURL
+        , const char* const relativeURL) :
+
+    fFragment(0)
+    , fHost(0)
+    , fPassword(0)
+    , fPath(0)
+    , fProtocol(URL::Unknown)
+    , fQuery(0)
+    , fUser(0)
+    , fURLText(0)
+{
+    XMLCh* tmpRel = XMLString::transcode(relativeURL);
+    ArrayJanitor<XMLCh> janRel(tmpRel);
+    setURL(baseURL, tmpRel);
+}
+
+URL::URL(const XMLCh* const urlText) :
+
+    fFragment(0)
+    , fHost(0)
+    , fPassword(0)
+    , fPath(0)
+    , fProtocol(URL::Unknown)
+    , fQuery(0)
+    , fUser(0)
+    , fURLText(0)
+{
+    setURL(urlText);
+}
+
+URL::URL(const char* const urlText) :
+
+    fFragment(0)
+    , fHost(0)
+    , fPassword(0)
+    , fPath(0)
+    , fProtocol(URL::Unknown)
+    , fQuery(0)
+    , fUser(0)
+    , fURLText(0)
+{
+    XMLCh* tmpText = XMLString::transcode(urlText);
+    ArrayJanitor<XMLCh> janRel(tmpText);
+    setURL(tmpText);
 }
 
 URL::URL(const URL& toCopy) :
 
-    fFullURL(XMLString::replicate(toCopy.fFullURL))
+    fFragment(XMLString::replicate(toCopy.fFragment))
     , fHost(XMLString::replicate(toCopy.fHost))
+    , fPassword(XMLString::replicate(toCopy.fPassword))
     , fPath(XMLString::replicate(toCopy.fPath))
     , fProtocol(toCopy.fProtocol)
+    , fQuery(XMLString::replicate(toCopy.fQuery))
+    , fUser(XMLString::replicate(toCopy.fUser))
+    , fURLText(XMLString::replicate(toCopy.fURLText))
 {
 }
 
@@ -262,29 +332,26 @@ URL& URL::operator=(const URL& toAssign)
     cleanup();
 
     // And copy his stuff
-    fFullURL = XMLString::replicate(toAssign.fFullURL);
+    fFragment = XMLString::replicate(toAssign.fFragment);
     fHost = XMLString::replicate(toAssign.fHost);
+    fPassword = XMLString::replicate(toAssign.fPassword);
     fPath = XMLString::replicate(toAssign.fPath);
     fProtocol = toAssign.fProtocol;
+    fQuery = XMLString::replicate(toAssign.fQuery);
+    fUser = XMLString::replicate(toAssign.fUser);
+    fURLText = XMLString::replicate(toAssign.fURLText);
 
     return *this;
 }
 
 bool URL::operator==(const URL& toCompare) const
 {
-    // Test the obvious one first
-    if (fProtocol != toCompare.fProtocol)
-        return false;
-
     //
-    //  Oh well, we have to test the components. Don't test the original
-    //  URLs, because normalization might have occured that would have made
-    //  them equal even though actual text of the full URLs is not.
+    //  Compare the two complete URLs (which have been processed the same
+    //  way so they should now be the same even if they came in via different
+    //  relative parts.
     //
-    if (XMLString::compareString(fPath, toCompare.fPath))
-        return false;
-
-    if (XMLString::compareString(fHost, toCompare.fHost))
+    if (XMLString::compareString(getURLText(), toCompare.getURLText()))
         return false;
 
     return true;
@@ -295,8 +362,12 @@ bool URL::operator==(const URL& toCompare) const
 // ---------------------------------------------------------------------------
 //  URL: Getter methods
 // ---------------------------------------------------------------------------
-const XMLCh* URL::getProtocol() const
+const XMLCh* URL::getProtocolName() const
 {
+    // Check to see if its ever been set
+    if (fProtocol == Unknown)
+        ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+
     return gTypeList[fProtocol].prefix;
 }
 
@@ -306,10 +377,14 @@ const XMLCh* URL::getProtocol() const
 // ---------------------------------------------------------------------------
 void URL::setURL(const XMLCh* const urlText)
 {
-    fFullURL = XMLString::replicate(urlText);
+    //
+    //  Try to parse the URL. If this fails, we just give up, cleanup and
+    //  rethrow out of here.
+    //
+    cleanup();
     try
     {
-        parse();
+        parse(urlText);
     }
 
     catch(...)
@@ -319,13 +394,27 @@ void URL::setURL(const XMLCh* const urlText)
     }
 }
 
-void URL::setURL(const char* const urlText)
+void URL::setURL(const  XMLCh* const    baseURL
+                , const XMLCh* const    relativeURL)
 {
-    // Transcode the passed string to Unicode
-    fFullURL = XMLString::transcode(urlText);
+    cleanup();
     try
     {
-        parse();
+        // Parse our URL string
+        parse(relativeURL);
+
+        //
+        //  If its relative and the base is non-null and non-empty, then
+        //  parse the base URL string and conglomerate them.
+        //
+        if (isRelative() && baseURL)
+        {
+            if (*baseURL)
+            {
+                URL basePart(baseURL);
+                conglomerateWithBase(basePart);
+            }
+        }
     }
 
     catch(...)
@@ -335,33 +424,121 @@ void URL::setURL(const char* const urlText)
     }
 }
 
+void URL::setURL(const  URL&            baseURL
+                , const XMLCh* const    relativeURL)
+{
+    cleanup();
+    try
+    {
+        // Parse our URL string
+        parse(relativeURL);
+
+        // If its relative, then conglomerate with the base URL
+        if (isRelative())
+            conglomerateWithBase(baseURL);
+    }
+
+    catch(...)
+    {
+        cleanup();
+        throw;
+    }
+}
 
 
 // ---------------------------------------------------------------------------
 //  URL: Miscellaneous methods
 // ---------------------------------------------------------------------------
+bool URL::isRelative() const
+{
+    // If no protocol then relative
+    if (fProtocol == Unknown)
+        return true;
+
+    // If no path, or the path is not absolute, then relative
+    if (!fPath)
+        return true;
+
+    if (*fPath != chForwardSlash)
+        return true;
+
+    return false;
+}
+
+
 BinInputStream* URL::makeNewStream() const
 {
-    switch(fProtocol)
+    //
+    //  If its a local host, then we short circuit it and use our own file
+    //  stream support. Otherwise, we just let it fall through and let the
+    //  installed network access object provide a stream.
+    //
+    if (fProtocol == URL::File)
     {
-        case URL::File  :
+        if (!fHost || !XMLString::compareIString(fHost, L"localhost"))
         {
-            BinFileInputStream* retStrm = new BinFileInputStream(getPath());
+            //
+            //  We have to play a little trick here. If its really a Windows
+            //  style fully qualified path, we have to toss the leading /
+            //  character.
+            //
+            const XMLCh* realPath = fPath;
+            if (*fPath == chForwardSlash)
+            {
+                if (XMLString::stringLen(fPath) > 3)
+                {
+                    if (*(fPath + 2) == chColon)
+                    {
+                        const XMLCh chDrive = *(fPath + 1);
+                        if (((chDrive >= chLatin_A) && (chDrive <= chLatin_Z))
+                        ||  ((chDrive >= chLatin_a) && (chDrive <= chLatin_z)))
+                        {
+                            realPath = fPath + 3;
+                        }
+                    }
+                }
+            }
+
+            BinFileInputStream* retStrm = new BinFileInputStream(realPath);
             if (!retStrm->getIsOpen())
             {
                 delete retStrm;
                 return 0;
             }
             return retStrm;
-            break;
         }
-
-        default :
-            ThrowXML(MalformedURLException, XML4CExcepts::URL_UnsupportedProto);
-            break;
     }
-    return 0;
+
+    //
+    //  If we don't have have an installed net accessor object, then we
+    //  have to just throw here.
+    //
+    if (!XMLPlatformUtils::fgNetAccessor)
+        ThrowXML(MalformedURLException, XML4CExcepts::URL_UnsupportedProto);
+
+    // Else ask the net accessor to create the stream
+    return XMLPlatformUtils::fgNetAccessor->makeNew(*this);
 }
+
+void URL::makeRelativeTo(const XMLCh* const baseURLText)
+{
+    // If this one is not relative, don't bother
+    if (!isRelative())
+        return;
+
+    URL baseURL(baseURLText);
+    conglomerateWithBase(baseURL);
+}
+
+void URL::makeRelativeTo(const URL& baseURL)
+{
+    // If this one is not relative, don't bother
+    if (!isRelative())
+        return;
+    conglomerateWithBase(baseURL);
+}
+
+
 
 
 // ---------------------------------------------------------------------------
@@ -369,259 +546,533 @@ BinInputStream* URL::makeNewStream() const
 // ---------------------------------------------------------------------------
 
 //
+//  This method will take the broken out parts of the URL and build up the
+//  full text. We don't do this unless someone asks us to, since its often
+//  never required.
+//
+void URL::buildFullText()
+{
+    // Calculate the worst case size of the buffer required
+    unsigned int bufSize = gMaxProtoLen + 1
+                           + XMLString::stringLen(fFragment) + 1
+                           + XMLString::stringLen(fHost) + 2
+                           + XMLString::stringLen(fPassword) + 1
+                           + XMLString::stringLen(fPath)
+                           + XMLString::stringLen(fQuery) + 1
+                           + XMLString::stringLen(fUser) + 1
+                           + 16;
+
+    // Clean up the existing buffer and allocate another
+    delete [] fURLText;
+    fURLText = new XMLCh[bufSize];
+    *fURLText = 0;
+
+    XMLCh* outPtr = fURLText;
+    if (fProtocol != Unknown)
+    {
+        XMLString::catString(fURLText, getProtocolName());
+        outPtr += XMLString::stringLen(fURLText);
+        *outPtr++ = chColon;
+        *outPtr++ = chForwardSlash;
+        *outPtr++ = chForwardSlash;
+    }
+
+    if (fHost)
+    {
+        XMLString::copyString(outPtr, fHost);
+        outPtr += XMLString::stringLen(fHost);
+
+        if (fUser)
+        {
+            *outPtr++ = chAt;
+            XMLString::copyString(outPtr, fUser);
+            outPtr += XMLString::stringLen(fUser);
+
+            if (fPassword)
+            {
+                *outPtr++ = chColon;
+                XMLString::copyString(outPtr, fPassword);
+                outPtr += XMLString::stringLen(fPassword);
+            }
+        }
+    }
+
+    if (fPath)
+    {
+        XMLString::copyString(outPtr, fPath);
+        outPtr += XMLString::stringLen(fPath);
+    }
+
+    if (fQuery)
+    {
+        *outPtr++ = chQuestion;
+        XMLString::copyString(outPtr, fQuery);
+        outPtr += XMLString::stringLen(fQuery);
+    }
+
+    if (fFragment)
+    {
+        *outPtr++ = chPound;
+        XMLString::copyString(outPtr, fFragment);
+        outPtr += XMLString::stringLen(fFragment);
+    }
+}
+
+
+//
 //  Just a central place to handle cleanup, since its done from a number
 //  of different spots.
 //
 void URL::cleanup()
 {
-    delete [] fFullURL;
-    fFullURL = 0;
+    delete [] fFragment;
     delete [] fHost;
-    fHost = 0;
+    delete [] fPassword;
     delete [] fPath;
+    delete [] fQuery;
+    delete [] fUser;
+    delete [] fURLText;
+
+    fFragment = 0;
+    fHost = 0;
+    fPassword = 0;
     fPath = 0;
+    fQuery = 0;
+    fUser = 0;
+    fURLText = 0;
+
+    fProtocol = Unknown;
 }
 
 
-//
-//  This method searches our list of protocols and sees if the passed text
-//  starts with one of them. The prefix is the whole thing up to the second
-//  forward slash. The length of the text is passed so that obvious failures
-//  can be found quickly.
-//
-URL::Protocols URL::findType(unsigned int& curPos) const
+void URL::conglomerateWithBase(const URL& baseURL)
 {
-    XMLCh tmpStr[gMaxProtoLen+1];
-
-    //
-    //  Remember the current position so we can do exploratory reads from
-    //  the URL. Then look forward for a colon.
-    //
-    const unsigned int orgPos = curPos;
-    unsigned int tmpPos = curPos;
-    unsigned int tmpIndex = 0;
-    while (true)
+    // The base URL cannot be relative
+    if (baseURL.isRelative())
     {
-        // Get another char from the source URL. Indicate end of text is ok
-        const XMLCh nextCh = getNextCh(tmpPos, true);
+        // <TBD> Add an error for this
+        // ThrowXML(MalformedURLException, XML4CExcepts::URL_BaseWasRelative);
+    }
 
-        // If we hit the end, then no good
-        if (!nextCh)
-            ThrowXML(MalformedURLException, XML4CExcepts::URL_MalformedURL);
+    //
+    //  Check a special case. If all we have is a fragment, then we want
+    //  to just take the base host and path, plus our fragment.
+    //
+    if ((fProtocol == Unknown)
+    &&  !fHost
+    &&  !fPath
+    &&  fFragment)
+    {
+        fProtocol = baseURL.fProtocol;
+        fHost = XMLString::replicate(baseURL.fHost);
+        fUser = XMLString::replicate(baseURL.fUser);
+        fPassword = XMLString::replicate(baseURL.fPassword);
+        fPath = XMLString::replicate(baseURL.fPath);
+        return;
+    }
 
-        // Store this new character
-        tmpStr[tmpIndex++] = nextCh;
+    //
+    //  All we have to do is run up through our fields and, for each one
+    //  that we don't have, use the based URL's. Once we hit one field
+    //  that we have, we stop.
+    //
+    if (fProtocol != Unknown)
+        return;
+    fProtocol = baseURL.fProtocol;
 
-        // If we hit the colon, break out
-        if (nextCh == chColon)
+    if (fHost || !baseURL.fHost)
+        return;
+    fHost = XMLString::replicate(baseURL.fHost);
+    if (baseURL.fUser)
+        fUser = XMLString::replicate(baseURL.fUser);
+    if (baseURL.fPassword)
+        fPassword = XMLString::replicate(baseURL.fPassword);
+
+    // If we have a path and its absolute, then we are done
+    const bool hadPath = (fPath != 0);
+    if (hadPath)
+    {
+        if (*fPath == chForwardSlash)
+            return;
+    }
+
+    // Its a relative path, so weave them together.
+    if (baseURL.fPath)
+        weavePaths(baseURL.fPath);
+
+    // If we had any original path, then we are done
+    if (hadPath)
+        return;
+
+    if (fQuery || !baseURL.fQuery)
+        return;
+    fQuery = XMLString::replicate(baseURL.fQuery);
+
+    if (fFragment || !baseURL.fFragment)
+        return;
+    fFragment = XMLString::replicate(baseURL.fFragment);
+}
+
+
+void URL::parse(const XMLCh* const urlText)
+{
+    // Simplify things by checking for the psycho scenarios first
+    if (!*urlText)
+        ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+
+    //
+    //  The first thing we will do is to check for a file name, so that
+    //  we don't waste time thinking its a URL. If its in the form x:\
+    //  or x:/ and x is an ASCII letter, then assume that's the deal.
+    //
+    if (((*urlText >= chLatin_A) && (*urlText <= chLatin_Z))
+    ||  ((*urlText >= chLatin_a) && (*urlText <= chLatin_z)))
+    {
+        if (*(urlText + 1) == chColon)
+        {
+            if (((*urlText + 2) == chForwardSlash)
+            ||  ((*urlText + 2) == chBackSlash))
+            {
+                ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+            }
+        }
+    }
+
+    // Get a copy of the URL that we can modify
+    XMLCh* srcCpy = XMLString::replicate(urlText);
+    ArrayJanitor<XMLCh> janSrcCopy(srcCpy);
+
+    //
+    //  Get a pointer now that we can run up thrown the source as we parse
+    //  bits and pieces out of it.
+    //
+    XMLCh* srcPtr = srcCpy;
+
+    // Run up past any spaces
+    while (*srcPtr)
+    {
+        if (!XMLPlatformUtils::fgTransService->isSpace(*srcPtr))
             break;
+    }
 
-        // If we exceed the max colon pos without finding a colon, then no good
-        if (tmpIndex > gMaxColonPos)
-            ThrowXML(MalformedURLException, XML4CExcepts::URL_MalformedURL);
+    // Make sure it wasn't all space
+    if (!*srcPtr)
+        ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+
+    //
+    //  Ok, the next thing we have to do is to find either a / or : character.
+    //  If the : is first, we assume we have a protocol. If the / is first,
+    //  then we skip to the host processing.
+    //
+    static const XMLCh listOne[]    = { chColon, chForwardSlash, chNull };
+    static const XMLCh listTwo[]    = { chAt, chForwardSlash, chNull };
+    static const XMLCh listThree[]  = { chColon, chForwardSlash, chNull };
+    static const XMLCh listFour[]   = { chForwardSlash, chNull };
+    static const XMLCh listFive[]   = { chPound, chQuestion, chNull };
+    static const XMLCh listSix[]    = { chPound, chNull };
+    XMLCh* ptr1 = XMLString::findAny(srcPtr, listOne);
+    XMLCh* ptr2;
+
+    // If we found a protocol, then deal with it
+    if (ptr1)
+    {
+        if (*ptr1 == chColon)
+        {
+            // Cap the string at the colon
+            *ptr1 = 0;
+
+            // And try to find it in our list of protocols
+            fProtocol = lookupByName(srcPtr);
+
+            if (fProtocol == Unknown)
+            {
+                ThrowXML1
+                (
+                    MalformedURLException
+                    , XML4CExcepts::URL_UnsupportedProto1
+                    , srcPtr
+                );
+            }
+        
+            // And move our source pointer up past what we've processed
+            srcPtr = (ptr1 + 1);
+        }
     }
 
     //
-    //  See if the next two chars are forward slashes, If not, then undo
-    //  our read and return local. Else store them and compare against
-    //  the list. Indicate that end of input is ok here.
+    //  Ok, next we need to see if we have any host part. If the next
+    //  two characters are //, then we need to check, else move on.
     //
-    const bool gotSlashes = (getNextCh(tmpPos, true) == chForwardSlash)
-                            && (getNextCh(tmpPos, true) == chForwardSlash);
-    if (!gotSlashes)
-        ThrowXML(MalformedURLException, XML4CExcepts::URL_MalformedURL);
-
-    // Store the slashes in our temp string too
-    tmpStr[tmpIndex++] = chForwardSlash;
-    tmpStr[tmpIndex++] = chForwardSlash;
-
-    // Update the caller's position and cap off our string
-    curPos = tmpPos;
-    tmpStr[tmpIndex] = chNull;
-
-    //
-    //  Ok, lets see if tmpStr matches any of the prefixes in our list of
-    //  protocols.
-    //
-    for (unsigned int index = 0; index < Protocols_Count; index++)
+    if ((*srcPtr == chForwardSlash) && (*(srcPtr + 1) == chForwardSlash))
     {
-        if (!XMLString::compareString(tmpStr, gTypeList[index].prefix))
-            return gTypeList[index].protocol;
+        // Move up past the slashes
+        srcPtr += 2;
+
+        //
+        //  If we aren't at the end of the string, then there has to be a
+        //  host name at this point.
+        //
+        if (*srcPtr)
+        {
+            // Search from here for either a @ or / character
+            ptr1 = XMLString::findAny(srcPtr, listTwo);
+
+            //
+            //  If we found something, then the host is between where
+            //  we are and what we found. Else the host is the rest of
+            //  the content and we are done. If its empty, leave it null.
+            //
+            if (ptr1)
+            {
+                if (ptr1 != srcPtr)
+                {
+                    fHost = new XMLCh[(ptr1 - srcPtr) + 1];
+                    ptr2 = fHost;
+                    while (srcPtr < ptr1)
+                        *ptr2++ = *srcPtr++;
+                    *ptr2 = 0;
+                }
+
+                //
+                //  If we found a @, then we have to parse out a user name
+                //  and optional password.
+                //
+                if (*srcPtr == chAt)
+                {
+                    // Move up past the @ and look for a / or : character
+                    srcPtr++;
+                    ptr1 = XMLString::findAny(srcPtr, listThree);
+
+                    //
+                    //  If we found something, then the user name is between
+                    //  where we are and what we found. Else the user name
+                    //  is the rest of the string and we are done.
+                    //
+                    if (ptr1)
+                    {
+                        fUser = new XMLCh[(ptr1 - srcPtr) + 1];
+                        ptr2 = fUser;
+                        while (srcPtr < ptr1)
+                            *ptr2++ = *srcPtr++;
+                        *ptr2 = 0;
+
+                        //
+                        //  If we found a : character, then everything from
+                        //  after that to the end or a / character is the
+                        //  password.
+                        //
+                        if (*srcPtr == chColon)
+                        {
+                            srcPtr++;
+                            ptr1 = XMLString::findAny(srcPtr, listFour);
+
+                            //
+                            //  If we found one, then the password is everything
+                            //  from where we are to there. Else, the password
+                            //  is the rest of the string.
+                            //
+                            if (ptr1)
+                            {
+                                fPassword = new XMLCh[(ptr1 - srcPtr) + 1];
+                                ptr2 = fPassword;
+                                while (srcPtr < ptr1)
+                                    *ptr2++ = *srcPtr++;
+                                *ptr2 = 0;
+                            }
+                             else
+                            {
+                                fPassword = XMLString::replicate(srcPtr);
+                                return;
+                            }
+                        }
+                    }
+                     else
+                    {
+                        fUser = XMLString::replicate(srcPtr);
+                        return;
+                    }
+                }
+            }
+             else
+            {
+                fHost = XMLString::replicate(srcPtr);
+                return;
+            }
+        }
     }
 
-    // Cannot be a supported URL protocol
-    ThrowXML(MalformedURLException, XML4CExcepts::URL_UnsupportedProto);
-}
-
-
-//
-//  This method is used during the parse. It gets the next character out of
-//  the source URL (in fFullURL, which is a copy of the original text) and
-//  returns it. It updates the passed position with the new position.
-//
-//  The primary job of this method is to handle escaped characters, by reading
-//  them in and converting them to a Unicode char.
-//
-XMLCh URL::getNextCh(unsigned int& pos, const bool endOk) const
-{
     //
-    //  If we are at the end of the URL, then either return a zero or
-    //  throw if end of URL is not legal here.
+    //  Next is the path part. It can be absolute, i.e. starting with a
+    //  forward slash character, or relative. Its basically everything up
+    //  to the end of the string or to any trailing query or fragment.
     //
-    if (!fFullURL[pos])
+    ptr1 = XMLString::findAny(srcPtr, listFive);
+    if (!ptr1)
     {
-        if (!endOk)
-            ThrowXML(MalformedURLException, XML4CExcepts::URL_MalformedURL);
-        return chNull;
+        fPath = XMLString::replicate(srcPtr);
+        return;
+    }
+
+    // Everything from where we are to what we found is the path
+    if (ptr1 > srcPtr)
+    {
+        fPath = new XMLCh[(ptr1 - srcPtr) + 1];
+        ptr2 = fPath;
+        while (srcPtr < ptr1)
+            *ptr2++ = *srcPtr++;
+        *ptr2 = 0;
     }
 
     //
-    //  See if the current character is a '%'. If so, then we need to
-    //  deal with an escaped character.
+    //  If we found a fragment, then it is the rest of the string and we
+    //  are done.
     //
-    if (fFullURL[pos] == chPercent)
+    if (*srcPtr == chPound)
     {
-        XMLCh escapedChar = 0;
-
-        // There must be at least two more characters
-        if (!fFullURL[pos+1] || !fFullURL[pos+2])
-            ThrowXML(MalformedURLException, XML4CExcepts::URL_MalformedURL);
-
-        // Get them out and test them
-        const XMLCh test1 = fFullURL[pos+1];
-        const XMLCh test2 = fFullURL[pos+2];
-
-        if (!isHexDigit(test1) || !isHexDigit(test2))
-            ThrowXML(MalformedURLException, XML4CExcepts::URL_MalformedURL);
-
-        // Convert these to a character
-        escapedChar = XMLCh((xlatHexDigit(test1) << 4) + xlatHexDigit(test2));
-
-        // Bump the position up
-        pos += 3;
-
-        return escapedChar;
+        srcPtr++;
+        fFragment = XMLString::replicate(srcPtr);
+        return;
     }
 
-    // Else just return the current char and bump the position
-    return fFullURL[pos++];
-}
-
-
-//
-//  This method is called to parse the text into its components and validate
-//  that the URL is legal. It uses getNextCh() to pull characters out of the
-//  URL.
-//
-void URL::parse()
-{
-    // This is the current position that we track during the parse
-    unsigned int curPos = 0;
-    XMLCh nextCh;
-    const unsigned int bufSize = 2047;
-    XMLCh tmpBuf[bufSize + 1];
-    unsigned int bufIndex;
-
     //
-    //  Search the text for a prefix. We will get back the type of the prefix
-    //  and the current position will be updated.
+    //  The query is either the rest of the string, or up to the fragment
+    //  separator.
     //
-    fProtocol = findType(curPos);
-
-    //  In order to distinguish between a malformed URL and an unsupported
-    //  URL, we watch here for the types that we support. If its not supported
-    //  we throw a runtime exception.
-    //
-    if (!gTypeList[fProtocol].supported)
-        ThrowXML(MalformedURLException, XML4CExcepts::URL_UnsupportedProto);
-
-    //
-    //  Check the next char. It must be either a forward slash or it will
-    //  be the first char of the host name. We don't allow end of input
-    //  here so it will cause an exception if we hit it.
-    //
-    nextCh = getNextCh(curPos);
-    if (nextCh == chForwardSlash)
+    srcPtr++;
+    ptr1 = XMLString::findAny(srcPtr, listSix);
+    if (!ptr1)
     {
-        // There is no host so make an empty one
-        fHost = new XMLCh[1];
-        fHost[0] = chNull;
+        fQuery = XMLString::replicate(srcPtr);
+        return;
     }
      else
     {
-        // Put in the lookahead char we did above before we enter the loop
-        bufIndex = 0;
-        tmpBuf[bufIndex++] = nextCh;
+        fQuery = new XMLCh[(ptr1 - srcPtr) + 1];
+        ptr2 = fQuery;
+        while (srcPtr < ptr1)
+            *ptr2++ = *srcPtr++;
+        *ptr2 = 0;
+    }
 
-        // And now read up to the slash separator
-        while (true)
+    // If we are not at the end now, then everything else is the fragment
+    if (*srcPtr == chPound)
+    {
+        srcPtr++;
+        fFragment = XMLString::replicate(srcPtr);
+    }
+}
+
+
+void URL::weavePaths(const XMLCh* const basePart)
+{
+    // Watch for stupid stuff
+    if (!basePart)
+        return;
+    if (!*basePart)
+        return;
+
+    //
+    //  Ok, lets start at the end of the base path and work backwards and
+    //  our path part and work forwards. For each leading . we see, we just
+    //  eat it. For each leading .. we see, we eat it and throw away one
+    //  level in the source URL.
+    //
+    //  If the last character in the base part is a forward slash, back
+    //  up one first before we look for the last slash.
+    //
+    const XMLCh* basePtr = basePart + (XMLString::stringLen(basePart) - 1);
+    if (*basePtr == chForwardSlash)
+        basePtr--;
+
+    while ((basePtr >= basePart)
+    &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+    {
+        basePtr--;
+    }
+
+    if (basePtr < basePart)
+        return;
+
+    // Create a buffer as large as both parts
+    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(fPath)
+                              + XMLString::stringLen(basePart)
+                              + 2];
+    //
+    //  If we have no path part, then copy the base part up to the
+    //  base pointer
+    //
+    if (!fPath)
+    {
+        XMLCh* bufPtr = tmpBuf;
+        const XMLCh* tmpPtr = basePart;
+        while (tmpPtr <= basePtr)
+            *bufPtr++ = *tmpPtr++;
+        *bufPtr = 0;
+
+        fPath = tmpBuf;
+        return;
+    }
+
+    // After this, make sure the buffer gets handled if we exit early
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+
+    //
+    //  We have some path part, so we need to check to see if we ahve to
+    //  weave any of the parts together.
+    //
+    XMLCh* pathPtr = fPath;
+    while (true)
+    {
+        // If it does not start with some period, then we are done
+        if (*pathPtr != chPeriod)
+            break;
+
+        unsigned int periodCount = 1;
+        pathPtr++;
+        if (*pathPtr == chPeriod)
         {
-            // Get the next char, end of input is not valid here
-            const XMLCh nextCh = getNextCh(curPos);
-
-            // Break out on the forward slash
-            if (nextCh == chForwardSlash)
-                break;
-
-            // Otherwise, save it
-            tmpBuf[bufIndex++] = nextCh;
-
-            // If we max out on the temp buffer, definitely bad
-            if (bufIndex >= bufSize)
-                ThrowXML(MalformedURLException, XML4CExcepts::URL_MalformedURL);
+            pathPtr++;
+            periodCount++;
         }
 
-        // Cap the temp buffer and replicate to our host member
-        tmpBuf[bufIndex] = chNull;
-        fHost = XMLString::replicate(tmpBuf);
-    }
-
-    //
-    //  Now we need to get the path part of the URL. This should be the
-    //  rest of the content. So we just go until we get a null char back
-    //  from the character spooler. This gets rid of all escaped chars
-    //  in the URL.
-    //
-    bufIndex = 0;
-    while (true)
-    {
-        // Tell it that end of input is ok
-        const XMLCh nextCh = getNextCh(curPos, true);
-        tmpBuf[bufIndex++] = nextCh;
-
-        // Break out at the end
-        if (!nextCh)
+        // Has to be followed by a / or \ or the null to mean anything
+        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
+        &&  *pathPtr)
+        {
             break;
+        }
+        if (*pathPtr)
+            pathPtr++;
+
+        // If its one period, just eat it, else move backwards in the base
+        if (periodCount == 2)
+        {
+            basePtr--;
+            while ((basePtr >= basePart)
+            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+            {
+                basePtr--;
+            }
+
+            if (basePtr < basePart)
+            {
+                // The base cannot provide enough levels, so its in error
+                // <TBD>
+            }
+        }
     }
 
-    //
-    //  And get our own copy of the temp buffer as the path. If the path
-    //  does not start with 'x:', then assume that its a Unix style path
-    //  and put in a leading '/'.
-    //
-    tmpBuf[bufIndex] = chNull;
-    if ((((tmpBuf[0] >= chLatin_A) && (tmpBuf[0] <= chLatin_Z))
-    ||   ((tmpBuf[0] >= chLatin_a) && (tmpBuf[0] <= chLatin_z)))
-    &&  (tmpBuf[1] == chColon))
-    {
-        fPath = XMLString::replicate(tmpBuf);
-    }
-     else
-    {
-        fPath = new XMLCh[XMLString::stringLen(tmpBuf) + 2];
-        fPath[0] = chForwardSlash;
-        XMLString::copyString(&fPath[1], tmpBuf);
-    }
+    // Copy the base part up to the base pointer
+    XMLCh* bufPtr = tmpBuf;
+    const XMLCh* tmpPtr = basePart;
+    while (tmpPtr <= basePtr)
+        *bufPtr++ = *tmpPtr++;
 
-    //
-    //  <TBD> When we have more complete support, get rid of this. But for
-    //  now we only support file:// (which is checked above) and for files
-    //  we only support an empty host or "localhost" which means the same
-    //  thing.
-    //
-    if (fHost[0])
-    {
-        if (XMLString::compareString(fHost, gLocalHostString))
-            ThrowXML(MalformedURLException, XML4CExcepts::URL_OnlyLocalHost);
-    }
+    // And then copy on the rest of our path
+    XMLString::copyString(bufPtr, pathPtr);
+
+    // Now delete our path and make the new buffer our path
+    delete [] fPath;
+    janBuf.orphan();
+    fPath = tmpBuf;
 }

@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/12 00:16:22  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
  * Revision 1.2  1999/11/23 01:49:56  rahulj
  * Cannot use class qualifier in class defn. CC under HPUX is happy.
  *
@@ -90,8 +94,8 @@ MakeXML4CException(MalformedURLException, XMLUTIL_EXPORT)
 
 
 //
-//  This class provides a minimal URL implementation to be able to deal
-//  with file:// protocol URLs. It will be fleshed out in the future.
+//  This class supports file, http, and ftp style URLs. All others are
+//  rejected
 //
 class XMLUTIL_EXPORT URL
 {
@@ -99,30 +103,58 @@ public:
     // -----------------------------------------------------------------------
     //  Class types
     //
-    //  Local MUST be the last one in the list! And they must remain in this
-    //  order because they are indexes into an array internally!
+    //  And they must remain in this order because they are indexes into an
+    //  array internally!
     // -----------------------------------------------------------------------
     enum Protocols
     {
         File
         , HTTP
         , FTP
-        , Gopher
-        , MailTo
-        , News
-        , NNTP
-        , Telnet
-        , Wais
-        , Prospero
 
         , Protocols_Count
+        , Unknown
     };
+
+
+    // -----------------------------------------------------------------------
+    //  Public static methods
+    // -----------------------------------------------------------------------
+    Protocols lookupByName(const XMLCh* const protoName);
 
 
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     URL();
+    URL
+    (
+        const   XMLCh* const    baseURL
+        , const XMLCh* const    relativeURL
+    );
+    URL
+    (
+        const   XMLCh* const    baseURL
+        , const char* const     relativeURL
+    );
+    URL
+    (
+        const   URL&            baseURL
+        , const XMLCh* const    relativeURL
+    );
+    URL
+    (
+        const   URL&            baseURL
+        , const char* const     relativeURL
+    );
+    URL
+    (
+        const   XMLCh* const    urlText
+    );
+    URL
+    (
+        const   char* const     urlText
+    );
     URL(const URL& toCopy);
     virtual ~URL();
 
@@ -138,58 +170,96 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+    const XMLCh* getFragment() const;
     const XMLCh* getHost() const;
-    const XMLCh* getProtocol() const;
+    const XMLCh* getPassword() const;
     const XMLCh* getPath() const;
-    Protocols getType() const;
-    const XMLCh* getURL() const;
+    Protocols getProtocol() const;
+    const XMLCh* getProtocolName() const;
+    const XMLCh* getQuery() const;
+    const XMLCh* getURLText() const;
+    const XMLCh* getUser() const;
 
 
     // -----------------------------------------------------------------------
-    //  Getter methods
+    //  Setter methods
     // -----------------------------------------------------------------------
     void setURL(const XMLCh* const urlText);
-    void setURL(const char* const urlText);
+    void setURL
+    (
+        const   XMLCh* const    baseURL
+        , const XMLCh* const    relativeURL
+    );
+    void setURL
+    (
+        const   URL&            baseURL
+        , const XMLCh* const    relativeURL
+    );
 
 
     // -----------------------------------------------------------------------
     //  Miscellaneous methods
     // -----------------------------------------------------------------------
+    bool isRelative() const;
     BinInputStream* makeNewStream() const;
+    void makeRelativeTo(const XMLCh* const baseURLText);
+    void makeRelativeTo(const URL& baseURL);
 
 
 private:
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
+    void buildFullText();
     void cleanup();
-    Protocols findType(unsigned int& curPos) const;
-    XMLCh getNextCh(unsigned int& pos, const bool endOk = false) const;
-    XMLCh peekNextCh(unsigned int pos) const;
-    void parse();
+    void conglomerateWithBase(const URL& baseURL);
+    void parse
+    (
+        const   XMLCh* const    urlText
+    );
+    void weavePaths(const XMLCh* const basePart);
 
 
     // -----------------------------------------------------------------------
     //  Data members
     //
-    //  fFullURL
-    //      This is a copy of the original URL.
+    //  fFragment
+    //      The fragment part of the URL, if any. If none, its a null.
     //
     //  fHost
     //      The host part of the URL that was parsed out. This one will often
-    //      be empty (or "localhost", which also means the current machine.)
+    //      be null (or "localhost", which also means the current machine.)
+    //
+    //  fPassword
+    //      The password found, if any. If none then its a null.
     //
     //  fPath
-    //      The path part of the URL that was parsed out.
+    //      The path part of the URL that was parsed out, if any. If none,
+    //      then its a null.
     //
     //  fProtocol
     //      Indicates the type of the URL's source. The text of the prefix
     //      can be gotten from this.
+    //
+    //  fQuery
+    //      The query part of the URL, if any. If none, then its a null.
+    //
+    //  fUser
+    //      The username found, if any. If none, then its a null.
+    //
+    //  fURLText
+    //      This is a copy of the URL text, after it has been taken apart,
+    //      made relative if needed, canonicalized, and then put back
+    //      together. Its only created upon demand.
     // -----------------------------------------------------------------------
-    XMLCh*      fFullURL;
+    XMLCh*      fFragment;
     XMLCh*      fHost;
+    XMLCh*      fPassword;
     XMLCh*      fPath;
     Protocols   fProtocol;
+    XMLCh*      fQuery;
+    XMLCh*      fUser;
+    XMLCh*      fURLText;
 };
 
 
@@ -205,9 +275,19 @@ inline bool URL::operator!=(const URL& toCompare) const
 // ---------------------------------------------------------------------------
 //  URL: Getter methods
 // ---------------------------------------------------------------------------
+inline const XMLCh* URL::getFragment() const
+{
+    return fFragment;
+}
+
 inline const XMLCh* URL::getHost() const
 {
     return fHost;
+}
+
+inline const XMLCh* URL::getPassword() const
+{
+    return fPassword;
 }
 
 inline const XMLCh* URL::getPath() const
@@ -215,15 +295,32 @@ inline const XMLCh* URL::getPath() const
     return fPath;
 }
 
-inline URL::Protocols URL::getType() const
+inline URL::Protocols URL::getProtocol() const
 {
     return fProtocol;
 }
 
-inline const XMLCh* URL::getURL() const
+inline const XMLCh* URL::getQuery() const
 {
-    return fFullURL;
+    return fQuery;
 }
 
+inline const XMLCh* URL::getUser() const
+{
+    return fUser;
+}
+
+inline const XMLCh* URL::getURLText() const
+{
+    //
+    //  Fault it in if not already. Since this is a const method and we
+    //  can't use mutable members due the compilers we have to support,
+    //  we have to cast off the constness.
+    //
+    if (!fURLText)
+        ((URL*)this)->buildFullText();
+
+    return fURLText;
+}
 
 #endif

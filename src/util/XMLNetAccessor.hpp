@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:05:50  twl
- * Initial revision
+ * Revision 1.2  2000/01/12 00:16:23  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:05:50  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:20  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -101,8 +105,7 @@ public :
     // -----------------------------------------------------------------------
     virtual BinInputStream* makeNew
     (
-        const   XMLCh* const            urlSource
-        ,       XML4CExcepts::Codes&    failReason
+        const   URL&                    urlSrc
     ) = 0;
 
 

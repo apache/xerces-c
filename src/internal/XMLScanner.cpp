@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/12 00:15:04  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
  * Revision 1.4  1999/12/08 00:15:06  roddey
  * Some small last minute fixes to get into the 3.0.1 build that is going to be
  * going out anyway for platform fixes.
@@ -87,6 +91,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/Janitor.hpp>
 #include <util/Mutexes.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/RefVectorOf.hpp>
@@ -97,6 +102,8 @@
 #include <util/XMLUni.hpp>
 #include <sax/InputSource.hpp>
 #include <sax/SAXException.hpp>
+#include <framework/LocalFileInputSource.hpp>
+#include <framework/URLInputSource.hpp>
 #include <framework/XMLDocumentHandler.hpp>
 #include <framework/XMLElementDecl.hpp>
 #include <framework/XMLErrorReporter.hpp>
@@ -204,6 +211,52 @@ XMLScanner::~XMLScanner()
 // ---------------------------------------------------------------------------
 //  XMLScanner: Main entry point to scan a document
 // ---------------------------------------------------------------------------
+void XMLScanner::scanDocument(  const   XMLCh* const    systemId
+                                , const bool            reuseValidator)
+{
+    //
+    //  First we try to parse it as a URL. If that fails, we assume its
+    //  a file and try it that way.
+    //
+    InputSource* srcToUse = 0;
+    try
+    {
+        //
+        //  Create a temporary URL. Since this is the primary document,
+        //  it has to be fully qualified. If not, then assume we are just
+        //  mistaking a file for a URL.
+        //
+        URL tmpURL(systemId);
+        if (tmpURL.isRelative())
+            ThrowXML(MalformedURLException, XML4CExcepts::URL_NoProtocolPresent);
+        srcToUse = new URLInputSource(tmpURL);
+    }
+
+    catch(const MalformedURLException&)
+    {
+        srcToUse = new LocalFileInputSource(systemId);
+    }
+
+    catch(...)
+    {
+        // Just rethrow this, since its not our problem
+        throw;
+    }
+
+    Janitor<InputSource> janSrc(srcToUse);
+    scanDocument(*srcToUse, reuseValidator);
+}
+
+void XMLScanner::scanDocument(  const   char* const systemId
+                                , const bool        reuseValidator)
+{
+    // We just delegate this to the XMLCh version after transcoding
+    XMLCh* tmpBuf = XMLString::transcode(systemId);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+    scanDocument(tmpBuf, reuseValidator);
+}
+
+
 void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
 {
     //
@@ -359,6 +412,45 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
 //  returns false, then the scan of the prolog failed and the token is not
 //  going to work on subsequent scanNext() calls.
 //
+bool XMLScanner::scanFirst( const   XMLCh* const    systemId
+                            ,       XMLPScanToken&  toFill
+                            , const bool            reuseValidator)
+{
+    //
+    //  First we try to parse it as a URL. If that fails, we assume its
+    //  a file and try it that way.
+    //
+    InputSource* srcToUse = 0;
+    try
+    {
+        srcToUse = new URLInputSource(XMLUni::fgZeroLenString, systemId);
+    }
+
+    catch(const MalformedURLException&)
+    {
+        srcToUse = new LocalFileInputSource(systemId);
+    }
+
+    catch(...)
+    {
+        // Just rethrow this, since its not our problem
+        throw;
+    }
+
+    Janitor<InputSource> janSrc(srcToUse);
+    return scanFirst(*srcToUse, toFill, reuseValidator);
+}
+
+bool XMLScanner::scanFirst( const   char* const     systemId
+                            ,       XMLPScanToken&  toFill
+                            , const bool            reuseValidator)
+{
+    // We just delegate this to the XMLCh version after transcoding
+    XMLCh* tmpBuf = XMLString::transcode(systemId);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+    return scanFirst(tmpBuf, toFill, reuseValidator);
+}
+
 bool XMLScanner::scanFirst( const   InputSource&    src
                             ,       XMLPScanToken&  toFill
                             , const bool            reuseValidator)

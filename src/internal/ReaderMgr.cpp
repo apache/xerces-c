@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/12 00:15:03  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
  * Revision 1.2  1999/12/18 00:20:00  roddey
  * More changes to support the new, completely orthagonal, support for
  * intrinsic encodings.
@@ -85,14 +89,14 @@
 #include <util/URL.hpp>
 #include <util/XMLUni.hpp>
 #include <sax/InputSource.hpp>
+#include <framework/LocalFileInputSource.hpp>
+#include <framework/URLInputSource.hpp>
 #include <framework/XMLBuffer.hpp>
 #include <framework/XMLDocumentHandler.hpp>
 #include <framework/XMLEntityDecl.hpp>
 #include <framework/XMLEntityHandler.hpp>
 #include <internal/EndOfEntityException.hpp>
 #include <internal/ReaderMgr.hpp>
-#include <internal/URLInputSource.hpp>
-
 
 
 // ---------------------------------------------------------------------------
@@ -100,8 +104,7 @@
 // ---------------------------------------------------------------------------
 ReaderMgr::ReaderMgr() :
 
-    fBasePath(0)
-    , fCurEntity(0)
+    fCurEntity(0)
     , fCurReader(0)
     , fEntityHandler(0)
     , fEntityStack(0)
@@ -119,7 +122,6 @@ ReaderMgr::~ReaderMgr()
     //  does not own its elements either, so deleting it will not delete the
     //  entities it still references!)
     //
-    delete [] fBasePath;
     delete fCurReader;
     delete fReaderStack;
     delete fEntityStack;
@@ -520,8 +522,8 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
     XMLBuffer expSysId;
 
     //
-    //  Allow the entity handler to expand the system id. If we don't
-    //  have one, or they don't do anything, then just use it as is.
+    //  Allow the entity handler to expand the system id if they choose
+    //  to do so.
     //
     if (fEntityHandler)
     {
@@ -530,37 +532,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
     }
      else
     {
-        //
-        //  Try to parse it as a URL. If it succeeds, it must be a
-        //  fully qualified path. Otherwise, its just a file name and
-        //  could be partial so check and append it to the base path
-        //  if so.
-        //
-        URL tmpURL;
-        try
-        {
-            tmpURL.setURL(sysId);
-            expSysId.set(tmpURL.getPath());
-        }
-
-        catch(const MalformedURLException&)
-        {
-            // Its just a file path
-            if (XMLPlatformUtils::isRelative(sysId))
-            {
-                // Its relative so first store the base directory, if any
-                if (fBasePath)
-                    expSysId.set(fBasePath);
-
-                // And then append the relative path
-                expSysId.append(sysId);
-            }
-             else
-            {
-                // The path is not relative, so just set it directly
-                expSysId.set(sysId);
-            }
-        }
+        expSysId.set(sysId);
     }
 
     // Call the entity resolver interface to get an input source
@@ -574,9 +546,31 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
         );
     }
 
-    // If they didn't give us anything, then make up a URL input source
+    //
+    //  If they didn't create a source via the entity resolver, then we
+    //  have to create one on our own.
+    //
     if (!srcToFill)
-        srcToFill = new URLInputSource(expSysId.getRawBuffer());
+    {
+        LastExtEntityInfo lastInfo;
+        getLastExtEntityInfo(lastInfo);
+
+        try
+        {
+            URL urlTmp(lastInfo.systemId, expSysId.getRawBuffer());
+            srcToFill = new URLInputSource(urlTmp);
+        }
+
+        catch(const MalformedURLException&)
+        {
+            // Its not a URL, so lets assume its a local file name.
+            srcToFill = new LocalFileInputSource
+            (
+                lastInfo.systemId
+                , expSysId.getRawBuffer()
+            );
+        }
+    }
 
     // Put a janitor on the input source
     Janitor<InputSource> janSrc(srcToFill);
@@ -601,10 +595,7 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
     if (!retVal)
         return 0;
 
-    //
-    //  Give this reader the next available reader number. And let the input
-    //  source live to be returned to the caller.
-    //
+    // Give this reader the next available reader number and return it
     retVal->setReaderNum(fNextReaderNum++);
     return retVal;
 }
@@ -793,10 +784,6 @@ void ReaderMgr::reset()
 {
     // Reset all of the flags
     fThrowEOE = false;
-
-    // Delete the base path, which has to be reset each time
-    delete [] fBasePath;
-    fBasePath = 0;
 
     // Delete the current reader and flush the reader stack
     delete fCurReader;

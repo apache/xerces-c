@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:23  twl
- * Initial revision
+ * Revision 1.2  2000/01/12 00:15:04  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:23  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:44:52  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -232,12 +236,36 @@ public :
         const   InputSource&    src
         , const bool            reuseValidator = false
     );
+    void scanDocument
+    (
+        const   XMLCh* const    systemId
+        , const bool            reuseValidator = false
+    );
+    void scanDocument
+    (
+        const   char* const     systemId
+        , const bool            reuseValidator = false
+    );
+
     bool scanFirst
     (
         const   InputSource&    src
         ,       XMLPScanToken&  toFill
         , const bool            reuseValidator = false
     );
+    bool scanFirst
+    (
+        const   XMLCh* const    systemId
+        ,       XMLPScanToken&  toFill
+        , const bool            reuseValidator = false
+    );
+    bool scanFirst
+    (
+        const   char* const     systemId
+        ,       XMLPScanToken&  toFill
+        , const bool            reuseValidator = false
+    );
+
     bool scanNext(XMLPScanToken& toFill);
 
 

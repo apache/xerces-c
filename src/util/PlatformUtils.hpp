@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:04:55  twl
- * Initial revision
+ * Revision 1.2  2000/01/12 00:16:22  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:04:55  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:45:11  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -185,8 +189,13 @@ public :
     // -----------------------------------------------------------------------
     //  File system methods
     // -----------------------------------------------------------------------
-    static XMLCh* getBasePath(const XMLCh* const srcPath);
+    static XMLCh* getFullPath(const XMLCh* const srcPath);
     static bool isRelative(const XMLCh* const toCheck);
+    static XMLCh* weavePaths
+    (
+        const   XMLCh* const    basePath
+        , const XMLCh* const    relativePath
+    );
 
 
     // -----------------------------------------------------------------------

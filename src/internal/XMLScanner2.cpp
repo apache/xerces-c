@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/12 00:15:04  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
  * Revision 1.3  1999/12/18 00:20:24  roddey
  * Fixed a small reported memory leak
  *
@@ -104,7 +108,7 @@
 #include <framework/XMLValidator.hpp>
 #include <internal/XMLScanner.hpp>
 #include <internal/EndOfEntityException.hpp>
-#include <internal/URLInputSource.hpp>
+
 
 
 // ---------------------------------------------------------------------------
@@ -752,41 +756,6 @@ void XMLScanner::scanReset(const InputSource& src)
 
     // Push this read onto the reader manager
     fReaderMgr.pushReader(newReader, 0);
-
-    //
-    //  We know that the file is legal now, so lets get the base directory
-    //  off of it and store it. If there is no directory component on the
-    //  path, then this returns a null.
-    //
-    //  We have to assume it could be a URL so we create a temporary URL
-    //  and ask it for the path part of itself. That will insure that if its
-    //  relative we really see it as a relative path.
-    //
-    URL tmpURL;
-
-    try
-    {
-        tmpURL.setURL(src.getSystemId());
-
-        //
-        //  Its a valid URL so its assumed to be fully qualified. Get the
-        //  base part of the path part of the URL.
-        //
-        XMLCh* basePath = XMLPlatformUtils::getBasePath(tmpURL.getPath());
-        ArrayJanitor<XMLCh> pathJan(basePath);
-        fReaderMgr.setBasePath(basePath);
-    }
-
-    catch(const MalformedURLException&)
-    {
-        //
-        //  Its not a URL, so assume its just a plain file path and could
-        //  be partial, so get the complete path.
-        //
-        XMLCh* basePath = XMLPlatformUtils::getBasePath(src.getSystemId());
-        ArrayJanitor<XMLCh> pathJan(basePath);
-        fReaderMgr.setBasePath(basePath);
-    }
 }
 
 

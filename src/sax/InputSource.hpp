@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:46  twl
- * Initial revision
+ * Revision 1.2  2000/01/12 00:15:39  roddey
+ * Changes to deal with multiply nested, relative pathed, entities and to deal
+ * with the new URL class changes.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:46  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:01  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -101,8 +105,12 @@ class BinInputStream;
   * around beyond the call.</p>
   *
   * $Log$
-  * Revision 1.1  1999/11/09 01:07:46  twl
-  * Initial revision
+  * Revision 1.2  2000/01/12 00:15:39  roddey
+  * Changes to deal with multiply nested, relative pathed, entities and to deal
+  * with the new URL class changes.
+  *
+  * Revision 1.1.1.1  1999/11/09 01:07:46  twl
+  * Initial checkin
   *
   * Revision 1.2  1999/11/08 20:45:01  rahul
   * Swat for adding in Product name and CVS comment log variable.
@@ -230,6 +238,7 @@ protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
+    InputSource();
     InputSource(const XMLCh* const systemId);
     InputSource
     (
