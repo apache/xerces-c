@@ -488,7 +488,7 @@ int main(int argC, char* argV[])
 			// StdOutFormatTarget prints the resultant XML stream
 			// to stdout once it receives any thing from the serializer.
 			//
-			StdOutFormatTarget *myFormTarget = new StdOutFormatTarget();
+			XMLFormatTarget *myFormTarget = new StdOutFormatTarget();
 
 			// get the DOM representation
 			DOMNode                     *doc = parser->getDocument();
