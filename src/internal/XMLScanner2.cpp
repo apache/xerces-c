@@ -1551,42 +1551,49 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
             DOM_Element root = document.getDocumentElement();// This is what we pass to TraverserSchema
             if (!root.isNull())
             {
-                //
-                //  Since we have seen a grammar, set our validation flag
-                //  at this point if the validation scheme is auto
-                //
-                if (fValScheme == Val_Auto && !fValidate) {
-                    fValidate = true;
-                    fElemStack.setValidationFlag(fValidate);
+                const XMLCh* newUri = root.getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE).rawBuffer();
+                if (XMLString::compareString(newUri, uri)) {
+                    if (fValidate)
+                        fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
+                    grammar = fGrammarResolver->getGrammar(newUri);
                 }
 
-                // we have seen a schema, so set up the fValidator as fSchemaValidator
-                if (!fValidator->handlesSchema())
-                {
-                    if (fValidatorFromUser) {
-                        // the fValidator is from user
-                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
+
+                    //
+                    //  Since we have seen a grammar, set our validation flag
+                    //  at this point if the validation scheme is auto
+                    //
+                    if (fValScheme == Val_Auto && !fValidate) {
+                        fValidate = true;
+                        fElemStack.setValidationFlag(fValidate);
                     }
-                    else {
-                        fValidator = fSchemaValidator;
+
+                    // we have seen a schema, so set up the fValidator as fSchemaValidator
+                    if (!fValidator->handlesSchema())
+                    {
+                        if (fValidatorFromUser) {
+                            // the fValidator is from user
+                            ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                        }
+                        else {
+                            fValidator = fSchemaValidator;
+                        }
                     }
-                }
 
-                if (fValidate && (!uri || !root.getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE).equals(uri)))
-                    fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
+                    grammar = new SchemaGrammar();
+                    TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityResolver, fErrorHandler);
 
-                grammar = new SchemaGrammar();
-                TraverseSchema traverseSchema(root, fURIStringPool, (SchemaGrammar*) grammar, fGrammarResolver, this, fValidator, srcToFill->getSystemId(), fEntityResolver, fErrorHandler);
+                    if (fGrammarType == Grammar::DTDGrammarType) {
+                        fGrammar = grammar;
+                        fGrammarType = Grammar::SchemaGrammarType;
+                        fValidator->setGrammar(fGrammar);
+                    }
 
-                if (fGrammarType == Grammar::DTDGrammarType) {
-                    fGrammar = grammar;
-                    fGrammarType = Grammar::SchemaGrammarType;
-                    fValidator->setGrammar(fGrammar);
-                }
-
-                if (!fReuseGrammar && fValidate) {
-                    //  validate the Schema scan so far
-                    fValidator->preContentValidation(fReuseGrammar);
+                    if (!fReuseGrammar && fValidate) {
+                        //  validate the Schema scan so far
+                        fValidator->preContentValidation(fReuseGrammar);
+                    }
                 }
             }
         }
