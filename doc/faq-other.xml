@@ -45,8 +45,8 @@ SUCH DAMAGE.</source>
         <a>
 
            <p>The version string for &XercesCName; is in one of the header files. Look
-           inside the file <code>src/xercesc/util/XercesDefs.hpp</code> or, in the binary distribution, look in <code>include/xercesc/utils/XercesDefs.hpp</code>. Search for the static variable <code>gXercesFullVersionStr</code> and look at its definition. (It is usually a string like "1_4_0" or
-           something similar). This is the version of &XercesCName; you are using.</p>
+           inside the file <code>src/xercesc/util/XercesVersion.hpp</code> or, in the binary distribution,
+           look in <code>include/xercesc/utils/XercesVersion.hpp</code>. </p>
 
            <p>If you don't have the header files, you have to find the version
            information from the shared library name. On Windows right click on
@@ -154,6 +154,23 @@ SUCH DAMAGE.</source>
 
     <p> Download <jump href="http://www.w3.org/TR/xhtml1/xhtml1.zip">
       http://www.w3.org/TR/xhtml1/xhtml1.zip. </jump></p>
+
+    </a>
+  </faq>
+
+  <faq title="Does &XercesCName; support XPath?">
+
+    <q> Does &XercesCName; support XPath?</q>
+
+    <a>
+
+      <p>No.  The &XercesCName; &XercesCVersion; only has partial XPath implementation
+         for the purposes of handling Schema identity constraints.  For full XPath
+         support, you can refer
+         <jump href="http://xml.apache.org/xalan-c/overview.html">Apache Xalan C++</jump> or
+         other Open Source Project like
+         <jump href="http://software.decisionsoft.com">Pathan</jump>.
+       </p>
 
     </a>
   </faq>
