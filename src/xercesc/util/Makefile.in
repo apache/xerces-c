@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.23  2002/12/12 16:37:09  peiyongz
+# generate message catalog files for all UNIX platform if -miconv specified.
+#
 # Revision 1.22  2002/12/06 16:52:39  peiyongz
 # $XERCESCROOT/msg created as home directory for message files.
 #
@@ -586,25 +589,8 @@ endif
 
 messageloaders::
 ifeq (${MESSAGELOADER},ICONV)
-ifeq (${PLATFORM},SOLARIS)
 	mkdir -p ${MSG_DIR}
-	gencat ${MSG_DIR}/XMLMessages_en_US.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
-endif
-
-ifeq (${PLATFORM},AIX)
-	mkdir -p ${MSG_DIR}
-	gencat ${MSG_DIR}/XMLMessages_en_US.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
-endif
-
-ifeq (${PLATFORM},HPUX)
-	mkdir -p ${MSG_DIR}
-	gencat ${MSG_DIR}/XMLMessages_en_US.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
-endif
-
-ifeq (${PLATFORM},LINUX)
-	mkdir -p ${MSG_DIR}
-	gencat ${MSG_DIR}/XMLMessages_en_US.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
-endif
+	gencat ${MSG_DIR}/XercesMessages_en_US.cat MsgLoaders/${MESSAGELOADERMODULE}/XercesMessages_en_US.Msg
 
 endif
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE)
