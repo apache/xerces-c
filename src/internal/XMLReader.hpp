@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/18 00:20:00  roddey
+ * More changes to support the new, completely orthagonal, support for
+ * intrinsic encodings.
+ *
  * Revision 1.2  1999/12/15 19:48:03  roddey
  * Changed to use new split of transcoder interfaces into XML transcoders and
  * LCP transcoders, and implementation of intrinsic transcoders as pluggable
@@ -287,7 +291,10 @@ private:
 
     void refreshRawBuffer();
 
-    void setBaseTranscoder();
+    void setTranscoder
+    (
+        const   XMLCh* const    newEncoding
+    );
 
     unsigned int xcodeMoreChars
     (

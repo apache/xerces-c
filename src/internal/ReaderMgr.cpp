@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:11  twl
- * Initial revision
+ * Revision 1.2  1999/12/18 00:20:00  roddey
+ * More changes to support the new, completely orthagonal, support for
+ * intrinsic encodings.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:11  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:56:54  droddey
  * If the main xml entity does not exist, we need to get the error handling for that
@@ -682,8 +686,8 @@ void ReaderMgr::getLastExtEntityInfo(LastExtEntityInfo& lastInfo) const
     //
     if (!fReaderStack && !fCurReader)
     {
-        lastInfo.systemId = XMLString::replicate(XMLUni::fgZeroLenString);
-        lastInfo.publicId = XMLString::replicate(XMLUni::fgZeroLenString);
+        lastInfo.systemId = XMLUni::fgZeroLenString;
+        lastInfo.publicId = XMLUni::fgZeroLenString;
         lastInfo.lineNumber = 0;
         lastInfo.colNumber = 0;
         return;

@@ -56,8 +56,12 @@
 
 /**
  *  $Log$
- *  Revision 1.1  1999/11/09 01:08:37  twl
- *  Initial revision
+ *  Revision 1.2  1999/12/18 00:19:03  roddey
+ *  More changes to support the new, completely orthagonal, support for
+ *  intrinsic encodings.
+ *
+ *  Revision 1.1.1.1  1999/11/09 01:08:37  twl
+ *  Initial checkin
  *
  *  Revision 1.2  1999/11/08 20:44:40  rahul
  *  Swat for adding in Product name and CVS comment log variable.
@@ -82,22 +86,6 @@
 //  gEncodingNameMap
 //      This array maps the Encodings enum values to their canonical names.
 //      Be sure to keep this in sync with that enum!
-//
-//  gEBCDICPre
-//      The byte sequence prefix for a legal EBCDIC encoded file. This tells
-//      enough to let us read the XMLDecl in EBCDIC and get the real encoding
-//      string out.
-//
-//  gUCS4XXX
-//      The byte sequence prefixes for a legal UCS encoded file. If we get
-//      one of these, we can read the decl line in UCS and get the actual
-//      encoding.
-//
-//  gUTF16XXX
-//      These are the byte sequences that a legal UTF-16 (without BOM) file
-//      can start with. The BOM is checked for, but if not found we still
-//      will try for this sequence. Once we hit one of these, we can read
-//      the first line in UTF-6 and get the real encoding out.
 // ---------------------------------------------------------------------------
 static const XMLCh* gEncodingNameMap[XMLRecognizer::Encodings_Count] =
 {
@@ -109,13 +97,37 @@ static const XMLCh* gEncodingNameMap[XMLRecognizer::Encodings_Count] =
     , XMLUni::fgUTF16BEncodingString
     , XMLUni::fgUTF16LEncodingString
 };
-static const XMLByte    gEBCDICPre[]    = { 0x4C, 0x6F, 0xA7, 0x94, 0x93, 0x40 };
-static const XMLByte    gUCS4BPre[]     = { 0x00, 0x00, 0x00, 0x3C };
-static const XMLByte    gUCS4LPre[]     = { 0x3C, 0x00, 0x00, 0x00 };
-static const XMLByte    gUTF16BPre[]    = { 0x00, 0x3C, 0x00, 0x3F };
-static const XMLByte    gUTF16LPre[]    = { 0x3C, 0x00, 0x3F, 0x00 };
-static const char       gXMLDecl_ASCII[]= { 0x3C, 0x3F, 0x78, 0x6D, 0x6C };
 
+
+
+// ---------------------------------------------------------------------------
+//  XMLRecognizer: Public, const static data
+//
+//  gXXXPre
+//  gXXXPreLen
+//      The byte sequence prefixes for all of the encodings that we can
+//      auto sense. Also included is the length of each sequence.
+// ---------------------------------------------------------------------------
+const char           XMLRecognizer::fgASCIIPre[]  = { 0x3C, 0x3F, 0x78, 0x6D, 0x6C, 0x20 };
+const unsigned int   XMLRecognizer::fgASCIIPreLen = 6;
+const XMLByte        XMLRecognizer::fgEBCDICPre[] = { 0x4C, 0x6F, 0xA7, 0x94, 0x93, 0x40 };
+const unsigned int   XMLRecognizer::fgEBCDICPreLen = 6;
+const XMLByte        XMLRecognizer::fgUTF16BPre[] = { 0x00, 0x3C, 0x00, 0x3F, 0x00, 0x78, 0x00, 0x6D, 0x00, 0x6C, 0x00, 0x20 };
+const XMLByte        XMLRecognizer::fgUTF16LPre[] = { 0x3C, 0x00, 0x3F, 0x00, 0x78, 0x00, 0x6D, 0x00, 0x6C, 0x00, 0x20, 0x00 };
+const unsigned int   XMLRecognizer::fgUTF16PreLen = 12;
+const XMLByte        XMLRecognizer::fgUCS4BPre[]  =
+{
+        0x00, 0x00, 0x00, 0x3C, 0x00, 0x00, 0x00, 0x3F
+    ,   0x00, 0x00, 0x00, 0x78, 0x00, 0x00, 0x00, 0x6D
+    ,   0x00, 0x00, 0x00, 0x6C, 0x00, 0x00, 0x00, 0x20
+};
+const XMLByte        XMLRecognizer::fgUCS4LPre[]  =
+{
+        0x3C, 0x00, 0x00, 0x00, 0x3F, 0x00, 0x00, 0x00
+    ,   0x78, 0x00, 0x00, 0x00, 0x6D, 0x00, 0x00, 0x00
+    ,   0x6C, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 0x00
+};
+const unsigned int   XMLRecognizer::fgUCS4PreLen = 24;
 
 
 
@@ -133,9 +145,9 @@ XMLRecognizer::basicEncodingProbe(  const   XMLByte* const  rawBuffer
     //  the US-ASCII code points for these characters. So just return UTF-8
     //  to get us through the first line.
     //
-    if (rawByteCount > 5)
+    if (rawByteCount >= fgASCIIPreLen)
     {
-        if (!memcmp(rawBuffer, gXMLDecl_ASCII, 5))
+        if (!memcmp(rawBuffer, fgASCIIPre, fgASCIIPreLen))
             return UTF_8;
     }
 
@@ -169,13 +181,13 @@ XMLRecognizer::basicEncodingProbe(  const   XMLByte* const  rawBuffer
     //
     if ((rawBuffer[0] == 0x00) || (rawBuffer[0] == 0x3C))
     {
-        if (!memcmp(rawBuffer, gUCS4BPre, 4))
+        if (!memcmp(rawBuffer, fgUCS4BPre, fgUCS4PreLen))
             return UCS_4B;
-        else if (!memcmp(rawBuffer, gUCS4LPre, 4))
+        else if (!memcmp(rawBuffer, fgUCS4LPre, fgUCS4PreLen))
             return UCS_4L;
-        else if (!memcmp(rawBuffer, gUTF16BPre, 4))
+        else if (!memcmp(rawBuffer, fgUTF16BPre, fgUTF16PreLen))
             return UTF_16B;
-        else if (!memcmp(rawBuffer, gUTF16LPre, 4))
+        else if (!memcmp(rawBuffer, fgUTF16LPre, fgUTF16PreLen))
             return UTF_16L;
     }
 
@@ -183,9 +195,9 @@ XMLRecognizer::basicEncodingProbe(  const   XMLByte* const  rawBuffer
     //  See if we have enough bytes to possibly match the EBCDIC prefix.
     //  If so, try it.
     //
-    if (rawByteCount > 5)
+    if (rawByteCount > fgEBCDICPreLen)
     {
-        if (!memcmp(rawBuffer, gEBCDICPre, 5))
+        if (!memcmp(rawBuffer, fgEBCDICPre, fgEBCDICPreLen))
             return EBCDIC;
     }
 

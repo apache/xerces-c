@@ -56,6 +56,10 @@
 
 /**
  *  $Log$
+ *  Revision 1.3  1999/12/18 00:19:03  roddey
+ *  More changes to support the new, completely orthagonal, support for
+ *  intrinsic encodings.
+ *
  *  Revision 1.2  1999/11/23 01:49:27  rahulj
  *  Cannot use class qualifier in class defn. CC under HPUX is happy.
  *
@@ -123,6 +127,24 @@ public :
         , Def_UCS4      = UCS_4L
         #endif
     };
+
+
+    // -----------------------------------------------------------------------
+    //  Public, const static data
+    //
+    //  These are the byte sequences for each of the encodings that we can
+    //  auto sense, and their lengths.
+    // -----------------------------------------------------------------------
+    static const char           fgASCIIPre[];
+    static const unsigned int   fgASCIIPreLen;
+    static const XMLByte        fgEBCDICPre[];
+    static const unsigned int   fgEBCDICPreLen;
+    static const XMLByte        fgUTF16BPre[];
+    static const XMLByte        fgUTF16LPre[];
+    static const unsigned int   fgUTF16PreLen;
+    static const XMLByte        fgUCS4BPre[];
+    static const XMLByte        fgUCS4LPre[];
+    static const unsigned int   fgUCS4PreLen;
 
 
     // -----------------------------------------------------------------------
