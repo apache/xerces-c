@@ -1,0 +1,215 @@
+# ---------------------------------------------------------------------------
+!if !$d(BCB)
+BCB = $(MAKEDIR)\..
+!endif
+
+# ---------------------------------------------------------------------------
+# IDE-ABSCHNITT
+# ---------------------------------------------------------------------------
+# Der folgende Abschnitt der Make-Datei des Projekts wird von der IDE verwaltet.
+# Wir empfehlen, Änderungen an diesem Abschnitt nur über die IDE
+# vorzunehmen.
+# ---------------------------------------------------------------------------
+VERSION = BCB.04.04
+# ---------------------------------------------------------------------------
+PROJECT = ..\..\..\..\..\..\Build\win32\bcb4\DOMPrint.exe
+OBJFILES = ..\..\..\..\..\Build\win32\bcb4\obj\DOMPrint.obj \
+  ..\..\..\..\..\Build\win32\bcb4\obj\DOMTreeErrorReporter.obj
+RESFILES =
+RESDEPEN = $(RESFILES)
+LIBFILES = ..\..\..\..\..\Build\Win32\BCB4\XercesLib.lib
+IDLFILES =
+IDLGENFILES =
+LIBRARIES = 
+SPARELIBS = 
+PACKAGES = Vcl40.bpi Vclx40.bpi vcljpg40.bpi bcbsmp40.bpi Vclmid40.bpi Inet40.bpi \
+  Inetdb40.bpi Vcldb40.bpi vcldbx40.bpi Dss40.bpi Qrpt40.bpi TeeUI40.bpi \
+  teedb40.bpi tee40.bpi NMFast40.bpi dclocx40.bpi ibsmp40.bpi
+DEFFILE =
+# ---------------------------------------------------------------------------
+PATHCPP = .;..\..\..\..\..\samples\DOMPrint
+PATHASM = .;
+PATHPAS = .;
+PATHRC = .;
+DEBUGLIBPATH = $(BCB)\lib\debug
+RELEASELIBPATH = $(BCB)\lib\release
+SYSDEFINES = _NO_VCL
+USERDEFINES =
+# ---------------------------------------------------------------------------
+CFLAG1 = -I..\..\..\..\..\samples\DOMPrint;$(BCB)\include;..\..\..\..\..\src -Od -w \
+  -Tkh30000 -r- -a8 -k -y -v -vi- -c -tWM -tWC -D$(SYSDEFINES);$(USERDEFINES)
+IDLCFLAGS = -I..\..\..\..\..\samples\DOMPrint -I$(BCB)\include -I..\..\..\..\..\src \
+  -src_suffixcpp
+PFLAGS = -U..\..\..\..\..\samples\DOMPrint;$(BCB)\lib;$(DEBUGLIBPATH) \
+  -I..\..\..\..\..\samples\DOMPrint;$(BCB)\include;..\..\..\..\..\src \
+  -N2..\..\..\..\..\Build\win32\bcb4\obj -N0..\..\..\..\..\Build\win32\bcb4\obj \
+  -$YD -$W -$O- -v -JPHN -M
+RFLAGS = -i..\..\..\..\..\samples\DOMPrint;$(BCB)\include;..\..\..\..\..\src
+AFLAGS = /i..\..\..\..\..\samples\DOMPrint /i$(BCB)\include /i..\..\..\..\..\src /mx /w2 \
+  /zd
+LFLAGS = -L..\..\..\..\..\samples\DOMPrint;$(BCB)\lib;$(DEBUGLIBPATH) -ap -Tpe -x -Gn -v
+# ---------------------------------------------------------------------------
+ALLOBJ = c0x32.obj $(OBJFILES)
+ALLRES = $(RESFILES)
+ALLLIB = $(LIBFILES)  import32.lib cw32mt.lib
+# ---------------------------------------------------------------------------
+!ifdef IDEOPTIONS
+
+[Version Info]
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
+Debug=0
+PreRelease=0
+Special=0
+Private=0
+DLL=0
+Locale=1031
+CodePage=1252
+
+[Version Info Keys]
+CompanyName=
+FileDescription=Executable (Console)
+FileVersion=1.0.0.0
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
+Comments=
+
+[Excluded Packages]
+$(BCB)\Bin\bcbdrt40.bpl=C++ Builder Direct module
+$(BCB)\Bin\bcbide40.bpl=Borland C++Builder Core IDE Package
+$(BCB)\Bin\stride40.bpl=String Resource Editor IDE Package
+$(BCB)\Bin\proide40.bpl=Borland Core IDE Package
+$(BCB)\Bin\mtside40.bpl=Borland Core MTS IDE Package
+$(BCB)\Bin\bcbidl40.bpl=Borland Delphi Core IDL Package
+$(BCB)\Bin\bcbmts40.bpl=Borland CBuilder MTS IDE Package
+$(BCB)\Bin\bcbcxp40.bpl=Borland C++ Builder  - Code-Explorer
+$(BCB)\Bin\DbX40.bpl=(Unbenannt)
+
+[HistoryLists\hlIncludePath]
+Count=1
+Item0=..\..\..\..\..\samples\DOMPrint;$(BCB)\include;..\..\..\..\..\src
+
+[HistoryLists\hlLibraryPath]
+Count=1
+Item0=..\..\..\..\..\samples\DOMPrint;$(BCB)\lib
+
+[HistoryLists\hlIntOutputDir]
+Count=1
+Item0=..\..\..\..\..\Build\win32\bcb4\obj
+
+[HistoryLists\hlRunParameters]
+Count=1
+Item0=personal.xml
+
+[HistoryLists\hlFinalOutputDir]
+Count=1
+Item0=..\..\..\..\..\Build\win32\bcb4\
+
+[Debugging]
+DebugSourceDirs=
+
+[Parameters]
+RunParams=personal.xml
+HostApplication=
+RemoteHost=
+RemotePath=
+RemoteDebug=0
+
+[Compiler]
+InMemoryExe=0
+ShowInfoMsgs=0
+
+[CORBA]
+AddServerUnit=1
+AddClientUnit=1
+PrecompiledHeaders=1
+
+!endif
+
+# ---------------------------------------------------------------------------
+# MAKE-ABSCHNITT
+# ---------------------------------------------------------------------------
+# Der folgende Abschnitt der Datei des Projekts wird nicht von der IDE verwendet. Er ist
+# für das Erstellen von der Befehlszeile mit dem Programm MAKE gedacht.
+# ---------------------------------------------------------------------------
+
+.autodepend
+# ---------------------------------------------------------------------------
+!if !$d(BCC32)
+BCC32 = bcc32
+!endif
+
+!if !$d(DCC32)
+DCC32 = dcc32
+!endif
+
+!if !$d(TASM32)
+TASM32 = tasm32
+!endif
+
+!if !$d(LINKER)
+LINKER = ilink32
+!endif
+
+!if !$d(BRCC32)
+BRCC32 = brcc32
+!endif
+
+!if !$d(IDL2CPP)
+IDL2CPP = idl2cpp
+!endif
+
+# ---------------------------------------------------------------------------
+!if $d(PATHCPP)
+.PATH.CPP = $(PATHCPP)
+.PATH.C   = $(PATHCPP)
+!endif
+
+!if $d(PATHPAS)
+.PATH.PAS = $(PATHPAS)
+!endif
+
+!if $d(PATHASM)
+.PATH.ASM = $(PATHASM)
+!endif
+
+!if $d(PATHRC)
+.PATH.RC  = $(PATHRC)
+!endif
+# ---------------------------------------------------------------------------
+$(PROJECT): $(IDLGENFILES) $(OBJFILES) $(RESDEPEN) $(DEFFILE)
+    $(BCB)\BIN\$(LINKER) @&&!
+    $(LFLAGS) +
+    $(ALLOBJ), +
+    $(PROJECT),, +
+    $(ALLLIB), +
+    $(DEFFILE), +
+    $(ALLRES)
+!
+# ---------------------------------------------------------------------------
+.pas.hpp:
+    $(BCB)\BIN\$(DCC32) $(PFLAGS) {$< }
+
+.pas.obj:
+    $(BCB)\BIN\$(DCC32) $(PFLAGS) {$< }
+
+.cpp.obj:
+    $(BCB)\BIN\$(BCC32) $(CFLAG1) -n$(@D) {$< }
+
+.c.obj:
+    $(BCB)\BIN\$(BCC32) $(CFLAG1) -n$(@D) {$< }
+
+.asm.obj:
+    $(BCB)\BIN\$(TASM32) $(AFLAGS) $<, $@
+
+.rc.res:
+    $(BCB)\BIN\$(BRCC32) $(RFLAGS) -fo$@ $<
+# ---------------------------------------------------------------------------
