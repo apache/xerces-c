@@ -1154,6 +1154,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\BinMemOutputStream.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\BinMemOutputStream.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\BinOutputStream.cpp">
 			</File>
 			<File
