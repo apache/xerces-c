@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.3  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -173,7 +219,7 @@ public:
      * @return A list of top-level definition of the specified type in 
      *   <code>objectType</code> or <code>null</code>. 
      */
-    XSNamedMap <XSObject *> *getComponents(XSConstants::COMPONENT_TYPE objectType);
+    XSNamedMap<XSObject> *getComponents(XSConstants::COMPONENT_TYPE objectType);
 
     /**
      * Convenience method. Returns a list of top-level component declarations 
@@ -187,7 +233,7 @@ public:
      *   <code>objectType</code> and defined in the specified 
      *   <code>namespace</code> or <code>null</code>. 
      */
-    XSNamedMap <XSObject *> *getComponentsByNamespace(XSConstants::COMPONENT_TYPE objectType, 
+    XSNamedMap<XSObject> *getComponentsByNamespace(XSConstants::COMPONENT_TYPE objectType, 
                                                const XMLCh *compNamespace);
 
     /**
@@ -274,7 +320,7 @@ public:
     /** methods needed by implementation */
 
     //@{
-
+    XMLStringPool*  getURIStringPool();
     //@}
 private:
 
@@ -285,25 +331,49 @@ private:
     XSModel & operator=(const XSModel &);
 
 protected:
-
+    friend XSObject;
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
     // fMemoryManager:
     //  used for any memory allocations
-    // fPSVIvectorElemDecls:
-    //  list of ElemDecls for grammar's associated with this XSModel that are 
-    //  not part of GrammarPool (ie. associated with a parser).
-    const MemoryManager*                fMemoryManager;
-    ValueVectorOf<SchemaElementDecl*>*  fPSVIvectorElemDecls;
-    StringList*                         fNamespaceStringList;
-    XSNamespaceItemList*                fXSNamespaceItemList;
+    MemoryManager* const                    fMemoryManager;
+ 
+    StringList*                             fNamespaceStringList;
+    XSNamespaceItemList*                    fXSNamespaceItemList;
+
+    RefVectorOf<XSObject>*                  fDeleteVector;
+    RefVectorOf<XSElementDeclaration>*      fElementDeclarationVector;
+    RefVectorOf<XSAttributeDeclaration>*    fAttributeDeclarationVector;
+
+    /* Need a XSNamedMap for each component    top-level?
+	      ATTRIBUTE_DECLARATION     = 1,	   
+	      ELEMENT_DECLARATION       = 2,	    
+	      TYPE_DEFINITION           = 3,	    
+	      ATTRIBUTE_USE             = 4,	   no 
+	      ATTRIBUTE_GROUP_DEFINITION= 5,	    
+	      MODEL_GROUP_DEFINITION    = 6,	   
+	      MODEL_GROUP               = 7,	   no 
+	      PARTICLE                  = 8,	   no
+	      WILDCARD                  = 9,	    
+	      IDENTITY_CONSTRAINT       = 10,	   no
+	      NOTATION_DECLARATION      = 11,	    
+	      ANNOTATION                = 12,	    
+	      FACET                     = 13,      no
+	      MULTIVALUE_FACET          = 14       no
+    */
+    XSNamedMap<XSObject>*                   fComponentMap[XSConstants::MULTIVALUE_FACET];
+
+    // the mapping of Xerces Object to XS Objects
+    //  facets, mulitvaluefacets and xsattributegroupdefinitions are not stored in the 
+    //  the mapping
+    RefHashTableOf<XSObject>*               fXercesToXSMap;
+    XMLStringPool*                          fURIStringPool;
+
+    XSAnnotationList*                       fXSAnnotationList;
+
+    RefHashTableOf<XSNamespaceItem>*        fHashNamespace;
 };
-inline XSModel::~XSModel() 
-{
-    // REVISIT:
-    // need to delete items owned...
-}
 
 XERCES_CPP_NAMESPACE_END
 

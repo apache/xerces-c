@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.3  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -71,11 +117,19 @@
 #include <xercesc/framework/psvi/XSNamespaceItem.hpp>
 #include <xercesc/internal/XMLGrammarPoolImpl.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
+#include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
+#include <xercesc/util/HashPtr.hpp>
+#include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
+#include <xercesc/framework/psvi/XSElementDeclaration.hpp>
+#include <xercesc/framework/psvi/XSAttributeGroupDefinition.hpp>
+#include <xercesc/framework/psvi/XSNotationDeclaration.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
+#include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 /**
-  * The constructor to be used wen a grammar pool contains all needed info
+  * The constructor to be used when a grammar pool contains all needed info
   *
   * @param grammarPool  the grammar pool containing the underlying data structures
   * @param  manager     The configurable memory manager
@@ -84,26 +138,267 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
             , MemoryManager* const manager ):
         fMemoryManager(manager)
 {
+    fURIStringPool = grammarPool->getURIStringPool();
+
+    // Populate XSNamedMaps by going through the components
+    for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
+    {
+        // REVISIT: what size & modulus
+        switch (i+1) 
+        {
+            case XSConstants::ATTRIBUTE_DECLARATION:
+            case XSConstants::ELEMENT_DECLARATION:
+            case XSConstants::TYPE_DEFINITION:
+            case XSConstants::ATTRIBUTE_GROUP_DEFINITION:
+            case XSConstants::MODEL_GROUP_DEFINITION:
+            case XSConstants::NOTATION_DECLARATION:          
+                fComponentMap[i] = new (fMemoryManager) XSNamedMap<XSObject> 
+                (
+                    15,     // size
+                    29,     // modulus
+                    grammarPool->getURIStringPool(),
+                    false,  // adoptElems 
+                    fMemoryManager
+                );
+                break;
+            default:
+                // ATTRIBUTE_USE
+                // MODEL_GROUP
+                // PARTICLE
+                // IDENTITY_CONSTRAINT
+                // WILDCARD
+                // ANNOTATION
+                // FACET
+                // MULTIVALUE
+                fComponentMap[i] = 0;
+                break;
+        }
+    }
+   
+    // REVISIT: what size & modulus
+    fXercesToXSMap = new (fMemoryManager) RefHashTableOf<XSObject> 
+            (
+                29, false, new (fMemoryManager) HashPtr(), fMemoryManager
+            );
+
+    // Revisit: size of vector
+    fNamespaceStringList = new (manager) RefArrayVectorOf <XMLCh>(10, true, manager);
+    fXSNamespaceItemList = new (manager) RefVectorOf <XSNamespaceItem>(10, true, manager);
+    fDeleteVector        = new (manager) RefVectorOf<XSObject>(10, true, manager);
+    fXSAnnotationList    = new (manager) RefVectorOf <XSAnnotation> (10, false, manager);
+
+    fHashNamespace = new (manager) RefHashTableOf<XSNamespaceItem> (29, false, manager);
+
+    // Loop through all grammars in the grammar pool to create the XSNamespaceItem's
+    //  which will have access to Annotation Information which can be used later when
+    //  we create all the XS components.
     RefHashTableOfEnumerator<Grammar> grammarEnum = grammarPool->getGrammarEnumerator();
+
     while (grammarEnum.hasMoreElements())
     {
         SchemaGrammar& sGrammar = (SchemaGrammar&) grammarEnum.nextElement();
         if (sGrammar.getGrammarType() != Grammar::SchemaGrammarType)
             continue;
-        if (!fNamespaceStringList) {
-            // Revisit: size of vector
-            fNamespaceStringList = new (manager) RefArrayVectorOf <XMLCh>(10, true, manager);
-        }
+        
+        // NOTE: In the grammarpool, preprocessed grammars without targetnamespace
+        //       will use an empty string...
         XMLCh* NameSpace = XMLString::replicate(sGrammar.getTargetNamespace(), manager);
         fNamespaceStringList->addElement(NameSpace);
-        if (!fXSNamespaceItemList)
-        {
-            // Revisit: size of vector
-            fXSNamespaceItemList = new (manager) RefVectorOf <XSNamespaceItem>(10, true, manager);
-        }
-        XSNamespaceItem* NamespaceItem = new XSNamespaceItem(manager);
-        fXSNamespaceItemList->addElement(NamespaceItem);
+        
+        XSNamespaceItem* namespaceItem = new XSNamespaceItem(this, &sGrammar, manager);
+        fXSNamespaceItemList->addElement(namespaceItem);
+
+        fHashNamespace->put(NameSpace, namespaceItem);
     }
+    
+    // Now loop through all of the NamespaceItem's
+    unsigned int numberOfNamespaces = fXSNamespaceItemList->size();
+    for (unsigned int i=0; i<numberOfNamespaces; i++)
+    {
+        XSNamespaceItem* namespaceItem = fXSNamespaceItemList->elementAt(i);
+
+        // First loop through top-level BUILTIN simple type definitions in the grammar...
+        // all grammar's would be the same...    
+        RefHashTableOfEnumerator<DatatypeValidator> simpleEnum = RefHashTableOfEnumerator<DatatypeValidator> (namespaceItem->getSchemaGrammar()->getDatatypeRegistry()->getBuiltInRegistry());
+
+        while (simpleEnum.hasMoreElements())
+        {
+            DatatypeValidator& curSimple = simpleEnum.nextElement();
+            XSSimpleTypeDefinition* xsSimple;
+            if (i == 0)
+            {
+                xsSimple = new (fMemoryManager) XSSimpleTypeDefinition(&curSimple, this, fMemoryManager);
+                fXercesToXSMap->put((void *)&curSimple, xsSimple);
+                fComponentMap[XSConstants::TYPE_DEFINITION -1]->addElement(xsSimple, xsSimple->getName(), namespaceItem->getSchemaNamespace());
+
+                fDeleteVector->addElement(xsSimple);
+            }
+            else
+            {
+                xsSimple = (XSSimpleTypeDefinition*) fXercesToXSMap->get((void *)&curSimple);
+            }
+            namespaceItem->fComponentMap[XSConstants::TYPE_DEFINITION -1]->addElement(xsSimple, xsSimple->getName(), namespaceItem->getSchemaNamespace());
+            namespaceItem->fHashMap[XSConstants::TYPE_DEFINITION -1]->put((void *) xsSimple->getName(), xsSimple);                                                  
+        }
+        // end of simple BuiltIn loop
+
+        // Loop through top-level attribute declarations in the grammar...
+        RefHashTableOfEnumerator<XMLAttDef> attrEnum = RefHashTableOfEnumerator<XMLAttDef> (namespaceItem->getSchemaGrammar()->getAttributeDeclRegistry());
+        
+        while (attrEnum.hasMoreElements())
+        {
+            XMLAttDef&  curAttr = attrEnum.nextElement();
+            SchemaAttDef* attDef = (SchemaAttDef*) &curAttr;
+            
+  //          XSAttributeDeclaration* xsAttrDecl = (XSAttributeDeclaration*) fXercesToXSMap->get((void *) attDef);
+  //          if (!xsAttrDecl)
+  //          {
+                // not in map need to add it..
+                XSAttributeDeclaration* xsAttrDecl = new (fMemoryManager) XSAttributeDeclaration(attDef, this, fMemoryManager);
+                fXercesToXSMap->put((void *)attDef, xsAttrDecl);
+                fComponentMap[XSConstants::ATTRIBUTE_DECLARATION -1]->addElement(xsAttrDecl, xsAttrDecl->getName(), namespaceItem->getSchemaNamespace());
+
+                fDeleteVector->addElement(xsAttrDecl);
+
+                //also need to add to vector of attribute Id's!
+                xsAttrDecl->setId(fAttributeDeclarationVector->size());
+                fAttributeDeclarationVector->addElement(xsAttrDecl);
+    //        }
+            namespaceItem->fComponentMap[XSConstants::ATTRIBUTE_DECLARATION -1]->addElement(xsAttrDecl, xsAttrDecl->getName(), namespaceItem->getSchemaNamespace());
+            namespaceItem->fHashMap[XSConstants::ATTRIBUTE_DECLARATION -1]->put((void *) xsAttrDecl->getName(), xsAttrDecl);
+
+        } // end of attribute loop
+
+        // Loop through top-level elements in the grammar...
+        RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = namespaceItem->getSchemaGrammar()->getElemEnumerator();
+
+        while (elemEnum.hasMoreElements())
+        {
+            SchemaElementDecl& curElem = elemEnum.nextElement();
+
+            if (curElem.getEnclosingScope() == Grammar::TOP_LEVEL_SCOPE) 
+            {
+                XSElementDeclaration* xsElemDecl = (XSElementDeclaration*) fXercesToXSMap->get((void *)&curElem);
+                if (!xsElemDecl)
+                {
+                    // not in map need to add it..
+                    xsElemDecl = new (fMemoryManager) XSElementDeclaration(&curElem, this, fMemoryManager);
+                    fXercesToXSMap->put((void *)&curElem, xsElemDecl);
+                    fComponentMap[XSConstants::ELEMENT_DECLARATION -1]->addElement(xsElemDecl, xsElemDecl->getName(), namespaceItem->getSchemaNamespace());
+
+                    fDeleteVector->addElement(xsElemDecl);
+
+                    //also need to add to vector of elem Id's!
+                    xsElemDecl->setId(fElementDeclarationVector->size());
+                    fElementDeclarationVector->addElement(xsElemDecl);
+                }
+                namespaceItem->fComponentMap[XSConstants::ELEMENT_DECLARATION -1]->addElement(xsElemDecl, xsElemDecl->getName(), namespaceItem->getSchemaNamespace());
+                namespaceItem->fHashMap[XSConstants::ELEMENT_DECLARATION -1]->put((void *) xsElemDecl->getName(), xsElemDecl);
+            }
+        } // end of element loop
+
+        // Now loop through top-level User Defined simple type definitions in the grammar...   
+        RefHashTableOfEnumerator<DatatypeValidator> simpleUserEnum = RefHashTableOfEnumerator<DatatypeValidator> (namespaceItem->getSchemaGrammar()->getDatatypeRegistry()->getUserDefinedRegistry());
+
+        while (simpleUserEnum.hasMoreElements())
+        {
+            DatatypeValidator& curSimple = simpleUserEnum.nextElement();
+            if (!curSimple.getAnonymous())
+            {
+                XSSimpleTypeDefinition* xsSimple = (XSSimpleTypeDefinition*) fXercesToXSMap->get((void *)&curSimple);
+                if (!xsSimple)
+                {
+                    // not in map need to add it..
+                    xsSimple = new (fMemoryManager) XSSimpleTypeDefinition(&curSimple, this, fMemoryManager);
+                    fXercesToXSMap->put((void *)&curSimple, xsSimple);
+                    fComponentMap[XSConstants::TYPE_DEFINITION -1]->addElement(xsSimple, xsSimple->getName(), namespaceItem->getSchemaNamespace());
+
+                    fDeleteVector->addElement(xsSimple);
+                }
+                namespaceItem->fComponentMap[XSConstants::TYPE_DEFINITION -1]->addElement(xsSimple, xsSimple->getName(), namespaceItem->getSchemaNamespace());
+                namespaceItem->fHashMap[XSConstants::TYPE_DEFINITION -1]->put((void *) xsSimple->getName(), xsSimple);                
+            }            
+        }
+        // end of simple User loop
+
+        // Loop through top-level COMPLEX type definitions in the grammar...        
+        RefHashTableOfEnumerator<ComplexTypeInfo> complexEnum = RefHashTableOfEnumerator<ComplexTypeInfo> (namespaceItem->getSchemaGrammar()->getComplexTypeRegistry());   
+      
+        while (complexEnum.hasMoreElements())
+        {
+            ComplexTypeInfo&  curComplex = complexEnum.nextElement();           
+            if (!curComplex.getAnonymous())
+            {
+                XSComplexTypeDefinition* xsComplex = (XSComplexTypeDefinition*) fXercesToXSMap->get((void *) &curComplex);
+                if (!xsComplex)
+                {
+                    // not in map need to add it..
+                    xsComplex = new (fMemoryManager) XSComplexTypeDefinition(&curComplex, this, fMemoryManager);
+                    fXercesToXSMap->put((void *)&curComplex, xsComplex);
+                    fComponentMap[XSConstants::TYPE_DEFINITION -1]->addElement(xsComplex, xsComplex->getName(), namespaceItem->getSchemaNamespace());
+
+                    fDeleteVector->addElement(xsComplex);
+                }
+                namespaceItem->fComponentMap[XSConstants::TYPE_DEFINITION -1]->addElement(xsComplex, xsComplex->getName(), namespaceItem->getSchemaNamespace());
+                namespaceItem->fHashMap[XSConstants::TYPE_DEFINITION -1]->put((void *) xsComplex->getName(), xsComplex);                
+            }            
+        }  // end of type definition loop
+
+        // Loop through top-level attribute group definitions in the grammar...
+        RefHashTableOfEnumerator<XercesAttGroupInfo> attrGroupEnum = RefHashTableOfEnumerator<XercesAttGroupInfo> (namespaceItem->getSchemaGrammar()->getAttGroupInfoRegistry());
+      
+        while (attrGroupEnum.hasMoreElements())
+        {
+            XercesAttGroupInfo&  curAttrGroup = attrGroupEnum.nextElement();
+
+            // NOTE: There is no need to store the mapping between XercesAttGroupInfo
+            //       objects and XSAttributeGroupDefinition objects
+
+            XSAttributeGroupDefinition* xsAttrGroupDecl = new (fMemoryManager) XSAttributeGroupDefinition(&curAttrGroup, this, fMemoryManager);
+            fComponentMap[XSConstants::ATTRIBUTE_GROUP_DEFINITION -1]->addElement(xsAttrGroupDecl, xsAttrGroupDecl->getName(), namespaceItem->getSchemaNamespace());
+
+            fDeleteVector->addElement(xsAttrGroupDecl);
+
+            namespaceItem->fComponentMap[XSConstants::ATTRIBUTE_GROUP_DEFINITION -1]->addElement(xsAttrGroupDecl, xsAttrGroupDecl->getName(), namespaceItem->getSchemaNamespace());
+            namespaceItem->fHashMap[XSConstants::ATTRIBUTE_GROUP_DEFINITION -1]->put((void *) xsAttrGroupDecl->getName(), xsAttrGroupDecl);                
+        } // end of attribute group loop
+        
+        // Loop through top-level model group definitions in the grammar...
+        // REVISIT: need XSModelGroupDefinition to be completed...
+        // REVISIT: how to see if a model group definition is global or local?
+        // end of model group loop
+
+        // Loop through notations in the grammar...
+        // REVISIT: added getNotationEnumerator to SchemaGrammar... make friend instead?
+        NameIdPoolEnumerator<XMLNotationDecl> notationEnum = namespaceItem->getSchemaGrammar()->getNotationEnumerator();
+        while (notationEnum.hasMoreElements())
+        {
+            XMLNotationDecl& notationDecl = notationEnum.nextElement();            
+            // REVISIT: do we need to store mapping between XMLNotationDecl objects and
+            //          XSNotationDeclaration objects?  PSVIElement may need it to 
+            //          get the XSNotationDecl...
+            XSNotationDeclaration* xsNotationDecl = new (fMemoryManager) XSNotationDeclaration(&notationDecl, this, fMemoryManager);
+            fXercesToXSMap->put((void *)&notationDecl, xsNotationDecl);
+            fComponentMap[XSConstants::NOTATION_DECLARATION -1]->addElement(xsNotationDecl, xsNotationDecl->getName(), namespaceItem->getSchemaNamespace());
+
+            fDeleteVector->addElement(xsNotationDecl);
+
+            namespaceItem->fComponentMap[XSConstants::NOTATION_DECLARATION -1]->addElement(xsNotationDecl, xsNotationDecl->getName(), namespaceItem->getSchemaNamespace());
+            namespaceItem->fHashMap[XSConstants::NOTATION_DECLARATION -1]->put((void *) xsNotationDecl->getName(), xsNotationDecl);                
+        } // end of notation loop
+
+        // Loop through annotations in the grammar...
+        // As annotations are already created as XSAnnotations no need to create them
+        // or store them in the XercesToXSMap.
+        XSAnnotation* annot = namespaceItem->getSchemaGrammar()->getAnnotation();       
+        while (annot)
+        {     
+            fXSAnnotationList->addElement(annot);
+            namespaceItem->fXSAnnotationList->addElement(annot);
+            annot = annot->getNext();        
+        } // end of annotation loop
+
+    } // end of namespaceItem loop
 }
 
 /**
@@ -121,6 +416,34 @@ XSModel::XSModel( XSModel *baseModel
         fMemoryManager(manager)
 {
 }
+
+XSModel::~XSModel() 
+{
+    for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
+    {
+        // REVISIT: what size & modulus
+        switch (i+1) 
+        {
+            case XSConstants::ATTRIBUTE_DECLARATION:
+            case XSConstants::ELEMENT_DECLARATION:
+            case XSConstants::TYPE_DEFINITION:
+            case XSConstants::ATTRIBUTE_GROUP_DEFINITION:
+            case XSConstants::MODEL_GROUP_DEFINITION:
+            case XSConstants::NOTATION_DECLARATION:
+                delete fComponentMap[i];
+                break;
+           
+        }
+    }
+   
+    delete fXercesToXSMap;
+    delete fNamespaceStringList; 
+    delete fXSNamespaceItemList;
+    delete fDeleteVector; 
+    delete fXSAnnotationList;
+    delete fHashNamespace;
+}
+
 
 // XSModel methods
 
@@ -158,10 +481,9 @@ XSNamespaceItemList *XSModel::getNamespaceItems()
  * @return A list of top-level definition of the specified type in 
  *   <code>objectType</code> or <code>null</code>. 
  */
-XSNamedMap <XSObject *> *XSModel::getComponents(XSConstants::COMPONENT_TYPE objectType)
+XSNamedMap <XSObject> *XSModel::getComponents(XSConstants::COMPONENT_TYPE objectType)
 {
-    // REVISIT
-    return 0;
+    return fComponentMap[objectType -1];
 }
 
 /**
@@ -176,10 +498,14 @@ XSNamedMap <XSObject *> *XSModel::getComponents(XSConstants::COMPONENT_TYPE obje
  *   <code>objectType</code> and defined in the specified 
  *   <code>namespace</code> or <code>null</code>. 
  */
-XSNamedMap <XSObject *> *XSModel::getComponentsByNamespace(XSConstants::COMPONENT_TYPE objectType, 
+XSNamedMap <XSObject> *XSModel::getComponentsByNamespace(XSConstants::COMPONENT_TYPE objectType, 
                                                const XMLCh *compNamespace)
 {
-    // REVISIT
+    XSNamespaceItem* namespaceItem = fHashNamespace->get(compNamespace);
+    if (namespaceItem)
+    {
+        namespaceItem->getComponents(objectType);
+    }
     return 0;
 }
 
@@ -188,8 +514,7 @@ XSNamedMap <XSObject *> *XSModel::getComponentsByNamespace(XSConstants::COMPONEN
  */
 XSAnnotationList *XSModel::getAnnotations()
 {
-    // REVISIT
-    return 0;
+    return fXSAnnotationList;
 }
 
 /**
@@ -202,7 +527,11 @@ XSAnnotationList *XSModel::getAnnotations()
 XSElementDeclaration *XSModel::getElementDeclaration(const XMLCh *name
             , const XMLCh *compNamespace)
 {
-    // REVISIT
+    XSNamespaceItem* namespaceItem = fHashNamespace->get(compNamespace);
+    if (namespaceItem)
+    {
+        namespaceItem->getElementDeclaration(name);
+    }
     return 0;
 }
 
@@ -216,7 +545,11 @@ XSElementDeclaration *XSModel::getElementDeclaration(const XMLCh *name
 XSAttributeDeclaration *XSModel::getAttributeDeclaration(const XMLCh *name
             , const XMLCh *compNamespace)
 {
-    // REVISIT
+    XSNamespaceItem* namespaceItem = fHashNamespace->get(compNamespace);
+    if (namespaceItem)
+    {
+        namespaceItem->getAttributeDeclaration(name);
+    }
     return 0;
 }
 
@@ -231,7 +564,11 @@ XSAttributeDeclaration *XSModel::getAttributeDeclaration(const XMLCh *name
 XSTypeDefinition *XSModel::getTypeDefinition(const XMLCh *name
             , const XMLCh *compNamespace)
 {
-    // REVISIT
+    XSNamespaceItem* namespaceItem = fHashNamespace->get(compNamespace);
+    if (namespaceItem)
+    {
+        namespaceItem->getTypeDefinition(name);
+    }
     return 0;
 }
 
@@ -245,7 +582,11 @@ XSTypeDefinition *XSModel::getTypeDefinition(const XMLCh *name
 XSAttributeGroupDefinition *XSModel::getAttributeGroup(const XMLCh *name
             , const XMLCh *compNamespace)
 {
-    // REVISIT
+    XSNamespaceItem* namespaceItem = fHashNamespace->get(compNamespace);
+    if (namespaceItem)
+    {
+        namespaceItem->getAttributeGroup(name);
+    }
     return 0;
 }
 
@@ -259,7 +600,11 @@ XSAttributeGroupDefinition *XSModel::getAttributeGroup(const XMLCh *name
 XSModelGroupDefinition *XSModel::getModelGroupDefinition(const XMLCh *name
             , const XMLCh *compNamespace)
 {
-    // REVISIT
+    XSNamespaceItem* namespaceItem = fHashNamespace->get(compNamespace);
+    if (namespaceItem)
+    {
+        namespaceItem->getModelGroupDefinition(name);
+    }
     return 0;
 }
 
@@ -273,7 +618,11 @@ XSModelGroupDefinition *XSModel::getModelGroupDefinition(const XMLCh *name
 XSNotationDeclaration *XSModel::getNotationDeclaration(const XMLCh *name
             , const XMLCh *compNamespace)
 {
-    // REVISIT
+    XSNamespaceItem* namespaceItem = fHashNamespace->get(compNamespace);
+    if (namespaceItem)
+    {
+        namespaceItem->getNotationDeclaration(name);
+    }
     return 0;
 }
 
@@ -289,15 +638,24 @@ XSNotationDeclaration *XSModel::getNotationDeclaration(const XMLCh *name
 XSObject *XSModel::getXSObjectById(unsigned int  compId
             , XSConstants::COMPONENT_TYPE compType)
 {
-    // Revisit: only elements & attributes have id's
+    // only elements & attributes have id's
     switch(compType) {
         case XSConstants::ELEMENT_DECLARATION:
-            return 0;
+            if (compId < fElementDeclarationVector->size())
+                return fElementDeclarationVector->elementAt(compId);
+            break;    
         case XSConstants::ATTRIBUTE_DECLARATION:
-            return 0;
-        default:
-            return 0;
+            if (compId < fAttributeDeclarationVector->size())
+                return fAttributeDeclarationVector->elementAt(compId);
+            break;
     }
+    return 0;
+}
+
+
+XMLStringPool*  XSModel::getURIStringPool()
+{
+    return fURIStringPool;
 }
 
 XERCES_CPP_NAMESPACE_END

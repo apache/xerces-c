@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -93,7 +139,7 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSModelGroupDefinition( 
+    XSModelGroupDefinition(XSModel*              xsModel, 
                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
@@ -104,9 +150,8 @@ public:
     //@}
 
     //---------------------
-    // @name overridden XSXSObject methods
-
-    // @{
+    /** @name overridden XSXSObject methods */
+    //@{
 
     /**
      * The name of type <code>NCName</code> of this declaration as defined in 
@@ -120,12 +165,19 @@ public:
      */
     const XMLCh* getNamespace();
 
-    // @}
+    /**
+     * A namespace schema information item corresponding to the target 
+     * namespace of the component, if it's globally declared; or null 
+     * otherwise.
+     */
+    XSNamespaceItem *getNamespaceItem();
+
+    //@}
 
     //---------------------
-    // @name XSModelGroupDefinition methods
+    /** @name XSModelGroupDefinition methods */
 
-    /* @{
+    //@{
 
     /**
      * A model group. 
@@ -140,9 +192,8 @@ public:
     //@}
 
     //----------------------------------
-    // methods needed by implementation
-
-    // @{
+    /** methods needed by implementation */
+    //@{
 
     //@}
 private:

@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.2  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -94,6 +140,7 @@ class XSNotationDeclaration;
 class XSTypeDefinition;
 
 class SchemaGrammar;
+class XSModel;
 
 class XMLPARSER_EXPORT XSNamespaceItem : public XMemory
 {
@@ -109,8 +156,9 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSNamespaceItem( 
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSNamespaceItem(XSModel*            xsModel,
+                    SchemaGrammar*      grammar,
+                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
 
@@ -140,7 +188,7 @@ public:
      * @return A list of top-level definition of the specified type in 
      *   <code>objectType</code> or <code>null</code>. 
      */
-    XSNamedMap <XSObject *> *getComponents(XSConstants::COMPONENT_TYPE objectType);
+    XSNamedMap<XSObject> *getComponents(XSConstants::COMPONENT_TYPE objectType);
 
     /**
      *  [annotations]: a set of annotations.
@@ -208,6 +256,7 @@ public:
     /** methods needed by implementation */
 
     //@{
+    SchemaGrammar*  getSchemaGrammar()  const;
 
     //@}
 private:
@@ -219,20 +268,42 @@ private:
     XSNamespaceItem & operator=(const XSNamespaceItem &);
 
 protected:
-
+    friend class XSModel;
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
     // fMemoryManager:
     //  used for any memory allocations
-    const MemoryManager *fMemoryManager;
-    SchemaGrammar*       fGrammar;
+    MemoryManager* const    fMemoryManager;
+    SchemaGrammar*          fGrammar;
+    XSModel*                fXSModel;
+
+    /* Need a XSNamedMap for each component
+	      ATTRIBUTE_DECLARATION     = 1,	   
+	      ELEMENT_DECLARATION       = 2,	    
+	      TYPE_DEFINITION           = 3,	    
+	      ATTRIBUTE_USE             = 4,	   no 
+	      ATTRIBUTE_GROUP_DEFINITION= 5,	    
+	      MODEL_GROUP_DEFINITION    = 6,	   yes - no
+	      MODEL_GROUP               = 7,	   no - yes (just one of these) 
+	      PARTICLE                  = 8,	    no
+	      WILDCARD                  = 9,	    
+	      IDENTITY_CONSTRAINT       = 10,	     never return
+	      NOTATION_DECLARATION      = 11,	    
+	      ANNOTATION                = 12,	    
+	      FACET                     = 13,       no
+	      MULTIVALUE_FACET          = 14        no
+    */
+    XSNamedMap<XSObject>*                   fComponentMap[XSConstants::MULTIVALUE_FACET];
+    XSAnnotationList*                       fXSAnnotationList;
+
+    RefHashTableOf<XSObject>*               fHashMap[XSConstants::MULTIVALUE_FACET];
 
 };
-inline XSNamespaceItem::~XSNamespaceItem()
+
+inline SchemaGrammar* XSNamespaceItem::getSchemaGrammar() const
 {
-    // REVISIT:
-    // need to delete items owned...
+    return fGrammar;
 }
 
 XERCES_CPP_NAMESPACE_END

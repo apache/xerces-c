@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.2  2003/09/17 17:45:37  neilg
  * remove spurious inlines; hopefully this will make Solaris/AIX compilers happy.
  *
@@ -65,33 +111,19 @@
  */
 
 #include <xercesc/framework/psvi/XSTypeDefinition.hpp>
+#include <xercesc/validators/schema/ComplexTypeInfo.hpp>
+#include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSTypeDefinition::XSTypeDefinition( TYPE_CATEGORY typeCategory,
-            MemoryManager* const manager ):  
-        XSObject(XSConstants::TYPE_DEFINITION, manager),
+XSTypeDefinition::XSTypeDefinition(TYPE_CATEGORY            typeCategory,
+                                   XSModel*                 xsModel,
+                                   MemoryManager* const     manager ):  
+        XSObject(XSConstants::TYPE_DEFINITION, xsModel, manager),
+        fFinal(0),
+        fBaseType(0),
         fTypeCategory(typeCategory)
 {
-}
-
-// overloaded XSObject methods
-const XMLCh *XSTypeDefinition::getName() 
-{
-    // REVISIT
-    return 0;
-}
-
-const XMLCh *XSTypeDefinition::getNamespace() 
-{
-    // REVISIT
-    return 0;
-}
-
-XSNamespaceItem *XSTypeDefinition::getNamespaceItem() 
-{
-    //REVISIT
-    return 0;
 }
 
 // XSTypeDefinition implementation
@@ -100,42 +132,41 @@ inline XSTypeDefinition::TYPE_CATEGORY XSTypeDefinition::getTypeCategory() const
     return fTypeCategory;
 }
 
-XSTypeDefinition *XSTypeDefinition::getBaseType() 
-{
-    // REVISIT
-    return 0;
-}
 
 bool XSTypeDefinition::isFinal(short toTest)
 {
-    // REVISIT
+    if (fFinal & toTest)
+    {
+        return true;
+    }
     return false;
+
 }
 
 short XSTypeDefinition::getFinal() const
 {
-    // REVISIT
-    return 0;
-}
-
-bool XSTypeDefinition::getAnonymous() const
-{
-    // REVISIT
-    return false; 
-}
-
-bool XSTypeDefinition::derivedFromType(const XSTypeDefinition * const ancestorType, 
-                               short derivationMethod)
-{
-    // REVISIT
-    return false;
+    return fFinal;
 }
 
 bool XSTypeDefinition::derivedFrom(const XMLCh *typeNamespace, 
                            const XMLCh *name, 
                            short derivationMethod)
 {
-    // REVISIT
+    // REVISIT: review
+    // REVISIT: how to check derivationMethod (note: Java doesn't check)...
+    if (!name)
+        return false;
+
+    XSTypeDefinition* type = this;
+
+    while (type)
+    {
+        if (XMLString::equals(type->getName(), name) &&
+            XMLString::equals(type->getNamespace(), typeNamespace))
+            return true;
+        type = type->getBaseType();
+    }
+
     return false;
 }
 

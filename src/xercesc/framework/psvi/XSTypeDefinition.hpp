@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.2  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -73,6 +119,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 // forward declarations
 class XSNamespaceItem;
+class ComplexTypeInfo;
 
 /**
  * This class represents a complexType or simpleType definition.
@@ -106,8 +153,9 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSTypeDefinition( TYPE_CATEGORY typeCategory,
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSTypeDefinition(TYPE_CATEGORY          typeCategory,
+                     XSModel*               xsModel,
+                     MemoryManager* const   manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
 
@@ -124,20 +172,20 @@ public:
      * The name of type <code>NCName</code> of this declaration as defined in 
      * XML Namespaces.
      */
-    virtual const XMLCh* getName();
+    virtual const XMLCh* getName() = 0;
 
     /**
      *  The [target namespace] of this object, or <code>null</code> if it is 
      * unspecified. 
      */
-    virtual const XMLCh* getNamespace();
+    virtual const XMLCh* getNamespace() = 0;
 
     /**
      * A namespace schema information item corresponding to the target 
      * namespace of the component, if it's globally declared; or null 
      * otherwise.
      */
-    virtual XSNamespaceItem *getNamespaceItem();
+    virtual XSNamespaceItem *getNamespaceItem() = 0;
 
     //@}
 
@@ -155,7 +203,7 @@ public:
      * {base type definition}: either a simple type definition or a complex 
      * type definition. 
      */
-    XSTypeDefinition *getBaseType();
+    virtual XSTypeDefinition *getBaseType() = 0;
 
     /**
      * {final}. For complex type definition it is a subset of {extension, 
@@ -183,7 +231,7 @@ public:
      *  A boolean that specifies if the type definition is 
      * anonymous. Convenience attribute. 
      */
-    bool getAnonymous() const;
+    virtual bool getAnonymous() const = 0;
 
     /**
      * Convenience method: check if this type is derived from the given 
@@ -194,27 +242,25 @@ public:
      *   }. 
      * @return  Return true if this type is derived from 
      *   <code>ancestorType</code> using only derivation methods from the 
-     *   <code>derivationMethod</code>. Return true if this type is derived 
-     *   from <code>ancestorType</code>.
+     *   <code>derivationMethod</code>.
      */
-    bool derivedFromType(const XSTypeDefinition * const ancestorType, 
-                                   short derivationMethod);
+    virtual bool derivedFromType(const XSTypeDefinition* const ancestorType, 
+                                   short derivationMethod) = 0;
 
     /**
      * Convenience method: check if this type is derived from the given 
      * ancestor type. 
-     * @param namespace  An ancestor type namespace. 
+     * @param typeNamespace  An ancestor type namespace. 
      * @param name  An ancestor type name. 
      * @param derivationMethod  A bit combination representing a subset of {
      *   <code>DERIVATION_RESTRICTION, DERIVATION_EXTENSION, DERIVATION_UNION, DERIVATION_LIST</code>
      *   }. 
      * @return  Return true if this type is derived from 
-     *   <code>ancestorType</code> using only derivation methods from the 
-     *   <code>derivationMethod</code>. Return true if this type is derived 
-     *   from <code>ancestorType</code>.
+     *   the ancestor defined by <code>typeNamespace</code> and <code>name</code> using only
+     *   derivation methods from the <code>derivationMethod</code>.
      */
-    bool derivedFrom(const XMLCh * const typeNamespace, 
-                               const XMLCh * const name, 
+    bool derivedFrom(const XMLCh* typeNamespace, 
+                               const XMLCh* name, 
                                short derivationMethod);
 
     //@}
@@ -240,8 +286,11 @@ protected:
     // -----------------------------------------------------------------------
     // fTypeCategory
     //  whether this is a simpleType or complexType
-    TYPE_CATEGORY fTypeCategory;
-
+    // fFinal
+    //  the final properties which is set by the derived class.
+    TYPE_CATEGORY                   fTypeCategory;
+    short                           fFinal;
+    XSTypeDefinition*               fBaseType; // owned by XSModel
 };
 inline XSTypeDefinition::~XSTypeDefinition() {}
 

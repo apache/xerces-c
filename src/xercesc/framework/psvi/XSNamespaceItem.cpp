@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.2  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -66,12 +112,84 @@
 
 #include <xercesc/framework/psvi/XSNamespaceItem.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
+#include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSNamespaceItem::XSNamespaceItem( MemoryManager* const manager ):  
+XSNamespaceItem::XSNamespaceItem(XSModel*               xsModel,
+                                 SchemaGrammar*         grammar,
+                                 MemoryManager* const   manager ):  
+        fXSModel(xsModel),
+        fGrammar(grammar),
         fMemoryManager(manager)
 {
+    // Populate XSNamedMaps by going through the components
+    for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
+    {
+        // REVISIT: what size & modulus & adopt
+        switch (i+1) 
+        {
+            case XSConstants::ATTRIBUTE_DECLARATION:
+            case XSConstants::ELEMENT_DECLARATION:
+            case XSConstants::TYPE_DEFINITION:
+            case XSConstants::ATTRIBUTE_GROUP_DEFINITION:
+            case XSConstants::MODEL_GROUP_DEFINITION:
+            case XSConstants::NOTATION_DECLARATION:
+                fComponentMap[i] = new (fMemoryManager) XSNamedMap<XSObject> 
+                (
+                    15,     // size
+                    29,     // modulus
+                    fXSModel->getURIStringPool(),
+                    false,  // adoptElems 
+                    fMemoryManager
+                );               
+                fHashMap[i] = new (fMemoryManager) RefHashTableOf<XSObject>
+                (
+                    29,
+                    false,
+                    fMemoryManager
+                );
+                break;
+            default:
+                // ATTRIBUTE_USE
+                // MODEL_GROUP
+                // PARTICLE
+                // IDENTITY_CONSTRAINT
+                // WILDCARD
+                // ANNOTATION
+                // FACET
+                // MULTIVALUE
+                fComponentMap[i] = 0;
+                fHashMap[i] = 0;
+                break;
+        }
+    }
+    
+    // Revisit size
+    fXSAnnotationList = new (manager) RefVectorOf <XSAnnotation> (10, false, manager);
+}
+
+XSNamespaceItem::~XSNamespaceItem()
+{
+    for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
+    {
+        switch (i+1) 
+        {
+            case XSConstants::ATTRIBUTE_DECLARATION:
+            case XSConstants::ELEMENT_DECLARATION:
+            case XSConstants::TYPE_DEFINITION:
+            case XSConstants::ATTRIBUTE_GROUP_DEFINITION:
+            case XSConstants::MODEL_GROUP_DEFINITION:
+            case XSConstants::NOTATION_DECLARATION:            
+                delete fComponentMap[i];
+                delete fHashMap[i];             
+                break;
+        }
+    }
+    
+    delete fXSAnnotationList;
 }
 
 // XSNamespaceItem methods
@@ -95,10 +213,9 @@ const XMLCh *XSNamespaceItem::getSchemaNamespace()
  * @return A list of top-level definition of the specified type in 
  *   <code>objectType</code> or <code>null</code>. 
  */
-XSNamedMap <XSObject *> *XSNamespaceItem::getComponents(XSConstants::COMPONENT_TYPE objectType)
+XSNamedMap<XSObject> *XSNamespaceItem::getComponents(XSConstants::COMPONENT_TYPE objectType)
 {
-    // REVISIT
-    return 0;
+    return fComponentMap[objectType -1];
 }
 
 /**
@@ -106,8 +223,7 @@ XSNamedMap <XSObject *> *XSNamespaceItem::getComponents(XSConstants::COMPONENT_T
  */
 XSAnnotationList *XSNamespaceItem::getAnnotations()
 {
-    // REVISIT
-    return 0;
+    return fXSAnnotationList;
 }
 
 /**
@@ -118,8 +234,7 @@ XSAnnotationList *XSNamespaceItem::getAnnotations()
  */
 XSElementDeclaration *XSNamespaceItem::getElementDeclaration(const XMLCh *name)
 {
-    // REVISIT
-    return 0;
+    return (XSElementDeclaration*) fHashMap[XSConstants::ELEMENT_DECLARATION -1]->get(name);
 }
 
 /**
@@ -130,8 +245,7 @@ XSElementDeclaration *XSNamespaceItem::getElementDeclaration(const XMLCh *name)
  */
 XSAttributeDeclaration *XSNamespaceItem::getAttributeDeclaration(const XMLCh *name)
 {
-    // REVISIT
-    return 0;
+    return (XSAttributeDeclaration*) fHashMap[XSConstants::ATTRIBUTE_DECLARATION -1]->get(name);
 }
 
 /**
@@ -143,8 +257,7 @@ XSAttributeDeclaration *XSNamespaceItem::getAttributeDeclaration(const XMLCh *na
  */
 XSTypeDefinition *XSNamespaceItem::getTypeDefinition(const XMLCh *name)
 {
-    // REVISIT
-    return 0;
+    return (XSTypeDefinition*) fHashMap[XSConstants::TYPE_DEFINITION -1]->get(name);
 }
 
 /**
@@ -155,8 +268,7 @@ XSTypeDefinition *XSNamespaceItem::getTypeDefinition(const XMLCh *name)
  */
 XSAttributeGroupDefinition *XSNamespaceItem::getAttributeGroup(const XMLCh *name)
 {
-    // REVISIT
-    return 0;
+    return (XSAttributeGroupDefinition*) fHashMap[XSConstants::ATTRIBUTE_GROUP_DEFINITION -1]->get(name);
 }
 
 /**
@@ -167,8 +279,7 @@ XSAttributeGroupDefinition *XSNamespaceItem::getAttributeGroup(const XMLCh *name
  */
 XSModelGroupDefinition *XSNamespaceItem::getModelGroupDefinition(const XMLCh *name)
 {
-    // REVISIT
-    return 0;
+    return (XSModelGroupDefinition*) fHashMap[XSConstants::MODEL_GROUP_DEFINITION -1]->get(name);         
 }
 
 /**
@@ -179,8 +290,7 @@ XSModelGroupDefinition *XSNamespaceItem::getModelGroupDefinition(const XMLCh *na
  */
 XSNotationDeclaration *XSNamespaceItem::getNotationDeclaration(const XMLCh *name)
 {
-    // REVISIT
-    return 0;
+    return (XSNotationDeclaration*) fHashMap[XSConstants::NOTATION_DECLARATION -1]->get(name);
 }
 
 /**
@@ -189,8 +299,7 @@ XSNotationDeclaration *XSNamespaceItem::getNotationDeclaration(const XMLCh *name
  */
 StringList *XSNamespaceItem::getDocumentLocations()
 {
-    // REVISIT
-    return 0;
+    return ((XMLSchemaDescriptionImpl*) fGrammar->getGrammarDescription())->getLocationHints();
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.3  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -73,20 +119,21 @@
 #include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
 #include <xercesc/framework/psvi/XSIDCDefinition.hpp>
 #include <xercesc/util/StringPool.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
    
 XSElementDeclaration::XSElementDeclaration(SchemaElementDecl*       schemaElementDecl,
-                                           XMLStringPool*           uriStringPool,
+                                           XSModel*                 xsModel,
                                            MemoryManager * const    manager):
     fSchemaElementDecl(schemaElementDecl),
     fSubstitutionGroupAffiliation(0),
     fDisallowedSubstitutions(0),
     fSubstitutionGroupExclusions(0),
-    fURIStringPool(uriStringPool),
     fTypeDefinition(0),
     fIdentityConstraints(0),
-    XSObject(XSConstants::ELEMENT_DECLARATION, manager )
+    XSObject(XSConstants::ELEMENT_DECLARATION, xsModel, manager )
 {
     int blockorfinalset;
     if (blockorfinalset = fSchemaElementDecl->getBlockSet()) 
@@ -119,28 +166,48 @@ XSElementDeclaration::XSElementDeclaration(SchemaElementDecl*       schemaElemen
     
     if (fSchemaElementDecl->getSubstitutionGroupElem())
     {
-        fSubstitutionGroupAffiliation = new (manager) XSElementDeclaration(fSchemaElementDecl->getSubstitutionGroupElem(), fURIStringPool, manager);
+        fSubstitutionGroupAffiliation = (XSElementDeclaration*) getObjectFromMap((void*)fSchemaElementDecl->getSubstitutionGroupElem());
+        if (!fSubstitutionGroupAffiliation)
+        {
+            fSubstitutionGroupAffiliation = new (manager) XSElementDeclaration(fSchemaElementDecl->getSubstitutionGroupElem(), fXSModel, manager);
+            putObjectInMap((void*)fSchemaElementDecl->getSubstitutionGroupElem(),fSubstitutionGroupAffiliation);
+        }
     }
 
     if (fSchemaElementDecl->getDatatypeValidator())
     {
         // simple type
-        fTypeDefinition = (XSTypeDefinition*) new (manager) XSSimpleTypeDefinition(fSchemaElementDecl->getDatatypeValidator(), manager);
+        fTypeDefinition = (XSTypeDefinition*) getObjectFromMap((void *)fSchemaElementDecl->getDatatypeValidator());
+        if (!fTypeDefinition)
+        {
+            fTypeDefinition = (XSTypeDefinition*) new (manager) XSSimpleTypeDefinition(fSchemaElementDecl->getDatatypeValidator(), fXSModel, manager);
+            putObjectInMap((void *)fSchemaElementDecl->getDatatypeValidator(), fTypeDefinition);
+        }
     }
     else if (fSchemaElementDecl->getComplexTypeInfo()) 
     {
         // complex type
-        fTypeDefinition = (XSTypeDefinition*) new (manager) XSComplexTypeDefinition(fSchemaElementDecl->getComplexTypeInfo(), fURIStringPool, manager);
+        fTypeDefinition = (XSTypeDefinition*) getObjectFromMap((void *)fSchemaElementDecl->getComplexTypeInfo());
+        if (!fTypeDefinition)
+        {
+            fTypeDefinition = (XSTypeDefinition*) new (manager) XSComplexTypeDefinition(fSchemaElementDecl->getComplexTypeInfo(), fXSModel, manager);
+            putObjectInMap((void *)fSchemaElementDecl->getComplexTypeInfo(), fTypeDefinition);
+        }
     }
 
     unsigned int count = fSchemaElementDecl->getIdentityConstraintCount();
     if (count)
     {
         //REVISIT: size of hash table....   
-        fIdentityConstraints = new (manager) XSNamedMap <XSIDCDefinition> (count, 29, fURIStringPool, true, manager);
+        fIdentityConstraints = new (manager) XSNamedMap <XSIDCDefinition> (count, 29, fXSModel->getURIStringPool(), false, manager);
         for (unsigned int i = 0; i < count; i++) 
         {
-            XSIDCDefinition*    definition = new (manager) XSIDCDefinition(fSchemaElementDecl->getIdentityConstraintAt(i), manager);
+            XSIDCDefinition*    definition = (XSIDCDefinition*) getObjectFromMap((void*)fSchemaElementDecl->getIdentityConstraintAt(i));
+            if (!definition)
+            {
+                definition = new (manager) XSIDCDefinition(fSchemaElementDecl->getIdentityConstraintAt(i), fXSModel, manager);
+                putObjectInMap((void*) fSchemaElementDecl->getIdentityConstraintAt(i), definition);
+            }
             fIdentityConstraints->addElement(definition, definition->getName(), definition->getNamespace());
         }
     }
@@ -148,14 +215,8 @@ XSElementDeclaration::XSElementDeclaration(SchemaElementDecl*       schemaElemen
 
 XSElementDeclaration::~XSElementDeclaration() 
 {
-    if (fTypeDefinition) 
-    {
-        delete fTypeDefinition;
-    }
-    if (fSubstitutionGroupAffiliation)
-    {
-        delete fSubstitutionGroupAffiliation;
-    }
+    // don't delete fTypeDefinition - deleted by XSModel
+    // don't delete fSubstitutionGroupAffiliation - deleted by XSModel
     if (fIdentityConstraints)
     {
         delete fIdentityConstraints;
@@ -170,7 +231,12 @@ const XMLCh *XSElementDeclaration::getName()
 
 const XMLCh *XSElementDeclaration::getNamespace() 
 {
-    return fURIStringPool->getValueForId(fSchemaElementDecl->getURI());
+    return fXSModel->getURIStringPool()->getValueForId(fSchemaElementDecl->getURI());
+}
+
+XSNamespaceItem *XSElementDeclaration::getNamespaceItem() 
+{
+    return getNamespaceItemFromHash(getNamespace());
 }
 
 // XSElementDeclaration methods
@@ -344,8 +410,20 @@ bool XSElementDeclaration::getAbstract()
  */
 XSAnnotation *XSElementDeclaration::getAnnotation()
 {
-    // REVISIT
-    return 0;
+    return getAnnotationFromModel(fSchemaElementDecl);
+}
+
+/**
+ * Process Id
+ */ 
+void XSElementDeclaration::setId(unsigned int id)
+{
+    fId = id;
+}
+
+unsigned int XSElementDeclaration::getId() const
+{
+    return fId;
 }
 
 XERCES_CPP_NAMESPACE_END

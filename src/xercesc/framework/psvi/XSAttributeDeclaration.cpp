@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.3  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -72,29 +118,33 @@
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 #include <xercesc/util/QName.hpp>
 #include <xercesc/util/StringPool.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
+#include <xercesc/framework/psvi/XSNamespaceItem.hpp>
+#include <xercesc/validators/schema/SchemaGrammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 XSAttributeDeclaration::XSAttributeDeclaration(SchemaAttDef*            attDef,
-                                               XMLStringPool*           uriStringPool,
+                                               XSModel*                 xsModel,
                                                MemoryManager * const    manager):
     fAttDef(attDef),
     fTypeDefinition(0),
-    fURIStringPool(uriStringPool),
-    XSObject(XSConstants::ATTRIBUTE_DECLARATION, manager )
+    XSObject(XSConstants::ATTRIBUTE_DECLARATION, xsModel, manager)
 {
     if (fAttDef->getDatatypeValidator())
     {
-        fTypeDefinition = new (manager) XSSimpleTypeDefinition(fAttDef->getDatatypeValidator(),manager);
+        fTypeDefinition = (XSSimpleTypeDefinition*) getObjectFromMap((void *)fAttDef->getDatatypeValidator());
+        if (!fTypeDefinition)
+        {
+            fTypeDefinition = new (manager) XSSimpleTypeDefinition(fAttDef->getDatatypeValidator(), fXSModel, manager);
+            putObjectInMap((void *)fAttDef->getDatatypeValidator(), fTypeDefinition);
+        }
     }
 }
 
 XSAttributeDeclaration::~XSAttributeDeclaration() 
 {
-    if (fTypeDefinition)
-    {
-        delete fTypeDefinition;
-    }
+    // don't delete fTypeDefinition - deleted by XSModel
 }
 // XSObject methods
 const XMLCh *XSAttributeDeclaration::getName() 
@@ -104,13 +154,12 @@ const XMLCh *XSAttributeDeclaration::getName()
 
 const XMLCh *XSAttributeDeclaration::getNamespace() 
 {
-    return fURIStringPool->getValueForId(fAttDef->getAttName()->getURI());
+    return fXSModel->getURIStringPool()->getValueForId(fAttDef->getAttName()->getURI());
 }
 
 XSNamespaceItem *XSAttributeDeclaration::getNamespaceItem() 
 {
-    //REVISIT
-    return 0;
+    return getNamespaceItemFromHash(getNamespace());
 }
 
 // XSAttributeDeclaration methods
@@ -129,9 +178,15 @@ XSSimpleTypeDefinition *XSAttributeDeclaration::getTypeDefinition()
  * <code>enclosingCTDefinition</code> is present. 
  */
 XSConstants::SCOPE XSAttributeDeclaration::getScope() const
-{
-    // REVISIT
-    return XSConstants::SCOPE_ABSENT;
+{   
+    // REVISIT: review... what about SCOPE_ABSENT?
+    // Using just:
+    // if (getNamespaceItem()->getSchemaGrammar()->getAttributeDeclRegistry()->get(fAttDef))
+    // give class conversion error...
+    if (((XSAttributeDeclaration*) this)->getNamespaceItem()->getSchemaGrammar()->getAttributeDeclRegistry()->get(fAttDef))
+        return XSConstants::SCOPE_GLOBAL;
+    return XSConstants::SCOPE_LOCAL;
+
 }
 
 /**
@@ -175,10 +230,21 @@ const XMLCh *XSAttributeDeclaration::getConstraintValue()
  */
 XSAnnotation *XSAttributeDeclaration::getAnnotation()
 {
-    //REVISIT
-    return 0;
+    return getAnnotationFromModel(fAttDef);
 }
 
+/**
+ * Process Id
+ */ 
+void XSAttributeDeclaration::setId(unsigned int id)
+{
+    fId = id;
+}
+
+unsigned int XSAttributeDeclaration::getId() const
+{
+    return fId;
+}
 
 XERCES_CPP_NAMESPACE_END
 

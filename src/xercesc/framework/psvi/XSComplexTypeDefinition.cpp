@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.3  2003/11/10 21:56:54  neilg
  * make internal code use the new, stateless, method of traversing attribute lists
  *
@@ -74,18 +120,20 @@
 #include <xercesc/framework/psvi/XSWildcard.hpp>
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 #include <xercesc/framework/psvi/XSAttributeUse.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 XSComplexTypeDefinition::XSComplexTypeDefinition(ComplexTypeInfo*       complexTypeInfo,
-                                                 XMLStringPool*         uriStringPool,
+                                                 XSModel*               xsModel,
                                                  MemoryManager* const   manager ):  
         fComplexTypeInfo(complexTypeInfo),
         fXSWildcard(0),
         fXSAttributeUseList(0),
         fXSSimpleTypeDefinition(0),
         fProhibitedSubstitution(0),
-        XSTypeDefinition(COMPLEX_TYPE, manager)
+        fXSAnnotationList(0),
+        XSTypeDefinition(COMPLEX_TYPE, xsModel, manager)
 {
     int blockset;
     if (blockset = fComplexTypeInfo->getBlockSet()) 
@@ -101,43 +149,77 @@ XSComplexTypeDefinition::XSComplexTypeDefinition(ComplexTypeInfo*       complexT
     }
 
     if (fComplexTypeInfo->getAttWildCard()) 
-    {
-        fXSWildcard = new (manager) XSWildcard(fComplexTypeInfo->getAttWildCard(), uriStringPool, manager);
+    {       
+        fXSWildcard = (XSWildcard*) getObjectFromMap(fComplexTypeInfo->getAttWildCard());
+        if (!fXSWildcard)
+        {
+            fXSWildcard = new (manager) XSWildcard(fComplexTypeInfo->getAttWildCard(), fXSModel, manager);
+            putObjectInMap((void*)fComplexTypeInfo->getAttWildCard(), fXSWildcard);
+        }
     }
 
     if ((fComplexTypeInfo->getContentType() == SchemaElementDecl::Simple) &&
         (fComplexTypeInfo->getDatatypeValidator()))
     {
-        fXSSimpleTypeDefinition = new (manager) XSSimpleTypeDefinition(fComplexTypeInfo->getDatatypeValidator(), manager);
+        fXSSimpleTypeDefinition = (XSSimpleTypeDefinition*) getObjectFromMap((void *)fComplexTypeInfo->getDatatypeValidator());
+        if (!fXSSimpleTypeDefinition)
+        {
+            fXSSimpleTypeDefinition = new (manager) XSSimpleTypeDefinition(fComplexTypeInfo->getDatatypeValidator(), fXSModel, manager);
+            putObjectInMap((void *)fComplexTypeInfo->getDatatypeValidator(), fXSSimpleTypeDefinition);
+        }
     }
 
     if (fComplexTypeInfo->hasAttDefs())
     {
         SchemaAttDefList& schemaAttDefList = (SchemaAttDefList&) fComplexTypeInfo->getAttDefList();
         // REVISIT: size of vector...
-        fXSAttributeUseList = new (manager) RefVectorOf <XSAttributeUse> (10, true, manager);
+        fXSAttributeUseList = new (manager) RefVectorOf <XSAttributeUse> (10, false, manager);
             
         for(unsigned int i=0; i<schemaAttDefList.getAttDefCount(); i++)
         {
             SchemaAttDef& attDef = (SchemaAttDef&) schemaAttDefList.getAttDef(i);
-            fXSAttributeUseList->addElement(new (manager) XSAttributeUse(&attDef, uriStringPool, manager));
+            XSAttributeUse* attrUse = (XSAttributeUse*) getObjectFromMap((void*)&attDef);
+            if (!attrUse)
+            {
+                attrUse = new (manager) XSAttributeUse(&attDef, fXSModel, manager);
+                putObjectInMap((void*)&attDef, attrUse);
+            }
+            fXSAttributeUseList->addElement(attrUse);
+        }
+    }
+
+    // compute fBase
+    if (fComplexTypeInfo->getBaseComplexTypeInfo())
+    {
+        fBaseType = (XSTypeDefinition*) getObjectFromMap(fComplexTypeInfo->getBaseComplexTypeInfo());
+        if (!fBaseType)
+        {
+            fBaseType = new (fMemoryManager) XSComplexTypeDefinition(fComplexTypeInfo->getBaseComplexTypeInfo(), fXSModel, fMemoryManager);
+            putObjectInMap((void*)fComplexTypeInfo->getBaseComplexTypeInfo(), fBaseType);
+        }
+    }
+    else if (fComplexTypeInfo->getBaseDatatypeValidator())
+    {
+        fBaseType = (XSTypeDefinition*) getObjectFromMap(fComplexTypeInfo->getBaseDatatypeValidator());
+        if (!fBaseType)
+        {
+             fBaseType = new (fMemoryManager) XSSimpleTypeDefinition(fComplexTypeInfo->getBaseDatatypeValidator(), fXSModel, fMemoryManager);
+             putObjectInMap((void*)fComplexTypeInfo->getBaseDatatypeValidator(), fBaseType);
         }
     }
 }
 
 XSComplexTypeDefinition::~XSComplexTypeDefinition() 
 {
-    if (fXSWildcard) 
-    {
-        delete fXSWildcard;
-    }
-    if (fXSSimpleTypeDefinition)
-    {
-        delete fXSSimpleTypeDefinition;
-    }
+    // don't delete fXSWildcard - deleted by XSModel
+    // don't delete fXSSimpleTypeDefinition - deleted by XSModel
     if (fXSAttributeUseList)
     {
         delete fXSAttributeUseList;
+    }
+    if (fXSAnnotationList)
+    {
+        delete fXSAnnotationList;
     }
 }
 
@@ -258,9 +340,66 @@ short XSComplexTypeDefinition::getProhibitedSubstitutions()
  * A set of [annotations]. 
  */
 XSAnnotationList *XSComplexTypeDefinition::getAnnotations()
+{    
+    if (fXSAnnotationList)
+    {
+        return fXSAnnotationList;    
+    }
+    // REVISIT Size
+    fXSAnnotationList = new (fMemoryManager) RefVectorOf <XSAnnotation> (3, false, fMemoryManager);
+    XSAnnotation* annot = getAnnotationFromModel(fComplexTypeInfo);
+    while (annot)
+    {
+        fXSAnnotationList->addElement(annot);
+        annot = annot->getNext();        
+    }
+    return fXSAnnotationList;
+}
+
+/**
+ * virtual function from XSTypeDefinition
+ */
+const XMLCh *XSComplexTypeDefinition::getName() 
 {
-    // REVISIT
-    return 0;
+    return fComplexTypeInfo->getTypeLocalName();
+}
+
+const XMLCh *XSComplexTypeDefinition::getNamespace() 
+{
+    return fComplexTypeInfo->getTypeUri();
+}
+
+XSNamespaceItem *XSComplexTypeDefinition::getNamespaceItem() 
+{
+    return getNamespaceItemFromHash(getNamespace());
+}
+
+bool XSComplexTypeDefinition::getAnonymous() const
+{
+    return fComplexTypeInfo->getAnonymous(); 
+}
+
+XSTypeDefinition *XSComplexTypeDefinition::getBaseType() 
+{
+    return fBaseType;
+}
+
+bool XSComplexTypeDefinition::derivedFromType(const XSTypeDefinition * const ancestorType, 
+                               short derivationMethod)
+{
+    // REVISIT: review
+    // REVISIT: how to check derivationMethod (note: Java doesn't check)...
+    if (!ancestorType)
+        return false;
+
+    XSTypeDefinition* type = this;
+
+    while (type && (type != ancestorType))
+    {
+        type = type->getBaseType();
+    }
+
+    return (type == ancestorType);
 }
 
 XERCES_CPP_NAMESPACE_END

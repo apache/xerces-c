@@ -56,6 +56,52 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/14 22:33:30  neilg
+ * ./src/xercesc/framework/psvi/XSAnnotation.cpp
+ * ./src/xercesc/framework/psvi/XSAnnotation.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.cpp
+ * ./src/xercesc/framework/psvi/XSAttributeUse.hpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSComplexTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSElementDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSFacet.cpp
+ * ./src/xercesc/framework/psvi/XSFacet.hpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSIDCDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSModel.cpp
+ * ./src/xercesc/framework/psvi/XSModel.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroup.hpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSModelGroupDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.cpp
+ * ./src/xercesc/framework/psvi/XSMultiValueFacet.hpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.cpp
+ * ./src/xercesc/framework/psvi/XSNamespaceItem.hpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.cpp
+ * ./src/xercesc/framework/psvi/XSNotationDeclaration.hpp
+ * ./src/xercesc/framework/psvi/XSObject.cpp
+ * ./src/xercesc/framework/psvi/XSObject.hpp
+ * ./src/xercesc/framework/psvi/XSParticle.cpp
+ * ./src/xercesc/framework/psvi/XSParticle.hpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSSimpleTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.cpp
+ * ./src/xercesc/framework/psvi/XSTypeDefinition.hpp
+ * ./src/xercesc/framework/psvi/XSWildcard.cpp
+ * ./src/xercesc/framework/psvi/XSWildcard.hpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.cpp
+ * ./src/xercesc/internal/XMLGrammarPoolImpl.hpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.cpp
+ * ./src/xercesc/validators/schema/identity/IdentityConstraint.hpp
+ * ./src/xercesc/validators/schema/SchemaGrammar.hpp
+ * ./src/xercesc/validators/schema/TraverseSchema.cpp
+ *
  * Revision 1.4  2003/10/15 16:02:49  peiyongz
  * Solve Linkage error on Solaris
  *
@@ -71,13 +117,18 @@
  */
 
 #include <xercesc/framework/psvi/XSObject.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
+#include <xercesc/framework/psvi/XSNamespaceItem.hpp>
+#include <xercesc/validators/schema/SchemaGrammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 XSObject::XSObject( XSConstants::COMPONENT_TYPE compType,
+                    XSModel*    xsModel,
             MemoryManager* const manager ):  
         fMemoryManager(manager),
-        fComponentType(compType)
+        fComponentType(compType),
+        fXSModel(xsModel)
 {
 }
 
@@ -110,6 +161,38 @@ XSNamespaceItem *XSObject::getNamespaceItem()
 unsigned int XSObject::getId() const
 {
     return 0;
+}
+
+// Protected methods...
+XSAnnotation* XSObject::getAnnotationFromModel(const void* const key)
+{
+    XSNamespaceItemList* namespaceItemList = fXSModel->getNamespaceItems();
+
+    XSAnnotation* annot;
+    for (unsigned int i=0; i<namespaceItemList->size(); i++)
+    {
+        annot = namespaceItemList->elementAt(i)->getSchemaGrammar()->getAnnotation(key);
+        if (annot)
+            return annot;
+    }
+
+    return 0;
+}
+
+XSObject* XSObject::getObjectFromMap(void* key)
+{
+    return fXSModel->fXercesToXSMap->get(key);
+}
+
+void XSObject::putObjectInMap(void* key, XSObject* object)
+{
+     fXSModel->fXercesToXSMap->put(key, object);
+     fXSModel->fDeleteVector->addElement(object);
+}
+
+XSNamespaceItem* XSObject::getNamespaceItemFromHash(const XMLCh* nameSpace)
+{
+    return fXSModel->fHashNamespace->get(nameSpace);
 }
 
 XERCES_CPP_NAMESPACE_END
