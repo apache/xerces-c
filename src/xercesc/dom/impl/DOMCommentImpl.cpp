@@ -145,6 +145,8 @@ void DOMCommentImpl::release()
                                                                                     {return fNode.isSupported (feature, version); };
            void             DOMCommentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMCommentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           bool             DOMCommentImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             DOMCommentImpl::isEqualNode(const DOMNode* arg)         {return fNode.isEqualNode(arg); };
            void*            DOMCommentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                     {return fNode.setUserData(key, data, handler); };
            void*            DOMCommentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

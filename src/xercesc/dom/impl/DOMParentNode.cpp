@@ -400,6 +400,27 @@ void DOMParentNode::normalize()
     // so does not have to be reissued.
 };
 
+//Introduced in DOM Level 3
+
+bool DOMParentNode::isEqualNode(const DOMNode* arg)
+{
+    if (castToNodeImpl(this)->isEqualNode(arg))
+    {
+        DOMNode *kid, *argKid;
+        for (kid = fFirstChild, argKid = arg->getFirstChild();
+             kid != 0 && argKid != 0;
+             kid = kid->getNextSibling(), argKid = argKid->getNextSibling())
+        {
+            if (!kid->isEqualNode(argKid))
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+
+//Non-standard extension
 void DOMParentNode::release()
 {
     DOMNode *kid, *next;

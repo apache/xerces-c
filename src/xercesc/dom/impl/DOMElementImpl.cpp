@@ -287,7 +287,7 @@ void DOMElementImpl::setAttributeNS(const XMLCh *fNamespaceURI,
     DOMAttr *newAttr =
         this->fNode.getOwnerDocument()->createAttributeNS(fNamespaceURI, qualifiedName);
     newAttr->setNodeValue(fValue);
-    DOMNode* rem = fAttributes->setNamedItem(newAttr);
+    DOMNode* rem = fAttributes->setNamedItemNS(newAttr);
     if (rem)
         rem->release();
 }
@@ -430,8 +430,49 @@ void DOMElementImpl::release()
            bool             DOMElementImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
                                                                                     {return fNode.isSupported (feature, version); };
            void             DOMElementImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
+           bool             DOMElementImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
            void*            DOMElementImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                     {return fNode.setUserData(key, data, handler); };
            void*            DOMElementImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
 
 
+bool DOMElementImpl::isEqualNode(const DOMNode* arg)
+{
+    if (!fNode.isEqualNode(arg)) {
+        return false;
+    }
+
+    bool hasAttrs = hasAttributes();
+
+    if (hasAttrs != arg->hasAttributes()) {
+        return false;
+    }
+
+    if (hasAttrs) {
+        DOMNamedNodeMap* map1 = getAttributes();
+        DOMNamedNodeMap* map2 = arg->getAttributes();
+
+        XMLSize_t len = map1->getLength();
+        if (len != map2->getLength()) {
+            return false;
+        }
+        for (XMLSize_t i = 0; i < len; i++) {
+            DOMNode* n1 = map1->item(i);
+            if (!n1->getLocalName()) { // DOM Level 1 Node
+                DOMNode* n2 = map2->getNamedItem(n1->getNodeName());
+                if (!n2 || !n1->isEqualNode(n2)) {
+                    return false;
+                }
+            }
+            else {
+                DOMNode* n2 = map2->getNamedItemNS(n1->getNamespaceURI(),
+                                              n1->getLocalName());
+                if (!n2 || !n1->isEqualNode(n2)) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return fParent.isEqualNode(arg);
+};

@@ -159,6 +159,8 @@ void DOMDocumentFragmentImpl::release()
                                                                                              {return fNode.isSupported (feature, version); };
            void             DOMDocumentFragmentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMDocumentFragmentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           bool             DOMDocumentFragmentImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             DOMDocumentFragmentImpl::isEqualNode(const DOMNode* arg)         {return fParent.isEqualNode(arg); };
            void*            DOMDocumentFragmentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                              {return fNode.setUserData(key, data, handler); };
            void*            DOMDocumentFragmentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

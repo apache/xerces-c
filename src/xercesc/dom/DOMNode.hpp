@@ -613,6 +613,70 @@ public:
     /** @name Functions introduced in DOM Level 3. */
     //@{
     /**
+     * Returns whether this node is the same node as the given one.
+     * <br>This method provides a way to determine whether two
+     * <code>DOMNode</code> references returned by the implementation reference
+     * the same object. When two <code>DOMNode</code> references are references
+     * to the same object, even if through a proxy, the references may be
+     * used completely interchangeably, such that all attributes have the
+     * same values and calling the same DOM method on either reference
+     * always has exactly the same effect.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param other The node to test against.
+     * @return Returns <code>true</code> if the nodes are the same,
+     *   <code>false</code> otherwise.
+     * @since DOM Level 3
+     */
+    virtual bool              isSameNode(const DOMNode* other) = 0;
+
+    /**
+     * Tests whether two nodes are equal.
+     * <br>This method tests for equality of nodes, not sameness (i.e.,
+     * whether the two nodes are pointers to the same object) which can be
+     * tested with <code>DOMNode::isSameNode</code>. All nodes that are the same
+     * will also be equal, though the reverse may not be true.
+     * <br>Two nodes are equal if and only if the following conditions are
+     * satisfied: The two nodes are of the same type.The following string
+     * attributes are equal: <code>nodeName</code>, <code>localName</code>,
+     * <code>namespaceURI</code>, <code>prefix</code>, <code>nodeValue</code>
+     * , <code>baseURI</code>. This is: they are both <code>null</code>, or
+     * they have the same length and are character for character identical.
+     * The <code>attributes</code> <code>DOMNamedNodeMaps</code> are equal.
+     * This is: they are both <code>null</code>, or they have the same
+     * length and for each node that exists in one map there is a node that
+     * exists in the other map and is equal, although not necessarily at the
+     * same index.The <code>childNodes</code> <code>DOMNodeLists</code> are
+     * equal. This is: they are both <code>null</code>, or they have the
+     * same length and contain equal nodes at the same index. This is true
+     * for <code>DOMAttr</code> nodes as for any other type of node. Note that
+     * normalization can affect equality; to avoid this, nodes should be
+     * normalized before being compared.
+     * <br>For two <code>DOMDocumentType</code> nodes to be equal, the following
+     * conditions must also be satisfied: The following string attributes
+     * are equal: <code>publicId</code>, <code>systemId</code>,
+     * <code>internalSubset</code>.The <code>entities</code>
+     * <code>DOMNamedNodeMaps</code> are equal.The <code>notations</code>
+     * <code>DOMNamedNodeMaps</code> are equal.
+     * <br>On the other hand, the following do not affect equality: the
+     * <code>ownerDocument</code> attribute, the <code>specified</code>
+     * attribute for <code>DOMAttr</code> nodes, the
+     * <code>isWhitespaceInElementContent</code> attribute for
+     * <code>DOMText</code> nodes, as well as any user data or event listeners
+     * registered on the nodes.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param arg The node to compare equality with.
+     * @return If the nodes, and possibly subtrees are equal,
+     *   <code>true</code> otherwise <code>false</code>.
+     * @since DOM Level 3
+     */
+    virtual bool              isEqualNode(const DOMNode* arg) = 0;
+
+
+    /**
      * Associate an object to a key on this node. The object can later be
      * retrieved from this node by calling <code>getUserData</code> with the
      * same key.
@@ -625,6 +689,8 @@ public:
      * void pointer, it is applications' responsibility to keep track of
      * their original type.  Casting them to the wrong type may result
      * unexpected behavior.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param key The key to associate the object to.
      * @param data The object to associate to the given key, or
@@ -645,6 +711,9 @@ public:
      * Retrieves the object associated to a key on a this node. The object
      * must first have been set to this node by calling
      * <code>setUserData</code> with the same key.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param key The key the object is associated to.
      * @return Returns the <code>DOMObject</code> associated to the given key
      *   on this node, or <code>null</code> if there was none.

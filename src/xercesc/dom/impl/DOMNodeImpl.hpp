@@ -148,6 +148,8 @@ public:
     bool              isSupported(const XMLCh *feature, const XMLCh *version) const;
     bool              hasAttributes() const;
     void              release();
+    bool              isSameNode(const DOMNode* other);
+    bool              isEqualNode(const DOMNode* arg);
 
     static  bool      isKidOK(DOMNode *parent, DOMNode *child);
 
@@ -331,6 +333,8 @@ public: // should really be protected - ALH
     virtual       void             setPrefix(const XMLCh * prefix) ;\
     virtual       void*            setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler) ;\
     virtual       void*            getUserData(const XMLCh* key) const ;\
+    virtual       bool             isSameNode(const DOMNode* other);\
+    virtual       bool             isEqualNode(const DOMNode* arg);\
     virtual       void             release()
 
 
@@ -364,6 +368,8 @@ public: // should really be protected - ALH
                                                                          {return fNode.isSupported (feature, version); };
            void             xxx::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             xxx::hasAttributes() const                   {return fNode.hasAttributes(); };
+           bool             xxx::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             xxx::isEqualNode(const DOMNode* arg)         {return fNode.isEqualNode(arg); };
            void*            xxx::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                          {return fNode.setUserData(key, data, handler); };
            void*            xxx::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

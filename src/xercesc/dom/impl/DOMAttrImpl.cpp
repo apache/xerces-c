@@ -281,6 +281,8 @@ void DOMAttrImpl::release()
                                                                                  {return fNode.isSupported (feature, version); };
            void             DOMAttrImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMAttrImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           bool             DOMAttrImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             DOMAttrImpl::isEqualNode(const DOMNode* arg)         {return fParent.isEqualNode(arg); };
            void*            DOMAttrImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                  {return fNode.setUserData(key, data, handler); };
            void*            DOMAttrImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

@@ -201,6 +201,8 @@ void DOMProcessingInstructionImpl::release()
                                                                                                   {return fNode.isSupported (feature, version); };
            void             DOMProcessingInstructionImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMProcessingInstructionImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           bool             DOMProcessingInstructionImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             DOMProcessingInstructionImpl::isEqualNode(const DOMNode* arg)         {return fNode.isEqualNode(arg); };
            void*            DOMProcessingInstructionImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                                   {return fNode.setUserData(key, data, handler); };
            void*            DOMProcessingInstructionImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

@@ -202,6 +202,8 @@ void DOMEntityReferenceImpl::release()
                                                                                             {return fNode.isSupported (feature, version); };
            void             DOMEntityReferenceImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMEntityReferenceImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           bool             DOMEntityReferenceImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             DOMEntityReferenceImpl::isEqualNode(const DOMNode* arg)         {return fParent.isEqualNode(arg); };
            void*            DOMEntityReferenceImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                             {return fNode.setUserData(key, data, handler); };
            void*            DOMEntityReferenceImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

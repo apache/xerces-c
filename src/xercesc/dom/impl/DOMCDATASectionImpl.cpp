@@ -203,6 +203,8 @@ void DOMCDATASectionImpl::release()
                                                                                          {return fNode.isSupported (feature, version); };
            void             DOMCDATASectionImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMCDATASectionImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           bool             DOMCDATASectionImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             DOMCDATASectionImpl::isEqualNode(const DOMNode* arg)         {return fParent.isEqualNode(arg); };
            void*            DOMCDATASectionImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                          {return fNode.setUserData(key, data, handler); };
            void*            DOMCDATASectionImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

@@ -437,7 +437,96 @@ void DOMDocumentTypeImpl::release()
                                                                                          {return fNode.isSupported (feature, version); };
            void             DOMDocumentTypeImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMDocumentTypeImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           bool             DOMDocumentTypeImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
            void*            DOMDocumentTypeImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                          {return fNode.setUserData(key, data, handler); };
            void*            DOMDocumentTypeImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
+
+bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg)
+{
+    if (!fNode.isEqualNode(arg)) {
+        return false;
+    }
+
+    DOMDocumentType* argDT = (DOMDocumentType*) arg;
+    // check the string values
+    if (!getPublicId()) {
+        if (argDT->getPublicId()) {
+            return false;
+        }
+    }
+    else if (XMLString::compareString(getPublicId(), argDT->getPublicId())) {
+        return false;
+    }
+
+    if (!getSystemId()) {
+        if (argDT->getSystemId()) {
+            return false;
+        }
+    }
+    else if (XMLString::compareString(getSystemId(), argDT->getSystemId())) {
+        return false;
+    }
+
+    if (!getInternalSubset()) {
+        if (argDT->getInternalSubset()) {
+            return false;
+        }
+    }
+    else if (XMLString::compareString(getInternalSubset(), argDT->getInternalSubset())) {
+        return false;
+    }
+
+    // check the notations
+    if (getNotations()) {
+        if (!argDT->getNotations())
+            return false;
+
+        DOMNamedNodeMap* map1 = getNotations();
+        DOMNamedNodeMap* map2 = argDT->getNotations();
+
+        XMLSize_t len = map1->getLength();
+        if (len != map2->getLength()) {
+            return false;
+        }
+        for (XMLSize_t i = 0; i < len; i++) {
+            DOMNode* n1 = map1->item(i);
+            DOMNode* n2 = map2->getNamedItem(n1->getNodeName());
+            if (!n2 || !n1->isEqualNode(n2)) {
+                return false;
+            }
+        }
+    }
+    else {
+        if (argDT->getNotations())
+            return false;
+    }
+
+    // check the entities
+    if (getEntities()) {
+        if (!argDT->getEntities())
+            return false;
+
+        DOMNamedNodeMap* map1 = getEntities();
+        DOMNamedNodeMap* map2 = argDT->getEntities();
+
+        XMLSize_t len = map1->getLength();
+        if (len != map2->getLength()) {
+            return false;
+        }
+        for (XMLSize_t i = 0; i < len; i++) {
+            DOMNode* n1 = map1->item(i);
+            DOMNode* n2 = map2->getNamedItem(n1->getNodeName());
+            if (!n2 || !n1->isEqualNode(n2)) {
+                return false;
+            }
+        }
+    }
+    else {
+        if (argDT->getEntities())
+            return false;
+    }
+
+    return fParent.isEqualNode(arg);
+};
 

@@ -661,6 +661,8 @@ int             DOMDocumentImpl::changes() const{
                                                                                      {return fNode.isSupported (feature, version); };
            void             DOMDocumentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMDocumentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           bool             DOMDocumentImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             DOMDocumentImpl::isEqualNode(const DOMNode* arg)         {return fParent.isEqualNode(arg); };
            void*            DOMDocumentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                      {return fNode.setUserData(key, data, handler); };
            void*            DOMDocumentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

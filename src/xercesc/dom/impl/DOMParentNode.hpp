@@ -122,6 +122,9 @@ public:
     //Introduced in DOM Level 2
     void	normalize();
 
+    //Introduced in DOM Level 3
+    bool isEqualNode(const DOMNode* arg);
+
     // NON-DOM
     // unlike getOwnerDocument this never returns null, even for Document nodes
     DOMDocument * getDocument() const;

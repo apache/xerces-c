@@ -182,6 +182,8 @@ void DOMNotationImpl::release()
                                                                                      {return fNode.isSupported (feature, version); };
            void             DOMNotationImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMNotationImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+           bool             DOMNotationImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
+           bool             DOMNotationImpl::isEqualNode(const DOMNode* arg)         {return fNode.isEqualNode(arg); };
            void*            DOMNotationImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                      {return fNode.setUserData(key, data, handler); };
            void*            DOMNotationImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };

@@ -228,30 +228,6 @@ DOMNode*  DOMNodeImpl::getPreviousSibling() const
     return 0;                // overridden in ChildNode
 };
 
-void* DOMNodeImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
-{
-   if (!data && !hasUserData())
-       return 0;
-
-    hasUserData(true);
-    return ((DOMDocumentImpl*)getOwnerDocument())->setUserData(this, key, data, handler);
-}
-
-void* DOMNodeImpl::getUserData(const XMLCh* key) const
-{
-   if (hasUserData())
-       return ((DOMDocumentImpl*)getOwnerDocument())->getUserData(this, key);
-    return 0;
-}
-
-void DOMNodeImpl::callUserDataHandlers(DOMUserDataHandler::DOMOperationType operation,
-                                       const DOMNode* src,
-                                       const DOMNode* dst) const
-{
-    ((DOMDocumentImpl*)getOwnerDocument())->callUserDataHandlers(this, operation, src, dst);
-}
-
-
 bool DOMNodeImpl::hasChildNodes() const
 {
     return false;
@@ -412,6 +388,107 @@ const XMLCh* DOMNodeImpl::mapPrefix(const XMLCh *prefix,
     } else
         return namespaceURI;
     return namespaceURI;
+}
+
+//Introduced in DOM Level 3
+void* DOMNodeImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
+{
+   if (!data && !hasUserData())
+       return 0;
+
+    hasUserData(true);
+    return ((DOMDocumentImpl*)getOwnerDocument())->setUserData(this, key, data, handler);
+}
+
+void* DOMNodeImpl::getUserData(const XMLCh* key) const
+{
+   if (hasUserData())
+       return ((DOMDocumentImpl*)getOwnerDocument())->getUserData(this, key);
+    return 0;
+}
+
+void DOMNodeImpl::callUserDataHandlers(DOMUserDataHandler::DOMOperationType operation,
+                                       const DOMNode* src,
+                                       const DOMNode* dst) const
+{
+    ((DOMDocumentImpl*)getOwnerDocument())->callUserDataHandlers(this, operation, src, dst);
+}
+
+bool DOMNodeImpl::isSameNode(const DOMNode* other)
+{
+    return (castToNode(this) == other);
+}
+
+bool DOMNodeImpl::isEqualNode(const DOMNode* arg)
+{
+    if (isSameNode(arg)) {
+        return true;
+    }
+
+    DOMNode* thisNode = castToNode(this);
+
+    if (arg->getNodeType() != thisNode->getNodeType()) {
+        return false;
+    }
+    // in theory nodeName can't be null but better be careful
+    // who knows what other implementations may be doing?...
+    if (!thisNode->getNodeName()) {
+        if (arg->getNodeName()) {
+            return false;
+        }
+    }
+    else if (XMLString::compareString(thisNode->getNodeName(), arg->getNodeName())) {
+        return false;
+    }
+
+    if (!thisNode->getLocalName()) {
+        if (arg->getLocalName()) {
+            return false;
+        }
+    }
+    else if (XMLString::compareString(thisNode->getLocalName(),arg->getLocalName())) {
+        return false;
+    }
+
+    if (!thisNode->getNamespaceURI()) {
+        if (arg->getNamespaceURI()) {
+            return false;
+        }
+    }
+    else if (XMLString::compareString(thisNode->getNamespaceURI(), arg->getNamespaceURI())) {
+        return false;
+    }
+
+    if (!thisNode->getPrefix()) {
+        if (arg->getPrefix()) {
+            return false;
+        }
+    }
+    else if (XMLString::compareString(thisNode->getPrefix(), arg->getPrefix())) {
+        return false;
+    }
+
+    if (!thisNode->getNodeValue()) {
+        if (arg->getNodeValue()) {
+            return false;
+        }
+    }
+    else if (XMLString::compareString(thisNode->getNodeValue(), arg->getNodeValue())) {
+        return false;
+    }
+
+// baseURI not suppported yet
+/*
+    if (!thisNode->getBaseURI()) {
+        if (arg->getBaseURI()) {
+            return false;
+        }
+    }
+    else if (XMLString::compareString(thisNode->getBaseURI(), arg->getBaseURI())) {
+        return false;
+    }*/
+
+    return true;
 }
 
 // non-standard extension
