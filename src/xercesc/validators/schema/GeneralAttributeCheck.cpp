@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/09/26 21:08:14  tng
+ * [Bug12849] comparison is always false warning.  Patch from Gareth Reakes
+ *
  * Revision 1.6  2002/09/24 20:18:14  tng
  * Performance: use XMLString::equals instead of XMLString::compareString
  * and check for null string directly isntead of calling XMLString::stringLen
@@ -322,7 +325,7 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
                                        TraverseSchema* const schema,
                                        const bool isTopLevel) {
 
-    if (elem == 0 || !fAttMap || elemContext<0 || elemContext>=E_Count) {
+    if (elem == 0 || !fAttMap || elemContext>=E_Count) {
         return;
     }
 
