@@ -755,6 +755,37 @@ bool XMLString::isDigit(XMLCh const theChar)
 
     return false;
 }
+
+bool XMLString::isAlphaNum(XMLCh const theChar)
+{
+    return (isAlpha(theChar) || isDigit(theChar));
+}
+
+bool XMLString::isHex(XMLCh const theChar)
+{
+	return (isDigit(theChar) ||
+			(theChar >= chLatin_a && theChar <= chLatin_f) ||
+			(theChar >= chLatin_A && theChar <= chLatin_F));
+}
+
+bool XMLString::isAllWhiteSpace(const XMLCh* const toCheck)
+{
+    if ( !toCheck )
+        return true;
+
+    const XMLCh* startPtr = toCheck;
+
+    while (*startPtr)
+    {
+        if (!XMLPlatformUtils::fgTransService->isSpace(*startPtr))
+            return false;
+
+        startPtr++;
+    }
+
+    return true;
+}
+
 // ---------------------------------------------------------------------------
 //  Wide char versions of most of the string methods
 // ---------------------------------------------------------------------------
@@ -1130,6 +1161,32 @@ XMLCh* XMLString::findAny(          XMLCh* const    toSearch
     return 0;
 }
 
+int XMLString::patternMatch(        XMLCh* const    toSearch
+                            , const XMLCh* const    pattern)
+{
+    if (!toSearch || !pattern )
+        return -1;
+
+    XMLCh* srcPtr = toSearch;
+    const int patnLen = XMLString::stringLen(pattern);
+    int  patnIndex = 0;
+
+    while (*srcPtr)
+    {
+        if (*srcPtr++ != pattern[patnIndex++])
+        {
+            patnIndex = 0;
+        }
+        else
+        {
+            if (patnIndex == patnLen)
+                // full pattern match found
+                return (srcPtr - patnLen - toSearch);
+        }
+    }
+
+    return -1;
+}
 
 unsigned int XMLString::hashN(  const   XMLCh* const    tohash
                                 , const unsigned int    n

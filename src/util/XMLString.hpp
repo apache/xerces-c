@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2001/08/10 16:23:06  peiyongz
+ * isHex(), isAlphaNum(), isAllWhiteSpace() and patternMatch() Added
+ *
  * Revision 1.25  2001/07/06 20:27:57  peiyongz
  * isValidaQName()
  *
@@ -1017,6 +1020,18 @@ public:
         , const XMLCh* const    searchList
     );
 
+    /** Tells if a string has pattern within itself
+      * @param toSearch The string to be searched
+      * @param pattern The pattern to be searched within the string
+      * @return Returns index to the location where the pattern was
+      * found, else returns -1
+      */
+    static int patternMatch
+    (
+                XMLCh* const    toSearch
+        , const XMLCh* const    pattern
+    );
+
     /** Get the length of the string
       * @param src The string whose length is to be determined
       * @return Returns the length of the string
@@ -1071,6 +1086,27 @@ public:
       * @return Returns true if within the range, otherwise false
       */
     static bool isDigit(XMLCh const theChar);
+
+    /**
+      * Checks whether a character is within [0-9a-zA-Z].
+      * @param theChar: the character to check 
+      * @return Returns true if within the range, otherwise false
+      */
+    static bool isAlphaNum(XMLCh const theChar);
+
+    /**
+      * Checks whether a character is within [0-9a-fA-F].
+      * @param theChar: the character to check 
+      * @return Returns true if within the range, otherwise false
+      */
+    static bool isHex(XMLCh const theChar);
+
+    /**
+      * Checks whether a string contains only whitespace.
+      * @param toCheck: the string to check 
+      * @return Returns true if it is, otherwise false
+      */
+    static bool isAllWhiteSpace(const XMLCh* const toCheck);
 
     //@}
 
