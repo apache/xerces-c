@@ -1062,7 +1062,7 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
                             newelement->setAttributeNodeNS(nattr);
 
                         // if the imported attribute is of ID type, register the new node in fNodeIDMap
-                        if (castToNodeImpl(attr)->isIdAttr()) {
+                        if (attr->isId()) {
                             castToNodeImpl(nattr)->isIdAttr(true);
                             if (!fNodeIDMap)
                                  fNodeIDMap = new (this) DOMNodeIDMap(500, this);
