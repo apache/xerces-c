@@ -113,9 +113,9 @@ export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
       <p>In order to work with the &XercesCName; parser, you have to first
         initialize the XML subsystem. The most common mistake is to forget this
         initialization. Before you make any calls to &XercesCName; APIs, you must
-        call:</p>
+        call XMLPlatformUtils::Initialize(): </p>
 
-<source>XMLPlatformUtils::Initialize():
+<source>
 try {
    XMLPlatformUtils::Initialize();
 }
@@ -157,6 +157,10 @@ catch (const XMLException&amp; toCatch) {
         methods are thread safe, and can be concurrently entered by multiple threads.
         Non-const DOMString methods, such as <code>appendData()</code>, are not thread safe and the application must guarantee that no other
         methods (including const methods) are executed concurrently with them.</p>
+
+      <p>The application also needs to guarantee that only one thread has entered the
+        method XMLPlatformUtils::Initialize() at any one time.  And similarly only one
+        thread has entered the method XMLPlatformUtils::Terminate() at any one time.</p>
 
     </a>
   </faq>
@@ -224,6 +228,9 @@ catch (const XMLException&amp; toCatch) {
         that will be repeatedly loaded and unloaded from within the same process. To
         avoid memory leaks with this kind of use, <code>Terminate()</code> must be called before unloading the &XercesCName; library</p>
 
+      <p>To ensure all the memory held by the parser are freed, the number of XMLPlatformUtils::Terminate() calls
+         should match the number of XMLPlatformUtils::Initialize() calls.
+      </p>
     </a>
   </faq>
 
@@ -570,6 +577,9 @@ catch (const XMLException&amp; toCatch) {
         ends. You can make a call to <code>XMLPlatformUtil::terminate()</code> to release all the lazily allocated variables before you exit your
         program.</p>
 
+      <p>To ensure all the memory held by the parser are freed, the number of XMLPlatformUtils::Terminate() calls
+         should match the number of XMLPlatformUtils::Initialize() calls.
+      </p>
     </a>
   </faq>
 
@@ -613,8 +623,78 @@ catch (const XMLException&amp; toCatch) {
   <faq title="Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?">
     <q>Is it OK to call the XMLPlatformUtils::Initialize/Terminate pair of routines multiple times in one program?</q>
     <a>
-      <p>No.  XMLPlatformUtils::Initialize() can only be called once per process. Call
-         Initialize() when you start and Terminate() when you end.</p>
+      <p>Yes.  The code has been enhanced so that calling XMLPlatformUtils::Initialize/Terminate pair of routines
+         multiple times in one process is now allowed.
+      </p>
+
+      <p>But the application needs to guarantee that only one thread has entered the
+        method XMLPlatformUtils::Initialize() at any one time.  And similarly only one
+        thread has entered the method XMLPlatformUtils::Terminate() at any one time.
+      </p>
+
+      <p>If you are calling XMLPlatformUtils::Initialize() a number of times, and then follow with
+         XMLPlatformUtils::Terminate() the same number of times, only the first XMLPlatformUtils::Initialize()
+         will do the initialization, and only the last XMLPlatformUtils::Terminate() will clean up
+         the memory.  The other calls are ignored.
+      </p>
+      <p>To ensure all the memory held by the parser are freed, the number of XMLPlatformUtils::Terminate() calls
+         should match the number of XMLPlatformUtils::Initialize() calls.
+      </p>
+      <p>
+         Consider the following code snippets (for illustration simplicity the following
+         sample code is not coded in try/catch clause):
+      </p>
+
+<source>
+// The XMLPlatformUtils::Initialize/Terminate calls are paired.
+{
+    // Initialize the parser
+    XMLPlatformUtils::Initialize();
+
+    SAXParser parser;
+    parser.parse(xmlFile);
+
+    // Free all memory that was being held by the parser
+    XMLPlatformUtils::Terminate();
+
+    // Initialize the parser
+    XMLPlatformUtils::Initialize();
+
+    SAXParser parser;
+    parser.parse(xmlFile);
+
+    // Free all memory that was being held by the parser
+    XMLPlatformUtils::Terminate();
+}
+</source>
+
+<source>
+// calls XMLPlatformUtils::Initialize() three times
+// then calls XMLPlatformUtils::Terminate() numerous times
+{
+    // Initialize the parser
+    XMLPlatformUtils::Initialize();
+
+    // The next two calls are no-op
+    XMLPlatformUtils::Initialize();
+    XMLPlatformUtils::Initialize();
+
+    SAXParser parser;
+    parser.parse(xmlFile);
+
+    // The first two XMLPlatformUtils::Terminate() calls are no-op
+    XMLPlatformUtils::Terminate();
+    XMLPlatformUtils::Terminate();
+
+    // This third XMLPlatformUtils::Terminate() will free all memory that was being held by the parser
+    XMLPlatformUtils::Terminate();
+
+    // This extra fourth XMLPlatformUtils::Terminate() call is no-op.
+    // However calling XMLPlatformUtils::Terminate() without a matching XMLPlatformUtils::Initialize()
+    // is dangerous and should be avoided.
+    XMLPlatformUtils::Terminate();
+}
+</source>
     </a>
   </faq>
 
