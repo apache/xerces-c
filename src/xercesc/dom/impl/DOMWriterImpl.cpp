@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.25  2002/12/10 21:01:32  tng
+ * NLS: DOMWriter should use message loader to load message instead of using hardcoded static stirng
+ *
  * Revision 1.24  2002/12/10 18:59:14  tng
  * pretty format print: consistent newline
  *
@@ -137,6 +140,7 @@
 #include "DOMWriterImpl.hpp"
 #include "DOMErrorImpl.hpp"
 #include "DOMLocatorImpl.hpp"
+#include "DOMImplementationImpl.hpp"
 
 #include <xercesc/framework/MemBufFormatTarget.hpp>
 
@@ -145,6 +149,8 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLMsgLoader.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -323,31 +329,6 @@ static const XMLCh  gNotation[] =
 {
     chLatin_N, chLatin_D,     chLatin_A, chLatin_T, chLatin_A,
     chSpace,   chDoubleQuote, chNull
-};
-
-// Unrecognized node type
-static const XMLCh  gUnrecognizedNodeType[] =
-{
-    chLatin_U, chLatin_n, chLatin_r, chLatin_e, chLatin_c, chLatin_o,
-    chLatin_g, chLatin_n, chLatin_i, chLatin_z, chLatin_e, chLatin_d,
-    chSpace,   chLatin_N, chLatin_o, chLatin_d, chLatin_e, chSpace,
-    chLatin_T, chLatin_y, chLatin_p, chLatin_e, chNull
-};
-
-// nested cdata
-static const XMLCh  gNestedCdata[] =
-{
-    chLatin_N, chLatin_e, chLatin_s, chLatin_t, chLatin_e, chLatin_d,
-    chLatin_C, chLatin_D, chLatin_a, chLatin_t, chLatin_a, chNull
-};
-
-// Unrepresentable char
-static const XMLCh  gUnrepresentableChar[] =
-{
-    chLatin_U, chLatin_n, chLatin_r, chLatin_e, chLatin_p, chLatin_r,
-    chLatin_e, chLatin_s, chLatin_e, chLatin_n, chLatin_t, chLatin_a,
-    chLatin_b, chLatin_l, chLatin_e, chSpace,   chLatin_C, chLatin_h,
-    chLatin_a, chLatin_r, chNull
 };
 
 //Feature
@@ -569,7 +550,7 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
         return false;
     }
 
-    catch (const DOMException&)
+    catch (const XMLDOMMsg::Codes)
     {
         return false;
     }
@@ -1031,8 +1012,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                 // search for "]]>"
                 if (XMLString::patternMatch((XMLCh* const) nodeValue, gEndCDATA) != -1)
                 {
-                    reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, gNestedCdata);
-                    throw DOMException(DOMException::SYNTAX_ERR, gNestedCdata);
+                    reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, XMLDOMMsg::Writer_NestedCDATA);
                 }
 
                 TRY_CATCH_THROW
@@ -1099,8 +1079,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                         // [75] ExternalID ::= 'SYSTEM' S SystemLiteral
                         //                   | 'PUBLIC' S PubidLiteral S SystemLiteral
                         //
-                        reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, gUnrecognizedNodeType);
-                        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+                        reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, XMLDOMMsg::Writer_NotRecognizedType);
                         // systemLiteral not found
                     }
                 }
@@ -1162,8 +1141,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             once unrecognized node type encountered.
          ***/
         {
-            reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, gUnrecognizedNodeType);
-            throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+            reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, XMLDOMMsg::Writer_NotRecognizedType);
             // UnreognizedNodeType;
         }
 
@@ -1247,6 +1225,33 @@ bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
     }
 
     fErrorCount++;
+
+    return toContinueProcess;
+}
+
+bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
+                              , DOMError::ErrorSeverity errorType
+                              , XMLDOMMsg::Codes        toEmit)
+{
+    const unsigned int msgSize = 1023;
+    XMLCh errText[msgSize + 1];
+
+    DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(toEmit, errText, msgSize);
+
+    bool toContinueProcess = true;   // default value for no error handler
+
+    if (fErrorHandler)
+    {
+        DOMLocatorImpl  locator(0, 0, (DOMNode* const) errorNode, 0, 0);
+        DOMErrorImpl    domError(errorType , errText, &locator);
+        toContinueProcess = fErrorHandler->handleError(domError);
+    }
+
+    fErrorCount++;
+
+    if (errorType == DOMError::DOM_SEVERITY_FATAL_ERROR)
+        throw toEmit;
+
     return toContinueProcess;
 }
 
@@ -1277,8 +1282,7 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
         {
             nextPtr = curPtr + endTagPos + offset;  // skip the ']]>'
             *(curPtr + endTagPos) = chNull;         //nullify the first ']'
-
-            reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, gNestedCdata);
+            reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, XMLDOMMsg::Writer_NestedCDATA);
         }
         else
         {
@@ -1381,7 +1385,7 @@ void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
             //
 
             // one warning for consective unrep chars
-            reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, gUnrepresentableChar);
+            reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, XMLDOMMsg::Writer_NotRepresentChar);
 
             while (srcPtr < endPtr)
             {
@@ -1426,7 +1430,7 @@ void DOMWriterImpl::printNewLine()
     {
         fCurrentLine++;
         *fFormatter << fNewLineUsed;
-}
+    }
 }
 
 void DOMWriterImpl::printIndent(int level) const

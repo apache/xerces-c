@@ -781,6 +781,8 @@
     <MsgDomain Domain="http://apache.org/xml/messages/XMLDOMMsg">
         <FatalError>
 <!--The following are DOMException error text, same order as DOMException::ExceptionCode enum -->
+<!--DOMEXCEPTION_ERRX is not an error, it's just used to indicate the start of DOMExceptionCode enum -->
+            <Message Id="DOMEXCEPTION_ERRX" Text="Just an index"/>
             <Message Id="INDEX_SIZE_ERR" Text="The index or size is negative, or greater than the allowed value"/>
             <Message Id="DOMSTRING_SIZE_ERR" Text="The specified range of text does not fit into the String"/>
             <Message Id="HIERARCHY_REQUEST_ERR" Text="An attempt was made to insert a node where it is not permitted"/>
@@ -797,9 +799,16 @@
             <Message Id="NAMESPACE_ERR" Text="An attempt is made to create or change an object in a way which is incorrect with regard to namespaces"/>
             <Message Id="INVALID_ACCESS_ERR" Text="An attempt is made to use an object that is not, or is no longer, usable"/>
             <Message Id="VALIDATION_ERR" Text="A call to a method such as insertBefore or removeChild would make the Node invalid with respect to document grammar"/>
-<!--The following are DOMRangeException error text, reverse order as DOMRangeException::RangeExceptionCode enum -->
-            <Message Id="INVALID_NODE_TYPE_ERR" Text="The container of a Range's boundary-point is set to a node of an invalid type or to a node with an ancestor of an invalid type"/>
+<!--The following are DOMRangeException error text, same order as DOMRangeException::RangeExceptionCode enum -->
+<!--DOMRANGEEXCEPTION_ERRX is not an error, it's just used to indicate the start of DOMRangeExceptionCode enum -->
+            <Message Id="DOMRANGEEXCEPTION_ERRX" Text="Just an index"/>
             <Message Id="BAD_BOUNDARYPOINTS_ERR" Text="The boundary-points of a Range do not meet specific requirements"/>
+            <Message Id="INVALID_NODE_TYPE_ERR" Text="The container of a Range's boundary-point is set to a node of an invalid type or to a node with an ancestor of an invalid type"/>
+<!--The following are other messages related to DOM -->
+<!--Messages used by DOMWriter -->
+            <Message Id="Writer_NestedCDATA" Text="Nested CDATA sections"/>
+            <Message Id="Writer_NotRepresentChar" Text="Unrepresentable character data"/>
+            <Message Id="Writer_NotRecognizedType" Text="Unrecognized Node Type"/>
         </FatalError>
     </MsgDomain>
 </MsgFile>

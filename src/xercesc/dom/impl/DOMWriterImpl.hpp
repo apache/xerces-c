@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2002/12/10 21:01:32  tng
+ * NLS: DOMWriter should use message loader to load message instead of using hardcoded static stirng
+ *
  * Revision 1.9  2002/12/09 11:46:08  gareth
  * More pretty pretty print feature. Patch by Kevin King. Closes bug #13840.
  *
@@ -308,6 +311,7 @@
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/dom/DOMWriter.hpp>
+#include <xercesc/util/XMLDOMMsg.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -380,6 +384,9 @@ private:
     bool                          reportError(const DOMNode* const    errorNode
                                             , DOMError::ErrorSeverity errorType
                                             , const XMLCh*   const    errorMsg);
+    bool                          reportError(const DOMNode* const    errorNode
+                                            , DOMError::ErrorSeverity errorType
+                                            , XMLDOMMsg::Codes        toEmit);
 
     void                          procCdataSection(const XMLCh*   const nodeValue
                                                  , const DOMNode* const nodeToWrite);
@@ -436,8 +443,8 @@ private:
     //      based on this value.
     //
     //  fCurrentLine
-    //      the current line. Used to track the line number the current 
-    //      node begins on      
+    //      the current line. Used to track the line number the current
+    //      node begins on
     //
     // -----------------------------------------------------------------------
 

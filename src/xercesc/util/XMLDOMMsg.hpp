@@ -15,29 +15,34 @@ public :
     {
         NoError                            = 0
       , F_LowBounds                        = 1
-      , INDEX_SIZE_ERR                     = 2
-      , DOMSTRING_SIZE_ERR                 = 3
-      , HIERARCHY_REQUEST_ERR              = 4
-      , WRONG_DOCUMENT_ERR                 = 5
-      , INVALID_CHARACTER_ERR              = 6
-      , NO_DATA_ALLOWED_ERR                = 7
-      , NO_MODIFICATION_ALLOWED_ERR        = 8
-      , NOT_FOUND_ERR                      = 9
-      , NOT_SUPPORTED_ERR                  = 10
-      , INUSE_ATTRIBUTE_ERR                = 11
-      , INVALID_STATE_ERR                  = 12
-      , SYNTAX_ERR                         = 13
-      , INVALID_MODIFICATION_ERR           = 14
-      , NAMESPACE_ERR                      = 15
-      , INVALID_ACCESS_ERR                 = 16
-      , VALIDATION_ERR                     = 17
-      , INVALID_NODE_TYPE_ERR              = 18
-      , BAD_BOUNDARYPOINTS_ERR             = 19
-      , F_HighBounds                       = 20
-      , W_LowBounds                        = 21
-      , W_HighBounds                       = 22
-      , E_LowBounds                        = 23
-      , E_HighBounds                       = 24
+      , DOMEXCEPTION_ERRX                  = 2
+      , INDEX_SIZE_ERR                     = 3
+      , DOMSTRING_SIZE_ERR                 = 4
+      , HIERARCHY_REQUEST_ERR              = 5
+      , WRONG_DOCUMENT_ERR                 = 6
+      , INVALID_CHARACTER_ERR              = 7
+      , NO_DATA_ALLOWED_ERR                = 8
+      , NO_MODIFICATION_ALLOWED_ERR        = 9
+      , NOT_FOUND_ERR                      = 10
+      , NOT_SUPPORTED_ERR                  = 11
+      , INUSE_ATTRIBUTE_ERR                = 12
+      , INVALID_STATE_ERR                  = 13
+      , SYNTAX_ERR                         = 14
+      , INVALID_MODIFICATION_ERR           = 15
+      , NAMESPACE_ERR                      = 16
+      , INVALID_ACCESS_ERR                 = 17
+      , VALIDATION_ERR                     = 18
+      , DOMRANGEEXCEPTION_ERRX             = 19
+      , BAD_BOUNDARYPOINTS_ERR             = 20
+      , INVALID_NODE_TYPE_ERR              = 21
+      , Writer_NestedCDATA                 = 22
+      , Writer_NotRepresentChar            = 23
+      , Writer_NotRecognizedType           = 24
+      , F_HighBounds                       = 25
+      , W_LowBounds                        = 26
+      , W_HighBounds                       = 27
+      , E_LowBounds                        = 28
+      , E_HighBounds                       = 29
     };
 
     static bool isFatal(const XMLDOMMsg::Codes toCheck)
