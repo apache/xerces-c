@@ -256,8 +256,8 @@ int main(int argC, char* argV[])
     {
         char fURI[1000];
         //initialize the array to zeros
-        memset(fURI,0,sizeof(fURI)); 
-                
+        memset(fURI,0,sizeof(fURI));
+
         if (doList) {
             if (! fin.eof() ) {
                 fin.getline (fURI, sizeof(fURI));
@@ -282,6 +282,7 @@ int main(int argC, char* argV[])
         try
         {
             const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
+            parser.resetDocumentPool();
             parser.parse(xmlFile);
             const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
             duration = endMillis - startMillis;
