@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/09/24 19:44:40  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.2  2002/04/01 20:17:46  peiyongz
  * Bug#7551: Exceptions are caught by value, rather than by reference
  *
@@ -195,7 +198,7 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(DatatypeValidator*           
 void DecimalDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
                                                    , const XMLCh* const value)
 {
-    if (XMLString::compareString(key, SchemaSymbols::fgELT_TOTALDIGITS)==0)
+    if (XMLString::equals(key, SchemaSymbols::fgELT_TOTALDIGITS))
     {
         int val;
         try
@@ -214,7 +217,7 @@ void DecimalDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
         setTotalDigits(val);
         setFacetsDefined(DatatypeValidator::FACET_TOTALDIGITS);
     }
-    else if (XMLString::compareString(key, SchemaSymbols::fgELT_FRACTIONDIGITS)==0)
+    else if (XMLString::equals(key, SchemaSymbols::fgELT_FRACTIONDIGITS))
     {
         int val;
         try
@@ -249,23 +252,23 @@ void DecimalDatatypeValidator::inheritAdditionalFacet()
     if (!numBase)
         return;
 
-    int thisFacetsDefined = getFacetsDefined();  
+    int thisFacetsDefined = getFacetsDefined();
     int baseFacetsDefined = numBase->getFacetsDefined();
 
-    // inherit totalDigits         
-    if ((( baseFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&          
-        (( thisFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) == 0) )              
-    {          
-        setTotalDigits(numBase->fTotalDigits);              
-        setFacetsDefined(DatatypeValidator::FACET_TOTALDIGITS);              
+    // inherit totalDigits
+    if ((( baseFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
+        (( thisFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) == 0) )
+    {
+        setTotalDigits(numBase->fTotalDigits);
+        setFacetsDefined(DatatypeValidator::FACET_TOTALDIGITS);
     }
-          
-    // inherit fractionDigits          
-    if ((( baseFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&          
-        (( thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) == 0) )              
-    {          
-        setFractionDigits(numBase->fFractionDigits);              
-        setFacetsDefined(DatatypeValidator::FACET_FRACTIONDIGITS);              
+
+    // inherit fractionDigits
+    if ((( baseFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
+        (( thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) == 0) )
+    {
+        setFractionDigits(numBase->fFractionDigits);
+        setFacetsDefined(DatatypeValidator::FACET_FRACTIONDIGITS);
     }
 }
 
@@ -326,7 +329,7 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase() const
                                  , XMLExcepts::FACET_totalDigit_base_fixed
                                  , value1
                                  , value2);
-        }                    
+        }
     }
 
     if (( thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0)
@@ -419,7 +422,7 @@ void DecimalDatatypeValidator::setEnumeration()
             {
                 numBase->checkContent(fStrEnumeration->elementAt(i), false);
             }
-        }              
+        }
         catch (XMLException&)
         {
             ThrowXML1(InvalidDatatypeFacetException
@@ -430,11 +433,11 @@ void DecimalDatatypeValidator::setEnumeration()
 
     // We put the this->checkContent in a separate loop
     // to not block original message with in that method.
-    // 
+    //
     for ( i = 0; i < enumLength; i++)
     {
         checkContent(fStrEnumeration->elementAt(i), false);
-    }              
+    }
 
     fEnumeration = new RefVectorOf<XMLNumber>(enumLength, true);
     fEnumerationInherited = false;
@@ -442,7 +445,7 @@ void DecimalDatatypeValidator::setEnumeration()
     for ( i = 0; i < enumLength; i++)
     {
         fEnumeration->insertElementAt(new XMLBigDecimal(fStrEnumeration->elementAt(i)), i);
-    }              
+    }
 
 }
 

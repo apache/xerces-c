@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/09/24 19:48:39  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.2  2002/02/25 21:18:53  tng
  * Schema Fix: Ensure no invalid uri index for UPA checking.
  *
@@ -331,7 +334,7 @@ DFAContentModel::validateContent( QName** const        children
         {
             const QName* inElem  = fElemMap[elemIndex];
             if (fDTD) {
-                if (!XMLString::compareString(inElem->getRawName(), curElemRawName)) {
+                if (XMLString::equals(inElem->getRawName(), curElemRawName)) {
                     nextState = fTransTable[curState][elemIndex];
                     if (nextState != XMLContentModel::gInvalidTrans)
                         break;
@@ -342,7 +345,7 @@ DFAContentModel::validateContent( QName** const        children
                 if (type == ContentSpecNode::Leaf)
                 {
                     if ((inElem->getURI() == curElem->getURI()) &&
-                    (!XMLString::compareString(inElem->getLocalPart(), curElem->getLocalPart()))) {
+                    (XMLString::equals(inElem->getLocalPart(), curElem->getLocalPart()))) {
                         nextState = fTransTable[curState][elemIndex];
                         if (nextState != XMLContentModel::gInvalidTrans)
                             break;
@@ -626,14 +629,14 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
         {
             const QName* inElem = fElemMap[inIndex];
             if (fDTD) {
-                if (!XMLString::compareString(inElem->getRawName(), elementRawName)) {
+                if (XMLString::equals(inElem->getRawName(), elementRawName)) {
                     break;
                 }
             }
             else {
                 if ((fElemMapType[inIndex] == fLeafListType[outIndex]) &&
                     (inElem->getURI() == element->getURI()) &&
-                    (!XMLString::compareString(inElem->getLocalPart(), element->getLocalPart()))) {
+                    (XMLString::equals(inElem->getLocalPart(), element->getLocalPart()))) {
                     break;
                 }
             }
@@ -675,14 +678,14 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
             const QName* leaf = fLeafList[leafIndex]->getElement();
             const int leafType = fLeafListType[leafIndex];
             if (fDTD) {
-                if (!XMLString::compareString(leaf->getRawName(), elementRawName)) {
+                if (XMLString::equals(leaf->getRawName(), elementRawName)) {
                     fLeafSorter[fSortCount++] = leafIndex;
                 }
             }
             else {
                 if ((fElemMapType[elemIndex] == fLeafListType[leafIndex]) &&
                     (leaf->getURI() == element->getURI()) &&
-                    (!XMLString::compareString(leaf->getLocalPart(), element->getLocalPart()))) {
+                    (XMLString::equals(leaf->getLocalPart(), element->getLocalPart()))) {
                       fLeafSorter[fSortCount++] = leafIndex;
                 }
             }
@@ -796,13 +799,13 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
                     const QName* leaf = fLeafList[leafIndex]->getElement();
                     const QName* element = fElemMap[elemIndex];
                     if (fDTD) {
-                        if (!XMLString::compareString(leaf->getRawName(), element->getRawName())) {
+                        if (XMLString::equals(leaf->getRawName(), element->getRawName())) {
                             *newSet |= *fFollowList[leafIndex];
                         }
                     }
                     else {
                         if ((leaf->getURI() == element->getURI()) &&
-                            (!XMLString::compareString(leaf->getLocalPart(), element->getLocalPart()))) {
+                            (XMLString::equals(leaf->getLocalPart(), element->getLocalPart()))) {
                             *newSet |= *fFollowList[leafIndex];
                         }
                     }

@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/09/24 19:48:39  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.3  2002/07/12 14:35:37  knoaman
  * Add an error message and use it in the scanner.
  *
@@ -118,7 +121,7 @@ GrammarResolver::getDatatypeValidator(const XMLCh* const uriStr,
 
     DatatypeValidator* dv = 0;
 
-    if (XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
+    if (XMLString::equals(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
 
         if (!fDataTypeReg) {
 
@@ -212,7 +215,7 @@ void GrammarResolver::cacheGrammars()
         keys.addElement(grammarKey);
         keyCount++;
     }
- 
+
     if (!fCachedGrammarRegistry)
         fCachedGrammarRegistry = new RefHashTableOf<Grammar>(29, true);
 

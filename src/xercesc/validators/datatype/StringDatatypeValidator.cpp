@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:42  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/24 19:44:40  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
+ * sane_include
  *
  * Revision 1.17  2001/10/09 20:54:35  peiyongz
  * init(): take 1 arg.
@@ -163,7 +166,7 @@ StringDatatypeValidator::StringDatatypeValidator(
     // do not invoke init() here!!!
 }
 
-short StringDatatypeValidator::getWSFacet() const 
+short StringDatatypeValidator::getWSFacet() const
 {
     return fWhiteSpace;
 }
@@ -174,14 +177,14 @@ short StringDatatypeValidator::getWSFacet() const
 void StringDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
                                                   , const XMLCh* const value)
 {
-    if (XMLString::compareString(key, SchemaSymbols::fgELT_WHITESPACE)==0)
+    if (XMLString::equals(key, SchemaSymbols::fgELT_WHITESPACE))
     {
         // whiteSpace = preserve | replace | collapse
-        if (XMLString::compareString(value, SchemaSymbols::fgWS_PRESERVE) == 0)
+        if (XMLString::equals(value, SchemaSymbols::fgWS_PRESERVE))
             setWhiteSpace(DatatypeValidator::PRESERVE);
-        else if (XMLString::compareString(value, SchemaSymbols::fgWS_REPLACE) == 0)
+        else if (XMLString::equals(value, SchemaSymbols::fgWS_REPLACE))
             setWhiteSpace(DatatypeValidator::REPLACE);
-        else if (XMLString::compareString(value, SchemaSymbols::fgWS_COLLAPSE) == 0)
+        else if (XMLString::equals(value, SchemaSymbols::fgWS_COLLAPSE))
             setWhiteSpace(DatatypeValidator::COLLAPSE);
         else
             ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_WS, value);
@@ -220,7 +223,7 @@ void StringDatatypeValidator::checkAdditionalFacetConstraints() const
 
     if (!pBaseValidator)
         return;
-   
+
     short    thisWSFacet = getWSFacet();
     short    baseWSFacet = pBaseValidator->getWSFacet();
 
@@ -250,7 +253,7 @@ void StringDatatypeValidator::checkAdditionalFacetConstraints() const
 }
 
 void StringDatatypeValidator::checkAdditionalFacet(const XMLCh* const content) const
-{    
+{
     //
     // check WhiteSpace
     //

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/09/24 19:44:40  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.2  2002/02/14 15:17:31  peiyongz
  * getEnumString()
  *
@@ -137,7 +140,7 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 ,fMemberTypeValidators(0)
 {
     //
-    // baseValidator another UnionDTV from which, 
+    // baseValidator another UnionDTV from which,
     // this UnionDTV is derived by restriction.
     // it shall be not null
     //
@@ -186,7 +189,7 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
             key = pair.getKey();
             value = pair.getValue();
 
-            if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN)==0)
+            if (XMLString::equals(key, SchemaSymbols::fgELT_PATTERN))
             {
                 setPattern(value);
                 if (getPattern())
@@ -246,9 +249,9 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
         The reason of this inheriting (or copying values) is to ease
         schema constraint checking, so that we need NOT trace back to our
         very first base validator in the hierachy. Instead, we are pretty
-        sure checking against immediate base validator is enough.  
+        sure checking against immediate base validator is enough.
     ***/
-   
+
     UnionDatatypeValidator *pBaseValidator = (UnionDatatypeValidator*) baseValidator;
 
     // inherit enumeration
@@ -261,7 +264,7 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
 }
 
 //
-// 1) the bottom level UnionDTV would check against 
+// 1) the bottom level UnionDTV would check against
 //        pattern and enumeration as well
 // 2) each UnionDTV(s) above the bottom level UnionDTV and
 //        below the native UnionDTV (the top level DTV)
@@ -281,11 +284,11 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
         //
         bool memTypeValid = false;
         for ( unsigned int i = 0; i < fMemberTypeValidators->size(); ++i )
-        {  
-            if ( memTypeValid ) 
+        {
+            if ( memTypeValid )
                 break;
 
-            try 
+            try
             {
                 fMemberTypeValidators->elementAt(i)->validate(content);
                 memTypeValid = true;
@@ -293,15 +296,15 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
             catch (XMLException&)
             {
                 //absorbed
-            }  
+            }
         } // for
 
-        if ( !memTypeValid ) 
+        if ( !memTypeValid )
         {
             ThrowXML1(InvalidDatatypeValueException
                     , XMLExcepts::VALUE_no_match_memberType
                     , content);
-            //( "Content '"+content+"' does not match any union types" );  
+            //( "Content '"+content+"' does not match any union types" );
         }
     }
 
@@ -309,7 +312,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
         // lazy construction
-        if (getRegex() == 0) 
+        if (getRegex() == 0)
         {
             try {
                 setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
@@ -338,19 +341,19 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
         (getEnumeration() != 0))
     {
 
-        // If the content match (compare equal) any enumeration with 
+        // If the content match (compare equal) any enumeration with
         // any of the member types, it is considerd valid.
         //
-        RefVectorOf<DatatypeValidator>* memberDTV = getMemberTypeValidators();      
+        RefVectorOf<DatatypeValidator>* memberDTV = getMemberTypeValidators();
         RefVectorOf<XMLCh>* tmpEnum = getEnumeration();
         unsigned int memberTypeNumber = memberDTV->size();
         unsigned int enumLength = tmpEnum->size();
 
         for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
-        {           
+        {
             for ( unsigned int enumIndex = 0; enumIndex < enumLength; ++enumIndex)
-            {  
-                try 
+            {
+                try
                 {
                     if (memberDTV->elementAt(memberIndex)->compare(content, tmpEnum->elementAt(enumIndex)) == 0)
                         return;
@@ -358,7 +361,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
                 catch (XMLException&)
                 {
                     //absorbed
-                }  
+                }
             } // for enumIndex
         } // for memberIndex
 
@@ -374,7 +377,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
 int UnionDatatypeValidator::compare(const XMLCh* const lValue
                                   , const XMLCh* const rValue)
 {
-    RefVectorOf<DatatypeValidator>* memberDTV = getMemberTypeValidators();      
+    RefVectorOf<DatatypeValidator>* memberDTV = getMemberTypeValidators();
     unsigned int memberTypeNumber = memberDTV->size();
 
     for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
@@ -383,9 +386,9 @@ int UnionDatatypeValidator::compare(const XMLCh* const lValue
             return  0;
     }
 
-    //REVISIT: what does it mean for UNION1 to be <less than> or <greater than> UNION2 ?    
+    //REVISIT: what does it mean for UNION1 to be <less than> or <greater than> UNION2 ?
     // As long as -1 or +1 indicates an unequality, return either of them is ok.
-    return -1;        
+    return -1;
 }
 
 const RefVectorOf<XMLCh>* UnionDatatypeValidator::getEnumString() const

@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:42  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/24 19:44:40  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
+ * sane_include
  *
  * Revision 1.8  2001/10/11 19:32:27  peiyongz
  * To overwrite inheritFacet()
@@ -118,10 +121,10 @@ ListDatatypeValidator::ListDatatypeValidator(
 ,fContent(0)
 {
     //
-    // baseValidator shall either 
+    // baseValidator shall either
     // an atomic DTV which servers as itemType, or
     // another ListDTV from which, this ListDTV is derived by restriction.
-    // 
+    //
     // In either case, it shall be not null
     //
     if (!baseValidator)
@@ -150,25 +153,25 @@ int ListDatatypeValidator::compare(const XMLCh* const lValue
     Janitor<RefVectorOf<XMLCh> > janl(lVector);
     RefVectorOf<XMLCh>* rVector = XMLString::tokenizeString(rValue);
     Janitor<RefVectorOf<XMLCh> > janr(rVector);
-   
-    int lNumberOfTokens = lVector->size();         
-    int rNumberOfTokens = rVector->size();         
+
+    int lNumberOfTokens = lVector->size();
+    int rNumberOfTokens = rVector->size();
 
     if (lNumberOfTokens < rNumberOfTokens)
-        return -1; 
+        return -1;
     else if (lNumberOfTokens > rNumberOfTokens)
         return 1;
-    else 
-    { //compare each token   
+    else
+    { //compare each token
         for ( int i = 0; i < lNumberOfTokens; i++)
         {
             int returnValue = theItemTypeDTV->compare(lVector->elementAt(i), rVector->elementAt(i));
-            if (returnValue != 0) 
-                return returnValue; //REVISIT: does it make sense to return -1 or +1..?               
+            if (returnValue != 0)
+                return returnValue; //REVISIT: does it make sense to return -1 or +1..?
         }
         return 0;
     }
-       
+
 }
 
 bool ListDatatypeValidator::isAtomic() const {
@@ -212,7 +215,7 @@ void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool 
     if ( (thisFacetsDefined & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
         // lazy construction
-        if (getRegex() == 0) 
+        if (getRegex() == 0)
         {
             try {
                 setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
@@ -223,7 +226,7 @@ void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool 
             }
         }
 
-        //check each and every item in the list   
+        //check each and every item in the list
         for (unsigned int i = 0; i < tokenVector->size(); i++)
         {
             if (getRegex()->matches(tokenVector->elementAt(i)) ==false)
@@ -293,11 +296,11 @@ void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool 
         {
             //optimization: we do a lexical comparision first
             // this may be faster for string and its derived
-            if (XMLString::compareString(getEnumeration()->elementAt(i), getContent()) == 0)
+            if (XMLString::equals(getEnumeration()->elementAt(i), getContent()))
                 break; // a match found
 
             // do a value space check
-            // this is needed for decimal (and probably other types 
+            // this is needed for decimal (and probably other types
             // such as datetime related)
             // eg.
             // tokenVector = "1 2 3.0 4" vs enumeration = "1 2 3 4.0"
@@ -401,7 +404,7 @@ void ListDatatypeValidator::inspectFacetBase()
                     RefVectorOf<XMLCh>* tempList = XMLString::tokenizeString(getEnumeration()->elementAt(i));
                     int tokenNumber = tempList->size();
 
-                    try 
+                    try
                     {
                         for ( int j = 0; j < tokenNumber; j++)
                             getBaseValidator()->validate(tempList->elementAt(j));
@@ -425,7 +428,7 @@ void ListDatatypeValidator::inspectFacetBase()
                         , XMLExcepts::FACET_enum_base
                         , getEnumeration()->elementAt(i));
             }
-    
+
         }
 
     }
@@ -433,15 +436,15 @@ void ListDatatypeValidator::inspectFacetBase()
 }// End of inspectFacetBase()
 
 void ListDatatypeValidator::inheritFacet()
-{    
+{
 
     //iff the base validator is List, then we inherit
     //
     if (getBaseValidator()->getType() == DatatypeValidator::List)
     {
         AbstractStringValidator::inheritFacet();
-    }    
-       
+    }
+
 }
 
 /**

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/09/24 19:44:40  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.3  2002/04/01 20:17:46  peiyongz
  * Bug#7551: Exceptions are caught by value, rather than by reference
  *
@@ -216,14 +219,14 @@ void AbstractNumericFacetValidator::assignFacet()
         key = pair.getKey();
         value = pair.getValue();
 
-        if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN) == 0)
+        if (XMLString::equals(key, SchemaSymbols::fgELT_PATTERN))
         {
             setPattern(value);
             if (getPattern())
                 setFacetsDefined(DatatypeValidator::FACET_PATTERN);
             // do not construct regex until needed
         }
-        else if (XMLString::compareString(key, SchemaSymbols::fgELT_MAXINCLUSIVE)==0)
+        else if (XMLString::equals(key, SchemaSymbols::fgELT_MAXINCLUSIVE))
         {
             try
             {
@@ -235,7 +238,7 @@ void AbstractNumericFacetValidator::assignFacet()
             }
             setFacetsDefined(DatatypeValidator::FACET_MAXINCLUSIVE);
         }
-        else if (XMLString::compareString(key, SchemaSymbols::fgELT_MAXEXCLUSIVE)==0)
+        else if (XMLString::equals(key, SchemaSymbols::fgELT_MAXEXCLUSIVE))
         {
             try
             {
@@ -247,7 +250,7 @@ void AbstractNumericFacetValidator::assignFacet()
             }
             setFacetsDefined(DatatypeValidator::FACET_MAXEXCLUSIVE);
         }
-        else if (XMLString::compareString(key, SchemaSymbols::fgELT_MININCLUSIVE)==0)
+        else if (XMLString::equals(key, SchemaSymbols::fgELT_MININCLUSIVE))
         {
             try
             {
@@ -259,7 +262,7 @@ void AbstractNumericFacetValidator::assignFacet()
             }
             setFacetsDefined(DatatypeValidator::FACET_MININCLUSIVE);
         }
-        else if (XMLString::compareString(key, SchemaSymbols::fgELT_MINEXCLUSIVE)==0)
+        else if (XMLString::equals(key, SchemaSymbols::fgELT_MINEXCLUSIVE))
         {
             try
             {
@@ -271,7 +274,7 @@ void AbstractNumericFacetValidator::assignFacet()
             }
             setFacetsDefined(DatatypeValidator::FACET_MINEXCLUSIVE);
         }
-        else if (XMLString::compareString(key, SchemaSymbols::fgATT_FIXED)==0)
+        else if (XMLString::equals(key, SchemaSymbols::fgATT_FIXED))
         {
             unsigned int val;
             bool         retStatus;

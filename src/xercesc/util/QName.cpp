@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/09/24 19:51:24  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.3  2002/09/05 16:06:41  tng
  * [Bug 12232] Make operator to be constant.
  *
@@ -421,10 +424,10 @@ void QName::setValues(const QName& qname)
 bool QName::operator==(const QName& qname) const
 {
     if (fURIId == 0) // null URI
-        return (XMLString::compareString(getRawName(),qname.getRawName())==0);
+        return (XMLString::equals(getRawName(),qname.getRawName()));
 
     return ((fURIId == qname.getURI()) &&
-           (XMLString::compareString(fLocalPart, qname.getLocalPart())==0));
+           (XMLString::equals(fLocalPart, qname.getLocalPart())));
 }
 
 // ---------------------------------------------------------------------------

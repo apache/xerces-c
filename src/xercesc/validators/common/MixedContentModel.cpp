@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:39  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/24 19:48:39  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:39  peiyongz
+ * sane_include
  *
  * Revision 1.13  2001/08/24 12:48:48  tng
  * Schema: AllContentModel
@@ -207,13 +210,13 @@ bool MixedContentModel::hasDups() const
                 continue;
 
             if (fDTD) {
-                if (!XMLString::compareString(curVal->getRawName(), fChildren[iIndex]->getRawName())) {
+                if (XMLString::equals(curVal->getRawName(), fChildren[iIndex]->getRawName())) {
                     return true;
                 }
             }
             else {
                 if ((curVal->getURI() == fChildren[iIndex]->getURI()) &&
-                    (!XMLString::compareString(curVal->getLocalPart(), fChildren[iIndex]->getLocalPart()))) {
+                    (XMLString::equals(curVal->getLocalPart(), fChildren[iIndex]->getLocalPart()))) {
                     return true;
                 }
             }
@@ -254,13 +257,13 @@ MixedContentModel::validateContent( QName** const         children
 
             if (type == ContentSpecNode::Leaf) {
                 if (fDTD) {
-                    if (XMLString::compareString(inChild->getRawName(), curChild->getRawName())) {
+                    if (!XMLString::equals(inChild->getRawName(), curChild->getRawName())) {
                         return outIndex;
                     }
                 }
                 else {
                     if ((inChild->getURI() != curChild->getURI()) ||
-                        (XMLString::compareString(inChild->getLocalPart(), curChild->getLocalPart()))) {
+                        (!XMLString::equals(inChild->getLocalPart(), curChild->getLocalPart()))) {
                         return outIndex;
                     }
                 }
@@ -300,13 +303,13 @@ MixedContentModel::validateContent( QName** const         children
 
                 if (type == ContentSpecNode::Leaf) {
                     if (fDTD) {
-                        if (!XMLString::compareString(inChild->getRawName(), curChild->getRawName())) {
+                        if (XMLString::equals(inChild->getRawName(), curChild->getRawName())) {
                             break;
                         }
                     }
                     else {
                         if ((inChild->getURI() == curChild->getURI()) &&
-                            (!XMLString::compareString(inChild->getLocalPart(), curChild->getLocalPart()))) {
+                            (XMLString::equals(inChild->getLocalPart(), curChild->getLocalPart()))) {
                             break;
                         }
                     }

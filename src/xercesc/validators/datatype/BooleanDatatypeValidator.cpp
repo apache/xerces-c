@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/09/24 19:44:40  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.3  2002/08/23 20:16:50  tng
  * Memory leak fix: enums is not deleted if an error occurred.
  *
@@ -138,7 +141,7 @@ BooleanDatatypeValidator::BooleanDatatypeValidator(
             key = pair.getKey();
             value = pair.getValue();
 
-            if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN)==0)
+            if (XMLString::equals(key, SchemaSymbols::fgELT_PATTERN))
             {
                 setPattern(value);
                 setFacetsDefined(DatatypeValidator::FACET_PATTERN);
@@ -194,7 +197,7 @@ void BooleanDatatypeValidator::checkContent( const XMLCh* const content, bool as
     int   i = 0;
     for ( ; i < ARRAYSIZE; i++ )
     {
-        if ( XMLString::compareString(content, fgValueSpace[i]) ==0 )
+        if ( XMLString::equals(content, fgValueSpace[i]))
             break;
     }
 
@@ -211,19 +214,19 @@ int BooleanDatatypeValidator::compare(const XMLCh* const lValue
     // 1 == true
     // 0 == false
 
-    if (( XMLString::compareString(lValue, fgValueSpace[0]) ==0 ) ||
-        ( XMLString::compareString(lValue, fgValueSpace[2]) ==0 ) )
+    if (XMLString::equals(lValue, fgValueSpace[0])||
+        XMLString::equals(lValue, fgValueSpace[2]))
     {
-        if (( XMLString::compareString(rValue, fgValueSpace[0]) ==0 ) ||
-            ( XMLString::compareString(rValue, fgValueSpace[2]) ==0 ) )
+        if (XMLString::equals(rValue, fgValueSpace[0]) ||
+            XMLString::equals(rValue, fgValueSpace[2]))
             return 0;
     }
     else
-    if (( XMLString::compareString(lValue, fgValueSpace[1]) ==0 ) ||
-        ( XMLString::compareString(lValue, fgValueSpace[3]) ==0 ) )
+    if (XMLString::equals(lValue, fgValueSpace[1]) ||
+        XMLString::equals(lValue, fgValueSpace[3]))
     {
-        if (( XMLString::compareString(rValue, fgValueSpace[1]) ==0 ) ||
-            ( XMLString::compareString(rValue, fgValueSpace[3]) ==0 ) )
+        if (XMLString::equals(rValue, fgValueSpace[1]) ||
+            XMLString::equals(rValue, fgValueSpace[3]))
             return 0;
     }
 

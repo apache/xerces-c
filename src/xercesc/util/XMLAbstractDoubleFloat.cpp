@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/09/24 19:51:24  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.4  2002/05/03 16:05:45  peiyongz
  * Bug 7341: Missing newline at end of util and DOM source files,
  * patch from Martin Kalen.
@@ -123,27 +126,27 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
 
     normalizeZero(tmpStrValue);
 
-    if (XMLString::compareString(tmpStrValue, XMLUni::fgNegINFString) == 0)
+    if (XMLString::equals(tmpStrValue, XMLUni::fgNegINFString) )
     {
         fType = NegINF;
         return;
     }
-    else if (XMLString::compareString(tmpStrValue, XMLUni::fgNegZeroString) == 0)
+    else if (XMLString::equals(tmpStrValue, XMLUni::fgNegZeroString) )
     {
         fType = NegZero;
         return;
     }
-    else if (XMLString::compareString(tmpStrValue, XMLUni::fgPosZeroString) == 0)
+    else if (XMLString::equals(tmpStrValue, XMLUni::fgPosZeroString) )
     {
         fType = PosZero;
         return;
     }
-    else if (XMLString::compareString(tmpStrValue, XMLUni::fgPosINFString) == 0)
+    else if (XMLString::equals(tmpStrValue, XMLUni::fgPosINFString) )
     {
         fType = PosINF;
         return;
     }
-    else if (XMLString::compareString(tmpStrValue, XMLUni::fgNaNString) == 0)
+    else if (XMLString::equals(tmpStrValue, XMLUni::fgNaNString) )
     {
         fType = NaN;
         return;
@@ -351,9 +354,9 @@ int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const s
 //
 //  Return:
 //
-//  for input comforming to [+]? [0]* '.'? [0]*, 
-//            normalize the input to positive zero string 
-//  for input comforming to '-' [0]* '.'? [0]*, 
+//  for input comforming to [+]? [0]* '.'? [0]*,
+//            normalize the input to positive zero string
+//  for input comforming to '-' [0]* '.'? [0]*,
 //            normalize the input to negative zero string
 //  otherwise, do nothing
 //
@@ -361,10 +364,10 @@ void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
 {
 
 	// do a quick check
-	if (!inData  || 
+	if (!inData  ||
 		!*inData ||
-        (XMLString::compareString(inData, XMLUni::fgNegZeroString) == 0) ||
-        (XMLString::compareString(inData, XMLUni::fgPosZeroString) == 0)  )
+        (XMLString::equals(inData, XMLUni::fgNegZeroString) ) ||
+        (XMLString::equals(inData, XMLUni::fgPosZeroString) )  )
         return;
 
     XMLCh*   srcStr = inData;

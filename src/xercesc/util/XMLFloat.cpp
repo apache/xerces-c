@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/09/24 19:51:24  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.2  2002/05/03 16:05:45  peiyongz
  * Bug 7341: Missing newline at end of util and DOM source files,
  * patch from Martin Kalen.
@@ -131,7 +134,7 @@ static const XMLCh FLT_MAX_POSITIVE[] =
     chDigit_0, chDigit_9, chDigit_3, chDigit_8, chDigit_4, chDigit_6,
     chDigit_3, chDigit_4, chDigit_6, chDigit_3, chDigit_3, chDigit_7,
     chDigit_4, chDigit_6, chDigit_0, chDigit_7, chDigit_4, chDigit_3,
-    chDigit_1, chDigit_7, chDigit_7, 
+    chDigit_1, chDigit_7, chDigit_7,
     chLatin_E, chPlus,    chDigit_3, chDigit_8, chNull
 };
 
@@ -149,7 +152,7 @@ static const XMLCh FLT_MIN_POSITIVE[] =
     chDigit_2, chDigit_4, chDigit_8, chDigit_1, chDigit_7, chDigit_0,
     chDigit_7, chDigit_0, chDigit_9, chDigit_2, chDigit_3, chDigit_7,
     chDigit_2, chDigit_9, chDigit_5, chDigit_8, chDigit_3, chDigit_2,
-    chDigit_8, chDigit_9, chDigit_9, 
+    chDigit_8, chDigit_9, chDigit_9,
     chLatin_E, chDash,    chDigit_4, chDigit_5, chNull
 };
 
@@ -161,7 +164,7 @@ static const XMLCh FLT_MAX_NEGATIVE[] =
     chDigit_0, chDigit_9, chDigit_3, chDigit_8, chDigit_4, chDigit_6,
     chDigit_3, chDigit_4, chDigit_6, chDigit_3, chDigit_3, chDigit_7,
     chDigit_4, chDigit_6, chDigit_0, chDigit_7, chDigit_4, chDigit_3,
-    chDigit_1, chDigit_7, chDigit_7, 
+    chDigit_1, chDigit_7, chDigit_7,
     chLatin_E, chPlus,    chDigit_3, chDigit_8, chNull
 };
 
@@ -173,7 +176,7 @@ static const XMLCh FLT_MIN_NEGATIVE[] =
     chDigit_2, chDigit_4, chDigit_8, chDigit_1, chDigit_7, chDigit_0,
     chDigit_7, chDigit_0, chDigit_9, chDigit_2, chDigit_3, chDigit_7,
     chDigit_2, chDigit_9, chDigit_5, chDigit_8, chDigit_3, chDigit_2,
-    chDigit_8, chDigit_9, chDigit_9, 
+    chDigit_8, chDigit_9, chDigit_9,
     chLatin_E, chDash,    chDigit_4, chDigit_5, chNull
 };
 
@@ -234,10 +237,10 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
     //
     // by-pass boundary check for boundary value itself
     //
-    if (( XMLString::compareString(strValue, FLT_MAX_NEGATIVE) == 0 ) ||
-        ( XMLString::compareString(strValue, FLT_MIN_NEGATIVE) == 0 ) ||
-        ( XMLString::compareString(strValue, FLT_MIN_POSITIVE) == 0 ) ||
-        ( XMLString::compareString(strValue, FLT_MAX_POSITIVE) == 0 )  )
+    if ((XMLString::equals(strValue, FLT_MAX_NEGATIVE)) ||
+        (XMLString::equals(strValue, FLT_MIN_NEGATIVE)) ||
+        (XMLString::equals(strValue, FLT_MIN_POSITIVE)) ||
+        (XMLString::equals(strValue, FLT_MAX_POSITIVE))  )
         return;
 
     //  error: this < maxNegativeValue

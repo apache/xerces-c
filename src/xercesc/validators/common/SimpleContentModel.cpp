@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/09/24 19:48:39  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.2  2002/02/25 21:18:53  tng
  * Schema Fix: Ensure no invalid uri index for UPA checking.
  *
@@ -158,13 +161,13 @@ SimpleContentModel::validateContent(QName** const       children
 
             // If the 0th child is not the right kind, report an error at 0
             if (fDTD) {
-                if (XMLString::compareString(children[0]->getRawName(), fFirstChild->getRawName())!=0) {
+                if (!XMLString::equals(children[0]->getRawName(), fFirstChild->getRawName())) {
                     return 0;
                 }
             }
             else {
                 if ((children[0]->getURI() != fFirstChild->getURI()) ||
-                    (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())!=0)) {
+                    !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart())) {
                     return 0;
                 }
             }
@@ -181,13 +184,13 @@ SimpleContentModel::validateContent(QName** const       children
             //
             if (childCount == 1) {
                 if (fDTD) {
-                    if (XMLString::compareString(children[0]->getRawName(), fFirstChild->getRawName())!=0) {
+                    if (!XMLString::equals(children[0]->getRawName(), fFirstChild->getRawName())) {
                             return 0;
                     }
                 }
                 else {
                     if ((children[0]->getURI() != fFirstChild->getURI()) ||
-                        (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())!=0)) {
+                        (!XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart()))) {
                         return 0;
                     }
                 }
@@ -208,7 +211,7 @@ SimpleContentModel::validateContent(QName** const       children
             {
                 if (fDTD) {
                     for (index = 0; index < childCount; index++) {
-                        if (XMLString::compareString(children[index]->getRawName(), fFirstChild->getRawName())!=0) {
+                        if (!XMLString::equals(children[index]->getRawName(), fFirstChild->getRawName())) {
                             return index;
                         }
                     }
@@ -216,7 +219,7 @@ SimpleContentModel::validateContent(QName** const       children
                 else {
                     for (index = 0; index < childCount; index++) {
                         if ((children[index]->getURI() != fFirstChild->getURI()) ||
-                            (XMLString::compareString(children[index]->getLocalPart(), fFirstChild->getLocalPart())!=0)) {
+                            !XMLString::equals(children[index]->getLocalPart(), fFirstChild->getLocalPart())) {
                             return index;
                         }
                     }
@@ -235,7 +238,7 @@ SimpleContentModel::validateContent(QName** const       children
 
             if (fDTD) {
                 for (index = 0; index < childCount; index++) {
-                    if (XMLString::compareString(children[index]->getRawName(), fFirstChild->getRawName())!=0) {
+                    if (!XMLString::equals(children[index]->getRawName(), fFirstChild->getRawName())) {
                         return index;
                     }
                 }
@@ -243,7 +246,7 @@ SimpleContentModel::validateContent(QName** const       children
             else {
                 for (index = 0; index < childCount; index++) {
                     if ((children[index]->getURI() != fFirstChild->getURI()) ||
-                        (XMLString::compareString(children[index]->getLocalPart(), fFirstChild->getLocalPart())!=0)) {
+                        !XMLString::equals(children[index]->getLocalPart(), fFirstChild->getLocalPart())) {
                         return index;
                     }
                 }
@@ -259,16 +262,16 @@ SimpleContentModel::validateContent(QName** const       children
                 return 0;
 
             if (fDTD) {
-                if ((XMLString::compareString(children[0]->getRawName(), fFirstChild->getRawName())!=0) &&
-                    (XMLString::compareString(children[0]->getRawName(), fSecondChild->getRawName())!=0)) {
+                if (!XMLString::equals(children[0]->getRawName(), fFirstChild->getRawName()) &&
+                    !XMLString::equals(children[0]->getRawName(), fSecondChild->getRawName())) {
                     return 0;
                 }
             }
             else {
                 if (((children[0]->getURI() != fFirstChild->getURI()) ||
-                     (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())!=0)) &&
+                     !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart())) &&
                     ((children[0]->getURI() != fSecondChild->getURI()) ||
-                     (XMLString::compareString(children[0]->getLocalPart(), fSecondChild->getLocalPart())!=0))) {
+                     !XMLString::equals(children[0]->getLocalPart(), fSecondChild->getLocalPart()))) {
                     return 0;
                 }
             }
@@ -289,21 +292,21 @@ SimpleContentModel::validateContent(QName** const       children
 
             if (childCount == 2) {
                 if (fDTD) {
-                    if (XMLString::compareString(children[0]->getRawName(), fFirstChild->getRawName())!=0) {
+                    if (!XMLString::equals(children[0]->getRawName(), fFirstChild->getRawName())) {
                         return 0;
                     }
-                    if (XMLString::compareString(children[1]->getRawName(), fSecondChild->getRawName())!=0) {
+                    if (!XMLString::equals(children[1]->getRawName(), fSecondChild->getRawName())) {
                         return 1;
                     }
                 }
                 else {
                     if ((children[0]->getURI() != fFirstChild->getURI()) ||
-                        (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())!=0)) {
+                        !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart())) {
                         return 0;
                     }
 
                     if ((children[1]->getURI() != fSecondChild->getURI()) ||
-                        (XMLString::compareString(children[1]->getLocalPart(), fSecondChild->getLocalPart())!=0)) {
+                        !XMLString::equals(children[1]->getLocalPart(), fSecondChild->getLocalPart())) {
                         return 1;
                     }
                 }
@@ -349,7 +352,7 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
                 return 0;
 
             if ((children[0]->getURI() != fFirstChild->getURI()) ||
-                (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())!=0))
+                !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart()))
             {
                 if (!comparator.isEquivalentTo(children[0], fFirstChild))
                    return 0;
@@ -367,7 +370,7 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
             //
             if ((childCount == 1) &&
                ((children[0]->getURI() != fFirstChild->getURI()) ||
-                (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())!=0)))
+                !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart())))
             {
                 if(!comparator.isEquivalentTo(children[0], fFirstChild))
                     return 0;
@@ -388,7 +391,7 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
                 for (index = 0; index < childCount; index++)
                 {
                     if ((children[index]->getURI() != fFirstChild->getURI()) ||
-                        (XMLString::compareString(children[index]->getLocalPart(), fFirstChild->getLocalPart())!=0))
+                        !XMLString::equals(children[index]->getLocalPart(), fFirstChild->getLocalPart()))
                     {
     				    if (!comparator.isEquivalentTo(children[index], fFirstChild))
                             return index;
@@ -409,7 +412,7 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
             for (index = 0; index < childCount; index++)
             {
                 if ((children[index]->getURI() != fFirstChild->getURI()) ||
-                    (XMLString::compareString(children[index]->getLocalPart(), fFirstChild->getLocalPart())!=0))
+                    !XMLString::equals(children[index]->getLocalPart(), fFirstChild->getLocalPart()))
                 {
     			    if (!comparator.isEquivalentTo(children[index], fFirstChild))
                         return index;
@@ -426,9 +429,9 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
                 return 0;
 
             if (((children[0]->getURI() != fFirstChild->getURI()) ||
-                 (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())!=0)) &&
+                 !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart())) &&
                 ((children[0]->getURI() != fSecondChild->getURI()) ||
-                 (XMLString::compareString(children[0]->getLocalPart(), fSecondChild->getLocalPart())!=0)))
+                 !XMLString::equals(children[0]->getLocalPart(), fSecondChild->getLocalPart())))
             {
 
                  if (!comparator.isEquivalentTo(children[0], fFirstChild) &&
@@ -453,14 +456,14 @@ int SimpleContentModel::validateContentSpecial(QName** const          children
             if (childCount == 2)
             {
                 if ((children[0]->getURI() != fFirstChild->getURI()) ||
-                    (XMLString::compareString(children[0]->getLocalPart(), fFirstChild->getLocalPart())!=0))
+                    !XMLString::equals(children[0]->getLocalPart(), fFirstChild->getLocalPart()))
                 {
                     if(!comparator.isEquivalentTo(children[0], fFirstChild))
                         return 0;
                 }
 
                 if ((children[1]->getURI() != fSecondChild->getURI()) ||
-                    (XMLString::compareString(children[1]->getLocalPart(), fSecondChild->getLocalPart())!=0))
+                    !XMLString::equals(children[1]->getLocalPart(), fSecondChild->getLocalPart()))
                 {
                     if (!comparator.isEquivalentTo(children[1], fSecondChild))
                         return 1;

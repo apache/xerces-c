@@ -392,7 +392,7 @@ bool XMLURL::operator==(const XMLURL& toCompare) const
     //  way so they should now be the same even if they came in via different
     //  relative parts.
     //
-    if (XMLString::compareString(getURLText(), toCompare.getURLText()))
+    if (!XMLString::equals(getURLText(), toCompare.getURLText()))
         return false;
 
     return true;
@@ -945,8 +945,8 @@ void XMLURL::parse(const XMLCh* const urlText)
                 srcPtr += XMLString::stringLen(fHost);
             }
         }
-    } 
-    else 
+    }
+    else
     {
 	    //
 	    // http protocol requires two forward slashes

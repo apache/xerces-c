@@ -57,8 +57,11 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2002/02/01 22:22:42  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/24 19:44:40  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:42  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/10/09 20:49:09  peiyongz
  * init(): take 1 arg
@@ -121,7 +124,7 @@ NCNameDatatypeValidator::NCNameDatatypeValidator(
 int NCNameDatatypeValidator::compare(const XMLCh* const lValue
                                    , const XMLCh* const rValue)
 {
-    return ( XMLString::compareString(lValue, rValue)==0 ? 0 : -1);
+    return ( XMLString::equals(lValue, rValue)? 0 : -1);
 }
 
 void NCNameDatatypeValidator::validate(const XMLCh* const content)

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:37  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/24 19:48:39  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:37  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/11/21 14:30:13  knoaman
  * Fix for UPA checking.
@@ -177,7 +180,7 @@ AllContentModel::validateContent( QName** const         children
         {
             const QName* inChild = fChildren[inIndex];
             if ((inChild->getURI() == curChild->getURI()) &&
-                (!XMLString::compareString(inChild->getLocalPart(), curChild->getLocalPart()))) {
+                (XMLString::equals(inChild->getLocalPart(), curChild->getLocalPart()))) {
                 // found it
                 // If this element was seen already, indicate an error was
                 // found at the duplicate index.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/09/24 19:44:40  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ *
  * Revision 1.3  2002/04/01 20:17:46  peiyongz
  * Bug#7551: Exceptions are caught by value, rather than by reference
  *
@@ -193,7 +196,7 @@ void AbstractStringValidator::assignFacet()
         key = pair.getKey();
         value = pair.getValue();
 
-        if (XMLString::compareString(key, SchemaSymbols::fgELT_LENGTH)==0)
+        if (XMLString::equals(key, SchemaSymbols::fgELT_LENGTH))
         {
             int val;
             try
@@ -211,7 +214,7 @@ void AbstractStringValidator::assignFacet()
                 setLength(val);
                 setFacetsDefined(DatatypeValidator::FACET_LENGTH);
         }
-        else if (XMLString::compareString(key, SchemaSymbols::fgELT_MINLENGTH)==0)
+        else if (XMLString::equals(key, SchemaSymbols::fgELT_MINLENGTH))
         {
             int val;
             try
@@ -229,7 +232,7 @@ void AbstractStringValidator::assignFacet()
             setMinLength(val);
             setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);
         }
-        else if (XMLString::compareString(key, SchemaSymbols::fgELT_MAXLENGTH)==0)
+        else if (XMLString::equals(key, SchemaSymbols::fgELT_MAXLENGTH))
         {
             int val;
             try
@@ -247,14 +250,14 @@ void AbstractStringValidator::assignFacet()
             setMaxLength(val);
             setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);
         }
-        else if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN)==0)
+        else if (XMLString::equals(key, SchemaSymbols::fgELT_PATTERN))
         {
             setPattern(value);
             if (getPattern())
                 setFacetsDefined(DatatypeValidator::FACET_PATTERN);
             // do not construct regex until needed
         }
-        else if (XMLString::compareString(key, SchemaSymbols::fgATT_FIXED)==0)
+        else if (XMLString::equals(key, SchemaSymbols::fgATT_FIXED))
         {
             unsigned int val;
             bool         retStatus;
@@ -276,7 +279,7 @@ void AbstractStringValidator::assignFacet()
             //no setFacetsDefined here
         }
         //
-        // else if (XMLString::compareString(key, SchemaSymbols::fgELT_SPECIAL_TOKEN)==0)
+        // else if (XMLString::equals(key, SchemaSymbols::fgELT_SPECIAL_TOKEN))
         // TODO
         //
         // Note: whitespace is taken care of by TraverseSchema.
@@ -564,7 +567,7 @@ void AbstractStringValidator::inheritFacet()
 int AbstractStringValidator::compare(const XMLCh* const lValue
                                    , const XMLCh* const rValue)
 {
-    return XMLString::compareString(lValue, rValue);
+    return !XMLString::equals(lValue, rValue);
 }
 
 void AbstractStringValidator::validate( const XMLCh* const content)
@@ -647,7 +650,7 @@ void AbstractStringValidator::checkContent( const XMLCh* const content, bool asB
         int enumLength = getEnumeration()->size();
         for ( ; i < enumLength; i++)
         {
-            if (XMLString::compareString(content, getEnumeration()->elementAt(i))==0)
+            if (XMLString::equals(content, getEnumeration()->elementAt(i)))
                 break;
         }
 

@@ -422,7 +422,7 @@ inline void DatatypeValidator::cleanUp() {
 inline int DatatypeValidator::compare(const XMLCh* const lValue,
                                       const XMLCh* const rValue)
 {
-    return XMLString::compareString(lValue, rValue);
+    return !XMLString::equals(lValue, rValue);
 }
 
 // ---------------------------------------------------------------------------
