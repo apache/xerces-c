@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/02/29 22:54:46  aruna1
+ * MultiThreaded problem for solaris with CC compiler resolved in scanXMLDecl() function.
+ *
  * Revision 1.9  2000/02/06 07:47:54  rahulj
  * Year 2K copyright swat.
  *
@@ -2739,6 +2742,10 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
     //  Also set up a list of buffers in the right order so that we know
     //  where to put stuff.
     //
+/*
+This code gives a multithreaded problem on solaris CC compiler. So its 
+been replaced by the below uncommented code.
+
     XMLBuffer* buffers[StringCount] =
     {
         &bbVersion.getBuffer()
@@ -2746,6 +2753,12 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
         , &bbStand.getBuffer()
         , &bbDummy.getBuffer()
     };
+*/
+    XMLBuffer* buffers[StringCount] ;
+    buffers[0] = &bbVersion.getBuffer();
+    buffers[1] = &bbEncoding.getBuffer();
+    buffers[2] = &bbStand.getBuffer();
+    buffers[3] = &bbDummy.getBuffer();
 
     int curCount = 0;
     Strings curString;
