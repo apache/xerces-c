@@ -1340,7 +1340,7 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
     while (true)
     {
         // Skip any spaces
-        const unsigned int spaceCount = fReaderMgr.skipPastSpacesInDecl();
+        const unsigned int spaceCount = fReaderMgr.skipPastSpaces(true);
 
         // If we are looking at a question mark, then break out
         if (fReaderMgr.lookingAtChar(chQuestion))
@@ -1375,7 +1375,7 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
 
         //  Scan for an equal's sign. If we don't find it, issue an error
         //  but keep trying to go on.
-        if (!scanEq())
+        if (!scanEq(true))
             emitError(XMLErrs::ExpectedEqSign);
 
         //  Get a quote string into the buffer for the string that we are
@@ -2168,12 +2168,12 @@ void XMLScanner::scanComment()
 
 //  Most equal signs can have white space around them, so this little guy
 //  just makes the calling code cleaner by eating whitespace.
-bool XMLScanner::scanEq()
+bool XMLScanner::scanEq(bool inDecl)
 {
-    fReaderMgr.skipPastSpacesInDecl();
+    fReaderMgr.skipPastSpaces(inDecl);
     if (fReaderMgr.skippedChar(chEqual))
     {
-        fReaderMgr.skipPastSpacesInDecl();
+        fReaderMgr.skipPastSpaces(inDecl);
         return true;
     }
     return false;

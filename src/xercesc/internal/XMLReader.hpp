@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/06/14 15:18:53  peiyongz
+ * Consolidated End Of Line Handling
+ *
  * Revision 1.16  2004/06/03 15:38:27  peiyongz
  * XML1.1:  The characters #x85 and #x2028 cannot be reliably recognized
  * and translated until an entity's encoding declaration (if present) has been
@@ -333,8 +336,7 @@ public:
     bool getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck);
     bool peekNextChar(XMLCh& chGotten);
     bool skipIfQuote(XMLCh& chGotten);
-    bool skipSpaces(bool& skippedSomething);
-    bool skipSpacesInDecl(bool& skippedSomething);
+    bool skipSpaces(bool& skippedSomething, bool inDecl = false);
     bool skippedChar(const XMLCh toSkip);
     bool skippedSpace();
     bool skippedString(const XMLCh* const toSkip);
@@ -428,6 +430,11 @@ private:
         , const unsigned int            maxChars
     );
 
+    inline void handleEOL
+    (
+              XMLCh&   curCh
+            , bool     inDecl = false
+    );
 
     // -----------------------------------------------------------------------
     //  Data members
@@ -801,62 +808,8 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
     chGotten = fCharBuf[fCharIndex++];
 
     // Handle end of line normalization and line/col member maintenance.
-    if (chGotten == chCR)
-    {
-        //
-        //  Do the normalization. We return chLF regardless of which was
-        //  found. We also eat a chCR followed by an chLF.
-        //
-        //  We only do this if the content being spooled is not already
-        //  internalized.
-        //
-        if (fSource == Source_External)
-        {
-            //
-            //  See if we have another char left. If not, don't bother.
-            //  Else, see if its an chLF to eat. If it is, bump the
-            //  index again.
-            //
-            if (fCharIndex < fCharsAvail)
-            {
-                if (fCharBuf[fCharIndex] == chLF
-                    || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
-                    fCharIndex++;
-            }
-             else
-            {
-                if (refreshCharBuffer())
-                {
-                    if (fCharBuf[fCharIndex] == chLF
-                        || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
-                        fCharIndex++;
-                }
-            }
+    handleEOL(chGotten, false);
 
-            // And return just an chLF
-            chGotten = chLF;
-        }
-
-        // And handle the line/col stuff
-        fCurCol = 1;
-        fCurLine++;
-    }
-     else if (chGotten == chLF
-              || ((chGotten == chNEL || chGotten == chLineSeparator) && fNEL))
-    {
-        chGotten = chLF;
-        fCurLine++;
-        fCurCol = 1;
-    }
-     else if (chGotten)
-    {
-        //
-        //  Only do this is not a null char. Null chars are not part of the
-        //  real content. They are just marker characters inserted into
-        //  the stream.
-        //
-        fCurCol++;
-    }
     return true;
 }
 
@@ -883,53 +836,8 @@ inline bool XMLReader::getNextChar(XMLCh& chGotten)
     chGotten = fCharBuf[fCharIndex++];
 
     // Handle end of line normalization and line/col member maintenance.
-    if (chGotten == chCR)
-    {
-        //
-        //  Do the normalization. We return chLF regardless of which was
-        //  found. We also eat a chCR followed by an chLF.
-        //
-        //  We only do this if the content being spooled is not already
-        //  internalized.
-        //
-        if (fSource == Source_External)
-        {
-            //
-            //  See if we have another char left. If not, don't bother.
-            //  Else, see if its an chLF to eat. If it is, bump the
-            //  index again.
-            //
-            if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
-            {
-                if (fCharBuf[fCharIndex] == chLF
-                    || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
-                    fCharIndex++;
-            }
+    handleEOL(chGotten, false);
 
-            // And return just an chLF
-            chGotten = chLF;
-        }
-
-        // And handle the line/col stuff
-        fCurCol = 1;
-        fCurLine++;
-    }
-     else if (chGotten == chLF
-              || ((chGotten == chNEL || chGotten == chLineSeparator) && fNEL))
-    {
-        chGotten = chLF;
-        fCurLine++;
-        fCurCol = 1;
-    }
-     else if (chGotten)
-    {
-        //
-        //  Only do this is not a null char. Null chars are not part of the
-        //  real content. They are just marker characters inserted into
-        //  the stream.
-        //
-        fCurCol++;
-    }
     return true;
 }
 

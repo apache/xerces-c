@@ -72,7 +72,6 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/Janitor.hpp>
 
-
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -695,42 +694,7 @@ bool XMLReader::getSpaces(XMLBuffer& toFill)
                 // Eat this char
                 fCharIndex++;
 
-                //
-                //  Ok, we've got some whitespace here. So we have to store
-                //  it. But we have to normalize it and update the line and
-                //  column info along the way.
-                //
-                if (curCh == chCR)
-                {
-                    fCurCol = 1;
-                    fCurLine++;
-
-                    //
-                    //  If not already internalized, then convert it to an
-                    //  LF and eat any following LF.
-                    //
-                    if (fSource == Source_External)
-                    {
-                        if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
-                        {
-                            if (fCharBuf[fCharIndex] == chLF
-                                || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
-                                fCharIndex++;
-                        }
-                        curCh = chLF;
-                    }
-                }
-                 else if (curCh == chLF
-                          || ((curCh == chNEL || curCh == chLineSeparator) && fNEL))
-                {
-                    curCh = chLF;
-                    fCurCol = 1;
-                    fCurLine++;
-                }
-                 else
-                {
-                    fCurCol++;
-                }
+                handleEOL(curCh, false);
 
                 // Ok we can add this guy to our buffer
                 toFill.append(curCh);
@@ -773,42 +737,7 @@ bool XMLReader::getUpToCharOrWS(XMLBuffer& toFill, const XMLCh toCheck)
                 // Eat this char
                 fCharIndex++;
 
-                //
-                //  Ok, we've got some whitespace here. So we have to store
-                //  it. But we have to normalize it and update the line and
-                //  column info along the way.
-                //
-                if (curCh == chCR)
-                {
-                    fCurCol = 1;
-                    fCurLine++;
-
-                    //
-                    //  If not already internalized, then convert it to an
-                    //  LF and eat any following LF.
-                    //
-                    if (fSource == Source_External)
-                    {
-                        if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
-                        {
-                            if (fCharBuf[fCharIndex] == chLF
-                                || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
-                                fCharIndex++;
-                        }
-                        curCh = chLF;
-                    }
-                }
-                 else if (curCh == chLF
-                          || ((curCh == chNEL || curCh == chLineSeparator) && fNEL))
-                {
-                    curCh = chLF;
-                    fCurCol = 1;
-                    fCurLine++;
-                }
-                 else
-                {
-                    fCurCol++;
-                }
+                handleEOL(curCh, false);
 
                 // Add it to our buffer
                 toFill.append(curCh);
@@ -853,7 +782,7 @@ bool XMLReader::skipIfQuote(XMLCh& chGotten)
 }
 
 
-bool XMLReader::skipSpaces(bool& skippedSomething)
+bool XMLReader::skipSpaces(bool& skippedSomething, bool inDecl)
 {
     // Remember the current line and column
     XMLSSize_t    orgLine = fCurLine;
@@ -874,138 +803,8 @@ bool XMLReader::skipSpaces(bool& skippedSomething)
                 // Get the current char out of the buffer and eat it
                 XMLCh curCh = fCharBuf[fCharIndex++];
 
-                //  Ok, we've got some whitespace here. So we have to store
-                //  it. But we have to normalize it and update the line and
-                //  column info along the way.
-                if (curCh == chCR)
-                {
-                    fCurCol = 1;
-                    fCurLine++;
+                handleEOL(curCh, inDecl);
 
-                    //  If not already internalized, then convert it to an
-                    //  LF and eat any following LF.
-                    if (fSource == Source_External)
-                    {
-                        if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
-                        {
-                            if (fCharBuf[fCharIndex] == chLF
-                                || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
-                                fCharIndex++;
-                        }
-                    }
-                }
-                else if (curCh == chLF
-                         || ((curCh == chNEL || curCh == chLineSeparator) && fNEL))
-                {
-                    fCurCol = 1;
-                    fCurLine++;
-                }
-                else
-                {
-                    fCurCol++;
-                }
-            }
-            else
-            {
-                skippedSomething = (orgLine != fCurLine) || (orgCol != fCurCol);
-                return true;
-            }
-        }
-
-        //  We've eaten up the current buffer, so lets try to reload it. If
-        //  we don't get anything new, then break out. If we do, then we go
-        //  back to the top to keep getting spaces.
-        if (!refreshCharBuffer())
-            break;
-    }
-
-    // We never hit any non-space and ate up the whole reader
-    skippedSomething = (orgLine != fCurLine) || (orgCol != fCurCol);
-    return false;
-}
-
-/***
- * XML1.1
- *
- * 2.11 End-of-Line Handling
- *  ...
- *   The characters #x85 and #x2028 cannot be reliably recognized and translated 
- *   until an entity's encoding declaration (if present) has been read. 
- *   Therefore, it is a fatal error to use them within the XML declaration or 
- *   text declaration. 
- *
-***/
-bool XMLReader::skipSpacesInDecl(bool& skippedSomething)
-{
-    // Remember the current line and column
-    XMLSSize_t    orgLine = fCurLine;
-    XMLSSize_t    orgCol  = fCurCol;
-
-    //  We enter a loop where we skip over spaces until we hit the end of
-    //  this reader or a non-space value. The return indicates whether we
-    //  hit the non-space (true) or the end (false).
-    while (true)
-    {
-        // Loop through the current chars in the buffer
-        while (fCharIndex < fCharsAvail)
-        {
-            //  See if its a white space char. If so, then process it. Else
-            //  we've hit a non-space and need to return.
-            if (isWhitespace(fCharBuf[fCharIndex]))
-            {
-                // Get the current char out of the buffer and eat it
-                XMLCh curCh = fCharBuf[fCharIndex++];
-
-                //  Ok, we've got some whitespace here. So we have to store
-                //  it. But we have to normalize it and update the line and
-                //  column info along the way.
-                if (curCh == chCR)
-                {
-                    fCurCol = 1;
-                    fCurLine++;
-
-                    //  If not already internalized, then convert it to an
-                    //  LF and eat any following LF.
-                    if (fSource == Source_External)
-                    {
-                        if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
-                        {
-                            if (fCharBuf[fCharIndex] == chLF
-                                || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
-                                fCharIndex++;
-                        }
-                    }
-                }
-                else if (curCh == chLF)                   
-                {
-                    fCurCol = 1;
-                    fCurLine++;
-                }
-                else if (curCh == chNEL || curCh == chLineSeparator)
-                {
-                    if (fXMLVersion == XMLV1_1)
-                    {
-                        ThrowXMLwithMemMgr1
-                        (
-                            TranscodingException
-                          , XMLExcepts::Reader_NelLsepinDecl
-                          , fSystemId
-                          , fMemoryManager
-                        );
-                    }
-                    else //XMLV1_0
-                    {
-                        if (fNEL)
-                        {
-                            fCurCol = 1;
-                            fCurLine++;
-                        }
-                    }
-                }
-                else
-                {
-                    fCurCol++;
-                }
             }
             else
             {
@@ -1074,31 +873,8 @@ bool XMLReader::skippedSpace()
         // Eat the character
         fCharIndex++;
 
-        if (curCh == chCR)
-        {
-            fCurLine++;
-            fCurCol = 1;
+        handleEOL((XMLCh&)curCh, false);
 
-            if (fSource == Source_External)
-            {
-                if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
-                {
-                    if (fCharBuf[fCharIndex] == chLF
-                        || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
-                        fCharIndex++;
-                }
-            }
-        }
-         else if (curCh == chLF
-                  || ((curCh == chNEL || curCh == chLineSeparator) && fNEL))
-        {
-            fCurLine++;
-            fCurCol = 1;
-        }
-         else
-        {
-            fCurCol++;
-        }
         return true;
     }
     return false;
@@ -1723,6 +1499,103 @@ XMLReader::xcodeMoreChars(          XMLCh* const            bufToFill
     fRawBufIndex += bytesEaten;
 
     return charsDone;
+}
+
+/***
+ *
+ * XML1.1
+ *
+ * 2.11 End-of-Line Handling
+ *
+ *    XML parsed entities are often stored in computer files which, for editing 
+ *    convenience, are organized into lines. These lines are typically separated 
+ *    by some combination of the characters CARRIAGE RETURN (#xD) and LINE FEED (#xA).
+ *
+ *    To simplify the tasks of applications, the XML processor MUST behave as if 
+ *    it normalized all line breaks in external parsed entities (including the document 
+ *    entity) on input, before parsing, by translating all of the following to a single 
+ *    #xA character:
+ *
+ *  1. the two-character sequence #xD #xA
+ *  2. the two-character sequence #xD #x85
+ *  3. the single character #x85
+ *  4. the single character #x2028
+ *  5. any #xD character that is not immediately followed by #xA or #x85.
+ *
+ *
+ ***/
+inline void XMLReader::handleEOL(XMLCh& curCh, bool inDecl)
+{
+    // 1. the two-character sequence #xD #xA
+    // 2. the two-character sequence #xD #x85
+    // 5. any #xD character that is not immediately followed by #xA or #x85.
+    if (curCh == chCR)
+    {
+        fCurCol = 1;
+        fCurLine++;
+
+        //
+        //  If not already internalized, then convert it to an
+        //  LF and eat any following LF.
+        //
+        if (fSource == Source_External)
+        {
+            if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
+            {
+                if ( fCharBuf[fCharIndex] == chLF              || 
+                    ((fCharBuf[fCharIndex] == chNEL) && fNEL)  )
+                {
+                    fCharIndex++;
+                }
+            }
+            curCh = chLF;
+        }
+    }
+    else if (curCh == chLF)                   
+    {
+        fCurCol = 1;
+        fCurLine++;
+    }
+    // 3. the single character #x85
+    // 4. the single character #x2028
+    else if (curCh == chNEL || curCh == chLineSeparator)
+    {
+        if (inDecl && fXMLVersion == XMLV1_1)
+        {
+
+        /***
+         * XML1.1
+         *
+         * 2.11 End-of-Line Handling
+         *  ...
+         *   The characters #x85 and #x2028 cannot be reliably recognized and translated 
+         *   until an entity's encoding declaration (if present) has been read. 
+         *   Therefore, it is a fatal error to use them within the XML declaration or 
+         *   text declaration. 
+         *
+         ***/
+            ThrowXMLwithMemMgr1
+                (
+                TranscodingException
+                , XMLExcepts::Reader_NelLsepinDecl
+                , fSystemId
+                , fMemoryManager
+                );
+        }
+
+        if (fNEL && fSource == Source_External)
+        {
+            fCurCol = 1;
+            fCurLine++;
+            curCh = chLF;
+        }
+    }
+    else
+    {
+        fCurCol++;
+    }
+
+    return;
 }
 
 XERCES_CPP_NAMESPACE_END

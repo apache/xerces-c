@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/06/14 15:18:52  peiyongz
+ * Consolidated End Of Line Handling
+ *
  * Revision 1.12  2004/06/03 15:38:27  peiyongz
  * XML1.1:  The characters #x85 and #x2028 cannot be reliably recognized
  * and translated until an entity's encoding declaration (if present) has been
@@ -223,8 +226,7 @@ public :
     XMLCh peekNextChar();
     bool skipIfQuote(XMLCh& chGotten);
     void skipPastChar(const XMLCh toSkip);
-    bool skipPastSpaces();
-    bool skipPastSpacesInDecl();
+    bool skipPastSpaces(bool inDecl = false);
     void skipToChar(const XMLCh toSkipTo);
     bool skippedChar(const XMLCh toSkip);
     bool skippedSpace();

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.36  2004/06/14 15:18:53  peiyongz
+ * Consolidated End Of Line Handling
+ *
  * Revision 1.35  2004/04/13 18:57:54  peiyongz
  * Unrelavant comment removal
  *
@@ -734,7 +737,7 @@ protected:
     // -----------------------------------------------------------------------
     bool scanCharRef(XMLCh& toFill, XMLCh& second);
     void scanComment();
-    bool scanEq();
+    bool scanEq(bool inDecl = false);
     void scanMiscellaneous();
     void scanPI();
     void scanProlog();
