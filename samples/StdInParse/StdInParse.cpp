@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/11 02:40:58  abagchi
+ * Removed StrX::transcode
+ *
  * Revision 1.3  2000/02/06 07:47:25  rahulj
  * Year 2K copyright swat.
  *
@@ -195,71 +198,3 @@ int main(int argC, char* argV[])
     return 0;
 }
 
-
-
-// ---------------------------------------------------------------------------
-//  StrX: Private helper methods
-// ---------------------------------------------------------------------------
-void StrX::transcode(const XMLCh* const toTranscode, const unsigned int len)
-{
-    // Short circuit if its a null pointer
-    if (!toTranscode || (!toTranscode[0]))
-    {
-        fLocalForm = new char[1];
-        fLocalForm[0] = 0;
-        return;
-	}
-
-    // See if our XMLCh and wchar_t as the same on this platform
-    const bool isSameSize = (sizeof(XMLCh) == sizeof(wchar_t));
-
-    //
-    //  Get the actual number of chars. If the passed len is zero, its null
-    //  terminated. Else we have to use the len.
-    //
-    wchar_t realLen = (wchar_t)len;
-    if (!realLen)
-    {
-        //
-        //  We cannot just assume we can use wcslen() because we don't know
-        //  if our XMLCh is the same as wchar_t on this platform.
-        //
-        const XMLCh* tmpPtr = toTranscode;
-        while (*(tmpPtr++))
-            realLen++;
-    }
-
-    //
-    //  If either the passed length was non-zero or our char sizes are not 
-    //  same, we have to use a temp buffer. Since this is common in these
-    //  samples, we just do it anyway.
-    //
-    wchar_t* tmpSource = new wchar_t[realLen + 1];
-    if (isSameSize)
-    {
-        memcpy(tmpSource, toTranscode, realLen * sizeof(wchar_t));
-    }
-     else
-    {
-        for (unsigned int index = 0; index < realLen; index++)
-            tmpSource[index] = (wchar_t)toTranscode[index];
-    }
-    tmpSource[realLen] = 0;
-
-    // See now many chars we need to transcode this guy
-    const unsigned int targetLen = ::wcstombs(0, tmpSource, 0);
-
-    // Allocate out storage member
-    fLocalForm = new char[targetLen + 1];
-
-    //
-    //  And transcode our temp source buffer to the local buffer. Cap it
-    //  off since the converter won't do it (because the null is beyond
-    //  where the target will fill up.)
-    //
-    ::wcstombs(fLocalForm, tmpSource, targetLen);
-    fLocalForm[targetLen] = 0;
-
-    // Don't forget to delete our temp buffer
-    delete [] tmpSource;
-}

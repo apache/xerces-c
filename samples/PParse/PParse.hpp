@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/11 02:45:15  abagchi
+ * Removed StrX::transcode
+ *
  * Revision 1.2  2000/02/06 07:47:20  rahulj
  * Year 2K copyright swat.
  *
@@ -87,12 +90,10 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-	StrX(const XMLCh* const toTranscode, const unsigned int len = 0) :
-
-        fLocalForm(0)
+    StrX(const XMLCh* const toTranscode)
     {
         // Call the private transcoding method
-        transcode(toTranscode, len);
+        fLocalForm = XMLString::transcode(toTranscode);
     }
 
     ~StrX()
@@ -111,12 +112,6 @@ public :
 
 
 private :
-    // -----------------------------------------------------------------------
-    //  Private helper methods
-    // -----------------------------------------------------------------------
-	void transcode (const XMLCh* const toTranscode, const unsigned int len);
-
-
     // -----------------------------------------------------------------------
     //  Private data members
     //

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/11 02:49:47  abagchi
+ * Removed StrX::transcode
+ *
  * Revision 1.4  2000/02/11 02:26:40  abagchi
  * Removed StrX::transcode
  *
@@ -97,7 +100,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    StrX(const XMLCh* const toTranscode, const unsigned int len = 0)
+    StrX(const XMLCh* const toTranscode)
     {
         // Call the private transcoding method
         fLocalForm = XMLString::transcode(toTranscode);
