@@ -3,6 +3,78 @@
 
 <faqs title="Building / Running FAQs">
 
+  <faq title="Why do I get compilation error saying undeclared identifier or class undedined?">
+
+    <q>Why do I get compilation error saying undeclared identifier or class undedined?</q>
+
+    <a>
+
+      <p>&XercesCName; &XercesCVersion; now supports C++ Namespace.</p>
+
+      <p>If C++ Namespace is ENABLED,
+         users' applications must namespace qualified all the &XercesCName; classes/data/variables with
+         <code>"&XercesCNamespace;::"</code> or add the <code>"using namespace &XercesCNamespace;;"</code>
+         clause.  Users also need to ensure all forward declarations are properly qualified or scope.
+         For example
+      </p>
+
+<source>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;xercesc/sax/HandlerBase.hpp&gt;
+
+// indicate using &XercesCName; namespace in general
+using namespace &XercesCNamespace;;
+
+// need to properly scope any forward declarations
+namespace &XercesCNamespace; {
+class AttributeList;
+}
+
+// or namespace qualifier the forward declarations
+class &XercesCNamespace;::ErrorHandler;
+
+class MySAXHandlers : public HandlerBase
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Handlers for the SAX DocumentHandler interface
+    // -----------------------------------------------------------------------
+    void startElement(const XMLCh* const name, AttributeList&amp; attributes);
+    void characters(const XMLCh* const chars, const unsigned int length);
+:
+:
+};
+</source>
+
+      <p>See the Programming Guide <jump href="program-others.html#CPPNamespace">
+         Using C++ Namespace</jump> for more details.
+      </p>
+
+    </a>
+  </faq>
+
+  <faq title="Why do I get compilation error saying DOMDocument was declared twice using
+              Microsoft Visual C++.Net?">
+
+    <q>Why do I get compilation error saying DOMDocument was declared twice using
+              Microsoft Visual C++.Net?</q>
+
+    <a>
+
+      <p>Your application somehow has picked up the Microsoft SDK header <code>Msxml.h</code>
+         which has its own typedef of <code>DOMDocument</code>.   This confuses
+         with the &XercesCName; &XercesCVersion; <code>&XercesCNamespace;::DOMDocument</code>
+         and thus lead to the compilation errors.</p>
+
+      <p> Qualifier the use of DOMDocument in your application explicitly e.g.
+         <br/><br/><code>XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * fDoc;</code><br/><br/>
+         will eliminate these compilation problems.
+      </p>
+
+    </a>
+  </faq>
+
   <faq title="Why do I get Internal Compiler Error when compiling &XercesCName; for a 64bit target with gcc?">
     <q>Why do I get Internal Compiler Error when compiling &XercesCName; for a 64bit target with gcc?</q>
     <a>

@@ -10,11 +10,11 @@
           specific capabilities. For example,
          </p>
 <source>
-       #if _XERCES_VERSION >= 20304
-         // code specific to Xerces-C++ version 2.3.4
-       #else
-         // old code here...
-       #endif
+#if _XERCES_VERSION >= 20304
+  // code specific to Xerces-C++ version 2.3.4
+#else
+  // old code here...
+#endif
 </source>
         <p>The minor and revision (patch level) numbers have two digits of resolution
            which means that '3' becomes '03' and '4' becomes '04' in this example.
@@ -237,7 +237,7 @@ parser->parse(xmlFile2);
         file can create whichever type of message loader it wants to
         use on that platform.  &XercesCName; currently has versions for the in
         memory format, the Win32 resource format, the message
-        catalog format, and ICU message loader. 
+        catalog format, and ICU message loader.
         Some of the platforms can support multiple message
         loaders, in which case a #define token is used to control
         which one is used. You can set this in your build projects to
@@ -371,65 +371,44 @@ parser->parse(xmlFile2);
     <anchor name="CPPNamespace"/>
     <s2 title="Using C++ Namespace">
 
-        <p>&XercesCName; &XercesCVersion; now supports C++ Namespace.   Header
-           <code>"xercesc/util/XercesDefs.hpp"</code> has defined the following macros
-           so that C++ namespace is used if supported by the corresponding compiler.</p>
-
-        <source>
-#if defined(XERCES_HAS_CPP_NAMESPACE)
-    #define XERCES_CPP_NAMESPACE_BEGIN    namespace &XercesCNSVersion; {
-    #define XERCES_CPP_NAMESPACE_END    }
-    #define XERCES_CPP_NAMESPACE_USE    using namespace &XercesCNSVersion;
-    #define XERCES_CPP_NAMESPACE_QUALIFIER    &XercesCNSVersion;::
-
-    namespace &XercesCNSVersion; { }
-    namespace &XercesCNamespace; = &XercesCNSVersion;;
-#else
-    #define XERCES_CPP_NAMESPACE_BEGIN
-    #define XERCES_CPP_NAMESPACE_END
-    #define XERCES_CPP_NAMESPACE_USE
-    #define XERCES_CPP_NAMESPACE_QUALIFIER
-#endif
-        </source>
+        <p>&XercesCName; &XercesCVersion; now supports C++ Namespace.</p>
 
         <p>The macro <code>XERCES_HAS_CPP_NAMESPACE</code> is defined in each Compiler
            Definition file if C++ Namespace is supported.</p>
         <p>For example in header <code>xercesc/util/Compilers/GCCDefs.hpp</code>,
            the C++ Namespace is enabled:</p>
 
-        <source>
+<source>
 // -------------------------------------------------------------------------
 // Indicate that we support C++ namespace
 // Do not define it if the compile cannot handle C++ namespace
 // -------------------------------------------------------------------------
 #define XERCES_HAS_CPP_NAMESPACE
-        </source>
+</source>
 
         <p>If C++ Namespace support is ENABLED (all the binary distributions of &XercesCName;
-           &XercesCVersion; are built with C++ Namespace enabled), users' applications
-           must namespace qualified all the &XercesCName; classes/data/variables with
-           <code>"&XercesCNamespace;::"</code> or add the <code>"using namespace &XercesCNamespace;"</code>
-           clause.</p>
+           &XercesCVersion; are built with C++ Namespace enabled),
+         users' applications must namespace qualified all the &XercesCName; classes/data/variables with
+         <code>"&XercesCNamespace;::"</code> or add the <code>"using namespace &XercesCNamespace;"</code>
+         clause.  Users also need to ensure all forward declarations are properly qualified or scope.
+         For example
+        </p>
 
-        <p>NOTE: <code>"namespace &XercesCNamespace;"</code> and <code>"namespace &XercesCNSVersion;"</code>
-           are equivalent.</p>
-
-        <p>Users can also make use of those pre-defined macro in their applications.  For example:</p>
-        <source>
+<source>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
 #include &lt;xercesc/sax/HandlerBase.hpp&gt;
 
-// need to properly scope any forward declarations
-XERCES_CPP_NAMESPACE_BEGIN
-class AttributeList;
-XERCES_CPP_NAMESPACE_END
+// indicate using &XercesCName; namespace in general
+using namespace &XercesCNamespace;;
 
-// qualifier Xerces functions individually
-void initializing() {
-    XERCES_CPP_NAMESPACE_QUALIFER XMLPlatformUtils::Initialize();
+// need to properly scope any forward declarations
+namespace &XercesCNamespace; {
+class AttributeList;
 }
 
-// or use &XercesCName; namespace in general
-XERCES_CPP_NAMESPACE_USE
+// or namespace qualifier the forward declarations
+class &XercesCNamespace;::ErrorHandler;
 
 class MySAXHandlers : public HandlerBase
 {
@@ -442,7 +421,92 @@ public:
 :
 :
 };
-        </source>
+</source>
+
+        <p>Header <code>"xercesc/util/XercesDefs.hpp"</code> has defined the following macros</p>
+
+<source>
+#if defined(XERCES_HAS_CPP_NAMESPACE)
+    #define XERCES_CPP_NAMESPACE_BEGIN    namespace &XercesCNSVersion; {
+    #define XERCES_CPP_NAMESPACE_END    }
+    #define XERCES_CPP_NAMESPACE_USE    using namespace &XercesCNSVersion;;
+    #define XERCES_CPP_NAMESPACE_QUALIFIER    &XercesCNSVersion;::
+
+    namespace &XercesCNSVersion; { }
+    namespace &XercesCNamespace; = &XercesCNSVersion;;
+#else
+    #define XERCES_CPP_NAMESPACE_BEGIN
+    #define XERCES_CPP_NAMESPACE_END
+    #define XERCES_CPP_NAMESPACE_USE
+    #define XERCES_CPP_NAMESPACE_QUALIFIER
+#endif
+</source>
+
+        <p>Users can also make use of these pre-defined macro in their applications.  For example:</p>
+<source>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;xercesc/sax/HandlerBase.hpp&gt;
+
+// indicate using &XercesCName; namespace in general
+XERCES_CPP_NAMESPACE_USE
+
+// need to properly scope any forward declarations
+XERCES_CPP_NAMESPACE_BEGIN
+class AttributeList;
+XERCES_CPP_NAMESPACE_END
+
+// or namespace qualifier the forward declarations
+class XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler;
+
+class MySAXHandlers : public HandlerBase
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Handlers for the SAX DocumentHandler interface
+    // -----------------------------------------------------------------------
+    void startElement(const XMLCh* const name, AttributeList&amp; attributes);
+    void characters(const XMLCh* const chars, const unsigned int length);
+:
+:
+};
+</source>
+
+        <p>NOTE: <code>"namespace &XercesCNamespace;"</code> and <code>"namespace &XercesCNSVersion;"</code>
+           are equivalent in this release.</p>
+
+         <p>For those users who want to selectively pick which version of API to use, they can do
+            something like this:</p>
+
+<source>
+#if _XERCES_VERSION == 20300
+  // code specific to Xerces-C++ version 2.3.0
+  new xercesc_2_3::SAXParser();
+#elif _XERCES_VERSION == 20200
+  // code specific to Xerces-C++ version 2.2.0
+  new xercesc_2_2::SAXParser();
+#else
+  // old code here...
+  new SAXParser();
+#endif
+</source>
+
+        <p>But for those who just want to call the latest API, then they should use
+           <code>&XercesCNamespace;::</code> or the macro <code>XERCES_CPP_NAMESPACE_QUALIFIER</code>
+           for source compatibility:</p>
+
+<source>
+&XercesCNamespace;
+new &XercesCNamespace;::SAXParser();
+
+//or use the macro
+new XERCES_CPP_NAMESPACE_QUALIFIER SAXParser();
+</source>
+
+        <p><code>&XercesCNamespace;</code> is a generic namespace name which will be assigned to
+           <code>xercesc_YY_ZZ</code> in each specific release, where "YY" is the Major Release Number and "ZZ" is the
+           Minor Version Number.</p>
+
     </s2>
 
 
@@ -450,15 +514,15 @@ public:
     <s2 title="Specify locale for message loader">
 
         <p>The &XercesCName; has implemented mechanism to support NLS, though
-        the current drop has only English version message file, it is capable 
+        the current drop has only English version message file, it is capable
         to support other languages once the translated version of the target
         language is available.</p>
-        
+
         <p>Application can specify the locale for the message loader in their
         very first invocation to XMLPlatformUtils::Initialize() by supplying
-        a parameter for the target locale intended. The defaul locale is "en_US".          
+        a parameter for the target locale intended. The defaul locale is "en_US".
         </p>
-    </s2>        
+    </s2>
 
 <source>
 
@@ -516,7 +580,7 @@ parser.setDoNamespaces(true);
             The DGXMLScanner handles XML documents with DOCTYPE information. It does not do any
             XMLSchema processing, which means that any schema specific attributes (e.g. schemaLocation),
             will be treated as normal element attributes. Setting schema grammar specific features/properties
-            will have no effect on its behavior (e.g. setDoSchema(true) is ignored). 
+            will have no effect on its behavior (e.g. setDoSchema(true) is ignored).
             </p>
 
 <source>
@@ -577,5 +641,5 @@ parser->setFeature(XMLUni::fgXercesSchema, doSchema);
         </s3>
 
     </s2>
-    
+
 </s1>
