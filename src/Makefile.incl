@@ -359,9 +359,9 @@ MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -W l,dll ${LDFLAGS}
 ifeq (${TRANSCODER}, ICU)
 ## OS390BATCH
     ifeq (${OS390BATCH},1)
-	ALLLIBS = "//'${LOADEXP}(IXMICUUC)'"
+	ALLLIBS = "//'${LOADEXP}(IXMI20UC)'"
     else
-	ALLLIBS = ${ICUROOT}/lib/libicuuc.x
+	ALLLIBS = ${ICUROOT}/lib/libicuuc.20.0.x
     endif
 else
 	ALLLIBS =
