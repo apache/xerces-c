@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/28 20:56:19  tng
+ * Schema: Move getTargetNamespace as virtual function in base class Grammar
+ *
  * Revision 1.4  2001/05/11 13:27:36  tng
  * Copyright update.
  *
@@ -113,6 +116,7 @@ public:
     //  Implementation of Virtual Interface
     // -----------------------------------------------------------------------
     virtual Grammar::GrammarType getGrammarType();
+    virtual const XMLCh* getTargetNamespace() const;
 
     virtual XMLElementDecl* findOrAddElemDecl
     (
@@ -184,8 +188,6 @@ public:
     //  Getter methods
     // -----------------------------------------------------------------------
     RefHash3KeysIdPoolEnumerator<SchemaElementDecl> getElemEnumerator() const;
-    const XMLCh* getTargetNamespace() const;
-    XMLCh* getTargetNamespace() ;
     RefHashTableOf<XMLAttDef>* getAttributeDeclRegistry() const;
     RefHashTableOf<ComplexTypeInfo>* getComplexTypeRegistry() const;
     DatatypeValidatorFactory* getDatatypeRegistry() const;
@@ -249,14 +251,6 @@ SchemaGrammar::getElemEnumerator() const
     return RefHash3KeysIdPoolEnumerator<SchemaElementDecl>(fElemDeclPool);
 }
 
-inline XMLCh* SchemaGrammar::getTargetNamespace() {
-    return fTargetNamespace;
-}
-
-inline const XMLCh* SchemaGrammar::getTargetNamespace() const {
-    return fTargetNamespace;
-}
-
 inline RefHashTableOf<XMLAttDef>* SchemaGrammar::getAttributeDeclRegistry() const {
 
     return fAttributeDeclRegistry;
@@ -313,6 +307,10 @@ inline void SchemaGrammar::setNamespaceScope(NamespaceScope* const nsScope) {
 // ---------------------------------------------------------------------------
 inline Grammar::GrammarType SchemaGrammar::getGrammarType() {
     return Grammar::SchemaGrammarType;
+}
+
+inline const XMLCh* SchemaGrammar::getTargetNamespace() const {
+    return fTargetNamespace;
 }
 
 // Element Decl

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/28 20:56:17  tng
+ * Schema: Move getTargetNamespace as virtual function in base class Grammar
+ *
  * Revision 1.3  2001/05/11 13:27:09  tng
  * Copyright update.
  *
@@ -101,6 +104,7 @@ public:
     //  Implementation of Virtual Interface
     // -----------------------------------------------------------------------
     virtual Grammar::GrammarType getGrammarType();
+    virtual const XMLCh* getTargetNamespace() const;
 
     virtual XMLElementDecl* findOrAddElemDecl
     (
@@ -241,6 +245,10 @@ inline void DTDGrammar::setRootElemId(unsigned int rootElemId) {
 // ---------------------------------------------------------------------------
 inline Grammar::GrammarType DTDGrammar::getGrammarType() {
     return Grammar::DTDGrammarType;
+}
+
+inline const XMLCh* DTDGrammar::getTargetNamespace() const {
+    return XMLUni::fgZeroLenString;
 }
 
 // Element Decl

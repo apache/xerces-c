@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/28 20:56:18  tng
+ * Schema: Move getTargetNamespace as virtual function in base class Grammar
+ *
  * Revision 1.4  2001/05/11 13:27:18  tng
  * Copyright update.
  *
@@ -120,6 +123,7 @@ public:
     //  Virtual Getter methods
     // -----------------------------------------------------------------------
     virtual GrammarType getGrammarType()=0;
+    virtual const XMLCh* getTargetNamespace() const =0;
 
     // Element Decl
     virtual XMLElementDecl* findOrAddElemDecl
