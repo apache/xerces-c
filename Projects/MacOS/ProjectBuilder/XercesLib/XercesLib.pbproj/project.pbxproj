@@ -51,6 +51,13 @@
 				F58FFC3E02C4ED1F01A80065,
 				F58FFC3F02C4ED1F01A80065,
 				F58FFC4002C4ED1F01A80065,
+				90FE1B2104FAE65600A80082,
+				90FE1B2204FAE65600A80082,
+				90FE1B2304FAE65600A80082,
+				90FE1B2404FAE65600A80082,
+				90FE1B2504FAE65600A80082,
+				90FE1B2604FAE65600A80082,
+				90FE1B2704FAE65600A80082,
 			);
 			isa = PBXGroup;
 			path = dom;
@@ -3419,6 +3426,12 @@
 				90EF59D304D99C0B00DC5A2D,
 				90EF59D704D99CC200DC5A2D,
 				90EF59DB04D99CF800DC5A2D,
+				90FE1B2804FAE65600A80082,
+				90FE1B2A04FAE65600A80082,
+				90FE1B2B04FAE65600A80082,
+				90FE1B2C04FAE65600A80082,
+				90FE1B2D04FAE65600A80082,
+				90FE1B2E04FAE65600A80082,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3737,6 +3750,7 @@
 				90EF59D204D99C0B00DC5A2D,
 				90EF59D604D99CC200DC5A2D,
 				90EF59DA04D99CF800DC5A2D,
+				90FE1B2904FAE65600A80082,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4951,6 +4965,90 @@
 		};
 		90F99141047B1E7800A80080 = {
 			fileRef = 90F9913F047B1E7800A80080;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90FE1B2104FAE65600A80082 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = DOMXPathEvaluator.hpp;
+			refType = 4;
+		};
+		90FE1B2204FAE65600A80082 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = DOMXPathException.cpp;
+			refType = 4;
+		};
+		90FE1B2304FAE65600A80082 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = DOMXPathException.hpp;
+			refType = 4;
+		};
+		90FE1B2404FAE65600A80082 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = DOMXPathExpression.hpp;
+			refType = 4;
+		};
+		90FE1B2504FAE65600A80082 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = DOMXPathNamespace.hpp;
+			refType = 4;
+		};
+		90FE1B2604FAE65600A80082 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = DOMXPathNSResolver.hpp;
+			refType = 4;
+		};
+		90FE1B2704FAE65600A80082 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = DOMXPathResult.hpp;
+			refType = 4;
+		};
+		90FE1B2804FAE65600A80082 = {
+			fileRef = 90FE1B2104FAE65600A80082;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90FE1B2904FAE65600A80082 = {
+			fileRef = 90FE1B2204FAE65600A80082;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90FE1B2A04FAE65600A80082 = {
+			fileRef = 90FE1B2304FAE65600A80082;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90FE1B2B04FAE65600A80082 = {
+			fileRef = 90FE1B2404FAE65600A80082;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90FE1B2C04FAE65600A80082 = {
+			fileRef = 90FE1B2504FAE65600A80082;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90FE1B2D04FAE65600A80082 = {
+			fileRef = 90FE1B2604FAE65600A80082;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90FE1B2E04FAE65600A80082 = {
+			fileRef = 90FE1B2704FAE65600A80082;
 			isa = PBXBuildFile;
 			settings = {
 			};
