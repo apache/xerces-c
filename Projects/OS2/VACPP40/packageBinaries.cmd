@@ -209,6 +209,7 @@ EXIT
               "util\Transcoders", ,
               "util\Transcoders\ICU", ,
               "util\Transcoders\Iconv", ,
+              "util\regx", ,
               "validators", ,
               "validators\common", ,
               "validators\datatype", ,

@@ -7,19 +7,19 @@
 CFG=XercesLib - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "XercesLib.mak".
-!MESSAGE
+!MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "XercesLib.mak" CFG="XercesLib - Win32 Debug"
-!MESSAGE
+!MESSAGE 
 !MESSAGE Possible choices for configuration are:
-!MESSAGE
+!MESSAGE 
 !MESSAGE "XercesLib - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "XercesLib - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE
+!MESSAGE 
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -84,7 +84,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:1.4 /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1_4D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1D.lib" /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
@@ -164,6 +164,218 @@ SOURCE=..\..\..\..\..\src\util\NetAccessors\WinSock\WinSockNetAccessor.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\NetAccessors\WinSock\WinSockNetAccessor.hpp
+# End Source File
+# End Group
+# Begin Group "regx"
+
+# PROP Default_Filter ".cpp,.hpp"
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ASCIIRangeFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ASCIIRangeFactory.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\BlockRangeFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\BlockRangeFactory.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\BMPattern.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\BMPattern.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\CharToken.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\CharToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ClosureToken.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ClosureToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ConcatToken.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ConcatToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ConditionToken.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ConditionToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\Match.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\Match.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ModifierToken.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ModifierToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\Op.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\Op.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\OpFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\OpFactory.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ParenToken.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ParenToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ParserForXMLSchema.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\ParserForXMLSchema.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RangeFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RangeFactory.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RangeToken.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RangeToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RegularExpression.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RegularExpression.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RegxDefs.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RegxParser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RegxParser.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RegxUtil.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RegxUtil.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\StringToken.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\StringToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\Token.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\Token.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\TokenFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\TokenFactory.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\TokenInc.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\UnicodeRangeFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\UnicodeRangeFactory.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\UnionToken.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\UnionToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\XMLRangeFactory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\XMLRangeFactory.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\XMLUniCharacter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\XMLUniCharacter.hpp
 # End Source File
 # End Group
 # Begin Source File
@@ -320,11 +532,11 @@ SOURCE=..\..\..\..\..\src\util\RefArrayOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\RefHashTableOf.hpp
+SOURCE=..\..\..\..\..\src\util\RefHash2KeysTableOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\RefHash2KeysTableOf.hpp
+SOURCE=..\..\..\..\..\src\util\RefHashTableOf.hpp
 # End Source File
 # Begin Source File
 
@@ -1463,15 +1675,11 @@ SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator2.cpp
 # PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDef.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDef.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDefList.hpp
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDef.hpp
 # End Source File
 # Begin Source File
 
@@ -1479,11 +1687,15 @@ SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDefList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaElementDecl.hpp
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDefList.hpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\schema\SchemaElementDecl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SchemaElementDecl.hpp
 # End Source File
 # End Group
 # End Group

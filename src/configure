@@ -1492,6 +1492,7 @@ util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
 util/NetAccessors/libWWW/Makefile \
+util/regx/Makefile \
 validators/Makefile \
 validators/common/Makefile \
 validators/datatype/Makefile \
@@ -1625,6 +1626,7 @@ util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
 util/NetAccessors/libWWW/Makefile \
+util/regx/Makefile \
 validators/Makefile \
 validators/common/Makefile \
 validators/datatype/Makefile \

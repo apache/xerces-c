@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.30  2001/03/02 20:06:19  knoaman
+# Schema: Regular expression project and configuration file changes
+#
 # Revision 1.29  2001/03/02 14:39:13  tng
 # Enabling libWWW NetAccessor support under UNIX. Tested with latest tarball of libWWW
 # (w3c-libwww-5.3.2) under RedHat Linux 6.1.  Added by Martin Kalen.
@@ -350,7 +353,7 @@ UTIL_CPP_OBJECTS = \
 
 
 all:: includes $(UTIL_CPP_OBJECTS) platforms transcoders \
-      messageloaders compilers netaccessors
+      messageloaders compilers netaccessors regx
 
 includes:: pubheaders $(C_FILES)
 	cd Platforms ; $(MAKE) $@ ; cd ..
@@ -358,6 +361,7 @@ includes:: pubheaders $(C_FILES)
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd NetAccessors/$(NETACCESSORMODULE) ; $(MAKE) $@ ; cd ../..
 	cd Compilers ; $(MAKE) $@ ; cd ..
+	cd regx ; $(MAKE) $@ ; cd ..
 
 
 platforms::
@@ -389,6 +393,9 @@ compilers::
 netaccessors::
 	cd NetAccessors/$(NETACCESSORMODULE) ; $(MAKE) ; cd ../..
 
+regx::
+	cd regx ; $(MAKE) ; cd ..
+
 
 pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)
@@ -408,6 +415,7 @@ clean::
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd NetAccessors/$(NETACCESSORMODULE) ; $(MAKE) $@ ; cd ../..
 	cd Compilers ; $(MAKE) $@ ; cd ..
+	cd regx ; $(MAKE) $@ ; cd ..
 
 
 
@@ -421,6 +429,7 @@ distclean:: clean
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd NetAccessors/$(NETACCESSORMODULE) ; $(MAKE) $@ ; cd ../..
 	cd Compilers ; $(MAKE) $@ ; cd ..
+	cd regx ; $(MAKE) $@ ; cd ..
 
 
 install::
@@ -430,3 +439,4 @@ install::
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd Compilers ; $(MAKE) $@ ; cd ..
+	cd regx ; $(MAKE) $@ ; cd ..

@@ -205,6 +205,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         util/Platforms/Solaris
         util/Platforms/Tandem
         util/Platforms/Win32
+	util/regx
         util/Transcoders
         util/Transcoders/ICU
         util/Transcoders/Iconv
@@ -475,6 +476,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/include/util/Platforms/Solaris");
     psystem ("mkdir $targetdir/include/util/Platforms/Tandem");
     psystem ("mkdir $targetdir/include/util/Platforms/Win32");
+    psystem ("mkdir $targetdir/include/util/regx");
     psystem ("mkdir $targetdir/include/util/Transcoders");
     psystem ("mkdir $targetdir/include/util/Transcoders/ICU");
     psystem ("mkdir $targetdir/include/util/Transcoders/Iconv");
@@ -618,6 +620,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Solaris/*.hpp $targetdir/include/util/Platforms/Solaris");
     psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Tandem/*.hpp $targetdir/include/util/Platforms/Tandem");
     psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Win32/*.hpp $targetdir/include/util/Platforms/Win32");
+    psystem("cp -Rf $XERCESCROOT/src/util/regx/*.hpp $targetdir/include/util/regx");
     psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/*.hpp $targetdir/include/util/Transcoders");
     psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/ICU/*.hpp $targetdir/include/util/Transcoders/ICU");
     psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/Iconv/*.hpp $targetdir/include/util/Transcoders/Iconv");
