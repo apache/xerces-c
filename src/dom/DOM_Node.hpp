@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/11 02:17:19  chchou
+ * Fix bug # 29 to have the spefified flag set correctly for AttrImpl.
+ *
  * Revision 1.6  2000/03/02 19:53:56  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -648,6 +651,7 @@ protected:
     friend class NodeIteratorImpl;
     friend class DOM_NamedNodeMap;
     friend class DOM_NodeList;
+    friend class DOMParser;
 };
 
 

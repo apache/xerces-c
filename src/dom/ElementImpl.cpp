@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/03/11 02:17:19  chchou
+ * Fix bug # 29 to have the spefified flag set correctly for AttrImpl.
+ *
  * Revision 1.9  2000/03/02 19:54:00  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -252,7 +255,7 @@ AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
 
 
 
-void ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
+AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
 {
     if (readOnly)
         throw DOM_DOMException(
@@ -268,6 +271,7 @@ void ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
 	if (oldAttr->nodeRefCount == 0)
 	    NodeImpl::deleteIf(oldAttr);
     }
+    return newAttr;
 };
 
 
@@ -323,7 +327,7 @@ DOMString ElementImpl::getAttributeNS(const DOMString &fNamespaceURI,
 }
 
 
-void ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
+AttrImpl *ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &qualifiedName, const DOMString &fValue)
 {
     if (readOnly)
@@ -340,6 +344,7 @@ void ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
 	if (oldAttr->nodeRefCount == 0)
 	    NodeImpl::deleteIf(oldAttr);
     }
+    return newAttr;
 }
 
 

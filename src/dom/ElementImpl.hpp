@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/11 02:17:19  chchou
+ * Fix bug # 29 to have the spefified flag set correctly for AttrImpl.
+ *
  * Revision 1.6  2000/03/02 19:54:01  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -124,7 +127,7 @@ public:
     virtual DOMString getTagName();
     virtual void removeAttribute(const DOMString &name);
     virtual AttrImpl * removeAttributeNode(AttrImpl * oldAttr);
-    virtual void setAttribute(const DOMString &name, const DOMString &value);
+    virtual AttrImpl *setAttribute(const DOMString &name, const DOMString &value);
     virtual AttrImpl *setAttributeNode(AttrImpl *newAttr);
     virtual void setNodeValue(const DOMString &arg);
     virtual void setReadOnly(bool readOnly, bool deep);
@@ -132,7 +135,7 @@ public:
     //Introduced in DOM Level 2
     virtual DOMString getAttributeNS(const DOMString &namespaceURI,
 	const DOMString &localName);
-    virtual void setAttributeNS(const DOMString &namespaceURI,
+    virtual AttrImpl *setAttributeNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName, const DOMString &value);
     virtual void removeAttributeNS(const DOMString &namespaceURI,
 	const DOMString &localName);

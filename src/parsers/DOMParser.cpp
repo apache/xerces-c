@@ -60,6 +60,9 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.12  2000/03/11 02:17:35  chchou
+* Fix bug # 29 to have the spefified flag set correctly for AttrImpl.
+*
 * Revision 1.11  2000/03/03 01:29:33  roddey
 * Added a scanReset()/parseReset() method to the scanner and
 * parsers, to allow for reset after early exit from a progressive parse.
@@ -122,6 +125,8 @@
 #include <internal/XMLScanner.hpp>
 #include <validators/DTD/DTDValidator.hpp>
 #include <parsers/DOMParser.hpp>
+#include <dom/ElementImpl.hpp>
+#include <dom/AttrImpl.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -573,6 +578,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
             namespaceURI = DOMString(buf.getRawBuffer());
         }
         elem = fDocument.createElementNS(namespaceURI, elemDecl.getFullName());
+        ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
         for (unsigned int index = 0; index < attrCount; ++index) {
             const static XMLCh XMLNS[] = {
             chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull
@@ -586,14 +592,17 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
                 fValidator -> getURIText(attrURIId, buf);   //get namespaceURI
                 namespaceURI = DOMString(buf.getRawBuffer());
             }
-            elem.setAttributeNS(namespaceURI, oneAttrib -> getQName(),
+            AttrImpl *attr = elemImpl->setAttributeNS(namespaceURI, oneAttrib -> getQName(),
                 oneAttrib -> getValue());
+            attr->setSpecified(oneAttrib->getSpecified());
         }
     } else {    //DOM Level 1
         elem = fDocument.createElement(elemDecl.getFullName());
+        ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
         for (unsigned int index = 0; index < attrCount; ++index) {
             const XMLAttr* oneAttrib = attrList.elementAt(index);
-            elem.setAttribute(oneAttrib->getName(), oneAttrib->getValue());
+            AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
+            attr->setSpecified(oneAttrib->getSpecified());
         }
     }
     
