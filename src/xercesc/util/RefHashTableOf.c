@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.17  2004/11/18 01:35:20  cargilld
+ * Performance improvement to utility classes from Christian Will.  Avoid unnecessary checks and replace with assert calls.
+ *
  * Revision 1.16  2004/09/08 13:56:23  peiyongz
  * Apache License Version 2.0
  *
@@ -113,6 +116,7 @@
 #endif
 
 #include <xercesc/util/NullPointerException.hpp>
+#include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -271,8 +275,7 @@ orphanKey(const void* const key)
     // Hash the key
     TVal* retVal = 0;
     unsigned int hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     //
     //  Search the given bucket for this key. Keep up with the previous
@@ -476,8 +479,7 @@ template <class TVal> void RefHashTableOf<TVal>::rehash()
             nextElem = curElem->fNext;
 
             unsigned int hashVal = fHash->getHashVal(curElem->fKey, fHashModulus, fMemoryManager);
-            if (hashVal > fHashModulus)
-                ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+            assert(hashVal < fHashModulus);
             
             RefHashTableBucketElem<TVal>* newHeadElem = fBucketList[hashVal];
             
@@ -498,8 +500,7 @@ findBucketElem(const void* const key, unsigned int& hashVal)
 {
     // Hash the key
     hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -518,8 +519,7 @@ findBucketElem(const void* const key, unsigned int& hashVal) const
 {
     // Hash the key
     hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     const RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -539,8 +539,7 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
 {
     // Hash the key
     hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     //
     //  Search the given bucket for this key. Keep up with the previous

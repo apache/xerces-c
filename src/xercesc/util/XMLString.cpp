@@ -26,6 +26,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <assert.h>
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
@@ -296,10 +297,9 @@ void XMLString::cut(        XMLCh* const    toCutFrom
 
 unsigned int XMLString::hash(   const   char* const     tohash
                                 , const unsigned int    hashModulus
-                                , MemoryManager* const  manager)
+                                , MemoryManager* const)
 {    
-    if (!hashModulus)
-        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus, manager);
+    assert(hashModulus);
 
     unsigned int hashVal = 0;
     if (tohash) {
@@ -1099,10 +1099,9 @@ bool XMLString::copyNString(        XMLCh* const    target
 
 unsigned int XMLString::hash(   const   XMLCh* const    tohash
                                 , const unsigned int    hashModulus
-                                , MemoryManager* const  manager)
-{    
-    if (!hashModulus)
-        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus, manager);
+                                , MemoryManager* const)
+{  
+    assert(hashModulus);
 
     unsigned int hashVal = 0;
     if (tohash) {
@@ -1195,10 +1194,9 @@ int XMLString::patternMatch(  const XMLCh* const    toSearch
 unsigned int XMLString::hashN(  const   XMLCh* const    tohash
                                 , const unsigned int    n
                                 , const unsigned int    hashModulus
-                                , MemoryManager* const  manager)
+                                , MemoryManager* const)
 {
-    if (!hashModulus)
-        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus, manager);
+    assert(hashModulus);
 
     unsigned int hashVal = 0;
     if (tohash) {

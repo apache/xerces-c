@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2004/11/18 01:35:20  cargilld
+ * Performance improvement to utility classes from Christian Will.  Avoid unnecessary checks and replace with assert calls.
+ *
  * Revision 1.9  2004/09/08 13:56:23  peiyongz
  * Apache License Version 2.0
  *
@@ -48,6 +51,7 @@
 #endif
 
 #include <xercesc/util/NullPointerException.hpp>
+#include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -219,8 +223,7 @@ findBucketElem(const void* const key, unsigned int& hashVal)
 {
     // Hash the key
     hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     ValueHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -239,8 +242,7 @@ findBucketElem(const void* const key, unsigned int& hashVal) const
 {
     // Hash the key
     hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     const ValueHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -260,8 +262,7 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
 {
     // Hash the key
     hashVal = fHash->getHashVal(key, fHashModulus);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     //
     //  Search the given bucket for this key. Keep up with the previous

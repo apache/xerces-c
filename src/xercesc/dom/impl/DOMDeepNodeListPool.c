@@ -27,6 +27,8 @@
 #include <xercesc/dom/impl/DOMDeepNodeListPool.hpp>
 #endif
 
+#include <assert.h>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 
@@ -362,8 +364,7 @@ findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* con
 {
     // Hash the key
     hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     DOMDeepNodeListPoolTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -398,9 +399,8 @@ findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* con
 {
     // Hash the key
     hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
-
+    assert(hashVal < fHashModulus);
+    
     // Search that bucket for the key
     const DOMDeepNodeListPoolTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)

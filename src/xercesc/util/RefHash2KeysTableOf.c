@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.12  2004/11/18 01:35:20  cargilld
+ * Performance improvement to utility classes from Christian Will.  Avoid unnecessary checks and replace with assert calls.
+ *
  * Revision 1.11  2004/09/22 11:14:22  amassari
  * Reorder initialization of variables in constructor
  *
@@ -76,6 +79,7 @@
 #endif
 
 #include <xercesc/util/NullPointerException.hpp>
+#include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -218,9 +222,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void
 {
     // Hash the key
     unsigned int hashVal = fHash->getHashVal(key1, fHashModulus);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
-
+    assert(hashVal < fHashModulus);
     //
     //  Search the given bucket for this key. Keep up with the previous
     //  element so we can patch around it.
@@ -337,8 +339,7 @@ findBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
 {
     // Hash the key
     hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -357,8 +358,7 @@ findBucketElem(const void* const key1, const int key2, unsigned int& hashVal) co
 {
     // Hash the key
     hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     const RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -378,8 +378,7 @@ removeBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
 {
     // Hash the key
     hashVal = fHash->getHashVal(key1, fHashModulus);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     //
     //  Search the given bucket for this key. Keep up with the previous

@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.14  2004/11/18 01:35:20  cargilld
+ * Performance improvement to utility classes from Christian Will.  Avoid unnecessary checks and replace with assert calls.
+ *
  * Revision 1.13  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -79,6 +82,7 @@
 #endif
 
 #include <xercesc/util/NullPointerException.hpp>
+#include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -390,8 +394,7 @@ findBucketElem(const void* const key1, const int key2, const int key3, unsigned 
 {
     // Hash the key
     hashVal = fHash->getHashVal(key1, fHashModulus, fMemoryManager);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     RefHash3KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
@@ -410,8 +413,7 @@ findBucketElem(const void* const key1, const int key2, const int key3, unsigned 
 {
     // Hash the key
     hashVal = fHash->getHashVal(key1, fHashModulus);
-    if (hashVal > fHashModulus)
-        ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey, fMemoryManager);
+    assert(hashVal < fHashModulus);
 
     // Search that bucket for the key
     const RefHash3KeysTableBucketElem<TVal>* curElem = fBucketList[hashVal];
