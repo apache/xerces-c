@@ -280,7 +280,6 @@ creating validators/DTD/Makefile
 creating validators/schema/Makefile
 creating framework/Makefile
 creating dom/Makefile
-creating idom/Makefile
 creating parsers/Makefile
 creating internal/Makefile
 creating sax/Makefile
