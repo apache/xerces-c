@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/12/12 19:30:48  peiyongz
+ * Message file name changed.
+ *
  * Revision 1.7  2002/11/12 17:24:58  tng
  * DOM Message: add new domain for DOM Messages.
  *
@@ -257,7 +260,7 @@ void CppSrcFormatter::startOutput(  const   XMLCh* const    locale
     const unsigned int bufSize = 4095;
     XMLCh tmpBuf[bufSize + 1];
 
-    swprintf(tmpBuf, L"%s/%s_%s.hpp", outPath, L"CppErrMsgs", locale);
+    swprintf(tmpBuf, L"%s/%s_%s.hpp", outPath, L"XercesMessages", locale);
     fOutFl = _wfopen(tmpBuf, L"wt");
     if (!fOutFl)
     {

@@ -527,7 +527,7 @@
 				Name="MsgLoaders"
 				Filter=".cpp,.hpp">
 				<File
-					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\CppErrMsgs_EN_US.hpp">
+					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\XercesMessages_en_US.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.cpp">

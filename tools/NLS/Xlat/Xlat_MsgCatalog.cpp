@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/12/12 19:30:48  peiyongz
+ * Message file name changed.
+ *
  * Revision 1.7  2002/11/08 17:06:15  peiyongz
  * to build -miconv on hpux
  *
@@ -209,7 +212,7 @@ void MsgCatFormatter::startOutput(  const   XMLCh* const    locale
     const unsigned int bufSize = 4095;
     XMLCh tmpBuf[bufSize + 1];
 
-    swprintf(tmpBuf, L"%s/%s_%s.Msg", outPath, L"XMLMsgCat", locale);
+    swprintf(tmpBuf, L"%s/%s_%s.Msg", outPath, L"XercesMessages", locale);
     fOutFl = _wfopen(tmpBuf, L"wt");
     if (!fOutFl)
     {

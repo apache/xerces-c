@@ -186,7 +186,7 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\CppErrMsgs_EN_US.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\XercesMessages_en_US.hpp
 # End Source File
 # Begin Source File
 
