@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/07/25 19:07:42  peiyongz
+ * Fix to AIX compilation error: The function abs must have a prototype.
+ *
  * Revision 1.6  2001/07/24 13:58:11  peiyongz
  * XMLDouble and related supporting methods from XMLBigInteger/XMLBigDecimal
  *
@@ -137,7 +140,7 @@ XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent)
     {
         if (fScale >= (unsigned int)addExponent)
         {
-            fScale -= addExponent;
+            fScale -= addExponent;   //decrease scale
         }
         else
         {
@@ -148,7 +151,8 @@ XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent)
     }
     else // addExponent <= 0
     {
-        fScale += abs(addExponent);
+        //fScale += abs(addExponent);
+        fScale -= addExponent;    //increase scale
     }
 
 }

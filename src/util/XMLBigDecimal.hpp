@@ -84,6 +84,10 @@ public:
 
     XMLBigDecimal(const XMLBigDecimal& toCopy);
 
+	/**
+	 * Constructs a newly allocated <code>XMLBigDecimal</code> object 
+	 * from an existing XMLBigDecimal with an extra Exponent.
+	 */
     XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent);
 
     static void           parseBigDecimal(const XMLCh* const strValue
