@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/04/18 23:54:29  roddey
+ * Got rid of some foward references to no longer used classes.
+ *
  * Revision 1.4  2000/03/02 19:54:28  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -80,12 +83,6 @@
 
 #include <util/XercesDefs.hpp>
 #include <util/StringPool.hpp>
-
-#if defined(XERCES_DEBUG)
-class TextOutputStream;
-class XMLValidator;
-#endif
-
 class XMLElementDecl;
 
 //
@@ -228,17 +225,6 @@ public :
         , const unsigned int    xmlNSId
     );
 
-
-    // -----------------------------------------------------------------------
-    //  Debug only stuff
-    // -----------------------------------------------------------------------
-    #if defined(XERCES_DEBUG)
-    void dumpStacks
-    (
-                TextOutputStream&   target
-        , const XMLValidator&       srcPools
-    );
-    #endif
 
 private :
     // -----------------------------------------------------------------------
