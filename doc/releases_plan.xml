@@ -5,7 +5,7 @@
 
 <s2 title="&XercesCName; Future Releases Plan">
 <p>This document highlights the release plan for &XercesCName;.</p>
-<s3 title="Current Status"><p>&XercesCName; 2.1.0 - released on August 23, 2002.</p></s3>
+<s3 title="Current Status"><p>&XercesCName; 2.1.0 - released on August 26, 2002.</p></s3>
 <s3 title="Next Target Release"><p>&XercesCName; 2.2.0 - plan to be released by the end of this year.</p></s3>
 <s3 title="&XercesCName; Features list">
 <p> The following table lists the TODO items for &XercesCName;.  It does not include fixing
@@ -30,7 +30,42 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>SAX 2.0.1</td>
+        <td>More DOM Level 3 Core Support</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Schema 1.0 Errata</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>NLS messages</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Static Library Build</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Selectable Component Build (Xerces-C++ Lite)</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Use C++ namespace</td>
         <td></td>
         <td></td>
         <td></td>
@@ -51,21 +86,7 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>More DOM Level 3 Core Support</td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td>NLS messages</td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td>Use C++ namespace</td>
+        <td>SAX 2.0.1</td>
         <td></td>
         <td></td>
         <td></td>
