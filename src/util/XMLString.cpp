@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/06/12 22:36:30  andyh
+ * Fixed error in XMLSTring::trim, reported by Michele Laghi
+ *
  * Revision 1.9  2000/05/15 22:31:22  andyh
  * Replace #include<memory.h> with <string.h> everywhere.
  *
@@ -1076,13 +1079,13 @@ void XMLString::trim(XMLCh* const toTrim)
     unsigned int skip, scrape;
     for (skip = 0; skip < len; skip++)
     {
-        if (XMLPlatformUtils::fgTransService->isSpace(toTrim[skip]))
+        if (!XMLPlatformUtils::fgTransService->isSpace(toTrim[skip]))
             break;
     }
 
     for (scrape = len; scrape > skip; scrape--)
     {
-        if (XMLPlatformUtils::fgTransService->isSpace(toTrim[scrape - 1]))
+        if (!XMLPlatformUtils::fgTransService->isSpace(toTrim[scrape - 1]))
             break;
     }
 
