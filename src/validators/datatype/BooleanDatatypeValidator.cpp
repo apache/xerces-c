@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/06/22 16:26:01  peiyongz
+ * fix: redefinition of SIZE
+ *
  * Revision 1.5  2001/05/29 19:49:33  tng
  * Schema: Constraint Checking Fix in datatypeValidators.  By Pei Yong Zhang.
  *
@@ -81,7 +84,7 @@
 #include <validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
 
-const int   SIZE = 4;
+const int   ARRAYSIZE = 4;
 const XMLCh fgValueSpace[][32] =
 {
     { chLatin_f, chLatin_a, chLatin_l, chLatin_s, chLatin_e, chNull },
@@ -171,13 +174,13 @@ void BooleanDatatypeValidator::checkContent( const XMLCh* const content, bool as
         return;
 
     int   i = 0;
-    for ( ; i < SIZE; i++ )
+    for ( ; i < ARRAYSIZE; i++ )
     {
         if ( XMLString::compareString(content, fgValueSpace[i]) ==0 )
             break;
     }
 
-    if (i == SIZE)
+    if (i == ARRAYSIZE)
         ThrowXML(InvalidDatatypeValueException, XMLExcepts::CM_UnaryOpHadBinType);
         //Not valid boolean type
 

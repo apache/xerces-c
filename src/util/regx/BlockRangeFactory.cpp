@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/06/22 16:26:27  peiyongz
+ * fix: redefinition of SIZE
+ *
  * Revision 1.3  2001/05/11 13:26:40  tng
  * Copyright update.
  *
@@ -99,8 +102,8 @@ bool BlockRangeFactory::fKeywordsInitialized = false;
 // ---------------------------------------------------------------------------
 //  Local static data
 // ---------------------------------------------------------------------------
-const int   SIZE = 68;
-const XMLCh fgBlockNames[][SIZE] =
+const int   BLOCKNAMESIZE = 68;
+const XMLCh fgBlockNames[][BLOCKNAMESIZE] =
 {
     { chLatin_B, chLatin_a, chLatin_s, chLatin_i, chLatin_c, chSpace, chLatin_L, chLatin_a,
       chLatin_t, chLatin_i, chLatin_n,  chNull },
@@ -317,7 +320,7 @@ void BlockRangeFactory::buildRanges() {
     RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
     TokenFactory* tokFactory = rangeTokMap->getTokenFactory();
 
-    for (int i=0; i < SIZE; i++) {
+    for (int i=0; i < BLOCKNAMESIZE; i++) {
 
 		RangeToken* tok = tokFactory->createRange();
         tok->addRange(blockRanges[i*2], blockRanges[(i*2)+1]);
@@ -342,7 +345,7 @@ void BlockRangeFactory::initializeKeywordMap() {
 
 	RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
 
-	for (int i=0; i< SIZE; i++) {
+	for (int i=0; i< BLOCKNAMESIZE; i++) {
         rangeTokMap->addKeywordMap(fgBlockNames[i], fgBlockCategory);
     }
 
