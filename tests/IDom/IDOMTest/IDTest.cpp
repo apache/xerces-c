@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/04/01 21:04:00  tng
+ * According to DOM spec, setNodeValue by default is no-op.
+ *
  * Revision 1.5  2002/03/14 21:59:29  tng
  * Run methods test[NodeType] in the IDOMTest and other fixes.
  *
@@ -406,13 +409,10 @@ bool IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
     XMLString::transcode("entityReferenceText information", tempStr, 3999);
 
     // The following setNodeValue tests are not invalid
-    // According to DOM spec, exception is raised only if the node is readonly, otherwise should be no-op.
+    // According to DOM spec, if the node value is defined to be null in the DOM spec, setting it has no effect.
+    // Only those node type that are supposed to have node value, exception will be raised if the node is readonly.
     // EXCEPTIONSTEST(docFirstElement->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 6);
-
-    EXCEPTIONSTEST(docReferenceEntity->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 7);
-
-    // The following setNodeValue tests are not invalid
-    // According to DOM spec, exception is raised only if the node is readonly, otherwise should be no-op.
+    // EXCEPTIONSTEST(docReferenceEntity->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 7);
     // EXCEPTIONSTEST(docEntity->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 8);
     // EXCEPTIONSTEST(doc->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 9);
     // EXCEPTIONSTEST(docDocType->setNodeValue(tempStr), IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 10);

@@ -935,9 +935,9 @@ DOM reference counted memory alloction statistics:
     total NamedNodeMaps:    37
 DOM reference counted memory alloction statistics:
     live  string handles:   0
-    total string handles:   240
+    total string handles:   239
     live  string buffers:   0
-    total string buffers:   271
+    total string buffers:   270
     live  nodeImpls:        0
     total nodeImpls:        220
     live  NamedNodeMaps:    0

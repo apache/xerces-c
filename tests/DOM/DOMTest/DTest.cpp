@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2002/04/01 21:03:44  tng
+ * According to DOM spec, setNodeValue by default is no-op.
+ *
  * Revision 1.16  2002/02/01 22:43:17  peiyongz
  * sane_include
  *
@@ -349,13 +352,10 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
     EXCEPTIONSTEST(doc.replaceChild(docCDATASection, docFirstElement), DOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 5);
 
     // The following setNodeValue tests are not invalid
-    // According to DOM spec, exception is raised only if the node is readonly, otherwise should be no-op.
+    // According to DOM spec, if the node value is defined to be null in the DOM spec, setting it has no effect.
+    // Only those node type that are supposed to have node value, exception will be raised if the node is readonly.
     // EXCEPTIONSTEST(docFirstElement.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 6);
-
-    EXCEPTIONSTEST(docReferenceEntity.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 7);
-
-    // The following setNodeValue tests are not invalid
-    // According to DOM spec, exception is raised only if the node is readonly, otherwise should be no-op.
+    // EXCEPTIONSTEST(docReferenceEntity.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 7);
     // EXCEPTIONSTEST(docEntity.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 8);
     // EXCEPTIONSTEST(doc.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 9);
     // EXCEPTIONSTEST(docDocType.setNodeValue("This shouldn't work!" ), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 10);

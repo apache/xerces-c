@@ -274,8 +274,6 @@ IDOM_Node *IDNodeImpl::replaceChild(IDOM_Node *newChild, IDOM_Node *oldChild)
 
 void IDNodeImpl::setNodeValue(const XMLCh *val)
 {
-    if (isReadOnly())
-        throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
     // Default behavior is to do nothing, overridden in some subclasses
 };
 

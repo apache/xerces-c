@@ -362,9 +362,6 @@ NodeImpl *NodeImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
 
 void NodeImpl::setNodeValue(const DOMString &val)
 {
-    if (isReadOnly())
-        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
-                               null);
     // Default behavior is to do nothing, overridden in some subclasses
 };
 
