@@ -1839,7 +1839,10 @@ Grammar* SGXMLScanner::loadGrammar(const   InputSource& src
     try
     {
         fGrammarResolver->cacheGrammarFromParse(false);
-        fGrammarResolver->useCachedGrammarInParse(false);
+		// if the new grammar has to be cached, better use the already cached
+		// grammars, or the an exception will be thrown when caching an already
+		// cached grammar
+        fGrammarResolver->useCachedGrammarInParse(toCache);
         fRootGrammar = 0;
 
         if (fValScheme == Val_Auto) {
