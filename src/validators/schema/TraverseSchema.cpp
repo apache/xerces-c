@@ -4646,7 +4646,8 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
         }
         else if (childName.equals(SchemaSymbols::fgELT_ALL)) {
 
-            specNode = checkMinMax(traverseAll(childElem), childElem, All_Group);
+            specNode = traverseAll(childElem);
+            checkMinMax(specNode, childElem, All_Group);
             attrNode = XUtil::getNextSiblingElement(childElem);
         }
         else if (isAttrOrAttrGroup(childElem)) {
