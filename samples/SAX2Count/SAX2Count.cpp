@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.3  2000/08/09 22:46:06  jpolast
+* replace occurences of SAXCount with SAX2Count
+*
 * Revision 1.2  2000/08/09 22:40:15  jpolast
 * updates for changes to sax2 core functionality.
 *
@@ -80,7 +83,7 @@
 void usage()
 {
     cout << "\nUsage:\n"
-            "    SAXCount [options] <XML file>\n\n"
+            "    SAX2Count [options] <XML file>\n\n"
             "Options:\n"
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Disable namespace processing. Defaults to on.\n\n"
