@@ -167,25 +167,21 @@ endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
-
-    ifeq (${CXX}, xlC_r)
-        CMP= -c ${CXXFLAGS} -qnotempinc
-        CC=${COMPILER} -D${PLATFORM}
-        LINK =  ${COMPILER} ${LDFLAGS}
-
-        ifeq (${BITSTOBUILD}, 64)                                   
-	    EXTRA_LINK_OPTIONS=-bmaxdata:0x80000000000
-        else
-	    EXTRA_LINK_OPTIONS=-bmaxdata:0x80000000
-        endif
-    else
-        CMP= -c ${CXXFLAGS}
-        CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
-        LINK =  ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
-        PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
-        EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
-    endif
+  ifeq (${COMPILER}, xlC_r)
+    CMP= -c ${CXXFLAGS} -qnotempinc
+    CC= ${COMPILER} -c -D${PLATFORM}
+    LINK =  ${COMPILER} -D${PLATFORM} ${LDFLAGS}
+    PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
+    EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
     SHLIBSUFFIX=.so
+  else
+    CMP= -c ${CXXFLAGS}
+    CC= ${COMPILER} -c -D${PLATFORM} -D_REENTRANT -fpic
+    LINK =  ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
+    PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib
+    EXTRA_LINK_OPTIONS=-lc ${EXTRA_LIBS}
+    SHLIBSUFFIX=.so
+  endif
 endif
 
 #=============== QNX SPECIFIC OPTIONS =========================
