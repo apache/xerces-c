@@ -794,13 +794,25 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
         }
 
         if (getFragment())
-        {
             delete [] fFragment;
+
+        //make sure that there is something following the '#'
+        if (index > start)
+        {
+            fFragment = new XMLCh[index - start + 1];
+            XMLString::subString(fFragment, uriSpec, start, index);
         }
-
-        fFragment = new XMLCh[index - start + 1];
-        XMLString::subString(fFragment, uriSpec, start, index);
-
+        else 
+        {
+            // RFC 2396, 4.0. URI Reference
+            // URI-reference = [absoulteURI | relativeURI] [# fragment]
+            //
+            // RFC 2396, 4.1. Fragment Identifier
+            // fragment = *uric 
+            // 
+            // empty fragment is valid
+            fFragment = 0;
+        }
     }
 
 }
