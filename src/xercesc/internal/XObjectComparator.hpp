@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/10/31 22:15:42  peiyongz
+ * dumpContent
+ *
  * Revision 1.1  2003/10/29 16:14:15  peiyongz
  * XObjectComparator/XTemplateComparator
  *
@@ -115,6 +118,11 @@ public:
  *   DTDGrammar
  *
  ***********************************************************/   
+    static void dumpContent
+                (
+                    XMLGrammarPoolImpl* const
+                );
+
     static bool isEquivalent
                 (
                     XMLGrammarPoolImpl* const

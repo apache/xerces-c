@@ -57,6 +57,9 @@
 /*
  *
  * $Log$
+ * Revision 1.2  2003/10/31 22:15:42  peiyongz
+ * dumpContent
+ *
  * Revision 1.1  2003/10/29 16:14:15  peiyongz
  * XObjectComparator/XTemplateComparator
  *
@@ -70,6 +73,8 @@
 #include <xercesc/internal/XObjectComparator.hpp>
 #include <xercesc/internal/XTemplateComparator.hpp>
 
+#include <stdio.h>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 /**********************************************************
@@ -82,6 +87,34 @@ XERCES_CPP_NAMESPACE_BEGIN
  *   DTDGrammar
  *
  ***********************************************************/   
+void XObjectComparator::dumpContent(XMLGrammarPoolImpl* const gramPool)
+                                   
+{
+    RefHashTableOf<Grammar>*  gramReg = gramPool->fGrammarRegistry;
+    RefHashTableOfEnumerator<Grammar> eNum(gramReg);
+    int itemNumber = 0;        
+    while (eNum.hasMoreElements())
+    {
+        eNum.nextElement();
+        itemNumber++;
+    }
+
+    printf("itemNumber = <%d>\n", itemNumber);
+
+    //Any thing in the lValue shall be found in the rValue
+    eNum.Reset();
+    while (eNum.hasMoreElements())
+    {
+        XMLCh*   key   = (XMLCh*) eNum.nextElementKey();
+        char*    keyChar = XMLString::transcode(key);
+        printf("key=<%s>\n", keyChar);
+        XMLString::release(&keyChar);
+
+        Grammar* data = (Grammar*) gramReg->get(key);
+        printf("grammarType = <%d>\n", data->getGrammarType());
+    }
+}
+
 bool XObjectComparator::isEquivalent(XMLGrammarPoolImpl* const lValue
                                    , XMLGrammarPoolImpl* const rValue)
 {
