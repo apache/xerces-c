@@ -50,4 +50,5 @@
   <external href="http://&XercesDistDir;/"                        label="Download"/>
   <external href="http://xml.apache.org/websrc/cvsweb.cgi/xml-xerces/c/"     label="CVS Repository"/>
   <external href="http://archive.covalent.net "                   label="Mail Archive"/>
+  <external href="./bugs-todo.html"                               label="Bugs &amp; To Do List"/>
 </book>
