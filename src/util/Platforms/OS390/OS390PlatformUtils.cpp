@@ -56,8 +56,8 @@
 
 /**
  * $Log$
- * Revision 1.4  2000/02/06 07:48:29  rahulj
- * Year 2K copyright swat.
+ * Revision 1.5  2000/02/08 02:19:12  abagchi
+ * Fixed misplaced if statement
  *
  * Revision 1.3  2000/01/21 22:17:57  abagchi
  * OS390 Change: updates for Version 3.1.0
@@ -175,7 +175,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 
     catch(...)
     {
-	panic( XMLPlatformUtils::Panic_NoDefTranscoder );
+	panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
     return retVal;
 }
@@ -191,7 +191,6 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 {
 
     return new ICUTransService;
-#endif
 }
 #else
 {
@@ -205,29 +204,23 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::panic(const PanicReasons reason)
 {
-    //
-    //  We just print a message and exit
-    //
-    fprintf(stderr,
-        "The Xerces-C system could not be initialized.\n");
-    fprintf(stderr,
-        "If you are using ICU, then the most likely reason for this failure\n");
-    fprintf(stderr,
-        "is the inability to find the ICU coverter files. The converter files\n");
-    fprintf(stderr,
-        "have the extension .cnv and exist in a directory 'icu/data' relative\n");
-    fprintf(stderr,
-        "to the Xerces-C shared library. If you have installed the converter files\n");
-    fprintf(stderr,
-        "in a different location, you need to set up the environment variable\n");
-    fprintf(stderr,
-        "'ICU_DATA' to point directly to the directory containing the\n");
-    fprintf(stderr,
-        "converter files.\n");
-#ifdef OS390BATCH
-    printf("If your are running under native MVS, please verify that your\n");
-    printf("converter files are porperly allocated to DD:ICUDATA and DD:ICUTEXT.\n");
-#endif
+        const char* reasonStr = "Unknown reason";
+    if (reason == Panic_NoTransService)
+        reasonStr = "Could not load a transcoding service";
+    else if (reason == Panic_NoDefTranscoder)
+        reasonStr = "Could not load a local code page transcoder";
+    else if (reason == Panic_CantFindLib)
+        reasonStr = "Could not find the xerces-c DLL";
+    else if (reason == Panic_UnknownMsgDomain)
+        reasonStr = "Unknown message domain";
+    else if (reason == Panic_CantLoadMsgDomain)
+        reasonStr = "Cannot load message domain";
+    else if (reason == Panic_SynchronizationErr)
+        reasonStr = "Cannot synchronize system or mutex";
+    else if (reason == Panic_SystemInit)
+        reasonStr = "Cannot initialize the system or mutex";
+
+    fprintf(stderr, "%s\n", reasonStr);
 
     exit(-1);
 }
