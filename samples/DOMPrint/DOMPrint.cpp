@@ -428,8 +428,15 @@ int main(int argC, char* argV[])
 
     catch (const DOMException& e)
     {
-       cerr << "A DOM error occurred during parsing\n   DOMException code: "
-             << e.code << endl;
+        const unsigned int maxChars = 2047;
+        XMLCh errText[maxChars + 1];
+
+        cerr << "\nDOM Error during parsing: '" << gXmlFile << "'\n"
+             << "DOMException code is:  " << e.code << endl;
+
+        if (DOMImplementation::loadDOMExceptionMsg(e.code, errText, maxChars))
+             cerr << "Message is: " << StrX(errText) << endl;
+
         errorsOccured = true;
     }
 
@@ -442,84 +449,83 @@ int main(int argC, char* argV[])
     // If the parse was successful, output the document data from the DOM tree
     if (!errorsOccured && !errReporter->getSawErrors())
     {
-		DOMPrintFilter   *myFilter = 0;
+        DOMPrintFilter   *myFilter = 0;
 
         try
         {
-			// get a serializer, an instance of DOMWriter
-			XMLCh tempStr[100];
-			XMLString::transcode("LS", tempStr, 99);
-			DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempStr);
-			DOMWriter         *theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
+            // get a serializer, an instance of DOMWriter
+            XMLCh tempStr[100];
+            XMLString::transcode("LS", tempStr, 99);
+            DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempStr);
+            DOMWriter         *theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
 
-			// set user specified end of line sequence and output encoding
-			theSerializer->setNewLine(gMyEOLSequence);
-			theSerializer->setEncoding(gOutputEncoding);
+            // set user specified end of line sequence and output encoding
+            theSerializer->setNewLine(gMyEOLSequence);
+            theSerializer->setEncoding(gOutputEncoding);
 
-			// plug in user's own filter
-			if (gUseFilter)
-			{
-				// even we say to show attribute, but the DOMWriter
-				// will not show attribute nodes to the filter as
-				// the specs explicitly says that DOMWriter shall
-				// NOT show attributes to DOMWriterFilter.
-				//
-				// so DOMNodeFilter::SHOW_ATTRIBUTE has no effect.
-				// same DOMNodeFilter::SHOW_DOCUMENT_TYPE, no effect.
-				//
-				myFilter = new DOMPrintFilter(DOMNodeFilter::SHOW_ELEMENT   |
+            // plug in user's own filter
+            if (gUseFilter)
+            {
+                // even we say to show attribute, but the DOMWriter
+                // will not show attribute nodes to the filter as
+                // the specs explicitly says that DOMWriter shall
+                // NOT show attributes to DOMWriterFilter.
+                //
+                // so DOMNodeFilter::SHOW_ATTRIBUTE has no effect.
+                // same DOMNodeFilter::SHOW_DOCUMENT_TYPE, no effect.
+                //
+                myFilter = new DOMPrintFilter(DOMNodeFilter::SHOW_ELEMENT   |
                                               DOMNodeFilter::SHOW_ATTRIBUTE |
-                                              DOMNodeFilter::SHOW_DOCUMENT_TYPE
-											  );
-				theSerializer->setFilter(myFilter);
-			}
+                                              DOMNodeFilter::SHOW_DOCUMENT_TYPE);
+                theSerializer->setFilter(myFilter);
+            }
 
-			// plug in user's own error handler
-			DOMErrorHandler *myErrorHandler = new DOMPrintErrorHandler();
-			theSerializer->setErrorHandler(myErrorHandler);
+            // plug in user's own error handler
+            DOMErrorHandler *myErrorHandler = new DOMPrintErrorHandler();
+            theSerializer->setErrorHandler(myErrorHandler);
 
-			// set feature if the serializer supports the feature/mode
-			if (theSerializer->canSetFeature(XMLUni::fgDOMWRTSplitCdataSections, gSplitCdataSections))
-				theSerializer->setFeature(XMLUni::fgDOMWRTSplitCdataSections, gSplitCdataSections);
-			
-			if (theSerializer->canSetFeature(XMLUni::fgDOMWRTDiscardDefaultContent, gDiscardDefaultContent))
-				theSerializer->setFeature(XMLUni::fgDOMWRTDiscardDefaultContent, gDiscardDefaultContent);
+            // set feature if the serializer supports the feature/mode
+            if (theSerializer->canSetFeature(XMLUni::fgDOMWRTSplitCdataSections, gSplitCdataSections))
+                theSerializer->setFeature(XMLUni::fgDOMWRTSplitCdataSections, gSplitCdataSections);
 
-			if (theSerializer->canSetFeature(XMLUni::fgDOMWRTFormatPrettyPrint, gFormatPrettyPrint))
-				theSerializer->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, gFormatPrettyPrint);
+            if (theSerializer->canSetFeature(XMLUni::fgDOMWRTDiscardDefaultContent, gDiscardDefaultContent))
+                theSerializer->setFeature(XMLUni::fgDOMWRTDiscardDefaultContent, gDiscardDefaultContent);
 
-            //
-			// Plug in a format target to receive the resultant
-			// XML stream from the serializer.
-            //
-			// StdOutFormatTarget prints the resultant XML stream
-			// to stdout once it receives any thing from the serializer.
-			//
-      XMLFormatTarget *myFormTarget;
-      if (goutputfile)
-         myFormTarget = new LocalFileFormatTarget(goutputfile);
-      else
-         myFormTarget = new StdOutFormatTarget();
-
-			// get the DOM representation
-			DOMNode                     *doc = parser->getDocument();
-
-			//
-			// do the serialization through DOMWriter::writeNode();
-			//
-			theSerializer->writeNode(myFormTarget, *doc);
-
-			delete theSerializer;
+            if (theSerializer->canSetFeature(XMLUni::fgDOMWRTFormatPrettyPrint, gFormatPrettyPrint))
+                theSerializer->setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, gFormatPrettyPrint);
 
             //
-			// Filter, formatTarget and error handler
-			// are NOT owned by the serializer.
-			//
-			delete myFormTarget;
-			delete myErrorHandler;
+            // Plug in a format target to receive the resultant
+            // XML stream from the serializer.
+            //
+            // StdOutFormatTarget prints the resultant XML stream
+            // to stdout once it receives any thing from the serializer.
+            //
+            XMLFormatTarget *myFormTarget;
+            if (goutputfile)
+                myFormTarget = new LocalFileFormatTarget(goutputfile);
+            else
+                myFormTarget = new StdOutFormatTarget();
 
-			if (gUseFilter)
-				delete myFilter;      	
+            // get the DOM representation
+            DOMNode                     *doc = parser->getDocument();
+
+            //
+            // do the serialization through DOMWriter::writeNode();
+            //
+            theSerializer->writeNode(myFormTarget, *doc);
+
+            delete theSerializer;
+
+            //
+            // Filter, formatTarget and error handler
+            // are NOT owned by the serializer.
+            //
+            delete myFormTarget;
+            delete myErrorHandler;
+
+            if (gUseFilter)
+                delete myFilter;
 
         }
         catch (XMLException& e)
@@ -549,8 +555,8 @@ int main(int argC, char* argV[])
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
-	delete (void *)gOutputEncoding;        // const problems.
-	delete (void *)gMyEOLSequence;         // const problems.
+    delete (void *)gOutputEncoding;        // const problems.
+    delete (void *)gMyEOLSequence;         // const problems.
 
     return retval;
 }

@@ -204,7 +204,7 @@ int main(int argC, char* argV[])
             // it will recognize the unicode character 0x85 as new line character
             // instead of regular character as specified in XML 1.0
             // do not turn this on unless really necessary
-             
+
              recognizeNEL = true;
         }
          else if (!strncmp(argV[argInd], "-locale=", 8))
@@ -351,9 +351,15 @@ int main(int argC, char* argV[])
         }
         catch (const DOMException& toCatch)
         {
+            const unsigned int maxChars = 2047;
+            XMLCh errText[maxChars + 1];
+
             cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
-                 << "DOMException code is:  \n"
-                 << toCatch.code << "\n" << endl;
+                 << "DOMException code is:  " << toCatch.code << endl;
+
+            if (DOMImplementation::loadDOMExceptionMsg(toCatch.code, errText, maxChars))
+                 cerr << "Message is: " << StrX(errText) << endl;
+
             errorOccurred = true;
             continue;
         }
