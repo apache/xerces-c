@@ -1580,8 +1580,8 @@ inline void AbstractDOMParser::setCreateCommentNodes(const bool create)
 
 inline void AbstractDOMParser::useImplementation(const XMLCh* const implementationFeatures)
 {
-    delete[] fImplementationFeatures;
-    fImplementationFeatures = XMLString::replicate(implementationFeatures);
+    fMemoryManager->deallocate(fImplementationFeatures); 
+    fImplementationFeatures = XMLString::replicate(implementationFeatures, fMemoryManager); 
 }
 
 // ---------------------------------------------------------------------------
