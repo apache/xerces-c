@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/25 17:50:15  knoaman
+ * Fix AIX linking error
+ *
  * Revision 1.5  2003/11/24 15:45:36  knoaman
  * PSVI: finish construction of XSSimpleTypeDefinition
  *
@@ -416,7 +419,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
 XSElementDeclaration*
 XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
                            XSModel* const xsModel,
-                           XSComplexTypeDefinition* enclosingTypeDef)
+                           XSComplexTypeDefinition* const enclosingTypeDef)
 {
     XSElementDeclaration* xsObj = (XSElementDeclaration*) getObjectFromMap(elemDecl, xsModel);
     if (!xsObj)
