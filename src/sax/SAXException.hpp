@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/08/09 22:06:04  jpolast
+ * more functionality to SAXException and its children.
+ * msgs are now functional for SAXNotSupportedEx and
+ * SAXNotRecognizedEx
+ *
  * Revision 1.6  2000/08/02 18:04:02  jpolast
  * include SAXNotSupportedException and
  * SAXNotRecognizedException needed for sax2
@@ -169,7 +174,7 @@ public:
       *
       * @param toCopy The object to be copied
       */
-    SAXException& operator=(const SAXException& toCopy)
+    virtual SAXException& operator=(const SAXException& toCopy)
     {
         if (this == &toCopy)
             return *this;
@@ -186,16 +191,16 @@ public:
       * Get the contents of the message
       *
       */
-    const XMLCh* getMessage() const
+    virtual const XMLCh* getMessage() const
     {
         return fMsg;
     }
     //@}
 
 
-private :
+protected :
     // -----------------------------------------------------------------------
-    //  Private data members
+    //  Protected data members
     //
     //  fMsg
     //      This is the text of the error that is being thrown.
@@ -205,10 +210,57 @@ private :
 
 class SAXNotSupportedException : public SAXException
 {
+
+public:
+	SAXNotSupportedException();
+
+  /**
+    * Create a new SAXException.
+    *
+    * @param msg The error or warning message.
+    */
+    SAXNotSupportedException(const XMLCh* const msg);
+
+  /**
+    * Create a new SAXException.
+    *
+    * @param msg The error or warning message.
+    */
+    SAXNotSupportedException(const char* const msg);
+
+  /**
+    * Copy constructor
+    *
+    * @param toCopy The exception to be copy constructed
+    */
+    SAXNotSupportedException(const SAXException& toCopy);
 };
 
 class SAXNotRecognizedException : public SAXException
 {
+public:
+	SAXNotRecognizedException();
+
+  /**
+    * Create a new SAXException.
+    *
+    * @param msg The error or warning message.
+    */
+    SAXNotRecognizedException(const XMLCh* const msg);
+
+  /**
+    * Create a new SAXException.
+    *
+    * @param msg The error or warning message.
+    */
+    SAXNotRecognizedException(const char* const msg);
+
+  /**
+    * Copy constructor
+    *
+    * @param toCopy The exception to be copy constructed
+    */
+    SAXNotRecognizedException(const SAXException& toCopy);
 };
 
 #endif

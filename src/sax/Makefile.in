@@ -54,33 +54,7 @@
 # <http://www.apache.org/>.
 #
 #
-# $Log$
-# Revision 1.7  2000/03/01 22:30:03  abagchi
-# Object files are now created directly under obj directory
-#
-# Revision 1.6  2000/02/09 22:17:02  abagchi
-# AS/400 changes
-#
-# Revision 1.5  2000/02/06 07:47:58  rahulj
-# Year 2K copyright swat.
-#
-# Revision 1.4  2000/02/04 23:48:39  abagchi
-# Made sure all targets are appended with :: not single :
-#
-# Revision 1.3  1999/12/14 23:53:23  rahulj
-# Removed the offending Ctrl-M's from the commit message
-# logs which was giving packaging problems.
-#
-# Revision 1.2  1999/11/23 01:59:59  rahulj
-# Code now works under HPUX 11. Tested inmemory message loader.
-# Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
-#
-# Revision 1.1.1.1  1999/11/09 01:07:46  twl
-# Initial checkin
-#
-# Revision 1.3  1999/11/08 20:45:01  rahul
-# Swat for adding in Product name and CVS comment log variable.
-#
+# $Id$
 #
 
 PLATFORM = @platform@
@@ -120,6 +94,7 @@ SAX_C_FILES =
 SAX_CPP_OBJECTS = \
 	Dummy.$(TO) \
 	InputSource.$(TO) \
+	SAXException.$(TO) \
 	SAXParseException.$(TO)
 
 all::	includes $(SAX_CPP_OBJECTS)
