@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/10/24 10:59:26  gareth
+ * changed /* to // to prevent compiler warnings.
+ *
  * Revision 1.2  2003/10/10 18:37:51  neilg
  * update XSModel and XSObject interface so that IDs can be used to query components in XSModels, and so that those IDs can be recovered from components
  *
@@ -110,7 +113,7 @@ public:
     //---------------------
     // @name XSObject methods
 
-    /* @{
+    // @{
 
     /**
      *  The <code>type</code> of this object, i.e. 
