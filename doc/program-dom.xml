@@ -92,8 +92,12 @@
          <note>When a DOMDocument is released, all its associated children AND any objects it owned
             (e.g. DOMRange, DOMTreeWalker, DOMNodeIterator or any orphaned nodes) will also be released.
          </note>
+         <note>When a DOMDocument is cloned, the cloned document has nothing related to the original
+            master document and need to be released explicitly.
+         </note>
          <note>When a DOMDocumentType has been inserted into a DOMDocument and thus has a owner,
             it will then be released automatically when its owner document is released.
+            DOMException::INVALID_ACCESS_ERR will be raised if releasing such owned node.
          </note>
          </s4>
 
