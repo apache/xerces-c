@@ -363,10 +363,8 @@ const XMLCh* DOMNodeImpl::mapPrefix(const XMLCh *prefix,
         if (XMLString::equals(namespaceURI, XMLUni::fgXMLNSURIName))
             return XMLUni::fgXMLNSURIName;
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
-    } else if (namespaceURI == 0 || *namespaceURI == 0) {
+    } else if (namespaceURI == 0 || *namespaceURI == 0)
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
-    } else
-        return namespaceURI;
     return namespaceURI;
 }
 

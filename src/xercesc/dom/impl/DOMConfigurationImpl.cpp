@@ -99,22 +99,16 @@ void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, fMemoryManager);
     }
 
-    bool isBooleanParameter = true;
     DOMConfigurationFeature whichFlag;
     try {
         whichFlag = getFeatureFlag(lowerCaseName);
-    } catch(DOMException&) {
-        // must not be a boolean parameter
-        isBooleanParameter = false;
-    }
-
-    if(isBooleanParameter) {
         if(*((bool*)value)) {
             featureValues |= whichFlag;
         } else {
             featureValues &= ~whichFlag;
         }
-    } else {
+    } catch(DOMException&) {
+        // must not be a boolean parameter
         if(XMLString::equals(lowerCaseName, fgERROR_HANDLER)) {
             fErrorHandler = (DOMErrorHandler*)value;
         } else if (XMLString::equals(lowerCaseName, fgSCHEMA_TYPE)) {
@@ -139,22 +133,16 @@ const void* DOMConfigurationImpl::getParameter(const XMLCh* name) const {
 
     XMLString::lowerCase(lowerCaseName);
 
-    bool isBooleanParameter = true;
     DOMConfigurationFeature whichFlag;
     try {
         whichFlag = getFeatureFlag(lowerCaseName);
-    } catch (DOMException&) {
-        // must not be a boolean parameter
-        isBooleanParameter = false;
-    }
-
-    if(isBooleanParameter){
         if(featureValues & whichFlag) {
             return &fTrue;
         } else {
             return &fFalse;
         }
-    } else {
+   } catch (DOMException&) {
+        // must not be a boolean parameter
         if(XMLString::equals(lowerCaseName, fgERROR_HANDLER)) {
             return fErrorHandler;
         } else if (XMLString::equals(lowerCaseName, fgSCHEMA_TYPE)) {
@@ -190,18 +178,10 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
     
     XMLString::lowerCase(lowerCaseName);
     
-    bool isBooleanParameter = true;
-    bool booleanValue = false;
     DOMConfigurationFeature whichFlag;
     try {
         whichFlag = getFeatureFlag(lowerCaseName);
-        booleanValue = *((bool*)value);
-    } catch (DOMException&) {
-        // must not be a boolean parameter
-        isBooleanParameter = false;
-    }
-    
-    if(isBooleanParameter) {
+        bool booleanValue = *((bool*)value);
         switch (whichFlag) {
             case FEATURE_CANONICAL_FORM: 
                 if(booleanValue) return false;      // optional //
@@ -246,7 +226,8 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
                 else             return false;      // optional //
             default: return false; // should never be here
         }
-    } else {
+   } catch (DOMException&) {
+        // must not be a boolean parameter
         if(XMLString::equals(lowerCaseName, fgERROR_HANDLER)) {
             return true;                               // required //
         } else if (XMLString::equals(lowerCaseName, fgSCHEMA_TYPE)) {
