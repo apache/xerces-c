@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/08/22 16:58:55  tng
+ * typo: should issue the name of second element.
+ *
  * Revision 1.21  2001/08/21 16:50:23  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -1189,7 +1192,7 @@ void DFAContentModel::checkUniqueParticleAttribution (GrammarResolver*  const pG
                        else if ((fElemMapType[k] & 0x0f) == ContentSpecNode::Any_Other)
                            buf2.set(SchemaSymbols::fgATTVAL_TWOPOUNDOTHER);
                        else
-                           buf2.set(fElemMap[j]->getRawName());
+                           buf2.set(fElemMap[k]->getRawName());
 
                        pValidator->emitError(XMLValid::UniqueParticleAttributionFail,  buf1.getRawBuffer(), buf2.getRawBuffer());
                     }
