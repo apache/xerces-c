@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/04/04 20:11:29  abagchi
+ * Added PTX support
+ *
  * Revision 1.1  2000/03/02 19:54:50  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -174,6 +177,10 @@ static const unsigned int   gXercesRevision   = 0;
 #include    <util/Platforms/OS390/OS390Defs.hpp>
 #endif
 
+#if defined(XML_PTX)
+#include    <util/Platforms/PTX/PTXDefs.hpp>
+#endif
+
 #if defined(XML_OS2)
 #include    <util/Platforms/OS2/OS2Defs.hpp>
 #endif
@@ -245,6 +252,10 @@ static const unsigned int   gXercesRevision   = 0;
 
 #if defined(XML_METROWERKS)
 #include	<util/Compilers/CodeWarriorDefs.hpp>
+#endif
+
+#if defined(XML_PTX_CC)
+#include	<util/Compilers/PTXCCDefs.hpp>
 #endif
 
 #if defined(XML_AS400)

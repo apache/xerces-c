@@ -56,6 +56,9 @@
 #
 #
 # $Log$
+# Revision 1.26  2000/04/04 20:09:56  abagchi
+# Added PTX support
+#
 # Revision 1.25  2000/04/03 19:26:53  abagchi
 # Included changes for SGI IRIX 6.5
 #
@@ -196,9 +199,10 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'unixware', 'os400', 'irix' )"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris',
+'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx' )"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc)"
-    echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc)"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc, c++)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
     echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket'"
@@ -367,6 +371,11 @@ if test $platform = "hp-11"; then
     fi
 elif test $platform = "aix"; then
     threadingLibs="-lpthreads_compat -lpthreads"
+elif test $platform = "ptx"; then
+    threadingLibs=" "
+    if test -z $XMLINSTALL; then
+        XMLINSTALL=$ICUROOT
+    fi
 elif test $platform = "hp-10"; then
     threadingLibs="-lcma"
     threadingDefines="-DXML_USE_DCE"
@@ -527,6 +536,8 @@ rm -f config.log
 rm -f config.status
 if test $platform = "os400"; then
 ./configure --host AS400-OS400
+elif test $platform = "ptx"; then
+./configure --prefix=$XMLINSTALL
 else
 ./configure
 fi

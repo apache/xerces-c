@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2000/04/04 20:11:46  abagchi
+# Added PTX support
+#
 # Revision 1.10  2000/03/01 22:30:04  abagchi
 # Object files are now created directly under obj directory
 #
@@ -133,6 +136,10 @@ endif
 ifeq (${PLATFORM}, OS400)
     SUBMODULE = OS400
 endif
+ifeq (${PLATFORM}, PTX)
+    SUBMODULE = PTX
+endif
+
 
 includes::
 	${CD} $(SUBMODULE) ; $(MAKE) $@ ; ${CD} ..

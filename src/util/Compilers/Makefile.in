@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2000/04/04 20:13:07  abagchi
+# Added PTX support
+#
 # Revision 1.10  2000/02/22 01:00:48  aruna1
 # GNUGDefs references removed. Now only GCCDefs is used instead
 #
@@ -120,6 +123,7 @@ CPP_PUBHEADERS = \
 	IBMVAOS2Defs.hpp \
 	IBMVAW32Defs.hpp \
 	MVSCPPDefs.hpp \
+	PTXCCDefs.hpp \
 	SCOCCDefs.hpp \
 	SunCCDefs.hpp \
 	SunKaiDefs.hpp \
@@ -154,6 +158,9 @@ endif
 ifeq (${CXX},c++)
     ifeq (${PLATFORM},OS390)
         CPP_OBJECTS = MVSCPPDefs.$(TO)
+    endif
+    ifeq (${PLATFORM},PTX)
+        CPP_OBJECTS = PTXCCDefs.$(TO)
     endif
     ifeq (${PLATFORM},LINUX)
         CPP_OBJECTS = GCCDefs.$(TO)

@@ -1,4 +1,7 @@
 # $Log$
+# Revision 1.6  2000/04/04 20:10:17  abagchi
+# Added PTX support
+#
 # Revision 1.5  2000/02/26 05:45:17  rahulj
 # Fixed a typo.
 #
@@ -50,6 +53,7 @@ case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
         *-*-linux*)     platform=LINUX ;;
         *-*-aix*)       platform=AIX ;;
+        *-sequent-*)    platform=PTX ;;
         *-*-hp*)        platform=HPUX ;
                         case "${host}" in
                             *-*-hpux11*)  osver=HPUX11;;
@@ -83,7 +87,7 @@ DOM/DOMMemTest/Makefile \
 DOM/DOMTest/Makefile \
 DOM/Traversal/Makefile \
 EncodingTest/Makefile \
-ThreadTest/Makefile]) 
+ThreadTest/Makefile])
 
 echo
 echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/04/04 20:11:29  abagchi
+ * Added PTX support
+ *
  * Revision 1.11  2000/03/02 19:54:37  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -106,6 +109,9 @@
 // ---------------------------------------------------------------------------
 #if defined(_AIX)
     #define XML_AIX
+    #define XML_UNIX
+#elif defined(_SEQUENT_)
+    #define XML_PTX
     #define XML_UNIX
 #elif defined(_HP_UX) || defined(__hpux) || defined(_HPUX_SOURCE)
     #define XML_HPUX
@@ -196,6 +202,8 @@
     #endif
 #elif defined(XML_IRIX)
     #define XML_MIPSPRO_CC
+#elif defined(XML_PTX)
+    #define XML_PTX_CC
 #elif defined(XML_TANDEM)
     #define XML_TANDEMCC
 #elif defined(__MVS__) && defined(__cplusplus)
