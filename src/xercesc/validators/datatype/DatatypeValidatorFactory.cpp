@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/11/12 20:30:58  peiyongz
+ * movd ID/IDREF/IDREFS/ENTITY/ENTITIES dv to BuiltInRegistry
+ *
  * Revision 1.20  2003/11/06 15:30:07  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -755,6 +758,41 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                           getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER),
                           facets, 0, false, 0, false);
 
+            // Create 'ID', 'IDREF' and 'ENTITY' datatype validator
+            dv = new (fMemoryManager) IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
+            dv->setTypeName(XMLUni::fgIDString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) XMLUni::fgIDString, dv);
+
+            dv = new (fMemoryManager) IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
+            dv->setTypeName(XMLUni::fgIDRefString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) XMLUni::fgIDRefString, dv);
+
+            dv = new (fMemoryManager) ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
+            dv->setTypeName(XMLUni::fgEntityString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
+            fBuiltInRegistry->put((void*) XMLUni::fgEntityString, dv);
+
+            // Create 'IDREFS' datatype validator
+            createDatatypeValidator
+            (
+                XMLUni::fgIDRefsString
+              , getDatatypeValidator(XMLUni::fgIDRefString)
+              , 0
+              , 0
+              , false
+              , 0
+            );
+
+           // Create 'ENTITIES' datatype validator
+           createDatatypeValidator
+           (
+               XMLUni::fgEntitiesString
+             , getDatatypeValidator(XMLUni::fgEntityString)
+             , 0
+             , 0
+             , false
+             , 0
+           );
+
             // register cleanup method
             builtInRegistryCleanup.registerCleanup(reinitRegistry);
             sBuiltInRegistryMutexRegistered = true;
@@ -763,49 +801,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 
     //todo: to move these to fBuiltInRegistry
 
-    // ID, IDREF IDREFS, ENTITY, ENTITIES  DTV have specific data member
-    //   and cannot be shared across threads
-    // So instead of storing them in the static fBuiltInRegistry,
-    //   store them in local data fUserDefinedRegistry
-    if (fUserDefinedRegistry == 0)
-        fUserDefinedRegistry = new (fMemoryManager) RefHashTableOf<DatatypeValidator>(29, fMemoryManager);
 
-    if (!getDatatypeValidator(XMLUni::fgIDRefsString)) {
-
-        DatatypeValidator *dv = new (fMemoryManager) IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
-        dv->setTypeName(XMLUni::fgIDString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-        fUserDefinedRegistry->put((void*) XMLUni::fgIDString, dv);
-
-        dv = new (fMemoryManager) IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
-        dv->setTypeName(XMLUni::fgIDRefString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-        fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString, dv);
-
-        dv = new (fMemoryManager) ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0, fMemoryManager);
-        dv->setTypeName(XMLUni::fgEntityString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
-        fUserDefinedRegistry->put((void*) XMLUni::fgEntityString, dv);
-
-        // Create 'IDREFS' datatype validator
-    	createDatatypeValidator
-        (
-            XMLUni::fgIDRefsString
-            , getDatatypeValidator(XMLUni::fgIDRefString)
-            , 0
-            , 0
-            , true
-            , 0
-        );
-
-        // Create 'ENTITIES' datatype validator
-        createDatatypeValidator
-        (
-            XMLUni::fgEntitiesString
-    		, getDatatypeValidator(XMLUni::fgEntityString)
-            , 0
-            , 0
-            , true
-            , 0
-        );
-    }
 
 }
 
