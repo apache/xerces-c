@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/09/24 15:30:16  peiyongz
+ * DTV Reorganization: init() to be invoked from derived class' ctor to allow
+ *        correct resolution of virtual methods like assignAdditionalFacet(),
+ *        inheritAdditionalFacet(), etc.
+ *
  * Revision 1.3  2001/09/19 18:48:27  peiyongz
  * DTV reorganization:getLength() added, move inline to class declaration to avoid inline
  * function interdependency.
@@ -87,13 +92,17 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 AbstractStringValidator::~AbstractStringValidator()
 {
-    cleanUp();
+    //~RefVectorOf will delete all adopted elements
+    if (fEnumeration && !fEnumerationInherited)
+    {
+        delete fEnumeration;
+        fEnumeration = 0;
+    }
 }
 
 AbstractStringValidator::AbstractStringValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
-                        , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet
                         , const ValidatorType                 type)
 :DatatypeValidator(baseValidator, facets, finalSet, type)
@@ -103,15 +112,9 @@ AbstractStringValidator::AbstractStringValidator(
 ,fEnumerationInherited(false)
 ,fEnumeration(0)
 {
-    try
-    {
-        init(baseValidator, facets, enums);
-    }
-    catch (...)
-    {
-        cleanUp();
-        throw;
-    }
+    // init() is invoked from derived class's ctor instead of from
+    // here to allow correct resolution of virutal method, such as
+    // assigneAdditionalFacet(), inheritAdditionalFacet().
 }
 
 //
@@ -450,7 +453,7 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
                     }
                 }
 
-                catch ( XMLException& )
+                catch (...) //XMLException&
                 {
                     ThrowXML1(InvalidDatatypeFacetException
                             , XMLExcepts::FACET_enum_base
@@ -518,6 +521,20 @@ void AbstractStringValidator::init(DatatypeValidator*            const baseValid
         inheritAdditionalFacet();
         
     } // end of inheritance
+}
+
+// -----------------------------------------------------------------------
+// Compare methods
+// -----------------------------------------------------------------------
+int AbstractStringValidator::compare(const XMLCh* const lValue
+                                   , const XMLCh* const rValue)
+{
+    return XMLString::compareString(lValue, rValue);
+}
+
+void AbstractStringValidator::validate( const XMLCh* const content)
+{
+    checkContent(content, false);
 }
 
 void AbstractStringValidator::checkContent( const XMLCh* const content, bool asBase)

@@ -57,6 +57,11 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/24 15:30:16  peiyongz
+ * DTV Reorganization: init() to be invoked from derived class' ctor to allow
+ *        correct resolution of virtual methods like assignAdditionalFacet(),
+ *        inheritAdditionalFacet(), etc.
+ *
  * Revision 1.2  2001/09/19 18:48:27  peiyongz
  * DTV reorganization:getLength() added, move inline to class declaration to avoid inline
  * function interdependency.
@@ -70,7 +75,6 @@
 #define ABSTRACT_STRING_VALIDATOR_HPP
 
 #include <validators/datatype/DatatypeValidator.hpp>
-#include <validators/datatype/InvalidDatatypeFacetException.hpp>
 
 class VALIDATORS_EXPORT AbstractStringValidator : public DatatypeValidator
 {
@@ -100,7 +104,7 @@ public:
      * is not valid.
      */
 
-	inline void validate(const XMLCh* const content);
+	virtual void validate(const XMLCh* const content);
 
     //@}
 
@@ -110,51 +114,32 @@ public:
     /** @name Compare Function */
     //@{
 
-    inline int compare(const XMLCh* const, const XMLCh* const);
+    virtual int compare(const XMLCh* const, const XMLCh* const);
 
     //@}
-
-    /**
-      * Returns an instance of the base datatype validator class
-	  * Used by the DatatypeValidatorFactory.
-      */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet)
-                                 = 0;
 
 protected:
 
     AbstractStringValidator(DatatypeValidator*            const baseValidator
                           , RefHashTableOf<KVStringPair>* const facets
-                          , RefVectorOf<XMLCh>*           const enums
                           , const int                           finalSet
                           , const ValidatorType                 type);
 
-    // derived classes may have their own copy for any of the followings
     //
-    inline virtual void assignAdditionalFacet(const XMLCh* const key
-                                            , const XMLCh* const value);
+    // Abstract interface
+    //
+    virtual void assignAdditionalFacet(const XMLCh* const key
+                                     , const XMLCh* const value) = 0;
 
-    inline virtual void inheritAdditionalFacet();
+    virtual void inheritAdditionalFacet() = 0;
 
-    inline virtual void checkAdditionalFacetConstraints() const;
+    virtual void checkAdditionalFacetConstraints() const = 0;
 
-    inline virtual void checkAdditionalFacet(const XMLCh* const content) const;
+    virtual void checkAdditionalFacet(const XMLCh* const content) const = 0;
 
-    inline virtual void checkValueSpace(const XMLCh* const content);
+    virtual void checkValueSpace(const XMLCh* const content) = 0;
 
-    inline virtual int  getLength(const XMLCh* const content) const;
-
-private:
-
-    void checkContent(const XMLCh* const content, bool asBase);
-
-    void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
-
-    inline void cleanUp();
+    virtual int  getLength(const XMLCh* const content) const = 0;
 
 // -----------------------------------------------------------------------
 // Getter methods
@@ -180,6 +165,18 @@ private:
 
     inline void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
 
+// -----------------------------------------------------------------------
+// Misc
+// -----------------------------------------------------------------------
+
+    void init(DatatypeValidator*            const baseValidator
+            , RefHashTableOf<KVStringPair>* const facets
+            , RefVectorOf<XMLCh>*           const enums);
+
+private:
+
+    void checkContent(const XMLCh* const content, bool asBase);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -190,27 +187,6 @@ private:
      bool                 fEnumerationInherited;
      RefVectorOf<XMLCh>*  fEnumeration;
 };
-
-// -----------------------------------------------------------------------
-// Compare methods
-// -----------------------------------------------------------------------
-int AbstractStringValidator::compare(const XMLCh* const lValue
-                                          , const XMLCh* const rValue)
-{
-    return XMLString::compareString(lValue, rValue);
-}
-
-void AbstractStringValidator::validate( const XMLCh* const content)
-{
-    checkContent(content, false);
-}
-
-void AbstractStringValidator::cleanUp()
-{
-    //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
-        delete fEnumeration;
-}
 
 // -----------------------------------------------------------------------
 // Getter methods
@@ -267,32 +243,6 @@ void AbstractStringValidator::setEnumeration(RefVectorOf<XMLCh>* enums
         fEnumerationInherited = inherited;
         setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
     }
-}
-
-// -----------------------------------------------------------------------
-// Utility methods
-// -----------------------------------------------------------------------
-void AbstractStringValidator::assignAdditionalFacet( const XMLCh* const
-                                                          , const XMLCh* const)
-{
-    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
-}
-
-void AbstractStringValidator::inheritAdditionalFacet()
-{}
-
-void AbstractStringValidator::checkAdditionalFacetConstraints() const
-{}
-
-void AbstractStringValidator::checkAdditionalFacet(const XMLCh* const) const
-{}
-
-void AbstractStringValidator::checkValueSpace(const XMLCh* const)
-{}
-
-int AbstractStringValidator::getLength(const XMLCh* const content) const
-{
-    return XMLString::stringLen(content);
 }
 
 /**
