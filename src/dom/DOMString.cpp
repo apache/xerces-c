@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/01/25 19:22:50  tng
+ * Some bug fixes + Cleanup.  Fixed by Khaled Noaman.
+ *
  * Revision 1.18  2000/08/03 20:39:53  jberry
  * Add prototype for getDomConverter(), eliminating compiler warning
  *
@@ -496,7 +499,6 @@ DOMString::DOMString(const char *srcString)
     if (srcString != 0)
     {
         XMLLCPTranscoder*  uniConverter = getDomConverter();
-        unsigned int    len = 0;
 
         unsigned int srcLen = strlen(srcString);
         if (srcLen == 0)

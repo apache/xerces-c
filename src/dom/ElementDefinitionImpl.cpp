@@ -67,7 +67,7 @@ ElementDefinitionImpl::ElementDefinitionImpl(DocumentImpl *ownerDoc,
                                              const DOMString &nam)
     : NodeImpl(ownerDoc) 
 {
-    name = name.clone();
+    name = nam.clone();
     attributes = 0;
 };
 

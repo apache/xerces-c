@@ -64,7 +64,7 @@
 #include "DOM_DOMException.hpp"
 
 ElementNSImpl::ElementNSImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
-    ElementImpl(ownerDoc, name)
+    ElementImpl(ownerDoc, nam)
 {
     this->namespaceURI=null;	//DOM Level 2
     this->localName=null;       //DOM Level 2

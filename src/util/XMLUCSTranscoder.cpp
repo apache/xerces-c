@@ -245,6 +245,7 @@ XMLUCS4Transcoder::transcodeTo( const   XMLCh* const    srcData
             //  Then make sure its a legal trailing char. If not, throw
             //  an exception.
             //
+            if ( !( (trailCh >= 0xDC00) && (trailCh <= 0xDFFF) ) )
             ThrowXML(TranscodingException, XMLExcepts::Trans_BadTrailingSurrogate);
 
             // And now combine the two into a single output char
