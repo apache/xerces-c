@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/29 19:49:34  tng
+ * Schema: Constraint Checking Fix in datatypeValidators.  By Pei Yong Zhang.
+ *
  * Revision 1.7  2001/05/28 21:11:18  tng
  * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
  *
@@ -792,71 +795,6 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
 
                 }
 
-                /***
-                   Schema constraint: Part III -- inherit from base
-                ***/
-
-                    // inherit enumeration
-                    if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
-                        (( getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
-                    {
-                        fEnumeration = numBase->getEnumeration();
-                        fEnumerationInherited = true;
-                        setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
-                    }
-
-                    // inherit maxExclusive
-                    if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
-                         (( getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&
-                         (( getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )
-                    {
-                        setMaxExclusive(new XMLBigDecimal(*(numBase->getMaxExclusive())));
-                        setFacetsDefined(DatatypeValidator::FACET_MAXEXCLUSIVE);
-                    }
-
-                    // inherit maxInclusive
-                    if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
-                         (( getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&
-                         (( getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )
-                    {
-                        setMaxInclusive(new XMLBigDecimal(*(numBase->getMaxInclusive())));
-                        setFacetsDefined(DatatypeValidator::FACET_MAXINCLUSIVE);
-                    }
-
-                    // inherit minExclusive
-                    if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
-                         (( getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) &&
-                         (( getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) == 0) )
-                    {
-                        setMinExclusive(new XMLBigDecimal(*(numBase->getMinExclusive())));
-                        setFacetsDefined(DatatypeValidator::FACET_MINEXCLUSIVE);
-                    }
-
-                    // inherit minExclusive
-                    if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
-                         (( getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) &&
-                         (( getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) == 0) )
-                    {
-                        setMinInclusive(new XMLBigDecimal(*(numBase->getMinInclusive())));
-                        setFacetsDefined(DatatypeValidator::FACET_MININCLUSIVE);
-                    }
-
-                    // inherit totalDigits
-                    if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) &&
-                         (( getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) == 0) )
-                    {
-                        setTotalDigits(numBase->fTotalDigits);
-                        setFacetsDefined(DatatypeValidator::FACET_PRECISSION);
-                    }
-
-                    // inherit fractionDigits
-                    if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0) &&
-                         (( getFacetsDefined() & DatatypeValidator::FACET_SCALE) == 0) )
-                    {
-                        setFractionDigits(numBase->fFractionDigits);
-                        setFacetsDefined(DatatypeValidator::FACET_SCALE);
-                    }
-
             } //if baseValidator
         }
         catch (XMLException &e)
@@ -865,6 +803,76 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
         }
 
     }// End of Facet setting
+
+
+    /***
+         Schema constraint: Part III -- inherit from base
+     ***/
+    if ( baseValidator )    
+    {     
+        DecimalDatatypeValidator* numBase = (DecimalDatatypeValidator*)baseValidator;         
+        // inherit enumeration          
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&          
+            (( getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))              
+        {          
+            fEnumeration = numBase->getEnumeration();              
+            fEnumerationInherited = true;              
+            setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);              
+        }
+
+        // inherit maxExclusive         
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&          
+            (( getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&              
+            (( getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )              
+        {          
+            setMaxExclusive(new XMLBigDecimal(*(numBase->getMaxExclusive())));              
+            setFacetsDefined(DatatypeValidator::FACET_MAXEXCLUSIVE);              
+        }
+         
+        // inherit maxInclusive          
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&         
+            (( getFacetsDefined() & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&              
+            (( getFacetsDefined() & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )              
+        {          
+            setMaxInclusive(new XMLBigDecimal(*(numBase->getMaxInclusive())));
+            setFacetsDefined(DatatypeValidator::FACET_MAXINCLUSIVE);
+        }
+
+        // inherit minExclusive          
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&          
+            (( getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) &&              
+            (( getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) == 0) )              
+        {          
+            setMinExclusive(new XMLBigDecimal(*(numBase->getMinExclusive())));              
+            setFacetsDefined(DatatypeValidator::FACET_MINEXCLUSIVE);              
+        }
+          
+        // inherit minExclusive          
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&          
+            (( getFacetsDefined() & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) &&
+            (( getFacetsDefined() & DatatypeValidator::FACET_MININCLUSIVE) == 0) )              
+        {          
+            setMinInclusive(new XMLBigDecimal(*(numBase->getMinInclusive())));              
+            setFacetsDefined(DatatypeValidator::FACET_MININCLUSIVE);              
+        }
+
+        // inherit totalDigits         
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) &&          
+            (( getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) == 0) )              
+        {          
+            setTotalDigits(numBase->fTotalDigits);              
+            setFacetsDefined(DatatypeValidator::FACET_PRECISSION);              
+        }
+          
+        // inherit fractionDigits          
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0) &&          
+            (( getFacetsDefined() & DatatypeValidator::FACET_SCALE) == 0) )              
+        {          
+            setFractionDigits(numBase->fFractionDigits);              
+            setFacetsDefined(DatatypeValidator::FACET_SCALE);              
+        }
+          
+    }
 
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/29 19:49:33  tng
+ * Schema: Constraint Checking Fix in datatypeValidators.  By Pei Yong Zhang.
+ *
  * Revision 1.4  2001/05/28 21:11:17  tng
  * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
  *
@@ -97,9 +100,15 @@ BooleanDatatypeValidator::BooleanDatatypeValidator(
                         , const int                           finalSet)
 :DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Boolean)
 {
+
     // Set Facets if any defined
     if ( facets )
     {
+
+        // Boolean shall NOT have enumeration
+        if (enums)
+            ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+    
         XMLCh* key;
         XMLCh* value;
         RefHashTableOfEnumerator<KVStringPair> e(facets);

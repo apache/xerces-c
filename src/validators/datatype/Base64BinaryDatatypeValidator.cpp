@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/29 19:49:31  tng
+ * Schema: Constraint Checking Fix in datatypeValidators.  By Pei Yong Zhang.
+ *
  * Revision 1.5  2001/05/28 21:11:17  tng
  * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
  *
@@ -393,52 +396,57 @@ void Base64BinaryDatatypeValidator::init(DatatypeValidator*            const bas
                 }
             }
 
-            /***
-                Inherit facets from base.facets
-                
-                The reason of this inheriting (or copying values) is to ease
-                schema constraint checking, so that we need NOT trace back to our 
-                very first base validator in the hierachy. Instead, we are pretty 
-                sure checking against immediate base validator is enough.
-            
-            ***/
-
-            // inherit length
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) != 0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) == 0))
-            {
-                setLength(pBaseValidator->getLength());
-                setFacetsDefined(DatatypeValidator::FACET_LENGTH);
-            }
-            
-            // inherit minLength
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) == 0))
-            {
-                setMinLength(pBaseValidator->getMinLength());
-                setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);
-            }
-            
-            // inherit maxLength
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) == 0))
-            {
-                setMaxLength(pBaseValidator->getMaxLength());
-                setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);
-            }
- 
-            // inherit enumeration
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
-            {
-                setEnumeration(pBaseValidator->getEnumeration(), true);
-            }
-
-            // we don't inherit pattern
-
         } //if baseValidator
 
     }// End of Facet setting
+
+    if (baseValidator ) 
+    {
+        Base64BinaryDatatypeValidator *pBaseValidator = (Base64BinaryDatatypeValidator*) baseValidator;
+
+        /***
+            Inherit facets from base.facets
+                
+            The reason of this inheriting (or copying values) is to ease
+            schema constraint checking, so that we need NOT trace back to our 
+            very first base validator in the hierachy. Instead, we are pretty 
+            sure checking against immediate base validator is enough.            
+        ***/
+
+        // inherit length
+        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) != 0) &&
+            ((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) == 0))
+        {
+            setLength(pBaseValidator->getLength());
+            setFacetsDefined(DatatypeValidator::FACET_LENGTH);
+        }
+            
+        // inherit minLength
+        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
+            ((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) == 0))
+        {
+            setMinLength(pBaseValidator->getMinLength());
+            setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);
+        }
+            
+        // inherit maxLength
+        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
+            ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) == 0))
+        {
+            setMaxLength(pBaseValidator->getMaxLength());
+            setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);
+        }
+
+        // inherit enumeration
+        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
+            ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
+        {
+            setEnumeration(pBaseValidator->getEnumeration(), true);
+        }
+
+        // we don't inherit pattern
+
+    } // end of inheritance
 
 }
 

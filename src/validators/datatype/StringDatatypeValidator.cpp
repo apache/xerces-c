@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/05/29 19:49:36  tng
+ * Schema: Constraint Checking Fix in datatypeValidators.  By Pei Yong Zhang.
+ *
  * Revision 1.9  2001/05/28 21:11:18  tng
  * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
  *
@@ -433,61 +436,63 @@ void StringDatatypeValidator::init(DatatypeValidator*            const baseValid
                      ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_WS_replace);
             }
 
-            /***
-                Inherit facets from base.facets
-
-                The reason of this inheriting (or copying values) is to ease
-                schema constraint checking, so that we need NOT trace back to our
-                very first base validator in the hierachy. Instead, we are pretty
-                sure checking against immediate base validator is enough.
-
-            ***/
-
-            // inherit length
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) != 0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) == 0))
-            {
-                setLength(pBaseValidator->getLength());
-                setFacetsDefined(DatatypeValidator::FACET_LENGTH);
-            }
-
-            // inherit minLength
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) == 0))
-            {
-                setMinLength(pBaseValidator->getMinLength());
-                setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);
-            }
-
-            // inherit maxLength
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) == 0))
-            {
-                setMaxLength(pBaseValidator->getMaxLength());
-                setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);
-            }
-
-            // inherit enumeration
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
-            {
-                setEnumeration(pBaseValidator->getEnumeration(), true);
-            }
-
-            // we don't inherit pattern
-
-            // inherit whitespace
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_WHITESPACE) !=0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_WHITESPACE) == 0))
-            {
-                setWhiteSpace(pBaseValidator->getWSFacet());
-                setFacetsDefined(DatatypeValidator::FACET_WHITESPACE);
-            }
-
         } //if baseValidator
 
     }// End of Facet setting
 
+    /***
+        Inherit facets from base.facets
+
+        The reason of this inheriting (or copying values) is to ease
+        schema constraint checking, so that we need NOT trace back to our
+        very first base validator in the hierachy. Instead, we are pretty
+        sure checking against immediate base validator is enough.  
+    ***/
+    if ( baseValidator )
+    {
+        StringDatatypeValidator *pBaseValidator = (StringDatatypeValidator*) baseValidator;
+
+        // inherit length
+        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) != 0) &&
+            ((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) == 0))
+        {
+            setLength(pBaseValidator->getLength());
+            setFacetsDefined(DatatypeValidator::FACET_LENGTH);
+        }
+
+        // inherit minLength
+        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
+            ((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) == 0))
+        {
+            setMinLength(pBaseValidator->getMinLength());
+            setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);
+        }
+
+        // inherit maxLength
+        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
+            ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) == 0))
+        {
+            setMaxLength(pBaseValidator->getMaxLength());
+            setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);
+        }
+
+        // inherit enumeration
+        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
+            ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
+        {
+            setEnumeration(pBaseValidator->getEnumeration(), true);
+        }
+
+        // we don't inherit pattern
+
+        // inherit whitespace
+        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_WHITESPACE) !=0) &&
+            ((getFacetsDefined() & DatatypeValidator::FACET_WHITESPACE) == 0))
+        {
+            setWhiteSpace(pBaseValidator->getWSFacet());
+            setFacetsDefined(DatatypeValidator::FACET_WHITESPACE);
+        }
+    } // end of inheritance
 }
 
 void StringDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
