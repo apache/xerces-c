@@ -162,6 +162,12 @@ public:
         , const int finalSet
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(AnySimpleTypeDatatypeValidator)
+
 };
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/10/07 19:39:03  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.8  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -251,6 +254,17 @@ int BooleanDatatypeValidator::compare(const XMLCh* const lValue
 const RefArrayVectorOf<XMLCh>* BooleanDatatypeValidator::getEnumString() const
 {
 	return 0;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(BooleanDatatypeValidator)
+
+void BooleanDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+    DatatypeValidator::serialize(serEng);
 }
 
 XERCES_CPP_NAMESPACE_END

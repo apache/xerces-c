@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/10/07 19:39:03  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.7  2003/10/01 01:09:35  knoaman
  * Refactoring of some code to improve performance.
  *
@@ -130,6 +133,17 @@ DatatypeValidator* AnySimpleTypeDatatypeValidator::newInstance
 const RefArrayVectorOf<XMLCh>* AnySimpleTypeDatatypeValidator::getEnumString() const
 {
 	return 0;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(AnySimpleTypeDatatypeValidator)
+
+void AnySimpleTypeDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+    DatatypeValidator::serialize(serEng);
 }
 
 XERCES_CPP_NAMESPACE_END

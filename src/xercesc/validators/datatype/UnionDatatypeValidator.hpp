@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/10/07 19:39:03  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.10  2003/08/16 18:42:49  neilg
  * fix for bug 22457.  Union types that are restrictions of other union types were previously considered not to inherit their parents member types.  This is at variance with the behaviour of the Java parser and apparently with the spec, so I have changed this.
  *
@@ -245,6 +248,12 @@ public:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(UnionDatatypeValidator)
+
+
     RefVectorOf<DatatypeValidator>* getMemberTypeValidators() const;
 
 
@@ -307,9 +316,9 @@ private:
     //
     // -----------------------------------------------------------------------
 
-     bool                 fEnumerationInherited;
-     bool                 fMemberTypesInherited;
-     RefArrayVectorOf<XMLCh>*  fEnumeration;
+     bool                             fEnumerationInherited;
+     bool                             fMemberTypesInherited;
+     RefArrayVectorOf<XMLCh>*         fEnumeration;
      RefVectorOf<DatatypeValidator>*  fMemberTypeValidators;
      DatatypeValidator*               fValidatedDatatype;
 };

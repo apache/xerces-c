@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/10/07 19:39:03  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.12  2003/10/01 16:32:41  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -443,6 +446,113 @@ int UnionDatatypeValidator::compare(const XMLCh* const lValue
 const RefArrayVectorOf<XMLCh>* UnionDatatypeValidator::getEnumString() const
 {
 	return getEnumeration();
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(UnionDatatypeValidator)
+
+void UnionDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+
+    DatatypeValidator::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        serEng<<fEnumerationInherited;
+        serEng<<fMemberTypesInherited;
+
+        /***
+         *
+         * Serialize RefArrayVectorOf<XMLCh>
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fEnumeration))
+        {
+            int enumLength = fEnumeration->size();
+            serEng<<enumLength;
+
+            for ( int i = 0 ; i < enumLength; i++)
+            {            
+                serEng.writeString(fEnumeration->elementAt(i));
+            }
+        }
+
+        /***
+         *
+         * Serialize RefVectorOf<DatatypeValidator>
+         *
+         ***/
+        if (serEng.needToWriteTemplateObject(fMemberTypeValidators))
+        {
+            int vectorLength = fMemberTypeValidators->size();
+            serEng<<vectorLength;
+
+            for ( int i = 0 ; i < vectorLength; i++)
+            {
+                DatatypeValidator::storeDV(serEng, fMemberTypeValidators->elementAt(i));
+            }
+        }
+
+        DatatypeValidator::storeDV(serEng, fValidatedDatatype);
+
+    }
+    else
+    {
+        serEng>>fEnumerationInherited;
+        serEng>>fMemberTypesInherited;
+
+        /***
+         *
+         * Deserialize RefArrayVectorOf<XMLCh>
+         *
+         ***/    
+        if (serEng.needToReadTemplateObject((void**)&fEnumeration))
+        {
+            if (!fEnumeration)
+            {
+                fEnumeration = new (fMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fMemoryManager);
+            }
+
+            serEng.registerTemplateObject(fEnumeration);
+
+            int enumLength = 0;
+            serEng>>enumLength;
+            for ( int i = 0; i < enumLength; i++)
+            {
+                XMLCh* enumVal;
+                serEng.readString(enumVal);
+                fEnumeration->addElement(enumVal);
+            }
+        }
+
+        /***
+         *
+         * Deserialize RefVectorOf<DatatypeValidator>
+         *
+         ***/
+        if (serEng.needToReadTemplateObject((void**)&fMemberTypeValidators))
+        {
+            if (!fMemberTypeValidators)
+            {
+                fMemberTypeValidators = new (fMemoryManager) RefVectorOf<DatatypeValidator>(8, true, fMemoryManager);
+            }
+
+            serEng.registerTemplateObject(fMemberTypeValidators);
+
+            int vectorLength = 0;
+            serEng>>vectorLength;
+            for ( int i = 0 ; i < vectorLength; i++)
+            {            
+                fMemberTypeValidators->addElement(DatatypeValidator::loadDV(serEng));
+            }
+        }
+
+        fValidatedDatatype = DatatypeValidator::loadDV(serEng);
+
+    }
 }
 
 XERCES_CPP_NAMESPACE_END
