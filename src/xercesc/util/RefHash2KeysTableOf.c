@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.16  2005/04/05 12:49:12  amassari
+ * Fix thread safety issues. Jira #30380. Thanks to David Bertoni.
+ *
  * Revision 1.15  2005/02/02 09:27:53  amassari
  * Added rehashing capabilities
  *
@@ -84,6 +87,7 @@
 #include <xercesc/util/RefHash2KeysTableOf.hpp>
 #endif
 
+#include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/NullPointerException.hpp>
 #include <assert.h>
 #include <new>
@@ -513,44 +517,51 @@ findBucketElem(const void* const key1, const int key2, unsigned int& hashVal) co
 template <class TVal> void RefHash2KeysTableOf<TVal>::
 rehash()
 {
-    unsigned int index;
-    unsigned int oldMod = fHashModulus;
-    fHashModulus = (fHashModulus * 8) + 1;
-    
-    RefHash2KeysTableBucketElem<TVal>** oldBucketList = fBucketList;
-    
-    fBucketList = (RefHash2KeysTableBucketElem<TVal>**) fMemoryManager->allocate
+    const unsigned int newMod = (fHashModulus * 8)+1;
+
+    RefHash2KeysTableBucketElem<TVal>** newBucketList =
+        (RefHash2KeysTableBucketElem<TVal>**) fMemoryManager->allocate
     (
-        fHashModulus * sizeof(RefHash2KeysTableBucketElem<TVal>*)
+        newMod * sizeof(RefHash2KeysTableBucketElem<TVal>*)
     );//new RefHash2KeysTableBucketElem<TVal>*[fHashModulus];
-    for (index = 0; index < fHashModulus; index++)
-        fBucketList[index] = 0;
-    
-    
+
+    // Make sure the new bucket list is destroyed if an
+    // exception is thrown.
+    ArrayJanitor<RefHash2KeysTableBucketElem<TVal>*>  guard(newBucketList, fMemoryManager);
+
+    memset(newBucketList, 0, newMod * sizeof(newBucketList[0]));
+
     // Rehash all existing entries.
-    for (index = 0; index < oldMod; index++)
+    for (unsigned int index = 0; index < fHashModulus; index++)
     {
         // Get the bucket list head for this entry
-        RefHash2KeysTableBucketElem<TVal>* curElem = oldBucketList[index];
-        RefHash2KeysTableBucketElem<TVal>* nextElem;
+        RefHash2KeysTableBucketElem<TVal>* curElem = fBucketList[index];
         while (curElem)
         {
             // Save the next element before we detach this one
-            nextElem = curElem->fNext;
+            RefHash2KeysTableBucketElem<TVal>* nextElem = curElem->fNext;
 
-            unsigned int hashVal = fHash->getHashVal(curElem->fKey1, fHashModulus, fMemoryManager);
-            assert(hashVal < fHashModulus);
+            const unsigned int hashVal = fHash->getHashVal(curElem->fKey1, newMod, fMemoryManager);
+            assert(hashVal < newMod);
             
-            RefHash2KeysTableBucketElem<TVal>* newHeadElem = fBucketList[hashVal];
+            RefHash2KeysTableBucketElem<TVal>* newHeadElem = newBucketList[hashVal];
             
             // Insert at the start of this bucket's list.
             curElem->fNext = newHeadElem;
-            fBucketList[hashVal] = curElem;
+            newBucketList[hashVal] = curElem;
             
             curElem = nextElem;
         }
     }
             
+    RefHash2KeysTableBucketElem<TVal>** const oldBucketList = fBucketList;
+
+    // Everything is OK at this point, so update the
+    // member variables.
+    fBucketList = guard.release();
+    fHashModulus = newMod;
+
+    // Delete the old bucket list.
     fMemoryManager->deallocate(oldBucketList);//delete[] oldBucketList;
     
 }
