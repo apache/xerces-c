@@ -116,12 +116,12 @@ static XMLCh                        gDisallow4[] =
 static XMLCh                        gDisallow5[] =
 {
         chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_1
-      , chDigit_1, chDigit_4, chDigit_0, chNull
+      , chDigit_4, chDigit_0, chNull
 };
 static XMLCh                        gDisallow6[] =
 {
         chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_1
-      , chDigit_1, chDigit_4, chDigit_0, chDash, chLatin_S, chDigit_3
+      , chDigit_4, chDigit_0, chDash, chLatin_S, chDigit_3
       , chDigit_9, chDigit_0, chNull
 };
 static const unsigned int           gDisallowListSize = 6;
