@@ -1,0 +1,119 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+
+<s1 title="&XercesCName; Sample 9: SEnumVal">
+
+    <s2 title="SEnumVal">
+        <p>SEnumVal shows how to enumerate the markup decls in a DTD Validator.</p>
+
+        <s3 title="Running SEnumVal">
+          <p>This program parses the specified XML file, then shows how to
+            enumerate the contents of the validator pools. Essentially,
+            shows how one can access the Schema information stored in internal
+            data structures.  To run SEnumVal, enter the following </p>
+<source>SEnumVal &lt;XML file&gt;</source>
+          <p>Here is a sample output from SEnumVal</p>
+<source>cd &XercesCInstallDir;-linux/samples/data
+SEnumVal personal-schema.xml
+
+ Name:			personnel
+ Model Type:		Children
+ Create Reason:	Declared
+ ContentType:	OneOrMore
+ Content Model:	(person)+
+ ComplexType:
+ 	TypeName:	,C0
+ 	ContentType:	OneOrMore
+ --------------------------------------------
+ Name:			person
+ Model Type:		Children
+ Create Reason:	Declared
+ ContentType:	Sequence
+ Content Model:	(name,email*,url*,link?)
+ ComplexType:
+ 	TypeName:	,C1
+ 	ContentType:	Sequence
+ Attributes:
+ 	Name:			salary
+ 	Type:			CDATA
+ 	Default Type:	#IMPLIED
+ 	Base Datatype:		Decimal
+ Facets:		
+ 	fractionDigits=0
+ 
+ 	Name:			id
+ 	Type:			ID
+ 	Default Type:	#REQUIRED
+ 	Base Datatype:		ID
+ 
+ 	Name:			contr
+ 	Type:			CDATA
+ 	Default Type:	#DEFAULT
+ 	Value:			false
+ 	Base Datatype:		string
+ 
+ 	Name:			note
+ 	Type:			CDATA
+ 	Default Type:	#IMPLIED
+ 	Base Datatype:		string
+ 
+ --------------------------------------------
+ Name:			name
+ Model Type:		Children
+ Create Reason:	Declared
+ ContentType:	Sequence
+ Content Model:	(family,given)
+ ComplexType:
+ 	TypeName:	,C3
+ 	ContentType:	Sequence
+ --------------------------------------------
+ Name:			family
+ Model Type:		Simple
+ Create Reason:	Declared
+ Base Datatype:		string
+ --------------------------------------------
+ Name:			given
+ Model Type:		Simple
+ Create Reason:	Declared
+ Base Datatype:		string
+ --------------------------------------------
+ Name:			email
+ Model Type:		Simple
+ Create Reason:	Declared
+ Base Datatype:		string
+ --------------------------------------------
+ Name:			url
+ Model Type:		Empty
+ Create Reason:	Declared
+ Content Model:	EMPTY
+ ComplexType:
+ 	TypeName:	,C4
+ Attributes:
+ 	Name:			href
+ 	Type:			CDATA
+ 	Default Type:	#DEFAULT
+ 	Value:			http://
+ 	Base Datatype:		string
+ 
+ --------------------------------------------
+ Name:			link
+ Model Type:		Empty
+ Create Reason:	Declared
+ Content Model:	EMPTY
+ ComplexType:
+ 	TypeName:	,C5
+ Attributes:
+ 	Name:			subordinates
+ 	Type:			IDREFS
+ 	Default Type:	#IMPLIED
+ 	Base Datatype:		List
+ 
+ 	Name:			manager
+ 	Type:			IDREF
+ 	Default Type:	#IMPLIED
+ 	Base Datatype:		IDREF
+ 
+ --------------------------------------------
+        </s3>
+    </s2>
+</s1>
