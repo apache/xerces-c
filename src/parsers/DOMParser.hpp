@@ -222,17 +222,17 @@ public :
       */
     ValSchemes getValidationScheme() const;
 
-    /** Get the 'schema validation' flag
+    /** Get the 'do schema' flag
       *
-      * This method returns the state of the parser's schema support
+      * This method returns the state of the parser's schema processing
       * flag.
       *
       * @return true, if the parser is currently configured to
-      *         support schema, false otherwise.
+      *         understand schema, false otherwise.
       *
-      * @see #setSchemaValidation
+      * @see #setDoSchema
       */
-    bool getSchemaValidation() const;
+    bool getDoSchema() const;
 
     /** Get the 'do namespaces' flag
       *
@@ -471,23 +471,20 @@ public :
       */
     void setValidationScheme(const ValSchemes newScheme);
 
-    /** Set the 'schema support' flag
+    /** Set the 'do schema' flag
       *
       * This method allows users to enable or disable the parser's
-      * schema support.
+      * schema processing. When set to false, parser will not process
+      * any schema found.
       *
       * The parser's default state is: true.
-      *
-      * This flag is ignored by the underlying scanner if the validation
-      * is disable.
       *
       * @param newState The value specifying whether schema support should
       *                 be enforced or not.
       *
-      * @see #getSchemaValidation
-      * @see #getValidationScheme
+      * @see #getDoSchema
       */
-    void setSchemaValidation(const bool newState);
+    void setDoSchema(const bool newState);
 
     /**
       * This method allows users to set the toCreateXMLDeclTypeNode flag

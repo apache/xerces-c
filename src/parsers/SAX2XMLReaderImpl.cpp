@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/03/30 16:46:57  tng
+ * Schema: Use setDoSchema instead of setSchemaValidation which makes more sense.
+ *
  * Revision 1.9  2001/03/21 21:56:08  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -302,7 +305,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
 	fReuseGrammar = false;
 
 	// default: schema is on
-	setSchemaValidation(true);
+	setDoSchema(true);
 	
 	fPrefixes    = new RefStackOf<XMLBuffer> (10, false) ;
 	tempAttrVec  = new RefVectorOf<XMLAttr>  (10, false) ;
@@ -1105,7 +1108,7 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 
 	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
 	{
-		setSchemaValidation(value);
+		setDoSchema(value);
 	}
 
    else
@@ -1127,7 +1130,7 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEGRAMMAR) == 0)
         return fReuseGrammar;
 	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
-        return getSchemaValidation();
+        return getDoSchema();
    else
        throw SAXNotRecognizedException("Unknown Feature");
 	return false;
@@ -1175,12 +1178,12 @@ bool SAX2XMLReaderImpl::getDoNamespaces() const
     return fScanner->getDoNamespaces();
 }
 
-void SAX2XMLReaderImpl::setSchemaValidation(const bool newState)
+void SAX2XMLReaderImpl::setDoSchema(const bool newState)
 {
-    fScanner->setSchemaValidation(newState);
+    fScanner->setDoSchema(newState);
 }
 
-bool SAX2XMLReaderImpl::getSchemaValidation() const
+bool SAX2XMLReaderImpl::getDoSchema() const
 {
-    return fScanner->getSchemaValidation();
+    return fScanner->getDoSchema();
 }

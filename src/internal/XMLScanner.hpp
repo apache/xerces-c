@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/03/30 16:46:56  tng
+ * Schema: Use setDoSchema instead of setSchemaValidation which makes more sense.
+ *
  * Revision 1.12  2001/03/30 16:35:06  tng
  * Schema: Whitespace normalization.
  *
@@ -253,7 +256,7 @@ public :
     DocTypeHandler* getDocTypeHandler();
     bool getDoNamespaces() const;
     ValSchemes getValidationScheme() const;
-    bool getSchemaValidation() const;
+    bool getDoSchema() const;
     const XMLEntityHandler* getEntityHandler() const;
     XMLEntityHandler* getEntityHandler();
     const XMLErrorReporter* getErrorReporter() const;
@@ -358,7 +361,7 @@ public :
     void setExitOnFirstFatal(const bool newValue);
     void setValidationScheme(const ValSchemes newScheme);
     void setValidator(XMLValidator* const valToAdopt);
-    void setSchemaValidation(const bool doSchema);
+    void setDoSchema(const bool doSchema);
 
     // -----------------------------------------------------------------------
     //  Deprecated methods as of 3.2.0. Use getValidationScheme() and
@@ -669,9 +672,9 @@ private :
     //      This is the currently set validation scheme. It defaults to
     //      'never', but can be set by the client.
     //
-    //  fSchemaValidation
-    //      This flag indicates whether the client code wants Schema
-    //      support or not.
+    //  fDoSchema
+    //      This flag indicates whether the client code wants Schema to
+    //      be processed or not.
     //
     //  fAttName
     //  fAttValue
@@ -747,7 +750,7 @@ private :
     XMLValidator*               fValidator;
     bool                        fValidatorFromUser;
     ValSchemes                  fValScheme;
-    bool                        fSchemaValidation;
+    bool                        fDoSchema;
 
     XMLBuffer                   fAttNameBuf;
     XMLBuffer                   fAttValueBuf;
@@ -879,9 +882,9 @@ inline Grammar* XMLScanner::getCurrentGrammar()
     return fGrammar;
 }
 
-inline bool XMLScanner::getSchemaValidation() const
+inline bool XMLScanner::getDoSchema() const
 {
-    return fSchemaValidation;
+    return fDoSchema;
 }
 
 // ---------------------------------------------------------------------------
@@ -980,9 +983,9 @@ inline void XMLScanner::setValidator(XMLValidator* const valToAdopt)
     fValidator = valToAdopt;
 }
 
-inline void XMLScanner::setSchemaValidation(const bool doSchema)
+inline void XMLScanner::setDoSchema(const bool doSchema)
 {
-    fSchemaValidation = doSchema;
+    fDoSchema = doSchema;
 }
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/03/30 16:46:57  tng
+ * Schema: Use setDoSchema instead of setSchemaValidation which makes more sense.
+ *
  * Revision 1.16  2001/03/21 21:56:08  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -295,9 +298,9 @@ SAXParser::ValSchemes SAXParser::getValidationScheme() const
     return Val_Auto;
 }
 
-bool SAXParser::getSchemaValidation() const
+bool SAXParser::getDoSchema() const
 {
-    return fScanner->getSchemaValidation();
+    return fScanner->getDoSchema();
 }
 
 
@@ -326,9 +329,9 @@ void SAXParser::setValidationScheme(const ValSchemes newScheme)
         fScanner->setValidationScheme(XMLScanner::Val_Auto);
 }
 
-void SAXParser::setSchemaValidation(const bool newState)
+void SAXParser::setDoSchema(const bool newState)
 {
-    fScanner->setSchemaValidation(newState);
+    fScanner->setDoSchema(newState);
 }
 
 

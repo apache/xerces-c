@@ -176,9 +176,9 @@ DOMParser::ValSchemes DOMParser::getValidationScheme() const
     return Val_Auto;
 }
 
-bool DOMParser::getSchemaValidation() const
+bool DOMParser::getDoSchema() const
 {
-    return fScanner->getSchemaValidation();
+    return fScanner->getDoSchema();
 }
 
 
@@ -231,9 +231,9 @@ void DOMParser::setValidationScheme(const ValSchemes newScheme)
         fScanner->setValidationScheme(XMLScanner::Val_Auto);
 }
 
-void DOMParser::setSchemaValidation(const bool newState)
+void DOMParser::setDoSchema(const bool newState)
 {
-    fScanner->setSchemaValidation(newState);
+    fScanner->setDoSchema(newState);
 }
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/03/30 16:46:57  tng
+ * Schema: Use setDoSchema instead of setSchemaValidation which makes more sense.
+ *
  * Revision 1.12  2001/03/21 21:56:09  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -248,17 +251,17 @@ public :
       */
     ValSchemes getValidationScheme() const;
 
-    /** Get the 'schema validation' flag
+    /** Get the 'do schema' flag
       *
-      * This method returns the state of the parser's schema support
+      * This method returns the state of the parser's schema processing
       * flag.
       *
       * @return true, if the parser is currently configured to
-      *         support schema, false otherwise.
+      *         understand schema, false otherwise.
       *
-      * @see #setSchemaValidation
+      * @see #setDoSchema
       */
-    bool getSchemaValidation() const;
+    bool getDoSchema() const;
 
     /**
       * This method returns the state of the parser's namespace
@@ -330,20 +333,17 @@ public :
     /** Set the 'schema support' flag
       *
       * This method allows users to enable or disable the parser's
-      * schema support.
+      * schema processing. When set to false, parser will not process
+      * any schema found.
       *
       * The parser's default state is: true.
-      *
-      * This flag is ignored by the underlying scanner if the validation
-      * is disable.
       *
       * @param newState The value specifying whether schema support should
       *                 be enforced or not.
       *
-      * @see #getSchemaValidation
-      * @see #getValidationScheme
+      * @see #getDoSchema
       */
-    void setSchemaValidation(const bool newState);
+    void setDoSchema(const bool newState);
 
 
     /**

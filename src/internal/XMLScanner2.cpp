@@ -1132,7 +1132,7 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
     }
 
     // walk through the list again to deal with "xsi:...."
-    if (fSchemaValidation && seeXsi)
+    if (fDoSchema && seeXsi)
     {
         for (index = 0; index < attCount; index++)
         {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/03/30 16:46:57  tng
+ * Schema: Use setDoSchema instead of setSchemaValidation which makes more sense.
+ *
  * Revision 1.6  2001/03/21 21:56:08  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -1064,8 +1067,8 @@ private :
 	void setValidationScheme(const ValSchemes newScheme);
     void setDoNamespaces(const bool newState);
     bool getDoNamespaces() const;
-    void setSchemaValidation(const bool newState);
-    bool getSchemaValidation() const;
+    void setDoSchema(const bool newState);
+    bool getDoSchema() const;
 
 };
 
