@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/06/13 20:50:56  peiyongz
+ * fIsMixed: to handle mixed Content Model
+ *
  * Revision 1.13  2001/06/12 19:07:14  peiyongz
  * Memory leak: fixed by Erik Rydgren
  *
@@ -158,6 +161,31 @@ DFAContentModel::DFAContentModel(const bool            dtd
     , fTransTable(0)
     , fTransTableSize(0)
     , fDTD(dtd)
+    , fIsMixed(false)
+    , fLeafNameTypeVector(0)
+{
+    // And build the DFA data structures
+    buildDFA(elemDecl->getContentSpec());
+}
+
+DFAContentModel::DFAContentModel(const bool            dtd
+                               , XMLElementDecl* const elemDecl
+                               , const bool            isMixed) :
+
+    fElemMap(0)
+	 , fElemMapType(0)
+    , fElemMapSize(0)
+    , fEmptyOk(false)
+    , fEOCPos(0)
+    , fFinalStateFlags(0)
+    , fFollowList(0)
+    , fHeadNode(0)
+    , fLeafCount(0)
+    , fLeafList(0)
+    , fTransTable(0)
+    , fTransTableSize(0)
+    , fDTD(dtd)
+    , fIsMixed(isMixed)
     , fLeafNameTypeVector(0)
 {
     // And build the DFA data structures
@@ -217,6 +245,11 @@ DFAContentModel::validateContent( QName** const        children
     {
         // Get the current element index out
         const QName* curElem = children[childIndex];
+
+        // If this is text in a Schema mixed content model, skip it.
+        if ( fIsMixed && 
+            ( curElem->getURI() == XMLElementDecl::fgPCDataElemId))
+            continue;
 
         // Look up this child in our element map
         unsigned int elemIndex = 0;
@@ -320,6 +353,11 @@ int DFAContentModel::validateContentSpecial(QName** const          children
         // Get the current element index out
         QName* curElem = children[childIndex];
 
+        // If this is text in a Schema mixed content model, skip it.
+        if ( fIsMixed && 
+            ( curElem->getURI() == XMLElementDecl::fgPCDataElemId))
+            continue;
+
         // Look up this child in our element map
         unsigned int elemIndex = 0;
         for (; elemIndex < fElemMapSize; elemIndex++)
@@ -327,7 +365,7 @@ int DFAContentModel::validateContentSpecial(QName** const          children
             QName* inElem  = fElemMap[elemIndex];
             ContentSpecNode::NodeTypes type = fElemMapType[elemIndex];
             if (type == ContentSpecNode::Leaf)
-            {
+            {           
                 if (comparator.isEquivalentTo(curElem, inElem) )
                 {
                     nextState = fTransTable[curState][elemIndex];

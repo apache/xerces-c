@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/06/13 20:51:15  peiyongz
+ * fIsMixed: to handle mixed Content Model
+ *
  * Revision 1.7  2001/05/11 13:27:36  tng
  * Copyright update.
  *
@@ -208,7 +211,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    XMLContentModel* createChildModel() ;
+    XMLContentModel* createChildModel(const bool isMixed) ;
     void faultInAttDefList() const;
 
 

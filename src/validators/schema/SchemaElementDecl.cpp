@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/06/13 20:51:18  peiyongz
+ * fIsMixed: to handle mixed Content Model
+ *
  * Revision 1.8  2001/05/11 13:27:35  tng
  * Copyright update.
  *
@@ -324,7 +327,7 @@ XMLContentModel* SchemaElementDecl::makeContentModel()
         //  Just create a mixel content model object. This type of
         //  content model is optimized for mixed content validation.
         //
-        cmRet = new MixedContentModel(false, this);
+         cmRet = createChildModel(true);
     }
      else if (fModelType == Children)
     {
@@ -335,7 +338,7 @@ XMLContentModel* SchemaElementDecl::makeContentModel()
         //  create a SimpleListContentModel object. If its complex, it
         //  will create a DFAContentModel object.
         //
-        cmRet = createChildModel();
+         cmRet = createChildModel(false);
     }
      else
     {
@@ -349,7 +352,7 @@ XMLContentModel* SchemaElementDecl::makeContentModel()
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Private helper methods
 // ---------------------------------------------------------------------------
-XMLContentModel* SchemaElementDecl::createChildModel()
+XMLContentModel* SchemaElementDecl::createChildModel(const bool isMixed)
 {
     // Get the content spec node of the element
     ContentSpecNode* specNode = getContentSpec();
@@ -372,6 +375,10 @@ XMLContentModel* SchemaElementDecl::createChildModel()
        ((specNode->getType() & 0x0f) == ContentSpecNode::Any_Other) ||
        ((specNode->getType() & 0x0f) == ContentSpecNode::Any_Local)) {
        // let fall through to build a DFAContentModel
+    }
+    else if (isMixed)
+    {
+        //REVISIT once we introduce ALL content model
     }
      else if (specNode->getType() == ContentSpecNode::Leaf)
     {
@@ -429,7 +436,7 @@ XMLContentModel* SchemaElementDecl::createChildModel()
     }
 
     // Its not any simple type of content, so create a DFA based content model
-    return new DFAContentModel(false, this);
+    return new DFAContentModel(false, this, isMixed);
 }
 
 

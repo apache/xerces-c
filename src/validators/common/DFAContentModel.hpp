@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/06/13 20:50:55  peiyongz
+ * fIsMixed: to handle mixed Content Model
+ *
  * Revision 1.8  2001/05/11 13:27:18  tng
  * Copyright update.
  *
@@ -133,6 +136,11 @@ public:
     // -----------------------------------------------------------------------
     DFAContentModel(const bool             dtd
                   , XMLElementDecl* const  elemDecl);
+
+    DFAContentModel(const bool             dtd
+                  , XMLElementDecl* const  elemDecl
+                  , const bool             isMixed);
+
     virtual ~DFAContentModel();
 
 
@@ -254,6 +262,9 @@ private :
     //  fDTD
     //      Boolean to allow DTDs to validate even with namespace support.
     //
+    //  fIsMixed
+    //      DFA ContentModel with mixed PCDATA.
+    //
     // -----------------------------------------------------------------------
     QName**                 fElemMap;
     ContentSpecNode::NodeTypes  *fElemMapType;
@@ -269,6 +280,7 @@ private :
     unsigned int**          fTransTable;
     unsigned int            fTransTableSize;
     bool                    fDTD;
+    bool                    fIsMixed;
     ContentLeafNameTypeVector *fLeafNameTypeVector;
 };
 
