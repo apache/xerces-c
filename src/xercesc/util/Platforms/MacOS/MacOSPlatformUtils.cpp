@@ -126,13 +126,13 @@ XMLCh*	ConvertColonToSlash(XMLCh* p, std::size_t charCount);
 XMLCh*	ConvertSlashToColon(XMLCh* p, std::size_t charCount);
 char*	ConvertSlashToColon(char* p, std::size_t charCount);
 
-XMLCh*	XMLCreateFullPathFromFSRef_X(const FSRef& startingRef);
-XMLCh*	XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef);
+XMLCh*	XMLCreateFullPathFromFSRef_X(const FSRef& startingRef, MemoryManager* const manager);
+XMLCh*	XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef, MemoryManager* const manager);
 XMLCh*	XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec,
                                             MemoryManager* const manager);
-bool	XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref);
-bool	XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref);
-bool	XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec);
+bool	XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref, MemoryManager* const manager);
+bool	XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref, MemoryManager* const manager);
+bool	XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec, MemoryManager* const manager);
 
 
 //----------------------------------------------------------------------------
@@ -313,13 +313,17 @@ XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
     if (gHasHFSPlusAPIs)
     {
         FSRef ref;
-        if (!XMLParsePathToFSRef(srcPath, ref) || (path = XMLCreateFullPathFromFSRef(ref)) == NULL)
+        if (   !XMLParsePathToFSRef(srcPath, ref, manager)
+			|| (path = XMLCreateFullPathFromFSRef(ref, manager)) == NULL
+		   )
             path = XMLString::replicate(srcPath, manager);
     }
     else
     {
         FSSpec spec;
-        if (!XMLParsePathToFSSpec(srcPath, spec) || (path = XMLCreateFullPathFromFSSpec(spec, manager)) == NULL)
+        if (   !XMLParsePathToFSSpec(srcPath, spec, manager)
+		    || (path = XMLCreateFullPathFromFSSpec(spec, manager)) == NULL
+		   )
             path = XMLString::replicate(srcPath, manager);
     }
 
@@ -739,7 +743,7 @@ XMLMakeMacFile(void)
 
 
 bool
-XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
+XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref, MemoryManager* const manager)
 {
 	bool result;
 	
@@ -759,16 +763,16 @@ XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref)
 	//	classic case for this.
 		
 	if (TARGET_API_MAC_CARBON && gHasFSPathAPIs && gPathAPIsUsePosixPaths)
-		result = XMLParsePathToFSRef_X(pathName, ref);
+		result = XMLParsePathToFSRef_X(pathName, ref, manager);
 	else
-		result = XMLParsePathToFSRef_Classic(pathName, ref);
+		result = XMLParsePathToFSRef_Classic(pathName, ref, manager);
 		
 	return result;
 }
 
 
 bool
-XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref)
+XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref, MemoryManager* const manager)
 {
 	//	Parse Path to FSRef using FSPathMakeRef as available under
 	//	Mac OS X and CarbonLib 1.1 and greater.
@@ -828,7 +832,7 @@ XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref)
 
 
 bool
-XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref)
+XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref, MemoryManager* const manager)
 {
 	//	Parse Path to FSRef by stepping manually through path components.
 	
@@ -960,7 +964,8 @@ XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref)
 
 
 bool
-XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
+XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec,
+                            MemoryManager* const manager)
 {
 	//	Parse Path to an FSSpec
 
@@ -974,7 +979,7 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
 	{
 		//	Parse to a ref
 		FSRef ref;
-		result = XMLParsePathToFSRef(pathName, ref);
+		result = XMLParsePathToFSRef(pathName, ref, manager);
 		
 		//	Down convert to a spec
 		if (result)
@@ -987,7 +992,7 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
 								));
 	}
 	else
-		result = XMLParsePathToFSSpec_Classic(pathName, spec);
+		result = XMLParsePathToFSSpec_Classic(pathName, spec, manager);
 		
 	//	Return true on success
 	return result;
@@ -995,13 +1000,14 @@ XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec)
 
 
 bool
-XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
+XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec,
+                            MemoryManager* const manager)
 {
 	//	Manually parse the path using FSSpec APIs.
 	
     //	Transcode the path into ascii
-    const char* p = XMLString::transcode(pathName, fgMemoryManager);
-    ArrayJanitor<const char> janPath(p, fgMemoryManager);
+    const char* p = XMLString::transcode(pathName, manager);
+    ArrayJanitor<const char> janPath(p, manager);
     const char* pEnd;
     std::size_t segLen;
 
@@ -1153,7 +1159,8 @@ XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec)
 
 
 XMLCh*
-XMLCreateFullPathFromFSRef(const FSRef& startingRef)
+XMLCreateFullPathFromFSRef(const FSRef& startingRef,
+                            MemoryManager* const manager)
 {
 	XMLCh* result = NULL;
 	
@@ -1171,16 +1178,17 @@ XMLCreateFullPathFromFSRef(const FSRef& startingRef)
 	//	makes paths with ':' separators, which really confuses us!
 	
 	if (TARGET_API_MAC_CARBON && gHasFSPathAPIs && gPathAPIsUsePosixPaths)
-		result = XMLCreateFullPathFromFSRef_X(startingRef);
+		result = XMLCreateFullPathFromFSRef_X(startingRef, manager);
 	else
-		result = XMLCreateFullPathFromFSRef_Classic(startingRef);
+		result = XMLCreateFullPathFromFSRef_Classic(startingRef, manager);
 		
 	return result;
 }
 
 
 XMLCh*
-XMLCreateFullPathFromFSRef_X(const FSRef& startingRef)
+XMLCreateFullPathFromFSRef_X(const FSRef& startingRef,
+                            MemoryManager* const manager)
 {
 	//	Create the path using FSRefMakePath as available on Mac OS X
 	//	and under CarbonLib 1.1 and greater.
@@ -1203,7 +1211,8 @@ XMLCreateFullPathFromFSRef_X(const FSRef& startingRef)
 	uniBuf[pathLen++] = 0;
 	
 	//	Transcode into a dynamically allocated buffer of XMLChs
-	ArrayJanitor<XMLCh> result((XMLCh*) fgMemoryManager->allocate(pathLen * sizeof(XMLCh))/*new XMLCh[pathLen]*/, fgMemoryManager);
+	ArrayJanitor<XMLCh> result((XMLCh*) manager->allocate(pathLen * sizeof(XMLCh))/*new XMLCh[pathLen]*/,
+			manager);
 	if (result.get() != NULL)
 		CopyUniCharsToXMLChs(uniBuf, result.get(), pathLen, pathLen);
 		
@@ -1212,7 +1221,8 @@ XMLCreateFullPathFromFSRef_X(const FSRef& startingRef)
 
 
 XMLCh*
-XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
+XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef,
+                            MemoryManager* const manager)
 {
 	//	Manually create the path using FSRef APIs.
     OSStatus err = noErr;
@@ -1249,8 +1259,8 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
 			{
 				ArrayJanitor<XMLCh> temp
                 (
-                    (XMLCh*) fgMemoryManager->allocate((bufCnt + resultLen) * sizeof(XMLCh));//new XMLCh[bufCnt + resultLen]
-                    , fgMemoryManager
+                    (XMLCh*) manager->allocate((bufCnt + resultLen) * sizeof(XMLCh)) //new XMLCh[bufCnt + resultLen]
+                    , manager
                 );
 				
 				// Copy in the static buffer
@@ -1281,8 +1291,8 @@ XMLCreateFullPathFromFSRef_Classic(const FSRef& startingRef)
 	// Composite existing buffer + any previous result buffer
 	ArrayJanitor<XMLCh> final
     (
-        (XMLCh*) fgMemoryManager->allocate((bufCnt + resultLen) * sizeof(XMLCh))//new XMLCh[bufCnt + resultLen]
-        , fgMemoryManager
+        (XMLCh*) manager->allocate((bufCnt + resultLen) * sizeof(XMLCh))//new XMLCh[bufCnt + resultLen]
+        , manager
     );
 	
 	// Copy in the static buffer
@@ -1316,7 +1326,7 @@ XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec,
 			
 		//	Create the path
 		if (err == noErr)
-			result = XMLCreateFullPathFromFSRef(ref);
+			result = XMLCreateFullPathFromFSRef(ref, manager);
 	}
 	else
 	{
@@ -1366,8 +1376,8 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec,
 			{
 				ArrayJanitor<char> temp
                 (
-                    (char*) fgMemoryManager->allocate((bufCnt + resultLen) * sizeof(char))//new char[bufCnt + resultLen]
-                    , fgMemoryManager
+                    (char*) manager->allocate((bufCnt + resultLen) * sizeof(char))//new char[bufCnt + resultLen]
+                    , manager
                 );
 				
 				// Copy in the static buffer
@@ -1402,8 +1412,8 @@ XMLCreateFullPathFromFSSpec_Classic(const FSSpec& startingSpec,
 	// Composite existing buffer with any previous result buffer
 	ArrayJanitor<char> final
     (
-        (char*) fgMemoryManager->allocate((bufCnt + resultLen) * sizeof(char))//new char[bufCnt + resultLen]
-        , fgMemoryManager
+        (char*) manager->allocate((bufCnt + resultLen) * sizeof(char))//new char[bufCnt + resultLen]
+        , manager
     );
 	
 	// Copy in the static buffer

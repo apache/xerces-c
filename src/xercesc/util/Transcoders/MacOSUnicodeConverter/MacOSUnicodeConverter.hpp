@@ -259,7 +259,7 @@ public :
                             MemoryManager* const manager);
 
     virtual XMLCh* transcode(const char* const toTranscode);
-    virtual char* transcode(const XMLCh* const toTranscode,
+    virtual XMLCh* transcode(const char* const toTranscode,
                             MemoryManager* const manager);
 
     virtual bool transcode

@@ -743,6 +743,8 @@
 				02058E87FF8AF8CD7F000001,
 				02058E88FF8AF8CD7F000001,
 				F51053550382BB2501A80066,
+				90F9913A047B1E0100A80080,
+				90F9913B047B1E0100A80080,
 				02058E89FF8AF8CD7F000001,
 				02058E8AFF8AF8CD7F000001,
 				02058E8BFF8AF8CD7F000001,
@@ -3426,6 +3428,8 @@
 				9019E702045C3C8C0095DDBE,
 				9019E706045C3CBB0095DDBE,
 				9019E70A045C3CE10095DDBE,
+				90F9913D047B1E0100A80080,
+				90F99141047B1E7800A80080,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3739,6 +3743,8 @@
 				90B1A25B041C20770095DDD1,
 				9019E705045C3CBB0095DDBE,
 				9019E709045C3CE10095DDBE,
+				90F9913C047B1E0100A80080,
+				90F99140047B1E7800A80080,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4829,6 +4835,54 @@
 		};
 		90E0251B03E9FE2200136FE6 = {
 			fileRef = 90E0251A03E9FE2200136FE6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90F9913A047B1E0100A80080 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = XMemory.cpp;
+			refType = 4;
+		};
+		90F9913B047B1E0100A80080 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = XMemory.hpp;
+			refType = 4;
+		};
+		90F9913C047B1E0100A80080 = {
+			fileRef = 90F9913A047B1E0100A80080;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90F9913D047B1E0100A80080 = {
+			fileRef = 90F9913B047B1E0100A80080;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90F9913E047B1E7800A80080 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = DOMNormalizer.cpp;
+			refType = 4;
+		};
+		90F9913F047B1E7800A80080 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = DOMNormalizer.hpp;
+			refType = 4;
+		};
+		90F99140047B1E7800A80080 = {
+			fileRef = 90F9913E047B1E7800A80080;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90F99141047B1E7800A80080 = {
+			fileRef = 90F9913F047B1E7800A80080;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8370,6 +8424,8 @@
 				F58FFBAC02C4EAAC01A80065,
 				F58FFBAD02C4EAAC01A80065,
 				F58FFBAE02C4EAAC01A80065,
+				90F9913E047B1E7800A80080,
+				90F9913F047B1E7800A80080,
 				F58FFBAF02C4EAAC01A80065,
 				F58FFBB002C4EAAC01A80065,
 				F58FFBB102C4EAAC01A80065,

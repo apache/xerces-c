@@ -97,13 +97,17 @@ XMLUTIL_EXPORT XMLMacAbstractFile* XMLMakeMacFile(void);
 
 //	Convert fom FSRef/FSSpec to a Unicode character string path.
 //	Note that you'll need to delete [] that string after you're done with it!
-XMLUTIL_EXPORT XMLCh*	XMLCreateFullPathFromFSRef(const FSRef& startingRef);
-XMLUTIL_EXPORT XMLCh*	XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec);
+XMLUTIL_EXPORT XMLCh*	XMLCreateFullPathFromFSRef(const FSRef& startingRef,
+                            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+XMLUTIL_EXPORT XMLCh*	XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec,
+                            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 //	Convert from path to FSRef/FSSpec
 //	You retain ownership of the pathName.
-XMLUTIL_EXPORT bool	XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref);
-XMLUTIL_EXPORT bool	XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec);
+XMLUTIL_EXPORT bool	XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref,
+                            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+XMLUTIL_EXPORT bool	XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec,
+                            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 //	These routines copy characters between their representation in the Unicode Converter
 //	and the representation used by XMLCh. Until a recent change in Xerces, these were
