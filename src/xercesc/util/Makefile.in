@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.7  2002/06/12 17:10:16  tng
+# Add KeyRefPair (similar to KeyValuePair but using reference instead of value).
+#
 # Revision 1.6  2002/05/29 21:47:08  knoaman
 # DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
 #
@@ -364,6 +367,7 @@ UTIL_CPP_PUBHEADERS = \
     InvalidCastException.hpp \
     Janitor.hpp \
     KVStringPair.hpp \
+    KeyRefPair.hpp \
     KeyValuePair.hpp \
     Mutexes.hpp \
     NameIdPool.hpp \
@@ -432,6 +436,7 @@ C_FILES = \
     CountedPointer.c \
     FlagJanitor.c \
     Janitor.c \
+    KeyRefPair.c \
     KeyValuePair.c \
     NameIdPool.c \
     RefArrayOf.c \
