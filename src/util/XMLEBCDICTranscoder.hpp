@@ -69,6 +69,8 @@
 //  transcoders using the same transcoder abstraction as the pluggable
 //  transcoding services do.
 //
+//  EBCDIC-US is the same as IBM037, CP37, EBCDIC-CP-US, etc...
+//
 class XMLUTIL_EXPORT XMLEBCDICTranscoder : public XMLTranscoder
 {
 public :

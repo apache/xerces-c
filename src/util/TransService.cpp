@@ -62,7 +62,7 @@
 #include <util/XML88591Transcoder.hpp>
 #include <util/XMLASCIITranscoder.hpp>
 #include <util/XMLEBCDICTranscoder.hpp>
-#include <util/XMLIBM1047Transcoder.hpp>
+#include <util/XMLIBM1140Transcoder.hpp>
 #include <util/XMLUCS4Transcoder.hpp>
 #include <util/XMLUTF8Transcoder.hpp>
 #include <util/XMLUTF16Transcoder.hpp>
@@ -306,14 +306,17 @@ void XMLTransService::initTransService()
     //  encodings to our intrinsic encoder, which is IBM-037. And of course
     //  we map the IBM-037 encoding itself here as well.
     //
-    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgDefaultEBCDICEncodingString));
-    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgEBCDICEncodingString));
-    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgEBCDICEncodingString2));
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString));
+    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString2));
+    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString3));
+    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString4));
+    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString5));
+    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString6));
 
     //
-    //  And we intrinsically support the OE EBCDIC native page, which is IBM-1047.
-    //  It must be explicitly indicated as IBM-1047.
+    //  Add in our mappings for the EBCDIC-US with Euro update, i.e. IBM1140
+    //  or CPIBM1140.
     //
-    gMappings->put(new ENameMapFor<XMLIBM1047Transcoder>(XMLUni::fgIBM1047EncodingString));
+    gMappings->put(new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString));
+    gMappings->put(new ENameMapFor<XMLIBM1140Transcoder>(XMLUni::fgIBM1140EncodingString2));
 }

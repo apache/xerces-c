@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/17 00:51:13  roddey
+ * Updates for EBCDIC code page issues.
+ *
  * Revision 1.7  2000/02/08 00:59:19  roddey
  * Support for new intrinsic encoder for IBM-1047 code page.
  *
@@ -117,11 +120,6 @@ const XMLCh XMLUni::fgCDATAString[] =
     chLatin_C, chLatin_D, chLatin_A, chLatin_T, chLatin_A, chNull
 };
 
-const XMLCh XMLUni::fgDefaultEBCDICEncodingString[] =
-{
-    chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chDash, chLatin_C, chLatin_P, chDash, chLatin_U, chLatin_S, chNull
-};
-
 const XMLCh XMLUni::fgDefaultString[] =
 {
     chPound, chLatin_D, chLatin_E, chLatin_F, chLatin_A, chLatin_U, chLatin_L, chLatin_T, chNull
@@ -134,12 +132,8 @@ const XMLCh XMLUni::fgDocTypeString[] =
 
 const XMLCh XMLUni::fgEBCDICEncodingString[] =
 {
+    // Just plain 'EBCDIC'
     chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chNull
-};
-
-const XMLCh XMLUni::fgEBCDICEncodingString2[] =
-{
-    chLatin_C, chLatin_P, chDigit_0, chDigit_3, chDigit_7, chNull
 };
 
 const XMLCh XMLUni::fgElemString[] =
@@ -209,9 +203,40 @@ const XMLCh XMLUni::fgIBM037EncodingString[] =
     chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_0, chDigit_3, chDigit_7, chNull
 };
 
-const XMLCh XMLUni::fgIBM1047EncodingString[] =
+const XMLCh XMLUni::fgIBM037EncodingString2[] =
 {
-    chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_0, chDigit_4, chDigit_7, chNull
+    chLatin_C, chLatin_P, chLatin_I, chLatin_B, chLatin_M, chDigit_3, chDigit_7, chNull
+};
+
+const XMLCh XMLUni::fgIBM037EncodingString3[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDigit_0, chDigit_3, chDigit_7, chNull
+};
+
+const XMLCh XMLUni::fgIBM037EncodingString4[] =
+{
+    chLatin_C, chLatin_P, chDigit_3, chDigit_7, chNull
+};
+
+const XMLCh XMLUni::fgIBM037EncodingString5[] =
+{
+    chLatin_C, chLatin_P, chDigit_0, chDigit_3, chDigit_7, chNull
+};
+
+const XMLCh XMLUni::fgIBM037EncodingString6[] =
+{
+    chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chDash, chLatin_C, chLatin_P, chDash, chLatin_U, chLatin_S, chNull
+};
+
+
+const XMLCh XMLUni::fgIBM1140EncodingString[] =
+{
+    chLatin_C, chLatin_P, chLatin_I, chLatin_B, chLatin_M, chDigit_1, chDigit_1, chDigit_4, chDigit_0, chNull
+};
+
+const XMLCh XMLUni::fgIBM1140EncodingString2[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDigit_1, chDigit_1, chDigit_4, chDigit_0, chNull
 };
 
 const XMLCh XMLUni::fgIESString[] =

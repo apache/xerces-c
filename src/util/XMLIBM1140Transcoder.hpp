@@ -54,8 +54,8 @@
  * <http://www.apache.org/>.
  */
 
-#ifndef XMLIBM1047TRANSCODER_HPP
-#define XMLIBM1047TRANSCODER_HPP
+#ifndef XMLIBM1140TRANSCODER_HPP
+#define XMLIBM1140TRANSCODER_HPP
 
 #include <util/XML4CDefs.hpp>
 #include <util/TransService.hpp>
@@ -63,13 +63,13 @@
 
 //
 //  This class provides an implementation of the XMLTranscoder interface
-//  for a simple ibm-1047 transcoder. The parser does some encodings
+//  for a simple ibm-1140 transcoder. The parser does some encodings
 //  intrinsically without depending upon external transcoding services.
 //  To make everything more orthagonal, we implement these internal
 //  transcoders using the same transcoder abstraction as the pluggable
 //  transcoding services do.
 //
-class XMLUTIL_EXPORT XMLIBM1047Transcoder : public XMLTranscoder
+class XMLUTIL_EXPORT XMLIBM1140Transcoder : public XMLTranscoder
 {
 public :
     // -----------------------------------------------------------------------
@@ -81,13 +81,13 @@ public :
     // -----------------------------------------------------------------------
     //  Public constructors and destructor
     // -----------------------------------------------------------------------
-    XMLIBM1047Transcoder
+    XMLIBM1140Transcoder
     (
         const   XMLCh* const    encodingName
         , const unsigned int    blockSize
     );
 
-    virtual ~XMLIBM1047Transcoder();
+    virtual ~XMLIBM1140Transcoder();
 
 
     // -----------------------------------------------------------------------
@@ -117,8 +117,8 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    XMLIBM1047Transcoder(const XMLIBM1047Transcoder&);
-    void operator=(const XMLIBM1047Transcoder&);
+    XMLIBM1140Transcoder(const XMLIBM1140Transcoder&);
+    void operator=(const XMLIBM1140Transcoder&);
 };
 
 #endif

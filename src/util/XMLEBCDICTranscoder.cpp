@@ -481,34 +481,46 @@ int compFunc(const void* p1, const void* p2)
     return (int)rec1->ebcdicCh - (int)rec2->ebcdicCh;
 }
 
-static void spitOutTable()
+class SpitOutTable
 {
-    const unsigned int recCount = sizeof(gXlatTable) / sizeof(gXlatTable[0]);
-    qsort
-    (
-        gXlatTable
-        , recCount
-        , sizeof(XlatRecord)
-        , compFunc
-    );
-
-    unsigned int curValue = 0;
-    for (unsigned int index = 0; index < recCount; index++)
+public :
+    SpitOutTable()
     {
-        if (gXlatTable[index].ebcdicCh == curValue)
+        spitOutTable();
+    }
+
+    void spitOutTable()
+    {
+        const unsigned int recCount = sizeof(gXlatTable) / sizeof(gXlatTable[0]);
+        qsort
+        (
+            gXlatTable
+            , recCount
+            , sizeof(XlatRecord)
+            , compFunc
+        );
+
+        unsigned int curValue = 0;
+        for (unsigned int index = 0; index < recCount; index++)
         {
-            printf("0x%04X\n", (unsigned int)gXlatTable[index].xmlCh);
-            curValue++;
-        }
-         else
-        {
-            // We've hit a gap, so catch up
-            while (curValue < gXlatTable[index].ebcdicCh)
+            if (gXlatTable[index].ebcdicCh == curValue)
             {
-                printf("0xFFFF\n");
+                printf("0x%04X\n", (unsigned int)gXlatTable[index].xmlCh);
                 curValue++;
+            }
+             else
+            {
+                // We've hit a gap, so catch up
+                while (curValue < gXlatTable[index].ebcdicCh)
+                {
+                    printf("0xFFFF\n");
+                    curValue++;
+                }
             }
         }
     }
-}
+};
+
+SpitOutTable kicker;
+
 #endif

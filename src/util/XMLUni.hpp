@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/17 00:51:13  roddey
+ * Updates for EBCDIC code page issues.
+ *
  * Revision 1.7  2000/02/09 23:06:03  abagchi
  * Removed fgOtherEncodingStr
  *
@@ -227,9 +230,7 @@ public :
     static const XMLCh fgCDATAString[];
     static const XMLCh fgDefaultString[];
     static const XMLCh fgDocTypeString[];
-    static const XMLCh fgDefaultEBCDICEncodingString[];
     static const XMLCh fgEBCDICEncodingString[];
-    static const XMLCh fgEBCDICEncodingString2[];
     static const XMLCh fgElemString[];
     static const XMLCh fgEmptyString[];
     static const XMLCh fgEncodingString[];
@@ -241,7 +242,13 @@ public :
     static const XMLCh fgFixedString[];
     static const XMLCh fgGlobalNSURIName[];
     static const XMLCh fgIBM037EncodingString[];
-    static const XMLCh fgIBM1047EncodingString[];
+    static const XMLCh fgIBM037EncodingString2[];
+    static const XMLCh fgIBM037EncodingString3[];
+    static const XMLCh fgIBM037EncodingString4[];
+    static const XMLCh fgIBM037EncodingString5[];
+    static const XMLCh fgIBM037EncodingString6[];
+    static const XMLCh fgIBM1140EncodingString[];
+    static const XMLCh fgIBM1140EncodingString2[];
     static const XMLCh fgIESString[];
     static const XMLCh fgIDString[];
     static const XMLCh fgIDRefString[];
