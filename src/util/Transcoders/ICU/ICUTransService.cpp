@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.11  2000/01/25 19:19:07  roddey
+ * Simple addition of a getId() method to the xcode and netacess abstractions to
+ * allow each impl to give back an id string.
+ *
  * Revision 1.10  2000/01/24 20:39:47  roddey
  * Fixed a bug introduced in the recent move to always have XMLCh be
  * the same as wchar_t.
@@ -108,6 +112,16 @@
 #include <unicode/unicode.h>
 #include <unicode/ucnv.h>
 #include <unicode/ustring.h>
+
+
+
+// ---------------------------------------------------------------------------
+//  Local, const data
+// ---------------------------------------------------------------------------
+static const XMLCh gMyServiceId[] =
+{
+    chLatin_I, chLatin_C, chLatin_U, chNull
+};
 
 
 
@@ -231,6 +245,12 @@ int ICUTransService::compareNIString(const  XMLCh* const    comp1
             break;
     }
     return 0;
+}
+
+
+const XMLCh* ICUTransService::getId() const
+{
+    return gMyServiceId;
 }
 
 

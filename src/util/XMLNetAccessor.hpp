@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/25 19:19:07  roddey
+ * Simple addition of a getId() method to the xcode and netacess abstractions to
+ * allow each impl to give back an id string.
+ *
  * Revision 1.4  2000/01/15 01:26:17  rahulj
  * Added support for HTTP to the parser using libWWW 5.2.8.
  * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
@@ -131,6 +135,8 @@ public :
     // -----------------------------------------------------------------------
     //  The virtual net accessor interface
     // -----------------------------------------------------------------------
+    virtual const XMLCh* getId() const = 0;
+
     virtual BinInputStream* makeNew
     (
         const   XMLURL&                 urlSrc

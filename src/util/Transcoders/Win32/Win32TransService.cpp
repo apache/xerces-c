@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/25 19:19:09  roddey
+ * Simple addition of a getId() method to the xcode and netacess abstractions to
+ * allow each impl to give back an id string.
+ *
  * Revision 1.4  1999/12/18 00:22:33  roddey
  * Changes to support the new, completely orthagonal, transcoder architecture.
  *
@@ -82,7 +86,18 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "Win32TransService.hpp"
+#include <util/XMLUni.hpp>
 #include <windows.h>
+
+
+// ---------------------------------------------------------------------------
+//  Local, const data
+// ---------------------------------------------------------------------------
+static const XMLCh gMyServiceId[] =
+{
+    chLatin_W, chLatin_i, chLatin_n, chDigit_3, chDigit_2, chNull
+};
+
 
 
 // ---------------------------------------------------------------------------
@@ -106,6 +121,7 @@ int Win32TransService::compareIString(  const   XMLCh* const    comp1
     return _wcsicmp(comp1, comp2);
 }
 
+
 int Win32TransService::compareNIString( const   XMLCh* const    comp1
                                         , const XMLCh* const    comp2
                                         , const unsigned int    maxChars)
@@ -113,10 +129,18 @@ int Win32TransService::compareNIString( const   XMLCh* const    comp1
     return _wcsnicmp(comp1, comp2, maxChars);
 }
 
+
+const XMLCh* Win32TransService::getId() const
+{
+    return gMyServiceId;
+}
+
+
 bool Win32TransService::isSpace(const XMLCh toCheck) const
 {
     return (iswspace(toCheck) != 0);
 }
+
 
 XMLLCPTranscoder* Win32TransService::makeNewLCPTranscoder()
 {

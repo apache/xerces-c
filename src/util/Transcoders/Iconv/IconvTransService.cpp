@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/01/25 19:19:08  roddey
+ * Simple addition of a getId() method to the xcode and netacess abstractions to
+ * allow each impl to give back an id string.
+ *
  * Revision 1.8  2000/01/06 01:21:34  aruna1
  * Transcoding services modified.
  *
@@ -101,6 +105,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/XMLUni.hpp>
 #include "IconvTransService.hpp"
 #include <wchar.h>
 #if defined (XML_GNUG)
@@ -110,8 +115,21 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static const int gTempBuffArraySize = 1024;
-static unsigned int  getWideCharLength(const XMLCh* const src)
+
+// ---------------------------------------------------------------------------
+//  Local, const data
+// ---------------------------------------------------------------------------
+static const int    gTempBuffArraySize = 1024;
+static const XMLCh  gMyServiceId[] =
+{
+    chLatin_I, chLatin_C, chLatin_o, chDigit_n, chDigit_v, chNull
+};
+
+
+// ---------------------------------------------------------------------------
+//  Local methods
+// ---------------------------------------------------------------------------
+static unsigned int getWideCharLength(const XMLCh* const src)
 {
     if (!src)
         return 0;
@@ -122,7 +140,6 @@ static unsigned int  getWideCharLength(const XMLCh* const src)
         len++;
     return len;
 }
-
 
 
 
@@ -185,6 +202,12 @@ int IconvTransService::compareNIString( const   XMLCh* const    comp1
         n++;
     }
     return 0;
+}
+
+
+const XMLCh* Iconv32TransService::getId() const
+{
+    return gMyServiceId;
 }
 
 
@@ -270,7 +293,6 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
         return 0;
     return retVal;
 }
-
 
 
 char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode)

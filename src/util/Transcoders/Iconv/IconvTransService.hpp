@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/25 19:19:08  roddey
+ * Simple addition of a getId() method to the xcode and netacess abstractions to
+ * allow each impl to give back an id string.
+ *
  * Revision 1.4  2000/01/06 01:21:34  aruna1
  * Transcoding services modified.
  *
@@ -103,6 +107,8 @@ public :
         , const XMLCh* const    comp2
         , const unsigned int    maxChars
     );
+
+    virtual const XMLCh* getId() const;
 
     virtual bool isSpace(const XMLCh toCheck) const;
 
