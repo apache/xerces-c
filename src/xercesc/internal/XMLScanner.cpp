@@ -1171,6 +1171,11 @@ void XMLScanner::scanPI()
             , targetPtr
        );
     }
+
+    //mark PI is seen within the current element
+    if (! fElemStack.isEmpty())
+        fElemStack.setCommentOrPISeen();
+
 }
 
 //  Scans all the input from the start of the file to the root element.
@@ -2047,6 +2052,7 @@ bool XMLScanner::scanCharRef(XMLCh& toFill, XMLCh& second)
 //  it to.
 void XMLScanner::scanComment()
 {
+
     enum States
     {
         InText
@@ -2152,6 +2158,11 @@ void XMLScanner::scanComment()
             bbComment.getRawBuffer()
         );
     }
+
+    //mark comment is seen within the current element
+    if (! fElemStack.isEmpty())
+        fElemStack.setCommentOrPISeen();
+
 }
 
 

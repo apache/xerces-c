@@ -911,7 +911,6 @@ bool IGXMLScanner::scanContent()
 
                     case Token_Comment :
                         scanComment();
-                        fElemStack.setCommentOrPISeen();
                         break;
 
                     case Token_EndTag :
@@ -920,7 +919,6 @@ bool IGXMLScanner::scanContent()
 
                     case Token_PI :
                         scanPI();
-                        fElemStack.setCommentOrPISeen();
                         break;
 
                     case Token_StartTag :
