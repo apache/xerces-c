@@ -228,19 +228,19 @@ SOURCE=..\..\..\..\..\src\util\HashBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HashXMLCh.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\util\HashXMLCh.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\HashPtr.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\HashPtr.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\HashXMLCh.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\HashXMLCh.hpp
 # End Source File
 # Begin Source File
 
@@ -813,6 +813,14 @@ SOURCE=..\..\..\..\..\src\dom\AttrImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\dom\AttrImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\AttrMapImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\AttrMapImpl.hpp
 # End Source File
 # Begin Source File
 
