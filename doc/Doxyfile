@@ -19,7 +19,7 @@
 # The PROJECT_NAME tag is a single word (or a sequence of word surrounded
 # by quotes) that should identify the project.
 
-PROJECT_NAME         = Xerces-C
+PROJECT_NAME         = Xerces-C++
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or

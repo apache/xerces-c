@@ -287,7 +287,7 @@ sub change_documentation_entities()
         open (FIZZLEOUT, ">$thefile");
         while ($line = <FIZZLE>) {
                 $line =~ s/"Xerces C\+\+ Parser"/"XML for C\+\+ Parser"/g;
-                $line =~ s/"Xerces-C"/"XML4C"/g;
+                $line =~ s/"Xerces-C\+\+"/"XML4C"/g;
                 $line =~ s/"1\.5\.1"/"3\.5\.1"/g;
                 $line =~ s/"Xerces"/"XML4C"/g;
                 $line =~ s/"xerces-c1_5_1"/"xml4c-3_5_1"/g;
@@ -311,7 +311,7 @@ sub change_doxygen()
         open (FIZZLE, $thefiledotbak);
         open (FIZZLEOUT, ">$thefile");
         while ($line = <FIZZLE>) {
-                $line =~ s/Xerces-C/XML4C/g;
+                $line =~ s/Xerces-C\+\+/XML4C/g;
                 $line =~ s/1\.5\.1/3\.5\.1/g;
                 $line =~ s/header.html/header_ibm.html/g;
                 print FIZZLEOUT $line;
