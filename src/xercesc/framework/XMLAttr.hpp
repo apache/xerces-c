@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/28 20:12:45  knoaman
+ * Allow creating/setting of XMLAttr using a rawname (i.e. 'prefix:localpart').
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -181,6 +184,38 @@ public:
         , const XMLAttDef::AttTypes type = XMLAttDef::CData
         , const bool                specified = true
     );
+
+    /**
+      * This is the primary constructor which takes all of the information
+      * required to construct a complete attribute object.
+      *
+      * @param  uriId       The id into the validator's URI pool of the URI
+      *                     that the prefix mapped to. Only used if namespaces
+      *                     are enabled/supported.
+      *
+      * @param  rawName     The raw name of the attribute.
+      *
+      * @param  attrValue   The value string of the attribute, which should
+      *                     be fully normalized by XML rules!
+      *
+      * @param  type        The type of the attribute. This will indicate
+      *                     the type of normalization done and constrains
+      *                     the value content. Make sure that the value
+      *                     set meets the constraints!
+      *
+      * @param  specified   Indicates whether the attribute was explicitly
+      *                     specified or not. If not, then it was faulted
+      *                     in from a FIXED or DEFAULT value.
+      */
+    XMLAttr
+    (
+        const unsigned int uriId
+        , const XMLCh* const rawName
+        , const XMLCh* const attrValue
+        , const XMLAttDef::AttTypes type = XMLAttDef::CData
+        , const bool specified = true
+    );
+
     //@}
 
     /** @name Destructor */
@@ -284,6 +319,34 @@ public:
         const   unsigned int        uriId
         , const XMLCh* const        attrName
         , const XMLCh* const        attrPrefix
+        , const XMLCh* const        attrValue
+        , const XMLAttDef::AttTypes type = XMLAttDef::CData
+    );
+
+    /**
+      * This method is called to set up a default constructed object after
+      * the fact, or to reuse a previously used object.
+      *
+      * @param  uriId       The id into the validator's URI pool of the URI
+      *                     that the prefix mapped to. Only used if namespaces
+      *                     are enabled/supported.
+      *
+      * @param  attrRawName The raw name of the attribute.
+      *
+      * @param  attrValue   The value string of the attribute, which should
+      *                     be fully normalized by XML rules according to the
+      *                     attribute type.
+      *
+      * @param  type        The type of the attribute. This will indicate
+      *                     the type of normalization done and constrains
+      *                     the value content. Make sure that the value
+      *                     set meets the constraints!
+      *
+      */
+    void set
+    (
+        const   unsigned int        uriId
+        , const XMLCh* const        attrRawName
         , const XMLCh* const        attrValue
         , const XMLAttDef::AttTypes type = XMLAttDef::CData
     );
@@ -450,6 +513,19 @@ inline void XMLAttr::set(const  unsigned int        uriId
 {
     // Set the name info and the value via their respective calls
     fAttName->setName(attrPrefix, attrName, uriId);
+    setValue(attrValue);
+
+    // And store the type
+    fType = type;
+}
+
+inline void XMLAttr::set(const  unsigned int        uriId
+                        , const XMLCh* const        attrRawName
+                        , const XMLCh* const        attrValue
+                        , const XMLAttDef::AttTypes type)
+{
+    // Set the name info and the value via their respective calls
+    fAttName->setName(attrRawName, uriId);
     setValue(attrValue);
 
     // And store the type

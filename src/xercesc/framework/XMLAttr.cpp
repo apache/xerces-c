@@ -110,6 +110,31 @@ XMLAttr::XMLAttr(   const   unsigned int        uriId
     }
 }
 
+XMLAttr::XMLAttr(   const   unsigned int        uriId
+                    , const XMLCh* const        rawName
+                    , const XMLCh* const        attrValue
+                    , const XMLAttDef::AttTypes type
+                    , const bool                specified) :
+
+      fType(type)
+    , fValue(0)
+    , fValueBufSz(0)
+    , fSpecified(specified)
+{
+    try
+    {
+        //  Just call the local setters to set up everything. Too much
+        //  work is required to replicate that functionality here.
+        fAttName = new QName(rawName, uriId);
+        setValue(attrValue);
+    }
+
+    catch(...)
+    {
+        cleanUp();
+    }
+}
+
 
 // ---------------------------------------------------------------------------
 //  XMLAttr: Getter methods
