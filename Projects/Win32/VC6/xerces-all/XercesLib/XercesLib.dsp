@@ -712,6 +712,14 @@ SOURCE=..\..\..\..\..\src\util\XMLExceptMsgs.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLFloat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLFloat.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLIBM1140Transcoder.cpp
 # End Source File
 # Begin Source File
@@ -1755,6 +1763,14 @@ SOURCE=..\..\..\..\..\src\validators\datatype\ENTITYDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\datatype\FloatDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\FloatDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\datatype\HexBinaryDatatypeValidator.cpp
 # End Source File
 # Begin Source File
@@ -1984,14 +2000,6 @@ SOURCE=..\..\..\..\..\src\validators\schema\TraverseSchema.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\schema\TraverseSchema.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\validators\schema\XercesGroupInfo.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\validators\schema\XercesGroupInfo.hpp
 # End Source File
 # Begin Source File
 
