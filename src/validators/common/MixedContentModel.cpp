@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/06/12 22:13:33  peiyongz
+ * validateContentSpecial() : apply SubstitutionGroupComparator.isEquivalentTo()
+ *
  * Revision 1.9  2001/05/11 13:27:19  tng
  * Copyright update.
  *
@@ -118,7 +121,7 @@
 #include <validators/common/MixedContentModel.hpp>
 #include <validators/common/CMStateSet.hpp>
 #include <validators/common/Grammar.hpp>
-
+#include <validators/schema/SubstitutionGroupComparator.hpp>
 
 // ---------------------------------------------------------------------------
 //  MixedContentModel: Constructors and Destructor
@@ -376,12 +379,101 @@ MixedContentModel::buildChildList(  ContentSpecNode* const       curNode
     }
 }
 
-int MixedContentModel::validateContentSpecial(QName** const          children
+int MixedContentModel::validateContentSpecial(QName** const           children
                                             , const unsigned int      childCount
                                             , const unsigned int      emptyNamespaceId
                                             , GrammarResolver*  const pGrammarResolver
                                             , XMLStringPool*    const pStringPool) const
 {
-    return validateContent(children, childCount, emptyNamespaceId);
+
+    SubstitutionGroupComparator comparator(pGrammarResolver, pStringPool);
+
+    // must match order
+    if (fOrdered) {
+        unsigned int inIndex = 0;
+        for (unsigned int outIndex = 0; outIndex < childCount; outIndex++) {
+
+            // Get the current child out of the source index
+            QName* curChild = children[outIndex];
+
+            // If its PCDATA, then we just accept that
+            if (curChild->getURI() == XMLElementDecl::fgPCDataElemId)
+                continue;
+
+            ContentSpecNode::NodeTypes type = fChildTypes[inIndex];
+            QName* inChild = fChildren[inIndex];
+
+            if (type == ContentSpecNode::Leaf) {
+                if ( !comparator.isEquivalentTo(curChild, inChild))
+                    return outIndex;
+            }
+            else if (type == ContentSpecNode::Any) {
+                unsigned int uri = inChild->getURI();
+                if ((uri != emptyNamespaceId) && (uri != curChild->getURI()))
+                    return outIndex;
+            }
+            else if (type == ContentSpecNode::Any_Local) {
+                if (curChild->getURI() != emptyNamespaceId)
+                    return outIndex;
+            }
+            else if (type == ContentSpecNode::Any_Other) {
+                if (inChild->getURI() == curChild->getURI())
+                    return outIndex;
+            }
+
+            // advance index
+            inIndex++;
+        }
+    }
+
+    // can appear in any order
+    else {
+        for (unsigned int outIndex = 0; outIndex < childCount; outIndex++) {
+            // Get the current child out of the source index
+            QName* curChild = children[outIndex];
+
+            // If its PCDATA, then we just accept that
+            if (curChild->getURI() == XMLElementDecl::fgPCDataElemId)
+                continue;
+
+            // And try to find it in our list
+            unsigned int inIndex = 0;
+            for (; inIndex < fCount; inIndex++)
+            {
+                ContentSpecNode::NodeTypes type = fChildTypes[inIndex];
+                QName* inChild = fChildren[inIndex];
+
+                if (type == ContentSpecNode::Leaf) {
+                    if ( comparator.isEquivalentTo(curChild, inChild))
+                        break;
+                }
+                else if (type == ContentSpecNode::Any) {
+                    unsigned int uri = inChild->getURI();
+                    if ((uri == emptyNamespaceId) || (uri == curChild->getURI()))
+                        break;
+                }
+                else if (type == ContentSpecNode::Any_Local) {
+                    if (curChild->getURI() == emptyNamespaceId)
+                        break;
+                }
+                else if (type == ContentSpecNode::Any_Other) {
+                    if (inChild->getURI() != curChild->getURI())
+                        break;
+                }
+
+                // REVISIT: What about checking for multiple ANY matches?
+                //          The content model ambiguity *could* be checked
+                //          by the caller before constructing the mixed
+                //          content model.
+            }
+            // We did not find this one, so the validation failed
+            if (inIndex == fCount)
+                return outIndex;
+        }
+    }
+
+    // Everything seems to be in order, so return success
+    // success
+    return -1;
 }
 
