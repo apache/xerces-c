@@ -119,9 +119,9 @@ transcoder=native        # by default use native transcoder
 msgloader=iconv          # by default use native transcoder
 netaccessor=fileonly     # by default use fileonly
 compileroptions=""
-for i in $*
+while [ $# -gt 0 ]
    do
-   case $i in
+   case $1 in
    -p)
         platform=$2; shift 2;;
 

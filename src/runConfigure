@@ -136,9 +136,9 @@ netaccessor=socket       # by default use socket (can do HTTP URL's)
 thread=pthread           # by default use POSIX threads
 configureoptions=""
 
-for i in $*
+while [ $# -gt 0 ]
    do
-   case $i in
+   case $1 in
    -p)
         platform=$2; shift 2;;
 
