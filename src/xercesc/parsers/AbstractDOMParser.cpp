@@ -903,7 +903,7 @@ void AbstractDOMParser::attDef
             }
 
             attString.append(chCloseAngle);
-            fDocumentType->setInternalSubset(attString.getRawBuffer());
+            fDocumentType->appendInternalSubset(attString.getRawBuffer());
         }
     }
 }
@@ -927,7 +927,7 @@ void AbstractDOMParser::doctypeComment
             comString.append(chDash);
             comString.append(chDash);
             comString.append(chCloseAngle);
-            fDocumentType->setInternalSubset(comString.getRawBuffer());
+            fDocumentType->appendInternalSubset(comString.getRawBuffer());
         }
     }
 }
@@ -964,7 +964,7 @@ void AbstractDOMParser::doctypePI
         pi.append(chQuestion);
         pi.append(chCloseAngle);
 
-		fDocumentType->setInternalSubset(pi.getRawBuffer());
+		fDocumentType->appendInternalSubset(pi.getRawBuffer());
 	}
 	
 }
@@ -977,7 +977,7 @@ void AbstractDOMParser::doctypeWhitespace
 )
 {
     if (fDocumentType->isIntSubsetReading())
-		fDocumentType->setInternalSubset(chars);
+		fDocumentType->appendInternalSubset(chars);
 }
 
 void AbstractDOMParser::elementDecl
@@ -1005,7 +1005,7 @@ void AbstractDOMParser::elementDecl
         }
 
         elemDecl.append(chCloseAngle);
-		fDocumentType->setInternalSubset(elemDecl.getRawBuffer());
+		fDocumentType->appendInternalSubset(elemDecl.getRawBuffer());
 	}
 }
 
@@ -1178,7 +1178,7 @@ void AbstractDOMParser::entityDecl
         }
 
         entityName.append(chCloseAngle);
-        fDocumentType->setInternalSubset(entityName.getRawBuffer());
+        fDocumentType->appendInternalSubset(entityName.getRawBuffer());
     }
 
 }

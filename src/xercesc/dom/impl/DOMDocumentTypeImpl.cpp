@@ -75,7 +75,6 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
     publicId(0),
     systemId(0),
     name(0),
-    internalSubset(0), //DOM Level 2
     intSubsetReading(false),
     entities(0),
     notations(0),
@@ -108,7 +107,6 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
     publicId(0),
     systemId(0),
     name(0),
-    internalSubset(0), //DOM Level 2
     intSubsetReading(false),
     entities(0),
     notations(0),
@@ -145,7 +143,6 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool 
     publicId(0),
     systemId(0),
     name(0),
-    internalSubset(0), //DOM Level 2
     intSubsetReading(other.intSubsetReading),
     entities(0),
     notations(0),
@@ -159,15 +156,14 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool 
         //DOM Level 2
         publicId        = other.publicId;
         systemId        = other.systemId;
-        internalSubset  = other.internalSubset;
     }
     else {
         name = XMLString::replicate(other.name);
         publicId = XMLString::replicate(other.publicId);
         systemId = XMLString::replicate(other.systemId);
-        internalSubset = XMLString::replicate(other.internalSubset);
     }
 
+    internalSubset.set(other.internalSubset.getRawBuffer());
     entities = ((DOMNamedNodeMapImpl *)other.entities)->cloneMap(this);
     notations= ((DOMNamedNodeMapImpl *)other.notations)->cloneMap(this);
     elements = ((DOMNamedNodeMapImpl *)other.elements)->cloneMap(this);
@@ -185,9 +181,6 @@ DOMDocumentTypeImpl::~DOMDocumentTypeImpl()
         delete [] temp;
 
         temp = (XMLCh*) systemId;
-        delete [] temp;
-
-        temp = (XMLCh*) internalSubset;
         delete [] temp;
 
         delete entities;
@@ -228,10 +221,6 @@ void DOMDocumentTypeImpl::setOwnerDocument(DOMDocument *doc) {
 
             temp = (XMLCh*) systemId; // cast off const
             systemId = docImpl->cloneString(systemId);
-            delete [] temp;
-
-            temp = (XMLCh*) internalSubset; // cast off const
-            internalSubset = docImpl->cloneString(internalSubset);
             delete [] temp;
 
             temp = (XMLCh*) name; // cast off const
@@ -325,7 +314,7 @@ const XMLCh * DOMDocumentTypeImpl::getSystemId() const
 
 const XMLCh * DOMDocumentTypeImpl::getInternalSubset() const
 {
-    return internalSubset;
+    return internalSubset.getRawBuffer();
 }
 
 bool DOMDocumentTypeImpl::isIntSubsetReading() const
@@ -370,13 +359,15 @@ void        DOMDocumentTypeImpl::setInternalSubset(const XMLCh *value)
     if (value == 0)
         return;
 
-    if ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
-        internalSubset = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->getPooledString(value);
-    else {
-        XMLCh* temp = (XMLCh*) internalSubset; // cast off const
-        delete [] temp;
-        internalSubset = XMLString::replicate(value);
-    }
+    internalSubset.set(value);
+}
+
+void        DOMDocumentTypeImpl::appendInternalSubset(const XMLCh *value)
+{
+    if (value == 0)
+        return;
+
+    internalSubset.append(value);
 }
 
 void DOMDocumentTypeImpl::release()

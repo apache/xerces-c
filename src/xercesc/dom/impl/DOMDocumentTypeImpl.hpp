@@ -73,6 +73,7 @@
 
 
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
 #include "DOMNodeImpl.hpp"
 #include "DOMChildNode.hpp"
@@ -94,7 +95,7 @@ private:
     DOMNamedNodeMap*    elements;
     const XMLCh *       publicId;
     const XMLCh *       systemId;
-    const XMLCh *       internalSubset;
+    XMLBuffer           internalSubset;
 
     bool			         intSubsetReading;
     bool                fIsCreatedFromHeap;
@@ -102,6 +103,7 @@ private:
     virtual void        setPublicId(const XMLCh * value);
     virtual void        setSystemId(const XMLCh * value);
     virtual void        setInternalSubset(const XMLCh *value);
+    void                appendInternalSubset(const XMLCh *value);
     bool                isIntSubsetReading() const;
 
     friend class AbstractDOMParser;
