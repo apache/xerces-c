@@ -665,6 +665,23 @@ ifeq (${PLATFORM}, CYGWIN)
 endif
 
 
+###################### LIBNAME ####################################
+#
+#
+ifneq (${PLATFORM}, OS400)
+ifeq (${PLATFORM}, CYGWIN)
+CYGNAME=cygxerces-c
+CYGDEPDOM=cygxerces-depdom
+endif
+LIBNAME=libxerces-c
+LINK_LIBNAME=xerces-c
+LIBDEPDOM=libxerces-depdom
+else
+LIBNAME=libxercesc
+LINK_LIBNAME=xercesc
+LIBDEPDOM=libxercesdepdom
+endif
+
 ###################### SO_NAME ####################################
 #
 #

@@ -165,6 +165,7 @@ distclean::
 	${MAKE} -C $(XML_OBJ) $@
 	rm -f Makefile config.cache config.log config.status
 	find . -name Makefile -print -exec rm -f {} \;
+	rm -Rf ${XML_OBJ_DIR} ${XML_OBJ_DEPDOM_DIR} ${XML_LIB_DIR} ../../include
 	rm -f *~ core
 
 #docs::
