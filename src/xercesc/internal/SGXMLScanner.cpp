@@ -119,6 +119,7 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
     , fPSVIAttrList(0)
     , fModel(0)
     , fPSVIElement(0)
+    , fErrorStack(0)
 {
     try
     {
@@ -171,6 +172,7 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
     , fPSVIAttrList(0)
     , fModel(0)
     , fPSVIElement(0)
+    , fErrorStack(0)
 {
     try
     {	
@@ -966,6 +968,20 @@ void SGXMLScanner::scanEndTag(bool& gotData)
         );
     }
 
+    if (fPSVIHandler)
+    {
+        if (fValidate && topElem->fThisElement->isDeclared())
+        {
+            fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
+            fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
+        }
+        else
+        {
+            fPSVIElemContext.fCurrentDV = 0;
+            fPSVIElemContext.fCurrentTypeInfo = 0;
+        }
+    }
+
     //  If validation is enabled, then lets pass him the list of children and
     //  this element and let him validate it.
     DatatypeValidator* psviMemberType = 0;
@@ -1183,12 +1199,26 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     XMLContentModel* cm = 0;
     int currentScope = Grammar::TOP_LEVEL_SCOPE;
     bool laxThisOne = false;
-    if (!isRoot) {
-        // schema validator will have correct type
-        ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
-        SchemaElementDecl::ModelTypes modelType = (currType)
-                ? ((SchemaElementDecl::ModelTypes)currType->getContentType())
-                : ((SchemaElementDecl*) fElemStack.topElement()->fThisElement)->getModelType();
+    if (!isRoot)
+    {
+        // schema validator will have correct type if validating
+        SchemaElementDecl* tempElement = (SchemaElementDecl*)
+            fElemStack.topElement()->fThisElement;
+        SchemaElementDecl::ModelTypes modelType = tempElement->getModelType();
+        ComplexTypeInfo *currType = 0;
+
+        if (fValidate)
+        {
+            currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+            if (currType)
+                modelType = (SchemaElementDecl::ModelTypes)currType->getContentType();
+            else // something must have gone wrong
+                modelType = SchemaElementDecl::Any;
+        }
+        else
+        {
+            currType = tempElement->getComplexTypeInfo();
+        }
 
         if ((modelType == SchemaElementDecl::Mixed_Simple)
           ||  (modelType == SchemaElementDecl::Mixed_Complex)
@@ -1550,30 +1580,17 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
     if (fPSVIHandler)
     {
-        fPSVIElemContext.fPreviousError = fPSVIElemContext.fErrorOccurred;
+        fErrorStack->push(fPSVIElemContext.fErrorOccurred);
         fPSVIElemContext.fErrorOccurred = false;
         fPSVIElemContext.fElemDepth++;
-        fPSVIElemContext.fValidationRoot = fRootElemName;
-
-        // store current type info so we can restore it later
-        fPSVIElemContext.fPreviousDV = fPSVIElemContext.fCurrentDV;
-        fPSVIElemContext.fPreviousTypeInfo = fPSVIElemContext.fCurrentTypeInfo;
 
         if (elemDecl->isDeclared())
         {
             fPSVIElemContext.fNoneValidationDepth = fPSVIElemContext.fElemDepth;
-
-            // update current type info
-            fPSVIElemContext.fCurrentDV = ((SchemaElementDecl*) elemDecl)->getDatatypeValidator();
-            fPSVIElemContext.fCurrentTypeInfo = ((SchemaElementDecl*) elemDecl)->getComplexTypeInfo();
         }
         else
         {
             fPSVIElemContext.fFullValidationDepth = fPSVIElemContext.fElemDepth;
-
-            // update current type info
-            fPSVIElemContext.fCurrentDV = 0;
-            fPSVIElemContext.fCurrentTypeInfo = 0;
 
             if (isRoot && fValidate)
                 fPSVIElemContext.fErrorOccurred = true;
@@ -1588,25 +1605,13 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         {
             if (((SchemaValidator*) fValidator)->getErrorOccurred())
                 fPSVIElemContext.fErrorOccurred = true;
-
-            // store current type info so we can restore it later
-            fPSVIElemContext.fPreviousDV = fPSVIElemContext.fCurrentDV;
-            fPSVIElemContext.fPreviousTypeInfo = fPSVIElemContext.fCurrentTypeInfo;
-
-            if (elemDecl->isDeclared())
-            {
-                fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
-                fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
-            }
-            else
-            {
-                fPSVIElemContext.fCurrentDV = 0;
-                fPSVIElemContext.fCurrentTypeInfo = 0;
-            }
         }
     }
 
-    ComplexTypeInfo* typeinfo = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+    ComplexTypeInfo* typeinfo = (fValidate)
+        ? ((SchemaValidator*)fValidator)->getCurrentTypeInfo()
+        : ((SchemaElementDecl*) elemDecl)->getComplexTypeInfo();
+
     if (typeinfo) {
         currentScope = typeinfo->getScopeDefined();
 
@@ -1741,6 +1746,21 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     {
         // Pop the element stack back off since it'll never be used now
         fElemStack.popTop();
+
+        // reset current type info
+        if (fPSVIHandler && fGrammarType == Grammar::SchemaGrammarType)
+        {
+            if (fValidate && elemDecl->isDeclared())
+            {
+                fPSVIElemContext.fCurrentDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
+                fPSVIElemContext.fCurrentTypeInfo = ((SchemaValidator*) fValidator)->getCurrentTypeInfo();
+            }
+            else
+            {
+                fPSVIElemContext.fCurrentDV = 0;
+                fPSVIElemContext.fCurrentTypeInfo = 0;
+            }
+        }
 
         // If validating, then insure that its legal to have no content
         DatatypeValidator* psviMemberType = 0;
@@ -2112,6 +2132,7 @@ void SGXMLScanner::cleanUp()
     delete fUndeclaredAttrRegistryNS;
     delete fPSVIAttrList;
     delete fPSVIElement;
+    delete fErrorStack;
 }
 
 void SGXMLScanner::resizeElemState() {
@@ -3172,6 +3193,9 @@ void SGXMLScanner::scanReset(const InputSource& src)
     {
         if (!fPSVIElement)
             fPSVIElement = new (fMemoryManager) PSVIElement(fMemoryManager);
+
+        if (!fErrorStack)
+            fErrorStack = new (fMemoryManager) ValueStackOf<bool>(8, fMemoryManager);
 
         resetPSVIElemContext();
     }
@@ -4758,7 +4782,7 @@ void SGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
     (
         validity
         , validationAttempted
-        , fPSVIElemContext.fValidationRoot
+        , fRootElemName
         , fPSVIElemContext.fIsSpecified
         , (elemDecl->isDeclared()) 
             ? (XSElementDeclaration*) fModel->getXSObject(elemDecl) : 0
@@ -4766,6 +4790,8 @@ void SGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
         , (memberDV) ? (XSSimpleTypeDefinition*) fModel->getXSObject(memberDV) : 0
         , fModel
         , elemDecl->getDefaultValue()
+        , 0
+        , (fPSVIElemContext.fCurrentDV) ? fPSVIElemContext.fCurrentDV->getCanonicalRepresentation() : 0
     );
 
     fPSVIHandler->handleElementPSVI
@@ -4778,13 +4804,9 @@ void SGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
     // decrease element depth
     fPSVIElemContext.fElemDepth--;
 
-    // restore type info
-    fPSVIElemContext.fCurrentDV = fPSVIElemContext.fPreviousDV;
-    fPSVIElemContext.fCurrentTypeInfo = fPSVIElemContext.fPreviousTypeInfo;
-
     // reset error occurred
     fPSVIElemContext.fErrorOccurred = 
-        fPSVIElemContext.fErrorOccurred && fPSVIElemContext.fPreviousError;
+        fPSVIElemContext.fErrorOccurred && fErrorStack->pop();
 }
 
 void SGXMLScanner::resetPSVIElemContext()
@@ -4794,7 +4816,6 @@ void SGXMLScanner::resetPSVIElemContext()
     fPSVIElemContext.fElemDepth = -1;
     fPSVIElemContext.fFullValidationDepth = -1;
     fPSVIElemContext.fNoneValidationDepth = -1;
-    fPSVIElemContext.fValidationRoot = 0;
     fPSVIElemContext.fCurrentDV = 0;
     fPSVIElemContext.fCurrentTypeInfo = 0;
 }

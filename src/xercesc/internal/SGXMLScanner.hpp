@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/11/28 19:54:31  knoaman
+ * PSVIElement update
+ *
  * Revision 1.14  2003/11/27 22:52:37  knoaman
  * PSVIElement implementation
  *
@@ -367,6 +370,7 @@ private :
     PSVIAttributeList *                     fPSVIAttrList;
     XSModel*                                fModel;
     PSVIElement*                            fPSVIElement;
+    ValueStackOf<bool>*                     fErrorStack;
     PSVIElemContext                         fPSVIElemContext;
 };
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/11/28 19:54:31  knoaman
+ * PSVIElement update
+ *
  * Revision 1.16  2003/11/28 05:13:29  neilg
  * Fix state-ful duplicate attribute detection when the integrated
  * scanner is in use and namespaces are off.  Also, implement
@@ -391,6 +394,7 @@ private :
     PSVIAttributeList *                     fPSVIAttrList;
     XSModel*                                fModel;
     PSVIElement*                            fPSVIElement;
+    ValueStackOf<bool>*                     fErrorStack;
     PSVIElemContext                         fPSVIElemContext;
 };
 

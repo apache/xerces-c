@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2003/11/28 19:54:31  knoaman
+ * PSVIElement update
+ *
  * Revision 1.29  2003/11/27 22:52:37  knoaman
  * PSVIElement implementation
  *
@@ -328,15 +331,11 @@ struct PSVIElemContext
 {
     bool               fIsSpecified;
     bool               fErrorOccurred;
-    bool               fPreviousError;
     int                fElemDepth;
     int                fFullValidationDepth;
     int                fNoneValidationDepth;
-    const XMLCh*       fValidationRoot;
     DatatypeValidator* fCurrentDV;
-    DatatypeValidator* fPreviousDV;
     ComplexTypeInfo*   fCurrentTypeInfo;
-    ComplexTypeInfo*   fPreviousTypeInfo;
 };
 
 //  This is the mondo scanner class, which does the vast majority of the
