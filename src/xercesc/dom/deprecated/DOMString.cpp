@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,127 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.6  2002/04/01 21:01:07  tng
- * DOMString problem with Asian codepages.
- *
- * Revision 1.5  2002/03/15 16:27:58  tng
- * DOMString Thread safe Fix: should lock the entire deleter function where freeListPtr and blockListPtr are modified.
- *
- * Revision 1.4  2002/03/15 13:54:41  tng
- * Issue DOMException::INDEX_SIZE_ERR if count is greater than length, equal to length is ok.
- *
- * Revision 1.3  2002/03/14 22:09:36  tng
- * IDOM Fix: Issue IDOM_DOMException::INDEX_SIZE_ERR if count or offset is negative.
- *
- * Revision 1.2  2002/02/28 21:52:13  tng
- * [Bug 1368] improper DOMStringHandle locking.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:44  peiyongz
- * sane_include
- *
- * Revision 1.24  2001/12/14 15:16:51  tng
- * Performance: Do not transcode twice in DOMString constructor.
- *
- * Revision 1.23  2001/10/22 17:53:05  tng
- * [Bug 3660] Off-by-one error in DOMString.cpp.  And check that memory has been acquired successfully after memory acquistion requests in DOMString.
- *
- * Revision 1.22  2001/10/18 18:01:29  tng
- * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
- *
- * Revision 1.21  2001/06/26 19:28:25  tng
- * [Bug 2119] DOMString::print() should use DOMString::transcode() for transcoding.
- *
- * Revision 1.20  2001/05/11 13:25:19  tng
- * Copyright update.
- *
- * Revision 1.19  2001/01/25 19:22:50  tng
- * Some bug fixes + Cleanup.  Fixed by Khaled Noaman.
- *
- * Revision 1.18  2000/08/03 20:39:53  jberry
- * Add prototype for getDomConverter(), eliminating compiler warning
- *
- * Revision 1.17  2000/06/02 00:45:42  andyh
- * DOM Fixes:  DOMString::rawBuffer() now returns a const XMLCh * pointer.
- * Two plain deletes changed to array deletes.
- *
- * Revision 1.16  2000/05/09 00:22:29  andyh
- * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
- * allocated memory; memory leak checking tools will no longer report
- * that leaks exist.  (DOM GetElementsByTagID temporarily removed
- * as part of this.)
- *
- * Revision 1.15  2000/03/28 19:43:13  roddey
- * Fixes for signed/unsigned warnings. New work for two way transcoding
- * stuff.
- *
- * Revision 1.14  2000/03/02 19:53:52  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.13  2000/02/06 07:47:27  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.12  2000/02/05 01:19:19  andyh
- * Add more DOMString tests.  Fix limit test error in DOMString::insertData()
- * Andy Heninger  heninger@us.ibm.com
- *
- * Revision 1.11  2000/02/04 05:06:29  andyh
- * Change all DOMString offsets and lengths form signed to unsigned
- * Other misc. cleanups.
- *
- * Revision 1.10  2000/02/04 00:52:57  rahulj
- * Changed size_t to int.
- *
- * Revision 1.9  2000/02/03 23:07:27  andyh
- * Add several new functions from Robert Weir to DOMString.
- *
- * Revision 1.8  2000/01/29 00:39:08  andyh
- * Redo synchronization in DOMStringHandle allocator.  There
- * was a bug in the use of Compare and Swap.  Switched to mutexes.
- *
- * Changed a few plain deletes to delete [].
- *
- * Revision 1.7  2000/01/18 19:55:37  andyh
- * Remove dependencies on XMLStdout and err, as these are about
- * to stop working.
- *
- * Revision 1.6  2000/01/05 22:16:26  robweir
- * Move DOMString implementation class declarations into a new
- * file: DOMStringImpl.hpp.  Include this header in DOMString.hpp
- * for XML_DEBUG builds so the underlying character array will be
- * visible in the debugger.  <robert_weir@lotus.com>
- *
- * Revision 1.5  1999/12/17 02:09:41  andyh
- * Fix bug in DOMString::insertData() that occured if the source
- * and destination strings were the same and the orginal buffer had
- * enough space to hold the result.
- *
- * Revision 1.4  1999/12/15 19:44:46  roddey
- * Changed to use new LCP transcoder scheme.
- *
- * Revision 1.3  1999/12/03 00:11:22  andyh
- * Added DOMString.clone() to node parameters in and out of the DOM,
- * where they had been missed.
- *
- * DOMString::rawBuffer, removed incorrect assumptions about it
- * being null terminated.
- *
- * Revision 1.2  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:47  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:12  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include <stdio.h>

@@ -62,7 +62,7 @@
 #define DOM_Node_HEADER_GUARD_
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/dom/DOMString.hpp>
+#include "DOMString.hpp"
 
 class DOM_NodeList;
 class DOM_NamedNodeMap;

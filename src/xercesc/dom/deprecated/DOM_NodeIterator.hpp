@@ -55,59 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.3  2002/02/20 18:17:00  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.2  2002/02/04 20:03:48  tng
- * Add DOM Level missing functions:
- * 1. NodeIterator::getRoot
- * 2. TreeWalker::getRoot
- * 3. Element::hasAttribute
- * 4. Element::hasAttributeNS
- * 5. Node::hasAttributes
- * 6. Node::isSupported
- *
- * Revision 1.1.1.1  2002/02/01 22:21:46  peiyongz
- * sane_include
- *
- * Revision 1.9  2000/02/17 17:47:25  andyh
- * Update Doc++ API comments
- * NameSpace update to track W3C
- * Changes were made by Chih Hsiang Chou
- *
- * Revision 1.8  2000/02/16 19:39:38  aruna1
- * API Doc++ changes in
- *
- * Revision 1.7  2000/02/15 23:17:37  andyh
- * Update Doc++ API comments
- * NameSpace bugfix and update to track W3C
- * Chih Hsiang Chou
- *
- * Revision 1.6  2000/02/11 18:14:11  abagchi
- * Fixed doc++ bugs
- *
- * Revision 1.5  2000/02/11 03:01:04  abagchi
- * Made protected method public to compile, must be fixed later
- *
- * Revision 1.4  2000/02/10 23:38:05  abagchi
- * Added API docs
- *
- * Revision 1.3  2000/02/06 07:47:30  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/02/04 01:49:28  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.3  1999/11/08 20:44:20  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:01  twl
- * Initial checkin
- *
+ * $Id$
  */
 
 #ifndef DOM_NodeIterator_HEADER_GUARD_

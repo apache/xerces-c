@@ -55,68 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.3  2002/02/20 18:17:00  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.2  2002/02/04 19:57:15  tng
- * Remove the phrase "Experimental".
- *
- * Revision 1.1.1.1  2002/02/01 22:21:45  peiyongz
- * sane_include
- *
- * Revision 1.13  2000/06/07 22:49:40  andyh
- * Memory usage reduction:  DOM NamedNodeMaps for attributes are allocated
- * only for elements that actually have attributes.  By Joe Polastre.
- *
- * Revision 1.12  2000/03/11 03:19:13  chchou
- * Fix bug # 19, add const keyword to API
- *
- * Revision 1.11  2000/03/02 19:53:56  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.10  2000/02/24 20:11:28  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.9  2000/02/17 17:47:24  andyh
- * Update Doc++ API comments
- * NameSpace update to track W3C
- * Changes were made by Chih Hsiang Chou
- *
- * Revision 1.8  2000/02/15 23:17:36  andyh
- * Update Doc++ API comments
- * NameSpace bugfix and update to track W3C
- * Chih Hsiang Chou
- *
- * Revision 1.7  2000/02/10 20:20:42  abagchi
- * Added docs for assignment operators
- *
- * Revision 1.6  2000/02/10 20:19:24  abagchi
- * Added docs for equality operators
- *
- * Revision 1.5  2000/02/06 07:47:30  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/02/04 01:49:28  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.3  2000/01/22 01:38:29  andyh
- * Remove compiler warnings in DOM impl classes
- *
- * Revision 1.2  2000/01/05 01:16:07  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:59  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:18  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #ifndef DOM_NamedNodeMap_HEADER_GUARD_
@@ -124,7 +63,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-#include <xercesc/dom/DOM_Node.hpp>
+#include "DOM_Node.hpp"
 class NamedNodeMapImpl;
 
 /**

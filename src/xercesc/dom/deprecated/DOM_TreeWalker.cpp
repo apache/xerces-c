@@ -55,42 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.2  2002/02/04 20:03:48  tng
- * Add DOM Level missing functions:
- * 1. NodeIterator::getRoot
- * 2. TreeWalker::getRoot
- * 3. Element::hasAttribute
- * 4. Element::hasAttributeNS
- * 5. Node::hasAttributes
- * 6. Node::isSupported
- *
- * Revision 1.1.1.1  2002/02/01 22:21:46  peiyongz
- * sane_include
- *
- * Revision 1.5  2000/08/08 01:00:36  aruna1
- * detach functionality removed from TreeWalker
- *
- * Revision 1.4  2000/03/02 19:53:58  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:47:31  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/02/04 01:49:27  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.1.1.1  1999/11/09 01:09:05  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:22  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "DOM_TreeWalker.hpp"

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,30 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.1.1.1  2002/02/01 22:21:46  peiyongz
- * sane_include
- *
- * Revision 1.4  2000/03/02 19:53:56  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:47:30  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/02/04 01:49:28  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.1.1.1  1999/11/09 01:09:00  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:19  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // DOM_NodeFilter.cpp: implementation of the DOM_NodeFilter class.
@@ -89,12 +66,12 @@
 
 
 DOM_NodeFilter::DOM_NodeFilter() {
-    
+
 }
 
 
 DOM_NodeFilter::~DOM_NodeFilter() {
-   
+
 }
 
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,30 +55,21 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.1.1.1  2002/02/01 22:21:46  peiyongz
- * sane_include
- *
- * Revision 1.1  2000/07/28 01:33:31  aruna1
- * DOM Level 2 Range feature introduced
- *
+ * $Id$
  */
 
 #ifndef DOM_RangeException_HEADER_GUARD_
 #define DOM_RangeException_HEADER_GUARD_
 
-#include <xercesc/dom/DOM_DOMException.hpp>
+#include "DOM_DOMException.hpp"
 
 /**
-  * Encapsulate range related DOM error or warning. DOM level 2 implementation. 
+  * Encapsulate range related DOM error or warning. DOM level 2 implementation.
   *
   * <p> The DOM will create and throw an instance of DOM_RangeException
   * when an error condition in range is detected.  Exceptions can occur
   * when an application directly manipulates the range elements in DOM document
-  * tree that is produced by the parser. 
+  * tree that is produced by the parser.
   *
   * <p>Unlike the other classes in the C++ DOM API, DOM_RangeException
   * is NOT a reference to an underlying implementation class, and

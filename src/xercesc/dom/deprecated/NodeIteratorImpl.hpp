@@ -55,51 +55,21 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.2  2002/02/04 20:03:48  tng
- * Add DOM Level missing functions:
- * 1. NodeIterator::getRoot
- * 2. TreeWalker::getRoot
- * 3. Element::hasAttribute
- * 4. Element::hasAttributeNS
- * 5. Node::hasAttributes
- * 6. Node::isSupported
- *
- * Revision 1.1.1.1  2002/02/01 22:21:48  peiyongz
- * sane_include
- *
- * Revision 1.5  2000/02/24 20:11:30  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/15 23:17:37  andyh
- * Update Doc++ API comments
- * NameSpace bugfix and update to track W3C
- * Chih Hsiang Chou
- *
- * Revision 1.3  2000/02/06 07:47:33  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/02/04 01:49:26  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.1.1.1  1999/11/09 01:09:16  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:30  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #ifndef NodeIteratorImpl_HEADER_GUARD_
 #define NodeIteratorImpl_HEADER_GUARD_
 
-
-// NodeIteratorImpl.hpp: interface for the NodeIteratorImpl class.
 //
-//////////////////////////////////////////////////////////////////////
+//  This file is part of the internal implementation of the C++ XML DOM.
+//  It should NOT be included or used directly by application programs.
+//
+//  Applications should include the file <xercesc/dom/deprecated/DOM.hpp> for the entire
+//  DOM API, or DOM_*.hpp for individual DOM classes, where the class
+//  name is substituded for the *.
+//
+
 
 #include "DOM_Node.hpp"
 #include "DOM_NodeIterator.hpp"

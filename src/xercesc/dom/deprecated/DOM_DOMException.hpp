@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,46 +55,14 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.1.1.1  2002/02/01 22:21:45  peiyongz
- * sane_include
- *
- * Revision 1.7  2000/03/02 19:53:54  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.6  2000/02/24 20:11:27  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.5  2000/02/10 19:52:08  abagchi
- * Added docs for enum
- *
- * Revision 1.4  2000/02/06 07:47:28  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.3  2000/02/04 05:46:31  andyh
- * Change offsets and lengths form signed to unsigned
- *
- * Revision 1.2  2000/01/05 01:16:06  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:53  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:14  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
-#ifndef DOMException_HEADER_GUARD_
-#define DOMException_HEADER_GUARD_
+#ifndef DOM_DOMException_HEADER_GUARD_
+#define DOM_DOMException_HEADER_GUARD_
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/dom/DOMString.hpp>
+#include "DOMString.hpp"
 
 /**
   * Encapsulate a general DOM error or warning.

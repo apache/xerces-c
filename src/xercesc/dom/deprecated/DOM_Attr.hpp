@@ -55,55 +55,15 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.3  2002/02/20 18:17:00  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.2  2002/02/04 19:57:15  tng
- * Remove the phrase "Experimental".
- *
- * Revision 1.1.1.1  2002/02/01 22:21:44  peiyongz
- * sane_include
- *
- * Revision 1.7  2000/03/11 02:58:38  chchou
- * Fix bug # 18, remove set method of readonly attributes
- *
- * Revision 1.6  2000/03/02 19:53:52  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/24 20:11:27  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/17 17:47:24  andyh
- * Update Doc++ API comments
- * NameSpace update to track W3C
- * Changes were made by Chih Hsiang Chou
- *
- * Revision 1.3  2000/02/06 07:47:27  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/01/05 01:16:06  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:48  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:13  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #ifndef DOM_Attr_HEADER_GUARD_
 #define DOM_Attr_HEADER_GUARD_
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/dom/DOM_Node.hpp>
-#include <xercesc/dom/DOM_Element.hpp>
+#include "DOM_Node.hpp"
+#include "DOM_Element.hpp"
 
 class AttrImpl;
 

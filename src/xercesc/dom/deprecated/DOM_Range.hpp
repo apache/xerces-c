@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,9 +62,9 @@
 #define DOM_Range_HEADER_GUARD_
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/dom/DOM_Node.hpp>
-#include <xercesc/dom/DOMString.hpp>
-#include <xercesc/dom/DOM_DocumentFragment.hpp>
+#include "DOM_Node.hpp"
+#include "DOMString.hpp"
+#include "DOM_DocumentFragment.hpp"
 
 class RangeImpl;
 
@@ -85,7 +85,7 @@ public:
     DOM_Range(const DOM_Range& other);
     ~DOM_Range();
 
-    
+
     DOM_Range & operator = (const DOM_Range &other);
     DOM_Range & operator = (const DOM_NullPtr *other);
     bool operator != (const DOM_Range & other) const;
@@ -109,7 +109,7 @@ public:
     void setStartAfter(const DOM_Node &refNode);
     void setEndBefore(const DOM_Node &refNode);
     void setEndAfter(const DOM_Node &refNode);
-   
+
     //misc functions
     void collapse(bool toStart);
     void selectNode(const DOM_Node &node);
@@ -127,8 +127,8 @@ public:
     DOMString toString() const;
     void detach();
 
-    
-     
+
+
 
 protected:
 

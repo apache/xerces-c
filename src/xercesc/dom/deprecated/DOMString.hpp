@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,68 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.2  2002/02/20 18:17:00  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:44  peiyongz
- * sane_include
- *
- * Revision 1.12  2000/06/02 00:45:42  andyh
- * DOM Fixes:  DOMString::rawBuffer() now returns a const XMLCh * pointer.
- * Two plain deletes changed to array deletes.
- *
- * Revision 1.11  2000/03/02 19:53:52  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.10  2000/02/24 20:11:27  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.9  2000/02/16 22:54:56  abagchi
- * Switched the order of CDOM_EXPORT DomString for operators, to make OS/390 happy
- *
- * Revision 1.8  2000/02/06 07:47:27  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.7  2000/02/04 05:06:30  andyh
- * Change all DOMString offsets and lengths form signed to unsigned
- * Other misc. cleanups.
- *
- * Revision 1.6  2000/02/04 00:52:58  rahulj
- * Changed size_t to int.
- *
- * Revision 1.5  2000/02/03 23:07:27  andyh
- * Add several new functions from Robert Weir to DOMString.
- *
- * Revision 1.4  2000/01/05 22:16:26  robweir
- * Move DOMString implementation class declarations into a new
- * file: DOMStringImpl.hpp.  Include this header in DOMString.hpp
- * for XML_DEBUG builds so the underlying character array will be
- * visible in the debugger.  <robert_weir@lotus.com>
- *
- * Revision 1.3  1999/12/03 00:11:22  andyh
- * Added DOMString.clone() to node parameters in and out of the DOM,
- * where they had been missed.
- *
- * DOMString::rawBuffer, removed incorrect assumptions about it
- * being null terminated.
- *
- * Revision 1.2  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:48  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:12  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #ifndef DOMString_HEADER_GUARD_

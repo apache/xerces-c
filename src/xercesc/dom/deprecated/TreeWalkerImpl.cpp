@@ -55,56 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.2  2002/02/04 20:03:48  tng
- * Add DOM Level missing functions:
- * 1. NodeIterator::getRoot
- * 2. TreeWalker::getRoot
- * 3. Element::hasAttribute
- * 4. Element::hasAttributeNS
- * 5. Node::hasAttributes
- * 6. Node::isSupported
- *
- * Revision 1.1.1.1  2002/02/01 22:21:49  peiyongz
- * sane_include
- *
- * Revision 1.9  2001/10/18 18:01:29  tng
- * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
- *
- * Revision 1.8  2000/08/08 01:00:36  aruna1
- * detach functionality removed from TreeWalker
- *
- * Revision 1.7  2000/03/28 23:22:17  aruna1
- * Modified return statements in functions  to avoid warnings on HP.
- *
- * Revision 1.6  2000/03/02 19:54:05  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/06 07:47:34  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/02/04 01:49:25  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.3  1999/11/30 21:16:26  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.2  1999/11/23 01:48:17  rahulj
- * Changed 0L to 0. CC under HPUX is happy now.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:20  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:33  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "TreeWalkerImpl.hpp"

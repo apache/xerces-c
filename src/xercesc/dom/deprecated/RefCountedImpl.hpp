@@ -3,7 +3,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,37 +57,14 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.1.1.1  2002/02/01 22:21:49  peiyongz
- * sane_include
- *
- * Revision 1.4  2000/03/02 19:54:04  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/24 20:11:31  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/06 07:47:34  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:19  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:33  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 //
 //  This file is part of the internal implementation of the C++ XML DOM.
 //  It should NOT be included or used directly by application programs.
 //
-//  Applications should include the file <dom/DOM.hpp> for the entire
+//  Applications should include the file <xercesc/dom/deprecated/DOM.hpp> for the entire
 //  DOM API, or DOM_*.hpp for individual DOM classes, where the class
 //  name is substituded for the *.
 //

@@ -55,70 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.3  2002/03/15 16:29:56  tng
- * [Bug 6888] NodeIterator.  Retrofit this typo that was applied to Xerces-J, although this function "matchNodeOrParent" is not used in Xerces-C++....
- *
- * Revision 1.2  2002/02/04 20:03:48  tng
- * Add DOM Level missing functions:
- * 1. NodeIterator::getRoot
- * 2. TreeWalker::getRoot
- * 3. Element::hasAttribute
- * 4. Element::hasAttributeNS
- * 5. Node::hasAttributes
- * 6. Node::isSupported
- *
- * Revision 1.1.1.1  2002/02/01 22:21:48  peiyongz
- * sane_include
- *
- * Revision 1.12  2001/10/18 18:01:29  tng
- * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
- *
- * Revision 1.11  2000/11/01 01:26:30  andyh
- * DOM NodeIterator bug fix - iterators would sometimes continue beyond
- * their starting (root) node.  Fix from Tinny Ng.
- *
- * Revision 1.10  2000/07/17 23:00:16  jpolast
- * bug fix for SHOW_ELEMENT flag incorrectly being retreived.
- * contributed by Grace Yan and Joe Kesselman.
- *
- * Revision 1.9  2000/03/02 19:54:03  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.8  2000/02/08 20:26:11  aruna1
- * NodeIterator problem solved
- *
- * Revision 1.7  2000/02/08 01:16:18  aruna1
- * nodeIterator previous tracking problem solved
- *
- * Revision 1.6  2000/02/06 07:47:33  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.5  2000/02/04 01:49:26  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.4  1999/11/30 21:16:25  roddey
- * Changes to add the transcode() method to DOMString, which returns a transcoded
- * version (to local code page) of the DOM string contents. And I changed all of the
- * exception 'throw by pointer' to 'throw by value' style.
- *
- * Revision 1.3  1999/11/23 01:48:16  rahulj
- * Changed 0L to 0. CC under HPUX is happy now.
- *
- * Revision 1.2  1999/11/20 00:56:39  rahulj
- * Source files must end with an un-escaped newline.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:15  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:30  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // NodeIteratorImpl.cpp: implementation of the NodeIteratorImpl class.

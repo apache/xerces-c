@@ -4,7 +4,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,7 @@
 //  This file is part of the internal implementation of the C++ XML DOM.
 //  It should NOT be included or used directly by application programs.
 //
-//  Applications should include the file <dom/DOM.hpp> for the entire
+//  Applications should include the file <xercesc/dom/deprecated/DOM.hpp> for the entire
 //  DOM API, or DOM_*.hpp for individual DOM classes, where the class
 //  name is substituded for the *.
 //

@@ -55,53 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.2  2002/02/04 19:57:15  tng
- * Remove the phrase "Experimental".
- *
- * Revision 1.1.1.1  2002/02/01 22:21:46  peiyongz
- * sane_include
- *
- * Revision 1.10  2000/10/20 22:03:04  andyh
- * DOM NodeFileter - define values for FilterAction enum to match those in the DOM spec.
- *
- * Revision 1.9  2000/05/11 00:07:38  abagchi
- * Removed tables. It was confusing doxygen
- *
- * Revision 1.8  2000/03/11 03:19:13  chchou
- * Fix bug # 19, add const keyword to API
- *
- * Revision 1.7  2000/02/24 20:11:28  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.6  2000/02/17 17:47:25  andyh
- * Update Doc++ API comments
- * NameSpace update to track W3C
- * Changes were made by Chih Hsiang Chou
- *
- * Revision 1.5  2000/02/15 23:17:37  andyh
- * Update Doc++ API comments
- * NameSpace bugfix and update to track W3C
- * Chih Hsiang Chou
- *
- * Revision 1.4  2000/02/10 21:47:12  abagchi
- * Added API docs
- *
- * Revision 1.3  2000/02/06 07:47:30  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/02/04 01:49:28  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.1.1.1  1999/11/09 01:09:00  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:19  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // DOM_NodeFilter.h: interface for the DOM_NodeFilter class.

@@ -55,54 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 19:57:17  tng
- * DOM Reorganization: Move old DOM interface files from src/xercesc/dom to src/xercesc/dom/deprecated
- *
- * Revision 1.2  2002/02/04 20:03:48  tng
- * Add DOM Level missing functions:
- * 1. NodeIterator::getRoot
- * 2. TreeWalker::getRoot
- * 3. Element::hasAttribute
- * 4. Element::hasAttributeNS
- * 5. Node::hasAttributes
- * 6. Node::isSupported
- *
- * Revision 1.1.1.1  2002/02/01 22:21:45  peiyongz
- * sane_include
- *
- * Revision 1.7  2000/06/14 21:08:07  andyh
- * DOM attribute/named nodemaps: Fix a couple of null ptr problems.
- * Joe Polastre.
- *
- * Revision 1.6  2000/06/07 22:49:40  andyh
- * Memory usage reduction:  DOM NamedNodeMaps for attributes are allocated
- * only for elements that actually have attributes.  By Joe Polastre.
- *
- * Revision 1.5  2000/03/02 19:53:56  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/06 07:47:30  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.3  2000/01/05 01:16:07  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.2  1999/12/03 00:11:23  andyh
- * Added DOMString.clone() to node parameters in and out of the DOM,
- * where they had been missed.
- *
- * DOMString::rawBuffer, removed incorrect assumptions about it
- * being null terminated.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:59  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:44:19  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include "DOM_Node.hpp"

@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -73,11 +73,13 @@ TRANSCODER = @transcoder@
 THREADS = @threads@
 
 MODULE = dom
+SUBMODULE = deprecated
 
-include ../Makefile.incl
+include ../../Makefile.incl
 
-DOM_CPP_PUBHEADERS = \
+DOM_DEPRECATED_CPP_PUBHEADERS = \
 	DOM.hpp \
+	DOMParser.hpp \
 	DOMString.hpp \
 	DOM_Attr.hpp \
 	DOM_CDATASection.hpp \
@@ -105,7 +107,7 @@ DOM_CPP_PUBHEADERS = \
 	DOM_TreeWalker.hpp \
 	DOM_XMLDecl.hpp
 
-DOM_CPP_PRIVHEADERS =  \
+DOM_DEPRECATED_CPP_PRIVHEADERS =  \
 	AttrImpl.hpp \
 	AttrMapImpl.hpp \
 	AttrNSImpl.hpp \
@@ -114,6 +116,7 @@ DOM_CPP_PRIVHEADERS =  \
 	ChildNode.hpp \
 	CommentImpl.hpp \
 	DStringPool.hpp \
+	DOMStringImpl.hpp \
 	DeepNodeListImpl.hpp \
 	DocumentFragmentImpl.hpp \
 	DocumentImpl.hpp \
@@ -140,10 +143,10 @@ DOM_CPP_PRIVHEADERS =  \
 	TreeWalkerImpl.hpp \
 	XMLDeclImpl.hpp
 
-DOM_C_FILES =
+DOM_DEPRECATED_C_FILES =
 
 
-DOM_CPP_OBJECTS = \
+DOM_DEPRECATED_CPP_OBJECTS = \
 	AttrImpl.$(TO) \
 	AttrMapImpl.$(TO) \
 	AttrNSImpl.$(TO) \
@@ -151,6 +154,7 @@ DOM_CPP_OBJECTS = \
 	CharacterDataImpl.$(TO) \
 	ChildNode.$(TO) \
 	CommentImpl.$(TO) \
+	DOMParser.$(TO) \
 	DOMString.$(TO) \
 	DOM_Attr.$(TO) \
 	DOM_CDATASection.$(TO) \
@@ -191,7 +195,7 @@ DOM_CPP_OBJECTS = \
 	NodeIDMap.$(TO) \
 	NodeImpl.$(TO) \
 	NodeIteratorImpl.$(TO) \
-        NodeListImpl.$(TO) \
+	NodeListImpl.$(TO) \
 	NodeVector.$(TO) \
 	NotationImpl.$(TO) \
 	ParentNode.$(TO) \
@@ -203,27 +207,27 @@ DOM_CPP_OBJECTS = \
 	XMLDeclImpl.$(TO)
 
 
-all::	includes $(DOM_CPP_OBJECTS)
+all::	includes $(DOM_DEPRECATED_CPP_OBJECTS)
 
-includes::	pubheaders $(DOM_C_FILES)
+includes::	pubheaders $(DOM_DEPRECATED_C_FILES)
 
 pubheaders::
-	-mkdir -p $(XML_INC_DIR)/$(MODULE)
-	$(CP) $(DOM_CPP_PUBHEADERS) $(DOM_C_FILES) $(XML_INC_DIR)/$(MODULE)
+	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	$(CP) $(DOM_DEPRECATED_CPP_PUBHEADERS) $(DOM_DEPRECATED_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
 
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
 	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
 clean::
-	@echo "Making clean in $(MODULE) ..."
-	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(DOM_CPP_OBJECTS))
+	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."
+	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(DOM_DEPRECATED_CPP_OBJECTS))
 
 distclean::	clean
 	$(RM) Makefile $(DEPFILE)
-	@echo "Removing all $(MODULE) header files ..."
-	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(DOM_CPP_PUBHEADERS))
+	@echo "Removing all $(MODULE)/$(SUBMODULE) header files ..."
+	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(DOM_DEPRECATED_CPP_PUBHEADERS))
 
 install::
-	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)
-	$(CP) $(DOM_CPP_PUBHEADERS) $(DOM_C_FILES) $(PREFIX_INCLUDE)/$(MODULE)
+	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
+	$(CP) $(DOM_DEPRECATED_CPP_PUBHEADERS) $(DOM_DEPRECATED_C_FILES) $(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
