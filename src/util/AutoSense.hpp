@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:03:55  twl
- * Initial revision
+ * Revision 1.2  1999/12/01 17:16:16  rahulj
+ * Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
+ *
+ * Revision 1.1.1.1  1999/11/09 01:03:55  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:03  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -69,7 +72,7 @@
 
 // ---------------------------------------------------------------------------
 //  This section attempts to auto detect the operating system. It will set
-//  up XML4C specific defines that are used by the rest of the code.
+//  up XercesC specific defines that are used by the rest of the code.
 // ---------------------------------------------------------------------------
 #if defined(_AIX)
     #define XML_AIX
@@ -84,6 +87,9 @@
     #define XML_UNIX
 #elif defined(__linux__)
     #define XML_LINUX
+    #define XML_UNIX
+#elif defined(IRIX)
+    #define XML_IRIX
     #define XML_UNIX
 #elif defined(__MVS__)
     #define XML_OE390
@@ -149,6 +155,8 @@
     #elif (__cplusplus == 199707 || __cplusplus == 199711)
         #define XML_HPUX_aCC
     #endif
+#elif defined(XML_IRIX)
+    #define XML_MIPSPRO_CC
 #elif defined(XML_TANDEM)
     #define XML_TANDEMCC
 #elif defined(__linux__)

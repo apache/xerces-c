@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.3  1999/12/01 17:16:17  rahulj
+# Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
+#
 # Revision 1.2  1999/11/23 02:00:13  rahulj
 # Code now works under HPUX 11. Tested inmemory message loader.
 Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
@@ -96,6 +99,7 @@ CPP_PUBHEADERS = \
 	IBMVAW32Defs.hpp \
 	SunCCDefs.hpp \
 	SunKaiDefs.hpp \
+    MIPSproDefs.hpp \
 	TandemCCDefs.hpp \
 	VCPPDefs.hpp
 
@@ -106,6 +110,9 @@ ifeq (${CXX},CC)
     endif
     ifeq (${PLATFORM},HPUX)
         CPP_OBJECTS = HPCCDefs.o
+    endif
+    ifeq (${PLATFORM},IRIX)
+        CPP_OBJECTS = MIPSproDefs.o
     endif
 endif
 ifeq (${CXX},xlC_r)

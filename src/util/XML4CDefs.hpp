@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/01 17:16:16  rahulj
+ * Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
+ *
  * Revision 1.2  1999/11/10 02:02:51  abagchi
  * Changed version numbers
  *
@@ -113,6 +116,10 @@ static const unsigned int   gXML4CRevision   = 0;
 #include    <util/Platforms/HPUX/HPUXDefs.hpp>
 #endif
 
+#if defined(XML_IRIX)
+#include    <util/Platforms/IRIX/IRIXDefs.hpp>
+#endif
+
 #if defined(XML_TANDEM)
 #include    <util/Platforms/Tandem/TandemDefs.hpp>
 #endif
@@ -165,6 +172,10 @@ static const unsigned int   gXML4CRevision   = 0;
 
 #if defined(XML_HPUX_CC) || defined(XML_HPUX_aCC) || defined(XML_HPUX_KAICC)
 #include    <util/Compilers/HPCCDefs.hpp>
+#endif
+
+#if defined(XML_MIPSPRO_CC)
+#include    <util/Compilers/MIPSproDefs.hpp>
 #endif
 
 #if defined(XML_TANDEMCC)

@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.6  1999/12/01 17:16:15  rahulj
+# Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
+#
 # Revision 1.5  1999/11/23 01:59:28  rahulj
 # Code now works under HPUX 11. Tested inmemory message loader.
 Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
@@ -105,7 +108,7 @@ Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
 
 ALL:    all
 
-ALL_OBJECTS_DIR = ${XERCESCROOT}/obj
+ALL_OBJECTS_DIR   = ${XERCESCROOT}/obj
 
 XML_BUILD_OPTIONS = ${CXXFLAGS}
 
@@ -151,14 +154,25 @@ endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
-#PLATFORM_CPP_COMPILER = g++
-#PLATFORM_C_COMPILER = gcc
 PLATFORM_COMPILE_OPTIONS = -fpic -instances=static -D${PLATFORM} -D_REENTRANT
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fpic
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fpic
 ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
 SHLIBSUFFIX=.so
 endif
+
+#=============== IRIX SPECIFIC OPTIONS ============================
+ifeq (${PLATFORM}, IRIX)
+PLATFORM_COMPILE_OPTIONS = -mips4 -LANG:pch -LANG:std -O2 \
+                           -D${PLATFORM} -D_REENTRANT \
+                           -I/usr/local/include
+OBJ_OUT=${XML4CROOT}/obj/
+MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
+MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
+ALLLIBS = -L/usr/lib32 -lC
+SHLIBSUFFIX=.so
+endif
+
 
 #=============== OS2 SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, OS/2)
@@ -192,9 +206,6 @@ ifeq (${PLATFORM}, HPUX)
     ALLLIBS = ${LIBS} -lCsup -lstream
     SHLIBSUFFIX=.sl
   else
-#    ifneq (${DEBUG}, 1)
-#      XML_BUILD_OPTIONS = +O1
-#    endif
     TEMPLATESREPOSITORY = ${ALL_OBJECTS_DIR}/ptrepository
     COMMON_COMPILE_OPTIONS = -D_HP_UX -DXML4C_TMPLSINC \
         -D${OSVERDEFINE} +DAportable +eh +z -z +a1
@@ -253,24 +264,6 @@ ECHO = echo
 CREATE_DEPENDS_FILE = echo "" > depends
 MAKE_DEPEND = ${CC1} -E -xM
 
-########################## DIRECTORIES ############################
-#ifeq (${MESSAGELOADER}, ICU)
-#    INTL_INC_DIR1 = $(ICUROOT)/include
-#endif
-#ifeq (${TRANSCODER}, ICU)
-#    INTL_INC_DIR1 = $(ICUROOT)/include
-#endif
-
-#################### COMPILE/LINK FLAGS ###########################
-#ifeq (${MESSAGELOADER}, ICU)
-#    XML_INCL = -I. -I$(XML_INC_DIR) -I$(INTL_INC_DIR1)
-#else
-#    ifeq (${TRANSCODER}, ICU)
-#        XML_INCL = -I. -I$(XML_INC_DIR) -I$(INTL_INC_DIR1)
-#    else
-#        XML_INCL = -I. -I$(XML_INC_DIR)
-#    endif
-#endif
 
 ##################### HELPER MACROS ###############################
 DEPFILE = depends
@@ -282,6 +275,9 @@ LINKLIB = $(XML_LIB_DIR)
 
 .cpp.o:
 	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)
+ifeq (${PLATFORM}, IRIX)
+	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(OBJ_OUT)$(@) $(<)
+endif
 
 .c.o:
 	$(JUST_CC) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)

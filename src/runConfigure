@@ -58,6 +58,9 @@
 # 
 #
 # $Log$
+# Revision 1.7  1999/12/01 17:16:16  rahulj
+# Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
+#
 # Revision 1.6  1999/11/24 23:21:42  rahulj
 # Now works under HPUX 10.20 with CC and aCC, with ICU and native
 distclean target now remove and remaining Makefile(s)
@@ -100,12 +103,12 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11')"
-    echo "       -c <C compiler name> (e.g. gcc or xlc)"
-    echo "       -x <C++ compiler name> (e.g. g++ or xlC)"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'irix')"
+    echo "       -c <C compiler name> (e.g. gcc, cc, xlc)"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
-    echo "       -m <message loader> can be 'inmem', 'icu' or 'iconv'"
-    echo "       -n <net accessor> can be 'fileonly' or 'libwww'"
+    echo "       -m <message loader> can be 'inmem', 'icu', 'iconv'"
+    echo "       -n <net accessor> can be 'fileonly', 'libwww'"
     echo "       -t <transcoder> can be 'icu' or 'native'"
     echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
     echo "       -l <extra linker options>"
@@ -206,7 +209,7 @@ echo "Thread option: $thread"
 #
 
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11)
+   aix | linux | solaris | hp-10 | hp-11 | irix)
        # platform has been recognized
        ;;
    *)
