@@ -107,7 +107,11 @@ $docppfilelist = $docppfilelist . " $XERCESCROOT/src/dom/DOMString.hpp";
 $docppfilelist = $docppfilelist . " $XERCESCROOT/src/framework/XMLDocumentHandler.hpp";
 $docppfilelist = $docppfilelist . " $XERCESCROOT/src/framework/XMLEntityHandler.hpp";
 
-system ("doc++ -d $XERCESCROOT/doc/apiDocs -B $XERCESCROOT/doc/tail.html -a -G -k -H -S $docppfilelist");
+system ("doc++ -d $XERCESCROOT/doc/html/apiDocs -B $XERCESCROOT/doc/html/apiDocs/tail.html -a -G -k -H -S $docppfilelist");
+
+# Now create the User documentation from the XML sources
+chdir ("$XERCESCROOT");
+system("createdocs.bat");  # You must have Xerces-Java and Stylebook installed in addition to JDK1.2.2
 
 &package_sources();
 
@@ -124,7 +128,6 @@ sub package_sources {
    system ("mkdir $srctargetdir");
    print ("Targetdir is : " . $srctargetdir . "\n");
    system("cp -Rf $XERCESCROOT/* $srctargetdir");
-   system("cp $XERCESCROOT/doc/license.html $srctargetdir");
 
    if ($platform =~ m/Windows/) {
       $RM = "rm";
@@ -188,19 +191,19 @@ sub package_sources {
    system("$RM -rf *.opt");
    system("$RM -rf *.ncb");
    system("$RM -rf *.plg");
-   system("$RM -rf \.#*");
+   system("$RM -rf #*");
 
    # Walk through the source directory structure and delete all CVS directories
    &deleteCVSdirs($srctargetdir);
 
    # remove the export clauses
-   chdir ("$srctargetdir/doc/apiDocs");
-   opendir (THISDIR, "$srctargetdir/doc/apiDocs");
+   chdir ("$srctargetdir/doc/html/apiDocs");
+   opendir (THISDIR, "$srctargetdir/doc/html/apiDocs");
    @allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
    @allhtmlfiles = grep(/\.html/, @allfiles);
    closedir(THISDIR);
    foreach $htmlfile (@allhtmlfiles) {
-       &remove_export_clauses ("$srctargetdir/doc/apiDocs/" . $htmlfile);
+       &remove_export_clauses ("$srctargetdir/doc/html/apiDocs/" . $htmlfile);
    }
 
    chdir ("$srctargetdir/..");
