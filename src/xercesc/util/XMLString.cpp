@@ -1180,14 +1180,19 @@ int XMLString::patternMatch(        XMLCh* const    toSearch
     XMLCh* srcPtr = toSearch;
     const int patnLen = XMLString::stringLen(pattern);
     int  patnIndex = 0;
+    bool patnMatch;
 
     while (*srcPtr)
     {
-        if (*srcPtr++ != pattern[patnIndex++])
+        patnMatch = (*srcPtr++ == pattern[patnIndex++]);
+
+        if (!patnMatch)
         {
             patnIndex = 0;
+            patnMatch = (*srcPtr == pattern[patnIndex++]);
         }
-        else
+
+        if (patnMatch)
         {
             if (patnIndex == patnLen)
                 // full pattern match found
