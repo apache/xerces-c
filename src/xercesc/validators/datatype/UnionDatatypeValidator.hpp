@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/01/29 19:53:35  gareth
+ * we now store information about which validator was used to validate.
+ *
  * Revision 1.5  2003/01/10 16:48:47  tng
  * [Bug 14912] crashes inside UnionDatatypeValidator::isSubstitutableBy.   Patch from Alberto Massari.
  *
@@ -216,6 +219,30 @@ public:
 
     RefVectorOf<DatatypeValidator>* getMemberTypeValidators() const;
 
+
+    /**
+     * Returns the type name that was actually used to validate the last time validate was called
+     * note - this does not mean that it fully validated sucessfully
+     **/
+    const XMLCh* getMemberTypeName() const;
+
+    /**
+     * Returns the type uri that was actually used to validate the last time validate was called
+     * note - this does not mean that it fully validated sucessfully
+     **/
+    const XMLCh* getMemberTypeUri() const;
+
+    /**
+     * Returns true if the type that was actually used to validate the last time validate was called 
+     * is anonymous
+     */
+    bool getMemberTypeAnonymous() const;
+
+    /**
+     * Called inbetween uses of this validator to reset PSVI information
+     */
+    void reset();
+
 private:
 
     void checkContent(const XMLCh* const content, bool asBase);
@@ -225,7 +252,7 @@ private:
             , RefArrayVectorOf<XMLCh>*           const enums);
 
     void cleanUp();
-
+    
     RefArrayVectorOf<XMLCh>*  getEnumeration() const;
 
     void                 setEnumeration(RefArrayVectorOf<XMLCh>*, bool);
@@ -240,10 +267,15 @@ private:
     //  fMemberTypeValidators
     //      we own it.
     //
+    //  fValidatedDatatype
+    //      the dataTypeValidator  that was actually used to validate the last time validate was called
+    //
     // -----------------------------------------------------------------------
+
      bool                 fEnumerationInherited;
      RefArrayVectorOf<XMLCh>*  fEnumeration;
      RefVectorOf<DatatypeValidator>*  fMemberTypeValidators;
+     DatatypeValidator*               fValidatedDatatype;
 };
 
 inline DatatypeValidator* UnionDatatypeValidator::newInstance(
@@ -267,6 +299,7 @@ inline void UnionDatatypeValidator::cleanUp()
 
     if (fMemberTypeValidators)
         delete fMemberTypeValidators;
+    
 }
 
 inline RefArrayVectorOf<XMLCh>* UnionDatatypeValidator:: getEnumeration() const
@@ -338,6 +371,22 @@ inline bool UnionDatatypeValidator::isSubstitutableBy(const DatatypeValidator* c
         }
     }
     return false;
+}
+
+inline const XMLCh* UnionDatatypeValidator::getMemberTypeName() const {
+    return fValidatedDatatype->getTypeLocalName();
+}
+
+inline const XMLCh* UnionDatatypeValidator::getMemberTypeUri() const {
+    return fValidatedDatatype->getTypeUri();
+}
+
+inline bool UnionDatatypeValidator::getMemberTypeAnonymous() const {
+    return fValidatedDatatype->getAnonymous();
+}
+
+inline void UnionDatatypeValidator::reset() {
+    fValidatedDatatype = 0;
 }
 
 XERCES_CPP_NAMESPACE_END

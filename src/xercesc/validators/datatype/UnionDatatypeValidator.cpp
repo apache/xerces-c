@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/01/29 19:53:35  gareth
+ * we now store information about which validator was used to validate.
+ *
  * Revision 1.6  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -114,6 +117,7 @@ UnionDatatypeValidator::UnionDatatypeValidator()
 ,fEnumerationInherited(false)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
+,fValidatedDatatype(0)
 {}
 
 UnionDatatypeValidator::~UnionDatatypeValidator()
@@ -128,6 +132,7 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 ,fEnumerationInherited(false)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
+,fValidatedDatatype(0)
 {
     if ( !memberTypeValidators )
     {
@@ -148,6 +153,7 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 ,fEnumerationInherited(false)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
+,fValidatedDatatype(0)
 {
     //
     // baseValidator another UnionDTV from which,
@@ -284,6 +290,7 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
 //
 void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBase)
 {
+
     DatatypeValidator* bv = getBaseValidator();
     if (bv)
         ((UnionDatatypeValidator*)bv)->checkContent(content, true);
@@ -302,6 +309,10 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
             {
                 fMemberTypeValidators->elementAt(i)->validate(content);
                 memTypeValid = true;
+                
+                //set the name of the type actually used to validate the content
+                DatatypeValidator *dtv = fMemberTypeValidators->elementAt(i);
+                fValidatedDatatype = dtv;
             }
             catch (XMLException&)
             {
