@@ -217,7 +217,6 @@ TraverseSchema::TraverseSchema( const DOM_Element&                 schemaRoot
     , fCurrentGroupStack(0)
     , fIC_NamespaceDepth(0)
     , fIC_Elements(0)
-    , fAttributeCheck(0)
     , fGlobalDeclarations(0)
     , fNotationRegistry(0)
     , fRedefineComponents(0)
@@ -405,7 +404,7 @@ void TraverseSchema::traverseSchemaHeader(const DOM_Element& schemaRoot) {
     // Check Attributes
     // -----------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::GlobalContext;
-    fAttributeCheck->checkAttributes(schemaRoot, scope, this);
+    fAttributeCheck.checkAttributes(schemaRoot, scope, this);
 
     retrieveNamespaceMapping(schemaRoot);
     fElemAttrDefaultQualified = 0;
@@ -436,7 +435,7 @@ void TraverseSchema::traverseAnnotationDecl(const DOM_Element& annotationElem) {
     int scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
                            : GeneralAttributeCheck::LocalContext;
         
-    fAttributeCheck->checkAttributes(annotationElem, scope, this);
+    fAttributeCheck.checkAttributes(annotationElem, scope, this);
 
     for (DOM_Element child = XUtil::getFirstChildElement(annotationElem);
          child != 0;
@@ -450,7 +449,7 @@ void TraverseSchema::traverseAnnotationDecl(const DOM_Element& annotationElem) {
         }
 
         // General Attribute Checking
-        fAttributeCheck->checkAttributes(child, GeneralAttributeCheck::LocalContext, this);
+        fAttributeCheck.checkAttributes(child, GeneralAttributeCheck::LocalContext, this);
     }
 }
 
@@ -471,7 +470,7 @@ void TraverseSchema::traverseInclude(const DOM_Element& elem) {
     // Check attributes
     // ------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::GlobalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
@@ -599,7 +598,7 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
     // Check attributes
     // ------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::GlobalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
@@ -760,7 +759,7 @@ void TraverseSchema::traverseRedefine(const DOM_Element& redefineElem) {
     // Check attributes
     // ------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::GlobalContext;
-    fAttributeCheck->checkAttributes(redefineElem, scope, this);
+    fAttributeCheck.checkAttributes(redefineElem, scope, this);
 
     // First, we look through the children of redefineElem. Each one will
     // correspond to an element of the redefined schema that we need to
@@ -814,7 +813,7 @@ TraverseSchema::traverseChoiceSequence(const DOM_Element& elem,
     // Check attributes
     // ------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // Process contents
@@ -937,7 +936,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem,
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
                                       : GeneralAttributeCheck::LocalContext;
 
-    fAttributeCheck->checkAttributes(childElem, scope, this);
+    fAttributeCheck.checkAttributes(childElem, scope, this);
 
     // ------------------------------------------------------------------
     // Process contents
@@ -1002,7 +1001,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem,
     // -----------------------------------------------------------------------
     // Check Attributes
     // -----------------------------------------------------------------------
-    fAttributeCheck->checkAttributes(content, GeneralAttributeCheck::LocalContext, this);
+    fAttributeCheck.checkAttributes(content, GeneralAttributeCheck::LocalContext, this);
 
     // Remark: some code will be repeated in list|restriction| union but it
     //         is cleaner that way
@@ -1075,7 +1074,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
     // -----------------------------------------------------------------------
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
                                       : GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // Check if the type has already been registered
@@ -1237,7 +1236,7 @@ TraverseSchema::traverseGroupDecl(const DOM_Element& elem) {
     // ------------------------------------------------------------------
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
                                       : GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // Check for annotations
@@ -1394,7 +1393,7 @@ TraverseSchema::traverseAttributeGroupDecl(const DOM_Element& elem,
     // ------------------------------------------------------------------
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
                                       : GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // Handle "ref="
@@ -1515,7 +1514,7 @@ TraverseSchema::traverseAny(const DOM_Element& elem) {
     // Check Attributes
     // -----------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
@@ -1641,7 +1640,7 @@ TraverseSchema::traverseAll(const DOM_Element& elem) {
     // Check attributes
     // ------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // Process contents
@@ -1767,7 +1766,7 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     // ------------------------------------------------------------------
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
                                       : GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     const XMLCh* defaultVal = getElementAttValue(elem, SchemaSymbols::fgATT_DEFAULT);
     const XMLCh* fixedVal = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
@@ -2121,7 +2120,7 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem, bool& toDele
     // ------------------------------------------------------------------
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
                                       : GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // Process contents
@@ -2548,7 +2547,7 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOM_Element& elem) {
     // ------------------------------------------------------------------
     // Check attributes
     // ------------------------------------------------------------------
-    fAttributeCheck->checkAttributes(elem, GeneralAttributeCheck::GlobalContext, this);
+    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::GlobalContext, this);
 
     // ------------------------------------------------------------------
     // Process notation attributes/elements
@@ -2772,7 +2771,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
 
         if (content.getNodeType() == DOM_Node::ELEMENT_NODE) {
 
-            fAttributeCheck->checkAttributes(content, scope, this);
+            fAttributeCheck.checkAttributes(content, scope, this);
             facetName = content.getLocalName();
             fBuffer.set(facetName.rawBuffer(), facetName.length());
 
@@ -3055,7 +3054,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // Check Attributes
     // -----------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(contentDecl, scope, this);
+    fAttributeCheck.checkAttributes(contentDecl, scope, this);
 
     // -----------------------------------------------------------------------
     // Set the content type to be simple, and initialize content spec handle
@@ -3072,7 +3071,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
         throw TraverseSchema::InvalidComplexTypeInfo;
     }
 
-    fAttributeCheck->checkAttributes(simpleContent, scope, this);
+    fAttributeCheck.checkAttributes(simpleContent, scope, this);
 
     // -----------------------------------------------------------------------
     // The content should be either "restriction" or "extension"
@@ -3228,7 +3227,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
 
                 if (content.getNodeType() == DOM_Node::ELEMENT_NODE) {
 
-                    fAttributeCheck->checkAttributes(content, scope, this);
+                    fAttributeCheck.checkAttributes(content, scope, this);
 
                     DOMString attValue =
                         content.getAttribute(SchemaSymbols::fgATT_VALUE);
@@ -3393,7 +3392,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     // Check attributes
     // ------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(contentDecl, scope, this);
+    fAttributeCheck.checkAttributes(contentDecl, scope, this);
 
     // -----------------------------------------------------------------------
     // Determine whether the content is mixed, or element-only
@@ -3510,7 +3509,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOM_Element& elem) {
     // Check Attributes
     // -----------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
@@ -3619,7 +3618,7 @@ void TraverseSchema::traverseKey(const DOM_Element& icElem,
     // Check Attributes
     // -----------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(icElem, scope, this);
+    fAttributeCheck.checkAttributes(icElem, scope, this);
 
     // -----------------------------------------------------------------------
     // Create identity constraint
@@ -3682,7 +3681,7 @@ void TraverseSchema::traverseUnique(const DOM_Element& icElem,
     // Check Attributes
     // -----------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(icElem, scope, this);
+    fAttributeCheck.checkAttributes(icElem, scope, this);
 
     // -----------------------------------------------------------------------
     // Create identity constraint
@@ -3746,7 +3745,7 @@ void TraverseSchema::traverseKeyRef(const DOM_Element& icElem,
     // Check Attributes
     // -----------------------------------------------------------------------
     unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(icElem, scope, this);
+    fAttributeCheck.checkAttributes(icElem, scope, this);
 
     // -----------------------------------------------------------------------
     // Verify that key reference "refer" attribute is valid
@@ -3818,15 +3817,10 @@ void TraverseSchema::traverseKeyRef(const DOM_Element& icElem,
 bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
                                                 const DOM_Element& icElem) {
 
-    // -----------------------------------------------------------------------
-    // Check Attributes
-    // -----------------------------------------------------------------------
-    unsigned short scope = GeneralAttributeCheck::LocalContext;
-    fAttributeCheck->checkAttributes(icElem, scope, this);
-
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
     // ------------------------------------------------------------------
+    unsigned short scope = GeneralAttributeCheck::LocalContext;
     DOM_Element elem = XUtil::getFirstChildElement(icElem);
 
     if (elem == 0) {
@@ -3846,7 +3840,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
         return false;
     }
 
-    fAttributeCheck->checkAttributes(elem, scope, this);
+    fAttributeCheck.checkAttributes(elem, scope, this);
     checkContent(icElem, XUtil::getFirstChildElement(elem), true);
 
     // ------------------------------------------------------------------
@@ -3902,7 +3896,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
         }
         else {
             // General Attribute Checking
-            fAttributeCheck->checkAttributes(elem, scope, this);
+            fAttributeCheck.checkAttributes(elem, scope, this);
             checkContent(icElem, XUtil::getFirstChildElement(elem), true);
 
             // xpath expression parsing
@@ -4138,7 +4132,9 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
                 }
             }
 
-            traverseGroupDecl(child);
+            if (!typeName || !fGroupRegistry->containsKey(fBuffer.getRawBuffer())) {
+                traverseGroupDecl(child);
+            }
         }
         else if (name.equals(SchemaSymbols::fgELT_NOTATION)) {
             traverseNotationDecl(child);
@@ -5173,10 +5169,6 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         }
     }
 
-    if (minOccurs == 0 && maxOccurs == 0){
-        return;
-    }
-
     // Constraint checking for min/max value
     if (!isMaxUnbounded) {
 
@@ -5199,6 +5191,10 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
             if (specNode)
                 specNode->setMaxOccurs(minOccurs);
         }
+    }
+
+    if (minOccurs == 0 && maxOccurs == 0){
+        return;
     }
 
     // Constraint checking for 'all' content
@@ -7638,12 +7634,14 @@ TraverseSchema::checkForPointlessOccurrences(ContentSpecNode* const specNode,
                                              ValueVectorOf<ContentSpecNode*>* const nodes) {
 
     ContentSpecNode* rightNode = specNode->getSecond();
+    int min = specNode->getMinOccurs();
+    int max = specNode->getMaxOccurs();
 
     if (!rightNode) {
 
          gatherChildren(nodeType, specNode->getFirst(), nodes);
 
-         if (nodes->size() == 1) {
+         if (nodes->size() == 1 && min == 1 && max == 1) {
             return nodes->elementAt(0);
         }
 
@@ -8240,7 +8238,6 @@ void TraverseSchema::init() {
     fDatatypeRegistry->expandRegistryToFullSchemaSet();
     fStringPool = fGrammarResolver->getStringPool();
     fEmptyNamespaceURI = fScanner->getEmptyNamespaceId();
-    fAttributeCheck = GeneralAttributeCheck::instance();
     fCurrentTypeNameStack = new ValueVectorOf<unsigned int>(8);
     fCurrentGroupStack = new ValueVectorOf<unsigned int>(8);
     fGlobalDeclarations = new RefHash2KeysTableOf<XMLCh>(29, false);

@@ -80,6 +80,7 @@
 #include <validators/common/ContentSpecNode.hpp>
 #include <validators/schema/SchemaGrammar.hpp>
 #include <validators/schema/SchemaInfo.hpp>
+#include <validators/schema/GeneralAttributeCheck.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -98,7 +99,6 @@ class NamespaceScope;
 class SchemaAttDef;
 class InputSource;
 class ErrorHandler;
-class GeneralAttributeCheck;
 class XercesGroupInfo;
 class XercesAttGroupInfo;
 class IdentityConstraint;
@@ -801,7 +801,7 @@ private:
     ValueVectorOf<unsigned int>*                  fCurrentGroupStack;
     ValueVectorOf<unsigned int>*                  fIC_NamespaceDepth;
     ValueVectorOf<SchemaElementDecl*>*            fIC_Elements;
-    GeneralAttributeCheck*                        fAttributeCheck;
+    GeneralAttributeCheck                         fAttributeCheck;
     RefHash2KeysTableOf<XMLCh>*                   fGlobalDeclarations;
     RefHash2KeysTableOf<XMLCh>*                   fNotationRegistry;
     RefHash2KeysTableOf<XMLCh>*                   fRedefineComponents;

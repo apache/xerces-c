@@ -74,12 +74,13 @@
 #include <util/RefHashTableOf.hpp>
 #include <util/RefHash2KeysTableOf.hpp>
 #include <dom/DOM_Element.hpp>
+#include <validators/datatype/IDDatatypeValidator.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward declaration
 // ---------------------------------------------------------------------------
 class TraverseSchema;
-class DatatypeValidator;
+
 
 class AttributeInfo {
 public:
@@ -121,18 +122,14 @@ private:
 typedef RefVectorOf<AttributeInfo> RefVectorOfAttributeInfo;
 
 
-class GeneralAttributeCheck
+class VALIDATORS_EXPORT GeneralAttributeCheck
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructor/Destructor
     // -----------------------------------------------------------------------
+    GeneralAttributeCheck();
     ~GeneralAttributeCheck();
-
-    // -----------------------------------------------------------------------
-    //  Instance methods
-    // -----------------------------------------------------------------------
-    static GeneralAttributeCheck* instance();
 
     // -----------------------------------------------------------------------
     //  Public Constants
@@ -147,17 +144,12 @@ public:
                          const unsigned short elemContext,
                          TraverseSchema* const schema);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
-	static void reinitInstance();
+	static void reinitGeneralAttCheck();
 
 private:
-    // -----------------------------------------------------------------------
-    //  Constructor and destructors
-    // -----------------------------------------------------------------------
-    GeneralAttributeCheck();
-
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -170,11 +162,6 @@ private:
     void setUpAttributes();
     void setUpValidators();
     void mapElements();
-
-    // -----------------------------------------------------------------------
-    //  CleanUp methods
-    // -----------------------------------------------------------------------
-    void cleanUp();
 
     // -----------------------------------------------------------------------
     //  Validation methods
@@ -286,10 +273,11 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    AttributeInfo**                                fAttributes;
-    DatatypeValidator**                            fValidators;
-    RefHash2KeysTableOf<RefVectorOfAttributeInfo>* fElementMap;
-    static GeneralAttributeCheck* fInstance;
+    static AttributeInfo**                                fAttributes;
+    static DatatypeValidator**                            fValidators;
+    static RefHash2KeysTableOf<RefVectorOfAttributeInfo>* fElementMap;
+    IDDatatypeValidator                                   fIDValidator;
+    RefHashTableOf<XMLRefInfo>*                           fIDRefList;
 };
 
 
