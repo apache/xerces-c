@@ -69,6 +69,7 @@
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/XMLUri.hpp>
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
@@ -510,18 +511,22 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
     // Create a buffer for expanding the system id
     XMLBuffer expSysId(1023, fMemoryManager);
 
+    XMLBuffer& normalizedSysId = expSysId;
+    XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
+    const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
+
     //
     //  Allow the entity handler to expand the system id if they choose
     //  to do so.
     //
     if (fEntityHandler)
     {
-        if (!fEntityHandler->expandSystemId(sysId, expSysId))
-            expSysId.set(sysId);
+        if (!fEntityHandler->expandSystemId(normalizedURI, expSysId))
+            expSysId.set(normalizedURI);
     }
      else
     {
-        expSysId.set(sysId);
+        expSysId.set(normalizedURI);
     }
 
     // Call the entity resolver interface to get an input source
@@ -586,12 +591,17 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
             (urlTmp.isRelative()))
         {
             if (!fStandardUriConformant)
+            {
+                XMLBuffer resolvedSysId(1023, fMemoryManager);
+                XMLUri::normalizeURI(expSysId.getRawBuffer(), resolvedSysId);
+
                 srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
                     lastInfo.systemId
-                    , expSysId.getRawBuffer()
+                    , resolvedSysId.getRawBuffer()
                     , fMemoryManager
                 );
+            }
             else
                 ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
         }
@@ -647,18 +657,21 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
     // Create a buffer for expanding the system id
     XMLBuffer expSysId(1023, fMemoryManager);
 
+    XMLBuffer& normalizedSysId = expSysId;
+    XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
+    const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
     //
     //  Allow the entity handler to expand the system id if they choose
     //  to do so.
     //
     if (fEntityHandler)
     {
-        if (!fEntityHandler->expandSystemId(sysId, expSysId))
-            expSysId.set(sysId);
+        if (!fEntityHandler->expandSystemId(normalizedURI, expSysId))
+            expSysId.set(normalizedURI);
     }
      else
     {
-        expSysId.set(sysId);
+        expSysId.set(normalizedURI);
     }
 
     // Call the entity resolver interface to get an input source
@@ -684,12 +697,17 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
             (urlTmp.isRelative()))
         {
             if (!fStandardUriConformant)
+            {
+                XMLBuffer resolvedSysId(1023, fMemoryManager);
+                XMLUri::normalizeURI(expSysId.getRawBuffer(), resolvedSysId);
+
                 srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
                     lastInfo.systemId
-                    , expSysId.getRawBuffer()
+                    , resolvedSysId.getRawBuffer()
                     , fMemoryManager
                 );
+            }
             else
                 ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
         }

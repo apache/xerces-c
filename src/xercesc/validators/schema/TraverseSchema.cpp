@@ -94,6 +94,7 @@
 #include <xercesc/dom/impl/XSDElementNSImpl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLEntityResolver.hpp>
+#include <xercesc/util/XMLUri.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -6495,7 +6496,7 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc,
     InputSource* srcToFill = 0;
     XMLCh* normalizedURI = 0;
     if (loc) {
-        normalizeURI(loc, fBuffer);
+        XMLString::removeChar(loc, 0xFFFF, fBuffer);
         normalizedURI = fBuffer.getRawBuffer();
     }
 
@@ -6515,11 +6516,17 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc,
             (urlTmp.isRelative()))
         {
            if (!fScanner->getStandardUriConformant())
+           {
+               XMLCh* tempURI = XMLString::replicate(normalizedURI, fMemoryManager);
+               ArrayJanitor<XMLCh> tempURIName(tempURI, fMemoryManager);
+               XMLUri::normalizeURI(tempURI, fBuffer);
+
                 srcToFill = new (fMemoryManager) LocalFileInputSource
                 (   fSchemaInfo->getCurrentSchemaURL()
-                    , normalizedURI                    
+                    , fBuffer.getRawBuffer()
                     , fMemoryManager
                 );
+           }
             else
                 ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
         }

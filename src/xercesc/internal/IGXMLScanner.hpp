@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/05/25 18:09:50  peiyongz
+ * XML1.0 3rd: 4.2.2 ...Since escaping is not always a fully reversible process,
+ * it must be performed only when absolutely necessary and as late as possible
+ * in a processing chain...
+ *
  * Revision 1.21  2004/04/13 17:00:23  peiyongz
  * IdentityConstraintHandler
  *
@@ -228,10 +233,6 @@ private :
     // -----------------------------------------------------------------------
     void commonInit();
     void cleanUp();
-
-    // Spaces are not allowed in URI, so %20 is used instead.
-    // Convert %20 to spaces before resolving the URI
-    void normalizeURI(const XMLCh* const systemURI, XMLBuffer& normalizedURI);
 
     unsigned int buildAttList
     (

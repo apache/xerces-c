@@ -71,6 +71,7 @@
 #include <xercesc/internal/IGXMLScanner.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/util/UnexpectedEOFException.hpp>
+#include <xercesc/util/XMLUri.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
@@ -1716,7 +1717,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         XMLBuffer& expSysId = bbSys.getBuffer();
         XMLBuffer& normalizedSysId = bbSys.getBuffer();
 
-        normalizeURI(loc, normalizedSysId);
+        XMLString::removeChar(loc, 0xFFFF, normalizedSysId);
 
         //  Allow the entity handler to expand the system id if they choose
         //  to do so.
@@ -1750,12 +1751,18 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                 (urlTmp.isRelative()))
             {
                 if (!fStandardUriConformant)
+                {
+                    XMLBufBid  ddSys(&fBufMgr);
+                    XMLBuffer& resolvedSysId = ddSys.getBuffer();
+                    XMLUri::normalizeURI(expSysId.getRawBuffer(), resolvedSysId);
+
                     srcToFill = new (fMemoryManager) LocalFileInputSource
                     (
                         lastInfo.systemId
-                        , expSysId.getRawBuffer()
+                        , resolvedSysId.getRawBuffer()
                         , fMemoryManager
                     );
+                }
                 else
                     ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
             }
@@ -1889,23 +1896,27 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId)
     XMLBufBid bbSys(&fBufMgr);
     XMLBuffer& expSysId = bbSys.getBuffer();
 
+    XMLBuffer& normalizedSysId = bbSys.getBuffer();
+    XMLString::removeChar(sysId, 0xFFFF, normalizedSysId);
+    const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
+
     //  Allow the entity handler to expand the system id if they choose
     //  to do so.
     InputSource* srcToFill = 0;
     if (fEntityHandler)
     {
-        if (!fEntityHandler->expandSystemId(sysId, expSysId))
-            expSysId.set(sysId);
+        if (!fEntityHandler->expandSystemId(normalizedURI, expSysId))
+            expSysId.set(normalizedURI);
 
         ReaderMgr::LastExtEntityInfo lastInfo;
         fReaderMgr.getLastExtEntityInfo(lastInfo);
         XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
-                            expSysId.getRawBuffer(), 0, XMLUni::fgZeroLenString, lastInfo.systemId);
+                              expSysId.getRawBuffer(), 0, XMLUni::fgZeroLenString, lastInfo.systemId);
         srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
     else
     {
-        expSysId.set(sysId);
+        expSysId.set(normalizedURI);
     }
 
     //  If they didn't create a source via the entity handler, then we
@@ -1920,12 +1931,18 @@ InputSource* IGXMLScanner::resolveSystemId(const XMLCh* const sysId)
             (urlTmp.isRelative()))
         {
             if (!fStandardUriConformant)
+            {
+                XMLBufBid  ddSys(&fBufMgr);
+                XMLBuffer& resolvedSysId = ddSys.getBuffer();
+                XMLUri::normalizeURI(expSysId.getRawBuffer(), resolvedSysId);
+
                 srcToFill = new (fMemoryManager) LocalFileInputSource
                 (
                     lastInfo.systemId
-                    , expSysId.getRawBuffer()
+                    , resolvedSysId.getRawBuffer()
                     , fMemoryManager
                 );
+            }
             else
                 ThrowXMLwithMemMgr(MalformedURLException, XMLExcepts::URL_MalformedURL, fMemoryManager);            
         }
@@ -3232,32 +3249,6 @@ bool IGXMLScanner::anyAttributeValidation(SchemaAttDef* attWildCard, unsigned in
     }
 
     return anyEncountered;
-}
-
-void IGXMLScanner::normalizeURI(const XMLCh* const systemURI,
-                                XMLBuffer& normalizedURI)
-{
-    const XMLCh* pszSrc = systemURI;
-
-    normalizedURI.reset();
-
-    while (*pszSrc) {
-
-        if ((*(pszSrc) == chPercent)
-        &&  (*(pszSrc+1) == chDigit_2)
-        &&  (*(pszSrc+2) == chDigit_0))
-        {
-            pszSrc += 3;
-            normalizedURI.append(chSpace);
-        }
-        else if (*pszSrc == 0xFFFF) { //escaped character
-            pszSrc++;
-        }
-        else {
-            normalizedURI.append(*pszSrc);
-            pszSrc++;
-        }
-    }
 }
 
 inline XMLAttDefList& getAttDefList(bool              isSchemaGrammar
