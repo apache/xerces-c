@@ -1282,11 +1282,10 @@ XMLScanner::rawAttrScan(const   XMLCh* const                elemName
         if (nextCh == chForwardSlash)
         {
             fReaderMgr.getNextChar();
-            if (fReaderMgr.skippedChar(chCloseAngle))
-            {
-                isEmpty = true;
-                break;
-            }
+            isEmpty = true;
+            if (!fReaderMgr.skippedChar(chCloseAngle))
+                emitError(XMLErrs::UnterminatedStartTag, elemName);
+            break;
         }
          else if (nextCh == chCloseAngle)
         {
