@@ -155,7 +155,7 @@
             <Message Id="UnknownNotRefAttr" Text="Attribute '{0}' refers to an unknown notation '{1}'"/>
             <Message Id="UndeclaredElemInDocType" Text="Element '{0}' was used in the DOCTYPE but never declared"/>
             <Message Id="EmptyNotValidForContent" Text="Empty content not valid for content model: '{0}'"/>
-            <Message Id="AttNotDefinedForElement" Text="Attribute '{{0}}{1}' is not declared for element '{2}'"/>
+            <Message Id="AttNotDefinedForElement" Text="Attribute '{0}' is not declared for element '{1}'"/>
             <Message Id="BadEntityRefAttr" Text="Attributes of type ENTITY/ENTITIES must refer to an external, unparsed entity"/>
             <Message Id="UnknownEntityRefAttr" Text="Attribute '{0}' refers to an unknown entity '{1}'"/>
             <Message Id="NotEnoughElemsForCM" Text="Not enough elements to match content model : '{0}'"/>

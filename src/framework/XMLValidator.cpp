@@ -56,6 +56,10 @@
 
 /**
   * $Log$
+  * Revision 1.3  1999/12/08 00:15:06  roddey
+  * Some small last minute fixes to get into the 3.0.1 build that is going to be
+  * going out anyway for platform fixes.
+  *
   * Revision 1.2  1999/12/02 19:02:56  roddey
   * Get rid of a few statically defined XMLMutex objects, and lazy eval them
   * using atomic compare and swap. I somehow let it get by me that we don't
@@ -174,15 +178,15 @@ void XMLValidator::emitError(const XML4CValid::Codes toEmit)
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XML4CValid::isFatal(toEmit)
+    if ((XML4CValid::isValid(toEmit) || XML4CValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
-    &&  fScanner->getInException())
+    &&  !fScanner->getInException())
     {
         throw toEmit;
     }
 }
 
-void XMLValidator::emitError( const   XML4CValid::Codes   toEmit
+void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
                             , const XMLCh* const        text1
                             , const XMLCh* const        text2
                             , const XMLCh* const        text3
@@ -229,15 +233,15 @@ void XMLValidator::emitError( const   XML4CValid::Codes   toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XML4CValid::isFatal(toEmit)
+    if ((XML4CValid::isValid(toEmit) || XML4CValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
-    &&  fScanner->getInException())
+    &&  !fScanner->getInException())
     {
         throw toEmit;
     }
 }
 
-void XMLValidator::emitError( const   XML4CValid::Codes   toEmit
+void XMLValidator::emitError(const  XML4CValid::Codes   toEmit
                             , const char* const         text1
                             , const char* const         text2
                             , const char* const         text3
@@ -284,9 +288,9 @@ void XMLValidator::emitError( const   XML4CValid::Codes   toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XML4CValid::isFatal(toEmit)
+    if ((XML4CValid::isValid(toEmit) || XML4CValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
-    &&  fScanner->getInException())
+    &&  !fScanner->getInException())
     {
         throw toEmit;
     }

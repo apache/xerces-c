@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/08 00:15:06  roddey
+ * Some small last minute fixes to get into the 3.0.1 build that is going to be
+ * going out anyway for platform fixes.
+ *
  * Revision 1.3  1999/12/02 19:02:57  roddey
  * Get rid of a few statically defined XMLMutex objects, and lazy eval them
  * using atomic compare and swap. I somehow let it get by me that we don't
@@ -293,6 +297,12 @@ void XMLScanner::scanDocument(const InputSource& src, const bool reuseValidator)
         fReaderMgr.reset();
     }
 
+    catch(const XML4CValid::Codes)
+    {
+        // This is a 'first fatal error' type exit, so reset and fall through
+        fReaderMgr.reset();
+    }
+
     catch(const SAXException&)
     {
         //
@@ -387,6 +397,12 @@ bool XMLScanner::scanFirst( const   InputSource&    src
         // This is a 'first failure' exception so reset and return a failure
         fReaderMgr.reset();
         return false;
+    }
+
+    catch(const XML4CValid::Codes)
+    {
+        // This is a 'first fatal error' type exit, so reset and fall through
+        fReaderMgr.reset();
     }
 
     // We have to propogate SAX exceptions
@@ -527,6 +543,12 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
         // This is a 'first failure' exception, so reset and return failure
         fReaderMgr.reset();
         return false;
+    }
+
+    catch(const XML4CValid::Codes)
+    {
+        // This is a 'first fatal error' type exit, so reset and fall through
+        fReaderMgr.reset();
     }
 
     // We have to propogate SAX exceptions

@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:24  twl
- * Initial revision
+ * Revision 1.2  1999/12/08 00:15:07  roddey
+ * Some small last minute fixes to get into the 3.0.1 build that is going to be
+ * going out anyway for platform fixes.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:24  twl
+ * Initial checkin
  *
  * Revision 1.6  1999/11/08 20:56:55  droddey
  * If the main xml entity does not exist, we need to get the error handling for that
@@ -229,11 +233,15 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 {
                     XMLBuffer bufURI;
                     fValidator->getURIText(uriId, bufURI);
+                    XMLBuffer bufMsg;
+                    bufMsg.append(chOpenCurly);
+                    bufMsg.append(bufURI.getRawBuffer());
+                    bufMsg.append(chCloseCurly);
+                    bufMsg.append(suffPtr);
                     fValidator->emitError
                     (
                         XML4CValid::AttNotDefinedForElement
-                        , bufURI.getRawBuffer()
-                        , suffPtr
+                        , bufMsg.getRawBuffer()
                         , elemDecl.getFullName()
                     );
                 }
