@@ -41,7 +41,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     <tr>
         <td>2003-05-15</td>
         <td>Gareth Reakes</td>
-        <td>Document::normalizeDocument() Implementaion
+        <td>Partial Document::normalizeDocument() Implementaion
         </td>
     </tr>        
         

@@ -119,6 +119,15 @@ are owned by implementation</li>
 </td>
 </tr>
 
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>Xerces-C++ 2.3</td>
+<td ALIGN=LEFT VALIGN=TOP>Modified
+<br>- added DOMError::getRelatedData, DOMError::setRelatedData, DOMError::SetType, DOMError::getType
+<br>- removed DOMDocument::setFeature, DOMDocument::getFeature, DOMDocument::canSetFeature
+<br>- added DOMDocument::getDOMConfiguration
+</td>
+</tr>
+
 </table>
 
 <p>
@@ -2751,6 +2760,28 @@ const = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
+<td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getType()
+const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getRelatedData()
+const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>setSeverity(const short
@@ -2788,6 +2819,28 @@ const location) = 0</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>setRelatedException(void*
 exception) const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>setRelatedData(void*
+relatedData) const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>setType(const XMLCh*
+type) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -3428,7 +3481,7 @@ data) = 0;</font></font></td>
 <h3>
 <font color="#000000">DOMTypeInfo.hpp:</font></h3>
 
-<div id="DOMEntityReference"><font face="Courier New,Courier"><font size=-1>class
+<div id="DOMTypeInfo"><font face="Courier New,Courier"><font size=-1>class
 DOMTypeInfo </font></font>
 <table>
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -3459,6 +3512,65 @@ DOMTypeInfo </font></font>
 <td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getNamespace() = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+</table>
+</div>
+
+
+<h3>
+<font color="#000000">DOMConfiguration.hpp:</font></h3>
+
+<div id="DOMConfiguration"><font face="Courier New,Courier"><font size=-1>class
+DOMConfiguration </font></font>
+<table>
+<tr ALIGN=LEFT VALIGN=TOP>
+<td><font face="Courier New,Courier"><font size=-1>{</font></font></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>setParameter(const XMLCh* name, const void* value) = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>const void*</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>getParameter(const XMLCh* name) const = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>bool</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>canSetParameter(const XMLCh* name, const void* value) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
