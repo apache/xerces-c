@@ -495,6 +495,7 @@
             <Message Id="NetAcc_ConnSocket" Text="Could not connect to the socket for URL '{0}'"/>
             <Message Id="NetAcc_WriteSocket" Text="Could not write to the socket for URL '{0}'"/>
             <Message Id="NetAcc_ReadSocket" Text="Could not read from the socket for URL '{0}'"/>
+            <Message Id="NetAcc_UnsupportedMethod" Text="The specified HTTP method is not supported by this NetAccessor."/>
             <Message Id="Pool_ElemAlreadyExists" Text="The element {0} already exists"/>
             <Message Id="Pool_BadHashFromKey" Text="Hashing the key returned an invalid bad hash value"/>
             <Message Id="Pool_InvalidId" Text="The passed id is not valid for this pool"/>

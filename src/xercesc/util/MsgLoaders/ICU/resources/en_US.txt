@@ -496,6 +496,7 @@ en_US {
 		"Could not connect to the socket for URL '{0}' " ,
 		"Could not write to the socket for URL '{0}' " ,
 		"Could not read from the socket for URL '{0}' " ,
+		"The specified HTTP method is not supported by this NetAccessor. " ,
 		"The element {0} already exists " ,
 		"Hashing the key returned an invalid bad hash value " ,
 		"The passed id is not valid for this pool " ,
