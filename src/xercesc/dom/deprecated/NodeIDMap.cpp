@@ -97,7 +97,7 @@ NodeIDMap::NodeIDMap(int initialSize,
 
 NodeIDMap::~NodeIDMap()
 {
-    delete[] fTable;
+    // delete[] fTable;
     fMemoryManager->deallocate(fTable);//fTable = 0;
 };
 
