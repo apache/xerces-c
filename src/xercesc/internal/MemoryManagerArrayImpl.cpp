@@ -56,11 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/09/06 22:37:55  jberry
+ * Fix bug #22938. Deletion of void* is illegal. Thanks Dave Bertoni.
+ *
  * Revision 1.1  2003/08/26 21:55:02  jberry
  * Add new memory allocator that allocates using new[], for use where returned memory must be able to be deleted using delete []. This saves duplicated code in cases where a routine is optionally called with a specific memory manager, such as in the case of transcode
- *
- * Revision 1.1  2003/04/21 16:20:41  knoaman
- * Initial check-in.
  *
  */
 
@@ -82,7 +82,7 @@ void* MemoryManagerArrayImpl::allocate(size_t size)
 void MemoryManagerArrayImpl::deallocate(void* p)
 {
     //::operator delete[](p);
-	delete[]p;
+	delete [] (char*)p;
 }
 
 XERCES_CPP_NAMESPACE_END
