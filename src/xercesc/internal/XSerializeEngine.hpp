@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/03/05 22:21:45  peiyongz
+ * readBytes()/writeBytes between BinOutputStream/BinInputStream and
+ * XSerializeEngine will always be the full size of the buffer to maintain the exact
+ * position for aligned data.
+ *
  * Revision 1.16  2004/03/01 23:19:03  peiyongz
  * Grant XSerializeEngine access to GrammarPool
  *
@@ -660,7 +665,7 @@ private:
 
     inline void           checkAndFlushBuffer(int bytesNeedToWrite);
 
-           void           fillBuffer(int bytesNeedToRead);
+           void           fillBuffer();
 
            void           flushBuffer();
 

@@ -57,6 +57,11 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2004/03/05 22:21:45  peiyongz
+ * readBytes()/writeBytes between BinOutputStream/BinInputStream and
+ * XSerializeEngine will always be the full size of the buffer to maintain the exact
+ * position for aligned data.
+ *
  * Revision 1.16  2004/03/01 23:19:03  peiyongz
  * Grant XSerializeEngine access to GrammarPool
  *
@@ -196,7 +201,7 @@ XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
     /*** 
      *  initialize buffer from the inStream
      ***/
-    fillBuffer(1);
+    fillBuffer();
 
 }
 
@@ -243,7 +248,7 @@ XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
     /*** 
      *  initialize buffer from the inStream
      ***/
-    fillBuffer(1);
+    fillBuffer();
 
 }
 
@@ -369,16 +374,14 @@ void XSerializeEngine::write(const XMLByte* const toWrite
 
     // fill up the avaiable space and flush
     memcpy(fBufCur, tempWrite, bufAvail);
-    fBufCur     += bufAvail;
     tempWrite   += bufAvail;
     writeRemain -= bufAvail;
     flushBuffer();
 
     // write chunks of fBufSize
-    while (writeRemain > fBufSize)
+    while (writeRemain >= fBufSize)
     {
         memcpy(fBufCur, tempWrite, fBufSize);
-        fBufCur     += fBufSize;
         tempWrite   += fBufSize;
         writeRemain -= fBufSize;
         flushBuffer();
@@ -420,6 +423,7 @@ void XSerializeEngine::writeString(const XMLCh* const toWrite
 
         int strLen = XMLString::stringLen(toWrite);
         *this<<strLen;
+
         write(toWrite, strLen);
     }
     else
@@ -559,21 +563,27 @@ void XSerializeEngine::read(XMLByte* const toRead
         return;
     }
 
+    /***
+     *
+     * fillBuffer will discard anything left in the buffer
+     * before it asks the inputStream to fill in the buffer,
+     * so we need to readup everything in the buffer before
+     * calling fillBuffer
+     *
+     ***/
     XMLByte*     tempRead   = (XMLByte*) toRead;
     unsigned int readRemain = readLen;
 
     // read the unread
     memcpy(tempRead, fBufCur, dataAvail);
-    fBufCur    += dataAvail;
     tempRead   += dataAvail;
     readRemain -= dataAvail;
 
     // read chunks of fBufSize
-    while (readRemain > fBufSize)
+    while (readRemain >= fBufSize)
     {
-        fillBuffer(fBufSize);
+        fillBuffer();
         memcpy(tempRead, fBufCur, fBufSize);
-        fBufCur    += fBufSize;
         tempRead   += fBufSize;
         readRemain -= fBufSize;
     }
@@ -581,7 +591,7 @@ void XSerializeEngine::read(XMLByte* const toRead
     // read the remaining if any
     if (readRemain)
     {
-        fillBuffer(readRemain);
+        fillBuffer();
         memcpy(tempRead, fBufCur, readRemain);
         fBufCur += readRemain;
     }
@@ -612,6 +622,7 @@ void XSerializeEngine::readString(XMLCh*&  toRead
      * Check if any data written
      ***/
     *this>>bufferLen;
+
     if (bufferLen == noDataFollowed)
     {
         toRead = 0;
@@ -948,54 +959,37 @@ void XSerializeEngine::pumpCount()
 // ---------------------------------------------------------------------------
 /***
  *
- *  Always try to fill up the whole buffer
+ *  Though client may need only miniBytesNeeded, we always request
+ *  a full size reading from our inputStream.
+ *
+ *  Whatever possibly left in the buffer is abandoned, such as in 
+ *  the case of CheckAndFillBuffer() 
  *
  ***/
-void XSerializeEngine::fillBuffer(int miniBytesNeeded)
+void XSerializeEngine::fillBuffer()
 {
     ensureLoading();
     ensureLoadBuffer();
-
-	TEST_THROW_ARG2( ((miniBytesNeeded <= 0) || ((unsigned long)miniBytesNeeded > fBufSize))
-              , miniBytesNeeded
-              , fBufSize
-              , XMLExcepts::XSer_Inv_FillBuffer_Size
-              );
+ 
+    int bytesRead = fInputStream->readBytes(fBufStart, fBufSize);
 
     /***
-     *   Move remaing bytes to the beginning of the buffer, if any
+     * InputStream MUST fill in the exact amount of bytes as requested
+     * to do: combine the checking and create a new exception code later
      ***/
-	const int unRead = fBufLoadMax - fBufCur;
-    const int unUsed = fBufSize - unRead;
-
-    if (unRead > 0)
-    {
-        memcpy(fBufStart, fBufCur, unRead);
-    }
-
-    fBufCur = fBufStart + unRead;
-    
-    int bytesRead = fInputStream->readBytes(fBufCur, unUsed);
-
-    /***
-     * InputStream MUST read in at leaset miniBytesNeeded
-     ***/
-    TEST_THROW_ARG2( (bytesRead < miniBytesNeeded)
+    TEST_THROW_ARG2( (bytesRead < (int)fBufSize)
                , bytesRead
-               , miniBytesNeeded
+               , fBufSize
                , XMLExcepts::XSer_InStream_Read_LT_Req
                )
 
-    /***
-     * This is worse: buffer overflow bug
-     ***/
-    TEST_THROW_ARG2( (bytesRead > unUsed)
+    TEST_THROW_ARG2( (bytesRead > (int)fBufSize)
                , bytesRead
-               , miniBytesNeeded
+               , fBufSize
                , XMLExcepts::XSer_InStream_Read_OverFlow
                )
 
-    fBufLoadMax = fBufCur + bytesRead;
+    fBufLoadMax = fBufStart + fBufSize;
     fBufCur     = fBufStart;
 
     ensureLoadBuffer();
@@ -1004,7 +998,8 @@ void XSerializeEngine::fillBuffer(int miniBytesNeeded)
 
 /***
  *
- *  Flush out whatever left in the buffer.
+ *  Flush out whatever left in the buffer, from
+ *  fBufStart to fBufEnd.
  *
  ***/
 void XSerializeEngine::flushBuffer()
@@ -1012,7 +1007,7 @@ void XSerializeEngine::flushBuffer()
     ensureStoring();
     ensureStoreBuffer();
 
-    fOutputStream->writeBytes(fBufStart, fBufCur - fBufStart);
+    fOutputStream->writeBytes(fBufStart, fBufSize);
     fBufCur = fBufStart;
 
     ensureStoreBuffer();
@@ -1040,7 +1035,9 @@ inline void XSerializeEngine::checkAndFillBuffer(int bytesNeedToRead)
 
     // fBufStart ... fBufCur ...fBufLoadMax
     if ((fBufCur + bytesNeedToRead) > fBufLoadMax)
-        fillBuffer(fBufCur + bytesNeedToRead - fBufLoadMax);
+    {
+        fillBuffer();
+    }
 
 }
 
