@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
-<s1 title="&XercesCName; Sample 10">
+<s1 title="&XercesCName; Sample 10: CreateDOMDocument">
 
     <s2 title="CreateDOMDocument">
         <p> CreateDOMDocument, illustrates how you can create a DOM tree in
@@ -11,7 +11,7 @@
         <s3 title="Building on Windows">
 	        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
 	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
-	        build the project marked DOMCount.</p>
+	        build the project marked CreateDOMDocument.</p>
         </s3>
 
         <s3 title="Building on UNIX">

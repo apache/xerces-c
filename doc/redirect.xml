@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
-<s1 title="&XercesCName; Sample 6">
+<s1 title="&XercesCName; Sample 6: Redirect">
 
     <s2 title="Redirect">
         <p>Redirect uses the SAX EntityResolver handler to redirect the
@@ -37,16 +37,15 @@ gmake</source>
 
                     <p>The program then counts and reports the number of elements and attributes in
                    the given XML file.</p>
-<source>Redirect [-v] &lt;XML file&gt;</source>
-          <p>The -v option is used to invoke the Validating SAX Parser instead.</p>
+<source>Redirect &lt;XML file&gt;</source>
 
-                   <p>When invoked as follows:</p>
+                   <p>Redirect is invoked as follows:</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
-Redirect -v personal.xml</source>
+Redirect personal.xml</source>
           <p>The output is the following:</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
-Redirect -v personal.xml
-personal.xml: 30 ms (37 elems, 12 attrs, 134 spaces, 134 chars)</source>
+Redirect personal.xml
+personal.xml: 30 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
 
           <p>External files required to run this sample are 'personal.xml', 'personal.dtd' and
              'redirect.dtd', which are all present in the 'samples/data' directory. Make sure

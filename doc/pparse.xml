@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 
-<s1 title="&XercesCName; Sample 7">
+<s1 title="&XercesCName; Sample 7: PParse">
 
     <s2 title="PParse">
         <p>PParse demonstrates progressive parsing.</p>
@@ -39,9 +39,27 @@ gmake</source>
         <s3 title="Running PParse">
         	<p>The program looks for the first 16 elements of the XML file,
 			and reports if successful.</p>
-<source>PParse [-v] &lt;XML file&gt;</source>
+<source>PParse &lt;XML file&gt;</source>
+
+<source>
+Usage: PParse [options] <file>
+
+This sample program demonstrates the progressive parse capabilities of
+the parser system. It allows you to do a scanFirst() call followed by
+a loop which calls scanNext(). You can drop out when you've found what
+ever it is you want. In our little test, our event handler looks for
+16 new elements then sets a flag to indicate its found what it wants.
+At that point, our progressive parse loop exits.
+
+Options:
+      -v            - Do validation [default is off]
+      -n            - Enable namespace processing [default is off]
+      -?            - Show this help (must be the only parameter)</source>
           	<p>The output is the following:</p>
-<source>Got the required 16 elements.</source>
+<source>cd &XercesCInstallDir;-linux/samples/data
+PParse personal.xml
+
+Got the required 16 elements.</source>
         </s3>
     </s2>
 </s1>
