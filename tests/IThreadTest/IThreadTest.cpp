@@ -137,9 +137,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 //
 //------------------------------------------------------------------------------
 
-#ifdef OS390
 extern "C" {
-#endif
 
 
 typedef void (*ThreadFunc)(void *);
@@ -180,9 +178,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
     }
 
 }
-#ifdef OS390
 }
-#endif
 #else
 #error This platform is not supported
 #endif
@@ -806,13 +802,10 @@ void ReadFilesIntoMemory()
 //
 //----------------------------------------------------------------------
 
-#ifdef OS390
-extern "C" {
-#endif
-
 #ifdef PLATFORM_WIN32
 unsigned long WINAPI threadMain (void *param)
 #else
+extern "C" {
 void threadMain (void *param)
 #endif
 {
@@ -877,12 +870,10 @@ void threadMain (void *param)
     return 0;
 #else
     return;
+}
 #endif
 }
 
-#ifdef OS390
-}
-#endif
 
 
 

@@ -118,9 +118,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 //
 //------------------------------------------------------------------------------
 
-#ifdef OS390
 extern "C" {
-#endif
 
 
 typedef void (*ThreadFunc)(void *);
@@ -161,9 +159,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
     }
 
 }
-#ifdef OS390
 }
-#endif
 #else
 #error This platform is not supported
 #endif
@@ -777,9 +773,7 @@ void ReadFilesIntoMemory()
 //
 //----------------------------------------------------------------------
 
-#ifdef OS390
 extern "C" {
-#endif
 
 void threadMain (void *param)
 {
@@ -841,9 +835,7 @@ void threadMain (void *param)
     }
 }
 
-#ifdef OS390
 }
-#endif
 
 
 
