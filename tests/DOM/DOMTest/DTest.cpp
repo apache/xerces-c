@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.36  2002/11/21 22:12:08  tng
+ * fix typo where isID should be isId
+ *
  * Revision 1.35  2002/11/21 14:24:39  gareth
  * Tests added for isId, setIdAttribute, setIdAttributeNS, setIdAttributeNode
  *
@@ -1546,14 +1549,14 @@ bool DOMTest::testAttr(DOMDocument* document)
     testElementNode->setAttributeNode(idAtt);
     
 
-    if(idAtt->isID()) {
+    if(idAtt->isId()) {
         fprintf(stderr, "isID failed in line %i\n", __LINE__);
         OK = false;
     }
 
     testElementNode->setIdAttributeNode(idAtt);
 
-    if(!idAtt->isID()) {
+    if(!idAtt->isId()) {
         fprintf(stderr, "isID failed in line %i\n", __LINE__);
         OK = false;
     }
@@ -3397,7 +3400,7 @@ bool DOMTest::testElement(DOMDocument* document)
     testElementNode->setAttributeNode(idAtt);
     testElementNode->setIdAttributeNode(idAtt);
 
-    if(!idAtt->isID()) {
+    if(!idAtt->isId()) {
         fprintf(stderr, "setIdAttributeNode failed in line %i\n", __LINE__);
         OK = false;
     }
@@ -3418,7 +3421,7 @@ bool DOMTest::testElement(DOMDocument* document)
     testElementNode->setAttributeNode(idAtt);
     testElementNode->setIdAttributeNS(tempStr4, tempStr5);
 
-    if(!idAtt->isID()) {
+    if(!idAtt->isId()) {
         fprintf(stderr, "setIdAttributeNS failed in line %i\n", __LINE__);
         OK = false;
     }
@@ -3440,7 +3443,7 @@ bool DOMTest::testElement(DOMDocument* document)
     testElementNode->setAttributeNode(idAtt);
     testElementNode->setIdAttribute(tempStr5);
 
-    if(!idAtt->isID()) {
+    if(!idAtt->isId()) {
         fprintf(stderr, "setIdAttribute failed in line %i\n", __LINE__);
         OK = false;
     }
