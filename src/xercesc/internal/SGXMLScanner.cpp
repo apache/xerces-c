@@ -3713,6 +3713,8 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(int attCount)
 void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 {
     BaseRefVectorOf<XMLCh>* schemaLocation = XMLString::tokenizeString(schemaLocationStr, fMemoryManager);
+    ArrayJanitor<BaseRefVectorOf<XMLCh> > janLoc(schemaLocation, fMemoryManager);
+
     unsigned int size = schemaLocation->size();
     if (size % 2 != 0 ) {
         emitError(XMLErrs::BadSchemaLocation);
@@ -3721,8 +3723,6 @@ void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
             resolveSchemaGrammar(schemaLocation->elementAt(i+1), schemaLocation->elementAt(i));
         }
     }
-
-    delete schemaLocation;
 }
 
 void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {
