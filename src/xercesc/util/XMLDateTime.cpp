@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.27  2004/09/02 15:03:50  peiyongz
+ * To build on AIX
+ *
  * Revision 1.26  2004/08/31 20:50:50  peiyongz
  * Parse/keep milisecond as double to retain precision.
  *
@@ -156,6 +159,8 @@
 // ---------------------------------------------------------------------------
 #include <stdlib.h>
 #include <assert.h>
+#include <errno.h>
+
 #include <xercesc/util/XMLDateTime.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
