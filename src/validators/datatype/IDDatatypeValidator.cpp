@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/14 22:11:56  peiyongz
+ * new exception message added
+ *
  * Revision 1.2  2001/07/24 21:23:40  tng
  * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
  *
@@ -105,9 +108,12 @@ IDDatatypeValidator::IDDatatypeValidator(
         int enumLength = enums->size();
         for ( int i = 0; i < enumLength; i++)
         {
-            if ( XMLString::isValidName(enums->elementAt(i)) == false)
-                ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
-                //("Value '"+content+"' is not a valid NCName");
+            if ( !XMLString::isValidNCName(enums->elementAt(i)))
+            {
+                ThrowXML1(InvalidDatatypeFacetException
+                        , XMLExcepts::VALUE_Invalid_NCName
+                        , enums->elementAt(i));
+            }
         }
     }
 
@@ -122,11 +128,14 @@ void IDDatatypeValidator::validate(const XMLCh* const content)
     //
     StringDatatypeValidator::validate(content);
 
-    // check 3.3.1.constrain must: "Name"
+    // check 3.3.8.constrain must: "NCName"
     //
-    if (XMLString::isValidName(content) == false)
-        ThrowXML(InvalidDatatypeValueException, XMLExcepts::FACET_Len_minLen);
-        //("Value '"+content+"' is not a valid NCName");
+    if ( !XMLString::isValidNCName(content))
+    {
+        ThrowXML1(InvalidDatatypeFacetException
+                , XMLExcepts::VALUE_Invalid_NCName
+                , content);
+    }
 
     // storing IDs to the global ID table
     if (fIDRefList)
@@ -139,9 +148,11 @@ void IDDatatypeValidator::addId(const XMLCh * const content)
     if (find)
     {
         if (find->getDeclared())
-            ThrowXML(InvalidDatatypeValueException, XMLExcepts::FACET_Len_minLen);
-            //ThrowXML(InvalidDatatypeValueException, XMLExcepts::VALUE_ID_Not_Unique);
-            //("Value '"+content+"' has to be unique");
+        {
+            ThrowXML1(InvalidDatatypeValueException
+                    , XMLExcepts::VALUE_ID_Not_Unique
+                    , content);
+        }
     }
      else
     {

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/14 22:11:56  peiyongz
+ * new exception message added
+ *
  * Revision 1.1  2001/07/13 14:10:40  peiyongz
  * UnionDTV
  *
@@ -85,10 +88,11 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
 {
-    if (!memberTypeValidators)
-        ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Len, value1);
-        //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Union_Null_memberTypeValidators);
-        //"Not Null memberTypeValidators required for UnionDatatypeValidator
+    if ( !memberTypeValidators )
+    {
+        ThrowXML(InvalidDatatypeFacetException
+               , XMLExcepts::FACET_Union_Null_memberTypeValidators);
+    }
 
     // no pattern, no enumeration
     fMemberTypeValidators = memberTypeValidators;
@@ -110,14 +114,18 @@ UnionDatatypeValidator::UnionDatatypeValidator(
     // it shall be not null
     //
     if (!baseValidator)
-        ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Len, value1);
-        //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Union_Null_baseValidator);
-        //"Not Null baseValidator required for UnionDatatypeValidator
+    {
+        ThrowXML(InvalidDatatypeFacetException
+               , XMLExcepts::FACET_Union_Null_baseValidator);
+    }
 
     if (baseValidator->getType() != DatatypeValidator::Union)
-        ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Len, value1);
-        //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Union_invalid_baseValidator);
-        //"Union baseValidator required for UnionDatatypeValidator
+    {
+        XMLString::binToText(baseValidator->getType(), value1, BUF_LEN, 10);
+        ThrowXML1(InvalidDatatypeFacetException
+                , XMLExcepts::FACET_Union_invalid_baseValidatorType
+                , value1);
+    }
 
     try
     {
@@ -260,7 +268,9 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
 
         if ( !memTypeValid ) 
         {
-            ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
+            ThrowXML1(InvalidDatatypeValueException
+                    , XMLExcepts::VALUE_no_match_memberType
+                    , content);
             //( "Content '"+content+"' does not match any union types" );  
         }
     }

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/14 22:11:56  peiyongz
+ * new exception message added
+ *
  * Revision 1.1  2001/07/11 21:37:17  peiyongz
  * ListDatatypeDTV
  *
@@ -98,9 +101,7 @@ ListDatatypeValidator::ListDatatypeValidator(
     // In either case, it shall be not null
     //
     if (!baseValidator)
-        ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Len, value1);
-        //ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_List_Null_baseValidator);
-        //"Not Null baseValidator required for ListDatatypeValidator
+        ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_List_Null_baseValidator);
 
     try
     {

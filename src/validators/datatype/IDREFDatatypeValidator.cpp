@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/14 22:11:56  peiyongz
+ * new exception message added
+ *
  * Revision 1.2  2001/07/24 21:23:40  tng
  * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
  *
@@ -89,16 +92,19 @@ IDREFDatatypeValidator::IDREFDatatypeValidator(
 
     //
     // if enumeration is provided, make sure that they
-    // are all valid Name(s).
+    // are all valid NCName(s).
     //
     if (enums)
     {
         int enumLength = enums->size();
         for ( int i = 0; i < enumLength; i++)
         {
-            if ( XMLString::isValidName(enums->elementAt(i)) == false)
-                ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
-                //("Value '"+content+"' is not a valid NCName");
+            if ( !XMLString::isValidNCName(enums->elementAt(i)))
+            {
+                ThrowXML1(InvalidDatatypeFacetException
+                        , XMLExcepts::VALUE_Invalid_NCName
+                        , enums->elementAt(i));
+            }
         }
     }
 
@@ -113,11 +119,14 @@ void IDREFDatatypeValidator::validate(const XMLCh* const content)
     //
     StringDatatypeValidator::validate(content);
 
-    // check 3.3.1.constrain must: "Name"
+    // check 3.3.9.constrain must: "NCName"
     //
-    if ( XMLString::isValidName(content) == false)
-        ThrowXML(InvalidDatatypeValueException, XMLExcepts::FACET_Len_minLen);
-        //("Value '"+content+"' is not a valid QName");
+    if ( !XMLString::isValidNCName(content))
+    {
+        ThrowXML1(InvalidDatatypeFacetException
+                , XMLExcepts::VALUE_Invalid_NCName
+                , content);
+    }
 
     // this is different from java, since we always add, while
     // in java, it is done as told. REVISIT.

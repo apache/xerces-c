@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/14 22:11:56  peiyongz
+ * new exception message added
+ *
  * Revision 1.1  2001/07/05 20:15:27  peiyongz
  * NOTATIONDatatypeValidator
  *
@@ -564,21 +567,16 @@ void NOTATIONDatatypeValidator::checkContent( const XMLCh* const content, bool a
             ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
     }
 
-    // REVISIT: do we need to check 3.2.19: "anyURI:NCName"?        
-    /*
-        try 
-        {
-            int posColon = content.lastIndexOf(':');
-            if (posColon >= 0)
-                fgURIValidator.validate(content.substring(0,posColon), null);
-            fgStrValidator.validate(content.substring(posColon+1), null);
-        } 
-        catch (InvalidDatatypeValueException idve) 
-        {
-            ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
-            //("Value '"+content+"' is not a valid NOTATION");
-        }
-    */
+    //
+    // check 3.2.19: QName
+    //
+    if ( !XMLString::isValidQName(content))
+    {
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_NOTATION_Invalid
+                , content);
+    }
+
 }
 
 /**

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/14 22:11:56  peiyongz
+ * new exception message added
+ *
  * Revision 1.2  2001/07/24 21:23:39  tng
  * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
  *
@@ -99,9 +102,12 @@ ENTITYDatatypeValidator::ENTITYDatatypeValidator(
         int enumLength = enums->size();
         for ( int i = 0; i < enumLength; i++)
         {
-            if ( XMLString::isValidNCName(enums->elementAt(i)) == false)
-                ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
-                //("Value '"+content+"' is not a valid NCName");
+            if ( !XMLString::isValidNCName(enums->elementAt(i)))
+            {
+                ThrowXML1(InvalidDatatypeFacetException
+                        , XMLExcepts::VALUE_Invalid_NCName
+                        , enums->elementAt(i));
+            }
         }
     }
 
@@ -118,11 +124,14 @@ void ENTITYDatatypeValidator::validate(const XMLCh* const content)
     StringDatatypeValidator::validate(content);
 
     //
-    // check must: "NCName"
+    // 3.3.11 check must: "NCName"
     //
-    if ( XMLString::isValidNCName(content) == false)
-        ThrowXML(InvalidDatatypeValueException, XMLExcepts::FACET_Len_minLen);
-        //("Value '"+content+"' is not a valid NCName");
+    if ( !XMLString::isValidNCName(content))
+    {
+        ThrowXML1(InvalidDatatypeFacetException
+                , XMLExcepts::VALUE_Invalid_NCName
+                , content);
+    }
 
     //
     // parse the entity iff an EntityDeclPool is provided
@@ -133,8 +142,12 @@ void ENTITYDatatypeValidator::validate(const XMLCh* const content)
 
         if (!decl                ||
             (decl->isUnparsed())  )
-            ThrowXML(InvalidDatatypeValueException, XMLExcepts::CM_UnaryOpHadBinType);
-            //"ENTITY '"+ content +"' is not valid" )
+        {
+            ThrowXML1(InvalidDatatypeFacetException
+                    , XMLExcepts::VALUE_ENTITY_Invalid
+                    , content);
+        }
+
     }
 
     return;

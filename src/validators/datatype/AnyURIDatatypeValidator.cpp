@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/14 22:11:56  peiyongz
+ * new exception message added
+ *
  * Revision 1.2  2001/08/10 16:21:19  peiyongz
  * use XMLUri instead of XMLURL
  *
@@ -615,8 +618,9 @@ void AnyURIDatatypeValidator::checkContent( const XMLCh* const content, bool asB
     } 
     catch (...) 
     {
-        ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
-        //("Value '"+content+"' is a Malformed URI ");
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_URI_Malformed
+                , content);
     }
 
 }

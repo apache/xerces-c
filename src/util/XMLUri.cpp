@@ -63,7 +63,6 @@
 // ---------------------------------------------------------------------------
 #include <util/PlatformUtils.hpp>
 #include <util/Janitor.hpp>
-#include <util/IllegalArgumentException.hpp>
 #include <util/NumberFormatException.hpp>
 #include <util/XMLUri.hpp>
 #include <util/XMLString.hpp>
@@ -115,49 +114,105 @@ const XMLCh XMLUri::USERINFO_CHARACTERS[] =
 // ---------------------------------------------------------------------------
 //  Local methods and data
 // ---------------------------------------------------------------------------
+static const int BUF_LEN = 64;
+static XMLCh value1[BUF_LEN+1];
+
+//
+// "Scheme"
+// "SchemeSpecificPart"
+// "Parameters"
+// "UserInfo"
+// "Host"
+// "Port"
+// "Path"
+// "Query"
+// "Fragment"
+//
+static const XMLCh errMsg_SCHEME[] = 
+{
+    chLatin_S, chLatin_c, chLatin_h, chLatin_e,
+    chLatin_m, chLatin_e, chNull
+};
+
+static const XMLCh errMsg_SCHEMESPART[] = 
+{
+    chLatin_S, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_e, 
+    chLatin_S, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_f, 
+    chLatin_i, chLatin_c, chLatin_P, chLatin_a, chLatin_r, chLatin_t, 
+    chNull
+};
+
+static const XMLCh errMsg_PARAMS[] = 
+{
+    chLatin_P, chLatin_a, chLatin_r, chLatin_a, chLatin_m,
+    chLatin_e, chLatin_t, chLatin_e, chLatin_r, chLatin_s, chNull
+};
+
+static const XMLCh errMsg_USERINFO[] = 
+{
+    chLatin_U, chLatin_s, chLatin_e, chLatin_r, 
+    chLatin_i, chLatin_n, chLatin_f, chLatin_o, chNull
+};
+
+static const XMLCh errMsg_HOST[] = 
+{
+    chLatin_H, chLatin_o, chLatin_s, chLatin_t, chNull
+};
+
+static const XMLCh errMsg_PORT[] = 
+{
+    chLatin_P, chLatin_o, chLatin_r, chLatin_t, chNull
+};
+
+static const XMLCh errMsg_PATH[] = 
+{
+    chLatin_P, chLatin_a, chLatin_t, chLatin_h, chNull
+};  
+
+static const XMLCh errMsg_QUERY[] = 
+{
+    chLatin_Q, chLatin_u, chLatin_e, chLatin_r, chLatin_y, chNull
+};
+
+static const XMLCh errMsg_FRAGMENT[] = 
+{
+    chLatin_F, chLatin_r, chLatin_a, chLatin_g, 
+    chLatin_m, chLatin_e, chLatin_n, chLatin_t, chNull
+};
+
 //
 //  "//"
+//  "/"
+//  "./"
+//  "/."
+//  "/../"
+//  "/.."
 //
 static const XMLCh DOUBLE_SLASH[] = 
 {
     chForwardSlash, chForwardSlash, chNull
 };  
 
-//
-//  "/"
-//
 static const XMLCh SINGLE_SLASH[] = 
 {
     chForwardSlash, chNull
 };
 
-//
-//  "./"
-//
 static const XMLCh DOT_SLASH[] = 
 {
     chPeriod, chForwardSlash, chNull
 };
 
-//
-//  "/."
-//
 static const XMLCh SLASH_DOT[] = 
 {
     chForwardSlash, chPeriod, chNull
 };
 
-//
-//  "/../"
-//
 static const XMLCh SLASH_DOTDOT_SLASH[] = 
 {
     chForwardSlash, chPeriod, chPeriod, chForwardSlash, chNull
 };
 
-//
-//  "/.."
-//
 static const XMLCh SLASH_DOTDOT[] = 
 {
     chForwardSlash, chPeriod, chPeriod, chNull
@@ -187,17 +242,20 @@ static const XMLCh PATH_SEPARATORS[] =
 XMLUri::XMLUri(const XMLCh* const scheme
              , const XMLCh* const schemeSpecificPart)
 {
-	if (!scheme) //|| p_scheme.trim().length() == 0) 
+	if ( !scheme                           || 
+         XMLString::isAllWhiteSpace(scheme) ) 
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-        //MalformedURIException("Cannot construct URI with null/empty scheme!");
-	}
+        ThrowXML1(NumberFormatException
+               , XMLExcepts::XMLNUM_URI_Component_Empty
+               , errMsg_SCHEME);
+    }
 
-	if (!schemeSpecificPart )
-        //||p_schemeSpecificPart.trim().length() == 0) 
+    if ( !schemeSpecificPart                           ||
+         XMLString::isAllWhiteSpace(schemeSpecificPart) )
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-	   //MalformedURIException("Cannot construct URI with null/empty scheme-specific part!");
+        ThrowXML1(NumberFormatException
+               , XMLExcepts::XMLNUM_URI_Component_Empty
+               , errMsg_SCHEMESPART);
 	}
 
     setScheme(scheme);
@@ -233,8 +291,11 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
     if ( !baseURI && 
         (!trimedUriSpec || trimedUriSpecLen == 0))
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-	    //MalformedURIException("Cannot initialize URI with empty parameters.");
+    {
+        ThrowXML1(NumberFormatException
+               , XMLExcepts::XMLNUM_URI_Component_Empty
+               , errMsg_PARAMS);
+    }
 
 	// just make a copy of the base if spec is empty
 	if (!trimedUriSpec || trimedUriSpecLen == 0) 
@@ -256,8 +317,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // A standalone base is a valid URI according to spec
         if ( !baseURI && fragmentIdx != 0 ) 
         {
-            ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-            //MalformedURIException("No scheme found in URI.");
+            ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_URI_No_Scheme);
         }
     }
 	else 
@@ -483,41 +543,52 @@ void XMLUri::initialize(const XMLCh* const    scheme
                       , const XMLCh* const    queryString
                       , const XMLCh* const    fragment)
 {
-    if ( !scheme )
-        //|| p_scheme.trim().length() == 0) {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-	    //MalformedURIException("Scheme is required!");
+    if ( !scheme                          || 
+        XMLString::isAllWhiteSpace(scheme) ) 
+    {
+        ThrowXML1(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_Component_Empty
+                , errMsg_SCHEME);
+    }
 
 	if ( !host ) 
     {
         if ( userInfo ) 
         {
-            ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-            //MalformedURIException("Userinfo may not be specified if host is not specified!");
+            ThrowXML2(NumberFormatException
+                    , XMLExcepts::XMLNUM_URI_NullHost
+                    , errMsg_USERINFO
+                    , userInfo);
         }
 
         if ( port != -1) 
         {
-            ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-            //MalformedURIException("Port may not be specified if host is not specified!");
+            XMLString::binToText(port, value1, BUF_LEN, 10);
+            ThrowXML2(NumberFormatException
+                    , XMLExcepts::XMLNUM_URI_NullHost
+                    , errMsg_PORT
+                    , value1);
         }
 	}
 
 	if ( path ) 
     {
         if ( XMLString::indexOf(path, chQuestion) != -1 && 
-             queryString != 0) 
+             queryString                                 ) 
         {
-            ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-            //MalformedURIException("Query string cannot be specified in path and query string!");
+            ThrowXML2(NumberFormatException
+                    , XMLExcepts::XMLNUM_URI_Component_inPath
+                    , errMsg_QUERY
+                    , queryString);
         }
 
         if ( XMLString::indexOf(path, chPound) != -1 && 
-             fragment != 0) 
+             fragment                                 ) 
         {
-            ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-            //MalformedURIException("Fragment cannot be specified in both the path and fragment!");
-
+            ThrowXML2(NumberFormatException
+                    , XMLExcepts::XMLNUM_URI_Component_inPath
+                    , errMsg_FRAGMENT
+                    , fragment);
         }
     }
 
@@ -629,9 +700,10 @@ void XMLUri::initializeScheme(const XMLCh* const uriSpec)
 {
     const XMLCh* tmpPtr = XMLString::findAny(uriSpec, SCHEME_SEPARATORS);
 
-    if (!tmpPtr)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-	  //MalformedURIException("No scheme found in URI.");
+    if ( !tmpPtr )
+    {
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_URI_No_Scheme);
+    }
 	else 
     {
         XMLCh* scheme = new XMLCh[XMLString::stringLen(uriSpec)+1];
@@ -646,8 +718,9 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
 {
 	if ( !uriSpec ) 
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-	   // MalformedURIException("Cannot initialize path from null string!");
+        ThrowXML1(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_Component_Empty
+                , errMsg_PATH);
 	}
 
 	int index = 0;
@@ -671,15 +744,23 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 !XMLString::isHex(uriSpec[index+1]) ||
                 !XMLString::isHex(uriSpec[index+2])) 
             {
-                ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-                //MalformedURIException("Path contains invalid escape sequence!");
+                XMLString::moveChars(value1, &(uriSpec[index]), 3);
+                value1[3] = chNull;
+                ThrowXML2(NumberFormatException
+                        , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                        , errMsg_PATH
+                        , value1);
             }
         }
         else if (!isReservedCharacter(testChar) &&
                  !isUnreservedCharacter(testChar)) 
         {
-            ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-            //MalformedURIException("Path contains invalid character: " + testChar);
+            value1[0] = testChar;
+            value1[1] = chNull;
+            ThrowXML2(NumberFormatException
+                    , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
+                    , errMsg_PATH
+                    , value1);
         }
 
         index++;
@@ -712,15 +793,23 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                     !XMLString::isHex(uriSpec[index+1]) ||
                     !XMLString::isHex(uriSpec[index+2])) 
                 {
-                    ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-                    //MalformedURIException("Query string contains invalid escape sequence!");
+                    XMLString::moveChars(value1, &(uriSpec[index]), 3);
+                    value1[3] = chNull;
+                    ThrowXML2(NumberFormatException
+                            , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                            , errMsg_QUERY
+                            , value1);
                 }
             }
             else if (!isReservedCharacter(testChar) &&
                      !isUnreservedCharacter(testChar)) 
             {
-                ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-                //MalformedURIException("Query string contains invalid character:" + testChar);
+                value1[0] = testChar;
+                value1[1] = chNull;
+                ThrowXML2(NumberFormatException
+                        , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
+                        , errMsg_QUERY
+                        , value1);
             }
             index++;
         }
@@ -749,15 +838,23 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                     !XMLString::isHex(uriSpec[index+1]) ||
                     !XMLString::isHex(uriSpec[index+2])) 
                 {
-                    ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-                    //MalformedURIException("Fragment contains invalid escape sequence!");
+                    XMLString::moveChars(value1, &(uriSpec[index]), 3);
+                    value1[3] = chNull;
+                    ThrowXML2(NumberFormatException
+                            , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                            , errMsg_FRAGMENT
+                            , value1);
                 }
             }
             else if (!isReservedCharacter(testChar) &&
                      !isUnreservedCharacter(testChar)) 
             {
-                ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-                //MalformedURIException("Fragment contains invalid character:"+testChar);
+                value1[0] = testChar;
+                value1[1] = chNull;
+                ThrowXML2(NumberFormatException
+                        , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
+                        , errMsg_FRAGMENT
+                        , value1);
             }
 
             index++;
@@ -781,13 +878,20 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
 // ---------------------------------------------------------------------------
 void XMLUri::setScheme(const XMLCh* const newScheme) 
 {
-    if (!newScheme)
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-        //"Cannot set scheme from null string!");
+    if ( !newScheme )
+    {
+        ThrowXML1(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_Component_Set_Null
+                , errMsg_SCHEME);
+    }
 
     if (!isConformantSchemeName(newScheme)) 
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-        // MalformedURIException("The scheme is not conformant.");
+    {
+        ThrowXML2(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_Component_Not_Conformant               
+                , errMsg_SCHEME
+                , newScheme);
+    }
 
     if (getScheme())
     {
@@ -814,8 +918,10 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
     if ( newUserInfo && 
          !getHost()    ) 
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-            // MalformedURIException("Userinfo cannot be set when host is null!");
+        ThrowXML2(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_NullHost
+                , errMsg_USERINFO
+                , newUserInfo);
     }
     
     try
@@ -852,8 +958,12 @@ void XMLUri::setHost(const XMLCh* const newHost)
     }
 
     if (!isWellFormedAddress(newHost)) 
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-        // MalformedURIException"Host is not a well formed address!");
+    {
+        ThrowXML2(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_Component_Not_Conformant
+                , errMsg_HOST
+                , newHost);
+    }
 
     if (getHost())
     {
@@ -869,14 +979,19 @@ void XMLUri::setPort(int newPort)
     {
         if (!getHost()) 
         {
-            ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-           // MalformedURIException"Port cannot be set when host is null!");
+            XMLString::binToText(newPort, value1, BUF_LEN, 10);
+            ThrowXML2(NumberFormatException
+                    , XMLExcepts::XMLNUM_URI_NullHost
+                    , errMsg_PORT
+                    , value1);           
         }
     }
     else if (newPort != -1) 
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-        // MalformedURIException("Invalid port number!");
+        XMLString::binToText(newPort, value1, BUF_LEN, 10);
+        ThrowXML1(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_PortNo_Invalid
+                , value1);            
     }
 
     fPort = newPort;
@@ -918,18 +1033,23 @@ void XMLUri::setFragment(const XMLCh* const newFragment)
 	}
 	else if (!isGenericURI()) 
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-        //MalformedURIException("Fragment can only be set for a generic URI!");
+        ThrowXML2(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_Component_for_GenURI_Only
+                , errMsg_FRAGMENT
+                , newFragment);
 	}
 	else if ( !getPath() )  
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-	    //MalformedURIException("Fragment cannot be set when path is null!");
+        ThrowXML2(NumberFormatException
+               , XMLExcepts::XMLNUM_URI_NullPath
+               , errMsg_FRAGMENT
+               , newFragment);
 	}
 	else if (!isURIString(newFragment)) 
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-        //MalformedURIException("Fragment contains invalid character!");
+        ThrowXML1(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
+                , errMsg_FRAGMENT);
 	}
 	else 
     {
@@ -956,18 +1076,24 @@ void XMLUri::setQueryString(const XMLCh* const newQueryString)
 	}
 	else if (!isGenericURI()) 
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-        //MalformedURIException("Query string can only be set for a generic URI!");
+        ThrowXML2(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_Component_for_GenURI_Only
+                , errMsg_QUERY
+                , newQueryString);
 	}
 	else if ( !getPath() ) 
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-	    //MalformedURIException("Query string cannot be set when path is null!");
+        ThrowXML2(NumberFormatException
+                , XMLExcepts::XMLNUM_URI_NullPath
+                , errMsg_QUERY
+                , newQueryString);
 	}
 	else if (!isURIString(newQueryString)) 
     {
-        ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-        //MalformedURIException("Query string contains invalid character!");
+        ThrowXML2(NumberFormatException
+               , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
+               , errMsg_QUERY
+               , newQueryString);
 	}
 	else 
     {
@@ -1037,14 +1163,23 @@ void XMLUri::isConformantUserInfo(const XMLCh* const userInfo)
             }
             else
             {
-                ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-                // MalformedURIException"Userinfo contains invalid escape sequence!");
+                value1[0] = chPercent;
+                value1[1] = *(tmpStr+1);
+                value1[2] = *(tmpStr+2);
+                value1[3] = chNull;
+
+                ThrowXML2(NumberFormatException
+                        , XMLExcepts::XMLNUM_URI_Component_Invalid_EscapeSequence
+                        , errMsg_USERINFO
+                        , value1);
             }
         }
         else 
         {	
-            ThrowXML(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf);
-            // MalformedURIException"Userinfo contains invalid character:"+testChar);
+            ThrowXML2(NumberFormatException
+                    , XMLExcepts::XMLNUM_URI_Component_Invalid_Char
+                    , errMsg_USERINFO
+                    , userInfo);
         }
     } //while
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/14 22:11:56  peiyongz
+ * new exception message added
+ *
  * Revision 1.1  2001/07/06 20:20:14  peiyongz
  * QNameDTV
  *
@@ -566,9 +569,12 @@ void QNameDatatypeValidator::checkContent( const XMLCh* const content, bool asBa
     //
     // check 3.2.18.c0 must: QName
     //
-    if (XMLString::isValidQName(content) == false)
-        ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
-        //invalid QName
+    if ( !XMLString::isValidQName(content))
+    {
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_QName_Invalid
+                , content);
+    }
         
 }
 

@@ -555,42 +555,68 @@ $set 3
 207  len '{0}' must be equal to base's len '{1}' , fixed
 208  whitespace '{0}' must be equal to base's whitespace '{1}' , fixed
 209  internal Error: fixed
-210  Value '{0}' does not match regular expression facet '{1}'
-211  Value '{0}' is not encoded in Base64 
-212  Value '{0}' is not encoded in HexBin 
-213  Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' 
-214  Value '{0}' with length '{1}' is less than minimum length facet of '{2}' 
-215  Value '{0}' with length '{1}' is not equal to length facet of '{2}' 
-216  Value '{0}' is not in enumeration 
-217  Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}' 
-218  Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}' 
-219  Value '{0}' must be less than or equal to MaxInclusive '{1}' 
-220  Value '{0}' must be less than MaxExclusive '{1}' 
-221  Value '{0}' must be greater than or equal to MinInclusive '{1}' 
-222  Value '{0}' must be greater than MinExclusive '{1}' 
-223  Value '{0}' is not whitespace replaced 
-224  Value '{0}' is not whitespace collapsed 
-225   Empty string encountered.
-226   String contains whitespaces only.
-227   More than one decimal points encountered.
-228   Invalid chars encountered.
-229   Null pointer encountered.
-230  A result is not set.
-231  CompactRanges - Internal Error
-232  Merge Ranges - Mismatched type
-233  SubtractRanges - Internal Error
-234  IntersectRanges - Internal Error
-235  ComplementRanges - Argument must be a RangeToken
-236  Invalid category name: {0}
-237  Keyword '{0}' not found
-238  Reference no must be more than zero
-239  Unknown option: {0}
-240  Unknown token type
-241  Failed to get RangeToken for: {0}
-242  Not supported
-243  Invalid child index
-244  Enabling the NEL option can only be called once per process.
-245  {0}
-246  operator new fails.  Possibly running Of memory
+210  Null base validator in List 
+211  Null member type validators in Union 
+212  Null base validator in Union
+213  Union's base validator's type '{0}' must be union too 
+214  Value '{0}' does not match regular expression facet '{1}'
+215  Value '{0}' is not encoded in Base64 
+216  Value '{0}' is not encoded in HexBin 
+217  Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' 
+218  Value '{0}' with length '{1}' is less than minimum length facet of '{2}' 
+219  Value '{0}' with length '{1}' is not equal to length facet of '{2}' 
+220  Value '{0}' is not in enumeration 
+221  Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}' 
+222  Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}' 
+223  Value '{0}' must be less than or equal to MaxInclusive '{1}' 
+224  Value '{0}' must be less than MaxExclusive '{1}' 
+225  Value '{0}' must be greater than or equal to MinInclusive '{1}' 
+226  Value '{0}' must be greater than MinExclusive '{1}' 
+227  Value '{0}' is not whitespace replaced 
+228  Value '{0}' is not a whitespace collapsed 
+229  Value '{0}' is not valida NCName 
+230  ID '{0}' is not unique 
+231  Value '{0}' is not valid ENTITY 
+232  Value '{0}' is not valid QName 
+233  NOTATION '{0}' must be a valid QName 
+234  Value '{0}' does not match any member types (of the union) 
+235  Value '{0}' is NOT a valid URI 
+236   Empty string encountered.
+237   String contains whitespaces only.
+238   More than one decimal points encountered.
+239   Invalid chars encountered.
+240   Null pointer encountered.
+241   Cannot construct URI with null/empty '{0}' 
+242   '{0}', '{1}' can only be set for a generic URI! 
+243   '{0}' contains invalid escape sequence '{1}'
+244   '{0}' contains invalid char '{1}'
+245   '{0}' can not be set to null 
+246   '{0}' is NOT conformant '{1}' 
+247   No scheme found in URI
+248   '{0}', '{1}' may not be specified if host is not specified 
+249   '{0}', '{1}' may not be specified if path is not specified 
+250   '{0}', '{1}' cannot be specified in path
+251   Port no '{0}' shall be in (0, 65535) 
+252   Value '{0}' shall be greater than the max Negative value '{1}' 
+253   Value '{0}' shall be less than the max Negative value '{1}' 
+254   Value '{0}' shall be in the range of '{1}', '{2}' 
+255   Type '{0}' is invalid: internal error 
+256  A result is not set.
+257  CompactRanges - Internal Error
+258  Merge Ranges - Mismatched type
+259  SubtractRanges - Internal Error
+260  IntersectRanges - Internal Error
+261  ComplementRanges - Argument must be a RangeToken
+262  Invalid category name: {0}
+263  Keyword '{0}' not found
+264  Reference no must be more than zero
+265  Unknown option: {0}
+266  Unknown token type
+267  Failed to get RangeToken for: {0}
+268  Not supported
+269  Invalid child index
+270  Enabling the NEL option can only be called once per process.
+271  {0}
+272  operator new fails.  Possibly running Of memory
 
 

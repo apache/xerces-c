@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/08/14 22:10:20  peiyongz
+ * new exception message added
+ *
  * Revision 1.7  2001/07/31 17:38:16  peiyongz
  * Fix: memory leak by static (boundry) objects
  *
@@ -119,6 +122,8 @@ bool XMLDouble::isInitialized = false;
 // ---------------------------------------------------------------------------
 //  local data member
 // ---------------------------------------------------------------------------
+static const int BUF_LEN = 64;
+static XMLCh value1[BUF_LEN+1];
 
 // from <FLOAT.h>
 //
@@ -327,21 +332,36 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
         ( XMLString::compareString(strValue, DBL_MAX_POSITIVE) == 0 )  )
         return;
 
-    //  this < maxNegativeValue 
+    //  error: this < maxNegativeValue 
     if ( compareValues(this, maxNegativeValue) == -1 )
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
-        //value shall NOT be less than maxNegativeValue
+    {
+        ThrowXML2(NumberFormatException
+                , XMLExcepts::XMLNUM_DBL_FLT_maxNeg
+                , strValue
+                , DBL_MAX_NEGATIVE);
+    }
 
-    //  this > maxPositiveValue
+    //  error: this > maxPositiveValue
     if ( compareValues(this, maxPositiveValue) ==  1 )     
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
-        //value shall NOT be greater than maxPositiveValue
+    {
+        ThrowXML2(NumberFormatException
+                , XMLExcepts::XMLNUM_DBL_FLT_maxPos
+                , strValue
+                , DBL_MAX_POSITIVE);
+    }
 
     //  minNegativeValue < this < minPositiveValue
-    if  (( compareValues(this, minNegativeValue) ==  1 ) &&
+    //  value is not be representable
+    if (( compareValues(this, minNegativeValue) ==  1 ) &&
          ( compareValues(this, minPositiveValue) == -1 )  )
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
-        //value is not be representable
+    {
+        ThrowXML3(NumberFormatException
+                , XMLExcepts::XMLNUM_DBL_FLT_minNegPos
+                , strValue
+                , DBL_MIN_NEGATIVE
+                , DBL_MIN_POSITIVE);
+    }
+
 }
 
 XMLDouble::XMLDouble(const XMLDouble& toCopy)
@@ -406,8 +426,10 @@ XMLCh*  XMLDouble::toString() const
 
         break;
     default:
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
-        //internal error
+        XMLString::binToText(fType, value1, 16, 10);
+        ThrowXML1(NumberFormatException
+                , XMLExcepts::XMLNUM_DBL_FLT_InvalidType
+                , value1);
     };
 
     return (XMLCh*) 0;
@@ -491,7 +513,10 @@ int XMLDouble::compareSpecial(const XMLDouble* const specialValue
         return 1;
 
     default:
-        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
+        XMLString::binToText(specialValue->fType, value1, 16, 10);
+        ThrowXML1(NumberFormatException
+                , XMLExcepts::XMLNUM_DBL_FLT_InvalidType
+                , value1);
         //internal error
     }
 }
