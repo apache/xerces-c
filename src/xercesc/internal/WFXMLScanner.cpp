@@ -66,14 +66,10 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/UnexpectedEOFException.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
-#include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLPScanToken.hpp>
-#include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/framework/XMLValidityCodes.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 
@@ -84,16 +80,21 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  WFXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
 WFXMLScanner::WFXMLScanner(XMLValidator* const valToAdopt) :
+
     XMLScanner(valToAdopt)
+    , fElementIndex(0)
+    , fElements(0)
     , fEntityTable(0)
     , fAttrNameHashList(0)
     , fAttrNSList(0)
+    , fElementLookup(0)
 {
-    try {
-        commonInit();
+    try
+    {
+         commonInit();
     }
-    catch(...) {
-
+    catch(...)
+    {
         cleanUp();
         throw;
     }
@@ -106,15 +107,19 @@ WFXMLScanner::WFXMLScanner( XMLDocumentHandler* const  docHandler
                             , XMLValidator* const      valToAdopt) :
 
     XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt)
+    , fElementIndex(0)
+    , fElements(0)
     , fEntityTable(0)
     , fAttrNameHashList(0)
     , fAttrNSList(0)
+    , fElementLookup(0)
 {
-    try {
+    try
+    {	
         commonInit();
     }
-    catch(...) {
-
+    catch(...)
+    {
         cleanUp();
         throw;
     }
@@ -125,6 +130,18 @@ WFXMLScanner::~WFXMLScanner()
     cleanUp();
 }
 
+// ---------------------------------------------------------------------------
+//  XMLScanner: Getter methods
+// ---------------------------------------------------------------------------
+NameIdPool<DTDEntityDecl>* WFXMLScanner::getEntityDeclPool()
+{
+    return 0;
+}
+
+const NameIdPool<DTDEntityDecl>* WFXMLScanner::getEntityDeclPool() const
+{
+    return 0;
+}
 
 // ---------------------------------------------------------------------------
 //  WFXMLScanner: Main entry point to scan a document
@@ -246,7 +263,6 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
     // Find the next token and remember the reader id
     unsigned int orgReader;
     XMLTokens curToken;
-
     bool retVal = true;
 
     try
@@ -277,11 +293,11 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
         {
             if (!fElemStack.isEmpty())
             {
-                const WFElemStack::StackElem* topElem = fElemStack.popTop();
+                const ElemStack::StackElem* topElem = fElemStack.popTop();
                 emitError
                 (
                     XMLErrs::EndedWithTagsOnStack
-                    , topElem->fThisElement
+                    , topElem->fThisElement->getFullName()
                 );
             }
 
@@ -410,6 +426,7 @@ bool WFXMLScanner::scanNext(XMLPScanToken& token)
 }
 
 
+
 // ---------------------------------------------------------------------------
 //  WFXMLScanner: Private helper methods.
 // ---------------------------------------------------------------------------
@@ -421,6 +438,8 @@ void WFXMLScanner::commonInit()
     fEntityTable = new ValueHashTableOf<XMLCh>(11);
     fAttrNameHashList = new ValueVectorOf<unsigned int>(16);
     fAttrNSList = new ValueVectorOf<XMLAttr*>(8);
+    fElements = new RefVectorOf<XMLElementDecl>(32);
+    fElementLookup = new RefHashTableOf<XMLElementDecl>(109, false);
 
     //  Add the default entity entries for the character refs that must always
     //  be present.
@@ -436,11 +455,13 @@ void WFXMLScanner::cleanUp()
     delete fEntityTable;
     delete fAttrNameHashList;
     delete fAttrNSList;
+    delete fElementLookup;
+    delete fElements;
 }
 
 unsigned int
 WFXMLScanner::resolvePrefix(const   XMLCh* const          prefix
-                            , const WFElemStack::MapModes mode)
+                            , const ElemStack::MapModes mode)
 {
     //  Watch for the special namespace prefixes. We always map these to
     //  special URIs. 'xml' gets mapped to the official URI that its defined
@@ -469,7 +490,7 @@ WFXMLScanner::resolvePrefix(const   XMLCh* const          prefix
 //  upon successful return from here we are ready to go.
 void WFXMLScanner::scanReset(const InputSource& src)
 {
-    //  And for all installed handlers, send reset events. This gives them
+    //  For all installed handlers, send reset events. This gives them
     //  a chance to flush any cached data.
     if (fDocHandler)
         fDocHandler->resetDocument();
@@ -493,6 +514,10 @@ void WFXMLScanner::scanReset(const InputSource& src)
     fStandalone = false;
     fErrorCount = 0;
     fHasNoDTD = true;
+    fElementIndex = 0;
+
+    // Reset elements lookup table
+    fElementLookup->removeAll();
 
     //  Handle the creation of the XML reader object for this input source.
     //  This will provide us with transcoding and basic lexing services.
@@ -539,20 +564,6 @@ void WFXMLScanner::sendCharData(XMLBuffer& toSend)
 }
 
 // ---------------------------------------------------------------------------
-//  WFXMLScanner: Getter methods
-// ---------------------------------------------------------------------------
-NameIdPool<DTDEntityDecl>* WFXMLScanner::getEntityDeclPool()
-{
-    return 0;
-}
-
-const NameIdPool<DTDEntityDecl>* WFXMLScanner::getEntityDeclPool() const
-{
-    return 0;
-}
-
-
-// ---------------------------------------------------------------------------
 //  WFXMLScanner: Private scanning methods
 // ---------------------------------------------------------------------------
 
@@ -597,11 +608,11 @@ bool WFXMLScanner::scanContent(const bool extEntity)
                     //  ended prematurely before all elements were closed.
                     if (!fElemStack.isEmpty())
                     {
-                        const WFElemStack::StackElem* topElem = fElemStack.popTop();
+                        const ElemStack::StackElem* topElem = fElemStack.popTop();
                         emitError
                         (
                             XMLErrs::EndedWithTagsOnStack
-                            , topElem->fThisElement
+                            , topElem->fThisElement->getFullName()
                         );
                     }
 
@@ -691,31 +702,25 @@ void WFXMLScanner::scanEndTag(bool& gotData)
         ThrowXML(RuntimeException, XMLExcepts::Scan_UnbalancedStartEnd);
     }
 
-    // After the </ is the element QName, so get a name from the input
-    if (!fReaderMgr.getName(fQNameBuf))
-    {
-        // It failed so we can't really do anything with it
-        emitError(XMLErrs::ExpectedElementName);
-        fReaderMgr.skipPastChar(chCloseAngle);
-        return;
-    }
-
     //  Pop the stack of the element we are supposed to be ending. Remember
     //  that we don't own this. The stack just keeps them and reuses them.
     unsigned int uriId = (fDoNamespaces)
         ? fElemStack.getCurrentURI() : fEmptyNamespaceId;
-    const WFElemStack::StackElem* topElem = fElemStack.popTop();
+    const ElemStack::StackElem* topElem = fElemStack.popTop();
 
     // See if it was the root element, to avoid multiple calls below
     const bool isRoot = fElemStack.isEmpty();
 
     // Make sure that its the end of the element that we expect
-    if (!XMLString::equals(topElem->fThisElement, fQNameBuf.getRawBuffer())) {
+    if (!fReaderMgr.skippedString(topElem->fThisElement->getFullName()))
+    {
         emitError
         (
             XMLErrs::ExpectedEndOfTagX
-            , topElem->fThisElement
+            , topElem->fThisElement->getFullName()
         );
+        fReaderMgr.skipPastChar(chCloseAngle);
+        return;
     }
 
     // Make sure we are back on the same reader as where we started
@@ -731,20 +736,19 @@ void WFXMLScanner::scanEndTag(bool& gotData)
         emitError
         (
             XMLErrs::UnterminatedEndTag
-            , topElem->fThisElement
+            , topElem->fThisElement->getFullName()
         );
     }
 
     // If we have a doc handler, tell it about the end tag
     if (fDocHandler)
     {
-        fDTDElemDecl.setElementName(topElem->fThisElement, uriId);
         fDocHandler->endElement
         (
-            fDTDElemDecl
+            *topElem->fThisElement
             , uriId
             , isRoot
-            , fDTDElemDecl.getElementName()->getPrefix()
+            , topElem->fThisElement->getElementName()->getPrefix()
         );
     }
 
@@ -752,14 +756,13 @@ void WFXMLScanner::scanEndTag(bool& gotData)
     gotData = !isRoot;
 }
 
-
 void WFXMLScanner::scanDocTypeDecl()
 {
     // Just skips over it
     // REVISIT: Should we issue a warning
     static const XMLCh doctypeIE[] =
     {
-            chOpenSquare, chCloseAngle, chNull
+        chOpenSquare, chCloseAngle, chNull
     };
     XMLCh nextCh = fReaderMgr.skipUntilIn(doctypeIE);
 
@@ -771,8 +774,8 @@ void WFXMLScanner::scanDocTypeDecl()
 
 bool WFXMLScanner::scanStartTag(bool& gotData)
 {
-    // Assume we will still have data until proven otherwise. It will only
-    // ever be false if this is the root and its empty.
+    //  Assume we will still have data until proven otherwise. It will only
+    //  ever be false if this is the root and its empty.
     gotData = true;
 
     //  Get the QName. In this case, we are not doing namespaces, so we just
@@ -790,17 +793,30 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
     // See if its the root element
     const bool isRoot = fElemStack.isEmpty();
 
-    // Skip any whitespace after the name
-    fReaderMgr.skipPastSpaces();
+    //  Lets try to look up the element
+    const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer();
+    XMLElementDecl* elemDecl = fElementLookup->get(qnameRawBuf);
+
+    if (!elemDecl) {
+
+        if (fElementIndex < fElements->size()) {
+            elemDecl = fElements->elementAt(fElementIndex);
+        }
+        else {
+            elemDecl = new DTDElementDecl();
+            fElements->addElement(elemDecl);
+        }
+
+        elemDecl->setElementName(XMLUni::fgZeroLenString, qnameRawBuf, fEmptyNamespaceId);
+        fElementLookup->put((void*)elemDecl->getFullName(), elemDecl);
+        fElementIndex++;
+    }
 
     // Expand the element stack and add the new element
-    const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer();
-    fElemStack.addLevel
-    (
-        qnameRawBuf
-        , fQNameBuf.getLen()
-        , fReaderMgr.getCurrentReaderNum()
-    );
+    fElemStack.addLevel(elemDecl, fReaderMgr.getCurrentReaderNum());
+
+    // Skip any whitespace after the name
+    fReaderMgr.skipPastSpaces();
 
     //  We loop until we either see a /> or >, handling attribute/value
     //  pairs until we get there.
@@ -825,7 +841,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
                     fReaderMgr.skipPastSpaces();
                     nextCh = fReaderMgr.peekNextChar();
                 }
-                else
+                 else
                 {
                     // Emit the error but keep on going
                     emitError(XMLErrs::ExpectedWhitespace);
@@ -957,23 +973,22 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
             //  Add this attribute to the attribute list that we use to
             //  pass them to the handler. We reuse its existing elements
             //  but expand it as required.
+            XMLAttr* curAtt;
             if (attCount >= curAttListSize)
             {
-                fAttrList->addElement
+                curAtt = new XMLAttr
                 (
-                    new XMLAttr
-                    (
-                        -1
-                        , attNameRawBuf
-                        , XMLUni::fgZeroLenString
-                        , fAttValueBuf.getRawBuffer()
-                    )
+                    -1
+                    , attNameRawBuf
+                    , XMLUni::fgZeroLenString
+                    , fAttValueBuf.getRawBuffer()
                 );
+                fAttrList->addElement(curAtt);
                 fAttrNameHashList->addElement(attNameHash);
             }
             else
             {
-                XMLAttr* curAtt = fAttrList->elementAt(attCount);
+                curAtt = fAttrList->elementAt(attCount);
                 curAtt->set
                 (
                     -1
@@ -981,8 +996,9 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
                     , XMLUni::fgZeroLenString
                     , fAttValueBuf.getRawBuffer()
                 );
+                curAtt->setSpecified(true);
+                fAttrNameHashList->setElementAt(attNameHash, attCount);
             }
-
             attCount++;
 
             // And jump back to the top of the loop
@@ -1013,7 +1029,7 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
             //  and it is kind of auto-recovering since we've already hit the
             //  next open bracket, which is what we would have seeked to (and
             //  skipped this whole tag.)
-            emitError(XMLErrs::UnterminatedStartTag, qnameRawBuf);
+            emitError(XMLErrs::UnterminatedStartTag, elemDecl->getFullName());
             break;
         }
         else if ((nextCh == chSingleQuote) || (nextCh == chDoubleQuote))
@@ -1030,26 +1046,9 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
         }
     }
 
-    //  If we have a document handler, then tell it about this start tag. We
-    //  don't have any URI id to send along, so send fEmptyNamespaceId. We also do not send
-    //  any prefix since its just one big name if we are not doing namespaces.
-    if (fDocHandler)
-    {
-        fDTDElemDecl.setElementName(qnameRawBuf, fEmptyNamespaceId);
-        fDocHandler->startElement
-        (
-            fDTDElemDecl
-            , fEmptyNamespaceId
-            , 0
-            , *fAttrList
-            , attCount
-            , isEmpty
-            , isRoot
-        );
-    }
-
     //  If empty, validate content right now if we are validating and then
-    //  pop the element stack top.
+    //  pop the element stack top. Else, we have to update the current stack
+    //  top's namespace mapping elements.
     if (isEmpty)
     {
         // Pop the element stack back off since it'll never be used now
@@ -1060,13 +1059,30 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
             gotData = false;
     }
 
+    //  If we have a document handler, then tell it about this start tag. We
+    //  don't have any URI id to send along, so send fEmptyNamespaceId. We also do not send
+    //  any prefix since its just one big name if we are not doing namespaces.
+    if (fDocHandler)
+    {
+        fDocHandler->startElement
+        (
+            *elemDecl
+            , fEmptyNamespaceId
+            , 0
+            , *fAttrList
+            , attCount
+            , isEmpty
+            , isRoot
+        );
+    }
+
     return true;
 }
 
 
 //  This method is called to scan a start tag when we are processing
 //  namespaces. There are two different versions of this method, one for
-//  namespace aware processing and one for non-namespace aware processing.
+//  namespace aware processing an done for non-namespace aware processing.
 //
 //  This method is called after we've scanned the < of a start tag. So we
 //  have to get the element name, then scan the attributes, after which
@@ -1096,15 +1112,33 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
     // Skip any whitespace after the name
     fReaderMgr.skipPastSpaces();
 
-    // Expand the element stack and add the new element
+    //  Lets try to look up the element
     const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer();
-    fElemStack.addLevel(qnameRawBuf, fQNameBuf.getLen(), fReaderMgr.getCurrentReaderNum());
+    XMLElementDecl* elemDecl = fElementLookup->get(qnameRawBuf);
+
+    if (!elemDecl) {
+
+        if (fElementIndex < fElements->size()) {
+            elemDecl = fElements->elementAt(fElementIndex);
+        }
+        else {
+            elemDecl = new DTDElementDecl();
+            fElements->addElement(elemDecl);
+        }
+
+        elemDecl->setElementName(qnameRawBuf, fEmptyNamespaceId);
+        fElementLookup->put((void*)elemDecl->getFullName(), elemDecl);
+        fElementIndex++;
+    }
+
+    // Expand the element stack and add the new element
+    fElemStack.addLevel(elemDecl, fReaderMgr.getCurrentReaderNum());
 
     // reset NS attribute list
     fAttrNSList->removeAllElements();
 
-    //  We loop until we either see a /> or >, handling attribute/value
-    //  pairs until we get there.
+    // We loop until we either see a /> or >, handling attribute/value
+    // pairs until we get there.
     unsigned int attCount = 0;
     unsigned int curAttListSize = fAttrList->size();
     while (true)
@@ -1275,6 +1309,7 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
                     , attNameRawBuf
                     , attValueRawBuf
                 );
+                curAtt->setSpecified(true);
                 fAttrNameHashList->setElementAt(attNameHash, attCount);
             }
 
@@ -1369,43 +1404,39 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
         }
     }
 
-    unsigned int uriId = fEmptyNamespaceId;
-    if (fDocHandler) {
+    // Handle provided attributes that we did not map their prefixes
+    for (unsigned int i=0; i < fAttrNSList->size(); i++) {
 
-        // set element
-        fDTDElemDecl.setElementName(qnameRawBuf, uriId);
+        XMLAttr* providedAttr = fAttrNSList->elementAt(i);
 
-        // Handle provided attributes that we did not map their prefixes
-        for (unsigned int i=0; i < fAttrNSList->size(); i++) {
-
-            XMLAttr* providedAttr = fAttrNSList->elementAt(i);
-
-            providedAttr->setURIId
-            (
-	            resolvePrefix
-                (
-                    providedAttr->getPrefix(),
-                    WFElemStack::Mode_Attribute
-                )
-            );
-        }
-
-        // Resolve the qualified name to a URI.
-        uriId = resolvePrefix
+        providedAttr->setURIId
         (
-            fDTDElemDecl.getElementName()->getPrefix()
-            , WFElemStack::Mode_Element
+	        resolvePrefix
+            (
+                providedAttr->getPrefix(),
+                ElemStack::Mode_Attribute
+            )
         );
+    }
 
-        //  Now we can update the element stack
-        fElemStack.setCurrentURI(uriId);
+    // Resolve the qualified name to a URI.
+    unsigned int uriId = resolvePrefix
+    (
+        elemDecl->getElementName()->getPrefix()
+        , ElemStack::Mode_Element
+    );
 
-        // Tell the document handler about this start tag
+    // Now we can update the element stack
+    fElemStack.setCurrentURI(uriId);
+
+    // Tell the document handler about this start tag
+    if (fDocHandler)
+    {
         fDocHandler->startElement
         (
-            fDTDElemDecl
+            *elemDecl
             , uriId
-            , fDTDElemDecl.getElementName()->getPrefix()
+            , elemDecl->getElementName()->getPrefix()
             , *fAttrList
             , attCount
             , false
@@ -1414,7 +1445,8 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
     }
 
     //  If empty, validate content right now if we are validating and then
-    //  pop the element stack top.
+    //  pop the element stack top. Else, we have to update the current stack
+    //  top's namespace mapping elements.
     if (isEmpty)
     {
         // Pop the element stack back off since it'll never be used now
@@ -1425,10 +1457,10 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
         {
             fDocHandler->endElement
             (
-                fDTDElemDecl
+                *elemDecl
                 , uriId
                 , isRoot
-                , fDTDElemDecl.getElementName()->getPrefix()
+                , elemDecl->getElementName()->getPrefix()
             );
         }
 
@@ -1459,7 +1491,7 @@ WFXMLScanner::resolveQName(const   XMLCh* const qName
         bool unknown = false;
 
         prefixBuf.reset();
-        return fElemStack.mapPrefixToURI(XMLUni::fgZeroLenString, (WFElemStack::MapModes) mode, unknown);
+        return fElemStack.mapPrefixToURI(XMLUni::fgZeroLenString, (ElemStack::MapModes) mode, unknown);
     }
     else
     {
@@ -1475,21 +1507,21 @@ WFXMLScanner::resolveQName(const   XMLCh* const qName
         if (XMLString::equals(prefixRawBuf, XMLUni::fgXMLNSString)) {
 
             // if this is an element, it is an error to have xmlns as prefix
-            if (mode == WFElemStack::Mode_Element)
+            if (mode == ElemStack::Mode_Element)
                 emitError(XMLErrs::NoXMLNSAsElementPrefix, qName);
 
             return fXMLNSNamespaceId;
         }
         else if (XMLString::equals(prefixRawBuf, XMLUni::fgXMLString)) {
-            return fXMLNamespaceId;
+            return  fXMLNamespaceId;
         }
         else
         {
             bool unknown = false;
-            unsigned int uriId = fElemStack.mapPrefixToURI(prefixRawBuf, (WFElemStack::MapModes)mode, unknown);
+            unsigned int uriId = fElemStack.mapPrefixToURI(prefixRawBuf, (ElemStack::MapModes) mode, unknown);
 
             if (unknown)
-                emitError(XMLErrs::UnknownPrefix, prefixBuf.getRawBuffer());
+                emitError(XMLErrs::UnknownPrefix, prefixRawBuf);
 
             return uriId;
         }

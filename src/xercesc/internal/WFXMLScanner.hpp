@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/01/02 16:29:05  knoaman
+ * Modified the way we handle element tags.
+ *
  * Revision 1.1  2002/12/04 02:01:29  knoaman
  * Initial checkin.
  *
@@ -153,9 +156,9 @@ private :
     unsigned int resolvePrefix
     (
         const   XMLCh* const        prefix
-        , const WFElemStack::MapModes mode
+        , const ElemStack::MapModes mode
     );
-    
+
     // -----------------------------------------------------------------------
     //  Private scanning methods
     // -----------------------------------------------------------------------
@@ -179,9 +182,6 @@ private :
     //  fEntityTable
     //      This the table that contains the default entity entries.
     //
-    //  fDTDElemDecl
-    //      The XMLElementDecl object to be passed to the document handler.
-    //
     //  fAttrNameHashList
     //      This contains the hash value for attribute names. It's used when
     //      checking for duplicate attributes.
@@ -191,11 +191,13 @@ private :
     //      to URIs when namespace is enabled.
     //
     // -----------------------------------------------------------------------
-    ValueHashTableOf<XMLCh>*     fEntityTable;
-    ValueVectorOf<unsigned int>* fAttrNameHashList;
-    ValueVectorOf<XMLAttr*>*     fAttrNSList;
-    WFElemStack                  fElemStack;
-    DTDElementDecl               fDTDElemDecl;
+    unsigned int                       fElementIndex;
+    RefVectorOf<XMLElementDecl>*       fElements;
+    ValueHashTableOf<XMLCh>*           fEntityTable;
+    ValueVectorOf<unsigned int>*       fAttrNameHashList;
+    ValueVectorOf<XMLAttr*>*           fAttrNSList;
+    RefHashTableOf<XMLElementDecl>*    fElementLookup;  
+    ElemStack                          fElemStack;
 };
 
 inline const XMLCh* WFXMLScanner::getName() const
