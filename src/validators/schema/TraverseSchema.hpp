@@ -465,7 +465,24 @@ private:
                           const unsigned int locationId);
 
     void restoreSchemaInfo();
-    int resetCurrentTypeNameStack(const int);
+    int  resetCurrentTypeNameStack(const int);
+
+    /**
+      * Check whether a mixed content is emptiable or not.
+      * Needed to validate element constraint values (defualt, fixed)
+      */
+    bool emptiableMixedContent(const ContentSpecNode* const specNode);
+
+    /**
+      * Used by emptiableMixedContent to get the 'particle' minimum
+      * total range.
+      * 
+      * Note:
+      * The method does not return the exact min. value. It will stop
+      * calculation if a value > 0 is encountered, and the compositor is not
+      * a 'choice'.
+      */
+    int  getMinTotalRange(const ContentSpecNode* const specNode);
 
     // -----------------------------------------------------------------------
     //  Private data members

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/05/22 19:22:45  knoaman
+ * Added checking for element declaration value constraint (default/fixed).
+ *
  * Revision 1.10  2001/05/18 17:04:45  knoaman
  * Typo fix.
  *
@@ -1695,7 +1698,7 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem) {
     }
 
     // Resolve the type for the element
-    DOM_Element content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    DOM_Element  content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
     if (content != 0) {
 
@@ -1870,7 +1873,8 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem) {
 
         if(typeInfo != 0 &&
            typeInfo->getContentType() != SchemaElementDecl::Simple &&
-           typeInfo->getContentType() != SchemaElementDecl::Mixed) {
+           (typeInfo->getContentType() != SchemaElementDecl::Mixed
+            || !emptiableMixedContent(typeInfo->getContentSpec()))) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NotSimpleOrMixedElement, name);
         }
     }
@@ -4523,36 +4527,6 @@ void TraverseSchema::defaultComplexTypeInfo(ComplexTypeInfo* const typeInfo) {
     }
 }
 
-// ---------------------------------------------------------------------------
-//  TraverseSchema: Error reporting methods
-// ---------------------------------------------------------------------------
-void TraverseSchema::reportSchemaError(const XMLCh* const msgDomain,
-                                       const int errorCode) {
-
-    if (fScanner && XMLString::compareString(msgDomain, XMLUni::fgXMLErrDomain) == 0) {
-        fScanner->emitError((XMLErrs::Codes) errorCode);
-    }
-    else if (fValidator && fScanner->getDoValidation() 
-             && XMLString::compareString(msgDomain, XMLUni::fgValidityDomain) == 0) {
-        fValidator->emitError((XMLValid::Codes) errorCode);
-    }
-}
-
-void TraverseSchema::reportSchemaError(const XMLCh* const msgDomain,
-                                       const int errorCode,
-                                       const XMLCh* const text1,
-                                       const XMLCh* const text2,
-                                       const XMLCh* const text3,
-                                       const XMLCh* const text4) {
-
-    if (fScanner && XMLString::compareString(msgDomain, XMLUni::fgXMLErrDomain) == 0) {
-        fScanner->emitError((XMLErrs::Codes) errorCode,text1,text2,text3,text4);
-    }
-    else if (fValidator && fScanner->getDoValidation() 
-             && XMLString::compareString(msgDomain, XMLUni::fgValidityDomain) == 0) {
-        fValidator->emitError((XMLValid::Codes) errorCode,text1,text2,text3,text4);
-    }
-}
 
 InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
     
@@ -4597,6 +4571,90 @@ void TraverseSchema::restoreSchemaInfo() {
     fBlockDefault = fCurrentSchemaInfo->getBlockDefault();
     fFinalDefault = fCurrentSchemaInfo->getFinalDefault();
     fSchemaRootElement = fCurrentSchemaInfo->getRoot();
+}
+
+
+bool
+TraverseSchema::emptiableMixedContent(const ContentSpecNode* const specNode) {
+
+    if (!specNode) {
+        return false;
+    }
+
+    if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId) {
+        return true;    
+    }
+
+    int min = getMinTotalRange(specNode);
+
+    return (min == 0);
+}
+
+int TraverseSchema::getMinTotalRange(const ContentSpecNode* const specNode) {
+
+    ContentSpecNode::NodeTypes nodeType = specNode->getType();
+
+    if (nodeType == ContentSpecNode::ZeroOrMore
+        || nodeType == ContentSpecNode::ZeroOrOne) {
+        return 0;
+    }
+
+    const ContentSpecNode* first = 0;
+    const ContentSpecNode* second = 0;
+    int min = 1;
+
+    if (nodeType == ContentSpecNode::Sequence
+        || nodeType == ContentSpecNode::Choice) {
+
+        first = specNode->getFirst();
+        second = specNode->getSecond();
+        min = getMinTotalRange(first);
+
+        if (second) {
+
+            if (nodeType == ContentSpecNode::Choice) {
+                min = (min == 0) ? 0 : getMinTotalRange(second);
+            }
+            else {
+                // if min != 0, no point of calculation as content
+                // is not emptiable in case of sequence.
+                min = (min == 0) ? getMinTotalRange(second) : min;
+            }
+        }
+    }
+
+    return min;
+}
+
+// ---------------------------------------------------------------------------
+//  TraverseSchema: Error reporting methods
+// ---------------------------------------------------------------------------
+void TraverseSchema::reportSchemaError(const XMLCh* const msgDomain,
+                                       const int errorCode) {
+
+    if (fScanner && XMLString::compareString(msgDomain, XMLUni::fgXMLErrDomain) == 0) {
+        fScanner->emitError((XMLErrs::Codes) errorCode);
+    }
+    else if (fValidator && fScanner->getDoValidation() 
+             && XMLString::compareString(msgDomain, XMLUni::fgValidityDomain) == 0) {
+        fValidator->emitError((XMLValid::Codes) errorCode);
+    }
+}
+
+void TraverseSchema::reportSchemaError(const XMLCh* const msgDomain,
+                                       const int errorCode,
+                                       const XMLCh* const text1,
+                                       const XMLCh* const text2,
+                                       const XMLCh* const text3,
+                                       const XMLCh* const text4) {
+
+    if (fScanner && XMLString::compareString(msgDomain, XMLUni::fgXMLErrDomain) == 0) {
+        fScanner->emitError((XMLErrs::Codes) errorCode,text1,text2,text3,text4);
+    }
+    else if (fValidator && fScanner->getDoValidation() 
+             && XMLString::compareString(msgDomain, XMLUni::fgValidityDomain) == 0) {
+        fValidator->emitError((XMLValid::Codes) errorCode,text1,text2,text3,text4);
+    }
 }
 
 // ---------------------------------------------------------------------------
