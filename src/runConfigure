@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.18  2000/02/08 02:37:42  abagchi
+# Added Iconv390 as a transcoder option
+#
 # Revision 1.17  2000/02/06 07:47:26  rahulj
 # Year 2K copyright swat.
 #
@@ -183,7 +186,7 @@ usage()
     echo "       -d (specifies that you want to build debug version)"
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
     echo "       -n <net accessor> can be 'fileonly', 'libwww'"
-    echo "       -t <transcoder> can be 'icu', 'Iconv400' or 'native'"
+    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390' or 'native'"
     echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
@@ -360,6 +363,9 @@ case $transcoder in
    Iconv400)
        transcodingDefines="-DXML_USE_ICONV400_TRANSCODER" ;
        TRANSCODER=Iconv400 ;;
+   Iconv390)
+       transcodingDefines="-DXML_USE_ICONV390_TRANSCODER" ;
+       TRANSCODER=Iconv390 ;;
    native)
        ;;
 
