@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/10/26 11:55:46  tng
+ * Nest entire test in an inner block for reference counting to recover all document storage when this block exits before XMLPlatformUtils::Terminate is called.
+ *
  * Revision 1.6  2001/10/19 19:02:42  tng
  * [Bug 3909] return non-zero an exit code when error was encounted.
  * And other modification for consistent help display and return code across samples.
@@ -131,55 +134,60 @@ int main(int argC, char* argV[])
         return 1;
     }
 
-    //  The tree we create below is the same that the DOMParser would
-    //  have created, except that no whitespace text nodes would be created.
+    {
+         //  Nest entire test in an inner block.
+         //     Reference counting should recover all document
+         //     storage when this block exits.
+        //  The tree we create below is the same that the DOMParser would
+        //  have created, except that no whitespace text nodes would be created.
 
-    // <company>
-    //     <product>Xerces-C</product>
-    //     <category idea='great'>XML Parsing Tools</category>
-    //     <developedBy>Apache Software Foundation</developedBy>
-    // </company>
+        // <company>
+        //     <product>Xerces-C</product>
+        //     <category idea='great'>XML Parsing Tools</category>
+        //     <developedBy>Apache Software Foundation</developedBy>
+        // </company>
 
-    DOM_DOMImplementation impl;
+        DOM_DOMImplementation impl;
 
-    DOM_Document doc = impl.createDocument(
-                0,                    // root element namespace URI.
-                "company",            // root element name
-                DOM_DocumentType());  // document type object (DTD).
+        DOM_Document doc = impl.createDocument(
+                    0,                    // root element namespace URI.
+                    "company",            // root element name
+                    DOM_DocumentType());  // document type object (DTD).
 
-    DOM_Element rootElem = doc.getDocumentElement();
+        DOM_Element rootElem = doc.getDocumentElement();
 
-    DOM_Element  prodElem = doc.createElement("product");
-    rootElem.appendChild(prodElem);
+        DOM_Element  prodElem = doc.createElement("product");
+        rootElem.appendChild(prodElem);
 
-    DOM_Text    prodDataVal = doc.createTextNode("Xerces-C");
-    prodElem.appendChild(prodDataVal);
+        DOM_Text    prodDataVal = doc.createTextNode("Xerces-C");
+        prodElem.appendChild(prodDataVal);
 
-    DOM_Element  catElem = doc.createElement("category");
-    rootElem.appendChild(catElem);
-    catElem.setAttribute("idea", "great");
+        DOM_Element  catElem = doc.createElement("category");
+        rootElem.appendChild(catElem);
+        catElem.setAttribute("idea", "great");
 
-    DOM_Text    catDataVal = doc.createTextNode("XML Parsing Tools");
-    catElem.appendChild(catDataVal);
+        DOM_Text    catDataVal = doc.createTextNode("XML Parsing Tools");
+        catElem.appendChild(catDataVal);
 
-    DOM_Element  devByElem = doc.createElement("developedBy");
-    rootElem.appendChild(devByElem);
+        DOM_Element  devByElem = doc.createElement("developedBy");
+        rootElem.appendChild(devByElem);
 
-    DOM_Text    devByDataVal = doc.createTextNode("Apache Software Foundation");
-    devByElem.appendChild(devByDataVal);
+        DOM_Text    devByDataVal = doc.createTextNode("Apache Software Foundation");
+        devByElem.appendChild(devByDataVal);
 
-    //
-    // Now count the number of elements in the above DOM tree.
-    //
+        //
+        // Now count the number of elements in the above DOM tree.
+        //
 
-    unsigned int elementCount = doc.getElementsByTagName("*").getLength();
-    cout << "The tree just created contains: " << elementCount
-         << " elements." << endl;
+        unsigned int elementCount = doc.getElementsByTagName("*").getLength();
+        cout << "The tree just created contains: " << elementCount
+             << " elements." << endl;
 
-    //
-    //  The DOM document and its contents are reference counted, and need
-    //  no explicit deletion.
-    //
+        //
+        //  The DOM document and its contents are reference counted, and need
+        //  no explicit deletion.
+        //
+    }
     XMLPlatformUtils::Terminate();
     return 0;
 }

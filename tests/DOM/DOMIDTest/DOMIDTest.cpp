@@ -196,95 +196,100 @@ int main()
          return 1;
     }
 
-    bool doValidation    = true;
-    bool doNamespaces    = false;
-
-    DOMParser *parser = new DOMParser;
-    parser->setDoValidation(doValidation);
-    parser->setDoNamespaces(doNamespaces);
-
-    ErrorHandler *ehandler = new SimpleErrorHandler();
-    parser->setErrorHandler(ehandler);
-
-    MemBufInputSource* memBufIS = new MemBufInputSource (
-        (const XMLByte*)TestDoc1,
-        strlen(TestDoc1),
-        "TestDoc1",
-        false
-        );
-    parser->parse(*memBufIS);
-
-    DOM_Document doc = parser->getDocument();
-
-
-    DomMemDebug     entryMemState, exitMemState;
-
-    TESTPROLOG;
     {
-        DOM_Element elA = doc.getElementById("a001");
-        TASSERT(elA != 0);
+         //  Nest entire test in an inner block.
+         //     Reference counting should recover all document
+         //     storage when this block exits.
+        bool doValidation    = true;
+        bool doNamespaces    = false;
 
-        DOM_Element elB = doc.getElementById("a002");
-        TASSERT(elB == 0);
+        DOMParser *parser = new DOMParser;
+        parser->setDoValidation(doValidation);
+        parser->setDoNamespaces(doNamespaces);
 
-        DOM_Element elC = doc.getElementById("a003");
-        TASSERT(elC != 0);
-        TASSERT(elC != elA);
+        ErrorHandler *ehandler = new SimpleErrorHandler();
+        parser->setErrorHandler(ehandler);
 
-        DOMString s = elA.getAttribute("id");
-        TASSERT(s.equals("a001"));
+        MemBufInputSource* memBufIS = new MemBufInputSource (
+            (const XMLByte*)TestDoc1,
+            strlen(TestDoc1),
+            "TestDoc1",
+            false
+            );
+        parser->parse(*memBufIS);
 
-        s = elC.getAttribute("id");
-        TASSERT(s.equals("a003"));
+        DOM_Document doc = parser->getDocument();
 
+
+        DomMemDebug     entryMemState, exitMemState;
+
+        TESTPROLOG;
+        {
+            DOM_Element elA = doc.getElementById("a001");
+            TASSERT(elA != 0);
+
+            DOM_Element elB = doc.getElementById("a002");
+            TASSERT(elB == 0);
+
+            DOM_Element elC = doc.getElementById("a003");
+            TASSERT(elC != 0);
+            TASSERT(elC != elA);
+
+            DOMString s = elA.getAttribute("id");
+            TASSERT(s.equals("a001"));
+
+            s = elC.getAttribute("id");
+            TASSERT(s.equals("a003"));
+
+        }
+        TESTEPILOG;
+
+
+        parser->parse(*memBufIS);
+        doc = parser->getDocument();
+        TESTPROLOG;
+        {
+            // This one should get an element
+            DOM_Element elA = doc.getElementById("a001");
+            TASSERT(!elA.isNull());
+
+            elA.setAttribute("id", "a004");
+
+            // This one should NOT get an element
+            elA = doc.getElementById("a001");
+            TASSERT(elA.isNull());
+        };
+
+
+        parser->parse(*memBufIS);
+        doc = parser->getDocument();
+        TESTPROLOG;
+        {
+            // This one should get an element
+            DOM_Element elA = doc.getElementById("a001");
+            TASSERT(!elA.isNull());
+
+            DOM_Node parent = elA.getParentNode();
+            DOM_Node removed = parent.removeChild(elA);
+            removed = 0;
+            elA = 0;
+
+            // This one should NOT get an element
+            elA = doc.getElementById("a001");
+            TASSERT(elA.isNull());
+        }
+
+        doc = 0;
+        delete parser;
+        delete memBufIS;
+        delete ehandler;
     }
-    TESTEPILOG;
-
-
-    parser->parse(*memBufIS);
-    doc = parser->getDocument();
-    TESTPROLOG;
-    {
-        // This one should get an element
-        DOM_Element elA = doc.getElementById("a001");
-        TASSERT(!elA.isNull());
-
-        elA.setAttribute("id", "a004");
-
-        // This one should NOT get an element
-        elA = doc.getElementById("a001");
-        TASSERT(elA.isNull());
-    };
-
-
-    parser->parse(*memBufIS);
-    doc = parser->getDocument();
-    TESTPROLOG;
-    {
-        // This one should get an element
-        DOM_Element elA = doc.getElementById("a001");
-        TASSERT(!elA.isNull());
-
-        DOM_Node parent = elA.getParentNode();
-        DOM_Node removed = parent.removeChild(elA);
-        removed = 0;
-        elA = 0;
-
-        // This one should NOT get an element
-        elA = doc.getElementById("a001");
-        TASSERT(elA.isNull());
-    }
-
-    doc = 0;
-    delete parser;
-    delete memBufIS;
-    delete ehandler;
 
     //
     //  Print Final allocation stats for full set of tests
     //
-    XMLPlatformUtils::Terminate();
     DomMemDebug().print();
+    XMLPlatformUtils::Terminate();
     return 0;
 
 
