@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/12/22 15:22:58  gareth
+ * made getRootElemID const. Bug #25699
+ *
  * Revision 1.12  2003/12/17 00:18:40  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -239,7 +242,7 @@ public:
     
     // deprecated.  returns the ID of the root element; not
     // useable in multithreaded environments!
-    unsigned int getRootElemId();
+    unsigned int getRootElemId() const;
     const DTDEntityDecl* getEntityDecl(const XMLCh* const entName) const;
     DTDEntityDecl* getEntityDecl(const XMLCh* const entName);
     NameIdPool<DTDEntityDecl>* getEntityDeclPool();
@@ -330,7 +333,7 @@ private:
 // ---------------------------------------------------------------------------
 //  DTDGrammar: Getter methods
 // ---------------------------------------------------------------------------
-inline unsigned int DTDGrammar::getRootElemId()
+inline unsigned int DTDGrammar::getRootElemId() const
 {
     return fRootElemId;
 }
