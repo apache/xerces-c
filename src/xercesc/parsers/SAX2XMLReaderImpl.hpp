@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2005/02/25 11:31:07  amassari
+ * Performance improvements by David Bertoni (jira# 1343)
+ *
  * Revision 1.29  2004/12/10 10:52:16  cargilld
  * Make setInputBufferSize virtual.  Fix from Christian Will.
  *
@@ -1852,9 +1855,6 @@ private :
     //      The grammar pool passed from external application (through derivatives).
     //      which could be 0, not owned.
     //
-    //   fBuffer
-    //      A buffer used to store the element name
-    //
     // -----------------------------------------------------------------------
     bool                        fNamespacePrefix;
     bool                        fAutoValidation;
@@ -1884,7 +1884,6 @@ private :
     XMLValidator*               fValidator;
     MemoryManager*              fMemoryManager;
     XMLGrammarPool*             fGrammarPool;
-    XMLBuffer                   fBuffer;
 	
     // -----------------------------------------------------------------------
     // internal function used to set the state of the parser

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.43  2005/02/25 11:31:07  amassari
+ * Performance improvements by David Bertoni (jira# 1343)
+ *
  * Revision 1.42  2004/12/30 15:23:41  amassari
  * Notify advanced handlers of the whitespace before and after the root document element (jira# 729)
  *
@@ -353,7 +356,6 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
     , fValidator(0)
     , fMemoryManager(manager)
     , fGrammarPool(gramPool)
-    , fBuffer(1023,manager)
 {
     try
     {
@@ -958,19 +960,13 @@ startElement(   const   XMLElementDecl&         elemDecl
 
     if (fDocHandler)
     {
-        fBuffer.reset();
-        if (elemPrefix && *elemPrefix) {
-            fBuffer.set(elemPrefix);
-            fBuffer.append(chColon);
-        }
-        fBuffer.append(elemDecl.getBaseName());
+        const XMLCh* const elemQName =
+            elemDecl.getFullName();
 
         if (getDoNamespaces())
         {
             unsigned int numPrefix = 0;
             const XMLCh*   nsString = XMLUni::fgXMLNSString;
-            const XMLCh*   nsPrefix = 0;
-            const XMLCh*   nsURI    = 0;
             const XMLAttr* tempAttr = 0;
 
             if (!fNamespacePrefix)
@@ -980,6 +976,9 @@ startElement(   const   XMLElementDecl&         elemDecl
 
             for (unsigned int i = 0; i < attrCount; i++)
             {
+                const XMLCh*   nsPrefix = 0;
+                const XMLCh*   nsURI    = 0;
+
                 tempAttr = attrList.elementAt(i);
                 if (XMLString::equals(tempAttr->getQName(), nsString))
                     nsURI = tempAttr->getValue();
@@ -991,7 +990,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                 if (!fNamespacePrefix)
                 {
                     if (nsURI == 0)
-                        fTempAttrVec->addElement((XMLAttr* const)tempAttr);
+                        fTempAttrVec->addElement((XMLAttr*)tempAttr);
                 }
                 if (nsURI != 0)
                 {
@@ -1002,8 +1001,6 @@ startElement(   const   XMLElementDecl&         elemDecl
                     fPrefixes->push(nPrefixId) ;
                     numPrefix++;
                 }
-                nsURI = 0;
-                nsPrefix = 0;
             }
             fPrefixCounts->push(numPrefix) ;
             if (!fNamespacePrefix)
@@ -1016,7 +1013,7 @@ startElement(   const   XMLElementDecl&         elemDecl
             (
                 fScanner->getURIText(elemURLId)
                 , elemDecl.getBaseName()
-                , fBuffer.getRawBuffer()
+                , elemQName
                 , fAttrList
             );
         }
@@ -1025,7 +1022,7 @@ startElement(   const   XMLElementDecl&         elemDecl
             fAttrList.setVector(&attrList, attrCount, fScanner);
             fDocHandler->startElement(XMLUni::fgZeroLenString,
 										elemDecl.getBaseName(),
-										elemDecl.getFullName(),
+										elemQName,
 										fAttrList);
         }
 
@@ -1040,7 +1037,7 @@ startElement(   const   XMLElementDecl&         elemDecl
                 (
                     fScanner->getURIText(elemURLId)
                     , elemDecl.getBaseName()
-                    , fBuffer.getRawBuffer()
+                    , elemQName
                 );
 
                 unsigned int numPrefix = fPrefixCounts->pop();
@@ -1054,7 +1051,7 @@ startElement(   const   XMLElementDecl&         elemDecl
             {
                 fDocHandler->endElement(XMLUni::fgZeroLenString,
                                 elemDecl.getBaseName(),
-                                elemDecl.getFullName());
+                                elemQName);
             }
         }
     }
@@ -1090,18 +1087,11 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
         // get the prefixes back so that we can call endPrefixMapping()
         if (getDoNamespaces())
         {
-            fBuffer.reset();
-            if (elemPrefix && *elemPrefix) {
-                fBuffer.set(elemPrefix);
-                fBuffer.append(chColon);
-            }
-            fBuffer.append(elemDecl.getBaseName());
-
             fDocHandler->endElement
             (
                 fScanner->getURIText(uriId)
                 , elemDecl.getBaseName()
-                , fBuffer.getRawBuffer()
+                , elemDecl.getFullName()
             );
 
             unsigned int numPrefix = fPrefixCounts->pop();
