@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/08/23 20:16:50  tng
+ * Memory leak fix: enums is not deleted if an error occurred.
+ *
  * Revision 1.2  2002/02/14 15:17:31  peiyongz
  * getEnumString()
  *
@@ -118,11 +121,13 @@ BooleanDatatypeValidator::BooleanDatatypeValidator(
     {
 
         // Boolean shall NOT have enumeration
-        if (enums)
+        if (enums) {
+            delete enums;
             ThrowXML1(InvalidDatatypeFacetException
                     , XMLExcepts::FACET_Invalid_Tag
                     , "enumeration");
-    
+        }
+
         XMLCh* key;
         XMLCh* value;
         RefHashTableOfEnumerator<KVStringPair> e(facets);
@@ -163,7 +168,7 @@ void BooleanDatatypeValidator::checkContent( const XMLCh* const content, bool as
     {
         // lazy construction
         if (getRegex() ==0) {
-            try {         
+            try {
                 setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
             }
             catch (XMLException &e)
