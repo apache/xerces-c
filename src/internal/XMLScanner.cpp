@@ -1623,7 +1623,7 @@ void XMLScanner::scanEndTag(bool& gotData)
 
     // Make sure that its the end of the element that we expect
     XMLElementDecl* tempElement = topElem->fThisElement;
-    if (fDoNamespaces && fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+    if (fDoNamespaces && fGrammarType == Grammar::SchemaGrammarType) {
         if ((topUri != uriId) || (XMLString::compareString(tempElement->getBaseName(), bbName.getRawBuffer())))
         {
             emitError
@@ -1723,7 +1723,7 @@ void XMLScanner::scanEndTag(bool& gotData)
         }
 
         // reset xsi:type ComplexTypeInfo
-        if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
+        if (fGrammarType == Grammar::SchemaGrammarType)
             ((SchemaElementDecl*)topElem->fThisElement)->setXsiComplexTypeInfo(0);
     }
 
@@ -1734,14 +1734,15 @@ void XMLScanner::scanEndTag(bool& gotData)
         if (fDoNamespaces) {
             // Restore the grammar
             fGrammar = fElemStack.getCurrentGrammar();
-            if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
+            fGrammarType = fGrammar->getGrammarType();
+            if (fGrammarType == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
                 if (fValidatorFromUser)
                     ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
                 else {
                     fValidator = fSchemaValidator;
                 }
             }
-            else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
+            else if (fGrammarType == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
                 if (fValidatorFromUser)
                     ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
                 else {
@@ -2748,7 +2749,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     ContentLeafNameTypeVector* cv = 0;
     XMLContentModel* cm = 0;
     int currentScope = Grammar::TOP_LEVEL_SCOPE;
-    if (!isRoot && fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+    if (!isRoot && fGrammarType == Grammar::SchemaGrammarType) {
         SchemaElementDecl* tempElement = (SchemaElementDecl*) fElemStack.topElement()->fThisElement;
         SchemaElementDecl::ModelTypes modelType = tempElement->getModelType();
 
@@ -2781,7 +2782,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  Also find any default or fixed xmlns attributes in DTD defined for
     //  this element.
     //
-    if (fGrammar->getGrammarType() == Grammar::DTDGrammarType) {
+    if (fGrammarType == Grammar::DTDGrammarType) {
         XMLElementDecl* elemDecl = fGrammar->getElemDecl
         (
             fEmptyNamespaceId
@@ -3039,7 +3040,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     if (fValidate)
         fValidator->validateElement(elemDecl);
 
-    if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+    if (fGrammarType == Grammar::SchemaGrammarType) {
         ComplexTypeInfo* typeinfo = ((SchemaElementDecl*)elemDecl)->getComplexTypeInfo();
         if (typeinfo)
             currentScope = typeinfo->getScopeDefined();
@@ -3115,7 +3116,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             }
 
             // reset xsi:type ComplexTypeInfo
-            if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
+            if (fGrammarType == Grammar::SchemaGrammarType)
                 ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
         }
 
@@ -3126,14 +3127,15 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         {
             // Restore the grammar
             fGrammar = fElemStack.getCurrentGrammar();
-            if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
+            fGrammarType = fGrammar->getGrammarType();
+            if (fGrammarType == Grammar::SchemaGrammarType && !fValidator->handlesSchema()) {
                 if (fValidatorFromUser)
                     ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
                 else {
                     fValidator = fSchemaValidator;
                 }
             }
-            else if (fGrammar->getGrammarType() == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
+            else if (fGrammarType == Grammar::DTDGrammarType && !fValidator->handlesDTD()) {
                 if (fValidatorFromUser)
                     ThrowXML(RuntimeException, XMLExcepts::Gen_NoDTDValidator);
                 else {

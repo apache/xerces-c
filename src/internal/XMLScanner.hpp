@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.33  2001/09/10 15:16:04  tng
+ * Store the fGrammarType instead of calling getGrammarType all the time for faster performance.
+ *
  * Revision 1.32  2001/09/10 14:06:22  tng
  * Schema: AnyAttribute support in Scanner and Validator.
  *
@@ -819,6 +822,10 @@ private :
     //  fGrammar
     //      Current Grammar used by the Scanner and Validator
     //
+    //  fGrammarType
+    //      Current Grammar Type.  Store this value instead of calling getGrammarType
+    //      all the time for faster performance.
+    //
     //  fEntityDeclPool
     //      This is a pool of EntityDecl objects, which contains all of the
     //      general entities that are declared in the DTD subsets, plus the
@@ -877,6 +884,7 @@ private :
     XMLBuffer                   fURIBuf;
     GrammarResolver*            fGrammarResolver;
     Grammar*                    fGrammar;
+    Grammar::GrammarType        fGrammarType;
     NameIdPool<DTDEntityDecl>*  fEntityDeclPool;
     XMLStringPool*              fURIStringPool;
 };
