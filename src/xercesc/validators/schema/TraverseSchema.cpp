@@ -377,6 +377,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
     fTargetNSURIString = fSchemaGrammar->getTargetNamespace();
     fTargetNSURI = fURIStringPool->addOrFind(fTargetNSURIString);
+
     XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(fTargetNSURIString);
     fGrammarResolver->putGrammar(gramDesc, fSchemaGrammar);
     fAttributeCheck.setIDRefList(fSchemaGrammar->getIDRefList());
@@ -651,7 +652,15 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     // Resolve namespace to a grammar
     // ------------------------------------------------------------------	
-    Grammar* aGrammar = (nameSpace) ? fGrammarResolver->getGrammar(nameSpace) : 0;
+    Grammar* aGrammar = 0;
+
+    if (nameSpace)
+    {
+        XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(nameSpace);
+        Janitor<XMLSchemaDescription> janName(gramDesc);
+        aGrammar = fGrammarResolver->getGrammar(gramDesc);
+    }
+
     bool grammarFound = (aGrammar && (aGrammar->getGrammarType() == Grammar::SchemaGrammarType));
 
     if (grammarFound) {
@@ -1622,7 +1631,9 @@ TraverseSchema::traverseAttributeGroupDeclNS(const DOMElement* const elem,
     // ------------------------------------------------------------------
     // Get grammar information
     // ------------------------------------------------------------------
-    Grammar* aGrammar = fGrammarResolver->getGrammar(uriStr);
+    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uriStr);
+    Janitor<XMLSchemaDescription> janName(gramDesc);
+    Grammar* aGrammar = fGrammarResolver->getGrammar(gramDesc);
 
     if (!aGrammar || aGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
 
@@ -2532,8 +2543,9 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
                             if (!subsElements && fTargetNSURI != subsElemURI) {
 
-                                SchemaGrammar* aGrammar = (SchemaGrammar*)
-                                   fGrammarResolver->getGrammar(fURIStringPool->getValueForId(subsElemURI));
+                                XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(fURIStringPool->getValueForId(subsElemURI));
+                                Janitor<XMLSchemaDescription> janName(gramDesc);
+                                SchemaGrammar* aGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
 
                                 if (aGrammar) {
                                     subsElements = aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
@@ -2564,8 +2576,9 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
                             while (importingEnum.hasMoreElements()) {
 
                                 const SchemaInfo& curRef = importingEnum.nextElement();
-                                SchemaGrammar* aGrammar = (SchemaGrammar*)
-                                    fGrammarResolver->getGrammar(curRef.getTargetNSURIString());
+                                XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(curRef.getTargetNSURIString());
+                                Janitor<XMLSchemaDescription> janName(gramDesc);
+                                SchemaGrammar* aGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
                                 ValueVectorOf<SchemaElementDecl*>* subsElemList =
                                     aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
 
@@ -2794,7 +2807,9 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem,
             return 0;
         }
 
-        Grammar* grammar = fGrammarResolver->getGrammar(uriStr);
+        XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uriStr);
+        Janitor<XMLSchemaDescription> janName(gramDesc);
+        Grammar* grammar = fGrammarResolver->getGrammar(gramDesc);
 
         if (grammar == 0 || grammar->getGrammarType() != Grammar::SchemaGrammarType) {
 
@@ -4466,7 +4481,9 @@ TraverseSchema::getDatatypeValidator(const XMLCh* const uriStr,
 
         if ((uriStr && *uriStr) && !XMLString::equals(uriStr, fTargetNSURIString)) {
 
-            Grammar* grammar = fGrammarResolver->getGrammar(uriStr);
+            XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uriStr);
+            Janitor<XMLSchemaDescription> janName(gramDesc);
+            Grammar* grammar = fGrammarResolver->getGrammar(gramDesc);
 
             if (grammar && grammar->getGrammarType() == Grammar::SchemaGrammarType) {
                 dv = ((SchemaGrammar*) grammar)->getDatatypeRegistry()->getDatatypeValidator(fBuffer.getRawBuffer());
@@ -4987,7 +5004,9 @@ TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
         if (!fSchemaInfo->isImportingNS(uriId))
             return 0;
 
-        Grammar* aGrammar = fGrammarResolver->getGrammar(typeURI);
+        XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(typeURI);
+        Janitor<XMLSchemaDescription> janName(gramDesc);
+        Grammar* aGrammar = fGrammarResolver->getGrammar(gramDesc);
 
         if (!aGrammar || aGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
             return 0;
@@ -5062,7 +5081,9 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
                                                      0, Grammar::TOP_LEVEL_SCOPE, wasAdded);
         }
 
-        Grammar* grammar = fGrammarResolver->getGrammar(nameURI);
+        XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(nameURI);
+        Janitor<XMLSchemaDescription> janName(gramDesc);
+        Grammar* grammar = fGrammarResolver->getGrammar(gramDesc);
 
         if (grammar && grammar->getGrammarType() == Grammar::SchemaGrammarType) {
             elemDecl = (SchemaElementDecl*)
@@ -5362,7 +5383,9 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
             return;
         }
 
-        Grammar* grammar = fGrammarResolver->getGrammar(uriStr);
+        XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uriStr);
+        Janitor<XMLSchemaDescription> janName(gramDesc);
+        Grammar* grammar = fGrammarResolver->getGrammar(gramDesc);
 
         if (grammar == 0 || grammar->getGrammarType() != Grammar::SchemaGrammarType) {
 
@@ -6062,7 +6085,10 @@ ComplexTypeInfo* TraverseSchema::getTypeInfoFromNS(const DOMElement* const elem,
                                                    const XMLCh* const uriStr,
                                                    const XMLCh* const localPart)
 {
-    Grammar* grammar = fGrammarResolver->getGrammar(uriStr);
+
+    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uriStr);
+    Janitor<XMLSchemaDescription> janName(gramDesc);
+    Grammar* grammar = fGrammarResolver->getGrammar(gramDesc);
 
     if (grammar != 0 && grammar->getGrammarType() == Grammar::SchemaGrammarType) {
 
@@ -6369,7 +6395,10 @@ void TraverseSchema::restoreSchemaInfo(SchemaInfo* const toRestore,
         fSchemaInfo->setScopeCount(fScopeCount);
 
         int targetNSURI = toRestore->getTargetNSURI();
-        fSchemaGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(toRestore->getTargetNSURIString());
+
+        XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(toRestore->getTargetNSURIString());
+        Janitor<XMLSchemaDescription> janName(gramDesc);
+        fSchemaGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
 
         if (!fSchemaGrammar) {
             return;
@@ -6465,8 +6494,9 @@ TraverseSchema::buildValidSubstitutionListB(const DOMElement* const elem,
                 break; // an error must have occured
             }
 
-            SchemaGrammar* aGrammar = (SchemaGrammar*)
-                fGrammarResolver->getGrammar(fURIStringPool->getValueForId(chainElemURI));
+            XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(fURIStringPool->getValueForId(chainElemURI));
+            Janitor<XMLSchemaDescription> janName(gramDesc);
+            SchemaGrammar* aGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
 
             if (!aGrammar)
                 break;
@@ -6495,7 +6525,9 @@ TraverseSchema::buildValidSubstitutionListB(const DOMElement* const elem,
         while (importingEnum.hasMoreElements()) {
 
             const SchemaInfo& curRef = importingEnum.nextElement();
-            SchemaGrammar* aGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(curRef.getTargetNSURIString());
+            XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(curRef.getTargetNSURIString());
+            Janitor<XMLSchemaDescription> janName(gramDesc);
+            SchemaGrammar* aGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
             ValueVectorOf<SchemaElementDecl*>* subsElemList =
                 aGrammar->getValidSubstitutionGroups()->get(chainElemName, chainElemURI);
 
@@ -6529,8 +6561,9 @@ TraverseSchema::buildValidSubstitutionListF(const DOMElement* const elem,
                 return; // an error must have occured
             }
 
-            SchemaGrammar* aGrammar = (SchemaGrammar*)
-                fGrammarResolver->getGrammar(fURIStringPool->getValueForId(subsElemURI));
+            XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(fURIStringPool->getValueForId(subsElemURI));
+            Janitor<XMLSchemaDescription> janName(gramDesc);
+            SchemaGrammar* aGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
 
             if (!aGrammar)
                 return;
@@ -6616,7 +6649,9 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const DOMElement* const elem,
             return 0;
         }
 
-        Grammar* aGrammar = fGrammarResolver->getGrammar(uriStr);
+        XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uriStr);
+        Janitor<XMLSchemaDescription> janName(gramDesc);
+        Grammar* aGrammar = fGrammarResolver->getGrammar(gramDesc);
 
         if (!aGrammar || aGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
 
@@ -6801,8 +6836,9 @@ void TraverseSchema::processElements(const DOMElement* const elem,
 
                 if (elemURI != fTargetNSURI && elemURI != schemaURI && elemURI != fEmptyNamespaceURI) {
 
-                    Grammar* aGrammar =
-                        fGrammarResolver->getGrammar(fURIStringPool->getValueForId(elemURI));
+                    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(fURIStringPool->getValueForId(elemURI));
+                    Janitor<XMLSchemaDescription> janName(gramDesc);
+                    Grammar* aGrammar = fGrammarResolver->getGrammar(gramDesc);
 
                     if (!aGrammar || aGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
                         continue; // REVISIT - error message

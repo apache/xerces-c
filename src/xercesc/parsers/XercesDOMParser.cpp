@@ -75,6 +75,9 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
+#include <xercesc/framework/XMLSchemaDescription.hpp>
+#include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -114,7 +117,9 @@ bool XercesDOMParser::isUsingCachedGrammarInParse() const
 
 Grammar* XercesDOMParser::getGrammar(const XMLCh* const nameSpaceKey)
 {
-    return getGrammarResolver()->getGrammar(nameSpaceKey);
+    XMLSchemaDescription* gramDesc = getGrammarResolver()->getGrammarPool()->createSchemaDescription(nameSpaceKey);
+    Janitor<XMLSchemaDescription> janName(gramDesc);
+    return getGrammarResolver()->getGrammar(gramDesc);
 }
 
 Grammar* XercesDOMParser::getRootGrammar()

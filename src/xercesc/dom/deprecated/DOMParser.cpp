@@ -77,6 +77,10 @@
 #include <xercesc/util/IOException.hpp>
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
+#include <xercesc/framework/XMLSchemaDescription.hpp>
+#include <xercesc/util/Janitor.hpp>
+
 #include "DOMParser.hpp"
 #include "ElementImpl.hpp"
 #include "AttrImpl.hpp"
@@ -259,7 +263,9 @@ bool DOMParser::isUsingCachedGrammarInParse() const
 
 Grammar* DOMParser::getGrammar(const XMLCh* const nameSpaceKey)
 {
-    return fGrammarResolver->getGrammar(nameSpaceKey);
+    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(nameSpaceKey);
+    Janitor<XMLSchemaDescription> janName(gramDesc);
+    return fGrammarResolver->getGrammar(gramDesc);
 }
 
 Grammar* DOMParser::getRootGrammar()

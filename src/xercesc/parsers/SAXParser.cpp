@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/06/25 22:36:46  peiyongz
+ * to use new GrammarResolver::getGrammar()
+ *
  * Revision 1.20  2003/06/20 18:55:54  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -246,6 +249,9 @@
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
+#include <xercesc/framework/XMLSchemaDescription.hpp>
+#include <xercesc/util/Janitor.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -513,7 +519,9 @@ bool SAXParser::getStandardUriConformant() const
 
 Grammar* SAXParser::getGrammar(const XMLCh* const nameSpaceKey)
 {
-    return fGrammarResolver->getGrammar(nameSpaceKey);
+    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(nameSpaceKey);
+    Janitor<XMLSchemaDescription> janName(gramDesc);
+    return fGrammarResolver->getGrammar(gramDesc);
 }
 
 Grammar* SAXParser::getRootGrammar()

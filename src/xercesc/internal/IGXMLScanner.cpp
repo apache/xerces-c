@@ -1325,7 +1325,9 @@ void IGXMLScanner::scanDocTypeDecl()
         {
             InputSource* sysIdSrc = resolveSystemId(sysId);
             Janitor<InputSource> janSysIdSrc(sysIdSrc);
-            Grammar* grammar = fGrammarResolver->getGrammar(sysIdSrc->getSystemId());
+            XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(sysIdSrc->getSystemId());
+            Janitor<XMLDTDDescription> janName(gramDesc);
+            Grammar* grammar = fGrammarResolver->getGrammar(gramDesc);
 
             if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) {
 

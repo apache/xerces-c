@@ -78,6 +78,9 @@
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/framework/Wrapper4DOMInputSource.hpp>
+#include <xercesc/framework/XMLGrammarPool.hpp>
+#include <xercesc/framework/XMLSchemaDescription.hpp>
+#include <xercesc/util/Janitor.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -632,7 +635,9 @@ void DOMBuilderImpl::resetCachedGrammarPool()
 
 Grammar* DOMBuilderImpl::getGrammar(const XMLCh* const nameSpaceKey) const
 {
-    return getGrammarResolver()->getGrammar(nameSpaceKey);
+    XMLSchemaDescription* gramDesc = getGrammarResolver()->getGrammarPool()->createSchemaDescription(nameSpaceKey);
+    Janitor<XMLSchemaDescription> janName(gramDesc);
+    return getGrammarResolver()->getGrammar(gramDesc);
 }
 
 Grammar* DOMBuilderImpl::getRootGrammar() const

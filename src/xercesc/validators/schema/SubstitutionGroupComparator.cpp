@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/06/25 22:38:18  peiyongz
+ * to use new GrammarResolver::getGrammar()
+ *
  * Revision 1.6  2003/01/13 20:16:51  knoaman
  * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
  *
@@ -112,6 +115,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/framework/XMLGrammarPool.hpp>
+#include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
@@ -159,7 +164,9 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
     if (!uri)
         return false;
 
-    SchemaGrammar *sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uri);
+    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uri);
+    Janitor<XMLSchemaDescription> janName(gramDesc);
+    SchemaGrammar *sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
     if (!sGrammar || sGrammar->getGrammarType() == Grammar::DTDGrammarType)
         return false;
 

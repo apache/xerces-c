@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.34  2003/06/25 22:38:18  peiyongz
+ * to use new GrammarResolver::getGrammar()
+ *
  * Revision 1.33  2003/06/20 19:03:03  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -246,6 +249,7 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/KVStringPair.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
+#include <xercesc/framework/XMLSchemaDescription.hpp>
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/internal/ElemStack.hpp>
@@ -789,8 +793,9 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 
             // retrieve Grammar for the uri
             const XMLCh* uriStr = getScanner()->getURIText(uri);
-            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uriStr);
-
+            XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uriStr);
+            Janitor<XMLSchemaDescription> janName(gramDesc);
+            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
             if (!sGrammar) {
 
                 // Check built-in simple types
@@ -1692,7 +1697,9 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     const XMLCh* schemaURI = getScanner()->getURIStringPool()->getValueForId(derivedURI);
 
     if (derivedURI != getScanner()->getEmptyNamespaceId()) {
-        aGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(schemaURI);
+        XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(schemaURI);
+        Janitor<XMLSchemaDescription> janName(gramDesc);
+        aGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
     }
 
     if (!aGrammar) { //something is wrong
