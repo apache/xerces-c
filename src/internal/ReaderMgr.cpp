@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/03/20 19:12:23  roddey
+ * Fixed bug in getLastExtEntityInfo(), to avoid null pointer problem
+ * if an error is thrown very early in the parsing process (e.g. before
+ * any file can get opened.
+ *
  * Revision 1.10  2000/03/02 19:54:28  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -695,10 +700,10 @@ unsigned int ReaderMgr::getReaderDepth() const
 void ReaderMgr::getLastExtEntityInfo(LastExtEntityInfo& lastInfo) const
 {
     //
-    //  If the reader stack never got created, then we can't give this
-    //  information.
+    //  If the reader stack never got created or we've not managed to open any
+    //  main entity yet, then we can't give this information.
     //
-    if (!fReaderStack && !fCurReader)
+    if (!fReaderStack || !fCurReader)
     {
         lastInfo.systemId = XMLUni::fgZeroLenString;
         lastInfo.publicId = XMLUni::fgZeroLenString;
