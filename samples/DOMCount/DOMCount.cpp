@@ -62,12 +62,16 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/sax/SAXException.hpp>
-#include <xercesc/sax/SAXParseException.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/parsers/AbstractDOMParser.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
+#include <xercesc/dom/DOMImplementationRegistry.hpp>
+#include <xercesc/dom/DOMBuilder.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMError.hpp>
+#include <xercesc/dom/DOMLocator.hpp>
 #include "DOMCount.hpp"
 #include <string.h>
 #include <stdlib.h>
@@ -85,7 +89,7 @@ static void usage()
 {
     cout << "\nUsage:\n"
             "    DOMCount [options] <XML file | List file>\n\n"
-            "This program invokes the DOM parser, builds the DOM tree,\n"
+            "This program invokes the DOMBuilder, builds the DOM tree,\n"
             "and then prints the number of elements found in each XML file.\n\n"
             "Options:\n"
             "    -l          Indicate the input file is a List File that has a list of xml files.\n"
@@ -148,13 +152,13 @@ int main(int argC, char* argV[])
         return 1;
     }
 
-    const char*               xmlFile = 0;
-    XercesDOMParser::ValSchemes    valScheme = XercesDOMParser::Val_Auto;
-    bool                      doNamespaces       = false;
-    bool                      doSchema           = false;
-    bool                      schemaFullChecking = false;
-    bool                      doList = false;
-    bool                      errorOccurred = false;
+    const char*                xmlFile = 0;
+    AbstractDOMParser::ValSchemes valScheme = AbstractDOMParser::Val_Auto;
+    bool                       doNamespaces       = false;
+    bool                       doSchema           = false;
+    bool                       schemaFullChecking = false;
+    bool                       doList = false;
+    bool                       errorOccurred = false;
 
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
@@ -176,11 +180,11 @@ int main(int argC, char* argV[])
             const char* const parm = &argV[argInd][3];
 
             if (!strcmp(parm, "never"))
-                valScheme = XercesDOMParser::Val_Never;
+                valScheme = AbstractDOMParser::Val_Never;
             else if (!strcmp(parm, "auto"))
-                valScheme = XercesDOMParser::Val_Auto;
+                valScheme = AbstractDOMParser::Val_Auto;
             else if (!strcmp(parm, "always"))
-                valScheme = XercesDOMParser::Val_Always;
+                valScheme = AbstractDOMParser::Val_Always;
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
@@ -227,11 +231,29 @@ int main(int argC, char* argV[])
     }
 
     // Instantiate the DOM parser.
-    XercesDOMParser* parser = new XercesDOMParser;
-    parser->setValidationScheme(valScheme);
-    parser->setDoNamespaces(doNamespaces);
-    parser->setDoSchema(doSchema);
-    parser->setValidationSchemaFullChecking(schemaFullChecking);
+    static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
+    DOMImplementation *impl = DOMImplementationRegistry::getDOMImplementation(gLS);
+    DOMBuilder        *parser = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
+
+    parser->setFeature(XMLUni::fgDOMNamespaces, doNamespaces);
+    parser->setFeature(XMLUni::fgXercesSchema, doSchema);
+    parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
+
+    if (valScheme == AbstractDOMParser::Val_Auto)
+    {
+        parser->setFeature(XMLUni::fgDOMValidateIfSchema, true);
+    }
+    else if (valScheme == AbstractDOMParser::Val_Never)
+    {
+        parser->setFeature(XMLUni::fgDOMValidation, false);
+    }
+    else if (valScheme == AbstractDOMParser::Val_Always)
+    {
+        parser->setFeature(XMLUni::fgDOMValidation, true);
+    }
+
+    // enable datatype normalization - default is off
+    parser->setFeature(XMLUni::fgDOMDatatypeNormalization, true);
 
     // And create our error handler and install it
     DOMCountErrorHandler errorHandler;
@@ -277,11 +299,15 @@ int main(int argC, char* argV[])
         //reset error count first
         errorHandler.resetErrors();
 
+        DOMDocument *doc = 0;
+
         try
         {
+            // reset document pool
+            parser->setFeature(XMLUni::fgXercesResetDocumentPool, true);
+
             const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-            parser->resetDocumentPool();
-            parser->parse(xmlFile);
+            doc = parser->parseURI(xmlFile);
             const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
             duration = endMillis - startMillis;
         }
@@ -320,7 +346,6 @@ int main(int argC, char* argV[])
         }
          else
         {
-            DOMDocument *doc = parser->getDocument();
             unsigned int elementCount = 0;
             if (doc) {
                 elementCount = countChildElements((DOMNode*)doc->getDocumentElement());
@@ -371,32 +396,24 @@ DOMCountErrorHandler::~DOMCountErrorHandler()
 
 
 // ---------------------------------------------------------------------------
-//  DOMCountHandlers: Overrides of the SAX ErrorHandler interface
+//  DOMCountHandlers: Overrides of the DOM ErrorHandler interface
 // ---------------------------------------------------------------------------
-void DOMCountErrorHandler::error(const SAXParseException& e)
+bool DOMCountErrorHandler::handleError(const DOMError& domError)
 {
     fSawErrors = true;
-    cerr << "\nError at file " << StrX(e.getSystemId())
-         << ", line " << e.getLineNumber()
-         << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
-}
+    if (domError.getSeverity() == DOMError::DOM_SEVERITY_WARNING)
+        cerr << "\nWarning at file ";
+    else if (domError.getSeverity() == DOMError::DOM_SEVERITY_ERROR)
+        cerr << "\nError at file ";
+    else
+        cerr << "\nFatal Error at file ";
 
-void DOMCountErrorHandler::fatalError(const SAXParseException& e)
-{
-    fSawErrors = true;
-    cerr << "\nFatal Error at file " << StrX(e.getSystemId())
-         << ", line " << e.getLineNumber()
-         << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
-}
+    cerr << StrX(domError.getLocation()->getURI())
+         << ", line " << domError.getLocation()->getLineNumber()
+         << ", char " << domError.getLocation()->getColumnNumber()
+         << "\n  Message: " << StrX(domError.getMessage()) << endl;
 
-void DOMCountErrorHandler::warning(const SAXParseException& e)
-{
-    cerr << "\nWarning at file " << StrX(e.getSystemId())
-         << ", line " << e.getLineNumber()
-         << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+    return false;
 }
 
 void DOMCountErrorHandler::resetErrors()

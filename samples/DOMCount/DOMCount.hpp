@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/06/18 16:19:40  knoaman
+ * Replace XercesDOMParser with DOMBuilder for parsing XML documents.
+ *
  * Revision 1.6  2002/02/01 22:35:01  peiyongz
  * sane_include
  *
@@ -84,16 +87,15 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/sax/ErrorHandler.hpp>
+#include <xercesc/dom/DOMErrorHandler.hpp>
+#include <xercesc/util/XMLString.hpp>
 #include <iostream.h>
-
-class SAXParseException;
 
 
 // ---------------------------------------------------------------------------
 //  Simple error handler deriviative to install on parser
 // ---------------------------------------------------------------------------
-class DOMCountErrorHandler : public ErrorHandler
+class DOMCountErrorHandler : public DOMErrorHandler
 {
 public:
     // -----------------------------------------------------------------------
@@ -110,11 +112,9 @@ public:
 
 
     // -----------------------------------------------------------------------
-    //  Implementation of the SAX ErrorHandler interface
+    //  Implementation of the DOM ErrorHandler interface
     // -----------------------------------------------------------------------
-    void warning(const SAXParseException& e);
-    void error(const SAXParseException& e);
-    void fatalError(const SAXParseException& e);
+    bool handleError(const DOMError& domError);
     void resetErrors();
 
 
