@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/09/14 13:57:59  peiyongz
+ * exponent is a must if 'E' or 'e' is present.
+ *
  * Revision 1.10  2001/08/23 11:54:26  tng
  * Add newline at the end and various typo fixes.
  *
@@ -284,7 +287,9 @@ void XMLDouble::init(const XMLCh* const strValue)
         //
         else
         {
-            fExponent = new XMLBigInteger(XMLUni::fgZeroString);
+            ThrowXML1(NumberFormatException
+                    , XMLExcepts::XMLNUM_DBL_FLT_No_Exponent
+                    , strValue);
         }
 
     }
