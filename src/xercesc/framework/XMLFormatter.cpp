@@ -144,24 +144,21 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
                             ,       XMLFormatTarget* const  target
                             , const EscapeFlags             escapeFlags
                             , const UnRepFlags              unrepFlags) :
-
     fEscapeFlags(escapeFlags)
     , fOutEncoding(0)
     , fTarget(target)
     , fUnRepFlags(unrepFlags)
-    , fXCoder(0)
-
+    , fXCoder(0)  
     , fAposRef(0)
-    , fAmpRef(0)
+    , fAmpRef(0)    
     , fGTRef(0)
     , fLTRef(0)
     , fQuoteRef(0)
-
     , fAposLen(0)
-    , fAmpLen(0)
+    , fAmpLen(0)    
     , fGTLen(0)
     , fLTLen(0)
-    , fQuoteLen(0)
+    , fQuoteLen(0) 
 {
     // Transcode the encoding string
     fOutEncoding = XMLString::transcode(outEncoding);
@@ -277,70 +274,26 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
     }
 
     //
-    //  Use that to figure out what I should pass to the transcoder. If we
-    //  are doing character references or failing for unrepresentable chars,
-    //  then we just throw, since we should never get a call for something
-    //  we cannot represent. Else, we tell it to just use the replacement
-    //  char.
-    //
-    const XMLTranscoder::UnRepOpts unRepOpts = (actualUnRep == UnRep_Replace)
-                                             ? XMLTranscoder::UnRep_RepChar
-                                             : XMLTranscoder::UnRep_Throw;
-    //
     //  If we don't have any escape flags set, then we can do the most
     //  efficient loop, else we have to do it the hard way.
     //
     const XMLCh*    srcPtr = toFormat;
     const XMLCh*    endPtr = toFormat + count;
-    unsigned int    charsEaten;
     if (actualEsc == NoEscapes)
     {
         //
-        //  Just do a whole buffer at a time into the temp buffer, cap it
-        //  off, and send it to the target.
+        //  Just do a whole buffer at a time into the temp buffer, cap 
+        //  it off, and send it to the target. 
         //
-        while (srcPtr < endPtr)
-        {
-            const unsigned int srcCount = endPtr - srcPtr;
-            const unsigned srcChars = srcCount > kTmpBufSize ?
-                                      kTmpBufSize : srcCount;
-
-            const unsigned int outBytes = fXCoder->transcodeTo
-            (
-                srcPtr
-                , srcChars
-                , fTmpBuf
-                , kTmpBufSize
-                , charsEaten
-                , unRepOpts
-            );
-
-            #if defined(XML_DEBUG)
-            if ((outBytes > kTmpBufSize)
-            ||  (charsEaten > srcCount))
-            {
-                // <TBD> The transcoder is freakin out maaaannn
-            }
-            #endif
-
-            // If we get any bytes out, then write them
-            if (outBytes)
-            {
-                fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
-                fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-                fTarget->writeChars(fTmpBuf, outBytes, this);
-            }
-
-            // And bump up our pointer
-            srcPtr += charsEaten;
-        }
+        if (srcPtr < endPtr)
+           srcPtr += handleUnEscapedChars(srcPtr, endPtr - srcPtr, actualUnRep); 
     }
      else
     {
         //
-        //  Escap chars that require it according tot he scale flags we were
-        //  given. For the others, try to accumulate them and format them in
-        //  as big as bulk as we can.
+        //  Escape chars that require it according tot he scale flags 
+        //  we were given. For the others, try to accumulate them and 
+        //  format them in as big as bulk as we can. 
         //
         while (srcPtr < endPtr)
         {
@@ -358,78 +311,40 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
             //  out.
             //
             if (tmpPtr > srcPtr)
-            {
-                unsigned int srcCount = tmpPtr - srcPtr;
+               srcPtr += handleUnEscapedChars(srcPtr, tmpPtr - srcPtr,  
+                                              actualUnRep); 
 
-                while (srcCount) {
-
-                    const unsigned srcChars = srcCount > kTmpBufSize ?
-                                              kTmpBufSize : srcCount;
-
-                    const unsigned int outBytes = fXCoder->transcodeTo
-                    (
-                        srcPtr
-                        , srcChars
-                        , fTmpBuf
-                        , kTmpBufSize
-                        , charsEaten
-                        , unRepOpts
-                    );
-
-                    #if defined(XML_DEBUG)
-                    if ((outBytes > kTmpBufSize)
-                    ||  (charsEaten > srcCount))
-                    {
-                        // <TBD> The transcoder is freakin out maaaannn
-                    }
-                    #endif
-
-                    // If we get any bytes out, then write them
-                    if (outBytes)
-                    {
-                        fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
-                        fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-                        fTarget->writeChars(fTmpBuf, outBytes, this);
-                    }
-
-                    // And bump up our pointer
-                    srcPtr += charsEaten;
-                    srcCount -= charsEaten;
-                }
-            }
              else if (tmpPtr < endPtr)
             {
                 //
                 //  Ok, so we've hit a char that must be escaped. So do
                 //  this one specially.
                 //
-                const XMLByte * theChars;
-                unsigned int count = 0;
-                switch(*srcPtr)
-                {
+                const XMLByte * theChars;                
+                switch (*srcPtr) { 
                     case chAmpersand :
-                        theChars = getAmpRef(count);
-                        fTarget->writeChars(theChars, count, this);
+                   theChars = getCharRef(fAmpLen, fAmpRef, gAmpRef); 
+                        fTarget->writeChars(theChars, fAmpLen, this);
                         break;
 
                     case chSingleQuote :
-                        theChars = getAposRef(count);
-                        fTarget->writeChars(theChars, count, this);
+                   theChars = getCharRef(fAposLen, fAposRef, gAposRef); 
+                        fTarget->writeChars(theChars, fAposLen, this);
                         break;
 
                     case chDoubleQuote :
-                        theChars = getQuoteRef(count);
-                        fTarget->writeChars(theChars, count, this);
+                   theChars = getCharRef(fQuoteLen, fQuoteRef, gQuoteRef); 
+                        fTarget->writeChars(theChars, fQuoteLen, this);
                         break;
 
                     case chCloseAngle :
-                        theChars = getGTRef(count);
-                        fTarget->writeChars(theChars, count, this);
+                   theChars = getCharRef(fGTLen, fGTRef, gGTRef); 
+                        fTarget->writeChars(theChars, fGTLen, this);
                         break;
 
                     case chOpenAngle :
-                        theChars = getLTRef(count);
-                        fTarget->writeChars(theChars, count, this);
+                   theChars = getCharRef(fLTLen, fLTRef, gLTRef); 
+                        fTarget->writeChars(theChars, fLTLen, this);
                         break;
 
                     default:
@@ -442,6 +357,49 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
     }
 }
 
+ 
+unsigned int 
+XMLFormatter::handleUnEscapedChars(const XMLCh *                  srcPtr, 
+                                   const unsigned int             oCount, 
+                                   const UnRepFlags               actualUnRep) 
+{ 
+   //
+   //  Use that to figure out what I should pass to the transcoder. If we
+   //  are doing character references or failing for unrepresentable chars,
+   //  then we just throw, since we should never get a call for something
+   //  we cannot represent. Else, we tell it to just use the replacement
+   //  char.
+   //
+   const XMLTranscoder::UnRepOpts unRepOpts = (actualUnRep == UnRep_Replace)
+                                             ? XMLTranscoder::UnRep_RepChar
+                                             : XMLTranscoder::UnRep_Throw;
+                                             	
+   unsigned int charsEaten; 
+   unsigned int count = oCount; 
+ 
+   while (count) { 
+      const unsigned srcChars  
+         = count > kTmpBufSize ? kTmpBufSize : count; 
+ 
+      const unsigned int outBytes  
+         = fXCoder->transcodeTo(srcPtr, srcChars,  
+                                fTmpBuf, kTmpBufSize, 
+                                charsEaten, unRepOpts); 
+ 
+      if (outBytes) { 
+         fTmpBuf[outBytes]     = 0; fTmpBuf[outBytes + 1] = 0; 
+         fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0; 
+         fTarget->writeChars(fTmpBuf, outBytes, this); 
+      } 
+ 
+      srcPtr += charsEaten; 
+      count  -= charsEaten; 
+   } 
+    
+   return oCount; // This should be an assertion that count == 0. 
+} 
+ 
+ 
 XMLFormatter& XMLFormatter::operator<<(const XMLCh* const toFormat)
 {
     const unsigned int len = XMLString::stringLen(toFormat);
@@ -474,139 +432,26 @@ void XMLFormatter::writeBOM(const XMLByte* const toFormat
 // ---------------------------------------------------------------------------
 //  XMLFormatter: Private helper methods
 // ---------------------------------------------------------------------------
-const XMLByte* XMLFormatter::getAposRef(unsigned int & count)
+const XMLByte* XMLFormatter::getCharRef(unsigned int & count, 
+                                        XMLByte *      ref, 
+                                        const XMLCh *  stdRef) 
 {
-    if (fAposRef)
-    {
-        count = fAposLen;
-        return fAposRef;
-    }
-
+   if (!ref) { 
     unsigned int charsEaten;
-    const unsigned int outBytes = fXCoder->transcodeTo
-    (
-        gAposRef
-        , XMLString::stringLen(gAposRef)
-        , fTmpBuf
-        , kTmpBufSize
-        , charsEaten
-        , XMLTranscoder::UnRep_Throw
-    );
+      const unsigned int outBytes  
+         = fXCoder->transcodeTo(stdRef, XMLString::stringLen(stdRef), 
+                                fTmpBuf, kTmpBufSize, charsEaten, 
+                                XMLTranscoder::UnRep_Throw); 
+
     fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
     fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
 
-    ((XMLFormatter*)this)->fAposRef = new XMLByte[outBytes + 4];
-    memcpy(fAposRef, fTmpBuf, outBytes + 4);
-    count = fAposLen = outBytes;
-    return fAposRef;
-}
-
-const XMLByte* XMLFormatter::getAmpRef(unsigned int & count)
-{
-    if (fAmpRef)
-    {
-        count = fAmpLen;
-        return fAmpRef;
+      ref = new XMLByte[outBytes + 4]; 
+      memcpy(ref, fTmpBuf, outBytes + 4); 
+      count = outBytes; 
     }
 
-    unsigned int charsEaten;
-    const unsigned int outBytes = fXCoder->transcodeTo
-    (
-        gAmpRef
-        , XMLString::stringLen(gAmpRef)
-        , fTmpBuf
-        , kTmpBufSize
-        , charsEaten
-        , XMLTranscoder::UnRep_Throw
-    );
-    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
-    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-
-    ((XMLFormatter*)this)->fAmpRef = new XMLByte[outBytes + 4];
-    memcpy(fAmpRef, fTmpBuf, outBytes + 4);
-    count = fAmpLen = outBytes;
-    return fAmpRef;
-}
-
-const XMLByte* XMLFormatter::getGTRef(unsigned int & count)
-{
-    if (fGTRef)
-    {
-        count = fGTLen;
-        return fGTRef;
-    }
-
-    unsigned int charsEaten;
-    const unsigned int outBytes = fXCoder->transcodeTo
-    (
-        gGTRef
-        , XMLString::stringLen(gGTRef)
-        , fTmpBuf
-        , kTmpBufSize
-        , charsEaten
-        , XMLTranscoder::UnRep_Throw
-    );
-    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
-    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-
-    ((XMLFormatter*)this)->fGTRef = new XMLByte[outBytes + 4];
-    memcpy(fGTRef, fTmpBuf, outBytes + 4);
-    count = fGTLen = outBytes;
-    return fGTRef;
-}
-
-const XMLByte* XMLFormatter::getLTRef(unsigned int & count)
-{
-    if (fLTRef)
-    {
-        count = fLTLen;
-        return fLTRef;
-    }
-
-    unsigned int charsEaten;
-    const unsigned int outBytes = fXCoder->transcodeTo
-    (
-        gLTRef
-        , XMLString::stringLen(gLTRef)
-        , fTmpBuf
-        , kTmpBufSize
-        , charsEaten
-        , XMLTranscoder::UnRep_Throw
-    );
-    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
-    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-
-    ((XMLFormatter*)this)->fLTRef = new XMLByte[outBytes + 4];
-    memcpy(fLTRef, fTmpBuf, outBytes + 4);
-    count = fLTLen = outBytes;
-    return fLTRef;
-}
-
-const XMLByte* XMLFormatter::getQuoteRef(unsigned int & count)
-{
-    if (fQuoteRef)
-    {
-        count = fQuoteLen;
-        return fQuoteRef;
-    }
-
-    unsigned int charsEaten;
-    const unsigned int outBytes = fXCoder->transcodeTo
-    (
-        gQuoteRef
-        , XMLString::stringLen(gQuoteRef)
-        , fTmpBuf
-        , kTmpBufSize
-        , charsEaten
-        , XMLTranscoder::UnRep_Throw
-    );
-    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
-    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-
-    ((XMLFormatter*)this)->fQuoteRef = new XMLByte[outBytes + 4];
-    memcpy(fQuoteRef, fTmpBuf, outBytes + 4);
-    count = fQuoteLen = outBytes;
-    return fQuoteRef;
+   return ref; 
 }
 
 
@@ -658,7 +503,7 @@ void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
         }
          else
         {
-            //
+ 
             //  We hit something unrepresentable. So continue forward doing
             //  char refs until we hit something representable again or the
             //  end of input.

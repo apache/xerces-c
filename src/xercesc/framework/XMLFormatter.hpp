@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/03/07 21:42:37  tng
+ * [Bug 17589] Refactoring ... .  Patch from Jacques Legare.
+ *
  * Revision 1.8  2003/03/07 18:08:10  tng
  * Return a reference instead of void for operator=
  *
@@ -401,11 +404,13 @@ private :
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    const XMLByte* getAposRef(unsigned int & count);
-    const XMLByte* getAmpRef(unsigned int & count);
-    const XMLByte* getGTRef(unsigned int & count);
-    const XMLByte* getLTRef(unsigned int & count);
-    const XMLByte* getQuoteRef(unsigned int & count);
+    const XMLByte* getCharRef(unsigned int & count, 
+                              XMLByte *      ref, 
+                              const XMLCh *  stdRef);  
+ 
+   unsigned int handleUnEscapedChars(const XMLCh *                  srcPtr, 
+                                     unsigned int                   count, 
+                                     const UnRepFlags               unrepFlags);
 
     void specialFormat
     (
@@ -499,7 +504,7 @@ protected :
     // -----------------------------------------------------------------------
     XMLFormatTarget() {}
     XMLFormatTarget(const XMLFormatTarget&) {}
-    XMLFormatTarget& operator=(const XMLFormatTarget&) {return *this;}
+    void operator=(const XMLFormatTarget&) {}
 };
 
 
