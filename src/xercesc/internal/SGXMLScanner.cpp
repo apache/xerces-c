@@ -2055,9 +2055,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         //if schema, see if we should lax or skip the validation of this attribute
                         if (anyAttributeValidation(attWildCard, uriId, skipThisOne, laxThisOne)) {
 
-                            XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(getURIText(uriId));
-                            Janitor<XMLSchemaDescription> janName(gramDesc);
-                            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
+                            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
                             if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
                                 RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
                                 if (attRegistry) {
@@ -3064,9 +3062,7 @@ void SGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 
 void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {
 
-    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uri);
-    Janitor<XMLSchemaDescription> janName(gramDesc);
-    Grammar* grammar = fGrammarResolver->getGrammar(gramDesc);
+    Grammar* grammar = fGrammarResolver->getGrammar(uri);
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
         XSDDOMParser parser(0, fMemoryManager, 0);
@@ -3168,9 +3164,7 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
                     }
 
-                    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(newUri);
-                    Janitor<XMLSchemaDescription> janName(gramDesc);
-                    grammar = fGrammarResolver->getGrammar(gramDesc);
+                    grammar = fGrammarResolver->getGrammar(newUri);
                 }
 
                 if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
@@ -3183,6 +3177,9 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     }
 
                     grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+                    XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
+                    gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
+                    gramDesc->setLocationHints(srcToFill->getSystemId());
 
                     TraverseSchema traverseSchema
                     (
@@ -3336,6 +3333,10 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         if (root != 0)
         {
             SchemaGrammar* grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+            XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
+            gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
+            gramDesc->setLocationHints(src.getSystemId());
+
             TraverseSchema traverseSchema
             (
                 root
@@ -3989,9 +3990,7 @@ SGXMLScanner::scanEntityRef(  const   bool    inAttVal
 
 bool SGXMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
 {
-    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(newGrammarNameSpace);
-    Janitor<XMLSchemaDescription> janName(gramDesc);
-    Grammar* tempGrammar = fGrammarResolver->getGrammar(gramDesc);
+    Grammar* tempGrammar = fGrammarResolver->getGrammar(newGrammarNameSpace);
 
     if (!tempGrammar) {
         tempGrammar = fSchemaGrammar;

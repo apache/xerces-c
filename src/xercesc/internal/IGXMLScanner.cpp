@@ -1328,9 +1328,7 @@ void IGXMLScanner::scanDocTypeDecl()
         {
             InputSource* sysIdSrc = resolveSystemId(sysId);
             Janitor<InputSource> janSysIdSrc(sysIdSrc);
-            XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(sysIdSrc->getSystemId());
-            Janitor<XMLDTDDescription> janName(gramDesc);
-            Grammar* grammar = fGrammarResolver->getGrammar(gramDesc);
+            Grammar* grammar = fGrammarResolver->getGrammar(sysIdSrc->getSystemId());
 
             if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) {
 
@@ -1386,10 +1384,9 @@ void IGXMLScanner::scanDocTypeDecl()
                 unsigned int stringId = fGrammarResolver->getStringPool()->addOrFind(srcUsed->getSystemId());
                 const XMLCh* sysIdStr = fGrammarResolver->getStringPool()->getValueForId(stringId);
 
-                XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
-                fGrammarResolver->orphanGrammar(gramDesc);
-                gramDesc->setRootName(sysIdStr);
-                fGrammarResolver->putGrammar(gramDesc, fGrammar);
+                fGrammarResolver->orphanGrammar(XMLUni::fgDTDEntityString);
+                ((XMLDTDDescription*) (fGrammar->getGrammarDescription()))->setRootName(sysIdStr);
+                fGrammarResolver->putGrammar(fGrammar);
             }
 
             //  In order to make the processing work consistently, we have to
@@ -2855,8 +2852,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     }
 
     fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
-    XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
-    fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
+    fGrammarResolver->putGrammar(fDTDGrammar);
     fGrammar = fDTDGrammar;
     fGrammarType = fGrammar->getGrammarType();
     fValidator->setGrammar(fGrammar);
@@ -2877,11 +2873,10 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
 
         unsigned int sysId = fGrammarResolver->getStringPool()->addOrFind(src.getSystemId());
         const XMLCh* sysIdStr = fGrammarResolver->getStringPool()->getValueForId(sysId);
-
-        XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
-        fGrammarResolver->orphanGrammar(gramDesc);
-        gramDesc->setRootName(sysIdStr);
-        fGrammarResolver->putGrammar(gramDesc, fGrammar);
+              
+        fGrammarResolver->orphanGrammar(XMLUni::fgDTDEntityString);
+        ((XMLDTDDescription*) (fGrammar->getGrammarDescription()))->setRootName(sysIdStr);
+        fGrammarResolver->putGrammar(fGrammar);
     }
 
     //  Handle the creation of the XML reader object for this input source.

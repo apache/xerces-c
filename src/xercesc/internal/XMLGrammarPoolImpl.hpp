@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/07/31 17:05:03  peiyongz
+ * Grammar embed Grammar Description
+ * using getGrammar(URI)
+ * update GrammarDescription info
+ *
  * Revision 1.2  2003/06/23 21:06:21  peiyongz
  * to solve unresolved symbol on Solaris
  *
@@ -73,8 +78,6 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-class GrammarEntry;
 
 class XMLUTIL_EXPORT XMLGrammarPoolImpl : public XMLGrammarPool
 {
@@ -97,12 +100,10 @@ public :
     /**
       * cacheGrammar
       *
-      * @param gramDesc:    the grammar description
       * @param gramToCache: the Grammar to be cached in the grammar pool
 	  *
       */
-    virtual void           cacheGrammar(XMLGrammarDescription* const gramDesc 
-                                      , Grammar* const               gramToCache);
+    virtual void           cacheGrammar(Grammar* const               gramToCache);
     
 
     /**
@@ -120,11 +121,10 @@ public :
       *
 	  * grammar removed from the grammar pool and owned by the caller
       *
-      * @param gramDesc: the Grammar Description used to search for grammar
-	  *                  cached in the grammar pool
+      * @param nameSpaceKey: Key sed to search for grammar in the grammar pool
 	  *
       */
-    virtual Grammar*       orphanGrammar(XMLGrammarDescription* const);  
+    virtual Grammar*       orphanGrammar(const XMLCh* const nameSpaceKey);  
 
     /**
       * clear
@@ -196,55 +196,9 @@ private:
 	//    container
     //
     // -----------------------------------------------------------------------
-    RefHashTableOf<GrammarEntry>* fGrammarRegistry; 
+    RefHashTableOf<Grammar>* fGrammarRegistry; 
 
 };
-
-/**
- * Helper class, ought to be nested class
- */
-class GrammarEntry : public XMemory
-{
-public:
-    GrammarEntry(XMLGrammarDescription* const  gramDesc
-               , Grammar* const                grammar);
-
-    ~GrammarEntry();
-
-    inline XMLGrammarDescription*      getDescription() const;
-
-    inline Grammar*                    getGrammar() const;
-
-    inline void                        nullGrammar();
-
-    inline void                        nullDescription();
-
-private:
-
-    XMLGrammarDescription*     fDescription;
-    Grammar*                   fGrammar;
-
-};
-
-inline XMLGrammarDescription* GrammarEntry::getDescription() const
-{
-    return fDescription;
-}
-
-inline Grammar* GrammarEntry::getGrammar() const
-{
-    return fGrammar;
-}
-
-inline void GrammarEntry::nullGrammar()
-{
-    fGrammar = 0;
-}
-
-inline void GrammarEntry::nullDescription()
-{
-    fDescription = 0;
-}
 
 XERCES_CPP_NAMESPACE_END
 

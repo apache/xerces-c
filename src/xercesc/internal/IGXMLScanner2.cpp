@@ -217,9 +217,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         //if schema, see if we should lax or skip the validation of this attribute
                         if (anyAttributeValidation(attWildCard, uriId, skipThisOne, laxThisOne)) {
 
-                            XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(getURIText(uriId));
-                            Janitor<XMLSchemaDescription> janName(gramDesc);
-                            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
+                            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
                             if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
                                 RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
                                 if (attRegistry) {
@@ -457,7 +455,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  to the handler. We reuse its existing elements but expand it as
         //  required.
         XMLAttr* curAttr;
-
+        
         // check for duplicate namespace attributes:
         // by checking for qualified names with the same local part and with prefixes 
         // which have been bound to namespace names that are identical. 
@@ -475,7 +473,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 }
             }  
         }
-
+        
         if (retCount >= curAttListSize)
         {
             curAttr = new (fMemoryManager) XMLAttr
@@ -889,8 +887,7 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
     fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
-    XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
-    fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
+    fGrammarResolver->putGrammar(fDTDGrammar);
     fGrammar = fDTDGrammar;
     fGrammarType = fGrammar->getGrammarType();
     fRootGrammar = 0;
@@ -1316,9 +1313,7 @@ void IGXMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 
 void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {
 
-    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uri);
-    Janitor<XMLSchemaDescription> janName(gramDesc);
-    Grammar* grammar = fGrammarResolver->getGrammar(gramDesc);
+    Grammar* grammar = fGrammarResolver->getGrammar(uri);
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
         XSDDOMParser parser(0, fMemoryManager, 0);
@@ -1420,9 +1415,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
                     }
 
-                    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(newUri);
-                    Janitor<XMLSchemaDescription> janName(gramDesc);
-                    grammar = fGrammarResolver->getGrammar(gramDesc);
+                    grammar = fGrammarResolver->getGrammar(newUri);
                 }
 
                 if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
@@ -1447,6 +1440,10 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                     }
 
                     grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+                    XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
+                    gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
+                    gramDesc->setLocationHints(srcToFill->getSystemId());
+
                     TraverseSchema traverseSchema
                     (
                         root
@@ -1617,7 +1614,11 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
         if (root != 0)
         {
-            SchemaGrammar* grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+            SchemaGrammar* grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);                   
+            XMLSchemaDescription* gramDesc = (XMLSchemaDescription*) grammar->getGrammarDescription();
+            gramDesc->setContextType(XMLSchemaDescription::CONTEXT_PREPARSE);
+            gramDesc->setLocationHints(src.getSystemId());
+
             TraverseSchema traverseSchema
             (
                 root
@@ -2627,9 +2628,7 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
 
 bool IGXMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
 {
-    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(newGrammarNameSpace);
-    Janitor<XMLSchemaDescription> janName(gramDesc);
-    Grammar* tempGrammar = fGrammarResolver->getGrammar(gramDesc);
+    Grammar* tempGrammar = fGrammarResolver->getGrammar(newGrammarNameSpace);
 
     if (!tempGrammar) {
         // This is a case where namespaces is on with a DTD grammar.

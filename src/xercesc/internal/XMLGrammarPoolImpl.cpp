@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/07/31 17:05:03  peiyongz
+ * Grammar embed Grammar Description
+ * using getGrammar(URI)
+ * update GrammarDescription info
+ *
  * Revision 1.2  2003/06/20 22:19:30  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -90,26 +95,25 @@ XMLGrammarPoolImpl::XMLGrammarPoolImpl(MemoryManager* const memMgr)
 :XMLGrammarPool(memMgr)
 ,fGrammarRegistry(0)
 {
-    fGrammarRegistry = new (memMgr) RefHashTableOf<GrammarEntry>(29, true, memMgr);
+    fGrammarRegistry = new (memMgr) RefHashTableOf<Grammar>(29, true, memMgr);
 }
 
 // -----------------------------------------------------------------------
 // Implementation of Grammar Pool Interface 
 // -----------------------------------------------------------------------
-void XMLGrammarPoolImpl::cacheGrammar(XMLGrammarDescription* const gramDesc
-                                    , Grammar* const               gramToCache )
+void XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
 {
-    if (!gramDesc || !gramToCache )
+    if (!gramToCache )
         return;
 
-    const XMLCh* grammarKey = gramDesc->getGrammarKey();
+    const XMLCh* grammarKey = gramToCache->getGrammarDescription()->getGrammarKey();
 
     if (fGrammarRegistry->containsKey(grammarKey)) 
     {
         ThrowXML(RuntimeException, XMLExcepts::GC_ExistingGrammar);
     }
 
-    fGrammarRegistry->put((void*) grammarKey, new (getMemoryManager()) GrammarEntry(gramDesc, gramToCache)); 
+    fGrammarRegistry->put((void*) grammarKey, gramToCache); 
 
 }
 
@@ -118,32 +122,16 @@ Grammar* XMLGrammarPoolImpl::retrieveGrammar(XMLGrammarDescription* const gramDe
     if (!gramDesc)
         return 0;
 
-    GrammarEntry* gramEntry = fGrammarRegistry->get(gramDesc->getGrammarKey());
+    /***
+     * This implementation simply use GrammarKey
+     */
+    return fGrammarRegistry->get(gramDesc->getGrammarKey());
     
-    if (!gramEntry)
-        return 0;
-
-    return gramEntry->getGrammar();
 }
 
-Grammar* XMLGrammarPoolImpl::orphanGrammar(XMLGrammarDescription* const gramDesc)
+Grammar* XMLGrammarPoolImpl::orphanGrammar(const XMLCh* const nameSpaceKey)
 {
-    if (!gramDesc)
-        return 0;
-
-    GrammarEntry* gramEntry = fGrammarRegistry->orphanKey(gramDesc->getGrammarKey()); 
-
-    if (!gramEntry)
-        return 0;
-
-    /***
-     * Delete the grammarEntry but don't delete the grammar
-     */
-    Grammar* theGram = gramEntry->getGrammar();
-    gramEntry->nullGrammar();
-    delete gramEntry;
-
-    return theGram;
+    return fGrammarRegistry->orphanKey(nameSpaceKey); 
 }
 
 void XMLGrammarPoolImpl::clear()
@@ -182,32 +170,6 @@ XMLDTDDescription*  XMLGrammarPoolImpl::createDTDDescription(const XMLCh* const 
 XMLSchemaDescription* XMLGrammarPoolImpl::createSchemaDescription(const XMLCh* const targetNamespace)
 {
 	return new (getMemoryManager()) XMLSchemaDescriptionImpl(targetNamespace, getMemoryManager()); 
-}
-
-// ---------------------------------------------------------------------------
-//  GrammarEntry: constructor and destructor
-// ---------------------------------------------------------------------------
-GrammarEntry::GrammarEntry(XMLGrammarDescription* const  gramDesc
-                         , Grammar* const                grammar)
-:fDescription(gramDesc)
-,fGrammar(grammar)
-{
-}
-
-/**
- *
- * A GrammarEntry is desctructed in two ways
- *    . from clear(), we need to destroy the GrammarDescription and Grammar
- *    . from orphanGrammar()
- *
- */
-GrammarEntry::~GrammarEntry()
-{
-    if (fDescription)
-        delete fDescription;
-
-    if (fGrammar)
-        delete fGrammar;
 }
 
 XERCES_CPP_NAMESPACE_END
