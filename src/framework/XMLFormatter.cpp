@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/04/07 01:01:55  roddey
+ * Fixed an error message so that it indicated the correct radix for the rep
+ * token. Get all of the basic output formatting functionality in place for
+ * at least ICU and Win32 transcoders.
+ *
  * Revision 1.4  2000/04/06 23:50:38  roddey
  * Now the low level formatter handles doing char refs for
  * unrepresentable chars (in addition to the replacement char style
@@ -295,7 +300,6 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
     const XMLTranscoder::UnRepOpts unRepOpts = (actualUnRep == UnRep_Replace)
                                              ? XMLTranscoder::UnRep_RepChar
                                              : XMLTranscoder::UnRep_Throw;
-
     //
     //  If we don't have any escape flags set, then we can do the most
     //  efficient loop, else we have to do it the hard way.
@@ -347,12 +351,9 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
      else
     {
         //
-        //  This one just escapes the standard set of XML defined character
-        //  refs: apos, amp, lt, gt, and quot.
-        //
-        //  For now, just whimp out and do it the simple but slow way in
-        //  order to get this concept out for evaluation. Come back later
-        //  and spiff it up.
+        //  Escap chars that require it according tot he scale flags we were
+        //  given. For the others, try to accumulate them and format them in
+        //  as big as bulk as we can.
         //
         while (srcPtr < endPtr)
         {
@@ -406,45 +407,37 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
              else if (tmpPtr < endPtr)
             {
                 //
-                //  Ok, so we've hit a char that must be escaped. So loop
-                //  until we hit the end or a non-escaped char and put out
-                //  char refs for these.
+                //  Ok, so we've hit a char that must be escaped. So do
+                //  this one specially.
                 //
-                bool done = false;
-                while ((srcPtr < endPtr) && !done)
+                switch(*srcPtr)
                 {
-                    switch(*srcPtr)
-                    {
-                        case chAmpersand :
-                            fTarget->writeChars(getAmpRef());
-                            break;
+                    case chAmpersand :
+                        fTarget->writeChars(getAmpRef());
+                        break;
 
-                        case chSingleQuote :
-                            fTarget->writeChars(getAposRef());
-                            break;
+                    case chSingleQuote :
+                        fTarget->writeChars(getAposRef());
+                        break;
 
-                        case chDoubleQuote :
-                            fTarget->writeChars(getQuoteRef());
-                            break;
+                    case chDoubleQuote :
+                        fTarget->writeChars(getQuoteRef());
+                        break;
 
-                        case chCloseAngle :
-                            fTarget->writeChars(getGTRef());
-                            break;
+                    case chCloseAngle :
+                        fTarget->writeChars(getGTRef());
+                        break;
 
-                        case chOpenAngle :
-                            fTarget->writeChars(getLTRef());
-                            break;
+                    case chOpenAngle :
+                        fTarget->writeChars(getLTRef());
+                        break;
 
-                        default:
-                            done = true;
-                            break;
-                    }
-
-                    if (!done)
-                        srcPtr++;
+                    default:
+                        // <TBD> This is obviously an error
+                        break;
                 }
+                srcPtr++;
             }
-
         }
     }
 }

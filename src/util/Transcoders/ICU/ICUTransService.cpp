@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.17  2000/04/07 01:02:00  roddey
+ * Fixed an error message so that it indicated the correct radix for the rep
+ * token. Get all of the basic output formatting functionality in place for
+ * at least ICU and Win32 transcoders.
+ *
  * Revision 1.16  2000/03/18 00:00:03  roddey
  * Initial updates for two way transcoding support
  *
@@ -129,6 +134,7 @@
 #include <unicode/uloc.h>
 #include <unicode/unicode.h>
 #include <unicode/ucnv.h>
+#include <unicode/ucnv_err.h>
 #include <unicode/ustring.h>
 
 
@@ -564,12 +570,25 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
     ArrayJanitor<UChar> janTmpBuf(tmpBufPtr);
 
     //
+    //  Set the appropriate callback so that it will either fail or use
+    //  the rep char. Remember the old one so we can put it back.
+    //
+    UErrorCode  err = U_ZERO_ERROR;
+    UConverterFromUCallback oldCB = ucnv_setFromUCallBack
+    (
+        (UConverter*)&fConverter
+        , (options == UnRep_Throw) ? UCNV_FROM_U_CALLBACK_STOP
+                                   : UCNV_FROM_U_CALLBACK_SUBSTITUTE
+        , &err
+    );
+
+    //
     //  Ok, lets transcode as many chars as we we can in one shot. The
     //  ICU API gives enough info not to have to do this one char by char.
     //
-    UErrorCode  err = U_ZERO_ERROR;
     XMLByte*        startTarget = toFill;
     const UChar*    startSrc = srcPtr;
+    err = U_ZERO_ERROR;
     ucnv_fromUnicode
     (
         fConverter
@@ -582,13 +601,24 @@ ICUTranscoder::transcodeTo( const   XMLCh* const    srcData
         , &err
     );
 
-    //
-    // <TBD>
-    //  This is really right yet. We need to differentiate between
-    //  just an error and the use of a replacement char.
-    //
-    if (err != U_ZERO_ERROR)
+    // Rememember the status before we possibly overite the error code
+    const bool res = (err == U_ZERO_ERROR);
+
+    // Put the old handler back
+    err = U_ZERO_ERROR;
+    ucnv_setFromUCallBack(fConverter, oldCB, &err);
+
+    if (!res)
     {
+        XMLCh tmpBuf[16];
+        XMLString::binToText((unsigned int)*startSrc, tmpBuf, 16, 16);
+        ThrowXML2
+        (
+            TranscodingException
+            , XMLExcepts::Trans_Unrepresentable
+            , tmpBuf
+            , getEncodingName()
+        );
     }
 
     // Fill in the chars we ate from the input
@@ -619,12 +649,24 @@ bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck) const
         srcBuf[0] = UChar(toCheck);
     }
 
-    char tmpBuf[64];
-
-
+    //
+    //  Set the callback so that it will fail instead of using the rep char.
+    //  Remember the old one so we can put it back.
+    //
     UErrorCode  err = U_ZERO_ERROR;
+    UConverterFromUCallback oldCB = ucnv_setFromUCallBack
+    (
+        (UConverter*)&fConverter
+        , UCNV_FROM_U_CALLBACK_STOP
+        , &err
+    );
+
+    // Set upa temp buffer to format into. Make it more than big enough
+    char            tmpBuf[64];
     char*           startTarget = tmpBuf;
     const UChar*    startSrc = srcBuf;
+
+    err = U_ZERO_ERROR;
     ucnv_fromUnicode
     (
         fConverter
@@ -637,10 +679,14 @@ bool ICUTranscoder::canTranscodeTo(const unsigned int toCheck) const
         , &err
     );
 
-    if (err != U_ZERO_ERROR)
-        return false;
+    // Save the result before we overight the error code
+    const bool res = (err == U_ZERO_ERROR);
 
-    return true;
+    // Put the old handler back
+    err = U_ZERO_ERROR;
+    ucnv_setFromUCallBack(fConverter, oldCB, &err);
+
+    return res;
 }
 
 

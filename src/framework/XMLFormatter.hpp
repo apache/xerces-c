@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/04/07 01:01:56  roddey
+ * Fixed an error message so that it indicated the correct radix for the rep
+ * token. Get all of the basic output formatting functionality in place for
+ * at least ICU and Win32 transcoders.
+ *
  * Revision 1.4  2000/04/06 23:50:38  roddey
  * Now the low level formatter handles doing char refs for
  * unrepresentable chars (in addition to the replacement char style
@@ -208,7 +213,7 @@ private :
     // -----------------------------------------------------------------------
     enum Constants
     {
-        kTmpBufSize     = 8192
+        kTmpBufSize     = 16 * 1024
     };
 
 
@@ -241,7 +246,6 @@ private :
     //      This the name of the output encoding. Saved mainly for meaningful
     //      error messages.
     //
-    //  fRef
     //  fTarget
     //      This is the target object for the formatting operation.
     //
@@ -252,6 +256,10 @@ private :
     //  fXCoder
     //      This the transcoder that we will use. It is created using the
     //      encoding name we were told to use.
+    //
+    //  fTmpBuf
+    //      An output buffer that we use to transcode chars into before we
+    //      send them off to be output.
     //
     //  fAposRef
     //  fAmpRef
