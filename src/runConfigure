@@ -58,6 +58,39 @@
 # 
 #
 # $Log$
+# Revision 1.8  1999/12/02 18:10:51  dirkx
+# Changed exit codes from -1 to '1'. Added indirection.
+#
+# Date: Thu, 2 Dec 1999 17:47:39 +0000
+# From: Jonathan McDowell <noodles@earth.li>
+# Reply-To: xerces-dev@xml.apache.org
+# To: xerces-dev@xml.apache.org, rahulj@apache.org
+# Subject: Re: runConfigure script & bash
+#
+#
+# On Mon, Nov 29, 1999 at 10:29:13AM -0800, Rahul Jain wrote:
+#
+# > > I'm quite happy to produce a patch that makes it work under both
+# > > FreeBSD's sh and bash - I would assume this would work under most sh
+# > > like shells.
+# > Please post the changes for FreeBSD and I will test the changes on
+# > other unix's and do the integration.
+#
+# I sat down to do this today and found that it can be trivially fixed by
+# changing all the "exit -1" instances to "exit 1" - it seems the /bin/sh
+# with FreeBSD doesn't like negative result codes. It seems a bit
+# pointless to submit a patch for this, so can someone with CVS access
+# change this please?
+#
+# J.
+#
+# --
+#
+# PR:
+# Obtained from:
+# Submitted by:
+# Reviewed by:
+#
 # Revision 1.7  1999/12/01 17:16:16  rahulj
 # Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
 #
@@ -116,9 +149,11 @@ usage()
     echo "       -h (to get help on the above commands)"
 }
 
+ERROR_EXIT_CODE=1
+
 if test ${1}o = "o"; then
    usage
-   exit -1
+   exit ${ERROR_EXIT_CODE}
 fi
 
 if test ${XERCESCROOT}o = "o"; then
@@ -128,12 +163,12 @@ if test ${XERCESCROOT}o = "o"; then
    echo set an environment variable called XERCESCROOT to indicate where you installed
    echo the XERCES-C files, and run this command again to proceed. See the documentation
    echo for an example if you are still confused.
-   exit -1
+   exit ${ERROR_EXIT_CODE}
 fi
 
 if test $1 = "-h"; then
    usage
-   exit -1
+   exit ${ERROR_EXIT_CODE}
 fi
 
 # Get the command line parameters
@@ -141,7 +176,7 @@ set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
 if [ $? != 0 ]
    then
    usage
-   exit -1
+   exit ${ERROR_EXIT_CODE}
 fi
 
 # Set up the default values for each parameter
@@ -185,7 +220,7 @@ for i in $*
    
    -h) 
         usage
-        exit -1;; 
+        exit ${ERROR_EXIT_CODE};; 
    
    --) 
         shift; break;; 
@@ -214,7 +249,7 @@ case $platform in
        ;;
    *)
       echo "I do not recognize the platform '$platform'. Please type '${0} -h' for help."
-      exit -1;;
+      exit ${ERROR_EXIT_CODE};;
 esac
 
 
@@ -249,7 +284,7 @@ if test $platform = "hp-11"; then
     
        *)
            echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
-           exit -1;;
+           exit ${ERROR_EXIT_CODE};;
     esac
     fi
 elif test $platform = "aix"; then
@@ -272,7 +307,7 @@ case $transcoder in
    icu)
        if test -z $ICUROOT; then
            echo '***Error*** ICUROOT environment variable not defined. Exiting...';
-           exit -1;
+           exit ${ERROR_EXIT_CODE};
        fi
        transcodingDefines="-DXML_USE_ICU_TRANSCODER -I${ICUROOT}/include";
        transcodingLibs="-L${ICUROOT}/lib -licu-uc";
@@ -283,7 +318,7 @@ case $transcoder in
 
    *)
       echo "I do not recognize the transcoder option '$transcoder'. Please type '${0} -h' for help."
-      exit -1;;
+      exit ${ERROR_EXIT_CODE};;
 esac
 fi
 
@@ -302,7 +337,7 @@ case $msgloader in
    icu)
        if test -z $ICUROOT ; then
            echo '***Error*** ICUROOT environment variable not defined. Exiting...';
-           exit -1;
+           exit ${ERROR_EXIT_CODE};
        fi
        MESSAGELOADER=ICU;
        msgloaderDefines="-DXML_USE_ICU_MESSAGELOADER" ;;
@@ -316,7 +351,7 @@ case $msgloader in
 
    *)
       echo "I do not recognize the message loader option '$msgloader'. Please type '${0} -h' for help.";
-      exit -1;;
+      exit ${ERROR_EXIT_CODE};;
 esac
 fi
 
@@ -338,7 +373,7 @@ case $netaccessor in
    libwww)
        if test -z ${LIBWWWROOT} ; then
            echo "You have not defined your LIBWWWROOT environment variable. Cannot proceed further ..."
-           exit -1;
+           exit ${ERROR_EXIT_CODE};
        fi
        netaccessorDefines="-DXML_USE_NETACCESSOR_LIBWWW -I${LIBWWWROOT}/include" ;
        netaccessorLibs="-L${LIBWWWROOT}/lib -lwww";
@@ -346,7 +381,7 @@ case $netaccessor in
 
    *)
       echo "I do not recognize the netaccessor option '$netaccessor'. Please type '${0} -h' for help."
-      exit -1;;
+      exit ${ERROR_EXIT_CODE};;
 esac
 fi
 
@@ -391,5 +426,5 @@ echo
 echo If the result of the above commands look OK to you, go to the directory
 echo ${XERECSCROOT}/src and type \"make\" to make the XERECS-C system.
 
-exit 0;
+exit  0;
 

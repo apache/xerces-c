@@ -58,6 +58,39 @@
 # 
 #
 # $Log$
+# Revision 1.3  1999/12/02 18:10:51  dirkx
+# Changed exit codes from -1 to '1'. Added indirection.
+#
+# Date: Thu, 2 Dec 1999 17:47:39 +0000
+# From: Jonathan McDowell <noodles@earth.li>
+# Reply-To: xerces-dev@xml.apache.org
+# To: xerces-dev@xml.apache.org, rahulj@apache.org
+# Subject: Re: runConfigure script & bash
+#
+#
+# On Mon, Nov 29, 1999 at 10:29:13AM -0800, Rahul Jain wrote:
+#
+# > > I'm quite happy to produce a patch that makes it work under both
+# > > FreeBSD's sh and bash - I would assume this would work under most sh
+# > > like shells.
+# > Please post the changes for FreeBSD and I will test the changes on
+# > other unix's and do the integration.
+#
+# I sat down to do this today and found that it can be trivially fixed by
+# changing all the "exit -1" instances to "exit 1" - it seems the /bin/sh
+# with FreeBSD doesn't like negative result codes. It seems a bit
+# pointless to submit a patch for this, so can someone with CVS access
+# change this please?
+#
+# J.
+#
+# --
+#
+# PR:
+# Obtained from:
+# Submitted by:
+# Reviewed by:
+#
 # Revision 1.2  1999/11/12 19:12:40  abagchi
 # Changed instances of XML4CROOT to XERCESCROOT
 #
@@ -85,9 +118,11 @@ usage()
     echo "       -h (get help on the above commands)"
 }
 
+ERROR_EXIT_CODE=1
+
 if test ${1}o = "o"; then
    usage
-   exit -1
+   exit ${ERROR_EXIT_CODE}
 fi
 
 if test ${XERCESCROOT}o = "o"; then
@@ -97,12 +132,12 @@ if test ${XERCESCROOT}o = "o"; then
    echo set an environment variable called XERCESCROOT to indicate where you installed
    echo the XERCES-C files, and run this command again to proceed. See the documentation
    echo for an example if you are still confused.
-   exit -1
+   exit ${ERROR_EXIT_CODE}
 fi
 
 if test $1 = "-h"; then
    usage
-   exit -1
+   exit ${ERROR_EXIT_CODE}
 fi
 
 # Get the command line parameters
@@ -110,7 +145,7 @@ set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
 if [ $? != 0 ]
    then
    usage
-   exit -1
+   exit ${ERROR_EXIT_CODE}
 fi
 
 # Set up the default values for each parameter
@@ -136,7 +171,7 @@ for i in $*
 
    -h)
         usage
-        exit -1;;
+        exit ${ERROR_EXIT_CODE};;
 
    --)
         shift; break;;
@@ -162,7 +197,7 @@ case $platform in
        ;;
    *)
       echo "I do not recognize the platform '$platform'. Please type '${0} -h' for help."
-      exit -1;;
+      exit ${ERROR_EXIT_CODE};;
 esac
 
 # Set the C compiler and C++ compiler environment variables
