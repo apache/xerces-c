@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/10/23 14:11:07  knoaman
+ * Fix memory leak.
+ *
  * Revision 1.8  2003/10/22 20:22:30  knoaman
  * Prepare for annotation support.
  *
@@ -178,7 +181,7 @@ ElemStack::ElemStack(MemoryManager* const manager) :
     );//new StackElem*[fStackCapacity];
     memset(fStack, 0, fStackCapacity * sizeof(StackElem*));
 
-    fNamespaceMap = new (fMemoryManager) ValueVectorOf<PrefMapElem*>(16);
+    fNamespaceMap = new (fMemoryManager) ValueVectorOf<PrefMapElem*>(16, fMemoryManager);
 }
 
 ElemStack::~ElemStack()
@@ -200,6 +203,7 @@ ElemStack::~ElemStack()
 
     // Delete the stack array itself now
     fMemoryManager->deallocate(fStack);//delete [] fStack;
+    delete fNamespaceMap;
 }
 
 
