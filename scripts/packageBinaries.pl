@@ -749,13 +749,20 @@ sub change_windows_project_for_ICU() {
     open (FIZZLE, $thefiledotbak);
     open (FIZZLEOUT, ">$thefile");
     while ($line = <FIZZLE>) {
-        $line =~ s/\/D "PROJ_XMLPARSER"/\/I \"$ICUROOT\\include" \/D "PROJ_XMLPARSER"/g;
-        $line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"$ICUROOT\\lib\\Debug" \/libpath:"$ICUROOT\\bin\\Debug" \/libpath:"$ICUROOT\\data"/g;
-        $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"$ICUROOT\\lib\\Release" \/libpath:"$ICUROOT\\bin\\Release" \/libpath:"$ICUROOT\\data"/g;
+        if ($line =~ /Win32 Debug/) {
+            $icuuc = "icuucd";
+            }
+        if ($line =~ /Win32 Release/) {
+            $icuuc = "icuuc";
+            }
+
+        $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
+        $line =~ s[Debug/xerces-c_1D.lib"][Debug/xerces-c_1D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
+        $line =~ s[Release/xerces-c_1.lib"][Release/xerces-c_1.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
         $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
-        $line =~ s/user32\.lib/user32\.lib icuuc\.lib icudata\.lib/g;
-        $line =~ s/Transcoders\\Win32\\Win32TransService\.cpp/Transcoders\\ICU\\ICUTransService\.cpp/g;
-        $line =~ s/Transcoders\\Win32\\Win32TransService\.hpp/Transcoders\\ICU\\ICUTransService\.hpp/g;
+        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
+        $line =~ s/Transcoders\\Win32\\Win32TransService.cpp/Transcoders\\ICU\\ICUTransService.cpp/g;
+        $line =~ s/Transcoders\\Win32\\Win32TransService.hpp/Transcoders\\ICU\\ICUTransService.hpp/g;
         print FIZZLEOUT $line;
     }
     close (FIZZLEOUT);
