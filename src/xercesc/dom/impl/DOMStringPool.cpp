@@ -140,5 +140,83 @@ const XMLCh *DOMStringPool::getPooledString(const XMLCh *in)
 };
 
 
+// -----------------------------------------------------------------------
+//  DOMBuffer: Constructors
+// -----------------------------------------------------------------------
+DOMBuffer::DOMBuffer(DOMDocumentImpl *doc, int capacity) :
+    fBuffer(0)
+    , fIndex(0)
+    , fCapacity(capacity)
+    , fDoc(doc)
+{
+    // Buffer is one larger than capacity, to allow for zero term
+    fBuffer = (XMLCh*) doc->allocate((fCapacity+1)*sizeof(XMLCh));
 
+    // Keep it null terminated
+    fBuffer[0] = XMLCh(0);
+}
+
+DOMBuffer::DOMBuffer(DOMDocumentImpl *doc, const XMLCh* string) :
+    fBuffer(0)
+    , fIndex(0)
+    , fCapacity(0)
+    , fDoc(doc)
+{
+    unsigned int actualCount = XMLString::stringLen(string);
+    fCapacity = actualCount + 15;
+
+    // Buffer is one larger than capacity, to allow for zero term
+    fBuffer = (XMLCh*) doc->allocate((fCapacity+1)*sizeof(XMLCh));
+
+    memcpy(fBuffer, string, actualCount * sizeof(XMLCh));
+    fIndex = actualCount;
+
+    // Keep it null terminated
+    fBuffer[fIndex] = 0;
+}
+
+// ---------------------------------------------------------------------------
+//  DOMBuffer: Buffer management
+// ---------------------------------------------------------------------------
+void DOMBuffer::append(const XMLCh* const chars, const unsigned int count)
+{
+    unsigned int actualCount = count;
+    if (!count)
+        actualCount = XMLString::stringLen(chars);
+    if (fIndex + actualCount >= fCapacity)
+        expandCapacity(actualCount);
+    memcpy(&fBuffer[fIndex], chars, actualCount * sizeof(XMLCh));
+    fIndex += actualCount;
+}
+
+void DOMBuffer::set(const XMLCh* const chars, const unsigned int count)
+{
+    unsigned int actualCount = count;
+    if (!count)
+        actualCount = XMLString::stringLen(chars);
+    fIndex = 0;
+    if (fIndex + actualCount >= fCapacity)
+        expandCapacity(actualCount);
+    memcpy(fBuffer, chars, actualCount * sizeof(XMLCh));
+    fIndex = actualCount;
+}
+
+
+// ---------------------------------------------------------------------------
+//  DOMBuffer: Private helper methods
+// ---------------------------------------------------------------------------
+void DOMBuffer::expandCapacity(const unsigned int extraNeeded)
+{
+    //not enough room. Calc new capacity and allocate new buffer
+    const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 1.25);
+    XMLCh* newBuf = new (fDoc) XMLCh[newCap+1];
+
+    // Copy over the old stuff
+    memcpy(newBuf, fBuffer, fCapacity * sizeof(XMLCh));
+
+    // revisit: Leave the old buffer in document heap, yes, this is a leak, but live with it!
+    // store new stuff
+    fBuffer = newBuf;
+    fCapacity = newCap;
+}
 

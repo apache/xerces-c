@@ -103,4 +103,99 @@ private:
 
 };
 
+
+//
+// DOMBuffer is a lightweight text buffer
+// The buffer is not nul terminated until some asks to see the raw buffer
+// contents. This also avoids overhead during append operations.
+class DOMBuffer
+{
+public :
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    DOMBuffer(DOMDocumentImpl *doc, int capacity = 31);
+
+    DOMBuffer(DOMDocumentImpl *doc, const XMLCh* string);
+
+    ~DOMBuffer()
+    {
+    }
+
+    // -----------------------------------------------------------------------
+    //  Buffer Management
+    // -----------------------------------------------------------------------
+    void append
+    (
+        const   XMLCh* const    chars
+        , const unsigned int    count = 0
+    );
+
+    const XMLCh* getRawBuffer() const
+    {
+        fBuffer[fIndex] = 0;
+        return fBuffer;
+    }
+
+    void reset()
+    {
+        fIndex = 0;
+        fBuffer[0] = 0;
+    }
+
+    void set
+    (
+        const   XMLCh* const    chars
+        , const unsigned int    count = 0
+    );
+
+    void chop
+    (
+        const unsigned int    count
+    )
+    {
+        fBuffer[count] = 0;
+        fIndex = count;
+    }
+
+
+    // -----------------------------------------------------------------------
+    //  Getters
+    // -----------------------------------------------------------------------
+    unsigned int getLen() const
+    {
+        return fIndex;
+    }
+
+    // -----------------------------------------------------------------------
+    //  Private helpers
+    // -----------------------------------------------------------------------
+    void expandCapacity(const unsigned int extraNeeded);
+
+
+private :
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fBuffer
+    //      The pointer to the buffer data. Its grown as needed. Its always
+    //      one larger than fCapacity, to leave room for the null terminator.
+    //
+    //  fIndex
+    //      The current index into the buffer, as characters are appended
+    //      to it. If its zero, then the buffer is empty.
+    //
+    //  fCapacity
+    //      The current capacity of the buffer. Its actually always one
+    //      larger, to leave room for the null terminator.
+    //
+    //  fDoc
+    //      For allocating memory
+    // -----------------------------------------------------------------------
+    XMLCh*          fBuffer;
+    unsigned int    fIndex;
+    unsigned int    fCapacity;
+    DOMDocumentImpl* fDoc;
+};
+
 #endif

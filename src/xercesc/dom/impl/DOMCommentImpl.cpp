@@ -112,8 +112,10 @@ void DOMCommentImpl::release()
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
-    if (doc)
+    if (doc) {
+        fCharacterData.releaseBuffer();
         doc->release(this, DOMDocumentImpl::COMMENT_OBJECT);
+    }
     else {
         // shouldn't reach here
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0);

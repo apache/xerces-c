@@ -83,7 +83,7 @@ DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
     : fNode(ownerDoc), fParent(ownerDoc), fAttributes(0), fDefaultAttributes(0)
 {
     DOMDocumentImpl *docImpl = (DOMDocumentImpl *)ownerDoc;
-    fName = docImpl->fNamePool->getPooledString(eName);
+    fName = docImpl->getPooledString(eName);
     setupDefaultAttributes();
     if (!fDefaultAttributes) {
         fDefaultAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this);
@@ -551,7 +551,7 @@ DOMNode* DOMElementImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
 
     if (!namespaceURI || !*namespaceURI) {
-        fName = doc->fNamePool->getPooledString(name);
+        fName = doc->getPooledString(name);
         fAttributes->reconcileDefaultAttributes(getDefaultAttributes());
 
         return this;

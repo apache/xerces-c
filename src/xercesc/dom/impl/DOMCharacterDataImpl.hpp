@@ -75,6 +75,8 @@
 
 class DOMNode;
 class DOMDocument;
+class DOMDocumentImpl;
+class DOMBuffer;
 
 // Instances of DOMCharacterDataImpl appear as members of node types
 //   that implement the DOMCharacterData interfaces.
@@ -83,7 +85,9 @@ class DOMDocument;
 class CDOM_EXPORT DOMCharacterDataImpl
 {
 public:
-    const XMLCh *fData;
+    DOMBuffer* fDataBuf;
+    // for the buffer bid
+    DOMDocumentImpl* fDoc;
 
 public:
                    DOMCharacterDataImpl(DOMDocument *doc, const XMLCh *dat);
@@ -102,6 +106,7 @@ public:
 
 
     const XMLCh*   substringData(const DOMNode *node, XMLSize_t offset, XMLSize_t count) const;
+    void           releaseBuffer();
 
 };
 

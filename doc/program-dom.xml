@@ -164,13 +164,88 @@
        <anchor name="XMLCh"/>
        <s3 title="String Type">
          <p>The C++ DOM uses the plain, null-terminated (XMLCh *) utf-16 strings
-            as the String type. The (XMLCh*) utf-16 type string has low overhead.
-            All the string data would remain in memory until the document object is released.</p>
-
+            as the String type. The (XMLCh*) utf-16 type string has low overhead.</p>
        <source>
    //C++ DOM
    const XMLCh* nodeValue = aNode->getNodeValue();
        </source>
+
+         <p>All the string data would remain in memory until the document object is released.
+            But such string data may be RECYCLED by the implementation if necessary.
+            Users should make appropriate copy of any returned string for safe reference.</p>
+
+         <p>For example after a DOMNode has been released, the memory allocated for its node value
+            will be recycled by the implementation.  </p>
+
+       <source>
+   XMLCh xfoo[] = {chLatin_f, chLatin_o, chLatin_o, chNull};
+
+   // pAttr has node value = "foo"
+   // fNodeValue has "foo"
+   pAttr->setNodeValue(xfoo);
+   const XMLCh* fNodeValue = pAttr->getNodeValue();
+
+   // fNodeValue has "foo"
+   // make a copy of the string for future reference
+   XMLCh* oldNodeValue = XMLString::replicate(fNodeValue);
+
+   // release the node pAttr
+   pAttr->release()
+
+   // other operations
+   :
+   :
+
+   // implementation may have recycled the memory of the pAttr already
+   // so it's not safe to expect fNodeValue still have "foo"
+   if (XMLString::compareString(xfoo, fNodeValue))
+       printf("fNodeValue has some other content\n");
+
+   // should use your own safe copy
+   if (!XMLString::compareString(xfoo, oldNodeValue))
+       printf("Use your own copy of the oldNodeValue if want to reference the string later\n");
+
+   // delete your own replicated string when done
+   delete [] oldNodeValue;
+
+       </source>
+
+         <p>Or if DOMNode::setNodeValue() is called to set a new node value,
+            the implementation will simply overwrite the node value memory area.  So any previous
+            pointers will now have the new value automatically.   Users should make appropriate
+            copy of any previous returned string for safe reference.   For example</p>
+
+       <source>
+   XMLCh xfoo[] = {chLatin_f, chLatin_o, chLatin_o, chNull};
+   XMLCh xfee[] = {chLatin_f, chLatin_e, chLatin_e, chNull};
+
+   // pAttr has node value = "foo"
+   pAttr->setNodeValue(xfoo);
+   const XMLCh* fNodeValue = pAttr->getNodeValue();
+
+   // fNodeValue has "foo"
+   // make a copy of the string for future reference
+   XMLCh* oldNodeValue = XMLString::replicate(fNodeValue);
+
+   // now set pAttr with a new node value "fee"
+   pAttr->setNodeValue(xfee);
+
+   // should not rely on fNodeValue for the old node value, it may not compare
+   if (XMLString::compareString(xfoo, fNodeValue))
+       printf("Should not rely on fNodeValue for the old node value\n");
+
+   // should use your own safe copy
+   if (!XMLString::compareString(xfoo, oldNodeValue))
+       printf("Use your own copy of the oldNodeValue if want to reference the string later\n");
+
+   // delete your own replicated string when done
+   delete [] oldNodeValue;
+
+       </source>
+
+         <p>This is to prevent memory growth when DOMNode::setNodeValue() is being called hundreds of
+            times.   This design allows users to actively select which returned string should stay
+            in memory by manually copying the string to application's own heap.</p>
 
        </s3>
     </s2>

@@ -64,19 +64,37 @@
 #include "DOMRangeImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include "DOMCasts.hpp"
-#include <xercesc/framework/XMLBuffer.hpp>
+#include "DOMStringPool.hpp"
 #include <xercesc/util/XMLUniDefs.hpp>
 
 
 DOMCharacterDataImpl::DOMCharacterDataImpl(DOMDocument *doc, const XMLCh *dat)
+ : fDoc(0)
+ , fDataBuf(0)
 {
-    this->fData = ((DOMDocumentImpl *)doc)->getPooledString(dat);
+    fDoc = (DOMDocumentImpl*)doc;
+
+    fDataBuf = fDoc->popBuffer();
+    if (!fDataBuf)
+        fDataBuf = new (fDoc) DOMBuffer(fDoc, dat);
+    else
+        fDataBuf->set(dat);
+
 };
 
 
 DOMCharacterDataImpl::DOMCharacterDataImpl(const DOMCharacterDataImpl &other)
+ : fDoc(0)
+ , fDataBuf(0)
 {
-    fData = other.fData;
+    fDoc = (DOMDocumentImpl*)other.fDoc;
+
+    fDataBuf = fDoc->popBuffer();
+    if (!fDataBuf)
+        fDataBuf = new (fDoc) DOMBuffer(fDoc, other.fDataBuf->getRawBuffer());
+    else
+        fDataBuf->set(other.fDataBuf->getRawBuffer());
+
 };
 
 
@@ -86,7 +104,7 @@ DOMCharacterDataImpl::~DOMCharacterDataImpl() {
 
 const XMLCh * DOMCharacterDataImpl::getNodeValue() const
 {
-    return fData;
+    return fDataBuf->getRawBuffer();
 };
 
 
@@ -95,7 +113,7 @@ void DOMCharacterDataImpl::setNodeValue(const DOMNode *node, const XMLCh *value)
     if (castToNodeImpl(node)->isReadOnly())
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                0);
-    fData = ((DOMDocumentImpl *)node->getOwnerDocument())->getPooledString(value);
+    fDataBuf->set(value);
 
     if (node->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
@@ -117,11 +135,7 @@ void DOMCharacterDataImpl::appendData(const DOMNode *node, const XMLCh *dat)
         throw DOMException(
         DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
-
-    XMLBuffer temp;
-    temp.set(fData);
-    temp.append(dat);
-    fData = ((DOMDocumentImpl *)node->getOwnerDocument())->getPooledString(temp.getRawBuffer());
+    fDataBuf->append(dat);
 };
 
 
@@ -134,7 +148,7 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
     //       when parameter values are bad.
     //
 
-    XMLSize_t len = XMLString::stringLen(this->fData);
+    XMLSize_t len = this->fDataBuf->getLen();
     if (offset > len || offset < 0 || count < 0)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
 
@@ -159,10 +173,10 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
     else
         newString = temp;
 
-    XMLString::copyNString(newString, fData, offset);
-    XMLString::copyString(newString+offset, fData+offset+count);
+    XMLString::copyNString(newString, fDataBuf->getRawBuffer(), offset);
+    XMLString::copyString(newString+offset, fDataBuf->getRawBuffer()+offset+count);
 
-    fData = ((DOMDocumentImpl *)node->getOwnerDocument())->getPooledString(newString);
+    fDataBuf->set(newString);
 
     if (newLen >= 3999)
         delete[] newString;
@@ -188,7 +202,7 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
 
 const XMLCh *DOMCharacterDataImpl::getData() const
 {
-    return fData;
+    return fDataBuf->getRawBuffer();
 };
 
 
@@ -197,7 +211,7 @@ const XMLCh *DOMCharacterDataImpl::getData() const
 //
 XMLSize_t DOMCharacterDataImpl::getLength() const
 {
-    return XMLString::stringLen(fData);
+    return fDataBuf->getLen();
 };
 
 
@@ -212,7 +226,7 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
     //       when parameter values are bad.
     //
 
-    XMLSize_t len = XMLString::stringLen(this->fData);
+    XMLSize_t len = fDataBuf->getLen();
     if (offset > len || offset < 0)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
 
@@ -227,11 +241,11 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, con
     else
         newString = temp;
 
-    XMLString::copyNString(newString, fData, offset);
+    XMLString::copyNString(newString, fDataBuf->getRawBuffer(), offset);
     XMLString::copyNString(newString+offset, dat, datLen);
-    XMLString::copyString(newString+offset+datLen, fData+offset);
+    XMLString::copyString(newString+offset+datLen, fDataBuf->getRawBuffer()+offset);
 
-    fData = ((DOMDocumentImpl *)node->getOwnerDocument())->getPooledString(newString);
+    fDataBuf->set(newString);
 
     if (newLen >= 3999)
         delete[] newString;
@@ -257,7 +271,7 @@ void DOMCharacterDataImpl::setData(const DOMNode *node, const XMLCh *arg)
 {
     if (castToNodeImpl(node)->isReadOnly())
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
-    fData = ((DOMDocumentImpl *)node->getOwnerDocument())->getPooledString(arg);
+    fDataBuf->set(arg);
 };
 
 
@@ -273,7 +287,7 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
     //
 
 
-    XMLSize_t len = XMLString::stringLen(fData);
+    XMLSize_t len = fDataBuf->getLen();
 
     if (offset > len || offset < 0 || count < 0)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
@@ -286,7 +300,7 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
     else
         newString = temp;
 
-    XMLString::copyNString(newString, fData+offset, count);
+    XMLString::copyNString(newString, fDataBuf->getRawBuffer()+offset, count);
     newString[count] = chNull;
 
     const XMLCh* retString = ((DOMDocumentImpl *)node->getOwnerDocument())->getPooledString(newString);
@@ -295,6 +309,11 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
         delete[] newString;
 
     return retString;
+
 };
 
+
+void DOMCharacterDataImpl::releaseBuffer() {
+    fDoc->releaseBuffer(fDataBuf);
+}
 

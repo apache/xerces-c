@@ -65,6 +65,7 @@
 #include <xercesc/dom/DOMNode.hpp>
 
 #include "DOMDocumentImpl.hpp"
+#include "DOMStringPool.hpp"
 #include "DOMTextImpl.hpp"
 #include "DOMCharacterDataImpl.hpp"
 #include "DOMChildNode.hpp"
@@ -117,7 +118,7 @@ DOMText *DOMTextImpl::splitText(XMLSize_t offset)
         throw DOMException(
             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
     }
-    XMLSize_t len = XMLString::stringLen(fCharacterData.fData);
+    XMLSize_t len = fCharacterData.fDataBuf->getLen();
     if (offset > len || offset < 0)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
 
@@ -129,10 +130,7 @@ DOMText *DOMTextImpl::splitText(XMLSize_t offset)
     if (parent != 0)
         parent->insertBefore(newText, getNextSibling());
 
-    XMLCh *wData = (XMLCh *)(fCharacterData.fData);  // Cast off const.
-    wData[offset] = 0;                               //  revisit - could change a string that
-                                                     //     application code has.  Do we want to do this?
-
+    fCharacterData.fDataBuf->chop(offset);
 
     if (this->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
@@ -185,8 +183,10 @@ void DOMTextImpl::release()
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
-    if (doc)
+    if (doc) {
+        fCharacterData.releaseBuffer();
         doc->release(this, DOMDocumentImpl::TEXT_OBJECT);
+    }
     else {
         // shouldn't reach here
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0);

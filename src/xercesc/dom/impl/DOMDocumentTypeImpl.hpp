@@ -73,7 +73,6 @@
 
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
 #include "DOMNodeImpl.hpp"
 #include "DOMChildNode.hpp"

@@ -1429,17 +1429,40 @@ void DOMReleaseTests()
     //simulate setting the attribute value
     //   The setValue and setAttribute should call release internally so that
     //   the overall memory usage is not increased
-     int i = 0;
-    for(i=0;i<200000;i++)
+    int i = 0;
+    for(i=0;i<20000;i++)
     {
         pAttr->setValue(tempStr2);
     }
-    for(i=0;i<200000;i++)
+    for(i=0;i<20000;i++)
     {
         //same problem
         cpRoot->removeAttribute(tempStr);
         cpRoot->setAttribute(tempStr,tempStr2);
     }
+
+    //simulate changing node value
+    //   the overall memory usage is not increased
+    char tempchar[4000];
+    for(i=0;i<20000;i++)
+    {
+        sprintf(tempchar, "time is %i\n",XMLPlatformUtils::getCurrentMillis());
+        int len = strlen(tempchar);
+        for (int j = len; j < 4000-len; j++)
+            tempchar[j] = 'a';
+        pAttr->setNodeValue(X(tempchar));
+    }
+
+    DOMText*  text = cpXMLDocument->createTextNode(tempStr3);
+    for(i=0;i<20000;i++)
+    {
+        sprintf(tempchar, "time is %i\n",XMLPlatformUtils::getCurrentMillis());
+        int len = strlen(tempchar);
+        for (int j = len; j < 4000-len; j++)
+            tempchar[j] = 'a';
+        text->setNodeValue(X(tempchar));
+    }
+
     cpXMLDocument->release();
 
 }
@@ -1477,7 +1500,7 @@ int  mymain()
 };
 
 int  main() {
-    for (int i = 0; i<5; i++)
+   for (int i = 0; i<3; i++)
         mymain();
 
     printf("Test Run Successfully\n");

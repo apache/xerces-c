@@ -91,7 +91,6 @@ class DOMCommentImpl;
 class DOMDeepNodeListImpl;
 class DOMDocumentFragmentImpl;
 class DOMDocumentTypeImpl;
-class IDDStringPool;
 class DOMElementImpl;
 class DOMEntityImpl;
 class DOMEntityReferenceImpl;
@@ -108,6 +107,7 @@ class DOMNodeIDMap;
 class DOMRangeImpl;
 class DOMParentNode;
 class DOMStringPool;
+class DOMBuffer;
 
 typedef RefVectorOf<DOMRangeImpl>        Ranges;
 typedef KeyRefPair<void, DOMUserDataHandler> DOMUserDataRecord;
@@ -139,66 +139,9 @@ public:
     // -----------------------------------------------------------------------
     //  data
     // -----------------------------------------------------------------------
-
-
     DOMNodeImpl           fNode;           // Implements common node functionality.
     DOMParentNode         fParent;         // Implements common parent node functionality
-
-    DOMDocumentType*      fDocType;
-    DOMElement*           fDocElement;
-    DOMStringPool*        fNamePool;
     DOMNodeIDMap*         fNodeIDMap;     // for use by GetElementsById().
-
-    Ranges*               fRanges;
-
-    int                   fChanges;
-
-    bool                  errorChecking;    // Bypass error checking.
-
-    // New data introduced in DOM Level 3
-    XMLCh*                fActualEncoding;
-    XMLCh*                fEncoding;
-    bool                  fStandalone;
-    XMLCh*                fVersion;
-    XMLCh*                fDocumentURI;
-
-    RefHashTableOf<DOMNodeUserDataTable>* fUserDataTable;
-
-
-    // Per-Document heap Variables.
-    //   The heap consists of one or more biggish blocks which are
-    //   sub-allocated for individual allocations of nodes, strings, etc.
-    //   The big blocks form a linked list, allowing them to be located for deletion.
-    //
-    //   There is no provision for deleting suballocated blocks, other than
-    //     deleting the entire heap when the document is deleted.
-    //
-    //   There is no header on individual sub-allocated blocks.
-    //   The header on big blocks consists only of a single back pointer to
-    //    the previously allocated big block (our linked list of big blocks)
-    //
-    //
-    //   revisit - this heap should be encapsulated into its own
-    //                  class, rather than hanging naked on Document.
-    //
-    void*                 fCurrentBlock;
-    char*                 fFreePtr;
-    XMLSize_t             fFreeBytesRemaining;
-
-    // To recycle the DOMNode pointer
-    RefArrayOf<DOMNodePtr>* fRecycleNodePtr;
-
-    friend class DOMNodeImpl;
-    friend class DOMNodeIteratorImpl;
-    friend class DOMTreeWalkerImpl;
-    friend class DOMRangeImpl;
-    friend class IDXercesDOMParser;
-
-
-
-    void setDocumentType(DOMDocumentType *doctype);
-
-
 
 public:
     DOMDocumentImpl();
@@ -206,6 +149,8 @@ public:
                     const XMLCh*     qualifiedName,
                     DOMDocumentType* doctype);
     virtual ~DOMDocumentImpl();
+
+    void                         setDocumentType(DOMDocumentType *doctype);
 
     // Add all functions that are pure virutal in DOMNODE
     DOMNODE_FUNCTIONS;
@@ -348,14 +293,14 @@ public:
     //                               a document, and is not recovered until the
     //                               document itself is deleted.
     //
-
     void*                        allocate(size_t amount);
     void*                        allocate(size_t amount, NodeObjectType type);
     XMLCh*                       cloneString(const XMLCh *src);
     const XMLCh*                 getPooledString(const XMLCh *src);
     void                         deleteHeap();
     void                         release(DOMNode* object, NodeObjectType type);
-
+    void                         releaseBuffer(DOMBuffer* buffer);
+    DOMBuffer*                   popBuffer();
 
     // Factory methods for getting/creating node lists.
     // Because nothing is ever deleted, the implementation caches and recycles
@@ -371,14 +316,66 @@ private:
     virtual DOMNode*             importNode(DOMNode *source, bool deep, bool cloningNode);
 
 private:
+    // -----------------------------------------------------------------------
+    //  data
+    // -----------------------------------------------------------------------
+    // New data introduced in DOM Level 3
+    XMLCh*                fActualEncoding;
+    XMLCh*                fEncoding;
+    bool                  fStandalone;
+    XMLCh*                fVersion;
+    XMLCh*                fDocumentURI;
+
+    RefHashTableOf<DOMNodeUserDataTable>* fUserDataTable;
+
+
+    // Per-Document heap Variables.
+    //   The heap consists of one or more biggish blocks which are
+    //   sub-allocated for individual allocations of nodes, strings, etc.
+    //   The big blocks form a linked list, allowing them to be located for deletion.
+    //
+    //   There is no provision for deleting suballocated blocks, other than
+    //     deleting the entire heap when the document is deleted.
+    //
+    //   There is no header on individual sub-allocated blocks.
+    //   The header on big blocks consists only of a single back pointer to
+    //    the previously allocated big block (our linked list of big blocks)
+    //
+    //
+    //   revisit - this heap should be encapsulated into its own
+    //                  class, rather than hanging naked on Document.
+    //
+    void*                 fCurrentBlock;
+    char*                 fFreePtr;
+    XMLSize_t             fFreeBytesRemaining;
+
+    // To recycle the DOMNode pointer
+    RefArrayOf<DOMNodePtr>* fRecycleNodePtr;
+
+    // To recycle DOMBuffer pointer
+    RefStackOf<DOMBuffer>* fRecycleBufferPtr;
+
+    // Pool of DOMNodeList for getElementsByTagName
     DOMDeepNodeListPool<DOMDeepNodeListImpl>* fNodeListPool;
+
+    // Other data
+    DOMDocumentType*      fDocType;
+    DOMElement*           fDocElement;
+    DOMStringPool*        fNamePool;
+
+    Ranges*               fRanges;
+
+    int                   fChanges;
+    bool                  errorChecking;    // Bypass error checking.
 
 };
 
+// ---------------------------------------------------------------------------
 //
 //  Operator new.  Global overloaded version, lets any object be allocated on
 //                 the heap owned by a document.
 //
+// ---------------------------------------------------------------------------
 inline void * operator new(size_t amt, DOMDocument *doc, DOMDocumentImpl::NodeObjectType type)
 {
     // revist.  Probably should be a checked cast.

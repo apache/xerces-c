@@ -123,7 +123,8 @@ DOMDocumentImpl::DOMDocumentImpl()
       fStandalone(false),
       fDocumentURI(0),
       fUserDataTable(0),
-      fRecycleNodePtr(0)
+      fRecycleNodePtr(0),
+      fRecycleBufferPtr(0)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
 };
@@ -151,9 +152,11 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fStandalone(false),
       fDocumentURI(0),
       fUserDataTable(0),
-      fRecycleNodePtr(0)
+      fRecycleNodePtr(0),
+      fRecycleBufferPtr(0)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
+
     try {
         setDocumentType(doctype);
 
@@ -206,6 +209,10 @@ DOMDocumentImpl::~DOMDocumentImpl()
     if (fRecycleNodePtr) {
         fRecycleNodePtr->deleteAllElements();
         delete fRecycleNodePtr;
+    }
+
+    if (fRecycleBufferPtr) {
+        delete fRecycleBufferPtr;
     }
 
     //  Delete the heap for this document.  This uncerimoniously yanks the storage
@@ -690,7 +697,6 @@ int             DOMDocumentImpl::changes() const{
 //                       just lying around naked in DocumentImpl.
 //
 //-----------------------------------------------------------------------
-
 XMLCh * DOMDocumentImpl::cloneString(const XMLCh *src)
 {
     if (!src) return 0;
@@ -1213,6 +1219,22 @@ void DOMDocumentImpl::release(DOMNode* object, NodeObjectType type)
         fRecycleNodePtr->operator[](type) = new RefStackOf<DOMNode> (15, false);
 
     fRecycleNodePtr->operator[](type)->push(object);
+}
+
+void DOMDocumentImpl::releaseBuffer(DOMBuffer* buffer)
+{
+    if (!fRecycleBufferPtr)
+        fRecycleBufferPtr = new RefStackOf<DOMBuffer> (15, false);
+
+    fRecycleBufferPtr->push(buffer);
+}
+
+DOMBuffer* DOMDocumentImpl::popBuffer()
+{
+    if (!fRecycleBufferPtr || fRecycleBufferPtr->empty())
+        return 0;
+
+    return fRecycleBufferPtr->pop();
 }
 
 
