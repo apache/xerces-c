@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/09/06 23:51:21  jberry
+ * Add support for new compile time options defined in prefix file. These
+ * control the selection of the msgloader, transcoder, and netaccessor.
+ * Add a tiny bit of robustness to the nasty panic method.
+ *
  * Revision 1.11  2000/09/04 16:31:15  jberry
  * Fix atomic increment & decrement to return value after operation rather than before. Thanks to Michael Crawford.
  *
@@ -118,9 +123,16 @@
 #include <util/XMLString.hpp>
 #include <util/Platforms/MacOS/MacOSDefs.hpp>
 #include <util/Platforms/MacOS/MacOSPlatformUtils.hpp>
-#include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
-#include <util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp>
-#include <util/NetAccessors/MacOSURLAccess/MacOSURLAccess.hpp>
+
+#if defined(XML_USE_INMEMORY_MSGLOADER)
+   #include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
+#endif
+#if defined(XML_USE_MACOS_UNICODECONVERTER)
+   #include <util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp>
+#endif
+#if defined(XML_USE_NETACCESSOR_URLACCESS)
+   #include <util/NetAccessors/MacOSURLAccess/MacOSURLAccess.hpp>
+#endif
 
 #include <string.h>
 #include <stdlib.h>
@@ -371,10 +383,10 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
     
     //
     //  This isn't real friendly and should be cleaned up.
-    // Replace this code to do whatever you need to do.
+    //	Replace this code to do whatever you need to do.
     //
-    char text[200];
-    sprintf(text, "Xerces Panic Error: %s", reasonStr);
+    char text[256];
+    snprintf(text, sizeof(text), "Xerces Panic Error: %s", reasonStr);
     
     Str255 pasText;
     CopyCStringToPascal(text, pasText);
@@ -750,7 +762,11 @@ void XMLPlatformUtils::platformTerm()
 //
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
+#if defined(XML_USE_NETACCESSOR_URLACCESS)
 	return new MacOSURLAccess;
+#else
+	return 0;
+#endif
 }
 
 
@@ -760,7 +776,11 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 //
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
+#if defined(XML_USE_INMEMORY_MSGLOADER)
     return new InMemMsgLoader(msgDomain);
+#else
+    #error You must provide a message loader
+#endif
 }
 
 
@@ -772,7 +792,11 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 //
 XMLTransService* XMLPlatformUtils::makeTransService()
 {
+#if defined(XML_USE_MACOS_UNICODECONVERTER)
     return new MacOSUnicodeConverter;
+#else
+    #error You must provide a transcoding service implementation
+#endif
 }
 
 
