@@ -566,7 +566,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964iupxn64nepwi64icxin64iezj264icxin64ieyn264icpp264pw8ni64jygsn/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>963ikjfn63n6jei63i4t2n63i6v3263i4t2n63i6u6263i4j7263pn46i63jqcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -7475,6 +7475,42 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -12454,6 +12490,34 @@
                     <PATH>xercesc/internal/DGXMLScanner.cpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -12969,7 +13033,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964iupxn64nepwi64icxin64iezj264icxin64ieyn264icpp264pw8ni64jygsn/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964kkjfn64q6jei64k4t2n64k6v3264k4t2n64k6u6264k4j7264rn46i64mqcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -19878,6 +19942,42 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -24857,6 +24957,34 @@
                     <PATH>xercesc/internal/DGXMLScanner.cpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -25372,7 +25500,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9634ujfn638ejei634ct2n634ev32634ct2n634eu62634cj72639w46i635ycan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>964kkjfn64q6jei64k4t2n64k6v3264k4t2n64k6u6264k4j7264rn46i64mqcan/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -32281,6 +32409,42 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -37260,6 +37424,34 @@
                     <PATH>xercesc/internal/DGXMLScanner.cpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -37775,7 +37967,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9634ujfn638ejei634ct2n634ev32634ct2n634eu62634cj72639w46i635ycan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>95kmjzn5q7jyi5k5tkn5k7vm25k5tkn5k7uq25k5jr25rp4qi5mrcun/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -44684,6 +44876,42 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS></FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -49663,6 +49891,34 @@
                     <PATH>xercesc/internal/DGXMLScanner.cpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
@@ -49862,7 +50118,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9634ujfn638ejei634ct2n634ev32634ct2n634eu62634cj72639w46i635ycan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>95kmjzn5q7jyi5k5tkn5k7vm25k5tkn5k7uq25k5jr25rp4qi5mrcun/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -51118,7 +51374,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>9634ujfn638ejei634ct2n634ev32634ct2n634eu62634cj72639w46i635ycan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>954vjfw58fjes54dt2w54fv3a54dt2w54fu6a54dj7a59x46s55zcaw/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -58054,6 +58310,42 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -63052,6 +63344,34 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/internal/DGXMLScanner.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
@@ -63803,7 +64123,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>963iupfn63nepei63icx2n63iez3263icx2n63iey6263icp7263pw86i63jygan/0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>954vjfw58fjes54dt2w54fv3a54dt2w54fu6a54dj7a59x46s55zcaw/0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -70739,6 +71059,42 @@
                     <FILEKIND>Text</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
                 </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
             </FILELIST>
             <LINKORDER>
                 <FILEREF>
@@ -75737,6 +76093,34 @@
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/internal/DGXMLScanner.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
@@ -77045,6 +77429,14 @@
                     <PATHTYPE>PathRelative</PATHTYPE>
                     <PATHROOT>Project</PATHROOT>
                     <ACCESSPATH>../../../../src</ACCESSPATH>
+                    <PATH>xercesc/dom/DOMTypeInfo.hpp</PATH>
+                    <PATHFORMAT>Unix</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                    <PATHTYPE>PathRelative</PATHTYPE>
+                    <PATHROOT>Project</PATHROOT>
+                    <ACCESSPATH>../../../../src</ACCESSPATH>
                     <PATH>xercesc/dom/DOMUserDataHandler.hpp</PATH>
                     <PATHFORMAT>Unix</PATHFORMAT>
                 </FILEREF>
@@ -77583,6 +77975,22 @@
                         <PATHROOT>Project</PATHROOT>
                         <ACCESSPATH>../../../../src</ACCESSPATH>
                         <PATH>xercesc/dom/impl/DOMTreeWalkerImpl.hpp</PATH>
+                        <PATHFORMAT>Unix</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>PathRelative</PATHTYPE>
+                        <PATHROOT>Project</PATHROOT>
+                        <ACCESSPATH>../../../../src</ACCESSPATH>
+                        <PATH>xercesc/dom/impl/DOMTypeInfoImpl.cpp</PATH>
+                        <PATHFORMAT>Unix</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>PathRelative</PATHTYPE>
+                        <PATHROOT>Project</PATHROOT>
+                        <ACCESSPATH>../../../../src</ACCESSPATH>
+                        <PATH>xercesc/dom/impl/DOMTypeInfoImpl.hpp</PATH>
                         <PATHFORMAT>Unix</PATHFORMAT>
                     </FILEREF>
                     <FILEREF>
@@ -78795,7 +79203,7 @@
                 <GROUP><NAME>MsgLoaders</NAME>
                     <GROUP><NAME>InMemory</NAME>
                         <FILEREF>
-                            <TARGETNAME>XercesLib Carbon Debug</TARGETNAME>
+                            <TARGETNAME>XercesLib Classic Release</TARGETNAME>
                             <PATHTYPE>PathRelative</PATHTYPE>
                             <PATHROOT>Project</PATHROOT>
                             <ACCESSPATH>../../../../src</ACCESSPATH>
@@ -81261,6 +81669,14 @@
                         <PATHROOT>Project</PATHROOT>
                         <ACCESSPATH>../../../../src</ACCESSPATH>
                         <PATH>xercesc/validators/schema/NamespaceScope.hpp</PATH>
+                        <PATHFORMAT>Unix</PATHFORMAT>
+                    </FILEREF>
+                    <FILEREF>
+                        <TARGETNAME>XercesLib Classic Release</TARGETNAME>
+                        <PATHTYPE>PathRelative</PATHTYPE>
+                        <PATHROOT>Project</PATHROOT>
+                        <ACCESSPATH>../../../../src</ACCESSPATH>
+                        <PATH>xercesc/validators/schema/PSVIDefs.hpp</PATH>
                         <PATHFORMAT>Unix</PATHFORMAT>
                     </FILEREF>
                     <FILEREF>
