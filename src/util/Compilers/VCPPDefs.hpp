@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/14 01:19:22  roddey
+ * Added a define of XML_LSTRSUPPORT to indicate supoprt of L"" type
+ * prefixes on this compiler.
+ *
  * Revision 1.3  2000/01/14 00:51:30  roddey
  * Added the requested XMLStrL() macro to support some portable
  * optimization of DOM code. This still needs to be added to the other
@@ -85,11 +89,12 @@
 
 
 // ---------------------------------------------------------------------------
-//  Each compiler might support L"" prefixed constants. There are places in
-//  the DOM for instance, where it is advantageous to use the L"" where it
-//  supported, to avoid unnecessary transcoding. VC++ does support this.
+//  Each compiler might support L"" prefixed constants. There are places
+//  where it is advantageous to use the L"" where it supported, to avoid
+//  unnecessary transcoding. VC++ does support this, so we define this token.
+//  If your compiler does not support it, don't define this.
 // ---------------------------------------------------------------------------
-#define XMLStrL(str)  L##str
+#define XML_LSTRSUPPORT
 
 
 // ---------------------------------------------------------------------------
