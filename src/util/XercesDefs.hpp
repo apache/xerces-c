@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/11/02 07:23:27  roddey
+ * Just a test of checkin access
+ *
  * Revision 1.7  2000/08/18 21:29:14  andyh
  * Change version to 1.3 in preparation for upcoming Xerces 1.3
  * and XML4C 3.3 stable releases
@@ -132,6 +135,7 @@
 #if !defined(XERCESDEFS_HPP)
 #define XERCESDEFS_HPP
 
+// Just a check in test, remove me!
 
 // ---------------------------------------------------------------------------
 //  These are the various representations of the current version of Xerces.
