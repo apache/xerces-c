@@ -102,7 +102,7 @@ PKGTARGET=lib$(PKGNAME)$(ICUSHLIBSUFFIX)
 RESFILES=$(RESNAME)_en_US.res
 
 # list of resource bundles  - keep in sync with RESFILES
-RESLIST=res-file-list.txt
+RESLIST=res-file-list-unix.txt
 
 # list of targets that aren't actually created
 .PHONY: all clean distclean check report 
