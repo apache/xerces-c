@@ -179,8 +179,8 @@ int main(int argC, char* argV[])
     parser.setDoNamespaces(doNamespaces);
 
     // And create our error handler and install it
-    DOMCount elementCounter;
-    parser.setErrorHandler(&elementCounter);
+    DOMCountErrorHandler errorHandler;
+    parser.setErrorHandler(&errorHandler);
 
     //
     //  Get the starting time and kick off the parse of the indicated
@@ -221,7 +221,7 @@ int main(int argC, char* argV[])
     //  Extract the DOM tree, get the list of all the elements and report the
     //  length as the count of elements.
     //
-    if (elementCounter.getSawErrors())
+    if (errorHandler.getSawErrors())
     {
         cout << "\nErrors occured, no output available\n" << endl;
     }
@@ -242,13 +242,13 @@ int main(int argC, char* argV[])
 }
 
 
-DOMCount::DOMCount() :
+DOMCountErrorHandler::DOMCountErrorHandler() :
 
     fSawErrors(false)
 {
 }
 
-DOMCount::~DOMCount()
+DOMCountErrorHandler::~DOMCountErrorHandler()
 {
 }
 
@@ -256,7 +256,7 @@ DOMCount::~DOMCount()
 // ---------------------------------------------------------------------------
 //  DOMCountHandlers: Overrides of the SAX ErrorHandler interface
 // ---------------------------------------------------------------------------
-void DOMCount::error(const SAXParseException& e)
+void DOMCountErrorHandler::error(const SAXParseException& e)
 {
     fSawErrors = true;
     cerr << "\nError at file " << StrX(e.getSystemId())
@@ -265,7 +265,7 @@ void DOMCount::error(const SAXParseException& e)
          << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
-void DOMCount::fatalError(const SAXParseException& e)
+void DOMCountErrorHandler::fatalError(const SAXParseException& e)
 {
     fSawErrors = true;
     cerr << "\nFatal Error at file " << StrX(e.getSystemId())
@@ -274,7 +274,7 @@ void DOMCount::fatalError(const SAXParseException& e)
          << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
-void DOMCount::warning(const SAXParseException& e)
+void DOMCountErrorHandler::warning(const SAXParseException& e)
 {
     cerr << "\nWarning at file " << StrX(e.getSystemId())
          << ", line " << e.getLineNumber()
@@ -282,6 +282,6 @@ void DOMCount::warning(const SAXParseException& e)
          << "\n  Message: " << StrX(e.getMessage()) << endl;
 }
 
-void DOMCount::resetErrors()
+void DOMCountErrorHandler::resetErrors()
 {
 }

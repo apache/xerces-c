@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/10/20 22:00:35  andyh
+ * DOMCount sample Minor cleanup - rename error handler class to say that it is an error handler.
+ *
  * Revision 1.4  2000/03/02 19:53:39  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -87,14 +90,14 @@ class SAXParseException;
 // ---------------------------------------------------------------------------
 //  Simple error handler deriviative to install on parser
 // ---------------------------------------------------------------------------
-class DOMCount : public ErrorHandler
+class DOMCountErrorHandler : public ErrorHandler
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    DOMCount();
-    ~DOMCount();
+    DOMCountErrorHandler();
+    ~DOMCountErrorHandler();
 
 
     // -----------------------------------------------------------------------
@@ -116,8 +119,8 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    DOMCount(const DOMCount&);
-    void operator=(const DOMCount&);
+    DOMCountErrorHandler(const DOMCountErrorHandler&);
+    void operator=(const DOMCountErrorHandler&);
 
 
     // -----------------------------------------------------------------------
@@ -178,7 +181,7 @@ inline ostream& operator<<(ostream& target, const StrX& toDump)
     return target;
 }
 
-inline bool DOMCount::getSawErrors() const
+inline bool DOMCountErrorHandler::getSawErrors() const
 {
     return fSawErrors;
 }
