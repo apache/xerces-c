@@ -317,24 +317,25 @@ XMLMacFile::create(const XMLCh* const filePath)
     const XMLCh* namePtr = filePath + posName;
     int nameLen = XMLString::stringLen(namePtr);
 
-    //	Make a temporary buffer of the directory
+    //	Make a temporary string of the directory
     ArrayJanitor<XMLCh> dirPath(new XMLCh[namePtr - filePath + 1]);
     XMLString::subString(dirPath.get(), filePath, 0, posName);
 
-    //	Parse path to directory
+    //	Create the file as appropriate for API set
     if (gHasHFSPlusAPIs)
     {
+    	//	HFS+
         FSRef ref;
 
         //	If we find an existing file, delete it
         if (XMLParsePathToFSRef(filePath, ref))
             FSDeleteObject(&ref);
 
-        //	Get a ref to the directory
+        //	Get a ref to the parent directory
         if (!XMLParsePathToFSRef(dirPath.get(), ref))
             err = fnfErr;
 
-        //	Create a new file
+        //	Create a new file using the unicode name
         if (err == noErr)
         {
             UniChar uniName[256];
@@ -346,6 +347,7 @@ XMLMacFile::create(const XMLCh* const filePath)
     }
     else
     {
+    	//	HFS
         FSSpec spec;
 
         //	If we find an existing file, delete it
@@ -364,27 +366,28 @@ XMLMacFile::create(const XMLCh* const filePath)
         {
             //	Transcode the unicode name to native encoding
             ArrayJanitor<const char> nativeName(XMLString::transcode(namePtr));
-            unsigned char name[31 * 2 + 1 * 2 + 1];
             
-            // Make a partial pathname from our current spec to the new object
+            // Make a partial pathname from our current spec (parent directory) to the new file
+            unsigned char name[31 * 2 + 1 * 2 + 1];
             unsigned char* partial = &name[1];
 
             *partial++ = ':';      			 // Partial leads with :
-            const unsigned char* specName = spec.name; // Copy in spec name
+            const unsigned char* specName = spec.name;	// Copy in spec name
             for (int specCnt = *specName++; specCnt > 0; --specCnt)
                 *partial++ = *specName++;
 
-            *partial++ = ':';      			 // Separator
+            *partial++ = ':';      			 // Path component separator
             char c;
             for (const char* p = nativeName.get(); (c = *p++) != 0; ) // Copy in new element
-                *partial++ = (c == ':') ? '/' : c;	// Convert : to /
+                *partial++ = (c == ':') ? '/' : c;		// Convert : to /
 
-            name[0] = partial - &name[1];   // Set the name length
+            name[0] = partial - &name[1];   // Set the pascal string name length
 
             //	Update the spec: this will probably return fnfErr
+            //					 (since we just deleted any existing file)
             err = FSMakeFSSpec(spec.vRefNum, spec.parID, name, &spec);
 
-            //	Create the file
+            //	Create the file from the spec
             err = FSpCreate(&spec, '??\??', 'TEXT', smSystemScript);
         }
     }
