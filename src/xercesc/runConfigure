@@ -87,7 +87,8 @@ usage()
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 
             'netbsd', 'solaris', 'hp-10', 'hp-11', 'openserver', 'unixware', 
-            'os400', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 'qnx')
+            'os400', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 'qnx',
+            'interix')
             [required; no default]"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc or ecc) 
             [default is make default; cc for gnu make]"
@@ -242,7 +243,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin | qnx)
+   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin | qnx | interix)
        # platform has been recognized
        ;;
    *)

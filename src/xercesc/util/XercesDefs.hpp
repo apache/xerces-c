@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/02/04 13:26:44  amassari
+ * Added support for the Interix platform (Windows Services for Unix 3.5)
+ *
  * Revision 1.15  2003/05/29 11:18:37  gareth
  * Added macros in so we can determine whether to do things like iostream as opposed to iostream.h and whether to use std:: or not.
  *
@@ -265,6 +268,10 @@
 
 #if defined(XML_IRIX)
 #include    <xercesc/util/Platforms/IRIX/IRIXDefs.hpp>
+#endif
+
+#if defined(XML_INTERIX)
+#include    <xercesc/util/Platforms/Interix/InterixDefs.hpp>
 #endif
 
 #if defined(XML_TANDEM)

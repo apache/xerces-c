@@ -1332,6 +1332,7 @@ case "${host}" in
         *-*-osf*)		platform=TRU64 ;;
         *-apple-*)		platform=MACOSX ;;
         *-*-cygwin*)    platform=CYGWIN ;;
+        *-*-interix*)   platform=INTERIX ;;
         *)              platform=UNKNOWN ;;
 esac
 
@@ -1516,6 +1517,7 @@ util/Platforms/Solaris/Makefile \
 util/Platforms/AIX/Makefile \
 util/Platforms/BeOS/Makefile \
 util/Platforms/QNX/Makefile \
+util/Platforms/Interix/Makefile \
 util/Platforms/Linux/Makefile \
 util/Platforms/FreeBSD/Makefile \
 util/Platforms/NetBSD/Makefile \
@@ -1673,6 +1675,7 @@ util/Platforms/Solaris/Makefile \
 util/Platforms/AIX/Makefile \
 util/Platforms/BeOS/Makefile \
 util/Platforms/QNX/Makefile \
+util/Platforms/Interix/Makefile \
 util/Platforms/Linux/Makefile \
 util/Platforms/FreeBSD/Makefile \
 util/Platforms/NetBSD/Makefile \

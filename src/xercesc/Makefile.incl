@@ -323,6 +323,15 @@ ICUSHLIBSUFFIX=.so
 LD_SONAME = -Wl,-soname,${SO_NAME}
 endif
 
+#=============== INTERIX SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, INTERIX)
+    PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT -D_ALL_SOURCE
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+    ALLLIBS = ${LIBS}
+    SHLIBSUFFIX=.so
+endif
+
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
 PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT

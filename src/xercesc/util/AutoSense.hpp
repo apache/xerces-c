@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/02/04 13:26:44  amassari
+ * Added support for the Interix platform (Windows Services for Unix 3.5)
+ *
  * Revision 1.12  2003/05/21 21:08:04  knoaman
  * gcc 2.95.x is generating an internal error for some template definitions, so
  * we use the default memory manger in such cases.
@@ -262,6 +265,9 @@
     #define XML_TRU64
 #elif defined(__NetBSD__)
     #define XML_NETBSD
+#elif defined(__INTERIX)
+    #define XML_INTERIX
+    #define XML_UNIX
 #else
     #error Code requires port to host OS!
 #endif

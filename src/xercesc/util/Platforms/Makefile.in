@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2004/02/04 13:26:44  amassari
+# Added support for the Interix platform (Windows Services for Unix 3.5)
+#
 # Revision 1.8  2003/05/12 09:44:19  gareth
 # Port to NetBSD. Patch by Hiramatsu Yoshifumi.
 #
@@ -204,6 +207,9 @@ ifeq (${PLATFORM}, MACOSX)
 endif
 ifeq (${PLATFORM}, CYGWIN)
     SUBMODULE = Win32
+endif
+ifeq (${PLATFORM}, INTERIX)
+    SUBMODULE = Interix
 endif
 
 includes::
