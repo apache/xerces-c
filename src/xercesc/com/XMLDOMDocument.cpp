@@ -176,6 +176,10 @@ void CXMLDOMDocument::FinalRelease()
 		m_pOnTransformNode = NULL;
 	}
 
+    if(m_Document)
+        delete m_Document;
+    m_Document = NULL;
+
 	DestroyWindow();
 }
 
@@ -224,6 +228,8 @@ LRESULT CXMLDOMDocument::OnReadyStateChange(UINT uMsg, WPARAM wParam, LPARAM lPa
 	if (m_lReadyState != 4)
 		return 1L;
 
+    if(m_Document)
+        delete m_Document;
 	m_Document = m_TmpDocument;
 	m_TmpDocument = 0;
 	
@@ -1150,6 +1156,8 @@ STDMETHODIMP CXMLDOMDocument::load(VARIANT xmlSource, VARIANT_BOOL  *isSuccessfu
 	if (m_bParseError)
 		return hr;
 
+    if(m_Document)
+        delete m_Document;
 	m_Document = m_TmpDocument;
 	m_TmpDocument = 0;
 	
@@ -1337,6 +1345,8 @@ STDMETHODIMP CXMLDOMDocument::loadXML(BSTR bstrXML, VARIANT_BOOL  *isSuccessful)
 	if (m_bParseError)
 		return hr;
 
+    if(m_Document)
+        delete m_Document;
 	m_Document = m_TmpDocument;
 	m_TmpDocument = 0;
 	

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/02/27 13:23:02  amassari
+ * Fixed memory leaks
+ *
  * Revision 1.3  2004/02/25 18:38:33  amassari
  * The COM wrapper doesn't use the deprecated DOM anymore
  *
@@ -248,7 +251,10 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 		XMLPlatformUtils::Initialize();
     }
     else if (dwReason == DLL_PROCESS_DETACH)
+    {
+        XMLPlatformUtils::Terminate();
         _Module.Term();
+    }
     return TRUE;    // ok
 }
 
