@@ -1,0 +1,254 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 39;
+	objects = {
+		0249A662FF388D9811CA2CEA = {
+			children = (
+				902151AB055B3A4B00086E2E,
+			);
+			isa = PBXGroup;
+			name = "External Frameworks and Libraries";
+			path = "";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+//020
+//021
+//022
+//023
+//024
+//080
+//081
+//082
+//083
+//084
+		08FB7793FE84155DC02AAC07 = {
+			buildSettings = {
+			};
+			buildStyles = (
+				F58B304702DE343B0195DDC8,
+				F58B304802DE34410195DDC8,
+			);
+			hasScannedForEncodings = 1;
+			isa = PBXProject;
+			mainGroup = 08FB7794FE84155DC02AAC07;
+			projectDirPath = "";
+			targets = (
+				90E140B80541872600C60A69,
+			);
+		};
+		08FB7794FE84155DC02AAC07 = {
+			children = (
+				F52345F503AE603601A80065,
+				08FB7795FE84155DC02AAC07,
+				0249A662FF388D9811CA2CEA,
+				1AB674ADFE9D54B511CA2CBB,
+			);
+			isa = PBXGroup;
+			name = SEnumVal;
+			path = ../../../../../samples/SEnumVal;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		08FB7795FE84155DC02AAC07 = {
+			children = (
+				2E8D1E5D05852B5C000583E6,
+			);
+			isa = PBXGroup;
+			name = Sources;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//080
+//081
+//082
+//083
+//084
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+		1AB674ADFE9D54B511CA2CBB = {
+			children = (
+				90E140C70541872700C60A69,
+			);
+			isa = PBXGroup;
+			name = Products;
+			path = "";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+//2E0
+//2E1
+//2E2
+//2E3
+//2E4
+		2E8D1E5D05852B5C000583E6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = SEnumVal.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		2E8D1E5E05852B5C000583E6 = {
+			fileRef = 2E8D1E5D05852B5C000583E6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//2E0
+//2E1
+//2E2
+//2E3
+//2E4
+//900
+//901
+//902
+//903
+//904
+		902151AB055B3A4B00086E2E = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Xerces.framework;
+			path = ../../XercesLib/build/Xerces.framework;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		902151AC055B3A4B00086E2E = {
+			fileRef = 902151AB055B3A4B00086E2E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90E140B80541872600C60A69 = {
+			buildPhases = (
+				90E140B90541872600C60A69,
+				90E140BE0541872600C60A69,
+				90E140C30541872600C60A69,
+				90E140C50541872600C60A69,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				BUILD_SETTING = "";
+				FRAMEWORK_SEARCH_PATHS = ../../XercesLib/build;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../xerces_sample_prefix.h;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				HEADER_SEARCH_PATHS = ../../../../../src/;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = SEnumVal;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = SEnumVal;
+			productName = SEnumVal;
+			productReference = 90E140C70541872700C60A69;
+			productType = "com.apple.product-type.tool";
+		};
+		90E140B90541872600C60A69 = {
+			buildActionMask = 2147483647;
+			files = (
+				90E140BD0541872600C60A69,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		90E140BD0541872600C60A69 = {
+			fileRef = F52345F503AE603601A80065;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		90E140BE0541872600C60A69 = {
+			buildActionMask = 2147483647;
+			files = (
+				2E8D1E5E05852B5C000583E6,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		90E140C30541872600C60A69 = {
+			buildActionMask = 2147483647;
+			files = (
+				902151AC055B3A4B00086E2E,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		90E140C50541872600C60A69 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		90E140C70541872700C60A69 = {
+			explicitFileType = "compiled.mach-o.executable";
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = SEnumVal;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+//900
+//901
+//902
+//903
+//904
+//F50
+//F51
+//F52
+//F53
+//F54
+		F52345F503AE603601A80065 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = xerces_sample_prefix.h;
+			path = ../xerces_sample_prefix.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		F58B304702DE343B0195DDC8 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				OPTIMIZATION_CFLAGS = "-O0";
+			};
+			isa = PBXBuildStyle;
+			name = "Development GCC3";
+		};
+		F58B304802DE34410195DDC8 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			isa = PBXBuildStyle;
+			name = "Deployment GCC3";
+		};
+	};
+	rootObject = 08FB7793FE84155DC02AAC07;
+}
