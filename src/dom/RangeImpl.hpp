@@ -124,7 +124,7 @@ public:
     const DOM_Node    getCommonAncestorContainer() const;
 
     // functions to inform all existing valid ranges about a change
-    void updateSplitInfo(TextImpl* oldNode, TextImpl* startNode);
+    void updateSplitInfo(TextImpl* oldNode, TextImpl* startNode, unsigned int offset);
     void updateRangeForInsertedNode(NodeImpl* node);
     void receiveReplacedText(NodeImpl* node);
     void updateRangeForDeletedText(DOM_Node& node, unsigned int offset, int count);

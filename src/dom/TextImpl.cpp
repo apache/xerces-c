@@ -133,7 +133,7 @@ TextImpl *TextImpl::splitText(unsigned int offset)
             unsigned int sz = ranges->size();
             if (sz != 0) {
                 for (unsigned int i =0; i<sz; i++) {
-                    ranges->elementAt(i)->updateSplitInfo( this, newText);
+                    ranges->elementAt(i)->updateSplitInfo( this, newText, offset);
                 }
             }
         }

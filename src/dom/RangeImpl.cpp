@@ -197,7 +197,9 @@ void RangeImpl::setStart(const DOM_Node& refNode, unsigned int offset)
         collapse(true); 
     }
     
-    if (fStartOffset >= fEndOffset)
+    //compare the start and end boundary point
+    //collapse if start point is after the end point
+    if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
         collapse(true); //collapse the range positions to start
     else
         fCollapsed = false;
@@ -217,7 +219,9 @@ void RangeImpl::setEnd(const DOM_Node& refNode, unsigned int offset)
         collapse(false);
     }
     
-    if (fEndOffset <= fStartOffset) 
+    //compare the start and end boundary point
+    //collapse if start point is after the end point
+    if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
         collapse(false); //collapse the range positions to end
     else
         fCollapsed = false;
@@ -244,7 +248,9 @@ void RangeImpl::setStartBefore(const DOM_Node& refNode)
         collapse(true); 
     }
     
-    if (fStartOffset > fEndOffset)
+    //compare the start and end boundary point
+    //collapse if start point is after the end point
+    if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
         collapse(true); //collapse the range positions to start
     else
         fCollapsed = false;
@@ -269,7 +275,9 @@ void RangeImpl::setStartAfter(const DOM_Node& refNode)
         collapse(true); 
     }
     
-    if (fStartOffset > fEndOffset)
+    //compare the start and end boundary point
+    //collapse if start point is after the end point
+    if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
         collapse(true); //collapse the range positions to start
     else
         fCollapsed = false;
@@ -295,7 +303,9 @@ void RangeImpl::setEndBefore(const DOM_Node& refNode)
         collapse(true); 
     }
     
-    if (fEndOffset < fStartOffset) 
+    //compare the start and end boundary point
+    //collapse if start point is after the end point
+    if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
         collapse(false); //collapse the range positions to end
     else
         fCollapsed = false;
@@ -321,7 +331,9 @@ void RangeImpl::setEndAfter(const DOM_Node& refNode)
         collapse(true); 
     }
     
-    if (fEndOffset < fStartOffset) 
+    //compare the start and end boundary point
+    //collapse if start point is after the end point
+    if(compareBoundaryPoints(DOM_Range::END_TO_START, this) == 1)
         collapse(false); //collapse the range positions to end
     else
         fCollapsed = false;
@@ -503,28 +515,28 @@ short RangeImpl::compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* src
     switch (how)
     {
     case (DOM_Range::START_TO_START) :
-        pointA = srcRange->getStartContainer();
-        pointB = fStartContainer;
-        offsetA = srcRange->getStartOffset();
-        offsetB = fStartOffset;
+        pointB = srcRange->getStartContainer();
+        pointA = fStartContainer;
+        offsetB = srcRange->getStartOffset();
+        offsetA = fStartOffset;
         break;
     case (DOM_Range::START_TO_END) :
-        pointA = srcRange->getStartContainer();
-        pointB = fEndContainer;
-        offsetA = srcRange->getStartOffset();
-        offsetB = fEndOffset;
+        pointB = srcRange->getStartContainer();
+        pointA = fEndContainer;
+        offsetB = srcRange->getStartOffset();
+        offsetA = fEndOffset;
         break;
     case (DOM_Range::END_TO_START) :
-        pointA = srcRange->getEndContainer();
-        pointB = fStartContainer;
-        offsetA = srcRange->getEndOffset();
-        offsetB = fStartOffset;
+        pointB = srcRange->getEndContainer();
+        pointA = fStartContainer;
+        offsetB = srcRange->getEndOffset();
+        offsetA = fStartOffset;
         break;
     case (DOM_Range::END_TO_END) :
-        pointA = srcRange->getEndContainer();
-        pointB = fEndContainer;
-        offsetA = srcRange->getEndOffset();
-        offsetB = fEndOffset;
+        pointB = srcRange->getEndContainer();
+        pointA = fEndContainer;
+        offsetB = srcRange->getEndOffset();
+        offsetA = fEndOffset;
         break;
     }
     
@@ -807,6 +819,7 @@ void RangeImpl::insertNode(DOM_Node& newNode)
 
         //set 'parent' and 'next' here
         parent = fStartContainer.getParentNode();
+
         //split the text nodes
        if (fStartOffset > 0) 
             ((DOM_Text &)fStartContainer).splitText(fStartOffset);
@@ -833,7 +846,6 @@ void RangeImpl::insertNode(DOM_Node& newNode)
         else 
             parent.appendChild(newNode);
     }
-
 }
 
 RangeImpl* RangeImpl::cloneRange() const
@@ -863,7 +875,9 @@ DOMString RangeImpl::toString() const
     if ( (fStartContainer.getNodeType() == DOM_Node::TEXT_NODE)
         || (fStartContainer.getNodeType() == DOM_Node::CDATA_SECTION_NODE) ) {
         if (fStartContainer == fEndContainer) {
-            tempString.appendData(fStartContainer.getNodeValue().substringData(fStartOffset, fEndOffset));
+            //the substringData returns a substring from start to end all inclusive
+            //we want a substring begins at fStartOffset inclusive, but ends at fEndOffset exclusive
+            tempString.appendData(fStartContainer.getNodeValue().substringData(fStartOffset, fEndOffset-1));
             return tempString;
         } else {
             int length = fStartContainer.getNodeValue().length();
@@ -940,7 +954,7 @@ unsigned short RangeImpl::indexOf(const DOM_Node& child, const DOM_Node& parent)
 {
     unsigned short i = 0;
     if (child.getParentNode() != parent) return (unsigned short)-1;
-    for(DOM_Node node = child; node!= null; node=node.getPreviousSibling()) {
+    for(DOM_Node node = child.getPreviousSibling(); node!= null; node=node.getPreviousSibling()) {
         i++;
     }
     return i;
@@ -1545,23 +1559,21 @@ void RangeImpl::updateRangeForInsertedNode(NodeImpl* node) {
 }
 
 
-void RangeImpl::updateSplitInfo(TextImpl* oldNode, TextImpl* startNode)
+void RangeImpl::updateSplitInfo(TextImpl* oldNode, TextImpl* startNode, unsigned int offset)
 {
     if (startNode == null) return;
     
     DOM_Text oldText(oldNode);
     DOM_Text newText(startNode);
-    unsigned int oldStartOffset;
 
-    if (fStartContainer == oldText) {
-        oldStartOffset = fStartOffset;
+    if (fStartContainer == oldText && fStartOffset > offset) {
+          fStartOffset = fStartOffset - offset;
         fStartContainer = newText;
-        fStartOffset = 0;
+    }
         
-        if (fEndContainer == oldText) {
+    if (fEndContainer == oldText && fEndOffset > offset) {
             fEndContainer = newText;
-            fEndOffset = fEndOffset - oldStartOffset;
-        }
+       fEndOffset = fEndOffset - offset;
     }
 }
 
