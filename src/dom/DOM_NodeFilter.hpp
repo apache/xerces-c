@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/10 21:47:12  abagchi
+ * Added API docs
+ *
  * Revision 1.3  2000/02/06 07:47:30  rahulj
  * Year 2K copyright swat.
  *
@@ -82,17 +85,54 @@
 class NodeFilterImpl;
 
 
-/*
-*	This class wraps a NodeFilterImpl object, which is reference counted. Users
-*	are expected to subclass NodeFilterImpl to provide the desired filter. An example
-*	of this is in NameNodeFilterImpl.[cpp,hpp]
-*/
+/**
+ *  This class wraps a NodeFilterImpl object, which is reference counted. Users
+ *  are expected to subclass NodeFilterImpl to provide the desired filter. An example
+ *  of this is in NameNodeFilterImpl.[cpp,hpp]
+ *  Filters are objects that know how to "filter out" nodes. If a NodeIterator or
+ *  TreeWalker is given a filter, it applies the filter before it returns the next node. If the
+ *  filter says to accept the node, the iterator returns it; otherwise, the iterator looks for
+ *  the next node and pretends that the node that was rejected was not there.
+ *
+ *  The DOM does not provide any filters. Filter is just an interface that users can
+ *  implement to provide their own filters. 
+ *
+ *  Filters do not need to know how to iterate, nor do they need to know anything
+ *  about the data structure that is being iterated. This makes it very easy to write
+ *  filters, since the only thing they have to know how to do is evaluate a single node.
+ *  One filter may be used with a number of different kinds of iterators, encouraging
+ *  code reuse.
+ */
 
 
 class CDOM_EXPORT DOM_NodeFilter
 {
 	public:
-		enum FilterAction {FILTER_ACCEPT, FILTER_REJECT, FILTER_SKIP};
+	/** @name Enumerators for Node Filter */
+    //@{
+	/**
+	  *		<table><tr><td>FILTER_ACCEPT</td>
+          *            <td>Accept the node. Navigation methods defined for
+          *                NodeIterator or TreeWalker will return this node.</td>
+	  *			</tr>
+	  *			<tr><td>
+          *               FILTER_REJECT</td>
+          *               <td>Reject the node. Navigation methods defined for
+          *               NodeIterator or TreeWalker will not return this
+          *               node. For TreeWalker, the children of this node will
+          *               also be rejected. Iterators treat this as a synonym
+          *               for FILTER_SKIP.</td>
+	  *			</tr>
+	  *			<tr><td>FILTER_SKIP</td>
+          *              <td>Reject the node. Navigation methods defined for
+          *                  NodeIterator or TreeWalker will not return this
+          *                  node. For both NodeIterator and Treewalker, the
+          *                  children of this node will still be considered.</td>
+ 	  *			</tr>
+	  *		</table>
+          *
+	  */
+	enum FilterAction {FILTER_ACCEPT, FILTER_REJECT, FILTER_SKIP};
         enum ShowType {
             SHOW_ALL                       = 0x0000FFFF,
             SHOW_ELEMENT                   = 0x00000001,
@@ -108,10 +148,41 @@ class CDOM_EXPORT DOM_NodeFilter
             SHOW_DOCUMENT_FRAGMENT         = 0x00000400,
             SHOW_NOTATION                  = 0x00000800
         };
+	//@}
+
+    /** @name Constructors */
+    //@{
+    /**
+      * Default constructor for DOM_NodeFilter.
+      *
+      */
 
     DOM_NodeFilter();
+	//@}
+
+    /** @name Destructor */
+    //@{
+    /**
+      * Destructor
+      *
+      */
     virtual ~DOM_NodeFilter();
+	//@}
+
+    /** @name Destructor */
+    //@{
+    /**
+      * Test whether a specified node is visible in the logical view of a <code>TreeWalker</code>
+      * or <code>NodeIterator</code>. This function will be called by the implementation of
+      * TreeWalker and NodeIterator; it is not intended to be called directly from
+      * user code.
+      *
+      * @param node The node to check to see if it passes the filter or not.
+      * @return Returns a constant to determine whether the node is accepted, rejected,
+      *          or skipped
+      */
     virtual short acceptNode (DOM_Node node) =0;
+	//@}
 
 private:
     DOM_NodeFilter(const DOM_NodeFilter &other);
