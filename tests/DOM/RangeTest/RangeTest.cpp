@@ -450,7 +450,7 @@ int  main()
 
             //Testing toString()
             const char* str = aRange.toString().transcode();
-            char* str2 = "eplacedTextinsertedTexttle";
+            const char* str2 = "eplacedTextinsertedTexttle";
             TASSERT(*str == *str2);
 
             //start and end before and after tests
