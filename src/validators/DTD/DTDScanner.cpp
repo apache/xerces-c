@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/07/10 20:56:17  tng
+ * Should check the first char of PI Target Name.
+ *
  * Revision 1.14  2001/07/09 13:42:20  tng
  * Partial Markup in Parameter Entity is validity constraint and thus should be just error, not fatal error.
  *
@@ -3535,7 +3538,7 @@ void DTDScanner::scanPI()
 
     // Get a buffer for the PI name and scan it in
     XMLBufBid bbName(fBufMgr);
-    if (!fReaderMgr->getNameToken(bbName.getBuffer()))
+    if (!fReaderMgr->getName(bbName.getBuffer()))
     {
         fScanner->emitError(XMLErrs::PINameExpected);
         fReaderMgr->skipPastChar(chCloseAngle);

@@ -1844,7 +1844,7 @@ void XMLScanner::scanPI()
 
     // Get a buffer for the PI name and scan it in
     XMLBufBid bbName(&fBufMgr);
-    if (!fReaderMgr.getNameToken(bbName.getBuffer()))
+    if (!fReaderMgr.getName(bbName.getBuffer()))
     {
         emitError(XMLErrs::PINameExpected);
         fReaderMgr.skipPastChar(chCloseAngle);
