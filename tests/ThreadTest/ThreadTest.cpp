@@ -357,19 +357,19 @@ public:
     void warning(const SAXParseException& exc)     {
         fprintf(stderr, "*** Warning ");
         fflush(stderr);
-        throw exception;
+        throw exc;
     };
 
     void error(const SAXParseException& exc)       {
         fprintf(stderr, "*** Error ");
         fflush(stderr);
-        throw exception;
+        throw exc;
     };
 
     void fatalError(const SAXParseException& exc)  {
         fprintf(stderr, "***** Fatal error ");
         fflush(stderr);
-        throw exception;
+        throw exc;
     };
 
     // Create a nested class that can inherit from HandlerBase
