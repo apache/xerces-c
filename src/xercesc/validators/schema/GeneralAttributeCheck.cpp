@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/09/27 13:22:52  tng
+ * [Bug 13073] GeneralAttributeCheck.cpp : compilation fails with Sun C++ 4.2 on Solaris2.7 system.
+ *
  * Revision 1.7  2002/09/26 21:08:14  tng
  * [Bug12849] comparison is always false warning.  Patch from Gareth Reakes
  *
@@ -832,7 +835,7 @@ void GeneralAttributeCheck::initCharFlagTable()
 #endif
 
 
-unsigned short GeneralAttributeCheck::fgElemAttTable[E_Count][A_Count] =
+unsigned short GeneralAttributeCheck::fgElemAttTable[GeneralAttributeCheck::E_Count][GeneralAttributeCheck::A_Count] =
 {
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 258, 0, 514, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
