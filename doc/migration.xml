@@ -43,6 +43,13 @@
                    <li>const bool InputSource::getIssueFatalErrorIfNotFound() const</li>
                    <li>void InputSource::setIssueFatalErrorIfNotFound(const bool flag</li>
                 </ul>
+              <li>Allow code to take advantage of the fact that the length of the prefix and
+                  local name are known when constructing the QName.
+                  Add the following new methods:</li>
+                <ul>
+                   <li>void QName::setNPrefix(const XMLCh*, const unsigned int)</li>
+                   <li>void QName::setNLocalPart(const XMLCh*, const unsigned int)</li>
+                </ul>
               <li>To support schemaLocation and noNamespaceSchemaLocation to be specified outside the
                   instance document, the following new methods are added:</li>
               <ul>

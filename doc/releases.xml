@@ -56,6 +56,40 @@
 
     <tr>
         <td>2001-12-06</td>
+        <td>Henry Zongaro</td>
+        <td>Performance Enhancement.  Added setNPrefix and setNLocalPart methods in QName that
+            allow code to take advantage of the fact that it knows the length of the prefix and
+            local name, when possible.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-06</td>
+        <td>Henry Zongaro</td>
+        <td>Performance Enhancement.  Added a second ContentSpecNode constructor that allows
+            the QName to be just assigned, not copied.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-06</td>
+        <td>Henry Zongaro</td>
+        <td>Performance Enhancement.  Added a second CMLeaf constructor that indicated the
+            QName passed in was to be adopted.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-06</td>
+        <td>Henry Zongaro</td>
+        <td>Performance Enhancement.  Modify the handling of the fNEL option so that it results
+            in fgCharCharsTable being modified, instead of having all of the low-level routines check
+            the option.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-06</td>
         <td>Tinny Ng</td>
         <td>Make the runConfigure and associated config*, Makefile* in folders tests,
             samples and src more consistent.
