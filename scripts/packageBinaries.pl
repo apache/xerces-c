@@ -360,8 +360,6 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
         psystem("cp -fv $ICUROOT/bin/icudt30*.DLL $targetdir/bin");
         psystem("cp -fv $ICUROOT/bin/icudt30*.dll $targetdir/bin");
 
-        psystem("cp -fv $ICUROOT/lib/icudata.lib $targetdir/lib");
-
         psystem("cp -fv $ICUROOT/lib/icuuc.lib $targetdir/lib");
         psystem("cp -fv $ICUROOT/lib/icuucd.lib $targetdir/lib");
 
@@ -1179,11 +1177,11 @@ sub change_windows_project_for_ICU() {
        
         if ($MsgLoader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_5_0.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_5_0.lib/g;
         }        
         elsif ($Transcoder)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib/g;
         }
         
         if ($Transcoder)
@@ -1228,11 +1226,11 @@ sub change_windows_makefile_for_ICU() {
 
         if ($MsgLoader)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib XercesMessages2_5_0.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib XercesMessages2_5_0.lib/g;
         }        
         elsif ($Transcoder)
         {
-            $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
+            $line =~ s/user32.lib/user32.lib $icuuc.lib/g;
         }
             
         if ($Transcoder) {
@@ -1275,11 +1273,11 @@ sub change_windows_project_for_ICU_VC7() {
         
         if ($MsgLoader)
         {
-            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib XercesMessages2_5_0.lib $1/;
+            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib XercesMessages2_5_0.lib $1/;
         }        
         elsif ($Transcoder)
         {
-            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib $1/;
+            $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib $1/;
         }
 
         if ($Transcoder) {
