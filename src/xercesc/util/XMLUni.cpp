@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1080,6 +1080,21 @@ const XMLCh XMLUni::fgXercesSchemaExternalSchemaLocation[] =
     ,   chLatin_t, chLatin_e, chLatin_r, chLatin_n, chLatin_a, chLatin_l, chDash
     ,   chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chLatin_L
     ,   chLatin_o, chLatin_c, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+//Property
+//Xerces: http://apache.org/xml/properties/security-manager
+const XMLCh XMLUni::fgXercesSecurityManager[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_p, chLatin_r
+    ,   chLatin_o, chLatin_p, chLatin_e, chLatin_r, chLatin_t, chLatin_i
+    ,   chLatin_e, chLatin_s, chForwardSlash, chLatin_s, chLatin_e, chLatin_c
+    ,   chLatin_u, chLatin_r, chLatin_i, chLatin_t, chLatin_y, chDash
+    ,   chLatin_m, chLatin_a, chLatin_n, chLatin_a, chLatin_g, chLatin_e, chLatin_r
+    ,   chNull
 };
 
 //Property

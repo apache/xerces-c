@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002, 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,6 +65,7 @@
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
+#include <xercesc/util/SecurityManager.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
@@ -339,6 +340,23 @@ public :
       */
     XMLCh* getExternalNoNamespaceSchemaLocation() const;
 
+   /** Get the SecurityManager instance attached to this parser.
+      *
+      * This method returns the security manager 
+      * that was specified using setSecurityManager.
+      *
+      * The SecurityManager instance must have been specified by the application; 
+      * this should not be deleted until after the parser has been deleted (or
+      * a new SecurityManager instance has been supplied to the parser).
+      * 
+      * @return a pointer to the SecurityManager instance 
+      *         specified externally.  A null pointer is returned if nothing
+      *         was specified externally.
+      *
+      * @see #setSecurityManager(const SecurityManager* const)
+      */
+    SecurityManager* getSecurityManager() const;
+
     /** Get the 'Loading External DTD' flag
       *
       * This method returns the state of the parser's loading external DTD
@@ -605,6 +623,23 @@ public :
       * @see #setExternalNoNamespaceSchemaLocation(const XMLCh* const)
       */
     void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
+
+    /**
+      * This allows an application to set a SecurityManager on
+      * the parser; this object stores information that various
+      * components use to limit their consumption of system
+      * resources while processing documents.
+      *
+      * If this method is called more than once, only the last one takes effect.
+      * It may not be reset during a parse.
+      *
+      *
+      * @param securityManager  the SecurityManager instance to
+      * be used by this parser
+      *
+      * @see #getSecurityManager
+      */
+    void setSecurityManager(SecurityManager* const securityManager);
 
     /** Set the 'Loading External DTD' flag
       *

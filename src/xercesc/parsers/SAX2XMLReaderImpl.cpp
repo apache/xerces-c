@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,28 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/04/17 21:58:50  neilg
+ * Adding a new property,
+ * http://apache.org/xml/properties/security-manager, with
+ * appropriate getSecurityManager/setSecurityManager methods on DOM
+ * and SAX parsers.  Also adding a new SecurityManager class.
+ *
+ * The purpose of these modifications is to permit applications a
+ * means to have the parser reject documents whose processing would
+ * otherwise consume large amounts of system resources.  Malicious
+ * use of such documents could be used to launch a denial-of-service
+ * attack against a system running the parser.  Initially, the
+ * SecurityManager only knows about attacks that can result from
+ * exponential entity expansion; this is the only known attack that
+ * involves processing a single XML document.  Other, simlar attacks
+ * can be launched if arbitrary schemas may be parsed; there already
+ * exist means (via use of the EntityResolver interface) by which
+ * applications can deny processing of untrusted schemas.  In future,
+ * the SecurityManager will be expanded to take these other exploits
+ * into account.
+ *
+ * Adding SecurityManager support
+ * 
  * Revision 1.16  2003/01/03 20:09:36  tng
  * New feature StandardUriConformant to force strict standard uri conformance.
  *
@@ -1494,6 +1516,10 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 	{
 		fScanner->setExternalNoNamespaceSchemaLocation((XMLCh*)value);
 	}
+	else if (XMLString::compareIString(name, XMLUni::fgXercesSecurityManager) == 0)
+	{
+		fScanner->setSecurityManager((SecurityManager*)value);
+	}
     else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
     {
         XMLScanner* tempScanner = XMLScannerResolver::resolveScanner((const XMLCh*) value, fValidator);
@@ -1518,6 +1544,8 @@ void* SAX2XMLReaderImpl::getProperty(const XMLCh* const name) const
         return (void*)fScanner->getExternalSchemaLocation();
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
         return (void*)fScanner->getExternalNoNamespaceSchemaLocation();
+    else if (XMLString::compareIString(name, XMLUni::fgXercesSecurityManager) == 0)
+        return (void*)fScanner->getSecurityManager();
     else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
         return (void*)fScanner->getName();
     else

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002,2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -298,6 +298,11 @@ XMLCh* AbstractDOMParser::getExternalNoNamespaceSchemaLocation() const
     return fScanner->getExternalNoNamespaceSchemaLocation();
 }
 
+SecurityManager* AbstractDOMParser::getSecurityManager() const
+{
+    return fScanner->getSecurityManager();
+}
+
 bool AbstractDOMParser::getLoadExternalDTD() const
 {
     return fScanner->getLoadExternalDTD();
@@ -368,6 +373,16 @@ void AbstractDOMParser::setExternalSchemaLocation(const char* const schemaLocati
 void AbstractDOMParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
 {
     fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
+}
+
+void AbstractDOMParser::setSecurityManager(SecurityManager* const securityManager)
+{
+    // since this could impact various components, don't permit it to change
+    // during a parse
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    fScanner->setSecurityManager(securityManager);
 }
 
 void AbstractDOMParser::setLoadExternalDTD(const bool newState)

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002, 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -389,6 +389,10 @@ void DOMBuilderImpl::setProperty(const XMLCh* const name, void* value)
 	{
 		setExternalNoNamespaceSchemaLocation((XMLCh*)value);
 	}
+	else if (XMLString::compareIString(name, XMLUni::fgXercesSecurityManager) == 0)
+	{
+		setSecurityManager((SecurityManager*)value);
+	}
     else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
     {
         AbstractDOMParser::useScanner((const XMLCh*) value);
@@ -404,6 +408,8 @@ void* DOMBuilderImpl::getProperty(const XMLCh* const name) const
         return (void*)getExternalSchemaLocation();
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
         return (void*)getExternalNoNamespaceSchemaLocation();
+    else if (XMLString::compareIString(name, XMLUni::fgXercesSecurityManager) == 0)
+        return (void*)getSecurityManager();
     else
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
     return 0;

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,28 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/04/17 21:58:50  neilg
+ * Adding a new property,
+ * http://apache.org/xml/properties/security-manager, with
+ * appropriate getSecurityManager/setSecurityManager methods on DOM
+ * and SAX parsers.  Also adding a new SecurityManager class.
+ *
+ * The purpose of these modifications is to permit applications a
+ * means to have the parser reject documents whose processing would
+ * otherwise consume large amounts of system resources.  Malicious
+ * use of such documents could be used to launch a denial-of-service
+ * attack against a system running the parser.  Initially, the
+ * SecurityManager only knows about attacks that can result from
+ * exponential entity expansion; this is the only known attack that
+ * involves processing a single XML document.  Other, simlar attacks
+ * can be launched if arbitrary schemas may be parsed; there already
+ * exist means (via use of the EntityResolver interface) by which
+ * applications can deny processing of untrusted schemas.  In future,
+ * the SecurityManager will be expanded to take these other exploits
+ * into account.
+ *
+ * add security manager
+ * 
  * Revision 1.15  2003/02/04 19:27:43  knoaman
  * Performance: use global buffer to eliminate repetitive memory creation/deletion.
  *
@@ -436,6 +458,11 @@ XMLCh* SAXParser::getExternalNoNamespaceSchemaLocation() const
     return fScanner->getExternalNoNamespaceSchemaLocation();
 }
 
+SecurityManager* SAXParser::getSecurityManager() const
+{
+    return fScanner->getSecurityManager();
+}
+
 bool SAXParser::getLoadExternalDTD() const
 {
     return fScanner->getLoadExternalDTD();
@@ -538,6 +565,16 @@ void SAXParser::setExternalSchemaLocation(const char* const schemaLocation)
 void SAXParser::setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation)
 {
     fScanner->setExternalNoNamespaceSchemaLocation(noNamespaceSchemaLocation);
+}
+
+void SAXParser::setSecurityManager(SecurityManager* const securityManager)
+{
+    // since this could impact various components, don't permit it to change
+    // during a parse
+    if (fParseInProgress)
+        ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
+
+    fScanner->setSecurityManager(securityManager);
 }
 
 void SAXParser::setLoadExternalDTD(const bool newState)

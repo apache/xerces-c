@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,28 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/04/17 21:58:50  neilg
+ * Adding a new property,
+ * http://apache.org/xml/properties/security-manager, with
+ * appropriate getSecurityManager/setSecurityManager methods on DOM
+ * and SAX parsers.  Also adding a new SecurityManager class.
+ *
+ * The purpose of these modifications is to permit applications a
+ * means to have the parser reject documents whose processing would
+ * otherwise consume large amounts of system resources.  Malicious
+ * use of such documents could be used to launch a denial-of-service
+ * attack against a system running the parser.  Initially, the
+ * SecurityManager only knows about attacks that can result from
+ * exponential entity expansion; this is the only known attack that
+ * involves processing a single XML document.  Other, simlar attacks
+ * can be launched if arbitrary schemas may be parsed; there already
+ * exist means (via use of the EntityResolver interface) by which
+ * applications can deny processing of untrusted schemas.  In future,
+ * the SecurityManager will be expanded to take these other exploits
+ * into account.
+ *
+ * Add support for the SecurityManager
+ * 
  * Revision 1.21  2003/03/07 18:09:17  tng
  * Return a reference instead of void for operator=
  *
@@ -211,6 +233,7 @@
 #include <xercesc/framework/XMLEntityHandler.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
+#include <xercesc/util/SecurityManager.hpp>
 #include <xercesc/validators/DTD/DocTypeHandler.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -463,6 +486,23 @@ public :
       * @see #setExternalNoNamespaceSchemaLocation(const XMLCh* const)
       */
     XMLCh* getExternalNoNamespaceSchemaLocation() const;
+
+   /** Get the SecurityManager instance attached to this parser.
+      *
+      * This method returns the security manager 
+      * that was specified using setSecurityManager.
+      *
+      * The SecurityManager instance must have been specified by the application; 
+      * this should not be deleted until after the parser has been deleted (or
+      * a new SecurityManager instance has been supplied to the parser).
+      * 
+      * @return a pointer to the SecurityManager instance 
+      *         specified externally.  A null pointer is returned if nothing
+      *         was specified externally.
+      *
+      * @see #setSecurityManager(const SecurityManager* const)
+      */
+    SecurityManager* getSecurityManager() const;
 
     /** Get the 'Loading External DTD' flag
       *
@@ -728,6 +768,23 @@ public :
       * @see #setExternalNoNamespaceSchemaLocation(const XMLCh* const)
       */
     void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
+
+    /**
+      * This allows an application to set a SecurityManager on
+      * the parser; this object stores information that various
+      * components use to limit their consumption of system
+      * resources while processing documents.
+      *
+      * If this method is called more than once, only the last one takes effect.
+      * It may not be reset during a parse.
+      *
+      *
+      * @param securityManager  the SecurityManager instance to
+      * be used by this parser
+      *
+      * @see #getSecurityManager
+      */
+    void setSecurityManager(SecurityManager* const securityManager);
 
     /** Set the 'Loading External DTD' flag
       *
