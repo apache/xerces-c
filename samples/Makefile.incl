@@ -71,7 +71,7 @@ LIBNAME=xercesc
 endif
 THISLIB=${LIB_DIR}/${LIBNAME}
 
-LIBRARY_NAMES=-l${LIBNAME}${VER}
+LIBRARY_NAMES=-l${LIBNAME}
 LIBRARY_SEARCH_PATHS=-L${LIB_DIR}
 
 TO = o
@@ -154,7 +154,7 @@ endif
 ifeq (${PLATFORM}, AIX)
 CMP= -c ${CXXFLAGS} -qnotempinc
 CC=${COMPILER} -D${PLATFORM}
-LINK =  ${COMPILER} ${LDFLAGS}
+LINK =  ${COMPILER} -brtl ${LDFLAGS}
 # the compiler knows about this two
 # PLATFORM_LIB_LINK_OPTIONS=-L/usr/lpp/xlC/lib
 # EXTRA_LINK_OPTIONS=-lC

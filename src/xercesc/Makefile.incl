@@ -104,6 +104,10 @@ PLATFORM = OS400
 endif
 TO = o
 RM2 = rm -f
+## Compiler switch to embed a library name
+## default value empty
+LD_SONAME =
+
 ####################### PLATFORM DEPENDENCIES #####################
 
 #=============== SOLARIS SPECIFIC OPTIONS =========================
@@ -131,6 +135,8 @@ ifeq (${PLATFORM}, SOLARIS)
     endif
   endif
   SHLIBSUFFIX=.so
+  ## Compiler switch to embed a library name
+  LD_SONAME = -h ${SO_NAME}
 endif
 
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
@@ -225,8 +231,12 @@ endif
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
 MAKE_SHARED = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS}
 MAKE_SHARED_C = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS}
-EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${VER}.map
-SHLIBSUFFIX=.a
+
+EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
+SHLIBSUFFIX=.so
+## Compiler switch to embed a library name
+LD_SONAME =
+
 endif
 
 #================= OS400 SPECIFIC OPTIONS ==========================
@@ -277,8 +287,10 @@ ifeq (${TRANSCODER}, ICU)
 else
     ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
 endif
-EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${LIBNAME}${VER}.map
+EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_NAME}.map
 SHLIBSUFFIX=.so
+## Compiler switch to embed a library name
+LD_SONAME = -Wl,-soname,${SO_NAME}
 endif
 
 #=============== FREEBSD SPECIFIC OPTIONS =========================
@@ -365,6 +377,8 @@ ifeq (${PLATFORM}, HPUX)
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,-a,shared
     SHLIBSUFFIX=.sl
   endif
+  ## Compiler switch to embed a library name
+  LD_SONAME = -Wl,+h,${SO_NAME}
 endif
 
 
@@ -437,6 +451,37 @@ ifeq (${PLATFORM}, MACOSX)
 	SHLIBSUFFIX=.dylib
 endif
 
+#
+#
+#
+ifeq (${PLATFORM}, AIX)
+
+    #
+    # LINK_NAME=libxerces-c.so
+    # SO_NAME  =libxerces-c17.so
+    # REAL_NAME=libxerces-c17.0.so
+    #
+
+    LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+    SO_NAME  =${LIBNAME}${SO_TARGET_VERSION}${SHLIBSUFFIX}
+    REAL_NAME=${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}${SHLIBSUFFIX}
+
+else
+
+    #
+    # LINK_NAME=libxerces-c.so
+    # SO_NAME  =libxerces-c.so.17
+    # REAL_NAME=libxerces-c.so.17.0
+    #
+    LINK_NAME=${LIBNAME}${SHLIBSUFFIX}
+    SO_NAME  =${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}
+    REAL_NAME=${LIBNAME}${SHLIBSUFFIX}.${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}
+
+endif
+
+FQ_LINK_NAME=${XML_LIB_DIR}/${LINK_NAME}
+FQ_SO_NAME  =${XML_LIB_DIR}/${SO_NAME}
+FQ_REAL_NAME=${XML_LIB_DIR}/${REAL_NAME}
 
 ###################### STANDARD TOOLS #############################
 ifeq (${PLATFORM}, OS400)

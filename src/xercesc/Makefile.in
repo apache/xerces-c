@@ -88,7 +88,6 @@ PARSERS_DIR = parsers
 VALIDATORS_DIR = validators
 
 LIBNAME = libxerces-c
-THISLIB = ${XML_LIB_DIR}/${LIBNAME}
 
 #all these setting come from the arguments passed in to runConfigure.
 PLATFORM = @platform@
@@ -106,7 +105,7 @@ all:: lib
 
 compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom IDom Validators
 
-lib:: ${THISLIB}${VER}${SHLIBSUFFIX}
+lib:: ${FQ_REAL_NAME}
 
 Prepare::
 	@echo Preparing the directory structure for a build ...
@@ -159,8 +158,8 @@ Validators::
 	@echo Building "validators"
 	${MAKE} -C $(VALIDATORS_DIR) $(MAKE_FLAGS)
 
-${THISLIB}${VER}${SHLIBSUFFIX}:: compile
-	@echo Building ${THISLIB}${VER}${SHLIBSUFFIX}
+${FQ_REAL_NAME}:: compile
+	@echo Building ${FQ_REAL_NAME}
 	${MAKE} -C $(XML_OBJ_DIR)/.. -k $(MAKE_FLAGS)
 
 install::

@@ -89,7 +89,6 @@ LIBNAME=libxerces-c
 else
 LIBNAME=libxercesc
 endif
-THISLIB=${LIB}/${LIBNAME}
 
 ALL_OBJECTS=$(wildcard $(XML_OBJ_DIR)/*.o)
 
@@ -111,7 +110,7 @@ ifeq (${PLATFORM},HPUX)
     DUMMYEXE=$(XML_LIB_DIR)/dummyExe
     TEMPLATESOBJS=$(wildcard $(TEMPLATESREPOSITORY)/*.o)
 
-    all: $(DUMMYEXE) ${THISLIB}${VER}${SHLIBSUFFIX}
+    all: $(DUMMYEXE) ${FQ_REAL_NAME}
 	\rm -f $(DUMMYEXE)
 
     $(DUMMYEXE): $(ALL_OBJECTS)
@@ -119,7 +118,7 @@ ifeq (${PLATFORM},HPUX)
 
     ######  End HP-UX  CC compiler specific stuff #######
   else
-    all: ${THISLIB}${VER}${SHLIBSUFFIX}
+    all: ${FQ_REAL_NAME}
   endif
 else
    ## Start OS390BATCH ##
@@ -127,7 +126,7 @@ else
 all: ${BATCH_TARGET}
    ## End OS390BATCH ##
   else
-all: ${THISLIB}${VER}${SHLIBSUFFIX}
+all: ${FQ_REAL_NAME}
   endif
 endif
 
@@ -143,9 +142,14 @@ endif
 # link your application.                               #
 ########################################################
 
-${THISLIB}${VER}${SHLIBSUFFIX}:	$(ALL_OBJECTS)
-	@echo Building ${THISLIB}${VER}${SHLIBSUFFIX}
-	${MAKE_SHARED} -o ${@} ${^} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
+${FQ_REAL_NAME}:	$(ALL_OBJECTS)
+	@echo Building ${FQ_REAL_NAME}
+	${MAKE_SHARED} ${LD_SONAME} -o ${@} ${^} $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
+	@echo symlink ${FQ_SO_NAME}
+	rm -rf ${FQ_SO_NAME}   && ln -s ${FQ_REAL_NAME} ${FQ_SO_NAME}
+	@echo symlink ${FQ_LINK_NAME}
+	rm -rf ${FQ_LINK_NAME} && ln -s ${FQ_SO_NAME} ${FQ_LINK_NAME}
+
 ## Start OS390 ##
 ifeq (${PLATFORM},OS390)
 ## Start OS390BATCH ##
@@ -163,7 +167,7 @@ endif
 
 clean:
 	@echo "Making clean in obj ..."
-	-rm -f $(ALL_OBJECTS) ${THISLIB}${VER}${SHLIBSUFFIX}
+	-rm -f $(ALL_OBJECTS) ${FQ_REAL_NAME}
 ifneq ($(strip $(TEMPLATESREPOSITORY)),)
 	-rm -f $(TEMPLATESREPOSITORY)/*.o
 	-rm -f $(TEMPLATESREPOSITORY)/*.c
@@ -185,7 +189,7 @@ ifeq (${OS390BATCH},1)
 	@echo "Nothing to do for OS390BATCH ..."
 else
 	-mkdir -p ${PREFIX}/lib
-	$(CP) ${THISLIB}${VER}${SHLIBSUFFIX} $(PREFIX)/lib
+	$(CP) ${FQ_REAL_NAME} $(PREFIX)/lib
 ifeq (${PLATFORM},OS390)
 	$(CP) ${LIBNAME}${VER}${OS390SIDEDECK} $(PREFIX)/lib
 endif
