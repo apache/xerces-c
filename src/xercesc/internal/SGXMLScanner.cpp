@@ -2666,9 +2666,9 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             if(getPSVIHandler())
             {
                 psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
-	            XSSimpleTypeDefinition *validatingType = (attrValidator)
-                            ? (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator)
-                            : 0;
+                XSSimpleTypeDefinition *validatingType = 0;
+                if (attrValidator && fModel)
+                    validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
                 // no attribute declarations for these...
 	            psviAttr->reset(
 	                fRootElemName

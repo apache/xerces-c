@@ -2826,7 +2826,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
     // if we have a PSVIHandler, now's the time to call
     // its handleAttributesPSVI method:
-    if(fPSVIHandler)
+    if(fPSVIHandler && fGrammarType == Grammar::SchemaGrammarType)
     {
         QName *eName = elemDecl->getElementName();
         fPSVIHandler->handleAttributesPSVI

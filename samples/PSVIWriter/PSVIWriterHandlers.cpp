@@ -124,8 +124,8 @@ PSVIWriterHandlers::PSVIWriterHandlers(XMLFormatter* outputFormatter, XMLFormatt
 	fErrorFormatter = (errorFormatter != NULL) ? errorFormatter : outputFormatter;
 	
 	fAttrList = new StringList(8, false);
-	fTempResult = new XMLCh[50];
-	fIndentChars = new XMLCh[100];
+	fTempResult = new XMLCh[51];
+    fIndentChars = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate(101*sizeof(XMLCh));
 	fBaseUri = 0;
 	
 	XMLString::copyString(fIndentChars, XMLUni::fgZeroLenString);
@@ -154,7 +154,7 @@ PSVIWriterHandlers::~PSVIWriterHandlers() {
 		XMLString::release(&fBaseUri);
 	delete fAttrList;
 	delete[] fTempResult;
-	delete[] fIndentChars;
+	XMLPlatformUtils::fgMemoryManager->deallocate(fIndentChars);
 	
 	delete fIdMap;
 	delete fDefinedIds;
@@ -1574,10 +1574,16 @@ const XMLCh* PSVIWriterHandlers::getIdName(XSObject* obj) {
 }
 
 void PSVIWriterHandlers::incIndent() {
-	XMLCh tab[] = {chHTab, chNull};
-	checkCapacity(fIndent, &fIndentCap, &fIndentChars);
-	XMLString::catString(fIndentChars, tab);
-	fIndent++;
+    XMLCh tab[] = {chHTab, chNull};
+    if (fIndent >= fIndentCap) {
+        fIndentCap *= 2;
+        XMLCh* temp = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate((fIndentCap+1)*sizeof(XMLCh));
+        XMLString::copyString(temp, fIndentChars);
+        XMLPlatformUtils::fgMemoryManager->deallocate(fIndentChars);
+        fIndentChars = temp;
+    }
+    XMLString::catString(fIndentChars, tab);
+    fIndent++;
 }
 
 void PSVIWriterHandlers::decIndent() {
@@ -1585,16 +1591,3 @@ void PSVIWriterHandlers::decIndent() {
 	fIndent--;
 }
 
-void PSVIWriterHandlers::checkCapacity(unsigned int actual, unsigned int* capacity, XMLCh** buffer) {
-	if (actual >= *capacity) {
-		doubleCapacity(buffer, capacity);
-	}
-}
-
-void PSVIWriterHandlers::doubleCapacity(XMLCh** buffer, unsigned int* bufferCap) {
-	*bufferCap *= 2;
-	XMLCh* temp = new XMLCh[*bufferCap];
-	XMLString::copyString(temp, *buffer);
-	delete[] *buffer;
-	*buffer = temp;
-}

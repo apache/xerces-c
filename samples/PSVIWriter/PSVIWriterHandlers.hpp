@@ -284,8 +284,6 @@ private:
     const XMLCh* getIdName(XSObject* obj);
     void incIndent();
     void decIndent();
-    void checkCapacity(unsigned int actual, unsigned int* capacity, XMLCh** buffer);
-    void doubleCapacity(XMLCh** buffer, unsigned int* bufferCap);
     
 protected:    
 	XMLFormatter* fFormatter;
