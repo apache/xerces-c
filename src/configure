@@ -1477,6 +1477,7 @@ util/Makefile \
 util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
+util/Transcoders/Iconv400/Makefile \
 util/Platforms/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
@@ -1489,7 +1490,7 @@ dom/Makefile \
 parsers/Makefile \
 internal/Makefile \
 sax/Makefile \
-../obj/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+../obj/Makefile conf.h" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -1591,6 +1592,7 @@ util/Makefile \
 util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
+util/Transcoders/Iconv400/Makefile \
 util/Platforms/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
