@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/17 19:13:11  aruna1
+ * Solaris related conditional statement change
+ *
  * Revision 1.7  2000/02/17 17:47:25  andyh
  * Update Doc++ API comments
  * NameSpace update to track W3C
@@ -311,7 +314,7 @@ DOMString ElementImpl::getAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &fLocalName)
 {
     AttrImpl * attr=(AttrImpl *)(attributes->getNamedItemNS(fNamespaceURI, fLocalName));
-    return (attr==null) ? null : attr->getValue();
+    return (attr==null) ? DOMString(null) : attr->getValue();
 }
 
 
