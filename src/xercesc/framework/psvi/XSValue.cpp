@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/11/24 02:34:08  cargilld
+ * Various bug fixes and code cleanup for XSValue.
+ *
  * Revision 1.17  2004/11/14 19:01:22  peiyongz
  * st_InvalidRange removed
  * getActVal return double only for dt_decimal
@@ -95,6 +98,7 @@
 #include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -174,6 +178,19 @@ const XSValue::DataGroup XSValue::inGroup[XSValue::dt_MAXCOUNT] =
     dg_numerics,  dg_numerics,  dg_numerics,  dg_numerics
 };
 
+const bool XSValue::numericSign[XSValue::dt_MAXCOUNT] =
+{
+    true, true, true, true, true,
+    true, true, true, true, true,
+    true, true, true, true, true,
+    true, true, true, true, true,
+    true, true, true, true, true,
+    true, true, true, true, true,
+    true, true, true, true, true,
+    true, true, true, true, false,
+    false, false, false, true 
+};
+
 // ---------------------------------------------------------------------------
 //  Local static functions
 // ---------------------------------------------------------------------------
@@ -219,6 +236,10 @@ static RegularExpression* getRegEx()
                                           , XMLPlatformUtils::fgMemoryManager
                                           );
             }
+            catch(const OutOfMemoryException&)
+            {
+                throw;
+            }
             catch (...)
             {
                 return 0;
@@ -252,6 +273,10 @@ XSValue::DataType  XSValue::getDataType(const XMLCh* const dtString)
 		{
             try {
                 initializeRegistry();
+            }
+            catch(const OutOfMemoryException&)
+            {
+                throw;
             }
             catch (...) {
                 return dt_MAXCOUNT;
@@ -320,11 +345,10 @@ void XSValue::initializeRegistry()
     }
 }
 
-inline
 static bool checkTimeZoneError(XSValue::DataType       const &datatype
                              , SchemaDateTimeException const &e       )
 {
-    return (((datatype == XSValue::dt_dateTime) || (datatype == XSValue::dt_time)) &&
+    return (((datatype == XSValue::dt_dateTime) || (datatype == XSValue::dt_time) || (datatype == XSValue::dt_date)) &&
             ((e.getCode() == XMLExcepts::DateTime_tz_noUTCsign)   ||
              (e.getCode() == XMLExcepts::DateTime_tz_stuffAfterZ) ||
              (e.getCode() == XMLExcepts::DateTime_tz_invalid)     ||
@@ -338,17 +362,13 @@ static bool checkTimeZoneError(XSValue::DataType       const &datatype
 static const XMLCh Separator_20[] = {chSpace, chNull};
 static const XMLCh Separator_ws[] = {chSpace, chLF, chCR, chHTab, chNull};
 
-static const int convert_2_long  = 1;
-static const int convert_2_ulong = 2;
-static const int base_decimal    = 10;
-
 // ---------------------------------------------------------------------------
 //  XSValue: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XSValue::XSValue(DataType        const dt
                , MemoryManager*  const manager)
-:fMemAllocated(false)
-,fMemoryManager(manager)
+    :fMemAllocated(false)
+    ,fMemoryManager(manager)
 {
     fData.f_datatype = dt;
 }
@@ -366,69 +386,73 @@ XSValue::~XSValue()
 //
 // ---------------------------------------------------------------------------
 bool XSValue::validate(const XMLCh*         const content    
-                     ,       DataType             datatype
-                     ,       Status&              status
-                     ,       XMLVersion           version
-                     ,       MemoryManager* const manager)
+                      ,      DataType             datatype
+                      ,      Status&              status
+                      ,      XMLVersion           version
+                      ,      MemoryManager* const manager)
 {
-
-    if (!content || !*content)
-    {
-        status=st_NoContent;
+    if (!content || 
+        !*content ||
+        ((version == ver_10) && (XMLChar1_0::isAllSpaces(content, XMLString::stringLen(content)))) ||
+        ((version == ver_11) && (XMLChar1_1::isAllSpaces(content, XMLString::stringLen(content)))) ) {
+        status = st_NoContent;
         return false;
-    }
+    }  
 
-    switch (inGroup[datatype])
-    {
-    case XSValue::dg_numerics :
-        return validateNumerics(content, datatype, status, version, manager);
+    status = st_Init;
+
+    switch (inGroup[datatype]) {
+    case XSValue::dg_numerics:
+        return validateNumerics(content, datatype, status, manager);
         break;
     case XSValue::dg_datetimes:
-        return validateDateTimes(content, datatype, status, version, manager);
+        return validateDateTimes(content, datatype, status, manager);
         break;
     case XSValue::dg_strings:
         return validateStrings(content, datatype, status, version, manager);
         break;
     default:
         status = st_UnknownType;
+        
         return false;
         break;
     }
- 
 }
 
 XMLCh* 
 XSValue::getCanonicalRepresentation(const XMLCh*         const content    
-                                  ,       DataType             datatype
-                                  ,       Status&              status
-                                  ,       XMLVersion           version
-                                  ,       bool                 toValidate
-                                  ,       MemoryManager* const manager)
-{
- 
-    if (!content || !*content)
-    {
-        status=st_NoContent;
+                                   ,      DataType             datatype
+                                   ,      Status&              status
+                                   ,      XMLVersion           version
+                                   ,      bool                 toValidate
+                                   ,      MemoryManager* const manager)
+{ 
+    if (!content || 
+        !*content ||
+        ((version == ver_10) && (XMLChar1_0::isAllSpaces(content, XMLString::stringLen(content)))) ||
+        ((version == ver_11) && (XMLChar1_1::isAllSpaces(content, XMLString::stringLen(content)))) ) {
+        status = st_NoContent;
         return 0;
     }
     
-    switch (inGroup[datatype])
-    {
-    case XSValue::dg_numerics :
-        return getCanRepNumerics(content, datatype,  status, version, toValidate, manager);
+    status = st_Init;
+
+    switch (inGroup[datatype]) {
+    case XSValue::dg_numerics:
+        return getCanRepNumerics(content, datatype,  status, toValidate, manager);
         break;
     case XSValue::dg_datetimes:
-        return getCanRepDateTimes(content, datatype,  status, version, toValidate, manager);
+        return getCanRepDateTimes(content, datatype,  status, toValidate, manager);
         break;
     case XSValue::dg_strings:
         return getCanRepStrings(content, datatype,  status, version, toValidate, manager);
         break;
     default:
         status = st_UnknownType;
+        
         return 0;
         break;
     }
-
 }
 
 XSValue* XSValue::getActualValue(const XMLCh*         const content    
@@ -438,31 +462,31 @@ XSValue* XSValue::getActualValue(const XMLCh*         const content
                                ,       bool                 toValidate
                                ,       MemoryManager* const manager)
 {
-
-    if (!content || !*content)
-    {
-        status=st_NoContent;
+    if (!content || 
+        !*content ||
+        ((version == ver_10) && (XMLChar1_0::isAllSpaces(content, XMLString::stringLen(content)))) ||
+        ((version == ver_11) && (XMLChar1_1::isAllSpaces(content, XMLString::stringLen(content)))) ) {
+        status = st_NoContent;
         return 0;
     }
 
+    status = st_Init;
 
-    switch (inGroup[datatype])
-    {
-    case XSValue::dg_numerics :
-        return getActValNumerics(content, datatype,  status, version, manager);
+    switch (inGroup[datatype]) {
+    case XSValue::dg_numerics:
+        return getActValNumerics(content, datatype,  status, manager);
         break;
     case XSValue::dg_datetimes:
-        return getActValDateTimes(content, datatype,  status, version, manager);
+        return getActValDateTimes(content, datatype,  status, manager);
         break;
     case XSValue::dg_strings:
         return getActValStrings(content, datatype,  status, version, toValidate, manager);
         break;
     default:
-        status = st_UnknownType;
+        status = st_UnknownType;       
         return 0;
         break;
-    }
-    
+    }    
 }
 
 // ---------------------------------------------------------------------------
@@ -476,40 +500,40 @@ XSValue* XSValue::getActualValue(const XMLCh*         const content
 bool 
 XSValue::validateNumerics(const XMLCh*         const content    
                         ,       DataType             datatype
-                        ,       Status&              status
-                        ,       XMLVersion           version
+                        ,       Status&              status                        
                         ,       MemoryManager* const manager)
 {
 
     try {
 
-        if (datatype == XSValue::dt_decimal)
-        {
-            XMLBigDecimal::parseDecimal(content, manager); 
-            //error: no
-        }
-        else if (datatype == XSValue::dt_float)
-        {
-            //XMLFloat takes care of 0, -0, -INF, INF and NaN
-            //XMLFloat::checkBoundary() handles error and outofbound issues
-            XMLFloat data(content, manager);
-            if (data.isDataConverted())
+        switch (datatype) {
+        case XSValue::dt_decimal:        
+            XMLBigDecimal::parseDecimal(content, manager);
+            break;            
+        case XSValue::dt_float:
             {
-                status = st_FOCA0002;
-                return false;
+                //XMLFloat takes care of 0, -0, -INF, INF and NaN
+                //XMLFloat::checkBoundary() handles error and outofbound issues
+                XMLFloat data(content, manager);
+                if (data.isDataConverted())
+                {
+                    status = st_FOCA0002;
+                    return false;
+                }
+                break;
             }
-        }
-        else if (datatype == XSValue::dt_double)
-        {
-            //XMLDouble takes care of 0, -0, -INF, INF and NaN
-            //XMLDouble::checkBoundary() handles error and outofbound issues
-            XMLDouble  data(content, manager);
-            if (data.isDataConverted())
+        case XSValue::dt_double:
             {
-                status = st_FOCA0002;
-                return false;
+                //XMLDouble takes care of 0, -0, -INF, INF and NaN
+                //XMLDouble::checkBoundary() handles error and outofbound issues
+                XMLDouble  data(content, manager);
+                if (data.isDataConverted())
+                {
+                    status = st_FOCA0002;
+                    return false;
+                }
+                break;
             }
-        }
         /***
          *   For all potentially unrepresentable types
          *   
@@ -517,27 +541,25 @@ XSValue::validateNumerics(const XMLCh*         const content
          *   checking ensures consistent behaviour on 32/64 boxes
          *
          ***/
-        else if (datatype == XSValue::dt_integer            ||
-                 datatype == XSValue::dt_negativeInteger    ||
-                 datatype == XSValue::dt_nonPositiveInteger ||
-                 datatype == XSValue::dt_nonNegativeInteger ||
-                 datatype == XSValue::dt_positiveInteger    ||
-                 datatype == XSValue::dt_long               ||
-                 datatype == XSValue::dt_unsignedLong        )
-        {
-            XMLCh* compareData = (XMLCh*) manager->allocate((XMLString::stringLen(content) + 1) * sizeof(XMLCh));
-            ArrayJanitor<XMLCh> janName(compareData, manager);
-            int    signValue = 0;
-            XMLBigInteger::parseBigInteger(content, compareData, signValue,  manager);
+        case XSValue::dt_integer:
+        case XSValue::dt_negativeInteger:
+        case XSValue::dt_nonPositiveInteger:
+        case XSValue::dt_nonNegativeInteger:
+        case XSValue::dt_positiveInteger:
+        case XSValue::dt_long:
+        case XSValue::dt_unsignedLong:
+            {
+                XMLCh* compareData = (XMLCh*) manager->allocate((XMLString::stringLen(content) + 1) * sizeof(XMLCh));
+                ArrayJanitor<XMLCh> janName(compareData, manager);
+                int    signValue = 0;
+                XMLBigInteger::parseBigInteger(content, compareData, signValue,  manager);
 
-            switch (datatype)
-            { 
-            case XSValue::dt_integer:
-                //error: no
-                break;
-            case XSValue::dt_negativeInteger:
-                // error: > -1
-                {
+                switch (datatype) { 
+                case XSValue::dt_integer:
+                    //error: no
+                    break;
+                case XSValue::dt_negativeInteger:
+                    // error: > -1                    
                     if  (XMLBigInteger::compareValues(compareData
                                                     , signValue
                                                     , &(XMLUni::fgNegOne[1])
@@ -547,13 +569,11 @@ XSValue::validateNumerics(const XMLCh*         const content
                     {
                         status = st_FOCA0002;
                         return false;
-                    }
-                }
-                break;
-            case XSValue::dt_nonPositiveInteger:
-                // error: > 0
-                {
-                    if (XMLBigInteger::compareValues(compareData
+                    }                
+                    break;
+                case XSValue::dt_nonPositiveInteger:
+                    // error: > 0                    
+                     if (XMLBigInteger::compareValues(compareData
                                                    , signValue
                                                    , XMLUni::fgValueZero
                                                    , 0
@@ -562,12 +582,10 @@ XSValue::validateNumerics(const XMLCh*         const content
                     {
                         status = st_FOCA0002;
                         return false;
-                    }
-                }
-                break;
-            case XSValue::dt_nonNegativeInteger:
-                // error: < 0
-                {
+                    }                
+                    break;
+                case XSValue::dt_nonNegativeInteger:
+                    // error: < 0                
                     if (XMLBigInteger::compareValues(compareData
                                                    , signValue
                                                    , XMLUni::fgValueZero
@@ -577,12 +595,10 @@ XSValue::validateNumerics(const XMLCh*         const content
                     {
                         status = st_FOCA0002;
                         return false;
-                    }
-                }
-                break;
-            case XSValue::dt_positiveInteger:
-                // error: < 1
-                {
+                    }                
+                    break;
+                case XSValue::dt_positiveInteger:
+                    // error: < 1                
                     if (XMLBigInteger::compareValues(compareData
                                                    , signValue
                                                    , XMLUni::fgValueOne
@@ -592,12 +608,10 @@ XSValue::validateNumerics(const XMLCh*         const content
                     {
                         status = st_FOCA0002;
                         return false;
-                    }
-                }
-                break;
-            case XSValue::dt_long:
-                // error: < -9223372036854775808 || > 9223372036854775807
-                {
+                    }                
+                    break;
+                case XSValue::dt_long:
+                    // error: < -9223372036854775808 || > 9223372036854775807                
                     if ((XMLBigInteger::compareValues(compareData
                                                     , signValue
                                                     , &(XMLUni::fgLongMinInc[1])
@@ -613,12 +627,10 @@ XSValue::validateNumerics(const XMLCh*         const content
                     {
                         status = st_FOCA0002;
                         return false;
-                    }
-                }
-                break;
-            case XSValue::dt_unsignedLong:
-                // error: < 0 || > 18446744073709551615 
-                {
+                    }                
+                    break;
+                case XSValue::dt_unsignedLong:
+                    // error: < 0 || > 18446744073709551615                 
                     if ((XMLBigInteger::compareValues(compareData
                                                     , signValue
                                                     , XMLUni::fgValueZero
@@ -634,141 +646,46 @@ XSValue::validateNumerics(const XMLCh*         const content
                     {
                         status = st_FOCA0002;
                         return false;
-                    }
+                    }                
+                    break;
+                default:
+                    status = st_NotSupported;                    
+                    return false;
+                    break;
                 }
                 break;
-            default:
-                status = st_NotSupported;            
-                return false;
-                break;
-            }
+            }       
+        case XSValue::dt_int:
+        case XSValue::dt_short:
+        case XSValue::dt_byte:
+        case XSValue::dt_unsignedInt:
+        case XSValue::dt_unsignedShort:
+        case XSValue::dt_unsignedByte:      
+            {
+                t_value   actVal;
 
-        }
-        /***
-         *   For all singed integer types
-         ***/
-        else if (datatype == XSValue::dt_int   ||
-                 datatype == XSValue::dt_short ||
-                 datatype == XSValue::dt_byte   )
-        {
-            t_value   actVal;
-
-            if ( !getActualValue( 
+                if ( !getActualNumericValue( 
                                   content
-                                , status
-                                , version
-                                , convert_2_long
-                                , actVal
-                                , base_decimal
+                                , status                                                               
+                                , actVal                                
                                 , manager
+                                , datatype
                                  )
                 )
-            {
-                status = st_FOCA0002;
-                return false;
+                {                
+                    return false;
+                }
+                break;
             }
-
-            switch (datatype)
-            { 
-            case XSValue::dt_int:
-                // error: < INT_MIN || > INT_MAX
-                // strtol() won't overflow for INT_MIN-1 or INT_MAX+1 on 64 box
-                {
-                    if ((actVal.f_long < INT_MIN) || 
-                        (actVal.f_long > INT_MAX)  )
-                    {
-                        status = st_FOCA0002;
-                        return false;
-                    }
-                }
-                break;
-            case XSValue::dt_short:
-                // error: < SHRT_MIN || > SHRT_MAX
-                {
-                    if ((actVal.f_long < SHRT_MIN) || 
-                        (actVal.f_long > SHRT_MAX)  )
-                    {
-                        status = st_FOCA0002;
-                        return false;
-                    }
-                }
-                break;
-            case XSValue::dt_byte:
-                // error: < SCHAR_MIN || > SCHAR_MAX
-                {
-                    if ((actVal.f_long < SCHAR_MIN) || 
-                        (actVal.f_long > SCHAR_MAX)  )
-                    {
-                        status = st_FOCA0002;
-                        return false;
-                    }
-                }
-                break;
-            default:
-                return false;
-                break;
-            } 
-        }
-        /***
-         *   For all unsinged integer types
-         ***/
-        else
-        {
-            t_value   actVal;
-
-            if ( !getActualValue( 
-                                  content
-                                , status
-                                , version
-                                , convert_2_ulong
-                                , actVal
-                                , base_decimal
-                                , manager
-                                 )
-                )
-            {
-                status = st_FOCA0002;
-                return false;
-            }
-
-
-            switch (datatype)
-            { 
-            case XSValue::dt_unsignedInt:     
-                // error: > UINT_MAX
-                // strtol() won't overflow for UINT_MAX+1 on 64 box
-                if (actVal.f_long > UINT_MAX) 
-                {
-                    status = st_FOCA0002;
-                    return false;
-                }
-                break;
-            case XSValue::dt_unsignedShort:
-                // error: > USHRT_MAX
-                if (actVal.f_ulong > USHRT_MAX) 
-                {
-                    status = st_FOCA0002;
-                    return false;
-                }
-                break;
-            case XSValue::dt_unsignedByte:   
-                // error: > UCHAR_MAX
-                if (actVal.f_ulong > UCHAR_MAX) 
-                {
-                    status = st_FOCA0002;
-                    return false;
-                }
-                break;
-            default:
-                status = st_NotSupported;
-                return false;
-                break;
-            } 
-        }
-
+        default:            
+            return false;            
+        } // end switch
         return true;  //both valid chars and within boundary
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         //getActValue()/getCanonical() need to know the failure details
@@ -776,22 +693,18 @@ XSValue::validateNumerics(const XMLCh*         const content
         status = st_FOCA0002; 
         return false; 
     }
-
 }
 
 bool XSValue::validateDateTimes(const XMLCh*         const content    
                               ,       DataType             datatype
                               ,       Status&              status
-                              ,       XMLVersion           version
                               ,       MemoryManager* const manager)
 {
-
     try
     {
         XMLDateTime coreDate = XMLDateTime(content, manager);
 
-        switch (datatype)
-        { 
+        switch (datatype) { 
         case XSValue::dt_duration:
             coreDate.parseDuration();
             break;
@@ -832,7 +745,10 @@ bool XSValue::validateDateTimes(const XMLCh*         const content
         status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
         return false;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         //getActValue()/getCanonical() need to know the failure details
@@ -840,7 +756,6 @@ bool XSValue::validateDateTimes(const XMLCh*         const content
         status = st_FOCA0002;
         return false; 
     }      
-
 }
 
 bool XSValue::validateStrings(const XMLCh*         const content    
@@ -850,47 +765,35 @@ bool XSValue::validateStrings(const XMLCh*         const content
                             ,       MemoryManager* const manager)
 {
     bool isValid = true;
-    // Set this here, because we want to check it at the end.
-    status = st_Init;
     
     try
     {
-        switch (datatype)
-        { 
+        switch (datatype) { 
         case XSValue::dt_boolean:
             {
                 unsigned int i = 0;
-                for ( ; i < XMLUni::fgBooleanValueSpaceArraySize; i++ )
-                {
-                    if ( XMLString::equals(content, XMLUni::fgBooleanValueSpace[i]))
+                for (; i < XMLUni::fgBooleanValueSpaceArraySize; i++) {
+                    if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[i]))
                         break;
                 }
 
-                if (i == XMLUni::fgBooleanValueSpaceArraySize)
-                {
-                    isValid = false;                	
+                if (XMLUni::fgBooleanValueSpaceArraySize == i) {
+                    isValid = false;
                 }
+                break;
             }
+        case XSValue::dt_hexBinary:            
+            if (HexBin::getDataLength(content) == -1) {
+               isValid = false;                	
+            }            
             break;
-        case XSValue::dt_hexBinary:
-            {
-                if (HexBin::getDataLength(content) == -1) 
-                {
-                    isValid = false;                	
-                }
-            }
-            break;
-        case XSValue::dt_base64Binary:
-            {
-                if (Base64::getDataLength(content, manager) == -1) 
-                {
-                    isValid = false;                	
-                }
-            }
+        case XSValue::dt_base64Binary:            
+            if (Base64::getDataLength(content, manager) == -1) {
+                isValid = false;                	
+            }            
             break;
         case XSValue::dt_anyURI:
-            if (XMLUri::isValidURI(true, content) == false)
-            {
+            if (XMLUri::isValidURI(true, content) == false) {
                 isValid = false;
             }        
             break;
@@ -900,8 +803,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
                 XMLChar1_1::isValidQName(content, XMLString::stringLen(content));
             break;
         case XSValue::dt_NOTATION:
-            if ( XMLString::isValidNOTATION(content, manager) == false)
-            {
+            if ( XMLString::isValidNOTATION(content, manager) == false) {
             	isValid = false;
             }
             break;
@@ -909,75 +811,59 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 const XMLCh*   rawPtr = content;
 
-                if (version == ver_10)
-                {
+                if (version == ver_10) {
                     while (*rawPtr) 
-                        if (!XMLChar1_0::isXMLChar(*rawPtr++)) 
-                        {
+                        if (!XMLChar1_0::isXMLChar(*rawPtr++)) {
                             isValid = false;
                             break;
                         }
                 }
-                else
-                {
+                else {                
                     while (*rawPtr) 
-                        if (!XMLChar1_1::isXMLChar(*rawPtr++)) 
-                        {
+                        if (!XMLChar1_1::isXMLChar(*rawPtr++)) {                        
                             isValid = false;
                             break;
                         }
                 }
-
-            }
-            break;
+                break;
+            }            
         case XSValue::dt_normalizedString:
             {
                 const XMLCh*   rawPtr = content;
 
-                if (version == ver_10)
-                {
-                    while (*rawPtr) 
-                    {
-                        if (!XMLChar1_0::isXMLChar(*rawPtr)) 
-                        {
+                if (version == ver_10) {                
+                    while (*rawPtr) {                    
+                        if (!XMLChar1_0::isXMLChar(*rawPtr)) {                        
                             isValid = false;
                             break;
                         }
-                        else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
-                        {
+                        else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab) {                        
                             isValid = false;
                             break;
                         }
-                        else
-                        {
+                        else {                        
                             rawPtr++;
                         }
                     }
                 }
-                else
-                {
-                    while (*rawPtr) 
-                    {
-                        if (!XMLChar1_1::isXMLChar(*rawPtr)) 
-                        {
+                else {                
+                    while (*rawPtr) {                    
+                        if (!XMLChar1_1::isXMLChar(*rawPtr)) {                        
                             isValid = false;
                             break;
                         }
-                        else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
-                        {
+                        else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab) {                        
                             isValid = false;
                             break;
                         }
-                        else
-                        {
+                        else {                        
                             rawPtr++;
                         }
                                             	
                     }
                 }
-
-            }
-            break;
+                break;
+            }            
         case XSValue::dt_token:
         case XSValue::dt_language:
             {
@@ -985,43 +871,32 @@ bool XSValue::validateStrings(const XMLCh*         const content
                 const XMLCh*  rawPtr = content;
                 bool     inWS = false;
 
-                if (version == ver_10)
-                {
-
+                if (version == ver_10) {                
                     // Check leading/Trailing white space
                     if (XMLChar1_0::isWhitespace(content[0])      ||
-                        XMLChar1_0::isWhitespace(content[strLen - 1])  )
-                    {
+                        XMLChar1_0::isWhitespace(content[strLen - 1])  ) {                    
                         isValid = false;
                     }
-                    else
-                    {
-                        while (*rawPtr) 
-                        {
-                            if (!XMLChar1_0::isXMLChar(*rawPtr)) 
-                            {
+                    else {                    
+                        while (*rawPtr) {                        
+                            if (!XMLChar1_0::isXMLChar(*rawPtr)) {                            
                                 isValid = false;
                                 break;
                             }
-                            else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
-                            {
+                            else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab) {                            
                                 isValid = false;
                                 break;
                             }                            
-                            else if (XMLChar1_0::isWhitespace(*rawPtr))
-                            {
-                                if (inWS)
-                                {
+                            else if (XMLChar1_0::isWhitespace(*rawPtr)) {                            
+                                if (inWS) {                                
                                     isValid = false;
                                     break;
                                 }
-                                else
-                                {
+                                else {                                
                                     inWS = true;
                                 }
                             }
-                            else
-                            {
+                            else {                            
                                 inWS = false;
                             }
 
@@ -1029,70 +904,52 @@ bool XSValue::validateStrings(const XMLCh*         const content
                         }
                     }
                 }
-                else
-                {
-
+                else {                
                     // Check leading/Trailing white space
                     if (XMLChar1_1::isWhitespace(content[0])      ||
-                        XMLChar1_1::isWhitespace(content[strLen - 1])  )
-                    {
+                        XMLChar1_1::isWhitespace(content[strLen - 1])  ) {                    
                         isValid = false;
                     }
-                    else
-                    {
-                        while (*rawPtr) 
-                        {
-                            if (!XMLChar1_1::isXMLChar(*rawPtr)) 
-                            {
+                    else {                    
+                        while (*rawPtr) {                        
+                            if (!XMLChar1_1::isXMLChar(*rawPtr)) {                            
                                 isValid = false;
                                 break;
                             }
-                            else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
-                            {
+                            else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab) {                            
                                 isValid = false;
                                 break;
                             }                            
-                            else if (XMLChar1_1::isWhitespace(*rawPtr))
-                            {
-                                if (inWS)
-                                {
+                            else if (XMLChar1_1::isWhitespace(*rawPtr)) {                            
+                                if (inWS) {                                
                                     isValid = false;
                                     break;
                                 }
-                                else
-                                {
+                                else {                                
                                     inWS = true;
                                 }
                             }
-                            else
-                            {
+                            else {                            
                                 inWS = false;
                             }
-
                             rawPtr++;
                         }
                     }                   
                 }
-            }
-
-            if (isValid == true && datatype == XSValue::dt_language)
-            {
-                RegularExpression* regEx = getRegEx();
-                if (!regEx)
-                {
-                    status = st_CantCreateRegEx;
-                    isValid = false;
-                }
-                else
-                {
-                    if (regEx->matches(content, manager) == false)
-                    {
+                if (isValid == true && datatype == XSValue::dt_language) {                
+                    RegularExpression* regEx = getRegEx();
+                    if (!regEx) {                   
+                        status = st_CantCreateRegEx;
                         isValid = false;
                     }
+                    else {                    
+                        if (regEx->matches(content, manager) == false) {                        
+                            isValid = false;
+                        }
+                    }
                 }
+                break;
             }
-
-            break;
         case XSValue::dt_NMTOKEN:
             isValid = (version == ver_10) ? 
                 XMLChar1_0::isValidNmtoken(content, XMLString::stringLen(content)) :
@@ -1103,34 +960,28 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 XMLStringTokenizer tokenizer(content, Separator_20, manager);
 
-                if (version ==  ver_10 )
-                {
-                    while (tokenizer.hasMoreTokens()) 
-                    {
+                if (version ==  ver_10) {                
+                    while (tokenizer.hasMoreTokens()) {
                         const XMLCh* token = tokenizer.nextToken();
 
-                        if (!XMLChar1_0::isValidNmtoken(token, XMLString::stringLen(token)))
-                        {
+                        if (!XMLChar1_0::isValidNmtoken(token, XMLString::stringLen(token))) {                        
                             isValid = false;
                             break;
                         }                        
                     }
                 }
-                else
-                {
-                    while (tokenizer.hasMoreTokens()) 
-                    {
+                else {                
+                    while (tokenizer.hasMoreTokens()) {                    
                         const XMLCh* token = tokenizer.nextToken();
 
-                        if (!XMLChar1_1::isValidNmtoken(token, XMLString::stringLen(token)))
-                        {
+                        if (!XMLChar1_1::isValidNmtoken(token, XMLString::stringLen(token))) {                        
                             isValid = false;
                             break;
                         }                        
                     }
                 }
-            }
-            break;
+                break;
+            }            
         case XSValue::dt_Name:
             isValid = (version == ver_10) ? 
                 XMLChar1_0::isValidName(content, XMLString::stringLen(content)) :
@@ -1149,27 +1000,21 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 XMLStringTokenizer tokenizer(content, Separator_ws, manager);
 
-                if (version ==  ver_10 )
-                {
-                    while (tokenizer.hasMoreTokens()) 
-                    {
+                if (version ==  ver_10 ) {                
+                    while (tokenizer.hasMoreTokens()) {                    
                         const XMLCh* token = tokenizer.nextToken();
 
-                        if (!XMLChar1_0::isValidNCName(token, XMLString::stringLen(token)))
-                        {
+                        if (!XMLChar1_0::isValidNCName(token, XMLString::stringLen(token))) {                        
                             isValid = false;
                             break;
                         }                        
                     }
                 }
-                else
-                {
-                    while (tokenizer.hasMoreTokens()) 
-                    {
+                else {                
+                    while (tokenizer.hasMoreTokens()) {                    
                         const XMLCh* token = tokenizer.nextToken();
 
-                        if (!XMLChar1_1::isValidNCName(token, XMLString::stringLen(token)))
-                        {
+                        if (!XMLChar1_1::isValidNCName(token, XMLString::stringLen(token))) {                        
                             isValid = false;
                             break;
                         }                        
@@ -1184,26 +1029,27 @@ bool XSValue::validateStrings(const XMLCh*         const content
         }
 
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         isValid = false; 
+        status = st_FOCA0002;
     }
 
-    if (isValid == false && status == st_Init)
-    {
+    if (isValid == false && status == st_Init) {
         status = st_FOCA0002;
     }
 
     return isValid;
-
 }
 
 
 XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content    
                                 ,       DataType             datatype
-                                ,       Status&              status
-                                ,       XMLVersion           version
+                                ,       Status&              status                                
                                 ,       bool                 toValidate
                                 ,       MemoryManager* const manager)
 {
@@ -1213,7 +1059,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
         // All getCanonicalRepresentation does lexcial space validation only
         // (no range checking), therefore if validation is requied,
         // we need to pass the content to the validate interface for complete checking
-        if (toValidate && !validateNumerics(content, datatype, status, version, manager))
+        if (toValidate && !validateNumerics(content, datatype, status, manager))
             return 0;
 
         XMLCh* retVal;
@@ -1247,7 +1093,10 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
             return retVal;
         }
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         status = st_FOCA0002;
@@ -1258,8 +1107,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
 
 XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content    
                                  ,       DataType             datatype
-                                 ,       Status&              status
-                                 ,       XMLVersion           version
+                                 ,       Status&              status                                 
                                  ,       bool                 toValidate
                                  ,       MemoryManager* const manager)
 {
@@ -1269,8 +1117,7 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content
 
         XMLDateTime coreDate = XMLDateTime(content, manager);
 
-        switch (datatype)
-        { 
+        switch (datatype) { 
         case XSValue::dt_dateTime:
             //we need this parsing
             coreDate.parseDateTime();
@@ -1289,9 +1136,7 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content
         case XSValue::dt_gDay:
         case XSValue::dt_gMonth:
             {
-                if (toValidate && !validateDateTimes(content, datatype, status, version, manager))
-                    status = st_FOCA0002;
-                else
+                if (!(toValidate && !validateDateTimes(content, datatype, status, manager)))               
                     status = st_NoCanRep;
 
                 return 0;
@@ -1308,7 +1153,10 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content
         status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
         return 0;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         status = st_FOCA0002;
@@ -1326,27 +1174,24 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
 {
     try
     {
-        switch (datatype)
-        { 
-        case XSValue::dt_boolean:
+        switch (datatype) {        
+        case XSValue::dt_boolean:            
+            //always validate before getting canRep
+            if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[0]) ||
+                XMLString::equals(content, XMLUni::fgBooleanValueSpace[2])  ) 
             {
-                //always validate before getting canRep
-                if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[0]) ||
-                    XMLString::equals(content, XMLUni::fgBooleanValueSpace[2])  ) 
-                {
-                    return XMLString::replicate(XMLUni::fgBooleanValueSpace[0], manager);
-                }
-                else if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[1]) ||
-                         XMLString::equals(content, XMLUni::fgBooleanValueSpace[3])  ) 
-                {
-                    return XMLString::replicate(XMLUni::fgBooleanValueSpace[1], manager);
-                }
-                else
-                {
-                    status = st_FOCA0002;
-                    return 0;
-                }
+                return XMLString::replicate(XMLUni::fgBooleanValueSpace[0], manager);
             }
+            else if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[1]) ||
+                     XMLString::equals(content, XMLUni::fgBooleanValueSpace[3])  ) 
+            {
+                return XMLString::replicate(XMLUni::fgBooleanValueSpace[1], manager);
+            }
+            else
+            {
+                status = st_FOCA0002;
+                return 0;
+            }            
             break;
         case XSValue::dt_hexBinary: 
             {
@@ -1355,9 +1200,9 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
                 if (!canRep)
                     status = st_FOCA0002;
 
-                return canRep;
+                return canRep;            
+                break;
             }
-            break;
         case XSValue::dt_base64Binary:
             {
                 //Base64::getCanonicalRepresentation does validation automatically
@@ -1365,9 +1210,9 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
                 if (!canRep)
                     status = st_FOCA0002;
 
-                return canRep;
+                return canRep;            
+                break;
             }
-            break;
         case XSValue::dt_anyURI:
         case XSValue::dt_QName:
         case XSValue::dt_NOTATION:
@@ -1383,22 +1228,23 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
         case XSValue::dt_IDREF:
         case XSValue::dt_ENTITY:
         case XSValue::dt_ENTITIES:
-        case XSValue::dt_IDREFS:
-            {
-                if (toValidate && !validateStrings(content, datatype, status, version, manager))
-                    status = st_FOCA0002;
-                else
-                    status = st_NoCanRep;
+        case XSValue::dt_IDREFS:            
+            if (toValidate && !validateStrings(content, datatype, status, version, manager))
+                status = st_FOCA0002;
+            else
+                status = st_NoCanRep;
 
-                return 0;
-            }
+            return 0;            
             break;
         default:
             return 0;
             break;
         }
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         status = st_FOCA0002;
@@ -1410,14 +1256,14 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
 XSValue*
 XSValue::getActValNumerics(const XMLCh*         const content    
                          ,       DataType             datatype
-                         ,       Status&              status
-                         ,       XMLVersion           version
+                         ,       Status&              status                         
                          ,       MemoryManager* const manager)
 {
 
     try {
 
-        if (datatype == XSValue::dt_decimal)
+        switch (datatype) {
+        case XSValue::dt_decimal:
         {
             //Prepare the double value
             XMLDouble  data(content, manager);
@@ -1430,9 +1276,10 @@ XSValue::getActValNumerics(const XMLCh*         const content
             XSValue* retVal = new (manager) XSValue(dt_decimal, manager);
             retVal->fData.fValue.f_decimal.f_dvalue = data.getValue();
 
-            return retVal;
-        }
-        else if (datatype == XSValue::dt_float)
+            return retVal;            
+            break;
+        }    
+        case XSValue::dt_float:
         {
             //XMLFloat takes care of 0, -0, -INF, INF and NaN
             //XMLFloat::checkBoundary() handles error and outofbound issues
@@ -1448,8 +1295,9 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 retVal->fData.fValue.f_float = (float) data.getValue();
                 return retVal;
             }
+            break;
         }
-        else if (datatype == XSValue::dt_double)
+        case XSValue::dt_double:
         {
             //XMLDouble takes care of 0, -0, -INF, INF and NaN
             //XMLDouble::checkBoundary() handles error and outofbound issues
@@ -1465,271 +1313,95 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 retVal->fData.fValue.f_double = data.getValue();
                 return retVal;
             }
+            break;
         }
-        else if (datatype == XSValue::dt_integer            ||
-                 datatype == XSValue::dt_negativeInteger    ||
-                 datatype == XSValue::dt_nonPositiveInteger ||
-                 datatype == XSValue::dt_nonNegativeInteger ||
-                 datatype == XSValue::dt_positiveInteger      )
+        case XSValue::dt_integer:
+        case XSValue::dt_negativeInteger:
+        case XSValue::dt_nonPositiveInteger:
+        case XSValue::dt_nonNegativeInteger:
+        case XSValue::dt_positiveInteger:
+        case XSValue::dt_long:
+        case XSValue::dt_int:
+        case XSValue::dt_short:
+        case XSValue::dt_byte:
+        case XSValue::dt_unsignedLong:                                                   
+        case XSValue::dt_unsignedInt:                                                              
+        case XSValue::dt_unsignedShort:                                
+        case XSValue::dt_unsignedByte:    
         {
             t_value   actVal;                
 
-            if ( !getActualValue( 
+            if ( !getActualNumericValue( 
                                   content
-                                , status
-                                , version
-                                , convert_2_long
-                                , actVal
-                                , base_decimal
+                                , status                                                               
+                                , actVal                                
                                 , manager
+                                , datatype
                                 )
                 )
             {
-                //status has been set by getActualValue
+                //status has been set by getActualNumericValue
                 return 0;
             }
 
-            switch (datatype)
-            { 
-            case XSValue::dt_integer:
-                // error: no
-                {
-                    XSValue* retVal = new (manager) XSValue(dt_integer, manager);
+            XSValue* retVal = new (manager) XSValue(datatype, manager);
+
+            switch (datatype) { 
+                case XSValue::dt_integer:                  
                     retVal->fData.fValue.f_long = actVal.f_long;
-                    return retVal;
-                }
-                break;
-            case XSValue::dt_negativeInteger:
-                // error: > -1
-                {
-                    if (actVal.f_long > -1)
-                    {
-                        status = st_FOCA0002;
-                        return 0;
-                    }
-
-                    XSValue* retVal = new (manager) XSValue(dt_negativeInteger, manager);
+                    break;
+                case XSValue::dt_negativeInteger:                
                     retVal->fData.fValue.f_long = actVal.f_long;
-                    return retVal;
-                }
-                break;
-            case XSValue::dt_nonPositiveInteger:
-                // error: > 0
-                {
-                    if (actVal.f_long > 0)
-                    {
-                        status = st_FOCA0002;
-                        return 0;
-                    }
-
-                    XSValue* retVal = new (manager) XSValue(dt_nonPositiveInteger, manager);
+                    break;
+                case XSValue::dt_nonPositiveInteger:                
+                    retVal->fData.fValue.f_long = actVal.f_long;                    
+                    break;
+                case XSValue::dt_nonNegativeInteger:                
                     retVal->fData.fValue.f_long = actVal.f_long;
-                    return retVal;
-                }
-                break;
-            case XSValue::dt_nonNegativeInteger:
-                // error: < 0
-                {
-                    if (actVal.f_long < 0)
-                    {
-                        status = st_FOCA0002;
-                        return 0;
-                    }
-
-                    XSValue* retVal = new (manager) XSValue(dt_nonNegativeInteger, manager);
+                    break;
+                case XSValue::dt_positiveInteger:               
                     retVal->fData.fValue.f_long = actVal.f_long;
-                    return retVal;
-                }
-                break;
-            case XSValue::dt_positiveInteger:
-                // error: < 1
-                {
-                    if (actVal.f_long < 1)
-                    {
-                        status = st_FOCA0002;
-                        return 0;
-                    }
-
-                    XSValue* retVal = new (manager) XSValue(dt_positiveInteger, manager);
-                    retVal->fData.fValue.f_long = actVal.f_long;
-                    return retVal;
-                }
-                break;
-            default:
-                return 0;
-                break;
-            }
-        }
-        else if (datatype == XSValue::dt_long  ||
-                 datatype == XSValue::dt_int   ||
-                 datatype == XSValue::dt_short ||
-                 datatype == XSValue::dt_byte   )
-        {
-            t_value   actVal;                
-
-            if ( !getActualValue( 
-                                  content
-                                , status
-                                , version
-                                , convert_2_long
-                                , actVal
-                                , base_decimal
-                                , manager
-                                 )
-               )
-            {
-                //for dt_long we return whatever set by getActualValue
-                //for the rest, we need to return st_FOCA0002
-                if (datatype != XSValue::dt_long)
-                    status = st_FOCA0002;
-
-                return 0;
-            }
-
-            switch (datatype)
-            { 
-            case XSValue::dt_long:
-                // error : no
-                {
-                    XSValue* retVal = new (manager) XSValue(dt_long, manager);
-                    retVal->fData.fValue.f_long = actVal.f_long;
-                    return retVal;
-                }
-                break;
-            case XSValue::dt_int:
-                // error: < INT_MIN || > INT_MAX
-                // strtol() won't overflow for INT_MIN-1 or INT_MAX+1 on 64 box
-                {
-                    if ((actVal.f_long < INT_MIN) || 
-                        (actVal.f_long > INT_MAX)  )
-                    {
-                        status = st_FOCA0002;
-                        return 0;
-                    }
-
-                    XSValue* retVal = new (manager) XSValue(dt_int, manager);
-                    retVal->fData.fValue.f_int = (int) actVal.f_long;
-                    return retVal;
-                }
-                break;
-            case XSValue::dt_short:
-                // error: < SHRT_MIN || > SHRT_MAX
-                {
-                    if ((actVal.f_long < SHRT_MIN) || (actVal.f_long > SHRT_MAX))
-                    {
-                        status = st_FOCA0002;
-                        return 0;
-                    }
-
-                    XSValue* retVal = new (manager) XSValue(dt_short, manager);
+                    break;
+                case XSValue::dt_long:                                                    
+                    retVal->fData.fValue.f_long = actVal.f_long;                                    
+                    break;
+                case XSValue::dt_int:                                  
+                    retVal->fData.fValue.f_int = (int) actVal.f_long; 
+                    break;
+                case XSValue::dt_short:                
                     retVal->fData.fValue.f_short = (short) actVal.f_long;
-                    return retVal;
-                }
-                break;
-            case XSValue::dt_byte:
-                // error: < SCHAR_MIN || > SCHAR_MAX
-                {
-                    if ((actVal.f_long < SCHAR_MIN) || (actVal.f_long > SCHAR_MAX))
-                    {
-                        status = st_FOCA0002;
-                        return 0;
-                    }
-
-                    XSValue* retVal = new (manager) XSValue(dt_byte, manager);
+                    break;
+                case XSValue::dt_byte:                 
                     retVal->fData.fValue.f_char = (char) actVal.f_long;
-                    return retVal;
-                }
-                break;
-            default:
-                return 0;
-                break;
-            } 
-        }
-        else
-        {
-
-            t_value   actVal;                
-
-            if ( !getActualValue( 
-                                  content
-                                , status
-                                , version
-                                , convert_2_ulong
-                                , actVal
-                                , base_decimal
-                                , manager
-                                 )
-               )
-            {
-                //for dt_unsignedLong we return whatever set by getActualValue
-                //for the rest, we need to return st_FOCA0002
-                if (datatype != XSValue::dt_unsignedLong)
-                    status = st_FOCA0002;
-
-                return 0;
-            }
-
-            switch (datatype)
-            { 
-            case XSValue::dt_unsignedLong:
-                // error: no
-                {
-                    XSValue* retVal = new (manager) XSValue(dt_unsignedLong, manager);
+                    break;
+                case XSValue::dt_unsignedLong:                                                   
                     retVal->fData.fValue.f_ulong = actVal.f_ulong;
-                    return retVal;
-                }
-                break;
-            case XSValue::dt_unsignedInt:     
-                // error: > UINT_MAX
-                // strtol() won't overflow for UINT_MAX+1 on 64 box
-                {
-
-                    if (actVal.f_long > UINT_MAX) 
-                    {
-                        status = st_FOCA0002;
-                        return 0;
-                    }
-
-                    XSValue* retVal = new (manager) XSValue(dt_unsignedInt, manager);
-                    retVal->fData.fValue.f_uint = (unsigned int) actVal.f_ulong;
-                    return retVal;
-                }
-                break;
-            case XSValue::dt_unsignedShort:
-                // error: > USHRT_MAX
-                {
-                    if (actVal.f_ulong > USHRT_MAX)
-                    {
-                        status = st_FOCA0002;
-                        return 0;
-                    }
-
-                    XSValue* retVal = new (manager) XSValue(dt_unsignedShort, manager);
-                    retVal->fData.fValue.f_ushort = (unsigned short) actVal.f_ulong;
-                    return retVal;
-                }
-                break;
-            case XSValue::dt_unsignedByte:   
-                // error: > UCHAR_MAX
-                {
-                    if (actVal.f_ulong > UCHAR_MAX)
-                    {
-                        status = st_FOCA0002;
-                        return 0;
-                    }
-
-                    XSValue* retVal = new (manager) XSValue(dt_unsignedByte, manager);
-                    retVal->fData.fValue.f_uchar = (unsigned char) actVal.f_ulong;
-                    return retVal;
-                }
-                break;
-            default:
-                return 0;
-                break;
-            } 
+                    break; 
+                case XSValue::dt_unsignedInt:                                                              
+                    retVal->fData.fValue.f_uint = (unsigned int) actVal.f_ulong;           
+                    break;
+                case XSValue::dt_unsignedShort:                                
+                    retVal->fData.fValue.f_ushort = (unsigned short) actVal.f_ulong; 
+                    break;
+                case XSValue::dt_unsignedByte:                                                                         
+                    retVal->fData.fValue.f_uchar = (unsigned char) actVal.f_ulong;                                   
+                    break;
+                default:                    
+                    return 0;
+                    break;
+            }
+            return retVal;
+            break;
         }
+        default:        
+            return 0;
+            break;        
+        } // end switch
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         status = st_FOCA0002;
@@ -1741,8 +1413,7 @@ XSValue::getActValNumerics(const XMLCh*         const content
 XSValue*  
 XSValue::getActValDateTimes(const XMLCh*         const content    
                           ,       DataType             datatype
-                          ,       Status&              status
-                          ,       XMLVersion           version
+                          ,       Status&              status                         
                           ,       MemoryManager* const manager)
 {
     try
@@ -1751,8 +1422,7 @@ XSValue::getActValDateTimes(const XMLCh*         const content
         //parsing functions below does the validation automatically
         XMLDateTime coreDate = XMLDateTime(content, manager);
 
-        switch (datatype)
-        { 
+        switch (datatype) { 
         case XSValue::dt_duration:
             coreDate.parseDuration();
             break;
@@ -1803,7 +1473,10 @@ XSValue::getActValDateTimes(const XMLCh*         const content
         status = checkTimeZoneError(datatype, e)? XSValue::st_FODT0003 : st_FOCA0002;
         return 0;
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         status = st_FOCA0002;
@@ -1822,31 +1495,28 @@ XSValue::getActValStrings(const XMLCh*         const content
 {
     try
     {
-        switch (datatype)
-        { 
-        case XSValue::dt_boolean:
+        switch (datatype) { 
+        case XSValue::dt_boolean:            
+            //do validation here more efficiently
+            if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[0]) ||
+                XMLString::equals(content, XMLUni::fgBooleanValueSpace[2])  )
             {
-                //do validation here more efficiently
-                if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[0]) ||
-                    XMLString::equals(content, XMLUni::fgBooleanValueSpace[2])  )
-                {
-                    XSValue* retVal = new (manager) XSValue(dt_boolean, manager);
-                    retVal->fData.fValue.f_bool = true;
-                    return retVal;
-                }
-                else if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[1]) ||
-                         XMLString::equals(content, XMLUni::fgBooleanValueSpace[3])  )
-                {
-                    XSValue* retVal = new (manager) XSValue(dt_boolean, manager);
-                    retVal->fData.fValue.f_bool = false;
-                    return retVal;
-                }
-                else
-                {
-                    status = st_FOCA0002;
-                    return 0;
-                }
+                XSValue* retVal = new (manager) XSValue(dt_boolean, manager);
+                retVal->fData.fValue.f_bool = true;
+                return retVal;
             }
+            else if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[1]) ||
+                     XMLString::equals(content, XMLUni::fgBooleanValueSpace[3])  )
+            {
+                XSValue* retVal = new (manager) XSValue(dt_boolean, manager);
+                retVal->fData.fValue.f_bool = false;
+                return retVal;
+            }
+            else
+            {
+                status = st_FOCA0002;
+                return 0;
+            }            
             break;
         case XSValue::dt_hexBinary:
             {
@@ -1862,8 +1532,8 @@ XSValue::getActValStrings(const XMLCh*         const content
                 retVal->fData.fValue.f_strVal = decodedData;
                 retVal->fMemAllocated = true;
                 return retVal;                
-            }       
-            break;
+                break;
+            }                   
         case XSValue::dt_base64Binary:
             {
                 unsigned int    len = 0;
@@ -1879,8 +1549,8 @@ XSValue::getActValStrings(const XMLCh*         const content
                 retVal->fData.fValue.f_strVal = decodedData;
                 retVal->fMemAllocated = true;
                 return retVal;
-            }
-            break;
+                break;
+            }            
         case XSValue::dt_anyURI:
         case XSValue::dt_QName:
         case XSValue::dt_NOTATION:
@@ -1896,22 +1566,23 @@ XSValue::getActValStrings(const XMLCh*         const content
         case XSValue::dt_IDREF:
         case XSValue::dt_ENTITY:
         case XSValue::dt_ENTITIES:
-        case XSValue::dt_IDREFS:
-            {
-                if (toValidate && !validateStrings(content, datatype, status, version, manager))
-                    status = st_FOCA0002;
-                else
-                    status = st_NoActVal;
+        case XSValue::dt_IDREFS:            
+            if (toValidate && !validateStrings(content, datatype, status, version, manager))
+                status = st_FOCA0002;
+            else
+                status = st_NoActVal;
 
-                return 0;
-            }
+            return 0;            
             break;
         default:
             return 0;
             break;
         }
     }
-
+    catch(const OutOfMemoryException&)
+    {
+        throw;
+    }
     catch (...)
     {
         status = st_FOCA0002;
@@ -1923,13 +1594,11 @@ XSValue::getActValStrings(const XMLCh*         const content
 // ---------------------------------------------------------------------------
 //  Utilities
 // ---------------------------------------------------------------------------
-bool XSValue::getActualValue(const XMLCh*         const content
-                           ,       Status&              status
-                           ,       XMLVersion           version    
-                           ,       int                  ct
-                           ,       t_value&             retVal               
-                           ,       int                  base
-                           ,       MemoryManager* const manager)
+bool XSValue::getActualNumericValue(const XMLCh*  const content
+                           ,       Status&              status                                                          
+                           ,       t_value&             retVal                                          
+                           ,       MemoryManager* const manager
+                           ,       DataType             datatype)
 {
     char *nptr = XMLString::transcode(content, manager);
     ArrayJanitor<char> jan(nptr, manager);
@@ -1937,37 +1606,115 @@ bool XSValue::getActualValue(const XMLCh*         const content
     char *endptr = 0;
     errno = 0;
 
-    if (ct == convert_2_long)
+    if (XSValue::numericSign[datatype])
     {
-        retVal.f_long = strtol(nptr, &endptr, base);
+        retVal.f_long = strtol(nptr, &endptr, (int)10);
     }
-    else if (ct == convert_2_ulong)
+    else
     {
-        if (-1 != XMLString::indexOf(content, chDash))
+        if (XMLString::indexOf(content, chDash) != -1)
         {
             status = st_FOCA0002; //invalid lexcial value
             return false;
         }
 
-        retVal.f_ulong = strtoul(nptr, &endptr, base);
-
+        retVal.f_ulong = strtoul(nptr, &endptr, (int)10);
     }
 
-    // check if all chars are valid char
-    if ( (endptr - nptr) != strLen)
-    {
-        status = st_FOCA0002;
-        return false;
-    }
-
+    // need to check out-of-bounds before checking erange...
+    switch (datatype) {                                     
+        case XSValue::dt_nonPositiveInteger:
+            if (retVal.f_long > 0)
+            {
+                status = st_FOCA0002;
+                return false;
+            }
+            break;
+        case XSValue::dt_negativeInteger:
+            if (retVal.f_long >= 0)
+            {
+                status = st_FOCA0002;
+                return false;
+            }
+            break;
+        case XSValue::dt_int:
+            // strtol will set value to LONG_MIN/LONG_MAX if ERANGE error
+            if ((retVal.f_long < INT_MIN) || 
+                (retVal.f_long > INT_MAX) ||
+                (errno == ERANGE))
+            {
+                status = st_FOCA0002;
+                return false;
+            }
+            break;
+        case XSValue::dt_short:
+            if ((retVal.f_long < SHRT_MIN) || 
+                (retVal.f_long > SHRT_MAX))
+            {
+                status = st_FOCA0002;
+                return 0;
+            }
+            break;
+        case XSValue::dt_byte:
+            if ((retVal.f_long < SCHAR_MIN) || 
+                (retVal.f_long > SCHAR_MAX))
+            {
+                status = st_FOCA0002;
+                return 0;
+            }
+            break;
+        case XSValue::dt_nonNegativeInteger:
+            if (retVal.f_long < 0)
+            {
+                status = st_FOCA0002;
+                return false;
+            }
+            break;
+        case XSValue::dt_unsignedInt:
+            // strtoul will set value to LONG_INT if ERANGE error
+            if ((retVal.f_ulong > UINT_MAX)  ||
+                (errno == ERANGE))
+            {
+                status = st_FOCA0002;
+                return false;
+            }
+            break;
+        case XSValue::dt_unsignedShort:
+            if (retVal.f_ulong > USHRT_MAX) 
+            {
+                status = st_FOCA0002;
+                return false;
+            }
+            break;
+        case XSValue::dt_unsignedByte:
+            if (retVal.f_ulong > UCHAR_MAX) 
+            {
+                status = st_FOCA0002;
+                return false;
+            }              
+            break;              
+        case XSValue::dt_positiveInteger:
+            if (retVal.f_long <= 0)
+            {
+                status = st_FOCA0002;
+                return false;
+            }
+            break;
+        default:
+            break;
+    } // end switch
     // check if overflow/underflow occurs
     if (errno == ERANGE)
     {
         status = st_FOCA0003;
         return false;
     }
-
-
+    // check if all chars are valid char
+    if ( (endptr - nptr) != strLen)
+    {
+        status = st_FOCA0002;
+        return false;
+    }
     return true;
 }
 

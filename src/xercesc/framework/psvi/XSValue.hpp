@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/11/24 02:34:08  cargilld
+ * Various bug fixes and code cleanup for XSValue.
+ *
  * Revision 1.15  2004/11/14 19:01:22  peiyongz
  * st_InvalidRange removed
  * getActVal return double only for dt_decimal
@@ -149,7 +152,7 @@ public:
     };
 
     enum DataGroup {
-            dg_numerics,
+            dg_numerics,            
             dg_datetimes,
             dg_strings
     };
@@ -317,6 +320,7 @@ private:
     //@{
 
     static const XSValue::DataGroup inGroup[];
+    static const bool XSValue::numericSign[];
 
     //@}
 
@@ -325,8 +329,7 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       Status&               status
-              ,       XMLVersion            version
+              ,       Status&               status              
               ,       MemoryManager*  const manager
              );
 
@@ -335,8 +338,7 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       Status&               status
-              ,       XMLVersion            version
+              ,       Status&               status              
               ,       MemoryManager*  const manager
              );
 
@@ -355,8 +357,7 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       Status&               status
-              ,       XMLVersion            version
+              ,       Status&               status             
               ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
@@ -366,8 +367,7 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       Status&               status
-              ,       XMLVersion            version
+              ,       Status&               status             
               ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
@@ -388,8 +388,7 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       Status&               status
-              ,       XMLVersion            version
+              ,       Status&               status              
               ,       MemoryManager*  const manager
              );
 
@@ -398,8 +397,7 @@ private:
              (
                 const XMLCh*          const content    
               ,       DataType              datatype
-              ,       Status&               status
-              ,       XMLVersion            version
+              ,       Status&               status              
               ,       MemoryManager*  const manager
              );
 
@@ -415,15 +413,13 @@ private:
              );
 
     static
-    bool      getActualValue
+    bool      getActualNumericValue
               (
                  const XMLCh*         const content
-               ,       Status&               status
-               ,       XMLVersion            version    
-               ,       int                   ct
-               ,       t_value&              retVal               
-               ,       int                   base
+               ,       Status&               status                                
+               ,       t_value&              retVal                              
                ,       MemoryManager* const  manager
+               ,       DataType              datatype
                );
 
     static ValueHashTableOf<DataType>*    fDataTypeRegistry;

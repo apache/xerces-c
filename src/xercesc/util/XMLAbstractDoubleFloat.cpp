@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.31  2004/11/24 02:34:08  cargilld
+ * Various bug fixes and code cleanup for XSValue.
+ *
  * Revision 1.30  2004/10/28 20:14:58  peiyongz
  * store/load fDataOverflowed
  *
@@ -170,6 +173,9 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
     XMLCh* tmpStrValue = XMLString::replicate(strValue, fMemoryManager);
     ArrayJanitor<XMLCh> janTmpName(tmpStrValue, fMemoryManager);
     XMLString::trim(tmpStrValue);
+
+    if (!*tmpStrValue) 
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_emptyString, fMemoryManager);
 
     normalizeZero(tmpStrValue);
 
