@@ -265,7 +265,12 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         # Copy the ICU dlls and libs
         psystem("cp -fv $ICUROOT/bin/icuuc18.dll $targetdir/bin");
         psystem("cp -fv $ICUROOT/bin/icuuc18d.dll $targetdir/bin");
+
+        // it seems icudt18*.DLL is generated (upper case dll)
+        // but just case, try lower case .dll as well
+        psystem("cp -fv $ICUROOT/source/data/icudt18*.DLL $targetdir/bin");
         psystem("cp -fv $ICUROOT/source/data/icudt18*.dll $targetdir/bin");
+
         psystem("cp -fv $ICUROOT/source/data/icudata.lib $targetdir/lib");
 
         psystem("cp -fv $ICUROOT/lib/icuuc.lib $targetdir/lib");
