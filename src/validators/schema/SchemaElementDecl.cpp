@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/09/11 13:02:40  tng
+ * [Bug 3523] SchemaElementDecl.cpp(242) : error C2202 : not all control paths return a value
+ *
  * Revision 1.13  2001/08/29 20:52:35  tng
  * Schema: xsi:type support
  *
@@ -241,6 +244,8 @@ XMLAttDefList& SchemaElementDecl::getAttDefList() const
     else {
         throw; // REVISIT: add proper error message
     }
+
+    return *(XMLAttDefList*)0 ;
 }
 
 
