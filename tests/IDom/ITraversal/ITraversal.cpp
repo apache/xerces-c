@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2001/06/05 11:58:31  tng
+ * Delete the document at the end for clearing the memory.
+ *
  * Revision 1.1  2001/06/04 20:11:55  tng
  * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
  *
@@ -544,6 +547,7 @@ int  main()
             TASSERT(tw->nextNode() == 0);    //E11 rejected so can't get to textNode1
         }
 
+        delete doc;
 
     };
 
