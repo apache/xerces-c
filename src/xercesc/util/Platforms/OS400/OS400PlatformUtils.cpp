@@ -254,10 +254,11 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
 
 #include <qmhrtvm.h>
 #include <qusec.h>
-FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
+                                      , MemoryManager* const manager)
 {   char errno_id[7];
-    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
+    const char* tmpFileName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
     errno = 0;
     FileHandle retVal = (FILE*)fopen( tmpFileName , "rb" );
 
@@ -271,7 +272,8 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+FileHandle XMLPlatformUtils::openFile(const char* const fileName
+                                      , MemoryManager* const manager)
 {   char errno_id[7];
     errno = 0;
     FileHandle retVal = (FILE*)fopen( fileName , "rb" );
@@ -286,15 +288,17 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
+                                             , MemoryManager* const manager)
 {
-    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
+    const char* tmpFileName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
 
     return openFileToWrite(tmpFileName);
 }
 
-FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
+                                             , MemoryManager* const manager)
 {
     char errno_id[7];
     errno = 0;

@@ -153,27 +153,31 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
     return sbuf.st_size;
 }
 
-FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+FileHandle XMLPlatformUtils::openFile(const char* const fileName
+                                      , MemoryManager* const manager)
 {
     return fopen( fileName, "rb" );
 }
 
-FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
+                                      , MemoryManager* const manager)
 {
-    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
+    const char* tmpFileName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
     return openFile( tmpFileName );
 }
 
-FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
+                                             , MemoryManager* const manager)
 {
     return fopen( fileName, "wb" );
 }
 
-FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
+                                             , MemoryManager* const manager)
 {
-    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
+    const char* tmpFileName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
     return openFileToWrite(tmpFileName);
 }
 

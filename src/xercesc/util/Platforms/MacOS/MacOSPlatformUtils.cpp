@@ -219,11 +219,12 @@ XMLPlatformUtils::fileSize(const FileHandle theFile
 
 
 FileHandle
-XMLPlatformUtils::openFile(const char* const fileName)
+XMLPlatformUtils::openFile(const char* const fileName
+                           , MemoryManager* const manager)
 {
     // Check to make sure the file system is in a state where we can use it
     if (!gFileSystemCompatible)
-        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
+        ThrowXMLwithMemMgr1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName, manager);
 
     Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
     
@@ -232,11 +233,11 @@ XMLPlatformUtils::openFile(const char* const fileName)
 
 
 FileHandle
-XMLPlatformUtils::openFile(const XMLCh* const fileName)
+XMLPlatformUtils::openFile(const XMLCh* const fileName, MemoryManager* const manager)
 {
     // Check to make sure the file system is in a state where we can use it
     if (!gFileSystemCompatible)
-        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
+        ThrowXMLwithMemMgr1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName, manager);
 
     Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
 
@@ -245,11 +246,12 @@ XMLPlatformUtils::openFile(const XMLCh* const fileName)
 
 
 FileHandle
-XMLPlatformUtils::openFileToWrite(const char* const fileName)
+XMLPlatformUtils::openFileToWrite(const char* const fileName
+                                  , MemoryManager* const manager)
 {
     // Check to make sure the file system is in a state where we can use it
     if (!gFileSystemCompatible)
-        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
+        ThrowXMLwithMemMgr1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName, manager);
 
     Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
 
@@ -258,11 +260,12 @@ XMLPlatformUtils::openFileToWrite(const char* const fileName)
 
 
 FileHandle
-XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
+                                  , MemoryManager* const manager)
 {
     // Check to make sure the file system is in a state where we can use it
     if (!gFileSystemCompatible)
-        ThrowXML1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName);
+        ThrowXMLwithMemMgr1(XMLPlatformUtilsException, XMLExcepts::File_CouldNotOpenFile, fileName, manager);
 
     Janitor<XMLMacAbstractFile> file(XMLMakeMacFile());
 

@@ -280,13 +280,14 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
     return (unsigned int)retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
+                                      , MemoryManager* const manager)
 {
     if (fileName == NULL)
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::CPtr_PointerIsZero);
-    const char* tmpFileName = XMLString::transcode(fileName, XMLPlatformUtils::fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, XMLPlatformUtils::fgMemoryManager);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+                 XMLExcepts::CPtr_PointerIsZero, manager);
+    const char* tmpFileName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
     FileHandle retVal = (FILE*)fopen( tmpFileName , "r+" );
 
     if (retVal == NULL)
@@ -294,11 +295,12 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+FileHandle XMLPlatformUtils::openFile(const char* const fileName
+                                      , MemoryManager* const manager)
 {
     if (fileName == NULL)
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+                 XMLExcepts::CPtr_PointerIsZero, manager);
     FileHandle retVal = (FILE*)fopen( fileName , "r+" );
 
     if (retVal == NULL)
@@ -306,13 +308,14 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
+                                             , MemoryManager* const manager)
 {
     if (fileName == NULL)
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::CPtr_PointerIsZero);
-    const char* tmpFileName = XMLString::transcode(fileName, XMLPlatformUtils::fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, XMLPlatformUtils::fgMemoryManager);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+                 XMLExcepts::CPtr_PointerIsZero, manager);
+    const char* tmpFileName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
 
     FileHandle retVal = (FILE*)fopen( tmpFileName, "r+" );
     if (retVal == NULL)
@@ -320,11 +323,12 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
+                                             , MemoryManager* const manager)
 {
     if (fileName == NULL)
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+                 XMLExcepts::CPtr_PointerIsZero, manager);
     FileHandle retVal = (FILE*)fopen( fileName, "r+" );
 
     if (retVal == NULL)

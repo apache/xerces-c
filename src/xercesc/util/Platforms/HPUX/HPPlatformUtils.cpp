@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/17 15:16:10  cargilld
+ * Platform update for memory management so that the static memory manager (one
+ * used to call Initialize) is only for static data.
+ *
  * Revision 1.15  2003/12/17 13:58:02  cargilld
  * Platform update for memory management so that the static memory manager (one
  * used to call Initialize) is only for static data.
@@ -372,28 +376,31 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
     return (unsigned int) retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+FileHandle XMLPlatformUtils::openFile(const char* const fileName
+                                      , MemoryManager* const manager)
 {
     FileHandle retVal = (FILE*) fopen(fileName , "rb");
     return retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
+                                      , MemoryManager* const manager)
 {
-    char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
-    FileHandle retVal = (FILE*) fopen(tmpFileName , "rb");
-    fgMemoryManager->deallocate(tmpFileName);//delete [] tmpFileName;
-    return retVal;
+    const char* tmpFileName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
+    return fopen(tmpFileName , "rb");
 }
 
-FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
+                                             , MemoryManager* const manager)
 {
-    const char* tmpFileName = XMLString::transcode(fileName, fgMemoryManager);
-    ArrayJanitor<char> janText((char*)tmpFileName, fgMemoryManager);
+    const char* tmpFileName = XMLString::transcode(fileName, manager);
+    ArrayJanitor<char> janText((char*)tmpFileName, manager);
     return fopen( tmpFileName , "wb" );
 }
 
-FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
+                                             , MemoryManager* const manager)
 {
     return fopen( fileName , "wb" );
 }
