@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/06/07 20:55:21  tng
+ * Fix no newline at the end warning.  By Pei Yong Zhang.
+ *
  * Revision 1.4  2001/05/18 20:17:55  tng
  * Schema: More exception messages in XMLBigDecimal/XMLBigInteger/DecimalDatatypeValidator.  By Pei Yong Zhang.
  *

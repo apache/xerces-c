@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/07 20:58:39  tng
+ * Fix no newline at the end warning.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/11 13:27:19  tng
  * Copyright update.
  *
