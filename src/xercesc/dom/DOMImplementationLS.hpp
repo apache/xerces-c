@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/01 23:23:25  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.9  2003/06/20 18:47:21  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -192,6 +195,9 @@ public:
      * absolute URI. In order to create a DOMBuilder for any kind of schema
      * types (i.e. the DOMBuilder will be free to use any schema found), use
      * the value <code>null</code>.
+     * @param manager    Pointer to the memory manager to be used to
+     *                   allocate objects.
+     * @param gramPool   The collection of cached grammers.
      * @return The newly created <code>DOMBuilder<code> object. This
      * <code>DOMBuilder</code> is either synchronous or asynchronous depending
      * on the value of the <code>mode<code> argument.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/01 23:23:25  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.5  2003/07/30 14:48:38  peiyongz
  * Allow default value
  *
@@ -165,6 +168,8 @@ public :
       * @param  adoptBuffer     Indicates whether this object should adopt
       *                         the buffer (i.e. make a copy of it) or just
       *                         use it in place.
+      * @param  manager         Pointer to the memory manager to be used to
+      *                         allocate objects.
       */
     MemBufInputSource
     (

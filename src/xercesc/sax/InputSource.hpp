@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.9  2003/11/17 10:52:15  amassari
  * Fixed documentation bug#24746
  *
@@ -319,6 +322,8 @@ protected :
 
     /** Constructor with a system identifier as XMLCh type.
       * @param systemId The system identifier (URI).
+      * @param manager    Pointer to the memory manager to be used to
+      *                   allocate objects.
       */
     InputSource(const XMLCh* const systemId,
                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -326,6 +331,8 @@ protected :
     /** Constructor with a system and public identifiers
       * @param systemId The system identifier (URI).
       * @param publicId The public identifier as in the entity definition.
+      * @param manager    Pointer to the memory manager to be used to
+      *                   allocate objects.
       */
     InputSource
     (
@@ -336,6 +343,8 @@ protected :
 
     /** Constructor witha system identifier as string
       * @param systemId The system identifier (URI).
+      * @param manager    Pointer to the memory manager to be used to
+      *                   allocate objects.
       */
     InputSource(const char* const systemId,
                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -343,6 +352,8 @@ protected :
     /** Constructor witha system and public identifiers. Both as string
       * @param systemId The system identifier (URI).
       * @param publicId The public identifier as in the entity definition.
+      * @param manager    Pointer to the memory manager to be used to
+      *                   allocate objects.
       */
     InputSource
     (

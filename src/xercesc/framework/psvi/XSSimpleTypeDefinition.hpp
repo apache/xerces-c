@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.8  2003/11/25 18:08:31  knoaman
  * Misc. PSVI updates. Thanks to David Cargill.
  *
@@ -211,6 +214,13 @@ public:
     /**
       * The default constructor 
       *
+      * @param  datatypeValidator
+      * @param  stVariety
+      * @param  xsBaseType
+      * @param  primitiveOrItemType
+      * @param  memberTypes
+      * @param  headAnnot
+      * @param  xsModel
       * @param  manager     The configurable memory manager
       */
     XSSimpleTypeDefinition

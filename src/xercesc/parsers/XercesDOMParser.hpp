@@ -105,6 +105,8 @@ public :
       *
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
+      * @param  manager   Pointer to the memory manager to be used to
+      *                   allocate objects.
       */
     XercesDOMParser
     (

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.7  2003/11/25 18:08:31  knoaman
  * Misc. PSVI updates. Thanks to David Cargill.
  *
@@ -122,6 +125,9 @@ public:
     /**
       * The default constructor 
       *
+      * @param  typeCategory
+      * @param  xsBaseType
+      * @param  xsModel
       * @param  manager     The configurable memory manager
       */
     XSTypeDefinition

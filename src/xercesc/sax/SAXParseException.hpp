@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.5  2003/08/13 15:43:24  knoaman
  * Use memory manager when creating SAX exceptions.
  *
@@ -132,6 +135,8 @@ public:
     *
     * @param message The error or warning message.
     * @param locator The locator object for the error or warning.
+    * @param manager    Pointer to the memory manager to be used to
+    *                   allocate objects.
     * @see Locator#Locator
     * @see Parser#setLocale
     */
@@ -156,6 +161,8 @@ public:
     *                   caused the error or warning.
     * @param columnNumber The column number of the end of the text that
     *                     caused the error or warning.
+    * @param manager    Pointer to the memory manager to be used to
+    *                   allocate objects.
     * @see Parser#setLocale
     */
     SAXParseException

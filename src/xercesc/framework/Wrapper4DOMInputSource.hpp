@@ -87,6 +87,8 @@ public:
     * @param  inputSource  The DOMInputSource to be wrapped
     * @param  adoptFlag    Indicates if the wrapper should adopt the wrapped
     *                      DOMInputSource. Default is true.
+    * @param  manager      Pointer to the memory manager to be used to
+    *                      allocate objects.
     */
     Wrapper4DOMInputSource
     (

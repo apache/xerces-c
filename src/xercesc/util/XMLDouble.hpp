@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/12/01 23:23:27  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.6  2003/09/23 18:16:07  peiyongz
  * Inplementation for Serialization/Deserialization
  *
@@ -124,6 +127,8 @@ public:
 	 *
 	 * @param      strValue the <code>String</code> to be converted to an
 	 *                 <code>XMLDouble</code>.
+         * @param manager    Pointer to the memory manager to be used to
+         *                   allocate objects.
 	 * @exception  NumberFormatException  if the <code>String</code> does not
 	 *               contain a parsable XMLDouble.
 	 */

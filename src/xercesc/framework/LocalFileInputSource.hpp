@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/01 23:23:25  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.3  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -155,6 +158,10 @@ public :
       * @param  relativePath    The relative part of the path. It can actually
       *                         be fully qualified, in which case it is taken
       *                         as is.
+      *
+      * @param  manager    Pointer to the memory manager to be used to
+      *                    allocate objects.
+      *
       * @exception XMLException If the path is relative and doesn't properly
       *            resolve to a file.
       */
@@ -176,6 +183,9 @@ public :
       * still set them via the parent class' setPublicId() method of course.
       *
       * @param  filePath    The relative or fully qualified path.
+      *
+      * @param  manager     Pointer to the memory manager to be used to
+      *                     allocate objects.
       *
       * @exception XMLException If the path is relative and doesn't properly
       *            resolve to a file.

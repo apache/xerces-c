@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.6  2003/11/21 22:34:45  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -124,6 +127,8 @@ public:
     /**
       * The default constructor 
       *
+      * @param  xsModel
+      * @param  grammar
       * @param  manager     The configurable memory manager
       */
     XSNamespaceItem

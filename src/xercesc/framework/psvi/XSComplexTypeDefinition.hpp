@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.6  2003/11/25 18:08:31  knoaman
  * Misc. PSVI updates. Thanks to David Cargill.
  *
@@ -139,6 +142,14 @@ public:
     /**
       * The default constructor 
       *
+      * @param  complexTypeInfo
+      * @param  xsWildcard
+      * @param  xsSimpleType
+      * @param  xsAttList
+      * @param  xsBaseType
+      * @param  xsParticle
+      * @param  headAnnot
+      * @param  xsModel
       * @param  manager     The configurable memory manager
       */
     XSComplexTypeDefinition
@@ -212,7 +223,7 @@ public:
 
     /**
      * [prohibited substitutions]: a subset of {extension, restriction}
-     * @param restriction  Extention or restriction constants (see 
+     * @param toTest  Extention or restriction constants (see 
      *   <code>XSObject</code>). 
      * @return True if toTest is a prohibited substitution, otherwise 
      *   false.

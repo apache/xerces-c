@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.6  2003/05/30 16:11:44  gareth
  * Fixes so we compile under VC7.1. Patch by Alberto Massari.
  *
@@ -336,7 +339,7 @@ public:
     * for each error, such as inserting the message in a log file or
     * printing it to the console.</p>
     *
-    * @param exception The warning information encoded as an exception.
+    * @param exc The warning information encoded as an exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see ErrorHandler#warning
@@ -355,7 +358,7 @@ public:
     * method is invoked, since the document is no longer reliable, and
     * the parser may no longer report parsing events.</p>
     *
-    * @param exception The error information encoded as an exception.
+    * @param exc The error information encoded as an exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see ErrorHandler#fatalError
@@ -371,7 +374,7 @@ public:
     * for each warning, such as inserting the message in a log file or
     * printing it to the console.</p>
     *
-    * @param exception The warning information encoded as an exception.
+    * @param exc The warning information encoded as an exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see ErrorHandler#warning

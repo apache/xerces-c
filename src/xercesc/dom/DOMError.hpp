@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/01 23:23:25  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.10  2003/05/30 16:11:43  gareth
  * Fixes so we compile under VC7.1. Patch by Alberto Massari.
  *
@@ -278,7 +281,7 @@ public:
      *
      * <p><b>"Experimental - subject to change"</b></p>
      *
-     * @param exception the related exception to set.
+     * @param exc the related exception to set.
      * @see   getRelatedException
      * @since DOM Level 3
      */

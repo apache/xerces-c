@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/01 23:23:25  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.8  2003/10/10 16:23:29  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -149,6 +152,8 @@ public:
     /** Constructor with a const entity name
       *
       * @param  entName The new name to give to this entity.
+      * @param  manager Pointer to the memory manager to be used to
+      *                 allocate objects.
       */
     XMLEntityDecl
     (
@@ -161,6 +166,8 @@ public:
       *
       * @param  entName The new name to give to this entity.
       * @param  value   The new value to give to this entity name.
+      * @param  manager Pointer to the memory manager to be used to
+      *                 allocate objects.
       */
     XMLEntityDecl
     (
@@ -174,6 +181,8 @@ public:
       *
       * @param  entName The new name to give to this entity.
       * @param  value   The new value to give to this entity name.
+      * @param manager  Pointer to the memory manager to be used to
+      *                 allocate objects.
       */
     XMLEntityDecl
     (

@@ -95,7 +95,7 @@ public :
      * @param inputData Binary data in XMLByte stream.
      * @param inputLength Length of the XMLByte stream.
      * @param outputLength Length of the encoded Base64 byte stream.
-     * @param memMgr, client provided memory manager
+     * @param memMgr client provided memory manager
      * @return Encoded Base64 data in XMLByte stream,
      *      or NULL if input data can not be encoded.
      * @see   XMLString::release(XMLByte**)
@@ -117,7 +117,7 @@ public :
      *
      * @param inputData Base64 data in XMLByte stream.
      * @param outputLength Length of decoded XMLByte stream.
-     * @param memMgr, client provided memory manager
+     * @param memMgr client provided memory manager
      * @return Decoded binary data in XMLByte stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLByte**)
@@ -138,7 +138,7 @@ public :
      *
      * @param inputData Base64 data in XMLCh stream.
      * @param outputLength Length of decoded XMLCh stream
-     * @param memMgr, client provided memory manager
+     * @param memMgr client provided memory manager
      * @return Decoded binary data in XMLCh stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLCh**)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.4  2003/05/30 16:11:44  gareth
  * Fixes so we compile under VC7.1. Patch by Alberto Massari.
  *
@@ -159,8 +162,8 @@ public:
     * after invoking this method: it should still be possible for the
     * application to process the document through to the end.</p>
     *
-    * @param exception The warning information encapsulated in a
-    *                  SAX parse exception.
+    * @param exc The warning information encapsulated in a
+    *            SAX parse exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see SAXParseException#SAXParseException
@@ -183,8 +186,8 @@ public:
     * error even if the XML 1.0 recommendation does not require it to
     * do so.</p>
     *
-    * @param exception The error information encapsulated in a
-    *                  SAX parse exception.
+    * @param exc The error information encapsulated in a
+    *            SAX parse exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see SAXParseException#SAXParseException
@@ -205,8 +208,8 @@ public:
     * messages: in fact, SAX parsers are free to stop reporting any
     * other events once this method has been invoked.</p>
     *
-    * @param exception The error information encapsulated in a
-    *                  SAX parse exception.
+    * @param exc The error information encapsulated in a
+    *            SAX parse exception.
     * @exception SAXException Any SAX exception, possibly
     *            wrapping another exception.
     * @see SAXParseException#SAXParseException

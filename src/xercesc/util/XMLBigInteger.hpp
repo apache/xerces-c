@@ -77,6 +77,8 @@ public:
      *
      * @param      strValue   the <code>String</code> to be converted to an
      *                       <code>XMLBigInteger</code>.
+     * @param manager    Pointer to the memory manager to be used to
+     *                   allocate objects.
      * @exception  NumberFormatException  if the <code>String</code> does not
      *               contain a parsable XMLBigInteger.
      */

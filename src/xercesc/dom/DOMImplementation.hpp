@@ -182,6 +182,8 @@ public:
      *   When <code>doctype</code> is not <code>null</code>, its
      *   <code>ownerDocument</code> attribute is set to the document
      *   being created.
+     * @param manager    Pointer to the memory manager to be used to
+     *                   allocate objects.
      * @return A new <code>DOMDocument</code> object.
      * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name

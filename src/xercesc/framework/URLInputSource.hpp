@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/12/01 23:23:25  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.3  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -146,6 +149,8 @@ public :
       *
       * @param  urlId   The URL which holds the system id of the entity
       *                 to parse.
+      * @param  manager Pointer to the memory manager to be used to
+      *                 allocate objects.
       */
     URLInputSource
     (
@@ -165,6 +170,8 @@ public :
      *
      *  @param  systemId    The possibly relative system id URL. If its relative
      *                      its based on baseId, else its taken as is.
+     *  @param  manager     Pointer to the memory manager to be used to
+     *                      allocate objects.
      */
     URLInputSource
     (
@@ -185,6 +192,9 @@ public :
      *
      *  @param  publicId    The optional public id to set. This is just passed
      *                      on to the parent class for storage.
+     *
+     * @param  manager      Pointer to the memory manager to be used to
+     *                      allocate objects.
      */
     URLInputSource
     (
@@ -205,6 +215,9 @@ public :
      *
      *  @param  systemId    The possibly relative system id URL. If its relative
      *                      its based on baseId, else its taken as is.
+     *
+     *  @param  manager     Pointer to the memory manager to be used to
+     *                      allocate objects.
      */
     URLInputSource
     (
@@ -227,6 +240,9 @@ public :
      *  @param  publicId    The optional public id to set. This is just passed
      *                      on to the parent class for storage.
      *                      on to the parent class for storage.
+     *
+     *  @param  manager     Pointer to the memory manager to be used to
+     *                      allocate objects.
      */
     URLInputSource
     (

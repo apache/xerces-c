@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.28  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.27  2003/11/06 15:30:07  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -314,6 +317,9 @@ public :
       * validation.
       * @param valToAdopt Pointer to the validator instance to use. The
       *                   parser is responsible for freeing the memory.
+      * @param manager    Pointer to the memory manager to be used to
+      *                   allocate objects.
+      * @param gramPool   The collection of cached grammers.
       */
     SAXParser
     (

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.5  2003/11/21 17:29:53  knoaman
  * PSVI update
  *
@@ -122,6 +125,11 @@ public:
     /**
       * The default constructor 
       *
+      * @param  identityConstraint
+      * @param  keyIC
+      * @param  headAnnot
+      * @param  stringList
+      * @param  xsModel
       * @param  manager     The configurable memory manager
       */
     XSIDCDefinition

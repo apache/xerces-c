@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.5  2003/08/13 15:43:24  knoaman
  * Use memory manager when creating SAX exceptions.
  *
@@ -140,6 +143,8 @@ public:
     /** @name Constructors and Destructor */
     //@{
     /** Default constructor
+     * @param manager    Pointer to the memory manager to be used to
+     *                   allocate objects.
      */
     SAXException(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
 
@@ -152,6 +157,8 @@ public:
     * Create a new SAXException.
     *
     * @param msg The error or warning message.
+    * @param manager    Pointer to the memory manager to be used to
+    *                   allocate objects.
     */
     SAXException(const XMLCh* const msg,
                  MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
@@ -165,6 +172,8 @@ public:
     * Create a new SAXException.
     *
     * @param msg The error or warning message.
+    * @param manager    Pointer to the memory manager to be used to
+    *                   allocate objects.
     */
     SAXException(const char* const msg,
                  MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager) :
@@ -248,6 +257,8 @@ public:
     * Create a new SAXException.
     *
     * @param msg The error or warning message.
+    * @param manager    Pointer to the memory manager to be used to
+    *                   allocate objects.
     */
     SAXNotSupportedException(const XMLCh* const msg,
                              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -256,6 +267,8 @@ public:
     * Create a new SAXException.
     *
     * @param msg The error or warning message.
+    * @param manager    Pointer to the memory manager to be used to
+    *                   allocate objects.
     */
     SAXNotSupportedException(const char* const msg,
                              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -277,6 +290,8 @@ public:
     * Create a new SAXException.
     *
     * @param msg The error or warning message.
+    * @param manager    Pointer to the memory manager to be used to
+    *                   allocate objects.
     */
     SAXNotRecognizedException(const XMLCh* const msg,
                               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
@@ -285,6 +300,8 @@ public:
     * Create a new SAXException.
     *
     * @param msg The error or warning message.
+    * @param manager    Pointer to the memory manager to be used to
+    *                   allocate objects.
     */
     SAXNotRecognizedException(const char* const msg,
                               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);

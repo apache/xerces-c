@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.6  2003/12/01 23:23:26  neilg
+  * fix for bug 25118; thanks to Jeroen Witmond
+  *
   * Revision 1.5  2003/11/28 05:13:45  neilg
   * remove passing of prefixes in PSVIHandler
   *
@@ -111,7 +114,6 @@ public:
       * @param  localName The name of the element whose end tag was just
       *                     parsed.
       * @param  uri       The namespace to which the element is bound
-      * @param  prefix  The string representing the prefix name
       * @param  elementInfo    Object containing the element's PSVI properties
       */
     virtual void handleElementPSVI
@@ -129,7 +131,6 @@ public:
       * @param  localName The name of the element upon which start tag 
       *          these attributes were encountered.
       * @param  uri       The namespace to which the element is bound
-      * @param  prefix  The string representing the prefix name
       * @param  psviAttributes   Object containing the attributes' PSVI properties
       *          with information to identify them.
       */

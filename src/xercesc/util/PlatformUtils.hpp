@@ -401,6 +401,9 @@ public :
       *
       * @param srcPath The path of the file for which you want the full path
       *
+      * @param manager Pointer to the memory manager to be used to
+      *                allocate objects.
+      *
       * @return Returns the fully qualified path of the file name including
       *         the file name. This is dyanmically allocated and must be
       *         deleted  by the caller when its no longer needed! The memory

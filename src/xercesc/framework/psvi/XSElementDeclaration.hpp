@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.7  2003/12/01 20:41:25  neilg
  * fix for infinite loop between XSComplexTypeDefinitions and XSElementDeclarations; from David Cargill
  *
@@ -116,6 +119,14 @@ public:
     /**
       * The default constructor 
       *
+      * @param  schemaElementDecl
+      * @param  typeDefinition
+      * @param  substitutionGroupAffiliation
+      * @param  annot
+      * @param  identityConstraints
+      * @param  xsModel
+      * @param  elemScope
+      * @param  enclosingTypeDefinition
       * @param  manager     The configurable memory manager
       */
     XSElementDeclaration

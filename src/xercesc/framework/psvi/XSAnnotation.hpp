@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.7  2003/11/28 14:55:11  neilg
  * fix for compilation error on HPUX
  *
@@ -125,6 +128,7 @@ public:
     /**
       * The default constructor 
       *
+      * @param  contents    The string that is to be the content of this XSAnnotation
       * @param  manager     The configurable memory manager
       */
     XSAnnotation
@@ -149,7 +153,7 @@ public:
      * Write contents of the annotation to the specified DOM object. In-scope 
      * namespace declarations for <code>annotation</code> element are added as 
      * attribute nodes of the serialized <code>annotation</code>. 
-     * @param target  A target pointer to the annotation target object, i.e.
+     * @param node  A target pointer to the annotation target object, i.e.
      * either <code>DOMDocument</code> or <code>DOMElement</code> cast as 
      * <code>DOMNode</code). 
      * @param targetType  A target type.    
@@ -161,7 +165,7 @@ public:
      * Write contents of the annotation to the specified object. 
      * The corresponding events for all in-scope namespace declarations are 
      * sent via the specified document handler. 
-     * @param target  A target pointer to the annotation target object, i.e. 
+     * @param handler  A target pointer to the annotation target object, i.e. 
      *   <code>ContentHandler</code>.
      */    
     void writeAnnotation(ContentHandler* handler);

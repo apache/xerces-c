@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/01 23:23:26  neilg
+ * fix for bug 25118; thanks to Jeroen Witmond
+ *
  * Revision 1.9  2003/11/25 15:10:44  jberry
  * Eliminate some compiler warnings concerning comments inside of comments
  *
@@ -121,6 +124,8 @@ public:
     /**
       * The default constructor 
       *
+      * @param  compType
+      * @param  xsModel
       * @param  manager     The configurable memory manager
       */
     XSObject

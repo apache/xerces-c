@@ -1371,6 +1371,9 @@ protected :
       * @param gramPool   Pointer to the grammar pool instance from 
       *                   external application (through derivatives).
       *                   The parser does NOT own it.
+      *
+      * @param manager    Pointer to the memory manager to be used to
+      *                   allocate objects.
       */
     AbstractDOMParser
     (

@@ -75,8 +75,10 @@ public:
      * Constructs a newly allocated <code>XMLBigDecimal</code> object that
      * represents the value represented by the string.
      *
-     * @param      strValue the <code>String</code> to be converted to an
-     *                      <code>XMLBigDecimal</code>.
+     * @param  strValue the <code>String</code> to be converted to an
+     *                  <code>XMLBigDecimal</code>.
+     * @param  manager  Pointer to the memory manager to be used to
+     *                  allocate objects.
      * @exception  NumberFormatException  if the <code>String</code> does not
      *               contain a parsable XMLBigDecimal.
      */
@@ -114,7 +116,7 @@ public:
     /**
      * Compares this object to the specified object.
      *
-     * @param   toCompare   the object to compare with.
+     * @param   other   the object to compare with.
      * @return  <code>-1</code> value is less than other's
      *          <code>0</code>  value equals to other's
      *          <code>+1</code> value is greater than other's

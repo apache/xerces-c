@@ -95,6 +95,8 @@ public:
       * characters themselves will not be treated as tokens.
       *
       * @param  srcStr  The string to be parsed.
+      * @param  manager Pointer to the memory manager to be used to
+      *                 allocate objects.
       *
       */
 	XMLStringTokenizer(const XMLCh* const srcStr,
@@ -107,6 +109,8 @@ public:
       *
       * @param  srcStr  The string to be parsed.
       * @param  delim   The set of delimiters.
+      * @param  manager Pointer to the memory manager to be used to
+      *                 allocate objects.
       */
     XMLStringTokenizer(const XMLCh* const srcStr
                        , const XMLCh* const delim
