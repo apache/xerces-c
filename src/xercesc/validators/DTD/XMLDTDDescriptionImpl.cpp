@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/10/28 20:18:39  peiyongz
+ * store/load fSystemId
+ *
  * Revision 1.5  2004/09/08 13:56:50  peiyongz
  * Apache License Version 2.0
  *
@@ -116,10 +119,18 @@ void XMLDTDDescriptionImpl::serialize(XSerializeEngine& serEng)
 
     if (serEng.isStoring())
     {
+        serEng.writeString(fSystemId);
         serEng.writeString(fRootName);
     }
     else
     {
+        if (fSystemId)
+        {
+            XMLGrammarDescription::getMemoryManager()->deallocate((void*)fSystemId);
+        }
+
+        serEng.readString((XMLCh*&)fSystemId);
+
         //the original root name which came from the ctor needs deallocated
         if (fRootName)
         {
