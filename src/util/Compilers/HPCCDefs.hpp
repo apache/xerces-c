@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/18 22:37:20  aruna1
+ * Modified XMLCh to unsigned short
+ *
  * Revision 1.6  2000/01/18 21:32:21  aruna1
  * XMLCh assigned to wchar_t
  *
@@ -106,7 +109,7 @@
 #define INCLUDE_THIS_FILE
 #include <wchar.h>
 #endif
-typedef wchar_t XMLCh;
+typedef unsigned short XMLCh;
 typedef unsigned short UTF16Ch;
 
 
