@@ -735,7 +735,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
     # Change the directory permissions
     psystem ("chmod 644 `find $targetdir -type f`");
-    psystem ("chmod 755 $targetdir/bin/* $targetdir/lib/*.sl $targetdir/lib/*.so $targetdir/lib/*.a");
+    psystem ("chmod 755 $targetdir/bin/* $targetdir/lib/*");
     psystem ("chmod +x $targetdir/samples/runConfigure $targetdir/samples/configure $targetdir/samples/install-sh");
     psystem ("chmod +x $targetdir/samples/config.sub $targetdir/samples/config.guess $targetdir/samples/config.status");
     psystem ("chmod 755 `find $targetdir -type d`");
