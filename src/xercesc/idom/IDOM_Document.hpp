@@ -438,6 +438,34 @@ public:
 	                                              const XMLCh *qualifiedName) = 0;
 
     /**
+     * Creates an element of the given qualified name and
+     * namespace URI, and also stores line/column number info.
+     * Non standard. Used by XIDOMParser during schema traversal.
+     *
+     * @param namespaceURI The <em>namespace URI</em> of
+     *   the element to create.
+     * @param qualifiedName The <em>qualified name</em>
+     *   of the element type to instantiate.
+     * @param lineNum The <em>line number</em> of the element to create.
+     * @param columnNum The <em>column number</em> of the element to create.
+     * @return A new <code>IDOM_Element</code> object.
+     * @exception IDOMException
+     *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
+     *                          an illegal character.
+     * <br>
+     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is
+     *      malformed, if the <CODE>qualifiedName</CODE> has a prefix and the
+     *      <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string,
+     *      or if the <CODE>qualifiedName</CODE> has a prefix that is "xml" and
+     *      the <CODE>namespaceURI</CODE> is different from
+     *      "http://www.w3.org/XML/1998/namespace".
+     */
+    virtual IDOM_Element         *createElementNS(const XMLCh *namespaceURI,
+                                                  const XMLCh *qualifiedName,
+                                                  const int lineNum,
+                                                  const int columnNum) = 0;
+
+    /**
      * Creates an attribute of the given qualified name and namespace
      * URI.
      *

@@ -77,7 +77,7 @@
 #include "IDDeepNodeListImpl.hpp"
 #include "IDDocumentFragmentImpl.hpp"
 #include "IDElementImpl.hpp"
-#include "IDElementNSImpl.hpp"
+#include "XSDElementNSImpl.hpp"
 #include "IDEntityImpl.hpp"
 #include "IDEntityReferenceImpl.hpp"
 #include "IDNamedNodeMapImpl.hpp"
@@ -650,6 +650,17 @@ IDOM_Element *IDDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
         throw IDOM_DOMException(IDOM_DOMException::INVALID_CHARACTER_ERR,0);
     //XMLCh * pooledTagName = this->fNamePool->getPooledString(qualifiedName);
     return new (this) IDElementNSImpl(this, fNamespaceURI, qualifiedName);
+}
+
+IDOM_Element *IDDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
+                                              const XMLCh *qualifiedName,
+                                              const int lineNo,
+                                              const int columnNo)
+{
+    if(!isXMLName(qualifiedName))
+        throw IDOM_DOMException(IDOM_DOMException::INVALID_CHARACTER_ERR,0);
+
+    return new (this) XSDElementNSImpl(this, fNamespaceURI, qualifiedName, lineNo, columnNo);
 }
 
 

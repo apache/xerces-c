@@ -133,7 +133,8 @@ IDOM_CPP_PRIVHEADERS =  \
        IDProcessingInstructionImpl.hpp \
        IDRangeImpl.hpp \
        IDTextImpl.hpp \
-       IDTreeWalkerImpl.hpp
+       IDTreeWalkerImpl.hpp \
+       XSDElementNSImpl.hpp
 
 IDOM_C_FILES = \
        IDDeepNodeListPool.c
@@ -170,7 +171,8 @@ IDOM_CPP_OBJECTS = \
        IDRangeImpl.$(TO) \
        IDStringPool.$(TO) \
        IDTextImpl.$(TO) \
-       IDTreeWalkerImpl.$(TO)
+       IDTreeWalkerImpl.$(TO) \
+       XSDElementNSImpl.$(TO)
 
 
 all::	includes $(IDOM_CPP_OBJECTS)

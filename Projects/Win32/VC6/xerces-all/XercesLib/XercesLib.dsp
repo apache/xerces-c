@@ -2339,6 +2339,30 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesGroupInfo.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDErrorReporter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDErrorReporter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDIDOMParser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDIDOMParser.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDLocator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDLocator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XUtil.cpp
 # End Source File
 # Begin Source File
@@ -2721,6 +2745,14 @@ SOURCE=..\..\..\..\..\src\xercesc\idom\IDTreeWalkerImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\idom\IDTreeWalkerImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\idom\XSDElementNSImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\idom\XSDElementNSImpl.hpp
 # End Source File
 # End Group
 # Begin Source File

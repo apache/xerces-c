@@ -259,7 +259,11 @@ public:
     //Introduced in DOM Level 2
     virtual IDOM_Node            *importNode(IDOM_Node *source, bool deep);
     virtual IDOM_Element         *createElementNS(const XMLCh *namespaceURI,
-	                                             const XMLCh *qualifiedName);
+                                                  const XMLCh *qualifiedName);
+    virtual IDOM_Element         *createElementNS(const XMLCh *namespaceURI,
+                                                  const XMLCh *qualifiedName,
+                                                  const int lineNo,
+                                                  const int columnNo);
     virtual IDOM_Attr            *createAttributeNS(const XMLCh *namespaceURI,
 	                                             const XMLCh *qualifiedName);
     virtual IDOM_NodeList        *getElementsByTagNameNS(const XMLCh *namespaceURI,

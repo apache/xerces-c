@@ -171,7 +171,7 @@ private:
     // -----------------------------------------------------------------------
     //  Validation methods
     // -----------------------------------------------------------------------
-    void validate(const XMLCh* const attName, const XMLCh* const attValue,
+    void validate(const IDOM_Element* const elem, const XMLCh* const attName, const XMLCh* const attValue,
                   const short dvIndex, TraverseSchema* const schema);
 
     // -----------------------------------------------------------------------

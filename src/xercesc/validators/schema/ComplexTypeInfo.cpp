@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/03/21 15:34:40  knoaman
+ * Add support for reporting line/column numbers of schema errors.
+ *
  * Revision 1.2  2002/02/06 22:29:24  knoaman
  * Remove unnecessary data/methods.
  *
@@ -157,6 +160,7 @@
 #include <xercesc/validators/common/DFAContentModel.hpp>
 #include <xercesc/validators/common/MixedContentModel.hpp>
 #include <xercesc/validators/common/SimpleContentModel.hpp>
+#include <xercesc/validators/schema/XSDLocator.hpp>
 
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Constructors and Destructor
@@ -187,6 +191,7 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fUniqueURI(0)
     , fContentSpecOrgURISize(16)
     , fSpecNodesToDelete(0)
+    , fLocator(0)
 {
 
 }
@@ -205,6 +210,7 @@ ComplexTypeInfo::~ComplexTypeInfo()
     delete fAttList;
     delete fElements;
     delete fSpecNodesToDelete;
+    delete fLocator;
 
     delete fContentModel;
     delete [] fFormattedModel;
@@ -234,6 +240,14 @@ void ComplexTypeInfo::setContentSpec(ContentSpecNode* const toAdopt) {
     }
 
     fContentSpec = toAdopt;
+}
+
+void ComplexTypeInfo::setLocator(XSDLocator* const aLocator) {
+
+    if (fLocator)
+        delete fLocator;
+
+    fLocator = aLocator;
 }
 
 // ---------------------------------------------------------------------------

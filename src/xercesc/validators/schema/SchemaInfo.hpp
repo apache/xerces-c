@@ -108,7 +108,7 @@ public:
     ~SchemaInfo();
 
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
     XMLCh*                   getCurrentSchemaURL() const;
@@ -124,12 +124,15 @@ public:
     ValueVectorOf<const IDOM_Element*>* getRecursingAnonTypes() const;
     ValueVectorOf<const XMLCh*>*        getRecursingTypeNames() const;
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
     void setScopeCount(const int aValue);
+    void setBlockDefault(const int aValue);
+    void setFinalDefault(const int aValue);
+    void setElemAttrDefaultQualified(const unsigned short aValue);
     
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Access methods
     // -----------------------------------------------------------------------
     void addSchemaInfo(SchemaInfo* const toAdd, const ListType aListType);
@@ -244,6 +247,21 @@ SchemaInfo::getRecursingTypeNames() const {
 inline void SchemaInfo::setScopeCount(const int aValue) {
 
     fScopeCount = aValue;
+}
+
+inline void SchemaInfo::setBlockDefault(const int aValue) {
+
+    fBlockDefault = aValue;
+}
+
+inline void SchemaInfo::setFinalDefault(const int aValue) {
+
+    fFinalDefault = aValue;
+}
+
+inline void SchemaInfo::setElemAttrDefaultQualified(const unsigned short aValue) {
+
+    fElemAttrDefaultQualified = aValue;
 }
 
 

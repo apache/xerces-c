@@ -697,7 +697,7 @@ void IDOMParser::startElement(const  XMLElementDecl&         elemDecl
             fScanner->getURIText(urlId, buf);   //get namespaceURI
             namespaceURI = buf.getRawBuffer();
         }
-        elem = fDocument->createElementNS(namespaceURI, elemDecl.getFullName());
+        elem = createElementNSNode(namespaceURI, elemDecl.getFullName());
         IDElementImpl *elemImpl = (IDElementImpl *) elem;
         for (unsigned int index = 0; index < attrCount; ++index) {
             static const XMLCh XMLNS[] = {
@@ -818,8 +818,14 @@ void IDOMParser::XMLDecl(const   XMLCh* const version
     // placehold for DOM Level 3
 }
 
-
-
+// ---------------------------------------------------------------------------
+//  IDOMParser: Helper methods
+// ---------------------------------------------------------------------------
+IDOM_Element* IDOMParser::createElementNSNode(const XMLCh *namespaceURI,
+                                              const XMLCh *qualifiedName)
+{
+    return fDocument->createElementNS(namespaceURI, qualifiedName);
+}
 // ---------------------------------------------------------------------------
 //  IDOMParser: Deprecated methods
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/03/21 15:34:40  knoaman
+ * Add support for reporting line/column numbers of schema errors.
+ *
  * Revision 1.2  2002/02/06 22:21:49  knoaman
  * Use IDOM for schema processing.
  *
@@ -920,11 +923,11 @@ GeneralAttributeCheck::checkAttributes(const IDOM_Element* const elem,
             attNameList.put((void*) attName, 0);
 
             if (attValueLen > 0) {
-                validate(attName, attValue, attInfo->getValidatorIndex(), schema);
+                validate(elem, attName, attValue, attInfo->getValidatorIndex(), schema);
             }
             else if (attNode == 0) {
                 if (attInfo->getDefaultOption() == Att_Required) {
-                    schema->reportSchemaError(XMLUni::fgXMLErrDomain,
+                    schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
                         XMLErrs::AttributeRequired, attName, contextStr, elemName);
                 }
             }
@@ -965,7 +968,7 @@ GeneralAttributeCheck::checkAttributes(const IDOM_Element* const elem,
                 !XMLString::compareString(elemName, SchemaSymbols::fgELT_APPINFO) ||
                 !XMLString::compareString(elemName, SchemaSymbols::fgELT_DOCUMENTATION)) {
 
-                schema->reportSchemaError(XMLUni::fgXMLErrDomain,
+                schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
                     XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
             } else {
 
@@ -980,10 +983,10 @@ GeneralAttributeCheck::checkAttributes(const IDOM_Element* const elem,
                         dv->validate(attrVal);
                     }
                     catch(const XMLException& excep) {
-                        schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+                        schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
                     }
                     catch(...) {
-                        schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue, attrVal, attName);
+                        schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue, attrVal, attName);
                     }
                 }
                 // REVISIT:
@@ -998,14 +1001,15 @@ GeneralAttributeCheck::checkAttributes(const IDOM_Element* const elem,
 
         // check whether this attribute is allowed
         if (!attNameList.containsKey(attName)) {
-            schema->reportSchemaError(XMLUni::fgXMLErrDomain,
+            schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
                 XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
         }
     }
 }
 
 
-void GeneralAttributeCheck::validate(const XMLCh* const attName,
+void GeneralAttributeCheck::validate(const IDOM_Element* const elem, 
+                                     const XMLCh* const attName,
                                      const XMLCh* const attValue,
                                      const short dvIndex,
                                      TraverseSchema* const schema)
@@ -1081,7 +1085,7 @@ void GeneralAttributeCheck::validate(const XMLCh* const attName,
             dv->validate(attValue);
         }
         catch(const XMLException& excep) {
-            schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+            schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
         }
         catch(...) {
             isInvalid = true;
@@ -1089,7 +1093,7 @@ void GeneralAttributeCheck::validate(const XMLCh* const attName,
     }
 
     if (isInvalid) {
-        schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue,
+        schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue,
                                   attValue, attName);
     }
 }

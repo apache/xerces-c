@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.3  2002/03/21 15:34:40  knoaman
+# Add support for reporting line/column numbers of schema errors.
+#
 # Revision 1.2  2002/02/11 18:19:19  tng
 # [Bug 2715] Build recursion suppresses make failures.
 #
@@ -155,7 +158,10 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	XercesAttGroupInfo.hpp \
 	XercesElementWildcard.hpp \
 	XercesGroupInfo.hpp \
-	XUtil.hpp
+	XUtil.hpp \
+	XSDIDOMParser.hpp \
+	XSDLocator.hpp \
+	XSDErrorReporter.hpp
 
 VALIDATORS_SCHEMA_CPP_PRIVHEADERS =
 
@@ -177,7 +183,10 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	XercesAttGroupInfo.$(TO) \
 	XercesElementWildcard.$(TO) \
 	XercesGroupInfo.$(TO) \
-	XUtil.$(TO)
+	XUtil.$(TO) \
+	XSDIDOMParser.$(TO) \
+	XSDLocator.$(TO) \
+	XSDErrorReporter.$(TO)
 
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS) identity
 

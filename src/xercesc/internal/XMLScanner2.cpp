@@ -88,7 +88,6 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/internal/EndOfEntityException.hpp>
 #include <xercesc/internal/XMLInternalErrorHandler.hpp>
-#include <xercesc/parsers/IDOMParser.hpp>
 #include <xercesc/dom/DOM_DOMException.hpp>
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
@@ -98,6 +97,7 @@
 #include <xercesc/validators/schema/TraverseSchema.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
 #include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
+#include <xercesc/validators/schema/XSDIDOMParser.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -1454,7 +1454,7 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
     Grammar* grammar = fGrammarResolver->getGrammar(uri);
 
     if (!grammar || grammar->getGrammarType() == Grammar::DTDGrammarType) {
-        IDOMParser parser;
+        XSDIDOMParser parser;
         XMLInternalErrorHandler internalErrorHandler(fErrorHandler);
         parser.setValidationScheme(IDOMParser::Val_Never);
         parser.setDoNamespaces(true);

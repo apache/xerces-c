@@ -87,6 +87,7 @@ class DatatypeValidator;
 class ContentSpecNode;
 class SchemaAttDefList;
 class SchemaElementDecl;
+class XSDLocator;
 
 
 class VALIDATORS_EXPORT ComplexTypeInfo
@@ -128,6 +129,7 @@ public:
     SchemaElementDecl*       elementAt(const unsigned int index);
     XMLContentModel*         getContentModel(const bool checkUPA = false);
     const XMLCh*             getFormattedContentModel ()   const;
+    XSDLocator*              getLocator() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -151,6 +153,7 @@ public:
     void addAttDef(SchemaAttDef* const toAdd);
     void addElement(SchemaElementDecl* const toAdd);
     void setContentModel(XMLContentModel* const newModelToAdopt);
+    void setLocator(XSDLocator* const aLocator);
 
     // -----------------------------------------------------------------------
     //  Helper methods
@@ -221,6 +224,7 @@ private:
     unsigned int                       fUniqueURI;
     unsigned int                       fContentSpecOrgURISize;
     RefVectorOf<ContentSpecNode>*      fSpecNodesToDelete;
+    XSDLocator*                        fLocator;
 };
 
 // ---------------------------------------------------------------------------
@@ -366,6 +370,11 @@ inline XMLContentModel* ComplexTypeInfo::getContentModel(const bool checkUPA)
         fContentModel = makeContentModel(checkUPA);
 
     return fContentModel;
+}
+
+inline XSDLocator* ComplexTypeInfo::getLocator() const
+{
+    return fLocator;
 }
 
 

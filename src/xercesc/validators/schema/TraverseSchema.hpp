@@ -81,6 +81,7 @@
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/schema/SchemaInfo.hpp>
 #include <xercesc/validators/schema/GeneralAttributeCheck.hpp>
+#include <xercesc/validators/schema/XSDErrorReporter.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -103,6 +104,8 @@ class XercesGroupInfo;
 class XercesAttGroupInfo;
 class IdentityConstraint;
 class IDOMParser;
+class XSDLocator;
+class XSDIDOMParser;
 
 
 class VALIDATORS_EXPORT TraverseSchema
@@ -168,12 +171,14 @@ private:
     void                preprocessSchema(IDOM_Element* const schemaRoot,
                                          const XMLCh* const schemaURL);
     void                traverseSchemaHeader(const IDOM_Element* const schemaRoot);
-    void                traverseAnnotationDecl(const IDOM_Element* const childElem);
+    void                traverseAnnotationDecl(const IDOM_Element* const childElem,
+                                               const bool topLevel = false);
     void                traverseInclude(const IDOM_Element* const childElem);
     void                traverseImport(const IDOM_Element* const childElem);
     void                traverseRedefine(const IDOM_Element* const childElem);
     void                traverseAttributeDecl(const IDOM_Element* const childElem,
-                                              ComplexTypeInfo* const typeInfo);
+                                              ComplexTypeInfo* const typeInfo,
+                                              const bool topLevel = false);
     void                traverseSimpleContentDecl(const XMLCh* const typeName,
                                                   const IDOM_Element* const contentDecl,
                                                   ComplexTypeInfo* const typeInfo);
@@ -182,8 +187,10 @@ private:
                                                   ComplexTypeInfo* const typeInfo,
                                                   const bool isMixed);
     int                 traverseSimpleTypeDecl(const IDOM_Element* const childElem,
+                                               const bool topLevel = true,
                                                int baseRefContext = SchemaSymbols::EMPTY_SET);
     int                 traverseComplexTypeDecl(const IDOM_Element* const childElem,
+                                                const bool topLevel = true,
                                                 const XMLCh* const recursingTypeName = 0);
     int                 traverseByList(const IDOM_Element* const rootElem,
                                        const IDOM_Element* const contentElem,
@@ -198,18 +205,23 @@ private:
                                         const int typeNameIndex,
                                         const int finalSet,
                                         int baseRefContext);
-    QName*              traverseElementDecl(const IDOM_Element* const childElem, bool& toDelete);
+    QName*              traverseElementDecl(const IDOM_Element* const childElem, bool& toDelete,
+                                            const bool topLevel = false);
     const XMLCh*        traverseNotationDecl(const IDOM_Element* const childElem);
-    const XMLCh*        traverseNotationDecl(const XMLCh* const name,
+    const XMLCh*        traverseNotationDecl(const IDOM_Element* const childElem,
+                                             const XMLCh* const name,
                                              const XMLCh* const uriStr);
     ContentSpecNode*    traverseChoiceSequence(const IDOM_Element* const elemDecl,
                                                const int modelGroupType);
     ContentSpecNode*    traverseAny(const IDOM_Element* const anyDecl);
     ContentSpecNode*    traverseAll(const IDOM_Element* const allElem);
-    XercesGroupInfo*    traverseGroupDecl(const IDOM_Element* const childElem);
+    XercesGroupInfo*    traverseGroupDecl(const IDOM_Element* const childElem,
+                                          const bool topLevel = true);
     XercesAttGroupInfo* traverseAttributeGroupDecl(const IDOM_Element* const elem,
-                                                   ComplexTypeInfo* const typeInfo);
-    XercesAttGroupInfo* traverseAttributeGroupDeclNS(const XMLCh* const uriStr,
+                                                   ComplexTypeInfo* const typeInfo,
+                                                   const bool topLevel = false);
+    XercesAttGroupInfo* traverseAttributeGroupDeclNS(const IDOM_Element* const elem,
+                                                     const XMLCh* const uriStr,
                                                      const XMLCh* const name);
     SchemaAttDef*       traverseAnyAttribute(const IDOM_Element* const elem);
     void                traverseKey(const IDOM_Element* const icElem,
@@ -225,8 +237,21 @@ private:
     // -----------------------------------------------------------------------
     //  Error Reporting methods
     // -----------------------------------------------------------------------
-    void reportSchemaError(const XMLCh* const msgDomain, const int errorCode);
-    void reportSchemaError(const XMLCh* const msgDomain,
+    void reportSchemaError(const XSDLocator* const aLocator,
+                           const XMLCh* const msgDomain,
+                           const int errorCode);
+    void reportSchemaError(const XSDLocator* const aLocator,
+                           const XMLCh* const msgDomain,
+                           const int errorCode, 
+                           const XMLCh* const text1,
+                           const XMLCh* const text2 = 0,
+                           const XMLCh* const text3 = 0,
+                           const XMLCh* const text4 = 0);
+    void reportSchemaError(const IDOM_Element* const elem,
+                           const XMLCh* const msgDomain,
+                           const int errorCode);
+    void reportSchemaError(const IDOM_Element* const elem,
+                           const XMLCh* const msgDomain,
                            const int errorCode, 
                            const XMLCh* const text1,
                            const XMLCh* const text2 = 0,
@@ -302,19 +327,16 @@ private:
     /**
       * Return DatatypeValidator available for the baseTypeStr.
       */
-    DatatypeValidator* findDTValidator(const IDOM_Element* const rootElem,
-                                       const XMLCh* const baseTypeStr,
+    DatatypeValidator* findDTValidator(const IDOM_Element* const elem,
+                                       const XMLCh* const derivedTypeName,
+                                       const XMLCh* const baseTypeName,
                                        const int baseRefContext);
 
-    const XMLCh* resolvePrefixToURI(const XMLCh* const prefix);
-    const XMLCh* resolvePrefixToURI(const XMLCh* const prefix,
+    const XMLCh* resolvePrefixToURI(const IDOM_Element* const elem,
+                                    const XMLCh* const prefix);
+    const XMLCh* resolvePrefixToURI(const IDOM_Element* const elem,
+                                    const XMLCh* const prefix,
                                     const unsigned int namespaceDepth);
-
-    /**
-      * Return whether an element is defined as a top level schema component
-      * or not.
-      */
-    bool isTopLevelComponent(const IDOM_Element* const elem);
 
     /**
       * Return the prefix for a given rawname string
@@ -364,8 +386,8 @@ private:
     /**
       * Parse block & final items
       */
-    int parseBlockSet(const XMLCh* const blockStr, const int blockType);
-    int parseFinalSet(const XMLCh* const finalStr, const int finalType);
+    int parseBlockSet(const IDOM_Element* const elem, const int blockType, const bool isRoot = false);
+    int parseFinalSet(const IDOM_Element* const elem, const int finalType, const bool isRoot = false);
 
     /**
       * Return true if a name is an identity constraint, otherwise false
@@ -381,13 +403,15 @@ private:
       * If 'typeStr' belongs to a different schema, return that schema URI,
       * otherwise return 0;
       */
-    const XMLCh* checkTypeFromAnotherSchema(const XMLCh* const typeStr);
+    const XMLCh* checkTypeFromAnotherSchema(const IDOM_Element* const elem,
+                                            const XMLCh* const typeStr);
 
     /**
       * Return the datatype validator for a given element type attribute if
       * the type is a simple type
       */
-    DatatypeValidator* getElementTypeValidator(const XMLCh* const typeStr,
+    DatatypeValidator* getElementTypeValidator(const IDOM_Element* const elem,
+                                               const XMLCh* const typeStr,
                                                bool& noErrorDetected,
                                                const XMLCh* const otherSchemaURI);
 
@@ -395,7 +419,8 @@ private:
       * Return the complexType info for a given element type attribute if
       * the type is a complex type
       */
-    ComplexTypeInfo* getElementComplexTypeInfo(const XMLCh* const typeStr,
+    ComplexTypeInfo* getElementComplexTypeInfo(const IDOM_Element* const elem,
+                                               const XMLCh* const typeStr,
                                                bool& noErrorDetected,
                                                const XMLCh* const otherSchemaURI);
 
@@ -403,14 +428,16 @@ private:
       * Return schema element declaration for a given substituteGroup element
       * name
       */
-    SchemaElementDecl* getSubstituteGroupElemDecl(const XMLCh* const name,
+    SchemaElementDecl* getSubstituteGroupElemDecl(const IDOM_Element* const elem,
+                                                  const XMLCh* const name,
                                                   bool& noErrorDetected);
 
     /**
       * Check validity constraint of a substitutionGroup attribute in
       * an element declaration
       */
-    bool isSubstitutionGroupValid(const SchemaElementDecl* const elemDecl,
+    bool isSubstitutionGroupValid(const IDOM_Element* const elem,
+                                  const SchemaElementDecl* const elemDecl,
                                   const ComplexTypeInfo* const typeInfo,
                                   const DatatypeValidator* const validator,
                                   const XMLCh* const elemName,
@@ -439,7 +466,8 @@ private:
     /**
       * Process complex content for a complexType
       */
-    void processComplexContent(const XMLCh* const typeName,
+    void processComplexContent(const IDOM_Element* const elem,
+                               const XMLCh* const typeName,
                                const IDOM_Element* const childElem,
                                ComplexTypeInfo* const typeInfo,
                                const XMLCh* const baseRawName,
@@ -451,7 +479,8 @@ private:
     /**
       * Process "base" information for a complexType
       */
-    void processBaseTypeInfo(const XMLCh* const baseName,
+    void processBaseTypeInfo(const IDOM_Element* const elem,
+                             const XMLCh* const baseName,
                              const XMLCh* const localPart,
                              const XMLCh* const uriStr,
                              ComplexTypeInfo* const typeInfo);
@@ -464,7 +493,8 @@ private:
     /**
       * Get complexType infp from another schema
       */
-    ComplexTypeInfo* getTypeInfoFromNS(const XMLCh* const uriStr,
+    ComplexTypeInfo* getTypeInfoFromNS(const IDOM_Element* const elem,
+                                       const XMLCh* const uriStr,
                                        const XMLCh* const localPart);
 
     /**
@@ -479,6 +509,7 @@ private:
       * Process attributes of a complex type
       */
     void processAttributes(const IDOM_Element* const elem,
+                           const IDOM_Element* const attElem,
                            const XMLCh* const baseRawName,
                            const XMLCh* const baseLocalPart,
                            const XMLCh* const baseURI,
@@ -509,34 +540,31 @@ private:
       */
     bool emptiableParticle(const ContentSpecNode* const specNode);
 
-    /**
-      * Used by emptiableMixedContent to get the 'particle'
-      * minimum/maximum total range. 
-      */
-    int getMinTotalRange(const ContentSpecNode* const specNode);
-    int getMaxTotalRange(const ContentSpecNode* const specNode);
-
     void checkFixedFacet(const IDOM_Element* const, const XMLCh* const,
                          const DatatypeValidator* const, unsigned int&);
     void checkRefElementConsistency();
-    void buildValidSubstitutionListF(SchemaElementDecl* const,
+    void buildValidSubstitutionListF(const IDOM_Element* const elem,
+                                     SchemaElementDecl* const,
                                      SchemaElementDecl* const);
-    void buildValidSubstitutionListB(SchemaElementDecl* const,
+    void buildValidSubstitutionListB(const IDOM_Element* const elem,
+                                     SchemaElementDecl* const,
                                      SchemaElementDecl* const);
 
-    void checkEnumerationRequiredNotation(const XMLCh* const name,
+    void checkEnumerationRequiredNotation(const IDOM_Element* const elem,
+                                          const XMLCh* const name,
                                           const XMLCh* const typeStr);
 
-    bool hasAllContent(const ContentSpecNode* const specNode);
-
-    void processElements(ComplexTypeInfo* const baseTypeInfo,
+    void processElements(const IDOM_Element* const elem,
+                         ComplexTypeInfo* const baseTypeInfo,
                          ComplexTypeInfo* const newTypeInfo);
 
-    void copyGroupElements(XercesGroupInfo* const fromGroup,
+    void copyGroupElements(const IDOM_Element* const elem,
+                           XercesGroupInfo* const fromGroup,
                            XercesGroupInfo* const toGroup,
                            ComplexTypeInfo* const typeInfo);
 
-    void copyAttGroupAttributes(XercesAttGroupInfo* const fromAttGroup,
+    void copyAttGroupAttributes(const IDOM_Element* const elem,
+                                XercesAttGroupInfo* const fromAttGroup,
                                 XercesAttGroupInfo* const toAttGroup,
                                 ComplexTypeInfo* const typeInfo);
 
@@ -577,9 +605,11 @@ private:
       * Check that the attributes of a type derived by restriction satisfy
       * the constraints of derivation valid restriction
       */
-    void checkAttDerivationOK(const ComplexTypeInfo* const baseTypeInfo,
+    void checkAttDerivationOK(const IDOM_Element* const elem,
+                              const ComplexTypeInfo* const baseTypeInfo,
                               const ComplexTypeInfo* const childTypeInfo);
-    void checkAttDerivationOK(const XercesAttGroupInfo* const baseAttGrpInfo,
+    void checkAttDerivationOK(const IDOM_Element* const elem,
+                              const XercesAttGroupInfo* const baseAttGrpInfo,
                               const XercesAttGroupInfo* const childAttGrpInfo);
 
     /**
@@ -595,8 +625,6 @@ private:
       */
     bool isWildCardSubset(const SchemaAttDef* const baseAttWildCard,
                           const SchemaAttDef* const childAttWildCard);
-
-    bool isAnyType(const XMLCh* const typeName);
 
     bool openRedefinedSchema(const IDOM_Element* const redefineElem);
 
@@ -649,7 +677,8 @@ private:
       * for is in a <redefine> though, then we just rename it--and it's
       * reference--to be the same.
       */
-    void fixRedefinedSchema(SchemaInfo* const redefinedSchemaInfo,
+    void fixRedefinedSchema(const IDOM_Element* const elem,
+                            SchemaInfo* const redefinedSchemaInfo,
                             const XMLCh* const redefineChildComponentName,
                             const XMLCh* const redefineChildTypeName,
                             const int redefineNameCounter);
@@ -777,55 +806,55 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    bool                                          fFullConstraintChecking;
-    unsigned short                                fElemAttrDefaultQualified;
-    int                                           fTargetNSURI;
-    int                                           fEmptyNamespaceURI;
-    int                                           fCurrentScope;
-    int                                           fFinalDefault;
-    int                                           fBlockDefault;
-    int                                           fScopeCount;
-    unsigned int                                  fAnonXSTypeCount;
-    unsigned int                                  fCircularCheckIndex;
-    const XMLCh*                                  fTargetNSURIString;
-    DatatypeValidatorFactory*                     fDatatypeRegistry;
-    GrammarResolver*                              fGrammarResolver;
-    SchemaGrammar*                                fSchemaGrammar;
-    EntityResolver*                               fEntityResolver;
-    ErrorHandler*                                 fErrorHandler;
-    XMLStringPool*                                fURIStringPool;
-    XMLStringPool*                                fStringPool;
-    XMLBuffer                                     fBuffer;
-    XMLValidator*                                 fValidator;
-    XMLScanner*                                   fScanner;
-    NamespaceScope*                               fNamespaceScope;
-    RefHashTableOf<XMLAttDef>*                    fAttributeDeclRegistry;
-    RefHashTableOf<ComplexTypeInfo>*              fComplexTypeRegistry;
-    RefHashTableOf<XercesGroupInfo>*              fGroupRegistry;
-    RefHashTableOf<XercesAttGroupInfo>*           fAttGroupRegistry;
-    RefHash2KeysTableOf<SchemaInfo>*              fSchemaInfoList;
-    SchemaInfo*                                   fSchemaInfo;
-    XercesGroupInfo*                              fCurrentGroupInfo;
-    XercesAttGroupInfo*                           fCurrentAttGroupInfo;
-    ComplexTypeInfo*                              fCurrentComplexType;
-    ValueVectorOf<unsigned int>*                  fCurrentTypeNameStack;
-    ValueVectorOf<unsigned int>*                  fCurrentGroupStack;
-    ValueVectorOf<unsigned int>*                  fIC_NamespaceDepth;
-    ValueVectorOf<SchemaElementDecl*>*            fIC_Elements;
-    GeneralAttributeCheck                         fAttributeCheck;
-    RefHash2KeysTableOf<XMLCh>*                   fGlobalDeclarations;
-    RefHash2KeysTableOf<XMLCh>*                   fNotationRegistry;
-    RefHash2KeysTableOf<XMLCh>*                   fRedefineComponents;
-    RefHash2KeysTableOf<IdentityConstraint>*      fIdentityConstraintNames;
-    RefHash2KeysTableOf<SchemaElementDecl>*       fSubstitutionGroups;
-    RefHash2KeysTableOf<ElemVector>*              fValidSubstitutionGroups;
-    RefVectorOf<QName>*                           fRefElements;
-    ValueVectorOf<int>*                           fRefElemScope;
-    RefHashTableOf<ValueVectorOf<IDOM_Element*> >*  fIC_NodeListNS;
-    RefHashTableOf<ElemVector>*                   fIC_ElementsNS;
-    RefHashTableOf<ValueVectorOf<unsigned int> >* fIC_NamespaceDepthNS;
-    IDOMParser*                                   fParser;
-    RefHashTableOf<SchemaInfo>*                   fPreprocessedNodes;
+    bool                                           fFullConstraintChecking;
+    int                                            fTargetNSURI;
+    int                                            fEmptyNamespaceURI;
+    int                                            fCurrentScope;
+    int                                            fScopeCount;
+    unsigned int                                   fAnonXSTypeCount;
+    unsigned int                                   fCircularCheckIndex;
+    const XMLCh*                                   fTargetNSURIString;
+    DatatypeValidatorFactory*                      fDatatypeRegistry;
+    GrammarResolver*                               fGrammarResolver;
+    SchemaGrammar*                                 fSchemaGrammar;
+    EntityResolver*                                fEntityResolver;
+    ErrorHandler*                                  fErrorHandler;
+    XMLStringPool*                                 fURIStringPool;
+    XMLStringPool*                                 fStringPool;
+    XMLBuffer                                      fBuffer;
+    XMLValidator*                                  fValidator;
+    XMLScanner*                                    fScanner;
+    NamespaceScope*                                fNamespaceScope;
+    RefHashTableOf<XMLAttDef>*                     fAttributeDeclRegistry;
+    RefHashTableOf<ComplexTypeInfo>*               fComplexTypeRegistry;
+    RefHashTableOf<XercesGroupInfo>*               fGroupRegistry;
+    RefHashTableOf<XercesAttGroupInfo>*            fAttGroupRegistry;
+    RefHash2KeysTableOf<SchemaInfo>*               fSchemaInfoList;
+    SchemaInfo*                                    fSchemaInfo;
+    XercesGroupInfo*                               fCurrentGroupInfo;
+    XercesAttGroupInfo*                            fCurrentAttGroupInfo;
+    ComplexTypeInfo*                               fCurrentComplexType;
+    ValueVectorOf<unsigned int>*                   fCurrentTypeNameStack;
+    ValueVectorOf<unsigned int>*                   fCurrentGroupStack;
+    ValueVectorOf<unsigned int>*                   fIC_NamespaceDepth;
+    ValueVectorOf<SchemaElementDecl*>*             fIC_Elements;
+    GeneralAttributeCheck                          fAttributeCheck;
+    RefHash2KeysTableOf<XMLCh>*                    fGlobalDeclarations;
+    RefHash2KeysTableOf<XMLCh>*                    fNotationRegistry;
+    RefHash2KeysTableOf<XMLCh>*                    fRedefineComponents;
+    RefHash2KeysTableOf<IdentityConstraint>*       fIdentityConstraintNames;
+    RefHash2KeysTableOf<SchemaElementDecl>*        fSubstitutionGroups;
+    RefHash2KeysTableOf<ElemVector>*               fValidSubstitutionGroups;
+    RefVectorOf<QName>*                            fRefElements;
+    ValueVectorOf<int>*                            fRefElemScope;
+    RefHashTableOf<ValueVectorOf<IDOM_Element*> >* fIC_NodeListNS;
+    RefHashTableOf<ElemVector>*                    fIC_ElementsNS;
+    RefHashTableOf<ValueVectorOf<unsigned int> >*  fIC_NamespaceDepthNS;
+    XSDIDOMParser*                                 fParser;
+    RefHashTableOf<SchemaInfo>*                    fPreprocessedNodes;
+    XSDErrorReporter                               fErrorReporter;
+    XSDLocator*                                    fLocator;
+    RefVectorOf<XSDLocator>*                       fRefElemLocators;
 
     friend class GeneralAttributeCheck;
 };
@@ -915,7 +944,7 @@ TraverseSchema::getTargetNamespaceString(const IDOM_Element* const elem) {
     const XMLCh* targetNS = getElementAttValue(elem, SchemaSymbols::fgATT_TARGETNAMESPACE);
 
     if (targetNS && XMLString::stringLen(targetNS) == 0) {
-        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidTargetNSValue);
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidTargetNSValue);
     }
 
     return targetNS;
@@ -978,16 +1007,6 @@ TraverseSchema::copyWildCardData(const SchemaAttDef* const srcWildCard,
     destWildCard->setDefaultType(srcWildCard->getDefaultType());
 }
 
-inline bool
-TraverseSchema::isAnyType(const XMLCh* const typeName) {
-
-    const XMLCh* const localPart = getLocalPart(typeName);
-    const XMLCh* const uri = resolvePrefixToURI(getPrefix(typeName));
-
-    return (!XMLString::compareString(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
-            && !XMLString::compareString(localPart, SchemaSymbols::fgATTVAL_ANYTYPE));
-}
-
 inline void TraverseSchema::getRedefineNewTypeName(const XMLCh* const oldTypeName,
                                                    const int redefineCounter,
                                                    XMLBuffer& newTypeName) {
@@ -1009,15 +1028,6 @@ TraverseSchema::isOccurrenceRangeOK(const int min1, const int max1,
         return true;
     }
     return false;
-}
-
-inline bool
-TraverseSchema::isTopLevelComponent(const IDOM_Element* const elem) {
-
-    const XMLCh* parentName = elem->getParentNode()->getLocalName();
-
-    return (XMLString::endsWith(parentName, SchemaSymbols::fgELT_SCHEMA))
-            || (XMLString::endsWith(parentName, SchemaSymbols::fgELT_REDEFINE));
 }
 
 #endif

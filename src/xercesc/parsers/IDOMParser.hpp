@@ -80,6 +80,7 @@ class XMLScanner;
 class XMLValidator;
 class IDDocumentImpl;
 class IDDocumentTypeImpl;
+class IDOM_Element;
 
 
 /**
@@ -131,7 +132,7 @@ public :
     /**
       * Destructor
       */
-    ~IDOMParser();
+    virtual ~IDOMParser();
 
     //@}
 
@@ -1418,6 +1419,22 @@ protected :
     void setDocument(IDOM_Document* toSet);
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Protected Helper methods
+    // -----------------------------------------------------------------------
+    virtual IDOM_Element* createElementNSNode(const XMLCh *fNamespaceURI,
+                                              const XMLCh *qualifiedName);
+
+
+    // -----------------------------------------------------------------------
+    //  Protected data members
+    //
+    //  fScanner
+    //      The scanner used for this parser. This is created during the
+    //      constructor.
+    // -----------------------------------------------------------------------
+    XMLScanner*              fScanner;
+
 
 private :
     // -----------------------------------------------------------------------
@@ -1477,7 +1494,6 @@ private :
     bool                     fIncludeIgnorableWhitespace;
     ValueStackOf<IDOM_Node*>* fNodeStack;
     bool                     fParseInProgress;
-    XMLScanner*              fScanner;
     bool                     fWithinElement;
     IDDocumentTypeImpl*      fDocumentType;
     RefVectorOf<IDDocumentImpl>* fDocumentVector;
