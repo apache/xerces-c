@@ -377,6 +377,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSNamespaceItem.obj"
 	-@erase "$(INTDIR)\XSNotationDeclaration.obj"
 	-@erase "$(INTDIR)\XSObject.obj"
+	-@erase "$(INTDIR)\XSObjectFactory.obj"
 	-@erase "$(INTDIR)\XSParticle.obj"
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
@@ -583,6 +584,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XSObjectFactory.obj" \
 	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
@@ -1133,6 +1135,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSNamespaceItem.obj"
 	-@erase "$(INTDIR)\XSNotationDeclaration.obj"
 	-@erase "$(INTDIR)\XSObject.obj"
+	-@erase "$(INTDIR)\XSObjectFactory.obj"
 	-@erase "$(INTDIR)\XSParticle.obj"
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
@@ -1340,6 +1343,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XSObjectFactory.obj" \
 	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
@@ -1890,6 +1894,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSNamespaceItem.obj"
 	-@erase "$(INTDIR)\XSNotationDeclaration.obj"
 	-@erase "$(INTDIR)\XSObject.obj"
+	-@erase "$(INTDIR)\XSObjectFactory.obj"
 	-@erase "$(INTDIR)\XSParticle.obj"
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
@@ -2097,6 +2102,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XSObjectFactory.obj" \
 	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
@@ -2646,6 +2652,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSNamespaceItem.obj"
 	-@erase "$(INTDIR)\XSNotationDeclaration.obj"
 	-@erase "$(INTDIR)\XSObject.obj"
+	-@erase "$(INTDIR)\XSObjectFactory.obj"
 	-@erase "$(INTDIR)\XSParticle.obj"
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
@@ -2853,6 +2860,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XSObjectFactory.obj" \
 	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
@@ -4126,6 +4134,12 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XProtoType.cpp
 SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp
 
 "$(INTDIR)\XSerializeEngine.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp
+
+"$(INTDIR)\XSObjectFactory.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

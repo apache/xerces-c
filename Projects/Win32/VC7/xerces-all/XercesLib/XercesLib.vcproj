@@ -1271,6 +1271,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XTemplateComparator.cpp">
 			</File>
 			<File
