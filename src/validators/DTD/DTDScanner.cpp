@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/06/25 14:39:54  knoaman
+ * Fix bug #965 - submitted by Matt Lovett
+ *
  * Revision 1.10  2001/06/22 12:42:33  tng
  * [Bug 2257] 1.5 thinks a <?xml-stylesheet ...> tag is a <?xml ...> tag
  *
@@ -1634,7 +1637,8 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     //  there is no system id, just the opening character of the internal
     //  subset. Else, has to be an id.
     //
-    if (fReaderMgr->skippedChar(chOpenSquare))
+    // Just look at the next char, don't eat it.
+    if (fReaderMgr->peekNextChar() == chOpenSquare)
     {
         hasIntSubset = true;
     }
@@ -1661,8 +1665,11 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
 
         // Skip spaces and check again for the opening of an internal subset
         fReaderMgr->skipPastSpaces();
-        if (fReaderMgr->skippedChar(chOpenSquare))
+
+        // Just look at the next char, don't eat it.
+        if (fReaderMgr->peekNextChar() == chOpenSquare) {
             hasIntSubset = true;
+        }
     }
 
     // Insure that the ids get cleaned up, if they got allocated
@@ -1682,6 +1689,9 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     //
     if (hasIntSubset)
     {
+        // Eat the opening square bracket
+        fReaderMgr->getNextChar();
+
         // We can't have any internal subset if we are reusing the validator
         if (reuseGrammar)
             ThrowXML(RuntimeException, XMLExcepts::Val_CantHaveIntSS);
