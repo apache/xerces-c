@@ -106,7 +106,7 @@ public:
     virtual NodeImpl    *item(unsigned int index);
     virtual NodeImpl    * removeChild(NodeImpl *oldChild);
     virtual NodeImpl    *replaceChild(NodeImpl *newChild, NodeImpl *oldChild);
-    virtual void        setReadOnly(bool readOnly, bool deep);
+    virtual void        setReadOnly(bool isReadOnly, bool deep);
 
     //Introduced in DOM Level 2
     virtual void	normalize();

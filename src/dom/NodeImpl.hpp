@@ -208,51 +208,51 @@ public: // should really be protected - ALH
      * Flags setters and getters
      */
 
-    inline bool readOnly() const {
+    inline bool isReadOnly() const {
         return (flags & READONLY) != 0;
     }
 
-    inline void readOnly(bool value) {
+    inline void isReadOnly(bool value) {
         flags = (value ? flags | READONLY : flags & ~READONLY);
     }
 
-    inline bool syncData() const {
+    inline bool needsSyncData() const {
         return (flags & SYNCDATA) != 0;
     }
 
-    inline void syncData(bool value) {
+    inline void needsSyncData(bool value) {
         flags = (value ? flags | SYNCDATA : flags & ~SYNCDATA);
     }
 
-    inline bool syncChildren() const {
+    inline bool needsSyncChildren() const {
         return (flags & SYNCCHILDREN) != 0;
     }
 
-    inline void syncChildren(bool value) {
+    inline void needsSyncChildren(bool value) {
         flags = (value ? flags | SYNCCHILDREN : flags & ~SYNCCHILDREN);
     }
 
-    inline bool owned() const {
+    inline bool isOwned() const {
         return (flags & OWNED) != 0;
     }
 
-    inline void owned(bool value) {
+    inline void isOwned(bool value) {
         flags = (value ? flags | OWNED : flags & ~OWNED);
     }
 
-    inline bool firstChild() const {
+    inline bool isFirstChild() const {
         return (flags & FIRSTCHILD) != 0;
     }
 
-    inline void firstChild(bool value) {
+    inline void isFirstChild(bool value) {
         flags = (value ? flags | FIRSTCHILD : flags & ~FIRSTCHILD);
     }
 
-    inline bool specified() const {
+    inline bool isSpecified() const {
         return (flags & SPECIFIED) != 0;
     }
 
-    inline void specified(bool value) {
+    inline void isSpecified(bool value) {
         flags = (value ? flags | SPECIFIED : flags & ~SPECIFIED);
     }
 
@@ -272,19 +272,19 @@ public: // should really be protected - ALH
         flags = (value ? flags | SETVALUE : flags & ~SETVALUE);
     }
     
-    inline bool idAttr() const {
+    inline bool isIdAttr() const {
         return (flags & ID_ATTR) != 0;
     }
     
-    inline void idAttr(bool value) {
+    inline void isIdAttr(bool value) {
         flags = (value ? flags | ID_ATTR : flags & ~ID_ATTR);
     }
     
-    inline bool userdata() const {
+    inline bool hasUserData() const {
         return (flags & USERDATA) != 0;
     }
 
-    inline void userdata(bool value) {
+    inline void hasUserData(bool value) {
         flags = (value ? flags | USERDATA : flags & ~USERDATA);
     }
 };

@@ -90,7 +90,7 @@ DOMString CharacterDataImpl::getNodeValue()
 
 void CharacterDataImpl::setNodeValue(const DOMString &value)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     data = value.clone();
@@ -112,7 +112,7 @@ void CharacterDataImpl::setNodeValue(const DOMString &value)
 
 void CharacterDataImpl::appendData(const DOMString &dat)
 {
-    if(readOnly())
+    if(isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -122,7 +122,7 @@ void CharacterDataImpl::appendData(const DOMString &dat)
 
 void CharacterDataImpl::deleteData(unsigned int offset, unsigned int count)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
 
@@ -173,7 +173,7 @@ unsigned int CharacterDataImpl::getCharDataLength()
 void CharacterDataImpl::insertData(unsigned int offset, const DOMString &dat) 
 {
     
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -188,7 +188,7 @@ void CharacterDataImpl::insertData(unsigned int offset, const DOMString &dat)
 void CharacterDataImpl::replaceData(unsigned int offset, unsigned int count,
                                     const DOMString &dat)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     deleteData(offset, count);
@@ -200,7 +200,7 @@ void CharacterDataImpl::replaceData(unsigned int offset, unsigned int count,
 
 void CharacterDataImpl::setData(const DOMString &arg)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     data = arg.clone();

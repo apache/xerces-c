@@ -174,7 +174,7 @@ bool THIS_CLASS::hasChildNodes()
 
 
 NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -247,15 +247,15 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         
         // Attach up
         newInternal->ownerNode = this;
-        newInternal->owned(true);
+        newInternal->isOwned(true);
         
         // Attach after
         newInternal->previousSibling=prev;
         if (refInternal == firstChild) {
             firstChild = newInternal;
             if (refInternal != null)
-                 refInternal->firstChild(false);
-            newInternal->firstChild(true);
+                 refInternal->isFirstChild(false);
+            newInternal->isFirstChild(true);
         } else {
             prev->nextSibling = newInternal;
         }
@@ -298,7 +298,7 @@ NodeImpl *THIS_CLASS::item(unsigned int index) {
   
 NodeImpl *THIS_CLASS::removeChild(NodeImpl *oldChild) 
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -329,10 +329,10 @@ NodeImpl *THIS_CLASS::removeChild(NodeImpl *oldChild)
     if (oldInternal != firstChild)
         prev->nextSibling = next;
     else {
-        oldInternal->firstChild(false);
+        oldInternal->isFirstChild(false);
         firstChild = next;
         if (next != null) {
-            next->firstChild(true);
+            next->isFirstChild(true);
         }
     }
     
@@ -347,7 +347,7 @@ NodeImpl *THIS_CLASS::removeChild(NodeImpl *oldChild)
     
     // Remove oldChild's references to tree
     oldInternal->ownerNode = ownerDocument;
-    oldInternal->owned(false);
+    oldInternal->isOwned(false);
     oldInternal->nextSibling = null;
     oldInternal->previousSibling = null;
     

@@ -107,7 +107,7 @@ short TextImpl::getNodeType() {
 
 TextImpl *TextImpl::splitText(unsigned int offset)
 {
-    if (readOnly())
+    if (isReadOnly())
     {
         throw DOM_DOMException(
             DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);

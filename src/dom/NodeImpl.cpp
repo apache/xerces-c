@@ -108,7 +108,7 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
 NodeImpl::NodeImpl(const NodeImpl &other) {
     this->flags = other.flags;
     this->userData = other.userData;
-    this->readOnly(false);
+    this->isReadOnly(false);
     
     this->nodeRefCount = 0;
     NodeImpl::gLiveNodeImpls++; 
@@ -117,7 +117,7 @@ NodeImpl::NodeImpl(const NodeImpl &other) {
     // Need to break the association w/ original parent
     //    this->ownerNode = other.getOwnerDocument(); this doesn't work???
     this->ownerNode = ((NodeImpl*)&other)->getOwnerDocument();
-    this->owned(false);
+    this->isOwned(false);
 };
 
     
@@ -127,7 +127,7 @@ int  NodeImpl::gTotalNodeImpls= 0;
 
 
 NodeImpl::~NodeImpl() {
-	if (userdata())
+	if (hasUserData())
 	{
 		setUserData(null);
 	}
@@ -175,7 +175,7 @@ void NodeImpl::deleteIf(NodeImpl *thisNode)
     if (thisNode == 0)
         return;
 
-    if (thisNode->owned())
+    if (thisNode->isOwned())
         return;
     
     // Delete this node.  There should be no siblings, as the DOM
@@ -189,13 +189,13 @@ void NodeImpl::deleteIf(NodeImpl *thisNode)
     //   children.  This is because the Attr's children Text nodes
     //   contain the attr's value, which is the hash table key.
     //
-    if (thisNode->isAttrImpl() && ((AttrImpl *)thisNode->idAttr()))
+    if (thisNode->isAttrImpl() && ((AttrImpl *)thisNode->isIdAttr()))
     {
         ((AttrImpl *)thisNode)->getOwnerDocument() ->
             getNodeIDMap()->remove((AttrImpl *)thisNode);
     }
 
-    thisNode->readOnly(false);   // removeChild requires node not be readonly.
+    thisNode->isReadOnly(false);   // removeChild requires node not be readonly.
     NodeImpl *theNextChild;
     for (NodeImpl *child = thisNode->getFirstChild(); child != 0;
          child=theNextChild)
@@ -253,7 +253,7 @@ DocumentImpl *NodeImpl::getOwnerDocument()
 {
     // if we have an owner simply forward the request
     // otherwise ownerNode is our ownerDocument
-    if (owned()) {
+    if (isOwned()) {
         return ownerNode->getDocument();
     } else {
         return (DocumentImpl *) ownerNode;
@@ -265,7 +265,7 @@ DocumentImpl *NodeImpl::getDocument()
 {
     // if we have an owner simply forward the request
     // otherwise ownerNode is our ownerDocument
-    if (owned()) {
+    if (isOwned()) {
         return ownerNode->getDocument();
     } else {
         return (DocumentImpl *) ownerNode;
@@ -276,7 +276,7 @@ DocumentImpl *NodeImpl::getDocument()
 void NodeImpl::setOwnerDocument(DocumentImpl *doc) {
     // if we have an owner we rely on it to have it right
     // otherwise ownerNode is our ownerDocument
-    if (!owned()) {
+    if (!isOwned()) {
         ownerNode = doc;
     }
 }
@@ -295,7 +295,7 @@ NodeImpl*  NodeImpl::getPreviousSibling()
 
 void *NodeImpl::getUserData()
 {
-	return (userdata()) ? getOwnerDocument()->getUserData(this) : null;
+	return (hasUserData()) ? getOwnerDocument()->getUserData(this) : null;
 };  
 
 
@@ -357,7 +357,7 @@ NodeImpl *NodeImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
 
 void NodeImpl::setNodeValue(const DOMString &val)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     // Default behavior is to do nothing, overridden in some subclasses
@@ -367,7 +367,7 @@ void NodeImpl::setNodeValue(const DOMString &val)
 
 void NodeImpl::setReadOnly(bool readOnl, bool deep)
 {
-    this->readOnly(readOnl);
+    this->isReadOnly(readOnl);
     // by default we do not have children, so deep is meaningless
     // this is overridden by ParentNode
 }
@@ -377,9 +377,9 @@ void NodeImpl::setUserData(void * val)
 {
 	getOwnerDocument()->setUserData(this, val);
 	if (val)
-		userdata(true);
+		hasUserData(true);
 	else
-		userdata(false);
+		hasUserData(false);
 };  
 
 

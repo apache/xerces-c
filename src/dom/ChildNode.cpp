@@ -77,7 +77,7 @@ ChildNode::ChildNode(const ChildNode &other)
     // Need to break the association w/ original siblings and parent
     this->previousSibling = null;
     this->nextSibling = null;
-    firstChild(false);
+    isFirstChild(false);
 };
 
 ChildNode::~ChildNode() {
@@ -100,11 +100,11 @@ NodeImpl * ChildNode::getParentNode()
 {
     // if we have an owner, ownerNode is our parent, otherwise it's
     // our ownerDocument and we don't have a parent
-    return owned() ? ownerNode : null;
+    return isOwned() ? ownerNode : null;
 };  
 
 NodeImpl * ChildNode::getPreviousSibling() {
     // if we are the firstChild, previousSibling actually refers to our
     // parent's lastChild, but we hide that
-    return firstChild() ? null : previousSibling;
+    return isFirstChild() ? null : previousSibling;
 }; 

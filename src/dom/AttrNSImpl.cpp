@@ -143,7 +143,7 @@ void AttrNSImpl::setPrefix(const DOMString &prefix)
     DOMString xmlns = NodeImpl::getXmlnsString();
     DOMString xmlnsURI = NodeImpl::getXmlnsURIString();
 
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     if (namespaceURI == null || localName.equals(xmlns))

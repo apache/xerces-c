@@ -555,7 +555,7 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
         break;
     case DOM_Node::ENTITY_REFERENCE_NODE :
         newnode = createEntityReference(source->getNodeName());
-	newnode -> readOnly(false); //allow deep import temporarily
+	newnode -> isReadOnly(false); //allow deep import temporarily
         break;
     case DOM_Node::ENTITY_NODE :
         {
@@ -566,7 +566,7 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
             newentity->setNotationName(srcentity->getNotationName());
             // Kids carry additional value
             newnode=newentity;
-            newentity->readOnly(false);// allow deep import temporarily
+            newentity->isReadOnly(false);// allow deep import temporarily
         }
         break;
     case DOM_Node::PROCESSING_INSTRUCTION_NODE :
@@ -636,7 +636,7 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
         }
     if (newnode->getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE
         || newnode->getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE)
-	newnode->readOnly(true);
+	newnode->isReadOnly(true);
 
     return newnode;
 };
@@ -805,14 +805,14 @@ void* DocumentImpl::getUserData(NodeImpl* n)
 
 void* DocumentImpl::getUserData()
 {
-	return (userdata()) ? getUserData(this) : null;
+	return (hasUserData()) ? getUserData(this) : null;
 }
 
 void DocumentImpl::setUserData(void* val)
 {
 	setUserData(this, val);
 	if (val)
-		userdata(true);
+		hasUserData(true);
 	else
-		userdata(false);
+		hasUserData(false);
 };  

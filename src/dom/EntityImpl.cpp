@@ -69,7 +69,7 @@ EntityImpl::EntityImpl(DocumentImpl *ownerDoc, const DOMString &eName)
 
 {
     name        = eName.clone();
-    readOnly(true);
+    isReadOnly(true);
 };
 
 
@@ -83,7 +83,7 @@ EntityImpl::EntityImpl(const EntityImpl &other, bool deep)
     systemId        = other.systemId.clone();
     notationName    = other.notationName.clone();
     refEntity       = other.refEntity;	
-    readOnly(true);
+    isReadOnly(true);
 };
 
 

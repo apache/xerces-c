@@ -174,7 +174,7 @@ bool ElementImpl::isElementImpl()
 
 void ElementImpl::removeAttribute(const DOMString &nam)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
 
@@ -195,7 +195,7 @@ void ElementImpl::removeAttribute(const DOMString &nam)
 
 AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -220,7 +220,7 @@ AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
 
 AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -243,7 +243,7 @@ AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
 
 AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -296,7 +296,7 @@ DOMString ElementImpl::getAttributeNS(const DOMString &fNamespaceURI,
 AttrImpl *ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &qualifiedName, const DOMString &fValue)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -319,7 +319,7 @@ AttrImpl *ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
 void ElementImpl::removeAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &fLocalName)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
  
@@ -346,7 +346,7 @@ AttrImpl *ElementImpl::getAttributeNodeNS(const DOMString &fNamespaceURI,
 
 AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     

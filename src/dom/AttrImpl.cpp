@@ -71,7 +71,7 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
     : ParentNode (ownerDoc)
 {
     name = aName.clone();
-    specified(true);
+    isSpecified(true);
 };
 
 AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
@@ -79,14 +79,14 @@ AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
 {
     name = other.name.clone();
 	
-	if (other.specified())
-		specified(true);
+	if (other.isSpecified())
+		isSpecified(true);
 	else
-		specified(false);
+		isSpecified(false);
 
-    if (other.idAttr())
+    if (other.isIdAttr())
     {
-        idAttr(true);
+        isIdAttr(true);
         this->getOwnerDocument()->getNodeIDMap()->add(this);
     }
     
@@ -128,7 +128,7 @@ DOMString AttrImpl::getNodeValue()
 
 bool AttrImpl::getSpecified() 
 {
-    return specified();
+    return isSpecified();
 };
 
 
@@ -173,14 +173,14 @@ void AttrImpl::setNodeValue(const DOMString &val)
 
 void AttrImpl::setSpecified(bool arg)
 {
-    specified(arg);
+    isSpecified(arg);
 };
 
 
 
 void AttrImpl::setValue(const DOMString &val)
 {
-    if (readOnly())
+    if (isReadOnly())
     {
         throw DOM_DOMException
         (
@@ -192,7 +192,7 @@ void AttrImpl::setValue(const DOMString &val)
     //    then put it back in with the new name.  For now, we don't worry
     //    about what happens if the new name conflicts
     //
-    if (idAttr())
+    if (isIdAttr())
         this->getOwnerDocument()->getNodeIDMap()->remove(this);
 
     NodeImpl *kid;
@@ -205,10 +205,10 @@ void AttrImpl::setValue(const DOMString &val)
 
     if (val != null)              // Create and add the new one
         appendChild(ownerDocument->createTextNode(val));
-    specified(true);
+    isSpecified(true);
     changed();
     
-    if (idAttr())
+    if (isIdAttr())
         this->getOwnerDocument()->getNodeIDMap()->add(this);
 
 };
@@ -233,7 +233,7 @@ ElementImpl *AttrImpl::getOwnerElement()
 {
     // if we have an owner, ownerNode is our ownerElement, otherwise it's
     // our ownerDocument and we don't have an ownerElement
-    return (ElementImpl *) (owned() ? ownerNode : null);
+    return (ElementImpl *) (isOwned() ? ownerNode : null);
 }
 
 
@@ -241,5 +241,5 @@ ElementImpl *AttrImpl::getOwnerElement()
 void AttrImpl::setOwnerElement(ElementImpl *ownerElem)
 {
     ownerNode = ownerElem;
-    owned(false);
+    isOwned(false);
 }

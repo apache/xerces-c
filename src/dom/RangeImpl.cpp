@@ -766,7 +766,7 @@ void RangeImpl::insertNode(DOM_Node& newNode)
 {
     if (newNode == null) return; //don't have to do anything
 
-    if (fStartContainer.getParentNode().fImpl->readOnly()) {
+    if (fStartContainer.getParentNode().fImpl->isReadOnly()) {
         throw DOM_DOMException(
             DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     }
@@ -1374,7 +1374,7 @@ void RangeImpl::checkReadOnly(DOM_Node& start, DOM_Node& end,
     if ((start == null) || (end == null) ) return;
     //if both start and end are text check and return
     if (start.getNodeType() == DOM_Node::TEXT_NODE) {
-        if (start.fImpl->readOnly()) {
+        if (start.fImpl->isReadOnly()) {
             throw DOM_DOMException(
                 DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
         }
@@ -1403,7 +1403,7 @@ void RangeImpl::recurseTreeAndCheck(DOM_Node& start, DOM_Node& end)
 {
     for(DOM_Node node=start; node != null, node !=end; node=node.getNextSibling()) 
     {
-        if (node.fImpl->readOnly()) {
+        if (node.fImpl->isReadOnly()) {
             throw DOM_DOMException(
                 DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
         }

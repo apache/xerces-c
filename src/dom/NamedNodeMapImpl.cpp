@@ -111,9 +111,9 @@ NamedNodeMapImpl *NamedNodeMapImpl::cloneMap(NodeImpl *ownerNod)
         for (unsigned int i = 0; i < nodes->size(); ++i)
         {
             NodeImpl *n = nodes->elementAt(i)->cloneNode(true);
-			n->specified(nodes->elementAt(i)->specified());
+			n->isSpecified(nodes->elementAt(i)->isSpecified());
             n->ownerNode = ownerNod;
-            n->owned(true);
+            n->isOwned(true);
             newmap->nodes->addElement(n);
         }
     }
@@ -143,7 +143,7 @@ void NamedNodeMapImpl::removeAll()
         {
             NodeImpl *n = nodes->elementAt(i);
             n->ownerNode = ownerNode->getOwnerDocument();
-            n->owned(false);
+            n->isOwned(false);
             if (n->nodeRefCount == 0)
                 NodeImpl::deleteIf(n);
         }
@@ -241,7 +241,7 @@ NodeImpl * NamedNodeMapImpl::removeNamedItem(const DOMString &name)
     n = (NodeImpl *) (nodes->elementAt(i));
     nodes->removeElementAt(i);
     n->ownerNode = ownerNode->getOwnerDocument();
-    n->owned(false);
+    n->isOwned(false);
     return n;
 };
 
@@ -268,11 +268,11 @@ NodeImpl * NamedNodeMapImpl::setNamedItem(NodeImpl * arg)
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);
     if (readOnly)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    if (arg->owned())
+    if (arg->isOwned())
         throw DOM_DOMException(DOM_DOMException::INUSE_ATTRIBUTE_ERR,null);
 
     arg->ownerNode = ownerNode;
-    arg->owned(true);
+    arg->isOwned(true);
     int i=findNamePoint(arg->getNodeName());
     NodeImpl * previous=null;
     if(i>=0)
@@ -289,7 +289,7 @@ NodeImpl * NamedNodeMapImpl::setNamedItem(NodeImpl * arg)
     }
     if (previous != null) {
         previous->ownerNode = ownerNode->getOwnerDocument();
-        previous->owned(false);
+        previous->isOwned(false);
     }
 
     return previous;
@@ -355,11 +355,11 @@ NodeImpl * NamedNodeMapImpl::setNamedItemNS(NodeImpl *arg)
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);
     if (readOnly)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    if (arg->owned())
+    if (arg->isOwned())
         throw DOM_DOMException(DOM_DOMException::INUSE_ATTRIBUTE_ERR,null);
 
     arg->ownerNode = ownerNode;
-    arg->owned(true);
+    arg->isOwned(true);
     int i=findNamePoint(arg->getNamespaceURI(), arg->getLocalName());
     NodeImpl *previous=null;
     if(i>=0) {
@@ -373,7 +373,7 @@ NodeImpl * NamedNodeMapImpl::setNamedItemNS(NodeImpl *arg)
     }
     if (previous != null) {
         previous->ownerNode = ownerNode->getOwnerDocument();
-        previous->owned(false);
+        previous->isOwned(false);
     }
 
     return previous;
@@ -398,7 +398,7 @@ NodeImpl *NamedNodeMapImpl::removeNamedItemNS(const DOMString &namespaceURI,
     NodeImpl * n = nodes -> elementAt(i);
     nodes -> removeElementAt(i);	//remove n from nodes
     n->ownerNode = ownerNode->getOwnerDocument();
-    n->owned(false);
+    n->isOwned(false);
     return n;
 }
 
@@ -425,9 +425,9 @@ void NamedNodeMapImpl::cloneContent(NamedNodeMapImpl *srcmap) {
 		{
 			NodeImpl *n = srcmap->nodes->elementAt(i);
  			NodeImpl *clone = n->cloneNode(true);
-			clone->specified(n->specified());
+			clone->isSpecified(n->isSpecified());
 			clone->ownerNode = ownerNode;
-			clone->owned(true);
+			clone->isOwned(true);
 			nodes->addElement(clone);
 //			n = null;
 //			clone = null;

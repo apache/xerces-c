@@ -114,7 +114,7 @@ DOMString ProcessingInstructionImpl::getNodeValue()
 
 void ProcessingInstructionImpl::setNodeValue(const DOMString &value)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     data = value.clone();
@@ -151,7 +151,7 @@ DOMString ProcessingInstructionImpl::getTarget()
 */
 void ProcessingInstructionImpl::setData(const DOMString &arg)
 {
-    if (readOnly())
+    if (isReadOnly())
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     data = arg.clone();

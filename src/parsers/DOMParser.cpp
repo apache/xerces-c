@@ -455,13 +455,13 @@ void DOMParser::docCharacters(  const   XMLCh* const    chars
 			//If the node type is entityRef then set the readOnly flag to false before appending node
 			bool oldReadFlag;
 			if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-				oldReadFlag = fCurrentParent.fImpl->readOnly();
-				fCurrentParent.fImpl->readOnly(false);
+				oldReadFlag = fCurrentParent.fImpl->isReadOnly();
+				fCurrentParent.fImpl->isReadOnly(false);
 			}
 
             fCurrentParent.appendChild(node);
 			if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-				fCurrentParent.fImpl->readOnly(oldReadFlag);
+				fCurrentParent.fImpl->isReadOnly(oldReadFlag);
 			}
             fCurrentNode = node;
         }
@@ -534,13 +534,13 @@ void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
 		//If the node type is entityRef then set the readOnly flag to false before appending node
 		bool oldReadFlag;
 		if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-			oldReadFlag = fCurrentParent.fImpl->readOnly();
-			fCurrentParent.fImpl->readOnly(false);
+			oldReadFlag = fCurrentParent.fImpl->isReadOnly();
+			fCurrentParent.fImpl->isReadOnly(false);
 		}
 
         fCurrentParent.appendChild(node);
 		if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-			fCurrentParent.fImpl->readOnly(oldReadFlag);
+			fCurrentParent.fImpl->isReadOnly(oldReadFlag);
 		}
         
         fCurrentNode = node;
@@ -612,7 +612,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
                 if (docImpl->fNodeIDMap == 0)
                     docImpl->fNodeIDMap = new NodeIDMap(500);
                 docImpl->fNodeIDMap->add(attr);
-                attr->idAttr(true);
+                attr->isIdAttr(true);
             }
 
             attr->setSpecified(oneAttrib->getSpecified());
@@ -634,7 +634,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
 					if (docImpl->fNodeIDMap == 0)
 						docImpl->fNodeIDMap = new NodeIDMap(500);
 					docImpl->fNodeIDMap->add(attr);
-					attr->idAttr(true);
+					attr->isIdAttr(true);
 				}
 
 		}
@@ -643,13 +643,13 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
     //If the node type is entityRef then set the readOnly flag to false before appending node
 	bool oldReadFlag;
 	if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-		oldReadFlag = fCurrentParent.fImpl->readOnly();
-		fCurrentParent.fImpl->readOnly(false);
+		oldReadFlag = fCurrentParent.fImpl->isReadOnly();
+		fCurrentParent.fImpl->isReadOnly(false);
 	}
 
     fCurrentParent.appendChild(elem);
 	if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-		fCurrentParent.fImpl->readOnly(oldReadFlag);
+		fCurrentParent.fImpl->isReadOnly(oldReadFlag);
 	}
 
     fNodeStack->push(fCurrentParent);
