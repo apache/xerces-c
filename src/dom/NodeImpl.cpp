@@ -287,6 +287,7 @@ bool NodeImpl::hasChildNodes()
 
 NodeImpl *NodeImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+    return 0;
 };
   
 NodeImpl *NodeImpl::item(unsigned int index) {
@@ -297,12 +298,14 @@ NodeImpl *NodeImpl::item(unsigned int index) {
 NodeImpl *NodeImpl::removeChild(NodeImpl *oldChild) 
 {
     throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+    return 0;
 };
   
   
 NodeImpl *NodeImpl::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
 {
     throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+    return 0;
 };
 
 
@@ -416,34 +419,35 @@ DOMString NodeImpl::getXmlURIString() {
 }
 
 //Return a URI mapped from the given prefix and namespaceURI as below
-//	prefix	namespaceURI		output
+//	prefix   namespaceURI		output
 //---------------------------------------------------
-//	"xml"	xmlURI	xmlURI
-//	"xml"	otherwise		NAMESPACE_ERR
-//	"xmlns"	xmlnsURI	        xmlnsURI (nType = ATTRIBUTE_NODE only)
-//	"xmlns"	otherwise		NAMESPACE_ERR (nType = ATTRIBUTE_NODE only)
-//      != null null or ""              NAMESPACE_ERR
-//	else	any			namesapceURI
+//	"xml"      xmlURI            xmlURI
+//	"xml"	   otherwise         NAMESPACE_ERR
+//	"xmlns"	   xmlnsURI	         xmlnsURI (nType = ATTRIBUTE_NODE only)
+//	"xmlns"	   otherwise         NAMESPACE_ERR (nType = ATTRIBUTE_NODE only)
+//   != null   null or ""        NAMESPACE_ERR
+//	else       any			     namesapceURI
 const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
-	const DOMString &namespaceURI, short nType)
+                                     const DOMString &namespaceURI, short nType)
 {
     DOMString xml = DStringPool::getStaticString("xml", &s_xml);
     DOMString xmlURI = DStringPool::getStaticString("http://www.w3.org/XML/1998/namespace", &s_xmlURI);
     DOMString xmlns = DStringPool::getStaticString("xmlns", &s_xmlns);
     DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/", &s_xmlnsURI);
-
+    
     if (prefix == null)
-	return namespaceURI;
+        return namespaceURI;
     if (prefix.equals(xml)) {
-	if (namespaceURI.equals(xmlURI))
-	    return *s_xmlURI;
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+        if (namespaceURI.equals(xmlURI))
+            return *s_xmlURI;
+        throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     } else if (nType == DOM_Node::ATTRIBUTE_NODE && prefix.equals(xmlns)) {
-	if (namespaceURI.equals(xmlnsURI))
-	    return *s_xmlnsURI;
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+        if (namespaceURI.equals(xmlnsURI))
+            return *s_xmlnsURI;
+        throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     } else if (namespaceURI == null || namespaceURI.length() == 0) {
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+        throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     } else
-	return namespaceURI;
+        return namespaceURI;
+    return namespaceURI;
 }
