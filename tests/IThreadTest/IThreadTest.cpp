@@ -813,7 +813,11 @@ void ReadFilesIntoMemory()
 extern "C" {
 #endif
 
+#ifdef PLATFORM_WIN32
 unsigned long WINAPI threadMain (void *param)
+#else
+void threadMain (void *param)
+#endif
 {
     ThreadInfo   *thInfo = (ThreadInfo *)param;
     ThreadParser *thParser = 0;
@@ -872,7 +876,11 @@ unsigned long WINAPI threadMain (void *param)
     }
 
     delete thParser;
+#ifdef PLATFORM_WIN32
     return 0;
+#else
+    return;
+#endif
 }
 
 #ifdef OS390
