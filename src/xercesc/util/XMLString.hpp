@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2004/12/06 10:47:01  amassari
+ * Added XMLString::release(void**, MemoryManager*) [jira# 1301]
+ *
  * Revision 1.28  2004/09/08 13:56:24  peiyongz
  * Apache License Version 2.0
  *
@@ -1544,6 +1547,19 @@ public:
      * @param buf  The string to be deleted and become a null pointer.
      */
     static void release(XMLByte** buf);
+
+    /**
+     * Release the parameter string that was allocated using the version of XMLString::transcode
+     * that accepts a MemoryManager.
+     * The implementation will call MemoryManager::deallocate and then turn the string to a null pointer.
+     *
+     * @param buf  The string to be deleted and become a null pointer.
+     */
+    static void release
+    (
+        void**  buf
+        ,       MemoryManager* const manager
+    );
 
     //@}
 

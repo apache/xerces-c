@@ -1878,6 +1878,12 @@ void XMLString::release(XMLByte** buf)
     *buf = 0;
 }
 
+void XMLString::release(void** buf, MemoryManager* const manager)
+{
+    manager->deallocate(*buf);
+    *buf = 0;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLString: Private static methods
 // ---------------------------------------------------------------------------
