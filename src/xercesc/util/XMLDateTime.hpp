@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.18  2004/08/11 16:48:55  peiyongz
+ * Allow XSValue access
+ *
  * Revision 1.17  2004/01/29 11:48:47  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -130,6 +133,8 @@
 #include <xercesc/util/SchemaDateTimeException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+class XSValue;
 
 class XMLUTIL_EXPORT XMLDateTime : public XMLNumber
 {
@@ -246,6 +251,7 @@ private:
     // Constant data
     // -----------------------------------------------------------------------
 	//
+
     enum timezoneIndex
     {
         hh = 0,
@@ -360,6 +366,8 @@ private:
     int          fBufferMaxLen;
     XMLCh*       fBuffer;
     MemoryManager* fMemoryManager;
+
+    friend class XSValue;
 };
 
 inline void XMLDateTime::setBuffer(const XMLCh* const aString)
