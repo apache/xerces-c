@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:40  peiyongz
- * Initial revision
+ * Revision 1.2  2002/10/15 18:04:31  knoaman
+ * Bug [13485]: incorrect return from getWSstring
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:40  peiyongz
+ * sane_include
  *
  * Revision 1.7  2001/06/20 17:56:56  peiyongz
  * support for "fixed" option on constrainning facets
@@ -119,9 +122,9 @@ const XMLCh* DatatypeValidator::getWSstring(const short theType) const
     case PRESERVE:
          return SchemaSymbols::fgWS_PRESERVE;
     case REPLACE:
-         return SchemaSymbols::fgWS_COLLAPSE;
-    case COLLAPSE:
          return SchemaSymbols::fgWS_REPLACE;
+    case COLLAPSE:
+         return SchemaSymbols::fgWS_COLLAPSE;
     default: 
          return SchemaSymbols::fgWS_PRESERVE;
     }
