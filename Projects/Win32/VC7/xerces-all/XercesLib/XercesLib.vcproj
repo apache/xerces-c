@@ -1701,6 +1701,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMComment.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMConfiguration.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMDocument.hpp">
 			</File>
 			<File
@@ -1852,6 +1855,12 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMCommentImpl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMConfigurationImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMConfigurationImpl.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.cpp">

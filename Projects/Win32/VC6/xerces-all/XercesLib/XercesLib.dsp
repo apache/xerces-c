@@ -2194,6 +2194,14 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMCommentImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMConfigurationImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMConfigurationImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.cpp
 # End Source File
 # Begin Source File
@@ -2912,6 +2920,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMBuilder.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMCDATASection.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMConfiguration.hpp
 # End Source File
 # Begin Source File
 
