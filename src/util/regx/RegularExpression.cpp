@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/01/02 20:09:11  knoaman
+ * Fix for regular expression patterns that begin with ".".
+ *
  * Revision 1.5  2001/10/09 12:20:25  tng
  * Leak fix: Need to delete fMatch if adopted.
  *
@@ -1174,15 +1177,6 @@ void RegularExpression::prepare() {
 	XMLMutexLock lockInit(&fMutex);
 
 	compile(fTokenTree);
-
-	if (fOperations->getOpType() == Op::CLOSURE &&
-		fOperations->getChild()->getOpType() == Op::DOT)			{
-
-		Op* anchor = fOpFactory.createAnchorOp(isSet(fOptions, SINGLE_LINE) ? chLatin_A
-																	 : chAt);
-		anchor->setNextOp(fOperations);
-		fOperations = anchor;
-	}
 
 	fMinLength = fTokenTree->getMinLength();
 	fFirstChar = 0;
