@@ -39,8 +39,8 @@
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib"
 				OutputFile="..\..\..\..\..\Build\Win32\VC7\Release\xerces-c_2_3_0.dll"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/xerces-c_2_3_0.pdb"
 				GenerateMapFile="TRUE"
 				MapFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/xerces-c_2_3_0.map"
@@ -95,8 +95,8 @@
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib"
 				OutputFile="..\..\..\..\..\Build\Win32\VC7\Debug/xerces-c_2_3_0D.dll"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/xerces-c_2_3_0D.pdb"
 				SubSystem="2"
@@ -390,6 +390,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDOMMsg.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDOMMsg.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDateTime.cpp">
 			</File>
 			<File
@@ -397,9 +400,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDeleterFor.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDOMMsg.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDouble.cpp">
@@ -1027,6 +1027,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\internal\WFXMLScanner.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLInternalErrorHandler.hpp">
 			</File>
 			<File
@@ -1463,6 +1469,12 @@
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\DTD\DocTypeHandler.hpp">
 				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\DTD\XMLDTDDescriptionImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\DTD\XMLDTDDescriptionImpl.hpp">
+				</File>
 			</Filter>
 			<Filter
 				Name="schema"
@@ -1541,6 +1553,12 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\schema\TraverseSchema.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\schema\XMLSchemaDescriptionImpl.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\schema\XMLSchemaDescriptionImpl.hpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\schema\XSDDOMParser.cpp">
