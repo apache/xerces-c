@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/09/25 22:23:25  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.4  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -205,6 +208,30 @@ void KVStringPair::set(  const   XMLCh* const    newKey
 {
     setKey(newKey);
     setValue(newValue);
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(KVStringPair)
+
+void KVStringPair::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+
+        serEng.writeString(fKey,   fKeyAllocSize,   XSerializeEngine::toWriteBufferLen);
+        serEng.writeString(fValue, fValueAllocSize, XSerializeEngine::toWriteBufferLen);
+    }
+    else
+    {
+        int dataLen = 0;
+        serEng.readString(fKey,   (int&)fKeyAllocSize,   dataLen, XSerializeEngine::toReadBufferLen);
+        serEng.readString(fValue, (int&)fValueAllocSize, dataLen, XSerializeEngine::toReadBufferLen);
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -1813,5 +1813,57 @@ void XMLUri::buildFullText()
     *outPtr = 0;
 }
 
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XMLUri)
+
+void XMLUri::serialize(XSerializeEngine& serEng)
+{
+
+    if (serEng.isStoring())
+    {
+
+        serEng.writeString(fScheme);
+        serEng.writeString(fUserInfo);
+        serEng.writeString(fHost);
+
+        serEng<<fPort;
+
+        serEng.writeString(fPath);
+        serEng.writeString(fQueryString);
+        serEng.writeString(fFragment);
+        serEng.writeString(fURIText);
+    }
+    else
+    {
+        serEng.readString(fScheme);
+        serEng.readString(fUserInfo);
+        serEng.readString(fHost);
+
+        serEng>>fPort;
+
+        serEng.readString(fPath);
+        serEng.readString(fQueryString);
+        serEng.readString(fFragment);
+        serEng.readString(fURIText);
+    }
+
+}
+
+XMLUri::XMLUri(MemoryManager* const manager)
+: fScheme(0)
+, fUserInfo(0)
+, fHost(0)
+, fPort(-1)
+, fPath(0)
+, fQueryString(0)
+, fFragment(0)
+, fURIText(0)
+, fMemoryManager(manager)
+{
+}
+
 XERCES_CPP_NAMESPACE_END
 

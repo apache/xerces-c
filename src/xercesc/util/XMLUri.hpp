@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/09/25 22:23:25  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.10  2003/07/25 10:15:16  gareth
  * Patch by Michael Glavassevich
  *
@@ -128,6 +131,8 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLString.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 /*
@@ -139,7 +144,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *
  */
 
- class XMLUTIL_EXPORT XMLUri : public XMemory
+ class XMLUTIL_EXPORT XMLUri : public XSerializable, public XMemory
 {
 public:
 
@@ -361,6 +366,12 @@ public:
      */
     static bool isURIString(const XMLCh* const uric);
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLUri)
+
+    XMLUri(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private:
 

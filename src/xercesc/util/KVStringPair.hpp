@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/09/25 22:23:25  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.5  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -128,6 +131,8 @@
 #include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 //
@@ -135,7 +140,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  a pair of strings which represent a 'key=value' type mapping. It works
 //  only in terms of XMLCh type raw strings.
 //
-class XMLUTIL_EXPORT KVStringPair : public XMemory
+class XMLUTIL_EXPORT KVStringPair : public XSerializable, public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -174,6 +179,11 @@ public:
         , const XMLCh* const    newValue
     );
 
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(KVStringPair)
 
 private :
     // -----------------------------------------------------------------------
