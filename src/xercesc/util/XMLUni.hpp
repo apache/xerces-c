@@ -229,6 +229,7 @@ public :
     static const XMLCh fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation[];
     static const XMLCh fgSAX2XercesLoadExternalDTD[];
 
+	// Introduced in DOM Level 3
     // DOMBuilder features
     static const XMLCh fgDOMCanonicalForm[];
     static const XMLCh fgDOMCDATASections[];
@@ -243,6 +244,17 @@ public :
     static const XMLCh fgDOMValidateIfSchema[];
     static const XMLCh fgDOMValidation[];
     static const XMLCh fgDOMWhitespaceInElementContent[];
+
+	// Introduced in DOM Level 3
+	// DOMWriter feature
+	static const XMLCh fgDOMWRTCanonicalForm[];
+	static const XMLCh fgDOMWRTDiscardDefaultContent[];
+	static const XMLCh fgDOMWRTEntities[];
+	static const XMLCh fgDOMWRTFormatPrettyPrint[];
+	static const XMLCh fgDOMWRTNormalizeCharacters[];
+	static const XMLCh fgDOMWRTSplitCdataSections[];
+	static const XMLCh fgDOMWRTValidation[];
+	static const XMLCh fgDOMWRTWhitespaceInElementContent[];
 
 };
 
