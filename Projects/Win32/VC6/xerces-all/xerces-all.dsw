@@ -3,6 +3,18 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
+Project: "CreateDOMDocument"=".\CreateDOMDocument\CreateDOMDocument.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "DOMCount"=".\DOMCount\DOMCount.dsp" - Package Owner=<4>
 
 Package=<5>
