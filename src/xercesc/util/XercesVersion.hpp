@@ -128,7 +128,7 @@
 /***
  * data member added to XSAnnotation
  ***/
-#define XERCES_GRAMMAR_SERIALIZATION_LEVEL 4
+#define XERCES_GRAMMAR_SERIALIZATION_LEVEL 5
 
 /** DO NOT MODIFY BELOW THIS LINE */
 

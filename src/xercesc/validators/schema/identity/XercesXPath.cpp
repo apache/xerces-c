@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/12/28 16:35:57  amassari
+ * Store fAxisType as an integer, not as a XMLCh (bug# 1177)
+ *
  * Revision 1.14  2004/09/08 13:56:59  peiyongz
  * Apache License Version 2.0
  *
@@ -254,12 +257,15 @@ void XercesStep::serialize(XSerializeEngine& serEng)
 {
     if (serEng.isStoring())
     {
-        serEng<<fAxisType;
+        serEng<<(int)fAxisType;
         serEng<<fNodeTest;
     }
     else
     {
-        serEng>>fAxisType;
+        int i;
+        serEng>>i;
+        fAxisType = (unsigned short) i;
+
         serEng>>fNodeTest;
     }
 }
