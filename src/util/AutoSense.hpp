@@ -56,6 +56,17 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/10/09 18:15:43  jberry
+ * Modify sensing of Mac OS X.
+ * PR:
+ * Obtained from:
+ * Submitted by:
+ * Reviewed by:
+ * PR:
+ * Obtained from:
+ * Submitted by:
+ * Reviewed by:
+ *
  * Revision 1.15  2000/09/21 00:54:18  aruna1
  * OS2 related changes given by Bill Schindler
  *
@@ -175,7 +186,7 @@
 
 #elif defined(macintosh)
     #define XML_MACOS
-#elif defined(MACOSX)
+#elif defined(__APPLE__) && defined(__MACH__)
     #define XML_MACOSX
 #elif defined(__alpha) && defined(__osf__)
     #define XML_TRU64
