@@ -230,13 +230,8 @@ else
 endif
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
 
-ifeq (${BITSTOBUILD}, 64)
-    MAKE_SHARED = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS} -X64
-    MAKE_SHARED_C = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS} -X64
-else
-    MAKE_SHARED = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS}
-    MAKE_SHARED_C = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS}
-endif
+MAKE_SHARED = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS}
+MAKE_SHARED_C = makeC++SharedLib_r -p 5000 -brtl ${LDFLAGS}
 
 EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
 SHLIBSUFFIX=.so
