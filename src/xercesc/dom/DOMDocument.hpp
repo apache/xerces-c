@@ -1171,10 +1171,6 @@ public:
                                                   const XMLSSize_t columnNum) = 0;
     //@}
 
-private:
-    friend class DOMNode;
-    friend class DOMImplementation;
-
 };
 
 XERCES_CPP_NAMESPACE_END
