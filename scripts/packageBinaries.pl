@@ -1,8 +1,9 @@
 #!/usr/local/bin/perl5
 
-push(@INC, "/home/xerces-c/bin", "/home/xerces-c/bin/perl/perl-RUN/opt/perl5/lib", "/Development2/cupert/bin/perl/perl-RUN/opt/perl5/lib", "/Development/cupert/usr/local/perl/perl-RUN/opt/perl5/lib");
+push(@INC, "/home/xml4c/bin", "/home/xml4c/bin/perl/perl-RUN/opt/perl5/lib", "/Development2/cupert/bin/perl/perl-RUN/opt/perl5/lib", "/Development/cupert/usr/local/perl/perl-RUN/opt/perl5/lib");
 
 require "getopt.pl";
+require 5.0;
 
 $|=1;   # Force a flush after every print
 
@@ -15,10 +16,10 @@ $targetdir = $opt_o;
 # Check for the environment variables and exit if error
 if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
         print ("Usage is: packageBinaries <options>\n");
-		print ("          options are:  -s <source_directory>\n");
-		print ("                        -o <target_directory>\n");
-        print ("                        -c <C compiler name> (e.g. gcc or xlc)\n");
-        print ("                        -x <C++ compiler name> (e.g. g++ or xlC)\n");
+	print ("          options are:  -s <source_directory>\n");
+	print ("                        -o <target_directory>\n");
+        print ("                        -c <C compiler name> (e.g. gcc, cc or xlc_r)\n");
+        print ("                        -x <C++ compiler name> (e.g. g++, CC, aCC or xlC_r)\n");
         print ("                        -m <message loader> can be 'inmem', 'icu' or 'iconv'\n");
         print ("                        -n <net accessor> can be 'fileonly' or 'libwww'\n");
         print ("                        -t <transcoder> can be 'icu' or 'native'\n");
@@ -110,29 +111,32 @@ if ($platform =~ m/Windows/) {
         mkdir ($targetdir . "/bin/icu", "0644");
         mkdir ($targetdir . "/bin/icu/data", "0644");
 
-        #Clean up all the dependency files, causes problems for nmake
-		if (length($ICUROOT) > 0) {
-			chdir ("$ICUROOT");
-			system ("del /s /f *.dep");
+	if (length($ICUROOT) > 0) {
+		chdir ("$ICUROOT");
+		#Clean up all the dependency files, causes problems for nmake
+		system ("del /s /f *.dep *.ncb *.plg *.opt");
 
-			print ("Since you have defined ICUROOT in your environment, I am building ICU too ...");
-			# Make the icu dll
-			chdir ("$ICUROOT/source/common");
-			print "Executing: nmake -f common.mak clean CFG=\"common - $platformname $buildmode\"";
-			system("nmake -f common.mak clean CFG=\"common - $platformname $buildmode\"");
-			print "Executing: nmake -f common.mak all CFG=\"common - $platformname $buildmode\"";
-			system("nmake -f common.mak all CFG=\"common - $platformname $buildmode\"");
+		print ("Since you have defined ICUROOT in your environment, I am building ICU too ...\n");
+		# Make the icu dll
+		chdir ("$ICUROOT/source/common");
+		# NOTE: Delete the next line if 'nmake clean' breaks the build
+		print "Executing: nmake -f common.mak clean CFG=\"common - $platformname $buildmode\"";
+		system("nmake -f common.mak clean CFG=\"common - $platformname $buildmode\"");
+		print "Executing: nmake -f common.mak all CFG=\"common - $platformname $buildmode\"";
+		system("nmake -f common.mak all CFG=\"common - $platformname $buildmode\"");
 
-			# Make the makeconv utility
-			chdir ("$ICUROOT/source/tools/makeconv");
-			system "nmake -f makeconv.mak clean CFG=\"makeconv - $platformname $buildmode\"";
-			print "Executing: nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"";
-			system("nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"");
-		}
+		# Make the makeconv utility
+		chdir ("$ICUROOT/source/tools/makeconv");
+		# NOTE: Delete the next line if 'nmake clean' breaks the build
+		system "nmake -f makeconv.mak clean CFG=\"makeconv - $platformname $buildmode\"";
+		print "Executing: nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"";
+		system("nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"");
+	}
 
-        #Clean up all the dependency files, causes problems for nmake
+        # Clean up all the dependency files, causes problems for nmake
+	# Also clean up all MSVC-generated project files that just cache the IDE state
         chdir ("$XERCESCROOT");
-        system ("del /s /f *.dep");
+        system ("del /s /f *.dep *.ncb *.plg *.opt");
 
         # Make the XERCES-C dll
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib");
@@ -196,17 +200,17 @@ if ($platform =~ m/Windows/) {
         print "Executing: nmake -f EnumVal.mak all CFG=\"EnumVal - $platformname $buildmode\"";
         system("nmake -f EnumVal.mak all CFG=\"EnumVal - $platformname $buildmode\"");
 
-		if (length($ICUROOT) > 0) {
-			# run makeconv now
-			chdir ("$ICUROOT/data");
-			opendir (THISDIR, "$ICUROOT/data");
-			@allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
-			@allucmfiles = grep(/\.ucm/, @allfiles);
-			closedir(THISDIR);
-			foreach $ucmfile (@allucmfiles) {
-					system ("$ICUROOT/source/tools/makeconv/$buildmode/makeconv.exe $ucmfile");
-			}
+	if (length($ICUROOT) > 0) {
+		# run makeconv now
+		chdir ("$ICUROOT/data");
+		opendir (THISDIR, "$ICUROOT/data");
+		@allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
+		@allucmfiles = grep(/\.ucm/, @allfiles);
+		closedir(THISDIR);
+		foreach $ucmfile (@allucmfiles) {
+			system ("$ICUROOT/source/tools/makeconv/$buildmode/makeconv.exe $ucmfile");
 		}
+	}
 
         # Decide where you want the build copied from
         chdir ($targetdir);
@@ -222,26 +226,26 @@ if ($platform =~ m/Windows/) {
         $xcopycommand =~ s/\//\\/g;
         system ("$xcopycommand /S /C /I /R");
 
-		if (length($ICUROOT) > 0) {
+	if (length($ICUROOT) > 0) {
         	system("cp -Rfv $ICUROOT/include/* $targetdir/include/icu");
-		}
+	}
 
         # Populate the binary output directory
         print ("\n\nCopying binary outputs ...\n");
         system("cp -fv $BUILDDIR/*.dll $targetdir/bin");
         system("cp -fv $BUILDDIR/*.exe $targetdir/bin");
-		if (length($ICUROOT) > 0) {
-			system("cp -fv $ICUROOT/bin/$buildmode/icuuc.dll $targetdir/bin");
-			system("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
-			system("cp -fv $ICUROOT/source/tools/makeconv/$buildmode/makeconv.exe $targetdir/bin");
-		}
+	if (length($ICUROOT) > 0) {
+		system("cp -fv $ICUROOT/bin/$buildmode/icuuc.dll $targetdir/bin");
+		system("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
+		system("cp -fv $ICUROOT/source/tools/makeconv/$buildmode/makeconv.exe $targetdir/bin");
+	}
         system("cp -fv $BUILDDIR/xerces-c_1.lib $targetdir/lib");
 
         # Copy the locale files
-		if (length($ICUROOT) > 0) {
-			system("cp -fv $ICUROOT/data/*.cnv $targetdir/bin/icu/data/");
-			system("cp -fv $ICUROOT/data/convrtrs.txt $targetdir/bin/icu/data/");
-		}
+	if (length($ICUROOT) > 0) {
+		system("cp -fv $ICUROOT/data/*.cnv $targetdir/bin/icu/data/");
+		system("cp -fv $ICUROOT/data/convrtrs.txt $targetdir/bin/icu/data/");
+	}
 
         # Populate the samples directory
         print ("\n\nCopying sample files ...\n");
@@ -281,12 +285,21 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
            $icuCompileFlags = 'CXX="xlC_r -L/usr/lpp/xlC/lib" CC="xlc_r -L/usr/lpp/xlC/lib" C_FLAGS="-w -O" CXX_FLAGS="-w -O"'; 
         }
         if ($platform eq 'HP-UX') {
-            if ($opt_c eq 'CC') {
+            if ($opt_x eq 'CC') {
                 $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="+eh +DAportable -w -O" CFLAGS="+DAportable -w -O"'; 
             }
             else {
                 $icuCompileFlags = 'CC=cc CXX=aCC CXXFLAGS="+DAportable -w -O" CFLAGS="+DAportable -w -O"'; 
             }
+	    # Find out the operating system version from 'uname -r'
+	    open(OSVERSION, "uname -r|");
+	    $osversion = <OSVERSION>;
+	    chomp($osversion);
+	    close (OSVERSION);
+	    $platform = 'hp-11' if ($osversion =~ m/11\./);
+	    $platform = 'hp-10' if ($osversion =~ m/10\./);
+	    $opt_r = 'dce' if ($opt_r eq '');  # By default, use dce threads if not specified
+
         }
         if ($platform =~ m/Linux/) {
            $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"'; 
@@ -363,32 +376,38 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         system ("mkdir $targetdir/doc");
         system ("mkdir $targetdir/doc/apiDocs");
 
-		if (length($ICUROOT) > 0) {
-			# First make the ICU files
-			chdir ("$ICUROOT/source");
-			system ("$icuCompileFlags configure --prefix=$ICUROOT");
-			chdir ("$ICUROOT/source/common");
-			system ("gmake");
-			system ("gmake install");
+	if (length($ICUROOT) > 0) {
+		# First make the ICU files
+		chdir ("$ICUROOT/source");
+		print ("$icuCompileFlags configure --prefix=$ICUROOT\n");
+		system ("$icuCompileFlags configure --prefix=$ICUROOT");
+		chdir ("$ICUROOT/source/common");
+		system ("gmake clean");	# Clean up the build, may want to comment this line out!
+		system ("gmake");
+		system ("gmake install");
 
-			chdir ("$ICUROOT/source/tools/makeconv");
+		chdir ("$ICUROOT/source/tools/makeconv");
+		system ("gmake clean");	# Clean up the build, may want to comment this line out!
+		system ("rm -rf $ICUROOT/data/*.cnv");	# This line will save you many tears, but comment it if you want
+		system ("gmake");
+		# For the antiquated CC compiler under HPUX, we need to invoke
+		# gmake one extra time to generate the .cnv files.
+		if ( ($platform =~ m/hp-/i) && ($opt_x eq 'CC') ) {
 			system ("gmake");
-			# For the antiquated CC compiler under HPUX, we need to invoke
-			# gmake one extra time to generate the .cnv files.
-			if ( ($platform eq 'HP-UX') && ($opt_c eq 'CC') ) {
-				system ("gmake");
-			}
 		}
+	}
 
         # make the source files
         chdir ("$XERCESCROOT/src");
 
         system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
+        system ("gmake clean");	# May want to comment this line out to speed up
         system ("gmake");
 
         # Now build the samples
         chdir ("$XERCESCROOT/samples");
         system ("runConfigure -p$platform -c$opt_c -x$opt_x");
+        system ("gmake clean");	# May want to comment this line out to speed up
         system ("gmake");
 
         chdir ($targetdir);
@@ -425,29 +444,29 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 	system("cp -Rf $XERCESCROOT/src/util/Transcoders/Win32/*.hpp $targetdir/include/util/Transcoders/Win32");
 	system("cp -Rf $XERCESCROOT/src/validators/DTD/*.hpp $targetdir/include/validators/DTD");
 		
-		if (length($ICUROOT) > 0) {
-			print "\nInternational files are being copied from \'" . $ICUROOT . "\'";
-			system("cp -Rf $ICUROOT/include/* $targetdir/include/icu");
-		}
+	if (length($ICUROOT) > 0) {
+		print "\nICU files are being copied from \'" . $ICUROOT . "\'";
+		system("cp -Rf $ICUROOT/include/* $targetdir/include/icu");
+	}
 
         # Populate the binary output directory
         print ("\n\nCopying binary outputs ...\n");
         system("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
-		if (length($ICUROOT) > 0) {
-			system("cp -f $ICUROOT/source/tools/makeconv/makeconv $targetdir/bin");
-			system("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
-		}
+	if (length($ICUROOT) > 0) {
+		system("cp -f $ICUROOT/source/tools/makeconv/makeconv $targetdir/bin");
+		system("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
+	}
         system("cp -f $XERCESCROOT/lib/*.a $targetdir/lib");
         system("cp -f $XERCESCROOT/lib/*.so $targetdir/lib");
         system("cp -f $XERCESCROOT/lib/*.sl $targetdir/lib");
 
         system("rm -rf $targetdir/bin/obj");
 
-		if (length($ICUROOT) > 0) {
-			# Copy the locale files
-			system("cp -f $ICUROOT/data/*.cnv $targetdir/lib/icu/data/");
-			system("cp -f $ICUROOT/data/convrtrs.txt $targetdir/lib/icu/data/");
-		}
+	if (length($ICUROOT) > 0) {
+		# Copy the locale files
+		system("cp -f $ICUROOT/data/*.cnv $targetdir/lib/icu/data/");
+		system("cp -f $ICUROOT/data/convrtrs.txt $targetdir/lib/icu/data/");
+	}
 
         # Populate the samples directory
         print ("\n\nCopying sample files ...\n");
