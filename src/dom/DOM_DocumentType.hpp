@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/10 23:35:11  andyh
+ * Update DOM_DOMImplementation::CreateDocumentType and
+ * DOM_DocumentType to match latest from W3C
+ *
  * Revision 1.3  2000/02/06 07:47:29  rahulj
  * Year 2K copyright swat.
  *
@@ -183,13 +187,13 @@ public:
      * Get the public identifier of the external subset.
      * @return The public identifier of the external subset.
      */
-    DOMString     getPublicID() const;
+    DOMString     getPublicId() const;
 
     /**
      * Get the system identifier of the external subset.
      * @return The system identifier of the external subset.
      */
-    DOMString     getSystemID() const;
+    DOMString     getSystemId() const;
 
     /**
      * Get the internal subset as a string.

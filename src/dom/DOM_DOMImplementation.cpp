@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/10 23:35:10  andyh
+ * Update DOM_DOMImplementation::CreateDocumentType and
+ * DOM_DocumentType to match latest from W3C
+ *
  * Revision 1.5  2000/02/06 07:47:28  rahulj
  * Year 2K copyright swat.
  *
@@ -171,10 +175,11 @@ bool  DOM_DOMImplementation::hasFeature(const DOMString &feature,  const DOMStri
 //Introduced in DOM Level 2
 
 DOM_DocumentType DOM_DOMImplementation::createDocumentType(const DOMString &qualifiedName,
-	const DOMString &publicID, const DOMString &systemID,
-	const DOMString &internalSubset)
+	const DOMString &publicId, const DOMString &systemId)
 {
-    return DOM_DocumentType(new DocumentTypeImpl(qualifiedName, publicID, systemID, internalSubset));
+    if(!DocumentImpl::isXMLName(qualifiedName))
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+    return DOM_DocumentType(new DocumentTypeImpl(qualifiedName, publicId, systemId));
 }
 
 DOM_Document DOM_DOMImplementation::createDocument(const DOMString &namespaceURI,

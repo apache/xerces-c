@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/02/10 23:35:11  andyh
+ * Update DOM_DOMImplementation::CreateDocumentType and
+ * DOM_DocumentType to match latest from W3C
+ *
  * Revision 1.9  2000/02/09 00:11:19  andyh
  * Fix reference counting problem when creating new Documents
  * with a DocType.
@@ -615,5 +619,24 @@ DeepNodeListImpl *DocumentImpl::getElementsByTagNameNS(const DOMString &fNamespa
 
 ElementImpl *DocumentImpl::getElementById(const DOMString &elementId)
 {
-    return null;
+    return null;    //not implemented yet
+}
+
+
+//Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
+//Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".
+int DocumentImpl::indexofQualifiedName(const DOMString & qName)
+{
+    //Check if s = prefix:localName, name or malformed
+    XMLCh *qNameP = qName.rawBuffer();
+    int qNameLen = qName.length();	//note: qName[qNameLen] may not be 0
+    int index = -1, count = 0;
+    for (int i = 0; i < qNameLen; ++i)
+	if (*qNameP++ == chColon) {
+	    index = i;
+	    ++count;	//number of ':' found
+	}
+    if (qNameLen == 0 || count > 1 || index == 0 || index == qNameLen-1)
+        return -1;
+    return count == 0 ? 0 : index;
 }

@@ -56,6 +56,10 @@
 
 /**
 * $Log$
+* Revision 1.11  2000/02/10 23:35:11  andyh
+* Update DOM_DOMImplementation::CreateDocumentType and
+* DOM_DocumentType to match latest from W3C
+*
 * Revision 1.10  2000/02/06 07:47:33  rahulj
 * Year 2K copyright swat.
 *
@@ -111,8 +115,6 @@
 #include "DStringPool.hpp"
 #include "DocumentImpl.hpp"
 #include "stdio.h"
-#include <util/XMLString.hpp>
-#include <util/XMLUni.hpp>
 #include "TextImpl.hpp"
 
 static DOMString *s_xml = null;
@@ -159,22 +161,13 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
     DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/", &s_xmlnsURI);
     // Do we want to add isLeafNode to this? How about initial value?
     this->ownerDocument=ownerDoc;
-
-    //Check if qualifiedName = prefix:localName, name or malformed
     this->name = qualifiedName.clone();
-    XMLCh *qNameP = this->name.rawBuffer();
-    int qNameLen = this->name.length();	//note: qNameP[qNameLen] may not be 0
-    int index = -1, count = 0;
-    for (int i = 0; i < qNameLen; ++i)
-	if (*qNameP++ == chColon) {
-	    index = i;
-	    ++count;	//number of ':' found
-	}
-    if (qNameLen == 0 || count > 1 || index == 0 || index == qNameLen-1)
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
+    int index = DocumentImpl::indexofQualifiedName(qualifiedName);
+    if (index < 0)
+	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     bool xmlnsAlone = false;	//true if attribute name is "xmlns"
-    if (count == 0) {	//count == 0 && index == -1
+    if (index == 0) {	//qualifiedName contains no ':'
         if (nTyp == DOM_Node::ATTRIBUTE_NODE && this->name.equals(xmlns)) {
 	    if (fNamespaceURI != null && fNamespaceURI.length() != 0 &&
 		!fNamespaceURI.equals(xmlnsURI))
@@ -183,9 +176,9 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 	}
 	this -> prefix = null;
 	this -> localName = this -> name;
-    } else {	//count == 1 && 0 < index < qNameLen-1
+    } else {	//0 < index < this->name.length()-1
 	this -> prefix = this->name.substringData(0, index);
-	this -> localName = this->name.substringData(index+1, qNameLen-index-1);
+	this -> localName = this->name.substringData(index+1, this->name.length()-index-1);
     }
 
     const DOMString& URI = xmlnsAlone ? xmlnsURI : mapPrefix(prefix, fNamespaceURI, nTyp);

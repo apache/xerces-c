@@ -59,6 +59,10 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/10 23:35:11  andyh
+ * Update DOM_DOMImplementation::CreateDocumentType and
+ * DOM_DocumentType to match latest from W3C
+ *
  * Revision 1.5  2000/02/06 07:47:32  rahulj
  * Year 2K copyright swat.
  *
@@ -113,8 +117,7 @@ private:
 public:
     DocumentTypeImpl(DocumentImpl *, const DOMString &);
     DocumentTypeImpl(const DOMString &qualifiedName,	//DOM Level 2
-	const DOMString &publicID, const DOMString &systemID,
-	const DOMString &internalSubset);
+	const DOMString &publicId, const DOMString &systemId);
     DocumentTypeImpl(const DocumentTypeImpl &other, bool deep=false);
     virtual ~DocumentTypeImpl();
     virtual bool isDocumentTypeImpl();
@@ -128,11 +131,10 @@ public:
     virtual void               setReadOnly(bool readOnly, bool deep);
 
     //Introduced in DOM Level 2
-    DOMString publicID;
-    DOMString systemID;
-    DOMString internalSubset;
-    virtual DOMString     getPublicID();
-    virtual DOMString     getSystemID();
+    DOMString publicId;
+    DOMString systemId;
+    virtual DOMString     getPublicId();
+    virtual DOMString     getSystemId();
     virtual DOMString     getInternalSubset();
     //internal use only
     virtual void setOwnerDocument(DocumentImpl *docImpl);

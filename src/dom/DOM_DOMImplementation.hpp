@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/10 23:35:11  andyh
+ * Update DOM_DOMImplementation::CreateDocumentType and
+ * DOM_DocumentType to match latest from W3C
+ *
  * Revision 1.3  2000/02/06 07:47:28  rahulj
  * Year 2K copyright swat.
  *
@@ -158,15 +162,13 @@ class CDOM_EXPORT DOM_DOMImplementation {
      * will provide a way for populating a <code>DOM_DocumentType</code>.
      * @param qualifiedName The <em>qualified name</em>
      * of the document type to be created.
-     * @param publicID The external subset public identifier.
-     * @param systemID The external subset system identifier.
-     * @param internalSubset The internal subset as a string. This should be valid.
+     * @param publicId The external subset public identifier.
+     * @param systemId The external subset system identifier.
      * @return A new <code>DocumentType</code> node with
      * <code>Node.ownerDocument</code> set to <code>null</code>.
      */
     DOM_DocumentType createDocumentType(const DOMString &qualifiedName,
-	const DOMString &publicID, const DOMString &systemID,
-	const DOMString &internalSubset);
+	const DOMString &publicId, const DOMString &systemId);
 
     /**
      * Creates an XML <code>DOM_Document</code> object of the specified type

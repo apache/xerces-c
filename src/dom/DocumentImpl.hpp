@@ -59,6 +59,10 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/10 23:35:11  andyh
+ * Update DOM_DOMImplementation::CreateDocumentType and
+ * DOM_DocumentType to match latest from W3C
+ *
  * Revision 1.5  2000/02/06 07:47:32  rahulj
  * Year 2K copyright swat.
  *
@@ -175,6 +179,9 @@ public:
     virtual DeepNodeListImpl    *getElementsByTagNameNS(const DOMString &namespaceURI,
 	const DOMString &localName);
     virtual ElementImpl         *getElementById(const DOMString &elementId);
+    //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
+    //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".
+    static  int                 indexofQualifiedName(const DOMString & qName);
 };
 
 #endif

@@ -66,6 +66,10 @@
 
 /**
  * $Log$
+ * Revision 1.14  2000/02/10 23:35:14  andyh
+ * Update DOM_DOMImplementation::CreateDocumentType and
+ * DOM_DocumentType to match latest from W3C
+ *
  * Revision 1.13  2000/02/06 07:48:35  rahulj
  * Year 2K copyright swat.
  *
@@ -1032,16 +1036,15 @@ int  main()
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
-        DOMString intSubSet = "Internal subsets are not parsed by this call!";
         
-        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
         
         TASSERT(dt != 0);
         TASSERT(dt.getNodeType() == DOM_Node::DOCUMENT_TYPE_NODE);
         TASSERT(dt.getNodeName().equals(qName));
-        TASSERT(dt.getPublicID().equals(pubId));
-        TASSERT(dt.getSystemID().equals(sysId));
-        TASSERT(dt.getInternalSubset().equals(intSubSet));
+        TASSERT(dt.getPublicId().equals(pubId));
+        TASSERT(dt.getSystemId().equals(sysId));
+        TASSERT(dt.getInternalSubset().equals(0));
         
         DOM_NamedNodeMap nnm = dt.getEntities();
         TASSERT(nnm.getLength() == 0);
@@ -1072,9 +1075,8 @@ int  main()
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
-        DOMString intSubSet = "Internal subsets are not parsed by this call!";
         
-        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
         
         DOMString docNSURI = "http://document.namespace";
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
@@ -1130,8 +1132,7 @@ int  main()
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
-        DOMString intSubSet = "Internal subsets are not parsed by this call!";
-        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
         
         DOMString docNSURI = "http://document.namespace";
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
@@ -1195,8 +1196,7 @@ int  main()
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
-        DOMString intSubSet = "Internal subsets are not parsed by this call!";
-        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
         
         DOMString docNSURI = "http://document.namespace";
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
@@ -1244,8 +1244,7 @@ int  main()
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
-        DOMString intSubSet = "Internal subsets are not parsed by this call!";
-        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
         
         DOMString docNSURI = "http://document.namespace";
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
@@ -1367,8 +1366,7 @@ int  main()
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
-        DOMString intSubSet = "Internal subsets are not parsed by this call!";
-        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
         
         DOMString docNSURI = "http://document.namespace";
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);

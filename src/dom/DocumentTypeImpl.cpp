@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/10 23:35:11  andyh
+ * Update DOM_DOMImplementation::CreateDocumentType and
+ * DOM_DocumentType to match latest from W3C
+ *
  * Revision 1.5  2000/02/06 07:47:32  rahulj
  * Year 2K copyright swat.
  *
@@ -88,11 +92,12 @@
 #include "DOM_Node.hpp"
 #include "NamedNodeMapImpl.hpp"
 #include "DOM_DOMException.hpp"
+#include "DocumentImpl.hpp"
 
 
 DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc, const DOMString &dtName) 
 : NodeImpl(ownerDoc,dtName,DOM_Node::DOCUMENT_TYPE_NODE,false,null),
-    publicID(null), systemID(null), internalSubset(null)	//DOM Level 2
+    publicId(null), systemId(null)	//DOM Level 2
 {
     entities = new NamedNodeMapImpl(ownerDoc,null);
     notations= new NamedNodeMapImpl(ownerDoc,null);
@@ -104,11 +109,13 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc, const DOMString &dtNa
 
 //Introduced in DOM Level 2
 DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
-    const DOMString &fPublicID, const DOMString &fSystemID,
-    const DOMString &fInternalSubset)
+    const DOMString &fPublicId, const DOMString &fSystemId)
 : NodeImpl(null, qualifiedName, DOM_Node::DOCUMENT_TYPE_NODE, false, null),
-    publicID(fPublicID), systemID(fSystemID), internalSubset(fInternalSubset)
+    publicId(fPublicId), systemId(fSystemId)
 {
+    if (DocumentImpl::indexofQualifiedName(qualifiedName) < 0)
+	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+
     entities = new NamedNodeMapImpl(null,null);
     notations= new NamedNodeMapImpl(null,null);
     
@@ -127,9 +134,8 @@ DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
     elements = other.elements->cloneMap();
 
     //DOM Level 2
-    publicID = other.publicID.clone();
-    systemID = other.systemID.clone();
-    internalSubset = other.internalSubset.clone();
+    publicId = other.publicId.clone();
+    systemId = other.systemId.clone();
 };
 
 
@@ -209,21 +215,21 @@ void DocumentTypeImpl::setReadOnly(bool readOnl, bool deep)
 
 //Introduced in DOM Level 2
 
-DOMString DocumentTypeImpl::getPublicID()
+DOMString DocumentTypeImpl::getPublicId()
 {
-    return publicID;
+    return publicId;
 }
 
 
-DOMString DocumentTypeImpl::getSystemID()
+DOMString DocumentTypeImpl::getSystemId()
 {
-    return systemID;
+    return systemId;
 }
 
 
 DOMString DocumentTypeImpl::getInternalSubset()
 {
-    return internalSubset;
+    return null;    //not implemented yet
 }
 
 
@@ -241,7 +247,7 @@ DocumentTypeImpl *DocumentTypeImpl::exportNode(DocumentImpl *docImpl, bool deep)
 {
     DocumentTypeImpl *doctype;
     if (localName != null) {	//true if namespace involved, i.e. DOM Level 2 and after
-	doctype = new DocumentTypeImpl(name, publicID, systemID, internalSubset);
+	doctype = new DocumentTypeImpl(name, publicId, systemId);
 	doctype -> setOwnerDocument(docImpl);
     } else
 	doctype = new DocumentTypeImpl(docImpl, name);

@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/10 23:35:11  andyh
+ * Update DOM_DOMImplementation::CreateDocumentType and
+ * DOM_DocumentType to match latest from W3C
+ *
  * Revision 1.3  2000/02/06 07:47:29  rahulj
  * Year 2K copyright swat.
  *
@@ -137,15 +141,15 @@ DOM_NamedNodeMap DOM_DocumentType::getNotations() const
 
 //Introduced in DOM Level 2
 
-DOMString     DOM_DocumentType::getPublicID() const
+DOMString     DOM_DocumentType::getPublicId() const
 {
-        return ((DocumentTypeImpl *)fImpl)->getPublicID().clone();
+        return ((DocumentTypeImpl *)fImpl)->getPublicId().clone();
 }
 
 
-DOMString     DOM_DocumentType::getSystemID() const
+DOMString     DOM_DocumentType::getSystemId() const
 {
-        return ((DocumentTypeImpl *)fImpl)->getSystemID().clone();
+        return ((DocumentTypeImpl *)fImpl)->getSystemId().clone();
 }
 
 
