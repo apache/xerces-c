@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/11/21 14:56:35  gareth
+ * Fixed bug in Token::analyzeFirstCharacter so that . matches new line with head character optimisation enabled. As per discussion Jennifer Schachter had with Khaled.
+ *
  * Revision 1.4  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -342,6 +345,7 @@ int Token::analyzeFirstCharacter(RangeToken* const rangeTok,
 			return FC_CONTINUE;
 		}
 	case T_DOT:
+    return FC_ANY;
 	case T_EMPTY:
 	case T_ANCHOR:
 		return FC_CONTINUE;
