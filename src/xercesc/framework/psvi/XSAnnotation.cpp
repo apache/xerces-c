@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/12/19 07:18:56  neilg
+ * remove a throw clause inserted during debugging (but should we really swallow this exception?)
+ *
  * Revision 1.7  2003/12/15 19:04:55  neilg
  * fix segfault when a writeAnnotation() method was called
  *
@@ -144,7 +147,7 @@ void XSAnnotation::writeAnnotation(DOMNode* node, ANNOTATION_TARGET targetType)
     }
     catch (const XMLException&)
     {
-        throw;
+        // REVISIT:  should we really eat this?
     }
 
     DOMNode* newElem = futureOwner->importNode((parser->getDocument())->getDocumentElement(), true);
