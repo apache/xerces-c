@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/17 18:11:11  knoaman
+ * More constraint and attribute checking.
+ *
  * Revision 1.7  2001/05/16 15:24:42  tng
  * Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
  *
@@ -249,14 +252,13 @@ const XMLCh fgP1M[] =
 //  DatatypeValidatorFactory: Static member data
 // ---------------------------------------------------------------------------
 RefHashTableOf<DatatypeValidator>* DatatypeValidatorFactory::fBuiltInRegistry = 0;
-
+int DatatypeValidatorFactory::fRegistryExpanded = 0;
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
 DatatypeValidatorFactory::DatatypeValidatorFactory()
-    : fRegistryExpanded(0)
-      , fUserDefinedRegistry(0)
+    : fUserDefinedRegistry(0)
 {
 }
 
@@ -513,6 +515,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         createDatatypeValidator(SchemaSymbols::fgDT_BYTE,
                       getDatatypeValidator(SchemaSymbols::fgDT_SHORT),
                       facets, false, 0, false);
+*/
 
         // Create 'nonNegativeInteger' datatype validator
         facets = new RefHashTableOf<KVStringPair>(3);
@@ -524,6 +527,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                       getDatatypeValidator(SchemaSymbols::fgDT_INTEGER),
                       facets, false, 0, false);
 
+/*
         // Create 'unsignedLong' datatype validator
         facets = new RefHashTableOf<KVStringPair>(3);
 

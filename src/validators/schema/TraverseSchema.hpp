@@ -383,7 +383,8 @@ private:
       */
     SchemaElementDecl* createSchemaElementDecl(const DOM_Element& elem,
                                                const bool topLevel,
-                                               const unsigned short elemType);
+                                               const unsigned short elemType,
+                                               bool& isDuplicate);
 
     /**
       * Return the value of a given attribute name from an element node

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/17 18:11:15  knoaman
+ * More constraint and attribute checking.
+ *
  * Revision 1.1  2001/05/15 21:59:31  knoaman
  * TraverseSchema: add attribute checking + some fixes + more error messages.
  * More attribute cheking to come.
@@ -75,13 +78,25 @@
 #include <validators/schema/TraverseSchema.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
+#include <validators/datatype/DatatypeValidatorFactory.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local const data
 // ---------------------------------------------------------------------------
+const XMLCh fgValueZero[] =
+{
+    chDigit_0, chNull
+};
+
 const XMLCh fgValueOne[] =
 {
     chDigit_1, chNull
+};
+
+const XMLCh fgUnbounded[] =
+{
+    chLatin_u, chLatin_n, chLatin_b, chLatin_o, chLatin_u, chLatin_n, chLatin_d,
+    chLatin_e, chLatin_d, chNull
 };
 
 
@@ -128,6 +143,7 @@ AttributeInfo::~AttributeInfo()
 // ---------------------------------------------------------------------------
 GeneralAttributeCheck::GeneralAttributeCheck()
     : fAttributes(0)
+    , fValidators(0)
     , fElementMap(0)
 {
     try {
@@ -155,7 +171,7 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Abstract_D] = 
         new AttributeInfo(SchemaSymbols::fgATT_ABSTRACT, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_FALSE, 0);
+                          SchemaSymbols::fgATTVAL_FALSE, DT_Boolean);
 
     fAttributes[Att_Attribute_FD_D] =
 		new AttributeInfo(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT, Att_Optional_Default,
@@ -187,7 +203,7 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Element_FD_D] =
         new AttributeInfo(SchemaSymbols::fgATT_ELEMENTFORMDEFAULT, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_UNQUALIFIED, 0);
+                          SchemaSymbols::fgATTVAL_UNQUALIFIED, DT_Form);
 
     fAttributes[Att_Final_N] =
         new AttributeInfo(SchemaSymbols::fgATT_FINAL, Att_Optional_NoDefault,
@@ -207,11 +223,11 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Fixed_D] =
         new AttributeInfo(SchemaSymbols::fgATT_FIXED, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_FALSE, 0);
+                          SchemaSymbols::fgATTVAL_FALSE, DT_Boolean);
 
     fAttributes[Att_Form_N] =
         new AttributeInfo(SchemaSymbols::fgATT_FORM, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_Form);
 
     fAttributes[Att_ID_N] =
         new AttributeInfo(SchemaSymbols::fgATT_ID, Att_Optional_NoDefault,
@@ -223,31 +239,31 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_MaxOccurs_D] =
         new AttributeInfo(SchemaSymbols::fgATT_MAXOCCURS, Att_Optional_Default,
-                          fgValueOne, 0);
+                          fgValueOne, DT_MaxOccurs);
 
     fAttributes[Att_MaxOccurs1_D] =
         new AttributeInfo(SchemaSymbols::fgATT_MAXOCCURS, Att_Optional_Default,
-                          fgValueOne, 0);
+                          fgValueOne, DT_MaxOccurs1);
 
     fAttributes[Att_Member_T_N] =
         new AttributeInfo(SchemaSymbols::fgATT_MEMBERTYPES, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_MemberTypes);
 
     fAttributes[Att_MinOccurs_D] =
         new AttributeInfo(SchemaSymbols::fgATT_MINOCCURS, Att_Optional_Default,
-                          fgValueOne, 0);
+                          fgValueOne, DT_NonNegInt);
 
     fAttributes[Att_MinOccurs1_D] =
         new AttributeInfo(SchemaSymbols::fgATT_MINOCCURS, Att_Optional_Default,
-                          fgValueOne, 0);
+                          fgValueOne, DT_MinOccurs1);
 
     fAttributes[Att_Mixed_D] =
         new AttributeInfo(SchemaSymbols::fgATT_MIXED, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_FALSE, 0);
+                          SchemaSymbols::fgATTVAL_FALSE, DT_Boolean);
 
     fAttributes[Att_Mixed_N] =
         new AttributeInfo(SchemaSymbols::fgATT_MIXED, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_Boolean);
 
     fAttributes[Att_Name_R] =
         new AttributeInfo(SchemaSymbols::fgATT_NAME, Att_Required,
@@ -255,7 +271,7 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Namespace_D] =
         new AttributeInfo(SchemaSymbols::fgATT_NAMESPACE, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_TWOPOUNDANY, 0);
+                          SchemaSymbols::fgATTVAL_TWOPOUNDANY, DT_Namespace);
 
     fAttributes[Att_Namespace_N] =
         new AttributeInfo(SchemaSymbols::fgATT_NAMESPACE, Att_Optional_NoDefault,
@@ -263,15 +279,15 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Nillable_D] =
         new AttributeInfo(SchemaSymbols::fgATT_NILLABLE, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_FALSE, 0);
+                          SchemaSymbols::fgATTVAL_FALSE, DT_Boolean);
 
     fAttributes[Att_Process_C_D] =
         new AttributeInfo(SchemaSymbols::fgATT_PROCESSCONTENTS, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_STRICT, 0);
+                          SchemaSymbols::fgATTVAL_STRICT, DT_ProcessContents);
 
     fAttributes[Att_Public_R] =
         new AttributeInfo(SchemaSymbols::fgATT_PUBLIC, Att_Required,
-                          0, 0);
+                          0, DT_Public);
 
     fAttributes[Att_Ref_R] =
         new AttributeInfo(SchemaSymbols::fgATT_REF, Att_Required,
@@ -311,11 +327,11 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Use_D] =
         new AttributeInfo(SchemaSymbols::fgATT_USE, Att_Optional_Default,
-                          SchemaSymbols::fgATTVAL_OPTIONAL, 0);
+                          SchemaSymbols::fgATTVAL_OPTIONAL, DT_Use);
 
     fAttributes[Att_Value_NNI_N] =
         new AttributeInfo(SchemaSymbols::fgATT_VALUE, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_NonNegInt);
 
     fAttributes[Att_Value_STR_N] =
         new AttributeInfo(SchemaSymbols::fgATT_VALUE, Att_Optional_NoDefault,
@@ -323,11 +339,28 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Value_WS_N] =
         new AttributeInfo(SchemaSymbols::fgATT_VALUE, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_WhiteSpace);
 
     fAttributes[Att_Version_N] =
         new AttributeInfo(SchemaSymbols::fgATT_VERSION, Att_Optional_NoDefault,
                           0, 0);
+}
+
+void GeneralAttributeCheck::setUpValidators() {
+
+    fValidators = new DatatypeValidator*[DT_Count];
+
+    for (int i=0; i< DT_Count; i++) {
+        fValidators[i] = 0;
+    }
+
+    DatatypeValidatorFactory dvFactory;
+
+	dvFactory.expandRegistryToFullSchemaSet();
+    fValidators[DT_NonNegInt] = 
+        dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_NONNEGATIVEINTEGER);
+
+    // TO DO - add remaining valdiators
 }
 
 void GeneralAttributeCheck::mapElements() {
@@ -337,6 +370,7 @@ void GeneralAttributeCheck::mapElements() {
     }
 
     setUpAttributes();
+    setUpValidators();
 
     RefVectorOf<AttributeInfo>* attList = 0;
     int prefixContext = globalPrefix;
@@ -652,6 +686,7 @@ void GeneralAttributeCheck::cleanUp() {
     }
 
     delete [] fAttributes;
+    delete [] fValidators;
     delete fElementMap;
 }
 
@@ -725,11 +760,15 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 
             XMLCh* attName = attInfo->getName();
             DOMString attValue = elem.getAttribute(attName);
+            unsigned int attValueLen = attValue.length();
 
             attNameList.put((void*) attName, 0);
 
-            if (attValue.length() > 0) {
-                // validate value
+            if (attValueLen > 0) {
+
+                fBuffer.set(attValue.rawBuffer(), attValueLen);
+                validate(attName, fBuffer.getRawBuffer(),
+                         attInfo->getValidatorIndex(), schema);
 			}
             else {
                 if (attInfo->getDefaultOption() == Att_Required) {
@@ -772,6 +811,87 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
                 XMLErrs::AttributeDisallowed, fBuffer.getRawBuffer(), elemName);//"Attribute '{0}' cannot appear in '{1}'"
         }
     }
+}
+
+
+void GeneralAttributeCheck::validate(const XMLCh* const attName,
+                                     const XMLCh* const attValue,
+                                     const short dvIndex,
+                                     TraverseSchema* const schema)
+{
+	bool isInvalid = false;
+    DatatypeValidator* dv = 0;
+
+    switch (dvIndex) {
+    case DT_Form:
+        if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_QUALIFIED) != 0
+            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_UNQUALIFIED) != 0) {
+            isInvalid = true;
+        }
+		break;
+    case DT_MaxOccurs:
+            // maxOccurs = (nonNegativeInteger | unbounded)
+		if (XMLString::compareString(attValue, fgUnbounded) != 0) {
+            dv = fValidators[DT_NonNegInt];
+        }
+        break;
+    case DT_MaxOccurs1:
+        if (XMLString::compareString(attValue, fgValueOne) != 0) {
+            isInvalid = true;
+        }
+        break;
+    case DT_MinOccurs1:
+        if (XMLString::compareString(attValue, fgValueZero) != 0 
+            && XMLString::compareString(attValue, fgValueOne) != 0) {
+            isInvalid = true;
+        }
+        break;
+    case DT_ProcessContents:
+        if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_SKIP) != 0
+            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_LAX) != 0
+            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_STRICT) != 0) {
+            isInvalid = true;
+        }
+        break;
+    case DT_Use:
+        if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_OPTIONAL) != 0
+            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_PROHIBITED) != 0
+            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_REQUIRED) != 0) {
+            isInvalid = true;
+        }
+        break;
+    case DT_WhiteSpace:
+        if (XMLString::compareString(attValue, SchemaSymbols::fgWS_PRESERVE) != 0
+            && XMLString::compareString(attValue, SchemaSymbols::fgWS_REPLACE) != 0
+            && XMLString::compareString(attValue, SchemaSymbols::fgWS_COLLAPSE) != 0) {
+            isInvalid = true;
+        }
+        break;
+    case DT_Boolean:
+        if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_TRUE) != 0
+            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_FALSE) != 0) {
+            isInvalid = true;
+        }
+        break;
+    case DT_NonNegInt:
+		dv = fValidators[DT_NonNegInt];
+		break;
+    }
+
+    if (dv) {
+        try {
+            dv->validate(attValue);
+        }
+        catch(...) {
+            isInvalid = true;
+        }
+    }
+
+	if (isInvalid) {
+		      schema->reportSchemaError(XMLUni::fgXMLErrDomain, 
+                                      XMLErrs::InvalidAttValue,
+                                      attValue, attName);
+	}
 }
 
 /**

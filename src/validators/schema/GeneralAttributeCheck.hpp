@@ -80,6 +80,7 @@
 //  Forward declaration
 // ---------------------------------------------------------------------------
 class TraverseSchema;
+class DatatypeValidator;
 
 class AttributeInfo {
 public:
@@ -145,7 +146,7 @@ public:
     // -----------------------------------------------------------------------
 	void checkAttributes(const DOM_Element& elem,
                          const unsigned short elemContext,
-						 TraverseSchema* const scanner);
+						 TraverseSchema* const schema);
 
 private:
     // -----------------------------------------------------------------------
@@ -163,12 +164,19 @@ private:
     //  Setup methods
     // -----------------------------------------------------------------------
     void setUpAttributes();
+    void setUpValidators();
     void mapElements();
 
 	// -----------------------------------------------------------------------
     //  CleanUp methods
     // -----------------------------------------------------------------------
     void cleanUp();
+
+	// -----------------------------------------------------------------------
+    //  Validation methods
+    // -----------------------------------------------------------------------
+    void validate(const XMLCh* const attName, const XMLCh* const attValue,
+                  const short dvIndex, TraverseSchema* const schema);
 
 	// -----------------------------------------------------------------------
     //  Private Constants
@@ -240,7 +248,20 @@ private:
         DT_ProcessContents = -11,
         DT_Public = -12,
         DT_Use = -13,
-        DT_WhiteSpace = -14
+        DT_WhiteSpace = -14,
+        DT_Boolean = -15
+    };
+
+    // datatype validators
+    enum {
+        DT_AnyURI,
+        DT_ID,
+        DT_NonNegInt,
+        DT_QName,
+        DT_Token,
+
+		// add XPath
+        DT_Count
     };
 
     // element context prefixes
@@ -261,6 +282,7 @@ private:
     //  Private data members
     // -----------------------------------------------------------------------
     AttributeInfo**                                fAttributes;
+    DatatypeValidator**                            fValidators;
     RefHash2KeysTableOf<RefVectorOfAttributeInfo>* fElementMap;
     XMLBuffer                                      fBuffer;
     static GeneralAttributeCheck* fInstance;

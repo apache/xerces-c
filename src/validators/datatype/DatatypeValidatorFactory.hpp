@@ -233,8 +233,8 @@ private:
     //  fBuiltInRegistry
     //      This is a hashtable of built-in primitive datatype validators.
     // -----------------------------------------------------------------------
-	int                                fRegistryExpanded;
-    RefHashTableOf<DatatypeValidator>* fUserDefinedRegistry;
+    RefHashTableOf<DatatypeValidator>*        fUserDefinedRegistry;
+	static int                                fRegistryExpanded;
 	static RefHashTableOf<DatatypeValidator>* fBuiltInRegistry;
 };
 
