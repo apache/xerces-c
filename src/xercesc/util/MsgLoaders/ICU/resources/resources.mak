@@ -15,7 +15,7 @@
 #
 #
 PKGNAME  = XercescErrMsg
-TARGETS  = $(PKGNAME)_root.res $(PKGNAME)_en.res  $(PKGNAME)_fr.res
+TARGETS  = $(PKGNAME)_root.res $(PKGNAME)_en_US.res  $(PKGNAME)_fr_FR.res
 ICUDIR   = ..\..\..\..\..\..\..\icu
 GENRB    = $(ICUDIR)\bin\genrb.exe
 GENRBOPT = -s. -d. --package-name $(PKGNAME)  
@@ -29,12 +29,12 @@ clean :
 $(PKGNAME)_root.res : root.txt
 	$(GENRB) $(GENRBOPT) $?
     
-$(PKGNAME)_en.res : en.txt
+$(PKGNAME)_en_US.res : en_US.txt
 	$(GENRB) $(GENRBOPT) $?
 
 #
 # Note: $(GENRB) $(GENRBOPT) --encoding cp1251 $?
 #
-$(PKGNAME)_fr.res : fr.txt
+$(PKGNAME)_fr_FR.res : fr_FR.txt
 	$(GENRB) $(GENRBOPT) $?
     
