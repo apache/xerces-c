@@ -56,6 +56,35 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/01/15 21:26:34  tng
+ * Performance Patches by David Bertoni.
+ *
+ * Details: (see xerces-c-dev mailing Jan 14)
+ * XMLRecognizer.cpp: the internal encoding string XMLUni::fgXMLChEncodingString
+ * was going through this function numerous times.  As a result, the top hot-spot
+ * for the parse was _wcsicmp().  The real problem is that the Microsofts wide string
+ * functions are unbelievably slow.  For things like encodings, it might be
+ * better to use a special comparison function that only considers a-z and
+ * A-Z as characters with case.  This works since the character set for
+ * encodings is limit to printable ASCII characters.
+ *
+ *  XMLScanner2.cpp: This also has some case-sensitive vs. insensitive compares.
+ * They are also much faster.  The other tweak is to only make a copy of an attribute
+ * string if it needs to be split.  And then, the strategy is to try to use a
+ * stack-based buffer, rather than a dynamically-allocated one.
+ *
+ * SAX2XMLReaderImpl.cpp: Again, more case-sensitive vs. insensitive comparisons.
+ *
+ * KVStringPair.cpp & hpp: By storing the size of the allocation, the storage can
+ * likely be re-used many times, cutting down on dynamic memory allocations.
+ *
+ * XMLString.hpp: a more efficient implementation of stringLen().
+ *
+ * DTDValidator.cpp: another case of using a stack-based buffer when possible
+ *
+ * These patches made a big difference in parse time in some of our test
+ * files, especially the ones are very attribute-heavy.
+ *
  * Revision 1.14  2000/10/13 22:47:57  andyh
  * Fix bug (failure to null-terminate result) in XMLString::trim().
  * Patch contributed by Nadav Aharoni
@@ -977,14 +1006,19 @@ inline void XMLString::moveChars(       XMLCh* const    targetStr
 
 inline unsigned int XMLString::stringLen(const XMLCh* const src)
 {
-    unsigned int len = 0;
-    if (src)
+    if (src == 0 || *src == 0)
     {
-        const XMLCh* pszTmp = src;
-        while (*pszTmp++)
-            len++;
+        return 0;
+   }
+    else
+   {
+        const XMLCh* pszTmp = src + 1;
+
+        while (*pszTmp)
+            ++pszTmp;
+
+        return (unsigned int)(pszTmp - src);
     }
-    return len;
 }
 
 inline bool XMLString::startsWith(  const   XMLCh* const    toTest

@@ -619,8 +619,25 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
     //  Make a copy of the text that we can mangle and get a pointer we can
     //  move through the value
     //
-    XMLCh* pszTmpVal = XMLString::replicate(attrValue);
-    ArrayJanitor<XMLCh> janTmpVal(pszTmpVal);
+
+    // Use a stack-based buffer, when possible...
+    XMLCh   tempBuffer[100];
+
+    XMLCh* pszTmpVal = 0;
+
+    ArrayJanitor<XMLCh> janTmpVal(0);
+
+    if (XMLString::stringLen(attrValue) < sizeof(tempBuffer) / sizeof(tempBuffer[0]))
+    {
+        XMLString::copyString(tempBuffer, attrValue);
+        pszTmpVal = tempBuffer;
+    }
+    else
+    {
+        janTmpVal.reset(XMLString::replicate(attrValue));
+        pszTmpVal = janTmpVal.get();
+    }
+
     XMLCh* valPtr = pszTmpVal;
 
     while (true)

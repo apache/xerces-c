@@ -150,16 +150,32 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  We have to split the name into its prefix and name parts. Then
         //  we map the prefix to its URI.
         //
-        XMLCh* namePtr = XMLString::replicate(curPair->getKey());
-        ArrayJanitor<XMLCh> janName(namePtr);
+        const XMLCh* const namePtr = curPair->getKey();
+        ArrayJanitor<XMLCh> janName(0);
+
+        // use a stack-based buffer when possible.
+        XMLCh tempBuffer[100];
+
         const int colonInd = XMLString::indexOf(namePtr, chColon);
         const XMLCh* prefPtr = XMLUni::fgZeroLenString;
         const XMLCh* suffPtr = XMLUni::fgZeroLenString;
         if (colonInd != -1)
         {
-            namePtr[colonInd] = chNull;
-            prefPtr = namePtr;
-            suffPtr = &namePtr[colonInd + 1];
+            // We have to split the string, so make a copy.
+             if (XMLString::stringLen(namePtr) < sizeof(tempBuffer) / sizeof(tempBuffer[0]))
+            {
+                XMLString::copyString(tempBuffer, namePtr);
+                tempBuffer[colonInd] = chNull;
+                prefPtr = tempBuffer;
+            }
+            else
+            {
+                janName.reset(XMLString::replicate(namePtr));
+                janName[colonInd] = chNull;
+                prefPtr = janName.get();
+            }
+
+            suffPtr = prefPtr + colonInd + 1;
         }
          else
         {
@@ -588,9 +604,9 @@ XMLScanner::resolvePrefix(  const   XMLCh* const        prefix
     //  to map to by the NS spec. xmlns gets mapped to a special place holder
     //  URI that we define (so that it maps to something checkable.)
     //
-    if (!XMLString::compareIString(prefix, XMLUni::fgXMLNSString))
+    if (!XMLString::compareString(prefix, XMLUni::fgXMLNSString))
         return fValidator->getXMLNSNamespaceId();
-    else if (!XMLString::compareIString(prefix, XMLUni::fgXMLString))
+    else if (!XMLString::compareString(prefix, XMLUni::fgXMLString))
         return fValidator->getXMLNamespaceId();
 
 
@@ -620,9 +636,9 @@ XMLScanner::resolvePrefix(  const   XMLCh* const        prefix
     //  to map to by the NS spec. xmlns gets mapped to a special place holder
     //  URI that we define (so that it maps to something checkable.)
     //
-    if (!XMLString::compareIString(prefix, XMLUni::fgXMLNSString))
+    if (!XMLString::compareString(prefix, XMLUni::fgXMLNSString))
         return fValidator->getXMLNSNamespaceId();
-    else if (!XMLString::compareIString(prefix, XMLUni::fgXMLString))
+    else if (!XMLString::compareString(prefix, XMLUni::fgXMLString))
         return fValidator->getXMLNamespaceId();
 
     //
@@ -694,9 +710,9 @@ XMLScanner::resolveQName(   const   XMLCh* const        qName
         //  to map to by the NS spec. xmlns gets mapped to a special place holder
         //  URI that we define (so that it maps to something checkable.)
         //
-        if (!XMLString::compareIString(prefixBuf.getRawBuffer(), XMLUni::fgXMLNSString))
+        if (!XMLString::compareString(prefixBuf.getRawBuffer(), XMLUni::fgXMLNSString))
             uriId = fValidator->getXMLNSNamespaceId();
-        else if (!XMLString::compareIString(prefixBuf.getRawBuffer(), XMLUni::fgXMLString))
+        else if (!XMLString::compareString(prefixBuf.getRawBuffer(), XMLUni::fgXMLString))
             uriId = fValidator->getXMLNamespaceId();
         else
         {

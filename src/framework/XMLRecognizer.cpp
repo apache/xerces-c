@@ -209,7 +209,12 @@ XMLRecognizer::encodingForName(const XMLCh* const encName)
     //  !!NOTE: Note that we don't handle EBCDIC here because we don't handle
     //  that one ourselves. It is allowed to fall into 'other'.
     //
-    if (!XMLString::compareIString(encName, XMLUni::fgUTF8EncodingString)
+   if (encName == XMLUni::fgXMLChEncodingString ||
+        !XMLString::compareIString(encName, XMLUni::fgXMLChEncodingString))
+   {
+        return XMLRecognizer::OtherEncoding;
+   }
+   else if (!XMLString::compareIString(encName, XMLUni::fgUTF8EncodingString)
     ||  !XMLString::compareIString(encName, XMLUni::fgUTF8EncodingString2))
     {
         return XMLRecognizer::UTF_8;

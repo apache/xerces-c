@@ -56,6 +56,35 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/01/15 21:26:33  tng
+ * Performance Patches by David Bertoni.
+ *
+ * Details: (see xerces-c-dev mailing Jan 14)
+ * XMLRecognizer.cpp: the internal encoding string XMLUni::fgXMLChEncodingString
+ * was going through this function numerous times.  As a result, the top hot-spot
+ * for the parse was _wcsicmp().  The real problem is that the Microsofts wide string
+ * functions are unbelievably slow.  For things like encodings, it might be
+ * better to use a special comparison function that only considers a-z and
+ * A-Z as characters with case.  This works since the character set for
+ * encodings is limit to printable ASCII characters.
+ *
+ *  XMLScanner2.cpp: This also has some case-sensitive vs. insensitive compares.
+ * They are also much faster.  The other tweak is to only make a copy of an attribute
+ * string if it needs to be split.  And then, the strategy is to try to use a
+ * stack-based buffer, rather than a dynamically-allocated one.
+ *
+ * SAX2XMLReaderImpl.cpp: Again, more case-sensitive vs. insensitive comparisons.
+ *
+ * KVStringPair.cpp & hpp: By storing the size of the allocation, the storage can
+ * likely be re-used many times, cutting down on dynamic memory allocations.
+ *
+ * XMLString.hpp: a more efficient implementation of stringLen().
+ *
+ * DTDValidator.cpp: another case of using a stack-based buffer when possible
+ *
+ * These patches made a big difference in parse time in some of our test
+ * files, especially the ones are very attribute-heavy.
+ *
  * Revision 1.6  2000/12/22 20:41:52  tng
  * XMLUni::fgEmptyString which is defined as "EMPTY" is incorrectly used as an empty string; in fact XMLUni::fgZeroLenString should be used instead
  *
@@ -586,9 +615,9 @@ startElement(   const   XMLElementDecl&         elemDecl
 			for (unsigned int i = 0; i < attrCount; i++)
 			{
 				tempAttr = attrList.elementAt(i);
-				if (XMLString::compareIString(tempAttr->getQName(), nsString) == 0)
+                  if (XMLString::compareString(tempAttr->getQName(), nsString) == 0)
 					nsURI = tempAttr->getValue();
-				if (XMLString::compareIString(tempAttr->getPrefix(), nsString) == 0)
+                  if (XMLString::compareString(tempAttr->getPrefix(), nsString) == 0)
 				{
 					nsPrefix = tempAttr->getName();
 					nsURI = tempAttr->getValue();
