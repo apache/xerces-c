@@ -861,7 +861,7 @@ Name:			name
 Model Type:		Children
 Create Reason:	Declared
 ContentType:	All
-Content Model:	
+Content Model:	All(family,given)
 ComplexType:
 	TypeName:	,C3
 	ContentType:	All
