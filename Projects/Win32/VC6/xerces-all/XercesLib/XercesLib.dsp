@@ -864,6 +864,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLWin1252Transcoder.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileFormatTarget.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileFormatTarget.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileInputSource.cpp
 # End Source File
 # Begin Source File

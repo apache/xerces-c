@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.5  2002/06/19 21:59:26  peiyongz
+# DOM3:DOMSave Interface support: LocalFileFormatTarget
+#
 # Revision 1.4  2002/06/18 20:02:27  knoaman
 # Add Wrapper4DOMInputSource.
 #
@@ -133,6 +136,7 @@ MODULE = framework
 
 FRAMEWORK_CPP_PUBHEADERS = \
 	LocalFileInputSource.hpp \
+	LocalFileFormatTarget.hpp \
 	MemBufInputSource.hpp \
 	MemBufFormatTarget.hpp \
 	StdInInputSource.hpp \
@@ -166,6 +170,7 @@ FRAMEWORK_C_FILES =
 
 FRAMEWORK_CPP_OBJECTS = \
 	LocalFileInputSource.$(TO) \
+	LocalFileFormatTarget.$(TO) \
 	MemBufInputSource.$(TO) \
 	MemBufFormatTarget.$(TO) \
 	StdInInputSource.$(TO) \
