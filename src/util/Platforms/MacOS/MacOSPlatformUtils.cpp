@@ -843,10 +843,17 @@ XMLTransService*
 XMLPlatformUtils::makeTransService()
 {
 #if defined(XML_USE_MACOS_UNICODECONVERTER)
-	return new MacOSUnicodeConverter;
+    if (MacOSUnicodeConverter::IsMacOSUnicodeConverterSupported())
+        return new MacOSUnicodeConverter;
 #else
     #error You must provide a transcoding service implementation
 #endif
+
+    //	If we got here it's because we didn't detect the Mac OS
+    //	Unicode Converter or Text Encoding Converter routines
+    //	that we require to function properly. Xerces will not
+    //	survive this condition.
+    return NULL;
 }
 
 
