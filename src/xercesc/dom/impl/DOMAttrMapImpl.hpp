@@ -72,16 +72,23 @@
 //
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "DOMNamedNodeMapImpl.hpp"
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
+class DOMNodeVector;
 class DOMNode;
-class DOMNamedNodeMap;
 
-class CDOM_EXPORT DOMAttrMapImpl : public DOMNamedNodeMapImpl
+class CDOM_EXPORT DOMAttrMapImpl : public DOMNamedNodeMap
 {
+protected:
+    DOMNodeVector*    fNodes;
+    DOMNode*          fOwnerNode;       // the node this map belongs to
+
+    virtual void	cloneContent(const DOMAttrMapImpl *srcmap);
+
+    bool            readOnly();  // revisit.  Look at owner node read-only.
+
 private:
     bool attrDefaults;
 
@@ -91,19 +98,31 @@ public:
     // revisit.  This "copy" constructor is used for cloning an Element with Attributes,
     //                and for setting up default attributes.  It's probably not right
     //                for one or the other or both.
-    DOMAttrMapImpl(DOMNode *ownerNod, const DOMNamedNodeMapImpl *defaults);
+    DOMAttrMapImpl(DOMNode *ownerNod, const DOMAttrMapImpl *defaults);
     DOMAttrMapImpl();
 
     virtual ~DOMAttrMapImpl();
     virtual DOMAttrMapImpl *cloneAttrMap(DOMNode *ownerNode);
     virtual bool hasDefaults();
     virtual void hasDefaults(bool value);
+    virtual int             findNamePoint(const XMLCh *name) const;
+    virtual int             findNamePoint(const XMLCh *namespaceURI,
+	                                       const XMLCh *localName) const;
+    virtual DOMNode*        removeNamedItemAt(XMLSize_t index);
+    virtual void            setReadOnly(bool readOnly, bool deep);
 
-    virtual DOMNode *setNamedItem(DOMNode *arg);
-    virtual DOMNode *setNamedItemNS(DOMNode *arg);
-    virtual DOMNode *removeNamedItem(const XMLCh *name);
-    virtual DOMNode *removeNamedItemNS(const XMLCh *namespaceURI, const XMLCh *localName);
-    virtual DOMNode *removeNamedItemAt(XMLSize_t index);
+
+    virtual XMLSize_t       getLength() const;
+    virtual DOMNode*        item(XMLSize_t index) const;
+
+    virtual DOMNode*        getNamedItem(const XMLCh *name) const;
+    virtual DOMNode*        setNamedItem(DOMNode *arg);
+    virtual DOMNode*        removeNamedItem(const XMLCh *name);
+    
+    virtual DOMNode*        getNamedItemNS(const XMLCh *namespaceURI,
+	                                        const XMLCh *localName) const;
+    virtual DOMNode*        setNamedItemNS(DOMNode *arg);
+    virtual DOMNode*        removeNamedItemNS(const XMLCh *namespaceURI, const XMLCh *localName);
 
     void reconcileDefaultAttributes(const DOMAttrMapImpl* defaults);
     void moveSpecifiedAttributes(DOMAttrMapImpl* srcmap);

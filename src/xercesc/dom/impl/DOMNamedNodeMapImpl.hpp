@@ -78,19 +78,14 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class       DOMNodeVector;
 class       DOMNode;
-class       DOMDocument;
 
-
+#define MAP_SIZE    193
 
 class CDOM_EXPORT DOMNamedNodeMapImpl: public DOMNamedNodeMap {
 protected:
-    DOMNodeVector*    fNodes;
+    DOMNodeVector*    fBuckets[MAP_SIZE];
     DOMNode*          fOwnerNode;       // the node this map belongs to
     //bool             fReadOnly;     // revisit - flag on owner node instead?
-
-    friend class DOMDocumentImpl;
-
-    virtual void	cloneContent(const DOMNamedNodeMapImpl *srcmap);
 
     bool            readOnly();  // revisit.  Look at owner node read-only.
 
@@ -99,19 +94,15 @@ public:
 
     virtual                 ~DOMNamedNodeMapImpl();
     virtual DOMNamedNodeMapImpl *cloneMap(DOMNode *ownerNode);
-    virtual int             findNamePoint(const XMLCh *name) const;
-    virtual XMLSize_t       getLength() const;
-    virtual DOMNode*        getNamedItem(const XMLCh *name) const;
-    virtual DOMNode*        item(XMLSize_t index) const;
-    virtual void            removeAll();
-    virtual DOMNode*        removeNamedItem(const XMLCh *name);
-    virtual DOMNode*        removeNamedItemAt(XMLSize_t index);
-    virtual DOMNode*        setNamedItem(DOMNode *arg);
     virtual void            setReadOnly(bool readOnly, bool deep);
 
+    virtual XMLSize_t       getLength() const;
+    virtual DOMNode*        item(XMLSize_t index) const;
+    virtual DOMNode*        getNamedItem(const XMLCh *name) const;
+    virtual DOMNode*        setNamedItem(DOMNode *arg);
+    virtual DOMNode*        removeNamedItem(const XMLCh *name);
+
     //Introduced in DOM Level 2
-    virtual int             findNamePoint(const XMLCh *namespaceURI,
-	                                       const XMLCh *localName) const;
     virtual DOMNode*        getNamedItemNS(const XMLCh *namespaceURI,
 	                                        const XMLCh *localName) const;
     virtual DOMNode*        setNamedItemNS(DOMNode *arg);
