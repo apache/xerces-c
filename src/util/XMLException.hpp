@@ -121,6 +121,12 @@ public:
     XMLException(const XMLException& toCopy);
     void operator=(const XMLException& toAssign);
 
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitMsgMutex();
+
+	static void reinitMsgLoader();
 
 protected :
     // -----------------------------------------------------------------------

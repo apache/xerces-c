@@ -98,9 +98,13 @@
 //  Local static data
 // ---------------------------------------------------------------------------
 static XMLUInt32       gScannerId;
-static XMLMsgLoader*   gMsgLoader = 0;
 static bool            sRegistered = false;
+
 static XMLMutex*       sScannerMutex = 0;
+static XMLRegisterCleanup scannerMutexCleanup;
+
+static XMLMsgLoader*   gMsgLoader = 0;
+static XMLRegisterCleanup cleanupMsgLoader;
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -122,7 +126,7 @@ static const XMLCh gApos[] = { chLatin_a, chLatin_p, chLatin_o, chLatin_s, chNul
 // -----------------------------------------------------------------------
 //  Cleanup for the message loader
 // -----------------------------------------------------------------------
-static void reinitMsgLoader()
+void XMLScanner::reinitMsgLoader()
 {
 	delete gMsgLoader;
 	gMsgLoader = 0;
@@ -131,7 +135,7 @@ static void reinitMsgLoader()
 // -----------------------------------------------------------------------
 //  Cleanup for the scanner mutex
 // -----------------------------------------------------------------------
-static void reinitScannerMutex()
+void XMLScanner::reinitScannerMutex()
 {
     delete sScannerMutex;
     sScannerMutex = 0;
@@ -144,7 +148,7 @@ static void reinitScannerMutex()
 //
 static XMLMutex& gScannerMutex()
 {
-    static XMLRegisterCleanup scannerMutexCleanup;
+
     if (!sScannerMutex)
     {
         XMLMutex* tmpMutex = new XMLMutex;
@@ -160,7 +164,7 @@ static XMLMutex& gScannerMutex()
         // If we got here first, then register it and set the registered flag
         if (!sRegistered)
         {
-			scannerMutexCleanup.registerCleanup(reinitScannerMutex);
+			scannerMutexCleanup.registerCleanup(XMLScanner::reinitScannerMutex);
             sRegistered = true;
         }
     }
@@ -936,7 +940,6 @@ void XMLScanner::scanReset(XMLPScanToken& token)
 //
 void XMLScanner::commonInit()
 {
-	static XMLRegisterCleanup cleanupMsgLoader;
 
     //
     //  We have to do a little init that involves statics, so we have to

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.38  2001/11/30 22:19:15  peiyongz
+ * cleanUp function made member function
+ * cleanUp object moved to file scope
+ *
  * Revision 1.37  2001/11/20 18:51:44  tng
  * Schema: schemaLocation and noNamespaceSchemaLocation to be specified outside the instance document.  New methods setExternalSchemaLocation and setExternalNoNamespaceSchemaLocation are added (for SAX2, two new properties are added).
  *
@@ -534,6 +538,13 @@ public :
     void scanReset(XMLPScanToken& toFill);
 
     bool checkXMLDecl(bool startWithAngle);
+
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitScannerMutex();
+
+	static void reinitMsgLoader();
 
 private :
     // -----------------------------------------------------------------------

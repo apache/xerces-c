@@ -92,21 +92,15 @@ static const XMLCh  gDefErrMsg[] =
 // ---------------------------------------------------------------------------
 //  Local, static data
 // ---------------------------------------------------------------------------
-static XMLMsgLoader* sLoader = 0;
+static XMLMsgLoader* sMsgLoader = 0;
+static XMLRegisterCleanup msgLoaderCleanup;
+
 static XMLMutex* sMsgMutex = 0;
+static XMLRegisterCleanup msgMutexCleanup;
 
 // ---------------------------------------------------------------------------
 //  Local, static functions
 // ---------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------
-//  Reinitialise the message mutex
-// -----------------------------------------------------------------------
-static void reinitMsgMutex()
-{
-	delete sMsgMutex;
-	sMsgMutex = 0;
-}
 
 //
 //  We need to fault in this mutex. But, since its used for synchronization
@@ -114,7 +108,7 @@ static void reinitMsgMutex()
 //
 static XMLMutex& gMsgMutex()
 {
-	static XMLRegisterCleanup msgMutexCleanup;
+
     if (!sMsgMutex)
     {
         XMLMutex* tmpMutex = new XMLMutex;
@@ -126,54 +120,39 @@ static XMLMutex& gMsgMutex()
         else
         {
             // This is the real mutex.  Register it for cleanup at Termination.
-			msgMutexCleanup.registerCleanup(reinitMsgMutex);
+			msgMutexCleanup.registerCleanup(XMLException::reinitMsgMutex);
         }
         
     }
+
     return *sMsgMutex;
-}
-
-
-
-// ---------------------------------------------------------------------------
-//  Local methods
-// ---------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------
-//  Reinitialise the message loader
-// -----------------------------------------------------------------------
-static void reinitMsgLoader()
-{
-	delete sLoader;
-	sLoader = 0;
 }
 
 //
 //  This method is a lazy evaluator for the message loader for exception
 //  messages.
 //
-//  NOTE:   This is only ever called with the mutex locked so we don't
-//          have to synchronize here!!
-//
 static XMLMsgLoader& gGetMsgLoader()
 {
-	static XMLRegisterCleanup msgLoaderCleanup;
+
+    // Lock the message loader mutex and load the text
+	XMLMutexLock lockInit(&gMsgMutex());
 
     // Fault it in on first request
-    if (!sLoader)
+    if (!sMsgLoader)
     {
-        sLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgExceptDomain);
-        if (!sLoader)
+        sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgExceptDomain);
+        if (!sMsgLoader)
             XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
 
         //
         // Register this XMLMsgLoader for cleanup at Termination.
         //
-        msgLoaderCleanup.registerCleanup(reinitMsgLoader);
+        msgLoaderCleanup.registerCleanup(XMLException::reinitMsgLoader);
     }
     
     // We got it, so return it
-    return *sLoader;
+    return *sMsgLoader;
 }
 
 // ---------------------------------------------------------------------------
@@ -268,15 +247,12 @@ void XMLException::loadExceptText(const XMLExcepts::Codes toLoad)
     const unsigned int msgSize = 2047;
     XMLCh errText[msgSize + 1];
 
-    // Lock the message loader mutex and load the text
-    {
-        XMLMutexLock lockInit(&gMsgMutex());
-        if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize))
-        {
-            fMsg = XMLString::replicate(gDefErrMsg);
-            return;
-        }
-    }
+    // load the text
+	if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize))
+	{
+		fMsg = XMLString::replicate(gDefErrMsg);
+		return;
+	}
 
     // We got the text so replicate it into the message member
     fMsg = XMLString::replicate(errText);
@@ -297,15 +273,12 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
     const unsigned int msgSize = 4095;
     XMLCh errText[msgSize + 1];
 
-    // Lock the message loader mutex and load the text
-    {
-        XMLMutexLock lockInit(&gMsgMutex());
-        if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4))
-        {
-            fMsg = XMLString::replicate(gDefErrMsg);
-            return;
-        }
-    }
+    // load the text
+	if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4))
+	{
+		fMsg = XMLString::replicate(gDefErrMsg);
+		return;
+	}
 
     // We got the text so replicate it into the message member
     fMsg = XMLString::replicate(errText);
@@ -326,16 +299,31 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
     const unsigned int msgSize = 4095;
     XMLCh errText[msgSize + 1];
 
-    // Lock the message loader mutex and load the text
-    {
-        XMLMutexLock lockInit(&gMsgMutex());
-        if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4))
-        {
-            fMsg = XMLString::replicate(gDefErrMsg);
-            return;
-        }
-    }
+    // load the text
+	if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4))
+	{
+		fMsg = XMLString::replicate(gDefErrMsg);
+		return;
+	}
 
     // We got the text so replicate it into the message member
     fMsg = XMLString::replicate(errText);
+}
+
+// -----------------------------------------------------------------------
+//  Reinitialise the message mutex
+// -----------------------------------------------------------------------
+void XMLException::reinitMsgMutex()
+{
+	delete sMsgMutex;
+	sMsgMutex = 0;
+}
+
+// -----------------------------------------------------------------------
+//  Reinitialise the message loader
+// -----------------------------------------------------------------------
+void XMLException::reinitMsgLoader()
+{
+	delete sMsgLoader;
+	sMsgLoader = 0;
 }
