@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2002/12/11 22:14:54  knoaman
+ * Performance: no need to use temporary buffer to hold namespace value.
+ *
  * Revision 1.13  2002/12/04 01:57:09  knoaman
  * Scanner re-organization.
  *
@@ -272,6 +275,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
     , fScanner(0)
     , fGrammarResolver(0)
     , fURIStringPool(0)
+    , fValidator(0)
 {
     try
     {
@@ -893,15 +897,13 @@ startElement(   const   XMLElementDecl&         elemDecl
                 fAttrList.setVector(&attrList, attrCount, fScanner);
 
             // call startElement() with namespace declarations
-            XMLBufBid URIBufferBid ( &fStringBuffers ) ;
-            XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
-
-            fScanner->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
-
-            fDocHandler->startElement(URIBuffer.getRawBuffer(),
-										elemDecl.getBaseName(),
-										elemQName.getRawBuffer(),
-										fAttrList);
+            fDocHandler->startElement
+            (
+                fScanner->getURIText(elemURLId)
+                , elemDecl.getBaseName()
+                , elemQName.getRawBuffer()
+                , fAttrList
+            );
         }
         else // no namespace
         {
@@ -919,13 +921,12 @@ startElement(   const   XMLElementDecl&         elemDecl
             // call endPrefixMapping appropriately.
             if (getDoNamespaces())
             {
-                XMLBufBid URIBufferBid ( &fStringBuffers ) ;
-                XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
-                fScanner->getURIText(elemURLId, (XMLBuffer &)URIBuffer);
-
-                fDocHandler->endElement(	URIBuffer.getRawBuffer(),
-											elemDecl.getBaseName(),
-											elemQName.getRawBuffer());
+                fDocHandler->endElement
+                (
+                    fScanner->getURIText(elemURLId)
+                    , elemDecl.getBaseName()
+                    , elemQName.getRawBuffer()
+                );
 
                 unsigned int numPrefix = fPrefixCounts->pop();
                 for (unsigned int i = 0; i < numPrefix; ++i)
@@ -975,11 +976,6 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
         // get the prefixes back so that we can call endPrefixMapping()
         if (getDoNamespaces())
         {
-            XMLBufBid URIBufferBid ( &fStringBuffers ) ;
-            XMLBuffer &URIBuffer = URIBufferBid.getBuffer() ;
-
-            fScanner->getURIText(uriId, URIBuffer ) ;
-
             XMLBufBid elemQName( &fStringBuffers ) ;
             if (elemPrefix && *elemPrefix) {
                 elemQName.set(elemPrefix);
@@ -987,9 +983,12 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
             }
             elemQName.append(elemDecl.getBaseName());
 
-            fDocHandler->endElement(	URIBuffer.getRawBuffer(),
-										elemDecl.getBaseName(),
-										elemQName.getRawBuffer());
+            fDocHandler->endElement
+            (
+                fScanner->getURIText(uriId)
+                , elemDecl.getBaseName()
+                , elemQName.getRawBuffer()
+            );
 
             unsigned int numPrefix = fPrefixCounts->pop();
             for (unsigned int i = 0; i < numPrefix; i++)
