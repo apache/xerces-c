@@ -1219,7 +1219,7 @@ TraverseSchema::traverseGroupDecl(const DOM_Element& elem,
             specNode = traverseChoiceSequence(content, ContentSpecNode::Choice, adoptSpecNode);
         }
         else if (childName.equals(SchemaSymbols::fgELT_ALL)) {
-            // TO DO
+            specNode = traverseAll(content);
         }
         else {
             illegalChild = true;
@@ -1571,9 +1571,6 @@ TraverseSchema::traverseAny(const DOM_Element& elem) {
 ContentSpecNode*
 TraverseSchema::traverseAll(const DOM_Element& elem) {
 
-    return 0;
-
-    // Work in progress
     // ------------------------------------------------------------------
     // Check attributes
     // ------------------------------------------------------------------
@@ -1590,7 +1587,7 @@ TraverseSchema::traverseAll(const DOM_Element& elem) {
     }
 
     ContentSpecNode* left = 0;
-    RefVectorOf<ContentSpecNode>* allChildren = 0;
+    ContentSpecNode* right = 0;
 
     for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
 
@@ -1611,35 +1608,30 @@ TraverseSchema::traverseAll(const DOM_Element& elem) {
             seeParticle = true;
         }
         else {
+
             fBuffer.set(childName.rawBuffer(), childName.length());
-            reportSchemaError(0, 0, fBuffer.getRawBuffer()); //"Content of all group is restricted to elements only. '{0}' encountered and ignored."
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AllContentError, fBuffer.getRawBuffer());
+            continue;
         }
 
         if (seeParticle) {
-            checkMinMax(contentSpecNode, child);
+            checkMinMax(contentSpecNode, child, All_Element);
         }
 
-        if (contentSpecNode != 0) {
-
-            if (allChildren == 0) {
-                allChildren = new RefVectorOf<ContentSpecNode>(32, false);
-            }
-
-            allChildren->addElement(contentSpecNode);
+        if (!left) {
+            left = contentSpecNode;
+        }
+        else if (!right) {
+            right = contentSpecNode;
+        }
+        else {
+            left = new ContentSpecNode(ContentSpecNode::All, left, right);
+            right = contentSpecNode;
         }
     }
 
-    if (!allChildren || allChildren->size() == 0) {
-        return 0;
-    }
-
-    try {
-//        left = allCalcWrapper(allChildren);
-    }
-    catch(...) {
-
-        delete allChildren;
-        reportSchemaError(0, 0); //"The size of the &lt;all&gt; declaration is too large for this parser and elements using it will not validate correctly"
+    if (right) {
+        left = new ContentSpecNode(ContentSpecNode::All, left, right);
     }
 
     return left;
@@ -4654,7 +4646,7 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
         }
         else if (childName.equals(SchemaSymbols::fgELT_ALL)) {
 
-            //specNode = checkMinMax(traverseAll(childElem), childElem);
+            specNode = checkMinMax(traverseAll(childElem), childElem, All_Group);
             attrNode = XUtil::getNextSiblingElement(childElem);
         }
         else if (isAttrOrAttrGroup(childElem)) {
