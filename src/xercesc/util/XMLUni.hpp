@@ -244,6 +244,7 @@ public :
     static const XMLCh fgXercesDynamic[];
     static const XMLCh fgXercesSchema[];
     static const XMLCh fgXercesSchemaFullChecking[];
+    static const XMLCh fgXercesIdentityConstraintChecking[];
     static const XMLCh fgXercesSchemaExternalSchemaLocation[];
     static const XMLCh fgXercesSchemaExternalNoNameSpaceSchemaLocation[];
     static const XMLCh fgXercesSecurityManager[];
