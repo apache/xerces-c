@@ -839,7 +839,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         $icu_cflags = '"-w -O2 -qmaxmem=-1"';
 
         if ($opt_m =~ m/icu/i) {
-        	$ENV{'LIBPATH'}="$ICUROOT/lib:$ENV{'LIBPATH'}";
+        	$ENV{'LIBPATH'}="$ICUROOT/lib:$XERCESCROOT/lib:$ENV{'LIBPATH'}";
         	$ENV{'PATH'}="$ICUROOT/bin:$ENV{'PATH'}";        	
         }
         psystem ("echo LIBPATH=$ENV{'LIBPATH'}");
@@ -882,7 +882,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         $icu_cflags = '"-w +O2 +Ofltacc"';
 
         if ($opt_m =~ m/icu/i) {
-        	$ENV{'SHLIB_PATH'}="$ICUROOT/lib:$ENV{'SHLIB_PATH'}";
+        	$ENV{'SHLIB_PATH'}="$ICUROOT/lib:$XERCESCROOT/lib:$ENV{'SHLIB_PATH'}";
         	$ENV{'PATH'}="$ICUROOT/bin:$ENV{'PATH'}";        	        	
         }
 
@@ -904,7 +904,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         $icu_cflags = '"-w -O"';
 
         if ($opt_m =~ m/icu/i) {
-        	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
+        	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$XERCESCROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
         	$ENV{'PATH'}="$ICUROOT/bin:$ENV{'PATH'}";        	        	
         }
 
@@ -917,7 +917,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         if ($opt_x eq "") {$opt_x = "CC";}
 
         if ($opt_m =~ m/icu/i) {
-        	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
+        	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$XERCESCROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
         	$ENV{'PATH'}="$ICUROOT/bin:$ENV{'PATH'}";        	        	
         }
         
