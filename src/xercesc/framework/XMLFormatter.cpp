@@ -537,6 +537,28 @@ void XMLFormatter::writeCharRef(const XMLCh &toWrite)
 
 }
 
+void XMLFormatter::writeCharRef(unsigned long toWrite)
+{
+    XMLCh tmpBuf[32];
+    tmpBuf[0] = chAmpersand;
+    tmpBuf[1] = chPound;
+    tmpBuf[2] = chLatin_x;
+
+    // Build a char ref for the current char
+    XMLString::binToText(toWrite, &tmpBuf[3], 8, 16);
+    const unsigned int bufLen = XMLString::stringLen(tmpBuf);
+    tmpBuf[bufLen] = chSemiColon;
+    tmpBuf[bufLen+1] = chNull;
+
+    // write it out
+    formatBuf(tmpBuf
+            , bufLen + 1
+            , XMLFormatter::NoEscapes
+            , XMLFormatter::UnRep_Fail);
+
+}
+
+
 const XMLByte* XMLFormatter::getCharRef(unsigned int & count, 
                                         XMLByte*       &ref, 
                                         const XMLCh *  stdRef) 
@@ -614,7 +636,18 @@ void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
             //
             while (srcPtr < endPtr)
             {
-                writeCharRef(*srcPtr);
+                if ((*srcPtr & 0xFC00) == 0xD800) {
+                    // we have encountered a surrogate, need to recombine before printing out					  
+                    // use writeCharRef that takes unsigned long to get values larger than
+                    // hex 0xFFFF printed.
+                    tmpPtr = srcPtr;
+                    tmpPtr++; // point at low surrogate
+                    writeCharRef((unsigned long) (0x10000+((*srcPtr-0xD800)<<10)+*tmpPtr-0xDC00));
+                    srcPtr++; // advance to low surrogate (will advance again below)
+                }
+                else {
+                    writeCharRef(*srcPtr);
+                }
 
                 // Move up the source pointer and break out if needed
                 srcPtr++;

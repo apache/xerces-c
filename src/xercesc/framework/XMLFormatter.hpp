@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/10/10 02:06:09  neilg
+ * fix for bug 21780; thanks to David Cargill
+ *
  * Revision 1.17  2003/09/22 08:50:04  gareth
  * doc fix
  *
@@ -456,6 +459,7 @@ private :
                               const XMLCh *  stdRef);  
  
     void writeCharRef(const XMLCh &toWrite);
+    void writeCharRef(unsigned long toWrite);
 
     bool inEscapeList(const XMLFormatter::EscapeFlags escStyle
                     , const XMLCh                     toCheck);
