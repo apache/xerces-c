@@ -1225,8 +1225,8 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     if ( $opt_m =~ m/iconv/i ) {
         print ("\n\nCopying Message Catalog Files ...\n");
         pchdir ("$targetdir/msg");
-        psystem("rm -f XMLMessages* ");    	
-        psystem("cp -f $XERCESCROOT/lib/msg/XMLMessages*.cat .");        
+        psystem("rm -f XercesMessages* ");    	
+        psystem("cp -f $XERCESCROOT/msg/XercesMessages*.cat .");        
     }    
            
     #
