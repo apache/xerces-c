@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/01/25 20:56:51  abagchi
+ * Now at least compiles
+ *
  * Revision 1.9  2000/01/25 19:19:08  roddey
  * Simple addition of a getId() method to the xcode and netacess abstractions to
  * allow each impl to give back an id string.
@@ -122,7 +125,7 @@
 static const int    gTempBuffArraySize = 1024;
 static const XMLCh  gMyServiceId[] =
 {
-    chLatin_I, chLatin_C, chLatin_o, chDigit_n, chDigit_v, chNull
+    chLatin_I, chLatin_C, chLatin_o, chLatin_n, chLatin_v, chNull
 };
 
 
@@ -205,7 +208,7 @@ int IconvTransService::compareNIString( const   XMLCh* const    comp1
 }
 
 
-const XMLCh* Iconv32TransService::getId() const
+const XMLCh* IconvTransService::getId() const
 {
     return gMyServiceId;
 }
