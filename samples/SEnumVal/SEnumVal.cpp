@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2002/07/12 15:51:52  knoaman
+ * Retrieve the root grammar instead of using the validator.
+ * Modify the way we print substitution group info.
+ *
  * Revision 1.11  2002/06/25 15:30:46  peiyongz
  * Bug#10067: SEnumVal bugs found when porting to Visual Studio .NET
  *                     projects, patch from Robert Buck (rbuck@mathworks.com )
@@ -247,11 +251,12 @@ void process(char* const xmlFile)
 		return;
 	}
 
-    if ( parser.getValidator().getGrammar()->getGrammarType() != Grammar::SchemaGrammarType)
-    {
+	Grammar* rootGrammar = parser.getRootGrammar();
+	if (!rootGrammar || rootGrammar->getGrammarType() != Grammar::SchemaGrammarType)
+	{
 		cout << "\n Non schema grammar, no output available\n" << endl;
 		return;
-    }
+	}
 
 	//
 	//  Now we will get an enumerator for the element pool from the validator
@@ -259,7 +264,7 @@ void process(char* const xmlFile)
 	//  we get an enumerator for its attributes and print them also.
 	//
 
-    SchemaGrammar* grammar = (SchemaGrammar*) parser.getValidator().getGrammar();
+	SchemaGrammar* grammar = (SchemaGrammar*) rootGrammar;
 	RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = grammar->getElemEnumerator();
 
 	if (!elemEnum.hasMoreElements())
@@ -332,10 +337,12 @@ void process(char* const xmlFile)
 		}
 
 		// Substitution Name
-		XMLCh* subsGroup = curElem.getSubstitutionGroupName();
+		SchemaElementDecl* subsGroup = curElem.getSubstitutionGroupElem();
 		if( subsGroup )
 		{
-			cout << "Substitution Name:\t" << StrX(subsGroup) << "\n";
+			const XMLCh* uriText = parser.getURIText(subsGroup->getURI());
+			cout << "Substitution Name:\t" << StrX(uriText)
+			     << "," << StrX(subsGroup->getBaseName()) << "\n";
 		}
 
 		// Content Model
