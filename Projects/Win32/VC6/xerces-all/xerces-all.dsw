@@ -33,6 +33,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "DOMIDTest"=".\DOMIDTest\DOMIDTest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "DOMMemTest"=".\DOMMemTest\DOMMemTest.dsp" - Package Owner=<4>
 
 Package=<5>

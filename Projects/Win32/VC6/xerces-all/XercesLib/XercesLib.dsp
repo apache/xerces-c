@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\src" /I "..\..\src\dom" /I "..\..\..\..\..\src" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "PLATFORM_WIN32" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FD /c
+# ADD CPP /nologo /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\src" /I "..\..\src\dom" /I "..\..\..\..\..\src" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "PLATFORM_WIN32" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /FR /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -96,6 +96,10 @@ LINK32=link.exe
 # Begin Group "Win32"
 
 # PROP Default_Filter ".cpp,.hpp"
+# Begin Source File
+
+SOURCE=.\IDMap.hpp
+# End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\Platforms\Win32\resource.h
@@ -1133,6 +1137,14 @@ SOURCE=..\..\..\..\..\src\dom\NamedNodeMapImpl.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\dom\NameNodeFilter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\NodeIDMap.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\NodeIDMap.hpp
 # End Source File
 # Begin Source File
 
