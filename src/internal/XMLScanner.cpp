@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.20  2000/07/17 22:47:40  jpolast
+ * switched scanMisc() with endDoc() in scanNext()
+ * pointed out by Dean Roddey
+ *
  * Revision 1.19  2000/07/17 19:11:20  jpolast
  * fix for uninitialized variable gotData bug and endDocument bug.
  * Submitted by Jim Reitz (jereitz@home.com)
@@ -755,9 +759,9 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
             // If we hit the end, then do the miscellaneous part
             if (!gotData)
 			{
+                scanMiscellaneous();
 				if (fDocHandler)
 					fDocHandler->endDocument();
-                scanMiscellaneous();
 			}
         }
     }
