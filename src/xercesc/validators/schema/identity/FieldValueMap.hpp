@@ -210,11 +210,11 @@ inline void FieldValueMap::put(IC_Field* const key,
 
         fFields->addElement(key);
         fValidators->addElement(dv);
-        fValues->addElement(XMLString::replicate(value));
+        fValues->addElement(XMLString::replicate(value, fMemoryManager));
     }
     else {
         fValidators->setElementAt(dv, keyIndex);
-        fValues->setElementAt(XMLString::replicate(value), keyIndex);
+        fValues->setElementAt(XMLString::replicate(value, fMemoryManager), keyIndex);
     }
 }
 

@@ -381,7 +381,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     // Save current schema info
     SchemaInfo* currInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                           fNamespaceScope->increaseDepth(),
-                                          XMLString::replicate(schemaURL),
+                                          XMLString::replicate(schemaURL, fMemoryManager),
                                           fTargetNSURIString, schemaRoot,
                                           fMemoryManager);
 
@@ -572,7 +572,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
 
             fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                          fNamespaceScope->increaseDepth(),
-                                         XMLString::replicate(includeURL),
+                                         XMLString::replicate(includeURL, fMemoryManager),
                                          fTargetNSURIString, root,
                                          fMemoryManager);
 
@@ -3439,7 +3439,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                             enums = new (fMemoryManager) RefArrayVectorOf<XMLCh>(8, true, fMemoryManager);
                         }
 
-                        enums->addElement(XMLString::replicate(attValue));
+                        enums->addElement(XMLString::replicate(attValue, fMemoryManager));
                     }
                     else if (XMLString::equals(facetName, SchemaSymbols::fgELT_PATTERN)) {
 
@@ -7585,7 +7585,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
         redefSchemaInfo = fSchemaInfo;
         fSchemaInfo = new (fMemoryManager) SchemaInfo(0, 0, 0, fTargetNSURI, fScopeCount,
                                      fNamespaceScope->increaseDepth(),
-                                     XMLString::replicate(includeURL),
+                                     XMLString::replicate(includeURL, fMemoryManager),
                                      fTargetNSURIString, root,
                                      fMemoryManager);
 

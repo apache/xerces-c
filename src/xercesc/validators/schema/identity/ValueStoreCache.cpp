@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/26 22:05:01  knoaman
+ * Pass the memory manager to XMLString::replicate.
+ *
  * Revision 1.7  2003/05/18 14:02:09  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -207,7 +210,7 @@ void ValueStoreCache::initValueStoresFor(SchemaElementDecl* const elemDecl,
     for (unsigned int i=0; i<icCount; i++) {
 
         IdentityConstraint* ic = elemDecl->getIdentityConstraintAt(i);
-        ValueStore* valueStore = valueStore = new (fMemoryManager) ValueStore(ic, fScanner, fMemoryManager);
+        ValueStore* valueStore = new (fMemoryManager) ValueStore(ic, fScanner, fMemoryManager);
         fValueStores->addElement(valueStore);
         fIC2ValueStoreMap->put(ic, initialDepth, valueStore);
     }
