@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/11/20 20:48:10  knoaman
+ * Fix for invalid repeating quantifier check.
+ *
  * Revision 1.9  2001/11/16 15:56:37  knoaman
  * Add check for invalid repeating quantifier.
  *
@@ -909,10 +912,12 @@ Token* RegxParser::parseFactor() {
 
             if (ch == chComma) {
 
-                if (offset >= fStringLen
-                    || ((ch = fString[offset++]) < chDigit_0 || ch > chDigit_9)
-                    && ch != chCloseCurly)
+                if (offset >= fStringLen)
                     break;
+
+                if (((ch = fString[offset++]) < chDigit_0 || ch > chDigit_9)
+                    && ch != chCloseCurly)
+                    ThrowXML1(ParseException, XMLExcepts::Regex_InvalidQuantifier, fString);
 
                 if (ch == chCloseCurly) {
                     if (minExist)
