@@ -12,6 +12,65 @@
     </tr>
 
     <tr>
+        <td>2002-01-02</td>
+        <td>Tinny Ng</td>
+        <td>Schema Fix: should not store a temp value as the key in the element
+            pool and the attribute pool.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-22</td>
+        <td>Jason Stewart</td>
+        <td>[Bug 4953] Propagate existing CFLAGS and CXXFLAGS.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-21</td>
+        <td>Jason Stewart</td>
+        <td>[Bug 5514] XMLEnumerator needs virtual destructor.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-21</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2680] Remove '-instances=static' from the compile step.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-21</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 1833] LexicalHandler::startDTD not called correctly.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-21</td>
+        <td>Frank Balluffi</td>
+        <td>[Bug 5466] Memory Leak: ElementImpl.cpp's ElementImpl::ElementImpl copy
+            constructor does not cleanup attributes before assignment.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-21</td>
+        <td>Frank Balluffi</td>
+        <td>[Bug 5464] Memory Leak: DocumentImpl::importNode does not delete
+            old attribute if its reference count equals zero.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-21</td>
+        <td>Tinny Ng</td>
+        <td>Schema fix: leading whitespace should be preserved for CData type.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-12-14</td>
         <td>Khaled Noaman</td>
         <td>Add surrogate support to comments and processing instructions.

@@ -21,104 +21,104 @@ access the Schema information stored in internal data structures.
 <source>cd &XercesCInstallDir;-linux/samples/data
 SEnumVal personal-schema.xml
 
- Name:			personnel
- Model Type:		Children
- Create Reason:	Declared
- ContentType:	OneOrMore
- Content Model:	(person)+
- ComplexType:
- 	TypeName:	,C0
- 	ContentType:	OneOrMore
- --------------------------------------------
- Name:			person
- Model Type:		Children
- Create Reason:	Declared
- ContentType:	Sequence
- Content Model:	(name,email*,url*,link?)
- ComplexType:
- 	TypeName:	,C1
- 	ContentType:	Sequence
- Attributes:
- 	Name:			salary
- 	Type:			CDATA
- 	Default Type:	#IMPLIED
- 	Base Datatype:		Decimal
- Facets:		
- 	fractionDigits=0
+Name:                   personnel
+Model Type:             Children
+Create Reason:  Declared
+ContentType:    OneOrMore
+Content Model:  (person)+
+ComplexType:
+        TypeName:       ,C0
+        ContentType:    OneOrMore
+--------------------------------------------
+Name:                   person
+Model Type:             Children
+Create Reason:  Declared
+ContentType:    Sequence
+Content Model:  (name,email*,url*,link?)
+ComplexType:
+        TypeName:       ,C1
+        ContentType:    Sequence
+Attributes:
+        Name:                   salary
+        Type:                   CDATA
+        Default Type:   #IMPLIED
+        Base Datatype:          Decimal
+Facets:
+        fractionDigits=0
 
- 	Name:			id
- 	Type:			ID
- 	Default Type:	#REQUIRED
- 	Base Datatype:		ID
+        Name:                   id
+        Type:                   ID
+        Default Type:   #REQUIRED
+        Base Datatype:          ID
 
- 	Name:			contr
- 	Type:			CDATA
- 	Default Type:	#DEFAULT
- 	Value:			false
- 	Base Datatype:		string
+        Name:                   contr
+        Type:                   CDATA
+        Default Type:   #DEFAULT
+        Value:                  false
+        Base Datatype:          string
 
- 	Name:			note
- 	Type:			CDATA
- 	Default Type:	#IMPLIED
- 	Base Datatype:		string
+        Name:                   note
+        Type:                   CDATA
+        Default Type:   #IMPLIED
+        Base Datatype:          string
 
- --------------------------------------------
- Name:			name
- Model Type:		Children
- Create Reason:	Declared
- ContentType:	Sequence
- Content Model:	(family,given)
- ComplexType:
- 	TypeName:	,C3
- 	ContentType:	Sequence
- --------------------------------------------
- Name:			family
- Model Type:		Simple
- Create Reason:	Declared
- Base Datatype:		string
- --------------------------------------------
- Name:			given
- Model Type:		Simple
- Create Reason:	Declared
- Base Datatype:		string
- --------------------------------------------
- Name:			email
- Model Type:		Simple
- Create Reason:	Declared
- Base Datatype:		string
- --------------------------------------------
- Name:			url
- Model Type:		Empty
- Create Reason:	Declared
- Content Model:	EMPTY
- ComplexType:
- 	TypeName:	,C4
- Attributes:
- 	Name:			href
- 	Type:			CDATA
- 	Default Type:	#DEFAULT
- 	Value:			http://
- 	Base Datatype:		string
+--------------------------------------------
+Name:                   name
+Model Type:             Children
+Create Reason:  Declared
+ContentType:    All
+Content Model:
+ComplexType:
+        TypeName:       ,C3
+        ContentType:    All
+--------------------------------------------
+Name:                   family
+Model Type:             Simple
+Create Reason:  Declared
+Base Datatype:          string
+--------------------------------------------
+Name:                   given
+Model Type:             Simple
+Create Reason:  Declared
+Base Datatype:          string
+--------------------------------------------
+Name:                   email
+Model Type:             Simple
+Create Reason:  Declared
+Base Datatype:          string
+--------------------------------------------
+Name:                   url
+Model Type:             Empty
+Create Reason:  Declared
+Content Model:  EMPTY
+ComplexType:
+        TypeName:       ,C4
+Attributes:
+        Name:                   href
+        Type:                   CDATA
+        Default Type:   #DEFAULT
+        Value:                  http://
+        Base Datatype:          string
 
- --------------------------------------------
- Name:			link
- Model Type:		Empty
- Create Reason:	Declared
- Content Model:	EMPTY
- ComplexType:
- 	TypeName:	,C5
- Attributes:
- 	Name:			subordinates
- 	Type:			IDREFS
- 	Default Type:	#IMPLIED
- 	Base Datatype:		List
+--------------------------------------------
+Name:                   link
+Model Type:             Empty
+Create Reason:  Declared
+Content Model:  EMPTY
+ComplexType:
+        TypeName:       ,C5
+Attributes:
+        Name:                   subordinates
+        Type:                   IDREFS
+        Default Type:   #IMPLIED
+        Base Datatype:          List
 
- 	Name:			manager
- 	Type:			IDREF
- 	Default Type:	#IMPLIED
- 	Base Datatype:		IDREF
+        Name:                   manager
+        Type:                   IDREF
+        Default Type:   #IMPLIED
+        Base Datatype:          IDREF
 
- --------------------------------------------
+--------------------------------------------
               </source>
         </s3>
     </s2>

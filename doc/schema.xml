@@ -90,9 +90,9 @@ parser->parse(xmlFile);
                </p>
 
                <s3 title="Specifying Schema Grammar through method calls:">
-               <p>An application developer may use the methods <code>setExternalSchemaLocation</code>
-                if they use namespaces, and <code>setExternalNoNamespaceSchemaLocation</code> otherwise
-                to associate schemas with instance documents.
+               <p>An application developer may associate schemas with instance documents through
+                  methods <code>setExternalSchemaLocation</code> if they use namespaces, and
+                  <code>setExternalNoNamespaceSchemaLocation</code> otherwise.
                 (For SAX2XMLReader, use the properites:
                 "http://apache.org/xml/properties/schema/external-schemaLocation" and
                 "http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation")
@@ -116,7 +116,8 @@ parser.parse("test.xml");
 </source>
 
                <p>Here is an example with a target namespace. Note that it is an error to specify a
-                different namespace than the target namespace defined in the Schema.
+                different namespace in <code>setExternalSchemaLocation</code> than the target
+                namespace defined in the Schema.
                </p>
 <source>
 // Instantiate the DOM parser.
@@ -131,7 +132,7 @@ SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
 parser->setProperty(
        XMLString::transcode("http://apache.org/xml/properties/schema/external-SchemaLocation"),
        XMLString transcode("http://my.com personal.xsd http://my2.com test2.xsd"));
-parser.parse("test");
+parser.parse("test.xml");
 </source>
                </s3>
                <s3 title="Specifying Schema Grammar through attributes in the instance document:">
@@ -149,12 +150,13 @@ parser.parse("test");
 &lt;/personnel&gt;
 </source>
                <p>Here is an example with a target namespace. Note that it is an error to specify a
-                different namespace than the target namespace defined in the Schema.
+                different namespace in xsi:schemaLocation attribute than the target namespace
+                defined in the Schema.
                </p>
 <source>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;personnel xmlns="http://my.com"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:schemaLocation="http://my.com personal.xsd"&gt;
+	   xsi:schemaLocation="http://my.com personal.xsd http://my2.com test2.xsd"&gt;
 ...
 &lt;/personnel&gt;
 </source>
