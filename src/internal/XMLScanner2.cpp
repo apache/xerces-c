@@ -236,12 +236,11 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
             //
             //  Its not valid for this element, so issue an error if we are
-            //  validating. If its an XMLNS type attribute, then its not an
-            //  error for it not to be predefined.
+            //  validating.
             //
             if (wasAdded)
             {
-                if (fValidate && !isNSAttr)
+                if (fValidate)
                 {
                     // This is to tell the Validator that this attribute was
                     // faulted-in, was not an attribute in the attdef originally
@@ -267,7 +266,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 // If this attribute was faulted-in and first occurence,
                 // then emit an error
-                if (fValidate && !isNSAttr
+                if (fValidate
                     && attDef->getCreateReason() == XMLAttDef::JustFaultIn
                     && !attDef->getProvided())
                 {
@@ -628,6 +627,25 @@ bool XMLScanner::normalizeAttValue( const   XMLCh* const        attrName
             {
                 if (XMLReader::isWhitespace(nextCh))
                 {
+                    //
+                    // Check Validity Constraint for Standalone document declaration
+                    // XML 1.0, Section 2.9
+                    //
+                    //
+                    // Get attribute def - to check to see if it's declared externally or not
+                    //
+                    bool  added = false;
+                    const XMLAttDef* attDef = fElemStack.topElement()->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
+                    bool  isAttExternal = (attDef) ? attDef->isExternal() : false;
+
+                    if (fValidate && fStandalone && isAttExternal)
+                    {
+                         //
+                         // Can't have a standalone document declaration of "yes" if  attribute
+                         // values are subject to normalisation
+                         //
+                         fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                    }
                     curState = InWhitespace;
                     srcPtr++;
                     continue;
@@ -1546,14 +1564,6 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
     const unsigned int curReader = fReaderMgr.getCurrentReaderNum();
 
     //
-    // Get attribute def - to check to see if it's declared externally or not
-    //
-    bool  added = false;
-    const ElemStack::StackElem* topElem = fElemStack.topElement();
-    const XMLAttDef* attDef = topElem->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
-    bool  isAttExternal = (attDef) ? attDef->isExternal() : false;
-
-    //
     //  Loop until we get the attribute value. Note that we use a double
     //  loop here to avoid the setup/teardown overhead of the exception
     //  handler on every round.
@@ -1713,6 +1723,13 @@ bool XMLScanner::scanAttValue(  const   XMLCh* const        attrName
                         // Check Validity Constraint for Standalone document declaration
                         // XML 1.0, Section 2.9
                         //
+                        //
+                        // Get attribute def - to check to see if it's declared externally or not
+                        //
+                        bool  added = false;
+                        const XMLAttDef* attDef = fElemStack.topElement()->fThisElement->findAttr(attrName, 0, 0, 0, XMLElementDecl::FailIfNotFound, added);
+                        bool  isAttExternal = (attDef) ? attDef->isExternal() : false;
+
                         if (fValidate && fStandalone && isAttExternal)
                         {
                              //
