@@ -42,7 +42,7 @@ Options:
 
 The parser has intrinsic support for the following encodings:
     UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
-    WINDOWS-1252, IBM1140, IBM037.
+    WINDOWS-1252, IBM1140, IBM037, IBM1047.
 
 <?xml version="1.0" encoding="LATIN1"?>
 <personnel>
@@ -212,7 +212,7 @@ Options:
 
 The parser has intrinsic support for the following encodings:
     UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
-    WINDOWS-1252, IBM1140, IBM037.
+    WINDOWS-1252, IBM1140, IBM037, IBM1047.
 
 <?xml version="1.0" encoding="LATIN1"?>
 <personnel>
@@ -439,7 +439,7 @@ Options:
 
 The parser has intrinsic support for the following encodings:
     UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
-    WINDOWS-1252, IBM1140, IBM037.
+    WINDOWS-1252, IBM1140, IBM037, IBM1047.
 
 <?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
 <!DOCTYPE personnel SYSTEM "personal.dtd">

@@ -214,7 +214,7 @@ void usage()
             "  * = Default if not provided explicitly.\n\n"
             "The parser has intrinsic support for the following encodings:\n"
             "    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,\n"
-            "    WINDOWS-1252, IBM1140, IBM037.\n"
+            "    WINDOWS-1252, IBM1140, IBM037, IBM1047.\n"
           <<  XERCES_STD_QUALIFIER endl;
 }
 

@@ -92,7 +92,7 @@ HEADER_FILES=
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET= "//'${LOADMOD}(THREDTST)'"
+BATCH_TARGET= "//'${LOADMOD}(MEMHDTST)'"
 all:: makedir ${BATCH_TARGET}
 else
 all:: makedir ${EXEC}/${APP_NAME}

@@ -93,7 +93,7 @@ HEADER_FILES= ${SRC}/XSerializerTest.hpp ${SRC}/XSerializerHandlers.hpp
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET= "//'${LOADMOD}(THREDTST)'"
+BATCH_TARGET= "//'${LOADMOD}(XSERLTST)'"
 all:: makedir ${BATCH_TARGET}
 else
 all:: makedir ${EXEC}/${APP_NAME}

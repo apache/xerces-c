@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/02/06 15:04:16  cargilld
+ * Misc 390 changes.
+ *
  * Revision 1.14  2003/08/07 21:21:38  neilg
  * fix segmentation faults that may arise when the parser throws exceptions during document parsing.  In general, XMLPlatformUtils::Terminate() should not be called from within a catch statement.
  *
@@ -167,7 +170,7 @@ static void usage()
              "  * = Default if not provided explicitly.\n\n"
              "The parser has intrinsic support for the following encodings:\n"
              "    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,\n"
-             "    WINDOWS-1252, IBM1140, IBM037.\n"
+             "    WINDOWS-1252, IBM1140, IBM037, IBM1047.\n"
          <<  XERCES_STD_QUALIFIER endl;
 }
 
