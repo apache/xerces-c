@@ -16,8 +16,8 @@
 
 /**
  * $Log$
- * Revision 1.10  2004/11/18 01:35:20  cargilld
- * Performance improvement to utility classes from Christian Will.  Avoid unnecessary checks and replace with assert calls.
+ * Revision 1.11  2004/11/19 00:50:22  cargilld
+ * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
  *
  * Revision 1.9  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
@@ -73,6 +73,7 @@
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
+#include <new>
 #include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -172,7 +173,9 @@ template <class TElem> void NameIdPool<TElem>::removeAll()
             nextElem = curElem->fNext;
 
             delete curElem->fData;
-            delete curElem;
+            // destructor is empty...
+            // curElem->~NameIdPoolBucketElem();
+            fMemoryManager->deallocate(curElem);
 
             curElem = nextElem;
         }
@@ -255,11 +258,9 @@ unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
     }
 
     // Create a new bucket element and add it to the appropriate list
-    NameIdPoolBucketElem<TElem>* newBucket = new (fMemoryManager) NameIdPoolBucketElem<TElem>
-    (
-        elemToAdopt
-        , fBucketList[hashVal]
-    );
+    NameIdPoolBucketElem<TElem>* newBucket =
+        new (fMemoryManager->allocate(sizeof(NameIdPoolBucketElem<TElem>)))
+        NameIdPoolBucketElem<TElem>(elemToAdopt,fBucketList[hashVal]);
     fBucketList[hashVal] = newBucket;
 
     //
@@ -304,7 +305,7 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal)
     // Hash the key
     hashVal = XMLString::hash(key, fHashModulus, fMemoryManager);
 
-    assert(hashVal < fHashModulus);
+    assert(hashVal < fHashModulus);        
 
     // Search that bucket for the key
     NameIdPoolBucketElem<TElem>* curElem = fBucketList[hashVal];
@@ -323,6 +324,7 @@ findBucketElem(const XMLCh* const key, unsigned int& hashVal) const
 {
     // Hash the key
     hashVal = XMLString::hash(key, fHashModulus, fMemoryManager);
+
     assert(hashVal < fHashModulus);
 
     // Search that bucket for the key

@@ -16,8 +16,8 @@
 
 /**
  * $Log$
- * Revision 1.12  2004/11/18 01:35:20  cargilld
- * Performance improvement to utility classes from Christian Will.  Avoid unnecessary checks and replace with assert calls.
+ * Revision 1.13  2004/11/19 00:50:22  cargilld
+ * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
  *
  * Revision 1.11  2004/09/22 11:14:22  amassari
  * Reorder initialization of variables in constructor
@@ -80,6 +80,7 @@
 
 #include <xercesc/util/NullPointerException.hpp>
 #include <assert.h>
+#include <new>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -208,7 +209,9 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::removeAll()
                 delete curElem->fData;
 
             // Then delete the current element and move forward
-            delete curElem;
+            // destructor is empty...
+            // curElem->~RefHash2KeysTableBucketElem();
+            fMemoryManager->deallocate(curElem);
             curElem = nextElem;
         }
 
@@ -223,6 +226,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void
     // Hash the key
     unsigned int hashVal = fHash->getHashVal(key1, fHashModulus);
     assert(hashVal < fHashModulus);
+
     //
     //  Search the given bucket for this key. Keep up with the previous
     //  element so we can patch around it.
@@ -254,7 +258,10 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::transferElement(const void
             curElem = curElem->fNext;
 
             // Delete the current element
-            delete elemToDelete;
+            // delete elemToDelete;
+            // destructor is empty...
+            // curElem->~RefHash2KeysTableBucketElem();
+            fMemoryManager->deallocate(elemToDelete);           
         }
         else
         {
@@ -324,7 +331,9 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::put(void* key1, int key2, 
     }
      else
     {
-        newBucket = new (fMemoryManager) RefHash2KeysTableBucketElem<TVal>(key1, key2, valueToAdopt, fBucketList[hashVal]);
+        newBucket =
+            new (fMemoryManager->allocate(sizeof(RefHash2KeysTableBucketElem<TVal>)))
+            RefHash2KeysTableBucketElem<TVal>(key1, key2, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
     }
 }
@@ -407,8 +416,11 @@ removeBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
                 delete curElem->fData;
 
             // Delete the current element
-            delete curElem;
-
+            // delete curElem;
+            // destructor is empty...
+            // curElem->~RefHash2KeysTableBucketElem();
+            fMemoryManager->deallocate(curElem);
+            
             return;
         }
 

@@ -16,8 +16,8 @@
 
 /**
  * $Log$
- * Revision 1.14  2004/11/18 01:35:20  cargilld
- * Performance improvement to utility classes from Christian Will.  Avoid unnecessary checks and replace with assert calls.
+ * Revision 1.15  2004/11/19 00:50:22  cargilld
+ * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
  *
  * Revision 1.13  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
@@ -83,6 +83,7 @@
 
 #include <xercesc/util/NullPointerException.hpp>
 #include <assert.h>
+#include <new>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -251,7 +252,10 @@ template <class TVal> void RefHash3KeysIdPool<TVal>::removeAll()
                 delete curElem->fData;
 
             // Then delete the current element and move forward
-            delete curElem;
+            // delete curElem;
+            // destructor is empty...
+            // curElem->~RefHash3KeysTableBucketElem();
+            fMemoryManager->deallocate(curElem);
             curElem = nextElem;
         }
 
@@ -350,7 +354,9 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
 #if defined (XML_GCC_VERSION) && (XML_GCC_VERSION < 29600)
         newBucket = new RefHash3KeysTableBucketElem<TVal>(key1, key2, key3, valueToAdopt, fBucketList[hashVal]);
 #else
-        newBucket = new (fMemoryManager) RefHash3KeysTableBucketElem<TVal>(key1, key2, key3, valueToAdopt, fBucketList[hashVal]);
+        newBucket =
+            new (fMemoryManager->allocate(sizeof(RefHash3KeysTableBucketElem<TVal>)))
+            RefHash3KeysTableBucketElem<TVal>(key1, key2, key3, valueToAdopt, fBucketList[hashVal]);
 #endif
         fBucketList[hashVal] = newBucket;
     }

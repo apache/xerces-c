@@ -16,8 +16,8 @@
 
 /**
  * $Log$
- * Revision 1.10  2004/11/18 01:35:20  cargilld
- * Performance improvement to utility classes from Christian Will.  Avoid unnecessary checks and replace with assert calls.
+ * Revision 1.11  2004/11/19 00:50:22  cargilld
+ * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
  *
  * Revision 1.9  2004/09/08 13:56:23  peiyongz
  * Apache License Version 2.0
@@ -52,6 +52,7 @@
 
 #include <xercesc/util/NullPointerException.hpp>
 #include <assert.h>
+#include <new>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -153,7 +154,9 @@ template <class TVal> void ValueHashTableOf<TVal>::removeAll()
             nextElem = curElem->fNext;
 
             // delete the current element and move forward
-            delete curElem;
+            // destructor is empty...
+            // curElem->~ValueHashTableBucketElem();
+            fMemoryManager->deallocate(curElem);
             curElem = nextElem;
         }
 
@@ -208,7 +211,9 @@ template <class TVal> void ValueHashTableOf<TVal>::put(void* key, const TVal& va
     }
      else
     {
-        newBucket = new (fMemoryManager) ValueHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
+        newBucket =            
+            new (fMemoryManager->allocate(sizeof(ValueHashTableBucketElem<TVal>)))
+            ValueHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
     }
 }
@@ -287,7 +292,10 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
             }
 
             // Delete the current element
-            delete curElem;
+            // delete curElem;
+			// destructor is empty...
+            // curElem->~ValueHashTableBucketElem();
+            fMemoryManager->deallocate(curElem);                        
 
             return;
         }

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/11/19 00:50:22  cargilld
+ * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
+ *
  * Revision 1.12  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -101,7 +104,7 @@ template <class TVal> struct RefHash2KeysTableBucketElem;
 //  This should really be a nested class, but some of the compilers we
 //  have to support cannot deal with that!
 //
-template <class TVal> struct RefHash2KeysTableBucketElem : public XMemory
+template <class TVal> struct RefHash2KeysTableBucketElem
 {
     RefHash2KeysTableBucketElem(void* key1, int key2, TVal* const value, RefHash2KeysTableBucketElem<TVal>* next)
 		: fData(value), fNext(next), fKey1(key1), fKey2(key2)

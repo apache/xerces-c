@@ -45,13 +45,14 @@ template <class TVal> struct ValueHashTableBucketElem;
 //  This should really be a nested class, but some of the compilers we
 //  have to support cannot deal with that!
 //
-template <class TVal> struct ValueHashTableBucketElem : public XMemory
+template <class TVal> struct ValueHashTableBucketElem
 {
     ValueHashTableBucketElem(void* key, const TVal& value, ValueHashTableBucketElem<TVal>* next)
 		: fData(value), fNext(next), fKey(key)
         {
         }
     ValueHashTableBucketElem(){};
+    ~ValueHashTableBucketElem(){};
 
     TVal                           fData;
     ValueHashTableBucketElem<TVal>* fNext;

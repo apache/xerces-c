@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/11/19 00:50:22  cargilld
+ * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
+ *
  * Revision 1.11  2004/09/23 07:10:13  amassari
  * Removed const from variable declaration (jira#1259)
  *
@@ -117,7 +120,7 @@ template <class TElem> class NameIdPoolEnumerator;
 //  lists for each bucket. Because some of the compilers we have to support
 //  are totally brain dead, it cannot be a nested class as it should be.
 //
-template <class TElem> struct NameIdPoolBucketElem : public XMemory
+template <class TElem> struct NameIdPoolBucketElem
 {
 public :
     NameIdPoolBucketElem

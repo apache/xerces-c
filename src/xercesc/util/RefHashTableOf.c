@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.18  2004/11/19 00:50:22  cargilld
+ * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
+ *
  * Revision 1.17  2004/11/18 01:35:20  cargilld
  * Performance improvement to utility classes from Christian Will.  Avoid unnecessary checks and replace with assert calls.
  *
@@ -117,6 +120,7 @@
 
 #include <xercesc/util/NullPointerException.hpp>
 #include <assert.h>
+#include <new>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -254,7 +258,10 @@ template <class TVal> void RefHashTableOf<TVal>::removeAll()
                 delete curElem->fData;
 
             // Then delete the current element and move forward
-            delete curElem;
+ 	        // delete curElem;
+            // destructor doesn't do anything...
+			// curElem->~RefHashTableBucketElem();
+            fMemoryManager->deallocate(curElem);            
             curElem = nextElem;
         }
 
@@ -302,7 +309,10 @@ orphanKey(const void* const key)
             retVal = curElem->fData;
 
             // Delete the current element
-            delete curElem;
+            // delete curElem;
+            // destructor doesn't do anything...
+			// curElem->~RefHashTableBucketElem();
+            fMemoryManager->deallocate(curElem);            
             break;
         }
 
@@ -440,7 +450,10 @@ template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valu
     }
      else
     {
-        newBucket = new (fMemoryManager) RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
+        //newBucket = new (fMemoryManager) RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
+		newBucket =
+             new (fMemoryManager->allocate(sizeof(RefHashTableBucketElem<TVal>)))
+             RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);        
         fBucketList[hashVal] = newBucket;
         fCount++;
     }
@@ -568,7 +581,10 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
                 delete curElem->fData;
 
             // Delete the current element
-            delete curElem;
+            // delete curElem;
+            // destructor doesn't do anything...
+			// curElem->~RefHashTableBucketElem();
+            fMemoryManager->deallocate(curElem);            
 
             fCount--;
 
