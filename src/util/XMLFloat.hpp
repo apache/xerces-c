@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/11/28 15:39:26  peiyongz
+ * return Type& for operator=
+ *
  * Revision 1.8  2001/11/22 20:23:00  peiyongz
  * _declspec(dllimport) and inline warning C4273
  *
@@ -135,7 +138,7 @@ private:
     // assignment ctor
     //
     XMLFloat(const XMLFloat& toCopy);
-    operator=(const XMLFloat& toAssign);
+    XMLFloat& operator=(const XMLFloat& toAssign);
 
 };
 
@@ -147,3 +150,4 @@ inline int XMLFloat::compareValues(const XMLFloat* const lValue
 }
 
 #endif
+

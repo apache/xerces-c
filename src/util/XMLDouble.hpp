@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/11/28 15:39:26  peiyongz
+ * return Type& for operator=
+ *
  * Revision 1.10  2001/11/22 20:23:00  peiyongz
  * _declspec(dllimport) and inline warning C4273
  *
@@ -140,7 +143,7 @@ private:
     // assignment ctor
     //
      XMLDouble(const XMLDouble& toCopy);
-     operator=(const XMLDouble& toAssign);
+     XMLDouble& operator=(const XMLDouble& toAssign);
 
 };
 
@@ -152,3 +155,4 @@ inline int XMLDouble::compareValues(const XMLDouble* const lValue
 }
 
 #endif
+

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/11/28 15:39:26  peiyongz
+ * return Type& for operator=
+ *
  * Revision 1.3  2001/11/22 21:39:00  peiyongz
  * Allow "0.0" to be a valid lexcial representation of ZERO.
  *
@@ -164,7 +167,7 @@ private:
     // assignment ctor
     //
     XMLAbstractDoubleFloat(const XMLAbstractDoubleFloat& toCopy);
-    operator=(const XMLAbstractDoubleFloat& toAssign);
+    XMLAbstractDoubleFloat& operator=(const XMLAbstractDoubleFloat& toAssign);
 
     inline bool           isSpecialValue() const;
 
