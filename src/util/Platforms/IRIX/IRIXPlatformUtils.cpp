@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/12/11 14:46:39  tng
+ * [Bug 5320] 1.5.2 Build fails on IRIX.  The variable "atomicOpsMutex" has been defined twice.  Fixed by Christopher Just.
+ *
  * Revision 1.13  2001/10/23 23:10:20  peiyongz
  * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
  *
@@ -597,9 +600,9 @@ void* XMLPlatformUtils::makeMutex()
                       XMLExcepts::Mutex_CouldNotCreate);
     }
     else {
-        // arena==0; therefore platformInit hasn't been called. 
+        // arena==0; therefore platformInit hasn't been called.
         // it's important that we fail quietly here so that we don't
-        // throw an exception when trying to initizlize the 
+        // throw an exception when trying to initizlize the
         // atomicOpsMutex, which we re-initizlize in platformInit anyay.
         return 0;
     }
@@ -646,8 +649,6 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
-
-static XMLMutex atomicOpsMutex;
 
 void XMLPlatformUtils::platformInit()
 {
