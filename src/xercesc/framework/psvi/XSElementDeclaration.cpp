@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/02 01:27:01  knoaman
+ * Properly set fAnnotation data member
+ *
  * Revision 1.8  2003/11/25 20:37:40  jberry
  * Cleanup build errors/warnings from CodeWarrior
  *
@@ -119,6 +122,7 @@ XSElementDeclaration::XSElementDeclaration
     , fTypeDefinition(typeDefinition)
     , fEnclosingTypeDefinition(enclosingTypeDefinition)
     , fSubstitutionGroupAffiliation(substitutionGroupAffiliation)
+    , fAnnotation(annot)
     , fIdentityConstraints(identityConstraints)
 {
     // set block and final information
