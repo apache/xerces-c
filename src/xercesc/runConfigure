@@ -387,14 +387,17 @@ export THREADS
 #
 if test $bitsToBuild = 64; then
     bitstobuildDefines=" -DXML_BITSTOBUILD_64 " 
+    bitstobuildLink=" "
     if test $platform; then
         case $platform in
            solaris)
               bitstobuildDefines=" $bitstobuildDefines -xarch=v9 " ;;
            aix)
-              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
+              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 "
+              bitstobuildLink=" -X64" ;;
            hp-11)
-              bitstobuildDefines=" $bitstobuildDefines +DD64 " ;;
+              bitstobuildDefines=" $bitstobuildDefines +DA2.0W " 
+              bitstobuildLink=" +DA2.0W" ;;
            linux)
               bitstobuildDefines=" $bitstobuildDefines " ;;
            *)
@@ -403,6 +406,7 @@ if test $bitsToBuild = 64; then
     fi
 elif test $bitsToBuild = 32; then
     bitstobuildDefines=" "
+    bitstobuildLink=" "
 else
     echo "I do not recognize the bitsToBuild '$bitsToBuild'. Please type '${0} -h' for help."
     exit ${ERROR_EXIT_CODE};
@@ -594,7 +598,7 @@ if [ $platform = "tru64" -a $CXX = "g++" ]; then
     export CXXFLAGS CFLAGS
 fi
 
-LDFLAGS="$LDFLAGS $linkeroptions"
+LDFLAGS="$LDFLAGS $linkeroptions $bitstobuildLink"
 export LDFLAGS
 
 LIBS="$transcodingLibs $threadingLibs $netaccessorLibs"
