@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.5  2002/09/04 18:17:55  tng
+  * Do not set IDREF to used during prevalidation.
+  *
   * Revision 1.4  2002/08/20 16:54:11  tng
   * [Bug 6251] Info during compilation.
   *
@@ -277,6 +280,7 @@ public:
     (
         const   XMLAttDef*                  attDef
         , const XMLCh* const                attrValue
+        , bool                              preValidation = false
     ) = 0;
 
     /**

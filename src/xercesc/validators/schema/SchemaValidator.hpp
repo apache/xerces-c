@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/09/04 18:17:41  tng
+ * Do not set IDREF to used during prevalidation.
+ *
  * Revision 1.7  2002/07/11 18:55:45  knoaman
  * Add a flag to the preContentValidation method to indicate whether to validate
  * default/fixed attributes or not.
@@ -182,6 +185,7 @@ public:
     (
         const   XMLAttDef*                  attDef
         , const XMLCh* const                attrValue
+        , bool                              preValidation = false
     );
 
     virtual void validateElement

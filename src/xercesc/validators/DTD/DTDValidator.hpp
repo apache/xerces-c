@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/09/04 18:17:49  tng
+ * Do not set IDREF to used during prevalidation.
+ *
  * Revision 1.3  2002/08/22 15:05:40  tng
  * Remove unused parameter variables in inline functions.
  *
@@ -173,6 +176,7 @@ public:
     (
         const   XMLAttDef*                  attDef
         , const XMLCh* const                attrValue
+        , bool                              preValidation = false
     );
     virtual void validateElement
     (

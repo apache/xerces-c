@@ -199,7 +199,8 @@ bool DTDValidator::requiresNamespaces() const
 
 void
 DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
-                                , const XMLCh* const    attrValue)
+                                , const XMLCh* const    attrValue
+                                , bool                  preValidation)
 {
     //
     //  Get quick refs to lost of of the stuff in the passed objects in
@@ -215,8 +216,11 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
     //
     //  If the default type is fixed, then make sure the passed value maps
     //  to the fixed value.
+    //  If during preContentValidation, the value we are validating is the fixed value itself
+    //  so no need to compare.
+    //  Only need to do this for regular attribute value validation
     //
-    if (defType == XMLAttDef::Fixed)
+    if (defType == XMLAttDef::Fixed && !preValidation)
     {
         if (XMLString::compareString(attrValue, valueText))
             emitError(XMLValid::NotSameAsFixedValue, fullName, attrValue, valueText);
@@ -373,8 +377,11 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
                 //
                 if (type == XMLAttDef::ID)
                     find->setDeclared(true);
-                else
-                    find->setUsed(true);
+                else {
+                    if (!preValidation) {
+                        find->setUsed(true);
+                    }
+                }
             }
         }
          else if ((type == XMLAttDef::Entity) || (type == XMLAttDef::Entities))
@@ -576,6 +583,7 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
                 (
                     &curAttDef
                     , curAttDef.getValue()
+                    , true
                 );
             }
         }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2002/09/04 18:17:41  tng
+ * Do not set IDREF to used during prevalidation.
+ *
  * Revision 1.13  2002/07/11 18:55:44  knoaman
  * Add a flag to the preContentValidation method to indicate whether to validate
  * default/fixed attributes or not.
@@ -407,7 +410,8 @@ bool SchemaValidator::requiresNamespaces() const
 }
 
 void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
-                                       , const XMLCh* const attrValue)
+                                       , const XMLCh* const attrValue
+                                       , bool               preValidation)
 {
     //
     //  Get quick refs to lot of the stuff in the passed objects in
@@ -422,7 +426,11 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
     //  If the default type is fixed, then make sure the passed value maps
     //  to the fixed value.
     //
-    if (defType == XMLAttDef::Fixed || defType == XMLAttDef::Required_And_Fixed)
+    //  If during preContentValidation, the value we are validating is the fixed value itself
+    //  so no need to compare.
+    //  Only need to do this for regular attribute value validation
+    //
+    if ((defType == XMLAttDef::Fixed || defType == XMLAttDef::Required_And_Fixed) && !preValidation)
     {
         const XMLCh* const valueText = attDef->getValue();
         if (XMLString::compareString(attrValue, valueText))
@@ -454,8 +462,13 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
                     ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
                 else if (itemDTVType == DatatypeValidator::ID)
                     ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
-                else if (itemDTVType == DatatypeValidator::IDREF)
-                    ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                else if (itemDTVType == DatatypeValidator::IDREF) {
+                    // if in prevalidatoin, do not add attDef to IDREFList
+                    if (preValidation)
+                        ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(0);
+                    else
+                        ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                }
             }
             else if (attDefDVType == DatatypeValidator::Union) {
                 RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)attDefDV)->getMemberTypeValidators();
@@ -467,16 +480,26 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
                         ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
                     else if (memberDTVType == DatatypeValidator::ID)
                         ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
-                    else if (memberDTVType == DatatypeValidator::IDREF)
-                        ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                    else if (memberDTVType == DatatypeValidator::IDREF) {
+                        // if in prevalidatoin, do not add attDef to IDREFList
+                        if (preValidation)
+                            ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(0);
+                        else
+                            ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                    }
                 }
             }
             else if (attDefDVType == DatatypeValidator::ENTITY)
                 ((ENTITYDatatypeValidator*)attDefDV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
             else if (attDefDVType == DatatypeValidator::ID)
                 ((IDDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
-            else if (attDefDVType == DatatypeValidator::IDREF)
-                ((IDREFDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
+            else if (attDefDVType == DatatypeValidator::IDREF) {
+                // if in prevalidatoin, do not add attDef to IDREFList
+                if (preValidation)
+                    ((IDREFDatatypeValidator*)attDefDV)->setIDRefList(0);
+                else
+                    ((IDREFDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
+            }
 
             // now validate the attribute value
             // if notation, need to bind URI to notation first
@@ -844,6 +867,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
                         (
                             &curAttDef
                             , curAttDef.getValue()
+                            , true
                         );
                     }
                 }
