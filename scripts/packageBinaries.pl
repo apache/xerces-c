@@ -675,9 +675,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     print ("\n\nCopying binary outputs ...\n");
     psystem("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
 
-    psystem("cp -f $XERCESCROOT/lib/*.a $targetdir/lib");
-    psystem("cp -f $XERCESCROOT/lib/*.so $targetdir/lib");
-    psystem("cp -f $XERCESCROOT/lib/*.sl $targetdir/lib");
+    psystem("cp -f $XERCESCROOT/lib/* $targetdir/lib");
 
     psystem("rm -rf $targetdir/bin/obj");
 
