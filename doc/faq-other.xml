@@ -1,141 +1,157 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="no"?>
-<!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
-
+<!DOCTYPE faqs SYSTEM "dtd/faqs.dtd">
 <faqs title="Other &XercesCName; Questions">
 
-    <faq title="I can't use C++. Do you have a Java version?">
-        <q>I can't use C++. Do you have a Java version?</q>
-        <a>
+  <faq title="I can't use C++. Do you have a Java version?">
 
-            <p>Yes. The Xerces family of products also has a Java
-            version.  More information is available at: <jump
-            href="http://xml.apache.org/xerces-j/index.html">http://xml.apache.org/xerces-j/index.html</jump></p>
+    <q>I can't use C++. Do you have a Java version?</q>
 
-        </a>
-    </faq>
+    <a>
 
+      <p>Yes. The Xerces family of products also has a Java version. More
+        information is available at:
+        <jump href="http://xml.apache.org/xerces-j/index.html">
+        http://xml.apache.org/xerces-j/index.html</jump></p>
 
+    </a>
+  </faq>
 
-    <faq title="What are the differences between Xerces-C and IBM XML4C?">
-        <q>"What are the differences between Xerces-C and IBM XML4C?"</q>
-        <a>
-            <p>XML4C from IBM is based on the Xerces-C code.  The
-               only difference is that XML4C is bundled together
-               with IBM's ICU classes for Unicode support, which
-               allow it to support a wider range of character
-               set encodings.</p>
-        </a>
-    </faq>
-    <faq title="Is there any kind of support available for Xerces-C/XML4C?">
-        <q>Is there any kind of support available for Xerces-C/XML4C?</q>
-        <a>
+  <faq title="What are the differences between &XercesCName; and IBM XML4C?">
 
-            <p>&XercesCFullName; somes with <em>no</em> formal support.  </p>
-            <p>Every volunteer project obtains its strength from the
-            people involved in it. Mailing lists provide a simple and
-            effective communication mechanism.   You are welcome to join
-            any of these mailing lists (or all of them if you wish).
-            You can choose to lurk, or actively participate. It's up to you.
-            Before you join these lists, you should look over the resources
-            in the Reference Library section</p>
+    <q>What are the differences between &XercesCName; and IBM XML4C?</q>
 
+    <a>
 
-            <p>Instructions for subscribing are at
-            <jump href="http://xml.apache.org/mail.html">http://xml.apache.org/mail.html</jump>.
-               Archives of the lists are available from
-               <jump href="http://archive.covalent.net">http://archive.covalent.net</jump>
-            </p>
-            <p>
-            IBM also maintains a newsgroup for discussion of XML4C.  The
-            news server is "news.alphaworks.ibm.com", and the group is
-            "XML-for-C++".</p>
-        </a>
-    </faq>
+      <p>XML4C from IBM is based on the &XercesCName; code. The only difference
+        between &XercesCName; and XML4C is that XML4C is bundled with IBM's ICU classes
+        for Unicode support, which allows it to support a wider range of character set
+        encodings.</p>
 
-    <faq title="Where can I find additional information on XML?">
+    </a>
+  </faq>
+
+  <faq title="Where can I find additional information on XML?">
+
     <q>Where can I find additional information on XML?</q>
+
     <a>
-        <p>The Web.  <jump href="http://www.oasis-open.org/cover/xml.html">
-        http://www.oasis-open.org/cover/xml.html</jump> is an excellent
-        place to start, with links to overviews, FAQs, specifications,
-        industry news, applications and other software, related standards,
-        etc.</p>
-    </a>
-    </faq>
 
-    <faq title="I found a defect - how do I report it?">
-        <q>I found a defect - how do I report it?</q>
-        <a>
-
-            <p>Check the bug list at
-            <jump href="http://xml.apache.org/xerces-c/index.html">Apache</jump>.
-            The problem may already be known, or even fixed.
-           </p>
-
-            <p>Otherwise, send the bugs to either the xerces-c-dev
-            mailing list (preferred) or the IBM Alphaworks news group, as
-            desribed above.  The more information that you can provide,
-            the better the chance of understanding what happened, or
-            what the problem really is.  Please include the version of Xerces-c or XML4C,
-            what kind of machine, including Operating System and OS Verion Number,
-            whether you built the xerces library yourself or used the binary distribution,
-            the XML document (or excerpt) that fails, the C++ application code that failed,
-            and what happened.
-            </p>
-
-        </a>
-    </faq>
-
-
-
-
-    <faq title="I have a patch to the Xerces C source code.  How do I submit it?">
-        <q>I have a patch to the Xerces C source code.  How do I submit it?</q>
-        <a>
-            <p>Mail it to the xerces-c-dev mailing list at Apache  (You must be
-               a subscriber to post to this list, but if you're considering changing
-               the code you really want to be.)  There are no set
-               rules about how or what must be included - if you've fixed a problem
-               or enhanced the code in some way, we really would like to get the
-               changes back and will take them in any reasonable form.</p>
-
-            <p>Generally a diff of the changed files against the current sources
-               from CVS is good, along with some kind of description of what the
-               change is.  (Working with the current sources is important)</p>
-
-        </a>
-    </faq>
-
-
-    <faq title="How do I port Xerces-C to a new platform?">
-    <q>How do I port Xerces-C to a new platform?</q>
-    <a>
-        <p>(from Dean Roddey) The primary work of a port involved creating:</p>
-
-        <ol>
-        <li>A new compiler header for the compiler</li>
-        <li>A new platform utilities file that implements the little bit of system
-        access we need, and an associated header.</li>
-        <li>Updating XercesDefs.hpp and AutoSense.hpp to get your new headers
-        included when compiled under your OS and compiler.</li>
-        </ol>
-
-        <p>Other concerns are:</p>
-
-        <ol>
-        <li>Does ICU compile on your platform? If not, then you'll need to do a
-        transcoder implementation that uses your local transcoding services. I
-        assume that the Iconv transcoder would work for you, though perhaps with
-        some modifications.</li>
-
-        <li>What message loader will you use. For starting off, you can use the 'in
-        memory' one which is very simple and easy. Then, once you get going, you'll
-        want to possibly adapt the message catalog message loader or write one of
-        your own that uses local services of some sort.</li>
-        </ol>
+    <p>The Web. <jump href="http://www.oasis-open.org/cover/xml.html">
+      http://www.oasis-open.org/cover/xml.html</jump> is an excellent place to start,
+      with links to overviews, FAQs, specifications, industry news, applications and
+      other software, related standards, etc.</p>
 
     </a>
-    </faq>
+  </faq>
 
+  <faq title="How do I port &XercesCName; to a new platform?">
+
+    <q>How do I port &XercesCName; to a new platform?</q>
+
+    <a>
+
+      <p>(from Dean Roddey)</p>
+
+      <p>The primary work of a port involves:</p>
+
+      <ol>
+        <li>Creating a new compiler header for the compiler.</li>
+        <li>Creating a new platform utilities file that implements the little bit
+          of system access we need, and an associated header.</li>
+        <li>Updating <code>XercesDefs.hpp</code> and <code>AutoSense.hpp</code> to include your new headers when compiled under your OS and
+          compiler.</li>
+      </ol>
+
+      <p>Other concerns are:</p>
+
+      <ul>
+        <li>Does ICU compile on your platform? If not, then you'll need to create
+          a transcoder implementation that uses your local transcoding services. The
+          Iconv transcoder should work for you, though perhaps with some
+          modifications.</li>
+        <li>What message loader will you use? To get started, you can use the "in
+          memory" one, which is very simple and easy. Then, once you get going, you may
+          want to adapt the message catalog message loader, or write one of your own that
+          uses local services.</li>
+      </ul>
+
+    </a>
+  </faq>
+
+  <faq title="Is there any kind of support available for &XercesCName;/XML4C?">
+
+    <q>Is there any kind of support available for &XercesCName;/XML4C?</q>
+
+    <a>
+
+    <p>&XercesCName; comes with <em>no</em> formal support.</p>
+
+      <p>Every volunteer project obtains its strength from the people involved in
+        it. Mailing lists provide a simple and effective communication mechanism. You
+        are welcome to join any of these mailing lists (or all of them if you wish).
+        You can choose to lurk, or to actively participate. It's up to you. Before you
+        join these lists, you should look over the resources in the Reference Library
+        section</p>
+
+      <p>Instructions for subscribing are at
+        <jump
+         href="http://xml.apache.org/mail.html">http://xml.apache.org/mail.html</jump>.
+        Archives of the lists are available from
+        <jump href="http://archive.covalent.net">http://archive.covalent.net</jump>
+        </p>
+
+      <p>IBM also maintains a newsgroup for discussion of XML4C. The news server
+        is "news.alphaworks.ibm.com" and the group is "XML-for-C++".</p>
+
+    </a>
+  </faq>
+
+  <faq title="I found a defect -- how do I report it?">
+
+    <q>I found a defect -- how do I report it?</q>
+
+    <a>
+
+      <p>Check the bug list at the
+        <jump href="http://xml.apache.org/xerces-c/index.html">Apache &XercesCName; Web
+        site</jump>. The problem may already be known, or even fixed. </p>
+
+      <p>Otherwise, send the bugs to either the xerces-c-dev mailing list
+        (preferred) or the IBM Alphaworks news group, as described above. The more
+        information that you provide, the better our chance of understanding what
+        happened, or what the problem really is. Please include:</p>
+
+      <ul>
+        <li>The version of &XercesCName; or XML4C</li>
+        <li>What kind of machine</li>
+        <li>Operating system and OS version number</li>
+        <li>Whether you built the &XercesCName; library yourself or used the
+          binary distribution</li>
+        <li>The XML document (or excerpt) that fails</li>
+        <li>The C++ application code that failed</li>
+        <li>What happened</li>
+      </ul>
+
+    </a>
+  </faq>
+
+  <faq title="I have a patch to the &XercesCName; source code. How do I submit it?">
+
+    <q>I have a patch to the &XercesCName; source code. How do I submit it?</q>
+
+    <a>
+
+      <p>Mail it to the xerces-c-dev mailing list at Apache. (You must be a
+        subscriber to post to this list. But if you're considering changing the code
+        you really want to be a subscriber, in any case.) There are no set rules about
+        how or what must be included -- if you've fixed a problem or enhanced the code
+        in some way, we really would like to get your changes, and will take them in
+        any reasonable form.</p>
+
+      <p>Generally a diff of the changed files against the current sources from
+        CVS is good, along with some kind of description of what the change is.
+        (Working with the current sources is important!)</p>
+
+    </a>
+  </faq>
 </faqs>
-
