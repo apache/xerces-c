@@ -1452,6 +1452,7 @@ trap 'rm -fr `echo "Makefile \
 SAXCount/Makefile \
 DOMCount/Makefile \
 SAXPrint/Makefile \
+SAX2Print/Makefile \
 DOMPrint/Makefile \
 MemParse/Makefile \
 Redirect/Makefile \
@@ -1552,6 +1553,7 @@ CONFIG_FILES=\${CONFIG_FILES-"Makefile \
 SAXCount/Makefile \
 DOMCount/Makefile \
 SAXPrint/Makefile \
+SAX2Print/Makefile \
 DOMPrint/Makefile \
 MemParse/Makefile \
 Redirect/Makefile \
