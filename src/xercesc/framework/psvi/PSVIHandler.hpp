@@ -16,6 +16,9 @@
 
  /*
   * $Log$
+  * Revision 1.10  2004/09/23 21:22:15  peiyongz
+  * Documentation
+  *
   * Revision 1.9  2004/09/22 20:38:45  peiyongz
   * provide default implementation and documentation
   *
@@ -96,6 +99,18 @@ public:
       * Receive notification of partial PSVI properties of an element.
       * This callback is made right after the psviAttributes
       * call for non-empty element. 
+      *
+      *  The PSVIElement passed in has all fields properly set and it
+      *  can be safely accessed the same way as the one passed in handleElementPSVI.
+      *  However, fields listed below always have default values.
+      *
+      *  getValidity()	              PSVIItem::VALIDITY_NOTKNOWN
+      *  getValidationAttemped()      PSVIItem::VALIDATION_NONE
+      *  getMemberTypeDefinition()    0
+      *  getSchemaNormalizedValue()   0
+      *  getCanonicalRepresentation() 0
+      *  getNotationDeclaration()     0
+      *
       *
       * @param  localName    The name of the element upon which start tag 
       *                      these attributes were encountered.
