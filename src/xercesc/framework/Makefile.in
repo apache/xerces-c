@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2003/09/30 18:14:34  peiyongz
+# Implementation of Serialization/Deserialization
+#
 # Revision 1.11  2003/09/18 20:32:02  peiyongz
 # BinOutputStream
 #
@@ -215,6 +218,7 @@ FRAMEWORK_CPP_OBJECTS = \
 	XMLFormatter.$(TO) \
 	XMLNotationDecl.$(TO) \
 	XMLRecognizer.$(TO) \
+	XMLRefInfo.$(TO) \
 	XMLValidator.$(TO)
 
 all::	includes $(FRAMEWORK_CPP_OBJECTS) psvi

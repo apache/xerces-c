@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/09/30 18:17:53  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.5  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -191,6 +194,17 @@ void IDREFDatatypeValidator::checkValueSpace(const XMLCh* const content)
                 , content);
     }
 
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(IDREFDatatypeValidator)
+
+void IDREFDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+    StringDatatypeValidator::serialize(serEng);
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/09/30 18:17:53  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.7  2003/09/29 21:47:35  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -393,14 +396,12 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
             break;
         case Name: 
             NameDatatypeValidator* namedv;
-            //TODO
-            //serEng>>namedv;
+            serEng>>namedv;
             fBaseValidator = namedv;
             break;
         case NCName:  
             NCNameDatatypeValidator* ncnamedv;
-            //TODO
-            //serEng>>ncnamedv;
+            serEng>>ncnamedv;
             fBaseValidator = ncnamedv;
             break;
         case Boolean: 
@@ -495,20 +496,17 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
             break;
         case ID:           
             IDDatatypeValidator* iddv;
-            //TODO
-            //serEng>>iddv;
+            serEng>>iddv;
             fBaseValidator = iddv;
             break;
         case IDREF:         
             IDREFDatatypeValidator* idrefdv;
-            //TODO
-            //serEng>>idrefdv;
+            serEng>>idrefdv;
             fBaseValidator = idrefdv;
             break;
         case ENTITY:       
             ENTITYDatatypeValidator* entitydv;
-            //TODO
-            //serEng>>entitydv;
+            serEng>>entitydv;
             fBaseValidator = entitydv;
             break;
         case NOTATION:     

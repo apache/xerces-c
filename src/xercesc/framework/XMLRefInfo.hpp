@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/09/30 18:14:34  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.7  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -105,6 +108,8 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 /**
@@ -121,7 +126,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *  not enabled/supported by the validator, or it will be in the form
  *  {url}name if namespace processing is enabled.
  */
-class XMLPARSER_EXPORT XMLRefInfo : public XMemory
+class XMLPARSER_EXPORT XMLRefInfo : public XSerializable, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -159,11 +164,20 @@ public :
     void setDeclared(const bool newValue);
     void setUsed(const bool newValue);
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLRefInfo)
+
+    XMLRefInfo
+    (
+      MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    XMLRefInfo();
     XMLRefInfo(const XMLRefInfo&);
     XMLRefInfo& operator=(XMLRefInfo&);
 
