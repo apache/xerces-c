@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/05/31 20:59:40  peiyongz
+ * Add "introduced in DOM3"
+ *
  * Revision 1.2  2002/05/30 16:25:33  tng
  * Fix doxygen warning message.
  *
@@ -66,7 +69,10 @@
  */
 
 /**
- *  DOMWriter provides an API for serializing (writing) a DOM document out in
+ *
+ *  Introduced in DOM Level 3
+ *
+ * DOMWriter provides an API for serializing (writing) a DOM document out in
  * an XML document. The XML data is written to an output stream, the type of
  * which depends on the specific language bindings in use. During
  * serialization of XML data, namespace fixup is done when possible.
@@ -303,6 +309,8 @@ public:
  	/** @name Query */
  	//@{
     /**
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      * Query whether setting a feature to a specific value is supported.
      * <br>The feature name has the same form as a DOM hasFeature string.
      * @param featName The feature name, which is a DOM has-feature style string.
@@ -320,6 +328,8 @@ public:
  	/** @name setter */
  	//@{
     /**
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      * Set the state of a feature.
      * <br>The feature name has the same form as a DOM hasFeature string.
      * <br>It is possible for a <code>DOMWriter</code> to recognize a feature
@@ -337,6 +347,8 @@ public:
                                      , bool               state) = 0;
 
     /**
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      *  The character encoding in which the output will be written.
      * <br> The encoding to use when writing is determined as follows: If the
      * encoding attribute has been set, that value will be used.If the
@@ -349,6 +361,8 @@ public:
      virtual void           setEncoding(const XMLCh* const encoding) = 0;
 
     /**
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      *  The end-of-line sequence of characters to be used in the XML being
      * written out. The only permitted values are these:
      * <dl>
@@ -373,6 +387,8 @@ public:
      virtual void          setNewLine(const XMLCh* const newLine) = 0;
 
     /**
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      *  The error handler that will receive error notifications during
      * serialization. The node where the error occured is passed to this
      * error handler, any modification to nodes from within an error
@@ -388,6 +404,8 @@ public:
 	/** @name Getter functions */
     //@{
     /**
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      * Look up the value of a feature.
      * <br>The feature name has the same form as a DOM hasFeature string
      * @param featName The feature name, which is a string with DOM has-feature
@@ -413,6 +431,8 @@ public:
     /** @name Write function */
     //@{
     /**
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      * Write out the specified node as described above in the description of
      * <code>DOMWriter</code>. Writing a Document or Entity node produces a
      * serialized form that is well formed XML. Writing other node types
@@ -435,6 +455,8 @@ public:
                                , const DOMNode         &nodeToWrite) = 0;
 
     /**
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      *  Serialize the specified node as described above in the description of
      * <code>DOMWriter</code>. The result of serializing the node is
      * returned as a string. Writing a Document or Entity node produces a

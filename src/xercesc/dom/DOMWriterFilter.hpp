@@ -57,12 +57,20 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/05/31 20:59:40  peiyongz
+ * Add "introduced in DOM3"
+ *
  * Revision 1.2  2002/05/30 16:25:33  tng
  * Fix doxygen warning message.
  *
  * Revision 1.1  2002/05/28 22:38:55  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
+ */
+
+/**
+ *
+ *  Introduced in DOM Level 3
  */
 
 //////////////////////////////////////////////////////////////////////
