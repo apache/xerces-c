@@ -666,6 +666,15 @@ int             DOMDocumentImpl::changes() const{
            void*            DOMDocumentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                      {return fNode.setUserData(key, data, handler); };
            void*            DOMDocumentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
+           const XMLCh*     DOMDocumentImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
+           short            DOMDocumentImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           const XMLCh*     DOMDocumentImpl::getTextContent() const                  {return fNode.getTextContent(); };
+           void             DOMDocumentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
+           const XMLCh*     DOMDocumentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             DOMDocumentImpl::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     DOMDocumentImpl::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           DOMNode*         DOMDocumentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+
 
 
 
@@ -856,7 +865,43 @@ void DOMDocumentImpl::setDocumentURI(const XMLCh* documentURI){
     fDocumentURI = cloneString(documentURI);
 }
 
-//Introduced in DOM Level 2
+bool DOMDocumentImpl::getStrictErrorChecking() const {
+    return getErrorChecking();
+}
+
+void DOMDocumentImpl::setStrictErrorChecking(bool strictErrorChecking) {
+    setErrorChecking(strictErrorChecking);
+}
+
+DOMErrorHandler* DOMDocumentImpl::getErrorHandler() const {
+    return 0;
+}
+
+void DOMDocumentImpl::setErrorHandler(DOMErrorHandler* const handler) {
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+}
+
+DOMNode* DOMDocumentImpl::adoptNode(DOMNode* source) {
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+void DOMDocumentImpl::normalizeDocument() {
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+}
+
+bool DOMDocumentImpl::canSetNormalizationFeature(const XMLCh* const name, bool state) const {
+    return false;
+}
+
+void DOMDocumentImpl::setNormalizationFeature(const XMLCh* const name, bool state) {
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+}
+
+bool DOMDocumentImpl::getNormalizationFeature(const XMLCh* const name) const {
+    throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+    return false;
+}
 
 DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc)
 {

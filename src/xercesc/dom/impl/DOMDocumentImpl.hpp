@@ -278,7 +278,7 @@ public:
     /**
      * Returns true if the DOM implementation performs error checking.
      */
-    inline bool getErrorChecking() {
+    inline bool getErrorChecking() const {
         return errorChecking;
     }
 
@@ -307,6 +307,16 @@ public:
     virtual void                 setVersion(const XMLCh* version);
     virtual const XMLCh*         getDocumentURI() const;
     virtual void                 setDocumentURI(const XMLCh* documentURI);
+    virtual bool                 getStrictErrorChecking() const;
+    virtual void                 setStrictErrorChecking(bool strictErrorChecking);
+    virtual DOMErrorHandler*     getErrorHandler() const;
+    virtual void                 setErrorHandler(DOMErrorHandler* const handler);
+    virtual DOMNode*             adoptNode(DOMNode* source);
+    virtual void                 normalizeDocument();
+    virtual bool                 canSetNormalizationFeature(const XMLCh* const name, bool state) const;
+    virtual void                 setNormalizationFeature(const XMLCh* const name, bool state);
+    virtual bool                 getNormalizationFeature(const XMLCh* const name) const;
+
 
     // helper functions to prevent storing userdata pointers on every node.
     void*                        setUserData(DOMNodeImpl* n,
