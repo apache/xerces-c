@@ -837,8 +837,9 @@ public:
      * Provide default implementation to maintain source code compatibility
      ***/
     virtual DOMDocumentType* createDocumentType(const XMLCh *qName,
-                                                const XMLCh *publicId,
-                                                const XMLCh *systemId)
+                                                const XMLCh*,  //publicId,
+                                                const XMLCh*   //systemId
+                                               )
     {
         return createDocumentType(qName);
     }
