@@ -200,6 +200,15 @@ public :
      */
     unsigned int getSrcOffset() const;
 
+    /** Get the 'ignore cached DTD grammar' flag
+      *    
+      * @return true, if the parser is currently configured to
+      *         ignore cached DTD, false otherwise.
+      *
+      * @see #setIgnoreCachedDTD
+      */
+    bool getIgnoreCachedDTD() const;
+
     //@}
 
 
@@ -300,6 +309,22 @@ public :
       * @see #cacheGrammarFromParse
       */
     void useCachedGrammarInParse(const bool newState);
+
+    /** Set the 'ignore cached DTD grammar' flag
+      *
+      * This method gives users the option to ignore a cached DTD grammar, when
+      * an XML document contains both an internal and external DTD, and the use
+      * cached grammar from parse option is enabled. Currently, we do not allow
+      * using cached DTD grammar when an internal subset is present in the
+      * document. This option will only affect the behavior of the parser when
+      * an internal and external DTD both exist in a document (i.e. no effect
+      * if document has no internal subset).
+      *
+      * The parser's default state is false
+      *
+      * @param newValue The state to set
+      */
+    void setIgnoreCachedDTD(const bool newValue);
 
     //@}
 

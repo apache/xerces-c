@@ -223,6 +223,7 @@ public :
     static const XMLCh fgXercesDOMHasPSVIInfo[];
     static const XMLCh fgXercesGenerateSyntheticAnnotations[];
     static const XMLCh fgXercesValidateAnnotations[];
+    static const XMLCh fgXercesIgnoreCachedDTD[];
 
 
     // SAX2 features/properties names

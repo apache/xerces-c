@@ -98,6 +98,11 @@ unsigned int XercesDOMParser::getSrcOffset() const
     return getScanner()->getSrcOffset();
 }
 
+bool XercesDOMParser::getIgnoreCachedDTD() const
+{
+    return getScanner()->getIgnoreCachedDTD();
+}
+
 // ---------------------------------------------------------------------------
 //  XercesDOMParser: Setter methods
 // ---------------------------------------------------------------------------
@@ -153,6 +158,10 @@ void XercesDOMParser::useCachedGrammarInParse(const bool newState)
         getScanner()->useCachedGrammarInParse(newState);
 }
 
+void XercesDOMParser::setIgnoreCachedDTD(const bool newValue)
+{
+    getScanner()->setIgnoredCachedDTD(newValue);
+}
 
 // ---------------------------------------------------------------------------
 //  XercesDOMParser: Utilities

@@ -16,6 +16,10 @@
 
 /*
  * $Log$
+ * Revision 1.37  2004/12/07 19:45:43  knoaman
+ * An option to ignore a cached DTD grammar when a document contains an
+ * internal and external subset.
+ *
  * Revision 1.36  2004/09/29 19:00:29  peiyongz
  * [jira1207] --patch from Dan Rosen
  *
@@ -568,6 +572,11 @@ unsigned int SAXParser::getSrcOffset() const
     return fScanner->getSrcOffset();
 }
 
+bool SAXParser::getIgnoreCachedDTD() const
+{
+    return fScanner->getIgnoreCachedDTD();
+}
+
 // ---------------------------------------------------------------------------
 //  SAXParser: Setter methods
 // ---------------------------------------------------------------------------
@@ -702,6 +711,11 @@ void SAXParser::useScanner(const XMLCh* const scannerName)
 void SAXParser::setInputBufferSize(const size_t bufferSize)
 {
     fScanner->setInputBufferSize(bufferSize);
+}
+
+void SAXParser::setIgnoreCachedDTD(const bool newValue)
+{
+    fScanner->setIgnoredCachedDTD(newValue);
 }
 
 // ---------------------------------------------------------------------------

@@ -16,6 +16,10 @@
 
 /*
  * $Log$
+ * Revision 1.37  2004/12/07 19:45:43  knoaman
+ * An option to ignore a cached DTD grammar when a document contains an
+ * internal and external subset.
+ *
  * Revision 1.36  2004/09/29 19:28:12  cargilld
  * Mark SAXParser as deprecated.
  *
@@ -680,6 +684,15 @@ public :
       */
     bool getValidateAnnotations() const;
 
+    /** Get the 'ignore cached DTD grammar' flag
+      *    
+      * @return true, if the parser is currently configured to
+      *         ignore cached DTD, false otherwise.
+      *
+      * @see #setIgnoreCachedDTD
+      */
+    bool getIgnoreCachedDTD() const;
+
     //@}
 
 
@@ -948,7 +961,7 @@ public :
       * instead of building the grammar from scratch, to validate XML
       * documents.
       *
-      * If the 'Grammar caching' flag is set to true, this mehod ignore the
+      * If the 'Grammar caching' flag is set to true, this method ignores the
       * value passed in.
       *
       * The parser's default state is: false.
@@ -1007,6 +1020,22 @@ public :
       * @param bufferSize The maximum input buffer size
       */
     void setInputBufferSize(const size_t bufferSize);
+
+    /** Set the 'ignore cached DTD grammar' flag
+      *
+      * This method gives users the option to ignore a cached DTD grammar, when
+      * an XML document contains both an internal and external DTD, and the use
+      * cached grammar from parse option is enabled. Currently, we do not allow
+      * using cached DTD grammar when an internal subset is present in the
+      * document. This option will only affect the behavior of the parser when
+      * an internal and external DTD both exist in a document (i.e. no effect
+      * if document has no internal subset).
+      *
+      * The parser's default state is false
+      *
+      * @param newValue The state to set
+      */
+    void setIgnoreCachedDTD(const bool newValue);
 
     //@}
 

@@ -243,7 +243,10 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
         getScanner()->setIdentityConstraintChecking(state);
     }
-
+    else if (XMLString::compareIString(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+    {
+        getScanner()->setIgnoredCachedDTD(state);
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -342,6 +345,10 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
     {
         return getScanner()->getValidateAnnotations();
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+    {
+        return getScanner()->getIgnoreCachedDTD();
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -365,7 +372,8 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) co
         (XMLString::compareIString(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+        (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0) ||
+        (XMLString::compareIString(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
        ) {
         return true;
     }

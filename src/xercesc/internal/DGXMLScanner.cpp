@@ -972,7 +972,10 @@ void DGXMLScanner::scanDocTypeDecl()
 
         InputSource* srcUsed=0;
         Janitor<InputSource> janSrc(srcUsed);
-        if (fUseCachedGrammar)
+        // If we had an internal subset and we're using the cached grammar, it
+        // means that the ignoreCachedDTD is set, so we ignore the cached
+        // grammar
+        if (fUseCachedGrammar && !hasIntSubset)
         {
             srcUsed = resolveSystemId(sysId, pubId);
             janSrc.reset(srcUsed);

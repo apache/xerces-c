@@ -16,6 +16,10 @@
 
 /*
  * $Log$
+ * Revision 1.45  2004/12/07 19:45:43  knoaman
+ * An option to ignore a cached DTD grammar when a document contains an
+ * internal and external subset.
+ *
  * Revision 1.44  2004/12/03 19:40:30  cargilld
  * Change call to resolveEntity to pass in public id so that only one call to resolveEntity is needed (a follow-on to Alberto's fix).
  *
@@ -546,6 +550,7 @@ public :
 
     bool getGenerateSyntheticAnnotations() const;
     bool getValidateAnnotations() const;
+    bool getIgnoreCachedDTD() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -643,6 +648,7 @@ public :
 
     void setGenerateSyntheticAnnotations(const bool newValue);
     void setValidateAnnotations(const bool newValue);
+    void setIgnoredCachedDTD(const bool newValue);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -1010,6 +1016,7 @@ protected:
     bool                        fNormalizeData;
     bool                        fGenerateSyntheticAnnotations;
     bool                        fValidateAnnotations;
+    bool                        fIgnoreCachedDTD;
     int                         fErrorCount;
     unsigned int                fEntityExpansionLimit;
     unsigned int                fEntityExpansionCount;
@@ -1366,6 +1373,11 @@ inline bool XMLScanner::getValidateAnnotations() const
     return fValidateAnnotations;
 }
 
+inline bool XMLScanner::getIgnoreCachedDTD() const
+{
+    return fIgnoreCachedDTD;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -1533,6 +1545,11 @@ inline void XMLScanner::setInputBufferSize(const size_t bufferSize)
 {
     fBufferSize = bufferSize;
     fCDataBuf.setFullHandler(this, fBufferSize);
+}
+
+inline void XMLScanner::setIgnoredCachedDTD(const bool newValue)
+{
+    fIgnoreCachedDTD = newValue;
 }
 
 // ---------------------------------------------------------------------------

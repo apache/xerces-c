@@ -160,6 +160,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fNormalizeData(true)
     , fGenerateSyntheticAnnotations(false)
     , fValidateAnnotations(false)
+    , fIgnoreCachedDTD(false)
     , fErrorCount(0)
     , fEntityExpansionLimit(0)
     , fEntityExpansionCount(0)
@@ -243,6 +244,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fNormalizeData(true)
     , fGenerateSyntheticAnnotations(false)
     , fValidateAnnotations(false)
+    , fIgnoreCachedDTD(false)
     , fErrorCount(0)
     , fEntityExpansionLimit(0)
     , fEntityExpansionCount(0)
@@ -1752,7 +1754,7 @@ void XMLScanner::checkInternalDTD(bool hasExtSubset
     if (fToCacheGrammar)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_CantHaveIntSS, fMemoryManager);
 
-    if (fUseCachedGrammar && hasExtSubset )
+    if (fUseCachedGrammar && hasExtSubset && !fIgnoreCachedDTD)
     {
         InputSource* sysIdSrc = resolveSystemId(sysId, pubId);
         Janitor<InputSource> janSysIdSrc(sysIdSrc);

@@ -16,6 +16,10 @@
 
 /*
  * $Log$
+ * Revision 1.41  2004/12/07 19:45:43  knoaman
+ * An option to ignore a cached DTD grammar when a document contains an
+ * internal and external subset.
+ *
  * Revision 1.40  2004/10/04 11:30:51  amassari
  * As start/endPrefixMapping doesn't use the XMLBufMgr variable, we need only one XMLBuffer
  *
@@ -1573,6 +1577,10 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     {
         fScanner->setValidateAnnotations(value);
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+    {
+        fScanner->setIgnoredCachedDTD(value);
+    }
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 }
@@ -1611,6 +1619,8 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return fScanner->getGenerateSyntheticAnnotations();
     else if (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0)
         return fScanner->getValidateAnnotations();
+    else if (XMLString::compareIString(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+        return fScanner->getIgnoreCachedDTD();
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 
