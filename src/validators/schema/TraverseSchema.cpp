@@ -4507,10 +4507,6 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         }
     }
 
-    if (minOccurs == 0 && maxOccurs == 0 && !isMaxUnbounded) {
-        return;
-    }
-
     // Constraint checking for min/max value
     if (!isMaxUnbounded) {
 
@@ -4541,6 +4537,15 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
         if (maxOccurs != 1
 			|| ((isAllGroup || isGroupRefAll || minOccurs != 0)
 			    && minOccurs != 1)) {
+
+            // set back correct value in order to carry on
+            if (specNode) {
+                specNode->setMaxOccurs(1);
+                if (isAllGroup || isGroupRefAll)
+                    specNode->setMinOccurs(1);
+                else
+                    specNode->setMinOccurs(0);
+            }
 
             if (isAllElement) {
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BadMinMaxAllElem);
