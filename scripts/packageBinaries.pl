@@ -20,7 +20,7 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -s <source_directory>\n");
     print ("    -o <target_directory>\n");
     print ("    -c <C compiler name> (e.g. gcc, cc or xlc_r)\n");
-    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++ or xlC_r)\n");
+    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl or ecl)\n");
     print ("    -m <message loader> can be 'inmem' \(default\), 'icu' or 'iconv'\n");
     print ("    -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
     print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
@@ -66,17 +66,17 @@ if (-e $targetdir) {
     exit(1);
 }
 
-#Fix the backslashes on the Windows platform
-$XERCESCROOT =~ s/\\/\//g;
-$ICUROOT =~ s/\\/\//g;
-$targetdir =~ s/\\/\//g;
-
 # Find out the platform from 'uname -a'
-open(PLATFORM, "uname -s|");
-$platform = <PLATFORM>;
-chomp($platform);
-close (PLATFORM);
+$platform = "";
+$platform = `uname -s`;
 
+#Fix the backslashes on the Windows platform
+if ($platform ne "")
+{
+    $XERCESCROOT =~ s/\\/\//g;
+    $ICUROOT =~ s/\\/\//g;
+    $targetdir =~ s/\\/\//g;
+}
 
 print "Packaging binaries for \`" . $platform . "\` in " . $targetdir . " ...\n";   # "
 
@@ -87,7 +87,279 @@ $zipfiles = $zipfiles . "/*";
 
 $buildmode = "Release";         # Universally, why do you want to package Debug builds anyway?
 
+#
+#   Itanium platform builds happen here ...
+#
+if ($platform eq "" ) 
+{
+    if ($opt_x ne "" && $opt_x ne "cl" && $opt_x ne "ecl")
+    {
+        print("Compiler on Itanium must be \'cl\' or \'ecl\'\n");
+        exit(-1);
+    }
+    
+    if ($opt_x eq "")
+    {
+    	$opt_x = 'cl';
+    }
 
+    $platformname = 'Win64';    # Needed this way by nmake
+
+    if (-e "$targetdir.zip") {
+        print ("Deleting old target file \'$targetdir.zip\' \n");
+        unlink("$targetdir.zip");
+    }
+
+    # Make the target directory and its main subdirectories
+    psystem ("mkdir $targetdir");
+    psystem ("mkdir $targetdir\\bin");
+    psystem ("mkdir $targetdir\\lib");
+    psystem ("mkdir $targetdir\\etc");
+    psystem ("mkdir $targetdir\\include");
+    psystem ("mkdir $targetdir\\include\\xercesc");
+    psystem ("mkdir $targetdir\\samples");
+    psystem ("mkdir $targetdir\\samples\\Projects");
+    #REVISIT: to change to /Win64 if necessary
+    psystem ("mkdir $targetdir\\samples\\Projects\\Win32");
+    psystem ("mkdir $targetdir\\samples\\data");
+    psystem ("mkdir $targetdir\\samples\\SAXCount");
+    psystem ("mkdir $targetdir\\samples\\SAX2Count");
+    psystem ("mkdir $targetdir\\samples\\SAXPrint");
+    psystem ("mkdir $targetdir\\samples\\SAX2Print");
+    psystem ("mkdir $targetdir\\samples\\DOMCount");
+    psystem ("mkdir $targetdir\\samples\\DOMPrint");
+    psystem ("mkdir $targetdir\\samples\\Redirect");
+    psystem ("mkdir $targetdir\\samples\\MemParse");
+    psystem ("mkdir $targetdir\\samples\\PParse");
+    psystem ("mkdir $targetdir\\samples\\StdInParse");
+    psystem ("mkdir $targetdir\\samples\\EnumVal");
+    psystem ("mkdir $targetdir\\samples\\SEnumVal");
+    psystem ("mkdir $targetdir\\samples\\CreateDOMDocument");
+    psystem ("mkdir $targetdir\\doc");
+    psystem ("mkdir $targetdir\\doc\\html");
+    psystem ("mkdir $targetdir\\doc\\html\\apiDocs");
+
+    # If 'FileOnly' NetAccessor has been specified, then the project files have to be
+    # changed.
+    #REVISIT: we are make from makefile, not from *.dsp
+    #         need to look at it later
+    if ($opt_n =~ m/fileonly/i) {
+        changeWindowsProjectForFileOnlyNA("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
+    }
+
+    #
+    #	ICU Build happens here, if one is required.
+    #
+    #REVISIT: icu
+    #
+    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+        print ("Building ICU from $ICUROOT ...\n");
+
+        #Clean up all the dependency files, causes problems for nmake
+        pchdir ("$ICUROOT");
+        psystem ("del /s /f *.dep *.ncb *.plg *.opt");
+
+        # Make the icu dlls
+        pchdir ("$ICUROOT\\source\\allinone");
+        if (!$opt_j) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
+	    #For nt we ship both debug and release dlls
+	    psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD /OUT buildlog.txt");
+	    psystem("type buildlog.txt");
+	    psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD /OUT buildlog.txt");
+	    psystem("type buildlog.txt");
+        }
+
+        change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
+    }
+
+    # Clean up all the dependency files, causes problems for nmake
+    # Also clean up all MSVC-generated project files that just cache the IDE state
+    pchdir ("$XERCESCROOT");
+    psystem ("del /s /f *.dep *.ncb *.plg *.opt");
+
+    # Make all files in the Xerces-C system including libraries, samples and tests
+    pchdir ("$XERCESCROOT\\Projects\\Win64\\Nmake\\xerces-all\\all");
+    psystem( "nmake -f all.mak \"CFG=all - $platformname Release\" CPP=$opt_x.exe >buildlog.txt 2>&1");
+    system("type buildlog.txt");
+
+    pchdir ("$XERCESCROOT\\Projects\\Win64\\Nmake\\xerces-all\\XercesLib");
+    psystem("nmake -f XercesLib.mak \"CFG=XercesLib - $platformname Debug\" CPP=$opt_x.exe > buildlog.txt 2>&1 ");
+    system("type buildlog.txt");
+        
+    # Decide where you want the build copied from
+    pchdir ($targetdir);
+    $BUILDDIR = $XERCESCROOT . "\\Build\\Win64\\Nmake\\" . $buildmode;
+    print "\nBuild is being copied from \'" . $BUILDDIR . "\'";
+
+    # Populate the include output directory
+    print ("\n\nCopying headers files ...\n");
+
+    @headerDirectories =
+     qw'sax
+		sax2
+        framework
+        dom
+        dom\\deprecated
+        internal
+        parsers
+        util
+        util\\Compilers
+        util\\MsgLoaders
+        util\\MsgLoaders\\ICU
+        util\\MsgLoaders\\InMemory
+        util\\MsgLoaders\\MsgCatalog
+        util\\MsgLoaders\\Win32
+        util\\Platforms
+        util\\Platforms\\AIX
+        util\\Platforms\\HPUX
+        util\\Platforms\\Linux
+        util\\Platforms\\MacOS
+        util\\Platforms\\OS2
+        util\\Platforms\\OS390
+        util\\Platforms\\PTX
+        util\\Platforms\\Solaris
+        util\\Platforms\\Tandem
+        util\\Platforms\\Win32
+        util\\regx
+        util\\Transcoders
+        util\\Transcoders\\ICU
+        util\\Transcoders\\Iconv
+        util\\Transcoders\\Win32
+        validators
+        validators\\common
+        validators\\datatype
+        validators\\DTD
+        validators\\schema
+        validators\\schema\\identity';
+
+    foreach $dir (@headerDirectories) {
+        $inclDir = "include\\xercesc\\$dir";
+        if (! (-e $inclDir)) {
+            psystem("mkdir $inclDir");
+        }
+        $srcDir = "$XERCESCROOT\\src\\xercesc\\$dir";
+
+        # Weed out directories that have no files to copy, to avoid a bunch of
+        # warnings from the cp command in the build output.
+        opendir(dir, $srcDir);
+        @allfiles = readdir(dir);
+        closedir(dir);
+        foreach $fileKind ("hpp", "c") {
+            $matches = grep(/\.$fileKind$/, @allfiles);        
+            if ($matches > 0) {
+                psystem("copy /y $srcDir\\*.$fileKind  $inclDir\\ ");
+            }
+        }
+    }
+
+
+    #
+    #  Remove internal implementation headers from the DOM include directory.
+    #
+    psystem("del /s /f $targetdir\\include\\xercesc\\dom\\impl");
+    psystem("del  $targetdir\\include\\xercesc\\dom\\deprecated\\*Impl.hpp");
+    psystem("del  $targetdir\\include\\xercesc\\dom\\deprecated\\DS*.hpp");
+
+    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+        psystem("xcopy /y $ICUROOT\\include\\* $targetdir\\include");
+    }
+
+    #
+    # Populate the binary output directory
+    #
+    print ("\n \nCopying binary outputs ...\n");
+    psystem("copy /y $BUILDDIR\\*.dll $targetdir\\bin");
+    psystem("copy /y $BUILDDIR\\*.exe $targetdir\\bin");
+
+    if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
+        # Copy the ICU dlls and libs
+        psystem("copy /y $ICUROOT\\bin\\icuuc20.dll $targetdir\\bin");
+        psystem("copy /y $ICUROOT\\bin\\icuuc20d.dll $targetdir\\bin");
+
+        # it seems icudt20*.DLL is generated (upper case dll)
+        # but just case, try lower case .dll as well
+        psystem("copy /y $ICUROOT\\bin\\icudt20*.DLL $targetdir\\bin");
+        psystem("copy /y $ICUROOT\\bin\\icudt20*.dll $targetdir\\bin");
+
+        psystem("copy /y $ICUROOT\\lib\\icudata.lib $targetdir\\lib");
+
+        psystem("copy /y $ICUROOT\\lib\\icuuc.lib $targetdir\\lib");
+        psystem("copy /y $ICUROOT\\lib\\icuucd.lib $targetdir\\lib");
+    }
+
+    psystem("copy /y $BUILDDIR\\xerces-c_*.lib $targetdir\\lib");
+
+    if ($buildmode ne "Debug") {
+        $DEBUGBUILDDIR = "$XERCESCROOT\\Build\\Win64\\Nmake\\Debug";
+        psystem("copy /y $DEBUGBUILDDIR\\xerces-c_*D.lib $targetdir\\lib");
+        psystem("copy /y $DEBUGBUILDDIR\\xerces*D.dll $targetdir\\bin");
+    }
+
+
+    # Populate the etc output directory like config.status and the map file
+    print ("\n \nCopying misc output to etc ...\n");
+    psystem("copy /y $XERCESCROOT\\Build\\Win64\\Nmake\\Release\\obj\\*.map $targetdir\\etc");
+
+
+    # Populate the samples directory
+    print ("\n \nCopying sample files ...\n");
+    psystem("copy $XERCESCROOT\\version.incl $targetdir");
+    psystem("xcopy /y $XERCESCROOT\\samples\\Projects\\* $targetdir\\samples\\Projects");
+
+    psystem("xcopy /y $XERCESCROOT\\samples\\SAXCount\\* $targetdir\\samples\\SAXCount");
+    psystem("del /f $targetdir\\samples\\SAXCount\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\SAX2Count\\* $targetdir\\samples\\SAX2Count");
+    psystem("del /f $targetdir\\samples\\SAX2Count\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\SAXPrint\\* $targetdir\\samples\\SAXPrint");
+    psystem("del /f $targetdir\\samples\\SAXPrint\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\SAX2Print\\* $targetdir\\samples\\SAX2Print");
+    psystem("del /f $targetdir\\samples\\SAX2Print\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\DOMCount\\* $targetdir\\samples\\DOMCount");
+    psystem("del /f $targetdir\\samples\\DOMCount\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\DOMPrint\\* $targetdir\\samples\\DOMPrint");
+    psystem("del /f $targetdir\\samples\\DOMPrint\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\Redirect\\* $targetdir\\samples\\Redirect");
+    psystem("del /f $targetdir\\samples\\Redirect\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\MemParse\\* $targetdir\\samples\\MemParse");
+    psystem("del /f $targetdir\\samples\\MemParse\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\PParse\\* $targetdir\\samples\\PParse");
+    psystem("del /f $targetdir\\samples\\PParse\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\StdInParse\\* $targetdir\\samples\\StdInParse");
+    psystem("del /f $targetdir\\samples\\StdInParse\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\EnumVal\\* $targetdir\\samples\\EnumVal");
+    psystem("del /f $targetdir\\samples\\EnumVal\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\SEnumVal\\* $targetdir\\samples\\SEnumVal");
+    psystem("del /f $targetdir\\samples\\SEnumVal\\Makefile");
+    psystem("xcopy /y $XERCESCROOT\\samples\\CreateDOMDocument\\* $targetdir\\samples\\CreateDOMDocument");
+    psystem("del /f $targetdir\\samples\\CreateDOMDocument\\Makefile");
+
+    psystem("xcopy /y $XERCESCROOT\\samples\\data\\* $targetdir\\samples\\data");
+
+    # Populate the docs directory
+    print ("\n \nCopying documentation ...\n");
+    psystem("xcopy /y $XERCESCROOT\\doc\\* $targetdir\\doc");
+    psystem("copy $XERCESCROOT\\Readme.html $targetdir");
+    psystem("copy $XERCESCROOT\\credits.txt $targetdir");
+    psystem("copy $XERCESCROOT\\LICENSE.txt $targetdir");
+
+    if (length($ICUROOT) > 0) {
+        psystem("copy $XERCESCROOT\\license.html $targetdir");
+        psystem("copy $XERCESCROOT\\XLicense.html $targetdir");
+    }
+    psystem("del /f  $targetdir\\doc\\Doxyfile");
+    psystem("del /s /f $targetdir\\doc\\dtd");
+    psystem("del /f  $targetdir\\doc\\*.xml");
+    psystem("del /f  $targetdir\\doc\\*.ent");
+    psystem("del /f  $targetdir\\doc\\*.gif");
+
+    # Now package it all up using ZIP
+    pchdir ("$targetdir\\..");
+    print ("\n \nZIPping up all files ...\n");
+    $zipname = $targetdir . ".zip";
+    psystem ("zip -r $zipname $zipfiles");
+}
+#
+#     End of Itanium Builds.
 
 #
 #   WINDOWS builds happen here ...
