@@ -331,11 +331,21 @@ int NamedNodeMapImpl::findNamePoint(const DOMString &namespaceURI,
 	NodeImpl *node = nodes -> elementAt(i);
 	if (! node -> getNamespaceURI().equals(namespaceURI))	//URI not match
 	    continue;
+        DOMString nNamespaceURI = node->getNamespaceURI();
         DOMString nLocalName = node->getLocalName();
-	if (nLocalName.equals(localName)
-            ||
-            (nLocalName == null && localName.equals(node->getNodeName())))
-	    return i;
+        if (namespaceURI == null) {
+            if (nNamespaceURI == null
+                &&
+                (localName.equals(nLocalName)
+                 ||
+                 (nLocalName == null && localName.equals(node->getNodeName()))))
+                return i;
+        } else {
+            if (namespaceURI.equals(nNamespaceURI)
+                &&
+                localName.equals(nLocalName))
+                return i;
+        }
     }
     return -1;	//not found
 }
