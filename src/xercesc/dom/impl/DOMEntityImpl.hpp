@@ -89,9 +89,10 @@ private:
     DOMEntityReference*	fRefEntity;
 
     // New data introduced in DOM Level 3
-    XMLCh*                fActualEncoding;
-    XMLCh*                fEncoding;
-    XMLCh*                fVersion;
+    const XMLCh*          fActualEncoding;
+    const XMLCh*          fEncoding;
+    const XMLCh*          fVersion;
+    const XMLCh*          fBaseURI;
     bool                  fEntityRefNodeCloned;
     // private helper function
     void	cloneEntityRefTree() const;
@@ -125,6 +126,7 @@ public:
     virtual void                   setEncoding(const XMLCh* encoding);
     virtual const XMLCh*           getVersion() const;
     virtual void                   setVersion(const XMLCh* version);
+    virtual void                   setBaseURI(const XMLCh *arg);
 };
 
 #endif

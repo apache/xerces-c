@@ -62,6 +62,7 @@
 #include "DOMElementNSImpl.hpp"
 #include "DOMDocumentImpl.hpp"
 #include <xercesc/dom/DOMException.hpp>
+#include <xercesc/util/XMLUri.hpp>
 
 DOMElementNSImpl::DOMElementNSImpl(DOMDocument *ownerDoc, const XMLCh *nam) :
     DOMElementImpl(ownerDoc, nam)
@@ -109,6 +110,35 @@ const XMLCh * DOMElementNSImpl::getLocalName() const
 {
     return fLocalName;
 }
+
+const XMLCh* DOMElementNSImpl::getBaseURI() const
+{
+    const XMLCh* baseURI = (fNode.fOwnerNode)->getBaseURI();
+    if (fAttributes) {
+        const XMLCh baseString[] =
+        {
+            chLatin_b, chLatin_a, chLatin_s, chLatin_e, chNull
+        };
+        DOMNode* attrNode = fAttributes->getNamedItemNS(DOMNodeImpl::getXmlURIString(), baseString);
+        if (attrNode) {
+            const XMLCh* uri =  attrNode->getNodeValue();
+            if (XMLString::stringLen(uri) != 0 ) {// attribute value is always empty string
+                try {
+                    XMLUri temp(baseURI);
+                    XMLUri temp2(&temp, uri);
+                    uri = ((DOMDocumentImpl *)this->getOwnerDocument())->cloneString(temp2.getUriText());
+                }
+                catch (...){
+                    // REVISIT: what should happen in this case?
+                    return 0;
+                }
+                return uri;
+            }
+        }
+    }
+    return baseURI;
+}
+
 
 void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
 {

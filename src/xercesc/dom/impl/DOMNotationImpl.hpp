@@ -83,6 +83,7 @@ public:
     const XMLCh * fName;
     const XMLCh * fPublicId;
     const XMLCh * fSystemId;
+    const XMLCh * fBaseURI;
 
 public:
     DOMNotationImpl(DOMDocument *ownerDoc, const XMLCh *);
@@ -102,15 +103,17 @@ public:
     // was specified, this will be null.
     virtual const XMLCh * getSystemId() const;
 
-
     // NON-DOM: The Public Identifier for this Notation. If no public
-    // identifier was specified, this will be null.  */
+    // identifier was specified, this will be null.
     virtual void setPublicId(const XMLCh *arg);
 
 
     // NON-DOM: The System Identifier for this Notation. If no system
-    // identifier was specified, this will be null.  */
+    // identifier was specified, this will be null.
     virtual void setSystemId(const XMLCh *arg);
+
+    // NON-DOM: set base uri
+    virtual void setBaseURI(const XMLCh *arg);
 
 };
 

@@ -63,6 +63,8 @@
 #include <xercesc/dom/DOMAttr.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
 #include <xercesc/dom/DOMException.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLUri.hpp>
 
 #include "DOMAttrMapImpl.hpp"
 #include "DOMDocumentImpl.hpp"
@@ -71,11 +73,9 @@
 #include "DOMCasts.hpp"
 #include "DOMElementNSImpl.hpp"
 
-
 #include "DOMDeepNodeListImpl.hpp"
 #include "DOMDocumentTypeImpl.hpp"
 #include "DOMNamedNodeMapImpl.hpp"
-
 
 class DOMAttr;
 
@@ -102,6 +102,7 @@ DOMElementImpl::DOMElementImpl(const DOMElementImpl &other, bool deep)
       fDefaultAttributes(0)
 {
     fName = other.fName;
+
     if (deep)
         fParent.cloneChildren(&other);
 
@@ -129,6 +130,7 @@ DOMElementImpl::DOMElementImpl(const DOMElementImpl &other, bool deep)
             fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this, fDefaultAttributes);
         }
     }
+
 };
 
 
@@ -465,6 +467,35 @@ void DOMElementImpl::release()
     }
 }
 
+const XMLCh* DOMElementImpl::getBaseURI() const
+{
+    const XMLCh* baseURI = fNode.fOwnerNode->getBaseURI();
+    if (fAttributes) {
+        const XMLCh xmlBaseString[] =
+        {
+            chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_b, chLatin_a, chLatin_s, chLatin_e, chNull
+        };
+        DOMNode* attrNode = fAttributes->getNamedItem(xmlBaseString);
+        if (attrNode) {
+            const XMLCh* uri =  attrNode->getNodeValue();
+            if (XMLString::stringLen(uri) != 0 ) {// attribute value is always empty string
+                try {
+                    XMLUri temp(baseURI);
+                    XMLUri temp2(&temp, uri);
+                    uri = ((DOMDocumentImpl *)this->getOwnerDocument())->cloneString(temp2.getUriText());
+                }
+                catch (...){
+                    // REVISIT: what should happen in this case?
+                    return 0;
+                }
+                return uri;
+            }
+        }
+    }
+    return baseURI;
+}
+
+
 
 //
 //   Functions inherited from Node
@@ -477,7 +508,7 @@ void DOMElementImpl::release()
      const XMLCh*           DOMElementImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
            DOMNode*         DOMElementImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
      const XMLCh*           DOMElementImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
-           DOMDocument*     DOMElementImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
+           DOMDocument*     DOMElementImpl::getOwnerDocument() const                {return fParent.fOwnerDocument; };
      const XMLCh*           DOMElementImpl::getPrefix() const                       {return fNode.getPrefix (); };
            DOMNode*         DOMElementImpl::getParentNode() const                   {return fChild.getParentNode (this); };
            DOMNode*         DOMElementImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
@@ -495,7 +526,6 @@ void DOMElementImpl::release()
            void*            DOMElementImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                     {return fNode.setUserData(key, data, handler); };
            void*            DOMElementImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           const XMLCh*     DOMElementImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
            short            DOMElementImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMElementImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMElementImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
@@ -508,6 +538,10 @@ void DOMElementImpl::release()
 
 bool DOMElementImpl::isEqualNode(const DOMNode* arg)
 {
+    if (isSameNode(arg)) {
+        return true;
+    }
+
     if (!fNode.isEqualNode(arg)) {
         return false;
     }

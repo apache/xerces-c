@@ -576,6 +576,11 @@ int DOMDocumentImpl::indexofQualifiedName(const XMLCh * qName)
 }
 
 
+const XMLCh*     DOMDocumentImpl::getBaseURI() const
+{
+	  return fDocumentURI;
+};
+
 
 DOMRange* DOMDocumentImpl::createRange()
 {
@@ -692,7 +697,6 @@ int             DOMDocumentImpl::changes() const{
            void*            DOMDocumentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                      {return fNode.setUserData(key, data, handler); };
            void*            DOMDocumentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           const XMLCh*     DOMDocumentImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
            short            DOMDocumentImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMDocumentImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMDocumentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
@@ -727,7 +731,8 @@ XMLCh * DOMDocumentImpl::cloneString(const XMLCh *src)
 
 const XMLCh *  DOMDocumentImpl::getPooledString(const XMLCh *src)
 {
-    return this->fNamePool->getPooledString(src);
+    if (!src) return 0;
+    else return this->fNamePool->getPooledString(src);
 }
 
 static const int kHeapAllocSize = 0x10000;    // The chunk size to allocate from the
@@ -892,7 +897,8 @@ void DOMDocumentImpl::setVersion(const XMLCh* version){
     fVersion = cloneString(version);
 }
 
-const XMLCh* DOMDocumentImpl::getDocumentURI() const {
+const XMLCh* DOMDocumentImpl::getDocumentURI() const
+{
     return fDocumentURI;
 }
 

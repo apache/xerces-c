@@ -482,11 +482,9 @@ bool DOMNodeImpl::isEqualNode(const DOMNode* arg)
         return false;
     }
 
-// baseURI not suppported yet
-/*
     if (XMLString::compareString(thisNode->getBaseURI(), arg->getBaseURI())) {
         return false;
-    }*/
+    }
 
     return true;
 }

@@ -85,6 +85,7 @@ private:
 
     XMLCh       *fTarget;
     XMLCh       *fData;
+    const XMLCh *fBaseURI;
 
 public:
     DOMProcessingInstructionImpl(DOMDocument *ownerDoc,
@@ -100,6 +101,9 @@ public:
     virtual const XMLCh *getData() const;
     virtual const XMLCh *getTarget() const;
     virtual void setData(const XMLCh *arg);
+
+    // NON-DOM: set base uri
+    virtual void setBaseURI(const XMLCh* baseURI);
 };
 
 #endif

@@ -66,10 +66,10 @@
 
 
 DOMNotationImpl::DOMNotationImpl(DOMDocument *ownerDoc, const XMLCh *nName)
-    : fNode(ownerDoc), fPublicId(0), fSystemId(0)
+    : fNode(ownerDoc), fName(0), fPublicId(0), fSystemId(0), fBaseURI(0)
 {
     fNode.setIsLeafNode(true);
-    fName = ((DOMDocumentImpl *)ownerDoc)->cloneString(nName);
+    fName = ((DOMDocumentImpl *)ownerDoc)->getPooledString(nName);
 };
 
 DOMNotationImpl::DOMNotationImpl(const DOMNotationImpl &other, bool deep)
@@ -79,6 +79,7 @@ DOMNotationImpl::DOMNotationImpl(const DOMNotationImpl &other, bool deep)
     fName = other.fName;
     fPublicId = other.fPublicId;
     fSystemId = other.fSystemId;
+    fBaseURI = other.fBaseURI;
 };
 
 
@@ -159,6 +160,15 @@ void DOMNotationImpl::release()
     }
 }
 
+void DOMNotationImpl::setBaseURI(const XMLCh* baseURI) {
+    this->fBaseURI = ((DOMDocumentImpl *)getOwnerDocument())->cloneString(baseURI);
+}
+
+const XMLCh* DOMNotationImpl::getBaseURI() const
+{
+    return fBaseURI;
+}
+
 
            DOMNode*         DOMNotationImpl::appendChild(DOMNode *newChild)          {return fNode.appendChild (newChild); };
            DOMNamedNodeMap* DOMNotationImpl::getAttributes() const                   {return fNode.getAttributes (); };
@@ -189,7 +199,6 @@ void DOMNotationImpl::release()
            void*            DOMNotationImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                      {return fNode.setUserData(key, data, handler); };
            void*            DOMNotationImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           const XMLCh*     DOMNotationImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
            short            DOMNotationImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMNotationImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMNotationImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };

@@ -321,11 +321,11 @@ private:
     //  data
     // -----------------------------------------------------------------------
     // New data introduced in DOM Level 3
-    XMLCh*                fActualEncoding;
-    XMLCh*                fEncoding;
+    const XMLCh*          fActualEncoding;
+    const XMLCh*          fEncoding;
     bool                  fStandalone;
-    XMLCh*                fVersion;
-    XMLCh*                fDocumentURI;
+    const XMLCh*          fVersion;
+    const XMLCh*          fDocumentURI;
 
     RefHashTableOf<DOMNodeUserDataTable>* fUserDataTable;
 

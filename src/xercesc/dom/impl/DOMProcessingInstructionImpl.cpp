@@ -68,7 +68,7 @@
 DOMProcessingInstructionImpl::DOMProcessingInstructionImpl(DOMDocument *ownerDoc,
                                                      const XMLCh *targt,
                                                      const XMLCh *dat)
-    : fNode(ownerDoc)
+    : fNode(ownerDoc), fBaseURI(0)
 {
     fNode.setIsLeafNode(true);
     this->fTarget = ((DOMDocumentImpl *)ownerDoc)->cloneString(targt);
@@ -84,6 +84,7 @@ DOMProcessingInstructionImpl::DOMProcessingInstructionImpl(
     fNode.setIsLeafNode(true);
     fTarget = other.fTarget;
     fData = other.fData;
+    fBaseURI = other.fBaseURI;
 };
 
 
@@ -177,6 +178,15 @@ void DOMProcessingInstructionImpl::release()
     }
 }
 
+void DOMProcessingInstructionImpl::setBaseURI(const XMLCh* baseURI) {
+    this->fBaseURI = ((DOMDocumentImpl *)getOwnerDocument())->cloneString(baseURI);
+}
+
+const XMLCh* DOMProcessingInstructionImpl::getBaseURI() const
+{
+    return fBaseURI? fBaseURI : fNode.fOwnerNode->getBaseURI();
+}
+
 //
 //    Delegation stubs for inherited functions
 //
@@ -208,7 +218,6 @@ void DOMProcessingInstructionImpl::release()
            void*            DOMProcessingInstructionImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                                   {return fNode.setUserData(key, data, handler); };
            void*            DOMProcessingInstructionImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           const XMLCh*     DOMProcessingInstructionImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
            short            DOMProcessingInstructionImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
            const XMLCh*     DOMProcessingInstructionImpl::getTextContent() const                  {return fNode.getTextContent(); };
            void             DOMProcessingInstructionImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };

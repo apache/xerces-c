@@ -85,6 +85,7 @@ private:
     DOMChildNode     fChild;
 
     const XMLCh    *fName;
+    const XMLCh    *fBaseURI;
 
     friend class XercesDOMParser;
 

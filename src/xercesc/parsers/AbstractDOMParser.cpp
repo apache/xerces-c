@@ -90,8 +90,8 @@
 #include <xercesc/dom/impl/DOMNotationImpl.hpp>
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/dom/DOMProcessingInstruction.hpp>
+#include <xercesc/dom/impl/DOMProcessingInstructionImpl.hpp>
 #include <xercesc/dom/impl/DOMNodeIDMap.hpp>
-
 
 #include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/DTD/DTDAttDefList.hpp>
@@ -542,6 +542,44 @@ void AbstractDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
                 // append the child of erImpl to currentParent
                 fCurrentNode = kid->cloneNode(true);
                 fCurrentParent->appendChild(fCurrentNode);
+
+                if (erImpl->getBaseURI()) {
+                    /**
+                     * Record baseURI information for the Element (by adding xml:base attribute)
+                     * or for the ProcessingInstruction (by setting a baseURI field)
+                     */
+                    if (fCurrentNode->getNodeType() == DOMNode::ELEMENT_NODE) {
+                        // if an element already has xml:base attribute
+                        // do nothing
+                        const XMLCh baseString[] =
+                        {
+                            chLatin_b, chLatin_a, chLatin_s, chLatin_e, chNull
+                        };
+                        const XMLCh xmlBaseString[] =
+                        {
+                            chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_b, chLatin_a, chLatin_s, chLatin_e, chNull
+                        };
+
+                        if (fScanner -> getDoNamespaces() && (((DOMElement*)fCurrentNode)->getAttributeNodeNS(DOMNodeImpl::getXmlURIString(), baseString) != 0)) {
+                            return;
+                        } else if (((DOMElement*)fCurrentNode)->getAttributeNode(xmlBaseString) != 0) {
+                            return;
+                        }
+
+                        // retrive the baseURI from the entity decl
+                        const XMLCh* baseURI = erImpl->getBaseURI();
+                        if (baseURI != 0 && XMLString::compareString(baseURI,fDocument->getDocumentURI())) {
+                            if (fScanner -> getDoNamespaces()) {
+                                ((DOMElement*)fCurrentNode)->setAttributeNS(DOMNodeImpl::getXmlURIString(), baseString, baseURI);
+                            } else {
+                                ((DOMElement*)fCurrentNode)->setAttribute(xmlBaseString, baseURI);
+                            }
+                        }
+                    }
+                    else if (fCurrentNode->getNodeType() == DOMNode::PROCESSING_INSTRUCTION_NODE) {
+                        ((DOMProcessingInstructionImpl*)fCurrentNode)->setBaseURI(erImpl->getBaseURI());
+                    }
+                }
             }
 
             next = kid->getNextSibling();
@@ -619,7 +657,14 @@ void AbstractDOMParser::startDocument()
     // set DOM error checking off
     fDocument->setErrorChecking(false);
 
-    fDocument->setDocumentURI(fScanner->getLocator()->getSystemId());
+    const XMLCh* systemId = fScanner->getLocator()->getSystemId();
+    if (systemId) {
+        XMLBufBid bbURI(&fBufMgr);
+        XMLBuffer& bufURI = bbURI.getBuffer();
+        XMLString::fixURI(systemId, bufURI);
+
+        fDocument->setDocumentURI(bufURI.getRawBuffer());
+    }
     fDocument->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
 }
 
@@ -1179,8 +1224,9 @@ void AbstractDOMParser::endAttList
 void AbstractDOMParser::endIntSubset()
 {
     fDocumentType->setInternalSubset(fInternalSubset.getRawBuffer());
-    fBufMgr.releaseBuffer(fInternalSubset);
-    fDocumentType->intSubsetReading = false;
+    // the buffer shouldn't be released as it is reused in the next parse
+    // fBufMgr.releaseBuffer(fInternalSubset);
+    fDocumentType->fIntSubsetReading = false;
 }
 
 void AbstractDOMParser::endExtSubset()
@@ -1199,6 +1245,14 @@ void AbstractDOMParser::entityDecl
     entity->setPublicId(entityDecl.getPublicId());
     entity->setSystemId(entityDecl.getSystemId());
     entity->setNotationName(entityDecl.getNotationName());
+    if (entityDecl.getBaseURI())
+    {
+        XMLBufBid bbURI(&fBufMgr);
+        XMLBuffer& bufURI = bbURI.getBuffer();
+        XMLString::fixURI(entityDecl.getBaseURI(), bufURI);
+
+        entity->setBaseURI(bufURI.getRawBuffer());
+    }
 
     DOMEntityImpl *previousDef = (DOMEntityImpl *)
 	    fDocumentType->getEntities()->setNamedItem( entity );
@@ -1269,6 +1323,14 @@ void AbstractDOMParser::notationDecl
     DOMNotationImpl* notation = (DOMNotationImpl *)fDocument->createNotation(notDecl.getName());
     notation->setPublicId(notDecl.getPublicId());
     notation->setSystemId(notDecl.getSystemId());
+    if (notDecl.getBaseURI())
+    {
+        XMLBufBid bbURI(&fBufMgr);
+        XMLBuffer& bufURI = bbURI.getBuffer();
+        XMLString::fixURI(notDecl.getBaseURI(), bufURI);
+
+        notation->setBaseURI(bufURI.getRawBuffer());
+    }
 
     DOMNode* rem = fDocumentType->getNotations()->setNamedItem( notation );
     if (rem)
@@ -1324,7 +1386,7 @@ void AbstractDOMParser::startAttList
 
 void AbstractDOMParser::startIntSubset()
 {
-	fDocumentType->intSubsetReading = true;
+	fDocumentType->fIntSubsetReading = true;
 }
 
 void AbstractDOMParser::startExtSubset()
@@ -1342,3 +1404,4 @@ void AbstractDOMParser::TextDecl
         fCurrentEntity->setEncoding(encodingStr);
     }
 }
+
