@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/05/16 19:01:04  tng
+ * Schema: Typo fix in Base64
+ *
  * Revision 1.1  2001/05/16 15:25:36  tng
  * Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
  *
@@ -270,7 +273,7 @@ void Base64::init()
     //
 }
 
-inline bool Base64::isData(const XMLCh& octect) 
+bool Base64::isData(const XMLCh& octect) 
 {
     // sanity check to avoid out-of-bound index
     if (( octect >= BASELENGTH ) || ( octect < 0 ))
