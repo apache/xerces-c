@@ -20,6 +20,7 @@
 <s1 title="Migration Archive">
     <s2 title="Migrating to earlier Releases">
       <ul>
+        <li><link anchor="Migrateto250">Migrating from &XercesCName; 2.4.0 to 2.5.0</link></li>
         <li><link anchor="Migrateto240">Migrating from &XercesCName; 2.3.0 to 2.4.0</link></li>      
         <li><link anchor="Migrateto230">Migrating from &XercesCName; 2.2.0 to 2.3.0</link></li>
         <li><link anchor="Migrateto220">Migrating from &XercesCName; 2.1.0 to 2.2.0</link></li>
@@ -32,6 +33,70 @@
       </ul>
     </s2>
 
+	<anchor name="Migrateto250"/>
+	<s2 title="Migrating from &XercesCName; 2.4.0 to &XercesCName; 2.5.0">
+      <p>The following section is a discussion of the technical differences between
+      &XercesCName; 2.4.0 code base and the &XercesCName; 2.5.0.</p>
+
+      <p>Topics discussed are:</p>
+      <ul>
+        <li><link anchor="NewFeatures250">New features in &XercesCName; 2.5.0</link></li>
+        <li><link anchor="API250">Public API Changes</link></li>
+        <ul>
+            <li><link anchor="NewAPI250">New Public API</link></li>
+            <li><link anchor="ModifiedAPI250">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI250">Deprecated/Removed Public API</link></li>
+        </ul>
+      </ul>
+
+    <anchor name="NewFeatures250"/>
+    <s3 title="New features in &XercesCName; 2.5.0">
+      <ul>
+              <li>Fix duplicate attribute detection when namespaces are disabled </li>
+              <li>Stricter use of static memory manager for static data only</li>
+              <li>PSVI bug fix and enhencement </li>
+              <li>ThreadTest with grammar caching</li>
+              <li>Re-pluggable Panic Handler</li>
+              <li>Enhenced mutex creation to impove thread safety</li>
+              <li>Intrinsic transcoding support for 390.</li>
+              <li>Canonical Representation Support </li>              
+              <li>New sample SCMPrint</li>
+              <li>New sample PSVIWriter</li>
+              <li>New test XSerializerTest</li>
+      </ul>
+    </s3>
+
+    <anchor name="API250"/>
+    <s3 title="Public API Changes">
+
+        <p>The following lists the public API changes between the &XercesCName;
+           2.4.0; and the &XercesCName; 2.5.0 releases
+           of the parser. </p>
+
+        <anchor name="NewAPI250"/>
+        <s4 title="New Public API">
+            <ul>
+              <li></li>            
+            </ul>
+        </s4>
+
+        <anchor name="ModifiedAPI250"/>
+        <s4 title="Modified Public API">
+            <ul>
+              <li></li>
+            </ul>
+        </s4>
+
+        <anchor name="DeprecatedAPI250"/>
+        <s4 title="Deprecated/Removed Public API">
+            <ul>
+              <li></li>              
+            </ul>
+        </s4>
+
+    </s3>
+    </s2>
+    
     <anchor name="Migrateto240"/>
     <s2 title="Migrating from &XercesCName; 2.3.0 to &XercesCName; 2.4.0">
       <p>The following section is a discussion of the technical differences between

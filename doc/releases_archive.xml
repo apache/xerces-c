@@ -20,6 +20,7 @@
 <s1 title="Releases Archive">
     <s2 title="Release Information of earlier releases">
       <ul>
+        <li><link anchor="Release250">Release Information of &XercesCName; 2.5.0</link></li>
         <li><link anchor="Release240">Release Information of &XercesCName; 2.4.0</link></li>            
         <li><link anchor="Release230">Release Information of &XercesCName; 2.3.0</link></li>      
         <li><link anchor="Release220">Release Information of &XercesCName; 2.2.0</link></li>
@@ -39,6 +40,1077 @@
         <li><link anchor="ReleaseBETA">Release Information of &XercesCName; BETA</link></li>
       </ul>
     </s2>
+
+<anchor name="Release250"/>
+<s2 title="Release Information of &XercesCName; 2.5.0">
+
+<p>Here is the list of <jump href=
+"http&colon;//nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=02&percent;2F07&percent;2F03&amp;chfieldto=05&percent;2F23&percent;2F03&amp;chfieldvalue=fixed&amp;product=Xerces-C&percent;2B&percent;2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
+fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; 2.5.0.
+</p>
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Contributor</th>
+        <th>Description</th>
+    </tr>
+
+    <tr>
+        <td>2004-02-15</td>
+        <td>Neil Graham</td>
+        <td>make first parameter of BinOutputStream::writeBytes const * const; bug 26936</td>
+    </tr>
+       
+    <tr>
+        <td>2004-02-13</td>
+        <td>Khaled Noaman</td>
+        <td>Remove the limitation on providing PSVI information</td>
+    </tr>
+       
+    <tr>
+        <td>2004-02-13</td>
+        <td>David Cargill</td>
+        <td>Update threadtest to accept -init option instead of using compiler directive.</td>
+    </tr>
+        
+    <tr>
+        <td>2004-02-13</td>
+        <td>David Cargill</td>
+        <td>Remove unnecessary if statement</td>
+    </tr>
+        
+    <tr>
+        <td>2004-02-13</td>
+        <td>David Cargill</td>
+        <td>Bug#26900 fix, remove virtual on destructor</td>
+    </tr>
+        
+    <tr>
+        <td>2004-02-12</td>
+        <td>Alberto Massari</td>
+        <td>Xercesc2_5_0 Updates</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-12</td>
+        <td>PeiYong Zhang</td>
+        <td>Xercesc2_5_0 Updates</td>        
+    </tr>
+
+    <tr>
+        <td>2004-02-12</td>
+        <td>David Cargill</td>
+        <td>PSVIWriter documentation updates</td>        
+    </tr>
+    
+    <tr>
+        <td>2004-02-12</td>
+        <td>Merlin</td>
+        <td>Bug#26607 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-12</td>
+        <td>Alberto Massari</td>
+        <td>Bug#21965: A substitution group with no type is always valid </td>
+    </tr>            
+       
+    <tr>
+        <td>2004-02-12</td>
+        <td>David Cargill</td>
+        <td>SCMPrint build error fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-12</td>
+        <td>Alberto Massari</td>
+        <td>Xercesc2_5_0: com updates</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-12</td>
+        <td>Erik Rydgren</td>
+        <td>Implemented setTextContent </td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-11</td>
+        <td>PeiYong Zhang</td>
+        <td>Project SUMPrint</td>
+    </tr>
+
+    <tr>
+        <td>2004-02-11</td>
+        <td>PeiYong Zhang</td>
+        <td>PSVIWriter to build with intel</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-11</td>
+        <td>David Cargill</td>
+        <td>PSVIWriter to build on AIX</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-11</td>
+        <td>David Bertoni</td>
+        <td>Bug#26648 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-11</td>
+        <td>David Cargill</td>
+        <td>Bug#26131fix.</td>
+    </tr>
+
+    <tr>
+        <td>2004-02-11</td>
+        <td>David Cargill</td>
+        <td>Bug#25541fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-10</td>
+        <td>David Cargill</td>
+        <td>PSVIWriter build fix</td>
+    </tr>               
+           
+    <tr>
+        <td>2004-02-09</td>
+        <td>C-J Berg</td>
+        <td>Bug#20684 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-09</td>
+        <td>David Cargill</td>
+        <td>PSVIWriter build fix and usage update</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-06</td>
+        <td>PeiYong Zhang</td>
+        <td>Project PSVIWriter</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-06</td>
+        <td>David Cargill</td>
+        <td>Misc 390 changes.</td>
+    </tr>
+           
+    <tr>
+        <td>2004-02-06</td>
+        <td>David Cargill</td>
+        <td>Intrinsic transcoding support for 390.</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-05</td>
+        <td>David Cargill</td>
+        <td>Fix a seg fault with PSVI and set basetype of anysimpletype to be anytype.</td>
+    </tr>               
+           
+    <tr>
+        <td>2004-02-05</td>
+        <td>David Cargill</td>
+        <td>Code cleanup changes to get rid of various compiler diagnostic messages.</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-04</td>
+        <td>Alberto Massari</td>
+        <td>Added support for the Interix platform (Windows Services for Unix 3.5)</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-04</td>
+        <td>Berin Lautenbach</td>
+        <td>Bug#26426 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-03</td>
+        <td>PeiYong Zhang</td>
+        <td>Bug#26315 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-02-03</td>
+        <td>PeiYong Zhang</td>
+        <td>put back the parameter to build debug</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-31</td>
+        <td>David Cargill</td>
+        <td>Update script to flush buffer</td>
+    </tr>               
+           
+    <tr>
+        <td>2004-01-29</td>
+        <td>David Cargill</td>
+        <td>Update sanity tests so that each test result can be uniquely identified</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-29</td>
+        <td>David Cargill</td>
+        <td>Code cleanup changes to get rid of various compiler diagnostic messages.</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-28</td>
+        <td>James Berry</td>
+        <td>Add include for unistd.h</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-28</td>
+        <td>James Berry</td>
+        <td>Define away some gcc garbage so that /usr/include/unistd.h will compile with the CodeWarrior MachO target  </td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-26</td>
+        <td>James Berry</td>
+        <td>Add a check for a corner-case buffer condition</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-25</td>
+        <td>James Berry</td>
+        <td>Bug #26419 fix</td>
+    </tr>               
+           
+    <tr>
+        <td>2004-01-25</td>
+        <td>James Berry</td>
+        <td>Step around CodeWarrior compiler warning</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-25</td>
+        <td>James Berry</td>
+        <td>Update Mac OS Xcode project to reflect recent file additions</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-25</td>
+        <td>James Berry</td>
+        <td>Update Mac OS CodeWarrior project to reflect recent file additions</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-21</td>
+        <td>PeiYong Zhang</td>
+        <td>Bug#25751fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-19</td>
+        <td>Alberto Massari</td>
+        <td>WideCharToMultiByte and MultiByteToWideChar return 0 on failure, not -1</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-16</td>
+        <td>PeiYong Zhang</td>
+        <td>maintain the same size on both 32/64 bit architecture</td>
+    </tr>               
+           
+    <tr>
+        <td>2004-01-16</td>
+        <td>PeiYong Zhang</td>
+        <td>Project XSerializerTest</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-16</td>
+        <td>Alberto Massari</td>
+        <td>In the Win32LCPTranscoder, don't use wcstombs or mbstowcs, as they don't pick up 
+               the correct local code page; use the Win32 API using CP_ACP as the code page  </td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-16</td>
+        <td>Alberto Massari</td>
+        <td>Removed usage of undeclared macro MIN</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-15</td>
+        <td>PeiYong Zhang</td>
+        <td>proper allignment for built-in datatype read/write</td>
+    </tr>
+                                   
+    <tr>
+        <td>2004-01-15</td>
+        <td>Khaled Noaman</td>
+        <td>HP compiler (after upgrade) is no longer complaining about placement delete</td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-15</td>
+        <td>Alberto Massari</td>
+        <td>Bug#18341 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-15</td>
+        <td>Michael Wuschek</td>
+        <td>Bug#24929 fix </td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-13</td>
+        <td>PeiYong Zhang</td>
+        <td>revert code back to previous version</td>
+    </tr>
+            
+    <tr>
+        <td>2004-01-13</td>
+        <td>Kahled Noaman</td>
+        <td>Remove unnecessary local static data</td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-13</td>
+        <td>PeiYong Zhang</td>
+        <td>set optimization level#2 on hp aCC</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-13</td>
+        <td>David Cargill</td>
+        <td>Misc build updates</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-13</td>
+        <td>David Cargill</td>
+        <td>Undo previous change memory management changes.</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-13</td>
+        <td>David Cargill</td>
+        <td>Misc memory management changes</td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-13</td>
+        <td>Khaled Noaman</td>
+        <td>For sanity, use class name to qualify method</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-13</td>
+        <td>Khaled Noaman</td>
+        <td>Fix wrong size of allocation</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-12</td>
+        <td>Neil Graham</td>
+        <td>remove unused static member</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-12</td>
+        <td>Neil Graham</td>
+        <td>update Copyright year</td>
+    </tr>
+        
+    <tr>
+        <td>2004-01-12</td>
+        <td>David Cargill</td>
+        <td>Minor performance change for handling reserved and unreserved characters.</td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-12</td>
+        <td>David Cargill</td>
+        <td>Fix 390 compilation errors.</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-12</td>
+        <td>Khaled Noaman</td>
+        <td>Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-12</td>
+        <td>Neil Graham</td>
+        <td>remove use of static buffers</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-12</td>
+        <td>David Cargill</td>
+        <td>Avoid throwing malformedurl exceptions in XMLURL to avoid a threading problem on AIX.</td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-06</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: inherit facets from base type</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Neil Graham</td>
+        <td>Bug#25660 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Joanne Bogart, Neil Graham</td>
+        <td>Bug#25542 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Alberto Massari</td>
+        <td>Bug#25768 fix: Replaced the call to wcstombs using a NULL target buffer with the equivalent call 
+               to WideCharToMultiByte ()  </td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-06</td>
+        <td>Jeroen Witmond, Neil Graham</td>
+        <td>Bug#25412 fix</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Khaled Noaman</td>
+        <td>Fix segfault when adding S4S</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Khaled Noaman</td>    
+        <td>Reset list of grammars after building XSModel</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>PeiYong Zhang</td>
+        <td>using the no-exception-thrown ctor</td>
+    </tr>
+           
+    <tr>
+        <td>2004-01-06</td>
+        <td>Reid Spencer, Neil Graham</td>
+        <td>Bug#28517 static initialization problems</td>
+    </tr>
+    
+    <tr>
+        <td>2004-01-06</td>
+        <td>Neil Graham</td>
+        <td>make sure locally-declared attributes have declarations in the PSVI</td>
+    </tr>
+
+    <tr>
+        <td>2004-01-06</td>
+        <td>Neil Graham</td>
+        <td>On some platforms, it is problematic to throw a different exception from inside the 
+               catch block of another exception  </td>
+    </tr>
+        
+    <tr>
+        <td>2004-01-05</td>
+        <td>Khaled Noaman</td>
+        <td>Various PSVI fixes</td>
+    </tr>                                                                       
+   
+    <tr>
+        <td>2004-01-03</td>
+        <td>PeiYong Zhang</td>
+        <td>using ctor/parseContent to avoid exception thrown from ctor</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-31</td>
+        <td>David Cargill</td>
+        <td>Update AIX build to generate .a libraries as -brtl is no longer used so that a 
+               build generated without using packageBinaires.pl will be clean.  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-31</td>
+        <td>David Cargill</td>
+        <td>Release memory when an error is encountered.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-31</td>
+        <td>Alberto Massari</td>
+        <td>Updated project for BCC551</td>
+    </tr>                
+           
+    <tr>
+        <td>2003-12-31</td>
+        <td>Alberto Massari</td>
+        <td>Made virtual function checkAdditionalFacet 'const', so that it matches the 
+                declaration in a derived class  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>Even if the resolver has no grammars, since all schema
+               processors are aware of the schema-for-schemas, an XSModel
+               should be produced.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>fix one more buffer overrun, affecting boolean lists</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>enable production of canonical representations for dates with negative years, or 
+               years >9999  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>ensure an XSModel</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>even if there are no grammars to add to an XSModel, the S4S grammar must be
+               included  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>do not report anything about default/fixed values for non-global attribute declarations</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>use a null-terminated string when tokenizing pattern facets</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>more PSVI bug fixes</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>some indices in the PSVIAttributeList were 1 off</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>fix segfault when validation of a union type fails</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>initialize undeclared attribute registry appropriately for its local use in scanStartTag</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-30</td>
+        <td>Neil Graham</td>
+        <td>allow schema normalized values to be associated with a PSVIAttribute after it is reset</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-29</td>
+        <td>PeiYong Zhang</td>
+        <td>use the original memory manager to deallocate in assignment operator</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-29</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: return value constraint only if global declaration</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-29</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: add whitespace facet if missing</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-29</td>
+        <td>Khaled Noaman</td>
+        <td>More PSVI updates</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-29</td>
+        <td>Alberto Massari</td>
+        <td>When parsing a new element, clear the maps holding the unparsed attribute we have seen.
+                This because these maps keep pointers to the name of the attributes object that gets recycled
+                for every element (and their name is deallocated when recycled)</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-24</td>
+        <td>David Cargill</td>
+        <td>Memory management update.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-24</td>
+        <td>David Cargill</td>
+        <td>Improved algorithm for finding derivedFrom.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-24</td>
+        <td>David Cargill</td>
+        <td>More updates to memory management so that the static memory manager.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-23</td>
+        <td>PeiYong Zhang</td>
+        <td>Absorb exception thrown in getCanonicalRepresentation and return 0,
+                only validate when required</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-22</td>
+        <td>Michael Glavassevich</td>
+        <td>Bug#18611 fix.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-22</td>
+        <td>Gareth Reakes</td>
+        <td>Bug #25699 fix: made getRootElemID const. </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-22</td>
+        <td>Jeroen N. Witmond, Gareth Reakes</td>
+        <td>Bug#25164: Patch for doc enhancement</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-20</td>
+        <td>Neil Graham</td>
+        <td>add attribute names to PSVIAttributeList and fix some problems with calculation of 
+                canonical values in element content  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-20</td>
+        <td>Neil Graham</td>
+        <td>fix canonical representation production</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-20</td>
+        <td>Neil Graham</td>
+        <td>store name/namespace of corresponding attribute in PSVIAttributeList; not all
+               PSVIAttributes have XSAttributeDeclarations  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-19</td>
+        <td>David Cargill</td>
+        <td>Fix compiler messages on OS390.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-19</td>
+        <td>David Cargill</td>
+        <td>More memory management updates.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-19</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: process 'final' information</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-19</td>
+        <td>Neil Graham</td>
+        <td>when validating a skipped element or attribute, we should not look for a declaration.  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-19</td>
+        <td>Neil Graham</td>
+        <td>remove a throw clause inserted during debugging</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-18</td>
+        <td>PeiYong Zhang</td>
+        <td>do not assert memorymanager in placement delete.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>David Cargill</td>
+        <td>Fix AIX compiler error.</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: Use complex type info if present, otherwise use datatype validator</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>Khaled Noaman</td>
+        <td>PSVI: fix for annotation of attributes in attributeGroup/derived types  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>Neil Graham</td>
+        <td>fix two overflow conditions</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>Neil Graham</td>
+        <td>fix a segfault and a possible buffer overflow condition</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-17</td>
+        <td>David Cargill</td>
+        <td>Update for memory management so that the static memory manager (one
+               used to call Initialize) is only for static data.</td>
+    </tr>                        
+           
+    <tr>
+        <td>2003-12-17</td>
+        <td>Khaled Noaman</td>
+        <td>Check for NULL when building XSParticle</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Neil Graham</td>
+        <td>fix compilation error</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Neil Graham</td>
+        <td>ensure all uses of ArrayJanitor use a memory manager</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Neil Graham</td>
+        <td>add default memory manager parameter to loadMsg method that uses char * parameters</td>
+    </tr>
+               
+    <tr>
+        <td>2003-12-16</td>
+        <td>David Cargill</td>
+        <td>Fix memhandlertest failure (memory not deleted).</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>PeiYong Zhang</td>
+        <td>XSerializerTest updates</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>PeiYong Zhang</td>
+        <td>exception thrown upon invalid number, thanks Gareth Reakes.</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Khaled Noaman</td>
+        <td>Make IC_Field stateless, fMayMatch is no longer a data member of IC_Field</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Khaled Noaman</td>
+        <td>Add nextElementKey method</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-</td>
+        <td></td>
+        <td>BinMemOutputStream</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Alberto Massari</td>
+        <td>The DOMTypeInfo should have a NULL namespace and type name when DTD validation is 
+                used, not empty strings  </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>PeiYong Zhang</td>
+        <td>don't expand ContextSpecNode when deserilized</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>Steve Dulin, Neil Graham</td>
+        <td>update</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-16</td>
+        <td>David Cargill</td>
+        <td>Change a conditional expression to an if-else to avoid a compiler problem. </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-15</td>
+        <td>Neil Graham</td>
+        <td>fix segfault when a writeAnnotation() method was called</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-15</td>
+        <td>David Cargill</td>
+        <td>psvi updates; cleanup revisits and bug fixes</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-14</td>
+        <td>Neil Graham</td>
+        <td>make use of XMLDocumentHandler::elementTypeInfo instead of non-thread-safe XMLElementDecl methods  </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-13</td>
+        <td>Han Ming, Neil Graham</td>
+        <td>Bug#25494 fix</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-13</td>
+        <td>Neil Graham</td>
+        <td>fix compilation errors under gcc</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-13</td>
+        <td>Neil Graham</td>
+        <td>configure scripts need to be told about XSerializerTests before they can build its Makefile</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-12</td>
+        <td>Michael Glavassevich, Neil Graham</td>
+        <td>fix small bugs that made sanity tests fails</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-12</td>
+        <td>PeiYong Zhang</td>
+        <td>Project XSerializerTest</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-11</td>
+        <td>PeiYong Zhang</td>
+        <td>trailing zeros for double/float w/o decimal point</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-</td>
+        <td>Michael Glavassevich, Neil Graham</td>
+        <td>fixes for the URI implementation to take registry names into account </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-11</td>
+        <td>PeiYong Zhang</td>
+        <td>Canonical Representation Support</td> 
+    </tr>
+    
+    <tr>
+        <td>2003-12-11</td>
+        <td>Khaled Noaman</td>
+        <td>Store non schema attributes from parent in XSAnnotation</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-10</td>
+        <td>Steve Dulin, Neil Graham</td>
+        <td>OS/390 updates</td>
+    </tr>
+            
+    <tr>
+        <td>2003-12-10</td>
+        <td>Steve Dulin, Neil Graham</td>
+        <td>make documentation accord with what Xerces-C supports</td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-10</td>
+        <td>Steve Dulin, Neil Graham</td>
+        <td>ICU has deprecated the -s390 encoding suffix.  This patch uses the new convention 
+               for XML documents that make use of this suffix  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-10</td>
+        <td>Steve Dulin, Neil Graham</td>
+        <td>make CreateDOMDocument sample more robust </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-10</td>
+        <td>Neil Graham</td>
+        <td>fixes for canonical value production; memory management was not implemented correctly </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-10</td>
+        <td>Stephen Dulin</td>
+        <td>Eliminate the preparsing stage </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-10</td>
+        <td>Neil Graham</td>
+        <td>change some hash constants</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-10</td>
+        <td>Neil Graham</td>
+        <td>fix seg fault caused when a complex type had simple content; we were not processing 
+               the complex type itself, only its base </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-09</td>
+        <td>James Berry</td>
+        <td>Remove GCC2 build styles from xcode samples</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-09</td>
+        <td>Han Ming Ong</td>
+        <td>Bug #25343  Add xcode project for SEnumVal sample </td>
+    </tr>
+           
+    <tr>
+        <td>2003-12-09</td>
+        <td>Han Ming Ong</td>
+        <td>Bug#25337: Enable DEPLOYMENT_POSTPROCESSING for Mac OS X GCC3 Deployment Build. </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-07</td>
+        <td>Neil Graham</td>
+        <td>fix bug in PSVI where a segfault would occur if an attribute was not defined</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-07</td>
+        <td>Neil Graham</td>
+        <td>fix duplicate attribute detection when namespaces are disabled</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-03</td>
+        <td>Neil Graham</td>
+        <td>PSVI fix:  cannot allow validator to reset its element content buffer before exposing it to the application  </td>        
+    </tr>
+           
+    <tr>
+        <td>2003-12-03</td>
+        <td>Neil Graham</td>
+        <td>uninitialize panic handlers so they will be ready for subsequent initalizations</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-03</td>
+        <td>Pete Lloyd, Neil Graham</td>
+        <td>when an empty element is valid, it will not have a datatype validator </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Jeroen Whitmond, Neil Graham</td>
+        <td>Bug#25118, additional fix once again </td>
+    </tr>                                                                                                                                         
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Neil Graham</td>
+        <td>since there are certain things, such as schemaLocation attributes, that have a 
+               datatype and which we nonetheless do not validate, make canonical-value production 
+               dependent on validity being valid  </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Pete Lloyd, Neil Graham</td>
+        <td>fix for ArrayIndexOutOfBoundsException in PSVIAttributeList</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Alberto Massari</td>
+        <td>Bug#20169, openFile was opening the file for read and write, while only read was required </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Alberto Massari</td>
+        <td>Removed /version option from the linker</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Alberto Massari</td>
+        <td>Don't use the word "exception" as a variable name, as VC 7.1 complains about it</td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-02</td>
+        <td>Alberto Massari</td>
+        <td>Bug#16055 fix, Make the code compilable on Windows when UNICODE is defined </td>
+    </tr>
+    
+    <tr>
+        <td>2003-12-01</td>
+        <td>Khaled Noaman</td>
+        <td> Properly set fAnnotation data member</td>
+    </tr>
+                       
+</table>
+</s2>
+
 
     <anchor name="Release240"/>
 <s2 title="Release Information of &XercesCName; 2.4.0 Dec. 2, 2003">
