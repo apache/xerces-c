@@ -56,9 +56,12 @@
  /*                                                                   */
  /*                                                                   */
  /* $Log$
-  * Revision 1.2  2000/02/10 00:15:02  abagchi
-  * Added Apache Copyright notice
-  *                                  */
+  * Revision 1.3  2000/02/11 17:48:19  abagchi
+  * Message change for some Panic return codes
+  *
+ /* Revision 1.2  2000/02/10 00:15:02  abagchi
+ /* Added Apache Copyright notice
+ /*                                  */
  /* Revision 1.2  2000/02/06 07:48:23  swan                           */
  /* Year 2K copyright swat.                                           */
  /*                                                                   */
@@ -630,7 +633,8 @@
                           have the extension .cnv and exist in a directory ''icu/data'' relative to the Xerces-C shared library. If you have installed the converter files in a +
                           different location, you need to set up the environment variable ICU_DATA'' to point directly to the directory containing the converter files. Reason codes +
                           are: 0 -- Unable to load transcoding service 1 -- Unable to create default transcoder 2 -- Unable to locate complete parser 3 -- Customer-messaging choice not +
-                          compiled 4 -- Could not set up cutomer-messaging correctly &N Recovery  . . . :   Correct any errors, and then try request again') SEV(20) FMT((*CHAR *VARY +
+                          compiled 4 -- Could not load customer messaging correctly   5 -- Unable to synchronize system or mutex  6 -- Unable to initialize system or mutex  +
+                          &N Recovery  . . . :   Correct any errors, and then try request again') SEV(20) FMT((*CHAR *VARY +
                           2)) DMPLST(*NONE) LVL('01/14/00' 61) CCSID(*JOB)
              RMVMSGD    MSGID(XMLBEEF) MSGF(&LIBNAME/&FILENAME)
              ADDMSGD    MSGID(XMLBEEF) MSGF(&LIBNAME/&FILENAME) MSG('Error on &1 NetAccessor. Msg: &2') SEV(20) FMT((*CHAR *VARY 2) (*CHAR *VARY 2)) DMPLST(*NONE) LVL('01/14/00' 61) +
