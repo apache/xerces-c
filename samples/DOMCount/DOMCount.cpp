@@ -197,15 +197,15 @@ int main(int argC, char* argV[])
     }
 
     // Instantiate the DOM parser.
-    DOMParser parser;
-    parser.setValidationScheme(valScheme);
-    parser.setDoNamespaces(doNamespaces);
-    parser.setDoSchema(doSchema);
-    parser.setValidationSchemaFullChecking(schemaFullChecking);
+    DOMParser* parser = new DOMParser;
+    parser->setValidationScheme(valScheme);
+    parser->setDoNamespaces(doNamespaces);
+    parser->setDoSchema(doSchema);
+    parser->setValidationSchemaFullChecking(schemaFullChecking);
 
     // And create our error handler and install it
     DOMCountErrorHandler errorHandler;
-    parser.setErrorHandler(&errorHandler);
+    parser->setErrorHandler(&errorHandler);
 
     //
     //  Get the starting time and kick off the parse of the indicated
@@ -250,7 +250,7 @@ int main(int argC, char* argV[])
         try
         {
             const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-            parser.parse(xmlFile);
+            parser->parse(xmlFile);
             const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
             duration = endMillis - startMillis;
         }
@@ -289,7 +289,7 @@ int main(int argC, char* argV[])
         }
          else
         {
-            DOM_Document doc = parser.getDocument();
+            DOM_Document doc = parser->getDocument();
             unsigned int elementCount = doc.getElementsByTagName("*").getLength();
 
             // Print out the stats that we collected and time taken.
@@ -300,6 +300,11 @@ int main(int argC, char* argV[])
 
     if (doList)
         fin.close();
+
+    //
+    //  Delete the parser itself.  Must be done prior to calling Terminate, below.
+    //
+    delete parser;
 
     // And call the termination method
     XMLPlatformUtils::Terminate();

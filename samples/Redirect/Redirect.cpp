@@ -75,6 +75,9 @@
  * to read the contents of 'personal.dtd'.
  *
  * $Log$
+ * Revision 1.6  2001/10/25 15:18:33  tng
+ * delete the parser before XMLPlatformUtils::Terminate.
+ *
  * Revision 1.5  2001/10/19 19:02:42  tng
  * [Bug 3909] return non-zero an exit code when error was encounted.
  * And other modification for consistent help display and return code across samples.
@@ -152,16 +155,16 @@ int main(int argc, char* args[])
     //  Create a SAX parser object. Then, according to what we were told on
     //  the command line, set it to validate or not.
     //
-    SAXParser parser;
+    SAXParser* parser = new SAXParser;
 
     //
     //  Create our SAX handler object and install it on the parser, as the
     //  document, entity and error handlers.
     //
     RedirectHandlers handler;
-    parser.setDocumentHandler(&handler);
-    parser.setErrorHandler(&handler);
-    parser.setEntityResolver(&handler);
+    parser->setDocumentHandler(&handler);
+    parser->setErrorHandler(&handler);
+    parser->setEntityResolver(&handler);
 
     //
     //  Get the starting time and kick off the parse of the indicated file.
@@ -172,10 +175,10 @@ int main(int argc, char* args[])
     try
     {
         const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-        parser.parse(xmlFile);
+        parser->parse(xmlFile);
         const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
         duration = endMillis - startMillis;
-        errorCount = parser.getErrorCount();
+        errorCount = parser->getErrorCount();
     }
 
     catch (const XMLException& e)
@@ -195,6 +198,11 @@ int main(int argc, char* args[])
              << handler.getSpaceCount() << " spaces, "
              << handler.getCharacterCount() << " chars)" << endl;
     }
+
+    //
+    //  Delete the parser itself.  Must be done prior to calling Terminate, below.
+    //
+    delete parser;
 
     XMLPlatformUtils::Terminate();
 

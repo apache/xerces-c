@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/10/25 15:18:33  tng
+ * delete the parser before XMLPlatformUtils::Terminate.
+ *
  * Revision 1.11  2001/10/19 18:52:04  tng
  * Since PParse can take any XML file as input file, it shouldn't hardcode to expect 16 elements.
  * Change it to work similar to SAXCount which just prints the number of elements, characters, attributes ... etc.
@@ -283,14 +286,14 @@ int main(int argC, char* argV[])
     //  Create a SAX parser object to use and create our SAX event handlers
     //  and plug them in.
     //
-    SAXParser parser;
+    SAXParser* parser = new SAXParser;
     PParseHandlers handler;
-    parser.setDocumentHandler(&handler);
-    parser.setErrorHandler(&handler);
-    parser.setValidationScheme(valScheme);
-    parser.setDoNamespaces(doNamespaces);
-    parser.setDoSchema(doSchema);
-    parser.setValidationSchemaFullChecking(schemaFullChecking);
+    parser->setDocumentHandler(&handler);
+    parser->setErrorHandler(&handler);
+    parser->setValidationScheme(valScheme);
+    parser->setDoNamespaces(doNamespaces);
+    parser->setDoSchema(doSchema);
+    parser->setValidationSchemaFullChecking(schemaFullChecking);
 
     //
     //  Ok, lets do the progressive parse loop. On each time around the
@@ -304,7 +307,7 @@ int main(int argC, char* argV[])
         XMLPScanToken token;
 
         const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-        if (!parser.parseFirst(xmlFile, token))
+        if (!parser->parseFirst(xmlFile, token))
         {
             cerr << "scanFirst() failed\n" << endl;
             XMLPlatformUtils::Terminate();
@@ -316,21 +319,21 @@ int main(int argC, char* argV[])
         //  or hit the end.
         //
         bool gotMore = true;
-        while (gotMore && !parser.getErrorCount())
-            gotMore = parser.parseNext(token);
+        while (gotMore && !parser->getErrorCount())
+            gotMore = parser->parseNext(token);
 
         const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
         duration = endMillis - startMillis;
 
-        errorCount = parser.getErrorCount();
+        errorCount = parser->getErrorCount();
         //
-        //  Reset the parser. In this simple progrma, since we just exit
+        //  Reset the parser-> In this simple progrma, since we just exit
         //  now, its not technically required. But, in programs which
         //  would remain open, you should reset after a progressive parse
         //  in case you broke out before the end of the file. This insures
         //  that all opened files, sockets, etc... are closed.
         //
-        parser.parseReset(token);
+        parser->parseReset(token);
     }
 
     catch (const XMLException& toCatch)
@@ -351,6 +354,11 @@ int main(int argC, char* argV[])
             << handler.getSpaceCount() << " spaces, "
             << handler.getCharacterCount() << " chars)" << endl;
     }
+
+    //
+    //  Delete the parser itself.  Must be done prior to calling Terminate, below.
+    //
+    delete parser;
 
     // And call the termination method
     XMLPlatformUtils::Terminate();

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/10/25 15:18:33  tng
+ * delete the parser before XMLPlatformUtils::Terminate.
+ *
  * Revision 1.13  2001/10/19 19:02:42  tng
  * [Bug 3909] return non-zero an exit code when error was encounted.
  * And other modification for consistent help display and return code across samples.
@@ -229,8 +232,8 @@ int main(int argC, char* argV[])
     //
     int errorCount = 0;
     DTDValidator* valToUse = new DTDValidator;
-    SAXParser parser(valToUse);
-    parser.setValidationScheme(valScheme);
+    SAXParser* parser = new SAXParser(valToUse);
+    parser->setValidationScheme(valScheme);
 
     //
     //  Get the starting time and kick off the parse of the indicated
@@ -238,8 +241,8 @@ int main(int argC, char* argV[])
     //
     try
     {
-        parser.parse(xmlFile);
-        errorCount = parser.getErrorCount();
+        parser->parse(xmlFile);
+        errorCount = parser->getErrorCount();
     }
 
     catch (const XMLException& e)
@@ -331,6 +334,11 @@ int main(int argC, char* argV[])
     }
     else
         cout << "\nErrors occured, no output available\n" << endl;
+
+    //
+    //  Delete the parser itself.  Must be done prior to calling Terminate, below.
+    //
+    delete parser;
 
     // And call the termination method
     XMLPlatformUtils::Terminate();

@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.12  2001/10/25 15:18:33  tng
+* delete the parser before XMLPlatformUtils::Terminate.
+*
 * Revision 1.11  2001/10/19 19:02:43  tng
 * [Bug 3909] return non-zero an exit code when error was encounted.
 * And other modification for consistent help display and return code across samples.
@@ -344,6 +347,11 @@ int main(int argC, char* argV[])
 
     if (doList)
         fin.close();
+
+    //
+    //  Delete the parser itself.  Must be done prior to calling Terminate, below.
+    //
+    delete parser;
 
     // And call the termination method
     XMLPlatformUtils::Terminate();

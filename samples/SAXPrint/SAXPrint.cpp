@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/10/25 15:18:33  tng
+ * delete the parser before XMLPlatformUtils::Terminate.
+ *
  * Revision 1.16  2001/10/19 19:02:43  tng
  * [Bug 3909] return non-zero an exit code when error was encounted.
  * And other modification for consistent help display and return code across samples.
@@ -313,24 +316,24 @@ int main(int argC, char* argV[])
     //  Create a SAX parser object. Then, according to what we were told on
     //  the command line, set it to validate or not.
     //
-    SAXParser parser;
-    parser.setValidationScheme(valScheme);
-    parser.setDoNamespaces(doNamespaces);
-    parser.setDoSchema(doSchema);
-    parser.setValidationSchemaFullChecking(schemaFullChecking);
+    SAXParser* parser = new SAXParser;
+    parser->setValidationScheme(valScheme);
+    parser->setDoNamespaces(doNamespaces);
+    parser->setDoSchema(doSchema);
+    parser->setValidationSchemaFullChecking(schemaFullChecking);
 
     //
     //  Create the handler object and install it as the document and error
-    //  handler for the parser. Then parse the file and catch any exceptions
+    //  handler for the parser-> Then parse the file and catch any exceptions
     //  that propogate out
     //
     try
     {
         SAXPrintHandlers handler(encodingName, unRepFlags);
-        parser.setDocumentHandler(&handler);
-        parser.setErrorHandler(&handler);
-        parser.parse(xmlFile);
-        errorCount = parser.getErrorCount();
+        parser->setDocumentHandler(&handler);
+        parser->setErrorHandler(&handler);
+        parser->parse(xmlFile);
+        errorCount = parser->getErrorCount();
     }
 
     catch (const XMLException& toCatch)
@@ -341,6 +344,11 @@ int main(int argC, char* argV[])
         XMLPlatformUtils::Terminate();
         return -1;
     }
+
+    //
+    //  Delete the parser itself.  Must be done prior to calling Terminate, below.
+    //
+    delete parser;
 
     // And call the termination method
     XMLPlatformUtils::Terminate();

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/10/25 15:18:33  tng
+ * delete the parser before XMLPlatformUtils::Terminate.
+ *
  * Revision 1.11  2001/10/19 19:02:43  tng
  * [Bug 3909] return non-zero an exit code when error was encounted.
  * And other modification for consistent help display and return code across samples.
@@ -230,11 +233,11 @@ int main(int argC, char* argV[])
     //  Create a SAX parser object. Then, according to what we were told on
     //  the command line, set the options.
     //
-    SAXParser parser;
-    parser.setValidationScheme(valScheme);
-    parser.setDoNamespaces(doNamespaces);
-    parser.setDoSchema(doSchema);
-    parser.setValidationSchemaFullChecking(schemaFullChecking);
+    SAXParser* parser = new SAXParser;
+    parser->setValidationScheme(valScheme);
+    parser->setDoNamespaces(doNamespaces);
+    parser->setDoSchema(doSchema);
+    parser->setValidationSchemaFullChecking(schemaFullChecking);
 
 
     //
@@ -244,8 +247,8 @@ int main(int argC, char* argV[])
     //  to do.
     //
     StdInParseHandlers handler;
-    parser.setDocumentHandler(&handler);
-    parser.setErrorHandler(&handler);
+    parser->setDocumentHandler(&handler);
+    parser->setErrorHandler(&handler);
 
     //
     //  Kick off the parse and catch any exceptions. Create a standard
@@ -257,10 +260,10 @@ int main(int argC, char* argV[])
     try
     {
         const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-        parser.parse(src);
+        parser->parse(src);
         const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
         duration = endMillis - startMillis;
-        errorCount = parser.getErrorCount();
+        errorCount = parser->getErrorCount();
     }
 
     catch (const XMLException& e)
@@ -280,6 +283,11 @@ int main(int argC, char* argV[])
              << handler.getSpaceCount() << " spaces, "
              << handler.getCharacterCount() << " chars)" << endl;
     }
+
+    //
+    //  Delete the parser itself.  Must be done prior to calling Terminate, below.
+    //
+    delete parser;
 
     XMLPlatformUtils::Terminate();
 

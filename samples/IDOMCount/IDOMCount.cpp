@@ -233,15 +233,15 @@ int main(int argC, char* argV[])
     }
 
     // Instantiate the DOM parser.
-    IDOMParser parser;
-    parser.setValidationScheme(valScheme);
-    parser.setDoNamespaces(doNamespaces);
-    parser.setDoSchema(doSchema);
-    parser.setValidationSchemaFullChecking(schemaFullChecking);
+    IDOMParser* parser = new IDOMParser;
+    parser->setValidationScheme(valScheme);
+    parser->setDoNamespaces(doNamespaces);
+    parser->setDoSchema(doSchema);
+    parser->setValidationSchemaFullChecking(schemaFullChecking);
 
     // And create our error handler and install it
     DOMCountErrorHandler errorHandler;
-    parser.setErrorHandler(&errorHandler);
+    parser->setErrorHandler(&errorHandler);
 
     //
     //  Get the starting time and kick off the parse of the indicated
@@ -286,8 +286,8 @@ int main(int argC, char* argV[])
         try
         {
             const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-            parser.resetDocumentPool();
-            parser.parse(xmlFile);
+            parser->resetDocumentPool();
+            parser->parse(xmlFile);
             const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
             duration = endMillis - startMillis;
         }
@@ -326,7 +326,7 @@ int main(int argC, char* argV[])
         }
          else
         {
-            IDOM_Document *doc = parser.getDocument();
+            IDOM_Document *doc = parser->getDocument();
             unsigned int elementCount = 0;
             if (doc)
                 elementCount = countChildElements((IDOM_Node*)doc->getDocumentElement());
@@ -336,6 +336,11 @@ int main(int argC, char* argV[])
                  << elementCount << " elems)." << endl;
         }
     }
+
+    //
+    //  Delete the parser itself.  Must be done prior to calling Terminate, below.
+    //
+    delete parser;
 
     // And call the termination method
     XMLPlatformUtils::Terminate();

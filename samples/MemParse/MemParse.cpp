@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/10/25 15:18:33  tng
+ * delete the parser before XMLPlatformUtils::Terminate.
+ *
  * Revision 1.11  2001/10/19 18:56:08  tng
  * Pulled the hardcoded "encoding" out of the document itself and made it a #define
  * to make it easier to support other encodings.  Patch from David McCreedy.
@@ -271,19 +274,19 @@ int main(int argC, char* argV[])
     //  Create a SAX parser object. Then, according to what we were told on
     //  the command line, set it to validate or not.
     //
-    SAXParser parser;
-    parser.setValidationScheme(valScheme);
-    parser.setDoNamespaces(doNamespaces);
-    parser.setDoSchema(doSchema);
-    parser.setValidationSchemaFullChecking(schemaFullChecking);
+    SAXParser* parser = new SAXParser;
+    parser->setValidationScheme(valScheme);
+    parser->setDoNamespaces(doNamespaces);
+    parser->setDoSchema(doSchema);
+    parser->setValidationSchemaFullChecking(schemaFullChecking);
 
     //
     //  Create our SAX handler object and install it on the parser, as the
     //  document and error handlers.
     //
     MemParseHandlers handler;
-    parser.setDocumentHandler(&handler);
-    parser.setErrorHandler(&handler);
+    parser->setDocumentHandler(&handler);
+    parser->setErrorHandler(&handler);
 
     //
     //  Create MemBufferInputSource from the buffer containing the XML
@@ -311,10 +314,10 @@ int main(int argC, char* argV[])
     try
     {
         const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-        parser.parse(*memBufIS);
+        parser->parse(*memBufIS);
         const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
         duration = endMillis - startMillis;
-        errorCount = parser.getErrorCount();
+        errorCount = parser->getErrorCount();
     }
 
     catch (const XMLException& e)
@@ -337,6 +340,13 @@ int main(int argC, char* argV[])
              << handler.getSpaceCount() << " spaces, "
              << handler.getCharacterCount() << " characters).\n" << endl;
     }
+
+    //
+    //  Delete the parser itself.  Must be done prior to calling Terminate, below.
+    //
+    delete parser;
+
+    delete memBufIS;
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
