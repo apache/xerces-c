@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2000/03/01 22:30:00  abagchi
+# Object files are now created directly under obj directory
+#
 # Revision 1.11  2000/02/09 22:04:54  abagchi
 # AS/400 change
 #
@@ -137,8 +140,7 @@ endif
 THISLIB=${LIB}/${LIBNAME}
 VER=1_1
 
-ALL_OBJECTS_DIR=${XERCESCROOT}/obj
-ALL_OBJECTS=$(wildcard $(ALL_OBJECTS_DIR)/*.o)
+ALL_OBJECTS=$(wildcard $(XML_OBJ_DIR)/*.o)
 
 #######################################################
 #  HP-UX with CC compiler is awkward since it does    #

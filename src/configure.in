@@ -90,6 +90,14 @@ util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
 util/Transcoders/Iconv400/Makefile \
 util/Platforms/Makefile \
+util/Platforms/Solaris/Makefile \
+util/Platforms/AIX/Makefile \
+util/Platforms/Linux/Makefile \
+util/Platforms/HPUX/Makefile \
+util/Platforms/OS390/Makefile \
+util/Platforms/OS400/Makefile \
+util/Platforms/IRIX/Makefile \
+util/Platforms/UnixWare/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \

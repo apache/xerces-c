@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.6  2000/03/01 22:30:04  abagchi
+# Object files are now created directly under obj directory
+#
 # Revision 1.5  2000/02/04 23:48:54  abagchi
 # Made sure all targets are appended with :: not single :
 #
@@ -134,7 +137,7 @@ VALIDATORS_DTD_CPP_OBJECTS = \
 	MixedContentModel.$(TO) \
 	SimpleContentModel.$(TO)
 
-all::	includes $(VALIDATORS_DTD_CPP_OBJECTS) publish
+all::	includes $(VALIDATORS_DTD_CPP_OBJECTS)
 
 includes::	pubheaders $(VALIDATORS_DTD_C_FILES)
 
@@ -142,28 +145,18 @@ pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
 	$(CP) $(VALIDATORS_DTD_CPP_PUBHEADERS) $(VALIDATORS_DTD_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
 
-publish::
-	-mkdir -p ${ALL_OBJECTS_DIR}
-	$(CP) $(VALIDATORS_DTD_CPP_OBJECTS) $(ALL_OBJECTS_DIR)
-
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
 	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
 clean::
 	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."
-	$(RM2) $(VALIDATORS_DTD_CPP_OBJECTS)
+	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(VALIDATORS_DTD_CPP_OBJECTS))
 
 distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE)/$(SUBMODULE) header files ..."
-	@for file in $(VALIDATORS_DTD_CPP_PUBHEADERS); do \
-	rm -f $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/$$file; \
-	done
-	@echo "Removing all $(MODULE)/$(SUBMODULE) object files ..."
-	@for file in $(VALIDATORS_DTD_CPP_OBJECTS); do \
-	$(RM2) $(ALL_OBJECTS_DIR)/$$file; \
-	done
+	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(VALIDATORS_DTD_CPP_PUBHEADERS))
 
 install::
 	-mkdir -p $(PREFIX)/$(MODULE)/$(SUBMODULE)

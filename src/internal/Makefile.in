@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.8  2000/03/01 22:30:02  abagchi
+# Object files are now created directly under obj directory
+#
 # Revision 1.7  2000/02/06 07:47:53  rahulj
 # Year 2K copyright swat.
 #
@@ -126,7 +129,7 @@ INTERNAL_CPP_OBJECTS = \
 	XMLScanner.$(TO) \
 	XMLScanner2.$(TO)
 
-all::	includes $(INTERNAL_CPP_OBJECTS) publish
+all::	includes $(INTERNAL_CPP_OBJECTS)
 
 includes::	pubheaders $(INTERNAL_C_FILES)
 
@@ -134,28 +137,18 @@ pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)
 	$(CP) $(INTERNAL_CPP_PUBHEADERS) $(INTERNAL_C_FILES) $(XML_INC_DIR)/$(MODULE)
 
-publish::
-	-mkdir -p ${ALL_OBJECTS_DIR}
-	$(CP) $(INTERNAL_CPP_OBJECTS) $(ALL_OBJECTS_DIR)
-
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
 	$(MAKE_DEPEND) $(XML_INCL) *.cpp > $(DEPFILE)
 
 clean::
 	@echo "Making clean in $(MODULE) ..."
-	$(RM2) $(INTERNAL_CPP_OBJECTS)
+	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(INTERNAL_CPP_OBJECTS))
 
 distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE) header files ..."
-	@for file in $(INTERNAL_CPP_PUBHEADERS); do \
-	rm -f $(XML_INC_DIR)/$(MODULE)/$$file; \
-	done
-	@echo "Removing all $(MODULE) object files ..."
-	@for file in $(INTERNAL_CPP_OBJECTS); do \
-	$(RM2) $(ALL_OBJECTS_DIR)/$$file; \
-	done
+	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(INTERNAL_CPP_PUBHEADERS))
 
 install::
 	-mkdir -p $(PREFIX)/$(MODULE)

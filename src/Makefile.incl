@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.19  2000/03/01 22:30:00  abagchi
+# Object files are now created directly under obj directory
+#
 # Revision 1.18  2000/02/23 00:35:48  abagchi
 # Added OS/390 changes to comply with new ICUDATA library
 #
@@ -155,12 +158,11 @@
 
 ALL:    all
 
-ALL_OBJECTS_DIR   = ${XERCESCROOT}/obj
-
 XML_BUILD_OPTIONS = ${CXXFLAGS}
 
 XML_LIB_DIR = $(XERCESCROOT)/lib
 XML_INC_DIR = $(XERCESCROOT)/include
+XML_OBJ_DIR = ${XERCESCROOT}/obj
 XML_INCL    = -I$(XML_INC_DIR)
 ifeq (${SYSOVR},OS400)
 PLATFORM = OS400
@@ -304,7 +306,6 @@ ifeq (${PLATFORM}, IRIX)
 PLATFORM_COMPILE_OPTIONS = -LANG:pch -LANG:std -O2 \
                            -D${PLATFORM} -D_REENTRANT \
                            -I/usr/local/include
-OBJ_OUT=${XERCESCROOT}/obj/
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
 ifeq (${TRANSCODER}, ICU)
@@ -352,7 +353,7 @@ ifeq (${PLATFORM}, HPUX)
     endif
     SHLIBSUFFIX=.sl
   else
-    TEMPLATESREPOSITORY = ${ALL_OBJECTS_DIR}/ptrepository
+    TEMPLATESREPOSITORY = ${XML_OBJ_DIR}/ptrepository
     COMMON_COMPILE_OPTIONS = -D_HP_UX -DXML4C_TMPLSINC \
         -D${OSVERDEFINE} +DAportable +eh +z -z +a1
     ifeq ($(MODULE), dom)
@@ -427,12 +428,10 @@ LINKLIB = $(XML_LIB_DIR)
 .SUFFIXES: .cpp .c .$(TO)
 
 .cpp.$(TO):
-	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)
-ifeq (${PLATFORM}, IRIX)
-	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(OBJ_OUT)$(@) $(<)
-endif
+	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(XML_OBJ_DIR)/$(@) $(<)
 
 .c.$(TO):
-	$(JUST_CC) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)
+	$(JUST_CC) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(XML_OBJ_DIR)/$(@) $(<)
+
 .C.$(TO):
-	$(JUST_CC) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)
+	$(JUST_CC) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(XML_OBJ_DIR)/$(@) $(<)

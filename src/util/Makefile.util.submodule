@@ -54,7 +54,7 @@
 # <http://www.apache.org/>.
 #
 
-all:	includes $(CPP_OBJECTS) publish
+all:	includes $(CPP_OBJECTS)
 
 includes:	pubheaders
 
@@ -62,28 +62,18 @@ pubheaders:
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
 	$(CP) $(CPP_PUBHEADERS) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
 
-publish:
-	-mkdir -p ${ALL_OBJECTS_DIR}
-	$(CP) $(CPP_OBJECTS) $(ALL_OBJECTS_DIR)
-
 # this may generate unnecessary dependencies, but it makes life easier
 depend: includes
 	$(MAKE_DEPEND) $(XML_INCL) *.cpp > $(DEPFILE)
 
 clean:
 	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."
-	$(RM2) $(CPP_OBJECTS)
+	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(CPP_OBJECTS))
 
 distclean:	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE)/$(SUBMODULE) header files ..."
-	@for file in $(CPP_PUBHEADERS); do \
-	rm -f $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/$$file; \
-	done
-	@echo "Removing all $(MODULE)/$(SUBMODULE) object files ..."
-	@for file in $(CPP_OBJECTS); do \
-	rm -f $(ALL_OBJECTS_DIR)/$$file; \
-	done
+	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(CPP_PUBHEADERS))
 
 install:
 	-mkdir -p $(PREFIX)/$(MODULE)/$(SUBMODULE)

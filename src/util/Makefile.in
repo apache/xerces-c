@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.19  2000/03/01 22:30:03  abagchi
+# Object files are now created directly under obj directory
+#
 # Revision 1.18  2000/02/22 01:06:28  aruna1
 # Added XMLChTranscoder
 #
@@ -268,7 +271,7 @@ UTIL_CPP_OBJECTS = \
 	XMLUni.$(TO) \
 	XMLWin1252Transcoder.$(TO)
 
-all::	includes $(UTIL_CPP_OBJECTS) platforms transcoders messageloaders compilers publish
+all::	includes $(UTIL_CPP_OBJECTS) platforms transcoders messageloaders compilers
 
 includes::	pubheaders $(C_FILES)
 	cd Platforms ; $(MAKE) $@ ; cd ..
@@ -302,17 +305,13 @@ pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)
 	$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(XML_INC_DIR)/$(MODULE)
 
-publish::
-	-mkdir -p ${ALL_OBJECTS_DIR}
-	$(CP) $(UTIL_CPP_OBJECTS) $(ALL_OBJECTS_DIR)
-
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
 	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
 clean::
 	@echo "Making clean in $(MODULE) ..."
-	$(RM2) $(UTIL_CPP_OBJECTS)
+	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(UTIL_CPP_OBJECTS))
 	cd Platforms ; $(MAKE) $@ ; cd ..
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
@@ -323,16 +322,8 @@ clean::
 distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE) header files ..."
-	@for file in $(UTIL_CPP_PUBHEADERS); do \
-	rm -f $(XML_INC_DIR)/$(MODULE)/$$file; \
-	done
-	@for file in $(C_FILES); do \
-	rm -f $(XML_INC_DIR)/$(MODULE)/$$file; \
-	done
-	@echo "Removing all $(MODULE) object files ..."
-	@for file in $(UTIL_CPP_OBJECTS); do \
-	$(RM2) $(ALL_OBJECTS_DIR)/$$file; \
-	done
+	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(UTIL_CPP_PUBHEADERS))
+	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(C_FILES))
 	cd Platforms ; $(MAKE) $@ ; cd ..
 	cd Transcoders/$(TRANSCODERMODULE) ; $(MAKE) $@ ; cd ../..
 	cd MsgLoaders/$(MESSAGELOADERMODULE) ; $(MAKE) $@ ; cd ../..
