@@ -2990,7 +2990,7 @@ bool XMLScanner::anyAttributeValidation(SchemaAttDef* attWildCard, unsigned int 
         }
     }
 
-    return false;
+    return anyEncountered;
 }
 
 

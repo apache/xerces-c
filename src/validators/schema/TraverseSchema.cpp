@@ -3357,7 +3357,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOM_Element& elem) {
     // ------------------------------------------------------------------
     int uriIndex = fEmptyNamespaceURI;
     XMLAttDef::AttTypes attType = XMLAttDef::Any_Any;
-    ValueVectorOf<unsigned int>* namespaceList = 0;
+    ValueVectorOf<unsigned int> namespaceList(8);
 
     if (XMLString::stringLen(nameSpace) == 0
         || XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDANY) == 0) {
@@ -3369,8 +3369,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOM_Element& elem) {
         uriIndex = fTargetNSURI;
     }
     else {
-
-        namespaceList = new ValueVectorOf<unsigned int>(8);
+        
         XMLStringTokenizer tokenizer(nameSpace);
 
         attType = XMLAttDef::Any_List;
@@ -3389,8 +3388,8 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOM_Element& elem) {
                 uriIndex = fURIStringPool->addOrFind(token);
             }
 
-            if (!namespaceList->containsElement(uriIndex)) {
-                namespaceList->addElement(uriIndex);
+            if (!namespaceList.containsElement(uriIndex)) {
+                namespaceList.addElement(uriIndex);
             }
         }
 
@@ -3405,8 +3404,8 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOM_Element& elem) {
                                             uriIndex, attType, attDefType);
 
 
-    if (namespaceList && namespaceList->size()) {
-       attDef->setNamespaceList(namespaceList);
+    if (namespaceList.size()) {
+       attDef->setNamespaceList(&namespaceList);
     }
 
     return attDef;
