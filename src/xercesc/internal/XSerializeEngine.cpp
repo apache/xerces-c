@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/11/25 20:37:40  jberry
+ * Cleanup build errors/warnings from CodeWarrior
+ *
  * Revision 1.8  2003/10/20 17:37:05  amassari
  * Removed compiler warning
  *
@@ -214,7 +217,7 @@ void XSerializeEngine::write(XSerializable* const objectToWrite)
 	{
 		*this << fgNullObjectTag;
 	}
-    else if (objIndex = lookupStorePool((void*) objectToWrite))
+    else if (0 != (objIndex = lookupStorePool((void*) objectToWrite)))
 	{
         // writing an object reference tag
         *this << objIndex;
@@ -1022,7 +1025,7 @@ bool XSerializeEngine::needToStoreObject(void* const  templateObjectToWrite)
 		*this << fgNullObjectTag; // null pointer
         return false;
 	}
-    else if (objIndex = lookupStorePool(templateObjectToWrite))
+    else if (0 != (objIndex = lookupStorePool(templateObjectToWrite)))
 	{
         *this << objIndex;         // write an object reference tag
         return false;

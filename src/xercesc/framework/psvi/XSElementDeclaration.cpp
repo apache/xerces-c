@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/25 20:37:40  jberry
+ * Cleanup build errors/warnings from CodeWarrior
+ *
  * Revision 1.7  2003/11/23 16:20:16  knoaman
  * PSVI: pass scope and enclosing type during construction.
  *
@@ -133,7 +136,7 @@ XSElementDeclaration::XSElementDeclaration
             fDisallowedSubstitutions |= XSConstants::DERIVATION_SUBSTITUTION;
     }
     
-    if (blockFinalSet = fSchemaElementDecl->getFinalSet())
+    if (0 != (blockFinalSet = fSchemaElementDecl->getFinalSet()))
     {
         if (blockFinalSet & SchemaSymbols::XSD_EXTENSION)
             fSubstitutionGroupExclusions |= XSConstants::DERIVATION_EXTENSION;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/25 20:37:40  jberry
+ * Cleanup build errors/warnings from CodeWarrior
+ *
  * Revision 1.8  2003/11/11 22:48:13  knoaman
  * Serialization of XSAnnotation.
  *
@@ -108,6 +111,12 @@ public:
     enum { mode_Store
          , mode_Load 
     };
+    
+
+    static const bool toReadBufferLen;
+    static int defaultBufferLen;
+    static int defaultDataLen;
+
 
     typedef unsigned long   XSerializedObjectId_t;
 
@@ -422,12 +431,6 @@ public:
       *
       ***/
            void           registerObject(void* const templateObjectToRegister);
-
-    static const bool toReadBufferLen;
-
-    static int defaultBufferLen;
-
-    static int defaultDataLen;
 
     /***
       *
