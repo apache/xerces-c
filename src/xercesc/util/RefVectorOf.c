@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2002/02/05 15:38:14  tng
+ * [Bug 6114] Memory leaks on iDOM getElementsByTagName().
+ *
  * Revision 1.2  2002/02/05 13:11:06  tng
  * [Bug 6114] Memory leaks on iDOM getElementsByTagName().
  *
@@ -286,8 +289,8 @@ template <class TElem> void RefVectorOf<TElem>::reinitialize()
     if (fElemList)
         cleanup();
 
-    fElemList = new TElem*[maxElems];
-    for (unsigned int index = 0; index < maxElems; index++)
+    fElemList = new TElem*[fMaxCount];
+    for (unsigned int index = 0; index < fMaxCount; index++)
         fElemList[index] = 0;
 
 }
