@@ -75,6 +75,16 @@ public:
     </a>
   </faq>
 
+  <faq title="Why can't the compiler find the include files?">
+
+    <q>Why can't the compiler find the include files?</q>
+
+    <a><p>A common cause for this problem is setting build environment
+       variable XERCESROOT instead of setting variable XERCESCROOT.
+       Note the C before ROOT.</p>
+    </a>
+  </faq>
+
   <faq title="Why do I get Internal Compiler Error when compiling &XercesCName; for a 64bit target with gcc?">
     <q>Why do I get Internal Compiler Error when compiling &XercesCName; for a 64bit target with gcc?</q>
     <a>
