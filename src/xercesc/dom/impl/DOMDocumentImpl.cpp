@@ -237,7 +237,7 @@ DOMNode *DOMDocumentImpl::cloneNode(bool deep) const {
     // Note:  the cloned document node goes on the system heap.  All other
     //   nodes added to the new document will go on that document's heap,
     //   but we need to construct the document first, before its heap exists.
-    DOMDocumentImpl *newdoc = new DOMDocumentImpl(fMemoryManager);
+    DOMDocumentImpl *newdoc = new (fMemoryManager) DOMDocumentImpl(fMemoryManager);
 
     // then the children by _importing_ them
     if (deep)
@@ -821,7 +821,7 @@ void *         DOMDocumentImpl::allocate(size_t amount)
 		//	Try to allocate the block
         void* newBlock = 0;
         try {
-            newBlock = fMemoryManager->allocate(sizeOfHeader + amount); //new char[amount + sizeOfHeader];
+            newBlock = fMemoryManager->allocate((sizeOfHeader + amount) * sizeof(char)); //new char[amount + sizeOfHeader];
         }
         catch (...) {
             ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
@@ -860,7 +860,7 @@ void *         DOMDocumentImpl::allocate(size_t amount)
         // Get a new block from the system allocator.
         void* newBlock = 0;
         try {
-            newBlock = fMemoryManager->allocate(kHeapAllocSize); //new char[kHeapAllocSize];
+            newBlock = fMemoryManager->allocate(kHeapAllocSize * sizeof(char)); //new char[kHeapAllocSize];
         }
         catch (...) {
             ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
@@ -1188,7 +1188,7 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
         (
             29
             , true
-            , new HashPtr()
+            , new (fMemoryManager) HashPtr()
             , fMemoryManager
         );
     }
@@ -1217,7 +1217,7 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
 
         // clone the key first, and create the DOMUserDataRecord
         // create on the heap and adopted by the hashtable which will delete it upon removal.
-        node_userDataTable->put((void*)getPooledString(key), new DOMUserDataRecord(data, handler));
+        node_userDataTable->put((void*)getPooledString(key), new (fMemoryManager) DOMUserDataRecord(data, handler));
     }
     else {
         if (node_userDataTable->isEmpty())
