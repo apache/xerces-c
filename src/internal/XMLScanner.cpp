@@ -3450,24 +3450,32 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
 
 const XMLCh* XMLScanner::getURIText(const   unsigned int    uriId) const
 {
-    // Look up the URI in the string pool and return its id
-    const XMLCh* value = fURIStringPool->getValueForId(uriId);
-    if (!value)
-        return XMLUni::fgZeroLenString;
+    if (fURIStringPool->exists(uriId)) {
+        // Look up the URI in the string pool and return its id
+        const XMLCh* value = fURIStringPool->getValueForId(uriId);
+        if (!value)
+            return XMLUni::fgZeroLenString;
 
-	return value;
+        return value;
+    }
+    else
+        return XMLUni::fgZeroLenString;
 }
 
 bool XMLScanner::getURIText(  const   unsigned int    uriId
                       ,       XMLBuffer&      uriBufToFill) const
 {
-    // Look up the URI in the string pool and return its id
-    const XMLCh* value = fURIStringPool->getValueForId(uriId);
-    if (!value)
-        return false;
+    if (fURIStringPool->exists(uriId)) {
+        // Look up the URI in the string pool and return its id
+        const XMLCh* value = fURIStringPool->getValueForId(uriId);
+        if (!value)
+            return false;
 
-    uriBufToFill.set(value);
-    return true;
+        uriBufToFill.set(value);
+        return true;
+    }
+    else
+        return false;
 }
 
 unsigned int
