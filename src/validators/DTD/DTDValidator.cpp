@@ -55,44 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2000/07/07 22:24:35  jpolast
- * use put(key,value) instead of put(value)
- *
- * Revision 1.7  2000/03/18 00:00:05  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.6  2000/03/03 01:29:35  roddey
- * Added a scanReset()/parseReset() method to the scanner and
- * parsers, to allow for reset after early exit from a progressive parse.
- * Added calls to new Terminate() call to all of the samples. Improved
- * documentation in SAX and DOM parsers.
- *
- * Revision 1.5  2000/03/02 19:55:39  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/09 21:42:38  abagchi
- * Copyright swatswat
- *
- * Revision 1.3  2000/01/12 23:52:48  roddey
- * These are trivial changes required to get the C++ and Java versions
- * of error messages more into sync. Mostly it was where the Java version
- * was passing out one or more parameter than the C++ version was. In
- * some cases the change just required an extra parameter to get the
- * needed info to the place where the error was issued.
- *
- * Revision 1.2  1999/11/30 20:24:45  roddey
- * Fixes for incorrect deletion of temporary decl objects, which would cause
- * a double delete when the parser is deleted.
- *
- * Revision 1.1.1.1  1999/11/09 01:03:35  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:45:40  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -100,6 +63,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/Janitor.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <internal/ReaderMgr.hpp>
 #include <internal/XMLScanner.hpp>

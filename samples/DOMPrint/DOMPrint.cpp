@@ -80,6 +80,7 @@
 // ---------------------------------------------------------------------------
 #include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <framework/XMLFormatter.hpp>
 #include <util/TranscodingException.hpp>
 #include <parsers/DOMParser.hpp>

@@ -55,27 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2000/05/15 22:31:09  andyh
- * Replace #include<memory.h> with <string.h> everywhere.
- *
- * Revision 1.4  2000/03/02 19:53:46  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.3  2000/02/06 07:47:21  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/01/12 00:27:00  roddey
- * Updates to work with the new URL and input source scheme.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:38  twl
- * Initial checkin
- *
- * Revision 1.6  1999/11/08 20:43:39  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -83,6 +63,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <sax/AttributeList.hpp>
 #include <sax/SAXParseException.hpp>

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/07/25 22:41:32  aruna1
+ * Char definitions in XMLUni moved to XMLUniDefs
+ *
  * Revision 1.10  2000/06/17 01:58:06  rahulj
  * Now output the PI's with no space between ? and target.
  *
@@ -101,7 +104,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XMLUni.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <sax/AttributeList.hpp>
 #include "SAXPrint.hpp"
 

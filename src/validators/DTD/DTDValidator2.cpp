@@ -55,86 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.18  2000/05/15 22:08:33  rahulj
- * Fixed 'fatal error' when 'reusing the validator' problem reported
- * by Rocky Raccoon (rrockey@bigfoot.com). Fix submitted by
- * Dean Roddey (droddey@charmedquark.com).
- *
- * Revision 1.17  2000/05/12 15:45:09  andyh
- * Bug fix - A PE ref appearing at the start of a skipped conditional section
- * was incorrectly being processed rather than ignored.  Fix from Dean Roddey.
- *
- * Revision 1.16  2000/05/11 23:11:35  andyh
- * Add missing validity checks for stand-alone documents, character range
- * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
- * <sean.Macroibeaird@ireland.sun.com>
- *
- * Revision 1.15  2000/04/19 00:04:22  roddey
- * Don't allow spaces before PI target. Bug #42
- *
- * Revision 1.14  2000/04/10 23:02:00  roddey
- * Allow an empty DOCTYPE declaration, with just the root name.
- *
- * Revision 1.13  2000/03/08 23:41:18  roddey
- * Some fixes for content models that have multiple, trailing, empty
- * PE refs (for content model extension.)
- *
- * Revision 1.12  2000/03/03 01:29:35  roddey
- * Added a scanReset()/parseReset() method to the scanner and
- * parsers, to allow for reset after early exit from a progressive parse.
- * Added calls to new Terminate() call to all of the samples. Improved
- * documentation in SAX and DOM parsers.
- *
- * Revision 1.11  2000/03/02 19:55:39  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.10  2000/02/29 23:36:45  rahulj
- * Handle trailing PE refs in content models.
- *
- * Revision 1.9  2000/02/24 02:12:36  aruna1
- * ReaderMgr:;getReaderDepth() added
- *
- * Revision 1.8  2000/02/09 21:42:39  abagchi
- * Copyright swatswat
- *
- * Revision 1.7  2000/01/28 19:09:44  roddey
- * The API is not in place to allow client code to make sense of start/end entity
- * ref calls from attribute values. So supress them for now.
- *
- * Revision 1.6  2000/01/15 01:26:18  rahulj
- * Added support for HTTP to the parser using libWWW 5.2.8.
- * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
- * Only tested under NT 4.0 SP 5.
- * Removed URL.hpp from files where it was not used.
- *
- * Revision 1.5  2000/01/12 23:52:49  roddey
- * These are trivial changes required to get the C++ and Java versions
- * of error messages more into sync. Mostly it was where the Java version
- * was passing out one or more parameter than the C++ version was. In
- * some cases the change just required an extra parameter to get the
- * needed info to the place where the error was issued.
- *
- * Revision 1.4  2000/01/12 00:17:07  roddey
- * Changes to deal with multiply nested, relative pathed, entities and to deal
- * with the new URL class changes.
- *
- * Revision 1.3  1999/12/04 01:13:16  roddey
- * Fixed the logic for checking for PIs that start with 'xml'. It was doing doing "if (stringICompare()) "
- * instead of "if (!stringICompare()).
- *
- * Revision 1.2  1999/11/30 20:24:45  roddey
- * Fixes for incorrect deletion of temporary decl objects, which would cause
- * a double delete when the parser is deleted.
- *
- * Revision 1.1.1.1  1999/11/09 01:03:38  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:45:42  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -144,6 +65,7 @@
 #include <util/BinMemInputStream.hpp>
 #include <util/FlagJanitor.hpp>
 #include <util/Janitor.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/UnexpectedEOFException.hpp>
 #include <sax/InputSource.hpp>
 #include <framework/XMLDocumentHandler.hpp>

@@ -55,27 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.5  2000/07/14 18:15:08  jpolast
- * fix for put() with attributes bug in findAttr()
- *
- * Revision 1.4  2000/07/07 22:24:35  jpolast
- * use put(key,value) instead of put(value)
- *
- * Revision 1.3  2000/03/02 19:55:39  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/09 21:42:37  abagchi
- * Copyright swatswat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:29  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:39  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -83,6 +63,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <framework/XMLBuffer.hpp>
 #include <validators/DTD/DTDAttDefList.hpp>

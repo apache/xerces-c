@@ -55,21 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2000/03/02 19:55:38  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/09 21:42:37  abagchi
- * Copyright swatswat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:12  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:37  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -77,6 +63,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/Janitor.hpp>
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <framework/XMLNotationDecl.hpp>
 #include <framework/XMLBuffer.hpp>

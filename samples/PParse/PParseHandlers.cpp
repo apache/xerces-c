@@ -55,21 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.3  2000/03/02 19:53:44  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:47:20  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:45  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:43:38  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -77,6 +63,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <sax/AttributeList.hpp>
 #include "PParse.hpp"
