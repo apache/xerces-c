@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2004/01/12 16:27:41  neilg
+ * remove use of static buffers
+ *
  * Revision 1.10  2003/12/17 00:18:34  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -113,12 +116,10 @@ static const XSerializeEngine::XSerializedObjectId_t fgTemplateObjTag = 0xFFFFFF
 static const XSerializeEngine::XSerializedObjectId_t fgClassMask      = 0x80000000;  // indicates class tag
 static const XSerializeEngine::XSerializedObjectId_t fgMaxObjectCount = 0x3FFFFFFD;  
 
-static XMLCh value1[16];
-static XMLCh value2[16];
-
 #define TEST_THROW_ARG1(condition, data, err_msg) \
 if (condition) \
 { \
+    XMLCh value1[16]; \
     XMLString::binToText(data, value1, 16, 10, fMemoryManager); \
     ThrowXMLwithMemMgr1(XSerializationException \
             , err_msg  \
@@ -129,6 +130,8 @@ if (condition) \
 #define TEST_THROW_ARG2(condition, data1, data2, err_msg) \
 if (condition) \
 { \
+    XMLCh value1[16]; \
+    XMLCh value2[16]; \
     XMLString::binToText(data1, value1, 16, 10, fMemoryManager); \
     XMLString::binToText(data2, value2, 16, 10, fMemoryManager); \
     ThrowXMLwithMemMgr2(XSerializationException \

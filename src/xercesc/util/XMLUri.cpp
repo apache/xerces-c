@@ -136,7 +136,6 @@ const XMLCh XMLUri::PATH_CHARACTERS[] =
 //  Local methods and data
 // ---------------------------------------------------------------------------
 static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
 
 //
 // "Scheme"
@@ -911,6 +910,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                         !XMLString::isHex(uriSpec[index+1]) ||
                         !XMLString::isHex(uriSpec[index+2]))
                     {
+                        XMLCh value1[BUF_LEN+1];
                         XMLString::moveChars(value1, &(uriSpec[index]), 3);
                         value1[3] = chNull;
                         ThrowXMLwithMemMgr2(MalformedURLException
@@ -923,6 +923,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 else if (!isUnreservedCharacter(testChar) &&
                          !isPathCharacter(testChar))
                 {
+                    XMLCh value1[BUF_LEN+1];
                     value1[0] = testChar;
                     value1[1] = chNull;
                     ThrowXMLwithMemMgr2(MalformedURLException
@@ -954,6 +955,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                         !XMLString::isHex(uriSpec[index+1]) ||
                         !XMLString::isHex(uriSpec[index+2]))
                     {
+                        XMLCh value1[BUF_LEN+1];
                         XMLString::moveChars(value1, &(uriSpec[index]), 3);
                         value1[3] = chNull;
                         ThrowXMLwithMemMgr2(MalformedURLException
@@ -971,6 +973,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                 else if (!isUnreservedCharacter(testChar) &&
                          !isReservedCharacter(testChar))
                 {
+                    XMLCh value1[BUF_LEN+1];
                     value1[0] = testChar;
                     value1[1] = chNull;
                     ThrowXMLwithMemMgr2(MalformedURLException
@@ -1012,6 +1015,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                     !XMLString::isHex(uriSpec[index+1]) ||
                     !XMLString::isHex(uriSpec[index+2]))
                 {
+                    XMLCh value1[BUF_LEN+1];
                     XMLString::moveChars(value1, &(uriSpec[index]), 3);
                     value1[3] = chNull;
                     ThrowXMLwithMemMgr2(MalformedURLException
@@ -1024,6 +1028,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             else if (!isUnreservedCharacter(testChar) &&
                      !isReservedCharacter(testChar))
             {
+                XMLCh value1[BUF_LEN+1];
                 value1[0] = testChar;
                 value1[1] = chNull;
                 ThrowXMLwithMemMgr2(MalformedURLException
@@ -1062,6 +1067,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
                     !XMLString::isHex(uriSpec[index+1]) ||
                     !XMLString::isHex(uriSpec[index+2]))
                 {
+                    XMLCh value1[BUF_LEN+1];
                     XMLString::moveChars(value1, &(uriSpec[index]), 3);
                     value1[3] = chNull;
                     ThrowXMLwithMemMgr2(MalformedURLException
@@ -1074,6 +1080,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
             else if (!isUnreservedCharacter(testChar) &&
                      !isReservedCharacter(testChar))
             {
+                XMLCh value1[BUF_LEN+1];
                 value1[0] = testChar;
                 value1[1] = chNull;
                 ThrowXMLwithMemMgr2(MalformedURLException
@@ -1233,6 +1240,7 @@ void XMLUri::setPort(int newPort)
     {
         if (!getHost())
         {
+            XMLCh value1[BUF_LEN+1];
             XMLString::binToText(newPort, value1, BUF_LEN, 10, fMemoryManager);
             ThrowXMLwithMemMgr2(MalformedURLException
                     , XMLExcepts::XMLNUM_URI_NullHost
@@ -1243,6 +1251,7 @@ void XMLUri::setPort(int newPort)
     }
     else if (newPort != -1)
     {
+        XMLCh value1[BUF_LEN+1];
         XMLString::binToText(newPort, value1, BUF_LEN, 10, fMemoryManager);
         ThrowXMLwithMemMgr1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_PortNo_Invalid
@@ -1453,6 +1462,7 @@ void XMLUri::isConformantUserInfo(const XMLCh* const userInfo
             }
             else
             {
+                XMLCh value1[BUF_LEN+1];
                 value1[0] = chPercent;
                 value1[1] = *(tmpStr+1);
                 value1[2] = *(tmpStr+2);

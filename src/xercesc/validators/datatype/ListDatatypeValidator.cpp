@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2004/01/12 16:25:09  neilg
+ * remove use of static buffers
+ *
  * Revision 1.19  2004/01/06 18:13:59  peiyongz
  * using the no-exception-thrown ctor
  *
@@ -155,8 +158,6 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
-static XMLCh value2[BUF_LEN+1];
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -314,6 +315,8 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
     if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
         (tokenNumber > getMaxLength()))
     {
+        XMLCh value1[BUF_LEN+1];
+        XMLCh value2[BUF_LEN+1];
         XMLString::binToText(tokenNumber, value1, BUF_LEN, 10, manager);
         XMLString::binToText(getMaxLength(), value2, BUF_LEN, 10, manager);
 
@@ -328,6 +331,8 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
     if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) != 0) &&
         (tokenNumber < getMinLength()))
     {
+        XMLCh value1[BUF_LEN+1];
+        XMLCh value2[BUF_LEN+1];
         XMLString::binToText(tokenNumber, value1, BUF_LEN, 10, manager);
         XMLString::binToText(getMinLength(), value2, BUF_LEN, 10, manager);
 
@@ -342,6 +347,8 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
     if (((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) != 0) &&
         (tokenNumber != AbstractStringValidator::getLength()))
     {
+        XMLCh value1[BUF_LEN+1];
+        XMLCh value2[BUF_LEN+1];
         XMLString::binToText(tokenNumber, value1, BUF_LEN, 10, manager);
         XMLString::binToText(AbstractStringValidator::getLength(), value2, BUF_LEN, 10, manager);
 

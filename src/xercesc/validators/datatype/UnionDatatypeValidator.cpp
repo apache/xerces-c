@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.24  2004/01/12 16:25:09  neilg
+ * remove use of static buffers
+ *
  * Revision 1.23  2004/01/06 18:13:59  peiyongz
  * using the no-exception-thrown ctor
  *
@@ -158,7 +161,6 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 static const unsigned int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -227,6 +229,7 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 
     if (baseValidator->getType() != DatatypeValidator::Union)
     {
+        XMLCh value1[BUF_LEN+1];
         XMLString::binToText(baseValidator->getType(), value1, BUF_LEN, 10, manager);
         ThrowXMLwithMemMgr1(InvalidDatatypeFacetException
                 , XMLExcepts::FACET_Union_invalid_baseValidatorType

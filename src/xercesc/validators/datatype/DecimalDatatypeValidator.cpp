@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2004/01/12 16:25:09  neilg
+ * remove use of static buffers
+ *
  * Revision 1.24  2004/01/06 18:13:59  peiyongz
  * using the no-exception-thrown ctor
  *
@@ -203,8 +206,6 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
-static XMLCh value2[BUF_LEN+1];
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -365,6 +366,8 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraints(MemoryManager* co
     {
         if ( fFractionDigits > fTotalDigits )
         {
+            XMLCh value1[BUF_LEN+1];
+            XMLCh value2[BUF_LEN+1];
             XMLString::binToText(getFractionDigits(), value1, BUF_LEN, 10, manager);
             XMLString::binToText(getTotalDigits(), value2, BUF_LEN, 10, manager);
             ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
@@ -395,6 +398,8 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase(MemoryManager
         if ( (( baseFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
             ( fTotalDigits > numBase->fTotalDigits ))
         {
+            XMLCh value1[BUF_LEN+1];
+            XMLCh value2[BUF_LEN+1];
             XMLString::binToText(fTotalDigits, value1, BUF_LEN, 10, manager);
             XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10, manager);
             ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
@@ -408,6 +413,8 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase(MemoryManager
             (( numBase->getFixed() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
             ( fTotalDigits != numBase->fTotalDigits ))
         {
+            XMLCh value1[BUF_LEN+1];
+            XMLCh value2[BUF_LEN+1];
             XMLString::binToText(fTotalDigits, value1, BUF_LEN, 10, manager);
             XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10, manager);
             ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
@@ -424,6 +431,8 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase(MemoryManager
         if ( (( baseFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
             ( fFractionDigits > numBase->fFractionDigits ))
         {
+            XMLCh value1[BUF_LEN+1];
+            XMLCh value2[BUF_LEN+1];
             XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10, manager);
             XMLString::binToText(numBase->fFractionDigits, value2, BUF_LEN, 10, manager);
             ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
@@ -437,6 +446,8 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase(MemoryManager
         if ( (( baseFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
             ( fFractionDigits > numBase->fTotalDigits ))
         {
+            XMLCh value1[BUF_LEN+1];
+            XMLCh value2[BUF_LEN+1];
             XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10, manager);
             XMLString::binToText(numBase->fTotalDigits, value2, BUF_LEN, 10, manager);
             ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
@@ -451,6 +462,8 @@ void DecimalDatatypeValidator::checkAdditionalFacetConstraintsBase(MemoryManager
             (( numBase->getFixed() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
             ( fFractionDigits != numBase->fFractionDigits ))
         {
+            XMLCh value1[BUF_LEN+1];
+            XMLCh value2[BUF_LEN+1];
             XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10, manager);
             XMLString::binToText(numBase->fFractionDigits, value2, BUF_LEN, 10, manager);
             ThrowXMLwithMemMgr2(InvalidDatatypeFacetException
@@ -618,6 +631,8 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
         {
             if ( compareData->getScale() > fFractionDigits )
             {                
+                XMLCh value1[BUF_LEN+1];
+                XMLCh value2[BUF_LEN+1];
                 XMLString::binToText(compareData->getScale(), value1, BUF_LEN, 10, manager);
                 XMLString::binToText(fFractionDigits, value2, BUF_LEN, 10, manager);
                 ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
@@ -633,6 +648,8 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
         {
             if ( compareData->getTotalDigit() > fTotalDigits )
             {                
+                XMLCh value1[BUF_LEN+1];
+                XMLCh value2[BUF_LEN+1];
                 XMLString::binToText(compareData->getTotalDigit(), value1, BUF_LEN, 10, manager);
                 XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10, manager);
                 ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
@@ -652,6 +669,8 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
 
             if ( compareData->getScale() > fTotalDigits )  
             {                
+                XMLCh value1[BUF_LEN+1];
+                XMLCh value2[BUF_LEN+1];
                 XMLString::binToText(compareData->getScale(), value1, BUF_LEN, 10, manager);
                 XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10, manager);
                 ThrowXMLwithMemMgr3(InvalidDatatypeFacetException

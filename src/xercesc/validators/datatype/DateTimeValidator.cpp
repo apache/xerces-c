@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2004/01/12 16:25:49  neilg
+ * remove use of static buffers
+ *
  * Revision 1.14  2004/01/06 18:13:59  peiyongz
  * using the no-exception-thrown ctor
  *
@@ -118,10 +121,6 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
-static XMLCh value2[BUF_LEN+1];
 
 // ---------------------------------------------------------------------------
 //  Macro

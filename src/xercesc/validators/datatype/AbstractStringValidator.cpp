@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/01/12 16:25:09  neilg
+ * remove use of static buffers
+ *
  * Revision 1.19  2004/01/06 18:13:59  peiyongz
  * using the no-exception-thrown ctor
  *
@@ -158,10 +161,10 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
-static XMLCh value2[BUF_LEN+1];
 
 #define  REPORT_FACET_ERROR(val1, val2, except_code, manager)    \
+    XMLCh value1[BUF_LEN+1]; \
+    XMLCh value2[BUF_LEN+1]; \
    XMLString::binToText(val1, value1, BUF_LEN, 10, manager);     \
    XMLString::binToText(val2, value2, BUF_LEN, 10, manager);     \
    ThrowXMLwithMemMgr2(InvalidDatatypeFacetException             \
@@ -171,6 +174,8 @@ static XMLCh value2[BUF_LEN+1];
            , manager);
 
 #define  REPORT_VALUE_ERROR(data, val1, val2, except_code, manager)      \
+    XMLCh value1[BUF_LEN+1]; \
+    XMLCh value2[BUF_LEN+1]; \
    XMLString::binToText(val1, value1, BUF_LEN, 10, manager);             \
    XMLString::binToText(val2, value2, BUF_LEN, 10, manager);             \
    ThrowXMLwithMemMgr3(InvalidDatatypeValueException                     \

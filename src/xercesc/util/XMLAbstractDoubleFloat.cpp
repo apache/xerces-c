@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.24  2004/01/12 16:23:39  neilg
+ * remove use of static buffers
+ *
  * Revision 1.23  2004/01/03 00:03:18  peiyongz
  * parseContent
  *
@@ -155,7 +158,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  local data member
 // ---------------------------------------------------------------------------
 static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
 
 static XMLCh expSign[] = {chLatin_e, chLatin_E, chNull};
 
@@ -385,6 +387,7 @@ int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const s
         return INDETERMINATE;
 
     default:
+        XMLCh value1[BUF_LEN+1];
         XMLString::binToText(specialValue->fType, value1, 16, 10, manager);
         ThrowXMLwithMemMgr1(NumberFormatException
                 , XMLExcepts::XMLNUM_DBL_FLT_InvalidType
