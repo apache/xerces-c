@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.17  2001/08/22 11:33:43  tng
+# typo: XercesElementWildcard
+#
 # Revision 1.16  2001/08/21 15:58:42  tng
 # Schema: New files XercesElementWildCard.
 #
@@ -141,7 +144,7 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	SubstitutionGroupComparator.hpp \
 	TraverseSchema.hpp \
 	XercesAttGroupInfo.hpp \
-	XercesElementWildCard.hpp \
+	XercesElementWildcard.hpp \
 	XercesGroupInfo.hpp \
 	XUtil.hpp
 
@@ -163,7 +166,7 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	SubstitutionGroupComparator.$(TO) \
 	TraverseSchema.$(TO) \
 	XercesAttGroupInfo.$(TO) \
-	XercesElementWildCard.$(TO) \
+	XercesElementWildcard.$(TO) \
 	XercesGroupInfo.$(TO) \
 	XUtil.$(TO)
 
