@@ -446,59 +446,97 @@ The parser has intrinsic support for the following encodings:
 <!-- @version: -->
 <personnel>
 
+  
+
   <person id="Big.Boss">
+    
     <name>
-      <family>Boss</family>
+      <family>Boss</family> 
       <given>Big</given>
     </name>
+    
     <email>chief@foo.com</email>
+    
     <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  
   </person>
+
+  
 
   <person id="one.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>One</given>
     </name>
+    
     <email>one@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person id="two.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Two</given>
     </name>
+    
     <email>two@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person id="three.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Three</given>
     </name>
+    
     <email>three@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person id="four.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Four</given>
     </name>
+    
     <email>four@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
 
+  
+
   <person id="five.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Five</given>
     </name>
+    
     <email>five@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+
 
 </personnel>
 <?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
@@ -506,59 +544,97 @@ The parser has intrinsic support for the following encodings:
 <!-- @version: -->
 <personnel>
 
+  
+
   <person id="Big.Boss">
+    
     <name>
-      <family>Boss</family>
+      <family>Boss</family> 
       <given>Big</given>
     </name>
+    
     <email>chief@foo.com</email>
+    
     <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  
   </person>
+
+  
 
   <person id="one.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>One</given>
     </name>
+    
     <email>one@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person id="two.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Two</given>
     </name>
+    
     <email>two@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person id="three.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Three</given>
     </name>
+    
     <email>three@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person id="four.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Four</given>
     </name>
+    
     <email>four@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
 
+  
+
   <person id="five.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Five</given>
     </name>
+    
     <email>five@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+
 
 </personnel>
 <?xml version="1.0" encoding="iso-8859-1" standalone="no" ?>
@@ -566,119 +642,195 @@ The parser has intrinsic support for the following encodings:
 <!-- @version: -->
 <personnel>
 
+  
+
   <person id="Big.Boss">
+    
     <name>
-      <family>Boss</family>
+      <family>Boss</family> 
       <given>Big</given>
     </name>
+    
     <email>chief@foo.com</email>
+    
     <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  
   </person>
+
+  
 
   <person id="one.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>One</given>
     </name>
+    
     <email>one@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person id="two.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Two</given>
     </name>
+    
     <email>two@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person id="three.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Three</given>
     </name>
+    
     <email>three@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person id="four.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Four</given>
     </name>
+    
     <email>four@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
 
+  
+
   <person id="five.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Five</given>
     </name>
+    
     <email>five@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+
 
 </personnel>
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <?proc-inst-1 'foo' ?>
 <personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
 
+  
+
   <person contr="false" id="Big.Boss">
+    
     <name xml:base="foo/bar">
-      <family xml:base="bar/bar">Boss</family>
+      <family xml:base="bar/bar">Boss</family> 
       <given xml:base="car/bar">Big</given>
       <?proc-inst-2 'foobar' ?>
     </name>
+    
     <email>chief@foo.com</email>
+    
     <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  
   </person>
+
+  
 
   <person contr="false" id="one.worker" xml:base="/auto/bar">
+    
     <name xml:base="/car/foo/">
-      <family xml:base="bar/bar">Worker</family>
+      <family xml:base="bar/bar">Worker</family> 
       <given>One</given>
     </name>
+    
     <email>one@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person contr="false" id="two.worker" xml:base="http://www.example.com/car/car">
+    
     <name xml:base="/bar/foo/">
-      <family xml:base="foo/bar">Worker</family>
+      <family xml:base="foo/bar">Worker</family> 
       <given>Two</given>
     </name>
+    
     <email>two@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person contr="false" id="three.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Three</given>
     </name>
+    
     <email>three@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+  
 
   <person contr="false" id="four.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Four</given>
     </name>
+    
     <email>four@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
 
+  
+
   <person contr="false" id="five.worker">
+    
     <name>
-      <family>Worker</family>
+      <family>Worker</family> 
       <given>Five</given>
     </name>
+    
     <email>five@foo.com</email>
+    
     <link manager="Big.Boss"/>
+  
   </person>
+
+
 
 </personnel>
 stdin:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
