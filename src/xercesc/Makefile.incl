@@ -196,6 +196,7 @@ ifeq (${PLATFORM}, OPENSERVER)
     MAKE_SHARED = ${CXX} -D${PLATFORM} -G ${LDFLAGS}
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
     EXTRA_LINK_OPTIONS = -Wl,-h,${LIBNAME}${VER}${SHLIBSUFFIX}
+    DEPDOM_LINK_OPTIONS = -Wl,-h,${LIBDEPDOM}${VER}${SHLIBSUFFIX}    
   else
     PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -belf -KPIC
     MAKE_SHARED = ${CXX} -D${PLATFORM} -belf -G ${LDFLAGS}
@@ -226,6 +227,7 @@ OBJ_OUT=${ALL_OBJECTS_DIR}/
 MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -G ${LDFLAGS}
 MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -G ${LDFLAGS}
 EXTRA_LINK_OPTIONS = -lm -lgen
+DEPDOM_LINK_OPTIONS = -lm -lgen
 SHLIBSUFFIX=.so
 ICUSHLIBSUFFIX=.so
 endif
@@ -262,6 +264,8 @@ else
 endif
 
 EXTRA_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBNAME}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
+DEPDOM_LINK_OPTIONS = -bmap:$(XML_OBJ)/${LIBDEPDOM}${SO_TARGET_VERSION}.${SO_TARGET_VERSION_MAJOR}.map
+
 SHLIBSUFFIX=.a
 ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
@@ -298,12 +302,15 @@ endif
 ifeq (${TRANSCODER}, ICU)
 ifeq (${SYSOVR},OS400)
 EXTRA_LINK_OPTIONS = -licuuc -licudata -lbsd
+DEPDOM_LINK_OPTIONS = -licuuc -licudata -lbsd
 else
 EXTRA_LINK_OPTIONS = -lQZUUC
+DEPDOM_LINK_OPTIONS = -lQZUUC
 endif
 endif
 EXTRA_COMPILE_OPTIONS = -I. -g
 EXTRA_LINK_OPTIONS = -q OPTION='*DUPVAR *DUPPROC'
+DEPDOM_LINK_OPTIONS = -q OPTION='*DUPVAR *DUPPROC'
 
 RM2 = -del
 MV  = mv
@@ -321,6 +328,7 @@ else
     ALLLIBS = ${LIBS} -L/boot/develop/lib/x86 -L/boot/home/config/lib -lbe
 endif
 EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_NAME}.map
+DEPDOM_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_DEPDOM}.map
 SHLIBSUFFIX=.so
 ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
@@ -375,6 +383,7 @@ endif
 endif
 
 EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_NAME}.map
+DEPDOM_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_DEPDOM}.map
 SHLIBSUFFIX=.so
 ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
@@ -398,6 +407,7 @@ ifeq (${MESSAGELOADER}, ICU)
 endif
 
 EXTRA_LINK_OPTIONS =
+DEPDOM_LINK_OPTIONS =
 SHLIBSUFFIX=.so
 ICUSHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
@@ -467,6 +477,7 @@ PLATFORM_COMPILE_OPTIONS = /C+ /Gd- /Ge- /Gm+ /Gs- /Re /J+  /Ms /Sm /Sn /Ss+
 MAKE_SHARED = ilink /nofree ${LDFLAGS}
 MAKE_SHARED_C = ilink /nofree ${LDFLAGS}
 EXTRA_LINK_OPTIONS = /map /nod /noe /noi /packcode /packdata /exepack /align:4
+DEPDOM_LINK_OPTIONS = /map /nod /noe /noi /packcode /packdata /exepack /align:4
 SHLIBSUFFIX= .dll
 ICUSHLIBSUFFIX= .dll
 ifneq (${DEBUG}, 1)
@@ -499,6 +510,7 @@ ifeq (${PLATFORM}, HPUX)
     endif
 
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.
+    DEPDOM_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.    
     SHLIBSUFFIX=.sl
     ICUSHLIBSUFFIX=.sl
   else
@@ -523,6 +535,7 @@ ifeq (${PLATFORM}, HPUX)
     endif
 
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -Wl,-a,shared
+    DEPDOM_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -Wl,-a,shared    
     SHLIBSUFFIX=.sl
     ICUSHLIBSUFFIX=.sl
   endif
@@ -565,6 +578,7 @@ else
 endif
 endif
 EXTRA_LINK_OPTIONS =
+DEPDOM_LINK_OPTIONS =
 SHLIBSUFFIX=.dll
 ICUSHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
@@ -636,6 +650,16 @@ ifeq (${PLATFORM}, CYGWIN)
                   -Xlinker $(XML_LIB_DIR)/${LIBNAME}${SO_TARGET_VERSION}.def \
               -Xlinker --out-implib \
                   -Xlinker $(XML_LIB_DIR)/${LIBNAME}${SO_TARGET_VERSION}.dll.a
+                  
+      DEPDOM_LINK_OPTIONS = \
+              -Xlinker --warn-once \
+              -Xlinker -Map \
+                  -Xlinker $(XML_LIB_DIR)/${LIBDEPDOM}${SO_TARGET_VERSION}.map \
+              -Xlinker --output-def \
+                  -Xlinker $(XML_LIB_DIR)/${LIBDEPDOM}${SO_TARGET_VERSION}.def \
+              -Xlinker --out-implib \
+                  -Xlinker $(XML_LIB_DIR)/${LIBDEPDOM}${SO_TARGET_VERSION}.dll.a
+                                    
         SHLIBSUFFIX=.dll
         ICUSHLIBSUFFIX=.dll
 endif
