@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/10/25 19:46:15  tng
+ * Comment outside root element should also be reported.
+ *
  * Revision 1.21  2001/08/01 19:11:02  tng
  * Add full schema constraint checking flag to the samples and the parser.
  *
@@ -588,10 +591,6 @@ void SAXParser::docCharacters(  const   XMLCh* const    chars
 
 void SAXParser::docComment(const XMLCh* const commentText)
 {
-    // Suppress passing through any comments before the root element.
-    if (!fElemDepth)
-        return;
-
     //
     //  SAX has no way to report this. But, if there are any installed
     //  advanced handlers, then lets call them with this info.

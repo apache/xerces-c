@@ -106,6 +106,13 @@
     </tr>
 
     <tr>
+        <td>2001-10-25</td>
+        <td>Tinny Ng</td>
+        <td>Comment outside root element should also be reported.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-10-24</td>
         <td>Pei Yong Zhang</td>
         <td>[Bug 4342] Memory leak is SAX parser during validation.

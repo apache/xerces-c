@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/10/25 19:46:15  tng
+ * Comment outside root element should also be reported.
+ *
  * Revision 1.18  2001/09/12 13:03:43  tng
  * [Bug 3155] SAX2 does not offer progressive parse.
  *
@@ -711,10 +714,6 @@ void SAX2XMLReaderImpl::docComment(const XMLCh* const commentText)
         // array with a length.
         fLexicalHandler->comment(commentText, XMLString::stringLen(commentText));
    }
-
-    // Suppress passing through any comments before the root element.
-    if (!fElemDepth)
-        return;
 
     //
     //  OK, if there are any installed advanced handlers,
