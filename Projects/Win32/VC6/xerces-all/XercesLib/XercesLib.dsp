@@ -438,6 +438,38 @@ SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\framework\LocalFileInputSource.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\LocalFileInputSource.Hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\MemBufInputSource.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\MemBufInputSource.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\StdInInputSource.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\StdInInputSource.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\URLInputSource.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\URLInputSource.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\framework\XMLAttDef.cpp
 # End Source File
 # Begin Source File
@@ -558,35 +590,11 @@ SOURCE=..\..\..\..\..\src\internal\EndOfEntityException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\MemBufInputSource.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\internal\MemBufInputSource.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\internal\ReaderMgr.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\internal\ReaderMgr.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\internal\StdInInputSource.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\internal\StdInInputSource.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\internal\URLInputSource.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\internal\URLInputSource.hpp
 # End Source File
 # Begin Source File
 
