@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.20  2000/03/02 20:33:44  abagchi
+# Changed XML4CDefs to XercesDefs
+#
 # Revision 1.19  2000/03/01 22:30:03  abagchi
 # Object files are now created directly under obj directory
 #
@@ -209,11 +212,12 @@ UTIL_CPP_PUBHEADERS = \
 	ValueArrayOf.hpp \
 	ValueStackOf.hpp \
 	ValueVectorOf.hpp \
-	XML4CDefs.hpp \
+	XercesDefs.hpp \
 	XML88591Transcoder.hpp \
 	XMLASCIITranscoder.hpp \
 	XMLChTranscoder.hpp \
 	XMLIBM1140Transcoder.hpp \
+	XMLDeleterFor.hpp \
 	XMLEBCDICTranscoder.hpp \
 	XMLEnumerator.hpp \
 	XMLExceptMsgs.hpp \
@@ -243,7 +247,8 @@ C_FILES = \
 	TransENameMap.c \
 	ValueArrayOf.c \
 	ValueStackOf.c \
-	ValueVectorOf.c
+	ValueVectorOf.c \
+	XMLDeleterFor.c
 
 UTIL_CPP_OBJECTS = \
 	BinFileInputStream.$(TO) \
