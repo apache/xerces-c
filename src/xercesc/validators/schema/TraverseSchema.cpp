@@ -6046,9 +6046,11 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
     // Create an input source
     // ------------------------------------------------------------------
     InputSource* srcToFill = 0;
+    normalizeURI(loc, fBuffer);
 
+    const XMLCh* normalizedURI = fBuffer.getRawBuffer();
     if (fEntityHandler){
-        srcToFill = fEntityHandler->resolveEntity(XMLUni::fgZeroLenString, loc);
+        srcToFill = fEntityHandler->resolveEntity(XMLUni::fgZeroLenString, normalizedURI);
     }
 
     //  If they didn't create a source via the entity resolver, then we
@@ -6057,7 +6059,7 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
 
         try {
 
-            XMLURL urlTmp(fSchemaInfo->getCurrentSchemaURL(), loc);
+            XMLURL urlTmp(fSchemaInfo->getCurrentSchemaURL(), normalizedURI);
 
             if (urlTmp.isRelative()) {
                 ThrowXML(MalformedURLException,
@@ -6068,7 +6070,7 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
         }
         catch(const MalformedURLException&) {
             // Its not a URL, so lets assume its a local file name.
-            srcToFill = new LocalFileInputSource(fSchemaInfo->getCurrentSchemaURL(),loc);
+            srcToFill = new LocalFileInputSource(fSchemaInfo->getCurrentSchemaURL(),normalizedURI);
         }
     }
 

@@ -1421,23 +1421,27 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         // Create a buffer for expanding the system id
         XMLBufBid bbSys(&fBufMgr);
         XMLBuffer& expSysId = bbSys.getBuffer();
+        XMLBuffer& normalizedSysId = bbSys.getBuffer();
+
+        normalizeURI(loc, normalizedSysId);
 
         //
         //  Allow the entity handler to expand the system id if they choose
         //  to do so.
         //
         InputSource* srcToFill = 0;
+        const XMLCh* normalizedURI = normalizedSysId.getRawBuffer();
         if (fEntityHandler)
         {
-            if (!fEntityHandler->expandSystemId(loc, expSysId))
-                expSysId.set(loc);
+            if (!fEntityHandler->expandSystemId(normalizedURI, expSysId))
+                expSysId.set(normalizedURI);
 
             srcToFill = fEntityHandler->resolveEntity( XMLUni::fgZeroLenString
                                                      , expSysId.getRawBuffer());
         }
          else
         {
-            expSysId.set(loc);
+            expSysId.set(normalizedURI);
         }
 
         //
@@ -3193,4 +3197,25 @@ bool XMLScanner::anyAttributeValidation(SchemaAttDef* attWildCard, unsigned int 
     return anyEncountered;
 }
 
+void XMLScanner::normalizeURI(const XMLCh* const systemURI,
+                              XMLBuffer& normalizedURI)
+{
+    const XMLCh* pszSrc = systemURI;
 
+    normalizedURI.reset();
+
+    while (*pszSrc) {
+
+        if ((*(pszSrc) == chPercent)
+        &&  (*(pszSrc+1) == chDigit_2)
+        &&  (*(pszSrc+2) == chDigit_0))
+        {
+            pszSrc += 3;
+            normalizedURI.append(chSpace);
+        }
+        else {
+            normalizedURI.append(*pszSrc);
+            pszSrc++;
+        }
+    }
+}

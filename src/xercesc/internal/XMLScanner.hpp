@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/08/16 15:46:17  knoaman
+ * Bug 7698 : filenames with embedded spaces in schemaLocation strings not handled properly.
+ *
  * Revision 1.9  2002/07/31 18:49:29  tng
  * [Bug 6227] Make method getLastExtLocation() constant.
  *
@@ -615,6 +618,9 @@ private :
     void resetURIStringPool();
     InputSource* resolveSystemId(const XMLCh* const sysId); // return owned by caller
 
+    // Spaces are not allowed in URI, so %20 is used instead.
+    // Convert %20 to spaces before resolving the URI
+    void normalizeURI(const XMLCh* const systemURI, XMLBuffer& normalizedURI);
 
     // -----------------------------------------------------------------------
     //  Private helper methods

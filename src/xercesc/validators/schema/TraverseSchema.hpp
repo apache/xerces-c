@@ -690,6 +690,10 @@ private:
     void processKeyRefFor(SchemaInfo* const aSchemaInfo,
                           ValueVectorOf<SchemaInfo*>* const infoList);
 
+    // Spaces are not allowed in URI, so %20 is used instead.
+    // Convert %20 to spaces before resolving the URI
+    void normalizeURI(const XMLCh* const systemURI, XMLBuffer& normalizedURI);
+
     // -----------------------------------------------------------------------
     //  Private constants
     // -----------------------------------------------------------------------
@@ -921,6 +925,29 @@ inline void TraverseSchema::getRedefineNewTypeName(const XMLCh* const oldTypeNam
 
     for (int i=0; i < redefineCounter; i++) {
         newTypeName.append(SchemaSymbols::fgRedefIdentifier);
+    }
+}
+
+inline void TraverseSchema::normalizeURI(const XMLCh* const systemURI,
+                                         XMLBuffer& normalizedURI)
+{
+    const XMLCh* pszSrc = systemURI;
+
+    normalizedURI.reset();
+
+    while (*pszSrc) {
+
+        if ((*(pszSrc) == chPercent)
+        &&  (*(pszSrc+1) == chDigit_2)
+        &&  (*(pszSrc+2) == chDigit_0))
+        {
+            pszSrc += 3;
+            normalizedURI.append(chSpace);
+        }
+        else {
+            normalizedURI.append(*pszSrc);
+            pszSrc++;
+        }
     }
 }
 
