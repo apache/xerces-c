@@ -127,11 +127,12 @@ public :
       , EmptyElemHasContent                = 110
       , ElemOneNotationAttr                = 111
       , AttrDupToken                       = 112
-      , E_HighBounds                       = 113
-      , W_LowBounds                        = 114
-      , W_HighBounds                       = 115
-      , F_LowBounds                        = 116
-      , F_HighBounds                       = 117
+      , ElemChildrenHasInvalidWS           = 113
+      , E_HighBounds                       = 114
+      , W_LowBounds                        = 115
+      , W_HighBounds                       = 116
+      , F_LowBounds                        = 117
+      , F_HighBounds                       = 118
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

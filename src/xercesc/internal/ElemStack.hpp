@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/04/27 19:17:52  peiyongz
+ * XML1.0-3rd VC: element content(children) dont allow white space from
+ * EntityRef/CharRef
+ *
  * Revision 1.8  2004/04/23 21:20:40  peiyongz
  * fCommentOrPISeen to keep track if any comment or PI seen for the current
  * element
@@ -213,6 +217,7 @@ public :
 
         bool                fValidationFlag;
         bool                fCommentOrPISeen;
+        bool                fReferenceEscaped;
         int                 fCurrentScope;
         Grammar*            fCurrentGrammar;
         unsigned int        fCurrentURI;
@@ -252,6 +257,9 @@ public :
 
     inline void setCommentOrPISeen();
     inline bool getCommentOrPISeen() const;
+
+    inline void setReferenceEscaped();
+    inline bool getReferenceEscaped() const;
 
     void setCurrentScope(int currentScope);
     int getCurrentScope();
@@ -564,6 +572,17 @@ inline bool ElemStack::getCommentOrPISeen() const
 inline void ElemStack::setCommentOrPISeen()
 {
     fStack[fStackTop-1]->fCommentOrPISeen = true;
+    return;
+}
+
+inline bool ElemStack::getReferenceEscaped() const
+{
+    return fStack[fStackTop-1]->fReferenceEscaped;
+}
+
+inline void ElemStack::setReferenceEscaped()
+{
+    fStack[fStackTop-1]->fReferenceEscaped = true;
     return;
 }
 

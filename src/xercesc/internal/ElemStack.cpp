@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/04/27 19:17:52  peiyongz
+ * XML1.0-3rd VC: element content(children) dont allow white space from
+ * EntityRef/CharRef
+ *
  * Revision 1.11  2004/04/23 21:20:40  peiyongz
  * fCommentOrPISeen to keep track if any comment or PI seen for the current
  * element
@@ -240,6 +244,7 @@ unsigned int ElemStack::addLevel()
     fStack[fStackTop]->fMapCount = 0;
     fStack[fStackTop]->fValidationFlag = false;
     fStack[fStackTop]->fCommentOrPISeen = false;
+    fStack[fStackTop]->fReferenceEscaped = false;
     fStack[fStackTop]->fCurrentURI = fUnknownNamespaceId;
     fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
     fStack[fStackTop]->fCurrentGrammar = 0;
@@ -275,6 +280,7 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
     fStack[fStackTop]->fMapCount = 0;
     fStack[fStackTop]->fValidationFlag = false;
     fStack[fStackTop]->fCommentOrPISeen = false;
+    fStack[fStackTop]->fReferenceEscaped = false;
     fStack[fStackTop]->fCurrentURI = fUnknownNamespaceId;
     fStack[fStackTop]->fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
     fStack[fStackTop]->fCurrentGrammar = 0;

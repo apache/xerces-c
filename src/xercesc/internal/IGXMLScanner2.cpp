@@ -2681,6 +2681,11 @@ void IGXMLScanner::scanCharData(XMLBuffer& toUse)
                         gotLeadingSurrogate = false;
                         continue;
                     }
+                    else
+                    {
+                        if (escaped && !fElemStack.isEmpty())
+                            fElemStack.setReferenceEscaped();
+                    }
                 }
                 else if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
                 {
