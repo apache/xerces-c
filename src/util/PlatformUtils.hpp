@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -54,8 +54,11 @@
  * <http://www.apache.org/>.
  */
 
-/**
+/*
  * $Log$
+ * Revision 1.6  2000/02/15 00:58:28  abagchi
+ * Added API docs
+ *
  * Revision 1.5  2000/02/06 07:48:03  rahulj
  * Year 2K copyright swat.
  *
@@ -92,10 +95,10 @@ class XMLNetAccessor;
 class XMLTransService;
 
 
-//
-//  Generate an exception for platform utitilities to throw when something
-//  goes awry.
-//
+/*
+ *  Generate an exception for platform utilities to throw when something
+ *  goes awry.
+ */
 const XMLCh gXMLPlatformUtilsException_Name[] =
 {
         chLatin_X, chLatin_M, chLatin_L, chLatin_P, chLatin_l, chLatin_a
@@ -105,13 +108,21 @@ const XMLCh gXMLPlatformUtilsException_Name[] =
 };
 MakeXML4CException(XMLPlatformUtilsException, XMLUTIL_EXPORT)
 
-
+/**
+* Utilities that must be implemented in a platform-specific way.
+*
+* <p>This class contains functions that must be implemented in a platform-specific
+* manner. This is just an abstract class. The concrete implementations of these
+* functions are available in the per-platform files indide <code>src/util/Platforms</code>.</p>
+*
+*/
 class XMLUTIL_EXPORT XMLPlatformUtils
 {
 public :
-    // -----------------------------------------------------------------------
-    //  Public types
-    // -----------------------------------------------------------------------
+    /** @name Public Enumerators */
+    //@{
+    /** Public types */
+
     enum PanicReasons
     {
         Panic_NoTransService
@@ -124,143 +135,297 @@ public :
 
         , PanicReasons_Count
     };
+	//@}
 
-
-    // -----------------------------------------------------------------------
-    //  Public, static data
-    //
-    //  fgNetAccessor
-    //      This is the network access implementation. This is provided by
-    //      the per-platform driver, so each platform can choose what actual
-    //      implementation it wants to use.
-    //
-    //  fgTransService
-    //      This is the transcoding service. This is provided by the per
-    //      platform driver, so each platform can choose what implemenation
-    //      it wants to use.
-    // -----------------------------------------------------------------------
+    /** @name Public Static Data */
+    //@{
+    /** Public static data */
+    /** This is the network access implementation.
+      * This is provided by the per-platform driver, so each platform can choose what actual
+	  * implementation it wants to use.
+	  */
     static XMLNetAccessor*      fgNetAccessor;
+    /**
+      *  This is the transcoding service.
+      *  This is provided by the per platform driver, so each platform can choose what implemenation
+      *  it wants to use.
+	  */
     static XMLTransService*     fgTransService;
+	//@}
 
-
-    // -----------------------------------------------------------------------
-    //  Initialization method. This must be called first in any client code.
-    // -----------------------------------------------------------------------
+    /** @name Initialization amd Panic methods */
+    //@{
+    /**
+      * Initialization method.
+      * This must be called first in any client code.
+	  */
     static void Initialize();
 
-
-    // -----------------------------------------------------------------------
-    //  The panic mechanism. If, during init, we cannot even get far enough
-    //  along to get transcoding up or get message loading working, we call
-    //  this.
-    //
-    //  Each platform can implement it however they want. This method is
-    //  expected to display something meaningful and end the process. The
-    //  enum indicates why its being called, to allow the per-platform code
-    //  to display something more specific if desired.
-    // -----------------------------------------------------------------------
+    /**
+      * The panic mechanism.
+	  *
+      * <p>If, during initialization, we cannot even get far enough
+      * along to get transcoding up or get message loading working, we call
+      * this.</p>
+      *
+      * <p>Each platform can implement it however they want. This method is
+      * expected to display something meaningful and end the process. The
+      * enum indicates why its being called, to allow the per-platform code
+      * to display something more specific if desired.</p>
+	  *
+	  * @param reason The enumeration that defines the cause of the failure
+	  */
     static void panic
     (
         const   PanicReasons    reason
     );
+	//@}
 
-
-    // -----------------------------------------------------------------------
-    //  File methods
-    // -----------------------------------------------------------------------
+    /** @name File Methods */
+    //@{
+	/** Get the current file position
+	  *
+	  * @param theFile The file handle
+	  */
     static unsigned int curFilePos(FileHandle theFile);
+
+	/**
+	  * Closes the file handle
+	  *
+	  * @param theFile The file handle
+	  */
     static void closeFile(FileHandle theFile);
+
+	/**
+	  * Returns the file size
+	  *
+	  * @param theFile The file handle whose size you want
+	  * @return Returns the size of the file in bytes
+	  */
     static unsigned int fileSize(FileHandle theFile);
+
+	/**
+	  * Opens the file
+	  *
+	  * @param fileName The string containing the name of the file
+	  * @return The file handle of the opened file
+	  */
     static FileHandle openFile(const char* const fileName);
+
+	/**
+	  * Opens the file
+	  *
+	  * @param fileName The string containing the name of the file
+	  * @return The file handle of the opened file
+	  */
     static FileHandle openFile(const XMLCh* const fileName);
+
+	/**
+	  * Opens the standard input as a file
+	  * @return The file handle of the standard input stream
+	  */
     static FileHandle openStdInHandle();
+
+	/**
+	  * Reads the file buffer
+	  *
+	  * @param theFile The file handle that you want to read
+	  * @param toRead The number of byte to read from the current position
+	  * @param toFill The string buffer to fill
+	  * @return Returns the number of bytes read from the stream or file
+	  */
     static unsigned int readFileBuffer
     (
                 FileHandle      theFile
         , const unsigned int    toRead
         ,       XMLByte* const  toFill
     );
+
+	/**
+	  * Resets the file handle
+	  * @param theFile The file handle that you want to reset
+	  */
     static void resetFile(FileHandle theFile);
+	//@}
 
-
-    // -----------------------------------------------------------------------
-    //  File system methods
-    // -----------------------------------------------------------------------
+    /** @name File System Methods */
+    //@{
+	/**
+	  * Gets the full path from a relative path
+	  * @param srcPath The path of the file for which you want the full path
+	  * @return Returns the fully qualified path of the file name including the file name
+	  */
     static XMLCh* getFullPath(const XMLCh* const srcPath);
+
+	/**
+	  * Looks at a file name and tells if the path is specified relative to a directory, or absolute to the root
+	  * @param toCheck The file name which you want to check
+	  * @return Returns true if the filename appears to be relative
+	  */
     static bool isRelative(const XMLCh* const toCheck);
+
+	/**
+	  * Utility to join two paths
+	  * @param basePath The string containing the base path
+	  * @param relativePath The string containing the relative path
+	  * @return Returns a string containing the 'woven' path
+	  */
     static XMLCh* weavePaths
     (
         const   XMLCh* const    basePath
         , const XMLCh* const    relativePath
     );
+	//@}
 
-
-    // -----------------------------------------------------------------------
-    //  Timing methods
-    // -----------------------------------------------------------------------
+    /** @name Timing Methods */
+    //@{
+	/**
+	  * Gets the system time in milliseconds (for later comparison)
+	  * @return Returns the system time as an unsigned long
+	  */
     static unsigned long getCurrentMillis();
+	//@}
 
-
-    // -----------------------------------------------------------------------
-    //  Mutex methods
-    // -----------------------------------------------------------------------
+    /** @name Mutex Methods */
+    //@{
+	/**
+	  * Closes a mutex handle
+	  * @param mtxHandle The mutex handle that you want to close
+	  */
     static void closeMutex(void* const mtxHandle);
+
+	/**
+	  * Locks a mutex handle
+	  * @param mtxHandle The mutex handle that you want to lock
+	  */
     static void lockMutex(void* const mtxHandle);
+
+	/**
+	  * Make a new mutex
+	  */
     static void* makeMutex();
+
+	/**
+	  * Unlocks a mutex
+	  * @param mtxGandle The mutex handle that you want to unlock
+	  */
     static void unlockMutex(void* const mtxHandle);
+	//@}
 
-
-    // -----------------------------------------------------------------------
-    //  External message support
-    // -----------------------------------------------------------------------
+    /** @name External Message Support */
+    //@{
+	/**
+	  * Loads the message set from among the available domains
+	  *
+	  * @param msgDomain The message domain which you want to load
+	  */
     static XMLMsgLoader* loadMsgSet(const XMLCh* const msgDomain);
+	//@}
 
-
-    // -----------------------------------------------------------------------
-    //  Miscellaneous synchronization methods
-    // -----------------------------------------------------------------------
+    /** @name Miscellaneous synchronization methods */
+    //@{
+	/**
+	  * Conditionally updates or returns a single word variable atomically
+	  * The compareAndSwap subroutine performs an atomic operation which
+	  * compares the contents of a single word variable with a stored old value.
+	  * If the values are equal, a new value is stored in the single word
+	  * variable and TRUE is returned; otherwise, the old value is set to the
+	  * current value of the single word variable and FALSE is returned.
+	  *
+	  * The compareAndSwap subroutine is useful when a word value must be
+	  * updated only if it has not been changed since it was last read.
+	  *
+	  * Note: The word containing the single word variable must be aligned
+	  * on a full word boundary.
+	  *
+	  * @param toFill Specifies the address of the single word variable
+	  * @param newValue Specifies the new value to be conditionally assigned to the single word variable.
+	  * @param toCompare Specifies the address of the old value to be checked against (and conditionally updated with) the value of the single word variable.
+	  * @return Returns the new value assigned to the single word variable
+	  */
     static void* compareAndSwap
     (
                 void**      toFill
         , const void* const newValue
         , const void* const toCompare
     );
+	//@}
 
+    /** @name Atomic Increment and Decrement */
+    //@{
 
-    // -----------------------------------------------------------------------
-    //  Atomic Increment and Decrement
-    //
-    //  The function return value is positive if the result of the operation
-    //  was positive. Zero if the result of the operation was zero. Negative
-    //  if the result of the operation was negative. Except for the zero
-    //  case, the value returned may differ from the actual result of the
-    //  operation - only the sign and zero/nonzero state is guaranteed to be
-    //  correct.
-    // -----------------------------------------------------------------------
+    /**
+	  * Increments a single word variable atomically.
+	  * The atomicIncrement subroutine increments one word in a single atomic
+	  * operation. This operation is useful when a counter variable is shared
+	  * between several threads or processes. When updating such a counter
+	  * variable, it is important to make sure that the fetch, update, and
+	  * store operations occur atomically (are not interruptible).
+	  *
+	  * @param location Specifies the address of the word variable to be incremented.
+	  *
+      * @return The function return value is positive if the result of the operation
+      * was positive. Zero if the result of the operation was zero. Negative
+      * if the result of the operation was negative. Except for the zero
+      * case, the value returned may differ from the actual result of the
+      * operation - only the sign and zero/nonzero state is guaranteed to be
+      * correct.
+	  */
     static int atomicIncrement(int& location);
+    /**
+	  * Decrements a single word variable atomically.
+	  * The atomicDecrement subroutine increments one word in a single atomic
+	  * operation. This operation is useful when a counter variable is shared
+	  * between several threads or processes. When updating such a counter
+	  * variable, it is important to make sure that the fetch, update, and
+	  * store operations occur atomically (are not interruptible).
+	  *
+	  * @param location Specifies the address of the word variable to be decremented.
+	  *
+      * @return The function return value is positive if the result of the operation
+      * was positive. Zero if the result of the operation was zero. Negative
+      * if the result of the operation was negative. Except for the zero
+      * case, the value returned may differ from the actual result of the
+      * operation - only the sign and zero/nonzero state is guaranteed to be
+      * correct.
+	  */
     static int atomicDecrement(int& location);
-
+	//@}
 
 private :
-    // -----------------------------------------------------------------------
-    //  Private static methods. These are provided by the per-platform
-    //  implementation files.
-    // -----------------------------------------------------------------------
+    /** @name Private static methods */
+    //@{
+    /** Loads a message set from the available domains
+      *
+      * @param msgDomain The message domain containing the message to be loaded
+      */
     static XMLMsgLoader* loadAMsgSet(const XMLCh* const msgDomain);
+
+	/**
+	  * Creates a net accessor object
+	  */
     static XMLNetAccessor* makeNetAccessor();
+
+	/**
+	  * Creates a Transoding service
+	  */
     static XMLTransService* makeTransService();
+
+	/**
+	  * Does initialization for a particular platform
+	  * Here you put in code that you wish to execute before anything else is done in the application.
+	  */
     static void platformInit();
+	//@}
 
-
-    // -----------------------------------------------------------------------
-    //  Private static data members
-    //
-    //  fgInitFlag
-    //      This is used to avoid multiple inits if the client code calls us
-    //      more than once. They aren't supposed to, but some have trouble
-    //      keeping up if they are COM objects and such.
-    // -----------------------------------------------------------------------
+    /** @name Private static data members */
+    //@{
+    /** This is used to avoid multiple inits if the client code calls us
+      * more than once. They aren't supposed to, but some have trouble
+      * keeping up if they are COM objects and such.
+	  */
     static bool     fgInitFlag;
+	//@}
 };
 
 #endif
