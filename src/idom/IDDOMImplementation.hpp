@@ -58,6 +58,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/18 12:37:13  tng
+ * IDOM: fix typo to bypass HP aCC error message
+ *
  * Revision 1.2  2001/05/11 13:25:40  tng
  * Copyright update.
  *
@@ -76,7 +79,7 @@ private:
     IDDOMImplementation & operator = (const IDDOMImplementation & other);
 public:
     virtual ~IDDOMImplementation();
-    static IDOM_DOMImplementation   *IDDOMImplementation::getImplementation();
+    static IDOM_DOMImplementation   *getImplementation();
     virtual bool                         hasFeature(const  XMLCh * feature,  const  XMLCh * version);
     virtual IDOM_DocumentType           *createDocumentType(const XMLCh *qualifiedName,
                                             const XMLCh * publicId, const XMLCh *systemId);
