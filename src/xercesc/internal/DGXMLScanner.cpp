@@ -1322,7 +1322,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                 {
                     curAtt = new (fMemoryManager) XMLAttr
                     (
-                        -1
+                        0
                         , fAttNameBuf.getRawBuffer()
                         , XMLUni::fgZeroLenString
                         , XMLUni::fgZeroLenString
@@ -1351,7 +1351,7 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                 {
                     curAtt->set
                     (
-                        -1
+                        0
                         , fAttNameBuf.getRawBuffer()
                         , XMLUni::fgZeroLenString
                         , XMLUni::fgZeroLenString
@@ -2035,7 +2035,7 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
                         {
                             curAtt = new (fMemoryManager) XMLAttr
                             (
-                                -1
+                                fEmptyNamespaceId
                                 , curDef.getFullName()
                                 , XMLUni::fgZeroLenString
                                 , curDef.getValue()
@@ -2048,7 +2048,7 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
                         {
                             curAtt = new (fMemoryManager) XMLAttr
                             (
-                                -1
+                                0
                                 , curDef.getFullName()
                                 , XMLUni::fgZeroLenString
                                 , curDef.getValue()
@@ -2077,7 +2077,7 @@ DGXMLScanner::buildAttList(const unsigned int           attCount
                         {
                             curAtt->set
                             (
-                                -1
+                                0
                                 , curDef.getFullName()
                                 , XMLUni::fgZeroLenString
                                 , curDef.getValue()
