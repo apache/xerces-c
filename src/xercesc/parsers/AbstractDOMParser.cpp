@@ -1138,10 +1138,17 @@ void AbstractDOMParser::endIntSubset()
     fDocumentType->setInternalSubset(fInternalSubset.getRawBuffer());
     fBufMgr.releaseBuffer(fInternalSubset);
     fDocumentType->intSubsetReading = false;
+
+    // DOM L2 does not support editing DocumentType nodes
+    if (fScanner -> getDoNamespaces())
+        fDocumentType->setReadOnly(true, true);
 }
 
 void AbstractDOMParser::endExtSubset()
 {
+    // DOM L2 does not support editing DocumentType nodes
+    if (fScanner -> getDoNamespaces())
+        fDocumentType->setReadOnly(true, true);
 }
 
 void AbstractDOMParser::entityDecl
@@ -1256,6 +1263,10 @@ void AbstractDOMParser::startIntSubset()
 
 void AbstractDOMParser::startExtSubset()
 {
+    // Disable read only to be able to add entities and notations
+    // declarations. In endExtSubset, we will enable it again.
+    if (fScanner -> getDoNamespaces())
+        fDocumentType->setReadOnly(false, true);
 }
 
 void AbstractDOMParser::TextDecl
