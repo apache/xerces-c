@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/10 16:21:19  peiyongz
+ * use XMLUri instead of XMLURL
+ *
  * Revision 1.1  2001/08/01 18:49:16  peiyongz
  * AnyRUIDatatypeValidator
  *
@@ -69,7 +72,7 @@
 #include <validators/datatype/DatatypeValidator.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 #include <util/RefVectorOf.hpp>
-#include <util/XMLURL.hpp>
+#include <util/XMLUri.hpp>
 
 class VALIDATORS_EXPORT AnyURIDatatypeValidator : public DatatypeValidator
 {
@@ -182,8 +185,8 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fTempURL
-    //     
+    //  fTempURI
+    //      to support relative URI, such as the urispec= "\sample"
 	//		
     // -----------------------------------------------------------------------    
      int                  fLength;
@@ -192,7 +195,7 @@ private:
      bool                 fEnumerationInherited;
      RefVectorOf<XMLCh>*  fEnumeration;
 
-     XMLURL              *fTempURI;   //use XMLURL instead of XMLURI for the moment
+     XMLUri              *fTempURI;   
 
 };
 
@@ -214,11 +217,6 @@ inline AnyURIDatatypeValidator::~AnyURIDatatypeValidator()
 {
     cleanUp();
 }
-
-// -----------------------------------------------------------------------
-// Getter methods
-// -----------------------------------------------------------------------
-
 
 // -----------------------------------------------------------------------
 // Compare methods

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/10 16:21:19  peiyongz
+ * use XMLUri instead of XMLURL
+ *
  * Revision 1.1  2001/08/01 18:49:16  peiyongz
  * AnyRUIDatatypeValidator
  *
@@ -74,6 +77,18 @@
 static const int BUF_LEN = 64;
 static XMLCh value1[BUF_LEN+1];
 static XMLCh value2[BUF_LEN+1];
+
+//http://www.template.com
+//
+static const XMLCh BASE_URI[] = 
+{
+    chLatin_h, chLatin_t, chLatin_t, chLatin_p, 
+    chColon, chForwardSlash, chForwardSlash, 
+    chLatin_w, chLatin_w, chLatin_w, chPeriod,
+    chLatin_t, chLatin_e, chLatin_m, chLatin_p, chLatin_l, 
+    chLatin_a, chLatin_t, chLatin_e, chPeriod,
+    chLatin_c, chLatin_o, chLatin_m, chNull
+};
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -493,8 +508,6 @@ void AnyURIDatatypeValidator::init(DatatypeValidator*            const baseValid
 
 void AnyURIDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
 {
-    char* p=XMLString::transcode(content);
-
     //validate against base validator if any
     AnyURIDatatypeValidator *pBaseValidator = (AnyURIDatatypeValidator*) this->getBaseValidator();
     if (pBaseValidator !=0)
@@ -585,13 +598,10 @@ void AnyURIDatatypeValidator::checkContent( const XMLCh* const content, bool asB
     }
 
     // check 3.2.17.c0 must: URI (rfc 2396/2723)
-    XMLURL  *newURI;
-
-#ifdef REVISIT
     try 
     {
         if (!fTempURI) 
-            fTempURI = new XMLURL("http://www.template.com");
+            fTempURI = new XMLUri(BASE_URI);
 
         // Support for relative URLs
         // According to Java 1.1: URLs may also be specified with a 
@@ -599,16 +609,7 @@ void AnyURIDatatypeValidator::checkContent( const XMLCh* const content, bool asB
         //
         if (strLen) 
         {
-            newURI = new XMLURL(*fTempURI, content );   
-            delete newURI;
-        }
-    } 
-#endif
-    try 
-    {
-        if (strLen) 
-        {
-            newURI = new XMLURL(content );   
+            XMLUri  *newURI = new XMLUri(fTempURI, content );   
             delete newURI;
         }
     } 
@@ -617,7 +618,7 @@ void AnyURIDatatypeValidator::checkContent( const XMLCh* const content, bool asB
         ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
         //("Value '"+content+"' is a Malformed URI ");
     }
-      
+
 }
 
 /**
