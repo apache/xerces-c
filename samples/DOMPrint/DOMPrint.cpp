@@ -60,37 +60,38 @@
 
 // ---------------------------------------------------------------------------
 //  This sample program invokes the XercesDOMParser to build a DOM tree for
-//  the specified input file. It then invokes DOMWriter::writeNode() to
-//  serialize the resultant DOM tree into StdOutmyFormTarget, if no error
-//  occurs during the parsing.
+//  the specified input file. It then invokes DOMWriter::writeNode() to 
+//  serialize the resultant DOM tree back to XML stream.
 //
+//  Note:
+//  Application needs to provide its own implementation of 
+//		   DOMErrorHandler (in this sample, the DOMPrintErrorHandler), 
+//		   if it would like to receive notification from the serializer 
+//		   in the case any error occurs during the serialization.
 //
-//  Note: Application needs to provide its own implementation of DOMErrorHandler
-//        (in this sample, the DOMPrintErrorHandler), if it would receive
-//        notification from the serializer in case any error occurs during
-//        the serialization.
+//  Application needs to provide its own implementation of 
+//		   DOMWriterFilter (in this sample, the DOMPrintFilter), 
+//		   if it would like to filter out certain part of the DOM 
+//		   representation, but must be aware that thus may render the 
+//		   resultant XML stream invalid.
 //
-//  Note: And application needs to provide its own implementation of DOMWriterFilter
-//        as well (in this sample, the DOMPrintFilter), if it would like to
-//        filtering out certain part of the DOM representation. but must be aware
-//        that thus may render the resultant XML stream invalid.
+//  Application may choose any combination of characters as the 
+//		   end of line sequence to be used in the resultant XML stream, 
+//		   but must be aware that thus may render the resultant XML 
+//		   stream ill formed.
 //
-//  Note: Application may choose any combination of characters as the end of line
-//        sequence to be used in the resultant XML stream, but must be aware that
-//        thus may render the serialized XML stream ill formed.
+//  Application may choose a particular encoding name in which 
+//		   the output XML stream would be, but must be aware that if 
+//		   characters, unrepresentable in the encoding specified, appearing 
+//		   in markups, may force the serializer to terminate serialization 
+//		   prematurely, and thus no complete serialization would be done.
 //
-//  Note: Application may choose a particular encoding name in which the output
-//        XML stream would be, but must be aware that if characters, unrepresentable
-//        in the encoding specified, appearing in markups, may force the serializer
-//        to terminate serialization prematurely, and thus no complete serialization
-//        be done.
+//  Application shall query the serializer first, before set any 
+//           feature/mode(true, false), or be ready to catch exception if this
+//           feature/mode is not supported by the serializer.
 //
-//  Note: Application shall query the serializer first, before set any
-//        feature/mode(true, false), or be ready to catch exception if this
-//        feature/mode is not supported by the serializer.
-//
-//  Note: Application needs to clean up the filter, error handler and format target
-//        objects created for the serialization.
+//  Application needs to clean up the filter, error handler and 
+//		   format target objects created for the serialization.
 //
 //   Limitations:
 //      1.  The encoding="xxx" clause in the XML header should reflect
