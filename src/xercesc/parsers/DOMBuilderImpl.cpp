@@ -392,9 +392,8 @@ void DOMBuilderImpl::resetDocumentPool()
 // ---------------------------------------------------------------------------
 DOMDocument* DOMBuilderImpl::parse(const DOMInputSource& source)
 {
-    Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source);
+    Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false);
 
-    isWrapper.setAdoptInputSource(false);
     AbstractDOMParser::parse(isWrapper);
     return getDocument();
 }
@@ -551,9 +550,8 @@ Grammar* DOMBuilderImpl::loadGrammar(const DOMInputSource& source,
     Grammar* grammar = 0;
     try
     {
-        Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source);
+        Wrapper4DOMInputSource isWrapper((DOMInputSource*) &source, false);
 
-        isWrapper.setAdoptInputSource(false);
         setParseInProgress(true);
         grammar = getScanner()->loadGrammar(isWrapper, grammarType, toCache);
 
