@@ -71,6 +71,12 @@
 #include "Win32MsgLoader.hpp"
 
 
+//	Function prototypes
+BOOL APIENTRY DllMain(HINSTANCE hModule,
+                             DWORD  ul_reason_for_call,
+                             LPVOID lpReserved);
+
+
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
 // ---------------------------------------------------------------------------

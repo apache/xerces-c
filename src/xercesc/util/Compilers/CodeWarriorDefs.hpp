@@ -100,13 +100,13 @@
 //  unnecessary transcoding.
 //  If your compiler does not support it, don't define this.
 // ---------------------------------------------------------------------------
-// #define XML_LSTRSUPPORT
+#define XML_LSTRSUPPORT
 
 // ---------------------------------------------------------------------------
 //  Indicate that we support C++ namespace
 //  Do not define it if the compile cannot handle C++ namespace
 // ---------------------------------------------------------------------------
-// #define XERCES_HAS_CPP_NAMESPACE
+#define XERCES_HAS_CPP_NAMESPACE
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character

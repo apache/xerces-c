@@ -875,7 +875,15 @@ char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode)
     if (*toTranscode)
     {
         // Calc the needed size
-        const unsigned int neededLen = ::wcstombs(0, toTranscode, 0);
+        unsigned int neededLen;
+        
+       #if defined(XML_METROWERKS)
+	    	const unsigned int srcLen = ::wcslen(toTranscode);
+	    	neededLen = ::wcsmbslen(toTranscode, srcLen);
+	    #else
+	     	neededLen = ::wcstombs(0, toTranscode, 0);
+	    #endif
+
         if (neededLen == (unsigned int)-1)
             return 0;
 
