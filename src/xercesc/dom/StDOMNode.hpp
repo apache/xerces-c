@@ -99,7 +99,7 @@ public:
 	inline const T& operator* () const { return (*m_node); }
 	inline T* operator-> () const { return (m_node); }
 	inline operator T*() const { return (m_node); }
-	inline void ClearNode() { operator=(T*(0)); }
+	inline void ClearNode() { operator=((T*)(0)); }
 };
 
 #if defined(XML_DOMREFCOUNT_EXPERIMENTAL)

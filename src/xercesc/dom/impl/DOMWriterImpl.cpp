@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.34  2003/05/06 13:48:35  neilg
+ * fix GCC compilation problem and incorrect #include
+ *
  * Revision 1.33  2003/05/05 21:23:21  neilg
  * use of the new DOMNodeSPtr typedef and its friends to enable reference counting in
  * the DOMWriter implementation for applications that require it.
@@ -178,7 +181,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
-#include <xercesc/DOM/DOMSPtr.hpp>
+#include <xercesc/dom/StDOMNode.hpp>
 
 
 XERCES_CPP_NAMESPACE_BEGIN
