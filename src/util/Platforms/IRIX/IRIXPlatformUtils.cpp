@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/18 00:54:43  rahulj
+ * Merged in changes for IRIX submitted by Marc Stuessel
+ *
  * Revision 1.2  1999/12/14 23:53:32  rahulj
  * Removed the offending Ctrl-M's from the commit message
  * logs which was giving packaging problems.
@@ -195,7 +198,7 @@ void XMLPlatformUtils::platformInit()
     // Here you would also set the fgLibLocation global variable
     // XMLPlatformUtils::fgLibLocation is the variable to be set
 
-    static const char*  libEnvVar = "LD_LIBRARY_PATH";
+    static const char*  sharedLibEnvVar = "LD_LIBRARY_PATH";
     char*               libraryPath = 0;
     char                libName[256];
 
@@ -553,7 +556,7 @@ void* XMLPlatformUtils::makeMutex()
     pthread_mutex_t* mutex = new pthread_mutex_t;
     pthread_mutexattr_t*  attr = new pthread_mutexattr_t;
     pthread_mutexattr_init(attr);
-    pthread_mutexattr_setkind_np(attr, PTHREAD_MUTEX_RECURSIVE_NP);
+    pthread_mutexattr_settype(attr, PTHREAD_MUTEX_RECURSIVE);
     if (pthread_mutex_init(mutex, attr))
     {
         ThrowXML(XMLPlatformUtilsException,
