@@ -577,11 +577,14 @@ catch (const XMLException&amp; toCatch) {
     <a>
       <p>Both your application program and the &XercesCName; DLL must use the same *DLL* version of the
          runtime library.  If either statically links to the runtime library, the
-		 problem will still occur.
+		 problem will still occur.</p>
 
-         For example, for a Win32/VC6 build, the runtime library build setting MUST
+      <p>For example, for a Win32/VC6 build, the runtime library build setting MUST
 		 be "Multithreaded DLL" for release builds and "Debug Multithreaded DLL" for
 		 debug builds.</p>
+
+      <p>Or for example for a Win32/BCB6 build, application need to switch to Multithreaded
+         runtime to avoid such memory access violation.</p>
     </a>
   </faq>
 
@@ -739,6 +742,21 @@ t-&gt;transcodeFrom(source_Big5, length, result_unicode, length, bytesEaten, (un
          only way to get around this is to install an EntityResolver
          (see the Redirect sample for an example of how this is done), and reset the
          DTD file to "".
+      </p>
+
+    </a>
+  </faq>
+
+  <faq title="Why do I get segmentation fault when running on Redhat Linux?">
+
+    <q> Why do I get segmentation fault when running on Redhat Linux?</q>
+
+    <a>
+
+      <p>There were some problems with Redhat Linux 7.x with C++ exception handling across shared
+         libraries.  More details can be found
+         <jump href="http://rhn.redhat.com/errata/RHBA-2002-055.html">here</jump>.
+         Please try to upgrade your Redhat Linux gcc to the latest patch level and see if it helps.
       </p>
 
     </a>
