@@ -84,11 +84,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 class NamedNodeMapImpl;
 
 class CDOM_EXPORT DOMDocumentTypeImpl: public DOMDocumentType {
-public:
-    DOMNodeImpl          fNode;
-
 private:
-
+    DOMNodeImpl          fNode;
     DOMParentNode        fParent;
     DOMChildNode         fChild;
 

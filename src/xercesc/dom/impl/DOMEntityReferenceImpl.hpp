@@ -82,11 +82,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class CDOM_EXPORT DOMEntityReferenceImpl: public DOMEntityReference
 {
-public:
-    DOMNodeImpl      fNode;
-
 private:
-
+    DOMNodeImpl      fNode;
     DOMParentNode    fParent;
     DOMChildNode     fChild;
 

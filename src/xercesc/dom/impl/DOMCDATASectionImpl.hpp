@@ -81,10 +81,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 class CDOM_EXPORT DOMCDATASectionImpl: public DOMCDATASection {
-public:
-    DOMNodeImpl           fNode;
 private:
-
+    DOMNodeImpl           fNode;
     DOMParentNode         fParent;
     DOMChildNode          fChild;
     DOMCharacterDataImpl  fCharacterData;
