@@ -2055,11 +2055,27 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMEntityReferenceImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMErrorImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMErrorImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationImpl.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationimpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMLocatorImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMLocatorImpl.hpp
 # End Source File
 # Begin Source File
 
@@ -2700,6 +2716,14 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMEntityReference.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMError.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMErrorHandler.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMException.cpp
 # End Source File
 # Begin Source File
@@ -2709,6 +2733,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMException.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMImplementation.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMLocator.hpp
 # End Source File
 # Begin Source File
 

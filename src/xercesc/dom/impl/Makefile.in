@@ -98,6 +98,8 @@ DOM_IMPL_CPP_PRIVHEADERS =  \
 	DOMElementNSImpl.hpp \
 	DOMEntityImpl.hpp \
 	DOMEntityReferenceImpl.hpp \
+	DOMErrorImpl.hpp \
+	DOMLocatorImpl.hpp \
 	DOMNamedNodeMapImpl.hpp \
 	DOMNodeIDMap.hpp \
 	DOMNodeImpl.hpp \
@@ -134,6 +136,8 @@ DOM_IMPL_CPP_OBJECTS = \
 	DOMElementNSImpl.$(TO) \
 	DOMEntityImpl.$(TO) \
 	DOMEntityReferenceImpl.$(TO) \
+	DOMErrorImpl.$(TO) \
+	DOMLocatorImpl.$(TO) \
 	DOMNamedNodeMapImpl.$(TO) \
 	DOMNodeIDMap.$(TO) \
 	DOMNodeImpl.$(TO) \
