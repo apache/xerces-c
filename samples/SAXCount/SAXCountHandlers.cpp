@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/08/02 17:10:29  tng
+ * Allow DOMCount/SAXCount/IDOMCount/SAX2Count to take a file that has a list of xml file as input.
+ *
  * Revision 1.3  2000/03/02 19:53:47  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -158,4 +161,9 @@ void SAXCountHandlers::warning(const SAXParseException& e)
 		 << ", line " << e.getLineNumber()
 		 << ", char " << e.getColumnNumber()
          << "\n  Message: " << StrX(e.getMessage()) << endl;
+}
+
+void SAXCountHandlers::resetErrors()
+{
+    fSawErrors = false;
 }

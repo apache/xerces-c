@@ -70,6 +70,7 @@
 #include "IDOMCount.hpp"
 #include <string.h>
 #include <stdlib.h>
+#include <fstream.h>
 
 
 
@@ -82,11 +83,12 @@
 static void usage()
 {
     cout << "\nUsage:\n"
-            "    IDOMCount [options] <XML file>\n\n"
+            "    IDOMCount [options] <XML file> | List file>\n\n"
             "This program invokes the XML4C DOM parser, builds\n"
             "the DOM tree, and then prints the number of elements\n"
             "found in the input XML file.\n\n"
             "Options:\n"
+            "    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file\n"
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Enable namespace processing. Defaults to off.\n"
             "    -s          Enable schema processing. Defaults to off.\n"
@@ -155,6 +157,8 @@ int main(int argC, char* argV[])
     bool                      doNamespaces       = false;
     bool                      doSchema           = false;
     bool                      schemaFullChecking = false;
+    bool                      doList = false;
+    bool                      errorOccurred = false;
 
     // See if non validating dom parser configuration is requested.
     if ((argC == 2) && !strcmp(argV[1], "-?"))
@@ -202,6 +206,11 @@ int main(int argC, char* argV[])
         {
             schemaFullChecking = true;
         }
+         else if (!strcmp(argV[argInd], "-l")
+              ||  !strcmp(argV[argInd], "-L"))
+        {
+            doList = true;
+        }
          else
         {
             cerr << "Unknown option '" << argV[argInd]
@@ -218,7 +227,6 @@ int main(int argC, char* argV[])
         usage();
         return 1;
     }
-    xmlFile = argV[argInd];
 
     // Instantiate the DOM parser.
     IDOMParser parser;
@@ -236,60 +244,105 @@ int main(int argC, char* argV[])
     //  file. Catch any exceptions that might propogate out of it.
     //
     unsigned long duration;
-    try
-    {
-        const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-        parser.parse(xmlFile);
-        const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
-        duration = endMillis - startMillis;
+
+    bool more = true;
+    ifstream fin;
+
+    if (doList) {
+
+        // the input is a list file
+        fin.open(argV[argInd]);
+        if ( fin.is_open() == 0)
+        {
+            cerr << "Error opening list file: " << argV[argInd] << endl;
+            XMLPlatformUtils::Terminate();
+            return 1;
+        }
     }
 
-    catch (const XMLException& toCatch)
+    while (more)
     {
-        cerr << "\nError during parsing: '" << xmlFile << "'\n"
-             << "Exception message is:  \n"
-             << StrX(toCatch.getMessage()) << "\n" << endl;
-        return -1;
-    }
-    catch (const IDOM_DOMException& toCatch)
-    {
-        cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
-             << "DOMException code is:  \n"
-             << toCatch.code << "\n" << endl;
-        XMLPlatformUtils::Terminate();
-        return 4;
-    }
-    catch (...)
-    {
-       cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
-        XMLPlatformUtils::Terminate();
-        return 4;
-    }
+        char fURI[1000];
+        if (doList) {
+            if (! fin.eof() ) {
+                fin.getline (fURI, sizeof(fURI));
+                if (!*fURI)
+                    continue;
+                else
+                    xmlFile = fURI;
+            }
+            else
+                break;
+        }
+        else {
+            xmlFile = argV[argInd];
+            more = false;
+        }
 
-    //
-    //  Extract the DOM tree, get the list of all the elements and report the
-    //  length as the count of elements.
-    //
-    if (errorHandler.getSawErrors())
-    {
-        cout << "\nErrors occured, no output available\n" << endl;
-    }
-     else
-    {
-        IDOM_Document *doc = parser.getDocument();
-        unsigned int elementCount = 0;
-        if (doc)
-            elementCount = countChildElements((IDOM_Node*)doc->getDocumentElement());
+        cerr << "==Parsing== " << xmlFile << endl;
 
-        // Print out the stats that we collected and time taken.
-        cout << xmlFile << ": " << duration << " ms ("
-             << elementCount << " elems)." << endl;
+        //reset error count first
+        errorHandler.resetErrors();
+
+        try
+        {
+            const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
+            parser.parse(xmlFile);
+            const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
+            duration = endMillis - startMillis;
+        }
+
+        catch (const XMLException& toCatch)
+        {
+            cerr << "\nError during parsing: '" << xmlFile << "'\n"
+                 << "Exception message is:  \n"
+                 << StrX(toCatch.getMessage()) << "\n" << endl;
+            errorOccurred = true;
+            continue;
+        }
+        catch (const IDOM_DOMException& toCatch)
+        {
+            cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
+                 << "DOMException code is:  \n"
+                 << toCatch.code << "\n" << endl;
+            errorOccurred = true;
+            continue;
+        }
+        catch (...)
+        {
+            cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+            errorOccurred = true;
+            continue;
+        }
+
+        //
+        //  Extract the DOM tree, get the list of all the elements and report the
+        //  length as the count of elements.
+        //
+        if (errorHandler.getSawErrors())
+        {
+            cout << "\nErrors occured, no output available\n" << endl;
+        }
+         else
+        {
+            IDOM_Document *doc = parser.getDocument();
+            unsigned int elementCount = 0;
+            if (doc)
+                elementCount = countChildElements((IDOM_Node*)doc->getDocumentElement());
+
+            // Print out the stats that we collected and time taken.
+            cout << xmlFile << ": " << duration << " ms ("
+                 << elementCount << " elems)." << endl;
+        }
     }
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
-    return 0;
+    if (errorOccurred)
+        return 4;
+    else
+        return 0;
 }
 
 
@@ -338,4 +391,5 @@ void DOMCountErrorHandler::warning(const SAXParseException& e)
 
 void DOMCountErrorHandler::resetErrors()
 {
+    fSawErrors = false;
 }

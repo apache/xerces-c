@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.13  2001/08/02 17:10:29  tng
+* Allow DOMCount/SAXCount/IDOMCount/SAX2Count to take a file that has a list of xml file as input.
+*
 * Revision 1.12  2001/08/01 19:11:01  tng
 * Add full schema constraint checking flag to the samples and the parser.
 *
@@ -111,7 +114,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "SAXCount.hpp"
-
+#include <fstream.h>
 
 // ---------------------------------------------------------------------------
 //  Local helper methods
@@ -119,8 +122,9 @@
 void usage()
 {
     cout << "\nUsage:\n"
-            "    SAXCount [options] <XML file>\n\n"
+            "    SAXCount [options] <XML file> | List file>\n\n"
             "Options:\n"
+            "    -l          Indicate the input file is a file that has a list of xml files.  Default: Input file is an XML file\n"
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
             "    -n          Enable namespace processing. Defaults to off.\n"
             "    -s          Enable schema processing. Defaults to off.\n"
@@ -164,6 +168,8 @@ int main(int argC, char* argV[])
     bool                     doNamespaces       = false;
     bool                     doSchema           = false;
     bool                     schemaFullChecking = false;
+    bool                     doList = false;
+    bool                     errorOccurred = false;
 
 
     int argInd;
@@ -205,6 +211,11 @@ int main(int argC, char* argV[])
         {
             schemaFullChecking = true;
         }
+         else if (!strcmp(argV[argInd], "-l")
+              ||  !strcmp(argV[argInd], "-L"))
+        {
+            doList = true;
+        }
         else
         {
             cerr << "Unknown option '" << argV[argInd]
@@ -223,36 +234,75 @@ int main(int argC, char* argV[])
         return 1;
     }
 
+    //
+    //  Create a SAX parser object. Then, according to what we were told on
+    //  the command line, set it to validate or not.
+    //
+    SAXParser parser;
 
-    for (; argInd < argC; argInd++)
+    parser.setValidationScheme(valScheme);
+    parser.setDoNamespaces(doNamespaces);
+    parser.setDoSchema(doSchema);
+    parser.setValidationSchemaFullChecking(schemaFullChecking);
+
+    //
+    //  Create our SAX handler object and install it on the parser, as the
+    //  document and error handler.
+    //
+    SAXCountHandlers handler;
+    parser.setDocumentHandler(&handler);
+    parser.setErrorHandler(&handler);
+
+
+    //
+    //  Get the starting time and kick off the parse of the indicated
+    //  file. Catch any exceptions that might propogate out of it.
+    //
+    unsigned long duration;
+
+    ifstream fin;
+
+    if (doList) {
+
+        // the input is a list file
+        fin.open(argV[argInd]);
+        if ( fin.is_open() == 0)
+        {
+            cerr << "Error opening list file: " << argV[argInd] << endl;
+            XMLPlatformUtils::Terminate();
+            return 1;
+        }
+    }
+
+    while (true)
     {
-        xmlFile = argV[argInd];
+        char fURI[1000];
+        if (doList) {
+            if (! fin.eof() ) {
+                fin.getline (fURI, sizeof(fURI));
+                if (!*fURI)
+                    continue;
+                else
+                    xmlFile = fURI;
+            }
+            else
+                break;
+        }
+        else {
+            if (argInd < argC)
+            {
+                 xmlFile = argV[argInd];
+                 argInd++;
+            }
+            else
+                break;
+        }
 
-        //
-        //  Create a SAX parser object. Then, according to what we were told on
-        //  the command line, set it to validate or not.
-        //
-        SAXParser parser;
+        cerr << "==Parsing== " << xmlFile << endl;
 
-        parser.setValidationScheme(valScheme);
-        parser.setDoNamespaces(doNamespaces);
-        parser.setDoSchema(doSchema);
-        parser.setValidationSchemaFullChecking(schemaFullChecking);
+        //reset error count first
+        handler.resetErrors();
 
-        //
-        //  Create our SAX handler object and install it on the parser, as the
-        //  document and error handler.
-        //
-        SAXCountHandlers handler;
-        parser.setDocumentHandler(&handler);
-        parser.setErrorHandler(&handler);
-
-
-        //
-        //  Get the starting time and kick off the parse of the indicated
-        //  file. Catch any exceptions that might propogate out of it.
-        //
-        unsigned long duration;
         try
         {
             const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
@@ -266,15 +316,15 @@ int main(int argC, char* argV[])
             cerr << "\nError during parsing: '" << xmlFile << "'\n"
                 << "Exception message is:  \n"
                 << StrX(e.getMessage()) << "\n" << endl;
-            XMLPlatformUtils::Terminate();
-            return 4;
+            errorOccurred = true;
+            continue;
         }
 
         catch (...)
         {
             cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
-            XMLPlatformUtils::Terminate();
-            return 4;
+            errorOccurred = true;
+            continue;
         }
 
 
@@ -292,6 +342,10 @@ int main(int argC, char* argV[])
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
-    return 0;
+    if (errorOccurred)
+        return 4;
+    else
+        return 0;
+
 }
 

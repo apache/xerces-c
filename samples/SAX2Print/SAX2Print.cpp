@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/08/02 17:10:29  tng
+ * Allow DOMCount/SAXCount/IDOMCount/SAX2Count to take a file that has a list of xml file as input.
+ *
  * Revision 1.3  2001/08/01 19:11:01  tng
  * Add full schema constraint checking flag to the samples and the parser.
  *
@@ -121,7 +124,7 @@ static void usage()
              "    -v=xxx      Validation scheme [always | never | auto*]\n"
              "    -e          Expand Namespace Alias with URI's.\n"
              "    -x=XXX      Use a particular encoding for output (LATIN1*).\n"
-             "    -s          Disable schema processing. Defaults to on.\n\n"
+             "    -s          Disable schema processing. Defaults to on.\n"
              "    -f          Enable full schema constraint checking processing. Defaults to off.\n\n"
              "    -?          Show this help\n\n"
              "  * = Default if not provided explicitly\n\n"
