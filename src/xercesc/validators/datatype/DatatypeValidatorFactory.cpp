@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/21 23:43:19  peiyongz
+ * Schema Errata: E2-25 language
+ *
  * Revision 1.5  2002/11/04 14:53:28  tng
  * C++ Namespace Support.
  *
@@ -203,18 +206,16 @@ const XMLCh fgTokPattern[] =
     chBackSlash, chLatin_c, chPlus, chNull
 };
 
-//"([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]+)(-[a-zA-Z]+)*"
+// http://www.w3.org/2001/05/xmlschema-errata#Errata2
+// E2-25
+//"([a-zA-Z]{1,8})(-[a-zA-Z0-9]{1,8})*"
 const XMLCh fgLangPattern[] =
 {
-    chOpenParen, chOpenSquare, chLatin_a, chDash, chLatin_z, chLatin_A, chDash,
-    chLatin_Z, chCloseSquare, chOpenCurly, chDigit_2, chCloseCurly, chPipe,
-    chOpenSquare, chLatin_i, chLatin_I, chCloseSquare, chDash, chOpenSquare,
-    chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z, chCloseSquare,
-    chPlus, chPipe, chOpenSquare, chLatin_x, chLatin_X, chCloseSquare, chDash,
-    chOpenSquare, chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z,
-	chCloseSquare, chPlus, chCloseParen, chOpenParen, chDash, chOpenSquare,
-    chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z, chCloseSquare,
-    chPlus, chCloseParen, chAsterisk, chNull
+    chOpenParen,   chOpenSquare,  chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z, 
+    chCloseSquare, chOpenCurly, chDigit_1, chComma, chDigit_8, chCloseCurly, chCloseParen,
+    chOpenParen,   chDash, chOpenSquare, chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z,
+	chDigit_0,     chDash, chDigit_9, chCloseSquare, chOpenCurly, chDigit_1, chComma, chDigit_8, 
+    chCloseCurly,  chCloseParen, chAsterisk, chNull
 };
 
 //"\\i\\c*"
