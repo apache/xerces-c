@@ -67,6 +67,7 @@ make
 export XERCESCROOT=$RPM_BUILD_DIR/%{name}-src%{tarversion}
 cd $XERCESCROOT/src/xercesc
 make PREFIX=$RPM_BUILD_ROOT%{prefix} install
+ln -sf %{prefix}/lib/libxerces-c.so.22 $RPM_BUILD_ROOT%{prefix}/lib/libxerces-c.so
 mkdir -p $RPM_BUILD_ROOT%{prefix}/bin
 #we don't want obj directory
 install `find $XERCESCROOT/bin -type f -maxdepth 1` $RPM_BUILD_ROOT%{prefix}/bin
@@ -95,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc LICENSE.txt STATUS credits.txt Readme.html doc/
 
 %changelog
+* Wed Dec 18 2002 Albert Strasheim <albert@stonethree.com>
+- added symlink to libxerces-c.so in lib directory
+
 * Fri Dec 13 2002 Albert Strasheim <albert@stonethree.com>
 - added seperate doc package
 - major cleanups
