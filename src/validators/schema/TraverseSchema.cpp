@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/06/07 14:38:02  knoaman
+ * Bypass for now generating an error message in case of ID/IDREF/Entity(s)
+ * datatype validators is not found. Currently taken care of by the validator.
+ *
  * Revision 1.18  2001/06/06 21:16:13  knoaman
  * Display error when 'whiteSpace' facet value is not collapse.
  *
@@ -1464,6 +1468,9 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
         const XMLCh* localPart = getLocalPart(typeAttr);
         const XMLCh* prefix = getPrefix(typeAttr);
         const XMLCh* typeURI = resolvePrefixToURI(prefix);
+        //temporary flag to bypass error message in case (ID/IDREF/ENTITY(s)) validators not found
+        //REVISIT - remove flag once actual validators are available
+        bool  bypassErrorMsg = true;
 
         if (XMLString::stringLen(typeURI) == 0
             || XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)  == 0) {
@@ -1486,16 +1493,20 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
                 attType = XMLAttDef::Entities;
             }
             else if (XMLString::compareString(localPart,XMLUni::fgNmTokenString) == 0) {
+                bypassErrorMsg = false;
                 attType = XMLAttDef::NmToken;
             }
             else if (XMLString::compareString(localPart,XMLUni::fgNmTokensString) == 0) {
+                bypassErrorMsg = false;
                 attType = XMLAttDef::NmTokens;
             }
             else if (XMLString::compareString(localPart,XMLUni::fgNotationString) == 0) {
+                bypassErrorMsg = false;
                 attType = XMLAttDef::Notation;
             }
             else {
 
+                bypassErrorMsg = false;
                 attType = XMLAttDef::Simple;
 
                 if (dv == 0 && XMLString::stringLen(typeURI) == 0) {
@@ -1517,6 +1528,7 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
         }
         else { //isn't of the schema for schemas namespace...
 
+            bypassErrorMsg = false;
             // check if the type is from the same Schema
             dv = getDatatypeValidator(typeURI, localPart);
 
@@ -1541,7 +1553,7 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
             attType = XMLAttDef::Simple;
         }
 
-        if (!dv) {
+        if (!dv && !bypassErrorMsg) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, typeURI, localPart);
         }
     }
