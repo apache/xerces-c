@@ -13,8 +13,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC6\Release"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC6\Release\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Release\obj"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -22,15 +22,15 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
 				OptimizeForProcessor="2"
-				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\samples\SAXCount"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="NDEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC6\Release\obj/XSerializerTest.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC6\Release\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC6\Release\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC6\Release\obj/"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/XSerializerTest.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/"
 				WarningLevel="3"
 				CompileAs="0"/>
 			<Tool
@@ -41,8 +41,8 @@
 				AdditionalDependencies="xerces-c_2.lib"
 				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Release/XSerializerTest.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC6\Release"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC6\Release/XSerializerTest.pdb"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/XSerializerTest.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -64,8 +64,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC6\Debug"
-			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC6\Debug\obj"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
@@ -73,14 +73,14 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				OptimizeForProcessor="2"
-				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\samples\SAXCount"
+				AdditionalIncludeDirectories="..\..\..\..\..\src"
 				PreprocessorDefinitions="_DEBUG,_CONSOLE,WIN32,_WINDOWS,PLATFORM_WIN32"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC6\Debug\obj/XSerializerTest.pch"
-				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC6\Debug\obj/"
-				ObjectFile=".\..\..\..\..\..\Build\Win32\VC6\Debug\obj/"
-				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC6\Debug\obj/"
+				PrecompiledHeaderFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/XSerializerTest.pch"
+				AssemblerListingLocation=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
+				ObjectFile=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
+				ProgramDataBaseFileName=".\..\..\..\..\..\Build\Win32\VC7\Debug\obj/"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 				CompileAs="0"/>
@@ -92,9 +92,9 @@
 				AdditionalDependencies="xerces-c_2D.lib"
 				OutputFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/XSerializerTest.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC6\Debug"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC6\Debug/XSerializerTest.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/XSerializerTest.pdb"
 				SubSystem="1"/>
 			<Tool
 				Name="VCMIDLTool"
