@@ -98,6 +98,7 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp>
+#include <xercesc/internal/MemoryManagerArrayImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -1005,8 +1006,10 @@ MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 char*
 MacOSLCPTranscoder::transcode(const XMLCh* const srcText)
 {
-	//	Transcode using the static memory manaager
-	return transcode(srcText, XMLPlatformUtils::fgMemoryManager);
+	//	Transcode using a memory manager that allocates
+	//	memory using new[].
+	MemoryManagerArrayImpl allocator;
+	return transcode(srcText, &allocator);
 }
 
 
@@ -1124,8 +1127,10 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
 XMLCh*
 MacOSLCPTranscoder::transcode(const char* const srcText)
 {
-	//	Transcode using the static memory manaager
-	return transcode(srcText, XMLPlatformUtils::fgMemoryManager);
+	//	Transcode using a memory manager that allocates
+	//	memory using new[].
+	MemoryManagerArrayImpl allocator;
+	return transcode(srcText, &allocator);
 }
 
 
