@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/05/04 19:02:40  cargilld
+ * Enable IDs to work on all kinds of schema components
+ *
  * Revision 1.8  2003/11/21 17:34:04  knoaman
  * PSVI update
  *
@@ -86,6 +89,7 @@
  */
 
 #include <xercesc/framework/psvi/XSObject.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -98,7 +102,12 @@ XSObject::XSObject(XSConstants::COMPONENT_TYPE compType,
     : fComponentType(compType)
     , fXSModel(xsModel)
     , fMemoryManager(manager)
+    , fId(0)
 {
+    if (xsModel)
+    {
+        xsModel->addComponentToIdVector(this, compType-1);
+    }
 }
 
 XSObject::~XSObject()
@@ -125,9 +134,13 @@ XSNamespaceItem *XSObject::getNamespaceItem()
 
 unsigned int XSObject::getId() const
 {
-    return 0;
+    return fId;
 }
 
+inline void XSObject::setId(unsigned int id)
+{
+    fId = id;
+}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/05/04 19:02:40  cargilld
+ * Enable IDs to work on all kinds of schema components
+ *
  * Revision 1.20  2004/02/05 18:09:53  cargilld
  * Fix a seg fault with PSVI and set basetype of anysimpletype to be anytype.
  *
@@ -149,8 +152,6 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
     : fMemoryManager(manager)
     , fNamespaceStringList(0)
     , fXSNamespaceItemList(0)
-    , fElementDeclarationVector(0)
-    , fAttributeDeclarationVector(0)
     , fURIStringPool(0)
     , fXSAnnotationList(0)
     , fHashNamespace(0)
@@ -195,13 +196,12 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
                 fComponentMap[i] = 0;
                 break;
         }
+        fIdVector[i] = new (fMemoryManager) RefVectorOf<XSObject>(30, false, fMemoryManager);
     }
 
     fNamespaceStringList        = new (manager) RefArrayVectorOf <XMLCh>(10, true, manager);
     fXSNamespaceItemList        = new (manager) RefVectorOf <XSNamespaceItem>(10, true, manager);
     fXSAnnotationList           = new (manager) RefVectorOf <XSAnnotation> (10, false, manager);
-    fElementDeclarationVector   = new (manager) RefVectorOf<XSElementDeclaration> (30, false, manager);
-    fAttributeDeclarationVector = new (manager) RefVectorOf<XSAttributeDeclaration>  (20, false, manager);
     fHashNamespace              = new (manager) RefHashTableOf<XSNamespaceItem> (11, false, manager);
 
     // Loop through all grammars in the grammar pool to create the XSNamespaceItem's
@@ -262,8 +262,6 @@ XSModel::XSModel( XSModel *baseModel
     : fMemoryManager(manager)
     , fNamespaceStringList(0)
     , fXSNamespaceItemList(0)
-    , fElementDeclarationVector(0)
-    , fAttributeDeclarationVector(0)
     , fURIStringPool(0)
     , fXSAnnotationList(0)
     , fHashNamespace(0)    
@@ -309,14 +307,13 @@ XSModel::XSModel( XSModel *baseModel
                 fComponentMap[i] = 0;
                 break;
         }
+        fIdVector[i] = new (fMemoryManager) RefVectorOf<XSObject>(30, false, fMemoryManager);
     }
 
     fNamespaceStringList        = new (manager) RefArrayVectorOf <XMLCh>(10, true, manager);
     fXSNamespaceItemList        = new (manager) RefVectorOf <XSNamespaceItem>(10, false, manager);
     fDeleteNamespace            = new (manager) RefVectorOf <XSNamespaceItem>(10, true, manager);
-    fXSAnnotationList           = new (manager) RefVectorOf <XSAnnotation> (10, false, manager);
-    fElementDeclarationVector   = new (manager) RefVectorOf<XSElementDeclaration> (30, false, manager);
-    fAttributeDeclarationVector = new (manager) RefVectorOf<XSAttributeDeclaration>  (20, false, manager);
+    fXSAnnotationList           = new (manager) RefVectorOf <XSAnnotation> (10, false, manager); 
     fHashNamespace              = new (manager) RefHashTableOf<XSNamespaceItem> (11, false, manager);
 
     if (fParent)
@@ -357,16 +354,12 @@ XSModel::XSModel( XSModel *baseModel
                     }
                 break;
             }
+            for (unsigned int j=0; j<fParent->fIdVector[i]->size(); j++)
+            {
+                fIdVector[i]->addElement(fParent->fIdVector[i]->elementAt(j));
+            }
         }
 
-        for (i=0; i<fParent->fElementDeclarationVector->size(); i++)
-        {
-            fElementDeclarationVector->addElement(fParent->fElementDeclarationVector->elementAt(i));
-        }
-        for (i=0; i<fParent->fAttributeDeclarationVector->size(); i++)
-        {
-            fAttributeDeclarationVector->addElement(fParent->fAttributeDeclarationVector->elementAt(i));
-        }
         for (i=0; i<fParent->fXSAnnotationList->size(); i++)
         {
             fXSAnnotationList->addElement(fParent->fXSAnnotationList->elementAt(i));
@@ -446,6 +439,7 @@ XSModel::~XSModel()
                 delete fComponentMap[i];
                 break;
         }
+        delete fIdVector[i];
     }
 
     delete fNamespaceStringList;
@@ -453,8 +447,6 @@ XSModel::~XSModel()
     delete fXSAnnotationList;
     delete fHashNamespace;
     delete fObjFactory;
-    delete fElementDeclarationVector;
-    delete fAttributeDeclarationVector;
 
     if (fDeleteNamespace)
         delete fDeleteNamespace;
@@ -466,6 +458,14 @@ XSModel::~XSModel()
 // ---------------------------------------------------------------------------
 //  XSModel: Helper methods
 // ---------------------------------------------------------------------------
+void XSModel::addComponentToIdVector(XSObject* const component,
+                                     int componentIndex)
+{
+    component->setId(fIdVector[componentIndex]->size());
+    fIdVector[componentIndex]->addElement(component);
+}
+
+
 void XSModel::addComponentToNamespace(XSNamespaceItem* const namespaceItem,
                                       XSObject* const component,
                                       int componentIndex,
@@ -550,8 +550,6 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
             (SchemaAttDef*) &(attrEnum.nextElement()), this
         );
 
-        xsAttrDecl->setId(fAttributeDeclarationVector->size());
-        fAttributeDeclarationVector->addElement(xsAttrDecl);
         addComponentToNamespace
         (
             namespaceItem, xsAttrDecl, XSConstants::ATTRIBUTE_DECLARATION - 1
@@ -570,8 +568,6 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
                 &curElem, this
             );
 
-            xsElemDecl->setId(fElementDeclarationVector->size());
-            fElementDeclarationVector->addElement(xsElemDecl);
             addComponentToNamespace
             (
                 namespaceItem, xsElemDecl, XSConstants::ELEMENT_DECLARATION -1
@@ -665,6 +661,7 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
     {
         fXSAnnotationList->addElement(annot);
         namespaceItem->fXSAnnotationList->addElement(annot);
+        addComponentToIdVector(annot, XSConstants::ANNOTATION);
         annot = annot->getNext();
     } // end of annotation loop
 }
@@ -870,17 +867,9 @@ XSNotationDeclaration *XSModel::getNotationDeclaration(const XMLCh *name
 XSObject *XSModel::getXSObjectById(unsigned int  compId
             , XSConstants::COMPONENT_TYPE compType)
 {
-    // only elements & attributes have id's
-    switch(compType) {
-        case XSConstants::ELEMENT_DECLARATION:
-            if (compId < fElementDeclarationVector->size())
-                return fElementDeclarationVector->elementAt(compId);
-            break;    
-        case XSConstants::ATTRIBUTE_DECLARATION:
-            if (compId < fAttributeDeclarationVector->size())
-                return fAttributeDeclarationVector->elementAt(compId);
-            break;
-    }
+    if (compId < fIdVector[compType -1]->size())
+        return fIdVector[compType -1]->elementAt(compId);
+
     return 0;
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/05/04 19:02:40  cargilld
+ * Enable IDs to work on all kinds of schema components
+ *
  * Revision 1.10  2003/12/01 23:23:26  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -186,8 +189,12 @@ public:
     /** methods needed by implementation */
 
     //@{
-
+    /**
+      * Set the id to be returned on getId().
+      */
+    void setId(unsigned int id);
     //@}
+
 private:
 
     // -----------------------------------------------------------------------
@@ -208,6 +215,7 @@ protected:
     XSConstants::COMPONENT_TYPE fComponentType;
     XSModel*                    fXSModel;
     MemoryManager*              fMemoryManager;
+    unsigned int                fId;
 };
 
 inline XSConstants::COMPONENT_TYPE XSObject::getType() const

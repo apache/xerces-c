@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/05/04 19:02:40  cargilld
+ * Enable IDs to work on all kinds of schema components
+ *
  * Revision 1.10  2003/12/24 17:42:02  knoaman
  * Misc. PSVI updates
  *
@@ -337,6 +340,12 @@ private:
          , bool addToXSModel = true
     );
 
+    void addComponentToIdVector
+    (
+        XSObject* const component
+        , int componentIndex
+    );
+
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
@@ -345,6 +354,7 @@ private:
 
 protected:
     friend class XSObjectFactory;
+    friend class XSObject;
 
     // -----------------------------------------------------------------------
     //  data members
@@ -356,8 +366,7 @@ protected:
     StringList*                             fNamespaceStringList;
     XSNamespaceItemList*                    fXSNamespaceItemList;
 
-    RefVectorOf<XSElementDeclaration>*      fElementDeclarationVector;
-    RefVectorOf<XSAttributeDeclaration>*    fAttributeDeclarationVector;
+    RefVectorOf<XSObject>*                  fIdVector[XSConstants::MULTIVALUE_FACET];    
 
     /* Need a XSNamedMap for each component    top-level?
 	      ATTRIBUTE_DECLARATION     = 1,	   

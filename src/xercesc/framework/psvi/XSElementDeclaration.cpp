@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/05/04 19:02:40  cargilld
+ * Enable IDs to work on all kinds of schema components
+ *
  * Revision 1.10  2003/12/15 17:23:48  cargilld
  * psvi updates; cleanup revisits and bug fixes
  *
@@ -119,7 +122,6 @@ XSElementDeclaration::XSElementDeclaration
     : XSObject(XSConstants::ELEMENT_DECLARATION, xsModel, manager)
     , fDisallowedSubstitutions(0)
     , fSubstitutionGroupExclusions(0)
-    , fId(0)
     , fScope(elemScope)
     , fSchemaElementDecl(schemaElementDecl)
     , fTypeDefinition(typeDefinition)
@@ -177,11 +179,6 @@ const XMLCh *XSElementDeclaration::getNamespace()
 XSNamespaceItem *XSElementDeclaration::getNamespaceItem() 
 {
     return fXSModel->getNamespaceItem(getNamespace());
-}
-
-unsigned int XSElementDeclaration::getId() const
-{
-    return fId;
 }
 
 

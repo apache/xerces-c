@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/05/04 19:02:40  cargilld
+ * Enable IDs to work on all kinds of schema components
+ *
  * Revision 1.12  2004/01/29 11:46:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -121,8 +124,7 @@ XSAttributeDeclaration::XSAttributeDeclaration(SchemaAttDef* const           att
     : XSObject(XSConstants::ATTRIBUTE_DECLARATION, xsModel, manager)
     , fAttDef(attDef)
     , fTypeDefinition(typeDef)
-    , fAnnotation(annot)
-    , fId(0)
+    , fAnnotation(annot) 
     , fScope(scope)
     , fEnclosingCTDefinition(enclosingCTDefinition)        
 {
@@ -149,11 +151,6 @@ const XMLCh *XSAttributeDeclaration::getNamespace()
 XSNamespaceItem *XSAttributeDeclaration::getNamespaceItem() 
 {
     return fXSModel->getNamespaceItem(getNamespace());
-}
-
-unsigned int XSAttributeDeclaration::getId() const
-{
-    return fId;
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/05/04 19:02:40  cargilld
+ * Enable IDs to work on all kinds of schema components
+ *
  * Revision 1.8  2003/12/24 17:42:02  knoaman
  * Misc. PSVI updates
  *
@@ -169,13 +172,6 @@ public:
      */
     XSNamespaceItem* getNamespaceItem();
 
-    /**
-      * Return a unique identifier for a component within this XSModel, to
-      * optimize querying.
-      * @return id unique for this type of component within this XSModel.
-      */
-    unsigned int getId() const;
-
     //@}
 
     /** @name XSAttributeDeclaration methods **/
@@ -222,10 +218,6 @@ public:
     /** methods needed by implementation */
 
     //@{
-    /**
-      * Set the id to be returned on getId().
-      */
-    void setId(unsigned int id);
 
     bool getRequired() const;
     //@}
@@ -249,7 +241,6 @@ protected:
     SchemaAttDef*               fAttDef;
     XSSimpleTypeDefinition*     fTypeDefinition;
     XSAnnotation*               fAnnotation;
-    unsigned int                fId;
     XSConstants::SCOPE          fScope;
     XSComplexTypeDefinition*    fEnclosingCTDefinition;
 };
@@ -260,11 +251,6 @@ protected:
 inline XSSimpleTypeDefinition* XSAttributeDeclaration::getTypeDefinition() const
 {
     return fTypeDefinition;
-}
-
-inline void XSAttributeDeclaration::setId(unsigned int id)
-{
-    fId = id;
 }
 
 inline XSAnnotation *XSAttributeDeclaration::getAnnotation() const
