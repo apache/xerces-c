@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.38  2003/10/09 13:52:17  neilg
+# build SynchronizedStringPool
+#
 # Revision 1.37  2003/10/01 16:32:39  neilg
 # improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
 #
@@ -517,6 +520,7 @@ UTIL_CPP_PUBHEADERS = \
     SchemaDateTimeException.hpp \
     SecurityManager.hpp \
     StringPool.hpp \
+    SynchronizedStringPool.hpp \
     TranscodingException.hpp \
     TransENameMap.hpp \
     TransService.hpp \
@@ -607,6 +611,7 @@ UTIL_CPP_OBJECTS = \
     PlatformUtils.$(TO) \
     QName.$(TO) \
     StringPool.$(TO) \
+    SynchronizedStringPool.$(TO) \
     TransService.$(TO) \
     XMemory.$(TO) \
     XMLAbstractDoubleFloat.$(TO) \
