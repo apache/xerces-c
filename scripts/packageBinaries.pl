@@ -677,7 +677,15 @@ if ( ($platform =~ m/AIX/i)      ||
                 else {
                     psystem ("CC=$opt_c CXX=$cXX CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT");
                 }
-                                                    
+           }elsif ($platform eq 'solaris') {                       
+                if ($opt_b eq "32") {               	
+                    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT --disable-64bit-libs");
+                }
+                else {
+                    $icu_cxxflags = '"-w -O3 -xarch=v9"';
+                    $icu_cflags = '"-w -xO3 -xarch=v9"';                 	
+                    psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags sh ./configure --prefix=$ICUROOT");
+                }                                         
             } else {
             # set the 32 bit or 64 bit
                 if ($opt_b eq "32") {
