@@ -616,6 +616,9 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 {
     DOMElement     *elem;
     DOMElementImpl *elemImpl;
+    static const XMLCh XMLNS[] = {
+    chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull
+    };
 
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
 
@@ -639,9 +642,6 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
         elem = createElementNSNode(namespaceURI, elemQName.getRawBuffer());
         elemImpl = (DOMElementImpl *) elem;
         for (unsigned int index = 0; index < attrCount; ++index) {
-            static const XMLCh XMLNS[] = {
-            chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull
-            };
             const XMLAttr* oneAttrib = attrList.elementAt(index);
             unsigned int attrURIId = oneAttrib -> getURIId();
             namespaceURI = 0;
@@ -735,8 +735,15 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
                         XMLBuffer& nameBuf = bbQName.getBuffer();
                         unsigned int uriId = fScanner->resolveQName(qualifiedName, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
 
+                        const XMLCh* namespaceURI = 0;
+                        if (!XMLString::compareString(qualifiedName, XMLNS))    //for xmlns=...
+                            uriId = fScanner->getXMLNSNamespaceId();
+                        if (uriId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
+                            namespaceURI = fScanner->getURIText(uriId);
+                         }
+
                         insertAttr = (DOMAttrImpl *) fDocument->createAttributeNS(
-                           fScanner->getURIText(uriId),     // NameSpaceURI
+                           namespaceURI,     // NameSpaceURI
                            qualifiedName);   // qualified name
 
                         DOMNode* remAttr = elemImpl->setDefaultAttributeNodeNS(insertAttr);
