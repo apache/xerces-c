@@ -86,7 +86,7 @@
 #elif defined (XML_USE_ICU_TRANSCODER)
     #include <util/Transcoders/ICU/ICUTransService.hpp>
 #else
- Transcoder not Specified - For OS/400 must be either ICU or Iconv400 
+ Transcoder not Specified - For OS/400 must be either ICU or Iconv400
 #endif
 
 #if defined(XML_USE_MSGFILE_MESSAGELOADER)
@@ -146,27 +146,6 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
-static pthread_mutex_t* gAtomicOpMutex =0 ;
-
-void XMLPlatformUtils::platformInit()
-{
-    //
-    // The gAtomicOpMutex mutex needs to be created
-	// because compareAndSwap and incrementlocation and decrementlocation
-	// does not have the atomic system calls for usage
-    // Normally, mutexes are created on first use, but there is a
-    // circular dependency between compareAndExchange() and
-    // mutex creation that must be broken.
-
-    gAtomicOpMutex = new pthread_mutex_t;	
-
-    if (pthread_mutex_init(gAtomicOpMutex, NULL)) {
-		delete gAtomicOpMutex;
-		gAtomicOpMutex = 0;
-
-        panic( XMLPlatformUtils::Panic_SystemInit );
-	}
-}
 //
 //  This method is called very early in the bootstrapping process. This guy
 //  must create a transcoding service and return it. It cannot use any string
@@ -623,11 +602,32 @@ void abnormal_termination(int termcode)
 {
    send_message(NULL,"CPF9899",'e'); /* send final exception that we have terminated*/
 }
+
 // -----------------------------------------------------------------------
 //  Mutex methods
 // -----------------------------------------------------------------------
 
 #if !defined (APP_NO_THREADS)
+static pthread_mutex_t* gAtomicOpMutex =0 ;
+void XMLPlatformUtils::platformInit()
+{
+    //
+    // The gAtomicOpMutex mutex needs to be created
+	// because compareAndSwap and incrementlocation and decrementlocation
+	// does not have the atomic system calls for usage
+    // Normally, mutexes are created on first use, but there is a
+    // circular dependency between compareAndExchange() and
+    // mutex creation that must be broken.
+
+    gAtomicOpMutex = new pthread_mutex_t;	
+
+    if (pthread_mutex_init(gAtomicOpMutex, NULL)) {
+		delete gAtomicOpMutex;
+		gAtomicOpMutex = 0;
+
+        panic( XMLPlatformUtils::Panic_SystemInit );
+	}
+}
 
 class  RecursiveMutex
 {
@@ -764,6 +764,11 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 #else // #if !defined (APP_NO_THREADS)
 
+void XMLPlatformUtils::platformInit()
+{
+   // do nothing
+}
+
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
 }
@@ -822,9 +827,11 @@ FileHandle XMLPlatformUtils::openStdInHandle()
 
 void XMLPlatformUtils::platformTerm()
 {
+#if !defined (APP_NO_THREADS)
 	pthread_mutex_destroy(gAtomicOpMutex);
     delete gAtomicOpMutex;
 	gAtomicOpMutex = 0;
+#endif
 
 #if defined (XML_USE_ICONV400_TRANSCODER)
 	cleanupDefaultConverter();
