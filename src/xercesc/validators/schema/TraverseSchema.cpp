@@ -248,6 +248,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fLocator(0)
     , fMemoryManager(manager)
     , fGrammarPoolMemoryManager(fGrammarResolver->getGrammarPoolMemoryManager())
+    , fAnnotation(0)
     , fAttributeCheck(manager)
 {
 
@@ -936,16 +937,14 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
 
         if (XMLString::equals(childName, SchemaSymbols::fgELT_ELEMENT)) {
 
-            QName* eltQName = traverseElementDecl(child);
+            SchemaElementDecl* elemDecl = traverseElementDecl(child);
 
-            if (eltQName == 0) {
+            if (!elemDecl )
                 continue;
-            }
 
             contentSpecNode = new (fGrammarPoolMemoryManager) ContentSpecNode
             (
-                eltQName
-                , false
+                elemDecl
                 , fGrammarPoolMemoryManager
             );
             seeParticle = true;
@@ -1020,10 +1019,12 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
         }
     }
 
-    if (hadContent) {
+    if (hadContent)
+    {
         left = new (fGrammarPoolMemoryManager) ContentSpecNode
         (
-            (ContentSpecNode::NodeTypes) modelGroupType
+            ((ContentSpecNode::NodeTypes) modelGroupType) == ContentSpecNode::Choice
+                ? ContentSpecNode::ModelGroupChoice : ContentSpecNode::ModelGroupSequence
             , left
             , right
             , true
@@ -1455,7 +1456,8 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
     ContentSpecNode* specNode = 0;
     XercesGroupInfo* saveGroupInfo = fCurrentGroupInfo;
 
-    groupInfo = new (fGrammarPoolMemoryManager) XercesGroupInfo(fGrammarPoolMemoryManager);
+    groupInfo = new (fGrammarPoolMemoryManager) XercesGroupInfo(
+        fStringPool->addOrFind(name), fTargetNSURI, fGrammarPoolMemoryManager);
     fCurrentGroupStack->addElement(nameIndex);
     fCurrentGroupInfo = groupInfo;
 
@@ -1606,7 +1608,8 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
     // Process contents of global attributeGroups
     // ------------------------------------------------------------------
     XercesAttGroupInfo* saveAttGroupInfo = fCurrentAttGroupInfo;
-    XercesAttGroupInfo* attGroupInfo = new (fGrammarPoolMemoryManager) XercesAttGroupInfo(fGrammarPoolMemoryManager);
+    XercesAttGroupInfo* attGroupInfo = new (fGrammarPoolMemoryManager) XercesAttGroupInfo(
+        fStringPool->addOrFind(name), fTargetNSURI, fGrammarPoolMemoryManager);
 
     fDeclStack->addElement(elem);
     fCurrentAttGroupInfo = attGroupInfo;
@@ -1916,16 +1919,14 @@ TraverseSchema::traverseAll(const DOMElement* const elem) {
 
         if (XMLString::equals(childName, SchemaSymbols::fgELT_ELEMENT)) {
 
-            QName* eltQName = traverseElementDecl(child);
+            SchemaElementDecl* elemDecl = traverseElementDecl(child);
 
-            if (eltQName == 0) {
+            if (!elemDecl)
                 continue;
-            }
 
             contentSpecNode = new (fGrammarPoolMemoryManager) ContentSpecNode
             (
-                eltQName
-                , false
+                elemDecl
                 , fGrammarPoolMemoryManager
             );
             checkMinMax(contentSpecNode, child, All_Element);
@@ -2364,94 +2365,67 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
   *
   * @param elem:  the declaration of the element under consideration
   */
-QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
-                                           const bool topLevel) {
-
-    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
-    const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
-    bool         nameEmpty = (!name || !*name) ? true : false;
-    bool         refEmpty = (!ref || !*ref) ? true : false;
-
-    if (nameEmpty && topLevel) {
-        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::GlobalNoNameElement);
-        return 0;
+SchemaElementDecl*
+TraverseSchema::traverseElementDecl(const DOMElement* const elem,
+                                    const bool topLevel)
+{
+    // if local element and ref attribute exists
+    if (!topLevel)
+    {
+        const XMLCh* refName = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
+        if (refName)
+            return processElementDeclRef(elem, refName);
     }
 
-    if (nameEmpty && refEmpty) {
+    // check for empty name
+    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
+    if (!name || !*name)
+    {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoNameRefElement);
         return 0;
     }
 
-    if (topLevel) {
-
-        if (fSchemaGrammar->getElemDecl(fTargetNSURI, name, 0, Grammar::TOP_LEVEL_SCOPE) != 0) {
-            return new (fGrammarPoolMemoryManager) QName(name, fTargetNSURI, fGrammarPoolMemoryManager);
-        }
+    // make sure that name is a valid NCName
+    if (!XMLString::isValidNCName(name))
+    {
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain,
+            XMLErrs::InvalidDeclarationName, SchemaSymbols::fgELT_ELEMENT, name);
+        return 0;
     }
 
-    // ------------------------------------------------------------------
+    // if element already exists, just return --- revisit, it should not happen
+    if (topLevel)
+    {
+        SchemaElementDecl* retDecl = (SchemaElementDecl*) fSchemaGrammar->getElemDecl(fTargetNSURI, name, 0, Grammar::TOP_LEVEL_SCOPE);
+        if (retDecl)
+            return retDecl;
+    }
+
     // Check attributes
-    // ------------------------------------------------------------------
     unsigned short scope = (topLevel) ? GeneralAttributeCheck::E_ElementGlobal
-		                              : (refEmpty) ? GeneralAttributeCheck::E_ElementLocal
-                                                   : GeneralAttributeCheck::E_ElementRef;
+                                      : GeneralAttributeCheck::E_ElementLocal;
 
     fAttributeCheck.checkAttributes(elem, scope, this, topLevel);
 
-    // ------------------------------------------------------------------
-    // Process contents
-    // ------------------------------------------------------------------
-    const XMLCh* fixed = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
-    const XMLCh* deflt = getElementAttValue(elem, SchemaSymbols::fgATT_DEFAULT);
-
-    if((fixed && *fixed) && (deflt && *deflt)) {
-        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ElementWithFixedAndDefault);
-    }
-
-    if (nameEmpty || (!refEmpty && !topLevel)) {
-
-        if (!nameEmpty) {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DeclarationWithNameRef,
-                              SchemaSymbols::fgELT_ELEMENT, name);
-        }
-
-        if (!isValidRefDeclaration(elem)) {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttWithRef);
-        }
-
-        return processElementDeclRef(elem, ref);
-    }
-
-    // Name is notEmpty
-    if (!XMLString::isValidNCName(name)) {
-        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName,
-                          SchemaSymbols::fgELT_ELEMENT, name);
-        return 0;
-    }
-
-    const XMLCh*                  anotherSchemaURI = 0;
-    int                           scopeDefined = Grammar::UNKNOWN_SCOPE;
-    bool                          noErrorFound = true;
-    bool                          anonymousType = false;
-    DatatypeValidator*            validator = 0;
-    DatatypeValidator*            subGroupValidator = 0;
-    ComplexTypeInfo*              typeInfo = 0;
-    ComplexTypeInfo*              subGroupTypeInfo = 0;
-    ContentSpecNode*              contentSpecNode = 0;
-    SchemaElementDecl::ModelTypes contentSpecType = SchemaElementDecl::Any;
+    // check annotation
+    const DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    Janitor<XSAnnotation> janAnnot(fAnnotation);
 
     // Create element decl
     bool isDuplicate = false;
+    const XMLCh* valueConstraint = 0;
     SchemaElementDecl* elemDecl =
-       createSchemaElementDecl(elem, topLevel, contentSpecType, isDuplicate, (fixed != 0));
-
-    if (elemDecl == 0) {
-        return 0;
-    }
+        createSchemaElementDecl(elem, name, isDuplicate, valueConstraint, topLevel);
 
     if (!isDuplicate) {
 
         fSchemaGrammar->putElemDecl(elemDecl);
+
+        if (valueConstraint)
+            elemDecl->setDefaultValue(valueConstraint);
+
+        if (!janAnnot.isDataNull())
+            fSchemaGrammar->putAnnotation(elemDecl, janAnnot.release());
 
         if (fCurrentGroupInfo &&
             elemDecl->getEnclosingScope() == fCurrentGroupInfo->getScope()) {
@@ -2464,292 +2438,106 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
         }
     }
 
-    // Resolve the type for the element
-    const DOMElement*  content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
-    Janitor<XSAnnotation> janAnnot(fAnnotation);
+    // Process children
+    bool               anonymousType = false;
+    ComplexTypeInfo*   typeInfo = 0;
+    DatatypeValidator* validator = 0;
 
-    if (content != 0) {
-
+    if (content != 0)
+    {
         const XMLCh* contentName = content->getLocalName();
 
-        if (XMLString::equals(contentName, SchemaSymbols::fgELT_COMPLEXTYPE)) {
+        if (XMLString::equals(contentName, SchemaSymbols::fgELT_COMPLEXTYPE))
+        {
             const XMLCh* temp = content->getAttribute(SchemaSymbols::fgATT_NAME);
 
-            if (temp && *temp) {
+            if (temp && *temp)
+            {
                 // REVISIT - we are bypassing the complex type declaration.
                 reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AnonComplexTypeWithName, name);
             }
-            else {
+            else
+            {
                 typeInfo = checkForComplexTypeInfo(content);
-            }
 
-            if (!typeInfo) {
-                noErrorFound = false;
-            }
-            else if (!isDuplicate) {
+                if (typeInfo)
+                {
+                    validator = typeInfo->getDatatypeValidator();
 
-                typeInfo->setElementId(elemDecl->getId());
+                    if (!isDuplicate) {
 
-                //Recursing element
-                if (typeInfo->getPreprocessed()) {
+                        //Recursing element
+                        if (typeInfo->getPreprocessed()) {
 
-                    const XMLCh* typeInfoName = typeInfo->getTypeName();
-                    fSchemaInfo->addRecursingType(content, typeInfoName + XMLString::indexOf(typeInfoName, chComma) + 1);
+                            const XMLCh* typeInfoName = typeInfo->getTypeName();
+                            fSchemaInfo->addRecursingType(content, typeInfoName + XMLString::indexOf(typeInfoName, chComma) + 1);
+                        }
+                    }
                 }
             }
 
             anonymousType = true;
             content = XUtil::getNextSiblingElement(content);
         }
-        else if (XMLString::equals(contentName, SchemaSymbols::fgELT_SIMPLETYPE)) {
-
+        else if (XMLString::equals(contentName, SchemaSymbols::fgELT_SIMPLETYPE))
+        {
             const XMLCh* temp = content->getAttribute(SchemaSymbols::fgATT_NAME);
-            if (temp && *temp) {
+            if (temp && *temp)
                 // REVISIT - we are bypassing the simple type declaration.
                 reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AnonSimpleTypeWithName, name);
-            }
-            else {
+            else
                 validator = checkForSimpleTypeValidator(content);
-            }
 
-            if (!validator) {
-                noErrorFound = false;
-            }
-
-            contentSpecType = SchemaElementDecl::Simple;
             anonymousType = true;
             content = XUtil::getNextSiblingElement(content);
         }
 
         // Check for identity constraints
-        if (content != 0) {
-
+        if (content != 0)
+        {
             content = checkIdentityConstraintContent(content);
-            if (content != 0) {
+            if (content != 0)
                 reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::InvalidElementContent);
-            }
         }
     }
 
     // Handle 'type' attribute
     const XMLCh* typeStr = getElementAttValue(elem, SchemaSymbols::fgATT_TYPE);
-    if (typeStr && *typeStr) {
-
-        if (anonymousType) {
-
-            noErrorFound = false;
+    if (typeStr)
+    {
+        if (anonymousType)
+        {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ElementWithTypeAndAnonType, name);
         }
-        else {
-
+        else if (*typeStr)
+        {
             const XMLCh* typeLocalPart = getLocalPart(typeStr);
             const XMLCh* typePrefix = getPrefix(typeStr);
             const XMLCh* typeURI = resolvePrefixToURI(elem, typePrefix);
 
             if (!XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
-                || !XMLString::equals(typeLocalPart, SchemaSymbols::fgATTVAL_ANYTYPE)) {
-
+                || !XMLString::equals(typeLocalPart, SchemaSymbols::fgATTVAL_ANYTYPE))
+            {
                 checkEnumerationRequiredNotation(elem, name, typeStr);
 
-                anotherSchemaURI = checkTypeFromAnotherSchema(elem, typeStr);
+                bool noErrorFound = true;
+                const XMLCh* anotherSchemaURI = checkTypeFromAnotherSchema(elem, typeStr);
 
                 // get complex type info
                 typeInfo = getElementComplexTypeInfo(elem, typeStr, noErrorFound, anotherSchemaURI);
 
                 // get simple type validtor - if not a complex type
-                if (!typeInfo) {
+                if (typeInfo)
+                    validator = typeInfo->getDatatypeValidator();
+                else
                     validator = getElementTypeValidator(elem, typeStr, noErrorFound, anotherSchemaURI);
-                }
             }
         }
     }
 
-    // Set element declararion type information
-    if (!isDuplicate) {
-        elemDecl->setDatatypeValidator(validator);
-        elemDecl->setComplexTypeInfo(typeInfo);
-    }
-
-    if (topLevel) {
-
-        // Handle the substitutionGroup
-        const XMLCh* subsGroupName = getElementAttValue(elem, SchemaSymbols::fgATT_SUBSTITUTIONGROUP);
-
-        if (subsGroupName && *subsGroupName) {
-
-            SchemaElementDecl* subsElemDecl = getSubstituteGroupElemDecl
-            (
-                elem
-                , subsGroupName
-                , noErrorFound
-            );
-
-            if (subsElemDecl) {
-
-                if (isSubstitutionGroupCircular(elemDecl, subsElemDecl)) {
-                    reportSchemaError
-                    (
-                        elem
-                        , XMLUni::fgXMLErrDomain
-                        , XMLErrs::CircularSubsGroup
-                        , name
-                    );
-                }
-                else {
-
-                    // Check for substitution validity constraint
-                    // Substitution allowed (block and blockDefault) && same type
-                    if (isSubstitutionGroupValid(elem, subsElemDecl,typeInfo,validator,name)) {
-
-                        if (typeInfo == 0 && validator == 0 && noErrorFound) {
-
-                            typeInfo = subsElemDecl->getComplexTypeInfo();
-                            validator = subsElemDecl->getDatatypeValidator();
-                        }
-
-                        if (!isDuplicate) {
-
-                            XMLCh* elemBaseName = elemDecl->getBaseName();
-                            XMLCh* subsElemBaseName = subsElemDecl->getBaseName();
-                            int    elemURI = elemDecl->getURI();
-                            int    subsElemURI = subsElemDecl->getURI();
-
-                            elemDecl->setSubstitutionGroupElem(subsElemDecl);
-                            ValueVectorOf<SchemaElementDecl*>* subsElements =
-                                fValidSubstitutionGroups->get(subsElemBaseName, subsElemURI);
-
-                            if (!subsElements && fTargetNSURI != subsElemURI) {
-
-                                SchemaGrammar* aGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(fURIStringPool->getValueForId(subsElemURI));
-
-                                if (aGrammar) {
-                                    subsElements = aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
-
-                                    if (subsElements) {
-                                        subsElements = new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(*subsElements);
-                                        fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
-                                    }
-                                    else if (fSchemaInfo->circularImportExist(subsElemURI)) {
-
-                                        aGrammar->getValidSubstitutionGroups()->put(
-                                        subsElemBaseName, subsElemURI, new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fGrammarPoolMemoryManager));
-                                    }
-                                }
-                            }
-
-                            if (!subsElements) {
-
-                                subsElements = new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fGrammarPoolMemoryManager);
-                                fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
-                            }
-
-                            subsElements->addElement(elemDecl);
-
-                            // update related subs. info in case of circular import
-                            BaseRefVectorEnumerator<SchemaInfo> importingEnum = fSchemaInfo->getImportingListEnumerator();
-
-                            while (importingEnum.hasMoreElements()) {
-
-                                const SchemaInfo& curRef = importingEnum.nextElement();
-                                SchemaGrammar* aGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(curRef.getTargetNSURIString());
-                                ValueVectorOf<SchemaElementDecl*>* subsElemList =
-                                    aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
-
-                                if (subsElemList && !subsElemList->containsElement(elemDecl))
-                                    subsElemList->addElement(elemDecl);
-                            }
-
-                            buildValidSubstitutionListB(elem, elemDecl, subsElemDecl);
-                            buildValidSubstitutionListF(elem, elemDecl, subsElemDecl);
-                        }
-                    }
-                    else {
-                        noErrorFound = false;
-                    }
-                }
-            }
-        }
-    }
-
-    bool isAnyType = false;
-
-    if (typeInfo == 0 && validator == 0) {
-
-        if (noErrorFound) { // ur type
-
-            contentSpecType = SchemaElementDecl::Any;
-            isAnyType = true;
-        }
-        else {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::UntypedElement, name);
-        }
-    }
-
-    // if element belongs to a compelx type
-    if (typeInfo != 0) {
-
-        contentSpecNode = typeInfo->getContentSpec();
-        contentSpecType = (SchemaElementDecl::ModelTypes) typeInfo->getContentType();
-        scopeDefined = typeInfo->getScopeDefined();
-        validator = typeInfo->getDatatypeValidator();
-    }
-
-    // if element belongs to a simple type
-    if (validator != 0) {
-        contentSpecType = SchemaElementDecl::Simple;
-    }
-
-    // Now we can handle validation etc. of default and fixed attributes,
-    // since we finally have all the type information.
-    if(fixed && *fixed) {
-        deflt = fixed;
-    }
-
-    if(deflt && *deflt) {
-
-        try {
-            if(validator == 0) { // in this case validate according to xs:string
-                fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_STRING)->validate(deflt
-                                                                                            , fSchemaGrammar->getValidationContext());                    
-            } else {
-                validator->validate(deflt
-                                  , fSchemaGrammar->getValidationContext());
-             }
-        }
-        catch (const XMLException& excep) {
-            reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
-        }
-        catch(const OutOfMemoryException&)
-        {
-            throw;
-        }
-        catch(...) {
-            reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, deflt);
-        }
-
-        if(typeInfo != 0 &&
-           contentSpecType != SchemaElementDecl::Simple &&
-           contentSpecType != SchemaElementDecl::Mixed_Simple &&
-           contentSpecType != SchemaElementDecl::Mixed_Complex) {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NotSimpleOrMixedElement, name);
-        }
-
-        if(typeInfo != 0 &&
-           ((contentSpecType == SchemaElementDecl::Mixed_Complex
-             || contentSpecType == SchemaElementDecl::Mixed_Simple)
-            && !emptiableParticle(contentSpecNode))) {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::EmptiableMixedContent, name);
-        }
-
-        if (validator && (validator->getType() == DatatypeValidator::ID)) {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ElemIDValueConstraint, name, deflt);
-        }
-    }
-
-    // set element information, but first check for duplicate elements with
-    // different types.
-    if (isDuplicate) {
-
+    // check for duplicate elements with different types.
+    if (isDuplicate)
+    {
         DatatypeValidator* eltDV = elemDecl->getDatatypeValidator();
         ComplexTypeInfo*   eltTypeInfo = elemDecl->getComplexTypeInfo();
 
@@ -2757,81 +2545,60 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateElementDeclaration, name);
         }
     }
-    else {
-
+    // Set element declararion type information
+    else
+    {
         elemDecl->setDatatypeValidator(validator);
         elemDecl->setComplexTypeInfo(typeInfo);
-        elemDecl->setDefaultValue(deflt);
-        elemDecl->setModelType(contentSpecType);
-        elemDecl->setContentSpec(contentSpecNode);
 
-        if (!janAnnot.isDataNull())
-            fSchemaGrammar->putAnnotation(elemDecl, janAnnot.release());
+        if (validator)
+            elemDecl->setModelType(SchemaElementDecl::Simple);
+        else if (typeInfo)
+            elemDecl->setModelType((SchemaElementDecl::ModelTypes)typeInfo->getContentType());
 
-        if (isAnyType) {
-            elemDecl->setAttWildCard(new (fGrammarPoolMemoryManager) SchemaAttDef(XMLUni::fgZeroLenString,
-                                                      XMLUni::fgZeroLenString,
-                                                      fEmptyNamespaceURI, XMLAttDef::Any_Any,
-                                                      XMLAttDef::ProcessContents_Lax,
-                                                      fGrammarPoolMemoryManager));
+        if (topLevel) {
+
+            // Handle the substitutionGroup
+            const XMLCh* subsGroupName = getElementAttValue(elem, SchemaSymbols::fgATT_SUBSTITUTIONGROUP);
+            if (subsGroupName && *subsGroupName)
+                 processSubstitutionGroup(elem, elemDecl, typeInfo, validator, subsGroupName);
         }
 
-        // key/keyref/unique processing
-        DOMElement* ic = XUtil::getFirstChildElementNS(elem, fgIdentityConstraints,
-                                                         SchemaSymbols::fgURI_SCHEMAFORSCHEMA, 3);
-        ValueVectorOf<DOMElement*>* icNodes = 0;
+        // process identity constraints
+        DOMElement* ic = XUtil::getFirstChildElementNS(
+            elem, fgIdentityConstraints, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, 3);
 
-        while (ic != 0) {
+        if (ic)
+            processElemDeclIC(ic, elemDecl);
+    }
 
-            if (XMLString::equals(ic->getLocalName(), SchemaSymbols::fgELT_KEY)) {
-                traverseKey(ic, elemDecl);
-            }
-            else if (XMLString::equals(ic->getLocalName(), SchemaSymbols::fgELT_UNIQUE)) {
-                traverseUnique(ic, elemDecl);
-            }
-            else {
-
-                if (!icNodes) {
-                    icNodes = new (fGrammarPoolMemoryManager) ValueVectorOf<DOMElement*>(8, fGrammarPoolMemoryManager);
-                }
-
-                icNodes->addElement(ic);
-            }
-
-            ic = XUtil::getNextSiblingElementNS(ic, fgIdentityConstraints,
-                                                SchemaSymbols::fgURI_SCHEMAFORSCHEMA, 3);
+    if (!typeInfo && !validator)
+    {
+        if (!isDuplicate)
+        {
+            elemDecl->setModelType(SchemaElementDecl::Any);
+            elemDecl->setAttWildCard(
+                new (fGrammarPoolMemoryManager) SchemaAttDef(
+                    XMLUni::fgZeroLenString, XMLUni::fgZeroLenString,
+                    fEmptyNamespaceURI, XMLAttDef::Any_Any,
+                    XMLAttDef::ProcessContents_Lax, fGrammarPoolMemoryManager
+                )
+            );
         }
-
-        if (icNodes) {
-
-            if (!fIC_ElementsNS) {
-
-                fIC_ElementsNS = new (fMemoryManager) RefHashTableOf<ElemVector>(13, fMemoryManager);
-                fIC_NamespaceDepthNS = new (fMemoryManager) RefHashTableOf<ValueVectorOf<unsigned int> >(13, fMemoryManager);
-                fIC_NodeListNS = new (fMemoryManager) RefHashTableOf<ValueVectorOf<DOMElement*> >(29, true, new (fMemoryManager) HashPtr(), fMemoryManager);
-            }
-
-            if (fIC_ElementsNS->containsKey(fTargetNSURIString)) {
-
-                fIC_Elements = fIC_ElementsNS->get(fTargetNSURIString);
-                fIC_NamespaceDepth = fIC_NamespaceDepthNS->get(fTargetNSURIString);
-            }
-
-            if (!fIC_Elements) {
-
-                fIC_Elements = new (fMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fMemoryManager);
-                fIC_NamespaceDepth = new (fMemoryManager) ValueVectorOf<unsigned int>(8, fMemoryManager);
-                fIC_ElementsNS->put((void*) fTargetNSURIString, fIC_Elements);
-                fIC_NamespaceDepthNS->put((void*) fTargetNSURIString, fIC_NamespaceDepth);
-            }
-
-            fIC_NodeListNS->put(elemDecl, icNodes);
-            fIC_Elements->addElement(elemDecl);
-            fIC_NamespaceDepth->addElement(fSchemaInfo->getNamespaceScopeLevel());
+    }
+    else if (valueConstraint)
+    {
+        if (!checkElemDeclValueConstraint(elem, elemDecl, valueConstraint, typeInfo, validator)
+            && !isDuplicate)
+        {
+            int miscFlags = elemDecl->getMiscFlags();
+            miscFlags &= ~ SchemaSymbols::XSD_FIXED;
+            elemDecl->setDefaultValue(0);
+            elemDecl->setMiscFlags(miscFlags);
         }
     }
 
-    return new (fGrammarPoolMemoryManager) QName(*elemDecl->getElementName());
+    return elemDecl;
 }
 
 const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) {
@@ -4568,8 +4335,7 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
                 }
             }
 
-            QName* elmQName = traverseElementDecl(child, true);
-            delete elmQName;
+            traverseElementDecl(child, true);
         }
         else if (XMLString::equals(name, SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
 
@@ -4854,58 +4620,28 @@ const XMLCh* TraverseSchema::resolvePrefixToURI(const DOMElement* const elem,
 }
 
 
-QName* TraverseSchema::processElementDeclRef(const DOMElement* const elem,
-                                             const XMLCh* const refName) {
+SchemaElementDecl*
+TraverseSchema::processElementDeclRef(const DOMElement* const elem,
+                                      const XMLCh* const refName)
+{
+    // check attributes
+    fAttributeCheck.checkAttributes(elem, GeneralAttributeCheck::E_ElementRef, this);
 
+    // handle annotation
     DOMElement* content = checkContent(elem, XUtil::getFirstChildElement(elem), true);
     Janitor<XSAnnotation> janAnnot(fAnnotation);
 
     if (content != 0)
-        reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::NoContentForRef, SchemaSymbols::fgELT_ELEMENT);
+        reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::NoContentForRef, SchemaSymbols::fgELT_ELEMENT);   
 
-    const XMLCh* prefix = getPrefix(refName);
-    const XMLCh* localPart = getLocalPart(refName);
-    const XMLCh* uriStr = resolvePrefixToURI(elem, prefix);
-    QName*       eltName = new (fGrammarPoolMemoryManager) QName(prefix , localPart, uriStr != 0
-                                       ? fURIStringPool->addOrFind(uriStr)
-                                       : fEmptyNamespaceURI, fGrammarPoolMemoryManager);
+    SchemaElementDecl* refElemDecl = getGlobalElemDecl(elem, refName);
 
-    //if from another schema, just return the element QName
-    if (!XMLString::equals(uriStr, fTargetNSURIString)) {
-        return eltName;
+    if (!refElemDecl)
+    {
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::RefElementNotFound, refName);
     }
-
-    unsigned int uriID = eltName->getURI();
-    SchemaElementDecl* refElemDecl = (SchemaElementDecl*)
-        fSchemaGrammar->getElemDecl(uriID, localPart, 0, Grammar::TOP_LEVEL_SCOPE);
-
-    //if not found, traverse the top level element that is referenced
-    if (!refElemDecl) {
-
-        SchemaInfo* saveInfo = fSchemaInfo;
-        DOMElement* targetElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_Element,
-            SchemaSymbols::fgELT_ELEMENT, localPart, &fSchemaInfo);
-
-        if (targetElem == 0)  {
-
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::RefElementNotFound, localPart);
-            // REVISIT do we return 0 or what? for now we will return QName created
-            return eltName;
-        }
-        else {
-
-            delete eltName;
-            eltName = traverseElementDecl(targetElem, true);
-            refElemDecl = (SchemaElementDecl*)
-                fSchemaGrammar->getElemDecl(uriID, localPart, 0, Grammar::TOP_LEVEL_SCOPE);
-
-            // restore schema information
-            fSchemaInfo = saveInfo;
-        }
-    }
-
-    if (refElemDecl) {
-
+    else
+    {
         if (fCurrentComplexType)
             fCurrentComplexType->addElement(refElemDecl);
 
@@ -4913,7 +4649,7 @@ QName* TraverseSchema::processElementDeclRef(const DOMElement* const elem,
             fCurrentGroupInfo->addElement(refElemDecl);
     }
 
-    return eltName;
+    return refElemDecl;
 }
 
 int TraverseSchema::parseBlockSet(const DOMElement* const elem,
@@ -5306,106 +5042,72 @@ TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
 
 
 SchemaElementDecl*
-TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
-                                           const XMLCh* const name,
-                                           bool& noErrorDetected) {
-
-    const XMLCh*         nameURI =  resolvePrefixToURI(elem, getPrefix(name));
-    const XMLCh*         localPart = getLocalPart(name);
+TraverseSchema::getGlobalElemDecl(const DOMElement* const elem,
+                                  const XMLCh* const qName)
+{
+    const XMLCh*         nameURI =  resolvePrefixToURI(elem, getPrefix(qName));
+    const XMLCh*         localPart = getLocalPart(qName);
     SchemaElementDecl*   elemDecl = 0;
     SchemaInfo*          saveInfo = fSchemaInfo;
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
     int                  saveScope = fCurrentScope;
     unsigned int         uriId = fURIStringPool->addOrFind(nameURI);
 
-    if (!XMLString::equals(nameURI, fTargetNSURIString)) {
+    if (fSchemaInfo->getTargetNSURI() != (int) uriId)
+    {		
+    //if (!XMLString::equals(nameURI, fTargetNSURIString)) {
 
         // Make sure that we have an explicit import statement.
         // Clause 4 of Schema Representation Constraint:
         // http://www.w3.org/TR/xmlschema-1/#src-resolve
-        if (!fSchemaInfo->isImportingNS(uriId)) {
-
-            noErrorDetected = false;
+        if (!fSchemaInfo->isImportingNS(uriId))
+        {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, nameURI);
-            SchemaElementDecl *retVal = (SchemaElementDecl*) fSchemaGrammar->getElemDecl(uriId, localPart, 
-                                                     0, Grammar::TOP_LEVEL_SCOPE);
-            // in a manner of speaking, we're lying to the grammar here;
-            // the element really wasn't declared, but we need the decl to act
-            // as a placeholder, so, in a way, it is declared for us
-            return (retVal != 0?retVal:
-                ((SchemaElementDecl*) fSchemaGrammar->putElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
-                                                     0, Grammar::TOP_LEVEL_SCOPE)));
+            return 0;
         }
 
         Grammar* grammar = fGrammarResolver->getGrammar(nameURI);
 
-        if (grammar && grammar->getGrammarType() == Grammar::SchemaGrammarType) {
-            elemDecl = (SchemaElementDecl*)
-                grammar->getElemDecl(uriId, localPart, 0, Grammar::TOP_LEVEL_SCOPE);
+        if (grammar && grammar->getGrammarType() == Grammar::SchemaGrammarType)
+        {
+            elemDecl = (SchemaElementDecl*) grammar->getElemDecl(
+                uriId, localPart, 0, Grammar::TOP_LEVEL_SCOPE);
         }
-        else {
-
-            noErrorDetected = false;
+        else
+        {
             reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::GrammarNotFound, nameURI);
-            SchemaElementDecl *retVal = (SchemaElementDecl*) fSchemaGrammar->getElemDecl(uriId, localPart, 
-                                                     0, Grammar::TOP_LEVEL_SCOPE);
-            // in a manner of speaking, we're lying to the grammar here;
-            // the element really wasn't declared, but we need the decl to act
-            // as a placeholder, so, in a way, it is declared for us
-            return (retVal != 0?retVal:
-                ((SchemaElementDecl*) fSchemaGrammar->putElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
-                                                     0, Grammar::TOP_LEVEL_SCOPE)));
+            return 0;
         }
 
-        if (!elemDecl) {
-
+        if (!elemDecl)
+        {
             SchemaInfo* impInfo = fSchemaInfo->getImportInfo(uriId);
-
-            if (!impInfo || impInfo->getProcessed()) {
-
-                noErrorDetected = false;
+            if (!impInfo || impInfo->getProcessed())
+            {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, nameURI, localPart);
-                // in a manner of speaking, we're lying to the grammar here;
-                // the element really wasn't declared, but we need the decl to act
-                // as a placeholder, so, in a way, it is declared for us
-                return ((SchemaElementDecl*) fSchemaGrammar->putElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
-                                                     0, Grammar::TOP_LEVEL_SCOPE));
+                return 0;
             }
 
             infoType = SchemaInfo::IMPORT;
             restoreSchemaInfo(impInfo, infoType);		
         }
     }
-    else {
+    else
+    {
         elemDecl = (SchemaElementDecl*)
             fSchemaGrammar->getElemDecl(fTargetNSURI, localPart, 0, Grammar::TOP_LEVEL_SCOPE);
     }
 
-    if (!elemDecl) {
-
+    if (!elemDecl)
+    {
         DOMElement* subsGroupElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_Element,
             SchemaSymbols::fgELT_ELEMENT,localPart, &fSchemaInfo);
 
-        if (subsGroupElem != 0) {
+        if (subsGroupElem)
+            elemDecl = traverseElementDecl(subsGroupElem, true);
 
-            QName* subsGroupQName = traverseElementDecl(subsGroupElem, true);
-            Janitor<QName> janQName(subsGroupQName);
-
-            if (subsGroupQName) {
-                elemDecl = (SchemaElementDecl*) fSchemaGrammar->getElemDecl(fTargetNSURI, localPart,0, Grammar::TOP_LEVEL_SCOPE);
-            }
-        }
-
-        if (!elemDecl) {
-
-            noErrorDetected = false;
+        if (!elemDecl)
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, nameURI, localPart);
-            // in a manner of speaking, we're lying to the grammar here;
-            // the element really wasn't declared, but we need the decl to act
-            // as a placeholder, so, in a way, it is declared for us
-            elemDecl = ((SchemaElementDecl*) fSchemaGrammar->putElemDecl(uriId, localPart, XMLUni::fgZeroLenString,
-                                                 0, Grammar::TOP_LEVEL_SCOPE));
-        }
     }
 
     // restore schema information, if necessary
@@ -5523,80 +5225,49 @@ TraverseSchema::isSubstitutionGroupValid(const DOMElement* const elem,
 
 SchemaElementDecl*
 TraverseSchema::createSchemaElementDecl(const DOMElement* const elem,
-                                        const bool topLevel,
-                                        const unsigned short elemType,
+                                        const XMLCh* const name,
                                         bool& isDuplicate,
-                                        const bool isFixedVal)
+                                        const XMLCh*& valConstraint,
+                                        const bool topLevel)
 {
-    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
-    const XMLCh* elemForm = getElementAttValue(elem, SchemaSymbols::fgATT_FORM);
     int enclosingScope = fCurrentScope;
     int uriIndex = fEmptyNamespaceURI;
 
-    //refer to 4.3.2 in "XML Schema Part 1: Structures"
     if (topLevel) {
 
         uriIndex = fTargetNSURI;
         enclosingScope = Grammar::TOP_LEVEL_SCOPE;
     }
-    else if (((!elemForm || !*elemForm) &&
-             (fSchemaInfo->getElemAttrDefaultQualified() & Elem_Def_Qualified))
-             || XMLString::equals(elemForm,SchemaSymbols::fgATTVAL_QUALIFIED)) {
+    else
+    {
+        const XMLCh* elemForm = getElementAttValue(elem, SchemaSymbols::fgATT_FORM);
+    
+        if (((!elemForm || !*elemForm) &&
+            (fSchemaInfo->getElemAttrDefaultQualified() & Elem_Def_Qualified))
+            || XMLString::equals(elemForm,SchemaSymbols::fgATTVAL_QUALIFIED))
+            uriIndex = fTargetNSURI;
 
-        uriIndex = fTargetNSURI;
-    }
+        // Check for duplicate elements
+        SchemaElementDecl* other = (SchemaElementDecl*)
+            fSchemaGrammar->getElemDecl(uriIndex, name, 0, enclosingScope);
 
-    // Check for duplicate elements
-    SchemaElementDecl* other = (SchemaElementDecl*)
-        fSchemaGrammar->getElemDecl(uriIndex, name, 0, enclosingScope);
-
-    if (other != 0) {
-
-        isDuplicate = true;
-        return other;
-    }
-
-    int blockSet = parseBlockSet(elem, ES_Block);
-    int finalSet = parseFinalSet(elem, EC_Final);
-    int elementMiscFlags = 0;
-    const XMLCh* nillable = getElementAttValue(elem, SchemaSymbols::fgATT_NILLABLE);
-    const XMLCh* abstract = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
-
-    if (nillable && *nillable) {
-
-        if (XMLString::equals(nillable, SchemaSymbols::fgATTVAL_TRUE)
-            || XMLString::equals(nillable, fgValueOne)) {
-            elementMiscFlags += SchemaSymbols::XSD_NILLABLE;
+        if (other != 0)
+        {
+            isDuplicate = true;
+            return other;
         }
     }
 
-    if (abstract && *abstract) {
-
-        if (XMLString::equals(abstract, SchemaSymbols::fgATTVAL_TRUE)
-            || XMLString::equals(abstract, fgValueOne)) {
-            elementMiscFlags += SchemaSymbols::XSD_ABSTRACT;
-        }
-    }
-
-    if (isFixedVal) {
-        elementMiscFlags += SchemaSymbols::XSD_FIXED;
-    }
-
-    const XMLCh* prefix = getPrefix(name);
-    SchemaElementDecl* elemDecl = new (fGrammarPoolMemoryManager) SchemaElementDecl
-    (
-        prefix
-        , name
-        , uriIndex
-        , (SchemaElementDecl::ModelTypes) elemType
-        , enclosingScope
-        , fGrammarPoolMemoryManager
+    // create element decl and add it to the grammar
+    SchemaElementDecl* elemDecl = new (fGrammarPoolMemoryManager) SchemaElementDecl(
+        XMLUni::fgZeroLenString , name, uriIndex , SchemaElementDecl::Any
+        , enclosingScope , fGrammarPoolMemoryManager
     );
 
-    elemDecl->setFinalSet(finalSet);
-    elemDecl->setBlockSet(blockSet);
-    elemDecl->setMiscFlags(elementMiscFlags);
     elemDecl->setCreateReason(XMLElementDecl::Declared);
+
+    // process attributes
+    processElemDeclAttrs(elem, elemDecl, valConstraint, topLevel);
 
     return elemDecl;
 }
@@ -6106,7 +5777,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                 (
                     new (fGrammarPoolMemoryManager) ContentSpecNode
                     (
-                        ContentSpecNode::Sequence
+                        ContentSpecNode::ModelGroupSequence
                         , new (fGrammarPoolMemoryManager) ContentSpecNode(*baseSpecNode)
                         , specNode
                         , true
@@ -6154,7 +5825,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             (
                 new (fGrammarPoolMemoryManager) ContentSpecNode
                 (
-                    ContentSpecNode::Sequence
+                    ContentSpecNode::ModelGroupSequence
                     , anySpecNode
                     , specNode
                     , true
@@ -8423,6 +8094,261 @@ void TraverseSchema::cleanUp() {
     delete fPreprocessedNodes;
     delete fLocator;
     delete fParser;
+}
+
+void TraverseSchema::processElemDeclAttrs(const DOMElement* const elem,
+                                          SchemaElementDecl* const elemDecl,
+                                          const XMLCh*& valueConstraint,
+                                          bool isTopLevel)
+{
+    int elementMiscFlags = 0;
+    const XMLCh* fixedVal = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
+    const XMLCh* nillable = getElementAttValue(elem, SchemaSymbols::fgATT_NILLABLE);
+
+    // check constraint value
+	valueConstraint = getElementAttValue(elem, SchemaSymbols::fgATT_DEFAULT);
+    if (fixedVal)
+    {
+        elementMiscFlags |= SchemaSymbols::XSD_FIXED;
+
+        // if both default and fixed, emit an error
+        if (valueConstraint)
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ElementWithFixedAndDefault);
+
+        // set constraint value to the fixed one
+        valueConstraint = fixedVal;
+    }
+
+    // check nillable
+    if (nillable && *nillable) {
+
+        if (XMLString::equals(nillable, SchemaSymbols::fgATTVAL_TRUE)
+            || XMLString::equals(nillable, fgValueOne)) {
+            elementMiscFlags |= SchemaSymbols::XSD_NILLABLE;
+        }
+    }
+
+    if (isTopLevel)
+    {
+        const XMLCh* abstract = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
+        if (abstract && *abstract) {
+
+            if (XMLString::equals(abstract, SchemaSymbols::fgATTVAL_TRUE)
+                || XMLString::equals(abstract, fgValueOne)) {
+                elementMiscFlags |= SchemaSymbols::XSD_ABSTRACT;
+            }
+        }
+
+        elemDecl->setFinalSet(parseFinalSet(elem, EC_Final));
+    }
+
+    elemDecl->setBlockSet(parseBlockSet(elem, ES_Block));
+    elemDecl->setMiscFlags(elementMiscFlags);
+}
+
+void TraverseSchema::processElemDeclIC(DOMElement* const icElem,
+                                       SchemaElementDecl* const elemDecl)
+{
+    // key/keyref/unique processing
+    ValueVectorOf<DOMElement*>* icNodes = 0;
+    DOMElement* ic = icElem;
+    while (ic != 0) {
+
+        if (XMLString::equals(ic->getLocalName(), SchemaSymbols::fgELT_KEY)) {
+            traverseKey(ic, elemDecl);
+        }
+        else if (XMLString::equals(ic->getLocalName(), SchemaSymbols::fgELT_UNIQUE)) {
+            traverseUnique(ic, elemDecl);
+        }
+        else {
+
+            if (!icNodes) {
+                icNodes = new (fGrammarPoolMemoryManager) ValueVectorOf<DOMElement*>(8, fGrammarPoolMemoryManager);
+            }
+
+            icNodes->addElement(ic);
+        }
+
+        ic = XUtil::getNextSiblingElementNS(
+            ic, fgIdentityConstraints, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, 3);
+    }
+
+    if (icNodes) {
+
+        if (!fIC_ElementsNS) {
+
+            fIC_ElementsNS = new (fMemoryManager) RefHashTableOf<ElemVector>(13, fMemoryManager);
+            fIC_NamespaceDepthNS = new (fMemoryManager) RefHashTableOf<ValueVectorOf<unsigned int> >(13, fMemoryManager);
+            fIC_NodeListNS = new (fMemoryManager) RefHashTableOf<ValueVectorOf<DOMElement*> >(29, true, new (fMemoryManager) HashPtr(), fMemoryManager);
+        }
+
+        if (fIC_ElementsNS->containsKey(fTargetNSURIString)) {
+
+            fIC_Elements = fIC_ElementsNS->get(fTargetNSURIString);
+            fIC_NamespaceDepth = fIC_NamespaceDepthNS->get(fTargetNSURIString);
+        }
+
+        if (!fIC_Elements) {
+
+            fIC_Elements = new (fMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fMemoryManager);
+            fIC_NamespaceDepth = new (fMemoryManager) ValueVectorOf<unsigned int>(8, fMemoryManager);
+            fIC_ElementsNS->put((void*) fTargetNSURIString, fIC_Elements);
+            fIC_NamespaceDepthNS->put((void*) fTargetNSURIString, fIC_NamespaceDepth);
+        }
+
+        fIC_NodeListNS->put(elemDecl, icNodes);
+        fIC_Elements->addElement(elemDecl);
+        fIC_NamespaceDepth->addElement(fSchemaInfo->getNamespaceScopeLevel());
+    }
+}
+
+bool
+TraverseSchema::checkElemDeclValueConstraint(const DOMElement* const elem,
+                                             SchemaElementDecl* const elemDecl,
+                                             const XMLCh* const valConstraint,
+                                             ComplexTypeInfo* const typeInfo,
+                                             DatatypeValidator* const validator)
+{
+    bool isValid = false;
+    if (validator)
+    {
+        if (validator->getType() == DatatypeValidator::ID)
+            reportSchemaError(
+                elem, XMLUni::fgXMLErrDomain, XMLErrs::ElemIDValueConstraint
+				, elemDecl->getBaseName(), valConstraint
+            );
+
+        try
+        {
+            validator->validate(valConstraint);
+            isValid = true;
+        }
+        catch(const XMLException& excep)
+        {
+            reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
+        }
+        catch(const OutOfMemoryException&)
+        {
+            throw;
+        }
+        catch(...)
+        {
+            reportSchemaError(elem, XMLUni::fgValidityDomain, XMLValid::DatatypeValidationFailure, valConstraint);
+        }
+    }
+
+    if (typeInfo)
+    {
+        int contentSpecType = typeInfo->getContentType();
+
+        if (contentSpecType != SchemaElementDecl::Simple &&
+            contentSpecType != SchemaElementDecl::Mixed_Simple &&
+            contentSpecType != SchemaElementDecl::Mixed_Complex)
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NotSimpleOrMixedElement, elemDecl->getBaseName());
+
+        if (((contentSpecType == SchemaElementDecl::Mixed_Complex
+             || contentSpecType == SchemaElementDecl::Mixed_Simple)
+            && !emptiableParticle(typeInfo->getContentSpec())))
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::EmptiableMixedContent, elemDecl->getBaseName());
+    }
+
+    return isValid;
+}
+
+void TraverseSchema::processSubstitutionGroup(const DOMElement* const elem,
+                                              SchemaElementDecl* const elemDecl,
+                                              ComplexTypeInfo*& typeInfo,
+                                              DatatypeValidator*& validator,
+                                              const XMLCh* const subsElemQName)
+{
+    SchemaElementDecl* subsElemDecl = getGlobalElemDecl(elem, subsElemQName);
+    if (subsElemDecl)
+    {
+        if (isSubstitutionGroupCircular(elemDecl, subsElemDecl))
+        {
+            reportSchemaError(
+                elem , XMLUni::fgXMLErrDomain , XMLErrs::CircularSubsGroup, elemDecl->getBaseName());
+        }
+        else
+        {
+            // Check for substitution validity constraint
+            // Substitution allowed (block and blockDefault) && same type
+            if (isSubstitutionGroupValid(elem, subsElemDecl, typeInfo, validator, elemDecl->getBaseName()))
+            {
+                elemDecl->setSubstitutionGroupElem(subsElemDecl);
+
+                // if type information is missing, use subsGroup one
+                if (!typeInfo && !validator)
+                {
+                    typeInfo = subsElemDecl->getComplexTypeInfo();
+                    validator = subsElemDecl->getDatatypeValidator();
+
+                    if (validator)
+                    {
+                        elemDecl->setDatatypeValidator(validator);
+                        elemDecl->setModelType(SchemaElementDecl::Simple);
+                    }
+                    else if (typeInfo)
+                    {
+                        elemDecl->setComplexTypeInfo(typeInfo);
+                        elemDecl->setModelType((SchemaElementDecl::ModelTypes)typeInfo->getContentType());
+                    }
+                }
+
+                XMLCh* subsElemBaseName = subsElemDecl->getBaseName();
+                int    elemURI = elemDecl->getURI();
+                int    subsElemURI = subsElemDecl->getURI();
+                ValueVectorOf<SchemaElementDecl*>* subsElements =
+                    fValidSubstitutionGroups->get(subsElemBaseName, subsElemURI);
+
+                if (!subsElements && fTargetNSURI != subsElemURI)
+                {
+                    SchemaGrammar* aGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(fURIStringPool->getValueForId(subsElemURI));
+
+                    if (aGrammar)
+                    {
+                        subsElements = aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
+
+                        if (subsElements)
+                        {
+                            subsElements = new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(*subsElements);
+                            fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
+                        }
+                        else if (fSchemaInfo->circularImportExist(subsElemURI))
+                        {
+                            aGrammar->getValidSubstitutionGroups()->put(
+                            subsElemBaseName, subsElemURI, new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fGrammarPoolMemoryManager));
+                        }
+                    }
+                }
+
+                if (!subsElements)
+                {
+                    subsElements = new (fGrammarPoolMemoryManager) ValueVectorOf<SchemaElementDecl*>(8, fGrammarPoolMemoryManager);
+                    fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
+                }
+
+                subsElements->addElement(elemDecl);
+
+                // update related subs. info in case of circular import
+                BaseRefVectorEnumerator<SchemaInfo> importingEnum = fSchemaInfo->getImportingListEnumerator();
+
+                while (importingEnum.hasMoreElements())
+                {
+                    const SchemaInfo& curRef = importingEnum.nextElement();
+                    SchemaGrammar* aGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(curRef.getTargetNSURIString());
+                    ValueVectorOf<SchemaElementDecl*>* subsElemList =
+                        aGrammar->getValidSubstitutionGroups()->get(subsElemBaseName, subsElemURI);
+
+                    if (subsElemList && !subsElemList->containsElement(elemDecl))
+                        subsElemList->addElement(elemDecl);
+                }
+
+                buildValidSubstitutionListB(elem, elemDecl, subsElemDecl);
+                buildValidSubstitutionListF(elem, elemDecl, subsElemDecl);
+            }
+        }
+    }
 }
 
 XERCES_CPP_NAMESPACE_END

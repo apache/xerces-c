@@ -214,7 +214,7 @@ private:
                                         const int finalSet,
                                         int baseRefContext,
                                         Janitor<XSAnnotation>* const janAnnot);
-    QName*              traverseElementDecl(const DOMElement* const childElem,
+    SchemaElementDecl*    traverseElementDecl(const DOMElement* const childElem,
                                             const bool topLevel = false);
     const XMLCh*        traverseNotationDecl(const DOMElement* const childElem);
     const XMLCh*        traverseNotationDecl(const DOMElement* const childElem,
@@ -356,8 +356,19 @@ private:
     /**
       * Process a 'ref' of an Element declaration
       */
-    QName* processElementDeclRef(const DOMElement* const elem,
-                                 const XMLCh* const refName);
+    SchemaElementDecl* processElementDeclRef(const DOMElement* const elem,
+                                             const XMLCh* const refName);
+    void processElemDeclAttrs(const DOMElement* const elem,
+                              SchemaElementDecl* const elemDecl,
+                              const XMLCh*& valConstraint,
+                              bool isTopLevel = false);
+    void processElemDeclIC(DOMElement* const elem,
+                           SchemaElementDecl* const elemDecl);
+    bool checkElemDeclValueConstraint(const DOMElement* const elem,
+                                      SchemaElementDecl* const elemDecl,
+                                      const XMLCh* const valConstraint,
+                                      ComplexTypeInfo* const typeInfo,
+                                      DatatypeValidator* const validator);
 
     /**
       * Process a 'ref' of an Attribute declaration
@@ -394,11 +405,6 @@ private:
     bool isIdentityConstraintName(const XMLCh* const constraintName);
 
     /**
-      * Check a 'ref' declaration representation constraint
-      */
-    bool isValidRefDeclaration(const DOMElement* const elem);
-
-    /**
       * If 'typeStr' belongs to a different schema, return that schema URI,
       * otherwise return 0;
       */
@@ -424,12 +430,10 @@ private:
                                                const XMLCh* const otherSchemaURI);
 
     /**
-      * Return schema element declaration for a given substituteGroup element
-      * name
+      * Return global schema element declaration for a given element name
       */
-    SchemaElementDecl* getSubstituteGroupElemDecl(const DOMElement* const elem,
-                                                  const XMLCh* const name,
-                                                  bool& noErrorDetected);
+    SchemaElementDecl* getGlobalElemDecl(const DOMElement* const elem,
+                                         const XMLCh* const name);
 
     /**
       * Check validity constraint of a substitutionGroup attribute in
@@ -445,14 +449,20 @@ private:
     bool isSubstitutionGroupCircular(SchemaElementDecl* const elemDecl,
                                      SchemaElementDecl* const subsElemDecl);
 
+    void processSubstitutionGroup(const DOMElement* const elem,
+                                  SchemaElementDecl* elemDecl,
+                                  ComplexTypeInfo*& typeInfo,
+                                  DatatypeValidator*& validator,
+                                  const XMLCh* const subsElemQName);
+
     /**
       * Create a 'SchemaElementDecl' object and add it to SchemaGrammar
       */
     SchemaElementDecl* createSchemaElementDecl(const DOMElement* const elem,
-                                               const bool topLevel,
-                                               const unsigned short elemType,
+                                               const XMLCh* const name,
                                                bool& isDuplicate,
-                                               const bool isFixedValue);
+                                               const XMLCh*& valConstraint,
+                                               const bool topLevel);
 
     /**
       * Return the value of a given attribute name from an element node
@@ -831,19 +841,6 @@ inline const XMLCh* TraverseSchema::getLocalPart(const XMLCh* const rawName) {
     }
 
     return fStringPool->getValueForId(fStringPool->addOrFind(fBuffer.getRawBuffer()));
-}
-
-inline bool
-TraverseSchema::isValidRefDeclaration(const DOMElement* const elem) {
-
-    return !(XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_ABSTRACT)) != 0
-             || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_NILLABLE)) != 0
-             || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_BLOCK)) != 0
-             || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_FINAL)) != 0
-             || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_TYPE)) != 0
-             || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_DEFAULT)) != 0
-             || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_FIXED)) != 0
-             || XMLString::stringLen(elem->getAttribute(SchemaSymbols::fgATT_SUBSTITUTIONGROUP)) != 0);
 }
 
 inline
