@@ -1461,10 +1461,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
     fCurrentGroupStack->addElement(nameIndex);
     fCurrentGroupInfo = groupInfo;
 
-    if (fCurrentScope == Grammar::TOP_LEVEL_SCOPE) {
-        fCurrentScope = fScopeCount++;
-    }
-
+    fCurrentScope = fScopeCount++;
     fCurrentGroupInfo->setScope(fCurrentScope);
 
     if (content == 0) {
@@ -1496,6 +1493,10 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
         if (illegalChild || XUtil::getNextSiblingElement(content) != 0) {
             reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::GroupContentError, name);
         }
+
+        // copy local elements to complex type if it exists
+        if (fCurrentComplexType)
+           processElements(elem, fCurrentGroupInfo, fCurrentComplexType); 
     }
 
     // ------------------------------------------------------------------
@@ -1525,11 +1526,17 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
                             0, ((XSDElementNSImpl*) elem)->getLineNo(),
                             ((XSDElementNSImpl*) elem)->getColumnNo());
 		
-        if (fRedefineComponents && fRedefineComponents->get(SchemaSymbols::fgELT_GROUP, nameIndex)) {
+        if (fRedefineComponents && fRedefineComponents->get(SchemaSymbols::fgELT_GROUP, nameIndex))
+        {
 
             fBuffer.set(fullName);
             fBuffer.append(SchemaSymbols::fgRedefIdentifier);
-            groupInfo->setBaseGroup(fGroupRegistry->get(fBuffer.getRawBuffer()));
+            unsigned int rdfNameIndex = fStringPool->addOrFind(fBuffer.getRawBuffer());
+
+            if (fCurrentGroupStack->containsElement(rdfNameIndex))
+                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, name);
+            else
+                groupInfo->setBaseGroup(fGroupRegistry->get(fBuffer.getRawBuffer()));
         }
     }
 
@@ -6822,6 +6829,46 @@ void TraverseSchema::processElements(const DOMElement* const elem,
             }
 
             newTypeInfo->addElement(elemDecl);
+        }
+    }
+}
+
+void TraverseSchema::processElements(const DOMElement* const elem,
+                                     XercesGroupInfo* const fromGroup,
+                                     ComplexTypeInfo* const typeInfo)
+{
+    unsigned int elemCount = fromGroup->elementCount();
+    int newScope = typeInfo->getScopeDefined();
+
+    for (unsigned int i = 0; i < elemCount; i++) {
+
+        SchemaElementDecl* elemDecl = fromGroup->elementAt(i);
+        int elemScope = elemDecl->getEnclosingScope();
+
+        if (elemScope != Grammar::TOP_LEVEL_SCOPE)
+        {
+            int                      elemURI = elemDecl->getURI();
+            const XMLCh*             localPart = elemDecl->getBaseName();
+            const SchemaElementDecl* other = (SchemaElementDecl*)
+                    fSchemaGrammar->getElemDecl(elemURI, localPart, 0, newScope);
+
+            if (other)
+            {
+                if (elemDecl->getComplexTypeInfo() != other->getComplexTypeInfo()
+                    || elemDecl->getDatatypeValidator() != other->getDatatypeValidator())
+                {
+                   reportSchemaError(
+                       elem, XMLUni::fgXMLErrDomain
+                       , XMLErrs::DuplicateElementDeclaration, localPart);
+                }
+
+                continue;
+            }
+
+            elemDecl->setEnclosingScope(newScope);
+            fSchemaGrammar->putGroupElemDecl(elemDecl);
+            elemDecl->setEnclosingScope(elemScope);
+            typeInfo->addElement(elemDecl);
         }
     }
 }

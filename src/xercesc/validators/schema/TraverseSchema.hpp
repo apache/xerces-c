@@ -576,6 +576,10 @@ private:
                          ComplexTypeInfo* const baseTypeInfo,
                          ComplexTypeInfo* const newTypeInfo);
 
+    void processElements(const DOMElement* const elem,
+                         XercesGroupInfo* const fromGroup,
+                         ComplexTypeInfo* const typeInfo);
+
     void copyGroupElements(const DOMElement* const elem,
                            XercesGroupInfo* const fromGroup,
                            XercesGroupInfo* const toGroup,
