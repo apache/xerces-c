@@ -86,7 +86,7 @@ VALIDATORS_DTD_DIR = validators/DTD
 
 LIBNAME = libxerces-c
 THISLIB = ${XML_LIB_DIR}/${LIBNAME}
-VER = 1_1
+VER = 1_2
 
 #all these setting come from the arguments passed in to runConfigure.
 PLATFORM = @platform@
