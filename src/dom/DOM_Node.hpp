@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/04/25 20:29:33  aruna1
+ * DOM_XMLDecl type node introduced to get the information of the
+ * XML Declaration in a document and store it part of the tree
+ *
  * Revision 1.8  2000/04/19 02:26:16  aruna1
  * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
  *
@@ -215,18 +219,19 @@ class  CDOM_EXPORT DOM_Node {
 
 
     enum NodeType {
-        ELEMENT_NODE         = 1,
-        ATTRIBUTE_NODE       = 2,
-        TEXT_NODE            = 3,
-        CDATA_SECTION_NODE   = 4,
-        ENTITY_REFERENCE_NODE = 5,
-        ENTITY_NODE          = 6,
+        ELEMENT_NODE                = 1,
+        ATTRIBUTE_NODE              = 2,
+        TEXT_NODE                   = 3,
+        CDATA_SECTION_NODE          = 4,
+        ENTITY_REFERENCE_NODE       = 5,
+        ENTITY_NODE                 = 6,
         PROCESSING_INSTRUCTION_NODE = 7,
-        COMMENT_NODE         = 8,
-        DOCUMENT_NODE        = 9,
-        DOCUMENT_TYPE_NODE   = 10,
-        DOCUMENT_FRAGMENT_NODE = 11,
-        NOTATION_NODE        = 12
+        COMMENT_NODE                = 8,
+        DOCUMENT_NODE               = 9,
+        DOCUMENT_TYPE_NODE          = 10,
+        DOCUMENT_FRAGMENT_NODE      = 11,
+        NOTATION_NODE               = 12,
+        XML_DECL_NODE               = 13
     };
 
     //@}

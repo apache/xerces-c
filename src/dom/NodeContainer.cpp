@@ -246,7 +246,7 @@ NodeImpl *NodeContainer::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
 */
 bool NodeContainer::isKidOK(NodeImpl *parent, NodeImpl *child)
 {
-      static int kidOK[13];
+      static int kidOK[14];
       
       if (kidOK[DOM_Node::DOCUMENT_NODE] == 0)
       {
@@ -254,7 +254,8 @@ bool NodeContainer::isKidOK(NodeImpl *parent, NodeImpl *child)
               1 << DOM_Node::ELEMENT_NODE |
               1 << DOM_Node::PROCESSING_INSTRUCTION_NODE | 
               1 << DOM_Node::COMMENT_NODE | 
-              1 << DOM_Node::DOCUMENT_TYPE_NODE;
+              1 << DOM_Node::DOCUMENT_TYPE_NODE |
+              1 << DOM_Node::XML_DECL_NODE;
           
           kidOK[DOM_Node::DOCUMENT_FRAGMENT_NODE] = 
               kidOK[DOM_Node::ENTITY_NODE] = 
@@ -265,7 +266,8 @@ bool NodeContainer::isKidOK(NodeImpl *parent, NodeImpl *child)
               1 << DOM_Node::COMMENT_NODE |
               1 << DOM_Node::TEXT_NODE |
               1 << DOM_Node::CDATA_SECTION_NODE |
-              1 << DOM_Node::ENTITY_REFERENCE_NODE;
+              1 << DOM_Node::ENTITY_REFERENCE_NODE |
+              1 << DOM_Node::XML_DECL_NODE;
           
           kidOK[DOM_Node::DOCUMENT_TYPE_NODE] = 
               1 << DOM_Node::NOTATION_NODE |

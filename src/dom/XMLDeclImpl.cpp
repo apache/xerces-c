@@ -1,7 +1,3 @@
-#ifndef DOM_HEADER_GUARD_
-#define DOM_HEADER_GUARD_
-
-
 /*
  * The Apache Software License, Version 1.1
  * 
@@ -60,49 +56,95 @@
 
 /*
  * $Log$
- * Revision 1.4  2000/04/25 20:29:32  aruna1
+ * Revision 1.1  2000/04/25 20:32:19  aruna1
  * DOM_XMLDecl type node introduced to get the information of the
  * XML Declaration in a document and store it part of the tree
  *
- * Revision 1.3  2000/02/24 20:11:26  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/06 07:47:27  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:46  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:44:12  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
  */
 
-//
-//  This is the primary header file for inclusion in application
-//  programs using the C++ XML Document Object Model API.
-//
-
-#include <dom/DOM_Attr.hpp>
-#include <dom/DOM_CDATASection.hpp>
-#include <dom/DOM_CharacterData.hpp>
-#include <dom/DOM_Comment.hpp>
-#include <dom/DOM_Document.hpp>
-#include <dom/DOM_DocumentFragment.hpp>
-#include <dom/DOM_DocumentType.hpp>
-#include <dom/DOM_DOMException.hpp>
-#include <dom/DOM_DOMImplementation.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_Entity.hpp>
-#include <dom/DOM_EntityReference.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_NodeList.hpp>
-#include <dom/DOM_Notation.hpp>
-#include <dom/DOM_ProcessingInstruction.hpp>
-#include <dom/DOM_Text.hpp>
-#include <dom/DOMString.hpp>
-#include <dom/DOM_XMLDecl.hpp>
+#include "dom/XMLDeclImpl.hpp"
+#include <util/XMLUni.hpp>
+#include "dom/DOM_Node.hpp"
+#include "dom/DStringPool.hpp"
+#include "dom/DocumentImpl.hpp"
 
 
-#endif
+XMLDeclImpl::XMLDeclImpl(DocumentImpl *ownerDoc) 
+    : NodeImpl(ownerDoc),
+    version(DOMString(XMLUni::fgSupportedVersion)),
+    encoding (DOMString(XMLUni::fgUTF8EncodingString)),
+    standalone (DOMString(XMLUni::fgNoString))
+{
+};
+
+
+//Introduced in DOM Level 2
+XMLDeclImpl::XMLDeclImpl(DocumentImpl *ownerDoc, const DOMString &ver,
+                         const DOMString &enc, const DOMString &std)
+	: NodeImpl (ownerDoc),
+    version ( ver.clone() ),
+    encoding ( enc.clone() ),
+    standalone ( std.clone() )
+{
+};
+
+
+XMLDeclImpl::XMLDeclImpl(const XMLDeclImpl &other, bool deep)
+    : NodeImpl (other)
+{
+    version     = other.version.clone();
+    encoding    = other.encoding.clone();
+    standalone  = other.standalone.clone();
+};
+
+
+XMLDeclImpl::~XMLDeclImpl()
+{
+};
+
+NodeImpl * XMLDeclImpl::cloneNode(bool deep)
+{
+    return new XMLDeclImpl(*this, deep);
+}
+
+DOMString XMLDeclImpl::getNodeName()
+{
+    static DOMString *nam = 0;  // will be lazily initialized to "#xmldecl"
+    return DStringPool::getStaticString("#xmldecl", &nam);
+}
+
+short XMLDeclImpl::getNodeType()
+{
+    return DOM_Node::XML_DECL_NODE;
+}
+
+DOMString XMLDeclImpl::getVersion() const
+{
+    return version;
+}
+
+DOMString XMLDeclImpl::getEncoding() const
+{
+    return encoding;
+}
+
+DOMString XMLDeclImpl::getStandalone() const
+{
+    return standalone;
+}
+
+void XMLDeclImpl::setVersion(const DOMString &data)
+{
+    version = data.clone();
+}
+
+void XMLDeclImpl::setEncoding(const DOMString &data)
+{
+    encoding = data.clone();
+}
+
+void XMLDeclImpl::setStandalone(const DOMString &data)
+{
+    standalone = data.clone();
+}
+

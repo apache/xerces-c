@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/04/25 20:29:33  aruna1
+ * DOM_XMLDecl type node introduced to get the information of the
+ * XML Declaration in a document and store it part of the tree
+ *
  * Revision 1.11  2000/03/24 21:24:50  abagchi
  * Added getElementById() from patch submitted by Jeff Lewis
  *
@@ -122,6 +126,7 @@
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_NodeIterator.hpp>
 #include <dom/DOM_TreeWalker.hpp>
+#include <dom/DOM_XMLDecl.hpp>
 
 class DocumentImpl;
 class NodeIteratorImpl;
@@ -435,6 +440,25 @@ public:
                                      unsigned long whatToShow, 
                                      DOM_NodeFilter*  filter, 
                                      bool entityReferenceExpansion);
+
+    /**
+     * Creates a XMLDecl type Node .   Non-Standard (an extension to xerces)
+     *
+     * XMLDecl Nodes are created to get  version, encoding and standalone information in a document tree
+     *
+     * This node if created gets attached to a document object or an entity node. There can be no child
+     * to this type of node.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param version The version data of the document. Currently possible value is 1.0
+     * @param encoding The encoding type specified in the document
+     * @param standalone The information whether the document is standalone or not
+     */
+
+    DOM_XMLDecl createXMLDecl(const DOMString& version,
+                            const DOMString& encoding,
+                            const DOMString& standalone);
 
     //@}
     /** @name Getter functions */

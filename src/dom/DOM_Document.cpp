@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/25 20:29:33  aruna1
+ * DOM_XMLDecl type node introduced to get the information of the
+ * XML Declaration in a document and store it part of the tree
+ *
  * Revision 1.7  2000/03/24 21:26:32  abagchi
  * Added getElementById() from patch submitted by Jeff Lewis
  *
@@ -272,5 +276,10 @@ DOM_Element         DOM_Document::getElementById(const DOMString &elementId)
 void DOM_Document::putIdentifier(const DOMString &elementId, const DOM_Element &ele)
 {
        ((DocumentImpl*)fImpl)->putIdentifier(elementId,ele);
+}
+
+DOM_XMLDecl DOM_Document::createXMLDecl(const DOMString& version, const DOMString& encoding, const DOMString& standalone)
+{
+    return DOM_XMLDecl( ((DocumentImpl *)fImpl)->createXMLDecl(version, encoding, standalone));
 }
 

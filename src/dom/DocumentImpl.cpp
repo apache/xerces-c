@@ -662,3 +662,9 @@ int DocumentImpl::indexofQualifiedName(const DOMString & qName)
         return -1;
     return count == 0 ? 0 : index;
 }
+
+
+XMLDeclImpl* DocumentImpl::createXMLDecl(const DOMString& version, const DOMString& encoding, const DOMString& standalone)
+{
+    return new XMLDeclImpl(this, version, encoding, standalone);
+}

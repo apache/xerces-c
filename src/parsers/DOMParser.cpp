@@ -60,6 +60,10 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.20  2000/04/25 20:30:39  aruna1
+* DOM_XMLDecl type node introduced to get the information of the
+* XML Declaration in a document and store it part of the tree
+*
 * Revision 1.19  2000/04/20 18:58:06  aruna1
 * Changes for internalSubset string building in DocType
 *
@@ -165,6 +169,7 @@ DOMParser::DOMParser(XMLValidator* const valToAdopt) :
 fErrorHandler(0)
 , fEntityResolver(0)
 , fExpandEntityReferences(false)
+, fToCreateXMLDeclTypeNode(false)
 , fIncludeIgnorableWhitespace(true)
 , fNodeStack(0)
 , fScanner(0)
@@ -731,12 +736,25 @@ void DOMParser::startEntityReference(const XMLEntityDecl& entDecl)
 }
 
 
-void DOMParser::XMLDecl(const   XMLCh* const
-                        , const XMLCh* const
-                        , const XMLCh* const
-                        , const XMLCh* const)
+void DOMParser::XMLDecl(const   XMLCh* const version
+                        , const XMLCh* const encoding
+                        , const XMLCh* const standalone
+                        , const XMLCh* const actualEncStr)
 {
-    // This is not used by DOM at this time
+    //This is a non-standard extension to creating XMLDecl type nodes and attching to DOM Tree 
+    // currently this flag it set to false unless user explicitly asks for it
+    // Needs to be revisited after W3C specs are laid out on this issue.
+
+    if (fToCreateXMLDeclTypeNode) {
+        
+        DOMString ver(version);
+        DOMString enc(encoding);
+        DOMString std(standalone);
+        DOM_XMLDecl xmlDecl = fDocument.createXMLDecl(ver, enc, std);
+        
+        fCurrentParent.appendChild(xmlDecl);
+        fNodeStack->push(fCurrentParent);
+    }
 }
 
 

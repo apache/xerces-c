@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/04/25 20:27:44  aruna1
+ * DOM_XMLDecl type node introduced to get the information of the
+ * XML Declaration in a document and store it part of the tree
+ *
  * Revision 1.8  2000/04/19 02:25:03  aruna1
  * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
  *
@@ -108,6 +112,7 @@
 //      [-v]            - Do validation
 //      [-n]            - Enable namespace processing
 //      [-e]            - Expand Entity References
+//      [-x]            - Create XMLDecl type nodes      
 //      [-NoEscape]     - Don't escape characters like '<' or '&'.
 //      filename        - The path to the XML file to parse
 //
@@ -163,6 +168,7 @@ static bool     doEscapes       = true;
 static bool     doNamespaces    = false;
 static bool     doValidation    = false;
 static bool     doExpand        = false;
+static bool     doCreateXMLDecl = false;
 
 
 // ---------------------------------------------------------------------------
@@ -233,6 +239,11 @@ int main(int argC, char* argV[])
         {
             doExpand = true;
         }
+         else if (!strcmp(argV[parmInd], "-x")
+              ||  !strcmp(argV[parmInd], "-X"))
+        {
+            doCreateXMLDecl = true;
+        }
          else if (!strcmp(argV[parmInd], "-NoEscape"))
         {
             doEscapes = false;
@@ -266,7 +277,7 @@ int main(int argC, char* argV[])
     ErrorHandler *errReporter = new DOMTreeErrorReporter();
     parser.setErrorHandler(errReporter);
 	parser.setExpandEntityReferences(doExpand);
-
+    parser.setToCreateXMLDeclTypeNode(doCreateXMLDecl);
     //
     //  Parse the XML file, catching any XML exceptions that might propogate
     //  out of it.
@@ -371,7 +382,7 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
             //  for the default code page on the system where the program
             //  is running, and plug that in for the encoding name.  
             //
-            target << "<?xml version='1.0' encoding='ISO-8859-1' ?>\n";
+            //target << "<?xml version='1.0' encoding='ISO-8859-1' ?>\n";
             DOM_Node child = toWrite.getFirstChild();
             while( child != 0)
             {
@@ -482,7 +493,18 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
 
             break;
         }
-
+        case DOM_Node::XML_DECL_NODE:
+        {
+            target << "<?xml version=" << ((DOM_XMLDecl &)toWrite).getVersion();
+            DOMString str = ((DOM_XMLDecl &)toWrite).getEncoding();
+            if (str != 0)
+                target << " encoding=" << str;
+            str = ((DOM_XMLDecl &)toWrite).getStandalone();
+            if (str != 0)
+                target << " standalone=" << str;
+            target << "?>" << endl;
+            break;
+        }
         default:
             cerr << "Unrecognized node type = "
                  << (long)toWrite.getNodeType() << endl;

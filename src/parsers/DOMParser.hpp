@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/04/25 20:30:39  aruna1
+ * DOM_XMLDecl type node introduced to get the information of the
+ * XML Declaration in a document and store it part of the tree
+ *
  * Revision 1.9  2000/04/19 02:26:30  aruna1
  * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
  *
@@ -309,6 +313,18 @@ public :
       */
     bool getIncludeIgnorableWhitespace() const;
 
+    /** Get the 'to create MXLDecl node' flag.
+      *
+      * This method returns the state of the parser's to create XMLDecl 
+      * DOM Node flag.
+      *
+      * @return 'true' if the toCreateXMLDeclTypeNode flag is set on
+      *         the parser, 'false' otherwise.
+      *
+      */
+    bool getToCreateXMLDeclTypeNode() const;
+
+
     //@}
 
 
@@ -437,6 +453,18 @@ public :
       */
     void setValidationScheme(const ValSchemes newScheme);
 
+    /**
+      * This method allows users to set the toCreateXMLDeclTypeNode flag
+      * by this parser. By setting it to 'true' user can have XMLDecl type 
+      * nodes attached to the DOM tree.
+      *
+      * <p>The parser's default state is: false </p>
+      *
+      * @param newState The new to create XMLDecl type node flag
+      *
+      */
+    void setToCreateXMLDeclTypeNode(bool set);
+    
     //@}
 
 
@@ -1221,6 +1249,19 @@ private :
     //  fWithinElement
     //      A flag to indicate that the parser is within at least one level
     //      of element processing.
+    //
+    //  fDocumentType
+    //      Used to store and update the documentType variable information
+    //      in fDocument
+    //
+    //  fOldDocTypeHandler
+    //      Used to chain the old documentType node if the user has set it 
+    //      from outside
+    //
+    //  fToCreateXMLDecTypeNode
+    //      A flag to create a DOM_XMLDecl node in the ODM tree if it exists
+    //      This is an extension to xerces implementation 
+    //
     // -----------------------------------------------------------------------
     DOM_Node                fCurrentParent;
     DOM_Node                fCurrentNode;
@@ -1236,6 +1277,7 @@ private :
     bool                    fWithinElement;
     DocumentTypeImpl*		fDocumentType;
 	DocTypeHandler*			fOldDocTypeHandler;
+    bool                    fToCreateXMLDeclTypeNode;
 };
 
 
@@ -1318,6 +1360,11 @@ inline const XMLScanner& DOMParser::getScanner() const
     return *fScanner;
 }
 
+inline bool DOMParser::getToCreateXMLDeclTypeNode() const
+{
+    return fToCreateXMLDeclTypeNode;
+}
+
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Setter methods
@@ -1330,6 +1377,11 @@ inline void DOMParser::setExpandEntityReferences(const bool expand)
 inline void DOMParser::setIncludeIgnorableWhitespace(const bool include)
 {
     fIncludeIgnorableWhitespace = include;
+}
+
+inline void DOMParser::setToCreateXMLDeclTypeNode(const bool create)
+{
+    fToCreateXMLDeclTypeNode = create;
 }
 
 
