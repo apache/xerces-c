@@ -32,6 +32,12 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("Example: Under Windows\n");
     print ("    perl packageBinaries.pl -s \\xerces-c-src_1_2_0");
     print (" -o\\xerces-c_1_2_0-win32 [-n fileonly] [-t icu]\n\n");
+    print ("Note:\n");
+    print ("    Under Windows, by default the XercesLib project files is\n");
+    print ("    configured to use Win32 resource file based message loader,\n");
+    print ("    WinSocket based net accessor and native Win32 based transcoder.\n");
+    print ("    The two options mentioned in the example above are the only\n");
+    print ("    options relevant under Windows on the command line for this script.\n");
     exit(-1);
 }
 
