@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/03/10 20:55:58  peiyongz
+ * Schema Errata E2-40 double/float
+ *
  * Revision 1.4  2003/02/02 23:54:43  peiyongz
  * getFormattedString() added to return original and converted value.
  *
@@ -87,6 +90,14 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XMLUTIL_EXPORT XMLNumber
 {
 public:
+
+    enum
+    {
+        LESS_THAN     = -1,
+        EQUAL         = 0,
+        GREATER_THAN  = 1,
+        INDETERMINATE = 2
+    };
 
     virtual ~XMLNumber();
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/03/10 20:55:58  peiyongz
+ * Schema Errata E2-40 double/float
+ *
  * Revision 1.9  2003/02/02 23:54:43  peiyongz
  * getFormattedString() added to return original and converted value.
  *
@@ -148,16 +151,6 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
         fType = NegINF;
         fSign = -1;
     }
-    else if (XMLString::equals(tmpStrValue, XMLUni::fgNegZeroString) )
-    {
-        fType = NegZero;
-        fSign = -1;
-    }
-    else if (XMLString::equals(tmpStrValue, XMLUni::fgPosZeroString) )
-    {
-        fType = PosZero;
-        fSign = 1;
-    }
     else if (XMLString::equals(tmpStrValue, XMLUni::fgPosINFString) )
     {
         fType = PosINF;
@@ -228,12 +221,6 @@ void XMLAbstractDoubleFloat::formatString()
     case NegINF:       
         XMLString::catString(fFormattedString, XMLUni::fgNegINFString);
         break;
-    case NegZero:
-        XMLString::catString(fFormattedString, XMLUni::fgNegZeroString);
-        break;
-    case PosZero:
-        XMLString::catString(fFormattedString, XMLUni::fgPosZeroString);
-        break;
     case PosINF:
         XMLString::catString(fFormattedString, XMLUni::fgPosINFString);
         break;
@@ -265,23 +252,41 @@ int XMLAbstractDoubleFloat::compareValues(const XMLAbstractDoubleFloat* const lV
         (!rValue->isSpecialValue())  )
     {
         if (lValue->fValue == rValue->fValue)
-            return 0;
+            return EQUAL;
         else
-            return (lValue->fValue > rValue->fValue) ? 1: -1;
+            return (lValue->fValue > rValue->fValue) ? GREATER_THAN : LESS_THAN;
 
     }
     //
     // case#2: lValue special
     //         rValue special
     //
+    // Schema Errata E2-40
+    // 
+    // Positive Infinity is greater than all other non-NAN value.
+    // Nan equals itself but is not comparable with (neither greater than nor less than)
+    //     any other value in the value space
+    // Negative Infinity is less than all other non-NAN values.
+    //
     else
     if ((lValue->isSpecialValue()) &&
         (rValue->isSpecialValue())  )
     {
         if (lValue->fType == rValue->fType)
-            return 0;
+            return EQUAL;
         else
-            return (lValue->fType > rValue->fType) ? 1 : -1;
+        {
+            if ((lValue->fType == NaN) ||
+                (rValue->fType == NaN)  )
+            {
+                return INDETERMINATE;
+            }
+            else
+            {
+                return (lValue->fType > rValue->fType) ? GREATER_THAN : LESS_THAN;
+            }
+        }
+
     }
     //
     // case#3: lValue special
@@ -311,17 +316,12 @@ int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const s
     switch (specialValue->fType)
     {
     case NegINF:
-        return -1;
-
-    case NegZero:
-    case PosZero:
-        return (normalValue->getSign() > 0 ? -1 : 1);
-
+        return LESS_THAN;
     case PosINF:
-        return 1;
-
+        return GREATER_THAN;
     case NaN:
-        return 1;
+        // NaN is not comparable to any other value
+        return INDETERMINATE;
 
     default:
         XMLString::binToText(specialValue->fType, value1, 16, 10);

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/03/10 20:55:58  peiyongz
+ * Schema Errata E2-40 double/float
+ *
  * Revision 1.7  2003/02/02 23:54:43  peiyongz
  * getFormattedString() added to return original and converted value.
  *
@@ -177,7 +180,6 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
         {
             if (fValue > (-1)*DBL_MIN)
             {
-                fType = NegZero;
                 fDataConverted = true;
                 fValue = 0;
             }
@@ -191,7 +193,6 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
         {
             if (fValue < DBL_MIN )
             {
-                fType = PosZero;
                 fDataConverted = true;
                 fValue = 0;
             }
@@ -203,7 +204,6 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
         }
         else
         {
-            fType = (getSign() == 1) ? PosZero : NegZero;
             fDataConverted = true;
         }
 
