@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/17 21:15:08  knoaman
+ * Added circular checking for simple types.
+ *
  * Revision 1.7  2001/05/17 18:11:18  knoaman
  * More constraint and attribute checking.
  *
@@ -207,6 +210,7 @@ TraverseSchema::TraverseSchema( const DOM_Element&      schemaRoot
     , fImportLocations(0)
     , fIncludeLocations(0)
     , fAttributeCheck(0)
+    , fSimpleTypeStack(0)
 {
 
 	try {
@@ -240,6 +244,7 @@ void TraverseSchema::doTraverseSchema() {
     }
 
     fAttributeCheck = GeneralAttributeCheck::instance();
+    fSimpleTypeStack = new ValueVectorOf<unsigned int>(8);
 
     //Make sure namespace binding is defaulted
     DOMString rootPrefix = fSchemaRootElement.getPrefix();
@@ -773,6 +778,11 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem)
     // ------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(childElem,SchemaSymbols::fgATT_NAME);
 
+    if (topLevel && XMLString::stringLen(name) == 0) {
+//        reportSchemaError(XMLUni::fgXMLErrDomain, 0 , 0); // "Global simpleType must have a name - declaration ignored"
+        return -1;
+    }
+
     if (XMLString::stringLen(fTargetNSURIString) != 0) {
 
 		fBuffer.set(fTargetNSURIString);
@@ -796,6 +806,15 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem)
 
     newSimpleTypeName = fStringPool.addOrFind(name);
 
+    // Circular constraint checking
+    if (locationsContain(fSimpleTypeStack, newSimpleTypeName)){
+
+//        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::, name); //"No circular definitions are allowed: '{0}'"
+        return resetSimpleTypeNameStack(-1);
+    }
+
+    fSimpleTypeStack->addElement(newSimpleTypeName);
+
     // Get 'final' values
     const XMLCh* finalVal = getElementAttValue(childElem, SchemaSymbols::fgATT_FINAL);
     int finalSet = parseFinalSet(finalVal);
@@ -808,7 +827,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem)
     if (content == 0) {
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::EmptySimpleTypeContent);
-        return -1;
+        return resetSimpleTypeNameStack(-1);
     }
 
     DOMString varietyName = content.getLocalName();
@@ -830,7 +849,7 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem)
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::FeatureUnsupported,fBuffer.getRawBuffer());
     }
 
-    return -1;
+    return resetSimpleTypeNameStack(-1);;
 }
 
 /**
@@ -1005,7 +1024,6 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
     // Before exiting, restore the scope, mainly for nested anonymous types
     // ------------------------------------------------------------------
     fCurrentScope = previousScope;
-    //ArrayJanitor<XMLCh> janTypeName(fCurrentTypeNameStack->pop());
 
     return typeNameIndex;
 }
@@ -1843,8 +1861,7 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem) {
 
         if(typeInfo != 0 &&
            typeInfo->getContentType() != SchemaElementDecl::Simple &&
-           (typeInfo->getContentType() != SchemaElementDecl::Mixed ||
-            (contentSpecNode != 0 && contentSpecNode->getType() != ContentSpecNode::Leaf))) {
+           typeInfo->getContentType() != SchemaElementDecl::Mixed) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NotSimpleOrMixedElement, name);
         }
     }
@@ -1912,7 +1929,7 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
 
         if (content == 0) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ExpectedSimpleTypeInList, typeName);
-            return -1;
+            return resetSimpleTypeNameStack(-1);
         }
 
         if (content.getLocalName().equals(SchemaSymbols::fgELT_SIMPLETYPE)) {
@@ -1921,7 +1938,7 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
         else {
 
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
-            return -1;
+            return resetSimpleTypeNameStack(-1);
         }
 
         content = XUtil::getNextSiblingElement(content);
@@ -1934,7 +1951,7 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
 	}
 
     if (baseValidator == 0) {
-        return -1;
+        return resetSimpleTypeNameStack(-1);
     }
 
     // 'content' should be empty
@@ -1973,7 +1990,7 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
                           XMLErrs::DatatypeValidatorCreationError, typeName);
     }
 
-    return fStringPool.addOrFind(qualifiedName);
+    return resetSimpleTypeNameStack(fStringPool.addOrFind(qualifiedName));
 }
 
 int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
@@ -2003,7 +2020,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
 
         if (content == 0) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ExpectedSimpleTypeInRestriction);
-            return -1;
+            return resetSimpleTypeNameStack(-1);
         }
 
         if (content.getLocalName().equals(SchemaSymbols::fgELT_SIMPLETYPE)) {
@@ -2011,7 +2028,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
         }
         else {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
-            return -1;
+            return resetSimpleTypeNameStack(-1);
         }
 
 		// Check for facets
@@ -2025,7 +2042,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
     }
 
     if (baseValidator == 0) {
-        return -1;
+        return resetSimpleTypeNameStack(-1);
     }
 
 	// Get facets if any existing
@@ -2140,10 +2157,9 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
 
         reportSchemaError(XMLUni::fgXMLErrDomain,
                           XMLErrs::DatatypeValidatorCreationError, typeName);
-        return -1;
     }
 
-    return fStringPool.addOrFind(qualifiedName);
+    return resetSimpleTypeNameStack(fStringPool.addOrFind(qualifiedName));
 }
 
 
@@ -2179,7 +2195,7 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
 
         if (content == 0) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ExpectedSimpleTypeInUnion, typeName);
-            return -1;
+            return resetSimpleTypeNameStack(-1);
         }
 
         if (content.getLocalName().equals(SchemaSymbols::fgELT_SIMPLETYPE)) {
@@ -2187,7 +2203,7 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
             baseValidator = checkForSimpleTypeValidator(content);
 
             if (baseValidator == 0) {
-                return -1;
+                return resetSimpleTypeNameStack(-1);
             }
 
             validators->addElement(baseValidator);
@@ -2195,7 +2211,7 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
         else {
 
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
-            return -1;
+            return resetSimpleTypeNameStack(-1);
         }
 
         content = XUtil::getNextSiblingElement(content);
@@ -2214,7 +2230,7 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
                                             SchemaSymbols::UNION);
 
             if (baseValidator == 0) {
-                return -1;
+                return resetSimpleTypeNameStack(-1);
             }
 
             validators->addElement(baseValidator);
@@ -2231,7 +2247,7 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
             baseValidator = checkForSimpleTypeValidator(content);
 
             if (baseValidator == 0) {
-                return -1;
+                return resetSimpleTypeNameStack(-1);
             }
 
             validators->addElement(baseValidator);
@@ -2274,7 +2290,7 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
                           XMLErrs::DatatypeValidatorCreationError, typeName);
     }
 
-    return fStringPool.addOrFind(qualifiedName);
+    return resetSimpleTypeNameStack(fStringPool.addOrFind(qualifiedName));
 }
 
   

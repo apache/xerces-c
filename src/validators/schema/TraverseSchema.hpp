@@ -464,6 +464,7 @@ private:
                           const unsigned int locationId);
 
     void restoreSchemaInfo();
+    int resetSimpleTypeNameStack(const int);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -496,6 +497,7 @@ private:
     SchemaInfo*                      fCurrentSchemaInfo;
     ValueVectorOf<unsigned int>*     fImportLocations;
     ValueVectorOf<unsigned int>*     fIncludeLocations;
+    ValueVectorOf<unsigned int>*     fSimpleTypeStack;
     GeneralAttributeCheck*           fAttributeCheck;
     static XMLStringPool             fStringPool;
 
@@ -638,6 +640,17 @@ TraverseSchema::locationsContain(const ValueVectorOf<unsigned int>* const locati
     }
 
     return false;
+}
+
+inline int TraverseSchema::resetSimpleTypeNameStack(const int value) {
+
+    unsigned int stackSize = fSimpleTypeStack->size();
+
+	if (stackSize != 0) {
+        fSimpleTypeStack->removeElementAt(stackSize - 1);
+    }
+
+    return value;
 }
 
 #endif
