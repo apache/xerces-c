@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/11/06 21:52:17  neilg
+ * fix typo
+ *
  * Revision 1.14  2003/11/06 19:28:11  knoaman
  * PSVI support for annotations.
  *
@@ -310,7 +313,7 @@ void SchemaGrammar::cleanUp()
 {
 
     delete fElemDeclPool;
-    if(fElemDeclPool)
+    if(fElemNonDeclPool)
         delete fElemNonDeclPool;
     delete fGroupElemDeclPool;
     delete fNotationDeclPool;
