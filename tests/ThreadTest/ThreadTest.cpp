@@ -409,6 +409,7 @@ int ThreadParser::parse(int fileNum)
     {
         if (gRunInfo.dom) {
             // Do a DOM parse
+            fXercesDOMParser->resetDocumentPool();
             if (gRunInfo.inMemory)
                 fXercesDOMParser->parse(*mbis);
             else
@@ -866,6 +867,16 @@ void threadMain (void *param)
         int checkSum = 0;
         checkSum = thParser->parse(docNum);
 
+        // SRD -- for the case where we skip the preparse we will have nothing
+        // to compare the first parse's results to ... so if this looks like
+        // first parser move the checkSum back into the gRunInfo data for this
+        // file.
+
+        if (gRunInfo.files[docNum].checkSum == 0)
+        {
+           gRunInfo.files[docNum].checkSum = checkSum;
+        }
+
         if (checkSum != gRunInfo.files[docNum].checkSum)
         {
             fprintf(stderr, "\nThread %d: Parse Check sum error on file  \"%s\".  Expected %x,  got %x\n",
@@ -939,7 +950,14 @@ int main (int argc, char **argv)
     //
     ReadFilesIntoMemory();
 
+    // SRD -- initialize checksums to zero so we can check first parse and if
+    // zero then we need to move first parse's checksum into array
+    for (int n = 0; n < gRunInfo.numInputFiles; n++)
+    {
+        gRunInfo.files[n].checkSum = 0;
+    }
 
+#ifdef DOINITIALPARSE
     //
     // While we are still single threaded, parse each of the documents
     //  once, to check for errors, and to note the checksum.
@@ -977,6 +995,7 @@ int main (int argc, char **argv)
     }
 
     delete mainParser;
+#endif
 
     //
     //  Fire off the requested number of parallel threads
