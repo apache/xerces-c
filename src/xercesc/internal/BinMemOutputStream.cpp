@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2004/03/05 22:19:32  peiyongz
+ * getSize() to return fCapacity to differentiate it from curPos()
+ *
  * Revision 1.3  2004/02/16 04:02:34  neilg
  * fix for bug 26936
  *
@@ -122,7 +125,6 @@ const XMLByte* BinMemOutputStream::getRawBuffer() const
 void BinMemOutputStream::reset()
 {
     fIndex = 0;
-
     for (int i = 0; i < 4; i++)
     {
         fDataBuf[fIndex + i] = 0;
@@ -136,7 +138,7 @@ unsigned int BinMemOutputStream::curPos() const
 
 unsigned int BinMemOutputStream::getSize() const
 {
-    return fIndex;
+    return fCapacity;
 }
 
 // ---------------------------------------------------------------------------
