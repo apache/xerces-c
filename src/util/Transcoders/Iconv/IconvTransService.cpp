@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.18  2000/06/09 23:45:02  rahulj
+ * More PTX port related changes submitted by
+ * Sumit Chawla <sumitc@us.ibm.com>.
+ *
  * Revision 1.17  2000/03/28 19:43:24  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
  * stuff.
@@ -138,7 +142,7 @@
 #include <util/XMLUni.hpp>
 #include "IconvTransService.hpp"
 #include <wchar.h>
-#if defined (XML_GCC)
+#if defined (XML_GCC) || defined (XML_PTX)
 #include <wctype.h>
 #endif
 #include <string.h>

@@ -55,6 +55,10 @@
 #
 #
 # $Log$
+# Revision 1.8  2000/06/09 23:45:03  rahulj
+# More PTX port related changes submitted by
+# Sumit Chawla <sumitc@us.ibm.com>.
+#
 # Revision 1.7  2000/06/03 01:13:51  aruna1
 # Version number consolidated into single file for unix
 #
@@ -136,7 +140,7 @@ PLATFORM_COMPILE_OPTIONS = -KPIC -Kthread -DPTX
 MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -DPTX -G
 MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -DPTX -G
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib -L${XMLINSTALL}/lib
-EXTRA_LINK_OPTIONS=-lm -lgen -licu-uc -licu-i18n -lustdio -licu-toolutil
+EXTRA_LINK_OPTIONS=-lm -lgen 
 SHLIBSUFFIX=.so
 endif
 
