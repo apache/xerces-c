@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/03/20 19:13:04  roddey
+ * Fixed a compilation bug in one of the exception throwing calls.
+ *
  * Revision 1.11  2000/03/18 00:00:04  roddey
  * Initial updates for two way transcoding support
  *
@@ -268,7 +271,7 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
             {
                 XMLCh tmpBuf[16];
                 XMLString::binToText((unsigned int)(*inPtr), tmpBuf, 16, 16);
-                ThrowXML
+                ThrowXML2
                 (
                     TranscodingException
                     , XMLExcepts::Trans_BadSrcCP
