@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.3  2004/08/23 17:07:57  peiyongz
+* Minimum representable range on all platforms
+*
 * Revision 1.2  2004/08/19 21:29:28  peiyongz
 * no message
 *
@@ -720,13 +723,16 @@ void test_dt_double()
 
     const char lex_v_ran_iv_1[]="+1.7976931348623158e+309";
     const char lex_v_ran_iv_2[]="-1.7976931348623158e+309";
-    const char lex_v_ran_iv_3[]="+2.2250738585072014e-309";
-    const char lex_v_ran_iv_4[]="-2.2250738585072014e-309";
+    // on linux, hp, aix, the representable range is around e-324
+    // or e-325, using e-329 to gain consistent result on all
+    // platforms
+    const char lex_v_ran_iv_3[]="+2.2250738585072014e-329";
+    const char lex_v_ran_iv_4[]="-2.2250738585072014e-329";
 
     const char lex_v_ran_iv_1_canrep[]="1.7976931348623158E309";
     const char lex_v_ran_iv_2_canrep[]="-1.7976931348623158E309";
-    const char lex_v_ran_iv_3_canrep[]="2.2250738585072014E-309";
-    const char lex_v_ran_iv_4_canrep[]="-2.2250738585072014E-309";
+    const char lex_v_ran_iv_3_canrep[]="2.2250738585072014E-329";
+    const char lex_v_ran_iv_4_canrep[]="-2.2250738585072014E-329";
 
     const char lex_iv_1[]="12x.e+10";
     const char lex_iv_2[]="12.e+1x";
