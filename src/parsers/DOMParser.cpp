@@ -822,14 +822,6 @@ void DOMParser::attDef
                     }
                     anotherEnumString.appendData(chCloseParen);
                     attString.appendData(anotherEnumString);
-
-                    enumString = attDef.getValue();
-                    if ( enumString != 0) {
-                        attString.appendData(chSpace);
-                        attString.appendData(chDoubleQuote);
-                        attString.appendData(XMLString::transcode(attDef.getValue()));
-                        attString.appendData(chDoubleQuote);
-                    }
                 }
                 break;
             }
@@ -850,6 +842,15 @@ void DOMParser::attDef
                 attString.appendData(XMLUni::fgFixedString);
                 break;
             }
+
+            const XMLCh* defaultValue = attDef.getValue();
+            if (defaultValue != 0) {
+                attString.appendData(chSpace);
+                attString.appendData(chDoubleQuote);
+                attString.appendData(XMLString::transcode(defaultValue));
+                attString.appendData(chDoubleQuote);
+            }
+
             attString.appendData(chCloseAngle);
             fDocumentType->internalSubset.appendData(attString);
         }
