@@ -95,7 +95,7 @@ ElementImpl::ElementImpl(const ElementImpl &other, bool deep)
     name = other.name.clone();
     if (deep)
         cloneChildren(other);
-    attributes = other.attributes->cloneMap();
+    attributes = other.attributes->cloneMap(this);
 };
 
 

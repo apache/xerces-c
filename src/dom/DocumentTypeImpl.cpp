@@ -103,11 +103,11 @@ DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
     name = other.name.clone();
     if (deep)
         cloneChildren(other);
-    entities = other.entities->cloneMap();
-    notations= other.notations->cloneMap();
+    entities = other.entities->cloneMap(this);
+    notations= other.notations->cloneMap(this);
     
     // NON-DOM
-    elements = other.elements->cloneMap();
+    elements = other.elements->cloneMap(this);
 
     //DOM Level 2
     publicId = other.publicId.clone();

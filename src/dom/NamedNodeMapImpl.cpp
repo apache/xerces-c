@@ -106,16 +106,15 @@ void NamedNodeMapImpl::addRef(NamedNodeMapImpl *This)
 };
 
 
-NamedNodeMapImpl *NamedNodeMapImpl::cloneMap()
+NamedNodeMapImpl *NamedNodeMapImpl::cloneMap(NodeImpl *ownerNode)
 {
-    bool deep = true;
     NamedNodeMapImpl *newmap = new NamedNodeMapImpl(ownerNode, defaults);
     if (nodes != null)
     {
         newmap->nodes = new NodeVector(nodes->size());
         for (unsigned int i = 0; i < nodes->size(); ++i)
         {
-            NodeImpl *n = nodes->elementAt(i)->cloneNode(deep);
+            NodeImpl *n = nodes->elementAt(i)->cloneNode(true);
             n->ownerNode = ownerNode;
             newmap->nodes->addElement(n);
         }
@@ -465,7 +464,6 @@ void NamedNodeMapImpl::setReadOnly(bool readOnl, bool deep)
  */
 NamedNodeMapImpl *NamedNodeMapImpl::exportNode(NodeImpl *node)
 {
-    bool deep = true;
     NamedNodeMapImpl *newdefs =
         defaults == null ? null : defaults->exportNode(node);
     NamedNodeMapImpl *newmap = new NamedNodeMapImpl(node, newdefs);
@@ -474,7 +472,8 @@ NamedNodeMapImpl *NamedNodeMapImpl::exportNode(NodeImpl *node)
         newmap->nodes = new NodeVector(nodes->size());
         for (unsigned int i = 0; i < nodes->size(); ++i)
         {
-            NodeImpl *n = node->ownerDocument->importNode(nodes->elementAt(i), deep);
+            NodeImpl *n =
+                node->ownerDocument->importNode(nodes->elementAt(i), true);
             n->ownerNode = ownerNode;
             newmap->nodes->addElement(n);
         }

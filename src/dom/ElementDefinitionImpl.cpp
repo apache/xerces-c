@@ -81,7 +81,7 @@ ElementDefinitionImpl::ElementDefinitionImpl(
     // NamedNodeMap must be explicitly replicated to avoid sharing
     attributes = 0;
     if (other.attributes)
-        attributes = other.attributes->cloneMap();
+        attributes = other.attributes->cloneMap(this);
 };
 
 

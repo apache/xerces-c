@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/04/07 20:58:36  lehors
+ * fixed all cloneMap so that the ownerNode is correct
+ *
  * Revision 1.9  2000/04/06 21:17:48  lehors
  * got rid of the owned attribute,
  * renamed parentNode to ownerNode to make it clear it's not always the parent
@@ -137,7 +140,7 @@ public:
     
     virtual void            reconcileDefaults();
     virtual                 ~NamedNodeMapImpl();
-    virtual NamedNodeMapImpl *cloneMap();
+    virtual NamedNodeMapImpl *cloneMap(NodeImpl *ownerNode);
     static  void            addRef(NamedNodeMapImpl *);
     virtual int             findNamePoint(const DOMString &name);
     virtual unsigned int    getLength();
