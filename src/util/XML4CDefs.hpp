@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/16 23:47:10  rahulj
+ * Updated for version 1.0.1
+ *
  * Revision 1.3  1999/12/01 17:16:16  rahulj
  * Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
  *
@@ -82,10 +85,10 @@
 // ---------------------------------------------------------------------------
 #define XML4C_DLLVersionStr "1_0"
 static const char* const    gXML4CVersionStr = "1_0";
-static const char* const    gXML4CFullVersionStr = "1_0_0";
+static const char* const    gXML4CFullVersionStr = "1_0_1";
 static const unsigned int   gXML4CMajVersion = 1;
 static const unsigned int   gXML4CMinVersion = 0;
-static const unsigned int   gXML4CRevision   = 0;
+static const unsigned int   gXML4CRevision   = 1;
 
 
 // ---------------------------------------------------------------------------
