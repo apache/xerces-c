@@ -84,7 +84,8 @@ usage()
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 'netbsd',
             'solaris', 'hp-10', 'hp-11', 'openserver', 'unixware',
-            'os400', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin')
+            'os400', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 'qnx',
+            'interix', 'mingw-msys')
             [required: no default]"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc or ecc)"
     echo "            [default is make default; cc for gnu make]"
@@ -125,71 +126,100 @@ if test $1 = "-h"; then
    exit ${ERROR_EXIT_CODE}
 fi
 
-# Check the command line parameters
-if test -x /usr/bin/getopt; then
-getoptErr=`getopt p:c:x:dr:b:l:z:h $*`
-else
-getoptErr=`getopts p:c:x:dr:b:l:z:h `$*``
-fi
-if [ $? != 0 ]
-   then
-   usage
-   exit ${ERROR_EXIT_CODE}
-fi
-
-# Now get the command line parameters
-if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:dr:b:l:z:h $*`
-else
-set -- `getopts p:c:x:dr:b:l:z:h `$*``
-fi
-
 # Set up the default values for each parameter
 debug=off                # by default debug is off
 transcoder=native        # by default use native transcoder
 thread=pthread           # by default use POSIX threads
 bitsToBuild=32           # by default 32 bit build assumed
 
-while [ $# -gt 0 ]
-   do
-   case $1 in
-   -p)
-        platform=$2; shift 2;;
+# Check the command line parameters
+if test -x /usr/bin/getopt; then
+   getoptErr=`getopt p:c:x:dr:b:l:z:h $*`
+   if [ $? != 0 ]
+      then
+      usage
+      exit ${ERROR_EXIT_CODE}
+   fi
+   # Now get the command line parameters
+   set -- `getopt p:c:x:dr:b:l:z:h $*`
+   while [ $# -gt 0 ]
+      do
+      case $1 in
+      -p)
+         platform=$2; shift 2;;
 
-   -c)
-        ccompiler=$2; shift 2;;
+      -c)
+         ccompiler=$2; shift 2;;
 
-   -x)
-        cppcompiler=$2; shift 2;;
+      -x)
+         cppcompiler=$2; shift 2;;
 
-   -d)
-        debug=on; shift;;
+      -d)
+         debug=on; shift;;
 
-   -r)
-        thread=$2; shift 2;;
+      -r)
+         thread=$2; shift 2;;
 
-   -b)
-        bitsToBuild=$2; shift 2;;
+      -b)
+         bitsToBuild=$2; shift 2;;
 
-   -z)
-        compileroptions="$compileroptions $2"; shift 2;;
+      -z)
+         compileroptions="$compileroptions $2"; shift 2;;
 
-   -l)
-        linkeroptions="$linkeroptions $2"; shift 2;;
+      -l)
+         linkeroptions="$linkeroptions $2"; shift 2;;
 
-   -h)
-        usage
-        exit ${ERROR_EXIT_CODE};;
+      -h)
+         usage
+         exit ${ERROR_EXIT_CODE};;
 
-   --)
-        shift; break;;
+      --)
+         shift; break;;
 
-   *)
-       echo "unknown option $1"
-       usage
-       exit ${ERROR_EXIT_CODE};;
-   esac
-done
+      *)
+         echo "unknown option $1"
+         usage
+         exit ${ERROR_EXIT_CODE};;
+      esac
+   done
+else
+   while getopts "p:c:x:dr:b:l:z:h" switch; do
+      case $switch in
+      p)
+         platform=$OPTARG;;
+
+      c)
+         ccompiler=$OPTARG;;
+
+      x)
+         cppcompiler=$OPTARG;;
+
+      d)
+         debug=on;;
+
+      r)
+         thread=$OPTARG;;
+
+      b)
+         bitsToBuild=$OPTARG;;
+
+      z)
+         compileroptions="$compileroptions $OPTARG";;
+
+      l)
+         linkeroptions="$linkeroptions $OPTARG";;
+
+      h)
+         usage
+         exit ${ERROR_EXIT_CODE};;
+
+      *)
+         echo "unknown option -$switch $OPTARG"
+         usage
+         exit ${ERROR_EXIT_CODE};;
+      esac
+   done
+fi
 
 echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
@@ -204,7 +234,7 @@ echo "Extra link options: $linkeroptions"
 # Now check if the options are correct or not, bail out if incorrect
 #
 case $platform in
-   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin | qnx)
+   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin | qnx | interix | mingw-msys)
        # platform has been recognized
        ;;
    *)
@@ -343,6 +373,9 @@ else
             exit ${ERROR_EXIT_CODE};;
         esac
         fi
+    elif test $platform = "mingw-msys"; then
+        threadingLibs=""
+        threadingDefines=""
     fi
 fi
 

@@ -88,7 +88,7 @@ usage()
     echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 
             'netbsd', 'solaris', 'hp-10', 'hp-11', 'openserver', 'unixware', 
             'os400', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 'qnx',
-            'interix')
+            'interix', 'mingw-msys')
             [required; no default]"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc or ecc) 
             [default is make default; cc for gnu make]"
@@ -140,25 +140,6 @@ if test $1 = "-h"; then
    exit ${ERROR_EXIT_CODE}
 fi
 
-# Check the command line parameters
-if test -x /usr/bin/getopt; then
-getoptErr=`getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
-else
-getoptErr=`getopts p:c:x:dm:n:t:r:b:l:z:P:C:h `$*``
-fi
-if [ $? != 0 ]
-   then
-   usage
-   exit ${ERROR_EXIT_CODE}
-fi
-
-# Now get the command line parameters
-if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
-else
-set -- `getopts p:c:x:dm:n:t:r:b:l:z:P:C:h `$*``
-fi
-
 # Set up the default values for each parameter
 debug=off                # by default debug is off
 transcoder=native        # by default use native transcoder
@@ -168,61 +149,125 @@ thread=pthread           # by default use POSIX threads
 configureoptions=""
 bitsToBuild=32           # by default 32 bit build assumed
 
-while [ $# -gt 0 ]
-   do
-   case $1 in
-   -p)
-        platform=$2; shift 2;;
+# Check the command line parameters
+if test -x /usr/bin/getopt -o -x bin/getopt; then
+	getoptErr=`getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
+	if [ $? != 0 ]
+	   then
+	   usage
+	   exit ${ERROR_EXIT_CODE}
+	fi
+	# Now get the command line parameters
+	set -- `getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
+	while [ $# -gt 0 ]
+	   do
+	   case $1 in
+	   -p)
+			platform=$2; shift 2;;
 
-   -c)
-        ccompiler=$2; shift 2;;
+	   -c)
+			ccompiler=$2; shift 2;;
 
-   -x)
-        cppcompiler=$2; shift 2;;
+	   -x)
+			cppcompiler=$2; shift 2;;
 
-   -d)
-        debug=on; shift;;
+	   -d)
+			debug=on; shift;;
 
-   -m)
-        msgloader=$2; shift 2;;
+	   -m)
+			msgloader=$2; shift 2;;
 
-   -n)
-        netaccessor=$2; shift 2;;
+	   -n)
+			netaccessor=$2; shift 2;;
 
-   -t)
-        transcoder=$2; shift 2;;
+	   -t)
+			transcoder=$2; shift 2;;
 
-   -r)
-        thread=$2; shift 2;;
+	   -r)
+			thread=$2; shift 2;;
 
-   -b)
-        bitsToBuild=$2; shift 2;;
+	   -b)
+			bitsToBuild=$2; shift 2;;
 
-   -z)
-        compileroptions="$compileroptions $2"; shift 2;;
+	   -z)
+			compileroptions="$compileroptions $2"; shift 2;;
 
-   -l)
-        linkeroptions="$linkeroptions $2"; shift 2;;
+	   -l)
+			linkeroptions="$linkeroptions $2"; shift 2;;
 
-   -P)
-        configureoptions="$configureoptions --prefix=$2"; shift 2;;
+	   -P)
+			configureoptions="$configureoptions --prefix=$2"; shift 2;;
 
-   -C)
-        configureoptions="$configureoptions $2"; shift 2;;
+	   -C)
+			configureoptions="$configureoptions $2"; shift 2;;
 
-   -h)
-        usage
-        exit ${ERROR_EXIT_CODE};;
+	   -h)
+			usage
+			exit ${ERROR_EXIT_CODE};;
 
-   --)
-        shift; break;;
+	   --)
+			shift; break;;
 
-   *)
-       echo "unknown option $1"
-       usage
-       exit ${ERROR_EXIT_CODE};;
-   esac
-done
+	   *)
+		   echo "unknown option $1"
+		   usage
+		   exit ${ERROR_EXIT_CODE};;
+	   esac
+	done
+
+else
+	while getopts "p:c:x:dm:n:t:r:b:l:z:P:C:h" switch; do
+	   case $switch in
+	   p)
+			platform=$OPTARG;;
+
+	   c)
+			ccompiler=$OPTARG;;
+
+	   x)
+			cppcompiler=$OPTARG;;
+
+	   d)
+			debug=on;;
+
+	   m)
+			msgloader=$OPTARG;;
+
+	   n)
+			netaccessor=$OPTARG;;
+
+	   t)
+			transcoder=$OPTARG;;
+
+	   r)
+			thread=$OPTARG;;
+
+	   b)
+			bitsToBuild=$OPTARG;;
+
+	   z)
+			compileroptions="$compileroptions $OPTARG";;
+
+	   l)
+			linkeroptions="$linkeroptions $OPTARG";;
+
+	   P)
+			configureoptions="$configureoptions --prefix=$OPTARG";;
+
+	   C)
+			configureoptions="$configureoptions $OPTARG";;
+
+	   h)
+			usage
+			exit ${ERROR_EXIT_CODE};;
+
+	   *)
+		   echo "unknown option -$switch $OPTARG"
+		   usage
+		   exit ${ERROR_EXIT_CODE};;
+	   esac
+	done
+fi
 
 echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
@@ -243,7 +288,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin | qnx | interix)
+   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin | qnx | interix | mingw-msys)
        # platform has been recognized
        ;;
    *)
@@ -393,6 +438,9 @@ else
             exit ${ERROR_EXIT_CODE};;
         esac
         fi
+    elif test $platform = "mingw-msys"; then
+        threadingLibs=""
+        threadingDefines=""
     fi
 fi
 
@@ -473,6 +521,9 @@ case $transcoder in
        transcodingDefines="-DXML_USE_GNU_TRANSCODER -I/usr/local/include" ;;
    native)
  	if test $platform = "cygwin"; then
+ 	    TRANSCODER=Cygwin ;
+ 	    transcodingDefines="-DXML_USE_CYGWIN_TRANSCODER" ;
+ 	elif test $platform = "mingw-msys"; then
  	    TRANSCODER=Cygwin ;
  	    transcodingDefines="-DXML_USE_CYGWIN_TRANSCODER" ;
  	elif test $platform = "freebsd"; then
@@ -628,7 +679,7 @@ export CXX
 #
 # these defines are required when building the DLL
 #
-buildDefines="-DPROJ_XMLPARSER  -DPROJ_XMLUTIL  -DPROJ_PARSERS  -DPROJ_SAX4C  -DPROJ_SAX2  -DPROJ_DOM  -DPROJ_VALIDATORS"
+buildDefines="-DPROJ_XMLPARSER  -DPROJ_XMLUTIL  -DPROJ_PARSERS  -DPROJ_SAX4C  -DPROJ_SAX2  -DPROJ_DOM -DPROJ_DEPRECATED_DOM -DPROJ_VALIDATORS"
 
 CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $buildDefines $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines $bitstobuildDefines"
 export CXXFLAGS
