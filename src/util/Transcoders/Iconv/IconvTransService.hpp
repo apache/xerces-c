@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 23:30:38  abagchi
+ * Fixed the new class IconvLCPTranscoder functions. Tested on Linux only.
+ *
  * Revision 1.2  1999/12/18 00:22:32  roddey
  * Changes to support the new, completely orthagonal, transcoder architecture.
  *
@@ -100,8 +103,9 @@ public :
 
     virtual bool isSpace(const XMLCh toCheck) const;
 
-    virtual XMLTranscoder* makeNewLCPTranscoder();
+    virtual XMLLCPTranscoder* makeNewLCPTranscoder();
 
+    virtual void upperCase(XMLCh* const toUpperCase) const;
 
 protected :
     // -----------------------------------------------------------------------
@@ -172,8 +176,8 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    IconvTranscoder();
-    ~IconvTranscoder();
+    IconvLCPTranscoder();
+    ~IconvLCPTranscoder();
 
 
     // -----------------------------------------------------------------------

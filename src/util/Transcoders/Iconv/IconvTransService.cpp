@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/05 23:30:38  abagchi
+ * Fixed the new class IconvLCPTranscoder functions. Tested on Linux only.
+ *
  * Revision 1.6  1999/12/18 00:22:32  roddey
  * Changes to support the new, completely orthagonal, transcoder architecture.
  *
@@ -188,7 +191,7 @@ bool IconvTransService::isSpace(const XMLCh toCheck) const
 }
 
 
-XMLTranscoder* IconvTransService::makeNewLCPTranscoder()
+XMLLCPTranscoder* IconvTransService::makeNewLCPTranscoder()
 {
     // Just allocate a new transcoder of our type
     return new IconvLCPTranscoder;
@@ -215,22 +218,13 @@ IconvTransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
     return 0;
 }
 
-
-
-// ---------------------------------------------------------------------------
-//  IconvLCPTranscoder: Constructors and Destructor
-// ---------------------------------------------------------------------------
-IconvLCPTranscoder::IconvLCPTranscoder()
+void IconvTransService::upperCase(XMLCh* const toUpperCase) const
 {
+    towuppert(*toUpperCase);
 }
 
-IconvLCPTranscoder::~IconvLCPTranscoder()
-{
-}
-
-
 // ---------------------------------------------------------------------------
-//  IconvTranscoder: The virtual transcoder API
+//  IconvLCPTranscoder: The virtual transcoder API
 // ---------------------------------------------------------------------------
 unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText)
 {
@@ -450,69 +444,13 @@ bool IconvLCPTranscoder::transcode( const   char* const     toTranscode
 
 
 // ---------------------------------------------------------------------------
-//  IconvTranscoder: Constructors and Destructor
+//  IconvLCPTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-IconvTranscoder::IconvTranscoder()
+IconvLCPTranscoder::IconvLCPTranscoder()
 {
 }
 
-IconvTranscoder::~IconvTranscoder()
+IconvLCPTranscoder::~IconvLCPTranscoder()
 {
 }
-
-
-// ---------------------------------------------------------------------------
-//  IconvTranscoder: Implementation of the virtual transcoder API
-// ---------------------------------------------------------------------------
-XMLCh IconvTranscoder::transcodeOne(const   char* const     srcData
-                                    , const unsigned int    srcBytes
-                                    ,       unsigned int&   bytesEaten)
-{
-    wchar_t  toFill;
-    int eaten = ::mbtowc(&toFill, srcData, srcBytes);
-    if (eaten == -1)
-    {
-        bytesEaten = 0;
-        return 0;
-    }
-
-    // Return the bytes we ate and the resulting char.
-    bytesEaten = eaten;
-    return toFill;
-}
-
-
-unsigned int
-IconvTranscoder::transcodeXML(  const   char* const             srcData
-                                , const unsigned int            srcCount
-                                ,       XMLCh* const            toFill
-                                , const unsigned int            maxChars
-                                ,       unsigned int&           bytesEaten)
-{
-    //
-    //  For this one, because we have to maintain the offset table, we have
-    //  to do them one char at a time until we run out of source data.
-    //
-    unsigned int countIn = 0;
-    unsigned int countOut = 0;
-    while (countOut < maxChars)
-    {
-        wchar_t   oneWideChar;
-        const int bytesEaten =
-            ::mbtowc(&oneWideChar, &srcData[countIn], srcCount - countIn);
-
-        // We are done, so break out
-        if (bytesEaten == -1)
-            break;
-        toFill[countOut] = (XMLCh) oneWideChar;
-        countIn += (unsigned int) bytesEaten;
-        countOut++;
-    }
-
-    // Give back the counts of eaten and transcoded
-    bytesEaten = countIn;
-    return countOut;
-}
-
-
 
