@@ -201,17 +201,17 @@ inline XMLCh Base64::set3rdOctet(const XMLCh& b3, const XMLCh& b4)
 }
 
 inline void Base64::split1stOctet(const XMLCh& ch, XMLCh& b1, XMLCh& b2) {
-    b1 = ch >> 2;
+    b1 = ( ch & 0xff ) >> 2;
     b2 = ( ch & 0x3 ) << 4;
 }
 
 inline void Base64::split2ndOctet(const XMLCh& ch, XMLCh& b2, XMLCh& b3) {
-    b2 |= ch >> 4;  // combine with previous value
+    b2 |= ( ch & 0xff ) >> 4;  // combine with previous value  
     b3 = ( ch & 0xf ) << 2;
 }
 
 inline void Base64::split3rdOctet(const XMLCh& ch, XMLCh& b3, XMLCh& b4) {
-    b3 |= ch >> 6;  // combine with previous value 
+    b3 |= ( ch & 0xff) >> 6;  // combine with previous value 
     b4 = ( ch & 0x3f );
 }
 
