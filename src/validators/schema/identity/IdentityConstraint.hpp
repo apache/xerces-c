@@ -70,13 +70,12 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/RefVectorOf.hpp>
+#include <validators/schema/identity/IC_Field.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
 // ---------------------------------------------------------------------------
 class IC_Selector;
-class IC_Field;
-
 
 class VALIDATORS_EXPORT IdentityConstraint
 {
@@ -128,7 +127,7 @@ protected:
     // -----------------------------------------------------------------------
     IdentityConstraint(const XMLCh* const identityConstraintName,
                        const XMLCh* const elementName);
-    
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators
