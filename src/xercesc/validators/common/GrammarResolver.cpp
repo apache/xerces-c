@@ -57,6 +57,11 @@
 
 /*
  * $Log$
+ * Revision 1.23  2003/12/31 02:36:03  neilg
+ * Even if the resolver has no grammars, since all schema
+ * processors are aware of the schema-for-schemas, an XSModel
+ * should be produced.
+ *
  * Revision 1.22  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -535,9 +540,13 @@ XSModel *GrammarResolver::getXSModel()
             {
                 return fXSModel;
             }
-            else
+            else if (fGrammarPoolXSModel)
             {
                 return fGrammarPoolXSModel;
+            }
+            else
+            {
+                fXSModel = new (fMemoryManager) XSModel(0, this, fMemoryManager);
             }
         }
     }
@@ -546,6 +555,10 @@ XSModel *GrammarResolver::getXSModel()
     {      
         xsModel = new (fMemoryManager) XSModel(fXSModel, this, fMemoryManager);
         fXSModel = xsModel;             
+    }
+    else
+    {
+        fXSModel = new (fMemoryManager) XSModel(0, this, fMemoryManager);
     }
     return fXSModel; 
 }
