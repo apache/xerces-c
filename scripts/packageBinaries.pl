@@ -209,6 +209,7 @@ if ($platform eq "win64bit" )
     psystem ("mkdir $targetdir\\samples\\SEnumVal");
     psystem ("mkdir $targetdir\\samples\\CreateDOMDocument");
     psystem ("mkdir $targetdir\\samples\\PSVIWriter");
+    psystem ("mkdir $targetdir\\samples\\SCMPrint");
     psystem ("mkdir $targetdir\\scripts");
     psystem ("mkdir $targetdir\\doc");
     psystem ("mkdir $targetdir\\doc\\html");
@@ -446,7 +447,9 @@ if ($platform eq "win64bit" )
     psystem("del /f $targetdir\\samples\\CreateDOMDocument\\Makefile.in");
     psystem("copy /y $XERCESCROOT\\samples\\PSVIWriter\\* $targetdir\\samples\\PSVIWriter");
     psystem("del /f $targetdir\\samples\\PSVIWriter\\Makefile.in");
-    
+    psystem("copy /y $XERCESCROOT\\samples\\SCMPrint\\* $targetdir\\samples\\SCMPrint");
+    psystem("del /f $targetdir\\samples\\SCMPrint\\Makefile.in");
+        
     psystem("copy /y $XERCESCROOT\\samples\\data\\* $targetdir\\samples\\data");
 
     # Populate the scripts directory
@@ -569,6 +572,7 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     psystem ("mkdir $targetdir/samples/SEnumVal");
     psystem ("mkdir $targetdir/samples/CreateDOMDocument");
     psystem ("mkdir $targetdir/samples/PSVIWriter");    
+    psystem ("mkdir $targetdir/samples/SCMPrint");        
     psystem ("mkdir $targetdir/scripts");
     psystem ("mkdir $targetdir/doc");
     psystem ("mkdir $targetdir/doc/html");
@@ -857,7 +861,9 @@ if ($platform =~ m/Windows/  || ($platform =~ m/CYGWIN/ && !($opt_c =~ m/gcc/)))
     psystem("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
     psystem("cp -Rfv $XERCESCROOT/samples/PSVIWriter/* $targetdir/samples/PSVIWriter");
     psystem("rm -f $targetdir/samples/PSVIWriter/Makefile");
-    
+    psystem("cp -Rfv $XERCESCROOT/samples/SCMPrint/* $targetdir/samples/SCMPrint");
+    psystem("rm -f $targetdir/samples/SCMPrint/Makefile");
+        
     psystem("cp -Rfv $XERCESCROOT/samples/data/* $targetdir/samples/data");
 
     # Populate the scripts directory
@@ -1124,6 +1130,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     psystem ("mkdir $targetdir/samples/SEnumVal");
     psystem ("mkdir $targetdir/samples/CreateDOMDocument");
     psystem ("mkdir $targetdir/samples/PSVIWriter");    
+    psystem ("mkdir $targetdir/samples/SCMPrint");        
     psystem ("mkdir $targetdir/scripts");
     psystem ("mkdir $targetdir/doc");
     psystem ("mkdir $targetdir/doc/html");
@@ -1490,6 +1497,8 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     psystem("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/PSVIWriter/* $targetdir/samples/PSVIWriter");
     psystem("rm -f $targetdir/samples/PSVIWriter/Makefile");    
+    psystem("cp -Rf $XERCESCROOT/samples/SCMPrint/* $targetdir/samples/SCMPrint");
+    psystem("rm -f $targetdir/samples/SCMPrint/Makefile");        
     psystem("rm -f $targetdir/samples/Makefile");
 
     # Populate the scripts directory
