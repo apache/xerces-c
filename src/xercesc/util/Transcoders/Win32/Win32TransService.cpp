@@ -849,15 +849,10 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText
     if (!srcText)
         return 0;
 
-    unsigned charLen = ::mblen(srcText, MB_CUR_MAX);
-    if (charLen == -1)
+    int retVal = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, srcText, -1, NULL, 0);
+    if (retVal == -1)
         return 0;
-    else if (charLen != 0)
-        charLen = strlen(srcText)/charLen;
-
-    if (charLen == -1)
-        return 0;
-    return charLen;
+    return retVal;
 }
 
 
@@ -867,8 +862,8 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
     if (!srcText)
         return 0;
 
-    const unsigned int retVal = ::WideCharToMultiByte(CP_ACP, 0, srcText, -1, NULL, 0, NULL, NULL);
-    if (retVal == (unsigned int)-1)
+    int retVal = ::WideCharToMultiByte(CP_ACP, 0, srcText, -1, NULL, 0, NULL, NULL);
+    if (retVal == -1)
         return 0;
     return retVal;
 }
@@ -888,7 +883,7 @@ char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode)
 
         // Allocate a buffer of that size plus one for the null and transcode
         retVal = new char[neededLen + 1];
-        ::wcstombs(retVal, toTranscode, neededLen + 1);
+        ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, retVal, neededLen+1, NULL, NULL);
 
         // And cap it off anyway just to make sure
         retVal[neededLen] = 0;
@@ -915,7 +910,7 @@ char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode,
 
         // Allocate a buffer of that size plus one for the null and transcode
         retVal = (char*) manager->allocate((neededLen + 1) * sizeof(char)); //new char[neededLen + 1];
-        ::wcstombs(retVal, toTranscode, neededLen + 1);
+        ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, retVal, neededLen+1, NULL, NULL);
 
         // And cap it off anyway just to make sure
         retVal[neededLen] = 0;
@@ -949,7 +944,7 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode)
 
         // Allocate a buffer of that size plus one for the null and transcode
         retVal = new XMLCh[neededLen + 1];
-        ::mbstowcs(retVal, toTranscode, neededLen + 1);
+        ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)retVal, neededLen + 1);
 
         // Cap it off just to make sure. We are so paranoid!
         retVal[neededLen] = 0;
@@ -982,7 +977,7 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode,
 
         // Allocate a buffer of that size plus one for the null and transcode
         retVal = (XMLCh*) manager->allocate((neededLen + 1) * sizeof(XMLCh)); //new XMLCh[neededLen + 1];
-        ::mbstowcs(retVal, toTranscode, neededLen + 1);
+        ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)retVal, neededLen + 1);
 
         // Cap it off just to make sure. We are so paranoid!
         retVal[neededLen] = 0;
@@ -1015,7 +1010,7 @@ bool Win32LCPTranscoder::transcode( const   char* const     toTranscode
     }
 
     // This one has a fixed size output, so try it and if it fails it fails
-    if (::mbstowcs(toFill, toTranscode, maxChars + 1) == size_t(-1))
+    if ( size_t(-1) == ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, toTranscode, -1, (LPWSTR)toFill, maxChars + 1) )
         return false;
     return true;
 }
@@ -1040,7 +1035,7 @@ bool Win32LCPTranscoder::transcode( const   XMLCh* const    toTranscode
     }
 
     // This one has a fixed size output, so try it and if it fails it fails
-    if (::wcstombs(toFill, toTranscode, maxBytes + 1) == size_t(-1))
+    if ( size_t(-1) == ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR)toTranscode, -1, toFill, maxBytes + 1, NULL, NULL) )
         return false;
 
     // Cap it off just in case
