@@ -3,6 +3,152 @@
 
 <s1 title="Releases">
 
+<s2 title="&XercesCName; Latest Nightly Build">
+<table>
+    <tr>
+        <td>Date</td>
+        <td>Contributor</td>
+        <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2001-11-09</td>
+        <td>Carolyn Weiss</td>
+        <td>DOMIdTest/MemParse fix: Pulled the hardcoded encoding out of the document
+            itself and made it a #define to make it easier to support other encodings.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-09</td>
+        <td>Carolyn Weiss</td>
+        <td>DOMMemTest fix: Changed some literal values to their equivalent hex values
+            so they work correctly on both ascii and EBCDIC systems.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-09</td>
+        <td>Linda Swan</td>
+        <td>Bug Fix: maxChars in copyNString is more related to the target than the src.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-07</td>
+        <td>Tinny Ng</td>
+        <td>Performance: Create QName in ContentSpecNode only if it is a leaf/Any*/PCDataNode.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-07</td>
+        <td>Tinny Ng</td>
+        <td>Performance: move getRawName() to outer loop in DFAContentModel so that it
+            is called only once per outer loop.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-07</td>
+        <td>PeiYong Zhang</td>
+        <td>DatatypeValidator:<br/>
+             Support DateTimeValidator, <br/>
+             DateTimeDatatypeValidator, <br/>
+             DateDatatypeValidator, <br/>
+             TimeDatatypeValidator, <br/>
+             DayDatatypeValidator, <br/>
+             MonthDatatypeValidator, <br/>
+             MonthDayDatatypeValidator, <br/>
+             YearDatatypeValidator, <br/>
+             YearMonthDatatypeValidator, <br/>
+             DurationDatatypeValidator. <br/>
+             Add XMLDateTime.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-06</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 4644] Memory leak in schema traverser.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-02</td>
+        <td>Khaled Noaman</td>
+        <td>Schema: Add Identity Constraint(Key, KeyRef, Unique, Selector, Field, and Partial XPath Support). <br/>
+            Add XPathSymbols, <br/>
+            XPathMatcherStack, <br/>
+            XPathMatcher, <br/>
+            XPathException, <br/>
+            XercesXPath, <br/>
+            ValueStoreCache, <br/>
+            ValueStore, <br/>
+            IdentityConstraint, <br/>
+            IC_Unique, <br/>
+            IC_Selector, <br/>
+            IC_KeyRef, <br/>
+            IC_Key, <br/>
+            IC_Field, <br/>
+            FieldValueMap, <br/>
+            FieldActivator.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-02</td>
+        <td>Jason Stewart</td>
+        <td>[Bug 4133] --prefix not used properly in configure.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-01</td>
+        <td>Jason Stewart</td>
+        <td>[Bug 2730] Can't build xerces-c-1.5.1 with ICUMsgLoader.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-01</td>
+        <td>Jason Stewart</td>
+        <td>[Bug 4578] No documentation for XMLTranscoder.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-11-01</td>
+        <td>Tinny Ng</td>
+        <td>IDOM: Leak: should allocate the fNodeListPool with the overloaded new.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-29</td>
+        <td>Tinny Ng</td>
+        <td>Update samples doc to reflect the latest changes.  Also update runConfigure usage
+            in build doc to reflect the latest changes.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-26</td>
+        <td>PeiYong Zhang</td>
+        <td>Thread safe XMLFloat and XMLDouble.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-26</td>
+        <td>Tinny Ng</td>
+        <td>Update SAX standard web link.
+        </td>
+    </tr>
+
+</table>
+</s2>
+
 <s2 title="&XercesCName; Version 1.5.2: October 26, 2001">
 <table>
     <tr>
@@ -14,7 +160,7 @@
     <tr>
         <td>2001-10-26</td>
         <td>Khaled Noaman</td>
-        <td> Schema:<br/>
+        <td>Schema:<br/>
              Support group, <br/>
              attributeGroup, <br/>
              all, <br/>
@@ -53,7 +199,7 @@
     <tr>
         <td>2001-10-26</td>
         <td>Tinny Ng</td>
-        <td> Schema:<br/>
+        <td>Schema:<br/>
              Support xsi:type, <br/>
              Unique Particle Attribution Constraint Checking, <br/>
              anyAttribute in Scanner and Validator. <br/>
@@ -65,7 +211,7 @@
 
     <tr>
         <td>2001-10-25</td>
-        <td>Pei Yong Zhang</td>
+        <td>PeiYong Zhang</td>
         <td>XMLDeleterFor related functions and data are removed.  Replace with XMLRegisterCleanup.
         </td>
     </tr>
@@ -121,14 +267,14 @@
 
     <tr>
         <td>2001-10-24</td>
-        <td>Pei Yong Zhang</td>
-        <td>[Bug 4342] Memory leak is SAX parser during validation.
+        <td>PeiYong Zhang</td>
+        <td>[Bug 4342] Validator mutex is not deleted.
         </td>
     </tr>
 
     <tr>
         <td>2001-10-24</td>
-        <td>Pei Yong Zhang</td>
+        <td>PeiYong Zhang</td>
         <td>[Bug 3975] XMLPlatformUtils::Initialize() leaks memory after thousands of calls.
         </td>
     </tr>
@@ -646,14 +792,14 @@
 
     <tr>
         <td>2001-07-11</td>
-        <td>Pei Yong Zhang</td>
+        <td>PeiYong Zhang</td>
         <td>Fix to normalizeWhiteSpace: synchronize fDatatypeBuffer with toFill.
         </td>
     </tr>
 
     <tr>
         <td>2001-07-05</td>
-        <td>Pei Yong Zhang</td>
+        <td>PeiYong Zhang</td>
         <td>Add ListDatatypeValidator and UnionDatatypeValidator.
         </td>
     </tr>
@@ -780,21 +926,21 @@
 
     <tr>
         <td>2001-07-05</td>
-        <td>Pei Yong Zhang</td>
+        <td>PeiYong Zhang</td>
         <td>Add NotationDatatypeValidator, QNameDatatypeValidator and ENTITYDatatypeValidator.
         </td>
     </tr>
 
     <tr>
         <td>2001-07-04</td>
-        <td>Pei Yong Zhang</td>
+        <td>PeiYong Zhang</td>
         <td>Add IDREFDatatypeValidator and IDDatatypeValidator.
         </td>
     </tr>
 
     <tr>
         <td>2001-07-04</td>
-        <td>Pei Yong Zhang</td>
+        <td>PeiYong Zhang</td>
         <td>XMLString:isValidName(): to validate Name (XML [4][5]).
         </td>
     </tr>
@@ -865,7 +1011,7 @@
 
     <tr>
         <td>2001-06-25</td>
-        <td>Pei Yong Zhang</td>
+        <td>PeiYong Zhang</td>
         <td>[Bug 1393] Converting from Unicode to iso8859.
         </td>
     </tr>
@@ -893,7 +1039,7 @@
 
     <tr>
         <td>2001-06-22</td>
-        <td>Pei Yong Zhang</td>
+        <td>PeiYong Zhang</td>
         <td>[Bug 2263] 'SIZE' : redefinition ( BooleanDatatypeValidator.cpp ).
         </td>
     </tr>
@@ -935,7 +1081,7 @@
 
     <tr>
         <td>2001-06-20</td>
-        <td>Pei Yong Zhang</td>
+        <td>PeiYong Zhang</td>
         <td>Proper Debug Guard: Reported by Dean.
         </td>
     </tr>
@@ -970,7 +1116,7 @@
 
     <tr>
         <td>2001-06-18</td>
-        <td>Khaled Noaman and Pei Yong Zhang</td>
+        <td>Khaled Noaman and PeiYong Zhang</td>
         <td>Add support for 'fixed' facet.
         </td>
     </tr>
@@ -1037,7 +1183,7 @@
     <tr>
         <td>2001-06-15</td>
         <td>Khaled Noaman</td>
-        <td> Schema:<br/>
+        <td>Schema:<br/>
              Add Regular Expression. <br/>
              Add Schema Messages. <br/>
              Add Schema Simple Type Support. <br/>
