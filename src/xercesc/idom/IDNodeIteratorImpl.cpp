@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/03/15 16:30:04  tng
+ * [Bug 6888] NodeIterator.  Retrofit this typo that was applied to Xerces-J, although this function "matchNodeOrParent" is not used in Xerces-C++....
+ *
  * Revision 1.2  2002/02/04 21:20:59  tng
  * Add DOM 2 Level missing functions:
  *   1. NodeIterator::getRoot
@@ -285,7 +288,7 @@ bool IDNodeIteratorImpl::acceptNode (IDOM_Node* node) {
 /** Return node, if matches or any parent if matches. */
 IDOM_Node* IDNodeIteratorImpl::matchNodeOrParent (IDOM_Node* node) {
 
-    for (IDOM_Node* n = node; n != fRoot; n = n->getParentNode()) {
+    for (IDOM_Node* n = fCurrentNode; n != fRoot; n = n->getParentNode()) {
         if (node == n) return n;
     }
 
