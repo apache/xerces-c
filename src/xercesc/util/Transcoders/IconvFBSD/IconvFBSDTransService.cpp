@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/02/25 08:15:42  gareth
+ * Patch to fix compile problem in bug #17358. Patch by Michael Cahill.
+ *
  * Revision 1.7  2002/12/31 18:42:43  tng
  * [Bug 15608] IconvLCPTranscoder::transcode() is wrong at wcstombs() usage.
  *
@@ -102,8 +105,6 @@
 # include <iconv.h>
 # include <errno.h>
 # include <machine/endian.h>
-
-XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 // Description of encoding schemas, supported by iconv()
@@ -208,6 +209,8 @@ static const IconvFBSDEncoding    gIconvFBSDEncodings[] = {
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Local, const data
@@ -1563,6 +1566,6 @@ bool        IconvFBSDTranscoder::canTranscodeTo
     return (rc != (size_t)-1) && (len == 0);
 }
 
-XERCES_CPP_NAMESPACE_END
-
 #endif /* XML_USE_LIBICONV */
+
+XERCES_CPP_NAMESPACE_END
