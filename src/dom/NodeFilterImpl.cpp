@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:12  twl
- * Initial revision
+ * Revision 1.2  1999/11/20 00:56:39  rahulj
+ * Source files must end with an un-escaped newline.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:12  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:29  rahul
  * Swat for adding in Product name and CVS comment log variable.

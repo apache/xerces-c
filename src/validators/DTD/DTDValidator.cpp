@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:03:35  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 20:24:45  roddey
+ * Fixes for incorrect deletion of temporary decl objects, which would cause
+ * a double delete when the parser is deleted.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:03:35  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:45:40  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -579,7 +583,10 @@ DTDValidator::validateAttrValue(const   XMLAttDef&      attDef
 
     // An empty string cannot be valid for any of the other types
     if (!attrValue[0])
+    {
         emitError(XML4CValid::InvalidEmptyAttValue, fullName);
+        return;
+    }
 
     // See whether we are doing multiple values or not
     const bool multipleValues =

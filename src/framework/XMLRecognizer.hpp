@@ -56,8 +56,11 @@
 
 /**
  *  $Log$
- *  Revision 1.1  1999/11/09 01:08:37  twl
- *  Initial revision
+ *  Revision 1.2  1999/11/23 01:49:27  rahulj
+ *  Cannot use class qualifier in class defn. CC under HPUX is happy.
+ *
+ *  Revision 1.1.1.1  1999/11/09 01:08:37  twl
+ *  Initial checkin
  *
  *  Revision 1.2  1999/11/08 20:44:40  rahul
  *  Swat for adding in Product name and CVS comment log variable.
@@ -125,13 +128,13 @@ public :
     // -----------------------------------------------------------------------
     //  Encoding recognition methods
     // -----------------------------------------------------------------------
-    static XMLRecognizer::Encodings basicEncodingProbe
+    static Encodings basicEncodingProbe
     (
         const   XMLByte* const      rawBuffer
         , const unsigned int        rawByteCount
     );
 
-    static XMLRecognizer::Encodings encodingForName
+    static Encodings encodingForName
     (
         const   XMLCh* const    theEncName
     );

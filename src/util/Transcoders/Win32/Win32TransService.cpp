@@ -56,8 +56,14 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:06:04  twl
- * Initial revision
+ * Revision 1.2  1999/12/01 18:54:26  roddey
+ * Small syntactical change to make it compile under Borland's compiler.
+ * It does not make it worse under other compilers, so why not. Basically
+ * it was just changing ::iswspace() to iswspace(), i.e. get rid of the ::
+ * prefix, which freaked out Borland for some reason.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:06:04  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:35  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -102,7 +108,7 @@ int Win32TransService::compareNIString( const   XMLCh* const    comp1
 
 bool Win32TransService::isSpace(const XMLCh toCheck) const
 {
-    return (::iswspace(toCheck) != 0);
+    return (iswspace(toCheck) != 0);
 }
 
 XMLTranscoder* Win32TransService::makeNewDefTranscoder()

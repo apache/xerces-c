@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:50  twl
- * Initial revision
+ * Revision 1.2  1999/11/23 01:48:14  rahulj
+ * Changed 0L to 0. CC under HPUX is happy now.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:50  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:44:15  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -203,32 +206,32 @@ DOM_NodeIterator       DOM_Document::createNodeIterator(DOM_Node root, short wha
 };
 
 
-DOM_TreeWalker         DOM_Document::createTreeWalker(DOM_Node root, short whatToShow, DOM_NodeFilter filter) {
-        return DOM_TreeWalker(DocumentImpl::createTreeWalker(root, whatToShow, filter, 0L));
+DOM_TreeWalker DOM_Document::createTreeWalker(DOM_Node root, short whatToShow, DOM_NodeFilter filter) {
+	return DOM_TreeWalker(DocumentImpl::createTreeWalker(root, whatToShow, filter, 0L));
 };
 
 
-DOM_NodeIterator       DOM_Document::createNodeIterator(DOM_Node root, short whatToShow, NodeFilterImpl* filterThatWillBeAdopted) {
-        return DOM_NodeIterator(DocumentImpl::createNodeIterator(root, whatToShow, 0L, filterThatWillBeAdopted));
+DOM_NodeIterator DOM_Document::createNodeIterator(DOM_Node root, short whatToShow, NodeFilterImpl* filterThatWillBeAdopted) {
+	return DOM_NodeIterator(DocumentImpl::createNodeIterator(root, whatToShow, 0, filterThatWillBeAdopted));
 };
 
 
-DOM_TreeWalker         DOM_Document::createTreeWalker(DOM_Node root, short whatToShow, NodeFilterImpl* filterThatWillBeAdopted) {
-        return DOM_TreeWalker(DocumentImpl::createTreeWalker(root, whatToShow, 0L, filterThatWillBeAdopted));
+DOM_TreeWalker DOM_Document::createTreeWalker(DOM_Node root, short whatToShow, NodeFilterImpl* filterThatWillBeAdopted) {
+	return DOM_TreeWalker(DocumentImpl::createTreeWalker(root, whatToShow, 0, filterThatWillBeAdopted));
 };
 
 
 
-DOM_NodeList           DOM_Document::getElementsByTagName(const DOMString &tagname) const  {
-        return DOM_NodeList(((DocumentImpl *)fImpl)->getElementsByTagName(tagname));
+DOM_NodeList DOM_Document::getElementsByTagName(const DOMString &tagname) const  {
+	return DOM_NodeList(((DocumentImpl *)fImpl)->getElementsByTagName(tagname));
 };
 
 
 //Introduced in DOM Level 2
 
-DOM_Node               DOM_Document::importNode(const DOM_Node &source, bool deep)
+DOM_Node DOM_Document::importNode(const DOM_Node &source, bool deep)
 {
-        return DOM_Node(((DocumentImpl *)fImpl)->importNode(source.fImpl, deep));
+	return DOM_Node(((DocumentImpl *)fImpl)->importNode(source.fImpl, deep));
 };
 
 

@@ -56,8 +56,14 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:05:35  twl
- * Initial revision
+ * Revision 1.3  1999/12/01 17:16:16  rahulj
+ * Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
+ *
+ * Revision 1.2  1999/11/10 02:02:51  abagchi
+ * Changed version numbers
+ *
+ * Revision 1.1.1.1  1999/11/09 01:05:35  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:45:19  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -74,10 +80,10 @@
 //  These are updated for every build. They must be at the top because they
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
-#define XML4C_DLLVersionStr "3_0"
-static const char* const    gXML4CVersionStr = "3_0";
-static const char* const    gXML4CFullVersionStr = "3_0_0";
-static const unsigned int   gXML4CMajVersion = 3;
+#define XML4C_DLLVersionStr "1_0"
+static const char* const    gXML4CVersionStr = "1_0";
+static const char* const    gXML4CFullVersionStr = "1_0_0";
+static const unsigned int   gXML4CMajVersion = 1;
 static const unsigned int   gXML4CMinVersion = 0;
 static const unsigned int   gXML4CRevision   = 0;
 
@@ -108,6 +114,10 @@ static const unsigned int   gXML4CRevision   = 0;
 
 #if defined(XML_HPUX)
 #include    <util/Platforms/HPUX/HPUXDefs.hpp>
+#endif
+
+#if defined(XML_IRIX)
+#include    <util/Platforms/IRIX/IRIXDefs.hpp>
 #endif
 
 #if defined(XML_TANDEM)
@@ -162,6 +172,10 @@ static const unsigned int   gXML4CRevision   = 0;
 
 #if defined(XML_HPUX_CC) || defined(XML_HPUX_aCC) || defined(XML_HPUX_KAICC)
 #include    <util/Compilers/HPCCDefs.hpp>
+#endif
+
+#if defined(XML_MIPSPRO_CC)
+#include    <util/Compilers/MIPSproDefs.hpp>
 #endif
 
 #if defined(XML_TANDEMCC)

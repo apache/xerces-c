@@ -56,8 +56,18 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:06:31  twl
- * Initial revision
+ * Revision 1.3  1999/12/02 23:07:13  aruna1
+ * Solaris Atomic Mutex initailization changed to native calls
+ *
+ * Revision 1.2  1999/11/19 23:50:56  aruna1
+ * added changes for platformInit and makeTransService functions
+ * PR:
+ * Obtained from:
+ * Submitted by:
+ * Reviewed by:
+ *
+ * Revision 1.1.1.1  1999/11/09 01:06:31  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:45:32  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -147,7 +157,8 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
-static XMLMutex atomicOpsMutex;
+
+static mutex_t* gAtomicOpMutex =0 ;
 
 void XMLPlatformUtils::platformInit()
 {
@@ -156,7 +167,78 @@ void XMLPlatformUtils::platformInit()
     // Normally, mutexes are created on first use, but there is a
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
-    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+    gAtomicOpMutex = new mutex_t;	
+    if (mutex_init(gAtomicOpMutex, NULL, NULL))
+    {
+	printf("atomicOpMutex not created \n");
+	exit(1);
+        //panic( XMLPlatformUtils::Panic_MutexInit ); //to be changed later
+    }
+
+    // Here you would also set the fgLibLocation global variable
+    // XMLPlatformUtils::fgLibLocation is the variable to be set
+
+    static const char *sharedLibEnvVar = "LD_LIBRARY_PATH";
+    static const char * libraryPath = 0;
+
+    char libName[256];
+
+    // Construct the library name from the global variables
+    strcpy(libName, XML4C_DLLName);
+    strcat(libName, gXML4CVersionStr);
+    strcat(libName, ".so");
+
+    char* libEnvVar = getenv(sharedLibEnvVar);
+    char* libPath = NULL;
+
+    if (libEnvVar == NULL)
+    {
+        panic( XMLPlatformUtils::Panic_NoTransService );
+    }
+
+    //
+    // Its necessary to create a copy because strtok() modifies the
+    // string as it returns tokens. We don't want to modify the string
+    // returned to by getenv().
+
+    libPath = new char[strlen(libEnvVar) + 1];
+    strcpy(libPath, libEnvVar);
+
+    // First do the searching process for the first directory listing
+    char*  allPaths = libPath;
+    char*  libPathName;
+
+    while ((libPathName = strtok(allPaths, ":")) != NULL)
+    {
+        FILE*  dummyFptr = 0;
+        allPaths = 0;
+
+        char* libfile = new char[strlen(libPathName) + strlen(libName) + 2];
+        strcpy(libfile, libPathName);
+        strcat(libfile, "/");
+        strcat(libfile, libName);
+
+        dummyFptr = (FILE *) fopen(libfile, "rb");
+        delete [] libfile;
+        if (dummyFptr != NULL)
+        {
+            fclose(dummyFptr);
+            libraryPath = new char[strlen(libPathName)+1];
+            strcpy((char *) libraryPath, libPathName);
+            break;
+        }
+
+    }
+
+    delete libPath;
+
+    XMLPlatformUtils::fgLibLocation = libraryPath;
+
+    if (XMLPlatformUtils::fgLibLocation == NULL)
+    {
+        panic( XMLPlatformUtils::Panic_NoTransService );
+     }
+
 }
 
 
@@ -197,23 +279,22 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 //
 
 XMLTransService* XMLPlatformUtils::makeTransService()
-{
 
 #if defined (XML_USE_ICU_TRANSCODER)
+{
     //
-    //  We need to figure out the path to the Intl classes. They will be
-    //  in the ./Intl subdirectory under this DLL.
+    //  We need to figure out the path to the Intl converter files.
     //
 
     static const char * xml4cIntlDirEnvVar = "ICU_DATA";
-    char * intlPath = 0;
+    static const char * sharedLibEnvVar    = "LD_LIBRARY_PATH";
+    static const char * intlPath = 0;
 
     char* envVal = getenv(xml4cIntlDirEnvVar);
-    //
-    // Check if environment variable is set
-    //
-    if (envVal != NULL)         // We have found an environment variable
+    //check if environment variable is set
+    if (envVal != NULL) // We have found an environment variable
     {
+        // Store this string in the static member
         unsigned int pathLen = strlen(envVal);
         intlPath = new char[pathLen + 2];
 
@@ -224,81 +305,86 @@ XMLTransService* XMLPlatformUtils::makeTransService()
         }
 
         ICUTransService::setICUPath(intlPath);
-        if (intlPath != NULL) delete intlPath;
+        if (intlPath != NULL) delete (char*)intlPath;
 
         return new ICUTransService;
     }
 
-    //
+
     //  If we did not find the environment var, so lets try to go the auto
     //  search route.
     //
-
     char libName[256];
     strcpy(libName, XML4C_DLLName);
     strcat(libName, gXML4CVersionStr);
     strcat(libName, ".so");
 
-    void* handle = NULL;
-    handle = dlopen(libName, RTLD_LAZY);
-    if (!handle)
+    char* libEnvVar = getenv(sharedLibEnvVar);
+    char* libPath = NULL;
+
+    if (libEnvVar == NULL)
     {
-        char errorBuffer[1024];
-        sprintf(errorBuffer,
-                "Fatal error: Could not open library '%s'", libName);
-        perror (errorBuffer);
-        panic(XMLPlatformUtils::Panic_NoTransService);
+        panic( XMLPlatformUtils::Panic_NoTransService );
     }
 
-    int       ret = 0;
-    Link_map *firstLib   = NULL;
+    //
+    // Its necessary to create a copy because strtok() modifies the
+    // string as it returns tokens. We don't want to modify the string
+    // returned to by getenv().
+    //
 
-    ret = dlinfo(handle, RTLD_DI_LINKMAP, (void*) &firstLib);
-    Link_map* nextLib = NULL;
-    nextLib = firstLib;
+    libPath = new char[strlen(libEnvVar) + 1];
+    strcpy(libPath, libEnvVar);
 
-    while (nextLib)
+    // First do the searching process for the first directory listing
+    char*  allPaths = libPath;
+    char*  libPathName;
+
+    while ((libPathName = strtok(allPaths, ":")) != NULL)
     {
-        char* fileName = nextLib->l_name;
-        if (strstr(fileName, libName) != NULL)
+        FILE*  dummyFptr = 0;
+        allPaths = 0;
+
+        char* libfile = new char[strlen(libPathName) + strlen(libName) + 2];
+        strcpy(libfile, libPathName);
+        strcat(libfile, "/");
+        strcat(libfile, libName);
+
+        dummyFptr = (FILE *) fopen(libfile, "rb");
+        delete [] libfile;
+        if (dummyFptr != NULL)
         {
-            char* copyTo = strrchr(fileName, '/');
-            size_t chars_to_extract = copyTo - fileName;
-            char *libPathName = new char[chars_to_extract + 1];
-            strncpy(libPathName, fileName, chars_to_extract);
-            libPathName[chars_to_extract] = 0;
-            fgIntlPath = new char[strlen(libPathName)+ strlen("/icu/data/")+1];
-            strcpy((char *) fgIntlPath, libPathName);
-            strcat((char *) fgIntlPath, "/icu/data/");
-            delete libPathName;
+            fclose(dummyFptr);
+            intlPath = new char[strlen(libPathName)+ strlen("/icu/data/")+1];
+            strcpy((char *) intlPath, libPathName);
+            strcat((char *) intlPath, "/icu/data/");
             break;
         }
-        nextLib = nextLib->l_next;
-    }
 
-    if (fgIntlPath == NULL)
+    } // while
+
+    delete libPath;
+
+    ICUTransService::setICUPath(intlPath);
+
+    if (intlPath == NULL)
     {
-        fprintf(stderr,
-                "Fatal error: Could not find /icu/data relative to %s \n",
-                libName);
-        fprintf(stderr, 
-                "             while trying to auto detect the location ");
-        fprintf(stderr, "of the converter files.\n");
-        fprintf(stderr,
-                "             And the environment variable 'ICU_DATA' is ");
-        fprintf(stderr, "not defined.\n");
-        panic(XMLPlatformUtils::Panic_NoTransService);
+        panic( XMLPlatformUtils::Panic_NoTransService );
     }
+    if (intlPath != NULL) delete (char*)intlPath;
 
-    ICUTransService::setICUPath(fgIntlPath);
     return new ICUTransService;
-
+}
+#elif defined (XML_USE_ICONV_TRANSCODER)
+{
+    return new IconvTransService;
+}
 #else // Use Native transcoding service
-
+{
     return new IconvTransService;
 
-#endif
 }
+#endif
 
 
 // ---------------------------------------------------------------------------
@@ -564,13 +650,23 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
     // the below calls are temporarily made till the above functions are part of user library
     // Currently its supported only in the kernel mode
 
-    lockMutex(&atomicOpsMutex);
+    if (mutex_lock( gAtomicOpMutex))
+    {
+	printf("could not lock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
 
     void *retVal = *toFill;
     if (*toFill == toCompare)
               *toFill = (void *)newValue;
 
-    unlockMutex(&atomicOpsMutex);
+    if (mutex_unlock( gAtomicOpMutex))
+    {
+	printf("could not unlock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
 
     return retVal;
 }
@@ -578,16 +674,41 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
 int XMLPlatformUtils::atomicIncrement(int &location)
 {
     //return (int)atomic_add_32_nv( (uint32_t*)&location, 1);
-    XMLMutexLock localLock(&atomicOpsMutex);
 
-    return ++location;
+    if (mutex_lock( gAtomicOpMutex))
+    {
+	printf("could not lock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
+    int tmp = ++location;
+    if (mutex_unlock( gAtomicOpMutex))
+    {
+	printf("could not unlock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
+    return tmp;
 }
 int XMLPlatformUtils::atomicDecrement(int &location)
 {
     //return (int)atomic_add_32_nv( (uint32_t*)&location, -1);
-    XMLMutexLock localLock(&atomicOpsMutex);
 
-    return --location;
+    if (mutex_lock( gAtomicOpMutex))
+    {
+	printf("could not lock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
+	
+    int tmp = --location;
+    if (mutex_unlock( gAtomicOpMutex))
+    {
+	printf("could not unlock atomicOpMutex\n");
+	exit(1);
+	//call panic instead
+    }
+    return tmp;
 }
 
 #else // #if !defined (APP_NO_THREADS)

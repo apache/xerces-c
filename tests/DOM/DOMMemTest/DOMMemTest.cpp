@@ -66,8 +66,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:02:43  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:02:25  andyh
+ * DOM tests updated to catch DOMException by ref.
+ * Added tests of DOMString::transcode() and append()
+ *
+ * Revision 1.1.1.1  1999/11/09 01:02:43  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:24  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -75,10 +79,11 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <dom/DOM.hpp>
 #include <dom/DomMemDebug.hpp>
 #include <util/PlatformUtils.hpp>
-#include <util/Exception.hpp>
+#include <util/XMLException.hpp>
 #include <util/StdOut.hpp>
 
 
@@ -653,10 +658,9 @@ void main()
              DOM_Element el = doc.createElement("!@@ bad element name");
              TASSERT(false);  // Exception above should prevent us reaching here.
          }
-         catch ( DOM_DOMException *e)
+         catch ( DOM_DOMException &e)
          {
-             TASSERT(e->code == DOM_DOMException::INVALID_CHARACTER_ERR);
-             delete e;
+             TASSERT(e.code == DOM_DOMException::INVALID_CHARACTER_ERR);
          }
          catch (...)
          {
@@ -717,6 +721,33 @@ void main()
     }
     TESTEPILOG;
 
+
+	//
+	// Minimal test of DOMString::transcode()
+	//
+	TESTPROLOG;
+	{
+		static char testStr[] = "This is our test string.";
+
+		DOMString DOMTestStr = testStr;
+		char *roundTripString = DOMTestStr.transcode();
+		TASSERT(strcmp(testStr, roundTripString) == 0);
+		delete roundTripString;
+	}
+    TESTEPILOG;
+
+
+    //
+    //  String bug submitted by David Chung
+    //
+	TESTPROLOG;
+	{
+        DOMString greeting("hello");
+        greeting.appendData(greeting);
+        TASSERT(greeting.equals("hellohello"));
+        greeting.println();
+    }
+    TESTEPILOG;
 
     //
     //  Print Final allocation stats for full test

@@ -56,8 +56,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:03  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:11:23  andyh
+ * Added DOMString.clone() to node parameters in and out of the DOM,
+ * where they had been missed.
+ *
+ * DOMString::rawBuffer, removed incorrect assumptions about it
+ * being null terminated.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:03  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:21  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -111,19 +118,19 @@ DOM_ProcessingInstruction & DOM_ProcessingInstruction::operator = (const DOM_Nul
 
 DOMString DOM_ProcessingInstruction::getTarget() const
 {
-    return ((ProcessingInstructionImpl *)fImpl)->getTarget();
+    return ((ProcessingInstructionImpl *)fImpl)->getTarget().clone();
 };
 
 
 DOMString DOM_ProcessingInstruction::getData() const
 {
-    return ((ProcessingInstructionImpl *)fImpl)->getData();
+    return ((ProcessingInstructionImpl *)fImpl)->getData().clone();
 };
 
 
 void      DOM_ProcessingInstruction::setData(const DOMString &data)
 {
-    ((ProcessingInstructionImpl *)fImpl)->setData(data);
+    ((ProcessingInstructionImpl *)fImpl)->setData(data.clone());
 };
 
 

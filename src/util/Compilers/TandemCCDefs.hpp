@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:40  twl
- * Initial revision
+ * Revision 1.3  1999/11/12 20:37:03  rahulj
+ * Changed library name to xerces-c.lib.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:40  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:25  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -117,4 +120,4 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 // ---------------------------------------------------------------------------
 //  The name of the library that is built by the Tandem version of the system.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "libIXXML4C";
+const char* const XML4C_DLLName = "libxerces-c";

@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:02:34  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:02:25  andyh
+ * DOM tests updated to catch DOMException by ref.
+ * Added tests of DOMString::transcode() and append()
+ *
+ * Revision 1.1.1.1  1999/11/09 01:02:34  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:24  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -76,8 +80,12 @@
  
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:02:34  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:02:25  andyh
+ * DOM tests updated to catch DOMException by ref.
+ * Added tests of DOMString::transcode() and append()
+ *
+ * Revision 1.1.1.1  1999/11/09 01:02:34  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:24  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -87,7 +95,7 @@
 #include <stdio.h>
 #include "DTest.h"
 #include <util/PlatformUtils.hpp>
-#include <util/Exception.hpp>
+#include <util/XMLException.hpp>
 #include <util/StdOut.hpp>
 
 
@@ -98,9 +106,9 @@
             operation;                                              \
             fprintf(stderr, "Exceptions Test # %d: no Exception thrown.\n", testNum); \
         }                                                           \
-        catch (DOM_DOMException *e)                                 \
+        catch (DOM_DOMException &e)                                 \
         {                                                           \
-            if (e->code != expectedException) {                      \
+            if (e.code != expectedException) {                      \
                 fprintf(stderr, "Exceptions Test # %d: wrong DOM_DOMException thrown.\n", \
                     testNum);                                       \
                 resultFlag = false;                                 \

@@ -56,8 +56,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:52  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:11:23  andyh
+ * Added DOMString.clone() to node parameters in and out of the DOM,
+ * where they had been missed.
+ *
+ * DOMString::rawBuffer, removed incorrect assumptions about it
+ * being null terminated.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:52  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:16  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -107,7 +114,7 @@ DOM_DocumentType & DOM_DocumentType::operator = (const DOM_NullPtr *other)
 
 DOMString       DOM_DocumentType::getName() const
 {
-        return ((DocumentTypeImpl *)fImpl)->getName();
+        return ((DocumentTypeImpl *)fImpl)->getName().clone();
 };
 
 
@@ -129,17 +136,17 @@ DOM_NamedNodeMap DOM_DocumentType::getNotations() const
 
 DOMString     DOM_DocumentType::getPublicID() const
 {
-        return ((DocumentTypeImpl *)fImpl)->getPublicID();
+        return ((DocumentTypeImpl *)fImpl)->getPublicID().clone();
 }
 
 
 DOMString     DOM_DocumentType::getSystemID() const
 {
-        return ((DocumentTypeImpl *)fImpl)->getSystemID();
+        return ((DocumentTypeImpl *)fImpl)->getSystemID().clone();
 }
 
 
 DOMString     DOM_DocumentType::getInternalSubset() const
 {
-        return ((DocumentTypeImpl *)fImpl)->getInternalSubset();
+        return ((DocumentTypeImpl *)fImpl)->getInternalSubset().clone();
 }

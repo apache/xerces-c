@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:56  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 21:16:25  roddey
+ * Changes to add the transcode() method to DOMString, which returns a transcoded
+ * version (to local code page) of the DOM string contents. And I changed all of the
+ * exception 'throw by pointer' to 'throw by value' style.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:56  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:15  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -155,7 +160,7 @@ DOM_DocumentType DOM_DOMImplementation::createDocumentType(const DOMString &qual
 	const DOMString &internalSubset)
 {
     if (!DocumentImpl::isXMLName(qualifiedName))
-        throw new DOM_DOMException(
+        throw DOM_DOMException(
         DOM_DOMException::INVALID_CHARACTER_ERR, null);
     
     return DOM_DocumentType(new DocumentTypeImpl(qualifiedName, publicID, systemID, internalSubset));

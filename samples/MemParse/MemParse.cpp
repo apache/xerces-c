@@ -64,8 +64,11 @@
  * on parameters to the constructor.
  *
  * $Log$
- * Revision 1.1  1999/11/09 01:09:49  twl
- * Initial revision
+ * Revision 1.2  1999/11/20 01:09:55  rahulj
+ * Fixed usage message.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:49  twl
+ * Initial checkin
  *
  * Revision 1.7  1999/11/08 20:43:36  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -126,7 +129,7 @@ static const char*  gMemBufId = "prodInfo";
 void usage()
 {
     cout << "\nUsage:\n"
-         << "    MemParse [-nv]\n"
+         << "    MemParse [-v]\n"
          << "This program uses the SAX Parser to parse a memory buffer\n"
          << "containing XML statements, and reports the number of\n"
          << "elements and attributes found.\n"

@@ -55,8 +55,12 @@
 # 
 #
 # $Log$
-# Revision 1.1  1999/11/09 01:08:26  twl
-# Initial revision
+# Revision 1.2  1999/11/23 01:59:47  rahulj
+# Code now works under HPUX 11. Tested inmemory message loader.
+Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
+#
+# Revision 1.1.1.1  1999/11/09 01:08:26  twl
+# Initial checkin
 #
 # Revision 1.5  1999/11/08 20:44:34  rahul
 # Swat for adding in Product name and CVS comment log variable.
@@ -64,7 +68,8 @@
 #
 
 PLATFORM = @platform@
-COMPILER = @compiler@
+CC  = @cc@
+CXX = @cxx@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
@@ -139,9 +144,6 @@ distclean:	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE) header files ..."
 	@for file in $(FRAMEWORK_CPP_PUBHEADERS); do \
-	rm -f $(XML_INC_DIR)/$(MODULE)/$$file; \
-	done
-	@for file in $(FRAMEWORK_C_FILES); do \
 	rm -f $(XML_INC_DIR)/$(MODULE)/$$file; \
 	done
 	@echo "Removing all $(MODULE) object files ..."

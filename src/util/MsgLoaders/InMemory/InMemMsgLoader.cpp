@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:07:19  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:48:47  rahulj
+ * Removed byteswapping logic as its not needed for InMemory message loading.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:19  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:45:26  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -123,11 +126,7 @@ bool InMemMsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
         const XMLCh* srcPtr = gXMLErrArray[msgToLoad - 1];
         while (*srcPtr && (outPtr < endPtr))
         {
-            #if defined(ENDIANMODE_LITTLE)
             *outPtr++ = *srcPtr++;
-            #else
-            *outPtr++ = BitOps::swapBytes(*srcPtr++);
-            #endif
         }
         *outPtr = 0;
     }
@@ -136,11 +135,7 @@ bool InMemMsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
         const XMLCh* srcPtr = gXMLExceptArray[msgToLoad - 1];
         while (*srcPtr && (outPtr < endPtr))
         {
-            #if defined(ENDIANMODE_LITTLE)
             *outPtr++ = *srcPtr++;
-            #else
-            *outPtr++ = BitOps::swapBytes(*srcPtr++);
-            #endif
         }
         *outPtr = 0;
     }
@@ -149,11 +144,7 @@ bool InMemMsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
         const XMLCh* srcPtr = gXMLValidityArray[msgToLoad - 1];
         while (*srcPtr && (outPtr < endPtr))
         {
-            #if defined(ENDIANMODE_LITTLE)
             *outPtr++ = *srcPtr++;
-            #else
-            *outPtr++ = BitOps::swapBytes(*srcPtr++);
-            #endif
         }
         *outPtr = 0;
     }

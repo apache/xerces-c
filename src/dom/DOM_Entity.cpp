@@ -56,8 +56,15 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:57  twl
- * Initial revision
+ * Revision 1.2  1999/12/03 00:11:23  andyh
+ * Added DOMString.clone() to node parameters in and out of the DOM,
+ * where they had been missed.
+ *
+ * DOMString::rawBuffer, removed incorrect assumptions about it
+ * being null terminated.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:57  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:17  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -107,18 +114,18 @@ DOM_Entity & DOM_Entity::operator = (const DOM_NullPtr *other)
 
 DOMString  DOM_Entity::getPublicId() const
 {
-        return ((EntityImpl *)fImpl)->getPublicId();
+        return ((EntityImpl *)fImpl)->getPublicId().clone();
 };
 
 DOMString  DOM_Entity::getSystemId() const
 {
-        return ((EntityImpl *)fImpl)->getSystemId();
+        return ((EntityImpl *)fImpl)->getSystemId().clone();
 };
 
 
 DOMString  DOM_Entity::getNotationName() const
 {
-        return ((EntityImpl *)fImpl)->getNotationName();
+        return ((EntityImpl *)fImpl)->getNotationName().clone();
 };
 
 
