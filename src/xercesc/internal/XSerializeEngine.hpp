@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/09/19 04:29:11  neilg
+ * fix compilation problems under GCC
+ *
  * Revision 1.1  2003/09/18 18:31:24  peiyongz
  * OSU: Object Serialization Utilities
  *
@@ -512,7 +515,7 @@ private:
 
     inline XSerializeEngine::XSerializedObjectId_t getValue() const {return fData; };
 
-    friend XSerializeEngine;
+    friend class XSerializeEngine;
 
 private:
     // -----------------------------------------------------------------------
