@@ -618,17 +618,21 @@ void XMLString::subString(char* const targetStr, const char* const srcStr
   */
 bool XMLString::isValidNCName(const XMLCh* const name) {
 
-    if ( !name || !*name )
+    if (XMLString::stringLen(name) == 0
+        || XMLString::indexOf(name, chColon) != -1) {
         return false;
+    }
 
     const XMLCh* tempName = name;
     XMLCh firstChar = *tempName++;
 
     if (!XMLReader::isXMLLetter(firstChar) && firstChar != chUnderscore) {
+
         return false;
     }
 
     while(*tempName) {
+
         if (*tempName == chColon || !XMLReader::isNameChar(*tempName++)) {
             return false;
         }
@@ -646,7 +650,7 @@ bool XMLString::isValidNCName(const XMLCh* const name) {
   */
 bool XMLString::isValidName(const XMLCh* const name) {
 
-    if (!name || !*name)
+    if (XMLString::stringLen(name) == 0)
         return false;
 
     const XMLCh* tempName = name;
@@ -673,7 +677,7 @@ bool XMLString::isValidName(const XMLCh* const name) {
 bool XMLString::isValidEncName(const XMLCh* const name)
 {
 
-    if (!name || !*name)
+    if ( XMLString::stringLen(name) == 0 )
         return false;
 
     const XMLCh* tempName = name;
@@ -707,9 +711,6 @@ bool XMLString::isValidEncName(const XMLCh* const name)
   */
 bool XMLString::isValidQName(const XMLCh* const name)
 {
-    if (!name)
-        return false;
-
     int strLen = XMLString::stringLen(name);
     if (strLen == 0)
         return false;
@@ -1167,10 +1168,12 @@ XMLCh* XMLString::findAny(          XMLCh* const    toSearch
 int XMLString::patternMatch(  const XMLCh* const    toSearch
                             , const XMLCh* const    pattern)
 {
-    if (!toSearch || !*toSearch || !pattern || !*pattern)
+    if (!toSearch || !*toSearch )
         return -1;
 
     const int patnLen = XMLString::stringLen(pattern);
+	if ( !patnLen )
+		return -1;
 
     const XMLCh* srcPtr    = toSearch;
     const XMLCh* patnStart = toSearch;
@@ -1589,11 +1592,10 @@ bool XMLString::isWSReplaced(const XMLCh* const toCheck)
 //
 void XMLString::replaceWS(XMLCh* const toConvert)
 {
-    // If no string, then its a failure
-    if (( !toConvert ) || ( !*toConvert ))
+    int strLen = XMLString::stringLen(toConvert);
+    if (strLen == 0)
         return;
 
-    int strLen = XMLString::stringLen(toConvert);
     XMLCh* retBuf = new XMLCh[strLen+1];
     XMLCh* retPtr = &(retBuf[0]);
     XMLCh* startPtr = toConvert;
