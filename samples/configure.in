@@ -7,6 +7,9 @@ AC_PROG_CXX
 AC_PROG_INSTALL
 AC_CHECK_PROG(AUTOCONF, autoconf, autoconf, true)
 
+dnl Checks for libraries
+AC_CHECK_LIB(m, floor)
+
 dnl special pthread handling (AIX uses pthreads instead of pthread)
 AC_CHECK_LIB(pthread, pthread_create)
 if test $ac_cv_lib_pthread_pthread_create = no; then
@@ -67,8 +70,14 @@ AC_SUBST(cflags)
 ldflags=${LDFLAGS}
 AC_SUBST(ldflags)
 
+threads=${THREADS}
+AC_SUBST(threads)
+
 bitstobuild=${BITSTOBUILD}
 AC_SUBST(bitstobuild)
+
+extra_libs=${EXTRA_LIBS}
+AC_SUBST(extra_libs)
 
 dnl output the Makefiles
 AC_OUTPUT([Makefile \
@@ -87,5 +96,5 @@ SEnumVal/Makefile \
 CreateDOMDocument/Makefile])
 
 echo
-echo Having build problems?
-echo   Read instructions at http://xml.apache.org/xerces-c/build.html
+echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
+

@@ -78,6 +78,8 @@ COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+THREADS = @threads@
+EXTRA_LIBS = @extra_libs@
 BITSTOBUILD = @bitstobuild@
 
 all::	saxprint sax2print saxcount sax2count domprint domcount redirect memparse pparse stdinparse enumval senumval createdomdocument

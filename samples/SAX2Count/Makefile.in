@@ -72,6 +72,8 @@ COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 LDFLAGS = @ldflags@
+THREADS = @threads@
+EXTRA_LIBS = @extra_libs@
 PREFIX = @prefix@
 
 include ../../version.incl
