@@ -72,6 +72,8 @@
 
 #include <util/XercesDefs.hpp>
 #include "NodeContainer.hpp"
+#include "EntityReferenceImpl.hpp"
+
 
 class CDOM_EXPORT EntityImpl: public NodeContainer {
 private:
@@ -80,15 +82,20 @@ private:
     DOMString systemId;
     DOMString notationName;
 
+    EntityReferenceImpl*	refEntity;
+	void	cloneEntityRefTree();
+
+	friend class DOMParser;
+
 public:
-    EntityImpl(DocumentImpl *, const DOMString &eName);
+    EntityImpl(DocumentImpl*, const DOMString &eName);
     EntityImpl(const EntityImpl &other, bool deep=false);
     virtual ~EntityImpl();
     
-    virtual NodeImpl    *cloneNode(bool deep);
+    virtual NodeImpl*   cloneNode(bool deep);
     virtual DOMString getNodeName();
     virtual short getNodeType();
-    virtual NodeImpl * getParentNode();
+    virtual NodeImpl*   getParentNode();
     virtual DOMString   getPublicId();
     virtual DOMString   getSystemId();
     virtual DOMString   getNotationName();
@@ -96,6 +103,18 @@ public:
     virtual void        setNotationName(const DOMString &arg);
     virtual void        setPublicId(const DOMString &arg);
     virtual void        setSystemId(const DOMString &arg);
+
+    virtual NodeImpl*	getFirstChild();
+	virtual NodeImpl*   getLastChild();
+	virtual NodeListImpl* getChildNodes();
+	virtual bool		hasChildNodes();
+	virtual NodeImpl*   item(unsigned int index);
+	virtual NodeImpl*   getNextSibling();
+	virtual NodeImpl*   getPreviousSibling();
+
+	//DOM Level 2 additions. Non standard functions
+	virtual void		setEntityRef(EntityReferenceImpl*);
+	virtual EntityReferenceImpl*	getEntityRef() const;
 };
 
 #endif

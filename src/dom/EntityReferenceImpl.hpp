@@ -95,7 +95,6 @@ public:
     virtual NodeImpl *item(unsigned int index);
     virtual void setNodeValue(const DOMString &);
     virtual void setReadOnly(bool readOnly,bool deep);
-    virtual void synchronize();
 };
 
 #endif

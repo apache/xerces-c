@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/04/19 02:26:16  aruna1
+ * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+ *
  * Revision 1.8  2000/03/02 19:53:56  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -242,6 +245,8 @@ protected:
     friend class DOM_Document;
     friend class DOM_Element;
     friend class DOM_Node;
+    friend class DOM_Entity;
+
 };
 
 #endif

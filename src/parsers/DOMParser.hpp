@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/04/19 02:26:30  aruna1
+ * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+ *
  * Revision 1.8  2000/04/12 22:58:29  roddey
  * Added support for 'auto validate' mode.
  *
@@ -102,6 +105,12 @@
 #include <framework/XMLEntityHandler.hpp>
 #include <util/ValueStackOf.hpp>
 
+#include <validators/DTD/DocTypeHandler.hpp>
+#include <dom/DOM_DocumentType.hpp>
+#include <validators/DTD/DTDElementDecl.hpp>
+#include <validators/DTD/DTDValidator.hpp>
+#include <util/NameIdPool.hpp>
+
 class EntityResolver;
 class ErrorHandler;
 class XMLPScanToken;
@@ -124,6 +133,7 @@ class PARSERS_EXPORT DOMParser :
     public XMLDocumentHandler
     , public XMLErrorReporter
     , public XMLEntityHandler
+    , public DocTypeHandler
 {
 public :
     // -----------------------------------------------------------------------
@@ -1035,6 +1045,85 @@ public :
       * @see #getDoValidation
       */
     void setDoValidation(const bool newState);
+    //doctypehandler interfaces
+	virtual void attDef
+    (
+        const   DTDElementDecl&     elemDecl
+        , const DTDAttDef&          attDef
+        , const bool                ignoring
+    );
+
+    virtual void doctypeComment
+    (
+        const   XMLCh* const    comment
+    );
+
+    virtual void doctypeDecl
+    (
+        const   DTDElementDecl& elemDecl
+        , const XMLCh* const    publicId
+        , const XMLCh* const    systemId
+        , const bool            hasIntSubset
+    );
+
+    virtual void doctypePI
+    (
+        const   XMLCh* const    target
+        , const XMLCh* const    data
+    );
+
+    virtual void doctypeWhitespace
+    (
+        const   XMLCh* const    chars
+        , const unsigned int    length
+    );
+
+    virtual void elementDecl
+    (
+        const   DTDElementDecl& decl
+        , const bool            isIgnored
+    );
+
+    virtual void endAttList
+    (
+        const   DTDElementDecl& elemDecl
+    );
+
+    virtual void endIntSubset();
+
+    virtual void endExtSubset();
+
+    virtual void entityDecl
+    (
+        const   DTDEntityDecl&  entityDecl
+        , const bool            isPEDecl
+        , const bool            isIgnored
+    );
+
+    virtual void resetDocType();
+
+    virtual void notationDecl
+    (
+        const   XMLNotationDecl&    notDecl
+        , const bool                isIgnored
+    );
+
+    virtual void startAttList
+    (
+        const   DTDElementDecl& elemDecl
+    );
+
+    virtual void startIntSubset();
+
+    virtual void startExtSubset();
+
+    virtual void TextDecl
+    (
+        const   XMLCh* const    versionStr
+        , const XMLCh* const    encodingStr
+    );
+
+	
     //@}
 
 
@@ -1082,6 +1171,9 @@ protected :
 
 
 private :
+    //local private function to populate the doctype data
+	virtual void populateDocumentType();
+
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -1142,6 +1234,8 @@ private :
     XMLScanner*             fScanner;
     XMLValidator*           fValidator;
     bool                    fWithinElement;
+    DocumentTypeImpl*		fDocumentType;
+	DocTypeHandler*			fOldDocTypeHandler;
 };
 
 

@@ -68,32 +68,30 @@
 DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
                                    const DOMString &dtName) 
     : NodeContainer(ownerDoc),
-    publicId(null), systemId(null)	//DOM Level 2
+    publicId(null), systemId(null), internalSubset(null) //DOM Level 2
+	, isIntSubsetReading(false)	
 {
     name = dtName.clone();
-    entities = new NamedNodeMapImpl(this, null);
-    notations= new NamedNodeMapImpl(this, null);
+    entities = new NamedNodeMapImpl(this);
+    notations= new NamedNodeMapImpl(this);
     
-    // NON-DOM
-    elements = new NamedNodeMapImpl(this, null);
 };
 
 
 //Introduced in DOM Level 2
 DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
     const DOMString &fPublicId, const DOMString &fSystemId)
-    : NodeContainer(null),
-    publicId(fPublicId), systemId(fSystemId)
+	: NodeContainer(null),
+    publicId(fPublicId), systemId(fSystemId), internalSubset(null)
+	, isIntSubsetReading(false)
 {
     name = qualifiedName.clone();
     if (DocumentImpl::indexofQualifiedName(qualifiedName) < 0)
         throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
-    entities = new NamedNodeMapImpl(this, null);
-    notations= new NamedNodeMapImpl(this, null);
+    entities = new NamedNodeMapImpl(this);
+    notations= new NamedNodeMapImpl(this);
     
-    // NON-DOM
-    elements = new NamedNodeMapImpl(this, null);
 };
 
 
@@ -106,12 +104,11 @@ DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
     entities = other.entities->cloneMap(this);
     notations= other.notations->cloneMap(this);
     
-    // NON-DOM
-    elements = other.elements->cloneMap(this);
-
     //DOM Level 2
-    publicId = other.publicId.clone();
-    systemId = other.systemId.clone();
+    publicId		= other.publicId.clone();
+    systemId		= other.systemId.clone();
+	internalSubset	= other.internalSubset.clone();
+	isIntSubsetReading = other.isIntSubsetReading;
 };
 
 
@@ -128,13 +125,6 @@ DocumentTypeImpl::~DocumentTypeImpl()
         notations->removeAll();
         NamedNodeMapImpl::removeRef(notations);
     }
-
-    if (elements != null)
-    {
-        elements->removeAll();
-        NamedNodeMapImpl::removeRef(elements);
-    }
-
 };
 
 
@@ -152,12 +142,6 @@ DOMString DocumentTypeImpl::getNodeName()
 
 short DocumentTypeImpl::getNodeType() {
     return DOM_Node::DOCUMENT_TYPE_NODE;
-};
-
-
-NamedNodeMapImpl *DocumentTypeImpl::getElements()
-{
-    return elements;
 };
 
 
@@ -216,14 +200,36 @@ DOMString DocumentTypeImpl::getSystemId()
 
 DOMString DocumentTypeImpl::getInternalSubset()
 {
-    return null;    //not implemented yet
+    return internalSubset;
 }
 
+//set functions
+
+void        DocumentTypeImpl::setPublicId(const DOMString& value)
+{
+    if (value == 0)
+        return;
+    publicId = value.clone();
+}
+
+void        DocumentTypeImpl::setSystemId(const DOMString& value)
+{
+    if (value == 0)
+        return;
+    systemId = value.clone();
+}
+
+void        DocumentTypeImpl::setInternalSubset(const DOMString &value)
+{
+    if (value == 0)
+        return;
+    internalSubset = value.clone();
+}
 
 void DocumentTypeImpl::setOwnerDocument(DocumentImpl *docImpl)
 {
     ownerDocument = docImpl;
-    //Note: ownerDoc of entities, notations and elements remain unchanged
+    //Note: ownerDoc of entities, notations remain unchanged
     //The DOM APIs does not require a NamedNodeMap to have an owner document
 }
 
@@ -234,15 +240,16 @@ DocumentTypeImpl *DocumentTypeImpl::exportNode(DocumentImpl *docImpl, bool deep)
 {
     DocumentTypeImpl *doctype;
     doctype = new DocumentTypeImpl(name, publicId, systemId);
+	doctype -> internalSubset = internalSubset;
+	doctype -> isIntSubsetReading = false;
     doctype -> setOwnerDocument(docImpl);
     if (deep) {
-	delete doctype -> entities;
-	delete doctype -> notations;
-	delete doctype -> elements;
-	doctype -> entities = entities -> exportNode(doctype);
-	doctype -> notations = notations -> exportNode(doctype);
-	doctype -> elements = elements -> exportNode(doctype);
+		delete doctype -> entities;
+		delete doctype -> notations;
+		doctype -> entities = entities -> exportNode(doctype);
+		doctype -> notations = notations -> exportNode(doctype);
     }
+	
     return doctype;
 }
 

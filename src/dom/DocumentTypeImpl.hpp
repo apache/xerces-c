@@ -79,15 +79,25 @@ class NamedNodeMapImpl;
 
 class CDOM_EXPORT DocumentTypeImpl: public NodeContainer {
 private:
-    DOMString name;
-    NamedNodeMapImpl *entities;
-    NamedNodeMapImpl *notations;
-    NamedNodeMapImpl *elements;
+    DOMString			name;
+    NamedNodeMapImpl	*entities;
+    NamedNodeMapImpl	*notations;
+	DOMString			publicId;
+    DOMString			systemId;
+	DOMString			internalSubset;
+
+    bool				isIntSubsetReading;
+
+    virtual void        setPublicId(const DOMString& value);
+    virtual void        setSystemId(const DOMString& value);
+    virtual void        setInternalSubset(const DOMString &value);
+
+	friend class DOMParser;
     
 public:
     DocumentTypeImpl(DocumentImpl *, const DOMString &);
     DocumentTypeImpl(const DOMString &qualifiedName,	//DOM Level 2
-	const DOMString &publicId, const DOMString &systemId);
+		const DOMString &publicId, const DOMString &systemId);
     DocumentTypeImpl(const DocumentTypeImpl &other, bool deep=false);
     virtual ~DocumentTypeImpl();
     virtual bool isDocumentTypeImpl();
@@ -95,16 +105,14 @@ public:
     virtual NodeImpl *         cloneNode(bool deep);
     virtual DOMString getNodeName();
     virtual short getNodeType();
-    virtual NamedNodeMapImpl * getElements();
     virtual NamedNodeMapImpl * getEntities();
     virtual DOMString          getName();
     virtual NamedNodeMapImpl * getNotations();
     virtual void               setNodeValue(const DOMString &arg); 
     virtual void               setReadOnly(bool readOnly, bool deep);
-
+   
     //Introduced in DOM Level 2
-    DOMString publicId;
-    DOMString systemId;
+    
     virtual DOMString     getPublicId();
     virtual DOMString     getSystemId();
     virtual DOMString     getInternalSubset();

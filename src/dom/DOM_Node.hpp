@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/19 02:26:16  aruna1
+ * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+ *
  * Revision 1.7  2000/03/11 02:17:19  chchou
  * Fix bug # 29 to have the spefified flag set correctly for AttrImpl.
  *
@@ -652,6 +655,8 @@ protected:
     friend class DOM_NamedNodeMap;
     friend class DOM_NodeList;
     friend class DOMParser;
+    friend class DOM_Entity;
+
 };
 
 

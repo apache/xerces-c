@@ -120,6 +120,8 @@ private:
             DOMString        fString;
     };
 
+   	void setDocumentType(DocumentTypeImpl *doctype);
+
     DocumentTypeImpl            *docType;
     ElementImpl                 *docElement;
     DStringPool                 *namePool;
@@ -129,6 +131,7 @@ private:
     TreeWalkers                 *treeWalkers;
     friend class NodeIteratorImpl;
     friend class TreeWalkerImpl;
+   	friend class DOMParser;
 
 public:
     DocumentImpl();

@@ -68,14 +68,10 @@
 int        NamedNodeMapImpl::gLiveNamedNodeMaps  = 0;
 int        NamedNodeMapImpl::gTotalNamedNodeMaps = 0;
 
-NamedNodeMapImpl::NamedNodeMapImpl(NodeImpl *ownerNode,NamedNodeMapImpl *defs)
+NamedNodeMapImpl::NamedNodeMapImpl(NodeImpl *ownerNode)
 {
     this->ownerNode=ownerNode;
-    this->defaults=defs;
-    addRef(defaults);
     this->nodes = null;
-    this->changes = 0;
-    lastDefaultsChanges = -1;
     this->readOnly = false;
     this->refCount = 1;
     gLiveNamedNodeMaps++;
@@ -95,7 +91,6 @@ NamedNodeMapImpl::~NamedNodeMapImpl()
         nodes = 0;
     }
     gLiveNamedNodeMaps--;
-    removeRef(defaults);
 };
 
 
@@ -108,7 +103,7 @@ void NamedNodeMapImpl::addRef(NamedNodeMapImpl *This)
 
 NamedNodeMapImpl *NamedNodeMapImpl::cloneMap(NodeImpl *ownerNode)
 {
-    NamedNodeMapImpl *newmap = new NamedNodeMapImpl(ownerNode, defaults);
+    NamedNodeMapImpl *newmap = new NamedNodeMapImpl(ownerNode);
     if (nodes != null)
     {
         newmap->nodes = new NodeVector(nodes->size());
@@ -119,9 +114,7 @@ NamedNodeMapImpl *NamedNodeMapImpl::cloneMap(NodeImpl *ownerNode)
             newmap->nodes->addElement(n);
         }
     }
-    newmap->defaults = defaults;
-    NamedNodeMapImpl::addRef(defaults);
-    
+      
     return newmap;
 };
 
@@ -159,8 +152,7 @@ void NamedNodeMapImpl::removeAll()
 
 int NamedNodeMapImpl::findNamePoint(const DOMString &name)
 {
-    reconcileDefaults();
-    
+        
     // Binary search
     int i=0;
     if(nodes!=null)
@@ -204,7 +196,6 @@ int NamedNodeMapImpl::findNamePoint(const DOMString &name)
 
 unsigned int NamedNodeMapImpl::getLength()
 {
-    reconcileDefaults();
     return (nodes != null) ? nodes->size() : 0;
 };
 
@@ -214,86 +205,14 @@ NodeImpl * NamedNodeMapImpl::getNamedItem(const DOMString &name)
 {
     int i=findNamePoint(name);
     return (i<0) ? null : (NodeImpl *)(nodes->elementAt(i));
-    
-    /************   
-    reconcileDefaults();
-    
-      // DO BINARY SEARCH?????
-      if (nodes != null)
-      for (int i = 0; i < nodes.size(); ++i)
-      {
-      int test = name.compareTo(((Node) (nodes.elementAt(i))).getNodeName());
-      if (test == 0)
-      return (Node) (nodes.elementAt(i));
-      if (test < 0)
-      break; // Past the sort point.
-      }
-      return null;
-    **************/ 
 };
 
 
 
 NodeImpl * NamedNodeMapImpl::item(unsigned int index)
 {
-    reconcileDefaults();
     return (nodes != null && index < nodes->size()) ?
         (NodeImpl *) (nodes->elementAt(index)) : null;
-};
-
-
-
-void NamedNodeMapImpl::reconcileDefaults()
-{
-    if (defaults != null && lastDefaultsChanges != defaults->changes)
-    {
-        int n = 0, d = 0, nsize = nodes->size(), dsize = defaults->nodes->size();
-        AttrImpl * nnode = (nsize == 0) ? null : (AttrImpl *) nodes->elementAt(0);
-        AttrImpl * dnode = (dsize == 0) ? null : (AttrImpl *) defaults->nodes->elementAt(0);
-        while (n < nsize && d < dsize)
-        {
-            nnode = (AttrImpl *) nodes->elementAt(n);
-            dnode = (AttrImpl *) defaults->nodes->elementAt(d);
-            int test = nnode->getNodeName().compareString( dnode->getNodeName());
-            // nnode->getNodeName()->compareTo(dnode->getNodeName());
-            
-            // Same name and a default -- make sure same value
-            if (test == 0 && !nnode->getSpecified())
-            {
-                nodes->setElementAt(dnode, n);
-                // Advance over both, since names in sync
-                ++n;
-                ++d;
-            }
-            
-            // Different name, new default in table; add it
-            else if (test > 0)
-            {
-                nodes->insertElementAt(dnode, n);
-                // Now in sync, so advance over both
-                ++n;
-                ++d;
-            }
-            
-            // Different name, old default here; remove it.
-            else if (!nnode->getSpecified())
-            {
-                nodes->removeElementAt(n);
-                // n didn't advance but represents a different element
-            }
-            
-            // Different name, specified; accept it
-            else
-                ++n;
-        }
-        
-        // If we ran out of local before default, pick up defaults
-        while (d < dsize)
-        {
-            nodes->addElement(defaults->nodes->elementAt(d));
-        }
-        lastDefaultsChanges = defaults->changes;
-    }
 };
 
 
@@ -307,60 +226,22 @@ void NamedNodeMapImpl::reconcileDefaults()
 NodeImpl * NamedNodeMapImpl::removeNamedItem(const DOMString &name)
 {
     if (readOnly)
-	throw DOM_DOMException(
-	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+        throw DOM_DOMException(
+            DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     int i=findNamePoint(name);
+    NodeImpl *n = null;
+    
     if(i<0)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
     else
     {
-        NodeImpl * n = (NodeImpl *) (nodes->elementAt(i));
-        // If there's a default, add it instead
-        NodeImpl * d;
-	if (defaults != null && (d = defaults->getNamedItem(name)) != null) {
-	    if (n->isAttrImpl() && d->isAttrImpl()) {	//DOM Level 2
-		d = d->cloneNode(true); //copy d and ownerElement of n
-		((AttrImpl*)d)->setOwnerElement(((AttrImpl*)n)->getOwnerElement());
-		d->getNamespaceURI() = n->getNamespaceURI() == null ?
-                    DOMString(null) : n->getNamespaceURI().clone();
-		d->getPrefix() = n->getPrefix() == null ?
-                    DOMString(null) : n->getPrefix().clone();
-		d->getLocalName() = n->getLocalName() == null ?
-                    DOMString(null) : n->getLocalName().clone();
-	    }
-            nodes->setElementAt(d, i);
-	} else
-            nodes->removeElementAt(i);
+        n = (NodeImpl *) (nodes->elementAt(i));
+        nodes->removeElementAt(i);
         
-        ++changes;
         n->ownerNode = null;
-        return n;
     }
     
-    /************
-    // DO BINARY SEARCH????? 
-    // At least take advantage of sort-order for early stop.
-    if (nodes != null)
-    {
-    for (int i = 0; i < nodes.size(); ++i)
-    if (name.equals(((Node) (nodes.elementAt(i))).getNodeName()))
-    {
-    Node n = (Node) (nodes.elementAt(i));
-    // If there's a default, add it instead
-    Node d;
-    if (defaults != null && 
-    (d = defaults.getNamedItem(name)) != null)
-    nodes.setElementAt(d, i);
-    else
-    nodes.removeElementAt(i);
-    
-      ++changes;
-      return n;
-      }
-      }
-      throw DOMExceptionImpl(DOMException.NOT_FOUND_ERR, null);
-    **************/ 
-	return null;	// just to keep the compiler happy
+    return n;
 };
 
 
@@ -385,9 +266,6 @@ NodeImpl * NamedNodeMapImpl::setNamedItem(NodeImpl * arg)
     if(arg->getOwnerDocument()!= ownerNode->ownerDocument)
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);
     
-    if (arg->ownerNode)
-        throw DOM_DOMException(DOM_DOMException::INUSE_ATTRIBUTE_ERR,null);
-    
     arg->ownerNode = ownerNode;
     int i=findNamePoint(arg->getNodeName());
     NodeImpl * previous=null;
@@ -403,42 +281,10 @@ NodeImpl * NamedNodeMapImpl::setNamedItem(NodeImpl * arg)
             nodes=new NodeVector();
         nodes->insertElementAt(arg,i);
     }
-    ++changes;
     if (previous != null)
         previous->ownerNode = null;
 
     return previous;
-    
-    /*************************      
-    // DO BINARY SEARCH?????
-    // Insertion-sort is used to maintain list in lexical order.  That
-    // doesn't matter a great deal in normal operation (minor
-    // performance boost in getNamedItem), but improves comparison
-    // for reconcileDefault() (and equals(), if we add that.)
-    if(nodes==null)
-    nodes=new Vector();
-    for(int i=0; i<nodes.size();++i)
-    {
-    int test=arg.getNodeName()
-    .compareTo( ((Node)(nodes.elementAt(i))) .getNodeName());
-    if(test==0)
-    {                     // Names match
-    Node previous=(Node)nodes.elementAt(i);
-    nodes.setElementAt(arg,i);
-    ++changes;
-    return previous;
-    }
-    else if(test<0)
-    {                     // Mismatch but new goes before old
-    nodes.insertElementAt(arg,i);
-    ++changes;
-    return null;
-    }
-    }
-    nodes.addElement(arg);      // Bigger than all, append to end
-    ++changes;
-    return null;
-    ************/   
 };
 
 
@@ -464,9 +310,7 @@ void NamedNodeMapImpl::setReadOnly(bool readOnl, bool deep)
  */
 NamedNodeMapImpl *NamedNodeMapImpl::exportNode(NodeImpl *node)
 {
-    NamedNodeMapImpl *newdefs =
-        defaults == null ? null : defaults->exportNode(node);
-    NamedNodeMapImpl *newmap = new NamedNodeMapImpl(node, newdefs);
+    NamedNodeMapImpl *newmap = new NamedNodeMapImpl(node);
     if (nodes != null)
     {
         newmap->nodes = new NodeVector(nodes->size());
@@ -484,7 +328,6 @@ NamedNodeMapImpl *NamedNodeMapImpl::exportNode(NodeImpl *node)
 int NamedNodeMapImpl::findNamePoint(const DOMString &namespaceURI,
 	const DOMString &localName)
 {
-    reconcileDefaults();
     if (nodes == null)
 	return -1;
    // Linear search
@@ -519,7 +362,7 @@ NodeImpl *NamedNodeMapImpl::getNamedItemNS(const DOMString &namespaceURI,
 //
 NodeImpl * NamedNodeMapImpl::setNamedItemNS(NodeImpl *arg)
 {
-    if(arg->getOwnerDocument() != ownerNode->ownerDocument)
+   if(arg->getOwnerDocument() != ownerNode->ownerDocument)
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);   
     if (readOnly)
 	throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
@@ -538,7 +381,6 @@ NodeImpl * NamedNodeMapImpl::setNamedItemNS(NodeImpl *arg)
             nodes=new NodeVector();
         nodes->insertElementAt(arg,i);
     }
-    ++changes;
     if (previous != null)
         previous->ownerNode = null;
 
@@ -555,31 +397,14 @@ NodeImpl *NamedNodeMapImpl::removeNamedItemNS(const DOMString &namespaceURI,
 	const DOMString &localName)
 {
     if (readOnly)
-	throw DOM_DOMException(
-	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+        throw DOM_DOMException(
+        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     int i = findNamePoint(namespaceURI, localName);
     if (i < 0)
-	throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
-    NodeImpl * n = nodes -> elementAt(i);   //node to be removed or replaced
-    //find if n has a default value defined in DTD, if so replace n in nodes
-    //by its corresponding default value node, otherwise remove n from nodes
-    NodeImpl * d;
-    if (defaults != null
-        && (d = defaults->getNamedItemNS(namespaceURI, localName)) != null) {
-	if (n->isAttrImpl() && d->isAttrImpl()) {
-	    d = d->cloneNode(true); //copy d and ownerElement of n
-	    ((AttrImpl*)d)->setOwnerElement(((AttrImpl*)n)->getOwnerElement());
-	    d->getNamespaceURI() = n->getNamespaceURI() == null ?
-                DOMString(null) : n->getNamespaceURI().clone();
-	    d->getPrefix() = n->getPrefix() == null ?
-                DOMString(null) : n->getPrefix().clone();
-	    d->getLocalName() = n->getLocalName() == null ?
-                DOMString(null) : n->getLocalName().clone();
-	}
-        nodes -> setElementAt(d, i);	//replace n in nodes by d
-    } else
-        nodes -> removeElementAt(i);	//remove n from nodes
-    ++changes;
+        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+    NodeImpl * n = nodes -> elementAt(i);   
+    
+    nodes -> removeElementAt(i);	//remove n from nodes
     n -> ownerNode = null;
     return n;
 }

@@ -64,21 +64,26 @@
 
 
 EntityImpl::EntityImpl(DocumentImpl *ownerDoc, const DOMString &eName)
-    : NodeContainer(ownerDoc)
+   : NodeContainer(ownerDoc),
+	refEntity(0)
+
 {
-    name = eName.clone();
+    name        = eName.clone();
+    readOnly    = true;
 };
 
 
 EntityImpl::EntityImpl(const EntityImpl &other, bool deep)
     : NodeContainer(other)
 {
-    name = other.name.clone();
+    name            = other.name.clone();
     if (deep)
         cloneChildren(other);
-    publicId = other.publicId.clone();
-    systemId = other.systemId.clone();
-    notationName = other.notationName.clone();
+    publicId        = other.publicId.clone();
+    systemId        = other.systemId.clone();
+    notationName    = other.notationName.clone();
+    refEntity       = other.refEntity;	
+    readOnly        = true;
 };
 
 
@@ -149,3 +154,70 @@ void EntityImpl::setSystemId(const DOMString &arg)
     systemId = arg;
 };
 
+void		EntityImpl::setEntityRef(EntityReferenceImpl* other)
+{
+	refEntity = other;
+}
+
+EntityReferenceImpl*		EntityImpl::getEntityRef() const
+{
+	return refEntity;
+}
+
+void	EntityImpl::cloneEntityRefTree() 
+{
+	//lazily clone the entityRef tree to this entity 
+	if (firstChild != 0)
+		return;
+
+	if (!refEntity)
+		return;
+
+	this->cloneChildren(*refEntity);
+}
+
+NodeImpl * EntityImpl::getFirstChild() 
+{
+    cloneEntityRefTree();
+	return firstChild;
+};
+
+NodeImpl*   EntityImpl::getLastChild() 
+{
+	cloneEntityRefTree();
+	return lastChild;
+}
+
+NodeListImpl* EntityImpl::getChildNodes() 
+{
+	cloneEntityRefTree();
+	return this;
+
+}
+
+bool EntityImpl::hasChildNodes() 
+{
+	cloneEntityRefTree();
+	return firstChild!=null;
+}
+
+NodeImpl* EntityImpl::item(unsigned int index) 
+{
+	cloneEntityRefTree();
+    NodeImpl *node = firstChild;
+    for(unsigned int i=0; i<index && node!=null; ++i)
+        node = node->nextSibling;
+    return node;
+}
+
+NodeImpl * EntityImpl::getNextSibling()
+{
+	cloneEntityRefTree();
+	return nextSibling;
+}
+
+NodeImpl*  EntityImpl::getPreviousSibling()
+{
+	cloneEntityRefTree();
+	return previousSibling;
+}

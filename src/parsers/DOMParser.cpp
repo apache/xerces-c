@@ -60,6 +60,9 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.17  2000/04/19 02:26:30  aruna1
+* Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+*
 * Revision 1.16  2000/04/18 18:44:51  roddey
 * Change "const static" to "static const" Bug #120
 *
@@ -140,6 +143,11 @@
 #include <dom/ElementImpl.hpp>
 #include <dom/AttrImpl.hpp>
 #include <dom/TextImpl.hpp>
+#include <dom/DocumentImpl.hpp>
+#include <dom/DocumentTypeImpl.hpp>
+#include <dom/EntityImpl.hpp>
+#include <dom/NotationImpl.hpp>
+#include <dom/NamedNodeMapImpl.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -153,6 +161,7 @@ fErrorHandler(0)
 , fIncludeIgnorableWhitespace(true)
 , fNodeStack(0)
 , fScanner(0)
+, fOldDocTypeHandler(0)
 , fValidator(valToAdopt)
 {
     
@@ -160,6 +169,11 @@ fErrorHandler(0)
     if (!fValidator)
         fValidator = new DTDValidator;
     
+    //If the user already registered the doctypehandler then chain it
+	fOldDocTypeHandler =  ((DTDValidator*)fValidator)->getDocTypeHandler();
+	
+	//register the new doctypehandler 
+	((DTDValidator*)fValidator)->setDocTypeHandler(this);
     //
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
@@ -190,6 +204,7 @@ void DOMParser::reset()
     //  holding a reference to it.
     //
     fDocument = DOM_Document::createDocument();
+    resetDocType();
 
     fCurrentParent   = 0;
     fCurrentNode     = 0;
@@ -496,7 +511,17 @@ void DOMParser::docCharacters(  const   XMLCh* const    chars
         else
         {
             DOM_Text node = fDocument.createTextNode(DOMString(chars, length));
+			//If the node type is entityRef then set the readOnly flag to false before appending node
+			bool oldReadFlag;
+			if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
+				oldReadFlag = fCurrentParent.fImpl->readOnly;
+				fCurrentParent.fImpl->readOnly = false;
+			}
+
             fCurrentParent.appendChild(node);
+			if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
+				fCurrentParent.fImpl->readOnly = oldReadFlag;
+			}
             fCurrentNode = node;
         }
     }
@@ -565,7 +590,18 @@ void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
         DOM_Text node = fDocument.createTextNode(DOMString(chars, length));
         TextImpl *text = (TextImpl *) node.fImpl;
         text -> setIgnorableWhitespace(true);
+		//If the node type is entityRef then set the readOnly flag to false before appending node
+		bool oldReadFlag;
+		if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
+			oldReadFlag = fCurrentParent.fImpl->readOnly;
+			fCurrentParent.fImpl->readOnly = false;
+		}
+
         fCurrentParent.appendChild(node);
+		if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
+			fCurrentParent.fImpl->readOnly = oldReadFlag;
+		}
+        
         fCurrentNode = node;
     }
 }
@@ -646,7 +682,18 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
         }
     }
     
+    //If the node type is entityRef then set the readOnly flag to false before appending node
+	bool oldReadFlag;
+	if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
+		oldReadFlag = fCurrentParent.fImpl->readOnly;
+		fCurrentParent.fImpl->readOnly = false;
+	}
+
     fCurrentParent.appendChild(elem);
+	if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
+		fCurrentParent.fImpl->readOnly = oldReadFlag;
+	}
+
     fNodeStack->push(fCurrentParent);
     fCurrentParent = elem;
     fCurrentNode = elem;
@@ -662,14 +709,17 @@ void DOMParser::startEntityReference(const XMLEntityDecl& entDecl)
 {
     if (fExpandEntityReferences == true)
     {
-        DOM_EntityReference er = fDocument.createEntityReference
-            (
-            DOMString(entDecl.getName())
-            );
+		DOMString entName(entDecl.getName());
+        DOM_EntityReference er = fDocument.createEntityReference(entName);
         fCurrentParent.appendChild(er);
         fNodeStack->push(fCurrentParent);
         fCurrentParent = er;
         fCurrentNode = er;
+
+		//this entityRef needs to be stored in Entity map too.
+		EntityImpl* entity = (EntityImpl*)fDocumentType->entities->getNamedItem(entName);
+		entity->setEntityRef((EntityReferenceImpl*)er.fImpl);
+		fDocumentType->entities->setNamedItem(entity);
     }
 }
 
@@ -707,4 +757,280 @@ void DOMParser::setDoValidation(const bool newState)
     (
         newState ? XMLScanner::Val_Always : XMLScanner::Val_Never
     );
+}
+
+//doctypehandler interfaces
+void DOMParser::attDef
+(
+    const   DTDElementDecl&     elemDecl
+    , const DTDAttDef&          attDef
+    , const bool                ignoring
+	)
+{
+	if(fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->attDef(elemDecl,attDef, ignoring );
+	}
+}
+
+void DOMParser::doctypeComment
+(
+    const   XMLCh* const    comment
+)
+{
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->doctypeComment(comment);
+	}
+}
+
+void DOMParser::doctypeDecl
+(
+    const   DTDElementDecl& elemDecl
+    , const XMLCh* const    publicId
+    , const XMLCh* const    systemId
+    , const bool            hasIntSubset
+)
+{
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->doctypeDecl(elemDecl, publicId, systemId, hasIntSubset);
+	}
+
+	DOM_DocumentType dt;
+	dt = fDocument.getImplementation().createDocumentType(elemDecl.getFullName(), publicId, systemId);
+    fDocumentType = (DocumentTypeImpl*)dt.fImpl;
+	((DocumentImpl*)fDocument.fImpl)->setDocumentType(fDocumentType);
+	populateDocumentType();
+	
+}
+
+void DOMParser::doctypePI
+(
+    const   XMLCh* const    target
+    , const XMLCh* const    data
+)
+{
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->doctypePI(target, data);
+	}
+}
+
+
+void DOMParser::doctypeWhitespace
+(
+    const   XMLCh* const    chars
+    , const unsigned int    length
+)
+{
+	if (fDocumentType->isIntSubsetReading == true)
+	{
+		//add thes chars to internalSubset variable
+		fDocumentType->internalSubset.appendData(chars);
+	}
+
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->doctypeWhitespace(chars, length);
+	}
+}
+
+void DOMParser::elementDecl
+(
+    const   DTDElementDecl& decl
+    , const bool            isIgnored
+)
+{
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->elementDecl(decl, isIgnored);
+	}
+}
+
+void DOMParser::endAttList
+(
+    const   DTDElementDecl& elemDecl
+)
+{
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->endAttList(elemDecl);
+	}
+}
+
+void DOMParser::endIntSubset()
+{
+	fDocumentType->isIntSubsetReading = false;
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->endIntSubset();
+	}
+}
+
+void DOMParser::endExtSubset()
+{
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->endExtSubset();
+	}
+}
+
+void DOMParser::entityDecl
+(
+    const   DTDEntityDecl&  entityDecl
+    , const bool            isPEDecl
+    , const bool            isIgnored
+)
+{
+	EntityImpl* entity = ((DocumentImpl*)fDocument.fImpl)->createEntity(entityDecl.getName());
+
+	entity->setPublicId(entityDecl.getPublicId());
+	entity->setSystemId(entityDecl.getSystemId());
+	entity->setNotationName(entityDecl.getNotationName());
+
+	fDocumentType->entities->setNamedItem( entity ); 
+
+	if (fDocumentType->isIntSubsetReading == true)
+	{
+		//add thes chars to internalSubset variable
+		DOMString entityName;
+		entityName.appendData(chOpenAngle);
+		entityName.appendData(XMLUni::fgEntityString);
+		entityName.appendData(chSpace);
+
+		entityName.appendData(entityDecl.getName());
+		DOMString id = entity->getPublicId();
+		if (id != 0) {
+			entityName.appendData(chSpace);
+			entityName.appendData(XMLUni::fgPublicString);
+			entityName.appendData(chDoubleQuote);
+			entityName.appendData(id);
+			entityName.appendData(chDoubleQuote);
+		}
+		id = entity->getSystemId();
+		if (id != 0) {
+			entityName.appendData(chSpace);
+			entityName.appendData(XMLUni::fgSystemString);
+			entityName.appendData(chDoubleQuote);
+			entityName.appendData(id);
+			entityName.appendData(chDoubleQuote);
+			
+		}
+		id = entity->getNotationName();
+		if (id != 0) {
+			entityName.appendData(chSpace);
+			entityName.appendData(XMLUni::fgNdataString);
+			entityName.appendData(chDoubleQuote);
+			entityName.appendData(id);
+			entityName.appendData(chDoubleQuote);
+		}
+		entityName.appendData(chCloseAngle);
+		fDocumentType->internalSubset.appendData(entityName);
+	}
+
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->entityDecl(entityDecl, isPEDecl, isIgnored);
+	}
+}
+
+void DOMParser::resetDocType()
+{
+	fDocumentType = null;
+}
+
+void DOMParser::notationDecl
+(
+    const   XMLNotationDecl&    notDecl
+    , const bool                isIgnored
+)
+{
+	NotationImpl* notation = ((DocumentImpl*)fDocument.fImpl)->createNotation(notDecl.getName());
+	notation->setPublicId(notDecl.getPublicId());
+	notation->setPublicId(notDecl.getPublicId());
+
+	fDocumentType->notations->setNamedItem( notation );
+
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->notationDecl(notDecl, isIgnored);
+	}
+}
+
+void DOMParser::startAttList
+(
+    const   DTDElementDecl& elemDecl
+)
+{
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->startAttList(elemDecl);
+	}
+}
+
+void DOMParser::startIntSubset()
+{
+	fDocumentType->isIntSubsetReading = true;
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->startIntSubset();
+	}
+}
+
+void DOMParser::startExtSubset()
+{
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->startExtSubset();
+	}
+}
+
+void DOMParser::TextDecl
+(
+    const   XMLCh* const    versionStr
+    , const XMLCh* const    encodingStr
+)
+{
+	if (fOldDocTypeHandler)
+	{
+		fOldDocTypeHandler->TextDecl(versionStr, encodingStr);
+	}
+}
+
+
+// to populate the entities in the documentType
+void DOMParser::populateDocumentType()
+{
+	if (fDocumentType == null) 
+		return;
+	
+
+	NameIdPoolEnumerator<DTDEntityDecl> entityPoolEnum = ((DTDValidator*)fValidator)->getEntityEnumerator();
+
+	
+	while(entityPoolEnum.hasMoreElements()) {
+		
+		DTDEntityDecl* entityDecl = &entityPoolEnum.nextElement();
+		
+		EntityImpl* entity = ((DocumentImpl*)fDocument.fImpl)->createEntity(entityDecl->getName());
+		entity->setPublicId(entityDecl->getPublicId());
+		entity->setSystemId(entityDecl->getSystemId());
+		entity->setNotationName(entityDecl->getNotationName());
+
+		fDocumentType->entities->setNamedItem( entity ); 
+	}
+
+	NameIdPoolEnumerator<XMLNotationDecl> notationPoolEnum = ((DTDValidator*)fValidator)->getNotationEnumerator();
+	
+	while(notationPoolEnum.hasMoreElements()) {
+		XMLNotationDecl* notationDecl = &notationPoolEnum.nextElement();
+
+		NotationImpl* notation = ((DocumentImpl*)fDocument.fImpl)->createNotation(notationDecl->getName());
+		notation->setPublicId(notationDecl->getPublicId());
+		notation->setPublicId(notationDecl->getPublicId());
+
+		fDocumentType->notations->setNamedItem( notation );
+	}
+
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2000/04/19 02:26:41  aruna1
+ * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+ *
  * Revision 1.16  2000/04/18 23:25:59  andyh
  * Fix problem on NT with conflict between Korean Won Sign (0x20A9)
  * and backslash in file path names.
@@ -343,6 +346,10 @@ public :
     static const XMLCh fgXMLURIName[];
     static const XMLCh fgYesString[];
     static const XMLCh fgZeroLenString[];
+
+    static const XMLCh fgPublicString[];
+	static const XMLCh fgSystemString[];
+	static const XMLCh fgNdataString[];
 };
 
 #endif

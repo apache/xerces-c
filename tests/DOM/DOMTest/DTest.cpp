@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/04/19 02:25:18  aruna1
+ * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+ *
  * Revision 1.10  2000/03/11 03:00:24  chchou
  * Fix bug # 18, remove set method of readonly attributes.
  * As a result, remove related test cases
@@ -910,20 +913,25 @@ void DTest::testCharacterData(DOM_Document document)
     //   that exceed the length of the string are allowed.
 //    EXCEPTIONSTEST(charData.deleteData(2, -1), DOM_DOMException::INDEX_SIZE_ERR, OK, 102 );
     EXCEPTIONSTEST(charData.deleteData(100, 5), DOM_DOMException::INDEX_SIZE_ERR, OK,103 );
+
+//can't set negative unsigned int in c++ compiler
     
-    EXCEPTIONSTEST(charData.insertData(-1, "Stuff inserted"), DOM_DOMException::INDEX_SIZE_ERR, OK, 104 );
+  //  EXCEPTIONSTEST(charData.insertData(-1, "Stuff inserted"), DOM_DOMException::INDEX_SIZE_ERR, OK, 104 );
     EXCEPTIONSTEST(charData.insertData(100,"Stuff inserted"), DOM_DOMException::INDEX_SIZE_ERR, OK, 105 );
     
-    EXCEPTIONSTEST(charData.replaceData(-1, 5, "Replacement stuff") , DOM_DOMException::INDEX_SIZE_ERR, OK, 106 );
+  //  EXCEPTIONSTEST(charData.replaceData(-1, 5, "Replacement stuff") , DOM_DOMException::INDEX_SIZE_ERR, OK, 106 );
     EXCEPTIONSTEST(charData.replaceData(100, 5 ,"Replacement stuff"), DOM_DOMException::INDEX_SIZE_ERR, OK, 107 );
-    EXCEPTIONSTEST(charData.replaceData(2, -1, "Replacement stuff"), DOM_DOMException::INDEX_SIZE_ERR,  OK, 108 );
+  //  EXCEPTIONSTEST(charData.replaceData(2, -1, "Replacement stuff"), DOM_DOMException::INDEX_SIZE_ERR,  OK, 108 );
     
     EXCEPTIONSTEST(charData.substringData(-1, 5), DOM_DOMException::INDEX_SIZE_ERR, OK, 109 );
     EXCEPTIONSTEST(charData.substringData(100, 5), DOM_DOMException::INDEX_SIZE_ERR, OK, 110 );
-    EXCEPTIONSTEST(charData.substringData(2, -1), DOM_DOMException::INDEX_SIZE_ERR, OK, 111 );
+ //   EXCEPTIONSTEST(charData.substringData(2, -1), DOM_DOMException::INDEX_SIZE_ERR, OK, 111 );
     
 
 //!! Throws NO_MODIFICATION_ALLOWED_ERR ******** 
+// Since user cannot add children to Entity and EntityReference Nodes this test can't be done.
+#if 0
+
     DOM_Node abc8 = document.getDocumentElement().getElementsByTagName("dBodyLevel24").
         item(0).getFirstChild().getChildNodes().item(0); // node gets ourEntityReference node's child text
     DOM_Text node = (DOM_Text &) abc8;
@@ -933,7 +941,8 @@ void DTest::testCharacterData(DOM_Document document)
     EXCEPTIONSTEST(node.insertData(5, "Stuff inserted"), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 114 );
     EXCEPTIONSTEST(node.replaceData(5, 10, "Replacementstuff"), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 115 );
     EXCEPTIONSTEST(node.setData("New setdata stuff"), DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, OK, 116 );
-    
+
+#endif
         
 // For debugging*****       printf("All DOM_CharacterData method calls worked correctly.\n");
     if (!OK)

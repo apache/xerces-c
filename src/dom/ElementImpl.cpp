@@ -73,19 +73,7 @@ ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &eName)
     : NodeContainer(ownerDoc)
 {
     name = eName.clone();
-    
-    // If there is an ElementDefinition, set its Attributes up as
-    // shadows behind our own.
-    NamedNodeMapImpl *defaultAttrs = null;
-    DocumentTypeImpl *doctype = (DocumentTypeImpl*)ownerDocument->getDoctype();
-    if (doctype != null)
-    {
-        ElementDefinitionImpl *eldef=(ElementDefinitionImpl *)
-            doctype->getElements()->getNamedItem(this->name);
-        if(eldef!=null)
-            defaultAttrs=(NamedNodeMapImpl *)eldef->getAttributes();
-    }
-    attributes = new NamedNodeMapImpl(this, defaultAttrs);
+    attributes = new NamedNodeMapImpl(this);
 };
 
 
@@ -172,7 +160,7 @@ void ElementImpl::removeAttribute(const DOMString &nam)
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
     AttrImpl *att = (AttrImpl *) attributes->getNamedItem(nam);
-    // Remove it (and let the NamedNodeMap recreate the default, if any)
+    // Remove it
     if (att != null)
     {
         attributes->removeNamedItem(nam);
@@ -191,8 +179,7 @@ AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
     
     AttrImpl *found = (AttrImpl *) attributes->getNamedItem(oldAttr->getName());
     
-    // If it is in fact the right object, remove it (and let the
-    // NamedNodeMap recreate the default, if any)
+    // If it is in fact the right object, remove it.
     
     if (found == oldAttr)
     {
@@ -307,7 +294,7 @@ void ElementImpl::removeAttributeNS(const DOMString &fNamespaceURI,
     
     AttrImpl *att =
       (AttrImpl *) attributes->getNamedItemNS(fNamespaceURI, fLocalName);
-    // Remove it (and let the NamedNodeMap recreate the default, if any)
+    // Remove it 
     if (att != null) {
         attributes->removeNamedItemNS(fNamespaceURI, fLocalName);
         if (att->nodeRefCount == 0)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/04/19 02:26:41  aruna1
+ * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+ *
  * Revision 1.14  2000/03/02 19:54:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -594,3 +597,19 @@ const XMLCh XMLUni::fgYesString[] =
 };
 
 const XMLCh XMLUni::fgZeroLenString[] = { chNull };
+
+const XMLCh XMLUni::fgPublicString[] =
+{
+	chLatin_P, chLatin_U, chLatin_B, chLatin_L, chLatin_I, chLatin_C, chSpace, chNull
+};
+
+const XMLCh XMLUni::fgSystemString[] =
+{
+	chLatin_S, chLatin_Y, chLatin_S, chLatin_T, chLatin_E, chLatin_M, chSpace, chNull
+};
+
+const XMLCh XMLUni::fgNdataString[] =
+{
+	chLatin_N, chLatin_D, chLatin_A, chLatin_T, chLatin_A, chSpace, chNull
+};
+

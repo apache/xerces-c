@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/04/19 02:26:16  aruna1
+ * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+ *
  * Revision 1.6  2000/03/11 02:58:38  chchou
  * Fix bug # 18, remove set method of readonly attributes
  *
@@ -177,6 +180,13 @@ public:
    * For parsed entities, this is <code>null</code>. 
    */
   DOMString        getNotationName() const;
+
+  virtual DOM_Node		getFirstChild() const;
+  virtual DOM_Node      getLastChild() const;
+  virtual DOM_NodeList  getChildNodes() const;
+  virtual bool          hasChildNodes() const;
+  virtual DOM_Node		getPreviousSibling() const;
+  virtual DOM_Node		getNextSibling() const;
   //@}
 
 protected:

@@ -130,28 +130,41 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
                            DocumentTypeImpl *doctype)
     : NodeContainer(null)
 {
-    if (doctype != null && doctype->getOwnerDocument() != null)
-	// a doctype can belong to only one DocumentImpl
-        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     docType=null;
-    if (doctype != null) {
-        doctype -> setOwnerDocument(this);
-        appendChild(doctype);
-        doctype -> referenced();         // Warning, tricky!  An external (DOM_Node) reference
-                                         //  to a node normally bumps the reference count to its
-                                         //  document also.  But this could not happen when the
-                                         //  user created the DOM_DocumentType because there was
-                                         //  no document yet.  Now we have the document, and
-                                         //  the docs ref count must be got back in sync.
-    }
+    
+	setDocumentType(doctype);
+	
     docElement=null;
     appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
     namePool = new DStringPool(257);
-    identifiers = new RefHashTableOf<PoolElem>(109);
+	identifiers = new RefHashTableOf<PoolElem>(109);
     iterators = 0L;
     treeWalkers = 0L;
 }
 
+void DocumentImpl::setDocumentType(DocumentTypeImpl *doctype)
+{
+	if (!doctype)
+		return;
+
+	if (doctype->getOwnerDocument() != null)
+        throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl
+        DOM_DOMException::WRONG_DOCUMENT_ERR, null);
+    
+    doctype -> setOwnerDocument(this);
+	doctype->getEntities()->ownerNode->ownerDocument = this;
+	doctype->getNotations()->ownerNode->ownerDocument = this;
+	doctype -> referenced();         // Warning, tricky!  An external (DOM_Node) reference
+                                     //  to a node normally bumps the reference count to its
+                                     //  document also.  But this could not happen when the
+                                     //  user created the DOM_DocumentType because there was
+                                     //  no document yet.  Now we have the document, and
+                                     //  the docs ref count must be got back in sync.
+
+				
+	appendChild(doctype);
+    
+}
 
 DocumentImpl::~DocumentImpl()
 {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/19 02:25:03  aruna1
+ * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+ *
  * Revision 1.7  2000/03/03 01:29:30  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -104,6 +107,7 @@
 //      [-?]            - Show usage and exit
 //      [-v]            - Do validation
 //      [-n]            - Enable namespace processing
+//      [-e]            - Expand Entity References
 //      [-NoEscape]     - Don't escape characters like '<' or '&'.
 //      filename        - The path to the XML file to parse
 //
@@ -146,6 +150,10 @@
 //  doNamespaces
 //      Indicates whether namespace processing should be done.
 //
+//  doExpand
+//      Indicates whether entity references needs to be expanded or not
+//      Defaults to false
+//
 //  doValidation
 //      Indicates whether validation should be done. The default is not
 //      to validate, but -v overrides that.
@@ -154,6 +162,7 @@ static char*	xmlFile         = 0;
 static bool     doEscapes       = true;
 static bool     doNamespaces    = false;
 static bool     doValidation    = false;
+static bool     doExpand        = false;
 
 
 // ---------------------------------------------------------------------------
@@ -219,6 +228,11 @@ int main(int argC, char* argV[])
         {
             doNamespaces = true;
         }
+         else if (!strcmp(argV[parmInd], "-e")
+              ||  !strcmp(argV[parmInd], "-E"))
+        {
+            doExpand = true;
+        }
          else if (!strcmp(argV[parmInd], "-NoEscape"))
         {
             doEscapes = false;
@@ -251,6 +265,7 @@ int main(int argC, char* argV[])
     parser.setDoNamespaces(doNamespaces);
     ErrorHandler *errReporter = new DOMTreeErrorReporter();
     parser.setErrorHandler(errReporter);
+	parser.setExpandEntityReferences(doExpand);
 
     //
     //  Parse the XML file, catching any XML exceptions that might propogate
@@ -431,6 +446,40 @@ ostream& operator<<(ostream& target, DOM_Node& toWrite)
         case DOM_Node::COMMENT_NODE:
         {
             target << "<!--" << nodeValue << "-->";
+            break;
+        }
+
+        case DOM_Node::DOCUMENT_TYPE_NODE:
+        {
+			DOM_DocumentType doctype = toWrite.getOwnerDocument().getDoctype();
+
+			target << "<!DOCTYPE " << nodeName ;
+			DOMString id = doctype.getPublicId();
+			if (id != 0)
+				target << " PUBLIC \"" << id << "\"";
+			id = doctype.getSystemId();
+			if (id != 0)
+				target << " SYSTEM \"" << id << "\"";
+			id = doctype.getInternalSubset(); 
+			if (id !=0)
+				target << " [ " << id  << "]";
+			target  << ">" << endl;
+            break;
+        }
+		case DOM_Node::ENTITY_NODE:
+        {
+			target << "<!ENTITY " << nodeName;
+			DOMString id = ((DOM_Entity &)toWrite).getPublicId();
+			if (id != 0)
+				target << "PUBLIC \"" << id << "\"";
+			id = ((DOM_Entity &)toWrite).getSystemId();
+			if (id != 0)
+				target << "SYSTEM \"" << id << "\"";
+			id = ((DOM_Entity &)toWrite).getNotationName();
+			if (id != 0)
+				target << "NDATA \"" << id << "\"";
+			target << endl;
+
             break;
         }
 

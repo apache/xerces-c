@@ -153,8 +153,6 @@ EntityReferenceImpl::~EntityReferenceImpl()
 
 NodeImpl *EntityReferenceImpl::cloneNode(bool deep)
 {
-    // Note #971.  Unclear what a shallow clone should mean/do.
-    synchronize();
     return new EntityReferenceImpl(*this, deep);
 }
 
@@ -171,37 +169,31 @@ short EntityReferenceImpl::getNodeType() {
 
 
 /**
-* Perform synchronize() before accessing children.
 * 
 * @return org.w3c.dom.NodeList
 */
 NodeListImpl *EntityReferenceImpl::getChildNodes()
 {
-    synchronize();
     return NodeContainer::getChildNodes();
 }
 
 
 /**
-* Perform synchronize() before accessing children.
 * 
 * @return org.w3c.dom.NodeList
 */
 NodeImpl *EntityReferenceImpl::getFirstChild()
 {
-    synchronize();
     return NodeContainer::getFirstChild();
 }
 
 
 /**
-* Perform synchronize() before accessing children.
 * 
 * @return org.w3c.dom.NodeList
 */
 NodeImpl *EntityReferenceImpl::getLastChild() 
 {
-    synchronize();
     return NodeContainer::getLastChild();
 }
 
@@ -265,14 +257,10 @@ bool EntityReferenceImpl::isEntityReference()
 
 
 /**
-* Perform synchronize() before accessing children.
-* ????? Should just ask the Entity instead!
-* (Though if we discover 0, we can flush)
 *
 * @return org.w3c.dom.NodeList
 */
 NodeImpl *EntityReferenceImpl::item(unsigned int index) {
-    synchronize();
     return NodeContainer::item(index);
 }
 
@@ -303,84 +291,3 @@ void EntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
 }
 
 
-/**
-* EntityReference's children are a reflection of those defined in the
-* named Entity. This method updates them if the Entity is changed.
-* <P>
-* It is unclear what the least-cost resynch mechanism is.
-* If we expect the kids to be shallow, and/or expect changes
-* to the Entity contents to be rare, wiping them all out
-* and recloning is simplest.
-* <P>
-* If we expect them to be deep,
-* it might be better to first decide which kids (if any)
-* persist, and keep the ones (if any) that are unchanged
-* rather than doing all the work of cloning them again.
-* But that latter gets into having to convolve the two child lists,
-* insert new information in the right order (and possibly reorder
-* the existing kids), and a few other complexities that I really
-* don't want to deal with in this implementation.
-* <P>
-* Note that if we decide that we need to update the EntityReference's
-* contents, we have to turn off the readOnly flag temporarily to do so.
-* When we get around to adding multitasking support, this whole method
-* should probably be an atomic operation.
-* 
-* @see DocumentTypeImpl
-* @see EntityImpl
-*/
-void EntityReferenceImpl::synchronize()
-{
-    DocumentTypeImpl *doctype;
-    NamedNodeMapImpl *entities;
-    EntityImpl *entDef;
-    if (null != (doctype = ownerDocument->getDoctype()) && 
-        null != (entities = doctype->getEntities())
-        )
-    {
-        entDef = (EntityImpl *)entities->getNamedItem(name);
-        
-        // No Entity by this name. If we had a change count, reset it.
-        if(null==entDef)
-            entityChanges=-1;
-        
-        // If no kids availalble, wipe any pre-existing children.
-        // (See discussion above.)
-        // Note that we have to use the superclass to avoid recursion
-        // through Synchronize.
-        bool oldReadOnly = readOnly;
-        readOnly=false;
-        if(null==entDef || !entDef->hasChildNodes() || entDef->changes!=entityChanges)
-        {
-            NodeImpl *kid;
-            while ((kid=NodeContainer::getFirstChild()) != null)
-            {
-                removeChild(kid);
-                // Adding and removing a reference will cause the node to
-                // be deleted if the reference count is zero, meaning
-                // that there are no outside (from the application code) refs
-                // to the node.  When NodeImpl::removeChild is called from
-                //  DOM_Node::removeChild, this reference count wiggle happens
-                //  as a result of returning the removed node, but that doesn't
-                //  work here, so we do it by hand.
-                addRef(kid);
-                removeRef(kid);
-            }
-        }
-        
-        // If entity's definition changed, clone its kids
-        // (See discussion above.)
-        if(null!=entDef && entDef->changes!=entityChanges)
-        {
-            for(NodeImpl *defkid=entDef->getFirstChild();
-            defkid!=null; defkid=defkid->getNextSibling())
-            {
-                NodeImpl *newkid=(NodeImpl *) defkid->cloneNode(true);
-                insertBefore(newkid,null);
-                newkid->setReadOnly(true,true);
-            }
-            entityChanges=entDef->changes;
-        }
-        readOnly=oldReadOnly;
-    }
-}

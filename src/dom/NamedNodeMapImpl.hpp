@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/04/19 02:26:17  aruna1
+ * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+ *
  * Revision 1.10  2000/04/07 20:58:36  lehors
  * fixed all cloneMap so that the ownerNode is correct
  *
@@ -121,10 +124,7 @@ class NodeImpl;
 class CDOM_EXPORT NamedNodeMapImpl {
 private:
     NodeVector       *nodes;
-    NodeImpl     *ownerNode;    // the node this map belongs to
-    NamedNodeMapImpl *defaults;
-    int               changes;    
-    int               lastDefaultsChanges;
+    NodeImpl         *ownerNode;    // the node this map belongs to
     bool              readOnly;
     int               refCount;
     static int        gLiveNamedNodeMaps;
@@ -134,11 +134,11 @@ private:
     friend class      DOM_NamedNodeMap;
     friend class      DomMemDebug;
     friend class      ElementImpl;
+   	friend class	  DocumentImpl;
     
 public:
-    NamedNodeMapImpl(NodeImpl *ownerNode, NamedNodeMapImpl *defaults);
+    NamedNodeMapImpl(NodeImpl *ownerNode);
     
-    virtual void            reconcileDefaults();
     virtual                 ~NamedNodeMapImpl();
     virtual NamedNodeMapImpl *cloneMap(NodeImpl *ownerNode);
     static  void            addRef(NamedNodeMapImpl *);

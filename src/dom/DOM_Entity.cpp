@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/04/19 02:26:16  aruna1
+ * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
+ *
  * Revision 1.5  2000/03/11 02:58:38  chchou
  * Fix bug # 18, remove set method of readonly attributes
  *
@@ -84,7 +87,7 @@
 
 #include "DOM_Entity.hpp"
 #include "EntityImpl.hpp"
-
+#include "DOM_NodeList.hpp"
 
 
 
@@ -137,4 +140,35 @@ DOMString  DOM_Entity::getSystemId() const
 DOMString  DOM_Entity::getNotationName() const
 {
         return ((EntityImpl *)fImpl)->getNotationName().clone();
+};
+
+DOM_Node      DOM_Entity::getFirstChild() const
+{
+    return DOM_Node( ((EntityImpl*)fImpl)->getFirstChild());
+};
+
+DOM_Node      DOM_Entity::getLastChild() const
+{
+    return DOM_Node(((EntityImpl*)fImpl)->getLastChild());
+};
+
+DOM_NodeList      DOM_Entity::getChildNodes() const
+{
+    return DOM_NodeList((EntityImpl*)fImpl);
+};
+
+bool           DOM_Entity::hasChildNodes() const
+{
+    return ((EntityImpl*)fImpl)->hasChildNodes();
+};
+
+DOM_Node      DOM_Entity::getPreviousSibling() const
+{
+    return DOM_Node(((EntityImpl*)fImpl)->getPreviousSibling());
+};
+ 
+  
+DOM_Node       DOM_Entity::getNextSibling() const
+{
+    return DOM_Node(((EntityImpl*)fImpl)->getNextSibling());
 };
