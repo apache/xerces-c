@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:04:53  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:41:28  roddey
+ * Support for the new transcoder system, where even intrinsic encodings are
+ * done via the same transcoder abstraction as external ones.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:04:53  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:11  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -146,7 +150,7 @@ void XMLPlatformUtils::Initialize()
     //  used internally by the XMLString class. If we cannot create one, then
     //  call the panic method.
     //
-    XMLTranscoder* defXCode = XMLPlatformUtils::fgTransService->makeNewDefTranscoder();
+    XMLLCPTranscoder* defXCode = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
     if (!defXCode)
         panic(Panic_NoDefTranscoder);
     XMLString::initString(defXCode);

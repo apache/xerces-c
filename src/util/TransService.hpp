@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:05:16  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:41:28  roddey
+ * Support for the new transcoder system, where even intrinsic encodings are
+ * done via the same transcoder abstraction as external ones.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:05:16  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:16  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -69,20 +73,19 @@
 
 #include <util/XML4CDefs.hpp>
 
+class XMLUTIL_EXPORT XMLLCPTranscoder;
 class XMLUTIL_EXPORT XMLTranscoder;
 
 //
 //  This class is an abstract base class which are used to abstract the
-//  transcoding services that XML4C uses. XML4C's actual transcoding needs are
-//  small (this does not count demo programs, just the parser system itself)
-//  so it is desirable to allow different implementations to be provided.
+//  transcoding services that XML4C uses. The parser's actual transcoding
+//  needs are small so it is desirable to allow different implementations
+//  to be provided.
 //
-//  Also defined here is the abstract class, XMLTranscoder, which represents
-//  a particular instance of a transcoder for a particular encoding. The
-//  transcoding service must be able to create new transcoders upon demand
-//  for a particular encoding. It is assumed that the service will pool
-//  transcoders for efficiency where possible (since their use will commonly
-//  occur repeatedly and for short periods of time.)
+//  The transcoding service has to provide a couple of required string
+//  and character operations, but its most important service is the creation
+//  of transcoder objects. There are two types of transcoders, which are
+//  discussed below in the XMLTranscoder class' description.
 //
 class XMLUTIL_EXPORT XMLTransService
 {
@@ -123,7 +126,7 @@ public :
 
     virtual bool isSpace(const XMLCh toCheck) const = 0;
 
-    virtual XMLTranscoder* makeNewDefTranscoder() = 0;
+    virtual XMLLCPTranscoder* makeNewLCPTranscoder() = 0;
 
     virtual XMLTranscoder* makeNewTranscoderFor
     (
@@ -150,13 +153,114 @@ private :
 
 
 
-class XMLTranscoder
+//
+//  There are two levels of transcoding required by the parser system. One
+//  is used for transcoding raw binary data from XML source into the 
+//  internalized Unicode format. These also always take an encoding name
+//  and are intended to work for arbritrary encodings.
+//
+//  The other level of transcoding involves transcoding to and from the
+//  local code page. These are used more generally throughout the system
+//  to make XMLCh data displayable on the local host, or to internalize
+//  local code page strings passed into the parser from client code. These
+//  don't take an encoding name, but are just created by the transcoding
+//  service for the appopriate local code page encoding.
+//
+//  The basic level of transcoding is implemented in XMLTranscoder. The
+//  local code version is implemented in XMLLCPTranscoder. The purpose of
+//  this distinction is that there are a set of intrinsically supported
+//  encodings which only want to implement the basic transcoding interface.
+//
+class XMLUTIL_EXPORT XMLTranscoder
 {
 public :
     // -----------------------------------------------------------------------
     //  Public constructors and destructor
     // -----------------------------------------------------------------------
     virtual ~XMLTranscoder();
+
+
+    // -----------------------------------------------------------------------
+    //  The virtual transcoding interface
+    // -----------------------------------------------------------------------
+    virtual bool supportsSrcOfs() const = 0;
+
+    virtual XMLCh transcodeOne
+    (
+        const   XMLByte* const  srcData
+        , const unsigned int    srcBytes
+        ,       unsigned int&   bytesEaten
+    ) = 0;
+
+    virtual unsigned int transcodeXML
+    (
+        const   XMLByte* const          srcData
+        , const unsigned int            srcCount
+        ,       XMLCh* const            toFill
+        , const unsigned int            maxChars
+        ,       unsigned int&           bytesEaten
+        ,       unsigned char* const    charSizes
+    ) = 0;
+
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    unsigned int getBlockSize() const;
+
+    const XMLCh* getEncodingName() const;
+
+
+protected :
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    XMLTranscoder
+    (
+        const   XMLCh* const    encodingName
+        , const unsigned int    blockSize
+    );
+
+
+    // -----------------------------------------------------------------------
+    //  Protected helper methods
+    // -----------------------------------------------------------------------
+    void checkBlockSize(const unsigned int toCheck);
+
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLTranscoder(const XMLTranscoder&);
+    void operator=(const XMLTranscoder&);
+
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fBlockSize
+    //      This is the block size indicated in the constructor. This lets
+    //      the derived class preallocate appopriately sized buffers. This
+    //      sets the maximum number of characters which can be internalized
+    //      per call to transcodeXML().
+    //
+    //  fEncodingName
+    //      This is the name of the encoding this encoder is for. All basic
+    //      XML transcoder's are for named encodings.
+    // -----------------------------------------------------------------------
+    unsigned int    fBlockSize;
+    XMLCh*          fEncodingName;
+};
+
+
+class XMLUTIL_EXPORT XMLLCPTranscoder
+{
+public :
+    // -----------------------------------------------------------------------
+    //  Public constructors and destructor
+    // -----------------------------------------------------------------------
+    virtual ~XMLLCPTranscoder();
 
 
     // -----------------------------------------------------------------------
@@ -173,21 +277,7 @@ public :
 
     virtual unsigned int calcRequiredSize(const XMLCh* const srcText) = 0;
 
-    virtual XMLCh transcodeOne
-    (
-        const   char* const     srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    ) = 0;
-
     virtual char* transcode(const XMLCh* const toTranscode) = 0;
-
-    virtual bool transcode
-    (
-        const   XMLCh* const    toTranscode
-        ,       char* const     toFill
-        , const unsigned int    maxBytes
-    ) = 0;
 
     virtual XMLCh* transcode(const char* const toTranscode) = 0;
 
@@ -198,13 +288,11 @@ public :
         , const unsigned int    maxChars
     ) = 0;
 
-    virtual unsigned int transcodeXML
+    virtual bool transcode
     (
-        const   char* const             srcData
-        , const unsigned int            srcCount
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        ,       unsigned int&           bytesEaten
+        const   XMLCh* const    toTranscode
+        ,       char* const     toFill
+        , const unsigned int    maxChars
     ) = 0;
 
 
@@ -212,39 +300,29 @@ protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
-    XMLTranscoder();
+    XMLLCPTranscoder();
 
 
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    XMLTranscoder(const XMLTranscoder&);
-    void operator=(const XMLTranscoder&);
+    XMLLCPTranscoder(const XMLLCPTranscoder&);
+    void operator=(const XMLLCPTranscoder&);
 };
 
 
 // ---------------------------------------------------------------------------
-//  XLMTransService: Hidden constructors and destructor
+//  XMLTranscoder: Protected helper methods
 // ---------------------------------------------------------------------------
-inline XMLTransService::XMLTransService()
+inline unsigned int XMLTranscoder::getBlockSize() const
 {
+    return fBlockSize;
 }
 
-inline XMLTransService::~XMLTransService()
+inline const XMLCh* XMLTranscoder::getEncodingName() const
 {
-}
-
-
-// ---------------------------------------------------------------------------
-//  XLMTranscoder: Hidden constructors and destructor
-// ---------------------------------------------------------------------------
-inline XMLTranscoder::XMLTranscoder()
-{
-}
-
-inline XMLTranscoder::~XMLTranscoder()
-{
+    return fEncodingName;
 }
 
 #endif

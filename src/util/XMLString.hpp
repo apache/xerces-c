@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:05:52  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:41:28  roddey
+ * Support for the new transcoder system, where even intrinsic encodings are
+ * done via the same transcoder abstraction as external ones.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:05:52  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:21  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -69,7 +73,7 @@
 
 #include <util/XML4CDefs.hpp>
 
-class XMLTranscoder;
+class XMLLCPTranscoder;
 
 class XMLUTIL_EXPORT XMLString
 {
@@ -357,7 +361,7 @@ private :
     // -----------------------------------------------------------------------
     //  Initialization, called from PlatformInit class
     // -----------------------------------------------------------------------
-    static void initString(XMLTranscoder* const defToUse);
+    static void initString(XMLLCPTranscoder* const defToUse);
 };
 
 #endif

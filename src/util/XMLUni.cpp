@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:05:54  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:41:29  roddey
+ * Support for the new transcoder system, where even intrinsic encodings are
+ * done via the same transcoder abstraction as external ones.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:05:54  twl
+ * Initial checkin
  *
  * Revision 1.5  1999/11/08 20:45:21  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -212,6 +216,31 @@ const XMLCh XMLUni::fgIncludeString[] =
     chLatin_I, chLatin_N, chLatin_C, chLatin_L, chLatin_U, chLatin_D, chLatin_E, chNull
 };
 
+const XMLCh XMLUni::fgISO88591EncodingString[] =
+{
+    chLatin_I, chLatin_S, chLatin_O, chDigit_8, chDigit_8, chDigit_5, chDigit_9, chDash, chDigit_1, chNull
+};
+
+const XMLCh XMLUni::fgISO88591EncodingString2[] =
+{
+    chLatin_I, chLatin_S, chLatin_O, chDash, chDigit_8, chDigit_8, chDigit_5, chDigit_9, chDash, chDigit_1, chNull
+};
+
+const XMLCh XMLUni::fgISO88591EncodingString3[] =
+{
+    chLatin_I, chLatin_S, chLatin_O, chUnderscore, chDigit_8, chDigit_8, chDigit_5, chDigit_9, chDash, chDigit_1, chNull
+};
+
+const XMLCh XMLUni::fgISO88591EncodingString4[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_8, chDigit_1, chDigit_9, chNull
+};
+
+const XMLCh XMLUni::fgISO88591EncodingString5[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDigit_8, chDigit_1, chDigit_9, chNull
+};
+
 const XMLCh XMLUni::fgNoString[] =
 {
     chLatin_n, chLatin_o, chNull
@@ -345,6 +374,21 @@ const XMLCh XMLUni::fgUTF8EncodingString2[] =
 const XMLCh XMLUni::fgUTF16EncodingString[] =
 {
     chLatin_U, chLatin_T, chLatin_F, chDash, chDigit_1, chDigit_6, chNull
+};
+
+const XMLCh XMLUni::fgUTF16EncodingString2[] =
+{
+    chLatin_U, chLatin_C, chLatin_S, chDigit_2, chNull
+};
+
+const XMLCh XMLUni::fgUTF16EncodingString3[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDigit_1, chDigit_2, chDigit_0, chDigit_0, chNull
+};
+
+const XMLCh XMLUni::fgUTF16EncodingString4[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_2, chDigit_0, chDigit_0, chNull
 };
 
 const XMLCh XMLUni::fgUTF16BEncodingString[] =

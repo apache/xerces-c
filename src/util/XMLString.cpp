@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:05:51  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:41:28  roddey
+ * Support for the new transcoder system, where even intrinsic encodings are
+ * done via the same transcoder abstraction as external ones.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:05:51  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:20  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -91,8 +95,8 @@
 //      which calls our init method. This is the converter used for default
 //      conversion to/from the local code page.
 // ---------------------------------------------------------------------------
-static XMLTranscoder*   gTranscoder = 0;
-static XMLCh            gNullStr[] =
+static XMLLCPTranscoder*    gTranscoder = 0;
+static XMLCh                gNullStr[] =
 {
     chOpenCurly, chLatin_n, chLatin_u, chLatin_l, chLatin_l, chCloseCurly, chNull
 };
@@ -981,7 +985,7 @@ void XMLString::trim(XMLCh* const toTrim)
 // ---------------------------------------------------------------------------
 //  XMLString: Private static methods
 // ---------------------------------------------------------------------------
-void XMLString::initString(XMLTranscoder* const defToUse)
+void XMLString::initString(XMLLCPTranscoder* const defToUse)
 {
     // Store away the default transcoder that we are to use
     gTranscoder = defToUse;
