@@ -149,9 +149,50 @@ XMLRecognizer::basicEncodingProbe(  const   XMLByte* const  rawBuffer
     //
     if (rawByteCount < 2)
         return UTF_8;
+         
+    //  
+    //  We have two to four bytes, so lets check for a UTF-16 BOM. That
+    //  is quick to check and enough to identify two major encodings.   
+    // 
+
+    if (rawByteCount < 4)
+    {
+        if ((rawBuffer[0] == 0xFE) && (rawBuffer[1] == 0xFF))
+            return UTF_16B;
+        else if ((rawBuffer[0] == 0xFF) && (rawBuffer[1] == 0xFE))
+            return UTF_16L;
+        else 
+            return UTF_8;
+    }
+
+    /***
+     *    F.1 Detection Without External Encoding Information
+     *
+     *    Because each XML entity not accompanied by external encoding information and 
+     *    not in UTF-8 or UTF-16 encoding must begin with an XML encoding declaration, 
+     *    in which the first characters must be '<?xml', any conforming processor can detect, 
+     *    after two to four octets of input, which of the following cases apply. 
+     *
+     *    In reading this list, it may help to know that in UCS-4, '<' is "#x0000003C" and 
+     *    '?' is "#x0000003F", and the Byte Order Mark required of UTF-16 data streams is 
+     *    "#xFEFF". The notation ## is used to denote any byte value except that two consecutive 
+     *    ##s cannot be both 00.
+     *
+     *    With a Byte Order Mark:
+     *
+     *    00 00 FE FF           UCS-4,    big-endian machine    (1234 order) 
+     *    FF FE 00 00           UCS-4,    little-endian machine (4321 order) 
+     *    00 00 FF FE           UCS-4,    unusual octet order   (2143) 
+     *    FE FF 00 00           UCS-4,    unusual octet order   (3412) 
+     *    FE FF ## ##           UTF-16,   big-endian 
+     *    FF FE ## ##           UTF-16,   little-endian 
+     *    EF BB BF              UTF-8 
+     *
+     ***/
 
     //
-    //  Checking BOM for UCS-4BE, UCS-4LE, UTF-16BE and UTF-16LE
+    //  We have at least four bytes, so we can check all BOM
+    //  for UCS-4BE, UCS-4LE, UTF-16BE and UTF-16LE as well.
     //
     if ((rawBuffer[0] == 0x00) && (rawBuffer[1] == 0x00) && (rawBuffer[2] == 0xFE) && (rawBuffer[3] == 0xFF))
         return UCS_4B;
@@ -161,14 +202,6 @@ XMLRecognizer::basicEncodingProbe(  const   XMLByte* const  rawBuffer
         return UTF_16B;
     else if ((rawBuffer[0] == 0xFF) && (rawBuffer[1] == 0xFE))
         return UTF_16L;
-
-    //
-    //  Oh well, not one of those. So now lets see if we have at least 4
-    //  bytes. If not, then we are out of ideas and can return UTF-8 as the
-    //  fallback.
-    //
-    if (rawByteCount < 4)
-        return UTF_8;
 
     //
     //  We have at least 4 bytes. So lets check the 4 byte sequences that
