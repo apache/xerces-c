@@ -1,4 +1,4 @@
-# Microsoft Developer Studio Project File - Name="ThreadTest" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="MemHandlerTest" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  /subsystem:console /machine:I386
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib  /subsystem:console /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib  /version:1.0 /subsystem:console /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 
 !ELSEIF  "$(CFG)" == "MemHandlerTest - Win32 Debug"
 
@@ -69,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP  /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP  /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /GZ /c
+# ADD CPP  /G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
@@ -79,7 +79,6 @@ BSC32=bscmake.exe
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  /subsystem:console /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib  /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
-# SUBTRACT LINK32 /incremental:no
 
 !ELSEIF  "$(CFG)" == "MemHandlerTest - Win64 Debug"
 
@@ -95,7 +94,7 @@ LINK32=link.exe
 # PROP Intermediate_Dir "..\..\..\..\..\Build\Win64\VC6\Debug\obj"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP  /G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /GZ /c
+# ADD BASE CPP  /G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /GZ /c
 # SUBTRACT BASE CPP /YX
 # ADD CPP /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -104,9 +103,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 
 # ADD BSC32 
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2D.lib  /subsystem:console /debug /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
-# SUBTRACT BASE LINK32 /incremental:no
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /debug /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
+# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2D.lib  /subsystem:console /debug  /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /debug  /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64
 # SUBTRACT LINK32  /pdb:none
 
 !ELSEIF  "$(CFG)" == "MemHandlerTest - Win64 Release"
@@ -132,8 +130,8 @@ BSC32=bscmake.exe
 # ADD BASE BSC32 
 # ADD BSC32 
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2.lib  /subsystem:console /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
-# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
+# ADD BASE LINK32 kernel32.lib user32.lib xerces-c_2.lib  /version:1.0 /subsystem:console  /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:yes  /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64
 # SUBTRACT LINK32  /pdb:none
 
 !ENDIF 
@@ -150,12 +148,27 @@ LINK32=link.exe
 # Begin Source File
 
 SOURCE=..\..\..\..\..\tests\MemHandlerTest\MemoryMonitor.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\tests\MemHandlerTest\SimpleHashPtr.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=..\..\..\..\..\tests\MemHandlerTest\MemoryMonitor.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\tests\MemHandlerTest\SimpleHashPtr.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\tests\MemHandlerTest\SimpleValueHashTableOf.hpp
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 

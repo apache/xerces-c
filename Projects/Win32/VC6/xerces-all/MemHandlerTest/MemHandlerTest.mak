@@ -37,11 +37,11 @@ OutDir=.\..\..\..\..\..\Build\Win32\VC6\Release
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\MemoryMonitor.exe"
+ALL : "$(OUTDIR)\MemHandlerTest.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win32 Release" "$(OUTDIR)\MemoryMonitor.exe"
+ALL : "XercesLib - Win32 Release" "$(OUTDIR)\MemHandlerTest.exe"
 
 !ENDIF 
 
@@ -53,7 +53,7 @@ CLEAN :
 	-@erase "$(INTDIR)\MemoryMonitor.obj"
 	-@erase "$(INTDIR)\SimpleHashPtr.obj"
 	-@erase "$(INTDIR)\vc60.idb"
-	-@erase "$(OUTDIR)\MemoryMonitor.exe"
+	-@erase "$(OUTDIR)\MemHandlerTest.exe"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -96,17 +96,17 @@ CPP_PROJ=/G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "_CONSO
 
 RSC=rc.exe
 BSC32=bscmake.exe
-BSC32_FLAGS=/o"$(OUTDIR)\MemoryMonitor.bsc" 
+BSC32_FLAGS=/o"$(OUTDIR)\MemHandlerTest.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:no /pdb:"$(OUTDIR)\MemoryMonitor.pdb" /machine:I386 /out:"$(OUTDIR)\MemoryMonitor.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:no /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /machine:I386 /out:"$(OUTDIR)\MemHandlerTest.exe" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_2.lib"
 
-"$(OUTDIR)\MemoryMonitor.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -121,11 +121,11 @@ OutDir=.\..\..\..\..\..\Build\Win32\VC6\Debug
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\MemoryMonitor.exe"
+ALL : "$(OUTDIR)\MemHandlerTest.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win32 Debug" "$(OUTDIR)\MemoryMonitor.exe"
+ALL : "XercesLib - Win32 Debug" "$(OUTDIR)\MemHandlerTest.exe"
 
 !ENDIF 
 
@@ -138,9 +138,9 @@ CLEAN :
 	-@erase "$(INTDIR)\SimpleHashPtr.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
-	-@erase "$(OUTDIR)\MemoryMonitor.exe"
-	-@erase "$(OUTDIR)\MemoryMonitor.ilk"
-	-@erase "$(OUTDIR)\MemoryMonitor.pdb"
+	-@erase "$(OUTDIR)\MemHandlerTest.exe"
+	-@erase "$(OUTDIR)\MemHandlerTest.ilk"
+	-@erase "$(OUTDIR)\MemHandlerTest.pdb"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -149,7 +149,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_CONSOLE" /D "WIN32" /D "_WINDOWS" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -183,17 +183,17 @@ CPP_PROJ=/G6 /MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "_DEBUG" /D "_C
 
 RSC=rc.exe
 BSC32=bscmake.exe
-BSC32_FLAGS=/o"$(OUTDIR)\MemoryMonitor.bsc" 
+BSC32_FLAGS=/o"$(OUTDIR)\MemHandlerTest.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemoryMonitor.pdb" /debug /machine:I386 /out:"$(OUTDIR)\MemoryMonitor.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /debug /machine:I386 /out:"$(OUTDIR)\MemHandlerTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib"
 
-"$(OUTDIR)\MemoryMonitor.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -208,11 +208,11 @@ OutDir=.\..\..\..\..\..\Build\Win64\VC6\Debug
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\MemoryMonitor.exe"
+ALL : "$(OUTDIR)\MemHandlerTest.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win64 Debug" "$(OUTDIR)\MemoryMonitor.exe"
+ALL : "XercesLib - Win64 Debug" "$(OUTDIR)\MemHandlerTest.exe"
 
 !ENDIF 
 
@@ -225,9 +225,9 @@ CLEAN :
 	-@erase "$(INTDIR)\SimpleHashPtr.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
-	-@erase "$(OUTDIR)\MemoryHandler.exe"
-	-@erase "$(OUTDIR)\MemoryHandler.ilk"
-	-@erase "$(OUTDIR)\MemoryHandler.pdb"
+	-@erase "$(OUTDIR)\MemHandlerTest.exe"
+	-@erase "$(OUTDIR)\MemHandlerTest.ilk"
+	-@erase "$(OUTDIR)\MemHandlerTest.pdb"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -270,17 +270,17 @@ CPP_PROJ=/MDd /W3 /Gm /GX /ZI /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_DEBUG"
 
 RSC=rc.exe
 BSC32=bscmake.exe
-BSC32_FLAGS=/o"$(OUTDIR)\MemoryMonitor.bsc" 
+BSC32_FLAGS=/o"$(OUTDIR)\MemHandlerTest.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemoryMonitor.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\MemoryMonitor.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\MemHandlerTest.exe" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib"
 
-"$(OUTDIR)\MemoryMonitor.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -295,11 +295,11 @@ OutDir=.\..\..\..\..\..\Build\Win64\VC6\Release
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\MemoryMonitor.exe"
+ALL : "$(OUTDIR)\MemHandlerTest.exe"
 
 !ELSE 
 
-ALL : "XercesLib - Win64 Release" "$(OUTDIR)\MemoryMonitor.exe"
+ALL : "XercesLib - Win64 Release" "$(OUTDIR)\MemHandlerTest.exe"
 
 !ENDIF 
 
@@ -311,8 +311,8 @@ CLEAN :
 	-@erase "$(INTDIR)\MemoryMonitor.obj"
 	-@erase "$(INTDIR)\SimpleHashPtr.obj"
 	-@erase "$(INTDIR)\vc60.idb"
-	-@erase "$(OUTDIR)\MemoryMonitor.exe"
-	-@erase "$(OUTDIR)\MemoryMonitor.ilk"
+	-@erase "$(OUTDIR)\MemHandlerTest.exe"
+	-@erase "$(OUTDIR)\MemHandlerTest.ilk"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -355,17 +355,17 @@ CPP_PROJ=/MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D 
 
 RSC=rc.exe
 BSC32=bscmake.exe
-BSC32_FLAGS=/o"$(OUTDIR)\MemoryMonitor.bsc" 
+BSC32_FLAGS=/o"$(OUTDIR)\MemHandlerTest.bsc" 
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemoryMonitor.pdb" /machine:IX86 /out:"$(OUTDIR)\MemoryMonitor.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:console /incremental:yes /pdb:"$(OUTDIR)\MemHandlerTest.pdb" /machine:IX86 /out:"$(OUTDIR)\MemHandlerTest.exe" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\MemoryMonitor.obj" \
 	"$(INTDIR)\SimpleHashPtr.obj" \
 	"$(OUTDIR)\xerces-c_2.lib"
 
-"$(OUTDIR)\MemoryMonitor.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\MemHandlerTest.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -374,10 +374,10 @@ LINK32_OBJS= \
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
-!IF EXISTS("MemoryMonitor.dep")
-!INCLUDE "MemoryMonitor.dep"
+!IF EXISTS("MemHandlerTest.dep")
+!INCLUDE "MemHandlerTest.dep"
 !ELSE 
-!MESSAGE Warning: cannot find "MemoryMonitor.dep"
+!MESSAGE Warning: cannot find "MemHandlerTest.dep"
 !ENDIF 
 !ENDIF 
 
@@ -389,8 +389,10 @@ SOURCE=..\..\..\..\..\tests\MemHandlerTest\MemoryMonitor.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 SOURCE=..\..\..\..\..\tests\MemHandlerTest\SimpleHashPtr.cpp
+
 "$(INTDIR)\SimpleHashPtr.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
+
 
 !IF  "$(CFG)" == "MemHandlerTest - Win32 Release"
 
