@@ -381,8 +381,8 @@ private:
           break;
       case Token::T_MODIFIERGROUP:
           ret = fOpFactory.createModifierOp(next, result,
-                                     ((ModifierToken *) token)->getOptions(),
-                                     ((ModifierToken *) token)->getOptionsMask());
+                                     ((const ModifierToken *) token)->getOptions(),
+                                     ((const ModifierToken *) token)->getOptionsMask());
           break;
       }
 
@@ -448,7 +448,7 @@ private:
                                                  Op* const next,
                                                  const bool reverse) {
 
-      Token* condTok = ((ConditionToken*) token)->getConditionToken();
+      Token* condTok = ((const ConditionToken*) token)->getConditionToken();
       Token* yesTok  = token->getChild(0);
       Token* noTok   = token->getChild(1);
       int    refNo   = token->getReferenceNo();
@@ -632,11 +632,11 @@ private:
   }
 
   inline bool RegularExpression::matchIgnoreCase(const XMLInt32 ch1,
-                                               const XMLInt32 ch2)
-{
+                                                 const XMLInt32 ch2)
+  {
 
-    return (0==XMLString::compareNIString((XMLCh*)&ch1,(XMLCh*)&ch2, 1));
-}
+      return (0==XMLString::compareNIString((const XMLCh*)&ch1,(const XMLCh*)&ch2, 1));
+  }
 
 
 XERCES_CPP_NAMESPACE_END
