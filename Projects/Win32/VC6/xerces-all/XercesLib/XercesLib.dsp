@@ -1319,6 +1319,10 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLDocumentHandler.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLDTDDescription.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLDTDDescription.hpp
 # End Source File
 # Begin Source File
@@ -1359,6 +1363,10 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLFormatter.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLGrammarDescription.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLGrammarDescription.hpp
 # End Source File
 # Begin Source File
@@ -1392,6 +1400,10 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRefInfo.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRefInfo.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLSchemaDescription.cpp
 # End Source File
 # Begin Source File
 
@@ -1759,6 +1771,10 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\common\DFAContentModel.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\validators\common\DFAContentModel.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\Grammar.cpp
 # End Source File
 # Begin Source File
 
