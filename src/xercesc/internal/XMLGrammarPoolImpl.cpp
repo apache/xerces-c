@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/11/25 18:18:39  knoaman
+ * Check for out of memory exception. Thanks to David Cargill.
+ *
  * Revision 1.14  2003/11/21 22:38:50  neilg
  * Enable grammar pools and grammar resolvers to manufacture
  * XSModels.  This also cleans up handling in the
@@ -119,7 +122,7 @@
 #include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
-
+#include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/SynchronizedStringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -442,6 +445,10 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
          ***/
         XTemplateSerializer::loadObject(&fGrammarRegistry, 29, true, serEng);
 
+    }
+    catch(const OutOfMemoryException&)
+    {
+        throw;
     }
     catch(...)
     {
