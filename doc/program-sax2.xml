@@ -114,8 +114,8 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
 
         char* xmlFile = "x1.xml";
         SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
-        parser->setFeature(XMLUni::fgSAX2CoreValidation, true)   // optional
-        parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true)   // optional
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);   // optional
+        parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, true);   // optional
 
         DefaultHandler* defaultHandler = new DefaultHandler();
         parser->setContentHandler(defaultHandler);

@@ -898,19 +898,20 @@ delete parser;
     </a>
   </faq>
 
-  <faq title="Why do we have two versions of XMLString::transcode (one with memory manager and one without)?">
+  <faq title="Why do we have two versions of some XMLString methods (one with memory manager and one without)?">
 
-    <q>Why do we have two versions of XMLString::transcode (one with memory manager and one without)?</q>
+    <q>Why do we have two versions of some XMLString methods (one with memory manager and one without)?</q>
 
     <a>
 
-      <p>With the introdcution of the configurable memory manager, we didn't want to break users by
-         changing the signature of the method. Also, we did not want to provide a default memory
+      <p>With the introduction of the configurable memory manager, we didn't want to break users by
+         changing the signature of the existing methods (for example, transcode and replicate). Also, 
+         we did not want to provide a default memory
          manager as it would introduce a side effect with users experiencing some strange core dumps.
          The latter will occur when the scope of the string allocated is beyond that of
          XMLPlatformUtils::Terminate (i.e. a string is allocated using the default memory manager
          which is deleted when XMLPlatformUtils::Terminate is called, but the allocated string is
-         deleted later). We plan to deprecate the transcode method with no parameters in later releases.
+         deleted later). We plan to deprecate the methods without a memory manager in a later release.
       </p>
 
     </a>
