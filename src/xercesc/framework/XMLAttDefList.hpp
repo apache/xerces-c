@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/20 11:47:30  gareth
+ * Constructor take memory manager and get method for it.
+ *
  * Revision 1.5  2003/10/10 16:23:29  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -162,15 +165,48 @@ public:
      ***/
     DECL_XSERIALIZABLE(XMLAttDefList)
 
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+
+    /** @name Getter methods */
+    //@{
+
+    /** Get the memory manager
+      *
+      * This method returns the configurable memory manager used by the
+      * element declaration for dynamic allocation/deacllocation.
+      *
+      * @return the memory manager
+      */
+    MemoryManager* getMemoryManager() const;
+
+    //@}
+
 protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors and operators
     // -----------------------------------------------------------------------
-    XMLAttDefList();
+    XMLAttDefList(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     XMLAttDefList(const XMLAttDefList&);
     XMLAttDefList& operator=(const XMLAttDefList&);
+
+
+private:
+    MemoryManager*      fMemoryManager;
 };
 
+
+
+// ---------------------------------------------------------------------------
+//  XMLAttDefList: Getter methods
+// ---------------------------------------------------------------------------
+
+inline MemoryManager* XMLAttDefList::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLAttDefList: Constructors and Destructor
@@ -183,7 +219,8 @@ inline XMLAttDefList::~XMLAttDefList()
 // ---------------------------------------------------------------------------
 //  XMLAttDefList: Hidden Constructors and Operators
 // ---------------------------------------------------------------------------
-inline XMLAttDefList::XMLAttDefList()
+inline XMLAttDefList::XMLAttDefList(MemoryManager* const manager):
+fMemoryManager(manager)
 {
 }
 
