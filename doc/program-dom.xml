@@ -1242,7 +1242,6 @@
            </p>
 
            <s4 title="DOM Features">
-            <anchor name="validation"/>
             <table>
                 <tr><th colspan="2"><em>discard-default-content</em></th></tr>
                 <tr><th><em>true:</em></th><td> Use whatever information available to the implementation
