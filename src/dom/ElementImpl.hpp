@@ -120,23 +120,21 @@ public:
 
 	//Utils for the DOM_NamedNodeMap wrapper class
 	//All NamedNodeMap utils begin with NNM
-    virtual NamedNodeMapImpl *NNM_cloneMap(NodeImpl *ownerNode);
-//    static  void            NNM_addRef(NamedNodeMapImpl *);
-    virtual int             NNM_findNamePoint(const DOMString &name);
+    virtual NamedNodeMapImpl *NNM_cloneMap(NodeImpl *nnm_ownerNode);
+    virtual int             NNM_findNamePoint(const DOMString &nnm_name);
     virtual unsigned int    NNM_getLength();
-    virtual NodeImpl       *NNM_getNamedItem(const DOMString &name);
-    virtual NodeImpl       *NNM_item(unsigned int index);
+    virtual NodeImpl       *NNM_getNamedItem(const DOMString &nnm_name);
+    virtual NodeImpl       *NNM_item(unsigned int nnm_index);
     virtual void            NNM_removeAll();
-    virtual NodeImpl       *NNM_removeNamedItem(const DOMString &name);
-//    static  void            NNM_removeRef(NamedNodeMapImpl *);
-    virtual NodeImpl       *NNM_setNamedItem(NodeImpl *arg);
-    virtual void            NNM_setReadOnly(bool readOnly, bool deep);
+    virtual NodeImpl       *NNM_removeNamedItem(const DOMString &nnm_name);
+    virtual NodeImpl       *NNM_setNamedItem(NodeImpl *nnm_arg);
+    virtual void            NNM_setReadOnly(bool nnm_readOnly, bool nnm_deep);
     //Introduced in DOM Level 2
-    virtual int             NNM_findNamePoint(const DOMString &namespaceURI, const DOMString &localName);
-    virtual NodeImpl       *NNM_getNamedItemNS(const DOMString &namespaceURI, const DOMString &localName);
-    virtual NodeImpl       *NNM_setNamedItemNS(NodeImpl *arg);
-    virtual NodeImpl       *NNM_removeNamedItemNS(const DOMString &namespaceURI, const DOMString &localName);
-    virtual void            NNM_setOwnerDocument(DocumentImpl *doc);
+    virtual int             NNM_findNamePoint(const DOMString &nnm_namespaceURI, const DOMString &nnm_localName);
+    virtual NodeImpl       *NNM_getNamedItemNS(const DOMString &nnm_namespaceURI, const DOMString &nnm_localName);
+    virtual NodeImpl       *NNM_setNamedItemNS(NodeImpl *nnm_arg);
+    virtual NodeImpl       *NNM_removeNamedItemNS(const DOMString &nnm_namespaceURI, const DOMString &nnm_localName);
+    virtual void            NNM_setOwnerDocument(DocumentImpl *nnm_doc);
 
 
 };

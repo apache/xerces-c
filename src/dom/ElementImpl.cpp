@@ -377,14 +377,14 @@ DeepNodeListImpl *ElementImpl::getElementsByTagNameNS(const DOMString &fNamespac
 }
 
 // DOM_NamedNodeMap UTILITIES
-NamedNodeMapImpl *ElementImpl::NNM_cloneMap(NodeImpl *ownerNode) 
+NamedNodeMapImpl *ElementImpl::NNM_cloneMap(NodeImpl *nnm_ownerNode) 
 {
-	return (getAttributes() == null) ? null : ownerNode->getAttributes()->cloneMap(ownerNode);
+	return (getAttributes() == null) ? null : nnm_ownerNode->getAttributes()->cloneMap(nnm_ownerNode);
 }
 
-int ElementImpl::NNM_findNamePoint(const DOMString &name)
+int ElementImpl::NNM_findNamePoint(const DOMString &nnm_name)
 {
-	return (getAttributes() == null) ? -1 : getAttributes()->findNamePoint(name);
+	return (getAttributes() == null) ? -1 : getAttributes()->findNamePoint(nnm_name);
 }
 
 unsigned int ElementImpl::NNM_getLength()
@@ -392,14 +392,14 @@ unsigned int ElementImpl::NNM_getLength()
 	return (getAttributes() == null) ? 0 : getAttributes()->getLength();
 }
 
-NodeImpl *ElementImpl::NNM_getNamedItem(const DOMString &name)
+NodeImpl *ElementImpl::NNM_getNamedItem(const DOMString &nnm_name)
 {
-	return (getAttributes() == null) ? null : getAttributes()->getNamedItem(name);
+	return (getAttributes() == null) ? null : getAttributes()->getNamedItem(nnm_name);
 }
 
-NodeImpl *ElementImpl::NNM_item(unsigned int index)
+NodeImpl *ElementImpl::NNM_item(unsigned int nnm_index)
 {
-	return (getAttributes() == null) ? null : getAttributes()->item(index);
+	return (getAttributes() == null) ? null : getAttributes()->item(nnm_index);
 }
 
 void ElementImpl::NNM_removeAll() 
@@ -408,56 +408,56 @@ void ElementImpl::NNM_removeAll()
 		getAttributes()->removeAll();
 }
 
-NodeImpl *ElementImpl::NNM_removeNamedItem(const DOMString &name)
+NodeImpl *ElementImpl::NNM_removeNamedItem(const DOMString &nnm_name)
 {
 	if (getAttributes() == null)
 		throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
 	else
-		return getAttributes()->removeNamedItem(name);
+		return getAttributes()->removeNamedItem(nnm_name);
 	return null;
 }
 
-NodeImpl *ElementImpl::NNM_setNamedItem(NodeImpl *arg)
+NodeImpl *ElementImpl::NNM_setNamedItem(NodeImpl *nnm_arg)
 {
 	if (getAttributes() == null)
 		attributes = new NamedNodeMapImpl(this);
-	return attributes->setNamedItem(arg);
+	return attributes->setNamedItem(nnm_arg);
 }
 
-void ElementImpl::NNM_setReadOnly(bool readOnly, bool deep)
+void ElementImpl::NNM_setReadOnly(bool nnm_readOnly, bool nnm_deep)
 {
 	if (getAttributes() != null)
-		getAttributes()->setReadOnly(readOnly, deep);
+		getAttributes()->setReadOnly(nnm_readOnly, nnm_deep);
 }
 
-int ElementImpl::NNM_findNamePoint(const DOMString &namespaceURI, const DOMString &localName)
+int ElementImpl::NNM_findNamePoint(const DOMString &nnm_namespaceURI, const DOMString &nnm_localName)
 {
-	return (getAttributes() == null) ? -1 : getAttributes()->findNamePoint(namespaceURI, localName);
+	return (getAttributes() == null) ? -1 : getAttributes()->findNamePoint(nnm_namespaceURI, nnm_localName);
 }
 
-NodeImpl *ElementImpl::NNM_getNamedItemNS(const DOMString &namespaceURI, const DOMString &localName)
+NodeImpl *ElementImpl::NNM_getNamedItemNS(const DOMString &nnm_namespaceURI, const DOMString &nnm_localName)
 {
-	return (getAttributes() == null) ? null : getAttributes()->getNamedItemNS(namespaceURI, localName);
+	return (getAttributes() == null) ? null : getAttributes()->getNamedItemNS(nnm_namespaceURI, nnm_localName);
 }
 
-NodeImpl *ElementImpl::NNM_setNamedItemNS(NodeImpl *arg)
+NodeImpl *ElementImpl::NNM_setNamedItemNS(NodeImpl *nnm_arg)
 {
 	if (getAttributes() == null)
 		attributes = new NamedNodeMapImpl(this);
-	return getAttributes()->setNamedItemNS(arg);
+	return getAttributes()->setNamedItemNS(nnm_arg);
 }
 
-NodeImpl *ElementImpl::NNM_removeNamedItemNS(const DOMString &namespaceURI, const DOMString &localName)
+NodeImpl *ElementImpl::NNM_removeNamedItemNS(const DOMString &nnm_namespaceURI, const DOMString &nnm_localName)
 {
 	if (getAttributes() == null)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
 	else
-		return getAttributes()->removeNamedItemNS(namespaceURI, localName);
+		return getAttributes()->removeNamedItemNS(nnm_namespaceURI, nnm_localName);
 	return null;
 }
 
-void ElementImpl::NNM_setOwnerDocument(DocumentImpl *doc)
+void ElementImpl::NNM_setOwnerDocument(DocumentImpl *nnm_doc)
 {
 	if (getAttributes() != null)
-		getAttributes()->setOwnerDocument(doc);
+		getAttributes()->setOwnerDocument(nnm_doc);
 }
