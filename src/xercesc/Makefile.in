@@ -204,7 +204,7 @@ distclean::
 #docs::
 
 samples::
-	${MAKE} -C ../samples
+	${MAKE} -C ../../samples
 
 copy:: lib samples
 	@echo Make the target directory and its main subdirectories
