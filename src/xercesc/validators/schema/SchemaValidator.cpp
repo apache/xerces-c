@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.54  2004/07/27 02:09:41  amassari
+ * reset() was not resetting the stack of types (jira#1245)
+ *
  * Revision 1.53  2004/03/01 21:06:38  knoaman
  * Fix for UPA checking
  *
@@ -601,6 +604,7 @@ void SchemaValidator::reset()
 {
     fTrailing = false;
     fSeenId = false;
+	fTypeStack->removeAllElements();
     delete fXsiType;
     fXsiType = 0;
     fCurrentDatatypeValidator = 0;
