@@ -217,6 +217,18 @@ public :
     static const XMLCh fgZeroString[];
     static const XMLCh fgNullString[];
 
+    // SAX2 features/properties names
+    static const XMLCh fgSAX2CoreValidation[];
+    static const XMLCh fgSAX2CoreNameSpaces[];
+    static const XMLCh fgSAX2CoreNameSpacePrefixes[];
+    static const XMLCh fgSAX2XercesDynamic[];
+    static const XMLCh fgSAX2XercesReuseValidator[];
+    static const XMLCh fgSAX2XercesReuseGrammar[];
+    static const XMLCh fgSAX2XercesSchema[];
+    static const XMLCh fgSAX2XercesSchemaFullChecking[];
+    static const XMLCh fgSAX2XercesSchemaExternalSchemaLocation[];
+    static const XMLCh fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation[];
+
 };
 
 #endif

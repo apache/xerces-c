@@ -827,3 +827,146 @@ const XMLCh XMLUni::fgNullString[] =
     chLatin_n, chLatin_u, chLatin_l, chLatin_l, chNull
 };
 
+// SAX2 Core: http://xml.org/sax/features/validation
+const XMLCh XMLUni::fgSAX2CoreValidation[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_x, chLatin_m, chLatin_l, chPeriod, chLatin_o
+    ,   chLatin_r, chLatin_g, chForwardSlash, chLatin_s, chLatin_a, chLatin_x
+    ,   chForwardSlash, chLatin_f, chLatin_e, chLatin_a, chLatin_t, chLatin_u
+    ,   chLatin_r, chLatin_e, chLatin_s, chForwardSlash, chLatin_v, chLatin_a
+    ,   chLatin_l, chLatin_i, chLatin_d, chLatin_a, chLatin_t, chLatin_i
+    ,   chLatin_o, chLatin_n, chNull
+};
+
+// SAX2 Core: http://xml.org/sax/features/namespaces
+const XMLCh XMLUni::fgSAX2CoreNameSpaces[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_x, chLatin_m, chLatin_l, chPeriod, chLatin_o
+    ,   chLatin_r, chLatin_g, chForwardSlash, chLatin_s, chLatin_a, chLatin_x
+    ,   chForwardSlash, chLatin_f, chLatin_e, chLatin_a, chLatin_t, chLatin_u
+    ,   chLatin_r, chLatin_e, chLatin_s, chForwardSlash, chLatin_n, chLatin_a
+    ,   chLatin_m, chLatin_e, chLatin_s, chLatin_p, chLatin_a, chLatin_c
+    ,   chLatin_e, chLatin_s, chNull
+};
+
+//SAX2 Core: http://xml.org/sax/features/namespace-prefixes
+const XMLCh XMLUni::fgSAX2CoreNameSpacePrefixes[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_x, chLatin_m, chLatin_l, chPeriod, chLatin_o
+    ,   chLatin_r, chLatin_g, chForwardSlash, chLatin_s, chLatin_a, chLatin_x
+    ,   chForwardSlash, chLatin_f, chLatin_e, chLatin_a, chLatin_t, chLatin_u
+    ,   chLatin_r, chLatin_e, chLatin_s, chForwardSlash, chLatin_n, chLatin_a
+    ,   chLatin_m, chLatin_e, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e
+    ,   chDash, chLatin_p, chLatin_r, chLatin_e, chLatin_f, chLatin_i, chLatin_x
+    ,   chLatin_e, chLatin_s, chNull
+};
+
+//Xerces: http://apache.org/xml/features/validation/dynamic
+const XMLCh XMLUni::fgSAX2XercesDynamic[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash , chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
+    ,   chLatin_d, chLatin_y, chLatin_n, chLatin_a, chLatin_m, chLatin_i, chLatin_c, chNull
+};
+
+//Xerces: http://apache.org/xml/features/validation/reuse-grammar
+const XMLCh XMLUni::fgSAX2XercesReuseGrammar[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
+    ,   chLatin_r, chLatin_e, chLatin_u, chLatin_s, chLatin_e, chDash, chLatin_g
+    ,   chLatin_r, chLatin_a,	chLatin_m, chLatin_m, chLatin_a, chLatin_r, chNull
+};
+
+//Xerces: http://apache.org/xml/features/validation/schema
+const XMLCh XMLUni::fgSAX2XercesSchema[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
+    ,   chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chNull
+};
+
+//Xerces: http://apache.org/xml/features/validation/schema-full-checking
+const XMLCh XMLUni::fgSAX2XercesSchemaFullChecking[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
+    ,   chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chDash
+    ,   chLatin_f, chLatin_u, chLatin_l, chLatin_l, chDash, chLatin_c, chLatin_h
+    ,   chLatin_e, chLatin_c, chLatin_k, chLatin_i, chLatin_n, chLatin_g, chNull
+};
+
+//deprecated
+//Xerces: http://apache.org/xml/features/validation/reuse-validator
+const XMLCh XMLUni::fgSAX2XercesReuseValidator[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
+    ,   chLatin_r, chLatin_e, chLatin_u, chLatin_s, chLatin_e, chDash, chLatin_v
+    ,   chLatin_a, chLatin_l, chLatin_i, chLatin_d, chLatin_a, chLatin_t
+    ,   chLatin_o, chLatin_r, chNull
+};
+
+
+//Property
+//Xerces: http://apache.org/xml/properties/schema/external-schemaLocation
+const XMLCh XMLUni::fgSAX2XercesSchemaExternalSchemaLocation[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_p, chLatin_r
+    ,   chLatin_o, chLatin_p, chLatin_e, chLatin_r, chLatin_t, chLatin_i
+    ,   chLatin_e, chLatin_s, chForwardSlash, chLatin_s, chLatin_c, chLatin_h
+    ,   chLatin_e, chLatin_m, chLatin_a, chForwardSlash, chLatin_e, chLatin_x
+    ,   chLatin_t, chLatin_e, chLatin_r, chLatin_n, chLatin_a, chLatin_l, chDash
+    ,   chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chLatin_L
+    ,   chLatin_o, chLatin_c, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+//Property
+//Xerces: http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation
+const XMLCh XMLUni::fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_p, chLatin_r
+    ,   chLatin_o, chLatin_p, chLatin_e, chLatin_r, chLatin_t, chLatin_i
+    ,   chLatin_e, chLatin_s, chForwardSlash, chLatin_s, chLatin_c, chLatin_h
+    ,   chLatin_e, chLatin_m, chLatin_a, chForwardSlash, chLatin_e, chLatin_x
+    ,   chLatin_t, chLatin_e, chLatin_r, chLatin_n, chLatin_a, chLatin_l, chDash
+    ,   chLatin_n, chLatin_o, chLatin_N, chLatin_a, chLatin_m, chLatin_e, chLatin_s
+    ,   chLatin_p, chLatin_a, chLatin_c, chLatin_e, chLatin_S, chLatin_c, chLatin_h
+    ,   chLatin_e, chLatin_m, chLatin_a, chLatin_L, chLatin_o, chLatin_c, chLatin_a
+    ,   chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+

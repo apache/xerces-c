@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:06  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/13 16:09:24  knoaman
+ * Move SAX2 features/properties names constants to XMLUni.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:06  peiyongz
+ * sane_include
  *
  * Revision 1.25  2002/01/28 17:47:41  knoaman
  * Some SAX calls were not passed to the LexicalHandler.
@@ -195,180 +198,6 @@
 #include <xercesc/internal/XMLScanner.hpp>
 #include <xercesc/parsers/SAX2XMLReaderImpl.hpp>
 #include <string.h>
-
-// SAX2 Core: http://xml.org/sax/features/validation
-const XMLCh SAX2XMLReaderImpl::SAX_CORE_VALIDATION[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_s, chLatin_a, chLatin_x, chForwardSlash,
-		chLatin_f, chLatin_e, chLatin_a,
-		chLatin_t, chLatin_u, chLatin_r,
-		chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_v, chLatin_a, chLatin_l,
-		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
-		chLatin_i, chLatin_o, chLatin_n, chNull
-};
-
-// SAX2 Core: http://xml.org/sax/features/namespaces
-const XMLCh SAX2XMLReaderImpl::SAX_CORE_NAMESPACES[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_s, chLatin_a, chLatin_x, chForwardSlash,
-		chLatin_f, chLatin_e, chLatin_a,
-		chLatin_t, chLatin_u, chLatin_r,
-		chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_n, chLatin_a, chLatin_m,
-		chLatin_e, chLatin_s, chLatin_p, chLatin_a,
-		chLatin_c, chLatin_e, chLatin_s, chNull
-};
-
-//SAX2 Core: http://xml.org/sax/features/namespace-prefixes
-const XMLCh SAX2XMLReaderImpl::SAX_CORE_NAMESPACE_PREFIXES[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_s, chLatin_a, chLatin_x, chForwardSlash,
-		chLatin_f, chLatin_e, chLatin_a,
-		chLatin_t, chLatin_u, chLatin_r,
-		chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_n, chLatin_a, chLatin_m,
-		chLatin_e, chLatin_s, chLatin_p, chLatin_a,
-		chLatin_c, chLatin_e,
-		chDash, chLatin_p, chLatin_r, chLatin_e,
-		chLatin_f, chLatin_i, chLatin_x,
-		chLatin_e, chLatin_s, chNull
-};
-
-//Xerces: http://apache.org/xml/features/validation/dynamic
-const XMLCh SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
-		chLatin_f, chLatin_e, chLatin_a,
-		chLatin_t, chLatin_u, chLatin_r,
-		chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_v, chLatin_a, chLatin_l,
-		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
-		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
-		chLatin_d, chLatin_y, chLatin_n, chLatin_a,
-		chLatin_m, chLatin_i, chLatin_c, chNull
-};
-
-//Xerces: http://apache.org/xml/features/validation/reuse-grammar
-const XMLCh SAX2XMLReaderImpl::SAX_XERCES_REUSEGRAMMAR[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
-		chLatin_f, chLatin_e, chLatin_a,
-		chLatin_t, chLatin_u, chLatin_r,
-		chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_v, chLatin_a, chLatin_l,
-		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
-		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
-		chLatin_r, chLatin_e, chLatin_u, chLatin_s, chLatin_e, chDash,
-      chLatin_g, chLatin_r, chLatin_a,	chLatin_m, chLatin_m,
-      chLatin_a, chLatin_r, chNull
-};
-
-//Xerces: http://apache.org/xml/features/validation/schema
-const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
-		chLatin_f, chLatin_e, chLatin_a,
-		chLatin_t, chLatin_u, chLatin_r,
-		chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_v, chLatin_a, chLatin_l,
-		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
-		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
-		chLatin_s, chLatin_c, chLatin_h, chLatin_e,
-		chLatin_m, chLatin_a, chNull
-};
-
-//Xerces: http://apache.org/xml/features/validation/schema-full-checking
-const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_FULL_CHECKING[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
-		chLatin_f, chLatin_e, chLatin_a,
-		chLatin_t, chLatin_u, chLatin_r,
-		chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_v, chLatin_a, chLatin_l,
-		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
-		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
-		chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a,
-      chDash, chLatin_f, chLatin_u, chLatin_l, chLatin_l,
-      chDash, chLatin_c, chLatin_h, chLatin_e, chLatin_c, chLatin_k,
-      chLatin_i, chLatin_n, chLatin_g, chNull
-};
-
-//deprecated
-//Xerces: http://apache.org/xml/features/validation/reuse-validator
-const XMLCh SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
-		chLatin_f, chLatin_e, chLatin_a,
-		chLatin_t, chLatin_u, chLatin_r,
-		chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_v, chLatin_a, chLatin_l,
-		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
-		chLatin_i, chLatin_o, chLatin_n, chForwardSlash,
-		chLatin_r, chLatin_e, chLatin_u, chLatin_s,
-		chLatin_e, chDash, chLatin_v,
-		chLatin_a, chLatin_l,
-		chLatin_i, chLatin_d, chLatin_a, chLatin_t,
-		chLatin_o, chLatin_r, chNull
-};
-
-
-//Property
-//Xerces: http://apache.org/xml/properties/schema/external-schemaLocation
-const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_SCHEMALOCATION[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
-		chLatin_p, chLatin_r, chLatin_o, chLatin_p, chLatin_e, chLatin_r,
-      chLatin_t, chLatin_i, chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chForwardSlash,
-		chLatin_e, chLatin_x, chLatin_t, chLatin_e, chLatin_r, chLatin_n, chLatin_a, chLatin_l, chDash,
-      chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a,
-      chLatin_L, chLatin_o, chLatin_c, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
-};
-
-//Property
-//Xerces: http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation
-const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_NONAMESPACESCHEMALOCATION[] = {
-		chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-		chColon, chForwardSlash, chForwardSlash,
-		chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h, chLatin_e, chPeriod,
-		chLatin_o, chLatin_r, chLatin_g, chForwardSlash,
-		chLatin_x, chLatin_m, chLatin_l, chForwardSlash,
-		chLatin_p, chLatin_r, chLatin_o, chLatin_p, chLatin_e, chLatin_r,
-      chLatin_t, chLatin_i, chLatin_e, chLatin_s, chForwardSlash,
-		chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a, chForwardSlash,
-		chLatin_e, chLatin_x, chLatin_t, chLatin_e, chLatin_r, chLatin_n, chLatin_a, chLatin_l, chDash,
-      chLatin_n, chLatin_o, chLatin_N, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e,
-      chLatin_S, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a,
-      chLatin_L, chLatin_o, chLatin_c, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
-};
 
 const XMLCh gDTDEntityStr[] =
 {
@@ -1460,12 +1289,12 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 	if (fParseInProgress)
 		throw SAXNotSupportedException("Feature modification is not supported during parse.");
 	
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES) == 0)
+	if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
 	{
 		setDoNamespaces(value);
 	}
 
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_VALIDATION) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreValidation) == 0)
 	{
 		fValidation = value;
 		if (fValidation)
@@ -1478,12 +1307,12 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 	}
 
 
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACE_PREFIXES) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
 	{
 		fnamespacePrefix = value;
 	}
 
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesDynamic) == 0)
 	{
 		fautoValidation = value;
 		// for auto validation, the sax2 core validation feature must also be enabled.
@@ -1496,22 +1325,22 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 			setValidationScheme(Val_Never);
 	}
 
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesReuseValidator) == 0)
 	{
 		fReuseGrammar = value;
 	}
 
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEGRAMMAR) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesReuseGrammar) == 0)
 	{
 		fReuseGrammar = value;
 	}
 
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchema) == 0)
 	{
 		setDoSchema(value);
 	}
 
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_FULL_CHECKING) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaFullChecking) == 0)
 	{
 		fScanner->setValidationSchemaFullChecking(value);
 	}
@@ -1522,21 +1351,21 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 
 bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 {
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACES) == 0)
+	if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpaces) == 0)
 		return getDoNamespaces();
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_VALIDATION) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreValidation) == 0)
 		return fValidation;
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_CORE_NAMESPACE_PREFIXES) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
 		return fnamespacePrefix;
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_DYNAMIC) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesDynamic) == 0)
 		return fautoValidation;
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEVALIDATOR) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesReuseValidator) == 0)
         return fReuseGrammar;
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_REUSEGRAMMAR) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesReuseGrammar) == 0)
         return fReuseGrammar;
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchema) == 0)
         return getDoSchema();
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_FULL_CHECKING) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaFullChecking) == 0)
         return fScanner->getValidationSchemaFullChecking();
    else
        throw SAXNotRecognizedException("Unknown Feature");
@@ -1548,12 +1377,12 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 	if (fParseInProgress)
 		throw SAXNotSupportedException("Property modification is not supported during parse.");
 
-	if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_SCHEMALOCATION) == 0)
+	if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaExternalSchemaLocation) == 0)
 	{
 		fScanner->setExternalSchemaLocation((XMLCh*)value);
 	}
 
-	else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_NONAMESPACESCHEMALOCATION) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
 	{
 		fScanner->setExternalNoNamespaceSchemaLocation((XMLCh*)value);
 	}
@@ -1565,9 +1394,9 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 
 void* SAX2XMLReaderImpl::getProperty(const XMLCh* const name) const
 {
-    if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_SCHEMALOCATION) == 0)
+    if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaExternalSchemaLocation) == 0)
         return (void*)fScanner->getExternalSchemaLocation();
-    else if (XMLString::compareIString(name, SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_NONAMESPACESCHEMALOCATION) == 0)
+    else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
         return (void*)fScanner->getExternalNoNamespaceSchemaLocation();
     else
         throw SAXNotRecognizedException("Unknown Property");
