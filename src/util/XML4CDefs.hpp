@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/14 01:18:35  roddey
+ * Added a macro, XMLStrL(), which is defined one way or another according
+ * to whether the per-compiler file defines XML_LSTRSUPPORT or not. This
+ * allows conditional support of L"" type prefixes.
+ *
  * Revision 1.6  2000/01/14 00:52:06  roddey
  * Updated the version information for the next release, i.e. 1.1.0
  *
@@ -249,6 +254,18 @@ typedef int     bool;
 const   bool    true    = 1;
 const   bool    false   = 0;
 #endif
+
+
+// ---------------------------------------------------------------------------
+//  According to whether the compiler suports L"" type strings, we define
+//  the XMLStrL() macro one way or another.
+// ---------------------------------------------------------------------------
+#if defined(XML_LSTRSUPPORT)
+#define XMLStrL(str)  L##str
+#else
+#define XMLStrL(str)  str
+#endif
+
 
 
 // ---------------------------------------------------------------------------
