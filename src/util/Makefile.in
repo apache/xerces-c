@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.5  2000/01/05 22:06:11  aruna1
+# MsgCatalog support for AIX introduced
+#
 # Revision 1.4  1999/12/23 01:43:17  aruna1
 # MsgCatalog support added for solaris
 #
@@ -212,6 +215,10 @@ transcoders:
 messageloaders:
 ifeq (${MESSAGELOADER},ICONV)
 ifeq (${PLATFORM},SOLARIS)
+	mkdir -p ${MSG_DIR}
+	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
+endif        
+ifeq (${PLATFORM},AIX)
 	mkdir -p ${MSG_DIR}
 	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
 endif        
