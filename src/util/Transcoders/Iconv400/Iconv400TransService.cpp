@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -65,8 +65,8 @@
 #include "Iconv400TransService.hpp"
 #include <string.h>
 #include <qlgcase.h>
-#include "iconv_cnv.h"
-#include "iconv_util.h"
+#include "iconv_cnv.hpp"
+#include "iconv_util.hpp"
 #include <qusec.h>
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLString.hpp>
@@ -96,13 +96,6 @@ static UChar* convertToUChar(   const   XMLCh* const    toConvert
     return tmpBuf;
 }
 
-int32_t u_strlen(const XMLCh *s)
-{
-    int32_t i=0;
-    while(*s++)
-     i++;
-    return i;
-}
 // ---------------------------------------------------------------------------
 //  Local, const data
 // ---------------------------------------------------------------------------

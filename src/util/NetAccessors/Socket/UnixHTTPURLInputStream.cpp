@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/06/25 16:27:04  tng
+ * AS400 changes by Linda Swan.
+ *
  * Revision 1.5  2000/07/21 03:31:41  andyh
  * Improved (but still weak) http access by the parser.
  *
@@ -86,7 +89,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 
 #include <iostream.h>
 #include <unistd.h>
@@ -147,7 +149,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
                      XMLExcepts::NetAcc_TargetResolution);
         }
         if ((hostEntPtr =
-                gethostbyaddr((const char *) &numAddress,
+                gethostbyaddr((char *) &numAddress,
                               sizeof(unsigned long), AF_INET)) == NULL)
         {
             ThrowXML(NetAccessorException,
