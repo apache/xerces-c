@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/08/31 16:53:41  knoaman
+ * Misc. fixes.
+ *
  * Revision 1.6  2001/08/24 17:12:01  knoaman
  * Add support for anySimpleType.
  * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -276,7 +279,7 @@ RefVectorOf<DatatypeValidator>* UnionDatatypeValidator::getMemberTypeValidators(
 
 inline bool UnionDatatypeValidator::isAtomic() const {
 
-    unsigned int memberSize = fMemberTypeValidators->size();
+    unsigned int memberSize = (fMemberTypeValidators) ? fMemberTypeValidators->size() : 0;
 
     for (unsigned int i=0; i < memberSize; i++) {
         if (!fMemberTypeValidators->elementAt(i)->isAtomic()) {

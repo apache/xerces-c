@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/08/31 16:53:41  knoaman
+ * Misc. fixes.
+ *
  * Revision 1.6  2001/07/26 12:46:48  knoaman
  * Fix for bug 2815.
  *
@@ -1003,17 +1006,17 @@ Token* RegxParser::parseAtom() {
             }
 			break;
         case chLatin_c:
-            processBacksolidus_c();
+            return processBacksolidus_c();
         case chLatin_C:
-            processBacksolidus_C();
+            return processBacksolidus_C();
         case chLatin_i:
-            processBacksolidus_i();
+            return processBacksolidus_i();
         case chLatin_I:
-            processBacksolidus_I();
+            return processBacksolidus_I();
         case chLatin_g:
-            processBacksolidus_g();
+            return processBacksolidus_g();
         case chLatin_X:
-            processBacksolidus_X();
+            return processBacksolidus_X();
         case chDigit_0:
         case chDigit_1:
         case chDigit_2:

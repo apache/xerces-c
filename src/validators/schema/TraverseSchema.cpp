@@ -964,12 +964,6 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem,
         return traverseByRestriction(childElem, content, newSimpleTypeName, finalSet);
     }
     else if (varietyName.equals(SchemaSymbols::fgELT_UNION)) { //traverse union
-        if (baseRefContext & SchemaSymbols::UNION != 0) {
-
-           reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::MemberTypeNoUnion);
-           return resetCurrentTypeNameStack(-1);
-        }
-
         return traverseByUnion(childElem, content, newSimpleTypeName, finalSet, baseRefContext);
     }
     else {
@@ -2737,16 +2731,9 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
 
             const XMLCh* typeName = unionMembers.nextToken();
 
-            baseValidator = findDTValidator(rootElem, typeName,
-                                            SchemaSymbols::UNION);
+            baseValidator = findDTValidator(rootElem, typeName, SchemaSymbols::UNION);
 
             if (baseValidator == 0) {
-                return resetCurrentTypeNameStack(-1);
-            }
-
-            if (baseValidator->getType() == DatatypeValidator::Union) {
-
-                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::MemberTypeNoUnion, baseTypeName);
                 return resetCurrentTypeNameStack(-1);
             }
 
@@ -2778,12 +2765,6 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
             baseValidator = checkForSimpleTypeValidator(content, baseRefContext | SchemaSymbols::UNION);
 
             if (baseValidator == 0) {
-                return resetCurrentTypeNameStack(-1);
-            }
-
-            if (baseValidator->getType() == DatatypeValidator::Union) {
-
-                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::MemberTypeNoUnion, baseTypeName);
                 return resetCurrentTypeNameStack(-1);
             }
 
@@ -5054,7 +5035,24 @@ bool TraverseSchema::isValidFacet(const XMLCh* const component,
                                   const XMLCh* const name) {
 
     // TO DO
-    return true;
+    if (!XMLString::compareString(name, SchemaSymbols::fgELT_MINEXCLUSIVE) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_MININCLUSIVE) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_MAXEXCLUSIVE) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_MAXINCLUSIVE) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_TOTALDIGITS) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_FRACTIONDIGITS) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_LENGTH) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_MINLENGTH) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_MAXLENGTH) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_PERIOD) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_DURATION) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_ENUMERATION) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_PATTERN) ||
+        !XMLString::compareString(name, SchemaSymbols::fgELT_ANNOTATION)) {
+        return true;
+    }
+
+    return false;
 }
 
 
