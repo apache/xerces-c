@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/12/23 21:48:14  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0
+ *
  * Revision 1.9  2003/12/17 20:42:16  neilg
  * fix two overflow conditions
  *
@@ -122,26 +125,36 @@ XERCES_CPP_NAMESPACE_BEGIN
 XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawData
                                                ,       MemoryManager* const memMgr)
 {
-    XMLCh* retBuf = (XMLCh*) memMgr->allocate( (XMLString::stringLen(rawData)+1) * sizeof(XMLCh));
-    int    sign = 0;
-
-    XMLBigInteger::parseBigInteger(rawData, retBuf, sign);
-
-    if (sign == 0)
+    try 
     {
-        retBuf[0] = chDigit_0;
-        retBuf[1] = chNull;
-    }
-    else if (sign == -1)
+        XMLCh* retBuf = (XMLCh*) memMgr->allocate( (XMLString::stringLen(rawData) + 1) * sizeof(XMLCh));
+        int    sign = 0;
+
+        XMLBigInteger::parseBigInteger(rawData, retBuf, sign);
+
+        if (sign == 0)
+        {
+            retBuf[0] = chDigit_0;
+            retBuf[1] = chNull;
+        }
+        else if (sign == -1)
+        {
+            XMLCh* retBuffer = (XMLCh*) memMgr->allocate( (XMLString::stringLen(retBuf) + 2) * sizeof(XMLCh));
+            retBuffer[0] = chDash;
+            XMLString::copyString(&(retBuffer[1]), retBuf);
+            memMgr->deallocate(retBuf);
+            return retBuffer;
+        }
+
+        return retBuf;
+
+    }//
+
+    catch (...)
     {
-        XMLCh* retBuffer = (XMLCh*) memMgr->allocate( (XMLString::stringLen(retBuf) + 2) * sizeof(XMLCh));
-        retBuffer[0] = chDash;
-        XMLString::copyString(&(retBuffer[1]), retBuf);
-        memMgr->deallocate(retBuf);
-        return retBuffer;
+        return 0;
     }
 
-    return retBuf;
 }
 
 /***

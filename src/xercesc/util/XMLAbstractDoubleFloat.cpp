@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.22  2003/12/23 21:48:14  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0
+ *
  * Revision 1.21  2003/12/20 06:21:34  neilg
  * fix canonical representation production
  *
@@ -510,6 +513,9 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
         return XMLString::replicate(rawData, memMgr);
     }
 
+    try 
+    {
+
     int    strLen = XMLString::stringLen(rawData);
     XMLCh* manStr = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
     ArrayJanitor<XMLCh> janManStr(manStr, memMgr);
@@ -620,6 +626,13 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
     }
 
     return retBuffer;
+
+    } //try
+
+    catch (...)
+    {
+        return 0;
+    }
 }        
 
 /***

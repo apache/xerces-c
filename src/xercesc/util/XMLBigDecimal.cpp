@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/12/23 21:48:14  peiyongz
+ * Absorb exception thrown in getCanonicalRepresentation and return 0
+ *
  * Revision 1.17  2003/12/17 20:42:16  neilg
  * fix two overflow conditions
  *
@@ -244,6 +247,10 @@ void XMLBigDecimal::setDecimalValue(const XMLCh* const strValue)
 XMLCh* XMLBigDecimal::getCanonicalRepresentation(const XMLCh*         const rawData
                                                ,       MemoryManager* const memMgr)
 {
+
+    try 
+    {
+
     XMLCh* retBuf = (XMLCh*) memMgr->allocate( (XMLString::stringLen(rawData)+1) * sizeof(XMLCh));
     ArrayJanitor<XMLCh> janName(retBuf, memMgr);
     int   sign, totalDigits, fractDigits;
@@ -300,6 +307,12 @@ XMLCh* XMLBigDecimal::getCanonicalRepresentation(const XMLCh*         const rawD
     }
             
     return retBuffer;
+
+    }//try
+    catch (...)
+    {
+        return 0;
+    }
 
 }
 
