@@ -1229,7 +1229,7 @@ perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t 
         still cannot resolve your problem(s), there is more help. You
         can find out if others have
         solved this same problem before you, by checking the
-        <jump href="http://xml-archive.webweaving.org/xml-archive-xerces/">
+        <jump href="http://xml-archive.webweaving.org/xml-archive-xerces-c-dev/">
         &XercesCProjectName; mailing list archives</jump>.</p>
 
         <p>If all else fails, you may ask for help by subscribing to the
