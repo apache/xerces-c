@@ -297,7 +297,7 @@ MAKE_SHARED_C = ilink /nofree ${LDFLAGS}
 EXTRA_LINK_OPTIONS = /map /nod /noe /noi /packcode /packdata /exepack /align:4
 SHLIBSUFFIX= .dll
 ifneq (${DEBUG}, 1)
-XML_BUILD_OPTIONS = -2
+XML_BUILD_OPTIONS += -2
 endif
 endif
 
