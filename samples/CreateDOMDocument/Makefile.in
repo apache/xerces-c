@@ -73,7 +73,7 @@ CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
 
-include ../../obj/version.incl
+include ../../version.incl
 include ../Makefile.incl
 
 APP_NAME=CreateDOMDocument

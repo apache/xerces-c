@@ -76,7 +76,7 @@ LIBS = @libs@
 OSVER = @osver@
 TRANSCODER = @transcoder@
 
-include version.incl
+include ../version.incl
 include ../src/Makefile.incl
 
 LIB=${XERCESCROOT}/lib
