@@ -86,6 +86,7 @@ DOM_DIR = dom
 PARSERS_DIR = parsers
 VALIDATORS_DTD_DIR = validators/DTD
 VALIDATORS_DATATYPE_DIR = validators/datatype
+VALIDATORS_COMMON_DIR = validators/common
 
 LIBNAME = libxerces-c
 THISLIB = ${XML_LIB_DIR}/${LIBNAME}
@@ -102,9 +103,9 @@ PRODUCTNAME=xerces
 PRODUCTVERSION=${VER}
 BINTARGETDIR=${HOME}/${PRODUCTNAME}-c-${PLATFORM}-${CXX}-${PRODUCTVERSION}
 
-all:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators Datatype ${THISLIB}${VER}${SHLIBSUFFIX}
+all:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators Datatype Common ${THISLIB}${VER}${SHLIBSUFFIX}
 
-compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators Datatype
+compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators Datatype Common
 
 lib:: compile ${THISLIB}${VER}${SHLIBSUFFIX}
 
@@ -120,6 +121,7 @@ Prepare::
 	${CD} $(PARSERS_DIR) ; $(MAKE) includes ; ${CD} ..
 	${CD} $(VALIDATORS_DTD_DIR) ; $(MAKE) includes ; ${CD} ../..
 	${CD} $(VALIDATORS_DATATYPE_DIR) ; $(MAKE) includes ; ${CD} ../..
+	${CD} $(VALIDATORS_COMMON_DIR) ; $(MAKE) includes ; ${CD} ../..
 	${CD} $(DOM_DIR) ; $(MAKE) includes ; ${CD} ..
 
 Util::
@@ -159,6 +161,10 @@ Datatype::
 	@echo Building "datatype"
 	${CD} $(VALIDATORS_DATATYPE_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ../..
 
+Common::
+	@echo Building "common"
+	${CD} $(VALIDATORS_COMMON_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ../..
+
 ${THISLIB}${VER}${SHLIBSUFFIX}::
 	@echo Building ${THISLIB}${VER}${SHLIBSUFFIX}
 	${CD} $(XML_OBJ_DIR)/.. ; $(MAKE) -k $(MAKE_FLAGS) ; ${CD} ..
@@ -173,6 +179,7 @@ install::
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
 	${CD} $(VALIDATORS_DATATYPE_DIR) && $(MAKE) $@ && ${CD} ../..
+	${CD} $(VALIDATORS_COMMON_DIR) && $(MAKE) $@ && ${CD} ../..
 	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
 
 clean::
@@ -185,6 +192,7 @@ clean::
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
 	${CD} $(VALIDATORS_DATATYPE_DIR) && $(MAKE) $@ && ${CD} ../..
+	${CD} $(VALIDATORS_COMMON_DIR) && $(MAKE) $@ && ${CD} ../..
 	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
 
 distclean::
@@ -197,6 +205,7 @@ distclean::
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
 	${CD} $(VALIDATORS_DATATYPE_DIR) && $(MAKE) $@ && ${CD} ../..
+	${CD} $(VALIDATORS_COMMON_DIR) && $(MAKE) $@ && ${CD} ../..
 	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
 	rm -f Makefile config.cache config.log config.status
 	find . -name Makefile -print -exec rm -f {} \;

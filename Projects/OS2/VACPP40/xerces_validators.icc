@@ -1,12 +1,12 @@
 group xerces_validators =
-    BASE_DIR "\\src\\validators\\DTD\\CMBinaryOp.cpp",
-    BASE_DIR "\\src\\validators\\DTD\\CMUnaryOp.cpp",
-    BASE_DIR "\\src\\validators\\DTD\\ContentSpecNode.cpp",
-    BASE_DIR "\\src\\validators\\DTD\\DFAContentModel.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDAttDef.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDAttDefList.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDElementDecl.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDValidator.cpp",
     BASE_DIR "\\src\\validators\\DTD\\DTDValidator2.cpp",
-    BASE_DIR "\\src\\validators\\DTD\\MixedContentModel.cpp",
-    BASE_DIR "\\src\\validators\\DTD\\SimpleContentModel.cpp"
+    BASE_DIR "\\src\\validators\\common\\CMBinaryOp.cpp",
+    BASE_DIR "\\src\\validators\\common\\CMUnaryOp.cpp",
+    BASE_DIR "\\src\\validators\\common\\ContentSpecNode.cpp",
+    BASE_DIR "\\src\\validators\\common\\DFAContentModel.cpp",
+    BASE_DIR "\\src\\validators\\common\\MixedContentModel.cpp",
+    BASE_DIR "\\src\\validators\\common\\SimpleContentModel.cpp"

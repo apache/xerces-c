@@ -1306,50 +1306,74 @@ SOURCE=..\..\..\..\..\src\dom\XMLDeclImpl.hpp
 # Begin Group "validators"
 
 # PROP Default_Filter ".cpp,.hpp"
+# Begin Group "common"
+
+# PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\CMBinaryOp.cpp
+
+SOURCE=..\..\..\..\..\src\validators\common\CMBinaryOp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\CMBinaryOp.hpp
+SOURCE=..\..\..\..\..\src\validators\common\CMBinaryOp.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\CMLeaf.hpp
+SOURCE=..\..\..\..\..\src\validators\common\CMLeaf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\CMNode.hpp
+SOURCE=..\..\..\..\..\src\validators\common\CMNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\CMStateSet.hpp
+SOURCE=..\..\..\..\..\src\validators\common\CMStateSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\CMUnaryOp.cpp
+SOURCE=..\..\..\..\..\src\validators\common\CMUnaryOp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\CMUnaryOp.hpp
+SOURCE=..\..\..\..\..\src\validators\common\CMUnaryOp.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\ContentSpecNode.cpp
+SOURCE=..\..\..\..\..\src\validators\common\ContentSpecNode.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\ContentSpecNode.hpp
+SOURCE=..\..\..\..\..\src\validators\common\ContentSpecNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DFAContentModel.cpp
+SOURCE=..\..\..\..\..\src\validators\common\DFAContentModel.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DFAContentModel.hpp
+SOURCE=..\..\..\..\..\src\validators\common\DFAContentModel.hpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\common\MixedContentModel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\common\MixedContentModel.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\common\SimpleContentModel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\common\SimpleContentModel.hpp
+# End Source File
+# End Group
+# Begin Group "DTD"
+
+# PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\DTD\DocTypeHandler.hpp
@@ -1394,22 +1418,19 @@ SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator.hpp
 
 SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator2.cpp
 # End Source File
+# End Group
+# Begin Group "datatype"
+
+# PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\MixedContentModel.cpp
+SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeFacetException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\MixedContentModel.hpp
+SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeValueException.hpp
 # End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\validators\DTD\SimpleContentModel.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\validators\DTD\SimpleContentModel.hpp
-# End Source File
+# End Group
 # End Group
 # Begin Group "sax2"
 

@@ -72,11 +72,11 @@
 #include <framework/XMLEntityHandler.hpp>
 #include <internal/EndOfEntityException.hpp>
 #include <internal/XMLScanner.hpp>
-#include <validators/DTD/ContentSpecNode.hpp>
+#include <validators/common/ContentSpecNode.hpp>
 #include <validators/DTD/DTDEntityDecl.hpp>
 #include <validators/DTD/DTDValidator.hpp>
 #include <validators/DTD/DocTypeHandler.hpp>
-#include <validators/DTD/MixedContentModel.hpp>
+#include <validators/common/MixedContentModel.hpp>
 
 
 

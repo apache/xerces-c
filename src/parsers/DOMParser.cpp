@@ -89,7 +89,7 @@
 #include <dom/NodeIDMap.hpp>
 
 
-#include <validators/DTD/ContentSpecNode.hpp>
+#include <validators/common/ContentSpecNode.hpp>
 #include <validators/DTD/DTDAttDefList.hpp>
 
 // ---------------------------------------------------------------------------

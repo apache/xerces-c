@@ -210,6 +210,8 @@ EXIT
               "util\Transcoders\ICU", ,
               "util\Transcoders\Iconv", ,
               "validators", ,
+              "validators\common", ,
+              "validators\datatype", ,
               "validators\DTD" )
 
   DO dir OVER hdirs

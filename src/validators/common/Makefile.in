@@ -53,40 +53,11 @@
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
 #
-#
 # $Log$
-# Revision 1.7  2001/02/16 14:58:56  tng
+# Revision 1.1  2001/02/16 14:58:57  tng
 # Schema: Update Makefile, configure files, project files, and include path in
 # certain cpp files because of the move of the common Content Model files.  By Pei Yong Zhang.
 #
-# Revision 1.6  2000/03/01 22:30:04  abagchi
-# Object files are now created directly under obj directory
-#
-# Revision 1.5  2000/02/04 23:48:54  abagchi
-# Made sure all targets are appended with :: not single :
-#
-# Revision 1.4  2000/02/01 23:44:01  abagchi
-# AS/400 related change
-#
-# Revision 1.3  1999/12/14 23:53:36  rahulj
-# Removed the offending Ctrl-M's from the commit message
-# logs which was giving packaging problems.
-#
-# PR:
-# Obtained from:
-# Submitted by:
-# Reviewed by:
-#
-# Revision 1.2  1999/11/23 02:01:05  rahulj
-# Code now works under HPUX 11. Tested inmemory message loader.
-# Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
-#
-# Revision 1.1.1.1  1999/11/09 01:03:42  twl
-# Initial checkin
-#
-# Revision 1.3  1999/11/08 20:45:43  rahul
-# Swat for adding in Product name and CVS comment log variable.
-#:
 #
 
 PLATFORM = @platform@
@@ -105,34 +76,38 @@ TRANSCODER = @transcoder@
 include ../../Makefile.incl
 
 MODULE = validators
-SUBMODULE = DTD
+SUBMODULE = common
 
-VALIDATORS_DTD_CPP_PUBHEADERS = \
-	DTDAttDef.hpp \
-	DTDAttDefList.hpp \
-	DTDElementDecl.hpp \
-	DTDEntityDecl.hpp \
-	DTDValidator.hpp \
-	DocTypeHandler.hpp
+VALIDATORS_COMMON_CPP_PUBHEADERS = \
+	CMBinaryOp.hpp \
+	CMLeaf.hpp \
+	CMNode.hpp \
+	CMStateSet.hpp \
+	CMUnaryOp.hpp \
+	ContentSpecNode.hpp \
+	DFAContentModel.hpp \
+	MixedContentModel.hpp \
+	SimpleContentModel.hpp
 
-VALIDATORS_DTD_CPP_PRIVHEADERS =
+VALIDATORS_COMMON_CPP_PRIVHEADERS =
 
-VALIDATORS_DTD_C_FILES =
+VALIDATORS_COMMON_C_FILES =
 
-VALIDATORS_DTD_CPP_OBJECTS = \
-	DTDAttDef.$(TO) \
-	DTDAttDefList.$(TO) \
-	DTDElementDecl.$(TO) \
-	DTDValidator.$(TO) \
-	DTDValidator2.$(TO)
+VALIDATORS_COMMON_CPP_OBJECTS = \
+	CMBinaryOp.$(TO) \
+	CMUnaryOp.$(TO) \
+	ContentSpecNode.$(TO) \
+	DFAContentModel.$(TO) \
+	MixedContentModel.$(TO) \
+	SimpleContentModel.$(TO)
 
-all::	includes $(VALIDATORS_DTD_CPP_OBJECTS)
+all::	includes $(VALIDATORS_COMMON_CPP_OBJECTS)
 
-includes::	pubheaders $(VALIDATORS_DTD_C_FILES)
+includes::	pubheaders $(VALIDATORS_COMMON_C_FILES)
 
 pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
-	$(CP) $(VALIDATORS_DTD_CPP_PUBHEADERS) $(VALIDATORS_DTD_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	$(CP) $(VALIDATORS_COMMON_CPP_PUBHEADERS) $(VALIDATORS_COMMON_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
 
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
@@ -140,13 +115,13 @@ depend:: includes
 
 clean::
 	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."
-	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(VALIDATORS_DTD_CPP_OBJECTS))
+	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(VALIDATORS_COMMON_CPP_OBJECTS))
 
 distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE)/$(SUBMODULE) header files ..."
-	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(VALIDATORS_DTD_CPP_PUBHEADERS))
+	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(VALIDATORS_COMMON_CPP_PUBHEADERS))
 
 install::
 	-mkdir -p $(PREFIX)/$(MODULE)/$(SUBMODULE)
-	$(CP) $(VALIDATORS_DTD_CPP_PUBHEADERS) $(VALIDATORS_DTD_C_FILES) $(PREFIX)/$(MODULE)/$(SUBMODULE)
+	$(CP) $(VALIDATORS_COMMON_CPP_PUBHEADERS) $(VALIDATORS_COMMON_C_FILES) $(PREFIX)/$(MODULE)/$(SUBMODULE)

@@ -67,11 +67,11 @@
 #include <util/XMLUni.hpp>
 #include <framework/XMLBuffer.hpp>
 #include <validators/DTD/DTDAttDefList.hpp>
-#include <validators/DTD/DFAContentModel.hpp>
+#include <validators/common/DFAContentModel.hpp>
 #include <validators/DTD/DTDElementDecl.hpp>
-#include <validators/DTD/ContentSpecNode.hpp>
-#include <validators/DTD/MixedContentModel.hpp>
-#include <validators/DTD/SimpleContentModel.hpp>
+#include <validators/common/ContentSpecNode.hpp>
+#include <validators/common/MixedContentModel.hpp>
+#include <validators/common/SimpleContentModel.hpp>
 
 
 
