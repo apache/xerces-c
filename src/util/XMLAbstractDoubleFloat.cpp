@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/22 21:39:00  peiyongz
+ * Allow "0.0" to be a valid lexcial representation of ZERO.
+ *
  * Revision 1.1  2001/11/19 21:33:42  peiyongz
  * Reorganization: Double/Float
  *
@@ -113,6 +116,11 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
     else if (XMLString::compareString(tmpStrValue, XMLUni::fgNegZeroString) == 0)
     {
         fType = NegZero;
+        return;
+    }
+    else if (XMLString::compareString(tmpStrValue, XMLUni::fgNeuralZeroString) == 0)
+    {
+        fType = NeuralZero;
         return;
     }
     else if (XMLString::compareString(tmpStrValue, XMLUni::fgPosZeroString) == 0)
@@ -189,6 +197,9 @@ XMLCh*  XMLAbstractDoubleFloat::toString() const
 
     case NegZero:
         return XMLString::replicate(XMLUni::fgNegZeroString);
+
+    case NeuralZero:
+        return XMLString::replicate(XMLUni::fgNeuralZeroString);
 
     case PosZero:
         return XMLString::replicate(XMLUni::fgPosZeroString);
@@ -305,6 +316,7 @@ int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const s
         return -1;
 
     case NegZero:
+    case NeuralZero:
     case PosZero:
         return (normalValue->getSign() > 0 ? -1 : 1);
 

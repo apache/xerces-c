@@ -787,6 +787,11 @@ const XMLCh XMLUni::fgNegZeroString[] =
     chDash, chDigit_0, chNull
 };
 
+const XMLCh XMLUni::fgNeuralZeroString[] =
+{
+    chDigit_0, chPeriod, chDigit_0, chNull
+};
+
 const XMLCh XMLUni::fgPosZeroString[] =
 {
     chDigit_0, chNull

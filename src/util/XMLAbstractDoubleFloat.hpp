@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/22 21:39:00  peiyongz
+ * Allow "0.0" to be a valid lexcial representation of ZERO.
+ *
  * Revision 1.2  2001/11/22 20:23:00  peiyongz
  * _declspec(dllimport) and inline warning C4273
  *
@@ -111,10 +114,11 @@ public:
     {
         NegINF,
         NegZero,
+        NeuralZero,
         PosZero,
         PosINF,
         NaN,
-        SpecialTypeNum = 5,
+        SpecialTypeNum,
         Normal
     };
 

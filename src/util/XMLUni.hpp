@@ -208,6 +208,7 @@ public :
 
     static const XMLCh fgNegINFString[];
     static const XMLCh fgNegZeroString[];
+    static const XMLCh fgNeuralZeroString[];
     static const XMLCh fgPosZeroString[];
     static const XMLCh fgPosINFString[];
     static const XMLCh fgNaNString[];
