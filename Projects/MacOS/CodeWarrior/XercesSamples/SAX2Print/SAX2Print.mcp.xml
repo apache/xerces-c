@@ -50,7 +50,7 @@
 <PROJECT>
     <TARGETLIST>
         <TARGET>
-            <NAME>DOMPrint Carbon</NAME>
+            <NAME>SAX2Print Carbon</NAME>
             <SETTINGLIST>
 
                 <!-- Settings for "Source Trees" panel -->
@@ -89,7 +89,7 @@
                     </SETTING>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>::::::samples:DOMPrint:</VALUE></SETTING>
+                            <SETTING><NAME>Path</NAME><VALUE>::::::samples:SAX2Print:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
@@ -159,7 +159,7 @@
                 <SETTING><NAME>Linker</NAME><VALUE>MacOS PPC Linker</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>Targetname</NAME><VALUE>DOMPrint Carbon</VALUE></SETTING>
+                <SETTING><NAME>Targetname</NAME><VALUE>SAX2Print Carbon</VALUE></SETTING>
                 <SETTING><NAME>OutputDirectory</NAME>
                     <SETTING><NAME>Path</NAME><VALUE>::::::bin:</VALUE></SETTING>
                     <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
@@ -640,7 +640,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>265ivpfi65nxw62p'&#214;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>25kvpfi5qxw62&#141;rp'&#214;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -880,7 +880,7 @@
 
                 <!-- Settings for "PPC Project" panel -->
                 <SETTING><NAME>MWProject_PPC_type</NAME><VALUE>Application</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>DOMPrint.Carbon</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>SAX2Print.Carbon</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_filecreator</NAME><VALUE>1061109567</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_filetype</NAME><VALUE>1095782476</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_size</NAME><VALUE>2048</VALUE></SETTING>
@@ -1032,27 +1032,6 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMPrint.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>Xerces.Carbon.Dbg.Lib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Library</FILEKIND>
@@ -1070,7 +1049,35 @@
                     <PATH>CarbResource.r</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2PrintHandlers.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2PrintHandlers.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2Print.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2Print.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
                 </FILE>
             </FILELIST>
             <LINKORDER>
@@ -1096,21 +1103,6 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMPrint.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>Xerces.Carbon.Dbg.Lib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -1124,10 +1116,30 @@
                     <PATH>CarbResource.r</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2PrintHandlers.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2PrintHandlers.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2Print.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2Print.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
-            <NAME>DOMPrint Classic</NAME>
+            <NAME>SAX2Print Classic</NAME>
             <SETTINGLIST>
 
                 <!-- Settings for "Source Trees" panel -->
@@ -1166,7 +1178,7 @@
                     </SETTING>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>::::::samples:DOMPrint:</VALUE></SETTING>
+                            <SETTING><NAME>Path</NAME><VALUE>::::::samples:SAX2Print:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
@@ -1178,15 +1190,6 @@
                             <SETTING><NAME>Path</NAME><VALUE>::::::obj:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
-                        </SETTING>
-                        <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
-                        <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
-                    </SETTING>
-                    <SETTING>
-                        <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>:Carbon Support:CarbonLib:</VALUE></SETTING>
-                            <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
-                            <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
@@ -1205,6 +1208,15 @@
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
                             <SETTING><NAME>Path</NAME><VALUE>:MSL:</VALUE></SETTING>
+                            <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                            <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
+                        </SETTING>
+                        <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
+                    </SETTING>
+                    <SETTING>
+                        <SETTING><NAME>SearchPath</NAME>
+                            <SETTING><NAME>Path</NAME><VALUE>:Carbon Support:CarbonLib:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
@@ -1236,7 +1248,7 @@
                 <SETTING><NAME>Linker</NAME><VALUE>MacOS PPC Linker</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>Targetname</NAME><VALUE>DOMPrint Classic</VALUE></SETTING>
+                <SETTING><NAME>Targetname</NAME><VALUE>SAX2Print Classic</VALUE></SETTING>
                 <SETTING><NAME>OutputDirectory</NAME>
                     <SETTING><NAME>Path</NAME><VALUE>::::::bin:</VALUE></SETTING>
                     <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
@@ -1717,7 +1729,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>264kmjfi64qps62p'&#214;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>25kvpfi5qxw62&#141;rp'&#214;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -1957,7 +1969,7 @@
 
                 <!-- Settings for "PPC Project" panel -->
                 <SETTING><NAME>MWProject_PPC_type</NAME><VALUE>Application</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>DOMPrint.Classic</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>SAX2Print.Classic</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_filecreator</NAME><VALUE>1061109567</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_filetype</NAME><VALUE>1095782476</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_size</NAME><VALUE>2048</VALUE></SETTING>
@@ -2095,27 +2107,6 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMPrint.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>Xerces.Classic.Dbg.Lib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Library</FILEKIND>
@@ -2197,6 +2188,34 @@
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Library</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2PrintHandlers.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2PrintHandlers.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2Print.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2Print.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
                 </FILE>
             </FILELIST>
             <LINKORDER>
@@ -2212,21 +2231,6 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMPrint.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>Xerces.Classic.Dbg.Lib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -2285,10 +2289,30 @@
                     <PATH>CarbonAccessors.o</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2PrintHandlers.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2PrintHandlers.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2Print.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>SAX2Print.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
-            <NAME>DOMPrint All</NAME>
+            <NAME>SAX2Print All</NAME>
             <SETTINGLIST>
 
                 <!-- Settings for "Source Trees" panel -->
@@ -2334,7 +2358,7 @@
                 <SETTING><NAME>Linker</NAME><VALUE>None</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>Targetname</NAME><VALUE>DOMPrint All</VALUE></SETTING>
+                <SETTING><NAME>Targetname</NAME><VALUE>SAX2Print All</VALUE></SETTING>
                 <SETTING><NAME>OutputDirectory</NAME>
                     <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
                     <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
@@ -2558,7 +2582,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>264kmjfi64qps62p'&#214;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>25kvpfi5qxw62&#141;rp'&#214;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -2926,43 +2950,49 @@
             </LINKORDER>
             <SUBTARGETLIST>
                 <SUBTARGET>
-                    <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                    <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 </SUBTARGET>
                 <SUBTARGET>
-                    <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                    <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 </SUBTARGET>
             </SUBTARGETLIST>
         </TARGET>
     </TARGETLIST>
 
     <TARGETORDER>
-        <ORDEREDTARGET><NAME>DOMPrint All</NAME></ORDEREDTARGET>
-        <ORDEREDTARGET><NAME>DOMPrint Carbon</NAME></ORDEREDTARGET>
-        <ORDEREDTARGET><NAME>DOMPrint Classic</NAME></ORDEREDTARGET>
+        <ORDEREDTARGET><NAME>SAX2Print All</NAME></ORDEREDTARGET>
+        <ORDEREDTARGET><NAME>SAX2Print Carbon</NAME></ORDEREDTARGET>
+        <ORDEREDTARGET><NAME>SAX2Print Classic</NAME></ORDEREDTARGET>
     </TARGETORDER>
 
     <GROUPLIST>
-        <GROUP><NAME>DOMPrint</NAME>
+        <GROUP><NAME>SAX2Print</NAME>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
-                <PATH>DOMPrint.cpp</PATH>
+                <PATH>SAX2Print.hpp</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
-                <PATH>DOMTreeErrorReporter.cpp</PATH>
+                <PATH>SAX2Print.cpp</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
-                <PATH>DOMTreeErrorReporter.hpp</PATH>
+                <PATH>SAX2PrintHandlers.hpp</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
+                <PATHTYPE>Name</PATHTYPE>
+                <PATH>SAX2PrintHandlers.cpp</PATH>
+                <PATHFORMAT>MacOS</PATHFORMAT>
+            </FILEREF>
+            <FILEREF>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>CarbResource.r</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
@@ -2970,31 +3000,31 @@
         </GROUP>
         <GROUP><NAME>ANSI Libraries</NAME>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL C.Carbon.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL C.PPC.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL SIOUX.Carbon.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL SIOUX.PPC.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL C++.PPC.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
@@ -3002,67 +3032,67 @@
         </GROUP>
         <GROUP><NAME>Mac Libraries</NAME>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL RuntimePPC.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>CarbonLib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>InterfaceLib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>TextEncodingConverter</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>TextCommon</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>UnicodeConverter</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>UnicodeUtilitiesLib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>URLAccessLib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MathLib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MPLibrary</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>CarbonAccessors.o</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
@@ -3070,13 +3100,13 @@
         </GROUP>
         <GROUP><NAME>Xerces Libraries</NAME>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>SAX2Print Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>Xerces.Carbon.Dbg.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>SAX2Print Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>Xerces.Classic.Dbg.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>

@@ -50,7 +50,7 @@
 <PROJECT>
     <TARGETLIST>
         <TARGET>
-            <NAME>DOMPrint Carbon</NAME>
+            <NAME>IDOMPrint Carbon</NAME>
             <SETTINGLIST>
 
                 <!-- Settings for "Source Trees" panel -->
@@ -89,7 +89,7 @@
                     </SETTING>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>::::::samples:DOMPrint:</VALUE></SETTING>
+                            <SETTING><NAME>Path</NAME><VALUE>::::::samples:IDOMPrint:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
@@ -150,7 +150,7 @@
                 <SETTING><NAME>MWRuntimeSettings_CommandLine</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWRuntimeSettings_HostApplication</NAME>
                     <SETTING><NAME>Path</NAME><VALUE></VALUE></SETTING>
-                    <SETTING><NAME>PathFormat</NAME><VALUE>Generic</VALUE></SETTING>
+                    <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                     <SETTING><NAME>PathRoot</NAME><VALUE>Absolute</VALUE></SETTING>
                 </SETTING>
                 <SETTING><NAME>MWRuntimeSettings_EnvVars</NAME><VALUE></VALUE></SETTING>
@@ -159,7 +159,7 @@
                 <SETTING><NAME>Linker</NAME><VALUE>MacOS PPC Linker</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>Targetname</NAME><VALUE>DOMPrint Carbon</VALUE></SETTING>
+                <SETTING><NAME>Targetname</NAME><VALUE>IDOMPrint Carbon</VALUE></SETTING>
                 <SETTING><NAME>OutputDirectory</NAME>
                     <SETTING><NAME>Path</NAME><VALUE>::::::bin:</VALUE></SETTING>
                     <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
@@ -640,7 +640,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>265ivpfi65nxw62p'&#214;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>263ikjxi63nnsn2p'&#214;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -880,7 +880,7 @@
 
                 <!-- Settings for "PPC Project" panel -->
                 <SETTING><NAME>MWProject_PPC_type</NAME><VALUE>Application</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>DOMPrint.Carbon</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>IDOMPrint.Carbon</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_filecreator</NAME><VALUE>1061109567</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_filetype</NAME><VALUE>1095782476</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_size</NAME><VALUE>2048</VALUE></SETTING>
@@ -1032,27 +1032,6 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMPrint.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>Xerces.Carbon.Dbg.Lib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Library</FILEKIND>
@@ -1067,10 +1046,31 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMTreeErrorReporter.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMTreeErrorReporter.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMPrint.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>CarbResource.r</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
+                    <FILEFLAGS></FILEFLAGS>
                 </FILE>
             </FILELIST>
             <LINKORDER>
@@ -1096,21 +1096,6 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMPrint.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>Xerces.Carbon.Dbg.Lib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -1121,13 +1106,28 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMTreeErrorReporter.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMTreeErrorReporter.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMPrint.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>CarbResource.r</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
-            <NAME>DOMPrint Classic</NAME>
+            <NAME>IDOMPrint Classic</NAME>
             <SETTINGLIST>
 
                 <!-- Settings for "Source Trees" panel -->
@@ -1166,7 +1166,7 @@
                     </SETTING>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>::::::samples:DOMPrint:</VALUE></SETTING>
+                            <SETTING><NAME>Path</NAME><VALUE>::::::samples:IDOMPrint:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
                         </SETTING>
@@ -1178,15 +1178,6 @@
                             <SETTING><NAME>Path</NAME><VALUE>::::::obj:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>Project</VALUE></SETTING>
-                        </SETTING>
-                        <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
-                        <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
-                    </SETTING>
-                    <SETTING>
-                        <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>:Carbon Support:CarbonLib:</VALUE></SETTING>
-                            <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
-                            <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
                         <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
                         <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
@@ -1205,6 +1196,15 @@
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
                             <SETTING><NAME>Path</NAME><VALUE>:MSL:</VALUE></SETTING>
+                            <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
+                            <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
+                        </SETTING>
+                        <SETTING><NAME>Recursive</NAME><VALUE>true</VALUE></SETTING>
+                        <SETTING><NAME>HostFlags</NAME><VALUE>All</VALUE></SETTING>
+                    </SETTING>
+                    <SETTING>
+                        <SETTING><NAME>SearchPath</NAME>
+                            <SETTING><NAME>Path</NAME><VALUE>:Carbon Support:CarbonLib:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
@@ -1236,7 +1236,7 @@
                 <SETTING><NAME>Linker</NAME><VALUE>MacOS PPC Linker</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>Targetname</NAME><VALUE>DOMPrint Classic</VALUE></SETTING>
+                <SETTING><NAME>Targetname</NAME><VALUE>IDOMPrint Classic</VALUE></SETTING>
                 <SETTING><NAME>OutputDirectory</NAME>
                     <SETTING><NAME>Path</NAME><VALUE>::::::bin:</VALUE></SETTING>
                     <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
@@ -1717,7 +1717,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>264kmjfi64qps62p'&#214;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>263ikjxi63nnsn2p'&#214;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -1957,7 +1957,7 @@
 
                 <!-- Settings for "PPC Project" panel -->
                 <SETTING><NAME>MWProject_PPC_type</NAME><VALUE>Application</VALUE></SETTING>
-                <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>DOMPrint.Classic</VALUE></SETTING>
+                <SETTING><NAME>MWProject_PPC_outfile</NAME><VALUE>IDOMPrint.Classic</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_filecreator</NAME><VALUE>1061109567</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_filetype</NAME><VALUE>1095782476</VALUE></SETTING>
                 <SETTING><NAME>MWProject_PPC_size</NAME><VALUE>2048</VALUE></SETTING>
@@ -2095,27 +2095,6 @@
                 </FILE>
                 <FILE>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMPrint.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS>Debug</FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                    <FILEKIND>Text</FILEKIND>
-                    <FILEFLAGS></FILEFLAGS>
-                </FILE>
-                <FILE>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>Xerces.Classic.Dbg.Lib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Library</FILEKIND>
@@ -2197,6 +2176,27 @@
                     <PATHFORMAT>MacOS</PATHFORMAT>
                     <FILEKIND>Library</FILEKIND>
                     <FILEFLAGS>Debug</FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMTreeErrorReporter.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMTreeErrorReporter.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
+                </FILE>
+                <FILE>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMPrint.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                    <FILEKIND>Text</FILEKIND>
+                    <FILEFLAGS></FILEFLAGS>
                 </FILE>
             </FILELIST>
             <LINKORDER>
@@ -2212,21 +2212,6 @@
                 </FILEREF>
                 <FILEREF>
                     <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMPrint.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.cpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
-                    <PATH>DOMTreeErrorReporter.hpp</PATH>
-                    <PATHFORMAT>MacOS</PATHFORMAT>
-                </FILEREF>
-                <FILEREF>
-                    <PATHTYPE>Name</PATHTYPE>
                     <PATH>Xerces.Classic.Dbg.Lib</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
@@ -2285,10 +2270,25 @@
                     <PATH>CarbonAccessors.o</PATH>
                     <PATHFORMAT>MacOS</PATHFORMAT>
                 </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMTreeErrorReporter.hpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMTreeErrorReporter.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
+                <FILEREF>
+                    <PATHTYPE>Name</PATHTYPE>
+                    <PATH>IDOMPrint.cpp</PATH>
+                    <PATHFORMAT>MacOS</PATHFORMAT>
+                </FILEREF>
             </LINKORDER>
         </TARGET>
         <TARGET>
-            <NAME>DOMPrint All</NAME>
+            <NAME>IDOMPrint All</NAME>
             <SETTINGLIST>
 
                 <!-- Settings for "Source Trees" panel -->
@@ -2334,7 +2334,7 @@
                 <SETTING><NAME>Linker</NAME><VALUE>None</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>Targetname</NAME><VALUE>DOMPrint All</VALUE></SETTING>
+                <SETTING><NAME>Targetname</NAME><VALUE>IDOMPrint All</VALUE></SETTING>
                 <SETTING><NAME>OutputDirectory</NAME>
                     <SETTING><NAME>Path</NAME><VALUE>:</VALUE></SETTING>
                     <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
@@ -2558,7 +2558,7 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>264kmjfi64qps62p'&#214;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>263ikjxi63nnsn2p'&#214;</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
@@ -2926,43 +2926,43 @@
             </LINKORDER>
             <SUBTARGETLIST>
                 <SUBTARGET>
-                    <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                    <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 </SUBTARGET>
                 <SUBTARGET>
-                    <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                    <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 </SUBTARGET>
             </SUBTARGETLIST>
         </TARGET>
     </TARGETLIST>
 
     <TARGETORDER>
-        <ORDEREDTARGET><NAME>DOMPrint All</NAME></ORDEREDTARGET>
-        <ORDEREDTARGET><NAME>DOMPrint Carbon</NAME></ORDEREDTARGET>
-        <ORDEREDTARGET><NAME>DOMPrint Classic</NAME></ORDEREDTARGET>
+        <ORDEREDTARGET><NAME>IDOMPrint All</NAME></ORDEREDTARGET>
+        <ORDEREDTARGET><NAME>IDOMPrint Carbon</NAME></ORDEREDTARGET>
+        <ORDEREDTARGET><NAME>IDOMPrint Classic</NAME></ORDEREDTARGET>
     </TARGETORDER>
 
     <GROUPLIST>
-        <GROUP><NAME>DOMPrint</NAME>
+        <GROUP><NAME>IDOMPrint</NAME>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
-                <PATH>DOMPrint.cpp</PATH>
+                <PATH>IDOMPrint.cpp</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
-                <PATH>DOMTreeErrorReporter.cpp</PATH>
+                <PATH>IDOMTreeErrorReporter.hpp</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
-                <PATH>DOMTreeErrorReporter.hpp</PATH>
+                <PATH>IDOMTreeErrorReporter.cpp</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>CarbResource.r</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
@@ -2970,31 +2970,31 @@
         </GROUP>
         <GROUP><NAME>ANSI Libraries</NAME>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL C.Carbon.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL C.PPC.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL SIOUX.Carbon.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL SIOUX.PPC.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL C++.PPC.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
@@ -3002,67 +3002,67 @@
         </GROUP>
         <GROUP><NAME>Mac Libraries</NAME>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MSL RuntimePPC.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>CarbonLib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>InterfaceLib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>TextEncodingConverter</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>TextCommon</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>UnicodeConverter</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>UnicodeUtilitiesLib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>URLAccessLib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MathLib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>MPLibrary</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>CarbonAccessors.o</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
@@ -3070,13 +3070,13 @@
         </GROUP>
         <GROUP><NAME>Xerces Libraries</NAME>
             <FILEREF>
-                <TARGETNAME>DOMPrint Carbon</TARGETNAME>
+                <TARGETNAME>IDOMPrint Carbon</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>Xerces.Carbon.Dbg.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
             </FILEREF>
             <FILEREF>
-                <TARGETNAME>DOMPrint Classic</TARGETNAME>
+                <TARGETNAME>IDOMPrint Classic</TARGETNAME>
                 <PATHTYPE>Name</PATHTYPE>
                 <PATH>Xerces.Classic.Dbg.Lib</PATH>
                 <PATHFORMAT>MacOS</PATHFORMAT>
