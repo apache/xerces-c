@@ -69,6 +69,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <windows.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #ifdef _DEBUG
@@ -138,32 +139,33 @@ static bool     gOnNT;
 void XMLPlatformUtils::panic(const PanicReasons reason)
 {
     const char* reasonStr = "Unknown reason";
-    if (reason == Panic_NoTransService)
+    switch (reason)
+    {
+    case Panic_NoTransService:
         reasonStr = "Could not load a transcoding service";
-    else if (reason == Panic_NoDefTranscoder)
+        break;
+    case Panic_NoDefTranscoder:
         reasonStr = "Could not load a local code page transcoder";
-    else if (reason == Panic_CantFindLib)
+        break;
+    case Panic_CantFindLib:
         reasonStr = "Could not find the xerces-c DLL";
-    else if (reason == Panic_UnknownMsgDomain)
+        break;
+    case Panic_UnknownMsgDomain:
         reasonStr = "Unknown message domain";
-    else if (reason == Panic_CantLoadMsgDomain)
+        break;
+    case Panic_CantLoadMsgDomain:
         reasonStr = "Cannot load message domain";
-    else if (reason == Panic_SynchronizationErr)
-        reasonStr = "A system synchronization error occurred";
-    else if (reason == Panic_SystemInit)
-        reasonStr = "Failed to complete platfrom dependent initialization";
+        break;
+    case Panic_SynchronizationErr:
+        reasonStr = "Cannot synchronize system or mutex";
+        break;
+    case Panic_SystemInit:
+        reasonStr = "Cannot initialize the system or mutex";
+        break;
+    }
 
-    //
-    //  We just do a popup and exit. Replace this code to do whatever
-    //  you need to do.
-    //
-    MessageBoxA
-    (
-        0
-        , "Xerces Panic Error"
-        , reasonStr
-        , MB_OK | MB_ICONSTOP
-    );
+    fprintf(stderr, "Xerces Panic Error: %s\n", reasonStr);
+
     exit(-1);
 }
 
