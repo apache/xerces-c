@@ -63,13 +63,13 @@
 /**
  * User Documentation for Xerces Version Values:
  *
- *  
+ *
  *
  * Xerces  Notes:
  *
  * Xerces Committers Documentation:
  *
- *    Xerces committers normally only need to modify one or two of the 
+ *    Xerces committers normally only need to modify one or two of the
  *    following macros:
  *
  *      XERCES_VERSION_MAJOR
@@ -99,7 +99,7 @@
  *
  *    _XERCES_VERSION defines the primary preprocessor macro that users will
  *    introduce into their code to perform conditional compilation where the
- *    version of Xerces is detected in order to enable or disable version 
+ *    version of Xerces is detected in order to enable or disable version
  *    specific capabilities. The value of _XERCES_VERSION for the above example
  *    will be 190374. To use it a user would perform an operation such as the
  *    following:
@@ -117,7 +117,7 @@
  *    constant whose value, for the above example, will be "19.3.74".
  *
  *    XERCES_VERSIONSTR is a preprocessor macro that expands to a string
- *    constant whose value, for the above example, will be "19374". This 
+ *    constant whose value, for the above example, will be "19374". This
  *    particular macro is very dangerous if it were to be used for comparing
  *    version numbers since ordering will not be guaranteed.
  *
@@ -132,7 +132,7 @@
  *    the value "19_3" for the above example.
  *
  *    gXercesFullVersionStr is a global string constant whose value corresponds
- *    to the value "19_3_74" for the above example. 
+ *    to the value "19_3_74" for the above example.
  *
  *  Numeric Constants:
  *
@@ -157,7 +157,7 @@
  */
 
 #define XERCES_VERSION_MAJOR 2
-#define XERCES_VERSION_MINOR 0
+#define XERCES_VERSION_MINOR 1
 #define XERCES_VERSION_REVISION 0
 
 

@@ -2,15 +2,15 @@
 
 <!ENTITY XercesCFullName      "Xerces C++ Parser">            <!-- fullproductname -->
 <!ENTITY XercesCName          "Xerces-C++">                   <!-- productname -->
-<!ENTITY XercesCVersion       "2.0.0">                        <!-- versionnumber -->
+<!ENTITY XercesCVersion       "2.1.0">                        <!-- versionnumber -->
 <!ENTITY XercesCVersion152    "1.5.2">                        <!-- versionnumber -->
 <!ENTITY XercesCProjectName   "Xerces">                       <!-- projectname -->
-<!ENTITY XercesCInstallDir    "xerces-c2_0_0">                <!-- installdirname -->
-<!ENTITY XercesCSrcInstallDir "xerces-c-src2_0_0">            <!-- sourcedirectory -->
+<!ENTITY XercesCInstallDir    "xerces-c2_1_0">                <!-- installdirname -->
+<!ENTITY XercesCSrcInstallDir "xerces-c-src2_1_0">            <!-- sourcedirectory -->
 <!ENTITY XercesCWindowsLib    "xerces-c_2">                   <!-- windowslibname -->
-<!ENTITY XercesCWindowsDLL    "xerces-c_2_0_0">               <!-- windowsDLLname -->
-<!ENTITY XercesCUnixSoName    "20.0">                         <!-- unixlibname -->
-<!ENTITY XercesCUnixVersion   "20">                           <!-- unixlibname -->
+<!ENTITY XercesCWindowsDLL    "xerces-c_2_1_0">               <!-- windowsDLLname -->
+<!ENTITY XercesCUnixSoName    "21.0">                         <!-- unixlibname -->
+<!ENTITY XercesCUnixVersion   "21">                           <!-- unixlibname -->
 <!ENTITY XercesCUnixLib       "libxerces-c">                  <!-- unixlibname -->
 <!ENTITY XercesCEmailAddress  "xerces-c-dev@xml.apache.org "> <!-- emailaddress -->
 <!ENTITY XercesDistDir        "xml.apache.org/dist/xerces-c"> <!-- download directory -->

@@ -29,11 +29,11 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
-    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_0_0");
-    print (" -o \$HOME/xerces-c_2_0_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
+    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_1_0");
+    print (" -o \$HOME/xerces-c_2_1_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
     print ("Example: Under Windows\n");
-    print ("    perl packageBinaries.pl -s \\xerces-c-src2_0_0");
-    print (" -o\\xerces-c_2_0_0-win32 [-n fileonly] [-t icu]\n\n");
+    print ("    perl packageBinaries.pl -s \\xerces-c-src2_1_0");
+    print (" -o\\xerces-c_2_1_0-win32 [-n fileonly] [-t icu]\n\n");
     print ("Note:\n");
     print ("    Under Windows, by default the XercesLib project files is\n");
     print ("    configured to use Win32 resource file based message loader,\n");
@@ -166,9 +166,9 @@ if ($platform eq "" )
         pchdir ("$ICUROOT\\source\\allinone\\all");
         if (!(length($opt_j) > 0)) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
 	    #For XP we ship both release and debug dlls
-            psystem("nmake -f all_win64_release.mak \"CFG=all - $platformname Release\" CPP=$opt_x.exe >buildlog.txt 2>&1");	    	    
+            psystem("nmake -f all_win64_release.mak \"CFG=all - $platformname Release\" CPP=$opt_x.exe >buildlog.txt 2>&1");	    	
 	    psystem("type buildlog.txt");
-            psystem("nmake -f all_win64_debug.mak \"CFG=all - $platformname Debug\" CPP=$opt_x.exe >buildlog.txt 2>&1");	    	    
+            psystem("nmake -f all_win64_debug.mak \"CFG=all - $platformname Debug\" CPP=$opt_x.exe >buildlog.txt 2>&1");	    	
 	    psystem("type buildlog.txt");
         }
 
@@ -1040,22 +1040,22 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     pchdir ("$targetdir/lib");
     psystem("rm -f libxerces-c* ");
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.so.20.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.20.0 .");
-        psystem("ln -s libxerces-c.so.20.0 libxerces-c.so.20 ");
-        psystem("ln -s libxerces-c.so.20   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.so.21.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.21.0 .");
+        psystem("ln -s libxerces-c.so.21.0 libxerces-c.so.21 ");
+        psystem("ln -s libxerces-c.so.21   libxerces-c.so    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.20.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.20.0 .");
-        psystem("ln -s libxerces-c.sl.20.0 libxerces-c.sl.20 ");
-        psystem("ln -s libxerces-c.sl.20   libxerces-c.sl    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.21.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.21.0 .");
+        psystem("ln -s libxerces-c.sl.21.0 libxerces-c.sl.21 ");
+        psystem("ln -s libxerces-c.sl.21   libxerces-c.sl    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c20.0.so" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c20.0.so .");
-        psystem("ln -s libxerces-c20.0.so libxerces-c20.so  ");
-        psystem("ln -s libxerces-c20.so   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c21.0.so" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c21.0.so .");
+        psystem("ln -s libxerces-c21.0.so libxerces-c21.so  ");
+        psystem("ln -s libxerces-c21.so   libxerces-c.so    ");
     }
 
     #
@@ -1224,7 +1224,7 @@ sub change_windows_project_for_ICU() {
         $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService.cpp/Transcoders\\ICU\\ICUTransService.cpp/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService.hpp/Transcoders\\ICU\\ICUTransService.hpp/g;
-        
+
         print FIZZLEOUT $line;
     }
     close (FIZZLEOUT);
@@ -1248,7 +1248,7 @@ sub change_windows_makefile_for_ICU() {
             $icuuc = "icuuc";
         }
 
-        $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];      
+        $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];
         #$line =~ s[/implib:"\$(OUTDIR)\\xerces-c_2.lib"][/implib:"\$(OUTDIR)\\xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
         #$line =~ s[/implib:"\$(OUTDIR)\\xerces-c_2D.lib"][/implib:"\$(OUTDIR)\\xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
         $line =~ s[/machine:IA64][/libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /machine:IA64];
