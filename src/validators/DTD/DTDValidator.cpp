@@ -471,7 +471,7 @@ const XMLCh* DTDValidator::getURIText(const   unsigned int    uriId) const
     // Look up the URI in the string pool and return its id
     const XMLCh* value = fURIStringPool.getValueForId(uriId);
     if (!value)
-        return XMLUni::fgEmptyString;
+        return XMLUni::fgZeroLenString;
 
 	return value;
 }

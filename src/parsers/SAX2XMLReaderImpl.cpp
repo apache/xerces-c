@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/12/22 20:41:52  tng
+ * XMLUni::fgEmptyString which is defined as "EMPTY" is incorrectly used as an empty string; in fact XMLUni::fgZeroLenString should be used instead
+ *
  * Revision 1.5  2000/12/22 15:16:51  tng
  * SAX2-ext's LexicalHandler support added by David Bertoni.
  *
@@ -598,7 +601,7 @@ startElement(   const   XMLElementDecl&         elemDecl
 				if (nsURI != 0)
 				{
 					if (nsPrefix == 0)
-						nsPrefix = XMLUni::fgEmptyString;
+						nsPrefix = XMLUni::fgZeroLenString;
 					fDocHandler->startPrefixMapping(nsPrefix, nsURI);
 					
 					XMLBuffer &buf = fStringBuffers.bidOnBuffer()  ;
@@ -630,7 +633,7 @@ startElement(   const   XMLElementDecl&         elemDecl
 		else
 		{
 			fAttrList.setVector(&attrList, attrCount, fScanner->getValidator());
-			fDocHandler->startElement(XMLUni::fgEmptyString, 
+			fDocHandler->startElement(XMLUni::fgZeroLenString,
 										elemDecl.getBaseName(), 
 										elemDecl.getFullName(), 
 										fAttrList); 
@@ -662,7 +665,7 @@ startElement(   const   XMLElementDecl&         elemDecl
 			}
 			else
 			{
-				fDocHandler->endElement(XMLUni::fgEmptyString, 
+				fDocHandler->endElement(XMLUni::fgZeroLenString,
 							elemDecl.getBaseName(), 
 							elemDecl.getFullName() ); 
 
@@ -719,7 +722,7 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
 		}
 		else
 		{
-			fDocHandler->endElement(XMLUni::fgEmptyString, 
+			fDocHandler->endElement(XMLUni::fgZeroLenString,
 										elemDecl.getBaseName(), 
 										elemDecl.getFullName() ); 
 		}

@@ -158,7 +158,7 @@ const XMLCh XMLUni::fgFixedString[] =
     chPound, chLatin_F, chLatin_I, chLatin_X, chLatin_E, chLatin_D, chNull
 };
 
-const XMLCh* XMLUni::fgGlobalNSURIName = fgEmptyString;
+const XMLCh* XMLUni::fgGlobalNSURIName = fgZeroLenString;
 
 const XMLCh XMLUni::fgIBM037EncodingString[] =
 {
