@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/31 13:48:29  peiyongz
+ * fValue removed
+ *
  * Revision 1.1  2001/07/26 20:41:37  peiyongz
  * XMLFloat
  *
@@ -115,9 +118,9 @@ public:
 
     XMLFloat(const XMLFloat& toCopy);
    
-    float                floatValue() const;
+    int                   getSign() const;
 
-	/**
+    /**
 	 *  Return string representation of the decimal value.
      *  A decimal point will be included as necessary, 
      *  the caller of this method is responsible for the 
@@ -167,25 +170,16 @@ private:
     //  fType
     //     the type of the object.
     //
-    //  fValue
-    //     the built-in float value of the object.
-    //
     // -----------------------------------------------------------------------
 
     XMLBigDecimal*          fMantissa;
 	XMLBigInteger*          fExponent;   
     LiteralType             fType;
-    float                   fValue;
 };
 
 inline XMLFloat::~XMLFloat()
 {
     cleanUp();
-}
-
-inline float XMLFloat::floatValue() const
-{
-    return fValue;
 }
 
 inline bool XMLFloat::operator==(const XMLFloat& toCompare) const
@@ -207,4 +201,8 @@ inline void XMLFloat::cleanUp()
         delete fExponent;
 }
 
+inline int XMLFloat::getSign() const
+{
+    return fMantissa->getSign();
+}
 #endif

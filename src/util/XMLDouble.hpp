@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/07/31 13:48:29  peiyongz
+ * fValue removed
+ *
  * Revision 1.3  2001/07/26 18:21:15  peiyongz
  * Boundary Checking
  *
@@ -120,7 +123,7 @@ public:
 
     XMLDouble(const XMLDouble& toCopy);
    
-    double                doubleValue() const;
+    int                   getSign() const;
 
 	/**
 	 *  Return string representation of the decimal value.
@@ -172,15 +175,11 @@ private:
     //  fType
     //     the type of the object.
     //
-    //  fValue
-    //     the built-in double value of the object.
-    //
     // -----------------------------------------------------------------------
 
     XMLBigDecimal*          fMantissa;
 	XMLBigInteger*          fExponent;   
     LiteralType             fType;
-    double                  fValue;
 };
 
 inline XMLDouble::~XMLDouble()
@@ -188,9 +187,9 @@ inline XMLDouble::~XMLDouble()
     cleanUp();
 }
 
-inline double XMLDouble::doubleValue() const
+inline int XMLDouble::getSign() const
 {
-    return fValue;
+    return fMantissa->getSign();
 }
 
 inline bool XMLDouble::operator==(const XMLDouble& toCompare) const

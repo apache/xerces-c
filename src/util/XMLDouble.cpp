@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/07/31 13:48:29  peiyongz
+ * fValue removed
+ *
  * Revision 1.5  2001/07/27 20:43:53  peiyongz
  * copy ctor: to check for special types.
  *
@@ -188,7 +191,6 @@ XMLDouble::XMLDouble(const XMLCh* const strValue)
 :fMantissa(0)
 ,fExponent(0)
 ,fType(Normal)
-,fValue(0)
 {
     try
     {
@@ -276,8 +278,6 @@ void XMLDouble::init(const XMLCh* const strValue)
         fExponent = new XMLBigInteger(XMLUni::fgZeroString);
     }
 
-    fValue = fMantissa->doubleValue() * pow(10.0, fExponent->intValue());
-
     checkBoundary(tmpStrValue);
 }
 
@@ -325,7 +325,6 @@ XMLDouble::XMLDouble(const XMLDouble& toCopy)
 :fMantissa(0)
 ,fExponent(0)
 ,fType(Normal)
-,fValue(0)
 {
     if (!toCopy.isSpecialValue())
     {
@@ -334,7 +333,6 @@ XMLDouble::XMLDouble(const XMLDouble& toCopy)
     }
 
     fType  = toCopy.fType;
-    fValue = toCopy.fValue;
 }
 
 //
@@ -461,7 +459,7 @@ int XMLDouble::compareSpecial(const XMLDouble* const specialValue
 
     case NegZero:
     case PosZero:
-        return (normalValue->doubleValue() > 0 ? -1 : 1);
+        return (normalValue->getSign() > 0 ? -1 : 1);
 
     case PosINF:
         return 1;
