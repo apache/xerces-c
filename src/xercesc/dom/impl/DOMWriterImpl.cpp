@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2002/07/16 15:19:42  peiyongz
+ * check lenght of getEncoding()/getActualEncoding()
+ *
  * Revision 1.12  2002/06/25 16:17:16  tng
  * DOM L3: add release()
  *
@@ -602,13 +605,20 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
                             (DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
         if (docu)
         {
-            if (docu->getEncoding())
+            const XMLCh* tmpEncoding = docu->getEncoding();
+
+            if ( tmpEncoding && XMLString::stringLen(tmpEncoding))
             {
-                fEncodingUsed = docu->getEncoding();
+                fEncodingUsed = tmpEncoding;
             }
-            else if (docu->getActualEncoding())
+            else 
             {
-                fEncodingUsed = docu->getActualEncoding();
+                tmpEncoding = docu->getActualEncoding();
+
+                if ( tmpEncoding && XMLString::stringLen(tmpEncoding))               
+                {
+                    fEncodingUsed = tmpEncoding;
+                }
             }
         }
     }
