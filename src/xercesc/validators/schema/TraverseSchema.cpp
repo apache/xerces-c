@@ -8413,9 +8413,18 @@ TraverseSchema::checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
         }
     }
 
-    for (; rInfo && rInfo != bInfo; rInfo = rInfo->getBaseComplexTypeInfo());
+    if (rInfo == bInfo)
+        return;
 
-    if (rInfo == 0 || rInfo->getDerivedBy() != SchemaSymbols::RESTRICTION) {
+    for (; rInfo && rInfo != bInfo; rInfo = rInfo->getBaseComplexTypeInfo()) {
+        if (rInfo->getDerivedBy() != SchemaSymbols::RESTRICTION) {
+
+            rInfo = 0;
+            break;
+        }
+    }
+
+    if (!rInfo) {
         ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName);
     }
 }
