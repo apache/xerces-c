@@ -138,6 +138,7 @@
             <Message Id="BadAttDerivation_6" Text="An attribute wildcard is present in the derived type, but not in the base"/>
             <Message Id="BadAttDerivation_7" Text="The attribute wildcard in the derived type is not a valid subset of that in the base"/>
             <Message Id="BadAttDerivation_8" Text="Attribute '{0}' cannot modify the 'use' attribute in a derived type, if base attribute use is prohibited"/>
+            <Message Id="BadAttDerivation_9" Text="The wildcard attribute in the derived type must be identical to or stronger than the one in the base."/>
             <Message Id="AllContentError" Text="Content of &lt;all&gt; is restricted to elements only. '{0}' encountered and ignored."/>
             <Message Id="RedefineNamespaceDifference" Text="Redefined schema '{0}' has a different targetNameSpace '{1}'."/>
             <Message Id="Redefine_InvalidSimpleType" Text="A simpleType child of a &lt;redefine&gt; must have a restriction element as a child"/>

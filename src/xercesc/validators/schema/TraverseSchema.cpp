@@ -5652,8 +5652,6 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             typeInfo->setAdoptContentSpec(true);
             typeInfo->setContentType(SchemaElementDecl::Mixed_Simple);
         }
-
-
     }
     else if (typeInfo->getContentSpec() == 0) {
         typeInfo->setContentType(SchemaElementDecl::Empty);
@@ -6994,6 +6992,9 @@ void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
         else if (!isWildCardSubset(baseAttWildCard, childAttWildCard)) {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_7);
         }
+        else if (childAttWildCard->getDefaultType() < baseAttWildCard->getDefaultType()) {
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_9);
+        }
     }
 }
 
@@ -7066,6 +7067,9 @@ void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
         }
         else if (!isWildCardSubset(baseAttWildCard, childAttWildCard)) {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_7);
+        }
+        else if (childAttWildCard->getDefaultType() < baseAttWildCard->getDefaultType()) {
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_9);
         }
     }
 }

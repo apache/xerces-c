@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/12/10 02:15:55  knoaman
+ * Schema Errata: E1-21.
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -186,9 +189,9 @@ public:
         , Required               = 2
         , Required_And_Fixed     = 3
         , Implied                = 4
-        , ProcessContents_Strict = 5
+        , ProcessContents_Skip   = 5
         , ProcessContents_Lax    = 6
-        , ProcessContents_Skip   = 7
+        , ProcessContents_Strict = 7
         , Prohibited             = 8
 
         , DefAttTypes_Count
