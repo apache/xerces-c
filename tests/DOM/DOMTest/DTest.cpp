@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.37  2003/01/03 17:09:02  tng
+ * delete the parser when done, avoid memory leak report with the test case
+ *
  * Revision 1.36  2002/11/21 22:12:08  tng
  * fix typo where isID should be isId
  *
@@ -1057,6 +1060,8 @@ int main(int argc, char **argv)
 
         parser->setCreateEntityReferenceNodes(true);
         OK = test.testBaseURI(parser);
+
+        delete parser;
     };
 
     XMLPlatformUtils::Terminate();
@@ -1538,7 +1543,7 @@ bool DOMTest::testAttr(DOMDocument* document)
         OK = false;
     }
 
-    
+
 
     //isID tests
 
@@ -1547,7 +1552,7 @@ bool DOMTest::testAttr(DOMDocument* document)
 
     DOMAttr *idAtt = document->createAttributeNS(tempStr4, tempStr5);
     testElementNode->setAttributeNode(idAtt);
-    
+
 
     if(idAtt->isId()) {
         fprintf(stderr, "isID failed in line %i\n", __LINE__);
@@ -3404,7 +3409,7 @@ bool DOMTest::testElement(DOMDocument* document)
         fprintf(stderr, "setIdAttributeNode failed in line %i\n", __LINE__);
         OK = false;
     }
-    
+
     DOMElement *idEle = document->getElementById(tempStr3);
 
     if(!idEle || !idEle->isSameNode(testElementNode)) {
@@ -3414,7 +3419,7 @@ bool DOMTest::testElement(DOMDocument* document)
 
     testElementNode->removeAttributeNode(idAtt);
 
-    
+
     XMLString::transcode("someval", tempStr3, 3999);
     idAtt = document->createAttributeNS(tempStr4, tempStr5);
     idAtt->setValue(tempStr3);
@@ -3425,7 +3430,7 @@ bool DOMTest::testElement(DOMDocument* document)
         fprintf(stderr, "setIdAttributeNS failed in line %i\n", __LINE__);
         OK = false;
     }
-    
+
     idEle = document->getElementById(tempStr3);
 
     if(!idEle || !idEle->isSameNode(testElementNode)) {
@@ -3447,7 +3452,7 @@ bool DOMTest::testElement(DOMDocument* document)
         fprintf(stderr, "setIdAttribute failed in line %i\n", __LINE__);
         OK = false;
     }
-    
+
     idEle = document->getElementById(tempStr3);
 
     if(!idEle || !idEle->isSameNode(testElementNode)) {
@@ -3457,7 +3462,7 @@ bool DOMTest::testElement(DOMDocument* document)
 
     testElementNode->removeAttributeNode(idAtt);
     idAtt->release();
-    
+
     if (!OK)
         printf("\n*****The DOMElement* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
