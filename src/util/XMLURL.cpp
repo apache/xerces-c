@@ -204,7 +204,15 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
     , fUser(0)
     , fURLText(0)
 {
-    setURL(baseURL, relativeURL);
+	try
+	{
+		setURL(baseURL, relativeURL);
+	}
+    catch(...)
+    {
+        cleanup();
+        throw;
+    }
 }
 
 XMLURL::XMLURL(const XMLCh* const    baseURL
@@ -222,7 +230,15 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
 {
     XMLCh* tmpRel = XMLString::transcode(relativeURL);
     ArrayJanitor<XMLCh> janRel(tmpRel);
-    setURL(baseURL, tmpRel);
+	try
+	{
+		setURL(baseURL, tmpRel);
+	}
+    catch(...)
+    {
+        cleanup();
+        throw;
+    }
 }
 
 XMLURL::XMLURL(const XMLURL&         baseURL
@@ -238,7 +254,15 @@ XMLURL::XMLURL(const XMLURL&         baseURL
     , fUser(0)
     , fURLText(0)
 {
-    setURL(baseURL, relativeURL);
+	try
+	{
+		setURL(baseURL, relativeURL);
+	}
+    catch(...)
+    {
+        cleanup();
+        throw;
+    }
 }
 
 XMLURL::XMLURL(const  XMLURL&        baseURL
@@ -256,7 +280,16 @@ XMLURL::XMLURL(const  XMLURL&        baseURL
 {
     XMLCh* tmpRel = XMLString::transcode(relativeURL);
     ArrayJanitor<XMLCh> janRel(tmpRel);
-    setURL(baseURL, tmpRel);
+	try
+	{
+		setURL(baseURL, tmpRel);
+	}
+    catch(...)
+    {
+        cleanup();
+        throw;
+    }
+
 }
 
 XMLURL::XMLURL(const XMLCh* const urlText) :
@@ -271,7 +304,15 @@ XMLURL::XMLURL(const XMLCh* const urlText) :
     , fUser(0)
     , fURLText(0)
 {
-    setURL(urlText);
+	try
+	{
+	    setURL(urlText);
+	}
+    catch(...)
+    {
+        cleanup();
+        throw;
+    }
 }
 
 XMLURL::XMLURL(const char* const urlText) :
@@ -288,7 +329,15 @@ XMLURL::XMLURL(const char* const urlText) :
 {
     XMLCh* tmpText = XMLString::transcode(urlText);
     ArrayJanitor<XMLCh> janRel(tmpText);
-    setURL(tmpText);
+	try
+	{
+	    setURL(tmpText);
+	}
+    catch(...)
+    {
+        cleanup();
+        throw;
+    }
 }
 
 XMLURL::XMLURL(const XMLURL& toCopy) :
@@ -385,37 +434,19 @@ const XMLCh* XMLURL::getProtocolName() const
 void XMLURL::setURL(const XMLCh* const urlText)
 {
     //
-    //  Try to parse the URL. If this fails, we just give up, cleanup and
-    //  rethrow out of here.
+    //  Try to parse the URL.
     //
     cleanup();
-    try
-    {
-        parse(urlText);
-    }
-
-    catch(...)
-    {
-        cleanup();
-        throw;
-    }
+    parse(urlText);
 }
 
 void XMLURL::setURL(const XMLCh* const    baseURL
                   , const XMLCh* const    relativeURL)
 {
     cleanup();
-    try
-    {
-        // Parse our URL string
-        parse(relativeURL);
-    }
 
-    catch(...)
-    {
-        cleanup();
-        throw;
-    }
+    // Parse our URL string
+    parse(relativeURL);
 
 	//
 	//  If its relative and the base is non-null and non-empty, then
@@ -439,21 +470,13 @@ void XMLURL::setURL(const XMLURL&         baseURL
                   , const XMLCh* const    relativeURL)
 {
     cleanup();
-    try
-    {
-        // Parse our URL string
-        parse(relativeURL);
 
-        // If its relative, then conglomerate with the base URL
-        if (isRelative())
-            conglomerateWithBase(baseURL);
-    }
+	// Parse our URL string
+    parse(relativeURL);
 
-    catch(...)
-    {
-        cleanup();
-        throw;
-    }
+    // If its relative, then conglomerate with the base URL
+    if (isRelative())
+		conglomerateWithBase(baseURL);
 }
 
 
@@ -776,7 +799,7 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
     if (fFragment || !baseURL.fFragment)
         return true;
     fFragment = XMLString::replicate(baseURL.fFragment);
-    return true;
+	return true;
 }
 
 
@@ -972,8 +995,10 @@ void XMLURL::parse(const XMLCh* const urlText)
     }
 
     // If we are at the end, then we are done now
-    if (!*srcPtr)
+    if (!*srcPtr) 
+	{
         return;
+	}
 
     //
     //  Next is the path part. It can be absolute, i.e. starting with a
