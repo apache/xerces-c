@@ -391,7 +391,7 @@ personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 Usage:
     DOMCount [options] <XML file | List file>
 
-This program invokes the DOM parser, builds the DOM tree,
+This program invokes the DOMBuilder, builds the DOM tree,
 and then prints the number of elements found in each XML file.
 
 Options:
