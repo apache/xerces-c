@@ -59,6 +59,14 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/08 00:09:28  andyh
+ * Correcf failures in DOMTest with entity references and read-only nodes.
+ * Correct reference counting problem NamedNodeMap.
+ * Add export methods to NamedNodeMap and DocumentTypeImpl.
+ * Redo DocumentImpl::cloneNode
+ *
+ * (Changes by Chih-Hsiang Chou)
+ *
  * Revision 1.2  1999/12/21 07:47:06  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -120,7 +128,9 @@ public:
     virtual DOMString     getPublicID();
     virtual DOMString     getSystemID();
     virtual DOMString     getInternalSubset();
-    virtual void setOwnerDocument(DocumentImpl *docImpl); //internal use only
+    //internal use only
+    virtual void setOwnerDocument(DocumentImpl *docImpl);
+    virtual DocumentTypeImpl *export(DocumentImpl *docImpl, bool deep);
 };
 
 #endif

@@ -56,6 +56,14 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/08 00:09:27  andyh
+ * Correcf failures in DOMTest with entity references and read-only nodes.
+ * Correct reference counting problem NamedNodeMap.
+ * Add export methods to NamedNodeMap and DocumentTypeImpl.
+ * Redo DocumentImpl::cloneNode
+ *
+ * (Changes by Chih-Hsiang Chou)
+ *
  * Revision 1.3  2000/01/05 01:16:08  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -125,8 +133,10 @@ DocumentImpl::DocumentImpl(const DOMString &namespaceURI,
         throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl
 	    DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     docType=doctype;
-    if (doctype != null)
+    if (doctype != null) {
 	doctype -> setOwnerDocument(this);
+	appendChild(doctype);
+    }
     docElement=null;
     namePool = new DStringPool(257);
     iterators = 0L;
@@ -154,11 +164,22 @@ DocumentImpl::~DocumentImpl()
 
 
 NodeImpl *DocumentImpl::cloneNode(bool deep) {
-    DocumentImpl *newdoc=new DocumentImpl();
+    bool ns = localName != null;    //true if namespace involved, i.e. DOM Level 2 and after
+    DocumentImpl *newdoc = ns ? new DocumentImpl(namespaceURI, name, null) : new DocumentImpl();
     if (deep)
-        for(NodeImpl *n=getFirstChild();n!=null;n=n->getNextSibling())
-            newdoc->appendChild(newdoc->importNode(n,true));
-        return newdoc;
+        for (NodeImpl *n=getFirstChild(); n!=null; n=n->getNextSibling()) {
+	    if (n -> isDocumentTypeImpl()) {
+		DocumentTypeImpl *doctype = ((DocumentTypeImpl *)n) -> export(newdoc, true);
+		newdoc -> appendChild(doctype);
+		newdoc -> docType = doctype;
+	    } else if (n -> isElementImpl()) {
+		ElementImpl *docelem = (ElementImpl *) newdoc -> importNode(n, true);
+		newdoc -> appendChild(docelem);
+		newdoc -> docElement = docelem;
+	    } else
+		newdoc -> appendChild(newdoc->importNode(n,true));
+	}
+    return newdoc;
 };
 
 bool DocumentImpl::isDocumentImpl() {
@@ -489,7 +510,8 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
         break;
     case DOM_Node::ENTITY_REFERENCE_NODE :
         newnode = createEntityReference(source->getNodeName());
-        deep=false; // ????? Right Thing?
+	newnode -> readOnly = false; //allow deep copy temporarily
+//        deep=false; // ????? Right Thing?
         // Value implied by doctype, so we should not copy it
         // -- instead, refer to local doctype, if any.
         break;
@@ -535,6 +557,8 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
         {
             newnode->appendChild(importNode(srckid, true));
         }
+    if (newnode -> getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE)
+	newnode -> readOnly = true;
 
     return newnode;
 };

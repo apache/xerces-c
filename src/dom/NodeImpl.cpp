@@ -56,6 +56,14 @@
 
 /**
 * $Log$
+* Revision 1.6  2000/01/08 00:09:28  andyh
+* Correcf failures in DOMTest with entity references and read-only nodes.
+* Correct reference counting problem NamedNodeMap.
+* Add export methods to NamedNodeMap and DocumentTypeImpl.
+* Redo DocumentImpl::cloneNode
+*
+* (Changes by Chih-Hsiang Chou)
+*
 * Revision 1.5  2000/01/06 19:43:25  aruna1
 * Modifed ?: consturct on solaris to assign DOMString objects
 *
@@ -378,7 +386,7 @@ bool NodeImpl::hasChildNodes()
 
 
 NodeImpl *NodeImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
-    if (readOnly || newChild -> readOnly)
+    if (readOnly)
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     

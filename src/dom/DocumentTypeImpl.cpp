@@ -56,6 +56,14 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/08 00:09:28  andyh
+ * Correcf failures in DOMTest with entity references and read-only nodes.
+ * Correct reference counting problem NamedNodeMap.
+ * Add export methods to NamedNodeMap and DocumentTypeImpl.
+ * Redo DocumentImpl::cloneNode
+ *
+ * (Changes by Chih-Hsiang Chou)
+ *
  * Revision 1.2  1999/11/30 21:16:25  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -113,9 +121,9 @@ DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
     elements = other.elements->cloneMap();
 
     //DOM Level 2
-    publicID = other.publicID;
-    systemID = other.systemID;
-    internalSubset = other.internalSubset;
+    publicID = other.publicID.clone();
+    systemID = other.systemID.clone();
+    internalSubset = other.internalSubset.clone();
 };
 
 
@@ -127,14 +135,11 @@ DocumentTypeImpl::~DocumentTypeImpl()
         NamedNodeMapImpl::removeRef(entities);
     }
 
-
     if (notations != null)
     {
         notations->removeAll();
         NamedNodeMapImpl::removeRef(notations);
     }
-
-
 
     if (elements != null)
     {
@@ -219,4 +224,29 @@ DOMString DocumentTypeImpl::getInternalSubset()
 void DocumentTypeImpl::setOwnerDocument(DocumentImpl *docImpl)
 {
     ownerDocument = docImpl;
+    //Note: ownerDoc of entities, notations and elements remain unchanged
+    //The DOM APIs does not require a NamedNodeMap to have an owner document
 }
+
+
+/** Export this node to a different document docImpl.
+ */
+DocumentTypeImpl *DocumentTypeImpl::export(DocumentImpl *docImpl, bool deep)
+{
+    DocumentTypeImpl *doctype;
+    if (localName != null) {	//true if namespace involved, i.e. DOM Level 2 and after
+	doctype = new DocumentTypeImpl(name, publicID, systemID, internalSubset);
+	doctype -> setOwnerDocument(docImpl);
+    } else
+	doctype = new DocumentTypeImpl(docImpl, name);
+    if (deep) {
+	delete doctype -> entities;
+	delete doctype -> notations;
+	delete doctype -> elements;
+	doctype -> entities = entities -> export(docImpl);
+	doctype -> notations = notations -> export(docImpl);
+	doctype -> elements = elements -> export(docImpl);
+    }
+    return doctype;
+}
+

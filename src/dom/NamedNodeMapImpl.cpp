@@ -56,6 +56,14 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/08 00:09:28  andyh
+ * Correcf failures in DOMTest with entity references and read-only nodes.
+ * Correct reference counting problem NamedNodeMap.
+ * Add export methods to NamedNodeMap and DocumentTypeImpl.
+ * Redo DocumentImpl::cloneNode
+ *
+ * (Changes by Chih-Hsiang Chou)
+ *
  * Revision 1.4  2000/01/06 19:43:25  aruna1
  * Modifed ?: consturct on solaris to assign DOMString objects
  *
@@ -79,6 +87,7 @@
 #include "NodeVector.hpp"
 #include "AttrImpl.hpp"
 #include "DOM_DOMException.hpp"
+#include "DocumentImpl.hpp"
 
 
 int        NamedNodeMapImpl::gLiveNamedNodeMaps  = 0;
@@ -88,6 +97,7 @@ NamedNodeMapImpl::NamedNodeMapImpl(DocumentImpl *ownerD,NamedNodeMapImpl *defs)
 {
     this->ownerDoc=ownerD;
     this->defaults=defs;
+    addRef(defaults);
     this->nodes = null;
     this->changes = 0;
     lastDefaultsChanges = -1;
@@ -110,6 +120,7 @@ NamedNodeMapImpl::~NamedNodeMapImpl()
         nodes = 0;
     }
     gLiveNamedNodeMaps--;
+    removeRef(defaults);
 };
 
 
@@ -135,8 +146,7 @@ NamedNodeMapImpl *NamedNodeMapImpl::cloneMap()
         }
     }
     newmap->defaults = defaults;
-    if (defaults)
-        defaults->refCount++;
+    NamedNodeMapImpl::addRef(defaults);
     
     return newmap;
 };
@@ -337,11 +347,9 @@ NodeImpl * NamedNodeMapImpl::removeNamedItem(const DOMString &name)
 	    if (n->isAttrImpl() && d->isAttrImpl()) {	//DOM Level 2
 		d = d->cloneNode(true); //copy d and ownerElement of n
 		((AttrImpl *) d)->setOwnerElement(((AttrImpl *) n)->getOwnerElement());
-
-		d->namespaceURI = (n->namespaceURI == null) ? DOMString(null) : n->namespaceURI.clone();
-		d->prefix = (n->prefix == null) ? DOMString(null) : n->prefix.clone();
-		d->localName = (n->localName == null) ? DOMString(null) : n->localName.clone();
-
+		d->namespaceURI = n->namespaceURI == null ? DOMString(null) : n->namespaceURI.clone();
+		d->prefix = n->prefix == null ? DOMString(null) : n->prefix.clone();
+		d->localName = n->localName == null ? DOMString(null) : n->localName.clone();
 	    }
             nodes->setElementAt(d, i);
 	} else
@@ -475,6 +483,26 @@ void NamedNodeMapImpl::setReadOnly(bool readOnl, bool deep)
 
 //Introduced in DOM Level 2
 
+/** Export this object to a different document docImpl.
+ */
+NamedNodeMapImpl *NamedNodeMapImpl::export(DocumentImpl *docImpl)
+{
+    bool deep = true;
+    NamedNodeMapImpl *newdefs = defaults == null ? null : defaults->export(docImpl);
+    NamedNodeMapImpl *newmap = new NamedNodeMapImpl(docImpl, newdefs);
+    if (nodes != null)
+    {
+        newmap->nodes = new NodeVector(nodes->size());
+        for (int i = 0; i < nodes->size(); ++i)
+        {
+            NodeImpl *n = docImpl->importNode(nodes->elementAt(i), deep);
+            n->owned = true;
+            newmap->nodes->addElement(n);
+        }
+    }
+    return newmap;
+}
+
 int NamedNodeMapImpl::findNamePoint(const DOMString &namespaceURI,
 	const DOMString &localName)
 {
@@ -562,7 +590,7 @@ NodeImpl *NamedNodeMapImpl::removeNamedItemNS(const DOMString &namespaceURI,
 	if (n->isAttrImpl() && d->isAttrImpl()) {
 	    d = d->cloneNode(true); //copy d and ownerElement of n
 	    ((AttrImpl *) d)->setOwnerElement(((AttrImpl *) n)->getOwnerElement());
-	    d->namespaceURI = (n->namespaceURI == null) ? DOMString(null) : n->namespaceURI.clone();
+	    d->namespaceURI = n->namespaceURI == null ? DOMString(null) : n->namespaceURI.clone();
 	    d->prefix = n->prefix == null ? DOMString(null) : n->prefix.clone();
 	    d->localName = n->localName == null ? DOMString(null) : n->localName.clone();
 	}
