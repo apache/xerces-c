@@ -1444,7 +1444,8 @@ DOMPrint/Makefile \
 MemParse/Makefile \
 Redirect/Makefile \
 PParse/Makefile \
-StdInParse/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+StdInParse/Makefile \
+EnumVal/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -1542,7 +1543,8 @@ DOMPrint/Makefile \
 MemParse/Makefile \
 Redirect/Makefile \
 PParse/Makefile \
-StdInParse/Makefile"}
+StdInParse/Makefile \
+EnumVal/Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then
