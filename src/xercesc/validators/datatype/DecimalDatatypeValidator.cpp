@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2004/01/13 21:18:18  peiyongz
+ * revert code back to previous version
+ *
  * Revision 1.25  2004/01/12 16:25:09  neilg
  * remove use of static buffers
  *
@@ -243,10 +246,8 @@ int DecimalDatatypeValidator::compare(const XMLCh* const lValue
                                     , const XMLCh* const rValue
                                     , MemoryManager* const manager)
 {
-    XMLBigDecimal lObj(manager);
-    lObj.parseContent(lValue);
-    XMLBigDecimal rObj(manager);
-    rObj.parseContent(rValue);
+    XMLBigDecimal lObj(lValue, manager);
+    XMLBigDecimal rObj(rValue, manager);
 
     return compareValues(&lObj, &rObj);
 }
@@ -485,26 +486,22 @@ int  DecimalDatatypeValidator::compareValues(const XMLNumber* const lValue
 
 void  DecimalDatatypeValidator::setMaxInclusive(const XMLCh* const value)
 {
-    fMaxInclusive = new (fMemoryManager) XMLBigDecimal(fMemoryManager);
-    fMaxInclusive->parseContent(value);
+    fMaxInclusive = new (fMemoryManager) XMLBigDecimal(value, fMemoryManager);
 }
 
 void  DecimalDatatypeValidator::setMaxExclusive(const XMLCh* const value)
 {
-    fMaxExclusive = new (fMemoryManager) XMLBigDecimal(fMemoryManager);
-    fMaxExclusive->parseContent(value);
+    fMaxExclusive = new (fMemoryManager) XMLBigDecimal(value, fMemoryManager);
 }
 
 void  DecimalDatatypeValidator::setMinInclusive(const XMLCh* const value)
 {
-    fMinInclusive = new (fMemoryManager) XMLBigDecimal(fMemoryManager);
-    fMinInclusive->parseContent(value);
+    fMinInclusive = new (fMemoryManager) XMLBigDecimal(value, fMemoryManager);
 }
 
 void  DecimalDatatypeValidator::setMinExclusive(const XMLCh* const value)
 {
-    fMinExclusive = new (fMemoryManager) XMLBigDecimal(fMemoryManager);
-    fMinExclusive->parseContent(value);
+    fMinExclusive = new (fMemoryManager) XMLBigDecimal(value, fMemoryManager);
 }
 
 void DecimalDatatypeValidator::setEnumeration(MemoryManager* const manager)
@@ -552,9 +549,7 @@ void DecimalDatatypeValidator::setEnumeration(MemoryManager* const manager)
 
     for ( i = 0; i < enumLength; i++)
     {
-        XMLBigDecimal *data = new (manager) XMLBigDecimal(manager);
-        data->parseContent(fStrEnumeration->elementAt(i));
-        fEnumeration->insertElementAt(data, i);
+        fEnumeration->insertElementAt(new (manager) XMLBigDecimal(fStrEnumeration->elementAt(i), manager), i);        
     }
 
 }
@@ -581,9 +576,7 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
         if (getRegex() ==0) {
             try {
                 // REVISIT: cargillmem fMemoryManager vs manager
-                RegularExpression* regEx = new (fMemoryManager) RegularExpression(fMemoryManager);
-                regEx->setPattern(getPattern(), SchemaSymbols::fgRegEx_XOption);
-                setRegex(regEx);
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));                
             }
             catch (XMLException &e)
             {
@@ -607,9 +600,8 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
         return;
     XMLCh *errorMsg = 0;
     try {
-        XMLBigDecimal compareDataValue (manager);
-        compareDataValue.parseContent(content);
-        XMLBigDecimal* compareData = &compareDataValue;
+        XMLBigDecimal  compareDataValue(content, manager);
+        XMLBigDecimal* compareData = &compareDataValue;        
         
         if (getEnumeration())
         {

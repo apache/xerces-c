@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2004/01/13 21:18:18  peiyongz
+ * revert code back to previous version
+ *
  * Revision 1.15  2004/01/12 16:25:49  neilg
  * remove use of static buffers
  *
@@ -199,10 +202,8 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
     {
         // lazy construction
         if (getRegex() ==0) {
-            try {
-                RegularExpression* regEx = new (fMemoryManager) RegularExpression(fMemoryManager);
-                regEx->setPattern(getPattern(), SchemaSymbols::fgRegEx_XOption);
-                setRegex(regEx);
+            try {           	
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));                
             }
             catch (XMLException &e)
             {

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.21  2004/01/13 21:18:18  peiyongz
+ * revert code back to previous version
+ *
  * Revision 1.20  2004/01/12 16:25:09  neilg
  * remove use of static buffers
  *
@@ -283,9 +286,7 @@ void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       to
         if (getRegex() == 0)
         {
             try {
-                RegularExpression* regEx = new (fMemoryManager) RegularExpression(fMemoryManager);
-                regEx->setPattern(getPattern(), SchemaSymbols::fgRegEx_XOption);
-                setRegex(regEx);
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));            	
             }
             catch (XMLException &e)
             {
