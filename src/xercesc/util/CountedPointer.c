@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2005/01/12 13:29:06  amassari
+ * Macro having 3 arguments was invoked with only 2
+ *
  * Revision 1.4  2004/09/08 13:56:21  peiyongz
  * Apache License Version 2.0
  *
@@ -118,14 +121,14 @@ template <class T> T* CountedPointerTo<T>::operator->()
 template <class T> const T& CountedPointerTo<T>::operator*() const
 {
     if (!fPtr)
-        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, 0);
     return *fPtr;
 }
 
 template <class T> T& CountedPointerTo<T>::operator*()
 {
     if (!fPtr)
-        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero);
+        ThrowXMLwithMemMgr(NullPointerException, XMLExcepts::CPtr_PointerIsZero, 0);
     return *fPtr;
 }
 
