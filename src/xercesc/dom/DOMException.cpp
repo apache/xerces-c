@@ -1,7 +1,3 @@
-#ifndef IDOM_HEADER_GUARD_HPP
-#define IDOM_HEADER_GUARD_HPP
-
-
 /*
  * The Apache Software License, Version 1.1
  *
@@ -60,53 +56,44 @@
 
 /*
  * $Log$
- * Revision 1.2  2002/05/21 20:26:44  tng
+ * Revision 1.1  2002/05/21 20:26:44  tng
  * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
  *
  * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
  * sane_include
  *
- * Revision 1.4  2001/06/08 21:23:02  tng
- * IDOM: Remove the non-standard extension where XML Decl as a node
- *
- * Revision 1.3  2001/06/04 20:11:53  tng
- * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
- *
- * Revision 1.2  2001/05/11 13:25:48  tng
+ * Revision 1.2  2001/05/11 13:25:50  tng
  * Copyright update.
  *
- * Revision 1.1.1.1  2001/04/03 00:14:26  andyh
+ * Revision 1.1.1.1  2001/04/03 00:14:29  andyh
  * IDOM
  *
  */
 
-//
-//  This is the primary header file for inclusion in application
-//  programs using the C++ XML Document Object Model API.
-//
+#include "IDOM_DOMException.hpp"
 
-#include <xercesc/idom/IDOM_Attr.hpp>
-#include <xercesc/idom/IDOM_CDATASection.hpp>
-#include <xercesc/idom/IDOM_CharacterData.hpp>
-#include <xercesc/idom/IDOM_Comment.hpp>
-#include <xercesc/idom/IDOM_Document.hpp>
-#include <xercesc/idom/IDOM_DocumentFragment.hpp>
-#include <xercesc/idom/IDOM_DocumentType.hpp>
-#include <xercesc/idom/IDOM_DOMException.hpp>
-#include <xercesc/idom/IDOM_DOMImplementation.hpp>
-#include <xercesc/idom/IDOM_Element.hpp>
-#include <xercesc/idom/IDOM_Entity.hpp>
-#include <xercesc/idom/IDOM_EntityReference.hpp>
-#include <xercesc/idom/IDOM_NamedNodeMap.hpp>
-#include <xercesc/idom/IDOM_Node.hpp>
-#include <xercesc/idom/IDOM_NodeFilter.hpp>
-#include <xercesc/idom/IDOM_NodeIterator.hpp>
-#include <xercesc/idom/IDOM_NodeList.hpp>
-#include <xercesc/idom/IDOM_Notation.hpp>
-#include <xercesc/idom/IDOM_ProcessingInstruction.hpp>
-#include <xercesc/idom/IDOM_Range.hpp>
-#include <xercesc/idom/IDOM_RangeException.hpp>
-#include <xercesc/idom/IDOM_Text.hpp>
-#include <xercesc/idom/IDOM_TreeWalker.hpp>
 
-#endif
+IDOM_DOMException::IDOM_DOMException()
+: msg(0)
+{
+        code = (ExceptionCode) 0;
+};
+
+
+IDOM_DOMException::IDOM_DOMException(short exCode, const XMLCh *message)
+: msg(message)
+{
+   code = (ExceptionCode) exCode;
+};
+
+
+IDOM_DOMException::IDOM_DOMException(const IDOM_DOMException &other)
+: msg(other.msg)
+{
+        code = other.code;
+};
+
+
+IDOM_DOMException::~IDOM_DOMException()
+{
+};

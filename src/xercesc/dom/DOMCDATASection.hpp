@@ -1,5 +1,5 @@
-#ifndef IDOM_HEADER_GUARD_HPP
-#define IDOM_HEADER_GUARD_HPP
+#ifndef IDOM_CDataSection_HEADER_GUARD_
+#define IDOM_CDataSection_HEADER_GUARD_
 
 
 /*
@@ -60,53 +60,49 @@
 
 /*
  * $Log$
- * Revision 1.2  2002/05/21 20:26:44  tng
+ * Revision 1.1  2002/05/21 20:26:44  tng
  * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
  *
  * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
  * sane_include
  *
- * Revision 1.4  2001/06/08 21:23:02  tng
- * IDOM: Remove the non-standard extension where XML Decl as a node
- *
- * Revision 1.3  2001/06/04 20:11:53  tng
- * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
- *
- * Revision 1.2  2001/05/11 13:25:48  tng
+ * Revision 1.2  2001/05/11 13:25:49  tng
  * Copyright update.
  *
- * Revision 1.1.1.1  2001/04/03 00:14:26  andyh
+ * Revision 1.1.1.1  2001/04/03 00:14:27  andyh
  * IDOM
  *
  */
 
-//
-//  This is the primary header file for inclusion in application
-//  programs using the C++ XML Document Object Model API.
-//
+#include <xercesc/util/XercesDefs.hpp>
+#include "IDOM_Text.hpp"
 
-#include <xercesc/idom/IDOM_Attr.hpp>
-#include <xercesc/idom/IDOM_CDATASection.hpp>
-#include <xercesc/idom/IDOM_CharacterData.hpp>
-#include <xercesc/idom/IDOM_Comment.hpp>
-#include <xercesc/idom/IDOM_Document.hpp>
-#include <xercesc/idom/IDOM_DocumentFragment.hpp>
-#include <xercesc/idom/IDOM_DocumentType.hpp>
-#include <xercesc/idom/IDOM_DOMException.hpp>
-#include <xercesc/idom/IDOM_DOMImplementation.hpp>
-#include <xercesc/idom/IDOM_Element.hpp>
-#include <xercesc/idom/IDOM_Entity.hpp>
-#include <xercesc/idom/IDOM_EntityReference.hpp>
-#include <xercesc/idom/IDOM_NamedNodeMap.hpp>
-#include <xercesc/idom/IDOM_Node.hpp>
-#include <xercesc/idom/IDOM_NodeFilter.hpp>
-#include <xercesc/idom/IDOM_NodeIterator.hpp>
-#include <xercesc/idom/IDOM_NodeList.hpp>
-#include <xercesc/idom/IDOM_Notation.hpp>
-#include <xercesc/idom/IDOM_ProcessingInstruction.hpp>
-#include <xercesc/idom/IDOM_Range.hpp>
-#include <xercesc/idom/IDOM_RangeException.hpp>
-#include <xercesc/idom/IDOM_Text.hpp>
-#include <xercesc/idom/IDOM_TreeWalker.hpp>
 
+/**
+ * <code>DOM_CDataSection</code> objects refer to the data from an
+ * XML CDATA section.  These are used to escape blocks of text containing  characters
+ * that would otherwise be regarded as markup.
+ *
+ * <p>Note that the string data associated with the CDATA section may
+ * contain characters that need to be escaped when appearing in an
+ * XML document outside of a CDATA section.
+ * <p> The <code>IDOM_CDATASection</code> class inherits from the
+ * <code>DOM_CharacterData</code> class through the <code>Text</code>
+ * interface. Adjacent CDATASection nodes are not merged by use
+ * of the Element.normalize() method.
+ */
+class CDOM_EXPORT IDOM_CDATASection: public IDOM_Text {
+protected:
+    IDOM_CDATASection() {};
+    IDOM_CDATASection(const IDOM_CDATASection &other) {};
+    IDOM_CDATASection & operator = (const IDOM_CDATASection &other) {return *this;};
+
+
+public:
+
+    virtual ~IDOM_CDATASection() {};
+
+};
 #endif
+
+

@@ -1,6 +1,5 @@
-#ifndef IDOM_HEADER_GUARD_HPP
-#define IDOM_HEADER_GUARD_HPP
-
+#ifndef IDOM_Range_HEADER_GUARD_
+#define IDOM_Range_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
@@ -59,54 +58,66 @@
  */
 
 /*
- * $Log$
- * Revision 1.2  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
- * sane_include
- *
- * Revision 1.4  2001/06/08 21:23:02  tng
- * IDOM: Remove the non-standard extension where XML Decl as a node
- *
- * Revision 1.3  2001/06/04 20:11:53  tng
- * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
- *
- * Revision 1.2  2001/05/11 13:25:48  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:26  andyh
- * IDOM
- *
+ * $Id$
  */
 
-//
-//  This is the primary header file for inclusion in application
-//  programs using the C++ XML Document Object Model API.
-//
+#include <xercesc/util/XercesDefs.hpp>
 
-#include <xercesc/idom/IDOM_Attr.hpp>
-#include <xercesc/idom/IDOM_CDATASection.hpp>
-#include <xercesc/idom/IDOM_CharacterData.hpp>
-#include <xercesc/idom/IDOM_Comment.hpp>
-#include <xercesc/idom/IDOM_Document.hpp>
-#include <xercesc/idom/IDOM_DocumentFragment.hpp>
-#include <xercesc/idom/IDOM_DocumentType.hpp>
-#include <xercesc/idom/IDOM_DOMException.hpp>
-#include <xercesc/idom/IDOM_DOMImplementation.hpp>
-#include <xercesc/idom/IDOM_Element.hpp>
-#include <xercesc/idom/IDOM_Entity.hpp>
-#include <xercesc/idom/IDOM_EntityReference.hpp>
-#include <xercesc/idom/IDOM_NamedNodeMap.hpp>
-#include <xercesc/idom/IDOM_Node.hpp>
-#include <xercesc/idom/IDOM_NodeFilter.hpp>
-#include <xercesc/idom/IDOM_NodeIterator.hpp>
-#include <xercesc/idom/IDOM_NodeList.hpp>
-#include <xercesc/idom/IDOM_Notation.hpp>
-#include <xercesc/idom/IDOM_ProcessingInstruction.hpp>
-#include <xercesc/idom/IDOM_Range.hpp>
-#include <xercesc/idom/IDOM_RangeException.hpp>
-#include <xercesc/idom/IDOM_Text.hpp>
-#include <xercesc/idom/IDOM_TreeWalker.hpp>
+class IDOM_Node;
+class IDOM_DocumentFragment;
+
+class CDOM_EXPORT IDOM_Range {
+protected:
+    IDOM_Range() {};
+    IDOM_Range(const IDOM_Range &other) {};
+    IDOM_Range & operator = (const IDOM_Range &other) {return *this;};
+
+public:
+
+    enum CompareHow {
+        START_TO_START  = 0,
+        START_TO_END    = 1,
+        END_TO_END      = 2,
+        END_TO_START    = 3
+    };
+
+    virtual ~IDOM_Range() {};
+
+    //getter functions
+    virtual IDOM_Node* getStartContainer() const = 0;
+    virtual unsigned int getStartOffset() const = 0;
+    virtual IDOM_Node* getEndContainer() const = 0;
+    virtual unsigned int getEndOffset() const = 0;
+    virtual bool getCollapsed() const = 0;
+    virtual const IDOM_Node* getCommonAncestorContainer() const = 0;
+
+    //setter functions
+    virtual void setStart(const IDOM_Node *parent, unsigned int offset) = 0;
+    virtual void setEnd(const IDOM_Node *parent, unsigned int offset) = 0;
+
+    virtual void setStartBefore(const IDOM_Node *refNode) = 0;
+    virtual void setStartAfter(const IDOM_Node *refNode) = 0;
+    virtual void setEndBefore(const IDOM_Node *refNode) = 0;
+    virtual void setEndAfter(const IDOM_Node *refNode) = 0;
+
+    //misc functions
+    virtual void collapse(bool toStart) = 0;
+    virtual void selectNode(const IDOM_Node *node) = 0;
+    virtual void selectNodeContents(const IDOM_Node *node) = 0;
+
+    //Functions related to comparing range Boundrary-Points
+    virtual short compareBoundaryPoints(CompareHow how, const IDOM_Range* range) const = 0;
+    virtual void deleteContents() = 0;
+    virtual IDOM_DocumentFragment* extractContents() = 0;
+    virtual IDOM_DocumentFragment* cloneContents() const = 0;
+    virtual void insertNode(IDOM_Node *node) = 0;
+    //Misc functions
+    virtual void surroundContents(IDOM_Node *node) = 0;
+    virtual IDOM_Range* cloneRange() const = 0;
+    virtual const XMLCh* toString() const = 0;
+    virtual void detach() = 0;
+
+};
+
 
 #endif

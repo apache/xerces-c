@@ -1,6 +1,5 @@
-#ifndef IDOM_HEADER_GUARD_HPP
-#define IDOM_HEADER_GUARD_HPP
-
+#ifndef IDOM_RangeException_HEADER_GUARD_
+#define IDOM_RangeException_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
@@ -60,53 +59,96 @@
 
 /*
  * $Log$
- * Revision 1.2  2002/05/21 20:26:44  tng
+ * Revision 1.1  2002/05/21 20:26:44  tng
  * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
  *
- * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
+ * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
  * sane_include
  *
- * Revision 1.4  2001/06/08 21:23:02  tng
- * IDOM: Remove the non-standard extension where XML Decl as a node
+ * Revision 1.3  2001/06/04 14:55:36  tng
+ * IDOM: Add IRange and IDeepNodeList Support.
  *
- * Revision 1.3  2001/06/04 20:11:53  tng
- * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
- *
- * Revision 1.2  2001/05/11 13:25:48  tng
+ * Revision 1.2  2001/05/11 13:25:55  tng
  * Copyright update.
  *
- * Revision 1.1.1.1  2001/04/03 00:14:26  andyh
+ * Revision 1.1.1.1  2001/04/03 00:14:32  andyh
  * IDOM
  *
  */
 
-//
-//  This is the primary header file for inclusion in application
-//  programs using the C++ XML Document Object Model API.
-//
-
-#include <xercesc/idom/IDOM_Attr.hpp>
-#include <xercesc/idom/IDOM_CDATASection.hpp>
-#include <xercesc/idom/IDOM_CharacterData.hpp>
-#include <xercesc/idom/IDOM_Comment.hpp>
-#include <xercesc/idom/IDOM_Document.hpp>
-#include <xercesc/idom/IDOM_DocumentFragment.hpp>
-#include <xercesc/idom/IDOM_DocumentType.hpp>
 #include <xercesc/idom/IDOM_DOMException.hpp>
-#include <xercesc/idom/IDOM_DOMImplementation.hpp>
-#include <xercesc/idom/IDOM_Element.hpp>
-#include <xercesc/idom/IDOM_Entity.hpp>
-#include <xercesc/idom/IDOM_EntityReference.hpp>
-#include <xercesc/idom/IDOM_NamedNodeMap.hpp>
-#include <xercesc/idom/IDOM_Node.hpp>
-#include <xercesc/idom/IDOM_NodeFilter.hpp>
-#include <xercesc/idom/IDOM_NodeIterator.hpp>
-#include <xercesc/idom/IDOM_NodeList.hpp>
-#include <xercesc/idom/IDOM_Notation.hpp>
-#include <xercesc/idom/IDOM_ProcessingInstruction.hpp>
-#include <xercesc/idom/IDOM_Range.hpp>
-#include <xercesc/idom/IDOM_RangeException.hpp>
-#include <xercesc/idom/IDOM_Text.hpp>
-#include <xercesc/idom/IDOM_TreeWalker.hpp>
+
+/**
+  * Encapsulate range related DOM error or warning. DOM level 2 implementation.
+  *
+  * <p> The DOM will create and throw an instance of IDOM_RangeException
+  * when an error condition in range is detected.  Exceptions can occur
+  * when an application directly manipulates the range elements in DOM document
+  * tree that is produced by the parser.
+  *
+  * <p>Unlike the other classes in the C++ DOM API, IDOM_RangeException
+  * is NOT a reference to an underlying implementation class, and
+  * does not provide automatic memory management.  Code that catches
+  * a DOM Range exception is responsible for deleting it, or otherwise
+  * arranging for its disposal.
+  *
+  */
+class CDOM_EXPORT IDOM_RangeException  : public IDOM_DOMException {
+public:
+    /** @name Enumerators for DOM Range Exceptions */
+    //@{
+        enum RangeExceptionCode {
+                BAD_BOUNDARYPOINTS_ERR  = 1,
+                INVALID_NODE_TYPE_ERR   = 2
+        };
+    //@}
+public:
+    /** @name Constructors and assignment operator */
+    //@{
+    /**
+      * Default constructor for IDOM_RangeException.
+      *
+      */
+    IDOM_RangeException();
+
+    /**
+      * Constructor which takes an error code and a message.
+      *
+      * @param code The error code which indicates the exception
+      * @param message The string containing the error message
+      */
+    IDOM_RangeException(RangeExceptionCode code, const XMLCh* message);
+
+    /**
+      * Copy constructor.
+      *
+      * @param other The object to be copied.
+      */
+    IDOM_RangeException(const IDOM_RangeException &other);
+
+    //@}
+    /** @name Destructor. */
+    //@{
+	 /**
+	  * Destructor for IDOM_RangeException.  Applications are responsible
+      * for deleting IDOM_RangeException objects that they catch after they
+      * have completed their exception processing.
+	  *
+	  */
+    virtual ~IDOM_RangeException();
+    //@}
+
+    /** @name Public variables. */
+     //@{
+	 /**
+	  * A code value, from the set defined by the RangeExceptionCode enum,
+      * indicating the type of error that occured.
+	  */
+   RangeExceptionCode   code;
+
+    //@}
+
+};
 
 #endif
+

@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+# Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
 #
 # This software consists of voluntary contributions made by many
 # individuals on behalf of the Apache Software Foundation, and was
-# originally based on software copyright (c) 1999, International
+# originally based on software copyright (c) 2001, International
 # Business Machines, Inc., http://www.ibm.com .  For more information
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
@@ -78,134 +78,49 @@ include ../Makefile.incl
 
 DOM_CPP_PUBHEADERS = \
 	DOM.hpp \
-	DOMString.hpp \
-	DOM_Attr.hpp \
-	DOM_CDATASection.hpp \
-	DOM_CharacterData.hpp \
-	DOM_Comment.hpp \
-	DOM_DOMException.hpp \
-	DOM_DOMImplementation.hpp \
-	DOM_Document.hpp \
-	DOM_DocumentFragment.hpp \
-	DOM_DocumentType.hpp \
-	DOM_Element.hpp \
-	DOM_Entity.hpp \
-	DOM_EntityReference.hpp \
-	DomMemDebug.hpp \
-	DOM_NamedNodeMap.hpp \
-	DOM_Node.hpp \
-	DOM_NodeFilter.hpp \
-	DOM_NodeIterator.hpp \
-	DOM_NodeList.hpp \
-	DOM_Notation.hpp \
-	DOM_ProcessingInstruction.hpp \
-	DOM_Range.hpp \
-	DOM_RangeException.hpp \
-	DOM_Text.hpp \
-	DOM_TreeWalker.hpp \
-	DOM_XMLDecl.hpp
+	DOMAttr.hpp \
+	DOMCDATASection.hpp \
+	DOMCharacterData.hpp \
+	DOMComment.hpp \
+	DOMDocument.hpp \
+	DOMDocumentFragment.hpp \
+	DOMDocumentType.hpp \
+	DOMElement.hpp \
+	DOMEntity.hpp \
+	DOMEntityReference.hpp \
+	DOMException.hpp \
+	DOMImplementation.hpp \
+	DOMNamedNodeMap.hpp \
+	DOMNode.hpp \
+	DOMNodeFilter.hpp \
+	DOMNodeIterator.hpp \
+	DOMNodeList.hpp \
+	DOMNotation.hpp \
+	DOMProcessingInstruction.hpp \
+	DOMRange.hpp \
+	DOMRangeException.hpp \
+	DOMText.hpp \
+	DOMTreeWalker.hpp
 
-DOM_CPP_PRIVHEADERS =  \
-	AttrImpl.hpp \
-	AttrMapImpl.hpp \
-	AttrNSImpl.hpp \
-	CDATASectionImpl.hpp \
-	CharacterDataImpl.hpp \
-	ChildNode.hpp \
-	CommentImpl.hpp \
-	DStringPool.hpp \
-	DeepNodeListImpl.hpp \
-	DocumentFragmentImpl.hpp \
-	DocumentImpl.hpp \
-	DocumentTypeImpl.hpp \
-	ElementDefinitionImpl.hpp \
-	ElementImpl.hpp \
-	ElementNSImpl.hpp \
-	EntityImpl.hpp \
-	EntityReferenceImpl.hpp \
-	MemDebug.hpp \
-	NameNodeFilter.hpp \
-	NamedNodeMapImpl.hpp \
-	NodeIDMap.hpp \
-	NodeImpl.hpp \
-	NodeIteratorImpl.hpp \
-	NodeListImpl.hpp \
-	NodeVector.hpp \
-	NotationImpl.hpp \
-	ParentNode.hpp \
-	ProcessingInstructionImpl.hpp \
-	RangeImpl.hpp \
-	RefCountedImpl.hpp \
-	TextImpl.hpp \
-	TreeWalkerImpl.hpp \
-	XMLDeclImpl.hpp
+DOM_CPP_PRIVHEADERS =
 
 DOM_C_FILES =
 
-
 DOM_CPP_OBJECTS = \
-	AttrImpl.$(TO) \
-	AttrMapImpl.$(TO) \
-	AttrNSImpl.$(TO) \
-	CDATASectionImpl.$(TO) \
-	CharacterDataImpl.$(TO) \
-	ChildNode.$(TO) \
-	CommentImpl.$(TO) \
-	DOMString.$(TO) \
-	DOM_Attr.$(TO) \
-	DOM_CDATASection.$(TO) \
-	DOM_CharacterData.$(TO) \
-	DOM_Comment.$(TO) \
-	DOM_DOMException.$(TO) \
-	DOM_DOMImplementation.$(TO) \
-	DOM_Document.$(TO) \
-	DOM_DocumentFragment.$(TO) \
-	DOM_DocumentType.$(TO) \
-	DOM_Element.$(TO) \
-	DOM_Entity.$(TO) \
-	DOM_EntityReference.$(TO) \
-	DOM_NamedNodeMap.$(TO) \
-	DOM_Node.$(TO) \
-	DOM_NodeList.$(TO) \
-	DOM_NodeFilter.$(TO) \
-	DOM_NodeIterator.$(TO) \
-	DOM_TreeWalker.$(TO) \
-	DOM_Notation.$(TO) \
-	DOM_ProcessingInstruction.$(TO) \
-	DOM_Range.$(TO) \
-	DOM_RangeException.$(TO) \
-	DOM_Text.$(TO) \
-	DOM_XMLDecl.$(TO) \
-	DStringPool.$(TO) \
-	DeepNodeListImpl.$(TO) \
-	DocumentFragmentImpl.$(TO) \
-	DocumentImpl.$(TO) \
-	DocumentTypeImpl.$(TO) \
-	DomMemDebug.$(TO) \
-	ElementDefinitionImpl.$(TO) \
-	ElementImpl.$(TO) \
-	ElementNSImpl.$(TO) \
-	EntityImpl.$(TO) \
-	EntityReferenceImpl.$(TO) \
-	NamedNodeMapImpl.$(TO) \
-	NodeIDMap.$(TO) \
-	NodeImpl.$(TO) \
-	NodeIteratorImpl.$(TO) \
-        NodeListImpl.$(TO) \
-	NodeVector.$(TO) \
-	NotationImpl.$(TO) \
-	ParentNode.$(TO) \
-	ProcessingInstructionImpl.$(TO) \
-	RangeImpl.$(TO) \
-	RefCountedImpl.$(TO) \
-	TextImpl.$(TO) \
-	TreeWalkerImpl.$(TO) \
-	XMLDeclImpl.$(TO)
+	DOMException.$(TO) \
+	DOMRangeException.$(TO)
 
+all::	includes $(DOM_CPP_OBJECTS) impl deprecated
 
-all::	includes $(DOM_CPP_OBJECTS)
+includes:: pubheaders $(DOM_C_FILES)
+	${MAKE} -C impl $@
+	${MAKE} -C deprecated $@
 
-includes::	pubheaders $(DOM_C_FILES)
+impl::
+	${MAKE} -C impl
+
+deprecated::
+	${MAKE} -C deprecated
 
 pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)
@@ -218,12 +133,18 @@ depend:: includes
 clean::
 	@echo "Making clean in $(MODULE) ..."
 	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(DOM_CPP_OBJECTS))
+	${MAKE} -C impl $@
+	${MAKE} -C deprecated $@
 
 distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE) header files ..."
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(DOM_CPP_PUBHEADERS))
+	${MAKE} -C impl $@
+	${MAKE} -C deprecated $@
 
 install::
 	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)
 	$(CP) $(DOM_CPP_PUBHEADERS) $(DOM_C_FILES) $(PREFIX_INCLUDE)/$(MODULE)
+	${MAKE} -C impl $@
+	${MAKE} -C deprecated $@
