@@ -2,47 +2,45 @@
 <!DOCTYPE faqs SYSTEM "./dtd/faqs.dtd">
 
 <faqs title="Parsing with &XercesCName;">
-    <faq title="Why does my application crash on AIX when I run it under a
+
+  <faq title="Why does my application crash on AIX when I run it under a
          multi-threaded environment?">
 
-      <q>Why does my application crash on AIX when I run it under a
-        multi-threaded environment?</q>
+    <q>Why does my application crash on AIX when I run it under a
+      multi-threaded environment?</q>
 
-      <a>
-        <p>AIX maintains two kinds of libraries on the system,
-          thread-safe and non-thread safe. Multi-threaded libraries on
-          AIX follow a different naming convention, Usually the
-          multi-threaded library names are followed with "_r". For
-          example, libc.a is single threaded whereas libc_r.a is
-          multi-threaded.</p>
+    <a>
 
-        <p>To make your multi-threaded application run on AIX, you
-          MUST ensure that you do not have a 'system library path' in
-          your <code>LIBPATH</code> environment variable when you run the
-          application. The appropriate libraries (threaded or
-          non-threaded) are automatically picked up at runtime. An
-          application usually crashes when you build your application
-          for multi-threaded operation but don't point to the
-          thread-safe version of the system libraries. For example,
-          LIBPATH can be simply set as:</p>
+      <p>AIX maintains two kinds of libraries on the system, thread-safe and
+        non-thread safe. Multi-threaded libraries on AIX follow a different naming
+        convention, Usually the multi-threaded library names are followed with "_r".
+        For example, libc.a is single threaded whereas libc_r.a is multi-threaded.</p>
 
-          <source>LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib</source>
+      <p>To make your multi-threaded application run on AIX, you <em>must</em>
+        ensure that you do not have a "system library path" in your <code>LIBPATH</code>
+        environment variable when you run the application. The appropriate
+        libraries (threaded or non-threaded) are automatically picked up at runtime. An
+        application usually crashes when you build your application for multi-threaded
+        operation but don't point to the thread-safe version of the system libraries.
+        For example, LIBPATH can be simply set as:</p>
 
-        <p>Where &lt;&XercesCProjectName;&gt; points to the directory where
-          &XercesCProjectName; application resides.</p>
+      <source>LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib</source>
 
-        <p>If for any reason, unrelated to &XercesCProjectName;, you need to
-          keep a 'system library path' in your LIBPATH environment
-          variable, you must make sure that you have placed the
-          thread-safe path before you specify the normal system
-          path. For example, you must place <ref>/lib/threads</ref> before
-          <ref>/lib</ref> in your LIBPATH variable. That is to say your
-          LIBPATH may look like this:</p>
+      <p>Where &lt;&XercesCProjectName;&gt; points to the directory where the
+        &XercesCProjectName; application resides.</p>
 
-          <source>export LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib:/usr/lib/threads:/usr/lib</source>
+      <p>If, for any reason unrelated to &XercesCProjectName;, you need to keep a
+        "system library path" in your LIBPATH environment variable, you must make sure
+        that you have placed the thread-safe path before you specify the normal system
+        path. For example, you must place <ref>/lib/threads</ref> before
+        <ref>/lib</ref> in your LIBPATH variable. That is to say your LIBPATH may look
+        like this:</p>
 
-        <p>Where /usr/lib is where your system libraries are.</p>
-      </a>
+      <source>export LIBPATH=$HOME/&lt;&XercesCProjectName;&gt;/lib:/usr/lib/threads:/usr/lib</source>
+
+      <p>Where /usr/lib is where your system libraries are.</p>
+
+    </a>
   </faq>
 
   <faq title="What compilers are being used on the supported platforms?">
@@ -50,67 +48,80 @@
     <q>What compilers are being used on the supported platforms?</q>
 
     <a>
-      <p>&XercesCProjectName; has been built on the following platforms with these
-        compilers</p>
+
+      <p>&XercesCProjectName; has been built on the following platforms with
+        these compilers</p>
 
       <table>
-        <tr><td><em>Operating System</em></td><td><em>Compiler</em></td></tr>
-        <tr><td>Windows NT 4.0 SP5/98</td><td>MSVC 6.0 SP3</td></tr>
-        <tr><td>Redhat Linux 6.1</td><td>egcs-2.91.66 and glibc-2.1.2-11</td></tr>
-        <tr><td>AIX 4.2.1  and higher</td><td>xlC 3.6.4</td></tr>
-        <tr><td>Solaris 2.6</td><td>CC Workshop 4.2</td></tr>
-        <tr><td>HP-UX 10.2</td><td>CC A.10.36</td></tr>
-        <tr><td>HP-UX 11.0</td><td>aCC A.03.13 with pthreads</td></tr>
+        <tr>
+          <td><em>Operating System</em></td>
+          <td><em>Compiler</em></td>
+        </tr>
+        <tr>
+          <td>Windows NT 4.0 SP5/98</td>
+          <td>MSVC 6.0 SP3</td>
+        </tr>
+        <tr>
+          <td>Redhat Linux 6.1</td>
+          <td>egcs-2.91.66 and glibc-2.1.2-11</td>
+        </tr>
+        <tr>
+          <td>AIX 4.2.1 and higher</td>
+          <td>xlC 3.6.4</td>
+        </tr>
+        <tr>
+          <td>Solaris 2.6</td>
+          <td>CC Workshop 4.2</td>
+        </tr>
+        <tr>
+          <td>HP-UX 10.2</td>
+          <td>CC A.10.36</td>
+        </tr>
+        <tr>
+          <td>HP-UX 11.0</td>
+          <td>aCC A.03.13 with pthreads</td>
+        </tr>
       </table>
+
     </a>
   </faq>
 
-  <faq title="I cannot run my sample applications. What is wrong?">
+  <faq title="I cannot run the sample applications. What is wrong?">
 
-    <q>I cannot run my sample applications. What is wrong?</q>
+    <q>I cannot run the sample applications. What is wrong?</q>
+
     <a>
-      <p>In order to run an application built using &XercesCProjectName; you
-      must set up your path and library search path properly. In the
-      standalone version from Apache, you must have the &XercesCName; runtime library
-      available from your path settings. On Windows this library is called
-      <code>&XercesCWindowsLib;.dll</code> which must be available from your <code>PATH</code>
-      settings. (Note that now there are separate debug and release dlls for Windows.
-      If the release dll is named <code>&XercesCWindowsLib;.dll</code> then the debug dll is named
-      <code>&XercesCWindowsLib;d.dll)</code>.
-      On UNIX platforms the library is called <code>&XercesCUnixLib;.so</code>
-      (or <code>.a</code> or <code>.sl</code>) which must be available from your
-      <code>LD_LIBRARY_PATH</code> (or <code>LIBPATH</code> or <code>SHLIB_PATH</code>)
-      environment variable.</p>
 
-      <p>Thus, if you installed your binaries under <code>$HOME/fastxmlparser</code>,
-      you need to point your library path to that directory.
-      </p>
+      <p>In order to run an application built using &XercesCProjectName; you must
+        set up your path and library search path properly. In the stand-alone version
+        from Apache, you must have the &XercesCName; runtime library available from
+        your path settings. On Windows this library is called <code>&XercesCWindowsLib;.dll</code> which must be available from your <code>PATH</code> settings. (Note that now there are separate debug and release dlls for
+        Windows. If the release dll is named <code>&XercesCWindowsLib;.dll</code> then the debug dll is named <code>&XercesCWindowsLib;d.dll)</code>. On UNIX platforms the library is called <code>&XercesCUnixLib;.so</code> (or <code>.a</code> or <code>.sl</code>) which must be available from your <code>LD_LIBRARY_PATH</code> (or <code>LIBPATH</code> or <code>SHLIB_PATH</code>) environment variable.</p>
+
+      <p>Thus, if you installed your binaries under <code>$HOME/fastxmlparser</code>, you need to point your library path to that directory.</p>
 
 <source>export LIBPATH=$LIBPATH:$HOME/fastxmlparser/lib # (AIX)
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/fastxmlparser/lib # (Solaris, Linux)
 export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
 
-      <p>If you are using the enhanced version of this parser from IBM, you will need to
-      put in two additional DLLs. In the Windows build these are <code>icuuc.dll</code> and
-      <code>icudata.dll</code> which must be available from your PATH settings. On UNIX,
-      these libraries are called <code>libicu-uc.so</code> and <code>libicudata.so</code>
-      (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX) which must be available from
-      your library search path.
+      <p>If you are using the enhanced version of this parser from IBM, you will
+        need to put in two additional DLLs. In the Windows build these are <code>icuuc.dll</code> and <code>icudata.dll</code> which must be available from your PATH settings. On UNIX, these
+        libraries are called <code>libicu-uc.so</code> and <code>libicudata.so</code> (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX) which must be available from your library search path.</p>
 
-      </p>
     </a>
   </faq>
 
-  <faq title="I just built my own application using the &XercesCProjectName; parser. Why does it
-       crash?">
+  <faq title="I just built my own application using the &XercesCName; parser. Why does it crash?">
 
-    <q>I just built my own application using the &XercesCProjectName; parser. Why does it
-      crash?</q>
+    <q>I just built my own application using the &XercesCName; parser. Why does
+      it crash?</q>
+
     <a>
-      <p>In order to work with the &XercesCProjectName; parser, you have to
-        first initialize the XML subsystem. The most common mistake is
-        to forget this initialization. Before you make any calls to
-        &XercesCProjectName; APIs, you must call</p>
+
+      <p>In order to work with the &XercesCName; parser, you have to first
+        initialize the XML subsystem. The most common mistake is to forget this
+        initialization. Before you make any calls to &XercesCName; APIs, you must
+        call:</p>
 
 <source>XMLPlatformUtils::Initialize():
 try {
@@ -120,428 +131,510 @@ catch (const XMLException&amp; toCatch) {
    // Do your failure processing here
 }</source>
 
-      <p>This initializes the &XercesCProjectName; system and sets its
-        internal variables.  Note that you must the include
-        <code>util/PlatformUtils.hpp</code> file for this to work.</p>
+      <p>This initializes the &XercesCProjectName; system and sets its internal
+        variables. Note that you must the include <code>util/PlatformUtils.hpp</code> file for this to work.</p>
+
     </a>
   </faq>
 
-  <faq title="Is &XercesCProjectName; thread-safe?">
+  <faq title="Is &XercesCName; thread-safe?">
 
-    <q>Is &XercesCProjectName; thread-safe?</q>
+    <q>Is &XercesCName; thread-safe?</q>
 
     <a>
-      <p>This is not a question that has a simple yes/no answer. Here are
-        the rules for using &XercesCProjectName; in a multi-threaded environment:</p>
 
-      <p>Within an address space, an instance of the parser may be used
-        without restriction from a single thread, or an instance of the
-        parser can be accessed from multiple threads, provided the
-        application guarantees that only one thread has entered a method
-        of the parser at any one time.</p>
+      <p>This is not a question that has a simple yes/no answer. Here are the
+        rules for using &XercesCName; in a multi-threaded environment:</p>
 
-      <p>When two or more parser instances exist in a process, the
-        instances can be used concurrently, and without external
-        synchronization.  That is, in an application containing two
-        parsers and two threads, one pareser can be running within the
-        first thread concurrently with the second parser running
-        within the second thread.</p>
+      <p>Within an address space, an instance of the parser may be used without
+        restriction from a single thread, or an instance of the parser can be accessed
+        from multiple threads, provided the application guarantees that only one thread
+        has entered a method of the parser at any one time.</p>
 
-      <p>The same rules apply to &XercesCProjectName; DOM documents -
-        multiple document instances may be concurrently accessed from
-        different threads, but any given document instance can only be
-        accessed by one thread at a time.</p>
+      <p>When two or more parser instances exist in a process, the instances can
+        be used concurrently, without external synchronization. That is, in an
+        application containing two parsers and two threads, one parser can be running
+        within the first thread concurrently with the second parser running within the
+        second thread.</p>
 
-      <p>DOMStrings allow multiple concurrent readers.  All DOMString
-        const methods are thread safe, and can be concurrently entered
-        by multiple threads.  Non-const DOMString methods, such as
-        appendData(), are not thread safe and the application must
-        guarantee that no other methods (including const methods) are
-        executed concurrently with them.</p>
+      <p>The same rules apply to &XercesCName; DOM documents. Multiple document
+        instances may be concurrently accessed from different threads, but any given
+        document instance can only be accessed by one thread at a time.</p>
+
+      <p>DOMStrings allow multiple concurrent readers. All DOMString const
+        methods are thread safe, and can be concurrently entered by multiple threads.
+        Non-const DOMString methods, such as <code>appendData()</code>, are not thread safe and the application must guarantee that no other
+        methods (including const methods) are executed concurrently with them.</p>
+
     </a>
   </faq>
 
+  <faq title="Can't debug into the &XercesCName; DLL with the MSVC debugger">
 
-
-<faq title="Can't debug into the xerces DLL with the MSVC debugger">
-   <q>
-     The libs/dll's I downloaded keep me from using the debugger in VC6.0 . I
-     am using the 'D', debug versions of them. "no symbolic information
-     found" is what it says. Do I have to compile everything from source to
-     make it work?
-   </q>
-   <a><p>Unless you have the .pdb files, all you are getting with the debug library
-        is that it uses the debug heap manager, so that you can compile your stuff
-        in debug mode and not be dangerous. If you want full symbolic info
-        for the xerces library, you'll need the .pdb  files,
-        and to get those, you'll need to rebuild the xerces library.</p>
-    </a>
-  </faq>
-
-<faq title="First-chance exception in Microsoft debugger">
-     <q>"First-chance exception in DOMPrint.exe (KERNEL32.DLL):
-     0xE06D7363: Microsoft C++ Exception."  I am always getting
-     this message when I am using the parser.  My programs are
-     terminating abnormally.  Even the samples are giving this
-     exception.  I am using Visual C++ 6.0 with latest service
-     pack installed.</q>
+    <q> The libs/dll's I downloaded keep me from using the debugger in VC6.0. I
+      am using the 'D', debug versions of them. "no symbolic information found" is
+      what it says. Do I have to compile everything from source to make it work?</q>
 
     <a>
-    <p>XML4C uses C++ exceptions internally, as part of its normal operation.  By
-    default, the MSVC debugger will stop on each of these with the "First-chance
-    exception ..." message.
-    </p>
-    <p>To stop this from happening do this:</p>
-    <ul>
+
+      <p>Unless you have the .pdb files, all you are getting with the debug
+        library is that it uses the debug heap manager, so that you can compile your
+        stuff in debug mode and not be dangerous. If you want full symbolic info for
+        the &XercesCName; library, you'll need the .pdb files, and to get those, you'll
+        need to rebuild the &XercesCName; library.</p>
+
+    </a>
+  </faq>
+
+  <faq title="First-chance exception in Microsoft debugger">
+
+    <q>"First-chance exception in DOMPrint.exe (KERNEL32.DLL): 0xE06D7363:
+      Microsoft C++ Exception." I am always getting this message when I am using the
+      parser. My programs are terminating abnormally. Even the samples are giving
+      this exception. I am using Visual C++ 6.0 with latest service pack
+      installed.</q>
+
+    <a>
+
+      <p>&XercesCName; uses C++ exceptions internally, as part of its normal
+        operation. By default, the MSVC debugger will stop on each of these with the
+        "First-chance exception ..." message.</p>
+
+      <p>To stop this from happening do this:</p>
+
+      <ul>
         <li>start debugging (so the debug menu appears)</li>
         <li>from the debug menu select "Exceptions"</li>
-        <li>from the box that opens select "Microsoft C++ Exception"
-           and set it to "Stop if not handled" instead of "stop always".</li>
-    </ul>
+        <li>from the box that opens select "Microsoft C++ Exception" and set it
+          to "Stop if not handled" instead of "stop always".</li>
+      </ul>
 
-    <p>You'll still land in the debugger if your program
-    is terminating abnormally, but it'll be at your problem, not from
-    the internal XML4C exceptions.</p>
+      <p>You'll still land in the debugger if your program is terminating
+        abnormally, but it will be at your problem, not from the internal &XercesCName;
+        exceptions.</p>
+
     </a>
-</faq>
+  </faq>
 
-<faq title="I am seeing memory leaks for Xerces-C.  Are they real?">
-<q>I am seeing memory leaks for Xerces-C.  Are they real?</q>
-        <a>
-        <p>The Xerces library allocates and caches some commonly reused
-        items.  The storage for these may be reported as memory leaks by some heap analysis
-        tools; to avoid the problem, call the function
-        <code>XMLPlatformUtils::Terminate()</code> before your application exits.
-        This will free all memory that was being held by the library.</p>
+  <faq title="I am seeing memory leaks in &XercesCName;. Are they real?">
 
-        <p>For most applications, the use of <code>Terminate()</code> is optional.
-        The system will recover all memory when the application process shuts down.
-        The exception to this is the use of Xerces-C from DLLs that will be
-        repeatedly loaded and unloaded from within the same process.  To avoid
-        memory leaks with this kind of use, <code>Terminate()</code> must be called before
-        unloading the xerces-c library</p>
-        </a>
-</faq>
-
-<faq title="Can I validate the data contained in a DOM tree?">
-     <q>Can I validate the data contained in a DOM tree?</q>
-     <a><p>Given that I have built a DOM tree, is there a facility
-     in xerces-c that wil then validate the document contained in that
-     DOM tree?  That is, without having to re-parse the source document,
-     walk the tree and perform validation?</p>
-
-     <p>No.  This is a frequently requested feature, but at this time
-     it is not possible to feed xml data from the DOM directly back to
-     the DTD validator.  The best option for now is to generate xml
-     source from the DOM and feed that back into the parser.</p>
-     </a>
-</faq>
-
-<faq title="Can I use Xerces to perform write validation">
-    <q>
-        Can I use Xerces to perform "write validation" (which is having an
-        appropriate DTD and being able to add elements to the DOM whilst validating
-        against the DTD)?  Is there a function that I have totally
-        misssed that creates an XML file from a DTD,
-        (obviously with the values missing, a skeleton, as it were.)
-    </q>
+    <q>I am seeing memory leaks in &XercesCName;. Are they real?</q>
 
     <a>
-        <p>The answers are No and No.  Write Validation is a commonly requested
-        feature, but xerces doesn't have it yet.</p>
 
-        <p>The best you can do for now is to create the DOM document, write it
-        back as XML and re-parse it. </p>
+      <p>The &XercesCName; library allocates and caches some commonly reused
+        items. The storage for these may be reported as memory leaks by some heap
+        analysis tools; to avoid the problem, call the function <code>XMLPlatformUtils::Terminate()</code> before your application exits. This will free all memory that was being
+        held by the library.</p>
+
+      <p>For most applications, the use of <code>Terminate()</code> is optional. The system will recover all memory when the application
+        process shuts down. The exception to this is the use of &XercesCName; from DLLs
+        that will be repeatedly loaded and unloaded from within the same process. To
+        avoid memory leaks with this kind of use, <code>Terminate()</code> must be called before unloading the xerces-c library</p>
+
     </a>
-</faq>
+  </faq>
 
-    <faq title="Why does my multi-threaded application crash on Solaris?">
-        <q>Why does my multi-threaded application crash on Solaris?</q>
-        <a>
-            <p>The problem appears because the throw call on Solaris 2.6
-            is not multi-thread safe. Sun Microsystems provides a patch to
-            solve this problem. To get the latest patch for solving this
-            problem, go to <jump href="http://sunsolve.sun.com">SunSolve.sun.com</jump>
-            and get the appropriate patch for your operating system.
-            For Intel machines running Solaris, you need to get Patch ID 104678.
-            For SPARC machines you need to get Patch ID #105591.</p>
-        </a>
-    </faq>
+  <faq title="Can I validate the data contained in a DOM tree?">
 
-<faq title="Why does my application gives unresolved linking errors on Solaris?">
+    <q>Is there a facility in &XercesCName; to validate the data contained in a
+      DOM tree? That is, without saving and re-parsing the source document?</q>
+
+    <a>
+
+      <p>No. This is a frequently requested feature, but at this time it is not
+        possible to feed XML data from the DOM directly back to the DTD validator. The
+        best option for now is to generate XML source from the DOM and feed that back
+        into the parser.</p>
+
+    </a>
+  </faq>
+
+  <faq title="Can I use Xerces to perform write validation">
+
+    <q>Can I use Xerces to perform "write validation" (which is having an
+      appropriate DTD and being able to add elements to the DOM whilst validating
+      against the DTD)? Is there a function that I have totally missed that creates
+      an XML file from a DTD, (obviously with the values missing, a skeleton, as it
+      were.)</q>
+
+    <a>
+
+      <p>The answers are: "No" and "No." Write Validation is a commonly requested
+        feature, but &XercesCName; does not have it yet.</p>
+
+      <p>The best you can do for now is to create the DOM document, write it back
+        as XML and re-parse it.</p>
+
+    </a>
+  </faq>
+
+  <faq title="Why does my multi-threaded application crash on Solaris?">
+
+    <q>Why does my multi-threaded application crash on Solaris?</q>
+
+    <a>
+
+      <p>The problem appears because the throw call on Solaris 2.6 is not
+        multi-thread safe. Sun Microsystems provides a patch to solve this problem. To
+        get the latest patch for solving this problem, go to
+        <jump href="http://sunsolve.sun.com">SunSolve.sun.com</jump> and get the
+        appropriate patch for your operating system. For Intel machines running
+        Solaris, you need to get Patch ID 104678. For SPARC machines you need to get
+        Patch ID #105591.</p>
+
+    </a>
+  </faq>
+
+  <faq title="Why does my application gives unresolved linking errors on Solaris?">
+
     <q>Why does my application gives unresolved linking errors on Solaris?</q>
 
     <a>
-      <p>On Solaris there are couple of things that needs to be taken care before
-      you proceed to execute your application using Xerces / XML4C. In case you're
-      using the binary build of Xerces / XML4C make sure that the your OS and the
-      compiler are of the same version as the one on which the binary was build.
-      This might cause unresolved linking problems or compilation errors.
-      In this case rebuild the source on your system before building your application
-      with it. If you're using ICU (which is packaged with XML4C) you need to
-      rebuild the compatible version of ICU first.</p>
 
-      <p>Also make sure the library path is set properly and you have the correct version of
-      <code>gmake</code> and <code>autoconf</code> in your system.</p>
+      <p>On Solaris there are a few things that need to be done before you
+        execute your application using &XercesCName; / XML4C. In case you're using the
+        binary build of &XercesCName; / XML4C make sure that the OS and compiler are
+        the same version as the ones used to build the binary. Different OS and
+        compiler versions might cause unresolved linking problems or compilation
+        errors. If the versions are different, rebuild the &XercesCName; library on
+        your system before building your application. If you're using ICU (which is
+        packaged with XML4C) you need to rebuild the compatible version of ICU
+        first.</p>
+
+      <p>Also check that the library path is set properly and that the correct
+        versions of <code>gmake</code> and <code>autoconf</code> are on your system.</p>
+
     </a>
   </faq>
 
+  <faq title="How do I determine the version of &XercesCName; I am using?">
 
-    <faq title="How do I find out what version of &XercesCProjectName; I am using?">
-        <q>How do I find out what version of &XercesCProjectName; I am using?</q>
-        <a>
-      <p>The version string for &XercesCProjectName; happens to be in one of
-        the source files. Look inside the file
-        <code>src/util/XML4CDefs.hpp</code> and find out what the
-        static variable <code>gXML4CFullVersionStr</code> is defined
-        to be. (It is usually of type 3.0.0 or something
-        similar). This is the version of XML you are using.</p>
+    <q>How do I determine the version of &XercesCName; I am using?</q>
 
-      <p>If you don't have the source code, you have to find the version
-        information from the shared library name. On Windows NT/95/98
-        right click on the DLL name &XercesCWindowsLib;.dll in the bin directory
-        and look up properties. The version information may be found on
-        the Version tab.</p>
+    <a>
+
+      <p>The version string for &XercesCName; is in one of the header files. Look
+        inside the file <code>src/util/XercesDefs.hpp</code> or, in the binary distribution, look in <code>include/utils/XercesDefs.hpp</code>. Search for the static variable <code>gXercesFullVersionStr</code> and look at its definition. (It is usually a string like "1_4_0" or
+        something similar). This is the version of &XercesCName; you are using.</p>
+
+      <p>If you don't have the header files, you have to find the version
+        information from the shared library name. On Windows NT/95/98 right click on
+        the DLL name &XercesCWindowsLib;.dll in the bin directory and look up
+        properties. The version information may be found on the Version tab.</p>
 
       <p>On AIX, just look for the library name &XercesCUnixLib;.a (or
-        &XercesCUnixLib;.so on Solaris/Linux and &XercesCUnixLib;.sl on
-        HP-UX).  The version number is coded in the name of the
-        library.</p>
+        &XercesCUnixLib;.so on Solaris/Linux and &XercesCUnixLib;.sl on HP-UX). The
+        version number is coded in the name of the library.</p>
+
     </a>
   </faq>
 
-  <faq title="How do I uninstall &XercesCProjectName;?">
-    <q>How do I uninstall &XercesCProjectName;?</q>
+  <faq title="How do I uninstall &XercesCName;?">
+
+    <q>How do I uninstall &XercesCName;?</q>
+
     <a>
-      <p>&XercesCProjectName; only installs itself in a single directory and
-        does not set any registry entries. Thus, to un-install, you
-        only need to remove the directory where you installed it, and
-        all &XercesCProjectName; related files will be removed.</p>
+
+     <p>&XercesCName; only installs itself in a single directory and does not
+       set any registry entries. Thus, to uninstall, you only need to remove the
+       directory where you installed it, and all &XercesCName; related files will be
+       removed.</p>
+
     </a>
   </faq>
 
   <faq title="How are entity reference nodes handled in DOM?">
+
     <q>How are entity reference nodes handled in DOM?</q>
-    <a>
-      <p>If you are using the native DOM classes, the function
-        <code>setExpandEntityReferences</code> controls how entities appear in the
-        DOM tree. When setExpandEntityReferences is set to false (the
-        default), an occurance of an entity reference in the XML
-        document will be represented by a subtree with an
-        EntityReference node at the root whose children represent the
-        entity expansion. Entity expansion will be a DOM tree
-        representing the structure of the entity expansion, not a text
-        node containing the entity expansion as text.</p>
 
-      <p>If setExpandEntityReferences is true, an entity reference in the
-        XML document is represented by only the nodes that represent the
-        entity expansion. The DOM tree will not contain any
-        entityReference nodes.</p>
+    <a>
+
+      <p>If you are using the native DOM classes, the function <code>setExpandEntityReferences</code> controls how entities appear in the DOM tree. When
+        setExpandEntityReferences is set to false (the default), an occurrence of an
+        entity reference in the XML document will be represented by a subtree with an
+        EntityReference node at the root whose children represent the entity expansion.
+        Entity expansion will be a DOM tree representing the structure of the entity
+        expansion, not a text node containing the entity expansion as text.</p>
+
+      <p>If setExpandEntityReferences is true, an entity reference in the XML
+        document is represented by only the nodes that represent the entity expansion.
+        The DOM tree will not contain any entityReference nodes.</p>
+
     </a>
   </faq>
 
-  <faq title="What kinds of URLs are currently supported in &XercesCProjectName;?">
-    <q>What kinds of URLs are currently supported in &XercesCProjectName;?</q>
+  <faq title="What kinds of URLs are currently supported in &XercesCName;?">
+
+    <q>What kinds of URLs are currently supported in &XercesCName;?</q>
+
     <a>
 
-    <p>The <code>XMLURL</code> class provides for limited URL support. It understands
-    the <code>file://, http://</code>, and <code>ftp://</code> URL types, and is
-    capable or parsing them into their constituent components, and normalizing
-    them. It also supports the commonly required action of conglomerating a
-    base and relative URL into a single URL. In other words, it performs the
-    limited set of functions required by an XML parser.</p>
+      <p>The <code>XMLURL</code> class provides for limited URL support. It understands the <code>file://, http://</code>, and <code>ftp://</code> URL types, and is capable or parsing them into their constituent
+        components, and normalizing them. It also supports the commonly required action
+        of conglomerating a base and relative URL into a single URL. In other words, it
+        performs the limited set of functions required by an XML parser.</p>
 
-    <p>Another thing that URLs commonly do are to create an input stream that
-    provides access to the entity referenced. The parser, as shipped, only
-    supports this functionality on URLs in the form <code>file:///</code> and
-    <code>file://localhost/</code>, i.e. only when the URL refers to a local file.</p>
+      <p>Another thing that URLs commonly do are to create an input stream that
+        provides access to the entity referenced. The parser, as shipped, only supports
+        this functionality on URLs in the form <code>file:///</code> and <code>file://localhost/</code>, i.e. only when the URL refers to a local file.</p>
 
-    <p>You may enable support for HTTP and FTP URLs by implementing and installing
-    a NetAccessor object. When a NetAccessor object is installed, the URL class
-    will use it to create input streams for the remote entities refered to by such URLs.</p>
+      <p>You may enable support for HTTP and FTP URLs by implementing and
+        installing a NetAccessor object. When a NetAccessor object is installed, the
+        URL class will use it to create input streams for the remote entities referred
+        to by such URLs.</p>
+
     </a>
   </faq>
 
-  <faq title="How can I add support for URL's with HTTP/FTP protocols?">
-    <q>How can I add support for URL's with HTTP/FTP protocols?</q>
+  <faq title="How can I add support for URLs with HTTP/FTP protocols?">
+
+    <q>How can I add support for URLs with HTTP/FTP protocols?</q>
+
     <a>
-    <p>Support for the http: protocol is now included by default on all
-       platforms.</p>
-      <p>To address the need to make remote connections to resources
-      specified using additional protocols, ftp for example, Xerces-C
-      provides the <code>NetAccessor</code> interface. The header
-      file is <code>src/util/XMLNetAccessor.hpp</code>. This interface
-      allows you to plug in your own implementation of URL networking
-      code into the Xerces-C parser.</p>
-      </a>
+
+      <p>Support for the http: protocol is now included by default on all
+        platforms.</p>
+
+      <p>To address the need to make remote connections to resources specified
+        using additional protocols, ftp for example, &XercesCName; provides the <code>NetAccessor</code> interface. The header file is <code>src/util/XMLNetAccessor.hpp</code>. This interface allows you to plug in your own implementation of URL
+        networking code into the &XercesCName; parser.</p>
+
+    </a>
   </faq>
 
+  <faq title="Can I use &XercesCName; to parse HTML?">
 
-  <faq title="Can I use &XercesCProjectName; to parse HTML?">
-    <q>Can I use &XercesCProjectName; to parse HTML?</q>
+    <q>Can I use &XercesCName; to parse HTML?</q>
+
     <a>
-      <p>Yes, if it follows the XML spec rules. Most HTML, however,
-        does not follow the XML rules, and will therefore generate XML
-        well-formedness errors.</p>
+
+      <p>Yes, but only if the HTML follows the rules given in the
+        <jump href="http://www.w3.org/TR/REC-xml">XML specification</jump>. Most HTML,
+        however, does not follow the XML rules, and will generate XML well-formedness
+        errors.</p>
+
     </a>
   </faq>
 
   <faq title="I keep getting an error: &quot;invalid UTF-8 character&quot;. What's wrong?">
+
     <q>I keep getting an error: "invalid UTF-8 character". What's wrong?</q>
-    <a>
-    <p>Most commonly, the xml <code>encoding =</code> declaration is
-       either incorrect or missing.  Without a declaration, xml defaults
-       to the use utf-8 character encoding, which is not compatible with
-       the default text file encoding on most systems.</p>
-       <p>The xml declaration should look something like this: </p>
-       <p><code>&lt;?xml version="1.0" encoding="iso-8859-1"?></code></p>
-       <p>Make sure to specify the encoding that is actually used by file.
-       The encoding for "plain" text files depends both on the operating system
-       and the locale (country and language) in use.</p>
 
-      <p>Another common source of problems is that some characters are not allowed in
-        XML documents, according to the XML spec. Typical
-        disallowed characters are control characters, even if you
-        escape them using the Character Reference form. See the
-        <jump href="http://www.w3.org/TR/REC-xml#charsets">XML spec</jump>,
-        sections 2.2 and 4.1 for details. If the parser is
-        generating an <code>Invalid character (Unicode: 0x???)</code> error,
-        it is very likely that there's a
-        character in there that you can't see.  You can generally use
-        a UNIX command like "od -hc" to find it.</p>
+    <a>
+
+      <p>Most commonly, the XML <code>encoding =</code> declaration is either incorrect or missing. Without a declaration, XML
+        defaults to the use utf-8 character encoding, which is not compatible with the
+        default text file encoding on most systems.</p>
+  
+      <p>The XML declaration should look something like this:</p>
+  
+      <p><code>&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;</code></p>
+  
+      <p>Make sure to specify the encoding that is actually used by file. The
+        encoding for "plain" text files depends both on the operating system and the
+        locale (country and language) in use.</p>
+  
+      <p>Another common source of problems is that some characters are not
+        allowed in XML documents, according to the XML spec. Typical disallowed
+        characters are control characters, even if you escape them using the Character
+        Reference form. See the <jump href="http://www.w3.org/TR/REC-xml#charsets">XML
+        spec</jump>, sections 2.2 and 4.1 for details. If the parser is generating an <code>Invalid character (Unicode: 0x???)</code> error, it is very likely that there's a character in there that you
+        can't see. You can generally use a UNIX command like "od -hc" to find it.</p>
+
     </a>
   </faq>
 
-  <faq title="What encodings are supported by Xerces-C / XML4C?">
-    <q>What encodings are supported by Xerces-C / XML4C?</q>
+  <faq title="What encodings are supported by &XercesCName; / XML4C?">
+
+    <q>What encodings are supported by &XercesCName; / XML4C?</q>
+
     <a>
 
-      <p>Xerces-C has intrinsic support for ASCII, UTF-8, UTF-16
-      (Big/Small Endian), UCS4 (Big/Small Endian), EBCDIC code pages IBM037 and
-      IBM1140 encodings, ISO-8859-1 (aka Latin1) and Windows-1252. This means that it can parse
-      input XML files in these above mentioned encodings.</p>
-
-      <p>XML4C - the version of Xerces-C available from IBM - extends
-      this set to include the encodings listed in the table below.</p>
-
+      <p>&XercesCName; has intrinsic support for ASCII, UTF-8, UTF-16 (Big/Small
+        Endian), UCS4 (Big/Small Endian), EBCDIC code pages IBM037 and IBM1140
+        encodings, ISO-8859-1 (aka Latin1) and Windows-1252. This means that it can
+        parse input XML files in these above mentioned encodings.</p>
+  
+      <p>XML4C -- the version of &XercesCName; available from IBM -- extends this
+        set to include the encodings listed in the table below.</p>
+  
       <table>
-        <tr><td><em>Common Name</em></td><td><em>Use this name in XML</em></td></tr>
-        <tr><td>8 bit Unicode</td>                <td>UTF-8</td></tr>
-        <tr><td>ISO Latin 1</td>                  <td>ISO-8859-1</td></tr>
-        <tr><td>ISO Latin 2</td>                  <td>ISO-8859-2</td></tr>
-        <tr><td>ISO Latin 3</td>                  <td>ISO-8859-3</td></tr>
-        <tr><td>ISO Latin 4</td>                  <td>ISO-8859-4</td></tr>
-        <tr><td>ISO Latin Cyrillic</td>           <td>ISO-8859-5</td></tr>
-        <tr><td>ISO Latin Arabic</td>             <td>ISO-8859-6</td></tr>
-        <tr><td>ISO Latin Greek</td>              <td>ISO-8859-7</td></tr>
-        <tr><td>ISO Latin Hebrew</td>             <td>ISO-8859-8</td></tr>
-        <tr><td>ISO Latin 5</td>                  <td>ISO-8859-9</td></tr>
-        <tr><td>EBCDIC US</td>                    <td>ebcdic-cp-us</td></tr>
-        <tr><td>EBCDIC with Euro symbol</td>      <td>ibm1140</td></tr>
-        <tr><td>Chinese, PRC</td>                 <td>gb2312</td></tr>
-        <tr><td>Chinese, Big5</td>                <td>Big5</td></tr>
-        <tr><td>Cyrillic</td>                     <td>koi8-r</td></tr>
-        <tr><td>Japanese, Shift JIS</td>          <td>Shift_JIS</td></tr>
-        <tr><td>Korean, Extended UNIX code</td>   <td>euc-kr</td></tr>
+        <tr>
+          <td><em>Common Name</em></td>
+          <td><em>Use this name in XML</em></td>
+        </tr>
+        <tr>
+          <td>8 bit Unicode</td>
+          <td>UTF-8</td>
+        </tr>
+        <tr>
+          <td>ISO Latin 1</td>
+          <td>ISO-8859-1</td>
+        </tr>
+        <tr>
+          <td>ISO Latin 2</td>
+          <td>ISO-8859-2</td>
+        </tr>
+        <tr>
+          <td>ISO Latin 3</td>
+          <td>ISO-8859-3</td>
+        </tr>
+        <tr>
+          <td>ISO Latin 4</td>
+          <td>ISO-8859-4</td>
+        </tr>
+        <tr>
+          <td>ISO Latin Cyrillic</td>
+          <td>ISO-8859-5</td>
+        </tr>
+        <tr>
+          <td>ISO Latin Arabic</td>
+          <td>ISO-8859-6</td>
+        </tr>
+        <tr>
+          <td>ISO Latin Greek</td>
+          <td>ISO-8859-7</td>
+        </tr>
+        <tr>
+          <td>ISO Latin Hebrew</td>
+          <td>ISO-8859-8</td>
+        </tr>
+        <tr>
+          <td>ISO Latin 5</td>
+          <td>ISO-8859-9</td>
+        </tr>
+        <tr>
+          <td>EBCDIC US</td>
+          <td>ebcdic-cp-us</td>
+        </tr>
+        <tr>
+          <td>EBCDIC with Euro symbol</td>
+          <td>ibm1140</td>
+        </tr>
+        <tr>
+          <td>Chinese, PRC</td>
+          <td>gb2312</td>
+        </tr>
+        <tr>
+          <td>Chinese, Big5</td>
+          <td>Big5</td>
+        </tr>
+        <tr>
+          <td>Cyrillic</td>
+          <td>koi8-r</td>
+        </tr>
+        <tr>
+          <td>Japanese, Shift JIS</td>
+          <td>Shift_JIS</td>
+        </tr>
+        <tr>
+          <td>Korean, Extended UNIX code</td>
+          <td>euc-kr</td>
+        </tr>
       </table>
+  
+      <p>Some implementations or ports of &XercesCName; provide support for
+        additional encodings. The exact set will depend on the supplier of the parser
+        and on the character set transcoding services in use.</p>
 
-    <p>Some implementations or ports of Xerces-C provide support for
-    additional encodings.  The exact set will depend on the supplier
-    of the parser and on the character set transcoding services in use.</p>
     </a>
   </faq>
 
-  <faq title="What character encoding should I use when creating XML documents?">
+  <faq
+  title="What character encoding should I use when creating XML documents?">
+
     <q>What character encoding should I use when creating XML documents?</q>
+
     <a>
 
-      <p>The best choice in most cases is either utf-8 or utf-16.
-      Advantages of these encodings include </p>
-
+      <p>The best choice in most cases is either utf-8 or utf-16. Advantages of
+        these encodings include:</p>
+  
       <ul>
-         <li>The best portability.  These encodings are more widely
-         supported by XML processors than any others, meaning that
-         your documents will have the best possible chance of being
-         read correctly, no matter where they end up. </li>
-
-         <li>Full international character support.  Both utf-8 and
-         utf-16 cover the full Unicode character set, which
-         includes all of the characters from all major national,
-         international and industry character sets. </li>
-
-         <li>Efficient.  utf-8 has the smaller storage requirements
-         for documents that are primarily composed of of characters
-         from the Latin alphabet.  utf-16 is more efficient for
-         encoding Asian languages.  But both encodings cover
-         all languages without loss.</li>
+        <li>The best portability. These encodings are more widely supported by
+          XML processors than any others, meaning that your documents will have the best
+          possible chance of being read correctly, no matter where they end up.</li>
+        <li>Full international character support. Both utf-8 and utf-16 cover the
+          full Unicode character set, which includes all of the characters from all major
+          national, international and industry character sets.</li>
+        <li>Efficient. utf-8 has the smaller storage requirements for documents
+          that are primarily composed of of characters from the Latin alphabet. utf-16 is
+          more efficient for encoding Asian languages. But both encodings cover all
+          languages without loss.</li>
       </ul>
+  
+      <p>The only drawback of utf-8 or utf-16 is that they are not the native
+        text file format for most systems, meaning that common text file editors and
+        viewers can not be directly used.</p>
+  
+      <p>A second choice of encoding would be any of the others listed in the
+        table above. This works best when the xml encoding is the same as the default
+        system encoding on the machine where the XML document is being prepared,
+        because the document will then display correctly as a plain text file. For UNIX
+        systems in countries speaking Western European languages, the encoding will
+        usually be iso-8859-1.</p>
+  
+      <p>The versions of Xerces distributed by IBM, both C and Java (known
+        respectively as XML4C and XML4J), include all of the encodings listed in the
+        above table, on all platforms.</p>
+  
+      <p>A word of caution for Windows users: The default character set on
+        Windows systems is windows-1252, not iso-8859-1. While &XercesCName; does
+        recognize this Windows encoding, it is a poor choice for portable XML data
+        because it is not widely recognized by other XML processing tools. If you are
+        using a Windows-based editing tool to generate XML, check which character set
+        it generates, and make sure that the resulting XML specifies the correct name
+        in the <code>encoding="..."</code> declaration.</p>
 
-      <p>The only drawback of utf-8 or utf-16 is that they are not
-      the native text file format for most systems, meaning that
-      common text file editors and viewers can not be directly used.</p>
-
-      <p>A second choice of encoding would be any of the others listed in
-      the table above.  This works best when the xml encoding is the same
-      as the default system encoding on the machine where the
-      XML document is being prepared, because the document will then
-      display correctly as a plain text file.  For UNIX systems
-      in countries speaking Western European languages, the encoding
-      will usually be iso-8859-1.</p>
-
-      <p>The versions of Xerces, both C and Java, distributed
-      by IBM as XML4C and XML4J, include all of the encodings
-      listed in the above table, on all platforms. </p>
-
-      <p>A word of caution for Windows users: The default character set
-      on Windows systems is windows-1252, not iso-8859-1.  While Xerces-c
-      does recognize this Windows encoding, it is a poor choice for portable
-      XML data because it is not widely recoginized by other XML processing
-      tools.  If you are using a Windows based editing tool to generate
-      XML, check which character set it generates, and make sure that the
-      resulting XML specifies the correct name in the encoding="..." declaration.</p>
-        </a>
-      </faq>
-
-<faq title="I find memory leaks in Xerces-C / XML4C. How do I eliminate it?">
-    <q>I find memory leaks in Xerces-C / XML4C. How do I eliminate it?</q>
-    <a>
-
-      <p>The "leaks" that are reported through a leak-detector or heap-analysis tools
-      aren't really leaks in most application, in that the memory usage does not grow over
-      time as the XML parser is used and re-used.</p>
-
-      <p>What you are seeing as leaks are actually lazily evaluated data allocated into
-      static variables. It gets released when the application ends. Now you can  make a call
-      to <code>XMLPlatformUtil::terminate()</code> to release all the lazily allocated
-      variables before you exit your program.</p>
     </a>
   </faq>
 
+  <faq
+  title="I find memory leaks in &XercesCName; / XML4C. How do I eliminate it?">
+
+    <q>I find memory leaks in &XercesCName; / XML4C. How do I eliminate it?</q>
+
+    <a>
+
+      <p>The "leaks" that are reported through a leak-detector or heap-analysis
+        tools aren't really leaks in most application, in that the memory usage does
+        not grow over time as the XML parser is used and re-used.</p>
+  
+      <p>What you are seeing as leaks are actually lazily evaluated data
+        allocated into static variables. This data gets released when the application
+        ends. You can make a call to <code>XMLPlatformUtil::terminate()</code> to release all the lazily allocated variables before you exit your
+        program.</p>
+
+    </a>
+  </faq>
 
   <faq title="Is EBCDIC supported?">
+
     <q>Is EBCDIC supported?</q>
 
     <a>
-    <p>Yes, &XercesCName; supports EBCDIC.  When creating EBCDIC encoded XML data,
-    the preferred encoding is ibm1140.  Also supported is ibm037 (and its alternate name,
-    ebcdic-cp-us); this encoding is almost the same as ibm1140, but it lacks the Euro
-    symbol</p>
 
-    <p>These two encodings, ibm1140 and ibm037, are available on both Xerces-C and
-    IBM XML4C, on all platforms. </p>
+      <p>Yes, &XercesCName; supports EBCDIC. When creating EBCDIC encoded XML
+        data, the preferred encoding is ibm1140. Also supported is ibm037 (and its
+        alternate name, ebcdic-cp-us); this encoding is almost the same as ibm1140, but
+        it lacks the Euro symbol.</p>
+  
+      <p>These two encodings, ibm1140 and ibm037, are available on both
+        &XercesCName; and IBM XML4C, on all platforms.</p>
+  
+      <p>On IBM System 390, XML4C also supports two alternative forms,
+        ibm037-s390 and ibm1140-s390. These are similar to the base ibm037 and ibm1140
+        encodings, but with alternate mappings of the EBCDIC new-line character, which
+        allows them to appear as normal text files on System 390s. These encodings are
+        not supported on other platforms, and should not be used for portable data.</p>
+  
+      <p>XML4C on System 390 and AS/400 also provides additional EBCDIC
+        encodings, including those for the character sets of different countries. The
+        exact set supported will be platform dependent, and these encodings are not
+        recommended for portable XML data.</p>
 
-    <p>On IBM System 390, XML4C also supports two alternative forms, ibm037-s390
-    and ibm1140-s390.  These are similar to the base ibm037 and ibm1140 encodings,
-    but with alternate mappings of the EBCDIC new-line character, which allows
-    them to appear as normal text files on System 390s.  These encodings are not
-    supported on other platforms, and should not be used for portable data.</p>
-
-    <p>XML4C on System 390 and AS/400 also provides additional EBCDIC encodings, including
-    those for the character sets of different countries.  The exact set supported
-    will be platform dependent, and these encodings are not recommended for
-    portable XML data.  </p>
     </a>
-    </faq>
+  </faq>
 
 </faqs>
-
