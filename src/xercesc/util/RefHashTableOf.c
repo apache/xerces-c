@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.20  2005/02/08 09:21:11  amassari
+ * Removed warnings
+ *
  * Revision 1.19  2005/01/07 15:12:10  amassari
  * Removed warnings
  *
@@ -203,11 +206,7 @@ template <class TVal> void RefHashTableOf<TVal>::initialize(const unsigned int m
 
 template <class TVal> RefHashTableOf<TVal>::~RefHashTableOf()
 {
-    removeAll();
-
-    // Then delete the bucket list & hasher
-    fMemoryManager->deallocate(fBucketList); //delete [] fBucketList;
-    delete fHash;
+    cleanup();
 }
 
 
@@ -216,13 +215,7 @@ template <class TVal> RefHashTableOf<TVal>::~RefHashTableOf()
 // ---------------------------------------------------------------------------
 template <class TVal> bool RefHashTableOf<TVal>::isEmpty() const
 {
-    // Just check the bucket list for non-empty elements
-    for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
-    {
-        if (fBucketList[buckInd] != 0)
-            return false;
-    }
-    return true;
+    return fCount==0;
 }
 
 template <class TVal> bool RefHashTableOf<TVal>::
@@ -236,12 +229,64 @@ containsKey(const void* const key) const
 template <class TVal> void RefHashTableOf<TVal>::
 removeKey(const void* const key)
 {
-    unsigned int hashVal;
-    removeBucketElem(key, hashVal);
+    // Hash the key
+    unsigned int hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
+    assert(hashVal < fHashModulus);
+
+    //
+    //  Search the given bucket for this key. Keep up with the previous
+    //  element so we can patch around it.
+    //
+    RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
+    RefHashTableBucketElem<TVal>* lastElem = 0;
+
+    while (curElem)
+    {
+        if (fHash->equals(key, curElem->fKey))
+        {
+            if (!lastElem)
+            {
+                // It was the first in the bucket
+                fBucketList[hashVal] = curElem->fNext;
+            }
+             else
+            {
+                // Patch around the current element
+                lastElem->fNext = curElem->fNext;
+            }
+
+            // If we adopted the data, then delete it too
+            //    (Note:  the userdata hash table instance has data type of void *.
+            //    This will generate compiler warnings here on some platforms, but they
+            //    can be ignored since fAdoptedElements is false.
+            if (fAdoptedElems)
+                delete curElem->fData;
+
+            // Then delete the current element and move forward
+ 	        // delete curElem;
+            // destructor doesn't do anything...
+			// curElem->~RefHashTableBucketElem();
+            fMemoryManager->deallocate(curElem);            
+
+            fCount--;
+
+            return;
+        }
+
+        // Move both pointers upwards
+        lastElem = curElem;
+        curElem = curElem->fNext;
+    }
+
+    // We never found that key
+    ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists, fMemoryManager);
 }
 
 template <class TVal> void RefHashTableOf<TVal>::removeAll()
 {
+    if(isEmpty())
+        return;
+
     // Clean up the buckets first
     for (unsigned int buckInd = 0; buckInd < fHashModulus; buckInd++)
     {
@@ -303,7 +348,7 @@ orphanKey(const void* const key)
                 // It was the first in the bucket
                 fBucketList[hashVal] = curElem->fNext;
             }
-             else
+            else
             {
                 // Patch around the current element
                 lastElem->fNext = curElem->fNext;
@@ -336,7 +381,7 @@ orphanKey(const void* const key)
 //   similar to destructor
 //   called to cleanup the memory, in case destructor cannot be called
 //
-template <class TElem> void RefHashTableOf<TElem>::cleanup()
+template <class TVal> void RefHashTableOf<TVal>::cleanup()
 {
     removeAll();
 
@@ -351,7 +396,7 @@ template <class TElem> void RefHashTableOf<TElem>::cleanup()
 //   similar to constructor
 //   called to re-construct the fElemList from scratch again
 //
-template <class TElem> void RefHashTableOf<TElem>::reinitialize(HashBase* hashBase)
+template <class TVal> void RefHashTableOf<TVal>::reinitialize(HashBase* hashBase)
 {
     if (fBucketList || fHash)
         cleanup();
@@ -375,7 +420,7 @@ template <class TElem> void RefHashTableOf<TElem>::reinitialize(HashBase* hashBa
 // except that the data is not deleted in "removeKey" even it is adopted so that it
 // can be transferred to key2.
 // whatever key2 has originally will be purged (if adopted)
-template <class TElem> void RefHashTableOf<TElem>::transferElement(const void* const key1, void* key2)
+template <class TVal> void RefHashTableOf<TVal>::transferElement(const void* const key1, void* key2)
 {
     put(key2, orphanKey(key1));
 }
@@ -451,7 +496,7 @@ template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valu
         newBucket->fData = valueToAdopt;
 		newBucket->fKey = key;
     }
-     else
+    else
     {
         //newBucket = new (fMemoryManager) RefHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
 		newBucket =
@@ -548,61 +593,6 @@ findBucketElem(const void* const key, unsigned int& hashVal) const
     }
     return 0;
 }
-
-
-template <class TVal> void RefHashTableOf<TVal>::
-removeBucketElem(const void* const key, unsigned int& hashVal)
-{
-    // Hash the key
-    hashVal = fHash->getHashVal(key, fHashModulus, fMemoryManager);
-    assert(hashVal < fHashModulus);
-
-    //
-    //  Search the given bucket for this key. Keep up with the previous
-    //  element so we can patch around it.
-    //
-    RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
-    RefHashTableBucketElem<TVal>* lastElem = 0;
-
-    while (curElem)
-    {
-        if (fHash->equals(key, curElem->fKey))
-        {
-            if (!lastElem)
-            {
-                // It was the first in the bucket
-                fBucketList[hashVal] = curElem->fNext;
-            }
-             else
-            {
-                // Patch around the current element
-                lastElem->fNext = curElem->fNext;
-            }
-
-            // If we adopted the elements, then delete the data
-            if (fAdoptedElems)
-                delete curElem->fData;
-
-            // Delete the current element
-            // delete curElem;
-            // destructor doesn't do anything...
-			// curElem->~RefHashTableBucketElem();
-            fMemoryManager->deallocate(curElem);            
-
-            fCount--;
-
-            return;
-        }
-
-        // Move both pointers upwards
-        lastElem = curElem;
-        curElem = curElem->fNext;
-    }
-
-    // We never found that key
-    ThrowXMLwithMemMgr(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists, fMemoryManager);
-}
-
 
 
 // ---------------------------------------------------------------------------
@@ -725,11 +715,8 @@ template <class TVal> void RefHashTableOfEnumerator<TVal>::findNext()
             return;
 
         // Else find the next non-empty bucket
-        while (true)
+        while (fToEnum->fBucketList[fCurHash]==0)
         {
-            if (fToEnum->fBucketList[fCurHash])
-                break;
-
             // Bump to the next hash value. If we max out return
             fCurHash++;
             if (fCurHash == fToEnum->fHashModulus)

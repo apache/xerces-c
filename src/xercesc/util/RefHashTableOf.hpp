@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2005/02/08 09:21:11  amassari
+ * Removed warnings
+ *
  * Revision 1.16  2004/11/19 00:50:22  cargilld
  * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
  *
@@ -238,7 +241,6 @@ private:
     // -----------------------------------------------------------------------
     RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal);
     const RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal) const;
-    void removeBucketElem(const void* const key, unsigned int& hashVal);
     void initialize(const unsigned int modulus);
     void rehash();
 
@@ -258,9 +260,9 @@ private:
     //  fHashModulus
     //      The modulus used for this hash table, to hash the keys. This is
     //      also the number of elements in the bucket list.
-	//
-	//  fHash
-	//      The hasher for the key data type.
+    //
+    //  fHash
+    //      The hasher for the key data type.
     // -----------------------------------------------------------------------
     MemoryManager*                 fMemoryManager;
     bool                           fAdoptedElems;

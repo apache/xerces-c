@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2005/02/08 09:21:11  amassari
+ * Removed warnings
+ *
  * Revision 1.14  2004/09/08 13:56:13  peiyongz
  * Apache License Version 2.0
  *
@@ -440,27 +443,25 @@ inline bool ReaderMgr::skippedString(const XMLCh* const toSkip)
 
 inline void ReaderMgr::skipToChar(const XMLCh toSkipTo)
 {
-    while (true)
+	XMLCh nextCh = 0;
+    do
     {
         // Get chars until we find the one to skip
-        const XMLCh nextCh = getNextChar();
-
-        // Break out at end of input or the char to skip
-        if ((nextCh == toSkipTo) || !nextCh)
-            break;
-    }
+        nextCh = getNextChar();
+	} 
+    // Break out at end of input or the char to skip
+	while((nextCh != toSkipTo) && nextCh!=0);
 }
 
 inline void ReaderMgr::skipPastChar(const XMLCh toSkipPast)
 {
-    while (true)
+	XMLCh nextCh = 0;
+    do
     {
         // Get chars until we find the one to skip
-        const XMLCh nextCh = getNextChar();
-
-        if ((nextCh == toSkipPast) || !nextCh)
-            break;
-    }
+        nextCh = getNextChar();
+	} 
+	while((nextCh != toSkipPast) && nextCh!=0);
 }
 
 inline bool ReaderMgr::peekString(const XMLCh* const toPeek)
