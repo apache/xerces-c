@@ -981,6 +981,8 @@
 				909229750573B0C400C9F477,
 				02058E99FF8AF8CD7F000001,
 				02058E9AFF8AF8CD7F000001,
+				903ABF1507300F39007E4749,
+				903ABF1607300F39007E4749,
 				02058E9BFF8AF8CD7F000001,
 				F51053570382BB2501A80066,
 				02058E9CFF8AF8CD7F000001,
@@ -4063,6 +4065,7 @@
 				90ECBAE9070A5EDB002249D6,
 				90ECBAF2070A5F55002249D6,
 				90ECBAF3070A5F55002249D6,
+				903ABF1807300F39007E4749,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7280,6 +7283,7 @@
 				906C9B4106FF69AA00D1DCE1,
 				906C9B4B06FF69E900D1DCE1,
 				90ECBAE8070A5EDB002249D6,
+				903ABF1707300F39007E4749,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9266,6 +9270,34 @@
 			path = Xerces.framework;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		903ABF1507300F39007E4749 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = XMLInitializer.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		903ABF1607300F39007E4749 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.h;
+			path = XMLInitializer.hpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		903ABF1707300F39007E4749 = {
+			fileRef = 903ABF1507300F39007E4749;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		903ABF1807300F39007E4749 = {
+			fileRef = 903ABF1607300F39007E4749;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		9067ED1604FC0A9600A80082 = {
 			fileEncoding = 30;
