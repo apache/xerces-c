@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/01/07 02:33:56  knoaman
+ * PSVI: inherit facets from base type
+ *
  * Revision 1.18  2004/01/06 15:24:42  neilg
  * make sure locally-declared attributes have declarations in the PSVI
  *
@@ -150,6 +153,7 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 static XMLCh regexSeparator[] = {chPipe, chNull};
+
 
 // ---------------------------------------------------------------------------
 //  XSObjectFactory: Constructors and Destructor
@@ -481,8 +485,7 @@ XSObjectFactory::addOrFind(DatatypeValidator* const validator,
             xsObj->setPrimitiveType(xsObj);
 
         // process facets
-        if (validator->getFacetsDefined())
-            processFacets(validator, xsModel, xsObj);
+        processFacets(validator, xsModel, xsObj);
     }
 
     return xsObj;
@@ -903,53 +906,52 @@ void XSObjectFactory::putObjectInMap(void* key, XSObject* const object)
      fDeleteVector->addElement(object);
 }
 
-
 void XSObjectFactory::processFacets(DatatypeValidator* const dv,
                                     XSModel* const xsModel,
                                     XSSimpleTypeDefinition* const xsST)
 {
     // NOTE: XSMultiValueFacetList is not owned by XSModel!
     // NOTE: XSFacetList is not owned by XSModel!
-    int definedFacets = 0;
-    int fixedFacets = 0;
-    XSFacetList* xsFacetList = new (fMemoryManager) RefVectorOf<XSFacet>(4, true, fMemoryManager);
-    XSMultiValueFacetList* xsMultiFacetList = 0;
-    StringList* patternList = 0;
     bool isFixed = false;
     int dvFacetsDefined = dv->getFacetsDefined();
     int dvFixedFacets = dv->getFixed();
+    int definedFacets = 0;
+    int fixedFacets = 0;
+    XSMultiValueFacetList* xsMultiFacetList = 0;
+    StringList* patternList = 0;
+    XSFacetList* xsFacetList = new (fMemoryManager) RefVectorOf<XSFacet>(4, false, fMemoryManager);
 
-    if ((dvFacetsDefined & DatatypeValidator::FACET_PATTERN)
-        || (dvFacetsDefined & DatatypeValidator::FACET_ENUMERATION))
-        xsMultiFacetList = new (fMemoryManager) RefVectorOf<XSMultiValueFacet>(2, true, fMemoryManager);
+    if (isMultiValueFacetDefined(dv))
+        xsMultiFacetList = new (fMemoryManager) RefVectorOf<XSMultiValueFacet>(2, false, fMemoryManager);
 
     if (dvFacetsDefined & DatatypeValidator::FACET_ENUMERATION)
     {
         RefArrayVectorOf<XMLCh>* enumList = (RefArrayVectorOf<XMLCh>*) dv->getEnumString();
-        isFixed = ((dvFixedFacets & DatatypeValidator::FACET_ENUMERATION) != 0);
 
-        // NOTE: Don't need to add multivaluefacet to "ObjectMap -> getObjectFromMap/putObjectInMap);
-        xsMultiFacetList->addElement(
-            new (fMemoryManager) XSMultiValueFacet(
-                XSSimpleTypeDefinition::FACET_ENUMERATION , enumList, isFixed
-                , getAnnotationFromModel(xsModel, enumList)
-                , xsModel, fMemoryManager)
-        );
-        definedFacets |= XSSimpleTypeDefinition::FACET_ENUMERATION;
-        if (isFixed)
+        if (dvFixedFacets & DatatypeValidator::FACET_ENUMERATION)
+        {
+            isFixed = true;
             fixedFacets |= XSSimpleTypeDefinition::FACET_ENUMERATION;
+        }
+
+        XSMultiValueFacet* mvFacet = new (fMemoryManager) XSMultiValueFacet(
+            XSSimpleTypeDefinition::FACET_ENUMERATION , enumList, isFixed
+            , getAnnotationFromModel(xsModel, enumList), xsModel, fMemoryManager
+        );
+
+        fDeleteVector->addElement(mvFacet);
+        xsMultiFacetList->addElement(mvFacet);
+        definedFacets |= XSSimpleTypeDefinition::FACET_ENUMERATION;
     }
 
-    RefHashTableOf<KVStringPair>* facets = dv->getFacets();
-    if (facets)
+    if (dv->getFacets())
     {
-        // NOTE: Don't need to add facet to "ObjectMap -> getObjectFromMap/putObjectInMap);
-        RefHashTableOfEnumerator<KVStringPair> e(facets, false, fMemoryManager);
+        RefHashTableOfEnumerator<KVStringPair> e(dv->getFacets(), false, fMemoryManager);
         while (e.hasMoreElements())
         {
             KVStringPair& pair = e.nextElement();
             XMLCh* key = pair.getKey();
-            XSSimpleTypeDefinition::FACET facetType = XSSimpleTypeDefinition::FACET_NONE;
+            XSSimpleTypeDefinition::FACET facetType;
             XSAnnotation* annot = getAnnotationFromModel(xsModel, &pair);
 
             if (XMLString::equals(key, SchemaSymbols::fgELT_MAXINCLUSIVE))
@@ -1005,21 +1007,26 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
             else if (XMLString::equals(key, SchemaSymbols::fgELT_PATTERN))
             {
                 XMLStringTokenizer tokenizer(dv->getPattern(), regexSeparator, fMemoryManager);
-                patternList = new (fMemoryManager) RefArrayVectorOf<XMLCh>(tokenizer.countTokens(), true, fMemoryManager);
+                patternList = new (fMemoryManager) RefArrayVectorOf<XMLCh>(
+                    tokenizer.countTokens(), true, fMemoryManager
+                );
                 
                 while (tokenizer.hasMoreTokens())
                     patternList->addElement(XMLString::replicate(tokenizer.nextToken(), fMemoryManager));
 
-                isFixed = ((dvFixedFacets & DatatypeValidator::FACET_PATTERN) != 0);
-                // NOTE: Don't need to add multivaluefacet to "ObjectMap -> getObjectFromMap/putObjectInMap);
-                xsMultiFacetList->addElement(
-                    new (fMemoryManager) XSMultiValueFacet(
-                        XSSimpleTypeDefinition::FACET_PATTERN, patternList
-                        , isFixed, annot, xsModel, fMemoryManager)
-	            );
-                definedFacets |= XSSimpleTypeDefinition::FACET_PATTERN;
-                if (isFixed) 
+                if (dvFixedFacets & DatatypeValidator::FACET_PATTERN)
+                {
+                    isFixed = true;
                     fixedFacets |= XSSimpleTypeDefinition::FACET_PATTERN;
+                }
+
+                XSMultiValueFacet* mvFacet = new (fMemoryManager) XSMultiValueFacet(
+                    XSSimpleTypeDefinition::FACET_PATTERN, patternList
+                    , isFixed, annot, xsModel, fMemoryManager
+                );
+                fDeleteVector->addElement(mvFacet);
+                xsMultiFacetList->addElement(mvFacet);
+                definedFacets |= XSSimpleTypeDefinition::FACET_PATTERN;
                 continue;
             }
             else
@@ -1029,11 +1036,11 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
                 continue;
             }
 
-            xsFacetList->addElement(
-                new (fMemoryManager) XSFacet(
-                    facetType, pair.getValue(), isFixed, annot, xsModel, fMemoryManager)
-            );
+            XSFacet* xsFacet = new (fMemoryManager) XSFacet(
+                facetType, pair.getValue(), isFixed, annot, xsModel, fMemoryManager);
 
+            fDeleteVector->addElement(xsFacet);
+            xsFacetList->addElement(xsFacet);
             definedFacets |= facetType;
             if (isFixed) 
                 fixedFacets |= facetType;
@@ -1041,18 +1048,51 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
     }
 
     // add whistespace facet if missing
-    if (!(definedFacets & XSSimpleTypeDefinition::FACET_WHITESPACE))
+    if ((definedFacets & XSSimpleTypeDefinition::FACET_WHITESPACE) == 0)
     {
-        xsFacetList->addElement
-        (
-            new (fMemoryManager) XSFacet
-            (
-                XSSimpleTypeDefinition::FACET_WHITESPACE
-                , dv->getWSstring(dv->getWSFacet())
-                , false, 0, xsModel, fMemoryManager
-            )
-        );
+        XSFacet* xsFacet = new (fMemoryManager) XSFacet(
+            XSSimpleTypeDefinition::FACET_WHITESPACE
+            , dv->getWSstring(dv->getWSFacet())
+            , false, 0, xsModel, fMemoryManager);
+
+        fDeleteVector->addElement(xsFacet);
+        xsFacetList->addElement(xsFacet);
         definedFacets |= XSSimpleTypeDefinition::FACET_WHITESPACE;
+    }
+
+    // inherit facets from base
+    if (xsST->getBaseType())
+    {
+        XSSimpleTypeDefinition* baseST = (XSSimpleTypeDefinition*) xsST->getBaseType();
+        XSFacetList* baseFacets = baseST->getFacets();
+
+        for (unsigned int i=0; i<baseFacets->size(); i++)
+        {
+            XSFacet* bFacet = baseFacets->elementAt(i);
+            if ((definedFacets & bFacet->getFacetKind()) == 0)
+            {
+                definedFacets |= bFacet->getFacetKind();
+                xsFacetList->addElement(bFacet);
+                if (bFacet->isFixed())
+                    fixedFacets |= bFacet->getFacetKind();
+            }
+        }
+
+        if (baseST->getMultiValueFacets())
+        {
+            XSMultiValueFacetList* baseMVFacets = baseST->getMultiValueFacets();
+            for (unsigned int j=0; j<baseMVFacets->size(); j++)
+            {
+                XSMultiValueFacet* bFacet = baseMVFacets->elementAt(j);
+                if ((definedFacets & bFacet->getFacetKind()) == 0)
+                {
+                    definedFacets |= bFacet->getFacetKind();
+                    xsMultiFacetList->addElement(bFacet);
+                    if (bFacet->isFixed())
+                        fixedFacets |= bFacet->getFacetKind();
+                }
+            }
+        }
     }
 
     xsST->setFacetInfo(definedFacets, fixedFacets, xsFacetList, xsMultiFacetList, patternList);
@@ -1079,6 +1119,22 @@ void XSObjectFactory::processAttUse(SchemaAttDef* const attDef,
         isRequired = true;
 
     xsAttUse->set(isRequired, constraintType, attDef->getValue());
+}
+
+bool XSObjectFactory::isMultiValueFacetDefined(DatatypeValidator* const dv)
+{
+    DatatypeValidator* tmpDV = dv;
+
+    while (tmpDV)
+    {
+        if ((tmpDV->getFacetsDefined() & DatatypeValidator::FACET_PATTERN)
+        ||  (tmpDV->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION))
+            return true;
+
+        tmpDV = tmpDV->getBaseValidator();
+    }
+
+    return false;
 }
 
 XERCES_CPP_NAMESPACE_END

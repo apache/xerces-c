@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/01/07 02:33:56  knoaman
+ * PSVI: inherit facets from base type
+ *
  * Revision 1.7  2003/12/29 16:15:41  knoaman
  * More PSVI updates
  *
@@ -269,6 +272,8 @@ private:
         SchemaAttDef* const attDef
         , XSAttributeUse* const xsAttUse
     );
+
+    bool isMultiValueFacetDefined(DatatypeValidator* const dv);
 
     // make XSModel our friend
     friend class XSModel;
