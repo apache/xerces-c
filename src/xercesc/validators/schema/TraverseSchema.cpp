@@ -5560,6 +5560,16 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
                     attDef->setDefaultType(XMLAttDef::Required);
                 }
             }
+			else
+			{
+				if (fixedVal) {
+					attDef->setDefaultType(XMLAttDef::Fixed);
+                    valueConstraint = fixedVal;
+				}
+				else if (defaultVal) {
+					attDef->setDefaultType(XMLAttDef::Default);
+				}
+			}
 
             if (valueConstraint) {
 
