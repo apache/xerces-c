@@ -312,6 +312,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\StringPool.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\SynchronizedStringPool.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\TransService.cpp">
 			</File>
 			<File
@@ -876,6 +879,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLAttDef.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLAttDefList.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLAttDefList.hpp">
 			</File>
 			<File
@@ -901,6 +907,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLContentModel.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLDTDDescription.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLDocumentHandler.hpp">
@@ -933,6 +942,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLFormatter.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLGrammarDescription.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLNotationDecl.cpp">
 			</File>
 			<File
@@ -948,7 +960,13 @@
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLRecognizer.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLRefInfo.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLRefInfo.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLSchemaDescription.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLValidator.cpp">
@@ -958,6 +976,9 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLValidityCodes.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSObject.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -1061,6 +1082,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XProtoType.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -1202,6 +1229,9 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\common\DFAContentModel.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\common\Grammar.cpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\common\Grammar.hpp">
@@ -1453,6 +1483,9 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\DTD\DTDElementDecl.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\DTD\DTDEntityDecl.cpp">
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\DTD\DTDEntityDecl.hpp">
@@ -1844,27 +1877,6 @@
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMTypeInfo.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathNamespace.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathNSResolver.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathResult.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathEvaluator.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathException.hpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathExpression.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMUserDataHandler.hpp">
 			</File>
 			<File
@@ -1872,6 +1884,27 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMWriterFilter.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathEvaluator.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathException.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathExpression.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathNSResolver.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathNamespace.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\dom\DOMXPathResult.hpp">
 			</File>
 			<Filter
 				Name="impl"
