@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/24 05:11:06  neilg
+ * remove unused statics
+ *
  * Revision 1.9  2003/10/02 19:20:42  peiyongz
  * fWhiteSpace moved to DatatypeValidator
  *
@@ -143,10 +146,6 @@
 #include <xercesc/validators/datatype/InvalidDatatypeValueException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
-static XMLCh value2[BUF_LEN+1];
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
