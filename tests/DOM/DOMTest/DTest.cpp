@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.40  2004/03/02 13:53:50  amassari
+ * Added test for bug# 26919
+ *
  * Revision 1.39  2003/02/05 18:55:19  tng
  * [Bug 11915] Utility for freeing memory.
  *
@@ -755,6 +758,9 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
     XMLString::transcode("newNameForEle", tempStr4, 3999);
     DOMElement *ele = doc->createElementNS(tempStr3, tempStr4);
     docFirstElement->insertBefore(ele, docFirstElement->getFirstChild());
+
+    // test for bug# 26919
+    docFirstElement->insertBefore(docFirstElement->getFirstChild(), docFirstElement->getFirstChild());
 
     //a test for lookup when xmlns is not set so we take the fact that there is no prefix to be confimation
     LOOKUPDEFAULTNSTEST(ele, tempStr3, true, __LINE__);
