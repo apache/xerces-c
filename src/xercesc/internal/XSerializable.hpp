@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2004/11/29 16:20:35  cargilld
+ * Remove XObjectComparator and XTemplateComparator.  These are debug files that aren't used.
+ *
  * Revision 1.4  2004/09/08 13:56:14  peiyongz
  * Apache License Version 2.0
  *
@@ -87,8 +90,6 @@ DECL_XPROTOTYPE(class_name) \
 virtual bool                    isSerializable()                  const ;  \
 virtual XProtoType*             getProtoType()                    const;   \
 virtual void                    serialize(XSerializeEngine&); \
-friend  class XObjectComparator;   \
-friend  class XTemplateComparator; \
 \
 inline friend XSerializeEngine& operator>>(XSerializeEngine& serEng  \
                                          , class_name*&      objPtr) \

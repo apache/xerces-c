@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/11/29 16:20:35  cargilld
+ * Remove XObjectComparator and XTemplateComparator.  These are debug files that aren't used.
+ *
  * Revision 1.17  2004/09/29 19:27:07  cargilld
  * Fix for Jira-1217: fixing problems with getXSModel.
  *
@@ -318,9 +321,6 @@ public :
 
     virtual void     serializeGrammars(BinOutputStream* const); 
     virtual void     deserializeGrammars(BinInputStream* const); 
-
-    friend class XObjectComparator;
-    friend class XTemplateComparator;
 
 private:
 

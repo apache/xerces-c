@@ -1620,14 +1620,6 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\internal\XObjectComparator.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\internal\XObjectComparator.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\internal\XProtoType.cpp
 # End Source File
 # Begin Source File
@@ -1665,14 +1657,6 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\internal\XSObjectFactory.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\internal\XTemplateComparator.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\internal\XTemplateComparator.hpp
 # End Source File
 # Begin Source File
 

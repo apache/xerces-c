@@ -296,7 +296,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLUTF8Transcoder.obj"
 	-@erase "$(INTDIR)\XMLValidator.obj"
 	-@erase "$(INTDIR)\XMLWin1252Transcoder.obj"
-	-@erase "$(INTDIR)\XObjectComparator.obj"
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
@@ -328,7 +327,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSValue.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
-	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
@@ -535,12 +533,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
-	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSAXMLScanner.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\XSObjectFactory.obj" \
-	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
@@ -957,7 +953,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLUTF8Transcoder.obj"
 	-@erase "$(INTDIR)\XMLValidator.obj"
 	-@erase "$(INTDIR)\XMLWin1252Transcoder.obj"
-	-@erase "$(INTDIR)\XObjectComparator.obj"
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
@@ -989,7 +984,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSValue.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
-	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
@@ -1197,12 +1191,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
-	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSAXMLScanner.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\XSObjectFactory.obj" \
-	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
@@ -1619,7 +1611,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLUTF8Transcoder.obj"
 	-@erase "$(INTDIR)\XMLValidator.obj"
 	-@erase "$(INTDIR)\XMLWin1252Transcoder.obj"
-	-@erase "$(INTDIR)\XObjectComparator.obj"
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
@@ -1651,7 +1642,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSValue.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
-	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
@@ -1859,12 +1849,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
-	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSAXMLScanner.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\XSObjectFactory.obj" \
-	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
@@ -2280,7 +2268,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLUTF8Transcoder.obj"
 	-@erase "$(INTDIR)\XMLValidator.obj"
 	-@erase "$(INTDIR)\XMLWin1252Transcoder.obj"
-	-@erase "$(INTDIR)\XObjectComparator.obj"
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
@@ -2312,7 +2299,6 @@ CLEAN :
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSValue.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
-	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
@@ -2520,12 +2506,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
-	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSAXMLScanner.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\XSObjectFactory.obj" \
-	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
@@ -3757,12 +3741,6 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
-SOURCE=..\..\..\..\..\src\xercesc\internal\XObjectComparator.cpp
-
-"$(INTDIR)\XObjectComparator.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
 SOURCE=..\..\..\..\..\src\xercesc\internal\XProtoType.cpp
 
 "$(INTDIR)\XProtoType.obj" : $(SOURCE) "$(INTDIR)"
@@ -3784,12 +3762,6 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp
 SOURCE=..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp
 
 "$(INTDIR)\XSObjectFactory.obj" : $(SOURCE) "$(INTDIR)"
-	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
-SOURCE=..\..\..\..\..\src\xercesc\internal\XTemplateComparator.cpp
-
-"$(INTDIR)\XTemplateComparator.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

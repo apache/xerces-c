@@ -62,14 +62,12 @@ INTERNAL_CPP_PUBHEADERS = \
 	XMLReader.hpp \
 	XMLScanner.hpp \
 	XMLScannerResolver.hpp \
-	XObjectComparator.hpp \
 	XProtoType.hpp \
 	XSAXMLScanner.hpp \
 	XSerializable.hpp \
 	XSerializationException.hpp \
 	XSerializeEngine.hpp \
 	XSObjectFactory.hpp \
-	XTemplateComparator.hpp \
 	XTemplateSerializer.hpp
 				
 INTERNAL_CPP_PRIVHEADERS =
@@ -95,12 +93,10 @@ INTERNAL_CPP_OBJECTS = \
 	XMLReader.$(TO) \
 	XMLScanner.$(TO) \
 	XMLScannerResolver.$(TO) \
-	XObjectComparator.$(TO) \
 	XProtoType.$(TO) \
 	XSAXMLScanner.$(TO) \
 	XSerializeEngine.$(TO) \
 	XSObjectFactory.$(TO) \
-	XTemplateComparator.$(TO) \
 	XTemplateSerializer.$(TO)
 	
 all::	includes $(INTERNAL_CPP_OBJECTS)
