@@ -83,6 +83,8 @@
 //----------------------------------------------
 static void reinitDomConverter();
 static void reinitDomMutex();
+XMLLCPTranscoder*  getDomConverter();
+
 
 // ---------------------------------------------------------------------------
 //  Local static functions
