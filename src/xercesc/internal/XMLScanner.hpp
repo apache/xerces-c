@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2002/12/04 01:41:14  knoaman
+ * Scanner re-organization.
+ *
  * Revision 1.12  2002/11/04 14:58:19  tng
  * C++ Namespace Support.
  *
@@ -236,41 +239,33 @@
 #if !defined(XMLSCANNER_HPP)
 #define XMLSCANNER_HPP
 
-#include <xercesc/util/KVStringPair.hpp>
-#include <xercesc/util/RefVectorOf.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/framework/XMLAttr.hpp>
 #include <xercesc/framework/XMLBufferMgr.hpp>
 #include <xercesc/framework/XMLErrorCodes.hpp>
 #include <xercesc/framework/XMLRefInfo.hpp>
-#include <xercesc/framework/XMLPScanToken.hpp>
-#include <xercesc/internal/ElemStack.hpp>
+#include <xercesc/util/NameIdPool.hpp>
+#include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/internal/ReaderMgr.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
-#include <xercesc/validators/DTD/DTDValidator.hpp>
-#include <xercesc/validators/schema/SchemaValidator.hpp>
+#include <xercesc/framework/XMLAttr.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 class InputSource;
 class XMLDocumentHandler;
-class DocTypeHandler;
-class XMLElementDecl;
 class XMLEntityHandler;
-class XMLErrorReporter;
 class ErrorHandler;
-class XMLMsgLoader;
+class DocTypeHandler;
+class XMLPScanToken;
+class XMLStringPool;
+class Grammar;
+class GrammarResolver;
 class XMLValidator;
-class ValueStoreCache;
-class XPathMatcherStack;
-class FieldActivator;
-class IdentityConstraint;
 
-//
+
 //  This is the mondo scanner class, which does the vast majority of the
 //  work of parsing. It handles reading in input and spitting out events
 //  to installed handlers.
-//
 class XMLPARSER_EXPORT XMLScanner
 {
 public :
@@ -345,7 +340,7 @@ public :
         , XMLErrorReporter* const  errReporter
         , XMLValidator* const      valToAdopt
     );
-    ~XMLScanner();
+    virtual ~XMLScanner();
 
 
     // -----------------------------------------------------------------------
@@ -369,6 +364,31 @@ public :
         , const char* const         text4 = 0
     );
 
+    // -----------------------------------------------------------------------
+    //  Public pure virtual methods
+    // -----------------------------------------------------------------------
+    virtual const XMLCh* getName() const = 0;
+    virtual NameIdPool<DTDEntityDecl>* getEntityDeclPool() = 0;
+    virtual const NameIdPool<DTDEntityDecl>* getEntityDeclPool() const = 0;
+    virtual unsigned int resolveQName
+    (
+        const   XMLCh* const        qName
+        ,       XMLBuffer&          prefixBufToFill
+        , const short               mode
+        ,       int&                prefixColonPos
+    ) = 0;
+    virtual void scanDocument
+    (
+        const   InputSource&    src
+    ) = 0;
+    virtual bool scanNext(XMLPScanToken& toFill) = 0;
+    virtual Grammar* loadGrammar
+    (
+        const   InputSource&    src
+        , const short           grammarType
+        , const bool            toCache = false
+    ) = 0;
+
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -390,7 +410,7 @@ public :
     RefHashTableOf<XMLRefInfo>* getIDRefList();
     const RefHashTableOf<XMLRefInfo>* getIDRefList() const;
     bool getInException() const;
-    bool getLastExtLocation
+    /*bool getLastExtLocation
     (
                 XMLCh* const    sysIdToFill
         , const unsigned int    maxSysIdChars
@@ -398,7 +418,7 @@ public :
         , const unsigned int    maxPubIdChars
         ,       XMLSSize_t&     lineToFill
         ,       XMLSSize_t&     colToFill
-    ) const;
+    ) const;*/
     const Locator* getLocator() const;
     const ReaderMgr* getReaderMgr() const;
     unsigned int getSrcOffset() const;
@@ -406,8 +426,6 @@ public :
     const XMLValidator* getValidator() const;
     XMLValidator* getValidator();
     int getErrorCount();
-    NameIdPool<DTDEntityDecl>* getEntityDeclPool();
-    const NameIdPool<DTDEntityDecl>* getEntityDeclPool() const;
     const XMLStringPool* getURIStringPool() const;
     XMLStringPool* getURIStringPool();
     bool getHasNoDTD() const;
@@ -417,12 +435,12 @@ public :
     bool getNormalizeData() const;
     bool isCachingGrammarFromParse() const;
     bool isUsingCachedGrammarInParse() const;
+    bool getCalculateSrcOfs() const;
     Grammar* getRootGrammar() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-
     /**
       * When an attribute name has no prefix, unlike elements, it is not mapped
       * to the global namespace. So, in order to have something to map it to
@@ -474,23 +492,6 @@ public :
 
     const XMLCh* getURIText(const   unsigned int    uriId) const;
 
-    /**
-      * This method separate the passed QName into prefix
-      * and local part, and then return the URI id by resolving
-      * the prefix.
-      *
-      * mode: Indicate if this QName comes from an Element or Attribute
-      */
-    unsigned int resolveQName
-    (
-        const   XMLCh* const        qName
-        ,       XMLBuffer&          nameBufToFill
-        ,       XMLBuffer&          prefixBufToFill
-        , const ElemStack::MapModes mode
-    );
-
-    Grammar* getGrammar(const XMLCh* const nameSpaceKey);
-
     /* tell if the validator comes from user */
     bool isValidatorFromUser();
 
@@ -504,6 +505,8 @@ public :
     void setEntityHandler(XMLEntityHandler* const docTypeHandler);
     void setErrorReporter(XMLErrorReporter* const errHandler);
     void setErrorHandler(ErrorHandler* const handler);
+    void setGrammarResolver(GrammarResolver* const grammarResolver);
+    void setURIStringPool(XMLStringPool* const stringPool);
     void setExitOnFirstFatal(const bool newValue);
     void setValidationConstraintFatal(const bool newValue);
     void setValidationScheme(const ValSchemes newScheme);
@@ -520,6 +523,7 @@ public :
     void setExternalNoNamespaceSchemaLocation(const char* const noNamespaceSchemaLocation);
     void setLoadExternalDTD(const bool loadDTD);
     void setNormalizeData(const bool normalizeData);
+    void setCalculateSrcOfs(const bool newValue);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -533,7 +537,6 @@ public :
     bool getDoValidation() const;
     void setDoValidation(const bool validate);
 
-
     // -----------------------------------------------------------------------
     //  Document scanning methods
     //
@@ -542,10 +545,6 @@ public :
     // -----------------------------------------------------------------------
     void scanDocument
     (
-        const   InputSource&    src
-    );
-    void scanDocument
-    (
         const   XMLCh* const    systemId
     );
     void scanDocument
@@ -568,8 +567,6 @@ public :
         const   char* const     systemId
         ,       XMLPScanToken&  toFill
     );
-
-    bool scanNext(XMLPScanToken& toFill);
 
     void scanReset(XMLPScanToken& toFill);
 
@@ -577,13 +574,7 @@ public :
 
     // -----------------------------------------------------------------------
     //  Grammar preparsing methods
-    // -----------------------------------------------------------------------
-    Grammar* loadGrammar
-    (
-        const   InputSource&    src
-        , const short           grammarType
-        , const bool            toCache = false
-    );
+    // -----------------------------------------------------------------------    
     Grammar* loadGrammar
     (
         const   XMLCh* const    systemId
@@ -598,159 +589,46 @@ public :
     );
 
     // -----------------------------------------------------------------------
-    //  Reset pool of cached grammars
-    // -----------------------------------------------------------------------
-    void resetCachedGrammarPool();
-
-    // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
 	static void reinitScannerMutex();
-
 	static void reinitMsgLoader();
 
-private :
+protected:
     // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
+    //  Protected pure virtual methods
     // -----------------------------------------------------------------------
-    XMLScanner();
-    XMLScanner(const XMLScanner&);
-    void operator=(const XMLScanner&);
-
-
-    // -----------------------------------------------------------------------
-    //  Private helper methods
-    // -----------------------------------------------------------------------
-    void commonInit();
-    void initValidator(XMLValidator* theValidator);
-    void resetURIStringPool();
-    InputSource* resolveSystemId(const XMLCh* const sysId); // return owned by caller
-
-    // Spaces are not allowed in URI, so %20 is used instead.
-    // Convert %20 to spaces before resolving the URI
-    void normalizeURI(const XMLCh* const systemURI, XMLBuffer& normalizedURI);
-
-    // -----------------------------------------------------------------------
-    //  Private helper methods
-    //
-    //  These are implemented in XMLScanner2.cpp, to keep the main file from
-    //  becoming so bloated. We can't have any bloated files.
-    // -----------------------------------------------------------------------
-    unsigned int buildAttList
-    (
-        const   RefVectorOf<KVStringPair>&  providedAttrs
-        , const unsigned int                attCount
-        ,       XMLElementDecl*             elemDecl
-        ,       RefVectorOf<XMLAttr>&       toFill
-    );
-    void checkIDRefs();
-    bool isLegalToken(const XMLPScanToken& toCheck);
-    bool normalizeAttValue
-    (
-        const   XMLAttDef* const    attDef
-        , const XMLCh* const        value
-        ,       XMLBuffer&          toFill
-    );
-    bool normalizeAttRawValue
-    (
-        const   XMLCh* const        attrName
-        , const XMLCh* const        value
-        ,       XMLBuffer&          toFill
-    );
-
-    unsigned int resolvePrefix
-    (
-        const   XMLCh* const        prefix
-        , const ElemStack::MapModes mode
-    );
-    unsigned int resolvePrefix
-    (
-        const   XMLCh* const        prefix
-        ,       XMLBuffer&          uriBufToFill
-        , const ElemStack::MapModes mode
-    );
-    void scanReset(const InputSource& src);
-    void sendCharData(XMLBuffer& toSend);
-    XMLTokens senseNextToken(unsigned int& orgReader);
-    void updateNSMap
-    (
-        const   XMLCh* const    attrName
-        , const XMLCh* const    attrValue
-    );
-    void scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount);
-    void parseSchemaLocation(const XMLCh* const schemaLocationStr);
-    void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
-    bool switchGrammar(const XMLCh* const newGrammarNameSpace);
-    bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
-                              const XMLContentModel* const cm,
-                              const unsigned int parentElemDepth);
-    bool anyAttributeValidation(SchemaAttDef* attWildCard,
-                                unsigned int uriId,
-                                bool& skipThisOne,
-                                bool& laxThisOne);
-
-    // -----------------------------------------------------------------------
-    //  Private scanning methods
-    // -----------------------------------------------------------------------
-    bool basicAttrValueScan
-    (
-        const   XMLCh* const    attrName
-        ,       XMLBuffer&      toFill
-    );
-    bool getQuotedString(XMLBuffer& toFill);
-    unsigned int rawAttrScan
-    (
-        const   XMLCh* const                elemName
-        ,       RefVectorOf<KVStringPair>&  toFill
-        ,       bool&                       isEmpty
-    );
-    bool scanAttValue
-    (
-        const   XMLAttDef* const    attDef
-        ,       XMLBuffer&          toFill
-    );
-    void scanCDSection();
-    void scanCharData(XMLBuffer& toToUse);
-    bool scanCharRef(XMLCh& toFill, XMLCh& second);
-    void scanComment();
-    bool scanContent(const bool extEntity);
-    void scanEndTag(bool& gotData);
-    EntityExpRes scanEntityRef
+    virtual void scanCDSection() = 0;
+    virtual void scanCharData(XMLBuffer& toToUse) = 0;
+    virtual EntityExpRes scanEntityRef
     (
         const   bool    inAttVal
         ,       XMLCh&  firstCh
         ,       XMLCh&  secondCh
         ,       bool&   escaped
-    );
+    ) = 0;
+    virtual void scanDocTypeDecl() = 0;
+    virtual void scanReset(const InputSource& src) = 0;
+    virtual void sendCharData(XMLBuffer& toSend) = 0;
+
+    // -----------------------------------------------------------------------
+    //  Protected scanning methods
+    // -----------------------------------------------------------------------
+    bool scanCharRef(XMLCh& toFill, XMLCh& second);
+    void scanComment();
     bool scanEq();
     void scanMiscellaneous();
     void scanPI();
     void scanProlog();
-    bool scanStartTag(bool& gotData);
-    bool scanStartTagNS(bool& gotData);
     void scanXMLDecl(const DeclTypes type);
-    unsigned int scanUpToWSOr
-    (
-                XMLBuffer&  toFill
-        , const XMLCh       chEndChar
-    );
-    void scanDocTypeDecl();
 
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    void resizeElemState();
-
-    // -----------------------------------------------------------------------
-    //  IdentityConstraints Activation methods
-    // -----------------------------------------------------------------------
-    void activateSelectorFor(IdentityConstraint* const ic, const int initialDepth);
-
-    // -----------------------------------------------------------------------
-    //  Grammar preparsing methods
-    // -----------------------------------------------------------------------
-    Grammar* loadXMLSchemaGrammar(const InputSource& src, const bool toCache = false);
-    Grammar* loadDTDGrammar(const InputSource& src, const bool toCache = false);
+    void checkIDRefs();
+    bool isLegalToken(const XMLPScanToken& toCheck);
+    XMLTokens senseNextToken(unsigned int& orgReader);
+    void initValidator(XMLValidator* theValidator);
 
     // -----------------------------------------------------------------------
     //  Data members
@@ -779,10 +657,6 @@ private :
     //      This flag indicates whether the client code wants us to do
     //      namespaces or not. If the installed validator indicates that it
     //      has to do namespaces, then this is ignored.
-    //
-    //  fElemStack
-    //      This is the element stack that is used to track the elements that
-    //      are currently being worked on.
     //
     //  fEntityHandler
     //      The client code's entity handler. If zero, then no entity handler
@@ -814,11 +688,6 @@ private :
     //      it, which would normally throw again if the 'fail on first error'
     //      flag is one.
     //
-    //  fRawAttrList
-    //      During the initial scan of the attributes we can only do a raw
-    //      scan for key/value pairs. So this vector is used to store them
-    //      until they can be processed (and put into fAttrList.)
-    //
     //  fReaderMgr
     //      This is the reader manager, from which we get characters. It
     //      manages the reader stack for us, and provides a lot of convenience
@@ -848,12 +717,6 @@ private :
     //      Either point to user's installed validator, or fDTDValidator
     //      or fSchemaValidator.
     //
-    //  fDTDValidator
-    //      The DTD validator instance.
-    //
-    //  fSchemaValidator
-    //      The Schema validator instance.
-    //
     //  fValidatorFromUser
     //      This flag indicates whether the validator was installed from
     //      user.  If false, then the validator was created by the Scanner.
@@ -872,9 +735,6 @@ private :
     //  fSchemaFullChecking
     //      This flag indicates whether the client code wants full Schema
     //      constraint checking.
-    //
-    //  fSeeXsi
-    //      This flag indicates a schema has been seen.
     //
     //  fAttName
     //  fAttValue
@@ -908,11 +768,6 @@ private :
     //  fSchemaNamespaceId
     //      This is the id of the schema namespace URI.
     //
-    //  fElemState
-    //  fElemStateSize
-    //      Stores an element next state from DFA content model - used for
-    //      wildcard validation
-    //
     //  fGrammarResolver
     //      Grammar Pool that stores all the grammars. Key is namespace for
     //      schema and system id for external DTD. When caching a grammar, if
@@ -933,18 +788,6 @@ private :
     //      This is a pool for URIs with unique ids assigned. We use a standard
     //      string pool class.  This pool is going to be shared by all Grammar.
     //      Use only if namespace is turned on.
-    //
-    //  fMatcherStack
-    //      Stack of active XPath matchers for identity constraints. All
-    //      active XPath matchers are notified of startElement, characters
-    //      and endElement callbacks in order to perform their matches.
-    //
-    //  fValueStoreCache
-    //      Cache of value stores for identity constraint fields.
-    //
-    //  fFieldActivator
-    //      Activates fields within a certain scope when a selector matches
-    //      its xpath.
     //
     //  fRootElemName
     //      No matter we are using DTD or Schema Grammar, if a DOCTYPE exists,
@@ -968,6 +811,7 @@ private :
     //      normalization that is defined in the schema.
     //
     // -----------------------------------------------------------------------
+    bool                        fCalculateSrcOfs;
     bool                        fDoNamespaces;
     bool                        fExitOnFirstFatal;
     bool                        fValidationConstraintFatal;
@@ -978,58 +822,66 @@ private :
     bool                        fValidatorFromUser;
     bool                        fDoSchema;
     bool                        fSchemaFullChecking;
-    bool                        fSeeXsi;
     bool                        fToCacheGrammar;
     bool                        fUseCachedGrammar;
+    bool                        fLoadExternalDTD;
+    bool                        fNormalizeData;
     int                         fErrorCount;
     unsigned int                fEmptyNamespaceId;
     unsigned int                fUnknownNamespaceId;
     unsigned int                fXMLNamespaceId;
     unsigned int                fXMLNSNamespaceId;
     unsigned int                fSchemaNamespaceId;
-    unsigned int                fElemStateSize;
     XMLUInt32                   fScannerId;
     XMLUInt32                   fSequenceId;
-    unsigned int*               fElemState;
     RefVectorOf<XMLAttr>*       fAttrList;
     XMLBufferMgr                fBufMgr;
     XMLDocumentHandler*         fDocHandler;
     DocTypeHandler*             fDocTypeHandler;
-    ElemStack                   fElemStack;
     XMLEntityHandler*           fEntityHandler;
     XMLErrorReporter*           fErrorReporter;
     ErrorHandler*               fErrorHandler;
     RefHashTableOf<XMLRefInfo>* fIDRefList;
-    RefVectorOf<KVStringPair>*  fRawAttrList;
     ReaderMgr                   fReaderMgr;
     XMLValidator*               fValidator;
-    DTDValidator*               fDTDValidator;
-    SchemaValidator*            fSchemaValidator;
     ValSchemes                  fValScheme;
     XMLBuffer                   fAttNameBuf;
     XMLBuffer                   fAttValueBuf;
     XMLBuffer                   fCDataBuf;
-    XMLBuffer                   fNameBuf;
     XMLBuffer                   fQNameBuf;
     XMLBuffer                   fPrefixBuf;
     XMLBuffer                   fURIBuf;
     GrammarResolver*            fGrammarResolver;
     Grammar*                    fGrammar;
     Grammar*                    fRootGrammar;
-    DTDGrammar*                 fDTDGrammar;
-    Grammar::GrammarType        fGrammarType;
     XMLStringPool*              fURIStringPool;
-    XPathMatcherStack*          fMatcherStack;
-    ValueStoreCache*            fValueStoreCache;
-    FieldActivator*             fFieldActivator;
     XMLCh*                      fRootElemName;
     XMLCh*                      fExternalSchemaLocation;
     XMLCh*                      fExternalNoNamespaceSchemaLocation;
-    bool                        fLoadExternalDTD;
-    bool                        fNormalizeData;
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLScanner();
+    XMLScanner(const XMLScanner&);
+    void operator=(const XMLScanner&);
+
+    // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+    void commonInit();
+
+    // -----------------------------------------------------------------------
+    //  Private scanning methods
+    // -----------------------------------------------------------------------
+    bool getQuotedString(XMLBuffer& toFill);
+    unsigned int scanUpToWSOr
+    (
+                XMLBuffer&  toFill
+        , const XMLCh       chEndChar
+    );
 };
-
-
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Getter methods
@@ -1089,14 +941,14 @@ inline bool XMLScanner::getValidationConstraintFatal() const
     return fValidationConstraintFatal;
 }
 
-inline RefHashTableOf<XMLRefInfo>* XMLScanner::getIDRefList()
-{
-    return fIDRefList;
-}
-
 inline bool XMLScanner::getInException() const
 {
     return fInException;
+}
+
+inline RefHashTableOf<XMLRefInfo>* XMLScanner::getIDRefList()
+{
+    return fIDRefList;
 }
 
 inline const RefHashTableOf<XMLRefInfo>* XMLScanner::getIDRefList() const
@@ -1179,16 +1031,6 @@ inline unsigned int XMLScanner::getXMLNSNamespaceId() const
     return fXMLNSNamespaceId;
 }
 
-inline NameIdPool<DTDEntityDecl>* XMLScanner::getEntityDeclPool()
-{
-    return fDTDGrammar->getEntityDeclPool();
-}
-
-inline const NameIdPool<DTDEntityDecl>* XMLScanner::getEntityDeclPool() const
-{
-    return fDTDGrammar->getEntityDeclPool();
-}
-
 inline const XMLStringPool* XMLScanner::getURIStringPool() const
 {
     return fURIStringPool;
@@ -1234,14 +1076,14 @@ inline bool XMLScanner::isUsingCachedGrammarInParse() const
     return fUseCachedGrammar;
 }
 
+inline bool XMLScanner::getCalculateSrcOfs() const
+{
+    return fCalculateSrcOfs;
+}
+
 inline Grammar* XMLScanner::getRootGrammar() const
 {
     return fRootGrammar;
-}
-
-inline Grammar* XMLScanner::getGrammar(const XMLCh* const nameSpaceKey)
-{
-    return fGrammarResolver->getGrammar(nameSpaceKey);
 }
 
 // ---------------------------------------------------------------------------
@@ -1257,24 +1099,6 @@ inline void XMLScanner::setDocTypeHandler(DocTypeHandler* const docTypeHandler)
     fDocTypeHandler = docTypeHandler;
 }
 
-inline void XMLScanner::setDoNamespaces(const bool doNamespaces)
-{
-    fDoNamespaces = doNamespaces;
-    if (fDoNamespaces) {
-        if (!fURIStringPool) {
-            fURIStringPool = new XMLStringPool();
-            resetURIStringPool();
-        }
-    }
-}
-
-inline void XMLScanner::setErrorReporter(XMLErrorReporter* const errHandler)
-{
-    fErrorReporter = errHandler;
-    fDTDValidator->setErrorReporter(fErrorReporter);
-    fSchemaValidator->setErrorReporter(fErrorReporter);
-}
-
 inline void XMLScanner::setErrorHandler(ErrorHandler* const handler)
 {
     fErrorHandler = handler;
@@ -1286,11 +1110,21 @@ inline void XMLScanner::setEntityHandler(XMLEntityHandler* const entityHandler)
     fReaderMgr.setEntityHandler(entityHandler);
 }
 
+inline void XMLScanner::setErrorReporter(XMLErrorReporter* const errHandler)
+{
+    fErrorReporter = errHandler;
+}
+
+inline void XMLScanner::setGrammarResolver(GrammarResolver* const grammarResolver)
+{
+    fGrammarResolver = grammarResolver;
+}
+
 inline void XMLScanner::setExitOnFirstFatal(const bool newValue)
 {
     fExitOnFirstFatal = newValue;
-    fSchemaValidator->setExitOnFirstFatal(newValue);
 }
+
 
 inline void XMLScanner::setValidationConstraintFatal(const bool newValue)
 {
@@ -1309,18 +1143,14 @@ inline void XMLScanner::setValidationScheme(const ValSchemes newScheme)
         fValidate = false;
 }
 
-inline void XMLScanner::setValidator(XMLValidator* const valToAdopt)
-{
-    if (fValidatorFromUser)
-        delete fValidator;
-    fValidator = valToAdopt;
-    fValidatorFromUser = true;
-    initValidator(fValidator);
-}
-
 inline void XMLScanner::setDoSchema(const bool doSchema)
 {
     fDoSchema = doSchema;
+}
+
+inline void XMLScanner::setDoNamespaces(const bool doNamespaces)
+{
+    fDoNamespaces = doNamespaces;
 }
 
 inline void XMLScanner::setValidationSchemaFullChecking(const bool schemaFullChecking)
@@ -1383,6 +1213,10 @@ inline void XMLScanner::useCachedGrammarInParse(const bool newValue)
     fUseCachedGrammar = newValue;
 }
 
+inline void XMLScanner::setCalculateSrcOfs(const bool newValue)
+{
+    fCalculateSrcOfs = newValue;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Mutator methods
@@ -1391,7 +1225,6 @@ inline void XMLScanner::incrementErrorCount()
 {
     ++fErrorCount;
 }
-
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Deprecated methods
