@@ -508,9 +508,6 @@
 				Name="Win32"
 				Filter=".cpp,.hpp">
 				<File
-					RelativePath=".\IDMap.hpp">
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32Defs.hpp">
 				</File>
 				<File
