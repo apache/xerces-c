@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/12/19 23:02:25  cargilld
+ * More memory management updates.
+ *
  * Revision 1.17  2003/12/17 15:16:10  cargilld
  * Platform update for memory management so that the static memory manager (one
  * used to call Initialize) is only for static data.
@@ -316,8 +319,8 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
                                       , MemoryManager* const manager)
 {
     if (fileName == NULL)
-	ThrowXML(XMLPlatformUtilsException,
-		 XMLExcepts::CPtr_PointerIsZero);
+	    ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+		    XMLExcepts::CPtr_PointerIsZero, manager);
     const char* tmpFileName = XMLString::transcode(fileName, manager);
     ArrayJanitor<char> janText((char*)tmpFileName, manager);
     FileHandle retVal = (FileHandle)fopen( tmpFileName , "r" );
@@ -328,8 +331,8 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName
                                       , MemoryManager* const manager)
 {
     if (fileName == NULL)
-	ThrowXML(XMLPlatformUtilsException,
-		 XMLExcepts::CPtr_PointerIsZero);
+	    ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero, manager);
     FileHandle retVal = (FileHandle)fopen( fileName , "r" );
     return retVal;
 }
@@ -338,8 +341,8 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName
                                              , MemoryManager* const manager)
 {
     if (fileName == NULL)
-	ThrowXML(XMLPlatformUtilsException,
-		 XMLExcepts::CPtr_PointerIsZero);
+	    ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero, manager);
     const char* tmpFileName = XMLString::transcode(fileName, manager);
     ArrayJanitor<char> janText((char*)tmpFileName, manager);
     return fopen( tmpFileName , "w" );
@@ -349,8 +352,8 @@ FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
                                              , MemoryManager* const manager)
 {
     if (fileName == NULL)
-	ThrowXML(XMLPlatformUtilsException,
-		 XMLExcepts::CPtr_PointerIsZero);
+	    ThrowXMLwithMemMgr(XMLPlatformUtilsException,
+		 XMLExcepts::CPtr_PointerIsZero, manager);
     return fopen( fileName , "w" );
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/19 23:02:25  cargilld
+ * More memory management updates.
+ *
  * Revision 1.15  2003/12/17 15:16:10  cargilld
  * Platform update for memory management so that the static memory manager (one
  * used to call Initialize) is only for static data.
@@ -318,7 +321,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
 
     // Seek to the end and save that value for return
      if (fseek((FILE*) theFile, 0, SEEK_END))
-        ThrowXML(XMLPlatformUtilsException,
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException,
                  XMLExcepts::File_CouldNotSeekToEnd, manager);
 
     long int retVal = ftell((FILE*)theFile);

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/12/19 23:02:25  cargilld
+ * More memory management updates.
+ *
  * Revision 1.12  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -132,8 +135,6 @@ static XMLCh value2[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 DateTimeValidator::~DateTimeValidator()
 {
-    if (fDateTime)
-        delete fDateTime;
 }
 
 DateTimeValidator::DateTimeValidator(
@@ -143,7 +144,6 @@ DateTimeValidator::DateTimeValidator(
                         , const ValidatorType                 type
                         , MemoryManager* const                manager)
 :AbstractNumericFacetValidator(baseValidator, facets, finalSet, type, manager)
-, fDateTime(0)
 {
     //do not invoke init() here !!!
 }
@@ -185,8 +185,6 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
                                    ,       bool                     asBase
                                    ,       MemoryManager*     const manager)
 {
-    bool deleteLazy = false;
-
     //validate against base validator if any
     DateTimeValidator *pBaseValidator = (DateTimeValidator*) this->getBaseValidator();
     if (pBaseValidator)
@@ -226,24 +224,17 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
     // the derived classes' parse() method constructs an
     // XMLDateTime object anc invokes appropriate XMLDateTime's
     // parser to parse the content.
-    if (fDateTime)
-        fDateTime->setBuffer(content);
-    else
-    {
-        fDateTime = new (manager) XMLDateTime(content, manager);
-        // REVISIT: cargillmem
-        if (manager != fMemoryManager)
-            deleteLazy = true;
-    }
-
-    parse(fDateTime);
+    XMLDateTime dateTimeValue(content, manager);
+    XMLDateTime* dateTime = &dateTimeValue;
+    
+    parse(dateTime);
 
     // must be < MaxExclusive
     if ((thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0)
     {
-        if (compareValues(fDateTime, getMaxExclusive()) != XMLDateTime::LESS_THAN)
+        if (compareValues(dateTime, getMaxExclusive()) != XMLDateTime::LESS_THAN)
         {
-            REPORT_VALUE_ERROR( fDateTime
+            REPORT_VALUE_ERROR( dateTime
                               , getMaxExclusive()
                               , XMLExcepts::VALUE_exceed_maxExcl
                               , manager)
@@ -253,10 +244,10 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
     // must be <= MaxInclusive
     if ((thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
     {
-        int result = compareValues(fDateTime, getMaxInclusive());
+        int result = compareValues(dateTime, getMaxInclusive());
         if ( result == XMLDateTime::GREATER_THAN || result == XMLDateTime::INDETERMINATE )
         {
-            REPORT_VALUE_ERROR( fDateTime
+            REPORT_VALUE_ERROR( dateTime
                               , getMaxInclusive()
                               , XMLExcepts::VALUE_exceed_maxIncl
                               , manager)
@@ -266,10 +257,10 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
     // must be >= MinInclusive
     if ((thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0)
     {
-        int result = compareValues(fDateTime, getMinInclusive());
+        int result = compareValues(dateTime, getMinInclusive());
         if (result == XMLDateTime::LESS_THAN || result == XMLDateTime::INDETERMINATE)
         {
-            REPORT_VALUE_ERROR( fDateTime
+            REPORT_VALUE_ERROR( dateTime
                               , getMinInclusive()
                               , XMLExcepts::VALUE_exceed_minIncl
                               , manager)
@@ -279,9 +270,9 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
     // must be > MinExclusive
     if ( (thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0 )
     {
-        if (compareValues(fDateTime, getMinExclusive()) != XMLDateTime::GREATER_THAN)
+        if (compareValues(dateTime, getMinExclusive()) != XMLDateTime::GREATER_THAN)
         {
-            REPORT_VALUE_ERROR( fDateTime
+            REPORT_VALUE_ERROR( dateTime
                               , getMinExclusive()
                               , XMLExcepts::VALUE_exceed_minExcl
                               , manager)
@@ -295,21 +286,12 @@ void DateTimeValidator::checkContent(const XMLCh*             const content
         int enumLength = getEnumeration()->size();
         for ( ; i < enumLength; i++)
         {
-            if (compareValues(fDateTime, getEnumeration()->elementAt(i)) == XMLDateTime::EQUAL)
+            if (compareValues(dateTime, getEnumeration()->elementAt(i)) == XMLDateTime::EQUAL)
                 break;
         }
 
         if (i == enumLength)
             ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
-    }
-
-    if (deleteLazy)
-    {
-        // REVISIT: cargillmem
-        // hmm.. if an exception is thrown do we cleanup...
-        // no but this avoids a number of exceptions for now...
-        delete fDateTime;
-        fDateTime = 0;
     }
 }
 
@@ -411,7 +393,7 @@ void DateTimeValidator::serialize(XSerializeEngine& serEng)
 
     AbstractNumericFacetValidator::serialize(serEng);
 
-    //fDateTime can be instantiated during checkContent(), so don't serialize it.
+    //dateTime can be instantiated during checkContent(), so don't serialize it.
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/12/19 23:02:25  cargilld
+ * More memory management updates.
+ *
  * Revision 1.12  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -185,7 +188,8 @@ const XMLCh* DateTimeDatatypeValidator::getCanonicalRepresentation(const XMLCh* 
     temp->checkContent(rawData, 0, false, toUse);
     
     //Have the fDateTime to do the job
-    return fDateTime->getDateTimeCanonicalRepresentation(toUse);
+    XMLDateTime aDateTime(rawData, toUse);
+    return aDateTime.getDateTimeCanonicalRepresentation(toUse);
 }
 
 /***

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/12/19 23:02:25  cargilld
+ * More memory management updates.
+ *
  * Revision 1.10  2003/12/17 00:18:39  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -270,7 +273,7 @@ void FloatDatatypeValidator::checkContent(const XMLCh*             const content
     //validate against base validator if any
     FloatDatatypeValidator *pBase = (FloatDatatypeValidator*) this->getBaseValidator();
     if (pBase)
-        pBase->checkContent(content, context, true);
+        pBase->checkContent(content, context, true, manager);
 
     // we check pattern first
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/12/19 23:02:25  cargilld
+ * More memory management updates.
+ *
  * Revision 1.7  2003/12/17 00:18:39  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -197,7 +200,7 @@ protected:
 
     virtual void  setMinExclusive(const XMLCh* const);
 
-    virtual void  setEnumeration(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    virtual void  setEnumeration(MemoryManager* const manager);
 
 // -----------------------------------------------------------------------
 // Abstract interface from AbstractNumericValidator
@@ -206,7 +209,7 @@ protected:
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context
                             , bool                           asBase
-                            ,       MemoryManager*     const manager = XMLPlatformUtils::fgMemoryManager);
+                            ,       MemoryManager*     const manager);
 };
 
 XERCES_CPP_NAMESPACE_END

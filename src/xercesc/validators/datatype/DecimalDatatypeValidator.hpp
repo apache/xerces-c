@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/12/19 23:02:25  cargilld
+ * More memory management updates.
+ *
  * Revision 1.11  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -256,7 +259,6 @@ private:
     // -----------------------------------------------------------------------
     unsigned int         fTotalDigits;
     unsigned int         fFractionDigits;
-    XMLBigDecimal*       fCompareData;
 };
 
 // -----------------------------------------------------------------------

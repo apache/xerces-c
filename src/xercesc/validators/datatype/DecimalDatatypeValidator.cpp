@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/12/19 23:02:25  cargilld
+ * More memory management updates.
+ *
  * Revision 1.19  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -197,7 +200,6 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(MemoryManager* const manager)
 :AbstractNumericValidator(0, 0, 0, DatatypeValidator::Decimal, manager)
 , fTotalDigits(0)
 , fFractionDigits(0)
-, fCompareData(0)
 {
     setOrdered(XSSimpleTypeDefinition::ORDERED_TOTAL);
     setNumeric(true);
@@ -212,15 +214,12 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(
 :AbstractNumericValidator(baseValidator, facets, finalSet, DatatypeValidator::Decimal, manager)
 , fTotalDigits(0)
 , fFractionDigits(0)
-, fCompareData(0)
 {
     init(enums, manager);
 }
 
 DecimalDatatypeValidator::~DecimalDatatypeValidator()
 {
-    if (fCompareData)
-        delete fCompareData;
 }
 
 // -----------------------------------------------------------------------
@@ -534,8 +533,6 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
                                            ,      bool                     asBase
                                            ,      MemoryManager*     const manager)
 {
-    bool deleteLazy = false;
-
     //validate against base validator if any
     DecimalDatatypeValidator *pBase = (DecimalDatatypeValidator*) this->getBaseValidator();
     if (pBase)
@@ -574,22 +571,16 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
         return;
 
     try {
-        if (fCompareData)
-            fCompareData->setDecimalValue(content);
-        else {
-            // REVISIT: cargillmem
-            fCompareData = new (manager) XMLBigDecimal(content, manager);
-            if (manager != fMemoryManager)
-                deleteLazy = true;
-        }
-
+        XMLBigDecimal  compareDataValue(content, manager);
+        XMLBigDecimal* compareData = &compareDataValue;
+        
         if (getEnumeration())
         {
             int i=0;
             int enumLength = getEnumeration()->size();
             for ( ; i < enumLength; i++)
             {
-                if (compareValues(fCompareData, (XMLBigDecimal*) getEnumeration()->elementAt(i)) ==0 )
+                if (compareValues(compareData, (XMLBigDecimal*) getEnumeration()->elementAt(i)) ==0 )
                     break;
             }
 
@@ -597,17 +588,17 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
                 ThrowXMLwithMemMgr1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content, manager);
         }
 
-        boundsCheck(fCompareData, manager);
+        boundsCheck(compareData, manager);
 
         if ( (thisFacetsDefined & DatatypeValidator::FACET_FRACTIONDIGITS) != 0 )
         {
-            if ( fCompareData->getScale() > fFractionDigits )
+            if ( compareData->getScale() > fFractionDigits )
             {                
-                XMLString::binToText(fCompareData->getScale(), value1, BUF_LEN, 10, manager);
+                XMLString::binToText(compareData->getScale(), value1, BUF_LEN, 10, manager);
                 XMLString::binToText(fFractionDigits, value2, BUF_LEN, 10, manager);
                 ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_fractDigit
-                                 , fCompareData->getRawData()
+                                 , compareData->getRawData()
                                  , value1
                                  , value2
                                  , manager);
@@ -616,13 +607,13 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
 
         if ( (thisFacetsDefined & DatatypeValidator::FACET_TOTALDIGITS) != 0 )
         {
-            if ( fCompareData->getTotalDigit() > fTotalDigits )
+            if ( compareData->getTotalDigit() > fTotalDigits )
             {                
-                XMLString::binToText(fCompareData->getTotalDigit(), value1, BUF_LEN, 10, manager);
+                XMLString::binToText(compareData->getTotalDigit(), value1, BUF_LEN, 10, manager);
                 XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10, manager);
                 ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_totalDigit
-                                 , fCompareData->getRawData()
+                                 , compareData->getRawData()
                                  , value1
                                  , value2
                                  , manager);
@@ -635,13 +626,13 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
              where i and n are integers such that |i| < 10^totalDigits and 0 <= n <= totalDigits.
             ***/
 
-            if ( fCompareData->getScale() > fTotalDigits )  
+            if ( compareData->getScale() > fTotalDigits )  
             {                
-                XMLString::binToText(fCompareData->getScale(), value1, BUF_LEN, 10, manager);
+                XMLString::binToText(compareData->getScale(), value1, BUF_LEN, 10, manager);
                 XMLString::binToText(fTotalDigits, value2, BUF_LEN, 10, manager);
                 ThrowXMLwithMemMgr3(InvalidDatatypeFacetException
                                  , XMLExcepts::VALUE_exceed_totalDigit
-                                 , fCompareData->getRawData()
+                                 , compareData->getRawData()
                                  , value1
                                  , value2
                                  , manager);
@@ -650,15 +641,7 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
     }
     catch (XMLException &e)
     {
-        if (deleteLazy) {
-            delete fCompareData;
-            fCompareData = 0;
-        }
        ThrowXMLwithMemMgr1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage(), manager);
-    }
-    if (deleteLazy) {
-        delete fCompareData;
-        fCompareData = 0;
     }
 }
 

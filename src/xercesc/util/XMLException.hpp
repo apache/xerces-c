@@ -298,11 +298,11 @@ private : \
 
 #define ThrowXML(type,code) throw type(__FILE__, __LINE__, code)
 
-#define ThrowXML1(type,code,p1) throw type(__FILE__, __LINE__, code, p1, 0, 0, 0)
+#define ThrowXML1(type,code,p1) throw type(__FILE__, __LINE__, code, p1)
 
-#define ThrowXML2(type,code,p1,p2) throw type(__FILE__, __LINE__, code, p1, p2, 0, 0)
+#define ThrowXML2(type,code,p1,p2) throw type(__FILE__, __LINE__, code, p1, p2)
 
-#define ThrowXML3(type,code,p1,p2,p3) throw type(__FILE__, __LINE__, code, p1, p2, p3, 0)
+#define ThrowXML3(type,code,p1,p2,p3) throw type(__FILE__, __LINE__, code, p1, p2, p3)
 
 #define ThrowXML4(type,code,p1,p2,p3,p4) throw type(__FILE__, __LINE__, code, p1, p2, p3, p4)
 
