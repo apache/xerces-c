@@ -75,6 +75,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class XMLMsgLoader;
 
 class DOMImplementationImpl: public DOMImplementation,
                              public DOMImplementationSource
@@ -86,6 +87,7 @@ private:
 public:
     virtual ~DOMImplementationImpl() {};
     static DOMImplementationImpl*   getDOMImplementationImpl();
+    static XMLMsgLoader* getMsgLoader4DOM();
 
     // ------------------------------------------------------------
     // DOMImplementation Virtual interface

@@ -114,7 +114,7 @@ static void reinitMsgLoader4DOM()
 	gMsgLoader4DOM = 0;
 }
 
-XMLMsgLoader* getMsgLoader4DOM() {
+XMLMsgLoader* DOMImplementationImpl::getMsgLoader4DOM() {
 	static XMLRegisterCleanup msgLoader4DOMCleanup;
 
     if (gMsgLoader4DOM == 0)
@@ -259,8 +259,8 @@ bool DOMImplementation::loadDOMExceptionMsg
     , const unsigned int                 maxChars
 )
 {
-    // load the text, the msgToLoad+XMLDOMMsgs::F_LowBounds is the corresponding XMLDOMMsg Code
-    return getMsgLoader4DOM()->loadMsg(msgToLoad+XMLDOMMsg::F_LowBounds, toFill, maxChars);
+    // load the text, the msgToLoad+XMLDOMMsgs::DOMEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
+    return DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(XMLDOMMsg::DOMEXCEPTION_ERRX+msgToLoad, toFill, maxChars);
 }
 
 bool DOMImplementation::loadDOMExceptionMsg
@@ -270,8 +270,8 @@ bool DOMImplementation::loadDOMExceptionMsg
     , const unsigned int                           maxChars
 )
 {
-    // load the text, the XMLDOMMsgs::F_HighBounds-msgToLoad is the corresponding XMLDOMMsg Code
-    return getMsgLoader4DOM()->loadMsg(XMLDOMMsg::F_HighBounds-msgToLoad, toFill, maxChars);
+    // load the text, the XMLDOMMsgs::DOMRANGEEXCEPTION_ERRX+msgToLoad is the corresponding XMLDOMMsg Code
+    return DOMImplementationImpl::getMsgLoader4DOM()->loadMsg(XMLDOMMsg::DOMRANGEEXCEPTION_ERRX+msgToLoad, toFill, maxChars);
 }
 
 // ------------------------------------------------------------
