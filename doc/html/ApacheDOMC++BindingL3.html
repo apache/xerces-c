@@ -2047,6 +2047,17 @@ value) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>bool</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>isId() const
+= 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
 <td><font face="Courier New,Courier"><font size=-1>};</font></font></td>
 
 <td></td>
@@ -2272,6 +2283,40 @@ name) const = 0;</font></font></td>
 XMLCh* namespaceURI,</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 const XMLCh* localName) const = 0;</font></font></td>
+</tr>
+
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>setIdAttribute(const XMLCh*
+name) = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>setIdAttributeNS(const XMLCh*
+namespaceURI, const XMLCh* localName) = 0;</font></font></td>
+</tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td></td>
+
+<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
+
+<td><font face="Courier New,Courier"><font size=-1>setIdAttributeNode(DOMAttr
+*newAttr) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
