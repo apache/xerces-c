@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/29 13:52:36  gareth
+ * fixed typo for version number
+ *
  * Revision 1.8  2003/05/29 11:18:37  gareth
  * Added macros in so we can determine whether to do things like iostream as opposed to iostream.h and whether to use std:: or not.
  *
@@ -207,7 +210,7 @@ typedef int             XMLInt32;
 #define XERCES_DEBUG
 #endif
 
-#if _MSV_VER > 1300
+#if _MSC_VER > 1300
 #define XERCES_NEW_IOSTREAMS
 #define XERCES_STD_NAMESPACE
 #endif
