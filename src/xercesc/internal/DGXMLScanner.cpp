@@ -2378,6 +2378,13 @@ void DGXMLScanner::updateNSMap(const    XMLCh* const attrPrefix
 void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, int attCount, 
                                                 XMLElementDecl*       elemDecl)
 {
+
+    //
+    // Decide if to use hash table to do duplicate checking
+    //
+    bool toUseHashTable = false;
+    setAttrDupChkRegistry((unsigned int&)attCount, toUseHashTable);
+
     //  Make an initial pass through the list and find any xmlns attributes or
     //  schema attributes.
     //  When we find one, send it off to be used to update the element stack's
@@ -2412,17 +2419,35 @@ void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, 
         // by checking for qualified names with the same local part and with prefixes 
         // which have been bound to namespace names that are identical.         
         XMLAttr* loopAttr;
-        for (int attrIndex=0; attrIndex < index; attrIndex++) {
-            loopAttr = theAttrList->elementAt(attrIndex);
-            if (loopAttr->getURIId() == curAttr->getURIId() &&
-                XMLString::equals(loopAttr->getName(), curAttr->getName())) {
+
+        if (!toUseHashTable)
+        {
+            for (int attrIndex=0; attrIndex < index; attrIndex++) {
+                loopAttr = theAttrList->elementAt(attrIndex);
+                if (loopAttr->getURIId() == curAttr->getURIId() &&
+                    XMLString::equals(loopAttr->getName(), curAttr->getName())) {
+                    emitError
+                        ( 
+                        XMLErrs::AttrAlreadyUsedInSTag
+                        , curAttr->getName()
+                        , elemDecl->getFullName()
+                        );
+                }
+            }
+        }
+        else 
+        {
+            if (fAttrDupChkRegistry->containsKey((void*)curAttr->getName(), curAttr->getURIId()))
+            {
                 emitError
-                ( 
+                    ( 
                     XMLErrs::AttrAlreadyUsedInSTag
                     , curAttr->getName()
                     , elemDecl->getFullName()
-                );
+                    );
             }
+
+            fAttrDupChkRegistry->put((void*)curAttr->getName(), curAttr->getURIId(), curAttr);
         }                 
     }
 }

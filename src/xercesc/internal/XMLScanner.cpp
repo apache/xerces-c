@@ -157,6 +157,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fScannerId(0)
     , fSequenceId(0)
     , fAttrList(0)
+    , fAttrDupChkRegistry(0)
     , fDocHandler(0)
     , fDocTypeHandler(0)
     , fEntityHandler(0)
@@ -237,6 +238,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fScannerId(0)
     , fSequenceId(0)
     , fAttrList(0)
+    , fAttrDupChkRegistry(0)
     , fDocHandler(docHandler)
     , fDocTypeHandler(docTypeHandler)
     , fEntityHandler(entityHandler)
@@ -279,6 +281,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
 XMLScanner::~XMLScanner()
 {
     delete fAttrList;
+    delete fAttrDupChkRegistry;
     delete fValidationContext;
     fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;
     fMemoryManager->deallocate(fExternalSchemaLocation);//delete [] fExternalSchemaLocation;

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.40  2004/09/28 21:27:38  peiyongz
+ * Optimized duplicated attributes checking for large number of attributes
+ *
  * Revision 1.39  2004/09/28 02:14:13  cargilld
  * Add support for validating annotations.
  *
@@ -731,6 +734,13 @@ protected:
     void resetUIntPool();
     void recreateUIntPool();
 
+    inline
+    void setAttrDupChkRegistry
+         (
+            const unsigned int &attrNumber
+          ,       bool         &toUseHashTable
+         );
+
     // -----------------------------------------------------------------------
     //  Data members
     //
@@ -986,6 +996,7 @@ protected:
     XMLUInt32                   fScannerId;
     XMLUInt32                   fSequenceId;
     RefVectorOf<XMLAttr>*       fAttrList;
+    RefHash2KeysTableOf<XMLAttr>*  fAttrDupChkRegistry;    
     XMLDocumentHandler*         fDocHandler;
     DocTypeHandler*             fDocTypeHandler;
     XMLEntityHandler*           fEntityHandler;
@@ -1519,6 +1530,29 @@ inline void XMLScanner::resetValidationContext()
     fValidationContext->clearIdRefList();
     fValidationContext->setEntityDeclPool(0);
     fEntityDeclPoolRetrieved = false;
+}
+
+inline void XMLScanner::setAttrDupChkRegistry(const unsigned int &attrNumber
+                                            ,       bool         &toUseHashTable)
+{
+   // once the attribute exceed 20, we use hash table to check duplication
+    if (attrNumber > 20)
+   {
+        toUseHashTable = true;
+
+        if (!fAttrDupChkRegistry)
+        {
+            fAttrDupChkRegistry = new (fMemoryManager) RefHash2KeysTableOf<XMLAttr>
+            (
+              2*attrNumber+1, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+            );
+        }
+        else
+        {
+            fAttrDupChkRegistry->removeAll();
+        }
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

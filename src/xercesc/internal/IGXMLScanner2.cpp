@@ -110,6 +110,15 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     XMLBufBid bbNormal(&fBufMgr);
     XMLBuffer& normBuf = bbNormal.getBuffer();
 
+    //
+    // Decide if to use hash table to do duplicate checking
+    //
+    bool toUseHashTable = false;
+    if (fGrammarType == Grammar::DTDGrammarType)
+    {
+        setAttrDupChkRegistry(attCount, toUseHashTable);
+    }
+
     //  Loop through our explicitly provided attributes, which are in the raw
     //  scanned form, and build up XMLAttr objects.
     unsigned int index;
@@ -617,16 +626,32 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         // by checking for qualified names with the same local part and with prefixes 
         // which have been bound to namespace names that are identical. 
         if (fGrammarType == Grammar::DTDGrammarType) {
-            for (unsigned int attrIndex=0; attrIndex < retCount; attrIndex++) {
-                curAttr = toFill.elementAt(attrIndex);
-                if (uriId == curAttr->getURIId() &&
-                    XMLString::equals(suffPtr, curAttr->getName())) {
+            if (!toUseHashTable)
+            {
+                for (unsigned int attrIndex=0; attrIndex < retCount; attrIndex++) {
+                    curAttr = toFill.elementAt(attrIndex);
+                    if (uriId == curAttr->getURIId() &&
+                        XMLString::equals(suffPtr, curAttr->getName())) {
+                        emitError
+                        ( 
+
+                         XMLErrs::AttrAlreadyUsedInSTag
+                        , curAttr->getName()
+                        , elemDecl->getFullName()
+                        );
+                    }
+                }
+            }
+            else
+            {
+                if (fAttrDupChkRegistry->containsKey((void*)suffPtr, uriId))
+                {
                     emitError
-                    ( 
+                        ( 
                         XMLErrs::AttrAlreadyUsedInSTag
                         , curAttr->getName()
                         , elemDecl->getFullName()
-                    );
+                        );
                 }
             }  
         }
@@ -658,6 +683,12 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             );
             curAttr->setSpecified(true);
         }
+
+        if (toUseHashTable)
+        {
+            fAttrDupChkRegistry->put((void*)suffPtr, uriId, curAttr);
+        }
+
         if(psviAttr)
             psviAttr->setValue(curAttr->getValue());
             

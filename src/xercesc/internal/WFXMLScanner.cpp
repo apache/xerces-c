@@ -1457,6 +1457,13 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
     }
 
     if(attCount) {
+
+        //
+        // Decide if to use hash table to do duplicate checking
+        //
+        bool toUseHashTable = false;
+        setAttrDupChkRegistry(attCount, toUseHashTable);
+
         // check for duplicate namespace attributes:
         // by checking for qualified names with the same local part and with prefixes 
         // which have been bound to namespace names that are identical. 
@@ -1464,17 +1471,35 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
         XMLAttr* curAtt;
         for (unsigned int attrIndex=0; attrIndex < attCount-1; attrIndex++) {
             loopAttr = fAttrList->elementAt(attrIndex);
-            for (unsigned int curAttrIndex = attrIndex+1; curAttrIndex < attCount; curAttrIndex++) {
-                curAtt = fAttrList->elementAt(curAttrIndex);
-                if (curAtt->getURIId() == loopAttr->getURIId() &&
-                    XMLString::equals(curAtt->getName(), loopAttr->getName())) {
-                    emitError
-                    ( 
-                        XMLErrs::AttrAlreadyUsedInSTag
+
+            if (!toUseHashTable)
+            {
+                for (unsigned int curAttrIndex = attrIndex+1; curAttrIndex < attCount; curAttrIndex++) {
+                    curAtt = fAttrList->elementAt(curAttrIndex);
+                    if (curAtt->getURIId() == loopAttr->getURIId() &&
+                        XMLString::equals(curAtt->getName(), loopAttr->getName())) {
+                        emitError
+                            ( 
+                            XMLErrs::AttrAlreadyUsedInSTag
                             , curAtt->getName()
                             , elemDecl->getFullName()
+                            );
+                    }
+                }
+            }
+            else 
+            {
+                if (fAttrDupChkRegistry->containsKey((void*)loopAttr->getName(), loopAttr->getURIId()))
+                {
+                    emitError
+                    ( 
+                    XMLErrs::AttrAlreadyUsedInSTag
+                    , loopAttr->getName()
+                    , elemDecl->getFullName()
                     );
                 }
+
+                fAttrDupChkRegistry->put((void*)loopAttr->getName(), loopAttr->getURIId(), loopAttr);
             }
         }  
     }
