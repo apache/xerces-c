@@ -1129,7 +1129,7 @@
             </table>
             <p/>
 
-            <anchor name="CalculateSrcOffset"/>
+            <anchor name="builder-CalculateSrcOffset"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/calculate-src-ofs</em></th></tr>
                 <tr><th><em>true:</em></th><td> Enable src offset calculation. </td></tr>
@@ -1333,7 +1333,7 @@
 &lt;Test attr=" > ' &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; ">&lt;/Test>
 &lt;Test attr=' > " &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; '>&lt;/Test>
 &lt;Test> >  " ' &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; &lt;/Test>
-&lt;Test>&lt;![CDATA[&lt; > &amp; " ' &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; ]]&gt;&lt;/Test>
+&lt;Test>&lt;![CDATA[&lt; > &amp; " ' &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; ] ]&gt;&lt;/Test>
 &lt;/root>
 </source>
            <p>According to XML 1.0 spec, 4.4 XML Processor Treatment of Entities and References, the parser
@@ -1343,7 +1343,7 @@
 &lt;Test attr=" > ' &lt; &gt; &amp; &quot; &apos; ">&lt;/Test>
 &lt;Test attr=' > " &lt; &gt; &amp; &quot; &apos; '>&lt;/Test>
 &lt;Test> >  " ' &lt; &gt; &amp; &quot; &apos; &lt;/Test>
-&lt;Test>&lt;![CDATA[&lt; > &amp; " ' &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; ]]&gt;&lt;/Test>
+&lt;Test>&lt;![CDATA[&lt; > &amp; " ' &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; ] ]&gt;&lt;/Test>
 &lt;/root>
 </source>
 
@@ -1365,7 +1365,7 @@
 &lt;Test attr=" > ' &amp;lt; > &amp;amp; &amp;quot; ' "/>
 &lt;Test attr=" > &amp;quot; &amp;lt; > &amp;amp; &amp;quot; ' "/>
 &lt;Test> >  " ' &amp;lt; > &amp;amp; " ' &lt;/Test>
-&lt;Test>&lt;![CDATA[&lt; > &amp; " ' &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; ]]&gt;&lt;/Test>
+&lt;Test>&lt;![CDATA[&lt; > &amp; " ' &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos; ] ]&gt;&lt;/Test>
 &lt;/root>
 </source>
             <p>To summarize, here is the table that summarize how built-in entity refernece are handled for
