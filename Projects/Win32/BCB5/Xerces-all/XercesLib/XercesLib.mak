@@ -178,6 +178,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB5\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\GrammarResolver.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\MixedContentModel.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\SimpleContentModel.obj \
+    ..\..\..\..\..\Build\Win32\BCB5\obj\AnySimpleTypeDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\AnyURIDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\Base64BinaryDatatypeValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB5\obj\BooleanDatatypeValidator.obj \
