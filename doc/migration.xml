@@ -28,7 +28,8 @@
     <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
         <li>64 bit binaries distribution on Windows IA64 and Linux IA64</li>
-        <li>DOM Level 3 DOMNode::compareTreePosition, DOMNode::lookupNamespaceURI, DOMNode::lookupNamespacePrefix </li>
+        <li>Support for Cygwin environment</li>
+        <li>DOM Level 3 DOMNode: compareTreePosition, lookupNamespaceURI, lookupNamespacePrefix and isDefaultNamespace</li>
         <li>plus many more bug fixes</li>
       </ul>
     </s3>
@@ -43,7 +44,7 @@
         <anchor name="NewAPI210"/>
         <s4 title="New Public API">
             <ul>
-              <li>No new public API is introduced in this release.</li>
+              <li>To fix bug 7087, XMLEnumerator is added a virtual destructor.</li>
             </ul>
         </s4>
 

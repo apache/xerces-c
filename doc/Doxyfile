@@ -236,11 +236,11 @@ NodeIDMap.hpp NameNodeFilter.hpp NodeVector.hpp DOMString.hpp ParentNode.hpp \
 DOMCasts.hpp DOMChildNode.hpp DOMDeepNodeListPool.hpp \
 DOMNodeIDMap.hpp DOMNodeVector.hpp DOMParentNode.hpp DOMStringPool.hpp \
 NameIdPool.hpp KVStringPair.hpp Janitor.hpp BitOps.hpp BitSet.hpp \
-CountedPointer.hpp  TransENameMap.hpp \
-FlagJanitor.hpp HashBase.hpp HashPtr.hpp HashXMLCh.hpp KeyValuePair.hpp KeyRefPair.hpp \
+CountedPointer.hpp  TransENameMap.hpp EncodingValidator.hpp \
+FlagJanitor.hpp HashCMStateSet.hpp HashBase.hpp HashPtr.hpp HashXMLCh.hpp KeyValuePair.hpp KeyRefPair.hpp \
 KVStringPair.hpp NameIdPool.hpp NodeIDMap.hpp NameNodeFilter.hpp NodeVector.hpp \
 RefArrayOf.hpp RefHash*.hpp RefStackOf.hpp \
-RefVectorOf.hpp ValueArrayOf.hpp ValueStackOf.hpp ValueVectorOf.hpp \
+RefVectorOf.hpp ValueHashTableOf.hpp ValueArrayOf.hpp ValueStackOf.hpp ValueVectorOf.hpp \
 XML256TableTranscoder.hpp XML88591Transcoder.hpp XMLASCIITranscoder.hpp \
 XMLBufferMgr.hpp XMLBuffer.hpp XMLChTranscoder.hpp XMLEBCDICTranscoder.hpp \
 XMLEnumerator.hpp XMLExceptMsgs.hpp XMLIBM1140Transcoder.hpp XMLMsgLoader.hpp \
