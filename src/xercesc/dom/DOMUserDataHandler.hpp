@@ -85,8 +85,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMUserDataHandler() {};
-    DOMUserDataHandler(const DOMUserDataHandler &other) {};
-    DOMUserDataHandler & operator = (const DOMUserDataHandler &other) {return *this;};
+    DOMUserDataHandler(const DOMUserDataHandler &) {};
+    DOMUserDataHandler & operator = (const DOMUserDataHandler &) {return *this;};
     //@}
 
 public:

@@ -87,8 +87,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMNamedNodeMap() {};
-    DOMNamedNodeMap(const DOMNamedNodeMap &other) {};
-    DOMNamedNodeMap & operator = (const DOMNamedNodeMap &other) {return *this;};
+    DOMNamedNodeMap(const DOMNamedNodeMap &) {};
+    DOMNamedNodeMap & operator = (const DOMNamedNodeMap &) {return *this;};
     //@}
 
 public:

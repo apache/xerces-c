@@ -92,8 +92,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMNodeFilter() {};
-    DOMNodeFilter(const DOMNodeFilter &other) {};
-    DOMNodeFilter & operator = (const DOMNodeFilter &other) {return *this;};
+    DOMNodeFilter(const DOMNodeFilter &) {};
+    DOMNodeFilter & operator = (const DOMNodeFilter &) {return *this;};
     //@}
 
 public:

@@ -60,6 +60,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2002/08/22 15:04:57  tng
+ * Remove unused parameter variables in inline functions.
+ *
  * Revision 1.6  2002/06/06 20:53:07  tng
  * Documentation Fix: Update the API Documentation for DOM headers
  *
@@ -108,8 +111,8 @@ protected :
     /** @name Hidden constructors */
     //@{
     DOMWriterFilter() {};
-    DOMWriterFilter(const DOMWriterFilter &other) {};
-    DOMWriterFilter & operator = (const DOMWriterFilter &other) {return *this;};
+    DOMWriterFilter(const DOMWriterFilter &) {};
+    DOMWriterFilter & operator = (const DOMWriterFilter &) {return *this;};
     //@}
 
 

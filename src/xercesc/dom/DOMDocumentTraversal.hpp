@@ -89,8 +89,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMDocumentTraversal() {};
-    DOMDocumentTraversal(const DOMDocumentTraversal &other) {};
-    DOMDocumentTraversal & operator = (const DOMDocumentTraversal &other) {return *this;};
+    DOMDocumentTraversal(const DOMDocumentTraversal &) {};
+    DOMDocumentTraversal & operator = (const DOMDocumentTraversal &) {return *this;};
     //@}
 
 public:

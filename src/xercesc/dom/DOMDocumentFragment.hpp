@@ -114,8 +114,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMDocumentFragment() {};
-    DOMDocumentFragment(const DOMDocumentFragment &other) {};
-    DOMDocumentFragment & operator = (const DOMDocumentFragment &other) {return *this;};
+    DOMDocumentFragment(const DOMDocumentFragment &) {};
+    DOMDocumentFragment & operator = (const DOMDocumentFragment &) {return *this;};
     //@}
 
 public:

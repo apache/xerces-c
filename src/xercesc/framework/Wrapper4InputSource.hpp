@@ -309,7 +309,7 @@ inline const XMLCh* Wrapper4InputSource::getBaseURI() const
 // ---------------------------------------------------------------------------
 //  Wrapper4InputSource: Setter methods
 // ---------------------------------------------------------------------------
-inline void Wrapper4InputSource::setBaseURI(const XMLCh* const baseURI)
+inline void Wrapper4InputSource::setBaseURI(const XMLCh* const)
 {
 }
 

@@ -110,8 +110,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMEntity() {};
-    DOMEntity(const DOMEntity &other) {};
-    DOMEntity & operator = (const DOMEntity &other) {return *this;};
+    DOMEntity(const DOMEntity &) {};
+    DOMEntity & operator = (const DOMEntity &) {return *this;};
     //@}
 
 public:

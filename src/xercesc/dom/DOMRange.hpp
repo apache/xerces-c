@@ -78,8 +78,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMRange() {};
-    DOMRange(const DOMRange &other) {};
-    DOMRange & operator = (const DOMRange &other) {return *this;};
+    DOMRange(const DOMRange &) {};
+    DOMRange & operator = (const DOMRange &) {return *this;};
     //@}
 
 public:

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/08/22 15:05:40  tng
+ * Remove unused parameter variables in inline functions.
+ *
  * Revision 1.2  2002/07/11 18:55:44  knoaman
  * Add a flag to the preContentValidation method to indicate whether to validate
  * default/fixed attributes or not.
@@ -211,7 +214,7 @@ inline void DTDValidator::setGrammar(Grammar* aGrammar) {
     fDTDGrammar = (DTDGrammar*) aGrammar;
 }
 
-inline void DTDValidator::validateElement (const   XMLElementDecl* elemDef) {
+inline void DTDValidator::validateElement (const   XMLElementDecl*) {
     // no special DTD Element validation
 }
 

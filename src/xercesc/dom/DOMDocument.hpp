@@ -109,8 +109,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMDocument() {};
-    DOMDocument(const DOMDocument &other) {};
-    DOMDocument & operator = (const DOMDocument &other) {return *this;};
+    DOMDocument(const DOMDocument &) {};
+    DOMDocument & operator = (const DOMDocument &) {return *this;};
     //@}
 
 public:

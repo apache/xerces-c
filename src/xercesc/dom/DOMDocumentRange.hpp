@@ -79,8 +79,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMDocumentRange() {};
-    DOMDocumentRange(const DOMDocumentRange &other) {};
-    DOMDocumentRange & operator = (const DOMDocumentRange &other) {return *this;};
+    DOMDocumentRange(const DOMDocumentRange &) {};
+    DOMDocumentRange & operator = (const DOMDocumentRange &) {return *this;};
     //@}
 
 public:

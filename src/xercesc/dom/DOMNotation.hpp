@@ -86,8 +86,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMNotation() {};
-    DOMNotation(const DOMNotation &other) {};
-    DOMNotation & operator = (const DOMNotation &other) {return *this;};
+    DOMNotation(const DOMNotation &) {};
+    DOMNotation & operator = (const DOMNotation &) {return *this;};
     //@}
 
 public:

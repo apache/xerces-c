@@ -89,8 +89,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMCharacterData() {};
-    DOMCharacterData(const DOMCharacterData &other) {};
-    DOMCharacterData & operator = (const DOMCharacterData &other) {return *this;};
+    DOMCharacterData(const DOMCharacterData &) {};
+    DOMCharacterData & operator = (const DOMCharacterData &) {return *this;};
     //@}
 
 public:

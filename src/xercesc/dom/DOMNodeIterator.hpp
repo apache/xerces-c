@@ -86,8 +86,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMNodeIterator() {};
-    DOMNodeIterator(const DOMNodeIterator &other) {};
-    DOMNodeIterator & operator = (const DOMNodeIterator &other) {return *this;};
+    DOMNodeIterator(const DOMNodeIterator &) {};
+    DOMNodeIterator & operator = (const DOMNodeIterator &) {return *this;};
     //@}
 
 public:

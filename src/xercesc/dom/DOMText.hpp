@@ -94,8 +94,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMText() {};
-    DOMText(const DOMText &other) {};
-    DOMText & operator = (const DOMText &other) {return *this;};
+    DOMText(const DOMText &) {};
+    DOMText & operator = (const DOMText &) {return *this;};
     //@}
 
 public:

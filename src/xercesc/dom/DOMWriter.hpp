@@ -60,6 +60,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2002/08/22 15:04:57  tng
+ * Remove unused parameter variables in inline functions.
+ *
  * Revision 1.6  2002/06/25 16:04:49  tng
  * DOM L3: add function release().
  *
@@ -313,8 +316,8 @@ protected :
     /** @name Hidden constructors */
     //@{
     DOMWriter() {};
-    DOMWriter(const DOMWriter &other) {};
-    DOMWriter & operator = (const DOMWriter &other) {return *this;};
+    DOMWriter(const DOMWriter &) {};
+    DOMWriter & operator = (const DOMWriter &) {return *this;};
     //@}
 
 

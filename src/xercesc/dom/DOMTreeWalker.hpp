@@ -92,8 +92,8 @@ protected :
     /** @name Hidden constructors */
     //@{
     DOMTreeWalker() {};
-    DOMTreeWalker(const DOMTreeWalker &other) {};
-    DOMTreeWalker & operator = (const DOMTreeWalker &other) {return *this;};
+    DOMTreeWalker(const DOMTreeWalker &) {};
+    DOMTreeWalker & operator = (const DOMTreeWalker &) {return *this;};
     //@}
 
 public:

@@ -188,8 +188,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMNode() {};
-    DOMNode(const DOMNode &other) {};
-    DOMNode & operator = (const DOMNode &other) {return *this;};
+    DOMNode(const DOMNode &) {};
+    DOMNode & operator = (const DOMNode &) {return *this;};
     //@}
 
 public:

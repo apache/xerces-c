@@ -100,8 +100,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMEntityReference() {};
-    DOMEntityReference(const DOMEntityReference &other) {};
-    DOMEntityReference & operator = (const DOMEntityReference &other) {return *this;};
+    DOMEntityReference(const DOMEntityReference &) {};
+    DOMEntityReference & operator = (const DOMEntityReference &) {return *this;};
     //@}
 
 public:

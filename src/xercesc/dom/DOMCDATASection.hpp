@@ -108,8 +108,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMCDATASection() {};
-    DOMCDATASection(const DOMCDATASection &other) {};
-    DOMCDATASection & operator = (const DOMCDATASection &other) {return *this;};
+    DOMCDATASection(const DOMCDATASection &) {};
+    DOMCDATASection & operator = (const DOMCDATASection &) {return *this;};
     //@}
 
 public:

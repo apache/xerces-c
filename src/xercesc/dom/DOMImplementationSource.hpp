@@ -83,8 +83,8 @@ protected :
     /** @name Hidden constructors */
     //@{
     DOMImplementationSource() {};
-    DOMImplementationSource(const DOMImplementationSource &other) {};
-    DOMImplementationSource & operator = (const DOMImplementationSource &other) {return *this;};
+    DOMImplementationSource(const DOMImplementationSource &) {};
+    DOMImplementationSource & operator = (const DOMImplementationSource &) {return *this;};
     //@}
 
 

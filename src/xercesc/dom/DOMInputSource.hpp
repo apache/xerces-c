@@ -102,8 +102,8 @@ protected :
     /** @name Hidden constructors */
     //@{
     DOMInputSource() {};
-    DOMInputSource(const DOMInputSource &other) {};
-    DOMInputSource & operator = (const DOMInputSource &other) {return *this;};
+    DOMInputSource(const DOMInputSource &) {};
+    DOMInputSource & operator = (const DOMInputSource &) {return *this;};
     //@}
 
 public:

@@ -81,8 +81,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMProcessingInstruction() {};
-    DOMProcessingInstruction(const DOMProcessingInstruction &other) {};
-    DOMProcessingInstruction & operator = (const DOMProcessingInstruction &other) {return *this;};
+    DOMProcessingInstruction(const DOMProcessingInstruction &) {};
+    DOMProcessingInstruction & operator = (const DOMProcessingInstruction &) {return *this;};
     //@}
 
 public:

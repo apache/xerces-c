@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/08/22 15:04:57  tng
+ * Remove unused parameter variables in inline functions.
+ *
  * Revision 1.4  2002/07/15 19:26:34  tng
  * DOM L3: remove non standard resetErrors
  *
@@ -101,8 +104,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMErrorHandler() {};
-    DOMErrorHandler(const DOMErrorHandler &other) {};
-    DOMErrorHandler & operator = (const DOMErrorHandler &other) {return *this;};
+    DOMErrorHandler(const DOMErrorHandler &) {};
+    DOMErrorHandler & operator = (const DOMErrorHandler &) {return *this;};
     //@}
 
 public:

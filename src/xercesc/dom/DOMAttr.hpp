@@ -100,8 +100,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMAttr() {};
-    DOMAttr(const DOMAttr &other) {};
-    DOMAttr & operator = (const DOMAttr &other) {return *this;};
+    DOMAttr(const DOMAttr &) {};
+    DOMAttr & operator = (const DOMAttr &) {return *this;};
     //@}
 
 public:

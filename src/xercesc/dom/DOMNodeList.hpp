@@ -86,8 +86,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMNodeList() {};
-    DOMNodeList(const DOMNodeList &other) {};
-    DOMNodeList & operator = (const DOMNodeList &other) {return *this;};
+    DOMNodeList(const DOMNodeList &) {};
+    DOMNodeList & operator = (const DOMNodeList &) {return *this;};
     //@}
 
 public:

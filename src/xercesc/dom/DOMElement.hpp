@@ -103,8 +103,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMElement() {};
-    DOMElement(const DOMElement &other) {};
-    DOMElement & operator = (const DOMElement &other) {return *this;};
+    DOMElement(const DOMElement &) {};
+    DOMElement & operator = (const DOMElement &) {return *this;};
     //@}
 
 public:

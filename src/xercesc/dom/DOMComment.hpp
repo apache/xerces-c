@@ -82,8 +82,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMComment() {};
-    DOMComment(const DOMComment &other) {};
-    DOMComment & operator = (const DOMComment &other) {return *this;};
+    DOMComment(const DOMComment &) {};
+    DOMComment & operator = (const DOMComment &) {return *this;};
     //@}
 
 public:

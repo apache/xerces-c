@@ -92,8 +92,8 @@ protected :
     /** @name Hidden constructors */
     //@{
     DOMBuilder() {};
-    DOMBuilder(const DOMBuilder &other) {};
-    DOMBuilder & operator = (const DOMBuilder &other) {return *this;};
+    DOMBuilder(const DOMBuilder &) {};
+    DOMBuilder & operator = (const DOMBuilder &) {return *this;};
     //@}
 
 public:

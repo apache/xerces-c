@@ -87,8 +87,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMDocumentType() {};
-    DOMDocumentType(const DOMDocumentType &other) {};
-    DOMDocumentType & operator = (const DOMDocumentType &other) {return *this;};
+    DOMDocumentType(const DOMDocumentType &) {};
+    DOMDocumentType & operator = (const DOMDocumentType &) {return *this;};
     //@}
 
 public:

@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/08/22 15:04:57  tng
+ * Remove unused parameter variables in inline functions.
+ *
  * Revision 1.3  2002/06/06 20:53:06  tng
  * Documentation Fix: Update the API Documentation for DOM headers
  *
@@ -105,8 +108,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMEntityResolver() {};
-    DOMEntityResolver(const DOMEntityResolver &other) {};
-    DOMEntityResolver & operator = (const DOMEntityResolver &other) {return *this;};
+    DOMEntityResolver(const DOMEntityResolver &) {};
+    DOMEntityResolver & operator = (const DOMEntityResolver &) {return *this;};
     //@}
 
 public:

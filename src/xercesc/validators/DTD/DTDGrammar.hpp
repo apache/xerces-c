@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/08/22 15:05:39  tng
+ * Remove unused parameter variables in inline functions.
+ *
  * Revision 1.3  2002/07/11 18:19:28  knoaman
  * Grammar caching/preparsing - initial implementation.
  *
@@ -216,11 +219,11 @@ public:
     //  Setter methods
     // -----------------------------------------------------------------------
     void setRootElemId(unsigned int rootElemId);
-    
+
     // -----------------------------------------------------------------------
     //  Content management methods
     // -----------------------------------------------------------------------
-    unsigned int putEntityDecl(DTDEntityDecl* const entityDecl) const;    
+    unsigned int putEntityDecl(DTDEntityDecl* const entityDecl) const;
 
 private:
     // -----------------------------------------------------------------------
@@ -265,7 +268,7 @@ private:
     NameIdPool<DTDEntityDecl>*      fEntityDeclPool;
     NameIdPool<XMLNotationDecl>*    fNotationDeclPool;
     unsigned int                    fRootElemId;
-    bool                            fValidated;                  
+    bool                            fValidated;
 };
 
 
@@ -345,10 +348,10 @@ inline const XMLCh* DTDGrammar::getTargetNamespace() const {
 }
 
 // Element Decl
-inline unsigned int DTDGrammar::getElemId (const   unsigned int  uriId
-                                              , const XMLCh* const    baseName
+inline unsigned int DTDGrammar::getElemId (const   unsigned int
+                                              , const XMLCh* const
                                               , const XMLCh* const    qName
-                                              , unsigned int          scope ) const
+                                              , unsigned int) const
 {
     //
     //  In this case, we don't return zero to mean 'not found', so we have to
@@ -360,10 +363,10 @@ inline unsigned int DTDGrammar::getElemId (const   unsigned int  uriId
     return decl->getId();
 }
 
-inline const XMLElementDecl* DTDGrammar::getElemDecl( const   unsigned int  uriId
-                                              , const XMLCh* const    baseName
+inline const XMLElementDecl* DTDGrammar::getElemDecl( const   unsigned int
+                                              , const XMLCh* const
                                               , const XMLCh* const    qName
-                                              , unsigned int          scope )   const
+                                              , unsigned int)   const
 {
     const XMLElementDecl* elemDecl = fElemDeclPool->getByKey(qName);
 
@@ -373,10 +376,10 @@ inline const XMLElementDecl* DTDGrammar::getElemDecl( const   unsigned int  uriI
     return elemDecl;
 }
 
-inline XMLElementDecl* DTDGrammar::getElemDecl (const   unsigned int  uriId
-                                              , const XMLCh* const    baseName
+inline XMLElementDecl* DTDGrammar::getElemDecl (const   unsigned int
+                                              , const XMLCh* const
                                               , const XMLCh* const    qName
-                                              , unsigned int          scope )
+                                              , unsigned int)
 {
     XMLElementDecl* elemDecl = fElemDeclPool->getByKey(qName);
 

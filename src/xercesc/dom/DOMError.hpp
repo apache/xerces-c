@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/08/22 15:04:57  tng
+ * Remove unused parameter variables in inline functions.
+ *
  * Revision 1.5  2002/07/15 19:25:25  tng
  * DOM L3:  declare a dummy DOMError::set/getRelatedException
  *
@@ -98,8 +101,8 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMError() {};
-    DOMError(const DOMError &other) {};
-    DOMError & operator = (const DOMError &other) {return *this;};
+    DOMError(const DOMError &) {};
+    DOMError & operator = (const DOMError &) {return *this;};
     //@}
 
 public:

@@ -83,8 +83,8 @@ protected :
     //@{
 
         DOMImplementation() {};                                      // no plain constructor
-        DOMImplementation(const DOMImplementation &other) {};   // no copy construtor.
-        DOMImplementation & operator = (const DOMImplementation &other) {return *this;};  // No Assignment
+        DOMImplementation(const DOMImplementation &) {};   // no copy construtor.
+        DOMImplementation & operator = (const DOMImplementation &) {return *this;};  // No Assignment
     //@}
 
 
