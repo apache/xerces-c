@@ -15,8 +15,8 @@
         <jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html">DOM 1.0</jump>,
         <jump href="http://www.megginson.com/SAX/SAX1/index.html">SAX 1.0</jump>,
         <jump href="http://www.megginson.com/SAX/index.html">SAX 2.0</jump>,
-        <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>),
-        <jump href="http://www.w3.org/TR/1999/CR-DOM-Level-2-19991210/">DOM Level 2 version 1.0</jump>.
+        <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>,
+        <jump href="http://www.w3.org/TR/1999/CR-DOM-Level-2-19991210/">DOM Level 2</jump>).
         The parser provides high performance, modularity, and scalability.
         Source code, samples and API documentation are provided with the parser. For
         portability, care has been taken to make minimal use of templates,

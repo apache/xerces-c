@@ -162,6 +162,49 @@ catch (const XMLException&amp; toCatch) {
   </faq>
 
 
+
+<faq title="Can't debug into the xerces DLL with the MSVC debugger">
+   <q>
+     The libs/dll's I downloaded keep me from using the debugger in VC6.0 . I
+     am using the 'D', debug versions of them. "no symbolic information
+     found" is what it says. Do I have to compile everything from source to
+     make it work?
+   </q>
+   <a><p>Unless you have the .pdb files, all you are getting with the debug library
+        is that it uses the debug heap manager, so that you can compile your stuff
+        in debug mode and not be dangerous. If you want full symbolic info
+        for the xerces library, you'll need the .pdb  files,
+        and to get those, you'll need to rebuild the xerces library.</p>
+    </a>
+  </faq>
+
+<faq title="First-chance exception in Microsoft debugger">
+     <q>"First-chance exception in DOMPrint.exe (KERNEL32.DLL):
+     0xE06D7363: Microsoft C++ Exception."  I am always getting
+     this message when I am using the parser.  My programs are
+     terminating abnormally.  Even the samples are giving this
+     exception.  I am using Visual C++ 6.0 with latest service
+     pack installed.</q>
+
+    <a>
+    <p>XML4C uses C++ exceptions internally, as part of its normal operation.  By
+    default, the MSVC debugger will stop on each of these with the "First-chance
+    exception ..." message.
+    </p>
+    <p>To stop this from happening do this:</p>
+    <ul>
+        <li>start debugging (so the debug menu appears)</li>
+        <li>from the debug menu select "Exceptions"</li>
+        <li>from the box that opens select "Microsoft C++ Exception"
+           and set it to "Stop if not handled" instead of "stop always".</li>
+    </ul>
+
+    <p>You'll still land in the debugger if your program
+    is terminating abnormally, but it'll be at your problem, not from
+    the internal XML4C exceptions.</p>
+    </a>
+</faq>
+
 <faq title="I am seeing memory leaks for Xerces-C.  Are they real?">
 <q>I am seeing memory leaks for Xerces-C.  Are they real?</q>
         <a>
