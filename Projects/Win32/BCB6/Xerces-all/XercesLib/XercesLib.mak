@@ -51,6 +51,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\BinInputStream.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemInputStream.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\BitSet.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\EncodingValidator.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\HashPtr.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\HashXMLCh.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\HeaderDummy.obj \
@@ -84,10 +85,15 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUTF16Transcoder.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLUTF8Transcoder.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLWin1252Transcoder.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\LocalFileFormatTarget.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\LocalFileInputSource.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\MemBufFormatTarget.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\MemBufInputSource.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\StdInInputSource.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\StdOutFormatTarget.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\URLInputSource.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\Wrapper4DOMInputSource.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\Wrapper4InputSource.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLAttDef.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLAttr.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLBuffer.obj \
@@ -106,10 +112,132 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLReader.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScanner.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLScanner2.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMParser.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\Dummy.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\InputSource.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SAXException.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SAXParseException.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\AbstractDOMParser.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMBuilderImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\SAX2XMLReaderImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDOMParser.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\SAXParser.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XercesDOMParser.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\AllContentModel.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\CMAny.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\CMBinaryOp.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\CMUnaryOp.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\ContentLeafNameTypeVector.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\ContentSpecNode.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DFAContentModel.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\GrammarResolver.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\MixedContentModel.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SimpleContentModel.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\AbstractNumericFacetValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\AbstractNumericValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\AbstractStringValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\AnySimpleTypeDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\AnyURIDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\Base64BinaryDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\BooleanDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DatatypeValidatorFactory.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DateDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DateTimeDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DateTimeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DayDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DecimalDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DoubleDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DurationDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\ENTITYDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\FloatDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\HexBinaryDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IDDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IDREFDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\ListDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\MonthDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\MonthDayDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\NameDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\NCNameDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\NOTATIONDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\QNameDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\StringDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\TimeDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\UnionDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\YearDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\YearMonthDatatypeValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDAttDef.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDAttDefList.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDElementDecl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDGrammar.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDScanner.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\FieldActivator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\FieldValueMap.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Field.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Key.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IC_KeyRef.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Selector.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Unique.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraint.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\ValueStore.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\ValueStoreCache.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XercesXPath.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XPathMatcher.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XPathMatcherStack.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XPathSymbols.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\ComplexTypeInfo.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\GeneralAttributeCheck.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\NamespaceScope.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaAttDef.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaAttDefList.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaElementDecl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaGrammar.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaInfo.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaSymbols.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\SubstitutionGroupComparator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\TraverseSchema.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XercesAttGroupInfo.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XercesElementWildcard.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XercesGroupInfo.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSDDOMParser.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSDErrorReporter.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSDLocator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XUtil.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\sax2Dummy.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMAttrImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMAttrMapImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMAttrNSImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMCDATASectionImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMCharacterDataImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMChildNode.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMCommentImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMDeepNodeListImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMDocumentFragmentImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMDocumentImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMDocumentTypeImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMElementImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMElementNSImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMEntityImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMEntityReferenceImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMErrorImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMImplementationImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMImplementationRegistry.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMLocatorImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNamedNodeMapImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeIDMap.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeIteratorImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeListImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNodeVector.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMNotationImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMParentNode.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMProcessingInstructionImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMRangeImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMStringPool.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTextImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMTreeWalkerImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMWriterImpl.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XSDElementNSImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\AttrImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\AttrMapImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\AttrNSImpl.obj \
@@ -146,6 +274,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_TreeWalker.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOM_XMLDecl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DomMemDebug.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMParser.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DOMString.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\DStringPool.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\ElementDefinitionImpl.obj \
@@ -167,121 +296,8 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\TextImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\TreeWalkerImpl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDeclImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDAttrImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDAttrMapImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDAttrNSImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDCDATASectionImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDCharacterDataImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDChildNode.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDCommentImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDDeepNodeListImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDDocumentFragmentImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDDocumentImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDDocumentTypeImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDDOMImplementation.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDElementImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDElementNSImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDEntityImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDEntityReferenceImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDNamedNodeMapImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDNodeIDMap.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDNodeImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDNodeIteratorImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDNodeListImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDNodeVector.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDNotationImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDOM_DOMException.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDOM_RangeException.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDParentNode.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDProcessingInstructionImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDRangeImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDStringPool.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDTextImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDTreeWalkerImpl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\Dummy.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\InputSource.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SAXException.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SAXParseException.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\sax2Dummy.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\AllContentModel.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\CMAny.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\CMBinaryOp.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\CMUnaryOp.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\ContentLeafNameTypeVector.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\ContentSpecNode.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DFAContentModel.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\GrammarResolver.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\MixedContentModel.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SimpleContentModel.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\AbstractNumericFacetValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\AbstractNumericValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\AbstractStringValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\AnySimpleTypeDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\AnyURIDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\Base64BinaryDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\BooleanDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DateDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DateTimeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DateTimeDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DatatypeValidatorFactory.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DayDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DecimalDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DoubleDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DurationDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\ENTITYDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\FloatDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\HexBinaryDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IDREFDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\ListDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\MonthDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\MonthDayDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\NameDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\NCNameDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\NOTATIONDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\QNameDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\StringDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\TimeDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\UnionDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\YearDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\YearMonthDatatypeValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDAttDef.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDAttDefList.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDElementDecl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDGrammar.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDScanner.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\DTDValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\ComplexTypeInfo.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\GeneralAttributeCheck.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\NamespaceScope.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaAttDef.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaAttDefList.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaElementDecl.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaGrammar.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaInfo.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaSymbols.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SchemaValidator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\SubstitutionGroupComparator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\TraverseSchema.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XercesAttGroupInfo.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XercesElementWildcard.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XercesGroupInfo.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XUtil.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\FieldActivator.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\FieldValueMap.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Field.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Key.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IC_KeyRef.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Selector.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IC_Unique.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraint.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\ValueStore.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\ValueStoreCache.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XercesXPath.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XPathMatcher.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XPathMatcherStack.obj \
-    ..\..\..\..\..\Build\Win32\BCB6\obj\XPathSymbols.obj
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMException.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DOMRangeException.obj 
 RESFILES = ..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.res
 MAINSOURCE = Xerceslib.cpp
 RESDEPEN = $(RESFILES)
