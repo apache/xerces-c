@@ -1,4 +1,4 @@
-%define tarversion 2_1_0
+%define tarversion 2_2_0
 
 # threads
 # values: pthreads, none
@@ -6,7 +6,7 @@
 
 Summary:	Validating XML parser
 Name:		xerces-c
-Version:	2.1.0
+Version:	2.2.0
 Release:	2
 URL:		http://xml.apache.org/xerces-c/
 Source0:	%{name}-src%{tarversion}.tar.gz
@@ -18,14 +18,14 @@ Prefix:		/usr
 
 %description
 Xerces-C++ is a validating XML parser written in a portable subset of C++.
-Xerces-C++ makes it easy to give your application the ability to read and 
-write XML data. A shared library is provided for parsing, generating, 
-manipulating, and validating XML documents. 
+Xerces-C++ makes it easy to give your application the ability to read and
+write XML data. A shared library is provided for parsing, generating,
+manipulating, and validating XML documents.
 
-The parser provides high performance, modularity, and scalability. Source 
-code, samples and API documentation are provided with the parser. For 
-portability, care has been taken to make minimal use of templates, no RTTI, 
-no C++ namespaces and minimal use of #ifdefs.
+The parser provides high performance, modularity, and scalability. Source
+code, samples and API documentation are provided with the parser. For
+portability, care has been taken to make minimal use of templates, no RTTI,
+and minimal use of #ifdefs.
 
 %package devel
 Requires:	xerces-c = %{version}
@@ -34,9 +34,9 @@ Summary:	Header files, documentation and samples for xerces-c.
 
 %description devel
 Xerces-C++ is a validating XML parser written in a portable subset of C++.
-Xerces-C++ makes it easy to give your application the ability to read and 
-write XML data. A shared library is provided for parsing, generating, 
-manipulating, and validating XML documents. 
+Xerces-C++ makes it easy to give your application the ability to read and
+write XML data. A shared library is provided for parsing, generating,
+manipulating, and validating XML documents.
 
 %prep
 %setup -q -n %{name}-src%{tarversion}

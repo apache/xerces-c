@@ -29,11 +29,11 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
-    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_1_0");
-    print (" -o \$HOME/xerces-c_2_1_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
+    print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src2_2_0");
+    print (" -o \$HOME/xerces-c_2_2_0-linux -c gcc -x g++ -m inmem -n fileonly -t native\n\n");
     print ("Example: Under Windows\n");
-    print ("    perl packageBinaries.pl -s \\xerces-c-src2_1_0");
-    print (" -o\\xerces-c_2_1_0-win32 [-n fileonly] [-t icu]\n\n");
+    print ("    perl packageBinaries.pl -s \\xerces-c-src2_2_0");
+    print (" -o\\xerces-c_2_2_0-win32 [-n fileonly] [-t icu]\n\n");
     print ("Note:\n");
     print ("    Under Windows, by default the XercesLib project files is\n");
     print ("    configured to use Win32 resource file based message loader,\n");
@@ -163,7 +163,7 @@ if ($platform eq "win64bit" )
     #
     #REVISIT: icu
     #
-    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {    
+    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
 
         print ("Building ICU from $ICUROOT ...\n");
 
@@ -186,13 +186,13 @@ if ($platform eq "win64bit" )
         {
             $transcoder = 1;
         }
-        
-        $msgloader = 0;                        
-        if ($opt_m =~ m/icu/i)  
+
+        $msgloader = 0;
+        if ($opt_m =~ m/icu/i)
         {
             $msgloader = 1;
         }
-        
+
         change_windows_makefile_for_ICU("$XERCESCROOT\\Projects\\Win32\\VC6\\xerces-all/XercesLib/XercesLib.mak", $transcoder, $msgloader);
     }
 
@@ -213,8 +213,8 @@ if ($platform eq "win64bit" )
     # Build resource bundle for ICUMsgLoader
     if ($opt_m =~ m/icu/i) {
         pchdir ("$XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources");    	
-        psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");        
-        system("cat buildlog.txt");        
+        psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
+        system("cat buildlog.txt");
     }
 
     # Decide where you want the build copied from
@@ -322,7 +322,7 @@ if ($platform eq "win64bit" )
         if ( $opt_m =~ m/icu/i) {
             psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\*.res $targetdir\\lib");
         }        	
-        
+
     }
 
     psystem("copy /y $BUILDDIR\\xerces-c_*.lib $targetdir\\lib");
@@ -492,13 +492,13 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         {
             $transcoder = 1;
         }
-        
-        $msgloader = 0;                        
-        if ($opt_m =~ m/icu/i)  
+
+        $msgloader = 0;
+        if ($opt_m =~ m/icu/i)
         {
             $msgloader = 1;
         }
-        
+
         change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp", $transcoder , $msgloader);
     }
 
@@ -520,7 +520,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     }	
 
     system("cat buildlog.txt");
-          
+
     # Build the debug xerces dll.  Both debug and release DLLs
     #   are in the standard binary distribution of Xerces.
     if ($buildmode ne "Debug") {
@@ -538,10 +538,10 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     # Build resource bundle for ICUMsgLoader
     if ($opt_m =~ m/icu/i) {
         pchdir ("$XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources");    	
-        psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");        
-        system("cat buildlog.txt");        
+        psystem( "nmake /f resources.mak > buildlog.txt 2>&1 ");
+        system("cat buildlog.txt");
     }
-    
+
     # Decide where you want the build copied from
     pchdir ($targetdir);
     $BUILDDIR = $XERCESCROOT . "/Build/Win32/VC6/" . $buildmode;
@@ -641,12 +641,12 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
         psystem("cp -fv $ICUROOT/lib/icuuc.lib $targetdir/lib");
         psystem("cp -fv $ICUROOT/lib/icuucd.lib $targetdir/lib");
-        
+
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
             psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/*.res $targetdir/lib");
         }        	
-        
+
     }
     psystem("cp -fv $BUILDDIR/xerces-c_*.lib $targetdir/lib");
     if ($buildmode ne "Debug") {
@@ -787,7 +787,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         if ($opt_m =~ m/icu/i) {
         	$ENV{'SHLIB_PATH'}="$ICUROOT/lib:$ENV{'SHLIB_PATH'}";
         }
-        
+
         psystem ("echo SHLIB_PATH=$ENV{'SHLIB_PATH'}");
     }
     if ($platform =~ m/Linux/i) {
@@ -800,11 +800,11 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         } else {
             $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
         }
-        
+
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
         }
-                
+
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
     }
 
@@ -813,11 +813,11 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         $platform = "solaris";
         if ($opt_c eq "") {$opt_c = "cc";}
         if ($opt_x eq "") {$opt_x = "CC";}
-        
+
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
         }
-                
+
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
     }
 
@@ -929,7 +929,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/doc/html/apiDocs");
 
     # Build ICU if needed
-    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && !(length($opt_j) > 0))    
+    if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && !(length($opt_j) > 0))
     {
         print("\n\nBuild ICU with \'$opt_b\' bit ...\n");
         if(length($ICUROOT) == 0) {
@@ -1118,22 +1118,22 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     pchdir ("$targetdir/lib");
     psystem("rm -f libxerces-c* ");
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.so.21.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.21.0 .");
-        psystem("ln -s libxerces-c.so.21.0 libxerces-c.so.21 ");
-        psystem("ln -s libxerces-c.so.21   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.so.22.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.22.0 .");
+        psystem("ln -s libxerces-c.so.22.0 libxerces-c.so.22 ");
+        psystem("ln -s libxerces-c.so.22   libxerces-c.so    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.21.0" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.21.0 .");
-        psystem("ln -s libxerces-c.sl.21.0 libxerces-c.sl.21 ");
-        psystem("ln -s libxerces-c.sl.21   libxerces-c.sl    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.22.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.22.0 .");
+        psystem("ln -s libxerces-c.sl.22.0 libxerces-c.sl.22 ");
+        psystem("ln -s libxerces-c.sl.22   libxerces-c.sl    ");
     }
 
-    if ((-e "$XERCESCROOT/lib/libxerces-c21.0.so" )) {
-        psystem("cp -f $XERCESCROOT/lib/libxerces-c21.0.so .");
-        psystem("ln -s libxerces-c21.0.so libxerces-c21.so  ");
-        psystem("ln -s libxerces-c21.so   libxerces-c.so    ");
+    if ((-e "$XERCESCROOT/lib/libxerces-c22.0.so" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c22.0.so .");
+        psystem("ln -s libxerces-c22.0.so libxerces-c22.so  ");
+        psystem("ln -s libxerces-c22.so   libxerces-c.so    ");
     }
 
     #
@@ -1186,7 +1186,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         if ( $opt_m =~ m/icu/i) {
             psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/*.res $targetdir/lib");
         }        	
-        
+
     }
 
     # Populate the etc output directory like config.status and the map file
@@ -1286,7 +1286,7 @@ sub pchdir() {
 
 sub change_windows_project_for_ICU() {
     my ($thefile, $transcoder, $msgloader) = @_;
-    
+
     print "\nConverting Windows Xerces library project ($thefile) for ICU usage...";
     my $thefiledotbak = $thefile . ".bak";
     rename ($thefile, $thefiledotbak);
@@ -1305,21 +1305,21 @@ sub change_windows_project_for_ICU() {
         $line =~ s[Debug/xerces-c_2D.lib"][Debug/xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
         $line =~ s[Release/xerces-c_2.lib"][Release/xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
         $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
-                
+
         if ($transcoder)
         {
             $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
             $line =~ s/Transcoders\\Win32\\Win32TransService.cpp/Transcoders\\ICU\\ICUTransService.cpp/g;
-            $line =~ s/Transcoders\\Win32\\Win32TransService.hpp/Transcoders\\ICU\\ICUTransService.hpp/g;  
+            $line =~ s/Transcoders\\Win32\\Win32TransService.hpp/Transcoders\\ICU\\ICUTransService.hpp/g;
         }
-              
+
         if ($msgloader)
         {
             $line =~ s/XML_USE_WIN32_MSGLOADER/XML_USE_ICU_MESSAGELOADER/g;
             $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader.cpp/MsgLoaders\\ICU\\ICUMsgLoader.cpp/g;
-            $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader.hpp/MsgLoaders\\ICU\\ICUMsgLoader.hpp/g; 
+            $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader.hpp/MsgLoaders\\ICU\\ICUMsgLoader.hpp/g;
         }
-           
+
         print FIZZLEOUT $line;
     }
     close (FIZZLEOUT);
@@ -1352,14 +1352,14 @@ sub change_windows_makefile_for_ICU() {
             $line =~ s/Transcoders\\Win32\\Win32TransService/Transcoders\\ICU\\ICUTransService/g;
             $line =~ s/Win32TransService/ICUTransService/g;
         }
-        
+
         if ($msgloader)
         {
             $line =~ s/XML_USE_WIN32_MSGLOADER/XML_USE_ICU_MESSAGELOADER/g;
             $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader/MsgLoaders\\ICU\\ICUMsgLoader/g;
-            $line =~ s/Win32MsgLoader/ICUMsgLoader/g;             
+            $line =~ s/Win32MsgLoader/ICUMsgLoader/g;
         }
-                    
+
         print FIZZLEOUT $line;
     }
     close (FIZZLEOUT);

@@ -55,7 +55,7 @@ BSC32=bscmake.exe
 # ADD BSC32
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_1_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_2.lib" /version:2.1.0
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_2_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_2.lib" /version:2.2.0
 # SUBTRACT LINK32 /pdb:none /incremental:yes
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
@@ -83,7 +83,7 @@ BSC32=bscmake.exe
 # ADD BSC32
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2_1_0D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.1.0
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2_2_0D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.2.0
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Debug"
@@ -111,9 +111,9 @@ BSC32=bscmake.exe
 # ADD BASE BSC32
 # ADD BSC32
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /debug /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_1_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.1.0
+# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /debug /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_2_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.2.0
 # SUBTRACT BASE LINK32 /pdb:none
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_1_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.1.0 /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /debug /out:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2_2_0D.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Debug/xerces-c_2D.lib" /pdbtype:sept /version:2.2.0 /machine:IA64
 # SUBTRACT LINK32  /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win64 Release"
@@ -140,9 +140,9 @@ BSC32=bscmake.exe
 # ADD BASE BSC32
 # ADD BSC32
 LINK32=link.exe
-# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /map /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_1_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.1.0
+# ADD BASE LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib  /base:"0x12000000" /subsystem:windows /dll /map /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_2_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.2.0
 # SUBTRACT BASE LINK32 /pdb:none /incremental:yes
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /map /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_1_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.1.0 /machine:IA64
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /map /out:"..\..\..\..\..\Build\Win64\VC6\Release\xerces-c_2_2_0.dll" /implib:"..\..\..\..\..\Build\Win64\VC6\Release/xerces-c_2.lib" /version:2.2.0 /machine:IA64
 # SUBTRACT LINK32  /pdb:none
 
 !ENDIF
