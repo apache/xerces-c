@@ -234,9 +234,9 @@ Win32TransService::Win32TransService()
     //
     const unsigned int nameBufSz = 1024;
     char nameBuf[nameBufSz + 1];
-    unsigned int subIndex = 0;
+    unsigned int subIndex;
     unsigned long theSize;
-    while (true)
+    for (subIndex = 0;;++subIndex)
     {
         // Get the name of the next key
         theSize = nameBufSz;
@@ -261,7 +261,7 @@ Win32TransService::Win32TransService()
             , KEY_READ
             , &encodingKey))
         {
-            XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
+            continue;
         }
 
         //
@@ -289,7 +289,8 @@ Win32TransService::Win32TransService()
                 , (unsigned char*)&CPId
                 , &theSize) != ERROR_SUCCESS)
             {
-                XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
+                ::RegCloseKey(encodingKey);
+                continue;
             }
 
             //
@@ -308,7 +309,8 @@ Win32TransService::Win32TransService()
                     , (unsigned char*)&IEId
                     , &theSize) != ERROR_SUCCESS)
                 {
-                    XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
+                    ::RegCloseKey(encodingKey);
+                    continue;
                 }
 
                 CPMapEntry* newEntry = new CPMapEntry(nameBuf, CPId, IEId);
@@ -316,9 +318,8 @@ Win32TransService::Win32TransService()
             }
         }
 
-        // And now close the subkey handle and bump the subkey index
+        // And close the subkey handle
         ::RegCloseKey(encodingKey);
-        subIndex++;
     }
 
     //
@@ -327,9 +328,8 @@ Win32TransService::Win32TransService()
     //  built and add a new entry with this new name and the same id
     //  values we stored for the original.
     //
-    subIndex = 0;
     char aliasBuf[nameBufSz + 1];
-    while (true)
+    for (subIndex = 0;;++subIndex)
     {
         // Get the name of the next key
         theSize = nameBufSz;
@@ -354,7 +354,7 @@ Win32TransService::Win32TransService()
             , KEY_READ
             , &encodingKey))
         {
-            XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
+            continue;
         }
 
         //
@@ -411,9 +411,8 @@ Win32TransService::Win32TransService()
             }
         }
 
-        // And now close the subkey handle and bump the subkey index
+        // And close the subkey handle
         ::RegCloseKey(encodingKey);
-        subIndex++;
     }
 
     // And close the main key handle
