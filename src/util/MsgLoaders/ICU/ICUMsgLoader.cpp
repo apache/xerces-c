@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/01/21 14:52:25  tng
+ * [Bug 5847] ICUMsgLoader can't be compiled with gcc 3.0.3 and ICU2.  And also fix the memory leak introduced by Bug 2730 fix.
+ *
  * Revision 1.6  2001/11/01 23:39:18  jasons
  * 2001-11-01  Jason E. Stewart  <jason@openinformatics.com>
  *
@@ -95,7 +98,6 @@
 #include <util/XMLString.hpp>
 #include "ICUMsgLoader.hpp"
 
-#include "unicode/resbund.h"
 #include "string.h"
 
 
@@ -156,18 +158,47 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
 //    if (!msgString)
 //        return false;
 
-    UnicodeString msgString = fBundle->getStringEx(XMLString::transcode(keyStr), err);
-
+    char* tempKeyStr = XMLString::transcode(keyStr);
+    UnicodeString msgString = fBundle->getStringEx(tempKeyStr, err);
+    delete [] tempKeyStr;
 
     // Extract out from the UnicodeString to the passed buffer
     const unsigned int len = msgString.length();
     const unsigned int lesserLen = (len < maxChars) ? len : maxChars;
+
+    //
+    //  And now do the extract. This works differently according to
+    //  whether XMLCh and UChar are the same size or not.
+    //
+    UChar* startTarget;
+    if (sizeof(XMLCh) == sizeof(UChar))
+        startTarget = (UChar*)toFill;
+     else
+        startTarget = new UChar[maxChars];
+    UChar* orgTarget = startTarget;
+
     msgString.extract
     (
         0
         , lesserLen
-        , toFill
+        , startTarget
     );
+
+    //
+    //  If XMLCh and UChar are not the same size, then we need to copy over
+    //  the temp buffer to the new one.
+    //
+    if (sizeof(UChar) != sizeof(XMLCh))
+    {
+        XMLCh* outPtr = toFill;
+        startTarget = orgTarget;
+        for (unsigned int index = 0; index < lesserLen; index++)
+            *outPtr++ = XMLCh(*startTarget++);
+
+        // And delete the temp buffer
+        delete [] orgTarget;
+    }
+
 
     // Cap it off and return success
     toFill[lesserLen] = 0;
