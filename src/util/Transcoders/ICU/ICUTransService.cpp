@@ -78,7 +78,9 @@
 
 #if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX) && !defined(XML_PTX)
 // Forward reference the symbol which points to the ICU converter data.
+#if (U_ICU_VERSION_MAJOR_NUM < 2)
 extern "C" const uint8_t U_IMPORT icudata_dat[];
+#endif
 #endif
 
 
@@ -141,6 +143,15 @@ static XMLCh* convertToXMLCh(const UChar* const toConvert)
 ICUTransService::ICUTransService()
 {
 #if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX) && !defined(XML_PTX)
+#if (U_ICU_VERSION_MAJOR_NUM < 2)
+    // Starting with ICU 2.0, ICU itself includes a static reference to the data
+    // entrypoint symbol.
+    //
+    // ICU 1.8 (and previous) did not include a static reference, but would
+    // dynamically load the data dll when it was first needed, however this dynamic
+    // loading proved unreliable in some of the odd environments that Xerces needed
+    // to run in.  Hence, the static reference.
+
     // Pass the location of the converter data to ICU. By doing so, we are
     // forcing the load of ICU converter data DLL, after the Xerces-C DLL is
     // loaded. This implies that Xerces-C, now has to explicitly link with the
@@ -150,6 +161,7 @@ ICUTransService::ICUTransService()
     // calls.
     UErrorCode uerr = U_ZERO_ERROR;
     udata_setCommonData((void *) icudata_dat, &uerr);
+#endif
 #endif
 }
 
