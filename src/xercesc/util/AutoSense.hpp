@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/08/19 18:35:56  tng
+ * [Bug 6467] Installing Xerces C++ on cygwin environment.
+ *
  * Revision 1.4  2002/07/12 16:48:49  jberry
  * Remove reliance on XML_MACOSX. XML_MACOS is used solely. Where qualification
  * by compiler is required, look for the compiler explicitly such as with
@@ -206,7 +209,7 @@
     #define XML_TANDEM
     #define XML_UNIX
     #define XML_CSET
-#elif defined(_WIN32) || defined(WIN32)
+#elif defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__)
     #define XML_WIN32
     #ifndef WIN32
       #define WIN32
@@ -253,7 +256,7 @@
     #else
         #error Code requires port to current development environment
     #endif
-#elif defined (__GNUG__) || defined(__linux__)
+#elif defined (__GNUG__) || defined(__linux__) || defined(__CYGWIN__)
     #define XML_GCC
 #elif defined(XML_HPUX)
     #if defined(EXM_HPUX)

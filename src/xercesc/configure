@@ -1276,6 +1276,7 @@ case "${host}" in
         *-*-OS400*)     platform=OS400 ;;
         *-*-osf*)		platform=TRU64 ;;
         *-apple-*)		platform=MACOSX ;;
+        *-*-cygwin*)    platform=CYGWIN ;;
         *)              platform=UNKNOWN ;;
 esac
 
@@ -1438,6 +1439,7 @@ ac_given_INSTALL="$INSTALL"
 
 trap 'rm -fr `echo "Makefile \
 util/Makefile \
+util/Transcoders/Cygwin/Makefile \
 util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
@@ -1458,6 +1460,7 @@ util/Platforms/OpenServer/Makefile \
 util/Platforms/UnixWare/Makefile \
 util/Platforms/Tru64/Makefile \
 util/Platforms/MacOS/Makefile \
+util/Platforms/Win32/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \
@@ -1586,6 +1589,7 @@ cat >> $CONFIG_STATUS <<EOF
 
 CONFIG_FILES=\${CONFIG_FILES-"Makefile \
 util/Makefile \
+util/Transcoders/Cygwin/Makefile \
 util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
@@ -1606,6 +1610,7 @@ util/Platforms/OpenServer/Makefile \
 util/Platforms/UnixWare/Makefile \
 util/Platforms/Tru64/Makefile \
 util/Platforms/MacOS/Makefile \
+util/Platforms/Win32/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \

@@ -86,7 +86,7 @@ usage()
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'solaris',
             'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
-            'ptx', 'tru64', 'macosx')"
+            'ptx', 'tru64', 'macosx'. 'cygwin')"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc or ecc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc or ecc)"
     echo "       -d (specifies that you want to build debug version)"
@@ -227,7 +227,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | openserver | unixware | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx)
+   aix | openserver | unixware | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin)
        # platform has been recognized
        ;;
    *)
@@ -445,7 +445,10 @@ case $transcoder in
        TRANSCODER=IconvFBSD ;
        transcodingDefines="-DXML_USE_LIBICONV -I/usr/local/include" ;;
    native)
-       if test $platform = "freebsd"; then
+ 	if test $platform = "cygwin"; then
+ 	    TRANSCODER=Cygwin ;
+ 	    transcodingDefines="-DXML_USE_CYGWIN_TRANSCODER" ;
+ 	elif test $platform = "freebsd"; then
            TRANSCODER=IconvFBSD ;
        fi ;;
    *)

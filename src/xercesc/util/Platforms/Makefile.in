@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.5  2002/08/19 18:35:56  tng
+# [Bug 6467] Installing Xerces C++ on cygwin environment.
+#
 # Revision 1.4  2002/07/26 16:49:28  tng
 # [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
 #
@@ -180,6 +183,9 @@ ifeq (${PLATFORM}, TRU64)
 endif
 ifeq (${PLATFORM}, MACOSX)
     SUBMODULE = MacOS
+endif
+ifeq (${PLATFORM}, CYGWIN)
+    SUBMODULE = Win32
 endif
 
 includes::

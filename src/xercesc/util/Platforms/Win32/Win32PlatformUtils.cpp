@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -88,6 +88,8 @@
     #include <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
 #elif defined (XML_USE_WIN32_TRANSCODER)
     #include <xercesc/util/Transcoders/Win32/Win32TransService.hpp>
+#elif defined (XML_USE_CYGWIN_TRANSCODER)
+    #include <xercesc/util/Transcoders/Cygwin/CygwinTransService.hpp>
 #else
     #error A transcoding service must be chosen
 #endif
@@ -97,7 +99,7 @@
 //  They allow this to be controlled from the build process by just defining
 //  one of these values.
 //
-#if defined (XML_USE_INMEMORY_MSGLOADER)
+#if defined (XML_USE_INMEM_MESSAGELOADER)
     #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 #elif defined (XML_USE_WIN32_MSGLOADER)
     #include <xercesc/util/MsgLoaders/Win32/Win32MsgLoader.hpp>
@@ -260,14 +262,14 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     //  with a thorny problem. Shift-JIS and some other Asian encodings
     //  are fundamentally broken and map both the backslash and the Yen
     //  sign to the same code point. Transcoders have to pick one or the
-    //  other to map '\' to Unicode and tend to choose the Yen sign. 
+    //  other to map '\' to Unicode and tend to choose the Yen sign.
     //
     //  Unicode Yen or Won signs as directory separators will fail.
     //
     //  So, we will check this path name for Yen or won signs and, if they are
-    //  there, we'll replace them with slashes.  
+    //  there, we'll replace them with slashes.
     //
-    //  A further twist:  we replace Yen and Won with forward slashes rather 
+    //  A further twist:  we replace Yen and Won with forward slashes rather
     //   than back slashes.  Either form of slash will work as a directory
     //   separator.  On Win 95 and 98, though, Unicode back-slashes may
     //   fail to transode back to 8-bit 0x5C with some Unicode converters
@@ -276,7 +278,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     //
     XMLCh *tmpUName = 0;
     const XMLCh *nameToOpen = fileName;
-    
+
     const XMLCh* srcPtr = fileName;
     while (*srcPtr)
     {
@@ -285,7 +287,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
             break;
         srcPtr++;
     }
-    
+
     //
     //  If we found a yen, then we have to create a temp file name. Else
     //  go with the file name as is and save the overhead.
@@ -293,7 +295,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     if (*srcPtr)
     {
         tmpUName = XMLString::replicate(fileName);
-        
+
         XMLCh* tmpPtr = tmpUName;
         while (*tmpPtr)
         {
@@ -309,7 +311,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     {
         retVal = ::CreateFileW
             (
-            nameToOpen
+            (LPCWSTR) nameToOpen
             , GENERIC_READ
             , FILE_SHARE_READ
             , 0
@@ -338,12 +340,12 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
         delete [] tmpName;
     }
 
-    if (tmpUName)  
+    if (tmpUName)
         delete [] tmpUName;
-    
+
     if (retVal == INVALID_HANDLE_VALUE)
         return 0;
-    
+
     return retVal;
 }
 
@@ -376,14 +378,14 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
     //  with a thorny problem. Shift-JIS and some other Asian encodings
     //  are fundamentally broken and map both the backslash and the Yen
     //  sign to the same code point. Transcoders have to pick one or the
-    //  other to map '\' to Unicode and tend to choose the Yen sign. 
+    //  other to map '\' to Unicode and tend to choose the Yen sign.
     //
     //  Unicode Yen or Won signs as directory separators will fail.
     //
     //  So, we will check this path name for Yen or won signs and, if they are
-    //  there, we'll replace them with slashes.  
+    //  there, we'll replace them with slashes.
     //
-    //  A further twist:  we replace Yen and Won with forward slashes rather 
+    //  A further twist:  we replace Yen and Won with forward slashes rather
     //   than back slashes.  Either form of slash will work as a directory
     //   separator.  On Win 95 and 98, though, Unicode back-slashes may
     //   fail to transode back to 8-bit 0x5C with some Unicode converters
@@ -392,7 +394,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
     //
     XMLCh *tmpUName = 0;
     const XMLCh *nameToOpen = fileName;
-    
+
     const XMLCh* srcPtr = fileName;
     while (*srcPtr)
     {
@@ -401,7 +403,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
             break;
         srcPtr++;
     }
-    
+
     //
     //  If we found a yen, then we have to create a temp file name. Else
     //  go with the file name as is and save the overhead.
@@ -409,7 +411,7 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
     if (*srcPtr)
     {
         tmpUName = XMLString::replicate(fileName);
-        
+
         XMLCh* tmpPtr = tmpUName;
         while (*tmpPtr)
         {
@@ -454,12 +456,12 @@ FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
         delete [] tmpName;
     }
 
-    if (tmpUName)  
+    if (tmpUName)
         delete [] tmpUName;
-    
+
     if (retVal == INVALID_HANDLE_VALUE)
         return 0;
-    
+
     return retVal;
 }
 
@@ -513,7 +515,7 @@ XMLPlatformUtils::readFileBuffer(       FileHandle      theFile
 void
 XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
                                    , long                  toWrite
-                                   , const XMLByte* const  toFlush)                                   
+                                   , const XMLByte* const  toFlush)
 {
     if (!theFile        ||
         (toWrite <= 0 ) ||
@@ -566,7 +568,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
         XMLCh tmpPath[bufSize + 1];
 
         XMLCh* namePart = 0;
-        if (!::GetFullPathNameW(srcPath, bufSize, tmpPath, &namePart))
+        if (!::GetFullPathNameW((LPCWSTR)srcPath, bufSize, tmpPath, &namePart))
             return 0;
 
         // Return a copy of the path
@@ -740,7 +742,7 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
     ::DeleteCriticalSection((LPCRITICAL_SECTION)mtxHandle);
-    delete mtxHandle;
+    delete (CRITICAL_SECTION*)mtxHandle;
 }
 
 
@@ -798,7 +800,7 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
 
     #else
 
-    //    
+    //
     //  Note we have to cast off the constness of some of these because
     //  the system APIs are not C++ aware in all cases.
     //
@@ -856,7 +858,7 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 //
 XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
-#if defined (XML_USE_INMEMORY_MSGLOADER)
+#if defined (XML_USE_INMEM_MESSAGELOADER)
     return new InMemMsgLoader(msgDomain);
 #elif defined (XML_USE_WIN32_MSGLOADER)
     return new Win32MsgLoader(msgDomain);
@@ -884,6 +886,8 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     return new ICUTransService;
 #elif defined (XML_USE_WIN32_TRANSCODER)
     return new Win32TransService;
+#elif defined (XML_USE_CYGWIN_TRANSCODER)
+    return new CygwinTransService;
 #else
     #error You must provide a transcoding service implementation
 #endif
@@ -900,7 +904,7 @@ void XMLPlatformUtils::platformInit()
 
 #if 0 && defined(_DEBUG)
     //  Enable this code for memeory leak testing
-    
+
    // Send all reports to STDOUT
    _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_FILE );
    _CrtSetReportFile( _CRT_WARN, _CRTDBG_FILE_STDOUT );

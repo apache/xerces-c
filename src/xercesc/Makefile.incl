@@ -460,6 +460,28 @@ ifeq (${PLATFORM}, MACOSX)
 	SHLIBSUFFIX=.dylib
 endif
 
+#=============== CygWin SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, CYGWIN)
+      PLATFORM_COMPILE_OPTIONS = \
+              -D__${PLATFORM}__ \
+              -I/usr/include \
+              -I/usr/include/w32api
+      MAKE_SHARED = ${CXX} -shared ${LDFLAGS}
+      MAKE_SHARED_C = ${CC} -shared ${LDFLAGS}
+      ifeq (${TRANSCODER}, ICU)
+              ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -licudata -lc
+      else
+              ALLLIBS = ${LIBS} -L/usr/lib
+      endif
+      EXTRA_LINK_OPTIONS = \
+              -Xlinker --warn-once \
+              -Xlinker -Map -Xlinker $(XML_LIB_DIR)/${LIBNAME}${VER}.map \
+              -Xlinker --output-def -Xlinker $(XML_LIB_DIR)/${LIBNAME}${VER}.def \
+              -Xlinker --out-implib -Xlinker $(XML_LIB_DIR)/${LIBNAME}${VER}.lib
+        SHLIBSUFFIX=.dll
+endif
+
+
 ###################### SO_NAME ####################################
 #
 #
