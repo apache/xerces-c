@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/03/22 00:58:11  rahulj
+ * Now we throw exceptions when errors occur.
+ * Simplified code based on assumption that calling
+ * function will allocate enough storage to store the
+ * incoming data.
+ *
  * Revision 1.1  2000/03/20 23:48:51  rahulj
  * Added Socket based NetAccessor. This will enable one to
  * use HTTP URL's for system id's. Default build options do
@@ -123,10 +129,7 @@ static char* localTranscode(const XMLCh* latinStrInUnicode)
 
 
 UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
-      : fBuffer(0)
-      , fBufferSize(0)
-      , fBufferIndex(0)
-      , fSocket(0)
+      : fSocket(0)
       , fBytesProcessed(0)
 {
     const XMLCh*        uri = urlSource.getURLText();
@@ -145,15 +148,15 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
         unsigned long  numAddress = inet_addr(hostNameAsCharStar);
         if (numAddress < 0)
         {
-            // Throw cannot connect exception here.
-            // call WSAGetLastError() to get the error number.
+            ThrowXML(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution);
         }
         if ((hostEntPtr = 
                 gethostbyaddr((const char *) &numAddress, 
                               sizeof(unsigned long), AF_INET)) == NULL)
         {
-            // Throw cannot connect exception here.
-            // call WSAGetLastError() to get the error number.
+            ThrowXML(NetAccessorException,
+                     XMLExcepts::NetAcc_TargetResolution);
         }
     }
 
@@ -165,14 +168,14 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     int s = socket(hostEntPtr->h_addrtype, SOCK_STREAM, 0);
     if (s < 0)
     {
-        // Throw could not create socket exception.
-        // call WSAGetLastError() to get the error number.
+        ThrowXML(NetAccessorException,
+                 XMLExcepts::NetAcc_CreateSocket);
     }
 
     if (connect(s, (struct sockaddr *) &sa, sizeof(sa)) < 0)
     {
-        // Throw could not connect the socket exception.
-        // call WSAGetLastError() to get the error number.
+        ThrowXML(NetAccessorException,
+                 XMLExcepts::NetAcc_ConnSocket);
     }
     
     // Now you can simply read and write from/to the socket.
@@ -182,14 +185,11 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     int  aLent = 0;
     if ((aLent = write(s, (void *) obuf, lent)) != lent)
     {
-        // Throw could not write URL to the socket exception.
-        // call WSAGetLastError() to get the error number.
-        // wrote only 'aLent' bytes.
+        ThrowXML(NetAccessorException,
+                 XMLExcepts::NetAcc_WriteSocket);
     }
 
     fSocket = s;
-
-    fBuffer = new XMLByte[URLISBUFMAXSIZE];
 
 }
 
@@ -199,105 +199,24 @@ UnixHTTPURLInputStream::~UnixHTTPURLInputStream()
 {
     shutdown(fSocket, 2);
     close(fSocket);
-    delete [] fBuffer;
-    fBuffer = 0;
-}
-
-
-unsigned int UnixHTTPURLInputStream::curPos() const
-{
-    return fBytesProcessed;
 }
 
 
 unsigned int UnixHTTPURLInputStream::readBytes(XMLByte* const    toFill
-                                    , const unsigned int    maxToRead)
+                                      , const unsigned int    maxToRead)
 {
     unsigned int  retval = 0;
-    unsigned int  bytesAsked = maxToRead;
-    unsigned int  bytesForCopy = 0;
 
-    // Wipe out the old stuff from the destination buffer to fill.
+    int lent = read(fSocket, (void *) toFill, maxToRead); 
 
-    memset((void*)toFill, 0x00, sizeof(XMLByte) * maxToRead);
-    
-    if (fBufferSize > 0)
-        bytesForCopy = fBufferSize - fBufferIndex;
-
-    if (bytesAsked <= bytesForCopy)
+    if (lent < 0)
     {
-        // ...then you can satisfy this request completely from fBuffer.
-        // Simply copy over the bytes to the destination array.
-        memcpy((void*) toFill, (void*) (fBuffer + fBufferIndex), bytesAsked);
-        fBufferIndex += bytesAsked;
-        if (fBufferIndex >= fBufferSize)
-        {
-            fBufferSize = 0;
-            fBufferIndex = 0;
-        }
-        fBytesProcessed += bytesAsked;
-        retval = bytesAsked;
+        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_ReadSocket);
     }
-
     else
     {
-        // ...will need to read some more bytes out of the stream.
-        unsigned int    bufToFillIndex = 0;
-
-        // First copy over what is left in fBuffer, before reading another
-        // chunk out of the stream.
-
-        if (bytesForCopy != 0)
-        {
-            memcpy((void*) toFill, (void*) (fBuffer + fBufferSize), bytesForCopy);
-            fBufferSize = 0;
-            fBufferIndex = 0;
-            fBytesProcessed += bytesForCopy;
-            bufToFillIndex = bytesForCopy;
-            retval = bytesForCopy;
-        }
-
-        unsigned int    bytesRemainingToFill = bytesAsked - bytesForCopy;
-
-        // Now blow away the internal buffer and read next 'chunk' into it
-        // from the stream.
-
-        memset((void*) fBuffer, 0x00, URLISBUFMAXSIZE);
-        int lent = read(fSocket, (void *) fBuffer, URLISBUFMAXSIZE - 1); 
-
-        if (lent < 0)
-        {
-            // Throw socket error exception.
-            // call WSAGetLastError() to get the error number.
-        }
-        else if (lent == 0)
-        {
-            // No more data is available.
-            fBufferSize = 0;
-            fBufferIndex = 0;
-        }
-        else
-        {
-            fBufferIndex = 0;
-            fBufferSize = lent;
-
-            // Now fill the destination buffer with the new data just read.
-
-            if (bytesRemainingToFill > fBufferSize)
-            {
-                bytesRemainingToFill = fBufferSize;
-            }
-            memcpy((void*) (toFill + bufToFillIndex),
-                   (void*) fBuffer,
-                   bytesRemainingToFill);
-
-            // Update counters.
-            retval += bytesRemainingToFill;
-            fBufferIndex += bytesRemainingToFill;
-            fBytesProcessed += bytesRemainingToFill;
-
-        }
-
+        retval = lent;
+        fBytesProcessed += retval;
     }
 
     return retval;

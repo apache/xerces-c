@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/03/22 00:58:12  rahulj
+ * Now we throw exceptions when errors occur.
+ * Simplified code based on assumption that calling
+ * function will allocate enough storage to store the
+ * incoming data.
+ *
  * Revision 1.1  2000/03/20 23:48:51  rahulj
  * Added Socket based NetAccessor. This will enable one to
  * use HTTP URL's for system id's. Default build options do
@@ -102,31 +108,21 @@ private :
     //
     //  fSocket
     //      The socket representing the connection to the remote file.
-    //  fBuffer
-    //      This is the array in which the data is stored after reading it
-    //      of the network. The maximum size of this array is decided in the
-    //      constructor via a file specific #define.
-    //  fBufferIndex
-    //      Its the index into fBuffer and points to the next unprocessed
-    //      character. When the parser asks for more data to be read of the
-    //      stream, then fBuffer[fBufferIndex] is the first byte returned,
-    //      unless fBufferIndex equals fBufferSize indicating that all
-    //      data in the fBuffer has been processed.
-    //  fBufferSize
-    //      This represents the extent of valid data in the fBuffer array.
     //  fBytesProcessed
     //      Its a rolling count of the number of bytes processed off this
-    //      input stream. Its only reset back to zero, if the stream is
-    //      reset. The maximum value this can have is fRemoteFileSize.
+    //      input stream.
     // -----------------------------------------------------------------------
 
     int                 fSocket;
-    XMLByte*            fBuffer;
-    unsigned int        fBufferIndex;
-    unsigned int        fBufferSize;
     unsigned int        fBytesProcessed;
 
 }; // UnixHTTPURLInputStream
+
+
+inline unsigned int UnixHTTPURLInputStream::curPos() const
+{
+    return fBytesProcessed;
+}
 
 
 #endif // UNIXHTTPURLINPUTSTREAM_HPP
