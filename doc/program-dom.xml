@@ -1440,7 +1440,7 @@
                 <tr><th><em>Value</em></th><td> The syntax is the same as for the noNamespaceSchemaLocation
                             attribute that may occur in an instance document: e.g."file_name.xsd". </td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchemaExternalNoNamespaceSchemaLocation </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchemaExternalNoNameSpaceSchemaLocation </td></tr>
             </table>
             <p/>
 
