@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/02/28 22:34:36  peiyongz
+ * Bug#2717: patch to Unterminated INCLUDE section causes infinite loop with setExitOnFirstFatalError(false)
+ *
  * Revision 1.2  2002/02/26 21:06:53  knoaman
  * Create ZeroOrOne node only if needed.
  *
@@ -2809,6 +2812,10 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
                 }
                 return;
             }
+             else if (!nextCh)
+			{
+				 return; // nothing left
+			}
              else
             {
                 fReaderMgr->getNextChar();
