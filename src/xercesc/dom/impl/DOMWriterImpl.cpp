@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2002/06/11 19:45:45  peiyongz
+ * Notify application of the XMLFormatter creation failure
+ *
  * Revision 1.7  2002/06/10 16:02:21  peiyongz
  * format-pretty-print partially supported
  * resolve encoding from DOMDocument Interface
@@ -452,15 +455,30 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
 	//init session vars
 	initSession(&nodeToWrite);
 
-	try
-	{	
-		fFormatter = new XMLFormatter(fEncodingUsed
-                        			, destination
-	                                , XMLFormatter::NoEscapes
-                                    , XMLFormatter::UnRep_CharRef);
-		Janitor<XMLFormatter> janName(fFormatter);
+    try
+    {
+        fFormatter = new XMLFormatter(fEncodingUsed
+                                     ,destination
+                                     ,XMLFormatter::NoEscapes
+                                     ,XMLFormatter::UnRep_CharRef);
+    }
+    catch (const TranscodingException& e)
+    {
+        if (fErrorHandler)
+        {
+            DOMErrorImpl    domError(DOMError::DOM_SEVERITY_FATAL_ERROR 
+                                    ,e.getMessage()
+                                    ,0);
+            fErrorHandler->handleError(domError);
+        }
 
-		processNode(&nodeToWrite);
+        return false;
+    }
+
+    try
+    {
+        Janitor<XMLFormatter> janName(fFormatter);
+        processNode(&nodeToWrite);
 	}
 
 	//
