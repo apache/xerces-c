@@ -366,32 +366,9 @@ gmake</source>
                     <jump href="http://www-4.ibm.com/software/ad/vacpp/service/csd.html">Fixpak</jump>
                     from the IBM VisualAge C++ Corrective Services web page.</li>
                 </ul>
-
-                <p>To include the ICU library:</p>
-
-                <ul>
-                    <li>ICU Build:
-                    <br/>You should have the
-                    <jump href="http://www10.software.ibm.com/developerworks/opensource/icu/project/icuhtml/index.html">ICU Library</jump>
-                    in the same directory as the &XercesCName; library. For example if
-                    &XercesCName; is at the top level of the d drive, put the ICU
-                    library at the top level of d e.g. d:/xml4c, d:/icu.</li>
-                </ul>
-
-                <p><em>Instructions</em></p>
-                <ol>
-                   <li>Change directory to d:\xml4c\Projects\OS2</li>
-                   <li>If a d:\xml4c\Project\OS2\VACPP40 directory does not exist, create it.</li>
-                   <li>Copy the IBM VisualAge project file, XML4C2X.icc, to the VACPP40 directory.</li>
-                   <li>From the VisualAge main menu enter the project file name and path.</li>
-                   <li>When the build finishes the status bar displays this message: Last Compile
-                       completed Successfully with warnings on date.</li>
-                </ol>
-                <note>These instructions assume that you install in drive d:\. Replace d with the
-                      appropriate drive letter.</note>
             </s3>
 
-             <p>Alternatively there are two ways to build &XercesCName;. The "From Existing" method only
+             <p>There are two ways to build &XercesCName;. The "From Existing" method only
 	              requires VAC++. The "From Scratch" method requires both Object Rexx and VAC++
 	              installed.</p>
 
