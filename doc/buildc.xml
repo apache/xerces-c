@@ -390,6 +390,90 @@ gmake</source>
                 <note>These instructions assume that you install in drive d:\. Replace d with the
                       appropriate drive letter.</note>
             </s3>
+
+             <p>Alternatively there are two ways to build &XercesCName;. The "From Existing" method only
+	              requires VAC++. The "From Scratch" method requires both Object Rexx and VAC++
+	              installed.</p>
+
+	      <s3 title="The &quot;From Existing&quot; Method">
+		  <ol>
+		    <li>In the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory,
+		    find and edit the VAC++ configuration file <code>project_options.icc</code>.</li>
+
+		    <li>Change the directory on the first line <code>'BASE_DIR = "..."'</code>
+		    to match the base directory of the Xerces-C sources on your system.
+		    Note that the directory path must use double backslashes <code>"\\"</code>!</li>
+
+		    <li>Save <code>project_options.icc</code></li>
+
+		    <li>Start the Command Line in the VAC++ folder.</li>
+
+		    <li>Navigate to the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory.</li>
+
+		    <li>Run <code>build.cmd</code>. This does a migration build.</li>
+
+		    <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
+		    This file should contain only informational messages, almost all complaining
+		    about constant values in comparisons.</li>
+
+		    <li>You should now have a <code>xerces-c.dll</code> and <code>xerces-c.lib</code>.
+		    The library file is an import library for the DLL.</li>
+		  </ol>
+	      </s3>
+
+	      <s3 title="The &quot;From Scratch&quot; Method">
+		  <ol>
+		    <li>If you are not currently running <code>Object Rexx</code>,
+		    run the <code>SWITCHRX</code> command from a command line,
+		    answer <code>"yes"</code> to switching to <code>Object Rexx</code>, and follow the
+		    instructions to reboot. You can switch back to <code>"Classic Rexx"</code> by running
+		    <code>SWITCHRX</code> again. But you probably won't need to switch back since
+		    <code>Object Rexx</code> runs almost 100% of Classic Rexx programs.</li>
+
+		    <li>In the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory,
+		    run <code>genICC.cmd</code>. This builds the VAC++ configuration files for
+		    the sources you have on your system.</li>
+
+		    <li>Check the generated <code>ICC</code> files to ensure that they didn't pick up some
+		    non-OS/2 platform stuff. This happens when new platform-specific directories
+		    are added to Xerces. If they did pick up new non-OS/2 stuff, either edit it out
+		    of the <code>ICC</code> file or add them to the "ignore" array in <code>genICC.cmd</code> and
+		    re-run <code>genICC</code>.</li>
+
+		    <li>Start the Command Line in the VAC++ folder.</li>
+
+		    <li>Navigate to the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory.</li>
+
+		    <li>Run <code>build.cmd</code> This does a migration build.</li>
+
+		    <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
+		    This file should contain only informational messages, almost all complaining about constant
+		    values in comparisons.</li>
+
+		    <li>You should now have a <code>xerces-c.dll</code> and <code>xerces-c.lib</code>.
+		    The library file is an import library for the DLL.)</li>
+
+		  </ol>
+	      </s3>
+
+	     <s3 title="Packaging the Binaries">
+
+		  <p>There is an <code>Object Rexx</code> program that will package the binaries and headers.
+		  (See step 1 of the "From scratch" method on how to switch to <code>Object Rexx</code>.) The
+		  <code>packageBinaries.cmd</code> file is in the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code>
+		  directory. Run <code>packageBinaries</code>, giving the source and target directories
+		  like this:</p>
+
+		  <source>packageBinaries -s D:\Your\Xerces\Source -o D:\xerces_1_2_0</source>
+
+		  <p>(Match the source directory to your system; the target directory can be
+		  anything you want.)</p>
+
+		  <note>If you don't want to use the <code>Object Rexx</code> program, you'll need to
+		  manually  copy the "*.hpp" and "*.c" files to an include directory.
+		  (Be sure to maintain the same directory structure that you find under
+		  <code>&XercesCSrcInstallDir;</code>.)</note>
+	</s3>
     </s2>
 
     <anchor name="BuildAS400"/>
