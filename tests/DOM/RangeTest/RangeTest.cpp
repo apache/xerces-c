@@ -68,13 +68,13 @@
  */
 
 #include <stdio.h>
-#include <xercesc/idom/IDOM.hpp>
+#include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/idom/IDOM_Range.hpp>
+#include <xercesc/dom/DOMRange.hpp>
 
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
@@ -92,7 +92,7 @@ void tassert(bool c, const char *file, int line)
     operation;                                                      \
     printf(" Error: no exception thrown at line %d\n", __LINE__);   \
 }                                                                   \
-    catch (IDOM_DOMException &e) {                                       \
+    catch (DOMException &e) {                                       \
     if (e.code != expected_exception)                       \
     printf(" Wrong exception code: %d at line %d\n", e.code, __LINE__); \
 }                                                                 \
@@ -213,31 +213,31 @@ int  main()
     {
 
         {
-            IDOM_DOMImplementation* impl = IDOM_DOMImplementation::getImplementation();
-            IDOM_Document* doc = impl->createDocument();
+            DOMImplementation* impl = DOMImplementation::getImplementation();
+            DOMDocument* doc = impl->createDocument();
 
             //Creating a root element
-            IDOM_Element*     root = doc->createElement(xBody);
+            DOMElement*     root = doc->createElement(xBody);
             doc->appendChild(root);
 
             //Creating the siblings of root
-            IDOM_Element*     E11 = doc->createElement(xH1);
+            DOMElement*     E11 = doc->createElement(xH1);
             root->appendChild(E11);
 
-            IDOM_Element*     E12 = doc->createElement(xP);
+            DOMElement*     E12 = doc->createElement(xP);
             root->appendChild(E12);
 
             //Attaching texts to siblings
-            IDOM_Text*        textNode1 = doc->createTextNode(xTitle);
+            DOMText*        textNode1 = doc->createTextNode(xTitle);
             E11->appendChild(textNode1);
 
-            IDOM_Text*        textNode11 = doc->createTextNode(xAnotherText);
+            DOMText*        textNode11 = doc->createTextNode(xAnotherText);
             E11->appendChild(textNode11);
 
-            IDOM_Text*        textNode2 = doc->createTextNode(xBlahxyz);
+            DOMText*        textNode2 = doc->createTextNode(xBlahxyz);
             E12->appendChild(textNode2);
 
-            IDOM_Text*     E210 = doc->createTextNode(xInsertedText);
+            DOMText*     E210 = doc->createTextNode(xInsertedText);
 
             delete doc;
 
@@ -247,40 +247,40 @@ int  main()
 
         {
             //DOM Tree and some usable node creation
-            IDOM_DOMImplementation* impl = IDOM_DOMImplementation::getImplementation();
-            IDOM_Document* doc = impl->createDocument();
+            DOMImplementation* impl = DOMImplementation::getImplementation();
+            DOMDocument* doc = impl->createDocument();
 
             //Creating a root element
-            IDOM_Element*     root = doc->createElement(xBody);
+            DOMElement*     root = doc->createElement(xBody);
             doc->appendChild(root);
 
             //Creating the siblings of root
-            IDOM_Element*     E11 = doc->createElement(xH1);
+            DOMElement*     E11 = doc->createElement(xH1);
             root->appendChild(E11);
 
-            IDOM_Element*     E12 = doc->createElement(xP);
+            DOMElement*     E12 = doc->createElement(xP);
             root->appendChild(E12);
 
             //Attaching texts to siblings
-            IDOM_Text*        textNode1 = doc->createTextNode(xTitle);
+            DOMText*        textNode1 = doc->createTextNode(xTitle);
             E11->appendChild(textNode1);
 
-            IDOM_Text*        textNode11 = doc->createTextNode(xAnotherText);
+            DOMText*        textNode11 = doc->createTextNode(xAnotherText);
             E11->appendChild(textNode11);
 
-            IDOM_Text*        textNode2 = doc->createTextNode(xBlahxyz);
+            DOMText*        textNode2 = doc->createTextNode(xBlahxyz);
             E12->appendChild(textNode2);
 
             //experimental nodes
-            IDOM_Element*     E120 = doc->createElement(xElement1);
-            IDOM_Element*     E121 = doc->createElement(xElement2);
-            IDOM_Element*     E122 = doc->createElement(xElement3);
-            IDOM_Element*     E311 = doc->createElement(xSurroundNode1);
+            DOMElement*     E120 = doc->createElement(xElement1);
+            DOMElement*     E121 = doc->createElement(xElement2);
+            DOMElement*     E122 = doc->createElement(xElement3);
+            DOMElement*     E311 = doc->createElement(xSurroundNode1);
 
-            IDOM_Text*     E210 = doc->createTextNode(xInsertedText);
+            DOMText*     E210 = doc->createTextNode(xInsertedText);
 
-            IDOM_Node* rt = doc->getDocumentElement();
-            IDOM_Range* range = doc->createRange();
+            DOMNode* rt = doc->getDocumentElement();
+            DOMRange* range = doc->createRange();
 
 
 
@@ -305,7 +305,7 @@ int  main()
             TASSERT(range->getEndOffset() == 1);
 
 
-            //IDOM_Node* node = range->getCommonAncestorContainer();
+            //DOMNode* node = range->getCommonAncestorContainer();
             TASSERT(range->getCommonAncestorContainer() == rt->getFirstChild());
 
             //selection related test
@@ -444,7 +444,7 @@ int  main()
             // range has H1 as start and end container and 2 as start offset, 3 as end offset
 
             //testing cloning
-            IDOM_Range* aRange = range->cloneRange();
+            DOMRange* aRange = range->cloneRange();
 
             TASSERT(aRange->getStartContainer() == range->getStartContainer());
             TASSERT(aRange->getEndContainer() == range->getEndContainer());
@@ -454,13 +454,13 @@ int  main()
             aRange->setStart(aRange->getStartContainer()->getFirstChild(), 1);
 
             //comparing the ranges
-            short compVal = range->compareBoundaryPoints(IDOM_Range::END_TO_END, aRange);
+            short compVal = range->compareBoundaryPoints(DOMRange::END_TO_END, aRange);
             TASSERT(compVal == 0);
-            compVal = range->compareBoundaryPoints(IDOM_Range::START_TO_START, aRange);
+            compVal = range->compareBoundaryPoints(DOMRange::START_TO_START, aRange);
             TASSERT(compVal == 1);
-            compVal = range->compareBoundaryPoints(IDOM_Range::START_TO_END, aRange);
+            compVal = range->compareBoundaryPoints(DOMRange::START_TO_END, aRange);
             TASSERT(compVal == 1);
-            compVal = range->compareBoundaryPoints(IDOM_Range::END_TO_START, aRange);
+            compVal = range->compareBoundaryPoints(DOMRange::END_TO_START, aRange);
             TASSERT(compVal == -1);
 
             //testing collapse
@@ -502,7 +502,7 @@ int  main()
             // aRange has "ReplacedText" as start container and H1 as end container
             //    and 1 as start offset and 3 as end offset
 
-            IDOM_DocumentFragment* docFrag = aRange->cloneContents();
+            DOMDocumentFragment* docFrag = aRange->cloneContents();
             TASSERT( docFrag != 0);
             range->selectNode(rt->getFirstChild());
             TASSERT(range->getStartContainer() == rt);
@@ -532,7 +532,7 @@ int  main()
             TASSERT(range->getEndOffset() == 4);
 
             //testing extract()
-            IDOM_DocumentFragment* frag2 = range->extractContents();
+            DOMDocumentFragment* frag2 = range->extractContents();
             TASSERT( frag2 != 0);
 
             //After above operations, now the tree looks like:
@@ -586,20 +586,20 @@ int  main()
             //another set of test
             //TEST createRange, setStart and setEnd, insertnode
             //***************************************************************
-            IDOM_DOMImplementation* impl2 = IDOM_DOMImplementation::getImplementation();
-            IDOM_Document* doc2 = impl2->createDocument();
+            DOMImplementation* impl2 = DOMImplementation::getImplementation();
+            DOMDocument* doc2 = impl2->createDocument();
 
-            IDOM_Element* root2 = doc2->createElement(xroot2);
+            DOMElement* root2 = doc2->createElement(xroot2);
             doc2->appendChild(root2);
             //case 1: simple text node, start==end
             // <body>text1</body>
-            IDOM_Element* body = doc2->createElement(xBody);
-            IDOM_Text* text1 = doc2->createTextNode(xtext1);
+            DOMElement* body = doc2->createElement(xBody);
+            DOMText* text1 = doc2->createTextNode(xtext1);
             body->appendChild(text1);
             root2->appendChild(body);
 
             //set range
-            IDOM_Range* range1 = doc2->createRange();
+            DOMRange* range1 = doc2->createRange();
             range1->setStart(text1,1);
             range1->setEnd(text1,3);
 
@@ -611,7 +611,7 @@ int  main()
 
             //now insert a text node
             //<body>ttext2ext1</body>
-            IDOM_Text* text2 = doc2->createTextNode(xtext2);
+            DOMText* text2 = doc2->createTextNode(xtext2);
             range1->insertNode(text2);
 
             TASSERT(!XMLString::compareString(range1->toString(),xtext2ex));
@@ -622,7 +622,7 @@ int  main()
 
             //now insert a non-text node
             //<body>t<p1/>text2ext1</body>
-            IDOM_Element* p1 = doc2->createElement(xp1);
+            DOMElement* p1 = doc2->createElement(xp1);
             range1->insertNode(p1);
 
             TASSERT(!XMLString::compareString(range1->toString(),xtext2ex));
@@ -633,13 +633,13 @@ int  main()
 
             //case 2: non-text node, start==end
             // <head><h1/></head>
-            IDOM_Element* head = doc2->createElement(xhead);
-            IDOM_Element* h1 = doc2->createElement(xH1);
+            DOMElement* head = doc2->createElement(xhead);
+            DOMElement* h1 = doc2->createElement(xH1);
             head->appendChild(h1);
             root2->appendChild(head);
 
             //set range
-            IDOM_Range* range2 = doc2->createRange();
+            DOMRange* range2 = doc2->createRange();
             range2->setStart(head,0);
             range2->setEnd(head,1);
 
@@ -651,7 +651,7 @@ int  main()
 
             //now insert a non-text node
             //<head><h2/><h1/></head>
-            IDOM_Element* h2 = doc2->createElement(xh2);
+            DOMElement* h2 = doc2->createElement(xh2);
             range2->insertNode(h2);
 
             TASSERT(!XMLString::compareString(range2->toString(),XMLUni::fgZeroLenString));
@@ -662,7 +662,7 @@ int  main()
 
             //now insert a text node
             //<head>text5<h2/><h1/></head>
-            IDOM_Text* text5 = doc2->createTextNode(xtext5);
+            DOMText* text5 = doc2->createTextNode(xtext5);
             range2->insertNode(text5);
 
             TASSERT(!XMLString::compareString(range2->toString(),xtext5));
@@ -673,13 +673,13 @@ int  main()
 
             //case 3: simple text node, start!=end
             // <body2>text3</body2>
-            IDOM_Element* body2 = doc2->createElement(xbody2);
-            IDOM_Text* text3 = doc2->createTextNode(xtext3);
+            DOMElement* body2 = doc2->createElement(xbody2);
+            DOMText* text3 = doc2->createTextNode(xtext3);
             body2->appendChild(text3);
             root2->appendChild(body2);
 
             //set range
-            IDOM_Range* range3 = doc2->createRange();
+            DOMRange* range3 = doc2->createRange();
             range3->setStart(text3,1);
             range3->setEnd(body2,1);
 
@@ -691,7 +691,7 @@ int  main()
 
             //now insert a textnode
             //<body2>ttext4ext3</body2>
-            IDOM_Text* text4 = doc2->createTextNode(xtext4);
+            DOMText* text4 = doc2->createTextNode(xtext4);
             range3->insertNode(text4);
 
             TASSERT(!XMLString::compareString(range3->toString(),XMLUni::fgZeroLenString));
@@ -702,7 +702,7 @@ int  main()
 
             //now insert a non-text node
             //<body2>t<p2/>text4ext3</body2>
-            IDOM_Element* p2 = doc2->createElement(xp2);
+            DOMElement* p2 = doc2->createElement(xp2);
             range3->insertNode(p2);
 
             //extra empty node caused by splitting 't'
@@ -725,13 +725,13 @@ int  main()
 
             //case 4: non-text node, start!=end
             // <head2><h3/></head2>
-            IDOM_Element* head2 = doc2->createElement(xhead2);
-            IDOM_Element* h3 = doc2->createElement(xh3);
+            DOMElement* head2 = doc2->createElement(xhead2);
+            DOMElement* h3 = doc2->createElement(xh3);
             head2->appendChild(h3);
             root2->appendChild(head2);
 
             //set range
-            IDOM_Range* range4 = doc2->createRange();
+            DOMRange* range4 = doc2->createRange();
             range4->setStart(head2,0);
             range4->setEnd(h3,0);
 
@@ -743,7 +743,7 @@ int  main()
 
             //now insert a non-text node
             //<head2><h4/><h3/></head2>
-            IDOM_Element* h4 = doc2->createElement(xh4);
+            DOMElement* h4 = doc2->createElement(xh4);
             range4->insertNode(h4);
 
             TASSERT(!XMLString::compareString(range4->toString(),XMLUni::fgZeroLenString));
@@ -754,7 +754,7 @@ int  main()
 
             //now insert a text node
             //<head2>text6<h4/><h3/></head2>
-            IDOM_Text* text6 = doc2->createTextNode(xtext6);
+            DOMText* text6 = doc2->createTextNode(xtext6);
             range4->insertNode(text6);
 
             TASSERT(!XMLString::compareString(range4->toString(),xtext6));
@@ -767,12 +767,12 @@ int  main()
             // quick test of updating
             //***************************************************************
             // <upbody>text1</upbody>
-            IDOM_Element* upbody = doc2->createElement(xupbody);
-            IDOM_Text* uptext1 = doc2->createTextNode(xuptext1);
+            DOMElement* upbody = doc2->createElement(xupbody);
+            DOMText* uptext1 = doc2->createTextNode(xuptext1);
             upbody->appendChild(uptext1);
             root2->appendChild(upbody);
 
-            IDOM_Range* uprange = doc2->createRange();
+            DOMRange* uprange = doc2->createRange();
             uprange->setStart(upbody,0);
             uprange->setEnd(upbody,1);
 
@@ -792,16 +792,16 @@ int  main()
             TASSERT(!XMLString::compareString(uprange->getEndContainer()->getNodeName(),xupbody));
 
             //insert node
-            IDOM_Element* upbody2 = doc2->createElement(xupbody2);
-            IDOM_Text* uptext2 = doc2->createTextNode(xuptext2);
+            DOMElement* upbody2 = doc2->createElement(xupbody2);
+            DOMText* uptext2 = doc2->createTextNode(xuptext2);
             upbody2->appendChild(uptext2);
             root2->appendChild(upbody2);
 
-            IDOM_Range* uprange2 = doc2->createRange();
+            DOMRange* uprange2 = doc2->createRange();
             uprange2->setStart(uptext2,1);
             uprange2->setEnd(upbody2,1);
 
-            IDOM_Range* uprange3 = doc2->createRange();
+            DOMRange* uprange3 = doc2->createRange();
             uprange3->setStart(uptext2,1);
             uprange3->setEnd(upbody2,1);
 
@@ -817,7 +817,7 @@ int  main()
             TASSERT(uprange3->getEndOffset()==1);
             TASSERT(!XMLString::compareString(uprange3->getEndContainer()->getNodeName(),xupbody2));
 
-            IDOM_Element* upp1 = doc2->createElement(xupp1);
+            DOMElement* upp1 = doc2->createElement(xupp1);
             uprange2->insertNode(upp1);
 
             TASSERT(!XMLString::compareString(uprange2->toString(),XMLUni::fgZeroLenString));
@@ -842,22 +842,22 @@ int  main()
             //             |                      |           |
             //             b                    "Hello cd"   "ef"
             //
-            IDOM_DOMImplementation* impl3 = IDOM_DOMImplementation::getImplementation();
-            IDOM_Document* doc3 = impl3->createDocument();
+            DOMImplementation* impl3 = DOMImplementation::getImplementation();
+            DOMDocument* doc3 = impl3->createDocument();
 
-            IDOM_Element* root3 = doc3->createElement(xroot);
+            DOMElement* root3 = doc3->createElement(xroot);
             doc3->appendChild(root3);
 
-            IDOM_Element* foo = doc3->createElement(xfoo);
-            IDOM_Element* moo = doc3->createElement(xmoo);
-            IDOM_Element* cool = doc3->createElement(xcool);
-            IDOM_Text* ab = doc3->createTextNode(xab);
-            IDOM_Text* cd = doc3->createTextNode(xHellocd);
-            IDOM_Text* ef = doc3->createTextNode(xef);
+            DOMElement* foo = doc3->createElement(xfoo);
+            DOMElement* moo = doc3->createElement(xmoo);
+            DOMElement* cool = doc3->createElement(xcool);
+            DOMText* ab = doc3->createTextNode(xab);
+            DOMText* cd = doc3->createTextNode(xHellocd);
+            DOMText* ef = doc3->createTextNode(xef);
 
-            IDOM_Element* a = doc3->createElement(xa);
-            IDOM_Element* b = doc3->createElement(xb);
-            IDOM_Element* c = doc3->createElement(xc);
+            DOMElement* a = doc3->createElement(xa);
+            DOMElement* b = doc3->createElement(xb);
+            DOMElement* c = doc3->createElement(xc);
 
             root3->appendChild(foo);
             foo->appendChild(c);
@@ -872,7 +872,7 @@ int  main()
             //***************************************************************
             //TEST toString
             //***************************************************************
-            IDOM_Range* newtestrange = doc3->createRange();
+            DOMRange* newtestrange = doc3->createRange();
             //case 1:
             //start container is text node
             //   i) end container is also text node
@@ -930,7 +930,7 @@ int  main()
             //***************************************************************
             //test removeChild
             //***************************************************************
-            IDOM_Range* newrange = doc3->createRange();
+            DOMRange* newrange = doc3->createRange();
             newrange->setStart( moo, 0 );
             newrange->setEnd( foo, 4 );
 
@@ -940,8 +940,8 @@ int  main()
             TASSERT(!XMLString::compareString(newrange->getEndContainer()->getNodeName(),xfoo));
             TASSERT(!XMLString::compareString(newrange->toString(),xabHellocd));
 
-            IDOM_Node* n = newrange->cloneContents();
-            IDOM_NodeList* nol = foo->getChildNodes();
+            DOMNode* n = newrange->cloneContents();
+            DOMNodeList* nol = foo->getChildNodes();
 
             //removing moo
             foo->removeChild(nol->item(1));

@@ -64,14 +64,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <xercesc/parsers/SAXParser.hpp>
-#include <xercesc/parsers/DOMParser.hpp>
-#include <xercesc/parsers/IDOMParser.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 
 #include <xercesc/dom/DOM.hpp>
-#include <xercesc/idom/IDOM.hpp>
 
 void clearFileInfoMemory();
 
@@ -227,7 +225,6 @@ struct RunInfo
     int         numThreads;
     bool        validating;
     bool        dom;
-    bool        idom;
     bool        reuseParser;
     bool        inMemory;
     bool        dumpOnErr;
@@ -290,9 +287,8 @@ class ThreadParser: public HandlerBase
 private:
     int           fCheckSum;
     SAXParser*    fSAXParser;
-    DOMParser*    fDOMParser;
-    IDOMParser*   fIDOMParser;
-    IDOM_Document * fDoc;
+    XercesDOMParser*    fXercesDOMParser;
+    DOMDocument * fDoc;
 
 
 public:                               //  This is the API used by the rest of the test program
@@ -308,12 +304,8 @@ public:                               //  This is the API used by the rest of th
                                       //  for DOM, re-walk the tree.
                                       //  for SAX, can't do, just return previous value.
 
-    void domPrint(const DOM_Node &node); // Dump out the contents of a node,
-    void domPrint();                   //   including any children.  Default (no param)
-                                       //   version dumps the entire document.
-
-    void idomPrint(const IDOM_Node *node); // Dump out the contents of a node,
-    void idomPrint();                  //   including any children.  Default (no param)
+    void domPrint(const DOMNode *node); // Dump out the contents of a node,
+    void domPrint();                  //   including any children.  Default (no param)
                                        //   version dumps the entire document.
 
 private:
@@ -321,8 +313,7 @@ private:
     const ThreadParser & operator =(const ThreadParser &); // No assignment.
 
     void  addToCheckSum(const XMLCh *chars, int len=-1);
-    void  domCheckSum(const DOM_Node &);
-    void  idomCheckSum(const IDOM_Node *);
+    void  domCheckSum(const DOMNode *);
 
 
 public:                               // Not really public,
@@ -357,26 +348,16 @@ public:                               // Not really public,
 ThreadParser::ThreadParser()
 {
     fSAXParser = 0;
-    fDOMParser = 0;
-    fIDOMParser = 0;
+    fXercesDOMParser = 0;
     fDoc       = 0;
     if (gRunInfo.dom) {
         // Set up to use a DOM parser
-        fDOMParser = new DOMParser;
-        fDOMParser->setDoValidation(gRunInfo.validating);
-        fDOMParser->setDoSchema(gRunInfo.doSchema);
-        fDOMParser->setValidationSchemaFullChecking(gRunInfo.schemaFullChecking);
-        fDOMParser->setDoNamespaces(gRunInfo.doNamespaces);
-        fDOMParser->setErrorHandler(this);
-    }
-    else if (gRunInfo.idom) {
-        // Set up to use a DOM parser
-        fIDOMParser = new IDOMParser;
-        fIDOMParser->setDoValidation(gRunInfo.validating);
-        fIDOMParser->setDoSchema(gRunInfo.doSchema);
-        fIDOMParser->setValidationSchemaFullChecking(gRunInfo.schemaFullChecking);
-        fIDOMParser->setDoNamespaces(gRunInfo.doNamespaces);
-        fIDOMParser->setErrorHandler(this);
+        fXercesDOMParser = new XercesDOMParser;
+        fXercesDOMParser->setDoValidation(gRunInfo.validating);
+        fXercesDOMParser->setDoSchema(gRunInfo.doSchema);
+        fXercesDOMParser->setValidationSchemaFullChecking(gRunInfo.schemaFullChecking);
+        fXercesDOMParser->setDoNamespaces(gRunInfo.doNamespaces);
+        fXercesDOMParser->setErrorHandler(this);
     }
     else
     {
@@ -397,8 +378,7 @@ ThreadParser::ThreadParser()
 ThreadParser::~ThreadParser()
 {
      delete fSAXParser;
-     delete fDOMParser;
-     delete fIDOMParser;
+     delete fXercesDOMParser;
 }
 
 //------------------------------------------------------------------------
@@ -427,20 +407,11 @@ int ThreadParser::parse(int fileNum)
         if (gRunInfo.dom) {
             // Do a DOM parse
             if (gRunInfo.inMemory)
-                fDOMParser->parse(*mbis);
+                fXercesDOMParser->parse(*mbis);
             else
-                fDOMParser->parse(fInfo->fileName);
-            DOM_Document doc = fDOMParser->getDocument();
+                fXercesDOMParser->parse(fInfo->fileName);
+            DOMDocument* doc = fXercesDOMParser->getDocument();
             domCheckSum(doc);
-        }
-        else if (gRunInfo.idom) {
-            // Do a IDOM parse
-            if (gRunInfo.inMemory)
-                fIDOMParser->parse(*mbis);
-            else
-                fIDOMParser->parse(fInfo->fileName);
-            fDoc = fIDOMParser->getDocument();
-            idomCheckSum(fDoc);
         }
         else
         {
@@ -460,15 +431,9 @@ int ThreadParser::parse(int fileNum)
         delete [] exceptionMessage;
         errors = true;
     }
-    catch (const DOM_DOMException& toCatch)
+    catch (const DOMException& toCatch)
     {
         fprintf(stderr, " during parsing: %s \n DOMException code is: %i \n",
-            fInfo->fileName, toCatch.code);
-        errors = true;
-    }
-    catch (const IDOM_DOMException& toCatch)
-    {
-        fprintf(stderr, " during parsing: %s \n IDOMException code is: %i \n",
             fInfo->fileName, toCatch.code);
         errors = true;
     }
@@ -548,74 +513,15 @@ void ThreadParser::startElement(const XMLCh *const name, AttributeList &attribut
 // domCheckSum  -  Compute the check sum for a DOM node.
 //                 Works recursively - initially called with a document node.
 //
-void ThreadParser::domCheckSum(const DOM_Node &node)
-{
-    DOMString         s;
-    DOM_Node          child;
-    DOM_NamedNodeMap  attributes;
-
-    switch (node.getNodeType() )
-    {
-    case DOM_Node::ELEMENT_NODE:
-        {
-            s = node.getNodeName();   // the element name
-
-            attributes = node.getAttributes();  // Element's attributes
-            int numAttributes = attributes.getLength();
-            int i;
-            for (i=0; i<numAttributes; i++)
-                domCheckSum(attributes.item(i));
-
-            addToCheckSum(s.rawBuffer(), s.length());  // Content and Children
-            for (child=node.getFirstChild(); child!=0; child=child.getNextSibling())
-                domCheckSum(child);
-
-            break;
-        }
-
-
-    case DOM_Node::ATTRIBUTE_NODE:
-        {
-            s = node.getNodeName();  // The attribute name
-            addToCheckSum(s.rawBuffer(), s.length());
-            s = node.getNodeValue();  // The attribute value
-            if (s != 0)
-                addToCheckSum(s.rawBuffer(), s.length());
-            break;
-        }
-
-
-    case DOM_Node::TEXT_NODE:
-    case DOM_Node::CDATA_SECTION_NODE:
-        {
-            s = node.getNodeValue();
-            addToCheckSum(s.rawBuffer(), s.length());
-            break;
-        }
-
-    case DOM_Node::ENTITY_REFERENCE_NODE:
-    case DOM_Node::DOCUMENT_NODE:
-        {
-            // For entity references and the document, nothing is dirctly
-            //  added to the checksum, but we do want to process the chidren nodes.
-            //
-            for (child=node.getFirstChild(); child!=0; child=child.getNextSibling())
-                domCheckSum(child);
-            break;
-        }
-    }
-}
-
-
-void ThreadParser::idomCheckSum(const IDOM_Node *node)
+void ThreadParser::domCheckSum(const DOMNode *node)
 {
     const XMLCh        *s;
-    IDOM_Node          *child;
-    IDOM_NamedNodeMap  *attributes;
+    DOMNode          *child;
+    DOMNamedNodeMap  *attributes;
 
     switch (node->getNodeType() )
     {
-    case IDOM_Node::ELEMENT_NODE:
+    case DOMNode::ELEMENT_NODE:
         {
             s = node->getNodeName();   // the element name
 
@@ -623,17 +529,17 @@ void ThreadParser::idomCheckSum(const IDOM_Node *node)
             int numAttributes = attributes->getLength();
             int i;
             for (i=0; i<numAttributes; i++)
-                idomCheckSum(attributes->item(i));
+                domCheckSum(attributes->item(i));
 
             addToCheckSum(s);          // Content and Children
             for (child=node->getFirstChild(); child!=0; child=child->getNextSibling())
-                idomCheckSum(child);
+                domCheckSum(child);
 
             break;
         }
 
 
-    case IDOM_Node::ATTRIBUTE_NODE:
+    case DOMNode::ATTRIBUTE_NODE:
         {
             s = node->getNodeName();  // The attribute name
             addToCheckSum(s);
@@ -644,22 +550,22 @@ void ThreadParser::idomCheckSum(const IDOM_Node *node)
         }
 
 
-    case IDOM_Node::TEXT_NODE:
-    case IDOM_Node::CDATA_SECTION_NODE:
+    case DOMNode::TEXT_NODE:
+    case DOMNode::CDATA_SECTION_NODE:
         {
             s = node->getNodeValue();
             addToCheckSum(s);
             break;
         }
 
-    case IDOM_Node::ENTITY_REFERENCE_NODE:
-    case IDOM_Node::DOCUMENT_NODE:
+    case DOMNode::ENTITY_REFERENCE_NODE:
+    case DOMNode::DOCUMENT_NODE:
         {
             // For entity references and the document, nothing is dirctly
             //  added to the checksum, but we do want to process the chidren nodes.
             //
             for (child=node->getFirstChild(); child!=0; child=child->getNextSibling())
-                idomCheckSum(child);
+                domCheckSum(child);
             break;
         }
     }
@@ -674,12 +580,7 @@ int ThreadParser::reCheck()
 {
     if (gRunInfo.dom) {
         fCheckSum = 0;
-        DOM_Document doc = fDOMParser->getDocument();
-        domCheckSum(doc);
-    }
-    else if (gRunInfo.idom) {
-        fCheckSum = 0;
-        idomCheckSum(fDoc);
+        domCheckSum(fDoc);
     }
     return fCheckSum;
 }
@@ -691,81 +592,10 @@ int ThreadParser::reCheck()
 //
 void ThreadParser::domPrint()
 {
-    DOMString("Begin DOMPrint ...\n").print();
+    printf("Begin DOMPrint ...\n");
     if (gRunInfo.dom)
-        domPrint(fDOMParser->getDocument());
-    DOMString("End DOMPrint\n").print();
-}
-
-void ThreadParser::domPrint(const DOM_Node &node)
-{
-
-    DOMString         s;
-    DOM_Node          child;
-    DOM_NamedNodeMap  attributes;
-
-    switch (node.getNodeType() )
-    {
-    case DOM_Node::ELEMENT_NODE:
-        {
-            DOMString("<").print();
-            node.getNodeName().print();   // the element name
-
-            attributes = node.getAttributes();  // Element's attributes
-            int numAttributes = attributes.getLength();
-            int i;
-            for (i=0; i<numAttributes; i++) {
-                domPrint(attributes.item(i));
-            }
-            DOMString(">").print();
-
-            for (child=node.getFirstChild(); child!=0; child=child.getNextSibling())
-                domPrint(child);
-
-            DOMString("</").print();
-            node.getNodeName().print();
-            DOMString(">").print();
-            break;
-        }
-
-
-    case DOM_Node::ATTRIBUTE_NODE:
-        {
-            DOMString(" ").print();
-            node.getNodeName().print();   // The attribute name
-            DOMString("= \"").print();
-            node.getNodeValue().print();  // The attribute value
-            DOMString("\"").print();
-            break;
-        }
-
-
-    case DOM_Node::TEXT_NODE:
-    case DOM_Node::CDATA_SECTION_NODE:
-        {
-            node.getNodeValue().print();
-            break;
-        }
-
-    case DOM_Node::ENTITY_REFERENCE_NODE:
-    case DOM_Node::DOCUMENT_NODE:
-        {
-            // For entity references and the document, nothing is dirctly
-            //  printed, but we do want to process the chidren nodes.
-            //
-            for (child=node.getFirstChild(); child!=0; child=child.getNextSibling())
-                domPrint(child);
-            break;
-        }
-    }
-}
-
-void ThreadParser::idomPrint()
-{
-    printf("Begin IDOMPrint ...\n");
-    if (gRunInfo.idom)
-        idomPrint(fIDOMParser->getDocument());
-    printf("End IDOMPrint\n");
+        domPrint(fXercesDOMParser->getDocument());
+    printf("End DOMPrint\n");
 }
 
 static void printString(const XMLCh *str)
@@ -776,15 +606,15 @@ static void printString(const XMLCh *str)
 }
 
 
-void ThreadParser::idomPrint(const IDOM_Node *node)
+void ThreadParser::domPrint(const DOMNode *node)
 {
 
-    IDOM_Node          *child;
-    IDOM_NamedNodeMap  *attributes;
+    DOMNode          *child;
+    DOMNamedNodeMap  *attributes;
 
     switch (node->getNodeType() )
     {
-    case IDOM_Node::ELEMENT_NODE:
+    case DOMNode::ELEMENT_NODE:
         {
             printf("<");
             printString(node->getNodeName());   // the element name
@@ -793,12 +623,12 @@ void ThreadParser::idomPrint(const IDOM_Node *node)
             int numAttributes = attributes->getLength();
             int i;
             for (i=0; i<numAttributes; i++) {
-                idomPrint(attributes->item(i));
+                domPrint(attributes->item(i));
             }
             printf(">");
 
             for (child=node->getFirstChild(); child!=0; child=child->getNextSibling())
-                idomPrint(child);
+                domPrint(child);
 
             printf("</");
             printString(node->getNodeName());
@@ -807,7 +637,7 @@ void ThreadParser::idomPrint(const IDOM_Node *node)
         }
 
 
-    case IDOM_Node::ATTRIBUTE_NODE:
+    case DOMNode::ATTRIBUTE_NODE:
         {
             printf(" ");
             printString(node->getNodeName());   // The attribute name
@@ -818,21 +648,21 @@ void ThreadParser::idomPrint(const IDOM_Node *node)
         }
 
 
-    case IDOM_Node::TEXT_NODE:
-    case IDOM_Node::CDATA_SECTION_NODE:
+    case DOMNode::TEXT_NODE:
+    case DOMNode::CDATA_SECTION_NODE:
         {
             printString(node->getNodeValue());
             break;
         }
 
-    case IDOM_Node::ENTITY_REFERENCE_NODE:
-    case IDOM_Node::DOCUMENT_NODE:
+    case DOMNode::ENTITY_REFERENCE_NODE:
+    case DOMNode::DOCUMENT_NODE:
         {
             // For entity references and the document, nothing is dirctly
             //  printed, but we do want to process the chidren nodes.
             //
             for (child=node->getFirstChild(); child!=0; child=child->getNextSibling())
-                idomPrint(child);
+                domPrint(child);
             break;
         }
     }
@@ -861,7 +691,6 @@ void parseCommandLine(int argc, char **argv)
     gRunInfo.schemaFullChecking = false;
     gRunInfo.doNamespaces = false;
     gRunInfo.dom = false;
-    gRunInfo.idom = false;
     gRunInfo.reuseParser = false;
     gRunInfo.inMemory = false;
     gRunInfo.dumpOnErr = false;
@@ -890,28 +719,15 @@ void parseCommandLine(int argc, char **argv)
 
                 if (!strcmp(parm, "dom")) {
                     gRunInfo.dom = true;
-                    gRunInfo.idom = false;
-                }
-                else if (!strcmp(parm, "idom")) {
-                    gRunInfo.idom = true;
-                    gRunInfo.dom = false;
                 }
                 else if (!strcmp(parm, "sax")) {
-                    gRunInfo.idom = false;
                     gRunInfo.dom = false;
                 }
                 else
                     throw 1;
             }
             else if (strcmp(argv[argnum], "-dom") == 0) {
-                if (gRunInfo.idom == true)
-                    throw 1;
                 gRunInfo.dom = true;
-            }
-            else if (strcmp(argv[argnum], "-idom") == 0) {
-                if (gRunInfo.dom == true)
-                    throw 1;
-                gRunInfo.idom = true;
             }
             else if (strcmp(argv[argnum], "-reuse") == 0)
                 gRunInfo.reuseParser = true;
@@ -973,7 +789,7 @@ void parseCommandLine(int argc, char **argv)
             "     -n             Enable namespace processing. Defaults to off.\n"
             "     -s             Enable schema processing. Defaults to off.\n"
             "     -f             Enable full schema constraint checking. Defaults to off.\n"
-            "     -parser=xxx    Parser Type [dom | idom | sax].  Default is SAX.\n"
+            "     -parser=xxx    Parser Type [dom | sax].  Default is SAX.\n"
             "     -quiet         Suppress periodic status display.\n"
             "     -verbose       Display extra messages.\n"
             "     -reuse         Retain and reuse parser.  Default creates new for each parse.\n"
@@ -1109,8 +925,6 @@ void threadMain (void *param)
             if (gRunInfo.dumpOnErr) {
                if (gRunInfo.dom)
                   thParser->domPrint();
-               if (gRunInfo.idom)
-                  thParser->idomPrint();
             }
             fflush(stdout);
             clearFileInfoMemory();
@@ -1206,8 +1020,6 @@ int main (int argc, char **argv)
         if (gRunInfo.dumpOnErr && errors) {
            if (gRunInfo.dom)
               mainParser->domPrint();
-           if (gRunInfo.idom)
-              mainParser->idomPrint();
         }
 
     }

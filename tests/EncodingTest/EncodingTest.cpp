@@ -65,6 +65,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLException.hpp>
@@ -74,12 +75,13 @@
 #include <xercesc/sax/SAXParseException.hpp>
 
 
-#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <stdio.h>
 
 static int gTestsFailed = 0;
 static int gTestsRun    = 0;
+static XercesDOMParser* parser = 0;
 
 
 //-----------------------------------------------------------------------
@@ -134,15 +136,15 @@ void ParseErrorHandler::warning(const SAXParseException& e)
 //                and getting the DOM Document back.
 //
 //------------------------------------------------------------------------
-static DOM_Document parseFile(char *fileName)
+static DOMDocument* parseFile(char *fileName)
 {
     ParseErrorHandler eh;
-    DOMParser parser;
-    parser.setDoValidation(false);
-    parser.setErrorHandler(&eh);
+    parser = new XercesDOMParser;
+    parser->setDoValidation(false);
+    parser->setErrorHandler(&eh);
     try
     {
-        parser.parse(fileName);
+        parser->parse(fileName);
     }
 
     catch (const XMLException& e )
@@ -150,33 +152,34 @@ static DOM_Document parseFile(char *fileName)
 		fprintf(stderr, "Exception Occurred \"%s\".  \n",
 			XMLString::transcode(e.getMessage()));
 		fprintf(stderr, "File being parsed is \"%s\".\n", fileName);
-        return DOM_Document();  // A null document.
+        return 0;  // A null document.
     }
 
 	catch (...)
 	{
 		fprintf(stderr, "Unexpected Exception thrown during parse of file \"%s\".\n",
 		                 fileName);
-		return DOM_Document();
+		return 0;
 	}
-    return parser.getDocument();
+    return parser->getDocument();
 }
 
 
 //------------------------------------------------------------------------
 //
-//  writeUData - Write out a udata xml element for a DOMString contents.
+//  writeUData - Write out a udata xml element for a XMLCh* contents.
 //
 //------------------------------------------------------------------------
-static void writeUData(const DOMString s)
+static void writeUData(const XMLCh* s)
 {
     unsigned int i;
     printf("<udata>\n");
-    for (i=0; i<s.length(); i++)
+    size_t len = XMLString::stringLen(s);
+    for (i=0; i<len; i++)
     {
         if (i % 16 == 0)
             printf("\n");
-        XMLCh c = s.charAt(i);
+        XMLCh c = s[i];
         printf("%4x ", c);
     }
     printf("\n</udata>\n");
@@ -186,14 +189,14 @@ static void writeUData(const DOMString s)
 
 //------------------------------------------------------------------------
 //
-//  eatWhiteSpace -  DOMStrings are kind of short on utility functions :-(
+//  eatWhiteSpace -  XMLCh*s are kind of short on utility functions :-(
 //
 //------------------------------------------------------------------------
-static void eatWhiteSpace(DOMString s, unsigned int &i)
+static void eatWhiteSpace(XMLCh* s, unsigned int &i)
 {
-    while (i < s.length())
+    while (i < XMLString::stringLen(s))
     {
-    XMLCh c = s.charAt(i);
+    XMLCh c = s[i];
     if (!(c == 0x20 ||           // These are the official XML space characters,
         c == 0x09 ||             //   expressed as Unicode constants.
         c == 0x0A))
@@ -204,7 +207,7 @@ static void eatWhiteSpace(DOMString s, unsigned int &i)
 
 //------------------------------------------------------------------------
 //
-//   convertHexValue     if the DOMString contains a hex number at position i,
+//   convertHexValue     if the XMLCh* contains a hex number at position i,
 //                       convert it and return it, and update i to index the
 //                       first char not in the string.
 //                       return 0 if string[i] didn't have a hex digit.
@@ -212,7 +215,7 @@ static void eatWhiteSpace(DOMString s, unsigned int &i)
 //                       where 0 is not a valid character.
 //
 //------------------------------------------------------------------------
-static int convertHexValue(DOMString s, unsigned int &i)
+static int convertHexValue(XMLCh* s, unsigned int &i)
 {
     int value = 0;
 
@@ -221,9 +224,9 @@ static int convertHexValue(DOMString s, unsigned int &i)
                                    //                the letters a-f are Unicode 0x61-66
                                    // We can't use character literals - we might be
                                    //  building on an EBCDIC machine.
-    while (i < s.length())
+    while (i < XMLString::stringLen(s))
     {
-        XMLCh c = s.charAt(i);
+        XMLCh c = s[i];
         if (c >= 0x61 && c <= 0x66)     // Uppercase a-f to A-F.
             c -= 0x20;
 
@@ -251,98 +254,101 @@ static int convertHexValue(DOMString s, unsigned int &i)
 //                    run it.
 //
 //------------------------------------------------------------------------
-static bool  processTestFile(DOMString fileName)
+static bool  processTestFile(const XMLCh* fileName)
 {
     //
     //  Send the input file through the parse, create a DOM document for it.
     //
-    char *cFileName = fileName.transcode();
-    DOM_Document testDoc = parseFile(fileName.transcode());
+    char *cFileName = XMLString::transcode(fileName);
+    DOMDocument* testDoc = parseFile(cFileName);
     if (testDoc == 0)
         return false;    // parse errors in the source xml.
 
     //
     //  Pull the "data" element out of the document.
     //
-    DOM_NodeList nl = testDoc.getElementsByTagName("data");
-    if (nl.getLength() != 1) {
+    XMLCh tempStr[4000];
+    XMLString::transcode("data", tempStr, 3999);
+    DOMNodeList* nl = testDoc->getElementsByTagName(tempStr);
+    if (nl->getLength() != 1) {
         fprintf(stderr, "Test file \"%s\" must have exactly one \"data\" element.\n", cFileName);
         return false;
     };
-    DOM_Node tmpNode = nl.item(0);
-    DOM_Element data = (DOM_Element &) tmpNode;
+    DOMNode* tmpNode = nl->item(0);
+    DOMElement* data = (DOMElement*) tmpNode;
 
 
     //
     //  Build up a string containing the character data contents of the data element.
     //
-    DOM_Node child;
-    DOMString elData;
-    for (child=data.getFirstChild(); child != 0; child= child.getNextSibling())
+    DOMNode* child;
+    XMLBuffer elData;
+    for (child=data->getFirstChild(); child != 0; child= child->getNextSibling())
     {
-		if (child.getNodeType() == DOM_Node::COMMENT_NODE)
+		if (child->getNodeType() == DOMNode::COMMENT_NODE)
 			continue;
-        if (! (child.getNodeType() == DOM_Node::TEXT_NODE ||
-               child.getNodeType() == DOM_Node::CDATA_SECTION_NODE ||
-               child.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE))
+        if (! (child->getNodeType() == DOMNode::TEXT_NODE ||
+               child->getNodeType() == DOMNode::CDATA_SECTION_NODE ||
+               child->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE))
         {
                fprintf(stderr, "Test file \"%s\": data element contains unexpected children.",
                     cFileName);
                return false;
         }
-        elData += ((DOM_CharacterData &)child).getData();
+        elData.append(((DOMCharacterData *)child)->getData());
     };
 
     //
     //  Pull the "udata" element out of the document
     //
-    nl = testDoc.getElementsByTagName("udata");
-    if (nl.getLength() != 1) {
+    XMLString::transcode("udata", tempStr, 3999);
+    nl = testDoc->getElementsByTagName(tempStr);
+    if (nl->getLength() != 1) {
         fprintf(stderr, "Test file \"%s\" must have exactly one \"udata\" element.\n", cFileName);
         return false;
     };
-    DOM_Node tmpNode1 = nl.item(0);
-    DOM_Element udata = (DOM_Element &) tmpNode1;
+    DOMNode* tmpNode1 = nl->item(0);
+    DOMElement* udata = (DOMElement*) tmpNode1;
 
     //
     //  Build up a string containing the character data contents of the udata element.
     //  This will consist of a whole bunch hex numbers, still in string from
     //
 
-    DOMString rawUData;
-    for (child=udata.getFirstChild(); child != 0; child= child.getNextSibling())
+    XMLBuffer rawUData;
+    for (child=udata->getFirstChild(); child != 0; child= child->getNextSibling())
     {
-        if (child.getNodeType() == DOM_Node::COMMENT_NODE)
+        if (child->getNodeType() == DOMNode::COMMENT_NODE)
             continue;
-        if (! (child.getNodeType() == DOM_Node::TEXT_NODE ||
-            child.getNodeType() == DOM_Node::CDATA_SECTION_NODE ||
-            child.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE))
+        if (! (child->getNodeType() == DOMNode::TEXT_NODE ||
+            child->getNodeType() == DOMNode::CDATA_SECTION_NODE ||
+            child->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE))
         {
             fprintf(stderr, "Test file \"%s\": udata element contains unexpected children.",
                 cFileName);
             return false;
         }
-        rawUData += ((DOM_CharacterData &)child).getData();
+        rawUData.append(((DOMCharacterData *)child)->getData());
     };
 
 
     //
     // Convert the raw (hex numbers)  form of the udata to the corresponding string.
     //
-    DOMString uData;
+    XMLBuffer uData;
     unsigned int rawIndex = 0;
 
-    while (rawIndex < rawUData.length())
+    while (rawIndex < rawUData.getLen())
     {
-        eatWhiteSpace(rawUData, rawIndex);
-        XMLCh c = convertHexValue(rawUData, rawIndex);
+        eatWhiteSpace(rawUData.getRawBuffer(), rawIndex);
+        XMLCh c = convertHexValue(rawUData.getRawBuffer(), rawIndex);
         if (c > 0)
-            uData += c;
+            uData.append(c);
         else
-            if (rawIndex < rawUData.length())
+            if (rawIndex < rawUData.getLen())
             {
                 fprintf(stderr, "Test file \"%s\": Bad hex number in udata element.  "
-                    "Data character number %d\n", cFileName, uData.length());
+                    "Data character number %d\n", cFileName, uData.getLen());
                 return false;
             }
     }
@@ -352,32 +358,35 @@ static bool  processTestFile(DOMString fileName)
     // Compare the two strings.
     //
     unsigned int i;
-    for (i=0; i<elData.length(); i++)
+    for (i=0; i< elData.getLen(); i++)
     {
-        if (i >= uData.length())
+        XMLCh* elDataRaw = elData.getRawBuffer();
+        XMLCh* uDataRaw = uData.getRawBuffer();
+        if (i >= uData.getLen())
         {
             fprintf(stderr, "Test file \"%s\": udata element shorter than data at char number %d\n",
                 cFileName, i);
-            writeUData(elData);
+            writeUData(elDataRaw);
             return false;
         }
-        if (uData.charAt(i) != elData.charAt(i))
+        if (uDataRaw[i] != elDataRaw[i])
         {
             fprintf(stderr, "Test file \"%s\": comparison failure at character number %d\n",
                 cFileName, i);
-            writeUData(elData);
+            writeUData(elDataRaw);
             return false;
         };
     }
 
-    if (elData.length() != uData.length())
+    if (elData.getLen() != uData.getLen())
     {
         fprintf(stderr, "Test file \"%s\": udata element longer than data at char number %d\n",
             cFileName, i);
-        writeUData(elData);
+        writeUData(elData.getRawBuffer());
         return false;
     }
 
+    delete [] cFileName;
 
     return true;
 }
@@ -409,21 +418,24 @@ int main(int argc, char ** argv) {
                "   where file name is the xml file specifying the list of test files.", argv[0]);
         return 1;
     }
-    DOM_Document fileListDoc = parseFile(argv[1]);
+    DOMDocument* fileListDoc = parseFile(argv[1]);
     if (fileListDoc == 0) return 1;
 
 
     //
     // Iterate over the list of files, running each as a test.
     //
-    DOM_NodeList list = fileListDoc.getElementsByTagName("testFile");
+    XMLCh tempStr[4000];
+    XMLString::transcode("testFile", tempStr, 3999);
+    DOMNodeList* list = fileListDoc->getElementsByTagName(tempStr);
     int i;
-    int numFiles = list.getLength();
+    int numFiles = list->getLength();
     for (i=0; i<numFiles; i++)
     {
         ++gTestsRun;
-        DOM_Node tmpNode3 = list.item(i);
-        DOMString fileName = ((DOM_Element &) tmpNode3).getAttribute("name");
+        DOMNode* tmpNode3 = list->item(i);
+        XMLString::transcode("name", tempStr, 3999);
+        const XMLCh* fileName = ((DOMElement*) tmpNode3)->getAttribute(tempStr);
         if (processTestFile(fileName) == false)
             ++gTestsFailed;
     };

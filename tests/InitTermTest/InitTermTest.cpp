@@ -70,14 +70,12 @@
 #include <xercesc/sax/SAXException.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 
-#include <xercesc/parsers/DOMParser.hpp>
-#include <xercesc/parsers/IDOMParser.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/sax2/XMLReaderFactory.hpp>
 
-#include <xercesc/dom/DOM_DOMException.hpp>
-#include <xercesc/idom/IDOM_DOMException.hpp>
+#include <xercesc/dom/DOMException.hpp>
 #include "InitTermTest.hpp"
 
 #include <string.h>
@@ -100,7 +98,6 @@ enum Teststate {
 // ---------------------------------------------------------------------------
 //  Declare functions
 // ---------------------------------------------------------------------------
-int TestInit4DOM(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState);
 int TestInit4DOM(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState);
 int TestInit4SAX(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState);
 int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState);
@@ -172,7 +169,7 @@ int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool 
              << StrX(toCatch.getMessage()) << "\n" << endl;       \
         errorOccurred = true;                                     \
     }                                                             \
-    catch (const DOM_DOMException& toCatch)                       \
+    catch (const DOMException& toCatch)                           \
     {                                                             \
         cerr << "\nDOM Error during parsing: '" << xmlFile        \
              << "\nDOMException code is:  \n"                     \
@@ -213,20 +210,7 @@ int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool 
 int TestInit4DOM(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState)
 {
     TESTINITPRE;
-    DOMParser* parser = new DOMParser;
-    parser->setDoNamespaces(gDoNamespaces);
-    parser->setDoSchema(gDoSchema);
-    parser->setValidationSchemaFullChecking(gSchemaFullChecking);
-    TESTINITPOST;
-}
-
-// ---------------------------------------------------------------------------
-//  IDOM Parser
-// ---------------------------------------------------------------------------
-int TestInit4IDOM(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool gSchemaFullChecking, Teststate theState)
-{
-    TESTINITPRE;
-    IDOMParser* parser = new IDOMParser;
+    XercesDOMParser* parser = new XercesDOMParser;
     parser->setDoNamespaces(gDoNamespaces);
     parser->setDoSchema(gDoSchema);
     parser->setValidationSchemaFullChecking(gSchemaFullChecking);
@@ -280,9 +264,7 @@ void usage()
     cout << "\nUsage:\n"
             "    InitTermTest [options] <XML file>\n\n"
             "This program tests the XMLPlatformUtils::Initialize()/Terminate()\n"
-            "pair by calling it a number of times.  All four parsers\n"
-            "(DOMParser, IDOMParser, SAXParser and SAX2XMLReader) are invoked\n"
-            "to parse the specified XML file.\n\n"
+            "pair by calling it a number of times.\n"
             "Options:\n"
             "    -n          Enable namespace processing. Default is off.\n"
             "    -s          Enable schema processing. Default is off.\n"
@@ -381,8 +363,6 @@ int main(int argC, char* argV[]) {
 
         if (TestInit4DOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Once))
             error = true;
-        if (TestInit4IDOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Once))
-            error = true;
         if (TestInit4SAX(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Once))
             error = true;
         if (TestInit4SAX2(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Once))
@@ -390,8 +370,6 @@ int main(int argC, char* argV[]) {
     }
 
     if (error || TestInit4DOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Multiple))
-        error = true;
-    if (error || TestInit4IDOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Multiple))
         error = true;
     if (error || TestInit4SAX(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Multiple))
         error = true;
@@ -404,16 +382,12 @@ int main(int argC, char* argV[]) {
 /*
     if (error || TestInit4DOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Limit))
         error = true;
-    if (error || TestInit4IDOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Limit))
-        error = true;
     if (error || TestInit4SAX(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Limit))
         error = true;
     if (error || TestInit4SAX2(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, Limit))
         error = true;
 
     if (error || TestInit4DOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, ExceedLimit))
-        error = true;
-    if (error || TestInit4IDOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, ExceedLimit))
         error = true;
     if (error || TestInit4SAX(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, ExceedLimit))
         error = true;
@@ -422,8 +396,6 @@ int main(int argC, char* argV[]) {
 */
 
     if (error || TestInit4DOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, UnEven))
-        error = true;
-    if (error || TestInit4IDOM(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, UnEven))
         error = true;
     if (error || TestInit4SAX(xmlFile, gDoNamespaces, gDoSchema, gSchemaFullChecking, UnEven))
         error = true;

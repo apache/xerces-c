@@ -55,7 +55,7 @@
  */
 
 //
-//  Various IDOM tests.
+//  Various DOM tests.
 //     Contents include
 //       1.  NodeIterator tests
 //       2.  Tree Walker tests
@@ -66,8 +66,8 @@
 
 /**
  * $Log$
- * Revision 1.7  2002/05/21 18:51:37  tng
- * Test case update: this is the original tests/IDom/ITraversal/ITraversal.cpp
+ * Revision 1.8  2002/05/21 18:52:35  tng
+ * Test case update: modify to use the latest DOM interface.
  *
  * Revision 1.8  2002/03/07 21:41:58  peiyongz
  * Call Terminate() to avoid memory tools reporting memory leak
@@ -99,7 +99,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <xercesc/idom/IDOM.hpp>
+#include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -121,7 +121,7 @@ void tassert(bool c, const char *file, int line)
     operation;                                                      \
     printf(" Error: no exception thrown at line %d\n", __LINE__);   \
 }                                                                   \
-    catch (IDOM_DOMException &e) {                                       \
+    catch (DOMException &e) {                                       \
     if (e.code != expected_exception)                       \
     printf(" Wrong exception code: %d at line %d\n", e.code, __LINE__); \
 }                                                                 \
@@ -130,11 +130,11 @@ void tassert(bool c, const char *file, int line)
 }                                                                   \
 }
 
-class  MyFilter : public IDOM_NodeFilter {
+class  MyFilter : public DOMNodeFilter {
 public:
 
-  MyFilter(short nodeType, bool reject=false) : IDOM_NodeFilter(), fNodeType(nodeType), fReject(reject) {};
-  virtual short acceptNode(const IDOM_Node* node) const;
+  MyFilter(short nodeType, bool reject=false) : DOMNodeFilter(), fNodeType(nodeType), fReject(reject) {};
+  virtual short acceptNode(const DOMNode* node) const;
 private:
     short fNodeType;
     bool fReject;
@@ -154,13 +154,13 @@ private:
         DOCUMENT_FRAGMENT_NODE = 11,
         NOTATION_NODE        = 12
 */
-short  MyFilter::acceptNode(const IDOM_Node* node) const {
+short  MyFilter::acceptNode(const DOMNode* node) const {
     if (fNodeType == 0)
-        return  IDOM_NodeFilter::FILTER_ACCEPT;
+        return  DOMNodeFilter::FILTER_ACCEPT;
 	if (node->getNodeType() ==  fNodeType) {
-       	return  IDOM_NodeFilter::FILTER_ACCEPT;
+       	return  DOMNodeFilter::FILTER_ACCEPT;
 	} else {
-	    return  fReject ? IDOM_NodeFilter::FILTER_REJECT : IDOM_NodeFilter::FILTER_SKIP;
+	    return  fReject ? DOMNodeFilter::FILTER_REJECT : DOMNodeFilter::FILTER_SKIP;
 	}
 }
 
@@ -202,76 +202,76 @@ int  main()
                       - comment
          */
 
-        IDOM_DOMImplementation* impl = IDOM_DOMImplementation::getImplementation();
-        IDOM_Document* doc = impl->createDocument();
+        DOMImplementation* impl = DOMImplementation::getImplementation();
+        DOMDocument* doc = impl->createDocument();
 
         //Creating a root element
         XMLString::transcode("RootElement", tempStr, 3999);
-        IDOM_Element*     root = doc->createElement(tempStr);
+        DOMElement*     root = doc->createElement(tempStr);
         doc->appendChild(root);
 
         //Creating the siblings of root
         XMLString::transcode("FirstSibling", tempStr, 3999);
-        IDOM_Element*     E11 = doc->createElement(tempStr);
+        DOMElement*     E11 = doc->createElement(tempStr);
         root->appendChild(E11);
 
         XMLString::transcode("SecondSibling", tempStr, 3999);
-        IDOM_Element*     E12 = doc->createElement(tempStr);
+        DOMElement*     E12 = doc->createElement(tempStr);
         root->appendChild(E12);
 
         XMLString::transcode("ThirdSibling", tempStr, 3999);
-        IDOM_Element*     E13 = doc->createElement(tempStr);
+        DOMElement*     E13 = doc->createElement(tempStr);
         root->appendChild(E13);
 
         //Attaching texts to few siblings
         XMLString::transcode("Text1", tempStr, 3999);
-        IDOM_Text*        textNode1 = doc->createTextNode(tempStr);
+        DOMText*        textNode1 = doc->createTextNode(tempStr);
         E11->appendChild(textNode1);
 
         XMLString::transcode("Text2", tempStr, 3999);
-        IDOM_Text*        textNode2 = doc->createTextNode(tempStr);
+        DOMText*        textNode2 = doc->createTextNode(tempStr);
         E12->appendChild(textNode2);
 
         //creating child of siblings
         XMLString::transcode("FirstSiblingChild1", tempStr, 3999);
-        IDOM_Element*     E111 = doc->createElement(tempStr);
+        DOMElement*     E111 = doc->createElement(tempStr);
         E11->appendChild(E111);
 
         XMLString::transcode("Attr01", tempStr, 3999);
-        IDOM_Attr*        attr01  = doc->createAttribute(tempStr);
+        DOMAttr*        attr01  = doc->createAttribute(tempStr);
         E11->setAttributeNode(attr01);
 
         XMLString::transcode("FirstSiblingChild2", tempStr, 3999);
-        IDOM_Element*     E112 = doc->createElement(tempStr);
+        DOMElement*     E112 = doc->createElement(tempStr);
         E11->appendChild(E112);
 
         XMLString::transcode("SecondSiblingChild1", tempStr, 3999);
-        IDOM_Element*     E121 = doc->createElement(tempStr);
+        DOMElement*     E121 = doc->createElement(tempStr);
         E12->appendChild(E121);
 
         XMLString::transcode("Attr01", tempStr, 3999);
-        IDOM_Attr* attr02 = doc->createAttribute(tempStr);
+        DOMAttr* attr02 = doc->createAttribute(tempStr);
         E12->setAttributeNode(attr02);
 
         XMLString::transcode("SecondSiblingChild2", tempStr, 3999);
-        IDOM_Element*     E122 = doc->createElement(tempStr);
+        DOMElement*     E122 = doc->createElement(tempStr);
         E12->appendChild(E122);
 
         XMLString::transcode("ThirdSiblingChild1", tempStr, 3999);
-        IDOM_Element*     E131 = doc->createElement(tempStr);
+        DOMElement*     E131 = doc->createElement(tempStr);
         E13->appendChild(E131);
 
         XMLString::transcode("DocComment", tempStr, 3999);
-        IDOM_Comment* comment = doc->createComment(tempStr);
+        DOMComment* comment = doc->createComment(tempStr);
         root->appendChild(comment);
 
         XMLString::transcode("DocCDataSection", tempStr, 3999);
-        IDOM_CDATASection*  cdataSec = doc->createCDATASection(tempStr);
+        DOMCDATASection*  cdataSec = doc->createCDATASection(tempStr);
         E11->appendChild(cdataSec);
 
         XMLString::transcode("DocPI", tempStr, 3999);
         XMLCh piStr[] = {chLatin_D, chLatin_o, chLatin_c, chLatin_P, chLatin_I, chNull};
-        IDOM_ProcessingInstruction*  docPI = doc->createProcessingInstruction(piStr, tempStr);
+        DOMProcessingInstruction*  docPI = doc->createProcessingInstruction(piStr, tempStr);
         E13->appendChild(docPI);
 
 
@@ -298,15 +298,15 @@ int  main()
         {
             // all node iterating test
 
-            IDOM_Node*    node = doc->getFirstChild();
-            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_ALL;
+            DOMNode*    node = doc->getFirstChild();
+            unsigned long       whatToShow = DOMNodeFilter::SHOW_ALL;
             MyFilter* filter = new MyFilter(0);
 
-            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            DOMNodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter->getWhatToShow() == 65535);
             TASSERT(iter->getExpandEntityReferences() == 1);
 
-            IDOM_Node*  nd;
+            DOMNode*  nd;
             nd = iter->nextNode();
             TASSERT (nd ==root);
             nd = iter->nextNode();
@@ -355,15 +355,15 @@ int  main()
         {
             //element node iterating test
 
-            IDOM_Node*    node = doc->getFirstChild();
-            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_ELEMENT;
-            MyFilter* filter = new MyFilter(IDOM_Node::ELEMENT_NODE);
+            DOMNode*    node = doc->getFirstChild();
+            unsigned long       whatToShow = DOMNodeFilter::SHOW_ELEMENT;
+            MyFilter* filter = new MyFilter(DOMNode::ELEMENT_NODE);
 
-            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            DOMNodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter->getWhatToShow() == 1);
             TASSERT(iter->getExpandEntityReferences() == 1);
 
-            IDOM_Node*  nd;
+            DOMNode*  nd;
             nd = iter->nextNode();
             TASSERT (nd ==root);
             nd = iter->nextNode();
@@ -399,16 +399,16 @@ int  main()
         {
             // Text node iterating test
 
-            IDOM_Node*    node = doc->getFirstChild();
-            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_TEXT;
-            MyFilter* filter = new MyFilter(IDOM_Node::TEXT_NODE);
+            DOMNode*    node = doc->getFirstChild();
+            unsigned long       whatToShow = DOMNodeFilter::SHOW_TEXT;
+            MyFilter* filter = new MyFilter(DOMNode::TEXT_NODE);
 
-            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            DOMNodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
 
             TASSERT(iter->getWhatToShow() == 4);
             TASSERT(iter->getExpandEntityReferences() == 1);
 
-            IDOM_Node*  nd;
+            DOMNode*  nd;
             nd = iter->nextNode();
             TASSERT (nd ==textNode1);
             nd = iter->nextNode();
@@ -423,15 +423,15 @@ int  main()
         {
             //CDataSection node itearating test
 
-            IDOM_Node*    node = doc->getFirstChild();
-            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_CDATA_SECTION;
-            MyFilter* filter = new MyFilter(IDOM_Node::CDATA_SECTION_NODE);
+            DOMNode*    node = doc->getFirstChild();
+            unsigned long       whatToShow = DOMNodeFilter::SHOW_CDATA_SECTION;
+            MyFilter* filter = new MyFilter(DOMNode::CDATA_SECTION_NODE);
 
-            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            DOMNodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter->getWhatToShow() == 8);
             TASSERT(iter->getExpandEntityReferences() == 1);
 
-            IDOM_Node*  nd;
+            DOMNode*  nd;
             nd = iter->nextNode();
             TASSERT(nd == cdataSec);
             nd = iter->nextNode();
@@ -444,15 +444,15 @@ int  main()
         {
             // PI nodes iterating test
 
-            IDOM_Node*    node = doc->getFirstChild();
-            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_PROCESSING_INSTRUCTION;
-            MyFilter* filter = new MyFilter(IDOM_Node::PROCESSING_INSTRUCTION_NODE);
+            DOMNode*    node = doc->getFirstChild();
+            unsigned long       whatToShow = DOMNodeFilter::SHOW_PROCESSING_INSTRUCTION;
+            MyFilter* filter = new MyFilter(DOMNode::PROCESSING_INSTRUCTION_NODE);
 
-            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            DOMNodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter->getWhatToShow() == 64);
             TASSERT(iter->getExpandEntityReferences() == 1);
 
-            IDOM_Node*  nd;
+            DOMNode*  nd;
             nd = iter->nextNode();
             TASSERT(nd == docPI);
             nd = iter->nextNode();
@@ -464,15 +464,15 @@ int  main()
 
 
         {
-            IDOM_Node*    node = doc->getFirstChild();
-            unsigned long       whatToShow = IDOM_NodeFilter::SHOW_COMMENT;
-            MyFilter* filter = new MyFilter(IDOM_Node::COMMENT_NODE);
+            DOMNode*    node = doc->getFirstChild();
+            unsigned long       whatToShow = DOMNodeFilter::SHOW_COMMENT;
+            MyFilter* filter = new MyFilter(DOMNode::COMMENT_NODE);
 
-            IDOM_NodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
+            DOMNodeIterator*  iter = doc->createNodeIterator(root, whatToShow,  filter, true);
             TASSERT(iter->getWhatToShow() == 128);
             TASSERT(iter->getExpandEntityReferences() == 1);
 
-            IDOM_Node*  nd;
+            DOMNode*  nd;
             nd = iter->nextNode();
             TASSERT(nd == comment);
             nd = iter->nextNode();
@@ -489,8 +489,8 @@ int  main()
 
 
         {
-            unsigned long whatToShow = IDOM_NodeFilter::SHOW_ALL;
-            IDOM_TreeWalker* tw = doc->createTreeWalker(doc, whatToShow, 0, true);
+            unsigned long whatToShow = DOMNodeFilter::SHOW_ALL;
+            DOMTreeWalker* tw = doc->createTreeWalker(doc, whatToShow, 0, true);
 
             TASSERT(tw->getCurrentNode() == doc);
             TASSERT(tw->firstChild() == root);
@@ -519,9 +519,9 @@ int  main()
 
 
         {
-            MyFilter mf(IDOM_Node::ELEMENT_NODE);
-            unsigned long whatToShow = IDOM_NodeFilter::SHOW_ALL;
-            IDOM_TreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
+            MyFilter mf(DOMNode::ELEMENT_NODE);
+            unsigned long whatToShow = DOMNodeFilter::SHOW_ALL;
+            DOMTreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
 
             TASSERT(tw->getCurrentNode() == root);
             TASSERT(tw->parentNode() == 0);  //should not change currentNode
@@ -537,9 +537,9 @@ int  main()
 
 
         {
-            MyFilter mf(IDOM_Node::ELEMENT_NODE, true);
-            unsigned long whatToShow = IDOM_NodeFilter::SHOW_ELEMENT;
-            IDOM_TreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
+            MyFilter mf(DOMNode::ELEMENT_NODE, true);
+            unsigned long whatToShow = DOMNodeFilter::SHOW_ELEMENT;
+            DOMTreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
 
             tw->setCurrentNode(E12);
             TASSERT(tw->firstChild() == E121);   //still first visible child
@@ -548,9 +548,9 @@ int  main()
 
 
         {
-            MyFilter mf(IDOM_Node::TEXT_NODE);
-            unsigned long whatToShow = IDOM_NodeFilter::SHOW_TEXT;
-            IDOM_TreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
+            MyFilter mf(DOMNode::TEXT_NODE);
+            unsigned long whatToShow = DOMNodeFilter::SHOW_TEXT;
+            DOMTreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
 
             //when first is not visible, should it go to its descendent?
             TASSERT(tw->firstChild() == textNode1);   //E11 skipped
@@ -570,9 +570,9 @@ int  main()
 
 
         {
-            MyFilter mf(IDOM_Node::TEXT_NODE, true);
-            unsigned long whatToShow = IDOM_NodeFilter::SHOW_TEXT;
-            IDOM_TreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
+            MyFilter mf(DOMNode::TEXT_NODE, true);
+            unsigned long whatToShow = DOMNodeFilter::SHOW_TEXT;
+            DOMTreeWalker* tw = doc->createTreeWalker(root, whatToShow, &mf, true);
 
             TASSERT(tw->firstChild() == 0);   //E11 rejected and no children is TEXT
             TASSERT(tw->getCurrentNode() == root);
