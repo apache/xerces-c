@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/16 12:25:48  cargilld
+ * Change a conditional expression to an if-else to avoid a compiler problem.
+ *
  * Revision 1.15  2003/10/01 16:32:40  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -431,9 +434,19 @@ void RegularExpression::setPattern(const XMLCh* const pattern,
 	fOptions = parseOptions(options);
 	fPattern = XMLString::replicate(pattern, fMemoryManager);
 
-	RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE)
-		? new (fMemoryManager) ParserForXMLSchema(fMemoryManager) 
-        : new (fMemoryManager) RegxParser(fMemoryManager);
+    // the following construct causes an error in an Intel 7.1 32 bit compiler for 
+    // red hat linux 7.2
+    // (when an exception is thrown the wrong object is deleted)
+    //RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE)
+    //	? new (fMemoryManager) ParserForXMLSchema(fMemoryManager) 
+    //    : new (fMemoryManager) RegxParser(fMemoryManager);
+    RegxParser* regxParser;
+    if (isSet(fOptions, XMLSCHEMA_MODE)) {
+	    regxParser = new (fMemoryManager) ParserForXMLSchema(fMemoryManager);
+    }
+    else {
+        regxParser = new (fMemoryManager) RegxParser(fMemoryManager);
+    }
 
     if (regxParser) {
         regxParser->setTokenFactory(fTokenFactory);
