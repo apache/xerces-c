@@ -867,6 +867,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\framework\URLInputSource.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\ValidationContext.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\Wrapper4DOMInputSource.cpp">
 			</File>
 			<File
@@ -983,9 +986,157 @@
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLValidityCodes.hpp">
 			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSObject.cpp">
-			</File>
+			<Filter
+				Name="psvi"
+				Filter="">
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttribute.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttribute.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttributeList.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttributeList.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\PSVIElement.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\PSVIElement.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\PSVIHandler.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\PSVIItem.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\PSVIItem.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSAnnotation.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSAnnotation.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeDeclaration.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeDeclaration.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeGroupDefinition.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeGroupDefinition.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeUse.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeUse.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSComplexTypeDefinition.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSComplexTypeDefinition.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSConstants.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSElementDeclaration.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSElementDeclaration.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSFacet.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSFacet.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSIDCDefinition.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSIDCDefinition.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSModel.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSModel.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroup.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroup.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroupDefinition.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroupDefinition.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSNamedMap.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSNamespaceItem.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSNamespaceItem.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSNotationDeclaration.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSNotationDeclaration.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSObject.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSObject.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSParticle.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSParticle.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSSimpleTypeDefinition.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSSimpleTypeDefinition.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.hpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.hpp">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="internal"
@@ -1055,6 +1206,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\SGXMLScanner.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\ValidationContextImpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\ValidationContextImpl.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.cpp">
