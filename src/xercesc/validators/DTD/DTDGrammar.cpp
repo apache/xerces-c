@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/03/03 23:03:28  peiyongz
+ * Using serialize() to save/load object created in ctor
+ *
  * Revision 1.16  2004/01/29 11:52:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -369,8 +372,12 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
 
         serEng<<fRootElemId;
         serEng<<fValidated;
-        serEng<<fGramDesc;
 
+        /***
+         * serialize() method shall be used to store object
+         * which has been created in ctor
+         ***/
+        fGramDesc->serialize(serEng);
     }
     else
     {
@@ -389,10 +396,11 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
         serEng>>fRootElemId;
         serEng>>fValidated;
 
-        XMLDTDDescriptionImpl* gramDesc;
-        serEng>>gramDesc;
-        fGramDesc = gramDesc;
-
+        /***
+         * serialize() method shall be used to load object
+         * which has been created in ctor
+         ***/
+        fGramDesc->serialize(serEng);
     }
 
 }

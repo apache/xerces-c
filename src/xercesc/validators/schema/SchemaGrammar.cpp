@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/03/03 23:03:48  peiyongz
+ * Using serialize() to save/load object created in ctor
+ *
  * Revision 1.19  2004/01/29 11:52:31  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -436,7 +439,12 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
 
         serEng.writeString(fTargetNamespace);
         serEng<<fValidated;
-        serEng<<fGramDesc;
+
+        /***
+         * serialize() method shall be used to store object
+         * which has been created in ctor
+         ***/
+        fGramDesc->serialize(serEng);
 
     }
     else
@@ -485,9 +493,11 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         serEng.readString(fTargetNamespace);
         serEng>>fValidated;
 
-        XMLSchemaDescriptionImpl* gramDesc;
-        serEng>>gramDesc;
-        fGramDesc = gramDesc;
+        /***
+         * serialize() method shall be used to load object
+         * which has been created in ctor
+         ***/
+        fGramDesc->serialize(serEng);
 
     }
 }
