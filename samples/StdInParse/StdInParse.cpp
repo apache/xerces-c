@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/02/22 20:59:57  tng
+ * [Bug 678] StdInParse doesn't output filename or duration
+ *
  * Revision 1.6  2000/06/20 02:23:10  rahulj
  * Help message added by Joe Polastre.
  *
@@ -189,10 +192,14 @@ int main(int argC, char* argV[])
     //  Kick off the parse and catch any exceptions. Create a standard
     //  input input source and tell the parser to parse from that.
     //
+    unsigned long duration;
+    StdInInputSource src;
     try
     {
-        StdInInputSource src;
+        const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
         parser.parse(src);
+        const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
+        duration = endMillis - startMillis;
     }
 
     catch (const XMLException& e)
@@ -204,7 +211,8 @@ int main(int argC, char* argV[])
     }
 
     // Print out the stats that we collected and time taken
-    cout << handler.getElementCount() << " elems, "
+    cout << StrX(src.getSystemId()) << ": " << duration << " ms ("
+         << handler.getElementCount() << " elems, "
          << handler.getAttrCount() << " attrs, "
          << handler.getSpaceCount() << " spaces, "
          << handler.getCharacterCount() << " chars)" << endl;

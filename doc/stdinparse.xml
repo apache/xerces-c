@@ -43,7 +43,7 @@ spaces and display these stats at the end</source>
           <p>Here is a sample output from StdInParse:</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
 StdInParse &lt; personal.xml
-personal.xml: 60 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
+stdin: 60 ms (37 elems, 12 attrs, 0 spaces, 268 chars)</source>
 
           <note>The time reported by the program may be different depending on your
           machine processor.</note>
