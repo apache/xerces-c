@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/06/17 15:41:15  tng
+ * To be consistent, SAX2 is updated with:
+ * 1. the progressive parse methods should use the fReuseGrammar flag set from setFeature instead of using parameter
+ * 2. add feature "http://apache.org/xml/features/continue-after-fatal-error", and users should use setFeature instead of setExitOnFirstFatalError
+ * 3. add feature "http://apache.org/xml/features/validation-error-as-fatal", and users should use setFeature instead of setValidationConstraintFatal
+ *
  * Revision 1.9  2002/06/06 20:38:18  tng
  * Document Fix: document that the returned object from resolveEntity is owned by the parser
  *
@@ -515,10 +521,14 @@ public :
       * This method returns the state of the parser's
       * exit-on-First-Fatal-Error flag.
       *
+      * <p>Or you can query the feature "http://apache.org/xml/features/continue-after-fatal-error"
+      * which indicates the opposite state.</p>
+      *
       * @return true, if the parser is currently configured to
       *         exit on the first fatal error, false otherwise.
       *
       * @see #setExitOnFirstFatalError
+      * @see #getFeature
       */
     virtual bool getExitOnFirstFatalError() const;
 
@@ -526,11 +536,15 @@ public :
       * This method returns the state of the parser's
       * validation-constraint-fatal flag.
       *
+      * <p>Or you can query the feature "http://apache.org/xml/features/validation-error-as-fatal"
+      * which means the same thing.
+      *
       * @return true, if the parser is currently configured to
       *         set validation constraint errors as fatal, false
       *         otherwise.
       *
       * @see #setValidationContraintFatal
+      * @see #getFeature
       */
     virtual bool getValidationConstraintFatal() const;
 
@@ -672,28 +686,44 @@ public :
       * <p>The default value is 'true' and the parser exits on the
       * first fatal error.</p>
       *
+      * <p>Or you can set the feature "http://apache.org/xml/features/continue-after-fatal-error"
+      * which has the opposite behaviour.</p>
+      *
+      * <p>If both the feature above and this function are used, the latter takes effect.</p>
+      *
       * @param newState The value specifying whether the parser should
       *                 continue or exit when it encounters the first
       *                 fatal error.
       *
       * @see #getExitOnFirstFatalError
+      * @see #setFeature
       */
     virtual void setExitOnFirstFatalError(const bool newState);
 
     /**
       * This method allows users to set the parser's behaviour when it
       * encounters a validtion constraint error. If set to true, and the
-      * the parser is set to exit when it encounter the first fatal error,
-      * the parser will exit at the first encounter. If false, then it will
+      * the parser will treat validation error as fatal and will exit depends on the
+      * state of "getExitOnFirstFatalError". If false, then it will
       * report the error and continue processing.
+      *
+      * Note: setting this true does not mean the validation error will be printed with
+      * the word "Fatal Error".   It is still printed as "Error", but the parser
+      * will exit if "setExitOnFirstFatalError" is set to true.
       *
       * <p>The default value is 'false'.</p>
       *
-      * @param newState The value specifying whether the parser should
-      *                 continue or exit when it encounters a validation
-      *                 constraint error.
+      * <p>Or you can set the feature "http://apache.org/xml/features/validation-error-as-fatal"
+      * which means the same thing.</p>
+      *
+      * <p>If both the feature above and this function are used, the latter takes effect.</p>
+      *
+      * @param newState If true, the parser will exit if "setExitOnFirstFatalError"
+      *                 is set to true.
       *
       * @see #getValidationConstraintFatal
+      * @see #setExitOnFirstFatalError
+      * @see #setFeature
       */
     virtual void setValidationConstraintFatal(const bool newState);
 
@@ -710,6 +740,8 @@ public :
     * <br>http://apache.org/xml/features/validation/schema (default: true)
     * <br>http://apache.org/xml/features/validation/schema-full-checking (default: false)
     * <br>http://apache.org/xml/features/nonvalidating/load-external-dtd (default: true)
+    * <br>http://apache.org/xml/features/continue-after-fatal-error (default: false)
+    * <br>http://apache.org/xml/features/validation-error-as-fatal (default: false)
     * <br>http://apache.org/xml/features/validation/reuse-validator (Deprecated) (default: false)
     *
     * @param name The unique identifier (URI) of the feature.
@@ -1249,9 +1281,6 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -1266,7 +1295,6 @@ public :
     (
         const   XMLCh* const    systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
 
     /** Begin a progressive parse operation
@@ -1286,9 +1314,6 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consIstency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -1303,7 +1328,6 @@ public :
     (
         const   char* const     systemId
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
 
     /** Begin a progressive parse operation
@@ -1323,9 +1347,6 @@ public :
       * @param toFill   A token maintaing state information to maintain
       *                 internal consistency between invocation of 'parseNext'
       *                 calls.
-      * @param reuseGrammar The flag indicating whether the existing Grammar
-      *                     should be reused or not for this parsing run.
-      *                     If true, there cannot be any internal subset.
       *
       * @return 'true', if successful in parsing the prolog. It indicates the
       *         user can go ahead with parsing the rest of the file. It
@@ -1340,7 +1361,6 @@ public :
     (
         const   InputSource&    source
         ,       XMLPScanToken&  toFill
-        , const bool            reuseGrammar = false
     );
 
     /** Continue a progressive parse operation
@@ -1508,7 +1528,7 @@ private :
     bool                       fHasExternalSubset;
 	
     // -----------------------------------------------------------------------
-    // internal function used to set the state of validation: always, never, or auto
+    // internal function used to set the state of the parser
     // -----------------------------------------------------------------------
     void setValidationScheme(const ValSchemes newScheme);
     void setDoNamespaces(const bool newState);

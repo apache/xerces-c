@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/06/17 15:41:15  tng
+ * To be consistent, SAX2 is updated with:
+ * 1. the progressive parse methods should use the fReuseGrammar flag set from setFeature instead of using parameter
+ * 2. add feature "http://apache.org/xml/features/continue-after-fatal-error", and users should use setFeature instead of setExitOnFirstFatalError
+ * 3. add feature "http://apache.org/xml/features/validation-error-as-fatal", and users should use setFeature instead of setValidationConstraintFatal
+ *
  * Revision 1.7  2002/05/30 16:20:09  tng
  * Add feature to optionally ignore external DTD.
  *
@@ -543,8 +549,7 @@ void SAX2XMLReaderImpl::parse (const   char* const     systemId)
 //  SAX2XMLReaderImpl: Progressive parse methods
 // ---------------------------------------------------------------------------
 bool SAX2XMLReaderImpl::parseFirst( const   XMLCh* const    systemId
-                            ,       XMLPScanToken&  toFill
-                            , const bool            reuseGrammar)
+                            ,       XMLPScanToken&  toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -553,12 +558,11 @@ bool SAX2XMLReaderImpl::parseFirst( const   XMLCh* const    systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
+    return fScanner->scanFirst(systemId, toFill, fReuseGrammar);
 }
 
 bool SAX2XMLReaderImpl::parseFirst( const   char* const     systemId
-                            ,       XMLPScanToken&  toFill
-                            , const bool            reuseGrammar)
+                            ,       XMLPScanToken&  toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -567,12 +571,11 @@ bool SAX2XMLReaderImpl::parseFirst( const   char* const     systemId
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(systemId, toFill, reuseGrammar);
+    return fScanner->scanFirst(systemId, toFill, fReuseGrammar);
 }
 
 bool SAX2XMLReaderImpl::parseFirst( const   InputSource&    source
-                            ,       XMLPScanToken&  toFill
-                            , const bool            reuseGrammar)
+                            ,       XMLPScanToken&  toFill)
 {
     //
     //  Avoid multiple entrance. We cannot enter here while a regular parse
@@ -581,7 +584,7 @@ bool SAX2XMLReaderImpl::parseFirst( const   InputSource&    source
     if (fParseInProgress)
         ThrowXML(IOException, XMLExcepts::Gen_ParseInProgress);
 
-    return fScanner->scanFirst(source, toFill, reuseGrammar);
+    return fScanner->scanFirst(source, toFill, fReuseGrammar);
 }
 
 bool SAX2XMLReaderImpl::parseNext(XMLPScanToken& token)
@@ -1338,7 +1341,7 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 		fnamespacePrefix = value;
 	}
 
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesDynamic) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesDynamic) == 0)
 	{
 		fautoValidation = value;
 		// for auto validation, the sax2 core validation feature must also be enabled.
@@ -1351,31 +1354,39 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
 			setValidationScheme(Val_Never);
 	}
 
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesReuseValidator) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesReuseValidator) == 0)
 	{
 		fReuseGrammar = value;
 	}
 
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesReuseGrammar) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesReuseGrammar) == 0)
 	{
 		fReuseGrammar = value;
 	}
 
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchema) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
 	{
 		setDoSchema(value);
 	}
 
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaFullChecking) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
 	{
 		fScanner->setValidationSchemaFullChecking(value);
 	}
 
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesLoadExternalDTD) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
 	{
 		fScanner->setLoadExternalDTD(value);
 	}
 
+	else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
+	{
+      fScanner->setExitOnFirstFatal(!value);
+	}
+	else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
+	{
+      fScanner->setValidationConstraintFatal(value);
+	}
    else
        throw SAXNotRecognizedException("Unknown Feature");
 }
@@ -1388,18 +1399,22 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
 		return fValidation;
 	else if (XMLString::compareIString(name, XMLUni::fgSAX2CoreNameSpacePrefixes) == 0)
 		return fnamespacePrefix;
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesDynamic) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesDynamic) == 0)
 		return fautoValidation;
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesReuseValidator) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesReuseValidator) == 0)
         return fReuseGrammar;
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesReuseGrammar) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesReuseGrammar) == 0)
         return fReuseGrammar;
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchema) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
         return getDoSchema();
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaFullChecking) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaFullChecking) == 0)
         return fScanner->getValidationSchemaFullChecking();
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesLoadExternalDTD) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
         return fScanner->getLoadExternalDTD();
+	else if (XMLString::compareIString(name, XMLUni::fgXercesContinueAfterFatalError) == 0)
+        return !fScanner->getExitOnFirstFatal();
+	else if (XMLString::compareIString(name, XMLUni::fgXercesValidationErrorAsFatal) == 0)
+        return fScanner->getValidationConstraintFatal();
    else
        throw SAXNotRecognizedException("Unknown Feature");
 	return false;
@@ -1410,12 +1425,12 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 	if (fParseInProgress)
 		throw SAXNotSupportedException("Property modification is not supported during parse.");
 
-	if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaExternalSchemaLocation) == 0)
+	if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
 	{
 		fScanner->setExternalSchemaLocation((XMLCh*)value);
 	}
 
-	else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
+	else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
 	{
 		fScanner->setExternalNoNamespaceSchemaLocation((XMLCh*)value);
 	}
@@ -1427,9 +1442,9 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 
 void* SAX2XMLReaderImpl::getProperty(const XMLCh* const name) const
 {
-    if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaExternalSchemaLocation) == 0)
+    if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
         return (void*)fScanner->getExternalSchemaLocation();
-    else if (XMLString::compareIString(name, XMLUni::fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
+    else if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalNoNameSpaceSchemaLocation) == 0)
         return (void*)fScanner->getExternalNoNamespaceSchemaLocation();
     else
         throw SAXNotRecognizedException("Unknown Property");
