@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="DOMTypeInfoTest"
-	ProjectGUID="{DFC196B9-2146-4CDA-AC0A-632BD38FA41D}"
+	ProjectGUID="{15A10DF2-F551-4306-A4CC-690F58C58081}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
