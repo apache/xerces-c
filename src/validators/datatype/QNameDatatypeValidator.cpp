@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/24 15:33:15  peiyongz
+ * DTV Reorganization: virtual methods moved to *.cpp
+ *
  * Revision 1.6  2001/09/20 15:36:49  peiyongz
  * DTV reorganization: inherit from AbstractStringVaildator
  *
@@ -79,12 +82,14 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/QNameDatatypeValidator.hpp>
+#include <validators/datatype/InvalidDatatypeFacetException.hpp>
+#include <validators/datatype/InvalidDatatypeValueException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
 QNameDatatypeValidator::QNameDatatypeValidator()
-:AbstractStringValidator(0, 0, 0, 0, DatatypeValidator::QName)
+:AbstractStringValidator(0, 0, 0, DatatypeValidator::QName)
 {}
 
 QNameDatatypeValidator::~QNameDatatypeValidator()
@@ -95,8 +100,54 @@ QNameDatatypeValidator::QNameDatatypeValidator(
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
-:AbstractStringValidator(baseValidator, facets, enums, finalSet, DatatypeValidator::QName)
+:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::QName)
+{
+    init(baseValidator, facets, enums);
+}
+
+DatatypeValidator* QNameDatatypeValidator::newInstance(
+                                      RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
+                                    , const int                           finalSet)
+{
+    return (DatatypeValidator*) new QNameDatatypeValidator(this, facets, enums, finalSet);
+}
+
+// ---------------------------------------------------------------------------
+//  Utilities
+// ---------------------------------------------------------------------------
+void QNameDatatypeValidator::assignAdditionalFacet( const XMLCh* const
+                                                  , const XMLCh* const)
+{
+    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+}
+
+void QNameDatatypeValidator::inheritAdditionalFacet()
 {}
+
+void QNameDatatypeValidator::checkAdditionalFacetConstraints() const
+{}
+
+void QNameDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
+{}
+
+void QNameDatatypeValidator::checkValueSpace(const XMLCh* const content)
+{
+    //
+    // check 3.2.18.c0 must: QName
+    //
+    if ( !XMLString::isValidQName(content))
+    {
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_QName_Invalid
+                , content);
+    }
+}
+
+int QNameDatatypeValidator::getLength(const XMLCh* const content) const
+{
+    return XMLString::stringLen(content);
+}
        
 /**
   * End of file QNameDatatypeValidator.cpp

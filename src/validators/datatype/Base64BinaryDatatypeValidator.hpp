@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/24 15:33:15  peiyongz
+ * DTV Reorganization: virtual methods moved to *.cpp
+ *
  * Revision 1.5  2001/09/19 18:49:40  peiyongz
  * DTV reorganization: inherit from AbstractStringVaildator
  *
@@ -66,8 +69,6 @@
 #define BASE64BINARY_DATATYPEVALIDATOR_HPP
 
 #include <validators/datatype/AbstractStringValidator.hpp>
-#include <validators/datatype/InvalidDatatypeValueException.hpp>
-#include <util/Base64.hpp>
 
 class VALIDATORS_EXPORT Base64BinaryDatatypeValidator : public AbstractStringValidator
 {
@@ -94,15 +95,24 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    inline DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                        , RefVectorOf<XMLCh>*           const enums
-                                        , const int                           finalSet);
+    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                         , RefVectorOf<XMLCh>*           const enums
+                                         , const int                           finalSet);
 
 protected:
 
-    inline void checkValueSpace(const XMLCh* const content);
+    virtual void assignAdditionalFacet(const XMLCh* const key
+                                     , const XMLCh* const value);
 
-    inline int  getLength(const XMLCh* const content) const;
+    virtual void inheritAdditionalFacet();
+
+    virtual void checkAdditionalFacetConstraints() const;
+
+    virtual void checkAdditionalFacet(const XMLCh* const content) const;
+
+    virtual void checkValueSpace(const XMLCh* const content);
+
+    virtual int  getLength(const XMLCh* const content) const;
 
 private:
 
@@ -113,30 +123,6 @@ private:
     // -----------------------------------------------------------------------    
 
 };
-
-DatatypeValidator* Base64BinaryDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new Base64BinaryDatatypeValidator(this, facets, enums, finalSet);
-}
-
-
-int Base64BinaryDatatypeValidator::getLength(const XMLCh* const content) const
-{
-    return Base64::getDataLength(content);
-}
-
-void Base64BinaryDatatypeValidator::checkValueSpace(const XMLCh* const content)
-{
-    if (getLength(content) <= 0) 
-    {
-        ThrowXML1(InvalidDatatypeValueException
-                , XMLExcepts::VALUE_Not_Base64
-                , content);
-    }
-}
 
 /**
   * End of file Base64BinaryDatatypeValidator.hpp

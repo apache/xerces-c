@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/24 15:33:15  peiyongz
+ * DTV Reorganization: virtual methods moved to *.cpp
+ *
  * Revision 1.6  2001/09/19 18:49:17  peiyongz
  * DTV reorganization: move inline to class declaration to avoid inline
  * function interdependency.
@@ -84,6 +87,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/AnyURIDatatypeValidator.hpp>
+#include <validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
 
 //
@@ -103,15 +107,13 @@ static const XMLCh BASE_URI[] =
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
 AnyURIDatatypeValidator::AnyURIDatatypeValidator()
-:AbstractStringValidator(0, 0, 0, 0, DatatypeValidator::AnyURI)
+:AbstractStringValidator(0, 0, 0, DatatypeValidator::AnyURI)
 ,fTempURI(0)
 {}
 
 AnyURIDatatypeValidator::~AnyURIDatatypeValidator()
 {
-    if (fTempURI)
-        delete fTempURI;
-
+    cleanUp();
 }
 
 AnyURIDatatypeValidator::AnyURIDatatypeValidator(
@@ -119,12 +121,55 @@ AnyURIDatatypeValidator::AnyURIDatatypeValidator(
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
-:AbstractStringValidator(baseValidator, facets, enums, finalSet, DatatypeValidator::AnyURI)
+:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::AnyURI)
 ,fTempURI(0)
+{
+    try
+    {
+        init(baseValidator, facets, enums);
+    }
+    catch (...)
+    { 
+        cleanUp();
+        throw;
+    }
+}
+
+DatatypeValidator* AnyURIDatatypeValidator::newInstance(
+                                      RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
+                                    , const int                           finalSet)
+{
+    return (DatatypeValidator*) new AnyURIDatatypeValidator(this, facets, enums, finalSet);
+}
+
+// ---------------------------------------------------------------------------
+//  Utilities
+// ---------------------------------------------------------------------------
+
+void AnyURIDatatypeValidator::assignAdditionalFacet( const XMLCh* const
+                                                   , const XMLCh* const)
+{
+    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+}
+
+void AnyURIDatatypeValidator::inheritAdditionalFacet()
 {}
+
+void AnyURIDatatypeValidator::checkAdditionalFacetConstraints() const
+{}
+
+void AnyURIDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
+{}
+
+int AnyURIDatatypeValidator::getLength(const XMLCh* const content) const
+{
+    return XMLString::stringLen(content);
+}
 
 void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
 {  
+
     // check 3.2.17.c0 must: URI (rfc 2396/2723)
     try 
     {

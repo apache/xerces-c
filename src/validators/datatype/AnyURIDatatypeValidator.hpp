@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/24 15:33:15  peiyongz
+ * DTV Reorganization: virtual methods moved to *.cpp
+ *
  * Revision 1.6  2001/09/19 18:49:17  peiyongz
  * DTV reorganization: move inline to class declaration to avoid inline
  * function interdependency.
@@ -112,15 +115,28 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    inline DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                        , RefVectorOf<XMLCh>*           const enums
-                                        , const int                           finalSet);
+    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                         , RefVectorOf<XMLCh>*           const enums
+                                         , const int                           finalSet);
 
 protected:
 
-    void checkValueSpace(const XMLCh* const);
+    virtual void assignAdditionalFacet(const XMLCh* const key
+                                     , const XMLCh* const value);
+
+    virtual void inheritAdditionalFacet();
+
+    virtual void checkAdditionalFacetConstraints() const;
+
+    virtual void checkAdditionalFacet(const XMLCh* const content) const;
+
+    virtual void checkValueSpace(const XMLCh* const content);
+
+    virtual int  getLength(const XMLCh* const content) const;
 
 private:
+
+    inline void cleanUp();
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -130,18 +146,18 @@ private:
 	//		
     // -----------------------------------------------------------------------    
 
-    XMLUri              *fTempURI;   
+    XMLUri       *fTempURI;   
 
 };
 
-DatatypeValidator* AnyURIDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
+void AnyURIDatatypeValidator::cleanUp()
 {
-    return (DatatypeValidator*) new AnyURIDatatypeValidator(this, facets, enums, finalSet);
+    if (fTempURI)
+    {
+        delete fTempURI;
+        fTempURI = 0;
+    }
 }
-
 
 /**
   * End of file AnyURIDatatypeValidator.hpp

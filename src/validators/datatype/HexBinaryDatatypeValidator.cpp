@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/09/24 15:33:15  peiyongz
+ * DTV Reorganization: virtual methods moved to *.cpp
+ *
  * Revision 1.9  2001/09/19 20:35:23  peiyongz
  * DTV reorganization: inherit from AbstractStringVaildator
  *
@@ -90,12 +93,15 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/HexBinaryDatatypeValidator.hpp>
+#include <validators/datatype/InvalidDatatypeFacetException.hpp>
+#include <validators/datatype/InvalidDatatypeValueException.hpp>
+#include <util/HexBin.hpp>
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
 HexBinaryDatatypeValidator::HexBinaryDatatypeValidator()
-:AbstractStringValidator(0, 0, 0, 0, DatatypeValidator::HexBinary)
+:AbstractStringValidator(0, 0, 0, DatatypeValidator::HexBinary)
 {}
 
 HexBinaryDatatypeValidator::~HexBinaryDatatypeValidator()
@@ -106,8 +112,51 @@ HexBinaryDatatypeValidator::HexBinaryDatatypeValidator(
                         , RefHashTableOf<KVStringPair>* const facets    
                         , RefVectorOf<XMLCh>*           const enums                        
                         , const int                           finalSet)
-:AbstractStringValidator(baseValidator, facets, enums, finalSet, DatatypeValidator::HexBinary)
+:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::HexBinary)
+{
+    init(baseValidator, facets, enums);
+}
+
+DatatypeValidator* HexBinaryDatatypeValidator::newInstance(
+                                      RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
+                                    , const int                           finalSet)
+{
+    return (DatatypeValidator*) new HexBinaryDatatypeValidator(this, facets, enums, finalSet);
+}
+
+// ---------------------------------------------------------------------------
+//  Utilities
+// ---------------------------------------------------------------------------
+void HexBinaryDatatypeValidator::assignAdditionalFacet( const XMLCh* const
+                                                      , const XMLCh* const)
+{
+    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+}
+
+void HexBinaryDatatypeValidator::inheritAdditionalFacet()
 {}
+
+void HexBinaryDatatypeValidator::checkAdditionalFacetConstraints() const
+{}
+
+void HexBinaryDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
+{}
+
+void HexBinaryDatatypeValidator::checkValueSpace(const XMLCh* const content)
+{
+    if (getLength(content) <= 0) 
+    {
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_Not_HexBin
+                , content);
+    }
+}
+
+int HexBinaryDatatypeValidator::getLength(const XMLCh* const content) const
+{
+    return HexBin::getDataLength(content);
+}
 
 /**
   * End of file HexBinaryDatatypeValidator.cpp

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/24 15:33:15  peiyongz
+ * DTV Reorganization: virtual methods moved to *.cpp
+ *
  * Revision 1.5  2001/09/20 15:14:47  peiyongz
  * DTV reorganization: inherit from AbstractStringVaildator
  *
@@ -76,12 +79,14 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/NOTATIONDatatypeValidator.hpp>
+#include <validators/datatype/InvalidDatatypeFacetException.hpp>
+#include <validators/datatype/InvalidDatatypeValueException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
 NOTATIONDatatypeValidator::NOTATIONDatatypeValidator()
-:AbstractStringValidator(0, 0, 0, 0, DatatypeValidator::NOTATION)
+:AbstractStringValidator(0, 0, 0, DatatypeValidator::NOTATION)
 {}
 
 NOTATIONDatatypeValidator::~NOTATIONDatatypeValidator()
@@ -92,8 +97,55 @@ NOTATIONDatatypeValidator::NOTATIONDatatypeValidator(
                         , RefHashTableOf<KVStringPair>* const facets     
                         , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
-:AbstractStringValidator(baseValidator, facets, enums, finalSet, DatatypeValidator::NOTATION)
+:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::NOTATION)
+{
+    init(baseValidator, facets, enums);
+}
+
+DatatypeValidator* NOTATIONDatatypeValidator::newInstance(
+                                      RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
+                                    , const int                           finalSet)
+{
+    return (DatatypeValidator*) new NOTATIONDatatypeValidator(this, facets, enums, finalSet);
+}
+
+// ---------------------------------------------------------------------------
+//  Utilities
+// ---------------------------------------------------------------------------
+void NOTATIONDatatypeValidator::assignAdditionalFacet( const XMLCh* const
+                                                     , const XMLCh* const)
+{
+    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Tag);
+}
+
+void NOTATIONDatatypeValidator::inheritAdditionalFacet()
 {}
+
+void NOTATIONDatatypeValidator::checkAdditionalFacetConstraints() const
+{}
+
+void NOTATIONDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
+{}
+
+void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
+{
+    //
+    // check 3.2.19: QName
+    //
+    if ( !XMLString::isValidQName(content))
+    {
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_NOTATION_Invalid
+                , content);
+    }
+
+}
+
+int NOTATIONDatatypeValidator::getLength(const XMLCh* const content) const
+{
+    return XMLString::stringLen(content);
+}
 
 /**
   * End of file NOTATIONDatatypeValidator.cpp

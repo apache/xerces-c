@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/24 15:33:15  peiyongz
+ * DTV Reorganization: virtual methods moved to *.cpp
+ *
  * Revision 1.5  2001/09/19 20:35:23  peiyongz
  * DTV reorganization: inherit from AbstractStringVaildator
  *
@@ -66,8 +69,6 @@
 #define HEXBINARY_DATATYPEVALIDATOR_HPP
 
 #include <validators/datatype/AbstractStringValidator.hpp>
-#include <validators/datatype/InvalidDatatypeValueException.hpp>
-#include <util/HexBin.hpp>
 
 class VALIDATORS_EXPORT HexBinaryDatatypeValidator : public AbstractStringValidator
 {
@@ -94,16 +95,25 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    inline DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                        , RefVectorOf<XMLCh>*           const enums
-                                        , const int                           finalSet);
+    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                         , RefVectorOf<XMLCh>*           const enums
+                                         , const int                           finalSet);
 
 
 protected:
 
-    inline void checkValueSpace(const XMLCh* const content);
+    virtual void assignAdditionalFacet(const XMLCh* const key
+                                     , const XMLCh* const value);
 
-    inline int  getLength(const XMLCh* const content) const;
+    virtual void inheritAdditionalFacet();
+
+    virtual void checkAdditionalFacetConstraints() const;
+
+    virtual void checkAdditionalFacet(const XMLCh* const content) const;
+
+    virtual void checkValueSpace(const XMLCh* const content);
+
+    virtual int  getLength(const XMLCh* const content) const;
 
 private:
 
@@ -113,30 +123,6 @@ private:
 	//		Nil.
     // -----------------------------------------------------------------------    
 };
-
-DatatypeValidator* HexBinaryDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new HexBinaryDatatypeValidator(this, facets, enums, finalSet);
-}
-
-
-int HexBinaryDatatypeValidator::getLength(const XMLCh* const content) const
-{
-    return HexBin::getDataLength(content);
-}
-
-void HexBinaryDatatypeValidator::checkValueSpace(const XMLCh* const content)
-{
-    if (getLength(content) <= 0) 
-    {
-        ThrowXML1(InvalidDatatypeValueException
-                , XMLExcepts::VALUE_Not_HexBin
-                , content);
-    }
-}
 
 /**
   * End of file HexBinaryDatatypeValidator.hpp

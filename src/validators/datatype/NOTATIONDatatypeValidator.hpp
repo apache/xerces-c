@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/24 15:33:15  peiyongz
+ * DTV Reorganization: virtual methods moved to *.cpp
+ *
  * Revision 1.4  2001/09/20 15:14:47  peiyongz
  * DTV reorganization: inherit from AbstractStringVaildator
  *
@@ -77,7 +80,6 @@
 #define NOTATION_DATATYPEVALIDATOR_HPP
 
 #include <validators/datatype/AbstractStringValidator.hpp>
-#include <validators/datatype/InvalidDatatypeValueException.hpp>
 
 class VALIDATORS_EXPORT NOTATIONDatatypeValidator : public AbstractStringValidator
 {
@@ -104,13 +106,24 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    inline DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                        , RefVectorOf<XMLCh>*           const enums
-                                        , const int                           finalSet);
+    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                         , RefVectorOf<XMLCh>*           const enums
+                                         , const int                           finalSet);
 
 protected:
 
-    inline void checkValueSpace(const XMLCh* const content);
+    virtual void assignAdditionalFacet(const XMLCh* const key
+                                     , const XMLCh* const value);
+
+    virtual void inheritAdditionalFacet();
+
+    virtual void checkAdditionalFacetConstraints() const;
+
+    virtual void checkAdditionalFacet(const XMLCh* const content) const;
+
+    virtual void checkValueSpace(const XMLCh* const content);
+
+    virtual int  getLength(const XMLCh* const content) const;
 
 private:
 
@@ -121,28 +134,6 @@ private:
     // -----------------------------------------------------------------------    
 
 };
-
-DatatypeValidator* NOTATIONDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new NOTATIONDatatypeValidator(this, facets, enums, finalSet);
-}
-
-void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
-{
-    //
-    // check 3.2.19: QName
-    //
-    if ( !XMLString::isValidQName(content))
-    {
-        ThrowXML1(InvalidDatatypeValueException
-                , XMLExcepts::VALUE_NOTATION_Invalid
-                , content);
-    }
-
-}
 
 /**
   * End of file NOTATIONDatatypeValidator.hpp
