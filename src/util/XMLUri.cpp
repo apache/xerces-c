@@ -440,13 +440,19 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // if we get to this point, we need to resolve relative path
         // RFC 2396 5.2 #6
-        XMLCh* path = new XMLCh[trimedUriSpecLen + XMLString::stringLen(fPath) + 1];
-        ArrayJanitor<XMLCh> pathName(path);
         XMLCh* basePath = XMLString::replicate(baseURI->getPath());
         ArrayJanitor<XMLCh> basePathName(basePath);
 
+        int bufLen = trimedUriSpecLen+XMLString::stringLen(fPath)+XMLString::stringLen(basePath)+1;
+        XMLCh* path = new XMLCh[bufLen];
+        ArrayJanitor<XMLCh> pathName(path);
+        XMLCh* tmp1 = new XMLCh[bufLen];
+        ArrayJanitor<XMLCh> tmp1Name(tmp1);
+        XMLCh* tmp2 = new XMLCh[bufLen];
+        ArrayJanitor<XMLCh> tmp2Name(tmp2);
+
         // 6a - get all but the last segment of the base URI path
-        if (basePath != 0)
+        if (basePath)
         {
             int lastSlash = XMLString::lastIndexOf(basePath, chForwardSlash);
             if (lastSlash != -1)
@@ -462,17 +468,12 @@ void XMLUri::initialize(const XMLUri* const baseURI
         index = -1;
         while ((index = XMLString::patternMatch(path, DOT_SLASH)) != -1)
         {
-            XMLCh* tmp1 = new XMLCh[trimedUriSpecLen];
             XMLString::subString(tmp1, path, 0, index);
-            XMLCh* tmp2 = new XMLCh[trimedUriSpecLen];
             XMLString::subString(tmp2, path, index+2, XMLString::stringLen(path));
 
             path[0] = 0;
             XMLString::catString(path, tmp1);
             XMLString::catString(path, tmp2);
-
-            delete [] tmp1;
-            delete [] tmp2;
         }
 
         // 6d - remove "." if path ends with "." as a complete path segment
@@ -493,17 +494,12 @@ void XMLUri::initialize(const XMLUri* const baseURI
                 (path[segIndex+1] != chPeriod ||
                  path[index] != chPeriod))
             {
-                XMLCh* tmp1 = new XMLCh[trimedUriSpecLen];
                 XMLString::subString(tmp1, path, 0, segIndex);
-                XMLCh* tmp2 = new XMLCh[trimedUriSpecLen];
                 XMLString::subString(tmp2, path, index+3, XMLString::stringLen(path));
 
                 path[0] = 0;
                 XMLString::catString(path, tmp1);
                 XMLString::catString(path, tmp2);
-
-                delete [] tmp1;
-                delete [] tmp2;
 
                 index = segIndex;
             }
