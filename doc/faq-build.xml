@@ -395,4 +395,27 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
+  <faq title="Why my document is valid on some platforms while invalid on others">
+    <q>"Why my document is valid on some platform while invalid on others"?</q>
+    <a>
+      <p>The parser relies on the system call, strtod(), to parse a string representation 
+         of a double/float data. In the case of no invalid characters found, the strtod()
+         returns a double/float value if it is representable on that platform, or raises 
+         ERANGE to indicate either underflow or underflow occurs. And the parser assigns 
+         zero to the said data if underflow is found.        
+      </p>
+      <p>The threshold, where the strtod() decides if an underflow occurs, varies on 
+         platforms. On windows, it is roughly the order of e-308, on Linux, e-325, and 
+         on AIX, HP and Solaris, e-324.
+      </p>      
+      <p>So in an instance document, a data of value 1.0e-310 from a type with minExclusive 0, 
+         is considered invalid on windows (since it is converted to 0 and therefore violates
+         the minExclusive constraint), but valid on other unix platforms (since it remains 
+         the original value).          
+      </p>
+      <p>The discussion above applies to data in xsd file as well.
+      </p>            
+    </a>
+  </faq>
+
 </faqs>
