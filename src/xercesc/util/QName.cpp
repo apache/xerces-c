@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/10/28 20:14:41  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.13  2004/10/19 15:08:53  knoaman
  * Performance improvement
  *
@@ -92,32 +95,30 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  QName: Constructors and Destructor
 // ---------------------------------------------------------------------------
-QName::QName(MemoryManager* const manager) :
-
-    fMemoryManager(manager)
-    , fPrefix(0)
-    , fPrefixBufSz(0)
-    , fLocalPart(0)
-    , fLocalPartBufSz(0)
-    , fRawName(0)
-    , fRawNameBufSz(0)
-    , fURIId(0)
+QName::QName(MemoryManager* const manager)
+:fPrefixBufSz(0)
+,fLocalPartBufSz(0)
+,fRawNameBufSz(0)
+,fURIId(0)
+,fRawName(0)
+,fPrefix(0)
+,fLocalPart(0)
+,fMemoryManager(manager)
 {
 }
 
 QName::QName( const XMLCh* const   prefix
             , const XMLCh* const   localPart
             , const unsigned int   uriId
-            , MemoryManager* const manager) :
-
-    fMemoryManager(manager)
-    , fPrefix(0)
-    , fPrefixBufSz(0)
-    , fLocalPart(0)
-    , fLocalPartBufSz(0)
-    , fRawName(0)
-    , fRawNameBufSz(0)
-    , fURIId(0)
+            , MemoryManager* const manager)
+:fPrefixBufSz(0)
+,fLocalPartBufSz(0)
+,fRawNameBufSz(0)
+,fURIId(0)
+,fRawName(0)
+,fPrefix(0)
+,fLocalPart(0)
+,fMemoryManager(manager)
 {
     try
     {
@@ -139,16 +140,15 @@ QName::QName( const XMLCh* const   prefix
 
 QName::QName( const XMLCh* const rawName
             , const unsigned int uriId
-            , MemoryManager* const manager) :
-
-    fMemoryManager(manager)
-    , fPrefix(0)
-    , fPrefixBufSz(0)
-    , fLocalPart(0)
-    , fLocalPartBufSz(0)
-    , fRawName(0)
-    , fRawNameBufSz(0)
-    , fURIId(0)
+            , MemoryManager* const manager)
+:fPrefixBufSz(0)
+,fLocalPartBufSz(0)
+,fRawNameBufSz(0)
+,fURIId(0)
+,fRawName(0)
+,fPrefix(0)
+,fLocalPart(0)
+,fMemoryManager(manager)
 {
     try
     {
@@ -176,16 +176,15 @@ QName::~QName()
 // ---------------------------------------------------------------------------
 //  QName: Copy Constructors
 // ---------------------------------------------------------------------------
-QName::QName(const QName& qname) :
-
-    fMemoryManager(qname.fMemoryManager)
-    , fPrefix(0)
-    , fPrefixBufSz(0)
-    , fLocalPart(0)
-    , fLocalPartBufSz(0)
-    , fRawName(0)
-    , fRawNameBufSz(0)
-    , fURIId(0)
+QName::QName(const QName& qname)
+:fPrefixBufSz(0)
+,fLocalPartBufSz(0)
+,fRawNameBufSz(0)
+,fURIId(0)
+,fRawName(0)
+,fPrefix(0)
+,fLocalPart(0)
+,fMemoryManager(qname.fMemoryManager)
 {
     unsigned int newLen;
 

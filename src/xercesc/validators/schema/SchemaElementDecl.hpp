@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2004/10/28 20:21:06  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.22  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -492,7 +495,9 @@ private :
     // -----------------------------------------------------------------------
     ModelTypes                         fModelType;
     PSVIDefs::PSVIScope                fPSVIScope;
-    DatatypeValidator*                 fDatatypeValidator;
+    PSVIDefs::Validity                 fValidity;
+    PSVIDefs::Validation               fValidation;
+
     int                                fEnclosingScope;
     int                                fFinalSet;
     int                                fBlockSet;
@@ -505,8 +510,8 @@ private :
     RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
     SchemaAttDef*                      fAttWildCard;
     SchemaElementDecl*                 fSubstitutionGroupElem;
-    PSVIDefs::Validity                 fValidity;
-    PSVIDefs::Validation               fValidation;
+    DatatypeValidator*                 fDatatypeValidator;
+
     bool                               fSeenValidation;
     bool                               fSeenNoValidation;
     bool                               fHadContent;

@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.21  2004/10/28 20:13:35  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.20  2004/09/08 13:56:24  peiyongz
  * Apache License Version 2.0
  *
@@ -333,11 +336,11 @@ private:
     int          fStart;
     int          fEnd;
     int          fBufferMaxLen;
-    XMLCh*       fBuffer;
 
     double       fMiliSecond;
     bool         fHasTime;
 
+    XMLCh*       fBuffer;
     MemoryManager* fMemoryManager;
 
     friend class XSValue;

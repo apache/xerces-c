@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/10/28 20:21:06  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.15  2004/10/13 17:55:40  cargilld
  * Serialization fix, fPVSIScope not serialized.  Problem reported by David Bertoni.
  *
@@ -102,14 +105,14 @@ const XMLCh* SchemaAttDef::getFullName() const
 SchemaAttDef::SchemaAttDef(MemoryManager* const manager) :
     XMLAttDef(XMLAttDef::CData, XMLAttDef::Implied, manager)
     , fElemId(XMLElementDecl::fgInvalidElemId)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
+    , fPSVIScope(PSVIDefs::SCP_ABSENT)    
     , fAttName(0)
     , fDatatypeValidator(0)
     , fAnyDatatypeValidator(0)
     , fMemberTypeValidator(0)
     , fNamespaceList(0)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
-    , fPSVIScope(PSVIDefs::SCP_ABSENT)    
     , fBaseAttDecl(0)
 {
 }
@@ -122,13 +125,13 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
                           , MemoryManager* const         manager) :
     XMLAttDef(type, defType, manager)
     , fElemId(XMLElementDecl::fgInvalidElemId)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
+    , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fDatatypeValidator(0)
     , fAnyDatatypeValidator(0)
     , fMemberTypeValidator(0)    
     , fNamespaceList(0)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
-    , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fBaseAttDecl(0)
 {
     fAttName = new (manager) QName(prefix, localPart, uriId, manager);
@@ -145,13 +148,13 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
 
     XMLAttDef(attValue, type, defType, enumValues, manager)
     , fElemId(XMLElementDecl::fgInvalidElemId)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
+    , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fDatatypeValidator(0)
     , fAnyDatatypeValidator(0)
     , fMemberTypeValidator(0)
     , fNamespaceList(0)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
-    , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fBaseAttDecl(0)
 {
     fAttName = new (manager) QName(prefix, localPart, uriId, manager);
@@ -163,14 +166,14 @@ SchemaAttDef::SchemaAttDef(const SchemaAttDef* other) :
               other->getDefaultType(), other->getEnumeration(),
               other->getMemoryManager())
     , fElemId(XMLElementDecl::fgInvalidElemId)
+    , fValidity(other->fValidity)
+    , fValidation(other->fValidation)
+    , fPSVIScope(other->fPSVIScope)
     , fAttName(0)
     , fDatatypeValidator(other->fDatatypeValidator)
     , fAnyDatatypeValidator(other->fAnyDatatypeValidator)
     , fMemberTypeValidator(other->fMemberTypeValidator)
     , fNamespaceList(0)
-    , fValidity(other->fValidity)
-    , fValidation(other->fValidation)
-    , fPSVIScope(other->fPSVIScope)
     , fBaseAttDecl(other->fBaseAttDecl)
 {
     QName* otherName = other->getAttName();
@@ -214,7 +217,12 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         serEng<<fElemId;
+        serEng<<(int)fValidity;
+        serEng<<(int)fValidation;
+        serEng<<(int)fPSVIScope;
+
         serEng<<fAttName;
+
         DatatypeValidator::storeDV(serEng, fDatatypeValidator);
         DatatypeValidator::storeDV(serEng, fAnyDatatypeValidator);
         DatatypeValidator::storeDV(serEng, (DatatypeValidator*)fMemberTypeValidator);
@@ -224,25 +232,12 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
          ***/
         XTemplateSerializer::storeObject(fNamespaceList, serEng);
 
-        serEng<<(int)fValidity;
-        serEng<<(int)fValidation;
-        serEng<<(int)fPSVIScope;
         serEng<<fBaseAttDecl;
     }
     else
     {
 
         serEng>>fElemId;
-        serEng>>fAttName;
-        fDatatypeValidator    = DatatypeValidator::loadDV(serEng);
-        fAnyDatatypeValidator = DatatypeValidator::loadDV(serEng);
-        fMemberTypeValidator  = DatatypeValidator::loadDV(serEng);
-
-        /***
-         * Deserialize ValueVectorOf<unsigned int>
-         ***/
-        XTemplateSerializer::loadObject(&fNamespaceList, 8, false, serEng);
-
         int i;
         serEng>>i;
         fValidity = (PSVIDefs::Validity)i;
@@ -252,7 +247,18 @@ void SchemaAttDef::serialize(XSerializeEngine& serEng)
         
         serEng>>i;
         fPSVIScope = (PSVIDefs::PSVIScope)i;
-        
+
+        serEng>>fAttName;
+
+        fDatatypeValidator    = DatatypeValidator::loadDV(serEng);
+        fAnyDatatypeValidator = DatatypeValidator::loadDV(serEng);
+        fMemberTypeValidator  = DatatypeValidator::loadDV(serEng);
+
+        /***
+         * Deserialize ValueVectorOf<unsigned int>
+         ***/
+        XTemplateSerializer::loadObject(&fNamespaceList, 8, false, serEng);
+       
         serEng>>fBaseAttDecl;
     }
 }

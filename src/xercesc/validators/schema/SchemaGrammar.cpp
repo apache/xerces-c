@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/10/28 20:21:06  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.21  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -152,10 +155,10 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     , fValidSubstitutionGroups(0)
     , fValidationContext(0)
     , fMemoryManager(manager)
-    , fValidated(false)
-    , fDatatypeRegistry(manager)
     , fGramDesc(0)
     , fAnnotations(0)
+    , fValidated(false)
+    , fDatatypeRegistry(manager)
 {
     //
     //  Init all the pool members.

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.32  2004/10/28 20:21:06  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.31  2004/10/20 15:19:07  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -337,8 +340,10 @@ ComplexTypeInfo::ComplexTypeInfo(MemoryManager* const manager)
     , fBlockSet(0)
     , fFinalSet(0)
     , fScopeDefined(Grammar::TOP_LEVEL_SCOPE)
-    , fElementId(XMLElementDecl::fgInvalidElemId)
     , fContentType(SchemaElementDecl::Empty)
+    , fElementId(XMLElementDecl::fgInvalidElemId)
+    , fUniqueURI(0)
+    , fContentSpecOrgURISize(16)
     , fTypeName(0)
     , fTypeLocalName(0)
     , fTypeUri(0)
@@ -353,8 +358,6 @@ ComplexTypeInfo::ComplexTypeInfo(MemoryManager* const manager)
     , fContentModel(0)
     , fFormattedModel(0)
     , fContentSpecOrgURI(0)
-    , fUniqueURI(0)
-    , fContentSpecOrgURISize(16)    
     , fLocator(0)
     , fMemoryManager(manager)
 {
@@ -1039,8 +1042,9 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         serEng<<fBlockSet;
         serEng<<fFinalSet;
         serEng<<fScopeDefined;
-        serEng<<fElementId;
         serEng<<fContentType;
+
+        serEng<<fElementId;
 
         serEng.writeString(fTypeName);
         serEng.writeString(fTypeLocalName);
@@ -1085,8 +1089,9 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
         serEng>>fBlockSet;
         serEng>>fFinalSet;
         serEng>>fScopeDefined;
-        serEng>>fElementId;
         serEng>>fContentType;
+
+        serEng>>fElementId;
 
         serEng.readString(fTypeName);
         serEng.readString(fTypeLocalName);

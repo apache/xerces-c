@@ -203,8 +203,12 @@ private:
     int                                fBlockSet;
     int                                fFinalSet;
     int                                fScopeDefined;
-    unsigned int                       fElementId;
     int                                fContentType;
+
+    unsigned int                       fElementId;
+    unsigned int                       fUniqueURI;
+    unsigned int                       fContentSpecOrgURISize;
+
     XMLCh*                             fTypeName;
     XMLCh*                             fTypeLocalName;
     XMLCh*                             fTypeUri;
@@ -219,8 +223,6 @@ private:
     XMLContentModel*                   fContentModel;
     XMLCh*                             fFormattedModel;
     unsigned int*                      fContentSpecOrgURI;
-    unsigned int                       fUniqueURI;
-    unsigned int                       fContentSpecOrgURISize;
     XSDLocator*                        fLocator;
     MemoryManager*                     fMemoryManager;
 

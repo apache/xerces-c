@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.29  2004/10/28 20:13:35  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.28  2004/09/08 13:56:24  peiyongz
  * Apache License Version 2.0
  *
@@ -508,9 +511,9 @@ XMLDateTime::XMLDateTime(MemoryManager* const manager)
 : fStart(0)
 , fEnd(0)
 , fBufferMaxLen(0)
-, fBuffer(0)
 , fMiliSecond(0)
 , fHasTime(false)
+, fBuffer(0)
 , fMemoryManager(manager)
 {
     reset();
@@ -521,9 +524,9 @@ XMLDateTime::XMLDateTime(const XMLCh* const aString,
 : fStart(0)
 , fEnd(0)
 , fBufferMaxLen(0)
-, fBuffer(0)
 , fMiliSecond(0)
 , fHasTime(false)
+, fBuffer(0)
 , fMemoryManager(manager)
 {
     setBuffer(aString);

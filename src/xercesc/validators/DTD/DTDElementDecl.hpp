@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/10/28 20:18:26  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.11  2004/09/20 14:47:13  amassari
  * Mark some methods as deprecated
  *
@@ -266,10 +269,11 @@ private :
     //      our content model as a string, we format it and fault it into
     //      this field (to avoid doing the formatted over and over.)
     // -----------------------------------------------------------------------
+    ModelTypes                  fModelType;
+
     RefHashTableOf<DTDAttDef>*  fAttDefs;
     DTDAttDefList*              fAttList;
     ContentSpecNode*            fContentSpec;
-    ModelTypes                  fModelType;
     XMLContentModel*            fContentModel;
     XMLCh*                      fFormattedModel;
 };

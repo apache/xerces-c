@@ -460,14 +460,6 @@ protected:
      */
     void setNumeric(bool numeric);
 
-    // -----------------------------------------------------------------------
-    //  Protected data members
-    //
-    //  fMemoryManager
-    //      Pluggable memory manager for dynamic allocation/deallocation.
-    // -----------------------------------------------------------------------
-    MemoryManager*                fMemoryManager;
-
 private:
     // -----------------------------------------------------------------------
     //  CleanUp methods
@@ -525,11 +517,18 @@ private:
     //
     // -----------------------------------------------------------------------
     bool                                fAnonymous;
+    bool                                fFinite;
+    bool                                fBounded;
+    bool                                fNumeric;
+
     short                               fWhiteSpace;
     int                                 fFinalSet;
     int                                 fFacetsDefined;
     int                                 fFixed;
+
     ValidatorType                       fType;
+    XSSimpleTypeDefinition::ORDERING    fOrdered;
+
 	DatatypeValidator*                  fBaseValidator;
 	RefHashTableOf<KVStringPair>*       fFacets;
     XMLCh*                              fPattern;
@@ -537,10 +536,16 @@ private:
     XMLCh*                              fTypeName;
     const XMLCh*                        fTypeLocalName;
     const XMLCh*                        fTypeUri;
-    XSSimpleTypeDefinition::ORDERING    fOrdered;
-    bool                                fFinite;
-    bool                                fBounded;
-    bool                                fNumeric;
+
+protected:
+    // -----------------------------------------------------------------------
+    //  Protected data members
+    //
+    //  fMemoryManager
+    //      Pluggable memory manager for dynamic allocation/deallocation.
+    // -----------------------------------------------------------------------
+    MemoryManager*                      fMemoryManager;
+
 };
 
 

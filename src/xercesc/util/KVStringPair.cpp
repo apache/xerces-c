@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/10/28 20:14:41  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.6  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -94,36 +97,33 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  KVStringPair: Constructors and Destructor
 // ---------------------------------------------------------------------------
-KVStringPair::KVStringPair(MemoryManager* const manager) :
-
-    fMemoryManager(manager)
-    , fKey(0)
-    , fKeyAllocSize(0)
-    , fValue(0)
-    , fValueAllocSize(0)
+KVStringPair::KVStringPair(MemoryManager* const manager)
+:fKeyAllocSize(0)
+,fValueAllocSize(0)
+,fKey(0)
+,fValue(0)
+,fMemoryManager(manager)
 {
 }
 
 KVStringPair::KVStringPair(const XMLCh* const key,
                            const XMLCh* const value,
-                           MemoryManager* const manager) :
-
-    fMemoryManager(manager)
-    , fKey(0)
-    , fKeyAllocSize(0)
-    , fValue(0)
-    , fValueAllocSize(0)
+                           MemoryManager* const manager)
+:fKeyAllocSize(0)
+,fValueAllocSize(0)
+,fKey(0)
+,fValue(0)
+,fMemoryManager(manager)
 {
    set(key, value);
 }
 
-KVStringPair::KVStringPair(const KVStringPair& toCopy) :
-
-    fMemoryManager(toCopy.fMemoryManager)
-    , fKey(0)
-    , fKeyAllocSize(0)
-    , fValue(0)
-    , fValueAllocSize(0)
+KVStringPair::KVStringPair(const KVStringPair& toCopy)
+:fKeyAllocSize(0)
+,fValueAllocSize(0)
+,fKey(0)
+,fValue(0)
+,fMemoryManager(toCopy.fMemoryManager)
 {
    set(toCopy.fKey, toCopy.fValue);
 }
@@ -167,7 +167,7 @@ void KVStringPair::setValue(const XMLCh* const newValue)
 }
 
 void KVStringPair::set(  const   XMLCh* const    newKey
-                                , const XMLCh* const    newValue)
+                       , const   XMLCh* const    newValue)
 {
     setKey(newKey);
     setValue(newValue);

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/10/28 20:18:26  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.21  2004/10/20 15:19:07  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -153,9 +156,9 @@ DTDGrammar::DTDGrammar(MemoryManager* const manager) :
     , fElemNonDeclPool(0)
     , fEntityDeclPool(0)
     , fNotationDeclPool(0)
+    , fGramDesc(0)
     , fRootElemId(0)
     , fValidated(false)
-    , fGramDesc(0)
 {
     //
     //  Init all the pool members.
@@ -367,14 +370,14 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::storeObject(fEntityDeclPool, serEng);
         XTemplateSerializer::storeObject(fNotationDeclPool, serEng);
 
-        serEng<<fRootElemId;
-        serEng<<fValidated;
-
         /***
          * serialize() method shall be used to store object
          * which has been created in ctor
          ***/
         fGramDesc->serialize(serEng);
+
+        serEng<<fRootElemId;
+        serEng<<fValidated;
     }
     else
     {
@@ -390,14 +393,14 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::loadObject(&fEntityDeclPool, 109, 128, serEng);
         XTemplateSerializer::loadObject(&fNotationDeclPool, 109, 128, serEng);
 
-        serEng>>fRootElemId;
-        serEng>>fValidated;
-
         /***
          * serialize() method shall be used to load object
          * which has been created in ctor
          ***/
         fGramDesc->serialize(serEng);
+
+        serEng>>fRootElemId;
+        serEng>>fValidated;
     }
 
 }

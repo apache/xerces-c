@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/10/28 20:21:06  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.21  2004/10/13 17:55:40  cargilld
  * Serialization fix, fPVSIScope not serialized.  Problem reported by David Bertoni.
  *
@@ -156,7 +159,8 @@ SchemaElementDecl::SchemaElementDecl(MemoryManager* const manager) :
     XMLElementDecl(manager)
     , fModelType(Any)
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
-    , fDatatypeValidator(0)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
     , fEnclosingScope(Grammar::TOP_LEVEL_SCOPE)
     , fFinalSet(0)
     , fBlockSet(0)    
@@ -169,8 +173,7 @@ SchemaElementDecl::SchemaElementDecl(MemoryManager* const manager) :
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
+    , fDatatypeValidator(0)
     , fSeenValidation(false)
     , fSeenNoValidation(false)
     , fHadContent(false)
@@ -186,7 +189,8 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     XMLElementDecl(manager)
     , fModelType(type)
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
-    , fDatatypeValidator(0)
+    , fValidity(PSVIDefs::UNKNOWN)
+    , fValidation(PSVIDefs::NONE)
     , fEnclosingScope(enclosingScope)
     , fFinalSet(0)
     , fBlockSet(0)    
@@ -199,8 +203,7 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
-    , fValidity(PSVIDefs::UNKNOWN)
-    , fValidation(PSVIDefs::NONE)
+    , fDatatypeValidator(0)
     , fSeenValidation(false)
     , fSeenNoValidation(false)
     , fHadContent(false)
@@ -417,7 +420,8 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
     {
         serEng<<(int)fModelType;
         serEng<<(int)fPSVIScope;
-        DatatypeValidator::storeDV(serEng, fDatatypeValidator);
+        serEng<<(int)fValidity;
+        serEng<<(int)fValidation;
 
         serEng<<fEnclosingScope;
         serEng<<fFinalSet;
@@ -445,8 +449,8 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
 
         serEng<<fAttWildCard;
         serEng<<fSubstitutionGroupElem;
-        serEng<<(int)fValidity;
-        serEng<<(int)fValidation;
+        DatatypeValidator::storeDV(serEng, fDatatypeValidator);
+
         serEng<<fSeenValidation;
         serEng<<fSeenNoValidation;
         serEng<<fHadContent;
@@ -459,7 +463,10 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
         fModelType = (ModelTypes)i;
         serEng>>i;
         fPSVIScope = (PSVIDefs::PSVIScope)i;
-        fDatatypeValidator = DatatypeValidator::loadDV(serEng);
+        serEng>>i;
+        fValidity = (PSVIDefs::Validity)i;
+        serEng>> i;
+        fValidation = (PSVIDefs::Validation)i;
 
         serEng>>fEnclosingScope;
         serEng>>fFinalSet;
@@ -486,12 +493,8 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
 
         serEng>>fAttWildCard;
         serEng>>fSubstitutionGroupElem;
+        fDatatypeValidator = DatatypeValidator::loadDV(serEng);
 
-        serEng>>i;
-        fValidity = (PSVIDefs::Validity)i;
-
-        serEng>> i;
-        fValidation = (PSVIDefs::Validation)i;
         serEng>>fSeenValidation;
         serEng>>fSeenNoValidation;
         serEng>>fHadContent;

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/10/28 20:14:41  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.11  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -210,14 +213,14 @@ private :
     //  fURIId
     //      The id of the URI that this attribute belongs to.
     // -----------------------------------------------------------------------
-    MemoryManager*      fMemoryManager;
-    XMLCh*              fPrefix;
     unsigned int        fPrefixBufSz;
-    XMLCh*              fLocalPart;
     unsigned int        fLocalPartBufSz;
-    XMLCh*              fRawName;
     unsigned int        fRawNameBufSz;
     unsigned int        fURIId;
+    XMLCh*              fPrefix;
+    XMLCh*              fLocalPart;
+    XMLCh*              fRawName;
+    MemoryManager*      fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------

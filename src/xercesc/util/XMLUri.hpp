@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2004/10/28 20:13:35  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.18  2004/09/08 13:56:25  peiyongz
  * Apache License Version 2.0
  *
@@ -650,10 +653,10 @@ private:
     //  the memory allocated.
     //
     // -----------------------------------------------------------------------
+    int             fPort;
     XMLCh*          fScheme;
     XMLCh*          fUserInfo;
     XMLCh*          fHost;
-    int             fPort;
     XMLCh*          fRegAuth;
     XMLCh*          fPath;
     XMLCh*          fQueryString;

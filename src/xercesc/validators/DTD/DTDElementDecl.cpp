@@ -43,10 +43,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 DTDElementDecl::DTDElementDecl(MemoryManager* const manager) :
 
     XMLElementDecl(manager)
+    , fModelType(Any)
     , fAttDefs(0)
     , fAttList(0)
     , fContentSpec(0)
-    , fModelType(Any)
     , fContentModel(0)
     , fFormattedModel(0)
 {
@@ -57,10 +57,10 @@ DTDElementDecl::DTDElementDecl( const XMLCh* const               elemRawName
                               , const DTDElementDecl::ModelTypes type
                               , MemoryManager* const             manager) :
     XMLElementDecl(manager)
+    , fModelType(type)
     , fAttDefs(0)
     , fAttList(0)
     , fContentSpec(0)
-    , fModelType(type)
     , fContentModel(0)
     , fFormattedModel(0)
 {
@@ -71,10 +71,10 @@ DTDElementDecl::DTDElementDecl( QName* const                     elementName
                               , const DTDElementDecl::ModelTypes type
                               , MemoryManager* const             manager) :
     XMLElementDecl(manager)
+    , fModelType(type)
     , fAttDefs(0)
     , fAttList(0)
     , fContentSpec(0)
-    , fModelType(type)
     , fContentModel(0)
     , fFormattedModel(0)
 {
@@ -443,6 +443,8 @@ void DTDElementDecl::serialize(XSerializeEngine& serEng)
 
     if (serEng.isStoring())
     {
+        serEng<<(int) fModelType;
+
         /***
          *
          * Serialize RefHashTableOf<DTDAttDef>
@@ -452,7 +454,6 @@ void DTDElementDecl::serialize(XSerializeEngine& serEng)
 
         serEng<<fAttList;
         serEng<<fContentSpec;
-        serEng<<(int) fModelType;
 
         /***
          *   don't serialize
@@ -465,6 +466,10 @@ void DTDElementDecl::serialize(XSerializeEngine& serEng)
     }
     else
     {
+        int i;
+        serEng>>i;
+        fModelType=(ModelTypes)i;
+
         /***
          *
          * Deserialize RefHashTableOf<DTDAttDef>           
@@ -474,10 +479,6 @@ void DTDElementDecl::serialize(XSerializeEngine& serEng)
 
         serEng>>fAttList;
         serEng>>fContentSpec;
-
-        int i;
-        serEng>>i;
-        fModelType=(ModelTypes)i;
 
         /***
          *   don't deserialize

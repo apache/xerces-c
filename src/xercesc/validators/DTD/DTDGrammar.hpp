@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/10/28 20:18:26  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.16  2004/10/20 15:19:07  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -298,9 +301,10 @@ private:
     NameIdPool<DTDElementDecl>*       fElemNonDeclPool;
     NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
     NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
+    XMLDTDDescription*                fGramDesc;
+
     unsigned int                      fRootElemId;
     bool                              fValidated;
-    XMLDTDDescription*                fGramDesc;
 
     friend class XMLInitializer;
 };

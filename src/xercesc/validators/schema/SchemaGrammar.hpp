@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/10/28 20:21:06  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.17  2004/09/28 02:14:14  cargilld
  * Add support for validating annotations.
  *
@@ -421,10 +424,11 @@ private:
     RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
     ValidationContext*                     fValidationContext;
     MemoryManager*                         fMemoryManager;
-    bool                                   fValidated;
-    DatatypeValidatorFactory               fDatatypeRegistry;
     XMLSchemaDescription*                  fGramDesc;
     RefHashTableOf<XSAnnotation>*          fAnnotations;
+
+    bool                                   fValidated;
+    DatatypeValidatorFactory               fDatatypeRegistry;
 };
 
 

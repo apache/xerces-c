@@ -238,10 +238,10 @@ static const XMLCh PATH_SEPARATORS[] =
 // ctor# 2
 XMLUri::XMLUri(const XMLCh* const uriSpec,
                MemoryManager* const manager)
-: fScheme(0)
+: fPort(-1)
+, fScheme(0)
 , fUserInfo(0)
 , fHost(0)
-, fPort(-1)
 , fRegAuth(0)
 , fPath(0)
 , fQueryString(0)
@@ -267,10 +267,10 @@ XMLUri::XMLUri(const XMLCh* const uriSpec,
 XMLUri::XMLUri(const XMLUri* const      baseURI
               , const XMLCh* const   uriSpec
               , MemoryManager* const manager)
-: fScheme(0)
+: fPort(-1)
+, fScheme(0)
 , fUserInfo(0)
 , fHost(0)
-, fPort(-1)
 , fRegAuth(0)
 , fPath(0)
 , fQueryString(0)
@@ -294,10 +294,10 @@ XMLUri::XMLUri(const XMLUri* const      baseURI
 
 //Copy constructor
 XMLUri::XMLUri(const XMLUri& toCopy)
-: fScheme(0)
+: fPort(-1)
+, fScheme(0)
 , fUserInfo(0)
 , fHost(0)
-, fPort(-1)
 , fRegAuth(0)
 , fPath(0)
 , fQueryString(0)
@@ -2546,13 +2546,10 @@ void XMLUri::serialize(XSerializeEngine& serEng)
 
     if (serEng.isStoring())
     {
-
+        serEng<<fPort;
         serEng.writeString(fScheme);
         serEng.writeString(fUserInfo);
         serEng.writeString(fHost);
-
-        serEng<<fPort;
-
         serEng.writeString(fRegAuth);
         serEng.writeString(fPath);
         serEng.writeString(fQueryString);
@@ -2561,12 +2558,10 @@ void XMLUri::serialize(XSerializeEngine& serEng)
     }
     else
     {
+        serEng>>fPort;
         serEng.readString(fScheme);
         serEng.readString(fUserInfo);
         serEng.readString(fHost);
-
-        serEng>>fPort;
-
         serEng.readString(fRegAuth);
         serEng.readString(fPath);
         serEng.readString(fQueryString);
@@ -2577,10 +2572,10 @@ void XMLUri::serialize(XSerializeEngine& serEng)
 }
 
 XMLUri::XMLUri(MemoryManager* const manager)
-: fScheme(0)
+: fPort(-1)
+, fScheme(0)
 , fUserInfo(0)
 , fHost(0)
-, fPort(-1)
 , fRegAuth(0)
 , fPath(0)
 , fQueryString(0)

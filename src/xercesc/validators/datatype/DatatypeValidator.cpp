@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2004/10/28 20:16:31  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.26  2004/09/08 13:56:52  peiyongz
  * Apache License Version 2.0
  *
@@ -179,13 +182,16 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
                                      const int finalSet,
                                      const ValidatorType type,
                                      MemoryManager* const manager)
-    : fMemoryManager(manager)
-    , fAnonymous(false)
+    : fAnonymous(false)
+    , fFinite(false)
+    , fBounded(false)
+    , fNumeric(false)
     , fWhiteSpace(COLLAPSE)
     , fFinalSet(finalSet)
     , fFacetsDefined(0)
     , fFixed(0)
     , fType(type)
+    , fOrdered(XSSimpleTypeDefinition::ORDERED_FALSE)
     , fBaseValidator(baseValidator)
     , fFacets(facets)
     , fPattern(0)
@@ -193,10 +199,7 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
     , fTypeName(0)
     , fTypeLocalName(XMLUni::fgZeroLenString)
     , fTypeUri(XMLUni::fgZeroLenString)
-    , fOrdered(XSSimpleTypeDefinition::ORDERED_FALSE)
-    , fFinite(false)
-    , fBounded(false)
-    , fNumeric(false)
+    , fMemoryManager(manager)
 {
 }
 
@@ -317,16 +320,17 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
     if (serEng.isStoring())
     {
         serEng<<fAnonymous;
+        serEng<<fFinite;
+        serEng<<fBounded;
+        serEng<<fNumeric;
+
         serEng<<fWhiteSpace;
         serEng<<fFinalSet;
         serEng<<fFacetsDefined;
         serEng<<fFixed;
-        serEng<<(int)fType;
 
+        serEng<<(int)fType;
         serEng<<(int)fOrdered;
-        serEng<<fFinite;
-        serEng<<fBounded;
-        serEng<<fNumeric;
 
         storeDV(serEng, fBaseValidator);
 
@@ -361,6 +365,10 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
     else
     {
         serEng>>fAnonymous;
+        serEng>>fFinite;
+        serEng>>fBounded;
+        serEng>>fNumeric;
+
         serEng>>fWhiteSpace;
         serEng>>fFinalSet;
         serEng>>fFacetsDefined;
@@ -372,9 +380,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
 
         serEng>>type;
         fOrdered = (XSSimpleTypeDefinition::ORDERING)type;
-        serEng>>fFinite;
-        serEng>>fBounded;
-        serEng>>fNumeric;
+
 
         fBaseValidator = loadDV(serEng);
 

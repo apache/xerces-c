@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/10/28 20:14:41  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.8  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -171,11 +174,11 @@ private :
     //      The amount of memory allocated for fValue.
     //
     // -----------------------------------------------------------------------
-    MemoryManager* fMemoryManager;
-    XMLCh*         fKey;
     unsigned long  fKeyAllocSize;
-    XMLCh*         fValue;
     unsigned long  fValueAllocSize;
+    XMLCh*         fKey;
+    XMLCh*         fValue;
+    MemoryManager* fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/10/28 20:21:06  peiyongz
+ * Data member reshuffle
+ *
  * Revision 1.14  2004/09/20 14:47:13  amassari
  * Mark some methods as deprecated
  *
@@ -330,14 +333,16 @@ private :
     //      easy access the XSAnnotation object).
     // -----------------------------------------------------------------------
     unsigned int                 fElemId;
+
+    PSVIDefs::Validity           fValidity;
+    PSVIDefs::Validation         fValidation;
+    PSVIDefs::PSVIScope          fPSVIScope;
+
     QName*                       fAttName;
     DatatypeValidator*           fDatatypeValidator;
     DatatypeValidator*           fAnyDatatypeValidator;
     const DatatypeValidator*     fMemberTypeValidator;
     ValueVectorOf<unsigned int>* fNamespaceList;
-    PSVIDefs::Validity           fValidity;
-    PSVIDefs::Validation         fValidation;
-    PSVIDefs::PSVIScope          fPSVIScope;
     SchemaAttDef*                fBaseAttDecl;
 };
 
