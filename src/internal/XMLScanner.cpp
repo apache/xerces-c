@@ -87,6 +87,7 @@
 #include <internal/EndOfEntityException.hpp>
 #include <validators/DTD/DocTypeHandler.hpp>
 #include <validators/DTD/DTDScanner.hpp>
+#include <validators/schema/SchemaSymbols.hpp>
 
 
 
@@ -174,10 +175,12 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fValidatorFromUser(false)
     , fValScheme(Val_Never)
     , fDoSchema(false)
+    , fSeeXsi(false)
     , fEmptyNamespaceId(0)
     , fUnknownNamespaceId(0)
     , fXMLNamespaceId(0)
     , fXMLNSNamespaceId(0)
+    , fSchemaNamespaceId(0)
     , fGrammarResolver(0)
     , fGrammar(0)
     , fEntityDeclPool(0)
@@ -219,10 +222,12 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fValidatorFromUser(false)
     , fValScheme(Val_Never)
     , fDoSchema(false)
+    , fSeeXsi(false)
     , fEmptyNamespaceId(0)
     , fUnknownNamespaceId(0)
     , fXMLNamespaceId(0)
     , fXMLNSNamespaceId(0)
+    , fSchemaNamespaceId(0)
     , fGrammarResolver(0)
     , fGrammar(0)
     , fEntityDeclPool(0)
@@ -902,6 +907,7 @@ void XMLScanner::resetURIStringPool() {
     fUnknownNamespaceId = fURIStringPool->addOrFind(XMLUni::fgUnknownURIName);
     fXMLNamespaceId     = fURIStringPool->addOrFind(XMLUni::fgXMLURIName);
     fXMLNSNamespaceId   = fURIStringPool->addOrFind(XMLUni::fgXMLNSURIName);
+    fSchemaNamespaceId  = fURIStringPool->addOrFind(SchemaSymbols::fgURI_XSI);
 }
 
 // ---------------------------------------------------------------------------
@@ -2908,10 +2914,6 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         }
     }
 
-    //  Validate the element
-    if (fValidate)
-        fValidator->validateElement(elemDecl);
-
     //
     //  Now we can update the element stack to set the current element
     //  decl. We expanded the stack above, but couldn't store the element
@@ -2959,6 +2961,10 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  explictly provided attrs above.
     //
     attCount = buildAttList(*fRawAttrList, attCount, *elemDecl, *fAttrList);
+
+    //  Validate the element
+    if (fValidate)
+        fValidator->validateElement(elemDecl);
 
     //
     //  If empty, validate content right now if we are validating and then

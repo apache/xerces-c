@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/05/11 15:17:28  tng
+ * Schema: Nillable fixes.
+ *
  * Revision 1.17  2001/05/11 13:26:17  tng
  * Copyright update.
  *
@@ -701,6 +704,9 @@ private :
     //      This flag indicates whether the client code wants Schema to
     //      be processed or not.
     //
+    //  fSeeXsi
+    //      This flag indicates a schema has been seen.
+    //
     //  fAttName
     //  fAttValue
     //  fCDataBuf
@@ -729,6 +735,9 @@ private :
     //      'xml' and 'xmlns' special prefixes. The former is officially
     //      defined but the latter is not, so we just provide one for debug
     //      purposes.
+    //
+    //  fSchemaNamespaceId
+    //      This is the id of the schema namespace URI.
     //
     //  fGrammarResolver
     //      Grammar Pool that stores all the Grammar
@@ -772,6 +781,7 @@ private :
     bool                        fValidatorFromUser;
     ValSchemes                  fValScheme;
     bool                        fDoSchema;
+    bool                        fSeeXsi;
 
     XMLBuffer                   fAttNameBuf;
     XMLBuffer                   fAttValueBuf;
@@ -785,6 +795,7 @@ private :
     unsigned int                fUnknownNamespaceId;
     unsigned int                fXMLNamespaceId;
     unsigned int                fXMLNSNamespaceId;
+    unsigned int                fSchemaNamespaceId;
 
     GrammarResolver*            fGrammarResolver;
     Grammar*                    fGrammar;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/11 15:17:43  tng
+ * Schema: Nillable fixes.
+ *
  * Revision 1.4  2001/05/11 13:27:37  tng
  * Copyright update.
  *
@@ -307,10 +310,10 @@ const XMLCh SchemaSymbols::fgELT_PERIOD[] =
     chLatin_p, chLatin_e, chLatin_r, chLatin_i, chLatin_o, chLatin_d, chNull
 };
 
-const XMLCh SchemaSymbols::fgELT_PRECISION[] =
+const XMLCh SchemaSymbols::fgELT_TOTALDIGITS[] =
 {
-    chLatin_p, chLatin_r, chLatin_e, chLatin_c, chLatin_i, chLatin_s,
-    chLatin_i, chLatin_o, chLatin_n,  chNull
+    chLatin_t, chLatin_o, chLatin_t, chLatin_a, chLatin_l, chLatin_D,
+    chLatin_i, chLatin_g, chLatin_i, chLatin_t, chLatin_s, chNull
 };
 
 const XMLCh SchemaSymbols::fgELT_FRACTIONDIGITS[] =
@@ -496,6 +499,11 @@ const XMLCh SchemaSymbols::fgATT_NAMESPACE[] =
 {
     chLatin_n, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chLatin_p,
     chLatin_a, chLatin_c, chLatin_e, chNull
+};
+
+const XMLCh SchemaSymbols::fgATT_NILL[] =
+{
+    chLatin_n, chLatin_i, chLatin_l, chNull
 };
 
 const XMLCh SchemaSymbols::fgATT_NILLABLE[] =

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/11 15:17:46  tng
+ * Schema: Nillable fixes.
+ *
  * Revision 1.6  2001/05/11 13:27:37  tng
  * Copyright update.
  *
@@ -85,6 +88,7 @@
 #include <internal/XMLReader.hpp>
 #include <internal/XMLScanner.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
+#include <validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 #include <validators/schema/SchemaValidator.hpp>
 #include <validators/schema/SubstitutionGroupComparator.hpp>
@@ -96,10 +100,11 @@ SchemaValidator::SchemaValidator(XMLErrorReporter* const errReporter) :
 
     XMLValidator(errReporter)
     , fGrammarResolver(0)
+    , fSchemaGrammar(0)
     , fTrailing(false)
-    , fBufferDatatype(0)
     , fXsiType(0)
-    , fNil(0)
+    , fXsiTypeValidator(0)
+    , fNil(false)
 {
 }
 
@@ -144,19 +149,27 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
     else if ((modelType == SchemaElementDecl::Mixed)
          ||  (modelType == SchemaElementDecl::Children))
     {
-        // Get the element's content model or fault it in
-        XMLContentModel* elemCM = elemDecl->getContentModel();
+        // if nillable, it's an error to have value
+        if (fNil) {
+            if (childCount > 0 || XMLString::compareString(fDatatypeBuffer.getRawBuffer(), XMLUni::fgZeroLenString))
+                emitError(XMLValid::NilAttrNotEmpty, elemDecl->getFullName());
 
-        // Ask it to validate and return its return
-        int result = elemCM->validateContent(children, childCount, getScanner()->getEmptyNamespaceId());
-        if (result != -1) {
-            result = elemCM->validateContentSpecial(children
-                                                  , childCount
-                                                  , getScanner()->getEmptyNamespaceId()
-                                                  , fGrammarResolver
-                                                  , getScanner()->getURIStringPool());
         }
-        return result;
+        else {
+            // Get the element's content model or fault it in
+            XMLContentModel* elemCM = elemDecl->getContentModel();
+
+            // Ask it to validate and return its return
+            int result = elemCM->validateContent(children, childCount, getScanner()->getEmptyNamespaceId());
+            if (result != -1) {
+                result = elemCM->validateContentSpecial(children
+                                                      , childCount
+                                                      , getScanner()->getEmptyNamespaceId()
+                                                      , fGrammarResolver
+                                                      , getScanner()->getURIStringPool());
+            }
+            return result;
+        }
     }
     else if (modelType == SchemaElementDecl::Simple)
     {
@@ -166,7 +179,7 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
             try {
                 DatatypeValidator* fCurrentDV = ((SchemaElementDecl*)elemDecl)->getDatatypeValidator();
                 // If there is xsi:type validator, substitute it.
-                if (!fXsiTypeValidator) {
+                if (fXsiTypeValidator) {
                     fCurrentDV = fXsiTypeValidator;
                     fXsiTypeValidator = 0;
                 }
@@ -211,12 +224,12 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
             } catch (InvalidDatatypeValueException idve) {
                 emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
             }
+            catch (InvalidDatatypeFacetException idve) {
+                emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+            }
             catch (...) {
                 emitError(XMLValid::GenericError);
             }
-            fNil = false;
-            fBufferDatatype=false;
-            fDatatypeBuffer.reset();
         }
     }
      else
@@ -224,6 +237,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
         ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMType);
     }
 
+    fDatatypeBuffer.reset();
+    fNil = false;
     fTrailing=false;
 
     // Went ok, so return success
@@ -309,6 +324,9 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
             } catch (InvalidDatatypeValueException idve) {
                 emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
             }
+            catch (InvalidDatatypeFacetException idve) {
+                emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+            }
             catch (...) {
                 emitError(XMLValid::GenericError);
             }
@@ -363,6 +381,9 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
                                         if (type == XMLAttDef::Simple)
                                             attDeclDV->validate(attrValue);
                                     } catch (InvalidDatatypeValueException idve) {
+                                        emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+                                    }
+                                    catch (InvalidDatatypeFacetException idve) {
                                         emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
                                     }
                                     catch (...) {
@@ -600,10 +621,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
         emitError(XMLValid::NillNotAllowed, elemDef->getFullName());
     }
 
-    if (((SchemaElementDecl*) elemDef)->getModelType() == SchemaElementDecl::Simple) {
-        fBufferDatatype = true;
-        fDatatypeBuffer.reset();
-    }
+    fDatatypeBuffer.reset();
 }
 
 void SchemaValidator::preContentValidation(bool reuseGrammar)
@@ -840,9 +858,8 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         // Add this char to the target buffer
         toFill.append(nextCh);
 
-        // stored the content if we are in simple type element string content
-        if (fBufferDatatype)
-            fDatatypeBuffer.append(nextCh);
+        // stored the content for validation later
+        fDatatypeBuffer.append(nextCh);
 
         // And move up to the next character in the source
         srcPtr++;

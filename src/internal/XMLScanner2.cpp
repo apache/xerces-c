@@ -1071,13 +1071,6 @@ void XMLScanner::updateNSMap(const  XMLCh* const    attrName
 
 void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount) {
 
-    //  Indicate if the schema URI (e.g. "http://www.w3.org/2000/10/XMLSchema-instance")
-    //  has been seen
-    bool seeXsi = false;
-
-    //  Schema prefix xxx (e.g. xmlns:xxx="http://www.w3.org/2000/10/XMLSchema-instance")
-    XMLBuffer fXsiPrefix;
-
     //  Schema Xsi Type yyyy (e.g. xsi:type="yyyyy")
     XMLBuffer fXsiType;
 
@@ -1110,14 +1103,13 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
 
             // if the schema URI is seen in the the valuePtr, set the boolean seeXsi
             if (!XMLString::compareString(valuePtr, SchemaSymbols::fgURI_XSI)) {
-                fXsiPrefix.set(suffPtr);
-                seeXsi = true;
+                fSeeXsi = true;
             }
         }
     }
 
     // walk through the list again to deal with "xsi:...."
-    if (fDoSchema && seeXsi && !fReuseGrammar)
+    if (fDoSchema && fSeeXsi && !fReuseGrammar)
     {
         for (index = 0; index < attCount; index++)
         {
@@ -1132,14 +1124,15 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
 
             // if schema URI has been seen, scan for the schema location and uri
             // and resolve the schema grammar; or scan for schema type
-            if (!XMLString::compareString(prefPtr, fXsiPrefix.getRawBuffer())) {
+
+            if (resolvePrefix(prefPtr, ElemStack::Mode_Attribute) == fSchemaNamespaceId) {
                 if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_SCHEMALOCACTION))
                     parseSchemaLocation(valuePtr);
                 else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_NONAMESPACESCHEMALOCACTION))
                     resolveSchemaGrammar(valuePtr, XMLUni::fgZeroLenString);
                 else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgXSI_TYPE))
                     fXsiType.set(valuePtr);
-                else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgATT_NILLABLE)) {
+                else if (!XMLString::compareString(suffPtr, SchemaSymbols::fgATT_NILL)) {
                     if (fValidator) {
                         if (!XMLString::compareString(valuePtr, SchemaSymbols::fgATTVAL_TRUE))
                             ((SchemaValidator*)fValidator)->setNillable(true);

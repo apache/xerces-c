@@ -110,7 +110,7 @@ public :
     static const XMLCh fgELT_NOTATION[];
     static const XMLCh fgELT_PATTERN[];
     static const XMLCh fgELT_PERIOD[];
-    static const XMLCh fgELT_PRECISION[];
+    static const XMLCh fgELT_TOTALDIGITS[];
     static const XMLCh fgELT_FRACTIONDIGITS[];
     static const XMLCh fgELT_SCHEMA[];
     static const XMLCh fgELT_SELECTOR[];
@@ -143,6 +143,7 @@ public :
     static const XMLCh fgATT_MINOCCURS[];
     static const XMLCh fgATT_NAME[];
     static const XMLCh fgATT_NAMESPACE[];
+    static const XMLCh fgATT_NILL[];
     static const XMLCh fgATT_NILLABLE[];
     static const XMLCh fgATT_PROCESSCONTENTS[];
     static const XMLCh fgATT_REF[];

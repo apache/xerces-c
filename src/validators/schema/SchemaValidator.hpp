@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/11 15:17:48  tng
+ * Schema: Nillable fixes.
+ *
  * Revision 1.5  2001/05/11 13:27:37  tng
  * Copyright update.
  *
@@ -196,10 +199,6 @@ private:
     //  fDatatypeBuffer
     //      Buffer for simple type element string content
     //
-    //  fBufferDatatype
-    //      Indicate a simple type element is being scanned, and its
-    //      string content should be stored in fDatatypeBuffer
-    //
     //  fTrailing
     //      Previous chunk had a trailing space
     // -----------------------------------------------------------------------
@@ -210,7 +209,6 @@ private:
 
     DatatypeValidator* fXsiTypeValidator;
 
-    bool fBufferDatatype;
     XMLBuffer fDatatypeBuffer;
     bool fTrailing;
 };
