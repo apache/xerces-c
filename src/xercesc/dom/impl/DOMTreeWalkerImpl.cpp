@@ -132,6 +132,9 @@ DOMNode* DOMTreeWalkerImpl::firstChild () {
 
     if (!fCurrentNode) return 0;
 
+    if(!fExpandEntityReferences && fCurrentNode->getNodeType()==DOMNode::ENTITY_REFERENCE_NODE)
+        return 0;
+
     DOMNode* node = getFirstChild(fCurrentNode);
 
     if (node != 0) {
@@ -148,6 +151,9 @@ DOMNode* DOMTreeWalkerImpl::firstChild () {
 DOMNode* DOMTreeWalkerImpl::lastChild () {
 
     if (!fCurrentNode) return 0;
+
+    if(!fExpandEntityReferences && fCurrentNode->getNodeType()==DOMNode::ENTITY_REFERENCE_NODE)
+        return 0;
 
     DOMNode* node = getLastChild(fCurrentNode);
     if (node != 0) {
@@ -386,6 +392,9 @@ DOMNode* DOMTreeWalkerImpl::getFirstChild (DOMNode* node) {
 		
     if (!node) return 0;
 
+    if(!fExpandEntityReferences && node->getNodeType()==DOMNode::ENTITY_REFERENCE_NODE)
+        return 0;
+
     DOMNode* newNode = node->getFirstChild();
     if (!newNode)  return 0;
 
@@ -413,6 +422,9 @@ DOMNode* DOMTreeWalkerImpl::getFirstChild (DOMNode* node) {
 DOMNode* DOMTreeWalkerImpl::getLastChild (DOMNode* node) {
 	
     if (!node) return 0;
+
+    if(!fExpandEntityReferences && node->getNodeType()==DOMNode::ENTITY_REFERENCE_NODE)
+        return 0;
 
     DOMNode* newNode = node->getLastChild();
     if (!newNode)  return 0;
