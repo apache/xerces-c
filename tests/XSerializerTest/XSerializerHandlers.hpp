@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2004/12/06 11:55:38  cargilld
+ * Rename parameter named exception to get rid of warning msgs.
+ *
  * Revision 1.2  2004/09/08 13:57:07  peiyongz
  * Apache License Version 2.0
  *
@@ -88,9 +91,9 @@ public:
     // -----------------------------------------------------------------------
     //  Handlers for the SAX ErrorHandler interface
     // -----------------------------------------------------------------------
-	void warning(const SAXParseException& exception);
-    void error(const SAXParseException& exception);
-    void fatalError(const SAXParseException& exception);
+	void warning(const SAXParseException& exc);
+    void error(const SAXParseException& exc);
+    void fatalError(const SAXParseException& exc);
     void resetErrors();
 
 

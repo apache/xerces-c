@@ -354,19 +354,19 @@ public:
     void resetDocument() {
     };
 
-    void warning(const SAXParseException& exception)     {
+    void warning(const SAXParseException& exc)     {
         fprintf(stderr, "*** Warning ");
         fflush(stderr);
         throw exception;
     };
 
-    void error(const SAXParseException& exception)       {
+    void error(const SAXParseException& exc)       {
         fprintf(stderr, "*** Error ");
         fflush(stderr);
         throw exception;
     };
 
-    void fatalError(const SAXParseException& exception)  {
+    void fatalError(const SAXParseException& exc)  {
         fprintf(stderr, "***** Fatal error ");
         fflush(stderr);
         throw exception;
