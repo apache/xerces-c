@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/10/13 22:47:57  andyh
+ * Fix bug (failure to null-terminate result) in XMLString::trim().
+ * Patch contributed by Nadav Aharoni
+ *
  * Revision 1.13  2000/04/12 18:42:15  roddey
  * Improved docs in terms of what 'max chars' means in the method
  * parameters.
@@ -872,13 +876,15 @@ public:
         , const unsigned int    maxChars
     );
 
-    /** Trims off extra space characters from the end of the string
+    /** Trims off extra space characters from the start and end of the string,
+      * moving the non-space string content back to the start.
       * @param toTrim The string to be trimmed. On return this contains the
       * trimmed string
       */
     static void trim(char* const toTrim);
 
-    /** Trims off extra space characters from the end of the string
+    /** Trims off extra space characters from the start and end of the string,
+      * moving the non-space string content back to the start.
       * @param toTrim The string to be trimmed. On return this contains
       * the trimmed string
       */

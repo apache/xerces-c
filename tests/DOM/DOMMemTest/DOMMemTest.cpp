@@ -66,6 +66,10 @@
 
 /*
  * $Log$
+ * Revision 1.23  2000/10/13 22:47:37  andyh
+ * Fix bug (failure to null-terminate result) in XMLString::trim().
+ * Patch contributed by Nadav Aharoni
+ *
  * Revision 1.22  2000/05/09 00:22:48  andyh
  * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
  * allocated memory; memory leak checking tools will no longer report
@@ -567,6 +571,27 @@ void    DOMStringTests()
 
     }
     TESTEPILOG;
+
+
+    //
+    //  String bug submitted by Nadav Aharoni
+    //
+    TESTPROLOG;
+    {
+        char testString[] = "            ";
+        testString[4] = 0;
+        testString[5] = 'x';
+        char *origString = testString;
+        XMLString::trim(testString);
+        TASSERT(strlen(testString) == 0);
+        TASSERT(testString[5] == 'x');
+
+        strcpy(testString, "  Hello  ");
+        XMLString::trim(testString);
+        TASSERT(strcmp(testString, "Hello") == 0);
+    }
+    TESTEPILOG;
+
 
 }
 
@@ -1634,12 +1659,6 @@ void DOMNSTests()
     //
     // 
     //
-    TESTPROLOG;
-    {
-
-
-    }
-    TESTEPILOG;
 
 }
 

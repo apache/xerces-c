@@ -63,6 +63,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <string.h>
+#include <ctype.h>
 #include <util/ArrayIndexOutOfBoundsException.hpp>
 #include <util/IllegalArgumentException.hpp>
 #include <util/Janitor.hpp>
@@ -534,13 +535,13 @@ void XMLString::trim(char* const toTrim)
     unsigned int skip, scrape;
     for (skip = 0; skip < len; skip++)
     {
-        if (toTrim[skip] > ' ')
+        if (! isspace(toTrim[skip]))
             break;
     }
 
     for (scrape = len; scrape > skip; scrape--)
     {
-        if (toTrim[scrape - 1] > ' ')
+        if (! isspace(toTrim[scrape - 1] ))
             break;
     }
 
@@ -554,6 +555,8 @@ void XMLString::trim(char* const toTrim)
         unsigned int index = 0;
         while (toTrim[skip])
             toTrim[index++] = toTrim[skip++];
+
+        toTrim[index] = 0;
     }
 }
 
@@ -1059,6 +1062,8 @@ void XMLString::trim(XMLCh* const toTrim)
         unsigned int index = 0;
         while (toTrim[skip])
             toTrim[index++] = toTrim[skip++];
+
+        toTrim[index] = 0;
     }
 }
 
