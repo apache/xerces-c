@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:21:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/04/25 00:12:34  jasons
+ * fairly serious error in the two XMLCh* constructor, the fURL member
+ * was being improperly initialized with the (systemID,publicID) instead
+ * of (baseId,systemId)
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:50  peiyongz
+ * sane_include
  *
  * Revision 1.3  2000/02/06 07:47:46  rahulj
  * Year 2K copyright swat.
@@ -113,7 +118,7 @@ URLInputSource::URLInputSource( const   XMLCh* const    baseId
                                 , const XMLCh* const    systemId
                                 , const XMLCh* const    publicId) :
     InputSource(0, publicId)
-    , fURL(systemId, publicId)
+    , fURL(baseId, systemId)
 {
     setSystemId(fURL.getURLText());
 }
