@@ -713,28 +713,26 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     # Populate the library output directory
     print ("\n\nCopying library outputs ...\n");
     pchdir ("$targetdir/lib");
+    psystem("rm -f libxerces* ");
+       
+    if ((-e "$XERCESCROOT/lib/libxerces-c.so.17.0" )) {
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.17.0 .");           
+        psystem("ln -s libxerces-c.so.17.0 libxerces-c.so.17 ");
+        psystem("ln -s libxerces-c.so.17   libxerces-c.so    ");
+    }
 
-    # for Solaris & Linux
-    psystem("cp -f $XERCESCROOT/lib/libxerces-c.so.17.0 .");
-    psystem("rm -f libxerces-c.so.17");
-    psystem("rm -f libxerces-c.so");       
-    psystem("find . -name 'libxerces-c.so.17.0' -exec ln -s {} libxerces-c.so.17 \\;");
-    psystem("find . -name 'libxerces-c.so.17'   -exec ln -s {} libxerces-c.so \\;");
+    if ((-e "$XERCESCROOT/lib/libxerces-c.sl.17.0" )) {        
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.17.0 .");   
+        psystem("ln -s libxerces-c.sl.17.0 libxerces-c.sl.17 ");
+        psystem("ln -s libxerces-c.sl.17   libxerces-c.sl    ");
+    }
 
-    # for HP-UX        
-    psystem("cp -f $XERCESCROOT/lib/libxerces-c.sl.17.0 .");
-    psystem("rm -f libxerces-c.sl.17");
-    psystem("rm -f libxerces-c.sl");       
-    psystem("find . -name 'libxerces-c.sl.17.0' -exec ln -s {} libxerces-c.sl.17 \\;");
-    psystem("find . -name 'libxerces-c.sl.17'   -exec ln -s {} libxerces-c.sl \\;");
-
-    # for AIX
-    psystem("cp -f $XERCESCROOT/lib/libxerces-c17.0.so .");
-    psystem("rm -f libxerces-c17.so");
-    psystem("rm -f libxerces-c.so");       
-    psystem("find . -name 'libxerces-c17.0.so' -exec ln -s {} libxerces-c17.so \\;");
-    psystem("find . -name 'libxerces-c17.so'   -exec ln -s {} libxerces-c.so \\;");
-               
+    if ((-e "$XERCESCROOT/lib/libxerces-c17.0.so" )) {        
+        psystem("cp -f $XERCESCROOT/lib/libxerces-c17.0.so .");      
+        psystem("ln -s libxerces-c17.0.so libxerces-c17.so  ");
+        psystem("ln -s libxerces-c17.so   libxerces-c.so    ");
+    }
+                
     #
     # Create symbolic link for those ICU libraries
     #
