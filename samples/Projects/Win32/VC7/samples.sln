@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SEnumVal", "SEnumVal\SEnumV
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StdInParse", "StdInParse\StdInParse.vcproj", "{A0B8FC42-0429-48C1-9C65-939E0DC9D991}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSVIWriter", "PSVIWriter\PSVIWriter.vcproj", "{5769C5DE-11C2-47C4-ACC5-47C9000B6714}"
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		ConfigName.0 = Debug
@@ -58,6 +60,8 @@ Global
 		{9D4CA05C-E16F-4CC7-8894-2F8B4EDF8889}.Debug.Build.0 = Debug|Win32
 		{A0B8FC42-0429-48C1-9C65-939E0DC9D991}.Debug.ActiveCfg = Debug|Win32
 		{A0B8FC42-0429-48C1-9C65-939E0DC9D991}.Debug.Build.0 = Debug|Win32
+		{5769C5DE-11C2-47C4-ACC5-47C9000B6714}.Debug.ActiveCfg = Debug|Win32
+		{5769C5DE-11C2-47C4-ACC5-47C9000B6714}.Debug.Build.0 = Debug|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
