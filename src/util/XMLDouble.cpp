@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/07/27 20:43:53  peiyongz
+ * copy ctor: to check for special types.
+ *
  * Revision 1.4  2001/07/26 18:21:15  peiyongz
  * Boundary Checking
  *
@@ -324,10 +327,14 @@ XMLDouble::XMLDouble(const XMLDouble& toCopy)
 ,fType(Normal)
 ,fValue(0)
 {
-    fMantissa = new XMLBigDecimal(*(toCopy.fMantissa));
-    fExponent = new XMLBigInteger(*(toCopy.fExponent));
-    fType     = toCopy.fType;
-    fValue    = toCopy.fValue;
+    if (!toCopy.isSpecialValue())
+    {
+        fMantissa = new XMLBigDecimal(*(toCopy.fMantissa));
+        fExponent = new XMLBigInteger(*(toCopy.fExponent));
+    }
+
+    fType  = toCopy.fType;
+    fValue = toCopy.fValue;
 }
 
 //

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/27 20:43:53  peiyongz
+ * copy ctor: to check for special types.
+ *
  * Revision 1.1  2001/07/26 20:41:37  peiyongz
  * XMLFloat
  *
@@ -312,10 +315,14 @@ XMLFloat::XMLFloat(const XMLFloat& toCopy)
 ,fType(Normal)
 ,fValue(0)
 {
-    fMantissa = new XMLBigDecimal(*(toCopy.fMantissa));
-    fExponent = new XMLBigInteger(*(toCopy.fExponent));
-    fType     = toCopy.fType;
-    fValue    = toCopy.fValue;
+    if (!toCopy.isSpecialValue())
+    {
+        fMantissa = new XMLBigDecimal(*(toCopy.fMantissa));
+        fExponent = new XMLBigInteger(*(toCopy.fExponent));
+    }
+
+    fType  = toCopy.fType;
+    fValue = toCopy.fValue;
 }
 
 //
