@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/02/25 21:22:36  tng
+ * Modify UnixHTTPURLInputStream for it to work on ebcdic platform.  Patch from Steve Dulin
+ *
  * Revision 1.9  2002/12/09 13:12:12  tng
  * Fix compilation error.
  *
@@ -137,6 +140,9 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/TransService.hpp>
+#include <xercesc/util/TranscodingException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -145,31 +151,122 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
       : fSocket(0)
       , fBytesProcessed(0)
 {
+
     //
-    // Pull all of the parts of the URL out of th urlSource object, and transcode them
-    //   and transcode them back to ASCII.
+    //  Constants in ASCII to send/check in the HTTP request/response
     //
+
+    const char GET[] =
+    {
+        chLatin_G, chLatin_E, chLatin_T, chSpace, chNull
+    };
+
+    const char HTTP[] =
+    {
+        chLatin_H, chLatin_T, chLatin_T, chLatin_P, chNull
+    };
+
+    const char HTTP10[] =
+    {
+        chSpace, chLatin_H, chLatin_T, chLatin_T, chLatin_P, chForwardSlash, chDigit_1, chPeriod, chDigit_0, chCR, chLF, chNull
+    };
+
+    const char CRLF2X[] =
+    {
+        chCR, chLF, chCR, chLF, chNull
+    };
+
+    const char LF2X[] =
+    {
+        chLF, chLF, chNull
+    };
+
+    const char HOST[] =
+    {
+        chLatin_H, chLatin_o, chLatin_s, chLatin_t, chColon, chSpace, chNull
+    };
+
+    const char COLON[] =
+    {
+        chColon, chNull
+    };
+
+    const char resp200 [] =
+    {
+        chSpace, chDigit_2, chDigit_0, chDigit_0, chSpace, chNull
+    };
+
+    unsigned int charsEaten;
+    unsigned int transSize;
+    XMLTransService::Codes failReason;
+    const unsigned int blockSize = 2048;
+    const unsigned int bufSize = 5;
+    static XMLCh portBuffer[bufSize+1];
+
+    //
+    // Pull all of the parts of the URL out of the urlSource object
+    //
+
     const XMLCh*        hostName = urlSource.getHost();
+    const XMLCh*        path = urlSource.getPath();
+    const XMLCh*        fragment = urlSource.getFragment();
+    const XMLCh*        query = urlSource.getQuery();
+
+    //
+    //  Convert the hostName to the platform's code page for gethostbyname and
+    //  inet_addr functions.
+    //
+
     char*               hostNameAsCharStar = XMLString::transcode(hostName);
     ArrayJanitor<char>  janBuf1(hostNameAsCharStar);
 
-    const XMLCh*        path = urlSource.getPath();
-    char*               pathAsCharStar = XMLString::transcode(path);
-    ArrayJanitor<char>  janBuf2(pathAsCharStar);
+    //
+    //  Convert all the parts of the urlSource object to ASCII so they can be
+    //  sent to the remote host in that format
+    //
 
-    const XMLCh*        fragment = urlSource.getFragment();
-    char*               fragmentAsCharStar = 0;
+    transSize = XMLString::stringLen(hostName)+1;
+    char*               hostNameAsASCII = new char[transSize+1];
+    ArrayJanitor<char>  janBuf2(hostNameAsASCII);
+
+    XMLTranscoder* trans = XMLPlatformUtils::fgTransService->makeNewTranscoderFor("ISO8859-1", failReason, blockSize);
+    trans->transcodeTo(hostName, transSize, (unsigned char *) hostNameAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+
+    transSize = XMLString::stringLen(path)+1;
+    char*               pathAsASCII = new char[transSize+1];
+    ArrayJanitor<char>     janBuf3(pathAsASCII);
+    trans->transcodeTo(path, transSize, (unsigned char *) pathAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+
+    char*               fragmentAsASCII = 0;
     if (fragment)
-        fragmentAsCharStar = XMLString::transcode(fragment);
-    ArrayJanitor<char>  janBuf3(fragmentAsCharStar);
+    {
+        transSize = XMLString::stringLen(fragment)+1;
+        fragmentAsASCII = new char[transSize+1];
+        ArrayJanitor<char>  janBuf4(fragmentAsASCII);
+        trans->transcodeTo(fragment, transSize, (unsigned char *) fragmentAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+    }
 
-    const XMLCh*        query = urlSource.getQuery();
-    char*               queryAsCharStar = 0;
+    char*               queryAsASCII = 0;
+    ArrayJanitor<char>  janBuf5(queryAsASCII);
     if (query)
-        queryAsCharStar = XMLString::transcode(query);
-    ArrayJanitor<char>  janBuf4(queryAsCharStar);		
+    {
+        transSize = XMLString::stringLen(query)+1;
+        queryAsASCII = new char[transSize+1];
+        trans->transcodeTo(query, transSize, (unsigned char *) queryAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+    }
 
     unsigned short      portNumber = (unsigned short) urlSource.getPortNum();
+
+    //
+    //  Convert port number integer to unicode so we can transcode it to ASCII
+    //
+
+    XMLString::binToText((unsigned int) portNumber, portBuffer, bufSize, 10);
+    transSize = XMLString::stringLen(portBuffer)+1;
+    char*               portAsASCII = new char[transSize+1];
+    trans->transcodeTo(portBuffer, transSize, (unsigned char *) portAsASCII, transSize, charsEaten, XMLTranscoder::UnRep_Throw);
+
+    delete trans;
 
     //
     // Set up a socket.
@@ -177,7 +274,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     struct hostent*     hostEntPtr = 0;
     struct sockaddr_in  sa;
 
-
+    // Use the hostName in the local code page ....
     if ((hostEntPtr = gethostbyname(hostNameAsCharStar)) == NULL)
     {
         unsigned long  numAddress = inet_addr(hostNameAsCharStar);
@@ -195,6 +292,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
         }
     }
 
+    memset(&sa, '\0', sizeof(sockaddr_in));  // iSeries fix ??
     memcpy((void *) &sa.sin_addr,
            (const void *) hostEntPtr->h_addr, hostEntPtr->h_length);
     sa.sin_family = hostEntPtr->h_addrtype;
@@ -217,37 +315,36 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     // Build up the http GET command to send to the server.
     // To do:  We should really support http 1.1.  This implementation
     //         is weak.
-    strcpy(fBuffer, "GET ");
-    strcat(fBuffer, pathAsCharStar);
+    strcpy(fBuffer, GET);
+    strcat(fBuffer, pathAsASCII);
 
-    if (queryAsCharStar != 0)
+    if (queryAsASCII != 0)
     {		
         size_t n = strlen(fBuffer);
         fBuffer[n] = chQuestion;
         fBuffer[n+1] = chNull;
-        strcat(fBuffer, queryAsCharStar);
+        strcat(fBuffer, queryAsASCII);
     }
 
-    if (fragmentAsCharStar != 0)
+    if (fragmentAsASCII != 0)
     {
-        strcat(fBuffer, fragmentAsCharStar);
+        strcat(fBuffer, fragmentAsASCII);
     }
-    strcat(fBuffer, " HTTP/1.0\r\n");
+    strcat(fBuffer, HTTP10);
 
-
-    strcat(fBuffer, "Host: ");
-    strcat(fBuffer, hostNameAsCharStar);
+    strcat(fBuffer, HOST);
+    strcat(fBuffer, hostNameAsASCII);
     if (portNumber != 80)
     {
-        int i = strlen(fBuffer);
-		sprintf(fBuffer+i, ":%d", portNumber);
-        // _itoa(portNumber, fBuffer+i, 10);
+        strcat(fBuffer,COLON);
+        strcat(fBuffer,portAsASCII);
     }
-    strcat(fBuffer, "\r\n\r\n");
+    strcat(fBuffer, CRLF2X);
 
     // Send the http request
     int lent = strlen(fBuffer);
     int  aLent = 0;
+
     if ((aLent = write(s, (void *) fBuffer, lent)) != lent)
     {
         ThrowXML1(NetAccessorException,
@@ -270,7 +367,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     //  (Delimited by a blank line)
     // Hang on to any data for use by the first read from this BinHTTPURLInputStream.
     //
-    fBufferPos = strstr(fBuffer, "\r\n\r\n");
+    fBufferPos = strstr(fBuffer, CRLF2X);
     if (fBufferPos != 0)
     {
         fBufferPos += 4;
@@ -278,7 +375,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     }
     else
     {
-        fBufferPos = strstr(fBuffer, "\n\n");
+        fBufferPos = strstr(fBuffer, LF2X);
         if (fBufferPos != 0)
         {
             fBufferPos += 2;
@@ -290,20 +387,19 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
 
     // Make sure the header includes an HTTP 200 OK response.
     //
-    char *p = strstr(fBuffer, "HTTP");
+    char *p = strstr(fBuffer, HTTP);
     if (p == 0)
     {
         ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
     }
 
-    p = strchr(p, ' ');
+    p = strchr(p, chSpace);
     if (p == 0)
     {
         ThrowXML1(NetAccessorException, XMLExcepts::NetAcc_ReadSocket, urlSource.getURLText());
     }
-
-    int httpResponse = atoi(p);
-    if (httpResponse != 200)
+  
+    if (memcmp(p, resp200, strlen(resp200)))
     {
         // Most likely a 404 Not Found error.
         //   Should recognize and handle the forwarding responses.
@@ -311,11 +407,9 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
         ThrowXML1(NetAccessorException, XMLExcepts::File_CouldNotOpenFile, urlSource.getURLText());
     }
 
-
     fSocket = s;
 
 }
-
 
 
 UnixHTTPURLInputStream::~UnixHTTPURLInputStream()
