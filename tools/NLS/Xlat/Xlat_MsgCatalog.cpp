@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 20:24:58  roddey
+ * Some changes to simplify life for the Messge Catalog message loader. The formatter
+ * for the message loader now spits out a simple header of ids that allows the loader to
+ * be independent of hard coded set numbers.
+ *
  * Revision 1.2  1999/12/20 22:51:09  roddey
  * Updated to deal with the new transcoder interface.
  *
@@ -87,6 +92,9 @@ MsgCatFormatter::MsgCatFormatter() :
     //  Try to create a transcoder for the format that we were told
     //  to output in.
     //
+    //  <TBD> Right now we are just using an LCP transcoding, which is not
+    //  really the right thing to do!
+    //
     fTranscoder = XMLPlatformUtils::fgTransService->makeNewLCPTranscoder();
     if (!fTranscoder)
     {
@@ -117,8 +125,9 @@ void MsgCatFormatter::endMsgType(const MsgTypes type)
 
 void MsgCatFormatter::endOutput()
 {
-    // Close the output file
+    // Close the output files
     fclose(fOutFl);
+    fclose(fOutHpp);
 }
 
 void
@@ -139,36 +148,20 @@ MsgCatFormatter::nextMessage(const  XMLCh* const            msgText
 }
 
 
-void MsgCatFormatter::startDomain(const XMLCh* const domainName)
+void MsgCatFormatter::startDomain(  const   XMLCh* const    domainName
+                                    , const XMLCh* const    nameSpace)
 {
-    //
-    //  We need to output a different set id for each domain. So we look
-    //  for each one here and assign a set number.
-    //
-    unsigned int setNum;
-    if (!XMLString::compareString(XMLUni::fgXMLErrDomain, domainName))
-    {
-        setNum = 1;
-    }
-     else if (!XMLString::compareString(XMLUni::fgExceptDomain, domainName))
-    {
-        setNum = 2;
-    }
-     else if (!XMLString::compareString(XMLUni::fgValidityDomain, domainName))
-    {
-        setNum = 3;
-    }
-     else
-    {
-        wprintf(L"Unknown message domain: %s\n", domainName);
-        throw ErrReturn_SrcFmtError;
-    }
+    // Output a constant to the header file
+    fwprintf(fOutHpp, L"const unsigned int CatId_%s = %d;\n", nameSpace, fSeqId);
 
     //
     //  Output the leading part of the array declaration. Its just an
     //  array of pointers to Unicode chars.
     //
-    fwprintf(fOutFl, L"$set %u\n", setNum);
+    fwprintf(fOutFl, L"$set %u\n", fSeqId);
+
+    // And bump the sequence id
+    fSeqId++;
 }
 
 
@@ -202,4 +195,16 @@ void MsgCatFormatter::startOutput(  const   XMLCh* const    locale
 
     // Set the message delimiter
     fwprintf(fOutFl, L"$quote \"\n");
+
+
+    swprintf(tmpBuf, L"%s/%s.hpp", outPath, L"XMLMsgCat_Ids");
+    fOutHpp = _wfopen(tmpBuf, L"wt");
+    if (!fOutHpp)
+    {
+        wprintf(L"Could not open the output file: %s\n\n", tmpBuf);
+        throw ErrReturn_OutFileOpenFailed;
+    }
+
+    // Reset the sequence id
+    fSeqId = 1;
 }

@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 20:24:58  roddey
+ * Some changes to simplify life for the Messge Catalog message loader. The formatter
+ * for the message loader now spits out a simple header of ids that allows the loader to
+ * be independent of hard coded set numbers.
+ *
  * Revision 1.2  1999/12/20 22:51:09  roddey
  * Updated to deal with the new transcoder interface.
  *
@@ -102,7 +107,11 @@ public :
         , const unsigned int    curId
     );
 
-    virtual void startDomain(const XMLCh* const domainName);
+    virtual void startDomain
+    (
+        const   XMLCh* const    domainName
+        , const XMLCh* const    nameSpace
+    );
 
     virtual void startMsgType
     (
@@ -128,12 +137,23 @@ private :
     //  Private data members
     //
     //  fOutFl
-    //      This is the current output file.
+    //      This is the current output file for the message catalog contents.
+    //
+    //  fOutHpp
+    //      This is a separate header into which we just generate a couple
+    //      of constants to make the message catalog loader independent of
+    //      the order of the section numbers.
+    //
+    //  fSeqId
+    //      This is the number that we use to assign the sequence ids to
+    //      each section we output to the message catalog.
     //
     //  fTranscoder
     //      This is our transcoder. We transcode to the local code page in
     //      order to output Unicode based text to the message catalog.
     // -----------------------------------------------------------------------
     FILE*               fOutFl;
+    FILE*               fOutHpp;
+    unsigned int        fSeqId;
     XMLLCPTranscoder*   fTranscoder;
 };

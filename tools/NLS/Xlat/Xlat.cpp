@@ -57,8 +57,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:12  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 20:24:58  roddey
+ * Some changes to simplify life for the Messge Catalog message loader. The formatter
+ * for the message loader now spits out a simple header of ids that allows the loader to
+ * be independent of hard coded set numbers.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:12  twl
+ * Initial checkin
  *
  * Revision 1.5  1999/11/08 20:42:04  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -518,7 +523,11 @@ extern "C" int wmain(int argC, XMLCh** argV)
             fwprintf(outHeader, L"class %s\n{\npublic :\n    enum Codes\n    {\n", errNameSpace);
 
             // Tell the formatter that a new domain is starting
-            formatter->startDomain(domainStr);
+            formatter->startDomain
+            (
+                domainStr
+                , errNameSpace
+            );
 
             //
             //  Force out the first message, which is always implicit and is

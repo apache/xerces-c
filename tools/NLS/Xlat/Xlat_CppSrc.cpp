@@ -56,8 +56,13 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:16  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 20:24:58  roddey
+ * Some changes to simplify life for the Messge Catalog message loader. The formatter
+ * for the message loader now spits out a simple header of ids that allows the loader to
+ * be independent of hard coded set numbers.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:16  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:42:05  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -144,7 +149,8 @@ CppSrcFormatter::nextMessage(const  XMLCh* const            msgText
 }
 
 
-void CppSrcFormatter::startDomain(const XMLCh* const domainName)
+void CppSrcFormatter::startDomain(  const   XMLCh* const    domainName
+                                    , const XMLCh* const)
 {
     //
     //  We have a different array name for each domain, so store that for
