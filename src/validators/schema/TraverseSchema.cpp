@@ -8148,46 +8148,55 @@ TraverseSchema::checkRecurse(const ContentSpecNode* const derivedSpecNode,
     }
 
     // check for mapping of children
+    XMLExcepts::Codes codeToThrow = XMLExcepts::NoError;
     unsigned int count1= derivedNodes->size();
     unsigned int count2= baseNodes->size();
     unsigned int current = 0;
 
     for (unsigned int i=0; i<count1; i++) {
 
-        ContentSpecNode* derivedNode = derivedNodes->elementAt(i);
         bool matched = false;
 
-        for (unsigned int j = current; j<count2 && !matched; j++) {
+        for (unsigned int j = current; j < count2; j++) {
 
             ContentSpecNode* baseNode = baseNodes->elementAt(j);
             current++;
 
             try {
 
-                checkParticleDerivationOk(derivedNode, derivedScope, baseNode, baseScope, baseInfo);
+                checkParticleDerivationOk(derivedNodes->elementAt(i), derivedScope, baseNode, baseScope, baseInfo);
                 matched = true;
+                break;
             }
             catch(const XMLException&) {
                 if (!toLax && !emptiableParticle(baseNode)) {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_Recurse2);
+                    break;
                 }
             }
         }
 
         // did not find a match
         if (!matched) {
-            ThrowXML(RuntimeException, XMLExcepts::PD_Recurse2);
+
+            codeToThrow = XMLExcepts::PD_Recurse2;
+            break;
         }
     }
 
     // Now, see if there are some elements in the base we didn't match up
     // in case of Sequence or All
-    if (!toLax) {
+    if (!toLax && codeToThrow == XMLExcepts::NoError) {
         for (unsigned int j = current; j < count2; j++) {
             if (!emptiableParticle(baseNodes->elementAt(j))) {
-                ThrowXML(RuntimeException, XMLExcepts::PD_Recurse2);
+
+                codeToThrow =  XMLExcepts::PD_Recurse2;
+                break;
             }
         }
+    }
+
+    if (codeToThrow != XMLExcepts::NoError) {
+        ThrowXML(RuntimeException, codeToThrow);
     }
 }
 
@@ -8280,6 +8289,7 @@ TraverseSchema::checkRecurseUnordered(const ContentSpecNode* const derivedSpecNo
         ThrowXML(RuntimeException, XMLExcepts::PD_Recurse1);
     }
 
+    XMLExcepts::Codes  codeToThrow = XMLExcepts::NoError;
     unsigned int       derivedCount= derivedNodes->size();
     unsigned int       baseCount = baseNodes->size();
     bool*              foundIt = new bool[baseCount];
@@ -8295,18 +8305,19 @@ TraverseSchema::checkRecurseUnordered(const ContentSpecNode* const derivedSpecNo
         ContentSpecNode* derivedNode = derivedNodes->elementAt(i);
         bool matched = false;
 
-        for (unsigned int j = 0; j < baseCount && !matched; j++) {
+        for (unsigned int j = 0; j < baseCount; j++) {
 
             try {
 
                 checkParticleDerivationOk(derivedNode, derivedScope, baseNodes->elementAt(j), baseScope, baseInfo);
 
                 if (foundIt[j]) {
-                    ThrowXML(RuntimeException, XMLExcepts::PD_RecurseUnordered);
+                    break;
                 }
 
                 foundIt[j] = true;
                 matched = true;
+                break;
             }
             catch (const XMLException&) {
             }
@@ -8314,15 +8325,25 @@ TraverseSchema::checkRecurseUnordered(const ContentSpecNode* const derivedSpecNo
 
         // didn't find a match.
         if (!matched) {
-	        ThrowXML(RuntimeException, XMLExcepts::PD_RecurseUnordered);
+
+	        codeToThrow = XMLExcepts::PD_RecurseUnordered;
+            break;
         }
     }
 
     // For all unmapped particles in base, check to see it it's emptiable or not
-    for (unsigned int j=0; j < baseCount; j++) {
-        if (!foundIt[j] && !emptiableParticle(baseNodes->elementAt(j))) {
-	        ThrowXML(RuntimeException, XMLExcepts::PD_RecurseUnordered);
-        }			
+    if (codeToThrow == XMLExcepts::NoError) {
+        for (unsigned int j=0; j < baseCount; j++) {
+            if (!foundIt[j] && !emptiableParticle(baseNodes->elementAt(j))) {
+
+	            codeToThrow = XMLExcepts::PD_RecurseUnordered;
+                break;
+            }
+        }
+    }
+
+    if (codeToThrow != XMLExcepts::NoError) {
+        ThrowXML(RuntimeException, codeToThrow);
     }
 }
 
