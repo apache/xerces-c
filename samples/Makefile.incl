@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2000/01/25 00:57:16  aruna1
+# Updated the inclusion of Solaris CC options for supression of templates
+#
 # Revision 1.8  2000/01/21 22:22:04  abagchi
 # OS390 Change: updates for Version 3.1.0
 #
@@ -104,7 +107,7 @@ ifeq (${PLATFORM}, SOLARIS)
 	EXTRA_LINK_OPTIONS=-lc
   else
 	CMP= -c ${CXXFLAGS}
-	CC= CC -c -D${PLATFORM}
+	CC= CC -c -D${PLATFORM} -D_REENTRANT -pic -instances=static
 	LINK =  CC -D${PLATFORM}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib
 	EXTRA_LINK_OPTIONS=-lC -lc -lgen
