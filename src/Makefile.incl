@@ -387,7 +387,8 @@ ifeq (${PLATFORM}, MACOSX)
 		-framework CoreFoundation \
 		-framework CoreServices
 	PLATFORM_COMPILE_OPTIONS = \
-		-D${PLATFORM}
+		-D${PLATFORM} \
+		-D_REENTRANT
 	MAKE_SHARED = ${CXX} -D${PLATFORM} -dynamiclib
 	MAKE_SHARED_C = ${CC} -D${PLATFORM} -dynamiclib
 	ifeq (${TRANSCODER}, ICU)
