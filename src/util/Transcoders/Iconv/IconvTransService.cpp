@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/03/13 21:48:04  abagchi
+ * Changed XML_GNUG to XML_GCC
+ *
  * Revision 1.15  2000/03/02 19:55:35  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -131,7 +134,7 @@
 #include <util/XMLUni.hpp>
 #include "IconvTransService.hpp"
 #include <wchar.h>
-#if defined (XML_GNUG)
+#if defined (XML_GCC)
 #include <wctype.h>
 #endif
 #include <string.h>
