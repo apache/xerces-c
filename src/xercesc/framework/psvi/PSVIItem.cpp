@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/09/21 16:09:19  peiyongz
+ * only vaild PSVIItem has actual value.
+ *
  * Revision 1.7  2004/09/13 21:22:42  peiyongz
  * new method: getActualValue()
  *
@@ -95,10 +98,9 @@ XSValue* PSVIItem::getActualValue() const
 	 *    VALIDATION_PARTIAL 
 	 *    VALIDATION_FULL 
      * validity
-	 *    VALIDITY_INVALID 
 	 *    VALIDITY_VALID
      ***/
-    if ((fAssessmentType==VALIDATION_NONE) || (fValidityState==VALIDITY_NOTKNOWN))
+    if ((fAssessmentType==VALIDATION_NONE) || (fValidityState!=VALIDITY_VALID))
         return 0;
     
     /***
