@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/10/25 21:55:29  peiyongz
+ * copy ctor explicity declared private to prevent supprise.
+ *
  * Revision 1.3  2001/10/24 18:13:06  peiyongz
  * CVS tag added
  *
@@ -169,6 +172,13 @@ public :
 	}
 
 private:
+
+    //
+    // unsupported ctor and operator
+    //
+	XMLRegisterCleanup(const XMLRegisterCleanup&)
+	{}
+
 	// This is the cleanup function to be called
 	XMLCleanupFn m_cleanupFn;
 
