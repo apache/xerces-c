@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/17 22:32:45  aruna1
+ * Masking changes made due to swap of 16bit to 32 bit
+ *
  * Revision 1.2  2000/02/06 07:48:01  rahulj
  * Year 2K copyright swat.
  *
@@ -81,7 +84,7 @@ public:
     // -----------------------------------------------------------------------
     static inline XMLCh swapBytes(const XMLUInt16 toSwap)
     {
-        return XMLCh((toSwap >> 8) | (toSwap << 8));
+        return XMLCh(((toSwap >> 8) | (toSwap << 8)) & 0xFFFF);
     }
 
     static inline unsigned int swapBytes(const XMLUInt32 toSwap)
