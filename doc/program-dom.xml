@@ -608,7 +608,8 @@
                 <tr><th colspan="2"><em>setValidateAnnotation</em></th></tr>
                 <tr><th><em>true:</em></th><td> Enable validation of annotations. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable validation of annotations. </td></tr>
-                <tr><th><em>default:</em></th><td> false </td></tr>               
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td> Each annotation is validated independently. </td></tr>
             </table>
             <p/>         
             
@@ -1316,7 +1317,8 @@
                 <tr><th><em>true:</em></th><td> Enable validation of annotations. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable validation of annotations. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesValidateAnnotations </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesValidateAnnotations </td></tr>
+                <tr><th><em>note:</em></th><td> Each annotation is validated independently. </td></tr>
             </table>
             <p/>                                    
             

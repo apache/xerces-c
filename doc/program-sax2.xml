@@ -416,7 +416,8 @@ void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>true:</em></th><td> Enable validation of annotations. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable validation of annotations. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
-                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesValidateAnnotations </td></tr>                
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesValidateAnnotations </td></tr>
+                <tr><th><em>note:</em></th><td> Each annotation is validated independently. </td></tr>
             </table>
             <p/>                                    
 
