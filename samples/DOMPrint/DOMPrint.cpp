@@ -323,7 +323,7 @@ int main(int argC, char* argV[])
             }
 
         }
-         else if (!strncmp(argV[parmInd], "-wcsc=", 6))
+         else if (!strncmp(argV[parmInd], "-wscs=", 6))
         {
             const char* const parm = &argV[parmInd][6];
 
@@ -333,7 +333,7 @@ int main(int argC, char* argV[])
 				gSplitCdataSections = false;
             else
             {
-                cerr << "Unknown -wcsc= value: " << parm << endl;
+                cerr << "Unknown -wscs= value: " << parm << endl;
                 XMLPlatformUtils::Terminate();
                 return 2;
             }
