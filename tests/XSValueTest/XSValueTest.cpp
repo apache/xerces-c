@@ -17,6 +17,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.11  2004/09/13 21:25:11  peiyongz
+* DATATYPE_TEST added
+*
 * Revision 1.10  2004/09/10 13:55:00  peiyongz
 * to run on 64 box
 *
@@ -54,6 +57,9 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "XSValueTest.hpp"
+
+#include <xercesc/validators/schema/SchemaSymbols.hpp>
+#include <xercesc/util/XMLUni.hpp>
 
 #if defined(XERCES_NEW_IOSTREAMS)
 #include <fstream>
@@ -346,6 +352,37 @@ void CANREP_TEST(const char*                  const  data
         }                                                                             \
     }                                                                                 \
 }    
+#endif
+
+#ifdef _DEBUG
+void DATATYPE_TEST( const XMLCh*             const  dt_String
+                  , const XSValue::DataType         expDataType
+                  )
+{
+    XSValue::DataType actDataType = XSValue::getDataType(dt_String);
+
+    if (actDataType != expDataType)
+    {
+        char* dt_str = XMLString::transcode(dt_String);
+        printf("DATATYPE_TEST Fails: data=<%s>, actDataType=<%d>, expDataType=<%d>\n",
+                dt_str, actDataType, expDataType);
+        XMLString::release(&dt_str);
+        errSeen = true;
+    }
+}
+#else
+#define DATATYPE_TEST(dt_String, expDataType)                                          \
+{                                                                                      \
+    XSValue::DataType actDataType = XSValue::getDataType(dt_String);                   \
+    if (actDataType != expDataType)                                                    \
+    {                                                                                  \
+        char* dt_str = XMLString::transcode(dt_String);                                \
+        printf("DATATYPE_TEST Fails: data=<%s>, actDataType=<%d>, expDataType=<%d>\n", \
+                dt_str, actDataType, expDataType);                                     \
+        XMLString::release(&dt_str);                                                   \
+        errSeen = true;                                                                \
+    }                                                                                  \
+}
 #endif
 
 void test_dt_decimal()
@@ -5447,6 +5484,57 @@ void test_dt_IDREFS_ENTITIES(XSValue::DataType dt)
 
 }
 
+void test_DataType()
+{
+
+    DATATYPE_TEST( SchemaSymbols::fgDT_STRING,             XSValue::dt_string);
+    DATATYPE_TEST( SchemaSymbols::fgDT_BOOLEAN,            XSValue::dt_boolean);
+    DATATYPE_TEST( SchemaSymbols::fgDT_DECIMAL,            XSValue::dt_decimal);
+    DATATYPE_TEST( SchemaSymbols::fgDT_FLOAT,              XSValue::dt_float);
+    DATATYPE_TEST( SchemaSymbols::fgDT_DOUBLE,             XSValue::dt_double);
+    DATATYPE_TEST( SchemaSymbols::fgDT_DURATION,           XSValue::dt_duration);
+    DATATYPE_TEST( SchemaSymbols::fgDT_DATETIME,           XSValue::dt_dateTime);
+    DATATYPE_TEST( SchemaSymbols::fgDT_TIME,               XSValue::dt_time);
+    DATATYPE_TEST( SchemaSymbols::fgDT_DATE,               XSValue::dt_date);
+    DATATYPE_TEST( SchemaSymbols::fgDT_YEARMONTH,          XSValue::dt_gYearMonth);
+    DATATYPE_TEST( SchemaSymbols::fgDT_YEAR,               XSValue::dt_gYear);
+    DATATYPE_TEST( SchemaSymbols::fgDT_MONTHDAY,           XSValue::dt_gMonthDay);
+    DATATYPE_TEST( SchemaSymbols::fgDT_DAY,                XSValue::dt_gDay);
+    DATATYPE_TEST( SchemaSymbols::fgDT_MONTH,              XSValue::dt_gMonth);
+    DATATYPE_TEST( SchemaSymbols::fgDT_HEXBINARY,          XSValue::dt_hexBinary);
+    DATATYPE_TEST( SchemaSymbols::fgDT_BASE64BINARY,       XSValue::dt_base64Binary);
+    DATATYPE_TEST( SchemaSymbols::fgDT_ANYURI,             XSValue::dt_anyURI);
+    DATATYPE_TEST( SchemaSymbols::fgDT_QNAME,              XSValue::dt_QName);
+    DATATYPE_TEST( XMLUni::fgNotationString,               XSValue::dt_NOTATION);
+    DATATYPE_TEST( SchemaSymbols::fgDT_NORMALIZEDSTRING,   XSValue::dt_normalizedString);
+    DATATYPE_TEST( SchemaSymbols::fgDT_TOKEN,              XSValue::dt_token);
+    DATATYPE_TEST( SchemaSymbols::fgDT_LANGUAGE,           XSValue::dt_language);
+    DATATYPE_TEST( XMLUni::fgNmTokenString,                XSValue::dt_NMTOKEN);
+    DATATYPE_TEST( XMLUni::fgNmTokensString,               XSValue::dt_NMTOKENS);
+    DATATYPE_TEST( SchemaSymbols::fgDT_NAME,               XSValue::dt_Name);
+    DATATYPE_TEST( SchemaSymbols::fgDT_NCNAME,             XSValue::dt_NCName);
+    DATATYPE_TEST( XMLUni::fgIDString,                     XSValue::dt_ID);
+    DATATYPE_TEST( XMLUni::fgIDRefString,                  XSValue::dt_IDREF);
+    DATATYPE_TEST( XMLUni::fgIDRefsString,                 XSValue::dt_IDREFS);
+    DATATYPE_TEST( XMLUni::fgEntityString,                 XSValue::dt_ENTITY);
+    DATATYPE_TEST( XMLUni::fgEntitiesString,               XSValue::dt_ENTITIES);
+    DATATYPE_TEST( SchemaSymbols::fgDT_INTEGER,            XSValue::dt_integer);
+    DATATYPE_TEST( SchemaSymbols::fgDT_NONPOSITIVEINTEGER, XSValue::dt_nonPositiveInteger);
+    DATATYPE_TEST( SchemaSymbols::fgDT_NEGATIVEINTEGER,    XSValue::dt_negativeInteger);
+    DATATYPE_TEST( SchemaSymbols::fgDT_LONG,               XSValue::dt_long);
+    DATATYPE_TEST( SchemaSymbols::fgDT_INT,                XSValue::dt_int);
+    DATATYPE_TEST( SchemaSymbols::fgDT_SHORT,              XSValue::dt_short);
+    DATATYPE_TEST( SchemaSymbols::fgDT_BYTE,               XSValue::dt_byte);
+    DATATYPE_TEST( SchemaSymbols::fgDT_NONNEGATIVEINTEGER, XSValue::dt_nonNegativeInteger);
+    DATATYPE_TEST( SchemaSymbols::fgDT_ULONG,              XSValue::dt_unsignedLong);
+    DATATYPE_TEST( SchemaSymbols::fgDT_UINT,               XSValue::dt_unsignedInt);
+    DATATYPE_TEST( SchemaSymbols::fgDT_USHORT,             XSValue::dt_unsignedShort);
+    DATATYPE_TEST( SchemaSymbols::fgDT_UBYTE,              XSValue::dt_unsignedByte);
+    DATATYPE_TEST( SchemaSymbols::fgDT_POSITIVEINTEGER,    XSValue::dt_positiveInteger);
+
+    DATATYPE_TEST( XMLUni::fgLongMaxInc,                   XSValue::dt_MAXCOUNT);
+}
+
 // ---------------------------------------------------------------------------
 //  Program entry point
 // ---------------------------------------------------------------------------
@@ -5511,6 +5599,8 @@ int main(int, char* )
     test_dt_unsignedByte();
     test_dt_positiveInteger();
 
+    test_DataType();
+
     printf("\nXSValueTest %s\n", errSeen? "Fail" : "Pass");
 
     // And call the termination method
@@ -5518,4 +5608,3 @@ int main(int, char* )
 
     return 0;
 }
-
