@@ -219,10 +219,16 @@ const XMLCh fgUniDecimalDigit[] =
     chLatin_N, chLatin_d, chNull
 };
 
-const XMLCh fgBlockSpecials[] =
+const XMLCh fgBlockIsSpecials[] =
 {
-    chLatin_S, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_a,
+    chLatin_I, chLatin_s, chLatin_S, chLatin_p, chLatin_e, chLatin_c, chLatin_i, chLatin_a,
     chLatin_l, chLatin_s, chNull
+};
+
+const XMLCh fgBlockIsPrivateUse[] =
+{
+    chLatin_I, chLatin_s, chLatin_P, chLatin_r, chLatin_i, chLatin_v, chLatin_a, chLatin_t, chLatin_e,
+    chLatin_U, chLatin_s, chLatin_e,  chNull
 };
 
 const XMLCh fgUniLetter[] =
