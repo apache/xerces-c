@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2002/11/13 21:51:22  peiyongz
+ * fix to Bug#14528
+ *
  * Revision 1.19  2002/11/04 15:07:35  tng
  * C++ Namespace Support.
  *
@@ -1216,7 +1219,21 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
             endTagFound = false;
         }
 
-        procUnrepCharInCdataSection(curPtr, nodeToWrite);
+        /***
+            to check ]]>]]>
+        ***/
+        if (endTagPos == 0)
+        {
+            TRY_CATCH_THROW
+           (
+                *fFormatter << XMLFormatter::NoEscapes << gStartCDATA << gEndCDATA;
+                , true
+            )
+        }
+        else
+        {       
+            procUnrepCharInCdataSection(curPtr, nodeToWrite);
+        }
 
         if (endTagFound)
         {
