@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/08 02:32:59  abagchi
+ * Changed characters from ASCII to Hex
+ *
  * Revision 1.2  2000/02/06 07:48:17  rahulj
  * Year 2K copyright swat.
  *
@@ -124,17 +127,38 @@ typedef unsigned int   XMLUInt32;
 // ---------------------------------------------------------------------------
 //  Provide some common string ops that are different/notavail on MVSCPP
 // ---------------------------------------------------------------------------
-inline char toupper(const char toUpper) 
+//
+// This is a upper casing function. Note that this will not cover
+// all NLS cases such as european accents etc. but there aren't
+// any of these in the current uses of this function in XML4C.
+// If this changes in the future, than we can re-address the issue
+// at that time.
+//
+inline char mytoupper(const char toUpper)
 {
-    if ((toUpper >= 'a') && (toUpper <= 'z'))
+    if ((toUpper >= 0x61) && (toUpper <= 0x7A))
         return char(toUpper - 0x20);
     return toUpper;
 }
 
-inline char tolower(const char toLower)
+inline char mytolower(const char toLower)
 {
-    if ((toLower >= 'A') && (toLower <= 'Z'))
+    if ((toLower >= 0x41) && (toLower <= 0x5A))
         return char(toLower + 0x20);
+    return toLower;
+}
+
+inline XMLCh mytowupper(const XMLCh toUpper)
+{
+    if ((toUpper >= 0x61) && (toUpper <= 0x7A))
+       return XMLCh(toUpper - 0x20);
+    return toUpper;
+}
+
+inline XMLCh mytowlower(const XMLCh toLower)
+{
+    if ((toLower >= 0x41) && (toLower <= 0x5A))
+       return XMLCh(toLower + 0x20);
     return toLower;
 }
 
