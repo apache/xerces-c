@@ -60,6 +60,7 @@
 DOMIDTest_DIR=DOM/DOMIDTest
 DOMMemTest_DIR=DOM/DOMMemTest
 DOMTest_DIR=DOM/DOMTest
+IDOMTest_DIR=IDom/IDOMTest
 Traversal_DIR=DOM/Traversal
 ITraversal_DIR=IDom/ITraversal
 ThreadTest_DIR=ThreadTest
@@ -81,10 +82,10 @@ ifeq (${PLATFORM},HPUX)
   ifeq (${OSVER}, HPUX10)
       all:	threadtest ithreadtest encodingtest traversal itraversal
   else
-      all:	domtest threadtest ithreadtest encodingtest traversal itraversal
+      all:	domtest idomtest threadtest ithreadtest encodingtest traversal itraversal
   endif
 else
-    all:	domidtest dommemtest domtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest
+    all:	domidtest dommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest
 endif
 
 domidtest:
@@ -98,6 +99,10 @@ dommemtest:
 domtest:
 	@echo Building "DOMTest"
 	cd $(DOMTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+
+idomtest:
+	@echo Building "IDOMTest"
+	cd $(IDOMTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
 threadtest:
 	@echo Building "ThreadTest"
@@ -131,6 +136,7 @@ clean:
 	cd $(DOMIDTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMTest_DIR) && $(MAKE) $@ && cd ..
+	cd $(IDOMTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(ThreadTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(IThreadTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(EncodingTest_DIR) && $(MAKE) $@ && cd ..
@@ -143,6 +149,7 @@ distclean:
 	cd $(DOMIDTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMTest_DIR) && $(MAKE) $@ && cd ..
+	cd $(IDOMTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(ThreadTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(IThreadTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(EncodingTest_DIR) && $(MAKE) $@ && cd ..

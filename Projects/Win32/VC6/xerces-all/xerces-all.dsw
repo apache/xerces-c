@@ -165,6 +165,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "IDOMTest"=".\IDOMTest\IDOMTest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "IRangeTest"=".\IRangeTest\IRangeTest.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -454,6 +469,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name ITraversal
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name IDOMTest
     End Project Dependency
 }}}
 

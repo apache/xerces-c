@@ -177,6 +177,9 @@ system ("RangeTest");
 #  Run DOMTraversalTest
 system ("DOMTraversalTest");
 
+#  Run IDOMTest
+system ("IDOMTest");
+
 #  Run IRangeTest
 system ("IRangeTest");
 

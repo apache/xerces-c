@@ -71,6 +71,7 @@ AC_SUBST(libs)
 dnl output the Makefiles
 AC_OUTPUT([Makefile \
 DOM/DOMTest/Makefile \
+IDom/IDOMTest/Makefile \
 DOM/DOMIDTest/Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
