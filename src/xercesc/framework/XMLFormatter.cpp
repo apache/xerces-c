@@ -358,38 +358,43 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
             //
             if (tmpPtr > srcPtr)
             {
-                const unsigned int srcCount = tmpPtr - srcPtr;
-                const unsigned srcChars = srcCount > kTmpBufSize ?
-                                          kTmpBufSize : srcCount;
+                unsigned int srcCount = tmpPtr - srcPtr;
 
-                const unsigned int outBytes = fXCoder->transcodeTo
-                (
-                    srcPtr
-                    , srcChars
-                    , fTmpBuf
-                    , kTmpBufSize
-                    , charsEaten
-                    , unRepOpts
-                );
+                while (srcCount) {
 
-                #if defined(XML_DEBUG)
-                if ((outBytes > kTmpBufSize)
-                ||  (charsEaten > srcCount))
-                {
-                    // <TBD> The transcoder is freakin out maaaannn
+                    const unsigned srcChars = srcCount > kTmpBufSize ?
+                                              kTmpBufSize : srcCount;
+                
+                    const unsigned int outBytes = fXCoder->transcodeTo
+                    (
+                        srcPtr
+                        , srcChars
+                        , fTmpBuf
+                        , kTmpBufSize
+                        , charsEaten
+                        , unRepOpts
+                    );
+
+                    #if defined(XML_DEBUG)
+                    if ((outBytes > kTmpBufSize)
+                    ||  (charsEaten > srcCount))
+                    {
+                        // <TBD> The transcoder is freakin out maaaannn
+                    }
+                    #endif
+
+                    // If we get any bytes out, then write them
+                    if (outBytes)
+                    {
+                        fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
+                        fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
+                        fTarget->writeChars(fTmpBuf, outBytes, this);
+                    }
+
+                    // And bump up our pointer
+                    srcPtr += charsEaten;
+                    srcCount -= srcChars;
                 }
-                #endif
-
-                // If we get any bytes out, then write them
-                if (outBytes)
-                {
-                    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
-                    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-                    fTarget->writeChars(fTmpBuf, outBytes, this);
-                }
-
-                // And bump up our pointer
-                srcPtr += charsEaten;
             }
              else if (tmpPtr < endPtr)
             {
