@@ -88,13 +88,13 @@ private:
 
 
 
-    const XMLCh *		name;
-    IDOM_NamedNodeMap	*entities;
-    IDOM_NamedNodeMap	*notations;
-//	IDOM_NamedNodeMap	*elements;
-	const XMLCh *		publicId;
-    const XMLCh *		systemId;
-	const XMLCh *		internalSubset;
+    const XMLCh *       name;
+    IDOM_NamedNodeMap  *entities;
+    IDOM_NamedNodeMap  *notations;
+    IDOM_NamedNodeMap  *elements;
+    const XMLCh *       publicId;
+    const XMLCh *       systemId;
+    const XMLCh *      internalSubset;
 
     bool			 	intSubsetReading;
 
@@ -103,7 +103,7 @@ private:
     virtual void        setInternalSubset(const XMLCh *value);
     bool                isIntSubsetReading() const;
 
-	friend class IDOMParser;
+    friend class IDOMParser;
 
 public:
     IDDocumentTypeImpl(IDOM_Document *, const XMLCh *);
@@ -118,9 +118,10 @@ public:
 
     virtual void setOwnerDocument(IDOM_Document *doc);
     virtual IDOM_NamedNodeMap * getEntities() const;
-    virtual const XMLCh *          getName() const;
+    virtual const XMLCh *       getName() const;
     virtual IDOM_NamedNodeMap * getNotations() const;
-    virtual void               setReadOnly(bool readOnly, bool deep);
+    virtual IDOM_NamedNodeMap * getElements() const;
+    virtual void                setReadOnly(bool readOnly, bool deep);
 
     //Introduced in DOM Level 2
 

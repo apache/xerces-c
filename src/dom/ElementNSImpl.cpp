@@ -76,7 +76,6 @@ ElementNSImpl::ElementNSImpl(DocumentImpl *ownerDoc,
                              const DOMString &qualifiedName) :
     ElementImpl(ownerDoc, qualifiedName)
 {
-    this->ownerDocument=ownerDoc;
     this->name = qualifiedName.clone();
 
     int index = DocumentImpl::indexofQualifiedName(qualifiedName);

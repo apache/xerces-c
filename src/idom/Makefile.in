@@ -70,146 +70,109 @@ USELIBWWW = @uselibwww@
 MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
 
-MODULE = dom
+MODULE = idom
 
 include ../Makefile.incl
 
-DOM_CPP_PUBHEADERS = \
-	DOM.hpp \
-	DOMString.hpp \
-	DOM_Attr.hpp \
-	DOM_CDATASection.hpp \
-	DOM_CharacterData.hpp \
-	DOM_Comment.hpp \
-	DOM_DOMException.hpp \
-	DOM_DOMImplementation.hpp \
-	DOM_Document.hpp \
-	DOM_DocumentFragment.hpp \
-	DOM_DocumentType.hpp \
-	DOM_Element.hpp \
-	DOM_Entity.hpp \
-	DOM_EntityReference.hpp \
-	DomMemDebug.hpp \
-	DOM_NamedNodeMap.hpp \
-	DOM_Node.hpp \
-	DOM_NodeFilter.hpp \
-	DOM_NodeIterator.hpp \
-	DOM_NodeList.hpp \
-	DOM_Notation.hpp \
-	DOM_ProcessingInstruction.hpp \
-	DOM_Range.hpp \
-	DOM_RangeException.hpp \
-	DOM_Text.hpp \
-	DOM_TreeWalker.hpp \
-	DOM_XMLDecl.hpp
+IDOM_CPP_PUBHEADERS = \
+       IDCasts.hpp \
+       IDChildNode.hpp \
+       IDNameNodeFilter.hpp \
+       IDNodeIDMap.hpp \
+       IDNodeVector.hpp \
+       IDOM.hpp \
+       IDOM_Attr.hpp \
+       IDOM_CDATASection.hpp \
+       IDOM_CharacterData.hpp \
+       IDOM_Comment.hpp \
+       IDOM_Document.hpp \
+       IDOM_DocumentFragment.hpp \
+       IDOM_DocumentType.hpp \
+       IDOM_DOMException.hpp \
+       IDOM_DOMImplementation.hpp \
+       IDOM_Element.hpp \
+       IDOM_Entity.hpp \
+       IDOM_EntityReference.hpp \
+       IDOM_NamedNodeMap.hpp \
+       IDOM_Node.hpp \
+       IDOM_NodeFilter.hpp \
+       IDOM_NodeIterator.hpp \
+       IDOM_NodeList.hpp \
+       IDOM_Notation.hpp \
+       IDOM_ProcessingInstruction.hpp \
+       IDOM_Range.hpp \
+       IDOM_RangeException.hpp \
+       IDOM_Text.hpp \
+       IDOM_TreeWalker.hpp \
+       IDOM_XMLDecl.hpp \
+       IDParentNode.hpp \
+       IDStringPool.hpp \
 
-DOM_CPP_PRIVHEADERS =  \
-	AttrImpl.hpp \
-	AttrMapImpl.hpp \
-	AttrNSImpl.hpp \
-	CDATASectionImpl.hpp \
-	CharacterDataImpl.hpp \
-	ChildAndParentNode.hpp \
-	ChildNode.hpp \
-	CommentImpl.hpp \
-	DStringPool.hpp \
-	DeepNodeListImpl.hpp \
-	DocumentFragmentImpl.hpp \
-	DocumentImpl.hpp \
-	DocumentTypeImpl.hpp \
-	ElementDefinitionImpl.hpp \
-	ElementImpl.hpp \
-	ElementNSImpl.hpp \
-	EntityImpl.hpp \
-	EntityReferenceImpl.hpp \
-	MemDebug.hpp \
-	NameNodeFilter.hpp \
-	NamedNodeMapImpl.hpp \
-	NodeIDMap.hpp \
-	NodeImpl.hpp \
-	NodeIteratorImpl.hpp \
-	NodeListImpl.hpp \
-	NodeVector.hpp \
-	NotationImpl.hpp \
-	ParentNode.hpp \
-	ProcessingInstructionImpl.hpp \
-	RangeImpl.hpp \
-	RefCountedImpl.hpp \
-	TextImpl.hpp \
-	TreeWalkerImpl.hpp \
-	XMLDeclImpl.hpp
+IDOM_CPP_PRIVHEADERS =  \
+       IDAttrImpl.hpp \
+       IDAttrMapImpl.hpp \
+       IDAttrNSImpl.hpp \
+       IDCDATASectionImpl.hpp \
+       IDCharacterDataImpl.hpp \
+       IDCommentImpl.hpp \
+       IDDeepNodeListImpl.hpp \
+       IDDocumentFragmentImpl.hpp \
+       IDDocumentImpl.hpp \
+       IDDocumentTypeImpl.hpp \
+       IDDOMImplementation.hpp \
+       IDElementImpl.hpp \
+       IDElementNSImpl.hpp \
+       IDEntityImpl.hpp \
+       IDEntityReferenceImpl.hpp \
+       IDNamedNodeMapImpl.hpp \
+       IDNodeImpl.hpp \
+       IDNodeListImpl.hpp \
+       IDNotationImpl.hpp \
+       IDProcessingInstructionImpl.hpp \
+       IDTextImpl.hpp \
+       IDXMLDeclImpl.hpp
 
-DOM_C_FILES =
+IDOM_C_FILES =
 
 
-DOM_CPP_OBJECTS = \
-	AttrImpl.$(TO) \
-	AttrMapImpl.$(TO) \
-	AttrNSImpl.$(TO) \
-	CDATASectionImpl.$(TO) \
-	CharacterDataImpl.$(TO) \
-	ChildAndParentNode.$(TO) \
-	ChildNode.$(TO) \
-	CommentImpl.$(TO) \
-	DOMString.$(TO) \
-	DOM_Attr.$(TO) \
-	DOM_CDATASection.$(TO) \
-	DOM_CharacterData.$(TO) \
-	DOM_Comment.$(TO) \
-	DOM_DOMException.$(TO) \
-	DOM_DOMImplementation.$(TO) \
-	DOM_Document.$(TO) \
-	DOM_DocumentFragment.$(TO) \
-	DOM_DocumentType.$(TO) \
-	DOM_Element.$(TO) \
-	DOM_Entity.$(TO) \
-	DOM_EntityReference.$(TO) \
-	DOM_NamedNodeMap.$(TO) \
-	DOM_Node.$(TO) \
-	DOM_NodeList.$(TO) \
-	DOM_NodeFilter.$(TO) \
-	DOM_NodeIterator.$(TO) \
-	DOM_TreeWalker.$(TO) \
-	DOM_Notation.$(TO) \
-	DOM_ProcessingInstruction.$(TO) \
-	DOM_Range.$(TO) \
-	DOM_RangeException.$(TO) \
-	DOM_Text.$(TO) \
-	DOM_XMLDecl.$(TO) \
-	DStringPool.$(TO) \
-	DeepNodeListImpl.$(TO) \
-	DocumentFragmentImpl.$(TO) \
-	DocumentImpl.$(TO) \
-	DocumentTypeImpl.$(TO) \
-	DomMemDebug.$(TO) \
-	ElementDefinitionImpl.$(TO) \
-	ElementImpl.$(TO) \
-	ElementNSImpl.$(TO) \
-	EntityImpl.$(TO) \
-	EntityReferenceImpl.$(TO) \
-	NamedNodeMapImpl.$(TO) \
-	NodeIDMap.$(TO) \
-	NodeImpl.$(TO) \
-	NodeIteratorImpl.$(TO) \
-        NodeListImpl.$(TO) \
-	NodeVector.$(TO) \
-	NotationImpl.$(TO) \
-	ParentNode.$(TO) \
-	ProcessingInstructionImpl.$(TO) \
-	RangeImpl.$(TO) \
-	RefCountedImpl.$(TO) \
-	TextImpl.$(TO) \
-	TreeWalkerImpl.$(TO) \
-	XMLDeclImpl.$(TO)
+IDOM_CPP_OBJECTS = \
+       IDAttrImpl.$(TO) \
+       IDAttrMapImpl.$(TO) \
+       IDAttrNSImpl.$(TO) \
+       IDCDATASectionImpl.$(TO) \
+       IDCharacterDataImpl.$(TO) \
+       IDChildNode.$(TO) \
+       IDCommentImpl.$(TO) \
+       IDDeepNodeListImpl.$(TO) \
+       IDDocumentFragmentImpl.$(TO) \
+       IDDocumentImpl.$(TO) \
+       IDDocumentTypeImpl.$(TO) \
+       IDDOMImplementation.$(TO) \
+       IDElementImpl.$(TO) \
+       IDElementNSImpl.$(TO) \
+       IDEntityImpl.$(TO) \
+       IDEntityReferenceImpl.$(TO) \
+       IDNamedNodeMapImpl.$(TO) \
+       IDNodeIDMap.$(TO) \
+       IDNodeImpl.$(TO) \
+       IDNodeListImpl.$(TO) \
+       IDNodeVector.$(TO) \
+       IDNotationImpl.$(TO) \
+       IDOM_DOMException.$(TO) \
+       IDParentNode.$(TO) \
+       IDProcessingInstructionImpl.$(TO) \
+       IDStringPool.$(TO) \
+       IDTextImpl.$(TO) \
+       IDXMLDeclImpl.$(TO)
 
 
-all::	includes $(DOM_CPP_OBJECTS)
+all::	includes $(IDOM_CPP_OBJECTS)
 
-includes::	pubheaders $(DOM_C_FILES)
+includes::	pubheaders $(IDOM_C_FILES)
 
 pubheaders::
 	-mkdir -p $(XML_INC_DIR)/$(MODULE)
-	$(CP) $(DOM_CPP_PUBHEADERS) $(DOM_C_FILES) $(XML_INC_DIR)/$(MODULE)
+	$(CP) $(IDOM_CPP_PUBHEADERS) $(IDOM_C_FILES) $(XML_INC_DIR)/$(MODULE)
 
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
@@ -217,13 +180,13 @@ depend:: includes
 
 clean::
 	@echo "Making clean in $(MODULE) ..."
-	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(DOM_CPP_OBJECTS))
+	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(IDOM_CPP_OBJECTS))
 
 distclean::	clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE) header files ..."
-	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(DOM_CPP_PUBHEADERS))
+	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(IDOM_CPP_PUBHEADERS))
 
 install::
 	-mkdir -p $(PREFIX)/$(MODULE)
-	$(CP) $(DOM_CPP_PUBHEADERS) $(DOM_C_FILES) $(PREFIX)/$(MODULE)
+	$(CP) $(IDOM_CPP_PUBHEADERS) $(IDOM_C_FILES) $(PREFIX)/$(MODULE)

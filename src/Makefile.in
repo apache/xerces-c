@@ -83,6 +83,7 @@ SAX2_DIR = sax2
 INTERNAL_DIR = internal
 FRAMEWORK_DIR = framework
 DOM_DIR = dom
+IDOM_DIR = idom
 PARSERS_DIR = parsers
 VALIDATORS_DIR = validators
 
@@ -103,7 +104,7 @@ BINTARGETDIR=${HOME}/${PRODUCTNAME}-c-${PLATFORM}-${CXX}-${PRODUCTVERSION}
 
 all:: lib
 
-compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom Validators
+compile:: Prepare Util Sax Internal Framework Parsers Sax2 Dom IDom Validators
 
 lib:: ${THISLIB}${VER}${SHLIBSUFFIX}
 
@@ -119,6 +120,7 @@ Prepare::
 	${CD} $(PARSERS_DIR) ; $(MAKE) includes ; ${CD} ..
 	${CD} $(VALIDATORS_DIR) ; $(MAKE) includes ; ${CD} ..
 	${CD} $(DOM_DIR) ; $(MAKE) includes ; ${CD} ..
+	${CD} $(IDOM_DIR) ; $(MAKE) includes ; ${CD} ..
 
 Util::
 	@echo Building "util"
@@ -149,6 +151,10 @@ Dom::
 	@echo Building "dom"
 	${CD} $(DOM_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
 
+IDom::
+	@echo Building "idom"
+	${CD} $(IDOM_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+
 Validators::
 	@echo Building "validators"
 	${CD} $(VALIDATORS_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
@@ -165,6 +171,7 @@ install::
 	${CD} $(FRAMEWORK_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(IDOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
 
@@ -176,6 +183,7 @@ clean::
 	${CD} $(FRAMEWORK_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(IDOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
 
@@ -187,6 +195,7 @@ distclean::
 	${CD} $(FRAMEWORK_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(IDOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
 	rm -f Makefile config.cache config.log config.status
@@ -217,6 +226,7 @@ endif
 	-${MKDIR} ${BINTARGETDIR}/include/parsers
 	-${MKDIR} ${BINTARGETDIR}/include/util
 	-${MKDIR} ${BINTARGETDIR}/include/dom
+	-${MKDIR} ${BINTARGETDIR}/include/idom
 
 	-${MKDIR} ${BINTARGETDIR}/samples
 	-${MKDIR} ${BINTARGETDIR}/samples/data
@@ -224,6 +234,8 @@ endif
 	-${MKDIR} ${BINTARGETDIR}/samples/SAXPrint
 	-${MKDIR} ${BINTARGETDIR}/samples/DOMCount
 	-${MKDIR} ${BINTARGETDIR}/samples/DOMPrint
+	-${MKDIR} ${BINTARGETDIR}/samples/IDOMCount
+	-${MKDIR} ${BINTARGETDIR}/samples/IDOMPrint
 	-${MKDIR} ${BINTARGETDIR}/samples/Redirect
 	-${MKDIR} ${BINTARGETDIR}/samples/MemParse
 	-${MKDIR} ${BINTARGETDIR}/doc
@@ -235,6 +247,7 @@ endif
 	-${CP} -Rf ${XERCESCROOT}/src/sax2/*.hpp ${BINTARGETDIR}/include/sax2
 	-${CP} -Rf ${XERCESCROOT}/src/framework/*.hpp ${BINTARGETDIR}/include/framework
 	-${CP} -Rf ${XERCESCROOT}/src/dom/DOM*.hpp ${BINTARGETDIR}/include/dom
+	-${CP} -Rf ${XERCESCROOT}/src/idom/IDOM*.hpp ${BINTARGETDIR}/include/idom
 	-${CP} -Rf ${XERCESCROOT}/src/internal/*.hpp ${BINTARGETDIR}/include/internal
 	-${CP} -Rf ${XERCESCROOT}/src/internal/*.c ${BINTARGETDIR}/include/internal
 	-${CP} -Rf ${XERCESCROOT}/src/parsers/*.hpp ${BINTARGETDIR}/include/parsers
@@ -277,6 +290,8 @@ endif
 	-${CP} -Rf ${XERCESCROOT}/samples/SAXPrint/* ${BINTARGETDIR}/samples/SAXPrint
 	-${CP} -Rf ${XERCESCROOT}/samples/DOMCount/* ${BINTARGETDIR}/samples/DOMCount
 	-${CP} -Rf ${XERCESCROOT}/samples/DOMPrint/* ${BINTARGETDIR}/samples/DOMPrint
+	-${CP} -Rf ${XERCESCROOT}/samples/IDOMCount/* ${BINTARGETDIR}/samples/IDOMCount
+	-${CP} -Rf ${XERCESCROOT}/samples/IDOMPrint/* ${BINTARGETDIR}/samples/IDOMPrint
 	-${CP} -Rf ${XERCESCROOT}/samples/Redirect/* ${BINTARGETDIR}/samples/Redirect
 	-${CP} -Rf ${XERCESCROOT}/samples/MemParse/* ${BINTARGETDIR}/samples/MemParse
 

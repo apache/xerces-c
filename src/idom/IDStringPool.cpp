@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/17 15:58:49  tng
+ * IDOM: Add Unix build, and other idom udpates.
+ *
  * Revision 1.2  2001/05/11 13:25:58  tng
  * Copyright update.
  *
@@ -115,7 +118,7 @@ IDStringPool::IDStringPool(int hashTableSize, IDDocumentImpl *doc)
 {
     fDoc           = doc;          // needed to get access to the doc's storage allocator.
     fHashTableSize = hashTableSize;
-    fHashTable = new (doc) IDStringPoolEntry *[hashTableSize];
+    fHashTable = new IDStringPoolEntry *[hashTableSize];
     for (int i=0; i<fHashTableSize; i++)
         fHashTable[i] = 0;
 };

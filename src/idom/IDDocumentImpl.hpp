@@ -70,6 +70,7 @@
 //  name is substituded for the *.
 //
 
+#include <string.h>
 #include <util/XercesDefs.hpp>
 #include "util/RefVectorOf.hpp"
 #include "util/RefHashTableOf.hpp"
@@ -121,13 +122,15 @@ public:
     IDOM_DocumentType           *fDocType;
     IDOM_Element                *fDocElement;
     IDStringPool                *fNamePool;
-    IDNodeIDMap                 *fNodeIDMap;      // for use by GetElementsById().
+    IDNodeIDMap                 *fNodeIDMap;     // for use by GetElementsById().
 
     NodeIterators               *fIterators;
     TreeWalkers                 *fTreeWalkers;
-	RefHashTableOf<void>		*fUserData;
+    RefHashTableOf<void>        *fUserData;
     RangeImpls                  *fRanges;
     int                          fChanges;
+
+    bool errorChecking;                          // Bypass error checking.
 
 
     // Per-Document heap Variables.
@@ -157,7 +160,7 @@ public:
     friend class IDNodeIteratorImpl;
     friend class IDTreeWalkerImpl;
     friend class IDRangeImpl;
-   	friend class IDDOMParser;
+    friend class IDDOMParser;
 
 
 
@@ -168,7 +171,7 @@ public:
 public:
     IDDocumentImpl();
     IDDocumentImpl(const XMLCh      *namespaceURI,	     //DOM Level 2
-	               const XMLCh      *qualifiedName,
+                   const XMLCh      *qualifiedName,
                    IDOM_DocumentType *doctype);
     virtual ~IDDocumentImpl();
 
@@ -208,14 +211,14 @@ public:
     virtual IDOM_XMLDecl*          createXMLDecl(const XMLCh * version,
                                                  const XMLCh * encoding,
                                                  const XMLCh * standalone);
-    virtual void*			      getUserData() const;
-    virtual void		          setUserData(void* value);
+    virtual void*                  getUserData() const;
+    virtual void                   setUserData(void* value);
     virtual IDOM_Range*            createRange();
-    virtual IDOM_Range*           getRanges() const;  //non-standard api
-    virtual void                  removeRange(IDOM_Range* range); //non-standard api
+    virtual IDOM_Range*            getRanges() const;  //non-standard api
+    virtual void                   removeRange(IDOM_Range* range); //non-standard api
 
 
-	// helper functions to prevent storing userdata pointers on every node.
+    // helper functions to prevent storing userdata pointers on every node.
     virtual void  setUserData(IDOM_Node* n, void* data);
     virtual void* getUserData(const IDOM_Node* n) const;
 
@@ -225,6 +228,35 @@ public:
     //
     virtual void                 changed();
     virtual int                  changes() const;
+
+    /**
+     * Sets whether the DOM implementation performs error checking
+     * upon operations. Turning off error checking only affects
+     * the following DOM checks:
+     * <ul>
+     * <li>Checking strings to make sure that all characters are
+     *     legal XML characters
+     * <li>Hierarchy checking such as allowed children, checks for
+     *     cycles, etc.
+     * </ul>
+     * <p>
+     * Turning off error checking does <em>not</em> turn off the
+     * following checks:
+     * <ul>
+     * <li>Read only checks
+     * <li>Checks related to DOM events
+     * </ul>
+     */
+    inline void setErrorChecking(bool check) {
+        errorChecking = check;
+    }
+
+    /**
+     * Returns true if the DOM implementation performs error checking.
+     */
+    inline bool getErrorChecking() {
+        return errorChecking;
+    }
 
     //Introduced in DOM Level 2
     virtual IDOM_Node            *importNode(IDOM_Node *source, bool deep);

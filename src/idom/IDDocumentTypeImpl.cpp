@@ -74,7 +74,8 @@ IDDocumentTypeImpl::IDDocumentTypeImpl(IDOM_Document *ownerDoc,
 {
     name = ((IDDocumentImpl *)ownerDoc)->getPooledString(dtName);
     entities = new (ownerDoc) IDNamedNodeMapImpl(this);
-    notations = new (ownerDoc) IDNamedNodeMapImpl(this);
+    notations= new (ownerDoc) IDNamedNodeMapImpl(this);
+    elements = new (ownerDoc) IDNamedNodeMapImpl(this);
 
 };
 
@@ -99,6 +100,7 @@ IDDocumentTypeImpl::IDDocumentTypeImpl(IDOM_Document *ownerDoc,
 
     entities = new (ownerDoc) IDNamedNodeMapImpl(this);
     notations= new (ownerDoc) IDNamedNodeMapImpl(this);
+    elements = new (ownerDoc) IDNamedNodeMapImpl(this);
 };
 
 
@@ -110,6 +112,7 @@ IDDocumentTypeImpl::IDDocumentTypeImpl(const IDDocumentTypeImpl &other, bool dee
         fParent.cloneChildren(&other);
     entities = ((IDNamedNodeMapImpl *)other.entities)->cloneMap(this);
     notations= ((IDNamedNodeMapImpl *)other.notations)->cloneMap(this);
+    elements = ((IDNamedNodeMapImpl *)other.notations)->cloneMap(this);
 
     //DOM Level 2
     publicId		= other.publicId;
@@ -165,6 +168,12 @@ const XMLCh * IDDocumentTypeImpl::getName() const
 IDOM_NamedNodeMap *IDDocumentTypeImpl::getNotations() const
 {
     return notations;
+};
+
+
+IDOM_NamedNodeMap *IDDocumentTypeImpl::getElements() const
+{
+    return elements;
 };
 
 

@@ -120,6 +120,7 @@ validators/DTD/Makefile \
 validators/schema/Makefile \
 framework/Makefile \
 dom/Makefile \
+idom/Makefile \
 parsers/Makefile \
 internal/Makefile \
 sax/Makefile \
