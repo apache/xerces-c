@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/09 19:15:17  abagchi
+ * Inserted documentation for new APIs
+ *
  * Revision 1.3  2000/02/06 07:47:58  rahulj
  * Year 2K copyright swat.
  *
@@ -95,19 +98,6 @@
   * about a specific location in an XML document, it should use the
   * SAXParseException subclass.</p>
   *
-  * $Log$
-  * Revision 1.3  2000/02/06 07:47:58  rahulj
-  * Year 2K copyright swat.
-  *
-  * Revision 1.2  1999/12/18 00:21:23  roddey
-  * Fixed a small reported memory leak
-  *
-  * Revision 1.1.1.1  1999/11/09 01:07:47  twl
-  * Initial checkin
-  *
-  * Revision 1.2  1999/11/08 20:45:02  rahul
-  * Swat for adding in Product name and CVS comment log variable.
-  *
   * @see SAXParseException#SAXParseException
   */
 class SAX_EXPORT SAXException
@@ -134,12 +124,22 @@ public:
     {
     }
 
+  /**
+    * Create a new SAXException.
+    *
+    * @param msg The error or warning message.
+    */
     SAXException(const char* const msg) :
 
         fMsg(XMLString::transcode(msg))
     {
     }
 
+  /**
+    * Copy constructor
+    *
+    * @param toCopy The exception to be copy constructed
+    */
     SAXException(const SAXException& toCopy) :
 
         fMsg(XMLString::replicate(toCopy.fMsg))
@@ -156,6 +156,12 @@ public:
 
 
     /** @name Public Operators */
+    //@{
+    /**
+      * Assignment operator
+      *
+      * @param toCopy The object to be copied
+      */
     SAXException& operator=(const SAXException& toCopy)
     {
         if (this == &toCopy)
@@ -165,12 +171,19 @@ public:
         fMsg = XMLString::replicate(toCopy.fMsg);
         return *this;
     }
+    //@}
 
     /** @name Getter Methods */
+    //@{
+    /**
+      * Get the contents of the message
+      *
+      */
     const XMLCh* getMessage() const
     {
         return fMsg;
     }
+    //@}
 
 
 private :
