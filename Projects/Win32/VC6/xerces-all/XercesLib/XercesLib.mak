@@ -351,6 +351,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLUTF8Transcoder.obj"
 	-@erase "$(INTDIR)\XMLValidator.obj"
 	-@erase "$(INTDIR)\XMLWin1252Transcoder.obj"
+	-@erase "$(INTDIR)\XObjectComparator.obj"
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
@@ -379,6 +380,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
+	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
@@ -395,6 +397,37 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 MTL_PROJ=/D "NDEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -545,8 +578,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
+	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
@@ -1070,6 +1105,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLUTF8Transcoder.obj"
 	-@erase "$(INTDIR)\XMLValidator.obj"
 	-@erase "$(INTDIR)\XMLWin1252Transcoder.obj"
+	-@erase "$(INTDIR)\XObjectComparator.obj"
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
@@ -1098,6 +1134,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
+	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
@@ -1115,6 +1152,37 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 MTL_PROJ=/D "_DEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -1265,8 +1333,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
+	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
@@ -1790,6 +1860,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLUTF8Transcoder.obj"
 	-@erase "$(INTDIR)\XMLValidator.obj"
 	-@erase "$(INTDIR)\XMLWin1252Transcoder.obj"
+	-@erase "$(INTDIR)\XObjectComparator.obj"
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
@@ -1818,6 +1889,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
+	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
@@ -1835,6 +1907,37 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 MTL_PROJ=/D "_DEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -1985,8 +2088,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
+	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
@@ -2509,6 +2614,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLUTF8Transcoder.obj"
 	-@erase "$(INTDIR)\XMLValidator.obj"
 	-@erase "$(INTDIR)\XMLWin1252Transcoder.obj"
+	-@erase "$(INTDIR)\XObjectComparator.obj"
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
@@ -2537,6 +2643,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSWildcard.obj"
+	-@erase "$(INTDIR)\XTemplateComparator.obj"
 	-@erase "$(INTDIR)\XTemplateSerializer.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
@@ -2554,6 +2661,37 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 MTL_PROJ=/D "NDEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -2704,8 +2842,10 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
+	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
+	"$(INTDIR)\XTemplateComparator.obj" \
 	"$(INTDIR)\XTemplateSerializer.obj" \
 	"$(INTDIR)\Dummy.obj" \
 	"$(INTDIR)\InputSource.obj" \
@@ -2909,36 +3049,6 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -3987,6 +4097,12 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\XObjectComparator.cpp
+
+"$(INTDIR)\XObjectComparator.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\XProtoType.cpp
 
 "$(INTDIR)\XProtoType.obj" : $(SOURCE) "$(INTDIR)"
@@ -3996,6 +4112,12 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XProtoType.cpp
 SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializeEngine.cpp
 
 "$(INTDIR)\XSerializeEngine.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XTemplateComparator.cpp
+
+"$(INTDIR)\XTemplateComparator.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
