@@ -265,7 +265,7 @@ void usage()
 {
     cout << "\nUsage: IDOMPrint [options] file\n\n"
             "This program invokes the Xerces-C IDOM parser and builds the IDOM\n"
-            "tree. It then traverses the DOM tree and prints the contents \n"
+            "tree. It then traverses the DOM tree and prints the contents\n"
             "of the tree. Options are NOT case sensitive.\n\n"
             "Options:\n"
             "    -e          create entity reference nodes. Default is no expansion.\n"

@@ -125,6 +125,18 @@ system ("DOMPrint -v=never personal.xml");
 system ("DOMPrint personal.xml");
 system ("DOMPrint -n -s personal-schema.xml");
 
+#  Run IDOMCount
+system ("IDOMCount");
+system ("IDOMCount -v=never personal.xml");
+system ("IDOMCount personal.xml");
+system ("IDOMCount -n -s personal-schema.xml");
+
+#  Run IDOMPrint
+system ("IDOMPrint");
+system ("IDOMPrint -v=never personal.xml");
+system ("IDOMPrint personal.xml");
+system ("IDOMPrint -n -s personal-schema.xml");
+
 #  Run StdInParse
 system ("StdInParse < personal.xml");
 system ("StdInParse -v=never < personal.xml");

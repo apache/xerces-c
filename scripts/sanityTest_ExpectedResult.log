@@ -536,6 +536,177 @@ The parser has intrinsic support for the following encodings:
 
 </personnel>
 
+
+Usage:
+    IDOMCount [-v -n] {XML file}
+
+This program invokes the XML4C DOM parser, builds
+the DOM tree, and then prints the number of elements
+found in the input XML file.
+
+Options:
+    -v=xxx      Validation scheme [always | never | auto*]
+    -n          Enable namespace processing. Defaults to off.
+
+    -s          Enable schema processing. Defaults to off.
+
+  * = Default if not provided explicitly
+
+
+personal.xml:{timing removed}(37 elems).
+personal.xml:{timing removed}(37 elems).
+personal-schema.xml:{timing removed}(37 elems).
+
+Usage: IDOMPrint [options] file
+
+This program invokes the Xerces-C IDOM parser and builds the IDOM
+tree. It then traverses the DOM tree and prints the contents
+of the tree. Options are NOT case sensitive.
+
+Options:
+    -e          create entity reference nodes. Default is no expansion.
+    -u=xxx      Handle unrepresentable chars [fail | rep | ref*]
+    -v=xxx      Validation scheme [always | never | auto*]
+    -n          Enable namespace processing. Default is off.
+    -s          Enable schema processing. Default is off.
+    -x=XXX      Use a particular encoding for output. Default is
+                the same encoding as the input XML file. UTF-8 if
+                input XML file has not XML declaration.
+    -?          Show this help (must be the only parameter)
+
+  * = Default if not provided explicitly
+
+The parser has intrinsic support for the following encodings:
+    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
+    WINDOWS-1252, IBM1140, IBM037
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE personnel "personal.dtd" SYSTEM "personal.dtd">
+<!-- @version: -->
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+</personnel>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE personnel "personal.dtd" SYSTEM "personal.dtd">
+<!-- @version: -->
+<personnel>
+
+  <person id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  </person>
+
+  <person id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+</personnel>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
+
+  <person contr="false" id="Big.Boss">
+    <name><family>Boss</family> <given>Big</given></name>
+    <email>chief@foo.com</email>
+    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
+  </person>
+
+  <person contr="false" id="one.worker">
+    <name><family>Worker</family> <given>One</given></name>
+    <email>one@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person contr="false" id="two.worker">
+    <name><family>Worker</family> <given>Two</given></name>
+    <email>two@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person contr="false" id="three.worker">
+    <name><family>Worker</family> <given>Three</given></name>
+    <email>three@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person contr="false" id="four.worker">
+    <name><family>Worker</family> <given>Four</given></name>
+    <email>four@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+  <person contr="false" id="five.worker">
+    <name><family>Worker</family> <given>Five</given></name>
+    <email>five@foo.com</email>
+    <link manager="Big.Boss"/>
+  </person>
+
+</personnel>
+
 stdin:{timing removed}(37 elems, 12 attrs, 134 spaces, 134 chars)
 stdin:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 stdin:{timing removed}(37 elems, 20 attrs, 140 spaces, 128 chars)
