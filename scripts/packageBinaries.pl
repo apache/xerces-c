@@ -729,7 +729,8 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         if ($opt_c eq "") {$opt_c = "gcc";}
         if ($opt_x eq "") {$opt_x = "g++";}
         if ($opt_x eq "ecc") {
-            $icuCompileFlags = 'CC=ecc CXX=ecc CXXFLAGS="-w -O" CFLAGS="-w -O"';
+            #REVISIT: for ecc, disable optimization.
+            $icuCompileFlags = 'CC=ecc CXX=ecc CXXFLAGS="-w -O0" CFLAGS="-w -O0"';
         } else {
             $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
         }        
