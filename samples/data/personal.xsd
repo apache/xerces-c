@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns='http://www.w3.org/2001/XMLSchema'>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
 
- <element name="personnel">
-  <complexType>
-   <sequence>
-     <element ref="person" minOccurs='1' maxOccurs='unbounded'/>
-   </sequence>
-  </complexType>
- </element>
+ <xs:element name="personnel">
+  <xs:complexType>
+   <xs:sequence>
+     <xs:element ref="person" minOccurs='1' maxOccurs='unbounded'/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
 
- <element name="person">
-  <complexType>
-   <sequence>
-     <element ref="name"/>
-     <element ref="email" minOccurs='0' maxOccurs='unbounded'/>
-     <element ref="url"   minOccurs='0' maxOccurs='unbounded'/>
-     <element ref="link"  minOccurs='0' maxOccurs='1'/>
-   </sequence>
-   <attribute name="id"  type="ID" use='required'/>
-   <attribute name="note" type="string"/>
-   <attribute name="contr" default="false">
-    <simpleType>
-     <restriction base = "string">
-       <enumeration value="true"/>
-       <enumeration value="false"/>
-     </restriction>
-    </simpleType>
-   </attribute>
-   <attribute name="salary" type="integer"/>
-  </complexType>
- </element>
+ <xs:element name="person">
+  <xs:complexType>
+   <xs:sequence>
+     <xs:element ref="name"/>
+     <xs:element ref="email" minOccurs='0' maxOccurs='unbounded'/>
+     <xs:element ref="url"   minOccurs='0' maxOccurs='unbounded'/>
+     <xs:element ref="link"  minOccurs='0' maxOccurs='1'/>
+   </xs:sequence>
+   <xs:attribute name="id"  type="xs:ID" use='required'/>
+   <xs:attribute name="note" type="xs:string"/>
+   <xs:attribute name="contr" default="false">
+    <xs:simpleType>
+     <xs:restriction base = "xs:string">
+       <xs:enumeration value="true"/>
+       <xs:enumeration value="false"/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
+   <xs:attribute name="salary" type="xs:integer"/>
+  </xs:complexType>
+ </xs:element>
 
- <element name="name">
-  <complexType>
-   <sequence>
-    <element ref="family"/>
-    <element ref="given"/>
-   </sequence>
-  </complexType>
- </element>
+ <xs:element name="name">
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element ref="family"/>
+    <xs:element ref="given"/>
+   </xs:sequence>
+  </xs:complexType>
+ </xs:element>
 
- <element name="family" type='string'/>
+ <xs:element name="family" type='xs:string'/>
 
- <element name="given" type='string'/>
+ <xs:element name="given" type='xs:string'/>
 
- <element name="email" type='string'/>
+ <xs:element name="email" type='xs:string'/>
 
- <element name="url">
-  <complexType>
-   <attribute name="href" type="string" default="http://"/>
-  </complexType>
- </element>
+ <xs:element name="url">
+  <xs:complexType>
+   <xs:attribute name="href" type="xs:string" default="http://"/>
+  </xs:complexType>
+ </xs:element>
 
- <element name="link">
-  <complexType>
-   <attribute name="manager" type="IDREF"/>
-   <attribute name="subordinates" type="IDREFS"/>
-  </complexType>
- </element>
+ <xs:element name="link">
+  <xs:complexType>
+   <xs:attribute name="manager" type="xs:IDREF"/>
+   <xs:attribute name="subordinates" type="xs:IDREFS"/>
+  </xs:complexType>
+ </xs:element>
 
- <notation name='gif' public='-//APP/Photoshop/4.0' system='photoshop.exe'/>
+ <xs:notation name='gif' public='-//APP/Photoshop/4.0' system='photoshop.exe'/>
 
-</schema>
+</xs:schema>
