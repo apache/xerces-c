@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/08/22 20:26:01  tng
+ * [Bug 7512] Wrong error message created .
+ *
  * Revision 1.10  2002/08/22 19:29:13  tng
  * [Bug 11448] DomCount has problems with XHTML1.1 DTD.
  *
@@ -936,7 +939,7 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
                     );
                     fScanner->emitError
                     (
-                        XMLErrs::InvalidCharacter
+                        XMLErrs::InvalidCharacterInAttrValue
                         , attrName
                         , tmpBuf
                     );

@@ -216,7 +216,7 @@
             <Message Id="InvalidInitialNameChar" Text="Invalid initial name character"/>
             <Message Id="InvalidNameChar" Text="Invalid name character"/>
             <Message Id="UnexpectedWhitespace" Text="Unexpected whitespace"/>
-            <Message Id="InvalidCharacterInAttrValue" Text="Invalid character in attribute value (Unicode: 0x{0})"/>
+            <Message Id="InvalidCharacterInAttrValue" Text="Invalid character in attribute value {0} (Unicode: 0x{1})"/>
             <Message Id="ExpectedMarkupDecl" Text="Expected a markup declaration"/>
             <Message Id="TextDeclNotLegalHere" Text="Text declaration not legal here"/>
             <Message Id="ConditionalSectInIntSubset" Text="Conditional section in internal subset"/>

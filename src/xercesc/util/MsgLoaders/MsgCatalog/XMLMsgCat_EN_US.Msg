@@ -204,7 +204,7 @@ $set 1
 207  Invalid initial name character
 208  Invalid name character
 209  Unexpected whitespace
-210  Invalid character in attribute value (Unicode: 0x{0})
+210  Invalid character in attribute value {0} (Unicode: 0x{1})
 211  Expected a markup declaration
 212  Text declaration not legal here
 213  Conditional section in internal subset
