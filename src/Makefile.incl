@@ -306,8 +306,8 @@ ifeq (${PLATFORM}, HPUX)
     SHLIBSUFFIX=.sl
   else
     TEMPLATESREPOSITORY = ${XML_OBJ_DIR}/ptrepository
-    COMMON_COMPILE_OPTIONS = -D_HP_UX -DXML4C_TMPLSINC \
-        -D${OSVERDEFINE} +DAportable +eh +z -z +a1
+    COMMON_COMPILE_OPTIONS = -D_HP_UX -DXERCES_TMPLSINC \
+        -D${OSVERDEFINE} +DAportable +eh +z -z +a1 +d
     ifeq ($(MODULE), dom)
       PLATFORM_COMPILE_OPTIONS  = -DDOM_PROJ $(COMMON_COMPILE_OPTIONS)
     else
