@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/07/23 14:35:03  amassari
+ * A global mutex was not cleaned up
+ *
  * Revision 1.12  2004/02/25 14:53:24  peiyongz
  * Bug#27209: Xerces 2.5.0 does not build with option -t IconvGNU because of syntax errors!
  *
@@ -114,6 +117,7 @@
 
 #if !defined(APP_NO_THREADS)
 #include <xercesc/util/Mutexes.hpp>
+#include <xercesc/util/XMLRegisterCleanup.hpp>
 #endif /* !APP_NO_THREADS */
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -122,6 +126,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 // Iconv() access syncronization point
 static XMLMutex    *gIconvMutex = NULL;
+static XMLRegisterCleanup IconvGNUMutexCleanup;
 #  define ICONV_LOCK    XMLMutexLock lockConverter(gIconvMutex);
 
 #else /* APP_NO_THREADS */
@@ -502,6 +507,12 @@ size_t    IconvGNUWrapper::iconvTo ( const char    *fromPtr,
 //  IconvGNUTransService: Constructors and Destructor
 // ---------------------------------------------------------------------------
 
+void reinitIconvGNUMutex()
+{
+    delete gIconvMutex;
+    gIconvMutex = 0;
+}
+
 IconvGNUTransService::IconvGNUTransService()
     : IconvGNUWrapper(), fUnicodeCP(0)
 {
@@ -511,6 +522,7 @@ IconvGNUTransService::IconvGNUTransService()
         gIconvMutex = new XMLMutex;
         if (gIconvMutex == NULL)
             XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
+        IconvGNUMutexCleanup.registerCleanup(reinitIconvGNUMutex);
     }
 #endif
 
