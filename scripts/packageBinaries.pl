@@ -124,6 +124,8 @@ if ($platform eq "" )
     psystem ("mkdir $targetdir\\include\\xercesc");
     psystem ("mkdir $targetdir\\samples");
     psystem ("mkdir $targetdir\\samples\\Projects");
+    psystem ("mkdir $targetdir\\samples\\Projects\\Win32");
+    psystem ("mkdir $targetdir\\samples\\Projects\\Win32\\VC6");
     psystem ("mkdir $targetdir\\samples\\data");
     psystem ("mkdir $targetdir\\samples\\SAXCount");
     psystem ("mkdir $targetdir\\samples\\SAX2Count");
@@ -307,7 +309,7 @@ if ($platform eq "" )
     # Populate the samples directory
     print ("\n \nCopying sample files ...\n");
     psystem("copy $XERCESCROOT\\version.incl $targetdir");
-    psystem("xcopy /s /y $XERCESCROOT\\samples\\Projects\\* $targetdir\\samples\\Projects");
+    psystem("xcopy /s /y $XERCESCROOT\\samples\\Projects\\Win32\\VC6\\* $targetdir\\samples\\Projects\\Win32\\VC6");
 
     psystem("copy /y $XERCESCROOT\\samples\\SAXCount\\* $targetdir\\samples\\SAXCount");
     psystem("del /f $targetdir\\samples\\SAXCount\\Makefile.in");
@@ -603,7 +605,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     # Populate the samples directory
     print ("\n\nCopying sample files ...\n");
     psystem("cp $XERCESCROOT/version.incl $targetdir");
-    psystem("cp -Rfv $XERCESCROOT/samples/Projects/* $targetdir/samples/Projects");
+    psystem("cp -Rfv $XERCESCROOT/samples/Projects/Win32/VC6/* $targetdir/samples/Projects/Win32/VC6");
 
     psystem("cp -Rfv $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
     psystem("rm -f $targetdir/samples/SAXCount/Makefile");
