@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/07/15 18:26:46  tng
+ * DOM L3: For consistency, add release() to DOMInputSource and thus Wrapper4InputSource.
+ *
  * Revision 1.1  2002/06/18 19:07:07  knoaman
  * Initial checkin.
  *
@@ -147,4 +150,12 @@ BinInputStream* Wrapper4InputSource::makeStream() const
     return fInputSource->makeStream();
 }
 
+// ---------------------------------------------------------------------------
+//  Wrapper4InputSource: Memory methods
+// ---------------------------------------------------------------------------
+void Wrapper4InputSource::release()
+{
+    Wrapper4InputSource* src = (Wrapper4InputSource*) this;
+    delete src;
+}
 

@@ -255,6 +255,14 @@ public:
     */
     void setIssueFatalErrorIfNotFound(const bool flag);
 
+    /**
+     * Called to indicate that this DOMInputSource is no longer in use
+     * and that the implementation may relinquish any resources associated with it.
+     *
+     * Access to a released object will lead to unexpected result.
+     */
+    void              release();
+
   /**
     * <p><b>"Experimental - subject to change"</b></p>
     *

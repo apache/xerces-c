@@ -292,6 +292,13 @@ public:
      */
     virtual const bool getIssueFatalErrorIfNotFound() const = 0;
 
+    /**
+     * Called to indicate that this DOMInputSource is no longer in use
+     * and that the implementation may relinquish any resources associated with it.
+     *
+     * Access to a released object will lead to unexpected result.
+     */
+    virtual void              release() = 0;
     //@}
 };
 
