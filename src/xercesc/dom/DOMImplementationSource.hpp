@@ -4,7 +4,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -126,7 +126,7 @@ public:
      * @param features A string that specifies which features are required.
      *   This is a space separated list in which each feature is specified
      *   by its name optionally followed by a space and a version number.
-     *   This is something like: "XML 1.0 Traversal Events 2.0"
+     *   This is something like: "XML 1.0 Traversal 2.0"
      * @return An implementation that has the desired features, or
      *   <code>null</code> if this source has none.
      * @since DOM Level 3
