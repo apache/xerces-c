@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.26  2004/04/13 16:47:02  peiyongz
+* command line option to turn on/off Identity Constraint checking
+*
 * Revision 1.25  2003/05/30 09:36:36  gareth
 * Use new macros for iostream.h and std:: issues.
 *
@@ -164,6 +167,7 @@ void usage()
             "                Default to off (Input file is an XML file).\n"
             "    -v=xxx      Validation scheme [always | never | auto*].\n"
             "    -f          Enable full schema constraint checking processing. Defaults to off.\n"
+            "    -i          Enable identity constraint checking processing. Defaults to on.\n"
             "    -p          Enable namespace-prefixes feature. Defaults to off.\n"
             "    -n          Disable namespace processing. Defaults to on.\n"
             "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
@@ -194,6 +198,7 @@ int main(int argC, char* argV[])
     bool                         doNamespaces = true;
     bool                         doSchema = true;
     bool                         schemaFullChecking = false;
+    bool                         identityConstraintChecking = true;
     bool                         doList = false;
     bool                         errorOccurred = false;
     bool                         namespacePrefixes = false;
@@ -245,6 +250,11 @@ int main(int argC, char* argV[])
               ||  !strcmp(argV[argInd], "-F"))
         {
             schemaFullChecking = true;
+        }
+         else if (!strcmp(argV[argInd], "-i")
+              ||  !strcmp(argV[argInd], "-I"))
+        {
+            identityConstraintChecking = false;
         }
          else if (!strcmp(argV[argInd], "-l")
               ||  !strcmp(argV[argInd], "-L"))
@@ -319,6 +329,7 @@ int main(int argC, char* argV[])
     parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
     parser->setFeature(XMLUni::fgXercesSchema, doSchema);
     parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
+    parser->setFeature(XMLUni::fgXercesIdentityConstraintChecking, identityConstraintChecking);
     parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, namespacePrefixes);
 
     if (valScheme == SAX2XMLReader::Val_Auto)
