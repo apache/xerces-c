@@ -54,9 +54,7 @@
  * <http://www.apache.org/>.
  */
 
-
-#include <utils/XercesDefs.hpp>
-
+#include <util/XercesDefs.hpp>
 #include <ctype.h>
 
 // These functions are needed because MacOS doesn't define them
@@ -90,7 +88,4 @@ int strnicmp(const char *s1, const char *s2, const unsigned int n)
     }
     return 0;
 }
-
-
-
 

@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/07/29 05:41:00  jberry
+ * Fixups for Mac OS
+ *
  * Revision 1.3  2000/03/02 19:55:08  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -79,6 +82,7 @@
 // ---------------------------------------------------------------------------
 #include <util/Compilers/GCCDefs.hpp>
 #include <strings.h>
+#include <string.h>
 
 
 int stricmp(const char* const str1, const char* const  str2) 
