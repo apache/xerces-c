@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2000/04/05 18:55:36  roddey
+ * Delete the critical section handle in closeMutex().
+ *
  * Revision 1.16  2000/03/20 23:43:03  rahulj
  * Expanded tabs to spaces.
  *
@@ -577,6 +580,7 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
     ::DeleteCriticalSection((LPCRITICAL_SECTION)mtxHandle);
+    delete mtxHandle;
 }
 
 
