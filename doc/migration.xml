@@ -95,7 +95,12 @@
             been replaced with
             <code>validators/DTD/DocTypeHandler.hpp</code>.</li>
 
-            <li>The following methods now have different set of parameters:</li>
+            <li>The following methods now have different set of
+            parameters because the underlying base class methods have
+            changed in the 3.x release. These methods belong to one of
+            <code>XMLDocumentHandler</code>,
+            <code>XMLErrorReporter</code> or
+            <code>DocTypeHandler</code> interfaces.</li>
             <ul>
                 <li><code>[Non]Validating[DOM/SAX]Parser::docComment</code></li>
                 <li><code>[Non]Validating[DOM/SAX]Parser::doctypePI</code></li>
