@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:21  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/23 22:14:37  peiyongz
+ * Code sharing and Array boundary checking added
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:21  peiyongz
+ * sane_include
  *
  * Revision 1.5  2000/03/28 19:43:21  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
@@ -100,18 +103,17 @@
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
 // ---------------------------------------------------------------------------
-InMemMsgLoader::InMemMsgLoader(const XMLCh* const msgDomain) :
-
-    fMsgDomain(0)
+InMemMsgLoader::InMemMsgLoader(const XMLCh* const msgDomain)
+:fMsgDomain(0)
 {
-    fMsgDomain = XMLString::replicate(msgDomain);
-
-    if (XMLString::compareString(fMsgDomain, XMLUni::fgXMLErrDomain)
-    &&  XMLString::compareString(fMsgDomain, XMLUni::fgExceptDomain)
-    &&  XMLString::compareString(fMsgDomain, XMLUni::fgValidityDomain))
+    if (XMLString::compareString(msgDomain, XMLUni::fgXMLErrDomain)
+    &&  XMLString::compareString(msgDomain, XMLUni::fgExceptDomain)
+    &&  XMLString::compareString(msgDomain, XMLUni::fgValidityDomain))
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
+
+    fMsgDomain = XMLString::replicate(msgDomain);
 }
 
 InMemMsgLoader::~InMemMsgLoader()
@@ -136,38 +138,37 @@ bool InMemMsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
     //
     XMLCh* endPtr = toFill + maxChars;
     XMLCh* outPtr = toFill;
+    const XMLCh* srcPtr = 0;
+
     if (!XMLString::compareString(fMsgDomain, XMLUni::fgXMLErrDomain))
     {
-        const XMLCh* srcPtr = gXMLErrArray[msgToLoad - 1];
-        while (*srcPtr && (outPtr < endPtr))
-        {
-            *outPtr++ = *srcPtr++;
-        }
-        *outPtr = 0;
+        if ( msgToLoad > gXMLErrArraySize)
+            return false;
+        else
+            srcPtr = gXMLErrArray[msgToLoad - 1];
     }
      else if (!XMLString::compareString(fMsgDomain, XMLUni::fgExceptDomain))
     {
-        const XMLCh* srcPtr = gXMLExceptArray[msgToLoad - 1];
-        while (*srcPtr && (outPtr < endPtr))
-        {
-            *outPtr++ = *srcPtr++;
-        }
-        *outPtr = 0;
+         if ( msgToLoad > gXMLExceptArraySize)
+            return false;
+         else
+             srcPtr = gXMLExceptArray[msgToLoad - 1];
     }
      else if (!XMLString::compareString(fMsgDomain, XMLUni::fgValidityDomain))
     {
-        const XMLCh* srcPtr = gXMLValidityArray[msgToLoad - 1];
-        while (*srcPtr && (outPtr < endPtr))
-        {
-            *outPtr++ = *srcPtr++;
-        }
-        *outPtr = 0;
+         if ( msgToLoad > gXMLValidityArraySize)
+            return false;
+         else
+             srcPtr = gXMLValidityArray[msgToLoad - 1];
     }
-     else
-    {
-        return false;
-    }
-    return true;
+
+     while (*srcPtr && (outPtr < endPtr))
+     {
+         *outPtr++ = *srcPtr++;
+     }
+     *outPtr = 0;
+
+     return true;
 }
 
 
