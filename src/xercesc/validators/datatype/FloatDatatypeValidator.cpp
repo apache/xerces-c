@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/11/06 15:30:07  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.7  2003/10/02 19:21:06  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -115,7 +118,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 FloatDatatypeValidator::FloatDatatypeValidator(MemoryManager* const manager)
 :AbstractNumericValidator(0, 0, 0, DatatypeValidator::Float, manager)
-{}
+{
+    setOrdered(XSSimpleTypeDefinition::ORDERED_PARTIAL);
+    setBounded(true);
+    setFinite(true);
+    setNumeric(true);
+}
 
 FloatDatatypeValidator::FloatDatatypeValidator(
                           DatatypeValidator*            const baseValidator

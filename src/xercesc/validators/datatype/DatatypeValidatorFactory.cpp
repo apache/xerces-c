@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2003/11/06 15:30:07  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.19  2003/11/05 16:36:15  peiyongz
  * initialize BuiltInRegistry during deserialization
  *
@@ -839,6 +842,22 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
 
     if (isDerivedByList) {
         datatypeValidator = new (manager) ListDatatypeValidator(baseValidator, facets, enums, finalSet, manager);
+
+        // Set PSVI information for Ordered, Numeric, Bounded & Finite
+        datatypeValidator->setOrdered(XSSimpleTypeDefinition::ORDERED_FALSE);
+        datatypeValidator->setNumeric(false);
+        if (facets &&
+             ((facets->get(SchemaSymbols::fgELT_LENGTH) || 
+              (facets->get(SchemaSymbols::fgELT_MINLENGTH) && facets->get(SchemaSymbols::fgELT_MAXLENGTH)))))
+        {
+            datatypeValidator->setBounded(true);
+            datatypeValidator->setFinite(true);
+        }
+        else
+        {
+            datatypeValidator->setBounded(false);
+            datatypeValidator->setFinite(false);
+        }
     }
     else {
 
@@ -858,6 +877,57 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
             , finalSet
             , manager
         );
+
+        // Set PSVI information for Ordered, Numeric, Bounded & Finite
+        datatypeValidator->setOrdered(baseValidator->getOrdered());
+        datatypeValidator->setNumeric(baseValidator->getNumeric());
+        if (facets  && 
+            ((facets->get(SchemaSymbols::fgELT_MININCLUSIVE) || facets->get(SchemaSymbols::fgELT_MINEXCLUSIVE)) &&
+             (facets->get(SchemaSymbols::fgELT_MAXINCLUSIVE) || facets->get(SchemaSymbols::fgELT_MAXEXCLUSIVE))))
+        {
+            datatypeValidator->setBounded(true);
+        }
+        else
+        {
+            datatypeValidator->setBounded(false);
+        }
+        if (baseValidator->getFinite())
+        {
+            datatypeValidator->setFinite(true);
+        }
+        else if (!facets)
+        {
+            datatypeValidator->setFinite(false);
+        }
+        else if (facets->get(SchemaSymbols::fgELT_LENGTH) || facets->get(SchemaSymbols::fgELT_MAXLENGTH) ||
+                 facets->get(SchemaSymbols::fgELT_TOTALDIGITS))
+        {
+            datatypeValidator->setFinite(true);
+        }
+        //for efficiency use this instead of rechecking...
+        //else if ((facets->get(SchemaSymbols::fgELT_MININCLUSIVE) || facets->get(SchemaSymbols::fgELT_MINEXCLUSIVE)) &&
+        //         (facets->get(SchemaSymbols::fgELT_MAXINCLUSIVE) || facets->get(SchemaSymbols::fgELT_MAXEXCLUSIVE)))
+        else if (datatypeValidator->getBounded() ||
+                 datatypeValidator->getType() == DatatypeValidator::Date      || 
+                 datatypeValidator->getType() == DatatypeValidator::YearMonth ||
+                 datatypeValidator->getType() == DatatypeValidator::Year      ||
+                 datatypeValidator->getType() == DatatypeValidator::MonthDay  ||
+                 datatypeValidator->getType() == DatatypeValidator::Day       ||
+                 datatypeValidator->getType() == DatatypeValidator::Month)
+        {
+            if (facets->get(SchemaSymbols::fgELT_FRACTIONDIGITS))
+            {
+                datatypeValidator->setFinite(true);
+            }
+            else 
+            {
+                datatypeValidator->setFinite(false);
+            }
+        }
+        else 
+        {
+            datatypeValidator->setFinite(false);
+        }      
     }
 
     if (datatypeValidator != 0) {
@@ -880,6 +950,16 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
     return datatypeValidator;
 }
 
+static DatatypeValidator::ValidatorType getPrimitiveDV(DatatypeValidator::ValidatorType validationDV)
+{
+    if (validationDV == DatatypeValidator::ID    || 
+        validationDV == DatatypeValidator::IDREF || 
+        validationDV == DatatypeValidator::ENTITY)
+    {
+        return DatatypeValidator::String;
+    }
+    return validationDV;
+}
 
 DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
 (
@@ -912,8 +992,69 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
             fBuiltInRegistry->put((void *)typeName, datatypeValidator);
         }
         datatypeValidator->setTypeName(typeName);
-    }
 
+        // Set PSVI information for Ordered, Numeric, Bounded & Finite
+        unsigned int valSize = validators->size();
+        if (valSize) 
+        {
+            DatatypeValidator::ValidatorType ancestorId = getPrimitiveDV(validators->elementAt(0)->getType());
+
+            // For a union the ORDERED {value} is partial unless one of the following:
+            // 1. If every member of {member type definitions} is derived from a common ancestor other than the simple ur-type, then {value} is the same as that ancestor's ordered facet.
+            // 2. If every member of {member type definitions} has a {value} of false for the ordered facet, then {value} is false.
+            bool allOrderedFalse = true;
+            bool commonAnc = ancestorId != DatatypeValidator::AnySimpleType;
+            bool allNumeric = true;
+            bool allBounded = true;
+            bool allFinite  = true;
+        
+            for(unsigned int i = 0 ; (i < valSize) && (commonAnc || allOrderedFalse || allNumeric || allBounded || allFinite); i++)
+            {
+                // for the other member types, check whether the value is false
+                // and whether they have the same ancestor as the first one
+                if (commonAnc)
+                    commonAnc = ancestorId == getPrimitiveDV(validators->elementAt(i)->getType());
+                if (allOrderedFalse)
+                    allOrderedFalse = validators->elementAt(i)->getOrdered() == XSSimpleTypeDefinition::ORDERED_FALSE;
+           
+                if (allNumeric && !validators->elementAt(i)->getNumeric())
+                {
+                    allNumeric = false;
+                }
+                if (allBounded && (!validators->elementAt(i)->getBounded() ||
+                                   ancestorId != getPrimitiveDV(validators->elementAt(i)->getType())))
+                {
+                    allBounded = false;
+                }
+                if (allFinite && !validators->elementAt(i)->getFinite())
+                {
+                    allFinite = false;
+                }        
+            }
+            if (commonAnc) 
+            {
+                datatypeValidator->setOrdered(validators->elementAt(0)->getOrdered());
+            } 
+            else if (allOrderedFalse) 
+            {
+                datatypeValidator->setOrdered(XSSimpleTypeDefinition::ORDERED_FALSE);
+            } 
+            else 
+            {
+                datatypeValidator->setOrdered(XSSimpleTypeDefinition::ORDERED_PARTIAL);
+            }
+            datatypeValidator->setNumeric(allNumeric);
+            datatypeValidator->setBounded(allBounded);
+            datatypeValidator->setFinite(allFinite);
+        }
+        else // size = 0
+        {
+            datatypeValidator->setOrdered(XSSimpleTypeDefinition::ORDERED_PARTIAL);
+            datatypeValidator->setNumeric(true);
+            datatypeValidator->setBounded(true);
+            datatypeValidator->setFinite(true);
+        }
+    }
     return datatypeValidator;
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/11/06 15:30:07  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.14  2003/10/31 22:16:58  peiyongz
  * to serialize/deserialize data member
  *
@@ -179,7 +182,10 @@ DecimalDatatypeValidator::DecimalDatatypeValidator(MemoryManager* const manager)
 , fTotalDigits(0)
 , fFractionDigits(0)
 , fCompareData(0)
-{}
+{
+    setOrdered(XSSimpleTypeDefinition::ORDERED_TOTAL);
+    setNumeric(true);
+}
 
 DecimalDatatypeValidator::DecimalDatatypeValidator(
                           DatatypeValidator*            const baseValidator

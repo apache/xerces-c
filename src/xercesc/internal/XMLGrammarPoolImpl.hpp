@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/06 15:30:06  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.9  2003/11/05 18:19:45  peiyongz
  * Documentation update
  *
@@ -93,6 +96,11 @@
 #define XMLGrammarPoolImplIMPL_HPP
 
 #include <xercesc/framework/XMLGrammarPool.hpp>
+
+// PSVI includes:
+#include <xercesc/util/ValueVectorOf.hpp>
+#include <xercesc/validators/schema/SchemaElementDecl.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -178,6 +186,17 @@ public :
       *
       */
     virtual void           unlockPool();
+
+    /**
+      * setPSVI
+      *
+      * A flag to indicate that PSVI will be performed on the schema grammars as 
+      * a PSVIHandler has been set.
+      */ 
+    virtual void            setPSVI(const bool doPSVI);
+
+    friend void updatePSVIvectorElemIds(ValueVectorOf<SchemaElementDecl*>* PSVIvectorElemDecls, 
+            SchemaGrammar* const grammar);
     //@}
 
     // -----------------------------------------------------------------------
@@ -312,13 +331,17 @@ private:
     //      that can be updated in a thread-safe manner.
     // fLocked
     //      whether the pool has been locked
+    // fDoPSVI
+    //      whether PSVI will be performed
     //
     // -----------------------------------------------------------------------
-    RefHashTableOf<Grammar>*    fGrammarRegistry; 
-    XMLStringPool*              fStringPool;
-    XMLSynchronizedStringPool*  fSynchronizedStringPool;
-    bool                        fLocked;
-
+    RefHashTableOf<Grammar>*            fGrammarRegistry; 
+    XMLStringPool*                      fStringPool;
+    XMLSynchronizedStringPool*          fSynchronizedStringPool;
+    ValueVectorOf<SchemaElementDecl*>*  fPSVIvectorElemDecls;
+    XSModel*                            fXSModel;
+    bool                                fLocked;
+    bool                                fDoPSVI;
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,13 +56,16 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
  */
 
-#if !defined(XSCOMPLEXTYPEDEFINITION_HPP)
-#define XSCOMPLEXTYPEDEFINITION_HPP
+#if !defined(XSSIMPLETYPEDEFINITION_HPP)
+#define XSSIMPLETYPEDEFINITION_HPP
 
 #include <xercesc/framework/psvi/XSTypeDefinition.hpp>
 
@@ -80,6 +83,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XSAnnotation;
 class XSFacet;
 class XSMultiValueFacet;
+
+class DatatypeValidator;
+class RefVectorOf;
 
 class XMLPARSER_EXPORT XSSimpleTypeDefinition : public XSTypeDefinition
 {
@@ -110,11 +116,11 @@ public:
 	    /**
 	     * No facets defined.
 	     */
-	    FACET_NONE            = 0,
+	    FACET_NONE                = 0,
 	    /**
 	     * 4.3.1 Length
 	     */
-	   FACET_LENGTH              = 1,
+	    FACET_LENGTH              = 1,
 	    /**
 	     * 4.3.2 minLength. 
 	     */
@@ -188,7 +194,8 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSSimpleTypeDefinition( MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSSimpleTypeDefinition(DatatypeValidator*   datatypeValidator,
+                           MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
 
@@ -198,9 +205,9 @@ public:
     //@}
 
     //---------------------
-    // @name XSSimpleTypeDefinition methods
+    /** @name XSSimpleTypeDefinition methods */
 
-    /* @{
+    //@{
 
     /**
      * [variety]: one of {atomic, list, union} or absent 
@@ -226,7 +233,7 @@ public:
      * non-empty sequence of simple type definitions) is available, 
      * otherwise <code>null</code>. 
      */
-    StringList *getMemberTypes();
+    XSSimpleTypeDefinitionList *getMemberTypes();
 
     /**
      * [facets]: get all facets defined on this type. The value is a bit 
@@ -312,14 +319,14 @@ public:
     /** 
      * @return list of enumeration and pattern facets.
      */
-    XSFacetList *getMultiValueFacets();
+    XSMultiValueFacetList *getMultiValueFacets();
 
     //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 
@@ -336,8 +343,16 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    DatatypeValidator*                  fDatatypeValidator;
+    XSFacetList*                        fXSFacetList;
+    XSMultiValueFacetList*              fXSMultiValueFacetList;
+    StringList*                         fPatternList;
+    short                               fDefinedFacets;
+    short                               fFixedFacets;
+    VARIETY                             fVariety;
+    XSSimpleTypeDefinition*             fPrimitiveOrItemType;
+    XSSimpleTypeDefinitionList*         fMemberTypes;
 };
-inline XSSimpleTypeDefinition::~XSSimpleTypeDefinition() {}
 
 XERCES_CPP_NAMESPACE_END
 

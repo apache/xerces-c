@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -77,6 +80,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 // forward declarations
 class XSAnnotation;
+
+class SchemaAttDef;
+class ContentSpecNode;
+class XMLStringPool;
 
 class XMLPARSER_EXPORT XSWildcard : public XSObject
 {
@@ -128,10 +135,15 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSWildcard( 
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSWildcard(SchemaAttDef*        attWildCard, 
+               XMLStringPool*       uriStringPool,
+               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    
+    XSWildcard(ContentSpecNode*     elmWildCard, 
+               XMLStringPool*       uriStringPool,
+               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
-    //@};
+    //@}
 
     /** @name Destructor */
     //@{
@@ -139,9 +151,9 @@ public:
     //@}
 
     //---------------------
-    // @name XSWildcard methods
+    /** @name XSWildcard methods */
 
-    /* @{
+    //@{
 
     /**
      * Namespace constraint: A constraint type: any, not, list. 
@@ -150,8 +162,8 @@ public:
 
     /**
      * Namespace constraint. For <code>constraintType</code> 
-     * <code>DERIVATION_LIST_NSCONSTRAINT</code>, the list contains allowed namespaces. 
-     * For <code>constraintType</code> <code>NOT_NSCONSTRAINT</code>, the 
+     * <code>NSCONSTRAINT_DERIVATION_LIST</code>, the list contains allowed namespaces. 
+     * For <code>constraintType</code> <code>NSCONSTRAINT_NOT</code>, the 
      * list contains disallowed namespaces. 
      */
     StringList *getNsConstraintList();
@@ -170,9 +182,9 @@ public:
     //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 private:
@@ -188,8 +200,18 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    NAMESPACE_CONSTRAINT            fConstraintType;
+    PROCESS_CONTENTS                fProcessContents;
+    StringList*                     fNsConstraintList;
+    XMLStringPool*                  fURIStringPool;
 };
-inline XSWildcard::~XSWildcard() {}
+
+inline XSWildcard::~XSWildcard() {
+    if (fNsConstraintList) 
+    {
+        delete fNsConstraintList;
+    }
+}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2003/11/06 15:30:07  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.23  2003/10/30 21:37:31  knoaman
  * Enhanced Entity Resolver Support. Thanks to David Cargill.
  *
@@ -250,6 +253,7 @@ class DeclHandler;
 class GrammarResolver;
 class XMLGrammarPool;
 class XMLResourceIdentifier;
+class PSVIHandler;
 
 /**
   * This class implements the SAX2 'XMLReader' interface and should be
@@ -333,6 +337,13 @@ public :
       * @return A pointer to the installed error handler object.
       */
     virtual ErrorHandler* getErrorHandler() const ;
+
+    /**
+      * This method returns the installed PSVI handler.
+      *
+      * @return A pointer to the installed PSVI handler object.
+      */
+    virtual PSVIHandler* getPSVIHandler() const ;
 
 	/**
      * Query the current state of any feature in a SAX2 XMLReader.
@@ -457,6 +468,16 @@ public :
     * @see HandlerBase#HandlerBase
     */
     virtual void setErrorHandler(ErrorHandler* const handler) ;
+
+  /**
+    * This method installs the user specified PSVI handler on
+    * the parser.
+    *
+    * @param handler A pointer to the PSVI handler to be called
+    *                when the parser comes across 'PSVI' events
+    *                as per the schema specification.
+    */
+    virtual void setPSVIHandler(PSVIHandler* const handler);
 
   /**
     * Set the state of any feature in a SAX2 XMLReader.
@@ -1863,6 +1884,7 @@ private :
     EntityResolver*             fEntityResolver;
     XMLEntityResolver*          fXMLEntityResolver;
     ErrorHandler*               fErrorHandler;
+    PSVIHandler*                fPSVIHandler;
     LexicalHandler*             fLexicalHandler;
     DeclHandler*                fDeclHandler;
     XMLDocumentHandler**        fAdvDHList;
@@ -1872,7 +1894,7 @@ private :
     XMLValidator*               fValidator;
     MemoryManager*              fMemoryManager;
     XMLGrammarPool*             fGrammarPool;
-    XMLBufferMgr		        fStringBuffers;
+    XMLBufferMgr                fStringBuffers;
 	
     // -----------------------------------------------------------------------
     // internal function used to set the state of the parser
@@ -1911,6 +1933,11 @@ inline XMLEntityResolver* SAX2XMLReaderImpl::getXMLEntityResolver() const
 inline ErrorHandler* SAX2XMLReaderImpl::getErrorHandler() const
 {
 	return fErrorHandler;
+}
+
+inline PSVIHandler* SAX2XMLReaderImpl::getPSVIHandler() const
+{
+	return fPSVIHandler;
 }
 
 inline LexicalHandler* SAX2XMLReaderImpl::getLexicalHandler() const

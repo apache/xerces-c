@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -65,7 +68,13 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSMultiValueFacet::XSMultiValueFacet( MemoryManager * const manager):
+XSMultiValueFacet::XSMultiValueFacet(XSSimpleTypeDefinition::FACET   facetKind,
+            StringList*                     lexicalValues,
+            bool                            isFixed,  
+            MemoryManager* const            manager):
+            fFacetKind(facetKind),
+            fLexicalValues(lexicalValues),
+            fIsFixed(isFixed),
             XSObject(XSConstants::MULTIVALUE_FACET, manager )
 {
 }
@@ -78,8 +87,7 @@ XSMultiValueFacet::XSMultiValueFacet( MemoryManager * const manager):
  */
 XSSimpleTypeDefinition::FACET XSMultiValueFacet::getFacetKind() const
 {
-    // REVISIT
-    return XSSimpleTypeDefinition::FACET_NONE;
+    return fFacetKind;
 }
 
 /**
@@ -87,8 +95,7 @@ XSSimpleTypeDefinition::FACET XSMultiValueFacet::getFacetKind() const
  */
 StringList *XSMultiValueFacet::getLexicalFacetValues()
 {
-    // REVISIT
-    return 0;
+    return fLexicalValues; 
 }
 
 /**
@@ -96,8 +103,7 @@ StringList *XSMultiValueFacet::getLexicalFacetValues()
  */
 bool XSMultiValueFacet::isFixed() const
 {
-    // REVISIT
-    return false;
+    return fIsFixed;
 }
 
 /**

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2003/11/06 15:30:07  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.26  2003/10/30 21:37:31  knoaman
  * Enhanced Entity Resolver Support. Thanks to David Cargill.
  *
@@ -261,6 +264,7 @@ class GrammarResolver;
 class XMLGrammarPool;
 class XMLEntityResolver;
 class XMLResourceIdentifier;
+class PSVIHandler;
 
 /**
   * This class implements the SAX 'Parser' interface and should be
@@ -393,6 +397,22 @@ public :
       * @return A const pointer to the installed error handler object.
       */
     const ErrorHandler* getErrorHandler() const;
+
+    /**
+      * This method returns the installed PSVI handler. Suitable
+      * for 'lvalue' usages.
+      *
+      * @return The pointer to the installed PSVI handler object.
+      */
+    PSVIHandler* getPSVIHandler();
+
+    /**
+      * This method returns the installed PSVI handler. Suitable
+      * for 'rvalue' usages.
+      *
+      * @return A const pointer to the installed PSVI handler object.
+      */
+    const PSVIHandler* getPSVIHandler() const;
 
     /**
       * This method returns a reference to the parser's installed
@@ -1283,6 +1303,18 @@ public :
     virtual void setErrorHandler(ErrorHandler* const handler);
 
     /**
+      * This method installs the user specified PSVI handler on
+      * the parser.
+      *
+      * @param handler A pointer to the PSVI handler to be called
+      *                when the parser comes across 'PSVI' events
+      *                as per the schema specification.
+      *
+      * @see Parser#setPSVIHandler
+      */
+    virtual void setPSVIHandler(PSVIHandler* const handler);
+
+    /**
       * This method installs the user specified entity resolver on the
       * parser. It allows applications to trap and redirect calls to
       * external entities.
@@ -2068,6 +2100,9 @@ private:
     //  fErrorHandler
     //      The installed SAX error handler, if any. Null if none.
     //
+    //  fPSVIHandler
+    //      The installed PSVI handler, if any. Null if none.
+    //
     //  fAdvDHCount
     //  fAdvDHList
     //  fAdvDHListSize
@@ -2104,6 +2139,7 @@ private:
     EntityResolver*      fEntityResolver;
     XMLEntityResolver*   fXMLEntityResolver;
     ErrorHandler*        fErrorHandler;
+    PSVIHandler*         fPSVIHandler;
     XMLDocumentHandler** fAdvDHList;
     XMLScanner*          fScanner;
     GrammarResolver*     fGrammarResolver;
@@ -2156,6 +2192,16 @@ inline ErrorHandler* SAXParser::getErrorHandler()
 inline const ErrorHandler* SAXParser::getErrorHandler() const
 {
     return fErrorHandler;
+}
+
+inline PSVIHandler* SAXParser::getPSVIHandler()
+{
+    return fPSVIHandler;
+}
+
+inline const PSVIHandler* SAXParser::getPSVIHandler() const
+{
+    return fPSVIHandler;
 }
 
 inline const XMLScanner& SAXParser::getScanner() const

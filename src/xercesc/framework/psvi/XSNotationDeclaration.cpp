@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.2  2003/09/17 17:45:37  neilg
  * remove spurious inlines; hopefully this will make Solaris/AIX compilers happy.
  *
@@ -65,25 +68,26 @@
  */
 
 #include <xercesc/framework/psvi/XSNotationDeclaration.hpp>
+#include <xercesc/framework/XMLNotationDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSNotationDeclaration::XSNotationDeclaration( MemoryManager * const manager):
-            XSObject(XSConstants::NOTATION_DECLARATION, manager )
+XSNotationDeclaration::XSNotationDeclaration(XMLNotationDecl*    xmlNotationDecl,
+                                             MemoryManager * const manager):
+    fXMLNotationDecl(xmlNotationDecl),
+    XSObject(XSConstants::NOTATION_DECLARATION, manager)
 {
 }
 
 // Overridden XSObject methods
 const XMLCh *XSNotationDeclaration::getName() 
 {
-    // REVISIT
-    return 0;
+    return fXMLNotationDecl->getName();
 }
 
 const XMLCh *XSNotationDeclaration::getNamespace() 
 {
-    // REVISIT
-    return 0;
+    return fXMLNotationDecl->getNameSpace();
 }
 
 // XSNotationDeclaration methods
@@ -94,8 +98,7 @@ const XMLCh *XSNotationDeclaration::getNamespace()
  */
 const XMLCh *XSNotationDeclaration::getSystemId()
 {
-    // REVISIT
-    return 0;
+    return fXMLNotationDecl->getSystemId();
 }
 
 /**
@@ -104,8 +107,7 @@ const XMLCh *XSNotationDeclaration::getSystemId()
  */
 const XMLCh *XSNotationDeclaration::getPublicId()
 {
-    // REVISIT
-    return 0;
+   return fXMLNotationDecl->getPublicId();
 }
 
 /**

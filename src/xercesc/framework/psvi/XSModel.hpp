@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.2  2003/10/10 18:37:51  neilg
  * update XSModel and XSObject interface so that IDs can be used to query components in XSModels, and so that those IDs can be recovered from components
  *
@@ -70,6 +73,9 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/psvi/XSObject.hpp>
 #include <xercesc/framework/psvi/XSNamedMap.hpp>
+
+#include <xercesc/util/ValueVectorOf.hpp>
+#include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -107,8 +113,7 @@ public:
     //@{
 
     /**
-      * The constructor to be used wen a grammar pool contains all needed info
-      *
+      * The constructor to be used when a grammar pool contains all needed info
       * @param grammarPool  the grammar pool containing the underlying data structures
       * @param  manager     The configurable memory manager
       */
@@ -136,9 +141,9 @@ public:
     //@}
 
     //---------------------
-    // @name XSModel methods
+    /** @name XSModel methods */
 
-    /* @{
+    //@{
 
     /**
      * Convenience method. Returns a list of all namespaces that belong to 
@@ -263,12 +268,12 @@ public:
     XSObject *getXSObjectById(unsigned int  compId
                 , XSConstants::COMPONENT_TYPE compType);
 
-    // @}
+    //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 private:
@@ -286,10 +291,19 @@ protected:
     // -----------------------------------------------------------------------
     // fMemoryManager:
     //  used for any memory allocations
-    const MemoryManager *fMemoryManager;
-
+    // fPSVIvectorElemDecls:
+    //  list of ElemDecls for grammar's associated with this XSModel that are 
+    //  not part of GrammarPool (ie. associated with a parser).
+    const MemoryManager*                fMemoryManager;
+    ValueVectorOf<SchemaElementDecl*>*  fPSVIvectorElemDecls;
+    StringList*                         fNamespaceStringList;
+    XSNamespaceItemList*                fXSNamespaceItemList;
 };
-inline XSModel::~XSModel() {}
+inline XSModel::~XSModel() 
+{
+    // REVISIT:
+    // need to delete items owned...
+}
 
 XERCES_CPP_NAMESPACE_END
 

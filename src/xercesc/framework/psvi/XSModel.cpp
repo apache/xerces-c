@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.2  2003/10/10 18:37:51  neilg
  * update XSModel and XSObject interface so that IDs can be used to query components in XSModels, and so that those IDs can be recovered from components
  *
@@ -65,6 +68,9 @@
  */
 
 #include <xercesc/framework/psvi/XSModel.hpp>
+#include <xercesc/framework/psvi/XSNamespaceItem.hpp>
+#include <xercesc/internal/XMLGrammarPoolImpl.hpp>
+#include <xercesc/validators/schema/SchemaGrammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -78,6 +84,26 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
             , MemoryManager* const manager ):
         fMemoryManager(manager)
 {
+    RefHashTableOfEnumerator<Grammar> grammarEnum = grammarPool->getGrammarEnumerator();
+    while (grammarEnum.hasMoreElements())
+    {
+        SchemaGrammar& sGrammar = (SchemaGrammar&) grammarEnum.nextElement();
+        if (sGrammar.getGrammarType() != Grammar::SchemaGrammarType)
+            continue;
+        if (!fNamespaceStringList) {
+            // Revisit: size of vector
+            fNamespaceStringList = new (manager) RefArrayVectorOf <XMLCh>(10, true, manager);
+        }
+        XMLCh* NameSpace = XMLString::replicate(sGrammar.getTargetNamespace(), manager);
+        fNamespaceStringList->addElement(NameSpace);
+        if (!fXSNamespaceItemList)
+        {
+            // Revisit: size of vector
+            fXSNamespaceItemList = new (manager) RefVectorOf <XSNamespaceItem>(10, true, manager);
+        }
+        XSNamespaceItem* NamespaceItem = new XSNamespaceItem(manager);
+        fXSNamespaceItemList->addElement(NamespaceItem);
+    }
 }
 
 /**
@@ -106,8 +132,7 @@ XSModel::XSModel( XSModel *baseModel
  */
 StringList *XSModel::getNamespaces()
 {
-    // REVISIT
-    return 0;
+    return fNamespaceStringList;
 }
 
 /**
@@ -120,8 +145,7 @@ StringList *XSModel::getNamespaces()
  */
 XSNamespaceItemList *XSModel::getNamespaceItems()
 {
-    // REVISIT
-    return 0;
+    return fXSNamespaceItemList;
 }
 
 /**
@@ -265,7 +289,15 @@ XSNotationDeclaration *XSModel::getNotationDeclaration(const XMLCh *name
 XSObject *XSModel::getXSObjectById(unsigned int  compId
             , XSConstants::COMPONENT_TYPE compType)
 {
-    return 0;
+    // Revisit: only elements & attributes have id's
+    switch(compType) {
+        case XSConstants::ELEMENT_DECLARATION:
+            return 0;
+        case XSConstants::ATTRIBUTE_DECLARATION:
+            return 0;
+        default:
+            return 0;
+    }
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -325,6 +325,8 @@ public:
 
     XercesXPath(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
+    XMLCh* getExpression();
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented contstructors and operators
@@ -522,6 +524,10 @@ inline void XPathScanner::addToken(ValueVectorOf<int>* const tokens,
 inline RefVectorOf<XercesLocationPath>* XercesXPath::getLocationPaths() const {
 
     return fLocationPaths;
+}
+
+inline XMLCh* XercesXPath::getExpression() {
+    return fExpression;
 }
 
 XERCES_CPP_NAMESPACE_END

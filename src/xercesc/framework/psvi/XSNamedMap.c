@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -69,19 +72,31 @@
 #include <xercesc/framework/psvi/XSNamedMap.hpp>
 #endif
 
+#include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/StringPool.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  XSNamedMap: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TVal>
-XSNamedMap<TVal>::XSNamedMap( 
-                                    MemoryManager* const manager) 
+XSNamedMap<TVal>::XSNamedMap(const unsigned int maxElems,
+                             const unsigned int modulus,
+                             XMLStringPool* uriStringPool,
+                             const bool adoptElems,
+                             MemoryManager* const manager) 
     : fMemoryManager(manager) 
+    , fURIStringPool(uriStringPool)
 {
+    // allow one of the Vector or Hash to own the data... but not both...
+    fVector = new (manager) RefVectorOf<TVal> (maxElems, false, manager);
+    fHash = new (manager) RefHash2KeysTableOf<TVal> (modulus, adoptElems, manager);
 }
 template <class TVal> XSNamedMap<TVal>::~XSNamedMap()
 {
+    delete fVector;
+    delete fHash;
 }
 
 
@@ -93,12 +108,11 @@ template <class TVal> XSNamedMap<TVal>::~XSNamedMap()
 template <class TVal> 
 unsigned int getLength()
 {
-    // REVISIT
-    return 0;
+    return fVector->size();
 }
 
 /**
- *  Returns the <code>index</code>th item in the collection. The index 
+ * Returns the <code>index</code>th item in the collection. The index 
  * starts at 0. If <code>index</code> is greater than or equal to the 
  * number of objects in the list, this returns <code>null</code>. 
  * @param index  index into the collection. 
@@ -107,10 +121,13 @@ unsigned int getLength()
  *   that is not a valid index. 
  */
 template <class TVal> 
-TVal *item(int index)
+TVal *item(unsigned int index)
 {
-    // REVISIT
-    return 0;
+    if (index >= fVector->size()) 
+    {
+        return 0;
+    }
+    return fVector->elementAt(index);
 }
 
 /**
@@ -128,9 +145,15 @@ template <class TVal>
 TVal *XSNamedMap<TVal>::itemByName(const XMLCh *compNamespace, 
                           const XMLCh *localName)
 {
-    // REVISIT
-    return 0;
+    return fHash->get((void*)localName, fURIStringPool->getId(compNamespace));
 }
 
+
+template <class TVal>
+void XSNamedMap<TVal>::addElement(TVal* const toAdd, const XMLCh* key1, const XMLCh* key2)
+{
+    fVector->addElement(toAdd);
+    fHash->put((void*)key1, fURIStringPool->getId(key2), toAdd);
+}
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/06 15:30:06  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.9  2003/10/10 16:23:29  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -158,6 +161,7 @@ public:
     const XMLCh* getPublicId() const;
     const XMLCh* getSystemId() const;
     const XMLCh* getBaseURI() const;
+    const XMLCh* getNameSpace() const;
     MemoryManager* getMemoryManager() const;
 
 
@@ -172,7 +176,7 @@ public:
     void setPublicId(const XMLCh* const newId);
     void setSystemId(const XMLCh* const newId);
     void setBaseURI(const XMLCh* const newId);
-
+    void setNameSpace(const XMLCh* const newId);
 
     // -----------------------------------------------------------------------
     //  Support named collection element semantics
@@ -222,6 +226,7 @@ private :
     XMLCh*          fPublicId;
     XMLCh*          fSystemId;
     XMLCh*          fBaseURI;
+    XMLCh*          fNameSpace;
     MemoryManager*  fMemoryManager;
 };
 
@@ -237,6 +242,11 @@ inline unsigned int XMLNotationDecl::getId() const
 inline const XMLCh* XMLNotationDecl::getName() const
 {
     return fName;
+}
+
+inline const XMLCh* XMLNotationDecl::getNameSpace() const
+{
+    return fNameSpace;
 }
 
 inline const XMLCh* XMLNotationDecl::getPublicId() const
@@ -265,6 +275,14 @@ inline MemoryManager* XMLNotationDecl::getMemoryManager() const
 inline void XMLNotationDecl::setId(const unsigned int newId)
 {
     fId = newId;
+}
+
+inline void XMLNotationDecl::setNameSpace(const XMLCh* const newId)
+{
+    if (fNameSpace)
+        fMemoryManager->deallocate(fNameSpace);
+
+    fNameSpace = XMLString::replicate(newId, fMemoryManager);
 }
 
 inline void XMLNotationDecl::setPublicId(const XMLCh* const newId)

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2003/11/06 15:30:06  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.8  2003/10/10 16:23:29  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -110,6 +113,7 @@ XMLNotationDecl::XMLNotationDecl(MemoryManager* const manager) :
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fNameSpace(0)
     , fMemoryManager(manager)
 {
 }
@@ -124,6 +128,7 @@ XMLNotationDecl::XMLNotationDecl( const XMLCh* const   notName
     , fPublicId(0)
     , fSystemId(0)
     , fBaseURI(0)
+    , fNameSpace(0)
     , fMemoryManager(manager)
 {
     try
@@ -172,6 +177,7 @@ void XMLNotationDecl::cleanUp()
     fMemoryManager->deallocate(fPublicId);
     fMemoryManager->deallocate(fSystemId);
     fMemoryManager->deallocate(fBaseURI);
+    fMemoryManager->deallocate(fNameSpace);
 }
 
 /***

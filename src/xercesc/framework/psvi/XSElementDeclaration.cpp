@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.2  2003/09/17 17:45:37  neilg
  * remove spurious inlines; hopefully this will make Solaris/AIX compilers happy.
  *
@@ -65,25 +68,109 @@
  */
 
 #include <xercesc/framework/psvi/XSElementDeclaration.hpp>
+#include <xercesc/validators/schema/SchemaElementDecl.hpp>
+#include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
+#include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
+#include <xercesc/framework/psvi/XSIDCDefinition.hpp>
+#include <xercesc/util/StringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-XSElementDeclaration::XSElementDeclaration( MemoryManager * const manager):
-            XSObject(XSConstants::ELEMENT_DECLARATION, manager )
+   
+XSElementDeclaration::XSElementDeclaration(SchemaElementDecl*       schemaElementDecl,
+                                           XMLStringPool*           uriStringPool,
+                                           MemoryManager * const    manager):
+    fSchemaElementDecl(schemaElementDecl),
+    fSubstitutionGroupAffiliation(0),
+    fDisallowedSubstitutions(0),
+    fSubstitutionGroupExclusions(0),
+    fURIStringPool(uriStringPool),
+    fTypeDefinition(0),
+    fIdentityConstraints(0),
+    XSObject(XSConstants::ELEMENT_DECLARATION, manager )
 {
+    int blockorfinalset;
+    if (blockorfinalset = fSchemaElementDecl->getBlockSet()) 
+    {
+        if (blockorfinalset & SchemaSymbols::XSD_EXTENSION)
+        {
+            fDisallowedSubstitutions |= XSConstants::DERIVATION_EXTENSION;
+        }
+        if (blockorfinalset & SchemaSymbols::XSD_RESTRICTION)
+        {
+            fDisallowedSubstitutions |= XSConstants::DERIVATION_RESTRICTION;
+        }
+        if (blockorfinalset & SchemaSymbols::XSD_SUBSTITUTION)
+        {
+            fDisallowedSubstitutions |= XSConstants::DERIVATION_SUBSTITUTION;
+        }
+    }
+    
+    if (blockorfinalset = fSchemaElementDecl->getFinalSet()) 
+    {
+        if (blockorfinalset & SchemaSymbols::XSD_EXTENSION)
+        {
+            fSubstitutionGroupExclusions |= XSConstants::DERIVATION_EXTENSION;
+        }
+        if (blockorfinalset & SchemaSymbols::XSD_RESTRICTION)
+        {
+            fSubstitutionGroupExclusions |= XSConstants::DERIVATION_RESTRICTION;
+        }
+    }
+    
+    if (fSchemaElementDecl->getSubstitutionGroupElem())
+    {
+        fSubstitutionGroupAffiliation = new (manager) XSElementDeclaration(fSchemaElementDecl->getSubstitutionGroupElem(), fURIStringPool, manager);
+    }
+
+    if (fSchemaElementDecl->getDatatypeValidator())
+    {
+        // simple type
+        fTypeDefinition = (XSTypeDefinition*) new (manager) XSSimpleTypeDefinition(fSchemaElementDecl->getDatatypeValidator(), manager);
+    }
+    else if (fSchemaElementDecl->getComplexTypeInfo()) 
+    {
+        // complex type
+        fTypeDefinition = (XSTypeDefinition*) new (manager) XSComplexTypeDefinition(fSchemaElementDecl->getComplexTypeInfo(), fURIStringPool, manager);
+    }
+
+    unsigned int count = fSchemaElementDecl->getIdentityConstraintCount();
+    if (count)
+    {
+        //REVISIT: size of hash table....   
+        fIdentityConstraints = new (manager) XSNamedMap <XSIDCDefinition> (count, 29, fURIStringPool, true, manager);
+        for (unsigned int i = 0; i < count; i++) 
+        {
+            XSIDCDefinition*    definition = new (manager) XSIDCDefinition(fSchemaElementDecl->getIdentityConstraintAt(i), manager);
+            fIdentityConstraints->addElement(definition, definition->getName(), definition->getNamespace());
+        }
+    }
+}
+
+XSElementDeclaration::~XSElementDeclaration() 
+{
+    if (fTypeDefinition) 
+    {
+        delete fTypeDefinition;
+    }
+    if (fSubstitutionGroupAffiliation)
+    {
+        delete fSubstitutionGroupAffiliation;
+    }
+    if (fIdentityConstraints)
+    {
+        delete fIdentityConstraints;
+    }
 }
 
 // Overridden XSObject methods
 const XMLCh *XSElementDeclaration::getName() 
 {
-    // REVISIT
-    return 0;
+    return fSchemaElementDecl->getElementName()->getLocalPart();
 }
 
 const XMLCh *XSElementDeclaration::getNamespace() 
 {
-    // REVISIT
-    return 0;
+    return fURIStringPool->getValueForId(fSchemaElementDecl->getURI());
 }
 
 // XSElementDeclaration methods
@@ -95,8 +182,7 @@ const XMLCh *XSElementDeclaration::getNamespace()
  */
 XSTypeDefinition *XSElementDeclaration::getTypeDefinition()
 {
-    // REVISIT
-    return 0;
+    return fTypeDefinition;
 }
 
 /**
@@ -106,8 +192,10 @@ XSTypeDefinition *XSElementDeclaration::getTypeDefinition()
  */
 XSConstants::SCOPE XSElementDeclaration::getScope() 
 {
-    // REVISIT
-    return XSConstants::SCOPE_GLOBAL;
+    if (fSchemaElementDecl->getEnclosingScope() == Grammar::TOP_LEVEL_SCOPE)
+        return XSConstants::SCOPE_GLOBAL;
+    else
+        return XSConstants::SCOPE_LOCAL;
 }
 
 /**
@@ -125,7 +213,16 @@ XSComplexTypeDefinition *XSElementDeclaration::getEnclosingCTDefinition()
  */
 XSConstants::VALUE_CONSTRAINT XSElementDeclaration::getConstraintType()
 {
-    // REVISIT
+    if (fSchemaElementDecl->getMiscFlags() & SchemaSymbols::XSD_FIXED)
+    {
+        return XSConstants::VC_FIXED;
+    }
+    // REVISIT: need to verify this... don't appear to set a DEFAULT flag so thought
+    // this might work...
+    if (fSchemaElementDecl->getDefaultValue())
+    {
+        return XSConstants::VC_DEFAULT;
+    }
     return XSConstants::VC_NONE;
 }
 
@@ -135,12 +232,11 @@ XSConstants::VALUE_CONSTRAINT XSElementDeclaration::getConstraintType()
  */
 const XMLCh *XSElementDeclaration::getConstraintValue()
 {
-    // REVISIT
-    return 0;
+    return fSchemaElementDecl->getDefaultValue();
 }
 
 /**
- *  If nillable is true, then an element may also be valid if it carries 
+ * If nillable is true, then an element may also be valid if it carries 
  * the namespace qualified attribute with local name <code>nil</code> 
  * from namespace <code>http://www.w3.org/2001/XMLSchema-instance</code> 
  * and value <code>true</code> (xsi:nil) even if it has no text or 
@@ -149,17 +245,18 @@ const XMLCh *XSElementDeclaration::getConstraintValue()
  */
 bool XSElementDeclaration::getNillable()
 {
-    // REVISIT
+    if (fSchemaElementDecl->getMiscFlags() & SchemaSymbols::XSD_NILLABLE) {
+        return true;
+    }
     return false;
 }
 
 /**
  * identity-constraint definitions: a set of constraint definitions. 
  */
-XSNamedMap <XSIDCDefinition *> *XSElementDeclaration::getIdentityConstraints()
+XSNamedMap <XSIDCDefinition> *XSElementDeclaration::getIdentityConstraints()
 {
-    // REVISIT
-    return 0;
+    return fIdentityConstraints;
 }
 
 /**
@@ -168,8 +265,7 @@ XSNamedMap <XSIDCDefinition *> *XSElementDeclaration::getIdentityConstraints()
  */
 XSElementDeclaration *XSElementDeclaration::getSubstitutionGroupAffiliation()
 {
-    // REVISIT
-    return 0;
+    return fSubstitutionGroupAffiliation;
 }
 
 /**
@@ -183,7 +279,10 @@ XSElementDeclaration *XSElementDeclaration::getSubstitutionGroupAffiliation()
  */
 bool XSElementDeclaration::isSubstitutionGroupExclusion(XSConstants::DERIVATION_TYPE exclusion)
 {
-    // REVISIT
+    if (fSubstitutionGroupExclusions & exclusion)
+    {
+        return true;
+    }
     return false;
 }
 
@@ -195,8 +294,7 @@ bool XSElementDeclaration::isSubstitutionGroupExclusion(XSConstants::DERIVATION_
  */
 short XSElementDeclaration::getSubstitutionGroupExclusions()
 {
-    // REVISIT
-    return 0;
+    return fSubstitutionGroupExclusions;
 }
 
 /**
@@ -211,7 +309,10 @@ short XSElementDeclaration::getSubstitutionGroupExclusions()
  */
 bool XSElementDeclaration::isDisallowedSubstitution(XSConstants::DERIVATION_TYPE disallowed)
 {
-    // REVISIT
+    if (fDisallowedSubstitutions & disallowed)
+    {
+        return true;
+    }
     return false;
 }
 
@@ -224,8 +325,7 @@ bool XSElementDeclaration::isDisallowedSubstitution(XSConstants::DERIVATION_TYPE
  */
 short XSElementDeclaration::getDisallowedSubstitutions()
 {
-    // REVISIT
-    return 0;
+    return fDisallowedSubstitutions;
 }
 
 /**
@@ -233,7 +333,9 @@ short XSElementDeclaration::getDisallowedSubstitutions()
  */
 bool XSElementDeclaration::getAbstract()
 {
-    // REVISIT
+    if (fSchemaElementDecl->getMiscFlags() & SchemaSymbols::XSD_ABSTRACT) {
+        return true;
+    }
     return false;
 }
 
@@ -247,5 +349,3 @@ XSAnnotation *XSElementDeclaration::getAnnotation()
 }
 
 XERCES_CPP_NAMESPACE_END
-
-

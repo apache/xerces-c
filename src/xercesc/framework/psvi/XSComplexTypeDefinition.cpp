@@ -56,18 +56,85 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
  */
 
 #include <xercesc/framework/psvi/XSComplexTypeDefinition.hpp>
+#include <xercesc/validators/schema/ComplexTypeInfo.hpp>
+#include <xercesc/validators/schema/SchemaElementDecl.hpp>
+#include <xercesc/validators/schema/SchemaAttDefList.hpp>
+#include <xercesc/framework/psvi/XSWildcard.hpp>
+#include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
+#include <xercesc/framework/psvi/XSAttributeUse.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSComplexTypeDefinition::XSComplexTypeDefinition( MemoryManager* const manager ):  
+XSComplexTypeDefinition::XSComplexTypeDefinition(ComplexTypeInfo*       complexTypeInfo,
+                                                 XMLStringPool*         uriStringPool,
+                                                 MemoryManager* const   manager ):  
+        fComplexTypeInfo(complexTypeInfo),
+        fXSWildcard(0),
+        fXSAttributeUseList(0),
+        fXSSimpleTypeDefinition(0),
+        fProhibitedSubstitution(0),
         XSTypeDefinition(COMPLEX_TYPE, manager)
 {
+    int blockset;
+    if (blockset = fComplexTypeInfo->getBlockSet()) 
+    {
+        if (blockset & SchemaSymbols::XSD_EXTENSION)
+        {
+            fProhibitedSubstitution |= XSConstants::DERIVATION_EXTENSION;
+        }
+        if (blockset & SchemaSymbols::XSD_RESTRICTION)
+        {
+            fProhibitedSubstitution |= XSConstants::DERIVATION_RESTRICTION;
+        }
+    }
+
+    if (fComplexTypeInfo->getAttWildCard()) 
+    {
+        fXSWildcard = new (manager) XSWildcard(fComplexTypeInfo->getAttWildCard(), uriStringPool, manager);
+    }
+
+    if ((fComplexTypeInfo->getContentType() == SchemaElementDecl::Simple) &&
+        (fComplexTypeInfo->getDatatypeValidator()))
+    {
+        fXSSimpleTypeDefinition = new (manager) XSSimpleTypeDefinition(fComplexTypeInfo->getDatatypeValidator(), manager);
+    }
+
+    if (fComplexTypeInfo->hasAttDefs())
+    {
+        SchemaAttDefList& schemaAttDefList = (SchemaAttDefList&) fComplexTypeInfo->getAttDefList();
+        // REVISIT: size of vector...
+        fXSAttributeUseList = new (manager) RefVectorOf <XSAttributeUse> (10, true, manager);
+            
+        while (schemaAttDefList.hasMoreElements()) {
+            SchemaAttDef& attDef = (SchemaAttDef&) schemaAttDefList.nextElement();
+            fXSAttributeUseList->addElement(new (manager) XSAttributeUse(&attDef, uriStringPool, manager));
+        }
+    }
+}
+
+XSComplexTypeDefinition::~XSComplexTypeDefinition() 
+{
+    if (fXSWildcard) 
+    {
+        delete fXSWildcard;
+    }
+    if (fXSSimpleTypeDefinition)
+    {
+        delete fXSSimpleTypeDefinition;
+    }
+    if (fXSAttributeUseList)
+    {
+        delete fXSAttributeUseList;
+    }
 }
 
 // XSComplexTypeDefinition methods
@@ -79,8 +146,14 @@ XSComplexTypeDefinition::XSComplexTypeDefinition( MemoryManager* const manager )
  */
 XSConstants::DERIVATION_TYPE XSComplexTypeDefinition::getDerivationMethod() const
 {
-    // REVISIT
-    return XSConstants::DERIVATION_NONE;
+    switch(fComplexTypeInfo->getDerivedBy()) {
+        case SchemaSymbols::XSD_RESTRICTION:
+            return XSConstants::DERIVATION_RESTRICTION;
+        case SchemaSymbols::XSD_EXTENSION:
+            return XSConstants::DERIVATION_EXTENSION;
+        default:
+            return XSConstants::DERIVATION_NONE;
+    }
 }
 
 /**
@@ -90,8 +163,7 @@ XSConstants::DERIVATION_TYPE XSComplexTypeDefinition::getDerivationMethod() cons
  */
 bool XSComplexTypeDefinition::getAbstract() const
 {
-    // REVISIT
-    return false;
+    return fComplexTypeInfo->getAbstract();
 }
 
 /**
@@ -99,8 +171,7 @@ bool XSComplexTypeDefinition::getAbstract() const
  */
 XSAttributeUseList *XSComplexTypeDefinition::getAttributeUses()
 {
-    // REVISIT
-    return 0;
+    return fXSAttributeUseList;
 }
 
 /**
@@ -108,8 +179,7 @@ XSAttributeUseList *XSComplexTypeDefinition::getAttributeUses()
  */
 XSWildcard *XSComplexTypeDefinition::getAttributeWildcard()
 {
-    // REVISIT
-    return 0;
+    return fXSWildcard;
 }
 
 /**
@@ -120,8 +190,19 @@ XSWildcard *XSComplexTypeDefinition::getAttributeWildcard()
  */
 XSComplexTypeDefinition::CONTENT_TYPE XSComplexTypeDefinition::getContentType() const
 {
-    // REVISIT
-    return CONTENTTYPE_EMPTY;
+    switch(fComplexTypeInfo->getContentType()) {
+        case SchemaElementDecl::Simple:
+            return CONTENTTYPE_SIMPLE;
+        case SchemaElementDecl::Empty:
+            return CONTENTTYPE_EMPTY;
+        case SchemaElementDecl::Children:
+            return CONTENTTYPE_ELEMENT;
+        default:
+            //case SchemaElementDecl::Mixed_Complex:
+            //case SchemaElementDecl::Mixed_Simple:
+            //case SchemaElementDecl::Any:
+            return CONTENTTYPE_MIXED;
+    }
 }
 
 /**
@@ -130,8 +211,7 @@ XSComplexTypeDefinition::CONTENT_TYPE XSComplexTypeDefinition::getContentType() 
  */
 XSSimpleTypeDefinition *XSComplexTypeDefinition::getSimpleType()
 {
-    // REVISIT
-    return 0;
+    return fXSSimpleTypeDefinition;
 }
 
 /**
@@ -151,9 +231,12 @@ XSParticle *XSComplexTypeDefinition::getParticle()
  * @return True if toTest is a prohibited substitution, otherwise 
  *   false.
  */
-bool XSComplexTypeDefinition::isProhibitedSubstitution(short toTest)
+bool XSComplexTypeDefinition::isProhibitedSubstitution(XSConstants::DERIVATION_TYPE toTest)                                                     
 {
-    // REVISIT
+    if (fProhibitedSubstitution & toTest)
+    {
+        return true;
+    }
     return false;
 }
 
@@ -164,8 +247,7 @@ bool XSComplexTypeDefinition::isProhibitedSubstitution(short toTest)
  */
 short XSComplexTypeDefinition::getProhibitedSubstitutions()
 {
-    // REVISIT
-    return 0;
+    return fProhibitedSubstitution;
 }
 
 /**
@@ -178,5 +260,3 @@ XSAnnotationList *XSComplexTypeDefinition::getAnnotations()
 }
 
 XERCES_CPP_NAMESPACE_END
-
-

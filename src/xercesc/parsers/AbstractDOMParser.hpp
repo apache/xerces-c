@@ -82,6 +82,7 @@ class DOMDocumentTypeImpl;
 class DOMElement;
 class GrammarResolver;
 class XMLGrammarPool;
+class PSVIHandler;
 
 /**
   * This class implements the Document Object Model (DOM) interface.
@@ -405,6 +406,22 @@ public :
       */
     bool getStandardUriConformant() const;
 
+    /**
+      * This method returns the installed PSVI handler. Suitable
+      * for 'lvalue' usages.
+      *
+      * @return The pointer to the installed PSVI handler object.
+      */
+    PSVIHandler* getPSVIHandler();
+
+    /**
+      * This method returns the installed PSVI handler. Suitable
+      * for 'rvalue' usages.
+      *
+      * @return A const pointer to the installed PSVI handler object.
+      */
+    const PSVIHandler* getPSVIHandler() const;
+
     //@}
 
 
@@ -714,6 +731,16 @@ public :
       * @param implementationFeatures The names of the desired features the implementation should have.
       */
     void useImplementation(const XMLCh* const implementationFeatures);
+
+    /**
+      * This method installs the user specified PSVI handler on
+      * the parser.
+      *
+      * @param handler A pointer to the PSVI handler to be called
+      *                when the parser comes across 'PSVI' events
+      *                as per the schema specification.
+      */
+    virtual void setPSVIHandler(PSVIHandler* const handler);
 
     //@}
 
@@ -1515,6 +1542,7 @@ protected:
     XMLGrammarPool*               fGrammarPool;
     XMLBufferMgr                  fBufMgr;
     XMLBuffer&                    fInternalSubset;
+    PSVIHandler*                  fPSVIHandler;
 };
 
 
@@ -1556,6 +1584,15 @@ inline bool AbstractDOMParser::getCreateCommentNodes() const
     return fCreateCommentNodes;
 }
 
+inline PSVIHandler* AbstractDOMParser::getPSVIHandler()
+{
+    return fPSVIHandler;
+}
+
+inline const PSVIHandler* AbstractDOMParser::getPSVIHandler() const
+{
+    return fPSVIHandler;
+}
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Setter methods
 // ---------------------------------------------------------------------------

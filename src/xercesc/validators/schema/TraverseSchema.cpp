@@ -2802,6 +2802,18 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
     fNotationRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)),
                            fTargetNSURI, 0);
 
+    // for PSVI we need to store the notational decl
+    XMLNotationDecl* decl = new (fGrammarPoolMemoryManager) XMLNotationDecl
+        (
+            name,
+            publicId,
+            systemId,
+            0,
+            fGrammarPoolMemoryManager
+        );
+    decl->setNameSpace(fURIStringPool->getValueForId(fTargetNSURI));
+    fSchemaGrammar->putNotationDecl(decl);
+
     //we don't really care if something inside <notation> is wrong..
     checkContent(elem, XUtil::getFirstChildElement(elem), true);
 

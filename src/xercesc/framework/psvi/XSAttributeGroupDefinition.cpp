@@ -56,18 +56,55 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
  */
 
 #include <xercesc/framework/psvi/XSAttributeGroupDefinition.hpp>
+#include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
+#include <xercesc/framework/psvi/XSAttributeUse.hpp>
+#include <xercesc/framework/psvi/XSWildcard.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSAttributeGroupDefinition::XSAttributeGroupDefinition( MemoryManager * const manager):
-            XSObject(XSConstants::ATTRIBUTE_GROUP_DEFINITION, manager )
+XSAttributeGroupDefinition::XSAttributeGroupDefinition(XercesAttGroupInfo* xercesAttGroupInfo,
+                                                       XMLStringPool*  uriStringPool,
+                                                       MemoryManager * const manager):
+    fXercesAttGroupInfo(xercesAttGroupInfo),
+    fXSAttributeUseList(0),
+    fXSWildcard(0),
+    XSObject(XSConstants::ATTRIBUTE_GROUP_DEFINITION, manager )
 {
+    unsigned int attCount = fXercesAttGroupInfo->attributeCount();
+    if (fXercesAttGroupInfo->attributeCount())
+    {
+        fXSAttributeUseList = new (manager) RefVectorOf <XSAttributeUse> (attCount, true, manager);
+        for (unsigned int i=0; i < attCount; i++) 
+        {
+            fXSAttributeUseList->addElement(new (manager) XSAttributeUse(fXercesAttGroupInfo->attributeAt(i), uriStringPool, manager));
+        }
+    }
+    
+    if (fXercesAttGroupInfo->getCompleteWildCard()) 
+    {
+        fXSWildcard = new (manager) XSWildcard(fXercesAttGroupInfo->getCompleteWildCard(), uriStringPool, manager);
+    }
+}
+
+XSAttributeGroupDefinition::~XSAttributeGroupDefinition()
+{
+    if (fXSAttributeUseList)
+    {
+        delete fXSAttributeUseList;
+    }
+    if (fXSWildcard)
+    {
+        delete fXSWildcard;
+    }
 }
 
 // XSAttributeGroupDefinition methods
@@ -77,8 +114,7 @@ XSAttributeGroupDefinition::XSAttributeGroupDefinition( MemoryManager * const ma
  */
 XSAttributeUseList *XSAttributeGroupDefinition::getAttributeUses()
 {
-    // REVISIT
-    return 0;
+    return fXSAttributeUseList;
 }
 
 /**
@@ -86,8 +122,7 @@ XSAttributeUseList *XSAttributeGroupDefinition::getAttributeUses()
  */
 XSWildcard *XSAttributeGroupDefinition::getAttributeWildcard()
 {
-    // REVISIT
-    return 0;
+    return fXSWildcard;
 }
 
 /**

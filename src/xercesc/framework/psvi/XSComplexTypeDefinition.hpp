@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -82,6 +85,9 @@ class XSAttributeUse;
 class XSSimpleTypeDefinition;
 class XSParticle;
 class XSWildcard;
+
+class ComplexTypeInfo;
+class XMLStringPool;
 
 class XMLPARSER_EXPORT XSComplexTypeDefinition : public XSTypeDefinition
 {
@@ -122,7 +128,9 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSComplexTypeDefinition( MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSComplexTypeDefinition(ComplexTypeInfo*        complexTypeInfo,
+                            XMLStringPool*          uriStringPool,
+                            MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
 
@@ -132,9 +140,9 @@ public:
     //@}
 
     //---------------------
-    // @name XSComplexTypeDefinition methods
+    /** @name XSComplexTypeDefinition methods */
 
-    /* @{
+    //@{
 
     /**
      * [derivation method]: either <code>DERIVATION_EXTENSION</code>, 
@@ -187,7 +195,7 @@ public:
      * @return True if toTest is a prohibited substitution, otherwise 
      *   false.
      */
-    bool isProhibitedSubstitution(short toTest);
+    bool isProhibitedSubstitution(XSConstants::DERIVATION_TYPE toTest);
 
     /**
      *  [prohibited substitutions]: A subset of {extension, restriction} or 
@@ -204,9 +212,9 @@ public:
     //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 private:
@@ -222,8 +230,13 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    ComplexTypeInfo*            fComplexTypeInfo;
+    XSWildcard*                 fXSWildcard;
+    XSAttributeUseList*         fXSAttributeUseList;
+    XSSimpleTypeDefinition*     fXSSimpleTypeDefinition;
+    short                       fProhibitedSubstitution;
 };
-inline XSComplexTypeDefinition::~XSComplexTypeDefinition() {}
+
 
 XERCES_CPP_NAMESPACE_END
 

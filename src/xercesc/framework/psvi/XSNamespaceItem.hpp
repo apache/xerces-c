@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -90,6 +93,8 @@ class XSModelGroupDefinition;
 class XSNotationDeclaration;
 class XSTypeDefinition;
 
+class SchemaGrammar;
+
 class XMLPARSER_EXPORT XSNamespaceItem : public XMemory
 {
 public:
@@ -115,9 +120,9 @@ public:
     //@}
 
     //---------------------
-    // @name XSNamespaceItem methods
+    /** @name XSNamespaceItem methods */
 
-    /* @{
+    //@{
 
     /**
      * [schema namespace]: A namespace name or <code>null</code>
@@ -197,12 +202,12 @@ public:
      */
     StringList *getDocumentLocations();
 
-    // @}
+    //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 private:
@@ -221,9 +226,14 @@ protected:
     // fMemoryManager:
     //  used for any memory allocations
     const MemoryManager *fMemoryManager;
+    SchemaGrammar*       fGrammar;
 
 };
-inline XSNamespaceItem::~XSNamespaceItem() {}
+inline XSNamespaceItem::~XSNamespaceItem()
+{
+    // REVISIT:
+    // need to delete items owned...
+}
 
 XERCES_CPP_NAMESPACE_END
 

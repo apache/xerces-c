@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/11/06 15:30:08  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.14  2003/10/14 15:22:28  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -361,6 +364,7 @@ public :
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+    void setElemId(unsigned int elemId);
     void setModelType(const SchemaElementDecl::ModelTypes toSet);
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setEnclosingScope(const int enclosingScope);
@@ -480,6 +484,7 @@ private :
     int                                fFinalSet;
     int                                fBlockSet;
     int                                fMiscFlags;
+    unsigned int                       fElemId;
     XMLCh*                             fDefaultValue;
     ComplexTypeInfo*                   fComplexTypeInfo;
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
@@ -768,6 +773,12 @@ inline const XMLCh* SchemaElementDecl::getDOMTypeInfoUri() const {
 // ---------------------------------------------------------------------------
 //  SchemaElementDecl: Setter methods
 // ---------------------------------------------------------------------------
+inline void
+SchemaElementDecl::setElemId(unsigned int elemId)
+{
+    fElemId = elemId;
+}
+
 inline void
 SchemaElementDecl::setModelType(const SchemaElementDecl::ModelTypes toSet)
 {

@@ -56,20 +56,34 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
  */
 
 #include <xercesc/framework/psvi/XSAttributeUse.hpp>
+#include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
+#include <xercesc/validators/schema/SchemaAttDef.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSAttributeUse::XSAttributeUse( MemoryManager * const manager):
-            XSObject(XSConstants::ATTRIBUTE_USE, manager )
+XSAttributeUse::XSAttributeUse(SchemaAttDef*            attDef,
+                               XMLStringPool*           uriStringPool,
+                               MemoryManager * const    manager):
+    fAttDef(attDef),
+    XSObject(XSConstants::ATTRIBUTE_USE, manager )
 {
+    fXSAttributeDeclaration = new (manager) XSAttributeDeclaration(fAttDef, uriStringPool, manager);
 }
 
+
+XSAttributeUse::~XSAttributeUse() 
+{
+    delete fXSAttributeDeclaration;
+}
 // XSAttributeUse methods
 
 
@@ -80,7 +94,11 @@ XSAttributeUse::XSAttributeUse( MemoryManager * const manager):
  */
 bool XSAttributeUse::getRequired() const
 {
-    // REVISIT
+    if (fAttDef->getDefaultType() == XMLAttDef::Required ||
+        fAttDef->getDefaultType() == XMLAttDef::Required_And_Fixed)
+    {
+        return true;
+    }
     return false;
 }
 
@@ -90,8 +108,7 @@ bool XSAttributeUse::getRequired() const
  */
 XSAttributeDeclaration *XSAttributeUse::getAttrDeclaration()
 {
-    // REVISIT
-    return 0;
+    return fXSAttributeDeclaration;
 }
 
 /**
@@ -99,7 +116,16 @@ XSAttributeDeclaration *XSAttributeUse::getAttrDeclaration()
  */
 XSConstants::VALUE_CONSTRAINT XSAttributeUse::getConstraintType() const
 {
-    // REVISIT
+    // REVISIT: same as XSAttributeDeclaration????
+    if (fAttDef->getDefaultType() & XMLAttDef::Default)
+    {
+        return XSConstants::VC_DEFAULT;
+    }
+    if (fAttDef->getDefaultType() & XMLAttDef::Fixed ||
+        fAttDef->getDefaultType() & XMLAttDef::Required_And_Fixed)
+    {
+        return XSConstants::VC_FIXED;
+    }
     return XSConstants::VC_NONE;
 }
 
@@ -108,8 +134,8 @@ XSConstants::VALUE_CONSTRAINT XSAttributeUse::getConstraintType() const
  */
 const XMLCh *XSAttributeUse::getConstraintValue()
 {
-    // REVISIT
-    return 0;
+    // REVISIT: same as XSAttributeDeclaration????
+    return fAttDef->getValue();
 }
 
 XERCES_CPP_NAMESPACE_END

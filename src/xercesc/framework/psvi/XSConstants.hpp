@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -65,6 +68,7 @@
 #define XSCONSTANTS_HPP
 
 #include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/RefArrayVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -76,6 +80,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XSAnnotation;
 class XSAttributeUse;
 class XSFacet;
+class XSMultiValueFacet;
 class XSNamespaceItem;
 class XSParticle;
 class XSSimpleTypeDefinition;
@@ -83,13 +88,15 @@ class XSSimpleTypeDefinition;
 // these typedefs are intended to help hide dependence on utility
 // classes, as well as to define more intuitive names for commonly
 // used concepts.
-typedef RefVectorOf <XSAnnotation *> XSAnnotationList;
-typedef RefVectorOf <XSAttributeUse *> XSAttributeUseList;
-typedef RefVectorOf <XSFacet *> XSFacetList;
-typedef RefVectorOf <XSNamespaceItem *> XSNamespaceItemList;
-typedef RefVectorOf <XSParticle *> XSParticleList;
-typedef RefVectorOf <XSSimpleTypeDefinition *> XSSimpleTypeDefinitionList;
-typedef RefVectorOf <const XMLCh *> StringList;
+
+typedef RefVectorOf <XSAnnotation> XSAnnotationList;
+typedef RefVectorOf <XSAttributeUse> XSAttributeUseList;
+typedef RefVectorOf <XSFacet> XSFacetList;
+typedef RefVectorOf <XSMultiValueFacet> XSMultiValueFacetList;
+typedef RefVectorOf <XSNamespaceItem> XSNamespaceItemList;
+typedef RefVectorOf <XSParticle> XSParticleList;
+typedef RefVectorOf <XSSimpleTypeDefinition> XSSimpleTypeDefinitionList;
+typedef RefArrayVectorOf <XMLCh> StringList;
 
 class XMLPARSER_EXPORT XSConstants 
 {

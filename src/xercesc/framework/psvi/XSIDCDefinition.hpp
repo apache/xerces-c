@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -77,6 +80,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 // forward declarations
 class XSAnnotation;
+
+class IdentityConstraint;
 
 class XMLPARSER_EXPORT XSIDCDefinition : public XSObject
 {
@@ -108,7 +113,7 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSIDCDefinition( 
+    XSIDCDefinition(IdentityConstraint* identityConstraint, 
                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
@@ -119,9 +124,9 @@ public:
     //@}
 
     //---------------------
-    // @name overridden XSXSObject methods
+    /** @name overridden XSXSObject methods */
 
-    // @{
+    //@{
 
     /**
      * The name of type <code>NCName</code> of this declaration as defined in 
@@ -135,12 +140,12 @@ public:
      */
     const XMLCh* getNamespace();
 
-    // @}
+    //@}
 
     //---------------------
-    // @name XSIDCDefinition methods
+    /** @name XSIDCDefinition methods */
 
-    /* @{
+    //@{
 
     /**
      * [identity-constraint category]: one of IC_KEY, IC_KEYREF or IC_UNIQUE. 
@@ -172,9 +177,9 @@ public:
     //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 private:
@@ -190,8 +195,23 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    IdentityConstraint*     fIdentityConstraint;
+    XSIDCDefinition*        fKey;
+    StringList*             fStringList;
 };
-inline XSIDCDefinition::~XSIDCDefinition() {}
+
+inline XSIDCDefinition::~XSIDCDefinition() {
+    if (fStringList)
+    {
+        delete fStringList;
+        fStringList = 0;
+    }
+    if (fKey) 
+    {
+        delete fKey;
+        fKey = 0;
+    }
+}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/06 15:30:06  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.7  2003/11/05 18:19:09  peiyongz
  * Documentation update
  *
@@ -185,6 +188,14 @@ public :
       *
       */
     virtual void           unlockPool() = 0;
+
+    /**
+      * setPSVI
+      *
+      * A flag to indicate that PSVI will be performed on the schema grammars as 
+      * a PSVIHandler has been set.
+      */ 
+    virtual void            setPSVI(const bool doPSVI) = 0;
     //@}
 
     // -----------------------------------------------------------------------
@@ -348,7 +359,8 @@ private :
     //
     // -----------------------------------------------------------------------
     
-    MemoryManager* const  fMemMgr;     
+    MemoryManager* const  fMemMgr;
+
 };
 
 XERCES_CPP_NAMESPACE_END

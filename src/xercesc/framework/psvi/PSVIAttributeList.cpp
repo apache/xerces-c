@@ -56,12 +56,17 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
  */
 
 #include <xercesc/framework/psvi/PSVIAttributeList.hpp>
+#include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -76,8 +81,7 @@ PSVIAttributeList::PSVIAttributeList( MemoryManager* const manager ):
  */
 const unsigned int PSVIAttributeList::getLength() const
 {
-    // REVISIT
-    return 0;
+    return fAttrList->size();
 }
 
 /*
@@ -90,8 +94,7 @@ const unsigned int PSVIAttributeList::getLength() const
  */
 const PSVIAttribute *PSVIAttributeList::getAttributePSVIAtIndex(const unsigned int index)
 {
-    // REVISIT
-    return 0;
+    return fAttrList->elementAt(index);
 }
 
 /*
@@ -104,8 +107,10 @@ const PSVIAttribute *PSVIAttributeList::getAttributePSVIAtIndex(const unsigned i
  */
 const XMLCh *PSVIAttributeList::getAttributeNameAtIndex(const unsigned int index)
 {
-    // REVISIT
-    return 0;
+    
+    //PSVIAttribute* PSVIAttr= fAttrList->elementAt(index);
+    //XSAttributeDeclaration* XSAttrDecl = fAttrList->elementAt(index)->getAttributeDeclaration();
+    return fAttrList->elementAt(index)->getAttributeDeclaration()->getName();
 }
 
 /*
@@ -118,8 +123,9 @@ const XMLCh *PSVIAttributeList::getAttributeNameAtIndex(const unsigned int index
  */
 const XMLCh *PSVIAttributeList::getAttributeNamespaceAtIndex(const unsigned int index)
 {
-    // REVISIT
-    return 0;
+    //PSVIAttribute* PSVIAttr= fAttrList->elementAt(index);
+    //XSAttributeDeclaration* XSAttrDecl = fAttrList->elementAt(index)->getAttributeDeclaration();
+    return fAttrList->elementAt(index)->getAttributeDeclaration()->getNamespace();
 }
 
 /*
@@ -132,7 +138,13 @@ const XMLCh *PSVIAttributeList::getAttributeNamespaceAtIndex(const unsigned int 
 const PSVIAttribute *PSVIAttributeList::getAttributePSVIByName(const XMLCh *attrName
                 , const XMLCh * attrNamespace)
 {
-    // REVISIT
+    for (unsigned int index=0; index < fAttrList->size(); index++) {
+        PSVIAttribute* PSVIAttr= fAttrList->elementAt(index);
+        if (XMLString::equals(attrName,PSVIAttr->getAttributeDeclaration()->getName()) &&
+            XMLString::equals(attrNamespace,PSVIAttr->getAttributeDeclaration()->getNamespace())) {
+            return PSVIAttr;
+        }
+    }
     return 0;
 }
 

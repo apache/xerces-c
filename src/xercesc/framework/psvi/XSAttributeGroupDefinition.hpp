@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -80,6 +83,9 @@ class XSAnnotation;
 class XSAttributeUse;
 class XSWildcard;
 
+class XercesAttGroupInfo;
+class XMLStringPool;
+
 class XMLPARSER_EXPORT XSAttributeGroupDefinition : public XSObject
 {
 public:
@@ -94,7 +100,8 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSAttributeGroupDefinition( 
+    XSAttributeGroupDefinition(XercesAttGroupInfo* xercesAttGroupInfo,
+                XMLStringPool*  uriStringPool,
                 MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
@@ -105,9 +112,9 @@ public:
     //@}
 
     //--------------------- 
-    // @name XSAttributeGroupDefinition methods
+    /** @name XSAttributeGroupDefinition methods */
 
-    /* @{
+    //@{
 
     /**
      * A set of [attribute uses]. 
@@ -127,9 +134,9 @@ public:
     //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 private:
@@ -145,8 +152,10 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    XercesAttGroupInfo*     fXercesAttGroupInfo;
+    XSAttributeUseList*     fXSAttributeUseList;
+    XSWildcard*             fXSWildcard;
 };
-inline XSAttributeGroupDefinition::~XSAttributeGroupDefinition() {}
 
 XERCES_CPP_NAMESPACE_END
 

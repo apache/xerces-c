@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -82,6 +85,9 @@ class XSComplexTypeDefinition;
 class XSIDCDefinition;
 class XSTypeDefinition;
 
+class SchemaElementDecl;
+class XMLStringPool;
+
 class XMLPARSER_EXPORT XSElementDeclaration : public XSObject
 {
 public:
@@ -96,8 +102,9 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSElementDeclaration( 
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSElementDeclaration(SchemaElementDecl*     schemaElementDecl,
+                         XMLStringPool*         uriStringPool,
+                         MemoryManager* const   manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
 
@@ -107,9 +114,9 @@ public:
     //@}
 
     //---------------------
-    // @name overridden XSXSObject methods
+    /** @name overridden XSXSObject methods */
 
-    // @{
+    //@{
 
     /**
      * The name of type <code>NCName</code> of this declaration as defined in 
@@ -123,12 +130,12 @@ public:
      */
     const XMLCh* getNamespace();
 
-    // @}
+    //@}
 
     //---------------------
-    // @name XSElementDeclaration methods
+    /** @name XSElementDeclaration methods */
 
-    /* @{
+    //@{
 
     /**
      * [type definition]: either a simple type definition or a complex type 
@@ -161,7 +168,7 @@ public:
     const XMLCh *getConstraintValue();
 
     /**
-     *  If nillable is true, then an element may also be valid if it carries 
+     * If nillable is true, then an element may also be valid if it carries 
      * the namespace qualified attribute with local name <code>nil</code> 
      * from namespace <code>http://www.w3.org/2001/XMLSchema-instance</code> 
      * and value <code>true</code> (xsi:nil) even if it has no text or 
@@ -173,7 +180,7 @@ public:
     /**
      * identity-constraint definitions: a set of constraint definitions. 
      */
-    XSNamedMap <XSIDCDefinition *> *getIdentityConstraints();
+    XSNamedMap <XSIDCDefinition> *getIdentityConstraints();
 
     /**
      * [substitution group affiliation]: optional. A top-level element 
@@ -193,7 +200,7 @@ public:
     bool isSubstitutionGroupExclusion(XSConstants::DERIVATION_TYPE exclusion);
 
     /**
-     *  [substitution group exclusions]: the returned value is a bit 
+     * [substitution group exclusions]: the returned value is a bit 
      * combination of the subset of {
      * <code>DERIVATION_EXTENSION, DERIVATION_RESTRICTION</code>} or 
      * <code>DERIVATION_NONE</code>. 
@@ -213,7 +220,7 @@ public:
     bool isDisallowedSubstitution(XSConstants::DERIVATION_TYPE disallowed);
 
     /**
-     *  [disallowed substitutions]: the returned value is a bit combination of 
+     * [disallowed substitutions]: the returned value is a bit combination of 
      * the subset of {
      * <code>DERIVATION_SUBSTITUTION, DERIVATION_EXTENSION, DERIVATION_RESTRICTION</code>
      * } corresponding to substitutions disallowed by this 
@@ -231,12 +238,12 @@ public:
      */
     XSAnnotation *getAnnotation();
 
-    // @}
+    //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 private:
@@ -252,8 +259,14 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    SchemaElementDecl*              fSchemaElementDecl;
+    XSTypeDefinition*               fTypeDefinition;
+    XSElementDeclaration*           fSubstitutionGroupAffiliation;
+    XSNamedMap <XSIDCDefinition>*   fIdentityConstraints;
+    XMLStringPool*                  fURIStringPool;
+    short                           fDisallowedSubstitutions;
+    short                           fSubstitutionGroupExclusions;
 };
-inline XSElementDeclaration::~XSElementDeclaration() {}
 
 XERCES_CPP_NAMESPACE_END
 

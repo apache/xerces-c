@@ -205,7 +205,7 @@ ENABLED_SECTIONS     =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                = ../src/xercesc/dom ../src/xercesc/framework ../src/xercesc/sax ../src/xercesc/parsers ../src/xercesc/util ../src/xercesc/sax2
+INPUT                = ../src/xercesc/dom ../src/xercesc/framework ../src/xercesc/framework/psvi ../src/xercesc/sax ../src/xercesc/parsers ../src/xercesc/util ../src/xercesc/sax2
 
 # If the value of the INPUT tag contains directories, you can use the
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp

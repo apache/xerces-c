@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2003/11/06 15:30:06  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.24  2003/10/22 20:22:30  knoaman
  * Prepare for annotation support.
  *
@@ -305,7 +308,7 @@ class XMLStringPool;
 class Grammar;
 class XMLValidator;
 class MemoryManager;
-
+class PSVIHandler;
 
 //  This is the mondo scanner class, which does the vast majority of the
 //  work of parsing. It handles reading in input and spitting out events
@@ -454,6 +457,8 @@ public :
     XMLErrorReporter* getErrorReporter();
     const ErrorHandler* getErrorHandler() const;
     ErrorHandler* getErrorHandler();
+    const PSVIHandler* getPSVIHandler() const;
+    PSVIHandler* getPSVIHandler();
     bool getExitOnFirstFatal() const;
     bool getValidationConstraintFatal() const;
     RefHashTableOf<XMLRefInfo>* getIDRefList();
@@ -562,6 +567,7 @@ public :
     void setEntityHandler(XMLEntityHandler* const docTypeHandler);
     void setErrorReporter(XMLErrorReporter* const errHandler);
     void setErrorHandler(ErrorHandler* const handler);
+    void setPSVIHandler(PSVIHandler* const handler);
     void setURIStringPool(XMLStringPool* const stringPool);
     void setExitOnFirstFatal(const bool newValue);
     void setValidationConstraintFatal(const bool newValue);
@@ -728,6 +734,9 @@ protected:
     //  fErrorHandler
     //      The client code's error handler.  Need to store this info for
     //      Schema parse error handling.
+    //
+    //  fPSVIHandler
+    //      The client code's PSVI handler.
     //
     //  fExitOnFirstFatal
     //      This indicates whether we bail out on the first fatal XML error
@@ -925,6 +934,7 @@ protected:
     XMLEntityHandler*           fEntityHandler;
     XMLErrorReporter*           fErrorReporter;
     ErrorHandler*               fErrorHandler;
+    PSVIHandler*                fPSVIHandler;
     RefHashTableOf<XMLRefInfo>* fIDRefList;
     ReaderMgr                   fReaderMgr;
     XMLValidator*               fValidator;
@@ -948,6 +958,7 @@ protected:
     XMLBuffer                   fPrefixBuf;
     XMLBuffer                   fURIBuf;
     ElemStack                   fElemStack;
+
 
 private :
     // -----------------------------------------------------------------------
@@ -1029,6 +1040,16 @@ inline const ErrorHandler* XMLScanner::getErrorHandler() const
 inline ErrorHandler* XMLScanner::getErrorHandler()
 {
     return fErrorHandler;
+}
+
+inline const PSVIHandler* XMLScanner::getPSVIHandler() const
+{
+    return fPSVIHandler;
+}
+
+inline PSVIHandler* XMLScanner::getPSVIHandler()
+{
+    return fPSVIHandler;
 }
 
 inline bool XMLScanner::getExitOnFirstFatal() const
@@ -1237,6 +1258,11 @@ inline void XMLScanner::setDocTypeHandler(DocTypeHandler* const docTypeHandler)
 inline void XMLScanner::setErrorHandler(ErrorHandler* const handler)
 {
     fErrorHandler = handler;
+}
+
+inline void XMLScanner::setPSVIHandler(PSVIHandler* const handler)
+{
+    fPSVIHandler = handler;
 }
 
 inline void XMLScanner::setEntityHandler(XMLEntityHandler* const entityHandler)

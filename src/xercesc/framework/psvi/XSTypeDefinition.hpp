@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -114,7 +117,8 @@ public:
     //@}
 
     //---------------------
-    // @name overloaded XSObject methods
+    /** @name overloaded XSObject methods */
+    //@{
 
     /**
      * The name of type <code>NCName</code> of this declaration as defined in 
@@ -138,9 +142,9 @@ public:
     //@}
 
     //---------------------
-    // @name XSTypeDefinition methods
+    /** @name XSTypeDefinition methods */
 
-    /* @{
+    //@{
 
     /**
      * Return whether this type definition is a simple type or complex type.
@@ -216,9 +220,9 @@ public:
     //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 private:

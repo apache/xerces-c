@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -66,6 +69,7 @@
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/psvi/PSVIAttribute.hpp>
+#include <xercesc/util/ValueVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -102,9 +106,9 @@ public:
     //@}
 
     //---------------------
-    // @name PSVIAttributeList methods
+    /** @name PSVIAttributeList methods */
 
-    /* @{
+    //@{
 
     /*
      * Get the number of attributes whose PSVI contributions
@@ -155,9 +159,9 @@ public:
     //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 
@@ -175,7 +179,8 @@ private:
     // -----------------------------------------------------------------------
     // fMemoryManager
     //  handler to provide dynamically-need memory
-    MemoryManager *fMemoryManager;
+    MemoryManager*                  fMemoryManager;
+    ValueVectorOf<PSVIAttribute*>*  fAttrList;
 };
 inline PSVIAttributeList::~PSVIAttributeList() {}
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/06 15:30:06  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.9  2003/11/05 18:20:20  peiyongz
  * cleanup deserialized grammars if exception thrown during loading
  *
@@ -121,7 +124,9 @@ XMLGrammarPoolImpl::XMLGrammarPoolImpl(MemoryManager* const memMgr)
 ,fGrammarRegistry(0)
 ,fStringPool(0)
 ,fSynchronizedStringPool(0)
+,fPSVIvectorElemDecls(0)
 ,fLocked(false)
+,fDoPSVI(false)
 {
     fGrammarRegistry = new (memMgr) RefHashTableOf<Grammar>(29, true, memMgr);
     fStringPool = new (memMgr) XMLStringPool(109, memMgr);
@@ -142,7 +147,16 @@ void XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
         ThrowXML(RuntimeException, XMLExcepts::GC_ExistingGrammar);
     }
 
-    fGrammarRegistry->put((void*) grammarKey, gramToCache); 
+    fGrammarRegistry->put((void*) grammarKey, gramToCache);
+    
+    if (fDoPSVI && gramToCache->getGrammarType() == Grammar::SchemaGrammarType) {
+        if (!fPSVIvectorElemDecls) {
+            // REVISIT: what should the be the initial size?
+            MemoryManager *memMgr = getMemoryManager();
+            fPSVIvectorElemDecls = new (memMgr) ValueVectorOf<SchemaElementDecl*>(64, memMgr);
+        }
+        updatePSVIvectorElemIds(fPSVIvectorElemDecls, (SchemaGrammar*) gramToCache);
+    }
 
 }
 
@@ -178,10 +192,14 @@ void XMLGrammarPoolImpl::clear()
 void XMLGrammarPoolImpl::lockPool()
 {
     fLocked = true;
+    MemoryManager *memMgr = getMemoryManager();
     if(!fSynchronizedStringPool)
     {
-        MemoryManager *memMgr = getMemoryManager();
         fSynchronizedStringPool = new (memMgr) XMLSynchronizedStringPool(fStringPool, 109, memMgr);
+    }
+    if (fDoPSVI) 
+    {
+        fXSModel = new XSModel(this, memMgr);
     }
 }
 
@@ -190,6 +208,34 @@ void XMLGrammarPoolImpl::unlockPool()
     fLocked = false;
     if(fSynchronizedStringPool)
         fSynchronizedStringPool->flushAll();
+    if (fDoPSVI) 
+    {
+        delete fXSModel;
+        fXSModel = 0;
+    }
+}
+
+// -----------------------------------------------------------------------
+// Implementation of PSVI
+// -----------------------------------------------------------------------
+void XMLGrammarPoolImpl::setPSVI(const bool doPSVI)
+{
+    fDoPSVI = doPSVI;
+}
+
+void updatePSVIvectorElemIds(ValueVectorOf<SchemaElementDecl*>* vectorElemDecls, 
+                             SchemaGrammar* const grammar) {
+
+    unsigned int vectorElemDeclsIndex = vectorElemDecls->size();
+    RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = grammar->getElemEnumerator();
+
+    while (elemEnum.hasMoreElements())
+    {
+        SchemaElementDecl& curElem = elemEnum.nextElement();
+        vectorElemDecls->addElement(&curElem);
+        curElem.setElemId(vectorElemDeclsIndex);
+        vectorElemDeclsIndex++;
+    }
 }
 
 // -----------------------------------------------------------------------
@@ -219,8 +265,7 @@ inline XSModel *XMLGrammarPoolImpl::getXSModel() const
 {
     if(!fLocked)
         return 0;
-    // REVISIT:  implement along with XSModel implementation
-    return 0;
+    return fXSModel;
 }
 
 inline XMLStringPool *XMLGrammarPoolImpl::getURIStringPool() 

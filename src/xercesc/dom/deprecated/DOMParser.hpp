@@ -83,6 +83,7 @@ class Grammar;
 class GrammarResolver;
 class XMLGrammarPool;
 class XMLEntityResolver;
+class PSVIHandler;
 
 /**
   * This class implements the Document Object Model (DOM) interface.
@@ -186,6 +187,24 @@ public :
       * @return A const pointer to the installed error handler object.
       */
     const ErrorHandler* getErrorHandler() const;
+
+    /** Get a pointer to the PSVI handler
+      *
+      * This method returns the installed PSVI handler. If no handler
+      * has been installed, then it will be a zero pointer.
+      *
+      * @return The pointer to the installed PSVI handler object.
+      */
+    PSVIHandler* getPSVIHandler();
+
+    /** Get a const pointer to the error handler
+      *
+      * This method returns the installed error handler.  If no handler
+      * has been installed, then it will be a zero pointer.
+      *
+      * @return A const pointer to the installed error handler object.
+      */
+    const PSVIHandler* getPSVIHandler() const;
 
     /** Get a pointer to the entity resolver
       *
@@ -504,6 +523,21 @@ public :
       * @see #getErrorHandler
       */
     void setErrorHandler(ErrorHandler* const handler);
+
+    /** Set the PSVI handler
+      *
+      * This method allows applications to install their own PSVI handler.
+      *
+      * <i>Any previously set handler is merely dropped, since the parser
+      * does not own them.</i>
+      *
+      * @param handler  A const pointer to the user supplied PSVI
+      *                 handler.
+      *
+      * @see #getPSVIHandler
+      */
+    void setPSVIHandler(PSVIHandler* const handler);
+
 
     /** Set the entity resolver
       *
@@ -1815,6 +1849,7 @@ private :
     EntityResolver*         fEntityResolver;
     XMLEntityResolver*      fXMLEntityResolver;
     ErrorHandler*           fErrorHandler;
+    PSVIHandler*            fPSVIHandler;
     ValueStackOf<DOM_Node>* fNodeStack;
     XMLScanner*             fScanner;
     DocumentTypeImpl*       fDocumentType;
@@ -1867,6 +1902,16 @@ inline ErrorHandler* DOMParser::getErrorHandler()
 inline const ErrorHandler* DOMParser::getErrorHandler() const
 {
     return fErrorHandler;
+}
+
+inline PSVIHandler* DOMParser::getPSVIHandler()
+{
+    return fPSVIHandler;
+}
+
+inline const PSVIHandler* DOMParser::getPSVIHandler() const
+{
+    return fPSVIHandler;
 }
 
 inline EntityResolver* DOMParser::getEntityResolver()

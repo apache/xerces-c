@@ -117,6 +117,7 @@ DOMParser::DOMParser( XMLValidator* const   valToAdopt
     , fEntityResolver(0)
     , fXMLEntityResolver(0)
     , fErrorHandler(0)
+    , fPSVIHandler(0)
     , fNodeStack(0)
     , fScanner(0)
     , fDocumentType(0)
@@ -316,6 +317,19 @@ void DOMParser::setErrorHandler(ErrorHandler* const handler)
     else {
         fScanner->setErrorReporter(0);
         fScanner->setErrorHandler(0);
+    }
+}
+
+void DOMParser::setPSVIHandler(PSVIHandler* const handler)
+{
+    fPSVIHandler = handler;
+    if (fPSVIHandler) {
+        fScanner->setPSVIHandler(fPSVIHandler);
+        fGrammarResolver->getGrammarPool()->setPSVI(true);
+    }
+    else {
+        fScanner->setPSVIHandler(0);
+        fGrammarResolver->getGrammarPool()->setPSVI(false);
     }
 }
 

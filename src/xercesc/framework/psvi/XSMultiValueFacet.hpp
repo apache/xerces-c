@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -93,8 +96,10 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSMultiValueFacet( 
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSMultiValueFacet(XSSimpleTypeDefinition::FACET   facetKind,
+            StringList*                     lexicalValues,
+            bool                            isFixed,  
+            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
 
@@ -104,9 +109,9 @@ public:
     //@}
 
     //---------------------
-    // @name XSMultiValueFacet methods
+    /** @name XSMultiValueFacet methods */
 
-    /* @{
+    //@{
 
     /**
      * @return An indication as to the facet's type; see <code>XSSimpleTypeDefinition::FACET</code>
@@ -131,9 +136,9 @@ public:
     //@}
 
     //----------------------------------
-    // methods needed by implementation
+    /** methods needed by implementation */
 
-    // @{
+    //@{
 
     //@}
 private:
@@ -149,6 +154,9 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    XSSimpleTypeDefinition::FACET   fFacetKind;
+    StringList*                     fLexicalValues;  // not owned by this class...
+    bool                            fIsFixed;    
 };
 inline XSMultiValueFacet::~XSMultiValueFacet() {}
 

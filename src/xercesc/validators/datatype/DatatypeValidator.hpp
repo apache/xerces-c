@@ -68,6 +68,7 @@
 #include <xercesc/util/regx/RegularExpression.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/internal/XSerializable.hpp>
+#include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -216,6 +217,26 @@ public:
      * sets this type to be anonymous
      **/
     void setAnonymous();
+
+    /**
+     *  Fundamental Facet: ordered 
+     */
+    XSSimpleTypeDefinition::ORDERING getOrdered() const;
+
+    /**
+     * Fundamental Facet: cardinality. 
+     */
+    bool getFinite() const;
+
+    /**
+     * Fundamental Facet: bounded. 
+     */
+    bool getBounded() const;
+
+    /**
+     * Fundamental Facet: numeric. 
+     */
+    bool getNumeric() const;
 
     //@}
 
@@ -374,6 +395,7 @@ protected:
 
 
 	friend class DatatypeValidatorFactory;
+    friend class XSSimpleTypeDefinition;
 
     /**
       * facetDefined
@@ -414,6 +436,26 @@ protected:
       * get WSString
       */
     const XMLCh*   getWSstring(const short WSType) const;
+
+    /**
+     *  Fundamental Facet: ordered 
+     */
+    void setOrdered(XSSimpleTypeDefinition::ORDERING ordered);
+
+    /**
+     * Fundamental Facet: cardinality. 
+     */
+    void setFinite(bool finite);
+
+    /**
+     * Fundamental Facet: bounded. 
+     */
+    void setBounded(bool bounded);
+
+    /**
+     * Fundamental Facet: numeric. 
+     */
+    void setNumeric(bool numeric);
 
     // -----------------------------------------------------------------------
     //  Protected data members
@@ -475,19 +517,23 @@ private:
     //      true if this type is anonynous
     //
     // -----------------------------------------------------------------------
-    bool                          fAnonymous;
-    short                         fWhiteSpace;
-    int                           fFinalSet;
-    int                           fFacetsDefined;
-    int                           fFixed;
-    ValidatorType                 fType;
-	DatatypeValidator*            fBaseValidator;
-	RefHashTableOf<KVStringPair>* fFacets;
-    XMLCh*                        fPattern;
-    RegularExpression*            fRegex;
-    XMLCh*                        fTypeName;
-    const XMLCh*                  fTypeLocalName;
-    const XMLCh*                  fTypeUri;
+    bool                                fAnonymous;
+    short                               fWhiteSpace;
+    int                                 fFinalSet;
+    int                                 fFacetsDefined;
+    int                                 fFixed;
+    ValidatorType                       fType;
+	DatatypeValidator*                  fBaseValidator;
+	RefHashTableOf<KVStringPair>*       fFacets;
+    XMLCh*                              fPattern;
+    RegularExpression*                  fRegex;
+    XMLCh*                              fTypeName;
+    const XMLCh*                        fTypeLocalName;
+    const XMLCh*                        fTypeUri;
+    XSSimpleTypeDefinition::ORDERING    fOrdered;
+    bool                                fFinite;
+    bool                                fBounded;
+    bool                                fNumeric;
 };
 
 
@@ -564,6 +610,26 @@ inline MemoryManager* DatatypeValidator::getMemoryManager() const
     return fMemoryManager;
 }
 
+inline XSSimpleTypeDefinition::ORDERING DatatypeValidator::getOrdered() const
+{
+    return fOrdered;
+}
+
+inline bool DatatypeValidator::getFinite() const
+{
+    return fFinite;
+}
+ 
+inline bool DatatypeValidator::getBounded() const
+{
+    return fBounded;
+}
+
+inline bool DatatypeValidator::getNumeric() const
+{
+    return fNumeric;
+}
+
 // ---------------------------------------------------------------------------
 //  DatatypeValidator: Setters
 // ---------------------------------------------------------------------------
@@ -606,6 +672,26 @@ inline bool DatatypeValidator::isAtomic() const {
 
 inline void DatatypeValidator::setAnonymous() {
     fAnonymous = true;
+}
+
+inline void DatatypeValidator::setOrdered(XSSimpleTypeDefinition::ORDERING ordered)
+{
+    fOrdered = ordered;
+}
+
+inline void DatatypeValidator::setFinite(bool finite)
+{
+    fFinite = finite;
+}
+
+inline void DatatypeValidator::setBounded(bool bounded)
+{
+    fBounded = bounded;
+}
+
+inline void DatatypeValidator::setNumeric(bool numeric)
+{
+    fNumeric = numeric;
 }
 
 // ---------------------------------------------------------------------------

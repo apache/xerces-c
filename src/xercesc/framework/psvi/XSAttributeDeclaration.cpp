@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.2  2003/09/17 17:45:37  neilg
  * remove spurious inlines; hopefully this will make Solaris/AIX compilers happy.
  *
@@ -65,25 +68,43 @@
  */
 
 #include <xercesc/framework/psvi/XSAttributeDeclaration.hpp>
+#include <xercesc/validators/schema/SchemaAttDef.hpp>
+#include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
+#include <xercesc/util/QName.hpp>
+#include <xercesc/util/StringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSAttributeDeclaration::XSAttributeDeclaration( MemoryManager * const manager):
-            XSObject(XSConstants::ATTRIBUTE_DECLARATION, manager )
+XSAttributeDeclaration::XSAttributeDeclaration(SchemaAttDef*            attDef,
+                                               XMLStringPool*           uriStringPool,
+                                               MemoryManager * const    manager):
+    fAttDef(attDef),
+    fTypeDefinition(0),
+    fURIStringPool(uriStringPool),
+    XSObject(XSConstants::ATTRIBUTE_DECLARATION, manager )
 {
+    if (fAttDef->getDatatypeValidator())
+    {
+        fTypeDefinition = new (manager) XSSimpleTypeDefinition(fAttDef->getDatatypeValidator(),manager);
+    }
 }
 
+XSAttributeDeclaration::~XSAttributeDeclaration() 
+{
+    if (fTypeDefinition)
+    {
+        delete fTypeDefinition;
+    }
+}
 // XSObject methods
 const XMLCh *XSAttributeDeclaration::getName() 
 {
-    //REVISIT
-    return 0;
+    return fAttDef->getAttName()->getLocalPart();
 }
 
 const XMLCh *XSAttributeDeclaration::getNamespace() 
 {
-    //REVISIT
-    return 0;
+    return fURIStringPool->getValueForId(fAttDef->getAttName()->getURI());
 }
 
 XSNamespaceItem *XSAttributeDeclaration::getNamespaceItem() 
@@ -99,8 +120,7 @@ XSNamespaceItem *XSAttributeDeclaration::getNamespaceItem()
  */
 XSSimpleTypeDefinition *XSAttributeDeclaration::getTypeDefinition()
 {
-    // REVISIT
-    return 0;
+    return fTypeDefinition;
 }
 
 /**
@@ -129,7 +149,15 @@ XSComplexTypeDefinition *XSAttributeDeclaration::getEnclosingCTDefinition()
  */
 XSConstants::VALUE_CONSTRAINT XSAttributeDeclaration::getConstraintType() const
 {
-    // REVISIT
+    if (fAttDef->getDefaultType() & XMLAttDef::Default)
+    {
+        return XSConstants::VC_DEFAULT;
+    }
+    if (fAttDef->getDefaultType() & XMLAttDef::Fixed ||
+        fAttDef->getDefaultType() & XMLAttDef::Required_And_Fixed)
+    {
+        return XSConstants::VC_FIXED;
+    }
     return XSConstants::VC_NONE;
 }
 
@@ -139,8 +167,7 @@ XSConstants::VALUE_CONSTRAINT XSAttributeDeclaration::getConstraintType() const
  */
 const XMLCh *XSAttributeDeclaration::getConstraintValue()
 {
-    // REVISIT
-    return 0;
+    return fAttDef->getValue();
 }
 
 /**

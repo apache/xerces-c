@@ -172,6 +172,7 @@ private:
 inline BooleanDatatypeValidator::BooleanDatatypeValidator(MemoryManager* const manager)
 :DatatypeValidator(0, 0, 0, DatatypeValidator::Boolean, manager)
 {
+    setFinite(true);
 }
 
 inline BooleanDatatypeValidator::~BooleanDatatypeValidator()

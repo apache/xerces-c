@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.3  2003/10/24 10:59:26  gareth
  * changed /* to // to prevent compiler warnings.
  *
@@ -111,7 +114,7 @@ public:
     //@}
 
     //---------------------
-    // @name XSObject methods
+    /** @name XSObject methods */
 
     // @{
 
@@ -173,7 +176,7 @@ protected:
     //  used for any memory allocations
     // fComponentType
     //  the type of the actual component
-    const MemoryManager *fMemoryManager;
+    MemoryManager *fMemoryManager;
     XSConstants::COMPONENT_TYPE fComponentType;
 
 };

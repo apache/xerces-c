@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2003/11/06 15:30:07  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.29  2003/10/30 21:37:31  knoaman
  * Enhanced Entity Resolver Support. Thanks to David Cargill.
  *
@@ -339,6 +342,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
     , fEntityResolver(0)
     , fXMLEntityResolver(0)
     , fErrorHandler(0)
+    , fPSVIHandler(0)
     , fLexicalHandler(0)
     , fDeclHandler(0)
     , fAdvDHList(0)
@@ -579,6 +583,18 @@ void SAX2XMLReaderImpl::setErrorHandler(ErrorHandler* const handler)
     }
 }
 
+void SAX2XMLReaderImpl::setPSVIHandler(PSVIHandler* const handler)
+{
+    fPSVIHandler = handler;
+    if (fPSVIHandler) {
+        fScanner->setPSVIHandler(fPSVIHandler);
+        fGrammarResolver->getGrammarPool()->setPSVI(true);
+    }
+    else {
+        fScanner->setPSVIHandler(0);
+        fGrammarResolver->getGrammarPool()->setPSVI(false);
+    }
+}
 
 void SAX2XMLReaderImpl::setLexicalHandler(LexicalHandler* const handler)
 {

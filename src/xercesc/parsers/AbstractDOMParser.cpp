@@ -131,6 +131,7 @@ AbstractDOMParser::AbstractDOMParser( XMLValidator* const   valToAdopt
 , fGrammarPool(gramPool)
 , fBufMgr(manager)
 , fInternalSubset(fBufMgr.bidOnBuffer())
+, fPSVIHandler(0)
 {
     try
     {
@@ -335,6 +336,20 @@ bool AbstractDOMParser::getStandardUriConformant() const
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Setter methods
 // ---------------------------------------------------------------------------
+void AbstractDOMParser::setPSVIHandler(PSVIHandler* const handler)
+{
+    fPSVIHandler = handler;
+    if (fPSVIHandler) {
+        fScanner->setPSVIHandler(fPSVIHandler);
+        fGrammarResolver->getGrammarPool()->setPSVI(true);
+    }
+    else {
+        fScanner->setPSVIHandler(0);
+        fGrammarResolver->getGrammarPool()->setPSVI(false);
+    }
+}
+
+
 void AbstractDOMParser::setDoNamespaces(const bool newState)
 {
     fScanner->setDoNamespaces(newState);

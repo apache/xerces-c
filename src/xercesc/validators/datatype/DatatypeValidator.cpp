@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/11/06 15:30:07  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.14  2003/11/05 16:37:18  peiyongz
  * don't serialize built-in baseValidator, and don't serialize localName/uriName
  *
@@ -188,6 +191,10 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
     , fTypeLocalName(XMLUni::fgZeroLenString)
     , fTypeName(0)
     , fTypeUri(XMLUni::fgZeroLenString)
+    , fOrdered(XSSimpleTypeDefinition::ORDERED_FALSE)
+    , fFinite(false)
+    , fBounded(false)
+    , fNumeric(false)
 {
 }
 

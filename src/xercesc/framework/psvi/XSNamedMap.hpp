@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -67,8 +70,11 @@
 
 
 #include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/RefHash2KeysTableOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+class XMLStringPool;
 
 /*
  * This template provides convenient mappings between name,namespace
@@ -82,19 +88,28 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-     // @{
+    /** @name Constructors */
+    //@{
 
-    XSNamedMap( 
+    XSNamedMap(const unsigned int maxElems,
+        const unsigned int modulus,
+        XMLStringPool* uriStringPool,
+        const bool adoptElems,
         MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
+    //@}
+
+    /** @name Destructor */
+    //@{
     ~XSNamedMap();
 
-    // @}
+    //@}
 
     // -----------------------------------------------------------------------
     //  XSNamedMap methods
     // -----------------------------------------------------------------------
-     // @{
+    /** @name XSNamedMap methods */ 
+    //@{
 
     /**
      * The number of <code>XSObjects</code> in the <code>XSObjectList</code>. 
@@ -112,23 +127,31 @@ public:
      *   position in the <code>XSObjectList</code>, or <code>null</code> if 
      *   that is not a valid index. 
      */
-    TVal *item(int index);
+    TVal *item(unsigned int index);
 
     /**
-     * Retrieves a node specified by local name and namespace URI.
-     * <br>Per , applications must use the value null as the 
-     * <code>namespace</code> parameter for methods if they wish to have no 
-     * namespace.
-     * @param namespace The namespace URI of the node to retrieve.
-     * @param localName The local name of the node to retrieve.
-     * @return A <code>XSObject</code> (of any type) with the specified local 
+     * Retrieves a component specified by local name and namespace URI.
+     * <br>applications must use the value null as the 
+     * <code>compNamespace</code> parameter for components whose targetNamespace property
+     * is absent.
+     * @param compNamespace The namespace URI of the component to retrieve.
+     * @param localName The local name of the component to retrieve.
+     * @return A component (of any type) with the specified local 
      *   name and namespace URI, or <code>null</code> if they do not 
      *   identify any node in this map.
      */
     TVal *itemByName(const XMLCh *compNamespace, 
                               const XMLCh *localName);
 
-     // @}
+    //@}
+
+    //----------------------------------
+    /** methods needed by implementation */
+
+    //@{
+    void addElement(TVal* const toAdd, const XMLCh* key1, const XMLCh* key2);
+    //@}
+    
 
 private :
     // -----------------------------------------------------------------------
@@ -139,8 +162,11 @@ private :
     //  Data members
     //
     // fMemoryManager
-    //  manager used to allocate memory needed b this object
-    MemoryManager *const fMemoryManager;
+    //  manager used to allocate memory needed by this object
+    MemoryManager *const        fMemoryManager;
+    XMLStringPool*              fURIStringPool;
+    RefVectorOf<TVal>*          fVector;
+    RefHash2KeysTableOf<TVal>*  fHash;
 };
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/06 15:30:04  neilg
+ * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
+ *
  * Revision 1.2  2003/09/17 17:45:37  neilg
  * remove spurious inlines; hopefully this will make Solaris/AIX compilers happy.
  *
@@ -65,24 +68,47 @@
  */
 
 #include <xercesc/framework/psvi/XSIDCDefinition.hpp>
+#include <xercesc/validators/schema/identity/IC_KeyRef.hpp>
+#include <xercesc/validators/schema/identity/IC_Selector.hpp>
+#include <xercesc/validators/schema/identity/XercesXPath.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSIDCDefinition::XSIDCDefinition( MemoryManager * const manager):
-            XSObject(XSConstants::IDENTITY_CONSTRAINT, manager )
+XSIDCDefinition::XSIDCDefinition(IdentityConstraint* identityConstraint,
+                                 MemoryManager * const manager):
+    fIdentityConstraint(identityConstraint),
+    fStringList(0),
+    fKey(0),
+    XSObject(XSConstants::IDENTITY_CONSTRAINT, manager )
+
 {
+    unsigned int fieldCount = fIdentityConstraint->getFieldCount();
+
+    if (fieldCount) 
+    {
+        fStringList = new (manager) RefArrayVectorOf <XMLCh>(fieldCount, true, manager);
+
+        for(unsigned int i=0; i<fieldCount; i++) {
+            XMLCh* expr = XMLString::replicate(fIdentityConstraint->getFieldAt(i)->getXPath()->getExpression(), manager);
+            fStringList->addElement(expr);
+        }     
+    }
+
+    if (fIdentityConstraint->getType() == IdentityConstraint::KEYREF)
+    {
+        fKey = new (manager) XSIDCDefinition(((IC_KeyRef*) fIdentityConstraint)->getKey(), manager);
+    }
 }
 
 // Overridden XSObject methods
 const XMLCh *XSIDCDefinition::getName() 
 {
-    // REVISIT
-    return 0;
+    return fIdentityConstraint->getIdentityConstraintName();
 }
 
 const XMLCh *XSIDCDefinition::getNamespace() 
 {
-    // REVISIT
+    // REVISIT: IdentityConstraint class doesn't have namespace method...
     return 0;
 }
 
@@ -93,8 +119,19 @@ const XMLCh *XSIDCDefinition::getNamespace()
  */
 XSIDCDefinition::IC_CATEGORY XSIDCDefinition::getCategory() const
 {
-    // REVISIT
-    return IC_KEY;
+    switch(fIdentityConstraint->getType()) {
+        case IdentityConstraint::UNIQUE:
+            return IC_UNIQUE;
+        case IdentityConstraint::KEY:
+            return IC_KEY;
+        case IdentityConstraint::KEYREF:
+            return IC_KEYREF;
+        default:
+            // REVISIT:
+            // should never really get here... IdentityConstraint::Unknown is the other
+            // choice so need a default case for completeness; should issues error?
+            return IC_KEY;
+    }
 }
 
 /**
@@ -102,8 +139,7 @@ XSIDCDefinition::IC_CATEGORY XSIDCDefinition::getCategory() const
  */
 const XMLCh *XSIDCDefinition::getSelectorStr()
 {
-    // REVISIT
-    return 0;
+    return fIdentityConstraint->getSelector()->getXPath()->getExpression();
 }
 
 /**
@@ -111,8 +147,7 @@ const XMLCh *XSIDCDefinition::getSelectorStr()
  */
 StringList *XSIDCDefinition::getFieldStrs()
 {
-    // REVISIT
-    return 0;
+    return fStringList;
 }
 
 /**
@@ -122,8 +157,7 @@ StringList *XSIDCDefinition::getFieldStrs()
  */
 XSIDCDefinition *XSIDCDefinition::getRefKey()
 {
-    // REVISIT
-    return 0;
+    return fKey;
 }
 
 /**
