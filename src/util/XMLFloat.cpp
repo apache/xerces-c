@@ -57,8 +57,8 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.10  2001/10/25 21:54:50  peiyongz
- * Apply XMLRegisterCleanup
+ * Revision 1.11  2001/10/26 16:37:46  peiyongz
+ * Add thread safe code
  *
  * Revision 1.9  2001/09/20 13:11:41  knoaman
  * Regx  + misc. fixes
@@ -121,11 +121,6 @@
 //   Then we can impose the limit of length after the '.' before 'E'.
 //
 //---------
-
-// ---------------------------------------------------------------------------
-//  class data member
-// ---------------------------------------------------------------------------
-bool XMLFloat::isInitialized = false;
 
 // ---------------------------------------------------------------------------
 //  local data member
@@ -192,6 +187,7 @@ static XMLFloat*  minNegativeValue = 0;
 static XMLFloat*  minPositiveValue = 0;
 static XMLFloat*  maxPositiveValue = 0;
 
+static XMLMutex* sFloatMutex = 0;
 static XMLRegisterCleanup XMLFloatCleanup;
 
 /***
@@ -302,16 +298,28 @@ void XMLFloat::init(const XMLCh* const strValue)
 //
 void XMLFloat::checkBoundary(const XMLCh* const strValue)
 {
-    if (!isInitialized)
+    if (!sFloatMutex)
     {
-        isInitialized = true;  // set first to avoid recursion
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&sFloatMutex, tmpMutex, 0))
+        {
+            // Some other thread beat us to it, so let's clean up ours.
+            delete tmpMutex;
+        }
+        else
+        {
+            //
+            // the thread who creates the mutex succesfully, to
+            // initialize the followings
+            //
+            maxNegativeValue = new XMLFloat(FLT_MAX_NEGATIVE);
+            minNegativeValue = new XMLFloat(FLT_MIN_NEGATIVE);
+            minPositiveValue = new XMLFloat(FLT_MIN_POSITIVE);
+            maxPositiveValue = new XMLFloat(FLT_MAX_POSITIVE);
 
-        maxNegativeValue = new XMLFloat(FLT_MAX_NEGATIVE);
-        minNegativeValue = new XMLFloat(FLT_MIN_NEGATIVE);
-        minPositiveValue = new XMLFloat(FLT_MIN_POSITIVE);
-        maxPositiveValue = new XMLFloat(FLT_MAX_POSITIVE);
-
-        XMLFloatCleanup.registerCleanup(reinitXMLFloat);
+            // This is the real mutex.  Register it for cleanup at Termination.
+            XMLFloatCleanup.registerCleanup(reinitXMLFloat);
+        }
     }
 
     //
@@ -518,7 +526,8 @@ int XMLFloat::compareSpecial(const XMLFloat* const specialValue
 // -----------------------------------------------------------------------
 void XMLFloat::reinitXMLFloat() {
 
-    isInitialized = false;
+    delete sFloatMutex;
+    sFloatMutex = 0;
 
     delete maxNegativeValue;
     maxNegativeValue = 0;

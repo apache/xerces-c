@@ -57,8 +57,8 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.13  2001/10/25 21:54:50  peiyongz
- * Apply XMLRegisterCleanup
+ * Revision 1.14  2001/10/26 16:37:46  peiyongz
+ * Add thread safe code
  *
  * Revision 1.12  2001/09/20 13:11:41  knoaman
  * Regx  + misc. fixes
@@ -133,7 +133,6 @@
 // ---------------------------------------------------------------------------
 //  class data member
 // ---------------------------------------------------------------------------
-bool XMLDouble::isInitialized = false;
 
 // ---------------------------------------------------------------------------
 //  local data member
@@ -204,6 +203,7 @@ static XMLDouble*  minNegativeValue = 0;
 static XMLDouble*  minPositiveValue = 0;
 static XMLDouble*  maxPositiveValue = 0;
 
+static XMLMutex* sDoubleMutex = 0;
 static XMLRegisterCleanup XMLDoubleCleanup;
 
 /***
@@ -314,16 +314,29 @@ void XMLDouble::init(const XMLCh* const strValue)
 //
 void XMLDouble::checkBoundary(const XMLCh* const strValue)
 {
-    if (!isInitialized)
+
+    if (!sDoubleMutex)
     {
-        isInitialized = true;  // set first to avoid recursion
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&sDoubleMutex, tmpMutex, 0))
+        {
+            // Some other thread beat us to it, so let's clean up ours.
+            delete tmpMutex;
+        }
+        else
+        {
+            //
+            // the thread who creates the mutex succesfully, to
+            // initialize the followings
+            //
+            maxNegativeValue = new XMLDouble(DBL_MAX_NEGATIVE);
+            minNegativeValue = new XMLDouble(DBL_MIN_NEGATIVE);
+            minPositiveValue = new XMLDouble(DBL_MIN_POSITIVE);
+            maxPositiveValue = new XMLDouble(DBL_MAX_POSITIVE);
 
-        maxNegativeValue = new XMLDouble(DBL_MAX_NEGATIVE);
-        minNegativeValue = new XMLDouble(DBL_MIN_NEGATIVE);
-        minPositiveValue = new XMLDouble(DBL_MIN_POSITIVE);
-        maxPositiveValue = new XMLDouble(DBL_MAX_POSITIVE);
-
-        XMLDoubleCleanup.registerCleanup(reinitXMLDouble);
+            // This is the real mutex.  Register it for cleanup at Termination.
+            XMLDoubleCleanup.registerCleanup(reinitXMLDouble);
+        }
     }
 
     //
@@ -530,7 +543,8 @@ int XMLDouble::compareSpecial(const XMLDouble* const specialValue
 // -----------------------------------------------------------------------
 void XMLDouble::reinitXMLDouble() {
 
-    isInitialized = false;
+    delete sDoubleMutex;
+    sDoubleMutex = 0;
 
     delete maxNegativeValue;
     maxNegativeValue = 0;

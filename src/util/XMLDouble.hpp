@@ -57,8 +57,8 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.7  2001/10/25 21:54:50  peiyongz
- * Apply XMLRegisterCleanup
+ * Revision 1.8  2001/10/26 16:37:46  peiyongz
+ * Add thread safe code
  *
  * Revision 1.6  2001/09/27 14:54:20  peiyongz
  * DTV Reorganization: derived from XMLNumber
@@ -169,8 +169,6 @@ private:
 
     static int            compareSpecial(const XMLDouble* const specialValue
                                        , const XMLDouble* const normalValue);
-
-    static bool           isInitialized;
 
     // -----------------------------------------------------------------------
     //  Private data members
