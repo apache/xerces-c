@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2005/02/23 15:57:48  cargilld
+ * Copy performance change made to XMLUTF8Transcoder.cpp to the 390 version.
+ *
  * Revision 1.5  2004/09/08 13:56:46  peiyongz
  * Apache License Version 2.0
  *
@@ -226,9 +229,18 @@ XMLUTF8Transcoder390::transcodeFrom(const  XMLByte* const          srcData
         
         if (*srcPtr <= 127)
         {
-            *outPtr++ = XMLCh(*srcPtr++);
-            *sizePtr++ = 1;
-            continue;
+            // Handle ASCII in groups instead of single character at a time.
+            const XMLByte* srcPtr_save = srcPtr;
+            do
+            {
+                *outPtr++ = XMLCh(*srcPtr++);
+            } while (*srcPtr <= 127    &&
+                      srcPtr != srcEnd &&
+                      outPtr != outEnd );
+            memset(sizePtr,1,srcPtr - srcPtr_save);
+            sizePtr += srcPtr - srcPtr_save;
+            if (srcPtr == srcEnd || outPtr == outEnd)
+                break;
         }
         
         // See how many trailing src bytes this sequence is going to require
