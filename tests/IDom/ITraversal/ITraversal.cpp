@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2002/02/04 21:56:57  tng
+ * Test DOM Level 2 function getRoot.
+ *
  * Revision 1.6  2002/02/04 19:02:37  tng
  * Memory leak fix in samples / test cases.
  *
@@ -333,6 +336,10 @@ int  main()
             nd = iter->previousNode();
             TASSERT(nd == E131);
 
+            //test getRoot
+            TASSERT(iter->getRoot() == root);
+            TASSERT(iter->getRoot() != doc);
+
             delete filter;
 
         }
@@ -565,6 +572,9 @@ int  main()
             TASSERT(tw->getCurrentNode() == root);
             TASSERT(tw->nextNode() == 0);    //E11 rejected so can't get to textNode1
 
+            //test getRoot
+            TASSERT(tw->getRoot() == root);
+            TASSERT(tw->getRoot() != doc);
         }
 
         delete doc;
