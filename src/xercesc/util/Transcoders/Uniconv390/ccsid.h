@@ -1,12 +1,13 @@
+
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,13 +17,13 @@
 /*
  * $Id$
  */
-  
+
 /*****************************************************************
  * Do not manually change this file. It is generated automatically.
  *****************************************************************/
  
 #define _AE_MAX_CODESET_NAME_LENGTH    40
-#define _AE_NUM_OF_CODESETS   584
+#define _AE_NUM_OF_CODESETS   613
 
 struct ccsid_mapping {
    char NAME[_AE_MAX_CODESET_NAME_LENGTH];
@@ -88,14 +89,16 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"CP1250", 5346}, 
 {"CP1251", 5347}, 
 {"CP1252", 5348}, 
-{"CP1253", 5349}, 
+{"CP1253", 1253}, 
 {"CP1254", 5350}, 
 {"CP1255", 5351}, 
 {"CP1256", 5352}, 
 {"CP1257", 5353}, 
 {"CP1258", 5354}, 
+{"CP1363", 1363}, 
 {"CP1364", 1364}, 
 {"CP1383", 1383}, 
+{"CP1386", 1386}, 
 {"CP273", 273}, 
 {"CP277", 277}, 
 {"CP278", 278}, 
@@ -113,6 +116,7 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"CP65001", 1208}, 
 {"CP813", 813}, 
 {"CP819", 819}, 
+{"CP838", 9030}, 
 {"CP850", 850}, 
 {"CP851", 851}, 
 {"CP852", 852}, 
@@ -146,7 +150,7 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"CP918", 918}, 
 {"CP920", 920}, 
 {"CP921", 921}, 
-{"CP922", 902}, 
+{"CP922", 922}, 
 {"CP923", 923}, 
 {"CP932", 942}, 
 {"CP933", 933}, 
@@ -156,6 +160,8 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"CP939", 939}, 
 {"CP943", 943}, 
 {"CP943C", 943}, 
+{"CP949", 949}, 
+{"CP949C", 949}, 
 {"CP950", 1370}, 
 {"CPAR", 868}, 
 {"CPGR", 869}, 
@@ -199,7 +205,9 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"CSADOBESTANDARDENCODING", 1276}, 
 {"CSBIG5", 1370}, 
 {"CSEUCKR", 970}, 
+{"CSEUCPKDFMTJAPANESE", 33722}, 
 {"CSGB2312", 1383}, 
+{"CSHALFWIDTHKATAKANA", 897}, 
 {"CSHPROMAN8", 1051}, 
 {"CSIBM037", 37}, 
 {"CSIBM273", 273}, 
@@ -225,6 +233,7 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"CSIBM870", 870}, 
 {"CSIBM871", 871}, 
 {"CSIBM918", 918}, 
+{"CSIBMTHAI", 9030}, 
 {"CSISO58GB231280", 1383}, 
 {"CSISOLATIN0", 923}, 
 {"CSISOLATIN1", 819}, 
@@ -238,7 +247,7 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"CSISOLATINGREEK", 813}, 
 {"CSISOLATINHEBREW", 916}, 
 {"CSKOI8R", 878}, 
-{"CSKSC56011987", 949}, 
+{"CSKSC56011987", 1363}, 
 {"CSMACINTOSH", 1275}, 
 {"CSPC850MULTILINGUAL", 850}, 
 {"CSPC851", 851}, 
@@ -276,13 +285,18 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"EBCDICDK", 277}, 
 {"EBCDICGB", 285}, 
 {"EBCDICHE", 12712}, 
+{"EBCDICIS", 871}, 
 {"EBCDICSV", 278}, 
 {"ECMA114", 1089}, 
 {"ECMA118", 813}, 
 {"ECMA128", 920}, 
 {"ELOT928", 813}, 
 {"EUCCN", 1383}, 
+{"EUCJIS", 33722}, 
+{"EUCJP", 33722}, 
 {"EUCKR", 970}, 
+{"EUCTH", 874}, 
+{"EXTENDEDUNIXCODEPACKEDFORMATFORJAPANESE", 33722}, 
 {"GB", 1383}, 
 {"GB2312", 1383}, 
 {"GB23121980", 1383}, 
@@ -291,6 +305,7 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"GREEK", 813}, 
 {"GREEK8", 813}, 
 {"HEBREW", 916}, 
+{"HP15CN", 1383}, 
 {"HPROMAN8", 1051}, 
 {"IBM00858", 858}, 
 {"IBM01140", 1140}, 
@@ -410,6 +425,7 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"IBM285", 285}, 
 {"IBM297", 297}, 
 {"IBM33722", 33722}, 
+{"IBM33722VPUA", 33722}, 
 {"IBM367", 367}, 
 {"IBM37", 37}, 
 {"IBM37S390", 37}, 
@@ -466,6 +482,7 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"IBM875", 875}, 
 {"IBM875STD", 875}, 
 {"IBM878", 878}, 
+{"IBM897", 897}, 
 {"IBM901", 901}, 
 {"IBM902", 902}, 
 {"IBM9030", 9030}, 
@@ -496,6 +513,7 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"IBM942", 942}, 
 {"IBM942VSUBVPUA", 942}, 
 {"IBM943", 943}, 
+{"IBM943C", 943}, 
 {"IBM943VSUBVPUA", 943}, 
 {"IBM949", 949}, 
 {"IBM949VSUBVPUA", 949}, 
@@ -504,7 +522,9 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"IBM970", 970}, 
 {"IBM970P1102000", 970}, 
 {"IBMEUCCN", 1383}, 
+{"IBMEUCJP", 33722}, 
 {"IBMEUCKR", 970}, 
+{"IBMTHAI", 9030}, 
 {"ISO10646UCS2", 1200}, 
 {"ISO88591", 819}, 
 {"ISO885913", 921}, 
@@ -515,6 +535,8 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"ISO88594", 914}, 
 {"ISO88595", 915}, 
 {"ISO88596", 1089}, 
+{"ISO88596E", 1089}, 
+{"ISO88596I", 1089}, 
 {"ISO88597", 813}, 
 {"ISO88598", 916}, 
 {"ISO88598E", 916}, 
@@ -529,14 +551,16 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"ISOIR138", 916}, 
 {"ISOIR144", 915}, 
 {"ISOIR148", 920}, 
-{"ISOIR149", 949}, 
+{"ISOIR149", 1363}, 
 {"ISOIR58", 1383}, 
+{"JISX0201", 897}, 
 {"KOI8", 878}, 
 {"KOI8R", 878}, 
-{"KOREAN", 949}, 
-{"KSC5601", 949}, 
-{"KSC56011987", 949}, 
-{"KSC56011989", 949}, 
+{"KOREAN", 1363}, 
+{"KSC", 1363}, 
+{"KSC5601", 970}, 
+{"KSC56011987", 970}, 
+{"KSC56011989", 1363}, 
 {"KSC56011992", 949}, 
 {"L1", 819}, 
 {"L2", 912}, 
@@ -566,22 +590,25 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"SHIFTJIS78", 942}, 
 {"SJIS", 943}, 
 {"SJIS78", 942}, 
+{"TIS620", 874}, 
+{"TIS620.2533", 874}, 
 {"UCS2", 1200}, 
+{"UNICODE", 1200}, 
 {"UTF8", 1208}, 
 {"WINDOWS10000", 1275}, 
 {"WINDOWS10006", 1280}, 
 {"WINDOWS10007", 1283}, 
 {"WINDOWS10029", 1282}, 
 {"WINDOWS10081", 1281}, 
-{"WINDOWS1250", 5346}, 
-{"WINDOWS1251", 5347}, 
-{"WINDOWS1252", 5348}, 
-{"WINDOWS1253", 5349}, 
-{"WINDOWS1254", 5350}, 
+{"WINDOWS1250", 1250}, 
+{"WINDOWS1251", 1251}, 
+{"WINDOWS1252", 1252}, 
+{"WINDOWS1253", 1253}, 
+{"WINDOWS1254", 1254}, 
 {"WINDOWS1255", 5351}, 
 {"WINDOWS1256", 5352}, 
 {"WINDOWS1257", 5353}, 
-{"WINDOWS1258", 5354}, 
+{"WINDOWS1258", 1258}, 
 {"WINDOWS28592", 912}, 
 {"WINDOWS28593", 913}, 
 {"WINDOWS28594", 914}, 
@@ -604,7 +631,10 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"WINDOWS866", 866}, 
 {"WINDOWS869", 869}, 
 {"WINDOWS936", 1386}, 
+{"WINDOWS949", 1363}, 
+{"X0201", 897}, 
 {"XBIG5", 1370}, 
+{"XEUCJP", 33722}, 
 {"XMACCE", 1282}, 
 {"XMACCENTRALEURROMAN", 1282}, 
 {"XMACCYRILLIC", 1283}, 
