@@ -113,6 +113,7 @@ void DOMCommentImpl::release()
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
+        fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fCharacterData.releaseBuffer();
         doc->release(this, DOMDocumentImpl::COMMENT_OBJECT);
     }

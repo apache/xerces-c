@@ -386,6 +386,7 @@ void DOMDocumentTypeImpl::release()
     if (fNode.isOwned()) {
         if (fNode.isToBeReleased()) {
             if (fIsCreatedFromHeap) {
+                fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
                 DOMDocumentType* docType = this;
                 delete docType;
             }
@@ -395,13 +396,16 @@ void DOMDocumentTypeImpl::release()
     }
     else {
         if (fIsCreatedFromHeap) {
+            fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
             DOMDocumentType* docType = this;
             delete docType;
         }
         else {
             DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
-            if (doc)
+            if (doc) {
+                fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
                 doc->release(this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT);
+            }
             else {
                 // shouldn't reach here
                 throw DOMException(DOMException::INVALID_ACCESS_ERR,0);

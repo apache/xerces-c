@@ -177,6 +177,7 @@ void DOMAttrNSImpl::release()
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
+        fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
         doc->release(this, DOMDocumentImpl::ATTR_NS_OBJECT);
     }
@@ -242,7 +243,7 @@ void DOMAttrNSImpl::setName(const XMLCh* namespaceURI, const XMLCh* qualifiedNam
     const XMLCh * URI = xmlnsAlone ? xmlnsURI
         : DOMNodeImpl::mapPrefix
           (
-              fPrefix, 
+              fPrefix,
               (XMLString::stringLen(namespaceURI) == 0) ? 0 : namespaceURI,
               DOMNode::ATTRIBUTE_NODE
           );

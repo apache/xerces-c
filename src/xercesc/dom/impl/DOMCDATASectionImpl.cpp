@@ -180,6 +180,7 @@ void DOMCDATASectionImpl::release()
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
 
     if (doc) {
+        fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
         fCharacterData.releaseBuffer();
         doc->release(this, DOMDocumentImpl::CDATA_SECTION_OBJECT);

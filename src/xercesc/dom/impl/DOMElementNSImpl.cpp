@@ -170,6 +170,7 @@ void DOMElementNSImpl::release()
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
     if (doc) {
+        fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         fParent.release();
         doc->release(this, DOMDocumentImpl::ELEMENT_NS_OBJECT);
     }
@@ -215,11 +216,11 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
         if (index >= 3999)
             delete[] newName;
     }
- 
+
     // DOM Level 3: namespace URI is never empty string.
     const XMLCh * URI = DOMNodeImpl::mapPrefix
         (
-            fPrefix, 
+            fPrefix,
             (XMLString::stringLen(namespaceURI) == 0) ? 0 : namespaceURI,
             DOMNode::ELEMENT_NODE
         );

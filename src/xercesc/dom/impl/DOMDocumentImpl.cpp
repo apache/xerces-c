@@ -1167,6 +1167,10 @@ void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHand
                     void* data = userDataRecord->getKey();
                     handler->handle(operation, key, data, src, dst);
                 }
+
+                // if the operation is deleted, we in fact should remove the data from the table
+                if (operation == DOMUserDataHandler::NODE_DELETED)
+                    node_userDataTable->removeKey((void*)key);
             }
         }
     }
@@ -1206,6 +1210,7 @@ DOMNode* DOMDocumentImpl::renameNode(DOMNode* n, const XMLCh* namespaceURI, cons
 void DOMDocumentImpl::release()
 {
     DOMDocument* doc = (DOMDocument*) this;
+    fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
 
     // release the docType as well
     if (fDocType) {

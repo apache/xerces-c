@@ -167,8 +167,10 @@ void DOMProcessingInstructionImpl::release()
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
 
     DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
-    if (doc)
+    if (doc) {
+        fNode.callUserDataHandlers(DOMUserDataHandler::NODE_DELETED, 0, 0);
         doc->release(this, DOMDocumentImpl::PROCESSING_INSTRUCTION_OBJECT);
+    }
     else {
         // shouldn't reach here
         throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
