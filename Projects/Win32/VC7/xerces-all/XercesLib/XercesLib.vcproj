@@ -182,12 +182,6 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\CountedPointer.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\DOMInputSourceWrapper.cpp">
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\src\xercesc\util\DOMInputSourceWrapper.hpp">
-			</File>
-			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\EmptyStackException.hpp">
 			</File>
 			<File
@@ -785,6 +779,12 @@
 			Name="framework"
 			Filter="">
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\LocalFileFormatTarget.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\LocalFileFormatTarget.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\LocalFileInputSource.Hpp">
 			</File>
 			<File
@@ -819,6 +819,18 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\URLInputSource.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\Wrapper4DOMInputSource.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\Wrapper4DOMInputSource.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\Wrapper4InputSource.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\Wrapper4InputSource.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\XMLAttDef.cpp">
