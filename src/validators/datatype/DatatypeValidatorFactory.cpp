@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/07/04 14:38:24  peiyongz
+ * IDDatatypeValidator: created
+ * DatatypeValidatorFactory: IDDTV enabled
+ * XMLString:isValidName(): to validate Name (XML [4][5])
+ *
  * Revision 1.10  2001/05/28 21:11:17  tng
  * Schema: Various DatatypeValidator fix.  By Pei Yong Zhang
  *
@@ -102,6 +107,7 @@
 #include <validators/datatype/DecimalDatatypeValidator.hpp>
 #include <validators/datatype/HexBinaryDatatypeValidator.hpp>
 #include <validators/datatype/Base64BinaryDatatypeValidator.hpp>
+#include <validators/datatype/IDDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -307,10 +313,9 @@ void DatatypeValidatorFactory::initializeDTDRegistry()
 
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_STRING,
                        new StringDatatypeValidator());
-
-/*
         fBuiltInRegistry->put((void*) XMLUni::fgIDString,
                        new IDDatatypeValidator());
+/*
         fBuiltInRegistry->put((void*) XMLUni::fgIDRefString,
                        new IDREFDatatypeValidator());
         fBuiltInRegistry->put((void*) XMLUni::fgEntityString,

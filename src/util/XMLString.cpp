@@ -638,6 +638,34 @@ bool XMLString::isValidNCName(const XMLCh* const name) {
 }
  
 /**
+  * isValidName
+  *
+  *    Name::= (Letter | '_' | ':') (NameChar)*
+  *    NameChar ::= Letter | Digit | '.' | '-' | '_' | ':'
+  *                 | CombiningChar | Extender
+  */
+bool XMLString::isValidName(const XMLCh* const name) {
+
+    if (!name || 
+        (XMLString::stringLen(name) == 0))
+        return false;
+
+    const XMLCh* tempName = name;
+    XMLCh firstChar = *tempName++;
+
+    if (!XMLReader::isXMLLetter(firstChar) && 
+        (firstChar != chUnderscore)        &&
+        (firstChar != chColon)              ) 
+        return false;
+
+    while(*tempName) 
+        if (!XMLReader::isNameChar(*tempName++))
+            return false;
+
+    return true;
+}
+
+/**
   * isValidEncName
   *
   * [80] EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')* 

@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.24  2001/07/04 14:38:20  peiyongz
+ * IDDatatypeValidator: created
+ * DatatypeValidatorFactory: IDDTV enabled
+ * XMLString:isValidName(): to validate Name (XML [4][5])
+ *
  * Revision 1.23  2001/06/13 14:07:55  peiyongz
  * isValidaEncName() to validate an encoding name (EncName)
  *
@@ -1029,6 +1034,13 @@ public:
     static bool isValidNCName(const XMLCh* const name);
 
     /**
+      * Checks whether an name is a valid Name.
+      * @param name The string to check its Name validity
+      * @return Returns true if name is Name valid, otherwise false
+      */
+    static bool isValidName(const XMLCh* const name);
+
+    /**
       * Checks whether an name is a valid EncName.
       * @param name The string to check its EncName validity
       * @return Returns true if name is EncName valid, otherwise false
@@ -1040,6 +1052,7 @@ public:
       * @param theChar: the character to check 
       * @return Returns true if within the range, otherwise false
       */
+
     static bool isAlpha(XMLCh const theChar);
 
     /**
