@@ -1,7 +1,10 @@
+#ifndef DOMImplementation_HEADER_GUARD_
+#define DOMImplementation_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,28 +58,13 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:50  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:29  andyh
- * IDOM
- *
+ * $Id$
  */
-
-#ifndef IDOM_DOMImplementation_HEADER_GUARD_
-#define IDOM_DOMImplementation_HEADER_GUARD_
 
 #include <xercesc/util/XercesDefs.hpp>
 
-class IDOM_Document;
-class IDOM_DocumentType;
+class DOMDocument;
+class DOMDocumentType;
 
 /**
  *   This class provides a way to query the capabilities of an implementation
@@ -84,11 +72,11 @@ class IDOM_DocumentType;
  */
 
 
-class CDOM_EXPORT IDOM_DOMImplementation {
+class CDOM_EXPORT DOMImplementation {
  protected:
-     IDOM_DOMImplementation() {};                                      // no plain constructor
-     IDOM_DOMImplementation(const IDOM_DOMImplementation &other) {};   // no copy construtor.
-     IDOM_DOMImplementation & operator = (const IDOM_DOMImplementation &other) {return *this;};  // No Assignment
+     DOMImplementation() {};                                      // no plain constructor
+     DOMImplementation(const DOMImplementation &other) {};   // no copy construtor.
+     DOMImplementation & operator = (const DOMImplementation &other) {return *this;};  // No Assignment
 
 
  public:
@@ -97,11 +85,11 @@ class CDOM_EXPORT IDOM_DOMImplementation {
      //     The DOM implementation retains ownership of the returned object.
      //     Application code should NOT delete it.
      //
- static IDOM_DOMImplementation *getImplementation();
+ static DOMImplementation *getImplementation();
 
 
 
- virtual ~IDOM_DOMImplementation() {};
+ virtual ~DOMImplementation() {};
 
 virtual bool  hasFeature(const XMLCh *feature,  const XMLCh *version) = 0;
 
@@ -112,17 +100,17 @@ virtual bool  hasFeature(const XMLCh *feature,  const XMLCh *version) = 0;
 //        for deleting it.  If the DocumentType is subsequently associated with a Document,
 //        that document becomes the owner of the storage and will delete the document type
 //        when the document is deleted.
-virtual  IDOM_DocumentType *createDocumentType(const XMLCh *qualifiedName,
+virtual  DOMDocumentType *createDocumentType(const XMLCh *qualifiedName,
                                                const XMLCh *publicId, const XMLCh *systemId) = 0;
 
 
-virtual IDOM_Document *createDocument(const XMLCh *namespaceURI,
-                              const XMLCh *qualifiedName, IDOM_DocumentType *doctype) = 0;
+virtual DOMDocument *createDocument(const XMLCh *namespaceURI,
+                              const XMLCh *qualifiedName, DOMDocumentType *doctype) = 0;
 
 // Non-standard extension.  Create a completely empty document that has neither a root
 //          element or a doctype node.
 //
-virtual IDOM_Document *createDocument() = 0;
+virtual DOMDocument *createDocument() = 0;
 };
 
 #endif

@@ -1,9 +1,10 @@
-#ifndef IDOM_DocumentFragment_HEADER_GUARD_
-#define IDOM_DocumentFragment_HEADER_GUARD_
+#ifndef DOMDocumentFragment_HEADER_GUARD_
+#define DOMDocumentFragment_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,7 +63,7 @@
 
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "IDOM_Node.hpp"
+#include "DOMNode.hpp"
 
 
 /**
@@ -103,17 +104,17 @@
  * such as <code>insertBefore()</code> and  <code>appendChild()</code>.
  */
 
-class CDOM_EXPORT IDOM_DocumentFragment: public IDOM_Node {
+class CDOM_EXPORT DOMDocumentFragment: public DOMNode {
 
 protected:
-    IDOM_DocumentFragment() {};
-    IDOM_DocumentFragment(const IDOM_DocumentFragment &other) {};
-    IDOM_DocumentFragment & operator = (const IDOM_DocumentFragment &other) {return *this;};
+    DOMDocumentFragment() {};
+    DOMDocumentFragment(const DOMDocumentFragment &other) {};
+    DOMDocumentFragment & operator = (const DOMDocumentFragment &other) {return *this;};
     /** @name Destructor */
     //@{
 	
 public:
-    virtual ~IDOM_DocumentFragment() {};
+    virtual ~DOMDocumentFragment() {};
 
 	//@}
 

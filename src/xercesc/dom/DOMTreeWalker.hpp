@@ -1,3 +1,6 @@
+#ifndef DOMTreeWalker_HEADER_GUARD_
+#define DOMTreeWalker_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -55,61 +58,34 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.2  2002/02/04 21:20:59  tng
- * Add DOM 2 Level missing functions:
- *   1. NodeIterator::getRoot
- *   2. TreeWalker::getRoot
- *   3. Element::hasAttribute
- *   4. Element::hasAttributeNS
- *   5. Node::hasAttributes
- *   6. Node::isSupported
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/06/04 20:11:53  tng
- * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
- *
- * Revision 1.2  2001/05/11 13:25:56  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:33  andyh
- * IDOM
- *
+ * $Id$
  */
 
-#ifndef IDOM_TreeWalker_HEADER_GUARD_
-#define IDOM_TreeWalker_HEADER_GUARD_
-
-#include "IDOM_Node.hpp"
-#include "IDOM_NodeFilter.hpp"
+#include "DOMNode.hpp"
+#include "DOMNodeFilter.hpp"
 
 
 /**
- * <code>IDOM_TreeWalker</code> objects are used to navigate a document tree or
+ * <code>DOMTreeWalker</code> objects are used to navigate a document tree or
  * subtree using the view of the document defined by its <code>whatToShow</code>
- * flags and any filters that are defined for the <code>IDOM_TreeWalker</code>. Any
- * function which performs navigation using a <code>IDOM_TreeWalker</code> will
- * automatically support any view defined by a <code>IDOM_TreeWalker</code>.
+ * flags and any filters that are defined for the <code>DOMTreeWalker</code>. Any
+ * function which performs navigation using a <code>DOMTreeWalker</code> will
+ * automatically support any view defined by a <code>DOMTreeWalker</code>.
  *
  * Omitting nodes from the logical view of a subtree can result in a structure that is
  * substantially different from the same subtree in the complete, unfiltered document. Nodes
- * that are siblings in the IDOM_TreeWalker view may be children of different, widely separated
+ * that are siblings in the DOMTreeWalker view may be children of different, widely separated
  * nodes in the original view. For instance, consider a Filter that skips all nodes except for
  * Text nodes and the root node of a document. In the logical view that results, all text
  * nodes will be siblings and appear as direct children of the root node, no matter how
  * deeply nested the structure of the original document.
  *
  */
-class CDOM_EXPORT IDOM_TreeWalker {
+class CDOM_EXPORT DOMTreeWalker {
     protected:
-        IDOM_TreeWalker() {};
-        IDOM_TreeWalker(const IDOM_TreeWalker &other) {};
-        IDOM_TreeWalker & operator = (const IDOM_TreeWalker &other) {return *this;};
+        DOMTreeWalker() {};
+        DOMTreeWalker(const DOMTreeWalker &other) {};
+        DOMTreeWalker & operator = (const DOMTreeWalker &other) {return *this;};
 
     public:
         /** @name Get functions. */
@@ -118,10 +94,10 @@ class CDOM_EXPORT IDOM_TreeWalker {
          * The <code>root</code> node of the <code>TreeWalker</code>, as specified
          * when it was created.
          */
-        virtual IDOM_Node*          getRoot() = 0;
+        virtual DOMNode*          getRoot() = 0;
         /**
-          * Return which node types are presented via the IDOM_TreeWalker.
-          * These constants are defined in the IDOM_NodeFilter interface.
+          * Return which node types are presented via the DOMTreeWalker.
+          * These constants are defined in the DOMNodeFilter interface.
           *
           */
         virtual unsigned long   	getWhatToShow()= 0;
@@ -130,91 +106,91 @@ class CDOM_EXPORT IDOM_TreeWalker {
           * Return The filter used to screen nodes.
           *
           */
-        virtual IDOM_NodeFilter*		getFilter()= 0;
+        virtual DOMNodeFilter*		getFilter()= 0;
 
         /**
           * Return the expandEntityReferences flag.
           * The value of this flag determines whether the children of entity reference
-          * nodes are visible to the IDOM_TreeWalker. If false, they will be skipped over.
+          * nodes are visible to the DOMTreeWalker. If false, they will be skipped over.
           *
           */
         virtual bool getExpandEntityReferences()= 0;
 
         /**
-          * Return the node at which the IDOM_TreeWalker is currently positioned.
+          * Return the node at which the DOMTreeWalker is currently positioned.
           *
           */
-        virtual IDOM_Node*		getCurrentNode()= 0;
+        virtual DOMNode*		getCurrentNode()= 0;
 
         /**
           * Moves to and returns the closest visible ancestor node of the current node.
-          * If the search for parentNode attempts to step upward from the IDOM_TreeWalker's root
+          * If the search for parentNode attempts to step upward from the DOMTreeWalker's root
           * node, or if it fails to find a visible ancestor node, this method retains the
           * current position and returns null.
           *
           */
-        virtual IDOM_Node*		parentNode()= 0;
+        virtual DOMNode*		parentNode()= 0;
 
         /**
-          * Moves the <code>IDOM_TreeWalker</code> to the first child of the current node,
+          * Moves the <code>DOMTreeWalker</code> to the first child of the current node,
           * and returns the new node. If the current node has no children, returns
           * <code>null</code>, and retains the current node.
           *
           */
-        virtual IDOM_Node*		firstChild()= 0;
+        virtual DOMNode*		firstChild()= 0;
 
         /**
-          * Moves the <code>IDOM_TreeWalker</code> to the last child of the current node, and
+          * Moves the <code>DOMTreeWalker</code> to the last child of the current node, and
           * returns the new node. If the current node has no children, returns
           * <code>null</code>, and retains the current node.
           *
           */
-        virtual IDOM_Node*		lastChild()= 0;
+        virtual DOMNode*		lastChild()= 0;
 
         /**
-          * Moves the <code>IDOM_TreeWalker</code> to the previous sibling of the current
+          * Moves the <code>DOMTreeWalker</code> to the previous sibling of the current
           * node, and returns the new node. If the current node has no previous sibling,
           * returns <code>null</code>, and retains the current node.
           *
           */
-        virtual IDOM_Node*		previousSibling()= 0;
+        virtual DOMNode*		previousSibling()= 0;
 
         /**
-          * Moves the <code>IDOM_TreeWalker</code> to the next sibling of the current node,
+          * Moves the <code>DOMTreeWalker</code> to the next sibling of the current node,
           * and returns the new node. If the current node has no next sibling, returns
           * <code>null</code>, and retains the current node.
           *
           */
-        virtual IDOM_Node*		nextSibling()= 0;
+        virtual DOMNode*		nextSibling()= 0;
 
         /**
-          * Moves the <code>IDOM_TreeWalker</code> to the previous visible node in document
+          * Moves the <code>DOMTreeWalker</code> to the previous visible node in document
           * order relative to the current node, and returns the new node. If the current
           * node has no previous node,
-          * or if the search for previousNode attempts to step upward from the IDOM_TreeWalker's
+          * or if the search for previousNode attempts to step upward from the DOMTreeWalker's
           * root node, returns <code>null</code>, and retains the current node.
           *
           */
-        virtual IDOM_Node*		previousNode()= 0;
+        virtual DOMNode*		previousNode()= 0;
 
         /**
-          * Moves the <code>IDOM_TreeWalker</code> to the next visible node in document order
+          * Moves the <code>DOMTreeWalker</code> to the next visible node in document order
           * relative to the current node, and returns the new node. If the current node has
           * no next node,
-          * or if the search for nextNode attempts to step upward from the IDOM_TreeWalker's
+          * or if the search for nextNode attempts to step upward from the DOMTreeWalker's
           * root node, returns <code>null</code>, and retains the current node.
           *
           */
-        virtual IDOM_Node*		nextNode()= 0;
+        virtual DOMNode*		nextNode()= 0;
         //@}
 
         /** @name Set functions. */
         //@{
         /**
-          * Set the node at which the IDOM_TreeWalker is currently positioned.
+          * Set the node at which the DOMTreeWalker is currently positioned.
           *
           */
-        virtual void			setCurrentNode(IDOM_Node* currentNode)= 0;
+        virtual void			setCurrentNode(DOMNode* currentNode)= 0;
         //@}
 };
 

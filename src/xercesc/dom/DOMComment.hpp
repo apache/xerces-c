@@ -1,11 +1,11 @@
-#ifndef IDOM_Comment_HEADER_GUARD_
-#define IDOM_Comment_HEADER_GUARD_
+#ifndef DOMComment_HEADER_GUARD_
+#define DOMComment_HEADER_GUARD_
 
 
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,23 +59,11 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:49  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:27  andyh
- * IDOM
- *
+ * $Id$
  */
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "IDOM_CharacterData.hpp"
+#include "DOMCharacterData.hpp"
 
 
 /**
@@ -84,15 +72,15 @@
  * <P>The string value contains all of the characters between
  * the starting '<code>&lt;!--</code>' and ending '<code>--&gt;</code>'.
  */
-class CDOM_EXPORT IDOM_Comment: public IDOM_CharacterData {
+class CDOM_EXPORT DOMComment: public DOMCharacterData {
 
 protected:
-    IDOM_Comment() {};
-    IDOM_Comment(const IDOM_Comment &other) {};
-    IDOM_Comment & operator = (const IDOM_Comment &other) {return *this;};
+    DOMComment() {};
+    DOMComment(const DOMComment &other) {};
+    DOMComment & operator = (const DOMComment &other) {return *this;};
 
 public:
-    virtual ~IDOM_Comment() {};
+    virtual ~DOMComment() {};
 
 };
 

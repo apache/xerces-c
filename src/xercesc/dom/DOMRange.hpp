@@ -1,10 +1,10 @@
-#ifndef IDOM_Range_HEADER_GUARD_
-#define IDOM_Range_HEADER_GUARD_
+#ifndef DOMRange_HEADER_GUARD_
+#define DOMRange_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,14 +63,14 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 
-class IDOM_Node;
-class IDOM_DocumentFragment;
+class DOMNode;
+class DOMDocumentFragment;
 
-class CDOM_EXPORT IDOM_Range {
+class CDOM_EXPORT DOMRange {
 protected:
-    IDOM_Range() {};
-    IDOM_Range(const IDOM_Range &other) {};
-    IDOM_Range & operator = (const IDOM_Range &other) {return *this;};
+    DOMRange() {};
+    DOMRange(const DOMRange &other) {};
+    DOMRange & operator = (const DOMRange &other) {return *this;};
 
 public:
 
@@ -81,39 +81,39 @@ public:
         END_TO_START    = 3
     };
 
-    virtual ~IDOM_Range() {};
+    virtual ~DOMRange() {};
 
     //getter functions
-    virtual IDOM_Node* getStartContainer() const = 0;
-    virtual unsigned int getStartOffset() const = 0;
-    virtual IDOM_Node* getEndContainer() const = 0;
-    virtual unsigned int getEndOffset() const = 0;
+    virtual DOMNode* getStartContainer() const = 0;
+    virtual DOMSize_t getStartOffset() const = 0;
+    virtual DOMNode* getEndContainer() const = 0;
+    virtual DOMSize_t getEndOffset() const = 0;
     virtual bool getCollapsed() const = 0;
-    virtual const IDOM_Node* getCommonAncestorContainer() const = 0;
+    virtual const DOMNode* getCommonAncestorContainer() const = 0;
 
     //setter functions
-    virtual void setStart(const IDOM_Node *parent, unsigned int offset) = 0;
-    virtual void setEnd(const IDOM_Node *parent, unsigned int offset) = 0;
+    virtual void setStart(const DOMNode *parent, DOMSize_t offset) = 0;
+    virtual void setEnd(const DOMNode *parent, DOMSize_t offset) = 0;
 
-    virtual void setStartBefore(const IDOM_Node *refNode) = 0;
-    virtual void setStartAfter(const IDOM_Node *refNode) = 0;
-    virtual void setEndBefore(const IDOM_Node *refNode) = 0;
-    virtual void setEndAfter(const IDOM_Node *refNode) = 0;
+    virtual void setStartBefore(const DOMNode *refNode) = 0;
+    virtual void setStartAfter(const DOMNode *refNode) = 0;
+    virtual void setEndBefore(const DOMNode *refNode) = 0;
+    virtual void setEndAfter(const DOMNode *refNode) = 0;
 
     //misc functions
     virtual void collapse(bool toStart) = 0;
-    virtual void selectNode(const IDOM_Node *node) = 0;
-    virtual void selectNodeContents(const IDOM_Node *node) = 0;
+    virtual void selectNode(const DOMNode *node) = 0;
+    virtual void selectNodeContents(const DOMNode *node) = 0;
 
     //Functions related to comparing range Boundrary-Points
-    virtual short compareBoundaryPoints(CompareHow how, const IDOM_Range* range) const = 0;
+    virtual short compareBoundaryPoints(CompareHow how, const DOMRange* range) const = 0;
     virtual void deleteContents() = 0;
-    virtual IDOM_DocumentFragment* extractContents() = 0;
-    virtual IDOM_DocumentFragment* cloneContents() const = 0;
-    virtual void insertNode(IDOM_Node *node) = 0;
+    virtual DOMDocumentFragment* extractContents() = 0;
+    virtual DOMDocumentFragment* cloneContents() const = 0;
+    virtual void insertNode(DOMNode *node) = 0;
     //Misc functions
-    virtual void surroundContents(IDOM_Node *node) = 0;
-    virtual IDOM_Range* cloneRange() const = 0;
+    virtual void surroundContents(DOMNode *node) = 0;
+    virtual DOMRange* cloneRange() const = 0;
     virtual const XMLCh* toString() const = 0;
     virtual void detach() = 0;
 

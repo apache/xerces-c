@@ -1,5 +1,5 @@
-#ifndef IDOM_NamedNodeMap_HEADER_GUARD_
-#define IDOM_NamedNodeMap_HEADER_GUARD_
+#ifndef DOMNamedNodeMap_HEADER_GUARD_
+#define DOMNamedNodeMap_HEADER_GUARD_
 
 
 /*
@@ -59,27 +59,12 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.2  2002/02/04 21:11:55  tng
- * Remove the phrase "Experimental".
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:53  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:30  andyh
- * IDOM
- *
+ * $Id$
  */
 
 #include <xercesc/util/XercesDefs.hpp>
 
-class IDOM_Node;
+class DOMNode;
 
 /**
 *  <code>NamedNodeMap</code>s  are used to
@@ -92,18 +77,18 @@ class IDOM_Node;
 * convenient enumeration of the contents, and
 * does not imply that the DOM specifies an order to these Nodes.
 */
-class CDOM_EXPORT IDOM_NamedNodeMap {
+class CDOM_EXPORT DOMNamedNodeMap {
 protected:
-    IDOM_NamedNodeMap() {};
-    IDOM_NamedNodeMap(const IDOM_NamedNodeMap &other) {};
-    IDOM_NamedNodeMap & operator = (const IDOM_NamedNodeMap &other) {return *this;};
+    DOMNamedNodeMap() {};
+    DOMNamedNodeMap(const DOMNamedNodeMap &other) {};
+    DOMNamedNodeMap & operator = (const DOMNamedNodeMap &other) {return *this;};
 
 
 
 public:
     /** @name Destructor. */
     //@{
-    virtual ~IDOM_NamedNodeMap() {};
+    virtual ~DOMNamedNodeMap() {};
 
     //@}
 
@@ -135,7 +120,7 @@ public:
     *   <code>Element</code> object. The DOM user must explicitly clone
     *   <code>Attr</code> nodes to re-use them in other elements.
     */
-    virtual IDOM_Node   *setNamedItem(IDOM_Node *arg) = 0;
+    virtual DOMNode   *setNamedItem(DOMNode *arg) = 0;
 
     //@}
     /** @name Get functions. */
@@ -152,17 +137,17 @@ public:
     *   <code>NamedNodeMap</code>, or <code>null</code> if that is not a valid
     *   index.
     */
-    virtual IDOM_Node     *item(unsigned int index) const = 0;
+    virtual DOMNode     *item(DOMSize_t index) const = 0;
 
     /**
     * Retrieves a node specified by name.
     *
     * @param name The <code>nodeName</code> of a node to retrieve.
-    * @return A <code>IDOM_Node</code> (of any type) with the specified <code>nodeName</code>, or
+    * @return A <code>DOMNode</code> (of any type) with the specified <code>nodeName</code>, or
     *   <code>null</code> if it does not identify any node in
     *   the map.
     */
-    virtual IDOM_Node   *getNamedItem(const XMLCh *name) const = 0;
+    virtual DOMNode   *getNamedItem(const XMLCh *name) const = 0;
 
     /**
     * The number of nodes in the map.
@@ -170,7 +155,7 @@ public:
     * The range of valid child node indices is
     * 0 to <code>length-1</code> inclusive.
     */
-    virtual unsigned int   getLength() const = 0;
+    virtual DOMSize_t   getLength() const = 0;
 
     //@}
     /** @name Functions to change the node collection. */
@@ -191,7 +176,7 @@ public:
     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this <code>NamedNodeMap</code>
     *   is readonly.
     */
-    virtual IDOM_Node    *removeNamedItem(const XMLCh *name) = 0;
+    virtual DOMNode    *removeNamedItem(const XMLCh *name) = 0;
 
     //@}
     /** @name Functions introduced in DOM Level 2. */
@@ -203,11 +188,11 @@ public:
      * @param namespaceURI The <em>namespace URI</em> of
      *    the node to retrieve.
      * @param localName The <em>local name</em> of the node to retrieve.
-     * @return A <code>IDOM_Node</code> (of any type) with the specified
+     * @return A <code>DOMNode</code> (of any type) with the specified
      *    local name and namespace URI, or <code>null</code> if they do not
      *    identify any node in the map.
      */
-    virtual IDOM_Node   *getNamedItemNS(const XMLCh *namespaceURI,
+    virtual DOMNode   *getNamedItemNS(const XMLCh *namespaceURI,
 	                                        const XMLCh *localName) const = 0;
 
     /**
@@ -218,13 +203,13 @@ public:
      *       <CODE>localName</CODE> attribute of the node. If a node with those
      *       namespace URI and local name is already present in the map, it is
      *       replaced by the new one.
-     * @return If the new <code>IDOM_Node</code> replaces an existing node the
-     *   replaced <code>IDOM_Node</code> is returned,
+     * @return If the new <code>DOMNode</code> replaces an existing node the
+     *   replaced <code>DOMNode</code> is returned,
      *   otherwise <code>null</code> is returned.
      * @exception DOMException
      *   WRONG_DOCUMENT_ERR: Raised if <code>arg</code> was created from a
      *   different document than the one that created the
-     *   <code>IDOM_NamedNodeMap</code>.
+     *   <code>DOMNamedNodeMap</code>.
      *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this
      *   <code>vNamedNodeMap</code> is readonly.
      *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>arg</code> is an
@@ -232,7 +217,7 @@ public:
      *   <code>DOM_Element</code> object. The DOM user must explicitly clone
      *   <code>DOM_Attr</code> nodes to re-use them in other elements.
      */
-    virtual IDOM_Node   *setNamedItemNS(IDOM_Node *arg) = 0;
+    virtual DOMNode   *setNamedItemNS(DOMNode *arg) = 0;
 
     /**
      * Removes a node specified by local name and namespace URI.
@@ -240,9 +225,9 @@ public:
      * @param namespaceURI The <em>namespace URI</em> of
      *    the node to remove.
      * @param localName The <em>local name</em> of the
-     *    node to remove. When this <code>IDOM_NamedNodeMap</code> contains the
+     *    node to remove. When this <code>DOMNamedNodeMap</code> contains the
      *    attributes attached to an element, as returned by the attributes
-     *    attribute of the <code>IDOM_Node</code> interface, if the removed
+     *    attribute of the <code>DOMNode</code> interface, if the removed
      *    attribute is known to have a default value, an attribute
      *    immediately appears containing the default value
      *    as well as the corresponding namespace URI, local name, and prefix.
@@ -252,10 +237,10 @@ public:
      *   NOT_FOUND_ERR: Raised if there is no node named <code>name</code> in
      *   the map.
      * <br>
-     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this <code>IDOM_NamedNodeMap</code>
+     *   NO_MODIFICATION_ALLOWED_ERR: Raised if this <code>DOMNamedNodeMap</code>
      *   is readonly.
      */
-    virtual IDOM_Node     *removeNamedItemNS(const XMLCh *namespaceURI,
+    virtual DOMNode     *removeNamedItemNS(const XMLCh *namespaceURI,
 	                                          const XMLCh *localName) = 0;
 
     //@}

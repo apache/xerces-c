@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,33 +55,18 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/06/04 20:44:14  tng
- * IDOM: Comment should say XMLCh instead of DOMString
- *
- * Revision 1.2  2001/05/11 13:25:49  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:27  andyh
- * IDOM
- *
+ * $Id$
  */
 
-#ifndef IDOM_CharacterData_HEADER_GUARD_
-#define IDOM_CharacterData_HEADER_GUARD_
+#ifndef DOMCharacterData_HEADER_GUARD_
+#define DOMCharacterData_HEADER_GUARD_
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/idom/IDOM_Node.hpp>
+#include <xercesc/dom/DOMNode.hpp>
 
 
 /**
- * The <code>IDOM_CharacterData</code> interface extends Node with a set  of
+ * The <code>DOMCharacterData</code> interface extends Node with a set  of
  * methods for accessing character data in the DOM.
  *
  * For clarity this set is defined here rather than on each class that uses
@@ -90,22 +75,22 @@
  * the interface from it. All <code>offset</code>s in this interface start
  * from 0, and index in terms of Unicode 16 bit storage units.
  */
-class CDOM_EXPORT IDOM_CharacterData: public IDOM_Node {
+class CDOM_EXPORT DOMCharacterData: public DOMNode {
 
 protected:
-    IDOM_CharacterData() {};
-    IDOM_CharacterData(const IDOM_CharacterData &other) {};
-    IDOM_CharacterData & operator = (const IDOM_CharacterData &other) {return *this;};
+    DOMCharacterData() {};
+    DOMCharacterData(const DOMCharacterData &other) {};
+    DOMCharacterData & operator = (const DOMCharacterData &other) {return *this;};
 
 public:
     /** @name Destructor. */
     //@{
 	 /**
-	  * Destructor for IDOM_CharacterData.  The object being destroyed
+	  * Destructor for DOMCharacterData.  The object being destroyed
       * is the reference to the Character Data node, not the character
       * data itself.
 	  */
-    virtual ~IDOM_CharacterData() {};
+    virtual ~DOMCharacterData() {};
 
 
     //@}
@@ -132,7 +117,7 @@ public:
    * This may have the value
    * zero, i.e., <code>CharacterData</code> nodes may be empty.
    */
-  virtual unsigned int       getLength() const = 0;
+  virtual DOMSize_t       getLength() const = 0;
   /**
    * Extracts a range of data from the node.
    *
@@ -146,8 +131,8 @@ public:
    *   than the number of characters in <code>data</code>, or if the
    *   specified <code>count</code> is negative.
    */
-  virtual const XMLCh *     substringData(unsigned int offset,
-                                   unsigned int count) const = 0;
+  virtual const XMLCh *     substringData(DOMSize_t offset,
+                                   DOMSize_t count) const = 0;
     //@}
     /** @name Functions that set or change data. */
     //@{
@@ -171,7 +156,7 @@ public:
    *   than the number of characters in <code>data</code>.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  virtual void               insertData(unsigned int offset, const  XMLCh *arg) = 0;
+  virtual void               insertData(DOMSize_t offset, const  XMLCh *arg) = 0;
   /**
    * Remove a range of characters from the node.
    *
@@ -188,8 +173,8 @@ public:
    *   specified <code>count</code> is negative.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  virtual void               deleteData(unsigned int offset,
-                                unsigned int count) = 0;
+  virtual void               deleteData(DOMSize_t offset,
+                                DOMSize_t count) = 0;
   /**
    * Replace the characters starting at the specified character offset with
    * the specified string.
@@ -208,8 +193,8 @@ public:
    *   specified <code>count</code> is negative.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  virtual void               replaceData(unsigned int offset,
-                                 unsigned int count,
+  virtual void               replaceData(DOMSize_t offset,
+                                 DOMSize_t count,
                                  const XMLCh *arg) = 0;
 
   /**

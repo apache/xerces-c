@@ -1,11 +1,11 @@
-#ifndef IDOM_CDataSection_HEADER_GUARD_
-#define IDOM_CDataSection_HEADER_GUARD_
+#ifndef DOMCDataSection_HEADER_GUARD_
+#define DOMCDataSection_HEADER_GUARD_
 
 
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,23 +59,11 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:49  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:27  andyh
- * IDOM
- *
+ * $Id$
  */
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "IDOM_Text.hpp"
+#include "DOMText.hpp"
 
 
 /**
@@ -86,21 +74,21 @@
  * <p>Note that the string data associated with the CDATA section may
  * contain characters that need to be escaped when appearing in an
  * XML document outside of a CDATA section.
- * <p> The <code>IDOM_CDATASection</code> class inherits from the
+ * <p> The <code>DOMCDATASection</code> class inherits from the
  * <code>DOM_CharacterData</code> class through the <code>Text</code>
  * interface. Adjacent CDATASection nodes are not merged by use
  * of the Element.normalize() method.
  */
-class CDOM_EXPORT IDOM_CDATASection: public IDOM_Text {
+class CDOM_EXPORT DOMCDATASection: public DOMText {
 protected:
-    IDOM_CDATASection() {};
-    IDOM_CDATASection(const IDOM_CDATASection &other) {};
-    IDOM_CDATASection & operator = (const IDOM_CDATASection &other) {return *this;};
+    DOMCDATASection() {};
+    DOMCDATASection(const DOMCDATASection &other) {};
+    DOMCDATASection & operator = (const DOMCDATASection &other) {return *this;};
 
 
 public:
 
-    virtual ~IDOM_CDATASection() {};
+    virtual ~DOMCDATASection() {};
 
 };
 #endif

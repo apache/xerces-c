@@ -1,5 +1,5 @@
-#ifndef IDOM_DocumentType_HEADER_GUARD_
-#define IDOM_DocumentType_HEADER_GUARD_
+#ifndef DOMDocumentType_HEADER_GUARD_
+#define DOMDocumentType_HEADER_GUARD_
 
 
 /*
@@ -59,46 +59,31 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.2  2002/02/04 21:11:55  tng
- * Remove the phrase "Experimental".
- *
- * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:51  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:28  andyh
- * IDOM
- *
+ * $Id$
  */
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "IDOM_Node.hpp"
+#include "DOMNode.hpp"
 
-class IDOM_NamedNodeMap;
+class DOMNamedNodeMap;
 
 /**
  * Each <code>Document</code> has a <code>doctype</code> whose value
  * is either <code>null</code> or a <code>DocumentType</code> object.
  *
- * The <code>IDOM_DocumentType</code> class provides access
+ * The <code>DOMDocumentType</code> class provides access
  *  to the list of entities and notations that are defined for the document.
  * <p>The DOM Level 1 doesn't support editing <code>DocumentType</code> nodes.
  */
-class CDOM_EXPORT IDOM_DocumentType: public IDOM_Node {
+class CDOM_EXPORT DOMDocumentType: public DOMNode {
 protected:
-    IDOM_DocumentType() {};
-    IDOM_DocumentType(const IDOM_DocumentType &other) {};
-    IDOM_DocumentType & operator = (const IDOM_DocumentType &other) {return *this;};
+    DOMDocumentType() {};
+    DOMDocumentType(const DOMDocumentType &other) {};
+    DOMDocumentType & operator = (const DOMDocumentType &other) {return *this;};
 
 public:
 
-    virtual ~IDOM_DocumentType() {};
+    virtual ~DOMDocumentType() {};
 
 
 
@@ -118,7 +103,7 @@ public:
    * Note: this functionality is not implemented in the initial release
    * of the parser, and the returned NamedNodeMap will be empty.
    */
-  virtual IDOM_NamedNodeMap *getEntities() const = 0;
+  virtual DOMNamedNodeMap *getEntities() const = 0;
 
 
   /**
@@ -129,7 +114,7 @@ public:
    * Note: this functionality is not implemented in the initial release
    * of the parser, and the returned NamedNodeMap will be empty.
    */
-  virtual IDOM_NamedNodeMap *getNotations() const = 0;
+  virtual DOMNamedNodeMap *getNotations() const = 0;
   //@}
 
     /** @name Functions introduced in DOM Level 2. */

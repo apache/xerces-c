@@ -1,3 +1,6 @@
+#ifndef DOMNodeFilter_HEADER_GUARD_
+#define DOMNodeFilter_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -55,42 +58,22 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.2  2002/02/04 21:11:55  tng
- * Remove the phrase "Experimental".
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/06/04 20:11:53  tng
- * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
- *
- * Revision 1.2  2001/05/11 13:25:53  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:31  andyh
- * IDOM
- *
+ * $Id$
  */
 
-// IDOM_NodeFilter.h: interface for the IDOM_NodeFilter class.
+//////////////////////////////////////////////////////////////////////
+// DOMNodeFilter.h: interface for the DOMNodeFilter class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef IDOM_NodeFilter_HEADER_GUARD_
-#define IDOM_NodeFilter_HEADER_GUARD_
+#include "DOMNode.hpp"
 
-#include "IDOM_Node.hpp"
-
-class IDNodeFilterImpl;
+class DOMNodeFilterImpl;
 
 
 /**
  * Filters are objects that know how to "filter out" nodes. If a
- * <code>IDOM_NodeIterator</code> or <code>IDOM_TreeWalker</code> is given a
+ * <code>DOMNodeIterator</code> or <code>DOMTreeWalker</code> is given a
  * filter, it applies the filter before it returns the next node.
  *
  * If the filter says to accept the node, the iterator returns it; otherwise, the
@@ -107,12 +90,12 @@ class IDNodeFilterImpl;
  *  code reuse.
  *
  */
-class CDOM_EXPORT IDOM_NodeFilter
+class CDOM_EXPORT DOMNodeFilter
 {
     protected:
-        IDOM_NodeFilter() {};
-        IDOM_NodeFilter(const IDOM_NodeFilter &other) {};
-        IDOM_NodeFilter & operator = (const IDOM_NodeFilter &other) {return *this;};
+        DOMNodeFilter() {};
+        DOMNodeFilter(const DOMNodeFilter &other) {};
+        DOMNodeFilter & operator = (const DOMNodeFilter &other) {return *this;};
 
     public:
         /** @name Enumerators for Node Filter */
@@ -163,15 +146,15 @@ class CDOM_EXPORT IDOM_NodeFilter
         /** @name Test function. */
         //@{
         /**
-         * Test whether a specified node is visible in the logical view of a IDOM_TreeWalker
-         * or IDOM_NodeIterator. This function will be called by the implementation of
-         * IDOM_TreeWalker and IDOM_NodeIterator; it is not intended to be called directly from user
+         * Test whether a specified node is visible in the logical view of a DOMTreeWalker
+         * or DOMNodeIterator. This function will be called by the implementation of
+         * DOMTreeWalker and DOMNodeIterator; it is not intended to be called directly from user
          * code.
          *
          * @param node The node to check to see if it passes the filter or not.
          * @return A constant to determine whether the node is accepted, rejected, or skipped.
          */
-        virtual short acceptNode (const IDOM_Node* node) const =0;
+        virtual short acceptNode (const DOMNode* node) const =0;
         //@}
 
 };

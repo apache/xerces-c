@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,45 +55,33 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:50  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:29  andyh
- * IDOM
- *
+ * $Id$
  */
 
-#include "IDOM_DOMException.hpp"
+#include "DOMException.hpp"
 
 
-IDOM_DOMException::IDOM_DOMException()
+DOMException::DOMException()
 : msg(0)
 {
         code = (ExceptionCode) 0;
 };
 
 
-IDOM_DOMException::IDOM_DOMException(short exCode, const XMLCh *message)
+DOMException::DOMException(short exCode, const XMLCh *message)
 : msg(message)
 {
    code = (ExceptionCode) exCode;
 };
 
 
-IDOM_DOMException::IDOM_DOMException(const IDOM_DOMException &other)
+DOMException::DOMException(const DOMException &other)
 : msg(other.msg)
 {
         code = other.code;
 };
 
 
-IDOM_DOMException::~IDOM_DOMException()
+DOMException::~DOMException()
 {
 };

@@ -1,3 +1,6 @@
+#ifndef DOMNode_HEADER_GUARD_
+#define DOMNode_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -58,15 +61,12 @@
  * $Id$
  */
 
-#ifndef IDOM_Node_HEADER_GUARD_
-#define IDOM_Node_HEADER_GUARD_
-
 #include <xercesc/util/XercesDefs.hpp>
 
 
-class IDOM_Document;
-class IDOM_NamedNodeMap;
-class IDOM_NodeList;
+class DOMDocument;
+class DOMNamedNodeMap;
+class DOMNodeList;
 
 /**
  * The <code>Node</code> interface is the primary datatype for the entire
@@ -87,31 +87,31 @@ class IDOM_NodeList;
  * Note that the  specialized interfaces may contain additional and more
  * convenient mechanisms to get and set the relevant information.
  */
-class  CDOM_EXPORT IDOM_Node {
+class  CDOM_EXPORT DOMNode {
 
     protected:
     /** @name Constructors and assignment operators */
     //@{
     /**
-      * Default constructor for IDOM_Node.  Protected, because
-      * IDOM_Node is an abstract base class.
+      * Default constructor for DOMNode.  Protected, because
+      * DOMNode is an abstract base class.
       *
       */
-        IDOM_Node() {};
+        DOMNode() {};
 
     /**
       * Copy constructor.
       *
       * @param other The object to be copied.
       */
-        IDOM_Node(const IDOM_Node &other) {};
+        DOMNode(const DOMNode &other) {};
 
     /**
       * Assignment operator.
       *
       * @param other The source to be assigned.
       */
-        IDOM_Node & operator = (const IDOM_Node &other) {return *this;};
+        DOMNode & operator = (const DOMNode &other) {return *this;};
 
     public:
 
@@ -119,10 +119,10 @@ class  CDOM_EXPORT IDOM_Node {
     /** @name Destructor. */
     //@{
 	 /**
-	  * Destructor for IDOM_Node.
+	  * Destructor for DOMNode.
 	  *
 	  */
-        virtual ~IDOM_Node() {};
+        virtual ~DOMNode() {};
 
     //@}
 
@@ -170,10 +170,10 @@ class  CDOM_EXPORT IDOM_Node {
      * All nodes, except <code>Document</code>,
      * <code>DocumentFragment</code>, and <code>Attr</code> may have a parent.
      * However, if a node has just been created and not yet added to the tree,
-     * or if it has been removed from the tree, a <code>null</code> IDOM_Node
+     * or if it has been removed from the tree, a <code>null</code> DOMNode
      * is returned.
      */
-    virtual IDOM_Node        *getParentNode() const = 0;
+    virtual DOMNode        *getParentNode() const = 0;
 
     /**
      * Gets a <code>NodeList</code> that contains all children of this node.
@@ -188,52 +188,52 @@ class  CDOM_EXPORT IDOM_Node {
      * including the ones returned by the <code>getElementsByTagName</code>
      * method.
      */
-    virtual IDOM_NodeList    *getChildNodes() const = 0;
+    virtual DOMNodeList    *getChildNodes() const = 0;
     /**
      * Gets the first child of this node.
      *
      * If there is no such node, this returns <code>null</code>.
      */
-    virtual IDOM_Node        *getFirstChild() const = 0;
+    virtual DOMNode        *getFirstChild() const = 0;
 
     /**
      * Gets the last child of this node.
      *
      * If there is no such node, this returns <code>null</code>.
      */
-    virtual IDOM_Node        *getLastChild() const = 0;
+    virtual DOMNode        *getLastChild() const = 0;
 
     /**
      * Gets the node immediately preceding this node.
      *
      * If there is no such node, this returns <code>null</code>.
      */
-    virtual IDOM_Node        *getPreviousSibling() const = 0;
+    virtual DOMNode        *getPreviousSibling() const = 0;
 
     /**
      * Gets the node immediately following this node.
      *
      * If there is no such node, this returns <code>null</code>.
      */
-    virtual IDOM_Node        *getNextSibling() const = 0;
+    virtual DOMNode        *getNextSibling() const = 0;
 
     /**
      * Gets a <code>NamedNodeMap</code> containing the attributes of this node (if it
      * is an <code>Element</code>) or <code>null</code> otherwise.
      */
-    virtual IDOM_NamedNodeMap  *getAttributes() const = 0;
+    virtual DOMNamedNodeMap  *getAttributes() const = 0;
 
     /**
-     * Gets the <code>IDOM_Document</code> object associated with this node.
+     * Gets the <code>DOMDocument</code> object associated with this node.
      *
      * This is also
-     * the <code>IDOM_Document</code> object used to create new nodes. When this
-     * node is a <code>IDOM_Document</code> or a <code>IDOM_DocumentType</code>
-     * which is not used with any <code>IDOM_Document</code> yet, this is
+     * the <code>DOMDocument</code> object used to create new nodes. When this
+     * node is a <code>DOMDocument</code> or a <code>DOMDocumentType</code>
+     * which is not used with any <code>DOMDocument</code> yet, this is
      * <code>null</code>.
      *
      */
-    virtual IDOM_Document      *getOwnerDocument() const = 0;
+    virtual DOMDocument      *getOwnerDocument() const = 0;
 
 
     //@}
@@ -258,7 +258,7 @@ class  CDOM_EXPORT IDOM_Node {
      *   its attributes, if it is an <code>Element</code>).
      * @return The duplicate node.
      */
-    virtual IDOM_Node        * cloneNode(bool deep) const = 0;
+    virtual DOMNode        * cloneNode(bool deep) const = 0;
 
     //@}
     /** @name Functions to modify the DOM Node. */
@@ -273,7 +273,7 @@ class  CDOM_EXPORT IDOM_Node {
      * <br>If <code>newChild</code> is a <code>DocumentFragment</code> object,
      * all of its children are inserted, in the same order, before
      * <code>refChild</code>. If the <code>newChild</code> is already in the
-     * tree, it is first removed.  Note that a <code>IDOM_Node</code> that
+     * tree, it is first removed.  Note that a <code>DOMNode</code> that
      * has never been assigned to refer to an actual node is == null.
      * @param newChild The node to insert.
      * @param refChild The reference node, i.e., the node before which the new
@@ -290,16 +290,16 @@ class  CDOM_EXPORT IDOM_Node {
      *   <br>NOT_FOUND_ERR: Raised if <code>refChild</code> is not a child of
      *   this node.
      */
-    virtual IDOM_Node       *insertBefore(IDOM_Node *newChild,
-                                          IDOM_Node *refChild) = 0;
+    virtual DOMNode       *insertBefore(DOMNode *newChild,
+                                          DOMNode *refChild) = 0;
 
 
     /**
      * Replaces the child node <code>oldChild</code> with <code>newChild</code>
      * in the list of children, and returns the <code>oldChild</code> node.
      *
-     * If <CODE>newChild</CODE> is a <CODE>IDOM_DocumentFragment</CODE> object,
-     * <CODE>oldChild</CODE> is replaced by all of the <CODE>IDOM_DocumentFragment</CODE>
+     * If <CODE>newChild</CODE> is a <CODE>DOMDocumentFragment</CODE> object,
+     * <CODE>oldChild</CODE> is replaced by all of the <CODE>DOMDocumentFragment</CODE>
      * children, which are inserted in the same order.
      *
      * If the <code>newChild</code> is already in the tree, it is first removed.
@@ -316,8 +316,8 @@ class  CDOM_EXPORT IDOM_Node {
      *   <br>NOT_FOUND_ERR: Raised if <code>oldChild</code> is not a child of
      *   this node.
      */
-    virtual IDOM_Node  *replaceChild(IDOM_Node *newChild,
-                                     IDOM_Node *oldChild) = 0;
+    virtual DOMNode  *replaceChild(DOMNode *newChild,
+                                     DOMNode *oldChild) = 0;
     /**
      * Removes the child node indicated by <code>oldChild</code> from the list
      * of children, and returns it.
@@ -329,7 +329,7 @@ class  CDOM_EXPORT IDOM_Node {
      *   <br>NOT_FOUND_ERR: Raised if <code>oldChild</code> is not a child of
      *   this node.
      */
-    virtual IDOM_Node        *removeChild(IDOM_Node *oldChild) = 0;
+    virtual DOMNode        *removeChild(DOMNode *oldChild) = 0;
 
     /**
      * Adds the node <code>newChild</code> to the end of the list of children of
@@ -350,7 +350,7 @@ class  CDOM_EXPORT IDOM_Node {
      *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node or the node being
      *   appended is readonly.
      */
-    virtual IDOM_Node        *appendChild(IDOM_Node *newChild) = 0;
+    virtual DOMNode        *appendChild(DOMNode *newChild) = 0;
 
     //@}
     /** @name Query functions. */
@@ -392,21 +392,21 @@ class  CDOM_EXPORT IDOM_Node {
     //@{
 
     /**
-     * Puts all <CODE>IDOM_Text</CODE>
-     * nodes in the full depth of the sub-tree underneath this <CODE>IDOM_Node</CODE>,
+     * Puts all <CODE>DOMText</CODE>
+     * nodes in the full depth of the sub-tree underneath this <CODE>DOMNode</CODE>,
      * including attribute nodes, into a "normal" form where only markup (e.g.,
      * tags, comments, processing instructions, CDATA sections, and entity
-     * references) separates <CODE>IDOM_Text</CODE>
-     * nodes, i.e., there are neither adjacent <CODE>IDOM_Text</CODE>
-     * nodes nor empty <CODE>IDOM_Text</CODE>
+     * references) separates <CODE>DOMText</CODE>
+     * nodes, i.e., there are neither adjacent <CODE>DOMText</CODE>
+     * nodes nor empty <CODE>DOMText</CODE>
      * nodes. This can be used to ensure that the DOM view of a document is the
      * same as if it were saved and re-loaded, and is useful when operations
      * (such as XPointer lookups) that depend on a particular document tree
      * structure are to be used.
-     * <P><B>Note:</B> In cases where the document contains <CODE>IDOM_CDATASections</CODE>,
+     * <P><B>Note:</B> In cases where the document contains <CODE>DOMCDATASections</CODE>,
      * the normalize operation alone may not be sufficient, since XPointers do
-     * not differentiate between <CODE>IDOM_Text</CODE>
-     * nodes and <CODE>IDOM_CDATASection</CODE>
+     * not differentiate between <CODE>DOMText</CODE>
+     * nodes and <CODE>DOMCDATASection</CODE>
      * nodes.</P>
      *
      *
@@ -419,7 +419,7 @@ class  CDOM_EXPORT IDOM_Node {
      *
      * @param feature The string of the feature to test. This is the same
      * name as what can be passed to the method <code>hasFeature</code> on
-     * <code>IDOM_DOMImplementation</code>.
+     * <code>DOMImplementation</code>.
      * @param version This is the version number of the feature to test. In
      * Level 2, version 1, this is the string "2.0". If the version is not
      * specified, supporting any version of the feature will cause the
@@ -440,7 +440,7 @@ class  CDOM_EXPORT IDOM_Node {
      * <p>
      * For nodes of any type other than <CODE>ELEMENT_NODE</CODE> and
      * <CODE>ATTRIBUTE_NODE</CODE> and nodes created with a DOM Level 1 method,
-     * such as <CODE>createElement</CODE> from the <CODE>IDOM_Document</CODE>
+     * such as <CODE>createElement</CODE> from the <CODE>DOMDocument</CODE>
      * interface, this is always <CODE>null</CODE>.
      *
      */
@@ -457,7 +457,7 @@ class  CDOM_EXPORT IDOM_Node {
      * Returns the local part of the <em>qualified name</em> of this node.
      * <p>
      * For nodes created with a DOM Level 1 method, such as
-     * <code>createElement</code> from the <code>IDOM_Document</code> interface,
+     * <code>createElement</code> from the <code>DOMDocument</code> interface,
      * it is null.
      *
      *
@@ -470,7 +470,7 @@ class  CDOM_EXPORT IDOM_Node {
      * Note that setting this attribute, when permitted, changes
      * the <CODE>nodeName</CODE> attribute, which holds the <EM>qualified
      * name</EM>, as well as the <CODE>tagName</CODE> and <CODE>name</CODE>
-     * attributes of the <CODE>IDOM_Element</CODE> and <CODE>IDOM_Attr</CODE>
+     * attributes of the <CODE>DOMElement</CODE> and <CODE>DOMAttr</CODE>
      * interfaces, when applicable.
      * <p>
      * Note also that changing the prefix of an

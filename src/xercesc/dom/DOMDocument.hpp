@@ -1,5 +1,5 @@
-#ifndef IDOM_Document_HEADER_GUARD_
-#define IDOM_Document_HEADER_GUARD_
+#ifndef DOMDocument_HEADER_GUARD_
+#define DOMDocument_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
@@ -62,34 +62,34 @@
 */
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "IDOM_Node.hpp"
+#include "DOMNode.hpp"
 
-class IDNodeIteratorImpl;
+class DOMNodeIteratorImpl;
 
-class IDOM_DocumentType;
-class IDOM_Element;
-class IDOM_DocumentFragment;
-class IDOM_Comment;
-class IDOM_CDATASection;
-class IDOM_ProcessingInstruction;
-class IDOM_Attr;
-class IDOM_Entity;
-class IDOM_EntityReference;
-class IDOM_DOMImplementation;
-class IDOM_NodeFilter;
-class IDOM_NodeList;
-class IDOM_Notation;
-class IDOM_Text;
-class IDOM_Node;
-class IDOM_NodeIterator;
-class IDOM_TreeWalker;
-class IDOM_Range;
+class DOMDocumentType;
+class DOMElement;
+class DOMDocumentFragment;
+class DOMComment;
+class DOMCDATASection;
+class DOMProcessingInstruction;
+class DOMAttr;
+class DOMEntity;
+class DOMEntityReference;
+class DOMImplementation;
+class DOMNodeFilter;
+class DOMNodeList;
+class DOMNotation;
+class DOMText;
+class DOMNode;
+class DOMNodeIterator;
+class DOMTreeWalker;
+class DOMRange;
 
 
 /**
-* Class to refer to XML Document nodes in the IDOM.
+* Class to refer to XML Document nodes in the DOM.
 *
-* Conceptually, a IDOM document node is the root of the document tree, and provides
+* Conceptually, a DOM document node is the root of the document tree, and provides
 * the  primary access to the document's data.
 * <p>Since elements, text nodes, comments, processing instructions, etc.
 * cannot exist outside the context of a <code>Document</code>, the
@@ -98,35 +98,35 @@ class IDOM_Range;
 * <code>ownerDocument</code> attribute which associates them with the
 * <code>Document</code> within whose  context they were created.
 */
-class CDOM_EXPORT IDOM_Document: public IDOM_Node {
+class CDOM_EXPORT DOMDocument: public DOMNode {
 
 protected:
     /** @name Constructors and assignment operators */
     //@{
     /**
-     * The default constructor for IDOM_Document creates a null
-     * IDOM_Document object that refers to no document.  It may subsequently be
+     * The default constructor for DOMDocument creates a null
+     * DOMDocument object that refers to no document.  It may subsequently be
      * assigned to refer to an actual Document node.
      *
      * To create a new document, use the DOMImplementation
-     *   <code> IDOM_DOMImplementation::createDocument(). </code>
+     *   <code> DOMImplementation::createDocument(). </code>
      *
      */
-    IDOM_Document() {};
+    DOMDocument() {};
 
     /**
-      * Copy constructor.  Creates a new <code>IDOM_Document</code> that refers to the
+      * Copy constructor.  Creates a new <code>DOMDocument</code> that refers to the
       * same underlying actual document as the original.
       *
       * @param other The object to be copied
       */
-    IDOM_Document(const IDOM_Document &other) {};
+    DOMDocument(const DOMDocument &other) {};
     /**
       * Assignment operator
       *
       * @param other The object to be copied
       */
-    IDOM_Document & operator = (const IDOM_Document &other) {return *this;};
+    DOMDocument & operator = (const DOMDocument &other) {return *this;};
 
 
 	//@}
@@ -135,7 +135,7 @@ public:
   /** @name Destructor */
   //@{
 	
-    virtual ~IDOM_Document() {};
+    virtual ~DOMDocument() {};
 
   //@}
   /** @name Factory methods to create new nodes for the Document */
@@ -148,7 +148,7 @@ public:
     * @param name The name of the entity to instantiate
     *
     */
-    virtual IDOM_Entity     *createEntity(const XMLCh *name) = 0;
+    virtual DOMEntity     *createEntity(const XMLCh *name) = 0;
 
     /**
     * Creates an element of the type specified.
@@ -157,60 +157,60 @@ public:
     * implements the Element interface, so attributes can be specified
     * directly  on the returned object.
     * @param tagName The name of the element type to instantiate.
-    * @return A <code>IDOM_Element</code> that reference the new element.
-    * @exception IDOMException
+    * @return A <code>DOMElement</code> that reference the new element.
+    * @exception DOMException
     *   INVALID_CHARACTER_ERR: Raised if the specified name contains an
     *   illegal character.
     */
-    virtual IDOM_Element     *createElement(const XMLCh *tagName) = 0;
+    virtual DOMElement     *createElement(const XMLCh *tagName) = 0;
 
 
 
     /**
     * Creates an empty DocumentFragment object.
     *
-    * @return A <code>IDOM_DocumentFragment</code> that references the newly
+    * @return A <code>DOMDocumentFragment</code> that references the newly
     * created document fragment.
     */
-    virtual IDOM_DocumentFragment   *createDocumentFragment() = 0;
+    virtual DOMDocumentFragment   *createDocumentFragment() = 0;
 
     /**
     * Creates a Text node given the specified string.
     *
     * @param data The data for the node.
-    * @return A <code>IDOM_Text</code> object that references the newly
+    * @return A <code>DOMText</code> object that references the newly
     *  created text node.
     */
-    virtual IDOM_Text         *createTextNode(const XMLCh *data) = 0;
+    virtual DOMText         *createTextNode(const XMLCh *data) = 0;
 
     /**
     * Creates a Comment node given the specified string.
     *
     * @param data The data for the comment.
-    * @return A <code>IDOM_Comment</code> that references the newly
+    * @return A <code>DOMComment</code> that references the newly
     *  created comment node.
     */
-    virtual IDOM_Comment      *createComment(const XMLCh *data) = 0;
+    virtual DOMComment      *createComment(const XMLCh *data) = 0;
 
     /**
     * Creates a CDATASection node whose value  is the specified
     * string.
     *
-    * @param data The data for the <code>IDOM_CDATASection</code> contents.
-    * @return A <code>IDOM_CDATASection</code> object.
-    * @exception IDOMException
+    * @param data The data for the <code>DOMCDATASection</code> contents.
+    * @return A <code>DOMCDATASection</code> object.
+    * @exception DOMException
     *   NOT_SUPPORTED_ERR: Raised if this document is an HTML document.
     */
-    virtual IDOM_CDATASection   *createCDATASection(const XMLCh *data) = 0;
+    virtual DOMCDATASection   *createCDATASection(const XMLCh *data) = 0;
 
     /**
     *  Create a DocumentType node.  Non-standard extension.
     *
-    * @return A <code>IDOM_DocumentType</code> that references the newly
+    * @return A <code>DOMDocumentType</code> that references the newly
     *  created DocumentType node.
     *
     */
-    virtual IDOM_DocumentType *createDocumentType(const XMLCh *name) = 0;
+    virtual DOMDocumentType *createDocumentType(const XMLCh *name) = 0;
 
 
     /**
@@ -219,10 +219,10 @@ public:
     *  Non-standard extension.
     *
     *  @param name The name of the notation to instantiate
-    * @return A <code>IDOM_Notation</code> that references the newly
+    * @return A <code>DOMNotation</code> that references the newly
     *  created Notation node.
     */
-    virtual IDOM_Notation *createNotation(const XMLCh *name) = 0;
+    virtual DOMNotation *createNotation(const XMLCh *name) = 0;
 
 
     /**
@@ -231,12 +231,12 @@ public:
     *
     * @param target The target part of the processing instruction.
     * @param data The data for the node.
-    * @return A <code>IDOM_ProcessingInstruction</code> that references the newly
+    * @return A <code>DOMProcessingInstruction</code> that references the newly
     *  created PI node.
-    * @exception IDOMException
+    * @exception DOMException
     *   INVALID_CHARACTER_ERR: Raised if an illegal character is specified.
     */
-    virtual IDOM_ProcessingInstruction *createProcessingInstruction(const XMLCh *target,
+    virtual DOMProcessingInstruction *createProcessingInstruction(const XMLCh *target,
         const XMLCh *data) = 0;
 
 
@@ -245,39 +245,39 @@ public:
      *
      * Note that the
      * <code>Attr</code> instance can then be attached to an Element
-     * using the <code>IDOMElement::setAttribute()</code> method.
+     * using the <code>DOMElement::setAttribute()</code> method.
      * @param name The name of the attribute.
-     * @return A new <CODE>IDOM_Attr</CODE>
+     * @return A new <CODE>DOMAttr</CODE>
      *       object with the <CODE>nodeName</CODE> attribute set to
      *       <CODE>name</CODE>, and <CODE>localName</CODE>, <CODE>prefix</CODE>,
      *       and <CODE>namespaceURI</CODE> set to
      *       <CODE>null</CODE>.
-     * @exception IDOMException
+     * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified name contains an
      *   illegal character.
      */
-    virtual IDOM_Attr     *createAttribute(const XMLCh *name) = 0;
+    virtual DOMAttr     *createAttribute(const XMLCh *name) = 0;
 
 
     /**
      * Creates an EntityReference object.
      *
      * @param name The name of the entity to reference.
-     * @return A <code>IDOM_EntityReference</code> that references the newly
+     * @return A <code>DOMEntityReference</code> that references the newly
      *  created EntityReference node.
-     * @exception IDOMException
+     * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified name contains an
      *   illegal character.
      */
-    virtual IDOM_EntityReference    *createEntityReference(const XMLCh *name) = 0;
+    virtual DOMEntityReference    *createEntityReference(const XMLCh *name) = 0;
 
 
     /**
-     * Creates a NodeIterator object.   (IDOM2)
+     * Creates a NodeIterator object.   (DOM2)
      *
      * NodeIterators are used to step through a set of nodes, e.g. the set of nodes in a NodeList, the
      * document subtree governed by a particular node, the results of a query, or any other set of nodes.
-     * The set of nodes to be iterated is determined by the implementation of the NodeIterator. IDOM Level 2
+     * The set of nodes to be iterated is determined by the implementation of the NodeIterator. DOM Level 2
      * specifies a single NodeIterator implementation for document-order traversal of a document subtree.
      * Instances of these iterators are created by calling <code>DocumentTraversal.createNodeIterator()</code>.
      *
@@ -288,19 +288,19 @@ public:
      * use the <code>whatToShow</code> flags to show the entity reference node and set
      * expandEntityReferences to false.
      *
-     * @param root The root node of the IDOM tree
+     * @param root The root node of the DOM tree
      * @param whatToShow This attribute determines which node types are presented via the iterator.
      * @param filter The filter used to screen nodes
      * @param entityReferenceExpansion The value of this flag determines whether the children of entity reference nodes are
      *                   visible to the iterator. If false, they will be skipped over.
      */
 
-    virtual IDOM_NodeIterator *createNodeIterator(IDOM_Node         *root,
+    virtual DOMNodeIterator *createNodeIterator(DOMNode         *root,
                                                    unsigned long    whatToShow,
-                                                   IDOM_NodeFilter* filter,
+                                                   DOMNodeFilter* filter,
                                                    bool             entityReferenceExpansion) = 0;
      /**
-     * Creates a TreeWalker object.   (IDOM2)
+     * Creates a TreeWalker object.   (DOM2)
      *
      * TreeWalker objects are used to navigate a document tree or subtree using the view of the document defined
      * by its whatToShow flags and any filters that are defined for the TreeWalker. Any function which performs
@@ -321,16 +321,16 @@ public:
      * <code>whatToShow</code> flags to show the entity reference node and set
      * <code>expandEntityReferences</code> to false
      *
-     * @param root The root node of the IDOM tree
+     * @param root The root node of the DOM tree
      * @param whatToShow This attribute determines which node types are presented via the tree-walker.
      * @param filter The filter used to screen nodes
      * @param entityReferenceExpansion The value of this flag determines whether the children of entity reference nodes are
      *                   visible to the tree-walker. If false, they will be skipped over.
      */
 
-    virtual IDOM_TreeWalker  *createTreeWalker(IDOM_Node        *root,
+    virtual DOMTreeWalker  *createTreeWalker(DOMNode        *root,
                                                unsigned long     whatToShow,
-                                               IDOM_NodeFilter  *filter,
+                                               DOMNodeFilter  *filter,
                                                bool              entityReferenceExpansion) = 0;
 
     /**
@@ -338,42 +338,42 @@ public:
       * selected contents
       *
       * @return The initial state of the Range such that both the boundary-points
-      * are positioned at the beginning of the corresponding IDOM_DOcument, before
+      * are positioned at the beginning of the corresponding DOMDOcument, before
       * any content. The range returned can only be used to select content
       * associated with this document, or with documentFragments and Attrs for
       * which this document is the ownerdocument
 	  */
-    virtual IDOM_Range    *createRange() = 0;
+    virtual DOMRange    *createRange() = 0;
 
     //@}
     /** @name Getter functions */
     //@{
     /**
-     * Get Document Type Declaration (see <code>IDOM_DocumentType</code>) associated
+     * Get Document Type Declaration (see <code>DOMDocumentType</code>) associated
      * with  this document.
      *
      * For documents without
-     * a document type declaration this returns <code>null</code> reference object. The IDOM Level
+     * a document type declaration this returns <code>null</code> reference object. The DOM Level
      *  1 does not support editing the Document Type Declaration, therefore
      * <code>docType</code> cannot be altered in any way.
      */
-    virtual IDOM_DocumentType       *getDoctype() const = 0;
+    virtual DOMDocumentType       *getDoctype() const = 0;
 
 
 
     /**
-     * Return the <code>IDOMImplementation</code> object that handles this document.
+     * Return the <code>DOMImplementation</code> object that handles this document.
      */
-    virtual IDOM_DOMImplementation  *getImplementation() const = 0;
+    virtual DOMImplementation  *getImplementation() const = 0;
 
 
     /**
      * Return a reference to the root element of the document.
      */
-    virtual IDOM_Element     *getDocumentElement() const = 0;
+    virtual DOMElement     *getDocumentElement() const = 0;
 
     /**
-     * Returns a <code>IDOM_NodeList</code> of all the elements with a
+     * Returns a <code>DOMNodeList</code> of all the elements with a
      * given tag name.  The returned node list is "live", in that changes
      * to the document tree made after a nodelist was initially
      * returned will be immediately reflected in the node list.
@@ -386,10 +386,10 @@ public:
      * @return A reference to a NodeList containing all the matched
      *   <code>Element</code>s.
      */
-    virtual IDOM_NodeList      *getElementsByTagName(const XMLCh *tagname) const = 0;
+    virtual DOMNodeList      *getElementsByTagName(const XMLCh *tagname) const = 0;
 
     //@}
-    /** @name Functions introduced in IDOM Level 2. */
+    /** @name Functions introduced in DOM Level 2. */
     //@{
 
     /**
@@ -405,14 +405,14 @@ public:
      * @param importedNode The node to import.
      * @param deep If <CODE>true</CODE>, recursively import the subtree under the
      *      specified node; if <CODE>false</CODE>, import only the node itself,
-     *      as explained above. This does not apply to <CODE>IDOM_Attr</CODE>,
-     *      <CODE>IDOM_EntityReference</CODE>, and <CODE>IDOM_Notation</CODE> nodes.
-     * @return The imported node that belongs to this <CODE>IDOM_Document</CODE>.
-     * @exception IDOMException
+     *      as explained above. This does not apply to <CODE>DOMAttr</CODE>,
+     *      <CODE>DOMEntityReference</CODE>, and <CODE>DOMNotation</CODE> nodes.
+     * @return The imported node that belongs to this <CODE>DOMDocument</CODE>.
+     * @exception DOMException
      *   NOT_SUPPORTED_ERR: Raised if the type of node being imported is
      *                      not supported.
      */
-    virtual IDOM_Node        *importNode(IDOM_Node *importedNode, bool deep) = 0;
+    virtual DOMNode        *importNode(DOMNode *importedNode, bool deep) = 0;
 
     /**
      * Creates an element of the given qualified name and
@@ -422,8 +422,8 @@ public:
      *   the element to create.
      * @param qualifiedName The <em>qualified name</em>
      *   of the element type to instantiate.
-     * @return A new <code>IDOM_Element</code> object.
-     * @exception IDOMException
+     * @return A new <code>DOMElement</code> object.
+     * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
      *                          an illegal character.
      * <br>
@@ -434,13 +434,13 @@ public:
      *      the <CODE>namespaceURI</CODE> is different from
      *      "http://www.w3.org/XML/1998/namespace".
      */
-    virtual IDOM_Element         *createElementNS(const XMLCh *namespaceURI,
+    virtual DOMElement         *createElementNS(const XMLCh *namespaceURI,
 	                                              const XMLCh *qualifiedName) = 0;
 
     /**
      * Creates an element of the given qualified name and
      * namespace URI, and also stores line/column number info.
-     * Non standard. Used by XIDOMParser during schema traversal.
+     * Non standard. Used by XSDXercesDOMParser during schema traversal.
      *
      * @param namespaceURI The <em>namespace URI</em> of
      *   the element to create.
@@ -448,8 +448,8 @@ public:
      *   of the element type to instantiate.
      * @param lineNum The <em>line number</em> of the element to create.
      * @param columnNum The <em>column number</em> of the element to create.
-     * @return A new <code>IDOM_Element</code> object.
-     * @exception IDOMException
+     * @return A new <code>DOMElement</code> object.
+     * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
      *                          an illegal character.
      * <br>
@@ -460,7 +460,7 @@ public:
      *      the <CODE>namespaceURI</CODE> is different from
      *      "http://www.w3.org/XML/1998/namespace".
      */
-    virtual IDOM_Element         *createElementNS(const XMLCh *namespaceURI,
+    virtual DOMElement         *createElementNS(const XMLCh *namespaceURI,
                                                   const XMLCh *qualifiedName,
                                                   const int lineNum,
                                                   const int columnNum) = 0;
@@ -473,8 +473,8 @@ public:
      *   the attribute to create.
      * @param qualifiedName The <em>qualified name</em>
      *   of the attribute to instantiate.
-     * @return A new <code>IDOM_Attr</code> object.
-     * @exception IDOMException
+     * @return A new <code>DOMAttr</code> object.
+     * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
      *                          an illegal character.
      * <br>
@@ -491,31 +491,31 @@ public:
      *      <CODE>namespaceURI</CODE> is different from
      *      "http://www.w3.org/2000/xmlns/".
      */
-    virtual IDOM_Attr        *createAttributeNS(const XMLCh *namespaceURI,
+    virtual DOMAttr        *createAttributeNS(const XMLCh *namespaceURI,
 	                                            const XMLCh *qualifiedName) = 0;
 
     /**
-     * Returns a <code>IDOM_NodeList</code> of all the <code>IDOM_Element</code>s
+     * Returns a <code>DOMNodeList</code> of all the <code>DOMElement</code>s
      * with a given <em>local name</em> and
      * namespace URI in the order in which they would be encountered in a
-     * preorder traversal of the <code>IDOM_Document</code> tree.
+     * preorder traversal of the <code>DOMDocument</code> tree.
      *
      * @param namespaceURI The <em>namespace URI</em> of
      *   the elements to match on. The special value "*" matches all
      *   namespaces.
      * @param localName The <em>local name</em> of the
      *   elements to match on. The special value "*" matches all local names.
-     * @return A new <code>IDOM_NodeList</code> object containing all the matched
-     *  <code>IDOM_Element</code>s.
+     * @return A new <code>DOMNodeList</code> object containing all the matched
+     *  <code>DOMElement</code>s.
      */
-    virtual IDOM_NodeList        *getElementsByTagNameNS(const XMLCh *namespaceURI,
+    virtual DOMNodeList        *getElementsByTagNameNS(const XMLCh *namespaceURI,
 	                                                     const XMLCh *localName) const = 0;
 
     /**
-     * Returns the <code>IDOM_Element</code> whose ID is given by <code>elementId</code>.
+     * Returns the <code>DOMElement</code> whose ID is given by <code>elementId</code>.
      * If no such element exists, returns <code>null</code>.
      * Behavior is not defined if more than one element has this <code>ID</code>.
-     * <P><B>Note:</B> The IDOM implementation must have information that says
+     * <P><B>Note:</B> The DOM implementation must have information that says
      * which attributes are of type ID. Attributes with the name "ID" are not of
      * type ID unless so defined. Implementations that do not know whether
      * attributes are of type ID or not are expected to return
@@ -524,15 +524,15 @@ public:
      * @param elementId The unique <code>id</code> value for an element.
      * @return The matching element.
      */
-    virtual  IDOM_Element        * getElementById(const XMLCh *elementId) const = 0;
+    virtual  DOMElement        * getElementById(const XMLCh *elementId) const = 0;
 
     //@}
 
 protected:
-    friend class IDOM_Node;
+    friend class DOMNode;
     friend class DocumentImpl;
     friend class NodeIteratorImpl;
-    friend class IDOM_IDOMImplementation;
+    friend class DOMImplementation;
 
 };
 

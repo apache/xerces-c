@@ -1,10 +1,10 @@
-#ifndef IDOM_Notation_HEADER_GUARD_
-#define IDOM_Notation_HEADER_GUARD_
+#ifndef DOMNotation_HEADER_GUARD_
+#define DOMNotation_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,23 +58,11 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:54  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:32  andyh
- * IDOM
- *
+ * $Id$
  */
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "IDOM_Node.hpp"
+#include "DOMNode.hpp"
 
 
 /**
@@ -88,14 +76,14 @@
  * they are therefore readonly.
  * <p>A <code>Notation</code> node does not have any parent.
  */
-class CDOM_EXPORT IDOM_Notation: public IDOM_Node {
+class CDOM_EXPORT DOMNotation: public DOMNode {
 protected:
-    IDOM_Notation() {};
-    IDOM_Notation(const IDOM_Notation &other) {};
-    IDOM_Notation & operator = (const IDOM_Notation &other) {return *this;};
+    DOMNotation() {};
+    DOMNotation(const DOMNotation &other) {};
+    DOMNotation & operator = (const DOMNotation &other) {return *this;};
 
 public:
-    virtual ~IDOM_Notation() {};
+    virtual ~DOMNotation() {};
 
     /** @name Get functions. */
     //@{

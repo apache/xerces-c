@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,43 +55,34 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.1  2001/06/04 14:55:36  tng
- * IDOM: Add IRange and IDeepNodeList Support.
- *
+ * $Id$
  */
 
-#include "IDOM_RangeException.hpp"
+#include "DOMRangeException.hpp"
 
 
-IDOM_RangeException::IDOM_RangeException()
-: IDOM_DOMException()
+DOMRangeException::DOMRangeException()
+: DOMException()
 {
         code = (RangeExceptionCode) 0;
 };
 
 
-IDOM_RangeException::IDOM_RangeException(RangeExceptionCode exCode, const XMLCh* message)
-: IDOM_DOMException(exCode, message)
+DOMRangeException::DOMRangeException(RangeExceptionCode exCode, const XMLCh* message)
+: DOMException(exCode, message)
 {
    code = exCode;
 };
 
 
-IDOM_RangeException::IDOM_RangeException(const IDOM_RangeException &other)
-: IDOM_DOMException(other)
+DOMRangeException::DOMRangeException(const DOMRangeException &other)
+: DOMException(other)
 {
         code = other.code;
 };
 
 
-IDOM_RangeException::~IDOM_RangeException()
+DOMRangeException::~DOMRangeException()
 {
 };
 

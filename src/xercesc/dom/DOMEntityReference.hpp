@@ -1,10 +1,10 @@
-#ifndef IDOM_EntityReference_HEADER_GUARD_
-#define IDOM_EntityReference_HEADER_GUARD_
+#ifndef DOMEntityReference_HEADER_GUARD_
+#define DOMEntityReference_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,24 +58,12 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:52  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:30  andyh
- * IDOM
- *
+ * $Id$
  */
 
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "IDOM_Node.hpp"
+#include "DOMNode.hpp"
 
 
 /**
@@ -89,18 +77,18 @@
  *
 */
 
-class CDOM_EXPORT IDOM_EntityReference: public IDOM_Node {
+class CDOM_EXPORT DOMEntityReference: public DOMNode {
 protected:
     /** @name Constructors and assignment operator */
     //@{
-    IDOM_EntityReference() {};
+    DOMEntityReference() {};
 
-    IDOM_EntityReference(const IDOM_EntityReference &other) {};
+    DOMEntityReference(const DOMEntityReference &other) {};
 
-    IDOM_EntityReference & operator = (const IDOM_EntityReference &other) {return *this;};
+    DOMEntityReference & operator = (const DOMEntityReference &other) {return *this;};
 
 public:
-    virtual ~IDOM_EntityReference() {};
+    virtual ~DOMEntityReference() {};
     //@}
 
 };

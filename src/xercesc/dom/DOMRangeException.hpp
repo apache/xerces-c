@@ -1,10 +1,10 @@
-#ifndef IDOM_RangeException_HEADER_GUARD_
-#define IDOM_RangeException_HEADER_GUARD_
+#ifndef DOMRangeException_HEADER_GUARD_
+#define DOMRangeException_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,42 +58,27 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/06/04 14:55:36  tng
- * IDOM: Add IRange and IDeepNodeList Support.
- *
- * Revision 1.2  2001/05/11 13:25:55  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:32  andyh
- * IDOM
- *
+ * $Id$
  */
 
-#include <xercesc/idom/IDOM_DOMException.hpp>
+#include <xercesc/dom/DOMException.hpp>
 
 /**
   * Encapsulate range related DOM error or warning. DOM level 2 implementation.
   *
-  * <p> The DOM will create and throw an instance of IDOM_RangeException
+  * <p> The DOM will create and throw an instance of DOMRangeException
   * when an error condition in range is detected.  Exceptions can occur
   * when an application directly manipulates the range elements in DOM document
   * tree that is produced by the parser.
   *
-  * <p>Unlike the other classes in the C++ DOM API, IDOM_RangeException
+  * <p>Unlike the other classes in the C++ DOM API, DOMRangeException
   * is NOT a reference to an underlying implementation class, and
   * does not provide automatic memory management.  Code that catches
   * a DOM Range exception is responsible for deleting it, or otherwise
   * arranging for its disposal.
   *
   */
-class CDOM_EXPORT IDOM_RangeException  : public IDOM_DOMException {
+class CDOM_EXPORT DOMRangeException  : public DOMException {
 public:
     /** @name Enumerators for DOM Range Exceptions */
     //@{
@@ -106,10 +91,10 @@ public:
     /** @name Constructors and assignment operator */
     //@{
     /**
-      * Default constructor for IDOM_RangeException.
+      * Default constructor for DOMRangeException.
       *
       */
-    IDOM_RangeException();
+    DOMRangeException();
 
     /**
       * Constructor which takes an error code and a message.
@@ -117,25 +102,25 @@ public:
       * @param code The error code which indicates the exception
       * @param message The string containing the error message
       */
-    IDOM_RangeException(RangeExceptionCode code, const XMLCh* message);
+    DOMRangeException(RangeExceptionCode code, const XMLCh* message);
 
     /**
       * Copy constructor.
       *
       * @param other The object to be copied.
       */
-    IDOM_RangeException(const IDOM_RangeException &other);
+    DOMRangeException(const DOMRangeException &other);
 
     //@}
     /** @name Destructor. */
     //@{
 	 /**
-	  * Destructor for IDOM_RangeException.  Applications are responsible
-      * for deleting IDOM_RangeException objects that they catch after they
+	  * Destructor for DOMRangeException.  Applications are responsible
+      * for deleting DOMRangeException objects that they catch after they
       * have completed their exception processing.
 	  *
 	  */
-    virtual ~IDOM_RangeException();
+    virtual ~DOMRangeException();
     //@}
 
     /** @name Public variables. */

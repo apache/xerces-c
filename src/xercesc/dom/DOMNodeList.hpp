@@ -1,10 +1,10 @@
-#ifndef IDOM_NodeList_HEADER_GUARD_
-#define IDOM_NodeList_HEADER_GUARD_
+#ifndef DOMNodeList_HEADER_GUARD_
+#define DOMNodeList_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,27 +58,12 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/06/04 14:55:35  tng
- * IDOM: Add IRange and IDeepNodeList Support.
- *
- * Revision 1.2  2001/05/11 13:25:54  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:31  andyh
- * IDOM
- *
+ * $Id$
  */
 
 #include <xercesc/util/XercesDefs.hpp>
 
-class IDOM_Node;
+class DOMNode;
 
 
 /**
@@ -93,16 +78,16 @@ class IDOM_Node;
  * reflected in any NodeLists that may have been created for that tree.
  */
 
-class  CDOM_EXPORT IDOM_NodeList {
+class  CDOM_EXPORT DOMNodeList {
 protected:
-    IDOM_NodeList() {};
-    IDOM_NodeList(const IDOM_NodeList &other) {};
-    IDOM_NodeList & operator = (const IDOM_NodeList &other) {return *this;};
+    DOMNodeList() {};
+    DOMNodeList(const DOMNodeList &other) {};
+    DOMNodeList & operator = (const DOMNodeList &other) {return *this;};
 
 public:
     /** @name Destructor. */
     //@{
-    virtual ~IDOM_NodeList()  {};
+    virtual ~DOMNodeList()  {};
     //@}
 
 
@@ -120,14 +105,14 @@ public:
      *   <code>NodeList</code>, or <code>null</code> if that is not a valid
      *   index.
      */
-    virtual IDOM_Node  *item(unsigned int index) = 0;
+    virtual DOMNode  *item(DOMSize_t index) = 0;
 
     /**
      * Returns the number of nodes in the list.
      *
      * The range of valid child node indices is 0 to <code>length-1</code> inclusive.
      */
-    virtual unsigned int getLength() = 0;
+    virtual DOMSize_t getLength() = 0;
     //@}
 };
 

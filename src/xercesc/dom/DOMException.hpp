@@ -1,7 +1,10 @@
+#ifndef DOMException_HEADER_GUARD_
+#define DOMException_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,23 +58,8 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:50  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:29  andyh
- * IDOM
- *
+ * $Id$
  */
-
-#ifndef IDOMException_HEADER_GUARD_
-#define IDOMException_HEADER_GUARD_
 
 #include <xercesc/util/XercesDefs.hpp>
 
@@ -93,7 +81,7 @@
   * arranging for its disposal.
   *
   */
-class CDOM_EXPORT IDOM_DOMException  {
+class CDOM_EXPORT DOMException  {
 public:
     /** @name Enumerators for DOM Exceptions */
     //@{
@@ -119,10 +107,10 @@ public:
     /** @name Constructors and assignment operator */
     //@{
     /**
-      * Default constructor for IDOM_DOMException.
+      * Default constructor for DOMException.
       *
       */
-    IDOM_DOMException();
+    DOMException();
 
     /**
       * Constructor which takes an error code and a message.
@@ -130,25 +118,25 @@ public:
       * @param code The error code which indicates the exception
       * @param message The string containing the error message
       */
-    IDOM_DOMException(short code, const XMLCh *message);
+    DOMException(short code, const XMLCh *message);
 
     /**
       * Copy constructor.
       *
       * @param other The object to be copied.
       */
-    IDOM_DOMException(const IDOM_DOMException &other);
+    DOMException(const DOMException &other);
 
     //@}
     /** @name Destructor. */
     //@{
 	 /**
-	  * Destructor for IDOM_DOMException.  Applications are responsible
+	  * Destructor for DOMException.  Applications are responsible
       * for deleting DOM_Exception objects that they catch after they
       * have completed their exception processing.
 	  *
 	  */
-    virtual ~IDOM_DOMException();
+    virtual ~DOMException();
     //@}
 
     /** @name Public variables. */

@@ -1,3 +1,6 @@
+#ifndef DOMElement_HEADER_GUARD_
+#define DOMElement_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -55,73 +58,46 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.3  2002/02/20 18:17:01  tng
- * [Bug 5977] Warnings on generating apiDocs.
- *
- * Revision 1.2  2002/02/04 21:20:59  tng
- * Add DOM 2 Level missing functions:
- *   1. NodeIterator::getRoot
- *   2. TreeWalker::getRoot
- *   3. Element::hasAttribute
- *   4. Element::hasAttributeNS
- *   5. Node::hasAttributes
- *   6. Node::isSupported
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:52  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:29  andyh
- * IDOM
- *
+ * $Id$
  */
 
-#ifndef IDOM_Element_HEADER_GUARD_
-#define IDOM_Element_HEADER_GUARD_
-
 #include <xercesc/util/XercesDefs.hpp>
-#include "IDOM_Node.hpp"
+#include "DOMNode.hpp"
 
-class IDOM_Attr;
-class IDOM_NodeList;
+class DOMAttr;
+class DOMNodeList;
 
 
 /**
  * By far the vast majority of objects (apart from text) that authors
- * encounter when traversing a document are <code>IDOM_Element</code> nodes.
+ * encounter when traversing a document are <code>DOMElement</code> nodes.
  *
  * Assume the following XML document:&lt;elementExample id="demo"&gt;
  * &lt;subelement1/&gt;
  * &lt;subelement2&gt;&lt;subsubelement/&gt;&lt;/subelement2&gt;
  * &lt;/elementExample&gt;
- * <p>When represented using DOM, the top node is an <code>IDOM_Element</code> node
- * for "elementExample", which contains two child <code>IDOM_Element</code> nodes,
+ * <p>When represented using DOM, the top node is an <code>DOMElement</code> node
+ * for "elementExample", which contains two child <code>DOMElement</code> nodes,
  * one for "subelement1" and one for "subelement2". "subelement1" contains no
  * child nodes.
  * <p>Elements may have attributes associated with them; since the
- * <code>IDOM_Element</code> interface inherits from <code>IDOM_Node</code>, the generic
- *  <code>IDOM_Node</code> interface method <code>getAttributes</code> may be used
+ * <code>DOMElement</code> interface inherits from <code>DOMNode</code>, the generic
+ *  <code>DOMNode</code> interface method <code>getAttributes</code> may be used
  * to retrieve the set of all attributes for an element.  There are methods on
- *  the <code>IDOM_Element</code> interface to retrieve either an <code>IDOM_Attr</code>
+ *  the <code>DOMElement</code> interface to retrieve either an <code>DOMAttr</code>
  *  object by name or an attribute value by name. In XML, where an attribute
- * value may contain entity references, an <code>IDOM_Attr</code> object should be
+ * value may contain entity references, an <code>DOMAttr</code> object should be
  * retrieved to examine the possibly fairly complex sub-tree representing the
  * attribute value. On the other hand, in HTML, where all attributes have
  * simple string values, methods to directly access an attribute value can
  * safely be used as a convenience.
  */
 
-class CDOM_EXPORT IDOM_Element: public IDOM_Node {
+class CDOM_EXPORT DOMElement: public DOMNode {
 protected:
-    IDOM_Element() {};
-    IDOM_Element(const IDOM_Element &other) {};
-    IDOM_Element & operator = (const IDOM_Element &other) {return *this;};
+    DOMElement() {};
+    DOMElement(const DOMElement &other) {};
+    DOMElement & operator = (const DOMElement &other) {return *this;};
 
 public:
     /** @name Constructors and assignment operator */
@@ -137,7 +113,7 @@ public:
       * object, not the underlying Element itself.
 	  *
 	  */
-    virtual ~IDOM_Element() {};
+    virtual ~DOMElement() {};
     //@}
     /** @name Getter functions. */
     //@{
@@ -156,30 +132,30 @@ public:
    * Retrieves an attribute value by name.
    *
    * @param name The name of the attribute to retrieve.
-   * @return The <code>IDOM_Attr</code> value as a string, or the empty  string if
+   * @return The <code>DOMAttr</code> value as a string, or the empty  string if
    *   that attribute does not have a specified or default value.
    */
   virtual const XMLCh *         getAttribute(const XMLCh *name) const = 0;
 
   /**
-   * Retrieves an <code>IDOM_Attr</code> node by name.
+   * Retrieves an <code>DOMAttr</code> node by name.
    *
    * @param name The name (<CODE>nodeName</CODE>) of the attribute to retrieve.
-   * @return The <code>IDOM_Attr</code> node with the specified name (<CODE>nodeName</CODE>) or
+   * @return The <code>DOMAttr</code> node with the specified name (<CODE>nodeName</CODE>) or
    *   <code>null</code> if there is no such attribute.
    */
-  virtual IDOM_Attr       * getAttributeNode(const XMLCh *name) const = 0;
+  virtual DOMAttr       * getAttributeNode(const XMLCh *name) const = 0;
 
   /**
    * Returns a <code>NodeList</code> of all descendant elements with a given
    * tag name, in the order in which they would be encountered in a preorder
-   * traversal of the <code>IDOM_Element</code> tree.
+   * traversal of the <code>DOMElement</code> tree.
    *
    * @param name The name of the tag to match on. The special value "*"
    *   matches all tags.
-   * @return A list of matching <code>IDOM_Element</code> nodes.
+   * @return A list of matching <code>DOMElement</code> nodes.
    */
-  virtual IDOM_NodeList   * getElementsByTagName(const XMLCh *name) const = 0;
+  virtual DOMNodeList   * getElementsByTagName(const XMLCh *name) const = 0;
 
   //@}
   /** @name Set functions. */
@@ -195,7 +171,7 @@ public:
    * treated as literal text, and needs to be appropriately escaped by the
    * implementation when it is written out. In order to assign an attribute
    * value that contains entity references, the user must create an
-   * <code>IDOM_Attr</code> node plus any <code>Text</code> and
+   * <code>DOMAttr</code> node plus any <code>Text</code> and
    * <code>EntityReference</code> nodes, build the appropriate subtree, and
    * use <code>setAttributeNode</code> to assign it as the value of an
    * attribute.
@@ -213,41 +189,41 @@ public:
     *
     * If an attribute with that name (<CODE>nodeName</CODE>) is already present
     * in the element, it is replaced by the new one.
-    * @param newAttr The <code>IDOM_Attr</code> node to add to the attribute list.
+    * @param newAttr The <code>DOMAttr</code> node to add to the attribute list.
     * @return If the <code>newAttr</code> attribute replaces an existing
     *   attribute, the replaced
-    *   <code>IDOM_Attr</code> node is returned, otherwise <code>null</code> is
+    *   <code>DOMAttr</code> node is returned, otherwise <code>null</code> is
     *   returned.
     * @exception DOMException
     *   WRONG_DOCUMENT_ERR: Raised if <code>newAttr</code> was created from a
     *   different document than the one that created the element.
     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
     *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>newAttr</code> is already an
-    *   attribute of another <code>IDOM_Element</code> object. The DOM user must
-    *   explicitly clone <code>IDOM_Attr</code> nodes to re-use them in other
+    *   attribute of another <code>DOMElement</code> object. The DOM user must
+    *   explicitly clone <code>DOMAttr</code> nodes to re-use them in other
     *   elements.
     */
-   virtual IDOM_Attr       * setAttributeNode(IDOM_Attr *newAttr) = 0;
+   virtual DOMAttr       * setAttributeNode(DOMAttr *newAttr) = 0;
 
    //@}
    /** @name Functions which modify the Element. */
    //@{
   /**
    * Removes the specified attribute node.
-   * If the removed <CODE>IDOM_Attr</CODE>
+   * If the removed <CODE>DOMAttr</CODE>
    *   has a default value it is immediately replaced. The replacing attribute
    *   has the same namespace URI and local name, as well as the original prefix,
    *   when applicable.
    *
-   * @param oldAttr The <code>IDOM_Attr</code> node to remove from the attribute
+   * @param oldAttr The <code>DOMAttr</code> node to remove from the attribute
    *   list.
-   * @return The <code>IDOM_Attr</code> node that was removed.
+   * @return The <code>DOMAttr</code> node that was removed.
    * @exception DOMException
    *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    *   <br>NOT_FOUND_ERR: Raised if <code>oldAttr</code> is not an attribute
    *   of the element.
    */
-  virtual IDOM_Attr       * removeAttributeNode(IDOM_Attr *oldAttr) = 0;
+  virtual DOMAttr       * removeAttributeNode(DOMAttr *oldAttr) = 0;
 
   /**
    * Removes an attribute by name.
@@ -274,7 +250,7 @@ public:
    *    the attribute to retrieve.
    * @param localName The <em>local name</em> of the
    *    attribute to retrieve.
-   * @return The <code>IDOM_Attr</code> value as a string, or an <CODE>null</CODE> if
+   * @return The <code>DOMAttr</code> value as a string, or an <CODE>null</CODE> if
    *    that attribute does not have a specified or default value.
    */
   virtual const XMLCh *         getAttributeNS(const XMLCh *namespaceURI,
@@ -289,8 +265,8 @@ public:
    * as syntax to be recognized as an entity reference) is treated as literal
    * text, and needs to be appropriately escaped by the implementation when it
    * is written out. In order to assign an attribute value that contains entity
-   * references, the user must create an <CODE>IDOM_Attr</CODE>
-   * node plus any <CODE>IDOM_Text</CODE> and <CODE>IDOM_EntityReference</CODE>
+   * references, the user must create an <CODE>DOMAttr</CODE>
+   * node plus any <CODE>DOMText</CODE> and <CODE>DOMEntityReference</CODE>
    * nodes, build the appropriate subtree, and use
    * <CODE>setAttributeNodeNS</CODE> or <CODE>setAttributeNode</CODE> to assign
    * it as the value of an attribute.
@@ -338,16 +314,16 @@ public:
 	const XMLCh *localName) = 0;
 
   /**
-   * Retrieves an <code>IDOM_Attr</code> node by local name and namespace URI.
+   * Retrieves an <code>DOMAttr</code> node by local name and namespace URI.
    *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the attribute to retrieve.
    * @param localName The <em>local name</em> of the
    *    attribute to retrieve.
-   * @return The <code>IDOM_Attr</code> node with the specified attribute local
+   * @return The <code>DOMAttr</code> node with the specified attribute local
    *    name and namespace URI or <code>null</code> if there is no such attribute.
    */
-  virtual IDOM_Attr      *  getAttributeNodeNS(const XMLCh *namespaceURI,
+  virtual DOMAttr      *  getAttributeNodeNS(const XMLCh *namespaceURI,
 	const XMLCh *localName) const = 0;
 
    /**
@@ -356,37 +332,37 @@ public:
     * If an attribute with that local name and namespace URI is already present
     * in the element, it is replaced by the new one.
     *
-    * @param newAttr The <code>IDOM_Attr</code> node to add to the attribute list.
+    * @param newAttr The <code>DOMAttr</code> node to add to the attribute list.
     * @return If the <code>newAttr</code> attribute replaces an existing
     *    attribute with the same <em>local name</em> and <em>namespace URI</em>,
-    *    the replaced <code>IDOM_Attr</code> node is
+    *    the replaced <code>DOMAttr</code> node is
     *    returned, otherwise <code>null</code> is returned.
     * @exception DOMException
     *   WRONG_DOCUMENT_ERR: Raised if <code>newAttr</code> was created from a
     *   different document than the one that created the element.
     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
     *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>newAttr</code> is already an
-    *   attribute of another <code>IDOM_Element</code> object. The DOM user must
-    *   explicitly clone <code>IDOM_Attr</code> nodes to re-use them in other
+    *   attribute of another <code>DOMElement</code> object. The DOM user must
+    *   explicitly clone <code>DOMAttr</code> nodes to re-use them in other
     *   elements.
     */
-   virtual IDOM_Attr      *  setAttributeNodeNS(IDOM_Attr *newAttr) = 0;
+   virtual DOMAttr      *  setAttributeNodeNS(DOMAttr *newAttr) = 0;
 
   /**
-   * Returns a <code>IDOM_NodeList</code> of all the <code>IDOM_Element</code>s
+   * Returns a <code>DOMNodeList</code> of all the <code>DOMElement</code>s
    * with a given local name and namespace URI in the order in which they
    * would be encountered in a preorder traversal of the
-   * <code>IDOM_Document</code> tree, starting from this node.
+   * <code>DOMDocument</code> tree, starting from this node.
    *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the elements to match on. The special value "*" matches all
    *    namespaces.
    * @param localName The <em>local name</em> of the
    *    elements to match on. The special value "*" matches all local names.
-   * @return A new <code>IDOM_NodeList</code> object containing all the matched
-   *    <code>IDOM_Element</code>s.
+   * @return A new <code>DOMNodeList</code> object containing all the matched
+   *    <code>DOMElement</code>s.
    */
-  virtual IDOM_NodeList   * getElementsByTagNameNS(const XMLCh *namespaceURI,
+  virtual DOMNodeList   * getElementsByTagNameNS(const XMLCh *namespaceURI,
 	const XMLCh *localName) const = 0;
 
     /**

@@ -1,3 +1,6 @@
+#ifndef DOMNodeIterator_HEADER_GUARD_
+#define DOMNodeIterator_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -55,40 +58,13 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.2  2002/02/04 21:20:59  tng
- * Add DOM 2 Level missing functions:
- *   1. NodeIterator::getRoot
- *   2. TreeWalker::getRoot
- *   3. Element::hasAttribute
- *   4. Element::hasAttributeNS
- *   5. Node::hasAttributes
- *   6. Node::isSupported
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.3  2001/06/04 20:11:53  tng
- * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
- *
- * Revision 1.2  2001/05/11 13:25:53  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:31  andyh
- * IDOM
- *
+ * $Id$
  */
 
-#ifndef IDOM_NodeIterator_HEADER_GUARD_
-#define IDOM_NodeIterator_HEADER_GUARD_
+#include "DOMNodeFilter.hpp"
+#include "DOMNode.hpp"
 
-#include "IDOM_NodeFilter.hpp"
-#include "IDOM_Node.hpp"
-
-class IDNodeIteratorImpl;
+class DOMNodeIteratorImpl;
 
 /**
  * NodeIterators are used to step through a set of nodes
@@ -101,12 +77,12 @@ class IDNodeIteratorImpl;
  * <code>DocumentTraversal.createNodeIterator()</code>.
  *
  */
-class CDOM_EXPORT IDOM_NodeIterator
+class CDOM_EXPORT DOMNodeIterator
 {
     protected:
-        IDOM_NodeIterator() {};
-        IDOM_NodeIterator(const IDOM_NodeIterator &other) {};
-        IDOM_NodeIterator & operator = (const IDOM_NodeIterator &other) {return *this;};
+        DOMNodeIterator() {};
+        DOMNodeIterator(const DOMNodeIterator &other) {};
+        DOMNodeIterator & operator = (const DOMNodeIterator &other) {return *this;};
 
     public:
         /** @name Get functions. */
@@ -115,10 +91,10 @@ class CDOM_EXPORT IDOM_NodeIterator
          * The <code>root</code> node of the <code>NodeIterator</code>, as specified
          * when it was created.
          */
-        virtual IDOM_Node*          getRoot() = 0;
+        virtual DOMNode*          getRoot() = 0;
         /**
           * Return which node types are presented via the iterator.
-          * The available set of constants is defined in the IDOM_NodeFilter interface.
+          * The available set of constants is defined in the DOMNodeFilter interface.
           *
           */
         virtual unsigned long       getWhatToShow() = 0;
@@ -127,26 +103,26 @@ class CDOM_EXPORT IDOM_NodeIterator
           * Return The filter used to screen nodes.
           *
           */
-        virtual IDOM_NodeFilter*     getFilter() = 0;
+        virtual DOMNodeFilter*     getFilter() = 0;
 
         /**
           * Return the expandEntityReferences flag.
           * The value of this flag determines whether the children of entity reference
-          * nodes are visible to the IDOM_NodeFilter. If false, they will be skipped over.
+          * nodes are visible to the DOMNodeFilter. If false, they will be skipped over.
           *
           */
         virtual bool getExpandEntityReferences() = 0;
 
         /**
           * Returns the next node in the set and advances the position of the iterator
-          * in the set. After a IDOM_NodeIterator is created, the first call to nextNode()
+          * in the set. After a DOMNodeIterator is created, the first call to nextNode()
           * returns the first node in the set.
           *
           * @exception DOMException
           *   INVALID_STATE_ERR: Raised if this method is called after the
           *   <code>detach</code> method was invoked.
           */
-        virtual IDOM_Node*           nextNode() = 0;
+        virtual DOMNode*           nextNode() = 0;
 
         /**
           * Returns the previous node in the set and moves the position of the iterator
@@ -156,7 +132,7 @@ class CDOM_EXPORT IDOM_NodeIterator
           *   INVALID_STATE_ERR: Raised if this method is called after the
           *   <code>detach</code> method was invoked.
           */
-        virtual IDOM_Node*           previousNode() = 0;
+        virtual DOMNode*           previousNode() = 0;
         //@}
 
         /** @name Detaching functions. */

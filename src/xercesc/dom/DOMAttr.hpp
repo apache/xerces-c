@@ -1,5 +1,5 @@
-#ifndef IDOM_Attr_HEADER_GUARD_
-#define IDOM_Attr_HEADER_GUARD_
+#ifndef DOMAttr_HEADER_GUARD_
+#define DOMAttr_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
@@ -58,42 +58,27 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.2  2002/02/04 21:11:55  tng
- * Remove the phrase "Experimental".
- *
- * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:48  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:27  andyh
- * IDOM
- *
+ * $Id$
  */
 
 
 #include <xercesc/util/XercesDefs.hpp>
-#include "IDOM_Node.hpp"
+#include "DOMNode.hpp"
 
-class IDOM_Element;
+class DOMElement;
 
 
 /**
-* The <code>IDOM_Attr</code> class refers to an attribute of an XML element.
+* The <code>DOMAttr</code> class refers to an attribute of an XML element.
 *
 * Typically the allowable values for the
 * attribute are defined in a documenttype definition.
-* <p><code>IDOM_Attr</code> objects inherit the <code>DOM_Node</code>  interface, but
+* <p><code>DOMAttr</code> objects inherit the <code>DOM_Node</code>  interface, but
 * since attributes are not actually child nodes of the elements they are associated with, the
 * DOM does not consider them part of the document  tree.  Thus, the
 * <code>DOM_Node</code> attributes <code>parentNode</code>,
 * <code>previousSibling</code>, and <code>nextSibling</code> have a  null
-* value for <code>IDOM_Attr</code> objects. The DOM takes the  view that
+* value for <code>DOMAttr</code> objects. The DOM takes the  view that
 * attributes are properties of elements rather than having a  separate
 * identity from the elements they are associated with;  this should make it
 * more efficient to implement such features as default attributes associated
@@ -106,12 +91,12 @@ class IDOM_Element;
 * also are quite distinct.
 *
 */
-class CDOM_EXPORT IDOM_Attr: public IDOM_Node {
+class CDOM_EXPORT DOMAttr: public DOMNode {
 
 protected:
-    IDOM_Attr() {};
-    IDOM_Attr(const IDOM_Attr &other) {};
-    IDOM_Attr & operator = (const IDOM_Attr &other) {return *this;};
+    DOMAttr() {};
+    DOMAttr(const DOMAttr &other) {};
+    DOMAttr & operator = (const DOMAttr &other) {return *this;};
 
 
 public:
@@ -123,7 +108,7 @@ public:
     * "node", not the underlying attribute itself.
     *
     */
-    virtual ~IDOM_Attr() {};
+    virtual ~DOMAttr() {};
 	//@}
 
   /** @name Getter functions */
@@ -169,7 +154,7 @@ public:
      * <code>null</code> if this attribute is not in use.
      *
      */
-    virtual IDOM_Element     *getOwnerElement() const = 0;
+    virtual DOMElement     *getOwnerElement() const = 0;
     //@}
 
 };

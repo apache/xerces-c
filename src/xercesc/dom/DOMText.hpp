@@ -1,3 +1,6 @@
+#ifndef DOMText_HEADER_GUARD_
+#define DOMText_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -55,109 +58,88 @@
  */
 
 /*
- * $Log$
- * Revision 1.1  2002/05/21 20:26:44  tng
- * DOM Reorganization: move IDOM from src/xercesc/idom to src/xercesc/dom and src/xercesc/dom/impl.  And rename IDOM_XXXX to DOMXXX.
- *
- * Revision 1.2  2002/02/04 21:11:55  tng
- * Remove the phrase "Experimental".
- *
- * Revision 1.1.1.1  2002/02/01 22:21:56  peiyongz
- * sane_include
- *
- * Revision 1.2  2001/05/11 13:25:55  tng
- * Copyright update.
- *
- * Revision 1.1.1.1  2001/04/03 00:14:32  andyh
- * IDOM
- *
+ * $Id$
  */
 
-#ifndef IDOM_Text_HEADER_GUARD_
-#define IDOM_Text_HEADER_GUARD_
-
 #include <xercesc/util/XercesDefs.hpp>
-#include "IDOM_CharacterData.hpp"
+#include "DOMCharacterData.hpp"
 
 
 
 /**
- * The <code>Text</code> interface represents the textual content (termed
- * character  data in XML) of an <code>Element</code> or <code>Attr</code>.
- * If there is no markup inside an element's content, the text is contained
- * in a single object implementing the <code>Text</code> interface that is
- * the only child of the element. If there is markup, it is parsed into a
- * list of elements and <code>Text</code> nodes that form the list of
- * children of the element.
- * <p>When a document is first made available via the DOM, there is  only one
- * <code>Text</code> node for each block of text. Users may create  adjacent
- * <code>Text</code> nodes that represent the  contents of a given element
+ * The <code>Text</code> interface inherits from <code>CharacterData</code>
+ * and represents the textual content (termed character data in XML) of an
+ * <code>Element</code> or <code>Attr</code>. If there is no markup inside
+ * an element's content, the text is contained in a single object
+ * implementing the <code>Text</code> interface that is the only child of
+ * the element. If there is markup, it is parsed into the information items
+ * (elements, comments, etc.) and <code>Text</code> nodes that form the list
+ * of children of the element.
+ * <p>When a document is first made available via the DOM, there is only one
+ * <code>Text</code> node for each block of text. Users may create adjacent
+ * <code>Text</code> nodes that represent the contents of a given element
  * without any intervening markup, but should be aware that there is no way
- * to represent the separations between these nodes in XML, so they
+ * to represent the separations between these nodes in XML or HTML, so they
  * will not (in general) persist between DOM editing sessions. The
- * <code>normalize()</code> method on <code>Element</code> merges any such
+ * <code>normalize()</code> method on <code>Node</code> merges any such
  * adjacent <code>Text</code> objects into a single node for each block of
- * text; this is  recommended before employing operations that depend on a
- * particular document structure, such as navigation with
- * <code>XPointers.</code>
+ * text.
+ * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>Document Object Model (DOM) Level 2 Core Specification</a>.
  */
-class CDOM_EXPORT IDOM_Text: public IDOM_CharacterData {
+class CDOM_EXPORT DOMText: public DOMCharacterData {
 
     protected:
     /** @name Constructors and assignment operator */
     //@{
-        IDOM_Text() {};
+        DOMText() {};
 
-        IDOM_Text(const IDOM_Text &other) {};
+        DOMText(const DOMText &other) {};
 
-        IDOM_Text & operator = (const IDOM_Text &other) {return *this;};
+        DOMText & operator = (const DOMText &other) {return *this;};
+     //@}
 
-
-    //@}
     public:
     /** @name Destructor. */
     //@{
 	 /**
-	  * Destructor for IDOM_Text. The object being destroyed is the reference
+	  * Destructor for DOMText. The object being destroyed is the reference
       * object, not the underlying Comment node itself.
 	  *
 	  */
-        virtual ~IDOM_Text() {};
-
+        virtual ~DOMText() {};
     //@}
+
     /** @name Functions to modify the Text node. */
     //@{
 
     /**
-     * Breaks this node into two nodes at the specified
-     * offset, keeping both in the tree as siblings.
-     *
-     * This node then only
-     * contains all the content up to the <code>offset</code> point. And a new
-     * node of the same nodeType, which is inserted as the next sibling of this
-     * node, contains all the content at and after the <code>offset</code>
-     * point. When the <code>offset</code> is equal to the lenght of this node,
-     * the new node has no data.
-     * @param offset The offset at which to split, starting from 0.
-     * @return The new <code>Text</code> node.
+     * Breaks this node into two nodes at the specified <code>offset</code>,
+     * keeping both in the tree as siblings. After being split, this node
+     * will contain all the content up to the <code>offset</code> point. A
+     * new node of the same type, which contains all the content at and
+     * after the <code>offset</code> point, is returned. If the original
+     * node had a parent node, the new node is inserted as the next sibling
+     * of the original node. When the <code>offset</code> is equal to the
+     * length of this node, the new node has no data.
+     * @param offset The 16-bit unit offset at which to split, starting from
+     *   <code>0</code>.
+     * @return The new node, of the same type as this node.
      * @exception DOMException
      *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater
-     *   than the number of characters in <code>data</code>.
+     *   than the number of 16-bit units in <code>data</code>.
      *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      */
-    virtual IDOM_Text *splitText(unsigned int offset) = 0;
-
+    virtual DOMText *splitText(DOMSize_t offset) = 0;
     //@}
+
     /** @name Non-standard (not defined by the DOM specification) functions. */
     //@{
-
     /**
      *
      * Return true if this node contains ignorable whitespaces only.
      * @return True if this node contains ignorable whitespaces only.
      */
     virtual bool isIgnorableWhitespace() const = 0;
-
     //@}
 
 };
