@@ -152,11 +152,9 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
-static int posixIsOn = 0;
 
 void XMLPlatformUtils::platformInit()
 {
-	posixIsOn = __isPosixOn();
 }
 
 // ---------------------------------------------------------------------------
@@ -357,7 +355,6 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     delete [] datasetName;
     }
 #endif
-    delete [] tmpFileName;
     if( retVal == NULL )
 	return 0;
     return retVal;
@@ -662,7 +659,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
 #ifdef OS390BATCH
-    if (posixIsOn) {
+    if (__isPosixOn()) {
 #endif
     if (pthread_mutex_destroy( (pthread_mutex_t*)mtxHandle))
     {
@@ -683,7 +680,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
 #ifdef OS390BATCH
-    if (posixIsOn) {
+    if (__isPosixOn()) {
 #endif
     if (pthread_mutex_lock( (pthread_mutex_t*)mtxHandle))
     {
@@ -706,7 +703,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 void* XMLPlatformUtils::makeMutex()
 {
 #ifdef OS390BATCH
-    if (posixIsOn) {
+    if (__isPosixOn()) {
 #endif
     pthread_mutex_t* mutex = new pthread_mutex_t;
     if (mutex == NULL)
@@ -741,7 +738,7 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
 #ifdef OS390BATCH
-    if (posixIsOn) {
+    if (__isPosixOn()) {
 #endif
     if (pthread_mutex_unlock( (pthread_mutex_t*)mtxHandle))
     {
