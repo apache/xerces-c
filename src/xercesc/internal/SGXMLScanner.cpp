@@ -2001,9 +2001,6 @@ void SGXMLScanner::commonInit()
     //  value string pairs (prior to any processing.)
     fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32, true, fMemoryManager);
 
-    // Create dummy schema grammar
-    fSchemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
-
     //  Create the Validator and init them
     fSchemaValidator = new (fMemoryManager) SchemaValidator(0, fMemoryManager);
     initValidator(fSchemaValidator);
@@ -2043,8 +2040,11 @@ void SGXMLScanner::cleanUp()
     delete fAttDefRegistry;
     delete fUndeclaredAttrRegistryNS;
     delete fPSVIAttrList;
-    delete fPSVIElement;
-    delete fErrorStack;
+    if (fPSVIElement)
+        delete fPSVIElement;
+
+    if (fErrorStack)
+        delete fErrorStack;
 }
 
 void SGXMLScanner::resizeElemState() {
@@ -3030,6 +3030,11 @@ void SGXMLScanner::scanReset(const InputSource& src)
     // fModel may need updating, as fGrammarResolver could have cleaned it
     if(fModel && getPSVIHandler())
         fModel = fGrammarResolver->getXSModel();
+
+    // Create dummy schema grammar
+    if (!fSchemaGrammar) {
+        fSchemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
+    }
 
     fGrammar = fSchemaGrammar;
     fGrammarType = Grammar::DTDGrammarType;

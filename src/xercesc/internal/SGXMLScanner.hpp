@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/09/27 21:04:38  knoaman
+ * Update SGXMLScanner to allow access of data and methods to XSAXMLScanner
+ *
  * Revision 1.20  2004/09/08 13:56:13  peiyongz
  * Apache License Version 2.0
  *
@@ -156,37 +159,21 @@ public :
         , const bool            toCache = false
     );
 
-private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    SGXMLScanner();
-    SGXMLScanner(const SGXMLScanner&);
-    SGXMLScanner& operator=(const SGXMLScanner&);
-
+protected:
     // -----------------------------------------------------------------------
     //  XMLScanner virtual methods
     // -----------------------------------------------------------------------
-    virtual void scanCDSection();
-    virtual void scanCharData(XMLBuffer& toToUse);
-    virtual EntityExpRes scanEntityRef
-    (
-        const   bool    inAttVal
-        ,       XMLCh&  firstCh
-        ,       XMLCh&  secondCh
-        ,       bool&   escaped
-    );
-    virtual void scanDocTypeDecl();
     virtual void scanReset(const InputSource& src);
-    virtual void sendCharData(XMLBuffer& toSend);
-    virtual InputSource* resolveSystemId(const XMLCh* const sysId);
 
     // -----------------------------------------------------------------------
-    //  Private helper methods
+    //  SGXMLScanner virtual methods
     // -----------------------------------------------------------------------
-    void commonInit();
-    void cleanUp();
+    virtual bool scanStartTag(bool& gotData);
+    virtual void scanEndTag(bool& gotData);
 
+    // -----------------------------------------------------------------------
+    //  Helper methods
+    // -----------------------------------------------------------------------
     unsigned int buildAttList
     (
         const   RefVectorOf<KVStringPair>&  providedAttrs
@@ -194,87 +181,27 @@ private :
         ,       XMLElementDecl*             elemDecl
         ,       RefVectorOf<XMLAttr>&       toFill
     );
-    bool normalizeAttValue
-    (
-        const   XMLAttDef* const    attDef
-        , const XMLCh* const        attrName 
-        , const XMLCh* const        value
-        ,       XMLBuffer&          toFill
-    );
-    bool normalizeAttRawValue
-    (
-        const   XMLCh* const        attrName
-        , const XMLCh* const        value
-        ,       XMLBuffer&          toFill
-    );
-    unsigned int resolvePrefix
-    (
-        const   XMLCh* const        prefix
-        , const ElemStack::MapModes mode
-    );
-    unsigned int resolvePrefix
-    (
-        const   XMLCh* const        prefix
-        ,       XMLBuffer&          uriBufToFill
-        , const ElemStack::MapModes mode
-    );
-    void updateNSMap
-    (
-        const   XMLCh* const    attrName
-        , const XMLCh* const    attrValue
-    );
-    void scanRawAttrListforNameSpaces(int attCount);
-    void parseSchemaLocation(const XMLCh* const schemaLocationStr);
-    void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
-    bool switchGrammar(const XMLCh* const newGrammarNameSpace);
     bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
                               const XMLContentModel* const cm,
                               const unsigned int parentElemDepth);
-    bool anyAttributeValidation(SchemaAttDef* attWildCard,
-                                unsigned int uriId,
-                                bool& skipThisOne,
-                                bool& laxThisOne);
-    void resizeElemState();
-
-    // -----------------------------------------------------------------------
-    //  Private scanning methods
-    // -----------------------------------------------------------------------
-    bool basicAttrValueScan
-    (
-        const   XMLCh* const    attrName
-        ,       XMLBuffer&      toFill
-    );
     unsigned int rawAttrScan
     (
         const   XMLCh* const                elemName
         ,       RefVectorOf<KVStringPair>&  toFill
         ,       bool&                       isEmpty
     );
-    bool scanAttValue
+    void updateNSMap
     (
-        const   XMLAttDef* const    attDef
-        ,       XMLBuffer&          toFill
+        const   XMLCh* const    attrName
+        , const XMLCh* const    attrValue
     );
-    bool scanContent();
-    void scanEndTag(bool& gotData);
-    bool scanStartTag(bool& gotData);
+    unsigned int resolvePrefix
+    (
+        const   XMLCh* const        prefix
+        , const ElemStack::MapModes mode
+    );
+    void resizeElemState();
 
-    // -----------------------------------------------------------------------
-    //  IdentityConstraints Activation methods
-    // -----------------------------------------------------------------------
-    inline bool toCheckIdentityConstraint()  const;
-
-    // -----------------------------------------------------------------------
-    //  Grammar preparsing methods
-    // -----------------------------------------------------------------------
-    Grammar* loadXMLSchemaGrammar(const InputSource& src, const bool toCache = false);
-
-    // -----------------------------------------------------------------------
-    //  PSVI handling methods
-    // -----------------------------------------------------------------------
-    void endElementPSVI(SchemaElementDecl* const elemDecl,
-                        DatatypeValidator* const memberDV);
-    void resetPSVIElemContext();
 
     // -----------------------------------------------------------------------
     //  Data members
@@ -330,6 +257,96 @@ private :
     PSVIElement*                            fPSVIElement;
     ValueStackOf<bool>*                     fErrorStack;
     PSVIElemContext                         fPSVIElemContext;
+
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SGXMLScanner();
+    SGXMLScanner(const SGXMLScanner&);
+    SGXMLScanner& operator=(const SGXMLScanner&);
+
+    // -----------------------------------------------------------------------
+    //  XMLScanner virtual methods
+    // -----------------------------------------------------------------------
+    virtual void scanCDSection();
+    virtual void scanCharData(XMLBuffer& toToUse);
+    virtual EntityExpRes scanEntityRef
+    (
+        const   bool    inAttVal
+        ,       XMLCh&  firstCh
+        ,       XMLCh&  secondCh
+        ,       bool&   escaped
+    );
+    virtual void scanDocTypeDecl();
+    virtual void sendCharData(XMLBuffer& toSend);
+    virtual InputSource* resolveSystemId(const XMLCh* const sysId);
+
+    // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+    void commonInit();
+    void cleanUp();
+
+    bool normalizeAttValue
+    (
+        const   XMLAttDef* const    attDef
+        , const XMLCh* const        attrName 
+        , const XMLCh* const        value
+        ,       XMLBuffer&          toFill
+    );
+    bool normalizeAttRawValue
+    (
+        const   XMLCh* const        attrName
+        , const XMLCh* const        value
+        ,       XMLBuffer&          toFill
+    );
+    unsigned int resolvePrefix
+    (
+        const   XMLCh* const        prefix
+        ,       XMLBuffer&          uriBufToFill
+        , const ElemStack::MapModes mode
+    );
+    void scanRawAttrListforNameSpaces(int attCount);
+    void parseSchemaLocation(const XMLCh* const schemaLocationStr);
+    void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
+    bool switchGrammar(const XMLCh* const newGrammarNameSpace);
+    bool anyAttributeValidation(SchemaAttDef* attWildCard,
+                                unsigned int uriId,
+                                bool& skipThisOne,
+                                bool& laxThisOne);
+
+    // -----------------------------------------------------------------------
+    //  Private scanning methods
+    // -----------------------------------------------------------------------
+    bool basicAttrValueScan
+    (
+        const   XMLCh* const    attrName
+        ,       XMLBuffer&      toFill
+    );
+    bool scanAttValue
+    (
+        const   XMLAttDef* const    attDef
+        ,       XMLBuffer&          toFill
+    );
+    bool scanContent();
+
+    // -----------------------------------------------------------------------
+    //  IdentityConstraints Activation methods
+    // -----------------------------------------------------------------------
+    inline bool toCheckIdentityConstraint()  const;
+
+    // -----------------------------------------------------------------------
+    //  Grammar preparsing methods
+    // -----------------------------------------------------------------------
+    Grammar* loadXMLSchemaGrammar(const InputSource& src, const bool toCache = false);
+
+    // -----------------------------------------------------------------------
+    //  PSVI handling methods
+    // -----------------------------------------------------------------------
+    void endElementPSVI(SchemaElementDecl* const elemDecl,
+                        DatatypeValidator* const memberDV);
+    void resetPSVIElemContext();
 };
 
 inline const XMLCh* SGXMLScanner::getName() const
