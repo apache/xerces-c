@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/03/19 17:01:20  peiyongz
+ * Fix to Bug#7243 Base64 encoding is not working.
+ *
  * Revision 1.3  2002/02/18 16:07:38  peiyongz
  * fix: "i" redefined on line 428 reported by compilers on some UNIX platforms
  *
@@ -210,6 +213,7 @@ XMLByte* Base64::encode(const XMLByte* const inputData,
     {
         // second octet not present
         // two PADs e.g. 3c==
+        encodedData[ outputIndex++ ] = base64Alphabet[ b2 ];
         encodedData[ outputIndex++ ] = base64Padding;
         encodedData[ outputIndex++ ] = base64Padding;
     }
