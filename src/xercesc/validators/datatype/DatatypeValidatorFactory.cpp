@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/02/26 16:14:27  peiyongz
+ * Schema Errata E2-43: disallow trailing decimal point and a new pattern added
+ * to the Integer definition.
+ *
  * Revision 1.11  2003/01/29 19:51:48  gareth
  * type names / uris are now added to DatatypeValidators.
  *
@@ -232,6 +236,14 @@ const XMLCh fgLangPattern[] =
     chOpenParen,   chDash, chOpenSquare, chLatin_a, chDash, chLatin_z, chLatin_A, chDash, chLatin_Z,
 	chDigit_0,     chDash, chDigit_9, chCloseSquare, chOpenCurly, chDigit_1, chComma, chDigit_8,
     chCloseCurly,  chCloseParen, chAsterisk, chNull
+};
+
+//E2-43
+//[+-]?[0-9]+
+const XMLCh fgIntegerPattern[] =
+{
+    chOpenSquare,  chPlus,     chDash,  chCloseSquare, chQuestion,
+    chOpenSquare,  chDigit_0,  chDash,  chDigit_9,     chCloseSquare, chPlus, chNull
 };
 
 //"\\i\\c*"
@@ -560,6 +572,9 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 
             facets->put((void*) SchemaSymbols::fgELT_FRACTIONDIGITS,
                         new KVStringPair(SchemaSymbols::fgELT_FRACTIONDIGITS, fgValueZero));
+
+            facets->put((void*) SchemaSymbols::fgELT_PATTERN,
+                        new KVStringPair(SchemaSymbols::fgELT_PATTERN, fgIntegerPattern));
 
             createDatatypeValidator(SchemaSymbols::fgDT_INTEGER,
                           getDatatypeValidator(SchemaSymbols::fgDT_DECIMAL),
