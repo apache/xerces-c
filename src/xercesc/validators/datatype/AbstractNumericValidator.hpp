@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/11/28 18:53:07  peiyongz
+ * Support for getCanonicalRepresentation
+ *
  * Revision 1.6  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -110,6 +113,12 @@ public:
                   const XMLCh*             const content
                 ,       ValidationContext* const context = 0
                   );
+
+    virtual const XMLCh* getCanonicalRepresentation
+                        (
+                          const XMLCh*         const rawData
+                        ,       MemoryManager* const memMgr = 0
+                        ) const;
 
     /***
      * Support for Serialization/De-serialization

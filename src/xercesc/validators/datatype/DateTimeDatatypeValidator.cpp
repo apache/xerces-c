@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/11/28 18:53:07  peiyongz
+ * Support for getCanonicalRepresentation
+ *
  * Revision 1.9  2003/11/06 15:30:07  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -164,6 +167,23 @@ XMLDateTime* DateTimeDatatypeValidator::parse(const XMLCh* const content)
 void DateTimeDatatypeValidator::parse(XMLDateTime* const pDate)
 {
     pDate->parseDateTime();
+}
+
+/***
+ *3.2.7 dateTime
+ *
+ *  . either the time zone must be omitted or, 
+ *    if present, the time zone must be Coordinated Universal Time (UTC) indicated by a "Z".
+ ***/   
+const XMLCh* DateTimeDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
+                                                                  ,      MemoryManager* const memMgr) const
+{
+    DateTimeDatatypeValidator* temp = (DateTimeDatatypeValidator*) this;
+    temp->checkContent(rawData, 0, false);
+
+    MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
+    //todo: change behaviour later
+    return XMLString::replicate(rawData, toUse);
 }
 
 /***

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/11/28 18:53:07  peiyongz
+ * Support for getCanonicalRepresentation
+ *
  * Revision 1.17  2003/11/13 23:19:18  peiyongz
  * initSize
  *
@@ -626,6 +629,20 @@ DatatypeValidator::isBuiltInDV(DatatypeValidator* const dv)
 {
     return dv? DatatypeValidatorFactory::getBuiltInRegistry()->containsKey(dv->getTypeName())
              : false;
+}
+
+/**
+ * Canonical Representation
+ *
+ */
+const XMLCh* DatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
+                                                          ,      MemoryManager* const memMgr) const
+{
+    DatatypeValidator *temp = (DatatypeValidator*) this;
+    temp->validate(rawData, 0);
+
+    MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
+    return XMLString::replicate(rawData, toUse);
 }
 
 XERCES_CPP_NAMESPACE_END

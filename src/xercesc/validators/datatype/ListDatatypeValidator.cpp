@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/11/28 18:53:07  peiyongz
+ * Support for getCanonicalRepresentation
+ *
  * Revision 1.12  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -484,6 +487,42 @@ void ListDatatypeValidator::inheritFacet()
         AbstractStringValidator::inheritFacet();
     }
 
+}
+
+/***
+ * 2.5.1.2 List datatypes   
+ *   
+ * The canonical-lexical-representation for the ·list· datatype is defined as 
+ * the lexical form in which each item in the ·list· has the canonical 
+ * lexical representation of its ·itemType·.
+ ***/
+const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
+                                                             ,       MemoryManager* const memMgr) const
+{
+    ListDatatypeValidator* temp = (ListDatatypeValidator*) this;
+
+    temp->setContent(rawData);
+    BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(rawData);
+    Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
+    temp->checkContent(tokenVector, rawData, 0, false);
+
+    MemoryManager* toUse = memMgr? memMgr : getMemoryManager();
+    int  retBufSize = 2 * XMLString::stringLen(rawData);
+    XMLCh* retBuf = (XMLCh*) toUse->allocate(retBufSize * sizeof(XMLCh));
+    XMLCh* retBufPtr = retBuf;
+
+    DatatypeValidator* itemDv = this->getItemTypeDTV();
+    for (unsigned int i = 0; i < tokenVector->size(); i++)
+    {
+        XMLCh* itemCanRep = (XMLCh*) itemDv->getCanonicalRepresentation(tokenVector->elementAt(i), memMgr);
+        XMLString::catString(retBufPtr, itemCanRep);
+        retBufPtr = retBufPtr + XMLString::stringLen(itemCanRep) + 1;
+        *(retBufPtr++) = chSpace;
+        *(retBufPtr) = chNull;
+        toUse->deallocate(itemCanRep);
+    }
+
+    return 0;
 }
 
 /***

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2003/11/28 18:53:07  peiyongz
+ * Support for getCanonicalRepresentation
+ *
  * Revision 1.18  2003/11/24 05:10:26  neilg
  * implement method for determining member type of union that validated some value
  *
@@ -468,6 +471,47 @@ const RefArrayVectorOf<XMLCh>* UnionDatatypeValidator::getEnumString() const
 {
 	return getEnumeration();
 }
+
+/***
+ * 2.5.1.3 Union datatypes
+ *
+ * The canonical-lexical-representation for a ·union· datatype is defined as the lexical form 
+ * in which the values have the canonical lexical representation of the appropriate ·memberTypes·.       
+ ***/
+const XMLCh* UnionDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
+                                                              ,       MemoryManager* const memMgr ) const
+{
+
+    UnionDatatypeValidator* temp = (UnionDatatypeValidator*) this;
+    temp->checkContent(rawData, 0, false);
+
+    //get the native unionDv
+    UnionDatatypeValidator* bdv = (UnionDatatypeValidator*) temp->getBaseValidator();
+    while (bdv)
+    {
+        temp = bdv;
+        bdv = (UnionDatatypeValidator*) temp->getBaseValidator();
+    }
+
+    //let the member dv which recognize the rawData, to return
+    //us the canonical form
+    for ( unsigned int i = 0; i < fMemberTypeValidators->size(); ++i )
+    {
+        try
+        {
+            fMemberTypeValidators->elementAt(i)->validate(rawData, 0);
+            return fMemberTypeValidators->elementAt(i)->getCanonicalRepresentation(rawData);
+        }
+        catch (XMLException&)
+        {
+            //absorbed
+        }
+    }
+
+    //its not likely we reach here, but who knows ...
+    return 0;
+}
+
 
 /***
  * Support for Serialization/De-serialization

@@ -239,6 +239,28 @@ public:
      */
     bool getNumeric() const;
 
+    /**
+     *    Canonical Representation
+     *
+     *    Derivative datatype may overwrite this method once
+     *    it has its own canonical representation other than
+     *    the default one.
+     *
+     * @param rawData: data in raw string
+     * @param memMgr:  memory manager
+     *
+     * @return: canonical representation of the data
+     * 
+     * Note:  user need to use the dv's memory manager to
+     *        deallocate the memory for the string returned.
+     *
+     */
+    virtual const XMLCh* getCanonicalRepresentation
+                        (
+                          const XMLCh*         const rawData
+                        ,       MemoryManager* const memMgr = 0
+                        ) const;
+
     //@}
 
     // -----------------------------------------------------------------------

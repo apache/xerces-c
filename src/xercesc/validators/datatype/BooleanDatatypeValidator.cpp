@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/28 18:53:07  peiyongz
+ * Support for getCanonicalRepresentation
+ *
  * Revision 1.10  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -259,6 +262,26 @@ int BooleanDatatypeValidator::compare(const XMLCh* const lValue
 const RefArrayVectorOf<XMLCh>* BooleanDatatypeValidator::getEnumString() const
 {
 	return 0;
+}
+
+/***
+ * 3.2.2.2 Canonical representation
+ *
+ * The canonical representation for boolean is the set of literals {true, false}.
+ ***/
+const XMLCh* BooleanDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
+                                                                ,       MemoryManager* const memMgr) const
+{
+    BooleanDatatypeValidator *temp = (BooleanDatatypeValidator*) this;
+    temp->checkContent(rawData, 0, false);
+
+    MemoryManager* toUse = memMgr? memMgr : getMemoryManager();
+
+    return ( XMLString::equals(rawData, fgValueSpace[0]) ||
+             XMLString::equals(rawData, fgValueSpace[2])  ) ?
+             XMLString::replicate(fgValueSpace[0], toUse) :
+             XMLString::replicate(fgValueSpace[1], toUse) ;
+
 }
 
 /***

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/11/28 18:53:07  peiyongz
+ * Support for getCanonicalRepresentation
+ *
  * Revision 1.16  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -620,6 +623,72 @@ void DecimalDatatypeValidator::checkContent(const XMLCh*             const conte
        ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::RethrowError, e.getMessage());
     }
 
+}
+
+/***
+ * 3.2.3 decimal  
+ *
+ * . the preceding optional "+" sign is prohibited. 
+ * . The decimal point is required. 
+ * . Leading and trailing zeroes are prohibited subject to the following: 
+ *   there must be at least one digit to the right and to the left of the decimal point which may be a zero.
+ *
+ *
+ *  3.3.13 integer
+ *  3.3.16 long
+ *  3.3.17 int
+ *  3.3.18 short 
+ *  3.3.19 byte
+ *  3.3.20 nonNegativeInteger
+ *  3.3.25 positiveInteger
+ *
+ *   . the preceding optional "+" sign is prohibited and
+ *   . leading zeroes are prohibited.
+ *   
+ *  3.3.14 nonPositiveInteger
+ *
+ *  . the negative sign ("-") is required with the token "0" and 
+ *  . leading zeroes are prohibited.
+ *  
+ *  3.3.15 negativeInteger
+ *  3.3.21 unsignedLong
+ *  3.3.22 unsignedInt
+ *  3.3.23 unsignedShort
+ *  3.3.24 unsignedByte
+ *
+ *  . leading zeroes are prohibited.
+ *  
+ *  todo:
+ *    In order to implement this method, this class shall have a way to tell if itself
+ *    is an 'int', or 'unsignedLong', or something list above, not merely 'Decimal'.
+ *
+ *    Thus we need to extend DatatypeValidator::ValidatorType to include these
+ *    'new' dv types. And assign them the value the way that once AND with mask
+ *    it would be 'Decimal', and all the existing dv type would remain what they
+ *    are.
+ *
+ *    eg. 'String' & mask = 'String'
+ *        'AnyURI' & mask = 'AnyURI',
+ *
+ *        'int'    & mask = 'Decimal'
+ *        'long'   & mask = 'long'
+ *    
+ *    thus, when deserialize, we can create 'Decimal'dv even they are 'int',
+ *    'long'.
+ *
+ *    All dv' ctor need to carry an extra field DatatypeValidator::ValidatorType
+ *    to specify who it is rather than merely relying on the c++ object itself.
+ *
+ ***/
+const XMLCh* DecimalDatatypeValidator::getCanonicalRepresentation(const XMLCh*         const rawData
+                                                                 ,      MemoryManager* const memMgr) const
+{
+    DecimalDatatypeValidator* temp = (DecimalDatatypeValidator*) this;
+    temp->checkContent(rawData, 0, false);
+
+    MemoryManager* toUse = memMgr? memMgr : fMemoryManager;
+    //todo: change behaviour later
+    return XMLString::replicate(rawData, toUse);
 }
 
 /***

@@ -100,7 +100,11 @@ public:
     /** @name Getter Functions */
     //@{
 
-
+    virtual const XMLCh* getCanonicalRepresentation
+                        (
+                          const XMLCh*         const rawData
+                        ,       MemoryManager* const memMgr = 0
+                        ) const;
     //@}
 
     // -----------------------------------------------------------------------

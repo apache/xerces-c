@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/11/28 18:53:07  peiyongz
+ * Support for getCanonicalRepresentation
+ *
  * Revision 1.13  2003/11/24 05:10:26  neilg
  * implement method for determining member type of union that validated some value
  *
@@ -193,6 +196,12 @@ public:
       * Returns whether the type is atomic or not
       */
     virtual bool isAtomic() const;
+
+    virtual const XMLCh* getCanonicalRepresentation
+                        (
+                          const XMLCh*         const rawData
+                        ,       MemoryManager* const memMgr = 0
+                        ) const;
 
     //@}
 
