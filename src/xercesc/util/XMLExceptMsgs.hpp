@@ -362,9 +362,10 @@ public :
       , PD_RecurseUnordered                = 351
       , PD_MapAndSum                       = 352
       , PD_InvalidContentType              = 353
-      , F_HighBounds                       = 354
-      , E_LowBounds                        = 355
-      , E_HighBounds                       = 356
+      , NodeIDMap_GrowErr                  = 354
+      , F_HighBounds                       = 355
+      , E_LowBounds                        = 356
+      , E_HighBounds                       = 357
     };
 
 };

@@ -758,6 +758,7 @@
             <Message Id="PD_RecurseUnordered" Text="RecurseUnordered: There is not a complete functional mapping between the particles"/>
             <Message Id="PD_MapAndSum" Text="MapAndSum: There is not a complete functional mapping between the particles"/>
             <Message Id="PD_InvalidContentType" Text="Particle derivation: Invalid content spec node type"/>
+            <Message Id="NodeIDMap_GrowErr" Text="NodeIDMap overflows and exceeds the largest available size"/>
         </FatalError>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">

@@ -742,5 +742,6 @@ $set 3
 351  RecurseUnordered: There is not a complete functional mapping between the particles
 352  MapAndSum: There is not a complete functional mapping between the particles
 353  Particle derivation: Invalid content spec node type
+354  NodeIDMap overflows and exceeds the largest available size
 
 
