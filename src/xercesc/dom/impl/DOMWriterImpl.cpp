@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2002/09/09 15:42:14  peiyongz
+ * Patch to Bug#12369: invalid output from DOMWriter using MemBufFormatTarget
+ *
  * Revision 1.15  2002/08/07 18:10:19  peiyongz
  * Fix to Bug#11534: Wrong CDATA Terminator in DOMWriterImpl
  *
@@ -1259,7 +1262,7 @@ void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
             (
                 srcPtr
                 , tmpPtr - srcPtr
-                , XMLFormatter::CharEscapes
+                , XMLFormatter::NoEscapes
                 , XMLFormatter::UnRep_Fail
             );
 
