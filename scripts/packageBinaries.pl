@@ -125,6 +125,9 @@ if ($platform eq "win64bit" )
     psystem ("mkdir $targetdir");
     psystem ("mkdir $targetdir\\bin");
     psystem ("mkdir $targetdir\\lib");
+    if ( $opt_m =~ m/icu/i ) {
+        psystem ("mkdir $targetdir\\msg");
+    }    
     psystem ("mkdir $targetdir\\etc");
     psystem ("mkdir $targetdir\\include");
     psystem ("mkdir $targetdir\\include\\xercesc");
@@ -302,7 +305,7 @@ if ($platform eq "win64bit" )
     print ("\n \nCopying binary outputs ...\n");
     psystem("copy /y $BUILDDIR\\*.dll $targetdir\\bin");
     psystem("copy /y $BUILDDIR\\*.exe $targetdir\\bin");
-
+   
     if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
 
         # Copy the ICU dlls and libs
@@ -321,7 +324,7 @@ if ($platform eq "win64bit" )
 
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
-            psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\*.res $targetdir\\lib");
+            psystem("copy /y $XERCESCROOT\\src\\xercesc\\util\\MsgLoaders\\ICU\\resources\\*.res $targetdir\\msg");
         }        	
 
     }
@@ -333,8 +336,7 @@ if ($platform eq "win64bit" )
         psystem("copy /y $DEBUGBUILDDIR\\xerces-c_*D.lib $targetdir\\lib");
         psystem("copy /y $DEBUGBUILDDIR\\xerces*D.dll $targetdir\\bin");
     }
-
-
+   
     # Populate the etc output directory like config.status and the map file
     print ("\n \nCopying misc output to etc ...\n");
     psystem("copy /y $XERCESCROOT\\Build\\Win64\\VC6\\Release\\obj\\*.map $targetdir\\etc");
@@ -460,6 +462,9 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("mkdir $targetdir");
     psystem ("mkdir $targetdir/bin");
     psystem ("mkdir $targetdir/lib");
+    if ( $opt_m =~ m/icu/i ) {
+        psystem ("mkdir $targetdir/msg");
+    }   
     psystem ("mkdir $targetdir/etc");
     psystem ("mkdir $targetdir/include");
     psystem ("mkdir $targetdir/include/xercesc");
@@ -714,7 +719,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
-            psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/*.res $targetdir/lib");
+            psystem("cp -fv $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/*.res $targetdir/msg");
         }        	
 
     }
@@ -944,7 +949,9 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     psystem ("mkdir $targetdir/bin");
     psystem ("mkdir $targetdir/etc");
     psystem ("mkdir $targetdir/lib");
-    psystem ("mkdir $targetdir/lib/msg");    
+    if ( $opt_m =~ m/iconv/i || $opt_m =~ m/icu/i ) {
+        psystem ("mkdir $targetdir/msg");
+    }
     psystem ("mkdir $targetdir/include");
     psystem ("mkdir $targetdir/include/xercesc");
     if (length($ICUROOT) > 0) {
@@ -1217,11 +1224,11 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
     # Populate the Message Catalog Files
     if ( $opt_m =~ m/iconv/i ) {
         print ("\n\nCopying Message Catalog Files ...\n");
-        pchdir ("$targetdir/lib/msg");
+        pchdir ("$targetdir/msg");
         psystem("rm -f XMLMessages* ");    	
         psystem("cp -f $XERCESCROOT/lib/msg/XMLMessages*.cat .");        
     }    
-    
+           
     #
     # Create symbolic link for those ICU libraries
     #
@@ -1270,7 +1277,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {
-            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/*.res $targetdir/lib");
+            psystem("cp -f $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/resources/*.res $targetdir/msg");
         }        	
 
     }
