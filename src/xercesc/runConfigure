@@ -478,7 +478,8 @@ case $msgloader in
            exit ${ERROR_EXIT_CODE};
        fi
        MESSAGELOADER=ICU;
-       msgloaderDefines="-DXML_USE_ICU_MESSAGELOADER" ;;
+       msgloaderLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
+       msgloaderDefines="-DXML_USE_ICU_MESSAGELOADER -I${ICUROOT}/include";;
 
    inmem)
        ;;
@@ -607,7 +608,7 @@ fi
 LDFLAGS="$LDFLAGS $linkeroptions $bitstobuildLink"
 export LDFLAGS
 
-LIBS="$transcodingLibs $threadingLibs $netaccessorLibs"
+LIBS="$transcodingLibs $msgloaderLibs $threadingLibs $netaccessorLibs"
 export LIBS
 
 

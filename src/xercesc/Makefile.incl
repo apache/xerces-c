@@ -123,6 +123,12 @@ ifeq (${PLATFORM}, SOLARIS)
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
                   -lm  -lgen
     endif
+
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
+                  -licuuc -licudata -lm -lgen
+    endif
+
   else
     PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(XML_OBJ_DIR) \
                                -features=rtti -D${PLATFORM} -D_REENTRANT
@@ -133,6 +139,11 @@ ifeq (${PLATFORM}, SOLARIS)
     else
         ALLLIBS = -mt ${LIBS}
     endif
+
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = -mt -licuuc -licudata ${LIBS}
+    endif
+
   endif
   SHLIBSUFFIX=.so
   ## Compiler switch to embed a library name
@@ -228,6 +239,11 @@ ifeq (${TRANSCODER}, ICU)
 else
     ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib
 endif
+
+ifeq (${MESSAGELOADER}, ICU)
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata
+endif
+
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
 
 ifeq (${BITSTOBUILD}, 64)
@@ -293,6 +309,11 @@ ifeq (${TRANSCODER}, ICU)
 else
     ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
 endif
+
+ifeq (${MESSAGELOADER}, ICU)
+    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata
+endif
+
 EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_NAME}.map
 SHLIBSUFFIX=.so
 ## Compiler switch to embed a library name
@@ -365,6 +386,11 @@ ifeq (${PLATFORM}, HPUX)
     else
         ALLLIBS = ${LIBS}
     endif
+
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = $(LIBS} -licuuc -licudata
+    endif
+
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,.
     SHLIBSUFFIX=.sl
   else
@@ -383,6 +409,11 @@ ifeq (${PLATFORM}, HPUX)
     else
         ALLLIBS = ${LIBS}
     endif
+
+    ifeq (${MESSAGELOADER}, ICU)
+        ALLLIBS = $(LIBS} -licuuc -licudata
+    endif
+
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,+b,. -Wl,-a,shared
     SHLIBSUFFIX=.sl
   endif
