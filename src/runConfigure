@@ -136,7 +136,7 @@ netaccessor=socket       # by default use socket (can do HTTP URL's)
 thread=pthread           # by default use POSIX threads
 configureoptions=""
 
-while [$# -gt 0]
+while [ $# -gt 0 ]
    do
    case $1 in
    -p)
