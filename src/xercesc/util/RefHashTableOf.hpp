@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/04 15:24:57  tng
+ * DOM L3: add transferElement and removeBucketElemSafe for use in DOMDocument::renameNode.
+ *
  * Revision 1.2  2002/06/12 17:14:03  tng
  * Add function cleanup, reinitialize and nextElementKey for ease of use.
  *
@@ -140,7 +143,7 @@ template <class TVal> struct RefHashTableBucketElem
 
     TVal*                           fData;
     RefHashTableBucketElem<TVal>*   fNext;
-	void*							fKey;
+    void*                           fKey;
 };
 
 
@@ -150,13 +153,13 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-	// backwards compatability - default hasher is HashXMLCh
+    // backwards compatability - default hasher is HashXMLCh
     RefHashTableOf(const unsigned int modulus);
-	// backwards compatability - default hasher is HashXMLCh
+    // backwards compatability - default hasher is HashXMLCh
     RefHashTableOf(const unsigned int modulus, const bool adoptElems);
-	// if a hash function is passed in, it will be deleted when the hashtable is deleted.
-	// use a new instance of the hasher class for each hashtable, otherwise one hashtable
-	// may delete the hasher of a different hashtable if both use the same hasher.
+    // if a hash function is passed in, it will be deleted when the hashtable is deleted.
+    // use a new instance of the hasher class for each hashtable, otherwise one hashtable
+    // may delete the hasher of a different hashtable if both use the same hasher.
     RefHashTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hashBase);
     ~RefHashTableOf();
 
@@ -170,6 +173,7 @@ public:
     void removeAll();
     void cleanup();
     void reinitialize(HashBase* hashBase);
+    void transferElement(const void* const key1, void* key2);
 
     // -----------------------------------------------------------------------
     //  Getters
@@ -181,7 +185,7 @@ public:
     // -----------------------------------------------------------------------
     //  Putters
     // -----------------------------------------------------------------------
-	void put(void* key, TVal* const valueToAdopt);
+    void put(void* key, TVal* const valueToAdopt);
 
 
 private :
@@ -198,7 +202,8 @@ private:
     RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal);
     const RefHashTableBucketElem<TVal>* findBucketElem(const void* const key, unsigned int& hashVal) const;
     void removeBucketElem(const void* const key, unsigned int& hashVal);
-	void initialize(const unsigned int modulus);
+    void removeBucketElemSafe(const void* const key, unsigned int& hashVal);
+    void initialize(const unsigned int modulus);
 
 
     // -----------------------------------------------------------------------
@@ -216,14 +221,14 @@ private:
     //  fHashModulus
     //      The modulus used for this hash table, to hash the keys. This is
     //      also the number of elements in the bucket list.
-	//
-	//  fHash
-	//      The hasher for the key data type.
+    //
+    //  fHash
+    //      The hasher for the key data type.
     // -----------------------------------------------------------------------
     bool                                fAdoptedElems;
     RefHashTableBucketElem<TVal>**      fBucketList;
     unsigned int                        fHashModulus;
-	HashBase*							fHash;
+    HashBase*                           fHash;
 };
 
 
