@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.5  2001/07/08 19:54:35  jberry
+# Fix clean and distclean targets; broken because rm fails if passed no files
+#
 # Revision 1.4  2001/07/06 17:12:09  tng
 # Automatic build of single-threaded library.  By Martin Kalen.
 #
@@ -134,7 +137,9 @@ depend:: includes
 
 clean::
 	@echo "Making clean in $(MODULE) ..."
+ifneq ($(addprefix $(XML_OBJ_DIR)/,$(VALIDATORS_CPP_OBJECTS)),)
 	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(VALIDATORS_CPP_OBJECTS))
+endif
 	cd common ; $(MAKE) $@ ; cd ..
 	cd datatype ; $(MAKE) $@ ; cd ..
 	cd DTD ; $(MAKE) $@ ; cd ..
@@ -145,8 +150,12 @@ clean::
 distclean:: clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE) header files ..."
+ifneq ($(addprefix $(XML_INC_DIR)/$(MODULE)/,$(VALIDATORS_CPP_PUBHEADERS)),)
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(VALIDATORS_CPP_PUBHEADERS))
+endif
+ifneq ($(addprefix $(XML_INC_DIR)/$(MODULE)/,$(VALIDATORS_C_FILES)),)
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(VALIDATORS_C_FILES))
+endif
 	cd common ; $(MAKE) $@ ; cd ..
 	cd datatype ; $(MAKE) $@ ; cd ..
 	cd DTD ; $(MAKE) $@ ; cd ..
