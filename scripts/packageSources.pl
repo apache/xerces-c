@@ -163,7 +163,7 @@ sub package_sources {
    system("$RM -rf $srctargetdir/doc/*.zip");
 
    system("$RM -rf $srctargetdir/Projects/Win32/Unsupported");
-   system("$RM -rf $srctargetdir/Projects/Win32/BCB4");
+#  system("$RM -rf $srctargetdir/Projects/Win32/BCB4");
    system("$RM $srctargetdir/scripts/packageSources.pl");
 
    chdir ($srctargetdir);
