@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:51  twl
- * Initial revision
+ * Revision 1.2  1999/11/12 02:14:05  rahulj
+ * It now validates when the -v option is specified.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:51  twl
+ * Initial checkin
  *
  * Revision 1.7  1999/11/08 20:43:35  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -199,6 +202,7 @@ int main(int argC, char* argV[])
     //  discovers errors during the course of parsing the XML document.
     //
     DOMParser parser;
+    parser.setDoValidation(doValidation);
     ErrorHandler *errReporter = new DOMTreeErrorReporter();
     parser.setErrorHandler(errReporter);
 
