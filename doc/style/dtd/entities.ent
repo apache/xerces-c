@@ -10,6 +10,7 @@
 <!ENTITY XercesCWindowsLib    "xerces-c_2">                   <!-- windowslibname -->
 <!ENTITY XercesCWindowsDLL    "xerces-c_2_0_0">               <!-- windowsDLLname -->
 <!ENTITY XercesCUnixSoName    "20.0">                         <!-- unixlibname -->
+<!ENTITY XercesCUnixVersion   "20">                           <!-- unixlibname -->
 <!ENTITY XercesCUnixLib       "libxerces-c">                  <!-- unixlibname -->
 <!ENTITY XercesCEmailAddress  "xerces-c-dev@xml.apache.org "> <!-- emailaddress -->
 <!ENTITY XercesDistDir        "xml.apache.org/dist/xerces-c"> <!-- download directory -->
