@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/11/05 22:10:06  tng
+ * Explicit code using namespace in application.
+ *
  * Revision 1.7  2002/09/30 22:09:58  peiyongz
  * To generate icu resource file (in text) for error message.
  *
@@ -85,7 +88,6 @@
  * Swat for adding in Product name and CVS comment log variable.
  *
  */
-
 
 // ---------------------------------------------------------------------------
 //  Some globally used types
@@ -118,6 +120,8 @@ enum MsgTypes
 #include "Xlat_Win32RC.hpp"
 #include "Xlat_MsgCatalog.hpp"
 #include "Xlat_ICUResourceBundle.hpp"
+
+XERCES_CPP_NAMESPACE_USE
 
 
 // ---------------------------------------------------------------------------
