@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/24 21:39:12  peiyongz
+ * DTV Reorganization:
+ *
  * Revision 1.6  2001/09/24 15:31:13  peiyongz
  * DTV Reorganization: inherit from AbstractStringValidator
  *
@@ -117,9 +120,9 @@ protected:
 
     virtual void checkAdditionalFacet(const XMLCh* const content) const;
 
-    inline virtual void checkValueSpace(const XMLCh* const content);
+    virtual void checkValueSpace(const XMLCh* const content);
 
-    inline virtual int  getLength(const XMLCh* const content) const;
+    virtual int  getLength(const XMLCh* const content) const;
 
 private:
 
