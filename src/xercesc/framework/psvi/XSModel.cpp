@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/25 18:08:31  knoaman
+ * Misc. PSVI updates. Thanks to David Cargill.
+ *
  * Revision 1.8  2003/11/21 22:34:45  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -263,7 +266,7 @@ XSModel::XSModel( XMLGrammarPool *grammarPool
     , fAddedBuiltinDatatypeValidators(false)
 {
     fURIStringPool = grammarPool->getURIStringPool();
-    fObjFactory = new XSObjectFactory(manager);
+    fObjFactory = new (fMemoryManager) XSObjectFactory(manager);
 
     // Populate XSNamedMaps by going through the components
     for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
@@ -365,7 +368,7 @@ XSModel::XSModel( XSModel *baseModel
     , fAddedBuiltinDatatypeValidators(false)
 {
     fURIStringPool = grammarResolver->getStringPool();        
-    fObjFactory = new XSObjectFactory(manager);
+    fObjFactory = new (manager) XSObjectFactory(manager);
 
     unsigned int i;
     // Populate XSNamedMaps by going through the components
@@ -473,7 +476,7 @@ XSModel::XSModel( XSModel *baseModel
         XMLCh* NameSpace = XMLString::replicate(grammarsToAdd->elementAt(i)->getTargetNamespace(), manager);
         fNamespaceStringList->addElement(NameSpace);
 
-        XSNamespaceItem* namespaceItem = new XSNamespaceItem(this, grammarsToAdd->elementAt(i), manager);
+        XSNamespaceItem* namespaceItem = new (manager) XSNamespaceItem(this, grammarsToAdd->elementAt(i), manager);
         fXSNamespaceItemList->addElement(namespaceItem);
         
         fHashNamespace->put(NameSpace, namespaceItem);

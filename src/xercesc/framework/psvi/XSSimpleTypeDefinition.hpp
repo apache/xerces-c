@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/25 18:08:31  knoaman
+ * Misc. PSVI updates. Thanks to David Cargill.
+ *
  * Revision 1.7  2003/11/24 15:45:36  knoaman
  * PSVI: finish construction of XSSimpleTypeDefinition
  *
@@ -381,15 +384,10 @@ public:
      * Convenience method: check if this type is derived from the given 
      * <code>ancestorType</code>. 
      * @param ancestorType  An ancestor type definition. 
-     * @param derivationMethod  A bit combination representing a subset of {
-     *   <code>DERIVATION_RESTRICTION, DERIVATION_EXTENSION, DERIVATION_UNION, DERIVATION_LIST</code>
-     *   }. 
      * @return  Return true if this type is derived from 
-     *   <code>ancestorType</code> using only derivation methods from the 
-     *   <code>derivationMethod</code>.
+     *   <code>ancestorType</code>.
      */
-    bool derivedFromType(const XSTypeDefinition* const ancestorType, 
-                                   short derivationMethod);
+    bool derivedFromType(const XSTypeDefinition* const ancestorType);
 
     //@}
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/25 18:08:31  knoaman
+ * Misc. PSVI updates. Thanks to David Cargill.
+ *
  * Revision 1.5  2003/11/21 17:19:30  knoaman
  * PSVI update.
  *
@@ -263,15 +266,10 @@ public:
      * Convenience method: check if this type is derived from the given 
      * <code>ancestorType</code>. 
      * @param ancestorType  An ancestor type definition. 
-     * @param derivationMethod  A bit combination representing a subset of {
-     *   <code>DERIVATION_RESTRICTION, DERIVATION_EXTENSION, DERIVATION_UNION, DERIVATION_LIST</code>
-     *   }. 
      * @return  Return true if this type is derived from 
-     *   <code>ancestorType</code> using only derivation methods from the 
-     *   <code>derivationMethod</code>.
+     *   <code>ancestorType</code>.
      */
-    bool derivedFromType(const XSTypeDefinition* const ancestorType, 
-                                   short derivationMethod);
+    bool derivedFromType(const XSTypeDefinition* const ancestorType);
 
     //@}
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/25 18:08:31  knoaman
+ * Misc. PSVI updates. Thanks to David Cargill.
+ *
  * Revision 1.6  2003/11/24 15:45:36  knoaman
  * PSVI: finish construction of XSSimpleTypeDefinition
  *
@@ -258,11 +261,9 @@ XSTypeDefinition *XSSimpleTypeDefinition::getBaseType()
     return fBaseType;
 }
 
-bool XSSimpleTypeDefinition::derivedFromType(const XSTypeDefinition * const ancestorType, 
-                               short derivationMethod)
+bool XSSimpleTypeDefinition::derivedFromType(const XSTypeDefinition * const ancestorType)
 {
     // REVISIT: review
-    // REVISIT: how to check derivationMethod (note: Java doesn't check)...
 
     if (!ancestorType)
         return false;

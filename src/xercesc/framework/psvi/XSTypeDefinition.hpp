@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/25 18:08:31  knoaman
+ * Misc. PSVI updates. Thanks to David Cargill.
+ *
  * Revision 1.6  2003/11/21 17:34:04  knoaman
  * PSVI update
  *
@@ -209,31 +212,21 @@ public:
      * Convenience method: check if this type is derived from the given 
      * <code>ancestorType</code>. 
      * @param ancestorType  An ancestor type definition. 
-     * @param derivationMethod  A bit combination representing a subset of {
-     *   <code>DERIVATION_RESTRICTION, DERIVATION_EXTENSION, DERIVATION_UNION, DERIVATION_LIST</code>
-     *   }. 
      * @return  Return true if this type is derived from 
-     *   <code>ancestorType</code> using only derivation methods from the 
-     *   <code>derivationMethod</code>.
+     *   <code>ancestorType</code>.
      */
-    virtual bool derivedFromType(const XSTypeDefinition* const ancestorType, 
-                                   short derivationMethod) = 0;
+    virtual bool derivedFromType(const XSTypeDefinition* const ancestorType) = 0;
 
     /**
      * Convenience method: check if this type is derived from the given 
      * ancestor type. 
      * @param typeNamespace  An ancestor type namespace. 
      * @param name  An ancestor type name. 
-     * @param derivationMethod  A bit combination representing a subset of {
-     *   <code>DERIVATION_RESTRICTION, DERIVATION_EXTENSION, DERIVATION_UNION, DERIVATION_LIST</code>
-     *   }. 
      * @return  Return true if this type is derived from 
-     *   the ancestor defined by <code>typeNamespace</code> and <code>name</code> using only
-     *   derivation methods from the <code>derivationMethod</code>.
+     *   the ancestor defined by <code>typeNamespace</code> and <code>name</code>.
      */
     bool derivedFrom(const XMLCh* typeNamespace, 
-                               const XMLCh* name, 
-                               short derivationMethod);
+                               const XMLCh* name);
 
     //@}
 

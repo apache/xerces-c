@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/25 18:08:31  knoaman
+ * Misc. PSVI updates. Thanks to David Cargill.
+ *
  * Revision 1.6  2003/11/21 17:34:04  knoaman
  * PSVI update
  *
@@ -115,11 +118,9 @@ bool XSTypeDefinition::isFinal(short toTest)
 }
 
 bool XSTypeDefinition::derivedFrom(const XMLCh *typeNamespace, 
-                                   const XMLCh *name, 
-                                   short derivationMethod)
+                                   const XMLCh *name)
 {
-    // REVISIT: review
-    // REVISIT: how to check derivationMethod (note: Java doesn't check)...
+    // REVISIT: review    
     if (!name)
         return false;
 
