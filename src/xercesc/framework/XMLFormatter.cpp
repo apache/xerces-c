@@ -69,6 +69,9 @@
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/framework/XMLFormatter.hpp>
+#include <xercesc/util/Janitor.hpp>
+#include <xercesc/util/XMLChar.hpp>
+
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -124,8 +127,8 @@ static const XMLCh gEscapeChars[XMLFormatter::EscapeFlags_Count][kEscapeCount] =
 // ---------------------------------------------------------------------------
 //  Local methods
 // ---------------------------------------------------------------------------
-static inline bool inEscapeList(const   XMLFormatter::EscapeFlags escStyle
-                                , const XMLCh                     toCheck)
+bool XMLFormatter::inEscapeList(const XMLFormatter::EscapeFlags escStyle
+                              , const XMLCh                     toCheck)
 {
     const XMLCh* escList = gEscapeChars[escStyle];
     while (*escList)
@@ -133,7 +136,42 @@ static inline bool inEscapeList(const   XMLFormatter::EscapeFlags escStyle
         if (*escList++ == toCheck)
             return true;
     }
-    return false;
+
+    /***
+     *  XML1.1
+     *
+     *  Finally, there is considerable demand to define a standard representation of 
+     *  arbitrary Unicode characters in XML documents. Therefore, XML 1.1 allows the 
+     *  use of character references to the control characters #x1 through #x1F, 
+     *  most of which are forbidden in XML 1.0. For reasons of robustness, however, 
+     *  these characters still cannot be used directly in documents.
+     *  In order to improve the robustness of character encoding detection, the 
+     *  additional control characters #x7F through #x9F, which were freely allowed in 
+     *  XML 1.0 documents, now must also appear only as character references. 
+     *  (Whitespace characters are of course exempt.) The minor sacrifice of backward 
+     *  compatibility is considered not significant. 
+     *  Due to potential problems with APIs, #x0 is still forbidden both directly and 
+     *  as a character reference.
+     *
+    ***/
+    if (fIsXML11)
+    {
+        // for XML11
+        if ( XMLChar1_1::isControlChar(toCheck, 0) &&
+            !XMLChar1_1::isWhitespace(toCheck, 0)   )
+        {
+            return true;    
+        }
+        else
+        {    
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+
 }
 
 
@@ -141,24 +179,26 @@ static inline bool inEscapeList(const   XMLFormatter::EscapeFlags escStyle
 //  XMLFormatter: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLFormatter::XMLFormatter( const   char* const             outEncoding
+                            , const char* const             docVersion
                             ,       XMLFormatTarget* const  target
                             , const EscapeFlags             escapeFlags
-                            , const UnRepFlags              unrepFlags) :
-    fEscapeFlags(escapeFlags)
+                            , const UnRepFlags              unrepFlags)
+    : fEscapeFlags(escapeFlags)
     , fOutEncoding(0)
     , fTarget(target)
     , fUnRepFlags(unrepFlags)
     , fXCoder(0)  
     , fAposRef(0)
-    , fAmpRef(0)    
-    , fGTRef(0)
-    , fLTRef(0)
-    , fQuoteRef(0)
     , fAposLen(0)
+    , fAmpRef(0)    
     , fAmpLen(0)    
+    , fGTRef(0)
     , fGTLen(0)
+    , fLTRef(0)
     , fLTLen(0)
+    , fQuoteRef(0)
     , fQuoteLen(0) 
+    , fIsXML11(false)
 {
     // Transcode the encoding string
     fOutEncoding = XMLString::transcode(outEncoding);
@@ -183,24 +223,34 @@ XMLFormatter::XMLFormatter( const   char* const             outEncoding
             , outEncoding
         );
     }
+
+    XMLCh* const tmpDocVer = XMLString::transcode(docVersion);
+    ArrayJanitor<XMLCh> jname(tmpDocVer);
+    fIsXML11 = XMLString::equals(tmpDocVer, XMLUni::fgVersion1_1);
 }
 
 
 XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
+                            , const XMLCh* const            docVersion
                             ,       XMLFormatTarget* const  target
                             , const EscapeFlags             escapeFlags
-                            , const UnRepFlags              unrepFlags) :
-    fEscapeFlags(escapeFlags)
+                            , const UnRepFlags              unrepFlags)
+    : fEscapeFlags(escapeFlags)
     , fOutEncoding(0)
     , fTarget(target)
     , fUnRepFlags(unrepFlags)
-    , fXCoder(0)
-
+    , fXCoder(0)  
     , fAposRef(0)
-    , fAmpRef(0)
+    , fAposLen(0)
+    , fAmpRef(0)    
+    , fAmpLen(0)    
     , fGTRef(0)
+    , fGTLen(0)
     , fLTRef(0)
+    , fLTLen(0)
     , fQuoteRef(0)
+    , fQuoteLen(0) 
+    , fIsXML11(false)
 {
     // Copy the encoding string
     fOutEncoding = XMLString::replicate(outEncoding);
@@ -225,6 +275,8 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
             , outEncoding
         );
     }
+
+    fIsXML11 = XMLString::equals(docVersion, XMLUni::fgVersion1_1);
 }
 
 XMLFormatter::~XMLFormatter()
@@ -323,32 +375,33 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
                 const XMLByte * theChars;                
                 switch (*srcPtr) { 
                     case chAmpersand :
-                   theChars = getCharRef(fAmpLen, fAmpRef, gAmpRef); 
+                        theChars = getCharRef(fAmpLen, fAmpRef, gAmpRef); 
                         fTarget->writeChars(theChars, fAmpLen, this);
                         break;
 
                     case chSingleQuote :
-                   theChars = getCharRef(fAposLen, fAposRef, gAposRef); 
+                        theChars = getCharRef(fAposLen, fAposRef, gAposRef); 
                         fTarget->writeChars(theChars, fAposLen, this);
                         break;
 
                     case chDoubleQuote :
-                   theChars = getCharRef(fQuoteLen, fQuoteRef, gQuoteRef); 
+                        theChars = getCharRef(fQuoteLen, fQuoteRef, gQuoteRef); 
                         fTarget->writeChars(theChars, fQuoteLen, this);
                         break;
 
                     case chCloseAngle :
-                   theChars = getCharRef(fGTLen, fGTRef, gGTRef); 
+                        theChars = getCharRef(fGTLen, fGTRef, gGTRef); 
                         fTarget->writeChars(theChars, fGTLen, this);
                         break;
 
                     case chOpenAngle :
-                   theChars = getCharRef(fLTLen, fLTRef, gLTRef); 
+                        theChars = getCharRef(fLTLen, fLTRef, gLTRef); 
                         fTarget->writeChars(theChars, fLTLen, this);
                         break;
 
                     default:
-                        // <TBD> This is obviously an error
+                        // control characters
+                        writeCharRef(*srcPtr);
                         break;
                 }
                 srcPtr++;
@@ -357,7 +410,7 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
     }
 }
 
- 
+
 unsigned int 
 XMLFormatter::handleUnEscapedChars(const XMLCh *                  srcPtr, 
                                    const unsigned int             oCount, 
@@ -432,28 +485,51 @@ void XMLFormatter::writeBOM(const XMLByte* const toFormat
 // ---------------------------------------------------------------------------
 //  XMLFormatter: Private helper methods
 // ---------------------------------------------------------------------------
+const void XMLFormatter::writeCharRef(const XMLCh &toWrite)
+{
+    XMLCh tmpBuf[32];
+    tmpBuf[0] = chAmpersand;
+    tmpBuf[1] = chPound;
+    tmpBuf[2] = chLatin_x;
+
+    // Build a char ref for the current char
+    XMLString::binToText(toWrite, &tmpBuf[3], 8, 16);
+    const unsigned int bufLen = XMLString::stringLen(tmpBuf);
+    tmpBuf[bufLen] = chSemiColon;
+    tmpBuf[bufLen+1] = chNull;
+
+    // write it out
+    formatBuf(tmpBuf
+            , bufLen + 1
+            , XMLFormatter::NoEscapes
+            , XMLFormatter::UnRep_Fail);
+
+}
+
 const XMLByte* XMLFormatter::getCharRef(unsigned int & count, 
                                         XMLByte *      ref, 
                                         const XMLCh *  stdRef) 
 {
    if (!ref) { 
-    unsigned int charsEaten;
-      const unsigned int outBytes  
-         = fXCoder->transcodeTo(stdRef, XMLString::stringLen(stdRef), 
+
+       unsigned int charsEaten;
+       const unsigned int outBytes = 
+           fXCoder->transcodeTo(stdRef, XMLString::stringLen(stdRef), 
                                 fTmpBuf, kTmpBufSize, charsEaten, 
                                 XMLTranscoder::UnRep_Throw); 
 
-    fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
-    fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
+       fTmpBuf[outBytes] = 0; 
+       fTmpBuf[outBytes + 1] = 0;
+       fTmpBuf[outBytes + 2] = 0; 
+       fTmpBuf[outBytes + 3] = 0;
 
-      ref = new XMLByte[outBytes + 4]; 
-      memcpy(ref, fTmpBuf, outBytes + 4); 
-      count = outBytes; 
-    }
+       ref = new XMLByte[outBytes + 4]; 
+       memcpy(ref, fTmpBuf, outBytes + 4); 
+       count = outBytes; 
+   }
 
    return ref; 
 }
-
 
 void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
                                 , const unsigned int    count
@@ -469,12 +545,6 @@ void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
     //
     const XMLCh*    srcPtr = toFormat;
     const XMLCh*    endPtr = toFormat + count;
-
-    // Set up the common part of the buffer that we build char refs into
-    XMLCh tmpBuf[32];
-    tmpBuf[0] = chAmpersand;
-    tmpBuf[1] = chPound;
-    tmpBuf[2] = chLatin_x;
 
     while (srcPtr < endPtr)
     {
@@ -510,20 +580,7 @@ void XMLFormatter::specialFormat(const  XMLCh* const    toFormat
             //
             while (srcPtr < endPtr)
             {
-                // Build a char ref for the current char
-                XMLString::binToText(*srcPtr, &tmpBuf[3], 8, 16);
-                const unsigned int bufLen = XMLString::stringLen(tmpBuf);
-                tmpBuf[bufLen] = chSemiColon;
-                tmpBuf[bufLen+1] = chNull;
-
-                // And now call recursively back to our caller to format this
-                formatBuf
-                (
-                    tmpBuf
-                    , bufLen + 1
-                    , XMLFormatter::NoEscapes
-                    , XMLFormatter::UnRep_Fail
-                );
+                writeCharRef(*srcPtr);
 
                 // Move up the source pointer and break out if needed
                 srcPtr++;

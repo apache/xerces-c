@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/03/16 06:00:43  peiyongz
+ * Bug#17983 Formatter does not escape control characters
+ *
  * Revision 1.10  2003/03/11 12:58:36  tng
  * Fix compilation error on AIX.
  *
@@ -273,6 +276,7 @@ public:
     XMLFormatter
     (
         const   XMLCh* const            outEncoding
+        , const XMLCh* const            docVersion
         ,       XMLFormatTarget* const  target
         , const EscapeFlags             escapeFlags = NoEscapes
         , const UnRepFlags              unrepFlags = UnRep_Fail
@@ -281,6 +285,7 @@ public:
     XMLFormatter
     (
         const   char* const             outEncoding
+        , const char* const             docVersion
         ,       XMLFormatTarget* const  target
         , const EscapeFlags             escapeFlags = NoEscapes
         , const UnRepFlags              unrepFlags = UnRep_Fail
@@ -411,9 +416,15 @@ private :
                               XMLByte *      ref, 
                               const XMLCh *  stdRef);  
  
-   unsigned int handleUnEscapedChars(const XMLCh *                  srcPtr, 
-                                     const unsigned int             count, 
-                                     const UnRepFlags               unrepFlags);
+    const void writeCharRef(const XMLCh &toWrite);
+
+    bool inEscapeList(const XMLFormatter::EscapeFlags escStyle
+                    , const XMLCh                     toCheck);
+                              
+
+    unsigned int handleUnEscapedChars(const XMLCh *                  srcPtr, 
+                                      const unsigned int             count, 
+                                      const UnRepFlags               unrepFlags);
 
     void specialFormat
     (
@@ -458,6 +469,11 @@ private :
     //      These are character refs for the standard char refs, in the
     //      output encoding. They are faulted in as required, by transcoding
     //      them from fixed Unicode versions.
+    //
+    //  fIsXML11
+    //      for performance reason, we do not store the actual version string
+    //      and do the string comparison again and again.
+    //
     // -----------------------------------------------------------------------
     EscapeFlags                 fEscapeFlags;
     XMLCh*                      fOutEncoding;
@@ -476,6 +492,9 @@ private :
     unsigned int                fLTLen;
     XMLByte*                    fQuoteRef;
     unsigned int                fQuoteLen;
+
+    bool                        fIsXML11;
+
 };
 
 
@@ -493,7 +512,7 @@ public:
     // -----------------------------------------------------------------------
     virtual void writeChars
     (
-        const   XMLByte* const      toWrite
+          const XMLByte* const      toWrite
         , const unsigned int        count
         ,       XMLFormatter* const formatter
     ) = 0;
