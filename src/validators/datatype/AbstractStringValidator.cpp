@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/10/15 20:57:27  tng
+ * Schema: we should propagate the exception thrown from checkContent.
+ *
  * Revision 1.5  2001/10/09 21:00:54  peiyongz
  * . init() take 1 arg,
  * . make inspectFacetBase() virtual to allow ListDTV provide its own method,
@@ -146,7 +149,7 @@ void AbstractStringValidator::init(RefVectorOf<XMLCh>*           const enums)
 {
 
     if (enums)
-        setEnumeration(enums, false);    
+        setEnumeration(enums, false);
 
     assignFacet();
     inspectFacet();
@@ -164,7 +167,7 @@ void AbstractStringValidator::assignFacet()
 {
 
     RefHashTableOf<KVStringPair>* facets = getFacets();
-    
+
     if (!facets)
         return;
 
@@ -376,7 +379,7 @@ void AbstractStringValidator::inspectFacetBase()
             REPORT_FACET_ERROR(thisLength
                              , baseLength
                              , XMLExcepts::FACET_Len_baseLen)
-        }                        
+        }
     }
 
     /***
@@ -464,22 +467,12 @@ void AbstractStringValidator::inspectFacetBase()
     {
         int i = 0;
         int enumLength = getEnumeration()->size();
-        try
+        for ( ; i < enumLength; i++)
         {
-            for ( ; i < enumLength; i++)
-            {
-                // ask parent do a complete check
-                pBaseValidator->checkContent(getEnumeration()->elementAt(i), false);
-                // enum shall pass this->checkContent() as well.
-                checkContent(getEnumeration()->elementAt(i), false);
-            }
-        }
-
-        catch (...) //XMLException&
-        {
-            ThrowXML1(InvalidDatatypeFacetException
-                    , XMLExcepts::FACET_enum_base
-                    , getEnumeration()->elementAt(i));
+            // ask parent do a complete check
+            pBaseValidator->checkContent(getEnumeration()->elementAt(i), false);
+            // enum shall pass this->checkContent() as well.
+            checkContent(getEnumeration()->elementAt(i), false);
         }
     }
 
@@ -500,7 +493,7 @@ void AbstractStringValidator::inheritFacet()
         The reason of this inheriting (or copying values) is to ease
         schema constraint checking, so that we need NOT trace back to our
         very first base validator in the hierachy. Instead, we are pretty
-        sure checking against immediate base validator is enough.  
+        sure checking against immediate base validator is enough.
     ***/
 
     AbstractStringValidator *pBaseValidator = (AbstractStringValidator*) getBaseValidator();
@@ -548,7 +541,7 @@ void AbstractStringValidator::inheritFacet()
     setFixed(getFixed() | pBaseValidator->getFixed());
 
     // inherit additional facet
-    inheritAdditionalFacet();      
+    inheritAdditionalFacet();
 
 } // end of inheritance
 
