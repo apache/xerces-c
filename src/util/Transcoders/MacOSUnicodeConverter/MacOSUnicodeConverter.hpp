@@ -128,6 +128,9 @@ protected :
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
     );
+    
+    //	Sniff for available functionality
+    static bool IsMacOSUnicodeConverterSupported(void);
 
 
 private :

@@ -420,7 +420,7 @@ XMLLCPTranscoder* MacOSUnicodeConverter::makeNewLCPTranscoder()
 	
 	//	Get TextEncoding for current Mac System Script
 	TextEncoding systemTextEncoding;
-	status = UpgradeScriptInfoToTextEncoding (
+	status = UpgradeScriptInfoToTextEncoding(
 		smSystemScript, kTextLanguageDontCare, kTextRegionDontCare,
 		NULL, &systemTextEncoding);
 	
@@ -555,6 +555,17 @@ MacOSUnicodeConverter::makeNewXMLTranscoder(const   XMLCh* const		encodingName
     return result;
 }
 
+
+// ---------------------------------------------------------------------------
+//  IsMacOSUnicodeConverterSupported
+// ---------------------------------------------------------------------------
+bool
+MacOSUnicodeConverter::IsMacOSUnicodeConverterSupported(void)
+{
+    return UpgradeScriptInfoToTextEncoding != (void*)kUnresolvedCFragSymbolAddress
+        && CreateTextToUnicodeInfoByEncoding != (void*)kUnresolvedCFragSymbolAddress
+        ;
+}
 
 
 // ---------------------------------------------------------------------------
