@@ -87,9 +87,16 @@ private:
     const XMLCh *   fSystemId;
     const XMLCh *   fNotationName;
     DOMEntityReference*	fRefEntity;
-	void	cloneEntityRefTree() const;
 
-	friend class XercesDOMParser;
+    // New data introduced in DOM Level 3
+    XMLCh*                fActualEncoding;
+    XMLCh*                fEncoding;
+    XMLCh*                fVersion;
+
+    // private helper function
+    void	cloneEntityRefTree() const;
+
+    friend class XercesDOMParser;
 
 public:
     DOMEntityImpl(DOMDocument *doc, const XMLCh *eName);
@@ -107,9 +114,17 @@ public:
     virtual void            setPublicId(const XMLCh *arg);
     virtual void            setSystemId(const XMLCh *arg);
 
-	//DOM Level 2 additions. Non standard functions
-	virtual void		setEntityRef(DOMEntityReference *);
-	virtual DOMEntityReference*	getEntityRef() const;
+    //DOM Level 2 additions. Non standard functions
+    virtual void		setEntityRef(DOMEntityReference *);
+    virtual DOMEntityReference*	getEntityRef() const;
+
+    //Introduced in DOM Level 3
+    virtual const XMLCh*           getActualEncoding() const;
+    virtual void                   setActualEncoding(const XMLCh* actualEncoding);
+    virtual const XMLCh*           getEncoding() const;
+    virtual void                   setEncoding(const XMLCh* encoding);
+    virtual const XMLCh*           getVersion() const;
+    virtual void                   setVersion(const XMLCh* version);
 };
 
 #endif

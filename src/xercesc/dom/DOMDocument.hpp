@@ -281,6 +281,7 @@ public:
     virtual DOMNodeList      *getElementsByTagName(const XMLCh *tagname) const = 0;
 
     //@}
+
     /** @name Functions introduced in DOM Level 2. */
     //@{
 
@@ -536,7 +537,121 @@ public:
      * @since DOM Level 2
      */
     virtual  DOMElement        * getElementById(const XMLCh *elementId) const = 0;
+    //@}
 
+    /** @name Functions introduced in DOM Level 3. */
+    //@{
+
+    /**
+     * An attribute specifying the actual encoding of this document. This is
+     * <code>null</code> otherwise.
+     * <br> This attribute represents the property [character encoding scheme]
+     * defined in.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual const XMLCh*           getActualEncoding() const = 0;
+
+    /**
+     * An attribute specifying the actual encoding of this document. This is
+     * <code>null</code> otherwise.
+     * <br> This attribute represents the property [character encoding scheme]
+     * defined in .
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual void                   setActualEncoding(const XMLCh* actualEncoding) = 0;
+
+    /**
+     * An attribute specifying, as part of the XML declaration, the encoding
+     * of this document. This is <code>null</code> when unspecified.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual const XMLCh*           getEncoding() const = 0;
+
+    /**
+     * An attribute specifying, as part of the XML declaration, the encoding
+     * of this document. This is <code>null</code> when unspecified.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual void                   setEncoding(const XMLCh* encoding) = 0;
+
+    /**
+     * An attribute specifying, as part of the XML declaration, whether this
+     * document is standalone.
+     * <br> This attribute represents the property [standalone] defined in .
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual bool                   getStandalone() const = 0;
+
+    /**
+     * An attribute specifying, as part of the XML declaration, whether this
+     * document is standalone.
+     * <br> This attribute represents the property [standalone] defined in .
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual void                   setStandalone(bool standalone) = 0;
+
+    /**
+     * An attribute specifying, as part of the XML declaration, the version
+     * number of this document. This is <code>null</code> when unspecified.
+     * <br> This attribute represents the property [version] defined in .
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual const XMLCh*           getVersion() const = 0;
+
+    /**
+     * An attribute specifying, as part of the XML declaration, the version
+     * number of this document. This is <code>null</code> when unspecified.
+     * <br> This attribute represents the property [version] defined in .
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual void                   setVersion(const XMLCh* version) = 0;
+
+    /**
+     * The location of the document or <code>null</code> if undefined.
+     * <br>Beware that when the <code>DOMDocument</code> supports the feature
+     * "HTML" , the href attribute of the HTML BASE element takes precedence
+     * over this attribute.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual const XMLCh*           getDocumentURI() const = 0;
+    /**
+     * The location of the document or <code>null</code> if undefined.
+     * <br>Beware that when the <code>DOMDocument</code> supports the feature
+     * "HTML" , the href attribute of the HTML BASE element takes precedence
+     * over this attribute.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual void                   setDocumentURI(const XMLCh* documentURI) = 0;
     //@}
 
     // -----------------------------------------------------------------------

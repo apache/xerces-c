@@ -125,7 +125,12 @@ DOMDocumentImpl::DOMDocumentImpl()
       fUserData(0),
       fRanges(0),
       fChanges(0),
-      fNodeListPool(0)
+      fNodeListPool(0),
+      fActualEncoding(0),
+      fEncoding(0),
+      fVersion(0),
+      fStandalone(false),
+      fDocumentURI(0)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
 };
@@ -149,7 +154,12 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fUserData(0),
       fRanges(0),
       fChanges(0),
-      fNodeListPool(0)
+      fNodeListPool(0),
+      fActualEncoding(0),
+      fEncoding(0),
+      fVersion(0),
+      fStandalone(false),
+      fDocumentURI(0)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
     try {
@@ -1014,5 +1024,47 @@ DOMNodeList *DOMDocumentImpl::getDeepNodeList(const DOMNode *rootNode,     //DOM
     }
 
     return retList;
+}
+
+
+//Introduced in DOM Level 3
+const XMLCh* DOMDocumentImpl::getActualEncoding() const {
+    return fActualEncoding;
+}
+
+void DOMDocumentImpl::setActualEncoding(const XMLCh* actualEncoding){
+    fActualEncoding = cloneString(actualEncoding);
+}
+
+const XMLCh* DOMDocumentImpl::getEncoding() const {
+    return fEncoding;
+}
+
+void DOMDocumentImpl::setEncoding(const XMLCh* encoding){
+    fEncoding = cloneString(encoding);
+}
+
+bool DOMDocumentImpl::getStandalone() const{
+    return fStandalone;
+}
+
+void DOMDocumentImpl::setStandalone(bool standalone){
+    fStandalone = standalone;
+}
+
+const XMLCh* DOMDocumentImpl::getVersion() const {
+    return fVersion;
+}
+
+void DOMDocumentImpl::setVersion(const XMLCh* version){
+    fVersion = cloneString(version);
+}
+
+const XMLCh* DOMDocumentImpl::getDocumentURI() const {
+    return fDocumentURI;
+}
+
+void DOMDocumentImpl::setDocumentURI(const XMLCh* documentURI){
+    fDocumentURI = cloneString(documentURI);
 }
 

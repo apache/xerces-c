@@ -66,7 +66,13 @@
 
 
 DOMEntityImpl::DOMEntityImpl(DOMDocument *ownerDoc, const XMLCh *eName)
-   :  fNode(ownerDoc), fParent(ownerDoc), fPublicId(0), fSystemId(0)
+   : fNode(ownerDoc),
+     fParent(ownerDoc),
+     fPublicId(0),
+     fSystemId(0),
+     fActualEncoding(0),
+     fEncoding(0),
+     fVersion(0)
 {
     fRefEntity  = 0;
     fName        = ((DOMDocumentImpl *)ownerDoc)->getPooledString(eName);
@@ -75,7 +81,11 @@ DOMEntityImpl::DOMEntityImpl(DOMDocument *ownerDoc, const XMLCh *eName)
 
 
 DOMEntityImpl::DOMEntityImpl(const DOMEntityImpl &other, bool deep)
-    : fNode(other.fNode), fParent(other.fParent)
+    : fNode(other.fNode),
+      fParent(other.fParent),
+      fActualEncoding(other.fActualEncoding),
+      fEncoding(other.fEncoding),
+      fVersion(other.fVersion)
 {
     fName            = other.fName;
     if (deep)
@@ -232,3 +242,32 @@ bool DOMEntityImpl::hasChildNodes() const
                                                                             {return fNode.isSupported (feature, version); };
            void                DOMEntityImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool                DOMEntityImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
+
+//Introduced in DOM Level 3
+const XMLCh* DOMEntityImpl::getActualEncoding() const {
+    return fActualEncoding;
+}
+
+void DOMEntityImpl::setActualEncoding(const XMLCh* actualEncoding){
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
+    fActualEncoding = doc->cloneString(actualEncoding);
+}
+
+const XMLCh* DOMEntityImpl::getEncoding() const {
+    return fEncoding;
+}
+
+void DOMEntityImpl::setEncoding(const XMLCh* encoding){
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
+    fEncoding = doc->cloneString(encoding);
+}
+
+const XMLCh* DOMEntityImpl::getVersion() const {
+    return fVersion;
+}
+
+void DOMEntityImpl::setVersion(const XMLCh* version){
+    DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
+    fVersion = doc->cloneString(version);
+}
+

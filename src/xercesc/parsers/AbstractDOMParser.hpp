@@ -1260,6 +1260,10 @@ private :
     //      the tree must be built from a set of disjoint callbacks, we need
     //      these to keep up with where we currently are.
     //
+    //  fCurrentEntity
+    //      Used to track the current entity decl.  If a text decl is seen later on,
+    //      it is used to update the encoding and version information.
+    //
     //  fDocument
     //      The root document object, filled with the document contents.
     //
@@ -1301,6 +1305,7 @@ private :
     XMLScanner*                   fScanner;
     DOMNode*                      fCurrentParent;
     DOMNode*                      fCurrentNode;
+    DOMEntity*                    fCurrentEntity;
     DOMDocumentImpl*              fDocument;
     ValueStackOf<DOMNode*>*       fNodeStack;
     DOMDocumentTypeImpl*          fDocumentType;

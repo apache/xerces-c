@@ -134,6 +134,13 @@ public:
 
     bool                  errorChecking;    // Bypass error checking.
 
+    // New data introduced in DOM Level 3
+    XMLCh*                fActualEncoding;
+    XMLCh*                fEncoding;
+    bool                  fStandalone;
+    XMLCh*                fVersion;
+    XMLCh*                fDocumentURI;
+
 
     // Per-Document heap Variables.
     //   The heap consists of one or more biggish blocks which are
@@ -180,6 +187,7 @@ public:
     // Add all functions that are pure virutal in DOMNODE
     DOMNODE_FUNCTIONS;
 
+    // Add all functions that are pure virutal in DOMDocument
     virtual DOMAttr             *createAttribute(const XMLCh *name);
     virtual DOMCDATASection     *createCDATASection(const XMLCh *data);
     virtual DOMComment          *createComment(const XMLCh *data);
@@ -269,6 +277,18 @@ public:
     virtual DOMNodeList        *getElementsByTagNameNS(const XMLCh *namespaceURI,
 	                                              const XMLCh *localName) const;
     virtual DOMElement         *getElementById(const XMLCh *elementId) const;
+
+    //Introduced in DOM Level 3
+    virtual const XMLCh*           getActualEncoding() const;
+    virtual void                   setActualEncoding(const XMLCh* actualEncoding);
+    virtual const XMLCh*           getEncoding() const;
+    virtual void                   setEncoding(const XMLCh* encoding);
+    virtual bool                   getStandalone() const;
+    virtual void                   setStandalone(bool standalone);
+    virtual const XMLCh*           getVersion() const;
+    virtual void                   setVersion(const XMLCh* version);
+    virtual const XMLCh*           getDocumentURI() const;
+    virtual void                   setDocumentURI(const XMLCh* documentURI);
 
 
     //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".

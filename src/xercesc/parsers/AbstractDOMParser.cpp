@@ -108,6 +108,7 @@ AbstractDOMParser::AbstractDOMParser(XMLValidator* const valToAdopt) :
 , fScanner(0)
 , fCurrentParent(0)
 , fCurrentNode(0)
+, fCurrentEntity(0)
 , fDocument(0)
 , fNodeStack(0)
 , fDocumentType(0)
@@ -155,6 +156,7 @@ void AbstractDOMParser::reset()
 
     fCurrentParent   = 0;
     fCurrentNode     = 0;
+    fCurrentEntity   = 0;
     fParseInProgress = false;
     fWithinElement   = false;
     fNodeStack->removeAllElements();
@@ -577,6 +579,9 @@ void AbstractDOMParser::startDocument()
     fCurrentNode   = fDocument;
     // set DOM error checking off
     fDocument->setErrorChecking(false);
+
+    fDocument->setDocumentURI(fScanner->getLocator()->getSystemId());
+    fDocument->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
 }
 
 
@@ -695,9 +700,14 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
 
 void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
 {
+    const XMLCh * entName = entDecl.getName();
+    DOMNamedNodeMap *entities = fDocumentType->getEntities();
+    DOMEntityImpl* entity = (DOMEntityImpl*)entities->getNamedItem(entName);
+    entity->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
+    fCurrentEntity = entity;
+
     if (fCreateEntityReferenceNodes == true)
-    {
-        const XMLCh * entName = entDecl.getName();
+    {        
         DOMEntityReference *er = fDocument->createEntityReference(entName);
 
         //set the readOnly flag to false before appending node, will be reset in endEntityReference
@@ -713,10 +723,7 @@ void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
         // We'd decide later whether the entity nodes should be created by a
         // separated method in parser or not. For now just stick it in if
         // the ref nodes are created
-        DOMNamedNodeMap *entities = fDocumentType->getEntities();
-        DOMEntityImpl* entity = (DOMEntityImpl*)entities->getNamedItem(entName);
         entity->setEntityRef(er);
-
     }
 }
 
@@ -726,7 +733,14 @@ void AbstractDOMParser::XMLDecl(const   XMLCh* const version
                                 , const XMLCh* const standalone
                                 , const XMLCh* const actualEncStr)
 {
-    // placehold for DOM Level 3
+    const XMLCh standalone_true[] = {
+            chLatin_t, chLatin_r, chLatin_u, chLatin_e, chNull
+            };
+    fDocument->setStandalone(!XMLString::compareString(standalone_true, standalone));
+
+    fDocument->setVersion(version);
+    fDocument->setEncoding(encoding);
+    fDocument->setActualEncoding(actualEncStr);
 }
 
 // ---------------------------------------------------------------------------
@@ -1197,4 +1211,8 @@ void AbstractDOMParser::TextDecl
     , const XMLCh* const    encodingStr
 )
 {
+    if (fCurrentEntity) {
+        fCurrentEntity->setVersion(versionStr);
+        fCurrentEntity->setEncoding(encodingStr);
+    }
 }

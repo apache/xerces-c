@@ -163,6 +163,73 @@ public:
     virtual const XMLCh *        getNotationName() const = 0;
     //@}
 
+    /** @name Functions introduced in DOM Level 3. */
+    //@{
+
+     /**
+     * An attribute specifying the actual encoding of this entity, when it is
+     * an external parsed entity. This is <code>null</code> otherwise.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual const XMLCh*           getActualEncoding() const = 0;
+
+    /**
+     * An attribute specifying the actual encoding of this entity, when it is
+     * an external parsed entity. This is <code>null</code> otherwise.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual void                   setActualEncoding(const XMLCh* actualEncoding) = 0;
+
+    /**
+     * An attribute specifying, as part of the text declaration, the encoding
+     * of this entity, when it is an external parsed entity. This is
+     * <code>null</code> otherwise.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual const XMLCh*           getEncoding() const = 0;
+
+    /**
+     * An attribute specifying, as part of the text declaration, the encoding
+     * of this entity, when it is an external parsed entity. This is
+     * <code>null</code> otherwise.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual void                   setEncoding(const XMLCh* encoding) = 0;
+
+    /**
+     * An attribute specifying, as part of the text declaration, the version
+     * number of this entity, when it is an external parsed entity. This is
+     * <code>null</code> otherwise.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual const XMLCh*           getVersion() const = 0;
+
+    /**
+     * An attribute specifying, as part of the text declaration, the version
+     * number of this entity, when it is an external parsed entity. This is
+     * <code>null</code> otherwise.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+    virtual void                   setVersion(const XMLCh* version) = 0;
+    //@}
 };
 
 #endif
