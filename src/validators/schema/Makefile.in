@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.14  2001/07/24 20:13:30  knoaman
+# Added support for <group> + extra constraint checking for complexType
+#
 # Revision 1.13  2001/07/06 17:12:13  tng
 # Automatic build of single-threaded library.  By Martin Kalen.
 #
@@ -131,6 +134,7 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	SubstitutionGroupComparator.hpp \
 	SchemaInfo.hpp \
 	GeneralAttributeCheck.hpp \
+	XercesGroupInfo.hpp \
 	TraverseSchema.hpp
 
 VALIDATORS_SCHEMA_CPP_PRIVHEADERS =
@@ -150,6 +154,7 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	SubstitutionGroupComparator.$(TO) \
 	SchemaInfo.$(TO) \
 	GeneralAttributeCheck.$(TO) \
+	XercesGroupInfo.$(TO) \
 	TraverseSchema.$(TO)
 
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS)
