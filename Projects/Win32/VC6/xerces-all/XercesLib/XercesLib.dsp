@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_7_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_1.lib" /version:1.7.0
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /subsystem:windows /dll /map /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_2_0_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_1.lib" /version:2.0.0
 # SUBTRACT LINK32 /pdb:none /incremental:yes
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1_7_0D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1D.lib" /pdbtype:sept /version:1.7.0
+# ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_2_0_0D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1D.lib" /pdbtype:sept /version:2.0.0
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF
@@ -864,10 +864,6 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileInputSource.Hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\framework\Makefile.in
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\framework\MemBufInputSource.cpp
 # End Source File
 # Begin Source File
@@ -1148,22 +1144,6 @@ SOURCE=..\..\..\..\..\src\xercesc\sax\SAXParseException.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMParser.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMParser.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\parsers\IDOMParser.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\parsers\IDOMParser.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.cpp
 # End Source File
 # Begin Source File
@@ -1178,481 +1158,13 @@ SOURCE=..\..\..\..\..\src\xercesc\parsers\SAXParser.cpp
 
 SOURCE=..\..\..\..\..\src\xercesc\parsers\SAXParser.hpp
 # End Source File
-# End Group
-# Begin Group "dom"
-
-# PROP Default_Filter ".cpp,.hpp"
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\AttrImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\AttrImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\AttrMapImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\AttrMapImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\AttrNSImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\AttrNSImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\CDATASectionImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\CDATASectionImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\CharacterDataImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\CharacterDataImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ChildNode.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ChildNode.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\CommentImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\CommentImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DeepNodeListImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DeepNodeListImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentFragmentImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentFragmentImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentTypeImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentTypeImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Attr.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Attr.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_CDATASection.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_CDATASection.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_CharacterData.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_CharacterData.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Comment.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Comment.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Document.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Document.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DocumentFragment.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DocumentFragment.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DocumentType.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DocumentType.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DOMException.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DOMException.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DOMImplementation.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DOMImplementation.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Element.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Element.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Entity.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Entity.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_EntityReference.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_EntityReference.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NamedNodeMap.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NamedNodeMap.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Node.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Node.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeFilter.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeFilter.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeIterator.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeIterator.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeList.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeList.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Notation.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Notation.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_ProcessingInstruction.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_ProcessingInstruction.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Range.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Range.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_RangeException.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_RangeException.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Text.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Text.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_TreeWalker.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_TreeWalker.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_XMLDecl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_XMLDecl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DomMemDebug.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DomMemDebug.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMString.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMString.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMStringImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DStringPool.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DStringPool.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ElementDefinitionImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ElementDefinitionImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ElementImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ElementImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ElementNSImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ElementNSImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\EntityImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\EntityImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\EntityReferenceImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\EntityReferenceImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\MemDebug.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NamedNodeMapImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NamedNodeMapImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NameNodeFilter.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NodeIDMap.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NodeIDMap.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NodeImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NodeImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NodeIteratorImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NodeIteratorImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NodeListImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NodeListImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NodeVector.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NodeVector.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NotationImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\NotationImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ParentNode.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ParentNode.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ProcessingInstructionImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\ProcessingInstructionImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\RangeImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\RangeImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\RefCountedImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\RefCountedImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\TextImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\TextImpl.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\TreeWalkerImpl.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\TreeWalkerImpl.hpp
-# End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\XMLDeclImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\XercesDOMParser.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\XMLDeclImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\XercesDOMParser.hpp
 # End Source File
 # End Group
 # Begin Group "validators"
@@ -2339,19 +1851,19 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesGroupInfo.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDDOMParser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDDOMParser.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDErrorReporter.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDErrorReporter.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDIDOMParser.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDIDOMParser.hpp
 # End Source File
 # Begin Source File
 
@@ -2399,360 +1911,844 @@ SOURCE=..\..\..\..\..\src\xercesc\sax2\SAX2XMLReader.hpp
 SOURCE=..\..\..\..\..\src\xercesc\sax2\XMLReaderFactory.hpp
 # End Source File
 # End Group
-# Begin Group "idom"
+# Begin Group "dom"
+
+# PROP Default_Filter ""
+# Begin Group "impl"
 
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMAttrImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMAttrImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrMapImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMAttrMapImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrMapImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMAttrMapImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrNSImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMAttrNSImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrNSImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMAttrNSImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDCasts.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMCasts.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDCDATASectionImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMCDATASectionImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDCDATASectionImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMCDATASectionImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDCharacterDataImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMCharacterDataImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDCharacterDataImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMCharacterDataImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDChildNode.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMChildNode.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDChildNode.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMChildNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDCommentImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMCommentImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDCommentImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMCommentImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDeepNodeListImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDeepNodeListImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDeepNodeListPool.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDeepNodeListPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentFragmentImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDocumentFragmentImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentFragmentImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDocumentFragmentImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDocumentImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDocumentImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentTypeImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDocumentTypeImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentTypeImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMDocumentTypeImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDOMImplementation.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMElementImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDDOMImplementation.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMElementImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDElementImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMElementNSImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDElementImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMElementNSImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDElementNSImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMEntityImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDElementNSImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMEntityImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDEntityImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMEntityReferenceImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDEntityImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMEntityReferenceImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDEntityReferenceImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDEntityReferenceImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMImplementationimpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNamedNodeMapImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNamedNodeMapImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNamedNodeMapImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNamedNodeMapImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeIDMap.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeIDMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeIDMap.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeIDMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeIteratorImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeIteratorImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeIteratorImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeIteratorImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeListImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeListImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeListImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeListImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeVector.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeVector.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeVector.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNodeVector.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNotationImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNotationImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDNotationImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNotationImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMParentNode.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Attr.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMParentNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_CDATASection.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMProcessingInstructionImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_CharacterData.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMProcessingInstructionImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Comment.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMRangeImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Document.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMRangeImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_DocumentFragment.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMStringPool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_DocumentType.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMStringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_DOMException.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTextImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_DOMException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTextImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_DOMImplementation.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTreeWalkerImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Element.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMTreeWalkerImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Entity.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_EntityReference.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\XSDElementNSImpl.hpp
 # End Source File
+# End Group
+# Begin Group "deprecated"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\AttrImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\AttrImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\AttrMapImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\AttrMapImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\AttrNSImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\AttrNSImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\CDATASectionImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\CDATASectionImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\CharacterDataImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\CharacterDataImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ChildNode.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ChildNode.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\CommentImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\CommentImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DeepNodeListImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DeepNodeListImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DocumentFragmentImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DocumentFragmentImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DocumentImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DocumentImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DocumentTypeImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DocumentTypeImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Attr.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Attr.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_CDATASection.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_CDATASection.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_CharacterData.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_CharacterData.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Comment.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Comment.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Document.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Document.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DocumentFragment.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DocumentFragment.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DocumentType.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DocumentType.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DOMException.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DOMException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DOMImplementation.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_DOMImplementation.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Element.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Element.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Entity.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Entity.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_EntityReference.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_EntityReference.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NamedNodeMap.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NamedNodeMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Node.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Node.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NodeFilter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NodeFilter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NodeIterator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NodeIterator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NodeList.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_NodeList.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Notation.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Notation.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_ProcessingInstruction.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_ProcessingInstruction.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Range.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Range.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_RangeException.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_RangeException.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Text.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_Text.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_TreeWalker.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_TreeWalker.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_XMLDecl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOM_XMLDecl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DomMemDebug.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DomMemDebug.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOMParser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOMParser.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOMString.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOMString.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DOMStringImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DStringPool.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\DStringPool.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ElementDefinitionImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ElementDefinitionImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ElementImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ElementImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ElementNSImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ElementNSImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\EntityImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\EntityImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\EntityReferenceImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\EntityReferenceImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\MemDebug.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NamedNodeMapImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NamedNodeMapImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NameNodeFilter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NodeIDMap.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NodeIDMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NodeImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NodeImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NodeIteratorImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NodeIteratorImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NodeListImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NodeListImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NodeVector.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NodeVector.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NotationImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\NotationImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ParentNode.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ParentNode.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ProcessingInstructionImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\ProcessingInstructionImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\RangeImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\RangeImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\RefCountedImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\RefCountedImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\TextImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\TextImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\TreeWalkerImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\TreeWalkerImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\XMLDeclImpl.cpp
+# End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_NamedNodeMap.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\deprecated\XMLDeclImpl.hpp
 # End Source File
+# End Group
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Node.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMAttr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_NodeFilter.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMCDATASection.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_NodeIterator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMCharacterData.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_NodeList.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMComment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Notation.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMDocument.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_ProcessingInstruction.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMDocumentFragment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Range.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMDocumentType.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_RangeException.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMElement.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_RangeException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMEntity.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Text.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMEntityReference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_TreeWalker.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDParentNode.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDParentNode.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMImplementation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDProcessingInstructionImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMNamedNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDProcessingInstructionImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDRangeImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMNodeFilter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDRangeImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMNodeIterator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDStringPool.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMNodeList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDStringPool.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMNotation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDTextImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMProcessingInstruction.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDTextImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMRange.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDTreeWalkerImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMRangeException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\IDTreeWalkerImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMRangeException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\XSDElementNSImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMText.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\idom\XSDElementNSImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMTreeWalker.hpp
 # End Source File
 # End Group
 # Begin Source File
