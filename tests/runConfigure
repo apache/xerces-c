@@ -131,9 +131,9 @@ fi
 
 # Now get the command line parameters
 if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:d:r:b:l:z:h $*`
+set -- `getopt p:c:x:dr:b:l:z:h $*`
 else
-set -- `getopts p:c:x:d:r:b:l:z:h `$*``
+set -- `getopts p:c:x:dr:b:l:z:h `$*``
 fi
 
 # Set up the default values for each parameter
