@@ -13,6 +13,35 @@
     </tr>
 
     <tr>
+        <td>2001-07-16</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2410] DOMParser::parse() throws undocumented exceptions.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-16</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2512] typing mistake in code example of chapter "Constructing an XML Reader".
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-16</td>
+        <td>Tinny Ng</td>
+        <td>APIDocs fix: default for schema processing in DOMParser, IDOMParser,
+        and SAXParser should be false.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-15</td>
+        <td>James Berry</td>
+        <td>Add new files to UnionTypeValidator and ListDataTypeValidator to MacOS Project files.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-07-09</td>
         <td>Khaled Noaman</td>
         <td>Add constraint checking for simple types.
@@ -29,7 +58,7 @@
     <tr>
         <td>2001-07-05</td>
         <td>Pei Yong Zhang</td>
-        <td>Add ListDatatypeValidator and UnionDatatypeValidator (but not enabled yet).
+        <td>Add ListDatatypeValidator and UnionDatatypeValidator.
         </td>
     </tr>
 
