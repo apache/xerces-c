@@ -56,7 +56,7 @@ $set 1
  57  ref cannot appear with any of type, abstract, block, final, nullable, default or fixed
  58  Invalid element name: {0} - declaration ignored
  59  Globally-declared element {0} cannot have a ref attribute - ref ignored
- 60  Element {0} has a type attribute and an annoymous type child
+ 60  Element '{0}' cannot have both a type attribute and a simpleType/complexType type child
  61  Failed to validate '{0}'
  62  Element {0} has a fixed or default value and must have a mixed simple or simple content model
  63  The simpleType {0} that {1} uses has a value of 'final' which does not permit extension
@@ -91,8 +91,8 @@ $set 1
  92  Included schema '{0}' has a different targetNameSpace '{1}'
  93  At most one <annotation> element is expected in the content.
  94  The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered
- 95  Attribute '{0}' must appear in '{1}'
- 96  Attribute '{0}' cannot appear in '{1}'
+ 95  Attribute '{0}' must appear in {1} {2} declarations
+ 96  Attribute '{0}' cannot appear in {1} {2} declarations
  97  Value of minOccurs '{0}' must not be greater than value of maxOccurs '{1}'
  98  'anyAttribute' elements can contain at most one 'annotation' element in their children
  99  Global {0} must have a name - declaration ignored
@@ -497,44 +497,46 @@ $set 3
 189  minInclusive value '{0}' must be less than or equal to base's maxInclusive value '{1}'
 190  minInclusive value '{0}' must be greater than or equal to base's minInclusive value '{1}'
 191  minInclusive value '{0}' must be greater than base's minExclusive value '{1}'
-192  totalDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'
-193  maxInclusive value '{0}' must be from the base's value space
-194  maxExclusive value '{0}' must be from the base's value space
-195  minInclusive value '{0}' must be from the base's value space
-196  minExclusive value '{0}' must be from the base's value space
-197  Value '{0}' does not match regular expression facet '{1}'
-198  Value '{0}' is not encoded in Base64 
-199  Value '{0}' is not encoded in HexBin 
-200  Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' 
-201  Value '{0}' with length '{1}' is less than minimum length facet of '{2}' 
-202  Value '{0}' with length '{1}' is not equal to length facet of '{2}' 
-203  Value '{0}' is not in enumeration 
-204  Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}' 
-205  Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}' 
-206  Value '{0}' must be less than or equal to MaxInclusive '{1}' 
-207  Value '{0}' must be less than MaxExclusive '{1}' 
-208  Value '{0}' must be greater than or equal to MinInclusive '{1}' 
-209  Value '{0}' must be greater than MinExclusive '{1}' 
-210   Empty string encountered.
-211   String contains whitespaces only.
-212   More than one decimal points encountered.
-213   Invalid chars encountered.
-214   Null pointer encountered.
-215  A result is not set.
-216  CompactRanges - Internal Error
-217  Merge Ranges - Mismatched type
-218  SubtractRanges - Internal Error
-219  IntersectRanges - Internal Error
-220  ComplementRanges - Argument must be a RangeToken
-221  Invalid category name: {0}
-222  Keyword '{0}' not found
-223  Reference no must be more than zero
-224  Unknown option: {0}
-225  Unknown token type
-226  Failed to get RangeToken for: {0}
-227  Not supported
-228  Invalid child index
-229  Enabling the NEL option can only be called once per process.
-230  {0}
+192  maxInclusive value '{0}' must be from the base's value space
+193  maxExclusive value '{0}' must be from the base's value space
+194  minInclusive value '{0}' must be from the base's value space
+195  minExclusive value '{0}' must be from the base's value space
+196  totalDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'
+197  fractDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'
+198  fractDigit value '{0}' must be less than or equal to base's fractDigit value '{1}'
+199  Value '{0}' does not match regular expression facet '{1}'
+200  Value '{0}' is not encoded in Base64 
+201  Value '{0}' is not encoded in HexBin 
+202  Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' 
+203  Value '{0}' with length '{1}' is less than minimum length facet of '{2}' 
+204  Value '{0}' with length '{1}' is not equal to length facet of '{2}' 
+205  Value '{0}' is not in enumeration 
+206  Value '{0}' with total digits '{1}' exceeds total digit facet of '{2}' 
+207  Value '{0}' with fraction digits '{1}' exceeds fraction digit facet of '{2}' 
+208  Value '{0}' must be less than or equal to MaxInclusive '{1}' 
+209  Value '{0}' must be less than MaxExclusive '{1}' 
+210  Value '{0}' must be greater than or equal to MinInclusive '{1}' 
+211  Value '{0}' must be greater than MinExclusive '{1}' 
+212   Empty string encountered.
+213   String contains whitespaces only.
+214   More than one decimal points encountered.
+215   Invalid chars encountered.
+216   Null pointer encountered.
+217  A result is not set.
+218  CompactRanges - Internal Error
+219  Merge Ranges - Mismatched type
+220  SubtractRanges - Internal Error
+221  IntersectRanges - Internal Error
+222  ComplementRanges - Argument must be a RangeToken
+223  Invalid category name: {0}
+224  Keyword '{0}' not found
+225  Reference no must be more than zero
+226  Unknown option: {0}
+227  Unknown token type
+228  Failed to get RangeToken for: {0}
+229  Not supported
+230  Invalid child index
+231  Enabling the NEL option can only be called once per process.
+232  {0}
 
 

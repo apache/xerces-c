@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/18 20:05:30  knoaman
+ * Modified wording of error messages.
+ *
  * Revision 1.2  2001/05/17 18:11:15  knoaman
  * More constraint and attribute checking.
  *
@@ -97,6 +100,16 @@ const XMLCh fgUnbounded[] =
 {
     chLatin_u, chLatin_n, chLatin_b, chLatin_o, chLatin_u, chLatin_n, chLatin_d,
     chLatin_e, chLatin_d, chNull
+};
+
+const XMLCh fgLocal[] =
+{
+    chLatin_l, chLatin_o, chLatin_c, chLatin_a, chLatin_l, chNull
+};
+
+const XMLCh fgGlobal[] =
+{
+    chLatin_g, chLatin_l, chLatin_o, chLatin_b, chLatin_a, chLatin_l, chNull
 };
 
 
@@ -723,6 +736,7 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
     int                         prefixContext = globalPrefix;
     unsigned int                nameLen = name.length();
     XMLCh*                      elemName = 0;
+    const XMLCh*                contextStr = fgGlobal;
     RefVectorOf<AttributeInfo>* elemAttrs = 0;
 
 	if (nameLen) {
@@ -734,6 +748,9 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 	ArrayJanitor<XMLCh> janName(elemName);
 
     if (elemContext == LocalContext) {
+
+        contextStr = fgLocal;
+
         if (elem.getAttribute(SchemaSymbols::fgATT_REF) == 0) {
             prefixContext = localNamePrefix;
         }
@@ -772,7 +789,8 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 			}
             else {
                 if (attInfo->getDefaultOption() == Att_Required) {
-                    schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttributeRequired, attName, elemName); //"Attribute '{0}' must appear in '{1}'"
+                    schema->reportSchemaError(XMLUni::fgXMLErrDomain, 
+                        XMLErrs::AttributeRequired, attName, contextStr, elemName);
                 }
             }
         }
@@ -807,8 +825,8 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 		fBuffer.set(attName.rawBuffer(), attName.length());
 
         if (!attNameList.containsKey(fBuffer.getRawBuffer())) {
-            schema->reportSchemaError(XMLUni::fgXMLErrDomain, 
-                XMLErrs::AttributeDisallowed, fBuffer.getRawBuffer(), elemName);//"Attribute '{0}' cannot appear in '{1}'"
+            schema->reportSchemaError(XMLUni::fgXMLErrDomain,
+                XMLErrs::AttributeDisallowed, fBuffer.getRawBuffer(), contextStr, elemName);
         }
     }
 }

@@ -66,7 +66,7 @@
             <Message Id="BadAttWithRef" Text="ref cannot appear with any of type, abstract, block, final, nullable, default or fixed"/>
             <Message Id="InvalidElementName" Text="Invalid element name: {0} - declaration ignored"/>
             <Message Id="GlobalElementWithRef" Text="Globally-declared element {0} cannot have a ref attribute - ref ignored"/>
-            <Message Id="ElementWithTypeAndAnonType" Text="Element {0} has a type attribute and an annoymous type child"/>
+            <Message Id="ElementWithTypeAndAnonType" Text="Element '{0}' cannot have both a type attribute and a simpleType/complexType type child"/>
             <Message Id="DatatypeValidationFailure" Text="Failed to validate '{0}'"/>
             <Message Id="NotSimpleOrMixedElement" Text="Element {0} has a fixed or default value and must have a mixed simple or simple content model"/>
             <Message Id="DisallowedSimpleTypeExtension" Text="The simpleType {0} that {1} uses has a value of 'final' which does not permit extension"/>
@@ -101,8 +101,8 @@
             <Message Id="IncludeNamespaceDifference" Text="Included schema '{0}' has a different targetNameSpace '{1}'"/>
             <Message Id="OnlyAnnotationExpected" Text="At most one &lt;annotation&gt; element is expected in the content."/>
             <Message Id="InvalidAttributeContent" Text="The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered"/>
-            <Message Id="AttributeRequired" Text="Attribute '{0}' must appear in '{1}'"/>
-            <Message Id="AttributeDisallowed" Text="Attribute '{0}' cannot appear in '{1}'"/>
+            <Message Id="AttributeRequired" Text="Attribute '{0}' must appear in {1} {2} declarations"/>
+            <Message Id="AttributeDisallowed" Text="Attribute '{0}' cannot appear in {1} {2} declarations"/>
             <Message Id="InvalidMin2MaxOccurs" Text="Value of minOccurs '{0}' must not be greater than value of maxOccurs '{1}'"/>
             <Message Id="AnyAttributeContentError" Text="'anyAttribute' elements can contain at most one 'annotation' element in their children"/>
             <Message Id="NoNameGlobalElement" Text="Global {0} must have a name - declaration ignored"/>
@@ -511,12 +511,14 @@
             <Message Id="FACET_minIncl_base_maxIncl" Text="minInclusive value '{0}' must be less than or equal to base's maxInclusive value '{1}'"/>
             <Message Id="FACET_minIncl_base_minIncl" Text="minInclusive value '{0}' must be greater than or equal to base's minInclusive value '{1}'"/>
             <Message Id="FACET_minIncl_base_minExcl" Text="minInclusive value '{0}' must be greater than base's minExclusive value '{1}'"/>
-            <Message Id="FACET_totDigit_base_totalDigit" Text="totalDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'"/>
             <Message Id="FACET_maxIncl_notFromBase" Text="maxInclusive value '{0}' must be from the base's value space"/>
             <Message Id="FACET_maxExcl_notFromBase" Text="maxExclusive value '{0}' must be from the base's value space"/>
             <Message Id="FACET_minIncl_notFromBase" Text="minInclusive value '{0}' must be from the base's value space"/>
             <Message Id="FACET_minExcl_notFromBase" Text="minExclusive value '{0}' must be from the base's value space"/>
-			<Message Id="VALUE_NotMatch_Pattern" Text="Value '{0}' does not match regular expression facet '{1}'"/>
+            <Message Id="FACET_totalDigit_base_totalDigit" Text="totalDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'"/>
+            <Message Id="FACET_fractDigit_base_totalDigit" Text="fractDigit value '{0}' must be less than or equal to base's totalDigit value '{1}'"/>
+            <Message Id="FACET_fractDigit_base_fractDigit" Text="fractDigit value '{0}' must be less than or equal to base's fractDigit value '{1}'"/>
+            <Message Id="VALUE_NotMatch_Pattern" Text="Value '{0}' does not match regular expression facet '{1}'"/>
             <Message Id="VALUE_Not_Base64" Text="Value '{0}' is not encoded in Base64 "/>
             <Message Id="VALUE_Not_HexBin" Text="Value '{0}' is not encoded in HexBin "/>
             <Message Id="VALUE_GT_maxLen" Text="Value '{0}' with length '{1}' exceeds maximum length facet of '{2}' "/>
