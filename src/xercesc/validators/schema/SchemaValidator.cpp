@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/02/26 14:26:10  tng
+ * [Bug 6672] SAXValidator results in an access violation when validating against schema with empty element that has default value.
+ *
  * Revision 1.4  2002/02/25 21:24:31  tng
  * Schema Fix: Ensure no invalid uri index for UPA checking.
  *
@@ -280,7 +283,8 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                         if (!XMLString::compareString(value, XMLUni::fgZeroLenString)) {
                             // if this element didn't specified any value
                             // use default value
-                            getScanner()->getDocHandler()->docCharacters(elemDefaultValue, XMLString::stringLen(elemDefaultValue), false);
+                            if (getScanner()->getDocHandler())
+                                getScanner()->getDocHandler()->docCharacters(elemDefaultValue, XMLString::stringLen(elemDefaultValue), false);
                         }
                         else {
                             // this element has specified some value
