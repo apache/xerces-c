@@ -57,6 +57,11 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/11/22 14:25:59  tng
+ * Got a number of compilation erros for those non-ANSI C++ compliant compiler like xlC v3.
+ * Since the previous fix is just for fixing a "warning", I think it doesn't worth to break users who
+ * are not ANSI C++ ready yet.
+ *
  * Revision 1.3  2002/11/21 15:45:34  gareth
  * gcc 3.2 now issues a warning for use of iostream.h. Removed the .h and prefixed cout with std::.
  *
@@ -69,7 +74,7 @@
  */
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
-#include <iostream>
+#include <iostream.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -88,7 +93,7 @@ void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
         // Without the cast, it was printing the pointer value in hex.
         // Quite annoying, considering every other platform printed
         // the string with the explicit cast to char* below.
-	std::cout.write((char *) toWrite, (int) count);
+    cout.write((char *) toWrite, (int) count);
 
 }
 
