@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/01/27 16:50:27  knoaman
+ * some cleanup.
+ *
  * Revision 1.11  2002/12/20 22:09:56  tng
  * XML 1.1
  *
@@ -755,16 +758,7 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
     //  See if there is at least a char in the buffer. Else, do the buffer
     //  reload logic.
     //
-    if (fCharIndex < fCharsAvail)
-    {
-        // Check the next char
-        if (fCharBuf[fCharIndex] == chNotToGet)
-            return false;
-
-        // Its not the one we want to skip so bump the index
-        chGotten = fCharBuf[fCharIndex++];
-    }
-    else
+    if (fCharIndex >= fCharsAvail)
     {
         // If fNoMore is set, then we have nothing else to give
         if (fNoMore)
@@ -773,14 +767,14 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
         // Try to refresh
         if (!refreshCharBuffer())
             return false;
-
-        // Check the next char
-        if (fCharBuf[fCharIndex] == chNotToGet)
-            return false;
-
-        // Its not the one we want to skip so bump the index
-        chGotten = fCharBuf[fCharIndex++];
     }
+
+    // Check the next char
+    if (fCharBuf[fCharIndex] == chNotToGet)
+        return false;
+
+    // Its not the one we want to skip so bump the index
+    chGotten = fCharBuf[fCharIndex++];
 
     // Handle end of line normalization and line/col member maintenance.
     if (chGotten == chCR)
