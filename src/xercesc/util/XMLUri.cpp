@@ -322,6 +322,7 @@ XMLUri::XMLUri(const XMLUri& toCopy)
 
 XMLUri& XMLUri::operator=(const XMLUri& toAssign)
 {
+    cleanUp();
     try {
         initialize(toAssign);
     }
@@ -345,27 +346,27 @@ XMLUri::~XMLUri()
 void XMLUri::cleanUp()
 {
     if (fScheme)
-        fMemoryManager->deallocate(fScheme);//delete[] fScheme;
+        XMLString::release((void**)&fScheme, fMemoryManager);//delete[] fScheme;
 
     if (fUserInfo)
-        fMemoryManager->deallocate(fUserInfo);//delete[] fUserInfo;
+        XMLString::release((void**)&fUserInfo, fMemoryManager);//delete[] fUserInfo;
 
     if (fHost)
-        fMemoryManager->deallocate(fHost);//delete[] fHost;
+        XMLString::release((void**)&fHost, fMemoryManager);//delete[] fHost;
         
     if (fRegAuth)
-        fMemoryManager->deallocate(fRegAuth);//delete[] fRegAuth;
+        XMLString::release((void**)&fRegAuth, fMemoryManager);//delete[] fRegAuth;
 
     if (fPath)
-        fMemoryManager->deallocate(fPath);//delete[] fPath;
+        XMLString::release((void**)&fPath, fMemoryManager);//delete[] fPath;
 
     if (fQueryString)
-        fMemoryManager->deallocate(fQueryString);//delete[] fQueryString;
+        XMLString::release((void**)&fQueryString, fMemoryManager);//delete[] fQueryString;
 
     if (fFragment)
-        fMemoryManager->deallocate(fFragment);//delete[] fFragment;
+        XMLString::release((void**)&fFragment, fMemoryManager);//delete[] fFragment;
 
-    fMemoryManager->deallocate(fURIText);//delete[] fURIText;
+    XMLString::release((void**)&fURIText, fMemoryManager);//delete[] fURIText;
 }
 
 void XMLUri::initialize(const XMLUri& toCopy)
