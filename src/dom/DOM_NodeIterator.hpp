@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/11 18:14:11  abagchi
+ * Fixed doc++ bugs
+ *
  * Revision 1.5  2000/02/11 03:01:04  abagchi
  * Made protected method public to compile, must be fixed later
  *
@@ -112,6 +115,7 @@ class CDOM_EXPORT DOM_NodeIterator
     //@}
 
     /** @name Assignment operators */
+    //@{
 	/**
 	  * Assignment operator
 	  * @param other The object to be copied through assignment
@@ -129,19 +133,19 @@ class CDOM_EXPORT DOM_NodeIterator
 	  *   variable goes out of scope, but zeroing them can be useful for
 	  *   global instances, or for local instances that will remain in scope
 	  *   for an extended time,  when the storage belonging to the underlying
-      *   node needs to be reclaimed.
+          *   node needs to be reclaimed.
 	  * @param val Only a value of 0, or null, is allowed.
 	  */
     DOM_NodeIterator & operator = (const DOM_NullPtr *val);
     //@}
 
     /** @name Destructor */
+    //@{
 	/**
 	  * Destructor
 	  */
-    //@{
     ~DOM_NodeIterator();
-	//@}
+    //@}
 
     /** @name Equality operators */
     //@{
@@ -163,7 +167,7 @@ class CDOM_EXPORT DOM_NodeIterator
      *  @return Returns true if the node iterator is null
      */
     bool operator == (const DOM_NullPtr *other) const;
-	//@}
+    //@}
 
     /** @name Inequality operators */
     //@{
@@ -184,24 +188,24 @@ class CDOM_EXPORT DOM_NodeIterator
      *  @return Returns true if the node iterator is NOT null
      */
     bool operator != (const DOM_NullPtr * other) const;
-	//@}
+    //@}
 
     /** @name Get Functions */
     //@{
 	/**
 	  *	 Returns the value of <code>whatToShow</code>
 	  *  This attribute determines which node types are presented via the
-      *  iterator. The available set of constants is defined in the Filters
-      *  interface.
+          *  iterator. The available set of constants is defined in the Filters
+          *  interface.
 	  */
     unsigned long       getWhatToShow();
 
     /**
       *  Get the <code>expandEntity</code> reference flag.
-	  *  The value of this flag determines whether the children of entity
+      *  The value of this flag determines whether the children of entity
       *  reference nodes are visible to the iterator. If false, they will be skipped
       *  over.
-	  *
+      *
       *  To produce a view of the document that has entity references
       *  expanded and does not expose the entity reference node itself, use
       *  the <code>whatToShow</code> flags to hide the entity reference node and set
@@ -216,31 +220,31 @@ class CDOM_EXPORT DOM_NodeIterator
 	  *	Get the filter used to screen nodes.
 	  */
     DOM_NodeFilter*     getFilter();
-	//@}
+    //@}
 
     /** @name Iterator Methods */
     //@{
 	/**
 	  *	 Returns the next node in the set and advances the position of the
-      *  iterator in the set. After a NodeIterator is created, the first call to
-      *  <code>nextNode()</code> returns the first node in the set.
+          *  iterator in the set. After a NodeIterator is created, the first call to
+          *  <code>nextNode()</code> returns the first node in the set.
 	  *  @return Returns the next node in the set
 	  */
     DOM_Node            nextNode();
 
-    /**
-	  *	 Returns the previous node in the set and moves the position of the
-      *  iterator backwards in the set.
+        /**
+	  *  Returns the previous node in the set and moves the position of the
+          *  iterator backwards in the set.
 	  *  @return Returns the previous node in the set
 	  */
     DOM_Node            previousNode();
 
     /**
-	  *	 Detaches the iterator from the set which it iterated over, releasing any
+      *	 Detaches the iterator from the set which it iterated over, releasing any
       *  computational resources and placing the iterator in the INVALID state.
       *  After detach has been invoked, calls to nextNode or previousNode
       *  will raise the exception <code>INVALID_STATE_ERR</code>.
-	  */
+      */
 	void				detach();
 	//@}
 
