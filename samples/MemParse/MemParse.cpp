@@ -57,6 +57,11 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/10/19 18:56:08  tng
+ * Pulled the hardcoded "encoding" out of the document itself and made it a #define
+ * to make it easier to support other encodings.  Patch from David McCreedy.
+ * And other modification for consistent help display and return code across samples.
+ *
  * Revision 1.10  2001/08/01 19:11:01  tng
  * Add full schema constraint checking flag to the samples and the parser.
  *
@@ -122,8 +127,8 @@
 //      parser. This is the cheap way to do it, instead of reading it from
 //      somewhere. For this demo, its fine.
 //
-//      NOTE: This will NOT work if your compiler's default char type is not
-//      ASCII, since we indicate in the encoding that its ascii.
+//      NOTE: If your encoding is not ascii you will need to change
+//            the MEMPARSE_ENCODING #define
 //
 //  gMemBufId
 //      A simple name to give as the system id for the memory buffer. This
@@ -131,10 +136,17 @@
 //      system id (and the parser knows that.)
 // ---------------------------------------------------------------------------
 
-#ifdef OS390
+#ifndef MEMPARSE_ENCODING
+   #if defined(OS390)
+      #define MEMPARSE_ENCODING "ibm-1047-s390"
+   #else
+      #define MEMPARSE_ENCODING "ascii"
+   #endif
+#endif /* ifndef MEMPARSE_ENCODING */
+
 static const char*  gXMLInMemBuf =
 "\
-<?xml version='1.0' encoding='ibm-1047-s390'?>\n\
+<?xml version='1.0' encoding='" MEMPARSE_ENCODING "'?>\n\
 <!DOCTYPE company [\n\
 <!ELEMENT company     (product,category,developedAt)>\n\
 <!ELEMENT product     (#PCDATA)>\n\
@@ -150,26 +162,6 @@ static const char*  gXMLInMemBuf =
     </developedAt>\n\
 </company>\
 ";
-#else
-static const char*  gXMLInMemBuf =
-"\
-<?xml version='1.0' encoding='ascii'?>\n\
-<!DOCTYPE company [\n\
-<!ELEMENT company     (product,category,developedAt)>\n\
-<!ELEMENT product     (#PCDATA)>\n\
-<!ELEMENT category    (#PCDATA)>\n\
-<!ATTLIST category idea CDATA #IMPLIED>\n\
-<!ELEMENT developedAt (#PCDATA)>\n\
-]>\n\n\
-<company>\n\
-    <product>XML4C</product>\n\
-    <category idea='great'>XML Parsing Tools</category>\n\
-    <developedAt>\n\
-      IBM Center for Java Technology, Silicon Valley, Cupertino, CA\n\
-    </developedAt>\n\
-</company>\
-";
-#endif
 
 static const char*  gMemBufId = "prodInfo";
 
@@ -181,16 +173,17 @@ static const char*  gMemBufId = "prodInfo";
 void usage()
 {
     cout << "\nUsage:\n"
-         << "    MemParse [-v]\n"
-         << "This program uses the SAX Parser to parse a memory buffer\n"
-         << "containing XML statements, and reports the number of\n"
-         << "elements and attributes found.\n"
-         << "\nOptions:\n"
-         << "    -v=xxx      Validation scheme [always | never | auto*]\n"
-         << "    -n          Enable namespace processing. Defaults to off.\n"
-         << "    -s          Enable schema processing. Defaults to off.\n"
-         << "    -f          Enable full schema constraint checking. Defaults to off.\n\n"
-         << "  * = Default if not provided explicitly\n"
+            "    MemParse [options]\n\n"
+            "This program uses the SAX Parser to parse a memory buffer\n"
+            "containing XML statements, and reports the number of\n"
+            "elements and attributes found.\n\n"
+            "Options:\n"
+            "    -v=xxx      Validation scheme [always | never | auto*].\n"
+            "    -n          Enable namespace processing. Defaults to off.\n"
+            "    -s          Enable schema processing. Defaults to off.\n"
+            "    -f          Enable full schema constraint checking. Defaults to off.\n"
+		      "    -?          Show this help.\n\n"
+            "  * = Default if not provided explicitly.\n"
          << endl;
 }
 
@@ -216,55 +209,61 @@ int main(int argC, char* argV[])
     bool doNamespaces       = false;
     bool doSchema           = false;
     bool schemaFullChecking = false;
-    if (argC > 1)
+
+    int argInd;
+    for (argInd = 1; argInd < argC; argInd++)
     {
-        // See if non validating dom parser configuration is requested.
-        if ((argC == 2) && !strcmp(argV[1], "-?"))
+        // Break out on first parm not starting with a dash
+        if (argV[argInd][0] != '-')
         {
             usage();
-            return 2;
+            XMLPlatformUtils::Terminate();
+            return 1;
         }
 
-        int argInd;
-        for (argInd = 1; argInd < argC; argInd++)
+        // Watch for special case help request
+        if (!strcmp(argV[argInd], "-?"))
         {
-            if (!strncmp(argV[argInd], "-v=", 3)
-            ||  !strncmp(argV[argInd], "-V=", 3))
-            {
-                const char* const parm = &argV[argInd][3];
+            usage();
+            XMLPlatformUtils::Terminate();
+            return 1;
+        }
+         else if (!strncmp(argV[argInd], "-v=", 3)
+              ||  !strncmp(argV[argInd], "-V=", 3))
+        {
+            const char* const parm = &argV[argInd][3];
 
-                if (!strcmp(parm, "never"))
-                    valScheme = SAXParser::Val_Never;
-                else if (!strcmp(parm, "auto"))
-                    valScheme = SAXParser::Val_Auto;
-                else if (!strcmp(parm, "always"))
-                    valScheme = SAXParser::Val_Always;
-                else
-                {
-                    cerr << "Unknown -v= value: " << parm << endl;
-                    return 2;
-                }
-            }
-             else if (!strcmp(argV[argInd], "-n")
-                  ||  !strcmp(argV[argInd], "-N"))
+            if (!strcmp(parm, "never"))
+                valScheme = SAXParser::Val_Never;
+            else if (!strcmp(parm, "auto"))
+                valScheme = SAXParser::Val_Auto;
+            else if (!strcmp(parm, "always"))
+                valScheme = SAXParser::Val_Always;
+            else
             {
-                doNamespaces = true;
+                cerr << "Unknown -v= value: " << parm << endl;
+                return 2;
             }
-             else if (!strcmp(argV[argInd], "-s")
-                  ||  !strcmp(argV[argInd], "-S"))
-            {
-                doSchema = true;
-            }
-             else if (!strcmp(argV[argInd], "-f")
-                  ||  !strcmp(argV[argInd], "-F"))
-            {
-                schemaFullChecking = true;
-            }
-             else
-            {
-                cerr << "Unknown option '" << argV[argInd]
-                     << "', ignoring it\n" << endl;
-            }
+        }
+         else if (!strcmp(argV[argInd], "-n")
+              ||  !strcmp(argV[argInd], "-N"))
+        {
+            doNamespaces = true;
+        }
+         else if (!strcmp(argV[argInd], "-s")
+              ||  !strcmp(argV[argInd], "-S"))
+        {
+            doSchema = true;
+        }
+         else if (!strcmp(argV[argInd], "-f")
+              ||  !strcmp(argV[argInd], "-F"))
+        {
+            schemaFullChecking = true;
+        }
+         else
+        {
+            cerr << "Unknown option '" << argV[argInd]
+                 << "', ignoring it\n" << endl;
         }
     }
 
@@ -308,12 +307,14 @@ int main(int argC, char* argV[])
     //  file. Catch any exceptions that might propogate out of it.
     //
     unsigned long duration;
+    int errorCount = 0;
     try
     {
         const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
         parser.parse(*memBufIS);
         const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
         duration = endMillis - startMillis;
+        errorCount = parser.getErrorCount();
     }
 
     catch (const XMLException& e)
@@ -321,23 +322,28 @@ int main(int argC, char* argV[])
         cerr << "\nError during parsing memory stream:\n"
              << "Exception message is:  \n"
              << StrX(e.getMessage()) << "\n" << endl;
-        return -1;
+        return 4;
     }
 
     // Print out the stats that we collected and time taken.
-    cout << "\nFinished parsing the memory buffer containing the following "
-         << "XML statements:\n\n"
-         << gXMLInMemBuf
-         << "\n\n\n"
-         << "Parsing took " << duration << " ms ("
-         << handler.getElementCount() << " elements, "
-         << handler.getAttrCount() << " attributes, "
-         << handler.getSpaceCount() << " spaces, "
-         << handler.getCharacterCount() << " characters).\n" << endl;
+    if (!errorCount) {
+        cout << "\nFinished parsing the memory buffer containing the following "
+             << "XML statements:\n\n"
+             << gXMLInMemBuf
+             << "\n\n\n"
+             << "Parsing took " << duration << " ms ("
+             << handler.getElementCount() << " elements, "
+             << handler.getAttrCount() << " attributes, "
+             << handler.getSpaceCount() << " spaces, "
+             << handler.getCharacterCount() << " characters).\n" << endl;
+    }
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
-    return 0;
+    if (errorCount > 0)
+        return 4;
+    else
+        return 0;
 }
 
