@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:26  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/01 21:13:32  tng
+ * [Bug 7265] UnixWare port broken in platformTerm() since rev 1.10.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:26  peiyongz
+ * sane_include
  *
  * Revision 1.11  2001/10/25 15:20:31  tng
  * Need to guard with NO_APP_THREADS when destroying the mutex.
@@ -738,8 +741,9 @@ void XMLPlatformUtils::platformTerm()
 {
 #if !defined (APP_NO_THREADS)
     // delete the mutex we created
-	closeMutex(gAtomicOpMutex.fHandle);
-	gAtomicOpMutex.fHandle = 0;
+	pthread_mutex_destroy(gAtomicOpMutex);
+    delete gAtomicOpMutex;
+	gAtomicOpMutex = 0;
 #endif
 }
 
