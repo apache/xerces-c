@@ -2576,7 +2576,8 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     if (isRoot)
     {
         fRootGrammar = fGrammar;
-        fRootElemName = XMLString::replicate(qnameRawBuf);
+        if (fGrammarType == Grammar::SchemaGrammarType && !fRootElemName)
+            fRootElemName = XMLString::replicate(qnameRawBuf, fMemoryManager);
     }
 
     if (fGrammarType == Grammar::SchemaGrammarType && fPSVIHandler)
