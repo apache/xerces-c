@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/06 13:17:29  tng
+ * [Bug 9083] Make SAXNotSupportedException and SAXNotRecognizedException to be exportable
+ *
  * Revision 1.2  2002/11/04 14:56:26  tng
  * C++ Namespace Support.
  *
@@ -220,7 +223,7 @@ protected :
     XMLCh*  fMsg;
 };
 
-class SAXNotSupportedException : public SAXException
+class SAX_EXPORT SAXNotSupportedException : public SAXException
 {
 
 public:
@@ -248,7 +251,7 @@ public:
     SAXNotSupportedException(const SAXException& toCopy);
 };
 
-class SAXNotRecognizedException : public SAXException
+class SAX_EXPORT SAXNotRecognizedException : public SAXException
 {
 public:
 	SAXNotRecognizedException();
