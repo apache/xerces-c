@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/12 03:42:21  rahulj
+ * Fixed DOC++ documentation formatting errors.
+ *
  * Revision 1.6  2000/02/12 03:31:55  rahulj
  * Removed duplicate CVS Log entries.
  *
@@ -252,14 +255,14 @@ protected :
     InputSource();
 
     /** Constructor with a system identifier as XMLCh type.
-    * @param systemId The system identifier (URI).
-    */
+      * @param systemId The system identifier (URI).
+      */
     InputSource(const XMLCh* const systemId);
 
     /** Constructor with a system and public identifiers 
-    * @param systemId The system identifier (URI).
-    * @param publicId The public identifier as in the entity definition.
-    */
+      * @param systemId The system identifier (URI).
+      * @param publicId The public identifier as in the entity definition.
+      */
     InputSource
     (
         const   XMLCh* const    systemId
@@ -267,14 +270,14 @@ protected :
     );
     
     /** Constructor witha system identifier as string 
-    * @param systemId The system identifier (URI).
-    */
+      * @param systemId The system identifier (URI).
+      */
     InputSource(const char* const systemId);
     
     /** Constructor witha system and public identifiers. Both as string 
-    * @param systemId The system identifier (URI).
-    * @param publicId The public identifier as in the entity definition.
-    */
+      * @param systemId The system identifier (URI).
+      * @param publicId The public identifier as in the entity definition.
+      */
     InputSource
     (
         const   char* const systemId
