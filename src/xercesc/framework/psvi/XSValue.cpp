@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/12/01 16:18:47  cargilld
+ * Fix for bug xercesc-1304.
+ *
  * Revision 1.18  2004/11/24 02:34:08  cargilld
  * Various bug fixes and code cleanup for XSValue.
  *
@@ -1502,14 +1505,14 @@ XSValue::getActValStrings(const XMLCh*         const content
                 XMLString::equals(content, XMLUni::fgBooleanValueSpace[2])  )
             {
                 XSValue* retVal = new (manager) XSValue(dt_boolean, manager);
-                retVal->fData.fValue.f_bool = true;
+                retVal->fData.fValue.f_bool = false;
                 return retVal;
             }
             else if (XMLString::equals(content, XMLUni::fgBooleanValueSpace[1]) ||
                      XMLString::equals(content, XMLUni::fgBooleanValueSpace[3])  )
             {
                 XSValue* retVal = new (manager) XSValue(dt_boolean, manager);
-                retVal->fData.fValue.f_bool = false;
+                retVal->fData.fValue.f_bool = true;
                 return retVal;
             }
             else
