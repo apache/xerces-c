@@ -610,5 +610,10 @@ const XMLCh* DOMBuilderImpl::getURIText(unsigned int uriId) const
     return getScanner()->getURIText(uriId);
 }
 
+unsigned int DOMBuilderImpl::getSrcOffset() const
+{
+    return getScanner()->getSrcOffset();
+}
+
 XERCES_CPP_NAMESPACE_END
 

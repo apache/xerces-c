@@ -125,6 +125,10 @@ const XMLCh* XercesDOMParser::getURIText(unsigned int uriId)
     return getScanner()->getURIText(uriId);
 }
 
+unsigned int XercesDOMParser::getSrcOffset() const
+{
+    return getScanner()->getSrcOffset();
+}
 
 // ---------------------------------------------------------------------------
 //  XercesDOMParser: Setter methods

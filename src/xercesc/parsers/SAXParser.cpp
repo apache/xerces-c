@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/12/23 15:23:18  knoaman
+ * Added a public api to various parsers to return the src offset within the input
+ * source.
+ *
  * Revision 1.10  2002/12/04 01:57:09  knoaman
  * Scanner re-organization.
  *
@@ -453,6 +457,11 @@ Grammar* SAXParser::getRootGrammar()
 const XMLCh* SAXParser::getURIText(unsigned int uriId)
 {
     return fScanner->getURIText(uriId);
+}
+
+unsigned int SAXParser::getSrcOffset() const
+{
+    return fScanner->getSrcOffset();
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.16  2002/12/23 15:23:18  knoaman
+ * Added a public api to various parsers to return the src offset within the input
+ * source.
+ *
  * Revision 1.15  2002/12/04 01:57:09  knoaman
  * Scanner re-organization.
  *
@@ -516,6 +520,13 @@ public :
      * @return URI string corresponding to the URI id.
      */
     const XMLCh* getURIText(unsigned int uriId);
+
+    /**
+     * Returns the current src offset within the input source.
+     *
+     * @return offset within the input source
+     */
+    unsigned int getSrcOffset() const;
 
     //@}
 

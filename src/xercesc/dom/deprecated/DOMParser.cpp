@@ -273,6 +273,11 @@ bool DOMParser::getCalculateSrcOfs() const
     return fScanner->getCalculateSrcOfs();
 }
 
+unsigned int DOMParser::getSrcOffset() const
+{
+    return fScanner->getSrcOffset();
+}
+
 // ---------------------------------------------------------------------------
 //  DOMParser: Setter methods
 // ---------------------------------------------------------------------------

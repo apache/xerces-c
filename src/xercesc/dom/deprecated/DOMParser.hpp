@@ -436,6 +436,13 @@ public :
       */
     const XMLCh* getURIText(unsigned int uriId);
 
+    /**
+      * Returns the current src offset within the input source.
+      *
+      * @return offset within the input source
+      */
+    unsigned int getSrcOffset() const;
+
     //@}
 
 

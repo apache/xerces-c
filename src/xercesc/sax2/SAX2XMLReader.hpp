@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/12/23 15:23:18  knoaman
+ * Added a public api to various parsers to return the src offset within the input
+ * source.
+ *
  * Revision 1.7  2002/11/04 14:55:45  tng
  * C++ Namespace Support.
  *
@@ -616,6 +620,13 @@ public:
       * @return URI string corresponding to the URI id.
       */
     virtual const XMLCh* getURIText(unsigned int uriId) = 0;
+
+    /**
+      * Returns the current src offset within the input source.
+      *
+      * @return offset within the input source
+      */
+    virtual unsigned int getSrcOffset() const = 0;
 
     //@}
 

@@ -700,6 +700,13 @@ public:
       */
     virtual void resetCachedGrammarPool() = 0;
 
+    /**
+      * Returns the current src offset within the input source.
+      *
+      * @return offset within the input source
+      */
+    virtual unsigned int getSrcOffset() const = 0;
+
     //@}
 
 };
