@@ -471,6 +471,8 @@ IMPL_XSERIALIZABLE_TOCREATE(DTDElementDecl)
 void DTDElementDecl::serialize(XSerializeEngine& serEng)
 {
 
+    XMLElementDecl::serialize(serEng);
+
     if (serEng.isStoring())
     {
         /***

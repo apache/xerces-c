@@ -74,6 +74,8 @@ IMPL_XSERIALIZABLE_TOCREATE(DTDEntityDecl)
 
 void DTDEntityDecl::serialize(XSerializeEngine& serEng)
 {
+    XMLEntityDecl::serialize(serEng);
+
     if (serEng.isStoring())
     {
         serEng<<fDeclaredInIntSubset;
