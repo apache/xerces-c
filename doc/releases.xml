@@ -12,6 +12,56 @@
     </tr>
 
     <tr>
+        <td>2002-06-03</td>
+        <td>Tinny Ng</td>
+        <td>DOM L3: Add DOMImplementationRegistry and DOMImplementationSource.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-30</td>
+        <td>Tinny Ng</td>
+        <td>Add feature http://apache.org/xml/features/nonvalidating/load-external-dtd to
+            optionally ignore external DTD.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-29</td>
+        <td>Khaled Noaman</td>
+        <td>DOM L3: Add DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-29</td>
+        <td>Gereon Steffens</td>
+        <td>[Bug 9489] Malformed HTTP GET Requests in UnixHTTPUrlInputStream.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-28</td>
+        <td>PeiYong Zhang</td>
+        <td>DOM L3: Modify DOMPrint to use DOMWriter.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-28</td>
+        <td>PeiYong Zhang</td>
+        <td>DOM L3: Add DOMWriter, DOMWriterFilter, StdOutFormatTarget, and MemBufFormatTarget.hpp.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-05-28</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 9104] prefixes dissapearing when schema validation turned on.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-05-27</td>
         <td>Tinny Ng</td>
         <td>Add DOMDocumentRange and DOMDocumentTraversal.

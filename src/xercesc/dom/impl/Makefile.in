@@ -133,6 +133,7 @@ DOM_IMPL_CPP_OBJECTS = \
 	DOMDocumentImpl.$(TO) \
 	DOMDocumentTypeImpl.$(TO) \
 	DOMImplementationImpl.$(TO) \
+	DOMImplementationRegistry.$(TO) \
 	DOMElementImpl.$(TO) \
 	DOMElementNSImpl.$(TO) \
 	DOMEntityImpl.$(TO) \

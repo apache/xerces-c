@@ -97,6 +97,8 @@ DOM_CPP_PUBHEADERS = \
 	DOMException.hpp \
 	DOMImplementation.hpp \
 	DOMImplementationLS.hpp \
+	DOMImplementationRegistry.hpp \
+	DOMImplementationSource.hpp \
 	DOMInputSource.hpp \
 	DOMLocator.hpp \
 	DOMNamedNodeMap.hpp \

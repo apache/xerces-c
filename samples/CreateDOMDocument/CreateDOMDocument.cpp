@@ -151,8 +151,6 @@ int main(int argC, char* argV[])
 
     {
          //  Nest entire test in an inner block.
-         //     Reference counting should recover all document
-         //     storage when this block exits.
         //  The tree we create below is the same that the XercesDOMParser would
         //  have created, except that no whitespace text nodes would be created.
 
@@ -162,7 +160,7 @@ int main(int argC, char* argV[])
         //     <developedBy>Apache Software Foundation</developedBy>
         // </company>
 
-        DOMImplementation* impl =  DOMImplementation::getImplementation();
+        DOMImplementation* impl =  DOMImplementationRegistry::getDOMImplementation(X("Core"));
 
         DOMDocument* doc = impl->createDocument(
                     0,                    // root element namespace URI.

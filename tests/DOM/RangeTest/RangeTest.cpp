@@ -212,8 +212,10 @@ int  main()
     */
     {
 
+        XMLCh tempStr[100];
+        XMLString::transcode("Core",tempStr,99);
         {
-            DOMImplementation* impl = DOMImplementation::getImplementation();
+            DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
             DOMDocument* doc = impl->createDocument();
 
             //Creating a root element
@@ -247,7 +249,7 @@ int  main()
 
         {
             //DOM Tree and some usable node creation
-            DOMImplementation* impl = DOMImplementation::getImplementation();
+            DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
             DOMDocument* doc = impl->createDocument();
 
             //Creating a root element
@@ -586,7 +588,7 @@ int  main()
             //another set of test
             //TEST createRange, setStart and setEnd, insertnode
             //***************************************************************
-            DOMImplementation* impl2 = DOMImplementation::getImplementation();
+            DOMImplementation* impl2 = DOMImplementationRegistry::getDOMImplementation(tempStr);
             DOMDocument* doc2 = impl2->createDocument();
 
             DOMElement* root2 = doc2->createElement(xroot2);
@@ -842,7 +844,7 @@ int  main()
             //             |                      |           |
             //             b                    "Hello cd"   "ef"
             //
-            DOMImplementation* impl3 = DOMImplementation::getImplementation();
+            DOMImplementation* impl3 = DOMImplementationRegistry::getDOMImplementation(tempStr);
             DOMDocument* doc3 = impl3->createDocument();
 
             DOMElement* root3 = doc3->createElement(xroot);

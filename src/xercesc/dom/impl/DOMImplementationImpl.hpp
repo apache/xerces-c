@@ -71,29 +71,50 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationSource.hpp>
 
-class DOMImplementationImpl: public DOMImplementation
+class DOMImplementationImpl: public DOMImplementation,
+                             public DOMImplementationSource
 {
 private:
-    DOMImplementationImpl();
-    DOMImplementationImpl(const DOMImplementationImpl & other);
-    DOMImplementationImpl & operator = (const DOMImplementationImpl & other);
+    DOMImplementationImpl() {};
+    DOMImplementationImpl(const DOMImplementationImpl & other) {};
+    DOMImplementationImpl & operator = (const DOMImplementationImpl & other) {return *this;};
 public:
-    virtual ~DOMImplementationImpl();
-    static DOMImplementation   *getImplementation();
-    virtual bool                         hasFeature(const  XMLCh * feature,  const  XMLCh * version);
-    virtual DOMDocumentType           *createDocumentType(const XMLCh *qualifiedName,
-                                            const XMLCh * publicId, const XMLCh *systemId);
-    virtual DOMDocument               *createDocument(const XMLCh *namespaceURI,
-                                            const XMLCh *qualifiedName, DOMDocumentType *doctype);
-    virtual DOMDocument               *createDocument();
+    virtual ~DOMImplementationImpl() {};
+    static DOMImplementationImpl*   getDOMImplementationImpl();
 
+    // ------------------------------------------------------------
+    // DOMImplementation Virtual interface
+    // ------------------------------------------------------------
+    virtual bool                hasFeature(const  XMLCh * feature,  const  XMLCh * version);
+
+    // Introduced in DOM Level 2
+    virtual DOMDocumentType*    createDocumentType(const XMLCh *qualifiedName,
+                                                   const XMLCh * publicId,
+                                                   const XMLCh *systemId);
+    virtual DOMDocument*        createDocument(const XMLCh *namespaceURI,
+                                               const XMLCh *qualifiedName,
+                                               DOMDocumentType *doctype);
+
+    // Non-standard extension
+    virtual DOMDocument*        createDocument();
+
+    // ------------------------------------------------------------
+    // DOMImplementationLS Virtual interface
+    // ------------------------------------------------------------
     // Introduced in DOM Level 3
     // Experimental - subject to change
-    virtual DOMBuilder* createDOMBuilder(const short mode,
-                                         const XMLCh* const schemaType);
-    virtual DOMWriter* createDOMWriter();
-    virtual DOMInputSource* createDOMInputSource();
+    virtual DOMBuilder*         createDOMBuilder(const short mode,
+                                                 const XMLCh* const schemaType);
+    virtual DOMWriter*          createDOMWriter();
+    virtual DOMInputSource*     createDOMInputSource();
+
+    // ------------------------------------------------------------
+    // DOMImplementationSource Virtual interface
+    // ------------------------------------------------------------
+    virtual DOMImplementation* getDOMImplementation(const XMLCh* features) const;
+
 };
 
 

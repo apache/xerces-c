@@ -96,13 +96,47 @@ void tassert(bool c, const char *file, int line)
 }                                                                   \
 }
 
+// ---------------------------------------------------------------------------
+//  This is a simple class that lets us do easy (though not terribly efficient)
+//  trancoding of char* data to XMLCh data.
+// ---------------------------------------------------------------------------
+class XStr
+{
+public :
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    XStr(const char* const toTranscode)
+    {
+        // Call the private transcoding method
+        fUnicodeForm = XMLString::transcode(toTranscode);
+    }
 
-//temp XMLCh String Buffer
-XMLCh tempStr[4000];
-XMLCh tempStr2[4000];
-XMLCh tempStr3[4000];
-XMLCh tempStr4[4000];
-XMLCh tempStr5[4000];
+    ~XStr()
+    {
+        delete [] fUnicodeForm;
+    }
+
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    const XMLCh* unicodeForm() const
+    {
+        return fUnicodeForm;
+    }
+
+private :
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fUnicodeForm
+    //      This is the Unicode XMLCh format of the string.
+    // -----------------------------------------------------------------------
+    XMLCh*   fUnicodeForm;
+};
+
+#define X(str) XStr(str).unicodeForm()
 
 //---------------------------------------------------------------------------------------
 //
@@ -118,7 +152,7 @@ void DOMBasicTests()
         //  First precondition, so that lazily created strings do not appear
         //  as memory leaks.
         DOMDocument*   doc;
-        doc = DOMImplementation::getImplementation()->createDocument();
+        doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
         delete doc;
     }
 
@@ -131,34 +165,25 @@ void DOMBasicTests()
         //  Do all operations in a preconditioning step, to force the
         //  creation of implementation objects that are set up on first use.
         //  Don't watch for leaks in this block (no  / )
-        DOMDocument* doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument* doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("Doc02Element", tempStr, 3999);
-        DOMElement*   el = doc->createElement(tempStr);
+        DOMElement*   el = doc->createElement(X("Doc02Element"));
 
         DOMDocumentFragment* frag = doc->createDocumentFragment ();
 
-        XMLString::transcode("Doc02TextNode", tempStr, 3999);
-        DOMText*  text = doc->createTextNode(tempStr);
+        DOMText*  text = doc->createTextNode(X("Doc02TextNode"));
 
-        XMLString::transcode("Doc02Comment", tempStr, 3999);
-        DOMComment* comment = doc->createComment(tempStr);
+        DOMComment* comment = doc->createComment(X("Doc02Comment"));
 
-        XMLString::transcode("Doc02CDataSection", tempStr, 3999);
-        DOMCDATASection*  cdataSec = doc->createCDATASection(tempStr);
+        DOMCDATASection*  cdataSec = doc->createCDATASection(X("Doc02CDataSection"));
 
-        XMLString::transcode("Doc02DocumentType", tempStr, 3999);
-        DOMDocumentType*  docType = doc->createDocumentType(tempStr);
+        DOMDocumentType*  docType = doc->createDocumentType(X("Doc02DocumentType"));
 
-        XMLString::transcode("Doc02Notation", tempStr, 3999);
-        DOMNotation* notation = doc->createNotation(tempStr);
+        DOMNotation* notation = doc->createNotation(X("Doc02Notation"));
 
-        XMLString::transcode("Doc02PITarget", tempStr, 3999);
-        XMLString::transcode("Doc02PIData", tempStr2, 3999);
-        DOMProcessingInstruction* pi = doc->createProcessingInstruction(tempStr, tempStr2);
+        DOMProcessingInstruction* pi = doc->createProcessingInstruction(X("Doc02PITarget"), X("Doc02PIData"));
 
-        XMLString::transcode("*", tempStr, 3999);
-        DOMNodeList*    nodeList = doc->getElementsByTagName(tempStr);
+        DOMNodeList*    nodeList = doc->getElementsByTagName(X("*"));
 
         delete doc;
     }
@@ -170,20 +195,17 @@ void DOMBasicTests()
     //
 
     {
-        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("Doc03RootElement", tempStr, 3999);
-        DOMElement*   rootEl = doc->createElement(tempStr);
+        DOMElement*   rootEl = doc->createElement(X("Doc03RootElement"));
 
         doc->appendChild(rootEl);
 
-        XMLString::transcode("Doc03 text stuff", tempStr, 3999);
-        DOMText*       textNode = doc->createTextNode(tempStr);
+        DOMText*       textNode = doc->createTextNode(X("Doc03 text stuff"));
 
         rootEl->appendChild(textNode);
 
-        XMLString::transcode("*", tempStr, 3999);
-        DOMNodeList*    nodeList = doc->getElementsByTagName(tempStr);
+        DOMNodeList*    nodeList = doc->getElementsByTagName(X("*"));
         delete doc;
     };
 
@@ -193,22 +215,19 @@ void DOMBasicTests()
     //  Attr01
     //
     {
-        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("RootElement", tempStr, 3999);
-        DOMElement*   rootEl  = doc->createElement(tempStr);
+        DOMElement*   rootEl  = doc->createElement(X("RootElement"));
 
         doc->appendChild(rootEl);
         {
-            XMLString::transcode("Attr01", tempStr, 3999);
-            DOMAttr*        attr01  = doc->createAttribute(tempStr);
+            DOMAttr*        attr01  = doc->createAttribute(X("Attr01"));
             rootEl->setAttributeNode(attr01);
         }
 
 
         {
-            XMLString::transcode("Attr01", tempStr, 3999);
-            DOMAttr* attr02 = doc->createAttribute(tempStr);
+            DOMAttr* attr02 = doc->createAttribute(X("Attr01"));
             rootEl->setAttributeNode(attr02);
         }
         delete doc;
@@ -220,19 +239,17 @@ void DOMBasicTests()
     //
 
     {
-        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("RootElement", tempStr, 3999);
-        DOMElement*   rootEl  = doc->createElement(tempStr);
+        DOMElement*   rootEl  = doc->createElement(X("RootElement"));
 
         doc->appendChild(rootEl);
 
-        XMLString::transcode("Attr02", tempStr, 3999);
-        DOMAttr*        attr01  = doc->createAttribute(tempStr);
+        DOMAttr*        attr01  = doc->createAttribute(X("Attr02"));
 
         rootEl->setAttributeNode(attr01);
 
-        DOMAttr*        attr02 = doc->createAttribute(tempStr);
+        DOMAttr*        attr02 = doc->createAttribute(X("Attr02"));
 
         rootEl->setAttributeNode(attr02);
         delete doc;
@@ -245,23 +262,19 @@ void DOMBasicTests()
     //
 
     {
-        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("RootElement", tempStr, 3999);
-        DOMElement*   rootEl  = doc->createElement(tempStr);
+        DOMElement*   rootEl  = doc->createElement(X("RootElement"));
 
         doc->appendChild(rootEl);
 
-        XMLString::transcode("Attr03", tempStr, 3999);
-        DOMAttr*        attr01  = doc->createAttribute(tempStr);
+        DOMAttr*        attr01  = doc->createAttribute(X("Attr03"));
 
         rootEl->setAttributeNode(attr01);
 
-        XMLString::transcode("Attr03Value1", tempStr, 3999);
-        attr01->setValue(tempStr);
+        attr01->setValue(X("Attr03Value1"));
 
-        XMLString::transcode("Attr03Value2", tempStr, 3999);
-        attr01->setValue(tempStr);
+        attr01->setValue(X("Attr03Value2"));
         delete doc;
     }
 
@@ -272,20 +285,17 @@ void DOMBasicTests()
     //
 
     {
-        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("RootElement", tempStr, 3999);
-        DOMElement*   rootEl  = doc->createElement(tempStr);
+        DOMElement*   rootEl  = doc->createElement(X("RootElement"));
 
         doc->appendChild(rootEl);
 
-        XMLString::transcode("Attr04", tempStr, 3999);
-        DOMAttr*        attr01  = doc->createAttribute(tempStr);
+        DOMAttr*        attr01  = doc->createAttribute(X("Attr04"));
 
         rootEl->setAttributeNode(attr01);
 
-        XMLString::transcode("Attr04Value1", tempStr, 3999);
-        attr01->setValue(tempStr);
+        attr01->setValue(X("Attr04Value1"));
 
         DOMNode* value = attr01->getFirstChild();
         delete doc;
@@ -299,15 +309,13 @@ void DOMBasicTests()
     //
 
     {
-        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("RootElement", tempStr, 3999);
-        DOMElement*   rootEl  = doc->createElement(tempStr);
+        DOMElement*   rootEl  = doc->createElement(X("RootElement"));
 
         doc->appendChild(rootEl);
 
-        XMLString::transcode("Hello Goodbye", tempStr, 3999);
-        DOMText*        txt1 = doc->createTextNode(tempStr);
+        DOMText*        txt1 = doc->createTextNode(X("Hello Goodbye"));
         rootEl->appendChild(txt1);
 
         txt1->splitText(6);
@@ -323,29 +331,27 @@ void DOMBasicTests()
     //
 
     {
-        DOMDocument*       doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*       doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("DocType_for_Notation01", tempStr, 3999);
-        DOMDocumentType*   dt  = doc->createDocumentType(tempStr);
+        DOMDocumentType*   dt  = doc->createDocumentType(X("DocType_for_Notation01"));
 
         doc->appendChild(dt);
 
 
         DOMNamedNodeMap* notationMap = dt->getNotations();
 
-        XMLString::transcode("Notation01", tempStr, 3999);
-        DOMNotation*    nt1 = doc->createNotation(tempStr);
+        DOMNotation*    nt1 = doc->createNotation(X("Notation01"));
 
         notationMap->setNamedItem (nt1);
 
-        DOMNode*  abc1 = notationMap->getNamedItem(tempStr);
+        DOMNode*  abc1 = notationMap->getNamedItem(X("Notation01"));
 
         DOMNotation*    nt2 = (DOMNotation*) abc1;
         TASSERT(nt1==nt2);
         nt2 = 0;
         nt1 = 0;
 
-        DOMNode* abc6 = notationMap->getNamedItem(tempStr);
+        DOMNode* abc6 = notationMap->getNamedItem(X("Notation01"));
 
         nt2 = (DOMNotation*) abc6;
         delete doc;
@@ -361,14 +367,13 @@ void DOMBasicTests()
         DOMNamedNodeMap*    nnm = 0;
         TASSERT(nnm == 0);
 
-        DOMDocument*       doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*       doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
         nnm = doc->getAttributes();    // Should be null, because node type
                                       //   is not Element.
         TASSERT(nnm == 0);
         TASSERT(!(nnm != 0));
 
-        XMLString::transcode("NamedNodeMap01", tempStr, 3999);
-        DOMElement* el = doc->createElement(tempStr);
+        DOMElement* el = doc->createElement(X("NamedNodeMap01"));
 
         DOMNamedNodeMap* nnm2 = el->getAttributes();    // Should be an empty, but non-null map.
         TASSERT(nnm2 != 0);
@@ -385,11 +390,10 @@ void DOMBasicTests()
     //
 
     {
-        DOMDocument*   doc1 = DOMImplementation::getImplementation()->createDocument();
-        DOMDocument*   doc2 = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc1 = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
+        DOMDocument*   doc2 = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("abc", tempStr, 3999);
-        DOMElement*   el1  = doc1->createElement(tempStr);
+        DOMElement*   el1  = doc1->createElement(X("abc"));
 
         doc1->appendChild(el1);
         TASSERT(el1->getParentNode() != 0);
@@ -397,7 +401,7 @@ void DOMBasicTests()
         TASSERT(el2->getParentNode() == 0);
         const XMLCh*       tagName = el2->getNodeName();
 
-        TASSERT(!XMLString::compareString(tagName, tempStr));
+        TASSERT(!XMLString::compareString(tagName, X("abc")));
 
         TASSERT(el2->getOwnerDocument() == doc2);
         TASSERT(doc1 != doc2);
@@ -416,13 +420,11 @@ void DOMBasicTests()
     //
 
     {
-        DOMDocument*    doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*    doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("Hello", tempStr, 3999);
-        DOMText*          tx = doc->createTextNode(tempStr);
+        DOMText*          tx = doc->createTextNode(X("Hello"));
 
-        XMLString::transcode("abc", tempStr, 3999);
-        DOMElement*     el = doc->createElement(tempStr);
+        DOMElement*     el = doc->createElement(X("abc"));
 
         el->appendChild(tx);
 
@@ -451,15 +453,14 @@ void DOMBasicTests()
         TASSERT(!(nl != 0));
         TASSERT(nl == nl2);
 
-        DOMDocument*       doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*       doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
         nl = doc->getChildNodes();    // Should be non-null, but empty
 
         TASSERT(nl != 0);
         int len = nl->getLength();
         TASSERT(len == 0);
 
-        XMLString::transcode("NodeList01", tempStr, 3999);
-        DOMElement* el = doc->createElement(tempStr);
+        DOMElement* el = doc->createElement(X("NodeList01"));
 
         doc->appendChild(el);
         len = nl->getLength();
@@ -478,11 +479,10 @@ void DOMBasicTests()
     //
 
     {
-         DOMDocument*       doc = DOMImplementation::getImplementation()->createDocument();
+         DOMDocument*       doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
          try
          {
-             XMLString::transcode("!@@ bad element name", tempStr, 3999);
-             DOMElement* el = doc->createElement(tempStr);
+             DOMElement* el = doc->createElement(X("!@@ bad element name"));
              TASSERT(false);  // Exception above should prevent us reaching here.
          }
          catch ( DOMException e)
@@ -503,10 +503,9 @@ void DOMBasicTests()
     //
 
     {
-        DOMDocument*       doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*       doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("NodeList01", tempStr, 3999);
-        DOMElement* el = doc->createElement(tempStr);
+        DOMElement* el = doc->createElement(X("NodeList01"));
 
         doc->appendChild(el);
 
@@ -531,30 +530,27 @@ void DOMBasicTests()
     //
 
     {
-        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument();
+        DOMDocument*   doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
-        XMLString::transcode("CTestRoot", tempStr, 3999);
-        DOMElement*   root = doc->createElement(tempStr);
+        DOMElement*   root = doc->createElement(X("CTestRoot"));
 
-        XMLString::transcode("CTestAttr", tempStr, 3999);
-        XMLString::transcode("CTestAttrValue", tempStr2, 3999);
-        root->setAttribute(tempStr, tempStr2);
+        root->setAttribute(X("CTestAttr"), X("CTestAttrValue"));
 
-        const XMLCh* s = root->getAttribute(tempStr);
-        TASSERT(!XMLString::compareString(s, tempStr2));
+        const XMLCh* s = root->getAttribute(X("CTestAttr"));
+        TASSERT(!XMLString::compareString(s, X("CTestAttrValue")));
 
         DOMNode* abc2 = root->cloneNode(true);
         DOMElement*   cloned = (DOMElement*) abc2;
-        DOMAttr* a = cloned->getAttributeNode(tempStr);
+        DOMAttr* a = cloned->getAttributeNode(X("CTestAttr"));
         TASSERT(a != 0);
         s = a->getValue();
-        TASSERT(!XMLString::compareString(s, tempStr2));
+        TASSERT(!XMLString::compareString(s, X("CTestAttrValue")));
         a = 0;
 
-        a = cloned->getAttributeNode(tempStr);
+        a = cloned->getAttributeNode(X("CTestAttr"));
         TASSERT(a != 0);
         s = a->getValue();
-        TASSERT(!XMLString::compareString(s, tempStr2));
+        TASSERT(!XMLString::compareString(s, X("CTestAttrValue")));
         delete doc;
 
     }
@@ -568,26 +564,22 @@ void DOMBasicTests()
 
     {
         DOMDocument* doc;
-        doc = DOMImplementation::getImplementation()->createDocument();
+        doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
         DOMText* tn, *tn1, *tn2;
 
-        XMLString::transcode("0123456789", tempStr, 3999);
-        tn = doc->createTextNode (tempStr);
+        tn = doc->createTextNode (X("0123456789"));
 
         tn1 = tn->splitText(5);
 
-        XMLString::transcode("01234", tempStr, 3999);
-        TASSERT(!XMLString::compareString(tn->getNodeValue(), tempStr));
+        TASSERT(!XMLString::compareString(tn->getNodeValue(), X("01234")));
 
-        XMLString::transcode("56789", tempStr2, 3999);
-        TASSERT(!XMLString::compareString(tn1->getNodeValue(), tempStr2));
+        TASSERT(!XMLString::compareString(tn1->getNodeValue(), X("56789")));
 
 
         tn2 = tn->splitText(5);
-        TASSERT(!XMLString::compareString(tn->getNodeValue(), tempStr));
+        TASSERT(!XMLString::compareString(tn->getNodeValue(), X("01234")));
 
-        XMLString::transcode("", tempStr2, 3999);
-        TASSERT(!XMLString::compareString(tn2->getNodeValue(), tempStr2));
+        TASSERT(!XMLString::compareString(tn2->getNodeValue(), XMLUni::fgZeroLenString));
 
         EXCEPTION_TEST(tn->splitText(6), DOMException::INDEX_SIZE_ERR);
         delete doc;
@@ -622,103 +614,72 @@ void DOMNSTests()
     //
     {
 
-        DOMImplementation*  impl = DOMImplementation::getImplementation();
-        XMLString::transcode("1.0", tempStr, 3999);
-        XMLString::transcode("2.0", tempStr2, 3999);
-        XMLString::transcode("3.0", tempStr3, 3999);
-        XMLString::transcode("", tempStr4, 3999);
+        DOMImplementation*  impl = DOMImplementationRegistry::getDOMImplementation(X("Core"));
 
-        XMLString::transcode("XmL", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr2) == true);
+        TASSERT(impl->hasFeature(X("XmL"), X("2.0")) == true);
 
-        XMLString::transcode("xML", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4) == true);
+        TASSERT(impl->hasFeature(X("xML"), 0) == true);
+        TASSERT(impl->hasFeature(X("xML"), XMLUni::fgZeroLenString) == true);
 
-        XMLString::transcode("XMl", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr)  == true);
+        TASSERT(impl->hasFeature(X("XMl"), X("1.0"))  == true);
 
-        XMLString::transcode("xMl", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr3)  == false);
+        TASSERT(impl->hasFeature(X("xMl"), X("3.0"))  == false);
 
-        XMLString::transcode("TrAveRsal", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)  == true);
+        TASSERT(impl->hasFeature(X("TrAveRsal"), 0)  == true);
+        TASSERT(impl->hasFeature(X("TrAveRsal"), XMLUni::fgZeroLenString)  == true);
     }
 
 
 
     {
-        DOMImplementation*  impl = DOMImplementation::getImplementation();
-        XMLString::transcode("1.0", tempStr, 3999);
-        XMLString::transcode("2.0", tempStr2, 3999);
-        XMLString::transcode("3.0", tempStr3, 3999);
-        XMLString::transcode("", tempStr4, 3999);
+        DOMImplementation*  impl = DOMImplementationRegistry::getDOMImplementation(X("Core"));
 
-        XMLString::transcode("XmL", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == true);
-        TASSERT(impl->hasFeature(tempStr5, tempStr)    == true);
-        TASSERT(impl->hasFeature(tempStr5, tempStr2)   == true);
-        TASSERT(impl->hasFeature(tempStr5, tempStr3)   == false);
+        TASSERT(impl->hasFeature(X("XmL"), 0)   == true);
+        TASSERT(impl->hasFeature(X("XmL"), X("1.0"))    == true);
+        TASSERT(impl->hasFeature(X("XmL"), X("2.0"))   == true);
+        TASSERT(impl->hasFeature(X("XmL"), X("3.0"))   == false);
 
-        XMLString::transcode("Core", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == true);
+        TASSERT(impl->hasFeature(X("Core"), 0)   == true);
 
-        XMLString::transcode("coRe", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr)    == true);
+        TASSERT(impl->hasFeature(X("coRe"), X("1.0"))    == true);
 
-        XMLString::transcode("core", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr2)   == true);
+        TASSERT(impl->hasFeature(X("core"), X("2.0"))   == true);
 
-        XMLString::transcode("cORe", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr3)   == false);
+        TASSERT(impl->hasFeature(X("cORe"), X("3.0"))   == true);
+        TASSERT(impl->hasFeature(X("cORe"), X("4.0"))   == false);
 
-        XMLString::transcode("Traversal", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == true);
+        TASSERT(impl->hasFeature(X("Traversal"), XMLUni::fgZeroLenString)   == true);
 
-        XMLString::transcode("traversal", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr)    == false);
+        TASSERT(impl->hasFeature(X("traversal"), X("1.0"))    == false);
 
-        XMLString::transcode("TraVersal", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr2)   == true);
+        TASSERT(impl->hasFeature(X("TraVersal"), X("2.0"))   == true);
 
-        XMLString::transcode("Range", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == true);
+        TASSERT(impl->hasFeature(X("Range"), 0)   == true);
 
-        XMLString::transcode("raNge", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr)    == false);
+        TASSERT(impl->hasFeature(X("raNge"), X("1.0"))    == false);
 
-        XMLString::transcode("RaNge", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr2)   == true);
+        TASSERT(impl->hasFeature(X("RaNge"), X("2.0"))   == true);
 
 
-        XMLString::transcode("HTML", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == false);
+        TASSERT(impl->hasFeature(X("HTML"), 0)   == false);
 
-        XMLString::transcode("Views", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == false);
+        TASSERT(impl->hasFeature(X("Views"), XMLUni::fgZeroLenString)   == false);
 
-        XMLString::transcode("StyleSheets", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == false);
+        TASSERT(impl->hasFeature(X("StyleSheets"), 0)   == false);
 
-        XMLString::transcode("CSS", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == false);
+        TASSERT(impl->hasFeature(X("CSS"), XMLUni::fgZeroLenString)   == false);
 
-        XMLString::transcode("CSS2", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == false);
+        TASSERT(impl->hasFeature(X("CSS2"), 0)   == false);
 
-        XMLString::transcode("Events", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == false);
+        TASSERT(impl->hasFeature(X("Events"), 0)   == false);
 
-        XMLString::transcode("UIEvents", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == false);
+        TASSERT(impl->hasFeature(X("UIEvents"), 0)   == false);
 
-        XMLString::transcode("MouseEvents", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == false);
+        TASSERT(impl->hasFeature(X("MouseEvents"), 0)   == false);
 
-        XMLString::transcode("MutationEvents", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == false);
+        TASSERT(impl->hasFeature(X("MutationEvents"), 0)   == false);
 
-        XMLString::transcode("HTMLEvents", tempStr5, 3999);
-        TASSERT(impl->hasFeature(tempStr5, tempStr4)   == false);
+        TASSERT(impl->hasFeature(X("HTMLEvents"), 0)   == false);
     }
 
 
@@ -729,79 +690,54 @@ void DOMNSTests()
 
     {
         DOMDocument* doc;
-        doc = DOMImplementation::getImplementation()->createDocument();
-
-        XMLString::transcode("1.0", tempStr, 3999);
-        XMLString::transcode("2.0", tempStr2, 3999);
-        XMLString::transcode("3.0", tempStr3, 3999);
-        XMLString::transcode("", tempStr4, 3999);
-
-        XMLString::transcode("XmL", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == true);
-        TASSERT(doc->isSupported(tempStr5, tempStr)    == true);
-        TASSERT(doc->isSupported(tempStr5, tempStr2)   == true);
-        TASSERT(doc->isSupported(tempStr5, tempStr3)   == false);
-
-        XMLString::transcode("Core", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == true);
-
-        XMLString::transcode("coRe", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr)    == true);
-
-        XMLString::transcode("core", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr2)   == true);
-
-        XMLString::transcode("cORe", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr3)   == false);
-
-        XMLString::transcode("Traversal", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == true);
-
-        XMLString::transcode("traversal", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr)    == false);
-
-        XMLString::transcode("TraVersal", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr2)   == true);
-
-        XMLString::transcode("Range", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == true);
-
-        XMLString::transcode("raNge", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr)    == false);
-
-        XMLString::transcode("RaNge", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr2)   == true);
+        doc = DOMImplementationRegistry::getDOMImplementation(X("Core"))->createDocument();
 
 
-        XMLString::transcode("HTML", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == false);
+        TASSERT(doc->isSupported(X("XmL"), 0)   == true);
+        TASSERT(doc->isSupported(X("XmL"), X("1.0"))    == true);
+        TASSERT(doc->isSupported(X("XmL"), X("2.0"))   == true);
+        TASSERT(doc->isSupported(X("XmL"), X("3.0"))   == false);
 
-        XMLString::transcode("Views", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == false);
+        TASSERT(doc->isSupported(X("Core"), 0)   == true);
+        TASSERT(doc->isSupported(X("Core"), XMLUni::fgZeroLenString)   == true);
 
-        XMLString::transcode("StyleSheets", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == false);
+        TASSERT(doc->isSupported(X("coRe"), X("1.0"))    == true);
 
-        XMLString::transcode("CSS", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == false);
+        TASSERT(doc->isSupported(X("core"), X("2.0"))   == true);
 
-        XMLString::transcode("CSS2", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == false);
+        TASSERT(doc->isSupported(X("cORe"), X("3.0"))   == true);
+        TASSERT(doc->isSupported(X("cORe"), X("4.0"))   == false);
 
-        XMLString::transcode("Events", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == false);
+        TASSERT(doc->isSupported(X("Traversal"), 0)   == true);
 
-        XMLString::transcode("UIEvents", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == false);
+        TASSERT(doc->isSupported(X("traversal"), X("1.0"))    == false);
 
-        XMLString::transcode("MouseEvents", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == false);
+        TASSERT(doc->isSupported(X("TraVersal"), X("2.0"))   == true);
 
-        XMLString::transcode("MutationEvents", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == false);
+        TASSERT(doc->isSupported(X("Range"), XMLUni::fgZeroLenString)   == true);
 
-        XMLString::transcode("HTMLEvents", tempStr5, 3999);
-        TASSERT(doc->isSupported(tempStr5, tempStr4)   == false);
+        TASSERT(doc->isSupported(X("raNge"), X("1.0"))    == false);
+
+        TASSERT(doc->isSupported(X("RaNge"), X("2.0"))   == true);
+
+        TASSERT(doc->isSupported(X("HTML"), 0)   == false);
+
+        TASSERT(doc->isSupported(X("Views"), 0)   == false);
+
+        TASSERT(doc->isSupported(X("StyleSheets"), 0)   == false);
+
+        TASSERT(doc->isSupported(X("CSS"), 0)   == false);
+
+        TASSERT(doc->isSupported(X("CSS2"), XMLUni::fgZeroLenString)   == false);
+        TASSERT(doc->isSupported(X("Events"), 0)   == false);
+
+        TASSERT(doc->isSupported(X("UIEvents"), 0)   == false);
+
+        TASSERT(doc->isSupported(X("MouseEvents"), 0)   == false);
+
+        TASSERT(doc->isSupported(X("MutationEvents"), XMLUni::fgZeroLenString)   == false);
+
+        TASSERT(doc->isSupported(X("HTMLEvents"), 0)   == false);
         delete doc;
     }
 
@@ -811,22 +747,19 @@ void DOMNSTests()
     //
 
     {
-        DOMImplementation*  impl = DOMImplementation::getImplementation();
+        DOMImplementation*  impl = DOMImplementationRegistry::getDOMImplementation(X("Core"));
 
-        XMLString::transcode("foo:docName", tempStr, 3999);
-        XMLString::transcode("pubId", tempStr2, 3999);
-        XMLString::transcode( "http://sysId", tempStr3, 3999);
 
-        DOMDocumentType* dt = impl->createDocumentType(tempStr, tempStr2, tempStr3);
+        DOMDocumentType* dt = impl->createDocumentType(X("foo:docName"), X("pubId"), X("http://sysId"));
 
         TASSERT(dt != 0);
         TASSERT(dt->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE);
-        TASSERT(!XMLString::compareString(dt->getNodeName(), tempStr));
+        TASSERT(!XMLString::compareString(dt->getNodeName(), X("foo:docName")));
         TASSERT(dt->getNamespaceURI() == 0);
         TASSERT(dt->getPrefix() == 0);
         TASSERT(dt->getLocalName() == 0);
-        TASSERT(!XMLString::compareString(dt->getPublicId(), tempStr2));
-        TASSERT(!XMLString::compareString(dt->getSystemId(), tempStr3));
+        TASSERT(!XMLString::compareString(dt->getPublicId(), X("pubId")));
+        TASSERT(!XMLString::compareString(dt->getSystemId(), X("http://sysId")));
         TASSERT(dt->getInternalSubset() == 0);
         TASSERT(dt->getOwnerDocument() == 0);
 
@@ -839,35 +772,29 @@ void DOMNSTests()
         //
         // Qualified name without prefix should also work.
         //
-        XMLString::transcode("docName", tempStr, 3999);
-        dt = impl->createDocumentType(tempStr, tempStr2, tempStr3);
+        dt = impl->createDocumentType(X("docName"), X("pubId"), X("http://sysId"));
 
         TASSERT(dt != 0);
         TASSERT(dt->getNodeType() == DOMNode::DOCUMENT_TYPE_NODE);
-        TASSERT(!XMLString::compareString(dt->getNodeName(), tempStr));
+        TASSERT(!XMLString::compareString(dt->getNodeName(), X("docName")));
         TASSERT(dt->getNamespaceURI() == 0);
         TASSERT(dt->getPrefix() == 0);
         TASSERT(dt->getLocalName() == 0);
-        TASSERT(!XMLString::compareString(dt->getPublicId(), tempStr2));
-        TASSERT(!XMLString::compareString(dt->getSystemId(), tempStr3));
+        TASSERT(!XMLString::compareString(dt->getPublicId(), X("pubId")));
+        TASSERT(!XMLString::compareString(dt->getSystemId(), X("http://sysId")));
         TASSERT(dt->getInternalSubset() == 0);
         TASSERT(dt->getOwnerDocument() == 0);
 
         // Creating a DocumentType with invalid or malformed qName should fail.
-        XMLString::transcode("<docName", tempStr, 3999);
-        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), DOMException::INVALID_CHARACTER_ERR);
+        EXCEPTION_TEST(impl->createDocumentType(X("<docName"), X("pubId"), X("http://sysId")), DOMException::INVALID_CHARACTER_ERR);
 
-        XMLString::transcode(":docName", tempStr, 3999);
-        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(impl->createDocumentType(X(":docName"), X("pubId"), X("http://sysId")), DOMException::NAMESPACE_ERR);
 
-        XMLString::transcode("docName:", tempStr, 3999);
-        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(impl->createDocumentType(X("docName:"), X("pubId"), X("http://sysId")), DOMException::NAMESPACE_ERR);
 
-        XMLString::transcode("doc::Name", tempStr, 3999);
-        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(impl->createDocumentType(X("doc::Name"), X("pubId"), X("http://sysId")), DOMException::NAMESPACE_ERR);
 
-        XMLString::transcode("doc:N:ame", tempStr, 3999);
-        EXCEPTION_TEST(impl->createDocumentType(tempStr, tempStr2, tempStr3), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(impl->createDocumentType(X("doc:N:ame"), X("pubId"), X("http://sysId")), DOMException::NAMESPACE_ERR);
         delete dt;
 
     }
@@ -878,12 +805,10 @@ void DOMNSTests()
     //  DOMImplementation::CreateDocument
     {
 
-        DOMImplementation*   impl = DOMImplementation::getImplementation();
+        DOMImplementation*   impl = DOMImplementationRegistry::getDOMImplementation(X("Core"));
         DOMDocumentType*       dt = 0;
 
-        XMLString::transcode("", tempStr2, 3999);
-        XMLString::transcode("a", tempStr, 3999);
-        DOMDocument*           doc = impl->createDocument(tempStr2, tempStr, dt);
+        DOMDocument*           doc = impl->createDocument(XMLUni::fgZeroLenString, X("a"), dt);
 
         doc->getNodeName();
         delete doc;
@@ -893,18 +818,13 @@ void DOMNSTests()
 
     {
 
-        DOMImplementation* impl = DOMImplementation::getImplementation();
-
-        XMLString::transcode("foo:docName", tempStr3, 3999);
-        XMLString::transcode("pubId", tempStr2, 3999);
-        XMLString::transcode( "http://sysId", tempStr, 3999);
+        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(X("Core"));
 
 
-        DOMDocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
 
-        XMLString::transcode("http://document.namespace", tempStr2, 3999);
+        DOMDocumentType* dt = impl->createDocumentType(X("foo:docName"), X("pubId"), X("http://sysId"));
 
-        DOMDocument* doc = impl->createDocument(tempStr2, tempStr3, dt);
+        DOMDocument* doc = impl->createDocument(X("http://document.namespace"), X("foo:docName"), dt);
 
         TASSERT(dt->getOwnerDocument() == doc);
         TASSERT(doc->getOwnerDocument() == 0);
@@ -912,8 +832,7 @@ void DOMNSTests()
         TASSERT(doc->getNodeType() == DOMNode::DOCUMENT_NODE);
         TASSERT(doc->getDoctype() == dt);
 
-        XMLString::transcode("#document", tempStr, 3999);
-        TASSERT(!XMLString::compareString(doc->getNodeName(), tempStr));
+        TASSERT(!XMLString::compareString(doc->getNodeName(), X("#document")));
 
         TASSERT(doc->getNodeValue() == 0);
         TASSERT(doc->getNamespaceURI() == 0);
@@ -922,18 +841,16 @@ void DOMNSTests()
 
         DOMElement* el = doc->getDocumentElement();
 
-        XMLString::transcode("docName", tempStr, 3999);
-        TASSERT(!XMLString::compareString(el->getLocalName(), tempStr));
+        TASSERT(!XMLString::compareString(el->getLocalName(), X("docName")));
 
-        TASSERT(!XMLString::compareString(el->getNamespaceURI(), tempStr2));
-        TASSERT(!XMLString::compareString(el->getNodeName(), tempStr3));
+        TASSERT(!XMLString::compareString(el->getNamespaceURI(), X("http://document.namespace")));
+        TASSERT(!XMLString::compareString(el->getNodeName(), X("foo:docName")));
         TASSERT(el->getOwnerDocument() == doc);
         TASSERT(el->getParentNode() == doc);
 
-        XMLString::transcode("foo", tempStr, 3999);
-        TASSERT(!XMLString::compareString(el->getPrefix(), tempStr));
+        TASSERT(!XMLString::compareString(el->getPrefix(), X("foo")));
 
-        TASSERT(!XMLString::compareString(el->getTagName(), tempStr3));
+        TASSERT(!XMLString::compareString(el->getTagName(), X("foo:docName")));
         TASSERT(el->hasChildNodes() == false);
 
 
@@ -942,7 +859,7 @@ void DOMNSTests()
         //
         try
         {
-            DOMDocument* doc2 = impl->createDocument(tempStr2, tempStr3, dt);
+            DOMDocument* doc2 = impl->createDocument(X("pubId"), X("foo:docName"), dt);
             TASSERT(false);  // should not reach here.
         }
         catch ( DOMException &e)
@@ -956,7 +873,7 @@ void DOMNSTests()
 
         delete doc;
         // Creating a document with null NamespaceURI and DocumentType
-        doc = impl->createDocument(tempStr2, tempStr3, 0);
+        doc = impl->createDocument(X("pubId"), X("foo:docName"), 0);
 
         // Namespace tests of createDocument are covered by createElementNS below
         delete doc;
@@ -975,149 +892,115 @@ void DOMNSTests()
 
         // Set up an initial (root element only) document.
         //
-        DOMImplementation* impl = DOMImplementation::getImplementation();
-
-        XMLString::transcode("foo:docName", tempStr3, 3999);
-        XMLString::transcode("pubId", tempStr2, 3999);
-        XMLString::transcode( "http://sysId", tempStr, 3999);
+        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(X("Core"));
 
 
-        DOMDocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
+        DOMDocumentType* dt = impl->createDocumentType(X("foo:docName"), X("pubId"), X("http://sysId"));
 
-        XMLString::transcode("http://document.namespace", tempStr2, 3999);
 
-        DOMDocument* doc = impl->createDocument(tempStr2, tempStr3, dt);
+        DOMDocument* doc = impl->createDocument(X("http://document.namespace"), X("foo:docName"), dt);
         DOMElement* rootEl = doc->getDocumentElement();
 
         //
         // CreateElementNS
         //
-        XMLString::transcode("http://nsa", tempStr5, 3999);
-        XMLString::transcode("a:ela", tempStr, 3999);
-        DOMElement* ela = doc->createElementNS(tempStr5, tempStr);  // prefix and URI
+        DOMElement* ela = doc->createElementNS(X("http://nsa"), X("a:ela"));  // prefix and URI
 
-        TASSERT(!XMLString::compareString(ela->getNodeName(), tempStr));
-        TASSERT(!XMLString::compareString(ela->getNamespaceURI(), tempStr5));
-        XMLString::transcode("a", tempStr3, 3999);
-        TASSERT(!XMLString::compareString(ela->getPrefix(), tempStr3));
-        XMLString::transcode("ela", tempStr3, 3999);
-        TASSERT(!XMLString::compareString(ela->getLocalName(), tempStr3));
-        TASSERT(!XMLString::compareString(ela->getTagName(), tempStr));
+        TASSERT(!XMLString::compareString(ela->getNodeName(), X("a:ela")));
+        TASSERT(!XMLString::compareString(ela->getNamespaceURI(), X("http://nsa")));
+        TASSERT(!XMLString::compareString(ela->getPrefix(), X("a")));
+        TASSERT(!XMLString::compareString(ela->getLocalName(), X("ela")));
+        TASSERT(!XMLString::compareString(ela->getTagName(), X("a:ela")));
 
+        DOMElement* elb = doc->createElementNS(X("http://nsb"), X("elb"));    //  URI, no prefix.
 
-        XMLString::transcode("", tempStr3, 3999);
-        XMLString::transcode("http://nsb", tempStr2, 3999);
-        XMLString::transcode("elb", tempStr, 3999);
-        DOMElement* elb = doc->createElementNS(tempStr2, tempStr);    //  URI, no prefix.
+        TASSERT(!XMLString::compareString(elb->getNodeName(), X("elb")));
+        TASSERT(!XMLString::compareString(elb->getNamespaceURI(), X("http://nsb")));
+        TASSERT(!XMLString::compareString(elb->getPrefix(), XMLUni::fgZeroLenString));
+        TASSERT(!XMLString::compareString(elb->getLocalName(), X("elb")));
+        TASSERT(!XMLString::compareString(elb->getTagName(), X("elb")));
 
-        TASSERT(!XMLString::compareString(elb->getNodeName(), tempStr));
-        TASSERT(!XMLString::compareString(elb->getNamespaceURI(), tempStr2));
-        TASSERT(!XMLString::compareString(elb->getPrefix(), tempStr3));
-        TASSERT(!XMLString::compareString(elb->getLocalName(), tempStr));
-        TASSERT(!XMLString::compareString(elb->getTagName(), tempStr));
+        DOMElement* elc = doc->createElementNS(XMLUni::fgZeroLenString, X("elc"));              // No URI, no prefix.
 
-
-        XMLString::transcode("elc", tempStr, 3999);
-        DOMElement* elc = doc->createElementNS(tempStr3, tempStr);              // No URI, no prefix.
-
-        TASSERT(!XMLString::compareString(elc->getNodeName(), tempStr));
-        TASSERT(!XMLString::compareString(elc->getNamespaceURI(), tempStr3));
-        TASSERT(!XMLString::compareString(elc->getPrefix(), tempStr3));
-        TASSERT(!XMLString::compareString(elc->getLocalName(), tempStr));
-        TASSERT(!XMLString::compareString(elc->getTagName(), tempStr));
+        TASSERT(!XMLString::compareString(elc->getNodeName(), X("elc")));
+        TASSERT(!XMLString::compareString(elc->getNamespaceURI(), XMLUni::fgZeroLenString));
+        TASSERT(!XMLString::compareString(elc->getPrefix(), XMLUni::fgZeroLenString));
+        TASSERT(!XMLString::compareString(elc->getLocalName(), X("elc")));
+        TASSERT(!XMLString::compareString(elc->getTagName(), X("elc")));
 
         rootEl->appendChild(ela);
         rootEl->appendChild(elb);
         rootEl->appendChild(elc);
 
         // Badly formed qualified name
-        XMLString::transcode("<a", tempStr4, 3999);
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), DOMException::INVALID_CHARACTER_ERR);
+        EXCEPTION_TEST(doc->createElementNS(X("http://nsa"), X("<a")), DOMException::INVALID_CHARACTER_ERR);
 
-        XMLString::transcode(":a", tempStr4, 3999);
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(X("http://nsa"), X(":a")), DOMException::NAMESPACE_ERR);
 
-        XMLString::transcode("a:", tempStr4, 3999);
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(X("http://nsa"), X("a:")), DOMException::NAMESPACE_ERR);
 
-        XMLString::transcode("a::a", tempStr4, 3999);
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(X("http://nsa"), X("a::a")), DOMException::NAMESPACE_ERR);
 
-        XMLString::transcode("a:a:a", tempStr4, 3999);
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr4), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(X("http://nsa"), X("a:a:a")), DOMException::NAMESPACE_ERR);
 
         // xml:a must have namespaceURI == "http://www.w3.org/XML/1998/namespace"
-        XMLString::transcode("http://www.w3.org/XML/1998/namespace", tempStr4, 3999);
-        XMLString::transcode("xml:a",tempStr2, 3999);
-        TASSERT(!XMLString::compareString(doc->createElementNS(tempStr4, tempStr2)->getNamespaceURI(), tempStr4));
-        EXCEPTION_TEST(doc->createElementNS(tempStr5, tempStr2), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createElementNS(tempStr3, tempStr2), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createElementNS(0,  tempStr2), DOMException::NAMESPACE_ERR);
+        TASSERT(!XMLString::compareString(doc->createElementNS(X("http://www.w3.org/XML/1998/namespace"), X("xml:a"))->getNamespaceURI(), X("http://www.w3.org/XML/1998/namespace")));
+        EXCEPTION_TEST(doc->createElementNS(X("http://nsa"), X("xml:a")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(XMLUni::fgZeroLenString, X("xml:a")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(0,  X("xml:a")), DOMException::NAMESPACE_ERR);
 
         //unlike Attribute, xmlns (no different from foo) can have any namespaceURI for Element
-        XMLString::transcode("xmlns", tempStr2, 3999);
-        TASSERT(!XMLString::compareString(doc->createElementNS(tempStr5, tempStr2)->getNamespaceURI(), tempStr5));
+        TASSERT(!XMLString::compareString(doc->createElementNS(X("http://nsa"), X("xmlns"))->getNamespaceURI(), X("http://nsa")));
 
-        TASSERT(!XMLString::compareString(doc->createElementNS(tempStr4, tempStr2)->getNamespaceURI(), tempStr4));
-        TASSERT(!XMLString::compareString(doc->createElementNS(tempStr3, tempStr2)->getNamespaceURI(), tempStr3));
-        TASSERT(!XMLString::compareString(doc->createElementNS(0,  tempStr2)->getNamespaceURI(), tempStr3));
+        TASSERT(!XMLString::compareString(doc->createElementNS(X("http://www.w3.org/XML/1998/namespace"), X("xmlns"))->getNamespaceURI(), X("http://www.w3.org/XML/1998/namespace")));
+        TASSERT(!XMLString::compareString(doc->createElementNS(XMLUni::fgZeroLenString, X("xmlns"))->getNamespaceURI(), XMLUni::fgZeroLenString));
+        TASSERT(!XMLString::compareString(doc->createElementNS(0,  X("xmlns"))->getNamespaceURI(), XMLUni::fgZeroLenString));
 
         //unlike Attribute, xmlns:a (no different from foo:a) can have any namespaceURI for Element
         //except "" and null
-        XMLString::transcode("xmlns:a", tempStr2, 3999);
-        TASSERT(!XMLString::compareString(doc->createElementNS(tempStr5, tempStr2)->getNamespaceURI(), tempStr5));
-        TASSERT(!XMLString::compareString(doc->createElementNS(tempStr4, tempStr2)->getNamespaceURI(), tempStr4));
-        EXCEPTION_TEST(doc->createElementNS(tempStr3, tempStr2), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createElementNS(0, tempStr2), DOMException::NAMESPACE_ERR);
+        TASSERT(!XMLString::compareString(doc->createElementNS(X("http://nsa"), X("xmlns:a"))->getNamespaceURI(), X("http://nsa")));
+        TASSERT(!XMLString::compareString(doc->createElementNS(X("http://www.w3.org/XML/1998/namespace"), X("xmlns:a"))->getNamespaceURI(), X("http://www.w3.org/XML/1998/namespace")));
+        EXCEPTION_TEST(doc->createElementNS(XMLUni::fgZeroLenString, X("xmlns:a")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(0, X("xmlns:a")), DOMException::NAMESPACE_ERR);
 
         //In fact, any prefix != null should have a namespaceURI != 0 or != ""
-        XMLString::transcode("foo:a", tempStr2, 3999);
-        TASSERT(!XMLString::compareString(doc->createElementNS(tempStr5, tempStr2)->getNamespaceURI(), tempStr5));
-        EXCEPTION_TEST(doc->createElementNS(tempStr3, tempStr2), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createElementNS(0,  tempStr2), DOMException::NAMESPACE_ERR);
+        TASSERT(!XMLString::compareString(doc->createElementNS(X("http://nsa"), X("foo:a"))->getNamespaceURI(), X("http://nsa")));
+        EXCEPTION_TEST(doc->createElementNS(XMLUni::fgZeroLenString, X("foo:a")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createElementNS(0,  X("foo:a")), DOMException::NAMESPACE_ERR);
 
         //Change prefix
-        DOMElement* elem = doc->createElementNS(tempStr5, tempStr2);
-        XMLString::transcode("bar", tempStr2, 3999);
-        elem->setPrefix(tempStr2);
-        XMLString::transcode("bar:a", tempStr4, 3999);
-        TASSERT(!XMLString::compareString(elem->getNodeName(), tempStr4));
-        TASSERT(!XMLString::compareString(elem->getNamespaceURI(), tempStr5));
-        TASSERT(!XMLString::compareString(elem->getPrefix(), tempStr2));
-        XMLString::transcode("a", tempStr, 3999);
-        TASSERT(!XMLString::compareString(elem->getLocalName(), tempStr));
-        TASSERT(!XMLString::compareString(elem->getTagName(), tempStr4));
+        DOMElement* elem = doc->createElementNS(X("http://nsa"), X("foo:a"));
+        elem->setPrefix(X("bar"));
+        TASSERT(!XMLString::compareString(elem->getNodeName(), X("bar:a")));
+        TASSERT(!XMLString::compareString(elem->getNamespaceURI(), X("http://nsa")));
+        TASSERT(!XMLString::compareString(elem->getPrefix(), X("bar")));
+        TASSERT(!XMLString::compareString(elem->getLocalName(), X("a")));
+        TASSERT(!XMLString::compareString(elem->getTagName(), X("bar:a")));
         //The spec does not prevent us from setting prefix to a node without prefix
-        elem = doc->createElementNS(tempStr5, tempStr);
-        TASSERT(!XMLString::compareString(elem->getPrefix(), tempStr3));
-        elem->setPrefix(tempStr2);
-        TASSERT(!XMLString::compareString(elem->getNodeName(), tempStr4));
-        TASSERT(!XMLString::compareString(elem->getNamespaceURI(), tempStr5));
-        TASSERT(!XMLString::compareString(elem->getPrefix(), tempStr2));
-        TASSERT(!XMLString::compareString(elem->getLocalName(), tempStr));
-        TASSERT(!XMLString::compareString(elem->getTagName(), tempStr4));
+        elem = doc->createElementNS(X("http://nsa"), X("a"));
+        TASSERT(!XMLString::compareString(elem->getPrefix(), XMLUni::fgZeroLenString));
+        elem->setPrefix(X("bar"));
+        TASSERT(!XMLString::compareString(elem->getNodeName(), X("bar:a")));
+        TASSERT(!XMLString::compareString(elem->getNamespaceURI(), X("http://nsa")));
+        TASSERT(!XMLString::compareString(elem->getPrefix(), X("bar")));
+        TASSERT(!XMLString::compareString(elem->getLocalName(), X("a")));
+        TASSERT(!XMLString::compareString(elem->getTagName(), X("bar:a")));
 
         //Special case for xml:a where namespaceURI must be xmlURI
-        XMLString::transcode("foo:a", tempStr, 3999);
-        XMLString::transcode("http://www.w3.org/XML/1998/namespace", tempStr4, 3999);
-        elem = doc->createElementNS(tempStr4, tempStr);
-        XMLString::transcode("xml", tempStr2, 3999);
-        elem->setPrefix(tempStr2);
-        elem = doc->createElementNS(tempStr5, tempStr);
-        EXCEPTION_TEST(elem->setPrefix(tempStr2), DOMException::NAMESPACE_ERR);
+        elem = doc->createElementNS(X("http://www.w3.org/XML/1998/namespace"), X("foo:a"));
+        elem->setPrefix(X("xml"));
+        elem = doc->createElementNS(X("http://nsa"), X("foo:a"));
+        EXCEPTION_TEST(elem->setPrefix(X("xml")), DOMException::NAMESPACE_ERR);
         //However, there is no restriction on prefix xmlns
-        XMLString::transcode("xmlns", tempStr4, 3999);
-        elem->setPrefix(tempStr4);
+        elem->setPrefix(X("xmlns"));
         //Also an element can not have a prefix with namespaceURI == null or ""
-        XMLString::transcode("a", tempStr, 3999);
-        XMLString::transcode("foo", tempStr2, 3999);
-        elem = doc->createElementNS(0, tempStr);
-        EXCEPTION_TEST(elem->setPrefix(tempStr2), DOMException::NAMESPACE_ERR);
-        elem = doc->createElementNS(tempStr3, tempStr);
-        EXCEPTION_TEST(elem->setPrefix(tempStr2), DOMException::NAMESPACE_ERR);
+        elem = doc->createElementNS(0, X("a"));
+        EXCEPTION_TEST(elem->setPrefix(X("foo")), DOMException::NAMESPACE_ERR);
+        elem = doc->createElementNS(XMLUni::fgZeroLenString, X("a"));
+        EXCEPTION_TEST(elem->setPrefix(X("foo")), DOMException::NAMESPACE_ERR);
 
         //Only prefix of Element and Attribute can be changed
-        EXCEPTION_TEST(doc->setPrefix(tempStr2), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->setPrefix(X("foo")), DOMException::NAMESPACE_ERR);
 
         //Prefix of readonly Element can not be changed.
         //However, there is no way to create such DOMElement* for testing yet.
@@ -1136,162 +1019,128 @@ void DOMNSTests()
 
         // Set up an initial (root element only) document.
         //
-        DOMImplementation* impl = DOMImplementation::getImplementation();
-
-        XMLString::transcode("foo:docName", tempStr3, 3999);
-        XMLString::transcode("pubId", tempStr2, 3999);
-        XMLString::transcode( "http://sysId", tempStr, 3999);
+        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(X("Core"));
 
 
-        DOMDocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
 
-        XMLString::transcode("http://document.namespace", tempStr2, 3999);
-        DOMDocument* doc = impl->createDocument(tempStr2, tempStr3, dt);
+        DOMDocumentType* dt = impl->createDocumentType(X("foo:docName"), X("pubId"), X("http://sysId"));
+
+        DOMDocument* doc = impl->createDocument(X("http://document.namespace"), X("foo:docName"), dt);
         DOMElement* rootEl = doc->getDocumentElement();
 
         //
         // CreateAttributeNS
         //
-        XMLString::transcode("http://nsa", tempStr5, 3999);
-        XMLString::transcode("http://nsb", tempStr4, 3999);
-        XMLString::transcode("", tempStr3, 3999);
 
 
-        XMLString::transcode("a:attra", tempStr, 3999);
-        DOMAttr* attra = doc->createAttributeNS(tempStr5, tempStr);       // prefix and URI
-        TASSERT(!XMLString::compareString(attra->getNodeName(), tempStr));
-        TASSERT(!XMLString::compareString(attra->getNamespaceURI(), tempStr5));
+        DOMAttr* attra = doc->createAttributeNS(X("http://nsa"), X("a:attra"));       // prefix and URI
+        TASSERT(!XMLString::compareString(attra->getNodeName(), X("a:attra")));
+        TASSERT(!XMLString::compareString(attra->getNamespaceURI(), X("http://nsa")));
 
-        XMLString::transcode("a", tempStr2, 3999);
-        TASSERT(!XMLString::compareString(attra->getPrefix(), tempStr2));
+        TASSERT(!XMLString::compareString(attra->getPrefix(), X("a")));
 
-        XMLString::transcode("attra", tempStr2, 3999);
-        TASSERT(!XMLString::compareString(attra->getLocalName(), tempStr2));
-        TASSERT(!XMLString::compareString(attra->getName(), tempStr));
+        TASSERT(!XMLString::compareString(attra->getLocalName(), X("attra")));
+        TASSERT(!XMLString::compareString(attra->getName(), X("a:attra")));
         TASSERT(attra->getOwnerElement() == 0);
 
-        XMLString::transcode("attrb", tempStr2, 3999);
-        DOMAttr* attrb = doc->createAttributeNS(tempStr4, tempStr2);         //  URI, no prefix.
-        TASSERT(!XMLString::compareString(attrb->getNodeName(), tempStr2));
-        TASSERT(!XMLString::compareString(attrb->getNamespaceURI(), tempStr4));
-        TASSERT(!XMLString::compareString(attrb->getPrefix(), tempStr3));
-        TASSERT(!XMLString::compareString(attrb->getLocalName(), tempStr2));
-        TASSERT(!XMLString::compareString(attrb->getName(), tempStr2));
+        DOMAttr* attrb = doc->createAttributeNS(X("http://nsb"), X("attrb"));         //  URI, no prefix.
+        TASSERT(!XMLString::compareString(attrb->getNodeName(), X("attrb")));
+        TASSERT(!XMLString::compareString(attrb->getNamespaceURI(), X("http://nsb")));
+        TASSERT(!XMLString::compareString(attrb->getPrefix(), XMLUni::fgZeroLenString));
+        TASSERT(!XMLString::compareString(attrb->getLocalName(), X("attrb")));
+        TASSERT(!XMLString::compareString(attrb->getName(), X("attrb")));
         TASSERT(attrb->getOwnerElement() == 0);
 
 
 
-        XMLString::transcode("attrc", tempStr2, 3999);
-        DOMAttr* attrc = doc->createAttributeNS(tempStr3, tempStr2);
-        TASSERT(!XMLString::compareString(attrc->getNodeName(), tempStr2));
-        TASSERT(!XMLString::compareString(attrc->getNamespaceURI(), tempStr3));
-        TASSERT(!XMLString::compareString(attrc->getPrefix(), tempStr3));
-        TASSERT(!XMLString::compareString(attrc->getLocalName(), tempStr2));
-        TASSERT(!XMLString::compareString(attrc->getName(), tempStr2));
+        DOMAttr* attrc = doc->createAttributeNS(XMLUni::fgZeroLenString, X("attrc"));
+        TASSERT(!XMLString::compareString(attrc->getNodeName(), X("attrc")));
+        TASSERT(!XMLString::compareString(attrc->getNamespaceURI(), XMLUni::fgZeroLenString));
+        TASSERT(!XMLString::compareString(attrc->getPrefix(), XMLUni::fgZeroLenString));
+        TASSERT(!XMLString::compareString(attrc->getLocalName(), X("attrc")));
+        TASSERT(!XMLString::compareString(attrc->getName(), X("attrc")));
         TASSERT(attrc->getOwnerElement() == 0);
 
         // Badly formed qualified name
-        XMLString::transcode("<a", tempStr, 3999);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::INVALID_CHARACTER_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(X("http://nsa"), X("<a")), DOMException::INVALID_CHARACTER_ERR);
 
-        XMLString::transcode(":a", tempStr, 3999);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(X("http://nsa"), X(":a")), DOMException::NAMESPACE_ERR);
 
-        XMLString::transcode("a:", tempStr, 3999);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(X("http://nsa"), X("a:")), DOMException::NAMESPACE_ERR);
 
-        XMLString::transcode("a::a", tempStr, 3999);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(X("http://nsa"), X("a::a")), DOMException::NAMESPACE_ERR);
 
-        XMLString::transcode("a:a:a", tempStr, 3999);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(X("http://nsa"), X("a:a:a")), DOMException::NAMESPACE_ERR);
 
         // xml:a must have namespaceURI == "http://www.w3.org/XML/1998/namespace"
-        XMLString::transcode("http://www.w3.org/XML/1998/namespace", tempStr2, 3999);
-        XMLString::transcode("xml:a", tempStr, 3999);
-        TASSERT(!XMLString::compareString(doc->createAttributeNS(tempStr2, tempStr)->getNamespaceURI(), tempStr2));
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), DOMException::NAMESPACE_ERR);
+        TASSERT(!XMLString::compareString(doc->createAttributeNS(X("http://www.w3.org/XML/1998/namespace"), X("xml:a"))->getNamespaceURI(), X("http://www.w3.org/XML/1998/namespace")));
+        EXCEPTION_TEST(doc->createAttributeNS(X("http://nsa"), X("xml:a")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(XMLUni::fgZeroLenString, X("xml:a")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(0,  X("xml:a")), DOMException::NAMESPACE_ERR);
 
         //unlike Element, xmlns must have namespaceURI == "http://www.w3.org/2000/xmlns/"
-        XMLString::transcode("http://www.w3.org/2000/xmlns/", tempStr4, 3999);
-        XMLString::transcode("xmlns", tempStr, 3999);
-        TASSERT(!XMLString::compareString(doc->createAttributeNS(tempStr4, tempStr)->getNamespaceURI(), tempStr4));
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr2, tempStr), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), DOMException::NAMESPACE_ERR);
+        TASSERT(!XMLString::compareString(doc->createAttributeNS(X("http://www.w3.org/2000/xmlns/"), X("xmlns"))->getNamespaceURI(), X("http://www.w3.org/2000/xmlns/")));
+        EXCEPTION_TEST(doc->createAttributeNS(X("http://nsa"), X("xmlns")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(X("http://www.w3.org/XML/1998/namespace"), X("xmlns")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(XMLUni::fgZeroLenString, X("xmlns")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(0,  X("xmlns")), DOMException::NAMESPACE_ERR);
 
         //unlike Element, xmlns:a must have namespaceURI == "http://www.w3.org/2000/xmlns/"
-        XMLString::transcode("xmlns:a", tempStr, 3999);
-        TASSERT(!XMLString::compareString(doc->createAttributeNS(tempStr4, tempStr)->getNamespaceURI(), tempStr4));
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr5, tempStr), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr2, tempStr), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), DOMException::NAMESPACE_ERR);
+        TASSERT(!XMLString::compareString(doc->createAttributeNS(X("http://www.w3.org/2000/xmlns/"), X("xmlns:a"))->getNamespaceURI(), X("http://www.w3.org/2000/xmlns/")));
+        EXCEPTION_TEST(doc->createAttributeNS(X("http://nsa"), X("xmlns:a")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(X("http://www.w3.org/XML/1998/namespace"), X("xmlns:a")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(XMLUni::fgZeroLenString, X("xmlns:a")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(0,  X("xmlns:a")), DOMException::NAMESPACE_ERR);
 
         //In fact, any prefix != null should have a namespaceURI != 0 or != ""
-        XMLString::transcode("foo:a", tempStr, 3999);
-        TASSERT(!XMLString::compareString(doc->createAttributeNS(tempStr5, tempStr)->getNamespaceURI(), tempStr5));
-        EXCEPTION_TEST(doc->createAttributeNS(tempStr3, tempStr), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(doc->createAttributeNS(0,  tempStr), DOMException::NAMESPACE_ERR);
+        TASSERT(!XMLString::compareString(doc->createAttributeNS(X("http://nsa"), X("foo:a"))->getNamespaceURI(), X("http://nsa")));
+        EXCEPTION_TEST(doc->createAttributeNS(XMLUni::fgZeroLenString, X("foo:a")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->createAttributeNS(0,  X("foo:a")), DOMException::NAMESPACE_ERR);
 
         //Change prefix
-        DOMAttr* attr = doc->createAttributeNS(tempStr5, tempStr);
-        XMLString::transcode("bar", tempStr4, 3999);
-        XMLString::transcode("bar:a", tempStr, 3999);
-        XMLString::transcode("a", tempStr2, 3999);
-        attr->setPrefix(tempStr4);
+        DOMAttr* attr = doc->createAttributeNS(X("http://nsa"), X("foo:a"));
+        attr->setPrefix(X("bar"));
 
-        TASSERT(!XMLString::compareString(attr->getNodeName(), tempStr));
-        TASSERT(!XMLString::compareString(attr->getNamespaceURI(), tempStr5));
-        TASSERT(!XMLString::compareString(attr->getPrefix(), tempStr4));
-        TASSERT(!XMLString::compareString(attr->getName(), tempStr));
+        TASSERT(!XMLString::compareString(attr->getNodeName(), X("bar:a")));
+        TASSERT(!XMLString::compareString(attr->getNamespaceURI(), X("http://nsa")));
+        TASSERT(!XMLString::compareString(attr->getPrefix(), X("bar")));
+        TASSERT(!XMLString::compareString(attr->getName(), X("bar:a")));
         //The spec does not prevent us from setting prefix to a node without prefix
-        TASSERT(!XMLString::compareString(attr->getLocalName(), tempStr2));
-        attr = doc->createAttributeNS(tempStr5, tempStr2);
-        TASSERT(!XMLString::compareString(attr->getPrefix(), tempStr3));
-        attr->setPrefix(tempStr4);
-        TASSERT(!XMLString::compareString(attr->getNodeName(), tempStr));
-        TASSERT(!XMLString::compareString(attr->getNamespaceURI(), tempStr5));
-        TASSERT(!XMLString::compareString(attr->getPrefix(), tempStr4));
-        TASSERT(!XMLString::compareString(attr->getLocalName(), tempStr2));
-        TASSERT(!XMLString::compareString(attr->getName(), tempStr));
+        TASSERT(!XMLString::compareString(attr->getLocalName(), X("a")));
+        attr = doc->createAttributeNS(X("http://nsa"), X("a"));
+        TASSERT(!XMLString::compareString(attr->getPrefix(), XMLUni::fgZeroLenString));
+        attr->setPrefix(X("bar"));
+        TASSERT(!XMLString::compareString(attr->getNodeName(), X("bar:a")));
+        TASSERT(!XMLString::compareString(attr->getNamespaceURI(), X("http://nsa")));
+        TASSERT(!XMLString::compareString(attr->getPrefix(), X("bar")));
+        TASSERT(!XMLString::compareString(attr->getLocalName(), X("a")));
+        TASSERT(!XMLString::compareString(attr->getName(), X("bar:a")));
 
 
         //Special case for xml:a where namespaceURI must be xmlURI
-        XMLString::transcode("foo:a", tempStr, 3999);
-        XMLString::transcode("xml", tempStr4, 3999);
-        XMLString::transcode("http://www.w3.org/XML/1998/namespace", tempStr2, 3999);
-
-        attr = doc->createAttributeNS(tempStr2, tempStr);
-        attr->setPrefix(tempStr4);
-        attr = doc->createAttributeNS(tempStr5, tempStr);
-        EXCEPTION_TEST(attr->setPrefix(tempStr4), DOMException::NAMESPACE_ERR);
+        attr = doc->createAttributeNS(X("http://www.w3.org/XML/1998/namespace"), X("foo:a"));
+        attr->setPrefix(X("xml"));
+        attr = doc->createAttributeNS(X("http://nsa"), X("foo:a"));
+        EXCEPTION_TEST(attr->setPrefix(X("xml")), DOMException::NAMESPACE_ERR);
         //Special case for xmlns:a where namespaceURI must be xmlURI
-        XMLString::transcode("http://www.w3.org/2000/xmlns/", tempStr2, 3999);
-        attr = doc->createAttributeNS(tempStr2, tempStr);
+        attr = doc->createAttributeNS(X("http://www.w3.org/2000/xmlns/"), X("foo:a"));
 
-        XMLString::transcode("xmlns", tempStr4, 3999);
-        attr->setPrefix(tempStr4);
-        attr = doc->createAttributeNS(tempStr5, tempStr);
-        EXCEPTION_TEST(attr->setPrefix(tempStr4), DOMException::NAMESPACE_ERR);
+        attr->setPrefix(X("xmlns"));
+        attr = doc->createAttributeNS(X("http://nsa"), X("foo:a"));
+        EXCEPTION_TEST(attr->setPrefix(X("xmlns")), DOMException::NAMESPACE_ERR);
         //Special case for xmlns where no prefix can be set
-        attr = doc->createAttributeNS(tempStr2, tempStr4);
+        attr = doc->createAttributeNS(X("http://www.w3.org/2000/xmlns/"), X("xmlns"));
 
-        XMLString::transcode("foo", tempStr, 3999);
-        EXCEPTION_TEST(attr->setPrefix(tempStr), DOMException::NAMESPACE_ERR);
-        EXCEPTION_TEST(attr->setPrefix(tempStr4), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(attr->setPrefix(X("foo")), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(attr->setPrefix(X("xmlns")), DOMException::NAMESPACE_ERR);
         //Also an attribute can not have a prefix with namespaceURI == null or ""
-        XMLString::transcode("a", tempStr4, 3999);
-        attr = doc->createAttributeNS(0, tempStr4);
-        EXCEPTION_TEST(attr->setPrefix(tempStr), DOMException::NAMESPACE_ERR);
-        attr = doc->createAttributeNS(tempStr3, tempStr4);
-        EXCEPTION_TEST(attr->setPrefix(tempStr), DOMException::NAMESPACE_ERR);
+        attr = doc->createAttributeNS(XMLUni::fgZeroLenString, X("a"));
+        EXCEPTION_TEST(attr->setPrefix(X("foo")), DOMException::NAMESPACE_ERR);
+        attr = doc->createAttributeNS(0, X("a"));
+        EXCEPTION_TEST(attr->setPrefix(X("foo")), DOMException::NAMESPACE_ERR);
 
         //Only prefix of Element and Attribute can be changed
-        EXCEPTION_TEST(doc->setPrefix(tempStr), DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc->setPrefix(X("foo")), DOMException::NAMESPACE_ERR);
 
         //Prefix of readonly Attribute can not be changed.
         //However, there is no way to create such DOMAttribute for testing yet.
@@ -1309,45 +1158,30 @@ void DOMNSTests()
 
         // Set up an initial (root element only) document.
         //
-        DOMImplementation* impl = DOMImplementation::getImplementation();
+        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(X("Core"));
+        DOMDocumentType* dt = impl->createDocumentType(X("foo:docName"), X("pubId"), X("http://sysId"));
 
-        XMLString::transcode("foo:docName", tempStr3, 3999);
-        XMLString::transcode("pubId", tempStr2, 3999);
-        XMLString::transcode( "http://sysId", tempStr, 3999);
-
-
-        DOMDocumentType* dt = impl->createDocumentType(tempStr3, tempStr2, tempStr);
-
-        XMLString::transcode("http://document.namespace", tempStr2, 3999);
-        DOMDocument* doc = impl->createDocument(tempStr2, tempStr3, dt);
+        DOMDocument* doc = impl->createDocument(X("http://document.namespace"), X("foo:docName"), dt);
 
         DOMElement* rootEl = doc->getDocumentElement();
 
         //
         // Populate the document
         //
-        XMLString::transcode("http://nsa", tempStr5, 3999);
-        XMLString::transcode("http://nsb", tempStr4, 3999);
-        XMLString::transcode("", tempStr3, 3999);
 
-        XMLString::transcode("a:ela", tempStr, 3999);
-        DOMElement* ela = doc->createElementNS(tempStr5, tempStr);
+        DOMElement* ela = doc->createElementNS(X("http://nsa"), X("a:ela"));
         rootEl->appendChild(ela);
 
-        XMLString::transcode("elb", tempStr2, 3999);
-        DOMElement* elb = doc->createElementNS(tempStr4, tempStr2);
+        DOMElement* elb = doc->createElementNS(X("http://nsb"), X("elb"));
         rootEl->appendChild(elb);
 
-        XMLString::transcode("elc", tempStr, 3999);
-        DOMElement* elc = doc->createElementNS(tempStr3, tempStr);
+        DOMElement* elc = doc->createElementNS(XMLUni::fgZeroLenString, X("elc"));
         rootEl->appendChild(elc);
 
-        XMLString::transcode("d:ela", tempStr, 3999);
-        DOMElement* eld = doc->createElementNS(tempStr5, tempStr);
+        DOMElement* eld = doc->createElementNS(X("http://nsa"), X("d:ela"));
         rootEl->appendChild(eld);
 
-        XMLString::transcode("http://nse", tempStr, 3999);
-        DOMElement* ele = doc->createElementNS(tempStr, tempStr2);
+        DOMElement* ele = doc->createElementNS(X("http://nse"), X("elb"));
         rootEl->appendChild(ele);
 
 
@@ -1357,18 +1191,16 @@ void DOMNSTests()
 
         DOMNodeList* nl;
 
-        XMLString::transcode("a:ela", tempStr, 3999);
-        nl = doc->getElementsByTagName(tempStr);
+        nl = doc->getElementsByTagName(X("a:ela"));
         TASSERT(nl->getLength() == 1);
         TASSERT(nl->item(0) == ela);
 
-        nl = doc->getElementsByTagName(tempStr2);
+        nl = doc->getElementsByTagName(X("elb"));
         TASSERT(nl->getLength() == 2);
         TASSERT(nl->item(0) == elb);
         TASSERT(nl->item(1) == ele);
 
-        XMLString::transcode("d:ela", tempStr, 3999);
-        nl = doc->getElementsByTagName(tempStr);
+        nl = doc->getElementsByTagName(X("d:ela"));
         TASSERT(nl->getLength() == 1);
         TASSERT(nl->item(0) == eld);
 
@@ -1376,51 +1208,47 @@ void DOMNSTests()
         //  Access with DOM Level 2 getElementsByTagNameNS
         //
 
-        XMLString::transcode("elc", tempStr, 3999);
-        nl = doc->getElementsByTagNameNS(tempStr3, tempStr);
+        nl = doc->getElementsByTagNameNS(XMLUni::fgZeroLenString, X("elc"));
         TASSERT(nl->getLength() == 1);
         TASSERT(nl->item(0) == elc);
 
-        nl = doc->getElementsByTagNameNS(0, tempStr);
+        nl = doc->getElementsByTagNameNS(0, X("elc"));
         TASSERT(nl->getLength() == 1);
         TASSERT(nl->item(0) == elc);
 
-        XMLString::transcode("ela", tempStr, 3999);
-        nl = doc->getElementsByTagNameNS(tempStr5, tempStr);
+        nl = doc->getElementsByTagNameNS(X("http://nsa"), X("ela"));
         TASSERT(nl->getLength() == 2);
         TASSERT(nl->item(0) == ela);
         TASSERT(nl->item(1) == eld);
 
-        nl = doc->getElementsByTagNameNS(tempStr3, tempStr2);
+        nl = doc->getElementsByTagNameNS(XMLUni::fgZeroLenString, X("elb"));
         TASSERT(nl->getLength() == 0);
 
-        nl = doc->getElementsByTagNameNS(tempStr4, tempStr2);
+        nl = doc->getElementsByTagNameNS(X("http://nsb"), X("elb"));
         TASSERT(nl->getLength() == 1);
         TASSERT(nl->item(0) == elb);
 
-        XMLString::transcode("*", tempStr, 3999);
-        nl = doc->getElementsByTagNameNS(tempStr, tempStr2);
+        nl = doc->getElementsByTagNameNS(X("*"), X("elb"));
         TASSERT(nl->getLength() == 2);
         TASSERT(nl->item(0) == elb);
         TASSERT(nl->item(1) == ele);
 
-        nl = doc->getElementsByTagNameNS(tempStr5, tempStr);
+        nl = doc->getElementsByTagNameNS(X("http://nsa"), X("*"));
         TASSERT(nl->getLength() == 2);
         TASSERT(nl->item(0) == ela);
         TASSERT(nl->item(1) == eld);
 
-        nl = doc->getElementsByTagNameNS(tempStr, tempStr);
+        nl = doc->getElementsByTagNameNS(X("*"), X("*"));
         TASSERT(nl->getLength() == 6);     // Gets the document root element, plus 5 more
 
         TASSERT(nl->item(6) == 0);
         // TASSERT(nl->item(-1) == 0);
 
-        nl = rootEl->getElementsByTagNameNS(tempStr, tempStr);
+        nl = rootEl->getElementsByTagNameNS(X("*"), X("*"));
         TASSERT(nl->getLength() == 5);
 
 
-        XMLString::transcode("d:ela", tempStr2, 3999);
-        nl = doc->getElementsByTagNameNS(tempStr5, tempStr2);
+        nl = doc->getElementsByTagNameNS(X("http://nsa"), X("d:ela"));
         TASSERT(nl->getLength() == 0);
 
 
@@ -1428,8 +1256,8 @@ void DOMNSTests()
         // Node lists are Live
         //
 
-        nl = doc->getElementsByTagNameNS(tempStr, tempStr);
-        DOMNodeList* nla = ela->getElementsByTagNameNS(tempStr, tempStr);
+        nl = doc->getElementsByTagNameNS(X("*"), X("*"));
+        DOMNodeList* nla = ela->getElementsByTagNameNS(X("*"), X("*"));
 
         TASSERT(nl->getLength() == 6);
         TASSERT(nla->getLength() == 0);
@@ -1455,94 +1283,72 @@ void DOMNSTests()
 
         // Set up an initial (root element only) document.
         //
-        DOMImplementation* impl = DOMImplementation::getImplementation();
+        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(X("Core"));
 
-        XMLString::transcode("foo:docName", tempStr, 3999);
-        XMLString::transcode("pubId", tempStr2, 3999);
-        XMLString::transcode("http://sysId", tempStr3, 3999);
-        DOMDocumentType* dt = impl->createDocumentType(tempStr, tempStr2, tempStr3);
+        DOMDocumentType* dt = impl->createDocumentType(X("foo:docName"), X("pubId"), X("http://sysId"));
 
-        XMLString::transcode("http://document.namespace", tempStr2, 3999);
-        DOMDocument* doc = impl->createDocument(tempStr2, tempStr, dt);
+        DOMDocument* doc = impl->createDocument(X("http://document.namespace"), X("foo:docName"), dt);
         DOMElement* rootEl = doc->getDocumentElement();
 
         //
         // Create a set of attributes and hang them on the root element.
         //
-        XMLString::transcode("http://nsa", tempStr5, 3999);
-        XMLString::transcode("http://nsb", tempStr4, 3999);
-        XMLString::transcode("", tempStr3, 3999);
-        XMLString::transcode("a:attra", tempStr2, 3999);
 
-        DOMAttr* attra = doc->createAttributeNS(tempStr5, tempStr2);
+        DOMAttr* attra = doc->createAttributeNS(X("http://nsa"), X("a:attra"));
         rootEl->setAttributeNodeNS(attra);
 
-        XMLString::transcode("attrb", tempStr, 3999);
-        DOMAttr* attrb = doc->createAttributeNS(tempStr4, tempStr);
+        DOMAttr* attrb = doc->createAttributeNS(X("http://nsb"), X("attrb"));
         rootEl->setAttributeNodeNS(attrb);
 
-        XMLString::transcode("attrc", tempStr, 3999);
-        DOMAttr* attrc = doc->createAttributeNS(tempStr3, tempStr);
+        DOMAttr* attrc = doc->createAttributeNS(XMLUni::fgZeroLenString, X("attrc"));
         rootEl->setAttributeNodeNS(attrc);
 
-        XMLString::transcode("d:attra", tempStr, 3999);
-        DOMAttr* attrd = doc->createAttributeNS(tempStr5, tempStr);
+        DOMAttr* attrd = doc->createAttributeNS(X("http://nsa"), X("d:attra"));
         rootEl->setAttributeNodeNS(attrd);
 
-        XMLString::transcode("http://nse", tempStr2, 3999);
-        XMLString::transcode("attrb", tempStr, 3999);
-        DOMAttr* attre = doc->createAttributeNS(tempStr2, tempStr);
+        DOMAttr* attre = doc->createAttributeNS(X("http://nse"), X("attrb"));
         rootEl->setAttributeNodeNS(attre);
 
         //
         // Check that the attribute nodes were created with the correct properties.
         //
-        XMLString::transcode("a:attra", tempStr2, 3999);
-        TASSERT(!XMLString::compareString(attra->getNodeName(), tempStr2));
-        TASSERT(!XMLString::compareString(attra->getNamespaceURI(), tempStr5));
+        TASSERT(!XMLString::compareString(attra->getNodeName(), X("a:attra")));
+        TASSERT(!XMLString::compareString(attra->getNamespaceURI(), X("http://nsa")));
 
-        XMLString::transcode("attra", tempStr, 3999);
-        TASSERT(!XMLString::compareString(attra->getLocalName(), tempStr));
-        TASSERT(!XMLString::compareString(attra->getName(), tempStr2));
+        TASSERT(!XMLString::compareString(attra->getLocalName(), X("attra")));
+        TASSERT(!XMLString::compareString(attra->getName(), X("a:attra")));
         TASSERT(attra->getNodeType() == DOMNode::ATTRIBUTE_NODE);
-        TASSERT(!XMLString::compareString(attra->getNodeValue(), tempStr3));
+        TASSERT(!XMLString::compareString(attra->getNodeValue(), XMLUni::fgZeroLenString));
 
-        XMLString::transcode("a", tempStr, 3999);
-        TASSERT(!XMLString::compareString(attra->getPrefix(), tempStr));
+        TASSERT(!XMLString::compareString(attra->getPrefix(), X("a")));
         TASSERT(attra->getSpecified() == true);
-        TASSERT(!XMLString::compareString(attra->getValue(), tempStr3));
+        TASSERT(!XMLString::compareString(attra->getValue(), XMLUni::fgZeroLenString));
         TASSERT(attra->getOwnerElement() == 0);
 
         // Test methods of NamedNodeMap
         DOMNamedNodeMap* nnm = rootEl->getAttributes();
         TASSERT(nnm->getLength() == 4);
 
-        XMLString::transcode("attra", tempStr2, 3999);
-        XMLString::transcode("attrb", tempStr, 3999);
 
-        TASSERT(nnm->getNamedItemNS(tempStr5, tempStr2) == attrd);
-        TASSERT(nnm->getNamedItemNS(tempStr4, tempStr) == attrb);
-        TASSERT(nnm->getNamedItemNS(tempStr3, tempStr2) == 0);
-        TASSERT(nnm->getNamedItemNS(tempStr5, tempStr) == 0);
+        TASSERT(nnm->getNamedItemNS(X("http://nsa"), X("attra")) == attrd);
+        TASSERT(nnm->getNamedItemNS(X("http://nsb"), X("attrb")) == attrb);
+        TASSERT(nnm->getNamedItemNS(XMLUni::fgZeroLenString, X("attra")) == 0);
+        TASSERT(nnm->getNamedItemNS(X("http://nsa"), X("attrb")) == 0);
 
-        XMLString::transcode("http://nse", tempStr2, 3999);
-        TASSERT(nnm->getNamedItemNS(tempStr2, tempStr) == attre);
+        TASSERT(nnm->getNamedItemNS(X("http://nse"), X("attrb")) == attre);
 
-        XMLString::transcode("attrc", tempStr2, 3999);
-        TASSERT(nnm->getNamedItemNS(tempStr3, tempStr2) == attrc);
+        TASSERT(nnm->getNamedItemNS(XMLUni::fgZeroLenString, X("attrc")) == attrc);
 
         // Test hasAttributes, hasAttribute, hasAttributeNS
         TASSERT(doc->hasAttributes() ==  false);
         TASSERT(attrc->hasAttributes() == false);
         TASSERT(rootEl->hasAttributes() == true);
-        TASSERT(rootEl->hasAttribute(tempStr2) == true);
+        TASSERT(rootEl->hasAttribute(X("attrc")) == true);
 
-        XMLString::transcode("wrong", tempStr, 3999);
-        TASSERT(rootEl->hasAttribute(tempStr) == false);
+        TASSERT(rootEl->hasAttribute(X("wrong")) == false);
 
-        XMLString::transcode("attra", tempStr2, 3999);
-        TASSERT(rootEl->hasAttributeNS(tempStr5, tempStr2) == true);
-        TASSERT(rootEl->hasAttributeNS(tempStr5, tempStr) == false);
+        TASSERT(rootEl->hasAttributeNS(X("http://nsa"), X("attra")) == true);
+        TASSERT(rootEl->hasAttributeNS(X("http://nsa"), X("wrong")) == false);
         delete doc;
         delete dt;
     }

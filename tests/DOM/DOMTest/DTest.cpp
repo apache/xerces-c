@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2002/06/03 20:51:21  tng
+ * DOM L3: Add DOMImplementationRegistry and DOMImplementationSource
+ *
  * Revision 1.19  2002/05/21 18:50:16  tng
  * Test case update: modify to use the latest DOM interface
  *
@@ -151,7 +154,10 @@ DOMTest::DOMTest()
  *
  */
 DOMDocument* DOMTest::createDocument() {
-    DOMImplementation* impl = DOMImplementation::getImplementation();
+    XMLCh coreStr[100];
+    XMLString::transcode("Core",coreStr,99);
+
+    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(coreStr);
     return impl->createDocument();
 };
 

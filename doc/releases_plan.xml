@@ -98,7 +98,7 @@ Those features that have 'Complete' status will be included in the 'Next Target 
             optionally ignore external DTD</td>
         <td>Tinny Ng</td>
         <td>May</td>
-        <td></td>
+        <td>Complete</td>
     </tr>
 
     <tr>
@@ -109,10 +109,10 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>DOM L3 Core: DOMImplementationSource</td>
+        <td>DOM L3 Core: DOMImplementationRegistry and DOMImplementationSource</td>
         <td>Tinny Ng</td>
         <td>June</td>
-        <td></td>
+        <td>Complete</td>
     </tr>
 
     <tr>
@@ -152,16 +152,16 @@ Those features that have 'Complete' status will be included in the 'Next Target 
     </tr>
 
     <tr>
-        <td>DOM L3 Load: DOMInputSource, DOMEntityResolver, DOMBuilder</td>
+        <td>DOM L3 Load: DOMInputSource, DOMEntityResolver, DOMBuilder, DOMImplementationLS</td>
         <td>Khaled Noaman</td>
         <td>May</td>
         <td>Complete</td>
     </tr>
     <tr>
-        <td>DOM L3 Save: DOMWriter</td>
+        <td>DOM L3 Save: DOMWriter, DOMWriterFilter, DOMOutputSource(or similar class)</td>
         <td>PeiYong Zhang</td>
-        <td>June</td>
-        <td></td>
+        <td>May</td>
+        <td>Complete</td>
     </tr>
 
     <tr>
@@ -180,6 +180,13 @@ Those features that have 'Complete' status will be included in the 'Next Target 
 
     <tr>
         <td>SAX 2.0.1</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>Schema 1.1</td>
         <td></td>
         <td></td>
         <td></td>

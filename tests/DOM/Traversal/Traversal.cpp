@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2002/06/03 20:51:46  tng
+ * DOM L3: Add DOMImplementationRegistry and DOMImplementationSource
+ *
  * Revision 1.9  2002/05/27 21:11:26  tng
  * Add DOMDocumentRange and DOMDocumentTraversal.
  *
@@ -184,6 +187,9 @@ int  main()
 
     // Create a XMLCh buffer for string manipulation
     XMLCh tempStr[4000];
+    XMLCh coreStr[100];
+    XMLString::transcode("Core",coreStr,99);
+
 
 
     //
@@ -205,7 +211,7 @@ int  main()
                       - comment
          */
 
-        DOMImplementation* impl = DOMImplementation::getImplementation();
+        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(coreStr);
         DOMDocument* doc = impl->createDocument();
 
         //Creating a root element

@@ -1,10 +1,10 @@
-#ifndef DOMHEADER_GUARD_HPP
-#define DOMHEADER_GUARD_HPP
+#ifndef DOMImplementationSource_HEADER_GUARD_
+#define DOMImplementationSource_HEADER_GUARD_
 
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,7 +51,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 2001, International
+ * originally based on software copyright (c) 2002, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -61,53 +61,66 @@
  * $Id$
  */
 
-//
-//  This is the primary header file for inclusion in application
-//  programs using the C++ XML Document Object Model API.
-//
+/**
+  * Introduced in DOM Level 3
+  *
+  * This interface permits a DOM implementer to supply one or more
+  * implementations, based upon requested features. Each implemented
+  * <code>DOMImplementationSource</code> object is listed in the
+  * binding-specific list of available sources so that its
+  * <code>DOMImplementation</code> objects are made available.
+  * <p>See also the <a href='http://www.w3.org/2001/10/WD-DOM-Level-3-Core-20011017'>Document Object Model (DOM) Level 3 Core Specification</a>.
+  */
 
-#include <xercesc/dom/DOMAttr.hpp>
-#include <xercesc/dom/DOMCDATASection.hpp>
-#include <xercesc/dom/DOMCharacterData.hpp>
-#include <xercesc/dom/DOMComment.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMDocumentFragment.hpp>
-#include <xercesc/dom/DOMDocumentType.hpp>
-#include <xercesc/dom/DOMElement.hpp>
-#include <xercesc/dom/DOMEntity.hpp>
-#include <xercesc/dom/DOMEntityReference.hpp>
-#include <xercesc/dom/DOMEntityResolver.hpp>
-#include <xercesc/dom/DOMError.hpp>
-#include <xercesc/dom/DOMErrorHandler.hpp>
-#include <xercesc/dom/DOMException.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMNamedNodeMap.hpp>
-#include <xercesc/dom/DOMNode.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMNotation.hpp>
-#include <xercesc/dom/DOMProcessingInstruction.hpp>
-#include <xercesc/dom/DOMText.hpp>
+class DOMImplementation;
 
-// Introduced in DOM Level 2
-#include <xercesc/dom/DOMDocumentRange.hpp>
-#include <xercesc/dom/DOMDocumentTraversal.hpp>
-#include <xercesc/dom/DOMNodeFilter.hpp>
-#include <xercesc/dom/DOMNodeIterator.hpp>
-#include <xercesc/dom/DOMRange.hpp>
-#include <xercesc/dom/DOMRangeException.hpp>
-#include <xercesc/dom/DOMTreeWalker.hpp>
+class CDOM_EXPORT DOMImplementationSource
+{
+protected :
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Constructors */
+    //@{
 
-// Introduced in DOM Level 3
-// Experimental - subject to change
-#include <xercesc/dom/DOMBuilder.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMImplementationRegistry.hpp>
-#include <xercesc/dom/DOMImplementationSource.hpp>
-#include <xercesc/dom/DOMInputSource.hpp>
-#include <xercesc/dom/DOMLocator.hpp>
-#include <xercesc/dom/DOMWriter.hpp>
-#include <xercesc/dom/DOMWriterFilter.hpp>
+    /** Default constructor */
+    DOMImplementationSource() {};
+
+    //@}
 
 
+public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
+    /**
+     * Destructor
+     *
+     */
+    virtual ~DOMImplementationSource() {};
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Virtual DOMImplementationSource interface */
+    // -----------------------------------------------------------------------
+    /** @name Virtual DOMImplementationSource interface */
+    //@{
+    /**
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * A method to request a DOM implementation.
+     * @param features A string that specifies which features are required.
+     *   This is a space separated list in which each feature is specified
+     *   by its name optionally followed by a space and a version number.
+     *   This is something like: "XML 1.0 Traversal Events 2.0"
+     * @return An implementation that has the desired features, or
+     *   <code>null</code> if this source has none.
+     */
+    virtual DOMImplementation* getDOMImplementation(const XMLCh* features) const = 0;
+    //@}
+
+};
 
 #endif

@@ -120,7 +120,8 @@ int main (int argc, char* args[]) {
          <source>
    DOMNode*       aNode;
    DOMNode* docRootNode;
-   aNode = someDocument->createElement(L"ElementName");
+
+   aNode = someDocument->createElement(anElementName);
    docRootNode = someDocument->getDocumentElement();
    docRootNode->appendChild(aNode);
          </source>
@@ -141,33 +142,42 @@ int main (int argc, char* args[]) {
     //
 
     {
-        DOMDocument*   doc = DOMImplementation::getImplementation()->createDocument(L"", L"root", 0);
+        XMLCh* tempStr[100];
 
-        DOMElement*   root = doc->getDocumentElement();       
-        
-        DOMElement*   e1 = doc->createElement(L"FirstElement");
-        root->appendChild(e1);        
-        
-        DOMElement*   e2 = doc->createElement(L"SecondElement");
-        root->appendChild(e2);       
+        XMLString::transcode("Range", tempStr, 99);
+        DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(tempStr, 0);
 
-        DOMText*       textNode = doc->createTextNode(L"aTextNode");
+        XMLString::transcode("root", tempStr, 99);
+        DOMDocument*   doc = impl->createDocument(0, tempStr, 0);
+        DOMElement*   root = doc->getDocumentElement();
+
+        XMLString::transcode("FirstElement", tempStr, 99);
+        DOMElement*   e1 = doc->createElement(tempStr);
+        root->appendChild(e1);
+
+        XMLString::transcode("SecondElement", tempStr, 99);
+        DOMElement*   e2 = doc->createElement(tempStr);
+        root->appendChild(e2);
+
+        XMLString::transcode("aTextNode", tempStr, 99);
+        DOMText*       textNode = doc->createTextNode(tempStr);
         e1->appendChild(textNode);
-        
+
         // call release() to release the resource associated with the range after done
         DOMRange* range = doc->createRange();
         range->release();
-        
+
         // removedElement is an orphaned node, call release() to release associated resource
-        DOMElement* removedElement = root->removeChild(e2);        
+        DOMElement* removedElement = root->removeChild(e2);
         removedElement->release();
 
         // no need to release this returned object which is owned by implementation
-        DOMNodeList*    nodeList = doc->getElementsByTagName(L"*");
-        
+        XMLString::transcode("*", tempStr, 99);
+        DOMNodeList*    nodeList = doc->getElementsByTagName(tempStr);
+
         // done with the document, call release() to release the entire document resources
         doc->release();
-    };        
+    };
          </source>
        </s3>
 
