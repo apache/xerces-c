@@ -239,6 +239,11 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
         getScanner()->setValidateAnnotations(state);
     }
+    else if (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+    {
+        getScanner()->setIdentityConstraintChecking(state);
+    }
+
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -357,7 +362,11 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) co
         (XMLString::compareIString(name, XMLUni::fgXercesUserAdoptsDOMDocument) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgXercesCalculateSrcOfs) == 0) ||
         (XMLString::compareIString(name, XMLUni::fgXercesStandardUriConformant) == 0) ||
-        (XMLString::compareIString(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0)) {
+        (XMLString::compareIString(name, XMLUni::fgXercesDOMHasPSVIInfo) == 0) ||
+        (XMLString::compareIString(name, XMLUni::fgXercesValidateAnnotations) == 0) ||
+        (XMLString::compareIString(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0) ||
+        (XMLString::compareIString(name, XMLUni::fgXercesIdentityConstraintChecking) == 0)
+       ) {
         return true;
     }
 
