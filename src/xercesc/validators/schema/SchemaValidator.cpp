@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2002/12/12 20:53:28  knoaman
+ * Schema Errata E1-15.
+ *
  * Revision 1.22  2002/12/04 02:47:26  knoaman
  * scanner re-organization.
  *
@@ -1257,7 +1260,10 @@ void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
     // Check for pointless occurrences of all, choice, sequence.  The result is
     // the contentspec which is not pointless. If the result is a non-pointless
     // group, Vector is filled  in with the children of interest
-    if (!curNode || !baseNode)
+    if (curNode && !baseNode)
+        ThrowXML(RuntimeException, XMLExcepts::PD_EmptyBase);
+
+    if (!curNode)
         return;
 
     ContentSpecNode* curSpecNode = curNode;

@@ -156,7 +156,6 @@
             <Message Id="IC_KeyRefReferNotFound" Text="Key reference declaration '{0}' refers to unknown key with name '{1}'."/>
             <Message Id="IC_KeyRefCardinality" Text="Cardinality of fields for keyref '{0}' and key '{1}' must match."/>
             <Message Id="IC_XPathExprMissing" Text="Xpath expression is either missing or empty"/>
-            <Message Id="PD_EmptyBase" Text="The complexType has content, while base is empty"/>
             <Message Id="AttUseCorrect" Text="The {value constraint} of an attribute ref is not fixed or different from the fixed {value constraint} of '{0}'"/>
             <Message Id="AttDeclPropCorrect3" Text="The {type definition} for attribute '{0}={1}' is or is derived from ID, and must not have {value constraint}"/>
             <Message Id="AttDeclPropCorrect5" Text="More than one attribute derived from type ID cannot appear in the same complex type - '{0}' ignored"/>
@@ -753,6 +752,7 @@
             <Message Id="DateTime_min_invalid"        Text="Minute must have values 0-59! '{0}' "/>
             <Message Id="DateTime_second_invalid"     Text="Second must have values 0-60! '{0}' "/>
             <Message Id="DateTime_tz_hh_invalid"      Text="Minute must have values 0-59! '{0}' "/>
+            <Message Id="PD_EmptyBase" Text="Particle Derivation Restriction: The derived complexType has content, while base is empty."/>
             <Message Id="PD_NSCompat1" Text="NSCompat: The namespace of '{0}' is not allowed by wildcard in base"/>
             <Message Id="PD_OccurRangeE" Text="The occurrence range of '{0}' is not a valid restriction of base element's range"/>
             <Message Id="PD_NameTypeOK1" Text="NameAndTypeOK: The Element name/uri in restriction does not match that of corresponding base element"/>
