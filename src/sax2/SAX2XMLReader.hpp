@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/06/19 16:44:31  tng
+ * Add installAdvDocHandler to SAX2XMLReader as the code is there already.
+ *
  * Revision 1.8  2001/06/04 21:03:07  jberry
  * Add pure virtual getErrorCount to SAX2XMLReader interface.
  *
@@ -110,6 +113,7 @@ class EntityResolver;
 class ErrorHandler;
 class InputSource;
 class LexicalHandler;
+class XMLDocumentHandler;
 
 class SAX2_EXPORT SAX2XMLReader
 {
@@ -438,6 +442,39 @@ public:
 	  *
 	  */
 	virtual XMLValidator* getValidator() const = 0;
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Advanced document handler list maintenance methods
+    // -----------------------------------------------------------------------
+
+    /** @name Advanced document handler list maintenance methods */
+    //@{
+    /**
+      * This method installs the specified 'advanced' document callback
+      * handler, thereby allowing the user to customize the processing,
+      * if they choose to do so. Any number of advanced callback handlers
+      * maybe installed.
+      *
+      * <p>The methods in the advanced callback interface represent
+      * Xerces-C extensions. There is no specification for this interface.</p>
+      *
+      * @param toInstall A pointer to the users advanced callback handler.
+      *
+      * @see #removeAdvDocHandler
+      */
+    virtual void installAdvDocHandler(XMLDocumentHandler* const toInstall) = 0;
+
+    /**
+      * This method removes the 'advanced' document handler callback from
+      * the underlying parser scanner. If no handler is installed, advanced
+      * callbacks are not invoked by the scanner.
+      * @param toRemove A pointer to the advanced callback handler which
+      *                 should be removed.
+      *
+      * @see #installAdvDocHandler
+      */
+    virtual bool removeAdvDocHandler(XMLDocumentHandler* const toRemove) = 0;
     //@}
 
 private :

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/06/19 16:45:08  tng
+ * Add installAdvDocHandler to SAX2XMLReader as the code is there already.
+ *
  * Revision 1.13  2001/06/03 19:26:19  jberry
  * Add support for querying error count following parse; enables simple parse without requiring error handler.
  *
@@ -330,6 +333,93 @@ SAX2XMLReaderImpl::~SAX2XMLReaderImpl()
     delete prefixCounts ;
 }
 
+// ---------------------------------------------------------------------------
+//  SAX2XMLReaderImpl: Advanced document handler list maintenance methods
+// ---------------------------------------------------------------------------
+void SAX2XMLReaderImpl::installAdvDocHandler(XMLDocumentHandler* const toInstall)
+{
+    // See if we need to expand and do so now if needed
+    if (fAdvDHCount == fAdvDHListSize)
+    {
+        // Calc a new size and allocate the new temp buffer
+        const unsigned int newSize = (unsigned int)(fAdvDHListSize * 1.5);
+        XMLDocumentHandler** newList = new XMLDocumentHandler*[newSize];
+
+        // Copy over the old data to the new list and zero out the rest
+        memcpy(newList, fAdvDHList, sizeof(void*) * fAdvDHListSize);
+        memset
+        (
+            &newList[fAdvDHListSize]
+            , 0
+            , sizeof(void*) * (newSize - fAdvDHListSize)
+        );
+
+        // And now clean up the old array and store the new stuff
+        delete [] fAdvDHList;
+        fAdvDHList = newList;
+        fAdvDHListSize = newSize;
+    }
+
+    // Add this new guy into the empty slot
+    fAdvDHList[fAdvDHCount++] = toInstall;
+
+    //
+    //  Install ourself as the document handler with the scanner. We might
+    //  already be, but its not worth checking, just do it.
+    //
+    fScanner->setDocHandler(this);
+}
+
+
+bool SAX2XMLReaderImpl::removeAdvDocHandler(XMLDocumentHandler* const toRemove)
+{
+    // If our count is zero, can't be any installed
+    if (!fAdvDHCount)
+        return false;
+
+    //
+    //  Search the array until we find this handler. If we find a null entry
+    //  first, we can stop there before the list is kept contiguous.
+    //
+    unsigned int index;
+    for (index = 0; index < fAdvDHCount; index++)
+    {
+        //
+        //  We found it. We have to keep the list contiguous, so we have to
+        //  copy down any used elements after this one.
+        //
+        if (fAdvDHList[index] == toRemove)
+        {
+            //
+            //  Optimize if only one entry (pretty common). Otherwise, we
+            //  have to copy them down to compact them.
+            //
+            if (fAdvDHCount > 1)
+            {
+                index++;
+                while (index < fAdvDHCount)
+                    fAdvDHList[index - 1] = fAdvDHList[index];
+            }
+
+            // Bump down the count and zero out the last one
+            fAdvDHCount--;
+            fAdvDHList[fAdvDHCount] = 0;
+
+            //
+            //  If this leaves us with no advanced handlers and there is
+            //  no SAX doc handler installed on us, then remove us from the
+            //  scanner as the document handler.
+            //
+            if (!fAdvDHCount && !fDocHandler)
+                fScanner->setDocHandler(0);
+
+            return true;
+        }
+    }
+
+    // Never found it
+    return false;
+}
 
 // ---------------------------------------------------------------------------
 //  SAX2XMLReaderImpl Validator functions
@@ -483,6 +573,7 @@ void SAX2XMLReaderImpl::parse (const   char* const     systemId)
     }
 }
 
+
 // ---------------------------------------------------------------------------
 //  SAX2XMLReaderImpl: Overrides of the XMLDocumentHandler interface
 // ---------------------------------------------------------------------------
@@ -538,12 +629,20 @@ void SAX2XMLReaderImpl::docComment(const XMLCh* const commentText)
 }
 
 
-void SAX2XMLReaderImpl::XMLDecl(const   XMLCh* const
-                        , const XMLCh* const
-                        , const XMLCh* const
-                        , const XMLCh* const)
+void SAX2XMLReaderImpl::XMLDecl( const  XMLCh* const    versionStr
+                        , const XMLCh* const    encodingStr
+                        , const XMLCh* const    standaloneStr
+                        , const XMLCh* const    actualEncodingStr
+                        )
 {
-    // SAX has no way to report this event
+    // SAX has no way to report this event. But, if there are any installed
+    //  advanced handlers, then lets call them with this info.
+    //
+    for (unsigned int index = 0; index < fAdvDHCount; index++)
+        fAdvDHList[index]->XMLDecl( versionStr,
+                                    encodingStr,
+                                    standaloneStr,
+                                    actualEncodingStr );
 }
 
 

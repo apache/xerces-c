@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/06/19 16:45:08  tng
+ * Add installAdvDocHandler to SAX2XMLReader as the code is there already.
+ *
  * Revision 1.10  2001/06/04 21:01:49  jberry
  * getErrorCount is virtual in this class reflecting derivation from SAX2XMLReader.
  *
@@ -1018,6 +1021,39 @@ public :
 	virtual XMLValidator* getValidator() const;
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Advanced document handler list maintenance methods
+    // -----------------------------------------------------------------------
+
+    /** @name Advanced document handler list maintenance methods */
+    //@{
+    /**
+      * This method installs the specified 'advanced' document callback
+      * handler, thereby allowing the user to customize the processing,
+      * if they choose to do so. Any number of advanced callback handlers
+      * maybe installed.
+      *
+      * <p>The methods in the advanced callback interface represent
+      * Xerces-C extensions. There is no specification for this interface.</p>
+      *
+      * @param toInstall A pointer to the users advanced callback handler.
+      *
+      * @see #removeAdvDocHandler
+      */
+    virtual void installAdvDocHandler(XMLDocumentHandler* const toInstall);
+
+    /**
+      * This method removes the 'advanced' document handler callback from
+      * the underlying parser scanner. If no handler is installed, advanced
+      * callbacks are not invoked by the scanner.
+      * @param toRemove A pointer to the advanced callback handler which
+      *                 should be removed.
+      *
+      * @see #installAdvDocHandler
+      */
+    virtual bool removeAdvDocHandler(XMLDocumentHandler* const toRemove);
+    //@}
+
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -1036,29 +1072,68 @@ private :
     //  fDocHandler
     //      The installed SAX content handler, if any. Null if none.
     //
-	//  fnamespacePrefix
-	//      Indicates whether the namespace-prefix feature is on or off.
-	//
-	//  fautoValidation
-	//      Indicates whether automatic validation is on or off
-	//
-	//  fValidation
-	//      Indicates whether the 'validation' core features is on or off
-	//
-	//  fReuseGrammar
-	//      Tells the parser whether it should reuse the grammar or not.
-   //      If true, there cannot be any internal subset.
-	//
-	//	fStringBuffers
-	//		Any temporary strings we need are pulled out of this pool
-	//
-	//	fPrefixes
-	//		A Stack of the current namespace prefixes that need calls to
-	//		endPrefixMapping
-	//
-	//	fPrefixCounts
-	//		A Stack of the number of prefixes that need endPrefixMapping
-	//		calls for that element
+    //  fnamespacePrefix
+    //      Indicates whether the namespace-prefix feature is on or off.
+    //
+    //  fautoValidation
+    //      Indicates whether automatic validation is on or off
+    //
+    //  fValidation
+    //      Indicates whether the 'validation' core features is on or off
+    //
+    //  fReuseGrammar
+    //      Tells the parser whether it should reuse the grammar or not.
+    //      If true, there cannot be any internal subset.
+    //
+    //	fStringBuffers
+    //		Any temporary strings we need are pulled out of this pool
+    //
+    //	fPrefixes
+    //		A Stack of the current namespace prefixes that need calls to
+    //		endPrefixMapping
+    //
+    //	fPrefixCounts
+    //		A Stack of the number of prefixes that need endPrefixMapping
+    //		calls for that element
+    //
+    //  fDTDHandler
+    //      The installed SAX DTD handler, if any. Null if none.
+    //
+    //  fElemDepth
+    //      This is used to track the element nesting depth, so that we can
+    //      know when we are inside content. This is so we can ignore char
+    //      data outside of content.
+    //
+    //  fEntityResolver
+    //      The installed SAX entity handler, if any. Null if none.
+    //
+    //  fErrorHandler
+    //      The installed SAX error handler, if any. Null if none.
+    //
+    //  fLexicalHandler
+    //      The installed SAX lexical handler, if any.  Null if none.
+    //
+    //  fAdvDHCount
+    //  fAdvDHList
+    //  fAdvDHListSize
+    //      This is an array of pointers to XMLDocumentHandlers, which is
+    //      how we see installed advanced document handlers. There will
+    //      usually not be very many at all, so a simple array is used
+    //      instead of a collection, for performance. It will grow if needed,
+    //      but that is unlikely.
+    //
+    //      The count is how many handlers are currently installed. The size
+    //      is how big the array itself is (for expansion purposes.) When
+    //      count == size, is time to expand.
+    //
+    //  fParseInProgress
+    //      This flag is set once a parse starts. It is used to prevent
+    //      multiple entrance or reentrance of the parser.
+    //
+    //  fScanner
+    //      The scanner being used by this parser. It is created internally
+    //      during construction.
+    //
     // -----------------------------------------------------------------------
 	VecAttributesImpl		   fAttrList ;
 	ContentHandler*			   fDocHandler ;
@@ -1077,7 +1152,7 @@ private :
     unsigned int               fElemDepth;
     EntityResolver*            fEntityResolver;
     ErrorHandler*              fErrorHandler;
-   LexicalHandler*            fLexicalHandler;
+    LexicalHandler*            fLexicalHandler;
     unsigned int               fAdvDHCount;
     XMLDocumentHandler**       fAdvDHList;
     unsigned int               fAdvDHListSize;
