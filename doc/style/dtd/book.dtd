@@ -9,7 +9,7 @@
 <!ELEMENT book (resources?|document|hidden|faqs|changes|group|container|external|separator)+>
 <!ATTLIST book title     CDATA #REQUIRED
                copyright CDATA #IMPLIED>
-               
+
 <!ELEMENT resources EMPTY>
 <!ATTLIST resources source CDATA #REQUIRED>
 
@@ -29,13 +29,13 @@
 
 <!ELEMENT changes EMPTY>
 <!ATTLIST changes id     ID    #REQUIRED
-                  source CDATA #REQUIRED                  
+                  source CDATA #REQUIRED
 		  label  CDATA #REQUIRED>
 
 <!ELEMENT group (entry)+>
 <!ATTLIST group id    ID    #IMPLIED
                 label CDATA #REQUIRED
-		title CDATA #REQUIRED>
+		title CDATA #IMPLIED>
 
 <!ELEMENT container (entry)+>
 <!ATTLIST container id    ID    #IMPLIED
@@ -49,7 +49,7 @@
 <!ELEMENT external EMPTY>
 <!ATTLIST external label CDATA #REQUIRED
                    href  CDATA #REQUIRED>
-                   
+
 <!ELEMENT separator EMPTY>
 
 <!-- CVS $Revision$ $Date$ -->
