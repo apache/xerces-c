@@ -1757,9 +1757,6 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
     unsigned int    attCount = 0;
     unsigned int    curAttListSize = fAttrList->size();
     wasAdded = false;
-    // clear the map used to detect duplicate attributes
-    fUndeclaredAttrRegistry->removeAll();
-    fUndeclaredAttrRegistryNS->removeAll();
 
     fElemCount++;
 
@@ -2048,6 +2045,13 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
         }
     }
 
+    if(attCount)
+    {
+        // clean up after ourselves:
+        // clear the map used to detect duplicate attributes
+        fUndeclaredAttrRegistry->removeAll();
+    }
+
     //  Ok, so lets get an enumerator for the attributes of this element
     //  and run through them for well formedness and validity checks. But
     //  make sure that we had any attributes before we do it, since the list
@@ -2224,10 +2228,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
     // Skip any whitespace after the name
     fReaderMgr.skipPastSpaces();
-
-    // clear the map used to detect duplicate attributes
-    fUndeclaredAttrRegistry->removeAll();
-    fUndeclaredAttrRegistryNS->removeAll();
 
     //  First we have to do the rawest attribute scan. We don't do any
     //  normalization of them at all, since we don't know yet what type they
@@ -2841,6 +2841,13 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     //  it goes in with the number of values we got during the raw scan of
     //  explictly provided attrs above.
     attCount = buildAttList(*fRawAttrList, attCount, elemDecl, *fAttrList);
+    if(attCount)
+    {
+        // clean up after ourselves:
+        // clear the map used to detect duplicate attributes
+        fUndeclaredAttrRegistry->removeAll();
+        fUndeclaredAttrRegistryNS->removeAll();
+    }
 
     // activate identity constraints
     if (fGrammar  && 

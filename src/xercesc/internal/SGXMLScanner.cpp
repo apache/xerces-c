@@ -1693,9 +1693,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         fElemStack.addChild(elemDecl->getElementName(), true);
     }
 
-    // clear the map used to detect duplicate attributes
-    fUndeclaredAttrRegistryNS->removeAll();
-
     // PSVI handling:  must reset this, even if no attributes...
     if(getPSVIHandler())
         fPSVIAttrList->reset();
@@ -1708,6 +1705,13 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     //  it goes in with the number of values we got during the raw scan of
     //  explictly provided attrs above.
     attCount = buildAttList(*fRawAttrList, attCount, elemDecl, *fAttrList);
+
+    if(attCount)
+    {
+        // clean up after ourselves:
+        // clear the map used to detect duplicate attributes
+        fUndeclaredAttrRegistryNS->removeAll();
+    }
 
     // activate identity constraints
     if (toCheckIdentityConstraint()) 

@@ -1241,8 +1241,6 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
     unsigned int    attCount = 0;
     unsigned int    curAttListSize = fAttrList->size();
     wasAdded = false;
-    // clear the map used to detect duplicate attributes
-    fUndeclaredAttrRegistry->removeAll();
 
     fElemCount++;
 
@@ -1590,6 +1588,13 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
     //  Make an initial pass through the list and find any xmlns attributes.
     if (fDoNamespaces && attCount)
       scanAttrListforNameSpaces(fAttrList, attCount, elemDecl);
+
+    if(attCount)
+    {
+        // clean up after ourselves:
+        // clear the map used to detect duplicate attributes
+        fUndeclaredAttrRegistry->removeAll();
+    }
 
     //  Now lets get the fAttrList filled in. This involves faulting in any
     //  defaulted and fixed attributes and normalizing the values of any that
