@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/08/21 16:36:08  peiyongz
+ * use PlatformUtils::panic()
+ *
  * Revision 1.14  2003/05/15 18:29:49  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -213,7 +216,7 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
     {
         // Probably have to call panic here
         printf("Could not open catalog:\n %s\n or %s\n", catuser, catdefault);
-        exit(1);
+        XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
     }
 
     if (XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain))
