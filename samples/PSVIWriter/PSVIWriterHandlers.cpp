@@ -1009,7 +1009,7 @@ void PSVIWriterHandlers::processScope(XSComplexTypeDefinition* enclosingCTD, sho
 }
 
 void PSVIWriterHandlers::processValueConstraint(XSConstants::VALUE_CONSTRAINT valueConstraintType, const XMLCh* constraintValue) {
-	if (valueConstraintType == XSConstants::VC_NONE) {
+	if (valueConstraintType == XSConstants::VALUE_CONSTRAINT_NONE) {
 		sendElementEmpty(PSVIUni::fgValueConstraint);
 	} else {
 		sendIndentedElement(PSVIUni::fgValueConstraint);
@@ -1296,9 +1296,9 @@ const XMLCh* PSVIWriterHandlers::translateScope(XSConstants::SCOPE scope) {
 
 const XMLCh* PSVIWriterHandlers::translateValueConstraint(XSConstants::VALUE_CONSTRAINT constraintKind) {
 	switch (constraintKind) {
-		case XSConstants::VC_DEFAULT :
+		case XSConstants::VALUE_CONSTRAINT_DEFAULT :
 			return PSVIUni::fgDefault;
-		case XSConstants::VC_FIXED :
+		case XSConstants::VALUE_CONSTRAINT_FIXED :
 			return PSVIUni::fgFixed;
 		default :
 			return PSVIUni::fgUnknown;

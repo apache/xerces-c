@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/07/06 14:58:15  cargilld
+ * Rename VALUE_CONSTRAINT enumeration names to avoid naming conflict with AIX system header which already uses VC_DEFAULT as a macro.  Will need to document that this fix breaks source code compatibility.
+ *
  * Revision 1.3  2004/01/29 11:46:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -221,15 +224,15 @@ public:
 	    /**
 	     * Indicates that the component does not have any value constraint.
 	     */
-	     VC_NONE          = 0,
+	     VALUE_CONSTRAINT_NONE          = 0,
 	    /**
 	     * Indicates that there is a default value constraint.
 	     */
-	     VC_DEFAULT                = 1,
+	     VALUE_CONSTRAINT_DEFAULT       = 1,
 	    /**
 	     * Indicates that there is a fixed value constraint for this attribute.
 	     */
-	     VC_FIXED                  = 2
+	     VALUE_CONSTRAINT_FIXED         = 2
     };
 
 private:

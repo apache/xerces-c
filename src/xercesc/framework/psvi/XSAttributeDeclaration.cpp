@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/07/06 14:58:15  cargilld
+ * Rename VALUE_CONSTRAINT enumeration names to avoid naming conflict with AIX system header which already uses VC_DEFAULT as a macro.  Will need to document that this fix breaks source code compatibility.
+ *
  * Revision 1.13  2004/05/04 19:02:40  cargilld
  * Enable IDs to work on all kinds of schema components
  *
@@ -160,16 +163,16 @@ XSNamespaceItem *XSAttributeDeclaration::getNamespaceItem()
 XSConstants::VALUE_CONSTRAINT XSAttributeDeclaration::getConstraintType() const
 {
     if (fScope != XSConstants::SCOPE_GLOBAL)
-        return XSConstants::VC_NONE;
+        return XSConstants::VALUE_CONSTRAINT_NONE;
 
     if (fAttDef->getDefaultType() == XMLAttDef::Default)
-        return XSConstants::VC_DEFAULT;
+        return XSConstants::VALUE_CONSTRAINT_DEFAULT;
 
     if ((fAttDef->getDefaultType() == XMLAttDef::Fixed) ||
         (fAttDef->getDefaultType() == XMLAttDef::Required_And_Fixed))
-        return XSConstants::VC_FIXED;
+        return XSConstants::VALUE_CONSTRAINT_FIXED;
 
-    return XSConstants::VC_NONE;
+    return XSConstants::VALUE_CONSTRAINT_NONE;
 }
 
 const XMLCh *XSAttributeDeclaration::getConstraintValue()

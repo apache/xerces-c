@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/07/06 14:58:15  cargilld
+ * Rename VALUE_CONSTRAINT enumeration names to avoid naming conflict with AIX system header which already uses VC_DEFAULT as a macro.  Will need to document that this fix breaks source code compatibility.
+ *
  * Revision 1.6  2003/12/17 20:50:34  knoaman
  * PSVI: fix for annotation of attributes in attributeGroup/derived types
  *
@@ -91,7 +94,7 @@ XSAttributeUse::XSAttributeUse(XSAttributeDeclaration* const xsAttDecl,
                                MemoryManager* const manager)
     : XSObject(XSConstants::ATTRIBUTE_USE, xsModel, manager)
     , fRequired(false)
-    , fConstraintType(XSConstants::VC_NONE)
+    , fConstraintType(XSConstants::VALUE_CONSTRAINT_NONE)
     , fConstraintValue(0)
     , fXSAttributeDeclaration(xsAttDecl)
 {

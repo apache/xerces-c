@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/07/06 14:58:15  cargilld
+ * Rename VALUE_CONSTRAINT enumeration names to avoid naming conflict with AIX system header which already uses VC_DEFAULT as a macro.  Will need to document that this fix breaks source code compatibility.
+ *
  * Revision 1.21  2004/03/05 16:28:21  knoaman
  * PSVI: prohibited attributes should not be part of attribute use. Patch by Mike Boos.
  *
@@ -1116,16 +1119,16 @@ void XSObjectFactory::processAttUse(SchemaAttDef* const attDef,
                                     XSAttributeUse* const xsAttUse)
 {
     bool isRequired = false;
-    XSConstants::VALUE_CONSTRAINT constraintType = XSConstants::VC_NONE;
+    XSConstants::VALUE_CONSTRAINT constraintType = XSConstants::VALUE_CONSTRAINT_NONE;
     
     if (attDef->getDefaultType() == XMLAttDef::Default)
     {
-        constraintType = XSConstants::VC_DEFAULT;
+        constraintType = XSConstants::VALUE_CONSTRAINT_DEFAULT;
     }
     else if ((attDef->getDefaultType() == XMLAttDef::Fixed) ||
              (attDef->getDefaultType() == XMLAttDef::Required_And_Fixed))
     {
-        constraintType = XSConstants::VC_FIXED;
+        constraintType = XSConstants::VALUE_CONSTRAINT_FIXED;
     }
 
     if (attDef->getDefaultType() == XMLAttDef::Required ||
