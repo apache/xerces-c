@@ -355,6 +355,9 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
      ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) || ($platform =~ m/ptx/i) ) {
 
+    # Echo the current PATH to see what compiler it picks up
+    psystem ("echo PATH=$ENV{'PATH'}");
+
     # Set defaults for platform-independent options.
     if ($opt_m eq "") {$opt_m = "inmem";   # In memory  message loader.
     }
