@@ -60,6 +60,9 @@
 *  are created and added to the DOM tree.
 *
 * $Log$
+* Revision 1.14  2000/03/24 21:25:28  abagchi
+* Added getElementById() from patch submitted by Jeff Lewis
+*
 * Revision 1.13  2000/03/24 01:31:12  chchou
 * Fix bug #8 to support ignorable whitespace text nodes
 *
@@ -160,8 +163,8 @@ fErrorHandler(0)
     
     fNodeStack = new ValueStackOf<DOM_Node>(64);
     this->reset();
-    
-    
+
+ 
 }
 
 
@@ -272,7 +275,7 @@ void DOMParser::parse(const InputSource& source, const bool reuseValidator)
         fScanner->scanDocument(source, reuseValidator);
         fParseInProgress = false;
     }
-    
+
     catch(...)
     {
         fParseInProgress = false;
@@ -423,7 +426,6 @@ void DOMParser::error(  const   unsigned int                code
 void DOMParser::resetErrors()
 {
 }
-
 
 
 // ---------------------------------------------------------------------------
@@ -600,16 +602,26 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
                 namespaceURI = DOMString(buf.getRawBuffer());
             }
             AttrImpl *attr = elemImpl->setAttributeNS(namespaceURI, oneAttrib -> getQName(),
-                oneAttrib -> getValue());
+            oneAttrib -> getValue());
+            // Register identifiers
+            if (oneAttrib->getType()==XMLAttDef::ID)
+            {
+               fDocument.putIdentifier(oneAttrib->getValue(), elem);
+            }
             attr->setSpecified(oneAttrib->getSpecified());
         }
     } else {    //DOM Level 1
         elem = fDocument.createElement(elemDecl.getFullName());
         ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
         for (unsigned int index = 0; index < attrCount; ++index) {
-            const XMLAttr* oneAttrib = attrList.elementAt(index);
-            AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
-            attr->setSpecified(oneAttrib->getSpecified());
+           const XMLAttr* oneAttrib = attrList.elementAt(index);
+           AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
+           // Register identifiers
+           if (oneAttrib->getType()==XMLAttDef::ID)
+           {
+              fDocument.putIdentifier(oneAttrib->getValue(), elem);
+	   }
+           attr->setSpecified(oneAttrib->getSpecified());
         }
     }
     

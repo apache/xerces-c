@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/03/24 21:24:50  abagchi
+ * Added getElementById() from patch submitted by Jeff Lewis
+ *
  * Revision 1.8  2000/03/02 19:53:59  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -107,7 +110,9 @@
 #include <util/XercesDefs.hpp>
 #include "NodeImpl.hpp"
 #include "DOM_Node.hpp"
+#include "DOM_Element.hpp"
 #include "util/RefVectorOf.hpp"
+#include "util/RefHashTableOf.hpp"
 
 class DocumentTypeImpl;
 class ElementImpl;
@@ -128,23 +133,39 @@ class TreeWalkerImpl;
 class DOM_NodeFilter;
 class NodeFilterImpl;
 class DOM_DOMImplementation;
-
+class DOMString;
 
 typedef RefVectorOf<NodeIteratorImpl> NodeIterators;
 typedef RefVectorOf<TreeWalkerImpl> TreeWalkers;
 
 
-
 class CDOM_EXPORT DocumentImpl: public NodeImpl {
 private:
+private:
+    // -----------------------------------------------------------------------
+    //  Private data types
+    // -----------------------------------------------------------------------
+    class PoolElem
+    {
+        public :
+            PoolElem(const DOMString string, const DOM_Element &elem);
+            ~PoolElem();
+
+            const XMLCh* getKey() const;
+
+            DOM_Element		 fElem;
+            DOMString        fString;
+    };
+
     DocumentTypeImpl            *docType;
     ElementImpl                 *docElement;
     DStringPool                 *namePool;
-    NodeIterators                 *iterators;
-    TreeWalkers                   *treeWalkers;
+
+    RefHashTableOf<PoolElem>	*identifiers;
+    NodeIterators               *iterators;
+    TreeWalkers                 *treeWalkers;
     friend class NodeIteratorImpl;
     friend class TreeWalkerImpl;
-
 
 public:
     DocumentImpl();
@@ -187,6 +208,10 @@ public:
     virtual DeepNodeListImpl    *getElementsByTagNameNS(const DOMString &namespaceURI,
 	const DOMString &localName);
     virtual ElementImpl         *getElementById(const DOMString &elementId);
+
+	// Non-standard accessory functions
+    virtual void		         putIdentifier(const DOMString &elementId, const DOM_Element &ele);
+
     //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
     //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".
     static  int                 indexofQualifiedName(const DOMString & qName);

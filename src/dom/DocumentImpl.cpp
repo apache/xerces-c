@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/03/24 21:24:50  abagchi
+ * Added getElementById() from patch submitted by Jeff Lewis
+ *
  * Revision 1.11  2000/03/02 19:53:59  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -135,6 +138,31 @@
 
 static DOMString *nam = 0;  // Will be lazily initialized to "#document"
 
+
+// ---------------------------------------------------------------------------
+//  StringPool::PoolElem: Constructors and Destructor
+// ---------------------------------------------------------------------------
+DocumentImpl::PoolElem::PoolElem( const DOMString string
+                                  , const DOM_Element &elem) :
+    fElem((DOM_Element&)elem)
+    , fString(string)
+{
+}
+
+DocumentImpl::PoolElem::~PoolElem()
+{
+}
+
+// ---------------------------------------------------------------------------
+//  DocumentImpl::PoolElem: Public methods
+// ---------------------------------------------------------------------------
+const XMLCh* DocumentImpl::PoolElem::getKey() const
+{
+    return fString.rawBuffer();
+}
+
+
+
 DocumentImpl::DocumentImpl(): NodeImpl(null,
                                        DStringPool::getStaticString("#document", &nam),
                                        DOM_Node::DOCUMENT_NODE,
@@ -144,6 +172,7 @@ DocumentImpl::DocumentImpl(): NodeImpl(null,
     docType=null;
     docElement=null;
     namePool = new DStringPool(257);
+    identifiers = new RefHashTableOf<PoolElem>(109);
     iterators = 0L;
     treeWalkers = 0L;
 };
@@ -624,9 +653,21 @@ DeepNodeListImpl *DocumentImpl::getElementsByTagNameNS(const DOMString &fNamespa
 
 ElementImpl *DocumentImpl::getElementById(const DOMString &elementId)
 {
-    return null;    //not implemented yet
+	PoolElem *elem = identifiers->get(elementId.rawBuffer());
+	if (elem)
+	{
+		return (ElementImpl*)elem->fElem.fImpl;
+	}
+
+	return null;
 }
 
+// Non-standard accessory functions */
+
+void DocumentImpl::putIdentifier(const DOMString &elementId, const DOM_Element &ele)
+{
+	identifiers->put(new PoolElem(elementId, ele));
+}
 
 //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
 //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".

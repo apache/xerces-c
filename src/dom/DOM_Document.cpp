@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/24 21:26:32  abagchi
+ * Added getElementById() from patch submitted by Jeff Lewis
+ *
  * Revision 1.6  2000/03/02 19:53:55  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -263,3 +266,11 @@ DOM_Element         DOM_Document::getElementById(const DOMString &elementId)
 {
         return DOM_Element(((DocumentImpl *)fImpl)->getElementById(elementId));
 }
+
+// Non-standard accessory function
+
+void DOM_Document::putIdentifier(const DOMString &elementId, const DOM_Element &ele)
+{
+       ((DocumentImpl*)fImpl)->putIdentifier(elementId,ele);
+}
+
