@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/05 16:54:46  peiyongz
+ * Using XERCESC_NLS_HOME
+ *
  * Revision 1.5  2002/11/04 15:10:41  tng
  * C++ Namespace Support.
  *
@@ -124,7 +127,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
 :fCatalogHandle(0)
-,fMsgDomain(0)
 ,fMsgSet(0)
 {
     if (!XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain)
@@ -136,10 +138,18 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
 
     // Try to get the module handle
     char* tempLoc = setlocale(LC_ALL, "");
-    char catfile[256];
+    char catfile[1024];
 
-    strcpy(catfile, getenv("XERCESCROOT"));
-    strcat(catfile, "/lib/msg/XMLMessages.cat");
+    memset(catfile, 0, sizeof catfile);
+    char *nlsHome = getenv("XERCESC_NLS_HOME");
+
+    if (nlsHome)
+    {
+        strcpy(catfile, nlsHome);
+        strcat(catfile, "/msg/");
+    }
+
+    strcat(catfile, "XMLMessages.cat");
 
     fCatalogHandle = catopen(catfile , 0);
     if ((int)fCatalogHandle == -1)
@@ -150,20 +160,17 @@ MsgCatalogLoader::MsgCatalogLoader(const XMLCh* const msgDomain)
         exit(1);
     }
 
-    fMsgDomain = XMLString::replicate(msgDomain);
-
-    if (XMLString::equals(fMsgDomain, XMLUni::fgXMLErrDomain))
+    if (XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain))
         fMsgSet = CatId_XMLErrs;
-    else if (XMLString::equals(fMsgDomain, XMLUni::fgExceptDomain))
+    else if (XMLString::equals(msgDomain, XMLUni::fgExceptDomain))
         fMsgSet = CatId_XMLExcepts;
-    else if (XMLString::equals(fMsgDomain, XMLUni::fgValidityDomain))
+    else if (XMLString::equals(msgDomain, XMLUni::fgValidityDomain))
         fMsgSet = CatId_XMLValid;
 }
 
 MsgCatalogLoader::~MsgCatalogLoader()
 {
     catclose(fCatalogHandle);	
-    delete [] fMsgDomain;
 }
 
 

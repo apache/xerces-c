@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/05 16:54:46  peiyongz
+ * Using XERCESC_NLS_HOME
+ *
  * Revision 1.3  2002/11/04 15:10:41  tng
  * C++ Namespace Support.
  *
@@ -153,11 +156,10 @@ private :
     //      This is our DLL module handle that we need in order to load
     //      resource messages. This is set during construction.
     //
-    //  fMsgDomain
-    //      This is the name of the error domain that this loader is for.
+    //  fMsgSet
+    //      This is the message set id for the error domain that this loader is for.
     // -----------------------------------------------------------------------
     nl_catd       fCatalogHandle;
-    XMLCh*        fMsgDomain;
     unsigned int  fMsgSet;
 	
 };
