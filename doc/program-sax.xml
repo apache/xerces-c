@@ -3,9 +3,8 @@
 
 <s1 title="SAX1 Programming Guide">
 
-    <anchor name="SAX1ProgGuide"/>
     <anchor name="ConstructParser"/>
-    <s2 title="Constructing a parser">
+    <s2 title="Constructing a SAXParser">
       <p>In order to use &XercesCName; to parse XML files, you will
         need to create an instance of the SAXParser class. The example
         below shows the code you need in order to create an instance
@@ -13,21 +12,28 @@
         required by the SAX API are provided using the HandlerBase
         class supplied with &XercesCName;.</p>
 
-<source>int main (int argc, char* args[]) {
+<source>
+#include &lt;xercesc/parsers/SAXParser.hpp>
+#include &lt;xercesc/sax/HandlerBase.hpp>
+#include &lt;xercesc/util/XMLString.hpp>
+
+int main (int argc, char* args[]) {
 
     try {
         XMLPlatformUtils::Initialize();
     }
     catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
         cout &lt;&lt; "Error during initialization! :\n"
-             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n";
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
         return 1;
     }
 
     char* xmlFile = "x1.xml";
     SAXParser* parser = new SAXParser();
     parser->setDoValidation(true);    // optional.
-	parser->setDoNamespaces(true);    // optional
+    parser->setDoNamespaces(true);    // optional
 
     DocumentHandler* docHandler = new HandlerBase();
     ErrorHandler* errHandler = (ErrorHandler*) docHandler;
@@ -38,19 +44,27 @@
         parser->parse(xmlFile);
     }
     catch (const XMLException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
         cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
         return -1;
     }
     catch (const SAXParseException&amp; toCatch) {
+        char* message = XMLString::transcode(toCatch.getMessage());
         cout &lt;&lt; "Exception message is: \n"
-             &lt;&lt; DOMString(toCatch.getMessage()) &lt;&lt; "\n" ;
+             &lt;&lt; message &lt;&lt; "\n";
+        delete [] message;
         return -1;
     }
     catch (...) {
         cout &lt;&lt; "Unexpected Exception \n" ;
         return -1;
     }
+
+    delete parser;
+    delete docHandler;
+    return 0;
 }</source>
     </s2>
 
@@ -106,15 +120,15 @@ MySAXHandler::MySAXHandler()
 MySAXHandler::startElement(const XMLCh* const name,
                            AttributeList&amp; attributes)
 {
-    // transcode() is an user application defined function which
-    // converts unicode strings to usual 'char *'. Look at
-    // the sample program SAXCount for an example implementation.
-    cout &lt;&lt; "I saw element: " &lt;&lt; transcode(name) &lt;&lt; endl;
+    char* message = XMLString::transcode(name);
+    cout &lt;&lt; "I saw element: "&lt;&lt; message &lt;&lt; endl;
+    delete [] message;
 }
 
 MySAXHandler::fatalError(const SAXParseException&amp; exception)
 {
-    cout &lt;&lt; "Fatal Error: " &lt;&lt; transcode(exception.getMessage())
+    char* message = XMLString::transcode(exception.getMessage());
+    cout &lt;&lt; "Fatal Error: " &lt;&lt; message
          &lt;&lt; " at line: " &lt;&lt; exception.getLineNumber()
          &lt;&lt; endl;
 }</source>
