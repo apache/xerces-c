@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.24  2004/03/03 23:08:28  peiyongz
+ * Move the logic to check for BuiltIn Dv to storeDV/loadDV therefore dv which
+ * refers to BuiltIn DV will NOT be actually saved/loaded, as opposed to previously
+ * it is only done for dv appears in fBaseValidator.
+ *
  * Revision 1.23  2004/03/02 23:34:58  peiyongz
  * fix typo
  *
@@ -192,7 +197,9 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-
+static const int DV_BUILTIN = 0;
+static const int DV_NORMAL  = 1;
+static const int DV_ZERO    = 2;
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidator: Constructors and Destructor
@@ -352,19 +359,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
         serEng<<fBounded;
         serEng<<fNumeric;
 
-        /***
-         * don't serialize the fBaseValidator if it is a built-in
-         ***/
-        if (isBuiltInDV(fBaseValidator))
-        {
-            serEng<<true;
-            serEng.writeString(fBaseValidator->getTypeName());
-        }
-        else
-        {
-            serEng<<false;
-            storeDV(serEng, fBaseValidator);
-        }
+        storeDV(serEng, fBaseValidator);
 
         /***
          *  Serialize RefHashTableOf<KVStringPair>
@@ -412,33 +407,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
         serEng>>fBounded;
         serEng>>fNumeric;
 
-        /***
-         *
-         *  get the basevalidator's type
-         *
-         ***/
-        bool isBuiltInDV = false;
-        serEng>>isBuiltInDV;
-
-        if (isBuiltInDV)
-        {
-            XMLCh* baseTypeName;
-            serEng.readString(baseTypeName);
-            ArrayJanitor<XMLCh> janName(baseTypeName, fMemoryManager);
-
-            /***
-             *  Link to the fBuiltInRegistry
-             *
-             *  Since DatatypeValidatorFactory is always the first one
-             *  to be deserialized in SchemaGrammar, we are sure that
-             *  the BuiltInRegistry shall be available now.
-             ***/
-            fBaseValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(baseTypeName);
-        }
-        else
-        {
-            fBaseValidator = loadDV(serEng);
-        }
+        fBaseValidator = loadDV(serEng);
 
         /***
          *
@@ -446,7 +415,6 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          *
          ***/
         XTemplateSerializer::loadObject(&fFacets, 29, true, serEng);
-
         serEng.readString(fPattern);
 
         /***
@@ -480,7 +448,6 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
             ArrayJanitor<XMLCh> janUri(typeUri, fMemoryManager);
 
             setTypeName(typeLocalName, typeUri);
-
         }
 
         /***
@@ -512,18 +479,42 @@ void DatatypeValidator::storeDV(XSerializeEngine&        serEng
 {
     if (dv)
     {
-        serEng<<(int) dv->getType();
-        serEng<<dv;
+        if (DatatypeValidatorFactory::getBuiltInRegistry()->containsKey(dv->getTypeLocalName()))
+        {
+            serEng<<DV_BUILTIN;
+            serEng.writeString(dv->getTypeLocalName());
+        }
+        else
+        {
+            serEng<<DV_NORMAL;
+            serEng<<(int) dv->getType();
+            serEng<<dv;
+        }
     }
     else
     {
-        serEng<<(int) UnKnown;
+        serEng<<DV_ZERO;
     }
 
 }
 
 DatatypeValidator* DatatypeValidator::loadDV(XSerializeEngine& serEng)
 {
+    int flag;
+    serEng>>flag;
+
+    if (DV_BUILTIN == flag)
+    {
+        XMLCh* dvName;
+        serEng.readString(dvName);
+        ArrayJanitor<XMLCh> janName(dvName, serEng.getMemoryManager());
+
+        return DatatypeValidatorFactory::getBuiltInRegistry()->get(dvName);
+    }
+    else if (DV_ZERO == flag)
+    {
+        return 0;
+    }
 
     int type;
     serEng>>type;
@@ -649,7 +640,7 @@ DatatypeValidator* DatatypeValidator::loadDV(XSerializeEngine& serEng)
 inline bool 
 DatatypeValidator::isBuiltInDV(DatatypeValidator* const dv)
 {
-    return dv? DatatypeValidatorFactory::getBuiltInRegistry()->containsKey(dv->getTypeName())
+    return dv? DatatypeValidatorFactory::getBuiltInRegistry()->containsKey(dv->getTypeLocalName())
              : false;
 }
 
