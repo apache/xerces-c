@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2002/01/28 17:47:41  knoaman
+ * Some SAX calls were not passed to the LexicalHandler.
+ *
  * Revision 1.24  2002/01/28 17:08:47  knoaman
  * SAX2-ext's DeclHandler support.
  *
@@ -362,6 +365,11 @@ const XMLCh SAX2XMLReaderImpl::SAX_XERCES_SCHEMA_EXTERNAL_NONAMESPACESCHEMALOCAT
       chLatin_n, chLatin_o, chLatin_N, chLatin_a, chLatin_m, chLatin_e, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e,
       chLatin_S, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a,
       chLatin_L, chLatin_o, chLatin_c, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+const XMLCh gDTDEntityStr[] =
+{
+    chOpenSquare, chLatin_d, chLatin_t, chLatin_d, chCloseSquare, chNull
 };
 
 SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
@@ -1173,9 +1181,14 @@ void SAX2XMLReaderImpl::attDef( const   DTDElementDecl& elemDecl
 }
 
 
-void SAX2XMLReaderImpl::doctypeComment(const XMLCh* const)
+void SAX2XMLReaderImpl::doctypeComment(const XMLCh* const commentText)
 {
-    // Unused by SAX DTDHandler interface at this time
+   if (fLexicalHandler)
+   {
+        // SAX2 reports comment text like characters -- as an
+        // array with a length.
+        fLexicalHandler->comment(commentText, XMLString::stringLen(commentText));
+   }
 }
 
 
@@ -1227,15 +1240,18 @@ void SAX2XMLReaderImpl::endIntSubset()
    if (!fHasExternalSubset && fLexicalHandler)
         fLexicalHandler->endDTD();
 
-    // Unused by SAX DTDHandler interface at this time
+    // Unused by SAX DTDHandler interface at this time    
 }
 
 
 void SAX2XMLReaderImpl::endExtSubset()
 {
-   // Call the installed LexicalHandler.
-   if (fLexicalHandler)
+    // Call the installed LexicalHandler.
+    if (fLexicalHandler) {
+
+        fLexicalHandler->endEntity(gDTDEntityStr);
         fLexicalHandler->endDTD();
+    }
 
     // Unused by SAX DTDHandler interface at this time
 }
@@ -1339,7 +1355,9 @@ void SAX2XMLReaderImpl::startIntSubset()
 void SAX2XMLReaderImpl::startExtSubset()
 {
     fHasExternalSubset = true;
-    // Unused by SAX DTDHandler interface at this time
+
+    if (fLexicalHandler)
+        fLexicalHandler->startEntity(gDTDEntityStr);
 }
 
 
