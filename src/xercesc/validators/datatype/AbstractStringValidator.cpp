@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/04/01 20:17:46  peiyongz
+ * Bug#7551: Exceptions are caught by value, rather than by reference
+ *
  * Revision 1.2  2002/02/14 15:17:31  peiyongz
  * getEnumString()
  *
@@ -197,7 +200,7 @@ void AbstractStringValidator::assignFacet()
             {
                 val = XMLString::parseInt(value);
             }
-            catch (NumberFormatException nfe)
+            catch (NumberFormatException&)
             {
                 ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Len, value);
             }
@@ -215,7 +218,7 @@ void AbstractStringValidator::assignFacet()
             {
                 val = XMLString::parseInt(value);
             }
-            catch (NumberFormatException nfe)
+            catch (NumberFormatException&)
             {
                 ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_minLen, value);
             }
@@ -233,7 +236,7 @@ void AbstractStringValidator::assignFacet()
             {
                 val = XMLString::parseInt(value);
             }
-            catch (NumberFormatException nfe)
+            catch (NumberFormatException&)
             {
                 ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_maxLen, value);
             }
@@ -259,7 +262,7 @@ void AbstractStringValidator::assignFacet()
             {
                 retStatus = XMLString::textToBin(value, val);
             }
-            catch (RuntimeException)
+            catch (RuntimeException&)
             {
                 ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
             }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/04/01 20:17:55  peiyongz
+ * Bug#7551: Exceptions are caught by value, rather than by reference
+ *
  * Revision 1.7  2002/04/01 15:47:06  knoaman
  * Move Element Consistency checking (ref to global declarations) to SchemaValidator.
  *
@@ -322,10 +325,10 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
                             fCurrentDV->validate(value);
                     }
                 }
-            } catch (InvalidDatatypeValueException idve) {
+            } catch (InvalidDatatypeValueException& idve) {
                 emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
             }
-            catch (InvalidDatatypeFacetException idve) {
+            catch (InvalidDatatypeFacetException& idve) {
                 emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
             }
             catch (...) {
@@ -478,10 +481,10 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
             }
             else
                 attDefDV->validate(attrValue);
-        } catch (InvalidDatatypeValueException idve) {
+        } catch (InvalidDatatypeValueException& idve) {
             emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
         }
-        catch (InvalidDatatypeFacetException idve) {
+        catch (InvalidDatatypeFacetException& idve) {
             emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
         }
         catch (...) {

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:41  peiyongz
- * Initial revision
+ * Revision 1.2  2002/04/01 20:17:46  peiyongz
+ * Bug#7551: Exceptions are caught by value, rather than by reference
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:41  peiyongz
+ * sane_include
  *
  * Revision 1.19  2001/10/09 20:53:22  peiyongz
  * Optimization: save get***() to temp var
@@ -199,7 +202,7 @@ void DecimalDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
         {
             val = XMLString::parseInt(value);
         }
-        catch (NumberFormatException)
+        catch (NumberFormatException&)
         {
             ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_TotalDigit, value);
         }
@@ -218,7 +221,7 @@ void DecimalDatatypeValidator::assignAdditionalFacet(const XMLCh* const key
         {
             val = XMLString::parseInt(value);
         }
-        catch (NumberFormatException)
+        catch (NumberFormatException&)
         {
             ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_FractDigit, value);
         }

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/04/01 20:17:46  peiyongz
+ * Bug#7551: Exceptions are caught by value, rather than by reference
+ *
  * Revision 1.2  2002/02/14 15:17:31  peiyongz
  * getEnumString()
  *
@@ -226,7 +229,7 @@ void AbstractNumericFacetValidator::assignFacet()
             {
                 setMaxInclusive(value);
             }
-            catch (NumberFormatException)
+            catch (NumberFormatException&)
             {
                 ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MaxIncl, value);
             }
@@ -238,7 +241,7 @@ void AbstractNumericFacetValidator::assignFacet()
             {
                 setMaxExclusive(value);
             }
-            catch (NumberFormatException)
+            catch (NumberFormatException&)
             {
                 ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MaxExcl, value);
             }
@@ -250,7 +253,7 @@ void AbstractNumericFacetValidator::assignFacet()
             {
                 setMinInclusive(value);
             }
-            catch (NumberFormatException)
+            catch (NumberFormatException&)
             {
                 ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MinIncl, value);
             }
@@ -262,7 +265,7 @@ void AbstractNumericFacetValidator::assignFacet()
             {
                 setMinExclusive(value);
             }
-            catch (NumberFormatException)
+            catch (NumberFormatException&)
             {
                 ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_MinExcl, value);
             }
@@ -276,7 +279,7 @@ void AbstractNumericFacetValidator::assignFacet()
             {
                 retStatus = XMLString::textToBin(value, val);
             }
-            catch (RuntimeException)
+            catch (RuntimeException&)
             {
                 ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
             }
