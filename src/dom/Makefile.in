@@ -104,6 +104,8 @@ DOM_CPP_PRIVHEADERS =  \
 	AttrNSImpl.hpp \
 	CDATASectionImpl.hpp \
 	CharacterDataImpl.hpp \
+	ChildAndParentNode.hpp \
+	ChildNode.hpp \
 	CommentImpl.hpp \
 	DStringPool.hpp \
 	DeepNodeListImpl.hpp \
@@ -119,12 +121,12 @@ DOM_CPP_PRIVHEADERS =  \
 	MemDebug.hpp \
 	NameNodeFilter.hpp \
 	NamedNodeMapImpl.hpp \
-	NodeContainer.hpp \
 	NodeImpl.hpp \
 	NodeIteratorImpl.hpp \
 	NodeListImpl.hpp \
 	NodeVector.hpp \
 	NotationImpl.hpp \
+	ParentNode.hpp \
 	ProcessingInstructionImpl.hpp \
 	RefCountedImpl.hpp \
 	TextImpl.hpp \
@@ -138,6 +140,8 @@ DOM_CPP_OBJECTS = \
 	AttrNSImpl.$(TO) \
 	CDATASectionImpl.$(TO) \
 	CharacterDataImpl.$(TO) \
+	ChildAndParentNode.$(TO) \
+	ChildNode.$(TO) \
 	CommentImpl.$(TO) \
 	DOMString.$(TO) \
 	DOM_Attr.$(TO) \
@@ -179,6 +183,7 @@ DOM_CPP_OBJECTS = \
         NodeListImpl.$(TO) \
 	NodeVector.$(TO) \
 	NotationImpl.$(TO) \
+	ParentNode.$(TO) \
 	ProcessingInstructionImpl.$(TO) \
 	RefCountedImpl.$(TO) \
 	TextImpl.$(TO) \
