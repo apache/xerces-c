@@ -785,7 +785,7 @@ ELEMENTS:
   Content Model: (#PCDATA|family|given)*
 
   Name: email
-  Content Model: (#PCDATA)*
+  Content Model: (#PCDATA)
 
   Name: url
   Content Model: EMPTY
@@ -799,10 +799,10 @@ ELEMENTS:
     Name:manager, Type: IDREF(S)
 
   Name: family
-  Content Model: (#PCDATA)*
+  Content Model: (#PCDATA)
 
   Name: given
-  Content Model: (#PCDATA)*
+  Content Model: (#PCDATA)
 
 
 Usage:
