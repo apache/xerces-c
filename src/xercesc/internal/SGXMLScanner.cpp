@@ -3656,6 +3656,10 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
             fValidator->setGrammar(fGrammar);
         }
     }
+    // update fModel; rely on the grammar resolver to do this
+    // efficiently
+    if(getPSVIHandler())
+        fModel = fGrammarResolver->getXSModel();
 }
 
 InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
@@ -3794,6 +3798,9 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
             if (toCache) {
                 fGrammarResolver->cacheGrammars();
             }
+
+            if(getPSVIHandler())
+                fModel = fGrammarResolver->getXSModel();
 
             return grammar;
         }
