@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/01/06 04:42:04  neilg
+ * Since parseContent may now be called outside a constructor,
+ * the destructor may subsequently be invoked.  If this happens,
+ * an attempt will be made to delete fRawData if it is non-zero.
+ * Therefore, 0 it before throwing the exception after cleanUp() is called.
+ *
  * Revision 1.19  2004/01/03 00:03:18  peiyongz
  * parseContent
  *
@@ -209,6 +215,7 @@ void XMLBigDecimal::parseContent(const XMLCh* const strValue)
     catch(...)
     {
         cleanUp();
+        fRawData = 0;
         throw;
     }
 }
