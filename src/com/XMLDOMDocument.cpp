@@ -1358,8 +1358,9 @@ UINT APIENTRY CXMLDOMDocument::ParseThread(void *pParm)
 			if (pThis->m_FileName.length() > 0)
 				parser.parse(static_cast<LPCTSTR> (pThis->m_FileName));
 			else {
-				XMLByte *pXMLByte =  reinterpret_cast<XMLByte*> (static_cast<LPTSTR>(pThis->m_xml));
-				MemBufInputSource memBufIS(pXMLByte,pThis->m_xml.length(),OLESTR("IBMXMLParser"),false); 
+				XMLByte *pXMLByte =  reinterpret_cast<XMLByte*> (static_cast<XMLCh*>(pThis->m_xml));
+				MemBufInputSource memBufIS(pXMLByte,pThis->m_xml.length()*sizeof(XMLCh),OLESTR("IBMXMLParser"),false); 
+				memBufIS.setEncoding(OLESTR("UTF-16"));
 				if (!pThis->m_bParseError && !pThis->m_bAbort)
 					parser.parse(memBufIS);
 			}
