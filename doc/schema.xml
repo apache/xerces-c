@@ -24,15 +24,6 @@
             <li>No interface is provided for exposing the post-schema
             validation infoset , beyond
             that provided by DOM or SAX;</li>
-            <li> The parser permits situations in which there is
-            circular or multiple importing.  However, the parser only permits forward
-            references--that is, references directed from the
-            direction of the schema cited in the instance
-            document to other schemas.  For instance, if schema A
-            imports both schema B and schema C, then
-            any reference in schema B to an information item from
-            schema C will produce an error. Circular or multiple
-            &lt;include&gt;s have similar limitations.</li>
             <li>Due to the way in which the parser constructs content
             models for elements with complex content, specifying large
             values for the <code>minOccurs</code> or <code>maxOccurs</code>
