@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2005/02/19 22:26:19  cargilld
+ * Store key for recreating table instead of using enclosingscope.
+ *
  * Revision 1.11  2004/10/26 14:48:46  peiyongz
  * Maintain consistent order among multiple store/load session to allow comparison
  *
@@ -2158,10 +2161,17 @@ void XTemplateSerializer::storeObject(RefHash3KeysIdPool<SchemaElementDecl>* con
       
         serEng<<e.size();
 
-        while (e.hasMoreElements())
+        XMLCh* strkey;
+        int    key1;
+        int    key2;
+        /* Update to store key2 separately as for the putGroupElemDecl the key is not the
+           enclosing scope but another value. */
+        while (e.hasMoreKeys())
         {                       
-            SchemaElementDecl& data = e.nextElement();
-            serEng<<&data;
+            e.nextElementKey((void*&)strkey, key1, key2);
+            serEng<<key2;
+            SchemaElementDecl* data = objToStore->getByKey(strkey, key1, key2);
+            serEng<<data;
         }
     }
 
@@ -2195,16 +2205,17 @@ void XTemplateSerializer::loadObject(RefHash3KeysIdPool<SchemaElementDecl>** obj
         int itemNumber = 0;
         serEng>>itemNumber;
 
+        int scopeKey;
+        SchemaElementDecl*  elemDecl;
         for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
-        {                       
-            SchemaElementDecl*  elemDecl;
+        {                                                   
+            serEng>>scopeKey;
             serEng>>elemDecl;
             
-            (*objToLoad)->put(elemDecl->getBaseName()
+           (*objToLoad)->put(elemDecl->getBaseName()
                             , elemDecl->getURI()
-                            , elemDecl->getEnclosingScope()
+                            , scopeKey
                             , elemDecl);
-
         }
    
     }
