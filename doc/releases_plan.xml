@@ -26,7 +26,7 @@ Those features that have 'Complete' status will be included in the 'Next Target 
         <td>Report Schema Error with matching column number and line number</td>
         <td>Khaled Noaman</td>
         <td>March</td>
-        <td>Done</td>
+        <td>Complete</td>
     </tr>
 
     <tr>
@@ -34,7 +34,7 @@ Those features that have 'Complete' status will be included in the 'Next Target 
             from TraverseSchema to SchemaValidator</td>
         <td>Khaled Noaman</td>
         <td>March</td>
-        <td>Done</td>
+        <td>Complete</td>
     </tr>
 
     <tr>
@@ -180,6 +180,13 @@ Those features that have 'Complete' status will be included in the 'Next Target 
 
     <tr>
         <td>XML 1.1</td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+
+    <tr>
+        <td>SAX 2.0.1</td>
         <td></td>
         <td></td>
         <td></td>
