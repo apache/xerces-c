@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2005/03/25 10:54:22  amassari
+ * On Windows, export the class from the DLL
+ *
  * Revision 1.6  2004/09/08 13:56:51  peiyongz
  * Apache License Version 2.0
  *
@@ -57,7 +60,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class ContentLeafNameTypeVector : public XMemory
+class XMLPARSER_EXPORT ContentLeafNameTypeVector : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
