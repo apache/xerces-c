@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/09/25 22:22:00  peiyongz
+ * Introduction of readString/writeString
+ *
  * Revision 1.2  2003/09/19 04:29:11  neilg
  * fix compilation problems under GCC
  *
@@ -219,6 +222,46 @@ public:
 
     /***
       *
+      *  Write a stream of XMLCh to the internal buffer.
+      *
+      *  Write the bufferLen first if requested, then the length
+      *  of the stream followed by the stream.
+      *
+      *  Param
+      *     toWrite:        the stream of XMLCh to write
+      *     bufferLen:      the maximum size of the buffer
+      *     toWriteBufLen:  specify if the bufferLen need to be written or not
+      *
+      *  Return:
+      *
+      ***/
+           void           writeString(const XMLCh* const toWrite
+                                    , const int          bufferLen = 0
+                                    , bool               toWriteBufLen = false);
+
+    /***
+      *
+      *  Write a stream of XMLByte to the internal buffer.
+      *
+      *  Write the bufferLen first if requested, then the length
+      *  of the stream followed by the stream.
+      *
+      *  Param
+      *     toWrite:        the stream of XMLByte to write
+      *     bufferLen:      the maximum size of the buffer
+      *     toWriteBufLen:  specify if the bufferLen need to be written or not
+      *
+      *  Return:
+      *
+      ***/
+           void           writeString(const XMLByte* const toWrite
+                                    , const int            bufferLen = 0
+                                    , bool                 toWriteBufLen = false);
+
+    static const bool toWriteBufferLen;
+
+    /***
+      *
       *  Read/Create object from the internal buffer.
       *
       *  Param
@@ -272,6 +315,54 @@ public:
       ***/
            void           read(XMLCh* const toRead
                              , int          readLen);
+
+    /***
+      *
+      *  Read a stream of XMLCh from the internal buffer.
+      *
+      *  Read the bufferLen first if requested, then the length
+      *  of the stream followed by the stream.
+      *
+      *  Param
+      *     toRead:       the pointer to the buffer to hold the XMLCh stream
+      *     bufferLen:    the size of the buffer created
+      *     dataLen:       the length of the stream
+      *     toReadBufLen: specify if the bufferLen need to be read or not
+      *
+      *  Return:
+      *
+      ***/
+           void           readString(XMLCh*&        toRead
+                                   , int&           bufferLen    = defaultBufferLen
+                                   , int&           dataLen      = defaultDataLen
+                                   , bool           toReadBufLen = false);
+
+    /***
+      *
+      *  Read a stream of XMLByte from the internal buffer.
+      *
+      *  Read the bufferLen first if requested, then the length
+      *  of the stream followed by the stream.
+      *
+      *  Param
+      *     toRead:       the pointer to the buffer to hold the XMLByte stream
+      *     bufferLen:    the size of the buffer created
+      *     dataLen:       the length of the stream
+      *     toReadBufLen: specify if the bufferLen need to be read or not
+      *
+      *  Return:
+      *
+      ***/
+           void           readString(XMLByte*&      toRead
+                                   , int&           bufferLen    = defaultBufferLen
+                                   , int&           dataLen      = defaultDataLen
+                                   , bool           toReadBufLen = false);
+
+    static const bool toReadBufferLen;
+
+    static int defaultBufferLen;
+
+    static int defaultDataLen;
 
     /***
       *

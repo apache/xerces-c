@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/09/25 22:22:00  peiyongz
+ * Introduction of readString/writeString
+ *
  * Revision 1.4  2003/09/25 15:21:12  peiyongz
  * Loose the assert condition so that Serializable class need NOT to check the
  * actual string length before read/write.
@@ -81,6 +84,13 @@
 #include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+const bool XSerializeEngine::toWriteBufferLen = true;
+const bool XSerializeEngine::toReadBufferLen  = true;
+      int  XSerializeEngine::defaultBufferLen = 0;
+      int  XSerializeEngine::defaultDataLen   = 0;
+
+static const int noDataFollowed = -1;
 
 static const XSerializeEngine::XSerializedObjectId_t fgNullObjectTag  = 0;           // indicating null ptrs
 static const XSerializeEngine::XSerializedObjectId_t fgNewClassTag    = 0xFFFFFFFF;  // indicating new class
@@ -238,12 +248,13 @@ void XSerializeEngine::write(XProtoType* const protoType)
 
 /***
  *
- ***/
+***/ 
 void XSerializeEngine::write(const XMLCh* const toWrite
                            ,       int          writeLen)
 {
     write((XMLByte*)toWrite, (sizeof(XMLCh)/sizeof(XMLByte)) * writeLen);
 }
+
 
 void XSerializeEngine::write(const XMLByte* const toWrite
                            ,       int            writeLen)
@@ -293,6 +304,63 @@ void XSerializeEngine::write(const XMLByte* const toWrite
     {
         memcpy(fBufCur, tempWrite, writeRemain);
         fBufCur += writeRemain;
+    }
+
+}
+
+/***
+ *
+ *     Storage scheme (normal):
+ *
+ *     <
+ *     1st integer:    bufferLen (optional)
+ *     2nd integer:    dataLen
+ *     bytes following:
+ *     >
+ *
+ *     Storage scheme (special):
+ *     <
+ *     only integer:   noDataFollowed
+ *     >
+ */
+
+void XSerializeEngine::writeString(const XMLCh* const toWrite
+                                 , const int          bufferLen
+                                 , bool               toWriteBufLen)
+{
+    if (toWrite) 
+    {
+        if (toWriteBufLen)
+            *this<<bufferLen;
+
+        int strLen = XMLString::stringLen(toWrite);
+        *this<<strLen;
+        write(toWrite, strLen);
+    }
+    else
+    {
+        *this<<noDataFollowed;
+    }
+
+}
+
+void XSerializeEngine::writeString(const XMLByte* const toWrite
+                                 , const int            bufferLen
+                                 , bool                 toWriteBufLen)
+{
+
+    if (toWrite) 
+    {
+        if (toWriteBufLen)
+            *this<<bufferLen;
+
+        int strLen = XMLString::stringLen((char*)toWrite);
+        *this<<strLen;
+        write(toWrite, strLen);
+    }
+    else
+    {
+        *this<<noDataFollowed;
     }
 
 }
@@ -432,6 +500,84 @@ void XSerializeEngine::read(XMLByte* const toRead
         memcpy(tempRead, fBufCur, readRemain);
         fBufCur += readRemain;
     }
+
+}
+
+/***
+ *
+ *     Storage scheme (normal):
+ *
+ *     <
+ *     1st integer:    bufferLen (optional)
+ *     2nd integer:    dataLen
+ *     bytes following:
+ *     >
+ *
+ *     Storage scheme (special):
+ *     <
+ *     only integer:   noDataFollowed
+ *     >
+ */
+void XSerializeEngine::readString(XMLCh*&  toRead
+                                , int&     bufferLen
+                                , int&     dataLen
+                                , bool     toReadBufLen)
+{
+    /***
+     * Check if any data written
+     ***/
+    *this>>bufferLen;
+    if (bufferLen == noDataFollowed)
+    {
+        toRead = 0;
+        bufferLen = 0;
+        dataLen = 0;
+        return;
+    }
+
+    if (toReadBufLen)
+    {
+        *this>>dataLen;
+    }
+    else
+    {
+        dataLen = bufferLen++;        
+    }
+
+    toRead = (XMLCh*) fMemoryManager->allocate(bufferLen * sizeof(XMLCh));
+    read(toRead, dataLen);
+    toRead[dataLen] = 0;
+}
+
+void XSerializeEngine::readString(XMLByte*&  toRead
+                                , int&       bufferLen
+                                , int&       dataLen
+                                , bool       toReadBufLen)
+{
+    /***
+     * Check if any data written
+     ***/
+    *this>>bufferLen;
+    if (bufferLen == noDataFollowed)
+    {
+        toRead = 0;
+        bufferLen = 0;
+        dataLen = 0;
+        return;
+    }
+
+    if (toReadBufLen)
+    {
+        *this>>dataLen;
+    }
+    else
+    {
+        dataLen = bufferLen++;
+    }
+
+    toRead = (XMLByte*) fMemoryManager->allocate(bufferLen * sizeof(XMLByte));
+    read(toRead, dataLen);
+    toRead[dataLen] = 0;
 
 }
 
