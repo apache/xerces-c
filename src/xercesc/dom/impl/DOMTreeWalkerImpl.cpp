@@ -142,6 +142,9 @@ DOMNode* DOMTreeWalkerImpl::getCurrentNode () {
 /** Return the current Node. */
 void DOMTreeWalkerImpl::setCurrentNode (DOMNode* node) {
 
+    if (!node)
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+
     fCurrentNode = node;
 }
 
