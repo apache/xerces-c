@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/03/15 16:27:58  tng
+ * DOMString Thread safe Fix: should lock the entire deleter function where freeListPtr and blockListPtr are modified.
+ *
  * Revision 1.4  2002/03/15 13:54:41  tng
  * Issue DOMException::INDEX_SIZE_ERR if count is greater than length, equal to length is ok.
  *
@@ -391,12 +394,10 @@ void *DOMStringHandle::operator new(size_t sizeToAlloc)
 //
 void DOMStringHandle::operator delete(void *pMem)
 {
-    {
-        XMLMutexLock   lock(&getMutex());    // Lock the DOMStringHandle mutex for the
-        //    duration of this function.
-        *(void **)pMem = freeListPtr;
-        freeListPtr = pMem;
-    }
+    XMLMutexLock   lock(&getMutex());    // Lock the DOMStringHandle mutex for the
+    //    duration of this function.
+    *(void **)pMem = freeListPtr;
+    freeListPtr = pMem;
 
     // If ALL of the string handles are gone, delete the storage blocks used for the
     //   handles as well.
