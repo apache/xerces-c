@@ -78,7 +78,7 @@
 #include <dom/DOM.hpp>
 #include <stdio.h>
 
-static int gTestsFailed = 0; 
+static int gTestsFailed = 0;
 static int gTestsRun    = 0;
 
 
@@ -107,7 +107,7 @@ void ParseErrorHandler::error(const SAXParseException& e)
         XMLString::transcode(e.getSystemId()), e.getLineNumber(),
         e.getColumnNumber(), XMLString::transcode(e.getMessage()));
     throw e;
-    
+
 };
 
 void ParseErrorHandler::fatalError(const SAXParseException& e)
@@ -124,7 +124,7 @@ void ParseErrorHandler::warning(const SAXParseException& e)
         XMLString::transcode(e.getSystemId()), e.getLineNumber(),
         e.getColumnNumber(), XMLString::transcode(e.getMessage()));
     throw e;
-    
+
 };
 
 
@@ -145,16 +145,18 @@ static DOM_Document parseFile(char *fileName)
         parser.parse(fileName);
     }
 
-    catch (const XMLException& )
+    catch (const XMLException& e )
     {
-        // An error was already displayed by the ParserErrorHandler functions,
-        //   there is no need to output another one here.
+		fprintf(stderr, "Exception Occured \"%s\".  \n",
+			XMLString::transcode(e.getMessage()));
+		fprintf(stderr, "File being parsed is \"%s\".\n", fileName);
         return DOM_Document();  // A null document.
     }
 
 	catch (...)
 	{
-		fprintf(stderr, "Unexpected Exception thrown by parse.\n");
+		fprintf(stderr, "Unexpected Exception thrown during parse of file \"%s\".\n",
+		                 fileName);
 		return DOM_Document();
 	}
     return parser.getDocument();
@@ -199,7 +201,7 @@ static void eatWhiteSpace(DOMString s, unsigned int &i)
     i++;
     }
 }
-    
+
 //------------------------------------------------------------------------
 //
 //   convertHexValue     if the DOMString contains a hex number at position i,
@@ -222,8 +224,8 @@ static int convertHexValue(DOMString s, unsigned int &i)
     while (i < s.length())
     {
         XMLCh c = s.charAt(i);
-        if (c >= 0x61 && c <= 0x66)     // Uppercase a-f to A-F.  
-            c -= 0x20;               
+        if (c >= 0x61 && c <= 0x66)     // Uppercase a-f to A-F.
+            c -= 0x20;
 
         if (c < 0x30 || c >0x46)        // Stop if not a hex digit
             break;
@@ -282,7 +284,7 @@ static bool  processTestFile(DOMString fileName)
 			continue;
         if (! (child.getNodeType() == DOM_Node::TEXT_NODE ||
                child.getNodeType() == DOM_Node::CDATA_SECTION_NODE ||
-               child.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE)) 
+               child.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE))
         {
                fprintf(stderr, "Test file \"%s\": data element contains unexpected children.",
                     cFileName);
@@ -299,9 +301,8 @@ static bool  processTestFile(DOMString fileName)
         fprintf(stderr, "Test file \"%s\" must have exactly one \"udata\" element.\n", cFileName);
         return false;
     };
-
-	 DOM_Node tmpNode1 = nl.item(0);
-     DOM_Element udata = (DOM_Element &) tmpNode1;
+    DOM_Node tmpNode1 = nl.item(0);
+    DOM_Element udata = (DOM_Element &) tmpNode1;
 
     //
     //  Build up a string containing the character data contents of the udata element.
@@ -315,7 +316,7 @@ static bool  processTestFile(DOMString fileName)
             continue;
         if (! (child.getNodeType() == DOM_Node::TEXT_NODE ||
             child.getNodeType() == DOM_Node::CDATA_SECTION_NODE ||
-            child.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE)) 
+            child.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE))
         {
             fprintf(stderr, "Test file \"%s\": udata element contains unexpected children.",
                 cFileName);
@@ -338,7 +339,7 @@ static bool  processTestFile(DOMString fileName)
         if (c > 0)
             uData += c;
         else
-            if (rawIndex < rawUData.length()) 
+            if (rawIndex < rawUData.length())
             {
                 fprintf(stderr, "Test file \"%s\": Bad hex number in udata element.  "
                     "Data character number %d\n", cFileName, uData.length());
@@ -383,7 +384,7 @@ static bool  processTestFile(DOMString fileName)
 
 
 int main(int argc, char ** argv) {
- 
+
    //
     // Initialize the Xerces-c environment
     //
@@ -421,7 +422,7 @@ int main(int argc, char ** argv) {
     for (i=0; i<numFiles; i++)
     {
         ++gTestsRun;
-		DOM_Node tmpNode3 = list.item(i);
+        DOM_Node tmpNode3 = list.item(i);
         DOMString fileName = ((DOM_Element &) tmpNode3).getAttribute("name");
         if (processTestFile(fileName) == false)
             ++gTestsFailed;
