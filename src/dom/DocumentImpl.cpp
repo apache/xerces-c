@@ -728,10 +728,6 @@ bool DocumentImpl::isKidOK(NodeImpl *parent, NodeImpl *child)
               1 << DOM_Node::ENTITY_REFERENCE_NODE |
               1 << DOM_Node::XML_DECL_NODE;
           
-          kidOK[DOM_Node::DOCUMENT_TYPE_NODE] = 
-              1 << DOM_Node::NOTATION_NODE |
-              1 << DOM_Node::ENTITY_NODE;
-          
           kidOK[DOM_Node::ATTRIBUTE_NODE] = 
               1 << DOM_Node::TEXT_NODE |
               1 << DOM_Node::ENTITY_REFERENCE_NODE;
