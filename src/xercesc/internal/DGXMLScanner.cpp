@@ -853,6 +853,8 @@ void DGXMLScanner::scanDocTypeDecl()
         , DTDElementDecl::Any
         , fGrammarPoolMemoryManager
     ); 
+
+    Janitor<DTDElementDecl> rootDeclJanitor(rootDecl);    
     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
     rootDecl->setExternalElemDeclaration(true);
     if(!fUseCachedGrammar) 
@@ -860,14 +862,8 @@ void DGXMLScanner::scanDocTypeDecl()
         // this will break getRootElemId on DTDGrammar when
         // cached grammars are in use, but 
         // why would one use this anyway???
-        try {
-            ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
-        }
-        catch(const XMLException&)
-        {
-            delete rootDecl;
-            throw;
-        }
+        ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+        rootDeclJanitor.release();
     } else 
     {
         // put this in the undeclared pool so it gets deleted...
@@ -879,6 +875,7 @@ void DGXMLScanner::scanDocTypeDecl()
         else
         {
             rootDecl->setId(fDTDElemNonDeclPool->put((DTDElementDecl*)rootDecl));
+            rootDeclJanitor.release();
         }
     }
 
