@@ -8,12 +8,12 @@ CFG=XercesLib - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "XercesLib.MAK".
+!MESSAGE NMAKE /f "XercesLib.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "XercesLib.MAK" CFG="XercesLib - Win32 Debug"
+!MESSAGE NMAKE /f "XercesLib.mak" CFG="XercesLib - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\src" /I "..\..\src\dom" /I "..\..\..\..\..\src" /I "..\..\..\..\..\..\icu\include" /I "..\..\..\..\..\..\icu\source\common" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "DEVENV_VCPP" /D "PLATFORM_WIN32" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /FD /c
+# ADD CPP /nologo /G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\src" /I "..\..\src\dom" /I "..\..\..\..\..\src" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "DEVENV_VCPP" /D "PLATFORM_WIN32" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib icuuc.lib /nologo /base:"0x10000000" /version:3.0 /subsystem:windows /dll /incremental:yes /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_1.lib" /libpath:"..\..\..\..\..\..\..\..\..\icu\lib\Release"
+# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x10000000" /version:1.0 /subsystem:windows /dll /incremental:yes /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Release/xerces-c_1.lib"
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\src" /I "..\..\src\dom" /I "..\..\..\..\..\src" /I "..\..\..\..\..\..\icu\include" /I "..\..\..\..\..\..\icu\source\common" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /FD /c
+# ADD CPP /nologo /G6 /MDd /Za /W3 /Gm /GX /ZI /Od /I "..\..\src" /I "..\..\src\dom" /I "..\..\..\..\..\src" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x10000000" /version:3.0 /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1.lib" /pdbtype:sept /libpath:"..\..\..\..\..\..\icu\lib\Debug"
+# ADD LINK32 kernel32.lib user32.lib /nologo /base:"0x10000000" /version:1.0 /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1_0.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1.lib" /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -107,17 +107,7 @@ SOURCE=..\..\..\..\..\src\util\Platforms\Win32\Win32Defs.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\Platforms\Win32\Win32PlatformUtils.cpp
-
-!IF  "$(CFG)" == "XercesLib - Win32 Release"
-
 # ADD CPP /Ze
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
-
-# ADD CPP /Ze
-
-!ENDIF 
-
 # End Source File
 # End Group
 # Begin Group "MsgLoaders"
@@ -130,17 +120,7 @@ SOURCE=..\..\..\..\..\src\util\MsgLoaders\InMemory\CppErrMsgs_EN_US.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\MsgLoaders\Win32\Win32MsgLoader.Cpp
-
-!IF  "$(CFG)" == "XercesLib - Win32 Release"
-
 # ADD CPP /Ze
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
-
-# ADD CPP /Ze
-
-!ENDIF 
-
 # End Source File
 # End Group
 # Begin Group "Transcoders"
@@ -149,17 +129,7 @@ SOURCE=..\..\..\..\..\src\util\MsgLoaders\Win32\Win32MsgLoader.Cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\Transcoders\Win32\Win32TransService.cpp
-
-!IF  "$(CFG)" == "XercesLib - Win32 Release"
-
 # ADD CPP /Ze
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
-
-# ADD CPP /Ze
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 

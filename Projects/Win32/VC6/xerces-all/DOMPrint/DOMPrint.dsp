@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src\com\ibm\xml" /I "..\..\..\..\..\intlFiles\include" /I "..\..\..\..\..\src\com\ibm\xml\dom" /I "..\..\..\..\..\intlFiles\source\utility\CPP" /I "..\..\..\..\..\intlFiles\source\utility\C" /I "..\..\..\..\..\src" /I "..\..\..\..\..\intlFiles\source\convert\C" /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "DEVENV_VCPP" /D "PLATFORM_WIN32" /FD /c
+# ADD CPP /nologo /G6 /MD /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "DEVENV_VCPP" /D "PLATFORM_WIN32" /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -51,7 +51,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /machine:I386
-# ADD LINK32 kernel32.lib user32.lib xerces-c_1.lib /nologo /version:3.0 /subsystem:console /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
+# ADD LINK32 kernel32.lib user32.lib xerces-c_1.lib /nologo /version:1.0 /subsystem:console /incremental:yes /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 
 !ELSEIF  "$(CFG)" == "DOMPrint - Win32 Debug"
 
