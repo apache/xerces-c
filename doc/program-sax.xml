@@ -392,6 +392,41 @@ MySAXHandler::fatalError(const SAXParseException&amp; exception)
 
             <p/>
 
+            <table>
+                <tr><th
+                colspan="2"><em>setSecurityManager(Security Manager * const)</em></th></tr>
+                <tr><th><em>Description</em></th>
+                <td> 
+                    Certain valid XML and XML Schema constructs can force a
+                    processor to consume more system resources than an
+                    application may wish.  In fact, certain features could
+                    be exploited by malicious document writers to produce a
+                    denial-of-service attack.  This property allows
+                    applications to impose limits on the amount of
+                    resources the processor will consume while processing
+                    these constructs.  
+                </td></tr>
+                <tr><th><em>Value</em></th>
+                <td> 
+                    An instance of the SecurityManager class (see
+                    <code>xercesc/util/SecurityManager</code>.  This
+                    class's documentation describes the particular limits
+                    that may be set.  Note that, when instantiated, default
+                    values for limits that should be appropriate in most
+                    settings are provided.  The default implementation is
+                    not thread-safe; if thread-safety is required, the
+                    application should extend this class, overriding
+                    methods appropriately.  The parser will not adopt the
+                    SecurityManager instance; the application is
+                    responsible for deleting it when it is finished with
+                    it.  If no SecurityManager instance has been provided to
+                    the parser (the default) then processing strictly
+                    conforming to the relevant specifications will be
+                    performed.
+                </td></tr>
+                <tr><th><em>Value Type</em></th><td> SecurityManager* </td></tr>
+            </table>
+            <p/>
         </s3>
     </s2>
 
