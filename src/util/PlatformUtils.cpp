@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/24 19:50:29  roddey
+ * Clear the 'initialized' flag when the termination call is made. Probably
+ * not required technically, but...
+ *
  * Revision 1.6  2000/03/02 19:54:44  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -216,6 +220,9 @@ void XMLPlatformUtils::Terminate()
     //  it cannot use any XML exception or error reporting services.
     //
     platformTerm();
+
+    // And say we are no longer initialized
+    gInitFlag = false;
 }
 
 
