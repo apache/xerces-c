@@ -401,7 +401,7 @@ Iconv400Transcoder::transcodeXML(const   XMLByte* const          srcData
                             ,       unsigned char* const    charSizes)
 {
     // If debugging, insure the block size is legal
-    #if defined(Xerces_DEBUG)
+    #if defined(XERCES_DEBUG)
     checkBlockSize(maxChars);
     #endif
 
