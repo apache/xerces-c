@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.21  2002/12/02 21:49:16  peiyongz
+# Synchronize default message catalog file name with default locale
+#
 # Revision 1.20  2002/11/22 14:55:32  tng
 # 390: Uniconv390 support.  Patch by Chris Larsson and Stephen Dulin.
 #
@@ -582,22 +585,22 @@ messageloaders::
 ifeq (${MESSAGELOADER},ICONV)
 ifeq (${PLATFORM},SOLARIS)
 	mkdir -p ${MSG_DIR}
-	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
+	gencat ${MSG_DIR}/XMLMessages_en_US.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
 endif
 
 ifeq (${PLATFORM},AIX)
 	mkdir -p ${MSG_DIR}
-	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
+	gencat ${MSG_DIR}/XMLMessages_en_US.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
 endif
 
 ifeq (${PLATFORM},HPUX)
 	mkdir -p ${MSG_DIR}
-	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
+	gencat ${MSG_DIR}/XMLMessages_en_US.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
 endif
 
 ifeq (${PLATFORM},LINUX)
 	mkdir -p ${MSG_DIR}
-	gencat ${MSG_DIR}/XMLMessages.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
+	gencat ${MSG_DIR}/XMLMessages_en_US.cat MsgLoaders/${MESSAGELOADERMODULE}/XMLMsgCat_EN_US.Msg
 endif
 
 endif
