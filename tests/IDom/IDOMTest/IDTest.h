@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/03/14 21:59:29  tng
+ * Run methods test[NodeType] in the IDOMTest and other fixes.
+ *
  * Revision 1.2  2002/02/01 22:44:24  peiyongz
  * sane_include
  *
@@ -99,47 +102,47 @@ IDOM_Document* createDocument();
 IDOM_DocumentType* createDocumentType(IDOM_Document* doc, XMLCh* name);
 IDOM_Entity* createEntity(IDOM_Document* doc, XMLCh* name);
 IDOM_Notation* createNotation(IDOM_Document* doc, XMLCh* name);
-void docBuilder(IDOM_Document* document, XMLCh* name);
+bool docBuilder(IDOM_Document* document, XMLCh* name);
 
 void findTestNodes(IDOM_Document* document);
 void findTestNodes(IDOM_Node* node);
 
 
-void testAttr(IDOM_Document* document);
-void testCDATASection(IDOM_Document* document);
-void testCharacterData(IDOM_Document* document);
-void testChildNodeList(IDOM_Document* document);
-void testComment(IDOM_Document* document);
-void testDeepNodeList(IDOM_Document* document);
+bool testAttr(IDOM_Document* document);
+bool testCDATASection(IDOM_Document* document);
+bool testCharacterData(IDOM_Document* document);
+bool testChildNodeList(IDOM_Document* document);
+bool testComment(IDOM_Document* document);
+bool testDeepNodeList(IDOM_Document* document);
 
 /**
  **** ALL IDOM_Document create methods are run in docBuilder except createAttribute which is in testAttribute**
  */
-void testDocument(IDOM_Document* document);
+bool testDocument(IDOM_Document* document);
 
 
 /**
  ********This really isn't needed, only exists to throw NO_MODIFICATION_ALLOWED_ERR ********
  */
-void testDocumentFragment(IDOM_Document* document);
+bool testDocumentFragment(IDOM_Document* document);
 
-void testDocumentType(IDOM_Document* document);
-void testIDOMerrors(IDOM_Document* document);
-void testIDOMImplementation(IDOM_Document* document);
-void testElement(IDOM_Document* document);
-void testEntity(IDOM_Document* document);
-void testEntityReference(IDOM_Document* document);
+bool testDocumentType(IDOM_Document* document);
+bool testIDOMerrors(IDOM_Document* document);
+bool testIDOMImplementation(IDOM_Document* document);
+bool testElement(IDOM_Document* document);
+bool testEntity(IDOM_Document* document);
+bool testEntityReference(IDOM_Document* document);
 
 
 /**
  ********* This is only for a test of cloneNode "deep"*******
  ********* And for error tests*********
  */
-void testNode(IDOM_Document* document);
+bool testNode(IDOM_Document* document);
 
-void testNotation(IDOM_Document* document);
-void testPI(IDOM_Document* document);
-void testText(IDOM_Document* document);
+bool testNotation(IDOM_Document* document);
+bool testPI(IDOM_Document* document);
+bool testText(IDOM_Document* document);
 bool treeCompare(IDOM_Node* node, IDOM_Node* node2);
 
 };

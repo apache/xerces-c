@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/03/14 21:59:29  tng
+ * Run methods test[NodeType] in the IDOMTest and other fixes.
+ *
  * Revision 1.4  2002/02/01 22:44:24  peiyongz
  * sane_include
  *
@@ -190,7 +193,7 @@ IDOM_Notation* IDTest::createNotation(IDOM_Document* doc, XMLCh* name) {
  * @param type document's type
  *
  */
-void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
+bool IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
 {
     XMLCh* name = XMLString::replicate(nameIn);
 
@@ -199,7 +202,7 @@ void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
 
     //name + "FirstElement"
     XMLString::transcode("FirstElement", tempStr2, 3999);
-    XMLString::catString(tempStr, name);
+    XMLString::copyString(tempStr, name);
     XMLString::catString(tempStr, tempStr2);
 
     IDOM_Element* docFirstElement = doc->createElement(tempStr);
@@ -422,6 +425,8 @@ void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
 
     delete [] name;
 
+    return OK;
+
 
 //!! Throws a NOT_FOUND_ERR ********
 
@@ -434,7 +439,7 @@ void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
 /**
  * @param document org.w3c.dom.IDOM_Document
  */
- void IDTest::findTestNodes(IDOM_Document* document) {
+void IDTest::findTestNodes(IDOM_Document* document) {
     IDOM_Node* node = document;
     int nodeCount = 0;
 
@@ -491,7 +496,7 @@ void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
 /**
  * @param document org.w3c.dom.IDOM_Document
  */
- void IDTest::findTestNodes(IDOM_Node* node) {
+void IDTest::findTestNodes(IDOM_Node* node) {
     IDTest test;
     IDOM_Node*  kid;
     // Walk the tree until you find and assign all node types needed that exist.
@@ -558,8 +563,9 @@ void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
  *
  *
  */
- int main(int argc, char **argv)
+int main(int argc, char **argv)
  {
+     bool OK = true;
 
      {
          //  Nest entire test in an inner block.
@@ -578,7 +584,6 @@ void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
          }
 
          long avgTime = 0;
-         bool OK = true;
          long startTime = 0;//****************Time the whole thing for efficiency of IDOM implementation
 
          // for (int i=0; i< 1000; i++)
@@ -601,9 +606,28 @@ void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
          // docDocType->getEntities()->setNamedItem(docEntity);
 
          XMLString::transcode("d", tempStr3, 3999);
-         test.docBuilder(d, tempStr3);
+         OK = test.docBuilder(d, tempStr3);
 
          test.findTestNodes((IDOM_Node*)d);
+
+         OK = test.testAttr(d);
+         OK = test.testCDATASection(d);
+         OK = test.testCharacterData(d);
+         OK = test.testChildNodeList(d);
+         OK = test.testComment(d);
+         OK = test.testDeepNodeList(d);
+         OK = test.testDocument(d);
+         OK = test.testDocumentFragment(d);
+         OK = test.testDocumentType(d);
+         OK = test.testIDOMImplementation(d);
+         OK = test.testElement(d);
+//         OK = test.testEntity(d);  // Can not test entities;  only parser can create them.
+         OK = test.testEntityReference(d);
+         OK = test.testNode(d);
+         OK = test.testNotation(d);
+         OK = test.testPI(d);
+         OK = test.testText(d);
+         OK = test.testIDOMerrors(d);
 
          // Null out the static object references in class IDTest,
          // which will recover their storage.
@@ -626,7 +650,7 @@ void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
 
     XMLPlatformUtils::Terminate();
 
-    printf("Test Run Successfully\n");
+    if (OK) printf("Test Run Successfully\n");
     return 0;
 };
 
@@ -636,7 +660,7 @@ void IDTest::docBuilder(IDOM_Document* document, XMLCh* nameIn)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testAttr(IDOM_Document* document)
+bool IDTest::testAttr(IDOM_Document* document)
 {
     IDOM_Node* node;
     IDOM_Attr* attributeNode;
@@ -740,7 +764,7 @@ void IDTest::testAttr(IDOM_Document* document)
 */
     if (cloneOK == false)
         {
-            printf("'cloneNode' did not clone the Attribute node correctly\n");
+            fprintf(stderr, "'cloneNode' did not clone the Attribute node correctly\n");
             OK = false;
         }
         // Deep clone test comparison is in testNode & testDocument
@@ -762,6 +786,7 @@ void IDTest::testAttr(IDOM_Document* document)
     if (! OK)
         printf("\n*****The IDOM_Attr* method calls listed above failed, all others worked correctly.*****\n");
 //  printf("");
+    return OK;
 
 };
 
@@ -773,7 +798,7 @@ void IDTest::testAttr(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testCDATASection(IDOM_Document* document)
+bool IDTest::testCDATASection(IDOM_Document* document)
 {
     IDOM_Node* node;
     IDOM_Node* node2;
@@ -785,12 +810,12 @@ void IDTest::testCDATASection(IDOM_Document* document)
 
     node2 = node->cloneNode(T);//*****?
     // Check nodes for equality, both their name and value or lack thereof
-    if (XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&        // Compares node names for equality
+    if (!(!XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&        // Compares node names for equality
           (node->getNodeValue() != 0 && node2->getNodeValue() != 0)     // Checks to make sure each node has a value node
-        ?  !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())         // If both have value nodes test those value nodes for equality
-        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0))   // If one node doesn't have a value node make sure both don't
+        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())         // If both have value nodes test those value nodes for equality
+        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0)))   // If one node doesn't have a value node make sure both don't
     {
-        printf("'cloneNode' did not clone the IDOM_CDATASection* node correctly\n");
+        fprintf(stderr, "'cloneNode' did not clone the IDOM_CDATASection* node correctly\n");
         OK = false;
     }
     // Deep clone test comparison is in testNode & testDocument
@@ -800,6 +825,7 @@ void IDTest::testCDATASection(IDOM_Document* document)
     if (! OK)
         printf("\n*****The IDOM_CDATASection* method calls listed above failed, all others worked correctly.*****\n");
 //  printf("");
+    return OK;
 };
 
 
@@ -809,7 +835,7 @@ void IDTest::testCDATASection(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testCharacterData(IDOM_Document* document)
+bool IDTest::testCharacterData(IDOM_Document* document)
 {
     IDOM_CharacterData* charData;
     XMLCh resetData[3999];
@@ -830,10 +856,14 @@ void IDTest::testCharacterData(IDOM_Document* document)
     XMLString::copyString(resetData,charData->getData());
     //  printf("This node's original data is: " + charData->getData());
 
-    XMLString::copyString(tempStr, charData->getData());
     XMLString::transcode(" This is new data for this node", tempStr2, 3999);
-    XMLString::copyString(tempStr, tempStr2);
-    charData->appendData(tempStr);
+
+    XMLString::copyString(tempStr, charData->getData());
+    XMLString::catString(tempStr, tempStr2);
+
+    charData->appendData(tempStr2);
+
+
     if (XMLString::compareString(tempStr, charData->getData()))
     {
         printf("Warning!!! IDOM_CharacterData's 'appendData' failed to work properly!\n");
@@ -934,6 +964,7 @@ void IDTest::testCharacterData(IDOM_Document* document)
         printf("\n*****The IDOM_CharacterData method calls listed above failed, all others worked correctly.*****\n");
     charData->setData(resetData); // reset node to original data
 //  printf(""\n);
+    return OK;
 };
 
 
@@ -944,7 +975,7 @@ void IDTest::testCharacterData(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testChildNodeList(IDOM_Document* document)
+bool IDTest::testChildNodeList(IDOM_Document* document)
 {
     IDOM_Node* node;
     IDOM_Node* node2;
@@ -963,6 +994,7 @@ void IDTest::testChildNodeList(IDOM_Document* document)
     if (!OK)
         printf("\n*****The ChildNodeList method calls listed above failed, all others worked correctly.*****\n");
 //  printf("");
+    return OK;
 };
 
 
@@ -972,7 +1004,7 @@ void IDTest::testChildNodeList(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testComment(IDOM_Document* document)
+bool IDTest::testComment(IDOM_Document* document)
 {
     IDOM_Node* node;
     IDOM_Node* node2;
@@ -983,18 +1015,21 @@ void IDTest::testComment(IDOM_Document* document)
     node = document->getDocumentElement()->getElementsByTagName(tempStr)->item(0)->getFirstChild(); // node gets textNode11
     node2 = node->cloneNode(T);
     // Check nodes for equality, both their name and value or lack thereof
-    if (XMLString::compareString(node->getNodeName(),node2->getNodeName()) &&         // Compares node names for equality
+    if (!(!XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&        // Compares node names for equality
           (node->getNodeValue() != 0 && node2->getNodeValue() != 0)     // Checks to make sure each node has a value node
-        ?  !XMLString::compareString(node->getNodeValue(),node2->getNodeValue())         // If both have value nodes test those value nodes for equality
-        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0))   // If one node doesn't have a value node make sure both don't
-        //printf("'cloneNode' did not clone the IDOM_Comment* node correctly\n");
+        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())         // If both have value nodes test those value nodes for equality
+        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0)))   // If one node doesn't have a value node make sure both don't
+    {
+        fprintf(stderr, "'cloneNode' did not clone the IDOM_Comment* node correctly\n");
         OK = false;
+    }
     // Deep clone test comparison is in testNode & testDocument
     if (OK)
 // For debugging*****       printf("All IDOM_Comment* method calls worked correctly.\n");
     if (!OK)
         printf("\n*****The IDOM_Comment* method calls listed above failed, all others worked correctly.*****\n");
 //  printf("\n");
+    return OK;
 };
 
 
@@ -1004,7 +1039,7 @@ void IDTest::testComment(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testDeepNodeList(IDOM_Document* document)
+bool IDTest::testDeepNodeList(IDOM_Document* document)
 {
     IDOM_Node* node;
     IDOM_Node* node2;
@@ -1042,6 +1077,7 @@ void IDTest::testDeepNodeList(IDOM_Document* document)
     if (!OK)
         printf("\n*****The DeepNodeList method calls listed above failed, all others worked correctly.*****\n");
 //  printf("");
+    return OK;
 };
 
 
@@ -1053,7 +1089,7 @@ void IDTest::testDeepNodeList(IDOM_Document* document)
  *
  **** ALL IDOM_Document* create methods are run in docBuilder except createAttribute which is in testAttribute**
  */
-void IDTest::testDocument(IDOM_Document* document)
+bool IDTest::testDocument(IDOM_Document* document)
 {
     IDTest make;
     IDOM_DocumentFragment* docFragment, *docFragment2;
@@ -1097,10 +1133,12 @@ void IDTest::testDocument(IDOM_Document* document)
     */
 
     IDOM_Node*  rootElement = document->getLastChild();
-    if (XMLString::compareString(rootElement->getNodeName(), document->getDocumentElement()->getNodeName()) &&         // Compares node names for equality
-          (rootElement->getNodeValue() != 0 && document->getDocumentElement()->getNodeValue() != 0)   // Checks to make sure each node has a value node
+
+    bool check = (rootElement->getNodeValue() && document->getDocumentElement()->getNodeValue())   // Checks to make sure each node has a value node
         ?  !XMLString::compareString(rootElement->getNodeValue(), document->getDocumentElement()->getNodeValue())      // If both have value nodes test those value nodes for equality
-        : (rootElement->getNodeValue() == 0 && document->getDocumentElement()->getNodeValue() == 0))    // If one node doesn't have a value node make sure both don't
+        : (rootElement->getNodeValue() == 0 && document->getDocumentElement()->getNodeValue() == 0);    // If one node doesn't have a value node make sure both don't
+    if (!(!XMLString::compareString(rootElement->getNodeName(), document->getDocumentElement()->getNodeName()) &&        // Compares node names for equality
+         check))
     {
         printf("Warning!!! IDOM_Document's 'getDocumentElement' method failed!\n" );
         OK = false;
@@ -1203,6 +1241,7 @@ void IDTest::testDocument(IDOM_Document* document)
     if (!OK)
         printf("\n*****The IDOM_Document* method calls listed above failed, all others worked correctly.*****\n");
 //  printf("\n");
+    return OK;
 };
 
 
@@ -1215,7 +1254,7 @@ void IDTest::testDocument(IDOM_Document* document)
  *
  ********This really isn't needed, only exists to throw NO_MODIFICATION_ALLOWED_ERR ********
  */
-void IDTest::testDocumentFragment(IDOM_Document* document)
+bool IDTest::testDocumentFragment(IDOM_Document* document)
 {
     bool OK = true;
 // For debugging*****   printf("\n          testDocumentFragment's outputs:\n");
@@ -1227,6 +1266,7 @@ void IDTest::testDocumentFragment(IDOM_Document* document)
     if (!OK)
         printf("\n*****The IDOM_DocumentFragment* method calls listed above failed, all others worked correctly.*****\n");
 //  printf("\n");
+    return OK;
 };
 
 
@@ -1236,7 +1276,7 @@ void IDTest::testDocumentFragment(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testDocumentType(IDOM_Document* document)
+bool IDTest::testDocumentType(IDOM_Document* document)
 {
     IDTest test;
     IDOM_DocumentType* docType, *holdDocType;
@@ -1249,12 +1289,12 @@ void IDTest::testDocumentType(IDOM_Document* document)
     node = document->getFirstChild(); // node gets doc's docType node
     node2 = node->cloneNode(true);
     // Check nodes for equality, both their name and value or lack thereof
-    if (XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&         // Compares node names for equality
-          (node->getNodeValue() != 0 && node2->getNodeValue() != 0)  // Checks to make sure each node has a value node
-        ?  !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())          // If both have value nodes test those value nodes for equality
-        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0))// If one node doesn't have a value node make sure both don't
+    if (!(!XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&        // Compares node names for equality
+          (node->getNodeValue() != 0 && node2->getNodeValue() != 0)     // Checks to make sure each node has a value node
+        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())         // If both have value nodes test those value nodes for equality
+        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0)))   // If one node doesn't have a value node make sure both don't
     {
-        printf("'cloneNode' did not clone the IDOM_DocumentType* node correctly\n");
+        fprintf(stderr, "'cloneNode' did not clone the IDOM_DocumentType* node correctly\n");
         OK = false;
     }
      // Deep clone test comparison is in testNode & testDocument
@@ -1283,6 +1323,7 @@ void IDTest::testDocumentType(IDOM_Document* document)
     if (!OK)
         printf("\n*****The IDOM_DocumentType* method calls listed above failed, all others worked correctly.*****\n");
 //  printf("");
+    return OK;
 };
 
 
@@ -1290,13 +1331,14 @@ void IDTest::testDocumentType(IDOM_Document* document)
 /**
  * @param document org.w3c.dom.IDOM_Document
  */
-void IDTest::testIDOMerrors(IDOM_Document* document) {
+bool IDTest::testIDOMerrors(IDOM_Document* document) {
     bool OK = true;
 
     IDTest tests;
 
     EXCEPTIONSTEST(document->appendChild(testElementNode), IDOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 201 );
     EXCEPTIONSTEST(testTextNode->appendChild(testTextNode), IDOM_DOMException::HIERARCHY_REQUEST_ERR, OK, 202 );
+    return OK;
 };
 
 
@@ -1306,7 +1348,7 @@ void IDTest::testIDOMerrors(IDOM_Document* document) {
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testIDOMImplementation(IDOM_Document* document)
+bool IDTest::testIDOMImplementation(IDOM_Document* document)
 {
 
     IDOM_DOMImplementation* implementation;
@@ -1338,6 +1380,7 @@ void IDTest::testIDOMImplementation(IDOM_Document* document)
     if (!OK)
         fprintf(stderr, "\n*****The IDOM_IDOMImplementation method calls listed above failed, all others worked correctly.*****\n");
 //  printf("");
+    return OK;
 };
 
 
@@ -1347,7 +1390,7 @@ void IDTest::testIDOMImplementation(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testElement(IDOM_Document* document)
+bool IDTest::testElement(IDOM_Document* document)
 {
     IDOM_Attr* attributeNode, *newAttributeNode;
     IDOM_Element* element, *element2;
@@ -1366,10 +1409,10 @@ void IDTest::testElement(IDOM_Document* document)
     node = document->getDocumentElement(); // node gets doc's firstElement
     node2 = node->cloneNode(true);
     // Check nodes for equality, both their name and value or lack thereof
-    if (XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&         // Compares node names for equality
-         (node->getNodeValue() != 0 && node2->getNodeValue() != 0)  // Checks to make sure each node has a value node
-        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())          // If both have value nodes test those value nodes for equality
-        :(node->getNodeValue() == 0 && node2->getNodeValue() == 0))// If one node doesn't have a value node make sure both don't
+    if (!(!XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&        // Compares node names for equality
+          (node->getNodeValue() != 0 && node2->getNodeValue() != 0)     // Checks to make sure each node has a value node
+        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())         // If both have value nodes test those value nodes for equality
+        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0)))   // If one node doesn't have a value node make sure both don't
     {
         fprintf(stderr, "'cloneNode' did not clone the IDOM_Element* node correctly.\n");
         OK = false;
@@ -1535,7 +1578,7 @@ void IDTest::testElement(IDOM_Document* document)
     if (!OK)
         printf("\n*****The IDOM_Element* method calls listed above failed, all others worked correctly.*****\n");
 //  printf("");
-
+    return OK;
 };
 
 
@@ -1545,7 +1588,7 @@ void IDTest::testElement(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testEntity(IDOM_Document* document)
+bool IDTest::testEntity(IDOM_Document* document)
 {
     IDOM_Entity* entity;
     IDOM_Node* node, *node2;
@@ -1557,12 +1600,12 @@ void IDTest::testEntity(IDOM_Document* document)
     node = entity;
     node2 = entity->cloneNode(true);
     // Check nodes for equality, both their name and value or lack thereof
-    if (XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&         // Compares node names for equality
-            ((node->getNodeValue() != 0 && node2->getNodeValue() != 0) ?    // Checks to make sure each node has a value node
-               !XMLString::compareString(node->getNodeValue(), node2->getNodeValue()) :       // If both have value nodes test those value nodes for equality
-               (node->getNodeValue() == 0 && node2->getNodeValue() == 0))) // If one node doesn't have a value node make sure both don't
+    if (!(!XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&        // Compares node names for equality
+          (node->getNodeValue() != 0 && node2->getNodeValue() != 0)     // Checks to make sure each node has a value node
+        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())         // If both have value nodes test those value nodes for equality
+        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0)))   // If one node doesn't have a value node make sure both don't
     {
-        printf("Warning!!! 'cloneNode' did not clone the IDOM_Entity* node correctly");
+        fprintf(stderr, "'cloneNode' did not clone the IDOM_Entity* node correctly");
         OK = false;
     }
     // Deep clone test comparison is in testNode & testDocument
@@ -1571,6 +1614,7 @@ void IDTest::testEntity(IDOM_Document* document)
     if (!OK)
         printf("\n*****The IDOM_Entity* method calls listed above failed, all others worked correctly.*****\n");
 //  printf("");
+    return OK;
 };
 
 
@@ -1579,7 +1623,7 @@ void IDTest::testEntity(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testEntityReference(IDOM_Document* document)
+bool IDTest::testEntityReference(IDOM_Document* document)
 {
     IDOM_EntityReference* entityReference;
     IDOM_Node* node, *node2;
@@ -1590,12 +1634,12 @@ void IDTest::testEntityReference(IDOM_Document* document)
     node = entityReference;
     node2 = node->cloneNode(true);
     // Check nodes for equality, both their name and value or lack thereof
-    if (XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&         // Compares node names for equality
-         (node->getNodeValue() != 0 && node2->getNodeValue() != 0)  // Checks to make sure each node has a value node
-        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())          // If both have value nodes test those value nodes for equality
-        :(node->getNodeValue() == 0 && node2->getNodeValue() == 0))// If one node doesn't have a value node make sure both don't
+    if (!(!XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&        // Compares node names for equality
+          (node->getNodeValue() != 0 && node2->getNodeValue() != 0)     // Checks to make sure each node has a value node
+        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())         // If both have value nodes test those value nodes for equality
+        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0)))   // If one node doesn't have a value node make sure both don't
     {
-        printf("'cloneNode' did not clone the IDOM_EntityReference* node correctly\n");
+        fprintf(stderr, "'cloneNode' did not clone the IDOM_EntityReference* node correctly\n");
         OK = false;
     }
     // Deep clone test comparison is in testNode & testDocument
@@ -1606,6 +1650,7 @@ void IDTest::testEntityReference(IDOM_Document* document)
     if (!OK)
         printf("\n*****The IDOM_EntityReference* method calls listed above failed, all others worked correctly.*****\n");
 //  printf("\n");
+    return OK;
 };
 
 
@@ -1619,7 +1664,7 @@ void IDTest::testEntityReference(IDOM_Document* document)
  ********* This is only for a test of cloneNode "deep"*******
  ********* And for error tests*********
  */
-void IDTest::testNode(IDOM_Document* document)
+bool IDTest::testNode(IDOM_Document* document)
 {
     IDOM_Node* node, *node2;
     bool result;
@@ -1656,6 +1701,7 @@ void IDTest::testNode(IDOM_Document* document)
     if (!OK)
         printf("\n*****The IDOM_Node*  method calls listed above failed, all others worked correctly.*****\n");
 //  printf("\n");
+    return OK;
 };
 
 
@@ -1665,7 +1711,7 @@ void IDTest::testNode(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testNotation(IDOM_Document* document)
+bool IDTest::testNotation(IDOM_Document* document)
 {
     IDOM_Node* node, *node2;
     IDOM_Notation* notation;
@@ -1677,12 +1723,12 @@ void IDTest::testNotation(IDOM_Document* document)
     node = notation;
     node2 = notation->cloneNode(true);//*****?
     // Check nodes for equality, both their name and value or lack thereof
-    if (XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&         // Compares node names for equality
-         (node->getNodeValue() != 0 && node2->getNodeValue() != 0)  // Checks to make sure each node has a value node
-        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())          // If both have value nodes test those value nodes for equality
-        :(node->getNodeValue() == 0 && node2->getNodeValue() == 0))// If one node doesn't have a value node make sure both don't
+    if (!(!XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&        // Compares node names for equality
+          (node->getNodeValue() != 0 && node2->getNodeValue() != 0)     // Checks to make sure each node has a value node
+        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())         // If both have value nodes test those value nodes for equality
+        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0)))   // If one node doesn't have a value node make sure both don't
     {
-        printf("'cloneNode' did not clone the IDOM_Notation* node correctly");
+        fprintf(stderr, "'cloneNode' did not clone the IDOM_Notation* node correctly");
         OK = false;
     }
     // Deep clone test comparison is in testNode & testDocument
@@ -1693,6 +1739,7 @@ void IDTest::testNotation(IDOM_Document* document)
     if (!OK)
         printf("\n*****The IDOM_Notation* method calls listed above failed, all others worked correctly.*****\n");
 //  printf("");
+    return OK;
 };
 
 
@@ -1702,7 +1749,7 @@ void IDTest::testNotation(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testPI(IDOM_Document* document)
+bool IDTest::testPI(IDOM_Document* document)
 {
     IDOM_ProcessingInstruction* pI, *pI2;
     bool OK = true;
@@ -1712,10 +1759,10 @@ void IDTest::testPI(IDOM_Document* document)
 	IDOM_Node*   abc51 = pI->cloneNode(true);//*****?
     pI2 = (IDOM_ProcessingInstruction*) abc51;
     // Check nodes for equality, both their name and value or lack thereof
-    if (XMLString::compareString(pI->getNodeName(), pI2->getNodeName()) &&         // Compares node names for equality
+    if (!(!XMLString::compareString(pI->getNodeName(), pI2->getNodeName()) &&         // Compares node names for equality
          (pI->getNodeValue() != 0 && pI2->getNodeValue() != 0)  // Checks to make sure each node has a value node
         ? !XMLString::compareString(pI->getNodeValue(), pI2->getNodeValue())      // If both have value nodes test those value nodes for equality
-        :(pI->getNodeValue() == 0 && pI2->getNodeValue() == 0))// If one node doesn't have a value node make sure both don't
+        :(pI->getNodeValue() == 0 && pI2->getNodeValue() == 0)))// If one node doesn't have a value node make sure both don't
     {
         printf("'cloneNode' did not clone the IDOM_Entity* node correctly\n");
         OK = false;
@@ -1754,6 +1801,7 @@ void IDTest::testPI(IDOM_Document* document)
         printf("\n*****The PI method calls listed above failed, all others worked correctly.*****\n");
 
 //  printf("\n");
+    return OK;
 };
 
 
@@ -1763,7 +1811,7 @@ void IDTest::testPI(IDOM_Document* document)
  * @param document org.w3c.dom.IDOM_Document
  *
  */
-void IDTest::testText(IDOM_Document* document)
+bool IDTest::testText(IDOM_Document* document)
 {
     IDOM_Node* node, *node2;
     IDOM_Text* text;
@@ -1776,12 +1824,12 @@ void IDTest::testText(IDOM_Document* document)
     text = (IDOM_Text*) node;
     node2 = node->cloneNode(true);//*****?
     // Check nodes for equality, both their name and value or lack thereof
-    if (XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&         // Compares node names for equality
-         (node->getNodeValue() != 0 && node2->getNodeValue() != 0)  // Checks to make sure each node has a value node
-        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())          // If both have value nodes test those value nodes for equality
-        :(node->getNodeValue() == 0 && node2->getNodeValue() == 0))// If one node doesn't have a value node make sure both don't
+    if (!(!XMLString::compareString(node->getNodeName(), node2->getNodeName()) &&        // Compares node names for equality
+          (node->getNodeValue() != 0 && node2->getNodeValue() != 0)     // Checks to make sure each node has a value node
+        ? !XMLString::compareString(node->getNodeValue(), node2->getNodeValue())         // If both have value nodes test those value nodes for equality
+        : (node->getNodeValue() == 0 && node2->getNodeValue() == 0)))   // If one node doesn't have a value node make sure both don't
     {
-        printf("'cloneNode' did not clone the IDOM_Text* node correctly\n");
+        fprintf(stderr, "'cloneNode' did not clone the IDOM_Text* node correctly\n");
         OK = false;
     }
     // Deep clone test comparison is in testNode & testDocument
@@ -1817,6 +1865,7 @@ void IDTest::testText(IDOM_Document* document)
         printf("\n*****The IDOM_Text* method calls listed above failed, all others worked correctly.*****\n");
 
 //  printf("\n");
+    return OK;
 };
 
 
@@ -1835,15 +1884,15 @@ bool IDTest::treeCompare(IDOM_Node* node, IDOM_Node* node2)
     IDOM_Node*  kid, *kid2;         // Check the subtree for equality
     kid = node->getFirstChild();
     kid2 = node2->getFirstChild();
-    if (!kid && !kid2)
+    if (kid && kid2)
     {
         answer = treeCompare(kid, kid2);
         if (!answer)
             return answer;
         else
-            if (!kid->getNextSibling() && !kid2->getNextSibling())
+            if (kid->getNextSibling() && kid2->getNextSibling())
             {
-                while (!kid->getNextSibling() && !kid2->getNextSibling())
+                while (kid->getNextSibling() && kid2->getNextSibling())
                 {
                     answer = treeCompare(kid->getNextSibling(), kid2->getNextSibling());
                     if (!answer)
@@ -1855,7 +1904,7 @@ bool IDTest::treeCompare(IDOM_Node* node, IDOM_Node* node2)
                     }
                 }
             } else
-                if (!(kid->getNextSibling() && kid2->getNextSibling()))
+                if (!(!kid->getNextSibling() && !kid2->getNextSibling()))
                 {
                     return false;
                 }
