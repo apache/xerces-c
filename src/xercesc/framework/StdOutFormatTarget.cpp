@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/01/24 20:20:22  tng
+ * Add method flush to XMLFormatTarget
+ *
  * Revision 1.5  2003/01/09 18:58:29  tng
  * [Bug 15427] DOMWriter dose not flush the output stream.
  *
@@ -86,6 +89,11 @@ StdOutFormatTarget::StdOutFormatTarget()
 
 StdOutFormatTarget::~StdOutFormatTarget()
 {}
+
+void StdOutFormatTarget::flush()
+{
+    cout.flush();
+}
 
 void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
                                   , const unsigned int    count

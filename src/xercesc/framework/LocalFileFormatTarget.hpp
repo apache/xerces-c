@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/01/24 20:20:22  tng
+ * Add method flush to XMLFormatTarget
+ *
  * Revision 1.3  2002/11/27 18:09:25  tng
  * [Bug 13447] Performance: Using LocalFileFormatTarget with DOMWriter is very slow.
  *
@@ -94,6 +97,8 @@ public:
     virtual void writeChars(const XMLByte* const toWrite
                           , const unsigned int   count
                           , XMLFormatter* const  formatter);
+
+    virtual void flush();
 
 private:
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/01/24 20:20:22  tng
+ * Add method flush to XMLFormatTarget
+ *
  * Revision 1.4  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -473,6 +476,8 @@ public:
         , const unsigned int        count
         ,       XMLFormatter* const formatter
     ) = 0;
+
+    virtual void flush() {};
 
 
 protected :

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/01/24 20:20:22  tng
+ * Add method flush to XMLFormatTarget
+ *
  * Revision 1.4  2003/01/09 20:59:44  tng
  * [Bug 15928] Output with LocalFileFormatTarget fails silently.
  *
@@ -125,6 +128,11 @@ LocalFileFormatTarget::~LocalFileFormatTarget()
         XMLPlatformUtils::closeFile(fSource);
 
     delete [] fDataBuf;
+}
+
+void LocalFileFormatTarget::flush()
+{
+    flushBuffer();
 }
 
 void LocalFileFormatTarget::writeChars(const XMLByte* const toWrite

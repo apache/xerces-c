@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/01/24 20:20:22  tng
+ * Add method flush to XMLFormatTarget
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -90,6 +93,8 @@ public:
     virtual void writeChars(const XMLByte* const toWrite
                           , const unsigned int   count
                           , XMLFormatter* const  formatter);
+
+    virtual void flush();
 
 private:
     // -----------------------------------------------------------------------
