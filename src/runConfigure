@@ -360,6 +360,7 @@ NETACCESSOR=Socket               # By default use socket (does HTTP URL's)
 if test $netaccessor ; then
 case $netaccessor in
    fileonly)
+       NETACCESSOR=FileOnly
        netaccessorDefines="" ;;
 
    socket)
