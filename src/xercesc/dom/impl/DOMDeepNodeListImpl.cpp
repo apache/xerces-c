@@ -105,7 +105,7 @@ DOMDeepNodeListImpl::~DOMDeepNodeListImpl()
 {
 }
 
-XMLSize_t DOMDeepNodeListImpl::getLength()
+XMLSize_t DOMDeepNodeListImpl::getLength() const
 {
     // Reset cache to beginning of list
     item(0);
@@ -116,6 +116,10 @@ XMLSize_t DOMDeepNodeListImpl::getLength()
 }
 
 
+DOMNode *DOMDeepNodeListImpl::item(XMLSize_t index) const
+{
+    return ((DOMDeepNodeListImpl*)this)->cacheItem(index);
+}
 
 // Start from the first child and count forward, 0-based. index>length-1
 // should return 0.
@@ -127,7 +131,7 @@ XMLSize_t DOMDeepNodeListImpl::getLength()
 // irrelevant ones.  Doing so in a really useful manner would seem
 // to involve a tree-walk in its own right, or maintaining our data
 // in a parallel tree.
-DOMNode *DOMDeepNodeListImpl::item(XMLSize_t index)
+DOMNode *DOMDeepNodeListImpl::cacheItem(XMLSize_t index)
 {
     XMLSize_t currentIndexPlus1 = fCurrentIndexPlus1;
     DOMNode *currentNode = fCurrentNode;

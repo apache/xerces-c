@@ -96,8 +96,9 @@ public:
 	                    const XMLCh *namespaceURI,
                        const XMLCh *localName);
     virtual          ~DOMDeepNodeListImpl();
-    virtual XMLSize_t getLength();
-    virtual DOMNode*  item(XMLSize_t index);
+    virtual XMLSize_t getLength() const;
+    virtual DOMNode*  item(XMLSize_t index) const;
+    DOMNode*  cacheItem(XMLSize_t index);
 
 private:
     DOMNode*          nextMatchingElementAfter(DOMNode *current);
