@@ -770,6 +770,10 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     //}
     // With new XMLEntityResolver, it may resolve the nameSpace so call resolveSchemaLocation...
 
+    // a bare <xs:import/> doesn't load anything
+    if(!schemaLocation && !nameSpace)
+        return;
+
     // ------------------------------------------------------------------
     // Resolve schema location
     // ------------------------------------------------------------------
