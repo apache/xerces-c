@@ -69,9 +69,11 @@
 #include <util/XMLExceptMsgs.hpp>
 #include <util/BinInputStream.hpp>
 
-#if defined(TARGET_API_MAC_CARBON)
-	#include <Carbon.h>
+#if defined(XML_MACOSX)
+    //	Framework includes from ProjectBuilder
+	#include <URLAccess/URLAccess.h>
 #else
+    //	Classic includes otherwise
 	#include <URLAccess.h>
 #endif
 
