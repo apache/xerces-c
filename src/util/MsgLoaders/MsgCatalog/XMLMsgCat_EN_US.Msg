@@ -210,39 +210,38 @@ $set 2
  52  Could not create a converter for encoding: {0}
  53  Could not decode first line of entity: {0}
  54  End of input was hit in the middle of a multibyte sequence
- 55  This encoding ({0})should have had a transcoder
- 56  Invalid second byte of a UTF-8 character sequence
- 57  Invalid surrogate character found in UTF-8 data
- 58  The current transcoding service does not support source offset information
- 59  The primary document entity could not be opened. Id={0}
- 60  Unbalanced start/end tags found, cannot continue
- 61  The call to scanNext() is illegal at this time
- 62  The index is past the top of stack
- 63  The stack is empty, cannot access members
- 64  The target buffer cannot have a max size of zero
- 65  The given radix is not supported. Use 2, 8, 10, or 16
- 66  The target buffer is too small to accept the results
- 67  The start index is past the end of the string
- 68  Could not write to standard err
- 69  Could not write to standard out
- 70  Could not write to console
- 71  String pool id was not legal
- 72  The block of XML data could not be transcoded
- 73  Could not create a default transcoder
- 74  The maximum size to xlat is larger than the declared block size
- 75  Got an representable code point for encoding {0}
- 76  A source character was not in the code point set for encoding {0}
- 77  The URL was not correctly formed
- 78  The URL used an unsupported protocol
- 79  Unsupported URL protocol: '{0}'
- 80  Only localhost is supported at this time
- 81  No protocol prefix present
- 82  Expected // after protocol
- 83  % must be followed by two hex digits
- 84  Unterminated host component
- 85  The passed index is past the end of the vector
- 86  The element id was invalid
- 87  When reusing the validator, no internal subset is allowed
- 88  The passed recognizer encoding was not known
+ 55  Invalid second byte of a UTF-8 character sequence
+ 56  Invalid surrogate character found in UTF-8 data
+ 57  The current transcoding service does not support source offset information
+ 58  The primary document entity could not be opened. Id={0}
+ 59  Unbalanced start/end tags found, cannot continue
+ 60  The call to scanNext() is illegal at this time
+ 61  The index is past the top of stack
+ 62  The stack is empty, cannot access members
+ 63  The target buffer cannot have a max size of zero
+ 64  The given radix is not supported. Use 2, 8, 10, or 16
+ 65  The target buffer is too small to accept the results
+ 66  The start index is past the end of the string
+ 67  Could not write to standard err
+ 68  Could not write to standard out
+ 69  Could not write to console
+ 70  String pool id was not legal
+ 71  The block of XML data could not be transcoded
+ 72  Could not create a default transcoder
+ 73  The maximum size to xlat is larger than the declared block size
+ 74  Got an representable code point for encoding {0}
+ 75  A source character was not in the code point set for encoding {0}
+ 76  The URL was not correctly formed
+ 77  The URL used an unsupported protocol
+ 78  Unsupported URL protocol: '{0}'
+ 79  Only localhost is supported at this time
+ 80  No protocol prefix present
+ 81  Expected // after protocol
+ 82  % must be followed by two hex digits
+ 83  Unterminated host component
+ 84  The passed index is past the end of the vector
+ 85  The element id was invalid
+ 86  When reusing the validator, no internal subset is allowed
+ 87  The passed recognizer encoding was not known
 
 
