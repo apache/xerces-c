@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/07/31 17:45:25  peiyongz
+ * Fix: memory leak in postTreeBuildInit()
+ *
  * Revision 1.16  2001/07/24 20:00:33  peiyongz
  * Memory Leak fix: Bugzilla #2707 reported by Francois Rioux
  *
@@ -855,7 +858,6 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //
 
     delete qname;
-    fHeadNode = 0;
 
     for (index = 0; index < fLeafCount; index++)
         delete fFollowList[index];
@@ -870,6 +872,8 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     delete [] fLeafList;
 
 	delete [] fLeafSorter;
+
+    fHeadNode = 0;
 }
 
 
@@ -1037,6 +1041,8 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
         fLeafList[newIndex] = new CMLeaf(qname, ((CMAny*)nodeCur)->getPosition());
         fLeafListType[newIndex] = curType;
         ++newIndex;
+
+        delete qname;
     }
     else if ((curType == ContentSpecNode::Choice)
          ||  (curType == ContentSpecNode::Sequence))
