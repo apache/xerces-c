@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/04/06 19:09:21  roddey
+ * Some more improvements to output formatting. Now it will correctly
+ * handle doing the 'replacement char' style of dealing with chars
+ * that are unrepresentable.
+ *
  * Revision 1.2  2000/04/05 00:20:16  roddey
  * More updates for the low level formatted output support
  *
@@ -260,6 +265,21 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
     const EscapeFlags actualEsc = (escapeFlags == DefaultEscape)
                                 ? fEscapeFlags : escapeFlags;
 
+    // And do the same for the unrep flags
+    const UnRepFlags  actualUnRep = (unrepFlags == DefaultUnRep)
+                                    ? fUnRepFlags : unrepFlags;
+
+    //
+    //  Use that to figure out what I should pass to the transcoder. If we
+    //  are doing character references or failing for unrepresentable chars,
+    //  then we just throw, since we should never get a call for something
+    //  we cannot represent. Else, we tell it to just use the replacement
+    //  char.
+    //
+    const XMLTranscoder::UnRepOpts unRepOpts = (actualUnRep == UnRep_Replace)
+                                             ? XMLTranscoder::UnRep_RepChar
+                                             : XMLTranscoder::UnRep_Throw;
+
     //
     //  If we don't have any escape flags set, then we can do the most
     //  efficient loop, else we have to do it the hard way.
@@ -286,7 +306,7 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
                 , fTmpBuf
                 , kTmpBufSize
                 , charsEaten
-                , XMLTranscoder::UnRep_Throw
+                , unRepOpts
             );
 
             #if XML_DEBUG
@@ -346,7 +366,7 @@ XMLFormatter::formatBuf(const   XMLCh* const    toFormat
                     , fTmpBuf
                     , kTmpBufSize
                     , charsEaten
-                    , XMLTranscoder::UnRep_Throw
+                    , unRepOpts
                 );
 
                 #if XML_DEBUG

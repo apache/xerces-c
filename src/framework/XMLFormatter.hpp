@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/04/06 19:09:21  roddey
+ * Some more improvements to output formatting. Now it will correctly
+ * handle doing the 'replacement char' style of dealing with chars
+ * that are unrepresentable.
+ *
  * Revision 1.2  2000/04/05 00:20:16  roddey
  * More updates for the low level formatted output support
  *
@@ -104,6 +109,7 @@ public:
     {
         UnRep_Fail
         , UnRep_CharRef
+        , UnRep_Replace
 
         , DefaultUnRep      = 999
     };
@@ -245,18 +251,18 @@ private :
     //      output encoding. They are faulted in as required, by transcoding
     //      them from fixed Unicode versions.
     // -----------------------------------------------------------------------
-    EscapeFlags         fEscapeFlags;
-    XMLCh*              fOutEncoding;
-    XMLFormatTarget*    fTarget;
-    UnRepFlags          fUnRepFlags;
-    XMLTranscoder*      fXCoder;
-    XMLByte             fTmpBuf[kTmpBufSize + 1];
+    EscapeFlags                 fEscapeFlags;
+    XMLCh*                      fOutEncoding;
+    XMLFormatTarget*            fTarget;
+    UnRepFlags                  fUnRepFlags;
+    XMLTranscoder*              fXCoder;
+    XMLByte                     fTmpBuf[kTmpBufSize + 1];
 
-    XMLByte*            fAposRef;
-    XMLByte*            fAmpRef;
-    XMLByte*            fGTRef;
-    XMLByte*            fLTRef;
-    XMLByte*            fQuoteRef;
+    XMLByte*                    fAposRef;
+    XMLByte*                    fAmpRef;
+    XMLByte*                    fGTRef;
+    XMLByte*                    fLTRef;
+    XMLByte*                    fQuoteRef;
 };
 
 

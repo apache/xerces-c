@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/04/06 19:09:51  roddey
+ * Some more improvements to output formatting. Now it will correctly
+ * handle doing the 'replacement char' style of dealing with chars
+ * that are unrepresentable.
+ *
  * Revision 1.8  2000/04/05 00:20:32  roddey
  * More updates for the low level formatted output support
  *
@@ -104,11 +109,6 @@
 // ---------------------------------------------------------------------------
 //  Local data
 //
-//  doEscapes
-//      Indicates whether, in the output, characters that are commonly
-//      represented in XML via intrinsic character references should be
-//      output that way.
-//
 //  doNamespaces
 //      Indicates whether namespace processing should be enabled or not.
 //      Defaults to disabled.
@@ -124,11 +124,11 @@
 //  xmlFile
 //      The path to the file to parser. Set via command line.
 // ---------------------------------------------------------------------------
-static bool             doEscapes       = true;
-static bool             doNamespaces    = false;
-static bool             doValidation    = false;
-static const char*      encodingName    = "UTF-8";
-static char*            xmlFile         = 0;
+static bool                     doNamespaces    = false;
+static bool                     doValidation    = false;
+static const char*              encodingName    = "UTF-8";
+static XMLFormatter::UnRepFlags unRepFlags      = XMLFormatter::UnRep_Fail;
+static char*                    xmlFile         = 0;
 
 
 
@@ -138,15 +138,15 @@ static char*            xmlFile         = 0;
 static void usage()
 {
     cout <<  "\nUsage: SAXPrint [options] file\n"
-         <<  "   This program prints the data returned by various SAX\n"
+         <<  "   This program prints the data returned by the various SAX\n"
          <<  "   handlers for the specified input file.\n\n"
          <<  "   Options:\n"
-         <<  "     -NoEscape   Don't escape special characters in output\n"
+         <<  "     -u=xxx      Handle unrepresentable chars [fail* | rep | ref]\n"
          <<  "     -v          Invoke the Validating SAX Parser.\n"
          <<  "     -n          Enable namespace processing.\n"
-         <<  "     -x=XXX      Use a particular transcoder for output.\n"
+         <<  "     -x=XXX      Use a particular encoding for output (UTF-8*).\n"
          <<  "     -?          Show this help\n\n"
-         <<  "  If no encoding is provided, it defaults to UTF-8\n"
+         <<  "  * = Default if not provided explicitly\n"
          <<  endl;
 }
 
@@ -206,9 +206,21 @@ int main(int argC, char* argV[])
             // Get out the encoding name
             encodingName = &argV[parmInd][3];
         }
-         else if (!strcmp(argV[parmInd], "-NoEscape"))
+         else if (!strncmp(argV[parmInd], "-u=", 3))
         {
-            doEscapes = false;
+            const char* const parm = &argV[parmInd][3];
+
+            if (!strcmp(parm, "fail"))
+                unRepFlags = XMLFormatter::UnRep_Fail;
+            else if (!strcmp(parm, "rep"))
+                unRepFlags = XMLFormatter::UnRep_Replace;
+            else if (!strcmp(parm, "ref"))
+                unRepFlags = XMLFormatter::UnRep_CharRef;
+            else
+            {
+                cerr << "Unknown -u= value: " << parm << endl;
+                return 2;
+            }
         }
          else
         {
@@ -243,7 +255,7 @@ int main(int argC, char* argV[])
     //
     try
     {
-        SAXPrintHandlers handler(encodingName);
+        SAXPrintHandlers handler(encodingName, unRepFlags);
         parser.setDocumentHandler(&handler);
         parser.setErrorHandler(&handler);
         parser.parse(xmlFile);

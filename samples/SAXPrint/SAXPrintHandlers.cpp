@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/04/06 19:09:51  roddey
+ * Some more improvements to output formatting. Now it will correctly
+ * handle doing the 'replacement char' style of dealing with chars
+ * that are unrepresentable.
+ *
  * Revision 1.6  2000/04/05 00:20:32  roddey
  * More updates for the low level formatted output support
  *
@@ -124,14 +129,15 @@ static const XMLCh  gXMLDecl2[] =
 // ---------------------------------------------------------------------------
 //  SAXPrintHandlers: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SAXPrintHandlers::SAXPrintHandlers(const char* const encodingName) :
+SAXPrintHandlers::SAXPrintHandlers( const   char* const              encodingName
+                                    , const XMLFormatter::UnRepFlags unRepFlags) :
 
     fFormatter
     (
         encodingName
         , this
         , XMLFormatter::NoEscapes
-        , XMLFormatter::UnRep_Fail
+        , unRepFlags
     )
 {
     //
@@ -219,16 +225,19 @@ void SAXPrintHandlers::endDocument()
 {
 }
 
+
 void SAXPrintHandlers::endElement(const XMLCh* const name)
 {
     fFormatter << gEndElement << name << chCloseAngle;
 }
+
 
 void SAXPrintHandlers::ignorableWhitespace( const   XMLCh* const chars
                                             ,const  unsigned int length)
 {
     fFormatter.formatBuf(chars, length);
 }
+
 
 void SAXPrintHandlers::processingInstruction(const  XMLCh* const target
                                             , const XMLCh* const data)
@@ -239,16 +248,17 @@ void SAXPrintHandlers::processingInstruction(const  XMLCh* const target
     fFormatter << gEndPI;
 }
 
+
 void SAXPrintHandlers::startDocument()
 {
 }
+
 
 void SAXPrintHandlers::startElement(const   XMLCh* const    name
                                     ,       AttributeList&  attributes)
 {
     // The name has to be representable without any escapes
     fFormatter  << XMLFormatter::NoEscapes
-                << XMLFormatter::UnRep_Fail
                 << chOpenAngle << name;
 
     unsigned int len = attributes.getLength();
@@ -256,10 +266,10 @@ void SAXPrintHandlers::startElement(const   XMLCh* const    name
     {
         //
         //  Again the name has to be completely representable. But the
-        //  attribute does require the attribute style escaping.
+        //  attribute can have refs and requires the attribute style
+        //  escaping.
         //
         fFormatter  << XMLFormatter::NoEscapes
-                    << XMLFormatter::UnRep_Fail
                     << chSpace << attributes.getName(index)
                     << chEqual << chDoubleQuote
                     << XMLFormatter::AttrEscapes
@@ -267,5 +277,5 @@ void SAXPrintHandlers::startElement(const   XMLCh* const    name
                     << XMLFormatter::NoEscapes
                     << chDoubleQuote;
     }
-    fFormatter << XMLFormatter::NoEscapes << chCloseAngle;
+    fFormatter << chCloseAngle;
 }

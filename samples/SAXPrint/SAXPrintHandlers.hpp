@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/04/06 19:09:52  roddey
+ * Some more improvements to output formatting. Now it will correctly
+ * handle doing the 'replacement char' style of dealing with chars
+ * that are unrepresentable.
+ *
  * Revision 1.5  2000/04/05 00:20:32  roddey
  * More updates for the low level formatted output support
  *
@@ -91,7 +96,8 @@ public:
     // -----------------------------------------------------------------------
     SAXPrintHandlers
     (
-        const   char* const     encodingName
+        const   char* const                 encodingName
+        , const XMLFormatter::UnRepFlags    unRepFlags
     );
     ~SAXPrintHandlers();
 
