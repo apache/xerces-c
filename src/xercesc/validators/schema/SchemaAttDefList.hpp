@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/06 13:27:14  tng
+ * [Bug 9083] Make some classes be exportable.
+ *
  * Revision 1.2  2002/11/04 14:49:41  tng
  * C++ Namespace Support.
  *
@@ -92,7 +95,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  This class does not adopt the hash table, it just references it. The
 //  hash table is owned by the element decl it is a member of.
 //
-class SchemaAttDefList : public XMLAttDefList
+class VALIDATORS_EXPORT SchemaAttDefList : public XMLAttDefList
 {
 public :
     // -----------------------------------------------------------------------

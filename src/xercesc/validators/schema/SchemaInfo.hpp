@@ -83,7 +83,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class SchemaInfo
+class VALIDATORS_EXPORT SchemaInfo
 {
 public:
 
