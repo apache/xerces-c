@@ -31,54 +31,69 @@ This page has sections on the following topics:
 * Where can I look for more help?
 
 
-Building on Windows NT/98                
- 
+Building on Windows 2000/NT/98
+==============================
 
-Xerces-C comes with Microsoft Visual C++ projects and workspaces to help you build
-Xerces-C. The following describes the steps you need to build Xerces-C.
+    Borland C++Builder Compiler
+    ---------------------------
+    Xerces-C comes with Borland C++Builder projects to help you build Xerces-C.
+    The following describes the steps you need to build Xerces-C.  The library
+    and demo projects are all contained in the Xerces-all project group:
 
-Building Xerces-C library              
+        xerces-c-src1_5_1\Projects\Win32\BCB5\Xerces-all\Xerces-all.bpg
 
- To build Xerces-C from it source (using MSVC), you will need to open the workspace
- containing the project. If you are building your application, you may want to add the
- Xerces-C project inside your applications's workspace.
+    Each project in the group refers a directory belog \Xerces-all.  For example
+    the XercesLib project files are contained in the directory
 
- The workspace containing the Xerces-C project file and all other samples is:
+        xerces-c-src1_5_1\Projects\Win32\BCB5\Xerces-all\XercesLib
 
+    To build any project, open the project manager.  Double click on the project
+    name.  Then select "Project|Build" from the menu.  For example, double click
+    on XercesLib.dll in the manager.  Then select "Project|Build XercesLib" from
+    the menu.
 
-
-	   xerces-c-src-1_1_0\Projects\Win32\VC6\xerces-all\xerces-all.dsw
-
-
-
- Once you are inside MSVC, you need to build the project marked XercesLib.
-
- If you want to include the Xerces-C project separately, you need to pick up:
-
-
-
-	 xerces-c-src-1_1_0\Projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp
+    Once the library has been built, include XercesLib.lib with in application's
+    project and place XercesLib.dll somewhere in your path.
 
 
+    Microsoft Visual C++
+    --------------------
+    Xerces-C comes with Microsoft Visual C++ projects and workspaces to help you
+    build Xerces-C. The following describes the steps you need to build Xerces-C.
+
+    Building Xerces-C library
+
+    To build Xerces-C from it source (using MSVC), you will need to open the
+    workspace containing the project. If you are building your application, you
+    may want to add the Xerces-C project inside your applications's workspace.
+
+    The workspace containing the Xerces-C project file and all other samples is:
+
+        xerces-c-src-1_1_0\Projects\Win32\VC6\xerces-all\xerces-all.dsw
+
+    Once you are inside MSVC, you need to build the project marked XercesLib.
+    If you want to include the Xerces-C project separately, you need to pick up:
+
+        xerces-c-src-1_1_0\Projects\Win32\VC6\xerces-all\XercesLib\XercesLib.dsp
+
+    You must make sure that you are linking your application with the xerces-c_1.lib
+    library and also make sure that the associated DLL is somewhere in your path.
+
+    [Note]
+    If you are working on the AlphaWorks version which uses ICU, you must either
+    have the environment variable ICU_DATA set, or keep the international converter
+    files relative to the Xerces DLL (as it came with the original binary drop) for
+    the program to find it. For finding out where you can get ICU from and build it,
+    look at the last section of this page.
 
 
- You must make sure that you are linking your application with the xerces-c_1.lib library
- and also make sure that the associated DLL is somewhere in your path.
+    Building samples
 
- [Note] If you are working on the AlphaWorks version which uses ICU, you must either
-	have the environment variable ICU_DATA set, or keep the international converter
-	files relative to the Xerces DLL (as it came with the original binary drop) for
-	the program to find it. For finding out where you can get ICU from and build it,
-	look at the last section of this page.
-
-
-Building samples                       
-
- Inside the same workspace (xerces-all.dsw), you'll find
- several other projects. These are for the samples. Select
- all the samples and right click on the selection. Then
- choose "Build (selection only)" to build all the samples in
- one shot.
+    Inside the same workspace (xerces-all.dsw), you'll find
+    several other projects. These are for the samples. Select
+    all the samples and right click on the selection. Then
+    choose "Build (selection only)" to build all the samples in
+    one shot.
 
 
 Building on UNIX platforms               
