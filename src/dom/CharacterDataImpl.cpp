@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/04 20:31:21  lehors
+ * got rid of unused isLeafNode attribute
+ *
  * Revision 1.7  2000/03/02 19:53:51  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -97,7 +100,7 @@
 
 CharacterDataImpl::CharacterDataImpl(DocumentImpl *ownerDoc, const DOMString &nam,
                                      short nTyp, const DOMString &data) :
-NodeImpl(ownerDoc, nam, nTyp, true, data)
+NodeImpl(ownerDoc, nam, nTyp, data)
 {
 };
 

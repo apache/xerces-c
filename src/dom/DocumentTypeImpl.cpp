@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/04 20:31:22  lehors
+ * got rid of unused isLeafNode attribute
+ *
  * Revision 1.7  2000/03/02 19:53:59  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -101,7 +104,7 @@
 
 
 DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc, const DOMString &dtName) 
-: NodeImpl(ownerDoc,dtName,DOM_Node::DOCUMENT_TYPE_NODE,false,null),
+: NodeImpl(ownerDoc,dtName,DOM_Node::DOCUMENT_TYPE_NODE,null),
     publicId(null), systemId(null)	//DOM Level 2
 {
     entities = new NamedNodeMapImpl(ownerDoc,null);
@@ -115,7 +118,7 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc, const DOMString &dtNa
 //Introduced in DOM Level 2
 DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
     const DOMString &fPublicId, const DOMString &fSystemId)
-: NodeImpl(null, qualifiedName, DOM_Node::DOCUMENT_TYPE_NODE, false, null),
+: NodeImpl(null, qualifiedName, DOM_Node::DOCUMENT_TYPE_NODE, null),
     publicId(fPublicId), systemId(fSystemId)
 {
     if (DocumentImpl::indexofQualifiedName(qualifiedName) < 0)

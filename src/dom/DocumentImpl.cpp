@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/04/04 20:31:21  lehors
+ * got rid of unused isLeafNode attribute
+ *
  * Revision 1.12  2000/03/24 21:24:50  abagchi
  * Added getElementById() from patch submitted by Jeff Lewis
  *
@@ -166,7 +169,6 @@ const XMLCh* DocumentImpl::PoolElem::getKey() const
 DocumentImpl::DocumentImpl(): NodeImpl(null,
                                        DStringPool::getStaticString("#document", &nam),
                                        DOM_Node::DOCUMENT_NODE,
-                                       false,
                                        null)
 {
     docType=null;
@@ -181,7 +183,7 @@ DocumentImpl::DocumentImpl(): NodeImpl(null,
 //DOM Level 2
 DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
                            const DOMString &qualifiedName, DocumentTypeImpl *doctype)
-                           : NodeImpl(null, DStringPool::getStaticString("#document", &nam), DOM_Node::DOCUMENT_NODE, false, null)
+                           : NodeImpl(null, DStringPool::getStaticString("#document", &nam), DOM_Node::DOCUMENT_NODE, null)
 {
     if (doctype != null && doctype->getOwnerDocument() != null)
         throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl

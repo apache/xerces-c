@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/04/04 20:31:23  lehors
+ * got rid of unused isLeafNode attribute
+ *
  * Revision 1.4  2000/03/02 19:54:04  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -106,7 +109,7 @@
 */
 
 NotationImpl::NotationImpl(DocumentImpl *ownerDoc, const DOMString &notationName) :
-NodeImpl(ownerDoc, notationName, DOM_Node::NOTATION_NODE, true, null)
+NodeImpl(ownerDoc, notationName, DOM_Node::NOTATION_NODE, null)
 {
 };
 

@@ -56,6 +56,9 @@
 
 /**
 * $Log$
+* Revision 1.7  2000/04/04 20:31:22  lehors
+* got rid of unused isLeafNode attribute
+*
 * Revision 1.6  2000/02/06 07:47:33  rahulj
 * Year 2K copyright swat.
 *
@@ -152,7 +155,7 @@
 
 
 EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc, const DOMString &entityName) :
-NodeImpl(ownerDoc, entityName, DOM_Node::ENTITY_REFERENCE_NODE, false, null)
+NodeImpl(ownerDoc, entityName, DOM_Node::ENTITY_REFERENCE_NODE, null)
 {
     
     // EntityReference behaves as a read-only node, since its contents

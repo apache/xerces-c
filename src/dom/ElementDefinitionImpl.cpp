@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/04/04 20:31:22  lehors
+ * got rid of unused isLeafNode attribute
+ *
  * Revision 1.3  2000/03/02 19:54:00  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -78,7 +81,7 @@
 
 
 ElementDefinitionImpl::ElementDefinitionImpl(DocumentImpl *ownerDoc, const DOMString &nam):
-      NodeImpl(ownerDoc, nam, (short)-1, true, null) 
+      NodeImpl(ownerDoc, nam, (short)-1, null) 
 {
      attributes = 0;    
 };

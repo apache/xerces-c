@@ -54,69 +54,6 @@
  * <http://www.apache.org/>.
  */
 
-/**
-* $Log$
-* Revision 1.14  2000/04/04 19:14:57  lehors
-* got rid of ownerElement attribute on AttrImpl,
-* so we must use getParentNode() instead of parentNode
-*
-* Revision 1.13  2000/02/17 17:47:25  andyh
-* Update Doc++ API comments
-* NameSpace update to track W3C
-* Changes were made by Chih Hsiang Chou
-*
-* Revision 1.12  2000/02/15 23:17:37  andyh
-* Update Doc++ API comments
-* NameSpace bugfix and update to track W3C
-* Chih Hsiang Chou
-*
-* Revision 1.10  2000/02/06 07:47:33  rahulj
-* Year 2K copyright swat.
-*
-* Revision 1.9  2000/02/04 01:49:26  aruna1
-* TreeWalker and NodeIterator changes
-*
-* Revision 1.8  2000/01/22 01:38:30  andyh
-* Remove compiler warnings in DOM impl classes
-*
-* Revision 1.7  2000/01/19 21:39:19  andyh
-* DOM L2, fix problems with new style createDocument.
-*
-* Revision 1.6  2000/01/08 00:09:28  andyh
-* Correcf failures in DOMTest with entity references and read-only nodes.
-* Correct reference counting problem NamedNodeMap.
-* Add export methods to NamedNodeMap and DocumentTypeImpl.
-* Redo DocumentImpl::cloneNode
-*
-* (Changes by Chih-Hsiang Chou)
-*
-* Revision 1.5  2000/01/06 19:43:25  aruna1
-* Modifed ?: consturct on solaris to assign DOMString objects
-*
-* Revision 1.4  2000/01/05 01:16:08  andyh
-* DOM Level 2 core, namespace support added.
-*
-* Revision 1.3  1999/12/03 00:11:23  andyh
-* Added DOMString.clone() to node parameters in and out of the DOM,
-* where they had been missed.
-*
-* DOMString::rawBuffer, removed incorrect assumptions about it
-* being null terminated.
-*
-* Revision 1.2  1999/11/30 21:16:25  roddey
-* Changes to add the transcode() method to DOMString, which returns a transcoded
-* version (to local code page) of the DOM string contents. And I changed all of the
-* exception 'throw by pointer' to 'throw by value' style.
-*
-* Revision 1.1.1.1  1999/11/09 01:09:13  twl
-* Initial checkin
-*
-* Revision 1.3  1999/11/08 20:44:29  rahul
-* Swat for adding in Product name and CVS comment log variable.
-*
-*/
-
-
 #include "NodeImpl.hpp"
 #include "DOM_DOMException.hpp"
 #include "DOM_Node.hpp"
@@ -134,16 +71,14 @@ static DOMString *s_xmlnsURI = null;
 
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
                    const DOMString &nam,  short nTyp,
-                   bool isLeafNod, const DOMString &initValue)
+                   const DOMString &initValue)
 {
-    // Do we want to add isLeafNode to this? How about initial value?
     this->ownerDocument=ownerDoc;
     this->namespaceURI=null;	//DOM Level 2
     this->prefix=null;			//DOM Level 2
     this->localName=null;		//DOM Level 2
     this->name=nam.clone();
     this->nType=nTyp;
-    this->isLeafNode=isLeafNod;
     this->value=initValue.clone();
     
     this->changes = 0;
@@ -165,11 +100,10 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 //Introduced in DOM Level 2
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
                    const DOMString &fNamespaceURI, const DOMString &qualifiedName, short nTyp,
-                   bool isLeafNod, const DOMString &initValue)
+                   const DOMString &initValue)
 {
     DOMString xmlns = DStringPool::getStaticString("xmlns", &s_xmlns);
     DOMString xmlnsURI = DStringPool::getStaticString("http://www.w3.org/2000/xmlns/", &s_xmlnsURI);
-    // Do we want to add isLeafNode to this? How about initial value?
     this->ownerDocument=ownerDoc;
     this->name = qualifiedName.clone();
 
@@ -194,7 +128,6 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
     this -> namespaceURI = URI == null ? DOMString(null) : URI.clone();
 
     this->nType=nTyp;
-    this->isLeafNode=isLeafNod;
     this->value=initValue.clone();
     
     this->changes = 0;
@@ -220,7 +153,6 @@ NodeImpl::NodeImpl(const NodeImpl &other, bool deep) {
     this->localName = other.localName.clone();          //DOM Level 2
     this->name  = other.name.clone();
     this->value = other.value.clone();
-    this->isLeafNode = other.isLeafNode;
     this->readOnly = false;
     this->owned = false;
     this->ownerDocument = other.ownerDocument;

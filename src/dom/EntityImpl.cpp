@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/04/04 20:31:22  lehors
+ * got rid of unused isLeafNode attribute
+ *
  * Revision 1.4  2000/03/02 19:54:01  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -83,7 +86,7 @@
 
 
 EntityImpl::EntityImpl(DocumentImpl *ownerDoc, const DOMString &eName) :
-NodeImpl(ownerDoc, eName, DOM_Node::ENTITY_NODE, false, null)
+NodeImpl(ownerDoc, eName, DOM_Node::ENTITY_NODE, null)
 {
 };
 

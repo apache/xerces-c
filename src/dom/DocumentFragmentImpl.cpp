@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/04/04 20:31:21  lehors
+ * got rid of unused isLeafNode attribute
+ *
  * Revision 1.4  2000/03/02 19:53:59  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -88,7 +91,7 @@ static DOMString *nam;   // Will be lazily initialized to "#document-fragment"
 
 DocumentFragmentImpl::DocumentFragmentImpl(DocumentImpl *masterDoc) :
 NodeImpl(masterDoc, DStringPool::getStaticString("#document-fragment", &nam),
-         DOM_Node::DOCUMENT_FRAGMENT_NODE,false,null)
+         DOM_Node::DOCUMENT_FRAGMENT_NODE,null)
 {
 };
         

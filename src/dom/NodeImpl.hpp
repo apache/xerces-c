@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/04/04 20:31:23  lehors
+ * got rid of unused isLeafNode attribute
+ *
  * Revision 1.8  2000/03/02 19:54:02  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -129,7 +132,6 @@ public:
     short                   nType;                  // Node type (see Node. constants)
     DOMString               name;                   // Name of this node or node type
     DOMString               value;                  // String value (not used in all nodes)
-    bool                    isLeafNode;             // If true, no children permitted
     bool                    readOnly;
     bool                    owned;                  // True if there is a reference to this
                                                     //  node in a named node list.  Applies to
@@ -154,10 +156,10 @@ public:
 public:
     NodeImpl(DocumentImpl *ownerDocument,
         const DOMString &name,  short nType,
-        bool isLeafNode, const DOMString &initValue);
+        const DOMString &initValue);
     NodeImpl(DocumentImpl *ownerDocument,   //Introduced in DOM Level 2
 	const DOMString &namespaceURI, const DOMString &qualifiedName, short nType,
-        bool isLeafNode, const DOMString &initValue);
+        const DOMString &initValue);
     NodeImpl(const NodeImpl &other, bool deep=false);
     virtual ~NodeImpl();
     NodeImpl        *clone();

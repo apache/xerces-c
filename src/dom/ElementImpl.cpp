@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/04/04 20:31:22  lehors
+ * got rid of unused isLeafNode attribute
+ *
  * Revision 1.11  2000/03/31 01:21:20  andyh
  * Element::setAttribute now checks whether the attribute node exists,
  * and uses it if it does.  Change from  Steve Dickson
@@ -115,7 +118,7 @@
 
 
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
-NodeImpl(ownerDoc, nam, DOM_Node::ELEMENT_NODE, false, null)
+NodeImpl(ownerDoc, nam, DOM_Node::ELEMENT_NODE, null)
 {
     
     // If there is an ElementDefintion, set its Attributes up as
@@ -135,7 +138,7 @@ NodeImpl(ownerDoc, nam, DOM_Node::ELEMENT_NODE, false, null)
 //DOM Level 2
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc,
     const DOMString &fNamespaceURI, const DOMString &qualifiedName) :
-NodeImpl(ownerDoc, fNamespaceURI, qualifiedName, DOM_Node::ELEMENT_NODE, false, null)
+NodeImpl(ownerDoc, fNamespaceURI, qualifiedName, DOM_Node::ELEMENT_NODE, null)
 {
     
     // If there is an ElementDefintion, set its Attributes up as

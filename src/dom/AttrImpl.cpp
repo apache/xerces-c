@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/04 20:31:20  lehors
+ * got rid of unused isLeafNode attribute
+ *
  * Revision 1.7  2000/04/04 17:38:16  lehors
  * got rid of ownerElement attribute, use parentNode instead
  *
@@ -96,7 +99,7 @@
 #define null 0
 
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName) 
-:  NodeImpl (ownerDoc, aName, DOM_Node::ATTRIBUTE_NODE, false, DOMString())
+:  NodeImpl (ownerDoc, aName, DOM_Node::ATTRIBUTE_NODE, DOMString())
 {
     specified = true;
 };
@@ -104,7 +107,7 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
 //DOM Level 2
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc,   //DOM Level 2
     const DOMString &fNamespaceURI, const DOMString &qualifiedName)
-:  NodeImpl (ownerDoc, fNamespaceURI, qualifiedName, DOM_Node::ATTRIBUTE_NODE, false, DOMString())
+:  NodeImpl (ownerDoc, fNamespaceURI, qualifiedName, DOM_Node::ATTRIBUTE_NODE, DOMString())
 {
     specified = true;
 };
