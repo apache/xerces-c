@@ -90,7 +90,14 @@ ElementImpl::ElementImpl(const ElementImpl &other, bool deep)
     if (deep)
         cloneChildren(other);
 	if (other.attributes != null)
+	{
+		if (attributes)
+		{
+			attributes->removeAll();
+			NamedNodeMapImpl::removeRef(attributes);
+		}
 		attributes = other.attributes->cloneAttrMap(this);
+	}
 };
 
 
