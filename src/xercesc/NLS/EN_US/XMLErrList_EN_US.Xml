@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<!DOCTYPE MsgFile SYSTEM "../XMLErrList.Dtd">
+<!DOCTYPE MsgFile SYSTEM "../XMLErrList.dtd">
 
 <!--  =====================================================
  A Message file is designed for a particular locale, which is
@@ -529,6 +529,7 @@
             <Message Id="URL_RelativeBaseURL" Text="The base part of the URL cannot be relative"/>
             <Message Id="URL_BaseUnderflow" Text="The base part has too few levels to weave in relative part"/>
             <Message Id="URL_BadPortField" Text="The port field must be a 16 bit decimal number"/>
+            <Message Id="UTF8_FormatError" Text="invalid byte {0} ({1}) of a {2}-byte sequence."/>
             <Message Id="Vector_BadIndex" Text="The passed index is past the end of the vector"/>
             <Message Id="Val_InvalidElemId" Text="The element id was invalid"/>
             <Message Id="Val_CantHaveIntSS" Text="When reusing the Grammar, no internal subset is allowed"/>

@@ -2,15 +2,15 @@ en_US {
 
 	 // an array 
 	XMLErrors { 
-		"W Start " , 
+		"W_ Start " , 
 		"Notation '{0}' has already been declared " ,
 		"Attribute '{0}' has already been declared for element '{1}' " ,
 		"Encoding ({0}, from XMLDecl or manually set) contradicts the auto-sensed encoding, ignoring it " ,
 		"Element '{0}' was referenced in a content model but never declared " ,
 		"Element '{0}' was referenced in an attlist but never declared " ,
 		"An exception occurred! Type:{0}, Message:{1} " ,
-		"W End " ,
-		"E Start " , 
+		"W_ End " ,
+		"E_ Start " , 
 		"{0} is unsupported " ,
 		"Error: Top level complexType has no name - declaration ignored " ,
 		"Globally-declared attribute must have a name - attribute declaration ignored " ,
@@ -169,8 +169,8 @@ en_US {
 		"For '{0}' to be a member of the substitution group set of '{1}', its {abstract} must be false. " ,
 		"The namespace of element '{0}' must be from the schema namespace. " ,
 		"The {target namespace} of '{0}' must not match 'http://www.w3.org/2001/XMLSchema-instance'. " ,
-		"E End " ,
-		"F Start " , 
+		"E_ End " ,
+		"F_ Start " , 
 		"Expected comment or CDATA " ,
 		"Expected an attribute name " ,
 		"Expected a notation name " ,
@@ -305,13 +305,13 @@ en_US {
 		"The namespace for 'xml' cannot be bound to any prefix other than 'xml'. " ,
 		"Element '{0}' cannot have 'xmlns' as its prefix. " ,
 		"Complex Type Definition Representation OK - 2.2: <restriction> must have a <simpleType> child. " ,
-		"F End " ,
+		"F_ End " ,
 		} 
 
 
 	 // an array 
 	XMLValidity { 
-		"E Start " , 
+		"E_ Start " , 
 		"Unknown element '{0}' " ,
 		"Attribute '{0}' not defined " ,
 		"Notation '{0}' was referenced but never declared " ,
@@ -417,17 +417,17 @@ en_US {
 		"Duplicate key value declared for identity constraint of element '{0}'. " ,
 		"The keyref '{0}' refers to a key/unique that is out of scope. " ,
 		"The key for identity constraint of element '{0}' is not found. " ,
-		"E End " ,
+		"E_ End " ,
 		} 
 
 
 	 // an array 
 	XML4CErrors { 
-		"W Start " , 
+		"W_ Start " , 
 		"Warning: The primary document entity could not be opened. Id={0} " ,
 		"Warning: No caching of grammar set, a grammar with same key found in the cache pool. " ,
-		"W End " ,
-		"F Start " , 
+		"W_ End " ,
+		"F_ Start " , 
 		"The index is beyond the array bounds  " ,
 		"The new size is less than the old one " ,
 		"The index given was beyond the max attribute index " ,
@@ -530,6 +530,7 @@ en_US {
 		"The base part of the URL cannot be relative " ,
 		"The base part has too few levels to weave in relative part " ,
 		"The port field must be a 16 bit decimal number " ,
+		"invalid byte {0} ({1}) of a {2}-byte sequence. " ,
 		"The passed index is past the end of the vector " ,
 		"The element id was invalid " ,
 		"When reusing the Grammar, no internal subset is allowed " ,
@@ -791,13 +792,13 @@ en_US {
 		"MapAndSum: There is not a complete functional mapping between the particles " ,
 		"Particle derivation: Invalid content spec node type " ,
 		"NodeIDMap overflows and exceeds the largest available size " ,
-		"F End " ,
+		"F_ End " ,
 		} 
 
 
 	 // an array 
 	XMLDOMMsg { 
-		"F Start " , 
+		"F_ Start " , 
 		"Just an index " ,
 		"The index or size is negative, or greater than the allowed value " ,
 		"The specified range of text does not fit into the String " ,
@@ -821,7 +822,7 @@ en_US {
 		"Nested CDATA sections " ,
 		"Unrepresentable character data " ,
 		"Unrecognized Node Type " ,
-		"F End " ,
+		"F_ End " ,
 		} 
 
 } 

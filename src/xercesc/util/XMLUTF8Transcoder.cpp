@@ -76,6 +76,16 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  gUTFBytes
 //      A list of counts of trailing bytes for each initial byte in the input.
 //
+//  gUTFByteIndicator
+//      For a UTF8 sequence of n bytes, n>=2, the first byte of the
+//      sequence must contain n 1's followed by precisely 1 0 with the
+//      rest of the byte containing arbitrary bits.  This array stores
+//      the required bit pattern for validity checking.
+//  gUTFByteIndicatorTest
+//      When bitwise and'd with the observed value, if the observed
+//      value is correct then a result matching gUTFByteIndicator will
+//      be produced.
+//
 //  gUTFOffsets
 //      A list of values to offset each result char type, according to how
 //      many source bytes when into making it.
@@ -102,6 +112,15 @@ static const XMLByte gUTFBytes[256] =
     ,   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
     ,   2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     ,   3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5
+};
+
+static const XMLByte gUTFByteIndicator[6] =
+{
+    0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC
+};
+static const XMLByte gUTFByteIndicatorTest[6] =
+{
+    0x80, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE
 };
 
 static const XMLUInt32 gUTFOffsets[6] =
@@ -192,20 +211,48 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
             break;
 
         // Looks ok, so lets build up the value
-        XMLUInt32 tmpVal = 0;
-        switch(trailingBytes)
-        {
-            case 5 : tmpVal += *srcPtr++; tmpVal <<= 6;
-            case 4 : tmpVal += *srcPtr++; tmpVal <<= 6;
-            case 3 : tmpVal += *srcPtr++; tmpVal <<= 6;
-            case 2 : tmpVal += *srcPtr++; tmpVal <<= 6;
-            case 1 : tmpVal += *srcPtr++; tmpVal <<= 6;
-            case 0 : tmpVal += *srcPtr++;
-                     break;
+        // or at least let's try to do so--remembering that
+        // we cannot assume the encoding to be valid:
 
-            default :
-                ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+        // first, test first byte
+        if((gUTFByteIndicatorTest[trailingBytes] & *srcPtr) != gUTFByteIndicator[trailingBytes]) {
+            char pos[2] = {(char)0x31, 0}; 
+            char len[2] = {(char)trailingBytes+0x31, 0};
+            char byte[2] = {*srcPtr,0};
+            ThrowXML3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len);
         }
+
+        XMLUInt32 tmpVal = *srcPtr++;
+        tmpVal <<= 6;
+        for(unsigned int i=1; i<trailingBytes; i++) 
+        {
+            if((*srcPtr & 0xC0) == 0x80) 
+            {
+                tmpVal += *srcPtr++; 
+                tmpVal <<= 6;
+            } 
+            else
+            {
+                char len[2] = {(char)trailingBytes+0x31, 0};
+                char pos[2]= {(char)i+0x31, 0};
+                char byte[2] = {*srcPtr,0};
+                ThrowXML3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len);
+            }
+        }
+        if((*srcPtr & 0xC0) == 0x80) 
+        {
+            tmpVal += *srcPtr++;
+        }
+        else 
+        {
+            char len[2] = {(char)trailingBytes+0x31, 0};
+            char byte[2] = {*srcPtr,0};
+            ThrowXML3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, len, byte, len);
+        }
+        // since trailingBytes comes from an array, this logic is redundant
+        //  default :
+        //      ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
+        //}
         tmpVal -= gUTFOffsets[trailingBytes];
 
         //
