@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/08 19:38:58  roddey
+ * xmlns:xxx="" should affect the mapping of the prefixes of sibling attributes,
+ * which was not being done.
+ *
  * Revision 1.3  2000/02/06 07:47:52  rahulj
  * Year 2K copyright swat.
  *
@@ -370,12 +374,9 @@ unsigned int ElemStack::mapPrefixToURI( const   XMLCh* const    prefixToMap
 
     //
     //  Start at the stack top and work backwards until we come to some
-    //  element that mapped this prefix. We start down one further if the
-    //  mapping mode is for an attribute name.
+    //  element that mapped this prefix.
     //
     int startAt = (int)(fStackTop - 1);
-    if (mode  == Mode_Attribute)
-        startAt--;
     for (int index = startAt; index >= 0; index--)
     {
         // Get a convenience pointer to the current element
