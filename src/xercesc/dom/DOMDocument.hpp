@@ -833,9 +833,15 @@ public:
      */
     virtual DOMDocumentType *createDocumentType(const XMLCh *name) = 0;
 
+    /***
+     * Provide default implementation to maintain source code compatibility
+     ***/
     virtual DOMDocumentType* createDocumentType(const XMLCh *qName,
                                                 const XMLCh *publicId,
-                                                const XMLCh *systemId) = 0;
+                                                const XMLCh *systemId)
+    {
+        return createDocumentType(qName);
+    }
 
     /**
      * Non-standard extension.
