@@ -1,0 +1,1 @@
+java org.apache.stylebook.StyleBook "targetDirectory=doc/html" doc/xerces-c_book.xml ../../xml-stylebook/styles/apachexml
