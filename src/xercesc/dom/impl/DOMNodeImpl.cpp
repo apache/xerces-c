@@ -677,7 +677,12 @@ const XMLCh* DOMNodeImpl::lookupNamespaceURI(const XMLCh* specifiedPrefix) const
 
 
 const XMLCh*     DOMNodeImpl::getBaseURI() const{
-    return 0;
+    DOMNode *thisNode = castToNode(this);
+    DOMNode* parent = thisNode->getParentNode();
+    if (parent)
+        return parent->getBaseURI();
+    else
+        return 0;
 }
 
 short            DOMNodeImpl::compareTreePosition(const DOMNode* other) const {
