@@ -128,7 +128,7 @@ DOMString ElementNSImpl::getLocalName()
     return localName;
 }
 
-void ElementNSImpl::setPrefix(const DOMString &fPrefix)
+void ElementNSImpl::setPrefix(const DOMString &prefix)
 {
     DOMString xml = NodeImpl::getXmlString();
     DOMString xmlURI = NodeImpl::getXmlURIString();
@@ -136,26 +136,28 @@ void ElementNSImpl::setPrefix(const DOMString &fPrefix)
     DOMString xmlnsURI = NodeImpl::getXmlnsURIString();
 
     if (readOnly)
-	throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
+        throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
-    if(fPrefix != null && !DocumentImpl::isXMLName(fPrefix))
+    if(prefix != null && !DocumentImpl::isXMLName(prefix))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
-    if (namespaceURI == null || localName == null)
+
+    if (namespaceURI == null)
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
-    if (fPrefix == null || fPrefix.length() == 0) {
-	this -> prefix = null;
-	name = localName;
-	return;
+    if (prefix == null || prefix.length() == 0) {
+        this -> prefix = null;
+        name = localName;
+        return;
     }
 
-    XMLCh *p = fPrefix.rawBuffer();
-    for (int i = fPrefix.length(); --i >= 0;)
-	if (*p++ == chColon)	//prefix is malformed
-	    throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-    if (fPrefix.equals(xml) && !namespaceURI.equals(xmlURI))
-	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+    if (prefix.equals(xml) && !namespaceURI.equals(xmlURI))
+        throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
-    name = this -> prefix = fPrefix;
-    name = name + chColon + localName;    //nodeName is changed too
+    XMLCh *p = prefix.rawBuffer();
+    for (int i = prefix.length(); --i >= 0;)
+        if (*p++ == chColon)	//prefix is malformed
+            throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+
+    this -> prefix = prefix;
+    name = prefix + chColon + localName; //nodeName is changed too
 }
