@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2002/01/28 17:08:47  knoaman
+ * SAX2-ext's DeclHandler support.
+ *
  * Revision 1.23  2002/01/28 16:29:21  knoaman
  * The namespace-prefixes feature in SAX2 should be off by default.
  *
@@ -177,6 +180,7 @@
 #include <util/XMLUniDefs.hpp>
 #include <sax2/ContentHandler.hpp>
 #include <sax2/LexicalHandler.hpp>
+#include <sax2/DeclHandler.hpp>
 #include <sax/DTDHandler.hpp>
 #include <sax/ErrorHandler.hpp>
 #include <sax/EntityResolver.hpp>
@@ -367,6 +371,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl() :
     , fEntityResolver(0)
     , fErrorHandler(0)
     , fLexicalHandler(0)
+    , fDeclHandler(0)
     , fAdvDHCount(0)
     , fAdvDHList(0)
     , fAdvDHListSize(32)
@@ -579,6 +584,15 @@ void SAX2XMLReaderImpl::setLexicalHandler(LexicalHandler* const handler)
 {
     fLexicalHandler = handler;
     if (fLexicalHandler)
+        fScanner->setDocTypeHandler(this);
+    else
+        fScanner->setDocTypeHandler(0);
+}
+
+void SAX2XMLReaderImpl::setDeclarationHandler(DeclHandler* const handler)
+{
+    fDeclHandler = handler;
+    if (fDeclHandler)
         fScanner->setDocTypeHandler(this);
     else
         fScanner->setDocTypeHandler(0);
@@ -1112,7 +1126,50 @@ void SAX2XMLReaderImpl::attDef( const   DTDElementDecl& elemDecl
                         , const DTDAttDef&      attDef
                         , const bool            ignoring)
 {
-    // Unused by SAX DTDHandler interface at this time
+    if (fDeclHandler && !ignoring) {
+
+        XMLAttDef::AttTypes attType = attDef.getType();
+        XMLAttDef::DefAttTypes defAttType = attDef.getDefaultType();
+        const XMLCh* defAttTypeStr = XMLUni::fgNullString;
+        bool isEnumeration = (attType == XMLAttDef::Notation || attType == XMLAttDef::Enumeration);
+        XMLBuffer enumBuf(128);
+
+        if (defAttType == XMLAttDef::Fixed ||
+            defAttType == XMLAttDef::Implied ||
+            defAttType == XMLAttDef::Required) {
+            defAttTypeStr = attDef.getDefAttTypeString(defAttType);
+        }
+
+        if (isEnumeration) {
+
+            const XMLCh* enumString = attDef.getEnumeration();
+            unsigned int enumLen = XMLString::stringLen(enumString);
+
+            if (attType == XMLAttDef::Notation) {
+
+                enumBuf.set(XMLUni::fgNotationString);
+                enumBuf.append(chSpace);
+            }
+
+            enumBuf.append(chOpenParen);
+
+            for (unsigned int i=0; i<enumLen; i++) {
+                if (enumString[i] == chSpace)
+                    enumBuf.append(chPipe);
+                else
+                    enumBuf.append(enumString[i]);
+            }
+
+            enumBuf.append(chCloseParen);
+        }
+
+        fDeclHandler->attributeDecl(elemDecl.getFullName(),
+                                    attDef.getFullName(),
+                                    (isEnumeration) ? enumBuf.getRawBuffer() 
+                                                    : attDef.getAttTypeString(attDef.getType()),
+                                    defAttTypeStr,
+                                    attDef.getValue());
+    }
 }
 
 
@@ -1149,9 +1206,12 @@ void SAX2XMLReaderImpl::doctypeWhitespace(  const   XMLCh* const    chars
 }
 
 
-void SAX2XMLReaderImpl::elementDecl(const DTDElementDecl&, const bool)
+void SAX2XMLReaderImpl::elementDecl(const DTDElementDecl& elemDecl,
+                                    const bool isIgnored)
 {
-    // Unused by SAX DTDHandler interface at this time
+    if (fDeclHandler && !isIgnored)
+        fDeclHandler->elementDecl(elemDecl.getFullName(),
+                                  elemDecl.getFormattedContentModel());
 }
 
 
@@ -1187,19 +1247,54 @@ void SAX2XMLReaderImpl::entityDecl( const   DTDEntityDecl&  entityDecl
 {
     //
     //  If we have a DTD handler, and this entity is not ignored, and
-    //  its an unparsed entity, then send this one.
+    //  its an unparsed entity, then send this one, else if we have a Decl
+    //  handler then send this one.
     //
-    if (fDTDHandler && !isIgnored)
-    {
-        if (entityDecl.isUnparsed())
-        {
-            fDTDHandler->unparsedEntityDecl
-            (
-                entityDecl.getName()
-                , entityDecl.getPublicId()
-                , entityDecl.getSystemId()
-                , entityDecl.getNotationName()
-            );
+    if (!isIgnored) {
+
+        if (entityDecl.isUnparsed()) {
+
+            if (fDTDHandler) {
+                fDTDHandler->unparsedEntityDecl
+                (
+                    entityDecl.getName()
+                    , entityDecl.getPublicId()
+                    , entityDecl.getSystemId()
+                    , entityDecl.getNotationName()
+                );
+            }
+        }
+        else if (fDeclHandler) {
+
+            const XMLCh* entityName = entityDecl.getName();
+            ArrayJanitor<XMLCh> tmpNameJan(0);
+
+            if (isPEDecl) {
+
+                unsigned int nameLen = XMLString::stringLen(entityName);
+                XMLCh* tmpName = new XMLCh[nameLen + 2];
+
+                tmpNameJan.reset(tmpName);
+                tmpName[0] = chPercent;
+                XMLString::copyString(tmpName + 1, entityName);
+                entityName = tmpName;
+            }
+
+            if (entityDecl.isExternal()) {
+                fDeclHandler->externalEntityDecl
+                (
+                    entityName
+                    , entityDecl.getPublicId()
+                    , entityDecl.getSystemId()
+                );
+            }
+            else {
+                fDeclHandler->internalEntityDecl
+                (
+                    entityName
+                    , entityDecl.getValue()
+                );
+            }
         }
     }
 }

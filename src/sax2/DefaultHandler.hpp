@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/01/28 17:08:33  knoaman
+ * SAX2-ext's DeclHandler support.
+ *
  * Revision 1.5  2001/11/13 13:24:05  tng
  * Fix documentation for DefaultHandler.
  *
@@ -82,6 +85,7 @@
 
 #include <sax2/ContentHandler.hpp>
 #include <sax2/LexicalHandler.hpp>
+#include <sax2/DeclHandler.hpp>
 #include <sax/DTDHandler.hpp>
 #include <sax/EntityResolver.hpp>
 #include <sax/ErrorHandler.hpp>
@@ -95,7 +99,7 @@ class Attributes;
   *
   * <p>This class implements the default behaviour for SAX2
   * interfaces: EntityResolver, DTDHandler, ContentHandler,
-  * ErrorHandler, and LexicalHandler.</p>
+  * ErrorHandler, LexicalHandler, and DeclHandler.</p>
   *
   * <p>Application writers can extend this class when they need to
   * implement only part of an interface; parser writers can
@@ -109,6 +113,7 @@ class Attributes;
   * @see ContentHandler#ContentHandler
   * @see ErrorHandler#ErrorHandler
   * @see LexicalHandler#LexicalHandler
+  * @see DeclHandler#DeclHandler
   */
 
 class SAX2_EXPORT DefaultHandler :
@@ -116,8 +121,9 @@ class SAX2_EXPORT DefaultHandler :
     public EntityResolver,
 	public DTDHandler,
 	public ContentHandler,
-   public ErrorHandler,
-   public LexicalHandler
+    public ErrorHandler,
+    public LexicalHandler,
+    public DeclHandler
 {
 public:
   /** @name Default handlers for the DocumentHandler interface */
@@ -594,6 +600,94 @@ public:
     virtual void startEntity (const XMLCh* const name);
 
     //@}
+
+    /** @name Default implementation of DeclHandler interface. */
+
+    //@{
+
+   /**
+    * Report an element type declaration.
+    *
+    * <p>The content model will consist of the string "EMPTY", the string
+    * "ANY", or a parenthesised group, optionally followed by an occurrence
+    * indicator. The model will be normalized so that all parameter entities
+    * are fully resolved and all whitespace is removed,and will include the
+    * enclosing parentheses. Other normalization (such as removing redundant
+    * parentheses or simplifying occurrence indicators) is at the discretion
+    * of the parser.</p>
+    *
+    * @param name The element type name.
+    * @param model The content model as a normalized string.
+    * @exception SAXException Any SAX exception, possibly
+    *            wrapping another exception.
+    */
+    virtual void elementDecl
+    (
+        const   XMLCh* const    name
+        , const XMLCh* const    model
+    );
+
+   /**
+    * Report an attribute type declaration.
+    *
+    * <p>Only the effective (first) declaration for an attribute will
+    * be reported.</p>
+    *
+    * @param eName The name of the associated element.
+    * @param aName The name of the attribute.
+    * @param type A string representing the attribute type.
+    * @param mode A string representing the attribute defaulting mode ("#IMPLIED", "#REQUIRED", or "#FIXED") or null if none of these applies.
+    * @param value A string representing the attribute's default value, or null if there is none. 
+    * @exception SAXException Any SAX exception, possibly
+    *            wrapping another exception.
+    */
+    virtual void attributeDecl
+    (
+        const   XMLCh* const    eName
+        , const XMLCh* const    aName
+        , const XMLCh* const    type
+        , const XMLCh* const    mode
+        , const XMLCh* const    value
+    );
+
+   /**
+    * Report an internal entity declaration.
+    *
+    * <p>Only the effective (first) declaration for each entity will be 
+    * reported. All parameter entities in the value will be expanded, but
+    * general entities will not.</p>
+    *
+    * @param name The name of the entity. If it is a parameter entity, the name will begin with '%'.
+    * @param value The replacement text of the entity.
+    * @exception SAXException Any SAX exception, possibly
+    *            wrapping another exception.
+    */
+    virtual void internalEntityDecl
+    (
+        const   XMLCh* const    name
+        , const XMLCh* const    value
+    );
+
+   /**
+    * Report a parsed external entity declaration.
+    *
+    * <p>Only the effective (first) declaration for each entity will
+    * be reported.</p>
+    *
+    * @param name The name of the entity. If it is a parameter entity, the name will begin with '%'.
+    * @param publicId The The declared public identifier of the entity, or null if none was declared.
+    * @param systemId The declared system identifier of the entity.
+    * @exception SAXException Any SAX exception, possibly
+    *            wrapping another exception.
+    */
+    virtual void externalEntityDecl
+    (
+        const   XMLCh* const    name
+        , const XMLCh* const    publicId
+        , const XMLCh* const    systemId
+    );
+
+    //@}
 };
 
 
@@ -731,6 +825,30 @@ inline void DefaultHandler::startDTD(  const   XMLCh* const    name
 }
 
 inline void DefaultHandler::startEntity (const XMLCh* const name)
+{
+}
+
+inline void DefaultHandler::attributeDecl(const XMLCh* const,
+                                          const XMLCh* const,
+                                          const XMLCh* const,
+                                          const XMLCh* const,
+                                          const XMLCh* const)
+{
+}
+
+inline void DefaultHandler::elementDecl(const XMLCh* const,
+                                        const XMLCh* const)
+{
+}
+
+inline void DefaultHandler::externalEntityDecl(const XMLCh* const,
+                                               const XMLCh* const,
+                                               const XMLCh* const)
+{
+}
+
+inline void DefaultHandler::internalEntityDecl(const XMLCh* const,
+                                               const XMLCh* const)
 {
 }
 

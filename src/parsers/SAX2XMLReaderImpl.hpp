@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2002/01/28 17:08:47  knoaman
+ * SAX2-ext's DeclHandler support.
+ *
  * Revision 1.19  2002/01/24 16:30:34  tng
  * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD() .
  *
@@ -144,6 +147,7 @@
 
 class ContentHandler;
 class LexicalHandler;
+class DeclHandler;
 
 /**
   * This class implements the SAX2 'XMLReader' interface and should be
@@ -478,6 +482,13 @@ public :
     virtual LexicalHandler* getLexicalHandler() const ;
 
     /**
+      * This method returns the installed declaration handler.
+      *
+      * @return A pointer to the installed declaration handler object.
+      */
+    virtual DeclHandler* getDeclarationHandler() const ;
+
+    /**
       * This method returns the state of the parser's
       * exit-on-First-Fatal-Error flag.
       *
@@ -610,6 +621,24 @@ public :
     * @see HandlerBase#HandlerBase
     */
     virtual void setLexicalHandler(LexicalHandler* const handler) ;
+
+   /**
+    * Allow an application to register a declaration event handler.
+    *
+    * If the application does not register a declaration handler,
+    * all events reported by the SAX parser will be silently
+    * ignored. (this is the default behaviour implemented by DefaultHandler).
+    *
+    * Applications may register a new or different handler in the
+    * middle of a parse, and the SAX parser must begin using the new
+    * handler immediately.
+    *
+    * @param handler The DTD declaration handler.
+    * @see DeclHandler#DeclHandler
+    * @see SAXException#SAXException
+    * @see DefaultHandler#DefaultHandler
+    */
+    virtual void setDeclarationHandler(DeclHandler* const handler);
 
     /**
       * This method allows users to set the parser's behaviour when it
@@ -1393,6 +1422,9 @@ private :
     //  fLexicalHandler
     //      The installed SAX lexical handler, if any.  Null if none.
     //
+    //  fDecllHandler
+    //      The installed SAX declaration handler, if any.  Null if none.
+    //
     //  fAdvDHCount
     //  fAdvDHList
     //  fAdvDHListSize
@@ -1436,6 +1468,7 @@ private :
     EntityResolver*            fEntityResolver;
     ErrorHandler*              fErrorHandler;
     LexicalHandler*            fLexicalHandler;
+    DeclHandler*               fDeclHandler;
     unsigned int               fAdvDHCount;
     XMLDocumentHandler**       fAdvDHList;
     unsigned int               fAdvDHListSize;
@@ -1481,6 +1514,11 @@ inline ErrorHandler* SAX2XMLReaderImpl::getErrorHandler() const
 inline LexicalHandler* SAX2XMLReaderImpl::getLexicalHandler() const
 {
    return fLexicalHandler;
+}
+
+inline DeclHandler* SAX2XMLReaderImpl::getDeclarationHandler() const
+{
+   return fDeclHandler;
 }
 
 inline bool SAX2XMLReaderImpl::getExitOnFirstFatalError() const

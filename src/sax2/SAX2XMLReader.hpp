@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2002/01/28 17:08:33  knoaman
+ * SAX2-ext's DeclHandler support.
+ *
  * Revision 1.16  2002/01/18 16:31:26  tng
  * Break program.xml which takes too long to load, into program-sax.xml, program-sax2.xml, program-dom.xml, program-idom.xml.
  *
@@ -135,6 +138,7 @@ class EntityResolver;
 class ErrorHandler;
 class InputSource;
 class LexicalHandler;
+class DeclHandler;
 class XMLDocumentHandler;
 
 class SAX2_EXPORT SAX2XMLReader
@@ -215,6 +219,13 @@ public:
       * @return A pointer to the installed lexical handler object.
       */
     virtual LexicalHandler* getLexicalHandler() const = 0 ;
+
+    /**
+      * This method returns the installed declaration handler.
+      *
+      * @return A pointer to the installed declaration handler object.
+      */
+    virtual DeclHandler* getDeclarationHandler() const = 0 ;
 
 	/**
      * Query the current state of any feature in a SAX2 XMLReader.
@@ -437,6 +448,24 @@ public:
     * @see HandlerBase#HandlerBase
     */
     virtual void setLexicalHandler(LexicalHandler* const handler) = 0;
+
+   /**
+    * Allow an application to register a declaration event handler.
+    *
+    * If the application does not register a declaration handler,
+    * all events reported by the SAX parser will be silently
+    * ignored. (this is the default behaviour implemented by DefaultHandler).
+    *
+    * Applications may register a new or different handler in the
+    * middle of a parse, and the SAX parser must begin using the new
+    * handler immediately.
+    *
+    * @param handler The DTD declaration handler.
+    * @see DeclHandler#DeclHandler
+    * @see SAXException#SAXException
+    * @see DefaultHandler#DefaultHandler
+    */
+    virtual void setDeclarationHandler(DeclHandler* const handler) = 0;
 
     /**
       * This method allows users to set the parser's behaviour when it
