@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2003/07/10 19:48:24  peiyongz
+ * Stateless Grammar: Initialize scanner with grammarResolver,
+ *
  * Revision 1.23  2003/06/25 22:36:46  peiyongz
  * to use new GrammarResolver::getGrammar()
  *
@@ -357,8 +360,7 @@ void SAX2XMLReaderImpl::initialize()
 
     //  Create a scanner and tell it what validator to use. Then set us
     //  as the document event handler so we can fill the DOM document.
-    fScanner = XMLScannerResolver::getDefaultScanner(0, fMemoryManager);
-    fScanner->setGrammarResolver(fGrammarResolver);
+    fScanner = XMLScannerResolver::getDefaultScanner(0, fGrammarResolver, fMemoryManager);
     fScanner->setURIStringPool(fURIStringPool);
 
     // Create the initial advanced handler list array and zero it out
@@ -1560,13 +1562,13 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
         (
             (const XMLCh*) value
             , fValidator
+            , fGrammarResolver
             , fMemoryManager
         );
 
         if (tempScanner) {
 
             tempScanner->setParseSettings(fScanner);
-            tempScanner->setGrammarResolver(fGrammarResolver);
             tempScanner->setURIStringPool(fURIStringPool);
             delete fScanner;
             fScanner = tempScanner;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/07/10 19:48:24  peiyongz
+ * Stateless Grammar: Initialize scanner with grammarResolver,
+ *
  * Revision 1.21  2003/06/25 22:36:46  peiyongz
  * to use new GrammarResolver::getGrammar()
  *
@@ -308,8 +311,7 @@ void SAXParser::initialize()
     fURIStringPool = new (fMemoryManager) XMLStringPool(109, fMemoryManager);
 
     // Create our scanner and tell it what validator to use
-    fScanner = XMLScannerResolver::getDefaultScanner(fValidator,fMemoryManager);
-    fScanner->setGrammarResolver(fGrammarResolver);
+    fScanner = XMLScannerResolver::getDefaultScanner(fValidator, fGrammarResolver, fMemoryManager);
     fScanner->setURIStringPool(fURIStringPool);
 
     // Create the initial advanced handler list array and zero it out
@@ -643,13 +645,13 @@ void SAXParser::useScanner(const XMLCh* const scannerName)
     (
         scannerName
         , fValidator
+        , fGrammarResolver
         , fMemoryManager
     );
 
     if (tempScanner) {
 
         tempScanner->setParseSettings(fScanner);
-        tempScanner->setGrammarResolver(fGrammarResolver);
         tempScanner->setURIStringPool(fURIStringPool);
         delete fScanner;
         fScanner = tempScanner;
