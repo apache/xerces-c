@@ -11,7 +11,7 @@
 #
 #    . When adding a resource source (.txt) file for a new locale,
 #           the corresponding .res file must be added to this list,
-#    . AND to the file res-file-list.txt
+#    . AND to the file res-file-list-wins.txt
 #
 #  keep synchronous with ICUMsgLoader.cpp
 #
@@ -21,7 +21,7 @@ include ..\..\..\..\..\..\version.incl
 
 RESFILES= en_US.res 
 
-PKGNAME       = XercesMessages$(VER)
+PKGNAME       = XercesMessages$(WIN_MSG_VER)
 TARGET_DLL    = $(PKGNAME).DLL
 TARGET_LIB    = $(PKGNAME).lib
 
@@ -50,5 +50,5 @@ REN      = ren
 all: $(TARGET_DLL)
 
 $(TARGET_DLL): $(RESFILES)
-	$(PKGDATA) --name $(PKGNAME) -v -O R:$(ICUROOT) --mode dll -d . res-file-list.txt
+	$(PKGDATA) --name $(PKGNAME) -v -O R:$(ICUROOT) --mode dll -d . res-file-list-wins.txt
 
