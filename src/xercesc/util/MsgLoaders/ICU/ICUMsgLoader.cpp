@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/10/02 17:08:50  peiyongz
+ * XMLString::equals() to replace XMLString::compareString()
+ *
  * Revision 1.2  2002/09/30 22:20:40  peiyongz
  * Build with ICU MsgLoader
  *
@@ -121,9 +124,9 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 ,fDomainBundle(0)
 {
     // validation on msgDomain
-    if (XMLString::compareString(msgDomain, XMLUni::fgXMLErrDomain)
-    &&  XMLString::compareString(msgDomain, XMLUni::fgExceptDomain)
-    &&  XMLString::compareString(msgDomain, XMLUni::fgValidityDomain))
+    if (!XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain)    &&
+        !XMLString::equals(msgDomain, XMLUni::fgExceptDomain)    &&
+        !XMLString::equals(msgDomain, XMLUni::fgValidityDomain)   )
     {
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
