@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/10/27 21:52:04  peiyongz
+ * Set status for invalid data -- patch from David Bertoni
+ *
  * Revision 1.15  2004/10/20 15:18:20  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -630,6 +633,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                 }
                 break;
             default:
+                status = st_NotSupported;            
                 return false;
                 break;
             }
@@ -744,6 +748,7 @@ XSValue::validateNumerics(const XMLCh*         const content
                 }
                 break;
             default:
+                status = st_NotSupported;            
                 return false;
                 break;
             } 
@@ -832,7 +837,10 @@ bool XSValue::validateStrings(const XMLCh*         const content
                             ,       XMLVersion           version
                             ,       MemoryManager* const manager)
 {
-
+    bool isValid = true;
+    // Set this here, because we want to check it at the end.
+    status = st_Init;
+    
     try
     {
         switch (datatype)
@@ -848,8 +856,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
 
                 if (i == XMLUni::fgBooleanValueSpaceArraySize)
                 {
-                    status = st_FOCA0002;
-                    return false;
+                    isValid = false;                	
                 }
             }
             break;
@@ -857,8 +864,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 if (HexBin::getDataLength(content) == -1) 
                 {
-                    status = st_FOCA0002;
-                    return false;
+                    isValid = false;                	
                 }
             }
             break;
@@ -866,68 +872,95 @@ bool XSValue::validateStrings(const XMLCh*         const content
             {
                 if (Base64::getDataLength(content, manager) == -1) 
                 {
-                    status = st_FOCA0002;
-                    return false;
+                    isValid = false;                	
                 }
             }
             break;
         case XSValue::dt_anyURI:
-            return XMLUri::isValidURI(true, content);
+            if (XMLUri::isValidURI(true, content) == false)
+            {
+                isValid = false;
+            }        
             break;
         case XSValue::dt_QName:
-            return (version == ver_10) ? 
+            isValid = (version == ver_10) ? 
                 XMLChar1_0::isValidQName(content, XMLString::stringLen(content)) :
                 XMLChar1_1::isValidQName(content, XMLString::stringLen(content));
             break;
         case XSValue::dt_NOTATION:
-            return XMLString::isValidNOTATION(content, manager);
+            if ( XMLString::isValidNOTATION(content, manager) == false)
+            {
+            	isValid = false;
+            }
             break;
         case XSValue::dt_string:
             {
-                XMLCh*   rawPtr = (XMLCh*) content;
+                const XMLCh*   rawPtr = content;
 
                 if (version == ver_10)
                 {
                     while (*rawPtr) 
                         if (!XMLChar1_0::isXMLChar(*rawPtr++)) 
-                            return false;
+                        {
+                            isValid = false;
+                            break;
+                        }
                 }
                 else
                 {
                     while (*rawPtr) 
                         if (!XMLChar1_1::isXMLChar(*rawPtr++)) 
-                            return false;
+                        {
+                            isValid = false;
+                            break;
+                        }
                 }
 
             }
             break;
         case XSValue::dt_normalizedString:
             {
-                XMLCh*   rawPtr = (XMLCh*) content;
+                const XMLCh*   rawPtr = content;
 
                 if (version == ver_10)
                 {
                     while (*rawPtr) 
                     {
                         if (!XMLChar1_0::isXMLChar(*rawPtr)) 
-                            return false;
-
-                        if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
-                            return false;
-
-                        rawPtr++;
+                        {
+                            isValid = false;
+                            break;
+                        }
+                        else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
+                        {
+                            isValid = false;
+                            break;
+                        }
+                        else
+                        {
+                            rawPtr++;
+                        }
                     }
                 }
                 else
                 {
                     while (*rawPtr) 
                     {
-                        if (!XMLChar1_1::isXMLChar(*rawPtr)) return false;
-
-                        if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
-                            return false;
-
-                        rawPtr++;
+                        if (!XMLChar1_1::isXMLChar(*rawPtr)) 
+                        {
+                            isValid = false;
+                            break;
+                        }
+                        else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
+                        {
+                            isValid = false;
+                            break;
+                        }
+                        else
+                        {
+                            rawPtr++;
+                        }
+                                            	
                     }
                 }
 
@@ -937,7 +970,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
         case XSValue::dt_language:
             {
                 unsigned int strLen = XMLString::stringLen(content);
-                XMLCh*   rawPtr = (XMLCh*) content;
+                const XMLCh*  rawPtr = content;
                 bool     inWS = false;
 
                 if (version == ver_10)
@@ -945,28 +978,43 @@ bool XSValue::validateStrings(const XMLCh*         const content
 
                     // Check leading/Trailing white space
                     if (XMLChar1_0::isWhitespace(content[0])      ||
-                        XMLChar1_0::isWhitespace(content[strLen])  )
-                        return false;
-
-                    while (*rawPtr) 
+                        XMLChar1_0::isWhitespace(content[strLen - 1])  )
                     {
-                        if (!XMLChar1_0::isXMLChar(*rawPtr)) 
-                            return false;
-
-                        if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
-                            return false;
-
-                        if (XMLChar1_0::isWhitespace(*rawPtr))
+                        isValid = false;
+                    }
+                    else
+                    {
+                        while (*rawPtr) 
                         {
-                            if (inWS)
-                                return false;
+                            if (!XMLChar1_0::isXMLChar(*rawPtr)) 
+                            {
+                                isValid = false;
+                                break;
+                            }
+                            else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
+                            {
+                                isValid = false;
+                                break;
+                            }                            
+                            else if (XMLChar1_0::isWhitespace(*rawPtr))
+                            {
+                                if (inWS)
+                                {
+                                    isValid = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    inWS = true;
+                                }
+                            }
                             else
-                                inWS = true;
-                        }
-                        else
-                            inWS = false;
+                            {
+                                inWS = false;
+                            }
 
-                        rawPtr++;
+                            rawPtr++;
+                        }
                     }
                 }
                 else
@@ -974,48 +1022,67 @@ bool XSValue::validateStrings(const XMLCh*         const content
 
                     // Check leading/Trailing white space
                     if (XMLChar1_1::isWhitespace(content[0])      ||
-                        XMLChar1_1::isWhitespace(content[strLen])  )
-                        return false;
-
-                    while (*rawPtr) 
+                        XMLChar1_1::isWhitespace(content[strLen - 1])  )
                     {
-                        if (!XMLChar1_1::isXMLChar(*rawPtr)) 
-                            return false;
-
-                        if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
-                            return false;
-
-                        if (XMLChar1_1::isWhitespace(*rawPtr))
-                        {
-                            if (inWS)
-                                return false;
-                            else
-                                inWS = true;
-                        }
-                        else
-                            inWS = false;
-
-                        rawPtr++;
+                        isValid = false;
                     }
-                }
+                    else
+                    {
+                        while (*rawPtr) 
+                        {
+                            if (!XMLChar1_1::isXMLChar(*rawPtr)) 
+                            {
+                                isValid = false;
+                                break;
+                            }
+                            else if (*rawPtr == chCR || *rawPtr == chLF || *rawPtr == chHTab )
+                            {
+                                isValid = false;
+                                break;
+                            }                            
+                            else if (XMLChar1_1::isWhitespace(*rawPtr))
+                            {
+                                if (inWS)
+                                {
+                                    isValid = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    inWS = true;
+                                }
+                            }
+                            else
+                            {
+                                inWS = false;
+                            }
 
+                            rawPtr++;
+                        }
+                    }                   
+                }
             }
 
-            if (datatype == XSValue::dt_language)
+            if (isValid == true && datatype == XSValue::dt_language)
             {
                 RegularExpression* regEx = getRegEx();
                 if (!regEx)
                 {
                     status = st_CantCreateRegEx;
-                    return false;
+                    isValid = false;
                 }
-
-                return regEx->matches(content, manager);
+                else
+                {
+                    if (regEx->matches(content, manager) == false)
+                    {
+                        isValid = false;
+                    }
+                }
             }
 
             break;
         case XSValue::dt_NMTOKEN:
-            return (version == ver_10) ? 
+            isValid = (version == ver_10) ? 
                 XMLChar1_0::isValidNmtoken(content, XMLString::stringLen(content)) :
                 XMLChar1_1::isValidNmtoken(content, XMLString::stringLen(content));
             break;
@@ -1031,7 +1098,10 @@ bool XSValue::validateStrings(const XMLCh*         const content
                         const XMLCh* token = tokenizer.nextToken();
 
                         if (!XMLChar1_0::isValidNmtoken(token, XMLString::stringLen(token)))
-                            return false;
+                        {
+                            isValid = false;
+                            break;
+                        }                        
                     }
                 }
                 else
@@ -1041,13 +1111,16 @@ bool XSValue::validateStrings(const XMLCh*         const content
                         const XMLCh* token = tokenizer.nextToken();
 
                         if (!XMLChar1_1::isValidNmtoken(token, XMLString::stringLen(token)))
-                            return false;
+                        {
+                            isValid = false;
+                            break;
+                        }                        
                     }
                 }
             }
             break;
         case XSValue::dt_Name:
-            return (version == ver_10) ? 
+            isValid = (version == ver_10) ? 
                 XMLChar1_0::isValidName(content, XMLString::stringLen(content)) :
                 XMLChar1_1::isValidName(content, XMLString::stringLen(content));
             break;
@@ -1055,7 +1128,7 @@ bool XSValue::validateStrings(const XMLCh*         const content
         case XSValue::dt_ID:
         case XSValue::dt_IDREF:
         case XSValue::dt_ENTITY:
-            return (version == ver_10) ? 
+            isValid = (version == ver_10) ? 
                 XMLChar1_0::isValidNCName(content, XMLString::stringLen(content)) :
                 XMLChar1_1::isValidNCName(content, XMLString::stringLen(content));
             break;
@@ -1071,7 +1144,10 @@ bool XSValue::validateStrings(const XMLCh*         const content
                         const XMLCh* token = tokenizer.nextToken();
 
                         if (!XMLChar1_0::isValidNCName(token, XMLString::stringLen(token)))
-                            return false;
+                        {
+                            isValid = false;
+                            break;
+                        }                        
                     }
                 }
                 else
@@ -1081,24 +1157,33 @@ bool XSValue::validateStrings(const XMLCh*         const content
                         const XMLCh* token = tokenizer.nextToken();
 
                         if (!XMLChar1_1::isValidNCName(token, XMLString::stringLen(token)))
-                            return false;
+                        {
+                            isValid = false;
+                            break;
+                        }                        
                     }
                 }
             }
             break;
         default:
-            return false;
+            status = st_NotSupported;
+            isValid = false;        
             break;
         }
 
-        return true; //parsing succeed
     }
 
     catch (...)
     {
-        status = st_FOCA0002;
-        return false; 
+        isValid = false; 
     }
+
+    if (isValid == false && status == st_Init)
+    {
+        status = st_FOCA0002;
+    }
+
+    return isValid;
 
 }
 
