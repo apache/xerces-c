@@ -12,28 +12,19 @@
 
                 <ul>
                     <li>OS/400 <code>QSHELL</code> interpreter installed (install base option 30, operating system)</li>
-                    <li>OS/400 - Portable App Solutions Environment (PASE) installed (install base option 33, operating system)</li>
-                    <li>QShell Utilities, PRPQ 5799-XEH</li>
-                    <li>iSeries Tools for Developers, PRPQ 5799-PTL (these are the gnu utilities)</li>
-                </ul>
-
-                <p>Compiler:</p>
-                <ul>
-                    <li>For v4r5m0: ILE C++ for AS/400, PRPQ 5799-GDW</li>
+                    <li>OS/400 - Portable App Solutions Environment (PASE) installed (install base option 33, operating system)</li>                    
+                    <li>iSeries Tools for Developers, PRPQ 5799-PTL (these are the gnu utilities)</li>       
                     <li>For v5: WebSphere Development ToolsSet, 5722-WDS ( installed  option 52, Compiler - ILE C++)</li>
                 </ul>
 
-                <p><em>Recommendations:</em></p>
+                <p><em>Recommendation:</em></p>
 
                 <ul>
                 <li>There is one option when building the XML4C parser on iSeries.
                 For code page translation, you can use the iSeries
-                native <code>Iconv400</code> support or ICU as the transcoder plug in. If you choose ICU, follow the instructions
+                native <code>Iconv400</code> support or <code>icu</code> as the transcoder plug in. If you choose ICU, follow the instructions
                 to build the ICU service program with the ICU download. Those instructions
-                are not included here.</li>
-
-                <li>We recommend the use of <code>Iconv400</code>.
-                The binary posted on Alphaworks uses Iconv400.</li>
+                are not included here.  We recommend the use of <code>Iconv400</code>.</li>        
                 </ul>
 
                 <p><em>Setup Instructions:</em></p>
@@ -66,9 +57,10 @@
                  </ul>
 <source>
 XERCESCROOT - &lt;the full path up to the &XercesCName; src directory, but not including 'src'&gt;
-MAKE   - '/usr/bin/gmake'
+MAKE   - '/qibm/proddata/developertools/qsh/bin/gmake'
 OUTPUTDIR  - &lt;identifies target iSeries library for *module, *pgm and *srvpgm objects&gt;
-ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;
+PATH   - '/usr/bin:/qibm/proddata/developertools/qsh/bin'
+ICUROOT - (if using ICU)  &lt;the path of your ICU installation&gt;
 </source>
 
                 <ul>
@@ -85,7 +77,9 @@ ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;
          <p>To configure the make files for an iSeries build do the following under Qsh:</p>
 <source>qsh:
 cd &lt;full path to &XercesCName;&gt;/src/xercesc
-runConfigure -p os400 -x icc -c icc -m inmem -t Iconv400</source>
+edit runConfigure and comment out the line:
+	getoptErr=`getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
+runConfigure -p os400 -x icc -c icc -m inmem -t Iconv400 -r none</source>
 
          <p>Troubleshooting:</p>
 <source>error: configure: error: installation or configuration problem:
@@ -103,7 +97,7 @@ DLTMOD &lt;OUTPUTDIR library&gt;/CONFT* and
 DLTPGM &lt;OUTPUTDIR library&gt;/CONFT*</source>
 
         <p><em>Build</em></p>
-
+		<p>If runConfigure runs fine then do the following under Qsh to actually build the modules:</p>
 <source>qsh:
 cd &lt;full path to &XercesCName;&gt;/src/xercesc
 gmake</source>
@@ -150,13 +144,13 @@ GMAKE: vfork: Argument list too long.
 
 <source>CL:
 CRTSRVPGM  (&lt;OUTPUTDIR-library&gt;/libxercesc)  MODULE(&lt;OUTPUTDIR-library&gt;/*ALL) EXPORT(*ALL) TEXT('XML4C parser version xxx')
-OPTION(*DUPPROC *DUPVAR)
+OPTION(*DUPPROC *DUPVAR *NOWARN) AUT(*USE)
 </source>
 
          <p>Note that if you manually create the service program you want to make sure that
          you do not include any CONFT* modules or samples modules in the OUTPUTDIR library.
          After the service program is manually created you can add a symbolic link to the
-         service program  into the appropriate /lib directory by qsh:</p>
+         service program into the appropriate /lib directory by qsh:</p>
 
 <source>
 qsh:
@@ -221,7 +215,7 @@ qar -cuv &XercesCUnixLib;&XercesCUnixSoName;.so *.o
  #endif
 </source>
 
-          <p>Update  the following routines in src/xercesc/dom/impl/DOMDocumentImpl.cpp as follows:</p>
+          <p>Update the following routines in src/xercesc/dom/impl/DOMDocumentImpl.cpp as follows:</p>
 <source>
  void DOMDocumentImpl::setUserData(DOMNode* n, void* data)
  {

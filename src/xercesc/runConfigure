@@ -151,6 +151,8 @@ bitsToBuild=32           # by default 32 bit build assumed
 
 # Check the command line parameters
 if test -x /usr/bin/getopt -o -x bin/getopt; then
+	#
+	# os400 Users will need to comment out the next line.
 	getoptErr=`getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
 	if [ $? != 0 ]
 	   then
@@ -330,6 +332,9 @@ if test $thread = "none"; then
     THREADS=none
     threadingDefines="-DAPP_NO_THREADS -DXML_USE_NO_THREADS"
     threadingLibs=""
+    if test $platform = "os400"; then
+    	threadingDefines="-DXML_USE_PTHREADS"
+    fi
 else
     THREADS=pthread
     threadingDefines="-DXML_USE_PTHREADS"

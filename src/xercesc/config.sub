@@ -928,6 +928,10 @@ case $basic_machine in
 		basic_machine=a29k-nyu
 		os=-sym1
 		;;
+	AS400)
+		basic_machine=AS400-ibm
+		os=-OS400
+		;;		
 	v810 | necv810)
 		basic_machine=v810-nec
 		os=-none
@@ -1205,6 +1209,9 @@ case $os in
 	-ose*)
 		os=-ose
 		;;
+	-OS400)
+		os=-OS400
+		;;		
 	-es1800*)
 		os=-ose
 		;;
