@@ -392,7 +392,6 @@ void DOMBuilderImpl::setProperty(const XMLCh* const name, void* value)
     else if (XMLString::equals(name, XMLUni::fgXercesScannerName))
     {
         AbstractDOMParser::useScanner((const XMLCh*) value);
-        getScanner()->setNormalizeData(false);
     }
     else
       throw DOMException(DOMException::NOT_FOUND_ERR, 0);
