@@ -494,7 +494,7 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 
         # Finally compress the files
         print ("Compressing $platformzipname ...\n");
-        system ("compress $platformzipname");
+        system ("gzip $platformzipname");
 
 }
 

@@ -226,7 +226,7 @@ sub package_sources {
       print ("tar -cvf $srczipname $srczipfiles");
       system ("tar -cvf $srczipname $srczipfiles");
 
-      system ("compress $srczipname");
+      system ("gzip $srczipname");
    }
    print ("Done with packaging sources.\n");
 }
