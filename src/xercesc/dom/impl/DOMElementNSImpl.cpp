@@ -161,6 +161,7 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
         throw DOMException(DOMException::NAMESPACE_ERR, 0, GetDOMNodeMemoryManager);
 
     if (prefix == 0 || *prefix == 0) {
+        fPrefix = 0;
         fName = fLocalName;
         return;
     }
