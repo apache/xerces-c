@@ -20,7 +20,7 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -s <source_directory>\n");
     print ("    -o <target_directory>\n");
     print ("    -c <C compiler name> (e.g. gcc, cc or xlc_r)\n");
-    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl or ecl)\n");
+    print ("    -x <C++ compiler name> (e.g. g++, CC, aCC, c++, xlC_r, cl, ecl or ecc)\n");
     print ("    -m <message loader> can be 'inmem' \(default\), 'icu' or 'iconv'\n");
     print ("    -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
     print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
@@ -90,13 +90,16 @@ $zipfiles = $zipfiles . "/*";
 $buildmode = "Release";         # Universally, why do you want to package Debug builds anyway?
 
 #
-#   Itanium platform builds happen here ...
+#   Architecture: Itanium 
+#   OS:           Windows XP
+#   Compiler:     Intel's cl and/or ecl
+#   cygwin:       Not Available
 #
 if ($platform eq "" ) 
 {
     if ($opt_x ne "" && $opt_x ne "cl" && $opt_x ne "ecl")
     {
-        print("Compiler on Itanium must be \'cl\' or \'ecl\'\n");
+        print("Compiler on Itanium/WindowsXP must be \'cl\' or \'ecl\'\n");
         exit(-1);
     }
     
