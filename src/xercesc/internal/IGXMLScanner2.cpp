@@ -1378,7 +1378,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
             {
                 const XMLCh* newUri = root->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
                 if (!XMLString::equals(newUri, uri)) {
-                    if (fValidate) {
+                    if (fValidate || fValScheme == Val_Auto) {
                         fValidator->emitError(XMLValid::WrongTargetNamespace, loc, uri);
                     }
 

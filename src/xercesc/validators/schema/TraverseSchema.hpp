@@ -492,6 +492,11 @@ private:
                                        const XMLCh* const uriStr,
                                        const XMLCh* const localPart);
 
+    DatatypeValidator*
+    getAttrDatatypeValidatorNS(const DOMElement* const elem,
+                               const XMLCh* localPart,
+                               const XMLCh* typeURI);
+
     /**
       * Returns true if a DOM Element is an attribute or attribute group
       */

@@ -2005,48 +2005,25 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
                 attType = XMLAttDef::Notation;
             }
             else {
-
                 attType = XMLAttDef::Simple;
-
-                if (dv == 0 && (!typeURI || !*typeURI)) {
-
-                    DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
-                        SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
-
-                    if (topLevelType) {
-                        dv = traverseSimpleTypeDecl(topLevelType);
-                    }
-                    else {
-                        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeSimpleTypeNotFound,
-                                          typeURI, localPart, name);
-                    }
-                }
             }
         }
         else { //isn't of the schema for schemas namespace...
 
-            // check if the type is from the same Schema
-            dv = getDatatypeValidator(typeURI, localPart);
-
-            if (dv == 0 && XMLString::equals(typeURI, fTargetNSURIString)) {
-
-                DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
-                    SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
-
-                if (topLevelType) {
-                    dv = traverseSimpleTypeDecl(topLevelType);
-                }
-                else {
-                    reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeSimpleTypeNotFound,
-                                      typeURI, localPart, name);
-                }
-            }
-
+            dv = getAttrDatatypeValidatorNS(elem, localPart, typeURI);
             attType = XMLAttDef::Simple;
         }
 
         if (!dv) {
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, typeURI, localPart);
+            reportSchemaError
+            (
+                elem
+                , XMLUni::fgXMLErrDomain
+                , XMLErrs::AttributeSimpleTypeNotFound
+                , typeURI
+                , localPart
+                , name
+            );
         }
     }
 
@@ -4793,7 +4770,6 @@ TraverseSchema::getElementTypeValidator(const DOMElement* const elem,
         if (!XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
             || XMLString::equals(fTargetNSURIString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
 
-            SchemaInfo* saveInfo = fSchemaInfo;
             DOMElement* typeElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
                 SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
 
@@ -4817,6 +4793,63 @@ TraverseSchema::getElementTypeValidator(const DOMElement* const elem,
     return dv;
 }
 
+
+DatatypeValidator*
+TraverseSchema::getAttrDatatypeValidatorNS(const DOMElement* const elem,
+                                           const XMLCh* localPart,
+                                           const XMLCh* typeURI)
+{
+    DatatypeValidator*   dv = getDatatypeValidator(typeURI, localPart);
+    SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
+    SchemaInfo*          saveInfo = fSchemaInfo;
+    int                  saveScope = fCurrentScope;
+
+    if (!XMLString::equals(typeURI, fTargetNSURIString)
+        && (typeURI && *typeURI)) {
+
+        // Make sure that we have an explicit import statement.
+        // Clause 4 of Schema Representation Constraint:
+        // http://www.w3.org/TR/xmlschema-1/#src-resolve
+        unsigned int uriId = fURIStringPool->addOrFind(typeURI);
+
+        if (!fSchemaInfo->isImportingNS(uriId)) {
+
+            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidNSReference, typeURI);
+            return 0;
+        }
+
+        if (!dv) {
+            SchemaInfo* impInfo = fSchemaInfo->getImportInfo(uriId);
+
+            if (!impInfo || impInfo->getProcessed())
+                return 0;
+
+            infoType = SchemaInfo::IMPORT;
+            restoreSchemaInfo(impInfo, infoType);
+        }
+    }
+
+    if (!dv) {
+
+        DOMElement* typeElem = fSchemaInfo->getTopLevelComponent
+        (
+            SchemaInfo::C_SimpleType
+            , SchemaSymbols::fgELT_SIMPLETYPE
+            , localPart
+            , &fSchemaInfo
+        );
+
+        if (typeElem)
+            dv = traverseSimpleTypeDecl(typeElem);
+
+        // restore schema information, if necessary
+        if (saveInfo != fSchemaInfo) {
+            restoreSchemaInfo(saveInfo, infoType, saveScope);
+        }
+    }
+
+    return dv;
+}
 
 ComplexTypeInfo*
 TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
