@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  1999/12/03 02:35:22  aruna1
+ * mutex recursive attribute introduced in makeMutex
+ *
  * Revision 1.3  1999/12/01 02:55:42  aruna1
  * Added panic calls and modified makeTransService for  AIX
  *
@@ -506,16 +509,21 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 void* XMLPlatformUtils::makeMutex()
 {
     pthread_mutex_t* mutex = new pthread_mutex_t;
-    if (mutex == NULL)
+    if (mutex ==  NULL)
     {
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotCreate);
+        ThrowXML(XMLPlatformUtilsException,
+                 XML4CExcepts::Mutex_CouldNotCreate);
     }
-
-    if (pthread_mutex_init(mutex, NULL))
+    pthread_mutexattr_t*  attr = new pthread_mutexattr_t;
+    pthread_mutexattr_init(attr);
+    pthread_mutexattr_setkind_np(attr, MUTEX_RECURSIVE_NP);
+    if (pthread_mutex_init(mutex, attr))
     {
-		ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotCreate);
+        ThrowXML(XMLPlatformUtilsException,
+                 XML4CExcepts::Mutex_CouldNotCreate);
     }
-
+    pthread_mutexattr_destroy(attr);
+    delete attr;
     return (void*)(mutex);
 }
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
