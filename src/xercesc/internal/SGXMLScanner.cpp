@@ -2183,20 +2183,22 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             XMLAttDef* attDefForWildCard = 0;
             XMLAttDef*  attDef = 0;
 
-            if (fGrammarType == Grammar::SchemaGrammarType && currType) {
+            if (fGrammarType == Grammar::SchemaGrammarType) {
 
                 //retrieve the att def
-                attDef = currType->getAttDef(suffPtr, uriId);
+                SchemaAttDef* attWildCard;
+                if (currType) {
+                    attDef = currType->getAttDef(suffPtr, uriId);
+                    attWildCard = currType->getAttWildCard();
+                }
+                else { // check explicitly-set wildcard
+                    attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
+                }
 
                 // if not found or faulted in - check for a matching wildcard attribute
                 // if no matching wildcard attribute, check (un)qualifed cases and flag
                 // appropriate errors
                 if (!attDef || (attDef->getCreateReason() == XMLAttDef::JustFaultIn)) {
-
-                    SchemaAttDef* attWildCard = currType->getAttWildCard();
-                    if(!attWildCard)
-                        // check explicitly-set wildcard
-                        attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
 
                     if (attWildCard) {
                         //if schema, see if we should lax or skip the validation of this attribute
@@ -2214,7 +2216,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             }
                         }
                     }
-                    else {
+                    else if (currType) {
                         // not found, see if the attDef should be qualified or not
                         if (uriId == fEmptyNamespaceId) {
                             attDef = currType->getAttDef(suffPtr, fURIStringPool->getId(fGrammar->getTargetNamespace()));
