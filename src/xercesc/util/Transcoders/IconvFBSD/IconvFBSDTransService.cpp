@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/03/07 14:42:45  tng
+ * [Bug 17570] IconvFBSD build on alpha,sparc.  Patch from Bjoern A. Zeeb.
+ *
  * Revision 1.8  2003/02/25 08:15:42  gareth
  * Patch to fix compile problem in bug #17358. Patch by Michael Cahill.
  *
@@ -1102,7 +1105,8 @@ char* IconvFBSDLCPTranscoder::transcode(const XMLCh* const toTranscode)
         // perform conversion
         wLent *= uChSize();
         char    *ptr = retVal;
-        size_t    rc = iconvTo(wideCharBuf, &wLent, &ptr, neededLen);
+        size_t  tmpwLent = wLent;
+        size_t  rc = iconvTo(wideCharBuf, &tmpwLent, &ptr, neededLen);
         if (rc == (size_t)-1) {
             if (wBufPtr)
             delete [] wBufPtr;
