@@ -62,7 +62,6 @@
 #if !defined(DOMPARSER_HPP)
 #define DOMPARSER_HPP
 
-
 #include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
 #include <xercesc/framework/XMLEntityHandler.hpp>
@@ -82,7 +81,7 @@ class XMLPScanToken;
 class XMLScanner;
 class XMLValidator;
 class Grammar;
-
+class GrammarResolver;
 
 /**
   * This class implements the Document Object Model (DOM) interface.
@@ -400,6 +399,19 @@ public :
       * @see #useCachedGrammarInParse
       */
     bool isUsingCachedGrammarInParse() const;
+
+    /**
+      * Get the 'calculate src offset flag'
+      *
+      * This method returns the state of the parser's src offset calculation
+      * when parsing an XML document.
+      *
+      * @return true, if the parser is currently configured to
+      *         calculate src offsets, false otherwise.
+      *
+      * @see #setCalculateSrcOfs
+      */
+    bool getCalculateSrcOfs() const;
 
     /**
       * Retrieve the grammar that is associated with the specified namespace key
@@ -725,6 +737,29 @@ public :
       * @see #cacheGrammarFromParse
       */
     void useCachedGrammarInParse(const bool newState);
+
+    /** Enable/disable src offset calculation
+      *
+      * This method allows users to enable/disable src offset calculation.
+      * Disabling the calculation will improve performance.
+      *
+      * The parser's default state is: true.
+      *
+      * @param newState The value specifying whether we should enable or
+      *                 disable src offset calculation
+      *
+      * @see #getCalculateSrcOfs
+      */
+    void setCalculateSrcOfs(const bool newState);
+
+    /** Set the scanner to use when scanning the XML document
+      *
+      * This method allows users to set the scanner to use
+      * when scanning a given XML document.
+      *
+      * @param scannerName The name of the desired scanner
+      */
+    void useScanner(const XMLCh* const scannerName);
 
     //@}
 
@@ -1613,6 +1648,12 @@ protected :
 
 private :
     // -----------------------------------------------------------------------
+    //  Protected setter methods
+    // -----------------------------------------------------------------------
+    void initialize();
+    void cleanUp();
+    
+    // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fCurrentNode
@@ -1661,21 +1702,23 @@ private :
     //      This is an extension to xerces implementation
     //
     // -----------------------------------------------------------------------
+    bool                    fToCreateXMLDeclTypeNode;
+    bool                    fCreateEntityReferenceNodes;
+    bool                    fIncludeIgnorableWhitespace;
+    bool                    fParseInProgress;
+    bool                    fWithinElement;
     DOM_Node                fCurrentParent;
     DOM_Node                fCurrentNode;
     DOM_Document            fDocument;
     EntityResolver*         fEntityResolver;
     ErrorHandler*           fErrorHandler;
-    bool                    fCreateEntityReferenceNodes;
-    bool                    fIncludeIgnorableWhitespace;
     ValueStackOf<DOM_Node>* fNodeStack;
-    bool                    fParseInProgress;
     XMLScanner*             fScanner;
-    bool                    fWithinElement;
     DocumentTypeImpl*       fDocumentType;
-    bool                    fToCreateXMLDeclTypeNode;
+    GrammarResolver*        fGrammarResolver;
+    XMLStringPool*          fURIStringPool;
+    XMLValidator*           fValidator;
 };
-
 
 
 // ---------------------------------------------------------------------------
@@ -1787,7 +1830,6 @@ inline DOM_Node DOMParser::getCurrentNode()
 {
     return fCurrentNode;
 }
-
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Protected setter methods

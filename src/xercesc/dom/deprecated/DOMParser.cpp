@@ -68,14 +68,15 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/internal/XMLScannerResolver.hpp>
 #include <xercesc/sax/EntityResolver.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/framework/XMLNotationDecl.hpp>
 #include <xercesc/util/IOException.hpp>
-#include <xercesc/internal/XMLScanner.hpp>
-#include <xercesc/validators/DTD/DTDValidator.hpp>
+#include <xercesc/framework/XMLValidator.hpp>
+#include <xercesc/validators/common/GrammarResolver.hpp>
 #include "DOMParser.hpp"
 #include "ElementImpl.hpp"
 #include "AttrImpl.hpp"
@@ -100,35 +101,68 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 DOMParser::DOMParser(XMLValidator* const valToAdopt) :
 
-fErrorHandler(0)
-, fEntityResolver(0)
-, fCreateEntityReferenceNodes(true)
-, fToCreateXMLDeclTypeNode(false)
-, fIncludeIgnorableWhitespace(true)
-, fNodeStack(0)
-, fScanner(0)
+    fToCreateXMLDeclTypeNode(false)
+    , fCreateEntityReferenceNodes(true)
+    , fIncludeIgnorableWhitespace(true)
+    , fParseInProgress(false)
+    , fWithinElement(false)
+    , fEntityResolver(0)
+    , fErrorHandler(0)
+    , fNodeStack(0)
+    , fScanner(0)
+    , fDocumentType(0)
+    , fGrammarResolver(0)
+    , fURIStringPool(0)
+    , fValidator(valToAdopt)
 {
-    //
-    //  Create a scanner and tell it what validator to use. Then set us
-    //  as the document event handler so we can fill the DOM document.
-    //
-    fScanner = new XMLScanner(valToAdopt);
-    fScanner->setDocHandler(this);
-    fScanner->setDocTypeHandler(this);
-
-    fNodeStack = new ValueStackOf<DOM_Node>(64);
-    this->reset();
-
-
+    try
+    {
+        initialize();
+    }
+    catch(...)
+    {
+        cleanUp();
+        throw;
+    }
 }
 
 
 DOMParser::~DOMParser()
 {
-    delete fNodeStack;
-    delete fScanner;
+    cleanUp();
 }
 
+// ---------------------------------------------------------------------------
+//  DOMParser: Initialize/CleanUp methods
+// ---------------------------------------------------------------------------
+void DOMParser::initialize()
+{
+    // Create grammar resolver and URI string pool to pass to the scanner
+    fGrammarResolver = new GrammarResolver();
+    fURIStringPool = new XMLStringPool();
+
+    //  Create a scanner and tell it what validator to use. Then set us
+    //  as the document event handler so we can fill the DOM document.
+    fScanner = XMLScannerResolver::getDefaultScanner(fValidator);
+    fScanner->setDocHandler(this);
+    fScanner->setDocTypeHandler(this);
+    fScanner->setGrammarResolver(fGrammarResolver);
+    fScanner->setURIStringPool(fURIStringPool);
+
+    fNodeStack = new ValueStackOf<DOM_Node>(64);
+    this->reset();
+}
+
+void DOMParser::cleanUp()
+{    
+    delete fNodeStack;
+    delete fScanner;
+    delete fGrammarResolver;
+    delete fURIStringPool;
+
+    if (fValidator)
+        delete fValidator;
+}
 
 void DOMParser::reset()
 {
@@ -221,7 +255,7 @@ bool DOMParser::isUsingCachedGrammarInParse() const
 
 Grammar* DOMParser::getGrammar(const XMLCh* const nameSpaceKey)
 {
-    return fScanner->getGrammar(nameSpaceKey);
+    return fGrammarResolver->getGrammar(nameSpaceKey);
 }
 
 Grammar* DOMParser::getRootGrammar()
@@ -234,6 +268,10 @@ const XMLCh* DOMParser::getURIText(unsigned int uriId)
     return fScanner->getURIText(uriId);
 }
 
+bool DOMParser::getCalculateSrcOfs() const
+{
+    return fScanner->getCalculateSrcOfs();
+}
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Setter methods
@@ -329,6 +367,24 @@ void DOMParser::useCachedGrammarInParse(const bool newState)
         fScanner->useCachedGrammarInParse(newState);
 }
 
+void DOMParser::setCalculateSrcOfs(const bool newState)
+{
+    fScanner->setCalculateSrcOfs(newState);
+}
+
+void DOMParser::useScanner(const XMLCh* const scannerName)
+{
+    XMLScanner* tempScanner = XMLScannerResolver::resolveScanner(scannerName, fValidator);
+
+    if (tempScanner) {
+
+        // REVISIT: need to set scanner options and handlers
+        delete fScanner;
+        fScanner = tempScanner;
+        fScanner->setGrammarResolver(fGrammarResolver);
+        fScanner->setURIStringPool(fURIStringPool);
+    }
+}
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Parsing methods
@@ -1340,7 +1396,7 @@ Grammar* DOMParser::loadGrammar(const InputSource& source,
 
 void DOMParser::resetCachedGrammarPool()
 {
-    fScanner->resetCachedGrammarPool();
+    fGrammarResolver->resetCachedGrammar();
 }
 
 XERCES_CPP_NAMESPACE_END
