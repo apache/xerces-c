@@ -2690,7 +2690,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if(actualAttDef)
                 {
 	                XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
-	                PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(); 
+	                PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
                     DatatypeValidator * attrDataType = actualAttDef->getDatatypeValidator();
 	                XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
 	                if(attrValid != PSVIItem::VALIDITY_VALID)
@@ -2744,7 +2744,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
             if(getPSVIHandler())
             {
-                PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill();
+                PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
 	            XSSimpleTypeDefinition *validatingType = (attrValidator)
                             ? (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator)
                             : 0;
@@ -2894,7 +2894,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     retCount++;
                     if(getPSVIHandler())
                     {
-                        PSVIAttribute *defAttrToFill = fPSVIAttrList->getPSVIAttributeToFill();
+                        QName *attName = ((SchemaAttDef *)curDef)->getAttName();
+                        PSVIAttribute *defAttrToFill = fPSVIAttrList->getPSVIAttributeToFill
+                        (
+                            attName->getLocalPart(), fURIStringPool->getValueForId( attName->getURI())
+                        );
                         XSAttributeDeclaration *defAttrDecl = (XSAttributeDeclaration *)fModel->getXSObject((void *)curDef);
                         DatatypeValidator * attrDataType = ((SchemaAttDef *)curDef)->getDatatypeValidator();
                         XSSimpleTypeDefinition *defAttrType = 
@@ -4885,13 +4889,20 @@ void SGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
     }
 
     XSTypeDefinition* typeDef = 0;
+    bool isMixed = false;
     if (fPSVIElemContext.fCurrentTypeInfo)
+    {
         typeDef = (XSTypeDefinition*) fModel->getXSObject(fPSVIElemContext.fCurrentTypeInfo);
+        SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes)fPSVIElemContext.fCurrentTypeInfo->getContentType();
+        isMixed = (modelType == SchemaElementDecl::Mixed_Simple
+                || modelType == SchemaElementDecl::Mixed_Complex);
+    }
     else if (fPSVIElemContext.fCurrentDV)
         typeDef = (XSTypeDefinition*) fModel->getXSObject(fPSVIElemContext.fCurrentDV);
 
     XMLCh* canonicalValue = 0;
-    if (fPSVIElemContext.fNormalizedValue)
+    if (fPSVIElemContext.fNormalizedValue && !isMixed &&
+            validity == PSVIElement::VALIDITY_VALID)
     {
         if (memberDV)
             canonicalValue = (XMLCh*) memberDV->getCanonicalRepresentation(fPSVIElemContext.fNormalizedValue, fMemoryManager);

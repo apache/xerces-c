@@ -593,7 +593,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if(actualAttDef)
                 {
 	                XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
-	                PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(); 
+	                PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
                     DatatypeValidator * attrDataType = actualAttDef->getDatatypeValidator();
 	                XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
 	                if(attrValid != PSVIItem::VALIDITY_VALID)
@@ -647,7 +647,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
             if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType)
             {
-	            PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(); 
+	            PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
 	            XSSimpleTypeDefinition *validatingType = (attrValidator)
                             ? (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator)
                             : 0;
@@ -835,7 +835,11 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     retCount++;
                     if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType)
                     {
-                        PSVIAttribute *defAttrToFill = fPSVIAttrList->getPSVIAttributeToFill();
+                        QName *attName = ((SchemaAttDef *)curDef)->getAttName();
+                        PSVIAttribute *defAttrToFill = fPSVIAttrList->getPSVIAttributeToFill
+                        (
+                            attName->getLocalPart(), fURIStringPool->getValueForId( attName->getURI())
+                        );
                         XSAttributeDeclaration *defAttrDecl = (XSAttributeDeclaration *)fModel->getXSObject((void *)curDef);
                         DatatypeValidator * attrDataType = ((SchemaAttDef *)curDef)->getDatatypeValidator();
                         XSSimpleTypeDefinition *defAttrType = 

@@ -3472,13 +3472,20 @@ void IGXMLScanner::endElementPSVI(SchemaElementDecl* const elemDecl,
     }
 
     XSTypeDefinition* typeDef = 0;
+    bool isMixed = false;
     if (fPSVIElemContext.fCurrentTypeInfo)
+    {
         typeDef = (XSTypeDefinition*) fModel->getXSObject(fPSVIElemContext.fCurrentTypeInfo);
+        SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes)fPSVIElemContext.fCurrentTypeInfo->getContentType();
+        isMixed = (modelType == SchemaElementDecl::Mixed_Simple
+                || modelType == SchemaElementDecl::Mixed_Complex);
+    }
     else if (fPSVIElemContext.fCurrentDV)
         typeDef = (XSTypeDefinition*) fModel->getXSObject(fPSVIElemContext.fCurrentDV);
 
     XMLCh* canonicalValue = 0;
-    if (fPSVIElemContext.fNormalizedValue )
+    if (fPSVIElemContext.fNormalizedValue && !isMixed && 
+            validity == PSVIElement::VALIDITY_VALID)
     {
         if (memberDV)
             canonicalValue = (XMLCh*) memberDV->getCanonicalRepresentation(fPSVIElemContext.fNormalizedValue, fMemoryManager);
