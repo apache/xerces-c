@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/09 18:43:38  tng
+ * Add StringDatatypeValidator and BooleanDatatypeValidator.  By Pei Yong Zhang.
+ *
  * Revision 1.3  2001/05/03 21:09:52  tng
  * Schema: DatatypeValidator Update.  By Pei Yong Zhang.
  *
@@ -94,20 +97,6 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
 DatatypeValidator::~DatatypeValidator()
 {
 	cleanUp();
-}
-
-
-// ---------------------------------------------------------------------------
-//  DatatypeValidators: Whitespace handling methods
-// ---------------------------------------------------------------------------
-void
-DatatypeValidator::processWhiteSpace(RefHashTableOf<KVStringPair>* const facets)
-{
-    KVStringPair* value = facets->get(SchemaSymbols::fgELT_WHITESPACE);
-
-    if (value != 0) {
-        facets->removeKey(SchemaSymbols::fgELT_WHITESPACE);
-    }
 }
 
 /**

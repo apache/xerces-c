@@ -111,7 +111,7 @@ public :
     static const XMLCh fgELT_PATTERN[];
     static const XMLCh fgELT_PERIOD[];
     static const XMLCh fgELT_PRECISION[];
-    static const XMLCh fgELT_SCALE[];
+    static const XMLCh fgELT_FRACTIONDIGITS[];
     static const XMLCh fgELT_SCHEMA[];
     static const XMLCh fgELT_SELECTOR[];
     static const XMLCh fgELT_SEQUENCE[];
@@ -193,6 +193,7 @@ public :
     static const XMLCh fgATTVAL_SUBSTITUTIONGROUP[];
     static const XMLCh fgATTVAL_SUBSTITUTION[];
     static const XMLCh fgATTVAL_ANYTYPE[];
+    static const XMLCh fgWS_PRESERVE[];
     static const XMLCh fgWS_COLLAPSE[];
     static const XMLCh fgWS_REPLACE[];
     static const XMLCh fgDT_STRING[];
@@ -229,6 +230,10 @@ public :
     static const XMLCh fgDT_DOUBLE[];
     static const XMLCh fgDT_URIREFERENCE[];
     static const XMLCh fgDT_QNAME[];
+    static const XMLCh fgDT_NORMALIZEDSTRING[];
+    static const XMLCh fgRegEx_XOption[];
+    static const int   fgINT_MIN_VALUE;
+    static const int   fgINT_MAX_VALUE;
 
     enum {
         EMPTY_SET = 0,
@@ -251,7 +256,7 @@ public :
         INFINITY = -1,
         NILLABLE = 1,
         ABSTRACT = 2,
-        FIXED    = 4
+        FIXED = 4
     };
 
 };

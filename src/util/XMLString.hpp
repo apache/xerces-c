@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/05/09 18:43:30  tng
+ * Add StringDatatypeValidator and BooleanDatatypeValidator.  By Pei Yong Zhang.
+ *
  * Revision 1.19  2001/05/03 20:34:35  tng
  * Schema: SchemaValidator update
  *
@@ -342,6 +345,24 @@ public:
         const   XMLCh* const    toConvert
         ,       unsigned int&   toFill
     );
+
+    /**
+      * Converts a string of decimal chars to a binary value
+      *
+      * Note that leading and trailng whitespace is legal and will be ignored,
+      *
+      * Only one and either of (+,-) after the leading whitespace, before
+      * any other characters are allowed.
+      *
+      * but the remainder must be all decimal digits.
+      *
+      * @param toConvert The string of digits to convert
+      */
+    static int parseInt
+    (
+        const   XMLCh* const    toConvert
+    );    
+    
     //@}
 
     /** @name String concatenation functions */
@@ -990,6 +1011,13 @@ public:
       * @return Returns the length of the string
       */
     static unsigned int stringLen(const XMLCh* const src);
+
+    /**
+      * Checks whether an name is a valid NCName.
+      * @param name The string to check its NCName validity
+      * @return Returns true if name is NCName valid, otherwise false
+      */
+    static bool isValidNCName(const XMLCh* const name);
     //@}
 
     /** @name Conversion functions */

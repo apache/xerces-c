@@ -115,36 +115,18 @@ public:
 
     enum ValidatorType {
         String,
-        NormalizedString,
         AnyURI,
         QName,
-        Token,
-        Language,
-        Name,
-        NCName,
         Boolean,
         Float,
         Double,
         Decimal,
         HexBinary,
         Base64Binary,
-        Integer,
-        NonPositiveInteger,
-        NegativeInteger,
-        Long,
-        Int,
-        Short,
-        Byte,
-        NonNegativeInteger,
-        UnsignedLong,
-        UnsignedInt,
-        UnsignedShort,
-        UnsignedByte,
-        PositiveInteger,
         Duration,
-        Time,
         DateTime,
         Date,
+        Time,
         MonthDay,
         YearMonth,
         Year,
@@ -154,10 +136,8 @@ public:
         IDREF,
         ENTITY,
         NOTATION,
-        IDREFS,
-        ENTITIES,
-        NMTOKEN,
-        NMTOKENS
+        List,
+        Union
     };
 
     // -----------------------------------------------------------------------
@@ -290,16 +270,6 @@ protected:
 
 	friend class DatatypeValidatorFactory;
 
-	/**
-	  * Process the WHITESPACE facet if passed by user.
-      * For all datatypes (exception of string), we don't need to pass
-	  * the WHITESPACE facet as its value is always 'collapse' and cannot
-	  * be reset by user.
-	  *
-	  * To be overwritten in the StringDatatypeValidator
-      */
-	virtual void processWhiteSpace(RefHashTableOf<KVStringPair>* const facets);
-
     /**
       * facetDefined
 	  */
@@ -311,13 +281,18 @@ protected:
       * fPattern
 	  */
     const XMLCh* getPattern() const;
-	void         setPattern(const XMLCh* const);
+	void         setPattern(const XMLCh* );
 
     /**
       * fRegex
 	  */
 	RegularExpression* getRegex() const;
 	void               setRegex(RegularExpression* const);
+
+    /**
+      * set fType
+      */
+    void setType(ValidatorType);
 
 private:
     // -----------------------------------------------------------------------
@@ -345,7 +320,8 @@ private:
     //      Stores the constaiting facets flag
     //
     //  fPattern
-    //      the String of the pattern
+    //      the pointer to the String of the pattern. The actual data is
+    //      in the Facets.
     //
     //  fRegex
     //      pointer to the RegularExpress object
@@ -364,7 +340,7 @@ private:
 
     ValidatorType                 fType;
     int                           fFacetsDefined;
-    DOMString                     fPattern;
+    const XMLCh*                  fPattern;
     RegularExpression            *fRegex;
 
     //ValueVectorOf<bool>        *fFixed;
@@ -399,22 +375,29 @@ inline DatatypeValidator::ValidatorType DatatypeValidator::getType() const
     return fType;
 }
 
+inline void DatatypeValidator::setType(ValidatorType theType)
+{
+    fType = theType;
+}
+
 // ---------------------------------------------------------------------------
 //  DatatypeValidator: CleanUp methods
 // ---------------------------------------------------------------------------
 inline void DatatypeValidator::cleanUp() {
 
 	delete fFacets;
+    delete fRegex;
+
 }
 
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidators: Compare methods
 // ---------------------------------------------------------------------------
-inline int DatatypeValidator::compare(const XMLCh* const value1,
-                                      const XMLCh* const value2)
+inline int DatatypeValidator::compare(const XMLCh* const lValue,
+                                      const XMLCh* const rValue)
 {
-    return XMLString::compareString(value1, value2);
+    return XMLString::compareString(lValue, rValue);
 }
 
 // ---------------------------------------------------------------------------
@@ -449,10 +432,10 @@ inline void DatatypeValidator::setFacetsDefined(int facets)
 
 inline const XMLCh* DatatypeValidator::getPattern() const
 {
-    return fPattern.rawBuffer();
+    return fPattern;
 }
 
-inline void DatatypeValidator::setPattern(const XMLCh* const pattern)
+inline void DatatypeValidator::setPattern(const XMLCh* pattern)
 {
     fPattern = pattern;
 }

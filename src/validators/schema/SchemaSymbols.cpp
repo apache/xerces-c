@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/09 18:43:49  tng
+ * Add StringDatatypeValidator and BooleanDatatypeValidator.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/03 19:18:03  knoaman
  * TraverseSchema Part II.
  *
@@ -307,9 +310,10 @@ const XMLCh SchemaSymbols::fgELT_PRECISION[] =
     chLatin_i, chLatin_o, chLatin_n,  chNull
 };
 
-const XMLCh SchemaSymbols::fgELT_SCALE[] =
+const XMLCh SchemaSymbols::fgELT_FRACTIONDIGITS[] =
 {
-    chLatin_s, chLatin_c, chLatin_a, chLatin_l, chLatin_e,  chNull
+    chLatin_f, chLatin_r, chLatin_a, chLatin_c, chLatin_t, chLatin_i, chLatin_o,
+    chLatin_n, chLatin_D, chLatin_i, chLatin_g, chLatin_i, chLatin_t, chLatin_s, chNull
 };
 
 const XMLCh SchemaSymbols::fgELT_SCHEMA[] =
@@ -363,7 +367,7 @@ const XMLCh SchemaSymbols::fgELT_SIMPLECONTENT[] =
     chLatin_o, chLatin_n, chLatin_t, chLatin_e, chLatin_n, chLatin_t, chNull
 };
 
-const XMLCh SchemaSymbols::fgELT_RESTRICTION[] = 
+const XMLCh SchemaSymbols::fgELT_RESTRICTION[] =
 {
     chLatin_r, chLatin_e, chLatin_s, chLatin_t, chLatin_r, chLatin_i,
     chLatin_c, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
@@ -580,7 +584,7 @@ const XMLCh SchemaSymbols::fgATTVAL_TWOPOUNDTRAGETNAMESPACE[] =
     chLatin_a, chLatin_c, chLatin_e, chNull
 };
 
-const XMLCh SchemaSymbols::fgATTVAL_POUNDALL[] = 
+const XMLCh SchemaSymbols::fgATTVAL_POUNDALL[] =
 {
     chPound, chLatin_a, chLatin_l, chLatin_l, chNull
 };
@@ -767,6 +771,12 @@ const XMLCh SchemaSymbols::fgATTVAL_ANYTYPE[] =
 {
     chLatin_a, chLatin_n, chLatin_y, chLatin_T, chLatin_y, chLatin_p,
     chLatin_e, chNull
+};
+
+const XMLCh SchemaSymbols::fgWS_PRESERVE[] =
+{
+    chLatin_p, chLatin_r, chLatin_e, chLatin_s, chLatin_e, chLatin_r,
+    chLatin_v, chLatin_e, chNull
 };
 
 const XMLCh SchemaSymbols::fgWS_COLLAPSE[] =
@@ -969,6 +979,22 @@ const XMLCh SchemaSymbols::fgDT_QNAME[] =
 {
     chLatin_Q, chLatin_N, chLatin_a, chLatin_m, chLatin_e, chNull
 };
+
+const XMLCh SchemaSymbols::fgDT_NORMALIZEDSTRING[] =
+{
+    chLatin_n, chLatin_o, chLatin_r, chLatin_m, chLatin_a, chLatin_l, chLatin_i,
+    chLatin_z, chLatin_e, chLatin_d, chLatin_S, chLatin_t, chLatin_r, chLatin_i,
+    chLatin_n, chLatin_g, chNull
+};
+
+const XMLCh SchemaSymbols::fgRegEx_XOption[] =
+{
+    chLatin_X, chNull
+};
+
+const int SchemaSymbols::fgINT_MIN_VALUE = 0x80000000;
+
+const int SchemaSymbols::fgINT_MAX_VALUE = 0x7fffffff;
 
 /**
   * End of file SchemaSymbols.cpp

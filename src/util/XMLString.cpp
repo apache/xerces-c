@@ -66,6 +66,7 @@
 #include <ctype.h>
 #include <util/ArrayIndexOutOfBoundsException.hpp>
 #include <util/IllegalArgumentException.hpp>
+#include <util/NumberFormatException.hpp>
 #include <util/Janitor.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/RuntimeException.hpp>
@@ -75,6 +76,7 @@
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
+#include <internal/XMLReader.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -601,6 +603,38 @@ void XMLString::subString(char* const targetStr, const char* const srcStr
 	}
 
 	targetStr[copySize] = 0;
+}
+
+/**
+  * isValidNCName
+  *
+  *    NCName::= (Letter | '_') (NCNameChar)*
+  *    NCNameChar ::= Letter | Digit | '.' | '-' | '_'
+  *                   | CombiningChar | Extender
+  */
+bool XMLString::isValidNCName(const XMLCh* const name) {
+
+    if (XMLString::stringLen(name) == 0
+        || XMLString::indexOf(name, chColon) != -1) {
+        return false;
+    }
+
+    const XMLCh* tempName = name;
+    XMLCh firstChar = *tempName++;
+
+    if (!XMLReader::isXMLLetter(firstChar) && firstChar != chUnderscore) {
+
+        return false;
+    }
+
+    while(*tempName) {
+
+        if (!XMLReader::isNameChar(*tempName++)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -1135,6 +1169,64 @@ bool XMLString::textToBin(const XMLCh* const toConvert, unsigned int& toFill)
     return true;
 }
 
+int XMLString::parseInt(const XMLCh* const toConvert)
+{
+    // If no string, then its a failure
+    if ((!toConvert) ||
+        (!*toConvert))
+        ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
+        //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+
+    // Scan past any whitespace. If we hit the end, then return failure
+    const XMLCh* startPtr = toConvert;
+    while (XMLPlatformUtils::fgTransService->isSpace(*startPtr))
+        startPtr++;
+
+    if (!*startPtr)
+        ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
+        //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+
+    // Start at the end and work back through any whitespace
+    const XMLCh* endPtr = toConvert + XMLString::stringLen(toConvert);
+    while (XMLPlatformUtils::fgTransService->isSpace(*(endPtr - 1)))
+        endPtr--;
+
+    //
+    //  Work through what remains and convert each char to a digit. 
+    //
+    int signValue = 1;
+
+    //
+    // '+' or '-' is allowed only at the first position
+    //
+    if (*startPtr == chDash)
+    {
+        signValue = -1;
+        startPtr++;  // skip the '-'
+    }
+    else if (*startPtr == chPlus)
+        startPtr++;  // skip the '+'
+
+    unsigned long tmpVal = 0;   
+    while (startPtr < endPtr)
+    {
+        // If not valid decimal digit, then an error
+        if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
+            ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
+            //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+        
+        const unsigned int nextVal = (unsigned int)(*startPtr - chDigit_0);
+        tmpVal = (tmpVal * 10) + nextVal;
+
+        startPtr++;
+    }
+
+    // Make sure it didn't overflow
+    if (tmpVal > ~0UL)
+        ThrowXML(NumberFormatException, XMLExcepts::Str_ConvertOverflow);
+
+    return (int) signValue*tmpVal;
+}
 
 void XMLString::trim(XMLCh* const toTrim)
 {
