@@ -28,9 +28,9 @@
       <li><jump href="program-dom.html#DOMBuilder">DOMBuilder</jump></li>
       <ul>
           <li><jump href="program-dom.html#ConstructDOMBuilder">Constructing a DOMBuilder</jump></li>
+          <li><jump href="program-dom.html#InputSourceWrapper">How to interchange DOMInputSource and SAX InputSource?</jump></li>
           <li><jump href="program-dom.html#DOMBuilderFeatures">Supported Features</jump></li>
           <li><jump href="program-dom.html#DOMBuilderProperties">Supported Properties</jump></li>
-          <li><jump href="program-dom.html#InputSourceWrapper">How to interchange DOMInputSource and SAX InputSource?</jump></li>
       </ul>
       <li><jump href="program-dom.html#DOMWriter">DOMWriter</jump></li>
       <ul>
