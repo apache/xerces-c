@@ -17,7 +17,7 @@
         <p>The parser provides high performance, modularity, and scalability.    Source
         code, samples and API documentation are provided with the parser.   For
         portability, care has been taken to make minimal use of templates,
-        no RTTI, no C++ namespaces and minimal use of #ifdefs.</p>
+        no RTTI, and minimal use of #ifdefs.</p>
 
     </s2>
 

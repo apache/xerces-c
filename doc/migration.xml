@@ -4,60 +4,74 @@
 <s1 title="Migration">
     <s2 title="Migration Archive">
 
-       <p>For migration information to &XercesCName; 2.0.0 or earlier,
+       <p>For migration information to &XercesCName; 2.1.0 or earlier,
           please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
 
     </s2>
 
-    <s2 title="Migrating from &XercesCName; 2.0.0 to &XercesCName; &XercesCVersion;">
-      <p>This document is a discussion of the technical differences between
-      &XercesCName; 2.0.0 code base and the &XercesCName; &XercesCVersion;.</p>
+    <s2 title="Migrating from &XercesCName; 2.1.0 to &XercesCName; &XercesCVersion;">
+      <p>The following section is a discussion of the technical differences between
+      &XercesCName; 2.1.0 code base and the &XercesCName; &XercesCVersion;.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="NewFeatures210">New features in &XercesCName; &XercesCVersion;</link></li>
-        <li><link anchor="API210">Public API Changes</link></li>
+        <li><link anchor="NewFeatures220">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="CPPNamespace220">Using C++ Namespace</link></li>
+        <li><link anchor="API220">Public API Changes</link></li>
         <ul>
-            <li><link anchor="NewAPI210">New Public API</link></li>
-            <li><link anchor="ModifiedAPI210">Modified Public API</link></li>
-            <li><link anchor="DeprecatedAPI210">Deprecated/Removed Public API</link></li>
+            <li><link anchor="NewAPI220">New Public API</link></li>
+            <li><link anchor="ModifiedAPI220">Modified Public API</link></li>
+            <li><link anchor="DeprecatedAPI220">Deprecated/Removed Public API</link></li>
         </ul>
       </ul>
 
-    <anchor name="NewFeatures210"/>
+    <anchor name="NewFeatures220"/>
     <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
-        <li>64 bit binaries distribution on Windows IA64 and Linux IA64</li>
-        <li>Support for Cygwin environment</li>
-        <li>DOM Level 3 DOMNode: compareTreePosition, lookupNamespaceURI, lookupNamespacePrefix and isDefaultNamespace</li>
-        <li>plus many more bug fixes</li>
+        <li>C++ Namespace Support</li>
+        <li></li>
       </ul>
     </s3>
 
-    <anchor name="API210"/>
+    <anchor name="CPPNamespace220"/>
+    <s3 title="Using C++ Namespace">
+        <p>&XercesCName; &XercesCVersion; now supports C++ Namespace.  All &XercesCName;
+           classes/data/variables are defined in the <code>"namespace &XercesCNamespace;"</code>
+           if C++ Namespace support is ENABLED.</p>
+
+        <p>All the binary distributions of &XercesCName; &XercesCVersion; are now built with
+           C++ Namespace enabled.   Therefore users' applications that links with the distributed
+           binary packages must namespace qualified all the &XercesCName; classes/data/variables
+           with <code>"&XercesCNamespace;::"</code> or add the
+           <code>"using namespace &XercesCNamespace;"</code> clause.</p>
+
+        <p>See the Programming Guide <jump href="program-others.html#CPPNamespace">Using C++ Namespace</jump>
+           for more details.</p>
+
+    </s3>
+
+    <anchor name="API220"/>
     <s3 title="Public API Changes">
 
         <p>The following lists the public API changes between the &XercesCName;
-           2.0.0; and the &XercesCName; &XercesCVersion; releases
+           2.1.0; and the &XercesCName; &XercesCVersion; releases
            of the parser. </p>
 
-        <anchor name="NewAPI210"/>
+        <anchor name="NewAPI220"/>
         <s4 title="New Public API">
             <ul>
-              <li>To fix bug 7087, XMLEnumerator is added a virtual destructor.</li>
-              <li>To fix bug 11448, XMLNotationDecl::get/setBaseURI, and XMLEntityDecl::get/setBaseURI are added.</li>
+              <li>.</li>
             </ul>
         </s4>
 
-        <anchor name="ModifiedAPI210"/>
+        <anchor name="ModifiedAPI220"/>
         <s4 title="Modified Public API">
             <ul>
-              <li>DOMNodeList: item, and getLength have been added a const modifier.</li>
-              <li>DOMNode: lookupNamespacePrefix, isDefaultNamespace, and lookupNamespaceURI have been added a const modifier.</li>
+              <li>.</li>
             </ul>
         </s4>
 
-        <anchor name="DeprecatedAPI210"/>
+        <anchor name="DeprecatedAPI220"/>
         <s4 title="Deprecated/Removed Public API">
             <ul>
               <li>No Deprecated Public API in this release.</li>

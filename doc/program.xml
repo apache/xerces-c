@@ -78,6 +78,7 @@
       <li><jump href="program-others.html#GrammarCache">Preparsing Grammar and Grammar Caching</jump></li>
       <li><jump href="program-others.html#LoadableMessageText">Loadable Message Text</jump></li>
       <li><jump href="program-others.html#PluggableTranscoders">Pluggable Transcoders</jump></li>
+      <li><jump href="program-others.html#CPPNamespace">Using C++ Namespace</jump></li>
     </ul>
   </s2>
 

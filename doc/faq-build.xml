@@ -41,49 +41,32 @@
     </a>
   </faq>
 
-  <faq title="Why does my application gives unresolved linking errors on Solaris?">
+  <faq title="Why does my application gives unresolved linking errors?">
 
-    <q>Why does my application gives unresolved linking errors on Solaris?</q>
-
-    <a>
-
-      <p>On Solaris there are a few things that need to be done before you
-        execute your application using &XercesCName;. In case you're using the
-        binary build of &XercesCName; make sure that the OS and compiler are
-        the same version as the ones used to build the binary (please refer to
-        <jump href="faq-distrib.html#faq-1">FAQ: What platforms / compilers are
-        being used to build the binary distribution kits?</jump>).  Different OS and
-        compiler versions might cause unresolved linking problems or compilation
-        errors. If the versions are different, rebuild the &XercesCName; library on
-        your system before building your application. If you're using ICU (which is
-        packaged with XML4C) you need to rebuild the compatible version of ICU
-        first.</p>
-
-      <p>Also check that the library path is set properly and that the correct
-        versions of <code>gmake</code> and <code>autoconf</code> are on your system.</p>
-
-    </a>
-  </faq>
-
-  <faq title="Why does my application gives unresolved linking errors on AIX?">
-
-    <q>Why does my application gives unresolved linking errors on AIX?</q>
+    <q>Why does my application gives unresolved linking errors?</q>
 
     <a>
 
-      <p>In case you're using the binary build of &XercesCName; make sure that the
-        OS and compiler are the same version as the ones used to build the binary
-        (please refer to <jump href="faq-distrib.html#faq-1">FAQ: What platforms / compilers
-        are being used to build the binary distribution kits?</jump>).  Different OS and
-        compiler versions might cause unresolved linking problems or compilation
-        errors. If the versions are different, rebuild the &XercesCName; library on
-        your system before building your application. If you're using ICU (which is
-        packaged with XML4C) you need to rebuild the compatible version of ICU
-        first.</p>
-
-      <p>Also check that the library path is set properly and that the correct
-        versions of <code>gmake</code> and <code>autoconf</code> are on your system.</p>
-
+      <p>Please check the following:</p>
+      <ol>
+        <li>If you're using the binary build of &XercesCName;, make sure that the OS and compiler are
+            the same version as the ones used to build the binary (please refer to
+            <jump href="faq-distrib.html#faq-1">FAQ: What platforms / compilers are
+            being used to build the binary distribution kits?</jump>).  Different OS and
+            compiler versions might cause unresolved linking problems or compilation
+            errors. If the versions are different, rebuild the &XercesCName; library on
+            your system before building your application. If you're using ICU (which is
+            packaged with XML4C) you need to rebuild the compatible version of ICU
+            first.</li>
+        <li>Check that the library path is set properly and that the correct
+            versions of <code>gmake</code> and <code>autoconf</code> are on your system.</li>
+        <li>If C++ Namespace support is ENABLED (all the binary distributions of &XercesCName;
+            &XercesCVersion; are built with C++ Namespace enabled), users' applications
+            must namespace qualified all the &XercesCName; classes/data/variables with
+            <code>"&XercesCNamespace;::"</code> or add the <code>"using namespace &XercesCNamespace;"</code>
+            clause.  See the Programming Guide <jump href="program-others.html#CPPNamespace">
+            Using C++ Namespace</jump> for more details.</li>
+      </ol>
     </a>
   </faq>
 
