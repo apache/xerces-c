@@ -166,6 +166,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DTDAttDef.obj"
 	-@erase "$(INTDIR)\DTDAttDefList.obj"
 	-@erase "$(INTDIR)\DTDElementDecl.obj"
+	-@erase "$(INTDIR)\DTDEntityDecl.obj"
 	-@erase "$(INTDIR)\DTDGrammar.obj"
 	-@erase "$(INTDIR)\DTDScanner.obj"
 	-@erase "$(INTDIR)\DTDValidator.obj"
@@ -304,6 +305,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLAbstractDoubleFloat.obj"
 	-@erase "$(INTDIR)\XMLASCIITranscoder.obj"
 	-@erase "$(INTDIR)\XMLAttDef.obj"
+	-@erase "$(INTDIR)\XMLAttDefList.obj"
 	-@erase "$(INTDIR)\XMLAttr.obj"
 	-@erase "$(INTDIR)\XMLBigDecimal.obj"
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
@@ -506,6 +508,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\Wrapper4DOMInputSource.obj" \
 	"$(INTDIR)\Wrapper4InputSource.obj" \
 	"$(INTDIR)\XMLAttDef.obj" \
+	"$(INTDIR)\XMLAttDefList.obj" \
 	"$(INTDIR)\XMLAttr.obj" \
 	"$(INTDIR)\XMLBuffer.obj" \
 	"$(INTDIR)\XMLBufferMgr.obj" \
@@ -589,6 +592,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DTDAttDef.obj" \
 	"$(INTDIR)\DTDAttDefList.obj" \
 	"$(INTDIR)\DTDElementDecl.obj" \
+	"$(INTDIR)\DTDEntityDecl.obj" \
 	"$(INTDIR)\DTDGrammar.obj" \
 	"$(INTDIR)\DTDScanner.obj" \
 	"$(INTDIR)\DTDValidator.obj" \
@@ -868,6 +872,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DTDAttDef.obj"
 	-@erase "$(INTDIR)\DTDAttDefList.obj"
 	-@erase "$(INTDIR)\DTDElementDecl.obj"
+	-@erase "$(INTDIR)\DTDEntityDecl.obj"
 	-@erase "$(INTDIR)\DTDGrammar.obj"
 	-@erase "$(INTDIR)\DTDScanner.obj"
 	-@erase "$(INTDIR)\DTDValidator.obj"
@@ -1007,6 +1012,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLAbstractDoubleFloat.obj"
 	-@erase "$(INTDIR)\XMLASCIITranscoder.obj"
 	-@erase "$(INTDIR)\XMLAttDef.obj"
+	-@erase "$(INTDIR)\XMLAttDefList.obj"
 	-@erase "$(INTDIR)\XMLAttr.obj"
 	-@erase "$(INTDIR)\XMLBigDecimal.obj"
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
@@ -1210,6 +1216,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\Wrapper4DOMInputSource.obj" \
 	"$(INTDIR)\Wrapper4InputSource.obj" \
 	"$(INTDIR)\XMLAttDef.obj" \
+	"$(INTDIR)\XMLAttDefList.obj" \
 	"$(INTDIR)\XMLAttr.obj" \
 	"$(INTDIR)\XMLBuffer.obj" \
 	"$(INTDIR)\XMLBufferMgr.obj" \
@@ -1293,6 +1300,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DTDAttDef.obj" \
 	"$(INTDIR)\DTDAttDefList.obj" \
 	"$(INTDIR)\DTDElementDecl.obj" \
+	"$(INTDIR)\DTDEntityDecl.obj" \
 	"$(INTDIR)\DTDGrammar.obj" \
 	"$(INTDIR)\DTDScanner.obj" \
 	"$(INTDIR)\DTDValidator.obj" \
@@ -1572,6 +1580,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DTDAttDef.obj"
 	-@erase "$(INTDIR)\DTDAttDefList.obj"
 	-@erase "$(INTDIR)\DTDElementDecl.obj"
+	-@erase "$(INTDIR)\DTDEntityDecl.obj"
 	-@erase "$(INTDIR)\DTDGrammar.obj"
 	-@erase "$(INTDIR)\DTDScanner.obj"
 	-@erase "$(INTDIR)\DTDValidator.obj"
@@ -1711,6 +1720,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLAbstractDoubleFloat.obj"
 	-@erase "$(INTDIR)\XMLASCIITranscoder.obj"
 	-@erase "$(INTDIR)\XMLAttDef.obj"
+	-@erase "$(INTDIR)\XMLAttDefList.obj"
 	-@erase "$(INTDIR)\XMLAttr.obj"
 	-@erase "$(INTDIR)\XMLBigDecimal.obj"
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
@@ -1914,6 +1924,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\Wrapper4DOMInputSource.obj" \
 	"$(INTDIR)\Wrapper4InputSource.obj" \
 	"$(INTDIR)\XMLAttDef.obj" \
+	"$(INTDIR)\XMLAttDefList.obj" \
 	"$(INTDIR)\XMLAttr.obj" \
 	"$(INTDIR)\XMLBuffer.obj" \
 	"$(INTDIR)\XMLBufferMgr.obj" \
@@ -1997,6 +2008,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DTDAttDef.obj" \
 	"$(INTDIR)\DTDAttDefList.obj" \
 	"$(INTDIR)\DTDElementDecl.obj" \
+	"$(INTDIR)\DTDEntityDecl.obj" \
 	"$(INTDIR)\DTDGrammar.obj" \
 	"$(INTDIR)\DTDScanner.obj" \
 	"$(INTDIR)\DTDValidator.obj" \
@@ -2276,6 +2288,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DTDAttDef.obj"
 	-@erase "$(INTDIR)\DTDAttDefList.obj"
 	-@erase "$(INTDIR)\DTDElementDecl.obj"
+	-@erase "$(INTDIR)\DTDEntityDecl.obj"
 	-@erase "$(INTDIR)\DTDGrammar.obj"
 	-@erase "$(INTDIR)\DTDScanner.obj"
 	-@erase "$(INTDIR)\DTDValidator.obj"
@@ -2617,6 +2630,8 @@ LINK32_OBJS= \
 	"$(INTDIR)\Wrapper4DOMInputSource.obj" \
 	"$(INTDIR)\Wrapper4InputSource.obj" \
 	"$(INTDIR)\XMLAttDef.obj" \
+	"$(INTDIR)\XMLAttDefList.obj" \
+	-@erase "$(INTDIR)\XMLAttDefList.obj"
 	"$(INTDIR)\XMLAttr.obj" \
 	"$(INTDIR)\XMLBuffer.obj" \
 	"$(INTDIR)\XMLBufferMgr.obj" \
@@ -2700,6 +2715,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DTDAttDef.obj" \
 	"$(INTDIR)\DTDAttDefList.obj" \
 	"$(INTDIR)\DTDElementDecl.obj" \
+	"$(INTDIR)\DTDEntityDecl.obj" \
 	"$(INTDIR)\DTDGrammar.obj" \
 	"$(INTDIR)\DTDScanner.obj" \
 	"$(INTDIR)\DTDValidator.obj" \
@@ -3737,12 +3753,18 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttDef.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttDefList.cpp
+
+"$(INTDIR)\XMLAttDefList.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttr.cpp
 
 "$(INTDIR)\XMLAttr.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
-
-
+	
+	
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLBuffer.cpp
 
 "$(INTDIR)\XMLBuffer.obj" : $(SOURCE) "$(INTDIR)"
@@ -4235,6 +4257,12 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDElementDecl.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDEntityDecl.cpp
+
+"$(INTDIR)\DTDEntityDecl.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+	
 SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDGrammar.cpp
 
 "$(INTDIR)\DTDGrammar.obj" : $(SOURCE) "$(INTDIR)"

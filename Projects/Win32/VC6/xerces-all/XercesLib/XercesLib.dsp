@@ -1275,6 +1275,10 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttDef.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttDefList.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttDefList.hpp
 # End Source File
 # Begin Source File
@@ -2091,6 +2095,10 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDElementDecl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDElementDecl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDEntityDecl.cpp
 # End Source File
 # Begin Source File
 
