@@ -330,8 +330,9 @@ void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
     //fix up non ns attrs
     len = attrMap->getLength();
 
-    for(int i = 0; i < len; i++) {
-        DOMAttr *at = (DOMAttr*)attrMap->item(i);
+    // hp aCC complains this i is a redefinition of the i on line 283
+    for(int j = 0; j < len; j++) {
+        DOMAttr *at = (DOMAttr*)attrMap->item(j);
         const XMLCh *uri = at->getNamespaceURI();
         const XMLCh *value = at->getNodeValue();
         const XMLCh* prefix = at->getPrefix();

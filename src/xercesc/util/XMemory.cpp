@@ -127,6 +127,9 @@ void XMemory::operator delete(void* p)
     }
 }
 
+//The HP compiler is complaining about duplicate overloading of delete
+#if !defined(XML_HPUX)
+
 void XMemory::operator delete(void* p, MemoryManager* manager)
 {
     assert(manager != 0);
@@ -140,6 +143,8 @@ void XMemory::operator delete(void* p, MemoryManager* manager)
 		manager->deallocate(block);
 	}
 }
+
+#endif
 
 XERCES_CPP_NAMESPACE_END
 
