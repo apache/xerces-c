@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/11 02:58:39  chchou
+ * Fix bug # 18, remove set method of readonly attributes
+ *
  * Revision 1.5  2000/03/02 19:53:57  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -177,28 +180,6 @@ public:
      */
     DOMString        getSystemId() const;
 
-
-    //@}
-    /** @name Set functions. */
-    //@{
-
-    /**
-     * Sets the public identifier of this notation. 
-     *
-     * This function is a non-standard IBM Extension.
-     * @param id The string containing the public id to be set
-     *
-     */
-    void             setPublicId(const DOMString &id);
-
-    /**
-     * Sets the system identifier of this notation. 
-     *
-     * This function is a non-standard IBM Extension.
-     * @param id The string containing the system id to be set
-     *
-     */
-    void             setSystemId(const DOMString &id);
 
     //@}
 

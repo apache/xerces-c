@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/11 02:58:38  chchou
+ * Fix bug # 18, remove set method of readonly attributes
+ *
  * Revision 1.4  2000/03/02 19:53:55  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -135,20 +138,3 @@ DOMString  DOM_Entity::getNotationName() const
 {
         return ((EntityImpl *)fImpl)->getNotationName().clone();
 };
-
-
-void DOM_Entity::setNotationName(const DOMString &name)
-{
-    ((EntityImpl *)fImpl)->setNotationName(name);
-};
-
-void DOM_Entity::setPublicId(const DOMString &id)
-{
-    ((EntityImpl *)fImpl)->setPublicId(id);
-};
-
-void DOM_Entity::setSystemId(const DOMString &id)
-{
-    ((EntityImpl *)fImpl)->setSystemId(id);
-};
-

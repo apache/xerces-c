@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/03/11 02:58:38  chchou
+ * Fix bug # 18, remove set method of readonly attributes
+ *
  * Revision 1.5  2000/03/02 19:53:55  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -174,33 +177,6 @@ public:
    * For parsed entities, this is <code>null</code>. 
    */
   DOMString        getNotationName() const;
-  //@}
-
-  /** @name Set functions. */
-  //@{
-  /**
-   * Set the Notation name.
-   *
-   * This is a non-standard IBM extension
-   */
-  void              setNotationName(const DOMString &name);
-
-  /**
-   * Set the public ID.
-   *
-   * This is a non-standard IBM extension.
-   *
-   */
-  void              setPublicId(const DOMString &Id);
-
-  /**
-   * Set the system ID.
-   *
-   * This is a non-standard IBM extension.
-   *
-   */
-  void              setSystemId(const DOMString &Id);
-
   //@}
 
 protected:

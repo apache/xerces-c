@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/11 02:58:38  chchou
+ * Fix bug # 18, remove set method of readonly attributes
+ *
  * Revision 1.4  2000/03/02 19:53:52  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -138,12 +141,6 @@ DOMString   DOM_Attr::getValue() const
     //  children of the attribute.
     //
     return ((AttrImpl *)fImpl)->getValue();
-};
-
-
-void      DOM_Attr::setSpecified(bool specified)
-{
-    ((AttrImpl *)fImpl)->setSpecified(specified);
 };
 
 
