@@ -138,7 +138,7 @@ while [ $# -gt 0 ]
         compileroptions="$compileroptions $2"; shift 2;;
 
    -l)
-        linkeroptions=$2; shift 2;;
+        linkeroptions="$linkeroptions $2"; shift 2;;
 
    -h)
         usage

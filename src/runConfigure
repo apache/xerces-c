@@ -164,10 +164,10 @@ while [ $# -gt 0 ]
         thread=$2; shift 2;;
 
    -l)
-        linkeroptions=$2; shift 2;;
+        linkeroptions="$linkeroptions $2"; shift 2;;
 
    -z)
-        compileroptions=$2; shift 2;;
+        compileroptions="$compileroptions $2"; shift 2;;
 
    -P)
         configureoptions="$configureoptions --prefix=$2"; shift 2;;

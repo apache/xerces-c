@@ -65,6 +65,20 @@
 
     <tr>
         <td>2001-10-25</td>
+        <td>Henry Zongaro</td>
+        <td>[Bug 2924] runConfigure script to accept multiple linker options.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-25</td>
+        <td>John Warrier</td>
+        <td>[Bug 2924] runConfigure script to accept multiple compiler options.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-10-25</td>
         <td>Mark Weaver</td>
         <td>[Bug 4213] BinHTTPURLInputStream initialisation not thread safe.
         </td>
