@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/01/29 15:00:01  knoaman
+ * [Bug 15787] Reduce array size to reduce memory footprint.
+ *
  * Revision 1.2  2002/11/04 15:24:50  tng
  * C++ Namespace Support.
  *
@@ -223,7 +226,7 @@ static void startOutput(const XMLCh* const outPath)
     //  Output the leading part of the array declaration. Its just an
     //  array of pointers to Unicode chars.
     //
-    fwprintf(gOutFile, L"const XMLCh gEncodingArray[][128] = \n{\n");
+    fwprintf(gOutFile, L"const XMLCh gEncodingArray[][46] = \n{\n");
 
     //
     // Reset first element trigger
