@@ -1,0 +1,12 @@
+include "basedir.icc"
+include "sample_options.icc"
+
+option sample_options
+{
+  target BIN_DIR "\\DOMPrint.exe"
+  {
+    source type("cpp") SAMPLES "\\DOMPrint\\DOMPrint.cpp"
+    source type("cpp") SAMPLES "\\DOMPrint\\DOMTreeErrorReporter.cpp"
+    source type("lib") xerces_lib
+  }
+}

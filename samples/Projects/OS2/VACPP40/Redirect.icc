@@ -1,0 +1,12 @@
+include "basedir.icc"
+include "sample_options.icc"
+
+option sample_options
+{
+  target BIN_DIR "\\Redirect.exe"
+  {
+    source type("cpp") SAMPLES "\\Redirect\\Redirect.cpp"
+    source type("cpp") SAMPLES "\\Redirect\\RedirectHandlers.cpp"
+    source type("lib") xerces_lib
+  }
+}

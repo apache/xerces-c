@@ -1,0 +1,11 @@
+include "basedir.icc"
+include "sample_options.icc"
+
+option sample_options
+{
+  target BIN_DIR "\\DOMCount.exe"
+  {
+    source type("cpp") SAMPLES "\\DOMCount\\DOMCount.cpp"
+    source type("lib") xerces_lib
+  }
+}

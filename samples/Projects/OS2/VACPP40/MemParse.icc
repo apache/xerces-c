@@ -1,0 +1,12 @@
+include "basedir.icc"
+include "sample_options.icc"
+
+option sample_options
+{
+  target BIN_DIR "\\MemParse.exe"
+  {
+    source type("cpp") SAMPLES "\\MemParse\\MemParse.cpp"
+    source type("cpp") SAMPLES "\\MemParse\\MemParseHandlers.cpp"
+    source type("lib") xerces_lib
+  }
+}

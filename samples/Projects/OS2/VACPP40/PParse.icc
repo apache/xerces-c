@@ -1,0 +1,12 @@
+include "basedir.icc"
+include "sample_options.icc"
+
+option sample_options
+{
+  target BIN_DIR "\\PParse.exe"
+  {
+    source type("cpp") SAMPLES "\\PParse\\PParse.cpp"
+    source type("cpp") SAMPLES "\\PParse\\PParseHandlers.cpp"
+    source type("lib") xerces_lib
+  }
+}
