@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.32  2001/04/19 17:47:56  knoaman
+# A string tokenizer utility.
+#
 # Revision 1.31  2001/03/21 21:56:11  tng
 # Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
 #
@@ -276,6 +279,7 @@ UTIL_CPP_PUBHEADERS = \
     RefVectorOf.hpp \
     RuntimeException.hpp \
     StringPool.hpp \
+    StringTokenizer.hpp \
     TransENameMap.hpp \
     TransService.hpp \
     TranscodingException.hpp \
@@ -340,6 +344,7 @@ UTIL_CPP_OBJECTS = \
     PlatformUtils.$(TO) \
     QName.$(TO) \
     StringPool.$(TO) \
+    StringTokenizer.$(TO) \
     XMLURL.$(TO) \
     TransService.$(TO) \
     XML256TableTranscoder.$(TO) \
