@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2001/10/22 17:53:05  tng
+ * [Bug 3660] Off-by-one error in DOMString.cpp.  And check that memory has been acquired successfully after memory acquistion requests in DOMString.
+ *
  * Revision 1.22  2001/10/18 18:01:29  tng
  * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
  *
@@ -206,7 +209,16 @@ DOMStringData *DOMStringData::allocateBuffer(unsigned int length)
     unsigned int sizeToAllocate = sizeof(DOMStringData) //  buffer will contain an
         + length*sizeof(XMLCh);                //  extra elem because of stub
                                                //  array in DOMStringData struct.
-    DOMStringData *buf = (DOMStringData *) new char[sizeToAllocate];
+    DOMStringData *buf = 0;
+    try {
+        buf = (DOMStringData *) new char[sizeToAllocate];
+    }
+    catch (...) {
+        ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
+    }
+    if (!buf)
+       ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
+
     XMLPlatformUtils::atomicIncrement(DOMString::gLiveStringDataCount);
     XMLPlatformUtils::atomicIncrement(DOMString::gTotalStringDataCount);
     buf->fBufferLength = length;
@@ -652,7 +664,7 @@ void DOMString::appendData(const DOMString &other)
     XMLCh *srcP = other.fHandle->fDSData->fData;
     XMLCh *destP = &fHandle->fDSData->fData[fHandle->fLength];
     unsigned int i;
-    for (i=0; i<=other.fHandle->fLength; i++)
+    for (i=0; i<other.fHandle->fLength; i++)
         destP[i] = srcP[i];
 
     fHandle->fLength += other.fHandle->fLength;
