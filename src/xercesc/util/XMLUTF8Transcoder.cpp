@@ -149,9 +149,18 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
         // Special-case ASCII, which is a leading byte value of <= 127
         if (*srcPtr <= 127)
         {
-            *outPtr++ = XMLCh(*srcPtr++);
-            *sizePtr++ = 1;
-            continue;
+            // Handle ASCII in groups instead of single character at a time.
+            const XMLByte* srcPtr_save = srcPtr;
+            do
+            {
+                *outPtr++ = XMLCh(*srcPtr++);
+            } while (*srcPtr <= 127    &&
+                      srcPtr != srcEnd &&
+                      outPtr != outEnd );
+            memset(sizePtr,1,srcPtr - srcPtr_save);
+            sizePtr += srcPtr - srcPtr_save;
+            if (srcPtr == srcEnd || outPtr == outEnd)
+                break;
         }
 
         // See how many trailing src bytes this sequence is going to require

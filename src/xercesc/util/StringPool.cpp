@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/12/13 16:35:21  cargilld
+ * Performance improvement from Christian Will.
+ *
  * Revision 1.11  2004/09/08 13:56:23  peiyongz
  * Apache License Version 2.0
  *
@@ -84,38 +87,6 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
-//  StringPool::PoolElem: Constructors and Destructor
-// ---------------------------------------------------------------------------
-XMLStringPool::PoolElem::PoolElem( const   XMLCh* const string
-                                 , const unsigned int id
-                                 , MemoryManager* const manager) :
-    fId(id)
-    , fString(0)
-    , fMemoryManager(manager)
-{
-    fString = XMLString::replicate(string, fMemoryManager);
-}
-
-XMLStringPool::PoolElem::~PoolElem()
-{
-    fMemoryManager->deallocate(fString); //delete [] fString;
-}
-
-// ---------------------------------------------------------------------------
-//  StringPool::PoolElem: Public methods
-// ---------------------------------------------------------------------------
-
-void
-XMLStringPool::PoolElem::reset(const XMLCh* const string, const unsigned int id)
-{
-    fId = id;
-    fMemoryManager->deallocate(fString);//delete [] fString;
-    fString = XMLString::replicate(string, fMemoryManager);
-}
-
-
-
-// ---------------------------------------------------------------------------
 //  XMLStringPool: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLStringPool::XMLStringPool(const  unsigned int  modulus,
@@ -128,7 +99,7 @@ XMLStringPool::XMLStringPool(const  unsigned int  modulus,
     , fCurId(1)
 {
     // Create the hash table, passing it the modulus
-    fHashTable = new (fMemoryManager) RefHashTableOf<PoolElem>(modulus, fMemoryManager);
+    fHashTable = new (fMemoryManager) RefHashTableOf<PoolElem>(modulus, false, fMemoryManager);
 
     // Do an initial allocation of the id map and zero it all out
     fIdMap = (PoolElem**) fMemoryManager->allocate
@@ -140,67 +111,31 @@ XMLStringPool::XMLStringPool(const  unsigned int  modulus,
 
 XMLStringPool::~XMLStringPool()
 {
+    // delete all buckelements, since the hashtable doesn't adopt the elements anymore
+    for (unsigned int index = 1; index < fCurId; index++)
+    {
+        //fIdMap[index]->~PoolElem();                                // we have no destructor
+        fMemoryManager->deallocate((void*) fIdMap[index]->fString);  // deallocate memory
+        fMemoryManager->deallocate(fIdMap[index]);                   // deallocate memory
+    }
     delete fHashTable;
     fMemoryManager->deallocate(fIdMap); //delete [] fIdMap;
 }
 
-
 // ---------------------------------------------------------------------------
 //  XMLStringPool: Pool management methods
 // ---------------------------------------------------------------------------
-unsigned int XMLStringPool::addOrFind(const XMLCh* const newString)
-{
-    PoolElem* elemToFind = fHashTable->get(newString);
-    if (elemToFind)
-        return elemToFind->fId;
-
-    return addNewEntry(newString);
-}
-
-
-bool XMLStringPool::exists(const XMLCh* const newString) const
-{
-    return fHashTable->containsKey(newString);
-}
-
-bool XMLStringPool::exists(const unsigned int id) const
-{
-    if (!id || (id >= fCurId))
-        return false;
-
-    return true;
-}
-
 void XMLStringPool::flushAll()
 {
+    // delete all buckelements, since the hashtable doesn't adopt the elements anymore
+    for (unsigned int index = 1; index < fCurId; index++)
+    {
+        //fIdMap[index]->~PoolElem();                                // we have no destructor
+        fMemoryManager->deallocate((void*) fIdMap[index]->fString);  // deallocate memory
+        fMemoryManager->deallocate(fIdMap[index]);                   // deallocate memory
+    }
     fCurId = 1;
     fHashTable->removeAll();
-}
-
-
-unsigned int XMLStringPool::getId(const XMLCh* const toFind) const
-{
-    PoolElem* elemToFind = fHashTable->get(toFind);
-    if (elemToFind)
-        return elemToFind->fId;
-
-    // Not found, so return zero, which is never a legal id
-    return 0;
-}
-
-
-const XMLCh* XMLStringPool::getValueForId(const unsigned int id) const
-{
-    if (!id || (id >= fCurId))
-        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::StrPool_IllegalId, fMemoryManager);
-
-    // Just index the id map and return that element's string
-    return fIdMap[id]->fString;
-}
-
-unsigned int XMLStringPool::getStringCount() const
-{
-    return fCurId-1;
 }
 
 // ---------------------------------------------------------------------------
@@ -236,8 +171,10 @@ unsigned int XMLStringPool::addNewEntry(const XMLCh* const newString)
     //  this new element in the id map at the current id index, then bump the
     //  id index.
     //
-    PoolElem* newElem = new (fMemoryManager) PoolElem(newString, fCurId, fMemoryManager);
-    fHashTable->put((void*)(newElem->getKey()), newElem);
+    PoolElem* newElem = (PoolElem*) fMemoryManager->allocate(sizeof(PoolElem));
+    newElem->fId      = fCurId;
+    newElem->fString  = XMLString::replicate(newString, fMemoryManager);
+    fHashTable->put((void*)newElem->fString, newElem);
     fIdMap[fCurId] = newElem;
 
     // Bump the current id and return the id of the new elem we just added
@@ -299,7 +236,7 @@ XMLStringPool::XMLStringPool(MemoryManager* const manager) :
     , fCurId(1)
 {
     // Create the hash table, passing it the modulus
-    fHashTable = new (fMemoryManager) RefHashTableOf<PoolElem>(109, fMemoryManager);
+    fHashTable = new (fMemoryManager) RefHashTableOf<PoolElem>(109, false, fMemoryManager);
 
     // Do an initial allocation of the id map and zero it all out
     fIdMap = (PoolElem**) fMemoryManager->allocate

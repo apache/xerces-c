@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/12/13 16:35:21  cargilld
+ * Performance improvement from Christian Will.
+ *
  * Revision 1.8  2004/09/08 13:56:23  peiyongz
  * Apache License Version 2.0
  *
@@ -118,22 +121,11 @@ private :
     // -----------------------------------------------------------------------
     //  Private data types
     // -----------------------------------------------------------------------
-    class PoolElem : public XMemory
+    struct PoolElem
     {
-        public :
-            PoolElem(const XMLCh* const string,
-                     const unsigned int id,
-                     MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
-            ~PoolElem();
-
-            inline const XMLCh* getKey() const { return fString; }
-            void reset(const XMLCh* const string, const unsigned int id);
-
-            unsigned int    fId;
-            XMLCh*          fString;
-            MemoryManager*  fMemoryManager;
+        unsigned int  fId;
+        XMLCh*        fString;
     };
-
 
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -177,6 +169,54 @@ protected:
     //      up one for each new string added.
     unsigned int                fCurId;
 };
+
+
+// Provid inline versions of some of the simple functions to improve performance.
+inline unsigned int XMLStringPool::addOrFind(const XMLCh* const newString)
+{
+    PoolElem* elemToFind = fHashTable->get(newString);
+    if (elemToFind)
+        return elemToFind->fId;
+
+    return addNewEntry(newString);
+}
+
+inline unsigned int XMLStringPool::getId(const XMLCh* const toFind) const
+{
+    PoolElem* elemToFind = fHashTable->get(toFind);
+    if (elemToFind)
+        return elemToFind->fId;
+
+    // Not found, so return zero, which is never a legal id
+    return 0;
+}
+
+inline bool XMLStringPool::exists(const XMLCh* const newString) const
+{
+    return fHashTable->containsKey(newString);
+}
+
+inline bool XMLStringPool::exists(const unsigned int id) const
+{
+    if (!id || (id >= fCurId))
+        return false;
+
+    return true;
+}
+
+inline const XMLCh* XMLStringPool::getValueForId(const unsigned int id) const
+{
+    if (!id || (id >= fCurId))
+        ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::StrPool_IllegalId, fMemoryManager);
+
+    // Just index the id map and return that element's string
+    return fIdMap[id]->fString;
+}
+
+inline unsigned int XMLStringPool::getStringCount() const
+{
+    return fCurId-1;
+}
 
 XERCES_CPP_NAMESPACE_END
 
