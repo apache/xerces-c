@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/11/20 20:28:17  peiyongz
+ * fix to warning C4018: '>' : signed/unsigned mismatch
+ *
  * Revision 1.7  2002/11/12 17:27:49  tng
  * DOM Message: add new domain for DOM Messages.
  *
@@ -225,7 +228,7 @@ bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
         return false;
     }
 
-    int retStrLen = strLen > maxChars ? maxChars : strLen;
+    int retStrLen = strLen > (int32_t)maxChars ? maxChars : strLen;
 
     if (sizeof(UChar)==sizeof(XMLCh))
     {
