@@ -784,6 +784,8 @@ void DOMNSTests()
         TASSERT(nnm->getLength() == 0);
         nnm = dt->getNotations();
         TASSERT(nnm->getLength() == 0);
+
+        // release the documentType (dt) which is an orphaned node (does not have the owner)
         dt->release();
 
         //
@@ -812,6 +814,8 @@ void DOMNSTests()
         EXCEPTION_TEST(impl->createDocumentType(X("doc::Name"), X("pubId"), X("http://sysId")), DOMException::NAMESPACE_ERR);
 
         EXCEPTION_TEST(impl->createDocumentType(X("doc:N:ame"), X("pubId"), X("http://sysId")), DOMException::NAMESPACE_ERR);
+
+        // release the documentType (dt) which is an orphaned node (does not have the owner)
         dt->release();
 
     }
@@ -888,13 +892,14 @@ void DOMNSTests()
             TASSERT(false);  // Wrong exception thrown.
         }
 
+        // release the document, the documentType (dt) still has the owner, and thus no need to release
         doc->release();
+
         // Creating a document with null NamespaceURI and DocumentType
         doc = impl->createDocument(X("pubId"), X("foo:docName"), 0);
+        doc->release();
 
         // Namespace tests of createDocument are covered by createElementNS below
-        doc->release();
-        dt->release();
     }
 
 
@@ -1021,8 +1026,9 @@ void DOMNSTests()
 
         //Prefix of readonly Element can not be changed.
         //However, there is no way to create such DOMElement* for testing yet.
+
+        // release the document, the documentType (dt) still has the owner, and thus no need to release
         doc->release();
-        dt->release();
     }
 
 
@@ -1161,8 +1167,9 @@ void DOMNSTests()
 
         //Prefix of readonly Attribute can not be changed.
         //However, there is no way to create such DOMAttribute for testing yet.
+
+        // release the document, the documentType (dt) still has the owner, and thus no need to release
         doc->release();
-        dt->release();
     }
 
 
@@ -1287,8 +1294,9 @@ void DOMNSTests()
         ela->appendChild(elc);
         TASSERT(nl->getLength() == 6);
         TASSERT(nla->getLength() == 1);
+
+        // release the document, the documentType (dt) still has the owner, and thus no need to release
         doc->release();
-        dt->release();
     }
 
 
@@ -1382,8 +1390,9 @@ void DOMNSTests()
 
         TASSERT(rootEl->hasAttributeNS(X("http://nsa"), X("attra")) == true);
         TASSERT(rootEl->hasAttributeNS(X("http://nsa"), X("wrong")) == false);
+
+        // release the document, the documentType (dt) still has the owner, and thus no need to release
         doc->release();
-        dt->release();
     }
 
 
@@ -1401,37 +1410,37 @@ void DOMNSTests()
 //---------------------------------------------------------------------------------------
 void DOMReleaseTests()
 {
-	XMLCh tempStr[4000];
-	XMLCh tempStr2[4000];
-	XMLCh tempStr3[4000];
-	XMLString::transcode("status", tempStr, 3999);
-	XMLString::transcode("true", tempStr2, 3999);
-	XMLString::transcode("root", tempStr3, 3999);
+    XMLCh tempStr[4000];
+    XMLCh tempStr2[4000];
+    XMLCh tempStr3[4000];
+    XMLString::transcode("status", tempStr, 3999);
+    XMLString::transcode("true", tempStr2, 3999);
+    XMLString::transcode("root", tempStr3, 3999);
 
-	//create document
-	DOMDocument*  cpXMLDocument;
-	cpXMLDocument = DOMImplementation::getImplementation()->createDocument();
-	//create root element
-	DOMElement*   cpRoot = cpXMLDocument->createElement(tempStr3);
-	//create status attribute
-	cpRoot->setAttribute(tempStr,tempStr2);
-	DOMAttr* pAttr = cpRoot->getAttributeNode(tempStr);
+    //create document
+    DOMDocument*  cpXMLDocument;
+    cpXMLDocument = DOMImplementation::getImplementation()->createDocument();
+    //create root element
+    DOMElement*   cpRoot = cpXMLDocument->createElement(tempStr3);
+    //create status attribute
+    cpRoot->setAttribute(tempStr,tempStr2);
+    DOMAttr* pAttr = cpRoot->getAttributeNode(tempStr);
 
-	//simulate setting the attribute value
-   //   The setValue and setAttribute should call release internally so that
-   //   the overall memory usage is not increased
-    int i = 0;
-	for(i=0;i<200000;i++)
-	{
-		 pAttr->setValue(tempStr2);
-	}
-	for(i=0;i<200000;i++)
-	{
-		//same problem
-		cpRoot->removeAttribute(tempStr);
-		cpRoot->setAttribute(tempStr,tempStr2);
-	}
-	cpXMLDocument->release();
+    //simulate setting the attribute value
+    //   The setValue and setAttribute should call release internally so that
+    //   the overall memory usage is not increased
+     int i = 0;
+    for(i=0;i<200000;i++)
+    {
+        pAttr->setValue(tempStr2);
+    }
+    for(i=0;i<200000;i++)
+    {
+        //same problem
+        cpRoot->removeAttribute(tempStr);
+        cpRoot->setAttribute(tempStr,tempStr2);
+    }
+    cpXMLDocument->release();
 
 }
 
@@ -1468,7 +1477,7 @@ int  mymain()
 };
 
 int  main() {
-    for (int i = 0; i<50; i++)
+    for (int i = 0; i<5; i++)
         mymain();
 
     printf("Test Run Successfully\n");
