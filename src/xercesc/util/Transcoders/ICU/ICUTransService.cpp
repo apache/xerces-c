@@ -69,7 +69,7 @@
 #include "ICUTransService.hpp"
 #include <string.h>
 #include <unicode/uloc.h>
-#include <unicode/unicode.h>
+#include <unicode/uchar.h>
 #include <unicode/ucnv.h>
 #include <unicode/ucnv_err.h>
 #include <unicode/ustring.h>
@@ -201,7 +201,7 @@ int ICUTransService::compareIString(const   XMLCh* const    comp1
         //  larger than 0xFFFF, so our cast here will work for both possible
         //  sizes of XMLCh.
         //
-        if (Unicode::toUpperCase(UChar(*psz1)) != Unicode::toUpperCase(UChar(*psz2)))
+        if (u_toupper(UChar(*psz1)) != u_toupper(UChar(*psz2)))
             return int(*psz1) - int(*psz2);
 
         // If either has ended, then they both ended, so equal
@@ -232,7 +232,7 @@ int ICUTransService::compareNIString(const  XMLCh* const    comp1
         //  larger than 0xFFFF, so our cast here will work for both possible
         //  sizes of XMLCh.
         //
-        if (Unicode::toUpperCase(UChar(*psz1)) != Unicode::toUpperCase(UChar(*psz2)))
+        if (u_toupper(UChar(*psz1)) != u_toupper(UChar(*psz2)))
             return int(*psz1) - int(*psz2);
 
         // If either ended, then both ended, so equal
@@ -276,7 +276,7 @@ bool ICUTransService::isSpace(const XMLCh toCheck) const
     {
         return true;
     }
-    return (Unicode::isSpaceChar(UChar(toCheck)) != 0);
+    return (u_isspace(UChar(toCheck)) != 0);
 }
 
 
@@ -309,7 +309,7 @@ void ICUTransService::upperCase(XMLCh* const toUpperCase) const
     XMLCh* outPtr = toUpperCase;
     while (*outPtr)
     {
-        *outPtr = XMLCh(Unicode::toUpperCase(UChar(*outPtr)));
+        *outPtr = XMLCh(u_toupper(UChar(*outPtr)));
         outPtr++;
     }
 }
@@ -319,7 +319,7 @@ void ICUTransService::lowerCase(XMLCh* const toLowerCase) const
     XMLCh* outPtr = toLowerCase;
     while (*outPtr)
     {
-        *outPtr = XMLCh(Unicode::toLowerCase(UChar(*outPtr)));
+        *outPtr = XMLCh(u_tolower(UChar(*outPtr)));
         outPtr++;
     }
 }

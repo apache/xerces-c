@@ -543,7 +543,7 @@ $set 3
 138  The range end code point '{0}' is less than the start code point '{1}'
 139  Invalid Unicode hex notation
 140  Overflow in a hex notation
-141  '\\x{' must be closed by '}'
+141  '\ x{' must be closed by '}'
 142  Invalid Unicode code point
 143  An anchor must not be here
 144  This expression is not supported in the current option setting

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/24 17:59:07  tng
+ * Build with ICU 2.4
+ *
  * Revision 1.2  2002/11/04 15:17:01  tng
  * C++ Namespace Support.
  *
@@ -77,7 +80,7 @@
 #include <xercesc/util/regx/XMLUniCharacter.hpp>
 
 #if defined (XML_USE_ICU_TRANSCODER)
-   #include <unicode/unicode.h>
+   #include <unicode/uchar.h>
 #else
    #include <xercesc/util/regx/UniCharTable.hpp>
 #endif
@@ -90,7 +93,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 unsigned short XMLUniCharacter::getType(const XMLCh ch) {
 
 #if defined (XML_USE_ICU_TRANSCODER)
-	return (unsigned short) Unicode::getType(ch);
+	return (unsigned short) u_charType(ch);
 #else
 	return (unsigned short) fgUniCharsTable[ch];
 #endif

@@ -72,7 +72,7 @@ $platform = <PLATFORM>;
 chomp($platform);
 close (PLATFORM);
 
-# 
+#
 
 #set platform variable if on windows 64bit
 my $return_code = system( "ls" );
@@ -129,7 +129,7 @@ if ($platform eq "win64bit" )
     psystem ("mkdir $targetdir\\lib");
     if ( $opt_m =~ m/icu/i ) {
         psystem ("mkdir $targetdir\\msg");
-    }    
+    }
     psystem ("mkdir $targetdir\\etc");
     psystem ("mkdir $targetdir\\include");
     psystem ("mkdir $targetdir\\include\\xercesc");
@@ -307,17 +307,17 @@ if ($platform eq "win64bit" )
     print ("\n \nCopying binary outputs ...\n");
     psystem("copy /y $BUILDDIR\\*.dll $targetdir\\bin");
     psystem("copy /y $BUILDDIR\\*.exe $targetdir\\bin");
-   
+
     if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {
 
         # Copy the ICU dlls and libs
-        psystem("copy /y $ICUROOT\\bin\\icuuc22.dll $targetdir\\bin");
-        psystem("copy /y $ICUROOT\\bin\\icuuc22d.dll $targetdir\\bin");
+        psystem("copy /y $ICUROOT\\bin\\icuuc24.dll $targetdir\\bin");
+        psystem("copy /y $ICUROOT\\bin\\icuuc24d.dll $targetdir\\bin");
 
-        # it seems icudt22*.DLL is generated (upper case dll)
+        # it seems icudt24*.DLL is generated (upper case dll)
         # but just case, try lower case .dll as well
-        psystem("copy /y $ICUROOT\\bin\\icudt22*.DLL $targetdir\\bin");
-        psystem("copy /y $ICUROOT\\bin\\icudt22*.dll $targetdir\\bin");
+        psystem("copy /y $ICUROOT\\bin\\icudt24*.DLL $targetdir\\bin");
+        psystem("copy /y $ICUROOT\\bin\\icudt24*.dll $targetdir\\bin");
 
         psystem("copy /y $ICUROOT\\lib\\icudata.lib $targetdir\\lib");
 
@@ -338,7 +338,7 @@ if ($platform eq "win64bit" )
         psystem("copy /y $DEBUGBUILDDIR\\xerces-c_*D.lib $targetdir\\lib");
         psystem("copy /y $DEBUGBUILDDIR\\xerces*D.dll $targetdir\\bin");
     }
-   
+
     # Populate the etc output directory like config.status and the map file
     print ("\n \nCopying misc output to etc ...\n");
     psystem("copy /y $XERCESCROOT\\Build\\Win64\\VC6\\Release\\obj\\*.map $targetdir\\etc");
@@ -466,7 +466,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("mkdir $targetdir/lib");
     if ( $opt_m =~ m/icu/i ) {
         psystem ("mkdir $targetdir/msg");
-    }   
+    }
     psystem ("mkdir $targetdir/etc");
     psystem ("mkdir $targetdir/include");
     psystem ("mkdir $targetdir/include/xercesc");
@@ -706,13 +706,13 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
     if (($opt_t =~ m/icu/i || $opt_m =~ m/icu/i) && length($ICUROOT) > 0) {    	
         # Copy the ICU dlls and libs
-        psystem("cp -fv $ICUROOT/bin/icuuc22.dll $targetdir/bin");
-        psystem("cp -fv $ICUROOT/bin/icuuc22d.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icuuc24.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icuuc24d.dll $targetdir/bin");
 
-        # it seems icudt22*.DLL is generated (upper case dll)
+        # it seems icudt24*.DLL is generated (upper case dll)
         # but just case, try lower case .dll as well
-        psystem("cp -fv $ICUROOT/bin/icudt22*.DLL $targetdir/bin");
-        psystem("cp -fv $ICUROOT/bin/icudt22*.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icudt24*.DLL $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icudt24*.dll $targetdir/bin");
 
         psystem("cp -fv $ICUROOT/lib/icudata.lib $targetdir/lib");
 
@@ -878,7 +878,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         if ($opt_x eq "") {$opt_x = "g++";}
         $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
         psystem ("echo LIBRARY_PATH=$ENV{'LIBRARY_PATH'}");
-    }    
+    }
     if ($platform =~ m/Linux/i) {
         $platform = "linux";
         if ($opt_c eq "") {$opt_c = "gcc";}
@@ -1100,43 +1100,43 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         #
         # copy icudata dll
         # For ICU 2.2:
-        # on AIX, it is called libicudata22.0.so
-        # on Solaris/Linux, it is called libicudata.so.22.0
-        # on HP, it is called libicudata.s1.22.0
+        # on AIX, it is called libicudata24.0.so
+        # on Solaris/Linux, it is called libicudata.so.24.0
+        # on HP, it is called libicudata.s1.24.0
         #
         psystem("rm -f libicudata*");
-        psystem("cp -f $ICUROOT/lib/libicudata22.0.so .");
-        psystem("cp -f $ICUROOT/lib/libicudata.so.22.0 .");
-        psystem("cp -f $ICUROOT/lib/libicudata.sl.22.0 .");
+        psystem("cp -f $ICUROOT/lib/libicudata24.0.so .");
+        psystem("cp -f $ICUROOT/lib/libicudata.so.24.0 .");
+        psystem("cp -f $ICUROOT/lib/libicudata.sl.24.0 .");
 
-        psystem("find . -name 'libicudata22.0.so' -exec ln -s {} libicudata.so \\;");
-        psystem("find . -name 'libicudata22.0.so' -exec ln -s {} libicudata22.so \\;");
+        psystem("find . -name 'libicudata24.0.so' -exec ln -s {} libicudata.so \\;");
+        psystem("find . -name 'libicudata24.0.so' -exec ln -s {} libicudata24.so \\;");
 
-        psystem("find . -name 'libicudata.so.22.0' -exec ln -s {} libicudata.so \\;");
-        psystem("find . -name 'libicudata.so.22.0' -exec ln -s {} libicudata.so.22 \\;");
+        psystem("find . -name 'libicudata.so.24.0' -exec ln -s {} libicudata.so \\;");
+        psystem("find . -name 'libicudata.so.24.0' -exec ln -s {} libicudata.so.24 \\;");
 
-        psystem("find . -name 'libicudata.sl.22.0' -exec ln -s {} libicudata.sl \\;");
-        psystem("find . -name 'libicudata.sl.22.0' -exec ln -s {} libicudata.sl.22 \\;");
+        psystem("find . -name 'libicudata.sl.24.0' -exec ln -s {} libicudata.sl \\;");
+        psystem("find . -name 'libicudata.sl.24.0' -exec ln -s {} libicudata.sl.24 \\;");
 
         #
         # copy icuuc dll
-        # on AIX, it is called libicuuc22.0.so
-        # on Solaris/Linux, it is called libicuuc.so.22.0
-        # on HP, it is called libicuuc.sl.22.0
+        # on AIX, it is called libicuuc24.0.so
+        # on Solaris/Linux, it is called libicuuc.so.24.0
+        # on HP, it is called libicuuc.sl.24.0
         #
         psystem("rm -f libicuuc*");
-        psystem("cp -f $ICUROOT/lib/libicuuc22.0.so .");
-        psystem("cp -f $ICUROOT/lib/libicuuc.so.22.0  .");
-        psystem("cp -f $ICUROOT/lib/libicuuc.sl.22.0  .");
+        psystem("cp -f $ICUROOT/lib/libicuuc24.0.so .");
+        psystem("cp -f $ICUROOT/lib/libicuuc.so.24.0  .");
+        psystem("cp -f $ICUROOT/lib/libicuuc.sl.24.0  .");
 
-        psystem("find . -name 'libicuuc22.0.so' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc22.0.so' -exec ln -s {} libicuuc22.so \\;");
+        psystem("find . -name 'libicuuc24.0.so' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc24.0.so' -exec ln -s {} libicuuc24.so \\;");
 
-        psystem("find . -name 'libicuuc.so.22.0' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc.so.22.0' -exec ln -s {} libicuuc.so.22 \\;");
+        psystem("find . -name 'libicuuc.so.24.0' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc.so.24.0' -exec ln -s {} libicuuc.so.24 \\;");
 
-        psystem("find . -name 'libicuuc.sl.22.0' -exec ln -s {} libicuuc.sl \\;");
-        psystem("find . -name 'libicuuc.sl.22.0' -exec ln -s {} libicuuc.sl.22 \\;");
+        psystem("find . -name 'libicuuc.sl.24.0' -exec ln -s {} libicuuc.sl \\;");
+        psystem("find . -name 'libicuuc.sl.24.0' -exec ln -s {} libicuuc.sl.24 \\;");
     }
 
     # Now build the samples
@@ -1250,9 +1250,9 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         print ("\n\nCopying Message Catalog Files ...\n");
         pchdir ("$targetdir/msg");
         psystem("rm -f XercesMessages* ");    	
-        psystem("cp -f $XERCESCROOT/msg/XercesMessages*.cat .");        
-    }    
-           
+        psystem("cp -f $XERCESCROOT/msg/XercesMessages*.cat .");
+    }
+
     #
     # Create symbolic link for those ICU libraries
     #
@@ -1261,43 +1261,43 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 
         #
         # copy icudata dll
-        # on AIX, it is called libicudata22.0.so
-        # on Solaris/Linux, it is called libicudata.so.22.0
-        # on HP, it is called libicudata.s1.22.0
+        # on AIX, it is called libicudata24.0.so
+        # on Solaris/Linux, it is called libicudata.so.24.0
+        # on HP, it is called libicudata.s1.24.0
         #
         psystem("rm -f libicudata*");
-        psystem("cp -f $XERCESCROOT/lib/libicudata22.0.so .");
-        psystem("cp -f $XERCESCROOT/lib/libicudata.so.22.0 .");
-        psystem("cp -f $XERCESCROOT/lib/libicudata.sl.22.0 .");
+        psystem("cp -f $XERCESCROOT/lib/libicudata24.0.so .");
+        psystem("cp -f $XERCESCROOT/lib/libicudata.so.24.0 .");
+        psystem("cp -f $XERCESCROOT/lib/libicudata.sl.24.0 .");
 
-        psystem("find . -name 'libicudata22.0.so' -exec ln -s {} libicudata.so \\;");
-        psystem("find . -name 'libicudata22.0.so' -exec ln -s {} libicudata22.so \\;");
+        psystem("find . -name 'libicudata24.0.so' -exec ln -s {} libicudata.so \\;");
+        psystem("find . -name 'libicudata24.0.so' -exec ln -s {} libicudata24.so \\;");
 
-        psystem("find . -name 'libicudata.so.22.0' -exec ln -s {} libicudata.so \\;");
-        psystem("find . -name 'libicudata.so.22.0' -exec ln -s {} libicudata.so.22 \\;");
+        psystem("find . -name 'libicudata.so.24.0' -exec ln -s {} libicudata.so \\;");
+        psystem("find . -name 'libicudata.so.24.0' -exec ln -s {} libicudata.so.24 \\;");
 
-        psystem("find . -name 'libicudata.sl.22.0' -exec ln -s {} libicudata.sl \\;");
-        psystem("find . -name 'libicudata.sl.22.0' -exec ln -s {} libicudata.sl.22 \\;");
+        psystem("find . -name 'libicudata.sl.24.0' -exec ln -s {} libicudata.sl \\;");
+        psystem("find . -name 'libicudata.sl.24.0' -exec ln -s {} libicudata.sl.24 \\;");
 
         #
         # copy icuuc dll
-        # on AIX, it is called libicuuc22.0.so
-        # on Solaris/Linux, it is called libicuuc.so.22.0
-        # on HP, it is called libicuuc.sl.22.0
+        # on AIX, it is called libicuuc24.0.so
+        # on Solaris/Linux, it is called libicuuc.so.24.0
+        # on HP, it is called libicuuc.sl.24.0
         #
         psystem("rm -f libicuuc*");
-        psystem("cp -f $XERCESCROOT/lib/libicuuc22.0.so .");
-        psystem("cp -f $XERCESCROOT/lib/libicuuc.so.22.0  .");
-        psystem("cp -f $XERCESCROOT/lib/libicuuc.sl.22.0  .");
+        psystem("cp -f $XERCESCROOT/lib/libicuuc24.0.so .");
+        psystem("cp -f $XERCESCROOT/lib/libicuuc.so.24.0  .");
+        psystem("cp -f $XERCESCROOT/lib/libicuuc.sl.24.0  .");
 
-        psystem("find . -name 'libicuuc22.0.so' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc22.0.so' -exec ln -s {} libicuuc22.so \\;");
+        psystem("find . -name 'libicuuc24.0.so' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc24.0.so' -exec ln -s {} libicuuc24.so \\;");
 
-        psystem("find . -name 'libicuuc.so.22.0' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc.so.22.0' -exec ln -s {} libicuuc.so.22 \\;");
+        psystem("find . -name 'libicuuc.so.24.0' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc.so.24.0' -exec ln -s {} libicuuc.so.24 \\;");
 
-        psystem("find . -name 'libicuuc.sl.22.0' -exec ln -s {} libicuuc.sl \\;");
-        psystem("find . -name 'libicuuc.sl.22.0' -exec ln -s {} libicuuc.sl.22 \\;");
+        psystem("find . -name 'libicuuc.sl.24.0' -exec ln -s {} libicuuc.sl \\;");
+        psystem("find . -name 'libicuuc.sl.24.0' -exec ln -s {} libicuuc.sl.24 \\;");
 
         # Copy the Resouce Bundle for ICUMsgLoader
         if ( $opt_m =~ m/icu/i) {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/12/24 17:59:07  tng
+ * Build with ICU 2.4
+ *
  * Revision 1.3  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -467,7 +470,7 @@ void TokenFactory::initializeRegistry() {
 
 /*
 #if defined (XML_USE_ICU_TRANSCODER)
-   #include <unicode/unicode.h>
+   #include <unicode/uchar.h>
 #endif
 
 #include <stdio.h>
@@ -485,22 +488,22 @@ void TokenFactory::printUnicode() {
     {
         fprintf(outFl
                 , "    , 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X\n"
-                , (unsigned int)Unicode::getType(index)
-                , (unsigned int)Unicode::getType(index+1)
-                , (unsigned int)Unicode::getType(index+2)
-                , (unsigned int)Unicode::getType(index+3)
-                , (unsigned int)Unicode::getType(index+4)
-                , (unsigned int)Unicode::getType(index+5)
-                , (unsigned int)Unicode::getType(index+6)
-                , (unsigned int)Unicode::getType(index+7)
-				, (unsigned int)Unicode::getType(index+8)
-                , (unsigned int)Unicode::getType(index+9)
-                , (unsigned int)Unicode::getType(index+10)
-                , (unsigned int)Unicode::getType(index+11)
-				, (unsigned int)Unicode::getType(index+12)
-                , (unsigned int)Unicode::getType(index+13)
-                , (unsigned int)Unicode::getType(index+14)
-                , (unsigned int)Unicode::getType(index+15));
+                , (unsigned int)u_charType(index)
+                , (unsigned int)u_charType(index+1)
+                , (unsigned int)u_charType(index+2)
+                , (unsigned int)u_charType(index+3)
+                , (unsigned int)u_charType(index+4)
+                , (unsigned int)u_charType(index+5)
+                , (unsigned int)u_charType(index+6)
+                , (unsigned int)u_charType(index+7)
+				, (unsigned int)u_charType(index+8)
+                , (unsigned int)u_charType(index+9)
+                , (unsigned int)u_charType(index+10)
+                , (unsigned int)u_charType(index+11)
+				, (unsigned int)u_charType(index+12)
+                , (unsigned int)u_charType(index+13)
+                , (unsigned int)u_charType(index+14)
+                , (unsigned int)u_charType(index+15));
     }
     fprintf(outFl, "};\n");
 
