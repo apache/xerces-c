@@ -83,6 +83,20 @@ void* XMemory::operator new(size_t size)
     return (char*)block + headerSize;
 }
 
+#if defined(XML_VISUALCPP)
+
+void* XMemory::operator new(size_t size, const char* file, int line)
+{ 
+		 return operator new(size); 
+}
+ 
+void XMemory::operator delete(void* p, const char* file, int line)
+{ 
+		 operator delete(p); 
+}
+ 
+#endif
+
 void* XMemory::operator new(size_t size, MemoryManager* manager)
 {
     assert(manager != 0);

@@ -93,6 +93,25 @@ public :
       */
     void* operator new(size_t size);
 
+#if defined(XML_VISUALCPP)
+    /**
+      * This method overrides the MFC debug version of the operator new
+      * 
+      * @param size   The requested memory size
+      * @param file   The file where the allocation was requested
+      * @param line   The line where the allocation was requested 
+      */ 
+    void* operator new(size_t size, const char* file, int line);
+    /**
+      * This method provides a matching delete for the MFC debug new
+      * 
+      * @param p      The pointer to the allocated memory
+      * @param file   The file where the allocation was requested
+      * @param line   The line where the allocation was requested 
+      */ 
+    void operator delete(void* p, const char* file, int line);
+#endif
+
     /**
       * This method overrides placement operator new
       *
@@ -111,10 +130,10 @@ public :
      //The HP compiler is complaining about duplicate overloading of delete
 #if !defined(XML_HPUX) && !defined(XML_BORLAND)
     /**
-      * This method provide a matching delete for the placement new
+      * This method provides a matching delete for the placement new
       *
       * @param p      The pointer to the allocated memory
-      * @param memMgr An appliation's memory manager
+      * @param memMgr An application's memory manager 
       */
     void operator delete(void* p, MemoryManager* memMgr);
 #endif
