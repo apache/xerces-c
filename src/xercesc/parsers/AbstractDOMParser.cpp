@@ -126,7 +126,7 @@ AbstractDOMParser::AbstractDOMParser(XMLValidator* const valToAdopt) :
     fScanner->setDocTypeHandler(this);
 
     fNodeStack = new ValueStackOf<DOMNode*>(64);
-    this->reset();   
+    this->reset();
 }
 
 
@@ -1203,9 +1203,7 @@ void AbstractDOMParser::entityDecl
             fInternalSubset.append(chSpace);
             fInternalSubset.append(XMLUni::fgNDATAString);
             fInternalSubset.append(chSpace);
-            fInternalSubset.append(chDoubleQuote);
             fInternalSubset.append(id);
-            fInternalSubset.append(chDoubleQuote);
         }
         id = entityDecl.getValue();
         if (id !=0) {
@@ -1238,6 +1236,38 @@ void AbstractDOMParser::notationDecl
     DOMNode* rem = fDocumentType->getNotations()->setNamedItem( notation );
     if (rem)
         rem->release();
+
+    if (fDocumentType->isIntSubsetReading())
+    {
+        //add thes chars to internalSubset variable
+        fInternalSubset.append(chOpenAngle);
+        fInternalSubset.append(chBang);
+        fInternalSubset.append(XMLUni::fgNotationString);
+        fInternalSubset.append(chSpace);
+
+        fInternalSubset.append(notDecl.getName());
+
+        const XMLCh* id = notation->getPublicId();
+        if (id != 0) {
+            fInternalSubset.append(chSpace);
+            fInternalSubset.append(XMLUni::fgPubIDString);
+            fInternalSubset.append(chSpace);
+            fInternalSubset.append(chDoubleQuote);
+            fInternalSubset.append(id);
+            fInternalSubset.append(chDoubleQuote);
+        }
+        id = notation->getSystemId();
+        if (id != 0) {
+            fInternalSubset.append(chSpace);
+            fInternalSubset.append(XMLUni::fgSysIDString);
+            fInternalSubset.append(chSpace);
+            fInternalSubset.append(chDoubleQuote);
+            fInternalSubset.append(id);
+            fInternalSubset.append(chDoubleQuote);
+
+        }
+        fInternalSubset.append(chCloseAngle);
+    }
 }
 
 void AbstractDOMParser::startAttList
