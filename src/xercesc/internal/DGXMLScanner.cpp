@@ -977,7 +977,8 @@ void DGXMLScanner::scanDocTypeDecl()
 
                 XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
                 fGrammarResolver->orphanGrammar(gramDesc);
-                fGrammarResolver->putGrammar(sysIdStr, fGrammar);
+                gramDesc->setRootName(sysIdStr);
+                fGrammarResolver->putGrammar(gramDesc, fGrammar);
             }
 
             //  In order to make the processing work consistently, we have to
@@ -1679,7 +1680,8 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
         fValidator->reset();
 
     fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();   
-    fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
+    XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
+    fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fValidator->setGrammar(fGrammar);
 
@@ -1702,7 +1704,8 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
 
         XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
         fGrammarResolver->orphanGrammar(gramDesc);
-        fGrammarResolver->putGrammar(sysIdStr, fGrammar);
+        gramDesc->setRootName(sysIdStr);
+        fGrammarResolver->putGrammar(gramDesc, fGrammar);
     }
 
     //  Handle the creation of the XML reader object for this input source.
@@ -2034,7 +2037,8 @@ void DGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
     fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
-    fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
+    XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
+    fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fRootGrammar = 0;
     fValidator->setGrammar(fGrammar);

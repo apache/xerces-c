@@ -1383,7 +1383,8 @@ void IGXMLScanner::scanDocTypeDecl()
 
                 XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
                 fGrammarResolver->orphanGrammar(gramDesc);
-                fGrammarResolver->putGrammar(sysIdStr, fGrammar);
+                gramDesc->setRootName(sysIdStr);
+                fGrammarResolver->putGrammar(gramDesc, fGrammar);
             }
 
             //  In order to make the processing work consistently, we have to
@@ -2849,7 +2850,8 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     }
 
     fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
-    fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
+    XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
+    fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fGrammarType = fGrammar->getGrammarType();
     fValidator->setGrammar(fGrammar);
@@ -2873,7 +2875,8 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
 
         XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
         fGrammarResolver->orphanGrammar(gramDesc);
-        fGrammarResolver->putGrammar(sysIdStr, fGrammar);
+        gramDesc->setRootName(sysIdStr);
+        fGrammarResolver->putGrammar(gramDesc, fGrammar);
     }
 
     //  Handle the creation of the XML reader object for this input source.

@@ -78,6 +78,7 @@
 #include <xercesc/framework/XMLPScanToken.hpp>
 #include <xercesc/framework/XMLRefInfo.hpp>
 #include <xercesc/framework/XMLGrammarPool.hpp>
+#include <xercesc/framework/XMLDTDDescription.hpp>
 #include <xercesc/validators/common/ContentLeafNameTypeVector.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
@@ -866,7 +867,8 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
     fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
-    fGrammarResolver->putGrammar(XMLUni::fgDTDEntityString, fDTDGrammar);
+    XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
+    fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;
     fGrammarType = fGrammar->getGrammarType();
     fRootGrammar = 0;
