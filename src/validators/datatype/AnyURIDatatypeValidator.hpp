@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/19 18:49:17  peiyongz
+ * DTV reorganization: move inline to class declaration to avoid inline
+ * function interdependency.
+ *
  * Revision 1.5  2001/09/18 20:38:02  peiyongz
  * DTV reorganization: inherit from AbstractStringValidator.
  *
@@ -108,9 +112,11 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    inline DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                        , RefVectorOf<XMLCh>*           const enums
+                                        , const int                           finalSet);
+
+protected:
 
     void checkValueSpace(const XMLCh* const);
 
@@ -128,7 +134,7 @@ private:
 
 };
 
-inline DatatypeValidator* AnyURIDatatypeValidator::newInstance(
+DatatypeValidator* AnyURIDatatypeValidator::newInstance(
                                       RefHashTableOf<KVStringPair>* const facets
                                     , RefVectorOf<XMLCh>*           const enums
                                     , const int                           finalSet)

@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/19 18:49:17  peiyongz
+ * DTV reorganization: move inline to class declaration to avoid inline
+ * function interdependency.
+ *
  * Revision 1.5  2001/09/18 20:38:03  peiyongz
  * DTV reorganization: inherit from AbstractStringValidator.
  *
@@ -101,8 +105,7 @@ static const XMLCh BASE_URI[] =
 AnyURIDatatypeValidator::AnyURIDatatypeValidator()
 :AbstractStringValidator(0, 0, 0, 0, DatatypeValidator::AnyURI)
 ,fTempURI(0)
-{
-}
+{}
 
 AnyURIDatatypeValidator::~AnyURIDatatypeValidator()
 {
@@ -118,12 +121,10 @@ AnyURIDatatypeValidator::AnyURIDatatypeValidator(
                         , const int                           finalSet)
 :AbstractStringValidator(baseValidator, facets, enums, finalSet, DatatypeValidator::AnyURI)
 ,fTempURI(0)
-{
-}
+{}
 
 void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
 {  
-
     // check 3.2.17.c0 must: URI (rfc 2396/2723)
     try 
     {
