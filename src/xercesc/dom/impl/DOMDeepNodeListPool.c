@@ -336,6 +336,20 @@ DOMDeepNodeListPool<TVal>::put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const
     }
     else
     {
+    // Revisit: the gcc compiler 2.95.x is generating an
+    // internal compiler error message. So we use the default
+    // memory manager for now.
+#if defined (XML_GCC_VERSION) && (XML_GCC_VERSION < 29600)
+        newBucket = new DOMDeepNodeListPoolTableBucketElem<TVal>
+        (
+            key1
+            , key2
+            , key3
+            , valueToAdopt
+            , fBucketList[hashVal]
+            , fMemoryManager
+        );
+#else
         newBucket = new (fMemoryManager) DOMDeepNodeListPoolTableBucketElem<TVal>
         (
             key1
@@ -345,6 +359,7 @@ DOMDeepNodeListPool<TVal>::put(void* key1, XMLCh* key2, XMLCh* key3, TVal* const
             , fBucketList[hashVal]
             , fMemoryManager
         );
+#endif
         fBucketList[hashVal] = newBucket;
     }
 

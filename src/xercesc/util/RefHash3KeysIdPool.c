@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/05/21 21:08:04  knoaman
+ * gcc 2.95.x is generating an internal error for some template definitions, so
+ * we use the default memory manger in such cases.
+ *
  * Revision 1.4  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -336,7 +340,14 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
     }
      else
     {
+    // Revisit: the gcc compiler 2.95.x is generating an
+    // internal compiler error message. So we use the default
+    // memory manager for now.
+#if defined (XML_GCC_VERSION) && (XML_GCC_VERSION < 29600)
+        newBucket = new RefHash3KeysTableBucketElem<TVal>(key1, key2, key3, valueToAdopt, fBucketList[hashVal]);
+#else
         newBucket = new (fMemoryManager) RefHash3KeysTableBucketElem<TVal>(key1, key2, key3, valueToAdopt, fBucketList[hashVal]);
+#endif
         fBucketList[hashVal] = newBucket;
     }
 

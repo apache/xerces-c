@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/05/21 21:08:04  knoaman
+ * gcc 2.95.x is generating an internal error for some template definitions, so
+ * we use the default memory manger in such cases.
+ *
  * Revision 1.11  2003/05/12 09:44:19  gareth
  * Port to NetBSD. Patch by Hiramatsu Yoshifumi.
  *
@@ -324,5 +328,17 @@
 #else
     #error Code requires port to current development environment
 #endif
+
+// ---------------------------------------------------------------------------
+//  The gcc compiler 2.95... is generating an internal error for some template
+//  definitions. So, if we are compiling with gcc, have a specific define that
+//  we can later use in the code.
+// ---------------------------------------------------------------------------
+#if defined(__GNUC__)
+#define XML_GCC_VERSION (__GNUC__ * 10000 \
+                         + __GNUC_MINOR__ * 100 \
+                         + __GNUC_PATCHLEVEL__)
+#endif
+
 
 #endif
