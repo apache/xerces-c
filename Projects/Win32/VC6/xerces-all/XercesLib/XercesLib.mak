@@ -284,6 +284,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XercesElementWildcard.obj"
 	-@erase "$(INTDIR)\XercesGroupInfo.obj"
 	-@erase "$(INTDIR)\XercesXPath.obj"
+	-@erase "$(INTDIR)\XMemory.obj"
 	-@erase "$(INTDIR)\XML256TableTranscoder.obj"
 	-@erase "$(INTDIR)\XML88591Transcoder.obj"
 	-@erase "$(INTDIR)\XMLAbstractDoubleFloat.obj"
@@ -440,6 +441,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\QName.obj" \
 	"$(INTDIR)\StringPool.obj" \
 	"$(INTDIR)\TransService.obj" \
+	"$(INTDIR)\XMemory.obj" \
 	"$(INTDIR)\XML256TableTranscoder.obj" \
 	"$(INTDIR)\XML88591Transcoder.obj" \
 	"$(INTDIR)\XMLAbstractDoubleFloat.obj" \
@@ -951,6 +953,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XercesElementWildcard.obj"
 	-@erase "$(INTDIR)\XercesGroupInfo.obj"
 	-@erase "$(INTDIR)\XercesXPath.obj"
+	-@erase "$(INTDIR)\XMemory.obj"
 	-@erase "$(INTDIR)\XML256TableTranscoder.obj"
 	-@erase "$(INTDIR)\XML88591Transcoder.obj"
 	-@erase "$(INTDIR)\XMLAbstractDoubleFloat.obj"
@@ -1108,6 +1111,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\QName.obj" \
 	"$(INTDIR)\StringPool.obj" \
 	"$(INTDIR)\TransService.obj" \
+	"$(INTDIR)\XMemory.obj" \
 	"$(INTDIR)\XML256TableTranscoder.obj" \
 	"$(INTDIR)\XML88591Transcoder.obj" \
 	"$(INTDIR)\XMLAbstractDoubleFloat.obj" \
@@ -1619,6 +1623,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XercesElementWildcard.obj"
 	-@erase "$(INTDIR)\XercesGroupInfo.obj"
 	-@erase "$(INTDIR)\XercesXPath.obj"
+	-@erase "$(INTDIR)\XMemory.obj"
 	-@erase "$(INTDIR)\XML256TableTranscoder.obj"
 	-@erase "$(INTDIR)\XML88591Transcoder.obj"
 	-@erase "$(INTDIR)\XMLAbstractDoubleFloat.obj"
@@ -1776,6 +1781,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\QName.obj" \
 	"$(INTDIR)\StringPool.obj" \
 	"$(INTDIR)\TransService.obj" \
+	"$(INTDIR)\XMemory.obj" \
 	"$(INTDIR)\XML256TableTranscoder.obj" \
 	"$(INTDIR)\XML88591Transcoder.obj" \
 	"$(INTDIR)\XMLAbstractDoubleFloat.obj" \
@@ -2286,6 +2292,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XercesElementWildcard.obj"
 	-@erase "$(INTDIR)\XercesGroupInfo.obj"
 	-@erase "$(INTDIR)\XercesXPath.obj"
+	-@erase "$(INTDIR)\XMemory.obj"
 	-@erase "$(INTDIR)\XML256TableTranscoder.obj"
 	-@erase "$(INTDIR)\XML88591Transcoder.obj"
 	-@erase "$(INTDIR)\XMLAbstractDoubleFloat.obj"
@@ -2443,6 +2450,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\QName.obj" \
 	"$(INTDIR)\StringPool.obj" \
 	"$(INTDIR)\TransService.obj" \
+	"$(INTDIR)\XMemory.obj" \
 	"$(INTDIR)\XML256TableTranscoder.obj" \
 	"$(INTDIR)\XML88591Transcoder.obj" \
 	"$(INTDIR)\XMLAbstractDoubleFloat.obj" \
@@ -3190,6 +3198,12 @@ SOURCE=..\..\..\..\..\src\xercesc\util\StringPool.cpp
 SOURCE=..\..\..\..\..\src\xercesc\util\TransService.cpp
 
 "$(INTDIR)\TransService.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\util\XMemory.cpp
+
+"$(INTDIR)\XMemory.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

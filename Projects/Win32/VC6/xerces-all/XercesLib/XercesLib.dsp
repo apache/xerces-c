@@ -735,6 +735,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XercesVersion.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\XMemory.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\XMemory.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\XML256TableTranscoder.cpp
 # End Source File
 # Begin Source File
