@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/04/05 00:20:32  roddey
+ * More updates for the low level formatted output support
+ *
  * Revision 1.5  2000/03/28 19:43:11  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
  * stuff.
@@ -90,17 +93,53 @@
 
 
 // ---------------------------------------------------------------------------
+//  Local const data
+//
+//  Note: This is the 'safe' way to do these strings. If you compiler supports
+//        L"" style strings, and portability is not a concern, you can use
+//        those types constants directly.
+// ---------------------------------------------------------------------------
+static const XMLCh  gEndElement[] = { chOpenAngle, chForwardSlash, chNull };
+static const XMLCh  gEndPI[] = { chQuestion, chCloseAngle, chSpace };
+static const XMLCh  gStartPI[] = { chOpenAngle, chQuestion, chSpace };
+static const XMLCh  gXMLDecl1[] =
+{
+        chOpenAngle, chQuestion, chLatin_x, chLatin_m, chLatin_l
+    ,   chSpace, chLatin_v, chLatin_e, chLatin_r, chLatin_s, chLatin_i
+    ,   chLatin_o, chLatin_n, chEqual, chDoubleQuote, chDigit_1, chPeriod
+    ,   chDigit_0, chDoubleQuote, chSpace, chLatin_e, chLatin_n, chLatin_c
+    ,   chLatin_o, chLatin_d, chLatin_i, chLatin_n, chLatin_g, chEqual
+    ,   chDoubleQuote, chNull
+};
+
+static const XMLCh  gXMLDecl2[] =
+{
+        chDoubleQuote, chSpace, chQuestion, chCloseAngle
+    ,   chCR, chLF, chNull
+};
+
+
+
+
+// ---------------------------------------------------------------------------
 //  SAXPrintHandlers: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SAXPrintHandlers::SAXPrintHandlers( const   char* const encodingName
-                                    , const bool        doEscapes) :
+SAXPrintHandlers::SAXPrintHandlers(const char* const encodingName) :
+
     fFormatter
     (
         encodingName
-        , (doEscapes ? XMLFormatter::StdEscapes : XMLFormatter::NoEscapes)
         , this
+        , XMLFormatter::NoEscapes
+        , XMLFormatter::UnRep_Fail
     )
 {
+    //
+    //  Go ahead and output an XML Decl with our known encoding. This
+    //  is not the best answer, but its the best we can do until we
+    //  have SAX2 support.
+    //
+    fFormatter << gXMLDecl1 << fFormatter.getEncodingName() << gXMLDecl2;
 }
 
 SAXPrintHandlers::~SAXPrintHandlers()
@@ -158,7 +197,7 @@ void SAXPrintHandlers::unparsedEntityDecl(const     XMLCh* const name
 }
 
 
-void SAXPrintHandlers::notationDecl(                                               const   XMLCh* const name
+void SAXPrintHandlers::notationDecl(const   XMLCh* const name
                                     , const XMLCh* const publicId
                                     , const XMLCh* const systemId)
 {
@@ -172,7 +211,7 @@ void SAXPrintHandlers::notationDecl(                                            
 void SAXPrintHandlers::characters(const     XMLCh* const    chars
                                   , const   unsigned int    length)
 {
-    fFormatter.formatBuf(chars, length);
+    fFormatter.formatBuf(chars, length, XMLFormatter::CharEscapes);
 }
 
 
@@ -182,7 +221,7 @@ void SAXPrintHandlers::endDocument()
 
 void SAXPrintHandlers::endElement(const XMLCh* const name)
 {
-    fFormatter << "</" << name << ">";
+    fFormatter << gEndElement << name << chCloseAngle;
 }
 
 void SAXPrintHandlers::ignorableWhitespace( const   XMLCh* const chars
@@ -194,10 +233,10 @@ void SAXPrintHandlers::ignorableWhitespace( const   XMLCh* const chars
 void SAXPrintHandlers::processingInstruction(const  XMLCh* const target
                                             , const XMLCh* const data)
 {
-    fFormatter << "<?" << target;
+    fFormatter << gStartPI << target;
     if (data)
-        fFormatter << " " << data;
-    fFormatter << "?>\n";
+        fFormatter << chSpace << data;
+    fFormatter << gEndPI;
 }
 
 void SAXPrintHandlers::startDocument()
@@ -207,13 +246,26 @@ void SAXPrintHandlers::startDocument()
 void SAXPrintHandlers::startElement(const   XMLCh* const    name
                                     ,       AttributeList&  attributes)
 {
-    fFormatter << "<" << name;
-    unsigned int len = attributes.getLength();
+    // The name has to be representable without any escapes
+    fFormatter  << XMLFormatter::NoEscapes
+                << XMLFormatter::UnRep_Fail
+                << chOpenAngle << name;
 
+    unsigned int len = attributes.getLength();
     for (unsigned int index = 0; index < len; index++)
     {
-        fFormatter << " " << attributes.getName(index) << "=\""
-		           << attributes.getValue(index) << "\"";
+        //
+        //  Again the name has to be completely representable. But the
+        //  attribute does require the attribute style escaping.
+        //
+        fFormatter  << XMLFormatter::NoEscapes
+                    << XMLFormatter::UnRep_Fail
+                    << chSpace << attributes.getName(index)
+                    << chEqual << chDoubleQuote
+                    << XMLFormatter::AttrEscapes
+		            << attributes.getValue(index)
+                    << XMLFormatter::NoEscapes
+                    << chDoubleQuote;
     }
-    fFormatter << ">";
+    fFormatter << XMLFormatter::NoEscapes << chCloseAngle;
 }

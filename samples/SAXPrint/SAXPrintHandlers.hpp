@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/04/05 00:20:32  roddey
+ * More updates for the low level formatted output support
+ *
  * Revision 1.4  2000/03/28 19:43:12  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
  * stuff.
@@ -89,7 +92,6 @@ public:
     SAXPrintHandlers
     (
         const   char* const     encodingName
-        , const bool            doEscapes
     );
     ~SAXPrintHandlers();
 

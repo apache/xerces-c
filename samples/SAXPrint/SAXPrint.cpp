@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/04/05 00:20:32  roddey
+ * More updates for the low level formatted output support
+ *
  * Revision 1.7  2000/03/28 19:43:11  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
  * stuff.
@@ -142,7 +145,8 @@ static void usage()
          <<  "     -v          Invoke the Validating SAX Parser.\n"
          <<  "     -n          Enable namespace processing.\n"
          <<  "     -x=XXX      Use a particular transcoder for output.\n"
-         <<  "     -?          Show this help\n"
+         <<  "     -?          Show this help\n\n"
+         <<  "  If no encoding is provided, it defaults to UTF-8\n"
          <<  endl;
 }
 
@@ -239,10 +243,9 @@ int main(int argC, char* argV[])
     //
     try
     {
-        SAXPrintHandlers handler(encodingName, doEscapes);
+        SAXPrintHandlers handler(encodingName);
         parser.setDocumentHandler(&handler);
         parser.setErrorHandler(&handler);
-
         parser.parse(xmlFile);
     }
 

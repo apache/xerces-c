@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/04/05 00:20:16  roddey
+ * More updates for the low level formatted output support
+ *
  * Revision 1.1  2000/03/28 19:43:17  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
  * stuff.
@@ -89,8 +92,20 @@ public:
     {
         NoEscapes
         , StdEscapes
-        , FailEscapes
-        , AllEscapes
+        , AttrEscapes
+        , CharEscapes
+
+        // Special values, don't use directly
+        , EscapeFlags_Count
+        , DefaultEscape     = 999
+    };
+
+    enum UnRepFlags
+    {
+        UnRep_Fail
+        , UnRep_CharRef
+
+        , DefaultUnRep      = 999
     };
 
 
@@ -100,15 +115,17 @@ public:
     XMLFormatter
     (
         const   XMLCh* const            outEncoding
-        , const EscapeFlags             escapeFlags
         ,       XMLFormatTarget* const  target
+        , const EscapeFlags             escapeFlags = NoEscapes
+        , const UnRepFlags              unrepFlags = UnRep_Fail
     );
 
     XMLFormatter
     (
         const   char* const             outEncoding
-        , const EscapeFlags             escapeFlags
         ,       XMLFormatTarget* const  target
+        , const EscapeFlags             escapeFlags = NoEscapes
+        , const UnRepFlags              unrepFlags = UnRep_Fail
     );
 
     ~XMLFormatter();
@@ -121,6 +138,8 @@ public:
     (
         const   XMLCh* const    toFormat
         , const unsigned int    count
+        , const EscapeFlags     escapeFlags = DefaultEscape
+        , const UnRepFlags      unrepFlags = DefaultUnRep
     );
 
     XMLFormatter& operator<<
@@ -130,7 +149,37 @@ public:
 
     XMLFormatter& operator<<
     (
-        const   char* const     toFormat
+        const   XMLCh           toFormat
+    );
+
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    const XMLCh* getEncodingName() const;
+
+
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
+    void setEscapeFlags
+    (
+        const   EscapeFlags     newFlags
+    );
+
+    void setUnRepFlags
+    (
+        const   UnRepFlags      newFlags
+    );
+
+    XMLFormatter& operator<<
+    (
+        const   EscapeFlags     newFlags
+    );
+
+    XMLFormatter& operator<<
+    (
+        const   UnRepFlags      newFlags
     );
 
 
@@ -153,6 +202,17 @@ private :
 
 
     // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+    const XMLByte* getAposRef();
+    const XMLByte* getAmpRef();
+    const XMLByte* getGTRef();
+    const XMLByte* getLTRef();
+    const XMLByte* getQuoteRef();
+
+
+
+    // -----------------------------------------------------------------------
     //  Private, non-virtual methods
     //
     //  fEscapeFlags
@@ -164,18 +224,39 @@ private :
     //      This the name of the output encoding. Saved mainly for meaningful
     //      error messages.
     //
+    //  fRef
     //  fTarget
     //      This is the target object for the formatting operation.
+    //
+    //  fUnRepFlags
+    //      The unrepresentable flags that indicate how to react when a
+    //      character cannot be represented in the target encoding.
     //
     //  fXCoder
     //      This the transcoder that we will use. It is created using the
     //      encoding name we were told to use.
+    //
+    //  fAposRef
+    //  fAmpRef
+    //  fGTRef
+    //  fLTRef
+    //  fQuoteRef
+    //      These are character refs for the standard char refs, in the
+    //      output encoding. They are faulted in as required, by transcoding
+    //      them from fixed Unicode versions.
     // -----------------------------------------------------------------------
     EscapeFlags         fEscapeFlags;
     XMLCh*              fOutEncoding;
     XMLFormatTarget*    fTarget;
+    UnRepFlags          fUnRepFlags;
     XMLTranscoder*      fXCoder;
     XMLByte             fTmpBuf[kTmpBufSize + 1];
+
+    XMLByte*            fAposRef;
+    XMLByte*            fAmpRef;
+    XMLByte*            fGTRef;
+    XMLByte*            fLTRef;
+    XMLByte*            fQuoteRef;
 };
 
 
@@ -205,5 +286,42 @@ protected :
     XMLFormatTarget(const XMLFormatTarget&) {}
     void operator=(const XMLFormatTarget&) {}
 };
+
+
+// ---------------------------------------------------------------------------
+//  XMLFormatter: Getter methods
+// ---------------------------------------------------------------------------
+inline const XMLCh* XMLFormatter::getEncodingName() const
+{
+    return fOutEncoding;
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLFormatter: Setter methods
+// ---------------------------------------------------------------------------
+inline void XMLFormatter::setEscapeFlags(const EscapeFlags newFlags)
+{
+    fEscapeFlags = newFlags;
+}
+
+inline void XMLFormatter::setUnRepFlags(const UnRepFlags newFlags)
+{
+    fUnRepFlags = newFlags;
+}
+
+
+inline XMLFormatter& XMLFormatter::operator<<(const EscapeFlags newFlags)
+{
+    fEscapeFlags = newFlags;
+    return *this;
+}
+
+inline XMLFormatter& XMLFormatter::operator<<(const UnRepFlags newFlags)
+{
+    fUnRepFlags = newFlags;
+    return *this;
+}
+
 
 #endif
