@@ -272,6 +272,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1047Transcoder.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
+	-@erase "$(INTDIR)\XMLInitializer.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
 	-@erase "$(INTDIR)\XMLNumber.obj"
@@ -453,6 +454,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLFloat.obj" \
 	"$(INTDIR)\XMLIBM1047Transcoder.obj" \
 	"$(INTDIR)\XMLIBM1140Transcoder.obj" \
+	"$(INTDIR)\XMLInitializer.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
 	"$(INTDIR)\XMLRegisterCleanup.obj" \
@@ -931,6 +933,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1047Transcoder.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
+	-@erase "$(INTDIR)\XMLInitializer.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
 	-@erase "$(INTDIR)\XMLNumber.obj"
@@ -1113,6 +1116,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLFloat.obj" \
 	"$(INTDIR)\XMLIBM1047Transcoder.obj" \
 	"$(INTDIR)\XMLIBM1140Transcoder.obj" \
+	"$(INTDIR)\XMLInitializer.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
 	"$(INTDIR)\XMLRegisterCleanup.obj" \
@@ -1591,6 +1595,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1047Transcoder.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
+	-@erase "$(INTDIR)\XMLInitializer.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
 	-@erase "$(INTDIR)\XMLNumber.obj"
@@ -1773,6 +1778,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLFloat.obj" \
 	"$(INTDIR)\XMLIBM1047Transcoder.obj" \
 	"$(INTDIR)\XMLIBM1140Transcoder.obj" \
+	"$(INTDIR)\XMLInitializer.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
 	"$(INTDIR)\XMLRegisterCleanup.obj" \
@@ -2250,6 +2256,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1047Transcoder.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
+	-@erase "$(INTDIR)\XMLInitializer.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
 	-@erase "$(INTDIR)\XMLNumber.obj"
@@ -2432,6 +2439,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLFloat.obj" \
 	"$(INTDIR)\XMLIBM1047Transcoder.obj" \
 	"$(INTDIR)\XMLIBM1140Transcoder.obj" \
+	"$(INTDIR)\XMLInitializer.obj" \
 	"$(INTDIR)\XMLMsgLoader.obj" \
 	"$(INTDIR)\XMLNumber.obj" \
 	"$(INTDIR)\XMLRegisterCleanup.obj" \
@@ -3260,6 +3268,12 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLIBM1140Transcoder.cpp
 
 "$(INTDIR)\XMLIBM1140Transcoder.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLInitializer.cpp
+
+"$(INTDIR)\XMLInitializer.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

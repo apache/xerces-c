@@ -453,6 +453,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLIBM1140Transcoder.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLInitializer.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLInitializer.hpp">
+			</File>			
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLInteger.hpp">
 			</File>
 			<File

@@ -884,6 +884,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLIBM1140Transcoder.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLInitializer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLInitializer.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLInteger.hpp
 # End Source File
 # Begin Source File
