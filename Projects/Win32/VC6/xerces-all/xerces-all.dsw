@@ -86,6 +86,9 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -98,6 +101,9 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -230,6 +236,66 @@ Package=<5>
 
 Package=<4>
 {{{
+}}}
+
+###############################################################################
+
+Project: "all"=".\all\all.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name CreateDOMDocument
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMCount
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMMemTest
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMPrint
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMTest
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name DOMTraversalTest
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name EncodingTest
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name EnumVal
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name MemParse
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name PParse
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Redirect
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name SAXCount
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name SAXPrint
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name StdInParse
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ThreadTest
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
 }}}
 
 ###############################################################################
