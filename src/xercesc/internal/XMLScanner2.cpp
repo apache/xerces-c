@@ -225,60 +225,60 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             bool skipThisOne = false;
 
             XMLAttDef* attDefForWildCard = 0;
-
             XMLAttDef*  attDef = 0;
+          
             if (fGrammarType == Grammar::SchemaGrammarType) {
-
-                SchemaAttDef* attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
-
-                if (attWildCard) {
-                    //if schema, see if we should lax or skip the validation of this attribute
-                    if (anyAttributeValidation(attWildCard, uriId, skipThisOne, laxThisOne)) {
-                        SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
-                        if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
-                            RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
-                            if (attRegistry) {
-                                attDefForWildCard = attRegistry->get(suffPtr);
-                            }
-                        }
-                    }
-                }
 
                 //retrieve the att def
                 attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, uriId);
 
-                if (!attDef) {
-                    // not find, see if the attDef should be qualified or not
-                    if (uriId == fEmptyNamespaceId) {
-                        attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, fURIStringPool->getId(fGrammar->getTargetNamespace()));
-                        if (fValidate
-                            && attDef
-                            && !attDefForWildCard
-                            && !skipThisOne
-                            && !laxThisOne
-                            && attDef->getCreateReason() != XMLAttDef::JustFaultIn) {
-                            // the attribute should be qualified
-                            fValidator->emitError
-                            (
-                                XMLValid::AttributeNotQualified
-                                , attDef->getFullName()
-                            );
+                // if not found or faulted in - check for a matching wildcard attribute
+                // if no matching wildcard attribute, check (un)qualifed cases and flag
+                // appropriate errors
+                if (!attDef || (attDef->getCreateReason() == XMLAttDef::JustFaultIn)) {
+
+                    SchemaAttDef* attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
+
+                    if (attWildCard) {
+                        //if schema, see if we should lax or skip the validation of this attribute
+                        if (anyAttributeValidation(attWildCard, uriId, skipThisOne, laxThisOne)) {
+
+                            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
+                            if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+                                RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
+                                if (attRegistry) {
+                                    attDefForWildCard = attRegistry->get(suffPtr);
+                                }
+                            }
                         }
                     }
                     else {
-                        attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, fEmptyNamespaceId);
-                        if (fValidate
-                            && attDef
-                            && !attDefForWildCard
-                            && !skipThisOne
-                            && !laxThisOne
-                            && attDef->getCreateReason() != XMLAttDef::JustFaultIn) {
-                            // the attribute should be qualified
-                            fValidator->emitError
-                            (
-                                XMLValid::AttributeNotUnQualified
-                                , attDef->getFullName()
-                            );
+                        // not found, see if the attDef should be qualified or not
+                        if (uriId == fEmptyNamespaceId) {
+                            attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, fURIStringPool->getId(fGrammar->getTargetNamespace()));
+                            if (fValidate
+                                && attDef
+                                && attDef->getCreateReason() != XMLAttDef::JustFaultIn) {
+                                // the attribute should be qualified
+                                fValidator->emitError
+                                (
+                                    XMLValid::AttributeNotQualified
+                                    , attDef->getFullName()
+                                );
+                            }
+                        }
+                        else {
+                            attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, fEmptyNamespaceId);
+                            if (fValidate
+                                && attDef
+                                && attDef->getCreateReason() != XMLAttDef::JustFaultIn) {
+                                // the attribute should be qualified
+                                fValidator->emitError
+                                (
+                                    XMLValid::AttributeNotUnQualified
+                                    , attDef->getFullName()
+                                );
+                            }
                         }
                     }
                 }
@@ -309,69 +309,36 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 attDef->setCreateReason(XMLAttDef::JustFaultIn);
             }
 
-            if (!attDefForWildCard) {
-                if (wasAdded)
-                {
-                    if (fValidate && !skipThisOne && !laxThisOne)
-                    {
-                        //
-                        //  Its not valid for this element, so issue an error if we are
-                        //  validating.
-                        //
-                        XMLBufBid bbURI(&fBufMgr);
-                        XMLBuffer& bufURI = bbURI.getBuffer();
+            if (fValidate && !attDefForWildCard && !skipThisOne && !laxThisOne &&
+                attDef->getCreateReason() == XMLAttDef::JustFaultIn && !attDef->getProvided())
+            {
+                //
+                //  Its not valid for this element, so issue an error if we are
+                //  validating.
+                //
+                XMLBufBid bbURI(&fBufMgr);
+                XMLBuffer& bufURI = bbURI.getBuffer();
 
-                        getURIText(uriId, bufURI);
+                getURIText(uriId, bufURI);
 
-                        XMLBufBid bbMsg(&fBufMgr);
-                        XMLBuffer& bufMsg = bbMsg.getBuffer();
-                        bufMsg.append(chOpenCurly);
-                        bufMsg.append(bufURI.getRawBuffer());
-                        bufMsg.append(chCloseCurly);
-                        bufMsg.append(suffPtr);
-                        fValidator->emitError
-                        (
-                            XMLValid::AttNotDefinedForElement
-                            , bufMsg.getRawBuffer()
-                            , elemDecl->getFullName()
-                        );
-                    }
-                }
-                else
-                {
-                    // If this attribute was faulted-in and first occurence,
-                    // then emit an error
-                    if (fValidate
-                        && attDef->getCreateReason() == XMLAttDef::JustFaultIn
-                        && !attDef->getProvided()
-                        && !skipThisOne
-                        && !laxThisOne)
-                    {
-                        XMLBufBid bbURI(&fBufMgr);
-                        XMLBuffer& bufURI = bbURI.getBuffer();
-                        getURIText(uriId, bufURI);
-
-                        XMLBufBid bbMsg(&fBufMgr);
-                        XMLBuffer& bufMsg = bbMsg.getBuffer();
-                        bufMsg.append(chOpenCurly);
-                        bufMsg.append(bufURI.getRawBuffer());
-                        bufMsg.append(chCloseCurly);
-                        bufMsg.append(suffPtr);
-                        fValidator->emitError
-                        (
-                            XMLValid::AttNotDefinedForElement
-                            , bufMsg.getRawBuffer()
-                            , elemDecl->getFullName()
-                        );
-                    }
-                }
+                XMLBufBid bbMsg(&fBufMgr);
+                XMLBuffer& bufMsg = bbMsg.getBuffer();
+                bufMsg.append(chOpenCurly);
+                bufMsg.append(bufURI.getRawBuffer());
+                bufMsg.append(chCloseCurly);
+                bufMsg.append(suffPtr);
+                fValidator->emitError
+                (
+                    XMLValid::AttNotDefinedForElement
+                    , bufMsg.getRawBuffer()
+                    , elemDecl->getFullName()
+                );
             }
 
             //
             //  If its already provided, then there are more than one of
             //  this attribute in this start tag, so emit an error.
             //
-
             if (attDef->getProvided())
             {
                 emitError
@@ -391,8 +358,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  don't care about the return status here. If it failed, an error
             //  was issued, which is all we care about.
             //
-
-            if (attDefForWildCard && (wasAdded || (!wasAdded && attDef->getCreateReason() == XMLAttDef::JustFaultIn))) {
+            if (attDefForWildCard) {
                 normalizeAttValue
                 (
                     attDefForWildCard
@@ -434,7 +400,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 //
                 //  If we found an attdef for this one, then lets validate it.
                 //
-                if (!wasAdded && attDef->getCreateReason() != XMLAttDef::JustFaultIn)
+                if (attDef->getCreateReason() != XMLAttDef::JustFaultIn)
                 {
                     if (fValidate && !skipThisOne)
                     {
