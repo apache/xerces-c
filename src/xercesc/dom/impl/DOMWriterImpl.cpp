@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.28  2003/01/24 20:21:46  tng
+ * DOMWriter: Call XMLFormatTarget::flush when done.
+ *
  * Revision 1.27  2003/01/20 16:50:13  tng
  * DOMWriter fix:
  * 1. wrong wrong nested cdata message
@@ -545,6 +548,7 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
     {
         Janitor<XMLFormatter> janName(fFormatter);
         processNode(&nodeToWrite);
+        destination->flush();
     }
 
     //
@@ -556,11 +560,13 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
     //
     catch (const TranscodingException&)
     {
+        destination->flush();
         return false;
     }
 
     catch (const XMLDOMMsg::Codes)
     {
+        destination->flush();
         return false;
     }
 
@@ -575,6 +581,7 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
     {
         // REVISIT generate a DOMSystemException wrapping the underlying
         //         exception.
+        destination->flush();
         throw;
     }
 
