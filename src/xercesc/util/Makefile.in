@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.40  2003/11/25 03:46:44  neilg
+# enable 1047 transcoder to build on Unix
+#
 # Revision 1.39  2003/10/30 21:37:32  knoaman
 # Enhanced Entity Resolver Support. Thanks to David Cargill.
 #
@@ -553,6 +556,7 @@ UTIL_CPP_PUBHEADERS = \
     XMLException.hpp \
     XMLExceptMsgs.hpp \
     XMLFloat.hpp \
+    XMLIBM1047Transcoder.hpp \
     XMLIBM1140Transcoder.hpp \
     XMLInteger.hpp \
     XMLMsgLoader.hpp \
@@ -630,6 +634,7 @@ UTIL_CPP_OBJECTS = \
     XMLEBCDICTranscoder.$(TO) \
     XMLException.$(TO) \
     XMLFloat.$(TO) \
+    XMLIBM1047Transcoder.$(TO) \
     XMLIBM1140Transcoder.$(TO) \
     XMLMsgLoader.$(TO) \
     XMLNumber.$(TO) \
