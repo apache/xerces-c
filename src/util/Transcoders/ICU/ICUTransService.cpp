@@ -414,7 +414,7 @@ ICUTranscoder::transcodeFrom(const  XMLByte* const          srcData
         , &err
     );
 
-    if ((err != U_ZERO_ERROR) && (err != U_INDEX_OUTOFBOUNDS_ERROR))
+    if ((err != U_ZERO_ERROR) && (err != U_BUFFER_OVERFLOW_ERROR))
     {
         if (orgTarget != (UChar*)toFill)
             delete [] orgTarget;
