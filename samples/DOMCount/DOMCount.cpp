@@ -96,7 +96,9 @@ static void usage()
             "    -n          Enable namespace processing. Defaults to off.\n"
             "    -s          Enable schema processing. Defaults to off.\n"
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
-		      "    -?          Show this help.\n\n"
+            "    -special:nel  Recognize nel \n"
+            "    -locale=ll_CC specify the locale, default: en_US \n"
+		    "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
          << endl;
 }
@@ -128,24 +130,11 @@ static int countChildElements(DOMNode *n)
 // ---------------------------------------------------------------------------
 int main(int argC, char* argV[])
 {
-    // Initialize the XML4C system
-    try
-    {
-        XMLPlatformUtils::Initialize();
-    }
-
-    catch (const XMLException& toCatch)
-    {
-         cerr << "Error during initialization! :\n"
-              << StrX(toCatch.getMessage()) << endl;
-         return 1;
-    }
 
     // Check command line and extract arguments.
     if (argC < 2)
     {
         usage();
-        XMLPlatformUtils::Terminate();
         return 1;
     }
 
@@ -156,6 +145,9 @@ int main(int argC, char* argV[])
     bool                       schemaFullChecking = false;
     bool                       doList = false;
     bool                       errorOccurred = false;
+    bool                       recognizeNEL = false;
+    char                       localeStr[64];
+    memset(localeStr, 0, sizeof localeStr);
 
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
@@ -168,7 +160,6 @@ int main(int argC, char* argV[])
         if (!strcmp(argV[argInd], "-?"))
         {
             usage();
-            XMLPlatformUtils::Terminate();
             return 2;
         }
          else if (!strncmp(argV[argInd], "-v=", 3)
@@ -185,7 +176,6 @@ int main(int argC, char* argV[])
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
-                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -215,8 +205,14 @@ int main(int argC, char* argV[])
             // it will recognize the unicode character 0x85 as new line character
             // instead of regular character as specified in XML 1.0
             // do not turn this on unless really necessary
-            XMLPlatformUtils::recognizeNEL(true);
+             
+             recognizeNEL = true;
         }
+         else if (!strncmp(argV[argInd], "-locale=", 8))
+        {
+             // Get out the end of line
+             strcpy(localeStr, &(argV[argInd][8]));
+        }			
          else
         {
             cerr << "Unknown option '" << argV[argInd]
@@ -231,8 +227,32 @@ int main(int argC, char* argV[])
     if (argInd != argC - 1)
     {
         usage();
-        XMLPlatformUtils::Terminate();
         return 1;
+    }
+
+    // Initialize the XML4C system
+    try
+    {
+        if (strlen(localeStr))
+        {
+            XMLPlatformUtils::Initialize(localeStr);
+        }
+        else
+        {
+            XMLPlatformUtils::Initialize();
+        }
+
+        if (recognizeNEL)
+        {
+            XMLPlatformUtils::recognizeNEL(recognizeNEL);
+        }
+    }
+
+    catch (const XMLException& toCatch)
+    {
+         cerr << "Error during initialization! :\n"
+              << StrX(toCatch.getMessage()) << endl;
+         return 1;
     }
 
     // Instantiate the DOM parser.

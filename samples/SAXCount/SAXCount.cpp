@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.25  2002/11/07 18:31:04  peiyongz
+* command line option for "locale"
+*
 * Revision 1.24  2002/11/04 14:09:16  tng
 * [Bug 14201] use of ios::nocreate breaks build.
 *
@@ -167,7 +170,9 @@ void usage()
             "    -n          Enable namespace processing. Defaults to off.\n"
             "    -s          Enable schema processing. Defaults to off.\n"
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
-		      "    -?          Show this help.\n\n"
+            "    -special:nel  Recognize nel \n"
+            "    -locale=ll_CC specify the locale, default: en_US \n"
+		    "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
          << endl;
 }
@@ -178,24 +183,11 @@ void usage()
 // ---------------------------------------------------------------------------
 int main(int argC, char* argV[])
 {
-    // Initialize the XML4C2 system
-    try
-    {
-        XMLPlatformUtils::Initialize();
-    }
-
-    catch (const XMLException& toCatch)
-    {
-        cerr << "Error during initialization! Message:\n"
-            << StrX(toCatch.getMessage()) << endl;
-        return 1;
-    }
 
     // Check command line and extract arguments.
     if (argC < 2)
     {
         usage();
-        XMLPlatformUtils::Terminate();
         return 1;
     }
 
@@ -206,7 +198,9 @@ int main(int argC, char* argV[])
     bool                     schemaFullChecking = false;
     bool                     doList = false;
     bool                     errorOccurred = false;
-
+    bool                     recognizeNEL = false;
+    char                     localeStr[64];
+    memset(localeStr, 0, sizeof localeStr);
 
     int argInd;
     for (argInd = 1; argInd < argC; argInd++)
@@ -219,7 +213,6 @@ int main(int argC, char* argV[])
         if (!strcmp(argV[argInd], "-?"))
         {
             usage();
-            XMLPlatformUtils::Terminate();
             return 2;
         }
          else if (!strncmp(argV[argInd], "-v=", 3)
@@ -236,7 +229,6 @@ int main(int argC, char* argV[])
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
-                XMLPlatformUtils::Terminate();
                 return 2;
             }
         }
@@ -266,8 +258,13 @@ int main(int argC, char* argV[])
             // it will recognize the unicode character 0x85 as new line character
             // instead of regular character as specified in XML 1.0
             // do not turn this on unless really necessary
-            XMLPlatformUtils::recognizeNEL(true);
+             recognizeNEL = true;
         }
+         else if (!strncmp(argV[argInd], "-locale=", 8))
+        {
+             // Get out the end of line
+             strcpy(localeStr, &(argV[argInd][8]));
+        }			
         else
         {
             cerr << "Unknown option '" << argV[argInd]
@@ -282,7 +279,31 @@ int main(int argC, char* argV[])
     if (argInd == argC)
     {
         usage();
-        XMLPlatformUtils::Terminate();
+        return 1;
+    }
+
+    // Initialize the XML4C2 system
+    try
+    {
+        if (strlen(localeStr))
+        {
+            XMLPlatformUtils::Initialize(localeStr);
+        }
+        else
+        {
+            XMLPlatformUtils::Initialize();
+        }
+
+        if (recognizeNEL)
+        {
+            XMLPlatformUtils::recognizeNEL(recognizeNEL);
+        }
+    }
+
+    catch (const XMLException& toCatch)
+    {
+        cerr << "Error during initialization! Message:\n"
+            << StrX(toCatch.getMessage()) << endl;
         return 1;
     }
 
