@@ -16,13 +16,13 @@
     </s2>
 
     <anchor name="Migrateto230"/>
-    <s2 title="Migrating from &XercesCName; 2.2.0 to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; 2.2.0 to &XercesCName; 2.3.0">
       <p>The following section is a discussion of the technical differences between
-      &XercesCName; 2.2.0 code base and the &XercesCName; &XercesCVersion;.</p>
+      &XercesCName; 2.2.0 code base and the &XercesCName; 2.3.0.</p>
 
       <p>Topics discussed are:</p>
       <ul>
-        <li><link anchor="NewFeatures230">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="NewFeatures230">New features in &XercesCName; 2.3.0</link></li>
         <li><link anchor="API230">Public API Changes</link></li>
         <ul>
             <li><link anchor="NewAPI230">New Public API</link></li>
@@ -32,7 +32,7 @@
       </ul>
 
     <anchor name="NewFeatures230"/>
-    <s3 title="New features in &XercesCName; &XercesCVersion;">
+    <s3 title="New features in &XercesCName; 2.3.0">
       <ul>
         <li>Experimental Implementation of Namespaces in XML 1.1 </li>
         <li>Experimental Implementation of XML 1.1: in DOMWriter</li>
@@ -53,7 +53,7 @@
     <s3 title="Public API Changes">
 
         <p>The following lists the public API changes between the &XercesCName;
-           2.2.0; and the &XercesCName; &XercesCVersion; releases
+           2.2.0; and the &XercesCName; 2.3.0 releases
            of the parser. </p>
 
         <anchor name="NewAPI230"/>
