@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/01/22 16:43:38  tng
+ * Loads winsock dynamically.  Fixed by Curt Arnold.
+ * Winsock2 is not initialized unless an http URL is used.    If an http
+ * URL is used and the Winsock 2 DLL is not installed, then an NetAccessor
+ * initialization exception is thrown.
+ *
  * Revision 1.5  2000/07/21 03:22:44  andyh
  * Improved (but still weak) http access by the parser.
  * Windows only.  UNIX will follow, probably tomorrow.
@@ -85,8 +91,10 @@
 
 #define _WINSOCKAPI_
 
+#define INCL_WINSOCK_API_TYPEDEFS 1 
 #include <winsock2.h>
 #include <windows.h>
+#include <tchar.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -98,12 +106,158 @@
 #include <util/Janitor.hpp>
 
 
+HMODULE gWinsockLib = NULL;
+LPFN_GETHOSTBYNAME gWSgethostbyname = NULL;
+LPFN_INET_ADDR gWSinet_addr = NULL;
+LPFN_GETHOSTBYADDR gWSgethostbyaddr = NULL;
+LPFN_HTONS gWShtons = NULL;
+LPFN_SOCKET gWSsocket = NULL;
+LPFN_CONNECT gWSconnect = NULL;
+LPFN_SEND gWSsend = NULL;
+LPFN_RECV gWSrecv = NULL;
+LPFN_SHUTDOWN gWSshutdown = NULL;
+LPFN_CLOSESOCKET gWSclosesocket = NULL;
+LPFN_WSACLEANUP gWSACleanup = NULL;
+
+bool BinHTTPURLInputStream::fInitialized = false;
+
+void BinHTTPURLInputStream::Initialize() {
+    //
+    // Initialize the WinSock library here.
+    //
+	fInitialized = true;
+    WORD        wVersionRequested;
+    WSADATA     wsaData;
+
+	LPFN_WSASTARTUP startup = NULL;
+	if(gWinsockLib == NULL) {
+		gWinsockLib = LoadLibrary(_T("WSOCK32"));
+		if(gWinsockLib == NULL) {
+			ThrowXML(NetAccessorException, XMLExcepts::NetAcc_InitFailed);
+		}
+		else {
+			startup = (LPFN_WSASTARTUP) GetProcAddress(gWinsockLib,_T("WSAStartup"));
+			gWSACleanup = (LPFN_WSACLEANUP) GetProcAddress(gWinsockLib,_T("WSACleanup"));
+			gWSgethostbyname = (LPFN_GETHOSTBYNAME) GetProcAddress(gWinsockLib,_T("gethostbyname"));
+			gWSinet_addr = (LPFN_INET_ADDR) GetProcAddress(gWinsockLib,_T("inet_addr"));
+			gWSgethostbyaddr = (LPFN_GETHOSTBYADDR) GetProcAddress(gWinsockLib,_T("gethostbyaddr"));
+			gWShtons = (LPFN_HTONS) GetProcAddress(gWinsockLib,_T("htons"));
+			gWSsocket = (LPFN_SOCKET) GetProcAddress(gWinsockLib,_T("socket"));
+			gWSconnect = (LPFN_CONNECT) GetProcAddress(gWinsockLib,_T("connect"));
+			gWSsend = (LPFN_SEND) GetProcAddress(gWinsockLib,_T("send"));
+			gWSrecv = (LPFN_RECV) GetProcAddress(gWinsockLib,_T("recv"));
+			gWSshutdown = (LPFN_SHUTDOWN) GetProcAddress(gWinsockLib,_T("shutdown"));
+			gWSclosesocket = (LPFN_CLOSESOCKET) GetProcAddress(gWinsockLib,_T("closesocket"));
+
+			if(startup == NULL || 
+				gWSACleanup == NULL || 
+				gWSgethostbyname == NULL ||
+				gWSinet_addr == NULL ||
+				gWSgethostbyaddr == NULL ||
+				gWShtons == NULL ||
+				gWSsocket == NULL ||
+				gWSconnect == NULL ||
+				gWSsend == NULL ||
+				gWSrecv == NULL ||
+				gWSshutdown == NULL ||
+				gWSclosesocket == NULL)
+			{
+				gWSACleanup = NULL;
+				Cleanup();
+				ThrowXML(NetAccessorException, XMLExcepts::NetAcc_InitFailed);
+			}
+		}
+	}
+    wVersionRequested = MAKEWORD( 2, 2 );
+    int err = (*startup)(wVersionRequested, &wsaData);
+    if (err != 0)
+    {
+        // Call WSAGetLastError() to get the last error.
+        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_InitFailed);
+    }
+}
+
+void BinHTTPURLInputStream::Cleanup() {
+	if(fInitialized) 
+	{
+		if(gWSACleanup) (*gWSACleanup)();
+		gWSACleanup = NULL;
+		gWinsockLib = NULL;
+		gWSgethostbyname = NULL;
+		gWSinet_addr = NULL;
+		gWSgethostbyaddr = NULL;
+		gWShtons = NULL;
+		gWSsocket = NULL;
+		gWSconnect = NULL;
+		gWSsend = NULL;
+		gWSrecv = NULL;
+		gWSshutdown = NULL;
+		gWSclosesocket = NULL;
+		FreeLibrary(gWinsockLib);
+		fInitialized = false;
+	}
+}
+
+
+hostent* BinHTTPURLInputStream::gethostbyname(const char* name)
+{
+	return (*gWSgethostbyname)(name);
+}
+
+unsigned long BinHTTPURLInputStream::inet_addr(const char* cp)
+{
+	return (*gWSinet_addr)(cp);
+}
+
+hostent* BinHTTPURLInputStream::gethostbyaddr(const char* addr,int len,int type)
+{
+	return (*gWSgethostbyaddr)(addr,len,type);
+}
+
+unsigned short BinHTTPURLInputStream::htons(unsigned short hostshort)
+{
+	return (*gWShtons)(hostshort);
+}
+
+unsigned short BinHTTPURLInputStream::socket(int af,int type,int protocol)
+{
+	return (*gWSsocket)(af,type,protocol);
+}
+
+int BinHTTPURLInputStream::connect(unsigned short s,const sockaddr* name,int namelen)
+{
+	return (*gWSconnect)(s,name,namelen);
+}
+
+int BinHTTPURLInputStream::send(unsigned short s,const char* buf,int len,int flags)
+{
+	return (*gWSsend)(s,buf,len,flags);
+}
+
+int BinHTTPURLInputStream::recv(unsigned short s,char* buf,int len,int flags)
+{
+	return (*gWSrecv)(s,buf,len,flags);
+}
+
+int BinHTTPURLInputStream::shutdown(unsigned int s,int how)
+{
+	return (*gWSshutdown)(s,how);
+}
+
+int BinHTTPURLInputStream::closesocket(unsigned int socket)
+{
+	return (*gWSclosesocket)(socket);
+}
 
 
 BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
       : fSocketHandle(0)
       , fBytesProcessed(0)
 {
+	if(!fInitialized) 
+	{
+		Initialize();
+	}
 
     //
     // Pull all of the parts of the URL out of th urlSource object, and transcode them

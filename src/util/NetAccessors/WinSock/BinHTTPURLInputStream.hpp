@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/01/22 16:43:39  tng
+ * Loads winsock dynamically.  Fixed by Curt Arnold.
+ * Winsock2 is not initialized unless an http URL is used.    If an http
+ * URL is used and the Winsock 2 DLL is not installed, then an NetAccessor
+ * initialization exception is thrown.
+ *
  * Revision 1.3  2000/07/21 03:22:45  andyh
  * Improved (but still weak) http access by the parser.
  * Windows only.  UNIX will follow, probably tomorrow.
@@ -90,6 +96,8 @@
 // This class implements the BinInputStream interface specified by the XML
 // parser.
 //
+struct hostent;
+struct sockaddr;
 
 class XMLUTIL_EXPORT BinHTTPURLInputStream : public BinInputStream
 {
@@ -103,6 +111,8 @@ public :
                 XMLByte* const  toFill
         , const unsigned int    maxToRead
     );
+
+	static void Cleanup();
 
 
 private :
@@ -130,6 +140,20 @@ private :
     char                fBuffer[4000];
     char *              fBufferEnd;
     char *              fBufferPos;
+	static bool         fInitialized;
+
+	static void Initialize();
+
+	inline static hostent* gethostbyname(const char* name);
+	inline static unsigned long inet_addr(const char* cp);
+	inline static hostent* gethostbyaddr(const char* addr,int len,int type);
+	inline static unsigned short htons(unsigned short hostshort);
+	inline static unsigned short socket(int af,int type,int protocol);
+	inline static int connect(unsigned short s,const sockaddr* name,int namelen);
+	inline static int send(unsigned short s,const char* buf,int len,int flags);
+	inline static int recv(unsigned short s,char* buf,int len,int flags);
+	inline static int shutdown(unsigned int s,int how);
+	inline static int closesocket(unsigned int socket);
 };
 
 

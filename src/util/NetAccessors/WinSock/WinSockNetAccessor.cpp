@@ -61,7 +61,6 @@
 
 #define _WINSOCKAPI_
 
-#include <winsock2.h>
 #include <windows.h>
 
 #include <util/XMLUniDefs.hpp>
@@ -72,6 +71,7 @@
 #include <util/NetAccessors/WinSock/WinSockNetAccessor.hpp>
 
 
+
 const XMLCh WinSockNetAccessor::fgMyName[] =
 {
     chLatin_W, chLatin_i, chLatin_n, chLatin_S, chLatin_o, chLatin_c,
@@ -80,31 +80,15 @@ const XMLCh WinSockNetAccessor::fgMyName[] =
     chNull
 };
 
-
 WinSockNetAccessor::WinSockNetAccessor()
 {
-    //
-    // Initialize the WinSock library here.
-    //
-
-    WORD        wVersionRequested;
-    WSADATA     wsaData;
- 
-    wVersionRequested = MAKEWORD( 2, 2 );
-    int err = WSAStartup(wVersionRequested, &wsaData);
-    if (err != 0)
-    {
-        // Call WSAGetLastError() to get the last error.
-        ThrowXML(NetAccessorException, XMLExcepts::NetAcc_InitFailed);
-    }
 }
 
 
 WinSockNetAccessor::~WinSockNetAccessor()
 {
     // Cleanup code for the WinSock library here.
-
-    WSACleanup();
+	BinHTTPURLInputStream::Cleanup();
 }
 
 
