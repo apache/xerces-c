@@ -168,7 +168,7 @@ NodeImpl *NodeContainer::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
     
     // refChild must in fact be a child of this node (or null)
-    if(refChild!=null && refChild->parentNode != this)
+    if(refChild!=null && refChild->ownerNode != this)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR,null);
     
     if (newInternal->isDocumentFragmentImpl())
@@ -206,7 +206,7 @@ NodeImpl *NodeContainer::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     
     else
     {
-        NodeImpl *oldparent=newInternal->parentNode;
+        NodeImpl *oldparent=newInternal->ownerNode;
         if(oldparent!=null)
             oldparent->removeChild(newInternal);
         
@@ -218,7 +218,7 @@ NodeImpl *NodeContainer::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
             : refChild->previousSibling;
         
         // Attach up
-        newInternal->parentNode=this;
+        newInternal->ownerNode=this;
         
         // Attach after
         newInternal->previousSibling=prev;
@@ -305,7 +305,7 @@ NodeImpl *NodeContainer::removeChild(NodeImpl *oldChild)
         throw DOM_DOMException(
           DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
       
-      if (oldChild != null && oldChild->parentNode != this)
+      if (oldChild != null && oldChild->ownerNode != this)
           throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
       
       // Patch tree past oldChild
@@ -321,7 +321,7 @@ NodeImpl *NodeContainer::removeChild(NodeImpl *oldChild)
           lastChild = prev;
       
       // Remove oldChild's references to tree
-      oldChild->parentNode = null;
+      oldChild->ownerNode = null;
       oldChild->nextSibling = null;
       oldChild->previousSibling = null;
       changed();

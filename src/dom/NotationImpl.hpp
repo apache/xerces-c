@@ -85,9 +85,9 @@ public:
     
     virtual ~NotationImpl();
     
-    
     virtual NodeImpl *cloneNode(bool deep);
     virtual short getNodeType();
+    virtual NodeImpl * getParentNode();
 
     //
     // The Public Identifier for this Notation. If no public identifier

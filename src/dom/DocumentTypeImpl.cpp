@@ -70,11 +70,11 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
     : NodeContainer(ownerDoc,dtName,null),
     publicId(null), systemId(null)	//DOM Level 2
 {
-    entities = new NamedNodeMapImpl(ownerDoc,null);
-    notations= new NamedNodeMapImpl(ownerDoc,null);
+    entities = new NamedNodeMapImpl(this, null);
+    notations= new NamedNodeMapImpl(this, null);
     
     // NON-DOM
-    elements = new NamedNodeMapImpl(ownerDoc,null);
+    elements = new NamedNodeMapImpl(this, null);
 };
 
 
@@ -87,11 +87,11 @@ DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
     if (DocumentImpl::indexofQualifiedName(qualifiedName) < 0)
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
-    entities = new NamedNodeMapImpl(null,null);
-    notations= new NamedNodeMapImpl(null,null);
+    entities = new NamedNodeMapImpl(this, null);
+    notations= new NamedNodeMapImpl(this, null);
     
     // NON-DOM
-    elements = new NamedNodeMapImpl(null,null);
+    elements = new NamedNodeMapImpl(this, null);
 };
 
 
@@ -230,9 +230,9 @@ DocumentTypeImpl *DocumentTypeImpl::exportNode(DocumentImpl *docImpl, bool deep)
 	delete doctype -> entities;
 	delete doctype -> notations;
 	delete doctype -> elements;
-	doctype -> entities = entities -> exportNode(docImpl);
-	doctype -> notations = notations -> exportNode(docImpl);
-	doctype -> elements = elements -> exportNode(docImpl);
+	doctype -> entities = entities -> exportNode(doctype);
+	doctype -> notations = notations -> exportNode(doctype);
+	doctype -> elements = elements -> exportNode(doctype);
     }
     return doctype;
 }

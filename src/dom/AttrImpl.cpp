@@ -111,8 +111,8 @@ DOMString AttrImpl::getNodeValue()
 };
 
 
-// parentNode is used to store the ownerElement but Attr nodes do not actually
-// have a parent
+// ownerNode is used to store the ownerElement,
+// Attr nodes do not have a parent
 NodeImpl * AttrImpl::getParentNode()
 {
     return 0;
@@ -207,14 +207,12 @@ DOMString AttrImpl::toString()
 
 ElementImpl *AttrImpl::getOwnerElement()
 {
-    return (ElementImpl*) parentNode;
+    return (ElementImpl*) ownerNode;
 }
 
 
 //internal use by parser only
 void AttrImpl::setOwnerElement(ElementImpl *ownerElem)
 {
-    // we use the parentNode, which is always null for Attr nodes, to store
-    // the ownerElement
-    parentNode = ownerElem;
+    ownerNode = ownerElem;
 }

@@ -95,6 +95,14 @@ short EntityImpl::getNodeType() {
 };
 
 
+// parentNode is used to store the ownerNode (so that we know when it's in use)
+// but Notation nodes do not actually have a parent
+NodeImpl * EntityImpl::getParentNode()
+{
+    return 0;
+};
+
+
 DOMString EntityImpl::getNotationName()
 {
     return notationName;

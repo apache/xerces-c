@@ -88,10 +88,9 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
     this->changes = 0;
     this->userData = null;
     this->readOnly = false;
-    this->owned    = false;
     this->previousSibling  = null;
     this->nextSibling  = null;
-    this->parentNode  = null;
+    this->ownerNode  = null;
     
     this->nodeRefCount = 0;
     NodeImpl::gLiveNodeImpls++; 
@@ -104,7 +103,6 @@ NodeImpl::NodeImpl(const NodeImpl &other) {
     this->name  = other.name.clone();
     this->value = other.value.clone();
     this->readOnly = false;
-    this->owned = false;
     this->ownerDocument = other.ownerDocument;
     this->userData = other.userData;
     this->changes = 0;
@@ -117,7 +115,7 @@ NodeImpl::NodeImpl(const NodeImpl &other) {
     // Need to break the association w/ original siblings and parent
     this->previousSibling = null;
     this->nextSibling = null;
-    this->parentNode = null;
+    this->ownerNode = null;
 };
 
     
@@ -166,7 +164,7 @@ void NodeImpl::deleteIf(NodeImpl *thisNode)
     if (thisNode == 0)
         return;
     
-    if (thisNode->getParentNode() != 0 || thisNode->owned)
+    if (thisNode->ownerNode != 0)
         return;
     
     // Delete this node.  There should be no siblings, as the DOM
@@ -241,7 +239,7 @@ DocumentImpl *NodeImpl::getOwnerDocument()
 
 NodeImpl * NodeImpl::getParentNode()
 {
-    return parentNode;
+    return ownerNode;
 };  
 
 

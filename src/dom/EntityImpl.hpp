@@ -86,6 +86,7 @@ public:
     
     virtual NodeImpl    *cloneNode(bool deep);
     virtual short getNodeType();
+    virtual NodeImpl * getParentNode();
     virtual DOMString   getPublicId();
     virtual DOMString   getSystemId();
     virtual DOMString   getNotationName();

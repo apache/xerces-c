@@ -102,13 +102,10 @@ public:
     DOMString               name;                   // Name of this node or node type
     DOMString               value;                  // String value (not used in all nodes)
     bool                    readOnly;
-    bool                    owned;                  // True if there is a reference to this
-                                                    //  node in a named node list.  Applies to
-                                                    //  attributes, notations, entities.
     DocumentImpl            *ownerDocument;         // Document this node belongs to
     NodeImpl                *previousSibling;
     NodeImpl                *nextSibling;
-    NodeImpl                *parentNode;
+    NodeImpl                *ownerNode; // typically the parent but not always!
     int changes;
     void *userData;
 

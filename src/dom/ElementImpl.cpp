@@ -76,7 +76,7 @@ NodeContainer(ownerDoc, nam, null)
     // If there is an ElementDefintion, set its Attributes up as
     // shadows behind our own.
     NamedNodeMapImpl *defaultAttrs = null;
-    DocumentTypeImpl *doctype = (DocumentTypeImpl *) ownerDocument->getDoctype();
+    DocumentTypeImpl *doctype = (DocumentTypeImpl*)ownerDocument->getDoctype();
     if (doctype != null)
     {
         ElementDefinitionImpl *eldef=(ElementDefinitionImpl *)
@@ -84,7 +84,7 @@ NodeContainer(ownerDoc, nam, null)
         if(eldef!=null)
             defaultAttrs=(NamedNodeMapImpl *)eldef->getAttributes();
     }
-    attributes = new NamedNodeMapImpl(ownerDoc,defaultAttrs);
+    attributes = new NamedNodeMapImpl(this, defaultAttrs);
 };
 
 
@@ -169,7 +169,6 @@ void ElementImpl::removeAttribute(const DOMString &nam)
     if (att != null)
     {
         attributes->removeNamedItem(nam);
-        att->setOwnerElement(null);	//DOM Level 2
         if (att->nodeRefCount == 0)
             NodeImpl::deleteIf(att);
     }
@@ -191,7 +190,6 @@ AttrImpl *ElementImpl::removeAttributeNode(AttrImpl *oldAttr)
     if (found == oldAttr)
     {
         attributes->removeNamedItem(oldAttr->getName());
-	found->setOwnerElement(null);	//DOM Level 2
         return found;
     }
     else
@@ -217,7 +215,6 @@ AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
     newAttr->setNodeValue(val);       // Note that setNodeValue on attribute
                                       //   nodes takes care of deleting
                                       //   any previously existing children.
-    newAttr->setOwnerElement(this);
     return newAttr;
 };
 
@@ -231,10 +228,8 @@ AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
     
     if (!(newAttr->isAttrImpl()))
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
-    AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItem(newAttr->getName());
-    if (oldAttr)
-	oldAttr->setOwnerElement(null);	    //DOM Level 2
-    
+    AttrImpl *oldAttr =
+      (AttrImpl *) attributes->getNamedItem(newAttr->getName());
     // This will throw INUSE if necessary
     attributes->setNamedItem(newAttr);
     
@@ -269,7 +264,8 @@ void ElementImpl::setReadOnly(bool readOnl, bool deep)
 DOMString ElementImpl::getAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &fLocalName)
 {
-    AttrImpl * attr=(AttrImpl *)(attributes->getNamedItemNS(fNamespaceURI, fLocalName));
+    AttrImpl * attr=
+      (AttrImpl *)(attributes->getNamedItemNS(fNamespaceURI, fLocalName));
     return (attr==null) ? DOMString(null) : attr->getValue();
 }
 
@@ -281,13 +277,13 @@ AttrImpl *ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    AttrImpl *newAttr = (AttrImpl *) ownerDocument->createAttributeNS(fNamespaceURI, qualifiedName);
+    AttrImpl *newAttr =
+      (AttrImpl *) ownerDocument->createAttributeNS(fNamespaceURI,
+                                                    qualifiedName);
     newAttr->setNodeValue(fValue);
-    newAttr->setOwnerElement(this);
     AttrImpl *oldAttr = (AttrImpl *)attributes->setNamedItem(newAttr);
 
     if (oldAttr) {
-	oldAttr->setOwnerElement(null);
 	if (oldAttr->nodeRefCount == 0)
 	    NodeImpl::deleteIf(oldAttr);
     }
@@ -302,11 +298,11 @@ void ElementImpl::removeAttributeNS(const DOMString &fNamespaceURI,
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    AttrImpl *att = (AttrImpl *) attributes->getNamedItemNS(fNamespaceURI, fLocalName);
+    AttrImpl *att =
+      (AttrImpl *) attributes->getNamedItemNS(fNamespaceURI, fLocalName);
     // Remove it (and let the NamedNodeMap recreate the default, if any)
     if (att != null) {
         attributes->removeNamedItemNS(fNamespaceURI, fLocalName);
-	att->setOwnerElement(null);
         if (att->nodeRefCount == 0)
             NodeImpl::deleteIf(att);
     }
@@ -330,8 +326,6 @@ AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
         throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     AttrImpl *oldAttr = (AttrImpl *) attributes->getNamedItemNS(
 	newAttr->getNamespaceURI(), newAttr->getLocalName());
-    if (oldAttr)
-	oldAttr->setOwnerElement(null);
     
     // This will throw INUSE if necessary
     attributes->setNamedItemNS(newAttr);

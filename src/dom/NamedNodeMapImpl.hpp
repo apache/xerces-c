@@ -59,6 +59,10 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/04/06 21:17:48  lehors
+ * got rid of the owned attribute,
+ * renamed parentNode to ownerNode to make it clear it's not always the parent
+ *
  * Revision 1.8  2000/03/02 19:54:02  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -114,8 +118,7 @@ class NodeImpl;
 class CDOM_EXPORT NamedNodeMapImpl {
 private:
     NodeVector       *nodes;
-    DocumentImpl     *ownerDoc;   
-    
+    NodeImpl     *ownerNode;    // the node this map belongs to
     NamedNodeMapImpl *defaults;
     int               changes;    
     int               lastDefaultsChanges;
@@ -130,7 +133,7 @@ private:
     friend class      ElementImpl;
     
 public:
-    NamedNodeMapImpl(DocumentImpl *ownerDoc, NamedNodeMapImpl *defaults);
+    NamedNodeMapImpl(NodeImpl *ownerNode, NamedNodeMapImpl *defaults);
     
     virtual void            reconcileDefaults();
     virtual                 ~NamedNodeMapImpl();
@@ -147,7 +150,7 @@ public:
     virtual void            setReadOnly(bool readOnly, bool deep);
 
     //Introduced in DOM Level 2
-    virtual NamedNodeMapImpl *exportNode(DocumentImpl *docImpl);
+    virtual NamedNodeMapImpl *exportNode(NodeImpl *node);
     virtual int             findNamePoint(const DOMString &namespaceURI,
 	const DOMString &localName);
     virtual NodeImpl        *getNamedItemNS(const DOMString &namespaceURI,

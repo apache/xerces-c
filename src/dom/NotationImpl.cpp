@@ -113,6 +113,14 @@ short NotationImpl::getNodeType() {
 };
 
 
+// parentNode is used to store the ownerNode (so that we know when it's in use)
+// but Notation nodes do not actually have a parent
+NodeImpl * NotationImpl::getParentNode()
+{
+    return 0;
+};
+
+
 DOMString NotationImpl::getPublicId()
 {
     return publicId.clone();
