@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/03/07 17:42:12  tng
+ * fix typo
+ *
  * Revision 1.1  2001/02/27 18:48:22  tng
  * Schema: Add SchemaAttDef, SchemaElementDecl, SchemaAttDefList.
  *
@@ -351,9 +354,9 @@ XMLContentModel* SchemaElementDecl::createChildModel() const
     //  According to the type of node, we will create the correct type of
     //  content model.
     //
-    if ((specNode->getType() == ContentSpecNode.Any) ||
-       (specNode->getType() == ContentSpecNode.Any_Other) ||
-       (specNode->getType() == ContentSpecNode.Any_Local)) {
+    if ((specNode->getType() == ContentSpecNode::Any) ||
+       (specNode->getType() == ContentSpecNode::Any_Other) ||
+       (specNode->getType() == ContentSpecNode::Any_Local)) {
        // let fall through to build a DFAContentModel
     }
      else if (specNode->getType() == ContentSpecNode::Leaf)
