@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/09 01:55:06  abagchi
+ * Removed private function docs
+ *
  * Revision 1.2  2000/02/06 07:47:58  rahulj
  * Year 2K copyright swat.
  *
@@ -95,6 +98,9 @@
   * locator is not available.</p>
   *
   * $Log$
+  * Revision 1.3  2000/02/09 01:55:06  abagchi
+  * Removed private function docs
+  *
   * Revision 1.2  2000/02/06 07:47:58  rahulj
   * Year 2K copyright swat.
   *
@@ -169,14 +175,11 @@ public:
     //@}
 
 private :
-    /** @name Unimplemented constructors and operators */
-    //@{
-    /** Copy constructor */
+    /* Copy constructor */
     Locator(const Locator&);
 
-    /** Assignment operator */
+    /* Assignment operator */
     void operator=(const Locator&);
-    //@}
 };
 
 #endif
