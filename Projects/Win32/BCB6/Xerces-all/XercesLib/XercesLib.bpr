@@ -95,6 +95,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLNotationDecl.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRecognizer.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLValidator.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\DGXMLScanner.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\ElemStack.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner2.obj
@@ -430,6 +431,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLNotationDecl.cpp" FORMNAME="" UNITNAME="XMLNotationDecl" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLRecognizer.cpp" FORMNAME="" UNITNAME="XMLRecognizer" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\XMLValidator.cpp" FORMNAME="" UNITNAME="XMLValidator" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\DGXMLScanner.cpp" FORMNAME="" UNITNAME="DGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\ElemStack.cpp" FORMNAME="" UNITNAME="ElemStack" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner.cpp" FORMNAME="" UNITNAME="IGXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp" FORMNAME="" UNITNAME="IGXMLScanner2" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

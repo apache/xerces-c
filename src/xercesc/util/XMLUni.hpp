@@ -194,6 +194,7 @@ public :
     static const XMLCh fgWFScanner[];
     static const XMLCh fgIGScanner[];
     static const XMLCh fgSGScanner[];
+    static const XMLCh fgDGScanner[];
 
     // Exception Name
     static const XMLCh fgArrayIndexOutOfBoundsException_Name[];

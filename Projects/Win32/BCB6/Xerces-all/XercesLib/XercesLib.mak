@@ -105,6 +105,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLNotationDecl.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRecognizer.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLValidator.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\DGXMLScanner.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\ElemStack.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\IGXMLScanner2.obj \

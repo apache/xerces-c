@@ -83,6 +83,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DecimalDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DeepNodeListImpl.obj"
 	-@erase "$(INTDIR)\DFAContentModel.obj"
+	-@erase "$(INTDIR)\DGXMLScanner.obj"
 	-@erase "$(INTDIR)\DocumentFragmentImpl.obj"
 	-@erase "$(INTDIR)\DocumentImpl.obj"
 	-@erase "$(INTDIR)\DocumentTypeImpl.obj"
@@ -475,6 +476,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
+	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
@@ -735,6 +737,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DecimalDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DeepNodeListImpl.obj"
 	-@erase "$(INTDIR)\DFAContentModel.obj"
+	-@erase "$(INTDIR)\DGXMLScanner.obj"
 	-@erase "$(INTDIR)\DocumentFragmentImpl.obj"
 	-@erase "$(INTDIR)\DocumentImpl.obj"
 	-@erase "$(INTDIR)\DocumentTypeImpl.obj"
@@ -1129,6 +1132,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
+	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLSCanner.obj" \
 	"$(INTDIR)\IGXMLSCanner2.obj" \
@@ -1389,6 +1393,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DecimalDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DeepNodeListImpl.obj"
 	-@erase "$(INTDIR)\DFAContentModel.obj"
+	-@erase "$(INTDIR)\DGXMLScanner.obj"
 	-@erase "$(INTDIR)\DocumentFragmentImpl.obj"
 	-@erase "$(INTDIR)\DocumentImpl.obj"
 	-@erase "$(INTDIR)\DocumentTypeImpl.obj"
@@ -1783,6 +1788,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
+	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
@@ -2043,6 +2049,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DecimalDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DeepNodeListImpl.obj"
 	-@erase "$(INTDIR)\DFAContentModel.obj"
+	-@erase "$(INTDIR)\DGXMLScanner.obj"
 	-@erase "$(INTDIR)\DocumentFragmentImpl.obj"
 	-@erase "$(INTDIR)\DocumentImpl.obj"
 	-@erase "$(INTDIR)\DocumentTypeImpl.obj"
@@ -2436,6 +2443,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLNotationDecl.obj" \
 	"$(INTDIR)\XMLRecognizer.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
+	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
 	"$(INTDIR)\IGXMLScanner2.obj" \
@@ -3386,6 +3394,12 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRecognizer.cpp
 SOURCE=..\..\..\..\..\src\xercesc\framework\XMLValidator.cpp
 
 "$(INTDIR)\XMLValidator.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\DGXMLScanner.cpp
+
+"$(INTDIR)\DGXMLScanner.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

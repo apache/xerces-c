@@ -80,6 +80,7 @@ MODULE = internal
 
 INTERNAL_CPP_PUBHEADERS = \
 	CharTypeTables.hpp \
+	DGXMLScanner.hpp \
 	ElemStack.hpp \
 	EndOfEntityException.hpp \
 	IANAEncodings.hpp \
@@ -99,6 +100,7 @@ INTERNAL_CPP_PRIVHEADERS =
 INTERNAL_C_FILES =
 
 INTERNAL_CPP_OBJECTS = \
+	DGXMLScanner.$(TO) \
 	ElemStack.$(TO) \
 	IGXMLScanner.$(TO) \
 	IGXMLScanner2.$(TO) \

@@ -66,6 +66,7 @@
 #include <xercesc/internal/IGXMLScanner.hpp>
 #include <xercesc/internal/WFXMLScanner.hpp>
 #include <xercesc/internal/SGXMLScanner.hpp>
+#include <xercesc/internal/DGXMLScanner.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -88,6 +89,8 @@ XMLScannerResolver::resolveScanner(const XMLCh* const scannerName,
         return new IGXMLScanner(valToAdopt);
     else if (XMLString::equals(scannerName, XMLUni::fgSGScanner))
         return new SGXMLScanner(valToAdopt);
+    else if (XMLString::equals(scannerName, XMLUni::fgDGScanner))
+        return new DGXMLScanner(valToAdopt);
 
     // REVISIT: throw an exception or return a default one?
     return 0;
@@ -107,6 +110,8 @@ XMLScannerResolver::resolveScanner(const XMLCh* const scannerName,
         return new IGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
     else if (XMLString::equals(scannerName, XMLUni::fgSGScanner))
         return new SGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
+    else if (XMLString::equals(scannerName, XMLUni::fgDGScanner))
+        return new DGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt);
 
     // REVISIT: throw an exception or return a default one?
     return 0;

@@ -1147,6 +1147,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\CharTypeTables.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\DGXMLScanner.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\DGXMLScanner.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\ElemStack.cpp
 # End Source File
 # Begin Source File
