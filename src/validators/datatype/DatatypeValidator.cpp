@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/03 21:09:52  tng
+ * Schema: DatatypeValidator Update.  By Pei Yong Zhang.
+ *
  * Revision 1.2  2001/05/03 19:17:43  knoaman
  * TraverseSchema Part II.
  *
@@ -76,10 +79,15 @@
 // ---------------------------------------------------------------------------
 DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
                                      RefHashTableOf<KVStringPair>* const facets,
-                                     const int finalSet)
+                                     const int finalSet,
+                                     const ValidatorType type)
     : fFinalSet(finalSet)
     , fBaseValidator(baseValidator)
     , fFacets(facets)
+    , fType(type)
+    , fFacetsDefined(0)
+    , fPattern(0)
+    , fRegex(0)
 {
 }
 

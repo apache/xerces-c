@@ -63,6 +63,8 @@
 
 #include <util/RefHashTableOf.hpp>
 #include <util/KVStringPair.hpp>
+#include <dom/DOMString.hpp>
+#include <util/regx/RegularExpression.hpp>
 
 /**
   * DataTypeValidator defines the interface that data type validators must
@@ -111,6 +113,53 @@ public:
         COLLAPSE = 2
     };
 
+    enum ValidatorType {
+        String,
+        NormalizedString,
+        AnyURI,
+        QName,
+        Token,
+        Language,
+        Name,
+        NCName,
+        Boolean,
+        Float,
+        Double,
+        Decimal,
+        HexBinary,
+        Base64Binary,
+        Integer,
+        NonPositiveInteger,
+        NegativeInteger,
+        Long,
+        Int,
+        Short,
+        Byte,
+        NonNegativeInteger,
+        UnsignedLong,
+        UnsignedInt,
+        UnsignedShort,
+        UnsignedByte,
+        PositiveInteger,
+        Duration,
+        Time,
+        DateTime,
+        Date,
+        MonthDay,
+        YearMonth,
+        Year,
+        Month,
+        Day,
+        ID,
+        IDREF,
+        ENTITY,
+        NOTATION,
+        IDREFS,
+        ENTITIES,
+        NMTOKEN,
+        NMTOKENS
+    };
+
     // -----------------------------------------------------------------------
     //  Public Destructor
     // -----------------------------------------------------------------------
@@ -148,6 +197,11 @@ public:
       */
     DatatypeValidator* getBaseValidator() const;
 
+    /**
+      * Returns the 'class' type of datatype validator
+      */
+    ValidatorType getType() const;
+
     //@}
 
     // -----------------------------------------------------------------------
@@ -170,7 +224,10 @@ public:
       *
       * @param  toCheck    A datatype validator of the type to be used as a
       *                    substitute
+      *
+      * To be redefined in UnionDatatypeValidator
       */
+
     bool isSubstitutableBy(const DatatypeValidator* const toCheck);
 
 	 //@}
@@ -198,6 +255,14 @@ public:
 
     //@}
 
+    /**
+      * Returns an instance of the base datatype validator class
+	  * Used by the DatatypeValidatorFactory.
+      */
+	virtual DatatypeValidator* newInstance(DatatypeValidator* const,
+                                           RefHashTableOf<KVStringPair>* const,
+                                           const int finalSet) = 0;
+
 protected:
     // -----------------------------------------------------------------------
     //  Protected Constructors
@@ -212,20 +277,16 @@ protected:
       *
       * @param  facets         A hashtable of datatype facets.
       *
+      * @param  finalSet       'final' value of the simpleType
       */
+
 	DatatypeValidator(DatatypeValidator* const baseValidator,
                       RefHashTableOf<KVStringPair>* const facets,
-                      const int finalSet);
+                      const int finalSet,
+                      const ValidatorType type);
 
     //@}
 
-    /**
-      * Returns an instance of the base datatype validator class
-	  * Used by the DatatypeValidatorFactory.
-      */
-	virtual DatatypeValidator* newInstance(DatatypeValidator* const,
-                                           RefHashTableOf<KVStringPair>* const,
-                                           const int finalSet) = 0;
 
 	friend class DatatypeValidatorFactory;
 
@@ -238,6 +299,25 @@ protected:
 	  * To be overwritten in the StringDatatypeValidator
       */
 	virtual void processWhiteSpace(RefHashTableOf<KVStringPair>* const facets);
+
+    /**
+      * facetDefined
+	  */
+	int   getFacetsDefined() const;
+    void  setFacetsDefined(int);
+
+
+    /**
+      * fPattern
+	  */
+    const XMLCh* getPattern() const;
+	void         setPattern(const XMLCh* const);
+
+    /**
+      * fRegex
+	  */
+	RegularExpression* getRegex() const;
+	void               setRegex(RegularExpression* const);
 
 private:
     // -----------------------------------------------------------------------
@@ -257,10 +337,37 @@ private:
 	//		
     //  fFacets
     //      This is a hashtable of dataype facets.
+    //
+    //  fType
+    //      Stores the class type of datatype validator
+    //
+    //  fFacetsDefined
+    //      Stores the constaiting facets flag
+    //
+    //  fPattern
+    //      the String of the pattern
+    //
+    //  fRegex
+    //      pointer to the RegularExpress object
+    //
+    //
+    //  fFixed
+    //      if {fixed} is true, then types for which this type is the
+    //      {base type definition} cannot specify a value for a specific
+    //      facet.
+    //
     // -----------------------------------------------------------------------
+
     int                           fFinalSet;
 	DatatypeValidator*            fBaseValidator;
 	RefHashTableOf<KVStringPair>* fFacets;
+
+    ValidatorType                 fType;
+    int                           fFacetsDefined;
+    DOMString                     fPattern;
+    RegularExpression            *fRegex;
+
+    //ValueVectorOf<bool>        *fFixed;
 };
 
 
@@ -285,6 +392,11 @@ inline DatatypeValidator* DatatypeValidator::getBaseValidator() const {
 inline short DatatypeValidator::getWSFacet() const {
 
     return COLLAPSE;
+}
+
+inline DatatypeValidator::ValidatorType DatatypeValidator::getType() const
+{
+    return fType;
 }
 
 // ---------------------------------------------------------------------------
@@ -324,6 +436,37 @@ DatatypeValidator::isSubstitutableBy(const DatatypeValidator* const toCheck)
 
     return false;
 }
+
+inline int DatatypeValidator::getFacetsDefined() const
+{
+    return fFacetsDefined;
+}
+
+inline void DatatypeValidator::setFacetsDefined(int facets)
+{
+    fFacetsDefined |= facets;
+}
+
+inline const XMLCh* DatatypeValidator::getPattern() const
+{
+    return fPattern.rawBuffer();
+}
+
+inline void DatatypeValidator::setPattern(const XMLCh* const pattern)
+{
+    fPattern = pattern;
+}
+
+inline RegularExpression* DatatypeValidator::getRegex() const
+{
+    return fRegex;
+}
+
+inline void DatatypeValidator::setRegex(RegularExpression* const regex)
+{
+    fRegex = regex;
+}
+
 
 #endif
 
