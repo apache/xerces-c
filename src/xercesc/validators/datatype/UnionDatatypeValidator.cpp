@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/08/16 18:42:49  neilg
+ * fix for bug 22457.  Union types that are restrictions of other union types were previously considered not to inherit their parents member types.  This is at variance with the behaviour of the Java parser and apparently with the spec, so I have changed this.
+ *
  * Revision 1.10  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -127,6 +130,7 @@ UnionDatatypeValidator::UnionDatatypeValidator(MemoryManager* const manager)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
 ,fValidatedDatatype(0)
+,fMemberTypesInherited(false)
 {}
 
 UnionDatatypeValidator::~UnionDatatypeValidator()
@@ -143,6 +147,7 @@ UnionDatatypeValidator::UnionDatatypeValidator(
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
 ,fValidatedDatatype(0)
+,fMemberTypesInherited(false)
 {
     if ( !memberTypeValidators )
     {
@@ -159,12 +164,16 @@ UnionDatatypeValidator::UnionDatatypeValidator(
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefArrayVectorOf<XMLCh>*      const enums
                         , const int                           finalSet
-                        , MemoryManager* const                manager)
+                        , MemoryManager* const                manager
+                        , RefVectorOf<DatatypeValidator>* const memberTypeValidators 
+                        , const bool memberTypesInherited
+                        )
 :DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Union, manager)
 ,fEnumerationInherited(false)
 ,fEnumeration(0)
-,fMemberTypeValidators(0)
+,fMemberTypeValidators(memberTypeValidators)
 ,fValidatedDatatype(0)
+,fMemberTypesInherited(memberTypesInherited)
 {
     //
     // baseValidator another UnionDTV from which,

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/08/16 18:42:49  neilg
+ * fix for bug 22457.  Union types that are restrictions of other union types were previously considered not to inherit their parents member types.  This is at variance with the behaviour of the Java parser and apparently with the spec, so I have changed this.
+ *
  * Revision 1.9  2003/05/15 18:53:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -151,7 +154,7 @@ public:
     // <simpleType name="derivedUnion">
     //      <restriction base="nativeUnion">
     //          <pattern     value="patter_value"/>
-    //          <enumeartion value="enum_value"/>
+    //          <enumeration value="enum_value"/>
     //      </restriction>
     // </simpleType>
     //
@@ -162,6 +165,8 @@ public:
         , RefArrayVectorOf<XMLCh>* const enums
         , const int finalSet
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+        , RefVectorOf<DatatypeValidator>* const memberTypeValidators = 0
+        , const bool memberTypesInherited = true
     );
 
     virtual ~UnionDatatypeValidator();
@@ -292,10 +297,10 @@ private:
     //  Private data members
     //
     //  fEnumeration
-    //      we own it.
+    //      we own it (or not, depending on state of fEnumerationInherited).
     //
     //  fMemberTypeValidators
-    //      we own it.
+    //      we own it (or not, depending on the state of fMemberTypesInherited).
     //
     //  fValidatedDatatype
     //      the dataTypeValidator  that was actually used to validate the last time validate was called
@@ -303,6 +308,7 @@ private:
     // -----------------------------------------------------------------------
 
      bool                 fEnumerationInherited;
+     bool                 fMemberTypesInherited;
      RefArrayVectorOf<XMLCh>*  fEnumeration;
      RefVectorOf<DatatypeValidator>*  fMemberTypeValidators;
      DatatypeValidator*               fValidatedDatatype;
@@ -316,7 +322,7 @@ inline DatatypeValidator* UnionDatatypeValidator::newInstance
     , MemoryManager* const                manager
 )
 {
-    return (DatatypeValidator*) new (manager) UnionDatatypeValidator(this, facets, enums, finalSet, manager);
+    return (DatatypeValidator*) new (manager) UnionDatatypeValidator(this, facets, enums, finalSet, manager, fMemberTypeValidators, true);
 }
 
 inline void UnionDatatypeValidator::validate( const XMLCh* const content)
@@ -330,7 +336,7 @@ inline void UnionDatatypeValidator::cleanUp()
     if ( !fEnumerationInherited && fEnumeration)
         delete fEnumeration;
 
-    if (fMemberTypeValidators)
+    if (!fMemberTypesInherited && fMemberTypeValidators)
         delete fMemberTypeValidators;
     
 }
@@ -360,27 +366,21 @@ inline void UnionDatatypeValidator::setEnumeration(RefArrayVectorOf<XMLCh>* enum
 inline
 RefVectorOf<DatatypeValidator>* UnionDatatypeValidator::getMemberTypeValidators() const
 {
-    UnionDatatypeValidator* thisdv = (UnionDatatypeValidator*)this; // cast away constness
-
-    while (thisdv->getBaseValidator())
-        thisdv = (UnionDatatypeValidator*) thisdv->getBaseValidator();
-
-    return thisdv->fMemberTypeValidators;
+    return this->fMemberTypeValidators;
 }
 
 inline bool UnionDatatypeValidator::isAtomic() const {
 
 
-    RefVectorOf<DatatypeValidator>* memberDVs = getMemberTypeValidators();
 
-    if (!memberDVs) {
+    if (!fMemberTypeValidators) {
         return false;
     }
 
-    unsigned int memberSize = memberDVs->size();
+    unsigned int memberSize = fMemberTypeValidators->size();
 
     for (unsigned int i=0; i < memberSize; i++) {
-        if (!memberDVs->elementAt(i)->isAtomic()) {
+        if (!fMemberTypeValidators->elementAt(i)->isAtomic()) {
             return false;
         }
     }
