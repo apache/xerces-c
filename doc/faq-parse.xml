@@ -217,6 +217,56 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
+  <faq title="I'm suddenly getting segfaults with Xerces-C 2.3.0;
+    why might this be?">
+  
+    <q>I'm suddenly getting segfaults with Xerces-C 2.3.0;
+        why might this be?</q>
+    <a>
+      <p>The introduction of pluggable memory management into
+        Xerces-C, one of the main features of 2.3.0, means that
+        application writers have to be more conscious about
+        destructors being invoked implicitly after a call to
+        XMLPlatformUtils::Terminate().  For example, the
+        following code is guaranteed to produce a segmentation
+        fault under Xerces-C 2.3.0, while it happened to work
+        under previous versions (in fact, this was how our
+        SAXPrint sample was formerly written;
+        try-catch blocks removed for brevity):
+      </p>
+<source>
+void myParsingFunction()
+{
+    XMLPlatformUtils::Initialize();
+    SAXParser parser;
+    //parser.various method calls
+    XMLPlatformUtils::Terminate();
+} // seg fault here!
+</source>
+      <p>The reason this will produce a segmentation fault is
+        that any dynamic memory the SAXParser (or any other of
+        Xerces's parsers) needs to allocate is now allocated
+        by default by a static object owned by XMLPlatformUtils.
+        When the XMLPlatformUtils::Terminate() call is made, this
+        object is destroyed--and, consequently, so are all the
+        objects that it directly created.  This includes all the
+        objects dynamically allocated by the SAXParser.  When the
+        parser object goes out of scope, its destructor is
+        invoked, and this attempts to destroy all the objects
+        that it created--which have of course just been destroyed
+        by the static MemoryManager in XMLPlatformUtils.
+      </p>
+      <p>
+        To avoid this, one must either explicitly scope the
+        parser object inside calls to
+        XMLPlatformUtils::Initialize() and
+        XMLPlatformUtils::Terminate(), or dynamically allocate
+        the parser object and destroy it explicitly before the
+        call to XMLPlatformUtils::Terminate() is made.
+      </p>
+    </a>
+  </faq>
+
   <faq title="Is &XercesCName; thread-safe?">
 
     <q>Is &XercesCName; thread-safe?</q>
