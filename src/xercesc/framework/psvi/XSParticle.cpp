@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/24 10:30:53  gareth
+ * fixed typo in include
+ *
  * Revision 1.4  2003/11/21 17:34:04  knoaman
  * PSVI update
  *
@@ -76,7 +79,7 @@
 #include <xercesc/framework/psvi/XSParticle.hpp>
 #include <xercesc/framework/psvi/XSElementDeclaration.hpp>
 #include <xercesc/framework/psvi/XSModelGroup.hpp>
-#include <xercesc/framework/psvi/XSWildCard.hpp>
+#include <xercesc/framework/psvi/XSWildcard.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
