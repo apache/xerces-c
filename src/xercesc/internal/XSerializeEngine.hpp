@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/10/27 20:38:52  peiyongz
+ * Optimized alignment for various data types
+ *
  * Revision 1.19  2004/10/26 14:49:27  peiyongz
  * Reset buffer/Provide position info for debugging
  *
@@ -613,7 +616,9 @@ public:
     const unsigned long   getBufCurAccumulated()     const; 
 
     inline 
-    const unsigned long   getBufCount()     const; 
+    const unsigned long   getBufCount()    const; 
+
+    void                  trace(char*)     const;
 
 private:
     // -----------------------------------------------------------------------
@@ -676,9 +681,12 @@ private:
     inline void            Assert(bool  toEval
                                 , const XMLExcepts::Codes toThrow)  const;
 
-    inline size_t          allignAdjust()                           const;
 
-    inline void            allignBufCur();
+    inline size_t          calBytesNeeded(size_t)  const;
+
+    inline size_t          alignAdjust(size_t)     const;
+
+    inline void            alignBufCur(size_t);
 
     // Make XTemplateSerializer friend of XSerializeEngine so that
     // we can call lookupStorePool and lookupLoadPool in the case of
@@ -808,36 +816,6 @@ inline void XSerializeEngine::Assert(bool toEval
 
 }
 
-// For the following built-in datatype, we assume
-// the same allignment requirement
-//
-// short    unsigned short
-// int      unsigned long
-// long     unsigned long
-// float
-// double
-//
-// Based on the current position (fBufCur), calculated the needed size
-// to read/write
-//
-inline size_t XSerializeEngine::allignAdjust() const
-{
-	#ifdef XML_PLATFORM_NEW_BLOCK_ALIGNMENT
-		size_t alignment = XML_PLATFORM_NEW_BLOCK_ALIGNMENT;
-	#else
-		size_t alignment = (sizeof(void*) >= sizeof(double)) ? sizeof(void*) : sizeof(double);
-	#endif
-	
-	size_t remainder = (size_t) fBufCur % alignment;	
-	return (remainder == 0) ? 0 : (alignment - remainder);
-}
-
-// Adjust the fBufCur
-inline void XSerializeEngine::allignBufCur()
-{
-    fBufCur+=allignAdjust();
-}
-
 inline void XSerializeEngine::readString(XMLCh*&        toRead
                                        , int&           bufferLen)
 {
@@ -881,7 +859,7 @@ const unsigned long XSerializeEngine::getBufCur() const
 inline 
 const unsigned long XSerializeEngine::getBufCurAccumulated() const
 {
-    return (fBufCount - isStoring() ? 0: 1)* fBufSize + (fBufCur-fBufStart);
+    return (fBufCount - (isStoring() ? 0: 1)) * fBufSize + (fBufCur-fBufStart);
 }
 
 inline 
