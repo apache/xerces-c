@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.32  2005/03/08 09:04:09  amassari
+ * Improve performances of XMLString::tokenizeString (jira# 1363) - patch by Christian Will
+ *
  * Revision 1.31  2004/12/21 16:02:51  cargilld
  * Attempt to fix various apidoc problems.
  *
@@ -805,7 +808,7 @@ public:
 
     /** @name Substring function */
     //@{
-    /** Create a substring of a givend string. The substring begins at the
+    /** Create a substring of a given string. The substring begins at the
       * specified beginIndex and extends to the character at index
       * endIndex - 1.
       * @param targetStr The string to copy the chars to
@@ -823,7 +826,7 @@ public:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
-    /** Create a substring of a givend string. The substring begins at the
+    /** Create a substring of a given string. The substring begins at the
       * specified beginIndex and extends to the character at index
       * endIndex - 1.
       * @param targetStr The string to copy the chars to
@@ -838,6 +841,26 @@ public:
         , const XMLCh* const    srcStr
         , const int             startIndex
         , const int             endIndex
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+    );
+
+    /** Create a substring of a given string. The substring begins at the
+      * specified beginIndex and extends to the character at index
+      * endIndex - 1.
+      * @param targetStr The string to copy the chars to
+      * @param srcStr The string to copy the chars from
+      * @param startIndex beginning index, inclusive.
+      * @param endIndex the ending index, exclusive.
+      * @param srcStrLength the length of srcStr
+      * @param manager The MemoryManager to use to allocate objects
+      */
+    static void subString
+    (
+                XMLCh* const    targetStr
+        , const XMLCh* const    srcStr
+        , const int             startIndex
+        , const int             endIndex
+        , const int             srcStrLength
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 

@@ -1414,9 +1414,16 @@ void XMLString::lowerCase(XMLCh* const toLowerCase)
     XMLPlatformUtils::fgTransService->lowerCase(toLowerCase);
 }
 
+void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
+                          , const int startIndex, const int endIndex
+                          , MemoryManager* const manager)
+{
+    subString(targetStr, srcStr, startIndex, endIndex, stringLen(srcStr), manager);
+}
 
 void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
                           , const int startIndex, const int endIndex
+                          , const int srcStrLength
                           , MemoryManager* const manager)
 {
     //if (startIndex < 0 || endIndex < 0)
@@ -1425,11 +1432,10 @@ void XMLString::subString(XMLCh* const targetStr, const XMLCh* const srcStr
     if (targetStr == 0)
         ThrowXMLwithMemMgr(IllegalArgumentException, XMLExcepts::Str_ZeroSizedTargetBuf, manager);
 
-    const int srcLen = stringLen(srcStr);
     const int copySize = endIndex - startIndex;
 
     // Make sure the start index is within the XMLString bounds
-    if ( startIndex < 0 || startIndex > endIndex || endIndex > srcLen)
+    if ( startIndex < 0 || startIndex > endIndex || endIndex > srcStrLength)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     for (int i= startIndex; i < endIndex; i++) {
@@ -1479,7 +1485,7 @@ BaseRefVectorOf<XMLCh>* XMLString::tokenizeString(const XMLCh*      const   toke
             (skip+1-index) * sizeof(XMLCh)
         );//new XMLCh[skip+1-index];
 
-        XMLString::subString(token, tokenizeStr, index, skip, manager);
+        XMLString::subString(token, tokenizeStr, index, skip, len, manager);
         tokenStack->addElement(token);
         index = skip;
     }
