@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2004/02/09 23:01:43  peiyongz
+ * Bug#20684: patch from carbe771@student.liu.se (C-J Berg)
+ *
  * Revision 1.8  2004/01/29 11:46:29  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -86,12 +89,7 @@
  */
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
-
-#if defined(XERCES_NEW_IOSTREAMS)
-#include <iostream>
-#else
-#include <iostream.h>
-#endif
+#include <stdio.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -103,21 +101,20 @@ StdOutFormatTarget::~StdOutFormatTarget()
 
 void StdOutFormatTarget::flush()
 {
-    XERCES_STD_QUALIFIER cout.flush();
+    fflush(stdout);
 }
 
 void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
                                   , const unsigned int    count
                                   , XMLFormatter* const)
 {
-        // Surprisingly, Solaris was the only platform on which
-        // required the char* cast to print out the string correctly.
-        // Without the cast, it was printing the pointer value in hex.
-        // Quite annoying, considering every other platform printed
-        // the string with the explicit cast to char* below.
-    XERCES_STD_QUALIFIER cout.write((char *) toWrite, (int) count);
-    XERCES_STD_QUALIFIER cout.flush();
-
+    // Surprisingly, Solaris was the only platform on which
+    // required the char* cast to print out the string correctly.
+    // Without the cast, it was printing the pointer value in hex.
+    // Quite annoying, considering every other platform printed
+    // the string with the explicit cast to char* below.
+    fwrite(toWrite, sizeof(XMLByte), (size_t)count, stdout);
+    fflush(stdout);
 }
 
 XERCES_CPP_NAMESPACE_END
