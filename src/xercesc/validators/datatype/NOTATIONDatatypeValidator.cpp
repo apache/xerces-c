@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/09/30 21:31:30  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.5  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -223,6 +226,17 @@ void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
 int NOTATIONDatatypeValidator::getLength(const XMLCh* const content) const
 {
     return XMLString::stringLen(content);
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(NOTATIONDatatypeValidator)
+
+void NOTATIONDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+    AbstractStringValidator::serialize(serEng);
 }
 
 XERCES_CPP_NAMESPACE_END

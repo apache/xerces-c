@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/09/30 21:31:37  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.6  2003/09/29 21:47:35  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -309,6 +312,9 @@ IMPL_XSERIALIZABLE_TOCREATE(StringDatatypeValidator)
 void StringDatatypeValidator::serialize(XSerializeEngine& serEng)
 {
     AbstractStringValidator::serialize(serEng);
+
+    // don't serialize fWhiteSpace, which is set to DatatypeValidator::PRESERVE
+    // by the constructor
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/09/30 21:31:30  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.9  2003/05/16 06:01:57  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -466,6 +469,20 @@ void ListDatatypeValidator::inheritFacet()
         AbstractStringValidator::inheritFacet();
     }
 
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(ListDatatypeValidator)
+
+void ListDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+    AbstractStringValidator::serialize(serEng);
+
+    //don't serialize fContent, since it is NOT owned and 
+    //will be reset each time validate()/checkContent() invoked.
 }
 
 XERCES_CPP_NAMESPACE_END

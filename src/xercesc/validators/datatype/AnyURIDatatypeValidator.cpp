@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/09/30 21:31:30  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.6  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -225,6 +228,19 @@ void AnyURIDatatypeValidator::checkValueSpace(const XMLCh* const content)
                 , content);
     }
 
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(AnyURIDatatypeValidator)
+
+void AnyURIDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+    AbstractStringValidator::serialize(serEng);
+
+    //don't serialize fTempURI
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/09/30 21:31:30  peiyongz
+ * Implementation of Serialization/Deserialization
+ *
  * Revision 1.6  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -204,6 +207,17 @@ void Base64BinaryDatatypeValidator::normalizeEnumeration()
 void Base64BinaryDatatypeValidator::normalizeContent(XMLCh* const content) const
 {
     XMLString::removeWS(content);     
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(Base64BinaryDatatypeValidator)
+
+void Base64BinaryDatatypeValidator::serialize(XSerializeEngine& serEng)
+{
+    AbstractStringValidator::serialize(serEng);
 }
 
 XERCES_CPP_NAMESPACE_END
