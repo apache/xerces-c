@@ -514,15 +514,44 @@ void AbstractDOMParser::docPI(  const   XMLCh* const    target
 
 void AbstractDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 {
-    if (fCreateEntityReferenceNodes == true)
-    {
-        if (fCurrentParent->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
-            DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) fCurrentParent;
-            erImpl->setReadOnly(true, true);
-        }
-        fCurrentParent = fNodeStack->pop();
-        fCurrentNode   = fCurrentParent;
+    DOMEntityReferenceImpl *erImpl = 0;
+    DOMNode* firstChild = 0;
+
+    if (fCurrentParent->getNodeType() == DOMNode::ENTITY_REFERENCE_NODE) {
+        erImpl = (DOMEntityReferenceImpl *) fCurrentParent;
+        firstChild = erImpl->getFirstChild();
     }
+
+    fCurrentParent = fNodeStack->pop();
+
+    if (!fCreateEntityReferenceNodes && erImpl && firstChild) {
+        DOMNode *kid, *next;
+        fCurrentNode   = fCurrentParent->getLastChild();
+
+        for (kid = firstChild; kid != 0; kid = next)
+        {
+            // If kid and fCurrentNode are both Text nodes (but _not_ CDATASection,
+            // which is a subclass of Text), they can be merged.
+            if (kid->getNodeType() == DOMNode::TEXT_NODE   &&
+                fCurrentNode &&
+                fCurrentNode->getNodeType() == DOMNode::TEXT_NODE )
+            {
+                ((DOMTextImpl *) fCurrentNode)->appendData(((DOMTextImpl *) kid)->getData());
+            }
+            else {
+                // append the child of erImpl to currentParent
+                fCurrentNode = kid->cloneNode(true);
+                fCurrentParent->appendChild(fCurrentNode);
+            }
+
+            next = kid->getNextSibling();
+        }
+    }
+    else
+        fCurrentNode   = fCurrentParent;
+
+    if (erImpl)
+        erImpl->setReadOnly(true, true);
 }
 
 
@@ -789,26 +818,27 @@ void AbstractDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
         entity->setActualEncoding(fScanner->getReaderMgr()->getCurrentEncodingStr());
     fCurrentEntity = entity;
 
+    DOMEntityReference *er = fDocument->createEntityReference(entName);
+
+    //set the readOnly flag to false before appending node, will be reset in endEntityReference
+    DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) er;
+    erImpl->setReadOnly(false, true);
+
     if (fCreateEntityReferenceNodes == true)
     {
-        DOMEntityReference *er = fDocument->createEntityReference(entName);
-
-        //set the readOnly flag to false before appending node, will be reset in endEntityReference
-        DOMEntityReferenceImpl *erImpl = (DOMEntityReferenceImpl *) er;
-        erImpl->setReadOnly(false, true);
-
         fCurrentParent->appendChild(er);
-        fNodeStack->push(fCurrentParent);
-        fCurrentParent = er;
-        fCurrentNode = er;
-
-        // this entityRef needs to be stored in Entity map too.
-        // We'd decide later whether the entity nodes should be created by a
-        // separated method in parser or not. For now just stick it in if
-        // the ref nodes are created
-        if (entity)
-            entity->setEntityRef(er);
     }
+
+    fNodeStack->push(fCurrentParent);
+    fCurrentParent = er;
+    fCurrentNode = er;
+
+    // this entityRef needs to be stored in Entity map too.
+    // We'd decide later whether the entity nodes should be created by a
+    // separated method in parser or not. For now just stick it in if
+    // the ref nodes are created
+    if (entity)
+        entity->setEntityRef(er);
 }
 
 
