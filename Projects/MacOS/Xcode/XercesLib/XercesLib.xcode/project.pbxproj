@@ -1921,8 +1921,6 @@
 			buildSettings = {
 			};
 			buildStyles = (
-				1A7E46A50080FC837F000001,
-				1A7E46A60080FC837F000001,
 				F58B302202DE22220195DDC8,
 				F58B302402DE22660195DDC8,
 			);
@@ -2020,38 +2018,6 @@
 //0C2
 //0C3
 //0C4
-//1A0
-//1A1
-//1A2
-//1A3
-//1A4
-		1A7E46A50080FC837F000001 = {
-			buildRules = (
-			);
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_VERSION = 2.x;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "\U0001-DDEBUG";
-			};
-			isa = PBXBuildStyle;
-			name = "Development GCC2";
-		};
-		1A7E46A60080FC837F000001 = {
-			buildRules = (
-			);
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_VERSION = 2.x;
-			};
-			isa = PBXBuildStyle;
-			name = "Deployment GCC2";
-		};
-//1A0
-//1A1
-//1A2
-//1A3
-//1A4
 //200
 //201
 //202
@@ -12413,6 +12379,7 @@
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
 			};
 			isa = PBXBuildStyle;
 			name = "Deployment GCC3";
