@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/14 00:52:45  roddey
+ * Added a NetAccessorException for use by implementations of the
+ * NetAccessor abstraction, if they need to report errors during
+ * processing.
+ *
  * Revision 1.2  2000/01/12 00:16:23  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -74,6 +79,19 @@
 #include <util/XML4CDefs.hpp>
 
 class BinInputStream;
+
+
+// Hard coded Unicode text for "NetAccessorException"
+static const XMLCh gNetAccessorException_Name[] =
+{
+        chLatin_N, chLatin_e, chLatin_t, chLatin_A, chLatin_c, chLatin_c
+    ,   chLatin_e, chLatin_s, chLatin_s, chLatin_o, chLatin_r, chLatin_E
+    ,   chLatin_x, chLatin_c, chLatin_e, chLatin_p, chLatin_t, chLatin_i
+    ,   chLatin_o, chLatin_n, chNull
+};
+
+MakeXML4CException(NetAccessorException, XMLUTIL_EXPORT)
+
 
 
 //
