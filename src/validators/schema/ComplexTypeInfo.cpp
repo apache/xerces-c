@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/08/29 21:27:07  knoaman
+ * no message
+ *
  * Revision 1.16  2001/08/28 20:43:52  knoaman
  * Fix for content spec node adoption.
  *
@@ -585,13 +588,14 @@ ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const 
 
         if (rightNode != curNode->getSecond()) {
 
+             if (rightNode == curNode->getSecond()->getFirst() && !curNode->isSecondAdopted())
+                toAdoptRight = false;
+             else
+                toAdoptRight = true;
+
             curNode->setAdoptSecond(false);
             curNode->setSecond(rightNode);
-
-            if (rightNode == curNode->getSecond()->getFirst() && !curNode->isSecondAdopted())
-                curNode->setAdoptSecond(false);
-            else
-                curNode->setAdoptSecond(true);
+            curNode->setAdoptSecond(toAdoptRight);
         }
 
         retNode =  expandContentModel(curNode, minOccurs, maxOccurs, toAdoptSpecNode);
