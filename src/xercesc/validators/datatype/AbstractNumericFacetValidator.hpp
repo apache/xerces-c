@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/10/17 21:13:24  peiyongz
+ * loadNumber() moved to XMLNumber
+ *
  * Revision 1.7  2003/10/02 19:21:06  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -212,9 +215,6 @@ private:
     void inspectFacetBase();
 
     void inheritFacet();
-
-    XMLNumber*          readNumber(XMLNumber::NumberType   numType
-                                 , XSerializeEngine&       serEng);
 
 };
 
