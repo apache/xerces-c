@@ -98,6 +98,10 @@
 	 #include <xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp>
 #endif
 
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    #include <xercesc/util/NetAccessors/Socket/SocketNetAccessor.hpp>
+#endif
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 char* PackingRepText(const char * const repText1,
@@ -109,7 +113,11 @@ char* PackingRepText(const char * const repText1,
 // ---------------------------------------------------------------------------
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    return new SocketNetAccessor();
+#else
     return 0;
+#endif
 }
 
 
