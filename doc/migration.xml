@@ -45,6 +45,7 @@
         <s4 title="New Public API">
             <ul>
               <li>To fix bug 7087, XMLEnumerator is added a virtual destructor.</li>
+              <li>To fix bug 11448, XMLNotationDecl::get/setBaseURI, and XMLEntityDecl::get/setBaseURI are added.</li>
             </ul>
         </s4>
 

@@ -8,6 +8,7 @@
       or jump directly to:</p>
     <ul>
        <li><jump href="build-winunix.html#WinNT">Building &XercesCName; on Windows using Microsoft Visual C++</jump></li>
+       <li><jump href="build-winunix.html#WinIntel">Building &XercesCName; 64 bit binary on Windows XP using Intel C++ Compiler</jump></li>
        <li><jump href="build-winunix.html#WinBorland">Building &XercesCName; on Windows using Borland C++Builder</jump></li>
        <li><jump href="build-winunix.html#UNIX">Building &XercesCName; on UNIX platforms</jump></li>
        <li><jump href="build-winunix.html#UNIX_SingleThread">Building &XercesCName; as a single-threaded library on Unix platforms</jump></li>

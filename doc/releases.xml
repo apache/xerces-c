@@ -26,6 +26,55 @@
     </tr>
 
     <tr>
+        <td>2002-08-23</td>
+        <td>James Berry</td>
+        <td>Begin addition of support for Codewarrior MachO build of Xerces framework.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-23</td>
+        <td>James Berry</td>
+        <td>[Bug 11776] MacOSUnicodeConvertor::upperCase doesn't work correctly.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-22</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 7512] Wrong error message created.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-22</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 11448] DomCount has problems with XHTML1.1 DTD.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-22</td>
+        <td>Robert Buck</td>
+        <td>[Bug 11946] Updated VC7 Project Files for Xerces-C 2.1.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-22</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 11906] Wrong comparison in TraverseSchema.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-08-22</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 10653] XMLString::parseInt possible overflow.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-08-21</td>
         <td>Tinny Ng</td>
         <td>[Bug 11869] Add the const modifier (XMLBuffer.hpp).

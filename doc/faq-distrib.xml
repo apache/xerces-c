@@ -46,6 +46,10 @@
           <td></td>
         </tr>
         <tr>
+          <td>Windows XP, IA64</td>
+          <td>Intel C++ Compiler v6, ecl</td>
+        </tr>
+        <tr>
           <td>Redhat Linux 7.2, IA64</td>
           <td>Intel C++ Compiler v6, ecc</td>
         </tr>

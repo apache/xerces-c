@@ -48,6 +48,32 @@
         </s3>
     </s2>
 
+    <anchor name="WinIntel"/>
+    <s2 title="Building &XercesCName; 64 bit binary on Windows XP using Intel C++ Compiler">
+        <p>&XercesCName; source distribution comes with Microsoft Visual C++ NMake Files which
+        work with Intel C++ Compiler. The following describes the steps you need
+        to build &XercesCName; 64 bit binary using Intel C++ Compiler.</p>
+
+        <s3 title="Building &XercesCName; library">
+            <p>&XercesCName; source distribution provides a makefile <code>all.mak</code>
+            which will build everything including samples, tests and the parser library.</p>
+<source>
+cd &XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\all
+nmake -f all.mak "CFG=all - Win64 Release" CPP=ecl.exe
+</source>
+
+            <p>If you want to just build the &XercesCName; parser library alone, then</p>
+<source>
+cd &XercesCSrcInstallDir;\Projects\Win32\VC6\xerces-all\XercesLib
+nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
+</source>
+
+            <p>You must make sure that you are linking your application with
+            the &XercesCWindowsLib;.lib library and also make sure that
+            the associated DLL is somewhere in your path.</p>
+        </s3>
+    </s2>
+
     <anchor name="WinBorland"/>
     <s2 title="Building &XercesCName; on Windows using Borland C++Builder">
         <p>&XercesCName; sourec distribution comes with Borland C++Builder projects to help you
