@@ -4,10 +4,10 @@
        <s2 title="Disclaimer">
 		<p>Schema is not fully supported in Xerces-C yet.  But an
                experimental implementation of a subset of the W3C XML
-               Schema language is now available for review in Xerces1.5.            
-               You should not consider this implementation complete or 
-			   correct. The limitations of this implementation are 
-			   detailed below.  Please read this document before using 
+               Schema language is now available for review in Xerces1.5.
+               You should not consider this implementation complete or
+			   correct. The limitations of this implementation are
+			   detailed below.  Please read this document before using
 			   Xerces 1.5.
                </p>
        </s2>
@@ -78,7 +78,7 @@
 
                <p>Other features in the Schema recommendation such as "redefine",
                "identity constraints" and others which are not mentioned above, are not supported
-               yet. Also, particle constraint checking is not yet implemented. But development is
+               yet. Also, particle and model group constraint checking is not yet fully implemented. But development is
                continuing and we target to implement all the features of the current XML Schema
                Recommendation before end of this year. Please note that the date is tentative and
                subject to change.
