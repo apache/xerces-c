@@ -87,7 +87,7 @@ public:
     // ------------------------------------------------------------
     // DOMImplementation Virtual interface
     // ------------------------------------------------------------
-    virtual bool                hasFeature(const  XMLCh * feature,  const  XMLCh * version);
+    virtual bool                hasFeature(const  XMLCh * feature,  const  XMLCh * version) const;
 
     // Introduced in DOM Level 2
     virtual DOMDocumentType*    createDocumentType(const XMLCh *qualifiedName,

@@ -143,7 +143,7 @@ DOMImplementationImpl *DOMImplementationImpl::getDOMImplementationImpl() {
 // ------------------------------------------------------------
 // DOMImplementation Virtual interface
 // ------------------------------------------------------------
-bool  DOMImplementationImpl::hasFeature(const  XMLCh * feature,  const  XMLCh * version)
+bool  DOMImplementationImpl::hasFeature(const  XMLCh * feature,  const  XMLCh * version) const
 {
     if (!feature)
         return false;

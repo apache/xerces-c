@@ -122,7 +122,7 @@ public:
      *   specified version, <code>false</code> otherwise.
      * @since DOM Level 1
      */
-    virtual bool  hasFeature(const XMLCh *feature,  const XMLCh *version) = 0;
+    virtual bool  hasFeature(const XMLCh *feature,  const XMLCh *version) const = 0;
     //@}
 
     // -----------------------------------------------------------------------
