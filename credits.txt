@@ -40,6 +40,7 @@ Paul Ferguson
 Pierpaolo Fumagalli
 Guido Gagliardi
 Gary Gale
+Michael Glavassevich
 Natalie Gorden
 Max Gotlib
 Petr Gotthard
