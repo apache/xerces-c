@@ -760,3 +760,38 @@ const XMLCh XMLUni::fgInvalidDatatypeValueException_Name[] =
     ,   chLatin_u, chLatin_e, chLatin_E, chLatin_x, chLatin_c, chLatin_e
     ,   chLatin_p, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
+
+const XMLCh XMLUni::fgNegINFString[] =
+{
+    chDash, chLatin_I, chLatin_N, chLatin_F, chNull
+};
+
+const XMLCh XMLUni::fgNegZeroString[] =
+{
+    chDash, chDigit_0, chNull
+};
+
+const XMLCh XMLUni::fgPosZeroString[] =
+{
+    chDigit_0, chNull
+};
+
+const XMLCh XMLUni::fgPosINFString[] =
+{
+    chLatin_I, chLatin_N, chLatin_F, chNull
+};
+
+const XMLCh XMLUni::fgNaNString[] =
+{
+    chLatin_N, chLatin_a, chLatin_N, chNull
+};
+
+const XMLCh XMLUni::fgEString[] =
+{
+    chLatin_E, chNull
+};
+
+const XMLCh XMLUni::fgZeroString[] =
+{
+    chDigit_0, chNull
+};

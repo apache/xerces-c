@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/24 21:52:27  peiyongz
+ * XMLDouble: move fg...String to XMLUni
+ *
  * Revision 1.1  2001/07/24 13:58:11  peiyongz
  * XMLDouble and related supporting methods from XMLBigInteger/XMLBigDecimal
  *
@@ -72,48 +75,14 @@
 #include <util/NumberFormatException.hpp>
 #include <util/TransService.hpp>
 #include <util/Janitor.hpp>
+#include <util/XMLUni.hpp>
 #include <math.h>
-#include <iostream.h>
 
 // 
 // The special values positive and negative zero, 
 // positive and negative infinity and not-a-number 
 // have lexical representations 0, -0, INF, -INF and NaN, respectively
 //
-const XMLCh XMLDouble::fgNegINFString[] =
-{
-    chDash, chLatin_I, chLatin_N, chLatin_F, chNull
-};
-
-const XMLCh XMLDouble::fgNegZeroString[] =
-{
-    chDash, chDigit_0, chNull
-};
-
-const XMLCh XMLDouble::fgPosZeroString[] =
-{
-    chDigit_0, chNull
-};
-
-const XMLCh XMLDouble::fgPosINFString[] =
-{
-    chLatin_I, chLatin_N, chLatin_F, chNull
-};
-
-const XMLCh XMLDouble::fgNaNString[] =
-{
-    chLatin_N, chLatin_a, chLatin_N, chNull
-};
-
-XMLCh fgEString[] =
-{
-    chLatin_E, chNull
-};
-
-XMLCh fgZeroString[] =
-{
-    chDigit_0, chNull
-};
 
 /***
  *   Algo:
@@ -138,27 +107,27 @@ XMLDouble::XMLDouble(const XMLCh* const strValue)
     XMLString::trim(tmpStrValue);
 //    char *p2 = XMLString::transcode(tmpStrValue);
 
-    if (XMLString::compareString(tmpStrValue, fgNegINFString) == 0)
+    if (XMLString::compareString(tmpStrValue, XMLUni::fgNegINFString) == 0)
     {
         fType = LiteralType::NegINF;
         return;
     }
-    else if (XMLString::compareString(tmpStrValue, fgNegZeroString) == 0)
+    else if (XMLString::compareString(tmpStrValue, XMLUni::fgNegZeroString) == 0)
     {
         fType = LiteralType::NegZero;
         return;
     }
-    else if (XMLString::compareString(tmpStrValue, fgPosZeroString) == 0)
+    else if (XMLString::compareString(tmpStrValue, XMLUni::fgPosZeroString) == 0)
     {
         fType = LiteralType::PosZero;
         return;
     }
-    else if (XMLString::compareString(tmpStrValue, fgPosINFString) == 0)
+    else if (XMLString::compareString(tmpStrValue, XMLUni::fgPosINFString) == 0)
     {
         fType = LiteralType::PosINF;
         return;
     }
-    else if (XMLString::compareString(tmpStrValue, fgNaNString) == 0)
+    else if (XMLString::compareString(tmpStrValue, XMLUni::fgNaNString) == 0)
     {
         fType = LiteralType::NaN;
         return;
@@ -193,14 +162,14 @@ XMLDouble::XMLDouble(const XMLCh* const strValue)
         // 
         else
         {        
-            fExponent = new XMLBigInteger(fgZeroString);
+            fExponent = new XMLBigInteger(XMLUni::fgZeroString);
         }
 
     }
     else
     {
         fMantissa = new XMLBigDecimal(tmpStrValue);
-        fExponent = new XMLBigInteger(fgZeroString);
+        fExponent = new XMLBigInteger(XMLUni::fgZeroString);
     }
 
 
@@ -229,19 +198,19 @@ XMLCh*  XMLDouble::toString() const
     switch (fType) 
     {
     case NegINF:
-        return XMLString::replicate(fgNegINFString);
+        return XMLString::replicate(XMLUni::fgNegINFString);
 
     case NegZero:
-        return XMLString::replicate(fgNegZeroString);
+        return XMLString::replicate(XMLUni::fgNegZeroString);
 
     case PosZero:
-        return XMLString::replicate(fgPosZeroString);
+        return XMLString::replicate(XMLUni::fgPosZeroString);
 
     case PosINF:
-        return XMLString::replicate(fgPosINFString);
+        return XMLString::replicate(XMLUni::fgPosINFString);
 
     case NaN:
-        return XMLString::replicate(fgNaNString);
+        return XMLString::replicate(XMLUni::fgNaNString);
 
     case Normal:
 
@@ -255,7 +224,7 @@ XMLCh*  XMLDouble::toString() const
                                          XMLString::stringLen(ret_exponent) + 2];
             *ret_val = 0;
             XMLString::catString(ret_val, ret_mantissa);
-            XMLString::catString(ret_val, fgEString);
+            XMLString::catString(ret_val, XMLUni::fgEString);
             XMLString::catString(ret_val, ret_exponent);
 
             delete [] ret_mantissa;

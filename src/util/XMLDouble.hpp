@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/24 21:52:27  peiyongz
+ * XMLDouble: move fg...String to XMLUni
+ *
  * Revision 1.1  2001/07/24 13:58:11  peiyongz
  * XMLDouble and related supporting methods from XMLBigInteger/XMLBigDecimal
  *
@@ -139,12 +142,6 @@ public:
     static int            compareValues(const XMLDouble* const lValue
                                       , const XMLDouble* const rValue);
 
-    static const XMLCh fgNegINFString[];
-    static const XMLCh fgNegZeroString[];
-    static const XMLCh fgPosZeroString[];
-    static const XMLCh fgPosINFString[];
-    static const XMLCh fgNaNString[];
-
 private:
 
     bool                  isSpecialValue() const;
@@ -186,7 +183,7 @@ inline double XMLDouble::doubleValue() const
 
 inline bool XMLDouble::operator==(const XMLDouble& toCompare) const
 {
-    return ( XMLBigInteger::compareValues(this->fExponent, toCompare.fExponent) == 0 ? true : false);
+    return ( XMLDouble::compareValues(this, &toCompare) == 0 ? true : false);
 }
 
 inline bool XMLDouble::isSpecialValue() const
