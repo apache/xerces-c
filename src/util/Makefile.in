@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.33  2001/05/10 20:51:18  tng
+# Schema: Add DecimalDatatypeValidator and XMLBigDecimal, XMLBigInteger.  By Pei Yong Zhang.
+#
 # Revision 1.32  2001/04/19 17:47:56  knoaman
 # A string tokenizer utility.
 #
@@ -293,6 +296,8 @@ UTIL_CPP_PUBHEADERS = \
     XML256TableTranscoder.hpp \
     XML88591Transcoder.hpp \
     XMLASCIITranscoder.hpp \
+    XMLBigDecimal.hpp \
+    XMLBigInteger.hpp \
     XMLChTranscoder.hpp \
     XMLIBM1140Transcoder.hpp \
     XMLDeleterFor.hpp \
@@ -350,6 +355,8 @@ UTIL_CPP_OBJECTS = \
     XML256TableTranscoder.$(TO) \
     XML88591Transcoder.$(TO) \
     XMLASCIITranscoder.$(TO) \
+    XMLBigDecimal.$(TO) \
+    XMLBigInteger.$(TO) \
     XMLChTranscoder.$(TO) \
     XMLIBM1140Transcoder.$(TO) \
     XMLEBCDICTranscoder.$(TO) \
