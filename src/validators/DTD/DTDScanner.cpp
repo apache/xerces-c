@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/11/13 13:27:28  tng
+ * Move root element check to XMLScanner.
+ *
  * Revision 1.20  2001/09/05 20:49:10  knoaman
  * Fix for complexTypes with mixed content model.
  *
@@ -1608,8 +1611,13 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     }
 
     //
+    //  Store the root element name for later check
+    //
+    fScanner->setRootElemName(bbRootName.getRawBuffer());
+
+    //
     //  This element obviously is not going to exist in the element decl
-    //  pool yet, but we need to store away an element id. So force it into
+    //  pool yet, but we need to call docTypeDecl. So force it into
     //  the element decl pool, marked as being there because it was in
     //  the DOCTYPE. Later, when its declared, the status will be updated.
     //
@@ -1617,20 +1625,28 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     //  then look it up instead. It has to exist!
     //
     DTDElementDecl* rootDecl;
+    Janitor<DTDElementDecl> janSrc(0);
+
     if (reuseGrammar)
     {
-        rootDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
-        if (fScanner->getDoValidation())
-        {
-            if (!rootDecl)
-            {
-                fScanner->getValidator()->emitError(XMLValid::UndeclaredElemInDocType, bbRootName.getRawBuffer());
-                fReaderMgr->skipPastChar(chCloseAngle);
-                return;
+        Grammar* fGrammar = fDTDGrammar;
+        if (fGrammar->getGrammarType() == Grammar::DTDGrammarType) {
+            rootDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(fEmptyNamespaceId, 0, bbRootName.getRawBuffer(), Grammar::TOP_LEVEL_SCOPE);
+            if (rootDecl)
+                fDTDGrammar->setRootElemId(rootDecl->getId());
+            else {
+                rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
+                rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+                rootDecl->setExternalElemDeclaration(isReadingExternalEntity());
+                fDTDGrammar->setRootElemId(fDTDGrammar->putElemDecl(rootDecl));
             }
         }
-        if (rootDecl)
-            fDTDGrammar->setRootElemId(rootDecl->getId());
+        else {
+            rootDecl = new DTDElementDecl(bbRootName.getRawBuffer(), fEmptyNamespaceId);
+            rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
+            rootDecl->setExternalElemDeclaration(isReadingExternalEntity());
+            janSrc.reset(rootDecl);
+        }
     }
      else
     {

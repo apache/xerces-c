@@ -1011,6 +1011,10 @@ void XMLScanner::scanReset(const InputSource& src)
     // Clear out the id reference list
     fIDRefList->removeAll();
 
+    // Reset the Root Element Name
+    delete [] fRootElemName;
+    fRootElemName = 0;
+
     // Reset IdentityConstraints
     fMatcherStack->clear();
 

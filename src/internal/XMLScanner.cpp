@@ -215,6 +215,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fMatcherStack(0)
     , fValueStoreCache(0)
     , fFieldActivator(0)
+    , fRootElemName(0)
 {
    commonInit();
 
@@ -276,6 +277,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fMatcherStack(0)
     , fValueStoreCache(0)
     , fFieldActivator(0)
+    , fRootElemName(0)
 {
    commonInit();
 
@@ -311,6 +313,8 @@ XMLScanner::~XMLScanner()
     delete fFieldActivator;
     delete fMatcherStack;
     delete fValueStoreCache;
+
+    delete [] fRootElemName;
 }
 
 
@@ -944,7 +948,7 @@ void XMLScanner::commonInit()
     initValidator(fSchemaValidator);
 
     // Create IdentityConstraint info
-    fMatcherStack = new XPathMatcherStack();    
+    fMatcherStack = new XPathMatcherStack();
     fValueStoreCache = new ValueStoreCache();
     fFieldActivator = new FieldActivator(fValueStoreCache, fMatcherStack);
     fValueStoreCache->setScanner(this);
@@ -2138,8 +2142,17 @@ void XMLScanner::scanProlog()
 
                     //
                     //  We have a doc type. So, create a DTDScanner and
-                    //  store the Grammar in DTDGrammar.
+                    //  switch the Grammar to the emptyNamespace one.
                     //
+
+                    if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate)
+                    {
+                        fValidator->emitError
+                        (
+                            XMLValid::GrammarNotFound
+                          , XMLUni::fgZeroLenString
+                        );
+                    }
 
                     DTDScanner fDTDScanner((DTDGrammar*)fGrammar, fEntityDeclPool, fDocTypeHandler);
                     fDTDScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
@@ -2299,15 +2312,19 @@ bool XMLScanner::scanStartTag(bool& gotData)
 
     //
     //  If this is the first element and we are validating, check the root
-    //  element. This may or may not have any meaning for the installed
-    //  validator, in which case it may just always return success. Some
-    //  validators will treat any element as the root.
+    //  element.
     //
     if (isRoot)
     {
         if (fValidate)
         {
-            if (!fValidator->checkRootElement(elemDecl->getId()))
+            //  If a DocType exists, then check if it matches the root name there.
+            if (fRootElemName && XMLString::compareString(fQNameBuf.getRawBuffer(), fRootElemName))
+                fValidator->emitError(XMLValid::RootElemNotLikeDocType);
+
+            //  Some validators may also want to check the root, call the
+            //  XMLValidator::checkRootElement
+            if (fValidatorFromUser && !fValidator->checkRootElement(elemDecl->getId()))
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
         }
     }
@@ -3218,15 +3235,19 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
 
     //
     //  If this is the first element and we are validating, check the root
-    //  element. This may or may not have any meaning for the installed
-    //  validator, in which case it may just always return success. Some
-    //  validators will treat any element as the root.
+    //  element.
     //
     if (isRoot)
     {
         if (fValidate)
         {
-            if (!fValidator->checkRootElement(elemDecl->getId()))
+            //  If a DocType exists, then check if it matches the root name there.
+            if (fRootElemName && XMLString::compareString(qnameRawBuf, fRootElemName))
+                fValidator->emitError(XMLValid::RootElemNotLikeDocType);
+
+            //  Some validators may also want to check the root, call the
+            //  XMLValidator::checkRootElement
+            if (fValidatorFromUser && !fValidator->checkRootElement(elemDecl->getId()))
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
         }
     }

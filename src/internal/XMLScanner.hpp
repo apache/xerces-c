@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.36  2001/11/13 13:27:28  tng
+ * Move root element check to XMLScanner.
+ *
  * Revision 1.35  2001/11/02 14:20:14  knoaman
  * Add support for identity constraints.
  *
@@ -461,6 +464,7 @@ public :
     void setDoSchema(const bool doSchema);
     void setValidationSchemaFullChecking(const bool schemaFullChecking);
     void setHasNoDTD(const bool hasNoDTD);
+    void setRootElemName(XMLCh* rootElemName);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -859,6 +863,12 @@ private :
     //  fFieldActivator
     //      Activates fields within a certain scope when a selector matches
     //      its xpath.
+    //
+    //  fRootElemName
+    //      No matter we are using DTD or Schema Grammar, if a DOCTYPE exists,
+    //      we need to verify the root element name.  So store the rootElement
+    //      that is used in the DOCTYPE in the Scanner instead of in the DTDGrammar
+    //      where it used to
     // -----------------------------------------------------------------------
     bool                        fDoNamespaces;
     bool                        fExitOnFirstFatal;
@@ -913,6 +923,7 @@ private :
     XPathMatcherStack*          fMatcherStack;
     ValueStoreCache*            fValueStoreCache;
     FieldActivator*             fFieldActivator;
+    XMLCh*                      fRootElemName;
 };
 
 
@@ -1192,6 +1203,12 @@ inline void XMLScanner::setValidationSchemaFullChecking(const bool schemaFullChe
 inline void XMLScanner::setHasNoDTD(const bool hasNoDTD)
 {
     fHasNoDTD = hasNoDTD;
+}
+
+inline void XMLScanner::setRootElemName(XMLCh* rootElemName)
+{
+    delete [] fRootElemName;
+    fRootElemName = XMLString::replicate(rootElemName);
 }
 
 // ---------------------------------------------------------------------------
