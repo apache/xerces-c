@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/11/15 13:30:40  amassari
+ * Add build target for VC7.1 to create a static library
+ *
  * Revision 1.10  2004/09/08 13:56:32  peiyongz
  * Apache License Version 2.0
  *
@@ -112,8 +115,13 @@
 //  These defines provide the platform specific keywords that they need
 //  to do this.
 // ---------------------------------------------------------------------------
-#define PLATFORM_EXPORT     __declspec(dllexport)
-#define PLATFORM_IMPORT     __declspec(dllimport)
+#ifdef XML_LIBRARY
+  #define PLATFORM_EXPORT
+  #define PLATFORM_IMPORT
+#else
+  #define PLATFORM_EXPORT     __declspec(dllexport)
+  #define PLATFORM_IMPORT     __declspec(dllimport)
+#endif
 
 // ---------------------------------------------------------------------------
 //  Indicate that we do not support native bools

@@ -34,14 +34,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef _DEBUG
- #ifdef _MSC_VER
-    #include <crtdbg.h>
- #else
-    #include <assert.h>
- #endif
-#endif
-
 //
 //  These control which transcoding service is used by the Win32 version.
 //  They allow this to be controlled from the build process by just defining
@@ -814,12 +806,18 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 //  primary jobs here are getting the path to our DLL and to get the
 //  stdout and stderr file handles setup.
 //
+
+//  Enable this code for memeory leak testing
+//#define MEM_LEAK_TESTING
+
+#ifdef MEM_LEAK_TESTING
+    #include <crtdbg.h>
+#endif
+
 void XMLPlatformUtils::platformInit()
 {
 
-#if 0 && defined(_DEBUG)
-    //  Enable this code for memeory leak testing
-
+#ifdef MEM_LEAK_TESTING
    // Send all reports to STDOUT
    _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_FILE );
    _CrtSetReportFile( _CRT_WARN, _CRTDBG_FILE_STDOUT );

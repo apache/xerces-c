@@ -42,6 +42,36 @@
 			<Tool
 				Name="VCPreBuildEventTool"/>
 		</Configuration>
+		<Configuration
+			Name="Static Debug|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticDebug"
+			ConfigurationType="10"
+			UseOfMFC="0">
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+		</Configuration>
+		<Configuration
+			Name="Static Release|Win32"
+			OutputDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease"
+			IntermediateDirectory=".\..\..\..\..\..\Build\Win32\VC7.1\StaticRelease"
+			ConfigurationType="10"
+			UseOfMFC="0">
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>

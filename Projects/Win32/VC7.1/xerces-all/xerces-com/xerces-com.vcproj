@@ -151,6 +151,141 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
+		<Configuration
+			Name="Static Release|Win32"
+			OutputDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticRelease"
+			IntermediateDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticRelease\obj"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="1"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_LIBRARY"
+				StringPooling="TRUE"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="TRUE"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="stdafx.h"
+				PrecompiledHeaderFile="..\..\..\..\..\Build\Win32\xml4com\StaticRelease\obj/xerces-com.pch"
+				AssemblerListingLocation="..\..\..\..\..\Build\Win32\xml4com\StaticRelease\obj/"
+				ObjectFile="..\..\..\..\..\Build\Win32\xml4com\StaticRelease\obj/"
+				ProgramDataBaseFileName="..\..\..\..\..\Build\Win32\xml4com\StaticRelease/"
+				WarningLevel="3"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Performing registration"
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;
+echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
+"
+				Outputs="$(TargetDir)xerces-c_2_6.dll;$(OutDir)\regsvr32.trg"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_static_2.lib"
+				OutputFile="..\..\..\..\..\Build\Win32\xml4com\StaticRelease/xerces-com.dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\StaticRelease;..\..\..\..\..\Build\Win32\xml4com\StaticRelease"
+				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
+				ProgramDatabaseFile="..\..\..\..\..\Build\Win32\xml4com\StaticRelease/xerces-com.pdb"
+				SubSystem="2"
+				ImportLibrary="..\..\..\..\..\Build\Win32\xml4com\StaticRelease/xerces-com.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\StaticRelease/xerces-com.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Static Debug|Win32"
+			OutputDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticDebug"
+			IntermediateDirectory="..\..\..\..\..\Build\Win32\xml4com\StaticDebug\obj"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\..\..\..\..\src,..\..\..\..\..\src\xercesc\com"
+				PreprocessorDefinitions="_DEBUG;_ATL_DEBUG_INTERFACES;_ATL_DEBUG_QI;_ATL_DEBUG_REFCOUNT;WIN32;_WINDOWS;_USRDLL;DEVENV_VCPP;XML_LIBRARY"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="3"
+				PrecompiledHeaderThrough="stdafx.h"
+				PrecompiledHeaderFile="..\..\..\..\..\Build\Win32\xml4com\StaticDebug\obj/xerces-com.pch"
+				AssemblerListingLocation="..\..\..\..\..\Build\Win32\xml4com\StaticDebug\obj/"
+				ObjectFile="..\..\..\..\..\Build\Win32\xml4com\StaticDebug\obj/"
+				ProgramDataBaseFileName="..\..\..\..\..\Build\Win32\xml4com\StaticDebug/"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+				CompileAs="0"/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Performing registration"
+				CommandLine="regsvr32 /s /c &quot;$(TargetPath)&quot;
+echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
+"
+				Outputs="$(TargetDir)xerces-c_2_6D.dll;$(OutDir)\regsvr32.trg"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="wininet.lib shlwapi.lib xerces-c_static_2D.lib"
+				OutputFile="..\..\..\..\..\Build\Win32\xml4com\StaticDebug/xerces-com.dll"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7.1\StaticDebug;..\..\..\..\..\Build\Win32\xml4com\StaticDebug"
+				ModuleDefinitionFile="..\..\..\..\..\src\xercesc\com\xml4com.def"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="..\..\..\..\..\Build\Win32\xml4com\StaticDebug/xerces-com.pdb"
+				SubSystem="2"
+				ImportLibrary="..\..\..\..\..\Build\Win32\xml4com\StaticDebug/xerces-com.lib"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName="..\..\..\..\..\Build\Win32\xml4com\StaticDebug/xerces-com.tlb"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -265,6 +400,18 @@ echo regsvr32 exec. time &gt; &quot;$(OutDir)\regsvr32.trg&quot;
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="1"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Release|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="1"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static Debug|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							UsePrecompiledHeader="1"/>
