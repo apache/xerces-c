@@ -56,8 +56,8 @@
 
 /**
  * $Log$
- * Revision 1.2  1999/11/11 22:33:41  abagchi
- * Changed the library name from 'XML4C' to 'xerces-c'
+ * Revision 1.3  1999/11/12 20:36:51  rahulj
+ * Changed library name to xerces-c.lib.
  *
  * Revision 1.1.1.1  1999/11/09 01:07:31  twl
  * Initial checkin
