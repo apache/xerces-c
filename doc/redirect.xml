@@ -9,25 +9,6 @@
 		resolver, traps the call to the external DTD file and redirects
 		it to another specific file which contains the actual DTD.</p>
 
-        <s3 title="Building on Windows">
-        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
-        Microsoft Visual C++ workspace inside your MSVC IDE. Then
-        build the project marked Redirect.
-        </p>
-        </s3>
-        <s3 title="Building on UNIX">
-<source>cd &XercesCInstallDir;-linux/samples
-./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
-cd Redirect
-gmake</source>
-        <p>
-        This will create the object files in the current directory and the executable named
-        Redirect in '&XercesCInstallDir;-linux/bin' directory.</p>
-
-        <p>To delete all the generated object files and executables, type</p>
-<source>gmake clean</source>
-        </s3>
-
         <s3 title="Running Redirect">
 
           <p>This program illustrates how a XML application can use the SAX EntityResolver

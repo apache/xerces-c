@@ -32,10 +32,15 @@
 
         </s3>
         <s3 title="Building samples">
-            <p>Inside the same workspace (xerces-all.dsw), you'll find several other
+            <p>If you are using the source package, inside the same workspace (xerces-all.dsw), you'll find several other
             projects. These are for the samples. Select all the samples and right click
             on the selection. Then choose "Build (selection only)" to build all the
             samples in one shot.</p>
+
+            <p>If you are using the binary package, load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+              Microsoft Visual C++ workspace inside your MSVC IDE. Then select all the samples and right click
+              on the selection. Then choose "Build (selection only)" to build all the
+              samples in one shot.</p>
         </s3>
     </a>
     </faq>
@@ -372,21 +377,38 @@ will be fixed in future.</note>
         </s3>
 
         <s3 title="Building samples">
-            <p>Similarly, you can build the samples by giving the same commands in the
-            <code>samples</code> directory.</p>
-
-<source>cd $XERCESCROOT/samples
-runConfigure -plinux -cgcc -xg++
+        <p>The installation process for the samples is same on all UNIX
+         platforms.
+        </p>
+<source>cd &XercesCInstallDir;-linux/samples
+./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
 gmake</source>
+         <p>This will create the object files in each sample directory
+          and the executables in ' &XercesCInstallDir;-linux/bin' directory.</p>
 
-            <p>The samples get built in the <code>bin</code> directory. Before you run the
-            samples, you must make sure that your library path is set to pick up
-            libraries from <code>$XERCESCROOT/lib</code>. If not, type the following to
-            set your library path properly.</p>
+         <p>Note that <em>runConfigure</em> is just a helper script and you are free to
+          use <em>./configure</em> with the correct parameters to make it work
+          on any platform-compiler combination of your choice. The script needs the following parameters:
 
-<source>export LD_LIBRARY_PATH=$XERCESCROOT/lib:$LD_LIBRARY_PATH</source>
-            <p>You are now set to run the sample applications.</p>
+         </p>
+<source>
+Usage: runConfigure "options"
+       where options may be any of the following:
+       -p &lt;platform&gt; (accepts 'aix', 'unixware', 'linux', 'solaris',
+'hp-10', 'hp-11', 'os400', 'irix', 'ptx', 'tru64', 'macosx')
+       -c &lt;C compiler name&gt; (e.g. gcc, xlc or icc)
+       -x &lt;C++ compiler name&gt; (e.g. g++, xlC, or icc)
+       -d (specifies that you want to build debug version)
+       -h (get help on the above commands)
+       -z &lt;extra compiler options&gt;
+</source>
 
+         <note><em>NOTE:</em>The code samples in this section assume that you are are working on the Linux binary drop.
+         If you are using some other UNIX flavor, please replace '-linux' with the appropriate
+         platform name in the code samples.</note>
+
+         <p>To delete all the generated object files and executables, type:</p>
+<source>gmake clean</source>
         </s3>
     </a>
     </faq>

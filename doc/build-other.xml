@@ -100,6 +100,66 @@
           (Be sure to maintain the same directory structure that you find under
           <code>&XercesCSrcInstallDir;</code>.)</note>
           </s3>
+
+        <s3 title="Building Samples">
+         <p>Building the &XercesCName; samples using IBM Visual Age C++ Professional 4.0
+          for OS/2 (VAC++).</p>
+
+         <ul>
+         <li> In the <code>XercesCSrcInstallDir;\samples\Projects\OS2\VACPP40</code> directory,
+         find and edit the VAC++ configuration file <code>basedir.icc</code>.</li>
+
+         <li>All of the directories used to build the samples are defined in
+         <code>basedir.icc</code>. You need to edit the directories to match your system.
+         Here are the directories you need to assign:
+
+                SRC_DIR -- <code>XercesCSrcInstallDir;</code>
+                           This is where VAC++ should look to find the samples
+                           directories containing the source files.
+                BASE_DIR -- The install directory <code>XercesCSrcInstallDir;</code>.
+                		VAC++ will store the compiled samples in the <code>bin</code>
+                		directory under BASE_DIR. It will also look for the
+                		<code>xerces-c.lib</code> file in the <code>lib</code> directory under BASE_DIR.
+
+            Other directories are set based on these two. You can choose to override them
+            if you wish.</li>
+
+         <li>Save <code>basedir.icc</code></li>
+
+         <li>Start the Command Line in the VAC++ folder.</li>
+
+         <li>Navigate to the <code>XercesCSrcInstallDir;\samples\Projects\OS2\VACPP40</code> directory.</li>
+
+         <li>Run <code>bldsamples.cmd</code></li>
+
+         <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
+         This file should contain only informational messages, almost all complaining about constant
+            values in comparisons.</li>
+
+         <li>You should now have several executable files.</li>
+
+        </ul>
+
+        <p>Rebuilding the Configuration Files</p>
+
+        <p>Although it shouldn't be necessary, if you want to rebuild the VAC++
+        configuration files, you'll need to have Object Rexx running on your system:</p>
+
+        <ul>
+         <li> If you are not currently running Object Rexx, run the SWITCHRX command from
+            a command line, answer "yes" to switching to Object Rexx, and follow the
+            instructions to reboot. (Note: You can switch back to "Classic Rexx" by
+            running SWITCHRX again. But you probably won't need to switch back since
+            Object Rexx runs almost 100% of Classic Rexx programs.)</li>
+
+         <li>In the Projects\OS2\VACPP40 directory, run genICC.cmd. This builds the VAC++
+            configuration files for the samples you have on your system.</li>
+
+
+          <li>Go to the first step above in the "Building asmples for OS/2" section.</li>
+        </ul>
+        </s3>
+
     </a>
     </faq>
 
@@ -319,15 +379,15 @@ gmake -e</source>
 			<li>Built atop CoreServices APIs and a limited number of Carbon APIs;
 			supports builds for both Mac OS Classic, Carbon, and Mac OS X systems.
 			</li>
-			   
+			
 			<li>Has a Mac OS native transcoder that utilizes the built-in Mac OS Unicode
 			converter [MacOSUnicodeConverter].
 			</li>
-			   
+			
 			<li>Has a Mac OS native netaccessor that utilizes the built-in Mac OS URLAccess
 			routines [MacOSURLAccess].
 			</li>
-			   
+			
 			<li>Supports builds from Metroworks CodeWarrior, Apple Project Builder,
 			and Mac OS X shell.
 			</li>
@@ -441,7 +501,7 @@ perl ShortenFiles.pl</source>
 				CodeWarrior builds, it is not necessary to shorten file names or set the
 				type/creator codes as required for CodeWarrior.
 				</li>
-				  
+				
 				<li>The Project Builder project builds XercesLib as the framework
 				Xerces.framework. This framework, however, does not currently include a
 				correct set of public headers. Any referencing code must have an include
@@ -490,7 +550,7 @@ make</source>
 			<p>Apart from the build instructions, above, the most important note
 			about use of &XercesCName; on the Macintosh is that &XercesCName; expects
 			all filename paths to be specified in unix syntax. If running natively
-			under a Mac OS X system, this path will be the standard posix path as 
+			under a Mac OS X system, this path will be the standard posix path as
 			expected by the shell. The easiest means of creating and interpreting these
 			paths will be through the routines <code>XMLCreateFullPathFromFSRef</code>
 			and <code>XMLParsePathToFSRef</code> as declared in the file

@@ -8,25 +8,6 @@
 		through the tree printing each element. It thus dumps the XML back
 		(output same as SAXPrint).</p>
 
-        <s3 title="Building on Windows">
-        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
-        Microsoft Visual C++ workspace inside your MSVC IDE. Then
-        build the project marked DOMPrint.
-        </p>
-        </s3>
-        <s3 title="Building on UNIX">
-<source>cd &XercesCInstallDir;-linux/samples
-./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
-cd DOMPrint
-gmake</source>
-        <p>
-        This will create the object files in the current directory and the executable named
-        DOMPrint in '&XercesCInstallDir;-linux/bin' directory.</p>
-
-        <p>To delete all the generated object files and executables, type</p>
-<source>gmake clean</source>
-        </s3>
-
         <s3 title="Running DOMPrint">
 
           <p>The DOMPrint sample parses an XML file, using either a validating
