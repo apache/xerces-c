@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2000/09/06 23:10:38  aruna1
+ * OS390 sockets related changes
+ *
  * Revision 1.13  2000/07/25 22:30:24  aruna1
  * Char definitions in XMLUni moved to XMLUniDefs
  *
@@ -140,6 +143,9 @@
 #else   // use In-memory message loader
     #include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>   //hint for the user to include this file.
 #endif
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    #include <util/NetAccessors/Socket/SocketNetAccessor.hpp>
+#endif
 
 
 // ---------------------------------------------------------------------------
@@ -177,7 +183,11 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    return new SocketNetAccessor();
+#else
     return 0;
+#endif
 }
 
 // ---------------------------------------------------------------------------
