@@ -960,7 +960,7 @@ ELEMENTS:
 
   Name: link
   Content Model: EMPTY
-  Attributes:    
+  Attributes:
     Name:manager, Type: IDREF(S)
     Name:subordinates, Type: IDREF(S)
 
