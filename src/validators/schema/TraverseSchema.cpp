@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/06/15 22:55:53  knoaman
+ * Added constraint checking for ref on elements.
+ *
  * Revision 1.21  2001/06/14 21:03:48  knoaman
  * Changed ref on elements to traverse the actual element decl, instead of just returning the qname.
  *
@@ -1476,10 +1479,9 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
         //REVISIT - remove flag once actual validators are available
         bool  bypassErrorMsg = true;
 
-        if (XMLString::stringLen(typeURI) == 0
-            || XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)  == 0) {
+        if (XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)  == 0) {
 
-            dv = getDatatypeValidator(XMLUni::fgZeroLenString, localPart);
+            dv = getDatatypeValidator(SchemaSymbols::fgURI_SCHEMAFORSCHEMA, localPart);
 
             if (XMLString::compareString(localPart,XMLUni::fgIDString) == 0) {
                 attType = XMLAttDef::ID;
@@ -3131,8 +3133,7 @@ TraverseSchema::getDatatypeValidator(const XMLCh* const uriStr,
 
     DatatypeValidator* dv = 0;
 
-    if (XMLString::stringLen(uriStr) == 0
-        || XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
+    if (XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
         dv = fDatatypeRegistry->getDatatypeValidator(localPartStr);
     }
     else {
@@ -3151,15 +3152,9 @@ XMLCh* TraverseSchema::getQualifiedName(const int typeNameIndex) {
 
     const XMLCh* typeName = fStringPool.getValueForId(typeNameIndex);
 
-    if (XMLString::stringLen(fTargetNSURIString) != 0) {
-
-        fBuffer.set(fTargetNSURIString);
-        fBuffer.append(chComma);
-        fBuffer.append(typeName);
-    }
-    else {
-        fBuffer.set(typeName);
-    }
+    fBuffer.set(fTargetNSURIString);
+    fBuffer.append(chComma);
+    fBuffer.append(typeName);
 
     return fBuffer.getRawBuffer();
 }
@@ -3330,7 +3325,8 @@ QName* TraverseSchema::processElementDeclRef(const DOM_Element& elem,
         return eltName;
     }
 
-    unsigned int elemIndex = fSchemaGrammar->getElemId(eltName->getURI(),
+    unsigned int uriID = eltName->getURI();
+    unsigned int elemIndex = fSchemaGrammar->getElemId(uriID,
                                                        localPart, 0,
                                                        Grammar::TOP_LEVEL_SCOPE);
 
@@ -3348,8 +3344,21 @@ QName* TraverseSchema::processElementDeclRef(const DOM_Element& elem,
             return eltName;
         }
         else {
-            return traverseElementDecl(targetElem);
+
+            delete eltName;
+            eltName = traverseElementDecl(targetElem);
         }
+    }
+
+    const SchemaElementDecl* refElemDecl = (SchemaElementDecl*)
+        fSchemaGrammar->getElemDecl(uriID, localPart, 0, Grammar::TOP_LEVEL_SCOPE);
+    const SchemaElementDecl* other = (SchemaElementDecl*)
+        fSchemaGrammar->getElemDecl(uriID, localPart, 0, fCurrentScope);
+
+    if (refElemDecl && other
+        && (refElemDecl->getComplexTypeInfo() != other->getComplexTypeInfo()
+            || refElemDecl->getDatatypeValidator() != other->getDatatypeValidator())) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateElementDeclaration, localPart);
     }
 
     return eltName;
