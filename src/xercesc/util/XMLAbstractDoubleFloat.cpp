@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/03/06 19:13:12  peiyongz
+ * Patch: more valid lexcial representation for positive/negative zero
+ *
  * Revision 1.2  2002/03/01 18:47:37  peiyongz
  * fix: more valid lexcial representation forms for "neural zero"
  *
@@ -114,7 +117,7 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
     ArrayJanitor<XMLCh> janTmpName(tmpStrValue);
     XMLString::trim(tmpStrValue);
 
-    normalizeToNeuralZero(tmpStrValue);
+    normalizeZero(tmpStrValue);
 
     if (XMLString::compareString(tmpStrValue, XMLUni::fgNegINFString) == 0)
     {
@@ -124,11 +127,6 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
     else if (XMLString::compareString(tmpStrValue, XMLUni::fgNegZeroString) == 0)
     {
         fType = NegZero;
-        return;
-    }
-    else if (XMLString::compareString(tmpStrValue, XMLUni::fgNeuralZeroString) == 0)
-    {
-        fType = NeuralZero;
         return;
     }
     else if (XMLString::compareString(tmpStrValue, XMLUni::fgPosZeroString) == 0)
@@ -205,9 +203,6 @@ XMLCh*  XMLAbstractDoubleFloat::toString() const
 
     case NegZero:
         return XMLString::replicate(XMLUni::fgNegZeroString);
-
-    case NeuralZero:
-        return XMLString::replicate(XMLUni::fgNeuralZeroString);
 
     case PosZero:
         return XMLString::replicate(XMLUni::fgPosZeroString);
@@ -324,7 +319,6 @@ int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const s
         return -1;
 
     case NegZero:
-    case NeuralZero:
     case PosZero:
         return (normalValue->getSign() > 0 ? -1 : 1);
 
@@ -345,26 +339,67 @@ int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const s
 }
 
 //
-// Apply to string
-//    "0.[0]+"  ->     "0"
+//  Assumption: no leading space
 //
-
-void XMLAbstractDoubleFloat::normalizeToNeuralZero(XMLCh* const inData)
+//  1. The valid char set is "+-.0"
+//  2. There shall be only one sign at the first position, if there is one.
+//  3. There shall be only one dot '.', if there is one.
+//
+//  Return:
+//
+//  for input comforming to [+]? [0]* '.'? [0]*, 
+//            normalize the input to positive zero string 
+//  for input comforming to '-' [0]* '.'? [0]*, 
+//            normalize the input to negative zero string
+//  otherwise, do nothing
+//
+void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
 {
-	if (!inData || !*inData)
-		return;
 
-    const unsigned int len = XMLString::stringLen(inData);
+	// do a quick check
+	if (!inData  || 
+		!*inData ||
+        (XMLString::compareString(inData, XMLUni::fgNegZeroString) == 0) ||
+        (XMLString::compareString(inData, XMLUni::fgPosZeroString) == 0)  )
+        return;
 
-	// the first two have to be "0."
-	if (len < 3 || inData[0] != chDigit_0 || inData[1] != chPeriod)
-		return;
+    XMLCh*   srcStr = inData;
+	bool     minusSeen = false;
 
-    unsigned int index;
-    for ( index = 2; (index < len) && (inData[index] == chDigit_0); index++);
+	// process sign if any
+	if (*srcStr == chDash)
+	{
+		minusSeen = true;
+		srcStr++;
+	}
+	else if (*srcStr == chPlus)
+	{
+		srcStr++;
+	}
 
-	if (index >= len) 
-		XMLString::copyString(inData, XMLUni::fgNeuralZeroString);
+	// scan the string
+	bool  dotSeen = false;
+	bool  isValidStr = true;
+    XMLCh theChar;
+	while ((theChar=*srcStr++) && isValidStr)
+	{
+		if ( theChar != chPeriod && theChar != chDigit_0 )
+			isValidStr = false;           		// invalid char
+        else if (theChar == chPeriod)           // process dot
+			dotSeen ? isValidStr = false : dotSeen = true;
+	}
+
+	// need not to worry about the memory problem
+	// since either fgNegZeroString or fgPosZeroString
+	// is the canonical form (meaning the shortest in length)
+	// of their category respectively.
+	if (isValidStr)
+	{
+		if (minusSeen)
+			XMLString::copyString(inData, XMLUni::fgNegZeroString);
+		else
+			XMLString::copyString(inData, XMLUni::fgPosZeroString);
+	}
 
 	return;
 }

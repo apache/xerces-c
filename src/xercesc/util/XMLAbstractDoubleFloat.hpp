@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/03/06 19:13:12  peiyongz
+ * Patch: more valid lexcial representation for positive/negative zero
+ *
  * Revision 1.3  2002/03/01 18:47:37  peiyongz
  * fix: more valid lexcial representation forms for "neural zero"
  *
@@ -126,7 +129,6 @@ public:
     {
         NegINF,
         NegZero,
-        NeuralZero,
         PosZero,
         PosINF,
         NaN,
@@ -179,7 +181,7 @@ private:
     XMLAbstractDoubleFloat(const XMLAbstractDoubleFloat& toCopy);
     XMLAbstractDoubleFloat& operator=(const XMLAbstractDoubleFloat& toAssign);
 
-	void                  normalizeToNeuralZero(XMLCh* const);
+	void                  normalizeZero(XMLCh* const);
 
     inline bool           isSpecialValue() const;
 
