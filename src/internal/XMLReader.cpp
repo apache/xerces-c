@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/07/06 21:00:51  jpolast
+ * inlined getNextCharIfNot() for better performance
+ *
  * Revision 1.15  2000/05/15 22:31:15  andyh
  * Replace #include<memory.h> with <string.h> everywhere.
  *
@@ -695,101 +698,7 @@ bool XMLReader::getNextChar(XMLCh& chGotten)
 }
 
 
-bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
-{
-    //
-    //  See if there is at least a char in the buffer. Else, do the buffer
-    //  reload logic.
-    //
-    if (fCharIndex < fCharsAvail)
-    {
-        // Check the next char
-        if (fCharBuf[fCharIndex] == chNotToGet)
-            return false;
 
-        // Its not the one we want to skip so bump the index
-        chGotten = fCharBuf[fCharIndex++];
-    }
-     else
-    {
-        // If fNoMore is set, then we have nothing else to give
-        if (fNoMore)
-            return false;
-
-        // If the buffer is empty, then try to refresh
-        if (fCharIndex == fCharsAvail)
-        {
-            if (!refreshCharBuffer())
-            {
-                // If still empty, then return false
-                if (fCharIndex == fCharsAvail)
-                    return false;
-            }
-        }
-
-        // Check the next char
-        if (fCharBuf[fCharIndex] == chNotToGet)
-            return false;
-
-        // Its not the one we want to skip so bump the index
-        chGotten = fCharBuf[fCharIndex++];
-    }
-
-    // Handle end of line normalization and line/col member maintenance.
-    if (chGotten == chCR)
-    {
-        //
-        //  Do the normalization. We return chLF regardless of which was
-        //  found. We also eat a chCR followed by an chLF.
-        //
-        //  We only do this if the content being spooled is not already
-        //  internalized.
-        //
-        if (fSource == Source_External)
-        {
-            //
-            //  See if we have another char left. If not, don't bother.
-            //  Else, see if its an chLF to eat. If it is, bump the
-            //  index again.
-            //
-            if (fCharIndex < fCharsAvail)
-            {
-                if (fCharBuf[fCharIndex] == chLF)
-                    fCharIndex++;
-            }
-             else
-            {
-                if (refreshCharBuffer())
-                {
-                    if (fCharBuf[fCharIndex] == chLF)
-                        fCharIndex++;
-                }
-            }
-
-            // And return just an chLF
-            chGotten = chLF;
-        }
-
-        // And handle the line/col stuff
-        fCurCol = 1;
-        fCurLine++;
-    }
-     else if (chGotten == chLF)
-    {
-        fCurLine++;
-        fCurCol = 1;
-    }
-     else if (chGotten)
-    {
-        //
-        //  Only do this is not a null char. Null chars are not part of the
-        //  real content. They are just marker characters inserted into
-        //  the stream.
-        //
-        fCurCol++;
-    }
-    return true;
-}
 
 
 bool XMLReader::getSpaces(XMLBuffer& toFill)
