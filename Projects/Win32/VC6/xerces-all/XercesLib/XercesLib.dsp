@@ -224,10 +224,6 @@ SOURCE=..\..\..\..\..\src\util\FlagJanitor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HashBase.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\HashBase.hpp
 # End Source File
 # Begin Source File
