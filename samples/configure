@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Guess values for system-dependent variables and create Makefiles.
-# Generated automatically using autoconf version 2.13
+# Generated automatically using autoconf version 2.13 
 # Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 #
 # This configure script is free software; the Free Software Foundation
@@ -1260,7 +1260,7 @@ if eval "test \"`echo '$ac_cv_header_'$ac_safe`\" = yes"; then
   cat >> confdefs.h <<EOF
 #define $ac_tr_hdr 1
 EOF
-
+ 
 else
   echo "$ac_t""no" 1>&6
 fi
@@ -1305,7 +1305,8 @@ case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
         *-*-sysv5*)     platform=UNIXWARE ;;
         *-*-UnixWare*)  platform=UNIXWARE ;;
-        *-*-unixware*)  platform=UNIXWARE ;;
+        *-*-*unixware*)  platform=UNIXWARE ;;
+        *-*-sysv5uw7*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
@@ -1319,6 +1320,7 @@ case "${host}" in
         *-*-os400*)     platform=OS400 ;;
         *-*-OS400*)     platform=OS400 ;;
 		*-*-osf*)	platform=TRU64 ;;
+        *-apple-*)		platform=MACOSX ;;
         *)              platform=UNKNOWN ;;
 esac
 
@@ -1333,7 +1335,7 @@ cxxflags=${CXXFLAGS}
 
 
 cflags=${CFLAGS}
-ldflags=${LDFLAGS}
+
 
 trap '' 1 2 15
 cat > confcache <<\EOF
@@ -1511,7 +1513,6 @@ s%@platform@%$platform%g
 s%@compiler@%$compiler%g
 s%@cxxflags@%$cxxflags%g
 s%@cflags@%$cflags%g
-s%@ldflags@%$ldflags%g
 
 CEOF
 EOF

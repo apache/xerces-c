@@ -48,6 +48,7 @@ case "${host}" in
         *-*-os400*)     platform=OS400 ;;
         *-*-OS400*)     platform=OS400 ;;
 		*-*-osf*)	platform=TRU64 ;;
+        *-apple-*)		platform=MACOSX ;;
         *)              platform=UNKNOWN ;;
 esac
 AC_SUBST(platform)

@@ -71,7 +71,7 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'unixware', 'linux', 'solaris',
-'hp-10', 'hp-11', 'os400', 'irix', 'ptx', 'tru64')"
+'hp-10', 'hp-11', 'os400', 'irix', 'ptx', 'tru64', 'macosx')"
     echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
     echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
@@ -167,7 +167,7 @@ fi
 
 # Now check if the options are correct or not, bail out if incorrect
 case $platform in
-   aix | unixware | linux | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64)
+   aix | unixware | linux | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx)
        # platform has been recognized
        ;;
    *)

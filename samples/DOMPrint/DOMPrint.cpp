@@ -437,6 +437,9 @@ int main(int argC, char* argV[])
     try
     {
         parser->parse(gXmlFile);
+        int errorCount = parser->getErrorCount();
+        if (errorCount > 0)
+            errorsOccured = true;
     }
 
     catch (const XMLException& e)
