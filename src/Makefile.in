@@ -158,7 +158,7 @@ install::
 	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
-	${CD} $(XML_OBJ_DIR)/.. && $(MAKE) $@ && ${CD} ..
+	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
 
 clean::
 	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
@@ -168,7 +168,7 @@ clean::
 	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
-	${CD} $(XML_OBJ_DIR)/.. && $(MAKE) $@ && ${CD} ..
+	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
 
 distclean::
 	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
@@ -178,7 +178,7 @@ distclean::
 	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
 	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
-	${CD} $(XML_OBJ_DIR)/.. && $(MAKE) $@ && ${CD} ..
+	${CD} $(XML_OBJ) && $(MAKE) $@ && ${CD} ..
 	rm -f Makefile config.cache config.log config.status
 	find . -name Makefile -print -exec rm -f {} \;
 	rm -f *~ core
