@@ -192,7 +192,7 @@ MySAXHandler::fatalError(const SAXParseException&amp; exception)
 
     ContentHandler* contentHandler = new DefaultHandler();
     ErrorHandler* errHandler = (ErrorHandler*) contentHandler;
-    parser->setContentHandler(docHandler);
+    parser->setContentHandler(contentHandler);
     parser->setErrorHandler(errHandler);
 
     try {
