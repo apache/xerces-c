@@ -77,7 +77,6 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <stdio.h>
 #include <assert.h>
-
 const unsigned short DOMNodeImpl::READONLY     = 0x1<<0;
 const unsigned short DOMNodeImpl::SYNCDATA     = 0x1<<1;
 const unsigned short DOMNodeImpl::SYNCCHILDREN = 0x1<<2;
@@ -912,9 +911,63 @@ void             DOMNodeImpl::setTextContent(const XMLCh* textContent){
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }
 
-bool             DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-    return false;
+
+bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
+	DOMNode *thisNode = castToNode(this);
+    short type = thisNode->getNodeType();
+    switch (type) {
+    case DOMNode::ELEMENT_NODE: {
+        //if we dont find a xmlns and we are looking for "" then its true
+        if(thisNode->isSameNode(thisNode->getOwnerDocument()->getDocumentElement())) {
+            if(namespaceURI == 0) {
+                return true;
+            }
+        }
+
+        const XMLCh *ns = getNamespaceURI();
+        const XMLCh *prefix = getPrefix();
+
+        if (thisNode->hasAttributes()) {
+            DOMElement *elem = (DOMElement *)thisNode;
+            DOMNode *attr = elem->getAttributeNodeNS(s_xmlnsURI, s_xmlns);
+            if (attr != 0) {
+                const XMLCh *value = attr->getNodeValue();
+                return (XMLString::compareString(namespaceURI, value) == 0);
+            }
+        }
+        DOMNode *ancestor = getElementAncestor(thisNode);
+        if (ancestor != 0) {
+            return ancestor->isDefaultNamespace(namespaceURI);
+        }
+
+        return false;
+    }
+    case DOMNode::DOCUMENT_NODE:{
+        return ((DOMDocument*)thisNode)->getDocumentElement()->isDefaultNamespace(namespaceURI);
+    }
+
+    case DOMNode::ENTITY_NODE :
+    case DOMNode::NOTATION_NODE:
+    case DOMNode::DOCUMENT_FRAGMENT_NODE:
+    case DOMNode::DOCUMENT_TYPE_NODE:
+        // type is unknown
+        return false;
+    case DOMNode::ATTRIBUTE_NODE:{
+        if (fOwnerNode->getNodeType() == DOMNode::ELEMENT_NODE) {
+            return fOwnerNode->isDefaultNamespace(namespaceURI);
+
+        }
+        return false;
+    }
+    default:{
+        DOMNode *ancestor = getElementAncestor(thisNode);
+        if (ancestor != 0) {
+            return ancestor->isDefaultNamespace(namespaceURI);
+        }
+        return false;
+    }
+
+    }
 }
 
 DOMNode*         DOMNodeImpl::getInterface(const XMLCh* feature)      {
