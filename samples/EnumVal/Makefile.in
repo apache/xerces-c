@@ -100,8 +100,14 @@ ${EXEC}/${APP_NAME}:: ${OBJS}
 ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} 
 
+## SOLARIS 
+ifeq (${PLATFORM}, SOLARIS)
 $(OUTDIR)/EnumVal.o:: ${SRC}/EnumVal.cpp ${HEADER_FILES}
 	${CC} ${CMP} -ptr${OUTDIR} $(INCLUDES) -o $(OUTDIR)/EnumVal.o ${SRC}/EnumVal.cpp
+else
+$(OUTDIR)/EnumVal.o:: ${SRC}/EnumVal.cpp ${HEADER_FILES}
+	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/EnumVal.o ${SRC}/EnumVal.cpp
+endif
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}
