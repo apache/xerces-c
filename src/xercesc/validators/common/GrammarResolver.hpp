@@ -79,7 +79,7 @@ class DatatypeValidatorFactory;
  *
  */
 
-class GrammarResolver {
+class VALIDATORS_EXPORT GrammarResolver {
 public:
 
     /** @name Constructor and Destructor */
