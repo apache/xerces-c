@@ -76,12 +76,12 @@
 #include <validators/schema/SchemaSymbols.hpp>
 #include <util/ValueVectorOf.hpp>
 #include <util/RefHash2KeysTableOf.hpp>
+#include <validators/schema/SchemaGrammar.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
 // ---------------------------------------------------------------------------
 class GrammarResolver;
-class SchemaGrammar;
 class EntityResolver;
 class XMLValidator;
 class XMLScanner;
@@ -89,7 +89,6 @@ class DatatypeValidator;
 class DatatypeValidatorFactory;
 class QName;
 class ComplexTypeInfo;
-class SchemaElementDecl;
 class XMLAttDef;
 class ContentSpecNode;
 class NamespaceScope;
@@ -378,7 +377,8 @@ private:
     bool isSubstitutionGroupValid(const SchemaElementDecl* const elemDecl,
                                   const ComplexTypeInfo* const typeInfo,
                                   const DatatypeValidator* const validator,
-                                  const XMLCh* const elemName);
+                                  const XMLCh* const elemName,
+                                  const bool toEmit = true);
 
     /**
       * Create a 'SchemaElementDecl' object and add it to SchemaGrammar
@@ -487,6 +487,12 @@ private:
 
     void checkFixedFacet(const DOM_Element&, const XMLCh* const,
                          const DatatypeValidator* const, unsigned int&);
+    void checkRefElementConsistency();
+    void buildValidSubstitutionListF(SchemaElementDecl* const,
+                                     SchemaElementDecl* const);
+    void buildValidSubstitutionListB(SchemaElementDecl* const,
+                                     SchemaElementDecl* const);
+
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -523,6 +529,10 @@ private:
     ValueVectorOf<unsigned int>*     fCurrentTypeNameStack;
     GeneralAttributeCheck*           fAttributeCheck;
     RefHash2KeysTableOf<XMLCh>*      fGlobalTypes;
+    RefHash2KeysTableOf<SchemaElementDecl>* fSubstitutionGroups;
+    RefHash2KeysTableOf<ElemVector>* fValidSubstitutionGroups;
+    RefVectorOf<SchemaElementDecl>*  fRefElements;
+    ValueVectorOf<int>*              fRefElemScope;
     static XMLStringPool             fStringPool;
 
     friend class GeneralAttributeCheck;

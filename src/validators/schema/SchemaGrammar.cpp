@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/06/25 12:51:56  knoaman
+ * Add constraint checking on elements in complex types to prevent same
+ * element names from having different definitions - use substitueGroups.
+ *
  * Revision 1.3  2001/05/11 13:27:36  tng
  * Copyright update.
  *
@@ -86,6 +90,7 @@ SchemaGrammar::SchemaGrammar() :
     , fComplexTypeRegistry(0)
     , fDatatypeRegistry(0)
     , fNamespaceScope(0)
+    , fValidSubstitutionGroups(0)
 {
     //
     //  Init all the pool members.
@@ -112,6 +117,7 @@ SchemaGrammar::~SchemaGrammar()
     delete fAttributeDeclRegistry;
     delete fComplexTypeRegistry;
     delete fNamespaceScope;
+    delete fValidSubstitutionGroups;
 }
 
 // -----------------------------------------------------------------------

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.25  2001/06/25 12:51:58  knoaman
+ * Add constraint checking on elements in complex types to prevent same
+ * element names from having different definitions - use substitueGroups.
+ *
  * Revision 1.24  2001/06/20 15:07:04  knoaman
  * Fix for 'fixed' attribute on facets - wrong string comparison.
  *
@@ -270,6 +274,10 @@ TraverseSchema::TraverseSchema( const DOM_Element&                 schemaRoot
     , fCurrentTypeNameStack(0)
     , fAttributeCheck(0)
     , fGlobalTypes(0)
+    , fSubstitutionGroups(0)
+    , fValidSubstitutionGroups(0)
+    , fRefElements(0)
+    , fRefElemScope(0)
 {
 
     try {
@@ -315,6 +323,9 @@ void TraverseSchema::doTraverseSchema() {
     fAttributeCheck = GeneralAttributeCheck::instance();
     fCurrentTypeNameStack = new ValueVectorOf<unsigned int>(8);
     fGlobalTypes = new RefHash2KeysTableOf<XMLCh>(29, false);
+    fSubstitutionGroups = new RefHash2KeysTableOf<SchemaElementDecl>(29, false);
+    fRefElements = new RefVectorOf<SchemaElementDecl>(32, false);
+    fRefElemScope = new ValueVectorOf<int>(32);
 
     //Make sure namespace binding is defaulted
     DOMString rootPrefix = fSchemaRootElement.getPrefix();
@@ -346,7 +357,9 @@ void TraverseSchema::doTraverseSchema() {
 
     // Set schemaGrammar data and add it to GrammarResolver
     if (fGrammarResolver == 0) {
+
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NoGrammarResolver);
+        return;
     }
     else{
 
@@ -379,6 +392,14 @@ void TraverseSchema::doTraverseSchema() {
             fSchemaGrammar->setNamespaceScope(fNamespaceScope);
         }
 
+        fValidSubstitutionGroups = fSchemaGrammar->getValidSubstitutionGroups();
+
+        if (!fValidSubstitutionGroups) {
+
+            fValidSubstitutionGroups = new RefHash2KeysTableOf<ElemVector>(29);
+            fSchemaGrammar->setValidSubstitutionGroups(fValidSubstitutionGroups);
+        }
+
         fSchemaGrammar->setDatatypeRegistry(fDatatypeRegistry);
         fSchemaGrammar->setTargetNamespace(fTargetNSURIString);
         fGrammarResolver->putGrammar(fSchemaGrammar->getTargetNamespace(),
@@ -392,6 +413,9 @@ void TraverseSchema::doTraverseSchema() {
 
     // Handle identity constraints
     // TO DO
+    
+    // Element consistency checks - substitution groups
+    checkRefElementConsistency();
 }
 
 
@@ -1887,8 +1911,27 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem) {
                     fBuffer.append(chComma);
                     fBuffer.append(localPart);
 
-                    if (!isDuplicate) {
+                    if (!isDuplicate) {                  
+
+                        XMLCh* elemBaseName = elemDecl->getBaseName();
+                        XMLCh* subsElemBaseName = subsElemDecl->getBaseName();
+                        int    elemURI = elemDecl->getURI();
+                        int    subsElemURI = subsElemDecl->getURI();
+
                         elemDecl->setSubstitutionGroupName(fBuffer.getRawBuffer());
+                        fSubstitutionGroups->put((void*) elemBaseName, elemURI, subsElemDecl);
+                        RefVectorOf<SchemaElementDecl>* subsElements = 
+                           fValidSubstitutionGroups->get(subsElemBaseName, subsElemURI);
+
+                        if (!subsElements) {
+
+                            subsElements = new RefVectorOf<SchemaElementDecl>(8, false);
+                            fValidSubstitutionGroups->put(subsElemBaseName, subsElemURI, subsElements);
+                        }
+
+                        subsElements->addElement(elemDecl);
+                        buildValidSubstitutionListB(elemDecl, subsElemDecl);
+                        buildValidSubstitutionListF(elemDecl, subsElemDecl);
                     }
                 }
                 else {
@@ -3357,12 +3400,11 @@ QName* TraverseSchema::processElementDeclRef(const DOM_Element& elem,
     }
 
     unsigned int uriID = eltName->getURI();
-    unsigned int elemIndex = fSchemaGrammar->getElemId(uriID,
-                                                       localPart, 0,
-                                                       Grammar::TOP_LEVEL_SCOPE);
+    SchemaElementDecl* refElemDecl = (SchemaElementDecl*)
+        fSchemaGrammar->getElemDecl(uriID, localPart, 0, Grammar::TOP_LEVEL_SCOPE);
 
     //if not found, traverse the top level element that is referenced
-    if (elemIndex == XMLElementDecl::fgInvalidElemId) {
+    if (!refElemDecl) {
 
         DOM_Element targetElem =
                      getTopLevelComponentByName(SchemaSymbols::fgELT_ELEMENT,
@@ -3378,11 +3420,11 @@ QName* TraverseSchema::processElementDeclRef(const DOM_Element& elem,
 
             delete eltName;
             eltName = traverseElementDecl(targetElem);
+            refElemDecl = (SchemaElementDecl*)
+                fSchemaGrammar->getElemDecl(uriID, localPart, 0, Grammar::TOP_LEVEL_SCOPE);
         }
     }
 
-    const SchemaElementDecl* refElemDecl = (SchemaElementDecl*)
-        fSchemaGrammar->getElemDecl(uriID, localPart, 0, Grammar::TOP_LEVEL_SCOPE);
     const SchemaElementDecl* other = (SchemaElementDecl*)
         fSchemaGrammar->getElemDecl(uriID, localPart, 0, fCurrentScope);
 
@@ -3390,6 +3432,12 @@ QName* TraverseSchema::processElementDeclRef(const DOM_Element& elem,
         && (refElemDecl->getComplexTypeInfo() != other->getComplexTypeInfo()
             || refElemDecl->getDatatypeValidator() != other->getDatatypeValidator())) {
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateElementDeclaration, localPart);
+    }
+
+    if (refElemDecl) {
+
+        fRefElements->addElement(refElemDecl);
+        fRefElemScope->addElement(fCurrentScope);
     }
 
     return eltName;
@@ -3738,7 +3786,8 @@ bool
 TraverseSchema::isSubstitutionGroupValid(const SchemaElementDecl* const subsElemDecl,
                                          const ComplexTypeInfo* const typeInfo,
                                          const DatatypeValidator* const validator,
-                                         const XMLCh* const elemName) {
+                                         const XMLCh* const elemName,
+                                         const bool toEmit) {
 
     // here we must do two things:
     // 1.  Make sure there actually *is* a relation between the types of
@@ -3768,14 +3817,19 @@ TraverseSchema::isSubstitutionGroupValid(const SchemaElementDecl* const subsElem
 
                 if ((subsElemDecl->getFinalSet() & derivationMethod) != 0) {
 
-                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidSubstitutionGroupElement,
-                                      elemName, subsElemDecl->getBaseName());
+                    if (toEmit) {
+                        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidSubstitutionGroupElement,
+                                          elemName, subsElemDecl->getBaseName());
+                    }
+
                     return false;
                 }
             }
             else {
 
-                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::SubstitutionGroupTypeMismatch, elemName);
+                if (toEmit) {
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::SubstitutionGroupTypeMismatch, elemName);
+                }
                 return false;
             }
         }
@@ -3792,14 +3846,18 @@ TraverseSchema::isSubstitutionGroupValid(const SchemaElementDecl* const subsElem
 
                 if ((subsElemDecl->getFinalSet() & derivationMethod) != 0) {
 
-                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidSubstitutionGroupElement,
-                                      elemName, subsElemDecl->getBaseName());
+                    if (toEmit) {
+                        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidSubstitutionGroupElement,
+                                          elemName, subsElemDecl->getBaseName());
+                    }
                     return false;
                 }
             }
             else {
 
-                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::SubstitutionGroupTypeMismatch, elemName);
+                if (toEmit) {
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::SubstitutionGroupTypeMismatch, elemName);
+                }
                 return false;
             }
         }
@@ -3813,14 +3871,19 @@ TraverseSchema::isSubstitutionGroupValid(const SchemaElementDecl* const subsElem
 
             if ((subsElemDecl->getFinalSet() & SchemaSymbols::RESTRICTION) != 0) {
 
-                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidSubstitutionGroupElement,
-                                  elemName, subsElemDecl->getBaseName());
+                if (toEmit) {
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidSubstitutionGroupElement,
+                                      elemName, subsElemDecl->getBaseName());
+                }
                 return false;
             }
         }
         else {
 
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::SubstitutionGroupTypeMismatch, elemName);
+            if (toEmit) {
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::SubstitutionGroupTypeMismatch, elemName);
+            }
+
             return false;
         }
     }
@@ -4788,6 +4851,103 @@ void TraverseSchema::checkFixedFacet(const DOM_Element& elem,
     }
 }
 
+void TraverseSchema::checkRefElementConsistency() {
+
+    unsigned int refElemSize = fRefElements->size();
+
+    for (unsigned int i=0; i < refElemSize; i++) {
+
+        int elemScope = fRefElemScope->elementAt(i);
+        SchemaElementDecl* elem = fRefElements->elementAt(i);     
+        RefVectorOf<SchemaElementDecl>* subsElements = 
+            fValidSubstitutionGroups->get(elem->getBaseName(), elem->getURI());
+
+        if (subsElements) {
+            unsigned subsElemSize = subsElements->size();
+
+            for (unsigned int j=0; j < subsElemSize; j++) {
+
+                SchemaElementDecl* subsElem = subsElements->elementAt(j);
+                const XMLCh* subsElemName = subsElem->getBaseName();
+                SchemaElementDecl* sameScopeElem = (SchemaElementDecl*)
+                    fSchemaGrammar->getElemDecl(subsElem->getURI(), subsElemName, 0, elemScope);
+
+                if (sameScopeElem 
+                    && (subsElem->getComplexTypeInfo() != sameScopeElem->getComplexTypeInfo()
+                        || subsElem->getDatatypeValidator() != sameScopeElem->getDatatypeValidator())) {
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateElementDeclaration, subsElemName);
+                }
+            }
+        }
+    }
+}
+
+void
+TraverseSchema::buildValidSubstitutionListB(SchemaElementDecl* const elemDecl,
+                                            SchemaElementDecl* const subsElemDecl) {
+
+    int elemURI = subsElemDecl->getURI();
+    XMLCh* elemName = subsElemDecl->getBaseName();
+
+    SchemaElementDecl* chainElem = fSubstitutionGroups->get(elemName, elemURI);
+
+    if (!chainElem || (chainElem == elemDecl)) {
+        return;
+    }
+
+    RefVectorOf<SchemaElementDecl>* validSubsElements =
+        fValidSubstitutionGroups->get(chainElem->getBaseName(), chainElem->getURI());
+
+    if (validSubsElements->containsElement(elemDecl)) {
+        return;
+    }
+
+    if (isSubstitutionGroupValid(chainElem, elemDecl->getComplexTypeInfo(),
+                                 elemDecl->getDatatypeValidator(), 0, false)) {
+
+        validSubsElements->addElement(elemDecl);
+    }
+
+    buildValidSubstitutionListB(elemDecl, chainElem);
+}
+
+void
+TraverseSchema::buildValidSubstitutionListF(SchemaElementDecl* const elemDecl,
+                                            SchemaElementDecl* const subsElemDecl) {
+
+    int elemURI = elemDecl->getURI();
+    XMLCh* elemName = elemDecl->getBaseName();
+    RefVectorOf<SchemaElementDecl>* validSubsElements =
+        fValidSubstitutionGroups->get(elemName, elemURI);
+
+    if (validSubsElements) {
+
+        unsigned int elemSize = validSubsElements->size();
+        for (unsigned int i=0; i<elemSize; i++) {
+
+            SchemaElementDecl* chainElem = validSubsElements->elementAt(i);
+
+            if (chainElem == subsElemDecl) {
+                continue;
+            }
+
+            RefVectorOf<SchemaElementDecl>* validSubs =
+                fValidSubstitutionGroups->get(subsElemDecl->getBaseName(), subsElemDecl->getURI());
+
+            if (validSubs->containsElement(chainElem)) {
+                continue;
+            }
+
+            if (isSubstitutionGroupValid(subsElemDecl, chainElem->getComplexTypeInfo(),
+                                         chainElem->getDatatypeValidator(), 0, false)) {
+                validSubsElements->addElement(chainElem);
+            }
+
+            buildValidSubstitutionListF(chainElem, subsElemDecl);
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Error reporting methods
 // ---------------------------------------------------------------------------
@@ -4830,6 +4990,9 @@ void TraverseSchema::cleanUp() {
     delete fIncludeLocations;
     delete fCurrentTypeNameStack;
     delete fGlobalTypes;
+    delete fSubstitutionGroups;
+    delete fRefElements;
+    delete fRefElemScope;    
 
     if (fAdoptImportLocations) {
         delete fImportLocations;

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/06/25 12:51:57  knoaman
+ * Add constraint checking on elements in complex types to prevent same
+ * element names from having different definitions - use substitueGroups.
+ *
  * Revision 1.5  2001/05/28 20:56:19  tng
  * Schema: Move getTargetNamespace as virtual function in base class Grammar
  *
@@ -86,6 +90,7 @@
 #include <validators/common/Grammar.hpp>
 #include <validators/schema/SchemaElementDecl.hpp>
 
+
 //
 // This class stores the Schema information
 //  NOTE: Schemas are not namespace aware, so we just use regular NameIdPool
@@ -101,6 +106,11 @@
 class DatatypeValidatorFactory;
 class ComplexTypeInfo;
 class NamespaceScope;
+
+// ---------------------------------------------------------------------------
+//  typedef declaration
+// ---------------------------------------------------------------------------
+typedef RefVectorOf<SchemaElementDecl> ElemVector;
 
 
 class VALIDATORS_EXPORT SchemaGrammar : public Grammar
@@ -192,6 +202,7 @@ public:
     RefHashTableOf<ComplexTypeInfo>* getComplexTypeRegistry() const;
     DatatypeValidatorFactory* getDatatypeRegistry() const;
     NamespaceScope* getNamespaceScope() const;
+    RefHash2KeysTableOf<ElemVector>* getValidSubstitutionGroups() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -201,6 +212,7 @@ public:
     void setComplexTypeRegistry(RefHashTableOf<ComplexTypeInfo>* const other);
     void setDatatypeRegistry(DatatypeValidatorFactory* const dvRegistry);
     void setNamespaceScope(NamespaceScope* const nsScope);
+    void setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const);
 
 private:
 
@@ -231,6 +243,9 @@ private:
     //
     //  fNamespaceScope
     //      Prefix to Namespace map
+    //
+    //  fValidSubstitutionGroups
+    //      Valid list of elements that can substitute a given element
     // -----------------------------------------------------------------------
     RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
     NameIdPool<XMLNotationDecl>*           fNotationDeclPool;
@@ -239,6 +254,7 @@ private:
     RefHashTableOf<ComplexTypeInfo>*       fComplexTypeRegistry;
     DatatypeValidatorFactory*              fDatatypeRegistry;
     NamespaceScope*                        fNamespaceScope;
+    RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
 };
 
 
@@ -272,6 +288,12 @@ inline NamespaceScope* SchemaGrammar::getNamespaceScope() const {
     return fNamespaceScope;
 }
 
+inline RefHash2KeysTableOf<ElemVector>*
+SchemaGrammar::getValidSubstitutionGroups() const {
+
+    return fValidSubstitutionGroups;
+}
+
 // -----------------------------------------------------------------------
 //  Setter methods
 // -----------------------------------------------------------------------
@@ -300,6 +322,12 @@ SchemaGrammar::setDatatypeRegistry(DatatypeValidatorFactory* const dvRegistry) {
 inline void SchemaGrammar::setNamespaceScope(NamespaceScope* const nsScope) {
 
     fNamespaceScope = nsScope;
+}
+
+inline void 
+SchemaGrammar::setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const other) {
+
+    fValidSubstitutionGroups = other;
 }
 
 // ---------------------------------------------------------------------------
