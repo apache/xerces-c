@@ -346,7 +346,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
             // If namespace is enabled, colon is not allowed in the first 6
 
             if (doNamespace && *valPtr == chColon && firstNameChar)
-                getScanner()->emitError(XMLErrs::ColonNotLegalWithNS);
+                emitError(XMLValid::ColonNotValidWithNS);
 
             if (!getReaderMgr()->getCurrentReader()->isNameChar(*valPtr))
             {

@@ -331,6 +331,7 @@ en_US {
 		"Attribute '{0}' is not declared for element '{1}' " ,
 		"Attributes of type ENTITY/ENTITIES must refer to an external, unparsed entity " ,
 		"Attribute '{0}' refers to an unknown entity '{1}' " ,
+		"If namespaces are enabled, it's invalid for an attribute of type ID/IDREF/IDREFS/ENTITY/ENTITIES/NOTATION to contain a colon. " ,
 		"Not enough elements to match content model : '{0}' " ,
 		"No character data is allowed by content model " ,
 		"Attribute '{0}' does not match its defined enumeration or notation list " ,

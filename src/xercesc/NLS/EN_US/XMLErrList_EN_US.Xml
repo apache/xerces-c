@@ -333,6 +333,7 @@
             <Message Id="AttNotDefinedForElement" Text="Attribute '{0}' is not declared for element '{1}'"/>
             <Message Id="BadEntityRefAttr" Text="Attributes of type ENTITY/ENTITIES must refer to an external, unparsed entity"/>
             <Message Id="UnknownEntityRefAttr" Text="Attribute '{0}' refers to an unknown entity '{1}'"/>
+            <Message Id="ColonNotValidWithNS" Text="If namespaces are enabled, it's invalid for an attribute of type ID/IDREF/IDREFS/ENTITY/ENTITIES/NOTATION to contain a colon."/>
             <Message Id="NotEnoughElemsForCM" Text="Not enough elements to match content model : '{0}'"/>
             <Message Id="NoCharDataInCM" Text="No character data is allowed by content model"/>
             <Message Id="DoesNotMatchEnumList" Text="Attribute '{0}' does not match its defined enumeration or notation list"/>
