@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/02/26 19:21:30  tng
+ * Schema: add parameter prefix in findElem and findAttr.
+ *
  * Revision 1.8  2000/12/14 18:49:57  tng
  * Fix API document generation warning: "Warning: end of member group without matching begin"
  *
@@ -218,6 +221,9 @@ class XMLPARSER_EXPORT XMLElementDecl
       * @param  baseName    This is the base part of the name, i.e. after any
       *                     prefix.
       *
+      * @param  prefix      The prefix, if any, of this attribute's name. If
+      *                     this is empty, then uriID is meaningless as well.
+      *
       * @param  options     Indicates the lookup options.
       *
       * @param  wasAdded    Should be set if the attribute is faulted in, else
@@ -228,6 +234,7 @@ class XMLPARSER_EXPORT XMLElementDecl
         const   XMLCh* const    qName
         , const unsigned int    uriId
         , const XMLCh* const    baseName
+        , const XMLCh* const    prefix
         , const LookupOpts      options
         ,       bool&           wasAdded
     )   const = 0;

@@ -66,7 +66,6 @@
 #include <util/XMLUni.hpp>
 #include <framework/XMLElementDecl.hpp>
 
-
 // ---------------------------------------------------------------------------
 //  XMLElementDecl: Public, static data
 // ---------------------------------------------------------------------------
@@ -89,9 +88,8 @@ XMLElementDecl::~XMLElementDecl()
     delete [] fFormattedModel;
 }
 
-
 // ---------------------------------------------------------------------------
-//  ElementDecl: Miscellaneous
+//  XMLElementDecl: Miscellaneous
 // ---------------------------------------------------------------------------
 const XMLCh*
 XMLElementDecl::getFormattedContentModel(const XMLValidator& validator) const

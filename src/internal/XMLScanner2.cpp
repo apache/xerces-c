@@ -218,6 +218,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 curPair->getKey()
                 , uriId
                 , suffPtr
+                , prefPtr
                 , XMLElementDecl::AddIfNotFound
                 , wasAdded
             );
@@ -921,7 +922,7 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
     if (nextCh != chOpenAngle)
         return Token_CharData;
 
-    //  
+    //
     //
     //  Ok it had to have been a '<' character. So get it out of the reader
     //  and store the reader number where we saw it, passing it back to the
@@ -1527,7 +1528,7 @@ void XMLScanner::scanCDSection()
 
         //
         //  If this is a close square bracket it could be our closing
-        //  sequence. 
+        //  sequence.
         //
         if (nextCh == chCloseSquare && fReaderMgr.skippedString(CDataClose))
         {
@@ -1541,11 +1542,11 @@ void XMLScanner::scanCDSection()
                     , true
                     );
             }
-            
+
             // And we are done
             break;
         }
-        
+
         //
         //  Make sure its a valid character. But if we've emitted an error
         //  already, don't bother with the overhead since we've already told
@@ -1632,7 +1633,7 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
 
 
                 // Try to get another char from the source
-                //   The code from here on down covers all contengencies, 
+                //   The code from here on down covers all contengencies,
                 //
                 if (!fReaderMgr.getNextCharIfNot(chOpenAngle, nextCh))
                 {

@@ -1512,12 +1512,13 @@ void XMLScanner::scanEndTag(bool& gotData)
         (
             uriId
             , bbName.getBuffer().getRawBuffer()
+            , bbPrefix.getBuffer().getRawBuffer()
             , qnameBuf.getRawBuffer()
         );
     }
      else
     {
-        elemId = fValidator->findElemId(0, 0, qnameBuf.getRawBuffer());
+        elemId = fValidator->findElemId(0, 0, 0, qnameBuf.getRawBuffer());
     }
 
     //
@@ -2006,6 +2007,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
     (
         0
         , 0
+        , 0
         , fQNameBuf.getRawBuffer()
         , XMLValidator::AddIfNotFound
         , wasAdded
@@ -2194,6 +2196,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             XMLAttDef* attDef = elemDecl->findAttr
             (
                 fAttNameBuf.getRawBuffer()
+                , 0
                 , 0
                 , 0
                 , XMLElementDecl::AddIfNotFound
@@ -2669,6 +2672,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     (
         uriId
         , fNameBuf.getRawBuffer()
+        , fPrefixBuf.getRawBuffer()
         , fQNameBuf.getRawBuffer()
         , XMLValidator::AddIfNotFound
         , wasAdded
