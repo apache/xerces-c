@@ -70,6 +70,7 @@ StdInParse_DIR=StdInParse
 EnumVal_DIR=EnumVal
 SEnumVal_DIR=SEnumVal
 CreateDOMDocument_DIR=CreateDOMDocument
+PSVIWriter_DIR=PSVIWriter
 
 LIB_DIR=${XERCESCROOT}/lib
 
@@ -84,7 +85,7 @@ THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
 BITSTOBUILD = @bitstobuild@
 
-all::	saxprint sax2print saxcount sax2count domprint domcount redirect memparse pparse stdinparse enumval senumval createdomdocument
+all::	saxprint sax2print saxcount sax2count domprint domcount redirect memparse pparse stdinparse enumval senumval createdomdocument psviwriter
 
 saxprint::
 	@echo Building "SAXPrint"
@@ -138,6 +139,9 @@ createdomdocument::
 	@echo Building "CreateDOMDocument"
 	$(MAKE) -C $(CreateDOMDocument_DIR) $(MAKE_FLAGS)
 
+psviwriter::
+	@echo Building "PSVIWriter"
+	$(MAKE) -C $(PSVIWriter_DIR) $(MAKE_FLAGS)
 
 clean::
 	$(MAKE) -C $(SAXPrint_DIR) $@
@@ -153,6 +157,7 @@ clean::
 	$(MAKE) -C $(EnumVal_DIR) $@
 	$(MAKE) -C $(SEnumVal_DIR) $@
 	$(MAKE) -C $(CreateDOMDocument_DIR) $@
+	$(MAKE) -C $(PSVIWriter_DIR) $@
 
 distclean::
 	$(MAKE) -C $(SAXPrint_DIR) $@
@@ -168,6 +173,7 @@ distclean::
 	$(MAKE) -C $(EnumVal_DIR) $@
 	$(MAKE) -C $(SEnumVal_DIR) $@
 	$(MAKE) -C $(CreateDOMDocument_DIR) $@
+	$(MAKE) -C $(PSVIWriter_DIR) $@
 	rm -f Makefile config.cache config.log config.status
 	rm -f *~ core
 

@@ -1539,7 +1539,8 @@ PParse/Makefile \
 StdInParse/Makefile \
 EnumVal/Makefile \
 SEnumVal/Makefile \
-CreateDOMDocument/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+CreateDOMDocument/Makefile \
+PSVIWriter/Makefile" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -1648,7 +1649,8 @@ PParse/Makefile \
 StdInParse/Makefile \
 EnumVal/Makefile \
 SEnumVal/Makefile \
-CreateDOMDocument/Makefile"}
+CreateDOMDocument/Makefile \
+PSVIWriter/Makefile"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then

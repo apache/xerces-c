@@ -99,7 +99,8 @@ PParse/Makefile \
 StdInParse/Makefile \
 EnumVal/Makefile \
 SEnumVal/Makefile \
-CreateDOMDocument/Makefile])
+CreateDOMDocument/Makefile \
+PSVIWriter/Makefile])
 
 echo
 echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
