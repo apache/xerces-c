@@ -4,26 +4,30 @@
 <s1 title="&XercesCName; Sample 2">
 		
     <s2 title="SAXPrint">
-        <p>SAXPrint uses the SAX APIs to parse an XML file and print it back. 
-		Notice that the output of this file is not exactly the same as 
-		the input (in terms of whitespaces), but the output has the same 
-		information content as the input.</p>
+        <p>SAXPrint uses the SAX APIs to parse an XML file and print
+		it back. Do note that the output of this sample is not
+		exactly the same as the input (in terms of whitespaces, first
+		line), but the output has the same information content as the
+		input.</p>
 
         <s3 title="Building on Windows">
-	        <p>Load the &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
+	        <p>Load the
+	        &XercesCInstallDir;-win32\samples\Projects\Win32\VC6\samples.dsw
 	        Microsoft Visual C++ workspace inside your MSVC IDE. Then
 	        build the project marked SAXPrint.
 	        </p>
         </s3>
 		
         <s3 title="Building on UNIX">
+
 <source>cd &XercesCInstallDir;-linux/samples
 ./runConfigure -p&lt;platform&gt; -c&lt;C_compiler&gt; -x&lt;C++_compiler&gt;
 cd SAXPrint
 gmake</source>
-        <p>This will create the object files in the current directory and 
-		the executable named SAXPrint in '&XercesCInstallDir;-linux/bin' 
-		directory.</p>
+
+        <p>This will create the object files in the current directory
+		and the executable named SAXPrint in
+		'&XercesCInstallDir;-linux/bin' directory.</p>
 
         <p>To delete all the generated object files and executables, type</p>
 <source>gmake clean</source>
@@ -31,8 +35,10 @@ gmake</source>
 
         <s3 title="Running SAXPrint">
 
-          <p>The SAXPrint sample parses an XML file and prints out a count of the number of
-          elements in the file. To run SAXPrint, enter the following </p>
+          <p>The SAXPrint sample parses an XML file and prints out the
+          contents again in XML (some loss occurs). To run SAXPrint,
+          enter the following </p>
+
 <source>SAXPrint &lt;XML file&gt;</source>
           <p>To use the validating parser, use </p>
 <source>SAXPrint -v &lt;XML file&gt;</source>
