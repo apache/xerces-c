@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/01 00:07:31  roddey
+ * A small patch for the base/rel conglomeration when the protocol is file.
+ *
  * Revision 1.4  2000/01/27 18:22:31  roddey
  * Fixed a couple of small reported bugs, in the parsing code and in the
  * special cased local file stream creation code.
@@ -691,13 +694,25 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
         return;
     fProtocol = baseURL.fProtocol;
 
-    if (fHost || !baseURL.fHost)
-        return;
-    fHost = XMLString::replicate(baseURL.fHost);
-    if (baseURL.fUser)
-        fUser = XMLString::replicate(baseURL.fUser);
-    if (baseURL.fPassword)
-        fPassword = XMLString::replicate(baseURL.fPassword);
+    //
+    //  If the protocol is not file, and we either already have our own
+    //  host, or the base does not have one, then we are done.
+    //
+    if (fProtocol != File)
+    {
+        if (fHost || !baseURL.fHost)
+            return;
+    }
+
+    // Replicate all of the hosty stuff if the base has one
+    if (baseURL.fHost)
+    {
+        fHost = XMLString::replicate(baseURL.fHost);
+        if (baseURL.fUser)
+            fUser = XMLString::replicate(baseURL.fUser);
+        if (baseURL.fPassword)
+            fPassword = XMLString::replicate(baseURL.fPassword);
+    }
 
     // If we have a path and its absolute, then we are done
     const bool hadPath = (fPath != 0);
