@@ -629,7 +629,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     emitError
                         ( 
                         XMLErrs::AttrAlreadyUsedInSTag
-                        , curAttr->getName()
+                        , suffPtr
                         , elemDecl->getFullName()
                         );
                 }
