@@ -4,14 +4,19 @@
 <s1 title="&XercesCName; Sample 9: SEnumVal">
 
     <s2 title="SEnumVal">
-        <p>SEnumVal shows how to enumerate the markup decls in a DTD Validator.</p>
+        <p>SEnumVal shows how to enumerate the markup decls in a Schema Grammar.</p>
 
         <s3 title="Running SEnumVal">
           <p>This program parses the specified XML file, then shows how to
-            enumerate the contents of the validator pools. Essentially,
-            shows how one can access the Schema information stored in internal
-            data structures.  To run SEnumVal, enter the following </p>
-<source>SEnumVal &lt;XML file&gt;</source>
+            enumerate the contents of the Schema Grammar. </p>
+<source>
+Usage:
+    SEnumVal &lt;XML file&gt;
+
+This program parses a file, then shows how to enumerate the
+contents of the Schema Grammar. Essentially, shows how one can
+access the Schema information stored in internal data structures.
+</source>
           <p>Here is a sample output from SEnumVal</p>
 <source>cd &XercesCInstallDir;-linux/samples/data
 SEnumVal personal-schema.xml
@@ -40,23 +45,23 @@ SEnumVal personal-schema.xml
  	Base Datatype:		Decimal
  Facets:		
  	fractionDigits=0
- 
+
  	Name:			id
  	Type:			ID
  	Default Type:	#REQUIRED
  	Base Datatype:		ID
- 
+
  	Name:			contr
  	Type:			CDATA
  	Default Type:	#DEFAULT
  	Value:			false
  	Base Datatype:		string
- 
+
  	Name:			note
  	Type:			CDATA
  	Default Type:	#IMPLIED
  	Base Datatype:		string
- 
+
  --------------------------------------------
  Name:			name
  Model Type:		Children
@@ -94,7 +99,7 @@ SEnumVal personal-schema.xml
  	Default Type:	#DEFAULT
  	Value:			http://
  	Base Datatype:		string
- 
+
  --------------------------------------------
  Name:			link
  Model Type:		Empty
@@ -107,12 +112,12 @@ SEnumVal personal-schema.xml
  	Type:			IDREFS
  	Default Type:	#IMPLIED
  	Base Datatype:		List
- 
+
  	Name:			manager
  	Type:			IDREF
  	Default Type:	#IMPLIED
  	Base Datatype:		IDREF
- 
+
  --------------------------------------------
               </source>
         </s3>

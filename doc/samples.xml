@@ -54,9 +54,9 @@
 				<li><link idref="stdinparse">StdInParse</link>
 					<br/>StdInParse demonstrates streaming XML data from standard input.</li>
 				<li><link idref="enumval">EnumVal</link>
-					<br/>EnumVal shows how to enumerate the markup decls in a DTD Validator.</li>
+					<br/>EnumVal shows how to enumerate the markup decls in a DTD Grammar.</li>
 				<li><link idref="senumval">SEnumVal</link>
-					<br/>SEnumVal shows how to enumerate the markup decls in a Schema Validator.</li>
+					<br/>SEnumVal shows how to enumerate the markup decls in a Schema Grammar.</li>
 				<li><link idref="createdoc">CreateDOMDocument</link>
 					<br/>CreateDOMDocument creates a DOM tree in memory from scratch.</li>
 				<li><link idref="sax2count">SAX2Count</link>

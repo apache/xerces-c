@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/11/22 14:47:54  tng
+ * Use the phrase "Grammar" instead of "Validator" in EnumVal and SEnumVal Description.
+ *
  * Revision 1.14  2001/10/25 15:18:33  tng
  * delete the parser before XMLPlatformUtils::Terminate.
  *
@@ -179,7 +182,7 @@ static void usage()
     cout << "\nUsage:\n"
             "    EnumVal <XML file>\n\n"
             "This program parses the specified XML file, then shows how to\n"
-            "enumerate the contents of the validator pools. Essentially,\n"
+            "enumerate the contents of the DTD Grammar. Essentially,\n"
             "shows how one can access the DTD information stored in internal\n"
             "data structures.\n"
          << endl;

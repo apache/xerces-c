@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/11/22 14:47:48  tng
+ * Use the phrase "Grammar" instead of "Validator" in EnumVal and SEnumVal Description.
+ *
  * Revision 1.4  2001/11/21 22:09:49  peiyongz
  * Copy Right date
  *
@@ -87,9 +90,9 @@ static void usage();
 
 void process(char* const);
 void processAttributes( XMLAttDefList& attList, bool margin = false );
-void processDatatypeValidator( const DatatypeValidator*, bool margin = false 
+void processDatatypeValidator( const DatatypeValidator*, bool margin = false
 );
-void processContentSpecNode( const ContentSpecNode* specNode, bool margin = 
+void processContentSpecNode( const ContentSpecNode* specNode, bool margin =
 false );
 
 // ---------------------------------------------------------------------------
@@ -146,9 +149,8 @@ static void usage()
     cout << "\nUsage:\n"
             "    SEnumVal <XML file>\n\n"
             "This program parses a file, then shows how to enumerate the\n"
-            "contents of the validator pools. Essentially, shows how one can\n"
-            "access the Schema information stored in internal data structures.\n\n"
-            "  * = Default if not provided explicitly\n"
+            "contents of the Schema Grammar. Essentially, shows how one can\n"
+            "access the Schema information stored in internal data structures.\n"
          << endl;
 }
 

@@ -764,7 +764,7 @@ Usage:
     EnumVal <XML file>
 
 This program parses the specified XML file, then shows how to
-enumerate the contents of the validator pools. Essentially,
+enumerate the contents of the DTD Grammar. Essentially,
 shows how one can access the DTD information stored in internal
 data structures.
 
@@ -807,10 +807,8 @@ Usage:
     SEnumVal <XML file>
 
 This program parses a file, then shows how to enumerate the
-contents of the validator pools. Essentially, shows how one can
+contents of the Schema Grammar. Essentially, shows how one can
 access the Schema information stored in internal data structures.
-
-  * = Default if not provided explicitly
 
 Name:			personnel
 Model Type:		Children
