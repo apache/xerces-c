@@ -239,8 +239,9 @@ Example: perl packageBinaries.pl -s$HOME/&XercesCSrcInstallDir;
     <faq title="How can I port &XercesCProjectName; to my favourite platform?">
         <q>How can I port &XercesCProjectName; to my favourite platform?</q>
         <a>
-          <p>Some porting information is mentioned on the <jump
-          href="build-misc.html#faq-4">build</jump> page.</p>
+          <p>Here are some <jump
+          href="program-others.html#PortingGuidelines">Porting
+          Guidelines</jump>.</p>
         </a>
     </faq>
 
