@@ -116,7 +116,9 @@ void RangeImpl::unreferenced()
             }
         }
     }
-    delete this;
+//    delete this;
+    RangeImpl* ptr = this;
+    delete ptr;
 };
 
 

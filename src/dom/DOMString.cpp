@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/10/18 18:01:29  tng
+ * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
+ *
  * Revision 1.21  2001/06/26 19:28:25  tng
  * [Bug 2119] DOMString::print() should use DOMString::transcode() for transcoding.
  *
@@ -368,7 +371,9 @@ void DOMStringHandle::removeRef()
     {
         fDSData->removeRef();
         XMLPlatformUtils::atomicDecrement(DOMString::gLiveStringHandleCount);
-        delete this;
+//        delete this;
+        DOMStringHandle* ptr = this;
+        delete ptr;
     };
 };
 

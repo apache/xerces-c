@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/10/18 18:01:29  tng
+ * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
+ *
  * Revision 1.11  2000/11/01 01:26:30  andyh
  * DOM NodeIterator bug fix - iterators would sometimes continue beyond
  * their starting (root) node.  Fix from Tinny Ng.
@@ -132,8 +135,8 @@ void NodeIteratorImpl::detach ()
 
 
 NodeIteratorImpl::NodeIteratorImpl (
-                                    DOM_Node root, 
-                                    unsigned long whatToShow, 
+                                    DOM_Node root,
+                                    unsigned long whatToShow,
                                     DOM_NodeFilter* nodeFilter,
                                     bool expandEntityRef)
 :   fDetached(false),
@@ -264,7 +267,7 @@ DOM_Node NodeIteratorImpl::previousNode () {
     bool accepted = false;
 
     while (!accepted) {
-        
+
 
         if (fForward && ! aPreviousNode.isNull()) {
             //repeat last node.
@@ -273,7 +276,7 @@ DOM_Node NodeIteratorImpl::previousNode () {
             // get previous node in backwards depth first order.
             aPreviousNode = previousNode(aPreviousNode);
         }
-  
+
         // we are going backwards
         fForward = false;
 
@@ -343,13 +346,13 @@ DOM_Node NodeIteratorImpl::nextNode (DOM_Node node, bool visitChildren) {
             return result;
         }
     }
-    
+
     // if hasSibling, return sibling
     if (node != fRoot) {
         result = node.getNextSibling();
         if (! result.isNull()) return result;
-        
-        
+
+
         // return parent's 1st sibling.
         DOM_Node parent = node.getParentNode();
         while (!parent.isNull() && parent != fRoot) {
@@ -359,7 +362,7 @@ DOM_Node NodeIteratorImpl::nextNode (DOM_Node node, bool visitChildren) {
             } else {
                 parent = parent.getParentNode();
             }
-            
+
         } // while (parent != null && parent != fRoot) {
     }
     // end of list, return null
@@ -461,5 +464,7 @@ void NodeIteratorImpl::unreferenced()
             }
     }
 
-    delete this;
+//    delete this;
+    NodeIteratorImpl* ptr = this;
+    delete ptr;
 }

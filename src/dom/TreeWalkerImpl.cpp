@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/10/18 18:01:29  tng
+ * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
+ *
  * Revision 1.8  2000/08/08 01:00:36  aruna1
  * detach functionality removed from TreeWalker
  *
@@ -97,11 +100,11 @@
 
 /** constructor */
 TreeWalkerImpl::TreeWalkerImpl (
-                                DOM_Node root, 
-                                unsigned long whatToShow, 
-                                DOM_NodeFilter* nodeFilter, 
-                                bool expandEntityRef) 
-:   fCurrentNode(root), 
+                                DOM_Node root,
+                                unsigned long whatToShow,
+                                DOM_NodeFilter* nodeFilter,
+                                bool expandEntityRef)
+:   fCurrentNode(root),
     fRoot(root),
     fWhatToShow(whatToShow),
     fNodeFilter(nodeFilter),
@@ -111,7 +114,7 @@ TreeWalkerImpl::TreeWalkerImpl (
 }
 
 
-TreeWalkerImpl::TreeWalkerImpl (const TreeWalkerImpl& twi) 
+TreeWalkerImpl::TreeWalkerImpl (const TreeWalkerImpl& twi)
 : fCurrentNode(twi.fCurrentNode),
     fRoot(twi.fRoot),
     fWhatToShow(twi.fWhatToShow),
@@ -157,7 +160,9 @@ void TreeWalkerImpl::unreferenced()
             }
     }
 
-    delete this;
+//    delete this;
+    TreeWalkerImpl* ptr = this;
+    delete ptr;
 }
 
 

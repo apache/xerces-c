@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/10/18 18:01:29  tng
+ * [Bug 1699] Redirect "delete this" to a temp ptr to bypass AIX xlC v5 optimization memory leak problem.
+ *
  * Revision 1.6  2000/04/27 02:52:42  lehors
  * global reorganization similar to what I've done in Java,
  * nodes now are much smaller.
@@ -164,13 +167,13 @@ unsigned int DeepNodeListImpl::getLength()
 NodeImpl *DeepNodeListImpl::item(unsigned int index)
 {
     NodeImpl *thisNode;
-    
+
     if(rootNode->changes() != changes)
     {
         nodes->reset();     // Tree changed. Do it all from scratch!
         changes = rootNode->changes();
     }
-    
+
     if(index< nodes->size())      // In the cache
         return nodes->elementAt((int) index);
     else                        // Not yet seen
@@ -228,7 +231,7 @@ NodeImpl *DeepNodeListImpl::nextMatchingElementAfter(NodeImpl *current)
                 current = next;
             }
         }
-        
+
         // Have we found an Element with the right tagName?
         // ("*" matches anything.)
         if (current != null && current != rootNode && current->isElementImpl()) {
@@ -242,7 +245,7 @@ NodeImpl *DeepNodeListImpl::nextMatchingElementAfter(NodeImpl *current)
 		    return current;
 	    }
 	}
-        
+
         // Otherwise continue walking the tree
     }
     // Fell out of tree-walk; no more instances found
@@ -254,9 +257,11 @@ NodeImpl *DeepNodeListImpl::nextMatchingElementAfter(NodeImpl *current)
 //  unreferenced()      The RefCountedImpl base class calls back to this function
 //                      when the ref count goes to zero.
 //
-//          
+//
 void DeepNodeListImpl::unreferenced()
 {
-    delete this;
+//    delete this;
+      DeepNodeListImpl* ptr = this;
+      delete ptr;
 };
 
