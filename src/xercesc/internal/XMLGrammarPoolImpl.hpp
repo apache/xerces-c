@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/10/29 16:16:08  peiyongz
+ * GrammarPool' serialization/deserialization support
+ *
  * Revision 1.7  2003/10/10 18:36:41  neilg
  * update XMLGrammarPool default implementation to reflect recent modifications to the base interface.
  *
@@ -87,10 +90,10 @@
 #define XMLGrammarPoolImplIMPL_HPP
 
 #include <xercesc/framework/XMLGrammarPool.hpp>
-#include <xercesc/util/RefHashTableOf.hpp>
-#include <xercesc/util/SynchronizedStringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+class XMLSynchronizedStringPool;
 
 class XMLUTIL_EXPORT XMLGrammarPoolImpl : public XMLGrammarPool
 {
@@ -237,6 +240,16 @@ public :
     virtual XMLStringPool *getURIStringPool();
 
     // @}
+
+    // -----------------------------------------------------------------------
+    // serialization and deserialization support
+    // -----------------------------------------------------------------------
+    virtual void     serializeGrammars(BinOutputStream* const); 
+    virtual void     deserializeGrammars(BinInputStream* const); 
+
+    friend class XObjectComparator;
+    friend class XTemplateComparator;
+
 private:
     // -----------------------------------------------------------------------
     /** name  Unimplemented copy constructor and operator= */
@@ -260,10 +273,10 @@ private:
     //      whether the pool has been locked
     //
     // -----------------------------------------------------------------------
-    RefHashTableOf<Grammar>* fGrammarRegistry; 
-    XMLStringPool         * fStringPool;
-    XMLSynchronizedStringPool * fSynchronizedStringPool;
-    bool                    fLocked;
+    RefHashTableOf<Grammar>*    fGrammarRegistry; 
+    XMLStringPool*              fStringPool;
+    XMLSynchronizedStringPool*  fSynchronizedStringPool;
+    bool                        fLocked;
 
 };
 

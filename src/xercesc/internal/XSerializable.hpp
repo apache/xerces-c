@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2003/10/29 16:16:08  peiyongz
+ * GrammarPool' serialization/deserialization support
+ *
  * Revision 1.2  2003/09/23 18:12:19  peiyongz
  * Macro re-organized: provide create/nocreate macros for abstract and
  * nonabstract classes
@@ -121,6 +124,8 @@ DECL_XPROTOTYPE(class_name) \
 virtual bool                    isSerializable()                  const ;  \
 virtual XProtoType*             getProtoType()                    const;   \
 virtual void                    serialize(XSerializeEngine&); \
+friend  class XObjectComparator;   \
+friend  class XTemplateComparator; \
 \
 inline friend XSerializeEngine& operator>>(XSerializeEngine& serEng  \
                                          , class_name*&      objPtr) \
@@ -153,6 +158,11 @@ bool        class_name::isSerializable() const \
 XProtoType* class_name::getProtoType()   const \
 {return XPROTOTYPE_CLASS(class_name); } 
 
+#define IS_EQUIVALENT(lptr, rptr) \
+    if (lptr == rptr)             \
+        return true;              \
+    if (( lptr && !rptr) || (!lptr &&  rptr))  \
+        return false;
 
 XERCES_CPP_NAMESPACE_END
 

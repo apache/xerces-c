@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/29 16:16:48  peiyongz
+ * GrammarPool' serialization/deserialization support
+ *
  * Revision 1.5  2003/10/10 18:36:03  neilg
  * update XMLGrammarPool interface to make expected behaviour of locked pools better specified, and to add the capability to generate XSModels
  *
@@ -93,6 +96,8 @@ class SchemaGrammar;
 class XMLDTDDescription;
 class XMLSchemaDescription;
 class XMLStringPool;
+class BinInputStream;
+class BinOutputStream;
 
 class XMLPARSER_EXPORT XMLGrammarPool : public XMemory
 {
@@ -252,7 +257,59 @@ public :
       */
     virtual XMLStringPool *getURIStringPool() = 0;
     //@}
-	
+
+    // -----------------------------------------------------------------------
+    /** serialization and deserialization support
+    // -----------------------------------------------------------------------                                                        
+
+    /***
+      *
+      * 1. Context: Serialize/Deserialize All Grammars In One Session
+      *
+      *    Since it is common that a declaration in one grammar may reference 
+      *    to definitions in another grammar, it is required to serialize those 
+      *    related (or interdependent) grammars in to one persistent data store 
+      *    in one serialization session (storing), and deserialize them from the
+      *    persistent data store in one deserialization session (loading) back
+      *    to the grammar pool.    
+      *
+      * 2. Multiple serialization
+      *
+      *    It is acceptable that client application requests more than one 
+      *    gramamr serialization on a particular grammar pool, to track the 
+      *    different grammars cached, or for whatever reasons that client 
+      *    application is interested in. However it is strongly recommended that 
+      *    the client application requests no more than one gramamr deserialization
+      *    and only does it when the grammar pool is empty.
+      *
+      *    For multiple serializations, if the same file name is given, then the 
+      *    last result will be in the file (overwriting mode), if different file 
+      *    names are given, then we have multiple data stores for each serialization.
+      *
+      * 3. Multiple deserialization
+      * 
+      *    Request for grammar deserialization either after the grammar pool has 
+      *    its own cached grammars, or request for more than one grammar 
+      *    deserialization, may cause undesired and unpredictable consequence
+      *    and therefore is NOT supported.
+      *
+      * 4. Locking
+      *
+      *    Both serialization and deserialization requires to lock the grammar pool
+      *    before operation and unlock after operation. In the case the grammar pool
+      *    is locked by a third party, the request for serialization/deserialization
+      *    will NOT be entertained.
+      *
+      * 5. Versioning
+      *
+      *    The Persistent data store has a version tag to be verified during 
+      *    deserialization, thus a grammar pool may decide if it supports
+      *    a binary data created by a different release of Xerces.
+      * 
+      */
+    virtual void     serializeGrammars(BinOutputStream* const)  = 0; 
+    virtual void     deserializeGrammars(BinInputStream* const) = 0;       
+	   
 protected :
     // -----------------------------------------------------------------------
     /**  Hidden Constructors */

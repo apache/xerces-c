@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2003/10/29 16:16:08  peiyongz
+ * GrammarPool' serialization/deserialization support
+ *
  * Revision 1.1  2003/10/17 21:07:49  peiyongz
  * To support Template object serialization/deserialization
  *
@@ -69,6 +72,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/internal/XSerializeEngine.hpp>
 #include <xercesc/internal/XTemplateSerializer.hpp>
+#include <xercesc/validators/common/Grammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -753,6 +757,7 @@ void XTemplateSerializer::loadObject(RefVectorOf<XercesStep>** objToLoad
  *   XercesAttGroupInfo
  *   XMLRefInfo
  *   DatatypeValidator
+ *   Grammar
  *
  ***********************************************************/
 void XTemplateSerializer::storeObject(RefHashTableOf<KVStringPair>* const objToStore
@@ -1306,6 +1311,73 @@ void XTemplateSerializer::loadObject(RefHashTableOf<DatatypeValidator>** objToLo
     }
 }
 
+void XTemplateSerializer::storeObject(RefHashTableOf<Grammar>* const objToStore
+                                    , XSerializeEngine&              serEng)                                          
+{
+
+    if (serEng.needToStoreObject(objToStore))
+    {
+        RefHashTableOfEnumerator<Grammar> e(objToStore);
+        int itemNumber = 0;        
+
+        while (e.hasMoreElements())
+        {
+            e.nextElement();
+            itemNumber++;
+        }
+
+        serEng<<itemNumber;
+        e.Reset();
+
+        while (e.hasMoreElements())
+        {
+            XMLCh*     key  = (XMLCh*) e.nextElementKey();
+            serEng.writeString(key);
+
+            Grammar* data = objToStore->get(key);
+            Grammar::storeGrammar(serEng, data);
+        }
+    }
+}
+
+void XTemplateSerializer::loadObject(RefHashTableOf<Grammar>** objToLoad
+                                   , int                       initSize
+                                   , bool                      toAdopt
+                                   , XSerializeEngine&         serEng)
+{
+
+    if (serEng.needToLoadObject((void**)objToLoad))
+    {
+        if (!*objToLoad)
+        {
+            if (initSize < 0)
+                initSize = 16;
+
+            *objToLoad = new (serEng.getMemoryManager()) 
+                             RefHashTableOf<Grammar>(
+                                                     initSize
+                                                   , toAdopt
+                                                   , serEng.getMemoryManager()
+                                                   );
+        }
+
+        serEng.registerObject(*objToLoad);
+
+        int itemNumber = 0;
+        serEng>>itemNumber;
+
+        for (int itemIndex = 0; itemIndex < itemNumber; itemIndex++)
+        {
+            XMLCh*      key;
+            serEng.readString(key);
+
+            Grammar*  data;
+            data = Grammar::loadGrammar(serEng);
+
+            (*objToLoad)->put((void*)key, data);
+        }
+    }
+}
 
 /**********************************************************
  *
@@ -1343,7 +1415,7 @@ void XTemplateSerializer::storeObject(RefHash2KeysTableOf<SchemaAttDef>* const o
             serEng.writeString(key1);
             serEng<<key2;
 
-            XMLAttDef* data = objToStore->get(key1, key2);
+            SchemaAttDef* data = objToStore->get(key1, key2);
             serEng<<data;
 
         }
@@ -1510,8 +1582,8 @@ void XTemplateSerializer::storeObject(RefHash3KeysIdPool<SchemaElementDecl>* con
         while (e.hasMoreElements())
         {
             //there is no e.nextElementKey() for RefHash3KeysIdPoolEnumerator
-            SchemaElementDecl& attDef = e.nextElement();
-            attDef.serialize(serEng);
+            SchemaElementDecl& data = e.nextElement();
+            data.serialize(serEng);
         }
 
     }

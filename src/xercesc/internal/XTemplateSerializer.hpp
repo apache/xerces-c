@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/10/29 16:16:08  peiyongz
+ * GrammarPool' serialization/deserialization support
+ *
  * Revision 1.1  2003/10/17 21:07:49  peiyongz
  * To support Template object serialization/deserialization
  *
@@ -235,6 +238,7 @@ public:
      *   XercesAttGroupInfo
      *   XMLRefInfo
      *   DatatypeValidator
+     *   Grammar
      *
      ***********************************************************/
     static void           storeObject(RefHashTableOf<KVStringPair>* const tempObjToWrite
@@ -301,6 +305,13 @@ public:
                                    , bool                                      toAdopt
                                    , XSerializeEngine&                         serEng);
 
+    static void           storeObject(RefHashTableOf<Grammar>* const tempObjToWrite
+                                    , XSerializeEngine&              serEng);
+
+    static void           loadObject(RefHashTableOf<Grammar>**       tempObjToRead
+                                   , int                             initSize
+                                   , bool                            toAdopt
+                                   , XSerializeEngine&               serEng);
 
     /**********************************************************
      *

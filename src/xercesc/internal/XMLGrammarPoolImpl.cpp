@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/10/29 16:16:08  peiyongz
+ * GrammarPool' serialization/deserialization support
+ *
  * Revision 1.7  2003/10/10 18:36:41  neilg
  * update XMLGrammarPool default implementation to reflect recent modifications to the base interface.
  *
@@ -88,10 +91,14 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/internal/XMLGrammarPoolImpl.hpp>
+#include <xercesc/internal/XSerializeEngine.hpp>
+#include <xercesc/internal/XTemplateSerializer.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
+
+#include <xercesc/util/SynchronizedStringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -219,5 +226,154 @@ inline XMLStringPool *XMLGrammarPoolImpl::getURIStringPool()
         return fSynchronizedStringPool;
     return fStringPool;
 }
+
+// -----------------------------------------------------------------------
+// serialization and deserialization support
+// -----------------------------------------------------------------------
+/***
+ *
+ * don't serialize
+ *
+ *   XMLSynchronizedStringPool*  fSynchronizedStringPool;
+ *   bool                        fLocked;
+ */
+
+/***
+ *   .not locked
+ *   .non-empty gramamrRegistry
+ ***/
+void XMLGrammarPoolImpl::serializeGrammars(BinOutputStream* const binOut)
+{
+    if (fLocked)
+    {
+        ThrowXML(XSerializationException, XMLExcepts::XSer_GrammarPool_Locked);
+    }
+
+    fLocked = true;
+    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
+    if (!(grammarEnum.hasMoreElements())) 
+    {
+        fLocked = false;
+        ThrowXML(XSerializationException, XMLExcepts::XSer_GrammarPool_Empty);
+    }
+
+    try 
+    {
+        XSerializeEngine  serEng(binOut, getMemoryManager());
+
+        //version information
+        serEng<<gXercesMajVersion;
+        serEng<<gXercesMinVersion;
+        serEng<<gXercesRevision;
+
+        //StringPool, don't use <<
+        fStringPool->serialize(serEng);
+
+        /***
+         * Serialize RefHashTableOf<Grammar>*    fGrammarRegistry; 
+         ***/
+        XTemplateSerializer::storeObject(fGrammarRegistry, serEng);
+          
+    }
+    catch(...)
+    {
+        fLocked = false;
+        throw;
+    }
+
+    fLocked = false;
+}
+
+/***
+ *   .not locked
+ *   .empty stringPool
+ *   .empty gramamrRegistry
+ ***/
+void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
+{
+    if (fLocked)
+    {
+        ThrowXML(XSerializationException, XMLExcepts::XSer_GrammarPool_Locked);
+    }
+
+    fLocked = true;
+    unsigned int stringCount = fStringPool->getStringCount();
+    if (stringCount)
+    {
+        /***
+         * it contains only the four predefined one, that is ok
+         * but we need to reset the string before deserialize it
+         *
+         ***/
+        if ( stringCount <= 4 )
+        {
+            fStringPool->flushAll();
+        }
+        else
+        {
+            fLocked = false;
+            ThrowXML(XSerializationException, XMLExcepts::XSer_StringPool_NotEmpty);
+        }
+    }
+
+    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
+    if (grammarEnum.hasMoreElements()) 
+    {
+        fLocked = false;
+        ThrowXML(XSerializationException, XMLExcepts::XSer_GrammarPool_NotEmpty);
+    }
+
+    try 
+    {
+        XSerializeEngine  serEng(binIn, getMemoryManager());
+
+        //version information
+        unsigned int  MajVer;
+        unsigned int  MinVer;
+        unsigned int  Revision;
+
+        serEng>>MajVer;
+        serEng>>MinVer;
+        serEng>>Revision;
+
+        //we may change the logic once we have more
+        //versions
+        if ((MajVer   != gXercesMajVersion) ||
+            (MinVer   != gXercesMinVersion) ||
+            (Revision != gXercesRevision)     )
+        {
+            fLocked = false;
+            XMLCh     MajVerChar[4];
+            XMLCh     MinVerChar[4];
+            XMLCh     RevisionChar[4];
+            XMLString::binToText(MajVer,   MajVerChar,   4, 10);
+            XMLString::binToText(MinVer,   MinVerChar,   4, 10);
+            XMLString::binToText(Revision, RevisionChar, 4, 10);
+            
+            ThrowXML3(XSerializationException
+                    , XMLExcepts::XSer_BinaryData_Version_NotSupported
+                    , MajVerChar
+                    , MinVerChar
+                    , RevisionChar);
+        }
+
+        //StringPool, don't use >>
+        fStringPool->serialize(serEng);
+
+        /***
+         * Deserialize RefHashTableOf<Grammar>*    fGrammarRegistry; 
+         ***/
+        XTemplateSerializer::loadObject(&fGrammarRegistry, 29, true, serEng);
+
+    }
+    catch(...)
+    {
+        fLocked = false;
+        throw;
+    }
+
+    fLocked = false;
+}
+
 
 XERCES_CPP_NAMESPACE_END
