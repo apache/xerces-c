@@ -337,7 +337,7 @@ int XMLString::indexOf( const   char* const     toSearch
     const unsigned int len = strlen(toSearch);
 
     // Make sure the start index is within the XMLString bounds
-	if ((int)fromIndex > len-1)
+	if ((int)fromIndex > ((int)len)-1)
         ThrowXMLwithMemMgr(ArrayIndexOutOfBoundsException, XMLExcepts::Str_StartIndexPastEnd, manager);
 
     for (unsigned int i = fromIndex; i < len; i++)
