@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/05 18:20:20  peiyongz
+ * cleanup deserialized grammars if exception thrown during loading
+ *
  * Revision 1.8  2003/10/29 16:16:08  peiyongz
  * GrammarPool' serialization/deserialization support
  *
@@ -368,6 +371,7 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
     }
     catch(...)
     {
+        clear();  //clear all deserialized grammars
         fLocked = false;
         throw;
     }
