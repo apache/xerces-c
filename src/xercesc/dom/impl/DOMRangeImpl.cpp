@@ -1672,8 +1672,10 @@ void DOMRangeImpl::checkReadOnly(DOMNode* start, DOMNode* end,
     }
     else { //need to check all the kids that fall before the end offset value
         eNode = end->getFirstChild();
-        for (XMLSize_t i = 0; i<endOffset-1; i++)
-            eNode = eNode->getNextSibling();
+        if (endOffset > 0)  {
+            for (XMLSize_t i = 0; i<endOffset-1; i++)
+                eNode = eNode->getNextSibling();
+        }
     }
     //recursivly search if any node is readonly
     recurseTreeAndCheck(sNode, eNode);
