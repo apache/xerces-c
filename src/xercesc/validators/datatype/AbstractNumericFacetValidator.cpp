@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/02/02 23:55:40  peiyongz
+ * getFormattedString() added to return original and converted value.
+ *
  * Revision 1.9  2003/01/30 21:56:22  tng
  * Performance: call getRawData instead of toString
  *
@@ -120,9 +123,8 @@ const int AbstractNumericFacetValidator::INDETERMINATE = 2;
 #define  REPORT_FACET_ERROR(val1, val2, except_code)    \
   ThrowXML2(InvalidDatatypeFacetException               \
           , except_code                                 \
-          , val1->getRawData()                          \
-          , val2->getRawData());
-
+          , val1->getFormattedString()                  \
+          , val2->getFormattedString());
 
 #define  FROM_BASE_VALUE_SPACE(val, facetFlag, except_code)   \
   if ((thisFacetsDefined & facetFlag) != 0)                   \

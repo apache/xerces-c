@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/02/02 23:54:43  peiyongz
+ * getFormattedString() added to return original and converted value.
+ *
  * Revision 1.7  2003/01/30 21:55:22  tng
  * Performance: create getRawData which is similar to toString but return the internal data directly, user is not required to delete the returned memory.
  *
@@ -151,6 +154,8 @@ public:
     
     virtual XMLCh*        getRawData() const;
 
+    virtual const XMLCh*  getFormattedString() const;
+
     virtual int           getSign() const;
 
 protected:
@@ -199,13 +204,27 @@ private:
     static int            compareSpecial(const XMLAbstractDoubleFloat* const specialValue
                                        , const XMLAbstractDoubleFloat* const normalValue);
 
+    void                  formatString();
+
 protected:
     double                  fValue;
     LiteralType             fType;
+    bool                    fDataConverted;
 
 private:
     int                     fSign;
     XMLCh*                  fRawData;
+
+    //
+    // If the original string is not lexcially the same as the five
+    // special value notations, and the value is converted to
+    // special value due underlying platform restriction on data
+    // representation, then this string is constructed and
+    // takes the form "original_string (special_value_notation)", 
+    // otherwise it is empty.
+    //
+    XMLCh*                  fFormattedString;
+
 };
 
 inline bool XMLAbstractDoubleFloat::isSpecialValue() const

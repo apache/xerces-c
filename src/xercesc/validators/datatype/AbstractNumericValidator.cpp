@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/02/02 23:55:40  peiyongz
+ * getFormattedString() added to return original and converted value.
+ *
  * Revision 1.3  2003/01/30 21:56:22  tng
  * Performance: call getRawData instead of toString
  *
@@ -85,8 +88,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 #define  REPORT_VALUE_ERROR(val1, val2, except_code)    \
   ThrowXML2(InvalidDatatypeValueException               \
           , except_code                                 \
-          , val1->getRawData()                          \
-          , val2->getRawData());
+          , val1->getFormattedString()                  \
+          , val2->getFormattedString());
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor

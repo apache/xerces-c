@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/02/02 23:54:43  peiyongz
+ * getFormattedString() added to return original and converted value.
+ *
  * Revision 1.3  2003/01/30 21:55:22  tng
  * Performance: create getRawData which is similar to toString but return the internal data directly, user is not required to delete the returned memory.
  *
@@ -103,6 +106,15 @@ public:
      *  the returned buffer
 	 */
     virtual XMLCh*     getRawData() const = 0;    
+
+    /**
+     *  Return the original and converted value of the original data.
+     *  (applicable to double/float)
+     *
+     *  The internal buffer is returned directly, user is not required 
+     *  to delete the returned buffer
+     */
+    virtual const XMLCh*     getFormattedString() const = 0;    
 
 	/**
 	 * Returns the sign of this number

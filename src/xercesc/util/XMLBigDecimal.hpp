@@ -108,6 +108,8 @@ public:
     
     virtual XMLCh*        getRawData() const;
 
+    virtual const XMLCh*  getFormattedString() const;
+
     virtual int           getSign() const;
 
     XMLBigInteger*        getValue() const;

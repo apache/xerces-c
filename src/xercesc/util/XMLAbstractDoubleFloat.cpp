@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/02/02 23:54:43  peiyongz
+ * getFormattedString() added to return original and converted value.
+ *
  * Revision 1.8  2003/01/30 21:55:22  tng
  * Performance: create getRawData which is similar to toString but return the internal data directly, user is not required to delete the returned memory.
  *
@@ -114,14 +117,17 @@ static XMLCh value1[BUF_LEN+1];
 XMLAbstractDoubleFloat::XMLAbstractDoubleFloat()
 :fValue(0)
 ,fType(Normal)
+,fDataConverted(false)
 ,fSign(0)
 ,fRawData(0)
+,fFormattedString(0)
 {
 }
 
 XMLAbstractDoubleFloat::~XMLAbstractDoubleFloat()
 {
      delete [] fRawData;
+     delete [] fFormattedString;
 }
 
 void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
@@ -141,37 +147,35 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
     {
         fType = NegINF;
         fSign = -1;
-        return;
     }
     else if (XMLString::equals(tmpStrValue, XMLUni::fgNegZeroString) )
     {
         fType = NegZero;
         fSign = -1;
-        return;
     }
     else if (XMLString::equals(tmpStrValue, XMLUni::fgPosZeroString) )
     {
         fType = PosZero;
         fSign = 1;
-        return;
     }
     else if (XMLString::equals(tmpStrValue, XMLUni::fgPosINFString) )
     {
         fType = PosINF;
         fSign = 1;
-        return;
     }
     else if (XMLString::equals(tmpStrValue, XMLUni::fgNaNString) )
     {
         fType = NaN;
         fSign = 1;
-        return;
+    }
+    else
+        //
+        // Normal case
+        //
+    {
+        checkBoundary(tmpStrValue);
     }
 
-    //
-    // Normal case
-    //
-    checkBoundary(tmpStrValue);
 }
 
 //
@@ -186,6 +190,62 @@ XMLCh*  XMLAbstractDoubleFloat::getRawData() const
 {
     return fRawData;
 }
+
+const XMLCh*  XMLAbstractDoubleFloat::getFormattedString() const
+{
+    if (!fDataConverted)
+    {
+        return fRawData;
+    }
+    else 
+    {
+        if (!fFormattedString)    	
+        {
+            XMLAbstractDoubleFloat *temp = (XMLAbstractDoubleFloat *) this;
+            temp->formatString();
+        }
+
+        return fFormattedString;           
+    }
+
+}
+
+void XMLAbstractDoubleFloat::formatString()
+{
+
+    unsigned int rawDataLen = XMLString::stringLen(fRawData);
+    fFormattedString = new XMLCh [ rawDataLen + 8];
+    for (unsigned int i = 0; i < rawDataLen + 8; i++)
+        fFormattedString[i] = chNull;
+
+    XMLString::copyString(fFormattedString, fRawData);
+
+    fFormattedString[rawDataLen] = chSpace;
+    fFormattedString[rawDataLen + 1] = chOpenParen;
+
+    switch (fType)
+    {
+    case NegINF:       
+        XMLString::catString(fFormattedString, XMLUni::fgNegINFString);
+        break;
+    case NegZero:
+        XMLString::catString(fFormattedString, XMLUni::fgNegZeroString);
+        break;
+    case PosZero:
+        XMLString::catString(fFormattedString, XMLUni::fgPosZeroString);
+        break;
+    case PosINF:
+        XMLString::catString(fFormattedString, XMLUni::fgPosINFString);
+        break;
+    case NaN:
+        XMLString::catString(fFormattedString, XMLUni::fgNaNString);
+        break;
+    }
+
+    fFormattedString[XMLString::stringLen(fFormattedString)] = chCloseParen;
+
+}
+
 int XMLAbstractDoubleFloat::getSign() const
 {
     return fSign;
@@ -344,6 +404,6 @@ void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
     }
 
     return;
-}
+} 
 
 XERCES_CPP_NAMESPACE_END

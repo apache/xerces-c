@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/02/02 23:54:43  peiyongz
+ * getFormattedString() added to return original and converted value.
+ *
  * Revision 1.5  2003/01/30 21:55:22  tng
  * Performance: create getRawData which is similar to toString but return the internal data directly, user is not required to delete the returned memory.
  *
@@ -514,6 +517,12 @@ XMLCh*  XMLDateTime::getRawData() const
 {
     assertBuffer();    
     return fBuffer;
+}
+
+
+const XMLCh*  XMLDateTime::getFormattedString() const
+{
+    return getRawData();
 }
 
 int XMLDateTime::getSign() const

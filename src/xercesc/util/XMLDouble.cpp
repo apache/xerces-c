@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/02/02 23:54:43  peiyongz
+ * getFormattedString() added to return original and converted value.
+ *
  * Revision 1.6  2003/01/30 19:14:43  tng
  * On some platforms like Solaris strtod will return -0.0.   So need to consider this scenario as well.
  *
@@ -175,11 +178,13 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
             if (fValue > (-1)*DBL_MIN)
             {
                 fType = NegZero;
+                fDataConverted = true;
                 fValue = 0;
             }
             else
             {
                 fType = NegINF;
+                fDataConverted = true;
             }
         }
         else if ( fValue > 0)
@@ -187,16 +192,19 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
             if (fValue < DBL_MIN )
             {
                 fType = PosZero;
+                fDataConverted = true;
                 fValue = 0;
             }
             else
             {
                 fType = PosINF;
+                fDataConverted = true;
             }
         }
         else
         {
             fType = (getSign() == 1) ? PosZero : NegZero;
+            fDataConverted = true;
         }
 
     }
