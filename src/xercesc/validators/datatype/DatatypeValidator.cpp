@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/03/02 23:22:06  peiyongz
+ * save/load TypeUri/TypeLocalName more accurately
+ *
  * Revision 1.21  2004/01/29 11:51:22  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -367,14 +370,26 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
 
         serEng.writeString(fPattern);
 
+        if (fTypeUri==XMLUni::fgZeroLenString)
+        {
+            serEng<<(unsigned int)1;
+        }
+        else if (fTypeUri == SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+        {
+            serEng<<(unsigned int)2;
+            serEng.writeString(fTypeLocalName);
+        }
+        else
+        {
+            serEng<<(unsigned int)3;
+            serEng.writeString(fTypeLocalName);
+            serEng.writeString(fTypeUri);
+        }
+
         /***
          * don't serialize 
          *       fRegex
-         *       fTypeLocalName
-         *       fTypeUri
-         ***/
-        serEng.writeString(fTypeName);
-
+         ***/    
     }
     else
     {
@@ -427,25 +442,49 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          *  Deserialize RefHashTableOf<KVStringPair>
          *
          ***/
-        XTemplateSerializer::loadObject(&fFacets, 29, true, serEng);
+        XTemplateSerializer::loadObject(&fFacets, 29, false, serEng);
+        //XTemplateSerializer::loadObject(&fFacets, 29, true, serEng);
 
         serEng.readString(fPattern);
+
+        /***
+         *   Recreate through setTypeName()
+         *       fTypeName
+         ***/
+
+        unsigned int flag;
+        serEng>>flag;
+
+        if ( 1 == flag )
+        {
+            setTypeName(0);
+        }
+        else if ( 2 == flag )
+        {
+            XMLCh* typeLocalName;
+            serEng.readString(typeLocalName);
+            ArrayJanitor<XMLCh> janName(typeLocalName, fMemoryManager);
+
+            setTypeName(typeLocalName);
+        }
+        else //3
+        {
+            XMLCh* typeLocalName;
+            serEng.readString(typeLocalName);
+            ArrayJanitor<XMLCh> janName(typeLocalName, fMemoryManager);
+
+            XMLCh* typeUri;
+            serEng.readString(typeUri);
+            ArrayJanitor<XMLCh> janUri(typeUri, fMemoryManager);
+
+            setTypeName(typeLocalName, typeUri);
+
+        }
 
         /***
          * don't serialize fRegex
          ***/
         fRegex = 0;
-
-        /***
-         *   Recreate through setTypeName()
-         *       fTypeName
-         *       fTypeLocalName
-         *       fTypeUri
-         ***/
-        XMLCh* typeName;
-        serEng.readString(typeName);
-        ArrayJanitor<XMLCh> janName(typeName, fMemoryManager);
-        setTypeName(typeName);
 
     }
 
