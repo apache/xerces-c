@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2003/09/23 18:12:19  peiyongz
+ * Macro re-organized: provide create/nocreate macros for abstract and
+ * nonabstract classes
+ *
  * Revision 1.1  2003/09/18 18:31:24  peiyongz
  * OSU: Object Serialization Utilities
  *
@@ -99,6 +103,36 @@ public:
     XSerializable*    (*fCreateObject)(MemoryManager*);
 
 };
+
+#define DECL_XPROTOTYPE(class_name) \
+static  XProtoType        class##class_name;                   \
+static  XSerializable*    createObject(MemoryManager* manager);
+
+/***
+ * For non-abstract class
+ ***/
+#define IMPL_XPROTOTYPE_TOCREATE(class_name) \
+IMPL_XPROTOTYPE_INSTANCE(class_name) \
+XSerializable* class_name::createObject(MemoryManager* manager) \
+{return new (manager) class_name(manager);}
+
+/***
+* For abstract class
+ ***/
+#define IMPL_XPROTOTYPE_NOCREATE(class_name) \
+IMPL_XPROTOTYPE_INSTANCE(class_name) \
+XSerializable* class_name::createObject(MemoryManager* manager) \
+{return 0;}
+
+
+/***
+ * Helper Macro 
+ ***/
+#define XPROTOTYPE_CLASS(class_name) ((XProtoType*)(&class_name::class##class_name))
+
+#define IMPL_XPROTOTYPE_INSTANCE(class_name) \
+XProtoType class_name::class##class_name = \
+{(XMLByte*) #class_name, class_name::createObject };
 
 XERCES_CPP_NAMESPACE_END
 

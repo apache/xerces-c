@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2003/09/23 18:12:19  peiyongz
+ * Macro re-organized: provide create/nocreate macros for abstract and
+ * nonabstract classes
+ *
  * Revision 1.1  2003/09/18 18:31:24  peiyongz
  * OSU: Object Serialization Utilities
  *
@@ -83,11 +87,11 @@ public :
     // -----------------------------------------------------------------------
     //  Serialization Interface
     // -----------------------------------------------------------------------   
-    virtual bool      isSerializable()               const = 0;
+    virtual bool        isSerializable()               const = 0;
 
-    virtual void      serialize(XSerializeEngine& )        = 0;
+    virtual void        serialize(XSerializeEngine& )        = 0;
 
-    virtual XProtoType* getProtoType()               const = 0;
+    virtual XProtoType* getProtoType()                 const = 0;
 
 protected:
     XSerializable(){} ;
@@ -111,34 +115,44 @@ inline void XSerializable::serialize(XSerializeEngine& )
  ***/
 #define DECL_XSERIALIZABLE(class_name) \
 public: \
-    static  XProtoType        class##class_name; \
-    static  XSerializable*    createObject(MemoryManager* manager); \
-    \
-    virtual bool              isSerializable() const {return true;} ; \
-    virtual XProtoType*       getProtoType() const; \
-    virtual void              serialize(XSerializeEngine&); \
-    friend  XSerializeEngine& operator>>(XSerializeEngine&, class_name*&);
+\
+DECL_XPROTOTYPE(class_name) \
+\
+virtual bool                    isSerializable()                  const ;  \
+virtual XProtoType*             getProtoType()                    const;   \
+virtual void                    serialize(XSerializeEngine&); \
+\
+inline friend XSerializeEngine& operator>>(XSerializeEngine& serEng  \
+                                         , class_name*&      objPtr) \
+{objPtr = (class_name*) serEng.read(XPROTOTYPE_CLASS(class_name));   \
+ return serEng; \
+};
 	
-#define PROTOTYPE_CLASS(class_name) ((XProtoType*)(&class_name::class##class_name))
+/***
+ * Macro to be included in the implementation file
+ * of XSerializable derivatives' which is instantiable
+ ***/
+#define IMPL_XSERIALIZABLE_TOCREATE(class_name) \
+IMPL_XPROTOTYPE_TOCREATE(class_name) \
+IMPL_XSERIAL(class_name)
 
 /***
- * Macro to be included in XSerializable derivatives' 
- * implementation file
+ * Macro to be included in the implementation file
+ * of XSerializable derivatives' which is UN-instantiable
  ***/
-#define IMPL_XSERIALIZABLE(class_name) \
-\
-XProtoType class_name::class##class_name = \
-{(XMLByte*) #class_name, class_name::createObject }; \
-\
-XSerializable* class_name::createObject(MemoryManager* manager) \
-{return new (manager) class_name(manager); } \
-\
-XProtoType* class_name::getProtoType() const \
-{return PROTOTYPE_CLASS(class_name); } \
-\
-XSerializeEngine& operator>>(XSerializeEngine& serEng, class_name*& objPtr) \
-{objPtr = (class_name*) serEng.read(PROTOTYPE_CLASS(class_name)); \
-return serEng; }
+#define IMPL_XSERIALIZABLE_NOCREATE(class_name) \
+IMPL_XPROTOTYPE_NOCREATE(class_name) \
+IMPL_XSERIAL(class_name)
+
+/***
+ * Helper Macro 
+ ***/
+#define IMPL_XSERIAL(class_name) \
+bool        class_name::isSerializable() const \
+{return true; } \
+XProtoType* class_name::getProtoType()   const \
+{return XPROTOTYPE_CLASS(class_name); } 
+
 
 XERCES_CPP_NAMESPACE_END
 
