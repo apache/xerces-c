@@ -54,7 +54,7 @@ usage()
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc, icpc or ecc) 
             [default is make default; cc for gnu make]"
     echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, aCC05, xlC_r, xlC_rv5compat, QCC, 
-            icc or ecc) [default is make default; g++ for gnu make]"
+            icc, icpc or ecc) [default is make default; g++ for gnu make]"
     echo "       -d (specifies that you want to build debug version)
             [default: no debug]"
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 
