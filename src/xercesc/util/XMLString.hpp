@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/01/24 23:16:33  peiyongz
+ * removeWS() added;
+ *
  * Revision 1.11  2002/12/20 22:10:21  tng
  * XML 1.1
  *
@@ -1357,6 +1360,12 @@ public:
       *        On return , this buffer also holds the converted string
       */
     static void collapseWS(XMLCh* const toConvert);
+
+    /** Remove whitespace
+      * @param toConvert The string which needs to be whitespace removed.
+      *        On return , this buffer also holds the converted string
+      */
+    static void removeWS(XMLCh* const toConvert);
 
     /**
      * Fixes a platform dependent absolute path filename to standard URI form.

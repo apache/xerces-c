@@ -1651,6 +1651,38 @@ void XMLString::collapseWS(XMLCh* const toConvert)
     return;
 }
 
+//
+// remove whitespace
+//
+void XMLString::removeWS(XMLCh* const toConvert)
+{
+    // If no string, then its a failure
+    if (( !toConvert ) || ( !*toConvert ))
+        return;
+
+    XMLCh* retBuf = new XMLCh[ XMLString::stringLen(toConvert) + 1];
+    XMLCh* retPtr = &(retBuf[0]);
+    XMLCh* startPtr = toConvert;
+
+    while (*startPtr)
+    {
+        if ( ( *startPtr != chCR)    &&
+             ( *startPtr != chLF)    &&
+             ( *startPtr != chHTab)  &&
+             ( *startPtr != chSpace)  )
+        {           
+            *retPtr++ = *startPtr;
+        }
+
+        startPtr++;
+
+    }
+
+    *retPtr = chNull;
+    XMLString::moveChars(toConvert, retBuf, stringLen(retBuf)+1); //copy the last chNull as well
+    delete[] retBuf;
+    return;
+}
 
 /**
  * Fixes a platform dependent absolute path filename to standard URI form.
