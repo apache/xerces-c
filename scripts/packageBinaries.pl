@@ -625,7 +625,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         psystem("rm -f libicuuc.sl.20");
 
         psystem("find . -name 'libicuuc20.2.so' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc20.2.so' -exec ln -s {} libicuuc.so.20 \\;");
+        psystem("find . -name 'libicuuc20.2.so' -exec ln -s {} libicuuc20.so \\;");
 
         psystem("find . -name 'libicuuc.so.20.2' -exec ln -s {} libicuuc.so \\;");
         psystem("find . -name 'libicuuc.so.20.2' -exec ln -s {} libicuuc.so.20 \\;");
@@ -742,7 +742,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         psystem("rm -f libicuuc.sl.20");
 
         psystem("find . -name 'libicuuc20.2.so' -exec ln -s {} libicuuc.so \\;");
-        psystem("find . -name 'libicuuc20.2.so' -exec ln -s {} libicuuc.so.20 \\;");
+        psystem("find . -name 'libicuuc20.2.so' -exec ln -s {} libicuuc20.so \\;");
 
         psystem("find . -name 'libicuuc.so.20.2' -exec ln -s {} libicuuc.so \\;");
         psystem("find . -name 'libicuuc.so.20.2' -exec ln -s {} libicuuc.so.20 \\;");
