@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/08/07 20:31:34  jpolast
+ * include SAX2_EXPORT module
+ *
  * Revision 1.5  2000/08/01 18:26:02  aruna1
  * Tru64 support added
  *
@@ -350,6 +353,12 @@ typedef XMLUInt32           UCS4Ch;
 #define SAX_EXPORT PLATFORM_EXPORT
 #else
 #define SAX_EXPORT PLATFORM_IMPORT
+#endif
+
+#if defined(PROJ_SAX2)
+#define SAX2_EXPORT PLATFORM_EXPORT
+#else
+#define SAX2_EXPORT PLATFORM_IMPORT
 #endif
 
 #if defined(PROJ_DOM)

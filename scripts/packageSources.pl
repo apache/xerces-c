@@ -231,6 +231,7 @@ sub remove_export_clauses()
         open (FIZZLEOUT, ">$thefile");
         while ($line = <FIZZLE>) {
                 $line =~ s/SAX_EXPORT//g;
+                $line =~ s/SAX2_EXPORT//g;
                 $line =~ s/CDOM_EXPORT//g;
                 $line =~ s/XMLPARSER_EXPORT//g;
                 $line =~ s/PARSERS_EXPORT//g;
