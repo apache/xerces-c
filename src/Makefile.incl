@@ -297,7 +297,7 @@ ifeq (${PLATFORM}, HPUX)
 
   ifeq (${CXX}, aCC)
     PLATFORM_COMPILE_OPTIONS = -D_HP_UX -DHPaCC \
-        -D${OSVERDEFINE} +DAportable +z +inst_compiletime
+        -D${OSVERDEFINE} +DAportable +z
     MAKE_SHARED = ${CXX} -D${PLATFORM} -b
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -b
     ifeq (${TRANSCODER}, ICU)
