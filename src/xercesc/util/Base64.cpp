@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/01/27 21:15:56  peiyongz
+ * only zero or one space allowed in between B64 character.
+ *
  * Revision 1.7  2002/12/20 22:10:20  tng
  * XML 1.1
  *
@@ -333,10 +336,22 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
 
     int inputIndex = 0;
     int rawInputLength = 0;
+    bool inWhiteSpace = false;
+
     while ( inputIndex < inputLength )
     {
         if (!XMLChar1_0::isWhitespace(inputData[inputIndex]))
+        {
             rawInputData[ rawInputLength++ ] = inputData[ inputIndex ];
+            inWhiteSpace = false;
+        }
+        else
+        {
+            if (inWhiteSpace)
+                return 0; // more than 1 whitespaces encountered
+            else
+                inWhiteSpace = true;
+        }
 
         inputIndex++;
     }
