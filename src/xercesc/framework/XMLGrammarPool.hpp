@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2005/03/03 08:02:55  dbertoni
+ * Removed superfluous const qualifier.
+ *
  * Revision 1.15  2004/12/21 16:02:51  cargilld
  * Attempt to fix various apidoc problems.
  *
@@ -266,7 +269,7 @@ public :
       * getMemoryManager
       *
       */    
-	inline MemoryManager* const    getMemoryManager()
+	inline MemoryManager*    getMemoryManager()
     {
         return fMemMgr;
     }
