@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/12/30 19:46:15  neilg
+ * use a null-terminated string when tokenizing pattern facets
+ *
  * Revision 1.15  2003/12/29 16:45:06  knoaman
  * PSVI: add whitespace facet if missing
  *
@@ -139,6 +142,8 @@
 #include <xercesc/util/XMLStringTokenizer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+static XMLCh regexSeparator[] = {chPipe, chNull};
 
 // ---------------------------------------------------------------------------
 //  XSObjectFactory: Constructors and Destructor
@@ -990,7 +995,7 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
             }
             else if (XMLString::equals(key, SchemaSymbols::fgELT_PATTERN))
             {
-                XMLStringTokenizer tokenizer(dv->getPattern(), &chPipe, fMemoryManager);
+                XMLStringTokenizer tokenizer(dv->getPattern(), regexSeparator, fMemoryManager);
                 patternList = new (fMemoryManager) RefArrayVectorOf<XMLCh>(tokenizer.countTokens(), true, fMemoryManager);
                 
                 while (tokenizer.hasMoreTokens())
