@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/03/18 19:38:28  knoaman
+ * Schema Errata E2-18 + misc. regex fixes.
+ *
  * Revision 1.5  2003/03/04 16:36:17  knoaman
  * RegEx: fix for character category escape
  *
@@ -420,9 +423,9 @@ void RegxParser::processNext() {
 }
 
 
-Token* RegxParser::parseRegx() {
+Token* RegxParser::parseRegx(const bool matchingRParen) {
 
-    Token* tok = parseTerm();
+    Token* tok = parseTerm(matchingRParen);
     Token* parentTok = 0;
 
     while (fState == REGX_T_OR) {
@@ -435,26 +438,28 @@ Token* RegxParser::parseRegx() {
             tok = parentTok;
         }
 
-        tok->addChild(parseTerm(), fTokenFactory);
+        tok->addChild(parseTerm(matchingRParen), fTokenFactory);
     }
 
     return tok;
 }
 
 
-Token* RegxParser::parseTerm() {
+Token* RegxParser::parseTerm(const bool matchingRParen) {
 
     unsigned short state = fState;
 
-    if (state == REGX_T_OR || state == REGX_T_RPAREN || state == REGX_T_EOF) {
+    if (state == REGX_T_OR || state == REGX_T_EOF
+        || (state == REGX_T_RPAREN && matchingRParen)) {
         return fTokenFactory->createToken(Token::T_EMPTY);
     }
     else {
 
-		Token* tok = parseFactor();
-		Token* concatTok = 0;
+        Token* tok = parseFactor();
+        Token* concatTok = 0;
 
-		while ((state = fState) != REGX_T_OR && state != REGX_T_RPAREN && state != REGX_T_EOF)
+        while ((state = fState) != REGX_T_OR && state != REGX_T_EOF
+               && (state != REGX_T_RPAREN || !matchingRParen))
         {
             if (concatTok == 0) {
 
@@ -605,7 +610,7 @@ Token* RegxParser::processParen() {
 
     processNext();
     int num = fNoGroups++;
-    Token* tok = fTokenFactory->createParenthesis(parseRegx(),num);
+    Token* tok = fTokenFactory->createParenthesis(parseRegx(true),num);
 
     if (fState != REGX_T_RPAREN)
         ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
@@ -893,85 +898,74 @@ Token* RegxParser::parseFactor() {
     case REGX_T_QUESTION:
         return processQuestion(tok);
     case REGX_T_CHAR:
-		if (fCharData == chOpenCurly) {
+        if (fCharData == chOpenCurly && fOffset < fStringLen) {
 
-            int offset = fOffset;
             int min = 0;
             int max = -1;
-            bool minExist = false;
+            XMLInt32 ch = fString[fOffset++];
 
-            if (offset >= fStringLen)
-                break;
+            if (ch >= chDigit_0 && ch <= chDigit_9) {
 
-            XMLInt32 ch = fString[offset++];
-
-            if (ch != chComma && (ch < chDigit_0 || ch > chDigit_9))
-                ThrowXML1(ParseException, XMLExcepts::Regex_InvalidQuantifier, fString);
-
-            if (ch != chComma) {
-                minExist = true;
                 min = ch - chDigit_0;
-                while (offset < fStringLen
-                       && (ch = fString[offset++]) >= chDigit_0
+                while (fOffset < fStringLen
+                       && (ch = fString[fOffset++]) >= chDigit_0
                        && ch <= chDigit_9) {
 
                     min = min*10 + ch - chDigit_0;
-                    ch = -1;
                 }
+
+                if (min < 0)
+                    ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier5, fString);
+            }
+            else {
+                ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier1, fString);
             }
 
             max = min;
 
-            if (ch != chCloseCurly && ch != chComma)  {
-                ThrowXML1(ParseException, XMLExcepts::Regex_InvalidQuantifier, fString);
-            }
-
             if (ch == chComma) {
 
-                if (offset >= fStringLen)
-                    break;
-
-                if (((ch = fString[offset++]) < chDigit_0 || ch > chDigit_9)
-                    && ch != chCloseCurly)
-                    ThrowXML1(ParseException, XMLExcepts::Regex_InvalidQuantifier, fString);
-
-                if (ch == chCloseCurly) {
-                    if (minExist)
-                        max = -1;
-                    else
-                        ThrowXML1(ParseException, XMLExcepts::Regex_InvalidQuantifier, fString);
+                if (fOffset >= fStringLen) {
+                    ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier3, fString);
                 }
-                else {
+                else if ((ch = fString[fOffset++]) >= chDigit_0 && ch <= chDigit_9) {
+
                     max = ch - chDigit_0;
-                    while (offset < fStringLen
-                           && (ch = fString[offset++]) >= chDigit_0
+                    while (fOffset < fStringLen
+                           && (ch = fString[fOffset++]) >= chDigit_0
                            && ch <= chDigit_9) {
 
                         max = max*10 + ch - chDigit_0;
-                        ch = -1;
                     }
 
-                    if (ch != chCloseCurly)  {
-                        ThrowXML1(ParseException, XMLExcepts::Regex_InvalidQuantifier, fString);
-                    }
+                    if (max < 0)
+                        ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier5, fString);
+                    else if (min > max)
+                        ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier4, fString);
                 }
-            } // end if ch = chComma
+                else {
+                    max = -1;
+                }
+            }
 
-            if (checkQuestion(offset)) {
+            if (ch != chCloseCurly)  {
+                ThrowXML1(ParseException, XMLExcepts::Parser_Quantifier2, fString);
+            }
+
+            if (checkQuestion(fOffset)) {
 
                 tok = fTokenFactory->createClosure(tok, true);
-                fOffset = offset + 1;
+                fOffset++;
             }
             else {
-
                 tok = fTokenFactory->createClosure(tok);
-                fOffset = offset;
             }
 
             tok->setMin(min);
             tok->setMax(max);
             processNext();
 		}
+        break;
 	}
 
 	return tok;
@@ -1014,27 +1008,6 @@ Token* RegxParser::parseAtom() {
             tok = getTokenForShorthand(fCharData);
             processNext();
             return tok;
-        case chLatin_e:
-        case chLatin_f:
-        case chLatin_n:
-        case chLatin_r:
-        case chLatin_t:
-        case chLatin_u:
-        case chLatin_v:
-        case chLatin_x:
-			{
-                XMLInt32 ch = decodeEscaped();
-                if (ch < 0x10000) {
-                    tok = fTokenFactory->createChar(ch);
-                }
-                else {
-
-                    XMLCh* surrogateStr = RegxUtil::decomposeToSurrogates(ch);
-				    ArrayJanitor<XMLCh> janSurrogate(surrogateStr);
-				    tok = fTokenFactory->createString(surrogateStr);
-                }
-            }
-			break;
         case chLatin_c:
             return processBacksolidus_c();
         case chLatin_C:
@@ -1069,12 +1042,29 @@ Token* RegxParser::parseAtom() {
 			}
             break;
         default:
-            tok = fTokenFactory->createChar(fCharData);
+            {
+                XMLInt32 ch = decodeEscaped();
+                if (ch < 0x10000) {
+                    tok = fTokenFactory->createChar(ch);
+                }
+                else {
+
+                    XMLCh* surrogateStr = RegxUtil::decomposeToSurrogates(ch);
+				    ArrayJanitor<XMLCh> janSurrogate(surrogateStr);
+				    tok = fTokenFactory->createString(surrogateStr);
+                }
+            }
+			break;
 		} // end switch
 
         processNext();
         break;
     case REGX_T_CHAR:
+        if (fCharData == chOpenCurly
+            || fCharData == chCloseCurly
+            || fCharData == chCloseSquare)
+            ThrowXML(ParseException,XMLExcepts::Parser_Atom4);
+
         tok = fTokenFactory->createChar(fCharData);
         processNext();
         break;

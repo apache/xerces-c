@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/18 19:38:28  knoaman
+ * Schema Errata E2-18 + misc. regex fixes.
+ *
  * Revision 1.4  2003/01/13 19:02:23  knoaman
  * [Bug 14390] C++ Indentifier collision with Python.
  *
@@ -169,7 +172,7 @@ Token* ParserForXMLSchema::processQuestion(Token* const tok) {
 Token* ParserForXMLSchema::processParen() {
 
     processNext();
-    Token* retTok = getTokenFactory()->createParenthesis(parseRegx(), 0);
+    Token* retTok = getTokenFactory()->createParenthesis(parseRegx(true), 0);
 
     if (getState() != REGX_T_RPAREN) {
         ThrowXML(ParseException, XMLExcepts::Parser_Factor1);
@@ -283,13 +286,13 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
 
         if (!end) {
 
-            if (type == REGX_T_CHAR) {
-
-                if (ch == chOpenSquare)
-                    ThrowXML(ParseException,XMLExcepts::Parser_CC6);
-
-                if (ch == chCloseSquare)
-                    ThrowXML(ParseException,XMLExcepts::Parser_CC7);
+            if (type == REGX_T_CHAR
+                && (ch == chOpenSquare
+                    || ch == chCloseSquare
+                    || ch == chDash)) {
+                // '[', ']', '-' not allowed and should be esacaped
+                XMLCh chStr[] = { ch, chNull };
+                ThrowXML2(ParseException,XMLExcepts::Parser_CC6, chStr, chStr);
             }
 
             if (getState() != REGX_T_CHAR || getCharData() != chDash) {
@@ -301,36 +304,32 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
                 if ((type = getState()) == REGX_T_EOF)
                     ThrowXML(ParseException,XMLExcepts::Parser_CC2);
 
-                if (type == REGX_T_CHAR && getCharData() == chCloseSquare) {
+                if ((type == REGX_T_CHAR && getCharData() == chCloseSquare)
+                    || type == REGX_T_XMLSCHEMA_CC_SUBTRACTION) {
 
-                    tok->addRange(ch, ch);
-                    tok->addRange(chDash, chDash);
-                }
-                else if (type == REGX_T_XMLSCHEMA_CC_SUBTRACTION) {
-                    tok->addRange(ch, ch);
-                    tok->addRange(chDash, chDash);
+                    static const XMLCh dashStr[] = { chDash, chNull};
+                    ThrowXML2(ParseException, XMLExcepts::Parser_CC6, dashStr, dashStr);
                 }
                 else {
 
                     XMLInt32 rangeEnd = getCharData();
+                    XMLCh rangeEndStr[] = { rangeEnd, chNull };
 
                     if (type == REGX_T_CHAR) {
 
-                        if (rangeEnd == chOpenSquare)
-                            ThrowXML(ParseException,XMLExcepts::Parser_CC6);
-
-                        if (rangeEnd == chCloseSquare)
-                            ThrowXML(ParseException,XMLExcepts::Parser_CC7);
+                        if (rangeEnd == chOpenSquare
+                            || rangeEnd == chCloseSquare
+                            || rangeEnd == chDash)
+                            // '[', ']', '-' not allowed and should be esacaped
+                            ThrowXML2(ParseException, XMLExcepts::Parser_CC6, rangeEndStr, rangeEndStr);
                     }
-
-                    if (type == REGX_T_BACKSOLIDUS) {
+                    else if (type == REGX_T_BACKSOLIDUS) {
                         rangeEnd = decodeEscaped();
                     }
 
                     processNext();
 
                     if (ch > rangeEnd) {
-                        XMLCh rangeEndStr[] = { rangeEnd, chNull };
                         XMLCh chStr[] = { ch, chNull };
                         ThrowXML2(ParseException,XMLExcepts::Parser_Ope3, rangeEndStr, chStr);
                     }

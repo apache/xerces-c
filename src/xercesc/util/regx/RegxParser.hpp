@@ -158,7 +158,7 @@ protected:
     //  Protected Parsing/Processing methods
     // -----------------------------------------------------------------------
 	void                processNext();
-	Token*              parseRegx();
+	Token*              parseRegx(const bool matchingRParen = false);
 	virtual Token*      processCaret();
     virtual Token*      processDollar();
 	virtual Token*      processLook(const unsigned short tokType);
@@ -199,7 +199,7 @@ private:
     // -----------------------------------------------------------------------
     //  Private parsing/processing methods
     // -----------------------------------------------------------------------
-    Token* parseTerm();
+    Token* parseTerm(const bool matchingRParen = false);
 	Token* parseFactor();
 	Token* parseAtom();
 
