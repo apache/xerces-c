@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/10/09 20:56:21  peiyongz
+ * inherit from AbstractStringValidator instead of DatatypeValidator to reuse
+ * the code.
+ *
  * Revision 1.6  2001/10/02 18:59:29  peiyongz
  * Invalid_Facet_Tag to display the tag name
  *
@@ -95,31 +99,17 @@ static XMLCh value2[BUF_LEN+1];
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
 ListDatatypeValidator::ListDatatypeValidator()
-:DatatypeValidator(0, 0, 0, DatatypeValidator::List)
-,fLength(0)
-,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
-,fMinLength(0)
-,fEnumerationInherited(false)
-,fEnumeration(0)
+:AbstractStringValidator(0, 0, 0, DatatypeValidator::List)
 ,fContent(0)
 {}
-
-ListDatatypeValidator::~ListDatatypeValidator()
-{
-    cleanUp();
-}
 
 ListDatatypeValidator::ListDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
                         , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
-:DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::List)
-,fLength(0)
-,fMaxLength(SchemaSymbols::fgINT_MAX_VALUE)
-,fMinLength(0)
-,fEnumerationInherited(false)
-,fEnumeration(0)
+:AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::List)
+,fContent(0)
 {
     //
     // baseValidator shall either 
@@ -131,428 +121,68 @@ ListDatatypeValidator::ListDatatypeValidator(
     if (!baseValidator)
         ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_List_Null_baseValidator);
 
-    try
-    {
-        init(baseValidator, facets, enums);
-    }
-    catch (...)
-    {
-        cleanUp();
-        throw;
-    }
+    init(enums);
 }
 
-void ListDatatypeValidator::init(DatatypeValidator*            const baseValidator
-                               , RefHashTableOf<KVStringPair>* const facets
-                               , RefVectorOf<XMLCh>*           const enums)
+ListDatatypeValidator::~ListDatatypeValidator()
+{}
+
+DatatypeValidator* ListDatatypeValidator::newInstance(
+                                      RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
+                                    , const int                           finalSet)
 {
-    // Set Facets if any defined
-    if (facets)
-    {
-        if (enums)
-            setEnumeration(enums, false);
+    return (DatatypeValidator*) new ListDatatypeValidator(this, facets, enums, finalSet);
+}
 
-        XMLCh* key;
-        XMLCh* value;
-        RefHashTableOfEnumerator<KVStringPair> e(facets);
 
-        while (e.hasMoreElements())
+int ListDatatypeValidator::compare(const XMLCh* const lValue
+                                 , const XMLCh* const rValue)
+{
+    DatatypeValidator* theItemTypeDTV = getItemTypeDTV();
+    RefVectorOf<XMLCh>* lVector = XMLString::tokenizeString(lValue);
+    Janitor<RefVectorOf<XMLCh> > janl(lVector);
+    RefVectorOf<XMLCh>* rVector = XMLString::tokenizeString(rValue);
+    Janitor<RefVectorOf<XMLCh> > janr(rVector);
+   
+    int lNumberOfTokens = lVector->size();         
+    int rNumberOfTokens = rVector->size();         
+
+    if (lNumberOfTokens < rNumberOfTokens)
+        return -1; 
+    else if (lNumberOfTokens > rNumberOfTokens)
+        return 1;
+    else 
+    { //compare each token   
+        for ( int i = 0; i < lNumberOfTokens; i++)
         {
-            KVStringPair pair = e.nextElement();
-            key = pair.getKey();
-            value = pair.getValue();
-
-            if (XMLString::compareString(key, SchemaSymbols::fgELT_LENGTH)==0)
-            {
-                int val;
-                try
-                {
-                    val = XMLString::parseInt(value);
-                }
-                catch (NumberFormatException nfe)
-                {
-                    ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_Len, value);
-                }
-
-                if ( val < 0 )
-                    ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_Len, value);
-
-                setLength(val);
-                setFacetsDefined(DatatypeValidator::FACET_LENGTH);
-            }
-            else if (XMLString::compareString(key, SchemaSymbols::fgELT_MINLENGTH)==0)
-            {
-                int val;
-                try
-                {
-                    val = XMLString::parseInt(value);
-                }
-                catch (NumberFormatException nfe)
-                {
-                    ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_minLen, value);
-                }
-
-                if ( val < 0 )
-                    ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_minLen, value);
-
-                setMinLength(val);
-                setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);
-            }
-            else if (XMLString::compareString(key, SchemaSymbols::fgELT_MAXLENGTH)==0)
-            {
-                int val;
-                try
-                {
-                    val = XMLString::parseInt(value);
-                }
-                catch (NumberFormatException nfe)
-                {
-                    ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_Invalid_maxLen, value);
-                }
-
-                if ( val < 0 )
-                    ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_maxLen, value);
-
-                setMaxLength(val);
-                setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);
-            }
-            else if (XMLString::compareString(key, SchemaSymbols::fgELT_PATTERN)==0)
-            {
-                setPattern(value);
-                if (getPattern())
-                    setFacetsDefined(DatatypeValidator::FACET_PATTERN);
-                // do not construct regex until needed
-            }
-            else if (XMLString::compareString(key, SchemaSymbols::fgATT_FIXED)==0)
-            {
-                unsigned int val;
-                bool         retStatus;
-                try
-                {
-                     retStatus = XMLString::textToBin(value, val);
-                }
-                catch (RuntimeException)
-                {
-                    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
-                }
-
-                if (!retStatus)
-                {
-                    ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_internalError_fixed);
-                }
-
-                setFixed(val);
-                //no setFacetsDefined here
-            }
-            else
-            {
-                 ThrowXML1(InvalidDatatypeFacetException
-                         , XMLExcepts::FACET_Invalid_Tag
-                         , key);
-            }
-        }//while
-
-        /***
-           Schema constraint: Part I -- self checking
-        ***/
-
-        // check 4.3.1.c1 error: length & (maxLength | minLength)
-        if ((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) != 0)
-        {
-            if ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) != 0)
-                 ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
-            else if (((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) != 0))
-                 ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
+            int returnValue = theItemTypeDTV->compare(lVector->elementAt(i), rVector->elementAt(i));
+            if (returnValue != 0) 
+                return returnValue; //REVISIT: does it make sense to return -1 or +1..?               
         }
+        return 0;
+    }
+       
+}
 
-        // check 4.3.2.c1 must: minLength <= maxLength
-        if ((getFacetsDefined() & (DatatypeValidator::FACET_MINLENGTH
-                                  |DatatypeValidator::FACET_MAXLENGTH)) != 0)
-        {
-            if ( getMinLength() > getMaxLength() )
-            {
-                XMLString::binToText(getMaxLength(), value1, BUF_LEN, 10);
-                XMLString::binToText(getMinLength(), value2, BUF_LEN, 10);
+bool ListDatatypeValidator::isAtomic() const {
+    return false;
+}
 
-                ThrowXML2(InvalidDatatypeFacetException
-                        , XMLExcepts::FACET_maxLen_minLen
-                        , value1
-                        , value2);
-            }
-        }
+void ListDatatypeValidator::validate( const XMLCh* const content)
+{
+    setContent(content);
+    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
+    checkContent(tokenVector, false);
+}
 
-        /***
-           Schema constraint: Part II base vs derived checking
-        ***/
-        if (baseValidator->getType() == DatatypeValidator::List)
-        {
-            /***
-                check facets against base.facets
-            ***/
-            ListDatatypeValidator *pBaseValidator = (ListDatatypeValidator*) baseValidator;
-
-            /***
-                Non coexistence of derived' length and base'    (minLength | maxLength)
-                                   base'    length and derived' (minLength | maxLength)
-            ***/
-
-            // check 4.3.1.c1 error: length & (base.maxLength | base.minLength)
-            if ((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) !=0)
-            {
-                if ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0)
-                     ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
-                else if ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0)
-                     ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
-            }
-
-            // check 4.3.1.c1 error: base.length & (maxLength | minLength)
-            if ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) !=0)
-            {
-                if ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0)
-                     ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
-                else if ((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0)
-                     ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
-            }
-
-            // check 4.3.1.c2 error: length != base.length
-            if (((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) !=0) &&
-                ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) !=0))
-            {
-                if ( getLength() != pBaseValidator->getLength() )
-                {
-                    XMLString::binToText(getLength(), value1, BUF_LEN, 10);
-                    XMLString::binToText(pBaseValidator->getLength(), value2, BUF_LEN, 10);
-
-                    ThrowXML2(InvalidDatatypeFacetException
-                        , XMLExcepts::FACET_Len_baseLen
-                        , value1
-                        , value2);
-                }                    
-            }
-
-            /***
-                                   |---  derived   ---|
-                base.minLength <= minLength <= maxLength <= base.maxLength
-                |-------------------        base      -------------------|
-            ***/
-
-            // check 4.3.2.c1 must: minLength <= base.maxLength
-            if (((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH ) != 0) &&
-                ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH ) != 0))
-            {
-                if ( getMinLength() > pBaseValidator->getMaxLength() )
-                {
-                    XMLString::binToText(getMinLength(), value1, BUF_LEN, 10);
-                    XMLString::binToText(pBaseValidator->getMaxLength(), value2, BUF_LEN, 10);
-
-                    ThrowXML2(InvalidDatatypeFacetException
-                        , XMLExcepts::FACET_minLen_baseminLen
-                        , value1
-                        , value2);
-                }
-            }
-
-            // check 4.3.2.c2 error: minLength < base.minLength
-            if (((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
-                ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) != 0))
-            {
-                if ((pBaseValidator->getFixed() & DatatypeValidator::FACET_MINLENGTH) !=0)
-                {
-                    if ( getMinLength() != pBaseValidator->getMinLength() )
-                    {
-                        XMLString::binToText(getMinLength(), value1, BUF_LEN, 10);
-                        XMLString::binToText(pBaseValidator->getMinLength(), value2, BUF_LEN, 10);
-
-                        ThrowXML2(InvalidDatatypeFacetException
-                        , XMLExcepts::FACET_minLen_base_fixed
-                        , value1
-                        , value2);
-                    }
-                }
-                else
-                {
-                    if ( getMinLength() < pBaseValidator->getMinLength() )
-                    {
-                        XMLString::binToText(getMinLength(), value1, BUF_LEN, 10);
-                        XMLString::binToText(pBaseValidator->getMinLength(), value2, BUF_LEN, 10);
-
-                        ThrowXML2(InvalidDatatypeFacetException
-                        , XMLExcepts::FACET_minLen_basemaxLen
-                        , value1
-                        , value2);
-                    }
-                }
-            }
-
-            // check 4.3.2.c1 must: base.minLength <= maxLength
-            if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
-                ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0))
-            {
-                if ( pBaseValidator->getMinLength() > getMaxLength() )
-                {
-                    XMLString::binToText(getMaxLength(), value1, BUF_LEN, 10);
-                    XMLString::binToText(pBaseValidator->getMinLength(), value2, BUF_LEN, 10);
-
-                    ThrowXML2(InvalidDatatypeFacetException
-                        , XMLExcepts::FACET_maxLen_baseminLen
-                        , value1
-                        , value2);
-                }
-            }
-
-            // check 4.3.3.c1 error: maxLength > base.maxLength
-            if (((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
-                ((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0))
-            {
-                if ((pBaseValidator->getFixed() & DatatypeValidator::FACET_MAXLENGTH) !=0)
-                {
-                    if ( getMaxLength() != pBaseValidator->getMaxLength() )
-                    {
-                        XMLString::binToText(getMaxLength(), value1, BUF_LEN, 10);
-                        XMLString::binToText(pBaseValidator->getMaxLength(), value2, BUF_LEN, 10);
-
-                        ThrowXML2(InvalidDatatypeFacetException
-                        , XMLExcepts::FACET_maxLen_base_fixed
-                        , value1
-                        , value2);
-                    }
-                }
-                else
-                {
-                    if ( getMaxLength() > pBaseValidator->getMaxLength() )
-                    {
-                        XMLString::binToText(getMaxLength(), value1, BUF_LEN, 10);
-                        XMLString::binToText(pBaseValidator->getMaxLength(), value2, BUF_LEN, 10);
-
-                        ThrowXML2(InvalidDatatypeFacetException
-                        , XMLExcepts::FACET_maxLen_basemaxLen
-                        , value1
-                        , value2);
-                    }
-                }
-            }
-
-            // check 4.3.5.c0 must: enumeration values from the value space of base
-            if ( ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0) &&
-                 (getEnumeration() !=0))
-            {
-                int i = 0;
-                int enumLength = getEnumeration()->size();
-                try
-                {
-                    for ( ; i < enumLength; i++)
-                    {
-                        // ask parent do a complete check
-                        pBaseValidator->checkContent(getEnumeration()->elementAt(i), false);
-                        // enum shall pass this->checkContent() as well.
-                        checkContent(getEnumeration()->elementAt(i), false);
-                    }
-                }
-
-                catch ( XMLException& )
-                {
-                    ThrowXML1(InvalidDatatypeFacetException
-                            , XMLExcepts::FACET_enum_base
-                            , getEnumeration()->elementAt(i));
-                }
-            }
-
-        } //ListDTV
-        else
-        {
-            // the first level ListDTV
-            // check 4.3.5.c0 must: enumeration values from the value space of base
-            if ( ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0) &&
-                 (getEnumeration() !=0))
-            {
-                int i;
-                int enumLength = getEnumeration()->size();
-                try
-                {
-                    for ( i = 0; i < enumLength; i++)
-                    {
-                        // ask the itemType for a complete check
-                        RefVectorOf<XMLCh>* tempList = XMLString::tokenizeString(getEnumeration()->elementAt(i));
-                        int tokenNumber = tempList->size();
-
-                        try 
-                        {
-                            for ( int j = 0; j < tokenNumber; j++)
-                                baseValidator->validate(tempList->elementAt(j));
-                        }
-                        catch (...)
-                        {
-                            delete tempList;
-                            throw;
-                        }
-
-                        delete tempList;
-
-                        // enum shall pass this->checkContent() as well.
-                        checkContent(getEnumeration()->elementAt(i), false);
-                    }
-                }
-
-                catch ( XMLException& )
-                {
-                    ThrowXML1(InvalidDatatypeFacetException
-                            , XMLExcepts::FACET_enum_base
-                            , getEnumeration()->elementAt(i));
-                }
-            }
-        }
-
-    }// End of Facet setting
-
-    /***
-        Inherit facets from base.facets
-
-        The reason of this inheriting (or copying values) is to ease
-        schema constraint checking, so that we need NOT trace back to our
-        very first base validator in the hierachy. Instead, we are pretty
-        sure checking against immediate base validator is enough.  
-    ***/
-    if (baseValidator->getType() == DatatypeValidator::List)
-    {
-        ListDatatypeValidator *pBaseValidator = (ListDatatypeValidator*) baseValidator;
-
-        // inherit length
-        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_LENGTH) != 0) &&
-            ((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) == 0))
-        {
-            setLength(pBaseValidator->getLength());
-            setFacetsDefined(DatatypeValidator::FACET_LENGTH);
-        }
-
-        // inherit minLength
-        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) !=0) &&
-            ((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) == 0))
-        {
-            setMinLength(pBaseValidator->getMinLength());
-            setFacetsDefined(DatatypeValidator::FACET_MINLENGTH);
-        }
-
-        // inherit maxLength
-        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
-            ((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) == 0))
-        {
-            setMaxLength(pBaseValidator->getMaxLength());
-            setFacetsDefined(DatatypeValidator::FACET_MAXLENGTH);
-        }
-
-        // inherit enumeration
-        if (((pBaseValidator->getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) !=0) &&
-            ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) == 0))
-        {
-            setEnumeration(pBaseValidator->getEnumeration(), true);
-        }
-
-        // we don't inherit pattern
-
-        // inherit "fixed" option
-        setFixed(getFixed() | pBaseValidator->getFixed());
-
-    } // end of inheritance
+void ListDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
+{
+    setContent(content);
+    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
+    checkContent(tokenVector, asBase);
 }
 
 //
@@ -561,6 +191,7 @@ void ListDatatypeValidator::init(DatatypeValidator*            const baseValidat
 void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool asBase)
 {
     DatatypeValidator* bv = getBaseValidator();
+
     if (bv->getType() == DatatypeValidator::List)
         ((ListDatatypeValidator*)bv)->checkContent(tokenVector, true);
     else
@@ -569,8 +200,10 @@ void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool 
             bv->validate(tokenVector->elementAt(i));
     }
 
+    int thisFacetsDefined = getFacetsDefined();
+
     // we check pattern first
-    if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
+    if ( (thisFacetsDefined & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
         // lazy construction
         if (getRegex() == 0) 
@@ -605,7 +238,7 @@ void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool 
 
     unsigned int tokenNumber = tokenVector->size();
 
-    if (((getFacetsDefined() & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
+    if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) != 0) &&
         (tokenNumber > getMaxLength()))
     {
         XMLString::binToText(tokenNumber, value1, BUF_LEN, 10);
@@ -618,7 +251,7 @@ void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool 
                 , value2);
     }
 
-    if (((getFacetsDefined() & DatatypeValidator::FACET_MINLENGTH) != 0) &&
+    if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) != 0) &&
         (tokenNumber < getMinLength()))
     {
         XMLString::binToText(tokenNumber, value1, BUF_LEN, 10);
@@ -631,11 +264,11 @@ void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool 
                 , value2);
     }
 
-    if (((getFacetsDefined() & DatatypeValidator::FACET_LENGTH) != 0) &&
-        (tokenNumber != getLength()))
+    if (((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) != 0) &&
+        (tokenNumber != AbstractStringValidator::getLength()))
     {
         XMLString::binToText(tokenNumber, value1, BUF_LEN, 10);
-        XMLString::binToText(getLength(), value2, BUF_LEN, 10);
+        XMLString::binToText(AbstractStringValidator::getLength(), value2, BUF_LEN, 10);
 
         ThrowXML3(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_NE_Len
@@ -644,7 +277,7 @@ void ListDatatypeValidator::checkContent( RefVectorOf<XMLCh>* tokenVector, bool 
                 , value2);
     }
 
-    if ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0 &&
+    if ((thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0 &&
         (getEnumeration() != 0))
     {
         int i;
@@ -693,50 +326,105 @@ bool ListDatatypeValidator::valueSpaceCheck(RefVectorOf<XMLCh>* tokenVector
     return true;
 }
 
-int ListDatatypeValidator::compare(const XMLCh* const lValue
-                                 , const XMLCh* const rValue)
+DatatypeValidator* ListDatatypeValidator::getItemTypeDTV() const
 {
-    DatatypeValidator* theItemTypeDTV = getItemTypeDTV();
-    RefVectorOf<XMLCh>* lVector = XMLString::tokenizeString(lValue);
-    Janitor<RefVectorOf<XMLCh> > janl(lVector);
-    RefVectorOf<XMLCh>* rVector = XMLString::tokenizeString(rValue);
-    Janitor<RefVectorOf<XMLCh> > janr(rVector);
-   
-    int lNumberOfTokens = lVector->size();         
-    int rNumberOfTokens = rVector->size();         
+    DatatypeValidator* bdv = this->getBaseValidator();
 
-    if (lNumberOfTokens < rNumberOfTokens)
-        return -1; 
-    else if (lNumberOfTokens > rNumberOfTokens)
-        return 1;
-    else 
-    { //compare each token   
-        for ( int i = 0; i < lNumberOfTokens; i++)
-        {
-            int returnValue = theItemTypeDTV->compare(lVector->elementAt(i), rVector->elementAt(i));
-            if (returnValue != 0) 
-                return returnValue; //REVISIT: does it make sense to return -1 or +1..?               
-        }
-        return 0;
+    while (bdv->getType() == DatatypeValidator::List)
+        bdv = bdv->getBaseValidator();
+
+    return bdv;
+}
+
+// ---------------------------------------------------------------------------
+//  Utilities
+// ---------------------------------------------------------------------------
+void ListDatatypeValidator::assignAdditionalFacet( const XMLCh* const key
+                                                 , const XMLCh* const)
+{
+    ThrowXML1(InvalidDatatypeFacetException
+            , XMLExcepts::FACET_Invalid_Tag
+            , key);
+}
+
+void ListDatatypeValidator::inheritAdditionalFacet()
+{}
+
+void ListDatatypeValidator::checkAdditionalFacetConstraints() const
+{}
+
+void ListDatatypeValidator::checkAdditionalFacet(const XMLCh* const) const
+{}
+
+void ListDatatypeValidator::checkValueSpace(const XMLCh* const content)
+{}
+
+int ListDatatypeValidator::getLength(const XMLCh* const content) const
+{
+    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
+    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
+
+    return tokenVector->size();
+}
+
+void ListDatatypeValidator::inspectFacetBase()
+{
+
+    //
+    // we are pretty sure baseValidator is not null
+    //
+
+    if (getBaseValidator()->getType() == DatatypeValidator::List)
+    {
+        AbstractStringValidator::inspectFacetBase();
     }
-       
-}
+    else
+    {
+        // the first level ListDTV
+        // check 4.3.5.c0 must: enumeration values from the value space of base
+        if ( ((getFacetsDefined() & DatatypeValidator::FACET_ENUMERATION) != 0) &&
+             (getEnumeration() !=0)                                              )
+        {
+            int i;
+            int enumLength = getEnumeration()->size();
+            try
+            {
+                for ( i = 0; i < enumLength; i++)
+                {
+                    // ask the itemType for a complete check
+                    RefVectorOf<XMLCh>* tempList = XMLString::tokenizeString(getEnumeration()->elementAt(i));
+                    int tokenNumber = tempList->size();
 
-void ListDatatypeValidator::validate( const XMLCh* const content)
-{
-    setContent(content);
-    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
-    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
-    checkContent(tokenVector, false);
-}
+                    try 
+                    {
+                        for ( int j = 0; j < tokenNumber; j++)
+                            getBaseValidator()->validate(tempList->elementAt(j));
+                    }
+                    catch (...)
+                    {
+                        delete tempList;
+                        throw;
+                    }
 
-void ListDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
-{
-    setContent(content);
-    RefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
-    Janitor<RefVectorOf<XMLCh> > janName(tokenVector);
-    checkContent(tokenVector, asBase);
-}
+                    delete tempList;
+
+                    // enum shall pass this->checkContent() as well.
+                    checkContent(getEnumeration()->elementAt(i), false);
+                }
+            }
+
+            catch ( XMLException& )
+            {
+                ThrowXML1(InvalidDatatypeFacetException
+                        , XMLExcepts::FACET_enum_base
+                        , getEnumeration()->elementAt(i));
+            }
+    
+        }
+
+    }
+
+}// End of inspectFacetBase()
 
 /**
   * End of file ListDatatypeValidator.cpp

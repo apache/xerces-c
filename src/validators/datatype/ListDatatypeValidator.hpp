@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/10/09 20:56:21  peiyongz
+ * inherit from AbstractStringValidator instead of DatatypeValidator to reuse
+ * the code.
+ *
  * Revision 1.7  2001/08/29 19:03:40  peiyongz
  * Bugzilla# 2816:on AIX 4.2, xlC 3 r ev.1, Compilation error on inline method
  *
@@ -81,10 +85,10 @@
 #if !defined(LIST_DATATYPEVALIDATOR_HPP)
 #define LIST_DATATYPEVALIDATOR_HPP
 
-#include <validators/datatype/DatatypeValidator.hpp>
+#include <validators/datatype/AbstractStringValidator.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 
-class VALIDATORS_EXPORT ListDatatypeValidator : public DatatypeValidator
+class VALIDATORS_EXPORT ListDatatypeValidator : public AbstractStringValidator
 {
 public:
 
@@ -101,14 +105,10 @@ public:
                         , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet);
 
-
     virtual ~ListDatatypeValidator();
 
 	//@}
 
-    // -----------------------------------------------------------------------
-    // Getter methods
-    // -----------------------------------------------------------------------
     /** @name Getter Functions */
     //@{
     /**
@@ -156,24 +156,41 @@ public:
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                         , RefVectorOf<XMLCh>*           const enums
+                                         , const int                           finalSet);
 
     DatatypeValidator* getItemTypeDTV() const;
+
+protected:
+
+    //
+    // ctor provided to be used by derived classes: No
+    //
+
+    virtual void assignAdditionalFacet(const XMLCh* const key
+                                     , const XMLCh* const value);
+
+    virtual void inheritAdditionalFacet();
+
+    virtual void checkAdditionalFacetConstraints() const;
+
+    virtual void checkAdditionalFacet(const XMLCh* const content) const;
+
+    virtual void checkValueSpace(const XMLCh* const content);
+
+    virtual int  getLength(const XMLCh* const content) const;
+
+    // 
+    // Overwrite AbstractStringValidator's 
+    //
+    virtual void inspectFacetBase();
 
 private:
 
     void checkContent(const XMLCh* const content, bool asBase);
 
     void checkContent(RefVectorOf<XMLCh>* tokenVector, bool asBase);
-
-    void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
-
-    void cleanUp();
-
 
     bool valueSpaceCheck(RefVectorOf<XMLCh>* tokenVector
                        , const XMLCh* const  enumStr) const;
@@ -182,29 +199,13 @@ private:
 // Getter methods
 // -----------------------------------------------------------------------
 
-    unsigned int         getLength() const;
-
-    unsigned int         getMaxLength() const;
-
-    unsigned int         getMinLength() const;
-
-    RefVectorOf<XMLCh>*  getEnumeration() const;
-
-    const XMLCh* const   getContent() const;
+    inline const XMLCh* const   getContent() const;
 
 // -----------------------------------------------------------------------
 // Setter methods
 // -----------------------------------------------------------------------
 
-    void                 setLength(unsigned int);
-
-    void                 setMaxLength(unsigned int);
-
-    void                 setMinLength(unsigned int);
-
-    void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
-
-    void                 setContent(const XMLCh* const content);
+    inline void                 setContent(const XMLCh* const content);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -214,107 +215,21 @@ private:
     //      for error reporting purpose.
     //
     // -----------------------------------------------------------------------
-     unsigned int         fLength;
-     unsigned int         fMaxLength;
-     unsigned int         fMinLength;
-     bool                 fEnumerationInherited;
-     RefVectorOf<XMLCh>*  fEnumeration;
      const XMLCh*         fContent;
 };
-
-inline DatatypeValidator* ListDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new ListDatatypeValidator(this, facets, enums, finalSet);
-}
-
-
-
-inline void ListDatatypeValidator::cleanUp()
-{
-    //~RefVectorOf will delete all adopted elements
-    if (fEnumeration && !fEnumerationInherited)
-        delete fEnumeration;
-}
 
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------
-inline unsigned int ListDatatypeValidator::getLength() const
-{
-    return fLength;
-}
-
-inline unsigned int ListDatatypeValidator::getMaxLength() const
-{
-    return fMaxLength;
-}
-
-inline unsigned int ListDatatypeValidator::getMinLength() const
-{
-    return fMinLength;
-}
-
-inline RefVectorOf<XMLCh>* ListDatatypeValidator:: getEnumeration() const
-{
-    return fEnumeration;
-}
-
-inline const XMLCh* const ListDatatypeValidator::getContent() const
+const XMLCh* const ListDatatypeValidator::getContent() const
 {
     return fContent;
-}
-
-inline
-DatatypeValidator* ListDatatypeValidator::getItemTypeDTV() const
-{
-    DatatypeValidator* bdv = this->getBaseValidator();
-
-    while (bdv->getType() == DatatypeValidator::List)
-        bdv = bdv->getBaseValidator();
-
-    return bdv;
-}
-
-inline bool ListDatatypeValidator::isAtomic() const {
-    return false;
 }
 
 // -----------------------------------------------------------------------
 // Setter methods
 // -----------------------------------------------------------------------
-inline void ListDatatypeValidator::setLength(unsigned int newLength)
-{
-    fLength = newLength;
-}
-
-inline void ListDatatypeValidator::setMaxLength(unsigned int newMaxLength)
-{
-    fMaxLength = newMaxLength;
-}
-
-inline void ListDatatypeValidator::setMinLength(unsigned int newMinLength)
-{
-    fMinLength = newMinLength;
-}
-
-inline void ListDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* enums
-                                                , bool                inherited)
-{
-    if (enums)
-    {
-        if (fEnumeration && !fEnumerationInherited)
-            delete fEnumeration;
-
-        fEnumeration = enums;
-        fEnumerationInherited = inherited;
-        setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
-    }
-}
-
-inline void ListDatatypeValidator::setContent(const XMLCh* const content)
+void ListDatatypeValidator::setContent(const XMLCh* const content)
 {
     fContent = content;
 }
