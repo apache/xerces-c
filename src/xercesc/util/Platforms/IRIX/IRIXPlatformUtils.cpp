@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/15 21:05:45  tng
+ * [Bug 14598] IRIX 6.5 / g++ 3.0.4 compilation bugs.  Patch from Richard Balint
+ * .
+ *
  * Revision 1.3  2002/11/04 15:13:00  tng
  * C++ Namespace Support.
  *
@@ -319,7 +323,21 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
 
     if (retVal == NULL)
         return 0;
+
     return retVal;
+}
+
+
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+{
+    const char* tmpFileName = XMLString::transcode(fileName);
+    ArrayJanitor<char> janText((char*)tmpFileName);
+    return fopen( tmpFileName , "wb" );
+}
+
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+{
+    return fopen( fileName , "wb" );
 }
 
 
@@ -343,7 +361,44 @@ XMLPlatformUtils::readFileBuffer( FileHandle          theFile
                  XMLExcepts::File_CouldNotReadFromFile);
     }
 
+
     return (unsigned int)noOfItemsRead;
+}
+
+
+void
+XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
+                                   , long                  toWrite
+                                   , const XMLByte* const  toFlush)
+{
+    if (!theFile        ||
+        (toWrite <= 0 ) ||
+        !toFlush         )
+        return;
+
+    const XMLByte* tmpFlush = (const XMLByte*) toFlush;
+    size_t bytesWritten = 0;
+
+    while (true)
+    {
+        bytesWritten=fwrite(tmpFlush, sizeof(XMLByte), toWrite, (FILE*)theFile);
+
+        if(ferror((FILE*)theFile))
+        {
+            ThrowXML(XMLPlatformUtilsException,XMLExcepts::File_CouldNotWriteToFile);
+        }
+
+        if (bytesWritten < toWrite) //incomplete write
+        {
+            tmpFlush+=bytesWritten;
+            toWrite-=bytesWritten;
+            bytesWritten=0;
+        }
+        else
+            return;
+    }
+
+    return;
 }
 
 
@@ -534,8 +589,8 @@ static XMLMutex atomicOpsMutex;
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
 
-static char* arenaName = 0;
-static usptr_t* arena = 0;
+static char* arenaName = NULL;
+static usptr_t* arena = NULL;
 
 void XMLPlatformUtils::platformInit()
 {
@@ -561,6 +616,8 @@ void XMLPlatformUtils::platformTerm()
     usdetach (arena);
     unlink (arenaName);
     free (arenaName);
+
+    arena = NULL;
     // We don't have any termination requirements at this time
 }
 
@@ -589,8 +646,9 @@ void* XMLPlatformUtils::makeMutex()
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
 
-    if (mtxHandle != NULL) {
-        usfreesema (mtxHandle, arena);
+    if ((mtxHandle != NULL) && (arena != NULL)) {
+
+        usfreesema ((usema_t *)mtxHandle, arena);
         // never returns anything testable for failure, so nothing
         // to throw an exception about.
     }
