@@ -32,6 +32,12 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     </tr>
 
     <tr>
+        <td>2004-02-15</td>
+        <td>Neil Graham</td>
+        <td>make first parameter of BinOutputStream::writeBytes const * const; bug 26936</td>
+    </tr>
+       
+    <tr>
         <td>2004-02-13</td>
         <td>Khaled Noaman</td>
         <td>Remove the limitation on providing PSVI information</td>
