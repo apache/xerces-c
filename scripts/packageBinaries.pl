@@ -574,24 +574,6 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         $ENV{'ICUROOT'} = $ENV{'XMLINSTALL'};
     }
 
-    # Copy the ICU libs for the source build
-    #
-    if (length($ICUROOT) > 0) {
-        # Only one of the following is generated, but don't know which is generated
-        # so trial and error
-        psystem("cp -f $ICUROOT/source/data/libicudt20e.a $ICUROOT/lib/libicudata.a");
-        psystem("cp -f $ICUROOT/source/data/libicudt20l.a $ICUROOT/lib/libicudata.a");
-        psystem("cp -f $ICUROOT/source/data/libicudt20b.a $ICUROOT/lib/libicudata.a");
-
-        psystem("cp -f $ICUROOT/source/data/libicudt20e.so $ICUROOT/lib/libicudata.so");
-        psystem("cp -f $ICUROOT/source/data/libicudt20l.so $ICUROOT/lib/libicudata.so");
-        psystem("cp -f $ICUROOT/source/data/libicudt20b.so $ICUROOT/lib/libicudata.so");
-
-        psystem("cp -f $ICUROOT/source/data/libicudt20e.sl $ICUROOT/lib/libicudata.sl");
-        psystem("cp -f $ICUROOT/source/data/libicudt20l.sl $ICUROOT/lib/libicudata.sl");
-        psystem("cp -f $ICUROOT/source/data/libicudt20b.sl $ICUROOT/lib/libicudata.sl");
-    }
-
     # make the source files
     print("\n\nBuild the xerces-c library ...\n");
     pchdir ("$XERCESCROOT/src");
@@ -612,9 +594,22 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     #   the eventual binary packaging, even though we are doing it in the build directory.
     #
     if (length($ICUROOT) > 0) {
-        psystem("cp -f $ICUROOT/lib/libicuuc.* $XERCESCROOT/lib");
-        psystem("cp -f $ICUROOT/lib/libicudata.* $XERCESCROOT/lib");
-        psystem("cp -f $ICUROOT/source/data/libicudt20*.* $XERCESCROOT/lib");
+        pchdir ("$XERCESCROOT/lib");
+        psystem("cp -f $ICUROOT/source/data/libicudt20*.* .");
+        psystem("rm -f libicudata*");
+        psystem("find . -name 'libicudt20*.so' -exec ln -s {} libicudata.so \\;");
+        psystem("find . -name 'libicudt20*.sl' -exec ln -s {} libicudata.sl \\;");
+
+        psystem("cp -f $ICUROOT/lib/libicuuc.so.20.0  .");
+        psystem("cp -f $ICUROOT/lib/libicuuc.sl.20.0  .");
+        psystem("rm -f libicuuc.so");
+        psystem("rm -f libicuuc.so.20");
+        psystem("rm -f libicuuc.sl");
+        psystem("rm -f libicuuc.sl.20");
+        psystem("find . -name 'libicuuc.so.20.0' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc.so.20.0' -exec ln -s {} libicuuc.so.20 \\;");
+        psystem("find . -name 'libicuuc.sl.20.0' -exec ln -s {} libicuuc.sl \\;");
+        psystem("find . -name 'libicuuc.sl.20.0' -exec ln -s {} libicuuc.sl.20 \\;");
     }
 
     # Now build the samples
@@ -691,10 +686,29 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     # Populate the binary output directory
     print ("\n\nCopying binary outputs ...\n");
     psystem("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
-
-    psystem("cp -f $XERCESCROOT/lib/* $targetdir/lib");
-
     psystem("rm -rf $targetdir/bin/obj");
+
+    # Populate the library output directory
+    print ("\n\nCopying library outputs ...\n");
+    psystem("cp -f $XERCESCROOT/lib/* $targetdir/lib");
+    #
+    # Create symbolic link for those ICU libraries
+    #
+    if (length($ICUROOT) > 0) {
+        pchdir ("$targetdir/lib");
+        psystem("rm -f libicudata*");
+        psystem("find . -name 'libicudt20*.so' -exec ln -s {} libicudata.so \\;");
+        psystem("find . -name 'libicudt20*.sl' -exec ln -s {} libicudata.sl \\;");
+
+        psystem("rm -f libicuuc.so");
+        psystem("rm -f libicuuc.so.20");
+        psystem("rm -f libicuuc.sl");
+        psystem("rm -f libicuuc.sl.20");
+        psystem("find . -name 'libicuuc.so.20.0' -exec ln -s {} libicuuc.so \\;");
+        psystem("find . -name 'libicuuc.so.20.0' -exec ln -s {} libicuuc.so.20 \\;");
+        psystem("find . -name 'libicuuc.sl.20.0' -exec ln -s {} libicuuc.sl \\;");
+        psystem("find . -name 'libicuuc.sl.20.0' -exec ln -s {} libicuuc.sl.20 \\;");
+    }
 
     # Populate the etc output directory like config.status and the map file
     print ("\n\nCopying misc output to etc ...\n");
