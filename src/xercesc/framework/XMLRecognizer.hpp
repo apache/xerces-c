@@ -103,10 +103,11 @@ public :
         , UTF_8         = 4
         , UTF_16B       = 5
         , UTF_16L       = 6
+        , XERCES_XMLCH  = 7
 
         , Encodings_Count
         , Encodings_Min = EBCDIC
-        , Encodings_Max = UTF_16L
+        , Encodings_Max = XERCES_XMLCH
 
         , OtherEncoding = 999
 
