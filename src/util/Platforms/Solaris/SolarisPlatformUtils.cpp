@@ -56,8 +56,8 @@
 
 /**
  * $Log$
- * Revision 1.8  2000/01/25 22:08:27  aruna1
- * Updated panic calls for synchronization and initialization
+ * Revision 1.9  2000/01/25 22:33:05  aruna1
+ * Updated panic information
  *
  * Revision 1.7  2000/01/21 20:04:00  abagchi
  * Removed the code for loadAMsgSet() when invoked with ICU
@@ -252,26 +252,24 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::panic(const PanicReasons reason)
 {
-    //
-    //  We just print a message and exit
-    //
     
-    fprintf(stderr,
-            "The XML4C system could not be initialized.\n");
-    fprintf(stderr,
-            "The most likely reason for this failure is the inability to find\n");
-    fprintf(stderr,
-            "the ICU coverter files, if you are using ICU. The converter files\n");
-    fprintf(stderr,
-            "have the extension .cnv and exist in a directory 'icu/data' relative\n");
-    fprintf(stderr,
-            "to the XML4C shared library. If you have installed the converter files\n");
-    fprintf(stderr,
-            "in a different location, you need to set up the environment variable\n");
-    fprintf(stderr,
-            "'ICU_DATA' to point directly to the directory containing the\n");
-    fprintf(stderr,
-            "converter files.\n");
+	const char* reasonStr = "Unknown reason";
+    if (reason == Panic_NoTransService)
+        reasonStr = "Could not load a transcoding service";
+    else if (reason == Panic_NoDefTranscoder)
+        reasonStr = "Could not load a local code page transcoder";
+    else if (reason == Panic_CantFindLib)
+        reasonStr = "Could not find the xerces-c DLL";
+    else if (reason == Panic_UnknownMsgDomain)
+        reasonStr = "Unknown message domain";
+    else if (reason == Panic_CantLoadMsgDomain)
+        reasonStr = "Cannot load message domain";
+    else if (reason == Panic_SynchronizationErr)
+        reasonStr = "Cannot synchronize system or mutex";
+    else if (reason == Panic_SystemInit)
+        reasonStr = "Cannot initialize the system or mutex";
+
+    fprintf(stderr, "%s\n", reasonStr);
     
     exit(-1);
 }

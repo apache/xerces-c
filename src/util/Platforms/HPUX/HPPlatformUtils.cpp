@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/25 22:32:45  aruna1
+ * Updated panic information
+ *
  * Revision 1.5  2000/01/20 20:37:55  abagchi
  * Removed fgLibLocation and cleaned up ICU path related stuff
  *
@@ -255,27 +258,24 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 // ---------------------------------------------------------------------------
 void XMLPlatformUtils::panic(const PanicReasons reason)
 {
-    //
-    //  We just print a message and exit
-    //
-    
-    fprintf(stderr,
-        "The Xerces-C system could not be initialized.\n");
-    fprintf(stderr,
-        "If you are using ICU, then the most likely reason for this failure\n");
-    fprintf(stderr,
-        "is the inability to find the ICU coverter files. The converter files\n");
-    fprintf(stderr,
-        "have the extension .cnv and exist in a directory 'icu/data' relative\n");
-    fprintf(stderr,
-        "to the Xerces-C shared library. If you have installed the converter files\n");
-    fprintf(stderr,
-        "in a different location, you need to set up the environment variable\n");
-    fprintf(stderr,
-        "'ICU_DATA' to point directly to the directory containing the\n");
-    fprintf(stderr,
-        "converter files.\n");
-    
+	 const char* reasonStr = "Unknown reason";
+    if (reason == Panic_NoTransService)
+        reasonStr = "Could not load a transcoding service";
+    else if (reason == Panic_NoDefTranscoder)
+        reasonStr = "Could not load a local code page transcoder";
+    else if (reason == Panic_CantFindLib)
+        reasonStr = "Could not find the xerces-c DLL";
+    else if (reason == Panic_UnknownMsgDomain)
+        reasonStr = "Unknown message domain";
+    else if (reason == Panic_CantLoadMsgDomain)
+        reasonStr = "Cannot load message domain";
+    else if (reason == Panic_SynchronizationErr)
+        reasonStr = "Cannot synchronize system or mutex";
+    else if (reason == Panic_SystemInit)
+        reasonStr = "Cannot initialize the system or mutex";
+
+    fprintf(stderr, "%s\n", reasonStr);
+
     exit(-1);
 }
 
