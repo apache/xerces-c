@@ -165,7 +165,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "IDOM_Traver sal Test"=".\IDOMTraversalTest\IDOMTraversalTest.dsp" - Package Owner=<4>
+Project: "ITraversal"=".\IDOMTraversalTest\ITraversal.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -173,6 +173,9 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
 }}}
 
 ###############################################################################
