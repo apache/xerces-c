@@ -84,20 +84,20 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE
+1 TEXTINCLUDE DISCARDABLE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE
+2 TEXTINCLUDE DISCARDABLE 
 BEGIN
     "#include ""winres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE
+3 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "1 TYPELIB ""..\\..\\..\\..\\..\\Build\\Win32\\xml4com\\xml4com.tlb""\r\n"
+    "1 TYPELIB ""..\\\\..\\\\..\\\\Build\\\\Win32\\\\xml4com\\\\xml4com.tlb""\r\n"
     "\0"
 END
 
@@ -164,7 +164,7 @@ IDR_XMLHTTPREQUEST      REGISTRY DISCARDABLE    "xmlhttprequest.rgs"
 // String Table
 //
 
-STRINGTABLE DISCARDABLE
+STRINGTABLE DISCARDABLE 
 BEGIN
     IDS_PROJNAME            "xml4com"
 END
@@ -179,7 +179,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-1 TYPELIB "..\..\..\..\..\Build\Win32\\xml4com\\xml4com.tlb"
+1 TYPELIB "..\\..\\..\\Build\\Win32\\xml4com\\xml4com.tlb"
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
