@@ -153,12 +153,16 @@ public :
     static const XMLCh* nameForEncoding(const Encodings theEncoding);
 
 
-private :
+protected :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors, operators, and destructor
     //
     //  This class is effectively being used as a namespace for some static
     //  methods.
+    //
+    //   (these functions are protected rather than private only to get rid of
+    //    some annoying compiler warnings.)
+    //
     // -----------------------------------------------------------------------
     XMLRecognizer();
     ~XMLRecognizer();

@@ -1383,7 +1383,7 @@ void XMLReader::doInitDecode()
                 //  A char greater than 0x7F is not allowed in this case. If
                 //  so, undo and throw.
                 //
-                if (curCh > 0x7F)
+                if (curCh & 0x80)
                 {
                     fCharsAvail = 0;
                     fRawBufIndex = 0;

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2000/08/30 22:21:40  andyh
+# Unix Build script fixes.  Clean up some UNIX compiler warnings.
+#
 # Revision 1.8  2000/06/09 23:45:03  rahulj
 # More PTX port related changes submitted by
 # Sumit Chawla <sumitc@us.ibm.com>.
@@ -150,7 +153,7 @@ CMP= -c ${CXXFLAGS}
 CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic -instances=static
 LINK =  g++ -D${PLATFORM} -fpic
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
-EXTRA_LINK_OPTIONS=-lc
+EXTRA_LINK_OPTIONS=-lc -Wl,-rpath-link,$(XERCESCROOT)/lib
 SHLIBSUFFIX=.so
 endif
 

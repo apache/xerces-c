@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/08/30 22:21:44  andyh
+ * Unix Build script fixes.  Clean up some UNIX compiler warnings.
+ *
  * Revision 1.12  2000/05/15 23:08:59  andyh
  * Remove entity tests, which failed because entity nodes are (correctly)
  * read-only.
@@ -484,7 +487,7 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
  * version 2.0 10/12/98
  *
  */
- void main(int argc, char **argv)
+ int main(int argc, char **argv)
  {
      
      {
@@ -500,7 +503,7 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
              char *pMessage = XMLString::transcode(toCatch.getMessage());
              fprintf(stderr, "Error during initialization! \n  %s \n", pMessage);
              delete [] pMessage;
-             return;
+             return -1;
          } 
          
          long avgTime = 0;
@@ -643,6 +646,7 @@ void DTest::docBuilder(DOM_Document document, DOMString name)
 
     XMLPlatformUtils::Terminate();
     DomMemDebug().print();
+    return 0;
 };
 
 

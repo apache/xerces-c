@@ -627,6 +627,7 @@ protected:
     friend class DOMParser;
     friend class DOM_Entity;
     friend class RangeImpl;
+    friend class CharacterDataImpl;
 
 };
 

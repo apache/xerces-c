@@ -939,7 +939,7 @@ bool RangeImpl::isAncestorOf(const DOM_Node& a, const DOM_Node& b) {
 unsigned short RangeImpl::indexOf(const DOM_Node& child, const DOM_Node& parent) const
 {
     unsigned short i = 0;
-    if (child.getParentNode() != parent) return -1;
+    if (child.getParentNode() != parent) return (unsigned short)-1;
     for(DOM_Node node = child; node!= null; node=node.getPreviousSibling()) {
         i++;
     }

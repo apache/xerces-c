@@ -138,7 +138,8 @@ void CharacterDataImpl::deleteData(unsigned int offset, unsigned int count)
             unsigned int sz = ranges->size();
             if (sz != 0) {
                 for (unsigned int i =0; i<sz; i++) {
-                    ranges->elementAt(i)->updateRangeForDeletedText( (DOM_Node&)*this, offset, count);
+                    DOM_Node dn = DOM_Node(this);
+                    ranges->elementAt(i)->updateRangeForDeletedText( dn, offset, count);
                 }
             }
         }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2000/08/30 22:21:37  andyh
+ * Unix Build script fixes.  Clean up some UNIX compiler warnings.
+ *
  * Revision 1.2  2000/08/07 18:21:27  jpolast
  * change SAX_EXPORT module to SAX2_EXPORT
  *
@@ -75,7 +78,7 @@
 
 class SAX2_EXPORT XMLReaderFactory
 {
-private:
+protected:                // really should be private, but that causes compiler warnings.
 	XMLReaderFactory() ;
 	~XMLReaderFactory() ;
 

@@ -142,7 +142,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         
         # Make the icu dlls
         pchdir ("$ICUROOT/source/allinone");
-        if ($opt_j eq "") {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
+        if (!$opt_j) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
 	    #For nt we ship both debug and release dlls
 	    psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD /OUT buildlog.txt");
 	    psystem("cat buildlog.txt");
@@ -492,8 +492,14 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/doc/html/apiDocs");
     
     # Build ICU if needed
-    if (length(($ICUROOT) > 0) && ($opt_j eq "")) {
+    if ($opt_t =~ m/icu/i && !$opt_j)
+    {
         print("\n\nBuild ICU ...\n");
+        if(length($ICUROOT) == 0) {
+           print("Error, ICUROOT not set, can not build ICU\n");
+           exit(-1);
+           }
+
         # First make the ICU files executable
         pchdir ("$ICUROOT/source");
         psystem ("chmod +x configure config.*");
@@ -540,6 +546,14 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("gmake clean");     # May want to comment this line out to speed up
     psystem ("gmake");
     
+    # Move ICU libs into lib dir, so samples will link.  This matches the structure of
+    #   the eventual binary packaging, even though we are doing it in the build directory.
+    #
+    if (length($ICUROOT) > 0) {
+	psystem("cp -f $ICUROOT/lib/libicu-uc.* $XERCESCROOT/lib");
+	psystem("cp -f $ICUROOT/data/libicudata.* $XERCESCROOT/lib");
+    }
+
     # Now build the samples
     print("\n\nBuild the samples ...\n");
     pchdir ("$XERCESCROOT/samples");
@@ -606,10 +620,14 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     # Populate the binary output directory
     print ("\n\nCopying binary outputs ...\n");
     psystem("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
-    if (length($ICUROOT) > 0) {
-        psystem("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
-        psystem("cp -f $ICUROOT/data/libicudata.* $targetdir/lib");
-    }
+    
+    
+    
+    #if (length($ICUROOT) > 0) {
+    #    psystem("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
+    #    psystem("cp -f $ICUROOT/data/libicudata.* $targetdir/lib");
+    #}
+    
     psystem("cp -f $XERCESCROOT/lib/*.a $targetdir/lib");
     psystem("cp -f $XERCESCROOT/lib/*.so $targetdir/lib");
     psystem("cp -f $XERCESCROOT/lib/*.sl $targetdir/lib");
