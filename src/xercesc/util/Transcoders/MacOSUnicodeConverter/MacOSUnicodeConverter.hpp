@@ -61,8 +61,8 @@
 #ifndef MACOSUNICODECONVERTER_HPP
 #define MACOSUNICODECONVERTER_HPP
 
-#include <xercesc/util/TransService.hpp>
 #include <cstddef>
+#include <xercesc/util/TransService.hpp>
 
 #if defined(__APPLE__)
     //	Framework includes from ProjectBuilder

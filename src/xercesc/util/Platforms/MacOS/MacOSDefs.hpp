@@ -59,7 +59,6 @@
  */
 
 
-
 #ifndef MACOS_DEFS_HPP
 #define MACOS_DEFS_HPP
 
@@ -68,11 +67,12 @@
 // ---------------------------------------------------------------------------
 #define ENDIANMODE_BIG
 
-
 // ---------------------------------------------------------------------------
 //  Define all the required platform types
+//
+//	FileHandle is a pointer to XMLMacAbstractFile. Due to namespace
+//	declaration issues, it is declared here as a void*.
 // ---------------------------------------------------------------------------
-class XMLMacAbstractFile;
-typedef XMLMacAbstractFile*   FileHandle;
+typedef void*   FileHandle;
 
 #endif

@@ -69,8 +69,6 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/BinInputStream.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
-
 #if defined(__APPLE__)
     //	Framework includes from ProjectBuilder
 	#include <CoreServices/CoreServices.h>
@@ -80,6 +78,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 	#include <CFURLAccess.h>
 #endif
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 // This class implements the BinInputStream interface specified by the XML

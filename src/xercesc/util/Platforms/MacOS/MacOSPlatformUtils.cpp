@@ -62,36 +62,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/Janitor.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/Platforms/MacOS/MacOSDefs.hpp>
-#include <xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp>
-
-#if (defined(XML_USE_INMEMORY_MSGLOADER) || defined(XML_USE_INMEM_MESSAGELOADER))
-   #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
-#endif
-#if (defined(XML_USE_MACOS_UNICODECONVERTER) || defined(XML_USE_NATIVE_TRANSCODER))
-   #include <xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp>
-#endif
-
-//	Make up our minds about which netaccessor we'll use
-#if (defined(XML_USE_NETACCESSOR_URLACCESSCF) || (defined(XML_USE_NETACCESSOR_NATIVE) && TARGET_API_MAC_CARBON))
-    #define USE_URLACCESSCF
-#elif (defined(XML_USE_NETACCESSOR_URLACCESS) || (defined(XML_USE_NETACCESSOR_NATIVE) && !TARGET_API_MAC_CARBON))
-    #define USE_URLACCESS
-#endif
-
-#if defined(USE_URLACCESSCF)
-   #include <xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp>
-#elif defined(USE_URLACCESS)
-   #include <xercesc/util/NetAccessors/MacOSURLAccess/MacOSURLAccess.hpp>
-#endif
-
-
 #include <cstring>
 #include <cstdlib>
 #include <cctype>
@@ -113,6 +83,35 @@
     #include <DriverServices.h>
     #include <CFString.h>
     #include <URLAccess.h>
+#endif
+
+#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/Janitor.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp>
+
+#if (defined(XML_USE_INMEMORY_MSGLOADER) || defined(XML_USE_INMEM_MESSAGELOADER))
+   #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
+#endif
+#if (defined(XML_USE_MACOS_UNICODECONVERTER) || defined(XML_USE_NATIVE_TRANSCODER))
+   #include <xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp>
+#endif
+
+//	Make up our minds about which netaccessor we'll use
+#if (defined(XML_USE_NETACCESSOR_URLACCESSCF) || (defined(XML_USE_NETACCESSOR_NATIVE) && TARGET_API_MAC_CARBON))
+    #define USE_URLACCESSCF
+#elif (defined(XML_USE_NETACCESSOR_URLACCESS) || (defined(XML_USE_NETACCESSOR_NATIVE) && !TARGET_API_MAC_CARBON))
+    #define USE_URLACCESS
+#endif
+
+#if defined(USE_URLACCESSCF)
+   #include <xercesc/util/NetAccessors/MacOSURLAccessCF/MacOSURLAccessCF.hpp>
+#elif defined(USE_URLACCESS)
+   #include <xercesc/util/NetAccessors/MacOSURLAccess/MacOSURLAccess.hpp>
 #endif
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -562,19 +561,19 @@ XMLPlatformUtils::panic(const PanicReasons reason)
 unsigned int
 XMLPlatformUtils::curFilePos(const FileHandle theFile)
 {
-    return theFile->currPos();
+	return reinterpret_cast<XMLMacAbstractFile*>(theFile)->currPos();
 }
 
 void
 XMLPlatformUtils::closeFile(const FileHandle theFile)
 {
-    theFile->close();
+    reinterpret_cast<XMLMacAbstractFile*>(theFile)->close();
 }
 
 unsigned int
 XMLPlatformUtils::fileSize(const FileHandle theFile)
 {
-    return theFile->size();
+    return reinterpret_cast<XMLMacAbstractFile*>(theFile)->size();
 }
 
 
@@ -635,7 +634,7 @@ XMLPlatformUtils::readFileBuffer(   const FileHandle      theFile
                                  ,  const unsigned int    toRead
                                  ,        XMLByte* const  toFill)
 {
-    return theFile->read(toRead, toFill);
+    return reinterpret_cast<XMLMacAbstractFile*>(theFile)->read(toRead, toFill);
 }
 
 
@@ -644,14 +643,14 @@ XMLPlatformUtils::writeBufferToFile(   const   FileHandle   theFile
                                     ,  const long		    toWrite
                                     ,  const XMLByte* const toFlush)
 {
-    return theFile->write(toWrite, toFlush);
+    return reinterpret_cast<XMLMacAbstractFile*>(theFile)->write(toWrite, toFlush);
 }
 
 
 void
 XMLPlatformUtils::resetFile(FileHandle theFile)
 {
-    theFile->reset();
+    reinterpret_cast<XMLMacAbstractFile*>(theFile)->reset();
 }
 
 

@@ -61,14 +61,14 @@
  * $Id$
  */
 
+#include <cstdlib>
+#include <cstring>
+
 #include <xercesc/util/XMLNetAccessor.hpp>
 #include <xercesc/util/NetAccessors/MacOSURLAccessCF/URLAccessCFBinInputStream.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/Janitor.hpp>
-
-#include <cstdlib>
-#include <cstring>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

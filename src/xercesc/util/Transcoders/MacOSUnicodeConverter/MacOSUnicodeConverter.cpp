@@ -62,23 +62,14 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/TranscodingException.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/Janitor.hpp>
-#include <xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp>
+#include <algorithm>
+#include <cstddef>
+#include <cstring>
 
 #if defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
 	// Only used under metrowerks.
 	#include <cwctype>
 #endif
-
-#include <algorithm>
-#include <cstddef>
-#include <cstring>
 
 #if defined(__APPLE__)
     //	Framework includes from ProjectBuilder
@@ -97,6 +88,15 @@
     #include <CFString.h>
 #endif
 
+#include <xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/TranscodingException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/Janitor.hpp>
+#include <xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -105,7 +105,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 //	TempUniBuf is used for cases where we need a temporary conversion due to
 //	a mismatch between UniChar (the 16-bit type that the Unicode converter uses)
-//	and XMLCH (the type that Xerces uses to represent a Unicode character).
+//	and XMLCh (the type that Xerces uses to represent a Unicode character).
 //	In the case of Metrowerks, these are the same size. For ProjectBuilder, they
 //	used to differ, but they are now the same since XMLCh is now always fixed
 //	as a 16 bit character, rather than floating with wchar_t as it used to.
@@ -463,11 +463,12 @@ void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase) const
 #if TARGET_API_MAC_CARBON
 
    // If we're targeting carbon, use the CFString conversion to uppercase
+   int len = XMLString::stringLen(toUpperCase);
    CFMutableStringRef cfString = CFStringCreateMutableWithExternalCharactersNoCopy(
-        NULL,
+        kCFAllocatorDefault,
         (UniChar*)toUpperCase,
-        XMLString::stringLen(toUpperCase),
-        0,
+        len,		// length
+        len,		// capacity
         kCFAllocatorNull);
    CFStringUppercase(cfString, NULL);
    CFRelease(cfString);
@@ -491,11 +492,12 @@ void MacOSUnicodeConverter::lowerCase(XMLCh* const toLowerCase) const
 #if TARGET_API_MAC_CARBON
 
    // If we're targeting carbon, use the CFString conversion to uppercase
+   int len = XMLString::stringLen(toLowerCase);
    CFMutableStringRef cfString = CFStringCreateMutableWithExternalCharactersNoCopy(
-        NULL,
+        kCFAllocatorDefault,
         (UniChar*)toLowerCase,
-        XMLString::stringLen(toLowerCase),
-        0,
+        len,		// length
+        len,		// capacity
         kCFAllocatorNull);
    CFStringLowercase(cfString, NULL);
    CFRelease(cfString);

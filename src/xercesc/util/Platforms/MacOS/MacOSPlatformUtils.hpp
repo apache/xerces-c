@@ -60,8 +60,8 @@
 
 #pragma once
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <cstdlib>
+#include <xercesc/util/XercesDefs.hpp>
 
 #if defined(__APPLE__)
     //	Framework includes from ProjectBuilder
