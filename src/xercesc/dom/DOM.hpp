@@ -105,6 +105,7 @@
 #include <xercesc/dom/DOMImplementationSource.hpp>
 #include <xercesc/dom/DOMInputSource.hpp>
 #include <xercesc/dom/DOMLocator.hpp>
+#include <xercesc/dom/DOMUserDataHandler.hpp>
 #include <xercesc/dom/DOMWriter.hpp>
 #include <xercesc/dom/DOMWriterFilter.hpp>
 

@@ -112,6 +112,7 @@ DOM_CPP_PUBHEADERS = \
 	DOMRangeException.hpp \
 	DOMText.hpp \
 	DOMTreeWalker.hpp \
+	DOMUserDataHandler.hpp \
 	DOMWriter.hpp \
 	DOMWriterFilter.hpp
 
@@ -121,7 +122,7 @@ DOM_C_FILES =
 
 DOM_CPP_OBJECTS = \
 	DOMException.$(TO) \
-	DOMRangeException.$(TO) 
+	DOMRangeException.$(TO)
 
 all::	includes $(DOM_CPP_OBJECTS) impl deprecated
 
