@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/02/19 20:41:25  knoaman
+ * Schema errata E2-38.
+ *
  * Revision 1.4  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -115,7 +118,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Local static data
 // ---------------------------------------------------------------------------
-const int   BLOCKNAMESIZE = 96;
+const int   BLOCKNAMESIZE = 93;
 
 // Block Names IsX
 // only define Specials as FEFF..FEFF, missing Specials as FFF0..FFFD, add manually
@@ -292,14 +295,6 @@ const XMLCh fgBlockNames[][BLOCKNAMESIZE] =
     { chLatin_I, chLatin_s, chLatin_H, chLatin_a, chLatin_n, chLatin_g, chLatin_u, chLatin_l, chLatin_S,
       chLatin_y, chLatin_l, chLatin_l, chLatin_a, chLatin_b, chLatin_l, chLatin_e, chLatin_s,
        chNull },
-    { chLatin_I, chLatin_s, chLatin_H, chLatin_i, chLatin_g, chLatin_h, chLatin_S, chLatin_u, chLatin_r,
-      chLatin_r, chLatin_o, chLatin_g, chLatin_a, chLatin_t, chLatin_e, chLatin_s,  chNull },
-    { chLatin_I, chLatin_s, chLatin_H, chLatin_i, chLatin_g, chLatin_h, chLatin_P, chLatin_r, chLatin_i,
-      chLatin_v, chLatin_a, chLatin_t, chLatin_e, chLatin_U, chLatin_s, chLatin_e,
-      chLatin_S, chLatin_u, chLatin_r, chLatin_r, chLatin_o, chLatin_g, chLatin_a,
-      chLatin_t, chLatin_e, chLatin_s,  chNull },
-    { chLatin_I, chLatin_s, chLatin_L, chLatin_o, chLatin_w, chLatin_S, chLatin_u, chLatin_r, chLatin_r,
-      chLatin_o, chLatin_g, chLatin_a, chLatin_t, chLatin_e, chLatin_s,  chNull },
     { chLatin_I, chLatin_s, chLatin_P, chLatin_r, chLatin_i, chLatin_v, chLatin_a, chLatin_t, chLatin_e,
       chLatin_U, chLatin_s, chLatin_e,  chNull },
     { chLatin_I, chLatin_s, chLatin_C, chLatin_J, chLatin_K, chLatin_C, chLatin_o, chLatin_m, chLatin_p,
@@ -373,11 +368,10 @@ const XMLInt32 blockRanges[] =
     0x2600,0x26FF,0x2700,0x27BF,0x2800,0x28FF,0x2E80,0x2EFF,0x2F00,0x2FDF,0x2FF0,0x2FFF,
     0x3000,0x303F,0x3040,0x309F,0x30A0,0x30FF,0x3100,0x312F,0x3130,0x318F,0x3190,0x319F,
     0x31A0,0x31BF,0x3200,0x32FF,0x3300,0x33FF,0x3400,0x4DB5,0x4E00,0x9FFF,0xA000,0xA48F,
-    0xA490,0xA4CF,0xAC00,0xD7A3,0xD800,0xDB7F,0xDB80,0xDBFF,0xDC00,0xDFFF,0xE000,0xF8FF,
-    0xF900,0xFAFF,0xFB00,0xFB4F,0xFB50,0xFDFF,0xFE20,0xFE2F,0xFE30,0xFE4F,0xFE50,0xFE6F,
-    0xFE70,0xFEFE,0xFEFF,0xFEFF,0xFF00,0xFFEF,0x10300,0x1032F,0x10330,0x1034F,
-    0x10400,0x1044F,0x1D000,0x1D0FF,0x1D100,0x1D1FF,0x1D400,0x1D7FF,0x20000,0x2A6D6,0x2F800,0x2FA1F,
-    0xE0000,0xE007F, chNull
+    0xA490,0xA4CF,0xAC00,0xD7A3,0xE000,0xF8FF,0xF900,0xFAFF,0xFB00,0xFB4F,0xFB50,0xFDFF,
+    0xFE20,0xFE2F,0xFE30,0xFE4F,0xFE50,0xFE6F,0xFE70,0xFEFE,0xFEFF,0xFEFF,0xFF00,0xFFEF,
+    0x10300,0x1032F,0x10330,0x1034F,0x10400,0x1044F,0x1D000,0x1D0FF,0x1D100,0x1D1FF,
+    0x1D400,0x1D7FF,0x20000,0x2A6D6,0x2F800,0x2FA1F,0xE0000,0xE007F, chNull
 };
 
 // ---------------------------------------------------------------------------
