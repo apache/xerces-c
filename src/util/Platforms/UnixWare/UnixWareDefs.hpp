@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  1999/12/17 23:31:29  rahulj
+ * Fixed the typo in Little endian #define.
+ *
  * Revision 1.1  1999/12/17 22:24:03  rahulj
  * Added missing UnixWare files to the repository.
  *
@@ -67,7 +70,7 @@
 // ---------------------------------------------------------------------------
 //  UnixWare runs in little endian mode
 // ---------------------------------------------------------------------------
-#define ENDIANMODE_LITTLW
+#define ENDIANMODE_LITTLE
 typedef void* FileHandle;
 
 #ifndef UNIXWARE
