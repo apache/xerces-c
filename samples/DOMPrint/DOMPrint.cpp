@@ -168,7 +168,7 @@ static char*                    gXmlFile               = 0;
 static bool                     gDoNamespaces          = false;
 static bool                     gDoSchema              = false;
 static bool                     gSchemaFullChecking    = false;
-static bool                     gDoCreate              = true;
+static bool                     gDoCreate              = false;
 
 static char*                    goutputfile            = 0;
 // options for DOMWriter's features
