@@ -86,7 +86,7 @@ SAX2_CPP_PRIVHEADERS =
 SAX2_C_FILES =
 
 SAX2_CPP_OBJECTS = \
-	sax2Dummy.$(TO) \
+	sax2Dummy.$(TO)
 
 all::	includes $(SAX2_CPP_OBJECTS)
 
