@@ -2084,9 +2084,17 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     //  Ask the element to clear the 'provided' flag on all of the att defs
     //  that it owns, and to return us a boolean indicating whether it has
     //  any defs.
-    ComplexTypeInfo *currType = (fValidate)
-                ?((SchemaValidator*)fValidator)->getCurrentTypeInfo()
-                :0;
+    DatatypeValidator *currDV = 0;
+    ComplexTypeInfo *currType = 0;
+
+    if (fValidate)
+    {
+        currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+        if (!currType) {
+            currDV = ((SchemaValidator*)fValidator)->getCurrentDatatypeValidator();
+        }
+    }
+
     const bool hasDefs = (currType && fValidate) 
             ? currType->resetDefs()
             : elemDecl->resetDefs();
@@ -2191,7 +2199,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     attDef = currType->getAttDef(suffPtr, uriId);
                     attWildCard = currType->getAttWildCard();
                 }
-                else { // check explicitly-set wildcard
+                else if (!currDV) { // check explicitly-set wildcard
                     attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
                 }
 

@@ -83,8 +83,15 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     // know what's best.  REVISIT:  don't modify grammar at all; eliminate
     // this step...
     ComplexTypeInfo *currType = 0;
+    DatatypeValidator *currDV = 0;
     if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType && fValidate)
+    {
         currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+        if (!currType) {
+            currDV = ((SchemaValidator*)fValidator)->getCurrentDatatypeValidator();
+        }
+    }
+
     const bool hasDefs = (currType && fValidate)
             ? currType->resetDefs()
             : elemDecl->resetDefs();
@@ -199,7 +206,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     attDef = currType->getAttDef(suffPtr, uriId);
                     attWildCard = currType->getAttWildCard();
                 }
-                else { // check explicitly-set wildcard
+                else if (!currDV) { // check explicitly-set wildcard
                     attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
                 }
 
