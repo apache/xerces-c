@@ -56,6 +56,9 @@
 #
 # $Id$
 # $Log$
+# Revision 1.2  2004/08/23 14:21:56  peiyongz
+# no message
+#
 # Revision 1.1  2004/08/19 17:17:21  peiyongz
 # XSValueTest
 #
@@ -84,21 +87,22 @@ PREFIX = @prefix@
 THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
 
-include ../../../version.incl
-include ../../Makefile.incl
+include ../../version.incl
+include ../Makefile.incl
 
-APP_NAME=XSValuTest
-APP_DIR=XSValuTest
+APP_NAME=XSValueTest
+APP_DIR=XSValueTest
 
 OUTDIR= ${XERCESCROOT}/tests/${APP_DIR}
 EXEC=	${XERCESCROOT}/bin
 OBJS=	${OUTDIR}/XSValueTest.o
 SRC=	${XERCESCROOT}/tests/${APP_DIR}
-HEADER_FILES=${SRC}/XSValueTest.hpp
+INCLUDES= -I. -I${XERCESCROOT}/include
+HEADER_FILES= ${SRC}/XSValueTest.hpp
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET= "//'${LOADMOD}(${APP_NAME})'"
+BATCH_TARGET= "//'${LOADMOD}(XSVALTST)'"
 all:: makedir ${BATCH_TARGET}
 else
 all:: makedir ${EXEC}/${APP_NAME}
@@ -108,7 +112,8 @@ makedir::
 	-mkdir -p $(OUTDIR)
 
 ${EXEC}/${APP_NAME}:: ${OBJS}
-	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
+	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} ${LIBS}
+
 ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
