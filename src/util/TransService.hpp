@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/11/01 23:37:07  jasons
+ * 2001-11-01  Jason E. Stewart  <jason@openinformatics.com>
+ *
+ * 	* src/util/TransService.hpp (Repository):
+ * 	Updated Doxygen documentation for XMLTranscoder class
+ *
  * Revision 1.13  2001/05/11 13:26:30  tng
  * Copyright update.
  *
@@ -250,42 +256,74 @@ private :
 
 
 
-//
-//  This type of transcoder is for non-local code page encodings, i.e.
-//  named encodings. These are used internally by the scanner to internalize
-//  raw XML into the internal Unicode format, and by writer classes to
-//  convert that internal Unicode format (which comes out of the parser)
-//  back out to a format that the receiving client code wants to use.
-//
+/**
+  * <code>DOMString</code> is the generic string class that stores all strings
+  * used in the DOM C++ API.
+  *
+  * Though this class supports most of the common string operations to manipulate
+  * strings, it is not meant to be a comphrehensive string class.
+  */
+
+/** 
+  *   <code>XMLTranscoder</code> is for transcoding non-local code
+  *   page encodings, i.e.  named encodings. These are used internally
+  *   by the scanner to internalize raw XML into the internal Unicode
+  *   format, and by writer classes to convert that internal Unicode
+  *   format (which comes out of the parser) back out to a format that
+  *   the receiving client code wants to use.
+  */
 class XMLUTIL_EXPORT XMLTranscoder
 {
 public :
-    // -----------------------------------------------------------------------
-    //  This enum is used by the transcodeTo() method to indicate how to
-    //  react to unrepresentable characters. The transcodeFrom() method always
-    //  works the same. It will consider any invalid data to be an error and
-    //  throw.
-    //
-    //  The options mean:
-    //      Throw   - Throw an exception
-    //      RepChar - Use the replacement char
-    // -----------------------------------------------------------------------
+
+	/** 
+	 * This enum is used by the <code>transcodeTo()</code> method
+	 * to indicate how to react to unrepresentable characters. The
+	 * <code>transcodeFrom()</code> method always works the
+	 * same. It will consider any invalid data to be an error and
+	 * throw.
+	 */
     enum UnRepOpts
     {
-        UnRep_Throw
-        , UnRep_RepChar
+        UnRep_Throw		/**< Throw an exception */
+        , UnRep_RepChar		/**< Use the replacement char */
     };
 
 
-    // -----------------------------------------------------------------------
-    //  Public constructors and destructor
-    // -----------------------------------------------------------------------
+	/** @name Destructor. */
+	//@{
+
+	 /**
+	  * Destructor for XMLTranscoder
+	  *
+	  */
     virtual ~XMLTranscoder();
+	//@}
 
 
-    // -----------------------------------------------------------------------
-    //  The virtual transcoding interface
-    // -----------------------------------------------------------------------
+
+    /** @name The virtual transcoding interface */
+    //@{
+
+    /** Converts from the encoding of the service to the internal XMLCh* encoding
+      *
+      * @param srcData the source buffer to be transcoded
+      * @param srcCount number of characters in the source buffer
+      * @param toFill the destination buffer
+      * @param maxChars the max number of characters in the destination buffer
+      * @param bytesEaten after transcoding, this will hold the number of bytes
+      *    that were processed from the source buffer
+      * @param charSizes an array which must be at least as big as maxChars
+      *    into which will be inserted values that indicate how many
+      *    bytes from the input went into each XMLCh that was created
+      *    into toFill. Since many encodings use variable numbers of
+      *    byte per character, this provides a means to find out what
+      *    bytes in the input went into making a particular output
+      *    UTF-16 character.
+      * @return Returns the number of chars put into the target buffer
+      */
+
+
     virtual unsigned int transcodeFrom
     (
         const   XMLByte* const          srcData
@@ -295,6 +333,19 @@ public :
         ,       unsigned int&           bytesEaten
         ,       unsigned char* const    charSizes
     ) = 0;
+
+    /** Converts from the internal XMLCh* encoding to the encoding of the service
+      *
+      * @param srcData    the source buffer to be transcoded
+      * @param srcCount   number of characters in the source buffer
+      * @param toFill     the destination buffer
+      * @param maxBytes   the max number of bytes in the destination buffer
+      * @param charsEaten after transcoding, this will hold the number of chars
+      *    that were processed from the source buffer
+      * @param options    options to pass to the transcoder that explain how to 
+      *    respond to an unrepresentable character
+      * @return Returns the number of chars put into the target buffer
+      */
 
     virtual unsigned int transcodeTo
     (
@@ -306,19 +357,38 @@ public :
         , const UnRepOpts       options
     ) = 0;
 
+    /** Query whether the transcoder can handle a given character
+      *
+      * @param toCheck   the character code point to check
+      */
+
     virtual bool canTranscodeTo
     (
         const   unsigned int    toCheck
     )   const = 0;
 
+    //@}
 
-    // -----------------------------------------------------------------------
-    //  Getter methods
-    // -----------------------------------------------------------------------
+    /** @name Getter methods */
+    //@{
+
+    /** Get the internal block size
+     *
+       * @return The block size indicated in the constructor. This
+       *   lets the derived class preallocate appopriately sized
+       *   buffers. This sets the maximum number of characters which can
+       *   be internalized per call to <code>transcodeFrom()</code> and
+       *   <code>transcodeTo()</code>.
+       */
     unsigned int getBlockSize() const;
 
+    /** Get the encoding name
+      *
+      * @return the name of the encoding that this
+      *    <code>XMLTranscoder</code> object is for
+      */
     const XMLCh* getEncodingName() const;
-
+	//@}
 
 protected :
     // -----------------------------------------------------------------------
