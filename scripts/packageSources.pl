@@ -82,6 +82,7 @@ print "\nPackaging XERCES-C sources in " . $srctargetdir . " on platform " . $pl
 # Build the API docs
 $docppfilelist = "";
 
+# First scan the 'src/sax' directory
 $hppdir = "$XERCESCROOT/src/sax";
 chdir ($hppdir);
 opendir (THISDIR, $hppdir);
@@ -92,6 +93,7 @@ foreach $hppfile (@allhppfiles) {
        $docppfilelist = $docppfilelist . " " . $hppdir . "/" . $hppfile;
 }
 
+# Next scan the 'src/dom' directory
 $hppdir = "$XERCESCROOT/src/dom";
 chdir ($hppdir);
 opendir (THISDIR, $hppdir);
@@ -100,12 +102,26 @@ opendir (THISDIR, $hppdir);
 @alldomhppfiles = grep(/DOM_/, @allhppfiles);
 closedir(THISDIR);
 foreach $hppfile (@alldomhppfiles) {
+   $docppfilelist = $docppfilelist . " " . $hppdir . "/" . $hppfile;
+}
+
+# Next scan the 'src/framework' directory
+$hppdir = "$XERCESCROOT/src/framework";
+chdir ($hppdir);
+opendir (THISDIR, $hppdir);
+@allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
+@allhppfiles = grep(/\.hpp/, @allfiles);
+closedir(THISDIR);
+foreach $hppfile (@allhppfiles) {
        $docppfilelist = $docppfilelist . " " . $hppdir . "/" . $hppfile;
 }
 
+# Add a few more files that we left out
 $docppfilelist = $docppfilelist . " $XERCESCROOT/src/dom/DOMString.hpp";
-$docppfilelist = $docppfilelist . " $XERCESCROOT/src/framework/XMLDocumentHandler.hpp";
-$docppfilelist = $docppfilelist . " $XERCESCROOT/src/framework/XMLEntityHandler.hpp";
+$docppfilelist = $docppfilelist . " $XERCESCROOT/src/util/XMLString.hpp";
+$docppfilelist = $docppfilelist . " $XERCESCROOT/src/util/PlatformUtils.hpp";
+$docppfilelist = $docppfilelist . " $XERCESCROOT/src/parsers/DOMParser.hpp";
+$docppfilelist = $docppfilelist . " $XERCESCROOT/src/parsers/SAXParser.hpp";
 
 system ("doc++ -d $XERCESCROOT/doc/html/apiDocs -B $XERCESCROOT/doc/html/apiDocs/tail.html -a -G -k -H -S $docppfilelist");
 
