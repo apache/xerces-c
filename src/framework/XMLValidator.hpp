@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.15  2001/10/24 23:46:52  peiyongz
+  * [Bug 4342] fix the leak.
+  *
   * Revision 1.14  2001/06/05 16:51:17  knoaman
   * Add 'const' to getGrammar - submitted by Peter A. Volchek.
   *
@@ -408,6 +411,10 @@ public:
 
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitXMLValidator();   
 
 protected :
     // -----------------------------------------------------------------------

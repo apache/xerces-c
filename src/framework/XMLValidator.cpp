@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.11  2001/10/24 23:46:52  peiyongz
+  * [Bug 4342] fix the leak.
+  *
   * Revision 1.10  2001/06/04 21:07:34  jberry
   * Increment scanner error count from schema validator, not just in scanner itself.
   *
@@ -107,15 +110,18 @@
 #include <util/PlatformUtils.hpp>
 #include <util/XMLMsgLoader.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 #include <framework/XMLErrorReporter.hpp>
 #include <framework/XMLValidator.hpp>
 #include <internal/XMLScanner.hpp>
 
 
-
 // ---------------------------------------------------------------------------
 //  Local static functions
 // ---------------------------------------------------------------------------
+
+static XMLMutex* validatorMutex = 0;
+static XMLRegisterCleanup validatorMutexCleanup;
 
 //
 //  We need to fault in this mutex. But, since its used for synchronization
@@ -123,7 +129,6 @@
 //
 static XMLMutex& gValidatorMutex()
 {
-    static XMLMutex* validatorMutex = 0;
     if (!validatorMutex)
     {
         XMLMutex* tmpMutex = new XMLMutex;
@@ -132,7 +137,12 @@ static XMLMutex& gValidatorMutex()
             // Someone beat us to it, so let's clean up ours
             delete tmpMutex;
         }
+        else
+        {
+            validatorMutexCleanup.registerCleanup(XMLValidator::reinitXMLValidator);
+        }
     }
+
     return *validatorMutex;
 }
 
@@ -349,3 +359,15 @@ XMLValidator::XMLValidator(XMLErrorReporter* const errReporter) :
     , fScanner(0)
 {
 }
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void XMLValidator::reinitXMLValidator() {
+
+    delete validatorMutex;
+    validatorMutex = 0;
+
+}
+
+
