@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.16  2001/11/13 13:24:46  tng
+  * Deprecate function XMLValidator::checkRootElement.
+  *
   * Revision 1.15  2001/10/24 23:46:52  peiyongz
   * [Bug 4342] fix the leak.
   *
@@ -197,16 +200,6 @@ public:
         XMLElementDecl* const   elemDecl
         , QName** const         children
         , const unsigned int    childCount
-    ) = 0;
-
-    /**
-      * For those validators that contrain the possible root elements of a
-      * document to only particular elements, they should use this call to
-      * validate that the passed root element id is a legal root element.
-      */
-    virtual bool checkRootElement
-    (
-        const   unsigned int    elemId
     ) = 0;
 
     /**
@@ -412,9 +405,24 @@ public:
     //@}
 
     // -----------------------------------------------------------------------
+    //  Deprecated XMLValidator interface
+    // -----------------------------------------------------------------------
+    /**
+      *
+      * DEPRECATED.
+      * For those validators that contrain the possible root elements of a
+      * document to only particular elements, they should use this call to
+      * validate that the passed root element id is a legal root element.
+      */
+    bool checkRootElement
+    (
+        const   unsigned int    elemId
+    ) { return true;};
+
+    // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
-	static void reinitXMLValidator();   
+	static void reinitXMLValidator();
 
 protected :
     // -----------------------------------------------------------------------

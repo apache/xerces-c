@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/11/13 13:25:28  tng
+ * Deprecate function XMLValidator::checkRootElement.
+ *
  * Revision 1.12  2001/06/05 16:51:20  knoaman
  * Add 'const' to getGrammar - submitted by Peter A. Volchek.
  *
@@ -139,11 +142,6 @@ public:
         XMLElementDecl* const   elemDecl
         , QName** const         children
         , const unsigned int    childCount
-    );
-
-    virtual bool checkRootElement
-    (
-        const   unsigned int    elemId
     );
 
     virtual void faultInAttr

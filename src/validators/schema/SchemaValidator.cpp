@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2001/11/13 13:25:08  tng
+ * Deprecate function XMLValidator::checkRootElement.
+ *
  * Revision 1.22  2001/11/09 18:10:58  tng
  * Schema Fix: should concatenate all characters for validation.
  *
@@ -306,13 +309,6 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
 
     // Went ok, so return success
     return -1;
-}
-
-bool SchemaValidator::checkRootElement (const   unsigned int    elemId)
-{
-    // we have nothing to check for root in schema
-    // always return true
-    return true;
 }
 
 void SchemaValidator::faultInAttr (XMLAttr&    toFill, const XMLAttDef&  attDef)   const

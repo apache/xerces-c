@@ -137,20 +137,6 @@ int DTDValidator::checkContent(XMLElementDecl* const elemDecl
 }
 
 
-bool DTDValidator::checkRootElement(const unsigned int elemId)
-{
-    //
-    //  If the root element was never set, then there was never a DOCTYPE. So
-    //  we just return false.
-    //
-    unsigned int fRootElemId = fDTDGrammar->getRootElemId();
-    if (fRootElemId == XMLElementDecl::fgInvalidElemId)
-        return false;
-
-    // Else return true if our stored root element is the same as the passed one
-    return (elemId == fRootElemId);
-}
-
 void DTDValidator::faultInAttr(XMLAttr& toFill, const XMLAttDef& attDef) const
 {
     //
@@ -475,11 +461,13 @@ void DTDValidator::preContentValidation(bool reuseGrammar)
             }
              else if (reason == XMLElementDecl::AsRootElem)
             {
+                // It's ok that the root element is not declared in the DTD
+                /*
                 emitError
                 (
                     XMLValid::UndeclaredElemInDocType
                     , curElem.getFullName()
-                );
+                );*/
             }
              else if (reason == XMLElementDecl::InContentModel)
             {
