@@ -156,7 +156,7 @@ void DOMBuilderImpl::setXMLEntityResolver(XMLEntityResolver* const handler)
 
 void DOMBuilderImpl::setFilter(DOMBuilderFilter* const)
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 }
 
 
@@ -211,12 +211,12 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
              XMLString::compareIString(name, XMLUni::fgDOMInfoset) == 0 ||
              XMLString::compareIString(name, XMLUni::fgDOMCanonicalForm) == 0 ) {
         if (state)
-            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     }
     else if (XMLString::compareIString(name, XMLUni::fgDOMNamespaceDeclarations) == 0 ||
              XMLString::compareIString(name, XMLUni::fgDOMCDATASections) == 0 ) {
         if (!state)
-            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
     }
     else if (XMLString::compareIString(name, XMLUni::fgXercesSchema) == 0)
     {
@@ -268,7 +268,7 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
         getScanner()->setStandardUriConformant(state);
     }
     else {
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
 }
 
@@ -350,7 +350,7 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
         return fUserAdoptsDocument;
     }
     else {
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
 
     return false;
@@ -424,7 +424,7 @@ void DOMBuilderImpl::setProperty(const XMLCh* const name, void* value)
     }
 
     else
-      throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+      throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
 }
 
 
@@ -437,7 +437,7 @@ void* DOMBuilderImpl::getProperty(const XMLCh* const name) const
     else if (XMLString::compareIString(name, XMLUni::fgXercesSecurityManager) == 0)
         return (void*)getSecurityManager();
     else
-        throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     return 0;
 }
 
@@ -489,7 +489,7 @@ void DOMBuilderImpl::parseWithContext(const DOMInputSource&,
                                       DOMNode* const,
                                       const short)
 {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, getMemoryManager());
 }
 
 
