@@ -146,9 +146,23 @@ private :
 //  Small in-memory test document
 //
 // ---------------------------------------------------------------------------
-#ifdef OS390
+//
+//      NOTE: If your encoding is not ascii you will need to change
+//            the following #define for DOMIDTEST_ENCODING
+//
+
+
+#ifndef DOMIDTEST_ENCODING
+   #if defined(OS390)
+       #define DOMIDTEST_ENCODING "ibm-1047-s390"
+   #else
+       #define DOMIDTEST_ENCODING "ascii"
+   #endif
+#endif /* ifndef DOMIDTEST_ENCODING */
+
+
     static const char*  TestDoc1 =
-"<?xml version='1.0' encoding='ibm-1047-s390'?>     \n\
+"<?xml version='1.0' encoding='" DOMIDTEST_ENCODING "'?>     \n\
 <!DOCTYPE doc [                             \n\
 <!ELEMENT doc  (elA | elB)*>                \n\
 <!ELEMENT elA             (#PCDATA)>        \n\
@@ -163,24 +177,6 @@ private :
     <elA id='a003'/>                        \n\
 </doc>                                      \n\
 ";
-#else
-    static const char*  TestDoc1 =
-"<?xml version='1.0' encoding='ascii'?>     \n\
-<!DOCTYPE doc [                             \n\
-<!ELEMENT doc  (elA | elB)*>                \n\
-<!ELEMENT elA             (#PCDATA)>        \n\
-<!ELEMENT elB             (#PCDATA)>        \n\
-<!ATTLIST elA    id ID    #IMPLIED>         \n\
-<!ATTLIST elB    id CDATA #IMPLIED>         \n\
-]>                                          \n\
-                                            \n\
-<doc>                                       \n\
-    <elA id='a001'/>                        \n\
-    <elB id='a002'/>                        \n\
-    <elA id='a003'/>                        \n\
-</doc>                                      \n\
-";
-#endif
 
 int main()
 {
