@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2004/03/09 21:00:46  peiyongz
+ * recognize builtIn dv
+ *
  * Revision 1.24  2004/03/03 23:08:28  peiyongz
  * Move the logic to check for BuiltIn Dv to storeDV/loadDV therefore dv which
  * refers to BuiltIn DV will NOT be actually saved/loaded, as opposed to previously
@@ -197,9 +200,13 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-static const int DV_BUILTIN = 0;
-static const int DV_NORMAL  = 1;
-static const int DV_ZERO    = 2;
+static const int DV_BUILTIN = -1;
+static const int DV_NORMAL  = -2;
+static const int DV_ZERO    = -3;
+
+static const int TYPENAME_ZERO    = -1;
+static const int TYPENAME_S4S     = -2;
+static const int TYPENAME_NORMAL  = -3;
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidator: Constructors and Destructor
@@ -333,7 +340,6 @@ void DatatypeValidator::cleanUp() {
         fMemoryManager->deallocate(fPattern);//delete [] fPattern;
     if (fTypeName)
         fMemoryManager->deallocate(fTypeName);
-
 }
 
 /***
@@ -370,16 +376,16 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
 
         if (fTypeUri==XMLUni::fgZeroLenString)
         {
-            serEng<<(unsigned int)1;
+            serEng<<TYPENAME_ZERO;
         }
         else if (fTypeUri == SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
         {
-            serEng<<(unsigned int)2;
+            serEng<<TYPENAME_S4S;
             serEng.writeString(fTypeLocalName);
         }
         else
-        {
-            serEng<<(unsigned int)3;
+        {        
+            serEng<<TYPENAME_NORMAL;
             serEng.writeString(fTypeLocalName);
             serEng.writeString(fTypeUri);
         }
@@ -422,14 +428,14 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          *       fTypeName
          ***/
 
-        unsigned int flag;
+        int flag;
         serEng>>flag;
 
-        if ( 1 == flag )
+        if ( TYPENAME_ZERO == flag )
         {
             setTypeName(0);
         }
-        else if ( 2 == flag )
+        else if ( TYPENAME_S4S == flag )
         {
             XMLCh* typeLocalName;
             serEng.readString(typeLocalName);
@@ -437,7 +443,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
 
             setTypeName(typeLocalName);
         }
-        else //3
+        else // TYPENAME_NORMAL
         {
             XMLCh* typeLocalName;
             serEng.readString(typeLocalName);
@@ -479,7 +485,8 @@ void DatatypeValidator::storeDV(XSerializeEngine&        serEng
 {
     if (dv)
     {
-        if (DatatypeValidatorFactory::getBuiltInRegistry()->containsKey(dv->getTypeLocalName()))
+        //builtIndv
+        if (dv == DatatypeValidatorFactory::getBuiltInRegistry()->get(dv->getTypeLocalName()))
         {
             serEng<<DV_BUILTIN;
             serEng.writeString(dv->getTypeLocalName());
@@ -500,6 +507,7 @@ void DatatypeValidator::storeDV(XSerializeEngine&        serEng
 
 DatatypeValidator* DatatypeValidator::loadDV(XSerializeEngine& serEng)
 {
+
     int flag;
     serEng>>flag;
 
@@ -637,13 +645,6 @@ DatatypeValidator* DatatypeValidator::loadDV(XSerializeEngine& serEng)
 
 }
 
-inline bool 
-DatatypeValidator::isBuiltInDV(DatatypeValidator* const dv)
-{
-    return dv? DatatypeValidatorFactory::getBuiltInRegistry()->containsKey(dv->getTypeLocalName())
-             : false;
-}
-
 /**
  * Canonical Representation
  *
@@ -670,6 +671,7 @@ const XMLCh* DatatypeValidator::getCanonicalRepresentation(const XMLCh*         
 
     return XMLString::replicate(rawData, toUse);
 }
+
 
 XERCES_CPP_NAMESPACE_END
 
