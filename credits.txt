@@ -35,8 +35,10 @@ Simon Fell
 Paul Ferguson
 Pierpaolo Fumagalli
 Gary Gale
+Natalie Gorden
 Max Gotlib
 Petr Gotthard
+Neil Graham
 Susan Hardenbrook
 Jeff Harrell
 Andy Heninger
@@ -72,6 +74,7 @@ John Ponzo
 Shengkai Qu
 Gareth Reakes
 Jim Reitz
+Caroline Rioux
 Dean Roddey
 John Roper
 Steven Rosenthal
