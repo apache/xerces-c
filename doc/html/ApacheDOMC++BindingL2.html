@@ -111,6 +111,15 @@ are owned by implementation</li>
 
 <td ALIGN=LEFT VALIGN=TOP>[Bug 12442] Fix typo: "Mode:" -> "Model" </td>
 </tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>October 28, 2002</td>
+
+<td ALIGN=LEFT VALIGN=TOP>Modified
+<br>- add const modifier to DOMImplementation::hasFeature
+</td>
+</tr>
+
 </table>
 
 <p>
@@ -383,7 +392,7 @@ DOMImplementation</font></font>
 <td><font face="Courier New,Courier"><font size=-1>hasFeature(const XMLCh*
 feature,</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-const XMLCh* version) = 0;</font></font></td>
+const XMLCh* version) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>

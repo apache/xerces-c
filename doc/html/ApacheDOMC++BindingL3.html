@@ -112,13 +112,22 @@ are owned by implementation</li>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
-<td>Xerces-C++ 2.1: September 26, 2002</td>
+<td>September 26, 2002</td>
 
 <td ALIGN=LEFT VALIGN=TOP>Modified
 <br>- add const modifier to DOMNode::compareTreePosition
 <br>- add const modifier to DOMNode::isSameNode
 <br>- add const modifier to DOMNode::isEqualNode
 </tr>
+
+<tr ALIGN=LEFT VALIGN=TOP>
+<td>October 28, 2002</td>
+
+<td ALIGN=LEFT VALIGN=TOP>Modified
+<br>- add const modifier to DOMImplementation::hasFeature
+</td>
+</tr>
+
 </table>
 
 <p>
@@ -510,7 +519,7 @@ DOMImplementation</font></font>
 <td><font face="Courier New,Courier"><font size=-1>hasFeature(const XMLCh*
 feature,</font></font>
 <br><font face="Courier New,Courier"><font size=-1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-const XMLCh* version) = 0;</font></font></td>
+const XMLCh* version) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
