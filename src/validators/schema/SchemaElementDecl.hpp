@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/10/11 12:07:39  tng
+ * Schema: model type should be based on complextypeinfo if exists.
+ *
  * Revision 1.13  2001/09/05 20:49:11  knoaman
  * Fix for complexTypes with mixed content model.
  *
@@ -340,6 +343,13 @@ SchemaElementDecl::setContentModel(XMLContentModel* const newModelToAdopt)
 // ---------------------------------------------------------------------------
 inline SchemaElementDecl::ModelTypes SchemaElementDecl::getModelType() const
 {
+    if (fXsiComplexTypeInfo) {
+        return (SchemaElementDecl::ModelTypes) fXsiComplexTypeInfo->getContentType();
+    }
+    else if (fComplexTypeInfo) {
+        return (SchemaElementDecl::ModelTypes) fComplexTypeInfo->getContentType();
+    }
+
     return fModelType;
 }
 

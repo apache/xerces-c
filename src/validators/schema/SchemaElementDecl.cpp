@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/10/11 12:07:39  tng
+ * Schema: model type should be based on complextypeinfo if exists.
+ *
  * Revision 1.15  2001/09/14 14:50:22  tng
  * Schema: Fix some wildcard bugs, and some retrieving qualified/unqualified element decl problems.
  *
@@ -254,8 +257,17 @@ XMLAttDefList& SchemaElementDecl::getAttDefList() const
 
 XMLElementDecl::CharDataOpts SchemaElementDecl::getCharDataOpts() const
 {
+    SchemaElementDecl::ModelTypes modelType = fModelType;
+
+    if (fXsiComplexTypeInfo) {
+        modelType = (SchemaElementDecl::ModelTypes) fXsiComplexTypeInfo->getContentType();
+    }
+    else if (fComplexTypeInfo) {
+        modelType = (SchemaElementDecl::ModelTypes) fComplexTypeInfo->getContentType();
+    }
+
     XMLElementDecl::CharDataOpts retVal;
-    switch(fModelType)
+    switch(modelType)
     {
         case Children :
             retVal = XMLElementDecl::SpacesOk;
