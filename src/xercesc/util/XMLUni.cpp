@@ -1273,6 +1273,53 @@ const XMLCh XMLUni::fgXercesIgnoreCachedDTD[] =
     ,   chLatin_D, chLatin_T, chLatin_D, chNull
 };
 
+//Xerces: http://apache.org/xml/features/schema/ignore-annotations
+const XMLCh XMLUni::fgXercesIgnoreAnnotations[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m
+    ,   chLatin_a, chForwardSlash, chLatin_i, chLatin_g, chLatin_n, chLatin_o
+    ,   chLatin_r, chLatin_e, chDash
+    ,   chLatin_a, chLatin_n, chLatin_n, chLatin_o, chLatin_t, chLatin_a, chLatin_t
+    ,   chLatin_i, chLatin_o, chLatin_n, chLatin_s, chNull
+};
+
+//Xerces: http://apache.org/xml/features/disable-default-entity-resolution
+const XMLCh XMLUni::fgXercesDisableDefaultEntityResolution[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_d, chLatin_i, chLatin_s, chLatin_a, chLatin_b
+    ,   chLatin_l, chLatin_e, chDash, chLatin_d, chLatin_e, chLatin_f
+    ,   chLatin_a, chLatin_u, chLatin_l, chLatin_t, chDash, chLatin_e
+    ,   chLatin_n, chLatin_t, chLatin_i, chLatin_t, chLatin_y, chDash
+    ,   chLatin_r, chLatin_e, chLatin_s, chLatin_o, chLatin_l, chLatin_u
+    ,   chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
+};
+
+//Xerces: http://apache.org/xml/features/validation/schema/skip-dtd-validation
+const XMLCh XMLUni::fgXercesSkipDTDValidation[] =
+{
+        chLatin_h, chLatin_t, chLatin_t, chLatin_p, chColon, chForwardSlash
+    ,   chForwardSlash, chLatin_a, chLatin_p, chLatin_a, chLatin_c, chLatin_h
+    ,   chLatin_e, chPeriod, chLatin_o, chLatin_r, chLatin_g, chForwardSlash
+    ,   chLatin_x, chLatin_m, chLatin_l, chForwardSlash, chLatin_f, chLatin_e
+    ,   chLatin_a, chLatin_t, chLatin_u, chLatin_r, chLatin_e, chLatin_s
+    ,   chForwardSlash, chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d
+    ,   chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chForwardSlash
+    ,   chLatin_s, chLatin_c, chLatin_h, chLatin_e, chLatin_m, chLatin_a
+    ,   chForwardSlash, chLatin_s, chLatin_k, chLatin_i, chLatin_p, chDash
+    ,   chLatin_d, chLatin_t, chLatin_d, chDash, chLatin_v, chLatin_a
+    ,   chLatin_l, chLatin_i, chLatin_d, chLatin_a, chLatin_t, chLatin_i 
+    ,   chLatin_o, chLatin_n, chNull
+};
 
 //Introduced in DOM Level 3
 const XMLCh XMLUni::fgDOMCanonicalForm[] =

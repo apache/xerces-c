@@ -312,6 +312,20 @@ bool AbstractDOMParser::getStandardUriConformant() const
     return fScanner->getStandardUriConformant();
 }
 
+bool AbstractDOMParser::getIgnoreAnnotations() const
+{
+    return fScanner->getIgnoreAnnotations();
+}
+
+bool AbstractDOMParser::getDisableDefaultEntityResolution() const
+{
+    return fScanner->getDisableDefaultEntityResolution();
+}
+
+bool AbstractDOMParser::getSkipDTDValidation() const
+{
+    return fScanner->getSkipDTDValidation();
+}
 
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Setter methods
@@ -447,6 +461,21 @@ void AbstractDOMParser::setCreateSchemaInfo(const bool create)
         fScanner->setPSVIHandler(this);
     else if(!fPSVIHandler)
         fScanner->setPSVIHandler(0);
+}
+
+void AbstractDOMParser::setIgnoreAnnotations(const bool newValue)
+{
+    fScanner->setIgnoreAnnotations(newValue);
+}
+
+void AbstractDOMParser::setDisableDefaultEntityResolution(const bool newValue)
+{
+    fScanner->setDisableDefaultEntityResolution(newValue);
+}
+
+void AbstractDOMParser::setSkipDTDValidation(const bool newValue)
+{
+    fScanner->setSkipDTDValidation(newValue);
 }
 
 // ---------------------------------------------------------------------------

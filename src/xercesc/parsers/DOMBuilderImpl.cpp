@@ -247,6 +247,18 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
         getScanner()->setIgnoredCachedDTD(state);
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0)
+    {
+        getScanner()->setIgnoreAnnotations(state);
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0)
+    {
+        getScanner()->setDisableDefaultEntityResolution(state);
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)
+    {
+        getScanner()->setSkipDTDValidation(state);
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -349,6 +361,18 @@ bool DOMBuilderImpl::getFeature(const XMLCh* const name) const
     {
         return getScanner()->getIgnoreCachedDTD();
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0)
+    {
+        return getScanner()->getIgnoreAnnotations();
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0)
+    {
+        return getScanner()->getDisableDefaultEntityResolution();
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)
+    {
+        return getScanner()->getSkipDTDValidation();
+    }
     else {
         throw DOMException(DOMException::NOT_FOUND_ERR, 0, getMemoryManager());
     }
@@ -373,7 +397,10 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state) co
         (XMLString::compareIStringASCII(name, XMLUni::fgXercesValidateAnnotations) == 0) ||
         (XMLString::compareIStringASCII(name, XMLUni::fgXercesGenerateSyntheticAnnotations) == 0) ||
         (XMLString::compareIStringASCII(name, XMLUni::fgXercesIdentityConstraintChecking) == 0) ||
-        (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0) ||
+        (XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)       
        ) {
         return true;
     }

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.49  2005/03/30 00:55:14  cargilld
+ * Begin work on adding some new features by checking in the feature handling support.
+ *
  * Revision 1.48  2005/01/06 21:39:43  amassari
  * Removed warnings
  *
@@ -563,6 +566,9 @@ public :
     bool getGenerateSyntheticAnnotations() const;
     bool getValidateAnnotations() const;
     bool getIgnoreCachedDTD() const;
+    bool getIgnoreAnnotations() const;
+    bool getDisableDefaultEntityResolution() const;
+    bool getSkipDTDValidation() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -661,6 +667,9 @@ public :
     void setGenerateSyntheticAnnotations(const bool newValue);
     void setValidateAnnotations(const bool newValue);
     void setIgnoredCachedDTD(const bool newValue);
+    void setIgnoreAnnotations(const bool newValue);
+    void setDisableDefaultEntityResolution(const bool newValue);
+    void setSkipDTDValidation(const bool newValue);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -1029,6 +1038,9 @@ protected:
     bool                        fGenerateSyntheticAnnotations;
     bool                        fValidateAnnotations;
     bool                        fIgnoreCachedDTD;
+    bool                        fIgnoreAnnotations;
+    bool                        fDisableDefaultEntityResolution;
+    bool                        fSkipDTDValidation;
     int                         fErrorCount;
     unsigned int                fEntityExpansionLimit;
     unsigned int                fEntityExpansionCount;
@@ -1391,6 +1403,21 @@ inline bool XMLScanner::getIgnoreCachedDTD() const
     return fIgnoreCachedDTD;
 }
 
+inline bool XMLScanner::getIgnoreAnnotations() const
+{
+    return fIgnoreAnnotations;
+}
+
+inline bool XMLScanner::getDisableDefaultEntityResolution() const
+{
+    return fDisableDefaultEntityResolution;
+}
+
+inline bool XMLScanner::getSkipDTDValidation() const
+{
+    return fSkipDTDValidation;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -1563,6 +1590,21 @@ inline void XMLScanner::setInputBufferSize(const size_t bufferSize)
 inline void XMLScanner::setIgnoredCachedDTD(const bool newValue)
 {
     fIgnoreCachedDTD = newValue;
+}
+
+inline void XMLScanner::setIgnoreAnnotations(const bool newValue)
+{
+    fIgnoreAnnotations = newValue;
+}
+
+inline void XMLScanner::setDisableDefaultEntityResolution(const bool newValue)
+{
+    fDisableDefaultEntityResolution = newValue;
+}
+
+inline void XMLScanner::setSkipDTDValidation(const bool newValue)
+{
+    fSkipDTDValidation = newValue;
 }
 
 // ---------------------------------------------------------------------------

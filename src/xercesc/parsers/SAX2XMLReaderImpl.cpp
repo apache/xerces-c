@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.45  2005/03/30 00:55:13  cargilld
+ * Begin work on adding some new features by checking in the feature handling support.
+ *
  * Revision 1.44  2005/03/20 19:02:45  cargilld
  * Implement versions of uppercase and compareIstring that only check a to z, instead of all characters, and don't rely on functionality provided in the transcoders.
  *
@@ -1577,6 +1580,18 @@ void SAX2XMLReaderImpl::setFeature(const XMLCh* const name, const bool value)
     {
         fScanner->setIgnoredCachedDTD(value);
     }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0)
+    {
+        fScanner->setIgnoreAnnotations(value);
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0)
+    {
+        fScanner->setDisableDefaultEntityResolution(value);
+    }
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)
+    {
+        fScanner->setSkipDTDValidation(value);
+    }
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 }
@@ -1617,6 +1632,12 @@ bool SAX2XMLReaderImpl::getFeature(const XMLCh* const name) const
         return fScanner->getValidateAnnotations();
     else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreCachedDTD) == 0)
         return fScanner->getIgnoreCachedDTD();
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesIgnoreAnnotations) == 0)
+        return fScanner->getIgnoreAnnotations();
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesDisableDefaultEntityResolution) == 0)
+        return fScanner->getDisableDefaultEntityResolution();
+    else if (XMLString::compareIStringASCII(name, XMLUni::fgXercesSkipDTDValidation) == 0)
+        return fScanner->getSkipDTDValidation();
     else
        throw SAXNotRecognizedException("Unknown Feature", fMemoryManager);
 

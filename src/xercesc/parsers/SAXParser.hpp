@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.39  2005/03/30 00:55:14  cargilld
+ * Begin work on adding some new features by checking in the feature handling support.
+ *
  * Revision 1.38  2005/03/09 16:07:10  amassari
  * Protected getSrcOffset to avoid crashing when parsing has finished; updated documentation
  *
@@ -697,6 +700,33 @@ public :
       */
     bool getIgnoreCachedDTD() const;
 
+    /** Get the 'ignore annotations' flag
+      *    
+      * @return true, if the parser is currently configured to
+      *         ignore annotations, false otherwise.
+      *
+      * @see #setIgnoreAnnotations
+      */
+    bool getIgnoreAnnotations() const;
+
+    /** Get the 'disable default entity resolution' flag
+      *    
+      * @return true, if the parser is currently configured to
+      *         not perform default entity resolution, false otherwise.
+      *
+      * @see #setDisableDefaultEntityResolution
+      */
+    bool getDisableDefaultEntityResolution() const;
+
+    /** Get the 'skip DTD validation' flag
+      *    
+      * @return true, if the parser is currently configured to
+      *         skip DTD validation, false otherwise.
+      *
+      * @see #setSkipDTDValidation
+      */
+    bool getSkipDTDValidation() const;
+
     //@}
 
 
@@ -1041,6 +1071,46 @@ public :
       */
     void setIgnoreCachedDTD(const bool newValue);
 
+    /** Set the 'ignore annotation' flag
+      *
+      * This method gives users the option to not generate XSAnnotations
+      * when "traversing" a schema.
+      *
+      * The parser's default state is false
+      *
+      * @param newValue The state to set
+      */
+    void setIgnoreAnnotations(const bool newValue);
+
+    /** Set the 'disable default entity resolution' flag
+      *
+      * This method gives users the option to not perform default entity
+      * resolution.  If the user's resolveEntity method returns NULL the
+      * parser will try to resolve the entity on its own.  When this option
+      * is set to true, the parser will not attempt to resolve the entity
+      * when the resolveEntity method returns NULL.
+      *    
+      * The parser's default state is false
+      *
+      * @param newValue The state to set
+      *
+      * @see #entityResolver
+      */
+    void setDisableDefaultEntityResolution(const bool newValue);
+
+    /** Set the 'skip DTD validation' flag
+      *
+      * This method gives users the option to skip DTD validation only when 
+      * schema validation is on (i.e. when performing validation,  we will
+      * ignore the DTD, except for entities, when schema validation is enabled).
+      *
+      * NOTE: This option is ignored if schema validation is disabled.
+      *
+      * The parser's default state is false
+      *
+      * @param newValue The state to set
+      */
+    void setSkipDTDValidation(const bool newValue);
     //@}
 
 

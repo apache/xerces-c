@@ -224,6 +224,9 @@ public :
     static const XMLCh fgXercesGenerateSyntheticAnnotations[];
     static const XMLCh fgXercesValidateAnnotations[];
     static const XMLCh fgXercesIgnoreCachedDTD[];
+    static const XMLCh fgXercesIgnoreAnnotations[];
+    static const XMLCh fgXercesDisableDefaultEntityResolution[];
+    static const XMLCh fgXercesSkipDTDValidation[];
 
 
     // SAX2 features/properties names

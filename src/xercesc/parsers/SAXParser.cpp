@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.39  2005/03/30 00:55:14  cargilld
+ * Begin work on adding some new features by checking in the feature handling support.
+ *
  * Revision 1.38  2004/12/30 15:23:41  amassari
  * Notify advanced handlers of the whitespace before and after the root document element (jira# 729)
  *
@@ -580,6 +583,21 @@ bool SAXParser::getIgnoreCachedDTD() const
     return fScanner->getIgnoreCachedDTD();
 }
 
+bool SAXParser::getIgnoreAnnotations() const
+{
+    return fScanner->getIgnoreAnnotations();
+}
+
+bool SAXParser::getDisableDefaultEntityResolution() const
+{
+    return fScanner->getDisableDefaultEntityResolution();
+}
+
+bool SAXParser::getSkipDTDValidation() const
+{
+    return fScanner->getSkipDTDValidation();
+}
+
 // ---------------------------------------------------------------------------
 //  SAXParser: Setter methods
 // ---------------------------------------------------------------------------
@@ -719,6 +737,21 @@ void SAXParser::setInputBufferSize(const size_t bufferSize)
 void SAXParser::setIgnoreCachedDTD(const bool newValue)
 {
     fScanner->setIgnoredCachedDTD(newValue);
+}
+
+void SAXParser::setIgnoreAnnotations(const bool newValue)
+{
+    fScanner->setIgnoreAnnotations(newValue);
+}
+
+void SAXParser::setDisableDefaultEntityResolution(const bool newValue)
+{
+    fScanner->setDisableDefaultEntityResolution(newValue);
+}
+
+void SAXParser::setSkipDTDValidation(const bool newValue)
+{
+    fScanner->setSkipDTDValidation(newValue);
 }
 
 // ---------------------------------------------------------------------------
