@@ -7676,12 +7676,9 @@ void TraverseSchema::reportSchemaError(const DOMElement* const elem,
 void TraverseSchema::init() {
 
     fXSDErrorReporter.setErrorReporter(fErrorReporter);
+    fXSDErrorReporter.setExitOnFirstFatal(fScanner->getExitOnFirstFatal());
 
-    if (fScanner && fScanner->getValidationSchemaFullChecking()) {
-
-        fFullConstraintChecking = true;
-        fXSDErrorReporter.setExitOnFirstFatal(fScanner->getExitOnFirstFatal());
-    }
+    fFullConstraintChecking = fScanner->getValidationSchemaFullChecking();
 
     fDatatypeRegistry = fSchemaGrammar->getDatatypeRegistry();
     fStringPool = fGrammarResolver->getStringPool();
