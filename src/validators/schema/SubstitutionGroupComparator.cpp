@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/11/28 16:46:03  tng
+ * Schema fix: Initialize the temporary string as null terminated.
+ *
  * Revision 1.10  2001/11/21 14:30:13  knoaman
  * Fix for UPA checking.
  *
@@ -150,7 +153,9 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
     {
         int commaAt = XMLString::indexOf(substitutionGroupFullName, chComma);
         XMLCh tmpURI[256];
+        tmpURI[0] = chNull;
         XMLCh tmpLocalpart[256];
+        tmpLocalpart[0] = chNull;
 
         if (commaAt >= 0)
         {
@@ -162,9 +167,6 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
         else {
             XMLString::subString(tmpLocalpart, substitutionGroupFullName, 0, XMLString::stringLen(substitutionGroupFullName));
         }
-
-        if (!tmpURI)
-            return false;
 
         sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(tmpURI);
         if (!sGrammar || sGrammar->getGrammarType() == Grammar::DTDGrammarType)
