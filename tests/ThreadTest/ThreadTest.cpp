@@ -150,7 +150,12 @@ void ThreadFuncs::Sleep(int millis)
 {
    int seconds = millis/1000;
    if (seconds <= 0) seconds = 1;
+#if defined(SOLARIS)
+   // somehow the sleep hangs on Solaris
+   // so ignore the call
+#else
    ::sleep(seconds);
+#endif
 }
 
 
