@@ -199,7 +199,17 @@ DOMDocument *DOMNodeImpl::getOwnerDocument() const
 
     //  Leaf node types - those that cannot have children, like Text.
     if (isOwned()) {
-        return fOwnerNode->getOwnerDocument();
+
+        DOMDocument* ownerDoc = fOwnerNode->getOwnerDocument();
+
+        if (!ownerDoc) {
+
+            assert (fOwnerNode->getNodeType() == DOMNode::DOCUMENT_NODE);
+            return  (DOMDocument *)fOwnerNode;
+        }
+        else {
+            return ownerDoc;
+        }
     } else {
         assert (fOwnerNode->getNodeType() == DOMNode::DOCUMENT_NODE);
         return  (DOMDocument *)fOwnerNode;
