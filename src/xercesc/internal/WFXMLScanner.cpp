@@ -2062,6 +2062,10 @@ void WFXMLScanner::scanCharData(XMLBuffer& toUse)
     sendCharData(toUse);
 }
 
+InputSource* WFXMLScanner::resolveSystemId(const XMLCh* const)
+{
+    return 0;
+}
 
 //  This method will scan a general/character entity ref. It will either
 //  expand a char ref and return it directly, or push a reader for a general
