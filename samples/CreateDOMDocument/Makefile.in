@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.2  2000/01/19 17:48:33  abagchi
+# Now really works, fixed small problem
+#
 # Revision 1.1  2000/01/19 00:17:50  rahulj
 # Added makefile for unix builds. Fixed the comments and usage
 # string.
@@ -103,7 +106,7 @@ ${EXEC}/${APP_NAME}: ${OBJS}
 ${BATCH_TARGET}: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} 
 
-$(OUTDIR)/DOMCount.o: ${SRC}/CreateDOMDocument.cpp
+$(OUTDIR)/CreateDOMDocument.o: ${SRC}/CreateDOMDocument.cpp
 	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/CreateDOMDocument.o ${SRC}/CreateDOMDocument.cpp
 
 clean:
