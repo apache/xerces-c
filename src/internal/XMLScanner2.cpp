@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/01/28 19:09:19  roddey
+ * The API is no in place to allow client code to make sense of start/end entity
+ * ref calls from attribute values. So supress them for now.
+ *
  * Revision 1.8  2000/01/27 23:20:33  roddey
  * If an entity ends on the last > of some markup, then the end of entity
  * won't be sent because the end of entity is not sensed.
@@ -2114,8 +2118,14 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
             return EntityExp_Failed;
         }
 
-        // Do a start entity reference event
-        if (fDocHandler)
+        //
+        //  Do a start entity reference event.
+        //
+        //  <TBD> For now, we supress them in att values. Later, when
+        //  the stuff is in place to correctly allow DOM to handle them
+        //  we'll turn this back on.
+        //
+        if (fDocHandler && !inAttVal)
             fDocHandler->startEntityReference(*decl);
 
         // If it starts with the XML string, then parse a text decl
@@ -2160,8 +2170,14 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
         if (!fReaderMgr.pushReader(valueReader, decl))
             emitError(XML4CErrs::RecursiveEntity, decl->getName());
 
-        // Do a start entity reference event
-        if (fDocHandler)
+        //
+        //  Do a start entity reference event.
+        //
+        //  <TBD> For now, we supress them in att values. Later, when
+        //  the stuff is in place to correctly allow DOM to handle them
+        //  we'll turn this back on.
+        //
+        if (fDocHandler && !inAttVal)
             fDocHandler->startEntityReference(*decl);
 
     }
