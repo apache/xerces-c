@@ -62,6 +62,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
+#include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XML88591Transcoder.hpp>
 #include <xercesc/util/XMLASCIITranscoder.hpp>
 #include <xercesc/util/XMLChTranscoder.hpp>
@@ -75,6 +76,8 @@
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/TransENameMap.hpp>
 #include <xercesc/util/EncodingValidator.hpp>
+#include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -85,34 +88,69 @@ XERCES_CPP_NAMESPACE_BEGIN
 //      This is a hash table of ENameMap objects. It is created and filled
 //      in when the platform init calls our initTransService() method.
 //
-//  gDisallow1
-//  gDisallowX
-//      These area small set of encoding names that, for temporary reasons,
-//      we disallow at this time.
+//  gMappingsRecognizer
+//      This is an array of ENameMap objects, predefined for those
+//      already recognized by XMLRecognizer::Encodings.
 //
-//  gDisallowList
-//  gDisallowListSize
-//      An array of the disallow strings, for easier searching below.
+//  gStrictIANAEncoding
+//      A flag to control whether strict IANA encoding names checking should
+//      be done
 //
-//  gDisallowPre
-//      All of the disallowed encodings start with 'IBM', so we have a prefix
-//      we can check for and quickly decide if we need to search the list.
 // ---------------------------------------------------------------------------
 static RefHashTableOf<ENameMap>*    gMappings = 0;
+static RefVectorOf<ENameMap>*       gMappingsRecognizer = 0;
 static bool gStrictIANAEncoding = false;
 
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+static void reinitMappings() {
+    delete gMappings;    // The contents of the gMappings hash table are owned by
+    gMappings = 0;       //   the it, and so will be deleted by gMapping's destructor.
+}
+
+static void reinitMappingsRecognizer() {
+    delete gMappingsRecognizer;
+    gMappingsRecognizer = 0;
+}
 
 // ---------------------------------------------------------------------------
 //  XLMTransService: Constructors and destructor
 // ---------------------------------------------------------------------------
 XMLTransService::XMLTransService()
 {
+    static XMLRegisterCleanup mappingsCleanup;
+    static XMLRegisterCleanup mappingsRecognizerCleanup;
+
+    if (!gMappings) {
+        RefHashTableOf<ENameMap>* t = new RefHashTableOf<ENameMap>(103);
+
+        if (XMLPlatformUtils::compareAndSwap((void **)&gMappings, t, 0) != 0)
+        {
+            delete t;
+        }
+        else
+        {
+            mappingsCleanup.registerCleanup(reinitMappings);
+        }
+    }
+
+    if (!gMappingsRecognizer) {
+        RefVectorOf<ENameMap>* t = new RefVectorOf<ENameMap>(XMLRecognizer::Encodings_Count);
+
+        if (XMLPlatformUtils::compareAndSwap((void **)&gMappingsRecognizer, t, 0) != 0)
+        {
+            delete t;
+        }
+        else
+        {
+            mappingsCleanup.registerCleanup(reinitMappingsRecognizer);
+        }
+    }
 }
 
 XMLTransService::~XMLTransService()
 {
-    delete gMappings;    // The contents of the gMappings hash table are owned by
-    gMappings = 0;       //   the it, and so will be deleted by gMapping's destructor.
 }
 
 // ---------------------------------------------------------------------------
@@ -120,12 +158,9 @@ XMLTransService::~XMLTransService()
 //	Should be called after platform init
 // ---------------------------------------------------------------------------
 void XMLTransService::addEncoding(const XMLCh* const encoding,
-								  ENameMap* const ownMapping) {
-
-	if (gMappings) {
-
-		gMappings->put((void *) encoding, ownMapping);
-	}
+								  ENameMap* const ownMapping)
+{
+    gMappings->put((void *) encoding, ownMapping);
 }
 
 // ---------------------------------------------------------------------------
@@ -199,6 +234,35 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
 }
 
 
+XMLTranscoder*
+XMLTransService::makeNewTranscoderFor(  XMLRecognizer::Encodings        encodingEnum
+                                        ,       XMLTransService::Codes& resValue
+                                        , const unsigned int            blockSize)
+{
+    //
+    // We can only make transcoder if the passed encodingEnum is under this range
+    //
+    if (encodingEnum < XMLRecognizer::EBCDIC || encodingEnum > XMLRecognizer::XERCES_XMLCH) {
+        resValue = XMLTransService::InternalFailure;
+        return 0;
+    }
+
+    ENameMap* ourMapping = gMappingsRecognizer->elementAt(encodingEnum);
+
+    // If we found it, then call the factory method for it
+    if (ourMapping)	{		
+       XMLTranscoder* temp = ourMapping->makeNew(blockSize);
+       resValue = temp ? XMLTransService::Ok : XMLTransService::InternalFailure;
+       return temp;
+    }
+    else {
+        resValue = XMLTransService::InternalFailure;
+        return 0;
+    }
+
+}
+
+
 // ---------------------------------------------------------------------------
 //  XLMTranscoder: Public Destructor
 // ---------------------------------------------------------------------------
@@ -252,22 +316,23 @@ XMLLCPTranscoder::~XMLLCPTranscoder()
 // ---------------------------------------------------------------------------
 void XMLTransService::initTransService()
 {
-
     //
-    //  Create our hash table that we will fill with mappings. The default
-    //  is to adopt the elements, which is fine with us.
+    //  A stupid way to increment the fCurCount inside the RefVectorOf
     //
-    gMappings = new RefHashTableOf<ENameMap>(103);
+    for (unsigned int i = 0; i < XMLRecognizer::Encodings_Count; i++)
+        gMappingsRecognizer->addElement(0);
 
     //
     //  Add in the magical mapping for the native XMLCh transcoder. This
     //  is used for internal entities.
     //
+    gMappingsRecognizer->setElementAt(new ENameMapFor<XMLChTranscoder>(XMLUni::fgXMLChEncodingString), XMLRecognizer::XERCES_XMLCH);
     gMappings->put((void*)XMLUni::fgXMLChEncodingString, new ENameMapFor<XMLChTranscoder>(XMLUni::fgXMLChEncodingString));
 
     //
     //  Add in our mappings for ASCII.
     //
+    gMappingsRecognizer->setElementAt(new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString), XMLRecognizer::US_ASCII);
     gMappings->put((void*)XMLUni::fgUSASCIIEncodingString, new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString));
     gMappings->put((void*)XMLUni::fgUSASCIIEncodingString2, new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString2));
     gMappings->put((void*)XMLUni::fgUSASCIIEncodingString3, new ENameMapFor<XMLASCIITranscoder>(XMLUni::fgUSASCIIEncodingString3));
@@ -277,6 +342,7 @@ void XMLTransService::initTransService()
     //
     //  Add in our mappings for UTF-8
     //
+    gMappingsRecognizer->setElementAt(new ENameMapFor<XMLUTF8Transcoder>(XMLUni::fgUTF8EncodingString), XMLRecognizer::UTF_8);
     gMappings->put((void*)XMLUni::fgUTF8EncodingString, new ENameMapFor<XMLUTF8Transcoder>(XMLUni::fgUTF8EncodingString));
     gMappings->put((void*)XMLUni::fgUTF8EncodingString2, new ENameMapFor<XMLUTF8Transcoder>(XMLUni::fgUTF8EncodingString2));
 
@@ -300,6 +366,7 @@ void XMLTransService::initTransService()
     #if defined(ENDIANMODE_BIG)
     swapped = true;
     #endif
+    gMappingsRecognizer->setElementAt(new EEndianNameMapFor<XMLUTF16Transcoder>(XMLUni::fgUTF16LEncodingString, swapped), XMLRecognizer::UTF_16L);
     gMappings->put
     (
 		(void*)XMLUni::fgUTF16LEncodingString,
@@ -320,6 +387,7 @@ void XMLTransService::initTransService()
         )
     );
 
+    gMappingsRecognizer->setElementAt(new EEndianNameMapFor<XMLUCS4Transcoder>(XMLUni::fgUCS4LEncodingString, swapped), XMLRecognizer::UCS_4L);
     gMappings->put
     (
 		(void*)XMLUni::fgUCS4LEncodingString,
@@ -347,6 +415,7 @@ void XMLTransService::initTransService()
     #if defined(ENDIANMODE_LITTLE)
     swapped = true;
     #endif
+    gMappingsRecognizer->setElementAt(new EEndianNameMapFor<XMLUTF16Transcoder>(XMLUni::fgUTF16BEncodingString, swapped), XMLRecognizer::UTF_16B);
     gMappings->put
     (
 		(void*)XMLUni::fgUTF16BEncodingString,
@@ -367,6 +436,7 @@ void XMLTransService::initTransService()
         )
     );
 
+    gMappingsRecognizer->setElementAt(new EEndianNameMapFor<XMLUCS4Transcoder>(XMLUni::fgUCS4BEncodingString, swapped), XMLRecognizer::UCS_4B);
     gMappings->put
     (
 		(void*)XMLUni::fgUCS4BEncodingString,
@@ -460,6 +530,7 @@ void XMLTransService::initTransService()
     //  Add in our mappings for IBM037, and the one alias we support for
     //  it, which is EBCDIC-CP-US.
     //
+    gMappingsRecognizer->setElementAt(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgEBCDICEncodingString), XMLRecognizer::EBCDIC);
     gMappings->put((void*)XMLUni::fgIBM037EncodingString, new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString));
     gMappings->put((void*)XMLUni::fgIBM037EncodingString2, new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString2));
 
