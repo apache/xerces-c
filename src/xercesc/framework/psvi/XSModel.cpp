@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2004/06/09 17:01:48  gareth
+ * Fixed null pointer bug. Patch by John Snelson.
+ *
  * Revision 1.22  2004/05/04 19:12:42  cargilld
  * Enable IDs to work on all kinds of schema components
  *
@@ -545,19 +548,22 @@ XSModel::addS4SToXSModel(XSNamespaceItem* const namespaceItem,
 void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
 {
     // Loop through top-level attribute declarations in the grammar...
-    RefHashTableOfEnumerator<XMLAttDef> attrEnum = RefHashTableOfEnumerator<XMLAttDef> (namespaceItem->fGrammar->getAttributeDeclRegistry(), false, fMemoryManager);
-    while (attrEnum.hasMoreElements())
-    {
-        XSAttributeDeclaration* xsAttrDecl = fObjFactory->addOrFind
-        (
-            (SchemaAttDef*) &(attrEnum.nextElement()), this
-        );
+    RefHashTableOf<XMLAttDef>* attDeclRegistry = namespaceItem->fGrammar->getAttributeDeclRegistry();
+    if(attDeclRegistry) {
+        RefHashTableOfEnumerator<XMLAttDef> attrEnum = RefHashTableOfEnumerator<XMLAttDef> (attDeclRegistry, false, fMemoryManager);
+        while (attrEnum.hasMoreElements())
+        {
+            XSAttributeDeclaration* xsAttrDecl = fObjFactory->addOrFind
+            (
+                (SchemaAttDef*) &(attrEnum.nextElement()), this
+            );
 
-        addComponentToNamespace
-        (
-            namespaceItem, xsAttrDecl, XSConstants::ATTRIBUTE_DECLARATION - 1
-        );
-    } // end of attribute loop
+            addComponentToNamespace
+            (
+                namespaceItem, xsAttrDecl, XSConstants::ATTRIBUTE_DECLARATION - 1
+            );
+        } // end of attribute loop
+    }
 
     // Loop through top-level elements in the grammar...
     RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = namespaceItem->fGrammar->getElemEnumerator();    
@@ -599,50 +605,59 @@ void XSModel::addGrammarToXSModel(XSNamespaceItem* namespaceItem)
     }
 
     // Loop through top-level COMPLEX type definitions in the grammar...
-    RefHashTableOfEnumerator<ComplexTypeInfo> complexEnum = RefHashTableOfEnumerator<ComplexTypeInfo> (namespaceItem->fGrammar->getComplexTypeRegistry(), false, fMemoryManager);
-    while (complexEnum.hasMoreElements())
-    {
-        ComplexTypeInfo&  curComplex = complexEnum.nextElement();
-        if (!curComplex.getAnonymous())
+    RefHashTableOf<ComplexTypeInfo>* complexTypeRegistry = namespaceItem->fGrammar->getComplexTypeRegistry();
+    if(complexTypeRegistry) {
+        RefHashTableOfEnumerator<ComplexTypeInfo> complexEnum = RefHashTableOfEnumerator<ComplexTypeInfo> (complexTypeRegistry, false, fMemoryManager);
+        while (complexEnum.hasMoreElements())
+        {
+            ComplexTypeInfo&  curComplex = complexEnum.nextElement();
+            if (!curComplex.getAnonymous())
+            {
+                addComponentToNamespace
+                (
+                    namespaceItem
+                    , fObjFactory->addOrFind(&curComplex, this)
+                    , XSConstants::TYPE_DEFINITION - 1
+                );
+            }
+        }  // end of type definition loop
+    }
+
+    // Loop through top-level attribute group definitions in the grammar...
+    RefHashTableOf<XercesAttGroupInfo>* attGroupInfoRegistry = namespaceItem->fGrammar->getAttGroupInfoRegistry();
+    if(attGroupInfoRegistry) {
+        RefHashTableOfEnumerator<XercesAttGroupInfo> attrGroupEnum = RefHashTableOfEnumerator<XercesAttGroupInfo> (attGroupInfoRegistry, false, fMemoryManager);
+        while (attrGroupEnum.hasMoreElements())
         {
             addComponentToNamespace
             (
                 namespaceItem
-                , fObjFactory->addOrFind(&curComplex, this)
-                , XSConstants::TYPE_DEFINITION - 1
+                , fObjFactory->createXSAttGroupDefinition
+                  (
+                      &(attrGroupEnum.nextElement()), this
+                  )
+                , XSConstants::ATTRIBUTE_GROUP_DEFINITION - 1
             );
-        }
-    }  // end of type definition loop
-
-    // Loop through top-level attribute group definitions in the grammar...
-    RefHashTableOfEnumerator<XercesAttGroupInfo> attrGroupEnum = RefHashTableOfEnumerator<XercesAttGroupInfo> (namespaceItem->fGrammar->getAttGroupInfoRegistry(), false, fMemoryManager);
-    while (attrGroupEnum.hasMoreElements())
-    {
-        addComponentToNamespace
-        (
-            namespaceItem
-            , fObjFactory->createXSAttGroupDefinition
-              (
-                  &(attrGroupEnum.nextElement()), this
-              )
-            , XSConstants::ATTRIBUTE_GROUP_DEFINITION - 1
-        );
-    } // end of attribute group loop
+        } // end of attribute group loop
+    }
 
     // Loop through top-level model group definitions in the grammar...
-    RefHashTableOfEnumerator<XercesGroupInfo> modelGroupEnum = RefHashTableOfEnumerator<XercesGroupInfo> (namespaceItem->fGrammar->getGroupInfoRegistry(), false, fMemoryManager);
-    while (modelGroupEnum.hasMoreElements())
-    {
-        addComponentToNamespace
-        (
-            namespaceItem
-            , fObjFactory->createXSModelGroupDefinition
-              (
-                  &(modelGroupEnum.nextElement()), this
-              )
-            , XSConstants::MODEL_GROUP_DEFINITION - 1
-        );
-    } // end of model group loop
+    RefHashTableOf<XercesGroupInfo>* groupInfoRegistry = namespaceItem->fGrammar->getGroupInfoRegistry();
+    if(groupInfoRegistry) {
+        RefHashTableOfEnumerator<XercesGroupInfo> modelGroupEnum = RefHashTableOfEnumerator<XercesGroupInfo> (groupInfoRegistry, false, fMemoryManager);
+        while (modelGroupEnum.hasMoreElements())
+        {
+            addComponentToNamespace
+            (
+                namespaceItem
+                , fObjFactory->createXSModelGroupDefinition
+                  (
+                      &(modelGroupEnum.nextElement()), this
+                  )
+                , XSConstants::MODEL_GROUP_DEFINITION - 1
+            );
+        } // end of model group loop
+    }
 
     // Loop through notations in the grammar...    
     NameIdPoolEnumerator<XMLNotationDecl> notationEnum = namespaceItem->fGrammar->getNotationEnumerator();
