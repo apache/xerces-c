@@ -89,7 +89,7 @@
 
 
 IDNotationImpl::IDNotationImpl(IDOM_Document *ownerDoc, const XMLCh *nName)
-    : fNode(ownerDoc)
+    : fNode(ownerDoc), fPublicId(0), fSystemId(0)
 {
     fNode.setIsLeafNode(true);
     fName = ((IDDocumentImpl *)ownerDoc)->cloneString(nName);
@@ -101,7 +101,7 @@ IDNotationImpl::IDNotationImpl(const IDNotationImpl &other, bool deep)
     fNode.setIsLeafNode(true);
     fName = other.fName;
     fPublicId = other.fPublicId;
-    fPublicId = other.fSystemId;
+    fSystemId = other.fSystemId;
 };
 
 
