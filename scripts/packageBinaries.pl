@@ -1253,6 +1253,7 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
 	psystem("cp -Rf $XERCESCROOT/src/xercesc/sax2/*.hpp $targetdir/include/xercesc/sax2");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/framework/*.hpp $targetdir/include/xercesc/framework");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/framework/psvi/*.hpp $targetdir/include/xercesc/framework/psvi");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/framework/psvi/*.c $targetdir/include/xercesc/framework/psvi");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/dom/*.hpp $targetdir/include/xercesc/dom");
     psystem("cp -Rf $XERCESCROOT/src/xercesc/dom/deprecated/*.hpp $targetdir/include/xercesc/dom/deprecated");
 
