@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/25 19:06:56  peiyongz
+ * Fix to Linux compilation error: XMLDouble::LiteralType' is not an aggregate type
+ *
  * Revision 1.2  2001/07/24 21:52:27  peiyongz
  * XMLDouble: move fg...String to XMLUni
  *
@@ -109,27 +112,27 @@ XMLDouble::XMLDouble(const XMLCh* const strValue)
 
     if (XMLString::compareString(tmpStrValue, XMLUni::fgNegINFString) == 0)
     {
-        fType = LiteralType::NegINF;
+        fType = NegINF;
         return;
     }
     else if (XMLString::compareString(tmpStrValue, XMLUni::fgNegZeroString) == 0)
     {
-        fType = LiteralType::NegZero;
+        fType = NegZero;
         return;
     }
     else if (XMLString::compareString(tmpStrValue, XMLUni::fgPosZeroString) == 0)
     {
-        fType = LiteralType::PosZero;
+        fType = PosZero;
         return;
     }
     else if (XMLString::compareString(tmpStrValue, XMLUni::fgPosINFString) == 0)
     {
-        fType = LiteralType::PosINF;
+        fType = PosINF;
         return;
     }
     else if (XMLString::compareString(tmpStrValue, XMLUni::fgNaNString) == 0)
     {
-        fType = LiteralType::NaN;
+        fType = NaN;
         return;
     }
 
