@@ -583,7 +583,52 @@
                 improves the performance.</td></tr>
             </table>
             <p/>
-
+            
+            <anchor name="IdentityConstraintChecking"/>
+            <table>
+                <tr><th colspan="2"><em>void setIdentityConstraintChecking(const bool);</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable identity constraint checking. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable identity constraint checking. </td></tr>
+                <tr><th><em>default:</em></th><td> true </td></tr>                
+            </table>
+            <p/>
+            
+            <anchor name="GenerateSyntheticAnnotations"/>
+            <table>
+                <tr><th colspan="2"><em>void setGenerateSyntheticAnnotations(const bool);</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable generation of synthetic annotations.  A synthetic annotation will be 
+                generated when a schema component has non-schema attributes but no child annotation. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable generation of synthetic annotations. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>                
+            </table>
+            <p/>
+            
+            <anchor name="XercesValidateAnnotations"/>
+            <table>
+                <tr><th colspan="2"><em>setValidateAnnotation</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable validation of annotations. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable validation of annotations. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>               
+            </table>
+            <p/>         
+            
+            <anchor name="CreateSchemaInfo"/>
+            <table>
+                <tr><th colspan="2"><em>setCreateSchemaInfo</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable storing of PSVI information in element and attribute nodes. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable storing of PSVI information in element and attribute nodes. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>               
+            </table>
+            <p/>         
+            
+            <anchor name="CreateCommentNodes"/>
+            <table>
+                <tr><th colspan="2"><em>setCreateCommentNodes</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable the parser to create comment nodes in the DOM tree being produced.</td></tr>
+                <tr><th><em>false:</em></th><td> Disable comment nodes being produced. </td></tr>
+                <tr><th><em>default:</em></th><td> true </td></tr>               
+            </table>
+            <p/>                                       
         </s3>
 
         <anchor name="XercesDOMProperties"/>
@@ -868,6 +913,7 @@
                 <tr><th><em>true:</em></th><td> Keep CDATASection nodes in the document. </td></tr>
                 <tr><th><em>false:</em></th><td> Not Supported. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMCDATASection </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to false is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
@@ -882,6 +928,7 @@
                 <tr><th><em>true:</em></th><td> Keep Comment nodes in the document. </td></tr>
                 <tr><th><em>false:</em></th><td> Discard Comment nodes in the document. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMComments </td></tr>                
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
                 DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
@@ -900,6 +947,7 @@
                 <tr><th><em>false:</em></th><td> Any character set encoding information from higher
                 level protocols is ignored by the parser. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMCharsetOverridesXMLEncoding </td></tr>                
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
                 DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
@@ -915,6 +963,7 @@
                 <tr><th><em>false:</em></th><td> Disable datatype normalization.
                 The XML 1.0 attribute value normalization always occurs though. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMDatatypeNormalization </td></tr>               
                 <tr><th><em>note:</em></th><td> Note that setting this feature to true does not affect
                 the DTD normalization operation which always takes place, in accordance to
                 <jump href="http://www.w3.org/TR/2000/REC-xml-20001006">XML 1.0 (Second Edition)</jump>.
@@ -938,6 +987,7 @@
                 EntityReference nodes will be created, only the nodes corresponding to their fully
                 expanded sustitution text will be created.  </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMEntities </td></tr>                
                 <tr><th><em>note:</em></th><td> This feature only affects the appearance of
                 EntityReference nodes in the DOM tree. The document will always contain the entity
                 reference child nodes. </td></tr>
@@ -954,6 +1004,7 @@
                 <tr><th><em>true:</em></th><td> Not Supported. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not canonicalize the document. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMCanonicalForm </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to true is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
@@ -968,6 +1019,7 @@
                 <tr><th><em>true:</em></th><td> Not Supported. </td></tr>
                 <tr><th><em>false:</em></th><td> No effect. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMInfoset </td></tr>  
                 <tr><th><em>note:</em></th><td> Setting this feature to true is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
@@ -983,6 +1035,7 @@
                 <tr><th><em>true:</em></th><td> Perform Namespace processing </td></tr>
                 <tr><th><em>false:</em></th><td> Do not perform Namespace processing</td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMNamespaces </td></tr> 
                 <tr><th><em>note:</em></th><td> If the validation is on, then the
                 document must contain a grammar that supports the use of namespaces </td></tr>
                 <tr><th><em>see:</em></th><td>
@@ -1002,6 +1055,7 @@
                 specified or defaulted from the schema or the DTD, in the document. </td></tr>
                 <tr><th><em>false:</em></th><td> Not Supported. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMNamespaceDeclarations </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to false is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="builder-namespaces">namespaces</link>
@@ -1019,6 +1073,7 @@
                 <tr><th><em>true:</em></th><td> Not Supported. </td></tr>
                 <tr><th><em>false:</em></th><td> Don't check the media type, accept any type of data. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMSupportedMediatypesOnly </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to true is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
@@ -1035,6 +1090,7 @@
                 <tr><th><em>false:</em></th><td> Validation is determined by the state of the
                 <link anchor="builder-validation">validation</link> feature. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMValidateIfSchema </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="builder-validation">validation</link>
                 </td></tr>
@@ -1052,6 +1108,7 @@
                 <tr><th><em>true:</em></th><td> Report all validation errors. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not report validation errors. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMValidation </td></tr>
                 <tr><th><em>note:</em></th><td> If this feature is set to true, the document must
                 specify a grammar.  If this feature is set to false and document specifies a grammar,
                 that grammar might be parsed but no validation of the document contents will be
@@ -1077,6 +1134,7 @@
                 whitespace" in the DOM tree. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not include ignorable whitespace in the DOM tree. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWhitespaceInElementContent </td></tr>
                 <tr><th><em>note:</em></th><td> The only way that the parser can determine if text is
                 ignorable is by reading the associated grammar and having a content model for the
                 document. When ignorable whitespace text nodes are included in the DOM tree,
@@ -1096,6 +1154,7 @@
                 <tr><th><em>true:</em></th><td> Enable the parser's schema support.  </td></tr>
                 <tr><th><em>false:</em></th><td> Disable the parser's schema support. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchema </td></tr>                
                 <tr><th><em>note</em></th><td> If set to true, namespace processing must also be turned on. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="builder-namespaces">namespaces</link>
@@ -1112,6 +1171,7 @@
                              are controlled by this option. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable full schema constraint checking. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchemaFullChecking </td></tr>
                 <tr><th><em>note:</em></th><td> This feature checks the Schema grammar itself for
                 additional errors that are time-consuming or memory intensive. It does <em>not</em> affect the
                 level of checking performed on document instances that use Schema grammars. </td></tr>
@@ -1128,6 +1188,7 @@
                 <tr><th><em>true:</em></th><td> Load the External DTD. </td></tr>
                 <tr><th><em>false:</em></th><td> Ignore the external DTD completely. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesLoadExternalDTD </td></tr>
                 <tr><th><em>note</em></th><td> This feature is ignored and DTD is always loaded when validation is on. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="builder-validation">validation</link>
@@ -1142,6 +1203,7 @@
                 <tr><th><em>true:</em></th><td> Attempt to continue parsing after a fatal error. </td></tr>
                 <tr><th><em>false:</em></th><td> Stops parse on first fatal error. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesContinueAfterFatalError </td></tr>
                 <tr><th><em>note:</em></th><td> The behavior of the parser when this feature is set to
                 true is <em>undetermined</em>! Therefore use this feature with extreme caution because
                 the parser may get stuck in an infinite loop or worse. </td></tr>
@@ -1157,6 +1219,7 @@
                 </td></tr>
                 <tr><th><em>false:</em></th><td> The parser will report the error and continue processing. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesValidationErrorAsFatal </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this true does not mean the validation error will
                 be printed with the word "Fatal Error".   It is still printed as "Error", but the parser
                 will exit if
@@ -1175,6 +1238,7 @@
                 <tr><th><em>true:</em></th><td>Use cached grammar if it exists in the pool.</td></tr>
                 <tr><th><em>false:</em></th><td>Parse the schema grammar.</td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesUseCachedGrammarInParse </td></tr>
                 <tr><th><em>note:</em></th><td>If http://apache.org/xml/features/validation/cache-grammarFromParse is enabled,
                 this feature is set to true automatically. Any setting to this feature by the users is a no-op.</td></tr>
                 <tr><th><em>see:</em></th><td>
@@ -1190,6 +1254,7 @@
                 <tr><th><em>true:</em></th><td>Cache the grammar in the pool for re-use in subsequent parses.</td></tr>
                 <tr><th><em>false:</em></th><td>Do not cache the grammar in the pool</td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesCacheGrammarFromParse </td></tr>
                 <tr><th><em>note:</em></th><td> If set to true, the http://apache.org/xml/features/validation/use-cachedGrammarInParse
                 is also set to true automatically.</td></tr>
                 <tr><th><em>see:</em></th><td>
@@ -1205,6 +1270,7 @@
                 <tr><th><em>true:</em></th><td> Force standard uri conformance. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not force standard uri conformance. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesStandardUriConformant </td></tr>
                 <tr><th><em>note:</em></th><td> If set to true, malformed uri will be rejected
                 and fatal error will be issued. </td></tr>
             </table>
@@ -1216,9 +1282,51 @@
                 <tr><th><em>true:</em></th><td> Enable src offset calculation. </td></tr>
                 <tr><th><em>false:</em></th><td> Disable src offset calculation. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesCalculateSrcOfs </td></tr>
                 <tr><th><em>note:</em></th><td> If set to true, the user can inquire about
                 the current src offset within the input source. Setting it to false (default)
                 improves the performance.</td></tr>
+            </table>
+            <p/>
+            
+            <anchor name="builder-IdentityConstraintChecking"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/validation/identity-constraint-checking</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable identity constraint checking. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable identity constraint checking. </td></tr>
+                <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesIdentityConstraintChecking </td></tr>                
+            </table>
+            <p/>
+            
+            <anchor name="builder-GenerateSyntheticAnnotations"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/generate-synthetic-annotations</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable generation of synthetic annotations.  A synthetic annotation will be 
+                generated when a schema component has non-schema attributes but no child annotation. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable generation of synthetic annotations. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesGenerateSyntheticAnnotations </td></tr>                
+            </table>
+            <p/>
+            
+            <anchor name="builder-XercesValidateAnnotations"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/validate-annotations</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable validation of annotations. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable validation of annotations. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesValidateAnnotations </td></tr>                
+            </table>
+            <p/>                                    
+            
+            <anchor name="builder-DOMHasPsviInfo"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/dom-has-psvi-info</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable storing of PSVI information in element and attribute nodes.</td></tr>
+                <tr><th><em>false:</em></th><td> Disable storing of PSVI information in element and attribute nodes. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesDOMHasPSVIInfo </td></tr>                
             </table>
             <p/>
 
@@ -1232,6 +1340,7 @@
                 <tr><th><em>false:</em></th><td> The returned DOMDocument from the parse method is owned by
                 the parser and thus will be deleted when the parser is released. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesUserAdoptsDOMDocument </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="apiDocs/classDOMBuilder.html">
                 DOMBuilder API Documentation</jump>, (DOMBuilder::parse and DOMBuilder::resetDocumentPool)
@@ -1281,6 +1390,7 @@
                                  in instance documents: e.g, "http://www.example.com file_name.xsd".
                                  The user can specify more than one XML Schema in the list. </td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchemaExternalSchemaLocation </td></tr>
             </table>
 
             <p/>
@@ -1295,6 +1405,7 @@
                 <tr><th><em>Value</em></th><td> The syntax is the same as for the noNamespaceSchemaLocation
                             attribute that may occur in an instance document: e.g."file_name.xsd". </td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSchemaExternalNoNamespaceSchemaLocation </td></tr>
             </table>
             <p/>
 
@@ -1312,6 +1423,7 @@
                             fgSGXMLScanner, or fgIGXMLScanner) or a string that matches the value of
                             one of those constants.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesScannerName </td></tr>
                 <tr><th><em>note: </em></th><td> See <jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump>
                 for more programming details. </td></tr>
             </table>
@@ -1322,6 +1434,7 @@
                             which the parser will then use to acquire an implementation from which it will create
                             the DOMDocument to use when reading in an XML file.</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesParserUseDocumentFromImplementation </td></tr>
 
             </table>
             <p/>
@@ -1338,7 +1451,7 @@
                     resources the processor will consume while processing
                     these constructs.  
                 </td></tr>
-                <tr><th><em>Value</em></th>
+                <tr><th><em>Value</em></th>                
                 <td> 
                     An instance of the SecurityManager class (see
                     <code>xercesc/util/SecurityManager</code>).  This
@@ -1357,6 +1470,7 @@
                     performed.
                 </td></tr>
                 <tr><th><em>Value Type</em></th><td> SecurityManager* </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesSecurityManager </td></tr>
             </table>
             <p/>
 
@@ -1576,6 +1690,7 @@
                 attributes and content should be discarded or not. </td></tr>
                 <tr><th><em>false:</em></th><td> Keep all attributes and all content. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTDiscardDefaultContent </td></tr>
                 <tr><th><em>note:</em></th><td> Note that the specified flag on Attr nodes in itself
                 is not always reliable, it is only reliable when it is set to false since the only case
                 where it can be set to false is if the attribute was created by the implementation.  The
@@ -1596,6 +1711,7 @@
                 <tr><th><em>false:</em></th><td> EntityReference nodes are serialized as expanded
 				sustitution text, unless the corresponding entity definition is not found. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTEntities </td></tr>
                 <tr><th><em>note:</em></th><td> This feature only affects the output XML stream.
 				The dom tree to be serialized will not be changed. </td></tr>
                 <tr><th><em>see:</em></th><td>
@@ -1612,6 +1728,7 @@
                 <tr><th><em>true:</em></th><td> Not Supported. </td></tr>
                 <tr><th><em>false:</em></th><td> Do not canonicalize the output. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTCanonicalForm </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to true is not supported. </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="writer-pretty">format-pretty-print</link>
@@ -1632,6 +1749,7 @@
                 is not specified by this specification. </td></tr>
                 <tr><th><em>false:</em></th><td> Don't pretty-print the result. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTFormatPrettyPrint </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to true will set the feature
                 <link anchor="writer-canonical">canonical-form</link> to false. </td></tr>
                 <tr><th><em>see:</em></th><td>
@@ -1651,6 +1769,7 @@
                 <tr><th><em>false:</em></th><td> Do not perform character normalization. </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to true is not supported. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTNormalizeCharacters </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
                 DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
@@ -1667,6 +1786,7 @@
                 <tr><th><em>false:</em></th><td> Signal an error if a CDATASection contains
                 CDATA section termination marker ']]&gt;', or an unrepresentable character. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTSplitCdataSections </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
                 DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
@@ -1681,6 +1801,7 @@
                 <tr><th><em>false:</em></th><td> Do not report validation errors. </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to true is not supported. </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTValidation </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
                 DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
@@ -1696,6 +1817,7 @@
                 <tr><th><em>false:</em></th><td> Not Supported. </td></tr>
                 <tr><th><em>note:</em></th><td> Setting this feature to false is not supported. </td></tr>
                 <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTWhitespaceInElementContent </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
                 DOM Level 3.0 Abstract Schemas and Load and Save Specification</jump>
@@ -1703,7 +1825,16 @@
             </table>
 
             <p/>
+            
+            <table>
+                <tr><th colspan="2"><em>xml declaration</em></th></tr>
+                <tr><th><em>true:</em></th><td> Include xml declaration. </td></tr>
+                <tr><th><em>false:</em></th><td> Do not include xml declaration. </td></tr>                
+                <tr><th><em>default:</em></th><td> true </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMXMLDeclaration </td></tr>                
+            </table>
 
+            <p/>
            </s4>
 
            <s4 title="Xerces Features">
@@ -1724,6 +1855,7 @@
                                                 is refered to determine the appropriate BOM to be written.
                 </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgDOMWRTBOM </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/REC-xml#sec-guessing"> XML 1.0 Appendix F </jump>
                 for more information about BOM.

@@ -361,6 +361,34 @@ void MySAXHandler::fatalError(const SAXParseException&amp; exception)
             </table>
             <p/>
 
+            <anchor name="IdentityConstraintChecking"/>
+            <table>
+                <tr><th colspan="2"><em>void setIdentityConstraintChecking(const bool);</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable identity constraint checking. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable identity constraint checking. </td></tr>
+                <tr><th><em>default:</em></th><td> true </td></tr>                
+            </table>
+            <p/>
+            
+            <anchor name="GenerateSyntheticAnnotations"/>
+            <table>
+                <tr><th colspan="2"><em>void setGenerateSyntheticAnnotations(const bool);</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable generation of synthetic annotations.  A synthetic annotation will be 
+                generated when a schema component has non-schema attributes but no child annotation. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable generation of synthetic annotations. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>                
+            </table>
+            <p/>
+            
+            <anchor name="XercesValidateAnnotations"/>
+            <table>
+                <tr><th colspan="2"><em>setValidateAnnotation</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable validation of annotations. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable validation of annotations. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>               
+            </table>
+            <p/>               
+            
             <table>
                 <tr><th colspan="2"><em>void setExternalSchemaLocation(const XMLCh* const)</em></th></tr>
                 <tr><th><em>Description</em></th><td> The XML Schema Recommendation explicitly states that
