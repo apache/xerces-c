@@ -801,71 +801,64 @@ void AbstractDOMParser::attDef
     {
         if (elemDecl.hasAttDefs())
         {
-            XMLBufBid bbQName(&fBufMgr);
-            XMLBuffer& attString = bbQName.getBuffer();
-
-            attString.append(attDef.getFullName());
+            fDocumentType->appendInternalSubset(attDef.getFullName());
 
             // Get the type and display it
             const XMLAttDef::AttTypes type = attDef.getType();
             switch(type)
             {
             case XMLAttDef::CData :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgCDATAString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgCDATAString);
                 break;
             case XMLAttDef::ID :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgIDString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgIDString);
                 break;
             case XMLAttDef::IDRef :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgIDRefString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgIDRefString);
                 break;
             case XMLAttDef::IDRefs :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgIDRefsString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgIDRefsString);
                 break;
             case XMLAttDef::Entity :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgEntityString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgEntityString);
                 break;
             case XMLAttDef::Entities :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgEntitiesString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgEntitiesString);
                 break;
             case XMLAttDef::NmToken :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgNmTokenString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgNmTokenString);
                 break;
             case XMLAttDef::NmTokens :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgNmTokensString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgNmTokensString);
                 break;
 
             case XMLAttDef::Notation :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgNotationString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgNotationString);
                 break;
 
             case XMLAttDef::Enumeration :
-                attString.append(chSpace);
+                fDocumentType->appendInternalSubset(chSpace);
                 const XMLCh* enumString = attDef.getEnumeration();
                 int length = XMLString::stringLen(enumString);
                 if (length > 0) {
 
-                    XMLBufBid bbQName(&fBufMgr);
-                    XMLBuffer& anotherEnumString = bbQName.getBuffer();
-
-                    anotherEnumString.append(chOpenParen );
+                    fDocumentType->appendInternalSubset(chOpenParen );
                     for(int i=0; i<length; i++) {
                         if (enumString[i] == chSpace)
-                            anotherEnumString.append(chPipe);
+                            fDocumentType->appendInternalSubset(chPipe);
                         else
-                            anotherEnumString.append(enumString[i]);
+                            fDocumentType->appendInternalSubset(enumString[i]);
                     }
-                    anotherEnumString.append(chCloseParen);
-                    attString.append(anotherEnumString.getRawBuffer());
+                    fDocumentType->appendInternalSubset(chCloseParen);
                 }
                 break;
             }
@@ -874,28 +867,26 @@ void AbstractDOMParser::attDef
             switch(def)
             {
             case XMLAttDef::Required :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgRequiredString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgRequiredString);
                 break;
             case XMLAttDef::Implied :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgImpliedString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgImpliedString);
                 break;
             case XMLAttDef::Fixed :
-                attString.append(chSpace);
-                attString.append(XMLUni::fgFixedString);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(XMLUni::fgFixedString);
                 break;
             }
 
             const XMLCh* defaultValue = attDef.getValue();
             if (defaultValue != 0) {
-                attString.append(chSpace);
-                attString.append(chDoubleQuote);
-                attString.append(defaultValue);
-                attString.append(chDoubleQuote);
+                fDocumentType->appendInternalSubset(chSpace);
+                fDocumentType->appendInternalSubset(chDoubleQuote);
+                fDocumentType->appendInternalSubset(defaultValue);
+                fDocumentType->appendInternalSubset(chDoubleQuote);
             }
-
-            fDocumentType->appendInternalSubset(attString.getRawBuffer());
         }
     }
 }
@@ -909,17 +900,13 @@ void AbstractDOMParser::doctypeComment
     {
         if (comment != 0)
         {
-            XMLBufBid bbQName(&fBufMgr);
-            XMLBuffer& comString = bbQName.getBuffer();
-
-            comString.set(XMLUni::fgCommentString);
-            comString.append(chSpace);
-            comString.append(comment);
-            comString.append(chSpace);
-            comString.append(chDash);
-            comString.append(chDash);
-            comString.append(chCloseAngle);
-            fDocumentType->appendInternalSubset(comString.getRawBuffer());
+            fDocumentType->appendInternalSubset(XMLUni::fgCommentString);
+            fDocumentType->appendInternalSubset(chSpace);
+            fDocumentType->appendInternalSubset(comment);
+            fDocumentType->appendInternalSubset(chSpace);
+            fDocumentType->appendInternalSubset(chDash);
+            fDocumentType->appendInternalSubset(chDash);
+            fDocumentType->appendInternalSubset(chCloseAngle);
         }
     }
 }
@@ -944,21 +931,16 @@ void AbstractDOMParser::doctypePI
 )
 {
     if (fDocumentType->isIntSubsetReading())
-	{
-		//add these chars to internalSubset variable
-        XMLBufBid bbQName(&fBufMgr);
-        XMLBuffer& pi = bbQName.getBuffer();
-        pi.append(chOpenAngle);
-        pi.append(chQuestion);
-        pi.append(target);
-        pi.append(chSpace);
-        pi.append(data);
-        pi.append(chQuestion);
-        pi.append(chCloseAngle);
-
-		fDocumentType->appendInternalSubset(pi.getRawBuffer());
-	}
-	
+    {
+        //add these chars to internalSubset variable
+        fDocumentType->appendInternalSubset(chOpenAngle);
+        fDocumentType->appendInternalSubset(chQuestion);
+        fDocumentType->appendInternalSubset(target);
+        fDocumentType->appendInternalSubset(chSpace);
+        fDocumentType->appendInternalSubset(data);
+        fDocumentType->appendInternalSubset(chQuestion);
+        fDocumentType->appendInternalSubset(chCloseAngle);
+    }	
 }
 
 
@@ -969,7 +951,7 @@ void AbstractDOMParser::doctypeWhitespace
 )
 {
     if (fDocumentType->isIntSubsetReading())
-		fDocumentType->appendInternalSubset(chars);
+        fDocumentType->appendInternalSubset(chars);
 }
 
 void AbstractDOMParser::elementDecl
@@ -979,26 +961,22 @@ void AbstractDOMParser::elementDecl
 )
 {
     if (fDocumentType->isIntSubsetReading())
-	{
-        XMLBufBid bbQName(&fBufMgr);
-        XMLBuffer& elemDecl = bbQName.getBuffer();
-
-        elemDecl.append(chOpenAngle);
-        elemDecl.append(chBang);
-        elemDecl.append(XMLUni::fgElemString);
-        elemDecl.append(chSpace);
-        elemDecl.append(decl.getFullName());
+    {
+        fDocumentType->appendInternalSubset(chOpenAngle);
+        fDocumentType->appendInternalSubset(chBang);
+        fDocumentType->appendInternalSubset(XMLUni::fgElemString);
+        fDocumentType->appendInternalSubset(chSpace);
+        fDocumentType->appendInternalSubset(decl.getFullName());
 
         //get the ContentSpec information
         const XMLCh* contentModel = decl.getFormattedContentModel();
         if (contentModel != 0) {
-            elemDecl.append(chSpace);
-            elemDecl.append(contentModel);
+            fDocumentType->appendInternalSubset(chSpace);
+            fDocumentType->appendInternalSubset(contentModel);
         }
 
-        elemDecl.append(chCloseAngle);
-		fDocumentType->appendInternalSubset(elemDecl.getRawBuffer());
-	}
+        fDocumentType->appendInternalSubset(chCloseAngle);
+    }
 }
 
 void AbstractDOMParser::endAttList
@@ -1130,53 +1108,50 @@ void AbstractDOMParser::entityDecl
     if (fDocumentType->isIntSubsetReading())
     {
         //add thes chars to internalSubset variable
-        XMLBufBid bbQName(&fBufMgr);
-        XMLBuffer& entityName = bbQName.getBuffer();
-        entityName.append(chOpenAngle);
-        entityName.append(chBang);
-        entityName.append(XMLUni::fgEntityString);
-        entityName.append(chSpace);
+        fDocumentType->appendInternalSubset(chOpenAngle);
+        fDocumentType->appendInternalSubset(chBang);
+        fDocumentType->appendInternalSubset(XMLUni::fgEntityString);
+        fDocumentType->appendInternalSubset(chSpace);
 
-        entityName.append(entityDecl.getName());
+        fDocumentType->appendInternalSubset(entityDecl.getName());
 
         const XMLCh* id = entity->getPublicId();
         if (id != 0) {
-            entityName.append(chSpace);
-            entityName.append(XMLUni::fgPubIDString);
-            entityName.append(chSpace);
-            entityName.append(chDoubleQuote);
-            entityName.append(id);
-            entityName.append(chDoubleQuote);
+            fDocumentType->appendInternalSubset(chSpace);
+            fDocumentType->appendInternalSubset(XMLUni::fgPubIDString);
+            fDocumentType->appendInternalSubset(chSpace);
+            fDocumentType->appendInternalSubset(chDoubleQuote);
+            fDocumentType->appendInternalSubset(id);
+            fDocumentType->appendInternalSubset(chDoubleQuote);
         }
         id = entity->getSystemId();
         if (id != 0) {
-            entityName.append(chSpace);
-            entityName.append(XMLUni::fgSysIDString);
-            entityName.append(chSpace);
-            entityName.append(chDoubleQuote);
-            entityName.append(id);
-            entityName.append(chDoubleQuote);
+            fDocumentType->appendInternalSubset(chSpace);
+            fDocumentType->appendInternalSubset(XMLUni::fgSysIDString);
+            fDocumentType->appendInternalSubset(chSpace);
+            fDocumentType->appendInternalSubset(chDoubleQuote);
+            fDocumentType->appendInternalSubset(id);
+            fDocumentType->appendInternalSubset(chDoubleQuote);
 
         }
         id = entity->getNotationName();
         if (id != 0) {
-            entityName.append(chSpace);
-            entityName.append(XMLUni::fgNDATAString);
-            entityName.append(chSpace);
-            entityName.append(chDoubleQuote);
-            entityName.append(id);
-            entityName.append(chDoubleQuote);
+            fDocumentType->appendInternalSubset(chSpace);
+            fDocumentType->appendInternalSubset(XMLUni::fgNDATAString);
+            fDocumentType->appendInternalSubset(chSpace);
+            fDocumentType->appendInternalSubset(chDoubleQuote);
+            fDocumentType->appendInternalSubset(id);
+            fDocumentType->appendInternalSubset(chDoubleQuote);
         }
         id = entityDecl.getValue();
         if (id !=0) {
-            entityName.append(chSpace);
-            entityName.append(chDoubleQuote);
-            entityName.append(id);
-            entityName.append(chDoubleQuote);
+            fDocumentType->appendInternalSubset(chSpace);
+            fDocumentType->appendInternalSubset(chDoubleQuote);
+            fDocumentType->appendInternalSubset(id);
+            fDocumentType->appendInternalSubset(chDoubleQuote);
         }
 
-        entityName.append(chCloseAngle);
-        fDocumentType->appendInternalSubset(entityName.getRawBuffer());
+        fDocumentType->appendInternalSubset(chCloseAngle);
     }
 
 }
@@ -1208,16 +1183,11 @@ void AbstractDOMParser::startAttList
 {
     if (fDocumentType->isIntSubsetReading())
     {
-        XMLBufBid bbQName(&fBufMgr);
-        XMLBuffer& attString = bbQName.getBuffer();
-
-        attString.append(chOpenAngle);
-        attString.append(chBang);
-        attString.append(XMLUni::fgAttListString);
-        attString.append(chSpace);
-        attString.append(elemDecl.getFullName());
-
-        fDocumentType->appendInternalSubset(attString.getRawBuffer());
+        fDocumentType->appendInternalSubset(chOpenAngle);
+        fDocumentType->appendInternalSubset(chBang);
+        fDocumentType->appendInternalSubset(XMLUni::fgAttListString);
+        fDocumentType->appendInternalSubset(chSpace);
+        fDocumentType->appendInternalSubset(elemDecl.getFullName());
     }
 }
 
