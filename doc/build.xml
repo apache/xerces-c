@@ -30,6 +30,7 @@
       or jump directly to:</p>
     <ul>
        <li><jump href="build-misc.html#ICUPerl">Building &XercesCName; with ICU</jump></li>
+       <li><jump href="build-misc.html#RPMLinux">Building &XercesCName; using RPM on Linux</jump></li>
        <li><jump href="build-misc.html#WinCOM">Building &XercesCName; COM Wrapper on Windows</jump></li>
        <li><jump href="build-misc.html#UserDoc">Building User Documentation</jump></li>
        <li><jump href="build-misc.html#PortInfo">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</jump></li>

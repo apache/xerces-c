@@ -134,6 +134,21 @@ perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCIn
         </s3>
     </s2>
 
+    <anchor name="RPMLinux"/>
+    <s2 title="Building &XercesCName; using RPM on Linux">
+        <p>&XercesCName; may be built from the distributed source archive directly on Linux
+        using RPM.  For example: </p>
+<source>
+rpm -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.0 and older)
+or
+rpmbuild -ta &XercesCSrcInstallDir;.tar.gz (rpm 4.1 and later; ships with RedHat 8)
+</source>
+        <p>The &XercesCName; RPM specificattion can be found in
+           <br/><code>&XercesCSrcInstallDir;/xerces-c.spec</code>.</p>
+        <p>Please refer to the <jump href="http://www.rpm.org/RPM-HOWTO">RPM-HOWTO</jump>,
+           for more RPM related information.</p>
+    </s2>
+
     <anchor name="WinCOM"/>
     <s2 title="Building &XercesCName; COM Wrapper on Windows">
         <p>To build the COM module for use with XML on Windows platforms, you
