@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/30 13:08:26  gareth
+ * move over to macros for std:: and iostream/iostream.h issues.
+ *
  * Revision 1.5  2002/02/01 22:46:28  peiyongz
  * sane_include
  *
@@ -110,33 +113,33 @@ static bool basicTests()
 // ---------------------------------------------------------------------------
 bool testRefStack()
 {
-    std::wcout  << L"----------------------------------\n"
+    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
                 << L"Testing RefStackOf template class\n"
-                << L"----------------------------------" << std::endl;
+                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
 
     bool retVal = true;
 
     try
     {
         // Call other local methods to do specific tests
-        std::wcout << L"Testing RefStackOf basics" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Testing RefStackOf basics" << XERCES_STD_QUALIFIER endl;
         if (!basicTests())
         {
-            std::wcout << L"RefStackOf basic tests failed" << std::endl;
+            XERCES_STD_QUALIFIER wcout << L"RefStackOf basic tests failed" << XERCES_STD_QUALIFIER endl;
             retVal = false;
         }
          else
         {
-            std::wcout  << L"RefArrayOf constructor tests passed"
-                        << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"RefArrayOf constructor tests passed"
+                        << XERCES_STD_QUALIFIER endl;
         }
-        std::wcout << std::endl;
+        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
-                    << toCatch.getMessage() << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
         return false;
     }
 

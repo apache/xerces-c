@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/30 13:08:26  gareth
+ * move over to macros for std:: and iostream/iostream.h issues.
+ *
  * Revision 1.5  2002/02/01 22:46:28  peiyongz
  * sane_include
  *
@@ -114,14 +117,14 @@ template <class T> bool commonRefTests()
     // Make sure the initial capacity is what we set
     if (testVec.curCapacity() != testMax)
     {
-        std::wcout << L"   Init capacity was incorrect" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"   Init capacity was incorrect" << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
     // Make sure the initial size is zero
     if (testVec.size() != 0)
     {
-        std::wcout << L"   Init size was not correct" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"   Init size was not correct" << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -129,7 +132,7 @@ template <class T> bool commonRefTests()
     testVec.addElement(new T);
     if (testVec.size() != 1)
     {
-        std::wcout << L"   Adding one element caused bad size" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"   Adding one element caused bad size" << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -137,8 +140,8 @@ template <class T> bool commonRefTests()
     testVec.addElement(new T);
     if (testVec.size() != 2)
     {
-        std::wcout  << L"   Adding another element caused bad size"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"   Adding another element caused bad size"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -148,8 +151,8 @@ template <class T> bool commonRefTests()
 
     if (testVec.curCapacity() == testMax)
     {
-        std::wcout  << L"   Adding another element failed to cause an expansion"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"   Adding another element failed to cause an expansion"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -167,8 +170,8 @@ template <class T> bool commonRefTests()
 
     if (!caughtIt)
     {
-        std::wcout  << L"   Failed to catch array bounds error at element 4"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"   Failed to catch array bounds error at element 4"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -177,8 +180,8 @@ template <class T> bool commonRefTests()
 
     if (testVec.size() != 3)
     {
-        std::wcout  << L"   Removing an element did not adjust size correctly"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"   Removing an element did not adjust size correctly"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -189,8 +192,8 @@ template <class T> bool commonRefTests()
 
     if (testVec.size() != 0)
     {
-        std::wcout  << L"   Removing all elements did not zero the size"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"   Removing all elements did not zero the size"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -208,8 +211,8 @@ template <class T> bool commonRefTests()
 
     if (!caughtIt)
     {
-        std::wcout  << L"   Failed to catch array bounds error at element 0"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"   Failed to catch array bounds error at element 0"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -219,7 +222,7 @@ template <class T> bool commonRefTests()
     testVec.insertElementAt(new T, 0);
     if (testVec.size() != 3)
     {
-        std::wcout << L"   Inserting elements caused bad size" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"   Inserting elements caused bad size" << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -228,7 +231,7 @@ template <class T> bool commonRefTests()
 
     if (testVec.size() != 0)
     {
-        std::wcout  << L"   removeAllElements caused bad size" << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"   removeAllElements caused bad size" << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -257,8 +260,8 @@ template <class T> bool extendedRefTests()
     {
         if (*testVec.elementAt(index) != T(index))
         {
-            std::wcout  << L"   addElement put elements in wrong order"
-                        << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"   addElement put elements in wrong order"
+                        << XERCES_STD_QUALIFIER endl;
             return false;
         }
     }
@@ -270,8 +273,8 @@ template <class T> bool extendedRefTests()
     {
         if (*testVec.elementAt(index) != T(index+1))
         {
-            std::wcout  << L"   removeElement at head removed wrong element"
-                        << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"   removeElement at head removed wrong element"
+                        << XERCES_STD_QUALIFIER endl;
             return false;
         }
     }
@@ -283,8 +286,8 @@ template <class T> bool extendedRefTests()
     {
         if (*testVec.elementAt(index) != T(index+1))
         {
-            std::wcout  << L"   removeElement at end removed wrong element"
-                        << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"   removeElement at end removed wrong element"
+                        << XERCES_STD_QUALIFIER endl;
             return false;
         }
     }
@@ -303,29 +306,29 @@ static bool doBasicTests()
     //
     // Do the common reference vector tests for ints, bools and strings.
     //
-    std::wcout << L"Testing RefVectorOf<int>, common tests" << std::endl;
+    XERCES_STD_QUALIFIER wcout << L"Testing RefVectorOf<int>, common tests" << XERCES_STD_QUALIFIER endl;
     if (!commonRefTests<int>())
     {
-        std::wcout << L"RefVectorOf<int> failed" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"RefVectorOf<int> failed" << XERCES_STD_QUALIFIER endl;
         retVal = false;
     }
      else
     {
-        std::wcout << L"RefVectorOf<int> passed" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"RefVectorOf<int> passed" << XERCES_STD_QUALIFIER endl;
     }
-    std::wcout << std::endl;
+    XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
 
-    std::wcout << L"Testing RefVectorOf<bool>, common tests" << std::endl;
+    XERCES_STD_QUALIFIER wcout << L"Testing RefVectorOf<bool>, common tests" << XERCES_STD_QUALIFIER endl;
     if (!commonRefTests<bool>())
     {
-        std::wcout << L"RefVectorOf<bool> failed" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"RefVectorOf<bool> failed" << XERCES_STD_QUALIFIER endl;
         retVal = false;
     }
      else
     {
-        std::wcout << L"RefVectorOf<bool> passed" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"RefVectorOf<bool> passed" << XERCES_STD_QUALIFIER endl;
     }
-    std::wcout << std::endl;
+    XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
 
 
     //
@@ -333,17 +336,17 @@ static bool doBasicTests()
     //  the instantiation type be of a fundamental value, because its going
     //  to test element ordering issues.
     //
-    std::wcout << L"Testing RefVectorOf<int>, extended tests" << std::endl;
+    XERCES_STD_QUALIFIER wcout << L"Testing RefVectorOf<int>, extended tests" << XERCES_STD_QUALIFIER endl;
     if (!extendedRefTests<int>())
     {
-        std::wcout << L"Extended RefVectorOf<int> failed" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Extended RefVectorOf<int> failed" << XERCES_STD_QUALIFIER endl;
         retVal = false;
     }
      else
     {
-        std::wcout << L"Extended RefVectorOf<int> passed" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Extended RefVectorOf<int> passed" << XERCES_STD_QUALIFIER endl;
     }
-    std::wcout << std::endl;
+    XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
 
     return retVal;
 }
@@ -365,15 +368,15 @@ static bool enumTests()
     {
         if (enumTest.nextElement() != index++)
         {
-            std::wcout << L"    Enumerator sequence was incorrect" << std::endl;
+            XERCES_STD_QUALIFIER wcout << L"    Enumerator sequence was incorrect" << XERCES_STD_QUALIFIER endl;
             return false;
         }
     }
 
     if (index != 32)
     {
-        std::wcout  << L"    Enumerator did not enum enough elements"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"    Enumerator did not enum enough elements"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
     return true;
@@ -386,9 +389,9 @@ static bool enumTests()
 // ---------------------------------------------------------------------------
 bool testRefVector()
 {
-    std::wcout  << L"----------------------------------\n"
+    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
                 << L"Testing RefVectorOf template class\n"
-                << L"----------------------------------" << std::endl;
+                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
 
     bool retVal = true;
 
@@ -399,23 +402,23 @@ bool testRefVector()
             retVal = false;
 
         // Test the enumerator
-        std::wcout << L"Testing RefVectorEnumerator" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Testing RefVectorEnumerator" << XERCES_STD_QUALIFIER endl;
         if (!enumTests())
         {
-            std::wcout << L"RefVectorEnumeration failed" << std::endl;
+            XERCES_STD_QUALIFIER wcout << L"RefVectorEnumeration failed" << XERCES_STD_QUALIFIER endl;
             retVal = false;
         }
          else
         {
-            std::wcout << L"RefVectorEnumeration passed" << std::endl;
+            XERCES_STD_QUALIFIER wcout << L"RefVectorEnumeration passed" << XERCES_STD_QUALIFIER endl;
         }
-        std::wcout << std::endl;
+        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
-                    << toCatch.getMessage() << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
         return false;
     }
     return retVal;

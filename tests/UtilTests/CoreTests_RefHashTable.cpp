@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/30 13:08:26  gareth
+ * move over to macros for std:: and iostream/iostream.h issues.
+ *
  * Revision 1.6  2003/02/05 18:55:21  tng
  * [Bug 11915] Utility for freeing memory.
  *
@@ -145,32 +148,32 @@ static bool basicTests()
 // ---------------------------------------------------------------------------
 bool testRefHashTable()
 {
-    std::wcout  << L"----------------------------------\n"
+    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
                 << L"Testing RefHashTableOf class\n"
-                << L"----------------------------------" << std::endl;
+                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
 
     bool retVal = true;
 
     try
     {
-        std::wcout << L"Testing basic RefHashtable methods" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Testing basic RefHashtable methods" << XERCES_STD_QUALIFIER endl;
         if (!basicTests())
         {
-            std::wcout  << L"RefHashtable basic test methods failed"
-                        << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"RefHashtable basic test methods failed"
+                        << XERCES_STD_QUALIFIER endl;
             retVal = false;
         }
          else
         {
-            std::wcout << L"RefHashtable basic tests passed" << std::endl;
+            XERCES_STD_QUALIFIER wcout << L"RefHashtable basic tests passed" << XERCES_STD_QUALIFIER endl;
         }
-        std::wcout << std::endl;
+        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
-                    << toCatch.getMessage() << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
         return false;
     }
     return retVal;

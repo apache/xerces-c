@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/05/30 13:08:27  gareth
+ * move over to macros for std:: and iostream/iostream.h issues.
+ *
  * Revision 1.9  2002/02/01 22:46:28  peiyongz
  * sane_include
  *
@@ -135,20 +138,20 @@ static bool checkAField(const   XMLCh* const test
 
     if (!test && expected)
     {
-        std::wcout << L"Expected value for the " << fieldName
-                   << " field was not present" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Expected value for the " << fieldName
+                   << " field was not present" << XERCES_STD_QUALIFIER endl;
         return false;
     }
      else if (test && !expected)
     {
-        std::wcout << L"The value '" << test << L"' for the " << fieldName
-                   << L" was not expected" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"The value '" << test << L"' for the " << fieldName
+                   << L" was not expected" << XERCES_STD_QUALIFIER endl;
         return false;
     }
      else if (XMLString::compareString(test, expected))
     {
-        std::wcout  << L"Expected: " << expected << L", but got: " << test
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"Expected: " << expected << L", but got: " << test
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
     return true;
@@ -173,8 +176,8 @@ static bool checkBasicResult(const  XMLURL&         testURL
 
     if (testURL.getPortNum() != testInfo.portNum)
     {
-        std::wcout << L"Expected port number: " << testInfo.portNum
-                   << L" but got: " << testURL.getPortNum() << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Expected port number: " << testInfo.portNum
+                   << L" but got: " << testURL.getPortNum() << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -393,8 +396,8 @@ static bool relativeURLTest()
 
         if (XMLString::compareString(testURL.getURLText(), testList[index].result))
         {
-            std::wcout  << L"Expected URL: " << testList[index].result
-                        << L" but got: " << testURL.getURLText() << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"Expected URL: " << testList[index].result
+                        << L" but got: " << testURL.getURLText() << XERCES_STD_QUALIFIER endl;
             retVal = false;
         }
     }
@@ -407,44 +410,44 @@ static bool relativeURLTest()
 // ---------------------------------------------------------------------------
 bool testURL()
 {
-    std::wcout  << L"----------------------------------\n"
+    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
                 << L"Testing URL class \n"
                 << L"----------------------------------"
-                << std::endl;
+                << XERCES_STD_QUALIFIER endl;
 
     bool retVal = true;
     try
     {
         // Call other local methods to do specific tests
-        std::wcout << L"Testing basic URL parsing" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Testing basic URL parsing" << XERCES_STD_QUALIFIER endl;
         if (!basicURLTest())
         {
-            std::wcout << L"Basic URL parsing tests failed" << std::endl;
+            XERCES_STD_QUALIFIER wcout << L"Basic URL parsing tests failed" << XERCES_STD_QUALIFIER endl;
             retVal = false;
         }
          else
         {
-            std::wcout << L"Basic URL parsing tests passed" << std::endl;
+            XERCES_STD_QUALIFIER wcout << L"Basic URL parsing tests passed" << XERCES_STD_QUALIFIER endl;
         }
-        std::wcout << std::endl;
+        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
 
-        std::wcout << L"Testing relative URL parsing" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Testing relative URL parsing" << XERCES_STD_QUALIFIER endl;
         if (!relativeURLTest())
         {
-            std::wcout << L"Relative URL parsing tests failed" << std::endl;
+            XERCES_STD_QUALIFIER wcout << L"Relative URL parsing tests failed" << XERCES_STD_QUALIFIER endl;
             retVal = false;
         }
          else
         {
-            std::wcout << L"Relative URL parsing tests passed" << std::endl;
+            XERCES_STD_QUALIFIER wcout << L"Relative URL parsing tests passed" << XERCES_STD_QUALIFIER endl;
         }
-        std::wcout << std::endl;
+        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
-                    << toCatch.getMessage() << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
         return false;
     }
     return retVal;

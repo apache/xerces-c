@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/30 13:08:27  gareth
+ * move over to macros for std:: and iostream/iostream.h issues.
+ *
  * Revision 1.8  2002/02/01 22:46:28  peiyongz
  * sane_include
  *
@@ -114,9 +117,9 @@
 // ---------------------------------------------------------------------------
 bool testTranscoders()
 {
-    std::wcout  << L"----------------------------------\n"
+    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
                 << L"Testing transcoder classes\n"
-                << L"----------------------------------" << std::endl;
+                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
 
     return true;
 }

@@ -63,13 +63,18 @@
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
+
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
 
 
 #define DOMTYPEINFOTEST(info, type, uri, line) \
     tmp = XMLString::equals(info->getName(), type) && XMLString::equals(info->getNamespace(), uri);\
     if(!tmp) { \
-      cerr << "DOMTypeInfo test failed at line, " << line << "\nExpected values : typename '" << XMLString::transcode(type) << "', uri '" << XMLString::transcode(uri) << "'\nActual values   : typename '" << XMLString::transcode(info->getName()) << "', uri '" << XMLString::transcode(info->getNamespace()) << "'\n" << endl; \
+      XERCES_STD_QUALIFIER cerr << "DOMTypeInfo test failed at line, " << line << "\nExpected values : typename '" << XMLString::transcode(type) << "', uri '" << XMLString::transcode(uri) << "'\nActual values   : typename '" << XMLString::transcode(info->getName()) << "', uri '" << XMLString::transcode(info->getNamespace()) << "'\n" << XERCES_STD_QUALIFIER endl; \
       passed = false; \
     }
 
@@ -167,9 +172,9 @@ TypeInfo::TypeInfo() {
 
     catch(const XMLException &toCatch)
     {
-        cerr << "Error during Xerces-c Initialization.\n"
+        XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
              << "  Exception message:"
-             << StrX(toCatch.getMessage()) << endl;
+             << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
     }
     parser = 0;
 }
@@ -846,7 +851,7 @@ int main(int argc, char **argv)
         ti.doc = ti.parser->getDocument();
     }
     catch (...) {
-        cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << endl;
+        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
         delete ti.parser;
         return false;
     }
@@ -864,7 +869,7 @@ int main(int argc, char **argv)
         passed &= ti.testInvaild();
     }
     else
-        cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << endl;
+        XERCES_STD_QUALIFIER cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << XERCES_STD_QUALIFIER endl;
 
     delete ti.parser;
 
@@ -880,7 +885,7 @@ int main(int argc, char **argv)
         ti.doc = ti.parser->getDocument();
     }
     catch (...) {
-        cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << endl;
+        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
         delete ti.parser;
         return false;
     }
@@ -898,7 +903,7 @@ int main(int argc, char **argv)
         passed &= ti.testInvaild();
     }
     else
-        cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << endl;
+        XERCES_STD_QUALIFIER cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << XERCES_STD_QUALIFIER endl;
 
     delete ti.parser;
 
@@ -911,7 +916,7 @@ int main(int argc, char **argv)
         ti.doc = ti.parser->getDocument();
     }
     catch (...) {
-        cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << endl;
+        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
         delete ti.parser;
         return false;
     }
@@ -921,7 +926,7 @@ int main(int argc, char **argv)
         passed &= ti.testDTD();
     }
     else
-        cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << endl;
+        XERCES_STD_QUALIFIER cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << XERCES_STD_QUALIFIER endl;
 
     delete ti.parser;
 
@@ -935,7 +940,7 @@ int main(int argc, char **argv)
         ti.doc = ti.parser->getDocument();
     }
     catch (...) {
-        cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << endl;
+        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
         delete ti.parser;
         return false;
     }
@@ -945,7 +950,7 @@ int main(int argc, char **argv)
         passed &=  ti.testDTD();
     }
     else
-        cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << endl;
+        XERCES_STD_QUALIFIER cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << XERCES_STD_QUALIFIER endl;
 
     delete ti.parser;
 
@@ -958,7 +963,7 @@ int main(int argc, char **argv)
         ti.doc = ti.parser->getDocument();
     }
     catch (...) {
-        cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << endl;
+        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
         delete ti.parser;
         return false;
     }
@@ -968,15 +973,15 @@ int main(int argc, char **argv)
         passed &= ti.combinedTest();
     }
     else
-        cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << endl;
+        XERCES_STD_QUALIFIER cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << XERCES_STD_QUALIFIER endl;
 
     delete ti.parser;
 
     if (!passed) {
-        cerr << "test failed" << endl;
+        XERCES_STD_QUALIFIER cerr << "test failed" << XERCES_STD_QUALIFIER endl;
         return 4;
     }
 
-    cerr << "Test Run Successfully" << endl;
+    XERCES_STD_QUALIFIER cerr << "Test Run Successfully" << XERCES_STD_QUALIFIER endl;
     return 0;
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/05/30 13:08:25  gareth
+ * move over to macros for std:: and iostream/iostream.h issues.
+ *
  * Revision 1.11  2002/02/01 22:45:54  peiyongz
  * sane_include
  *
@@ -118,8 +121,8 @@ int main(int argC, char** argV)
 
     catch(const XMLException& toCatch)
     {
-        cout << "Error during platform init! Message:\n"
-             << StrX(toCatch.getMessage()) << endl;
+        XERCES_STD_QUALIFIER cout << "Error during platform init! Message:\n"
+             << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
         return 1;
     }
 
@@ -162,13 +165,13 @@ int main(int argC, char** argV)
         else if (!XMLString::compareNIString(argV[index], "/URL=", 5))
             urlPath = XMLString::transcode(&argV[index][5]);
         else
-            cout << "Unknown parameter: " << argV[index] << endl;
+            XERCES_STD_QUALIFIER cout << "Unknown parameter: " << argV[index] << XERCES_STD_QUALIFIER endl;
     }
 
     // We have to have a URL to work on
     if (!urlPath)
     {
-        cout << "A URL must be provided, /URL=xxxx" << endl;
+        XERCES_STD_QUALIFIER cout << "A URL must be provided, /URL=xxxx" << XERCES_STD_QUALIFIER endl;
         return 1;
     }
 
@@ -208,9 +211,9 @@ int main(int argC, char** argV)
 
     catch(const XMLException& toCatch)
     {
-        cout << "Exception during scan:\n    "
+        XERCES_STD_QUALIFIER cout << "Exception during scan:\n    "
              << StrX(toCatch.getMessage())
-             << endl;
+             << XERCES_STD_QUALIFIER endl;
     }
 
     // And call the termination method

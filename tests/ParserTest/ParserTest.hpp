@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/30 13:08:26  gareth
+ * move over to macros for std:: and iostream/iostream.h issues.
+ *
  * Revision 1.7  2003/02/05 18:55:21  tng
  * [Bug 11915] Utility for freeing memory.
  *
@@ -101,7 +104,13 @@ enum OutputTypes
 // ---------------------------------------------------------------------------
 #include "ParserTest_Parser.hpp"
 #include <stdlib.h>
+#include <xercesc/util/PlatformUtils.hpp>
+
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
 
 
 // ---------------------------------------------------------------------------
@@ -153,7 +162,7 @@ private :
     char*   fLocalForm;
 };
 
-inline ostream& operator<<(ostream& target, const StrX& toDump)
+inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
 {
     target << toDump.localForm();
     return target;

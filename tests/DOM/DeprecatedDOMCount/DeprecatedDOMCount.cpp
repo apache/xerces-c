@@ -69,7 +69,12 @@
 #include "DeprecatedDOMCount.hpp"
 #include <string.h>
 #include <stdlib.h>
+
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <fstream>
+#else
 #include <fstream.h>
+#endif
 
 
 
@@ -80,7 +85,7 @@
 // ---------------------------------------------------------------------------
 void usage()
 {
-    cout << "\nUsage:\n"
+    XERCES_STD_QUALIFIER cout << "\nUsage:\n"
             "    DeprecatedDOMCount [options] <XML file | List file>\n\n"
             "This program invokes the DOM parser, builds the DOM tree,\n"
             "and then prints the number of elements found in each XML file.\n\n"
@@ -93,7 +98,7 @@ void usage()
             "    -f          Enable full schema constraint checking. Defaults to off.\n"
 		      "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
-         << endl;
+         << XERCES_STD_QUALIFIER endl;
 }
 
 
@@ -107,8 +112,8 @@ int main(int argC, char* argV[])
 
     catch (const XMLException& toCatch)
     {
-         cerr << "Error during initialization! :\n"
-              << StrX(toCatch.getMessage()) << endl;
+         XERCES_STD_QUALIFIER cerr << "Error during initialization! :\n"
+              << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
          return 1;
     }
 
@@ -155,7 +160,7 @@ int main(int argC, char* argV[])
                 valScheme = DOMParser::Val_Always;
             else
             {
-                cerr << "Unknown -v= value: " << parm << endl;
+                XERCES_STD_QUALIFIER cerr << "Unknown -v= value: " << parm << XERCES_STD_QUALIFIER endl;
                 return 2;
             }
         }
@@ -189,8 +194,8 @@ int main(int argC, char* argV[])
         }
          else
         {
-            cerr << "Unknown option '" << argV[argInd]
-                 << "', ignoring it\n" << endl;
+            XERCES_STD_QUALIFIER cerr << "Unknown option '" << argV[argInd]
+                 << "', ignoring it\n" << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -222,14 +227,14 @@ int main(int argC, char* argV[])
     unsigned long duration;
 
     bool more = true;
-    ifstream fin;
+    XERCES_STD_QUALIFIER ifstream fin;
 
     // the input is a list file
     if (doList)
         fin.open(argV[argInd]);
 
     if (fin.fail()) {
-        cerr <<"Cannot open the list file: " << argV[argInd] << endl;
+        XERCES_STD_QUALIFIER cerr <<"Cannot open the list file: " << argV[argInd] << XERCES_STD_QUALIFIER endl;
         return 2;
     }
 
@@ -246,7 +251,7 @@ int main(int argC, char* argV[])
                     continue;
                 else {
                     xmlFile = fURI;
-                    cerr << "==Parsing== " << xmlFile << endl;
+                    XERCES_STD_QUALIFIER cerr << "==Parsing== " << xmlFile << XERCES_STD_QUALIFIER endl;
                 }
             }
             else
@@ -270,23 +275,23 @@ int main(int argC, char* argV[])
 
         catch (const XMLException& toCatch)
         {
-            cerr << "\nError during parsing: '" << xmlFile << "'\n"
+            XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
                  << "Exception message is:  \n"
-                 << StrX(toCatch.getMessage()) << "\n" << endl;
+                 << StrX(toCatch.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
             errorOccurred = true;
             continue;
         }
         catch (const DOM_DOMException& toCatch)
         {
-            cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
+            XERCES_STD_QUALIFIER cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
                  << "DOMException code is:  \n"
-                 << toCatch.code << "\n" << endl;
+                 << toCatch.code << "\n" << XERCES_STD_QUALIFIER endl;
             errorOccurred = true;
             continue;
         }
         catch (...)
         {
-            cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+            XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
             errorOccurred = true;
             continue;
         }
@@ -297,7 +302,7 @@ int main(int argC, char* argV[])
         //
         if (errorHandler.getSawErrors())
         {
-            cout << "\nErrors occurred, no output available\n" << endl;
+            XERCES_STD_QUALIFIER cout << "\nErrors occurred, no output available\n" << XERCES_STD_QUALIFIER endl;
             errorOccurred = true;
         }
          else
@@ -306,8 +311,8 @@ int main(int argC, char* argV[])
             unsigned int elementCount = doc.getElementsByTagName("*").getLength();
 
             // Print out the stats that we collected and time taken.
-            cout << xmlFile << ": " << duration << " ms ("
-                 << elementCount << " elems)." << endl;
+            XERCES_STD_QUALIFIER cout << xmlFile << ": " << duration << " ms ("
+                 << elementCount << " elems)." << XERCES_STD_QUALIFIER endl;
         }
     }
 
@@ -347,27 +352,27 @@ DeprecatedDOMCountErrorHandler::~DeprecatedDOMCountErrorHandler()
 void DeprecatedDOMCountErrorHandler::error(const SAXParseException& e)
 {
     fSawErrors = true;
-    cerr << "\nError at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nError at file " << StrX(e.getSystemId())
          << ", line " << e.getLineNumber()
          << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void DeprecatedDOMCountErrorHandler::fatalError(const SAXParseException& e)
 {
     fSawErrors = true;
-    cerr << "\nFatal Error at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nFatal Error at file " << StrX(e.getSystemId())
          << ", line " << e.getLineNumber()
          << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void DeprecatedDOMCountErrorHandler::warning(const SAXParseException& e)
 {
-    cerr << "\nWarning at file " << StrX(e.getSystemId())
+    XERCES_STD_QUALIFIER cerr << "\nWarning at file " << StrX(e.getSystemId())
          << ", line " << e.getLineNumber()
          << ", char " << e.getColumnNumber()
-         << "\n  Message: " << StrX(e.getMessage()) << endl;
+         << "\n  Message: " << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
 }
 
 void DeprecatedDOMCountErrorHandler::resetErrors()

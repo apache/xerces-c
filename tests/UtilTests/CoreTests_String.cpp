@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/30 13:08:27  gareth
+ * move over to macros for std:: and iostream/iostream.h issues.
+ *
  * Revision 1.5  2002/02/01 22:46:28  peiyongz
  * sane_include
  *
@@ -99,9 +102,9 @@
 // ---------------------------------------------------------------------------
 bool testString()
 {
-    std::wcout  << L"----------------------------------\n"
+    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
                 << L"Testing String class\n"
-                << L"----------------------------------" << std::endl;
+                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
 
     bool retVal = true;
 
@@ -111,8 +114,8 @@ bool testString()
 
     catch(const XMLException& toCatch)
     {
-        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
-                    << toCatch.getMessage() << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
         return false;
     }
     return retVal;

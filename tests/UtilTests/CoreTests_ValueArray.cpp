@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/30 13:08:27  gareth
+ * move over to macros for std:: and iostream/iostream.h issues.
+ *
  * Revision 1.5  2002/02/01 22:46:28  peiyongz
  * sane_include
  *
@@ -106,8 +109,8 @@ static bool constructorTests()
     // Make sure that it has the right initial size
     if (testArray1.length() != 255)
     {
-        std::wcout  << L"    The ctor created wrong length() value"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"    The ctor created wrong length() value"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -116,16 +119,16 @@ static bool constructorTests()
 
     if (testArray2.length() != 255)
     {
-        std::wcout << L"    The copy ctor created wrong length() value"
-                << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"    The copy ctor created wrong length() value"
+                << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
     // Test the equality of the two arrays
     if (testArray1 != testArray2)
     {
-        std::wcout  << L"    The copy ctor created unequal arrays"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"    The copy ctor created unequal arrays"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -137,8 +140,8 @@ static bool constructorTests()
 
     if (testArray3.length() != 4)
     {
-        std::wcout  << L"    The init values ctor created wrong length() value"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"    The init values ctor created wrong length() value"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -148,8 +151,8 @@ static bool constructorTests()
     ||  (testArray3[2] != 3.3)
     ||  (testArray3[3] != 4.4))
     {
-        std::wcout  << L"    The init values ctor did not init contents correctly"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"    The init values ctor did not init contents correctly"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -162,8 +165,8 @@ static bool constructorTests()
 
     if (testArray4 != testArray3)
     {
-        std::wcout  << L"    Assignment did not create equal arrays"
-                    << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"    Assignment did not create equal arrays"
+                    << XERCES_STD_QUALIFIER endl;
         return false;
     }
     return true;
@@ -184,8 +187,8 @@ static bool accessTests()
     {
         if (testArray1[index] != index)
         {
-            std::wcout  << L"    Failed to read back values just set"
-                        << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"    Failed to read back values just set"
+                        << XERCES_STD_QUALIFIER endl;
             return false;
         }
     }
@@ -204,7 +207,7 @@ static bool accessTests()
 
     if (!caughtIt)
     {
-        std::wcout << L"    Failed to catch index error" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"    Failed to catch index error" << XERCES_STD_QUALIFIER endl;
         return false;
     }
 
@@ -217,48 +220,48 @@ static bool accessTests()
 // ---------------------------------------------------------------------------
 bool testValueArray()
 {
-    std::wcout  << L"----------------------------------\n"
+    XERCES_STD_QUALIFIER wcout  << L"----------------------------------\n"
                 << L"Testing ValueArrayOf template class\n"
-                << L"----------------------------------" << std::endl;
+                << L"----------------------------------" << XERCES_STD_QUALIFIER endl;
 
     bool retVal = true;
 
     try
     {
         // Call other local methods to do specific tests
-        std::wcout << L"Testing ValueArrayOf contructors" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Testing ValueArrayOf contructors" << XERCES_STD_QUALIFIER endl;
         if (!constructorTests())
         {
-            std::wcout  << L"ValueArrayOf constructor tests failed"
-                        << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"ValueArrayOf constructor tests failed"
+                        << XERCES_STD_QUALIFIER endl;
             retVal = false;
         }
          else
         {
-            std::wcout  << L"ValueArrayOf constructor tests passed"
-                        << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"ValueArrayOf constructor tests passed"
+                        << XERCES_STD_QUALIFIER endl;
         }
-        std::wcout << std::endl;
+        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
 
-        std::wcout << L"Testing ValueArrayOf element access" << std::endl;
+        XERCES_STD_QUALIFIER wcout << L"Testing ValueArrayOf element access" << XERCES_STD_QUALIFIER endl;
         if (!accessTests())
         {
-            std::wcout  << L"ValueArrayOf element access tests failed"
-                        << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"ValueArrayOf element access tests failed"
+                        << XERCES_STD_QUALIFIER endl;
             retVal = false;
         }
          else
         {
-            std::wcout  << L"ValueArrayOf element access tests passed"
-                        << std::endl;
+            XERCES_STD_QUALIFIER wcout  << L"ValueArrayOf element access tests passed"
+                        << XERCES_STD_QUALIFIER endl;
         }
-        std::wcout << std::endl;
+        XERCES_STD_QUALIFIER wcout << XERCES_STD_QUALIFIER endl;
     }
 
     catch(const XMLException& toCatch)
     {
-        std::wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
-                    << toCatch.getMessage() << std::endl;
+        XERCES_STD_QUALIFIER wcout  << L"  ERROR: Unexpected exception!\n   Msg: "
+                    << toCatch.getMessage() << XERCES_STD_QUALIFIER endl;
         return false;
     }
     return retVal;

@@ -62,7 +62,13 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/sax/ErrorHandler.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
+
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -159,9 +165,9 @@ private :
     char*   fLocalForm;
 };
 
-inline ostream& operator<<(ostream& target, const StrX& toDump)
+inline XERCES_STD_QUALIFIER ostream& operator<<(XERCES_STD_QUALIFIER ostream& target, const StrX& toDump)
 {
-    target << toDump.localForm();
+    target  << toDump.localForm();
     return target;
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/30 13:08:26  gareth
+ * move over to macros for std:: and iostream/iostream.h issues.
+ *
  * Revision 1.7  2003/01/29 20:14:49  gareth
  * updated for DOMTypeInfo tests.
  *
@@ -87,8 +90,13 @@
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
+#if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
+#else
 #include <iostream.h>
+#endif
 
 XERCES_CPP_NAMESPACE_USE
 
