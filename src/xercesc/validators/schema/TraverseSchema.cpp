@@ -6642,7 +6642,7 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc,
 
     if (fEntityHandler){
         XMLResourceIdentifier resourceIdentifier(resourceIdentitiferType,
-                            normalizedURI, nameSpace);
+                            normalizedURI, nameSpace, 0, fSchemaInfo->getCurrentSchemaURL());
         srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
 
