@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/14 19:32:15  abagchi
+ * Reintroduced bug-fix in 1.4
+ *
  * Revision 1.5  2000/02/14 17:59:49  abagchi
  * Reused iconv descriptors
  *
@@ -235,48 +238,44 @@ Iconv390TransService::~Iconv390TransService()
 //  Iconv390TransService: The virtual transcoding service API
 // ---------------------------------------------------------------------------
 int Iconv390TransService::compareIString(  const   XMLCh* const    comp1
-                                        , const XMLCh* const    comp2)
+                                           , const XMLCh* const    comp2)
 {
     const XMLCh* cptr1 = comp1;
     const XMLCh* cptr2 = comp2;
 
-    while ((*cptr1 != 0) && (*cptr2 != 0))
+    while ( (*cptr1 != 0) && (*cptr2 != 0) )
     {
-        wint_t  wch1 = towupper(*cptr1);
-        wint_t  wch2 = towupper(*cptr2);
-        if (wch1 < wch2)
-            return -1;
-        if (wch1 > wch2)
-            return 1;
+        wint_t wch1 = towupper(*cptr1);
+        wint_t wch2 = towupper(*cptr2);
+        if (wch1 != wch2)
+            break;
 
         cptr1++;
         cptr2++;
     }
-    return 0;
+    return (int) ( towupper(*cptr1) - towupper(*cptr2) );
 }
 
 int Iconv390TransService::compareNIString( const   XMLCh* const    comp1
-                                        , const XMLCh* const    comp2
-                                        , const unsigned int    maxChars)
+                                           , const XMLCh* const    comp2
+                                           , const unsigned int    maxChars)
 {
+    unsigned int  n = 0;
     const XMLCh* cptr1 = comp1;
     const XMLCh* cptr2 = comp2;
 
-    unsigned int  n = 0;
-    while ((*cptr1 != 0) && (*cptr2 != 0) && (n < maxChars))
+    while ( (*cptr1 != 0) && (*cptr2 != 0) && (n < maxChars) )
     {
-        wint_t  wch1 = towupper(*cptr1);
-        wint_t  wch2 = towupper(*cptr2);
-        if (wch1 < wch2)
-            return -1;
-        if (wch1 > wch2)
-            return 1;
+        wint_t wch1 = towupper(*cptr1);
+        wint_t wch2 = towupper(*cptr2);
+        if (wch1 != wch2)
+            break;
 
         cptr1++;
         cptr2++;
         n++;
     }
-    return 0;
+    return (int) ( towupper(*cptr1) - towupper(*cptr2) );
 }
 
 const XMLCh* Iconv390TransService::getId() const
