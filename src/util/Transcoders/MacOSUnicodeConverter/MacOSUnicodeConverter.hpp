@@ -66,10 +66,10 @@
 
 #if defined(XML_MACOSX)
     //	Framework includes from ProjectBuilder
-	#include <CarbonCore/UnicodeConverter.h>
+    #include <CoreServices/CoreServices.h>
 #else
     //	Classic includes otherwise
-	#include <UnicodeConverter.h>
+    #include <UnicodeConverter.h>
 #endif
 
 //

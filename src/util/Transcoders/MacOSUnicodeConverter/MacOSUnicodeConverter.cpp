@@ -83,24 +83,17 @@
 
 #if defined(XML_MACOSX)
     //	Framework includes from ProjectBuilder
-	#include <CarbonCore/MacErrors.h>
-	#include <CarbonCore/Script.h>
-	#include <CarbonCore/TextUtils.h>
-	#include <CarbonCore/TextEncodingConverter.h>
-	#include <CarbonCore/TextCommon.h>
-	#include <CarbonCore/CodeFragments.h>
-	#include <CarbonCore/UnicodeConverter.h>
-	#include <CarbonCore/UnicodeUtilities.h>
+    #include <CoreServices/CoreServices.h>
 #else
     //	Classic includes otherwise
-	#include <MacErrors.h>
-	#include <Script.h>
-	#include <TextUtils.h>
-	#include <TextEncodingConverter.h>
-	#include <TextCommon.h>
-	#include <CodeFragments.h>
-	#include <UnicodeConverter.h>
-	#include <UnicodeUtilities.h>
+    #include <MacErrors.h>
+    #include <Script.h>
+    #include <TextUtils.h>
+    #include <TextEncodingConverter.h>
+    #include <TextCommon.h>
+    #include <CodeFragments.h>
+    #include <UnicodeConverter.h>
+    #include <UnicodeUtilities.h>
 #endif
 
 
@@ -126,7 +119,7 @@ static const XMLCh gMyServiceId[] =
     chLatin_M, chLatin_a, chLatin_c, chLatin_O, chLatin_S, chNull
 };
 
-//	Detect a mismatch in unicode character size.
+//Detect a mismatch in unicode character size.
 const bool kUniSizeMismatch = sizeof(XMLCh) != sizeof(UniChar);
 
 
@@ -151,8 +144,8 @@ MacOSUnicodeConverter::~MacOSUnicodeConverter()
 int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
                                           , const XMLCh* const    comp2)
 {
-	//	If unicode collation routines are available, use them.
-	//	This should be the case on Mac OS 8.6 and later,
+        //	If unicode collation routines are available, use them.
+        //	This should be the case on Mac OS 8.6 and later,
 	//	with Carbon 1.0.2 or later, and under Mac OS X.
 	//
 	//	Otherwise, but only for Metrowerks, since only Metrowerks

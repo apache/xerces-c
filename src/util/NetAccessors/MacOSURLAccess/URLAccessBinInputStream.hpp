@@ -71,7 +71,7 @@
 
 #if defined(XML_MACOSX)
     //	Framework includes from ProjectBuilder
-	#include <URLAccess/URLAccess.h>
+	#include <Carbon/Carbon.h>
 #else
     //	Classic includes otherwise
 	#include <URLAccess.h>

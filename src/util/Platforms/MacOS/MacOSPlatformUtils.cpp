@@ -99,26 +99,18 @@
 
 #if defined(XML_MACOSX)
     //	Include from Frameworks Headers under ProjectBuilder
-	#include <CarbonCore/Files.h>
-	#include <CarbonCore/Gestalt.h>
-	#include <CarbonCore/TextUtils.h>
-	#include <CarbonCore/TextEncodingConverter.h>
-	#include <CarbonCore/Multiprocessing.h>
-	#include <CarbonCore/DriverSynchronization.h>
-	#include <CarbonCore/DriverServices.h>
-	#include <CoreFoundation/CFString.h>
-	#include <URLAccess/URLAccess.h>
+    #include <Carbon/Carbon.h>
 #else
     //	Classic include styles
     #include <Files.h>
-	#include <Gestalt.h>
-	#include <TextUtils.h>
-	#include <TextEncodingConverter.h>
-	#include <Multiprocessing.h>
-	#include <DriverSynchronization.h>
-	#include <DriverServices.h>
-	#include <CFString.h>
-	#include <URLAccess.h>
+    #include <Gestalt.h>
+    #include <TextUtils.h>
+    #include <TextEncodingConverter.h>
+    #include <Multiprocessing.h>
+    #include <DriverSynchronization.h>
+    #include <DriverServices.h>
+    #include <CFString.h>
+    #include <URLAccess.h>
 #endif
 
 
@@ -1546,65 +1538,38 @@ TranscodeUniCharsToUTF8(UniChar* src, char* dst, std::size_t srcCnt, std::size_t
 {
 	std::size_t result = 0;
 	
-    //	This special casing is needed because the Text Encoding Converter
-    //	fails on Mac OS X public beta if the HIToolbox has not been
-    //	dragged in. This should be fixed before final. But for now,
-    //	we use CFString instead to do the transcoding on X. An alternative
-    //	temporary fix would be to explicitly drag in HIToolbox by
-    //	doing something like: if (KeyScript != KeyScript) KeyScript(0);
-    //		-jdb
-	if (gIsClassic || !TARGET_API_MAC_CARBON)
-	{
-		//	Use the text encoding converter to perform the format conversion.
-		//	Note that this is slightly heavyweight, but we're not in a performance
-		//	sensitive code-path.
-		
-		OSStatus err = noErr;
-		TECObjectRef tec = 0;
-		ByteCount bytesConsumed = 0;
-		ByteCount bytesProduced = 0;
-		
-		TextEncoding inputEncoding	= CreateTextEncoding(kTextEncodingUnicodeDefault,
-											kTextEncodingDefaultVariant,
-											kUnicode16BitFormat);
-											
-		TextEncoding outputEncoding = CreateTextEncoding(kTextEncodingUnicodeDefault,
-											kTextEncodingDefaultVariant,
-											kUnicodeUTF8Format);
-		
-		if (err == noErr)
-			err = TECCreateConverter(&tec, inputEncoding, outputEncoding);
-			
-		if (err == noErr)
-			err = TECConvertText(tec,
-						(ConstTextPtr) src,
-						srcCnt * sizeof(UniChar),	// inputBufferLength
-						&bytesConsumed,				// actualInputLength
-						(TextPtr) dst,				// outputBuffer
-						maxChars * sizeof(char),	// outputBufferLength
-						&bytesProduced);			// actualOutputLength
-						
-		TECDisposeConverter(tec);
-		
-		result = bytesProduced;
-	}
-	else
-	{
-#if TARGET_API_MAC_CARBON
-		//	Build the string using the existing buffer of unicode characters
-		CFStringRef str = CFStringCreateWithCharactersNoCopy(
-								kCFAllocatorDefault,
-								src, srcCnt,
-								kCFAllocatorNull);
-								
-		//	Extract into UTF-8
-		if (CFStringGetCString(str, dst, maxChars, kCFStringEncodingUTF8))
-			result = std::strlen(dst);
-			
-		//	Release the string
-		CFRelease(str);
-#endif
-	}
+    //	Use the text encoding converter to perform the format conversion.
+    //	Note that this is slightly heavyweight, but we're not in a performance
+    //	sensitive code-path.
+    
+    OSStatus err = noErr;
+    TECObjectRef tec = 0;
+    ByteCount bytesConsumed = 0;
+    ByteCount bytesProduced = 0;
+    
+    TextEncoding inputEncoding	= CreateTextEncoding(kTextEncodingUnicodeDefault,
+                                        kTextEncodingDefaultVariant,
+                                        kUnicode16BitFormat);
+                                        
+    TextEncoding outputEncoding = CreateTextEncoding(kTextEncodingUnicodeDefault,
+                                        kTextEncodingDefaultVariant,
+                                        kUnicodeUTF8Format);
+    
+    if (err == noErr)
+        err = TECCreateConverter(&tec, inputEncoding, outputEncoding);
+        
+    if (err == noErr)
+        err = TECConvertText(tec,
+                    (ConstTextPtr) src,
+                    srcCnt * sizeof(UniChar),	// inputBufferLength
+                    &bytesConsumed,				// actualInputLength
+                    (TextPtr) dst,				// outputBuffer
+                    maxChars * sizeof(char),	// outputBufferLength
+                    &bytesProduced);			// actualOutputLength
+                    
+    TECDisposeConverter(tec);
+    
+    result = bytesProduced;
 	
     //	Return number of chars in dst
 	return result;
@@ -1616,69 +1581,39 @@ TranscodeUTF8ToUniChars(char* src, UniChar* dst, std::size_t maxChars)
 {
 	std::size_t result = 0;
 	
-    //	This special casing is needed because the Text Encoding Converter
-    //	fails on Mac OS X public beta if the HIToolbox has not been
-    //	dragged in. This should be fixed before final. But for now,
-    //	we use CFString instead to do the transcoding on X. An alternative
-    //	temporary fix would be to explicitly drag in HIToolbox by
-    //	doing something like: if (KeyScript != KeyScript) KeyScript(0);
-    //		-jdb
-	if (gIsClassic || !TARGET_API_MAC_CARBON)
-	{
-		//	Use the text encoding converter to perform the format conversion.
-		//	Note that this is slightly heavyweight, but we're not in a performance
-		//	sensitive code-path.
-		
-		OSStatus err = noErr;
-		TECObjectRef tec = 0;
-		ByteCount bytesConsumed = 0;
-		ByteCount bytesProduced = 0;
-		
-		
-		TextEncoding inputEncoding	= CreateTextEncoding(kTextEncodingUnicodeDefault,
-											kTextEncodingDefaultVariant,
-											kUnicodeUTF8Format);
-											
-		TextEncoding outputEncoding = CreateTextEncoding(kTextEncodingUnicodeDefault,
-											kTextEncodingDefaultVariant,
-											kUnicode16BitFormat);
-		
-		if (err == noErr)
-			err = TECCreateConverter(&tec, inputEncoding, outputEncoding);
-			
-		if (err == noErr)
-			err = TECConvertText(tec,
-						(ConstTextPtr) src,
-						std::strlen(src),			// inputBufferLength
-						&bytesConsumed,				// actualInputLength
-						(TextPtr) dst,				// outputBuffer
-						maxChars * sizeof(UniChar),	// outputBufferLength
-						&bytesProduced);			// actualOutputLength
-						
-		TECDisposeConverter(tec);
-		
-		result = bytesProduced / sizeof(UniChar);
-	}
-	else
-	{
-#if TARGET_API_MAC_CARBON
-		//	Build the string from existing buffer of UTF-8 characters
-		CFStringRef str = CFStringCreateWithCStringNoCopy(
-								kCFAllocatorDefault,
-								src,
-								kCFStringEncodingUTF8,
-								kCFAllocatorNull);
-		
-		//	Figure out how much we can convert back
-		result = std::min(static_cast<std::size_t>(CFStringGetLength(str)), maxChars);
-						
-		//	Convert to UniChars in our output buffer
-		CFStringGetCharacters(str, CFRangeMake(0, result), dst);
-			
-		//	Release the string
-		CFRelease(str);
-#endif
-	}
+    //	Use the text encoding converter to perform the format conversion.
+    //	Note that this is slightly heavyweight, but we're not in a performance
+    //	sensitive code-path.
+    
+    OSStatus err = noErr;
+    TECObjectRef tec = 0;
+    ByteCount bytesConsumed = 0;
+    ByteCount bytesProduced = 0;
+    
+    
+    TextEncoding inputEncoding	= CreateTextEncoding(kTextEncodingUnicodeDefault,
+                                        kTextEncodingDefaultVariant,
+                                        kUnicodeUTF8Format);
+                                        
+    TextEncoding outputEncoding = CreateTextEncoding(kTextEncodingUnicodeDefault,
+                                        kTextEncodingDefaultVariant,
+                                        kUnicode16BitFormat);
+    
+    if (err == noErr)
+        err = TECCreateConverter(&tec, inputEncoding, outputEncoding);
+        
+    if (err == noErr)
+        err = TECConvertText(tec,
+                    (ConstTextPtr) src,
+                    std::strlen(src),			// inputBufferLength
+                    &bytesConsumed,				// actualInputLength
+                    (TextPtr) dst,				// outputBuffer
+                    maxChars * sizeof(UniChar),	// outputBufferLength
+                    &bytesProduced);			// actualOutputLength
+                    
+    TECDisposeConverter(tec);
+    
+    result = bytesProduced / sizeof(UniChar);
 	
     //	Return number of unicode characters in dst
 	return result;

@@ -65,10 +65,10 @@
 
 #if defined(XML_MACOSX)
     //	Framework includes from ProjectBuilder
-	#include <CarbonCore/Files.h>
+    #include <CoreServices/CoreServices.h>
 #else
     //	Classic includes otherwise
-	#include <Files.h>
+    #include <Files.h>
 #endif
 
 
