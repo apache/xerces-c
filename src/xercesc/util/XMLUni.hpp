@@ -296,6 +296,9 @@ public :
     // Locale
     static const char  fgXercescDefaultLocale[];
 
+    // Default Exception String
+    static const XMLCh  fgDefErrMsg[];
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators

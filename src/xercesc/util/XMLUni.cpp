@@ -1423,7 +1423,15 @@ const XMLCh XMLUni::fgXMLDOMMsgDomain[] =
     ,   chNull
 };
 
-
+// default exception string
+const XMLCh XMLUni::fgDefErrMsg[] =
+{
+        chLatin_C, chLatin_o, chLatin_u, chLatin_l, chLatin_d
+    ,   chSpace, chLatin_n, chLatin_o, chLatin_t, chSpace
+    ,   chLatin_l, chLatin_o, chLatin_a, chLatin_d, chSpace
+    ,   chLatin_m, chLatin_e, chLatin_s, chLatin_s, chLatin_a
+    ,   chLatin_g, chLatin_e, chNull
+};
 
 XERCES_CPP_NAMESPACE_END
 
