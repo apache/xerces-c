@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/01/06 19:40:05  knoaman
+ * Throw an invalid datatype value exception if fEntityDeclPool is NULL.
+ *
  * Revision 1.4  2002/12/18 14:17:55  gareth
  * Fix to bug #13438. When you eant a vector that calls delete[] on its members you should use RefArrayVectorOf.
  *
@@ -163,6 +166,14 @@ void ENTITYDatatypeValidator::validate(const XMLCh* const content)
                     , content);
         }
 
+    }
+    else {
+        ThrowXML1
+        (
+            InvalidDatatypeValueException
+            , XMLExcepts::VALUE_ENTITY_Invalid
+            , content
+        );
     }
 
     return;
