@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.3  2002/11/22 14:57:32  tng
+# 390: support record-oriented MVS datasets with the DOM Level 3 serialization APIs.  Patch by Chris Larsson and Stephen Dulin.
+#
 # Revision 1.2  2002/07/26 16:49:28  tng
 # [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
 #
@@ -94,6 +97,9 @@ include ../../../Makefile.incl
 
 SUBMODULE = Platforms/OS390
 CPP_PUBHEADERS = OS390Defs.hpp
-CPP_OBJECTS = OS390PlatformUtils.$(TO)
+CPP_OBJECTS = \
+         OS390PlatformUtils.$(TO) \
+         Path390.$(TO) \
+         FileHandleImpl.$(TO)
 
 include ../../Makefile.util.submodule
