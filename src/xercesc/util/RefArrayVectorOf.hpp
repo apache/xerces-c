@@ -15,7 +15,9 @@ public :
     // -----------------------------------------------------------------------
     //  Constructor
     // -----------------------------------------------------------------------
-    RefArrayVectorOf(const unsigned int maxElems, const bool adoptElems = true);
+    RefArrayVectorOf( const unsigned int   maxElems
+                    , const bool           adoptElems = true
+                    , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
     //  Destructor

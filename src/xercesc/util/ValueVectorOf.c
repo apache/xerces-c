@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -101,12 +104,13 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  ValueVectorOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TElem>
-ValueVectorOf<TElem>::ValueVectorOf(const unsigned int maxElems) :
+ValueVectorOf<TElem>::ValueVectorOf(const unsigned int maxElems,
+                                    MemoryManager* const manager) :
 
     fCurCount(0)
     , fMaxCount(maxElems)
     , fElemList(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     fElemList = (TElem*) fMemoryManager->allocate
     (
@@ -120,7 +124,7 @@ ValueVectorOf<TElem>::ValueVectorOf(const ValueVectorOf<TElem>& toCopy) :
     fCurCount(toCopy.fCurCount)
     , fMaxCount(toCopy.fMaxCount)
     , fElemList(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(toCopy.fMemoryManager)
 {
     fElemList = (TElem*) fMemoryManager->allocate
     (

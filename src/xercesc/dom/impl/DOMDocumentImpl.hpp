@@ -305,6 +305,7 @@ public:
     void                         releaseDocNotifyUserData(DOMNode* object);
     void                         releaseBuffer(DOMBuffer* buffer);
     DOMBuffer*                   popBuffer();
+    MemoryManager*               getMemoryManager() const;
 
     // Factory methods for getting/creating node lists.
     // Because nothing is ever deleted, the implementation caches and recycles
@@ -376,6 +377,11 @@ private:
     bool                  errorChecking;    // Bypass error checking.
 
 };
+
+inline MemoryManager* DOMDocumentImpl::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -181,9 +181,9 @@ XMLURL::Protocols XMLURL::lookupByName(const XMLCh* const protoName)
 // ---------------------------------------------------------------------------
 //  XMLURL: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLURL::XMLURL() :
+XMLURL::XMLURL(MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fFragment(0)
     , fHost(0)
     , fPassword(0)
@@ -198,9 +198,10 @@ XMLURL::XMLURL() :
 }
 
 XMLURL::XMLURL(const XMLCh* const    baseURL
-             , const XMLCh* const    relativeURL) :
+             , const XMLCh* const    relativeURL
+             , MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fFragment(0)
     , fHost(0)
     , fPassword(0)
@@ -223,10 +224,11 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
     }
 }
 
-XMLURL::XMLURL(const XMLCh* const    baseURL
-             , const char* const     relativeURL) :
+XMLURL::XMLURL(const XMLCh* const  baseURL
+             , const char* const   relativeURL
+             , MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fFragment(0)
     , fHost(0)
     , fPassword(0)
@@ -254,7 +256,7 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
 XMLURL::XMLURL(const XMLURL&         baseURL
              , const XMLCh* const    relativeURL) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(baseURL.fMemoryManager)
     , fFragment(0)
     , fHost(0)
     , fPassword(0)
@@ -280,7 +282,7 @@ XMLURL::XMLURL(const XMLURL&         baseURL
 XMLURL::XMLURL(const  XMLURL&        baseURL
              , const char* const     relativeURL) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(baseURL.fMemoryManager)
     , fFragment(0)
     , fHost(0)
     , fPassword(0)
@@ -306,9 +308,10 @@ XMLURL::XMLURL(const  XMLURL&        baseURL
 
 }
 
-XMLURL::XMLURL(const XMLCh* const urlText) :
+XMLURL::XMLURL(const XMLCh* const urlText,
+               MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fFragment(0)
     , fHost(0)
     , fPassword(0)
@@ -331,9 +334,10 @@ XMLURL::XMLURL(const XMLCh* const urlText) :
     }
 }
 
-XMLURL::XMLURL(const char* const urlText) :
+XMLURL::XMLURL(const char* const urlText,
+               MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fFragment(0)
     , fHost(0)
     , fPassword(0)
@@ -360,7 +364,7 @@ XMLURL::XMLURL(const char* const urlText) :
 
 XMLURL::XMLURL(const XMLURL& toCopy) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(toCopy.fMemoryManager)
     , fFragment(0)
     , fHost(0)
     , fPassword(0)
@@ -490,7 +494,7 @@ void XMLURL::setURL(const XMLCh* const    baseURL
 	{
 		if (*baseURL)
 		{
-			XMLURL basePart(baseURL);
+			XMLURL basePart(baseURL, fMemoryManager);
 			if (!conglomerateWithBase(basePart, false))
 			{
 				cleanup();
@@ -617,7 +621,7 @@ void XMLURL::makeRelativeTo(const XMLCh* const baseURLText)
     if (!isRelative())
         return;
 
-    XMLURL baseURL(baseURLText);
+    XMLURL baseURL(baseURLText, fMemoryManager);
     conglomerateWithBase(baseURL);
 }
 

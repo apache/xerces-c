@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.12  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -123,14 +126,14 @@ static XMLCh value1[BUF_LEN+1];
 // ---------------------------------------------------------------------------
 //  ctor/dtor
 // ---------------------------------------------------------------------------
-XMLAbstractDoubleFloat::XMLAbstractDoubleFloat()
+XMLAbstractDoubleFloat::XMLAbstractDoubleFloat(MemoryManager* const manager)
 : fValue(0)
 , fType(Normal)
 , fDataConverted(false)
 , fSign(0)
 , fRawData(0)
 , fFormattedString(0)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(manager)
 {
 }
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/05/16 06:01:57  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -180,14 +183,17 @@ void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
     if (colonPosition > 0)
     {
         // Extract URI
-        XMLCh* uriPart = new XMLCh[colonPosition + 1];
-        ArrayJanitor<XMLCh> jan1(uriPart);
+        XMLCh* uriPart = (XMLCh*) fMemoryManager->allocate
+        (
+            (colonPosition + 1) * sizeof(XMLCh)
+        );//new XMLCh[colonPosition + 1];
+        ArrayJanitor<XMLCh> jan1(uriPart, fMemoryManager);
         XMLString::subString(uriPart, content, 0, colonPosition);
 
         try
         {
             // no relative uri support here
-            XMLUri  newURI(uriPart);
+            XMLUri  newURI(uriPart, fMemoryManager);
         }
         catch (...)
         {
@@ -198,8 +204,11 @@ void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
     }
 
     // Extract localpart
-    XMLCh* localPart = new XMLCh[contentLength - colonPosition];
-    ArrayJanitor<XMLCh> jan2(localPart);
+    XMLCh* localPart = (XMLCh*) fMemoryManager->allocate
+    (
+        (contentLength - colonPosition) * sizeof(XMLCh)
+    );//new XMLCh[contentLength - colonPosition];
+    ArrayJanitor<XMLCh> jan2(localPart, fMemoryManager);
     XMLString::subString(localPart, content, colonPosition + 1, contentLength);
 
     if ( !XMLString::isValidNCName(localPart))

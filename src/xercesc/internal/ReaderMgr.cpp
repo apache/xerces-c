@@ -731,7 +731,8 @@ ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
                                      (const XMLByte*)dataBuf
                                      , dataLen * sizeof(XMLCh)
                                      , copyBuf ? BinMemInputStream::BufOpt_Copy
-                                                 : BinMemInputStream::BufOpt_Reference
+                                               : BinMemInputStream::BufOpt_Reference
+                                     , fMemoryManager
                                    );
     if (!newStream)
         return 0;

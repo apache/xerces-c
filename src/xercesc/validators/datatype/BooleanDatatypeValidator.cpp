@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/16 06:01:57  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -184,7 +187,7 @@ void BooleanDatatypeValidator::checkContent( const XMLCh* const content, bool as
         // lazy construction
         if (getRegex() ==0) {
             try {
-                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
             }
             catch (XMLException &e)
             {

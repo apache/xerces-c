@@ -81,8 +81,11 @@ public:
      *               contain a parsable XMLBigInteger.
      */
 
-    XMLBigInteger(const XMLCh* const strValue);
-
+    XMLBigInteger
+    (
+        const XMLCh* const strValue
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     ~XMLBigInteger();
 
     XMLBigInteger(const XMLBigInteger& toCopy);

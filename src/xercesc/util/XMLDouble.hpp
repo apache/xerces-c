@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/05/16 06:01:53  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/12/11 00:20:02  peiyongz
  * Doing businesss in value space. Converting out-of-bound value into special values.
  *
@@ -122,7 +125,8 @@ public:
 	 *               contain a parsable XMLDouble.
 	 */
 
-    XMLDouble(const XMLCh* const strValue);
+    XMLDouble(const XMLCh* const strValue,
+              MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     ~XMLDouble();
 

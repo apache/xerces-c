@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/05/15 19:07:45  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -103,10 +106,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  StringPool::PoolElem: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLStringPool::PoolElem::PoolElem( const   XMLCh* const string
-                                 , const unsigned int id) :
+                                 , const unsigned int id
+                                 , MemoryManager* const manager) :
     fId(id)
     , fString(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     fString = XMLString::replicate(string, fMemoryManager);
 }
@@ -133,9 +137,10 @@ XMLStringPool::PoolElem::reset(const XMLCh* const string, const unsigned int id)
 // ---------------------------------------------------------------------------
 //  XMLStringPool: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLStringPool::XMLStringPool(const  unsigned int  modulus) :
+XMLStringPool::XMLStringPool(const  unsigned int  modulus,
+                             MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fIdMap(0)
     , fHashTable(0)
     , fMapCapacity(64)
@@ -246,7 +251,7 @@ unsigned int XMLStringPool::addNewEntry(const XMLCh* const newString)
     //  this new element in the id map at the current id index, then bump the
     //  id index.
     //
-    PoolElem* newElem = new (fMemoryManager) PoolElem(newString, fCurId);
+    PoolElem* newElem = new (fMemoryManager) PoolElem(newString, fCurId, fMemoryManager);
     fHashTable->put((void*)(newElem->getKey()), newElem);
     fIdMap[fCurId] = newElem;
 

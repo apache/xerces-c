@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -120,19 +123,23 @@ public :
     //  Contructors and Destructor
     // -----------------------------------------------------------------------
     /** Default constructor. */
-    QName();
+    QName(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /** Constructs a specified qname using prefix, and localpart. */
     QName
-    (   const XMLCh* const        prefix
-      , const XMLCh* const        localPart
-	   , const unsigned int        uriId
+    (
+          const XMLCh* const   prefix
+        , const XMLCh* const   localPart
+	    , const unsigned int   uriId
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Constructs a specified qname using rawName. */
     QName
-    (   const XMLCh* const        rawName
-	   , const unsigned int        uriId
+    (
+          const XMLCh* const   rawName
+	    , const unsigned int   uriId
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     /** Copy constructor. */

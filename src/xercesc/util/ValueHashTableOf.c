@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -84,8 +87,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 template <class TVal>
 ValueHashTableOf<TVal>::ValueHashTableOf( const unsigned int modulus
-                                        , HashBase* hashBase)
-    : fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+                                        , HashBase* hashBase
+                                        , MemoryManager* const manager)
+    : fMemoryManager(manager)
     , fBucketList(0)
     , fHashModulus(modulus)
     , fHash(0)
@@ -96,8 +100,9 @@ ValueHashTableOf<TVal>::ValueHashTableOf( const unsigned int modulus
 }
 
 template <class TVal>
-ValueHashTableOf<TVal>::ValueHashTableOf(const unsigned int modulus)
-	: fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+ValueHashTableOf<TVal>::ValueHashTableOf( const unsigned int modulus
+                                        , MemoryManager* const manager)
+	: fMemoryManager(manager)
     , fBucketList(0)
     , fHashModulus(modulus)
     , fHash(0)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -113,9 +116,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  QName: Constructors and Destructor
 // ---------------------------------------------------------------------------
-QName::QName() :
+QName::QName(MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fPrefix(0)
     , fPrefixBufSz(0)
     , fLocalPart(0)
@@ -126,11 +129,12 @@ QName::QName() :
 {
 }
 
-QName::QName( const XMLCh* const prefix
-            , const XMLCh* const localPart
-            , const unsigned int uriId) :
+QName::QName( const XMLCh* const   prefix
+            , const XMLCh* const   localPart
+            , const unsigned int   uriId
+            , MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fPrefix(0)
     , fPrefixBufSz(0)
     , fLocalPart(0)
@@ -154,9 +158,10 @@ QName::QName( const XMLCh* const prefix
 }
 
 QName::QName( const XMLCh* const rawName
-            , const unsigned int uriId) :
+            , const unsigned int uriId
+            , MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fPrefix(0)
     , fPrefixBufSz(0)
     , fLocalPart(0)
@@ -189,7 +194,7 @@ QName::~QName()
 // ---------------------------------------------------------------------------
 QName::QName(const QName& qname) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(qname.fMemoryManager)
     , fPrefix(0)
     , fPrefixBufSz(0)
     , fLocalPart(0)

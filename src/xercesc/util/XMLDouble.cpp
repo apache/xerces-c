@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/05/16 06:01:53  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.9  2003/05/16 03:11:22  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -151,8 +154,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ctor/dtor
 // ---------------------------------------------------------------------------
-XMLDouble::XMLDouble(const XMLCh* const strValue)
-:XMLAbstractDoubleFloat()
+XMLDouble::XMLDouble(const XMLCh* const strValue,
+                     MemoryManager* const manager)
+:XMLAbstractDoubleFloat(manager)
 {
     init(strValue);
 }

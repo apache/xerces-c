@@ -92,7 +92,7 @@ static const XMLCh gMyServiceId[] =
 //  This is the simple CPMapEntry class. It just contains an encoding name
 //  and a code page for that encoding.
 // ---------------------------------------------------------------------------
-class CPMapEntry
+class CPMapEntry : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -170,7 +170,10 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
         const unsigned int targetLen = srcLen/charLen;
 
 
-        fEncodingName = new XMLCh[targetLen + 1];
+        fEncodingName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        (
+            (targetLen + 1) * sizeof(XMLCh)
+        );//new XMLCh[targetLen + 1];
         ::mbstowcs(fEncodingName, encodingName, srcLen);
         fEncodingName[targetLen] = 0;
 
@@ -201,7 +204,7 @@ CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
 
 CPMapEntry::~CPMapEntry()
 {
-    delete [] fEncodingName;
+    XMLPlatformUtils::fgMemoryManager->deallocate(fEncodingName);//delete [] fEncodingName;
 }
 
 
@@ -407,7 +410,10 @@ Win32TransService::Win32TransService()
             if (charLen != -1) {
                 const unsigned int targetLen = srcLen/charLen;
 
-                XMLCh* uniAlias = new XMLCh[targetLen + 1];
+                XMLCh* uniAlias = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                (
+                    (targetLen + 1) * sizeof(XMLCh)
+                );//new XMLCh[targetLen + 1];
                 ::mbstowcs(uniAlias, aliasBuf, srcLen);
                 uniAlias[targetLen] = 0;
                 _wcsupr(uniAlias);
@@ -420,7 +426,10 @@ Win32TransService::Win32TransService()
                     const unsigned charLen = ::mblen(nameBuf, MB_CUR_MAX);
                     const unsigned int targetLen = srcLen/charLen;
                     
-                    XMLCh* uniName = new XMLCh[targetLen + 1];
+                    XMLCh* uniName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+                    (
+                        (targetLen + 1) * sizeof(XMLCh)
+                    );//new XMLCh[targetLen + 1];
                     ::mbstowcs(uniName, nameBuf, srcLen);
                     uniName[targetLen] = 0;
                     _wcsupr(uniName);
@@ -436,9 +445,9 @@ Win32TransService::Win32TransService()
                         fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
                     }
 
-                    delete [] uniName;
+                    XMLPlatformUtils::fgMemoryManager->deallocate(uniName);//delete [] uniName;
                 }
-                delete [] uniAlias;
+                XMLPlatformUtils::fgMemoryManager->deallocate(uniAlias);//delete [] uniAlias;
             }
         }
 
@@ -866,7 +875,8 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     return retVal;
 }
 
-
+// Return value using global operator new
+// Revisit: deprecate ?
 char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode)
 {
     if (!toTranscode)
@@ -932,7 +942,8 @@ char* Win32LCPTranscoder::transcode(const XMLCh* const toTranscode,
     return retVal;
 }
 
-
+// Return value using global operator new
+// Revisit: deprecate ?
 XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode)
 {
     if (!toTranscode)

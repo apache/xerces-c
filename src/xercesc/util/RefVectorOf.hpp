@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/05/15 19:07:45  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -118,7 +121,9 @@ public :
     // -----------------------------------------------------------------------
     //  Constructor
     // -----------------------------------------------------------------------
-    RefVectorOf(const unsigned int maxElems, const bool adoptElems = true);
+    RefVectorOf(const unsigned int maxElems,
+                const bool adoptElems = true,
+                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     // -----------------------------------------------------------------------
     //  Destructor

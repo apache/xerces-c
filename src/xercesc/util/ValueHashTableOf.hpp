@@ -105,11 +105,20 @@ public:
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
 	// backwards compatability - default hasher is HashXMLCh
-    ValueHashTableOf(const unsigned int modulus);
+    ValueHashTableOf
+    (
+          const unsigned int   modulus
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 	// if a hash function is passed in, it will be deleted when the hashtable is deleted.
 	// use a new instance of the hasher class for each hashtable, otherwise one hashtable
 	// may delete the hasher of a different hashtable if both use the same hasher.
-    ValueHashTableOf(const unsigned int modulus, HashBase* hashBase);
+    ValueHashTableOf
+    (
+          const unsigned int   modulus
+        , HashBase*            hashBase
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     ~ValueHashTableOf();
 
 

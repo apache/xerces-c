@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -164,6 +167,7 @@ public :
     (
         const   unsigned int    hashModulus
         , const unsigned int    initSize = 128
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~NameIdPool();

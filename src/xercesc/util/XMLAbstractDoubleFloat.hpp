@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/05/16 06:01:53  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.11  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -178,7 +181,7 @@ protected:
     //
     // To be used by derived class exclusively
     //
-    XMLAbstractDoubleFloat();
+    XMLAbstractDoubleFloat(MemoryManager* const manager);
 
     void                  init(const XMLCh* const strValue);
 

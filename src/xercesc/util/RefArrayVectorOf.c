@@ -11,7 +11,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  RefArrayVectorOf: Constructor and Destructor
 // ---------------------------------------------------------------------------
-template <class TElem> RefArrayVectorOf<TElem>::RefArrayVectorOf(const unsigned int maxElems, const bool adoptElems) : BaseRefVectorOf<TElem>(maxElems, adoptElems)
+template <class TElem>
+RefArrayVectorOf<TElem>::RefArrayVectorOf( const unsigned int maxElems
+                                         , const bool adoptElems
+                                         , MemoryManager* const manager)
+    : BaseRefVectorOf<TElem>(maxElems, adoptElems, manager)
 {
 }
 

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -91,10 +94,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  RefStackOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TElem> RefStackOf<TElem>::
-RefStackOf(const unsigned int initElems, const bool adoptElems) :
+template <class TElem>
+RefStackOf<TElem>::RefStackOf(const unsigned int initElems,
+                              const bool adoptElems,
+                              MemoryManager* const manager) :
 
-    fVector(initElems, adoptElems)
+    fVector(initElems, adoptElems, manager)
 {
 }
 

@@ -65,14 +65,16 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  BaseRefVectorOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TElem> BaseRefVectorOf<TElem>::
-BaseRefVectorOf(const unsigned int maxElems, const bool adoptElems) :
+template <class TElem>
+BaseRefVectorOf<TElem>::BaseRefVectorOf( const unsigned int maxElems
+                                       , const bool adoptElems
+                                       , MemoryManager* const manager) :
 
     fAdoptedElems(adoptElems)
     , fCurCount(0)
     , fMaxCount(maxElems)
     , fElemList(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     // Allocate and initialize the array
     fElemList = (TElem**) fMemoryManager->allocate(maxElems * sizeof(TElem*));//new TElem*[maxElems];

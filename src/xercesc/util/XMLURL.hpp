@@ -61,7 +61,7 @@
 #if !defined(XMLURL_HPP)
 #define XMLURL_HPP
 
-#include <xercesc/util/XMLException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -100,16 +100,18 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    XMLURL();
+    XMLURL(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     XMLURL
     (
         const   XMLCh* const    baseURL
         , const XMLCh* const    relativeURL
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager
     );
     XMLURL
     (
         const   XMLCh* const    baseURL
         , const char* const     relativeURL
+        , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager
     );
     XMLURL
     (
@@ -124,10 +126,12 @@ public:
     XMLURL
     (
         const   XMLCh* const    urlText
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     XMLURL
     (
         const   char* const     urlText
+        , MemoryManager* const manager 
     );
     XMLURL(const XMLURL& toCopy);
     virtual ~XMLURL();

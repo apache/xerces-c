@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/05/16 06:01:53  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.8  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -143,7 +146,8 @@ public:
      * ctor# 2
      *
      */
-    XMLUri(const XMLCh* const    uriSpec);
+    XMLUri(const XMLCh* const    uriSpec,
+           MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /**
      * Construct a new URI from a base URI and a URI specification string.
@@ -157,8 +161,9 @@ public:
      * ctor# 7 relative ctor
      *
      */
-    XMLUri(const XMLUri* const     baseURI
-         , const XMLCh* const      uriSpec);
+    XMLUri(const XMLUri* const  baseURI
+         , const XMLCh* const   uriSpec
+         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     /**
      * Copy constructor

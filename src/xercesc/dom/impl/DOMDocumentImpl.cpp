@@ -1329,7 +1329,7 @@ void DOMDocumentImpl::releaseDocNotifyUserData(DOMNode* object)
 void DOMDocumentImpl::release(DOMNode* object, NodeObjectType type)
 {
     if (!fRecycleNodePtr)
-        fRecycleNodePtr = new (fMemoryManager) RefArrayOf<DOMNodePtr> (15);
+        fRecycleNodePtr = new (fMemoryManager) RefArrayOf<DOMNodePtr> (15, fMemoryManager);
 
     if (!fRecycleNodePtr->operator[](type))
         fRecycleNodePtr->operator[](type) = new (fMemoryManager) RefStackOf<DOMNode> (15, false);

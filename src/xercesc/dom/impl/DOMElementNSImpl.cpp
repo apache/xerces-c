@@ -127,8 +127,8 @@ const XMLCh* DOMElementNSImpl::getBaseURI() const
             const XMLCh* uri =  attrNode->getNodeValue();
             if (uri && *uri) {// attribute value is always empty string
                 try {
-                    XMLUri temp(baseURI);
-                    XMLUri temp2(&temp, uri);
+                    XMLUri temp(baseURI, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
+                    XMLUri temp2(&temp, uri, ((DOMDocumentImpl *)this->getOwnerDocument())->getMemoryManager());
                     uri = ((DOMDocumentImpl *)this->getOwnerDocument())->cloneString(temp2.getUriText());
                 }
                 catch (...){

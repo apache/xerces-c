@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -135,8 +138,13 @@ public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    KVStringPair();
-    KVStringPair(const XMLCh* const key, const XMLCh* const value);
+    KVStringPair(MemoryManager* const manager);
+    KVStringPair
+    (
+        const XMLCh* const key
+        , const XMLCh* const value
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     KVStringPair(const KVStringPair& toCopy);
     ~KVStringPair();
 

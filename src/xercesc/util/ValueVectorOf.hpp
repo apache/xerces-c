@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -110,7 +113,11 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    ValueVectorOf(const unsigned int maxElems);
+    ValueVectorOf
+    (
+        const unsigned int maxElems
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     ValueVectorOf(const ValueVectorOf<TElem>& toCopy);
     ~ValueVectorOf();
 

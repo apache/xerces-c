@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -150,16 +153,18 @@ public:
     // backwards compatability - default hasher is HashXMLCh
     RefHash3KeysIdPool
     (
-        const unsigned int modulus
-      , const unsigned int    initSize = 128
+          const unsigned int   modulus
+        , const unsigned int   initSize = 128
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     // backwards compatability - default hasher is HashXMLCh
     RefHash3KeysIdPool
     (
-        const unsigned int modulus
-      , const bool adoptElems
-      , const unsigned int initSize = 128
+          const unsigned int   modulus
+        , const bool           adoptElems
+        , const unsigned int   initSize = 128
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     // if a hash function is passed in, it will be deleted when the hashtable is deleted.
@@ -167,9 +172,11 @@ public:
     // may delete the hasher of a different hashtable if both use the same hasher.
     RefHash3KeysIdPool
     (
-         const unsigned int modulus
-       , const bool adoptElems, HashBase* hashBase
-       , const unsigned int initSize = 128
+          const unsigned int   modulus
+        , const bool           adoptElems
+        , HashBase* hashBase
+        , const unsigned int initSize = 128
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
     ~RefHash3KeysIdPool();

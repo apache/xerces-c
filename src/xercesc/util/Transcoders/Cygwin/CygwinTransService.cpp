@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/16 06:01:57  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/05/15 18:47:02  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -144,7 +147,7 @@ static const LCID gLocaleId =
 //  This is the simple CPMapEntry class. It just contains an encoding name
 //  and a code page for that encoding.
 // ---------------------------------------------------------------------------
-class CPMapEntry
+class CPMapEntry : public XMemory
 {
 public :
     // -----------------------------------------------------------------------

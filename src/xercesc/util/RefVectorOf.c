@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.8  2003/05/15 19:07:45  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -118,7 +121,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  RefVectorOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TElem> RefVectorOf<TElem>::RefVectorOf(const unsigned int maxElems, const bool adoptElems) : BaseRefVectorOf<TElem>(maxElems, adoptElems)
+template <class TElem>
+RefVectorOf<TElem>::RefVectorOf(const unsigned int maxElems,
+                                const bool adoptElems,
+                                MemoryManager* const manager)
+    : BaseRefVectorOf<TElem>(maxElems, adoptElems, manager)
 {
 }
 

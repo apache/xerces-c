@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -94,23 +97,27 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  RefArrayOf: Contructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TElem> RefArrayOf<TElem>::RefArrayOf(const unsigned int size) :
+template <class TElem>
+RefArrayOf<TElem>::RefArrayOf(const unsigned int size,
+                              MemoryManager* const manager) :
 
     fSize(size)
     , fArray(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     fArray = (TElem**) fMemoryManager->allocate(fSize * sizeof(TElem*));//new TElem*[fSize];
     for (unsigned int index = 0; index < fSize; index++)
         fArray[index] = 0;
 }
 
-template <class TElem> RefArrayOf<TElem>::
-RefArrayOf(TElem* values[], const unsigned int size) :
+template <class TElem>
+RefArrayOf<TElem>::RefArrayOf(TElem* values[],
+                              const unsigned int size,
+                              MemoryManager* const manager) :
 
     fSize(size)
     , fArray(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(manager)
 {
     fArray = (TElem**) fMemoryManager->allocate(fSize * sizeof(TElem*));//new TElem*[fSize];
     for (unsigned int index = 0; index < fSize; index++)
@@ -122,7 +129,7 @@ RefArrayOf(const RefArrayOf<TElem>& source) :
 
     fSize(source.fSize)
     , fArray(0)
-    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fMemoryManager(source.fMemoryManager)
 {
     fArray = (TElem**) fMemoryManager->allocate(fSize * sizeof(TElem*));//new TElem*[fSize];
     for (unsigned int index = 0; index < fSize; index++)

@@ -327,7 +327,7 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId)
         //  Create a temporary URL. Since this is the primary document,
         //  it has to be fully qualified. If not, then assume we are just
         //  mistaking a file for a URL.
-        XMLURL tmpURL(systemId);
+        XMLURL tmpURL(systemId, fMemoryManager);
         if (tmpURL.isRelative()) {
             if (!fStandardUriConformant)
                 srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
@@ -444,7 +444,7 @@ bool XMLScanner::scanFirst( const   XMLCh* const    systemId
         //  Create a temporary URL. Since this is the primary document,
         //  it has to be fully qualified. If not, then assume we are just
         //  mistaking a file for a URL.
-        XMLURL tmpURL(systemId);
+        XMLURL tmpURL(systemId, fMemoryManager);
         if (tmpURL.isRelative()) {
             if (!fStandardUriConformant)
                 srcToUse = new (fMemoryManager) LocalFileInputSource(systemId);
@@ -1571,7 +1571,7 @@ Grammar* XMLScanner::loadGrammar(const   XMLCh* const systemId
             //  Create a temporary URL. Since this is the primary document,
             //  it has to be fully qualified. If not, then assume we are just
             //  mistaking a file for a URL.
-            XMLURL tmpURL(systemId);
+            XMLURL tmpURL(systemId, fMemoryManager);
             if (tmpURL.isRelative())
             {
                 if (!fStandardUriConformant)

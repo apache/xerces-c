@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -123,8 +126,9 @@ template <class TElem> NameIdPoolBucketElem<TElem>::~NameIdPoolBucketElem()
 // ---------------------------------------------------------------------------
 template <class TElem>
 NameIdPool<TElem>::NameIdPool( const unsigned int hashModulus
-                             , const unsigned int initSize) :
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+                             , const unsigned int initSize
+                             , MemoryManager* const manager) :
+    fMemoryManager(manager)
     , fBucketList(0)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -97,8 +100,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 template <class TVal>
 RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
                                             , const bool         adoptElems
-                                            , const unsigned int initSize) :
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+                                            , const unsigned int initSize
+                                            , MemoryManager* const manager) :
+    fMemoryManager(manager)
     , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
@@ -127,8 +131,9 @@ template <class TVal>
 RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
                                             , const bool         adoptElems
                                             , HashBase*          hashBase
-                                            , const unsigned int initSize) :
-	fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+                                            , const unsigned int initSize
+                                            , MemoryManager* const manager) :
+	fMemoryManager(manager)
     , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
@@ -154,8 +159,9 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
 
 template <class TVal>
 RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
-                                            , const unsigned int initSize) :
-	fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+                                            , const unsigned int initSize
+                                            , MemoryManager* const manager) :
+	fMemoryManager(manager)
     , fAdoptedElems(true)
     , fBucketList(0)
     , fHashModulus(modulus)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.18  2003/05/15 18:26:50  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -356,7 +359,7 @@ void SAX2XMLReaderImpl::initialize()
 	
 	fPrefixes    = new (fMemoryManager) RefStackOf<XMLBuffer> (10, false) ;
 	fTempAttrVec  = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false) ;
-	fPrefixCounts = new (fMemoryManager) ValueStackOf<unsigned int>(10) ;
+	fPrefixCounts = new (fMemoryManager) ValueStackOf<unsigned int>(10, fMemoryManager) ;
 }
 
 

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -92,10 +95,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ValueStackOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TElem> ValueStackOf<TElem>::
-ValueStackOf(const unsigned int fInitCapacity) :
+template <class TElem>
+ValueStackOf<TElem>::ValueStackOf(const unsigned int fInitCapacity,
+                                  MemoryManager* const manager) :
 
-    fVector(fInitCapacity)
+    fVector(fInitCapacity, manager)
 {
 }
 

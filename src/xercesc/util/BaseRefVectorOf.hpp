@@ -76,7 +76,12 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    BaseRefVectorOf(const unsigned int maxElems, const bool adoptElems = true);
+    BaseRefVectorOf
+    (
+          const unsigned int maxElems
+        , const bool adoptElems = true
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     virtual ~BaseRefVectorOf() = 0;
 
 

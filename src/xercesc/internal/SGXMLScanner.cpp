@@ -660,6 +660,7 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                 (
                     fAttNameBuf.getRawBuffer()
                     , fAttValueBuf.getRawBuffer()
+                    , fMemoryManager
                 );
                 toFill.addElement(curPair);
             }

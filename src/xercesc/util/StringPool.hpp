@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/05/15 19:07:45  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -116,7 +119,8 @@ public :
     // -----------------------------------------------------------------------
     XMLStringPool
     (
-        const   unsigned int    modulus = 109
+          const unsigned int   modulus = 109
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     ~XMLStringPool();
 
@@ -139,7 +143,9 @@ private :
     class PoolElem : public XMemory
     {
         public :
-            PoolElem(const XMLCh* const string, const unsigned int id);
+            PoolElem(const XMLCh* const string,
+                     const unsigned int id,
+                     MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
             ~PoolElem();
 
             inline const XMLCh* getKey() const { return fString; }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/05/16 06:01:57  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.9  2003/05/16 00:03:10  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -236,7 +239,8 @@ bool RegularExpression::Context::nextCh(XMLInt32& ch, int& offset,
 // ---------------------------------------------------------------------------
 //  RegularExpression: Constructors and Destructors
 // ---------------------------------------------------------------------------
-RegularExpression::RegularExpression(const char* const pattern)
+RegularExpression::RegularExpression(const char* const pattern,
+                                     MemoryManager* const manager)
 	:fHasBackReferences(false),
 	 fFixedStringOnly(false),
 	 fNoGroups(0),
@@ -250,9 +254,9 @@ RegularExpression::RegularExpression(const char* const pattern)
 	 fOperations(0),
 	 fTokenTree(0),
 	 fFirstChar(0),
-     fOpFactory(XMLPlatformUtils::fgMemoryManager),
+     fOpFactory(manager),
      fTokenFactory(0),
-     fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+     fMemoryManager(manager)
 {
 	try {
 
@@ -268,7 +272,8 @@ RegularExpression::RegularExpression(const char* const pattern)
 }
 
 RegularExpression::RegularExpression(const char* const pattern,
-									 const char* const options)
+									 const char* const options,
+                                     MemoryManager* const manager)
 	:fHasBackReferences(false),
 	 fFixedStringOnly(false),
 	 fNoGroups(0),
@@ -282,9 +287,9 @@ RegularExpression::RegularExpression(const char* const pattern,
 	 fOperations(0),
 	 fTokenTree(0),
 	 fFirstChar(0),
-     fOpFactory(XMLPlatformUtils::fgMemoryManager),
+     fOpFactory(manager),
      fTokenFactory(0),
-     fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+     fMemoryManager(manager)
 {
 	try {
 
@@ -302,7 +307,8 @@ RegularExpression::RegularExpression(const char* const pattern,
 }
 
 
-RegularExpression::RegularExpression(const XMLCh* const pattern)
+RegularExpression::RegularExpression(const XMLCh* const pattern,
+                                     MemoryManager* const manager)
 	:fHasBackReferences(false),
 	 fFixedStringOnly(false),
 	 fNoGroups(0),
@@ -316,9 +322,9 @@ RegularExpression::RegularExpression(const XMLCh* const pattern)
 	 fOperations(0),
 	 fTokenTree(0),
 	 fFirstChar(0),
-     fOpFactory(XMLPlatformUtils::fgMemoryManager),
+     fOpFactory(manager),
      fTokenFactory(0),
-     fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+     fMemoryManager(manager)
 {
 	try {
 
@@ -332,7 +338,8 @@ RegularExpression::RegularExpression(const XMLCh* const pattern)
 }
 
 RegularExpression::RegularExpression(const XMLCh* const pattern,
-									 const XMLCh* const options)
+									 const XMLCh* const options,
+                                     MemoryManager* const manager)
 	:fHasBackReferences(false),
 	 fFixedStringOnly(false),
 	 fNoGroups(0),
@@ -346,9 +353,9 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
 	 fOperations(0),
 	 fTokenTree(0),
 	 fFirstChar(0),
-     fOpFactory(XMLPlatformUtils::fgMemoryManager),
+     fOpFactory(manager),
      fTokenFactory(0),
-     fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+     fMemoryManager(manager)
 {
 	try {
 

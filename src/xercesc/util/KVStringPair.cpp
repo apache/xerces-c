@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -125,9 +128,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  KVStringPair: Constructors and Destructor
 // ---------------------------------------------------------------------------
-KVStringPair::KVStringPair() :
+KVStringPair::KVStringPair(MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fKey(0)
     , fKeyAllocSize(0)
     , fValue(0)
@@ -135,9 +138,11 @@ KVStringPair::KVStringPair() :
 {
 }
 
-KVStringPair::KVStringPair(const XMLCh* const key, const XMLCh* const value) :
+KVStringPair::KVStringPair(const XMLCh* const key,
+                           const XMLCh* const value,
+                           MemoryManager* const manager) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(manager)
     , fKey(0)
     , fKeyAllocSize(0)
     , fValue(0)
@@ -148,7 +153,7 @@ KVStringPair::KVStringPair(const XMLCh* const key, const XMLCh* const value) :
 
 KVStringPair::KVStringPair(const KVStringPair& toCopy) :
 
-    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    fMemoryManager(toCopy.fMemoryManager)
     , fKey(0)
     , fKeyAllocSize(0)
     , fValue(0)

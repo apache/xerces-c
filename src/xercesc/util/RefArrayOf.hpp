@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -104,8 +107,15 @@ public :
     // -----------------------------------------------------------------------
     //  Contructors and Destructor
     // -----------------------------------------------------------------------
-    RefArrayOf(const unsigned int size);
-	RefArrayOf(TElem* values[], const unsigned int size);
+    RefArrayOf
+    (
+          const unsigned int size
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+	RefArrayOf
+    (
+          TElem* values[]
+        , const unsigned int size
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	RefArrayOf(const RefArrayOf<TElem>& source);
 	~RefArrayOf();
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/05/16 06:01:57  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.8  2003/05/15 18:53:26  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -239,7 +242,7 @@ void ListDatatypeValidator::checkContent( BaseRefVectorOf<XMLCh>* tokenVector
         if (getRegex() == 0)
         {
             try {
-                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+                setRegex(new (fMemoryManager) RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption, fMemoryManager));
             }
             catch (XMLException &e)
             {

@@ -241,7 +241,8 @@ static const XMLCh PATH_SEPARATORS[] =
 //  XMLUri: Constructors and Helper methods
 // ---------------------------------------------------------------------------
 // ctor# 2
-XMLUri::XMLUri(const XMLCh* const uriSpec)
+XMLUri::XMLUri(const XMLCh* const uriSpec,
+               MemoryManager* const manager)
 : fScheme(0)
 , fUserInfo(0)
 , fHost(0)
@@ -250,7 +251,7 @@ XMLUri::XMLUri(const XMLCh* const uriSpec)
 , fQueryString(0)
 , fFragment(0)
 , fURIText(0)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(manager)
 {
     try {
         initialize((XMLUri *)0, uriSpec);
@@ -264,7 +265,8 @@ XMLUri::XMLUri(const XMLCh* const uriSpec)
 
 // ctor# 7 relative ctor
 XMLUri::XMLUri(const XMLUri* const      baseURI
-                    , const XMLCh* const       uriSpec)
+              , const XMLCh* const   uriSpec
+              , MemoryManager* const manager)
 : fScheme(0)
 , fUserInfo(0)
 , fHost(0)
@@ -273,7 +275,7 @@ XMLUri::XMLUri(const XMLUri* const      baseURI
 , fQueryString(0)
 , fFragment(0)
 , fURIText(0)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(manager)
 {
     try {
         initialize(baseURI, uriSpec);
@@ -295,7 +297,7 @@ XMLUri::XMLUri(const XMLUri& toCopy)
 , fQueryString(0)
 , fFragment(0)
 , fURIText(0)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(toCopy.fMemoryManager)
 {
     try {
         initialize(toCopy);

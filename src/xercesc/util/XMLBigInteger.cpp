@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/16 06:01:53  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -213,11 +216,12 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
 	 * inclusive, will result in a NumberFormatException.
  */
 
-XMLBigInteger::XMLBigInteger(const XMLCh* const strValue)
+XMLBigInteger::XMLBigInteger(const XMLCh* const strValue,
+                             MemoryManager* const manager)
 : fSign(0)
 , fMagnitude(0)
 , fRawData(0)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(manager)
 {
     if (!strValue)
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);

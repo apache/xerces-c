@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/16 06:01:53  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.8  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -134,13 +137,14 @@ XERCES_CPP_NAMESPACE_BEGIN
 //
 **/
 
-XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue)
+XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue,
+                             MemoryManager* const manager)
 : fSign(0)
 , fTotalDigits(0)
 , fScale(0)
 , fIntVal(0)
 , fRawData(0)
-, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+, fMemoryManager(manager)
 {
     if ((!strValue) || (!*strValue))
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);

@@ -89,10 +89,28 @@ public:
     // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-    RegularExpression(const char* const pattern);
-    RegularExpression(const char* const pattern, const char* const options);
-    RegularExpression(const XMLCh* const pattern);
-    RegularExpression(const XMLCh* const pattern, const XMLCh* const options);
+    RegularExpression
+    (
+        const char* const pattern
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    RegularExpression
+    (
+        const char* const pattern
+        , const char* const options
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    RegularExpression
+    (
+        const XMLCh* const pattern
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
+    RegularExpression
+    (
+        const XMLCh* const pattern
+        , const XMLCh* const options
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     ~RegularExpression();
 
     // -----------------------------------------------------------------------

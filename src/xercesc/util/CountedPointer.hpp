@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/16 06:01:52  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -85,12 +88,11 @@
 #if !defined(COUNTEDPOINTERTO_HPP)
 #define COUNTEDPOINTERTO_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/NullPointerException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-template <class T> class CountedPointerTo
+template <class T> class CountedPointerTo : public XMemory
 {
 public:
     // -----------------------------------------------------------------------

@@ -81,7 +81,11 @@ public:
      *               contain a parsable XMLBigDecimal.
      */
 
-    XMLBigDecimal(const XMLCh* const strValue);
+    XMLBigDecimal
+    (
+        const XMLCh* const strValue
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     ~XMLBigDecimal();
 
