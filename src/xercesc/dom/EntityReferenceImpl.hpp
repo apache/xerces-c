@@ -77,7 +77,6 @@ class CDOM_EXPORT EntityReferenceImpl: public ParentNode
 {
 private:
     DOMString name;
-    int entityChanges;
 
 public:
     EntityReferenceImpl(DocumentImpl *ownerDoc, const DOMString &entityName);

@@ -69,7 +69,7 @@ EntityImpl::EntityImpl(DocumentImpl *ownerDoc, const DOMString &eName)
 
 {
     name        = eName.clone();
-    isReadOnly(true);
+    setReadOnly(true, true);
 };
 
 
@@ -87,7 +87,7 @@ EntityImpl::EntityImpl(const EntityImpl &other, bool deep)
     refEntity       = other.refEntity;	
     RefCountedImpl::addRef(other.refEntity);
 
-    isReadOnly(true);
+    setReadOnly(true, true);
 };
 
 
@@ -166,9 +166,9 @@ void	EntityImpl::cloneEntityRefTree()
 	if (!refEntity)
 		return;
 
-   isReadOnly(false);
+   setReadOnly(false, true);
 	this->cloneChildren(*refEntity);
-   isReadOnly(true);
+   setReadOnly(true, true);
 }
 
 NodeImpl * EntityImpl::getFirstChild()

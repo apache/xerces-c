@@ -127,8 +127,22 @@ EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc,
     name = entityName.clone();
     // EntityReference behaves as a read-only node, since its contents
     // reflect the Entity it refers to -- but see setNodeName().
-    isReadOnly(true);
-    entityChanges=-1;
+
+    //retrieve the corresponding entity content
+    if (ownerDoc) {
+        if (ownerDoc->getDoctype()) {
+            if (ownerDoc->getDoctype()->getEntities()) {
+                EntityImpl* entity = (EntityImpl*)ownerDoc->getDoctype()->getEntities()->getNamedItem(entityName);
+                if (entity) {
+                    EntityReferenceImpl* refEntity = entity->getEntityRef();
+                    if (refEntity)
+                        cloneChildren(*refEntity);
+                }
+            }
+        }
+    }
+
+    setReadOnly(true, true);
 }
 
 
@@ -140,8 +154,7 @@ EntityReferenceImpl::EntityReferenceImpl(const EntityReferenceImpl &other,
     name = other.name.clone();
     if (deep)
         cloneChildren(other);
-    entityChanges = other.entityChanges;
-    isReadOnly(true);
+    setReadOnly(true, true);
 }
 
 
@@ -184,7 +197,7 @@ bool EntityReferenceImpl::isEntityReference()
 */
 void EntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
 {
-    if(readOnl==false)
+    if(getOwnerDocument()->getErrorChecking() && readOnl==false)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
     ParentNode::setReadOnly(readOnl,deep);
 }

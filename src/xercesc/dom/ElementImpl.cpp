@@ -284,7 +284,8 @@ AttrImpl * ElementImpl::setAttributeNode(AttrImpl *newAttr)
 void ElementImpl::setReadOnly(bool readOnl, bool deep)
 {
     ParentNode::setReadOnly(readOnl,deep);
-    attributes->setReadOnly(readOnl,true);
+    if (attributes != null)
+        attributes->setReadOnly(readOnl,true);
 };
 
 

@@ -127,7 +127,22 @@ IDEntityReferenceImpl::IDEntityReferenceImpl(IDOM_Document *ownerDoc,
     fName = ((IDDocumentImpl *)getOwnerDocument())->getPooledString(entityName);
     // EntityReference behaves as a read-only node, since its contents
     // reflect the Entity it refers to -- but see setNodeName().
-    fNode.isReadOnly(true);
+    //retrieve the corresponding entity content
+
+    if (ownerDoc) {
+        if (ownerDoc->getDoctype()) {
+            if (ownerDoc->getDoctype()->getEntities()) {
+                IDEntityImpl* entity = (IDEntityImpl*)ownerDoc->getDoctype()->getEntities()->getNamedItem(entityName);
+                if (entity) {
+                    IDOM_EntityReference* refEntity = entity->getEntityRef();
+                    if (refEntity)
+                        fParent.cloneChildren(refEntity);
+                }
+            }
+        }
+    }
+
+    fNode.setReadOnly(true, true);
 }
 
 
@@ -139,7 +154,7 @@ IDEntityReferenceImpl::IDEntityReferenceImpl(const IDEntityReferenceImpl &other,
     fName = other.fName;
     if (deep)
         fParent.cloneChildren(&other);
-    fNode.isReadOnly(true);
+    fNode.setReadOnly(true, true);
 }
 
 
@@ -187,7 +202,7 @@ void IDEntityReferenceImpl::setNodeValue(const XMLCh *x)
 */
 void IDEntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
 {
-    if(readOnl==false)
+    if(((IDDocumentImpl *)getOwnerDocument())->getErrorChecking() && readOnl==false)
         throw IDOM_DOMException(IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
     fNode.setReadOnly(readOnl,deep);
 }

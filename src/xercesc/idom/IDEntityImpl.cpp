@@ -70,7 +70,7 @@ IDEntityImpl::IDEntityImpl(IDOM_Document *ownerDoc, const XMLCh *eName)
 {
     fRefEntity  = 0;
     fName        = ((IDDocumentImpl *)ownerDoc)->getPooledString(eName);
-    fNode.isReadOnly(true);
+    fNode.setReadOnly(true, true);
 };
 
 
@@ -85,7 +85,7 @@ IDEntityImpl::IDEntityImpl(const IDEntityImpl &other, bool deep)
     fNotationName    = other.fNotationName;
 
     fRefEntity       = other.fRefEntity;	
-    fNode.isReadOnly(true);
+    fNode.setReadOnly(true, true);
 };
 
 
@@ -177,9 +177,9 @@ void	IDEntityImpl::cloneEntityRefTree() const
     if (!fRefEntity)
         return;
 
-    ncThis->fNode.isReadOnly(false);
+    ncThis->fNode.setReadOnly(false, true);
     ncThis->fParent.cloneChildren(fRefEntity);
-    ncThis->fNode.isReadOnly(true);
+    ncThis->fNode.setReadOnly(true, true);
 }
 
 IDOM_Node * IDEntityImpl::getFirstChild() const
