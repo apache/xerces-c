@@ -322,13 +322,18 @@ void XMLString::cut(        XMLCh* const    toCutFrom
 unsigned int XMLString::hash(   const   char* const     tohash
                                 , const unsigned int    hashModulus)
 {
+    if (!hashModulus)
+        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus);
+
     unsigned int hashVal = 0;
-    const char* curCh = tohash;
-    while (*curCh)
-    {
-        unsigned int top = hashVal >> 24;
-        hashVal += (hashVal * 37) + top + (unsigned int)(*curCh);
-        curCh++;
+    if (tohash) {
+        const char* curCh = tohash;
+        while (*curCh)
+        {
+            unsigned int top = hashVal >> 24;
+            hashVal += (hashVal * 37) + top + (unsigned int)(*curCh);
+            curCh++;
+        }
     }
 
     // Divide by modulus
@@ -636,7 +641,7 @@ bool XMLString::isValidNCName(const XMLCh* const name) {
 
     return true;
 }
- 
+
 /**
   * isValidName
   *
@@ -646,19 +651,19 @@ bool XMLString::isValidNCName(const XMLCh* const name) {
   */
 bool XMLString::isValidName(const XMLCh* const name) {
 
-    if (!name || 
+    if (!name ||
         (XMLString::stringLen(name) == 0))
         return false;
 
     const XMLCh* tempName = name;
     XMLCh firstChar = *tempName++;
 
-    if (!XMLReader::isXMLLetter(firstChar) && 
+    if (!XMLReader::isXMLLetter(firstChar) &&
         (firstChar != chUnderscore)        &&
-        (firstChar != chColon)              ) 
+        (firstChar != chColon)              )
         return false;
 
-    while(*tempName) 
+    while(*tempName)
         if (!XMLReader::isNameChar(*tempName++))
             return false;
 
@@ -668,10 +673,10 @@ bool XMLString::isValidName(const XMLCh* const name) {
 /**
   * isValidEncName
   *
-  * [80] EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')* 
+  * [80] EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')*
   *
   */
-bool XMLString::isValidEncName(const XMLCh* const name) 
+bool XMLString::isValidEncName(const XMLCh* const name)
 {
 
     if ( ( !name) ||
@@ -702,9 +707,9 @@ bool XMLString::isValidEncName(const XMLCh* const name)
 /**
   * isValidQName
   *
-  * [6]  QName ::=  (Prefix ':')? LocalPart 
-  * [7]  Prefix ::=  NCName 
-  * [8]  LocalPart ::=  NCName 
+  * [6]  QName ::=  (Prefix ':')? LocalPart
+  * [7]  Prefix ::=  NCName
+  * [8]  LocalPart ::=  NCName
   *
   */
 bool XMLString::isValidQName(const XMLCh* const name)
@@ -1109,13 +1114,18 @@ bool XMLString::copyNString(        XMLCh* const    target
 unsigned int XMLString::hash(   const   XMLCh* const    tohash
                                 , const unsigned int    hashModulus)
 {
+    if (!hashModulus)
+        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus);
+
     unsigned int hashVal = 0;
-    const XMLCh* curCh = tohash;
-    while (*curCh)
-    {
-        unsigned int top = hashVal >> 24;
-        hashVal += (hashVal * 37) + top + (unsigned int)(*curCh);
-        curCh++;
+    if (tohash) {
+        const XMLCh* curCh = tohash;
+        while (*curCh)
+        {
+            unsigned int top = hashVal >> 24;
+            hashVal += (hashVal * 37) + top + (unsigned int)(*curCh);
+            curCh++;
+        }
     }
 
     // Divide by modulus
@@ -1192,14 +1202,19 @@ unsigned int XMLString::hashN(  const   XMLCh* const    tohash
                                 , const unsigned int    n
                                 , const unsigned int    hashModulus)
 {
+    if (!hashModulus)
+        ThrowXML(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus);
+
     unsigned int hashVal = 0;
-    const XMLCh* curCh = tohash;
-    int i = n;
-    while (i--)
-    {
-        unsigned int top = hashVal >> 24;
-        hashVal += (hashVal * 37) + top + (unsigned int)(*curCh);
-        curCh++;
+    if (tohash) {
+        const XMLCh* curCh = tohash;
+        int i = n;
+        while (i--)
+        {
+            unsigned int top = hashVal >> 24;
+            hashVal += (hashVal * 37) + top + (unsigned int)(*curCh);
+            curCh++;
+        }
     }
 
     // Divide by modulus
