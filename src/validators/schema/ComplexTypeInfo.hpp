@@ -357,6 +357,10 @@ inline bool ComplexTypeInfo::hasAttDefs() const
 
 inline bool ComplexTypeInfo::contains(const XMLCh* const attName) {
 
+    if (!fAttDefs) {
+        return false;
+    }
+
     RefHash2KeysTableOfEnumerator<SchemaAttDef> enumDefs(fAttDefs);
 
     while (enumDefs.hasMoreElements()) {
