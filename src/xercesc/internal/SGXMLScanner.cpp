@@ -81,11 +81,8 @@
 #include <xercesc/validators/schema/TraverseSchema.hpp>
 #include <xercesc/validators/schema/XSDDOMParser.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
-#include <xercesc/validators/schema/identity/FieldActivator.hpp>
-#include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
-#include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
+#include <xercesc/validators/schema/identity/IdentityConstraintHandler.hpp>
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
-#include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
 #include <xercesc/util/HashPtr.hpp>
@@ -111,9 +108,7 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
     , fRawAttrList(0)
     , fSchemaGrammar(0)
     , fSchemaValidator(0)
-    , fMatcherStack(0)
-    , fValueStoreCache(0)
-    , fFieldActivator(0)
+    , fICHandler(0)
     , fElemNonDeclPool(0)
     , fElemCount(0)
     , fAttDefRegistry(0)
@@ -166,9 +161,7 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
     , fRawAttrList(0)
     , fSchemaGrammar(0)
     , fSchemaValidator(0)
-    , fMatcherStack(0)
-    , fValueStoreCache(0)
-    , fFieldActivator(0)
+    , fICHandler(0)
     , fElemNonDeclPool(0)
     , fElemCount(0)
     , fAttDefRegistry(0)
@@ -455,8 +448,8 @@ bool SGXMLScanner::scanNext(XMLPScanToken& token)
                 // That went ok, so scan for any miscellaneous stuff
                 scanMiscellaneous();
 
-                if (fValidate)
-                    fValueStoreCache->endDocument();
+                if (toCheckIdentityConstraint())
+                    fICHandler->endDocument();
 
                 if (fDocHandler)
                     fDocHandler->endDocument();
@@ -1056,52 +1049,17 @@ void SGXMLScanner::scanEndTag(bool& gotData)
             if(fPSVIElemContext.fIsSpecified)
                 fPSVIElemContext.fNormalizedValue = ((SchemaElementDecl *)topElem->fThisElement)->getDefaultValue();
         }
+
         // call matchers and de-activate context
-        int oldCount = fMatcherStack->getMatcherCount();
-
-        if (oldCount ||
-            ((SchemaElementDecl*)topElem->fThisElement)->getIdentityConstraintCount()) {
-
-            for (int i = oldCount - 1; i >= 0; i--) {
-
-                XPathMatcher* matcher = fMatcherStack->getMatcherAt(i);
-                matcher->endElement(*(topElem->fThisElement), fContent.getRawBuffer());
-            }
-
-            if (fMatcherStack->size() > 0) {
-                fMatcherStack->popContext();
-            }
-
-            // handle everything *but* keyref's.
-            int newCount = fMatcherStack->getMatcherCount();
-
-            for (int j = oldCount - 1; j >= newCount; j--) {
-
-                XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
-                IdentityConstraint* ic = matcher->getIdentityConstraint();
-
-                if (ic  && (ic->getType() != IdentityConstraint::KEYREF))
-                    fValueStoreCache->transplant(ic, matcher->getInitialDepth());
-            }
-
-            // now handle keyref's...
-            for (int k = oldCount - 1; k >= newCount; k--) {
-
-                XPathMatcher* matcher = fMatcherStack->getMatcherAt(k);
-                IdentityConstraint* ic = matcher->getIdentityConstraint();
-
-                if (ic && (ic->getType() == IdentityConstraint::KEYREF)) {
-
-                    ValueStore* values = fValueStoreCache->getValueStoreFor(ic, matcher->getInitialDepth());
-
-                    if (values) { // nothing to do if nothing matched!
-                        values->endDcocumentFragment(fValueStoreCache);
-                    }
-                }
-            }
-
-            fValueStoreCache->endElement();
+        if (toCheckIdentityConstraint())
+        {
+            fICHandler->deactivateContext
+                        (
+                         (SchemaElementDecl *) topElem->fThisElement
+                       , fContent.getRawBuffer()
+                        );
         }
+
     }
     if(!isRoot)
         ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromElement(topElem->fThisElement, fGrammarType);
@@ -1752,29 +1710,18 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     attCount = buildAttList(*fRawAttrList, attCount, elemDecl, *fAttrList);
 
     // activate identity constraints
-    if (fValidate) {
+    if (toCheckIdentityConstraint()) 
+    {
+        fICHandler->activateIdentityConstraint
+                        (
+                          (SchemaElementDecl*) elemDecl
+                        , (int) elemDepth
+                        , uriId
+                        , fPrefixBuf.getRawBuffer()
+                        , *fAttrList
+                        , attCount
+                        );
 
-        unsigned int count = ((SchemaElementDecl*) elemDecl)->getIdentityConstraintCount();
-
-        if (count || fMatcherStack->getMatcherCount()) {
-
-            fValueStoreCache->startElement();
-            fMatcherStack->pushContext();
-            fValueStoreCache->initValueStoresFor((SchemaElementDecl*) elemDecl, (int) elemDepth);
-
-            for (unsigned int i = 0; i < count; i++) {
-                activateSelectorFor(((SchemaElementDecl*) elemDecl)->getIdentityConstraintAt(i), (int) elemDepth);
-            }
-
-            // call all active identity constraints
-            count = fMatcherStack->getMatcherCount();
-
-            for (unsigned int j = 0; j < count; j++) {
-
-                XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
-                matcher->startElement(*elemDecl, uriId, fPrefixBuf.getRawBuffer(), *fAttrList, attCount);
-            }
-        }
     }
 
     // Since the element may have default values, call start tag now regardless if it is empty or not
@@ -1874,49 +1821,15 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             }
 
             // call matchers and de-activate context
-            int oldCount = fMatcherStack->getMatcherCount();
-            if (oldCount || ((SchemaElementDecl*) elemDecl)->getIdentityConstraintCount()) {
-
-                for (int i = oldCount - 1; i >= 0; i--) {
-
-                    XPathMatcher* matcher = fMatcherStack->getMatcherAt(i);
-                    matcher->endElement(*elemDecl, fContent.getRawBuffer());
-                }
-
-                if (fMatcherStack->size() > 0) {
-                    fMatcherStack->popContext();
-                }
-
-                // handle everything *but* keyref's.
-                int newCount = fMatcherStack->getMatcherCount();
-
-                for (int j = oldCount - 1; j >= newCount; j--) {
-
-                    XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
-                    IdentityConstraint* ic = matcher->getIdentityConstraint();
-
-                    if (ic  && (ic->getType() != IdentityConstraint::KEYREF))
-                        fValueStoreCache->transplant(ic, matcher->getInitialDepth());
-                }
-
-                // now handle keyref's...
-                for (int k = oldCount - 1; k >= newCount; k--) {
-
-                    XPathMatcher* matcher = fMatcherStack->getMatcherAt(k);
-                    IdentityConstraint* ic = matcher->getIdentityConstraint();
-
-                    if (ic && (ic->getType() == IdentityConstraint::KEYREF)) {
-
-                        ValueStore* values = fValueStoreCache->getValueStoreFor(ic, matcher->getInitialDepth());
-
-                        if (values) { // nothing to do if nothing matched!
-                            values->endDcocumentFragment(fValueStoreCache);
-                        }
-                    }
-                }
-
-                fValueStoreCache->endElement();
+            if (toCheckIdentityConstraint())
+            {
+                fICHandler->deactivateContext
+                       (
+                        (SchemaElementDecl *) elemDecl
+                      , fContent.getRawBuffer()
+                       );                
             }
+
         }
 
         if(!isRoot)
@@ -2061,27 +1974,6 @@ SGXMLScanner::resolveQName(const   XMLCh* const qName
 }
 
 // ---------------------------------------------------------------------------
-//  SGXMLScanner: IC activation methos
-// ---------------------------------------------------------------------------
-void SGXMLScanner::activateSelectorFor(IdentityConstraint* const ic, const int initialDepth) {
-
-    IC_Selector* selector = ic->getSelector();
-
-    if (!selector)
-        return;
-
-    XPathMatcher* matcher = selector->createMatcher
-    (
-        fFieldActivator
-        , initialDepth
-        , fMemoryManager
-    );
-
-    fMatcherStack->addMatcher(matcher);
-    matcher->startDocumentFragment();
-}
-
-// ---------------------------------------------------------------------------
 //  SGXMLScanner: Grammar preparsing
 // ---------------------------------------------------------------------------
 Grammar* SGXMLScanner::loadGrammar(const   InputSource& src
@@ -2214,10 +2106,11 @@ void SGXMLScanner::commonInit()
     initValidator(fSchemaValidator);
 
     // Create IdentityConstraint info
-    fMatcherStack = new (fMemoryManager) XPathMatcherStack(fMemoryManager);
-    fValueStoreCache = new (fMemoryManager) ValueStoreCache(fMemoryManager);
-    fFieldActivator = new (fMemoryManager) FieldActivator(fValueStoreCache, fMatcherStack, fMemoryManager);
-    fValueStoreCache->setScanner(this);
+    /***
+       todo: to auto sense if grammar has ic or not, probably do it
+             at reset() or parse()
+    ***/
+    fICHandler = new (fMemoryManager) IdentityConstraintHandler(this, fMemoryManager);
 
     //  Add the default entity entries for the character refs that must always
     //  be present.
@@ -2246,9 +2139,7 @@ void SGXMLScanner::cleanUp()
     delete fEntityTable;
     delete fRawAttrList;
     delete fSchemaValidator;
-    delete fFieldActivator;
-    delete fMatcherStack;
-    delete fValueStoreCache;
+    delete fICHandler;
     delete fElemNonDeclPool;
     delete fAttDefRegistry;
     delete fUndeclaredAttrRegistryNS;
@@ -3311,8 +3202,8 @@ void SGXMLScanner::scanReset(const InputSource& src)
     resetValidationContext();
 
     // Reset IdentityConstraints
-    fValueStoreCache->startDocument();
-    fMatcherStack->clear();
+    if (fICHandler)
+        fICHandler->reset();
 
     //  Reset the element stack, and give it the latest ids for the special
     //  URIs it has to know about.
@@ -3483,7 +3374,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
                 ((SchemaValidator*)fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
 
                 // call all active identity constraints
-                if (fMatcherStack->getMatcherCount())
+                if (toCheckIdentityConstraint() && fICHandler->getMatcherCount())
                     fContent.append(toFill.getRawBuffer(), toFill.getLen());
 
                 if (fDocHandler)
@@ -3521,7 +3412,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
                 ((SchemaValidator*)fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
 
                 // call all active identity constraints
-                if (fMatcherStack->getMatcherCount())
+                if (toCheckIdentityConstraint() && fICHandler->getMatcherCount())
                     fContent.append(toFill.getRawBuffer(), toFill.getLen());
 
                 if (fDocHandler)
@@ -3542,7 +3433,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
     else
     {
         // call all active identity constraints
-        if (fMatcherStack->getMatcherCount())
+        if (toCheckIdentityConstraint() && fICHandler->getMatcherCount())
             fContent.append(toSend.getRawBuffer(), toSend.getLen());
 
         // Always assume its just char data if not validating
@@ -4296,7 +4187,7 @@ void SGXMLScanner::scanCDSection()
             }
 
             // call all active identity constraints
-            if (fMatcherStack->getMatcherCount())
+            if (toCheckIdentityConstraint() && fICHandler->getMatcherCount())
                 fContent.append(bbCData.getRawBuffer(), bbCData.getLen());
 
             // If we have a doc handler, call it

@@ -81,11 +81,8 @@
 #include <xercesc/validators/DTD/DTDScanner.hpp>
 #include <xercesc/validators/DTD/DTDValidator.hpp>
 #include <xercesc/validators/schema/SchemaValidator.hpp>
-#include <xercesc/validators/schema/identity/FieldActivator.hpp>
-#include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
-#include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
+#include <xercesc/validators/schema/identity/IdentityConstraintHandler.hpp>
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
-#include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -107,9 +104,7 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fDTDValidator(0)
     , fSchemaValidator(0)
     , fDTDGrammar(0)
-    , fMatcherStack(0)
-    , fValueStoreCache(0)
-    , fFieldActivator(0)
+    , fICHandler(0)
     , fLocationPairs(0)
     , fDTDElemNonDeclPool(0)
     , fSchemaElemNonDeclPool(0)
@@ -159,9 +154,7 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fDTDValidator(0)
     , fSchemaValidator(0)
     , fDTDGrammar(0)
-    , fMatcherStack(0)
-    , fValueStoreCache(0)
-    , fFieldActivator(0)
+    , fICHandler(0)
     , fLocationPairs(0)
     , fDTDElemNonDeclPool(0)
     , fSchemaElemNonDeclPool(0)
@@ -455,8 +448,8 @@ bool IGXMLScanner::scanNext(XMLPScanToken& token)
                 // That went ok, so scan for any miscellaneous stuff
                 scanMiscellaneous();
 
-                if (fValidate)
-                    fValueStoreCache->endDocument();
+                if (toCheckIdentityConstraint())
+                    fICHandler->endDocument();
 
                 if (fDocHandler)
                     fDocHandler->endDocument();
@@ -571,10 +564,11 @@ void IGXMLScanner::commonInit()
     initValidator(fSchemaValidator);
 
     // Create IdentityConstraint info
-    fMatcherStack = new (fMemoryManager) XPathMatcherStack(fMemoryManager);
-    fValueStoreCache = new (fMemoryManager) ValueStoreCache(fMemoryManager);
-    fFieldActivator = new (fMemoryManager) FieldActivator(fValueStoreCache, fMatcherStack, fMemoryManager);
-    fValueStoreCache->setScanner(this);
+    /***
+       todo: to auto sense if grammar has ic or not, probably do it
+             at reset() or parse()
+    ***/
+    fICHandler = new (fMemoryManager) IdentityConstraintHandler(this, fMemoryManager);
 
     // Create schemaLocation pair info
     fLocationPairs = new (fMemoryManager) ValueVectorOf<XMLCh*>(8, fMemoryManager);
@@ -602,9 +596,7 @@ void IGXMLScanner::cleanUp()
     delete fRawAttrList;
     delete fDTDValidator;
     delete fSchemaValidator;
-    delete fFieldActivator;
-    delete fMatcherStack;
-    delete fValueStoreCache;
+    delete fICHandler;
     delete fLocationPairs;
     delete fDTDElemNonDeclPool;
     delete fSchemaElemNonDeclPool;
@@ -1153,51 +1145,15 @@ void IGXMLScanner::scanEndTag(bool& gotData)
             }
 
             // call matchers and de-activate context
-            int oldCount = fMatcherStack->getMatcherCount();
-
-            if (oldCount ||
-                ((SchemaElementDecl*)topElem->fThisElement)->getIdentityConstraintCount()) {
-
-                for (int i = oldCount - 1; i >= 0; i--) {
-
-                    XPathMatcher* matcher = fMatcherStack->getMatcherAt(i);
-                    matcher->endElement(*(topElem->fThisElement), fContent.getRawBuffer());
-                }
-
-                if (fMatcherStack->size() > 0) {
-                    fMatcherStack->popContext();
-                }
-
-                // handle everything *but* keyref's.
-                int newCount = fMatcherStack->getMatcherCount();
-
-                for (int j = oldCount - 1; j >= newCount; j--) {
-
-                    XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
-                    IdentityConstraint* ic = matcher->getIdentityConstraint();
-
-                    if (ic  && (ic->getType() != IdentityConstraint::KEYREF))
-                        fValueStoreCache->transplant(ic, matcher->getInitialDepth());
-                }
-
-                // now handle keyref's...
-                for (int k = oldCount - 1; k >= newCount; k--) {
-
-                    XPathMatcher* matcher = fMatcherStack->getMatcherAt(k);
-                    IdentityConstraint* ic = matcher->getIdentityConstraint();
-
-                    if (ic && (ic->getType() == IdentityConstraint::KEYREF)) {
-
-                        ValueStore* values = fValueStoreCache->getValueStoreFor(ic, matcher->getInitialDepth());
-
-                        if (values) { // nothing to do if nothing matched!
-                            values->endDcocumentFragment(fValueStoreCache);
-                        }
-                    }
-                }
-
-                fValueStoreCache->endElement();
+            if (toCheckIdentityConstraint())
+            {
+                fICHandler->deactivateContext
+                             (
+                              (SchemaElementDecl *) topElem->fThisElement
+                            , fContent.getRawBuffer()
+                             );                
             }
+
         }
     }
 
@@ -2841,28 +2797,19 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     attCount = buildAttList(*fRawAttrList, attCount, elemDecl, *fAttrList);
 
     // activate identity constraints
-    if (fValidate && fGrammar && fGrammarType == Grammar::SchemaGrammarType) {
-
-        unsigned int count = ((SchemaElementDecl*) elemDecl)->getIdentityConstraintCount();
-
-        if (count || fMatcherStack->getMatcherCount()) {
-
-            fValueStoreCache->startElement();
-            fMatcherStack->pushContext();
-            fValueStoreCache->initValueStoresFor((SchemaElementDecl*) elemDecl, (int) elemDepth);
-
-            for (unsigned int i = 0; i < count; i++) {
-                activateSelectorFor(((SchemaElementDecl*) elemDecl)->getIdentityConstraintAt(i), (int) elemDepth);
-            }
-
-            // call all active identity constraints
-            count = fMatcherStack->getMatcherCount();
-
-            for (unsigned int j = 0; j < count; j++) {
-                XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
-                matcher->startElement(*elemDecl, uriId, fPrefixBuf.getRawBuffer(), *fAttrList, attCount);
-            }
-        }
+    if (fGrammar  && 
+        fGrammarType == Grammar::SchemaGrammarType &&
+        toCheckIdentityConstraint()) 
+    {
+        fICHandler->activateIdentityConstraint
+                        (
+                          (SchemaElementDecl*) elemDecl
+                        , (int) elemDepth
+                        , uriId
+                        , fPrefixBuf.getRawBuffer()
+                        , *fAttrList
+                        , attCount
+                        );
     }
 
     // Since the element may have default values, call start tag now regardless if it is empty or not
@@ -2964,50 +2911,15 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 }
 
                 // call matchers and de-activate context
-                int oldCount = fMatcherStack->getMatcherCount();
-
-                if (oldCount || ((SchemaElementDecl*) elemDecl)->getIdentityConstraintCount()) {
-
-                    for (int i = oldCount - 1; i >= 0; i--) {
-
-                        XPathMatcher* matcher = fMatcherStack->getMatcherAt(i);
-                        matcher->endElement(*elemDecl, fContent.getRawBuffer());
-                    }
-
-                    if (fMatcherStack->size() > 0) {
-                        fMatcherStack->popContext();
-                    }
-
-                    // handle everything *but* keyref's.
-                    int newCount = fMatcherStack->getMatcherCount();
-
-                    for (int j = oldCount - 1; j >= newCount; j--) {
-
-                        XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
-                        IdentityConstraint* ic = matcher->getIdentityConstraint();
-
-                        if (ic  && (ic->getType() != IdentityConstraint::KEYREF))
-                            fValueStoreCache->transplant(ic, matcher->getInitialDepth());
-                    }
-
-                    // now handle keyref's...
-                    for (int k = oldCount - 1; k >= newCount; k--) {
-
-                        XPathMatcher* matcher = fMatcherStack->getMatcherAt(k);
-                        IdentityConstraint* ic = matcher->getIdentityConstraint();
-
-                        if (ic && (ic->getType() == IdentityConstraint::KEYREF)) {
-
-                            ValueStore* values = fValueStoreCache->getValueStoreFor(ic, matcher->getInitialDepth());
-
-                            if (values) { // nothing to do if nothing matched!
-                                values->endDcocumentFragment(fValueStoreCache);
-                            }
-                        }
-                    }
-
-                    fValueStoreCache->endElement();
+                if (toCheckIdentityConstraint())
+                {
+                    fICHandler->deactivateContext
+                                   (
+                                    (SchemaElementDecl *) elemDecl
+                                  , fContent.getRawBuffer()
+                                   );                
                 }
+
             }
         }
 
@@ -3199,22 +3111,6 @@ void IGXMLScanner::resizeElemState() {
     fMemoryManager->deallocate(fElemState); //delete [] fElemState;
     fElemState = newElemState;
     fElemStateSize = newSize;
-}
-
-// ---------------------------------------------------------------------------
-//  IGXMLScanner: IC activation methos
-// ---------------------------------------------------------------------------
-void IGXMLScanner::activateSelectorFor(IdentityConstraint* const ic, const int initialDepth) {
-
-    IC_Selector* selector = ic->getSelector();
-
-    if (!selector)
-        return;
-
-    XPathMatcher* matcher = selector->createMatcher(fFieldActivator, initialDepth, fMemoryManager);
-
-    fMatcherStack->addMatcher(matcher);
-    matcher->startDocumentFragment();
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/04/13 16:56:58  peiyongz
+ * IdentityConstraintHandler
+ *
  * Revision 1.17  2004/04/07 14:14:08  peiyongz
  * make resolveSystemId virutal
  *
@@ -126,9 +129,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 class SchemaGrammar;
 class SchemaValidator;
-class ValueStoreCache;
-class XPathMatcherStack;
-class FieldActivator;
+class IdentityConstraintHandler;
 class IdentityConstraint;
 class ContentLeafNameTypeVector;
 class SchemaAttDef;
@@ -297,7 +298,7 @@ private :
     // -----------------------------------------------------------------------
     //  IdentityConstraints Activation methods
     // -----------------------------------------------------------------------
-    void activateSelectorFor(IdentityConstraint* const ic, const int initialDepth);
+    inline bool toCheckIdentityConstraint()  const;
 
     // -----------------------------------------------------------------------
     //  Grammar preparsing methods
@@ -330,17 +331,6 @@ private :
     //      Stores an element next state from DFA content model - used for
     //      wildcard validation
     //
-    //  fMatcherStack
-    //      Stack of active XPath matchers for identity constraints. All
-    //      active XPath matchers are notified of startElement, characters
-    //      and endElement callbacks in order to perform their matches.
-    //
-    //  fValueStoreCache
-    //      Cache of value stores for identity constraint fields.
-    //
-    //  fFieldActivator
-    //      Activates fields within a certain scope when a selector matches
-    //      its xpath.
     // fElemNonDeclPool
     //      registry for elements without decls in the grammar
     // fElemCount
@@ -357,19 +347,17 @@ private :
     //      filled when a PSVIHandler is registered
     //
     // -----------------------------------------------------------------------
-    bool                        fSeeXsi;
-    Grammar::GrammarType        fGrammarType;
-    unsigned int                fElemStateSize;
-    unsigned int*               fElemState;
-    XMLBuffer                   fContent;
-    ValueHashTableOf<XMLCh>*    fEntityTable;
-    RefVectorOf<KVStringPair>*  fRawAttrList;
-    SchemaGrammar*              fSchemaGrammar;
-    SchemaValidator*            fSchemaValidator;
-    XPathMatcherStack*          fMatcherStack;
-    ValueStoreCache*            fValueStoreCache;
-    FieldActivator*             fFieldActivator;
-    RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
+    bool                                    fSeeXsi;
+    Grammar::GrammarType                    fGrammarType;
+    unsigned int                            fElemStateSize;
+    unsigned int*                           fElemState;
+    XMLBuffer                               fContent;
+    ValueHashTableOf<XMLCh>*                fEntityTable;
+    RefVectorOf<KVStringPair>*              fRawAttrList;
+    SchemaGrammar*                          fSchemaGrammar;
+    SchemaValidator*                        fSchemaValidator;
+    IdentityConstraintHandler*              fICHandler;
+    RefHash3KeysIdPool<SchemaElementDecl>*  fElemNonDeclPool;
     unsigned int                            fElemCount;
     RefHashTableOf<unsigned int>*           fAttDefRegistry;
     RefHash2KeysTableOf<unsigned int>*      fUndeclaredAttrRegistryNS;
@@ -383,6 +371,11 @@ private :
 inline const XMLCh* SGXMLScanner::getName() const
 {
     return XMLUni::fgSGXMLScanner;
+}
+
+inline bool SGXMLScanner::toCheckIdentityConstraint()  const
+{
+    return fValidate && fIdentityConstraintChecking && fICHandler;
 }
 
 XERCES_CPP_NAMESPACE_END

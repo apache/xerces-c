@@ -90,9 +90,8 @@
 #include <xercesc/validators/schema/SchemaValidator.hpp>
 #include <xercesc/validators/schema/TraverseSchema.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
-#include <xercesc/validators/schema/identity/XPathMatcherStack.hpp>
 #include <xercesc/validators/schema/XSDDOMParser.hpp>
-#include <xercesc/validators/schema/identity/ValueStoreCache.hpp>
+#include <xercesc/validators/schema/identity/IdentityConstraintHandler.hpp>
 #include <xercesc/util/XMLResourceIdentifier.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -1252,8 +1251,8 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fRootElemName = 0;
 
     // Reset IdentityConstraints
-    fValueStoreCache->startDocument();
-    fMatcherStack->clear();
+    if (fICHandler)
+        fICHandler->reset();
 
     //  Reset the element stack, and give it the latest ids for the special
     //  URIs it has to know about.
@@ -1434,7 +1433,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                     schemaValidator->setDatatypeBuffer(rawBuf);
 
                     // call all active identity constraints
-                    if (fMatcherStack->getMatcherCount())
+                    if (toCheckIdentityConstraint() && fICHandler->getMatcherCount())
                         fContent.append(rawBuf, len);
 
                     if (fDocHandler)
@@ -1476,7 +1475,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                     schemaValidator->setDatatypeBuffer(rawBuf);
 
                     // call all active identity constraints
-                    if (fMatcherStack->getMatcherCount())
+                    if (toCheckIdentityConstraint() && fICHandler->getMatcherCount())
                         fContent.append(rawBuf, len);
 
                     if (fDocHandler)
@@ -1503,7 +1502,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
         // call all active identity constraints
         if (fGrammarType == Grammar::SchemaGrammarType) {
 
-            if (fMatcherStack->getMatcherCount())
+            if (toCheckIdentityConstraint() && fICHandler->getMatcherCount())
                 fContent.append(toSend.getRawBuffer(), toSend.getLen());
         }
 
@@ -2520,8 +2519,10 @@ void IGXMLScanner::scanCDSection()
                     }
                 }
 
-                if (fMatcherStack->getMatcherCount())
+                // call all active identity constraints
+                if (toCheckIdentityConstraint() && fICHandler->getMatcherCount())
                     fContent.append(bbCData.getRawBuffer(), bbCData.getLen());
+
             }
             else {
                 if (fValidate) {

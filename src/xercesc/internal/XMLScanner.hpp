@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.34  2004/04/13 16:56:58  peiyongz
+ * IdentityConstraintHandler
+ *
  * Revision 1.33  2004/04/07 14:15:12  peiyongz
  * allow internalDTD (conditionally) with grammar reusing
  *
@@ -490,6 +493,7 @@ public :
     ValSchemes getValidationScheme() const;
     bool getDoSchema() const;
     bool getValidationSchemaFullChecking() const;
+    bool getIdentityConstraintChecking() const;
     const XMLEntityHandler* getEntityHandler() const;
     XMLEntityHandler* getEntityHandler();
     const XMLErrorReporter* getErrorReporter() const;
@@ -617,6 +621,7 @@ public :
     void setValidator(XMLValidator* const valToAdopt);
     void setDoSchema(const bool doSchema);
     void setValidationSchemaFullChecking(const bool schemaFullChecking);
+    void setIdentityConstraintChecking(const bool identityConstraintChecking);
     void setHasNoDTD(const bool hasNoDTD);
     void cacheGrammarFromParse(const bool newValue);
     void useCachedGrammarInParse(const bool newValue);
@@ -797,6 +802,10 @@ protected:
     //      This indicates whether we treat validation constraint errors as
     //      fatal errors or not. It defaults to false, but it can be changed.
     //
+    //  fValidateConstraint
+    //      This indicates whether we perform identity constraint validation.
+    //      It defaults to false, but it can be changed.
+    //
     //  fIDRefList
     //      This is a list of XMLRefInfo objects. This member lets us do all
     //      needed ID-IDREF balancing checks.
@@ -853,6 +862,11 @@ protected:
     //  fSchemaFullChecking
     //      This flag indicates whether the client code wants full Schema
     //      constraint checking.
+    //
+    //  fIdentityConstraintChecking
+    //      This flag indicates whether the client code wants Identity
+    //      Constraint checking, defaulted to true to maintain backward
+    //      compatibility (to minimize supprise)
     //
     //  fAttName
     //  fAttValue
@@ -973,6 +987,7 @@ protected:
     bool                        fValidatorFromUser;
     bool                        fDoSchema;
     bool                        fSchemaFullChecking;
+    bool                        fIdentityConstraintChecking;
     bool                        fToCacheGrammar;
     bool                        fUseCachedGrammar;
     bool                        fLoadExternalDTD;
@@ -1197,6 +1212,11 @@ inline bool XMLScanner::getValidationSchemaFullChecking() const
     return fSchemaFullChecking;
 }
 
+inline bool XMLScanner::getIdentityConstraintChecking() const
+{
+    return fIdentityConstraintChecking;
+}
+
 inline int XMLScanner::getErrorCount()
 {
     return fErrorCount;
@@ -1387,6 +1407,11 @@ inline void XMLScanner::setDoNamespaces(const bool doNamespaces)
 inline void XMLScanner::setValidationSchemaFullChecking(const bool schemaFullChecking)
 {
     fSchemaFullChecking = schemaFullChecking;
+}
+
+inline void XMLScanner::setIdentityConstraintChecking(const bool identityConstraintChecking)
+{
+    fIdentityConstraintChecking = identityConstraintChecking;
 }
 
 inline void XMLScanner::setHasNoDTD(const bool hasNoDTD)

@@ -175,6 +175,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fValidatorFromUser(false)
     , fDoSchema(false)
     , fSchemaFullChecking(false)
+    , fIdentityConstraintChecking(true)
     , fToCacheGrammar(false)
     , fUseCachedGrammar(false)
     , fLoadExternalDTD(true)
@@ -252,6 +253,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fValidatorFromUser(false)
     , fDoSchema(false)
     , fSchemaFullChecking(false)
+    , fIdentityConstraintChecking(true)
     , fToCacheGrammar(false)
     , fUseCachedGrammar(false)
 	, fLoadExternalDTD(true)
@@ -698,6 +700,7 @@ void XMLScanner::setParseSettings(XMLScanner* const refScanner)
     setStandardUriConformant(refScanner->getStandardUriConformant());
     setExitOnFirstFatal(refScanner->getExitOnFirstFatal());
     setValidationConstraintFatal(refScanner->getValidationConstraintFatal());
+    setIdentityConstraintChecking(refScanner->getIdentityConstraintChecking());
     setValidationSchemaFullChecking(refScanner->getValidationSchemaFullChecking());
     cacheGrammarFromParse(refScanner->isCachingGrammarFromParse());
     useCachedGrammarInParse(refScanner->isUsingCachedGrammarInParse());
