@@ -16,6 +16,10 @@
 
 /*
  * $Log$
+ * Revision 1.46  2004/12/09 20:31:39  knoaman
+ * DOM L3: pass schema normalized value only when datatype-normalization feature
+ * is enabled.
+ *
  * Revision 1.45  2004/12/07 19:45:43  knoaman
  * An option to ignore a cached DTD grammar when a document contains an
  * internal and external subset.
@@ -1062,6 +1066,7 @@ protected:
     XMLBuffer                   fQNameBuf;
     XMLBuffer                   fPrefixBuf;
     XMLBuffer                   fURIBuf;
+    XMLBuffer                   fWSNormalizeBuf;
     ElemStack                   fElemStack;
 
 
