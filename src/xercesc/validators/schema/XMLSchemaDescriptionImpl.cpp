@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/07/31 17:14:27  peiyongz
+ * Grammar embed grammar description
+ *
  * Revision 1.2  2003/06/20 22:19:12  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -71,6 +74,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
+#include <xercesc/util/QName.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -90,8 +94,10 @@ XMLSchemaDescriptionImpl::XMLSchemaDescriptionImpl(const XMLCh* const   targetNa
     if (targetNamespace)
         fNamespace = XMLString::replicate(targetNamespace, memMgr);
 
+
+    fLocationHints =  new (memMgr) RefArrayVectorOf<XMLCh>(4, true, memMgr);
+
     /***
-        fLocationHints
         fAttributes
     ***/
 }
@@ -109,9 +115,6 @@ XMLSchemaDescriptionImpl::~XMLSchemaDescriptionImpl()
 
     if (fEnclosingElementName)
         delete fEnclosingElementName;
-
-    if (fAttributes)
-        delete fAttributes;
 
 }
 
@@ -163,12 +166,9 @@ void XMLSchemaDescriptionImpl::setTargetNamespace(const XMLCh* const newNamespac
     fNamespace = XMLString::replicate(newNamespace, XMLGrammarDescription::getMemoryManager()); 
 }
 
-void XMLSchemaDescriptionImpl::setLocationHints(RefArrayVectorOf<XMLCh> *hints)
-{  
-    if (fLocationHints)
-        delete fLocationHints;
-                                
-    fLocationHints = hints; 
+void XMLSchemaDescriptionImpl::setLocationHints(const XMLCh* const hint)
+{    
+    fLocationHints->addElement(XMLString::replicate(hint, XMLGrammarDescription::getMemoryManager())); 
 }
 
 void XMLSchemaDescriptionImpl::setTriggeringComponent(QName* const trigComponent)
@@ -176,7 +176,7 @@ void XMLSchemaDescriptionImpl::setTriggeringComponent(QName* const trigComponent
     if ( fTriggeringComponent)
         delete fTriggeringComponent;
                                 
-    fTriggeringComponent = trigComponent; 
+    fTriggeringComponent = new QName(*trigComponent); 
 
 }
 
@@ -185,15 +185,14 @@ void XMLSchemaDescriptionImpl::setEnclosingElementName(QName* const encElement)
     if (fEnclosingElementName)
         delete fEnclosingElementName;
                                  
-    fEnclosingElementName = encElement; 
+    fEnclosingElementName = new QName(*encElement); 
 
 }
 
 void XMLSchemaDescriptionImpl::setAttributes(XMLAttDef* const attDefs)
 { 
-    if (fAttributes)
-        delete fAttributes;
-                             
+    // XMLAttDef is part of the grammar that this description refers to
+    // so we reference to it instead of adopting/owning/cloning.
     fAttributes = attDefs; 
 }
 

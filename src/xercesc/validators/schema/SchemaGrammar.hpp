@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/07/31 17:12:10  peiyongz
+ * Grammar embed grammar description
+ *
  * Revision 1.7  2003/05/16 21:43:21  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -133,6 +136,7 @@
 #include <xercesc/util/ValueVectorOf.hpp>
 #include <xercesc/validators/datatype/IDDatatypeValidator.hpp>
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
+#include <xercesc/framework/XMLSchemaDescription.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -279,6 +283,9 @@ public:
     void setNamespaceScope(NamespaceScope* const nsScope);
     void setValidSubstitutionGroups(RefHash2KeysTableOf<ElemVector>* const);
 
+    virtual void                    setGrammarDescription( XMLGrammarDescription*);
+    virtual XMLGrammarDescription*  getGrammarDescription() const;
+
     // -----------------------------------------------------------------------
     //  Helper methods
     // -----------------------------------------------------------------------
@@ -347,6 +354,9 @@ private:
     //      Indicates if the content of the Grammar has been pre-validated
     //      or not (UPA checking, etc.). When using a cached grammar, no need
     //      for pre content validation.
+    //
+    //  fGramDesc: adopted
+    //
     // -----------------------------------------------------------------------
     XMLCh*                                 fTargetNamespace;
     RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
@@ -363,6 +373,7 @@ private:
     MemoryManager*                         fMemoryManager;
     bool                                   fValidated;
     DatatypeValidatorFactory               fDatatypeRegistry;
+    XMLSchemaDescription*                  fGramDesc;
 };
 
 

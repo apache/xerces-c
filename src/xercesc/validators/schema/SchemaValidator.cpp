@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.35  2003/07/31 17:14:27  peiyongz
+ * Grammar embed grammar description
+ *
  * Revision 1.34  2003/06/25 22:38:18  peiyongz
  * to use new GrammarResolver::getGrammar()
  *
@@ -793,9 +796,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 
             // retrieve Grammar for the uri
             const XMLCh* uriStr = getScanner()->getURIText(uri);
-            XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uriStr);
-            Janitor<XMLSchemaDescription> janName(gramDesc);
-            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
+            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uriStr);
             if (!sGrammar) {
 
                 // Check built-in simple types
@@ -993,10 +994,10 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
     //  And enumerate all the complextype info in the grammar
     //    and do Unique Particle Attribution Checking
 
-    RefHashTableOfEnumerator<GrammarEntry> grammarEnum = fGrammarResolver->getGrammarEnumerator();
+    RefHashTableOfEnumerator<Grammar> grammarEnum = fGrammarResolver->getGrammarEnumerator();
     while (grammarEnum.hasMoreElements())
     {
-        SchemaGrammar& sGrammar = (SchemaGrammar&) *(grammarEnum.nextElement().getGrammar());
+        SchemaGrammar& sGrammar = (SchemaGrammar&) grammarEnum.nextElement();
         if (sGrammar.getGrammarType() != Grammar::SchemaGrammarType || sGrammar.getValidated())
              continue;
 
@@ -1697,9 +1698,7 @@ SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
     const XMLCh* schemaURI = getScanner()->getURIStringPool()->getValueForId(derivedURI);
 
     if (derivedURI != getScanner()->getEmptyNamespaceId()) {
-        XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(schemaURI);
-        Janitor<XMLSchemaDescription> janName(gramDesc);
-        aGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
+        aGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(schemaURI);
     }
 
     if (!aGrammar) { //something is wrong

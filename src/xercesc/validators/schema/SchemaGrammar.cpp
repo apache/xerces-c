@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/07/31 17:12:10  peiyongz
+ * Grammar embed grammar description
+ *
  * Revision 1.6  2003/05/21 21:35:31  knoaman
  * Pass the memory manager.
  *
@@ -120,6 +123,7 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
+#include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -142,6 +146,7 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     , fMemoryManager(manager)
     , fValidated(false)
     , fDatatypeRegistry(manager)
+    , fGramDesc(0)
 {
     //
     //  Init all the pool members.
@@ -157,6 +162,9 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
         fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109, 128, fMemoryManager);
         fIDRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(29, fMemoryManager);
         fDatatypeRegistry.expandRegistryToFullSchemaSet();
+
+        //REVISIT: use grammarPool to create
+        fGramDesc = new (fMemoryManager) XMLSchemaDescriptionImpl(XMLUni::fgXMLNSURIName, fMemoryManager);
 
         //
         //  Call our own reset method. This lets us have the pool setup stuff
@@ -263,6 +271,25 @@ void SchemaGrammar::cleanUp()
     delete fNamespaceScope;
     delete fValidSubstitutionGroups;
     delete fIDRefList;
+    delete fGramDesc;
+}
+
+void SchemaGrammar::setGrammarDescription( XMLGrammarDescription* gramDesc)
+{
+    if ((!gramDesc) || 
+        (gramDesc->getGrammarType() != Grammar::SchemaGrammarType))
+        return;
+
+    if (fGramDesc)
+        delete fGramDesc;
+
+    //adopt the grammar Description
+    fGramDesc = (XMLSchemaDescription*) gramDesc;
+}
+
+XMLGrammarDescription* SchemaGrammar::getGrammarDescription() const
+{
+    return fGramDesc;
 }
 
 XERCES_CPP_NAMESPACE_END

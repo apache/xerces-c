@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/07/31 17:07:33  peiyongz
+ * Grammar embed grammar description
+ *
  * Revision 1.5  2003/05/15 18:48:27  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -101,6 +104,8 @@
 #include <xercesc/framework/XMLNotationDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
+
+class XMLGrammarDescription;
 
 //
 // This abstract class specifies the interface for a Grammar
@@ -233,11 +238,15 @@ public:
     // -----------------------------------------------------------------------
     virtual void reset()=0;
 
+    virtual void                    setGrammarDescription( XMLGrammarDescription*) = 0;
+    virtual XMLGrammarDescription*  getGrammarDescription() const = 0;
+
 protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
-    Grammar() {};
+    Grammar(){};
+
 };
 
 XERCES_CPP_NAMESPACE_END

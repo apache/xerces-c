@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/07/31 17:09:59  peiyongz
+ * Grammar embed grammar description
+ *
  * Revision 1.6  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -95,6 +98,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
+#include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -108,6 +112,7 @@ DTDGrammar::DTDGrammar(MemoryManager* const manager) :
     , fEntityDeclPool(0)
     , fNotationDeclPool(0)
     , fValidated(false)
+    , fGramDesc(0)
 {
     //
     //  Init all the pool members.
@@ -119,6 +124,9 @@ DTDGrammar::DTDGrammar(MemoryManager* const manager) :
     fElemNonDeclPool = new (fMemoryManager) NameIdPool<DTDElementDecl>(29, 128, fMemoryManager);
     fEntityDeclPool = new (fMemoryManager) NameIdPool<DTDEntityDecl>(109, 128, fMemoryManager);
     fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109, 128, fMemoryManager);
+
+    //REVISIT: use grammarPool to create
+    fGramDesc = new (fMemoryManager) XMLDTDDescriptionImpl(XMLUni::fgDTDEntityString, fMemoryManager);
 
     //
     //  Call our own reset method. This lets us have the pool setup stuff
@@ -134,6 +142,7 @@ DTDGrammar::~DTDGrammar()
     delete fElemNonDeclPool;
     delete fEntityDeclPool;
     delete fNotationDeclPool;
+    delete fGramDesc;
 }
 
 // -----------------------------------------------------------------------
@@ -219,6 +228,24 @@ void DTDGrammar::resetEntityDeclPool() {
     fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgGT, chCloseAngle, true, true));
     fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgQuot, chDoubleQuote, true, true));
     fEntityDeclPool->put(new DTDEntityDecl(XMLUni::fgApos, chSingleQuote, true, true));
+}
+
+void DTDGrammar::setGrammarDescription( XMLGrammarDescription* gramDesc)
+{
+    if ((!gramDesc) || 
+        (gramDesc->getGrammarType() != Grammar::DTDGrammarType))
+        return;
+
+    if (fGramDesc)
+        delete fGramDesc;
+
+    //adopt the grammar Description
+    fGramDesc = (XMLDTDDescription*) gramDesc;
+}
+
+XMLGrammarDescription*  DTDGrammar::getGrammarDescription() const
+{
+    return fGramDesc;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/07/31 17:14:27  peiyongz
+ * Grammar embed grammar description
+ *
  * Revision 1.1  2003/06/20 18:40:29  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -156,7 +159,7 @@ public :
       * setLocationHints
       *
       */	
-    virtual void                   setLocationHints(RefArrayVectorOf<XMLCh>* const);
+    virtual void                   setLocationHints(const XMLCh* const);
 
     /**
       * setTriggeringComponent
@@ -195,15 +198,15 @@ private :
     //
     //  fContextType  
     //
-    //  fNamespace
+    //  fNamespace            owned
     //
-    //  fLocationHints
+    //  fLocationHints        owned
     //
-    //  fTriggeringComponent
+    //  fTriggeringComponent  owned
     //
-    //  fEnclosingElementName
+    //  fEnclosingElementName owned
     //                       
-    //  fAttributes
+    //  fAttributes           referenced
     //
     // -----------------------------------------------------------------------
 

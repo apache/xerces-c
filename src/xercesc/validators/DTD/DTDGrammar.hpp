@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/07/31 17:09:59  peiyongz
+ * Grammar embed grammar description
+ *
  * Revision 1.7  2003/05/16 21:43:19  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -105,6 +108,8 @@
 #include <xercesc/validators/common/Grammar.hpp>
 #include <xercesc/validators/DTD/DTDElementDecl.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
+#include <xercesc/framework/XMLDTDDescription.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -230,6 +235,9 @@ public:
     // -----------------------------------------------------------------------
     void setRootElemId(unsigned int rootElemId);
 
+    virtual void                    setGrammarDescription( XMLGrammarDescription*);
+    virtual XMLGrammarDescription*  getGrammarDescription() const;
+
     // -----------------------------------------------------------------------
     //  Content management methods
     // -----------------------------------------------------------------------
@@ -272,6 +280,9 @@ private:
     //      Indicates if the content of the Grammar has been pre-validated
     //      or not. When using a cached grammar, no need for pre content
     //      validation.
+    //
+    //  fGramDesc: adopted
+    //
     // -----------------------------------------------------------------------
     MemoryManager*               fMemoryManager;
     NameIdPool<DTDElementDecl>*  fElemDeclPool;
@@ -280,6 +291,7 @@ private:
     NameIdPool<XMLNotationDecl>* fNotationDeclPool;
     unsigned int                 fRootElemId;
     bool                         fValidated;
+    XMLDTDDescription*           fGramDesc;
 };
 
 

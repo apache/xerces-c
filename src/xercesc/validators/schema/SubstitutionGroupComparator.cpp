@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/07/31 17:14:27  peiyongz
+ * Grammar embed grammar description
+ *
  * Revision 1.7  2003/06/25 22:38:18  peiyongz
  * to use new GrammarResolver::getGrammar()
  *
@@ -164,9 +167,7 @@ bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
     if (!uri)
         return false;
 
-    XMLSchemaDescription* gramDesc = fGrammarResolver->getGrammarPool()->createSchemaDescription(uri);
-    Janitor<XMLSchemaDescription> janName(gramDesc);
-    SchemaGrammar *sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(gramDesc);
+    SchemaGrammar *sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uri);
     if (!sGrammar || sGrammar->getGrammarType() == Grammar::DTDGrammarType)
         return false;
 
