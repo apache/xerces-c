@@ -16,7 +16,11 @@ $gDstBase = $gScriptBase.$gPathSep."MacSrc";
 # Map from unshortened to shortened name
 %gBadMap;
 
-# Hints for shortening names
+# Hints for shortening names.
+# Hints are considered in order of occurance in list
+# until the name is adaquately shortened or there
+# are no more hints, in which case the name is
+# more rudely truncated.
 @gHints =
 (
 	["Exception",		"Except"	],
@@ -32,6 +36,14 @@ $gDstBase = $gScriptBase.$gPathSep."MacSrc";
 	["Instruction",		"Instr"		],
 	["Parent",			"Par"		],
 	["Fragment",		"Frag"		],
+	["Construction",	"Constr"	],
+	["Default",		"Def"		],
+	["Processor",		"Proc"		],
+	["Compare",		"Comp"		],
+	["Execution",		"Exe"		],
+	["Functor",		"Func"		],
+	["Collation",		"Col"		],
+	["Element",		"El"		],
 );
 
 sub GetPathSeparator
