@@ -2711,21 +2711,46 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
       scanRawAttrListforNameSpaces(fRawAttrList, attCount);
 
     //
+    //  Also find any default or fixed xmlns attributes in DTD defined for
+    //  this element.
+    //
+    XMLElementDecl* elemDecl;
+
+    if (fGrammar->getGrammarType() == Grammar::DTDGrammarType) {
+        XMLElementDecl* elemDecl = fGrammar->getElemDecl
+        (
+            0
+            , fNameBuf.getRawBuffer()
+            , fQNameBuf.getRawBuffer()
+            , 0
+        );
+        if (elemDecl) {
+            XMLAttDefList& attDefList = elemDecl->getAttDefList();
+            while (attDefList.hasMoreElements())
+            {
+                // Get the current att def, for convenience and its def type
+                const XMLAttDef& curDef = attDefList.nextElement();
+                const XMLAttDef::DefAttTypes defType = curDef.getDefaultType();
+
+                // update the NSMap if there are any default/fixed xmlns attributes
+                if ((defType == XMLAttDef::Default)
+                ||  (defType == XMLAttDef::Fixed))
+                {
+                    const XMLCh* rawPtr = curDef.getFullName();
+                    if (!XMLString::compareNString(rawPtr, XMLUni::fgXMLNSColonString, 6)
+                    ||  !XMLString::compareString(rawPtr, XMLUni::fgXMLNSString))
+                        updateNSMap(rawPtr, curDef.getValue());
+                }
+            }
+        }
+    }
+
+    //
     //  Resolve the qualified name to a URI and name so that we can look up
     //  the element decl for this element. We have now update the prefix to
     //  namespace map so we should get the correct element now.
     //
-    //  <TBD>
-    //  <NOTE> There is an issue here in that (when Schema comes along) if
-    //  there were defauled/fixed xmlns attributes defined for this element,
-    //  it is too late for them to affect the prefix of this element (though
-    //  technically they should.) There is no way out of this unfortunately.
-    //
-    //  For DTD case, there is no binding defined from name space prefixes to
-    //  name space URIs.  So we just map it to the XML URI
-    unsigned int uriId = fXMLNamespaceId;
-    if (fGrammar->getGrammarType() != Grammar::DTDGrammarType)
-        uriId = resolveQName
+    unsigned int uriId = resolveQName
         (
             fQNameBuf.getRawBuffer()
             , fNameBuf
@@ -2739,7 +2764,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  not find it.
     //
     bool wasAdded;
-    XMLElementDecl* elemDecl = fGrammar->findOrAddElemDecl
+    elemDecl = fGrammar->findOrAddElemDecl
     (
         uriId
         , fNameBuf.getRawBuffer()
