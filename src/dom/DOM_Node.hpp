@@ -628,6 +628,7 @@ protected:
     friend class DOM_Entity;
     friend class RangeImpl;
     friend class CharacterDataImpl;
+	friend class XUtil;
 
 };
 

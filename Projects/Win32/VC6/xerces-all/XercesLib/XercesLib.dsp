@@ -1765,6 +1765,14 @@ SOURCE=..\..\..\..\..\src\validators\schema\SchemaValidator.cpp
 
 SOURCE=..\..\..\..\..\src\validators\schema\SchemaValidator.hpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\XUtil.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\XUtil.hpp
+# End Source File
 # End Group
 # End Group
 # Begin Group "sax2"
