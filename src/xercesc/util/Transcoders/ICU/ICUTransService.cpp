@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,7 +78,6 @@
     #include <unicode/uclean.h>
 #endif
 
-
 #if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX) && !defined(XML_PTX)
 // Forward reference the symbol which points to the ICU converter data.
 #if (U_ICU_VERSION_MAJOR_NUM < 2)
@@ -96,8 +95,21 @@ static const XMLCh gMyServiceId[] =
     chLatin_I, chLatin_C, chLatin_U, chNull
 };
 
+static const XMLCh gS390Id[] =
+{
+    chLatin_S, chDigit_3, chDigit_9, chDigit_0, chNull
+};
 
+static const XMLCh gs390Id[] =
+{
+    chLatin_s, chDigit_3, chDigit_9, chDigit_0, chNull
+};
 
+static const XMLCh gswaplfnlId[] =
+{
+    chComma, chLatin_s, chLatin_w, chLatin_a, chLatin_p,
+    chLatin_l, chLatin_f, chLatin_n, chLatin_l, chNull
+};
 // ---------------------------------------------------------------------------
 //  Local functions
 // ---------------------------------------------------------------------------
@@ -341,6 +353,25 @@ makeNewXMLTranscoder(const  XMLCh* const            encodingName
                     , const unsigned int            blockSize
                     ,       MemoryManager* const    manager)
 {
+    //  
+    //  For encodings that end with "s390" we need to strip off the "s390" 
+    //  from the encoding name and add ",swaplfnl" to the encoding name	
+    //  that we pass into ICU on the ucnv_openU.  
+    //  
+    XMLCh* encodingNameToUse = (XMLCh*) encodingName;
+    XMLCh* workBuffer = 0;
+
+    if ( (XMLString::endsWith(encodingNameToUse, gs390Id)) ||
+         (XMLString::endsWith(encodingNameToUse, gS390Id)) )
+    {
+       int workBufferSize = (XMLString::stringLen(encodingNameToUse) + XMLString::stringLen(gswaplfnlId) - XMLString::stringLen(gS390Id) + 1);
+       workBuffer = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate(workBufferSize * sizeof(XMLCh));
+       int moveSize = XMLString::stringLen(encodingNameToUse) - XMLString::stringLen(gS390Id);
+       XMLString::moveChars(workBuffer, encodingNameToUse, moveSize);
+       XMLString::moveChars((workBuffer + moveSize), gswaplfnlId, XMLString::stringLen(gswaplfnlId));
+       encodingNameToUse = workBuffer;
+    }
+
     //
     //  If UChar and XMLCh are not the same size, then we have premassage the
     //  encoding name into a UChar type string.
@@ -349,15 +380,16 @@ makeNewXMLTranscoder(const  XMLCh* const            encodingName
     UChar* tmpName = 0;
     if (sizeof(UChar) == sizeof(XMLCh))
     {
-        actualName = (const UChar*)encodingName;
+        actualName = (const UChar*)encodingNameToUse;
     }
     else
     {
-        tmpName = convertToUChar(encodingName, 0, XMLPlatformUtils::fgMemoryManager);
+        tmpName = convertToUChar(encodingNameToUse, 0, XMLPlatformUtils::fgMemoryManager);
         actualName = tmpName;
     }
 
     ArrayJanitor<UChar> janTmp(tmpName, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<XMLCh> janTmp1(workBuffer, XMLPlatformUtils::fgMemoryManager);
 
     UErrorCode uerr = U_ZERO_ERROR;
     UConverter* converter = ucnv_openU(actualName, &uerr);
