@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -134,11 +134,11 @@ int Iconv400TransService::compareIString(const   XMLCh* const    comp1
                                          , const XMLCh* const    comp2)
 {
     const XMLCh* psz1 = comp1;
-    const XMLCh* psz2 = comp2;    
+    const XMLCh* psz2 = comp2;
 
     while (true)
     {
-                       
+
         if (toUnicodeUpper(*psz1) != toUnicodeUpper(*psz2))
             return int(*psz1) - int(*psz2);
 
@@ -160,13 +160,13 @@ int Iconv400TransService::compareNIString(const  XMLCh* const    comp1
 {
     const XMLCh* psz1 = comp1;
     const XMLCh* psz2 = comp2;
-  
+
 
     unsigned int curCount = 0;
     while (true)
     {
         // If an inequality, then return the difference
-  
+
 
         // If an inequality, then return difference
         if (toUnicodeUpper(*psz1) != toUnicodeUpper(*psz2))
@@ -181,7 +181,7 @@ int Iconv400TransService::compareNIString(const  XMLCh* const    comp1
         psz2++;
 
         //
-        //  Bump the count of chars done. If it equals the count then we 
+        //  Bump the count of chars done. If it equals the count then we
         //  are equal for the requested count, so break out and return
         //  equal.
         //
@@ -264,7 +264,7 @@ void Iconv400TransService::lowerCase(XMLCh* const toLowerCase) const
 // ---------------------------------------------------------------------------
 //  Iconv400TransService: The virtual transcoding service API
 // ---------------------------------------------------------------------------
-XMLCh Iconv400TransService::toUnicodeUpper(XMLCh comp1) const  
+XMLCh Iconv400TransService::toUnicodeUpper(XMLCh comp1) const
 {
     XMLCh chRet;
     struct {
@@ -275,7 +275,7 @@ XMLCh Iconv400TransService::toUnicodeUpper(XMLCh comp1) const
              char exception_data[15];
             } error_code;
      error_code.bytes_available = sizeof(error_code);
- 
+
     long charlen =2;
 
     QlgConvertCase((char*)&convertCtlblkUpper,
@@ -297,7 +297,7 @@ XMLCh Iconv400TransService::toUnicodeLower(XMLCh comp1) const
              char exception_data[15];
             } error_code;
      error_code.bytes_available = sizeof(error_code);
- 
+
     long charlen =2;
 
     QlgConvertCase((char*)&convertCtlblkLower,
@@ -401,7 +401,7 @@ Iconv400Transcoder::transcodeXML(const   XMLByte* const          srcData
                             ,       unsigned char* const    charSizes)
 {
     // If debugging, insure the block size is legal
-    #if defined(XML4C_DEBUG)
+    #if defined(Xerces_DEBUG)
     checkBlockSize(maxChars);
     #endif
 
@@ -717,7 +717,7 @@ bool Iconv400Transcoder::canTranscodeTo(const unsigned int toCheck) const
     char*           startTarget = tmpBuf;
     const UChar*    startSrc = srcBuf;
     UErrorCode  err = U_ZERO_ERROR;
-   
+
     ucnv_fromUnicode
     (
         fConverter
@@ -730,7 +730,7 @@ bool Iconv400Transcoder::canTranscodeTo(const unsigned int toCheck) const
         , &err
     );
 
- 
+
     return (err==U_ZERO_ERROR);  /*@01A*/
 }
 
