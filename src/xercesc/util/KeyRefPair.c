@@ -86,8 +86,8 @@ KeyRefPair(TKey* key, TValue* value) :
 template <class TKey, class TValue> KeyRefPair<TKey,TValue>::
 KeyRefPair(const KeyRefPair<TKey,TValue>* toCopy) :
 
-    fKey(toCopy.fKey)
-    , fValue(toCopy.fValue)
+    fKey(toCopy->fKey)
+    , fValue(toCopy->fValue)
 {
 }
 
