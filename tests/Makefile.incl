@@ -53,41 +53,9 @@
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
 #
+
 #
-# $Log$
-# Revision 1.9  2000/08/30 22:21:40  andyh
-# Unix Build script fixes.  Clean up some UNIX compiler warnings.
-#
-# Revision 1.8  2000/06/09 23:45:03  rahulj
-# More PTX port related changes submitted by
-# Sumit Chawla <sumitc@us.ibm.com>.
-#
-# Revision 1.7  2000/06/03 01:13:51  aruna1
-# Version number consolidated into single file for unix
-#
-# Revision 1.6  2000/06/02 01:04:32  aruna1
-# Modifed version no. to  1_2
-#
-# Revision 1.5  2000/04/04 20:10:16  abagchi
-# Added PTX support
-#
-# Revision 1.4  2000/02/26 07:20:18  rahulj
-#  - The threading tests now work on HPUX.
-#  - Under HPUX 10.20 we do no build DOMMemTest and DOMTest.
-#    It crashes the compiler.
-#  - One could not write more worse makefiles than what exists for the
-#    tests. Hopefully, I will get bugged enough to fix them oneday.
-#
-# Revision 1.3  2000/02/26 03:50:10  rahulj
-# Auto aggregate initializations, requires the +a1 flag with CC under HPUX 10.
-#
-# Revision 1.2  2000/02/06 07:48:34  rahulj
-# Year 2K copyright swat.
-#
-# Revision 1.1  2000/01/31 22:21:53  aruna1
-# initial checkin
-#
-#
+# $Id$
 #
 
 ################## LIBRARY NAMES AND DIRECTORIES ##################
@@ -153,7 +121,7 @@ CMP= -c ${CXXFLAGS}
 CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic -instances=static
 LINK =  g++ -D${PLATFORM} -fpic
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
-EXTRA_LINK_OPTIONS=-lc -Wl,-rpath-link,$(XERCESCROOT)/lib
+EXTRA_LINK_OPTIONS=-lc
 SHLIBSUFFIX=.so
 endif
 
@@ -208,9 +176,9 @@ ifeq (${PLATFORM}, OS390)
 CMP= -c -DOS390 ${CXXFLAGS}
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -DOPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -DOS390BATCH
+CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -DOS390BATCH
 else
-CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -DOPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
+CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
 endif
 LINK =  ${CC}
 PLATFORM_LIB_LINK_OPTIONS=
@@ -219,7 +187,7 @@ SHLIBSUFFIX=.dll
 OS390SIDEDECK=.x
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-LIBRARY_NAMES="//'${LOADEXP}(XERCES11)'"
+LIBRARY_NAMES="//'${LOADEXP}(IXM4C33)'"
 else
 LIBRARY_NAMES=${LIB_DIR}/lib${LIBNAME}${VER}${OS390SIDEDECK}
 endif

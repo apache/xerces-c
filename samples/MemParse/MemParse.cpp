@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/09/11 18:43:48  aruna1
+ * OS390 related updates
+ *
  * Revision 1.6  2000/03/02 19:53:42  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -118,6 +121,27 @@
 //      just for indentification purposes in case of errors. Its not a real
 //      system id (and the parser knows that.)
 // ---------------------------------------------------------------------------
+
+#ifdef OS390
+static const char*  gXMLInMemBuf =
+"\
+<?xml version='1.0' encoding='ibm-1047-s390'?>\n\
+<!DOCTYPE company [\n\
+<!ELEMENT company     (product,category,developedAt)>\n\
+<!ELEMENT product     (#PCDATA)>\n\
+<!ELEMENT category    (#PCDATA)>\n\
+<!ATTLIST category idea CDATA #IMPLIED>\n\
+<!ELEMENT developedAt (#PCDATA)>\n\
+]>\n\n\
+<company>\n\
+    <product>XML4C</product>\n\
+    <category idea='great'>XML Parsing Tools</category>\n\
+    <developedAt>\n\
+      IBM Center for Java Technology, Silicon Valley, Cupertino, CA\n\
+    </developedAt>\n\
+</company>\
+";
+#else
 static const char*  gXMLInMemBuf =
 "\
 <?xml version='1.0' encoding='ascii'?>\n\
@@ -136,6 +160,7 @@ static const char*  gXMLInMemBuf =
     </developedAt>\n\
 </company>\
 ";
+#endif
 
 static const char*  gMemBufId = "prodInfo";
 

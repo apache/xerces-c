@@ -86,7 +86,7 @@ HEADER_FILES=${SRC}/SAX2Print.hpp ${SRC}/SAX2PrintHandlers.hpp
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET= "//'${LOADMOD}(${APP_NAME})'"
+BATCH_TARGET= "//'${LOADMOD}(SAX2PRNT)'"
 all:: makedir ${BATCH_TARGET}
 else
 all:: makedir ${EXEC}/${APP_NAME}

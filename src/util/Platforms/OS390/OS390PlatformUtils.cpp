@@ -55,48 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.14  2000/09/06 23:10:38  aruna1
- * OS390 sockets related changes
- *
- * Revision 1.13  2000/07/25 22:30:24  aruna1
- * Char definitions in XMLUni moved to XMLUniDefs
- *
- * Revision 1.12  2000/03/18 00:00:00  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.11  2000/03/02 21:10:37  abagchi
- * Added empty function platformTerm()
- *
- * Revision 1.10  2000/03/02 19:55:29  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.9  2000/02/23 00:35:49  abagchi
- * Added OS/390 changes to comply with new ICUDATA library
- *
- * Revision 1.8  2000/02/08 18:55:59  abagchi
- * Changed it to use Iconv390 transcoder
- *
- * Revision 1.7  2000/02/08 18:37:28  abagchi
- * set __MUTEX_RECURSIVE
- *
- * Revision 1.4  2000/02/06 07:48:29  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.3  2000/01/21 22:17:57  abagchi
- * OS390 Change: updates for Version 3.1.0
- *
- * Revision 1.2  1999/12/18 00:47:01  rahulj
- * Merged in some changes for OS390.
- *
- * Revision 1.1.1.1  1999/11/09 01:06:38  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:31  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -125,7 +84,7 @@
 #endif
 #include    <string.h>
 #include    <unistd.h>
-#include    <limits.h>	
+#include    <limits.h>
 #include    <util/XMLString.hpp>
 #include    <util/XMLUniDefs.hpp>
 #include    <util/XMLUni.hpp>
@@ -153,9 +112,9 @@
 // ---------------------------------------------------------------------------
 static void WriteCharStr( FILE* stream, const char* const toWrite)
 {
-    if (!fputs(toWrite, stream))
-    {
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Strm_StdErrWriteFailure);
+    if (fputs(toWrite, stream) == EOF)
+	    {
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
     }
 }
 
@@ -163,9 +122,9 @@ static void WriteUStrStdErr( const XMLCh* const toWrite)
 {
     char* tmpVal = XMLString::transcode(toWrite);
         ArrayJanitor<char> janText(tmpVal);
-    if (!fputs(tmpVal, stderr))
-    {
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Strm_StdErrWriteFailure);
+    if (fputs(tmpVal, stderr) == EOF)
+	    {
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
     }
 }
 
@@ -174,9 +133,9 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
     char* tmpVal = XMLString::transcode(toWrite);
         ArrayJanitor<char> janText(tmpVal);
 
-    if (!fputs(tmpVal, stdout))
-    {
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Strm_StdErrWriteFailure);
+    if (fputs(tmpVal, stdout) == EOF)
+	    {
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::Strm_StdErrWriteFailure);
     }
 }
 
@@ -193,8 +152,11 @@ XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
+static int posixIsOn = 0;
+
 void XMLPlatformUtils::platformInit()
 {
+	posixIsOn = __isPosixOn();
 }
 
 // ---------------------------------------------------------------------------
@@ -281,7 +243,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
     // Get the current position
     int curPos = ftell( (FILE*)theFile);
     if (curPos == -1)
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetSize);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetSize);
 
     return (unsigned int)curPos;
 }
@@ -289,7 +251,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 void XMLPlatformUtils::closeFile(FileHandle theFile)
 {
     if (fclose((FILE*)theFile))
-ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotCloseFile);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotCloseFile);
 }
 
 unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
@@ -297,20 +259,20 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
     // Get the current position
     long  int curPos = ftell((FILE*)theFile);
     if (curPos == -1)
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetCurPos);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetCurPos);
 
     // Seek to the end and save that value for return
      if (fseek( (FILE*)theFile, 0, SEEK_END) )
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotSeekToEnd);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
 
     long int retVal = ftell( (FILE*)theFile);
     if (retVal == -1)
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotSeekToEnd);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToEnd);
 
 
     // And put the pointer back
     if (fseek( (FILE*)theFile, curPos, SEEK_SET) )
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotSeekToPos);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotSeekToPos);
 
     return (unsigned int)retVal;
 }
@@ -401,6 +363,89 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+{
+    FileHandle retVal = (FILE*)fopen( fileName , "rb" );
+
+#ifdef OS390BATCH
+    if (retVal == NULL) {
+    //
+    // We failed to open the file using its native format (OE or MVS)
+    // Try to go an extra step to map the path into a MVS dataset under BATCH:
+    //
+    //     /path/path2/filename.ext => //'path.path2.ext(filename)'
+    //     /path/path2/filename     => //'path.path2.filename'
+    // and
+    //     path/path2/filename.ext  => //path.path2.ext(filename)
+    //     path/path2/filename      => //path.path2.filename
+
+    char* datasetName = new char[ strlen(fileName) + 5 ];
+    char *datasetPos = datasetName, *tmpPos = (char *)fileName;
+    FileHandle retVal;
+
+    // We are in EBCDIC mode here
+    // Specify "//" to indicate that the filename refers to a non-POSIX file
+    // or a MVS data set
+
+    strcpy(datasetName, "//");
+    *datasetPos += 2;
+
+    // If we have a leading '/' then the path is absolute
+
+    if( *tmpPos == '/' ) {
+        *datasetPos++ = '\'';
+        tmpPos++;
+    }
+
+    // Find the last '/' in the path - this seperates the path from the
+    // filename.  Then copy the pathname.
+
+    char* pathEnd = strrchr( tmpPos, '/' );
+    if( pathEnd == NULL ) pathEnd = tmpPos - 1;
+    while( tmpPos <= pathEnd ) {
+        switch( *tmpPos ) {
+                case '/':
+                        *datasetPos = '.';
+                        break;
+                default:
+                        *datasetPos = *tmpPos;
+        }
+        datasetPos++; tmpPos++;
+    }
+
+    // Now we try to locate the extension, and copy that.
+
+    char* extStart = strrchr( fileName, '.' );
+    if ( extStart != NULL ) {
+        tmpPos = extStart + 1;
+        while( *tmpPos != '\0' ) {
+                *datasetPos++ = *tmpPos++;
+        }
+        *datasetPos++ = '(';
+    }
+
+    // Now we copy in the filename.
+
+    tmpPos = pathEnd + 1;
+    while( *tmpPos != '\0' && ((extStart == NULL) || (tmpPos < extStart)) ) {
+        *datasetPos++ = *tmpPos++;
+    }
+
+    // Finally cap off the filename with optional ")" and "'", plus a null
+    if( extStart != NULL ) *datasetPos++ = ')';
+    if( *fileName == '/' ) *datasetPos++ = '\'';
+    *datasetPos = '\0';
+
+    retVal = (FILE*)fopen( datasetName , "rb" );
+
+    delete [] datasetName;
+    }
+#endif
+    if( retVal == NULL )
+        return 0;
+    return retVal;
+}
+
 unsigned int
 XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
                                 , const unsigned int    toRead
@@ -410,7 +455,7 @@ XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
 
     if(ferror((FILE*)theFile))
     {
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotReadFromFile);
+		ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
     }
 
     return (unsigned int)noOfItemsRead;
@@ -421,7 +466,7 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 {
     // Seek to the start of the file
     if (fseek((FILE*)theFile, 0, SEEK_SET) )
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotResetFile);
+	ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotResetFile);
 }
 
 
@@ -450,13 +495,14 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 
     // Use a local buffer that is big enough for the largest legal path
     char *absPath = new char[_POSIX_PATH_MAX];
-        //get the absolute path
-        char* retPath = realpath(newSrc, absPath);
-    ArrayJanitor<char> janText2(retPath);
+    ArrayJanitor<char> janText2(absPath);
+	//get the absolute path
+	char* retPath = realpath(newSrc, absPath);
+
 
     if (!retPath)
     {
-                ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotGetBasePathName);
+                ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
     }
     return XMLString::transcode(absPath);
 }
@@ -585,7 +631,8 @@ XMLCh* XMLPlatformUtils::weavePaths
 
             // The base cannot provide enough levels, so its in error/
             if (basePtr < basePath)
-                ThrowXML(PlatformUtilsException, File_BasePathUnderflow);
+				ThrowXML(XMLPlatformUtilsException,	XMLExcepts::File_BasePathUnderflow);
+
         }
     }
 
@@ -615,11 +662,11 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
 #ifdef OS390BATCH
-    if (__isPosixOn()) {
+    if (posixIsOn) {
 #endif
     if (pthread_mutex_destroy( (pthread_mutex_t*)mtxHandle))
     {
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotDestroy);
+	ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
     }
     if ( (pthread_mutex_t*)mtxHandle)
         delete mtxHandle;
@@ -636,11 +683,11 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
 #ifdef OS390BATCH
-    if (__isPosixOn()) {
+    if (posixIsOn) {
 #endif
     if (pthread_mutex_lock( (pthread_mutex_t*)mtxHandle))
     {
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotLock);
+	ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock);
     }
 #ifdef OS390BATCH
     } // __isPosixOn
@@ -649,7 +696,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 
     do {
         unlocked = 0;
-        compareAndSwap( (void**) &mtxHandle, (void*) &locked, (void*) &unlocked );
+        compareAndSwap( (void**) &mtxHandle, (void*) locked, (void*) unlocked );
     } while( unlocked != 0 );
     }
 #endif
@@ -659,12 +706,12 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 void* XMLPlatformUtils::makeMutex()
 {
 #ifdef OS390BATCH
-    if (__isPosixOn()) {
+    if (posixIsOn) {
 #endif
     pthread_mutex_t* mutex = new pthread_mutex_t;
     if (mutex == NULL)
     {
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotCreate);
+	ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate);
     }
 
     pthread_mutexattr_t*  attr = new pthread_mutexattr_t;
@@ -673,7 +720,7 @@ void* XMLPlatformUtils::makeMutex()
     if (pthread_mutex_init(mutex, attr))
     {
         ThrowXML(XMLPlatformUtilsException,
-                XML4CExcepts::Mutex_CouldNotCreate);
+                XMLExcepts::Mutex_CouldNotCreate);
     }
     pthread_mutexattr_destroy(attr);
     delete attr;
@@ -694,11 +741,11 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
     if (mtxHandle == NULL)
         return;
 #ifdef OS390BATCH
-    if (__isPosixOn()) {
+    if (posixIsOn) {
 #endif
     if (pthread_mutex_unlock( (pthread_mutex_t*)mtxHandle))
     {
-	ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Mutex_CouldNotUnlock);
+	ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock);
     }
 #ifdef OS390BATCH
     } // __isPosixOn

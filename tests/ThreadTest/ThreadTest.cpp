@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -53,6 +53,10 @@
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
+/*
+* $Id$
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -100,7 +104,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 }
 
 
-#elif defined (AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX)
+#elif defined (AIX) || defined(SOLARIS) || defined(LINUX) || defined(HPUX) || defined (OS390)
 #include <pthread.h>
 #include <unistd.h>
 #include <errno.h>
@@ -112,6 +116,10 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 //
 //------------------------------------------------------------------------------
 
+#ifdef OS390
+extern "C" {
+#endif
+
 
 typedef void (*ThreadFunc)(void *);
 typedef void *(*pthreadfunc)(void *);
@@ -119,7 +127,7 @@ typedef void *(*pthreadfunc)(void *);
 class ThreadFuncs           // This class isolates OS dependent threading
 {                           //   functions from the rest of ThreadTest program.
 public:
-    static void Sleep(int millis); 
+    static void Sleep(int millis);
     static void startThread(ThreadFunc, void *param);
 };
 
@@ -141,7 +149,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
     x = pthread_create( &tId, pthread_attr_default,  (pthreadfunc)func,  param);
 #else
     pthread_attr_t attr;
-    pthread_attr_init(&attr); 
+    pthread_attr_init(&attr);
     x = pthread_create( &tId, &attr,  (pthreadfunc)func,  param);
 #endif
     if (x == -1)
@@ -149,8 +157,11 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
         fprintf(stderr, "Error starting thread.  Errno = %d\n", errno);
         exit(-1);
     }
-    
-}    
+
+}
+#ifdef OS390
+}
+#endif
 #else
 #error This platform is not supported
 #endif
@@ -326,14 +337,14 @@ ThreadParser::ThreadParser()
         fSAXParser->setDocumentHandler(this);
         fSAXParser->setErrorHandler(this);
     }
-    
+
 }
 
 
 
 ThreadParser::~ThreadParser()
 {
-     delete fSAXParser; 
+     delete fSAXParser;
      delete fDOMParser;
 }
 
@@ -356,12 +367,12 @@ int ThreadParser::parse(int fileNum)
                                        fInfo->fileName,
                                        false);
     }
-        
+
     try
     {
         if (gRunInfo.dom) {
             // Do a DOM parse
-            if (gRunInfo.inMemory) 
+            if (gRunInfo.inMemory)
                 fDOMParser->parse(*mbis);
             else
                 fDOMParser->parse(fInfo->fileName);
@@ -370,14 +381,14 @@ int ThreadParser::parse(int fileNum)
         }
         else
         {
-            // Do a SAX parse 
-            if (gRunInfo.inMemory) 
+            // Do a SAX parse
+            if (gRunInfo.inMemory)
                 fSAXParser->parse(*mbis);
             else
                 fSAXParser->parse(fInfo->fileName);
         }
     }
-    
+
     catch (const XMLException& e)
     {
         char *exceptionMessage = XMLString::transcode(e.getMessage());
@@ -385,7 +396,7 @@ int ThreadParser::parse(int fileNum)
             fInfo->fileName, exceptionMessage);
         delete exceptionMessage;
     }
-    
+
     delete mbis;
     return fCheckSum;
 }
@@ -452,9 +463,9 @@ void ThreadParser::domCheckSum(const DOM_Node &node)
     DOM_Node          child;
     DOM_NamedNodeMap  attributes;
 
-    switch (node.getNodeType() ) 
+    switch (node.getNodeType() )
     {
-    case DOM_Node::ELEMENT_NODE: 
+    case DOM_Node::ELEMENT_NODE:
         {
             s = node.getNodeName();   // the element name
 
@@ -503,7 +514,7 @@ void ThreadParser::domCheckSum(const DOM_Node &node)
         }
     }
 }
- 
+
 
 //
 // Recompute the checksum.  Meaningful only for DOM, will tell us whether
@@ -539,9 +550,9 @@ void ThreadParser::domPrint(const DOM_Node &node)
     DOM_Node          child;
     DOM_NamedNodeMap  attributes;
 
-    switch (node.getNodeType() ) 
+    switch (node.getNodeType() )
     {
-    case DOM_Node::ELEMENT_NODE: 
+    case DOM_Node::ELEMENT_NODE:
         {
             DOMString("<").print();
             node.getNodeName().print();   // the element name
@@ -556,7 +567,7 @@ void ThreadParser::domPrint(const DOM_Node &node)
 
             for (child=node.getFirstChild(); child!=0; child=child.getNextSibling())
                 domPrint(child);
-            
+
             DOMString("</").print();
             node.getNodeName().print();
             DOMString(">").print();
@@ -594,7 +605,7 @@ void ThreadParser::domPrint(const DOM_Node &node)
         }
     }
 }
- 
+
 
 
 
@@ -622,7 +633,7 @@ void parseCommandLine(int argc, char **argv)
     gRunInfo.dumpOnErr = false;
     gRunInfo.totalTime = 0;
     gRunInfo.numInputFiles = 0;
-    
+
     try             // Use exceptions for command line syntax errors.
     {
         int argnum = 1;
@@ -640,7 +651,7 @@ void parseCommandLine(int argc, char **argv)
                 gRunInfo.reuseParser = true;
             else if (strcmp(argv[argnum], "-dump") == 0)
                 gRunInfo.dumpOnErr = true;
-            else if (strcmp(argv[argnum], "-mem") == 0) 
+            else if (strcmp(argv[argnum], "-mem") == 0)
                 gRunInfo.inMemory = true;
             else if (strcmp(argv[argnum], "-threads") == 0)
             {
@@ -676,9 +687,9 @@ void parseCommandLine(int argc, char **argv)
                 }
                 gRunInfo.files[gRunInfo.numInputFiles-1].fileName = argv[argnum];
             }
-            argnum++; 
+            argnum++;
         }
-        
+
         // We've made it through the command line.
         //  Verify that at least one input file to be parsed was specified.
         if (gRunInfo.numInputFiles == 0)
@@ -686,8 +697,8 @@ void parseCommandLine(int argc, char **argv)
             fprintf(stderr, "No input XML file specified on command line.\n");
             throw 1;
         };
-        
-        
+
+
     }
     catch (int)
     {
@@ -722,7 +733,7 @@ void ReadFilesIntoMemory()
     int     fileNum;
     FILE    *fileF;
     size_t  t;
-    
+
     if (gRunInfo.inMemory)
     {
         for (fileNum = 0; fileNum <gRunInfo.numInputFiles; fileNum++)
@@ -764,6 +775,10 @@ void ReadFilesIntoMemory()
 //
 //----------------------------------------------------------------------
 
+#ifdef OS390
+extern "C" {
+#endif
+
 void threadMain (void *param)
 {
     ThreadInfo   *thInfo = (ThreadInfo *)param;
@@ -780,29 +795,29 @@ void threadMain (void *param)
     //
     while (true)
     {
-        
+
         if (thParser == 0)
             thParser = new ThreadParser;
-        
+
         docNum++;
-        
+
         if (docNum >= gRunInfo.numInputFiles)
             docNum = 0;
-        
+
         InFileInfo *fInfo = &gRunInfo.files[docNum];
-        
+
         if (gRunInfo.verbose )
             printf("Thread #%d: starting file %s\n", thInfo->fThreadNum, fInfo->fileName);
-        
-        
+
+
         int checkSum = 0;
         checkSum = thParser->parse(docNum);
-        
+
         if (checkSum != gRunInfo.files[docNum].checkSum)
         {
             fprintf(stderr, "\nThread %d: Parse Check sum error on file  \"%s\".  Expected %x,  got %x\n",
                 thInfo->fThreadNum, fInfo->fileName, fInfo->checkSum, checkSum);
-            
+
             // Revisit - let the loop continue to run?
             int secondTryCheckSum = thParser->reCheck();
             fprintf(stderr, "   Retry checksum is %x\n", secondTryCheckSum);
@@ -811,18 +826,22 @@ void threadMain (void *param)
             fflush(stdout);
             exit(-1);
         }
-        
+
         if (gRunInfo.reuseParser == false)
         {
             delete thParser;
             thParser = 0;
         }
-        
-        
+
+
         thInfo->fHeartBeat = true;
         thInfo->fParses++;
     }
 }
+
+#ifdef OS390
+}
+#endif
 
 
 
@@ -834,8 +853,8 @@ void threadMain (void *param)
 //----------------------------------------------------------------------
 
 int main (int argc, char **argv)
-{   
-    
+{
+
 
     parseCommandLine(argc, argv);
 
@@ -902,9 +921,9 @@ int main (int argc, char **argv)
 
     if (gRunInfo.numThreads == 0)
         exit(0);
-    
+
     gThreadInfo = new ThreadInfo[gRunInfo.numThreads];
-    
+
     int threadNum;
     for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
     {
@@ -917,7 +936,7 @@ int main (int argc, char **argv)
     //    Each second, display "+" when all threads have completed a parse
     //                 display "." if some thread hasn't since previous "+"
     //
-    
+
     unsigned long startTime = XMLPlatformUtils::getCurrentMillis();
     int elapsedSeconds = 0;
     while (gRunInfo.totalTime == 0 || gRunInfo.totalTime > elapsedSeconds)
@@ -943,14 +962,14 @@ int main (int argc, char **argv)
         }
         elapsedSeconds = (XMLPlatformUtils::getCurrentMillis() - startTime) / 1000;
     };
-    
+
     //
     //  Time's up, we are done.  (We only get here if this was a timed run)
     //  Tally up the total number of parses completed by each of the threads.
     //  To Do:  Run the main thread at higher priority, so that the worker threads
     //    won't make much progress while we are adding up the results.
-    //  
-    double totalParsesCompleted = 0;       
+    //
+    double totalParsesCompleted = 0;
     for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
     {
         totalParsesCompleted += gThreadInfo[threadNum].fParses;
