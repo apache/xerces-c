@@ -109,7 +109,6 @@ DOM_CPP_PRIVHEADERS =  \
 	AttrNSImpl.hpp \
 	CDATASectionImpl.hpp \
 	CharacterDataImpl.hpp \
-	ChildAndParentNode.hpp \
 	ChildNode.hpp \
 	CommentImpl.hpp \
 	DStringPool.hpp \
@@ -148,7 +147,6 @@ DOM_CPP_OBJECTS = \
 	AttrNSImpl.$(TO) \
 	CDATASectionImpl.$(TO) \
 	CharacterDataImpl.$(TO) \
-	ChildAndParentNode.$(TO) \
 	ChildNode.$(TO) \
 	CommentImpl.$(TO) \
 	DOMString.$(TO) \

@@ -127,6 +127,7 @@ public:
     static const unsigned short SETVALUE;
     static const unsigned short ID_ATTR;
     static const unsigned short USERDATA;
+    static const unsigned short HASSTRING;
 
     static int              gLiveNodeImpls; // Counters for debug & tuning.
     static int              gTotalNodeImpls;
@@ -262,11 +263,11 @@ public: // should really be protected - ALH
         flags = (value ? flags | IGNORABLEWS : flags & ~IGNORABLEWS);
     }
 
-    inline bool setValue() const {
+    inline bool setValueCalled() const {
         return (flags & SETVALUE) != 0;
     }
 
-    inline void setValue(bool value) {
+    inline void setValueCalled(bool value) {
         flags = (value ? flags | SETVALUE : flags & ~SETVALUE);
     }
     
@@ -284,6 +285,14 @@ public: // should really be protected - ALH
 
     inline void hasUserData(bool value) {
         flags = (value ? flags | USERDATA : flags & ~USERDATA);
+    }
+    
+    inline bool hasStringValue() const {
+        return (flags & HASSTRING) != 0;
+    }
+
+    inline void hasStringValue(bool value) {
+        flags = (value ? flags | HASSTRING : flags & ~HASSTRING);
     }
 };
 

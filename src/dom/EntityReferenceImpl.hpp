@@ -71,9 +71,9 @@
 //
 
 #include <util/XercesDefs.hpp>
-#include "ChildAndParentNode.hpp"
+#include "ParentNode.hpp"
 
-class CDOM_EXPORT EntityReferenceImpl: public ChildAndParentNode
+class CDOM_EXPORT EntityReferenceImpl: public ParentNode
 {
 private:
     DOMString name;

@@ -74,11 +74,11 @@
 #include <util/XercesDefs.hpp>
 #include "AttrImpl.hpp"
 #include "AttrMapImpl.hpp"
-#include "ChildAndParentNode.hpp"
+#include "ParentNode.hpp"
 
 class DeepNodeListImpl;
 
-class CDOM_EXPORT ElementImpl: public ChildAndParentNode {
+class CDOM_EXPORT ElementImpl: public ParentNode {
 protected:
     DOMString name;
     AttrMapImpl *attributes;

@@ -67,7 +67,7 @@
 
 DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
                                    const DOMString &dtName) 
-    : ChildAndParentNode(ownerDoc),
+    : ParentNode(ownerDoc),
     publicId(null), systemId(null), internalSubset(null) //DOM Level 2
 	, intSubsetReading(false)	
 {
@@ -84,7 +84,7 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
                                    const DOMString &qualifiedName,
                                    const DOMString &pubId,
                                    const DOMString &sysId)
-	: ChildAndParentNode(ownerDoc),
+	: ParentNode(ownerDoc),
     publicId(pubId), systemId(sysId), internalSubset(null)
 	, intSubsetReading(false)
 {
@@ -99,7 +99,7 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc,
 
 
 DocumentTypeImpl::DocumentTypeImpl(const DocumentTypeImpl &other, bool deep)
-    : ChildAndParentNode(other)
+    : ParentNode(other)
 {
     name = other.name.clone();
     if (deep)
@@ -147,7 +147,7 @@ NodeImpl *DocumentTypeImpl::cloneNode(bool deep)
  * set the ownerDocument of this node and its children
  */
 void DocumentTypeImpl::setOwnerDocument(DocumentImpl *doc) {
-    ChildAndParentNode::setOwnerDocument(doc);
+    ParentNode::setOwnerDocument(doc);
     entities->setOwnerDocument(doc);
     notations->setOwnerDocument(doc);
     //    elements->setOwnerDocument(doc);
@@ -201,7 +201,7 @@ void DocumentTypeImpl::setNodeValue(const DOMString &val)
 
 void DocumentTypeImpl::setReadOnly(bool readOnl, bool deep)
 {
-    ChildAndParentNode::setReadOnly(readOnl,deep);
+    ParentNode::setReadOnly(readOnl,deep);
     entities->setReadOnly(readOnl,true);
     notations->setReadOnly(readOnl,true);
 };

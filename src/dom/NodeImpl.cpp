@@ -89,6 +89,7 @@ const unsigned short NodeImpl::IGNORABLEWS  = 0x1<<6;
 const unsigned short NodeImpl::SETVALUE     = 0x1<<7;
 const unsigned short NodeImpl::ID_ATTR      = 0x1<<8;
 const unsigned short NodeImpl::USERDATA     = 0x1<<9;
+const unsigned short NodeImpl::HASSTRING    = 0x1<<10;
 
 
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc)

@@ -872,14 +872,6 @@ SOURCE=..\..\..\..\..\src\dom\CharacterDataImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ChildAndParentNode.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\dom\ChildAndParentNode.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\dom\ChildNode.cpp
 # End Source File
 # Begin Source File

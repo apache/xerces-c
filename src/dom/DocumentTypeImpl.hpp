@@ -73,11 +73,11 @@
 
 
 #include <util/XercesDefs.hpp>
-#include "ChildAndParentNode.hpp"
+#include "ParentNode.hpp"
 
 class NamedNodeMapImpl;
 
-class CDOM_EXPORT DocumentTypeImpl: public ChildAndParentNode {
+class CDOM_EXPORT DocumentTypeImpl: public ParentNode {
 private:
     DOMString			name;
     NamedNodeMapImpl	*entities;

@@ -83,15 +83,6 @@ ChildNode::ChildNode(const ChildNode &other)
 ChildNode::~ChildNode() {
 };
 
-void ChildNode::changed()
-{
-    //  ++changes; we just let the parent know
-    NodeImpl *parentNode = getParentNode();
-    if (parentNode != null) {
-        parentNode->changed();
-    }
-};  
-
 NodeImpl * ChildNode::getNextSibling() {
     return nextSibling;
 }; 

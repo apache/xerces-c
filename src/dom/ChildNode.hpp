@@ -87,8 +87,6 @@ public:
     ChildNode(const ChildNode &other);
     virtual ~ChildNode();
     
-    virtual void changed();
-
     virtual NodeImpl * getNextSibling();
     virtual NodeImpl * getParentNode();
     virtual NodeImpl*  getPreviousSibling();

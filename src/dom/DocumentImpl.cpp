@@ -540,13 +540,30 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
         }
         break;
     case DOM_Node::ATTRIBUTE_NODE :
-	if (source->getLocalName() == null)
-	    newnode = createAttribute(source->getNodeName());
-	else
-	    newnode = createAttributeNS(source->getNamespaceURI(),
+        {
+            if (source->getLocalName() == null)
+                newnode = createAttribute(source->getNodeName());
+            else
+                newnode = createAttributeNS(source->getNamespaceURI(),
                                         source->getNodeName());
-	deep = true;
-        // Kids carry value
+        // if source is an AttrImpl from this very same implementation
+        // avoid creating the child nodes if possible
+//        if (source instanceof AttrImpl) {
+            AttrImpl *attr = (AttrImpl *) source;
+            if (attr->hasStringValue()) {
+                AttrImpl *newattr = (AttrImpl *) newnode;
+                newattr->setValue(attr->getValue());
+                deep = false;
+            }
+            else {
+                deep = true;
+            }
+//        }
+//        else {
+//            // Kids carry value
+//            deep = true;
+//        }
+        }
         break;
     case DOM_Node::TEXT_NODE :
         newnode = createTextNode(source->getNodeValue());

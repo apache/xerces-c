@@ -65,100 +65,7 @@
 //
 
 /*
- * $Log$
- * Revision 1.24  2000/11/30 19:46:07  andyh
- * DOM_Text::splitText(), fix off by one error in the test for index too big error.
- * Tinny Ng
- *
- * Revision 1.23  2000/10/13 22:47:37  andyh
- * Fix bug (failure to null-terminate result) in XMLString::trim().
- * Patch contributed by Nadav Aharoni
- *
- * Revision 1.22  2000/05/09 00:22:48  andyh
- * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
- * allocated memory; memory leak checking tools will no longer report
- * that leaks exist.  (DOM GetElementsByTagID temporarily removed
- * as part of this.)
- *
- * Revision 1.21  2000/04/18 01:07:28  aruna1
- * Rectified memory leak caused by doctype-getNodeName()
- *
- * Revision 1.20  2000/03/11 03:00:13  chchou
- * Fix bug # 18, remove set method of readonly attributes.
- * As a result, remove related test cases
- *
- * Revision 1.19  2000/03/10 02:15:15  chchou
- * add null DOM_DocumentType constructor
- *
- * Revision 1.18  2000/03/02 19:55:44  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.17  2000/02/29 02:19:12  rahulj
- * No more compilation errors under HPUX 11.0. We do not build
- * DOMMemTest as it crashes the aCC compiler.
- *
- * Revision 1.16  2000/02/17 21:56:02  andyh
- * Update to match W3C Dom Level 2 spec changes
- *
- * Revision 1.15  2000/02/15 23:15:28  andyh
- * Add additional tests to DOMMemTest
- *
- * Revision 1.13  2000/02/06 07:48:35  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.12  2000/02/05 01:19:19  andyh
- * Add more DOMString tests.  Fix limit test error in DOMString::insertData()
- * Andy Heninger  heninger@us.ibm.com
- *
- * Revision 1.11  2000/02/03 23:07:28  andyh
- * Add several new functions from Robert Weir to DOMString.
- *
- * Revision 1.10  2000/01/29 00:39:09  andyh
- * Redo synchronization in DOMStringHandle allocator.  There
- * was a bug in the use of Compare and Swap.  Switched to mutexes.
- *
- * Changed a few plain deletes to delete [].
- *
- * Revision 1.9  2000/01/22 01:38:32  andyh
- * Remove compiler warnings in DOM impl classes
- *
- * Revision 1.8  2000/01/20 20:37:25  andyh
- * Remove DEVENV_VCPP preprocessor variable everywhere.
- * It was obsolete, left over from an earlier configuration system.
- * And it was not set correctly in all projects.
- *
- * Should fix build problem reported by some with use of
- * InterlockedCompareExchange() on Windows with VC6.
- *
- * Revision 1.6  2000/01/19 21:40:58  andyh
- * Remove a few remaining dependencies on the (now defunct)
- * XML StdOut stream.
- *
- * Revision 1.5  2000/01/18 19:57:30  andyh
- * Add some DOM L2 tests
- *
- * Revision 1.4  1999/12/17 02:09:41  andyh
- * Fix bug in DOMString::insertData() that occured if the source
- * and destination strings were the same and the orginal buffer had
- * enough space to hold the result.
- *
- * Revision 1.3  1999/12/10 18:35:15  andyh
- * Removed spurious debug output from DOMMemTest.
- * Udated MSVC project files for Release build of DOMTest and DOMMemTest,
- *    these weren't set up before.
- *
- * Revision 1.2  1999/12/03 00:02:25  andyh
- * DOM tests updated to catch DOMException by ref.
- * Added tests of DOMString::transcode() and append()
- *
- * Revision 1.1.1.1  1999/11/09 01:02:43  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:42:24  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #include <stdio.h>
@@ -802,6 +709,23 @@ void DOMBasicTests()
 
         attr01.setValue("Attr03Value1");
         attr01.setValue("Attr03Value2");
+    }
+    TESTEPILOG;
+
+
+    //
+    //  Attr04
+    //
+    TESTPROLOG;
+    {
+        DOM_Document    doc = DOM_Document::createDocument();
+        DOM_Element     rootEl  = doc.createElement("RootElement");
+        doc.appendChild(rootEl);
+        DOM_Attr        attr01  = doc.createAttribute("Attr04");
+        rootEl.setAttributeNode(attr01);
+
+        attr01.setValue("Attr04Value1");
+        DOM_Node value = attr01.getFirstChild();
     }
     TESTEPILOG;
 

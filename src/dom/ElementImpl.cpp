@@ -70,7 +70,7 @@
 
 
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &eName)
-    : ChildAndParentNode(ownerDoc)
+    : ParentNode(ownerDoc)
 {
     name = eName.clone();
     attributes = null;
@@ -79,7 +79,7 @@ ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &eName)
 
 
 ElementImpl::ElementImpl(const ElementImpl &other, bool deep)
-    : ChildAndParentNode(other)
+    : ParentNode(other)
 {
     name = other.name.clone();
 	attributes = null;
@@ -112,7 +112,7 @@ NodeImpl *ElementImpl::cloneNode(bool deep)
  * set the ownerDocument of this node, its children, and its attributes
  */
 void ElementImpl::setOwnerDocument(DocumentImpl *doc) {
-    ChildAndParentNode::setOwnerDocument(doc);
+    ParentNode::setOwnerDocument(doc);
 	if (attributes != null)
 		attributes->setOwnerDocument(doc);
 }
@@ -278,7 +278,7 @@ void ElementImpl::setNodeValue(const DOMString &x)
 
 void ElementImpl::setReadOnly(bool readOnl, bool deep)
 {
-    ChildAndParentNode::setReadOnly(readOnl,deep);
+    ParentNode::setReadOnly(readOnl,deep);
     attributes->setReadOnly(readOnl,true);
 };
 

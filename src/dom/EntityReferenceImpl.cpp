@@ -122,7 +122,7 @@
 
 EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc,
                                          const DOMString &entityName)
-    : ChildAndParentNode(ownerDoc)
+    : ParentNode(ownerDoc)
 {
     name = entityName.clone();
     // EntityReference behaves as a read-only node, since its contents
@@ -135,7 +135,7 @@ EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc,
 
 EntityReferenceImpl::EntityReferenceImpl(const EntityReferenceImpl &other,
                                          bool deep)
-    : ChildAndParentNode(other)
+    : ParentNode(other)
 {
     name = other.name.clone();
     if (deep)
@@ -196,5 +196,5 @@ void EntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
 {
     if(readOnl==false)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,null);
-    ChildAndParentNode::setReadOnly(readOnl,deep);
+    ParentNode::setReadOnly(readOnl,deep);
 }
