@@ -73,10 +73,10 @@ DOM/DOMTest/Makefile \
 DOM/DOMIDTest/Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
-IDOM/ITraversal/Makefile \
+IDom/ITraversal/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
-IDOM/IRangeTest/Makefile \
+IDom/IRangeTest/Makefile \
 ThreadTest/Makefile \
 IThreadTest/Makefile])
 

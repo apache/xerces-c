@@ -81,7 +81,7 @@ include ../../../version.incl
 include ../../Makefile.incl
 
 APP_NAME=IRangeTest
-APP_DIR=DOM/IRangeTest
+APP_DIR=IDom/IRangeTest
 
 OUTDIR= ${XERCESCROOT}/tests/${APP_DIR}
 EXEC=	${XERCESCROOT}/bin

@@ -61,12 +61,12 @@ DOMIDTest_DIR=DOM/DOMIDTest
 DOMMemTest_DIR=DOM/DOMMemTest
 DOMTest_DIR=DOM/DOMTest
 Traversal_DIR=DOM/Traversal
-ITraversal_DIR=IDOM/ITraversal
+ITraversal_DIR=IDom/ITraversal
 ThreadTest_DIR=ThreadTest
 IThreadTest_DIR=IThreadTest
 EncodingTest_DIR=EncodingTest
 DOMRange_DIR=DOM/RangeTest
-IDOMRange_DIR=IDOM/IRangeTest
+IDOMRange_DIR=IDom/IRangeTest
 
 LIB_DIR=${XERCESCROOT}/lib
 

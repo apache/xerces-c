@@ -81,7 +81,7 @@ include ../../../version.incl
 include ../../Makefile.incl
 
 APP_NAME=ITraversal
-APP_DIR=IDOM/ITraversal
+APP_DIR=IDom/ITraversal
 
 OUTDIR= ${XERCESCROOT}/tests/${APP_DIR}
 EXEC=	${XERCESCROOT}/bin
