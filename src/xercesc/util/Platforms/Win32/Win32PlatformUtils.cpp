@@ -103,6 +103,8 @@
     #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 #elif defined (XML_USE_WIN32_MSGLOADER)
     #include <xercesc/util/MsgLoaders/Win32/Win32MsgLoader.hpp>
+#elif defined(XML_USE_ICU_MESSAGELOADER)
+    #include <xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp>
 #else
     #error A message loading service must be chosen
 #endif
@@ -862,6 +864,8 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     return new InMemMsgLoader(msgDomain);
 #elif defined (XML_USE_WIN32_MSGLOADER)
     return new Win32MsgLoader(msgDomain);
+#elif defined (XML_USE_ICU_MESSAGELOADER)
+    return new ICUMsgLoader(msgDomain);
 #else
     #error You must provide a message loader
 #endif
