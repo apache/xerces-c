@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2004/09/14 19:47:30  amassari
+ * The signature for implementation for ArrayJanitor::reset was not aligned with the declaration (jira#1261)
+ *
  * Revision 1.6  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -214,7 +217,7 @@ ArrayJanitor<T>::reset(T* p)
 }
 
 template <class T> void
-ArrayJanitor<T>::reset(T* p, MemoryManager* manager)
+ArrayJanitor<T>::reset(T* p, MemoryManager* const manager)
 {
 	if (fData) {
 
