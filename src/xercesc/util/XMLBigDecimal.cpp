@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/12/17 20:42:16  neilg
+ * fix two overflow conditions
+ *
  * Revision 1.16  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -241,7 +244,7 @@ void XMLBigDecimal::setDecimalValue(const XMLCh* const strValue)
 XMLCh* XMLBigDecimal::getCanonicalRepresentation(const XMLCh*         const rawData
                                                ,       MemoryManager* const memMgr)
 {
-    XMLCh* retBuf = (XMLCh*) memMgr->allocate( XMLString::stringLen(rawData) * sizeof(XMLCh));
+    XMLCh* retBuf = (XMLCh*) memMgr->allocate( (XMLString::stringLen(rawData)+1) * sizeof(XMLCh));
     ArrayJanitor<XMLCh> janName(retBuf, memMgr);
     int   sign, totalDigits, fractDigits;
 

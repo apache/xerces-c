@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/17 20:42:16  neilg
+ * fix two overflow conditions
+ *
  * Revision 1.8  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -119,7 +122,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 XMLCh* XMLBigInteger::getCanonicalRepresentation(const XMLCh*         const rawData
                                                ,       MemoryManager* const memMgr)
 {
-    XMLCh* retBuf = (XMLCh*) memMgr->allocate( XMLString::stringLen(rawData) * sizeof(XMLCh));
+    XMLCh* retBuf = (XMLCh*) memMgr->allocate( (XMLString::stringLen(rawData)+1) * sizeof(XMLCh));
     int    sign = 0;
 
     XMLBigInteger::parseBigInteger(rawData, retBuf, sign);
