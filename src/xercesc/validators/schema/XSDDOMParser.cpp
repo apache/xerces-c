@@ -143,3 +143,4 @@ InputSource* XSDDOMParser::resolveEntity(const XMLCh* const publicId,
 
     return 0;
 }
+
