@@ -83,6 +83,7 @@ Redirect/Makefile \
 PParse/Makefile \
 StdInParse/Makefile \
 EnumVal/Makefile \
+SEnumVal/Makefile \
 CreateDOMDocument/Makefile])
 
 echo

@@ -70,6 +70,7 @@ MemParse_DIR=MemParse
 PParse_DIR=PParse
 StdInParse_DIR=StdInParse
 EnumVal_DIR=EnumVal
+SEnumVal_DIR=SEnumVal
 CreateDOMDocument_DIR=CreateDOMDocument
 
 LIB_DIR=${XERCESCROOT}/lib
@@ -80,7 +81,7 @@ CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
 
-all::	saxprint sax2print saxcount sax2count domprint domcount idomprint idomcount redirect memparse pparse stdinparse enumval createdomdocument
+all::	saxprint sax2print saxcount sax2count domprint domcount idomprint idomcount redirect memparse pparse stdinparse enumval senumval createdomdocument
 
 saxprint::
 	@echo Building "SAXPrint"
@@ -133,6 +134,10 @@ stdinparse::
 enumval::
 	@echo Building "EnumVal"
 	cd $(EnumVal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+
+senumval::
+	@echo Building "SEnumVal"
+	cd $(SEnumVal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
 createdomdocument::
 	@echo Building "CreateDOMDocument"
