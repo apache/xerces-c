@@ -84,8 +84,8 @@ const XMLCh MacOSUnicodeConverter::fgMyServiceId[] =
 const XMLCh MacOSUnicodeConverter::fgMacLCPEncodingName[] =
 {
         chLatin_M, chLatin_a, chLatin_c, chLatin_O, chLatin_S, chLatin_L
-    ,   chLatin_C, chLatin_P, chLatin_E, chLatin_c, chLatin_o, chLatin_d
-    ,   chLatin_i, chLatin_n, chLatin_g,  chNull
+    ,   chLatin_C, chLatin_P, chLatin_E, chLatin_n, chLatin_c, chLatin_o
+    ,   chLatin_d, chLatin_i, chLatin_n, chLatin_g, chNull
 };
 
 
@@ -97,7 +97,7 @@ MacOSUnicodeConverter::MacOSUnicodeConverter()
   : fCollator(NULL)
 {
 	//	Test for presense of unicode collation functions
-	fHasUnicodeCollation = (UCCompareTextDefault != (void*)kUnresolvedCFragSymbolAddress);
+	fHasUnicodeCollation = (UCCompareText != (void*)kUnresolvedCFragSymbolAddress);
     
     //  Create a unicode collator for doing string comparisons
     if (fHasUnicodeCollation)
