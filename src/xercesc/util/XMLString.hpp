@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2004/09/02 19:08:09  cargilld
+ * Fix API Doc warning message
+ *
  * Revision 1.26  2004/08/11 16:07:27  peiyongz
  * isValidNOTATION
  *
@@ -318,7 +321,7 @@ public:
       * The behavior of <code>catString</code> is undefined if source and destination
       * strings overlap.
       *
-      *    @param target Null-terminated destination string
+      * @param target Null-terminated destination string
       * @param src Null-terminated source string
       */
     static void catString
@@ -633,6 +636,7 @@ public:
       *
       * @param toHash The string to hash
       * @param hashModulus The divisor to be used for hashing
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the hash value
       */
     static unsigned int hash
@@ -646,6 +650,7 @@ public:
       *
       * @param toHash The string to hash
       * @param hashModulus The divisor to be used for hashing
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the hash value
       */
     static unsigned int hash
@@ -661,7 +666,7 @@ public:
       * @param toHash The string to hash
       * @param numChars The maximum number of characters to consider for hashing
       * @param hashModulus The divisor to be used for hashing
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the hash value
       */
     static unsigned int hashN
@@ -702,7 +707,8 @@ public:
       *
       * @param toSearch The string to search
       * @param chToFind The character to search within the string
-      * @param fromIndex The index to start earch from
+      * @param fromIndex The index to start searching from
+      * @param manager The MemoryManager to use to allocate objects
       * @return If found, returns the index of the character within the string,
       * else returns -1.
       */
@@ -720,7 +726,8 @@ public:
       *
       * @param toSearch The string to search
       * @param chToFind The character to search within the string
-      * @param fromIndex The index to start search from
+      * @param fromIndex The index to start searching from
+      * @param manager The MemoryManager to use to allocate objects
       * @return If found, returns the index of the character within the string,
       * else returns -1.
       */
@@ -775,6 +782,7 @@ public:
       * @param toSearch The string to search
       * @param chToFind The character to search within the string
       * @param fromIndex The index to start backward search from
+      * @param manager The MemoryManager to use to allocate objects
       * @return If found, returns the index of the character within the string,
       * else returns -1.
       */
@@ -793,6 +801,7 @@ public:
       * @param toSearch The string to search
       * @param ch       The character to search within the string
       * @param fromIndex The index to start backward search from
+      * @param manager The MemoryManager to use to allocate objects
       * @return If found, returns the index of the character within the string,
       * else returns -1.
       */
@@ -830,6 +839,7 @@ public:
       * @param srcStr The string to copy the chars from
       * @param startIndex beginning index, inclusive.
       * @param endIndex the ending index, exclusive.
+      * @param manager The MemoryManager to use to allocate objects
       */
     static void subString
     (
@@ -847,6 +857,7 @@ public:
       * @param srcStr The string to copy the chars from
       * @param startIndex beginning index, inclusive.
       * @param endIndex the ending index, exclusive.
+      * @param manager The MemoryManager to use to allocate objects
       */
     static void subString
     (
@@ -1129,6 +1140,7 @@ public:
       * @param maxChars The maximum number of output characters that can be
       *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
       * will be done
       */
     static void binToText
@@ -1148,6 +1160,7 @@ public:
       * @param maxChars The maximum number of output characters that can be
       *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
       * will be done
       */
     static void binToText
@@ -1167,6 +1180,7 @@ public:
       * @param maxChars The maximum number of output characters that can be
       *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
       * will be done
       */
     static void binToText
@@ -1186,6 +1200,7 @@ public:
       * @param maxChars The maximum number of output characters that can be
       *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
       * will be done
       */
     static void binToText
@@ -1205,6 +1220,7 @@ public:
       * @param maxChars The maximum number of output characters that can be
       *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
       * will be done
       */
     static void binToText
@@ -1224,6 +1240,7 @@ public:
       * @param maxChars The maximum number of output characters that can be
       *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
       * will be done
       */
     static void binToText
@@ -1243,6 +1260,7 @@ public:
       * @param maxChars The maximum number of output characters that can be
       *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
       * will be done
       */
     static void binToText
@@ -1262,6 +1280,7 @@ public:
       * @param maxChars The maximum number of output characters that can be
       *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
+      * @param manager The MemoryManager to use to allocate objects
       * will be done
       */
     static void binToText
@@ -1282,6 +1301,7 @@ public:
       * @param toConvert The string of digits to convert
       * @param toFill    The unsigned int value to fill with the converted
       *                  value.
+      * @param manager The MemoryManager to use to allocate objects
       */
     static bool textToBin
     (
@@ -1301,6 +1321,7 @@ public:
       * but the remainder must be all decimal digits.
       *
       * @param toConvert The string of digits to convert
+      * @param manager The MemoryManager to use to allocate objects
       */
     static int parseInt
     (
@@ -1325,7 +1346,7 @@ public:
       * responsibility of the caller to delete it when not longer needed.
       * You can call XMLString::release to release this returned buffer.
       *
-      * @param toTranscode The string to be transcoded
+      * @param toTranscode The string to be transcoded      
       * @return Returns the transcoded string
       * @see   XMLString::release(XMLCh**)
       */
@@ -1351,6 +1372,7 @@ public:
       * @param maxChars The maximum number of bytes that the output
       *         buffer can hold (not including the null, which is why
       *         toFill should be at least maxChars+1.).
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns true if successful, false if there was an error
       */
     static bool transcode
@@ -1367,7 +1389,7 @@ public:
       * responsibility of the caller to delete it when not longer needed.
       * You can call XMLString::release to release this returned buffer.
       *
-      * @param toTranscode The string to be transcoded
+      * @param toTranscode The string to be transcoded     
       * @return Returns the transcoded string
       * @see   XMLString::release(char**)
       */
@@ -1388,6 +1410,7 @@ public:
       * @param maxChars The maximum number of characters that the output
       *         buffer can hold (not including the null, which is why
       *         toFill should be at least maxChars+1.).
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns true if successful, false if there was an error
       */
     static bool transcode
@@ -1416,6 +1439,7 @@ public:
       * stored in a string vector.  The caller owns the string vector
       * that is returned, and is responsible for deleting it.
       * @param tokenizeSrc String to be tokenized
+      * @param manager The MemoryManager to use to allocate objects
       * @return a vector of all the tokenized string
       */
     static BaseRefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc
@@ -1452,6 +1476,7 @@ public:
       * @param text2 Replacement text-two
       * @param text3 Replacement text-three
       * @param text4 Replacement text-four
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the count of characters that are outputted
       */
     static unsigned int replaceTokens
@@ -1490,6 +1515,7 @@ public:
 	/** Replace whitespace
       * @param toConvert The string which needs to be whitespace replaced.
       *        On return , this buffer also holds the converted string
+      * @param manager The MemoryManager to use to allocate objects
       */
     static void replaceWS(XMLCh* const toConvert
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager);
@@ -1497,6 +1523,7 @@ public:
 	/** Collapse whitespace
       * @param toConvert The string which needs to be whitespace collapsed.
       *        On return , this buffer also holds the converted string
+      * @param manager The MemoryManager to use to allocate objects
       */
     static void collapseWS(XMLCh* const toConvert
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager);
@@ -1504,6 +1531,7 @@ public:
     /** Remove whitespace
       * @param toConvert The string which needs to be whitespace removed.
       *        On return , this buffer also holds the converted string
+      * @param manager The MemoryManager to use to allocate objects
       */
     static void removeWS(XMLCh* const toConvert
     , MemoryManager*       const manager = XMLPlatformUtils::fgMemoryManager);
@@ -1511,8 +1539,8 @@ public:
 
     /** Remove character
       * @param srcString The string 
-      *        toRemove  The character needs to be removed from the string
-      *        dstBuffer The buffer containning the result
+      * @param toRemove  The character needs to be removed from the string
+      * @param dstBuffer The buffer containning the result
       */
     static void removeChar(const XMLCh*     const srcString
                          , const XMLCh&           toRemove

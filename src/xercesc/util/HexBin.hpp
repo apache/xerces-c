@@ -99,6 +99,7 @@ public :
      * of the string returned.
      * 
      * @param hexData A string containing the HexBinary
+     * @param manager The MemoryManager to use to allocate the string
      *
      * return: the canonical representation of the HexBinary
      *         if it is a valid HexBinary, 
@@ -122,7 +123,7 @@ public :
      * the returned buffer.
      *
      * @param hexData HexBinary data in XMLCh stream.
-     * @param memMgr client provided memory manager
+     * @param manager client provided memory manager
      * @return Decoded binary data in XMLCh stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLCh**)

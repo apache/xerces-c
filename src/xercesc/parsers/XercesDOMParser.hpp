@@ -424,8 +424,8 @@ public :
       * This method allows the user installed Error Handler callback to
       * 'reset' itself.
       *
-      * <b><font color="#FF0000">This method is a no-op for this DOM
-      * implementation.</font></b>
+      * <b>This method is a no-op for this DOM
+      * implementation.</b>
       */
     virtual void resetErrors();
     //@}
@@ -443,8 +443,8 @@ public :
       * This method is used to indicate the end of parsing of an external
       * entity file.
       *
-      * <b><font color="#FF0000">This method is a no-op for this DOM
-      * implementation.</font></b>
+      * <b>This method is a no-op for this DOM
+      * implementation.</b>
       *
       * @param inputSource A const reference to the InputSource object
       *                    which points to the XML file being parsed.
@@ -458,8 +458,8 @@ public :
       * process any system id's of enternal entities encountered in
       * the XML file being parsed, such as redirection etc.
       *
-      * <b><font color="#FF0000">This method always returns 'false'
-      * for this DOM implementation.</font></b>
+      * <b>This method always returns 'false'
+      * for this DOM implementation.</b>
       *
       * @param systemId  A const pointer to an Unicode string representing
       *                  the system id scanned by the parser.
@@ -478,8 +478,8 @@ public :
       * This method allows the installed XMLEntityHandler to reset
       * itself.
       *
-      * <b><font color="#FF0000">This method is a no-op for this DOM
-      * implementation.</font></b>
+      * <b>This method is a no-op for this DOM
+      * implementation.</b>
       */
     virtual void resetEntities();
 
@@ -539,8 +539,8 @@ public :
       * This method is used to indicate the start of parsing an external
       * entity file.
       *
-      * <b><font color="#FF0000">This method is a no-op for this DOM parse
-      * implementation.</font></b>
+      * <b>This method is a no-op for this DOM parse
+      * implementation.</b>
       *
       * @param inputSource A const reference to the InputSource object
       *                    which points to the external entity

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.22  2004/09/02 19:08:09  cargilld
+ * Fix API Doc warning message
+ *
  * Revision 1.21  2004/08/11 16:50:47  peiyongz
  * getValue()/isDataConverted()
  *
@@ -243,6 +246,7 @@ protected:
 	 *
 	 * @param   lValue the object to compare with.
 	 * @param   rValue the object to compare against.
+     * @param manager The MemoryManager to use to allocate objects
 	 * @return  <code>true</code> if the objects are the same;
 	 *          <code>false</code> otherwise.
 	 */

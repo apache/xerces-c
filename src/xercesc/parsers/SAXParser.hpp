@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2004/09/02 19:08:09  cargilld
+ * Fix API Doc warning message
+ *
  * Revision 1.30  2004/04/13 18:58:36  peiyongz
  * correct comment
  *
@@ -1609,8 +1612,8 @@ public :
       * This method is used to report the XML decl scanned by the parser.
       * Refer to the XML specification to see the meaning of parameters.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param versionStr A const pointer to a Unicode string representing
       *                   version string value.
@@ -1677,8 +1680,8 @@ public :
       * This method allows the user installed Error Handler
       * callback to 'reset' itself.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       */
     virtual void resetErrors();
@@ -1695,8 +1698,8 @@ public :
       * This method is used to indicate the end of parsing of an external
       * entity file.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param inputSource A const reference to the InputSource object
       *                    which points to the XML file being parsed.
@@ -1709,8 +1712,8 @@ public :
       * process any system id's of enternal entities encountered in
       * the XML file being parsed, such as redirection etc.
       *
-      * <b><font color="#FF0000">This method always returns 'false'
-      * for this SAX driver implementation.</font></b>
+      * <b>This method always returns 'false'
+      * for this SAX driver implementation.</b>
       *
       * @param systemId  A const pointer to an Unicode string representing
       *                  the system id scanned by the parser.
@@ -1728,8 +1731,8 @@ public :
       * This method allows the installed XMLEntityHandler to reset
       * itself.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       */
     virtual void resetEntities();
 
@@ -1787,8 +1790,8 @@ public :
       * This method is used to indicate the start of parsing an
       * external entity file.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param inputSource A const reference to the InputSource object
       *                    which points to the external entity
@@ -1806,8 +1809,8 @@ public :
     /**
       * This method is used to report an attribute definition.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX
-      * driver implementation.</font></b>
+      * <b>This method is a no-op for this SAX
+      * driver implementation.</b>
       *
       * @param elemDecl A const reference to the object containing information
       *                 about the element whose attribute definition was just
@@ -1827,8 +1830,8 @@ public :
     /**
       * This method is used to report a comment occurring within the DTD.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param comment  A const pointer to a Unicode string representing the
       *                 text of the comment just parsed.
@@ -1841,8 +1844,8 @@ public :
     /**
       * This method is used to report the DOCTYPE declaration.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param elemDecl A const reference to the object containing information
       *                 about the root element definition declaration of the
@@ -1869,8 +1872,8 @@ public :
       * This method is used to report any PI declarations
       * occurring inside the DTD definition block.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param target A const pointer to a Unicode string representing the
       *               target of the PI declaration.
@@ -1888,8 +1891,8 @@ public :
       * This method is used to report any whitespaces
       * occurring inside the DTD definition block.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param chars  A const pointer to a Unicode string representing the
       *               whitespace characters.
@@ -1905,8 +1908,8 @@ public :
       * This method is used to report an element declarations
       * successfully scanned by the parser.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param decl   A const reference to the object containing element
       *               declaration information.
@@ -1923,8 +1926,8 @@ public :
       * This method is used to report the end of an attribute
       * list declaration for an element.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param elemDecl A const reference to the object containing element
       *                 declaration information.
@@ -1937,16 +1940,16 @@ public :
     /**
       * This method is used to report the end of the internal subset.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       */
     virtual void endIntSubset();
 
     /**
       * This method is used to report the end of the external subset.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       */
     virtual void endExtSubset();
 
@@ -1999,8 +2002,8 @@ public :
       * This method is used to indicate the start of an element's attribute
       * list declaration.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param elemDecl A const reference to the object containing element
       *                 declaration information.
@@ -2013,16 +2016,16 @@ public :
     /**
       * This method is used indicate the start of the internal subset.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       */
     virtual void startIntSubset();
 
     /**
       * This method is used indicate the start of the external subset.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       */
     virtual void startExtSubset();
 
@@ -2030,8 +2033,8 @@ public :
       * This method is used to report the TextDecl. Refer to the XML
       * specification for the syntax of a TextDecl.
       *
-      * <b><font color="#FF0000">This method is a no-op for this SAX driver
-      * implementation.</font></b>
+      * <b>This method is a no-op for this SAX driver
+      * implementation.</b>
       *
       * @param versionStr A const pointer to a Unicode string representing
       *                   the version number of the 'version' clause.

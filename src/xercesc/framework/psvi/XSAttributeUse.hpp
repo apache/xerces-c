@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/09/02 19:08:09  cargilld
+ * Fix API Doc warning message
+ *
  * Revision 1.7  2003/12/19 23:02:43  cargilld
  * Fix compiler messages on OS390.
  *
@@ -110,7 +113,8 @@ public:
 
     /**
       * The default constructor 
-      *
+      * @param  xsAttDecl
+      * @param  xsModel
       * @param  manager     The configurable memory manager
       */
     XSAttributeUse

@@ -251,6 +251,7 @@ public :
       * of any interest, and hence should be the one returned.
       *
       * @param theFile The file handle
+      * @param manager The MemoryManager to use to allocate objects
       */
     static unsigned int curFilePos(FileHandle theFile
         , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
@@ -263,6 +264,7 @@ public :
       * resources it contains.
       *
       * @param theFile The file handle to close
+      * @param manager The MemoryManager to use to allocate objects
       */
     static void closeFile(FileHandle theFile
         , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
@@ -274,7 +276,7 @@ public :
       * represented by the passed handle.
       *
       * @param theFile The file handle whose size you want
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the size of the file in bytes
       */
     static unsigned int fileSize(FileHandle theFile
@@ -287,7 +289,7 @@ public :
       * null handle pointer should be returned.
       *
       * @param fileName The string containing the name of the file
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return The file handle of the opened file
       */
     static FileHandle openFile(const char* const fileName
@@ -300,7 +302,7 @@ public :
       * null handle pointer should be returned.
       *
       * @param fileName The string containing the name of the file
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return The file handle of the opened file
       */
     static FileHandle openFile(const XMLCh* const fileName
@@ -313,7 +315,7 @@ public :
       * null handle pointer should be returned.
       *
       * @param fileName The string containing the name of the file
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return The file handle of the opened file
       */
     static FileHandle openFileToWrite(const char* const fileName
@@ -326,7 +328,7 @@ public :
       * null handle pointer should be returned.
       *
       * @param fileName The string containing the name of the file
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return The file handle of the opened file
       */
     static FileHandle openFileToWrite(const XMLCh* const fileName
@@ -339,6 +341,7 @@ public :
       * It should be a copy of the standard input handle, since it will
       * be closed later!
       *
+      * @param manager The MemoryManager to use to allocate objects
       * @return The file handle of the standard input stream
       */
     static FileHandle openStdInHandle(MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
@@ -355,6 +358,7 @@ public :
       * @param toRead The maximum number of byte to read from the current
       * position
       * @param toFill The byte buffer to fill
+      * @param manager The MemoryManager to use to allocate objects
       *
       * @return Returns the number of bytes read from the stream or file
       */
@@ -377,7 +381,7 @@ public :
       * @param toWrite The maximum number of byte to write from the current
       * position
       * @param toFlush The byte buffer to flush
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return void
       */
     static void writeBufferToFile
@@ -395,6 +399,7 @@ public :
       * the file.
       *
       * @param theFile The file handle that you want to reset
+      * @param manager The MemoryManager to use to allocate objects
       */
     static void resetFile(FileHandle theFile
         , MemoryManager* const manager  = XMLPlatformUtils::fgMemoryManager);
@@ -435,7 +440,7 @@ public :
       *
       * This must be implemented by the per-platform driver. It returns 
       * the current working directory is. 
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns the current working directory. 
       *         This is dyanmically allocated and must be deleted
       *         by the caller when its no longer needed! The memory returned
@@ -466,7 +471,7 @@ public :
       * slash dot slash.
       *
       * @param srcPath The path for which you want to remove the dot slash sequence.
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return 
       */
     static void   removeDotSlash(XMLCh* const srcPath
@@ -479,7 +484,7 @@ public :
       *
       * @param srcPath The path for which you want to remove the slash dot
       *        dot slash sequence and its preceding path segment.
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return 
       */
     static void   removeDotDotSlash(XMLCh* const srcPath
@@ -495,7 +500,7 @@ public :
       * for any platform.
       *
       * @param toCheck The file name which you want to check
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns true if the filename appears to be relative
       */
     static bool isRelative(const XMLCh* const toCheck
@@ -516,7 +521,7 @@ public :
       *
       * @param basePath The string containing the base path
       * @param relativePath The string containing the relative path
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return Returns a string containing the 'woven' path. It should
       * be dynamically allocated and becomes the responsibility of the
       * caller to delete.

@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/09/02 19:08:09  cargilld
+ * Fix API Doc warning message
+ *
  * Revision 1.10  2003/12/01 23:23:25  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -198,9 +201,9 @@ public:
      * @param manager    Pointer to the memory manager to be used to
      *                   allocate objects.
      * @param gramPool   The collection of cached grammers.
-     * @return The newly created <code>DOMBuilder<code> object. This
+     * @return The newly created <code>DOMBuilder</code> object. This
      * <code>DOMBuilder</code> is either synchronous or asynchronous depending
-     * on the value of the <code>mode<code> argument.
+     * on the value of the <code>mode</code> argument.
      * @exception DOMException NOT_SUPPORTED_ERR: Raised if the requested mode
      * or schema type is not supported.
      *
@@ -219,7 +222,7 @@ public:
      *
      * <p><b>"Experimental - subject to change"</b></p>
      *
-     * @return The newly created <code>DOMWriter<code> object.
+     * @return The newly created <code>DOMWriter</code> object.
      *
      * @see DOMWriter
      * @since DOM Level 3
@@ -231,7 +234,7 @@ public:
      *
      * <p><b>"Experimental - subject to change"</b></p>
      *
-     * @return The newly created <code>DOMInputSource<code> object.
+     * @return The newly created <code>DOMInputSource</code> object.
      * @exception DOMException NOT_SUPPORTED_ERR: Raised if this function is not
      * supported by implementation
      *

@@ -88,6 +88,7 @@ public:
     * @param  inputSource  The SAX InputSource to be wrapped
     * @param  adoptFlag    Indicates if the wrapper should adopt the wrapped
     *                      SAX InputSource. Default is true.
+    * @param manager The MemoryManager to use to allocate objects
     */
     Wrapper4InputSource(InputSource* const inputSource
                         , const bool adoptFlag = true

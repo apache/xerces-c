@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.9  2004/09/02 19:08:09  cargilld
+  * Fix API Doc warning message
+  *
   * Revision 1.8  2004/02/25 18:29:16  amassari
   * Fixed typo in documentation
   *
@@ -366,13 +369,12 @@ public:
       *                         most recent endElement() callback
       * @param  typeURI         namespace of the type that actually validated
       *                         the content of the element corresponding to the
-      *                         most recent endElement() callback
-      * @experimental
+      *                         most recent endElement() callback      
       */
     virtual void elementTypeInfo
     (
-        const   XMLCh* const
-        , const XMLCh* const
+        const   XMLCh* const /* typeName */
+        , const XMLCh* const /* typeURI */
     ) { /* non pure virtual to permit backward compatibility of implementations.  */  };
     //@}
 

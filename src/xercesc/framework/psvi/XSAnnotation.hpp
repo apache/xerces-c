@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/09/02 19:08:09  cargilld
+ * Fix API Doc warning message
+ *
  * Revision 1.9  2004/04/02 16:51:05  peiyongz
  * Better error report support
  *
@@ -158,7 +161,7 @@ public:
      * attribute nodes of the serialized <code>annotation</code>. 
      * @param node  A target pointer to the annotation target object, i.e.
      * either <code>DOMDocument</code> or <code>DOMElement</code> cast as 
-     * <code>DOMNode</code). 
+     * <code>DOMNode</code>. 
      * @param targetType  A target type.    
      */
  

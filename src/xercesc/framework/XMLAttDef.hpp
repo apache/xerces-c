@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/09/02 19:08:09  cargilld
+ * Fix API Doc warning message
+ *
  * Revision 1.12  2003/12/17 00:18:33  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -252,7 +255,7 @@ public:
       * type, mostly for debug or display.
       *
       * @param attrType The attribute type value to get the string for.
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return A const pointer to the static string that holds the text
       *         description of the passed type.
       */
@@ -265,7 +268,7 @@ public:
       * attributetype, mostly for debug or display.
       *
       * @param attrType The default attribute type value to get the string for.
-      *
+      * @param manager The MemoryManager to use to allocate objects
       * @return A const pointer to the static string that holds the text
       *         description of the passed default type.
       */

@@ -122,7 +122,7 @@ public :
      * the returned buffer.
      *
      * @param inputData Base64 data in XMLByte stream.
-     * @param outputLength Length of decoded XMLByte stream.
+     * @param decodedLength Length of decoded XMLByte stream.
      * @param memMgr client provided memory manager
      * @param conform conformance specified
      * @return Decoded binary data in XMLByte stream,
@@ -147,7 +147,7 @@ public :
      * the returned buffer.
      *
      * @param inputData Base64 data in XMLCh stream.
-     * @param outputLength Length of decoded XMLCh stream
+     * @param decodedLength Length of decoded XMLCh stream
      * @param memMgr client provided memory manager
      * @param conform conformance specified
      * @return Decoded binary data in XMLCh stream,
