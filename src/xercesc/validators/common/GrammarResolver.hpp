@@ -117,10 +117,9 @@ public:
     /**
      * Retrieve the grammar that is associated with the specified namespace key
      *
-     * @param  nameSpaceKey   Namespace key into Grammar pool
+     * @param  gramDesc   Namespace key into Grammar pool
      * @return Grammar abstraction associated with the NameSpace key.
      */
-    Grammar* getGrammar( const XMLCh* const nameSpaceKey ) ;
     Grammar* getGrammar( XMLGrammarDescription* const gramDesc ) ;
 
     /**

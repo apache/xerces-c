@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/06/25 22:38:40  peiyongz
+ * remove old getGrammar()
+ *
  * Revision 1.13  2003/06/25 19:32:05  peiyongz
  * remove old putGrammar()
  *
@@ -188,7 +191,9 @@ GrammarResolver::getDatatypeValidator(const XMLCh* const uriStr,
     }
     else {
 
-        Grammar* grammar = getGrammar(uriStr);
+        XMLSchemaDescription* gramDesc = fGrammarPool->createSchemaDescription(uriStr);
+        Janitor<XMLSchemaDescription> janName(gramDesc);
+        Grammar* grammar = getGrammar(gramDesc);
 
         if (grammar && grammar->getGrammarType() == Grammar::SchemaGrammarType) {
 
@@ -203,18 +208,6 @@ GrammarResolver::getDatatypeValidator(const XMLCh* const uriStr,
     }
 
     return dv;
-}
-
-//Deprecated
-Grammar* GrammarResolver::getGrammar(const XMLCh* const nameSpaceKey)
-{
-    if (!nameSpaceKey)
-        return 0;
-
-    XMLGrammarDescription* gramDesc = getGrammarDescription(nameSpaceKey);
-    Janitor<XMLGrammarDescription> janName(gramDesc);
-    return getGrammar(gramDesc);
-
 }
 
 Grammar* GrammarResolver::getGrammar( XMLGrammarDescription* const gramDesc)
