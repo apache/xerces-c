@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/17 10:52:15  amassari
+ * Fixed documentation bug#24746
+ *
  * Revision 1.8  2003/05/30 16:11:45  gareth
  * Fixes so we compile under VC7.1. Patch by Alberto Massari.
  *
@@ -142,7 +145,7 @@ class BinInputStream;
   *
   * <p>InputSource is never used directly, but is the base class for a number
   * of derived classes for particular types of input sources. Derivatives are
-  * provided (in the internal/ directory) for URL input sources, memory buffer
+  * provided (in the framework/ directory) for URL input sources, memory buffer
   * input sources, and so on.</p>
   *
   * <p>When it is time to parse the input described by an input source, it
