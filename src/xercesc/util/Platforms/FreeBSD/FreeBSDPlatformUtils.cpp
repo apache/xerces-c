@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/12/12 16:28:48  peiyongz
+ * MsgCatalogLoader added.
+ *
  * Revision 1.6  2002/12/02 19:16:26  tng
  * [Bug 14723] Memory leak in atomicOpsMutex.  Patch from Adam Zell.
  *
@@ -125,6 +128,8 @@
 
 #if defined(XML_USE_ICU_MESSAGELOADER)
     #include <xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp>
+#elif defined (XML_USE_ICONV_MESSAGELOADER)
+    #include <xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp>
 #else
     // Same as -DXML_USE_INMEM_MESSAGELOADER
     #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
@@ -164,6 +169,8 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     {
 #if defined (XML_USE_ICU_MESSAGELOADER)
         retVal = new ICUMsgLoader(msgDomain);
+#elif defined (XML_USE_ICONV_MESSAGELOADER)
+        retVal = new MsgCatalogLoader(msgDomain);        
 #else
         // same as -DXML_USE_INMEM_MESSAGELOADER
         retVal = new InMemMsgLoader(msgDomain);

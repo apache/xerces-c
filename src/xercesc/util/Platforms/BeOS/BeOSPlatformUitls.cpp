@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/12/12 16:28:40  peiyongz
+ * MsgCatalogLoader added.
+ *
  * Revision 1.1  2002/12/02 20:42:30  tng
  * [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
  *
@@ -110,6 +113,8 @@ char *realpath(const char *path, char *resolved_path) {
 
 #if defined(XML_USE_ICU_MESSAGELOADER)
     #include <xercesc/util/MsgLoaders/ICU/ICUMsgLoader.hpp>
+#elif defined (XML_USE_ICONV_MESSAGELOADER)
+    #include <xercesc/util/MsgLoaders/MsgCatalog/MsgCatalogLoader.hpp>
 #else
     // Same as -DXML_USE_INMEM_MESSAGELOADER
     #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
@@ -149,6 +154,8 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     {
 #if defined (XML_USE_ICU_MESSAGELOADER)
         retVal = new ICUMsgLoader(msgDomain);
+#elif defined (XML_USE_ICONV_MESSAGELOADER)
+        retVal = new MsgCatalogLoader(msgDomain);        
 #else
         // same as -DXML_USE_INMEM_MESSAGELOADER
         retVal = new InMemMsgLoader(msgDomain);
