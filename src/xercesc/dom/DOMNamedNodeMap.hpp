@@ -278,6 +278,8 @@ public:
 
 };
 
+#define GetDOMNamedNodeMapMemoryManager   GET_INDIRECT_MM(fOwnerNode)
+
 XERCES_CPP_NAMESPACE_END
 
 #endif

@@ -308,6 +308,8 @@ public:
     //@}
 };
 
+#define GetDOMTreeWalkerMemoryManager GET_INDIRECT_MM(fCurrentNode)
+
 XERCES_CPP_NAMESPACE_END
 
 #endif

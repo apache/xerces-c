@@ -228,6 +228,8 @@ public:
     //@}
 };
 
+#define GetDOMNodeIteratorMemoryManager GET_DIRECT_MM(fDocument)
+
 XERCES_CPP_NAMESPACE_END
 
 #endif
