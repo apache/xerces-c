@@ -90,11 +90,13 @@ public :
       , FixedDifferentFromActual           = 77
       , NoDatatypeValidatorForAttribute    = 78
       , GenericError                       = 79
-      , E_HighBounds                       = 80
-      , W_LowBounds                        = 81
-      , W_HighBounds                       = 82
-      , F_LowBounds                        = 83
-      , F_HighBounds                       = 84
+      , ElementNotQualified                = 80
+      , ElementNotUnQualified              = 81
+      , E_HighBounds                       = 82
+      , W_LowBounds                        = 83
+      , W_HighBounds                       = 84
+      , F_LowBounds                        = 85
+      , F_HighBounds                       = 86
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

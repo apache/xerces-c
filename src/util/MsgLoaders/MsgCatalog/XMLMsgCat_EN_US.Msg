@@ -304,6 +304,8 @@ $set 2
  77  Content of element '{0}' is different from the fixed attribute value in the element's schema declaration.
  78  No datatypevalidator was found for this attribute {0}.
  79  Schema error during parsing
+ 80  Element '{0}' should be qualified
+ 81  Element '{0}' should be un-qualified
 
 
 $set 3

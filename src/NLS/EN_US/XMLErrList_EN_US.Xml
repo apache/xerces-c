@@ -317,6 +317,8 @@
             <Message Id="FixedDifferentFromActual" Text="Content of element '{0}' is different from the fixed attribute value in the element's schema declaration."/>
             <Message Id="NoDatatypeValidatorForAttribute" Text="No datatypevalidator was found for this attribute {0}."/>
             <Message Id="GenericError" Text="Schema error during parsing"/>
+            <Message Id="ElementNotQualified" Text="Element '{0}' should be qualified"/>
+            <Message Id="ElementNotUnQualified" Text="Element '{0}' should be un-qualified"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
@@ -487,7 +489,7 @@
             <Message Id="FACET_Invalid_TotalDigit" Text="TotalDigit Value '{0}' is invalid"/>
             <Message Id="FACET_Invalid_FractDigit" Text="FractionDigit Value '{0}' is invalid"/>
             <Message Id="FACET_NonNeg_TotalDigit" Text="TotalDigit Value '{0}' must be a nonNegativeInteger"/>
-            <Message Id="FACET_NonNeg_FractDigit" Text="FractionDigit Value '{0}' must be a nonNegativeInteger"/>            
+            <Message Id="FACET_NonNeg_FractDigit" Text="FractionDigit Value '{0}' must be a nonNegativeInteger"/>
             <Message Id="FACET_max_Incl_Excl" Text="It is an error for both maxInclusive and maxExclusive to be specified for the same datatype"/>
             <Message Id="FACET_min_Incl_Excl" Text="It is an error for both minInclusive and minExclusive to be specified for the same datatype"/>
             <Message Id="FACET_maxExcl_minExcl" Text="maxExclusive value '{0}' must be greater than minExclusive value '{1}'"/>
