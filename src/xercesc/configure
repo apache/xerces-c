@@ -1462,7 +1462,7 @@ util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
 util/NetAccessors/libWWW/Makefile \
-util/NetAccessors/MacOSURLAccess/Makefile \
+util/NetAccessors/MacOSURLAccessCF/Makefile \
 util/regx/Makefile \
 validators/Makefile \
 validators/common/Makefile \
@@ -1605,7 +1605,7 @@ util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
 util/NetAccessors/libWWW/Makefile \
-util/NetAccessors/MacOSURLAccess/Makefile \
+util/NetAccessors/MacOSURLAccessCF/Makefile \
 util/regx/Makefile \
 validators/Makefile \
 validators/common/Makefile \

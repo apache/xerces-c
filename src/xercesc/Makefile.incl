@@ -398,8 +398,6 @@ endif
 #=============== MacOS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, MACOSX)
 	PLATFORM_LIBRARIES = \
-		-framework Carbon \
-		-framework CoreFoundation \
 		-framework CoreServices
 	PLATFORM_COMPILE_OPTIONS = \
 		-D${PLATFORM} \

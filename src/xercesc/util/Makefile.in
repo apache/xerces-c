@@ -55,6 +55,12 @@
 #
 #
 # $Log$
+# Revision 1.3  2002/02/18 06:36:44  jberry
+# Modify Mac OS X "unix" build to use new MacOSURLAccessCF NetAccessor.
+# This means that Xerces no longer relies on the Carbon.framework and
+# links only to CoreServices.framework, which allows it to be called
+# from a remote context where no GUI is available.
+#
 # Revision 1.2  2002/02/11 18:19:19  tng
 # [Bug 2715] Build recursion suppresses make failures.
 #
@@ -272,9 +278,9 @@ MODULE = util
 ifeq (${TRANSCODER},NATIVE)
 	ifeq (${PLATFORM},MACOSX)
 		TRANSCODERMODULE=MacOSUnicodeConverter
-       else
-               TRANSCODERMODULE=Iconv
-       endif
+    else
+        TRANSCODERMODULE=Iconv
+    endif
 else
 	ifeq (${TRANSCODER},ICU)
 	   TRANSCODERMODULE=ICU
@@ -313,7 +319,7 @@ endif
 
 ifeq (${NETACCESSOR},NATIVE)
 	ifeq (${PLATFORM},MACOSX)
-	  NETACCESSORMODULE=MacOSURLAccess
+	  NETACCESSORMODULE=MacOSURLAccessCF
 	endif
 else
 	ifeq (${NETACCESSOR},Socket)
