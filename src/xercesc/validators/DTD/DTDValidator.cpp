@@ -315,7 +315,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
         {
             // If its not, emit and error but try to keep going
             if (!getReaderMgr()->getCurrentReader()->isFirstNameChar(*valPtr))
-                emitError(XMLValid::AttrValNotName, fullName);
+                emitError(XMLValid::AttrValNotName, valPtr, fullName);
             valPtr++;
         }
 
@@ -326,13 +326,22 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
             //  If we hit a whitespace, its either a break between two
             //  or more values, or an error if we have a single value.
             //
-            if (getReaderMgr()->getCurrentReader()->isWhitespace(*valPtr))
+            //
+            //   XML1.0-3rd
+            //
+            //   [6]   Names   ::=   Name (#x20 Name)*
+            //   [8]   Nmtokens   ::=   Nmtoken (#x20 Nmtoken)*
+            //
+            //   only and only ONE #x20 is allowed to be the delimiter
+            //
+            if (*valPtr==chSpace)
             {
                 if (!multipleValues)
                 {
                     emitError(XMLValid::NoMultipleValues, fullName);
                     return;
                 }
+
                 break;
             }
 
@@ -346,7 +355,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
 
             if (!getReaderMgr()->getCurrentReader()->isNameChar(*valPtr))
             {
-                emitError(XMLValid::AttrValNotName, fullName);
+                emitError(XMLValid::AttrValNotName, valPtr, fullName);
                 return;
             }
             valPtr++;
@@ -412,7 +421,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
             if (decl)
             {
                 if (!decl->isUnparsed())
-                    emitError(XMLValid::BadEntityRefAttr, fullName);
+                    emitError(XMLValid::BadEntityRefAttr, pszTmpVal, fullName);
             }
              else
             {
@@ -435,7 +444,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
             //  this value will be legal since it matches one of them.
             //
             if (!XMLString::isInList(pszTmpVal, enumList))
-                emitError(XMLValid::DoesNotMatchEnumList, fullName);
+                emitError(XMLValid::DoesNotMatchEnumList, pszTmpVal, fullName);
         }
 
         // If not doing multiple values, then we are done
