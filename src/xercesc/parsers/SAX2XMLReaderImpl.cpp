@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.38  2004/09/30 14:07:23  peiyongz
+ * setInputBufferSize
+ *
  * Revision 1.37  2004/09/28 02:14:14  cargilld
  * Add support for validating annotations.
  *
@@ -1796,6 +1799,11 @@ Grammar* SAX2XMLReaderImpl::loadGrammar(const InputSource& source,
 void SAX2XMLReaderImpl::resetCachedGrammarPool()
 {
     fGrammarResolver->resetCachedGrammar();
+}
+
+void SAX2XMLReaderImpl::setInputBufferSize(const size_t bufferSize)
+{
+    fScanner->setInputBufferSize(bufferSize);
 }
 
 Grammar* SAX2XMLReaderImpl::getGrammar(const XMLCh* const nameSpaceKey)

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2004/09/30 14:07:23  peiyongz
+ * setInputBufferSize
+ *
  * Revision 1.25  2004/09/08 13:56:17  peiyongz
  * Apache License Version 2.0
  *
@@ -1039,6 +1042,18 @@ public :
       * Clear the cached grammar pool
       */
     virtual void resetCachedGrammarPool();
+
+    /** Set maximum input buffer size
+      *
+      * This method allows users to limit the size of buffers used in parsing
+      * XML character data. The effect of setting this size is to limit the
+      * size of a ContentHandler::characters() call.
+      *
+      * The parser's default input buffer size is 1 megabyte.
+      *
+      * @param bufferSize The maximum input buffer size
+      */
+    void setInputBufferSize(const size_t bufferSize);
 
     //@}
 
