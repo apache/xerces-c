@@ -9,13 +9,14 @@
 
     <a>
 
-      <p>The &XercesCName; &XercesCVersion; contains an implementation
-         of a subset of the W3C XML Schema Language as specified
-         in the 2 May 2001 Recommendation for <jump
-         href="http://www.w3.org/TR/xmlschema-1/">Structures</jump>
-         and <jump href="http://www.w3.org/TR/xmlschema-2/">
-         Datatypes</jump>.  See <jump href="schema.html">the Schema
-         page</jump> for details.</p>
+      <p>Yes.  The &XercesCName; &XercesCVersion; contains an implementation
+         of the W3C XML Schema Language, a recommendation of the Worldwide Web Consortium
+         available in three parts:
+         <jump href="http://www.w3.org/TR/xmlschema-0/">XML Schema: Primer</jump> and
+         <jump href="http://www.w3.org/TR/xmlschema-1/">XML Schema: Structures</jump> and
+         <jump href="http://www.w3.org/TR/xmlschema-2/">XML Schema: Datatypes</jump>.
+         We consider this implementation complete.  See
+         <jump href="schema.html#limitation">the Schema page</jump> for limitations.</p>
 
     </a>
   </faq>
@@ -27,13 +28,19 @@
     <a>
 
       <p>The &XercesCName; &XercesCVersion; contains an implementation
-         of a subset of the W3C XML Schema Language as specified
-         in the 2 May 2001 Recommendation for <jump
-         href="http://www.w3.org/TR/xmlschema-1/">Structures</jump>
-         and <jump href="http://www.w3.org/TR/xmlschema-2/">
-         Datatypes</jump>.  You should not consider this implementation
-         complete or correct. Please refer to <jump href="schema.html#limitation">
-         the Schema Limitations </jump>for further details.</p>
+         of the W3C XML Schema Language, a recommendation of the Worldwide Web Consortium
+         available in three parts:
+         <jump href="http://www.w3.org/TR/xmlschema-0/">XML Schema: Primer</jump> and
+         <jump href="http://www.w3.org/TR/xmlschema-1/">XML Schema: Structures</jump> and
+         <jump href="http://www.w3.org/TR/xmlschema-2/">XML Schema: Datatypes</jump>.
+         We consider this implementation complete.  See
+         <jump href="schema.html#limitation">the Schema page</jump> for limitations.</p>
+
+      <p>If you find any Schema feature which is specified in the W3C XML Schema Language
+         Recommendation does not work with &XercesCName; &XercesCVersion;, we encourage
+         the submission of bugs as described in
+         <jump href="http://xml.apache.org/xerces-c/bug-report.html">Bug-Reporting</jump> page.
+       </p>
 
     </a>
   </faq>
@@ -158,9 +165,9 @@ catch (const XMLException&amp; toCatch) {
         Non-const DOMString methods, such as <code>appendData()</code>, are not thread safe and the application must guarantee that no other
         methods (including const methods) are executed concurrently with them.</p>
 
-      <p>The application also needs to guarantee that only one thread has entered the
-        method XMLPlatformUtils::Initialize() at any one time.  And similarly only one
-        thread has entered the method XMLPlatformUtils::Terminate() at any one time.</p>
+      <p>The application also needs to guarantee that only one thread has entered either the
+        method XMLPlatformUtils::Initialize() or the method XMLPlatformUtils::Terminate() at any
+        one time.</p>
 
     </a>
   </faq>
@@ -627,19 +634,20 @@ catch (const XMLException&amp; toCatch) {
          multiple times in one process is now allowed.
       </p>
 
-      <p>But the application needs to guarantee that only one thread has entered the
-        method XMLPlatformUtils::Initialize() at any one time.  And similarly only one
-        thread has entered the method XMLPlatformUtils::Terminate() at any one time.
-      </p>
+      <p>But the application needs to guarantee that only one thread has entered either the
+        method XMLPlatformUtils::Initialize() or the method XMLPlatformUtils::Terminate() at any
+        one time.</p>
 
       <p>If you are calling XMLPlatformUtils::Initialize() a number of times, and then follow with
          XMLPlatformUtils::Terminate() the same number of times, only the first XMLPlatformUtils::Initialize()
          will do the initialization, and only the last XMLPlatformUtils::Terminate() will clean up
          the memory.  The other calls are ignored.
       </p>
+
       <p>To ensure all the memory held by the parser are freed, the number of XMLPlatformUtils::Terminate() calls
          should match the number of XMLPlatformUtils::Initialize() calls.
       </p>
+
       <p>
          Consider the following code snippets (for illustration simplicity the following
          sample code is not coded in try/catch clause):
@@ -817,6 +825,94 @@ catch (const XMLException&amp; toCatch) {
           the DOM Level 3 "node key" mechanism, when that becomes officially
           available.
       </p>
+    </a>
+  </faq>
+
+  <faq title="Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair is called more than once.">
+
+    <q>Why does my application crash or hang if XMLPlatformUtils::Initialize()/Terminate() pair more than once</q>
+
+    <a>
+
+      <p>Please make sure the XMLPlatformUtils::Terminate() is the last &XercesCName; function to be called
+         in your program.  NO explicit nor implicit &XercesCName; destructor (those local data that are
+         destructed when going out of scope) should be called after XMLPlatformUtils::Terminate().
+      </p>
+      <p>
+         Consider the following code snippets which is incorrect (for illustration simplicity the
+         following sample code is not coded in try/catch clause):
+      </p>
+
+<source>
+1: {
+2:    XMLPlatformUtils::Initialize();
+3:    DOMString c("hello");
+4:    XMLPlatformUtils::Terminate();
+5: }
+</source>
+
+      <p>The DOMString object "c" is destructed when going out of scope at line 5 before the closing
+         brace.  As a result, DOMString destructor is called at line 5 after
+         XMLPlatformUtils::Terminate() which is wrong.  Correct code should be:
+      </p>
+
+<source>
+1: {
+2:    XMLPlatformUtils::Initialize();
+2a:    {
+3:           DOMString c("hello");
+3a:    }
+4:    XMLPlatformUtils::Terminate();
+5: }
+</source>
+
+      <p>The extra pair of braces (line 2a and 3a) ensures that all implicit destructors are called
+         before terminating &XercesCName;.</p>
+
+      <p>In addition the application also needs to guarantee that only one thread has entered either the
+        method XMLPlatformUtils::Initialize() or the method XMLPlatformUtils::Terminate() at any
+        one time.
+      </p>
+    </a>
+  </faq>
+
+  <faq title="Why does SAX2XMLReader::setProperty not work?">
+
+    <q>Why does SAX2XMLReader::setProperty not work?</q>
+
+    <a>
+
+      <p>The function <code>SAX2XMLReader::setProperty(const XMLCh* const name, void* value)</code>
+         takes a void pointer for the property value.  Application is required to initialize this void pointer
+         to a correct type.  See <jump href="schema.html#SAX2Properties">SAX2 Programming Guide</jump>
+         to learn exactly what type of property value that each property expects for processing.
+         Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
+      </p>
+
+    </a>
+  </faq>
+
+  <faq title="Why does SAX2XMLReader::getProperty not work?">
+
+    <q>Why does SAX2XMLReader::setProperty not work?</q>
+
+    <a>
+
+      <p>The function <code>void* SAX2XMLReader::getProperty(const XMLCh* const name)</code>
+         returns a void pointer for the property value.  See
+         <jump href="schema.html#SAX2Properties">SAX2 Programming Guide</jump> to learn
+         exactly what type of object each property returns.
+      </p>
+      <p>The parser owns the returned pointer, and the memory allocated for
+         the returned pointer will be destroyed when the parser is deleted.
+         To ensure assessiblity of the returned information after the parser
+         is deleted, callers need to copy and store the returned information
+         somewhere else; other you may get unexpected result.  Since the returned
+         pointer is a generic void pointer, see
+         <jump href="schema.html#SAX2Properties">SAX2 Programming Guide</jump> to learn
+         exactly what type of object each property returns for replication.
+      </p>
+
     </a>
   </faq>
 
