@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/04 01:13:16  roddey
+ * Fixed the logic for checking for PIs that start with 'xml'. It was doing doing "if (stringICompare()) "
+ * instead of "if (!stringICompare()).
+ *
  * Revision 1.2  1999/11/30 20:24:45  roddey
  * Fixes for incorrect deletion of temporary decl objects, which would cause
  * a double delete when the parser is deleted.
@@ -3270,7 +3274,7 @@ void DTDValidator::scanPI()
     namePtr = bbName.getRawBuffer();
 
     // See if it issome form of 'xml' and emit a warning
-    if (XMLString::compareIString(namePtr, XMLUni::fgXMLString))
+    if (!XMLString::compareIString(namePtr, XMLUni::fgXMLString))
         getScanner()->emitError(XML4CErrs::NoPIStartsWithXML);
 
     // If namespaces are enabled, then no colons allowed
