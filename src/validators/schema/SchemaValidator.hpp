@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/03/30 16:35:20  tng
+ * Schema: Whitespace normalization.
+ *
  * Revision 1.1  2001/03/21 21:56:33  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -68,8 +71,9 @@
 
 #include <framework/XMLValidator.hpp>
 #include <util/RefVectorOf.hpp>
-#include <validators/schema/SchemaElementDecl.hpp>
 #include <validators/common/GrammarResolver.hpp>
+#include <validators/datatype/DatatypeValidator.hpp>
+#include <validators/schema/SchemaElementDecl.hpp>
 
 //
 //  This is a derivative of the abstract validator interface. This class
@@ -140,6 +144,10 @@ public:
     // -----------------------------------------------------------------------
     virtual bool handlesSchema() const;
 
+    // -----------------------------------------------------------------------
+    //  Schema Validator methods
+    // -----------------------------------------------------------------------
+    void normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill);
 
 private:
     // -----------------------------------------------------------------------
@@ -150,9 +158,13 @@ private:
     //
     //  fGrammarResolver
     //      All the schema grammar stored
+    //
+    //  fCurrentDV
+    //      Current DataTypeValidator used by the validator
     // -----------------------------------------------------------------------
     const XMLCh* fXsiTypeAttValue;
     GrammarResolver* fGrammarResolver;
+    DatatypeValidator* fCurrentDV;
 };
 
 

@@ -188,6 +188,7 @@
             <Message Id="NoMultipleValues" Text="Attribute '{0}' does not support multiple values"/>
             <Message Id="NotSameAsFixedValue" Text="Attribute '{0}' has a value, '{1}', that does not match its #FIXED value, '{2}'"/>
             <Message Id="RepElemInMixed" Text="Element types cannot be duplicated in Mixed content models"/>
+            <Message Id="IllegalXMLSpace" Text="Illegal xml:space declaration."/>
             <Message Id="NotBoolean" Text="{0} is not a boolean."/>
             <Message Id="NotDecimal" Text="{0} is not a decimal."/>
             <Message Id="FacetsInconsistent" Text="Facets are inconsistent with base type."/>

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/03/30 16:35:17  tng
+ * Schema: Whitespace normalization.
+ *
  * Revision 1.1  2001/03/21 21:56:20  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -527,6 +530,31 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
                 fScanner->getValidator()->emitError(XMLValid::BadIDAttrDefType, decl->getFullName());
             }
         }
+
+        // if attdef is xml:space, check correct enumeration (default|preserve)
+        const XMLCh fgXMLSpace[] = { chLatin_x, chLatin_m, chLatin_l, chColon, chLatin_s, chLatin_p, chLatin_a, chLatin_c, chLatin_e, chNull };
+
+        if (!XMLString::compareString(decl->getFullName(),fgXMLSpace)) {
+            const XMLCh fgPreserve[] = { chLatin_p, chLatin_r, chLatin_e, chLatin_s, chLatin_e, chLatin_r, chLatin_v, chLatin_e, chNull };
+            const XMLCh fgDefault[] = { chLatin_d, chLatin_e, chLatin_f, chLatin_a, chLatin_u, chLatin_l, chLatin_t, chNull };
+            bool ok = false;
+            if (decl->getType() == XMLAttDef::Enumeration) {
+                RefVectorOf<XMLCh>* enumVector = XMLString::tokenizeString(decl->getEnumeration());
+                int size = enumVector->size();
+                ok = (size == 1 &&
+                     (!XMLString::compareString(enumVector->elementAt(0), fgDefault) ||
+                      !XMLString::compareString(enumVector->elementAt(0), fgPreserve))) ||
+                     (size == 2 &&
+                     (!XMLString::compareString(enumVector->elementAt(0), fgDefault) &&
+                      !XMLString::compareString(enumVector->elementAt(1), fgPreserve))) ||
+                     (size == 2 &&
+                     (!XMLString::compareString(enumVector->elementAt(1), fgDefault) &&
+                      !XMLString::compareString(enumVector->elementAt(0), fgPreserve)));
+                delete enumVector;
+            }
+            if (!ok)
+                fScanner->getValidator()->emitError(XMLValid::IllegalXMLSpace);
+        }
     }
 
     // If we have a doc type handler, tell it about this attdef.
@@ -648,11 +676,14 @@ void DTDScanner::scanAttListDecl()
             //  make sure that we have not seen an id attribute yet. Set
             //  the flag to say that we've seen one now also.
             //
-            if (attDef->getType() == XMLAttDef::ID)
+            if (fScanner->getDoValidation())
             {
-                if (seenAnId)
-                    fScanner->getValidator()->emitError(XMLValid::MultipleIdAttrs, elemDecl->getFullName());
-                seenAnId = true;
+                if (attDef->getType() == XMLAttDef::ID)
+                {
+                    if (seenAnId)
+                        fScanner->getValidator()->emitError(XMLValid::MultipleIdAttrs, elemDecl->getFullName());
+                    seenAnId = true;
+                }
             }
         }
     }
@@ -1516,11 +1547,14 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     if (reuseGrammar)
     {
         rootDecl = (DTDElementDecl*) fDTDGrammar->getElemDecl(0, 0, bbRootName.getRawBuffer(), 0);
-        if (!rootDecl)
+        if (fScanner->getDoValidation())
         {
-            fScanner->getValidator()->emitError(XMLValid::UndeclaredElemInDocType, bbRootName.getRawBuffer());
-            fReaderMgr->skipPastChar(chCloseAngle);
-            return;
+            if (!rootDecl)
+            {
+                fScanner->getValidator()->emitError(XMLValid::UndeclaredElemInDocType, bbRootName.getRawBuffer());
+                fReaderMgr->skipPastChar(chCloseAngle);
+                return;
+            }
         }
     }
      else

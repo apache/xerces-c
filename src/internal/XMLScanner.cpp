@@ -1950,15 +1950,6 @@ void XMLScanner::scanProlog()
                 {
 
                     //
-                    //  We have a doc type. So, create a DTDScanner and
-                    //  store the Grammar in DTDGrammar.
-                    //
-
-                    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fDocTypeHandler);
-                    dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
-                    dtdScanner.scanDocTypeDecl(fReuseGrammar);
-
-                    //
                     //  Since we have seen a grammar, set our validation flag
                     //  at this point if the validation scheme is auto
                     //
@@ -1975,7 +1966,6 @@ void XMLScanner::scanProlog()
                             fValidator = new DTDValidator();
                             initValidator();
                         }
-
                         ((DTDValidator*) fValidator)->setDTDGrammar((DTDGrammar*)fGrammar);
                         //
                         //  At this point, we know which type of validation we are going to
@@ -1986,7 +1976,19 @@ void XMLScanner::scanProlog()
                         //
                         if (fValidator->requiresNamespaces() && !fDoNamespaces)
                             fDoNamespaces = true;
+                    }
 
+                    //
+                    //  We have a doc type. So, create a DTDScanner and
+                    //  store the Grammar in DTDGrammar.
+                    //
+
+                    DTDScanner dtdScanner((DTDGrammar*)fGrammar, fDocTypeHandler);
+                    dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
+                    dtdScanner.scanDocTypeDecl(fReuseGrammar);
+
+
+                    if (fValidate) {
                         //  if validating, then validate the DTD scan so far
                         fValidator->preContentValidation(fReuseGrammar);
                     }

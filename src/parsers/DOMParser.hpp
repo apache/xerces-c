@@ -442,6 +442,9 @@ public :
       * <p>When set to false, all ignorable whitespace will be discarded and
       * no text node is added to the DOM tree.  Note: applications intended
       * to process the "xml:space" attribute should not set this flag to false.
+      * And this flag also overrides any schema datateye whitespace facets,
+      * that is, all ignorable whitespace will be discarded even though
+      * 'preserve' is set in schema datatype whitespace facets.
       *
       * @param include The new state of the include ignorable whitespace
       *                flag.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/03/30 16:35:06  tng
+ * Schema: Whitespace normalization.
+ *
  * Revision 1.11  2001/03/21 21:56:05  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -988,23 +991,15 @@ inline void XMLScanner::setSchemaValidation(const bool doSchema)
 // ---------------------------------------------------------------------------
 inline bool XMLScanner::getDoValidation() const
 {
-    if (fValScheme == Val_Always)
-        return true;
-    return false;
+    return fValidate;
 }
 
 inline void XMLScanner::setDoValidation(const bool validate)
 {
-    if (validate)
+    fValidate = validate;
+    if (fValidate)
         fValScheme = Val_Always;
     else
         fValScheme = Val_Never;
-
-    // validation flag for Val_Auto is set to false by default,
-    //   and will be turned to true if a grammar is seen
-    if (fValScheme == Val_Always)
-        fValidate = true;
-    else
-        fValidate = false;
 }
 #endif

@@ -87,6 +87,7 @@
 #include <parsers/DOMParser.hpp>
 #include <dom/DOM_DOMException.hpp>
 #include <sax/EntityResolver.hpp>
+#include <validators/datatype/DatatypeValidator.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 #include <validators/schema/SchemaGrammar.hpp>
 
@@ -309,6 +310,13 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 if (fValidate)
                 {
+                    if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
+                    {
+                        // normalize the attribute according to schema whitespace facet
+                        DatatypeValidator* tempDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
+                        ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, normBuf.getRawBuffer(), normBuf);
+                    }
+
                     fValidator->validateAttrValue
                     (
                         *attDef
@@ -907,6 +915,14 @@ void XMLScanner::sendCharData(XMLBuffer& toSend)
             //
             if (charOpts == XMLElementDecl::AllCharData)
             {
+                if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
+                {
+                    // normalize the character according to schema whitespace facet
+                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                    ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, rawBuf, toSend);
+                    rawBuf = toSend.getRawBuffer();
+                }
+
                 if (fDocHandler)
                     fDocHandler->docCharacters(rawBuf, len, false);
             }
@@ -1141,40 +1157,9 @@ void XMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* t
             }
         }
 
-        // set up the SchemaValidator if validating
-        if(fValidate) {
-            if (fValidator) {
-                if (!fValidator->handlesSchema())
-                {
-                    // the fValidator is from user
-                    if (fValidatorFromUser)
-                        ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
-                    else {
-                        // the fValidator is created by the Scanner, replace it with a SchemaValidator
-                        delete fValidator;
-                        fValidator = new SchemaValidator();
-                        initValidator();
-                    }
-                }
-            }
-            else {
-                fValidator = new SchemaValidator();
-                initValidator();
-            }
-
+        if (fValidator) {
             if (fXsiType)
                 ((SchemaValidator*)fValidator)->setXsiTypeAttValue(fXsiType);
-
-            //
-            //  At this point, we know which type of validation we are going to
-            //  use (if the plugged in validator handles either DTD or Schemas)
-            //  since we will have seen the DOCTYPE or PI that set it up. So lets
-            //  ask the validator whether it requires namespaces or not. If it
-            //  does, we have to override the namespace enablement flag.
-            //
-            if (fValidator->requiresNamespaces() && !fDoNamespaces)
-                fDoNamespaces = true;
-
         }
     }
 }
@@ -1195,6 +1180,46 @@ void XMLScanner::parseSchemaLocation(const XMLCh* const schemaLocationStr)
 }
 
 void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri) {
+
+    //
+    //  Since we have seen a grammar, set our validation flag
+    //  at this point if the validation scheme is auto
+    //
+    if (fValScheme == Val_Auto)
+        fValidate = true;
+
+    // set up the SchemaValidator if validating
+    if(fValidate) {
+        if (fValidator) {
+            if (!fValidator->handlesSchema())
+            {
+                // the fValidator is from user
+                if (fValidatorFromUser)
+                    ThrowXML(RuntimeException, XMLExcepts::Gen_NoSchemaValidator);
+                else {
+                    // the fValidator is created by the Scanner, replace it with a SchemaValidator
+                    delete fValidator;
+                    fValidator = new SchemaValidator();
+                    initValidator();
+                }
+            }
+        }
+        else {
+            fValidator = new SchemaValidator();
+            initValidator();
+        }
+
+        //
+        //  At this point, we know which type of validation we are going to
+        //  use (if the plugged in validator handles either DTD or Schemas)
+        //  since we will have seen the DOCTYPE or PI that set it up. So lets
+        //  ask the validator whether it requires namespaces or not. If it
+        //  does, we have to override the namespace enablement flag.
+        //
+        if (fValidator->requiresNamespaces() && !fDoNamespaces)
+            fDoNamespaces = true;
+
+    }
 
     SchemaGrammar* grammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uri);
 
@@ -1236,14 +1261,6 @@ void XMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const
         }
     }
     fGrammar = grammar;
-
-    //
-    //  Since we have seen a grammar, set our validation flag
-    //  at this point if the validation scheme is auto
-    //
-    if (fValScheme == Val_Auto)
-        fValidate = true;
-
 }
 
 // ---------------------------------------------------------------------------
@@ -1832,159 +1849,159 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
     bool    notDone = true;
     while (notDone)
     {
-    try
-    {
-        while (true)
+        try
         {
-            if (secondCh)
+            while (true)
             {
-                nextCh = secondCh;
-                secondCh = 0;
-            }
-             else
-            {
-                 //  Eat through as many plain content characters as possible without
-                 //  needing special handling.  Moving most content characters here,
-                 //  in this one call, rather than running the overall loop once
-                 //  per content character, is a speed optimization.
-                 //
-                if (curState == State_Waiting  &&  !gotLeadingSurrogate)
+                if (secondCh)
                 {
-                     fReaderMgr.movePlainContentChars(toUse);
-                }
-
-
-                // Try to get another char from the source
-                //   The code from here on down covers all contengencies,
-                //
-                if (!fReaderMgr.getNextCharIfNot(chOpenAngle, nextCh))
-                {
-                    // If we were waiting for a trailing surrogate, its an error
-                    if (gotLeadingSurrogate)
-                        emitError(XMLErrs::Expected2ndSurrogateChar);
-
-                    notDone = false;
-                    break;
-                }
-            }
-
-            //
-            //  Watch for a reference. Note that the escapement mechanism
-            //  is ignored in this content.
-            //
-            if (nextCh == chAmpersand)
-            {
-                sendCharData(toUse);
-
-                // Turn off the throwing at the end of entity during this
-                ThrowEOEJanitor jan(&fReaderMgr, false);
-
-                if (scanEntityRef(false, nextCh, secondCh, escaped) != EntityExp_Returned)
-                {
-                    gotLeadingSurrogate = false;
-                    continue;
-                }
-            }
-             else
-            {
-                escaped = false;
-            }
-
-             // Keep the state machine up to date
-            if (!escaped)
-            {
-                if (nextCh == chCloseSquare)
-                {
-                    if (curState == State_Waiting)
-                        curState = State_GotOne;
-                    else if (curState == State_GotOne)
-                        curState = State_GotTwo;
-                }
-                 else if (nextCh == chCloseAngle)
-                {
-                    if (curState == State_GotTwo)
-                        emitError(XMLErrs::BadSequenceInCharData);
-                    curState = State_Waiting;
+                    nextCh = secondCh;
+                    secondCh = 0;
                 }
                  else
                 {
-                    curState = State_Waiting;
-                }
-            }
-             else
-            {
-                curState = State_Waiting;
-            }
-
-            // Deal with surrogate pairs
-            if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
-            {
-                //
-                //  Its a leading surrogate. If we already got one, then
-                //  issue an error, else set leading flag to make sure that
-                //  we look for a trailing next time.
-                //
-                if (gotLeadingSurrogate)
-                    emitError(XMLErrs::Expected2ndSurrogateChar);
-                else
-                    gotLeadingSurrogate = true;
-            }
-             else
-            {
-                //
-                //  If its a trailing surrogate, make sure that we are
-                //  prepared for that. Else, its just a regular char so make
-                //  sure that we were not expected a trailing surrogate.
-                //
-                if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
-                {
-                    // Its trailing, so make sure we were expecting it
-                    if (!gotLeadingSurrogate)
-                        emitError(XMLErrs::Unexpected2ndSurrogateChar);
-                }
-                 else
-                {
-                    //
-                    //  Its just a char, so make sure we were not expecting a
-                    //  trailing surrogate.
-                    //
-                    if (gotLeadingSurrogate)
-                        emitError(XMLErrs::Expected2ndSurrogateChar);
-
-                    // Make sure the returned char is a valid XML char
-                    if (!XMLReader::isXMLChar(nextCh))
+                     //  Eat through as many plain content characters as possible without
+                     //  needing special handling.  Moving most content characters here,
+                     //  in this one call, rather than running the overall loop once
+                     //  per content character, is a speed optimization.
+                     //
+                    if (curState == State_Waiting  &&  !gotLeadingSurrogate)
                     {
-                        XMLCh tmpBuf[9];
-                        XMLString::binToText
-                        (
-                            nextCh
-                            , tmpBuf
-                            , 8
-                            , 16
-                        );
-                        emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                         fReaderMgr.movePlainContentChars(toUse);
+                    }
+
+
+                    // Try to get another char from the source
+                    //   The code from here on down covers all contengencies,
+                    //
+                    if (!fReaderMgr.getNextCharIfNot(chOpenAngle, nextCh))
+                    {
+                        // If we were waiting for a trailing surrogate, its an error
+                        if (gotLeadingSurrogate)
+                            emitError(XMLErrs::Expected2ndSurrogateChar);
+
+                        notDone = false;
+                        break;
                     }
                 }
-                gotLeadingSurrogate = false;
+
+                //
+                //  Watch for a reference. Note that the escapement mechanism
+                //  is ignored in this content.
+                //
+                if (nextCh == chAmpersand)
+                {
+                    sendCharData(toUse);
+
+                    // Turn off the throwing at the end of entity during this
+                    ThrowEOEJanitor jan(&fReaderMgr, false);
+
+                    if (scanEntityRef(false, nextCh, secondCh, escaped) != EntityExp_Returned)
+                    {
+                        gotLeadingSurrogate = false;
+                        continue;
+                    }
+                }
+                 else
+                {
+                    escaped = false;
+                }
+
+                 // Keep the state machine up to date
+                if (!escaped)
+                {
+                    if (nextCh == chCloseSquare)
+                    {
+                        if (curState == State_Waiting)
+                            curState = State_GotOne;
+                        else if (curState == State_GotOne)
+                            curState = State_GotTwo;
+                    }
+                     else if (nextCh == chCloseAngle)
+                    {
+                        if (curState == State_GotTwo)
+                            emitError(XMLErrs::BadSequenceInCharData);
+                        curState = State_Waiting;
+                    }
+                     else
+                    {
+                        curState = State_Waiting;
+                    }
+                }
+                 else
+                {
+                    curState = State_Waiting;
+                }
+
+                // Deal with surrogate pairs
+                if ((nextCh >= 0xD800) && (nextCh <= 0xDBFF))
+                {
+                    //
+                    //  Its a leading surrogate. If we already got one, then
+                    //  issue an error, else set leading flag to make sure that
+                    //  we look for a trailing next time.
+                    //
+                    if (gotLeadingSurrogate)
+                        emitError(XMLErrs::Expected2ndSurrogateChar);
+                    else
+                        gotLeadingSurrogate = true;
+                }
+                 else
+                {
+                    //
+                    //  If its a trailing surrogate, make sure that we are
+                    //  prepared for that. Else, its just a regular char so make
+                    //  sure that we were not expected a trailing surrogate.
+                    //
+                    if ((nextCh >= 0xDC00) && (nextCh <= 0xDFFF))
+                    {
+                        // Its trailing, so make sure we were expecting it
+                        if (!gotLeadingSurrogate)
+                            emitError(XMLErrs::Unexpected2ndSurrogateChar);
+                    }
+                     else
+                    {
+                        //
+                        //  Its just a char, so make sure we were not expecting a
+                        //  trailing surrogate.
+                        //
+                        if (gotLeadingSurrogate)
+                            emitError(XMLErrs::Expected2ndSurrogateChar);
+
+                        // Make sure the returned char is a valid XML char
+                        if (!XMLReader::isXMLChar(nextCh))
+                        {
+                            XMLCh tmpBuf[9];
+                            XMLString::binToText
+                            (
+                                nextCh
+                                , tmpBuf
+                                , 8
+                                , 16
+                            );
+                            emitError(XMLErrs::InvalidCharacter, tmpBuf);
+                        }
+                    }
+                    gotLeadingSurrogate = false;
+                }
+
+                // Add this char to the buffer
+                toUse.append(nextCh);
             }
-
-            // Add this char to the buffer
-            toUse.append(nextCh);
         }
-    }
 
-    catch(const EndOfEntityException& toCatch)
-    {
-        //
-        //  Some entity ended, so we have to send any accumulated
-        //  chars and send an end of entity event.
-        //
-        sendCharData(toUse);
-        gotLeadingSurrogate = false;
+        catch(const EndOfEntityException& toCatch)
+        {
+            //
+            //  Some entity ended, so we have to send any accumulated
+            //  chars and send an end of entity event.
+            //
+            sendCharData(toUse);
+            gotLeadingSurrogate = false;
 
-        if (fDocHandler)
-            fDocHandler->endEntityReference(toCatch.getEntity());
-    }
+            if (fDocHandler)
+                fDocHandler->endEntityReference(toCatch.getEntity());
+        }
     }
     //
     // Check the validity constraints as per XML 1.0 Section 2.9
@@ -1995,28 +2012,28 @@ void XMLScanner::scanCharData(XMLBuffer& toUse)
 
     if (fValidate)
     {
-      // See if the text contains whitespace
-      // Get the raw data we need for the callback
-      const bool isSpaces = XMLReader::containsWhiteSpace(rawBuf, len);
-      if (isSpaces)
-      {
-        // And see if the current element is a 'Children' style content model
-        const ElemStack::StackElem* topElem = fElemStack.topElement();
+        // See if the text contains whitespace
+        // Get the raw data we need for the callback
+        const bool isSpaces = XMLReader::containsWhiteSpace(rawBuf, len);
+        if (isSpaces)
+        {
+            // And see if the current element is a 'Children' style content model
+            const ElemStack::StackElem* topElem = fElemStack.topElement();
 
-        // Get the character data opts for the current element
-        XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
+            // Get the character data opts for the current element
+            XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
 
-	if (charOpts == XMLElementDecl::SpacesOk)  // => Element Content
-	{
-	  if ((fStandalone) && (topElem->fThisElement->isExternal()))
-	  {
-	    // Error - standalone should have a value of "no" as whitespace detected in an
-	    // element type with element content whose element declaration was external
-	    //
-	    emitError(XMLErrs::BadStandalone);
-	  }
-	}
-      }
+            if (charOpts == XMLElementDecl::SpacesOk)  // => Element Content
+            {
+                if ((fStandalone) && (topElem->fThisElement->isExternal()))
+                {
+                    // Error - standalone should have a value of "no" as whitespace detected in an
+                    // element type with element content whose element declaration was external
+                    //
+                    emitError(XMLErrs::BadStandalone);
+                }
+            }
+        }
     }
     // Send any char data that we accumulated into the buffer
     sendCharData(toUse);

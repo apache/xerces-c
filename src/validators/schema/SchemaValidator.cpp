@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/03/30 16:35:19  tng
+ * Schema: Whitespace normalization.
+ *
  * Revision 1.1  2001/03/21 21:56:33  tng
  * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
  *
@@ -66,6 +69,8 @@
 // ---------------------------------------------------------------------------
 #include <util/KVStringPair.hpp>
 #include <validators/schema/SchemaValidator.hpp>
+#include <framework/XMLBuffer.hpp>
+#include <internal/XMLReader.hpp>
 
 // ---------------------------------------------------------------------------
 //  SchemaValidator: Constructors and Destructor
@@ -120,4 +125,86 @@ bool SchemaValidator::requiresNamespaces() const
 void SchemaValidator::validateAttrValue (const   XMLAttDef& attDef
                                        , const XMLCh* const attrValue)
 {
+}
+
+// ---------------------------------------------------------------------------
+//  SchemaValidator: Validator method
+// ---------------------------------------------------------------------------
+// Do Schema Normalization depends on the WhiteSpace Facet
+// preserve : No normalization is done
+// replace  : All occurrences of #x9 (tab), #xA (linefeed) and #xD (carriage return)
+//            are replaced with #x20 (space).
+// collapse : Subsequent to the replacements specified above under replace,
+//            contiguous sequences of #x20s are collapsed to a single #x20,
+//            and initial and/or final #x20s are deleted.
+//
+void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill)
+{
+    fCurrentDV = dV;
+    short fWhiteSpace = fCurrentDV->getWSFacet();
+
+    enum States
+    {
+        InWhitespace
+        , InContent
+    };
+
+    States curState = InContent;
+    toFill.reset();
+
+    //
+    //  Loop through the chars of the source value and normalize it according
+    //  to the whitespace facet
+    //
+    bool firstNonWS = false;
+    XMLCh nextCh;
+    const XMLCh* srcPtr = value;
+
+    while (*srcPtr)
+    {
+        nextCh = *srcPtr;
+
+        if (fWhiteSpace == DatatypeValidator::PRESERVE)
+        {
+            // do nothing
+        }
+        else if (fWhiteSpace == DatatypeValidator::REPLACE)
+        {
+            if (XMLReader::isWhitespace(nextCh))
+                nextCh = chSpace;
+        }
+        else // COLLAPSE case
+        {
+            if (curState == InWhitespace)
+            {
+                if (!XMLReader::isWhitespace(nextCh))
+                {
+                    if (firstNonWS)
+                        toFill.append(chSpace);
+                    curState = InContent;
+                    firstNonWS = true;
+                }
+                 else
+                {
+                    srcPtr++;
+                    continue;
+                }
+            }
+             else if (curState == InContent)
+            {
+                if (XMLReader::isWhitespace(nextCh))
+                {
+                    curState = InWhitespace;
+                    srcPtr++;
+                    continue;
+                }
+                firstNonWS = true;
+            }
+        }
+        // Add this char to the target buffer
+        toFill.append(nextCh);
+
+        // And move up to the next character in the source
+        srcPtr++;
+    }
 }
