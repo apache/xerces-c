@@ -262,12 +262,12 @@ void DOMBuilderImpl::error( const   unsigned int                code
 {
     if (fErrorHandler) {
 
-        short severity = DOMError::SEVERITY_ERROR;
+        short severity = DOMError::DOM_SEVERITY_ERROR;
 
         if (errType == XMLErrorReporter::ErrType_Warning)
-            severity = DOMError::SEVERITY_WARNING;
+            severity = DOMError::DOM_SEVERITY_WARNING;
         else if (errType == XMLErrorReporter::ErrType_Fatal)
-            severity = DOMError::SEVERITY_FATAL_ERROR;
+            severity = DOMError::DOM_SEVERITY_FATAL_ERROR;
 
         DOMLocatorImpl location((int)lineNum, (int) colNum, getCurrentNode(), systemId);
         DOMErrorImpl domError(severity, errorText, &location);

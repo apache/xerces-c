@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/06/06 20:58:37  tng
+ * [Bug 9639] enum_mem in DOMError clashes with constant.
+ *
  * Revision 1.5  2002/06/05 16:03:03  peiyongz
  * delete[] used.
  *
@@ -115,19 +118,19 @@ static const XMLCh  gUTF8[] =
 //</
 static const XMLCh  gEndElement[] =
 {
-	chOpenAngle, chForwardSlash, chNull 
+	chOpenAngle, chForwardSlash, chNull
 };
 
 //?>
 static const XMLCh  gEndPI[] =
-{ 
+{
 	chQuestion, chCloseAngle, chNull
 };
 
 //<?
-static const XMLCh  gStartPI[] = 
-{ 
-	chOpenAngle, chQuestion, chNull 
+static const XMLCh  gStartPI[] =
+{
+	chOpenAngle, chQuestion, chNull
 };
 
 //<?xml version="1.0
@@ -178,7 +181,7 @@ static const XMLCh  gEndComment[] =
     chDash, chDash, chCloseAngle, chNull
 };
 
-//<!DOCTYPE 
+//<!DOCTYPE
 static const XMLCh  gStartDoctype[] =
 {
     chOpenAngle, chBang,    chLatin_D, chLatin_O, chLatin_C, chLatin_T,
@@ -199,7 +202,7 @@ static const XMLCh  gSystem[] =
     chLatin_M, chSpace,   chDoubleQuote, chNull
 };
 
-//<!ENTITY 
+//<!ENTITY
 static const XMLCh  gStartEntity[] =
 {
     chOpenAngle, chBang,    chLatin_E, chLatin_N, chLatin_T, chLatin_I,
@@ -213,7 +216,7 @@ static const XMLCh  gNotation[] =
     chSpace,   chDoubleQuote, chNull
 };
 
-// Unrecognized node type 
+// Unrecognized node type
 static const XMLCh  gUnrecognizedNodeType[] =
 {
 	chLatin_U, chLatin_n, chLatin_r, chLatin_e, chLatin_c, chLatin_o,
@@ -226,14 +229,14 @@ static const XMLCh  gUnrecognizedNodeType[] =
 // Notification of the error though error handler
 //
 // The application may instruct the engine to abort serialization
-// by returning "false". 
+// by returning "false".
 //
 // REVISIT: update the locator ctor once the line#, col#, uri and offset
 // are available from DOM3 core
 //
 // REVISIT: use throwing exception to abort serialization is an interesting
 // thing here, since the serializer is a recusively called function, we
-// can't use return, obviously. However we may have multiple try/catch 
+// can't use return, obviously. However we may have multiple try/catch
 // along it is way go back to writeNode(). So far we can't think of a
 // "short-cut" to go "directly" back.
 //
@@ -250,7 +253,7 @@ catch(TranscodingException const &e)                             \
                           , (DOMNode* const)nodeToWrite          \
                           , 0                                    \
                           , 0);                                  \
-    DOMErrorImpl    domError(DOMError::SEVERITY_FATAL_ERROR      \
+    DOMErrorImpl    domError(DOMError::DOM_SEVERITY_FATAL_ERROR      \
                            , e.getMessage()                      \
                            , &locator);                          \
     bool  retVal = fErrorHandler->handleError(domError);         \
@@ -292,7 +295,7 @@ DOMWriterImpl::DOMWriterImpl()
 
 	fFeatures->put((void*)XMLUni::fgDOMWRTCanonicalForm,
 		            new KVStringPair(XMLUni::fgDOMWRTCanonicalForm, gFalse));
-	fFeatures->put((void*)XMLUni::fgDOMWRTDiscardDefaultContent, 
+	fFeatures->put((void*)XMLUni::fgDOMWRTDiscardDefaultContent,
 		            new KVStringPair(XMLUni::fgDOMWRTDiscardDefaultContent, gTrue));
 	fFeatures->put((void*)XMLUni::fgDOMWRTEntities,
 		            new KVStringPair(XMLUni::fgDOMWRTEntities, gTrue));
@@ -304,7 +307,7 @@ DOMWriterImpl::DOMWriterImpl()
 		            new KVStringPair(XMLUni::fgDOMWRTSplitCdataSections, gTrue));
 	fFeatures->put((void*)XMLUni::fgDOMWRTValidation,
 		            new KVStringPair(XMLUni::fgDOMWRTValidation, gFalse));
-	fFeatures->put((void*)XMLUni::fgDOMWRTWhitespaceInElementContent, 
+	fFeatures->put((void*)XMLUni::fgDOMWRTWhitespaceInElementContent,
 		            new KVStringPair(XMLUni::fgDOMWRTWhitespaceInElementContent, gTrue));
 
 }
@@ -319,15 +322,15 @@ bool DOMWriterImpl::canSetFeature(const XMLCh* const featName
 		return false;
 
 	if ((XMLString::compareString(featName, XMLUni::fgDOMWRTCanonicalForm)==0) && state)
-		return false;        
+		return false;
 	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTFormatPrettyPrint)==0) && state)
-		return false;        
+		return false;
 	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTNormalizeCharacters)==0) && state)
 		return false;
 	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTValidation)==0) && state)
 		return false;
 	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTWhitespaceInElementContent)==0) && !state)
-		return false;        
+		return false;
 	else
 		return true;
 }
@@ -438,9 +441,9 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
 	}
 
 	//
-	// The serialize engine (processNode) throws an exception to abort 
+	// The serialize engine (processNode) throws an exception to abort
 	// serialization if
-	//   
+	//
 	//   . A fatal error occurs which renters the output ill-formed, or
 	//   . Instructed by the application's error handler
 	//
@@ -456,22 +459,22 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
 
 	//
 	// DOMSystemException
-    // This exception will be raised in response to any sort of IO or system 
-    // error that occurs while writing to the destination. It may wrap an 
+    // This exception will be raised in response to any sort of IO or system
+    // error that occurs while writing to the destination. It may wrap an
     // underlying system exception.
 	//
 	//catch (RuntimeException const &)
 	catch (...)
 	{
-		// REVISIT generate a DOMSystemException wrapping the underlying 
+		// REVISIT generate a DOMSystemException wrapping the underlying
 		//         exception.
 		throw;
 	}
 
 	//
-	// true if node was successfully serialized and 
-	// false in case a failure occured and the 
-	// failure wasn't canceled by the error handler. 
+	// true if node was successfully serialized and
+	// false in case a failure occured and the
+	// failure wasn't canceled by the error handler.
 	//
 	return ((fErrorCount == 0)? true : false);
 }
@@ -485,14 +488,14 @@ XMLCh* DOMWriterImpl::writeToString(const DOMNode &nodeToWrite)
 	MemBufFormatTarget  destination;
 	bool retVal;
 
-	try 
+	try
 	{
 		retVal = writeNode(&destination, nodeToWrite);
 	}
 	catch (...)
 	{
 		//
-		// there is a possibility that memeory allocation 
+		// there is a possibility that memeory allocation
 		// exception thrown in XMLBuffer class
 		//
 		return 0;
@@ -505,13 +508,13 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 {
 
 /**
- * The encoding to use when writing is determined as follows: 
+ * The encoding to use when writing is determined as follows:
  *     If the encoding attribute has been set, that value will be used.
- *     If the encoding attribute is null or empty, 
+ *     If the encoding attribute is null or empty,
  *            but the item to be written, or
  *            the owner document specified encoding (ie. the "actualEncoding"
  *            from the document) that value will be used.
- *     If neither of the above provides an encoding name, a default encoding of 
+ *     If neither of the above provides an encoding name, a default encoding of
  *            "UTF-8" will be used.
  */	
 	fEncodingUsed = gUTF8;
@@ -527,14 +530,14 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 	}
 
 /**
- *  The end-of-line sequence of characters to be used in the XML being 
- *  written out. The only permitted values are these: 
+ *  The end-of-line sequence of characters to be used in the XML being
+ *  written out. The only permitted values are these:
  *     . null
  *
- *  Use a default end-of-line sequence. DOM implementations should choose 
- * the default to match the usual convention for text files in the 
- * environment being used. Implementations must choose a default 
- * sequence that matches one of those allowed by  2.11 "End-of-Line 
+ *  Use a default end-of-line sequence. DOM implementations should choose
+ * the default to match the usual convention for text files in the
+ * environment being used. Implementations must choose a default
+ * sequence that matches one of those allowed by  2.11 "End-of-Line
  * Handling".
  *
  *    CR    The carriage-return character (#xD)
@@ -554,7 +557,7 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 // 1. CHARACTER DATA (outside of markup)                --- no error
 //    ordinary character  -> numeric character reference
 //    '<' and '&'         -> &lt; and &amp;
-//             
+//
 // 2. Within MARKUP, but outside of attributes
 //    reported as an error                                 --- ERROR
 //    markup:
@@ -562,7 +565,7 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 //           end tag                                    done
 //           empty element tag                          done
 //           entity references                          done
-//           character references    // REVISIT         
+//           character references    // REVISIT
 //           comments                                   done
 //           CDATA section delimiters                   done, done
 //           document type declarartions                done
@@ -574,7 +577,7 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 //    with quotes, no apostrophe       -> in apostrophe
 //    with quotes and apostrophe       -> in quotes and &quot;
 //
-// 4. CDATA sections     
+// 4. CDATA sections
 //    "split_cdata_section"  true                      --- char ref
 //                           false                     ---      ERROR
 //
@@ -658,8 +661,8 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 				//           this element    attributes   child elements
                 // accept        yes             yes           yes
 				// skip          no              no            yes
-				// 
-				TRY_CATCH_THROW 
+				//
+				TRY_CATCH_THROW
 				(
 				// The name has to be representable without any escapes
                     *fFormatter  << XMLFormatter::NoEscapes
@@ -679,23 +682,23 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 
 					// Not to be shown to Filter
 
-					//      
-					//"discard-default-content" 
-					//	true 
+					//
+					//"discard-default-content"
+					//	true
 					//	[required] (default)
-					//	Use whatever information available to the implementation 
-					//  (i.e. XML schema, DTD, the specified flag on Attr nodes, 
-					//  and so on) to decide what attributes and content should be 
-					//  discarded or not. 
-					//  Note that the specified flag on Attr nodes in itself is 
-					//  not always reliable, it is only reliable when it is set 
-					//  to false since the only case where it can be set to false 
-					//  is if the attribute was created by the implementation. 
-					//  The default content won't be removed if an implementation 
-					//  does not have any information available. 
-					//	false 
+					//	Use whatever information available to the implementation
+					//  (i.e. XML schema, DTD, the specified flag on Attr nodes,
+					//  and so on) to decide what attributes and content should be
+					//  discarded or not.
+					//  Note that the specified flag on Attr nodes in itself is
+					//  not always reliable, it is only reliable when it is set
+					//  to false since the only case where it can be set to false
+					//  is if the attribute was created by the implementation.
+					//  The default content won't be removed if an implementation
+					//  does not have any information available.
+					//	false
 					//	[required]
-					//	Keep all attributes and all content. 
+					//	Keep all attributes and all content.
 					//
 					if (discard && !((DOMAttr*)attribute )->getSpecified())
 						continue;
@@ -765,17 +768,17 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 
 	case DOMNode::ENTITY_REFERENCE_NODE:
 		{
-			//"entities" 
-			//true 
+			//"entities"
+			//true
 			//[required] (default)
-			//Keep EntityReference and Entity nodes in the document. 
+			//Keep EntityReference and Entity nodes in the document.
 
-			//false 
+			//false
 			//[optional]
-			//Remove all EntityReference and Entity nodes from the document, 
-			//       putting the entity expansions directly in their place. 
-			//       Text nodes are into "normal" form. 
-			//Only EntityReference nodes to non-defined entities are kept in the document. 
+			//Remove all EntityReference and Entity nodes from the document,
+			//       putting the entity expansions directly in their place.
+			//       Text nodes are into "normal" form.
+			//Only EntityReference nodes to non-defined entities are kept in the document.
 
 			if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
 				break;
@@ -814,11 +817,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			)
 
 			if (getFeature(XMLUni::fgDOMWRTSplitCdataSections))
-			{ 
+			{
 				setURCharRef();
 				*fFormatter << nodeValue;
-			} 
-			else 
+			}
+			else
 			{
 				TRY_CATCH_THROW
 				(
@@ -874,16 +877,16 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 					{
 						//
                         // 4.2.2 External Entities
-                        // [Definition: If the entity is not internal, 
+                        // [Definition: If the entity is not internal,
 						//           it is an external entity, declared as follows:]
 						// External Entity Declaration
-						// [75] ExternalID ::= 'SYSTEM' S SystemLiteral 
-						//                   | 'PUBLIC' S PubidLiteral S SystemLiteral 
+						// [75] ExternalID ::= 'SYSTEM' S SystemLiteral
+						//                   | 'PUBLIC' S PubidLiteral S SystemLiteral
 						//
 						DOMLocatorImpl  locator(0, 0, (DOMNode* const)nodeToWrite, 0, 0);
-						DOMErrorImpl    domError(DOMError::SEVERITY_FATAL_ERROR
-                                 			   , gUnrecognizedNodeType                   
-		                                       , &locator);                       
+						DOMErrorImpl    domError(DOMError::DOM_SEVERITY_FATAL_ERROR
+                                 			   , gUnrecognizedNodeType
+		                                       , &locator);
 						fErrorHandler->handleError(domError);
 						throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 						// systemLiteral not found
@@ -940,15 +943,15 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
         }
 
 	default:
-    	/*** 
+    	/***
 		    This is an implementation specific behaviour, we abort serialization
 			once unrecognized node type encountered.
 	     ***/
         {
 			DOMLocatorImpl  locator(0, 0, (DOMNode* const)nodeToWrite, 0, 0);
-			DOMErrorImpl    domError(DOMError::SEVERITY_FATAL_ERROR
-                      			   , gUnrecognizedNodeType                   
-			                       , &locator);                       
+			DOMErrorImpl    domError(DOMError::DOM_SEVERITY_FATAL_ERROR
+                      			   , gUnrecognizedNodeType
+			                       , &locator);
 			fErrorHandler->handleError(domError);
 			throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 			// UnreognizedNodeType;
@@ -968,8 +971,8 @@ DOMNodeFilter::FilterAction DOMWriterImpl::checkFilter(const DOMNode* const node
 		return DOMNodeFilter::FILTER_ACCEPT;
 
 	//
-	// if and only if there is a filter, and it is interested 
-	// in the node type, then we pass the node to the filter 
+	// if and only if there is a filter, and it is interested
+	// in the node type, then we pass the node to the filter
 	// for examination
 	//
 	return (DOMNodeFilter::FilterAction) fFilter->acceptNode(node);

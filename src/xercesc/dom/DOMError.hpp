@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/06/06 21:01:21  tng
+ * [Bug 9639] enum_mem in DOMError clashes with constant.
+ *
  * Revision 1.3  2002/06/06 20:53:06  tng
  * Documentation Fix: Update the API Documentation for DOM headers
  *
@@ -121,9 +124,9 @@ public:
      */
     enum ErrorSeverity
     {
-        SEVERITY_WARNING     = 0,
-        SEVERITY_ERROR       = 1,
-        SEVERITY_FATAL_ERROR = 2
+        DOM_SEVERITY_WARNING     = 0,
+        DOM_SEVERITY_ERROR       = 1,
+        DOM_SEVERITY_FATAL_ERROR = 2
     };
     //@}
 
