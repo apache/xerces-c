@@ -77,10 +77,10 @@ class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
         DOMNode* fCurrentNode;
 
         // The direction of the iterator on the fCurrentNode.
-        //  <pre>
-        //  nextNode()  ==      fForward = true;
-        //  previousNode() ==   fForward = false;
-        //  </pre>
+        //  <code>
+        //  nextNode()  ==      fForward = true;<br>
+        //  previousNode() ==   fForward = false;<br>
+        //  </code>
         bool fForward;
 
     public:

@@ -106,10 +106,10 @@ class DEPRECATED_DOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
 		DOM_Node fCurrentNode;
 
 		// The direction of the iterator on the fCurrentNode.
-		//  <pre>
-		//  nextNode()  ==      fForward = true;
-		//  previousNode() ==   fForward = false;
-		//  </pre>
+		//  <code>
+		//  nextNode()  ==      fForward = true;<br>
+		//  previousNode() ==   fForward = false;<br>
+		//  </code>
 		bool fForward;
 
 

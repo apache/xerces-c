@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/09/26 01:06:30  cargilld
+ * Fix documentation generation problem.  Replace <pre> with <code>.  Patch from James Littlejohn.
+ *
  * Revision 1.5  2004/09/08 13:56:19  peiyongz
  * Apache License Version 2.0
  *
@@ -87,27 +90,27 @@ class InputSource;
   * with a special character stream for the entity with the system
   * identifier "http://www.myhost.com/today":</p>
   *
-  *<pre>
-  *#include <xercesc/sax/EntityResolver.hpp>
-  *#include <xercesc/sax/InputSource.hpp>
-  *
-  *class MyResolver : public EntityResolver {
-  *  public:
-  *    InputSource resolveEntity (const XMLCh* const publicId,
-  *                               const XMLCh* const systemId);
-  *   ...
-  *   };
-  *
-  *  MyResolver::resolveEntity {
-  *    if (XMLString::compareString(systemId, "http://www.myhost.com/today")) {
-  *      MyReader* reader = new MyReader();
-  *      return new InputSource(reader);
-  *    } else {
-  *      return null;
-  *    }
-  *  }
-  *
-  *</pre>
+  *<code>
+  *#include <xercesc/sax/EntityResolver.hpp><br>
+  *#include <xercesc/sax/InputSource.hpp><br>
+  *<br>
+  *class MyResolver : public EntityResolver {<br>
+  *  public:<br>&nbsp;
+  *    InputSource resolveEntity (const XMLCh* const publicId, const XMLCh* const systemId);<br>&nbsp;&nbsp;
+  *    <br>
+  *   ...<br>&nbsp;&nbsp;
+  *   };<br>&nbsp;
+  *<br>
+  *&nbsp;MyResolver::resolveEntity {<br>
+  *&nbsp;&nbsp;if (XMLString::compareString(systemId, "http://www.myhost.com/today")) {<br>
+  *&nbsp;&nbsp;&nbsp;MyReader* reader = new MyReader();<br>
+  *&nbsp;&nbsp;&nbsp;return new InputSource(reader);<br>
+  *&nbsp;&nbsp;} else {<br>
+  *&nbsp;&nbsp;&nbsp;return null;<br>
+  *&nbsp;&nbsp;}<br>
+  *&nbsp;}<br>
+  *<br>
+  *</code>
   *
   * <p>The application can also use this interface to redirect system
   * identifiers to local URIs or to look up replacements in a catalog

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/09/26 01:06:31  cargilld
+ * Fix documentation generation problem.  Replace <pre> with <code>.  Patch from James Littlejohn.
+ *
  * Revision 1.5  2004/09/08 13:56:20  peiyongz
  * Apache License Version 2.0
  *
@@ -87,18 +90,18 @@ XERCES_CPP_NAMESPACE_BEGIN
   * from the Attributes.  First, it can iterate through the entire
   * list:
   *
-  * <pre>
-  * public void startElement (String uri, String localpart, String qName, Attributes atts) {
-  *   for (int i = 0; i < atts.getLength(); i++) {
-  *     String Qname = atts.getQName(i);
-  *		String URI   = atts.getURI(i)
-  *		String local = atts.GetLocalName(i)
-  *     String type  = atts.getType(i);
-  *     String value = atts.getValue(i);
-  *     [...]
-  *   }
+  * <code>
+  * public void startElement (String uri, String localpart, String qName, Attributes atts) {<br>
+  * &nbsp;for (int i = 0; i < atts.getLength(); i++) {<br>
+  * &nbsp;&nbsp;String Qname = atts.getQName(i);<br>
+  * &nbsp;&nbsp;String URI   = atts.getURI(i)<br>
+  * &nbsp;&nbsp;String local = atts.GetLocalName(i)<br>
+  * &nbsp;&nbsp;String type  = atts.getType(i);<br>
+  * &nbsp;&nbsp;String value = atts.getValue(i);<br>
+  * &nbsp;&nbsp;[...]<br>
+  * &nbsp;}<br>
   * }
-  * </pre>
+  * </code>
   *
   * (Note that the result of getLength() will be zero if there
   * are no attributes.)
@@ -106,13 +109,13 @@ XERCES_CPP_NAMESPACE_BEGIN
   * As an alternative, the application can request the value or
   * type of specific attributes:
   *
-  * <pre>
-  * public void startElement (String uri, String localpart, String qName, Attributes atts) {
-  *   String identifier = atts.getValue("id");
-  *   String label = atts.getValue("label");
-  *   [...]
+  * <code>
+  * public void startElement (String uri, String localpart, String qName, Attributes atts) {<br>
+  * &nbsp;String identifier = atts.getValue("id");<br>
+  * &nbsp;String label = atts.getValue("label");<br>
+  * &nbsp;[...]<br>
   * }
-  * </pre>
+  * </code>
   *
   * The AttributesImpl helper class provides a convenience
   * implementation for use by parser or application writers.

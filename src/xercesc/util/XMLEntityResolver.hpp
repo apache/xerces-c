@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/09/26 01:06:31  cargilld
+ * Fix documentation generation problem.  Replace <pre> with <code>.  Patch from James Littlejohn.
+ *
  * Revision 1.2  2004/09/08 13:56:24  peiyongz
  * Apache License Version 2.0
  *
@@ -67,30 +70,30 @@ class InputSource;
   * with a special character stream for the entity with the system
   * identifier "http://www.myhost.com/today":</p>
   *
-  *<pre>
-  * #include <xercesc/util/XMLEntityResolver.hpp>
-  * #include <xercesc/sax/InputSource.hpp>
-  *
-  * class MyResolver : public XMLEntityResolver {
-  *  public:
-  *    InputSource resolveEntity (XMLResourceIdentifier* xmlri);
-  *   ...
-  *   };
-  *
-  *  MyResolver::resolveEntity(XMLResourceIdentifier* xmlri) {
-  *    switch(xmlri->getResourceIdentifierType()) {
-  *      case XMLResourceIdentifier::SystemId: 
-  *        if (XMLString::compareString(xmlri->getSystemId(), "http://www.myhost.com/today")) {
-  *          MyReader* reader = new MyReader();
-  *          return new InputSource(reader);
-  *        } else {
-  *          return null;
-  *        }
-  *        break;
-  *      default:
-  *        return null;
-  *    }
-  *  }</pre>
+  *<code>
+  * #include <xercesc/util/XMLEntityResolver.hpp><br>
+  * #include <xercesc/sax/InputSource.hpp><br>
+  *<br>
+  *&nbsp;class MyResolver : public XMLEntityResolver {<br>
+  *&nbsp;&nbsp;public:<br>
+  *&nbsp;&nbsp;&nbsp;InputSource resolveEntity (XMLResourceIdentifier* xmlri);<br>
+  *&nbsp;&nbsp;&nbsp;...<br>
+  *&nbsp;&nbsp;};<br>
+  *<br>
+  *&nbsp;MyResolver::resolveEntity(XMLResourceIdentifier* xmlri) {<br>
+  *&nbsp;&nbsp;switch(xmlri->getResourceIdentifierType()) {<br>
+  *&nbsp;&nbsp;&nbsp;case XMLResourceIdentifier::SystemId:<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;if (XMLString::compareString(xmlri->getSystemId(), "http://www.myhost.com/today")) {<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyReader* reader = new MyReader();<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return new InputSource(reader);<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;} else {<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return null;<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;break;<br>
+  *&nbsp;&nbsp;&nbsp;default:<br>
+  *&nbsp;&nbsp;&nbsp;&nbsp;return null;<br>
+  *&nbsp;&nbsp;}<br>
+  *&nbsp;}</code>
   *
   * <p>The application can also use this interface to redirect system
   * identifiers to local URIs or to look up replacements in a catalog
