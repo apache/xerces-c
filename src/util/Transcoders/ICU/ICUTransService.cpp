@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.19  2000/05/11 23:13:31  rahulj
+ * Works with latest revision of ICU which provides a hard
+ * linked data DLL. i.e. icudata.dll will be loaded when xerces-c is
+ * loaded.
+ *
  * Revision 1.18  2000/04/12 18:41:28  roddey
  * Fixed a small 'one off' problem in the calls to ICU.
  *
@@ -139,6 +144,13 @@
 #include <unicode/ucnv.h>
 #include <unicode/ucnv_err.h>
 #include <unicode/ustring.h>
+#include <unicode/udata.h>
+
+
+#if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX)
+// Forward reference the symbol which points to the ICU converter data.
+extern "C" const uint8_t U_IMPORT icudata_dat[]; 
+#endif
 
 
 
@@ -199,6 +211,17 @@ static XMLCh* convertToXMLCh(const UChar* const toConvert)
 // ---------------------------------------------------------------------------
 ICUTransService::ICUTransService()
 {
+#if !defined(XML_OS390) && !defined(XML_AS400) && !defined(XML_HPUX)
+    // Pass the location of the converter data to ICU. By doing so, we are
+    // forcing the load of ICU converter data DLL, after the Xerces-C DLL is
+    // loaded. This implies that Xerces-C, now has to explicitly link with the
+    // ICU converter dll. However, the advantage is that we no longer depend
+    // on the code which does demand dynamic loading of DLL's. The demand
+    // loading is highly system dependent and was a constant source of support
+    // calls.
+    UErrorCode uerr = U_ZERO_ERROR;
+    udata_setCommonData((void *) icudata_dat, &uerr);
+#endif
 }
 
 ICUTransService::~ICUTransService()
