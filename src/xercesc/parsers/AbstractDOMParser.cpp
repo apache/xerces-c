@@ -381,6 +381,8 @@ void AbstractDOMParser::useScanner(const XMLCh* const scannerName)
         // REVISIT: need to set scanner options and handlers
         delete fScanner;
         fScanner = tempScanner;
+        fScanner->setDocHandler(this);
+        fScanner->setDocTypeHandler(this);
         fScanner->setGrammarResolver(fGrammarResolver);
         fScanner->setURIStringPool(fURIStringPool);
     }
