@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2001/07/10 18:12:53  knoaman
+ * Modified the 'throw' in complexType processing.
+ *
  * Revision 1.28  2001/07/09 20:07:49  knoaman
  * Added <element> constraint checking.
  *
@@ -2524,7 +2527,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     if (simpleContent == 0) {
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::EmptySimpleTypeContent);
-        throw;
+        throw 0;
     }
 
     fAttributeCheck->checkAttributes(simpleContent, scope, this);
@@ -2542,7 +2545,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     }
     else {
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidSimpleContent);
-        throw;
+        throw 0;
     }
 
     // -----------------------------------------------------------------------
@@ -2554,7 +2557,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     if (XMLString::stringLen(baseName) == 0) {
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::UnspecifiedBase);
-        throw;
+        throw 0;
     }
 
     const XMLCh* prefix = getPrefix(baseName);
@@ -2568,7 +2571,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisallowedSimpleTypeExtension,
                           baseName, typeName);
-        throw;
+        throw 0;
     }
 
     processBaseTypeInfo(baseName, localPart, uri, typeInfo);
@@ -2579,7 +2582,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     if (baseTypeInfo != 0 && baseTypeInfo->getContentSpec() != 0) {
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidSimpleContentBase, baseName);
-        throw;
+        throw 0;
     }
 
     // -----------------------------------------------------------------------
@@ -2595,7 +2598,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
         if (typeInfo->getBaseDatatypeValidator() != 0) {
 
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidComplexTypeBase, baseName);
-            throw;
+            throw 0;
         }
         else {
            typeInfo->setBaseDatatypeValidator(
@@ -2621,7 +2624,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                     content = XUtil::getNextSiblingElement(content);
                 }
                 else {
-                    throw;
+                    throw 0;
                 }
             }
 
@@ -2851,7 +2854,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
 
     // If there are no children, return
     if (complexContent == 0) {
-       throw;
+       throw 0;
     }
 
     // -----------------------------------------------------------------------
@@ -2868,7 +2871,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     else {
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidComplexContent);
-        throw;
+        throw 0;
     }
 
     // -----------------------------------------------------------------------
@@ -2880,7 +2883,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     if (XMLString::stringLen(baseName) == 0) {
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::UnspecifiedBase);
-        throw;
+        throw 0;
     }
 
     const XMLCh* prefix = getPrefix(baseName);
@@ -2900,7 +2903,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
 
             reportSchemaError(XMLUni::fgXMLErrDomain,
                               XMLErrs::BaseNotComplexType);
-            throw;
+            throw 0;
         }
     }
 
@@ -4325,7 +4328,7 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
 
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ForbiddenDerivationByRestriction,
                                   baseLocalPart);
-                throw;
+                throw 0;
             }
 
             //REVISIT: !!!really hairy stuff to check the particle derivation OK in 5.10
@@ -4337,7 +4340,7 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
             if((baseTypeInfo->getFinalSet() & SchemaSymbols::EXTENSION) != 0) {
 
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ForbiddenDerivationByExtension, baseLocalPart);
-                throw;
+                throw 0;
             }
 
             // Compose the final content model by concatenating the base and
@@ -4422,7 +4425,7 @@ void TraverseSchema::processBaseTypeInfo(const XMLCh* const baseName,
             if (baseDTValidator == 0) {
 
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, uriStr, localPart);
-                throw;
+                throw 0;
             }
         }
     }
@@ -4444,7 +4447,7 @@ void TraverseSchema::processBaseTypeInfo(const XMLCh* const baseName,
             locationsContain(fCurrentTypeNameStack, fStringPool.addOrFind(localPart))) {
 
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, localPart);
-            throw;
+            throw 0;
         }
 
         // if not found, 2 possibilities:
@@ -4479,13 +4482,13 @@ void TraverseSchema::processBaseTypeInfo(const XMLCh* const baseName,
                         if (baseDTValidator == 0)  {
 
                             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, uriStr, localPart, uriStr);
-                            throw;
+                            throw 0;
                         }
                     }
                     else {
 
                         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::BaseTypeNotFound, baseName);
-                        throw;
+                        throw 0;
                     }
                 }
             }
