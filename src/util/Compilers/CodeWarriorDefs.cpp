@@ -54,6 +54,10 @@
  * <http://www.apache.org/>.
  */
 
+/*
+ * $Id$
+ */
+
 #include <util/XercesDefs.hpp>
 #include <ctype.h>
 
