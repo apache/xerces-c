@@ -890,8 +890,8 @@ const XMLCh* DOMDocumentImpl::getVersion() const {
 }
 
 void DOMDocumentImpl::setVersion(const XMLCh* version){
-    if (XMLString::stringLen(version) &&
-        XMLString::compareString(version, XMLUni::fgSupportedVersion))
+    if ((version && *version) &&
+        !XMLString::equals(version, XMLUni::fgSupportedVersion))
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 
     fVersion = cloneString(version);
@@ -903,7 +903,9 @@ const XMLCh* DOMDocumentImpl::getDocumentURI() const
 }
 
 void DOMDocumentImpl::setDocumentURI(const XMLCh* documentURI){
-    fDocumentURI = cloneString(documentURI);
+    XMLCh* temp = (XMLCh*) this->allocate((XMLString::stringLen(documentURI) + 9)*sizeof(XMLCh));
+    XMLString::fixURI(documentURI, temp);
+    fDocumentURI = temp;
 }
 
 bool DOMDocumentImpl::getStrictErrorChecking() const {

@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2002/09/24 20:19:14  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ * and check for null string directly isntead of calling XMLString::stringLen
+ *
  * Revision 1.16  2002/09/09 15:42:14  peiyongz
  * Patch to Bug#12369: invalid output from DOMWriter using MemBufFormatTarget
  *
@@ -610,7 +614,7 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
  */	
 	fEncodingUsed = gUTF8;
 
-	if (fEncoding && XMLString::stringLen(fEncoding))
+	if (fEncoding && *fEncoding)
 	{
 		fEncodingUsed = fEncoding;
 	}
@@ -622,7 +626,7 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
         {
             const XMLCh* tmpEncoding = docu->getEncoding();
 
-            if ( tmpEncoding && XMLString::stringLen(tmpEncoding))
+            if ( tmpEncoding && *tmpEncoding)
             {
                 fEncodingUsed = tmpEncoding;
             }
@@ -630,7 +634,7 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
             {
                 tmpEncoding = docu->getActualEncoding();
 
-                if ( tmpEncoding && XMLString::stringLen(tmpEncoding))
+                if ( tmpEncoding && *tmpEncoding)
                 {
                     fEncodingUsed = tmpEncoding;
                 }
@@ -655,7 +659,7 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
  *
  *  The default value for this attribute is null
  */
-	fNewLineUsed = (fNewLine && XMLString::stringLen(fNewLine))? fNewLine : gEOLSeq;
+	fNewLineUsed = (fNewLine && *fNewLine)? fNewLine : gEOLSeq;
 
 	fErrorCount = 0;	
 }
@@ -1119,7 +1123,7 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
                                , int&               featureId) const
 {
     // check for null and/or empty feature name
-    if ((!featName) || (XMLString::stringLen(featName)==0))
+    if (!featName || !*featName)
     {
         if (toThrow)
             throw DOMException(DOMException::NOT_FOUND_ERR, 0);
@@ -1129,21 +1133,21 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
 
     featureId = INVALID_FEATURE_ID;
 
-    if (XMLString::compareString(featName, XMLUni::fgDOMWRTCanonicalForm)==0)
+    if (XMLString::equals(featName, XMLUni::fgDOMWRTCanonicalForm))
         featureId = CANONICAL_FORM_ID;
-    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTDiscardDefaultContent)==0)
+    else if (XMLString::equals(featName, XMLUni::fgDOMWRTDiscardDefaultContent))
         featureId = DISCARD_DEFAULT_CONTENT_ID;
-    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTEntities)==0)
+    else if (XMLString::equals(featName, XMLUni::fgDOMWRTEntities))
         featureId = ENTITIES_ID;
-    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTFormatPrettyPrint)==0)
+    else if (XMLString::equals(featName, XMLUni::fgDOMWRTFormatPrettyPrint))
         featureId = FORMAT_PRETTY_PRINT_ID;
-    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTNormalizeCharacters)==0)
+    else if (XMLString::equals(featName, XMLUni::fgDOMWRTNormalizeCharacters))
         featureId = NORMALIZE_CHARACTERS_ID;
-    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTSplitCdataSections)==0)
+    else if (XMLString::equals(featName, XMLUni::fgDOMWRTSplitCdataSections))
         featureId = SPLIT_CDATA_SECTIONS_ID;
-    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTValidation)==0)
+    else if (XMLString::equals(featName, XMLUni::fgDOMWRTValidation))
         featureId = VALIDATION_ID;
-    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTWhitespaceInElementContent)==0)
+    else if (XMLString::equals(featName, XMLUni::fgDOMWRTWhitespaceInElementContent))
         featureId = WHITESPACE_IN_ELEMENT_CONTENT_ID;
 
     //feature name not resolvable

@@ -289,12 +289,12 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
 
     // Make sure namespace binding is defaulted
     const XMLCh* rootPrefix = schemaRoot->getPrefix();
-    
-    if (rootPrefix == 0 || XMLString::stringLen(rootPrefix) == 0) {
+
+    if (rootPrefix == 0 || !*rootPrefix) {
 
 		const XMLCh* xmlnsStr = schemaRoot->getAttribute(XMLUni::fgXMLNSString);
 
-        if (XMLString::stringLen(xmlnsStr) == 0) {
+        if (!xmlnsStr || !*xmlnsStr) {
             schemaRoot->setAttribute(XMLUni::fgXMLNSString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA);
         }
     }
@@ -355,7 +355,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     //Retrieve the targetnamespace URI information
     const XMLCh* targetNSURIStr = schemaRoot->getAttribute(SchemaSymbols::fgATT_TARGETNAMESPACE);
 
-    if (targetNSURIStr == 0 || XMLString::stringLen(targetNSURIStr) == 0) {
+    if (targetNSURIStr == 0 || !*targetNSURIStr) {
         fSchemaGrammar->setTargetNamespace(XMLUni::fgZeroLenString);
     }
     else {
@@ -383,7 +383,7 @@ void TraverseSchema::preprocessSchema(DOMElement* const schemaRoot,
     fSchemaInfoList->put((void*) fSchemaInfo->getCurrentSchemaURL(), fSchemaInfo->getTargetNSURI(), fSchemaInfo);
     fSchemaInfo->addSchemaInfo(fSchemaInfo, SchemaInfo::INCLUDE);
 
-    if (XMLString::compareString(schemaRoot->getLocalName(), SchemaSymbols::fgELT_SCHEMA)) {
+    if (!XMLString::equals(schemaRoot->getLocalName(), SchemaSymbols::fgELT_SCHEMA)) {
         reportSchemaError(schemaRoot, XMLUni::fgXMLErrDomain, XMLErrs::InvalidXMLSchemaRoot);
     }
 
@@ -404,17 +404,17 @@ void TraverseSchema::traverseSchemaHeader(const DOMElement* const schemaRoot) {
     retrieveNamespaceMapping(schemaRoot);
     unsigned short elemAttrDefaultQualified = 0;
 
-    if (!XMLString::compareString(schemaRoot->getAttribute(SchemaSymbols::fgATT_ELEMENTFORMDEFAULT),
+    if (XMLString::equals(schemaRoot->getAttribute(SchemaSymbols::fgATT_ELEMENTFORMDEFAULT),
                                   SchemaSymbols::fgATTVAL_QUALIFIED)) {
         elemAttrDefaultQualified |= Elem_Def_Qualified;
     }
 
-    if (!XMLString::compareString(schemaRoot->getAttribute(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT), 
+    if (XMLString::equals(schemaRoot->getAttribute(SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT),
                                   SchemaSymbols::fgATTVAL_QUALIFIED)) {
         elemAttrDefaultQualified |= Attr_Def_Qualified;
     }
 
-    fSchemaInfo->setElemAttrDefaultQualified(elemAttrDefaultQualified);    
+    fSchemaInfo->setElemAttrDefaultQualified(elemAttrDefaultQualified);
     fSchemaInfo->setBlockDefault(parseBlockSet(schemaRoot, ES_Block, true));
     fSchemaInfo->setFinalDefault(parseFinalSet(schemaRoot, ECS_Final, true));
 }
@@ -434,10 +434,10 @@ void TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationEl
 
         const XMLCh* name = child->getLocalName();
 
-        if (!XMLString::compareString(name, SchemaSymbols::fgELT_APPINFO)) {
+        if (XMLString::equals(name, SchemaSymbols::fgELT_APPINFO)) {
             fAttributeCheck.checkAttributes(child, GeneralAttributeCheck::E_Appinfo, this);
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_DOCUMENTATION)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_DOCUMENTATION)) {
             fAttributeCheck.checkAttributes(child, GeneralAttributeCheck::E_Documentation, this);
         }
         else {
@@ -476,7 +476,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     const XMLCh* schemaLocation = getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION);
 
-    if (XMLString::stringLen(schemaLocation) == 0) {
+    if (!schemaLocation || !*schemaLocation) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DeclarationNoSchemaLocation, SchemaSymbols::fgELT_INCLUDE);
         return;
     }
@@ -536,11 +536,11 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
         if (root) {
 
             const XMLCh* targetNSURIString = getTargetNamespaceString(root);
-            unsigned int targetNSLength = XMLString::stringLen(targetNSURIString);
+            bool targetNSLength = !targetNSURIString || !*targetNSURIString;
 
             // check to see if targetNameSpace is right
-            if (targetNSLength != 0
-                && XMLString::compareString(targetNSURIString,fTargetNSURIString) != 0){
+            if (!targetNSLength
+                && !XMLString::equals(targetNSURIString,fTargetNSURIString)){
                 reportSchemaError(root, XMLUni::fgXMLErrDomain, XMLErrs::IncludeNamespaceDifference,
                                   schemaLocation, targetNSURIString);
                 return;
@@ -548,7 +548,7 @@ void TraverseSchema::preprocessInclude(const DOMElement* const elem) {
 
             // if targetNamespace is empty, change it to includ'g schema
             // targetNamespace
-            if (targetNSLength == 0 && root->getAttributeNode(XMLUni::fgXMLNSString) == 0
+            if (targetNSLength && root->getAttributeNode(XMLUni::fgXMLNSString) == 0
                 && fTargetNSURI != fEmptyNamespaceURI) {
                 root->setAttribute(XMLUni::fgXMLNSString, fTargetNSURIString);
             }
@@ -620,13 +620,13 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     const XMLCh* nameSpace = getElementAttValue(elem, SchemaSymbols::fgATT_NAMESPACE);
 
-    if (!XMLString::compareString(nameSpace, fTargetNSURIString)) {
+    if (XMLString::equals(nameSpace, fTargetNSURIString)) {
 
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::Import_1_1);
         return;
     }
 
-    if (!XMLString::stringLen(nameSpace) && fTargetNSURI == fEmptyNamespaceURI) {
+    if ((!nameSpace || !*nameSpace) && fTargetNSURI == fEmptyNamespaceURI) {
 
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::Import_1_2);
         return;
@@ -647,7 +647,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     const XMLCh* schemaLocation = getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION);
 
-    if (XMLString::stringLen(schemaLocation) == 0) {
+    if (!schemaLocation || !*schemaLocation) {
         return;
     }
 
@@ -718,7 +718,7 @@ void TraverseSchema::preprocessImport(const DOMElement* const elem) {
 
         const XMLCh* targetNSURIString = getTargetNamespaceString(root);
 
-        if (XMLString::compareString(targetNSURIString, nameSpace) != 0) {
+        if (!XMLString::equals(targetNSURIString, nameSpace)) {
             reportSchemaError(root, XMLUni::fgXMLErrDomain, XMLErrs::ImportNamespaceDifference,
                               schemaLocation, targetNSURIString, nameSpace);
         }
@@ -867,7 +867,7 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
         bool seeParticle = false;
         const XMLCh* childName = child->getLocalName();
 
-        if (!XMLString::compareString(childName, SchemaSymbols::fgELT_ELEMENT)) {
+        if (XMLString::equals(childName, SchemaSymbols::fgELT_ELEMENT)) {
 
             QName* eltQName = traverseElementDecl(child);
 
@@ -878,7 +878,7 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
             contentSpecNode = new ContentSpecNode(eltQName, false);
             seeParticle = true;
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_GROUP)) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_GROUP)) {
 
             XercesGroupInfo* grpInfo = traverseGroupDecl(child, false);
 
@@ -901,17 +901,17 @@ TraverseSchema::traverseChoiceSequence(const DOMElement* const elem,
             contentSpecNode = new ContentSpecNode(*contentSpecNode);
             seeParticle = true;
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_CHOICE)) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_CHOICE)) {
 
             contentSpecNode = traverseChoiceSequence(child,ContentSpecNode::Choice);
             seeParticle = true;
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_SEQUENCE)) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_SEQUENCE)) {
 
             contentSpecNode = traverseChoiceSequence(child,ContentSpecNode::Sequence);
             seeParticle = true;
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_ANY)) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_ANY)) {
 
             contentSpecNode = traverseAny(child);
             seeParticle = true;
@@ -965,7 +965,7 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
     // Process contents
     // ------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(childElem,SchemaSymbols::fgATT_NAME);
-    bool nameEmpty = (XMLString::stringLen(name) == 0); 
+    bool nameEmpty = (!name || !*name);
 
     if (topLevel && nameEmpty) {
         reportSchemaError(childElem, XMLUni::fgXMLErrDomain, XMLErrs::NoNameGlobalElement,
@@ -1031,7 +1031,7 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
 
         // Remark: some code will be repeated in list|restriction| union but it
         //         is cleaner that way
-        if (!XMLString::compareString(varietyName, SchemaSymbols::fgELT_LIST)) { //traverse List
+        if (XMLString::equals(varietyName, SchemaSymbols::fgELT_LIST)) { //traverse List
             if ((baseRefContext & SchemaSymbols::LIST) != 0) {
 
                 reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AtomicItemType);
@@ -1041,10 +1041,10 @@ TraverseSchema::traverseSimpleTypeDecl(const DOMElement* const childElem,
 
             return traverseByList(childElem, content, name, fullName, finalSet);
         }
-        else if (!XMLString::compareString(varietyName, SchemaSymbols::fgELT_RESTRICTION)) { //traverse Restriction
+        else if (XMLString::equals(varietyName, SchemaSymbols::fgELT_RESTRICTION)) { //traverse Restriction
             return traverseByRestriction(childElem, content, name, fullName, finalSet);
         }
-        else if (!XMLString::compareString(varietyName, SchemaSymbols::fgELT_UNION)) { //traverse union
+        else if (XMLString::equals(varietyName, SchemaSymbols::fgELT_UNION)) { //traverse union
             return traverseByUnion(childElem, content, name, fullName, finalSet, baseRefContext);
         }
         else {
@@ -1078,7 +1078,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
     // Get the attributes of the complexType
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
 
-    if (XMLString::stringLen(name) == 0) {
+    if (!name || !*name) {
 
         if (topLevel) {
 
@@ -1183,13 +1183,13 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
             const XMLCh* mixedVal = getElementAttValue(elem,SchemaSymbols::fgATT_MIXED);
             bool isMixed = false;
 
-            if (XMLString::stringLen(mixedVal)
-                && (!XMLString::compareString(SchemaSymbols::fgATTVAL_TRUE, mixedVal)
-                    || !XMLString::compareString(fgValueOne, mixedVal))) {
+            if ((mixedVal && *mixedVal)
+                && (XMLString::equals(SchemaSymbols::fgATTVAL_TRUE, mixedVal)
+                    || XMLString::equals(fgValueOne, mixedVal))) {
                 isMixed = true;
             }
 
-            if (!XMLString::compareString(childName, SchemaSymbols::fgELT_SIMPLECONTENT)) {
+            if (XMLString::equals(childName, SchemaSymbols::fgELT_SIMPLECONTENT)) {
 
                 // SIMPLE CONTENT element
                 traverseSimpleContentDecl(name, fullName, child, typeInfo);
@@ -1198,7 +1198,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::InvalidChildFollowingSimpleContent);
                 }
             }
-            else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_COMPLEXCONTENT)) {
+            else if (XMLString::equals(childName, SchemaSymbols::fgELT_COMPLEXCONTENT)) {
 
                 // COMPLEX CONTENT element
                 traverseComplexContentDecl(name, child, typeInfo, isMixed);
@@ -1237,9 +1237,9 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
         typeInfo->setBlockSet(blockSet);
         typeInfo->setFinalSet(finalSet);
 
-        if (XMLString::stringLen(abstractAttVal)
-            && (!XMLString::compareString(abstractAttVal, SchemaSymbols::fgATTVAL_TRUE)
-                || !XMLString::compareString(abstractAttVal, fgValueOne))) {
+        if ((abstractAttVal && *abstractAttVal)
+            && (XMLString::equals(abstractAttVal, SchemaSymbols::fgATTVAL_TRUE)
+                || XMLString::equals(abstractAttVal, fgValueOne))) {
             typeInfo->setAbstract(true);
         }
         else {
@@ -1277,8 +1277,8 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
 
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
     const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
-    bool         nameEmpty = (XMLString::stringLen(name) == 0);
-    bool         refEmpty = (XMLString::stringLen(ref) == 0);
+    bool         nameEmpty = (!name || !*name);
+    bool         refEmpty = (!ref || !*ref);
 
     if (nameEmpty && topLevel) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoNameGlobalElement,
@@ -1364,13 +1364,13 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
         bool illegalChild = false;
         const XMLCh* childName = content->getLocalName();
 
-        if (!XMLString::compareString(childName, SchemaSymbols::fgELT_SEQUENCE)) {
+        if (XMLString::equals(childName, SchemaSymbols::fgELT_SEQUENCE)) {
             specNode = traverseChoiceSequence(content, ContentSpecNode::Sequence);
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_CHOICE)) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_CHOICE)) {
             specNode = traverseChoiceSequence(content, ContentSpecNode::Choice);
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_ALL)) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_ALL)) {
             specNode = traverseAll(content);
         }
         else {
@@ -1409,7 +1409,7 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
 
             fBuffer.set(fullName);
             fBuffer.append(SchemaSymbols::fgRedefIdentifier);
-            groupInfo->setBaseGroup(fGroupRegistry->get(fBuffer.getRawBuffer()));            
+            groupInfo->setBaseGroup(fGroupRegistry->get(fBuffer.getRawBuffer()));
         }
     }
 
@@ -1435,8 +1435,8 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
 
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
     const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
-    bool         nameEmpty = (XMLString::stringLen(name) == 0) ? true : false;
-    bool         refEmpty = (XMLString::stringLen(ref) == 0) ? true : false;
+    bool         nameEmpty = (!name || !*name) ? true : false;
+    bool         refEmpty = (!ref || !*ref) ? true : false;
 
     if (nameEmpty && topLevel) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoNameGlobalElement,
@@ -1494,10 +1494,10 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
 
     for (; content !=0; content = XUtil::getNextSiblingElement(content)) {
 
-        if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTE)) {
+        if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTE)) {
             traverseAttributeDecl(content, typeInfo);
         }
-        else if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
+        else if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
             traverseAttributeGroupDecl(content, typeInfo);
         }
         else {
@@ -1507,7 +1507,7 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
 
     if (content != 0) {
 
-        if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_ANYATTRIBUTE)) {
+        if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ANYATTRIBUTE)) {
 
             SchemaAttDef* anyAtt = traverseAnyAttribute(content);
 
@@ -1616,16 +1616,16 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
     ContentSpecNode::NodeTypes anyLocalType = ContentSpecNode::Any_NS;
     ContentSpecNode::NodeTypes anyOtherType = ContentSpecNode::Any_Other;
 
-    if (XMLString::stringLen(processContents) > 0
-        && XMLString::compareString(processContents, fgStrict)) {
+    if ((processContents && *processContents)
+        && !XMLString::equals(processContents, fgStrict)) {
 
-        if (!XMLString::compareString(processContents, fgLax)) {
+        if (XMLString::equals(processContents, fgLax)) {
 
             anyType = ContentSpecNode::Any_Lax;
             anyOtherType = ContentSpecNode::Any_Other_Lax;
             anyLocalType = ContentSpecNode::Any_NS_Lax;
         }
-        else if (!XMLString::compareString(processContents, fgSkip)) {
+        else if (XMLString::equals(processContents, fgSkip)) {
 
             anyType = ContentSpecNode::Any_Skip;
             anyOtherType = ContentSpecNode::Any_Other_Skip;
@@ -1638,15 +1638,15 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
     // ------------------------------------------------------------------
     ContentSpecNode* retSpecNode = 0;
 
-    if (XMLString::stringLen(nameSpace) == 0
-        || !XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDANY)) {
+    if ((!nameSpace || !*nameSpace)
+        || XMLString::equals(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDANY)) {
         retSpecNode = new ContentSpecNode(new QName(XMLUni::fgZeroLenString,
                                                     XMLUni::fgZeroLenString,
                                                     fEmptyNamespaceURI),
                                           false);
         retSpecNode->setType(anyType);
     }
-    else if (!XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDOTHER)) {
+    else if (XMLString::equals(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDOTHER)) {
         retSpecNode = new ContentSpecNode(new QName(XMLUni::fgZeroLenString,
                                                     XMLUni::fgZeroLenString,
                                                     fTargetNSURI),
@@ -1666,9 +1666,9 @@ TraverseSchema::traverseAny(const DOMElement* const elem) {
             const XMLCh* tokenElem = nameSpaceTokens->elementAt(i);
             int uriIndex = fEmptyNamespaceURI;
 
-            if (XMLString::compareString(tokenElem,SchemaSymbols::fgATTVAL_TWOPOUNDLOCAL)) { // not ##local
+            if (!XMLString::equals(tokenElem,SchemaSymbols::fgATTVAL_TWOPOUNDLOCAL)) { // not ##local
 
-                if (!XMLString::compareString(tokenElem,SchemaSymbols::fgATTVAL_TWOPOUNDTRAGETNAMESPACE)) {
+                if (XMLString::equals(tokenElem,SchemaSymbols::fgATTVAL_TWOPOUNDTRAGETNAMESPACE)) {
                     uriIndex = fTargetNSURI;
                 }
                 else {
@@ -1741,7 +1741,7 @@ TraverseSchema::traverseAll(const DOMElement* const elem) {
         ContentSpecNode* contentSpecNode = 0;
         const XMLCh* childName = child->getLocalName();
 
-        if (!XMLString::compareString(childName, SchemaSymbols::fgELT_ELEMENT)) {
+        if (XMLString::equals(childName, SchemaSymbols::fgELT_ELEMENT)) {
 
             QName* eltQName = traverseElementDecl(child);
 
@@ -1807,8 +1807,8 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
     const XMLCh*   name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
     const XMLCh*   ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
-    bool           nameEmpty = (XMLString::stringLen(name) == 0);
-    bool           refEmpty = (XMLString::stringLen(ref) == 0);
+    bool           nameEmpty = (!name || !*name);
+    bool           refEmpty = (!ref || !*ref);
 
     if (nameEmpty && refEmpty) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoNameRefAttribute);
@@ -1841,7 +1841,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
         const XMLCh* contentName = simpleType->getLocalName();
 
-        if (!XMLString::compareString(SchemaSymbols::fgELT_SIMPLETYPE, contentName)) {
+        if (XMLString::equals(SchemaSymbols::fgELT_SIMPLETYPE, contentName)) {
 
             if (XUtil::getNextSiblingElement(simpleType) != 0) {
                 badContent = true;
@@ -1867,8 +1867,8 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeDefaultFixedValue);
         }
 
-        if (XMLString::stringLen(useVal) != 0
-            && XMLString::compareString(useVal, SchemaSymbols::fgATTVAL_OPTIONAL) != 0) {
+        if ((useVal && *useVal)
+            && !XMLString::equals(useVal, SchemaSymbols::fgATTVAL_OPTIONAL)) {
 
             useVal = 0;
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NotOptionalDefaultAttValue);
@@ -1889,7 +1889,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
     // processing 'name'
     if (!XMLString::isValidNCName(name)
-        || XMLString::compareString(name, XMLUni::fgXMLNSString) == 0) {
+        || XMLString::equals(name, XMLUni::fgXMLNSString)) {
 
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidDeclarationName, SchemaSymbols::fgELT_ATTRIBUTE, name);
         return;
@@ -1899,10 +1899,10 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
     const XMLCh* qualified = SchemaSymbols::fgATTVAL_QUALIFIED;
     int uriIndex = fEmptyNamespaceURI;
 
-    if (XMLString::stringLen(fTargetNSURIString) != 0
-        && (topLevel || XMLString::compareString(attForm, qualified) == 0
+    if ((fTargetNSURIString && *fTargetNSURIString)
+        && (topLevel || XMLString::equals(attForm, qualified)
             || ((fSchemaInfo->getElemAttrDefaultQualified() & Attr_Def_Qualified)
-                && XMLString::stringLen(attForm) == 0))) {
+                && (!attForm || !*attForm)))) {
         uriIndex = fTargetNSURI;
     }
 
@@ -1923,13 +1923,13 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
 
     if (simpleType != 0) {
 
-        if (XMLString::stringLen(dvType) != 0) {
+        if (dvType && *dvType) {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttributeWithTypeAndSimpleType);
         }
 
         dv = traverseSimpleTypeDecl(simpleType, false);
     }
-    else if (XMLString::stringLen(dvType) == 0) {
+    else if (!dvType || !*dvType) {
         dv = fDatatypeRegistry->getDatatypeValidator(SchemaSymbols::fgDT_STRING);
     }
     else {
@@ -1940,39 +1940,39 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         const XMLCh* prefix = getPrefix(dvType);
         const XMLCh* typeURI = resolvePrefixToURI(elem, prefix);
 
-        if (XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)  == 0) {
+        if (XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
 
             dv = fDatatypeRegistry->getDatatypeValidator(localPart);
 
-            if (XMLString::compareString(localPart,XMLUni::fgIDString) == 0) {
+            if (XMLString::equals(localPart,XMLUni::fgIDString)) {
                 attType = XMLAttDef::ID;
             }
-            else if (XMLString::compareString(localPart,XMLUni::fgIDRefString) == 0) {
+            else if (XMLString::equals(localPart,XMLUni::fgIDRefString)) {
                 attType = XMLAttDef::IDRef;
             }
-            else if (XMLString::compareString(localPart,XMLUni::fgIDRefsString) == 0) {
+            else if (XMLString::equals(localPart,XMLUni::fgIDRefsString)) {
                 attType = XMLAttDef::IDRefs;
             }
-            else if (XMLString::compareString(localPart,XMLUni::fgEntityString) == 0) {
+            else if (XMLString::equals(localPart,XMLUni::fgEntityString)) {
                 attType = XMLAttDef::Entity;
             }
-            else if (XMLString::compareString(localPart,XMLUni::fgEntitiesString) == 0) {
+            else if (XMLString::equals(localPart,XMLUni::fgEntitiesString)) {
                 attType = XMLAttDef::Entities;
             }
-            else if (XMLString::compareString(localPart,XMLUni::fgNmTokenString) == 0) {
+            else if (XMLString::equals(localPart,XMLUni::fgNmTokenString)) {
                 attType = XMLAttDef::NmToken;
             }
-            else if (XMLString::compareString(localPart,XMLUni::fgNmTokensString) == 0) {
+            else if (XMLString::equals(localPart,XMLUni::fgNmTokensString)) {
                 attType = XMLAttDef::NmTokens;
             }
-            else if (XMLString::compareString(localPart,XMLUni::fgNotationString) == 0) {
+            else if (XMLString::equals(localPart,XMLUni::fgNotationString)) {
                 attType = XMLAttDef::Notation;
             }
             else {
 
                 attType = XMLAttDef::Simple;
 
-                if (dv == 0 && XMLString::stringLen(typeURI) == 0) {
+                if (dv == 0 && (!typeURI || !*typeURI)) {
 
                     DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
                         SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
@@ -1992,7 +1992,7 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
             // check if the type is from the same Schema
             dv = getDatatypeValidator(typeURI, localPart);
 
-            if (dv == 0 && !XMLString::compareString(typeURI, fTargetNSURIString)) {
+            if (dv == 0 && XMLString::equals(typeURI, fTargetNSURIString)) {
 
                 DOMElement* topLevelType = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
                     SchemaSymbols::fgELT_SIMPLETYPE, localPart, &fSchemaInfo);
@@ -2020,12 +2020,12 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
     bool required = false;
     bool prohibited = false;
 
-    if (XMLString::stringLen(useVal) != 0) {
+    if (useVal && *useVal) {
 
-        if (!XMLString::compareString(useVal, SchemaSymbols::fgATTVAL_REQUIRED)) {
+        if (XMLString::equals(useVal, SchemaSymbols::fgATTVAL_REQUIRED)) {
             required = true;
         }
-        else if (!XMLString::compareString(useVal, SchemaSymbols::fgATTVAL_PROHIBITED)) {
+        else if (XMLString::equals(useVal, SchemaSymbols::fgATTVAL_PROHIBITED)) {
             prohibited = true;
         }
     }
@@ -2159,8 +2159,8 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
     const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
     const XMLCh* fixed = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
     const XMLCh* deflt = getElementAttValue(elem, SchemaSymbols::fgATT_DEFAULT);
-    bool         nameEmpty = (XMLString::stringLen(name) == 0) ? true : false;
-    bool         refEmpty = (XMLString::stringLen(ref) == 0) ? true : false;
+    bool         nameEmpty = (!name || !*name) ? true : false;
+    bool         refEmpty = (!ref || !*ref) ? true : false;
 
     if (nameEmpty && topLevel) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::GlobalNoNameElement);
@@ -2183,7 +2183,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
     // ------------------------------------------------------------------
     // Process contents
     // ------------------------------------------------------------------
-    if(XMLString::stringLen(fixed) != 0 && XMLString::stringLen(deflt) != 0) {
+    if((fixed && *fixed) && (deflt && *deflt)) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ElementWithFixedAndDefault);
     }
 
@@ -2261,9 +2261,10 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
         const XMLCh* contentName = content->getLocalName();
 
-        if (!XMLString::compareString(contentName, SchemaSymbols::fgELT_COMPLEXTYPE)) {
+        if (XMLString::equals(contentName, SchemaSymbols::fgELT_COMPLEXTYPE)) {
+            const XMLCh* temp = content->getAttribute(SchemaSymbols::fgATT_NAME);
 
-            if (XMLString::stringLen(content->getAttribute(SchemaSymbols::fgATT_NAME)) > 0) {
+            if (temp && *temp) {
                 // REVISIT - we are bypassing the complex type declaration.
                 reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AnonComplexTypeWithName, name);
             }
@@ -2289,9 +2290,10 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
             anonymousType = true;
             content = XUtil::getNextSiblingElement(content);
         }
-        else if (!XMLString::compareString(contentName, SchemaSymbols::fgELT_SIMPLETYPE)) {
+        else if (XMLString::equals(contentName, SchemaSymbols::fgELT_SIMPLETYPE)) {
 
-            if (XMLString::stringLen(content->getAttribute(SchemaSymbols::fgATT_NAME)) > 0) {
+            const XMLCh* temp = content->getAttribute(SchemaSymbols::fgATT_NAME);
+            if (temp && *temp) {
                 // REVISIT - we are bypassing the simple type declaration.
                 reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AnonSimpleTypeWithName, name);
             }
@@ -2320,7 +2322,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
     // Handle 'type' attribute
     const XMLCh* typeStr = getElementAttValue(elem, SchemaSymbols::fgATT_TYPE);
-    if (XMLString::stringLen(typeStr) > 0) {
+    if (typeStr && *typeStr) {
 
         if (anonymousType) {
 
@@ -2333,8 +2335,8 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
             const XMLCh* typePrefix = getPrefix(typeStr);
             const XMLCh* typeURI = resolvePrefixToURI(elem, typePrefix);
 
-            if (XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
-                || XMLString::compareString(typeLocalPart, SchemaSymbols::fgATTVAL_ANYTYPE)) {
+            if (!XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+                || !XMLString::equals(typeLocalPart, SchemaSymbols::fgATTVAL_ANYTYPE)) {
 
                 checkEnumerationRequiredNotation(elem, name, typeStr);
 
@@ -2361,7 +2363,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
     // Handle the substitutionGroup
     const XMLCh* subsGroupName = getElementAttValue(elem, SchemaSymbols::fgATT_SUBSTITUTIONGROUP);
 
-    if (topLevel && XMLString::stringLen(subsGroupName) != 0) {
+    if (topLevel && (subsGroupName && *subsGroupName)) {
 
         SchemaElementDecl* subsElemDecl = getSubstituteGroupElemDecl(elem, subsGroupName, noErrorFound);
 
@@ -2487,11 +2489,11 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
     // Now we can handle validation etc. of default and fixed attributes,
     // since we finally have all the type information.
-    if(XMLString::stringLen(fixed) != 0) {
+    if(fixed && *fixed) {
         deflt = fixed;
     }
 
-    if(XMLString::stringLen(deflt) != 0) {
+    if(deflt && *deflt) {
 
         try {
             if(validator == 0) { // in this case validate according to xs:string
@@ -2559,10 +2561,10 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
 
         while (ic != 0) {
 
-            if (!XMLString::compareString(ic->getLocalName(), SchemaSymbols::fgELT_KEY)) {
+            if (XMLString::equals(ic->getLocalName(), SchemaSymbols::fgELT_KEY)) {
                 traverseKey(ic, elemDecl);
             }
-            else if (!XMLString::compareString(ic->getLocalName(), SchemaSymbols::fgELT_UNIQUE)) {
+            else if (XMLString::equals(ic->getLocalName(), SchemaSymbols::fgELT_UNIQUE)) {
                 traverseUnique(ic, elemDecl);
             }
             else {
@@ -2621,7 +2623,7 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
     // Process notation attributes/elements
     // ------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
-    bool         nameEmpty = (XMLString::stringLen(name) == 0) ? true : false;
+    bool         nameEmpty = (!name || !*name) ? true : false;
 
     if (nameEmpty) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoNameGlobalElement,
@@ -2636,11 +2638,11 @@ const XMLCh* TraverseSchema::traverseNotationDecl(const DOMElement* const elem) 
     const XMLCh* publicId = getElementAttValue(elem, SchemaSymbols::fgATT_PUBLIC);
     const XMLCh* systemId = getElementAttValue(elem, SchemaSymbols::fgATT_SYSTEM);
 
-    if (XMLString::stringLen(publicId) == 0 && XMLString::stringLen(systemId) == 0) {
+    if ((!publicId || !*publicId) && (!systemId || !*systemId)) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::Notation_InvalidDecl, name);
     }
 
-    fNotationRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)), 
+    fNotationRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)),
                            fTargetNSURI, 0);
 
     //we don't really care if something inside <notation> is wrong..
@@ -2724,7 +2726,7 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
 
     DOMElement*      content = 0;
 
-    if (XMLString::stringLen(baseTypeName) == 0) { // must 'see' <simpleType>
+    if (!baseTypeName || !*baseTypeName) { // must 'see' <simpleType>
 
         content = checkContent(rootElem, XUtil::getFirstChildElement(contentElem), false);
 
@@ -2735,7 +2737,7 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
             return 0;
         }
 
-        if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
+        if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
             baseValidator = checkForSimpleTypeValidator(content, SchemaSymbols::LIST);
         }
         else {
@@ -2808,7 +2810,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
     DOMElement* content = 0;
 
-    if (XMLString::stringLen(baseTypeName) == 0) { // must 'see' <simpleType>
+    if (!baseTypeName || !*baseTypeName) { // must 'see' <simpleType>
 
         content = checkContent(rootElem, XUtil::getFirstChildElement(contentElem), false);
 
@@ -2819,7 +2821,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
             return 0;
         }
 
-        if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
+        if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
             baseValidator = checkForSimpleTypeValidator(content);
         }
         else {
@@ -2872,7 +2874,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                     facets = new RefHashTableOf<KVStringPair>(29, true);
                 }
 
-                if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_ENUMERATION)) {
+                if (XMLString::equals(facetName, SchemaSymbols::fgELT_ENUMERATION)) {
 
                     // REVISIT
                     // if validator is a notation datatype validator, we need
@@ -2886,7 +2888,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
 
                         const XMLCh* localPart = getLocalPart(attValue);
                         const XMLCh* prefix = getPrefix(attValue);
-                        const XMLCh* uriStr = (XMLString::stringLen(prefix)) ? resolvePrefixToURI(content, prefix) : fTargetNSURIString;
+                        const XMLCh* uriStr = (prefix && *prefix) ? resolvePrefixToURI(content, prefix) : fTargetNSURIString;
                         unsigned int uriId = fURIStringPool->addOrFind(uriStr);
 
                         if (!fNotationRegistry->containsKey(localPart, uriId)) {
@@ -2902,7 +2904,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                         enums->addElement(XMLString::replicate(attValue));
                     }
                 }
-                else if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_PATTERN)) {
+                else if (XMLString::equals(facetName, SchemaSymbols::fgELT_PATTERN)) {
 
                     if (isFirstPattern) { // fBuffer.isEmpty() - overhead call
 
@@ -2922,9 +2924,9 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
                     }
                     else {
 
-                        if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_WHITESPACE)
+                        if (XMLString::equals(facetName, SchemaSymbols::fgELT_WHITESPACE)
                             && baseValidator->getType() != DatatypeValidator::String
-                            && XMLString::compareString(attValue, SchemaSymbols::fgWS_COLLAPSE) != 0) {
+                            && !XMLString::equals(attValue, SchemaSymbols::fgWS_COLLAPSE)) {
                             reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::WS_CollapseExpected, attValue);
                         }
                         else {
@@ -2995,7 +2997,7 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
     Janitor<DVRefVector>            janValidators(validators);
     DOMElement*                     content = 0;
 
-    if (XMLString::stringLen(baseTypeName)) { //base was provided - get proper validator.
+    if (baseTypeName && *baseTypeName) { //base was provided - get proper validator.
 
         XMLStringTokenizer unionMembers(baseTypeName);
         int             tokCount = unionMembers.countTokens();
@@ -3028,7 +3030,7 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
             return 0;
         }
 
-        if (XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
+        if (!XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
 
             reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::ListUnionRestrictionError, typeName);
             popCurrentTypeNameStack();
@@ -3039,7 +3041,7 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
     // process union content of simpleType children if any
     while (content != 0) {
 
-        if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
+        if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
 
             baseValidator = checkForSimpleTypeValidator(content, baseRefContext | SchemaSymbols::UNION);
 
@@ -3137,12 +3139,12 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     const XMLCh* const contentName = simpleContent->getLocalName();
 
-    if (!XMLString::compareString(contentName, SchemaSymbols::fgATTVAL_RESTRICTION)) {
+    if (XMLString::equals(contentName, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
         fAttributeCheck.checkAttributes(simpleContent, GeneralAttributeCheck::E_Restriction, this);
         typeInfo->setDerivedBy(SchemaSymbols::RESTRICTION);
     }
-    else if (!XMLString::compareString(contentName, SchemaSymbols::fgATTVAL_EXTENSION)) {
+    else if (XMLString::equals(contentName, SchemaSymbols::fgATTVAL_EXTENSION)) {
 
         fAttributeCheck.checkAttributes(simpleContent, GeneralAttributeCheck::E_Extension, this);
         typeInfo->setDerivedBy(SchemaSymbols::EXTENSION);
@@ -3157,7 +3159,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     const XMLCh* baseName = getElementAttValue(simpleContent, SchemaSymbols::fgATT_BASE);
 
-    if (XMLString::stringLen(baseName) == 0) {
+    if (!baseName || !*baseName) {
 
         reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::UnspecifiedBase);
         throw TraverseSchema::InvalidComplexTypeInfo;
@@ -3184,8 +3186,8 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     else {
 
         // check for 'anyType'
-        if (!XMLString::compareString(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
-            && !XMLString::compareString(localPart, SchemaSymbols::fgATTVAL_ANYTYPE)) {
+        if (XMLString::equals(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+            && XMLString::equals(localPart, SchemaSymbols::fgATTVAL_ANYTYPE)) {
 
             reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidSimpleContentBase, baseName);
             throw TraverseSchema::InvalidComplexTypeInfo;
@@ -3236,7 +3238,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
             // element. The data type validator will be based on it, if
             // specified
             // ---------------------------------------------------------------
-            if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
+            if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_SIMPLETYPE)) {
 
                 DatatypeValidator* simpleTypeDV = traverseSimpleTypeDecl(content, false);
 
@@ -3293,7 +3295,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         facets = new RefHashTableOf<KVStringPair>(29, true);
                     }
 
-                    if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_ENUMERATION)) {
+                    if (XMLString::equals(facetName, SchemaSymbols::fgELT_ENUMERATION)) {
 
                         if (!enums) {
                             enums = new RefVectorOf<XMLCh>(8, true);
@@ -3301,7 +3303,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
 
                         enums->addElement(XMLString::replicate(attValue));
                     }
-                    else if (!XMLString::compareString(facetName, SchemaSymbols::fgELT_PATTERN)) {
+                    else if (XMLString::equals(facetName, SchemaSymbols::fgELT_PATTERN)) {
 
                         if (isFirstPattern) { // fBuffer.isEmpty() - overhead call
 
@@ -3321,7 +3323,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         }
                         else {
 
-                            const XMLCh* facetNameStr = 
+                            const XMLCh* facetNameStr =
                                 fStringPool->getValueForId(fStringPool->addOrFind(facetName));
 
                             facets->put((void*) facetNameStr, new KVStringPair(facetNameStr, attValue));
@@ -3450,12 +3452,12 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     bool mixedContent = isMixed;
 
     if (mixed) {
-        if (!XMLString::compareString(mixed, SchemaSymbols::fgATTVAL_TRUE)
-            || !XMLString::compareString(mixed, fgValueOne)) {
+        if (XMLString::equals(mixed, SchemaSymbols::fgATTVAL_TRUE)
+            || XMLString::equals(mixed, fgValueOne)) {
             mixedContent = true;
         }
-        else if (!XMLString::compareString(mixed, SchemaSymbols::fgATTVAL_FALSE)
-                 || !XMLString::compareString(mixed, fgValueZero)) {
+        else if (XMLString::equals(mixed, SchemaSymbols::fgATTVAL_FALSE)
+                 || XMLString::equals(mixed, fgValueZero)) {
             mixedContent = false;
         }
     }
@@ -3479,10 +3481,10 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     const XMLCh* const complexContentName = complexContent->getLocalName();
 
-    if (!XMLString::compareString(complexContentName, SchemaSymbols::fgELT_RESTRICTION)) {
+    if (XMLString::equals(complexContentName, SchemaSymbols::fgELT_RESTRICTION)) {
         typeInfo->setDerivedBy(SchemaSymbols::RESTRICTION);
     }
-    else if (!XMLString::compareString(complexContentName, SchemaSymbols::fgELT_EXTENSION)) {
+    else if (XMLString::equals(complexContentName, SchemaSymbols::fgELT_EXTENSION)) {
         typeInfo->setDerivedBy(SchemaSymbols::EXTENSION);
     }
     else {
@@ -3496,7 +3498,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     const XMLCh* baseName = getElementAttValue(complexContent, SchemaSymbols::fgATT_BASE);
 
-    if (XMLString::stringLen(baseName) == 0) {
+    if (!baseName || !*baseName) {
 
         reportSchemaError(complexContent, XMLUni::fgXMLErrDomain, XMLErrs::UnspecifiedBase);
         throw TraverseSchema::InvalidComplexTypeInfo;
@@ -3510,8 +3512,8 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     // -------------------------------------------------------------
     // check if the base is "anyType"
     // -------------------------------------------------------------
-    if (XMLString::compareString(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0 &&
-        XMLString::compareString(localPart, SchemaSymbols::fgATTVAL_ANYTYPE) == 0) {
+    if (XMLString::equals(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) &&
+        XMLString::equals(localPart, SchemaSymbols::fgATTVAL_ANYTYPE)) {
         isBaseAnyType = true;
     }
     else {
@@ -3579,16 +3581,14 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
     // ------------------------------------------------------------------
     XMLAttDef::DefAttTypes attDefType = XMLAttDef::ProcessContents_Strict;
 
-    if (XMLString::stringLen(processContents) == 0
-        || XMLString::compareString(processContents, SchemaSymbols::fgATTVAL_STRICT) == 0) {
+    if ((!processContents || !*processContents)
+        || XMLString::equals(processContents, SchemaSymbols::fgATTVAL_STRICT)) {
         // Do nothing - defaulted already
     }
-    else if (XMLString::compareString(processContents,
-                                      SchemaSymbols::fgATTVAL_SKIP) == 0) {
+    else if (XMLString::equals(processContents, SchemaSymbols::fgATTVAL_SKIP)) {
         attDefType = XMLAttDef::ProcessContents_Skip;
     }
-    else if (XMLString::compareString(processContents,
-                                      SchemaSymbols::fgATTVAL_LAX) == 0) {
+    else if (XMLString::equals(processContents, SchemaSymbols::fgATTVAL_LAX)) {
         attDefType = XMLAttDef::ProcessContents_Lax;
     }
 
@@ -3599,11 +3599,11 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
     XMLAttDef::AttTypes attType = XMLAttDef::Any_Any;
     ValueVectorOf<unsigned int> namespaceList(8);
 
-    if (XMLString::stringLen(nameSpace) == 0
-        || XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDANY) == 0) {
+    if ((!nameSpace || !*nameSpace)
+        || XMLString::equals(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDANY)) {
         // Do nothing - defaulted already
     }
-    else if (XMLString::compareString(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDOTHER) == 0) {
+    else if (XMLString::equals(nameSpace, SchemaSymbols::fgATTVAL_TWOPOUNDOTHER)) {
 
         attType = XMLAttDef::Any_Other;
         uriIndex = fTargetNSURI;
@@ -3618,10 +3618,10 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOMElement* const elem)
 
             const XMLCh* token = tokenizer.nextToken();
 
-            if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_TWOPOUNDLOCAL)) {
+            if (XMLString::equals(token, SchemaSymbols::fgATTVAL_TWOPOUNDLOCAL)) {
                 uriIndex = fEmptyNamespaceURI;
             }
-            else if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_TWOPOUNDTRAGETNAMESPACE)) {
+            else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_TWOPOUNDTRAGETNAMESPACE)) {
                 uriIndex = fTargetNSURI;
             }
             else {
@@ -3671,7 +3671,7 @@ void TraverseSchema::traverseKey(const DOMElement* const icElem,
     // -----------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
 
-    if (!XMLString::stringLen(name)) {
+    if (!name || !*name) {
         return;
     }
 
@@ -3733,7 +3733,7 @@ void TraverseSchema::traverseUnique(const DOMElement* const icElem,
     // -----------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
 
-    if (!XMLString::stringLen(name)) {
+    if (!name || !*name) {
         return;
     }
 
@@ -3797,7 +3797,7 @@ void TraverseSchema::traverseKeyRef(const DOMElement* const icElem,
     const XMLCh* name = getElementAttValue(icElem, SchemaSymbols::fgATT_NAME);
     const XMLCh* refer = getElementAttValue(icElem, SchemaSymbols::fgATT_REFER);
 
-    if (!XMLString::stringLen(name) || !XMLString::stringLen(refer)) {
+    if ((!name || !*name) || (!refer || !*refer)) {
         return;
     }
 
@@ -3875,7 +3875,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
         return false;
     }
 
-    if (XMLString::compareString(elem->getLocalName(), SchemaSymbols::fgELT_SELECTOR)) {
+    if (!XMLString::equals(elem->getLocalName(), SchemaSymbols::fgELT_SELECTOR)) {
 
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::IC_BadContent);
         return false;
@@ -3899,7 +3899,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     fBuffer.reset();
 
     unsigned int startIndex = 0;
-    	 
+    	
     while (startIndex < xpathLen) {
 
         if (!XMLString::startsWith(xpathExpr + startIndex, fgForwardSlash)
@@ -3913,7 +3913,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
             break;
 
         fBuffer.append(xpathExpr + startIndex, chOffset + 1 - startIndex);
-        startIndex = chOffset + 1;    
+        startIndex = chOffset + 1;
     }
 
     if (startIndex < xpathLen)
@@ -3947,7 +3947,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
 
     while (elem != 0) {
 
-        if (XMLString::compareString(elem->getLocalName(), SchemaSymbols::fgELT_FIELD)) {
+        if (!XMLString::equals(elem->getLocalName(), SchemaSymbols::fgELT_FIELD)) {
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::IC_BadContent);
         }
         else {
@@ -3958,7 +3958,7 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
             // xpath expression parsing
             xpathExpr = getElementAttValue(elem, SchemaSymbols::fgATT_XPATH, true);
 
-            if (!xpathExpr || !XMLString::stringLen(xpathExpr)) {
+            if (!xpathExpr || !*xpathExpr) {
 
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::IC_XPathExprMissing);
                 return false;
@@ -4024,7 +4024,7 @@ void TraverseSchema::retrieveNamespaceMapping(const DOMElement* const schemaRoot
 
             fNamespaceScope->addPrefix(attName + offsetIndex + 1, fURIStringPool->addOrFind(attValue));
         }
-        else if (!XMLString::compareString(attName, XMLUni::fgXMLNSString)) { // == 'xmlns'
+        else if (XMLString::equals(attName, XMLUni::fgXMLNSString)) { // == 'xmlns'
 
             const XMLCh* attValue = attribute->getNodeValue();
             fNamespaceScope->addPrefix( XMLUni::fgZeroLenString, fURIStringPool->addOrFind(attValue));
@@ -4032,7 +4032,7 @@ void TraverseSchema::retrieveNamespaceMapping(const DOMElement* const schemaRoot
         }
     } // end for
 
-    if (!seenXMLNS && XMLString::stringLen(fTargetNSURIString) == 0 ) {
+    if (!seenXMLNS && (!fTargetNSURIString || !*fTargetNSURIString)) {
         fNamespaceScope->addPrefix(XMLUni::fgZeroLenString, fEmptyNamespaceURI);
     }
 
@@ -4049,16 +4049,16 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
 
         const XMLCh* name = child->getLocalName();
 
-        if (!XMLString::compareString(name, SchemaSymbols::fgELT_ANNOTATION)) {
+        if (XMLString::equals(name, SchemaSymbols::fgELT_ANNOTATION)) {
             traverseAnnotationDecl(child, true);
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_INCLUDE)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_INCLUDE)) {
             traverseInclude(child);
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_IMPORT)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_IMPORT)) {
             traverseImport(child);
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_REDEFINE)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_REDEFINE)) {
             traverseRedefine(child);
         }
         else
@@ -4081,12 +4081,12 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
             fullNameId = fStringPool->addOrFind(fBuffer.getRawBuffer());
         }
 
-        if (!XMLString::compareString(name, SchemaSymbols::fgELT_ANNOTATION)) {
+        if (XMLString::equals(name, SchemaSymbols::fgELT_ANNOTATION)) {
             traverseAnnotationDecl(child, true);
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_SIMPLETYPE)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_SIMPLETYPE)) {
 
-            if (XMLString::stringLen(typeName)) {
+            if (typeName && *typeName) {
                 if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_SIMPLETYPE, fullNameId)
                     || fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_COMPLEXTYPE, fullNameId)) {
 
@@ -4101,9 +4101,9 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
 
             traverseSimpleTypeDecl(child);
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_COMPLEXTYPE)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_COMPLEXTYPE)) {
 
-            if (XMLString::stringLen(typeName)) {
+            if (typeName && *typeName) {
                 if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_SIMPLETYPE, fullNameId)
                     || fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_COMPLEXTYPE, fullNameId)) {
 
@@ -4118,9 +4118,9 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
 
             traverseComplexTypeDecl(child);
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_ELEMENT)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_ELEMENT)) {
 
-            if (XMLString::stringLen(typeName)) {
+            if (typeName && *typeName) {
                 if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_ELEMENT, fullNameId)) {
 
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalDeclaration,
@@ -4135,9 +4135,9 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
             QName* elmQName = traverseElementDecl(child, true);
             delete elmQName;
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
 
-            if (XMLString::stringLen(typeName)) {
+            if (typeName && *typeName) {
                 if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_ATTRIBUTEGROUP, fullNameId)) {
 
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalDeclaration,
@@ -4153,9 +4153,9 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
                 traverseAttributeGroupDecl(child, 0, true);
             }
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_ATTRIBUTE)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_ATTRIBUTE)) {
 
-            if (XMLString::stringLen(typeName)) {
+            if (typeName && *typeName) {
                 if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_ATTRIBUTE, fullNameId)) {
 
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateAttribute, typeName);
@@ -4170,9 +4170,9 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
                 traverseAttributeDecl( child, 0, true);
             }
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_GROUP)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_GROUP)) {
 
-            if (XMLString::stringLen(typeName)) {
+            if (typeName && *typeName) {
                 if (fGlobalDeclarations->containsKey(SchemaSymbols::fgELT_GROUP, fullNameId)) {
 
                     reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateGlobalDeclaration,
@@ -4188,7 +4188,7 @@ void TraverseSchema::processChildren(const DOMElement* const root) {
                 traverseGroupDecl(child);
             }
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_NOTATION)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_NOTATION)) {
             traverseNotationDecl(child);
         }
         else {
@@ -4223,16 +4223,16 @@ void TraverseSchema::preprocessChildren(const DOMElement* const root) {
 
         const XMLCh* name = child->getLocalName();
 
-        if (!XMLString::compareString(name, SchemaSymbols::fgELT_ANNOTATION)) {
+        if (XMLString::equals(name, SchemaSymbols::fgELT_ANNOTATION)) {
             continue;
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_INCLUDE)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_INCLUDE)) {
             preprocessInclude(child);
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_IMPORT)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_IMPORT)) {
             preprocessImport(child);
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_REDEFINE)) {
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_REDEFINE)) {
             preprocessRedefine(child);
         }
         else
@@ -4257,7 +4257,7 @@ DOMElement* TraverseSchema::checkContent(const DOMElement* const rootElem,
        return 0;
     }
 
-    if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
+    if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
 
         traverseAnnotationDecl(content);
         content = XUtil::getNextSiblingElement(content);
@@ -4271,7 +4271,7 @@ DOMElement* TraverseSchema::checkContent(const DOMElement* const rootElem,
             return 0;
         }
 
-        if (!XMLString::compareString(content->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
+        if (XMLString::equals(content->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
 
             reportSchemaError(content, XMLUni::fgXMLErrDomain, XMLErrs::AnnotationError, name);
             return 0;
@@ -4288,7 +4288,7 @@ TraverseSchema::getDatatypeValidator(const XMLCh* const uriStr,
 
     DatatypeValidator* dv = 0;
 
-    if (XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
+    if (XMLString::equals(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
         dv = fDatatypeRegistry->getDatatypeValidator(localPartStr);
     }
     else {
@@ -4297,7 +4297,7 @@ TraverseSchema::getDatatypeValidator(const XMLCh* const uriStr,
         fBuffer.append(chComma);
         fBuffer.append(localPartStr);
 
-        if (XMLString::stringLen(uriStr) && XMLString::compareString(uriStr, fTargetNSURIString)) {
+        if ((uriStr && *uriStr) && !XMLString::equals(uriStr, fTargetNSURIString)) {
 
             Grammar* grammar = fGrammarResolver->getGrammar(uriStr);
 
@@ -4398,7 +4398,7 @@ const XMLCh* TraverseSchema::resolvePrefixToURI(const DOMElement* const elem,
     int nameSpaceIndex = fNamespaceScope->getNamespaceForPrefix(prefix, fSchemaInfo->getNamespaceScopeLevel());
     const XMLCh* uriStr = fURIStringPool->getValueForId(nameSpaceIndex);
 
-    if (!XMLString::stringLen(uriStr) && XMLString::stringLen(prefix)) {
+    if ((!uriStr || !*uriStr) && (prefix && *prefix)) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::UnresolvedPrefix, prefix);
         return XMLUni::fgZeroLenString;
     }
@@ -4413,7 +4413,7 @@ const XMLCh* TraverseSchema::resolvePrefixToURI(const DOMElement* const elem,
     int nameSpaceIndex = fNamespaceScope->getNamespaceForPrefix(prefix, namespaceDepth);
     const XMLCh* uriStr = fURIStringPool->getValueForId(nameSpaceIndex);
 
-    if (!XMLString::stringLen(uriStr) && XMLString::stringLen(prefix)) {
+    if ((!uriStr || !*uriStr) && (prefix && *prefix)) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::UnresolvedPrefix, prefix);
         return XMLUni::fgZeroLenString;
     }
@@ -4439,7 +4439,7 @@ QName* TraverseSchema::processElementDeclRef(const DOMElement* const elem,
                                        : fEmptyNamespaceURI);
 
     //if from another schema, just return the element QName
-    if (XMLString::compareString(uriStr, fTargetNSURIString) != 0) {
+    if (!XMLString::equals(uriStr, fTargetNSURIString)) {
         return eltName;
     }
 
@@ -4490,13 +4490,13 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
     const XMLCh* blockVal = (isRoot) ? getElementAttValue(elem, SchemaSymbols::fgATT_BLOCKDEFAULT)
                                      : getElementAttValue(elem, SchemaSymbols::fgATT_BLOCK);
 
-    if (!XMLString::stringLen(blockVal)) {
+    if (!blockVal || !*blockVal) {
         return fSchemaInfo->getBlockDefault();
     }
 
     int blockSet = 0;
 
-    if (!XMLString::compareString(blockVal, SchemaSymbols::fgATTVAL_POUNDALL)) {
+    if (XMLString::equals(blockVal, SchemaSymbols::fgATTVAL_POUNDALL)) {
 
         blockSet = SchemaSymbols::EXTENSION + SchemaSymbols::RESTRICTION + SchemaSymbols::SUBSTITUTION;
         return blockSet;
@@ -4508,7 +4508,7 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
 
         XMLCh* token = tokenizer.nextToken();
 
-        if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_SUBSTITUTION)
+        if (XMLString::equals(token, SchemaSymbols::fgATTVAL_SUBSTITUTION)
 			&& blockType == ES_Block) {
 
             if ((blockSet & SchemaSymbols::SUBSTITUTION) == 0 ) {
@@ -4518,7 +4518,7 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::SubstitutionRepeated);
             }
         }
-        else if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_EXTENSION)) {
+        else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_EXTENSION)) {
 
             if ((blockSet & SchemaSymbols::EXTENSION) == 0) {
                 blockSet += SchemaSymbols::EXTENSION;
@@ -4527,7 +4527,7 @@ int TraverseSchema::parseBlockSet(const DOMElement* const elem,
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ExtensionRepeated);
             }
         }
-        else if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_RESTRICTION)) {
+        else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
             if ((blockSet & SchemaSymbols::RESTRICTION) == 0 ) {
                 blockSet += SchemaSymbols::RESTRICTION;
@@ -4550,13 +4550,13 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
     const XMLCh* finalVal = (isRoot) ? getElementAttValue(elem, SchemaSymbols::fgATT_FINALDEFAULT)
                                      : getElementAttValue(elem, SchemaSymbols::fgATT_FINAL);
 
-    if (!XMLString::stringLen(finalVal)) {
+    if (!finalVal || !*finalVal) {
         return fSchemaInfo->getFinalDefault();
     }
 
     int finalSet = 0;
 
-    if (!XMLString::compareString(finalVal, SchemaSymbols::fgATTVAL_POUNDALL)) {
+    if (XMLString::equals(finalVal, SchemaSymbols::fgATTVAL_POUNDALL)) {
 
         finalSet = SchemaSymbols::RESTRICTION + SchemaSymbols::LIST +
                    SchemaSymbols::UNION + SchemaSymbols::EXTENSION;
@@ -4569,7 +4569,7 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
 
         XMLCh* token = tokenizer.nextToken();
 
-        if (!XMLString::compareString(token, SchemaSymbols::fgELT_UNION)
+        if (XMLString::equals(token, SchemaSymbols::fgELT_UNION)
             && finalType == S_Final) {
 
             if ((finalSet & SchemaSymbols::UNION) == 0) {
@@ -4579,7 +4579,7 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::UnionRepeated);
             }
         }
-        else if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_EXTENSION)
+        else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_EXTENSION)
                  && finalType != S_Final) {
 
             if ((finalSet & SchemaSymbols::EXTENSION) == 0) {
@@ -4589,7 +4589,7 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ExtensionRepeated);
             }
         }
-        else if (!XMLString::compareString(token, SchemaSymbols::fgELT_LIST)
+        else if (XMLString::equals(token, SchemaSymbols::fgELT_LIST)
                  && finalType == S_Final) {
 
             if ((finalSet & SchemaSymbols::LIST) == 0 ) {
@@ -4599,7 +4599,7 @@ int TraverseSchema::parseFinalSet(const DOMElement* const elem,
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::ListRepeated);
             }
         }
-        else if (!XMLString::compareString(token, SchemaSymbols::fgATTVAL_RESTRICTION)) {
+        else if (XMLString::equals(token, SchemaSymbols::fgATTVAL_RESTRICTION)) {
 
             if ((finalSet & SchemaSymbols::RESTRICTION) == 0 ) {
                 finalSet += SchemaSymbols::RESTRICTION;
@@ -4640,9 +4640,9 @@ TraverseSchema::checkIdentityConstraintContent(const DOMElement* const content) 
 
 bool TraverseSchema::isIdentityConstraintName(const XMLCh* const name) {
 
-    return (XMLString::compareString(name, SchemaSymbols::fgELT_KEY) == 0
-            || XMLString::compareString(name, SchemaSymbols::fgELT_KEYREF) == 0
-            || XMLString::compareString(name, SchemaSymbols::fgELT_UNIQUE) == 0);
+    return (XMLString::equals(name, SchemaSymbols::fgELT_KEY)
+            || XMLString::equals(name, SchemaSymbols::fgELT_KEYREF)
+            || XMLString::equals(name, SchemaSymbols::fgELT_UNIQUE));
 }
 
 const XMLCh*
@@ -4652,9 +4652,9 @@ TraverseSchema::checkTypeFromAnotherSchema(const DOMElement* const elem,
     const XMLCh* prefix = getPrefix(typeStr);
     const XMLCh* typeURI = resolvePrefixToURI(elem, prefix);
 
-    if (XMLString::compareString(typeURI, fTargetNSURIString) != 0
-        && XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0
-        && XMLString::stringLen(typeURI) != 0) {
+    if (!XMLString::equals(typeURI, fTargetNSURIString)
+        && !XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+        && (typeURI && *typeURI)) {
         return typeURI;
     }
 
@@ -4713,8 +4713,8 @@ TraverseSchema::getElementTypeValidator(const DOMElement* const elem,
 
     if (!dv) {
 
-        if (XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0
-            || XMLString::compareString(fTargetNSURIString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
+        if (!XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
+            || XMLString::equals(fTargetNSURIString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
 
             SchemaInfo* saveInfo = fSchemaInfo;
             DOMElement* typeElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_SimpleType,
@@ -4796,8 +4796,8 @@ TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
 
     if (!typeInfo) {
 
-        if (XMLString::compareString(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0 ||
-            XMLString::compareString(fTargetNSURIString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) == 0) {
+        if (!XMLString::equals(typeURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) ||
+            XMLString::equals(fTargetNSURIString, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)) {
 
             DOMElement* typeNode = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_ComplexType,
                 SchemaSymbols::fgELT_COMPLEXTYPE, localPart, &fSchemaInfo);
@@ -4831,7 +4831,7 @@ TraverseSchema::getSubstituteGroupElemDecl(const DOMElement* const elem,
     unsigned int         uriId = fURIStringPool->addOrFind(nameURI);
     bool                 wasAdded = false;
 
-    if (XMLString::compareString(nameURI, fTargetNSURIString) != 0) {
+    if (!XMLString::equals(nameURI, fTargetNSURIString)) {
 
         // Make sure that we have an explicit import statement.
         // Clause 4 of Schema Representation Constraint:
@@ -5021,9 +5021,9 @@ TraverseSchema::createSchemaElementDecl(const DOMElement* const elem,
         uriIndex = fTargetNSURI;
         enclosingScope = Grammar::TOP_LEVEL_SCOPE;
     }
-    else if ((XMLString::stringLen(elemForm) == 0 &&
+    else if (((!elemForm || !*elemForm) &&
              (fSchemaInfo->getElemAttrDefaultQualified() & Elem_Def_Qualified))
-             || XMLString::compareString(elemForm,SchemaSymbols::fgATTVAL_QUALIFIED) == 0) {
+             || XMLString::equals(elemForm,SchemaSymbols::fgATTVAL_QUALIFIED)) {
 
         uriIndex = fTargetNSURI;
     }
@@ -5044,18 +5044,18 @@ TraverseSchema::createSchemaElementDecl(const DOMElement* const elem,
     const XMLCh* nillable = getElementAttValue(elem, SchemaSymbols::fgATT_NILLABLE);
     const XMLCh* abstract = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
 
-    if (XMLString::stringLen(nillable)) {
+    if (nillable && *nillable) {
 
-        if (!XMLString::compareString(nillable, SchemaSymbols::fgATTVAL_TRUE)
-            || !XMLString::compareString(nillable, fgValueOne)) {
+        if (XMLString::equals(nillable, SchemaSymbols::fgATTVAL_TRUE)
+            || XMLString::equals(nillable, fgValueOne)) {
             elementMiscFlags += SchemaSymbols::NILLABLE;
         }
     }
 
-    if (XMLString::stringLen(abstract)) {
+    if (abstract && *abstract) {
 
-        if (!XMLString::compareString(abstract, SchemaSymbols::fgATTVAL_TRUE)
-            || !XMLString::compareString(abstract, fgValueOne)) {
+        if (XMLString::equals(abstract, SchemaSymbols::fgATTVAL_TRUE)
+            || XMLString::equals(abstract, fgValueOne)) {
             elementMiscFlags += SchemaSymbols::ABSTRACT;
         }
     }
@@ -5113,7 +5113,7 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
     SchemaAttDef* refAttDef = 0;
     int saveScope = fCurrentScope;
 
-    if (XMLString::compareString(uriStr, fTargetNSURIString) != 0) {
+    if (!XMLString::equals(uriStr, fTargetNSURIString)) {
 
         // Make sure that we have an explicit import statement.
         // Clause 4 of Schema Representation Constraint:
@@ -5184,7 +5184,7 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
     bool invalidAttUse = false;
 
     if (refAttDefType == XMLAttDef::Fixed &&
-        (defaultVal || (fixedVal && XMLString::compareString(fixedVal, refAttValue)))) {
+        (defaultVal || (fixedVal && !XMLString::equals(fixedVal, refAttValue)))) {
 
         invalidAttUse = true;
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::AttUseCorrect, refName);
@@ -5217,8 +5217,8 @@ void TraverseSchema::processAttributeDeclRef(const DOMElement* const elem,
         }
     }
 
-    bool required = (XMLString::compareString(useAttr,SchemaSymbols::fgATTVAL_REQUIRED) == 0);
-    bool prohibited = (XMLString::compareString(useAttr,SchemaSymbols::fgATTVAL_PROHIBITED) == 0);
+    bool required = XMLString::equals(useAttr,SchemaSymbols::fgATTVAL_REQUIRED);
+    bool prohibited = XMLString::equals(useAttr,SchemaSymbols::fgATTVAL_PROHIBITED);
     QName* attQName = refAttDef->getAttName();
     SchemaAttDef* attDef = new SchemaAttDef(attQName->getPrefix(),
                                             attQName->getLocalPart(),
@@ -5305,7 +5305,7 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
     const XMLCh* minOccursStr = getElementAttValue(elem, SchemaSymbols::fgATT_MINOCCURS, true);
     const XMLCh* maxOccursStr = getElementAttValue(elem, SchemaSymbols::fgATT_MAXOCCURS, true);
 
-    if (XMLString::stringLen(minOccursStr) == 0) {
+    if (!minOccursStr || !*minOccursStr) {
         if (specNode)
             minOccurs = specNode->getMinOccurs();
     }
@@ -5321,7 +5321,7 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
             specNode->setMinOccurs(minOccurs);
     }
 
-    bool isMaxUnbounded = (XMLString::compareString(maxOccursStr, fgUnbounded) == 0);
+    bool isMaxUnbounded = XMLString::equals(maxOccursStr, fgUnbounded);
 
     if (isMaxUnbounded) {
         maxOccurs = SchemaSymbols::UNBOUNDED;
@@ -5329,7 +5329,7 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
             specNode->setMaxOccurs(maxOccurs);
     }
     else {
-        if (XMLString::stringLen(maxOccursStr) == 0) {
+        if (!maxOccursStr || !*maxOccursStr) {
             if (specNode)
                 maxOccurs = specNode->getMaxOccurs();
         }
@@ -5443,7 +5443,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             }
 
             // Check for derivation valid (extension) - 1.4.2.2
-            if (baseContentType != SchemaElementDecl::Empty 
+            if (baseContentType != SchemaElementDecl::Empty
                 && baseContentType != SchemaElementDecl::Simple) {
                 if ((isMixed && baseContentType == SchemaElementDecl::Children)
                     || (!isMixed && baseContentType != SchemaElementDecl::Children)) {
@@ -5472,7 +5472,7 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
         // --------------------------------------------------------------------
         const XMLCh* childName = childElem->getLocalName();
 
-        if (!XMLString::compareString(childName, SchemaSymbols::fgELT_GROUP)) {
+        if (XMLString::equals(childName, SchemaSymbols::fgELT_GROUP)) {
 
             XercesGroupInfo* grpInfo = traverseGroupDecl(childElem, false);
 
@@ -5492,19 +5492,19 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
             attrNode = XUtil::getNextSiblingElement(childElem);
 
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_SEQUENCE)) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_SEQUENCE)) {
 
             specNode = traverseChoiceSequence(childElem, ContentSpecNode::Sequence);
             checkMinMax(specNode, childElem);
             attrNode = XUtil::getNextSiblingElement(childElem);
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_CHOICE)) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_CHOICE)) {
 
             specNode = traverseChoiceSequence(childElem, ContentSpecNode::Choice);
             checkMinMax(specNode, childElem);
             attrNode = XUtil::getNextSiblingElement(childElem);
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_ALL)) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_ALL)) {
 
             specNode = traverseAll(childElem);
             checkMinMax(specNode, childElem, All_Group);
@@ -5839,16 +5839,16 @@ void TraverseSchema::processAttributes(const DOMElement* const elem,
 
         const XMLCh* childName = child->getLocalName();
 
-        if (!XMLString::compareString(childName, SchemaSymbols::fgELT_ATTRIBUTE)) {
+        if (XMLString::equals(childName, SchemaSymbols::fgELT_ATTRIBUTE)) {
             traverseAttributeDecl(child, typeInfo);
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
             attGroupInfo = traverseAttributeGroupDecl(child, typeInfo);
             if (attGroupInfo && !attGroupList.containsElement(attGroupInfo)) {
                 attGroupList.addElement(attGroupInfo);
             }
         }
-        else if (!XMLString::compareString(childName, SchemaSymbols::fgELT_ANYATTRIBUTE) ) {
+        else if (XMLString::equals(childName, SchemaSymbols::fgELT_ANYATTRIBUTE) ) {
             attWildCard = traverseAnyAttribute(child);
             janAttWildCard.reset(attWildCard);
         }
@@ -6134,35 +6134,35 @@ void TraverseSchema::checkFixedFacet(const DOMElement* const elem,
 {
     const XMLCh* fixedFacet = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
 
-    if (XMLString::stringLen(fixedFacet) &&
-        (!XMLString::compareString(fixedFacet, SchemaSymbols::fgATTVAL_TRUE)
-         || !XMLString::compareString(fixedFacet, fgValueOne))) {
+    if ((fixedFacet && *fixedFacet) &&
+        (XMLString::equals(fixedFacet, SchemaSymbols::fgATTVAL_TRUE)
+         || XMLString::equals(fixedFacet, fgValueOne))) {
 
-        if (!XMLString::compareString(SchemaSymbols::fgELT_MINLENGTH, facetName)) {
+        if (XMLString::equals(SchemaSymbols::fgELT_MINLENGTH, facetName)) {
             flags |= DatatypeValidator::FACET_MINLENGTH;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXLENGTH, facetName)) {
+        else if (XMLString::equals(SchemaSymbols::fgELT_MAXLENGTH, facetName)) {
             flags |= DatatypeValidator::FACET_MAXLENGTH;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXEXCLUSIVE, facetName)) {
+        else if (XMLString::equals(SchemaSymbols::fgELT_MAXEXCLUSIVE, facetName)) {
             flags |= DatatypeValidator::FACET_MAXEXCLUSIVE;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_MAXINCLUSIVE, facetName)) {
+        else if (XMLString::equals(SchemaSymbols::fgELT_MAXINCLUSIVE, facetName)) {
             flags |= DatatypeValidator::FACET_MAXINCLUSIVE;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_MINEXCLUSIVE, facetName)) {
+        else if (XMLString::equals(SchemaSymbols::fgELT_MINEXCLUSIVE, facetName)) {
             flags |= DatatypeValidator::FACET_MINEXCLUSIVE;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_MININCLUSIVE, facetName)) {
+        else if (XMLString::equals(SchemaSymbols::fgELT_MININCLUSIVE, facetName)) {
             flags |= DatatypeValidator::FACET_MININCLUSIVE;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_TOTALDIGITS, facetName)) {
+        else if (XMLString::equals(SchemaSymbols::fgELT_TOTALDIGITS, facetName)) {
             flags |= DatatypeValidator::FACET_TOTALDIGITS;
         }
-        else if (!XMLString::compareString(SchemaSymbols::fgELT_FRACTIONDIGITS, facetName)) {
+        else if (XMLString::equals(SchemaSymbols::fgELT_FRACTIONDIGITS, facetName)) {
             flags |= DatatypeValidator::FACET_FRACTIONDIGITS;
         }
-        else if ((!XMLString::compareString(SchemaSymbols::fgELT_WHITESPACE, facetName)) &&
+        else if ((XMLString::equals(SchemaSymbols::fgELT_WHITESPACE, facetName)) &&
                  baseDV->getType() == DatatypeValidator::String) {
             flags |= DatatypeValidator::FACET_WHITESPACE;
         }
@@ -6300,7 +6300,7 @@ void TraverseSchema::checkEnumerationRequiredNotation(const DOMElement* const el
 
     const XMLCh* localPart = getLocalPart(type);
 
-    if (!XMLString::compareString(localPart, SchemaSymbols::fgELT_NOTATION)) {
+    if (XMLString::equals(localPart, SchemaSymbols::fgELT_NOTATION)) {
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoNotationType, name);
     }
 }
@@ -6334,7 +6334,7 @@ XercesGroupInfo* TraverseSchema::processGroupRef(const DOMElement* const elem,
     int                  saveScope = fCurrentScope;
 
     //if from another target namespace
-    if (XMLString::compareString(uriStr, fTargetNSURIString) != 0) {
+    if (!XMLString::equals(uriStr, fTargetNSURIString)) {
 
         // Make sure that we have an explicit import statement.
         // Clause 4 of Schema Representation Constraint:
@@ -6430,7 +6430,7 @@ TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
     SchemaInfo::ListType infoType = SchemaInfo::INCLUDE;
     int                  saveScope = fCurrentScope;
 
-    if (XMLString::compareString(uriStr, fTargetNSURIString) != 0) {
+    if (!XMLString::equals(uriStr, fTargetNSURIString)) {
 
         // Make sure that we have an explicit import statement.
         // Clause 4 of Schema Representation Constraint:
@@ -6464,9 +6464,9 @@ TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
         // circular check
         DOMNode* parentElem = elem->getParentNode();
 
-        if (XMLString::compareString(parentElem->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTEGROUP) == 0
-            && !XMLString::compareString(((DOMElement*) parentElem)->getAttribute(SchemaSymbols::fgATT_NAME), localPart)
-            && XMLString::compareString(parentElem->getParentNode()->getLocalName(), SchemaSymbols::fgELT_REDEFINE)) {
+        if (XMLString::equals(parentElem->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTEGROUP)
+            && XMLString::equals(((DOMElement*) parentElem)->getAttribute(SchemaSymbols::fgATT_NAME), localPart)
+            && !XMLString::equals(parentElem->getParentNode()->getLocalName(), SchemaSymbols::fgELT_REDEFINE)) {
 
             reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoCircularAttGroup);
             return 0;
@@ -6949,7 +6949,7 @@ void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
             // Constraint 2.1.3
             if ((baseAttDefType & XMLAttDef::Fixed) &&
                 (!(childAttDefType & XMLAttDef::Fixed) ||
-                 XMLString::compareString(baseAttDef->getValue(), childAttDef.getValue()))) {
+                 !XMLString::equals(baseAttDef->getValue(), childAttDef.getValue()))) {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_4, childLocalPart);
             }
         }
@@ -7022,7 +7022,7 @@ void TraverseSchema::checkAttDerivationOK(const DOMElement* const elem,
             // Constraint 2.1.3
             if ((baseAttDefType & XMLAttDef::Fixed) &&
                 (!(childAttDefType & XMLAttDef::Fixed) ||
-                 XMLString::compareString(baseAttDef->getValue(), childAttDef->getValue()))) {
+                 !XMLString::equals(baseAttDef->getValue(), childAttDef->getValue()))) {
                 reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::BadAttDerivation_4, childLocalPart);
             }
         }
@@ -7151,7 +7151,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
     // ------------------------------------------------------------------
     const XMLCh* schemaLocation = getElementAttValue(redefineElem, SchemaSymbols::fgATT_SCHEMALOCATION);
 
-    if (XMLString::stringLen(schemaLocation) == 0) {
+    if (!schemaLocation || !*schemaLocation) {
         reportSchemaError(redefineElem, XMLUni::fgXMLErrDomain, XMLErrs::DeclarationNoSchemaLocation, SchemaSymbols::fgELT_REDEFINE);
         return false;
     }
@@ -7169,7 +7169,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
 
     const XMLCh* includeURL = srcToFill->getSystemId();
 
-    if (!XMLString::compareString(includeURL, fSchemaInfo->getCurrentSchemaURL())) {
+    if (XMLString::equals(includeURL, fSchemaInfo->getCurrentSchemaURL())) {
         return false;
     }
 
@@ -7221,11 +7221,11 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
         }
 
         const XMLCh* targetNSURIString = getTargetNamespaceString(root); //getElementAttValue(root,SchemaSymbols::fgATT_TARGETNAMESPACE);
-		unsigned int targetNSLength = XMLString::stringLen(targetNSURIString);
+		  bool targetNSLength = !targetNSURIString || !*targetNSURIString;
 
         // check to see if targetNameSpace is right
-        if (targetNSLength != 0
-            && XMLString::compareString(targetNSURIString,fTargetNSURIString) != 0){
+        if (!targetNSLength
+            && !XMLString::equals(targetNSURIString,fTargetNSURIString)){
             reportSchemaError(root, XMLUni::fgXMLErrDomain, XMLErrs::RedefineNamespaceDifference,
                               schemaLocation, targetNSURIString);
             return false;
@@ -7233,7 +7233,7 @@ bool TraverseSchema::openRedefinedSchema(const DOMElement* const redefineElem) {
 
         // if targetNamespace is empty, change it to redefin'g schema
         // targetNamespace
-        if (targetNSLength == 0 && root->getAttributeNode(XMLUni::fgXMLNSString) == 0
+        if (targetNSLength && root->getAttributeNode(XMLUni::fgXMLNSString) == 0
             && fTargetNSURI != fEmptyNamespaceURI) {
             root->setAttribute(XMLUni::fgXMLNSString, fTargetNSURIString);
         }
@@ -7266,7 +7266,7 @@ void TraverseSchema::renameRedefinedComponents(const DOMElement* const redefineE
 
         const XMLCh* childName = child->getLocalName();
 
-        if (!XMLString::compareString(childName, SchemaSymbols::fgELT_ANNOTATION)) {
+        if (XMLString::equals(childName, SchemaSymbols::fgELT_ANNOTATION)) {
             continue;
         }
 
@@ -7311,7 +7311,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
 
     restoreSchemaInfo(redefiningSchemaInfo);
 
-    if (!XMLString::compareString(redefineChildComponentName,SchemaSymbols::fgELT_SIMPLETYPE)) {
+    if (XMLString::equals(redefineChildComponentName,SchemaSymbols::fgELT_SIMPLETYPE)) {
 
         if (fDatatypeRegistry->getDatatypeValidator(typeNameStr)) {
             return false;
@@ -7319,7 +7319,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
 
         DOMElement* grandKid = XUtil::getFirstChildElement(redefineChildElem);
 
-        if (grandKid && !XMLString::compareString(grandKid->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
+        if (grandKid && XMLString::equals(grandKid->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
             grandKid = XUtil::getNextSiblingElement(grandKid);
         }
 
@@ -7328,7 +7328,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
             reportSchemaError(redefineChildElem, XMLUni::fgXMLErrDomain, XMLErrs::Redefine_InvalidSimpleType);
             return false;
         }
-        else if(XMLString::compareString(grandKid->getLocalName(), SchemaSymbols::fgELT_RESTRICTION)) {
+        else if(!XMLString::equals(grandKid->getLocalName(), SchemaSymbols::fgELT_RESTRICTION)) {
 
             reportSchemaError(grandKid, XMLUni::fgXMLErrDomain, XMLErrs::Redefine_InvalidSimpleType);
             return false;
@@ -7351,7 +7351,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
         fRedefineComponents->put((void*) SchemaSymbols::fgELT_SIMPLETYPE,
                                  fullTypeNameId, 0);
     }
-    else if (!XMLString::compareString(redefineChildComponentName,SchemaSymbols::fgELT_COMPLEXTYPE)) {
+    else if (XMLString::equals(redefineChildComponentName,SchemaSymbols::fgELT_COMPLEXTYPE)) {
 
         if (fComplexTypeRegistry->containsKey(typeNameStr)) {
             return false;
@@ -7359,7 +7359,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
 
         DOMElement* grandKid = XUtil::getFirstChildElement(redefineChildElem);
 
-        if (grandKid && !XMLString::compareString(grandKid->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
+        if (grandKid && XMLString::equals(grandKid->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
             grandKid = XUtil::getNextSiblingElement(grandKid);
         }
 
@@ -7372,7 +7372,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
             DOMElement* greatGrandKid = XUtil::getFirstChildElement(grandKid);
 
             if (greatGrandKid != 0 &&
-                !XMLString::compareString(greatGrandKid->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
+                XMLString::equals(greatGrandKid->getLocalName(), SchemaSymbols::fgELT_ANNOTATION)) {
                 greatGrandKid = XUtil::getNextSiblingElement(greatGrandKid);
             }
 
@@ -7384,8 +7384,8 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
 
                 const XMLCh* greatGrandKidName = greatGrandKid->getLocalName();
 
-                if (XMLString::compareString(greatGrandKidName, SchemaSymbols::fgELT_RESTRICTION)
-                    && XMLString::compareString(greatGrandKidName, SchemaSymbols::fgELT_EXTENSION)) {
+                if (!XMLString::equals(greatGrandKidName, SchemaSymbols::fgELT_RESTRICTION)
+                    && !XMLString::equals(greatGrandKidName, SchemaSymbols::fgELT_EXTENSION)) {
 
                     reportSchemaError(greatGrandKid, XMLUni::fgXMLErrDomain, XMLErrs::Redefine_InvalidComplexType);
                     return false;
@@ -7410,7 +7410,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
             }
         }
     }
-    else if (!XMLString::compareString(redefineChildComponentName, SchemaSymbols::fgELT_GROUP)) {
+    else if (XMLString::equals(redefineChildComponentName, SchemaSymbols::fgELT_GROUP)) {
 
         if (fGroupRegistry->containsKey(typeNameStr)) {
             return false;
@@ -7435,7 +7435,7 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
             fRedefineComponents->put((void*) SchemaSymbols::fgELT_GROUP, fullTypeNameId, 0);
         }
     }
-    else if (!XMLString::compareString(redefineChildComponentName, SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
+    else if (XMLString::equals(redefineChildComponentName, SchemaSymbols::fgELT_ATTRIBUTEGROUP)) {
 
         if (fAttGroupRegistry->containsKey(redefineChildTypeName)) {
             return false;
@@ -7476,16 +7476,16 @@ int TraverseSchema::changeRedefineGroup(const DOMElement* const redefineChildEle
 
         const XMLCh* name = child->getLocalName();
 
-        if (!XMLString::compareString(name, SchemaSymbols::fgELT_ANNOTATION)) {
+        if (XMLString::equals(name, SchemaSymbols::fgELT_ANNOTATION)) {
             continue;
         }
 
-        if (XMLString::compareString(name, redefineChildComponentName)) {
+        if (!XMLString::equals(name, redefineChildComponentName)) {
             result += changeRedefineGroup(child, redefineChildComponentName, redefineChildTypeName, redefineNameCounter);
         } else {
             const XMLCh* refName = getElementAttValue(child, SchemaSymbols::fgATT_REF);
 
-            if (XMLString::stringLen(refName)) {
+            if (refName && *refName) {
 
                 const XMLCh* prefix = getPrefix(refName);
                 const XMLCh* localPart = getLocalPart(refName);
@@ -7499,13 +7499,13 @@ int TraverseSchema::changeRedefineGroup(const DOMElement* const redefineChildEle
                     child->setAttribute(SchemaSymbols::fgATT_REF, fBuffer.getRawBuffer());
                     result++;
 
-                    if(!XMLString::compareString(redefineChildComponentName, SchemaSymbols::fgELT_GROUP)) {
+                    if(XMLString::equals(redefineChildComponentName, SchemaSymbols::fgELT_GROUP)) {
 
                         const XMLCh* minOccurs = getElementAttValue(child, SchemaSymbols::fgATT_MINOCCURS);
                         const XMLCh* maxOccurs = getElementAttValue(child, SchemaSymbols::fgATT_MAXOCCURS);
 
-                        if ((XMLString::stringLen(maxOccurs) && XMLString::compareString(maxOccurs, fgValueOne))
-                            || (XMLString::stringLen(minOccurs) && XMLString::compareString(minOccurs, fgValueOne))) {
+                        if (((maxOccurs && *maxOccurs) && !XMLString::equals(maxOccurs, fgValueOne))
+                            || ((minOccurs && *minOccurs) && !XMLString::equals(minOccurs, fgValueOne))) {
                             reportSchemaError(child, XMLUni::fgXMLErrDomain, XMLErrs::Redefine_InvalidGroupMinMax, redefineChildTypeName);
                         }
                     }
@@ -7533,11 +7533,11 @@ void TraverseSchema::fixRedefinedSchema(const DOMElement* const elem,
 
         const XMLCh* name = child->getLocalName();
 
-        if (!XMLString::compareString(name, redefineChildComponentName)) {
+        if (XMLString::equals(name, redefineChildComponentName)) {
 
             const XMLCh* infoItemName = getElementAttValue(child, SchemaSymbols::fgATT_NAME);
 
-            if(XMLString::compareString(infoItemName, redefineChildTypeName)) {
+            if(!XMLString::equals(infoItemName, redefineChildTypeName)) {
                 continue;
             }
             else { // found it!
@@ -7549,7 +7549,7 @@ void TraverseSchema::fixRedefinedSchema(const DOMElement* const elem,
                 break;
             }
         }
-        else if (!XMLString::compareString(name, SchemaSymbols::fgELT_REDEFINE)) { // need to search the redefine decl...
+        else if (XMLString::equals(name, SchemaSymbols::fgELT_REDEFINE)) { // need to search the redefine decl...
 
             for (DOMElement* redefChild = XUtil::getFirstChildElement(child);
 				 redefChild != 0;
@@ -7557,11 +7557,11 @@ void TraverseSchema::fixRedefinedSchema(const DOMElement* const elem,
 
                 const XMLCh* redefName = redefChild->getLocalName();
 
-                if (!XMLString::compareString(redefName, redefineChildComponentName)) {
+                if (XMLString::equals(redefName, redefineChildComponentName)) {
 
                     const XMLCh* infoItemName = getElementAttValue(redefChild, SchemaSymbols::fgATT_NAME);
 
-                    if(XMLString::compareString(infoItemName, redefineChildTypeName)) {
+                    if(!XMLString::equals(infoItemName, redefineChildTypeName)) {
                         continue;
                     }
                     else { // found it!

@@ -122,7 +122,7 @@ const XMLCh* DOMElementNSImpl::getBaseURI() const
         DOMNode* attrNode = fAttributes->getNamedItemNS(DOMNodeImpl::getXmlURIString(), baseString);
         if (attrNode) {
             const XMLCh* uri =  attrNode->getNodeValue();
-            if (XMLString::stringLen(uri) != 0 ) {// attribute value is always empty string
+            if (uri && *uri) {// attribute value is always empty string
                 try {
                     XMLUri temp(baseURI);
                     XMLUri temp2(&temp, uri);
@@ -159,8 +159,8 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
         return;
     }
 
-    if (XMLString::compareString(prefix, xml) == 0 &&
-        XMLString::compareString(fNamespaceURI, xmlURI) != 0)
+    if (XMLString::equals(prefix, xml) &&
+        !XMLString::equals(fNamespaceURI, xmlURI))
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
 
 
@@ -255,7 +255,7 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
     const XMLCh * URI = DOMNodeImpl::mapPrefix
         (
             fPrefix,
-            (XMLString::stringLen(namespaceURI) == 0) ? 0 : namespaceURI,
+            (!namespaceURI || !*namespaceURI) ? 0 : namespaceURI,
             DOMNode::ELEMENT_NODE
         );
     this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/09/24 20:18:14  tng
+ * Performance: use XMLString::equals instead of XMLString::compareString
+ * and check for null string directly isntead of calling XMLString::stringLen
+ *
  * Revision 1.5  2002/05/27 19:54:33  knoaman
  * Performance: use pre-built element-attribute map table.
  *
@@ -345,13 +349,13 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
         // for attributes with namespace prefix
         const XMLCh* attrURI = attribute->getNamespaceURI();
 
-        if (attrURI != 0 && XMLString::stringLen(attrURI) != 0) {
+        if (attrURI != 0 && *attrURI) {
 
             // attributes with schema namespace are not allowed
             // and not allowed on "documentation" and "appInfo"
-            if (!XMLString::compareString(attrURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) ||
-                !XMLString::compareString(elemName, SchemaSymbols::fgELT_APPINFO) ||
-                !XMLString::compareString(elemName, SchemaSymbols::fgELT_DOCUMENTATION)) {
+            if (XMLString::equals(attrURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) ||
+                XMLString::equals(elemName, SchemaSymbols::fgELT_APPINFO) ||
+                XMLString::equals(elemName, SchemaSymbols::fgELT_DOCUMENTATION)) {
 
                 schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
                     XMLErrs::AttributeDisallowed, attName, contextStr, elemName);
@@ -401,7 +405,7 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
 
             attList[attNameId] = 1;
 
-            if (XMLString::stringLen(attrVal)) {
+            if (attrVal && *attrVal) {
                 validate(elem, attName, attrVal, fgElemAttTable[elemContext][attNameId] & DV_Mask, schema);
             }
         }
@@ -435,46 +439,46 @@ void GeneralAttributeCheck::validate(const DOMElement* const elem,
 
     switch (dvIndex) {
     case DV_Form:
-        if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_QUALIFIED) != 0
-            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_UNQUALIFIED) != 0) {
+        if (!XMLString::equals(attValue, SchemaSymbols::fgATTVAL_QUALIFIED)
+            && !XMLString::equals(attValue, SchemaSymbols::fgATTVAL_UNQUALIFIED)) {
             isInvalid = true;
         }
         break;
     case DV_MaxOccurs:
             // maxOccurs = (nonNegativeInteger | unbounded)
-        if (XMLString::compareString(attValue, fgUnbounded) != 0) {
+        if (!XMLString::equals(attValue, fgUnbounded)) {
             dv = fNonNegIntDV;
         }
         break;
     case DV_MaxOccurs1:
-        if (XMLString::compareString(attValue, fgValueOne) != 0) {
+        if (!XMLString::equals(attValue, fgValueOne)) {
             isInvalid = true;
         }
         break;
     case DV_MinOccurs1:
-        if (XMLString::compareString(attValue, fgValueZero) != 0
-            && XMLString::compareString(attValue, fgValueOne) != 0) {
+        if (!XMLString::equals(attValue, fgValueZero)
+            && !XMLString::equals(attValue, fgValueOne)) {
             isInvalid = true;
         }
         break;
     case DV_ProcessContents:
-        if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_SKIP) != 0
-            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_LAX) != 0
-            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_STRICT) != 0) {
+        if (!XMLString::equals(attValue, SchemaSymbols::fgATTVAL_SKIP)
+            && !XMLString::equals(attValue, SchemaSymbols::fgATTVAL_LAX)
+            && !XMLString::equals(attValue, SchemaSymbols::fgATTVAL_STRICT)) {
             isInvalid = true;
         }
         break;
     case DV_Use:
-        if (XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_OPTIONAL) != 0
-            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_PROHIBITED) != 0
-            && XMLString::compareString(attValue, SchemaSymbols::fgATTVAL_REQUIRED) != 0) {
+        if (!XMLString::equals(attValue, SchemaSymbols::fgATTVAL_OPTIONAL)
+            && !XMLString::equals(attValue, SchemaSymbols::fgATTVAL_PROHIBITED)
+            && !XMLString::equals(attValue, SchemaSymbols::fgATTVAL_REQUIRED)) {
             isInvalid = true;
         }
         break;
     case DV_WhiteSpace:
-        if (XMLString::compareString(attValue, SchemaSymbols::fgWS_PRESERVE) != 0
-            && XMLString::compareString(attValue, SchemaSymbols::fgWS_REPLACE) != 0
-            && XMLString::compareString(attValue, SchemaSymbols::fgWS_COLLAPSE) != 0) {
+        if (!XMLString::equals(attValue, SchemaSymbols::fgWS_PRESERVE)
+            && !XMLString::equals(attValue, SchemaSymbols::fgWS_REPLACE)
+            && !XMLString::equals(attValue, SchemaSymbols::fgWS_COLLAPSE)) {
             isInvalid = true;
         }
         break;
@@ -550,7 +554,7 @@ void GeneralAttributeCheck::initCharFlagTable()
     attList[E_All][A_ID] = Att_Optional | DV_ID;
     attList[E_All][A_MaxOccurs] = Att_Optional | DV_MaxOccurs1;
     attList[E_All][A_MinOccurs] = Att_Optional | DV_MinOccurs1;
-    
+
     // "annotation"
     attList[E_Annotation][A_ID] = Att_Optional | DV_ID;
 

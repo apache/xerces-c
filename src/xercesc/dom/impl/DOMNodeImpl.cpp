@@ -401,12 +401,12 @@ const XMLCh* DOMNodeImpl::mapPrefix(const XMLCh *prefix,
     if (prefix == 0)
         return namespaceURI;
 
-    if (XMLString::compareString(prefix, s_xml) == 0)  {
-        if (XMLString::compareString(namespaceURI, s_xmlURI) == 0)
+    if (XMLString::equals(prefix, s_xml))  {
+        if (XMLString::equals(namespaceURI, s_xmlURI))
             return s_xmlURI;
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
-    } else if (nType == DOMNode::ATTRIBUTE_NODE && XMLString::compareString(prefix, s_xmlns) == 0) {
-        if (XMLString::compareString(namespaceURI, s_xmlnsURI) == 0)
+    } else if (nType == DOMNode::ATTRIBUTE_NODE && XMLString::equals(prefix, s_xmlns)) {
+        if (XMLString::equals(namespaceURI, s_xmlnsURI))
             return s_xmlnsURI;
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
     } else if (namespaceURI == 0 || *namespaceURI == 0) {
@@ -462,27 +462,27 @@ bool DOMNodeImpl::isEqualNode(const DOMNode* arg)
     }
 
     // the compareString will check null string as well
-    if (XMLString::compareString(thisNode->getNodeName(), arg->getNodeName())) {
+    if (!XMLString::equals(thisNode->getNodeName(), arg->getNodeName())) {
         return false;
     }
 
-    if (XMLString::compareString(thisNode->getLocalName(),arg->getLocalName())) {
+    if (!XMLString::equals(thisNode->getLocalName(),arg->getLocalName())) {
         return false;
     }
 
-    if (XMLString::compareString(thisNode->getNamespaceURI(), arg->getNamespaceURI())) {
+    if (!XMLString::equals(thisNode->getNamespaceURI(), arg->getNamespaceURI())) {
         return false;
     }
 
-    if (XMLString::compareString(thisNode->getPrefix(), arg->getPrefix())) {
+    if (!XMLString::equals(thisNode->getPrefix(), arg->getPrefix())) {
         return false;
     }
 
-    if (XMLString::compareString(thisNode->getNodeValue(), arg->getNodeValue())) {
+    if (!XMLString::equals(thisNode->getNodeValue(), arg->getNodeValue())) {
         return false;
     }
 
-    if (XMLString::compareString(thisNode->getBaseURI(), arg->getBaseURI())) {
+    if (!XMLString::equals(thisNode->getBaseURI(), arg->getBaseURI())) {
         return false;
     }
 
@@ -553,10 +553,10 @@ const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* const namespaceURI,
     //          could be both?
     const XMLCh* prefix = getPrefix();
 
-    if (ns != 0 && (XMLString::compareString(ns,namespaceURI) == 0)) {
+    if (ns != 0 && XMLString::equals(ns,namespaceURI)) {
         if (useDefault || prefix != 0) {
             const XMLCh* foundNamespace =  el->lookupNamespaceURI(prefix);
-            if (foundNamespace != 0 && (XMLString::compareString(foundNamespace, namespaceURI) == 0)) {
+            if (foundNamespace != 0 && XMLString::equals(foundNamespace, namespaceURI)) {
                 return prefix;
             }
         }
@@ -574,14 +574,14 @@ const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* const namespaceURI,
 
                 ns = attr->getNamespaceURI();
 
-                if (ns != 0 && (XMLString::compareString(ns, s_xmlnsURI) == 0)) {
+                if (ns != 0 && XMLString::equals(ns, s_xmlnsURI)) {
                     // DOM Level 2 nodes
-                    if ((useDefault && (XMLString::compareString(attr->getNodeName(), s_xmlns) == 0)) ||
-                        (attrPrefix != 0 && (XMLString::compareString(attrPrefix, s_xmlns) == 0)) &&
-                        (XMLString::compareString(value, namespaceURI) == 0)) {
+                    if ((useDefault && XMLString::equals(attr->getNodeName(), s_xmlns)) ||
+                        (attrPrefix != 0 && XMLString::equals(attrPrefix, s_xmlns)) &&
+                        XMLString::equals(value, namespaceURI)) {
                         const XMLCh* localname= attr->getLocalName();
                         const XMLCh* foundNamespace = el->lookupNamespaceURI(localname);
-                        if (foundNamespace != 0 && (XMLString::compareString(foundNamespace, namespaceURI) == 0)) {
+                        if (foundNamespace != 0 && XMLString::equals(foundNamespace, namespaceURI)) {
                             return localname;
                         }
                     }
@@ -609,7 +609,7 @@ const XMLCh* DOMNodeImpl::lookupNamespaceURI(const XMLCh* specifiedPrefix) const
             if (specifiedPrefix == 0 && prefix == specifiedPrefix) {
                 // looking for default namespace
                 return ns;
-            } else if (prefix != 0 && (XMLString::compareString(prefix, specifiedPrefix) == 0)) {
+            } else if (prefix != 0 && XMLString::equals(prefix, specifiedPrefix)) {
                 // non default namespace
                 return ns;
             }
@@ -624,15 +624,15 @@ const XMLCh* DOMNodeImpl::lookupNamespaceURI(const XMLCh* specifiedPrefix) const
                     const XMLCh *value = attr->getNodeValue();
                     ns = attr->getNamespaceURI();
 
-                    if (ns != 0 && (XMLString::compareString(ns, s_xmlnsURI) == 0)) {
+                    if (ns != 0 && XMLString::equals(ns, s_xmlnsURI)) {
                         // at this point we are dealing with DOM Level 2 nodes only
                         if (specifiedPrefix == 0 &&
-                            (XMLString::compareString(attr->getNodeName(), s_xmlns) == 0)) {
+                            XMLString::equals(attr->getNodeName(), s_xmlns)) {
                             // default namespace
                             return value;
                         } else if (attrPrefix != 0 &&
-                                   (XMLString::compareString(attrPrefix, s_xmlns) == 0) &&
-                                   (XMLString::compareString(attr->getLocalName(), specifiedPrefix) == 0)) {
+                                   XMLString::equals(attrPrefix, s_xmlns) &&
+                                   XMLString::equals(attr->getLocalName(), specifiedPrefix)) {
                             // non default namespace
                             return value;
                         }
@@ -923,12 +923,12 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
 
         const XMLCh *prefix = thisNode->getPrefix();
         // REVISIT: is it possible that prefix is empty string?
-        if (prefix == 0 || XMLString::stringLen(prefix) == 0) {
+        if (prefix == 0 || !*prefix) {
             const XMLCh* ns = thisNode->getNamespaceURI();
             if (namespaceURI == 0) {
                 return (ns == namespaceURI);
             }
-             return (XMLString::compareString(namespaceURI, ns) == 0);
+             return XMLString::equals(namespaceURI, ns);
         }
 
         if (thisNode->hasAttributes()) {
@@ -936,7 +936,7 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
             DOMNode *attr = elem->getAttributeNodeNS(s_xmlnsURI, s_xmlns);
             if (attr != 0) {
                 const XMLCh *value = attr->getNodeValue();
-                return (XMLString::compareString(namespaceURI, value) == 0);
+                return XMLString::equals(namespaceURI, value);
             }
         }
         DOMNode *ancestor = getElementAncestor(thisNode);

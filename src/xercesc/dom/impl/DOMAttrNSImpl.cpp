@@ -124,7 +124,7 @@ void DOMAttrNSImpl::setPrefix(const XMLCh *prefix)
     if (fNode.isReadOnly())
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR,
         0);
-    if (fNamespaceURI == 0 || fNamespaceURI[0] == chNull || XMLString::compareString(fLocalName, xmlns) == 0)
+    if (fNamespaceURI == 0 || fNamespaceURI[0] == chNull || XMLString::equals(fLocalName, xmlns))
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
 
     if (prefix != 0 && !DOMDocumentImpl::isXMLName(prefix))
@@ -136,10 +136,10 @@ void DOMAttrNSImpl::setPrefix(const XMLCh *prefix)
         return;
     }
 
-    if (XMLString::compareString(prefix, xml) == 0 &&
-        XMLString::compareString(fNamespaceURI, xmlURI) != 0 ||
-        XMLString::compareString(prefix, xmlns) == 0 &&
-        XMLString::compareString(fNamespaceURI, xmlnsURI) != 0)
+    if (XMLString::equals(prefix, xml)&&
+        !XMLString::equals(fNamespaceURI, xmlURI)||
+        XMLString::equals(prefix, xmlns)&&
+        !XMLString::equals(fNamespaceURI, xmlnsURI))
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
 
     if (XMLString::indexOf(prefix, chColon) != -1) {
@@ -215,8 +215,8 @@ void DOMAttrNSImpl::setName(const XMLCh* namespaceURI, const XMLCh* qualifiedNam
 
     bool xmlnsAlone = false;	//true if attribute name is "xmlns"
     if (index == 0) {	//qualifiedName contains no ':'
-        if (XMLString::compareString(this->fName, xmlns) == 0) {
-            if (XMLString::compareString(namespaceURI, xmlnsURI) != 0)
+        if (XMLString::equals(this->fName, xmlns)) {
+            if (!XMLString::equals(namespaceURI, xmlnsURI))
                 throw DOMException(DOMException::NAMESPACE_ERR, 0);
             xmlnsAlone = true;
         }
@@ -248,7 +248,7 @@ void DOMAttrNSImpl::setName(const XMLCh* namespaceURI, const XMLCh* qualifiedNam
         : DOMNodeImpl::mapPrefix
           (
               fPrefix,
-              (XMLString::stringLen(namespaceURI) == 0) ? 0 : namespaceURI,
+              (!namespaceURI || !*namespaceURI) ? 0 : namespaceURI,
               DOMNode::ATTRIBUTE_NODE
           );
     this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
