@@ -1139,7 +1139,7 @@ void DOMParser::notationDecl
 {
 	NotationImpl* notation = ((DocumentImpl*)fDocument.fImpl)->createNotation(notDecl.getName());
 	notation->setPublicId(notDecl.getPublicId());
-	notation->setPublicId(notDecl.getPublicId());
+	notation->setSystemId(notDecl.getSystemId());
 
 	fDocumentType->notations->setNamedItem( notation );
 
