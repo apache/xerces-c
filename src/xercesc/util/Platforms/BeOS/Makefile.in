@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.2  2002/12/31 19:30:56  tng
+# [Bug 15590] BeOSDefs.hpp has wrong case in CVS.
+#
 # Revision 1.1  2002/12/02 20:42:30  tng
 # [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
 #
@@ -82,7 +85,7 @@ include ../../../Makefile.incl
 
 SUBMODULE = Platforms/BeOS
 CXXFLAGS += -D_GNU_SOURCE -D__USE_GNU
-CPP_PUBHEADERS = BeOSDefs.hpp
+CPP_PUBHEADERS = BeOSDef.hpp
 CPP_OBJECTS = BeOSPlatformUtils.$(TO)
 
 include ../../Makefile.util.submodule

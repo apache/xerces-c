@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/12/31 19:31:07  tng
+ * [Bug 15590] BeOSDefs.hpp has wrong case in CVS.
+ *
  * Revision 1.10  2002/12/02 20:40:49  tng
  * [Bug 12490] Patches required to build Xerces-C++ on BeOS R5.  Patch from Andrew Bachmann.
  *
@@ -257,7 +260,7 @@
 #endif
 
 #if defined(XML_BEOS)
-#include    <xercesc/util/Platforms/BeOS/BeOSDefs.hpp>
+#include    <xercesc/util/Platforms/BeOS/BeOSDef.hpp>
 #endif
 
 #if defined(XML_LINUX)
