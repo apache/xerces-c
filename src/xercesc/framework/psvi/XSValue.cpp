@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/08/24 15:59:20  peiyongz
+ * using SCHAR_MIN/SCHAR_MAX
+ *
  * Revision 1.4  2004/08/17 21:11:41  peiyongz
  * no more Unrepresentable
  *
@@ -562,10 +565,10 @@ XSValue::validateNumerics(const XMLCh*         const content
                 }
                 break;
             case XSValue::dt_byte:
-                // error: < CHAR_MIN || > CHAR_MAX
+                // error: < SCHAR_MIN || > SCHAR_MAX
                 {
-                    if ((actVal.f_long < CHAR_MIN) || 
-                        (actVal.f_long > CHAR_MAX)  )
+                    if ((actVal.f_long < SCHAR_MIN) || 
+                        (actVal.f_long > SCHAR_MAX)  )
                     {
                         context.fStatus = XSValueContext::st_InvalidRange;
                         return false;
@@ -1394,9 +1397,9 @@ XSValue::getActValNumerics(const XMLCh*         const content
                 }
                 break;
             case XSValue::dt_byte:
-                // error: < CHAR_MIN || > CHAR_MAX
+                // error: < SCHAR_MIN || > SCHAR_MAX
                 {
-                    if ((actVal.f_long < CHAR_MIN) || (actVal.f_long > CHAR_MAX))
+                    if ((actVal.f_long < SCHAR_MIN) || (actVal.f_long > SCHAR_MAX))
                     {
                         context.fStatus = XSValueContext::st_InvalidRange;
                         return 0;
