@@ -533,7 +533,7 @@ $set 3
 137  The range end code point '{0}' is less than the start code point '{1}'
 138  Invalid Unicode hex notation
 139  Overflow in a hex notation
-140  '\x{' must be closed by '}'
+140  '\\x{' must be closed by '}'
 141  Invalid Unicode code point
 142  An anchor must not be here
 143  This expression is not supported in the current option setting

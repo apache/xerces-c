@@ -550,7 +550,7 @@ en_US {
 		"The range end code point '{0}' is less than the start code point '{1}' " ,
 		"Invalid Unicode hex notation " ,
 		"Overflow in a hex notation " ,
-		"'\x{' must be closed by '}' " ,
+		"'\\x{' must be closed by '}' " ,
 		"Invalid Unicode code point " ,
 		"An anchor must not be here " ,
 		"This expression is not supported in the current option setting " ,
