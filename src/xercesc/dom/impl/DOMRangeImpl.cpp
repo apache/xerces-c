@@ -228,15 +228,18 @@ void DOMRangeImpl::setStart(const DOMNode* refNode, XMLSize_t offset)
     validateNode(refNode);
     checkIndex(refNode, offset);
 
-    fStartContainer = (DOMNode*) refNode;
-    fStartOffset    = offset;
-
     // error if not the same owner document
     if (fDocument != refNode->getOwnerDocument()) {
-        if ( refNode != fDocument )
+        if ( refNode != fDocument ) {
+            collapse(true); //collapse the range positions to start
+            fCollapsed = true;
             throw DOMException(
                 DOMException::WRONG_DOCUMENT_ERR, 0);
+        }
     }
+
+    fStartContainer = (DOMNode*) refNode;
+    fStartOffset    = offset;
 
     // they may be of same document, but not same root container
     // collapse if not the same root container
@@ -256,15 +259,18 @@ void DOMRangeImpl::setEnd(const DOMNode* refNode, XMLSize_t offset)
     validateNode(refNode);
     checkIndex(refNode, offset);
 
-    fEndContainer   = (DOMNode*) refNode;
-    fEndOffset      = offset;
-
     // error if not the same owner document
     if (fDocument != refNode->getOwnerDocument()) {
-        if ( refNode != fDocument )
+        if ( refNode != fDocument ) {
+            collapse(false); //collapse the range positions to end
+            fCollapsed = true;
             throw DOMException(
                 DOMException::WRONG_DOCUMENT_ERR, 0);
+        }
     }
+
+    fEndContainer   = (DOMNode*) refNode;
+    fEndOffset      = offset;
 
     // they may be of same document, but not same root container
     // collapse if not the same root container
@@ -290,6 +296,16 @@ void DOMRangeImpl::setStartBefore(const DOMNode* refNode)
             DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
     }
 
+    // error if not the same owner document
+    if (fDocument != refNode->getOwnerDocument()) {
+        if ( refNode != fDocument ) {
+            collapse(true); //collapse the range positions to start
+            fCollapsed = true;
+            throw DOMException(
+                DOMException::WRONG_DOCUMENT_ERR, 0);
+        }
+    }
+
     fStartContainer = refNode->getParentNode();
    XMLSize_t i = 0;
     for (DOMNode* n = (DOMNode*) refNode; n!=0; n = n->getPreviousSibling()) {
@@ -299,13 +315,6 @@ void DOMRangeImpl::setStartBefore(const DOMNode* refNode)
         fStartOffset = 0;
     else
         fStartOffset = i-1;
-
-    // error if not the same owner document
-    if (fDocument != refNode->getOwnerDocument()) {
-        if ( refNode != fDocument )
-            throw DOMException(
-                DOMException::WRONG_DOCUMENT_ERR, 0);
-    }
 
     // they may be of same document, but not same root container
     // collapse if not the same root container
@@ -331,6 +340,16 @@ void DOMRangeImpl::setStartAfter(const DOMNode* refNode)
             DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
     }
 
+    // error if not the same owner document
+    if (fDocument != refNode->getOwnerDocument()) {
+        if ( refNode != fDocument ) {
+            collapse(true); //collapse the range positions to start
+            fCollapsed = true;
+            throw DOMException(
+                DOMException::WRONG_DOCUMENT_ERR, 0);
+        }
+    }
+
     fStartContainer = refNode->getParentNode();
     XMLSize_t i = 0;
     for (DOMNode* n = (DOMNode*) refNode; n!=0; n = n->getPreviousSibling()) {
@@ -338,13 +357,6 @@ void DOMRangeImpl::setStartAfter(const DOMNode* refNode)
     }
 
     fStartOffset = i;
-
-    // error if not the same owner document
-    if (fDocument != refNode->getOwnerDocument()) {
-        if ( refNode != fDocument )
-            throw DOMException(
-                DOMException::WRONG_DOCUMENT_ERR, 0);
-    }
 
     // they may be of same document, but not same root container
     // collapse if not the same root container
@@ -370,6 +382,16 @@ void DOMRangeImpl::setEndBefore(const DOMNode* refNode)
             DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
     }
 
+    // error if not the same owner document
+    if (fDocument != refNode->getOwnerDocument()) {
+        if ( refNode != fDocument ) {
+            collapse(false); //collapse the range positions to end
+            fCollapsed = true;
+            throw DOMException(
+                DOMException::WRONG_DOCUMENT_ERR, 0);
+        }
+    }
+
     fEndContainer = refNode->getParentNode();
     XMLSize_t i = 0;
     for (DOMNode* n = (DOMNode*) refNode; n!=0; n = n->getPreviousSibling(), i++) ;
@@ -378,13 +400,6 @@ void DOMRangeImpl::setEndBefore(const DOMNode* refNode)
         fEndOffset = 0;
     else
         fEndOffset = i-1;
-
-    // error if not the same owner document
-    if (fDocument != refNode->getOwnerDocument()) {
-        if ( refNode != fDocument )
-            throw DOMException(
-                DOMException::WRONG_DOCUMENT_ERR, 0);
-    }
 
     // they may be of same document, but not same root container
     // collapse if not the same root container
@@ -410,6 +425,16 @@ void DOMRangeImpl::setEndAfter(const DOMNode* refNode)
             DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
     }
 
+    // error if not the same owner document
+    if (fDocument != refNode->getOwnerDocument()) {
+        if ( refNode != fDocument ) {
+            collapse(false); //collapse the range positions to end
+            fCollapsed = true;
+            throw DOMException(
+                DOMException::WRONG_DOCUMENT_ERR, 0);
+        }
+    }
+
     fEndContainer = refNode->getParentNode();
     XMLSize_t i = 0;
     for (DOMNode* n = (DOMNode*) refNode; n!=0; n = n->getPreviousSibling(), i++) ;
@@ -418,13 +443,6 @@ void DOMRangeImpl::setEndAfter(const DOMNode* refNode)
         fEndOffset = 0;
     else
         fEndOffset = i;
-
-    // error if not the same owner document
-    if (fDocument != refNode->getOwnerDocument()) {
-        if ( refNode != fDocument )
-            throw DOMException(
-                DOMException::WRONG_DOCUMENT_ERR, 0);
-    }
 
     // they may be of same document, but not same root container
     // collapse if not the same root container
@@ -677,27 +695,40 @@ short DOMRangeImpl::compareBoundaryPoints(DOMRange::CompareHow how, const DOMRan
         }
     }
 
-    DOMNode* ancestor = (DOMNode*) commonAncestorOf(pointA, pointB);
-
     // case 4: preorder traversal of context tree.
-    if (ancestor) {
-        DOMNode* current = ancestor;
+    // Instead of literally walking the context tree in pre-order,
+    // we use relative node depth walking which is usually faster
 
-        do {
-            if (current == pointA) return -1;
-            if (current == pointB) return 1;
-            current = nextNode(current, true);
+    int depthDiff = 0;
+    for ( DOMNode* n = pointB; n != 0; n = n->getParentNode() )
+        depthDiff++;
+    for ( DOMNode* n = pointA; n != 0; n = n->getParentNode() )
+        depthDiff--;
+    while (depthDiff > 0) {
+        pointB = pointB->getParentNode();
+        depthDiff--;
+    }
+    while (depthDiff < 0) {
+        pointA = pointA->getParentNode();
+        depthDiff++;
+    }
+    for (DOMNode* pB = pointB->getParentNode(),
+         *pA = pointA->getParentNode();
+         pB != pA;
+         pB = pB->getParentNode(), pA = pA->getParentNode() )
+    {
+        pointB = pB;
+        pointA = pA;
+    }
+    for ( DOMNode* n = pointB->getNextSibling();
+         n != 0;
+         n = n->getNextSibling() )
+    {
+        if (n == pointA) {
+            return 1;
         }
-        while (current!=0 && current!=ancestor);
     }
-    else {
-        // case 5: there is no common ancestor of these two points
-        // it means the two Ranges are not in the same "root container"
-        throw DOMException(
-            DOMException::WRONG_DOCUMENT_ERR, 0);
-    }
-
-    return -2; // this should never happen
+    return -1;
 }
 
 
@@ -723,25 +754,6 @@ void DOMRangeImpl::insertNode(DOMNode* newNode)
 {
     if (newNode == 0) return; //don't have to do anything
 
-    for (DOMNode* aNode = fStartContainer; aNode!=0; aNode = aNode->getParentNode()) {
-        if (castToNodeImpl(newNode)->isReadOnly()) {
-        throw DOMException(
-            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
-    }
-    }
-
-    if (fDocument != newNode->getOwnerDocument()) {
-        throw DOMException(
-            DOMException::WRONG_DOCUMENT_ERR, 0);
-    }
-
-    // Prevent cycles in the tree.
-    //isKidOK() is not checked here as its taken care by insertBefore() function
-    if (isAncestorOf( newNode, fStartContainer)) {
-        throw DOMException(
-            DOMException::HIERARCHY_REQUEST_ERR, 0);
-    }
-
     if( fDetached) {
         throw DOMException(
             DOMException::INVALID_STATE_ERR, 0);
@@ -755,6 +767,25 @@ void DOMRangeImpl::insertNode(DOMNode* newNode)
     {
         throw DOMRangeException(
             DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
+    }
+
+    // Prevent cycles in the tree.
+    //isKidOK() is not checked here as its taken care by insertBefore() function
+    if (isAncestorOf( newNode, fStartContainer)) {
+        throw DOMException(
+            DOMException::HIERARCHY_REQUEST_ERR, 0);
+    }
+
+    for (DOMNode* aNode = fStartContainer; aNode!=0; aNode = aNode->getParentNode()) {
+        if (castToNodeImpl(newNode)->isReadOnly()) {
+        throw DOMException(
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+    }
+    }
+
+    if (fDocument != newNode->getOwnerDocument()) {
+        throw DOMException(
+            DOMException::WRONG_DOCUMENT_ERR, 0);
     }
 
 
