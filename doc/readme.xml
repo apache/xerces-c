@@ -64,9 +64,8 @@
         <ul>
             <li>Win32 using MSVC 6.0 SP3</li>
             <li>Linux (RedHat 6.1) using egcs-2.91.66 and glibc-2.1.2-11</li>
-            <li>Solaris 2.6 using Sun Workshop 4.2 <em>XML4C only</em></li>
-            <li>AIX 4.2.1 using xlC 3.6.4 <em>XML4C only</em></li>
-            <li>HP-UX 10.2 using CC A.10.36 <em>XML4C only</em></li>
+            <li>Solaris 2.6 using Sun Workshop 4.2</li>
+            <li>AIX 4.2.1 using xlC 3.6.4</li>
             <li>HP-UX 11 using aCC A.03.13 with pthreads <em>XML4C only</em></li>
         </ul>
     </s2>
@@ -77,7 +76,9 @@
             <li>AS/400</li>
             <li>SGI IRIX</li>
             <li>FreeBSD</li>
-            <li>Unixware</li>
+            <li>Macintosh</li>
+            <li>OS/2</li>
+            <li>PTX</li>
             <li>and more!</li>
         </ul>
     </s2>

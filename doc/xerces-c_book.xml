@@ -5,45 +5,51 @@
   <external href="../index.html"  label="Home"/>
 
   <separator/>
-  <document id="index"       label="Readme"       source="readme.xml"     />
-  <document id="install"     label="Installation" source="install.xml"    />
-  <document id="build"       label="Build"        source="buildc.xml"      />
+
+  <document id="index"       label="Readme"       source="readme.xml"/>
+  <document id="install"     label="Installation" source="install.xml"/>
+  <document id="build"       label="Build"        source="buildc.xml"/>
 
   <separator/>
-  <document id="api"         label="API Docs"     source="apidocs.xml"    />
+
+  <document id="api"         label="API Docs"     source="apidocs.xml"/>
+
   <container id="samples"    label="Samples"      source="samples.xml">
-            <entry id="saxcount"   source="saxcount.xml"/>
-            <entry id="saxprint"   source="saxprint.xml"/>
-            <entry id="domcount"   source="domcount.xml"/>
-            <entry id="domprint"   source="domprint.xml"/>
-            <entry id="memparse"   source="memparse.xml"/>
-            <entry id="redirect"   source="redirect.xml"/>
-            <entry id="pparse"     source="pparse.xml"/>
-            <entry id="stdinparse" source="stdinparse.xml"/>
-            <entry id="enumval"    source="enumval.xml"/>
-            <entry id="createdoc"  source="createdoc.xml"/>
+     <entry id="saxcount"    source="saxcount.xml"/>
+     <entry id="saxprint"    source="saxprint.xml"/>
+     <entry id="domcount"    source="domcount.xml"/>
+     <entry id="domprint"    source="domprint.xml"/>
+     <entry id="memparse"    source="memparse.xml"/>
+     <entry id="redirect"    source="redirect.xml"/>
+     <entry id="pparse"      source="pparse.xml"/>
+     <entry id="stdinparse"  source="stdinparse.xml"/>
+     <entry id="enumval"     source="enumval.xml"/>
+     <entry id="createdoc"   source="createdoc.xml"/>
   </container>
 
-  <document id="program"     label="Programming"  source="program.xml"    />
-  <document id="migrate"     label="Migration"    source="migration.xml"  />
+  <document id="program"     label="Programming"  source="program.xml"/>
+  <document id="migrate"     label="Migration"    source="migration.xml"/>
 
   <group    id="faqs"        title="Frequently Asked Questions" label="FAQs">
-    <entry  id="faq-distrib"                      source="faq-distrib.xml"/>
-    <entry  id="faq-parse"                        source="faq-parse.xml"  />
-    <entry  id="faq-other"                        source="faq-other.xml"  />
+     <entry id="faq-distrib" source="faq-distrib.xml"/>
+     <entry id="faq-parse"   source="faq-parse.xml"/>
+     <entry id="faq-other"   source="faq-other.xml"/>
   </group>
 
   <separator/>
-  <document id="releases"    label="Releases"     source="releases.xml"   />
-  <document id="caveats"     label="Caveats"      source="caveats.xml"    />
-  <document id="feedback"    label="Feedback"     source="feedback.xml"   />
+
+  <document id="releases"    label="Releases"     source="releases.xml"/>
+  <document id="caveats"     label="Caveats"      source="caveats.xml"/>
+  <document id="feedback"    label="Feedback"     source="feedback.xml"/>
 
   <separator/>
-  <document id="pdf"    label="PDF Document"     source="pdf-c.xml"   />
+
+  <document id="pdf"         label="PDF Document" source="pdf-c.xml"/>
+
   <separator/>
-  <external href="http://&XercesDistDir;/"     label="Download"    />
-  <external href="http://xml.apache.org/from-cvs/xml-xerces/"     label="Dev Snapshots"    />
-  <external href="http://xml.apache.org/websrc/cvsweb.cgi/xml-xerces/c/"     label="CVS Repository"    />
-  <external href="http://xml-archive.webweaving.org/"     label="Mail Archive"    />
-  <external href="http://xml.apache.org/bugs/"     label="Bug Database"    />
+
+  <external href="http://&XercesDistDir;/"                        label="Download"/>
+  <external href="http://xml.apache.org/from-cvs/xml-xerces/"     label="Dev Snapshots"/>
+  <external href="http://xml.apache.org/websrc/cvsweb.cgi/xml-xerces/c/"     label="CVS Repository"/>
+  <external href="http://xml-archive.webweaving.org/"             label="Mail Archive"/>
 </book>
