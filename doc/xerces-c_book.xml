@@ -26,11 +26,11 @@
             <hidden id="createdoc"  source="createdoc.xml"/>
             
   <document id="program"     label="Programming"  source="program.xml"    />
+  <document id="migrate"     label="Migration"    source="migration.xml"  />
   
   <group    id="faqs"        label="FAQs">
     <entry  id="faq-distrib"                      source="faq-distrib.xml"/>
     <entry  id="faq-parse"                        source="faq-parse.xml"  />
-    <entry  id="faq-migrate"                      source="faq-migrate.xml"/>
     <entry  id="faq-other"                        source="faq-other.xml"  />
   </group>
   
