@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/14 01:55:09  abagchi
+ * Added XML_LSTRSUPPORT
+ *
  * Revision 1.4  2000/01/13 01:39:11  abagchi
  * Changed unsigned short to wchar_t for XMLCh
  *
@@ -82,6 +85,11 @@
 // Indicate that we do not support native bools
 // ---------------------------------------------------------------------------
 //#define NO_NATIVE_BOOL
+
+// ---------------------------------------------------------------------------
+//  GCC supports "L" for long strings. So we define ...
+// ---------------------------------------------------------------------------
+#define XML_LSTRSUPPORT
 
 
 // ---------------------------------------------------------------------------
