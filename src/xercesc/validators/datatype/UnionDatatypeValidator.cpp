@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2003/11/13 23:19:18  peiyongz
+ * initSize
+ *
  * Revision 1.16  2003/11/12 20:32:03  peiyongz
  * Statless Grammar: ValidationContext
  *
@@ -500,7 +503,7 @@ void UnionDatatypeValidator::serialize(XSerializeEngine& serEng)
         XTemplateSerializer::loadObject(&fEnumeration, 8, owned, serEng);
 
         owned = fMemberTypesInherited ? true : false;
-        XTemplateSerializer::loadObject(&fMemberTypeValidators, 8, owned, serEng);
+        XTemplateSerializer::loadObject(&fMemberTypeValidators, 4, owned, serEng);
 
         fValidatedDatatype = DatatypeValidator::loadDV(serEng);
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/11/13 23:20:47  peiyongz
+ * initSize
+ *
  * Revision 1.18  2003/11/10 21:54:51  neilg
  * implementation for new stateless means of traversing attribute definition lists
  *
@@ -1030,7 +1033,7 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
          * Deserialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
          ***/
         XTemplateSerializer::loadObject(&fElements, 8, false, serEng);
-        XTemplateSerializer::loadObject(&fAttDefs, 8, true, serEng);
+        XTemplateSerializer::loadObject(&fAttDefs, 29, true, serEng);
 
          /***
           *   Don't deserialize 

@@ -510,7 +510,7 @@ void DTDElementDecl::serialize(XSerializeEngine& serEng)
          * Deserialize RefHashTableOf<DTDAttDef>           
          *
          ***/
-        XTemplateSerializer::loadObject(&fAttDefs, 3, true, serEng);
+        XTemplateSerializer::loadObject(&fAttDefs, 29, true, serEng);
 
         serEng>>fAttList;
         serEng>>fContentSpec;

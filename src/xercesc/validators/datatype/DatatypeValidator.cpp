@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/11/13 23:19:18  peiyongz
+ * initSize
+ *
  * Revision 1.16  2003/11/07 22:39:41  peiyongz
  * PSVI/schema component model implementation, thanks to David Cargill
  *
@@ -304,6 +307,7 @@ void DatatypeValidator::cleanUp() {
         fMemoryManager->deallocate(fPattern);//delete [] fPattern;
     if (fTypeName)
         fMemoryManager->deallocate(fTypeName);
+
 }
 
 /***
@@ -410,7 +414,7 @@ void DatatypeValidator::serialize(XSerializeEngine& serEng)
          *  Deserialize RefHashTableOf<KVStringPair>
          *
          ***/
-        XTemplateSerializer::loadObject(&fFacets, 3, true, serEng);
+        XTemplateSerializer::loadObject(&fFacets, 29, true, serEng);
 
         serEng.readString(fPattern);
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/13 23:20:47  peiyongz
+ * initSize
+ *
  * Revision 1.9  2003/10/29 16:21:52  peiyongz
  * don't own the element list pointed to by fElements
  *
@@ -174,7 +177,7 @@ void XercesGroupInfo::serialize(XSerializeEngine& serEng)
          * Deserialize RefVectorOf<SchemaElementDecl>*    fElements;
          *
          ***/
-        XTemplateSerializer::loadObject(&fElements, 8, false, serEng);
+        XTemplateSerializer::loadObject(&fElements, 4, false, serEng);
 
         serEng>>fBaseGroup;
 

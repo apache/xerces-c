@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/13 23:21:41  peiyongz
+ * initSize
+ *
  * Revision 1.7  2003/10/17 21:18:04  peiyongz
  * using XTemplateSerializer
  *
@@ -231,7 +234,7 @@ void IdentityConstraint::serialize(XSerializeEngine& serEng)
          * Deserialize RefVectorOf<IC_Field>* fFields;
          *
          ***/
-        XTemplateSerializer::loadObject(&fFields, 8, true, serEng);
+        XTemplateSerializer::loadObject(&fFields, 4, true, serEng);
 
     }
 

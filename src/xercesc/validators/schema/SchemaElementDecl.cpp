@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/11/13 23:20:47  peiyongz
+ * initSize
+ *
  * Revision 1.14  2003/10/17 21:17:12  peiyongz
  * using XTemplateSerializer
  *
@@ -488,7 +491,7 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
         /***
          * DeSerialize RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
          ***/
-        XTemplateSerializer::loadObject(&fAttDefs, 3, true, serEng);
+        XTemplateSerializer::loadObject(&fAttDefs, 29, true, serEng);
 
         serEng>>fXsiComplexTypeInfo;
 
@@ -497,7 +500,7 @@ void SchemaElementDecl::serialize(XSerializeEngine& serEng)
         /***
          * DeSerialize RefVectorOf<IdentityConstraint>*   fIdentityConstraints;
          ***/
-        XTemplateSerializer::loadObject(&fIdentityConstraints, 8, true, serEng);
+        XTemplateSerializer::loadObject(&fIdentityConstraints, 16, true, serEng);
 
         serEng>>fAttWildCard;
         serEng>>fSubstitutionGroupElem;

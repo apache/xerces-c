@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/13 23:19:49  peiyongz
+ * initSize
+ *
  * Revision 1.6  2003/11/10 21:54:51  neilg
  * implementation for new stateless means of traversing attribute definition lists
  *
@@ -241,7 +244,7 @@ void DTDAttDefList::serialize(XSerializeEngine& serEng)
          * Deserialize RefHashTableOf<DTDAttDef>           
          *
          ***/
-        XTemplateSerializer::loadObject(&fList, 3, true, serEng);
+        XTemplateSerializer::loadObject(&fList, 29, true, serEng);
         // assume empty so we can size fArray just right
         serEng >> fSize;
         if (!fEnum && fList)

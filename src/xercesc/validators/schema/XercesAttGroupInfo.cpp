@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/13 23:20:47  peiyongz
+ * initSize
+ *
  * Revision 1.6  2003/10/17 21:17:12  peiyongz
  * using XTemplateSerializer
  *
@@ -208,7 +211,7 @@ void XercesAttGroupInfo::serialize(XSerializeEngine& serEng)
          * Deserialize RefVectorOf<SchemaAttDef>* fAttributes;
          *
          ***/
-        XTemplateSerializer::loadObject(&fAttributes, 8, true, serEng);
+        XTemplateSerializer::loadObject(&fAttributes, 4, true, serEng);
 
         /***
          *
@@ -216,7 +219,7 @@ void XercesAttGroupInfo::serialize(XSerializeEngine& serEng)
          *
          ***/
 
-        XTemplateSerializer::loadObject(&fAnyAttributes, 8, true, serEng);
+        XTemplateSerializer::loadObject(&fAnyAttributes, 2, true, serEng);
 
         serEng>>fCompleteWildCard;
     }
