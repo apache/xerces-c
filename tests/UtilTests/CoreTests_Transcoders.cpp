@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:02:03  twl
- * Initial revision
+ * Revision 1.2  1999/12/07 23:11:01  roddey
+ * Add in some new tests for transcoders and update the URL tests
+ * a bit.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:02:03  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:42:28  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -69,29 +73,102 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "CoreTests.hpp"
+#include <util/Janitor.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/TransService.hpp>
 
 
 // ---------------------------------------------------------------------------
+//  Local, static data
+// ---------------------------------------------------------------------------
+static const char* const   testStr1 = "The test string";
+static const XMLCh         testStr2[] = 
+{
+        chLatin_T, chLatin_h, chLatin_e, chSpace, chLatin_t, chLatin_e
+    ,   chLatin_s, chLatin_t, chSpace, chLatin_s, chLatin_t, chLatin_r
+    ,   chLatin_i, chLatin_n, chLatin_g, chNull
+};
+static const XMLCh         testStr3[] = 
+{
+        chLatin_T, chLatin_H, chLatin_E, chSpace, chLatin_T, chLatin_E
+    ,   chLatin_S, chLatin_T, chSpace, chLatin_S, chLatin_T, chLatin_R
+    ,   chLatin_I, chLatin_N, chLatin_G, chNull
+};
+
+
+
+// ---------------------------------------------------------------------------
 //  Local test methods
 // ---------------------------------------------------------------------------
-static bool basicTests()
+static bool basicTransServiceTests()
 {
-    const char* const   testStr1 = "The test string";
-    const XMLCh         testStr2[] = 
-    {
-            chLatin_T, chLatin_h, chLatin_e, chSpace, chLatin_t, chLatin_e
-        ,   chLatin_s, chLatin_t, chSpace, chLatin_s, chLatin_t, chLatin_r
-        ,   chLatin_i, chLatin_n, chLatin_g, chNull
-    };
+    const XMLCh* pszTmp;
 
+    // Test the case insensitive comparison
+    if (XMLPlatformUtils::fgTransService->compareIString(testStr2, testStr3))
+    {
+        outStrm << "Case sensitive compare failed" << EndLn;
+        return false;
+    }
+
+    //
+    //  Test the case sensitive leading substring compare. Loop through and
+    //  test it for each length possible. This will probe boundary conditions
+    //  hopefully.
+    //
+    const unsigned int testLen = XMLString::stringLen(testStr2);
+    for (unsigned int testInd = 0; testInd < testLen; testInd++)
+    {
+        if (XMLPlatformUtils::fgTransService->compareNIString(testStr2, testStr3, testInd))
+        {
+            outStrm << "Case sensitive leading compare failed" << EndLn;
+            return false;
+        }
+    }
+
+    //
+    //  Check the isSpace API. This is the only generalized character type
+    //  check that we need (all others are XML specific and done via XML's
+    //  character type tables.)
+    //
+    static const XMLCh testWS[] = { chSpace, chHTab, chLF, chCR, chNull };
+    pszTmp = testWS;
+    while (*pszTmp)
+    {
+        if (!XMLPlatformUtils::fgTransService->isSpace(*pszTmp))
+        {
+            outStrm << "isSpace() failed on code point: "
+                    << (unsigned int)*pszTmp << EndLn;
+            return false;
+        }
+        pszTmp++;
+    }
+
+    static const XMLCh testNWS[] = { chDigit_0, chLatin_A, chPound, chNull };
+    pszTmp = testNWS;
+    while (*pszTmp)
+    {
+        if (XMLPlatformUtils::fgTransService->isSpace(*pszTmp))
+        {
+            outStrm << "isSpace() failed on code point: "
+                    << (unsigned int)*pszTmp << EndLn;
+            return false;
+        }
+        pszTmp++;
+    }
+
+    return true;
+}
+
+static bool basicTranscoderTests()
+{
     //
     //  Ok, lets test out the very basic semantics of transcoders. This
     //  will test the particular transcoder system installed. First of all
     //  lets get a default transcoder.
     //
     XMLTranscoder* testX = XMLPlatformUtils::fgTransService->makeNewDefTranscoder();
+    Janitor<XMLTranscoder> janXCoder(testX);
 
     // Ask it to do a basic transcoding of a string round trip
     {
@@ -116,14 +193,14 @@ static bool basicTests()
 
     // Check the methods that calculate required storage
     {
-        if (testX->calcRequiredSize(testStr1) != XMLString::stringLen(testStr1))
+        if (testX->calcRequiredSize(testStr1) != XMLString::stringLen(testStr2))
         {
             outStrm << "Calculated size to xcode char string was wrong"
                     << EndLn;
             return false;
         }
 
-        if (testX->calcRequiredSize(testStr2) != XMLString::stringLen(testStr2))
+        if (testX->calcRequiredSize(testStr2) != XMLString::stringLen(testStr1))
         {
             outStrm << "Calculated size to xcode Unicode string was wrong"
                     << EndLn;
@@ -149,8 +226,20 @@ bool testTranscoders()
     try
     {
         // Call other local methods to do specific tests
-        outStrm << "Testing basic transcoder semantics" << EndLn;
-        if (!basicTests())
+        outStrm << "Testing basic trans service functions" << EndLn;
+        if (!basicTransServiceTests())
+        {
+            outStrm << "TransService basic tests failed" << EndLn;
+            retVal = false;
+        }
+         else
+        {
+            outStrm << "TransService basic tests passed" << EndLn;
+        }
+        outStrm << EndLn;
+
+        outStrm << "Testing basic transcoder functions" << EndLn;
+        if (!basicTranscoderTests())
         {
             outStrm << "Transcoder basic tests failed" << EndLn;
             retVal = false;
