@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.10  2001/06/04 21:07:34  jberry
+  * Increment scanner error count from schema validator, not just in scanner itself.
+  *
   * Revision 1.9  2001/05/11 13:25:33  tng
   * Copyright update.
   *
@@ -163,6 +166,10 @@ static XMLMsgLoader& getMsgLoader()
 //
 void XMLValidator::emitError(const XMLValid::Codes toEmit)
 {
+    //	Track our error count
+    fScanner->incrementErrorCount();
+    
+    //	Call error reporter if we have one
     if (fErrorReporter)
     {
         // Load the message into a local for display
@@ -216,6 +223,10 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
                             , const XMLCh* const    text3
                             , const XMLCh* const    text4)
 {
+    //	Track our error count
+    fScanner->incrementErrorCount();
+    
+    //	Call error reporter if we have one
     if (fErrorReporter)
     {
         //
@@ -272,6 +283,10 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
                             , const char* const     text3
                             , const char* const     text4)
 {
+    //	Track our error count
+    fScanner->incrementErrorCount();
+    
+    //	Call error reporter if we have one
     if (fErrorReporter)
     {
         //
