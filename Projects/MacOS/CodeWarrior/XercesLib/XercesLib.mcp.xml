@@ -57,7 +57,6 @@
                 <SETTING><NAME>UserSourceTrees</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Access Paths" panel -->
-                <SETTING><NAME>Access Paths</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>AlwaysSearchUserPaths</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>InterpretDOSAndUnixPaths</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>UserSearchPaths</NAME>
@@ -121,7 +120,6 @@
                 <SETTING><NAME>MWRuntimeSettings_EnvVars</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Target Settings" panel -->
-                <SETTING><NAME>Target Settings</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>Linker</NAME><VALUE>MacOS PPC Linker</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
@@ -404,7 +402,6 @@
                 </SETTING>
 
                 <!-- Settings for "Build Extras" panel -->
-                <SETTING><NAME>Local Extras</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>CacheModDates</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>ActivateBrowser</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>DumpBrowserInfo</NAME><VALUE>false</VALUE></SETTING>
@@ -413,7 +410,6 @@
                 <SETTING><NAME>DebuggerCommandLine</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Debugger Target" panel -->
-                <SETTING><NAME>Debugger Target</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>LogSystemMessages</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>AutoTargetDLLs</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>StopAtWatchpoints</NAME><VALUE>true</VALUE></SETTING>
@@ -461,7 +457,6 @@
                 </VALUE></PANELDATA>
 
                 <!-- Settings for "Custom Keywords" panel -->
-                <SETTING><NAME>Custom Color</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>CustomColor1</NAME>
                     <SETTING><NAME>Red</NAME><VALUE>0</VALUE></SETTING>
                     <SETTING><NAME>Green</NAME><VALUE>32767</VALUE></SETTING>
@@ -609,11 +604,12 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>0%&#148;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>85iupfn5nepei5icx2n5iez325icx2n5iey625icp725pw86i</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathFormat</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_ftp_tree</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_uploadDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_port</NAME><VALUE>21</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_SendBin</NAME><VALUE>1</VALUE></SETTING>
@@ -687,6 +683,10 @@
                 <SETTING><NAME>MWJava_Proj_mainClassName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppCreator</NAME><VALUE>1463898714</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathVersion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathType</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathFormat</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_tree</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppWin32Name</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_compress</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_useVM</NAME><VALUE>1</VALUE></SETTING>
@@ -793,12 +793,12 @@
                 <SETTING><NAME>MWCodeGen_PPC_structalignment</NAME><VALUE>PPC</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_tracebacktables</NAME><VALUE>Inline</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_processor</NAME><VALUE>Generic</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_PPC_readonlystrings</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_PPC_readonlystrings</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_tocdata</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_profiler</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_fpcontract</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_PPC_schedule</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_PPC_peephole</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_PPC_schedule</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_PPC_peephole</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_processorspecific</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_altivec</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_vectortocdata</NAME><VALUE>1</VALUE></SETTING>
@@ -815,7 +815,7 @@
                 <SETTING><NAME>MWDisassembler_PPC_shownames</NAME><VALUE>1</VALUE></SETTING>
 
                 <!-- Settings for "PPC Global Optimizer" panel -->
-                <SETTING><NAME>GlobalOptimizer_PPC_optimizationlevel</NAME><VALUE>Level0</VALUE></SETTING>
+                <SETTING><NAME>GlobalOptimizer_PPC_optimizationlevel</NAME><VALUE>Level4</VALUE></SETTING>
                 <SETTING><NAME>GlobalOptimizer_PPC_optfor</NAME><VALUE>Speed</VALUE></SETTING>
 
                 <!-- Settings for "PPC Linker" panel -->
@@ -895,6 +895,20 @@
                 <SETTING><NAME>MWCodeGen_X86_codeviewinfo</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_X86_extinst_cmov_fcomi</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_X86_extinst_sse</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "x86 Disassembler" panel -->
+                <SETTING><NAME>PDisasmX86_showHeaders</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showSymTab</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showCode</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showSource</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showHex</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showRelocation</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showComments</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showDebug</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showExceptions</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showData</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showRaw</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_verbose</NAME><VALUE>false</VALUE></SETTING>
 
                 <!-- Settings for "x86 Exceptions Panel" panel -->
                 <SETTING><NAME>MWDebugger_X86_Exceptions</NAME>
@@ -4636,7 +4650,6 @@
                 <SETTING><NAME>UserSourceTrees</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Access Paths" panel -->
-                <SETTING><NAME>Access Paths</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>AlwaysSearchUserPaths</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>InterpretDOSAndUnixPaths</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>UserSearchPaths</NAME>
@@ -4671,7 +4684,7 @@
                     </SETTING>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>:MacOS Support:</VALUE></SETTING>
+                            <SETTING><NAME>Path</NAME><VALUE>:Carbon Support:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
@@ -4700,7 +4713,6 @@
                 <SETTING><NAME>MWRuntimeSettings_EnvVars</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Target Settings" panel -->
-                <SETTING><NAME>Target Settings</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>Linker</NAME><VALUE>MacOS PPC Linker</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
@@ -4983,7 +4995,6 @@
                 </SETTING>
 
                 <!-- Settings for "Build Extras" panel -->
-                <SETTING><NAME>Local Extras</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>CacheModDates</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>ActivateBrowser</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>DumpBrowserInfo</NAME><VALUE>false</VALUE></SETTING>
@@ -4992,7 +5003,6 @@
                 <SETTING><NAME>DebuggerCommandLine</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Debugger Target" panel -->
-                <SETTING><NAME>Debugger Target</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>LogSystemMessages</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>AutoTargetDLLs</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>StopAtWatchpoints</NAME><VALUE>true</VALUE></SETTING>
@@ -5040,7 +5050,6 @@
                 </VALUE></PANELDATA>
 
                 <!-- Settings for "Custom Keywords" panel -->
-                <SETTING><NAME>Custom Color</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>CustomColor1</NAME>
                     <SETTING><NAME>Red</NAME><VALUE>0</VALUE></SETTING>
                     <SETTING><NAME>Green</NAME><VALUE>32767</VALUE></SETTING>
@@ -5188,11 +5197,12 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>0%&#148;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>85iupfn5nepei5icx2n5iez325icx2n5iey625icp725pw86i</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathFormat</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_ftp_tree</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_uploadDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_port</NAME><VALUE>21</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_SendBin</NAME><VALUE>1</VALUE></SETTING>
@@ -5266,6 +5276,10 @@
                 <SETTING><NAME>MWJava_Proj_mainClassName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppCreator</NAME><VALUE>1463898714</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathVersion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathType</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathFormat</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_tree</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppWin32Name</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_compress</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_useVM</NAME><VALUE>1</VALUE></SETTING>
@@ -5372,13 +5386,13 @@
                 <SETTING><NAME>MWCodeGen_PPC_structalignment</NAME><VALUE>PPC</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_tracebacktables</NAME><VALUE>Inline</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_processor</NAME><VALUE>Generic</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_PPC_readonlystrings</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_PPC_readonlystrings</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_tocdata</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_profiler</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_fpcontract</NAME><VALUE>1</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_PPC_schedule</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_PPC_peephole</NAME><VALUE>0</VALUE></SETTING>
-                <SETTING><NAME>MWCodeGen_PPC_processorspecific</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_PPC_schedule</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_PPC_peephole</NAME><VALUE>1</VALUE></SETTING>
+                <SETTING><NAME>MWCodeGen_PPC_processorspecific</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_altivec</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_vectortocdata</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_PPC_vrsave</NAME><VALUE>1</VALUE></SETTING>
@@ -5394,7 +5408,7 @@
                 <SETTING><NAME>MWDisassembler_PPC_shownames</NAME><VALUE>1</VALUE></SETTING>
 
                 <!-- Settings for "PPC Global Optimizer" panel -->
-                <SETTING><NAME>GlobalOptimizer_PPC_optimizationlevel</NAME><VALUE>Level0</VALUE></SETTING>
+                <SETTING><NAME>GlobalOptimizer_PPC_optimizationlevel</NAME><VALUE>Level4</VALUE></SETTING>
                 <SETTING><NAME>GlobalOptimizer_PPC_optfor</NAME><VALUE>Speed</VALUE></SETTING>
 
                 <!-- Settings for "PPC Linker" panel -->
@@ -5474,6 +5488,20 @@
                 <SETTING><NAME>MWCodeGen_X86_codeviewinfo</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_X86_extinst_cmov_fcomi</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_X86_extinst_sse</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "x86 Disassembler" panel -->
+                <SETTING><NAME>PDisasmX86_showHeaders</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showSymTab</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showCode</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showSource</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showHex</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showRelocation</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showComments</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showDebug</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showExceptions</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showData</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showRaw</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_verbose</NAME><VALUE>false</VALUE></SETTING>
 
                 <!-- Settings for "x86 Exceptions Panel" panel -->
                 <SETTING><NAME>MWDebugger_X86_Exceptions</NAME>
@@ -7140,7 +7168,6 @@
                 <SETTING><NAME>UserSourceTrees</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Access Paths" panel -->
-                <SETTING><NAME>Access Paths</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>AlwaysSearchUserPaths</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>InterpretDOSAndUnixPaths</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>UserSearchPaths</NAME>
@@ -7204,7 +7231,6 @@
                 <SETTING><NAME>MWRuntimeSettings_EnvVars</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Target Settings" panel -->
-                <SETTING><NAME>Target Settings</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>Linker</NAME><VALUE>MacOS PPC Linker</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
@@ -7487,7 +7513,6 @@
                 </SETTING>
 
                 <!-- Settings for "Build Extras" panel -->
-                <SETTING><NAME>Local Extras</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>CacheModDates</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>ActivateBrowser</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>DumpBrowserInfo</NAME><VALUE>false</VALUE></SETTING>
@@ -7496,7 +7521,6 @@
                 <SETTING><NAME>DebuggerCommandLine</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Debugger Target" panel -->
-                <SETTING><NAME>Debugger Target</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>LogSystemMessages</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>AutoTargetDLLs</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>StopAtWatchpoints</NAME><VALUE>true</VALUE></SETTING>
@@ -7544,7 +7568,6 @@
                 </VALUE></PANELDATA>
 
                 <!-- Settings for "Custom Keywords" panel -->
-                <SETTING><NAME>Custom Color</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>CustomColor1</NAME>
                     <SETTING><NAME>Red</NAME><VALUE>0</VALUE></SETTING>
                     <SETTING><NAME>Green</NAME><VALUE>32767</VALUE></SETTING>
@@ -7692,11 +7715,12 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>0%&#148;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>84kjfn566jei44t2n46v3244t2n46u6244j7257n46i</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathFormat</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_ftp_tree</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_uploadDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_port</NAME><VALUE>21</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_SendBin</NAME><VALUE>1</VALUE></SETTING>
@@ -7770,6 +7794,10 @@
                 <SETTING><NAME>MWJava_Proj_mainClassName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppCreator</NAME><VALUE>1463898714</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathVersion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathType</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathFormat</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_tree</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppWin32Name</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_compress</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_useVM</NAME><VALUE>1</VALUE></SETTING>
@@ -7978,6 +8006,20 @@
                 <SETTING><NAME>MWCodeGen_X86_codeviewinfo</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_X86_extinst_cmov_fcomi</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_X86_extinst_sse</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "x86 Disassembler" panel -->
+                <SETTING><NAME>PDisasmX86_showHeaders</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showSymTab</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showCode</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showSource</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showHex</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showRelocation</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showComments</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showDebug</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showExceptions</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showData</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showRaw</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_verbose</NAME><VALUE>false</VALUE></SETTING>
 
                 <!-- Settings for "x86 Exceptions Panel" panel -->
                 <SETTING><NAME>MWDebugger_X86_Exceptions</NAME>
@@ -11719,7 +11761,6 @@
                 <SETTING><NAME>UserSourceTrees</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Access Paths" panel -->
-                <SETTING><NAME>Access Paths</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>AlwaysSearchUserPaths</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>InterpretDOSAndUnixPaths</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>UserSearchPaths</NAME>
@@ -11754,7 +11795,7 @@
                     </SETTING>
                     <SETTING>
                         <SETTING><NAME>SearchPath</NAME>
-                            <SETTING><NAME>Path</NAME><VALUE>:MacOS Support:</VALUE></SETTING>
+                            <SETTING><NAME>Path</NAME><VALUE>:Carbon Support:</VALUE></SETTING>
                             <SETTING><NAME>PathFormat</NAME><VALUE>MacOS</VALUE></SETTING>
                             <SETTING><NAME>PathRoot</NAME><VALUE>CodeWarrior</VALUE></SETTING>
                         </SETTING>
@@ -11783,7 +11824,6 @@
                 <SETTING><NAME>MWRuntimeSettings_EnvVars</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Target Settings" panel -->
-                <SETTING><NAME>Target Settings</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>Linker</NAME><VALUE>MacOS PPC Linker</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
@@ -12066,7 +12106,6 @@
                 </SETTING>
 
                 <!-- Settings for "Build Extras" panel -->
-                <SETTING><NAME>Local Extras</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>CacheModDates</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>ActivateBrowser</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>DumpBrowserInfo</NAME><VALUE>false</VALUE></SETTING>
@@ -12075,7 +12114,6 @@
                 <SETTING><NAME>DebuggerCommandLine</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Debugger Target" panel -->
-                <SETTING><NAME>Debugger Target</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>LogSystemMessages</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>AutoTargetDLLs</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>StopAtWatchpoints</NAME><VALUE>true</VALUE></SETTING>
@@ -12123,7 +12161,6 @@
                 </VALUE></PANELDATA>
 
                 <!-- Settings for "Custom Keywords" panel -->
-                <SETTING><NAME>Custom Color</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>CustomColor1</NAME>
                     <SETTING><NAME>Red</NAME><VALUE>0</VALUE></SETTING>
                     <SETTING><NAME>Green</NAME><VALUE>32767</VALUE></SETTING>
@@ -12271,11 +12308,12 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>0%&#148;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>84kjfn566jei44t2n46v3244t2n46u6244j7257n46i</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathFormat</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_ftp_tree</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_uploadDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_port</NAME><VALUE>21</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_SendBin</NAME><VALUE>1</VALUE></SETTING>
@@ -12349,6 +12387,10 @@
                 <SETTING><NAME>MWJava_Proj_mainClassName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppCreator</NAME><VALUE>1463898714</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathVersion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathType</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathFormat</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_tree</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppWin32Name</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_compress</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_useVM</NAME><VALUE>1</VALUE></SETTING>
@@ -12557,6 +12599,20 @@
                 <SETTING><NAME>MWCodeGen_X86_codeviewinfo</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_X86_extinst_cmov_fcomi</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_X86_extinst_sse</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "x86 Disassembler" panel -->
+                <SETTING><NAME>PDisasmX86_showHeaders</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showSymTab</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showCode</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showSource</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showHex</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showRelocation</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showComments</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showDebug</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showExceptions</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showData</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showRaw</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_verbose</NAME><VALUE>false</VALUE></SETTING>
 
                 <!-- Settings for "x86 Exceptions Panel" panel -->
                 <SETTING><NAME>MWDebugger_X86_Exceptions</NAME>
@@ -14223,7 +14279,6 @@
                 <SETTING><NAME>UserSourceTrees</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Access Paths" panel -->
-                <SETTING><NAME>Access Paths</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>AlwaysSearchUserPaths</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>InterpretDOSAndUnixPaths</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>UserSearchPaths</NAME>
@@ -14260,7 +14315,6 @@
                 <SETTING><NAME>MWRuntimeSettings_EnvVars</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Target Settings" panel -->
-                <SETTING><NAME>Target Settings</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>Linker</NAME><VALUE>None</VALUE></SETTING>
                 <SETTING><NAME>PreLinker</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>PostLinker</NAME><VALUE></VALUE></SETTING>
@@ -14286,7 +14340,6 @@
                 </SETTING>
 
                 <!-- Settings for "Build Extras" panel -->
-                <SETTING><NAME>Local Extras</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>CacheModDates</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>ActivateBrowser</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>DumpBrowserInfo</NAME><VALUE>false</VALUE></SETTING>
@@ -14295,7 +14348,6 @@
                 <SETTING><NAME>DebuggerCommandLine</NAME><VALUE></VALUE></SETTING>
 
                 <!-- Settings for "Debugger Target" panel -->
-                <SETTING><NAME>Debugger Target</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>LogSystemMessages</NAME><VALUE>true</VALUE></SETTING>
                 <SETTING><NAME>AutoTargetDLLs</NAME><VALUE>false</VALUE></SETTING>
                 <SETTING><NAME>StopAtWatchpoints</NAME><VALUE>true</VALUE></SETTING>
@@ -14343,7 +14395,6 @@
                 </VALUE></PANELDATA>
 
                 <!-- Settings for "Custom Keywords" panel -->
-                <SETTING><NAME>Custom Color</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>CustomColor1</NAME>
                     <SETTING><NAME>Red</NAME><VALUE>0</VALUE></SETTING>
                     <SETTING><NAME>Green</NAME><VALUE>32767</VALUE></SETTING>
@@ -14491,11 +14542,12 @@
                 <!-- Settings for "FTP Panel" panel -->
                 <SETTING><NAME>MWFTP_Post_hostName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_username</NAME><VALUE></VALUE></SETTING>
-                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>0%&#148;</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_password</NAME><VALUE>865kkjhn65q6jgi65k4t4n65k6v5265k4t4n65k6u8265k4j9265rn48i</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_remoteDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathVersion</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathType</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_PathFormat</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWFTP_Post_ftp_tree</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_uploadDir</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_ftp_port</NAME><VALUE>21</VALUE></SETTING>
                 <SETTING><NAME>MWFTP_Post_SendBin</NAME><VALUE>1</VALUE></SETTING>
@@ -14569,6 +14621,10 @@
                 <SETTING><NAME>MWJava_Proj_mainClassName</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppCreator</NAME><VALUE>1463898714</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppName</NAME><VALUE></VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathVersion</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathType</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_PathFormat</NAME><VALUE>0</VALUE></SETTING>
+                <SETTING><NAME>MWJava_Proj_tree</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_HTMLAppWin32Name</NAME><VALUE></VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_compress</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWJava_Proj_useVM</NAME><VALUE>1</VALUE></SETTING>
@@ -14778,6 +14834,20 @@
                 <SETTING><NAME>MWCodeGen_X86_codeviewinfo</NAME><VALUE>1</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_X86_extinst_cmov_fcomi</NAME><VALUE>0</VALUE></SETTING>
                 <SETTING><NAME>MWCodeGen_X86_extinst_sse</NAME><VALUE>0</VALUE></SETTING>
+
+                <!-- Settings for "x86 Disassembler" panel -->
+                <SETTING><NAME>PDisasmX86_showHeaders</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showSymTab</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showCode</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showSource</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showHex</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showRelocation</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showComments</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showDebug</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showExceptions</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showData</NAME><VALUE>true</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_showRaw</NAME><VALUE>false</VALUE></SETTING>
+                <SETTING><NAME>PDisasmX86_verbose</NAME><VALUE>false</VALUE></SETTING>
 
                 <!-- Settings for "x86 Exceptions Panel" panel -->
                 <SETTING><NAME>MWDebugger_X86_Exceptions</NAME>
