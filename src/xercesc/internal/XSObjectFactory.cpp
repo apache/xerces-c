@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/12/17 19:58:25  knoaman
+ * Check for NULL when building XSParticle
+ *
  * Revision 1.10  2003/12/17 00:18:34  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -151,8 +154,10 @@ XSParticle*
 XSObjectFactory::createModelGroupParticle(const ContentSpecNode* const rootNode,
                                           XSModel* const xsModel)
 {
-    ContentSpecNode::NodeTypes nodeType = rootNode->getType();
+    if (rootNode == 0)
+        return 0;
 
+    ContentSpecNode::NodeTypes nodeType = rootNode->getType();
     if (nodeType == ContentSpecNode::All
         || nodeType == ContentSpecNode::ModelGroupChoice
         || nodeType == ContentSpecNode::ModelGroupSequence)
