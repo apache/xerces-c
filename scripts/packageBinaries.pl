@@ -165,16 +165,16 @@ if ($platform eq "" )
         psystem ("del /s /f *.dep *.ncb *.plg *.opt");
 
         # Make the icu dlls
-        pchdir ("$ICUROOT\\source\\allinone");
+        pchdir ("$ICUROOT\\source\\allinone\\all");
         if (!(length($opt_j) > 0)) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
-	    #For nt we ship both debug and release dlls
-	    psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD /OUT buildlog.txt");
+	    #For XP we ship both release and debug dlls
+            psystem("nmake -f all_win64_release.mak \"CFG=all - $platformname Release\" CPP=$opt_x.exe >buildlog.txt 2>&1");	    	    
 	    psystem("type buildlog.txt");
-	    psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD /OUT buildlog.txt");
+            psystem("nmake -f all_win64_debug.mak \"CFG=all - $platformname Debug\" CPP=$opt_x.exe >buildlog.txt 2>&1");	    	    
 	    psystem("type buildlog.txt");
         }
 
-        change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
+        change_windows_makefile_for_ICU("$XERCESCROOT\\Projects\\Win64\\Nmake\\xerces-all/XercesLib/XercesLib.mak");
     }
 
     # Clean up all the dependency files, causes problems for nmake
@@ -1226,6 +1226,7 @@ sub change_windows_project_for_ICU() {
         $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService.cpp/Transcoders\\ICU\\ICUTransService.cpp/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService.hpp/Transcoders\\ICU\\ICUTransService.hpp/g;
+        
         print FIZZLEOUT $line;
     }
     close (FIZZLEOUT);
@@ -1233,6 +1234,37 @@ sub change_windows_project_for_ICU() {
     unlink ($thefiledotbak);
 }
 
+sub change_windows_makefile_for_ICU() {
+    my ($thefile) = @_;
+    print "\nConverting Windows Xerces library makefile ($thefile) for ICU usage...";
+    my $thefiledotbak = $thefile . ".bak";
+    rename ($thefile, $thefiledotbak);
+
+    open (FIZZLE, $thefiledotbak);
+    open (FIZZLEOUT, ">$thefile");
+    while ($line = <FIZZLE>) {
+        if ($line =~ /Win64 Debug/ ){
+            $icuuc = "icuucd";
+            }
+        if ($line =~ /Win64 Release/ ) {
+            $icuuc = "icuuc";
+        }
+
+        $line =~ s[/D "PROJ_XMLPARSER"][/I "$ICUROOT\\include" /D "PROJ_XMLPARSER"];      
+        #$line =~ s[/implib:"\$(OUTDIR)\\xerces-c_2.lib"][/implib:"\$(OUTDIR)\\xerces-c_2.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
+        #$line =~ s[/implib:"\$(OUTDIR)\\xerces-c_2D.lib"][/implib:"\$(OUTDIR)\\xerces-c_2D.lib" /libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data"];
+        $line =~ s[/machine:IA64][/libpath:"$ICUROOT\\lib" /libpath:"$ICUROOT\\source\\data" /machine:IA64];
+        $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
+        $line =~ s/user32.lib/user32.lib $icuuc.lib icudata.lib/g;
+        $line =~ s/Transcoders\\Win32\\Win32TransService/Transcoders\\ICU\\ICUTransService/g;
+        $line =~ s/Win32TransService/ICUTransService/g;
+
+        print FIZZLEOUT $line;
+    }
+    close (FIZZLEOUT);
+    close (FIZZLE);
+    unlink ($thefiledotbak);
+}
 
 #
 # This subroutine is used to munge the XercesLib project file to remove all
