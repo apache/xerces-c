@@ -126,8 +126,9 @@ public:
 
     NodeIterators               *fIterators;
     TreeWalkers                 *fTreeWalkers;
-    RefHashTableOf<void>        *fUserData;
     Ranges                      *fRanges;
+
+    RefHashTableOf<void>        *fUserData;
     int                          fChanges;
 
     bool errorChecking;                          // Bypass error checking.
@@ -202,17 +203,17 @@ public:
                                                       unsigned long whatToShow,
                                                       IDOM_NodeFilter* filter,
                                                       bool entityReferenceExpansion);
-    virtual IDOM_TreeWalker*       createTreeWalker(IDOM_Node *root,
+    virtual IDOM_TreeWalker       *createTreeWalker(IDOM_Node *root,
                                                     unsigned long whatToShow,
                                                     IDOM_NodeFilter* filter,
                                                     bool entityReferenceExpansion);
 
-    virtual IDOM_XMLDecl*          createXMLDecl(const XMLCh * version,
+    virtual IDOM_XMLDecl          *createXMLDecl(const XMLCh * version,
                                                  const XMLCh * encoding,
                                                  const XMLCh * standalone);
     virtual void*                  getUserData() const;
     virtual void                   setUserData(void* value);
-    virtual IDOM_Range*            createRange();
+    virtual IDOM_Range            *createRange();
     virtual Ranges*                getRanges() const;  //non-standard api
     virtual void                   removeRange(IDRangeImpl* range); //non-standard api
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 20:11:53  tng
+ * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
+ *
  * Revision 1.2  2001/05/11 13:25:53  tng
  * Copyright update.
  *
@@ -64,21 +67,21 @@
  *
  */
 
-// DOM_NodeFilter.h: interface for the DOM_NodeFilter class.
+// IDOM_NodeFilter.h: interface for the IDOM_NodeFilter class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef DOM_NodeFilter_HEADER_GUARD_
-#define DOM_NodeFilter_HEADER_GUARD_
+#ifndef IDOM_NodeFilter_HEADER_GUARD_
+#define IDOM_NodeFilter_HEADER_GUARD_
 
-#include "DOM_Node.hpp"
+#include "IDOM_Node.hpp"
 
-class NodeFilterImpl;
+class IDNodeFilterImpl;
 
 
 /**
  * Filters are objects that know how to "filter out" nodes. If a
- * <code>DOM_NodeIterator</code> or <code>DOM_TreeWalker</code> is given a
+ * <code>IDOM_NodeIterator</code> or <code>IDOM_TreeWalker</code> is given a
  * filter, it applies the filter before it returns the next node.
  *
  * If the filter says to accept the node, the iterator returns it; otherwise, the
@@ -97,33 +100,38 @@ class NodeFilterImpl;
  * <p><b>"Experimental - subject to change"</b></p>
  *
  */
-class CDOM_EXPORT DOM_NodeFilter
+class CDOM_EXPORT IDOM_NodeFilter
 {
+    protected:
+        IDOM_NodeFilter() {};
+        IDOM_NodeFilter(const IDOM_NodeFilter &other) {};
+        IDOM_NodeFilter & operator = (const IDOM_NodeFilter &other) {return *this;};
+
     public:
-	/** @name Enumerators for Node Filter */
+        /** @name Enumerators for Node Filter */
         //@{
-	/*
-	  *		<table><tr><td>FILTER_ACCEPT</td>
-      *            <td>Accept the node. Navigation methods defined for
-      *                NodeIterator or TreeWalker will return this node.</td>
-	  *			</tr>
-	  *			<tr><td>
-      *               FILTER_REJECT</td>
-      *               <td>Reject the node. Navigation methods defined for
-      *               NodeIterator or TreeWalker will not return this
-      *               node. For TreeWalker, the children of this node will
-      *               also be rejected. Iterators treat this as a synonym
-      *               for FILTER_SKIP.</td>
-	  *			</tr>
-	  *			<tr><td>FILTER_SKIP</td>
-      *              <td>Reject the node. Navigation methods defined for
-      *                  NodeIterator or TreeWalker will not return this
-      *                  node. For both NodeIterator and Treewalker, the
-      *                  children of this node will still be considered.</td>
- 	  *			</tr>
-	  *		</table>
-      *
-	  */
+        /*
+         *    <table><tr><td>FILTER_ACCEPT</td>
+         *               <td>Accept the node. Navigation methods defined for
+         *               NodeIterator or TreeWalker will return this node.</td>
+         *           </tr>
+         *           <tr>
+         *               <td>FILTER_REJECT</td>
+         *               <td>Reject the node. Navigation methods defined for
+         *               NodeIterator or TreeWalker will not return this
+         *               node. For TreeWalker, the children of this node will
+         *               also be rejected. Iterators treat this as a synonym
+         *               for FILTER_SKIP.</td>
+         *           </tr>
+         *           <tr><td>FILTER_SKIP</td>
+         *               <td>Reject the node. Navigation methods defined for
+         *               NodeIterator or TreeWalker will not return this
+         *               node. For both NodeIterator and Treewalker, the
+         *               children of this node will still be considered.</td>
+         *           </tr>
+         *    </table>
+         *
+         */
         enum FilterAction {FILTER_ACCEPT = 1,
                            FILTER_REJECT = 2,
                            FILTER_SKIP   = 3};
@@ -143,45 +151,24 @@ class CDOM_EXPORT DOM_NodeFilter
             SHOW_DOCUMENT_FRAGMENT         = 0x00000400,
             SHOW_NOTATION                  = 0x00000800
         };
-	//@}
-
-        /** @name Constructors */
-        //@{
-        /**
-          * Default constructor for DOM_NodeFilter.
-          */
-        DOM_NodeFilter();
-        //@}
-
-        /** @name Destructor. */
-        //@{
-	/**
-	  * Destructor for DOM_NodeFilter.
-	  */
-        virtual ~DOM_NodeFilter();
         //@}
 
         /** @name Test function. */
         //@{
-	/**
-	  * Test whether a specified node is visible in the logical view of a DOM_TreeWalker
-	  * or DOM_NodeIterator. This function will be called by the implementation of
-	  * DOM_TreeWalker and DOM_NodeIterator; it is not intended to be called directly from user
-	  * code.
-          *
-          * <p><b>"Experimental - subject to change"</b></p>
-          *
-          * @param node The node to check to see if it passes the filter or not.
-          * @return A constant to determine whether the node is accepted, rejected, or skipped.
-	  */
-        virtual short acceptNode (const DOM_Node &node) const =0;
+        /**
+         * Test whether a specified node is visible in the logical view of a IDOM_TreeWalker
+         * or IDOM_NodeIterator. This function will be called by the implementation of
+         * IDOM_TreeWalker and IDOM_NodeIterator; it is not intended to be called directly from user
+         * code.
+         *
+         * <p><b>"Experimental - subject to change"</b></p>
+         *
+         * @param node The node to check to see if it passes the filter or not.
+         * @return A constant to determine whether the node is accepted, rejected, or skipped.
+         */
+        virtual short acceptNode (const IDOM_Node* node) const =0;
         //@}
 
-    private:
-        DOM_NodeFilter(const DOM_NodeFilter &other);
-        DOM_NodeFilter & operator = (const DOM_NodeFilter &other);
-        bool operator == (const DOM_NodeFilter &other) const;
-        bool operator != (const DOM_NodeFilter &other) const;
 };
 
 #endif

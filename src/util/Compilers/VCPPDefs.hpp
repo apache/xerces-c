@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/06/04 20:11:54  tng
+ * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
+ *
  * Revision 1.12  2001/06/04 13:45:06  tng
  * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
  *
@@ -173,9 +176,14 @@ const char* const Xerces_DLLName = "xerces-c_" Xerces_DLLVersionStr;
 
 // ---------------------------------------------------------------------------
 //  For IDOM:
-//  Ignore compiler warning:
+//  Bypass compiler warning:
 //    no matching operator delete found; memory will not be freed if initialization throws an exception
 // ---------------------------------------------------------------------------
-#pragma warning( push )
-#pragma warning( disable : 4291 )
+#if _MSC_VER == 1200 /* VC++ 6.0 */
+class IDOM_Document;
+inline void operator delete(void* ptr, IDOM_Document *doc)
+{
+    return;
+}
+#endif
 

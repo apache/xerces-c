@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 20:11:53  tng
+ * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
+ *
  * Revision 1.2  2001/05/11 13:26:00  tng
  * Copyright update.
  *
@@ -64,15 +67,29 @@
  *
  */
 
-#ifndef TreeWalkerImpl_HEADER_GUARD_
-#define TreeWalkerImpl_HEADER_GUARD_
+#ifndef IDTreeWalkerImpl_HEADER_GUARD_
+#define IDTreeWalkerImpl_HEADER_GUARD_
 
 
-#include "DOM_TreeWalker.hpp"
-#include "RefCountedImpl.hpp"
+#include "IDOM_TreeWalker.hpp"
 
 
-class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
+class CDOM_EXPORT IDTreeWalkerImpl : public IDOM_TreeWalker {
+    private:
+        // The whatToShow mask.
+        unsigned long fWhatToShow;
+
+        // The NodeFilter reference.
+        IDOM_NodeFilter* fNodeFilter;
+
+        // The current Node.
+        IDOM_Node* fCurrentNode;
+
+        // The root Node.
+        IDOM_Node* fRoot;
+
+        // The expandEntity reference flag.
+        bool fExpandEntityReferences;
 
 	public:
     // Implementation Note: No state is kept except the data above
@@ -81,66 +98,64 @@ class CDOM_EXPORT TreeWalkerImpl : public RefCountedImpl {
     // implementation will still work.
 
     /** Public constructor */
-    TreeWalkerImpl (
-        DOM_Node root,
+    IDTreeWalkerImpl (
+        IDOM_Node* root,
         unsigned long whatToShow,
-        DOM_NodeFilter* nodeFilter,
+        IDOM_NodeFilter* nodeFilter,
         bool expandEntityRef);
-    TreeWalkerImpl (const TreeWalkerImpl& twi);
-    TreeWalkerImpl& operator= (const TreeWalkerImpl& twi);
+    IDTreeWalkerImpl (const IDTreeWalkerImpl& twi);
+    IDTreeWalkerImpl& operator= (const IDTreeWalkerImpl& twi);
 
     // Return the whatToShow value.
-    unsigned long  getWhatToShow ();
+    virtual unsigned long  getWhatToShow ();
 
     // Return the NodeFilter.
-    DOM_NodeFilter* getFilter ();
+    virtual IDOM_NodeFilter* getFilter ();
 
 	
-    // Return the current DOM_Node.
-    DOM_Node getCurrentNode ();
+    // Return the current IDOM_Node.
+    virtual IDOM_Node* getCurrentNode ();
 
     // Return the current Node.
-    void setCurrentNode (DOM_Node node);
+    virtual void setCurrentNode (IDOM_Node* node);
 
     // Return the parent Node from the current node,
     //  after applying filter, whatToshow.
     //  If result is not null, set the current Node.
-    DOM_Node parentNode ();
+    virtual IDOM_Node* parentNode ();
 
     // Return the first child Node from the current node,
     //  after applying filter, whatToshow.
     //  If result is not null, set the current Node.
-    DOM_Node firstChild ();
+    virtual IDOM_Node* firstChild ();
 
     // Return the last child Node from the current node,
     //  after applying filter, whatToshow.
     //  If result is not null, set the current Node.
-    DOM_Node lastChild ();
+    virtual IDOM_Node* lastChild ();
 
     // Return the previous sibling Node from the current node,
     //  after applying filter, whatToshow.
     //  If result is not null, set the current Node.
-    DOM_Node previousSibling ();
+    virtual IDOM_Node* previousSibling ();
 
     // Return the next sibling Node from the current node,
     //  after applying filter, whatToshow.
     //  If result is not null, set the current Node.
 
-    DOM_Node nextSibling ();
+    virtual IDOM_Node* nextSibling ();
     // Return the previous Node from the current node,
     //  after applying filter, whatToshow.
     //  If result is not null, set the current Node.
-    DOM_Node previousNode ();
+    virtual IDOM_Node* previousNode ();
 
     // Return the next Node from the current node,
     //  after applying filter, whatToshow.
     //  If result is not null, set the current Node.
-    DOM_Node nextNode ();
-
-    void unreferenced ();
+    virtual IDOM_Node* nextNode ();
 
     // Get the expandEntity reference flag.
-    bool getExpandEntityReferences();
+    virtual bool getExpandEntityReferences();
 
 protected:
 
@@ -148,51 +163,36 @@ protected:
     //  Return the parent Node, from the input node
     //  after applying filter, whatToshow.
     //  The current node is not consulted or set.
-    DOM_Node getParentNode (DOM_Node node);
+    IDOM_Node* getParentNode (IDOM_Node* node);
 
     // Internal function.
     //  Return the nextSibling Node, from the input node
     //  after applying filter, whatToshow.
     //  The current node is not consulted or set.
-    DOM_Node getNextSibling (DOM_Node node);
+    IDOM_Node* getNextSibling (IDOM_Node* node);
 
     // Internal function.
     //  Return the previous sibling Node, from the input node
     //  after applying filter, whatToshow.
     //  The current node is not consulted or set.
-    DOM_Node getPreviousSibling (DOM_Node node);
+    IDOM_Node* getPreviousSibling (IDOM_Node* node);
 
     // Internal function.
     //  Return the first child Node, from the input node
     //  after applying filter, whatToshow.
     //  The current node is not consulted or set.
-    DOM_Node getFirstChild (DOM_Node node);
+    IDOM_Node* getFirstChild (IDOM_Node* node);
 
     // Internal function.
     //  Return the last child Node, from the input node
     //  after applying filter, whatToshow.
     //  The current node is not consulted or set.
-    DOM_Node getLastChild (DOM_Node node);
+    IDOM_Node* getLastChild (IDOM_Node* node);
 
     // The node is accepted if it passes the whatToShow and the filter.
-    short acceptNode (DOM_Node node);
+    short acceptNode (IDOM_Node* node);
 
     		
-private:
-    // The whatToShow mask.
-    unsigned long fWhatToShow;
-
-    // The NodeFilter reference.
-    DOM_NodeFilter* fNodeFilter;
-
-    // The current Node.
-    DOM_Node fCurrentNode;
-
-    // The root Node.
-    DOM_Node fRoot;
-
-    // The expandEntity reference flag.
-    bool fExpandEntityReferences;
 };
 
 #endif

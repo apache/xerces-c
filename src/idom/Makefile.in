@@ -126,11 +126,13 @@ IDOM_CPP_PRIVHEADERS =  \
        IDEntityReferenceImpl.hpp \
        IDNamedNodeMapImpl.hpp \
        IDNodeImpl.hpp \
+       IDNodeIteratorImpl.hpp \
        IDNodeListImpl.hpp \
        IDNotationImpl.hpp \
        IDProcessingInstructionImpl.hpp \
        IDRangeImpl.hpp \
        IDTextImpl.hpp \
+       IDTreeWalker.hpp \
        IDXMLDeclImpl.hpp
 
 IDOM_C_FILES = \
@@ -157,6 +159,7 @@ IDOM_CPP_OBJECTS = \
        IDNamedNodeMapImpl.$(TO) \
        IDNodeIDMap.$(TO) \
        IDNodeImpl.$(TO) \
+       IDNodeIteratorImpl.$(TO) \
        IDNodeListImpl.$(TO) \
        IDNodeVector.$(TO) \
        IDNotationImpl.$(TO) \
@@ -167,6 +170,7 @@ IDOM_CPP_OBJECTS = \
        IDRangeImpl.$(TO) \
        IDStringPool.$(TO) \
        IDTextImpl.$(TO) \
+       IDTreeWalker.$(TO) \
        IDXMLDeclImpl.$(TO)
 
 

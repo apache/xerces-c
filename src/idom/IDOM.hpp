@@ -1,5 +1,5 @@
-#ifndef DOM_HEADER_GUARD_
-#define DOM_HEADER_GUARD_
+#ifndef IDOM_HEADER_GUARD_HPP
+#define IDOM_HEADER_GUARD_HPP
 
 
 /*
@@ -60,6 +60,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 20:11:53  tng
+ * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
+ *
  * Revision 1.2  2001/05/11 13:25:48  tng
  * Copyright update.
  *
@@ -87,11 +90,15 @@
 #include <idom/IDOM_EntityReference.hpp>
 #include <idom/IDOM_NamedNodeMap.hpp>
 #include <idom/IDOM_Node.hpp>
+#include <idom/IDOM_NodeFilter.hpp>
+#include <idom/IDOM_NodeIterator.hpp>
 #include <idom/IDOM_NodeList.hpp>
 #include <idom/IDOM_Notation.hpp>
 #include <idom/IDOM_ProcessingInstruction.hpp>
+#include <idom/IDOM_Range.hpp>
+#include <idom/IDOM_RangeException.hpp>
 #include <idom/IDOM_Text.hpp>
+#include <idom/IDOM_TreeWalker.hpp>
 #include <idom/IDOM_XMLDecl.hpp>
-
 
 #endif

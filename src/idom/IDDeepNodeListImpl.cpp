@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/06/04 20:11:52  tng
+ * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
+ *
  * Revision 1.3  2001/06/04 14:55:32  tng
  * IDOM: Add IRange and IDeepNodeList Support.
  *
@@ -118,8 +121,6 @@ IDDeepNodeListImpl::~IDDeepNodeListImpl()
 
 IDOM_NodeList *IDDeepNodeListImpl::getDeepNodeList(const IDOM_Node *rootNode, const XMLCh *tagName)
 {
-    // idom_revisit - need to recycle NodeList objects from a free list
-    //                or allocate them from the regular heap
     if(!fNodeListPool) {
         fNodeListPool = new ((IDDocumentImpl*)rootNode->getOwnerDocument()) IDDeepNodeListPool<IDDeepNodeListImpl>(109);
     }
@@ -139,8 +140,6 @@ IDOM_NodeList *IDDeepNodeListImpl::getDeepNodeList(const IDOM_Node *rootNode,   
                                                    const XMLCh *namespaceURI,
                                                    const XMLCh *localName)
 {
-    // idom_revisit - need to recycle NodeList objects from a free list
-    //                or allocate them from the regular heap
     if(!fNodeListPool) {
         fNodeListPool = new ((IDDocumentImpl*)rootNode->getOwnerDocument()) IDDeepNodeListPool<IDDeepNodeListImpl>(109);
     }

@@ -73,6 +73,7 @@ DOM/DOMTest/Makefile \
 DOM/DOMIDTest/Makefile \
 DOM/DOMMemTest/Makefile \
 DOM/Traversal/Makefile \
+IDOM/ITraversal/Makefile \
 EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 IDOM/IRangeTest/Makefile \

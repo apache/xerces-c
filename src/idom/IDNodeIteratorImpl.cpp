@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 20:11:52  tng
+ * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
+ *
  * Revision 1.2  2001/05/11 13:25:45  tng
  * Copyright update.
  *
@@ -64,41 +67,41 @@
  *
  */
 
-// NodeIteratorImpl.cpp: implementation of the NodeIteratorImpl class.
+// IDNodeIteratorImpl.cpp: implementation of the IDNodeIteratorImpl class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "NodeIteratorImpl.hpp"
-#include "DOM_Document.hpp"
-#include "DOM_DOMException.hpp"
-#include "DocumentImpl.hpp"
+#include "IDNodeIteratorImpl.hpp"
+#include "IDOM_Document.hpp"
+#include "IDOM_DOMException.hpp"
+#include "IDDocumentImpl.hpp"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-NodeIteratorImpl::NodeIteratorImpl ()
+IDNodeIteratorImpl::IDNodeIteratorImpl ()
 : fDetached(false),
     fNodeFilter(0)
 {
 }	
 
-NodeIteratorImpl::~NodeIteratorImpl ()
+IDNodeIteratorImpl::~IDNodeIteratorImpl ()
 {
 	fDetached = false;
 }
 
 
-void NodeIteratorImpl::detach ()
+void IDNodeIteratorImpl::detach ()
 {
 	fDetached = true;
 }
 
 
-NodeIteratorImpl::NodeIteratorImpl (
-                                    DOM_Node root,
+IDNodeIteratorImpl::IDNodeIteratorImpl (
+                                    IDOM_Node* root,
                                     unsigned long whatToShow,
-                                    DOM_NodeFilter* nodeFilter,
+                                    IDOM_NodeFilter* nodeFilter,
                                     bool expandEntityRef)
 :   fDetached(false),
     fRoot(root),
@@ -112,7 +115,7 @@ NodeIteratorImpl::NodeIteratorImpl (
 }
 
 
-NodeIteratorImpl::NodeIteratorImpl ( const NodeIteratorImpl& toCopy)
+IDNodeIteratorImpl::IDNodeIteratorImpl ( const IDNodeIteratorImpl& toCopy)
     :   fDetached(toCopy.fDetached),
     fRoot(toCopy.fRoot),
     fCurrentNode(toCopy.fCurrentNode),
@@ -124,13 +127,13 @@ NodeIteratorImpl::NodeIteratorImpl ( const NodeIteratorImpl& toCopy)
 }
 
 
-NodeIteratorImpl& NodeIteratorImpl::operator= (const NodeIteratorImpl& other) {
+IDNodeIteratorImpl& IDNodeIteratorImpl::operator= (const IDNodeIteratorImpl& other) {
     fRoot                   = other.fRoot;
     fCurrentNode            = other.fRoot;
     fWhatToShow             = other.fWhatToShow;
     fNodeFilter             = other.fNodeFilter;
     fForward                = other.fForward;
-	fDetached               = other.fDetached;
+    fDetached               = other.fDetached;
     fExpandEntityReferences = other.fExpandEntityReferences;
     return *this;
 }
@@ -143,45 +146,43 @@ NodeIteratorImpl& NodeIteratorImpl::operator= (const NodeIteratorImpl& other) {
 
 /** Return the whatToShow value */
 
-unsigned long NodeIteratorImpl::getWhatToShow () {
+unsigned long IDNodeIteratorImpl::getWhatToShow () {
     return fWhatToShow;
 }
 
 
 /** Return the filter */
 
-DOM_NodeFilter* NodeIteratorImpl::getFilter () {
+IDOM_NodeFilter* IDNodeIteratorImpl::getFilter () {
     return fNodeFilter;
 }
 
 /** Get the expandEntity reference flag. */
-bool NodeIteratorImpl::getExpandEntityReferences()
+bool IDNodeIteratorImpl::getExpandEntityReferences()
 {
     return fExpandEntityReferences;
 }
 
-/** Return the next DOM_Node in the Iterator. The node is the next node in
+/** Return the next IDOM_Node* in the Iterator. The node is the next node in
  *  depth-first order which also passes the filter, and whatToShow.
- *  A null return means either that
+ *  A 0 return means either that
  */
 
-DOM_Node NodeIteratorImpl::nextNode () {
+IDOM_Node* IDNodeIteratorImpl::nextNode () {
 	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw IDOM_DOMException(IDOM_DOMException::INVALID_STATE_ERR, 0);
 
-	DOM_Node result;
+    // if root is 0 there is no next node->
+    if (!fRoot)
+			return 0;
 
-    // if root is null there is no next node.
-    if (fRoot.isNull())
-			return result;
-
-    DOM_Node aNextNode = fCurrentNode;
+    IDOM_Node* aNextNode = fCurrentNode;
     bool accepted = false; // the next node has not been accepted.
 
     while (!accepted) {
 
-        // if last direction is not forward, repeat node.
-        if (!fForward && !aNextNode.isNull()) {
+        // if last direction is not forward, repeat node->
+        if (!fForward && (aNextNode != 0)) {
             //System.out.println("nextNode():!fForward:"+fCurrentNode.getNodeName());
             aNextNode = fCurrentNode;
         } else {
@@ -189,24 +190,22 @@ DOM_Node NodeIteratorImpl::nextNode () {
             aNextNode = nextNode(aNextNode, true);
         }
 
-        fForward = true; //REVIST: should direction be set forward before null check?
+        fForward = true; //REVIST: should direction be set forward before 0 check?
 
-        // nothing in the list. return null.
-        if (aNextNode.isNull())
-					return result;
+        // nothing in the list. return 0.
+        if (!aNextNode) return 0;
 
         // does node pass the filters and whatToShow?
         accepted = acceptNode(aNextNode);
         if (accepted) {
-            // if so, then the node is the current node.
+            // if so, then the node is the current node->
             fCurrentNode = aNextNode;
             return fCurrentNode;
-				}
-
+        }
     }
 
     // no nodes, or no accepted nodes.
-    return result;
+    return 0;
 }
 
 
@@ -214,24 +213,20 @@ DOM_Node NodeIteratorImpl::nextNode () {
  *  _backwards_ depth-first order which also passes the filter, and whatToShow.
  */
 
-DOM_Node NodeIteratorImpl::previousNode () {
+IDOM_Node* IDNodeIteratorImpl::previousNode () {
 	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw IDOM_DOMException(IDOM_DOMException::INVALID_STATE_ERR, 0);
 		
-	DOM_Node result;
+    // if the root is 0, or the current node is 0, return 0.
+    if (!fRoot || !fCurrentNode) return 0;
 
-    // if the root is null, or the current node is null, return null.
-    if (fRoot.isNull() || fCurrentNode.isNull())
-			return result;
-
-    DOM_Node aPreviousNode = fCurrentNode;
+    IDOM_Node* aPreviousNode = fCurrentNode;
     bool accepted = false;
 
     while (!accepted) {
 
-
-        if (fForward && ! aPreviousNode.isNull()) {
-            //repeat last node.
+        if (fForward && (aPreviousNode != 0)) {
+            //repeat last node->
             aPreviousNode = fCurrentNode;
         } else {
             // get previous node in backwards depth first order.
@@ -241,10 +236,9 @@ DOM_Node NodeIteratorImpl::previousNode () {
         // we are going backwards
         fForward = false;
 
-        // if the new previous node is null, we're at head or past the root,
-        // so return null.
-        if (aPreviousNode.isNull())
-					return result;
+        // if the new previous node is 0, we're at head or past the root,
+        // so return 0.
+        if (!aPreviousNode) return 0;
 
         // check if node passes filters and whatToShow.
         accepted = acceptNode(aPreviousNode);
@@ -255,109 +249,107 @@ DOM_Node NodeIteratorImpl::previousNode () {
         }
     }
     // there are no nodes?
-    return result;
+    return 0;
 }
 
 
 /** The node is accepted if it passes the whatToShow and the filter. */
-bool NodeIteratorImpl::acceptNode (DOM_Node node) {
+bool IDNodeIteratorImpl::acceptNode (IDOM_Node* node) {
 	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw IDOM_DOMException(IDOM_DOMException::INVALID_STATE_ERR, 0);
 
     if (fNodeFilter == 0) {
-        return ((fWhatToShow & (1 << (node.getNodeType() - 1))) != 0);
+        return ((fWhatToShow & (1 << (node->getNodeType() - 1))) != 0);
     } else {
-        return ((fWhatToShow & (1 << (node.getNodeType() - 1))) != 0)
-            && fNodeFilter->acceptNode(node) == DOM_NodeFilter::FILTER_ACCEPT;
+        return ((fWhatToShow & (1 << (node->getNodeType() - 1))) != 0)
+            && fNodeFilter->acceptNode(node) == IDOM_NodeFilter::FILTER_ACCEPT;
     }
 }
 
 
 /** Return node, if matches or any parent if matches. */
-DOM_Node NodeIteratorImpl::matchNodeOrParent (DOM_Node node) {
-		DOM_Node result;
+IDOM_Node* IDNodeIteratorImpl::matchNodeOrParent (IDOM_Node* node) {
 
-    for (DOM_Node n = node; n != fRoot; n = n.getParentNode()) {
+    for (IDOM_Node* n = node; n != fRoot; n = n->getParentNode()) {
         if (node == n) return n;
     }
 
-    return result;
+    return 0;
 }
 
 
-/** The method nextNode(DOM_Node, bool) returns the next node
+/** The method nextNode(IDOM_Node, bool) returns the next node
  *  from the actual DOM tree.
  *
  *  The bool visitChildren determines whether to visit the children.
  *  The result is the nextNode.
  */
 
-DOM_Node NodeIteratorImpl::nextNode (DOM_Node node, bool visitChildren) {
+IDOM_Node* IDNodeIteratorImpl::nextNode (IDOM_Node* node, bool visitChildren) {
 	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw IDOM_DOMException(IDOM_DOMException::INVALID_STATE_ERR, 0);
 
-    if (node.isNull()) return fRoot;
+    if (!node) return fRoot;
 
-    DOM_Node result;
+    IDOM_Node* result = 0;
     // only check children if we visit children.
     if (visitChildren) {
         //if hasChildren, return 1st child.
-        if (node.hasChildNodes()) {
-            result = node.getFirstChild();
+        if (node->hasChildNodes()) {
+            result = node->getFirstChild();
             return result;
         }
     }
 
     // if hasSibling, return sibling
     if (node != fRoot) {
-        result = node.getNextSibling();
-        if (! result.isNull()) return result;
+        result = node->getNextSibling();
+        if (result != 0) return result;
 
 
         // return parent's 1st sibling.
-        DOM_Node parent = node.getParentNode();
-        while (!parent.isNull() && parent != fRoot) {
-            result = parent.getNextSibling();
-            if (!result.isNull()) {
+        IDOM_Node* parent = node->getParentNode();
+        while ((parent != 0) && parent != fRoot) {
+            result = parent->getNextSibling();
+            if (result != 0) {
                 return result;
             } else {
-                parent = parent.getParentNode();
+                parent = parent->getParentNode();
             }
 
-        } // while (parent != null && parent != fRoot) {
+        } // while (parent != 0 && parent != fRoot) {
     }
-    // end of list, return null
-    DOM_Node aNull;
-    return aNull;
+    // end of list, return 0
+    return 0;
 }
 
 
-/** The method previousNode(DOM_Node) returns the previous node
+/** The method previousNode(IDOM_Node) returns the previous node
  *  from the actual DOM tree.
  */
 
-DOM_Node NodeIteratorImpl::previousNode (DOM_Node node) {
+IDOM_Node* IDNodeIteratorImpl::previousNode (IDOM_Node* node) {
 	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw IDOM_DOMException(IDOM_DOMException::INVALID_STATE_ERR, 0);
 
-    DOM_Node result;
+    IDOM_Node* result = 0;
 
-    // if we're at the root, return null.
+    // if we're at the root, return 0.
     if (node == fRoot)
-			return result;
+			return 0;
 
     // get sibling
-    result = node.getPreviousSibling();
-    if (result.isNull()) {
+    result = node->getPreviousSibling();
+    if (!result) {
         //if 1st sibling, return parent
-        result = node.getParentNode();
+        result = node->getParentNode();
         return result;
     }
 
     // if sibling has children, keep getting last child of child.
-    if (result.hasChildNodes()) {
-        while (result.hasChildNodes()) {
-            result = result.getLastChild();
+    if (result->hasChildNodes()) {
+        while (result->hasChildNodes()) {
+            result = result->getLastChild();
         }
     }
 
@@ -369,27 +361,26 @@ DOM_Node NodeIteratorImpl::previousNode (DOM_Node node) {
  *  before an actual DOM remove.
  */
 
-void NodeIteratorImpl::removeNode (DOM_Node node) {
+void IDNodeIteratorImpl::removeNode (IDOM_Node* node) {
 	if (fDetached)
-		throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
+		throw IDOM_DOMException(IDOM_DOMException::INVALID_STATE_ERR, 0);
 
     // Implementation note: Fix-up means setting the current node properly
     // after a remove.
 
-    if (node.isNull())
-				return;
+    if (!node) return;
 
-    DOM_Node deleted = matchNodeOrParent(node);
+    IDOM_Node* deleted = matchNodeOrParent(node);
 
-    if (deleted.isNull()) return;
+    if (!deleted) return;
 
     if (fForward) {
         fCurrentNode = previousNode(deleted);
     } else
     // if (!fForward)
     {
-        DOM_Node next = nextNode(deleted, false);
-        if (! next.isNull()) {
+        IDOM_Node* next = nextNode(deleted, false);
+        if (next != 0) {
             // normal case: there _are_ nodes following this in the iterator.
             fCurrentNode = next;
         } else {
@@ -403,27 +394,3 @@ void NodeIteratorImpl::removeNode (DOM_Node node) {
 
 }
 
-
-void NodeIteratorImpl::unreferenced()
-{
-    DOM_Document doc = fRoot.getOwnerDocument();
-    DocumentImpl* impl;
-
-    if (! doc.isNull()) {
-        impl = (DocumentImpl *) doc.fImpl;
-    }
-    else
-        impl = (DocumentImpl *) fRoot.fImpl;
-
-    if (impl->iterators != 0L) {
-        int i;
-        int sz = impl->iterators->size();
-        for (i = 0; i < sz; i++)
-            if (impl->iterators->elementAt(i) == this) {
-                impl->iterators->removeElementAt(i);
-                break;
-            }
-    }
-
-    delete this;
-}

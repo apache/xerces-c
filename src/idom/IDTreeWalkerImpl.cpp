@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 20:11:53  tng
+ * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
+ *
  * Revision 1.2  2001/05/11 13:26:00  tng
  * Copyright update.
  *
@@ -64,17 +67,17 @@
  *
  */
 
-#include "TreeWalkerImpl.hpp"
-#include "DOM_Document.hpp"
-#include "DOM_DOMException.hpp"
-#include "DocumentImpl.hpp"
+#include "IDTreeWalkerImpl.hpp"
+#include "IDOM_Document.hpp"
+#include "IDOM_DOMException.hpp"
+#include "IDDocumentImpl.hpp"
 
 
 /** constructor */
-TreeWalkerImpl::TreeWalkerImpl (
-                                DOM_Node root,
+IDTreeWalkerImpl::IDTreeWalkerImpl (
+                                IDOM_Node* root,
                                 unsigned long whatToShow,
-                                DOM_NodeFilter* nodeFilter,
+                                IDOM_NodeFilter* nodeFilter,
                                 bool expandEntityRef)
 :   fCurrentNode(root),
     fRoot(root),
@@ -86,7 +89,7 @@ TreeWalkerImpl::TreeWalkerImpl (
 }
 
 
-TreeWalkerImpl::TreeWalkerImpl (const TreeWalkerImpl& twi)
+IDTreeWalkerImpl::IDTreeWalkerImpl (const IDTreeWalkerImpl& twi)
 : fCurrentNode(twi.fCurrentNode),
     fRoot(twi.fRoot),
     fWhatToShow(twi.fWhatToShow),
@@ -96,7 +99,7 @@ TreeWalkerImpl::TreeWalkerImpl (const TreeWalkerImpl& twi)
 }
 
 
-TreeWalkerImpl& TreeWalkerImpl::operator= (const TreeWalkerImpl& twi) {
+IDTreeWalkerImpl& IDTreeWalkerImpl::operator= (const IDTreeWalkerImpl& twi) {
     if (this != &twi)
     {
         fCurrentNode            = twi.fCurrentNode;
@@ -111,58 +114,33 @@ TreeWalkerImpl& TreeWalkerImpl::operator= (const TreeWalkerImpl& twi) {
 
 
 
-void TreeWalkerImpl::unreferenced()
-{
-    DOM_Document doc = fRoot.getOwnerDocument();
-    DocumentImpl* impl;
-
-    if (! doc.isNull()) {
-        impl = (DocumentImpl *) doc.fImpl;
-    }
-    else
-        impl = (DocumentImpl *) fRoot.fImpl;
-
-    if (impl->treeWalkers != 0L) {
-        int i;
-        int sz = impl->treeWalkers->size();
-        for (i = 0; i < sz; i++)
-            if (impl->treeWalkers->elementAt(i) == this) {
-                impl->treeWalkers->removeElementAt(i);
-                break;
-            }
-    }
-
-    delete this;
-}
-
-
 /** Return the whatToShow value */
-unsigned long TreeWalkerImpl::getWhatToShow () {
+unsigned long IDTreeWalkerImpl::getWhatToShow () {
     return fWhatToShow;
 }
 
 
 /** Return the NodeFilter */
-DOM_NodeFilter* TreeWalkerImpl::getFilter () {
+IDOM_NodeFilter* IDTreeWalkerImpl::getFilter () {
     return fNodeFilter;
 }
 
 /** Get the expandEntity reference flag. */
-bool TreeWalkerImpl::getExpandEntityReferences() {
+bool IDTreeWalkerImpl::getExpandEntityReferences() {
     return fExpandEntityReferences;
 }
 
 
 
 /** Return the current Node. */
-DOM_Node TreeWalkerImpl::getCurrentNode () {
+IDOM_Node* IDTreeWalkerImpl::getCurrentNode () {
 
     return fCurrentNode;
 }
 
 
 /** Return the current Node. */
-void TreeWalkerImpl::setCurrentNode (DOM_Node node) {
+void IDTreeWalkerImpl::setCurrentNode (IDOM_Node* node) {
 
     fCurrentNode = node;
 }
@@ -172,13 +150,11 @@ void TreeWalkerImpl::setCurrentNode (DOM_Node node) {
  *  after applying filter, whatToshow.
  *  If result is not null, set the current Node.
  */
-DOM_Node TreeWalkerImpl::parentNode () {
+IDOM_Node* IDTreeWalkerImpl::parentNode () {
 
-	DOM_Node result;
+    if (!fCurrentNode) return 0;
 
-    if (fCurrentNode.isNull()) return result;
-
-    DOM_Node node = getParentNode(fCurrentNode);
+    IDOM_Node* node = getParentNode(fCurrentNode);
     if (node != 0) {
         fCurrentNode = node;
     }
@@ -191,14 +167,13 @@ DOM_Node TreeWalkerImpl::parentNode () {
  *  after applying filter, whatToshow.
  *  If result is not null, set the current Node.
  */
-DOM_Node TreeWalkerImpl::firstChild () {
+IDOM_Node* IDTreeWalkerImpl::firstChild () {
 
-	DOM_Node result;
+    if (!fCurrentNode) return 0;
 
-    if (fCurrentNode.isNull()) return result;
+    IDOM_Node* node = getFirstChild(fCurrentNode);
 
-    DOM_Node node = getFirstChild(fCurrentNode);
-    if (! node.isNull()) {
+    if (node != 0) {
         fCurrentNode = node;
     }
     return node;
@@ -209,14 +184,12 @@ DOM_Node TreeWalkerImpl::firstChild () {
  *  after applying filter, whatToshow.
  *  If result is not null, set the current Node.
  */
-DOM_Node TreeWalkerImpl::lastChild () {
+IDOM_Node* IDTreeWalkerImpl::lastChild () {
 
-    DOM_Node result;
+    if (!fCurrentNode) return 0;
 
-    if (fCurrentNode.isNull()) return result;
-
-    DOM_Node node = getLastChild(fCurrentNode);
-    if (! node.isNull()) {
+    IDOM_Node* node = getLastChild(fCurrentNode);
+    if (node != 0) {
         fCurrentNode = node;
     }
     return node;
@@ -228,14 +201,12 @@ DOM_Node TreeWalkerImpl::lastChild () {
  *  If result is not null, set the current Node.
  */
 
-DOM_Node TreeWalkerImpl::previousSibling () {
+IDOM_Node* IDTreeWalkerImpl::previousSibling () {
 	
-	DOM_Node result;
+    if (!fCurrentNode) return 0;
 
-    if (fCurrentNode.isNull()) return result;
-
-    DOM_Node node = getPreviousSibling(fCurrentNode);
-    if (! node.isNull()) {
+    IDOM_Node* node = getPreviousSibling(fCurrentNode);
+    if (node != 0) {
         fCurrentNode = node;
     }
     return node;
@@ -247,14 +218,12 @@ DOM_Node TreeWalkerImpl::previousSibling () {
  *  If result is not null, set the current Node.
  */
 
-DOM_Node TreeWalkerImpl::nextSibling () {
+IDOM_Node* IDTreeWalkerImpl::nextSibling () {
 		
-	DOM_Node result;
+    if (!fCurrentNode) return 0;
 
-    if (fCurrentNode.isNull()) return result;
-
-    DOM_Node node = getNextSibling(fCurrentNode);
-    if (! node.isNull()) {
+    IDOM_Node* node = getNextSibling(fCurrentNode);
+    if (node != 0) {
         fCurrentNode = node;
     }
     return node;
@@ -266,40 +235,33 @@ DOM_Node TreeWalkerImpl::nextSibling () {
  *  If result is not null, set the current Node.
  */
 
-DOM_Node TreeWalkerImpl::previousNode () {
+IDOM_Node* IDTreeWalkerImpl::previousNode () {
 	
-    DOM_Node result;
-
-    if (fCurrentNode.isNull()) return result;
+    if (!fCurrentNode) return 0;
 
     // get sibling
-    result = getPreviousSibling(fCurrentNode);
-    if (result.isNull()) {
-        result = getParentNode(fCurrentNode);
-        if (! result.isNull()) {
-            fCurrentNode = result;
-            return fCurrentNode;
+    IDOM_Node* node = getPreviousSibling(fCurrentNode);
+    if (node == 0) {
+        node = getParentNode(fCurrentNode);
+        if ( node != 0) {
+            fCurrentNode = node;
         }
-        return result;
+        return node;
     }
+    else {
 
-    // get the lastChild of result.
-    DOM_Node lastChild  = getLastChild(result);
+        // get the lastChild of result.
+        IDOM_Node* lastChild  = getLastChild(node);
 
-    // if there is a lastChild which passes filters return it.
-    if (! lastChild.isNull()) {
-        fCurrentNode = lastChild;
+        // if there is a lastChild which passes filters return it.
+        if (lastChild != 0) {
+            fCurrentNode = lastChild;
+        }
+        else {
+            fCurrentNode = node;
+        }
         return fCurrentNode;
     }
-
-    // otherwise return the previous sibling.
-    if (! result.isNull()) {
-        fCurrentNode = result;
-        return fCurrentNode;
-    }
-
-    // otherwise return null.
-    return result;
 }
 
 
@@ -308,40 +270,40 @@ DOM_Node TreeWalkerImpl::previousNode () {
  *  If result is not null, set the current Node.
  */
 
-DOM_Node TreeWalkerImpl::nextNode () {
+IDOM_Node* IDTreeWalkerImpl::nextNode () {
 	
-	DOM_Node result;
+    if (!fCurrentNode) return 0;
 
-    if (fCurrentNode.isNull()) return result;
+    IDOM_Node* node = getFirstChild(fCurrentNode);
 
-    result = getFirstChild(fCurrentNode);
-
-    if (! result.isNull()) {
-        fCurrentNode = result;
-        return result;
+    if (node != 0) {
+        fCurrentNode = node;
+        return node;
     }
+    else {
 
-    result = getNextSibling(fCurrentNode);
+        node = getNextSibling(fCurrentNode);
 
-    if (! result.isNull()) {
-        fCurrentNode = result;
-        return result;
-    }
+        if (node != 0) {
+            fCurrentNode = node;
+            return node;
+        }
+        else {
 
-    // return parent's 1st sibling.
-    DOM_Node parent = getParentNode(fCurrentNode);
-    while (! parent.isNull()) {
-        result = getNextSibling(parent);
-        if (! result.isNull()) {
-            fCurrentNode = result;
-            return result;
-        } else {
-            parent = getParentNode(parent);
+            // return parent's 1st sibling.
+            IDOM_Node* parent = getParentNode(fCurrentNode);
+            while ( parent != 0) {
+                node = getNextSibling(parent);
+                if (node != 0) {
+                    fCurrentNode = node;
+                    return node;
+                } else {
+                    parent = getParentNode(parent);
+                }
+            }
+            return node;
         }
     }
-
-    // end , return null
-    return result;
 }
 
 
@@ -351,18 +313,16 @@ DOM_Node TreeWalkerImpl::nextNode () {
  *  The current node is not consulted or set.
  */
 
-DOM_Node TreeWalkerImpl::getParentNode (DOM_Node node) {
+IDOM_Node* IDTreeWalkerImpl::getParentNode (IDOM_Node* node) {
 	
-	DOM_Node result;
+    if (!node || node == fRoot) return 0;
 
-    if (node.isNull() || node == fRoot) return result;
-
-    DOM_Node newNode = node.getParentNode();
-    if (newNode.isNull())  return result;
+    IDOM_Node* newNode = node->getParentNode();
+    if (!newNode)  return 0;
 
     short accept = acceptNode(newNode);
 
-    if (accept == DOM_NodeFilter::FILTER_ACCEPT)
+    if (accept == IDOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
 
     return getParentNode(newNode);
@@ -376,36 +336,34 @@ DOM_Node TreeWalkerImpl::getParentNode (DOM_Node node) {
  *  The current node is not consulted or set.
  */
 
-DOM_Node TreeWalkerImpl::getNextSibling (DOM_Node node) {
+IDOM_Node* IDTreeWalkerImpl::getNextSibling (IDOM_Node* node) {
 	
-	DOM_Node result;
+    if (!node || node == fRoot) return 0;
 
-    if (node.isNull() || node == fRoot) return result;
+    IDOM_Node* newNode = node->getNextSibling();
+    if (!newNode) {
 
-    DOM_Node newNode = node.getNextSibling();
-    if (newNode.isNull()) {
+        newNode = node->getParentNode();
 
-        newNode = node.getParentNode();
-
-        if (newNode.isNull() || node == fRoot)  return result;
+        if (!newNode || node == fRoot)  return 0;
 
         short parentAccept = acceptNode(newNode);
 
-        if (parentAccept == DOM_NodeFilter::FILTER_SKIP) {
+        if (parentAccept == IDOM_NodeFilter::FILTER_SKIP) {
             return getNextSibling(newNode);
         }
 
-        return result;
+        return 0;
     }
 
     short accept = acceptNode(newNode);
 
-    if (accept == DOM_NodeFilter::FILTER_ACCEPT)
+    if (accept == IDOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
     else
-    if (accept == DOM_NodeFilter::FILTER_SKIP) {
-        DOM_Node fChild =  getFirstChild(newNode);
-        if (fChild.isNull()) {
+    if (accept == IDOM_NodeFilter::FILTER_SKIP) {
+        IDOM_Node* fChild =  getFirstChild(newNode);
+        if (!fChild) {
             return getNextSibling(newNode);
         }
         return fChild;
@@ -421,35 +379,33 @@ DOM_Node TreeWalkerImpl::getNextSibling (DOM_Node node) {
  *  The current node is not consulted or set.
  */
 
-DOM_Node TreeWalkerImpl::getPreviousSibling (DOM_Node node) {
+IDOM_Node* IDTreeWalkerImpl::getPreviousSibling (IDOM_Node* node) {
 		
-	DOM_Node result;
+    if (!node || node == fRoot) return 0;
 
-    if (node.isNull() || node == fRoot) return result;
+    IDOM_Node* newNode = node->getPreviousSibling();
+    if (!newNode) {
 
-    DOM_Node newNode = node.getPreviousSibling();
-    if (newNode.isNull()) {
-
-        newNode = node.getParentNode();
-        if (newNode.isNull() || node == fRoot)  return result;
+        newNode = node->getParentNode();
+        if (!newNode || node == fRoot)  return 0;
 
         short parentAccept = acceptNode(newNode);
 
-        if (parentAccept == DOM_NodeFilter::FILTER_SKIP) {
+        if (parentAccept == IDOM_NodeFilter::FILTER_SKIP) {
             return getPreviousSibling(newNode);
         }
 
-        return result;
+        return 0;
     }
 
     short accept = acceptNode(newNode);
 
-    if (accept == DOM_NodeFilter::FILTER_ACCEPT)
+    if (accept == IDOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
     else
-    if (accept == DOM_NodeFilter::FILTER_SKIP) {
-        DOM_Node fChild =  getLastChild(newNode);
-        if (fChild.isNull()) {
+    if (accept == IDOM_NodeFilter::FILTER_SKIP) {
+        IDOM_Node* fChild =  getLastChild(newNode);
+        if (!fChild) {
             return getPreviousSibling(newNode);
         }
         return fChild;
@@ -465,22 +421,20 @@ DOM_Node TreeWalkerImpl::getPreviousSibling (DOM_Node node) {
  *  The current node is not consulted or set.
  */
 
-DOM_Node TreeWalkerImpl::getFirstChild (DOM_Node node) {
+IDOM_Node* IDTreeWalkerImpl::getFirstChild (IDOM_Node* node) {
 		
-	DOM_Node result;
+    if (!node) return 0;
 
-    if (node.isNull()) return result;
-
-    DOM_Node newNode = node.getFirstChild();
-    if (newNode.isNull())  return result;
+    IDOM_Node* newNode = node->getFirstChild();
+    if (!newNode)  return 0;
 
     short accept = acceptNode(newNode);
 
-    if (accept == DOM_NodeFilter::FILTER_ACCEPT)
+    if (accept == IDOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
     else
-    if (accept == DOM_NodeFilter::FILTER_SKIP
-        && newNode.hasChildNodes())
+    if (accept == IDOM_NodeFilter::FILTER_SKIP
+        && newNode->hasChildNodes())
     {
         return getFirstChild(newNode);
     }
@@ -494,22 +448,20 @@ DOM_Node TreeWalkerImpl::getFirstChild (DOM_Node node) {
  *  The current node is not consulted or set.
  */
 
-DOM_Node TreeWalkerImpl::getLastChild (DOM_Node node) {
+IDOM_Node* IDTreeWalkerImpl::getLastChild (IDOM_Node* node) {
 	
-	DOM_Node result;
+    if (!node) return 0;
 
-    if (node.isNull()) return result;
-
-    DOM_Node newNode = node.getLastChild();
-    if (newNode.isNull())  return result;
+    IDOM_Node* newNode = node->getLastChild();
+    if (!newNode)  return 0;
 
     short accept = acceptNode(newNode);
 
-    if (accept == DOM_NodeFilter::FILTER_ACCEPT)
+    if (accept == IDOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
     else
-    if (accept == DOM_NodeFilter::FILTER_SKIP
-        && newNode.hasChildNodes())
+    if (accept == IDOM_NodeFilter::FILTER_SKIP
+        && newNode->hasChildNodes())
     {
         return getLastChild(newNode);
     }
@@ -521,27 +473,27 @@ DOM_Node TreeWalkerImpl::getLastChild (DOM_Node node) {
 
 /** The node is accepted if it passes the whatToShow and the filter. */
 
-short TreeWalkerImpl::acceptNode (DOM_Node node) {
+short IDTreeWalkerImpl::acceptNode (IDOM_Node* node) {
 	
     if (fNodeFilter == 0) {
-        if ( ( fWhatToShow & (1 << (node.getNodeType() - 1))) != 0)
+        if ( ( fWhatToShow & (1 << (node->getNodeType() - 1))) != 0)
         {
-            return DOM_NodeFilter::FILTER_ACCEPT;
+            return IDOM_NodeFilter::FILTER_ACCEPT;
         }
         else
         {
-            return DOM_NodeFilter::FILTER_SKIP;
+            return IDOM_NodeFilter::FILTER_SKIP;
         }
     } else {
         // REVISIT: This logic is unclear from the spec!
-        if ((fWhatToShow & (1 << (node.getNodeType() - 1))) != 0 ) {
+        if ((fWhatToShow & (1 << (node->getNodeType() - 1))) != 0 ) {
             return fNodeFilter->acceptNode(node);
         } else {
             // what to show has failed!
-            if (fNodeFilter->acceptNode(node) == DOM_NodeFilter::FILTER_REJECT) {
-                return DOM_NodeFilter::FILTER_REJECT;
+            if (fNodeFilter->acceptNode(node) == IDOM_NodeFilter::FILTER_REJECT) {
+                return IDOM_NodeFilter::FILTER_REJECT;
             } else {
-                return DOM_NodeFilter::FILTER_SKIP;
+                return IDOM_NodeFilter::FILTER_SKIP;
             }
         }
     }

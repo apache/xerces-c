@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 20:11:53  tng
+ * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
+ *
  * Revision 1.2  2001/05/11 13:25:56  tng
  * Copyright update.
  *
@@ -64,25 +67,23 @@
  *
  */
 
-#ifndef DOM_TreeWalker_HEADER_GUARD_
-#define DOM_TreeWalker_HEADER_GUARD_
+#ifndef IDOM_TreeWalker_HEADER_GUARD_
+#define IDOM_TreeWalker_HEADER_GUARD_
 
-#include "DOM_Node.hpp"
-#include "DOM_NodeFilter.hpp"
-
-class TreeWalkerImpl;
+#include "IDOM_Node.hpp"
+#include "IDOM_NodeFilter.hpp"
 
 
 /**
- * <code>DOM_TreeWalker</code> objects are used to navigate a document tree or
+ * <code>IDOM_TreeWalker</code> objects are used to navigate a document tree or
  * subtree using the view of the document defined by its <code>whatToShow</code>
- * flags and any filters that are defined for the <code>DOM_TreeWalker</code>. Any
- * function which performs navigation using a <code>DOM_TreeWalker</code> will
- * automatically support any view defined by a <code>DOM_TreeWalker</code>.
+ * flags and any filters that are defined for the <code>IDOM_TreeWalker</code>. Any
+ * function which performs navigation using a <code>IDOM_TreeWalker</code> will
+ * automatically support any view defined by a <code>IDOM_TreeWalker</code>.
  *
  * Omitting nodes from the logical view of a subtree can result in a structure that is
  * substantially different from the same subtree in the complete, unfiltered document. Nodes
- * that are siblings in the DOM_TreeWalker view may be children of different, widely separated
+ * that are siblings in the IDOM_TreeWalker view may be children of different, widely separated
  * nodes in the original view. For instance, consider a Filter that skips all nodes except for
  * Text nodes and the root node of a document. In the logical view that results, all text
  * nodes will be siblings and appear as direct children of the root node, no matter how
@@ -91,86 +92,23 @@ class TreeWalkerImpl;
  * <p><b>"Experimental - subject to change"</b></p>
  *
  */
-class CDOM_EXPORT DOM_TreeWalker {
+class CDOM_EXPORT IDOM_TreeWalker {
+    protected:
+        IDOM_TreeWalker() {};
+        IDOM_TreeWalker(const IDOM_TreeWalker &other) {};
+        IDOM_TreeWalker & operator = (const IDOM_TreeWalker &other) {return *this;};
+
     public:
-        /** @name Constructors and assignment operator */
-        //@{
-        /**
-          * Default constructor.
-          */
-        DOM_TreeWalker();
-
-        /**
-          * Copy constructor.
-          *
-          * @param other The object to be copied.
-          */
-        DOM_TreeWalker(const DOM_TreeWalker &other);
-
-        /**
-          * Assignment operator.
-          *
-          * @param other The object to be copied.
-          */
-        DOM_TreeWalker & operator = (const DOM_TreeWalker &other);
-
-        /**
-          * Assignment operator.  This overloaded variant is provided for
-          *   the sole purpose of setting a DOM_NodeIterator to null.
-          *
-          * @param val.  Only a value of 0, or null, is allowed.
-          */
-        DOM_TreeWalker & operator = (const DOM_NullPtr *val);
-        //@}
-
-        /** @name Destructor. */
-        //@{
-	/**
-	  * Destructor for DOM_TreeWalker.
-	  */
-        ~DOM_TreeWalker();
-        //@}
-
-        /** @name Equality and Inequality operators. */
-        //@{
-        /**
-         * The equality operator.
-         *
-         * @param other The object reference with which <code>this</code> object is compared
-         * @returns True if both <code>DOM_TreeWalker</code>s refer to the same
-         *  actual node, or are both null; return false otherwise.
-         */
-        bool operator == (const DOM_TreeWalker & other)const;
-
-        /**
-          *  Compare with a pointer.  Intended only to allow a convenient
-          *    comparison with null.
-          */
-        bool operator == (const DOM_NullPtr *other) const;
-
-        /**
-         * The inequality operator.  See operator ==.
-         */
-        bool operator != (const DOM_TreeWalker & other) const;
-
-         /**
-          *  Compare with a pointer.  Intended only to allow a convenient
-          *    comparison with null.
-          *
-          */
-        bool operator != (const DOM_NullPtr * other) const;
-        //@}
-
         /** @name Get functions. */
         //@{
         /**
-          * Return which node types are presented via the DOM_TreeWalker.
-          * These constants are defined in the DOM_NodeFilter interface.
+          * Return which node types are presented via the IDOM_TreeWalker.
+          * These constants are defined in the IDOM_NodeFilter interface.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        unsigned long   	getWhatToShow();
+        virtual unsigned long   	getWhatToShow()= 0;
 
         /**
           * Return The filter used to screen nodes.
@@ -178,121 +116,112 @@ class CDOM_EXPORT DOM_TreeWalker {
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        DOM_NodeFilter*		getFilter();
+        virtual IDOM_NodeFilter*		getFilter()= 0;
 
         /**
           * Return the expandEntityReferences flag.
           * The value of this flag determines whether the children of entity reference
-          * nodes are visible to the DOM_TreeWalker. If false, they will be skipped over.
+          * nodes are visible to the IDOM_TreeWalker. If false, they will be skipped over.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        bool getExpandEntityReferences();
+        virtual bool getExpandEntityReferences()= 0;
 
         /**
-          * Return the node at which the DOM_TreeWalker is currently positioned.
+          * Return the node at which the IDOM_TreeWalker is currently positioned.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        DOM_Node		getCurrentNode();
+        virtual IDOM_Node*		getCurrentNode()= 0;
 
         /**
           * Moves to and returns the closest visible ancestor node of the current node.
-          * If the search for parentNode attempts to step upward from the DOM_TreeWalker's root
+          * If the search for parentNode attempts to step upward from the IDOM_TreeWalker's root
           * node, or if it fails to find a visible ancestor node, this method retains the
           * current position and returns null.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        DOM_Node		parentNode();
+        virtual IDOM_Node*		parentNode()= 0;
 
         /**
-          * Moves the <code>DOM_TreeWalker</code> to the first child of the current node,
+          * Moves the <code>IDOM_TreeWalker</code> to the first child of the current node,
           * and returns the new node. If the current node has no children, returns
           * <code>null</code>, and retains the current node.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        DOM_Node		firstChild();
+        virtual IDOM_Node*		firstChild()= 0;
 
         /**
-          * Moves the <code>DOM_TreeWalker</code> to the last child of the current node, and
+          * Moves the <code>IDOM_TreeWalker</code> to the last child of the current node, and
           * returns the new node. If the current node has no children, returns
           * <code>null</code>, and retains the current node.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        DOM_Node		lastChild();
+        virtual IDOM_Node*		lastChild()= 0;
 
         /**
-          * Moves the <code>DOM_TreeWalker</code> to the previous sibling of the current
+          * Moves the <code>IDOM_TreeWalker</code> to the previous sibling of the current
           * node, and returns the new node. If the current node has no previous sibling,
           * returns <code>null</code>, and retains the current node.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        DOM_Node		previousSibling();
+        virtual IDOM_Node*		previousSibling()= 0;
 
         /**
-          * Moves the <code>DOM_TreeWalker</code> to the next sibling of the current node,
+          * Moves the <code>IDOM_TreeWalker</code> to the next sibling of the current node,
           * and returns the new node. If the current node has no next sibling, returns
           * <code>null</code>, and retains the current node.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        DOM_Node		nextSibling();
+        virtual IDOM_Node*		nextSibling()= 0;
 
         /**
-          * Moves the <code>DOM_TreeWalker</code> to the previous visible node in document
+          * Moves the <code>IDOM_TreeWalker</code> to the previous visible node in document
           * order relative to the current node, and returns the new node. If the current
           * node has no previous node,
-          * or if the search for previousNode attempts to step upward from the DOM_TreeWalker's
+          * or if the search for previousNode attempts to step upward from the IDOM_TreeWalker's
           * root node, returns <code>null</code>, and retains the current node.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        DOM_Node		previousNode();
+        virtual IDOM_Node*		previousNode()= 0;
 
         /**
-          * Moves the <code>DOM_TreeWalker</code> to the next visible node in document order
+          * Moves the <code>IDOM_TreeWalker</code> to the next visible node in document order
           * relative to the current node, and returns the new node. If the current node has
           * no next node,
-          * or if the search for nextNode attempts to step upward from the DOM_TreeWalker's
+          * or if the search for nextNode attempts to step upward from the IDOM_TreeWalker's
           * root node, returns <code>null</code>, and retains the current node.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        DOM_Node		nextNode();
+        virtual IDOM_Node*		nextNode()= 0;
         //@}
 
         /** @name Set functions. */
         //@{
         /**
-          * Set the node at which the DOM_TreeWalker is currently positioned.
+          * Set the node at which the IDOM_TreeWalker is currently positioned.
           *
           * <p><b>"Experimental - subject to change"</b></p>
           *
           */
-        void			setCurrentNode(DOM_Node currentNode);
+        virtual void			setCurrentNode(IDOM_Node* currentNode)= 0;
         //@}
-
-
-    protected:
-        DOM_TreeWalker(TreeWalkerImpl* impl);
-
-        friend class DOM_Document;
-
-    private:
-        TreeWalkerImpl*         fImpl;
 };
 
 #endif

@@ -2112,6 +2112,14 @@ SOURCE=..\..\..\..\..\src\idom\IDNodeImpl.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\idom\IDNodeIteratorImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDNodeIteratorImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\idom\IDNodeListImpl.cpp
 # End Source File
 # Begin Source File
@@ -2281,6 +2289,14 @@ SOURCE=..\..\..\..\..\src\idom\IDTextImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\idom\IDTextImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDTreeWalkerImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\idom\IDTreeWalkerImpl.hpp
 # End Source File
 # Begin Source File
 

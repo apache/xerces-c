@@ -18,6 +18,7 @@ group xerces_dom =
     BASE_DIR "\\src\\idom\\IDNamedNodeMapImpl.cpp",
     BASE_DIR "\\src\\idom\\IDNodeIDMap.cpp",
     BASE_DIR "\\src\\idom\\IDNodeImpl.cpp",
+    BASE_DIR "\\src\\idom\\IDNodeIteratorImpl.cpp",
     BASE_DIR "\\src\\idom\\IDNodeListImpl.cpp",
     BASE_DIR "\\src\\idom\\IDNodeVector.cpp",
     BASE_DIR "\\src\\idom\\IDNotationImpl.cpp",
@@ -28,4 +29,5 @@ group xerces_dom =
     BASE_DIR "\\src\\idom\\IDRangeImpl.cpp",
     BASE_DIR "\\src\\idom\\IDStringPool.cpp",
     BASE_DIR "\\src\\idom\\IDTextImpl.cpp",
+    BASE_DIR "\\src\\idom\\IDTreeWalkerImpl.cpp",
     BASE_DIR "\\src\\idom\\IDXMLDeclImpl.cpp"

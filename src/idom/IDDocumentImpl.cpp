@@ -87,12 +87,12 @@
 #include "IDXMLDeclImpl.hpp"
 
 #include "IDStringPool.hpp"
-#include <internal/XMLReader.hpp>
-//#include "IDTreeWalkerImpl.hpp"
-//#include "IDNodeIteratorImpl.hpp"
+#include "IDTreeWalkerImpl.hpp"
+#include "IDNodeIteratorImpl.hpp"
 #include "IDNodeIDMap.hpp"
-#include <util/HashPtr.hpp>
 #include "IDRangeImpl.hpp"
+#include <internal/XMLReader.hpp>
+#include <util/HashPtr.hpp>
 
 
 //idom_revisit.  These can go away once all of the include files above are really there.
@@ -345,51 +345,45 @@ IDOM_NodeIterator* IDDocumentImpl::createNodeIterator (
 		//	The vector of fIterators is kept in the "owner document" if there is one. If there isn't one, I assume that root is the
 		//	owner document.
 
-#ifdef idom_revisit
-    NodeIteratorImpl* iter = new NodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
-    DOM_Document doc = root.getOwnerDocument();
+    IDNodeIteratorImpl* iter = new (this) IDNodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
+    IDOM_Document* doc = root->getOwnerDocument();
     IDDocumentImpl* impl;
 
-    if (! doc.isNull()) {
-        impl = (IDDocumentImpl *) doc.fImpl;
+    if (doc != 0) {
+        impl = (IDDocumentImpl *) doc;
     }
     else
-        impl = (IDDocumentImpl *) root.fImpl;
+        impl = (IDDocumentImpl *) root;
 
     if (impl->fIterators == 0L) {
-        impl->fIterators = new NodeIterators(1, false);
+        impl->fIterators = new (this) NodeIterators(1, false);
         impl->fIterators->addElement(iter);
     }
 
     return iter;
-#endif
-    return 0;
 }
 
 
 IDOM_TreeWalker* IDDocumentImpl::createTreeWalker (IDOM_Node *root, unsigned long whatToShow, IDOM_NodeFilter* filter, bool entityReferenceExpansion)
 {
-#ifdef idom_revisit
-		// See notes for createNodeIterator...
+    // See notes for createNodeIterator...
 
-    TreeWalkerImpl* twi = new TreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
-    DOM_Document doc = root.getOwnerDocument();
+    IDTreeWalkerImpl* twi = new (this) IDTreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
+    IDOM_Document* doc = root->getOwnerDocument();
     IDDocumentImpl* impl;
 
-    if (! doc.isNull()) {
-        impl = (IDDocumentImpl *) doc.fImpl;
+    if ( doc != 0) {
+        impl = (IDDocumentImpl *) doc;
     }
     else
-        impl = (IDDocumentImpl *) root.fImpl;
+        impl = (IDDocumentImpl *) root;
 
     if (impl->fTreeWalkers == 0L) {
-        impl->fTreeWalkers = new TreeWalkers(1, false);
+        impl->fTreeWalkers = new (this) TreeWalkers(1, false);
         impl->fTreeWalkers->addElement(twi);
     }
 
     return twi;
-#endif
-    return 0;
 }
 
 

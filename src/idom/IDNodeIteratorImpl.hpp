@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/06/04 20:11:52  tng
+ * IDOM: Complete IDNodeIterator, IDTreeWalker, IDNodeFilter.
+ *
  * Revision 1.2  2001/05/11 13:25:45  tng
  * Copyright update.
  *
@@ -64,93 +67,87 @@
  *
  */
 
-#ifndef NodeIteratorImpl_HEADER_GUARD_
-#define NodeIteratorImpl_HEADER_GUARD_
+#ifndef IDNodeIteratorImpl_HEADER_GUARD_
+#define IDNodeIteratorImpl_HEADER_GUARD_
 
 
-// NodeIteratorImpl.hpp: interface for the NodeIteratorImpl class.
+// IDNodeIteratorImpl.hpp: interface for the IDNodeIteratorImpl class.
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "DOM_Node.hpp"
-#include "DOM_NodeIterator.hpp"
-#include "RefCountedImpl.hpp"
+#include "IDOM_Node.hpp"
+#include "IDOM_NodeIterator.hpp"
 
 
-class CDOM_EXPORT NodeIteratorImpl : public RefCountedImpl {
-	protected:
-		NodeIteratorImpl ();
+class CDOM_EXPORT IDNodeIteratorImpl : public IDOM_NodeIterator {
+    private:
+        //
+        // Data
+        //
+        // The root.
+        IDOM_Node* fRoot;
 
-	public:
-		virtual ~NodeIteratorImpl ();
-		NodeIteratorImpl (
-            DOM_Node root,
-            unsigned long whatToShow,
-            DOM_NodeFilter* nodeFilter,
-            bool expandEntityRef);
+        // The whatToShow mask.
+        unsigned long fWhatToShow;
 
-        NodeIteratorImpl ( const NodeIteratorImpl& toCopy);
-		
-        NodeIteratorImpl& operator= (const NodeIteratorImpl& other);
-		
-        unsigned long getWhatToShow ();
-		DOM_NodeFilter* getFilter ();
+        // The NodeFilter reference.
+        IDOM_NodeFilter* fNodeFilter;
 
-		DOM_Node nextNode ();
-		DOM_Node previousNode ();
-		bool acceptNode (DOM_Node node);
-		DOM_Node matchNodeOrParent (DOM_Node node);
-		DOM_Node nextNode (DOM_Node node, bool visitChildren);
-		DOM_Node previousNode (DOM_Node node);
-		void removeNode (DOM_Node node);
-
-		void unreferenced();
-
-		void detach ();
-
-        // Get the expandEntity reference flag.
-        bool getExpandEntityReferences();
-
-
-	private:
-		//
-		// Data
-		//
-		// The root.
-		DOM_Node fRoot;
-
-		// The whatToShow mask.
-		unsigned long fWhatToShow;
-
-		// The NodeFilter reference.
-		DOM_NodeFilter* fNodeFilter;
 
         // The expandEntity reference flag.
         bool  fExpandEntityReferences;
+        bool fDetached;
 
-		bool fDetached;
 
-		//
-		// Iterator state - current node and direction.
-		//
-		// Note: The current node and direction are sufficient to implement
-		// the desired behaviour of the current pointer being _between_
-		// two nodes. The fCurrentNode is actually the last node returned,
-		// and the
-		// direction is whether the pointer is in front or behind this node.
-		// (usually akin to whether the node was returned via nextNode())
-		// (eg fForward = true) or previousNode() (eg fForward = false).
+        //
+        // Iterator state - current node and direction.
+        //
+        // Note: The current node and direction are sufficient to implement
+        // the desired behaviour of the current pointer being _between_
+        // two nodes. The fCurrentNode is actually the last node returned,
+        // and the
+        // direction is whether the pointer is in front or behind this node.
+        // (usually akin to whether the node was returned via nextNode())
+        // (eg fForward = true) or previousNode() (eg fForward = false).
+        // The last Node returned.
+        IDOM_Node* fCurrentNode;
 
-		// The last Node returned.
-		DOM_Node fCurrentNode;
+        // The direction of the iterator on the fCurrentNode.
+        //  <pre>
+        //  nextNode()  ==      fForward = true;
+        //  previousNode() ==   fForward = false;
+        //  </pre>
+        bool fForward;
 
-		// The direction of the iterator on the fCurrentNode.
-		//  <pre>
-		//  nextNode()  ==      fForward = true;
-		//  previousNode() ==   fForward = false;
-		//  </pre>
-		bool fForward;
+    protected:
+        IDNodeIteratorImpl ();
 
+    public:
+        virtual ~IDNodeIteratorImpl ();
+        IDNodeIteratorImpl (
+            IDOM_Node* root,
+            unsigned long whatToShow,
+            IDOM_NodeFilter* nodeFilter,
+            bool expandEntityRef);
+
+        IDNodeIteratorImpl ( const IDNodeIteratorImpl& toCopy);
+        IDNodeIteratorImpl& operator= (const IDNodeIteratorImpl& other);
+        	
+        virtual unsigned long getWhatToShow ();
+        virtual IDOM_NodeFilter* getFilter ();
+        // Get the expandEntity reference flag.
+        virtual bool getExpandEntityReferences();
+
+        virtual IDOM_Node* nextNode ();
+        virtual IDOM_Node* previousNode ();
+        virtual void detach ();
+
+    private:
+        IDOM_Node* matchNodeOrParent (IDOM_Node* node);
+        IDOM_Node* nextNode (IDOM_Node* node, bool visitChildren);
+        IDOM_Node* previousNode (IDOM_Node* node);
+        void removeNode (IDOM_Node* node);
+        bool acceptNode (IDOM_Node* node);
 
 };
 

@@ -240,6 +240,8 @@ int  main()
 
             IDOM_Text*     E210 = doc->createTextNode(xInsertedText);
 
+            delete doc;
+
 
         }
 
@@ -581,386 +583,386 @@ int  main()
             aRange->detach();
             range->detach();
 
-           //***************************************************************
-           //another set of test
-           //TEST createRange, setStart and setEnd, insertnode
-           //***************************************************************
-           IDOM_DOMImplementation* impl2 = IDOM_DOMImplementation::getImplementation();
-           IDOM_Document* doc2 = impl2->createDocument();
-
-           IDOM_Element* root2 = doc2->createElement(xroot2);
-           doc2->appendChild(root2);
-           //case 1: simple text node, start==end
-           // <body>text1</body>
-           IDOM_Element* body = doc2->createElement(xBody);
-           IDOM_Text* text1 = doc2->createTextNode(xtext1);
-           body->appendChild(text1);
-           root2->appendChild(body);
-
-           //set range
-           IDOM_Range* range1 = doc2->createRange();
-           range1->setStart(text1,1);
-           range1->setEnd(text1,3);
-
-           TASSERT(!XMLString::compareString(range1->toString(),xex));
-           TASSERT(range1->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(range1->getStartContainer()->getNodeValue(),xtext1));
-           TASSERT(range1->getEndOffset()==3);
-           TASSERT(!XMLString::compareString(range1->getEndContainer()->getNodeValue(),xtext1));
-
-           //now insert a text node
-           //<body>ttext2ext1</body>
-           IDOM_Text* text2 = doc2->createTextNode(xtext2);
-           range1->insertNode(text2);
-
-           TASSERT(!XMLString::compareString(range1->toString(),xtext2ex));
-           TASSERT(range1->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(range1->getStartContainer()->getNodeValue(),xt));
-           TASSERT(range1->getEndOffset()==2);
-           TASSERT(!XMLString::compareString(range1->getEndContainer()->getNodeValue(),xext1));
-
-           //now insert a non-text node
-           //<body>t<p1/>text2ext1</body>
-           IDOM_Element* p1 = doc2->createElement(xp1);
-           range1->insertNode(p1);
-
-           TASSERT(!XMLString::compareString(range1->toString(),xtext2ex));
-           TASSERT(range1->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(range1->getStartContainer()->getNodeValue(),xt));
-           TASSERT(range1->getEndOffset()==2);
-           TASSERT(!XMLString::compareString(range1->getEndContainer()->getNodeValue(),xext1));
-
-           //case 2: non-text node, start==end
-           // <head><h1/></head>
-           IDOM_Element* head = doc2->createElement(xhead);
-           IDOM_Element* h1 = doc2->createElement(xH1);
-           head->appendChild(h1);
-           root2->appendChild(head);
-
-           //set range
-           IDOM_Range* range2 = doc2->createRange();
-           range2->setStart(head,0);
-           range2->setEnd(head,1);
-
-           TASSERT(!XMLString::compareString(range2->toString(),XMLUni::fgZeroLenString));
-           TASSERT(range2->getStartOffset()==0);
-           TASSERT(!XMLString::compareString(range2->getStartContainer()->getNodeName(),xhead));
-           TASSERT(range2->getEndOffset()==1);
-           TASSERT(!XMLString::compareString(range2->getEndContainer()->getNodeName(),xhead));
-
-           //now insert a non-text node
-           //<head><h2/><h1/></head>
-           IDOM_Element* h2 = doc2->createElement(xh2);
-           range2->insertNode(h2);
-
-           TASSERT(!XMLString::compareString(range2->toString(),XMLUni::fgZeroLenString));
-           TASSERT(range2->getStartOffset()==0);
-           TASSERT(!XMLString::compareString(range2->getStartContainer()->getNodeName(),xhead));
-           TASSERT(range2->getEndOffset()==2);
-           TASSERT(!XMLString::compareString(range2->getEndContainer()->getNodeName(),xhead));
-
-           //now insert a text node
-           //<head>text5<h2/><h1/></head>
-           IDOM_Text* text5 = doc2->createTextNode(xtext5);
-           range2->insertNode(text5);
-
-           TASSERT(!XMLString::compareString(range2->toString(),xtext5));
-           TASSERT(range2->getStartOffset()==0);
-           TASSERT(!XMLString::compareString(range2->getStartContainer()->getNodeName(),xhead));
-           TASSERT(range2->getEndOffset()==3);
-           TASSERT(!XMLString::compareString(range2->getEndContainer()->getNodeName(),xhead));
-
-           //case 3: simple text node, start!=end
-           // <body2>text3</body2>
-           IDOM_Element* body2 = doc2->createElement(xbody2);
-           IDOM_Text* text3 = doc2->createTextNode(xtext3);
-           body2->appendChild(text3);
-           root2->appendChild(body2);
-
-           //set range
-           IDOM_Range* range3 = doc2->createRange();
-           range3->setStart(text3,1);
-           range3->setEnd(body2,1);
-
-           TASSERT(!XMLString::compareString(range3->toString(),xext3));
-           TASSERT(range3->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(range3->getStartContainer()->getNodeValue(),xtext3));
-           TASSERT(range3->getEndOffset()==1);
-           TASSERT(!XMLString::compareString(range3->getEndContainer()->getNodeName(),xbody2));
-
-           //now insert a textnode
-           //<body2>ttext4ext3</body2>
-           IDOM_Text* text4 = doc2->createTextNode(xtext4);
-           range3->insertNode(text4);
-
-           TASSERT(!XMLString::compareString(range3->toString(),XMLUni::fgZeroLenString));
-           TASSERT(range3->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(range3->getStartContainer()->getNodeValue(),xt));
-           TASSERT(range3->getEndOffset()==1);
-           TASSERT(!XMLString::compareString(range3->getEndContainer()->getNodeName(),xbody2));
-
-           //now insert a non-text node
-           //<body2>t<p2/>text4ext3</body2>
-           IDOM_Element* p2 = doc2->createElement(xp2);
-           range3->insertNode(p2);
-
-           //extra empty node caused by splitting 't'
-           TASSERT(!XMLString::compareString(range3->toString(),XMLUni::fgZeroLenString));
-           TASSERT(range3->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(range3->getStartContainer()->getNodeValue(),xt));
-           TASSERT(range3->getEndOffset()==1);
-           TASSERT(!XMLString::compareString(range3->getEndContainer()->getNodeName(),xbody2));
-
-           //test toString a bit
-           range3->setStart(body2,1);
-           range3->setEnd(body2,5);
-
-           TASSERT(!XMLString::compareString(range3->toString(),xtext4ext3));
-
-           range3->setStart(body2,0);
-           range3->setEnd(body2,5);
-
-           TASSERT(!XMLString::compareString(range3->toString(),xttext4ext3));
-
-           //case 4: non-text node, start!=end
-           // <head2><h3/></head2>
-           IDOM_Element* head2 = doc2->createElement(xhead2);
-           IDOM_Element* h3 = doc2->createElement(xh3);
-           head2->appendChild(h3);
-           root2->appendChild(head2);
-
-           //set range
-           IDOM_Range* range4 = doc2->createRange();
-           range4->setStart(head2,0);
-           range4->setEnd(h3,0);
-
-           TASSERT(!XMLString::compareString(range4->toString(),XMLUni::fgZeroLenString));
-           TASSERT(range4->getStartOffset()==0);
-           TASSERT(!XMLString::compareString(range4->getStartContainer()->getNodeName(),xhead2));
-           TASSERT(range4->getEndOffset()==0);
-           TASSERT(!XMLString::compareString(range4->getEndContainer()->getNodeName(),xh3));
-
-           //now insert a non-text node
-           //<head2><h4/><h3/></head2>
-           IDOM_Element* h4 = doc2->createElement(xh4);
-           range4->insertNode(h4);
-
-           TASSERT(!XMLString::compareString(range4->toString(),XMLUni::fgZeroLenString));
-           TASSERT(range4->getStartOffset()==0);
-           TASSERT(!XMLString::compareString(range4->getStartContainer()->getNodeName(),xhead2));
-           TASSERT(range4->getEndOffset()==0);
-           TASSERT(!XMLString::compareString(range4->getEndContainer()->getNodeName(),xh3));
-
-           //now insert a text node
-           //<head2>text6<h4/><h3/></head2>
-           IDOM_Text* text6 = doc2->createTextNode(xtext6);
-           range4->insertNode(text6);
-
-           TASSERT(!XMLString::compareString(range4->toString(),xtext6));
-           TASSERT(range4->getStartOffset()==0);
-           TASSERT(!XMLString::compareString(range4->getStartContainer()->getNodeName(),xhead2));
-           TASSERT(range4->getEndOffset()==0);
-           TASSERT(!XMLString::compareString(range4->getEndContainer()->getNodeName(),xh3));
-
-           //***************************************************************
-           // quick test of updating
-           //***************************************************************
-           // <upbody>text1</upbody>
-           IDOM_Element* upbody = doc2->createElement(xupbody);
-           IDOM_Text* uptext1 = doc2->createTextNode(xuptext1);
-           upbody->appendChild(uptext1);
-           root2->appendChild(upbody);
-
-           IDOM_Range* uprange = doc2->createRange();
-           uprange->setStart(upbody,0);
-           uprange->setEnd(upbody,1);
-
-           TASSERT(!XMLString::compareString(uprange->toString(),xuptext1));
-           TASSERT(uprange->getStartOffset()==0);
-           TASSERT(!XMLString::compareString(uprange->getStartContainer()->getNodeName(),xupbody));
-           TASSERT(uprange->getEndOffset()==1);
-           TASSERT(!XMLString::compareString(uprange->getEndContainer()->getNodeName(),xupbody));
-
-           // split text
-           uptext1->splitText(1);
-
-           TASSERT(!XMLString::compareString(uprange->toString(),xu));
-           TASSERT(uprange->getStartOffset()==0);
-           TASSERT(!XMLString::compareString(uprange->getStartContainer()->getNodeName(),xupbody));
-           TASSERT(uprange->getEndOffset()==1);
-           TASSERT(!XMLString::compareString(uprange->getEndContainer()->getNodeName(),xupbody));
-
-           //insert node
-           IDOM_Element* upbody2 = doc2->createElement(xupbody2);
-           IDOM_Text* uptext2 = doc2->createTextNode(xuptext2);
-           upbody2->appendChild(uptext2);
-           root2->appendChild(upbody2);
-
-           IDOM_Range* uprange2 = doc2->createRange();
-           uprange2->setStart(uptext2,1);
-           uprange2->setEnd(upbody2,1);
-
-           IDOM_Range* uprange3 = doc2->createRange();
-           uprange3->setStart(uptext2,1);
-           uprange3->setEnd(upbody2,1);
-
-           TASSERT(!XMLString::compareString(uprange2->toString(),xptext2));
-           TASSERT(uprange2->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(uprange2->getStartContainer()->getNodeValue(),xuptext2));
-           TASSERT(uprange2->getEndOffset()==1);
-           TASSERT(!XMLString::compareString(uprange2->getEndContainer()->getNodeName(),xupbody2));
-
-           TASSERT(!XMLString::compareString(uprange3->toString(),xptext2));
-           TASSERT(uprange3->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(uprange3->getStartContainer()->getNodeValue(),xuptext2));
-           TASSERT(uprange3->getEndOffset()==1);
-           TASSERT(!XMLString::compareString(uprange3->getEndContainer()->getNodeName(),xupbody2));
-
-           IDOM_Element* upp1 = doc2->createElement(xupp1);
-           uprange2->insertNode(upp1);
-
-           TASSERT(!XMLString::compareString(uprange2->toString(),XMLUni::fgZeroLenString));
-           TASSERT(uprange2->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(uprange2->getStartContainer()->getNodeValue(),xu));
-           TASSERT(uprange2->getEndOffset()==1);
-           TASSERT(!XMLString::compareString(uprange2->getEndContainer()->getNodeName(),xupbody2));
-
-           TASSERT(!XMLString::compareString(uprange3->toString(),XMLUni::fgZeroLenString));
-           TASSERT(uprange3->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(uprange3->getStartContainer()->getNodeValue(),xu));
-           TASSERT(uprange3->getEndOffset()==1);
-           TASSERT(!XMLString::compareString(uprange3->getEndContainer()->getNodeName(),xupbody2));
-
-           //***************************************************************
-           //another set of test
-           //<foo><c/><moo><b/></moo>ab<a>Hello cd</a><cool>ef</cool></foo>
-           //
-           //  ______________________foo_____________________
-           //  |          |           |          |           |
-           //  c         moo        "ab"         a          cool
-           //             |                      |           |
-           //             b                    "Hello cd"   "ef"
-           //
-           IDOM_DOMImplementation* impl3 = IDOM_DOMImplementation::getImplementation();
-           IDOM_Document* doc3 = impl3->createDocument();
-
-           IDOM_Element* root3 = doc3->createElement(xroot);
-           doc3->appendChild(root3);
-
-           IDOM_Element* foo = doc3->createElement(xfoo);
-           IDOM_Element* moo = doc3->createElement(xmoo);
-           IDOM_Element* cool = doc3->createElement(xcool);
-           IDOM_Text* ab = doc3->createTextNode(xab);
-           IDOM_Text* cd = doc3->createTextNode(xHellocd);
-           IDOM_Text* ef = doc3->createTextNode(xef);
-
-           IDOM_Element* a = doc3->createElement(xa);
-           IDOM_Element* b = doc3->createElement(xb);
-           IDOM_Element* c = doc3->createElement(xc);
-
-           root3->appendChild(foo);
-           foo->appendChild(c);
-           foo->appendChild(moo);
-           foo->appendChild(ab);
-           foo->appendChild(a);
-           foo->appendChild(cool);
-           moo->appendChild(b);
-           a->appendChild(cd);
-           cool->appendChild(ef);
-
-           //***************************************************************
-           //TEST toString
-           //***************************************************************
-           IDOM_Range* newtestrange = doc3->createRange();
-           //case 1:
-           //start container is text node
-           //   i) end container is also text node
-           //    a) start==end
-           //    b) start!=end
-           //  ii) end container is not text node
-           //    a) start==end => impossible
-           //    b) start!=end
-           //
-           //case 2:
-           //start container is not text node
-           //   i) end container is text node
-           //    a) start==end => impossible
-           //    b) start!=end
-           //  ii) end container is not text node
-           //    a) start==end
-           //    b) start!=end
-
-           //case 1, i, a
-           newtestrange->setStart( cd, 1 );
-           newtestrange->setEnd( cd, 4 );
-
-           TASSERT(!XMLString::compareString(newtestrange->toString(),xell));
-
-           //case 1, i, b
-           newtestrange->setStart( cd, 1 );
-           newtestrange->setEnd( ef, 2 );
-
-           TASSERT(!XMLString::compareString(newtestrange->toString(),xellocdef));
-
-           //case 1, ii, b
-           newtestrange->setStart( cd, 1 );
-           newtestrange->setEnd( foo, 4 );
-
-           TASSERT(!XMLString::compareString(newtestrange->toString(),xellocd));
-
-           //case 2, i, b
-           newtestrange->setStart( foo, 1 );
-           newtestrange->setEnd( cd, 5 );
-
-           TASSERT(!XMLString::compareString(newtestrange->toString(),xabHello));
-
-           //case 2, ii, a
-           newtestrange->setStart( foo, 1 );
-           newtestrange->setEnd( foo, 4 );
-
-           TASSERT(!XMLString::compareString(newtestrange->toString(),xabHellocd));
-
-           //case 2, ii, b
-           newtestrange->setStart( moo, 1 );
-           newtestrange->setEnd( foo, 4 );
-
-           TASSERT(!XMLString::compareString(newtestrange->toString(),xabHellocd));
-
-           //***************************************************************
-           //test removeChild
-           //***************************************************************
-           IDOM_Range* newrange = doc3->createRange();
-           newrange->setStart( moo, 0 );
-           newrange->setEnd( foo, 4 );
-
-           TASSERT(newrange->getStartOffset()==0);
-           TASSERT(!XMLString::compareString(newrange->getStartContainer()->getNodeName(),xmoo));
-           TASSERT(newrange->getEndOffset()==4);
-           TASSERT(!XMLString::compareString(newrange->getEndContainer()->getNodeName(),xfoo));
-           TASSERT(!XMLString::compareString(newrange->toString(),xabHellocd));
-
-           IDOM_Node* n = newrange->cloneContents();
-           IDOM_NodeList* nol = foo->getChildNodes();
-
-           //removing moo
-           foo->removeChild(nol->item(1));
-           TASSERT(newrange->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(newrange->getStartContainer()->getNodeName(),xfoo));
-           TASSERT(newrange->getEndOffset()==3);
-           TASSERT(!XMLString::compareString(newrange->getEndContainer()->getNodeName(),xfoo));
-           TASSERT(!XMLString::compareString(newrange->toString(),xabHellocd));
-
-           TASSERT(newtestrange->getStartOffset()==1);
-           TASSERT(!XMLString::compareString(newtestrange->getStartContainer()->getNodeName(),xfoo));
-           TASSERT(newtestrange->getEndOffset()==3);
-           TASSERT(!XMLString::compareString(newtestrange->getEndContainer()->getNodeName(),xfoo));
-           TASSERT(!XMLString::compareString(newtestrange->toString(),xabHellocd));
-
-    }
-
-
+            //***************************************************************
+            //another set of test
+            //TEST createRange, setStart and setEnd, insertnode
+            //***************************************************************
+            IDOM_DOMImplementation* impl2 = IDOM_DOMImplementation::getImplementation();
+            IDOM_Document* doc2 = impl2->createDocument();
+
+            IDOM_Element* root2 = doc2->createElement(xroot2);
+            doc2->appendChild(root2);
+            //case 1: simple text node, start==end
+            // <body>text1</body>
+            IDOM_Element* body = doc2->createElement(xBody);
+            IDOM_Text* text1 = doc2->createTextNode(xtext1);
+            body->appendChild(text1);
+            root2->appendChild(body);
+
+            //set range
+            IDOM_Range* range1 = doc2->createRange();
+            range1->setStart(text1,1);
+            range1->setEnd(text1,3);
+
+            TASSERT(!XMLString::compareString(range1->toString(),xex));
+            TASSERT(range1->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(range1->getStartContainer()->getNodeValue(),xtext1));
+            TASSERT(range1->getEndOffset()==3);
+            TASSERT(!XMLString::compareString(range1->getEndContainer()->getNodeValue(),xtext1));
+
+            //now insert a text node
+            //<body>ttext2ext1</body>
+            IDOM_Text* text2 = doc2->createTextNode(xtext2);
+            range1->insertNode(text2);
+
+            TASSERT(!XMLString::compareString(range1->toString(),xtext2ex));
+            TASSERT(range1->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(range1->getStartContainer()->getNodeValue(),xt));
+            TASSERT(range1->getEndOffset()==2);
+            TASSERT(!XMLString::compareString(range1->getEndContainer()->getNodeValue(),xext1));
+
+            //now insert a non-text node
+            //<body>t<p1/>text2ext1</body>
+            IDOM_Element* p1 = doc2->createElement(xp1);
+            range1->insertNode(p1);
+
+            TASSERT(!XMLString::compareString(range1->toString(),xtext2ex));
+            TASSERT(range1->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(range1->getStartContainer()->getNodeValue(),xt));
+            TASSERT(range1->getEndOffset()==2);
+            TASSERT(!XMLString::compareString(range1->getEndContainer()->getNodeValue(),xext1));
+
+            //case 2: non-text node, start==end
+            // <head><h1/></head>
+            IDOM_Element* head = doc2->createElement(xhead);
+            IDOM_Element* h1 = doc2->createElement(xH1);
+            head->appendChild(h1);
+            root2->appendChild(head);
+
+            //set range
+            IDOM_Range* range2 = doc2->createRange();
+            range2->setStart(head,0);
+            range2->setEnd(head,1);
+
+            TASSERT(!XMLString::compareString(range2->toString(),XMLUni::fgZeroLenString));
+            TASSERT(range2->getStartOffset()==0);
+            TASSERT(!XMLString::compareString(range2->getStartContainer()->getNodeName(),xhead));
+            TASSERT(range2->getEndOffset()==1);
+            TASSERT(!XMLString::compareString(range2->getEndContainer()->getNodeName(),xhead));
+
+            //now insert a non-text node
+            //<head><h2/><h1/></head>
+            IDOM_Element* h2 = doc2->createElement(xh2);
+            range2->insertNode(h2);
+
+            TASSERT(!XMLString::compareString(range2->toString(),XMLUni::fgZeroLenString));
+            TASSERT(range2->getStartOffset()==0);
+            TASSERT(!XMLString::compareString(range2->getStartContainer()->getNodeName(),xhead));
+            TASSERT(range2->getEndOffset()==2);
+            TASSERT(!XMLString::compareString(range2->getEndContainer()->getNodeName(),xhead));
+
+            //now insert a text node
+            //<head>text5<h2/><h1/></head>
+            IDOM_Text* text5 = doc2->createTextNode(xtext5);
+            range2->insertNode(text5);
+
+            TASSERT(!XMLString::compareString(range2->toString(),xtext5));
+            TASSERT(range2->getStartOffset()==0);
+            TASSERT(!XMLString::compareString(range2->getStartContainer()->getNodeName(),xhead));
+            TASSERT(range2->getEndOffset()==3);
+            TASSERT(!XMLString::compareString(range2->getEndContainer()->getNodeName(),xhead));
+
+            //case 3: simple text node, start!=end
+            // <body2>text3</body2>
+            IDOM_Element* body2 = doc2->createElement(xbody2);
+            IDOM_Text* text3 = doc2->createTextNode(xtext3);
+            body2->appendChild(text3);
+            root2->appendChild(body2);
+
+            //set range
+            IDOM_Range* range3 = doc2->createRange();
+            range3->setStart(text3,1);
+            range3->setEnd(body2,1);
+
+            TASSERT(!XMLString::compareString(range3->toString(),xext3));
+            TASSERT(range3->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(range3->getStartContainer()->getNodeValue(),xtext3));
+            TASSERT(range3->getEndOffset()==1);
+            TASSERT(!XMLString::compareString(range3->getEndContainer()->getNodeName(),xbody2));
+
+            //now insert a textnode
+            //<body2>ttext4ext3</body2>
+            IDOM_Text* text4 = doc2->createTextNode(xtext4);
+            range3->insertNode(text4);
+
+            TASSERT(!XMLString::compareString(range3->toString(),XMLUni::fgZeroLenString));
+            TASSERT(range3->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(range3->getStartContainer()->getNodeValue(),xt));
+            TASSERT(range3->getEndOffset()==1);
+            TASSERT(!XMLString::compareString(range3->getEndContainer()->getNodeName(),xbody2));
+
+            //now insert a non-text node
+            //<body2>t<p2/>text4ext3</body2>
+            IDOM_Element* p2 = doc2->createElement(xp2);
+            range3->insertNode(p2);
+
+            //extra empty node caused by splitting 't'
+            TASSERT(!XMLString::compareString(range3->toString(),XMLUni::fgZeroLenString));
+            TASSERT(range3->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(range3->getStartContainer()->getNodeValue(),xt));
+            TASSERT(range3->getEndOffset()==1);
+            TASSERT(!XMLString::compareString(range3->getEndContainer()->getNodeName(),xbody2));
+
+            //test toString a bit
+            range3->setStart(body2,1);
+            range3->setEnd(body2,5);
+
+            TASSERT(!XMLString::compareString(range3->toString(),xtext4ext3));
+
+            range3->setStart(body2,0);
+            range3->setEnd(body2,5);
+
+            TASSERT(!XMLString::compareString(range3->toString(),xttext4ext3));
+
+            //case 4: non-text node, start!=end
+            // <head2><h3/></head2>
+            IDOM_Element* head2 = doc2->createElement(xhead2);
+            IDOM_Element* h3 = doc2->createElement(xh3);
+            head2->appendChild(h3);
+            root2->appendChild(head2);
+
+            //set range
+            IDOM_Range* range4 = doc2->createRange();
+            range4->setStart(head2,0);
+            range4->setEnd(h3,0);
+
+            TASSERT(!XMLString::compareString(range4->toString(),XMLUni::fgZeroLenString));
+            TASSERT(range4->getStartOffset()==0);
+            TASSERT(!XMLString::compareString(range4->getStartContainer()->getNodeName(),xhead2));
+            TASSERT(range4->getEndOffset()==0);
+            TASSERT(!XMLString::compareString(range4->getEndContainer()->getNodeName(),xh3));
+
+            //now insert a non-text node
+            //<head2><h4/><h3/></head2>
+            IDOM_Element* h4 = doc2->createElement(xh4);
+            range4->insertNode(h4);
+
+            TASSERT(!XMLString::compareString(range4->toString(),XMLUni::fgZeroLenString));
+            TASSERT(range4->getStartOffset()==0);
+            TASSERT(!XMLString::compareString(range4->getStartContainer()->getNodeName(),xhead2));
+            TASSERT(range4->getEndOffset()==0);
+            TASSERT(!XMLString::compareString(range4->getEndContainer()->getNodeName(),xh3));
+
+            //now insert a text node
+            //<head2>text6<h4/><h3/></head2>
+            IDOM_Text* text6 = doc2->createTextNode(xtext6);
+            range4->insertNode(text6);
+
+            TASSERT(!XMLString::compareString(range4->toString(),xtext6));
+            TASSERT(range4->getStartOffset()==0);
+            TASSERT(!XMLString::compareString(range4->getStartContainer()->getNodeName(),xhead2));
+            TASSERT(range4->getEndOffset()==0);
+            TASSERT(!XMLString::compareString(range4->getEndContainer()->getNodeName(),xh3));
+
+            //***************************************************************
+            // quick test of updating
+            //***************************************************************
+            // <upbody>text1</upbody>
+            IDOM_Element* upbody = doc2->createElement(xupbody);
+            IDOM_Text* uptext1 = doc2->createTextNode(xuptext1);
+            upbody->appendChild(uptext1);
+            root2->appendChild(upbody);
+
+            IDOM_Range* uprange = doc2->createRange();
+            uprange->setStart(upbody,0);
+            uprange->setEnd(upbody,1);
+
+            TASSERT(!XMLString::compareString(uprange->toString(),xuptext1));
+            TASSERT(uprange->getStartOffset()==0);
+            TASSERT(!XMLString::compareString(uprange->getStartContainer()->getNodeName(),xupbody));
+            TASSERT(uprange->getEndOffset()==1);
+            TASSERT(!XMLString::compareString(uprange->getEndContainer()->getNodeName(),xupbody));
+
+            // split text
+            uptext1->splitText(1);
+
+            TASSERT(!XMLString::compareString(uprange->toString(),xu));
+            TASSERT(uprange->getStartOffset()==0);
+            TASSERT(!XMLString::compareString(uprange->getStartContainer()->getNodeName(),xupbody));
+            TASSERT(uprange->getEndOffset()==1);
+            TASSERT(!XMLString::compareString(uprange->getEndContainer()->getNodeName(),xupbody));
+
+            //insert node
+            IDOM_Element* upbody2 = doc2->createElement(xupbody2);
+            IDOM_Text* uptext2 = doc2->createTextNode(xuptext2);
+            upbody2->appendChild(uptext2);
+            root2->appendChild(upbody2);
+
+            IDOM_Range* uprange2 = doc2->createRange();
+            uprange2->setStart(uptext2,1);
+            uprange2->setEnd(upbody2,1);
+
+            IDOM_Range* uprange3 = doc2->createRange();
+            uprange3->setStart(uptext2,1);
+            uprange3->setEnd(upbody2,1);
+
+            TASSERT(!XMLString::compareString(uprange2->toString(),xptext2));
+            TASSERT(uprange2->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(uprange2->getStartContainer()->getNodeValue(),xuptext2));
+            TASSERT(uprange2->getEndOffset()==1);
+            TASSERT(!XMLString::compareString(uprange2->getEndContainer()->getNodeName(),xupbody2));
+
+            TASSERT(!XMLString::compareString(uprange3->toString(),xptext2));
+            TASSERT(uprange3->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(uprange3->getStartContainer()->getNodeValue(),xuptext2));
+            TASSERT(uprange3->getEndOffset()==1);
+            TASSERT(!XMLString::compareString(uprange3->getEndContainer()->getNodeName(),xupbody2));
+
+            IDOM_Element* upp1 = doc2->createElement(xupp1);
+            uprange2->insertNode(upp1);
+
+            TASSERT(!XMLString::compareString(uprange2->toString(),XMLUni::fgZeroLenString));
+            TASSERT(uprange2->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(uprange2->getStartContainer()->getNodeValue(),xu));
+            TASSERT(uprange2->getEndOffset()==1);
+            TASSERT(!XMLString::compareString(uprange2->getEndContainer()->getNodeName(),xupbody2));
+
+            TASSERT(!XMLString::compareString(uprange3->toString(),XMLUni::fgZeroLenString));
+            TASSERT(uprange3->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(uprange3->getStartContainer()->getNodeValue(),xu));
+            TASSERT(uprange3->getEndOffset()==1);
+            TASSERT(!XMLString::compareString(uprange3->getEndContainer()->getNodeName(),xupbody2));
+
+            //***************************************************************
+            //another set of test
+            //<foo><c/><moo><b/></moo>ab<a>Hello cd</a><cool>ef</cool></foo>
+            //
+            //  ______________________foo_____________________
+            //  |          |           |          |           |
+            //  c         moo        "ab"         a          cool
+            //             |                      |           |
+            //             b                    "Hello cd"   "ef"
+            //
+            IDOM_DOMImplementation* impl3 = IDOM_DOMImplementation::getImplementation();
+            IDOM_Document* doc3 = impl3->createDocument();
+
+            IDOM_Element* root3 = doc3->createElement(xroot);
+            doc3->appendChild(root3);
+
+            IDOM_Element* foo = doc3->createElement(xfoo);
+            IDOM_Element* moo = doc3->createElement(xmoo);
+            IDOM_Element* cool = doc3->createElement(xcool);
+            IDOM_Text* ab = doc3->createTextNode(xab);
+            IDOM_Text* cd = doc3->createTextNode(xHellocd);
+            IDOM_Text* ef = doc3->createTextNode(xef);
+
+            IDOM_Element* a = doc3->createElement(xa);
+            IDOM_Element* b = doc3->createElement(xb);
+            IDOM_Element* c = doc3->createElement(xc);
+
+            root3->appendChild(foo);
+            foo->appendChild(c);
+            foo->appendChild(moo);
+            foo->appendChild(ab);
+            foo->appendChild(a);
+            foo->appendChild(cool);
+            moo->appendChild(b);
+            a->appendChild(cd);
+            cool->appendChild(ef);
+
+            //***************************************************************
+            //TEST toString
+            //***************************************************************
+            IDOM_Range* newtestrange = doc3->createRange();
+            //case 1:
+            //start container is text node
+            //   i) end container is also text node
+            //    a) start==end
+            //    b) start!=end
+            //  ii) end container is not text node
+            //    a) start==end => impossible
+            //    b) start!=end
+            //
+            //case 2:
+            //start container is not text node
+            //   i) end container is text node
+            //    a) start==end => impossible
+            //    b) start!=end
+            //  ii) end container is not text node
+            //    a) start==end
+            //    b) start!=end
+
+            //case 1, i, a
+            newtestrange->setStart( cd, 1 );
+            newtestrange->setEnd( cd, 4 );
+
+            TASSERT(!XMLString::compareString(newtestrange->toString(),xell));
+
+            //case 1, i, b
+            newtestrange->setStart( cd, 1 );
+            newtestrange->setEnd( ef, 2 );
+
+            TASSERT(!XMLString::compareString(newtestrange->toString(),xellocdef));
+
+            //case 1, ii, b
+            newtestrange->setStart( cd, 1 );
+            newtestrange->setEnd( foo, 4 );
+
+            TASSERT(!XMLString::compareString(newtestrange->toString(),xellocd));
+
+            //case 2, i, b
+            newtestrange->setStart( foo, 1 );
+            newtestrange->setEnd( cd, 5 );
+
+            TASSERT(!XMLString::compareString(newtestrange->toString(),xabHello));
+
+            //case 2, ii, a
+            newtestrange->setStart( foo, 1 );
+            newtestrange->setEnd( foo, 4 );
+
+            TASSERT(!XMLString::compareString(newtestrange->toString(),xabHellocd));
+
+            //case 2, ii, b
+            newtestrange->setStart( moo, 1 );
+            newtestrange->setEnd( foo, 4 );
+
+            TASSERT(!XMLString::compareString(newtestrange->toString(),xabHellocd));
+
+            //***************************************************************
+            //test removeChild
+            //***************************************************************
+            IDOM_Range* newrange = doc3->createRange();
+            newrange->setStart( moo, 0 );
+            newrange->setEnd( foo, 4 );
+
+            TASSERT(newrange->getStartOffset()==0);
+            TASSERT(!XMLString::compareString(newrange->getStartContainer()->getNodeName(),xmoo));
+            TASSERT(newrange->getEndOffset()==4);
+            TASSERT(!XMLString::compareString(newrange->getEndContainer()->getNodeName(),xfoo));
+            TASSERT(!XMLString::compareString(newrange->toString(),xabHellocd));
+
+            IDOM_Node* n = newrange->cloneContents();
+            IDOM_NodeList* nol = foo->getChildNodes();
+
+            //removing moo
+            foo->removeChild(nol->item(1));
+            TASSERT(newrange->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(newrange->getStartContainer()->getNodeName(),xfoo));
+            TASSERT(newrange->getEndOffset()==3);
+            TASSERT(!XMLString::compareString(newrange->getEndContainer()->getNodeName(),xfoo));
+            TASSERT(!XMLString::compareString(newrange->toString(),xabHellocd));
+
+            TASSERT(newtestrange->getStartOffset()==1);
+            TASSERT(!XMLString::compareString(newtestrange->getStartContainer()->getNodeName(),xfoo));
+            TASSERT(newtestrange->getEndOffset()==3);
+            TASSERT(!XMLString::compareString(newtestrange->getEndContainer()->getNodeName(),xfoo));
+            TASSERT(!XMLString::compareString(newtestrange->toString(),xabHellocd));
+
+            delete doc;
+            delete doc2;
+            delete doc3;
+        }
     } //creating the dom tree and tests
-
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
