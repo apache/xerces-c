@@ -56,6 +56,22 @@
 
 /**
  * $Log$
+ * Revision 1.6  2001/11/28 19:14:59  knoaman
+ * Bug 2238: fix by Artur Klauser
+ * Some broken proxy servers (e.g. the one behind which I happen to reside,
+ * which apparently is Server: Microsoft-IIS/5.0)
+ * implement wrong boundary conditions for range requests. In particular,
+ * (1) request ranges straddling the content length of the document
+ *     give bogus header information
+ *       Content-Range: bytes X-Y/Z
+ *     where Y > Z, and give 0 bytes of actual message content.
+ * (2) request ranges beyond the content length of the document do not
+ *     give an error response as asked for in RFC2616 (http/1.1)
+ *
+ * Since the NetAccessor code was just trying to fall off the end of the
+ * document with the last range request (ie. hitting case 1 above), it
+ * never gets the last chunk of data from this proxy server.
+ *
  * Revision 1.5  2001/11/28 19:11:33  knoaman
  * Bug 2237: fix by Artur Klauser
  *
@@ -281,8 +297,8 @@ unsigned int BinURLInputStream::readBytes(XMLByte* const  toFill
         // Now read a new chunk from the stream. HTTP lets you specify the
         // range of bytes that you would like.
 
-        sprintf(ranges, "%ld-%ld", 
-                fBytesProcessed, fBytesProcessed + URLISBUFMAXSIZE - 1);
+        sprintf(ranges, "%ld-%ld", fBytesProcessed,
+                MIN(fBytesProcessed + URLISBUFMAXSIZE - 1,  fRemoteFileSize - 1));
         HTRequest_addRange(request, "bytes", ranges);
         HTRequest_setOutputFormat(request, WWW_SOURCE);
         result = HTLoadAnchorToChunk(fAnchor, request);
