@@ -66,8 +66,13 @@
 
 /**
  * $Log$
- * Revision 1.7  2000/01/20 00:43:00  andyh
- * no message
+ * Revision 1.8  2000/01/20 20:37:25  andyh
+ * Remove DEVENV_VCPP preprocessor variable everywhere.
+ * It was obsolete, left over from an earlier configuration system.
+ * And it was not set correctly in all projects.
+ *
+ * Should fix build problem reported by some with use of
+ * InterlockedCompareExchange() on Windows with VC6.
  *
  * Revision 1.6  2000/01/19 21:40:58  andyh
  * Remove a few remaining dependencies on the (now defunct)
@@ -1185,6 +1190,43 @@ int  main()
     TESTEPILOG;
 
 
+   //
+    // Attributes and NamedNodeMaps.
+    //
+    TESTPROLOG;
+    {
+        // Set up an initial (root element only) document.
+        // 
+        DOM_DOMImplementation impl;
+        
+        DOMString qName = "foo:docName";
+        DOMString pubId = "pubId";
+        DOMString sysId = "http://sysId";
+        DOMString intSubSet = "Internal subsets are not parsed by this call!";
+        DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId, intSubSet);
+        
+        DOMString docNSURI = "http://document.namespace";
+        DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
+        DOM_Element rootEl = doc.getDocumentElement();
+
+        //
+        // Create a set of attributes and hang them on the root element.
+        //
+        DOM_Element ela = doc.createAttrNS("http://nsa", "a:ela");  
+        rootEl.appendChild(ela);
+        DOM_Element elb = doc.createElementNS("http://nsb", "elb");   
+        rootEl.appendChild(elb);
+        DOM_Element elc = doc.createElementNS("",           "elc");  
+        rootEl.appendChild(elc);
+        DOM_Element eld = doc.createElementNS("http://nsa", "d:ela");
+        rootEl.appendChild(eld);
+        DOM_Element ele = doc.createElementNS("http://nse", "elb");   
+        rootEl.appendChild(ele);
+
+
+
+    }
+    TESTEPILOG;
 
  
     //

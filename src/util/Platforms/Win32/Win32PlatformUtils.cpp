@@ -56,6 +56,14 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/01/20 20:37:25  andyh
+ * Remove DEVENV_VCPP preprocessor variable everywhere.
+ * It was obsolete, left over from an earlier configuration system.
+ * And it was not set correctly in all projects.
+ *
+ * Should fix build problem reported by some with use of
+ * InterlockedCompareExchange() on Windows with VC6.
+ *
  * Revision 1.7  2000/01/19 00:57:26  roddey
  * Changes to get rid of dependence on old utils standard streams and to
  * get rid of the fgLibLocation stuff.
@@ -566,8 +574,9 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
     //
     // Windows supports InterlockedCompareExchange only on Windows 98, NT 4.0,
     //  and newer. Not on Win 95. So we are back to using assembler.
+    //    (But only if building with MSVC)
     //
-    #if defined(DEVENV_VCPP)
+    #if defined(_MSC_VER)
 
     void*   result;
     __asm
@@ -579,14 +588,6 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
         mov             result, eax;
 	}
     return result;
-
-    #elif defined(XML_IBMVAW32) 
-
-    // <TBD> Why is this not using the interlocked call below?
-    void  *retval = *toFill;
-    if( *toFill == toCompare)
-       *toFill = (void *) newValue;
-    return retVal;
 
     #else
 
@@ -600,7 +601,6 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
         , (void*)newValue
         , (void*)toCompare
     );
-
     #endif
 }
 
