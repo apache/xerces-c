@@ -1096,29 +1096,6 @@ bool XMLString::copyNString(        XMLCh* const    target
     return (*srcPtr == 0);
 }
 
-
-unsigned int XMLString::hash(   const   XMLCh* const    tohash
-                                , const unsigned int    hashModulus
-                                , MemoryManager* const)
-{  
-    assert(hashModulus);
-
-    unsigned int hashVal = 0;
-    if (tohash) {
-        const XMLCh* curCh = tohash;
-        while (*curCh)
-        {
-            unsigned int top = hashVal >> 24;
-            hashVal += (hashVal * 37) + top + (unsigned int)(*curCh);
-            curCh++;
-        }
-    }
-
-    // Divide by modulus
-    return hashVal % hashModulus;
-}
-
-
 const XMLCh* XMLString::findAny(const   XMLCh* const    toSearch
                                 , const XMLCh* const    searchList)
 {

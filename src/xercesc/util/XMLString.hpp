@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2004/12/14 02:09:20  cargilld
+ * Performance update from Christian Will.
+ *
  * Revision 1.29  2004/12/06 10:47:01  amassari
  * Added XMLString::release(void**, MemoryManager*) [jira# 1301]
  *
@@ -235,6 +238,7 @@
 #include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 #include <string.h>
+#include <assert.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -1731,6 +1735,29 @@ inline bool XMLString::equals(   const char* const    str1
 inline int XMLString::lastIndexOf(const XMLCh* const toSearch, const XMLCh ch)
 {
     return XMLString::lastIndexOf(ch, toSearch, stringLen(toSearch));
+}
+
+inline unsigned int XMLString::hash(   const   XMLCh* const    tohash
+                                , const unsigned int    hashModulus
+                                , MemoryManager* const)
+{  
+    assert(hashModulus);
+
+    if (tohash == 0 || *tohash == 0)
+        return 0;
+
+    const XMLCh* curCh = tohash;
+    unsigned int hashVal = (unsigned int)(*curCh);
+    curCh++;
+
+    while (*curCh)
+    {
+        hashVal = (hashVal * 38) + (hashVal >> 24) + (unsigned int)(*curCh);
+        curCh++;
+    }
+
+    // Divide by modulus
+    return hashVal % hashModulus;
 }
 
 XERCES_CPP_NAMESPACE_END
