@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/08/21 15:57:51  tng
+ * Schema: Add isAllowedByWildcard.  Help from James Murphy.
+ *
  * Revision 1.5  2001/05/29 19:47:22  knoaman
  * Fix bug -  memory was not allocated before call to XMLString::subString
  *
@@ -81,12 +84,12 @@
 #include <validators/schema/ComplexTypeInfo.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 
-bool SubstitutionGroupComparator::isEquivalentTo(const QName& anElement
-                                               , const QName& exemplar)
+bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
+                                               , QName* const exemplar)
 {
 
-    if ((XMLString::compareString(anElement.getLocalPart(), exemplar.getLocalPart()) == 0) &&
-        (anElement.getURI() == exemplar.getURI()))
+    if ((XMLString::compareString(anElement->getLocalPart(), exemplar->getLocalPart()) == 0) &&
+        (anElement->getURI() == exemplar->getURI()))
         return true; // they're the same!
 
     if (!fGrammarResolver || !fStringPool )
@@ -94,12 +97,14 @@ bool SubstitutionGroupComparator::isEquivalentTo(const QName& anElement
         ThrowXML(RuntimeException, XMLExcepts::SubGrpComparator_NGR);
     }
 
-    unsigned int uriId = anElement.getURI();
-    if (uriId == XMLContentModel::gEOCFakeId || uriId == XMLContentModel::gEpsilonFakeId)
+    unsigned int uriId = anElement->getURI();
+    if (uriId == XMLContentModel::gEOCFakeId || 
+        uriId == XMLContentModel::gEpsilonFakeId ||
+        uriId == XMLElementDecl::fgPCDataElemId)
         return false;
 
     const XMLCh* uri = fStringPool->getValueForId(uriId);
-    const XMLCh* localpart = anElement.getLocalPart();
+    const XMLCh* localpart = anElement->getLocalPart();
 
     // In addition to simply trying to find a chain between anElement and exemplar,
     // we need to make sure that no steps in the chain are blocked.
@@ -133,7 +138,7 @@ bool SubstitutionGroupComparator::isEquivalentTo(const QName& anElement
         {
             if (commaAt > 0)
                  XMLString::subString(tmpURI, substitutionGroupFullName, 0, commaAt);
-           
+
             XMLString::subString(tmpLocalpart, substitutionGroupFullName, commaAt+1, XMLString::stringLen(substitutionGroupFullName));
         }
         else {
@@ -153,8 +158,8 @@ bool SubstitutionGroupComparator::isEquivalentTo(const QName& anElement
         if (!pElemDecl)
             return false;
 
-        if ((XMLString::compareString(tmpLocalpart, exemplar.getLocalPart()) == 0) &&
-            (uriId == exemplar.getURI()))
+        if ((XMLString::compareString(tmpLocalpart, exemplar->getLocalPart()) == 0) &&
+            (uriId == exemplar->getURI()))
         {
             // time to check for block value on element
             if((pElemDecl->getBlockSet() & SchemaSymbols::SUBSTITUTION) != 0)
@@ -203,6 +208,61 @@ bool SubstitutionGroupComparator::isEquivalentTo(const QName& anElement
 
     return true;
 }
+
+
+bool SubstitutionGroupComparator::isAllowedByWildcard(QName* const element, unsigned int wuri, bool wother)
+{
+    // whether the uri is allowed directly by the wildcard
+    unsigned int uriId = element->getURI();
+
+    if ((!wother && uriId == wuri) ||
+        (wother && uriId != wuri && uriId != XMLContentModel::gEOCFakeId && uriId != XMLContentModel::gEpsilonFakeId))
+    {
+        return true;
+    }
+
+    if (fGrammarResolver == 0 || fStringPool == 0)
+         ThrowXML(RuntimeException, XMLExcepts::SubGrpComparator_NGR);
+
+    // get the corresponding grammar
+    const XMLCh* uri = fStringPool->getValueForId(uriId);
+    if(uri == 0)
+        return false;
+
+    SchemaGrammar *sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uri);
+    if (!sGrammar || sGrammar->getGrammarType() == Grammar::DTDGrammarType)
+        return false;
+
+    if(sGrammar == 0)
+        return false;
+
+    // get all elements that can substitute the current element
+    RefHash2KeysTableOf<ElemVector>* theValidSubstitutionGroups = sGrammar->getValidSubstitutionGroups();
+
+    if (!theValidSubstitutionGroups)
+        return false;
+
+    RefVectorOf<SchemaElementDecl>* subsElements = theValidSubstitutionGroups->get(element->getLocalPart(), uriId);
+
+    if (!subsElements)
+        return false;
+
+    // then check whether there exists one element that is allowed by the wildcard
+    int size = subsElements->size();
+
+    for (int i = 0; i < size; i++)
+    {
+        unsigned int subUriId = subsElements->elementAt(i)->getElementName()->getURI();
+
+        if ((!wother && subUriId == wuri) ||
+            (wother && subUriId != wuri && subUriId != XMLContentModel::gEOCFakeId && subUriId != XMLContentModel::gEpsilonFakeId))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
   * End of file SubstitutionGroupComparator.cpp
   */

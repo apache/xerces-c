@@ -61,7 +61,6 @@
 #if !defined(SUBSTITUTIONGROUPCOMPARATOR_HPP)
 #define SUBSTITUTIONGROUPCOMPARATOR_HPP
 
-#include <framework/XMLErrorReporter.hpp>
 #include <util/StringPool.hpp>
 #include <util/QName.hpp>
 #include <validators/common/GrammarResolver.hpp>
@@ -70,10 +69,10 @@ class VALIDATORS_EXPORT SubstitutionGroupComparator
 {
 public:
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructor
     // -----------------------------------------------------------------------
-	/** @name Constructor. */
+    /** @name Constructor. */
     //@{
 
     SubstitutionGroupComparator(GrammarResolver*  const pGrammarResolver
@@ -85,12 +84,12 @@ public:
     // -----------------------------------------------------------------------
     //  Public Destructor
     // -----------------------------------------------------------------------
-	/** @name Destructor. */
+    /** @name Destructor. */
     //@{
 
     ~SubstitutionGroupComparator();
 
-	//@}
+    //@}
 
     // -----------------------------------------------------------------------
     // Validation methods
@@ -98,18 +97,28 @@ public:
     /** @name Validation Function */
     //@{
 
-     /**
+    /**
 	   * Checks that the "anElement" is within the subsitution group.
 	   *
 	   * @param  anElement   QName of the element
 	   *
 	   * @param  exeplar     QName of the head element in the group
 	   */
-
-     bool isEquivalentTo(const QName& anElement
-                       , const QName& exemplar);
+    bool isEquivalentTo(QName* const anElement
+                       , QName* const exemplar);
 	 //@}
 
+    /*
+     * check whether one element or any element in its substitution group
+     * is allowed by a given wildcard uri
+     *
+     * @param element  the QName of a given element
+     * @param wuri     the uri of the wildcard
+     * @param wother   whether the uri is from ##other, so wuri is excluded
+     *
+     * @return whether the element is allowed by the wildcard
+     */
+    bool isAllowedByWildcard(QName* const element, unsigned int wuri, bool wother);
 
 protected:
 
@@ -119,13 +128,11 @@ private:
     // -----------------------------------------------------------------------
     SubstitutionGroupComparator();
 
-
     // -----------------------------------------------------------------------
     //  Private data members
     //
     //
     // -----------------------------------------------------------------------
-
     GrammarResolver     *fGrammarResolver;
     XMLStringPool       *fStringPool;
 
