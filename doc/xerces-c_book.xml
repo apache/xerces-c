@@ -39,7 +39,6 @@
   <separator/>
 
   <document id="releases"    label="Releases"     source="releases.xml"/>
-  <document id="caveats"     label="Caveats"      source="caveats.xml"/>
   <document id="feedback"    label="Feedback"     source="feedback.xml"/>
 
   <separator/>
