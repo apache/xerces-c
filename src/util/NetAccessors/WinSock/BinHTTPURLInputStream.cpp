@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/10/25 16:26:39  tng
+ * [Bug 4213] BinHTTPURLInputStream initialisation not thread safe.  By Mark Weaver.
+ *
  * Revision 1.10  2001/10/25 16:10:46  tng
  * [Bug 4121] BinHTTPUrlInputStream needds to read entire HTTP header. By John Clayton.
  *
@@ -112,6 +115,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+
+#include <util/PlatformUtils.hpp>
 #include <util/XMLNetAccessor.hpp>
 #include <util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp>
 #include <util/XMLString.hpp>
@@ -134,12 +139,12 @@ LPFN_CLOSESOCKET gWSclosesocket = NULL;
 LPFN_WSACLEANUP gWSACleanup = NULL;
 
 bool BinHTTPURLInputStream::fInitialized = false;
+XMLMutex* BinHTTPURLInputStream::fInitMutex = 0;
 
 void BinHTTPURLInputStream::Initialize() {
     //
     // Initialize the WinSock library here.
     //
-	fInitialized = true;
     WORD        wVersionRequested;
     WSADATA     wsaData;
 
@@ -189,6 +194,7 @@ void BinHTTPURLInputStream::Initialize() {
         // Call WSAGetLastError() to get the last error.
         ThrowXML(NetAccessorException, XMLExcepts::NetAcc_InitFailed);
     }
+    fInitialized = true;
 }
 
 void BinHTTPURLInputStream::Cleanup() {
@@ -208,7 +214,9 @@ void BinHTTPURLInputStream::Cleanup() {
 		gWSshutdown = NULL;
 		gWSclosesocket = NULL;
 		FreeLibrary(gWinsockLib);
-		fInitialized = false;
+      fInitialized = false;
+      delete fInitMutex;
+      fInitMutex = 0;
 	}
 }
 
@@ -268,10 +276,23 @@ BinHTTPURLInputStream::BinHTTPURLInputStream(const XMLURL& urlSource)
       : fSocketHandle(0)
       , fBytesProcessed(0)
 {
-	if(!fInitialized)
-	{
-		Initialize();
-	}
+    if(!fInitialized)
+    {
+        if (!fInitMutex)
+        {
+            XMLMutex* tmpMutex = new XMLMutex;
+            if (XMLPlatformUtils::compareAndSwap((void**)&fInitMutex, tmpMutex, 0))
+            {
+                // Someone beat us to it, so let's clean up ours
+                delete tmpMutex;
+            }
+         }
+         XMLMutexLock lock(fInitMutex);
+         if (!fInitialized)
+         {
+             Initialize();
+         }
+    }
 
     //
     // Pull all of the parts of the URL out of th urlSource object, and transcode them

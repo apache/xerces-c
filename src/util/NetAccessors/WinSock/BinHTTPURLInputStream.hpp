@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/10/25 16:26:39  tng
+ * [Bug 4213] BinHTTPURLInputStream initialisation not thread safe.  By Mark Weaver.
+ *
  * Revision 1.4  2001/01/22 16:43:39  tng
  * Loads winsock dynamically.  Fixed by Curt Arnold.
  * Winsock2 is not initialized unless an http URL is used.    If an http
@@ -89,7 +92,7 @@
 #include <util/XMLURL.hpp>
 #include <util/XMLExceptMsgs.hpp>
 #include <util/BinInputStream.hpp>
-
+#include <util/Mutexes.hpp>
 
 
 //
@@ -140,7 +143,8 @@ private :
     char                fBuffer[4000];
     char *              fBufferEnd;
     char *              fBufferPos;
-	static bool         fInitialized;
+    static bool         fInitialized;
+    static XMLMutex*        fInitMutex;
 
 	static void Initialize();
 
