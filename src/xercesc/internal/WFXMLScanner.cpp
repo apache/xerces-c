@@ -757,6 +757,15 @@ void WFXMLScanner::scanDocTypeDecl()
 {
     // Just skips over it
     // REVISIT: Should we issue a warning
+    static const XMLCh doctypeIE[] =
+    {
+            chOpenSquare, chCloseAngle, chNull
+    };
+    XMLCh nextCh = fReaderMgr.skipUntilIn(doctypeIE);
+
+    if (nextCh == chOpenSquare)
+        fReaderMgr.skipPastChar(chCloseSquare);
+
     fReaderMgr.skipPastChar(chCloseAngle);
 }
 
