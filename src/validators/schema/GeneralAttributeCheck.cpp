@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/11/19 17:37:55  knoaman
+ * Use the instance of ID datatye validator directly.
+ *
  * Revision 1.12  2001/11/16 15:03:37  knoaman
  * Design change: GeneralAttributeCheck is not longer a singleton class.
  *
@@ -411,8 +414,6 @@ void GeneralAttributeCheck::setUpValidators() {
 
     fValidators[DT_AnyURI] =
         dvFactory.getDatatypeValidator(SchemaSymbols::fgDT_ANYURI);
-
-    fValidators[DT_ID] = &fIDValidator;
 
     // TO DO - add remaining valdiators
 }
@@ -1029,7 +1030,7 @@ void GeneralAttributeCheck::validate(const XMLCh* const attName,
         dv = fValidators[DT_AnyURI];
         break;
     case DT_ID:
-        dv = fValidators[DT_ID];
+        dv = &fIDValidator;
 
         if (!fIDRefList) {
 

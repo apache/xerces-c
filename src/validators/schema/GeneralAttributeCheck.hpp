@@ -239,7 +239,8 @@ private:
         DT_ProcessContents = -11,
         DT_Public = -12,
         DT_Use = -13,
-        DT_WhiteSpace = -14
+        DT_WhiteSpace = -14,
+        DT_ID = -15
     };
 
     // datatype validators
@@ -247,7 +248,6 @@ private:
         DT_String,
         DT_Token,
         DT_AnyURI,
-        DT_ID,
         DT_NonNegInt,
         DT_QName,
         DT_Boolean,
