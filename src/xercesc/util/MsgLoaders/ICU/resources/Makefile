@@ -18,7 +18,7 @@
 PKGNAME  = XercescErrMsg
 TARGETS  = $(PKGNAME)_root.res $(PKGNAME)_en.res  $(PKGNAME)_fr.res
 ICUDIR   = ../../../../../../../icu
-GENRB    = $(ICUDIR)/bin/genrb.exe
+GENRB    = $(ICUDIR)/bin/genrb
 GENRBOPT = -s. -d. --package-name $(PKGNAME)  
 
 all : $(TARGETS)
