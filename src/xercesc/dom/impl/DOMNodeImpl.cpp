@@ -63,18 +63,11 @@
 // The ParentNode subclass overrides this behavior.
 
 
+#include "DOMCasts.hpp"
+
 #include "DOMDocumentTypeImpl.hpp"
 #include "DOMElementImpl.hpp"
 #include "DOMAttrImpl.hpp"
-#include "DOMCasts.hpp"
-#include "DOMDocumentImpl.hpp"
-#include "DOMCDATASectionImpl.hpp"
-#include "DOMEntityReferenceImpl.hpp"
-#include "DOMEntityImpl.hpp"
-#include "DOMProcessingInstructionImpl.hpp"
-#include "DOMCommentImpl.hpp"
-#include "DOMDocumentFragmentImpl.hpp"
-#include "DOMNotationImpl.hpp"
 
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMException.hpp>
@@ -989,52 +982,24 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, unsigned int& rnBuf
     case DOMNode::DOCUMENT_FRAGMENT_NODE:
     {
 		DOMNode* current = thisNode->getFirstChild();
-		DOMNodeImpl* nodeImpl;
 
 		while (current != NULL) 
 		{
 			if (current->getNodeType() != DOMNode::COMMENT_NODE &&
 				current->getNodeType() != DOMNode::PROCESSING_INSTRUCTION_NODE)
 			{
-				switch (current->getNodeType())
-				{
-				case DOMNode::ELEMENT_NODE:
-					nodeImpl = &(((DOMElementImpl*)current)->fNode);
-				case DOMNode::ATTRIBUTE_NODE:       
-					nodeImpl = &(((DOMAttrImpl*)current)->fNode);
-				case DOMNode::TEXT_NODE:        
-					nodeImpl = &(((DOMTextImpl*)current)->fNode);
-				case DOMNode::CDATA_SECTION_NODE:
-					nodeImpl = &(((DOMCDATASectionImpl*)current)->fNode);
-				case DOMNode::ENTITY_REFERENCE_NODE:
-					nodeImpl = &(((DOMEntityReferenceImpl*)current)->fNode);
-				case DOMNode::ENTITY_NODE:
-					nodeImpl = &(((DOMEntityImpl*)current)->fNode);
-				case DOMNode::PROCESSING_INSTRUCTION_NODE:
-					nodeImpl = &(((DOMProcessingInstructionImpl*)current)->fNode);
-				case DOMNode::COMMENT_NODE:
-					nodeImpl = &(((DOMCommentImpl*)current)->fNode);
-				case DOMNode::DOCUMENT_NODE:        
-					nodeImpl = &(((DOMDocumentImpl*)current)->fNode);
-				case DOMNode::DOCUMENT_TYPE_NODE:
-					nodeImpl = &(((DOMDocumentTypeImpl*)current)->fNode);
-				case DOMNode::DOCUMENT_FRAGMENT_NODE:
-					nodeImpl = &(((DOMDocumentFragmentImpl*)current)->fNode);
-				case DOMNode::NOTATION_NODE:
-					nodeImpl = &(((DOMNotationImpl*)current)->fNode);
-				}
 
 				if (pzBuffer)
 				{
 					unsigned int nContentLength = nRemainingBuffer;
-					nodeImpl->getTextContent(pzBuffer + rnBufferLength, nContentLength);
+					castToNodeImpl(current)->getTextContent(pzBuffer + rnBufferLength, nContentLength);
 					rnBufferLength += nContentLength;
 					nRemainingBuffer -= nContentLength;
 				}
 				else 
 				{
 					unsigned int nContentLength = 0;
-					nodeImpl->getTextContent(NULL, nContentLength);
+					castToNodeImpl(current)->getTextContent(NULL, nContentLength);
 					rnBufferLength += nContentLength;
 				}
 			}
