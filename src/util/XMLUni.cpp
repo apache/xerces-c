@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/02/18 22:03:31  roddey
+ * One more tweak for EBCDIC encoding aliases.
+ *
  * Revision 1.9  2000/02/18 19:55:04  roddey
  * Added Windows-1252 as an intrinsic encoding.
  *
@@ -201,9 +204,10 @@ const XMLCh XMLUni::fgGlobalNSURIName[] =
     ,   chLatin_N, chLatin_S, chNull
 };
 
+
 const XMLCh XMLUni::fgIBM037EncodingString[] =
 {
-    chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chDash, chLatin_U, chLatin_S, chNull
+    chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chDash, chLatin_C, chLatin_P, chDash, chLatin_U, chLatin_S, chNull
 };
 
 const XMLCh XMLUni::fgIBM037EncodingString2[] =
@@ -223,7 +227,13 @@ const XMLCh XMLUni::fgIBM037EncodingString4[] =
 
 const XMLCh XMLUni::fgIBM037EncodingString5[] =
 {
-    chLatin_E, chLatin_B, chLatin_C, chLatin_D, chLatin_I, chLatin_C, chDash, chLatin_C, chLatin_P, chDash, chLatin_U, chLatin_S, chNull
+    chLatin_C, chLatin_P, chDigit_0, chDigit_3, chDigit_7, chNull
+};
+
+const XMLCh XMLUni::fgIBM037EncodingString6[] =
+{
+        chLatin_C, chLatin_S, chLatin_I, chLatin_B, chLatin_M, chDigit_0
+    ,   chDigit_3, chDigit_7, chNull
 };
 
 const XMLCh XMLUni::fgIBM1140EncodingString[] =

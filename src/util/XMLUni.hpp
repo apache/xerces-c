@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/02/18 22:03:31  roddey
+ * One more tweak for EBCDIC encoding aliases.
+ *
  * Revision 1.9  2000/02/18 19:55:04  roddey
  * Added Windows-1252 as an intrinsic encoding.
  *
@@ -249,6 +252,7 @@ public :
     static const XMLCh fgIBM037EncodingString3[];
     static const XMLCh fgIBM037EncodingString4[];
     static const XMLCh fgIBM037EncodingString5[];
+    static const XMLCh fgIBM037EncodingString6[];
     static const XMLCh fgIBM1140EncodingString[];
     static const XMLCh fgIBM1140EncodingString2[];
     static const XMLCh fgIESString[];
