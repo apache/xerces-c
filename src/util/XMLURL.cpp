@@ -945,6 +945,21 @@ void XMLURL::parse(const XMLCh* const urlText)
                 srcPtr += XMLString::stringLen(fHost);
             }
         }
+    } 
+    else 
+    {
+	    //
+	    // http protocol requires two forward slashes
+	    // we didn't get them, so throw an exception
+	    //
+	if (fProtocol == HTTP) {
+                ThrowXML1
+                (
+                    MalformedURLException
+                    , XMLExcepts::URL_ExpectingTwoSlashes
+                    , "Found 'http' protocol"
+                );
+	}
     }
 
     //
