@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/03/18 19:42:17  knoaman
+ * Schema Errata E2-18.
+ *
  * Revision 1.12  2003/02/26 16:14:27  peiyongz
  * Schema Errata E2-43: disallow trailing decimal point and a new pattern added
  * to the Integer definition.
@@ -239,11 +242,11 @@ const XMLCh fgLangPattern[] =
 };
 
 //E2-43
-//[+-]?[0-9]+
+//[+\-]?[0-9]+
 const XMLCh fgIntegerPattern[] =
 {
-    chOpenSquare,  chPlus,     chDash,  chCloseSquare, chQuestion,
-    chOpenSquare,  chDigit_0,  chDash,  chDigit_9,     chCloseSquare, chPlus, chNull
+    chOpenSquare, chPlus, chBackSlash, chDash, chCloseSquare, chQuestion,
+    chOpenSquare, chDigit_0, chDash, chDigit_9, chCloseSquare, chPlus, chNull
 };
 
 //"\\i\\c*"
