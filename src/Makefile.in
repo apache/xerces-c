@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.10  2000/01/12 20:31:31  aruna1
+# Msg Catalog support for AIX
+#
 # Revision 1.9  1999/12/23 01:43:01  aruna1
 # MsgCatalog support added for solaris
 #
@@ -285,6 +288,9 @@ endif
 	-${CP} -f ${XERCESCROOT}/lib/*.sl ${BINTARGETDIR}/lib
 ifeq (${MESSAGELOADER},ICONV)
 ifeq (${PLATFORM},SOLARIS)
+	-${CP} -f ${XERCESCROOT}/lib/msg/*.cat ${BINTARGETDIR}/lib/msg
+endif
+ifeq (${PLATFORM},AIX)
 	-${CP} -f ${XERCESCROOT}/lib/msg/*.cat ${BINTARGETDIR}/lib/msg
 endif
 endif
