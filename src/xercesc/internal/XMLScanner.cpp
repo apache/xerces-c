@@ -657,6 +657,7 @@ void XMLScanner::setParseSettings(XMLScanner* const refScanner)
     setNormalizeData(refScanner->getNormalizeData());
     setExternalSchemaLocation(refScanner->getExternalSchemaLocation());
     setExternalNoNamespaceSchemaLocation(refScanner->getExternalNoNamespaceSchemaLocation());
+    setValidationScheme(refScanner->getValidationScheme());
 }
 
 // ---------------------------------------------------------------------------
