@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:14  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/13 22:11:23  peiyongz
+ * Fix to Bug#9442
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:14  peiyongz
+ * sane_include
  *
  * Revision 1.7  2001/08/23 11:54:26  tng
  * Add newline at the end and various typo fixes.
@@ -200,7 +203,11 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
 	 * Any extraneous characters (including whitespace),
 	 * inclusive, will result in a NumberFormatException.
  */
+
 XMLBigInteger::XMLBigInteger(const XMLCh* const strValue)
+:fSign(0)
+,fMagnitude(0)
+,fRawData(0)
 {
     if (!strValue)
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
@@ -214,18 +221,25 @@ XMLBigInteger::XMLBigInteger(const XMLCh* const strValue)
         fMagnitude = XMLString::replicate(XMLUni::fgZeroLenString);
     else
         fMagnitude = XMLString::replicate(ret_value);
+   
+	fRawData = XMLString::replicate(strValue);
 
 }
 
 XMLBigInteger::~XMLBigInteger()
 {
     delete[] fMagnitude;
+	if (fRawData)
+		delete[] fRawData;
 }
 
 XMLBigInteger::XMLBigInteger(const XMLBigInteger& toCopy)
+:fSign(toCopy.fSign)
+,fMagnitude(0)
+,fRawData(0)
 {
-    setSign(toCopy.getSign());
     fMagnitude = XMLString::replicate(toCopy.fMagnitude);
+	fRawData = XMLString::replicate(toCopy.fRawData);
 }
 
 /**
@@ -324,33 +338,6 @@ void XMLBigInteger::divide(const unsigned int byteToShift)
 
     delete[] fMagnitude;
     fMagnitude = tmp;
-}
-
-//
-// The caller needs to de-allocate the memory allocated by this function
-// return buffer ALWAYS has a leading sign
-//
-XMLCh*  XMLBigInteger::toString() const
-{
-
-    if ( fSign == 0 )
-    {
-        XMLCh* retBuf = new XMLCh[3];
-        retBuf[0] = chPlus;
-        retBuf[1] = chDigit_0;
-        retBuf[2] = chNull;
-        return retBuf;
-    }
-
-    // Add the leading sign here
-    int strLen = XMLString::stringLen(fMagnitude);
-    XMLCh* retBuf = new XMLCh[strLen+2];
-
-    retBuf[0] = (fSign == 1) ? chPlus : chDash;
-    XMLString::moveChars(&(retBuf[1]), &(fMagnitude[0]), strLen);
-    retBuf[strLen+1] = chNull;
-
-    return retBuf;
 }
 
 //

@@ -139,16 +139,22 @@ private:
 	//  fScale
     //     the number of digits to the right of the decimal point
     //
+	//  fRawData
+	//     to preserve the original string used to construct this object, 
+	//     needed for pattern matching.
+	//
     // -----------------------------------------------------------------------
 
 	XMLBigInteger*   fIntVal;
 	unsigned int     fScale;
-
+    XMLCh*           fRawData;
 };
 
 inline XMLBigDecimal::~XMLBigDecimal()
 {
     delete fIntVal;
+	if (fRawData)
+		delete [] fRawData;
 }
 
 inline int XMLBigDecimal::getSign() const

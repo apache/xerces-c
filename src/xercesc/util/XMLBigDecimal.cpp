@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:14  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/13 22:11:23  peiyongz
+ * Fix to Bug#9442
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:14  peiyongz
+ * sane_include
  *
  * Revision 1.8  2001/08/08 18:33:44  peiyongz
  * fix: unresolved symbol warning for 'pow'.
@@ -115,6 +118,7 @@
 XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue)
 :fIntVal(0)
 ,fScale(0)
+,fRawData(0)
 {
     if (!strValue)
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
@@ -124,19 +128,23 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue)
 
     parseBigDecimal(strValue, ret_value, fScale);
     fIntVal = new XMLBigInteger(ret_value);
+	fRawData = XMLString::replicate(strValue);
 }
 
 XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy)
 :fIntVal(0)
 ,fScale(toCopy.getScale())
+,fRawData(0)
 {
     //invoke XMLBigInteger' copy ctor
     fIntVal = new XMLBigInteger(*(toCopy.getValue()));
+	fRawData = XMLString::replicate(toCopy.fRawData);
 }
 
 XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent)
 :fIntVal(0)
 ,fScale(toCopy.getScale())
+,fRawData(0)
 {
     //invoke XMLBigInteger' copy ctor
     fIntVal = new XMLBigInteger(*(toCopy.getValue()));
@@ -160,6 +168,17 @@ XMLBigDecimal::XMLBigDecimal(const XMLBigDecimal& toCopy, const int addExponent)
         fScale -= addExponent;    //increase scale
     }
 
+
+	// KNOWN defect
+	//   We need to adjust the decimal point with respect to the addExponent.
+    //
+	// REVISIT:
+	//   Since this ctor is only invoked by AbstractDoubleFloat::compareValues()
+	//   to generate temporaries for comparison and destructed after that,
+	//   no toString() would be applied to these temporaries, and therefore
+	//   this defect does NOT matter, for now.
+	//
+	fRawData = XMLString::replicate(toCopy.fRawData);
 }
 
 /***
@@ -333,43 +352,10 @@ void XMLBigDecimal::reScale(unsigned int newScale)
 }
 
 //
-// Add the decimal point as necessary
 // The caller needs to de-allocate the memory allocated by this function
-// Deallocate the memory allocated by XMLBigInteger
 //
 XMLCh*  XMLBigDecimal::toString() const
 {
-    // Retrieve a string (representing the value) from XMLBigInteger
-    // the returned buffer --ALWAYS-- contain a leading sign (+|-)
-    XMLCh* tmpBuf = fIntVal->toString();
-
-    // if no decimal point
-    if ( fScale == 0 )
-        return tmpBuf;
-
-    unsigned int strLen = XMLString::stringLen(tmpBuf);
-
-    //
-    // Sanity check here, internal error
-    // fScale = strLen -> .(+|-)1234 invalid
-    // for now, do not insert decimal point and return
-    //
-    if ( fScale >= strLen )
-        return tmpBuf;
-
-    // Add decimal point as needed
-    XMLCh* retBuf = new XMLCh[strLen+2];
-    XMLString::moveChars(&(retBuf[0]), &(tmpBuf[0]), strLen - fScale);
-    retBuf[strLen-fScale] = chPeriod;
-    XMLString::moveChars(&(retBuf[strLen-fScale+1]), &(tmpBuf[strLen-fScale]), fScale);
-    retBuf[strLen+1] = chNull;
-
-    // De-allocate the memory allocated by XMLBigInteger
-    delete[] tmpBuf;
-    return retBuf;
+    return XMLString::replicate(fRawData);
 }
-
-//
-//
-//
 

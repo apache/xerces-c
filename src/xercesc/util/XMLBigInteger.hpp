@@ -104,7 +104,7 @@ public:
      *  A leading sign is ALWAYS in place and the caller of this method
      *  is responsible for the de-allocation of the memory.
 	 */
-    XMLCh*      toString() const;
+    inline XMLCh*      toString() const;
 
 	/**
 	 * Compares this object to the specified object.
@@ -145,10 +145,15 @@ private:
 	//  fMagnitude
     //     the buffer holding the number.
     //
+	//  fRawData
+	//     to preserve the original string used to construct this object, 
+	//     needed for pattern matching.
+	//
     // -----------------------------------------------------------------------
 
     int         fSign;
 	XMLCh*      fMagnitude;  //null terminated
+	XMLCh*      fRawData;
 
 };
 
@@ -170,6 +175,14 @@ inline bool XMLBigInteger::operator==(const XMLBigInteger& toCompare) const
 inline void XMLBigInteger::setSign(int newSign)
 {
     fSign = newSign;
+}
+
+//
+// The caller needs to de-allocate the memory allocated by this function
+//
+inline XMLCh*  XMLBigInteger::toString() const
+{
+    return XMLString::replicate(fRawData);
 }
 
 #endif
