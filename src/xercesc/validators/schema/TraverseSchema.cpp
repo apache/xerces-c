@@ -2386,7 +2386,7 @@ QName* TraverseSchema::traverseElementDecl(const DOMElement* const elem,
                 , noErrorFound
             );
 
-            if (subsElemDecl && (subsElemDecl != elemDecl)) {
+            if (subsElemDecl) {
 
                 if (isSubstitutionGroupCircular(elemDecl, subsElemDecl)) {
                     reportSchemaError
@@ -7819,6 +7819,10 @@ void TraverseSchema::fixRedefinedSchema(const DOMElement* const elem,
 bool TraverseSchema::isSubstitutionGroupCircular(SchemaElementDecl* const elemDecl,
                                                  SchemaElementDecl* const subsElemDecl)
 {
+
+    if (elemDecl == subsElemDecl)
+        return true;
+
     SchemaElementDecl* tmpElemDecl = subsElemDecl->getSubstitutionGroupElem();
 
     while (tmpElemDecl)
