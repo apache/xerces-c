@@ -67,7 +67,7 @@ static const float gMaxFill = 0.8f;   // The maximum fraction of the total
 
 NodeIDMap::NodeIDMap(int initialSize) 
 {
-    for (fSizeIndex = 0; gPrimes[fSizeIndex] < initialSize; fSizeIndex++);
+    for (fSizeIndex = 0; gPrimes[fSizeIndex] < initialSize; fSizeIndex++)
     {
         if (gPrimes[fSizeIndex] == 0)
         {
