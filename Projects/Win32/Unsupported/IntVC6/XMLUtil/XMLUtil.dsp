@@ -157,7 +157,7 @@ SOURCE=..\..\..\..\..\src\util\XMLException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLIBM1047Transcoder.cpp
+SOURCE=..\..\..\..\..\src\util\XMLIBM1140Transcoder.cpp
 # End Source File
 # Begin Source File
 
@@ -369,7 +369,7 @@ SOURCE=..\..\..\..\..\src\util\XMLExceptMsgs.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLIBM1047Transcoder.hpp
+SOURCE=..\..\..\..\..\src\util\XMLIBM1140Transcoder.hpp
 # End Source File
 # Begin Source File
 
