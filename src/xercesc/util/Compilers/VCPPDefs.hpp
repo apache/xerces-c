@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/21 19:45:53  tng
+ * Define DOMSize_t and XMLSize_t
+ *
  * Revision 1.2  2002/04/17 20:30:01  tng
  * [Bug 7583] Build warnings with MS Visual Studio .NET.
  *
@@ -113,6 +116,8 @@
  *
  */
 
+#if !defined(VCPPDEFS_HPP)
+#define VCPPDEFS_HPP
 
 
 // ---------------------------------------------------------------------------
@@ -126,18 +131,19 @@
 
 
 // ---------------------------------------------------------------------------
+//  Indicate that we do not support native bools
+//  If the compiler can handle boolean itself, do not define it
+// ---------------------------------------------------------------------------
+// #define NO_NATIVE_BOOL
+
+
+// ---------------------------------------------------------------------------
 //  Each compiler might support L"" prefixed constants. There are places
 //  where it is advantageous to use the L"" where it supported, to avoid
-//  unnecessary transcoding. VC++ does support this, so we define this token.
+//  unnecessary transcoding.
 //  If your compiler does not support it, don't define this.
 // ---------------------------------------------------------------------------
 #define XML_LSTRSUPPORT
-
-
-// ---------------------------------------------------------------------------
-//  Indicate that we support native bools
-// ---------------------------------------------------------------------------
-// #define NO_NATIVE_BOOL
 
 
 // ---------------------------------------------------------------------------
@@ -146,7 +152,6 @@
 //  intrinsic type and is just mapped to unsigned short.
 // ---------------------------------------------------------------------------
 typedef unsigned short  XMLCh;
-typedef unsigned short  UTF16Ch;
 
 
 // ---------------------------------------------------------------------------
@@ -159,6 +164,16 @@ typedef unsigned int    XMLUInt32;
 //  Define signed 32 bits integers
 // ---------------------------------------------------------------------------
 typedef int             XMLInt32;
+
+// ---------------------------------------------------------------------------
+//  XMLSize_t and DOMSize_t are the unsigned integral type.
+// ---------------------------------------------------------------------------
+#ifdef _SIZE_T
+typedef size_t              XMLSize_t;
+#else
+typedef unsigned long       XMLSize_t;
+#endif
+typedef XMLSize_t           DOMSize_t;
 
 // ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment
@@ -181,15 +196,17 @@ const char* const Xerces_DLLName = "xerces-c_" Xerces_DLLVersionStr;
 #endif
 
 // ---------------------------------------------------------------------------
-//  For IDOM:
+//  For DOM:
 //  Bypass compiler warning:
 //    no matching operator delete found; memory will not be freed if initialization throws an exception
 // ---------------------------------------------------------------------------
 #if _MSC_VER >= 1200 /* VC++ 6.0 */
-class IDOM_Document;
-inline void operator delete(void* ptr, IDOM_Document *doc)
+class DOMDocument;
+inline void operator delete(void* ptr, DOMDocument *doc)
 {
     return;
 }
 #endif
+
+#endif //VCPPDEFS_HPP
 

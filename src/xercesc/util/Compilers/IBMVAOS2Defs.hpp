@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,16 @@
  * $Id$
  */
 
+#if !defined(IBMVAOS2DEFS_HPP)
+#define IBMVAOS2DEFS_HPP
+
+// ---------------------------------------------------------------------------
+//  Include some common headers that are needed product wide
+// ---------------------------------------------------------------------------
+#include <STRING.h>
+#include <FLOAT.h>
+#include <MEMORY.h>
+#include <BOOL.h>
 
 // ---------------------------------------------------------------------------
 //  A define in the build for each project is also used to control whether
@@ -67,7 +77,6 @@
 // ---------------------------------------------------------------------------
 #define PLATFORM_EXPORT     _Export
 #define PLATFORM_IMPORT
-#define XERCES_EXPORT
 
 // ---------------------------------------------------------------------------
 //  Supports L"" prefixed constants. There are places
@@ -78,10 +87,19 @@
 #define XML_LSTRSUPPORT
 
 // ---------------------------------------------------------------------------
-//  Indicate that we support native bools
+//  Indicate that we do not support native bools
+//  If the compiler can handle boolean itself, do not define it
 // ---------------------------------------------------------------------------
 // #define NO_NATIVE_BOOL
 
+
+// ---------------------------------------------------------------------------
+//  Each compiler might support L"" prefixed constants. There are places
+//  where it is advantageous to use the L"" where it supported, to avoid
+//  unnecessary transcoding.
+//  If your compiler does not support it, don't define this.
+// ---------------------------------------------------------------------------
+// #define XML_LSTRSUPPORT
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XMLCh.
@@ -101,6 +119,16 @@ typedef unsigned int   XMLUInt32;
 typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
+//  XMLSize_t and DOMSize_t are the unsigned integral type.
+// ---------------------------------------------------------------------------
+#ifdef _SIZE_T
+typedef size_t              XMLSize_t;
+#else
+typedef unsigned long       XMLSize_t;
+#endif
+typedef XMLSize_t           DOMSize_t;
+
+// ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment
 // ---------------------------------------------------------------------------
 #ifdef _DEBUG
@@ -115,10 +143,4 @@ typedef int             XMLInt32;
 const char* const Xerces_DLLName = "xerces-c";
 
 
-// ---------------------------------------------------------------------------
-//  Include some common headers that are needed product wide
-// ---------------------------------------------------------------------------
-#include <STRING.h>
-#include <FLOAT.h>
-#include <MEMORY.h>
-#include <BOOL.h>
+#endif //IBMVAOS2DEFS_HPP

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,16 +58,8 @@
  * $Id$
  */
 
-
-// ---------------------------------------------------------------------------
-// NOTE:
-//
-//    Xerces is not officially supported on Macintosh. This file was sent
-//    in by one of the Macintosh users and is included in the distribution
-//    just for convenience. Please send any defects / modification
-//    reports to xml4c@us.ibm.com
-// ---------------------------------------------------------------------------
-
+#if !defined(CODEWARRIORDEFS_HPP)
+#define CODEWARRIORDEFS_HPP
 
 
 // ---------------------------------------------------------------------------
@@ -81,9 +73,19 @@
 
 
 // ---------------------------------------------------------------------------
-//  Indicate that we support native bools
+//  Indicate that we do not support native bools
+//  If the compiler can handle boolean itself, do not define it
 // ---------------------------------------------------------------------------
 // #define NO_NATIVE_BOOL
+
+
+// ---------------------------------------------------------------------------
+//  Each compiler might support L"" prefixed constants. There are places
+//  where it is advantageous to use the L"" where it supported, to avoid
+//  unnecessary transcoding.
+//  If your compiler does not support it, don't define this.
+// ---------------------------------------------------------------------------
+// #define XML_LSTRSUPPORT
 
 
 // ---------------------------------------------------------------------------
@@ -105,6 +107,16 @@ typedef unsigned int    XMLUInt32;
 typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
+//  XMLSize_t and DOMSize_t are the unsigned integral type.
+// ---------------------------------------------------------------------------
+#ifdef _SIZE_T
+typedef size_t              XMLSize_t;
+#else
+typedef unsigned long       XMLSize_t;
+#endif
+typedef XMLSize_t           DOMSize_t;
+
+// ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment
 // ---------------------------------------------------------------------------
 #ifdef _DEBUG
@@ -124,3 +136,5 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 //  file is included into.
 // ---------------------------------------------------------------------------
 const char* const Xerces_DLLName = "xerces-c" Xerces_DLLVersionStr;
+
+#endif //CODEWARRIORDEFS_HPP

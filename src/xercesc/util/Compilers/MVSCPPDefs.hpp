@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:18  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/21 19:45:53  tng
+ * Define DOMSize_t and XMLSize_t
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:18  peiyongz
+ * sane_include
  *
  * Revision 1.8  2001/03/02 20:53:03  knoaman
  * Schema: Regular expression - misc. updates for error messages,
@@ -113,18 +116,19 @@
 #define PLATFORM_IMPORT _Export
 
 // ---------------------------------------------------------------------------
-//  Supports L"" prefixed constants. There are places
-//  where it is advantageous to use the L"" where it supported, to avoid
-//  unnecessary transcoding. c++ does support this, so we define this token.
-//  If your compiler does not support it, don't define this.
-// ---------------------------------------------------------------------------
-#define XML_LSTRSUPPORT
-
-// ---------------------------------------------------------------------------
-// Indicate that we do not support native bools
+//  Indicate that we do not support native bools
+//  If the compiler can handle boolean itself, do not define it
 // ---------------------------------------------------------------------------
 #define NO_NATIVE_BOOL
 
+
+// ---------------------------------------------------------------------------
+//  Each compiler might support L"" prefixed constants. There are places
+//  where it is advantageous to use the L"" where it supported, to avoid
+//  unnecessary transcoding.
+//  If your compiler does not support it, don't define this.
+// ---------------------------------------------------------------------------
+#define XML_LSTRSUPPORT
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
@@ -144,9 +148,19 @@ typedef unsigned int   XMLUInt32;
 typedef int            XMLInt32;
 
 // ---------------------------------------------------------------------------
+//  XMLSize_t and DOMSize_t are the unsigned integral type.
+// ---------------------------------------------------------------------------
+#ifdef _SIZE_T
+typedef size_t              XMLSize_t;
+#else
+typedef unsigned long       XMLSize_t;
+#endif
+typedef XMLSize_t           DOMSize_t;
+n
+// ---------------------------------------------------------------------------
 //  Force on the Xerces debug token if it was on in the build environment
 // ---------------------------------------------------------------------------
-#if 0
+#if defined(_DEBUG)
 #define XERCES_DEBUG
 #endif
 

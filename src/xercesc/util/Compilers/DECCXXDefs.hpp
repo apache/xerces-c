@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -68,6 +68,22 @@
 #define PLATFORM_IMPORT
 
 // ---------------------------------------------------------------------------
+//  Indicate that we do not support native bools
+//  If the compiler can handle boolean itself, do not define it
+// ---------------------------------------------------------------------------
+// #define NO_NATIVE_BOOL
+
+
+// ---------------------------------------------------------------------------
+//  Each compiler might support L"" prefixed constants. There are places
+//  where it is advantageous to use the L"" where it supported, to avoid
+//  unnecessary transcoding.
+//  If your compiler does not support it, don't define this.
+// ---------------------------------------------------------------------------
+// #define XML_LSTRSUPPORT
+
+
+// ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
 typedef unsigned short XMLCh;
@@ -84,11 +100,22 @@ typedef unsigned int    XMLUInt32;
 typedef int             XMLInt32;
 
 // ---------------------------------------------------------------------------
-//  Force on the XML4C debug token if it was on in the build environment
+//  XMLSize_t and DOMSize_t are the unsigned integral type.
 // ---------------------------------------------------------------------------
-#if 0
-#define XML4C_DEBUG
+#ifdef _SIZE_T
+typedef size_t              XMLSize_t;
+#else
+typedef unsigned long       XMLSize_t;
 #endif
+typedef XMLSize_t           DOMSize_t;
+
+// ---------------------------------------------------------------------------
+//  Force on the Xerces debug token if it was on in the build environment
+// ---------------------------------------------------------------------------
+#if defined(_DEBUG)
+#define XERCES_DEBUG
+#endif
+
 
 int stricmp(const char* const str1, const char* const  str2);
 int strnicmp(const char* const str1, const char* const  str2,
@@ -97,6 +124,6 @@ int strnicmp(const char* const str1, const char* const  str2,
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the CC version of the system.
 // ---------------------------------------------------------------------------
-const char* const XML4C_DLLName = "libxerces-c";
+const char* const Xerces_DLLName = "libxerces-c";
 
 #endif	// #if !defined(DECCXXDEFS_HPP)
