@@ -55,6 +55,13 @@
     </tr>
 
     <tr>
+        <td>2001-12-05</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 2752] Surrogate support incomplete.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-12-03</td>
         <td>Tinny Ng</td>
         <td>[Bug 5237] PATH_MAX undefined during build without threading support.
