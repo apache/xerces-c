@@ -56,6 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.15  2002/11/05 21:40:36  tng
+ * Oasis test fix:
+ * 1.  Should check if content model allow character for CDataSection case
+ * 2. Should check partial markup in entity for INCLUDE and IGNORE scenario
+ * 3. If standalone is yes, reference to entity where its declaration is external is a well-formness fatal error (XML 1.0 Section 4.1)
+ * If standalone is yes, reference to parameter entity where is declaration is external is a validity constraint (XML 1.0 Section 2.9)
+ * 4.  XML 1.0 Section 2.8 Partial markup in parameter entity reference.
+ * If it is a complete declaration, partial markup is a fatal error.
+ *
  * Revision 1.14  2002/11/04 14:50:40  tng
  * C++ Namespace Support.
  *
@@ -360,11 +369,12 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
     }
 
     //
+    // XML 1.0 Section 2.9
     //  If we are a standalone document, then it has to have been declared
     //  in the internal subset. Keep going though.
     //
     if (fScanner->getDoValidation() && fScanner->getStandalone() && !decl->getDeclaredInIntSubset())
-        fScanner->getValidator()->emitError(XMLValid::IllegalRefInStandalone, bbName.getRawBuffer());
+        fScanner->getValidator()->emitError(XMLValid::VC_IllegalRefInStandalone, bbName.getRawBuffer());
 
     //
     //  Okee dokee, we found it. So create either a memory stream with
@@ -1975,11 +1985,12 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
 
 
     //
+    // XML 1.0 Section 4.1
     //  If we are a standalone document, then it has to have been declared
-    //  in the internal subset. Keep going though.
+    //  in the internal subset.
     //
-    if (fScanner->getDoValidation() && fScanner->getStandalone() && !decl->getDeclaredInIntSubset())
-        fScanner->getValidator()->emitError(XMLValid::IllegalRefInStandalone, bbName.getRawBuffer());
+    if (fScanner->getStandalone() && !decl->getDeclaredInIntSubset())
+        fScanner->emitError(XMLErrs::IllegalRefInStandalone, bbName.getRawBuffer());
 
     //
     //  If its a special char reference, then its escaped and we can return
@@ -2502,7 +2513,9 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
             if (nextCh == chOpenAngle)
             {
                 // Get the reader we started this on
+                // XML 1.0 P28a Well-formedness constraint: PE Between Declarations
                 const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+                bool wasInPE = (fReaderMgr->getCurrentReader()->getType() == XMLReader::Type_PE);
 
                 //
                 //  Now scan the markup. Set the flag so that we will know that
@@ -2517,8 +2530,12 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
                 //  And see if we got back to the same level. If not, then its
                 //  a partial markup error.
                 //
-                if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getDoValidation())
-                    fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+                if (fReaderMgr->getCurrentReaderNum() != orgReader){
+                    if (wasInPE)
+                        fScanner->emitError(XMLErrs::PEBetweenDecl);
+                    else if (fScanner->getDoValidation())
+                        fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+                }
 
             }
              else if (XMLReader::isWhitespace(nextCh))
@@ -2902,16 +2919,22 @@ bool DTDScanner::scanInternalSubset()
         }
          else if (nextCh == chOpenAngle)
         {
-            // Remember this reader before we start the scan
+            // Remember this reader before we start the scan, for checking
+            // XML 1.0 P28a Well-formedness constraint: PE Between Declarations
             const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+            bool wasInPE = (fReaderMgr->getCurrentReader()->getType() == XMLReader::Type_PE);
 
             // And scan this markup
             fReaderMgr->getNextChar();
             scanMarkupDecl(false);
 
             // If we did not get back to entry level, then partial markup
-            if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getDoValidation())
-                fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+            if (fReaderMgr->getCurrentReaderNum() != orgReader) {
+                if (wasInPE)
+                    fScanner->emitError(XMLErrs::PEBetweenDecl);
+                else if (fScanner->getDoValidation())
+                    fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+            }
         }
          else if (XMLReader::isWhitespace(nextCh))
         {
@@ -3033,6 +3056,9 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
                 if (!fReaderMgr->skippedChar(chOpenSquare))
                     fScanner->emitError(XMLErrs::ExpectedINCLUDEBracket);
 
+                // Get the reader we started this on
+                const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+
                 checkForPERef(false, false, true);
 
                 //
@@ -3040,6 +3066,14 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
                 //  in an include section.
                 //
                 scanExtSubsetDecl(true);
+
+                //
+                //  And see if we got back to the same level. If not, then its
+                //  a partial markup error.
+                //
+                if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getDoValidation())
+                    fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+
             }
              else if (fReaderMgr->skippedString(XMLUni::fgIgnoreString))
             {
@@ -3049,8 +3083,19 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
                 if (!fReaderMgr->skippedChar(chOpenSquare))
                     fScanner->emitError(XMLErrs::ExpectedINCLUDEBracket);
 
+                // Get the reader we started this on
+                const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
+
                 // And scan over the ignored part
                 scanIgnoredSection();
+
+                //
+                //  And see if we got back to the same level. If not, then its
+                //  a partial markup error.
+                //
+                if (fReaderMgr->getCurrentReaderNum() != orgReader && fScanner->getDoValidation())
+                    fScanner->getValidator()->emitError(XMLValid::PartialMarkupInPE);
+
             }
              else
             {
