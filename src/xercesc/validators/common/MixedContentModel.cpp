@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/08/11 21:08:31  knoaman
+ * Fixing Xerces-C crash when creating a MixedContentModel. Patch by  Andrew Fang.
+ *
  * Revision 1.10  2004/01/29 11:51:21  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -210,13 +213,16 @@ MixedContentModel::MixedContentModel(const bool             dtd
         fCount * sizeof(ContentSpecNode::NodeTypes)
     ); //new ContentSpecNode::NodeTypes[fCount];
     for (unsigned int index = 0; index < fCount; index++) {
-        fChildren[index] = children.elementAt(index);
+        fChildren[index] = new (fMemoryManager) QName(*children.elementAt(index));
         fChildTypes[index] = childTypes.elementAt(index);
     }
 }
 
 MixedContentModel::~MixedContentModel()
 {
+    for (unsigned int index = 0; index < fCount; index++) {
+        delete fChildren[index];
+    }
     fMemoryManager->deallocate(fChildren); //delete [] fChildren;
     fMemoryManager->deallocate(fChildTypes); //delete [] fChildTypes;
 }
