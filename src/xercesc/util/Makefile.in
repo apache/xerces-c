@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.18  2002/11/13 12:43:05  tng
+# DOM Message: new file XMLDOMMsg.hpp
+#
 # Revision 1.17  2002/11/07 22:37:14  peiyongz
 # build -miconv on hpux and linux
 #
@@ -447,6 +450,7 @@ UTIL_CPP_PUBHEADERS = \
     XMLBigDecimal.hpp \
     XMLBigInteger.hpp \
     XMLAbstractDoubleFloat.hpp \
+    XMLDOMMsg.hpp \
     XMLDouble.hpp \
     XMLDateTime.hpp \
     XMLChTranscoder.hpp \

@@ -373,6 +373,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDeleterFor.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDOMMsg.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLDouble.cpp">
 			</File>
 			<File

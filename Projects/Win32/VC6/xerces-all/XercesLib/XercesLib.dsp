@@ -791,6 +791,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLDeleterFor.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLDOMMsg.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLDouble.cpp
 # End Source File
 # Begin Source File
