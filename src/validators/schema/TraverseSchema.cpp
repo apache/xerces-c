@@ -3566,7 +3566,7 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
                 }
             }
 
-            if (!fAttGroupRegistry->containsKey(typeName)) {
+            if (!typeName || !fAttGroupRegistry->containsKey(typeName)) {
                 traverseAttributeGroupDecl(child, 0);
             }
         }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/08/28 20:43:52  knoaman
+ * Fix for content spec node adoption.
+ *
  * Revision 1.15  2001/08/27 23:04:02  knoaman
  * Handle deletion of spec node tree created during UPA checking.
  *
@@ -353,8 +356,12 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
     else {
         specNode = convertContentSpecTree(fContentSpec, fAdoptContentSpec, checkUPA);
         if (specNode != fContentSpec) {
+            if (specNode == fContentSpec->getFirst() && !fAdoptContentSpec)
+                fAdoptContentSpec = false;
+            else
+                fAdoptContentSpec = true;
+
             fContentSpec = specNode;
-            fAdoptContentSpec = true;
         }
     }
 
@@ -427,18 +434,20 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
     else if (isMixed)
     {
         ContentSpecNode* rightNode = specNode->getSecond();
-        ContentSpecNode::NodeTypes rightType = rightNode->getType();        
+        if (rightNode) {
+            ContentSpecNode::NodeTypes rightType = rightNode->getType();
 
-        if (rightType == ContentSpecNode::All) {
-            // All the nodes under an ALL must be additional ALL nodes and
-            // ELEMENTs (or ELEMENTs under ZERO_OR_ONE nodes.)
-            // We collapse the ELEMENTs into a single vector.
-            return new AllContentModel(rightNode, true);
-        }
-        else if (rightType == ContentSpecNode::ZeroOrOne) {
-            // An ALL node can appear under a ZERO_OR_ONE node.
-            if (rightNode->getFirst()->getType() == ContentSpecNode::All) {
-                return new AllContentModel(rightNode->getFirst(), true);
+            if (rightType == ContentSpecNode::All) {
+                // All the nodes under an ALL must be additional ALL nodes and
+                // ELEMENTs (or ELEMENTs under ZERO_OR_ONE nodes.)
+                // We collapse the ELEMENTs into a single vector.
+                return new AllContentModel(rightNode, true);
+            }
+            else if (rightType == ContentSpecNode::ZeroOrOne) {
+                // An ALL node can appear under a ZERO_OR_ONE node.
+                if (rightNode->getFirst()->getType() == ContentSpecNode::All) {
+                    return new AllContentModel(rightNode->getFirst(), true);
+                }
             }
         }
         // otherwise, let fall through to build a DFAContentModel
@@ -539,38 +548,50 @@ ContentSpecNode* ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const 
         ||   (curType == ContentSpecNode::All)
         ||   (curType == ContentSpecNode::Sequence))
     {
-        bool toAdoptLeft = curNode->isFirstAdopted();
+        bool toAdoptLeft = toAdoptSpecNode? curNode->isFirstAdopted() : false;
         ContentSpecNode* leftNode = convertContentSpecTree(curNode->getFirst(), toAdoptLeft, checkUPA);
         ContentSpecNode* rightNode = curNode->getSecond();
-       
+
         if (leftNode != curNode->getFirst()) {
+            if (leftNode == curNode->getFirst()->getFirst() && !curNode->isFirstAdopted())
+                toAdoptLeft = false;
+            else
+                toAdoptLeft = true;
 
             curNode->setAdoptFirst(false);
             curNode->setFirst(leftNode);
-            toAdoptLeft = true;
+
+            if (rightNode) {
+                curNode->setAdoptFirst(toAdoptLeft);
+            }
         }
 
         if (!rightNode) {
 
-            retNode = expandContentModel(leftNode, minOccurs, maxOccurs, toAdoptLeft);
-            
             if (toAdoptSpecNode) {
-
+                retNode = expandContentModel(leftNode, minOccurs, maxOccurs, toAdoptLeft);
                 curNode->setAdoptFirst(false);				
                 delete curNode;
+            }
+            else {
+                retNode = expandContentModel(leftNode, minOccurs, maxOccurs, false);
             }
 
             return retNode;
         }
 
-        curNode->setAdoptFirst(toAdoptLeft);
+        bool toAdoptRight = toAdoptSpecNode? curNode->isSecondAdopted() : false;
+        rightNode =  convertContentSpecTree(curNode->getSecond(), toAdoptRight, checkUPA);
 
-        rightNode =  convertContentSpecTree(curNode->getSecond(), curNode->isSecondAdopted(), checkUPA);
         if (rightNode != curNode->getSecond()) {
 
             curNode->setAdoptSecond(false);
             curNode->setSecond(rightNode);
-            curNode->setAdoptSecond(true);
+
+            if (rightNode == curNode->getSecond()->getFirst() && !curNode->isSecondAdopted())
+                curNode->setAdoptSecond(false);
+            else
+                curNode->setAdoptSecond(true);
         }
 
         retNode =  expandContentModel(curNode, minOccurs, maxOccurs, toAdoptSpecNode);
