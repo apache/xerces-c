@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/04/12 18:42:15  roddey
+ * Improved docs in terms of what 'max chars' means in the method
+ * parameters.
+ *
  * Revision 1.12  2000/04/06 19:42:51  rahulj
  * Clarified how big the target buffer should be in the API
  * documentation.
@@ -136,8 +140,9 @@ public:
       *
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should atleast be 'maxChars + 1'.
-      * @param maxChars The maximum number of charcters to convert
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
       * will be done
       */
@@ -153,8 +158,9 @@ public:
       *
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should atleast be 'maxChars + 1'.
-      * @param maxChars The maximum number of charcters to convert
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
       * will be done
       */
@@ -170,8 +176,9 @@ public:
       *
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should atleast be 'maxChars + 1'.
-      * @param maxChars The maximum number of charcters to convert
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
       * will be done
       */
@@ -187,8 +194,9 @@ public:
       *
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should atleast be 'maxChars + 1'.
-      * @param maxChars The maximum number of charcters to convert
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
       * will be done
       */
@@ -204,8 +212,9 @@ public:
       *
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should atleast be 'maxChars + 1'.
-      * @param maxChars The maximum number of charcters to convert
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
       * will be done
       */
@@ -221,8 +230,9 @@ public:
       *
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should atleast be 'maxChars + 1'.
-      * @param maxChars The maximum number of charcters to convert
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
       * will be done
       */
@@ -238,8 +248,9 @@ public:
       *
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should atleast be 'maxChars + 1'.
-      * @param maxChars The maximum number of charcters to convert
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
       * will be done
       */
@@ -255,8 +266,9 @@ public:
       *
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should atleast be 'maxChars + 1'.
-      * @param maxChars The maximum number of charcters to convert
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
       * @param radix The radix of the input data, based on which the conversion
       * will be done
       */
@@ -794,6 +806,10 @@ public:
     );
 
     /** Transcodes a string to native code-page
+      *
+      * NOTE: The returned buffer is dynamically allocated and is the 
+      * responsibility of the caller to delete it when not longer needed.
+      *
       * @param toTranscode The string to be transcoded
       * @return Returns the transcoded string
       */
@@ -803,10 +819,19 @@ public:
     );
 
     /** Transcodes a string to native code-page
+      *
+      * Be aware that when transcoding to an external encoding, that each
+      * Unicode char can create multiple output bytes. So you cannot assume
+      * a one to one correspondence of input chars to output bytes.
+      *
       * @param toTranscode The string tobe transcoded
       * @param toFill The buffer that is filled with the transcoded value.
       *        The size of this buffer should atleast be 'maxChars + 1'.
-      * @param maxChars The maximum number of characters to transcode
+      * @param maxChars The maximum number of bytes that the output
+      *         buffer can hold (not including the null, which is why
+      *         toFill should be at least maxChars+1.) If the resulting
+      *         output cannot fit into this many bytes, it is an error and
+      *         false is returned.
       * @return Returns true if successful, false if there was an error
       */
     static bool transcode
@@ -817,6 +842,10 @@ public:
     );
 
     /** Transcodes a string to native code-page
+      *
+      * NOTE: The returned buffer is dynamically allocated and is the 
+      * responsibility of the caller to delete it when not longer needed.
+      *
       * @param toTranscode The string to be transcoded
       * @return Returns the transcoded string
       */
@@ -829,7 +858,11 @@ public:
       * @param toTranscode The string tobe transcoded
       * @param toFill The buffer that is filled with the transcoded value.
       *        The size of this buffer should atleast be 'maxChars + 1'.
-      * @param maxChars The maximum number of characters to transcode
+      * @param maxChars The maximum number of characters that the output
+      *         buffer can hold (not including the null, which is why
+      *         toFill should be at least maxChars+1.) If the resulting
+      *         output cannot fit into this many characters, it is an error
+      *         and false is returned.
       * @return Returns true if successful, false if there was an error
       */
     static bool transcode
@@ -874,8 +907,9 @@ public:
       * @param errText The text (NULL terminated) where the replacement
       *        is to be done. The size of this buffer should be
       *        'maxChars + 1' to account for the final NULL.
-      * @param maxChars The maximum length that 'errText' can have after
-      *        token replacement.
+      * @param maxChars The size of the output buffer, i.e. the maximum
+      *         number of characters that it will hold. If the result is
+      *         larger, it will be truncated.
       * @param text1 Replacement text-one
       * @param text2 Replacement text-two
       * @param text3 Replacement text-three
