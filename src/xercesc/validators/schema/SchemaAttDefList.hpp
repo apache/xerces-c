@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/12/16 03:21:24  cargilld
+ * Performance fix from David Bertoni.  Remove virtual so function gets inlined.
+ *
  * Revision 1.9  2004/09/10 18:42:06  cargilld
  * Performance improvement fix to more efficiently findattdef.  Fix from Dave Bertoni.
  *
@@ -119,13 +122,13 @@ public :
         , const XMLCh* const        attName
     )   const;
 
-    virtual XMLAttDef* findAttDefLocalPart
+    XMLAttDef* findAttDefLocalPart
     (
         const   unsigned long       uriID
         , const XMLCh* const        attLocalPart
     );
 
-    virtual const XMLAttDef* findAttDefLocalPart
+    const XMLAttDef* findAttDefLocalPart
     (
         const   unsigned long       uriID
         , const XMLCh* const        attLocalPart
