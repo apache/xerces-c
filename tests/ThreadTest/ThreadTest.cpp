@@ -71,6 +71,8 @@
 
 #include <xercesc/dom/DOM.hpp>
 
+#include <xercesc/framework/StdOutFormatTarget.hpp>
+
 XERCES_CPP_NAMESPACE_USE
 
 void clearFileInfoMemory();
@@ -306,7 +308,6 @@ public:                               //  This is the API used by the rest of th
                                       //  for DOM, re-walk the tree.
                                       //  for SAX, can't do, just return previous value.
 
-    void domPrint(const DOMNode *node); // Dump out the contents of a node,
     void domPrint();                  //   including any children.  Default (no param)
                                        //   version dumps the entire document.
 
@@ -596,7 +597,23 @@ void ThreadParser::domPrint()
 {
     printf("Begin DOMPrint ...\n");
     if (gRunInfo.dom)
-        domPrint(fXercesDOMParser->getDocument());
+    {
+        try
+        {
+            XMLCh tempStr[100];
+            XMLString::transcode("LS", tempStr, 99);
+            DOMImplementation *impl          = DOMImplementationRegistry::getDOMImplementation(tempStr);
+            DOMWriter         *theSerializer = ((DOMImplementationLS*)impl)->createDOMWriter();
+            XMLFormatTarget   *myFormTarget  = new StdOutFormatTarget();
+            DOMNode           *doc           = fXercesDOMParser->getDocument();
+            theSerializer->writeNode(myFormTarget, *doc);
+            delete theSerializer;
+        }
+        catch (...)
+        {
+            // do nothing
+        }
+    }
     printf("End DOMPrint\n");
 }
 
@@ -606,70 +623,6 @@ static void printString(const XMLCh *str)
     printf("%s", s);
     delete s;
 }
-
-
-void ThreadParser::domPrint(const DOMNode *node)
-{
-
-    DOMNode          *child;
-    DOMNamedNodeMap  *attributes;
-
-    switch (node->getNodeType() )
-    {
-    case DOMNode::ELEMENT_NODE:
-        {
-            printf("<");
-            printString(node->getNodeName());   // the element name
-
-            attributes = node->getAttributes();  // Element's attributes
-            int numAttributes = attributes->getLength();
-            int i;
-            for (i=0; i<numAttributes; i++) {
-                domPrint(attributes->item(i));
-            }
-            printf(">");
-
-            for (child=node->getFirstChild(); child!=0; child=child->getNextSibling())
-                domPrint(child);
-
-            printf("</");
-            printString(node->getNodeName());
-            printf(">");
-            break;
-        }
-
-
-    case DOMNode::ATTRIBUTE_NODE:
-        {
-            printf(" ");
-            printString(node->getNodeName());   // The attribute name
-            printf("= \"");
-            printString(node->getNodeValue());  // The attribute value
-            printf("\"");
-            break;
-        }
-
-
-    case DOMNode::TEXT_NODE:
-    case DOMNode::CDATA_SECTION_NODE:
-        {
-            printString(node->getNodeValue());
-            break;
-        }
-
-    case DOMNode::ENTITY_REFERENCE_NODE:
-    case DOMNode::DOCUMENT_NODE:
-        {
-            // For entity references and the document, nothing is dirctly
-            //  printed, but we do want to process the chidren nodes.
-            //
-            for (child=node->getFirstChild(); child!=0; child=child->getNextSibling())
-                domPrint(child);
-            break;
-        }
-    }
-}
-
 
 //----------------------------------------------------------------------
 //
@@ -727,9 +680,6 @@ void parseCommandLine(int argc, char **argv)
                 }
                 else
                     throw 1;
-            }
-            else if (strcmp(argv[argnum], "-dom") == 0) {
-                gRunInfo.dom = true;
             }
             else if (strcmp(argv[argnum], "-reuse") == 0)
                 gRunInfo.reuseParser = true;
