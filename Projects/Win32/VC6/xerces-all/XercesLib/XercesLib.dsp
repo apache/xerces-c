@@ -151,17 +151,7 @@ SOURCE=..\..\..\..\..\src\util\Transcoders\Win32\Win32TransService2.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp
-
-!IF  "$(CFG)" == "XercesLib - Win32 Release"
-
 # ADD CPP /Ze
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
-
-# ADD CPP /Ze
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
@@ -170,17 +160,7 @@ SOURCE=..\..\..\..\..\src\util\NetAccessors\WinSock\BinHTTPURLInputStream.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\NetAccessors\WinSock\WinSockNetAccessor.cpp
-
-!IF  "$(CFG)" == "XercesLib - Win32 Release"
-
 # ADD CPP /Ze
-
-!ELSEIF  "$(CFG)" == "XercesLib - Win32 Debug"
-
-# ADD CPP /Ze
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
@@ -529,6 +509,10 @@ SOURCE=..\..\..\..\..\src\framework\LocalFileInputSource.Hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\framework\Makefile.in
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\framework\MemBufInputSource.cpp
 # End Source File
 # Begin Source File
@@ -625,11 +609,27 @@ SOURCE=..\..\..\..\..\src\framework\XMLErrorCodes.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\framework\XMLErrorReporter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\XMLFormatter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\XMLFormatter.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\framework\XMLNotationDecl.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\framework\XMLNotationDecl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\XMLPScanToken.hpp
 # End Source File
 # Begin Source File
 
@@ -650,6 +650,10 @@ SOURCE=..\..\..\..\..\src\framework\XMLValidator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\framework\XMLValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\XMLValidityCodes.hpp
 # End Source File
 # End Group
 # Begin Group "internal"
