@@ -70,6 +70,7 @@ PLATFORM = @platform@
 COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
+LDFLAGS = @ldflags@
 PREFIX = @prefix@
 
 include ../../version.incl

@@ -1333,7 +1333,7 @@ cxxflags=${CXXFLAGS}
 
 
 cflags=${CFLAGS}
-
+ldflags=${LDFLAGS}
 
 trap '' 1 2 15
 cat > confcache <<\EOF
@@ -1509,6 +1509,7 @@ s%@platform@%$platform%g
 s%@compiler@%$compiler%g
 s%@cxxflags@%$cxxflags%g
 s%@cflags@%$cflags%g
+s%@ldflags@%$ldflags%g
 
 CEOF
 EOF

@@ -137,6 +137,9 @@ for i in $*
    -z)
         compileroptions="$compileroptions $2"; shift 2;;
 
+   -l)  
+        linkeroptions=$2; shift 2;;
+
    -h)
         usage
         exit ${ERROR_EXIT_CODE};;
@@ -217,6 +220,7 @@ esac
 # Set the extra C and C++ compiler flags
 CXXFLAGS="$compileroptions $debugflag $compileroption"; export CXXFLAGS
 CFLAGS="$compileroptions $debugflag $compileroption"; export CFLAGS
+LDFLAGS="$linkeroptions"; export LDFLAGS
 
 echo
 rm -f config.cache

@@ -423,6 +423,9 @@ export CXXFLAGS
 CFLAGS="$compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
 export CFLAGS
 
+LDFLAGS="$linkeroptions"
+export LDFLAGS
+
 LIBS="$transcodingLibs $threadingLibs $netaccessorLibs"
 export LIBS
 
@@ -448,6 +451,7 @@ echo export CC=\"$CC\"
 echo export CXX=\"$CXX\"
 echo export CXXFLAGS=\"$CXXFLAGS\"
 echo export CFLAGS=\"$CFLAGS\"
+echo export LDFLAGS=\"$LDFLAGS\"
 echo export LIBS=\"$LIBS\"
 echo export NETACCESSOR=\"$NETACCESSOR\"
 echo configure $configureoptions

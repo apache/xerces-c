@@ -110,8 +110,8 @@ RM2 = rm -f
 ifeq (${PLATFORM}, SOLARIS)
   ifeq (${CXX}, g++)
     PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
-    MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
-    MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -shared ${LDFLAGS}
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared ${LDFLAGS}
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
                   -licu-uc -licudata -lm -lgen
@@ -122,8 +122,8 @@ ifeq (${PLATFORM}, SOLARIS)
   else
 	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -ptr$(XML_OBJ_DIR) \
                                -features=rtti -D${PLATFORM} -D_REENTRANT
-	MAKE_SHARED = ${CXX} -D${PLATFORM} -G -ptr$(XML_OBJ_DIR)
-    MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
+ MAKE_SHARED = ${CXX} -D${PLATFORM} -G -ptr$(XML_OBJ_DIR) ${LDFLAGS}
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
                   -licu-uc -licudata -lc -lgen

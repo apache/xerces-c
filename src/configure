@@ -1337,7 +1337,7 @@ cppflags=${CPPFLAGS}
 cflags=${CFLAGS}
 
 
-ldflags=${LDCFLAGS}
+ldflags=${LDFLAGS}
 
 
 libs=${LIBS}
