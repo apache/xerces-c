@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/10/09 12:20:25  tng
+ * Leak fix: Need to delete fMatch if adopted.
+ *
  * Revision 1.4  2001/05/11 21:50:58  knoaman
  * Schema updates and fixes.
  *
@@ -155,6 +158,8 @@ void RegularExpression::Context::reset(const XMLCh* const string
 	fLimit = limit;
 	fLength = fLimit - fStart;
 	fInUse = true;
+	if (fAdoptMatch)
+		delete fMatch;
 	fMatch = 0;
 
 	if (fOffsets == 0 || fSize != noClosures) {
@@ -439,6 +444,8 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 		adoptMatch = true;
 	}
 
+	if (context->fAdoptMatch)
+		delete context->fMatch;
     context->fMatch = lMatch;
 	context->fAdoptMatch = adoptMatch;
 
@@ -1302,3 +1309,4 @@ unsigned short RegularExpression::getCharType(const XMLCh ch) {
 /**
   *	End of file RegularExpression.cpp
   */
+
