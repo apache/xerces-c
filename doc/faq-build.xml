@@ -3,9 +3,9 @@
 
 <faqs title="Building / Running FAQs">
 
-  <faq title="Why do I get compilation error saying undeclared identifier or class undedined?">
+  <faq title="Why do I get compilation error saying undeclared identifier or class undefined?">
 
-    <q>Why do I get compilation error saying undeclared identifier or class undedined?</q>
+    <q>Why do I get compilation error saying undeclared identifier or class undefined?</q>
 
     <a>
 
