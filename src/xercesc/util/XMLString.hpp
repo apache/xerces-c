@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/10/01 19:45:22  tng
+ * Performance in XMLString::equals, only need to check one string for null as they are equal already.
+ *
  * Revision 1.5  2002/09/24 19:41:21  tng
  * New inline function equals that is modified from compareString but simply return true or false.
  *
@@ -1468,7 +1471,7 @@ inline bool XMLString::equals(   const   XMLCh* const    str1
     while (*psz1 == *psz2)
     {
         // If either has ended, then they both ended, so equal
-        if (!*psz1 || !*psz2)
+        if (!*psz1)
             return true;
 
         // Move upwards for the next round
