@@ -534,7 +534,7 @@
            <p>The behavior of the DOMBuilder is dependant on the values of the following features.
            All of the features below can be set using the function <code>DOMBuilder::setFeature(cons XMLCh* const, const bool)</code>.
            And can be queried using the function <code>bool DOMBuilder::getFeature(const XMLCh* const)</code>.
-           User can also calls <code>DOMBuilder::canSetFeature(const XMLCh* const, const bool)</code>
+           User can also call <code>DOMBuilder::canSetFeature(const XMLCh* const, const bool)</code>
            to query whether setting a feature to a specific value is supported
            </p>
 
@@ -1005,7 +1005,7 @@
            <p>The behavior of the DOMWriter is dependant on the values of the following features.
            All of the features below can be set using the function <code>DOMWriter::setFeature(cons XMLCh* const, const bool)</code>.
            And can be queried using the function <code>bool DOMWriter::getFeature(const XMLCh* const)</code>.
-           User can also calls <code>DOMBuilder::canSetFeature(const XMLCh* const, const bool)</code>
+           User can also call <code>DOMWriter::canSetFeature(const XMLCh* const, const bool)</code>
            to query whether setting a feature to a specific value is supported
            </p>
 
