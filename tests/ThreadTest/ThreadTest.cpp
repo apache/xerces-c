@@ -63,16 +63,24 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 
+#include <xercesc/sax2/SAX2XMLReader.hpp>
+#include <xercesc/sax2/XMLReaderFactory.hpp>
+#include <xercesc/sax2/Attributes.hpp>
+#include <xercesc/sax2/DefaultHandler.hpp>
+
 #include <xercesc/dom/DOM.hpp>
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
-
+#include <xercesc/internal/XMLGrammarPoolImpl.hpp>
+#include <xercesc/internal/MemoryManagerImpl.hpp>
+#include <xercesc/util/OutOfMemoryException.hpp>
 
 void clearFileInfoMemory();
 
@@ -85,8 +93,6 @@ void clearFileInfoMemory();
 
 #include "Windows.h"
 #include "process.h"
-
-
 
 typedef DWORD (WINAPI *ThreadFunc)(void *);
 
@@ -136,7 +142,6 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 
 extern "C" {
 
-
 typedef void (*ThreadFunc)(void *);
 typedef void *(*pthreadfunc)(void *);
 
@@ -181,11 +186,11 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
     }
 
 }
-}
+
+} // end of extern "C"
 #else
 #error This platform is not supported
 #endif
-
 
 
 //------------------------------------------------------------------------------
@@ -210,36 +215,6 @@ struct InFileInfo
                              //   each file before the worker threads are started.
 };
 
-//------------------------------------------------------------------------------
-//
-//  struct runInfo     Holds the info extracted from the command line.
-//                     There is only one of these, and it is static, and
-//                     unchanging once the command line has been parsed.
-//                     During the test, the threads will access this info without
-//                     any synchronization.
-//
-//------------------------------------------------------------------------------
-const int MAXINFILES = 25;
-struct RunInfo
-{
-    bool        quiet;
-    bool        verbose;
-    bool        stopNow;
-    int         numThreads;
-    bool        validating;
-    bool        dom;
-    bool        reuseParser;
-    bool        inMemory;
-    bool        dumpOnErr;
-    bool        doSchema;
-    bool        schemaFullChecking;
-    bool        doNamespaces;
-    bool        doInitialParse;
-    int         totalTime;
-    int         numInputFiles;
-    InFileInfo  files[MAXINFILES];
-};
-
 
 //------------------------------------------------------------------------------
 //
@@ -251,11 +226,11 @@ struct RunInfo
 //------------------------------------------------------------------------------
 struct ThreadInfo
 {
-    bool    fHeartBeat;            // Set true by the thread each time it finishes
-                                   //   parsing a file.
-    bool    fInProgress;           // Set to false by the thread when parse in progress
-    unsigned int     fParses;      // Number of parses completed.
-    int              fThreadNum;   // Identifying number for this thread.
+    bool            fHeartBeat;   // Set true by the thread each time it finishes
+                                  //   parsing a file.
+    bool            fInProgress;  // Set to false by the thread when parse in progress
+    unsigned int    fParses;      // Number of parses completed.
+    int             fThreadNum;   // Identifying number for this thread.
     ThreadInfo() {
         fHeartBeat = false;
         fInProgress = false;
@@ -264,6 +239,41 @@ struct ThreadInfo
     }
 };
 
+
+XERCES_CPP_NAMESPACE_USE
+//------------------------------------------------------------------------------
+//
+//  struct runInfo     Holds the info extracted from the command line.
+//                     There is only one of these, and it is static, and
+//                     unchanging once the command line has been parsed.
+//                     During the test, the threads will access this info without
+//                     any synchronization.
+//
+//------------------------------------------------------------------------------
+const int MAXINFILES = 25;
+struct RunInfo
+{    
+    bool                            doGrammarCaching;    
+    bool                            quiet;
+    bool                            verbose;
+    bool                            stopNow;        
+    bool                            dom;    
+    bool                            sax;    
+    bool                            reuseParser;
+    bool                            inMemory;
+    bool                            dumpOnErr;
+    bool                            doSchema;
+    bool                            schemaFullChecking;
+    bool                            doNamespaces;
+    bool                            doInitialParse;    
+    bool                            doNamespacePrefixes;  // SAX2    
+    SAXParser::ValSchemes           valScheme;
+    int                             numThreads;
+    int                             totalTime;
+    int                             numInputFiles;
+    unsigned int                    numParses;
+    InFileInfo                      files[MAXINFILES];
+};
 
 //
 //------------------------------------------------------------------------------
@@ -274,8 +284,61 @@ struct ThreadInfo
 RunInfo         gRunInfo;
 ThreadInfo      *gThreadInfo;
 
+/** Grammar caching thread testing */
+MemoryManager*  gpMemMgr = 0;
+XMLGrammarPool* gp = 0;
 
-XERCES_CPP_NAMESPACE_USE
+// Routines which maybe helpful for debugging
+static void printString(const XMLCh *str)
+{
+    char *s = XMLString::transcode(str);
+    printf("%s", s);
+    delete s;
+}
+
+#define CHARS_PER_LINE           40
+#define BYTES_PER_LINE           16
+
+/*
+ * DumpLine: Dump out a buffer (address and length) to stderr.
+ */
+static void DumpLine(char* address, int length) {
+    int i, c, charCount=0;
+    if (length % 4) length += 4;
+    fprintf(stderr, "%8.8p: ", address);
+    for (i=0; i < length/4; ++i) {
+        fprintf(stderr, "%8.8X ", ((int*)address)[i]);
+        charCount += 9;
+    }
+    for (i=charCount; i < CHARS_PER_LINE; ++i) {
+        putc(' ', stderr);
+    }
+    fprintf(stderr, "| ");
+    for (i=0; i < length; ++i) {
+        c = address[i];
+        c = (isprint(c) ? c : '.');
+        fprintf(stderr, "%c", c);
+    }
+    fprintf(stderr, "\n");
+}
+
+/*
+ * dump: dump out a buffer (address and length) to stderr by dumping out
+ *       a line at a time (DumpLine), until the buffer is written out.
+ */
+
+static void dump(void* generalAddress, int length) {
+    int curr = 0;
+    char* address = (char*) generalAddress;
+    while (&address[curr] < &address[length-BYTES_PER_LINE]) {
+        DumpLine(&address[curr], BYTES_PER_LINE);
+        curr += BYTES_PER_LINE;
+    }
+    if (curr < length) {
+        DumpLine(&address[curr], length-curr);
+    }
+    fflush(stderr);
+}
 
 //------------------------------------------------------------------------------
 //
@@ -287,16 +350,17 @@ XERCES_CPP_NAMESPACE_USE
 //                       in different threads.
 //
 //-------------------------------------------------------------------------------
-class ThreadParser: public HandlerBase
+
+class ThreadParser
 {
-private:
-    int           fCheckSum;
-    SAXParser*    fSAXParser;
-    XercesDOMParser*    fXercesDOMParser;
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * fDoc;
-
-
-public:                               //  This is the API used by the rest of the test program
+public:
+    class SAXHandler;
+    class SAX2Handler;
+    SAXHandler*     fSAXHandler;
+    SAX2Handler*    fSAX2Handler;
+    ErrorHandler*   fDOMErrorHandler;
+    
+    //  This is the API used by the rest of the test program
     ThreadParser();
     ~ThreadParser();
 
@@ -305,84 +369,197 @@ public:                               //  This is the API used by the rest of th
                                       //  return the XML checksum, or
                                       //  0 if a parse error occurred.
 
+    int getCheckSum() {
+        return fCheckSum;
+    };
+
     int reCheck();                    // Try to compute the checksum again.
                                       //  for DOM, re-walk the tree.
                                       //  for SAX, can't do, just return previous value.
 
     void domPrint();                  //   including any children.  Default (no param)
                                        //   version dumps the entire document.
-
-private:
-    ThreadParser(const ThreadParser &); // No copy constructor
-    const ThreadParser & operator =(const ThreadParser &); // No assignment.
-
     void  addToCheckSum(const XMLCh *chars, int len=-1);
-    void  domCheckSum(const DOMNode *);
-
-
-public:                               // Not really public,
-                                      //  These are the SAX call-back functions
-                                      //  that this class implements.
-    void startElement(const XMLCh* const name, AttributeList& attributes);
+    
+    //  These are the SAX call-back functions that this class implements. Can be used
+    //  for SAX and SAX2.
     void characters(const XMLCh* const chars, const unsigned int length) {
-        addToCheckSum(chars, length);};
+        addToCheckSum(chars, length);
+    };
+    
     void ignorableWhitespace(const XMLCh* const chars, const unsigned int length) {
-        addToCheckSum(chars, length);};
-    void resetDocument() {};
+        addToCheckSum(chars, length);
+    };
+    
+    void resetDocument() {
+    };
 
     void warning(const SAXParseException& exception)     {
         fprintf(stderr, "*** Warning ");
-        throw exception;};
+        fflush(stderr);
+        throw exception;
+    };
 
     void error(const SAXParseException& exception)       {
         fprintf(stderr, "*** Error ");
-        throw exception;};
+        fflush(stderr);
+        throw exception;
+    };
 
     void fatalError(const SAXParseException& exception)  {
         fprintf(stderr, "***** Fatal error ");
-        throw exception;};
+        fflush(stderr);
+        throw exception;
+    };
+
+    // Create a nested class that can inherit from HandlerBase
+    // for SAX startElement callbacks.
+    class SAXHandler :  public HandlerBase
+    {
+    public:
+        ThreadParser* SAXInstance;
+
+        void startElement(const XMLCh* const name, AttributeList& attributes);
+    };
+
+    // Create a nested class that can inherit from DefaultHandler
+    // for SAX2 startElement callbacks.
+    class SAX2Handler :  public DefaultHandler
+    {
+    public:
+        ThreadParser* SAX2Instance;
+
+        void startElement(const XMLCh* const uri,
+                          const XMLCh* const localname,
+                          const XMLCh* const qname,
+                          const Attributes& attributes);
+    };
+
+private:
+    int                                             fCheckSum;
+    SAXParser*                                      fSAXParser;
+    SAX2XMLReader*                                  fSAX2Parser;
+    XercesDOMParser*                                fXercesDOMParser;
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *    fDoc;
+
+
+    ThreadParser(const ThreadParser &); // No copy constructor
+    const ThreadParser & operator =(const ThreadParser &); // No assignment.
+
+    void  domCheckSum(const DOMNode *);
 };
-
-
 
 //
 //  ThreadParser constructor.  Invoked by the threads of the test program
 //                              to create parsers.
 //
 ThreadParser::ThreadParser()
-{
-    fSAXParser = 0;
+{   
+    fSAXParser       = 0;
+    fSAX2Parser      = 0;
     fXercesDOMParser = 0;
-    fDoc       = 0;
+    fSAXHandler      = 0;
+    fSAX2Handler     = 0;
+    fDOMErrorHandler = 0;    
+    fDoc             = 0;
+    fCheckSum        = 0;
+
     if (gRunInfo.dom) {
         // Set up to use a DOM parser
-        fXercesDOMParser = new XercesDOMParser;
-        fXercesDOMParser->setDoValidation(gRunInfo.validating);
+        /** Grammar caching thread testing */
+        if (gp) {
+            fXercesDOMParser = new XercesDOMParser(0, XMLPlatformUtils::fgMemoryManager, gp);
+            fXercesDOMParser->cacheGrammarFromParse(true);
+            fXercesDOMParser->useCachedGrammarInParse(true);
+        }        
+        else {
+            fXercesDOMParser = new XercesDOMParser;
+        }
+        switch (gRunInfo.valScheme) {
+            case SAXParser::Val_Never:
+                fXercesDOMParser->setValidationScheme(XercesDOMParser::Val_Never);
+                break;
+            case SAXParser::Val_Auto:
+                fXercesDOMParser->setValidationScheme(XercesDOMParser::Val_Auto);
+                break;
+            default: //SAXParser::Val_Always:
+                fXercesDOMParser->setValidationScheme(XercesDOMParser::Val_Always);
+                break;
+        }        
         fXercesDOMParser->setDoSchema(gRunInfo.doSchema);
         fXercesDOMParser->setValidationSchemaFullChecking(gRunInfo.schemaFullChecking);
         fXercesDOMParser->setDoNamespaces(gRunInfo.doNamespaces);
-        fXercesDOMParser->setErrorHandler(this);
+        fDOMErrorHandler = (ErrorHandler*) new HandlerBase();
+        fXercesDOMParser->setErrorHandler(fDOMErrorHandler);
     }
-    else
-    {
-        // Set up to use a SAX parser.
-        fSAXParser = new SAXParser;
-        fSAXParser->setDoValidation(gRunInfo.validating);
+
+    else if (gRunInfo.sax) {
+        // Set up to use a SAX1 parser.
+        /** Grammar caching thread testing */
+        if (gp) {
+            fSAXParser = new SAXParser(0, XMLPlatformUtils::fgMemoryManager, gp);
+            fSAXParser->cacheGrammarFromParse(true);
+            fSAXParser->useCachedGrammarInParse(true);
+        }        
+        else {
+            fSAXParser = new SAXParser();
+        }
+        fSAXParser->setValidationScheme(gRunInfo.valScheme);
         fSAXParser->setDoSchema(gRunInfo.doSchema);
         fSAXParser->setValidationSchemaFullChecking(gRunInfo.schemaFullChecking);
         fSAXParser->setDoNamespaces(gRunInfo.doNamespaces);
-        fSAXParser->setDocumentHandler(this);
-        fSAXParser->setErrorHandler(this);
+        fSAXHandler = new ThreadParser::SAXHandler();
+        fSAXHandler->SAXInstance = this;
+        fSAXParser->setDocumentHandler(fSAXHandler);
+        fSAXParser->setErrorHandler(fSAXHandler);
     }
 
+    else { 
+        // Set up to use a SAX2 parser.
+        /** Grammar caching thread testing */
+        if (gp) {            
+            fSAX2Parser = XMLReaderFactory::createXMLReader(gpMemMgr, gp);
+            fSAX2Parser->setFeature(XMLUni::fgXercesCacheGrammarFromParse,true);
+            fSAX2Parser->setFeature(XMLUni::fgXercesUseCachedGrammarInParse,true);
+        }
+        else {
+            fSAX2Parser = XMLReaderFactory::createXMLReader();
+        }
+
+        fSAX2Parser->setFeature(XMLUni::fgSAX2CoreNameSpaces,(gRunInfo.doNamespaces));
+        fSAX2Parser->setFeature(XMLUni::fgXercesSchema,(gRunInfo.doSchema));
+        fSAX2Parser->setFeature(XMLUni::fgXercesSchemaFullChecking,(gRunInfo.schemaFullChecking));
+
+        switch (gRunInfo.valScheme) {
+            case SAXParser::Val_Never:
+                fSAX2Parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
+                break;
+            case SAXParser::Val_Auto:
+                fSAX2Parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+                fSAX2Parser->setFeature(XMLUni::fgXercesDynamic, true);
+                break;
+            default: //SAXParser::Val_Always:
+                fSAX2Parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+                fSAX2Parser->setFeature(XMLUni::fgXercesDynamic, false);
+                break;
+        }            
+        
+        fSAX2Parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes,(gRunInfo.doNamespacePrefixes));        
+        fSAX2Handler = new ThreadParser::SAX2Handler();
+        fSAX2Handler->SAX2Instance = this;
+        fSAX2Parser->setContentHandler(fSAX2Handler);
+        fSAX2Parser->setErrorHandler(fSAX2Handler);
+    }
 }
-
-
 
 ThreadParser::~ThreadParser()
 {
-     delete fSAXParser;
+     delete fSAXParser;          
+     delete fSAX2Parser;
      delete fXercesDOMParser;
+     delete fSAXHandler;
+     delete fSAX2Handler;     
+     delete fDOMErrorHandler;
 }
 
 //------------------------------------------------------------------------
@@ -415,37 +592,47 @@ int ThreadParser::parse(int fileNum)
                 fXercesDOMParser->parse(*mbis);
             else
                 fXercesDOMParser->parse(fInfo->fileName);
-            XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc = fXercesDOMParser->getDocument();
-            domCheckSum(doc);
+            fDoc = fXercesDOMParser->getDocument();
+            domCheckSum(fDoc);
         }
-        else
-        {
-            // Do a SAX parse
+        else if (gRunInfo.sax) {
+            // Do a SAX1 parse
             if (gRunInfo.inMemory)
                 fSAXParser->parse(*mbis);
             else
                 fSAXParser->parse(fInfo->fileName);
         }
+        else {
+            // Do a SAX2 parse
+            if (gRunInfo.inMemory)
+                fSAX2Parser->parse(*mbis);
+            else
+                fSAX2Parser->parse(fInfo->fileName);
+        }
     }
-
+    catch (const OutOfMemoryException&)
+    {
+	    fprintf(stderr, " during parsing: %s\n OutOfMemoryException.\n", fInfo->fileName);        
+	    errors = true;
+    }
     catch (const XMLException& e)
     {
         char *exceptionMessage = XMLString::transcode(e.getMessage());
-        fprintf(stderr, " during parsing: %s \n Exception message is: %s \n",
+        fprintf(stderr, " during parsing: %s\n Exception message is: %s\n",
             fInfo->fileName, exceptionMessage);
         XMLString::release(&exceptionMessage);
         errors = true;
     }
     catch (const DOMException& toCatch)
     {
-        fprintf(stderr, " during parsing: %s \n DOMException code is: %i \n",
+        fprintf(stderr, " during parsing: %s\n DOMException code is: %i\n",
             fInfo->fileName, toCatch.code);
         errors = true;
     }
     catch (const SAXParseException& e)
     {
         char *exceptionMessage = XMLString::transcode(e.getMessage());
-        fprintf(stderr, " during parsing: %s \n Exception message is: %s \n",
+        fprintf(stderr, " during parsing: %s\n Exception message is: %s\n",
             fInfo->fileName, exceptionMessage);
         XMLString::release(&exceptionMessage);
         errors = true;
@@ -457,8 +644,10 @@ int ThreadParser::parse(int fileNum)
     }
 
     delete mbis;
-    if (errors)
+    if (errors) {
+        fflush(stderr);
         return 0;  // if errors occurred, return zero as if checksum = 0;
+    }
     return fCheckSum;
 }
 
@@ -494,25 +683,47 @@ void ThreadParser::addToCheckSum(const XMLCh *chars, int len)
 
 
 //
-// startElement - our SAX handler callback function for element starts.
-//                update the document checksum with the element name
+// startElement - our SAX handler callback function for startElement.
+//                Update the document checksum with the element name
 //                and any attribute names and values.
 //
-void ThreadParser::startElement(const XMLCh *const name, AttributeList &attributes)
+ void ThreadParser::SAXHandler::startElement(const XMLCh *const name, AttributeList &attributes)
 {
-    addToCheckSum(name);
-
+    SAXInstance->addToCheckSum(name);
     int n = attributes.getLength();
     int i;
     for (i=0; i<n; i++)
     {
         const XMLCh *attNam = attributes.getName(i);
-        addToCheckSum(attNam);
+        SAXInstance->addToCheckSum(attNam);
         const XMLCh *attVal = attributes.getValue(i);
-        addToCheckSum(attVal);
+        SAXInstance->addToCheckSum(attVal);
     }
 }
 
+//
+// startElement - our SAX2 handler callback function for startElement.
+//                Update the document checksum with the element name
+//                and any attribute names and values.
+//
+
+void ThreadParser::SAX2Handler::startElement(const XMLCh *const uri,
+                              const XMLCh *const localname,
+                              const XMLCh *const qname,
+                              const Attributes& attributes)
+{
+    SAX2Instance->addToCheckSum(localname);
+
+    int n = attributes.getLength();
+    int i;
+    for (i=0; i<n; i++)
+    {
+        const XMLCh *attNam = attributes.getQName(i);
+        SAX2Instance->addToCheckSum(attNam);
+        const XMLCh *attVal = attributes.getValue(i);
+        SAX2Instance->addToCheckSum(attVal);
+    }
+}
 
 //
 // domCheckSum  -  Compute the check sum for a DOM node.
@@ -543,7 +754,6 @@ void ThreadParser::domCheckSum(const DOMNode *node)
             break;
         }
 
-
     case DOMNode::ATTRIBUTE_NODE:
         {
             s = node->getNodeName();  // The attribute name
@@ -553,7 +763,6 @@ void ThreadParser::domCheckSum(const DOMNode *node)
                 addToCheckSum(s);
             break;
         }
-
 
     case DOMNode::TEXT_NODE:
     case DOMNode::CDATA_SECTION_NODE:
@@ -619,13 +828,6 @@ void ThreadParser::domPrint()
     printf("End DOMPrint\n");
 }
 
-static void printString(const XMLCh *str)
-{
-    char *s = XMLString::transcode(str);
-    printf("%s", s);
-    delete s;
-}
-
 //----------------------------------------------------------------------
 //
 //   parseCommandLine   Read through the command line, and save all
@@ -640,49 +842,79 @@ static void printString(const XMLCh *str)
 
 void parseCommandLine(int argc, char **argv)
 {
+    gRunInfo.doGrammarCaching = false;     
     gRunInfo.quiet = false;               // Set up defaults for run.
     gRunInfo.verbose = false;
-    gRunInfo.numThreads = 2;
-    gRunInfo.validating = false;
+    gRunInfo.stopNow = false;            
+    gRunInfo.dom = false;
+    gRunInfo.sax = true;    
+    gRunInfo.reuseParser = false;
+    gRunInfo.inMemory = false;
+    gRunInfo.dumpOnErr = false;
     gRunInfo.doSchema = false;
     gRunInfo.schemaFullChecking = false;
     gRunInfo.doNamespaces = false;
     gRunInfo.doInitialParse = false;
-    gRunInfo.dom = false;
-    gRunInfo.reuseParser = false;
-    gRunInfo.inMemory = false;
-    gRunInfo.dumpOnErr = false;
+    gRunInfo.doNamespacePrefixes = false;    
+    
+    gRunInfo.valScheme = SAXParser::Val_Auto;
+    gRunInfo.numThreads = 2;
     gRunInfo.totalTime = 0;
     gRunInfo.numInputFiles = 0;
+    gRunInfo.numParses = 0;
 
     try             // Use exceptions for command line syntax errors.
     {
         int argnum = 1;
-        while (argnum < argc)
-        {
+        while (argnum < argc) {
             if (strcmp(argv[argnum], "-quiet") == 0)
                 gRunInfo.quiet = true;
             else if (strcmp(argv[argnum], "-verbose") == 0)
                 gRunInfo.verbose = true;
-            else if (strcmp(argv[argnum], "-v") == 0)
-                gRunInfo.validating = true;
+            else if (strncmp(argv[argnum], "-v=", 3) == 0) {
+                const char* const parm = &argv[argnum][3];
+                if (!strcmp(parm, "never"))
+                    gRunInfo.valScheme = SAXParser::Val_Never;
+                else if (!strcmp(parm, "auto"))
+                    gRunInfo.valScheme = SAXParser::Val_Auto;
+                else if (!strcmp(parm, "always"))
+                    gRunInfo.valScheme = SAXParser::Val_Always;
+                else {
+                    fprintf(stderr, "Unrecognized -v option \"%s\"\n", parm);                     
+                    throw 1;
+                }
+            }
+            else if (strcmp(argv[argnum], "-v") == 0) {
+                fprintf(stderr, "Please note the -v option has been changed to -v=[always | never | auto]\n");
+                fprintf(stderr, "ThreadTest will continue with -v=always\n");
+                gRunInfo.valScheme = SAXParser::Val_Always;
+            }
             else if (strcmp(argv[argnum], "-s") == 0)
                 gRunInfo.doSchema = true;
             else if (strcmp(argv[argnum], "-f") == 0)
                 gRunInfo.schemaFullChecking = true;
             else if (strcmp(argv[argnum], "-n") == 0)
-                gRunInfo.doNamespaces = true;
+                gRunInfo.doNamespaces = true;            
+            else if (strcmp(argv[argnum], "-p") == 0)
+                gRunInfo.doNamespacePrefixes = true;         
             else if (!strncmp(argv[argnum], "-parser=", 8)) {
-                const char* const parm = &argv[argnum][8];
-
+                const char* const parm = &argv[argnum][8];                
                 if (!strcmp(parm, "dom")) {
                     gRunInfo.dom = true;
+                    gRunInfo.sax = false;
                 }
                 else if (!strcmp(parm, "sax")) {
                     gRunInfo.dom = false;
+                    gRunInfo.sax = true;                    
                 }
-                else
+                else if (!strcmp(parm, "sax2")) {
+                    gRunInfo.dom = false;
+                    gRunInfo.sax = false;
+                }                
+                else {
+                    fprintf(stderr, "Unrecognized -parser option \"%s\"\n", parm);                    
                     throw 1;
+                }
             }
             else if (strcmp(argv[argnum], "-init") == 0)
                 gRunInfo.doInitialParse = true;
@@ -692,35 +924,53 @@ void parseCommandLine(int argc, char **argv)
                 gRunInfo.dumpOnErr = true;
             else if (strcmp(argv[argnum], "-mem") == 0)
                 gRunInfo.inMemory = true;
-            else if (strcmp(argv[argnum], "-threads") == 0)
-            {
+            else if (strcmp(argv[argnum], "-threads") == 0) {
                 ++argnum;
-                if (argnum >= argc)
+                if (argnum >= argc) {
+                    fprintf(stderr, "Invalid -threads option (missing # of threads)\n");
                     throw 1;
+                }
                 gRunInfo.numThreads = atoi(argv[argnum]);
-                if (gRunInfo.numThreads < 0)
+                if (gRunInfo.numThreads < 0) {
+                    fprintf(stderr, "Invalid -threads option (negative # of threads)\n");
                     throw 1;
+                }
             }
-            else if (strcmp(argv[argnum], "-time") == 0)
-            {
+            else if (strcmp(argv[argnum], "-time") == 0) {
                 ++argnum;
-                if (argnum >= argc)
+                if (argnum >= argc) {
+                    fprintf(stderr, "Invalid -time option (missing time value)\n");
                     throw 1;
+                }
                 gRunInfo.totalTime = atoi(argv[argnum]);
-                if (gRunInfo.totalTime < 1)
+                if (gRunInfo.totalTime < 1) {
+                    fprintf(stderr, "Invalid -time option (time value < 1)\n");
                     throw 1;
+                }
+            }            
+            else if (strcmp(argv[argnum], "-gc") == 0)
+                gRunInfo.doGrammarCaching = true;            
+            else if (strcmp(argv[argnum], "-parses") == 0) {
+                ++argnum;
+                if (argnum >= argc) {
+                    fprintf(stderr, "Invalid -parses option (missing # of parses)\n");
+                    throw 1;
+                }
+                int temp = atoi(argv[argnum]);
+                if (temp < 0) {
+                    fprintf(stderr, "Invalid -parses option (negative # of parses)\n");
+                    throw 1;
+                }
+                gRunInfo.numParses = temp;
             }
-            else  if (argv[argnum][0] == '-')
-            {
+            else  if (argv[argnum][0] == '-') {
                 fprintf(stderr, "Unrecognized command line option.  Scanning \"%s\"\n",
                     argv[argnum]);
                 throw 1;
             }
-            else
-            {
+            else {
                 gRunInfo.numInputFiles++;
-                if (gRunInfo.numInputFiles >= MAXINFILES)
-                {
+                if (gRunInfo.numInputFiles >= MAXINFILES) {
                     fprintf(stderr, "Too many input files.  Limit is %d\n", MAXINFILES);
                     throw 1;
                 }
@@ -730,30 +980,35 @@ void parseCommandLine(int argc, char **argv)
         }
 
         // We've made it through the command line.
-        //  Verify that at least one input file to be parsed was specified.
-        if (gRunInfo.numInputFiles == 0)
-        {
+        // Verify that at least one input file to be parsed was specified.
+        if (gRunInfo.numInputFiles == 0) {
             fprintf(stderr, "No input XML file specified on command line.\n");
             throw 1;
         };
 
-
+        if (gRunInfo.numParses && gRunInfo.totalTime) {
+            fprintf(stderr, "Both -parses nnn and -time nnn were specified. Ignoring -time nnn.\n");
+        }
     }
     catch (int)
     {
-        fprintf(stderr, "usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...\n"
-            "     -v             Use validating parser.  Non-validating is default.\n"
+        fprintf(stderr, "usage:  ThreadTest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...\n"            
+            "     -v=xxx         Validation scheme [always | never | auto].  Default is AUTO.\n"
             "     -n             Enable namespace processing. Defaults to off.\n"
             "     -s             Enable schema processing. Defaults to off.\n"
             "     -f             Enable full schema constraint checking. Defaults to off.\n"
-            "     -parser=xxx    Parser Type [dom | sax].  Default is SAX.\n"
+            "     -parser=xxx    Parser Type [dom | sax | sax2].  Default is SAX (SAX1).\n"
+            "     -p             Enable namespace prefixes. Defaults to off.\n"
+            "                    (Only used with -parser=sax2, ignored otherwise.)\n"
             "     -quiet         Suppress periodic status display.\n"
             "     -verbose       Display extra messages.\n"
             "     -reuse         Retain and reuse parser.  Default creates new for each parse.\n"
             "     -threads nnn   Number of threads.  Default is 2.\n"
             "     -time nnn      Total time to run, in seconds.  Default is forever.\n"
+            "     -parses nnn    Run for nnn parses instead of time.  Default is to use time\n"
             "     -dump          Dump DOM tree on error.\n"
             "     -mem           Read files into memory once only, and parse them from there.\n"
+            "     -gc            Enable grammar caching (i.e. grammar cached and used in subsequent parses). Defaults to off.\n"
             "     -init          Perform an initial parse of the file(s) before starting up the individual threads.\n\n"
             );
         exit(1);
@@ -834,7 +1089,6 @@ void clearFileInfoMemory()
 unsigned long WINAPI threadMain (void *param)
 #else
 extern "C" {
-
 void threadMain (void *param)
 #endif
 {
@@ -850,66 +1104,74 @@ void threadMain (void *param)
     // Each time through this loop, one file will be parsed and its checksum
     // computed and compared with the precomputed value for that file.
     //
-    while (gRunInfo.stopNow == false)
-    {
+    while (gRunInfo.stopNow == false) {
+        if (gRunInfo.numParses == 0 || thInfo->fParses < gRunInfo.numParses) {
+            thInfo->fInProgress = true;
 
-        thInfo->fInProgress = true;
+            if (thParser == 0)
+                thParser = new ThreadParser;
 
-        if (thParser == 0)
-            thParser = new ThreadParser;
+            docNum++;
 
-        docNum++;
+            if (docNum >= gRunInfo.numInputFiles)
+                docNum = 0;
 
-        if (docNum >= gRunInfo.numInputFiles)
-            docNum = 0;
+            InFileInfo *fInfo = &gRunInfo.files[docNum];
 
-        InFileInfo *fInfo = &gRunInfo.files[docNum];
+            if (gRunInfo.verbose )
+                printf("Thread #%d: parse %d starting file %s\n", thInfo->fThreadNum, thInfo->fParses, fInfo->fileName);
 
-        if (gRunInfo.verbose )
-            printf("Thread #%d: starting file %s\n", thInfo->fThreadNum, fInfo->fileName);
+            int checkSum = 0;
+                           
+            checkSum = thParser->parse(docNum);
 
+            // For the case where we skip the preparse we will have nothing to
+            // compare the first parse's results to ... so if this looks like first
+            // parse move the checkSum back into the gRunInfo data for this file.
 
-        int checkSum = 0;
-        checkSum = thParser->parse(docNum);
-
-        // For the case where we skip the preparse we will have nothing to
-        // compare the first parse's results to ... so if this looks like first
-        // parse move the checkSum back into the gRunInfo data for this file.
-
-        if (gRunInfo.files[docNum].checkSum == 0)
-        {
-           gRunInfo.files[docNum].checkSum = checkSum;
-        }
-
-        if (checkSum != gRunInfo.files[docNum].checkSum)
-        {
-            fprintf(stderr, "\nThread %d: Parse Check sum error on file  \"%s\".  Expected %x,  got %x\n",
-                thInfo->fThreadNum, fInfo->fileName, fInfo->checkSum, checkSum);
-
-            // Revisit - let the loop continue to run?
-            int secondTryCheckSum = thParser->reCheck();
-            fprintf(stderr, "   Retry checksum is %x\n", secondTryCheckSum);
-            if (gRunInfo.dumpOnErr) {
-               if (gRunInfo.dom)
-                  thParser->domPrint();
+            if (gRunInfo.files[docNum].checkSum == 0) {
+                gRunInfo.files[docNum].checkSum = checkSum;
             }
-            fflush(stdout);
-            clearFileInfoMemory();
-            exit(-1);
+            else if (checkSum != gRunInfo.files[docNum].checkSum) {
+                if (checkSum == 0) {
+                    // parse returns 0 if there was an error so do this to get the real
+                    // checksum value
+                    checkSum = thParser->getCheckSum();
+                }
+                fprintf(stderr, "\nThread %d: Parse Check sum error on file  \"%s\" for parse # %d.  Expected %x,  got %x\n",
+                    thInfo->fThreadNum, thInfo->fParses, fInfo->fileName, fInfo->checkSum, checkSum);
+
+	            double totalParsesCompleted = 0;
+                for (int threadNum=0; threadNum < gRunInfo.numThreads; threadNum++) {
+                    totalParsesCompleted += gThreadInfo[threadNum].fParses;                
+                }
+                fprintf(stderr, "Total number of parses completed is %f.\n", totalParsesCompleted);
+            
+                // Revisit - let the loop continue to run?
+                int secondTryCheckSum = thParser->reCheck();
+                fprintf(stderr, "   Retry checksum is %x\n", secondTryCheckSum);
+                if (gRunInfo.dumpOnErr && gRunInfo.dom) {
+                    thParser->domPrint();
+                }
+                fflush(stdout);
+                fflush(stderr);
+                clearFileInfoMemory();
+                exit(-1);
+            }
+
+            if (gRunInfo.reuseParser == false) {
+                delete thParser;
+                thParser = 0;
+            }
+
+            thInfo->fHeartBeat = true;
+            thInfo->fParses++;
+            thInfo->fInProgress = false;
         }
-
-        if (gRunInfo.reuseParser == false)
-        {
-            delete thParser;
-            thParser = 0;
+        else {
+            ThreadFuncs::Sleep(1000); 
         }
-
-
-        thInfo->fHeartBeat = true;
-        thInfo->fParses++;
-        thInfo->fInProgress = false;
     }
-
     delete thParser;
 #ifdef PLATFORM_WIN32
     return 0;
@@ -918,8 +1180,6 @@ void threadMain (void *param)
 }
 #endif
 }
-
-
 
 
 //----------------------------------------------------------------------
@@ -948,6 +1208,17 @@ int main (int argc, char **argv)
     }
 
 
+    /** Grammar caching thread testing */
+    // Initialize memory manger and grammar pool
+    // set doInitialParse to true so that the first parse will cache the
+    // grammar and it'll be used in subsequent parses
+    
+    if (gRunInfo.doSchema == true && gRunInfo.doNamespaces == true && gRunInfo.doGrammarCaching == true) {
+        gpMemMgr = new MemoryManagerImpl();
+        gp = new XMLGrammarPoolImpl(gpMemMgr);
+        gRunInfo.doInitialParse = true;
+    }    
+
     //
     // If we will be parsing from memory, read each of the input files
     //  into memory now.
@@ -966,7 +1237,7 @@ int main (int argc, char **argv)
     {
     //
     // While we are still single threaded, parse each of the documents
-    //  once, to check for errors, and to note the checksum.
+    // once, to check for errors, and to note the checksum.
     // Blow off the rest of the test if there are errors.
     //
         ThreadParser *mainParser = new ThreadParser;
@@ -982,8 +1253,7 @@ int main (int argc, char **argv)
 
             cksum = mainParser->parse(n);
 
-            if (cksum == 0)
-            {
+            if (cksum == 0) {
                 fprintf(stderr, "An error occurred while initially parsing %s\n",
                     fileName);
                 errors = true;
@@ -992,13 +1262,18 @@ int main (int argc, char **argv)
             gRunInfo.files[n].checkSum = cksum;
             if (gRunInfo.verbose )
                 printf("%x\n", cksum);
-            if (gRunInfo.dumpOnErr && errors) {
-                if (gRunInfo.dom)
-                    mainParser->domPrint();
+            if (gRunInfo.dumpOnErr && errors && gRunInfo.dom) {
+                mainParser->domPrint();
             }
 
         }
         delete mainParser;
+
+        if (errors) {
+            fprintf(stderr, "Quitting due to error incurred during initial parse\n");
+            clearFileInfoMemory();
+            return 1;
+        }
     }
 
     //
@@ -1018,38 +1293,53 @@ int main (int argc, char **argv)
         gThreadInfo[threadNum].fThreadNum = threadNum;
         ThreadFuncs::startThread(threadMain, &gThreadInfo[threadNum]);
     }
-
-    //
-    //  Loop, watching the heartbeat of the worker threads.
-    //    Each second, display "+" when all threads have completed a parse
-    //                 display "." if some thread hasn't since previous "+"
-    //
-
-    unsigned long startTime = XMLPlatformUtils::getCurrentMillis();
-    int elapsedSeconds = 0;
-    while (gRunInfo.totalTime == 0 || gRunInfo.totalTime > elapsedSeconds)
+        
+    if (gRunInfo.numParses)
     {
-        ThreadFuncs::Sleep(1000);
-        if (gRunInfo.quiet == false && gRunInfo.verbose == false)
+        bool notDone;
+        while (true)
         {
-            char c = '+';
-            int threadNum;
-            for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
-            {
-                if (gThreadInfo[threadNum].fHeartBeat == false)
-                {
-                    c = '.';
-                    break;
-                };
+            ThreadFuncs::Sleep(1000);            
+            notDone = false;
+           
+            for (threadNum = 0; threadNum < gRunInfo.numThreads; threadNum++) {
+                if (gThreadInfo[threadNum].fParses < gRunInfo.numParses)                                    
+                    notDone = true;
             }
-            fputc(c, stdout);
-            fflush(stdout);
-            if (c == '+')
-                for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
-                    gThreadInfo[threadNum].fHeartBeat = false;
+            if (notDone == false) {                
+                break;
+            }
         }
-        elapsedSeconds = (XMLPlatformUtils::getCurrentMillis() - startTime) / 1000;
-    };
+    }
+    else
+    {
+        //
+        //  Loop, watching the heartbeat of the worker threads.
+        //    Each second, display "+" when all threads have completed a parse
+        //                 display "." if some thread hasn't since previous "+"
+        //
+
+        unsigned long startTime = XMLPlatformUtils::getCurrentMillis();
+        int elapsedSeconds = 0;
+        while (gRunInfo.totalTime == 0 || gRunInfo.totalTime > elapsedSeconds) {
+            ThreadFuncs::Sleep(1000);
+            if (gRunInfo.quiet == false && gRunInfo.verbose == false) {
+                char c = '+';                
+                for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++) {
+                    if (gThreadInfo[threadNum].fHeartBeat == false) {
+                        c = '.';
+                        break;
+                    }
+                }
+                fputc(c, stdout);
+                fflush(stdout);
+                if (c == '+')
+                    for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
+                        gThreadInfo[threadNum].fHeartBeat = false;
+            }
+            elapsedSeconds = (XMLPlatformUtils::getCurrentMillis() - startTime) / 1000;
+        }
+    }
 
     //
     //  Time's up, we are done.  (We only get here if this was a timed run)
@@ -1066,7 +1356,6 @@ int main (int argc, char **argv)
         }
         if (gRunInfo.verbose)
             printf("Thread #%d: is finished.\n", threadNum);
-
     }
 
     //
@@ -1080,8 +1369,19 @@ int main (int argc, char **argv)
     }
 
     if (gRunInfo.quiet == false) {
-        double parsesPerMinute = totalParsesCompleted / (double(gRunInfo.totalTime) / double(60));
-        printf("\n%8.1f parses per minute.\n", parsesPerMinute);
+        if (gRunInfo.numParses) {
+            printf("\n%8.0f total parses were completed.\n", totalParsesCompleted);
+        }
+        else {
+            double parsesPerMinute = totalParsesCompleted / (double(gRunInfo.totalTime) / double(60));
+            printf("\n%8.2f parses per minute.\n", parsesPerMinute);
+        }
+    }
+    
+    // delete grammar pool and memory manager
+    if (gp) {
+        delete gp;    
+        delete gpMemMgr;    
     }
 
     XMLPlatformUtils::Terminate();
