@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/05/09 00:22:31  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.8  2000/04/25 20:29:33  aruna1
  * DOM_XMLDecl type node introduced to get the information of the
  * XML Declaration in a document and store it part of the tree
@@ -271,12 +277,6 @@ DOM_Element         DOM_Document::getElementById(const DOMString &elementId)
         return DOM_Element(((DocumentImpl *)fImpl)->getElementById(elementId));
 }
 
-// Non-standard accessory function
-
-void DOM_Document::putIdentifier(const DOMString &elementId, const DOM_Element &ele)
-{
-       ((DocumentImpl*)fImpl)->putIdentifier(elementId,ele);
-}
 
 DOM_XMLDecl DOM_Document::createXMLDecl(const DOMString& version, const DOMString& encoding, const DOMString& standalone)
 {

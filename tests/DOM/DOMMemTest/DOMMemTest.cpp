@@ -66,6 +66,12 @@
 
 /*
  * $Log$
+ * Revision 1.22  2000/05/09 00:22:48  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.21  2000/04/18 01:07:28  aruna1
  * Rectified memory leak caused by doctype-getNodeName()
  *
@@ -191,23 +197,15 @@ void tassert(bool c, char *file, int line)
 }
 
 
-
-
-int  main()
+//---------------------------------------------------------------------------------------
+//
+//   DOMStringTests    tests of class DOMString
+//
+//---------------------------------------------------------------------------------------
+void    DOMStringTests()
 {
     DomMemDebug     entryMemState, exitMemState;
-
-	try {
-		XMLPlatformUtils::Initialize();
-	}
-	catch (const XMLException& toCatch) {
-        char *pMessage = XMLString::transcode(toCatch.getMessage());
-        fprintf(stderr, "Error during XMLPlatformUtils::Initialize(). \n"
-                        "  Message is: %s\n", pMessage);
-        delete [] pMessage;
-        return -1;
-    }
-
+    
     //
     //  Test 1.  Basic operations on a simple string.
     //
@@ -223,29 +221,28 @@ int  main()
         TASSERT(foo.charAt(3) == 0);
     }
     TESTEPILOG
-
-
-    //
-    //  Construct from XMLCh *
-    //
-    TESTPROLOG
+        
+        //
+        //  Construct from XMLCh *
+        //
+        TESTPROLOG
     {
         //  ToDo - this test will fail on EBCDIC machines.  !!
-
+        
         XMLCh a[] = {'H', 'e', 'l', 'l', 'o', 0};
         DOMString x(a);
         DOMString y = "Hello";
         TASSERT(x.equals(y));
-
+        
         DOMString z(a+2, 3);
         TASSERT(z.equals("llo"));
     }
     TESTEPILOG
-
-    //
-    //  Test 2.  Empty strings shouldn't leave anything lying around
-    //
-    TESTPROLOG;
+        
+        //
+        //  Test 2.  Empty strings shouldn't leave anything lying around
+        //
+        TESTPROLOG;
     {
         DOMString a;
         DOMString b;
@@ -253,18 +250,18 @@ int  main()
         a = 0;
         TASSERT(a==0);
         TASSERT((a!=0) == false);
-
+        
         DOMString c(0);
         TASSERT(c==0);
         TASSERT(c==a);
     }
     TESTEPILOG
-
-
-    //
-    //  Test 3.   Clones should be equal. 
-    TESTPROLOG;
-   {
+        
+        
+        //
+        //  Test 3.   Clones should be equal. 
+        TESTPROLOG;
+    {
         DOMString a = "hello";
         DOMString b = a.clone();
         TASSERT(a.equals(b));
@@ -275,12 +272,12 @@ int  main()
         TASSERT(a.equals(""));
     }
     TESTEPILOG
-
-
-    //
-    //  Test 4.  Copy construction and assignemnt
-    //
-    TESTPROLOG;
+        
+        
+        //
+        //  Test 4.  Copy construction and assignemnt
+        //
+        TESTPROLOG;
     {
         DOMString a = "Test 04";
         DOMString b(a);
@@ -295,32 +292,32 @@ int  main()
         // printf ("   test04 should have 1 handle, 1 buffer here.  "); 
     }
     TESTEPILOG
-
-
-    //
-    // Test 5  AppendData, degenerate cases.
-    //
-    TESTPROLOG;
+        
+        
+        //
+        // Test 5  AppendData, degenerate cases.
+        //
+        TESTPROLOG;
     {
         DOMString a;
         DOMString b = "Test 05";
-
+        
         a.appendData(b);
         TASSERT(a.equals(b));
         TASSERT(a!=b);
         TASSERT(a.equals("Test 05"));
     };
     TESTEPILOG
-
-
-    //
-    //  Test 6  Append data, degenerate case 2
-    //
-    TESTPROLOG;
+        
+        
+        //
+        //  Test 6  Append data, degenerate case 2
+        //
+        TESTPROLOG;
     {
         DOMString a;
         DOMString b = "Test 06";
-
+        
         b.appendData(a);
         TASSERT(!a.equals(b));
         TASSERT(a!=b);
@@ -328,52 +325,52 @@ int  main()
         TASSERT(a==0);
     }
     TESTEPILOG
-
-
-    //
-    //  Test 7  Append Data, Common case, no extra space in original buffer.
-    //          Also, operator +=, which is a convenience alias for appendData.
-    //
-    TESTPROLOG;
+        
+        
+        //
+        //  Test 7  Append Data, Common case, no extra space in original buffer.
+        //          Also, operator +=, which is a convenience alias for appendData.
+        //
+        TESTPROLOG;
     {
         DOMString a = "Test 07";
         DOMString b = "append";
-
+        
         a.appendData(b);
         TASSERT(a.equals("Test 07append"));
         TASSERT(b.equals("append"));
-
+        
         a.appendData((XMLCh)0x31);
         TASSERT(a.equals("Test 07append1"));
-
+        
         XMLCh  s[] = {0x32, 0x33, 0x00};
         a.appendData(s);
         TASSERT(a.equals("Test 07append123"));
-
+        
         a = "Test 07a ";
         a += b;
         TASSERT(a.equals("Test 07a append"));
-       
+        
         a += (XMLCh)0x31;
         TASSERT(a.equals("Test 07a append1"));
-
+        
         a += s;
         TASSERT(a.equals("Test 07a append123"));
-
+        
     }
     TESTEPILOG
-
-
-    //
-    //  Test 8 Append Data, with plenty of extra space in buffer.
-    //
-    TESTPROLOG;
+        
+        
+        //
+        //  Test 8 Append Data, with plenty of extra space in buffer.
+        //
+        TESTPROLOG;
     {
         DOMString a;
-		a.reserve(100);
+        a.reserve(100);
         DOMString b("Test 08");
         DOMString c("append");
-
+        
         TASSERT(a != 0);  // (The String object has an identity, even if no contents)
         TASSERT(a.length() == 0);
         a.appendData(b);
@@ -386,26 +383,26 @@ int  main()
         TASSERT(c.equals("append"));
     };
     TESTEPILOG
-
-
-
-    //
-    //  Test 9 Append Data, with plenty of extra space in buffer, but with
-    //                      a clone, so that the original buffer can not be modified.
-    //
-    TESTPROLOG;
+        
+        
+        
+        //
+        //  Test 9 Append Data, with plenty of extra space in buffer, but with
+        //                      a clone, so that the original buffer can not be modified.
+        //
+        TESTPROLOG;
     {
         DOMString a;
-		a.reserve(100);
+        a.reserve(100);
         DOMString b("Test 09");
         DOMString c("append");
-
+        
         TASSERT(a.length() == 0);
         a.appendData(b);
         TASSERT(a.equals(b));
         TASSERT(a.equals("Test 09"));
         TASSERT(a != b);
-
+        
         DOMString d = a.clone();
         TASSERT(a.equals("Test 09"));
         TASSERT(b.equals("Test 09"));
@@ -413,7 +410,7 @@ int  main()
         TASSERT(a != b);
         TASSERT(a != d);
         TASSERT(b != d);
-
+        
         a.appendData(c);
         TASSERT(a.equals("Test 09append"));
         TASSERT(b.equals("Test 09"));
@@ -421,8 +418,8 @@ int  main()
         TASSERT(d.equals("Test 09"));
     };
     TESTEPILOG;
-
-
+    
+    
     //
     // Test 10   DOMString Operator +
     //
@@ -432,25 +429,25 @@ int  main()
         DOMString b("DOMString ");
         XMLCh     s[] = {0x58, 0x4d, 0x4c, 0x20, 0x00};   // Unicode "XML "
         XMLCh     Z   = 0x5A;                             // Unicode 'Z'
-
+        
         a = b + b;
         TASSERT(a.equals("DOMString DOMString "));
-
+        
         a = b + s;
         TASSERT(a.equals("DOMString XML "));
-
+        
         a = s + b;
         TASSERT(a.equals("XML DOMString "));
-
+        
         a = b + Z;
         TASSERT(a.equals("DOMString Z"));
-
+        
         a = Z + b;
         TASSERT(a.equals("ZDOMString "));
     }
     TESTEPILOG;
-
-
+    
+    
     //
     // Test 11   DOMString::subStringData(unsigned int offset, unsigned int count)
     //
@@ -458,33 +455,33 @@ int  main()
     {
         DOMString srcString("This is the source string.");
         //                   01234567890123456789012345
-
+        
         DOMString This = srcString.substringData(0,4);
         DOMString is   = srcString.substringData(5,2);
         DOMString dot  = srcString.substringData(25,1);
         DOMString offEnd = srcString.substringData(19, 1000);
-
+        
         TASSERT(This.equals("This"));
         TASSERT(is  .equals("is"));
         TASSERT(dot .equals("."));
         TASSERT(offEnd.equals("string."));
-
+        
         EXCEPTION_TEST(srcString.substringData(-1, 10), DOM_DOMException::INDEX_SIZE_ERR);
         EXCEPTION_TEST(srcString.substringData(26, 1), DOM_DOMException::INDEX_SIZE_ERR);
-
+        
         srcString.insertData(0, "x");   // Changing the source should not alter previously
-                                        //   extracted substrings.
-
+        //   extracted substrings.
+        
         TASSERT(This.equals("This"));
         TASSERT(is  .equals("is"));
         TASSERT(dot .equals("."));
         TASSERT(offEnd.equals("string."));
         TASSERT(srcString.equals("xThis is the source string."));
-
+        
     }
     TESTEPILOG;
-
-
+    
+    
     //
     // Test 12   DOMString::insertData(unsigned int offset, DOMString &src)
     //
@@ -492,36 +489,97 @@ int  main()
     {
         DOMString aString("This is a string.");
         //                 01234567890123456
-
+        
         aString.insertData(17, " Added at end.");
         TASSERT(aString.equals("This is a string. Added at end."));
-
+        
         aString = "This is a string.";
         EXCEPTION_TEST(aString.insertData(18, "x"), DOM_DOMException::INDEX_SIZE_ERR);
         TASSERT(aString.equals("This is a string."));
-
+        
         aString = 0;
         aString.reserve(100);
         aString.appendData("This is a string.");
         aString.insertData(17, " Added at end.");
         TASSERT(aString.equals("This is a string. Added at end."));
-
+        
         aString.insertData(0, "So ");
         TASSERT(aString.equals("So This is a string. Added at end."));
-
+        
         aString.insertData(2, "x");
         TASSERT(aString.equals("Sox This is a string. Added at end."));
-
+        
         EXCEPTION_TEST(aString.substringData(-1, 1), DOM_DOMException::INDEX_SIZE_ERR);
+        
+        
+    }
+    TESTEPILOG;
+    
 
+	//
+	// Minimal test of DOMString::transcode()
+	//
+	TESTPROLOG;
+	{
+		static char testStr[] = "This is our test string.";
+
+		DOMString DOMTestStr = testStr;
+		char *roundTripString = DOMTestStr.transcode();
+		TASSERT(strcmp(testStr, roundTripString) == 0);
+		delete [] roundTripString;
+
+        DOMString domstr2 = DOMString::transcode(testStr);
+        TASSERT(domstr2.equals(DOMTestStr));
+	}
+    TESTEPILOG;
+
+
+    //
+    //  String bugs submitted by David Chung
+    //
+	TESTPROLOG;
+	{
+        DOMString greeting("hello");
+        greeting.appendData(greeting);
+        TASSERT(greeting.equals("hellohello"));
+
+ 
+        // Test DOMString.insertData, when source string is the same as the destination.
+        //   Implementation forces creation of a new buffer.
+        //                            
+        DOMString greeting2("Hello              ");
+        //                   0123456789012345678
+        greeting2.deleteData(5, 14);    // Leave unused space at end of buffer.
+        TASSERT(greeting2.equals("Hello"));
+
+        greeting2.insertData(2, greeting2); 
+        TASSERT(greeting2.equals("HeHellollo"));
+
+
+        // DOMString.insertData().  Original buffer has space, and is retained.
+        DOMString greeting3("Hello              ");
+        //                   0123456789012345678
+        greeting3.deleteData(5, 14);    // Leave unused space at end of buffer.
+        TASSERT(greeting3.equals("Hello"));  
+
+        greeting3.insertData(2, "ByeBye"); 
+        TASSERT(greeting3.equals("HeByeByello"));
 
     }
     TESTEPILOG;
 
+}
 
 
 
-
+//---------------------------------------------------------------------------------------
+//
+//   DOMBasicTests    Basic DOM Level 1 tests
+//
+//---------------------------------------------------------------------------------------
+void DOMBasicTests()
+{
+        DomMemDebug     entryMemState, exitMemState;
     //
     //  Test Doc01      Create a new empty document
     //
@@ -946,57 +1004,18 @@ int  main()
     TESTEPILOG;
 
 
-	//
-	// Minimal test of DOMString::transcode()
-	//
-	TESTPROLOG;
-	{
-		static char testStr[] = "This is our test string.";
-
-		DOMString DOMTestStr = testStr;
-		char *roundTripString = DOMTestStr.transcode();
-		TASSERT(strcmp(testStr, roundTripString) == 0);
-		delete [] roundTripString;
-
-        DOMString domstr2 = DOMString::transcode(testStr);
-        TASSERT(domstr2.equals(DOMTestStr));
-	}
-    TESTEPILOG;
+}
 
 
-    //
-    //  String bugs submitted by David Chung
-    //
-	TESTPROLOG;
-	{
-        DOMString greeting("hello");
-        greeting.appendData(greeting);
-        TASSERT(greeting.equals("hellohello"));
+//---------------------------------------------------------------------------------------
+//
+//   DOMNSTests    DOM Name Space tests
+//
+//---------------------------------------------------------------------------------------
+void DOMNSTests()
+{
+        DomMemDebug     entryMemState, exitMemState;
 
- 
-        // Test DOMString.insertData, when source string is the same as the destination.
-        //   Implementation forces creation of a new buffer.
-        //                            
-        DOMString greeting2("Hello              ");
-        //                   0123456789012345678
-        greeting2.deleteData(5, 14);    // Leave unused space at end of buffer.
-        TASSERT(greeting2.equals("Hello"));
-
-        greeting2.insertData(2, greeting2); 
-        TASSERT(greeting2.equals("HeHellollo"));
-
-
-        // DOMString.insertData().  Original buffer has space, and is retained.
-        DOMString greeting3("Hello              ");
-        //                   0123456789012345678
-        greeting3.deleteData(5, 14);    // Leave unused space at end of buffer.
-        TASSERT(greeting3.equals("Hello"));  
-
-        greeting3.insertData(2, "ByeBye"); 
-        TASSERT(greeting3.equals("HeByeByello"));
-
-    }
-    TESTEPILOG;
 
 
     //
@@ -1612,19 +1631,51 @@ int  main()
     }
     TESTEPILOG;
 
-
+    //
+    // 
+    //
+    TESTPROLOG;
     {
-        
 
 
     }
- 
+    TESTEPILOG;
+
+}
+
+
+
+//---------------------------------------------------------------------------------------
+//
+//   main
+//
+//---------------------------------------------------------------------------------------
+int  main()
+{
+    try {
+        XMLPlatformUtils::Initialize();
+    }
+    catch (const XMLException& toCatch) {
+        char *pMessage = XMLString::transcode(toCatch.getMessage());
+        fprintf(stderr, "Error during XMLPlatformUtils::Initialize(). \n"
+            "  Message is: %s\n", pMessage);
+        delete [] pMessage;
+        return -1;
+    }
+    
+    
+    DOMStringTests();
+    DOMBasicTests();
+    DOMNSTests();
+
     //
-    //  Print Final allocation stats for full test
+    //  Print Final allocation stats for full set of tests
     //
+    XMLPlatformUtils::Terminate();
     DomMemDebug().print();
-    
     return 0;
-    };
-    
-            
+
+};
+
+
+

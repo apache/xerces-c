@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.16  2000/05/09 00:22:29  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.15  2000/03/28 19:43:13  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
  * stuff.
@@ -142,6 +148,12 @@
 #include <string.h>
 
  
+//----------------------------------------------
+//
+//  Forward decls
+//
+//----------------------------------------------
+static void DOMStringTerminate();
 
 //----------------------------------------------
 //
@@ -221,15 +233,18 @@ static const int allocGroupSize = 1024;   // Number of string handles to allocat
                                           //  as a chunk from the system's
                                           //  memory allocator.
 
+DOMStringHandle *DOMStringHandle::blockListPtr = 0;  // Point to the head of the list
+                                          //  of larger blocks in which DOMStringHandles
+                                          //  are allocated.
 
 //
 //  There is one global mutex that is used to synchronize access to the
 //     allocator free list for DOMStringHandles.  This function gets that
 //     mutex, and will create it on the first attempt to get it.
 //
+static XMLMutex* DOMStringHandleMutex = 0;   // Mutex will be deleted by ~DOMStringHandle.
 XMLMutex& DOMStringHandle::getMutex()
 {
-    static XMLMutex* DOMStringHandleMutex = 0;
     if (!DOMStringHandleMutex)
     {
         XMLMutex* tmpMutex = new XMLMutex;
@@ -239,6 +254,7 @@ XMLMutex& DOMStringHandle::getMutex()
             delete tmpMutex;
         }
     }
+    
     return *DOMStringHandleMutex;
 }
 
@@ -260,12 +276,20 @@ void *DOMStringHandle::operator new(size_t sizeToAlloc)
         // Allocate a new batch of them, using the system's 
         // operator new to get a chunk of memory.
         //
-        // Link all of these new StringHandles into our free list
-        //
-        DOMStringHandle *dsg = 
+       DOMStringHandle *dsg = 
             ::new DOMStringHandle[allocGroupSize];
-        int   i;
-        for (i=0; i<allocGroupSize-1; i++) {
+
+        // Link the block itself into the list of blocks.  The purpose of this is to
+        //   let us locate and delete the blocks when shutting down.
+        //
+        *(DOMStringHandle **)dsg = blockListPtr;
+        blockListPtr = dsg;
+
+
+        // Link all of the new storage for StringHandles into the StringHandle free list
+        int   i;    //   Start with index 1;  index 0 is reserved for linking the 
+                    //   larger allocation blocks together.
+        for (i=1; i<allocGroupSize-1; i++) {
             *(void **)&dsg[i] = freeListPtr;
             freeListPtr = &dsg[i];
         }
@@ -284,12 +308,34 @@ void *DOMStringHandle::operator new(size_t sizeToAlloc)
 //
 void DOMStringHandle::operator delete(void *pMem)
 {
-    XMLMutexLock   lock(&getMutex());    // Lock the DOMStringHandle mutex for the
-                                         //    duration of this function.
-   *(void **)pMem = freeListPtr;
-    freeListPtr = pMem;
-};
+    {
+        XMLMutexLock   lock(&getMutex());    // Lock the DOMStringHandle mutex for the
+        //    duration of this function.
+        *(void **)pMem = freeListPtr;
+        freeListPtr = pMem;
+    }
     
+    // If ALL of the string handles are gone, delete the storage blocks used for the
+    //   handles as well.  This will generally only happen on PlatFormUtils::Terminate(),
+    //   since any use of the DOM will cache some commonly used DOMStrings
+    //   forever (until Terminate).
+    if (DOMString::gLiveStringHandleCount == 0)
+    {
+        DOMStringHandle *pThisBlock, *pNextBlock;
+        for (pThisBlock = blockListPtr; pThisBlock != 0; pThisBlock = pNextBlock)
+        {
+            pNextBlock = *(DOMStringHandle **)pThisBlock;
+            delete [] pThisBlock;
+        }
+        blockListPtr = 0;
+        freeListPtr  = 0;
+
+        DOMStringTerminate();            //  Clean up everything else related to DOMString.
+    }
+    
+    
+};
+
 
 void DOMStringHandle::addRef()
 {
@@ -303,8 +349,8 @@ void DOMStringHandle::removeRef()
     if (result==0)
     {
         fDSData->removeRef();
-        delete this;
         XMLPlatformUtils::atomicDecrement(DOMString::gLiveStringHandleCount);
+        delete this;
     };
 };
 
@@ -410,9 +456,9 @@ DOMString::DOMString(const XMLCh *data, unsigned int dataLength)
 //          codepage to Unicode that is to be used when
 //          a DOMString is constructed from a char *.
 //
+static XMLLCPTranscoder* gDomConverter = 0;
 XMLLCPTranscoder*  getDomConverter()
 {
-    static XMLLCPTranscoder* gDomConverter = 0;
     if (!gDomConverter) 
     {
         XMLLCPTranscoder* transcoder =
@@ -423,7 +469,7 @@ XMLLCPTranscoder*  getDomConverter()
 
         if (XMLPlatformUtils::compareAndSwap((void **)&gDomConverter,
         transcoder, 0) != 0)
-            delete gDomConverter;
+            delete transcoder;
     }
     return gDomConverter;
 };
@@ -1124,6 +1170,21 @@ DOMString operator + (XMLCh lhs, const DOMString& rhs)
     retString.appendData(rhs);
     return retString;
 }
+
+
+
+static void DOMStringTerminate()        // Termination function cleans up all lazily created
+{                                       //   resources used by the DOMString implementation.
+                                        //   Called when no DOMStrings remain in the app.  (We
+                                        //   know this from reference counting.)
+
+        delete DOMStringHandleMutex;    //  Delete the synchronization mutex,
+        DOMStringHandleMutex = 0;       
+
+        delete gDomConverter;           //  Delete the local code page converter.
+        gDomConverter = 0;
+};
+
 
 
 

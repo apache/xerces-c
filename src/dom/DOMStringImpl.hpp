@@ -59,6 +59,12 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/05/09 00:22:30  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.7  2000/03/02 19:53:52  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -118,20 +124,29 @@ public:
 class  DOMStringHandle
 {
 public:
-            unsigned int     fLength;
-            int              fRefCount;
-            DOMStringData    *fDSData;
+            unsigned int     fLength;              // The logical length of the DOMString.
+                                                   //  This may be shorter than the buffer length.
+            int              fRefCount;            // The number of DOMString objects pointing to
+                                                   //  this string handle.
+            DOMStringData    *fDSData;             // Pointer to the string buffer. May be null.
 
-    void    *operator new( size_t sizeToAlloc);
-    void    operator delete( void *pvMem );
+    void    *operator new( size_t sizeToAlloc);    // StringHandles have custom, optimized
+    void    operator delete( void *pvMem );        //   memory allocation.
+
+
 private:
-    static  void *freeListPtr;
+    static  void             *freeListPtr;         // Head of the linked list of unallocated String Handles
+
+    static  DOMStringHandle  *blockListPtr;        // Head of the linked list of memory blocks from which
+                                                   //  string handles are sub-allocated.
+
 public:
     static  DOMStringHandle  *createNewStringHandle(unsigned int bufLength);
             DOMStringHandle  *cloneStringHandle();
     inline  void             addRef();
     inline  void             removeRef();
                              ~DOMStringHandle() {};
+    static  void             DOMStringCleanup();
 private:
     inline                   DOMStringHandle() {};
     static inline  XMLMutex &getMutex();

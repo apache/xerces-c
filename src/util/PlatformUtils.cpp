@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/05/09 00:22:40  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.7  2000/03/24 19:50:29  roddey
  * Clear the 'initialized' flag when the termination call is made. Probably
  * not required technically, but...
@@ -110,7 +116,7 @@
 //      the static data of the platform utilities class and here locally.
 // ---------------------------------------------------------------------------
 static XMLMutex*                gSyncMutex = 0;
-static RefVectorOf<XMLDeleter>  gLazyData(512);
+static RefVectorOf<XMLDeleter>* gLazyData;
 static bool                     gInitFlag = false;
 
 
@@ -139,6 +145,9 @@ void XMLPlatformUtils::Initialize()
 
     // Create the local sync mutex
     gSyncMutex = new XMLMutex;
+
+    // Create the array for saving lazily allocated objects to be deleted at termination
+    gLazyData= new RefVectorOf<XMLDeleter>(512);
 
     //
     //  Call the platform init method, which is implemented in each of the
@@ -247,7 +256,7 @@ void XMLPlatformUtils::registerLazyData(XMLDeleter* const deleter)
 {
     // Just add a copy of this object to the vector. MUST be synchronized
     XMLMutexLock lock(gSyncMutex);
-    gLazyData.addElement(deleter);
+    gLazyData->addElement(deleter);
 }
 
 
@@ -262,11 +271,11 @@ void XMLPlatformUtils::cleanupLazyData()
     //  Also, note that we don't synchronize here because this is happening
     //  during shutdown.
     //
-    while (gLazyData.size())
+    while (gLazyData->size())
     {
         try
         {
-            gLazyData.removeLastElement();
+            gLazyData->removeLastElement();
         }
 
         catch(...)
@@ -274,4 +283,6 @@ void XMLPlatformUtils::cleanupLazyData()
             // We don't try to report errors here, just fall through
         }
     }
+    delete gLazyData;
+    gLazyData = 0;
 }

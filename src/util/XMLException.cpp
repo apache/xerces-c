@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/05/09 00:22:40  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.4  2000/03/02 19:54:48  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -83,6 +89,7 @@
 // ---------------------------------------------------------------------------
 #include <util/Mutexes.hpp>
 #include <util/PlatformUtils.hpp>
+#include <util/XMLDeleterFor.hpp>
 #include <util/XMLException.hpp>
 #include <util/XMLMsgLoader.hpp>
 #include <util/XMLString.hpp>
@@ -122,9 +129,18 @@ static XMLMutex& gMsgMutex()
         XMLMutex* tmpMutex = new XMLMutex;
         if (XMLPlatformUtils::compareAndSwap((void**)&msgMutex, tmpMutex, 0))
         {
-            // Someone beat us to it, so let's clean up ours
+            // Some other thread beat us to it, so let's clean up ours.
             delete tmpMutex;
         }
+        else
+        {
+            // This is the real mutex.  Register it for deletion at Termination.
+            XMLPlatformUtils::registerLazyData
+                (
+                new XMLDeleterFor<XMLMutex>(msgMutex)
+                );
+        }
+        
     }
     return *msgMutex;
 }
@@ -151,8 +167,17 @@ static XMLMsgLoader& gGetMsgLoader()
         gLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgExceptDomain);
         if (!gLoader)
             XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
-    }
 
+        //
+        // Register this XMLMsgLoader for deletion at Termination.
+        //
+        XMLPlatformUtils::registerLazyData
+            (
+            new XMLDeleterFor<XMLMsgLoader>(gLoader)
+            );
+        
+    }
+    
     // We got it, so return it
     return *gLoader;
 }

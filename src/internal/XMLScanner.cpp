@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.17  2000/05/09 00:22:36  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.16  2000/05/05 01:44:29  rahulj
  * Fixed defect in progressive parsing 'parseNext()' reported by Tim
  * Johnston <tim@gntsoftware.com>. Fix provided by Dean Roddey.
@@ -291,10 +297,16 @@ void XMLScanner::scanDocument(  const   XMLCh* const    systemId
         //  it has to be fully qualified. If not, then assume we are just
         //  mistaking a file for a URL.
         //
+
         XMLURL tmpURL(systemId);
-        if (tmpURL.isRelative())
-            ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
-        srcToUse = new URLInputSource(tmpURL);
+        if (tmpURL.isRelative()) {
+            srcToUse = new LocalFileInputSource(systemId);
+        }
+        else
+        {
+            srcToUse = new URLInputSource(tmpURL);
+        }
+        
     }
 
     catch(const MalformedURLException&)

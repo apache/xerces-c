@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/05/09 00:22:45  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.9  2000/03/18 00:00:04  roddey
  * Initial updates for two way transcoding support
  *
@@ -98,7 +104,18 @@
 #define WIN32TRANSSERVICE_HPP
 
 #include <util/TransService.hpp>
+#include <util/RefHashTableOf.hpp>
+#include <windows.h>
 
+class CPMapEntry;
+
+
+
+//---------------------------------------------------------------------------
+//
+//  class Win32TransService
+//
+//---------------------------------------------------------------------------
 class XMLUTIL_EXPORT Win32TransService : public XMLTransService
 {
 public :
@@ -106,7 +123,7 @@ public :
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     Win32TransService();
-    ~Win32TransService();
+    virtual ~Win32TransService();
 
 
     // -----------------------------------------------------------------------
@@ -155,14 +172,35 @@ private :
     Win32TransService(const Win32TransService&);
     void operator=(const Win32TransService&);
 
+    //      This is a hash table of entries which map encoding names to their
+    //      Windows specific code pages. The code page allows us to create
+    //      transcoders for those encodings. The encoding names come from XML
+    //      files.
+    //
+    //      This map is shared unsynchronized among all threads of the process,
+    //      which is cool since it will be read only once its initialized.
 
-    // -----------------------------------------------------------------------
-    //  Private helper methods, implemented in Win32TransService2.cpp!
-    // -----------------------------------------------------------------------
-    void initCPMap();
+
+
+    static bool isAlias(const   HKEY            encodingKey
+                    ,       char* const     aliasBuf = 0
+                    , const unsigned int    nameBufSz = 0);
+
+
+    RefHashTableOf<CPMapEntry>    *fCPMap;
 };
 
 
+
+
+
+
+
+//---------------------------------------------------------------------------
+//
+//  class Win32Transcoder
+//
+//---------------------------------------------------------------------------
 
 class XMLUTIL_EXPORT Win32Transcoder : public XMLTranscoder
 {
@@ -231,6 +269,13 @@ private :
 
 
 
+
+
+//---------------------------------------------------------------------------
+//
+//  class Win32LCPTranscoder
+//
+//---------------------------------------------------------------------------
 class XMLUTIL_EXPORT Win32LCPTranscoder : public XMLLCPTranscoder
 {
 public :

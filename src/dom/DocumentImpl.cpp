@@ -88,29 +88,6 @@
 #include "NodeIteratorImpl.hpp"
 #include "DOM_Document.hpp"
 
-// ---------------------------------------------------------------------------
-//  StringPool::PoolElem: Constructors and Destructor
-// ---------------------------------------------------------------------------
-DocumentImpl::PoolElem::PoolElem( const DOMString string
-                                  , const DOM_Element &elem) :
-    fElem((DOM_Element&)elem)
-    , fString(string)
-{
-}
-
-DocumentImpl::PoolElem::~PoolElem()
-{
-}
-
-// ---------------------------------------------------------------------------
-//  DocumentImpl::PoolElem: Public methods
-// ---------------------------------------------------------------------------
-const XMLCh* DocumentImpl::PoolElem::getKey() const
-{
-    return fString.rawBuffer();
-}
-
-
 
 DocumentImpl::DocumentImpl()
     : ParentNode(this)
@@ -118,7 +95,6 @@ DocumentImpl::DocumentImpl()
     docType=null;
     docElement=null;
     namePool = new DStringPool(257);
-    identifiers = new RefHashTableOf<PoolElem>(109);
     iterators = 0L;
     treeWalkers = 0L;
 };
@@ -137,7 +113,6 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
     docElement=null;
     appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
     namePool = new DStringPool(257);
-	identifiers = new RefHashTableOf<PoolElem>(109);
     iterators = 0L;
     treeWalkers = 0L;
 }
@@ -178,9 +153,6 @@ DocumentImpl::~DocumentImpl()
         delete treeWalkers;
     }
     
-    if (identifiers != 0L) {
-	    delete identifiers;
-    }
 
     delete namePool;
     // Do not delete docType and docElement pointers here.
@@ -679,21 +651,9 @@ DeepNodeListImpl *DocumentImpl::getElementsByTagNameNS(const DOMString &fNamespa
 
 ElementImpl *DocumentImpl::getElementById(const DOMString &elementId)
 {
-	PoolElem *elem = identifiers->get(elementId.rawBuffer());
-	if (elem)
-	{
-		return (ElementImpl*)elem->fElem.fImpl;
-	}
-
 	return null;
 }
 
-// Non-standard accessory functions */
-
-void DocumentImpl::putIdentifier(const DOMString &elementId, const DOM_Element &ele)
-{
-	identifiers->put(new PoolElem(elementId, ele));
-}
 
 //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
 //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".

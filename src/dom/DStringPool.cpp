@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/05/09 00:22:31  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.3  2000/03/02 19:53:58  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -77,6 +83,7 @@
 //
 
 #include "DStringPool.hpp"
+#include <util/XMLDeleterFor.hpp>
 #include <util/XMLString.hpp>
 #include <util/PlatformUtils.hpp>
 
@@ -190,6 +197,16 @@ const DOMString &DStringPool::getStaticString(const char *in, DOMString **loc)
                                             //   pass them around by value.
         if (XMLPlatformUtils::compareAndSwap((void **)loc, t, 0) != 0)
             delete t;
+        else
+        {
+            // Register this string for deletion.  Doing each string individually
+            //   may be a little heavyweight, but will work for the time being
+            //   for arranging the deletion of eveything on Termination of XML.
+            XMLPlatformUtils::registerLazyData
+                (
+                new XMLDeleterFor<DOMString>(*loc)
+                );
+        }
     }
     return **loc;
 }

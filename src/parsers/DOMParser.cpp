@@ -601,7 +601,7 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
             // Register identifiers
             if (oneAttrib->getType()==XMLAttDef::ID)
             {
-               fDocument.putIdentifier(oneAttrib->getValue(), elem);
+                // When we record ID attributes, here is the place to do it.
             }
             attr->setSpecified(oneAttrib->getSpecified());
         }
@@ -609,14 +609,14 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
         elem = fDocument.createElement(elemDecl.getFullName());
         ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
         for (unsigned int index = 0; index < attrCount; ++index) {
-           const XMLAttr* oneAttrib = attrList.elementAt(index);
-           AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
-           // Register identifiers
-           if (oneAttrib->getType()==XMLAttDef::ID)
-           {
-              fDocument.putIdentifier(oneAttrib->getValue(), elem);
-	   }
-           attr->setSpecified(oneAttrib->getSpecified());
+            const XMLAttr* oneAttrib = attrList.elementAt(index);
+            AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
+            // Register identifiers
+            if (oneAttrib->getType()==XMLAttDef::ID)
+            {
+                // When we record ID attributes, here is the place to do it.
+            }
+            attr->setSpecified(oneAttrib->getSpecified());
         }
     }
     
@@ -850,7 +850,8 @@ void DOMParser::doctypeDecl
 	dt = fDocument.getImplementation().createDocumentType(elemDecl.getFullName(), publicId, systemId);
     fDocumentType = (DocumentTypeImpl*)dt.fImpl;
 	((DocumentImpl*)fDocument.fImpl)->setDocumentType(fDocumentType);
-	populateDocumentType();
+
+	populateDocumentType();                  //  Add the entities and notations to this DocType.
 	
 }
 

@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.21  2000/05/09 00:22:41  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.20  2000/04/18 23:26:01  andyh
  * Fix problem on NT with conflict between Korean Won Sign (0x20A9)
  * and backslash in file path names.
@@ -155,6 +161,10 @@
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
 #include <windows.h>
+
+#ifdef _DEBUG
+#include <crtdbg.h>
+#endif
 
 //
 //  These control which transcoding service is used by the Win32 version.
@@ -803,6 +813,24 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 //
 void XMLPlatformUtils::platformInit()
 {
+
+#if 1 && _DEBUG
+    //  Enable this code for memeory leak testing
+    
+   // Send all reports to STDOUT
+   _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_FILE );
+   _CrtSetReportFile( _CRT_WARN, _CRTDBG_FILE_STDOUT );
+   _CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_FILE );
+   _CrtSetReportFile( _CRT_ERROR, _CRTDBG_FILE_STDOUT );
+   _CrtSetReportMode( _CRT_ASSERT, _CRTDBG_MODE_FILE );
+   _CrtSetReportFile( _CRT_ASSERT, _CRTDBG_FILE_STDOUT );
+
+    int tmpDbgFlag;
+    tmpDbgFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+    tmpDbgFlag |= _CRTDBG_LEAK_CHECK_DF;
+    _CrtSetDbgFlag(tmpDbgFlag);
+#endif
+
     // Figure out if we are on NT and save that flag for later use
     OSVERSIONINFO   OSVer;
     OSVer.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);

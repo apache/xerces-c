@@ -108,17 +108,6 @@ private:
     // -----------------------------------------------------------------------
     //  Private data types
     // -----------------------------------------------------------------------
-    class PoolElem
-    {
-        public :
-            PoolElem(const DOMString string, const DOM_Element &elem);
-            ~PoolElem();
-
-            const XMLCh* getKey() const;
-
-            DOM_Element		 fElem;
-            DOMString        fString;
-    };
 
    	void setDocumentType(DocumentTypeImpl *doctype);
 
@@ -126,7 +115,6 @@ private:
     ElementImpl                 *docElement;
     DStringPool                 *namePool;
 
-    RefHashTableOf<PoolElem>	*identifiers;
     NodeIterators               *iterators;
     TreeWalkers                 *treeWalkers;
     friend class NodeIteratorImpl;
@@ -182,9 +170,6 @@ public:
     virtual DeepNodeListImpl    *getElementsByTagNameNS(const DOMString &namespaceURI,
 	const DOMString &localName);
     virtual ElementImpl         *getElementById(const DOMString &elementId);
-
-	// Non-standard accessory functions
-    virtual void		         putIdentifier(const DOMString &elementId, const DOM_Element &ele);
 
     //Return the index > 0 of ':' in the given qualified name qName="prefix:localName".
     //Return 0 if there is no ':', or -1 if qName is malformed such as ":abcd".

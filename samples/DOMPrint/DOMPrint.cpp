@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/05/09 00:22:27  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.9  2000/04/25 20:27:44  aruna1
  * DOM_XMLDecl type node introduced to get the information of the
  * XML Declaration in a document and store it part of the tree
@@ -136,6 +142,7 @@
 #include <parsers/DOMParser.hpp>
 #include <dom/DOM_Node.hpp>
 #include <dom/DOM_NamedNodeMap.hpp>
+#include <dom/DomMemDebug.hpp>
 #include "DOMTreeErrorReporter.hpp"
 #include <string.h>
 #include <stdlib.h>
@@ -206,6 +213,7 @@ int main(int argC, char* argV[])
     if (argC < 2)
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 1;
     }
 
@@ -213,6 +221,7 @@ int main(int argC, char* argV[])
     if (!strcmp(argV[1], "-?"))
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 2;
     }
 
@@ -251,6 +260,7 @@ int main(int argC, char* argV[])
          else
         {
             usage();
+            XMLPlatformUtils::Terminate();
             return 1;
         }
     }
@@ -262,22 +272,23 @@ int main(int argC, char* argV[])
     if (parmInd + 1 != argC)
     {
         usage();
+        XMLPlatformUtils::Terminate();
         return 1;
     }
     xmlFile = argV[parmInd];
 
     //
-    //  Create our validator, then attach an error handler to the parser.
+    //  Create our parser, then attach an error handler to the parser.
     //  The parser will call back to methods of the ErrorHandler if it
     //  discovers errors during the course of parsing the XML document.
     //
-    DOMParser parser;
-    parser.setDoValidation(doValidation);
-    parser.setDoNamespaces(doNamespaces);
+    DOMParser *parser = new DOMParser;
+    parser->setDoValidation(doValidation);
+    parser->setDoNamespaces(doNamespaces);
     ErrorHandler *errReporter = new DOMTreeErrorReporter();
-    parser.setErrorHandler(errReporter);
-	parser.setExpandEntityReferences(doExpand);
-    parser.setToCreateXMLDeclTypeNode(doCreateXMLDecl);
+    parser->setErrorHandler(errReporter);
+	parser->setExpandEntityReferences(doExpand);
+    parser->setToCreateXMLDeclTypeNode(doCreateXMLDecl);
     //
     //  Parse the XML file, catching any XML exceptions that might propogate
     //  out of it.
@@ -285,7 +296,7 @@ int main(int argC, char* argV[])
     bool errorsOccured = false;
     try
     {
-        parser.parse(xmlFile);
+        parser->parse(xmlFile);
     }
 
     catch (const XMLException& e)
@@ -298,19 +309,25 @@ int main(int argC, char* argV[])
     // If the parse was successful, output the document data from the DOM tree
     if (!errorsOccured)
     {
-        DOM_Node doc = parser.getDocument();
+        DOM_Node doc = parser->getDocument();
 		cout << doc << endl;
     }
 
     //
-    //  Clean up the element counter object. The parser does not adopt handlers
+    //  Clean up the error handler. The parser does not adopt handlers
     //  since they could be many objects or one object installed for multiple
     //  handlers.
     //
     delete errReporter;
 
+    //
+    //  Delete the parser itself.  Must be done prior to calling Terminate, below.
+    //
+    delete parser;
+
     // And call the termination method
     XMLPlatformUtils::Terminate();
+    // DomMemDebug().print();
 
     //
 	//  The DOM document and its contents are reference counted, and need

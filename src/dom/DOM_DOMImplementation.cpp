@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/05/09 00:22:31  andyh
+ * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
+ * allocated memory; memory leak checking tools will no longer report
+ * that leaks exist.  (DOM GetElementsByTagID temporarily removed
+ * as part of this.)
+ *
  * Revision 1.8  2000/04/27 02:52:42  lehors
  * global reorganization similar to what I've done in Java,
  * nodes now are much smaller.
@@ -115,7 +121,8 @@
 #include "DocumentImpl.hpp"
 #include "DocumentTypeImpl.hpp"
 #include "DStringPool.hpp"
-#include "util/PlatformUtils.hpp"
+#include <util/XMLDeleterFor.hpp>
+#include <util/PlatformUtils.hpp>
 
 //
 //  Static constants.  These are lazily initialized on first usage.
@@ -174,7 +181,18 @@ DOM_DOMImplementation &DOM_DOMImplementation::getImplementation() {
     {
         DOM_DOMImplementation *t = new DOM_DOMImplementation;
         if (XMLPlatformUtils::compareAndSwap((void **)&gDomimp, t, 0) != 0)
+        {
             delete t;
+        }
+        else
+        {
+            
+            XMLPlatformUtils::registerLazyData
+                (
+                new XMLDeleterFor<DOM_DOMImplementation>(gDomimp)
+                );
+        }
+        
     }
     return *gDomimp;
 };
