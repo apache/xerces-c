@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/11/08 23:37:00  neilg
+ * fix for bug 24287 by Abe Backus.
+ *
  * Revision 1.8  2003/05/17 16:32:17  knoaman
  * Memory manager implementation : transcoder update.
  *
@@ -587,7 +590,7 @@ int CygwinTransService::auxCompareString( const XMLCh* const comp1
     // Strings are equal until proven otherwise.
     while ( ( countChar < maxChars ) && ( !theResult ) )
     {
-        theResult = (int)(args[1][countChar]) - (int)(args[0][countChar]);
+        theResult = (int)(args[0][countChar]) - (int)(args[1][countChar]);
         ++countChar;
     }
 
