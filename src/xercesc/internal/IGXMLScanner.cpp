@@ -1421,11 +1421,12 @@ void IGXMLScanner::scanDocTypeDecl()
     //  next. If we are reusing the validator, then don't scan it.
     if (hasExtSubset) {
 
+        InputSource* srcUsed=0;
+        Janitor<InputSource> janSrc(srcUsed);
         if (fUseCachedGrammar)
         {
-            InputSource* sysIdSrc = resolveSystemId(sysId);
-            Janitor<InputSource> janSysIdSrc(sysIdSrc);
-            Grammar* grammar = fGrammarResolver->getGrammar(sysIdSrc->getSystemId());
+            srcUsed = resolveSystemId(sysId);
+            Grammar* grammar = fGrammarResolver->getGrammar(srcUsed->getSystemId());
 
             if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) {
 
@@ -1468,21 +1469,29 @@ void IGXMLScanner::scanDocTypeDecl()
         if (fLoadExternalDTD || fValidate)
         {
             // And now create a reader to read this entity
-            InputSource* srcUsed;
-            XMLReader* reader = fReaderMgr.createReader
-            (
-                sysId
-                , pubId
-                , false
-                , XMLReader::RefFrom_NonLiteral
-                , XMLReader::Type_General
-                , XMLReader::Source_External
-                , srcUsed
-                , fCalculateSrcOfs
-            );
-
-            // Put a janitor on the input source
-            Janitor<InputSource> janSrc(srcUsed);
+            XMLReader* reader;
+            if(srcUsed!=0)
+                reader = fReaderMgr.createReader
+                        (
+                            *srcUsed
+                            , false
+                            , XMLReader::RefFrom_NonLiteral
+                            , XMLReader::Type_General
+                            , XMLReader::Source_External
+                            , fCalculateSrcOfs
+                        );
+            else
+                reader = fReaderMgr.createReader
+                        (
+                            sysId
+                            , pubId
+                            , false
+                            , XMLReader::RefFrom_NonLiteral
+                            , XMLReader::Type_General
+                            , XMLReader::Source_External
+                            , srcUsed
+                            , fCalculateSrcOfs
+                        );
 
             //  If it failed then throw an exception
             if (!reader)
