@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2001/11/09 18:10:58  tng
+ * Schema Fix: should concatenate all characters for validation.
+ *
  * Revision 1.21  2001/10/23 13:35:36  tng
  * Schema fix: Resolve notation prefix to an URI.
  *
@@ -873,6 +876,6 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
     if (XMLReader::isWhitespace(nextCh))
         fTrailing = true;
 
-    fDatatypeBuffer.set(toFill.getRawBuffer());
+    fDatatypeBuffer.append(toFill.getRawBuffer());
 }
 
