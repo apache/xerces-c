@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/09/30 18:26:18  tng
+ * Since the derived class Wrapper4DOMInputSource has overwritten the set/getEncoding, SystemId, PublicId ... etc., these functions has to be virtual for them to work.
+ *
  * Revision 1.2  2002/02/20 18:17:01  tng
  * [Bug 5977] Warnings on generating apiDocs.
  *
@@ -185,7 +188,7 @@ public:
     * @return The forced encoding, or null if none was supplied.
     * @see #setEncoding
     */
-    const XMLCh* getEncoding() const;
+    virtual const XMLCh* getEncoding() const;
 
 
   /**
@@ -194,7 +197,7 @@ public:
     * @return The public identifier, or null if none was supplied.
     * @see #setPublicId
     */
-    const XMLCh* getPublicId() const;
+    virtual const XMLCh* getPublicId() const;
 
 
   /**
@@ -205,7 +208,7 @@ public:
     * @return The system identifier.
     * @see #setSystemId
     */
-    const XMLCh* getSystemId() const;
+    virtual const XMLCh* getSystemId() const;
 
   /**
     * Get the flag that indicates if the parser should issue fatal error if this input source
@@ -215,7 +218,7 @@ public:
     *         False if the parser issue warning message instead.
     * @see #setIssueFatalErrorIfNotFound
     */
-    const bool getIssueFatalErrorIfNotFound() const;
+    virtual const bool getIssueFatalErrorIfNotFound() const;
 
     //@}
 
@@ -235,7 +238,7 @@ public:
     *
     * @param encodingStr The name of the encoding to force.
     */
-    void setEncoding(const XMLCh* const encodingStr);
+    virtual void setEncoding(const XMLCh* const encodingStr);
 
 
   /**
@@ -249,7 +252,7 @@ public:
     * @see SAXParseException#getPublicId
     * @see #getPublicId
     */
-    void setPublicId(const XMLCh* const publicId);
+    virtual void setPublicId(const XMLCh* const publicId);
 
   /**
     * Set the system identifier for this input source.
@@ -267,7 +270,7 @@ public:
     * @see Locator#getSystemId
     * @see SAXParseException#getSystemId
     */
-    void setSystemId(const XMLCh* const systemId);
+    virtual void setSystemId(const XMLCh* const systemId);
 
   /**
     * Indicates if the parser should issue fatal error if this input source
@@ -278,7 +281,7 @@ public:
     *
     * @see #getIssueFatalErrorIfNotFound
     */
-    void setIssueFatalErrorIfNotFound(const bool flag);
+    virtual void setIssueFatalErrorIfNotFound(const bool flag);
 
     //@}
 
