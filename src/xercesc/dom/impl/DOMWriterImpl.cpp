@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2002/07/22 23:24:01  tng
+ * DOM L3: writeToString should use the fFormatter to do the transcoding
+ *
  * Revision 1.13  2002/07/16 15:19:42  peiyongz
  * check lenght of getEncoding()/getActualEncoding()
  *
@@ -564,6 +567,10 @@ XMLCh* DOMWriterImpl::writeToString(const DOMNode &nodeToWrite)
 	MemBufFormatTarget  destination;
 	bool retVal;
 
+   // XMLCh is unicode, assume fEncoding as UTF-16
+   XMLCh* tempEncoding = fEncoding;
+   fEncoding = (XMLCh*) XMLUni::fgUTF16EncodingString;
+
 	try
 	{
 		retVal = writeNode(&destination, nodeToWrite);
@@ -574,10 +581,12 @@ XMLCh* DOMWriterImpl::writeToString(const DOMNode &nodeToWrite)
 		// there is a possibility that memeory allocation
 		// exception thrown in XMLBuffer class
 		//
+      fEncoding = tempEncoding;
 		return 0;
 	}
-	
-	return (retVal ? destination.getString() : 0);
+
+    fEncoding = tempEncoding;
+    return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer()) : 0);
 }
 
 void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
@@ -611,11 +620,11 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
             {
                 fEncodingUsed = tmpEncoding;
             }
-            else 
+            else
             {
                 tmpEncoding = docu->getActualEncoding();
 
-                if ( tmpEncoding && XMLString::stringLen(tmpEncoding))               
+                if ( tmpEncoding && XMLString::stringLen(tmpEncoding))
                 {
                     fEncodingUsed = tmpEncoding;
                 }
