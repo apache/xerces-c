@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.21  2000/07/20 18:46:29  jpolast
+ * bug fix: call startDocument() at beginning of scan.
+ * submitted by Erik Schroeder
+ *
  * Revision 1.20  2000/07/17 22:47:40  jpolast
  * switched scanMisc() with endDoc() in scanNext()
  * pointed out by Dean Roddey
@@ -577,8 +581,16 @@ bool XMLScanner::scanFirst( const   InputSource&    src
     //
     fSequenceId++;
 
-    // Reset the scanner and its plugged in stuff for a new run
+	//
+    // Reset the scanner and its plugged in stuff for a new run.  This
+	// resets all the data structures, creates the initial reader and
+	// pushes it on the stack, and sets up the base document path
+	//
     scanReset(src);
+
+	// If we have a document handler, then call the start document
+	if (fDocHandler)
+		fDocHandler->startDocument();
 
     // Clear some flags for new round
     fHaveSubset = false;
