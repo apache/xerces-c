@@ -62,6 +62,7 @@
 #include <util/XML88591Transcoder.hpp>
 #include <util/XMLASCIITranscoder.hpp>
 #include <util/XMLEBCDICTranscoder.hpp>
+#include <util/XMLIBM1047Transcoder.hpp>
 #include <util/XMLUCS4Transcoder.hpp>
 #include <util/XMLUTF8Transcoder.hpp>
 #include <util/XMLUTF16Transcoder.hpp>
@@ -300,11 +301,19 @@ void XMLTransService::initTransService()
         )
     );
 
-
     //
-    //  Add in our mappings for EBCDIC-US
+    //  Add in our mappings for EBCDIC-US. We map all the default EBCDIC
+    //  encodings to our intrinsic encoder, which is IBM-037. And of course
+    //  we map the IBM-037 encoding itself here as well.
     //
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgDefaultEBCDICEncodingString));
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgEBCDICEncodingString));
     gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgEBCDICEncodingString2));
+    gMappings->put(new ENameMapFor<XMLEBCDICTranscoder>(XMLUni::fgIBM037EncodingString));
+
+    //
+    //  And we intrinsically support the OE EBCDIC native page, which is IBM-1047.
+    //  It must be explicitly indicated as IBM-1047.
+    //
+    gMappings->put(new ENameMapFor<XMLIBM1047Transcoder>(XMLUni::fgIBM1047EncodingString));
 }

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/08 00:59:19  roddey
+ * Support for new intrinsic encoder for IBM-1047 code page.
+ *
  * Revision 1.5  2000/02/06 07:48:06  rahulj
  * Year 2K copyright swat.
  *
@@ -234,6 +237,8 @@ public :
     static const XMLCh fgExceptDomain[];
     static const XMLCh fgFixedString[];
     static const XMLCh fgGlobalNSURIName[];
+    static const XMLCh fgIBM037EncodingString[];
+    static const XMLCh fgIBM1047EncodingString[];
     static const XMLCh fgIESString[];
     static const XMLCh fgIDString[];
     static const XMLCh fgIDRefString[];

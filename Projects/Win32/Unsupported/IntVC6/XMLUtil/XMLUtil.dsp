@@ -157,6 +157,10 @@ SOURCE=..\..\..\..\..\src\util\XMLException.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLIBM1047Transcoder.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLString.cpp
 # End Source File
 # Begin Source File
@@ -362,6 +366,10 @@ SOURCE=..\..\..\..\..\src\util\XMLException.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLExceptMsgs.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLIBM1047Transcoder.hpp
 # End Source File
 # Begin Source File
 

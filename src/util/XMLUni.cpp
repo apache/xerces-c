@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/08 00:59:19  roddey
+ * Support for new intrinsic encoder for IBM-1047 code page.
+ *
  * Revision 1.6  2000/02/06 07:48:06  rahulj
  * Year 2K copyright swat.
  *
@@ -199,6 +202,16 @@ const XMLCh XMLUni::fgGlobalNSURIName[] =
     ,   chForwardSlash, chLatin_x, chLatin_m, chLatin_l, chForwardSlash
     ,   chLatin_G, chLatin_l, chLatin_o, chLatin_b, chLatin_a, chLatin_l
     ,   chLatin_N, chLatin_S, chNull
+};
+
+const XMLCh XMLUni::fgIBM037EncodingString[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_0, chDigit_3, chDigit_7, chNull
+};
+
+const XMLCh XMLUni::fgIBM1047EncodingString[] =
+{
+    chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_0, chDigit_4, chDigit_7, chNull
 };
 
 const XMLCh XMLUni::fgIESString[] =
