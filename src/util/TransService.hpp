@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/04/12 22:57:45  roddey
+ * A couple of fixes to comments and parameter names to make them
+ * more correct.
+ *
  * Revision 1.10  2000/03/28 19:43:19  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
  * stuff.
@@ -330,7 +334,7 @@ private :
     //      This is the block size indicated in the constructor. This lets
     //      the derived class preallocate appopriately sized buffers. This
     //      sets the maximum number of characters which can be internalized
-    //      per call to transcodeXML().
+    //      per call to transcodeFrom() and transcodeTo().
     //
     //  fEncodingName
     //      This is the name of the encoding this encoder is for. All basic
@@ -385,7 +389,7 @@ public :
     (
         const   XMLCh* const    toTranscode
         ,       char* const     toFill
-        , const unsigned int    maxChars
+        , const unsigned int    maxBytes
     ) = 0;
 
 
