@@ -99,45 +99,6 @@
 //      we can check for and quickly decide if we need to search the list.
 // ---------------------------------------------------------------------------
 static RefHashTableOf<ENameMap>*    gMappings = 0;
-static XMLCh                        gDisallow1[] =
-{
-        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_0, chDigit_3
-      , chDigit_7, chNull
-};
-static XMLCh                        gDisallow2[] =
-{
-        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_3, chDigit_7, chNull
-};
-static XMLCh                        gDisallow3[] =
-{
-        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_0, chDigit_3
-    ,   chDigit_7, chDash, chLatin_S, chDigit_3, chDigit_9, chDigit_0, chNull
-};
-static XMLCh                        gDisallow4[] =
-{
-        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_3, chDigit_7, chDash
-    ,   chLatin_S, chDigit_3, chDigit_9, chDigit_0, chNull
-};
-static XMLCh                        gDisallow5[] =
-{
-        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_1
-      , chDigit_4, chDigit_0, chNull
-};
-static XMLCh                        gDisallow6[] =
-{
-        chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_1
-      , chDigit_4, chDigit_0, chDash, chLatin_S, chDigit_3
-      , chDigit_9, chDigit_0, chNull
-};
-static const unsigned int           gDisallowListSize = 6;
-static XMLCh*                       gDisallowList[gDisallowListSize] =
-{
-    gDisallow1, gDisallow2, gDisallow3, gDisallow4, gDisallow5, gDisallow6
-};
-static XMLCh                        gDisallowPre[] =
-{
-        chLatin_I, chLatin_B, chLatin_M, chNull
-};
 static bool gStrictIANAEncoding = false;
 
 
@@ -220,25 +181,6 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
        XMLTranscoder* temp = ourMapping->makeNew(blockSize);
        resValue = temp ? XMLTransService::Ok : XMLTransService::InternalFailure;
        return temp;
-     }
-
-    //
-    //  For now, we have a little list of encodings that we disallow
-    //  explicitly. So lets check for them up front. They all start with
-    //  IBM, so we can do a quick check to see if we should even do
-    //  anything at all.
-    //
-    if (XMLString::startsWith(upBuf, gDisallowPre))
-    {
-        for (unsigned int index = 0; index < gDisallowListSize; index++)
-        {
-            // If its one of our guys, then pretend we don't understand it
-            if (!XMLString::compareString(upBuf, gDisallowList[index]))
-			{
-                resValue = XMLTransService::UnsupportedEncoding;               
-                return 0;
-			}
-        }
     }
 
     //
