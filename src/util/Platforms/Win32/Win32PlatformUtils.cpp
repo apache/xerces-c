@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/14 19:48:34  andyh
+ * Update MSVC project files to reflect change in DLL version to 1_1
+ * Update dll name in panic message text from XML4C to Xerces
+ *
  * Revision 1.4  2000/01/13 20:07:10  roddey
  * Just a trivial fix of a misspelling in one of the panic messages.
  *
@@ -254,7 +258,7 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
     else if (reason == Panic_NoDefTranscoder)
         reasonStr = "Could not load a local code page transcoder";
     else if (reason == Panic_CantFindLib)
-        reasonStr = "Could not find the XML4C DLL";
+        reasonStr = "Could not find the xerces-c DLL";
     else if (reason == Panic_UnknownMsgDomain)
         reasonStr = "Unknown message domain";
     else if (reason == Panic_CantLoadMsgDomain)
