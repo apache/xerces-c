@@ -76,6 +76,7 @@
 #include    <util/Mutexes.hpp>
 #include    <util/XMLString.hpp>
 #include    <util/XMLUni.hpp>
+#include    <util/XMLUniDefs.hpp>
 
 //
 //  These control which transcoding service is used by the Tru64 version.
