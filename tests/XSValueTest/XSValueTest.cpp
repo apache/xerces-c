@@ -17,6 +17,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.8  2004/09/08 19:56:32  peiyongz
+* Remove parameter toValidate from validation interface
+*
 * Revision 1.7  2004/09/08 13:57:06  peiyongz
 * Apache License Version 2.0
 *
@@ -86,7 +89,6 @@ void VALIDATE_TEST( const char*                  const  data
                                         , datatype
                                         , myStatus
                                         , XSValue::ver_10
-                                        , true
                                         , XMLPlatformUtils::fgMemoryManager);
 
     if (actRetValid != expRetValid)
@@ -116,7 +118,6 @@ void VALIDATE_TEST( const char*                  const  data
                                         , datatype                                   \
                                         , myStatus                                   \
                                         , XSValue::ver_10                            \
-                                        , true                                       \
                                         , XMLPlatformUtils::fgMemoryManager);        \
     if (actRetValid != expRetValid) {                                                \
         printf("VALIDATE_TEST Validation Fail:                                       \

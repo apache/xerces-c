@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/09/08 19:56:05  peiyongz
+ * Remove parameter toValidate from validation interface
+ *
  * Revision 1.8  2004/09/08 13:56:09  peiyongz
  * Apache License Version 2.0
  *
@@ -143,7 +146,6 @@ public:
               ,       DataType              datatype
               ,       Status&               status
               ,       XMLVersion            version    = ver_10
-              ,       bool                  toValidate = true 
               ,       MemoryManager*  const manager    = XMLPlatformUtils::fgMemoryManager
              );
 
@@ -255,7 +257,6 @@ private:
               ,       DataType              datatype
               ,       Status&               status
               ,       XMLVersion            version
-              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -266,7 +267,6 @@ private:
               ,       DataType              datatype
               ,       Status&               status
               ,       XMLVersion            version
-              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -277,7 +277,6 @@ private:
               ,       DataType              datatype
               ,       Status&               status
               ,       XMLVersion            version
-              ,       bool                  toValidate
               ,       MemoryManager*  const manager
              );
 
@@ -353,7 +352,6 @@ private:
                  const XMLCh*         const content
                ,       Status&               status
                ,       XMLVersion            version    
-               ,       bool                  toValidate 
                ,       int                   ct
                ,       t_value&              retVal               
                ,       int                   base

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/09/08 19:56:05  peiyongz
+ * Remove parameter toValidate from validation interface
+ *
  * Revision 1.8  2004/09/08 13:56:09  peiyongz
  * Apache License Version 2.0
  *
@@ -231,7 +234,6 @@ bool XSValue::validate(const XMLCh*         const content
                      ,       DataType             datatype
                      ,       Status&              status
                      ,       XMLVersion           version
-                     ,       bool                 toValidate
                      ,       MemoryManager* const manager)
 {
 
@@ -241,13 +243,13 @@ bool XSValue::validate(const XMLCh*         const content
     switch (inGroup[datatype])
     {
     case XSValue::dg_numerics :
-        return validateNumerics(content, datatype, status, version, toValidate, manager);
+        return validateNumerics(content, datatype, status, version, manager);
         break;
     case XSValue::dg_datetimes:
-        return validateDateTimes(content, datatype, status, version, toValidate, manager);
+        return validateDateTimes(content, datatype, status, version, manager);
         break;
     case XSValue::dg_strings:
-        return validateStrings(content, datatype, status, version, toValidate, manager);
+        return validateStrings(content, datatype, status, version, manager);
         break;
     default:
         status = st_UnknownType;
@@ -331,7 +333,6 @@ XSValue::validateNumerics(const XMLCh*         const content
                         ,       DataType             datatype
                         ,       Status&              status
                         ,       XMLVersion           version
-                        ,       bool                 toValidate
                         ,       MemoryManager* const manager)
 {
 
@@ -510,7 +511,6 @@ XSValue::validateNumerics(const XMLCh*         const content
                                   content
                                 , status
                                 , version
-                                , toValidate
                                 , convert_2_long
                                 , actVal
                                 , base_decimal
@@ -571,7 +571,6 @@ XSValue::validateNumerics(const XMLCh*         const content
                                   content
                                 , status
                                 , version
-                                , toValidate
                                 , convert_2_ulong
                                 , actVal
                                 , base_decimal
@@ -630,7 +629,6 @@ bool XSValue::validateDateTimes(const XMLCh*         const content
                               ,       DataType             datatype
                               ,       Status&              status
                               ,       XMLVersion           version
-                              ,       bool                 toValidate
                               ,       MemoryManager* const manager)
 {
 
@@ -689,7 +687,6 @@ bool XSValue::validateStrings(const XMLCh*         const content
                             ,       DataType             datatype
                             ,       Status&              status
                             ,       XMLVersion           version
-                            ,       bool                 toValidate
                             ,       MemoryManager* const manager)
 {
 
@@ -976,7 +973,7 @@ XMLCh* XSValue::getCanRepNumerics(const XMLCh*         const content
         // All getCanonicalRepresentation does lexcial space validation only
         // (no range checking), therefore if validation is requied,
         // we need to pass the content to the validate interface for complete checking
-        if (toValidate && !validateNumerics(content, datatype, status, version, toValidate, manager))
+        if (toValidate && !validateNumerics(content, datatype, status, version, manager))
             return 0;
 
         XMLCh* retVal;
@@ -1052,7 +1049,7 @@ XMLCh* XSValue::getCanRepDateTimes(const XMLCh*         const content
         case XSValue::dt_gDay:
         case XSValue::dt_gMonth:
             {
-                if (toValidate && !validateDateTimes(content, datatype, status, version, toValidate, manager))
+                if (toValidate && !validateDateTimes(content, datatype, status, version, manager))
                     status = st_Invalid;
                 else
                     status = st_NoCanRep;
@@ -1142,7 +1139,7 @@ XMLCh* XSValue::getCanRepStrings(const XMLCh*         const content
         case XSValue::dt_ENTITIES:
         case XSValue::dt_IDREFS:
             {
-                if (toValidate && !validateStrings(content, datatype, status, version, toValidate, manager))
+                if (toValidate && !validateStrings(content, datatype, status, version, manager))
                     status = st_Invalid;
                 else
                     status = st_NoCanRep;
@@ -1190,7 +1187,6 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                   &(intVal[totalDigit - scale])
                                 , status
                                 , version
-                                , toValidate
                                 , convert_2_ulong
                                 , actValFract
                                 , base_decimal
@@ -1207,7 +1203,6 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                   intVal
                                 , status
                                 , version
-                                , toValidate
                                 , convert_2_ulong
                                 , actValInt
                                 , base_decimal
@@ -1281,7 +1276,6 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                   content
                                 , status
                                 , version
-                                , toValidate
                                 , convert_2_long
                                 , actVal
                                 , base_decimal
@@ -1360,7 +1354,6 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                   content
                                 , status
                                 , version
-                                , toValidate
                                 , convert_2_long
                                 , actVal
                                 , base_decimal
@@ -1437,7 +1430,6 @@ XSValue::getActValNumerics(const XMLCh*         const content
                                   content
                                 , status
                                 , version
-                                , toValidate
                                 , convert_2_ulong
                                 , actVal
                                 , base_decimal
@@ -1669,7 +1661,7 @@ XSValue::getActValStrings(const XMLCh*         const content
         case XSValue::dt_ENTITIES:
         case XSValue::dt_IDREFS:
             {
-                if (toValidate && !validateStrings(content, datatype, status, version, toValidate, manager))
+                if (toValidate && !validateStrings(content, datatype, status, version, manager))
                     status = st_Invalid;
                 else
                     status = st_NoActVal;
@@ -1696,7 +1688,6 @@ XSValue::getActValStrings(const XMLCh*         const content
 bool XSValue::getActualValue(const XMLCh*         const content
                            ,       Status&              status
                            ,       XMLVersion           version    
-                           ,       bool                 toValidate 
                            ,       int                  ct
                            ,       t_value&             retVal               
                            ,       int                  base
