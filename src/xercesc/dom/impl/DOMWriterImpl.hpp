@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/06/17 19:45:58  peiyongz
+ * optimization on fFeatures and featureId introduced
+ *
  * Revision 1.4  2002/06/14 15:39:02  peiyongz
  * Fix: Compilation error from ForteC on Solaris2.6
  *
@@ -292,8 +295,8 @@
 #define DOMWriterImpl_HEADER_GUARD_
 
 #include <xercesc/dom/DOMWriter.hpp>
-#include <xercesc/util/RefHashTableOf.hpp>
-#include <xercesc/util/KVStringPair.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLUni.hpp>
 
 class CDOM_EXPORT DOMWriterImpl:public DOMWriter {
 
@@ -355,17 +358,23 @@ private:
 	void                          processNode(const DOMNode* const);
     DOMNodeFilter::FilterAction   checkFilter(const DOMNode* const) const;
 
-    inline void                   printNewLine() const;
-    inline void                   setFeature(const XMLCh* const
-                                           , const XMLCh* const); 
+    bool                          checkFeature(const XMLCh* const featName
+                                             , bool               state
+                                             , int&               featureId) const;
 
-	inline void                   setURCharRef();
+    inline bool                   canSetFeature(const int featureId
+                                              , bool      val)     const;
+    inline void                   setFeature(const int featureId
+                                           , bool      val);
+    inline bool                   getFeature(const int featureId) const;                                   
+
+    inline void                   printNewLine() const;
+    inline void                   setURCharRef();
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
 	//  fFeatures
-	//      own it
 	//
     //  fEncoding
     //      own it
@@ -398,8 +407,8 @@ private:
 	//
     // -----------------------------------------------------------------------
 
-	RefHashTableOf<KVStringPair> *fFeatures;
-	XMLCh                        *fEncoding;
+	int                           fFeatures;
+    XMLCh                        *fEncoding;
 	XMLCh                        *fNewLine;
 	DOMErrorHandler              *fErrorHandler;
     DOMWriterFilter              *fFilter;
@@ -410,5 +419,21 @@ private:
 	XMLFormatter                 *fFormatter;
 	int                           fErrorCount;
 };
+
+inline void DOMWriterImpl::setFeature(const int featureId
+                                    , bool      val)
+{
+    (val)? fFeatures |= (1<<featureId) : fFeatures &= ~(1<<featureId);
+};
+
+inline bool DOMWriterImpl::getFeature(const int featureId) const
+{
+    return ((fFeatures & ( 1<<featureId )) != 0) ? true : false;
+};
+
+inline void DOMWriterImpl::setURCharRef()
+{
+	fFormatter->setUnRepFlags(XMLFormatter::UnRep_CharRef);
+}
 
 #endif

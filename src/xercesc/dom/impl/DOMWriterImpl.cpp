@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2002/06/17 19:45:58  peiyongz
+ * optimization on fFeatures and featureId introduced
+ *
  * Revision 1.8  2002/06/11 19:45:45  peiyongz
  * Notify application of the XMLFormatter creation failure
  *
@@ -91,23 +94,51 @@
 #include "DOMLocatorImpl.hpp"
 
 #include <xercesc/framework/MemBufFormatTarget.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/Janitor.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 // ---------------------------------------------------------------------------
 //  Local const data
 //
 // ---------------------------------------------------------------------------
-static const XMLCh  gTrue[] =
-{
-	chLatin_T, chNull
-};
 
-static const XMLCh  gFalse[] =
-{
-	chLatin_F, chNull
+static const int INVALID_FEATURE_ID               = -1;
+static const int CANONICAL_FORM_ID                = 0x0;
+static const int DISCARD_DEFAULT_CONTENT_ID       = 0x1;
+static const int ENTITIES_ID                      = 0x2;
+static const int FORMAT_PRETTY_PRINT_ID           = 0x3;
+static const int NORMALIZE_CHARACTERS_ID          = 0x4;
+static const int SPLIT_CDATA_SECTIONS_ID          = 0x5;
+static const int VALIDATION_ID                    = 0x6;
+static const int WHITESPACE_IN_ELEMENT_CONTENT_ID = 0x7;
+
+//    feature                      true                       false
+// ================================================================================
+//canonical-form                 [optional] Not Supported     [required] (default)
+//discard-default-content        [required] (default)         [required]
+//entity                         [required] (default)         [optional]
+//format-pretty-print            [optional] Partially Supported [required] (default)
+//normalize-characters           [optional] Not Supported     [required] (default)
+//split-cdata-sections           [required] (default)         [required]
+//validation                     [optional] Not Supported     [required] (default)
+//whitespace-in-element-content  [requierd] (default)         [optional] Not Supported
+//
+
+//
+// Each feature has 2 entries in this array, 
+// the first for "true",
+// the second for "false".
+//
+static bool  featuresSupported[] = {   
+    false, true,  // canonical-form
+    true,  true,  // discard-default-content              
+    true,  true,  // entity                 
+    true,  true,  // format-pretty-print            
+    false, true,  // normalize-characters           
+    true,  true,  // split-cdata-sections           
+    false, true,  // validation
+    true,  false  // whitespace-in-element-content   
 };
 
 // default end-of-line sequence
@@ -159,7 +190,6 @@ static const XMLCh  gXMLDecl_EncodingDecl[] =
 	chLatin_e,  chLatin_n,  chLatin_c,  chLatin_o,      chLatin_d, chLatin_i, 
     chLatin_n,  chLatin_g,  chEqual,    chDoubleQuote,  chNull
 };
-
 
 //" standalone="
 static const XMLCh  gXMLDecl_SDDecl[] =
@@ -298,109 +328,74 @@ catch(TranscodingException const &e)                             \
 
 DOMWriterImpl::~DOMWriterImpl()
 {
-	delete fFeatures;
 	delete [] fEncoding;
 	delete [] fNewLine;
 
 	// we don't own/adopt error handler and filter
 }
 
-//    feature                      true                       false
-// ================================================================================
-//canonical-form                 [optional] Not Supported     [required] (default)
-//discard-default-content        [required] (default)         [required]
-//entity                         [required] (default)         [optional]
-//format-pretty-print            [optional] Partially Supported [required] (default)
-//normalize-characters           [optional] Not Supported     [required] (default)
-//split-cdata-sections           [required] (default)         [required]
-//validation                     [optional] Not Supported     [required] (default)
-//whitespace-in-element-content  [requierd] (default)         [optional] Not Supported
-//
 DOMWriterImpl::DOMWriterImpl()
 :fFeatures(0)
 ,fEncoding(0)
 ,fNewLine(0)
 ,fErrorHandler(0)
 ,fFilter(0)
+,fEncodingUsed(0)
+,fNewLineUsed(0)
+,fFormatter(0)
+,fErrorCount(0)
 {
-	fFeatures = new RefHashTableOf<KVStringPair>(9, true);
-
-	setFeature(XMLUni::fgDOMWRTCanonicalForm,              gFalse);
-	setFeature(XMLUni::fgDOMWRTDiscardDefaultContent,      gTrue);
-	setFeature(XMLUni::fgDOMWRTEntities,                   gTrue);
-	setFeature(XMLUni::fgDOMWRTFormatPrettyPrint,	        gFalse);
-	setFeature(XMLUni::fgDOMWRTNormalizeCharacters,        gFalse);
-	setFeature(XMLUni::fgDOMWRTSplitCdataSections,         gTrue);
-	setFeature(XMLUni::fgDOMWRTValidation,                 gFalse);
-	setFeature(XMLUni::fgDOMWRTWhitespaceInElementContent, gTrue);
-
+    //
+    // set features to default setting
+    //
+    setFeature(CANONICAL_FORM_ID,                false);
+	setFeature(DISCARD_DEFAULT_CONTENT_ID,       true );
+	setFeature(ENTITIES_ID,                      true );
+	setFeature(FORMAT_PRETTY_PRINT_ID,	         false);
+	setFeature(NORMALIZE_CHARACTERS_ID,          false);
+	setFeature(SPLIT_CDATA_SECTIONS_ID,          true );
+	setFeature(VALIDATION_ID,                    false);
+	setFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID, true );
 }
-//
-// refer to the feature table above
-//
+
 bool DOMWriterImpl::canSetFeature(const XMLCh* const featName
           						, bool               state) const
 {
-	// featName not recognized
-	if ((!featName) || (!fFeatures->get(featName)))
-		return false;
-
-	if ((XMLString::compareString(featName, XMLUni::fgDOMWRTCanonicalForm)==0) && state)
-		return false;
-	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTNormalizeCharacters)==0) && state)
-		return false;
-	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTValidation)==0) && state)
-		return false;
-	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTWhitespaceInElementContent)==0) && !state)
-		return false;
-	else
-		return true;
+    int featureId = INVALID_FEATURE_ID;
+    return checkFeature(featName, false, featureId) ? canSetFeature(featureId, state) : false;
 }
 
 void DOMWriterImpl::setFeature(const XMLCh* const featName
                              , bool               state)
 {
-	if ((!featName) || (XMLString::stringLen(featName)==0))
-		throw DOMException(DOMException::NOT_FOUND_ERR, 0);			
+    int featureId = INVALID_FEATURE_ID;
+    checkFeature(featName, true, featureId);
 
-	if (!fFeatures->get(featName))
-		throw DOMException(DOMException::NOT_FOUND_ERR, featName);			
-        //"Feature "+featName+" not found");
-
-	if (!canSetFeature(featName, state))
+	if (!canSetFeature(featureId, state))
 		throw DOMException(DOMException::NOT_SUPPORTED_ERR, featName);
         //DOMException.NOT_SUPPORTED_ERR,"Feature "+featName+" cannot be set as "+state);
-
-	setFeature(featName, (state? gTrue : gFalse));
+    else
+        setFeature(featureId, state);
 
 	// 
 	// canonical-form and format-pretty-print can not be both set to true
 	// meaning set canonical-form true will automatically set
 	// format-pretty-print to false and vise versa.
     //
-    if ((XMLString::compareString(featName, XMLUni::fgDOMWRTCanonicalForm) == 0) && state)
-        setFeature(XMLUni::fgDOMWRTFormatPrettyPrint, gFalse);
+    if ((featureId == CANONICAL_FORM_ID) && state)
+        setFeature(FORMAT_PRETTY_PRINT_ID, false);
 
-    if ((XMLString::compareString(featName, XMLUni::fgDOMWRTFormatPrettyPrint) == 0) && state)
-        setFeature(XMLUni::fgDOMWRTCanonicalForm, gFalse);
+    if ((featureId == FORMAT_PRETTY_PRINT_ID) && state)
+        setFeature(CANONICAL_FORM_ID, false);
 
     return;
 }
 
 bool DOMWriterImpl::getFeature(const XMLCh* const featName) const
 {
-	if ((!featName) || (XMLString::stringLen(featName)==0))
-		throw DOMException(DOMException::NOT_FOUND_ERR, 0);			
-
-	KVStringPair *kvData = fFeatures->get(featName);
-	if (!kvData)
-	{
-		throw DOMException(DOMException::NOT_FOUND_ERR, featName);			
-        //DOMException.NOT_FOUND_ERR,"Feature "+featName+" not found");
-	}
-
-	return ( (XMLString::compareString(kvData->getValue(), gTrue)==0)? true : false);
-
+    int featureId = INVALID_FEATURE_ID;
+    checkFeature(featName, true, featureId);
+    return getFeature(featureId);
 }
 
 // we don't check the validity of the encoding set
@@ -745,7 +740,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 				DOMNamedNodeMap *attributes = nodeToWrite->getAttributes();
 				int attrCount = attributes->getLength();
 
-				bool discard = getFeature(XMLUni::fgDOMWRTDiscardDefaultContent);
+				bool discard = getFeature(DISCARD_DEFAULT_CONTENT_ID);
 				for (int i = 0; i < attrCount; i++)
 				{
 					DOMNode  *attribute = attributes->item(i);
@@ -853,7 +848,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
 				break;
 
-			if (getFeature(XMLUni::fgDOMWRTEntities))
+			if (getFeature(ENTITIES_ID))
 			{
 				TRY_CATCH_THROW
 				(
@@ -886,7 +881,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			    , true
 			)
 
-			if (getFeature(XMLUni::fgDOMWRTSplitCdataSections))
+			if (getFeature(SPLIT_CDATA_SECTIONS_ID))
 			{
 				setURCharRef();
 				*fFormatter << nodeValue;
@@ -1050,19 +1045,59 @@ DOMNodeFilter::FilterAction DOMWriterImpl::checkFilter(const DOMNode* const node
 	return (DOMNodeFilter::FilterAction) fFilter->acceptNode(node);
 }
 
-inline void DOMWriterImpl::setURCharRef()
+
+bool DOMWriterImpl::checkFeature(const XMLCh* const featName
+                               , bool               toThrow
+                               , int&               featureId) const
 {
-	fFormatter->setUnRepFlags(XMLFormatter::UnRep_CharRef);
+    // check for null and/or empty feature name
+    if ((!featName) || (XMLString::stringLen(featName)==0))
+    {
+        if (toThrow)
+            throw DOMException(DOMException::NOT_FOUND_ERR, 0);
+        else
+            return false;
+    }
+
+    featureId = INVALID_FEATURE_ID;
+
+    if (XMLString::compareString(featName, XMLUni::fgDOMWRTCanonicalForm)==0)
+        featureId = CANONICAL_FORM_ID;
+    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTDiscardDefaultContent)==0)
+        featureId = DISCARD_DEFAULT_CONTENT_ID;
+    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTEntities)==0)
+        featureId = ENTITIES_ID;
+    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTFormatPrettyPrint)==0)
+        featureId = FORMAT_PRETTY_PRINT_ID;
+    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTNormalizeCharacters)==0)
+        featureId = NORMALIZE_CHARACTERS_ID;
+    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTSplitCdataSections)==0)
+        featureId = SPLIT_CDATA_SECTIONS_ID;
+    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTValidation)==0)
+        featureId = VALIDATION_ID;
+    else if (XMLString::compareString(featName, XMLUni::fgDOMWRTWhitespaceInElementContent)==0)
+        featureId = WHITESPACE_IN_ELEMENT_CONTENT_ID;
+
+    //feature name not resolvable
+    if (featureId == INVALID_FEATURE_ID)
+    {
+        if (toThrow)
+            throw DOMException(DOMException::NOT_FOUND_ERR, featName);			
+        else
+            return false;
+    }
+    else
+        return true;
+}
+
+inline bool DOMWriterImpl::canSetFeature(const int featureId
+                                       , bool      val) const
+{
+    return featuresSupported[featureId + (val? 0: 1)];
 }
 
 inline void DOMWriterImpl::printNewLine() const
 {
-    if (getFeature(XMLUni::fgDOMWRTFormatPrettyPrint))               \
+    if (getFeature(FORMAT_PRETTY_PRINT_ID))
         *fFormatter << fNewLineUsed;
-}
-
-inline void DOMWriterImpl::setFeature(const XMLCh* const featName
-                                    , const XMLCh* const state)
-{
-    fFeatures->put((void*)featName, new KVStringPair(featName, state));      
 }
