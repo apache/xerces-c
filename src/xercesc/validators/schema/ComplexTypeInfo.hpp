@@ -165,7 +165,7 @@ public:
     /**
      * sets this type to be anonymous
      **/
-    void setAnonymous();    
+    void setAnonymous();
 
     // -----------------------------------------------------------------------
     //  Helper methods
@@ -227,17 +227,17 @@ private:
     ComplexTypeInfo*                   fBaseComplexTypeInfo;
     ContentSpecNode*                   fContentSpec;
     SchemaAttDef*                      fAttWildCard;
-    RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
     SchemaAttDefList*                  fAttList;
     RefVectorOf<SchemaElementDecl>*    fElements;
+    RefVectorOf<ContentSpecNode>*      fSpecNodesToDelete;
+    RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
     XMLContentModel*                   fContentModel;
     XMLCh*                             fFormattedModel;
     unsigned int*                      fContentSpecOrgURI;
     unsigned int                       fUniqueURI;
     unsigned int                       fContentSpecOrgURISize;
-    RefVectorOf<ContentSpecNode>*      fSpecNodesToDelete;
     XSDLocator*                        fLocator;
-    bool                               fAnonymous; 
+    bool                               fAnonymous;
 };
 
 // ---------------------------------------------------------------------------
