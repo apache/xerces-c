@@ -1944,6 +1944,13 @@ void TraverseSchema::traverseAttributeDecl(const DOMElement* const elem,
         uriIndex = fTargetNSURI;
     }
 
+    // make sure that attribute namespace is not xsi uri
+    if (XMLString::equals(fTargetNSURIString, SchemaSymbols::fgURI_XSI)) {
+
+        reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttTNS, name);
+        return;
+    }
+
     if (typeInfo && typeInfo->getAttDef(name, uriIndex) != 0) {
 
         reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::DuplicateAttribute, name);

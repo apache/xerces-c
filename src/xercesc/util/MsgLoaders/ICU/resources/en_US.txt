@@ -168,6 +168,7 @@ en_US {
 		"Circular substitution groups are disallowed for element '{0}'. " ,
 		"For '{0}' to be a member of the substitution group set of '{1}', its {abstract} must be false. " ,
 		"The namespace of element '{0}' must be from the schema namespace. " ,
+		"The {target namespace} of '{0}' must not match 'http://www.w3.org/2001/XMLSchema-instance'. " ,
 		"E End " ,
 		"F Start " , 
 		"Expected comment or CDATA " ,

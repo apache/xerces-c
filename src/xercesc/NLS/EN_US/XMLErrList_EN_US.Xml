@@ -173,6 +173,7 @@
             <Message Id="CircularSubsGroup" Text="Circular substitution groups are disallowed for element '{0}'."/>
             <Message Id="SubsGroupMemberAbstract" Text="For '{0}' to be a member of the substitution group set of '{1}', its {abstract} must be false."/>
             <Message Id="ELTSchemaNS" Text="The namespace of element '{0}' must be from the schema namespace."/>
+            <Message Id="InvalidAttTNS" Text="The {target namespace} of '{0}' must not match 'http://www.w3.org/2001/XMLSchema-instance'."/>
         </Error>
         <FatalError>
             <Message Id="ExpectedCommentOrCDATA" Text="Expected comment or CDATA"/>
