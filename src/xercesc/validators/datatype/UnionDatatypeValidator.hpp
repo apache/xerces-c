@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/01/29 19:55:19  gareth
+ * updated to deal with null pointer issue with fValidatedDatatype.
+ *
  * Revision 1.6  2003/01/29 19:53:35  gareth
  * we now store information about which validator was used to validate.
  *
@@ -374,15 +377,25 @@ inline bool UnionDatatypeValidator::isSubstitutableBy(const DatatypeValidator* c
 }
 
 inline const XMLCh* UnionDatatypeValidator::getMemberTypeName() const {
-    return fValidatedDatatype->getTypeLocalName();
+    if(fValidatedDatatype) {
+        return fValidatedDatatype->getTypeLocalName();
+    }
+    return 0;
 }
 
-inline const XMLCh* UnionDatatypeValidator::getMemberTypeUri() const {
-    return fValidatedDatatype->getTypeUri();
+inline const XMLCh* UnionDatatypeValidator::getMemberTypeUri() const 
+{
+    if(fValidatedDatatype) {
+        return fValidatedDatatype->getTypeUri();
+    }
+    return 0;
 }
 
 inline bool UnionDatatypeValidator::getMemberTypeAnonymous() const {
-    return fValidatedDatatype->getAnonymous();
+    if(fValidatedDatatype) {
+        return fValidatedDatatype->getAnonymous();
+    }
+    return 0;
 }
 
 inline void UnionDatatypeValidator::reset() {
