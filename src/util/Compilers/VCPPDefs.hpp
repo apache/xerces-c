@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/06/16 21:13:23  rahulj
+ * Add 'D' suffix to the library name for the 'DEBUG' build
+ * configuration.
+ *
  * Revision 1.6  2000/03/02 19:55:09  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -142,4 +146,8 @@ typedef unsigned int    XMLUInt32;
 //  versioning string. This is defined in XercesDefs.hpp which is what this
 //  file is included into.
 // ---------------------------------------------------------------------------
+#if defined(XERCES_DEBUG)
+const char* const Xerces_DLLName = "xerces-c_" Xerces_DLLVersionStr "D";
+#else
 const char* const Xerces_DLLName = "xerces-c_" Xerces_DLLVersionStr;
+#endif
