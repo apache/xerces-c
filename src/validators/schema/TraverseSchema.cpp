@@ -5493,7 +5493,7 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
     }
     else {
 
-        if (isBaseAnyType) {
+        if (isBaseAnyType && !specNode) {
 
             QName elemName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, fEmptyNamespaceURI);
             specNode = new ContentSpecNode(&elemName);
