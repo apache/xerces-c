@@ -355,6 +355,7 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\XSObjectFactory.obj \
     $(TARGETPATH)\obj\XMLIBM1047Transcoder.obj \
     $(TARGETPATH)\obj\XMLCanRepGroup.obj \
+    $(TARGETPATH)\obj\BinMemOutputStream.obj \
     $(DEPRDOM_OBJFILES)
 RESFILES = $(TARGETPATH)\obj\Version.res
 MAINSOURCE = XercesLib.cpp

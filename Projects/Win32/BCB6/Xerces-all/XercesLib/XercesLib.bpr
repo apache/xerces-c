@@ -348,7 +348,8 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\DOMXPathException.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSObjectFactory.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1047Transcoder.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj"/>
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemOutputStream.obj"/>
     <RESFILES value="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
