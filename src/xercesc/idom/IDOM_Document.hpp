@@ -4,7 +4,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -288,8 +288,6 @@ public:
      * use the <code>whatToShow</code> flags to show the entity reference node and set
      * expandEntityReferences to false.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param root The root node of the IDOM tree
      * @param whatToShow This attribute determines which node types are presented via the iterator.
      * @param filter The filter used to screen nodes
@@ -322,8 +320,6 @@ public:
      * that has entity reference nodes but no entity expansion, use the
      * <code>whatToShow</code> flags to show the entity reference node and set
      * <code>expandEntityReferences</code> to false
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param root The root node of the IDOM tree
      * @param whatToShow This attribute determines which node types are presented via the tree-walker.
@@ -406,8 +402,6 @@ public:
      * node's <CODE>nodeName</CODE> and <CODE>nodeType</CODE>, plus the
      * attributes related to namespaces (prefix and namespaces URI).
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param importedNode The node to import.
      * @param deep If <CODE>true</CODE>, recursively import the subtree under the
      *      specified node; if <CODE>false</CODE>, import only the node itself,
@@ -423,8 +417,6 @@ public:
     /**
      * Creates an element of the given qualified name and
      * namespace URI.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param namespaceURI The <em>namespace URI</em> of
      *   the element to create.
@@ -448,8 +440,6 @@ public:
     /**
      * Creates an attribute of the given qualified name and namespace
      * URI.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param namespaceURI The <em>namespace URI</em> of
      *   the attribute to create.
@@ -482,8 +472,6 @@ public:
      * namespace URI in the order in which they would be encountered in a
      * preorder traversal of the <code>IDOM_Document</code> tree.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @param namespaceURI The <em>namespace URI</em> of
      *   the elements to match on. The special value "*" matches all
      *   namespaces.
@@ -504,8 +492,6 @@ public:
      * type ID unless so defined. Implementations that do not know whether
      * attributes are of type ID or not are expected to return
      * <CODE>null</CODE>.</P>
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param elementId The unique <code>id</code> value for an element.
      * @return The matching element.

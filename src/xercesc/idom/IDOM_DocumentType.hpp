@@ -5,7 +5,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,8 +60,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:55  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:11:55  tng
+ * Remove the phrase "Experimental".
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/05/11 13:25:51  tng
  * Copyright update.
@@ -131,8 +134,6 @@ public:
     /**
      * Get the public identifier of the external subset.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @return The public identifier of the external subset.
      */
     virtual const XMLCh *     getPublicId() const = 0;
@@ -140,16 +141,12 @@ public:
     /**
      * Get the system identifier of the external subset.
      *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * @return The system identifier of the external subset.
      */
     virtual const XMLCh *     getSystemId() const = 0;
 
     /**
      * Get the internal subset as a string.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @return The internal subset as a string.
      */
