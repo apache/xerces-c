@@ -3,9 +3,9 @@
 
 <faqs title="Parsing with &XercesCName;">
 
-  <faq title="Does Xerces-C support Schema?">
+  <faq title="Does &XercesCName; support Schema?">
 
-    <q> Does Xerces-C support Schema?</q>
+    <q> Does &XercesCName; support Schema?</q>
 
     <a>
 
@@ -14,14 +14,14 @@
     </a>
   </faq>
 
-  <faq title="Why Xerces-C does not support this particular Schema feature?">
+  <faq title="Why &XercesCName; does not support this particular Schema feature?">
 
-    <q> Why Xerces-C does not support this particular Schema feature?</q>
+    <q> Why &XercesCName; does not support this particular Schema feature?</q>
 
     <a>
 
       <p> See <jump href="schema.html#supportedFeature">
-         supported schema features in Xerces1.5.</jump></p>
+         supported schema features in &XercesCName; &XercesCVersion;</jump></p>
 
     </a>
   </faq>
@@ -75,8 +75,8 @@
       <p>In order to run an application built using &XercesCProjectName; you must
         set up your path and library search path properly. In the stand-alone version
         from Apache, you must have the &XercesCName; runtime library available from
-        your path settings. On Windows this library is called <code>&XercesCWindowsLib;.dll</code> which must be available from your <code>PATH</code> settings. (Note that now there are separate debug and release dlls for
-        Windows. If the release dll is named <code>&XercesCWindowsLib;.dll</code> then the debug dll is named <code>&XercesCWindowsLib;d.dll)</code>. On UNIX platforms the library is called <code>&XercesCUnixLib;.so</code> (or <code>.a</code> or <code>.sl</code>) which must be available from your <code>LD_LIBRARY_PATH</code> (or <code>LIBPATH</code> or <code>SHLIB_PATH</code>) environment variable.</p>
+        your path settings. On Windows this library is called <code>&XercesCWindowsDLL;.dll</code> which must be available from your <code>PATH</code> settings. (Note that now there are separate debug and release dlls for
+        Windows. If the release dll is named <code>&XercesCWindowsDLL;.dll</code> then the debug dll is named <code>&XercesCWindowsDLL;d.dll)</code>. On UNIX platforms the library is called <code>&XercesCUnixLib;.so</code> (or <code>.a</code> or <code>.sl</code>) which must be available from your <code>LD_LIBRARY_PATH</code> (or <code>LIBPATH</code> or <code>SHLIB_PATH</code>) environment variable.</p>
 
       <p>Thus, if you installed your binaries under <code>$HOME/fastxmlparser</code>, you need to point your library path to that directory.</p>
 
@@ -288,8 +288,8 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="Why do I get Internal Compiler Error when compiling xerces-c for a 64bit target with gcc?">
-    <q>Why do I get Internal Compiler Error when compiling xerces-c for a 64bit target with gcc?</q>
+  <faq title="Why do I get Internal Compiler Error when compiling &XercesCName; for a 64bit target with gcc?">
+    <q>Why do I get Internal Compiler Error when compiling &XercesCName; for a 64bit target with gcc?</q>
     <a>
       <p>This is a compiler problem.  Try turning off optimization to bypass the problem.</p>
     </a>

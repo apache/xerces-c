@@ -7,7 +7,7 @@
         <p>Please browse through this bundled documentation completely.  Most of
         the common questions have been answered in the FAQ's. Specifically, do
         read the answer to "<jump href="faq-other.html#faq-4"> Is there any kind
-        of support available for Xerces-C?</jump>". Browsing this
+        of support available for &XercesCName;?</jump>". Browsing this
         documentation, may be the quickest way to get an answer. Of course, if
         all else fails, as mentioned in the link above, you can post a question
         to the <jump href="mailto:&XercesCEmailAddress;">Xerces-C mailing list</jump>.</p>

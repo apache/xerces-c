@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/07/13 20:16:38  tng
+ * Update for release 1.5.1.
+ *
  * Revision 1.14  2001/06/05 13:52:25  tng
  * Change Version number from Xerces 1.4 to 1.5.  By Pei Yong Zhang.
  *
@@ -159,12 +162,12 @@
 //  These are updated for every build. They must be at the top because they
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
-#define Xerces_DLLVersionStr "1_5"
+#define Xerces_DLLVersionStr "1_5_1"
 const char* const    gXercesVersionStr = "1_5";
-const char* const    gXercesFullVersionStr = "1_5_0";
+const char* const    gXercesFullVersionStr = "1_5_1";
 const unsigned int   gXercesMajVersion = 1;
 const unsigned int   gXercesMinVersion = 5;
-const unsigned int   gXercesRevision   = 0;
+const unsigned int   gXercesRevision   = 1;
 
 
 // ---------------------------------------------------------------------------

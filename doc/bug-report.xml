@@ -5,7 +5,7 @@
 
     <s2 title="How to report bugs">
         <p> Please report bugs to <jump href="http://nagoya.apache.org/bugzilla/">Bugzilla</jump>,
-	     the Apache bug database.  Pick the product "Xerces-C: Apache XML parsers in C++"
+	     the Apache bug database.  Pick the product "Xerces-C++: Apache XML parsers in C++"
             using the following components:
         </p>
         <table>

@@ -2,17 +2,17 @@
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 <s1 title="Schema">
        <s2 title="Disclaimer">
-		<p>Schema is not fully supported in Xerces-C yet.  But an
+		<p>Schema is not fully supported in &XercesCName; yet.  But an
                experimental implementation of a subset of the W3C XML
-               Schema language is now available for review in Xerces1.5.
+               Schema language is now available for review in &XercesCName; &XercesCVersion;.
                You should not consider this implementation complete or
 			   correct. The limitations of this implementation are
 			   detailed below.  Please read this document before using
-			   Xerces 1.5.
+			   &XercesCName; &XercesCVersion;.
                </p>
        </s2>
        <s2 title="Introduction">
-               <p>The Xerces 1.5 contains an implementation
+               <p>The &XercesCName; &XercesCVersion; contains an implementation
                of a subset of the W3C XML Schema Language as specified
                in the 2 May 2001 Recommendation for <jump
                href="http://www.w3.org/TR/xmlschema-1/">Structures</jump>
@@ -30,7 +30,7 @@
                </p>
        </s2>
        <s2 title="Limitations">
-               <p>The XML Schema implementation in the Xerces 1.5 is a
+               <p>The XML Schema implementation in the &XercesCName; &XercesCVersion; is a
                subset of the features defined in the 2 May 2001 XML Schema Recommendation.
                </p>
        </s2>
@@ -55,8 +55,18 @@
                        <li>SubsitutionGroup</li>
                        <li>Subset of Built-in Datatypes</li>
                        <ul>
-                                <li>Primitive Datatypes: string, boolean, decimal, hexbinary, base64binary</li>
-                                <li>Derived Datatypes: integer</li>
+                                <li>Primitive Datatypes</li>
+                                <ol>
+                                      <li>string</li>
+                                      <li>boolean</li>
+                                      <li>decimal</li>
+                                      <li>hexbinary</li>
+                                      <li>base64binary</li>
+                                </ol>
+                                <li>Derived Datatypes</li>
+                                <ol>
+                                      <li>integer</li>
+                                </ol>
                        </ul>
                        <li>xsi Markup</li>
                        <ul>
@@ -73,6 +83,26 @@
                        <li>Element and attribute re-use using "ref".</li>
                        <li>Include support</li>
                        <li>Import Support</li>
+                       <li>Element declaration &lt;any&gt;</li>
+                       <li>Subset of Built-in Datatypes</li>
+                       <ul>
+                                <li>Derived Datatypes</li>
+                                <ol>
+                                      <li>normalizedString</li>
+                                      <li>token</li>
+                                      <li>language</li>
+                                      <li>Name</li>
+                                      <li>NCName</li>
+                                      <li>NMTOKEN</li>
+                                      <li>NMTOKENS</li>
+                                      <li>ID</li>
+                                      <li>IDREF</li>
+                                      <li>IDREFS</li>
+                                      <li>ENTITY</li>
+                                      <li>ENTITIES</li>
+                                      <li>nonNegativeInteger</li>
+                                </ol>
+                       </ul>
                </ul>
 
 

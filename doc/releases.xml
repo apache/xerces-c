@@ -3,7 +3,373 @@
 
 <s1 title="Releases">
 
-<s2 title="Xerces-C Version 1.5.0: June 15, 2001">
+<s2 title="&XercesCName; Version 1.5.1: July 18, 2001">
+
+<table>
+    <tr>
+        <td>Date</td>
+        <td>Contributor</td>
+        <td>Description</td>
+    </tr>
+
+    <tr>
+        <td>2001-07-09</td>
+        <td>Khaled Noaman</td>
+        <td>Add constraint checking for simple types.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-11</td>
+        <td>Pei Yong Zhang</td>
+        <td>Fix to normalizeWhiteSpace: synchronize fDatatypeBuffer with toFill.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-05</td>
+        <td>Pei Yong Zhang</td>
+        <td>Add ListDatatypeValidator and UnionDatatypeValidator (but not enabled yet).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-10</td>
+        <td>Tinny Ng</td>
+        <td>Give proper error messsage when scanning external id.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-10</td>
+        <td>Tinny Ng</td>
+        <td>The first char of PI Target Name should be checked.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-09</td>
+        <td>Khaled Noaman</td>
+        <td>Add &lt;any&gt; declaration.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-09</td>
+        <td>Khaled Noaman</td>
+        <td>Fixes for import/include declarations.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-09</td>
+        <td>Tinny Ng</td>
+        <td>Partial Markup in Parameter Entity is validity constraint and thus
+        should be just error, not fatal error.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-08</td>
+        <td>James Berry</td>
+        <td>Add new samples projects: IDOMPPrint and SAX2Print for ProjectBuilder
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-08</td>
+        <td>James Berry</td>
+        <td>Update ProjectBuilder Xerces project for latest file additions.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-08</td>
+        <td>James Berry</td>
+        <td>[Bug 2486] Files missing from XercesLib.mcp.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-08</td>
+        <td>James Berry</td>
+        <td>Add new samples for CodeWarrior build: IDOMPrint and SAX2Print.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-08</td>
+        <td>James Berry</td>
+        <td>New file for use in building Carbon samples.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-08</td>
+        <td>James Berry</td>
+        <td>Simplify file existance checks.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-08</td>
+        <td>James Berry</td>
+        <td>[Bug 2495] Missing ( in xerces-c-src1_5_0/obj/Makefile.in.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-08</td>
+        <td>James Berry</td>
+        <td>Fix clean and distclean targets; broken because rm fails if passed no files.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-06</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2472] Linker options ignored on IRIX.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-06</td>
+        <td>Martin Kalen</td>
+        <td>Automatic build of single-threaded library.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-05</td>
+        <td>Tinny Ng</td>
+        <td>Encoding String must present for external entity text decl.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-05</td>
+        <td>Tinny Ng</td>
+        <td>Standalone checking is validity constraint and thus should be just error, not fatal error.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-05</td>
+        <td>Pei Yong Zhang</td>
+        <td>Add NotationDatatypeValidator, QNameDatatypeValidator and ENTITYDatatypeValidator.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-04</td>
+        <td>Pei Yong Zhang</td>
+        <td>Add IDREFDatatypeValidator and IDDatatypeValidator.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-04</td>
+        <td>Pei Yong Zhang</td>
+        <td>XMLString:isValidName(): to validate Name (XML [4][5]).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-03</td>
+        <td>Tinny Ng</td>
+        <td>Some compilers (e.g. the HP compiler) has mistaken the parameter 'std',
+        which is short for standalone as the special prefix used by the standard libraries.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-07-03</td>
+        <td>Miroslaw Dobrzanski-Neumann</td>
+        <td>Supporting dce threading on AIX and Solaris.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-27</td>
+        <td>David Bertoni</td>
+        <td>[Bug 2365] Huge performance problem with the parser in XMLScanner::sendCharData().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-27</td>
+        <td>David Bertoni</td>
+        <td>[Bug 2363] XMLScanner::sendCharData() can send the wrong length to the handler.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-27</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 2353] Validating Parser parses after validation failed.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-27</td>
+        <td>Murray Cumming</td>
+        <td>[Bug 1147] Headers install in wrong directory.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-26</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2119] DOMString::print() should use DOMString::transcode() for transcoding.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-25</td>
+        <td>Stephen Dulin</td>
+        <td>OS390 updates.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-25</td>
+        <td>Linda Swan</td>
+        <td>AS400 updates.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-25</td>
+        <td>Pei Yong Zhang</td>
+        <td>[Bug 1393] Converting from Unicode to iso8859.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-25</td>
+        <td>Matt Lovett</td>
+        <td>[Bug 965] scanDocTypeDecl messes up the source offsets.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-25</td>
+        <td>Khaled Noaman</td>
+        <td>Add constraint checking on elements in complex types.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-22</td>
+        <td>James Berry</td>
+        <td>[Bug 2277] Bad argument to ConvertFromUnicodeToText.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-22</td>
+        <td>Pei Yong Zhang</td>
+        <td>[Bug 2263] 'SIZE' : redefinition ( BooleanDatatypeValidator.cpp ).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-22</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 2258] Bug in Iconv and Iconv390.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-22</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2225] assignment vs. comparison in if clause.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-22</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2257] 1.5 thinks a &lt;?xml-stylesheet ...&gt; tag is a &lt;?xml ...&gt; tag.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-21</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 1946] Standalone validity check only for external decl.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-21</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 2262] Duplicated header guard.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-20</td>
+        <td>Pei Yong Zhang</td>
+        <td>Proper Debug Guard: Reported by Dean.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-19</td>
+        <td>Tinny Ng</td>
+        <td>Namespace should be off by default in XMLScanner.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001/06/19</td>
+        <td>Tinny Ng</td>
+        <td>Add installAdvDocHandler to SAX2XMLReader as the code is there already.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-19</td>
+        <td>Khaled Noaman</td>
+        <td>Handle maxChars > length(toTranscode).
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-18</td>
+        <td>Erik Rydgren</td>
+        <td>Memory leak fix: to addlevel().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-18</td>
+        <td>Khaled Noaman and Pei Yong Zhang</td>
+        <td>Add support for 'fixed' facet.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-15</td>
+        <td>Khaled Noaman</td>
+        <td>Added constraint checking for ref on elements.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-06-15</td>
+        <td>Tinny Ng</td>
+        <td>ICU 1.8.1 update.
+        </td>
+    </tr>
+
+
+</table>
+</s2>
+
+
+<s2 title="&XercesCName; Version 1.5.0: June 15, 2001">
 
 <table>
     <tr>
