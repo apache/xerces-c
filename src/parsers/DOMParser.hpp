@@ -271,7 +271,6 @@ public :
       * @see #setValidationContraintFatal
       */
     bool getValidationConstraintFatal() const;
-    //@}
 
     /** Get the 'expand entity references' flag.
       * DEPRECATED Use getCreateEntityReferenceNodes() instead.
