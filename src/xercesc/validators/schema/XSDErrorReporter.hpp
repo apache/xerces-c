@@ -97,12 +97,6 @@ public:
     void setExitOnFirstFatal(const bool newValue);
 
     // -----------------------------------------------------------------------
-    //  Notification that lazy data has been deleted
-    // -----------------------------------------------------------------------
-	static void reinitErrMsgMutex();
-	static void reinitErrMsgLoader();
-
-    // -----------------------------------------------------------------------
     //  Report error methods
     // -----------------------------------------------------------------------
     void emitError(const unsigned int toEmit,

@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.8  2003/01/09 15:30:09  tng
+  * Performance: construct message loader only when required.
+  *
   * Revision 1.7  2002/12/04 02:32:43  knoaman
   * #include cleanup.
   *
@@ -87,7 +90,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/XMLErrorCodes.hpp>
@@ -103,61 +105,69 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  Local static data
 // ---------------------------------------------------------------------------
-static bool               sMsgMutexRegistered = false;
-static XMLMutex*          sErrMsgMutex = 0;
-static XMLRegisterCleanup cleanupErrMsgMutex;
 static XMLMsgLoader*      gErrMsgLoader = 0;
 static XMLMsgLoader*      gValidMsgLoader = 0;
-static XMLRegisterCleanup cleanupErrMsgLoader;
 
 
 // ---------------------------------------------------------------------------
 //  Local, static functions
 // ---------------------------------------------------------------------------
-void XSDErrorReporter::reinitErrMsgLoader()
+static void reinitErrMsgLoader()
 {
 	delete gErrMsgLoader;
 	gErrMsgLoader = 0;
+}
+
+static void reinitValidMsgLoader()
+{
 	delete gValidMsgLoader;
 	gValidMsgLoader = 0;
 }
 
-
-void XSDErrorReporter::reinitErrMsgMutex()
+static XMLMsgLoader* getErrMsgLoader()
 {
-    delete sErrMsgMutex;
-    sErrMsgMutex = 0;
-    sMsgMutexRegistered = false;
-}
-
-//
-//  We need to fault in this mutex. But, since its used for synchronization
-//  itself, we have to do this the low level way using a compare and swap.
-//
-static XMLMutex& gErrMsgMutex()
-{
-    if (!sErrMsgMutex)
+    static XMLRegisterCleanup cleanupErrMsgLoader;
+    if (gErrMsgLoader == 0)
     {
-        XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&sErrMsgMutex, tmpMutex, 0))
-        {
-            // Someone beat us to it, so let's clean up ours
-            delete tmpMutex;
-        }
-
-        // Now lock it and try to register it
-        XMLMutexLock lock(sErrMsgMutex);
-
-        // If we got here first, then register it and set the registered flag
-        if (!sMsgMutexRegistered)
-        {
-            cleanupErrMsgMutex.registerCleanup(XSDErrorReporter::reinitErrMsgMutex);
-            sMsgMutexRegistered = true;
+        XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
+        if (!t)
+            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+        else {
+            if (XMLPlatformUtils::compareAndSwap((void **)&gErrMsgLoader, t, 0) != 0)
+            {
+                delete t;
+            }
+            else
+            {
+                cleanupErrMsgLoader.registerCleanup(reinitErrMsgLoader);
+            }
         }
     }
-    return *sErrMsgMutex;
+    return gErrMsgLoader;
 }
 
+
+static XMLMsgLoader* getValidMsgLoader()
+{
+    static XMLRegisterCleanup cleanupValidMsgLoader;
+    if (gValidMsgLoader == 0)
+    {
+        XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
+        if (!t)
+            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+        else {
+            if (XMLPlatformUtils::compareAndSwap((void **)&gValidMsgLoader, t, 0) != 0)
+            {
+                delete t;
+            }
+            else
+            {
+                cleanupValidMsgLoader.registerCleanup(reinitValidMsgLoader);
+            }
+        }
+    }
+    return gValidMsgLoader;
+}
 
 // ---------------------------------------------------------------------------
 //  XSDErrorReporter: Constructors and Destructor
@@ -167,31 +177,6 @@ XSDErrorReporter::XSDErrorReporter(XMLErrorReporter* const errorReporter) :
     , fErrorReporter(errorReporter)
 {
 
-    //
-    //  We have to do a little init that involves statics, so we have to
-    //  use the mutex to protect it.
-    //
-    {
-        XMLMutexLock lockInit(&gErrMsgMutex());
-
-        // If we haven't loaded our message yet, then do that
-        if (!gErrMsgLoader)
-        {
-            gErrMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
-            if (!gErrMsgLoader)
-                XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
-
-            gValidMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
-            if (!gValidMsgLoader) {
-
-                reinitErrMsgLoader();
-                XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
-            }
-
-            // Register this object to be cleaned up at termination
-			cleanupErrMsgLoader.registerCleanup(reinitErrMsgLoader);
-        }
-    }
 }
 
 
@@ -212,13 +197,13 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
     //
     const unsigned int msgSize = 1023;
     XMLCh errText[msgSize + 1];
-    XMLMsgLoader* msgLoader = gErrMsgLoader;
+    XMLMsgLoader* msgLoader = getErrMsgLoader();
     XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
 
     if (XMLString::equals(msgDomain, XMLUni::fgValidityDomain)) {
 
         errType = XMLValid::errorType((XMLValid::Codes) toEmit);
-        msgLoader = gValidMsgLoader;
+        msgLoader = getValidMsgLoader();
     }
 
     if (!msgLoader->loadMsg(toEmit, errText, msgSize))
@@ -254,13 +239,13 @@ void XSDErrorReporter::emitError(const unsigned int toEmit,
     //
     const unsigned int maxChars = 2047;
     XMLCh errText[maxChars + 1];
-    XMLMsgLoader* msgLoader = gErrMsgLoader;
+    XMLMsgLoader* msgLoader = getErrMsgLoader();
     XMLErrorReporter::ErrTypes errType = XMLErrs::errorType((XMLErrs::Codes) toEmit);
 
     if (XMLString::equals(msgDomain, XMLUni::fgValidityDomain)) {
 
         errType = XMLValid::errorType((XMLValid::Codes) toEmit);
-        msgLoader = gValidMsgLoader;
+        msgLoader = getValidMsgLoader();
     }
 
     if (!msgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))

@@ -144,6 +144,23 @@ static XMLMutex& gScannerMutex()
     return *sScannerMutex;
 }
 
+static XMLMsgLoader& gScannerMsgLoader()
+{
+    XMLMutexLock lockInit(&gScannerMutex());
+
+    // If we haven't loaded our message yet, then do that
+    if (!gMsgLoader)
+    {
+        gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
+        if (!gMsgLoader)
+            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+
+        // Register this object to be cleaned up at termination
+        cleanupMsgLoader.registerCleanup(XMLScanner::reinitMsgLoader);
+    }
+
+    return *gMsgLoader;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Constructors and Destructor
@@ -655,17 +672,6 @@ void XMLScanner::commonInit()
     {
         XMLMutexLock lockInit(&gScannerMutex());
 
-        // If we haven't loaded our message yet, then do that
-        if (!gMsgLoader)
-        {
-            gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
-            if (!gMsgLoader)
-                XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
-
-            // Register this object to be cleaned up at termination
-			cleanupMsgLoader.registerCleanup(reinitMsgLoader);
-        }
-
         // And assign ourselves the next available scanner id
         fScannerId = ++gScannerId;
     }
@@ -711,7 +717,7 @@ void XMLScanner::emitError(const XMLErrs::Codes toEmit)
         const unsigned int msgSize = 1023;
         XMLCh errText[msgSize + 1];
 
-        if (!gMsgLoader->loadMsg(toEmit, errText, msgSize))
+        if (!gScannerMsgLoader().loadMsg(toEmit, errText, msgSize))
         {
                 // <TBD> Probably should load a default msg here
         }
@@ -758,7 +764,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        if (!gMsgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
+        if (!gScannerMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
         {
                 // <TBD> Should probably load a default message here
         }
@@ -805,7 +811,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
         const unsigned int maxChars = 2047;
         XMLCh errText[maxChars + 1];
 
-        if (!gMsgLoader->loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
+        if (!gScannerMsgLoader().loadMsg(toEmit, errText, maxChars, text1, text2, text3, text4))
         {
                 // <TBD> Should probably load a default message here
         }
