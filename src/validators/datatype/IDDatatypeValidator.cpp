@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/24 21:23:40  tng
+ * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
+ *
  * Revision 1.1  2001/07/04 14:38:25  peiyongz
  * IDDatatypeValidator: created
  * DatatypeValidatorFactory: IDDTV enabled
@@ -85,7 +88,7 @@ IDDatatypeValidator::IDDatatypeValidator(
                         , RefVectorOf<XMLCh>*           const enums
                         , const int                           finalSet)
 :StringDatatypeValidator(baseValidator, facets, enums, finalSet)
-,fTableOfId(0)
+,fIDRefList(0)
 {
     //
     // the StringDatatypeValidator has the same set of
@@ -98,7 +101,7 @@ IDDatatypeValidator::IDDatatypeValidator(
     // are all valid NCName(s).
     //
     if (enums)
-    {               
+    {
         int enumLength = enums->size();
         for ( int i = 0; i < enumLength; i++)
         {
@@ -114,7 +117,7 @@ IDDatatypeValidator::IDDatatypeValidator(
 void IDDatatypeValidator::validate(const XMLCh* const content)
 {
     // use StringDatatypeValidator (which in turn, invoke
-    // the baseValidator) to validate content against 
+    // the baseValidator) to validate content against
     // facets if any.
     //
     StringDatatypeValidator::validate(content);
@@ -126,19 +129,30 @@ void IDDatatypeValidator::validate(const XMLCh* const content)
         //("Value '"+content+"' is not a valid NCName");
 
     // storing IDs to the global ID table
-    if (fTableOfId)
+    if (fIDRefList)
         addId(content);
 }
 
-void IDDatatypeValidator::addId(const XMLCh * const content) 
+void IDDatatypeValidator::addId(const XMLCh * const content)
 {
-    if (fTableOfId->containsKey(content))
-        ThrowXML(InvalidDatatypeValueException, XMLExcepts::FACET_Len_minLen);
-        //ThrowXML(InvalidDatatypeValueException, XMLExcepts::VALUE_ID_Not_Unique);
-        //("Value '"+content+"' has to be unique");
-   
-    fTableOfId->put((void*)content
-                   , new KVStringPair(content, XMLUni::fgZeroLenString)); 
+    XMLRefInfo* find = fIDRefList->get(content);
+    if (find)
+    {
+        if (find->getDeclared())
+            ThrowXML(InvalidDatatypeValueException, XMLExcepts::FACET_Len_minLen);
+            //ThrowXML(InvalidDatatypeValueException, XMLExcepts::VALUE_ID_Not_Unique);
+            //("Value '"+content+"' has to be unique");
+    }
+     else
+    {
+        find = new XMLRefInfo(content);
+        fIDRefList->put((void*)find->getRefName(), find);
+    }
+
+    //
+    //  Mark it declared
+    //
+    find->setDeclared(true);
 }
 
 /**

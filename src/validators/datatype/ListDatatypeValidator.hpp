@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/24 21:23:40  tng
+ * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
+ *
  * Revision 1.1  2001/07/11 21:37:17  peiyongz
  * ListDatatypeDTV
  *
@@ -142,10 +145,12 @@ public:
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
+    DatatypeValidator* getItemTypeDTV() const;
+
 private:
 
     void checkContent(const XMLCh* const content, bool asBase);
-    
+
     void checkContent(RefVectorOf<XMLCh>* tokenVector, bool asBase);
 
     void init(DatatypeValidator*            const baseValidator
@@ -154,7 +159,6 @@ private:
 
     void cleanUp();
 
-    DatatypeValidator* getItemTypeDTV() const;
 
     bool valueSpaceCheck(RefVectorOf<XMLCh>* tokenVector
                        , const XMLCh* const  enumStr) const;
@@ -281,12 +285,12 @@ inline const XMLCh* const ListDatatypeValidator::getContent() const
     return fContent;
 }
 
-inline 
+inline
 DatatypeValidator* ListDatatypeValidator::getItemTypeDTV() const
 {
     DatatypeValidator* bdv = this->getBaseValidator();
 
-    while (bdv->getType() == DatatypeValidator::List) 
+    while (bdv->getType() == DatatypeValidator::List)
         bdv = bdv->getBaseValidator();
 
     return bdv;

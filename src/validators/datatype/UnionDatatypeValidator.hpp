@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/24 21:23:40  tng
+ * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
+ *
  * Revision 1.1  2001/07/13 14:10:40  peiyongz
  * UnionDTV
  *
@@ -159,10 +162,12 @@ public:
                                  , RefVectorOf<XMLCh>*           const enums
                                  , const int                           finalSet);
 
+    RefVectorOf<DatatypeValidator>* getMemberTypeValidators() const;
+
 private:
 
     void checkContent(const XMLCh* const content, bool asBase);
-    
+
     void init(DatatypeValidator*            const baseValidator
             , RefHashTableOf<KVStringPair>* const facets
             , RefVectorOf<XMLCh>*           const enums);
@@ -173,7 +178,6 @@ private:
 
     void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
 
-    RefVectorOf<DatatypeValidator>* getMemberTypeValidators() const;
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -251,12 +255,12 @@ inline void UnionDatatypeValidator::setEnumeration(RefVectorOf<XMLCh>* enums
 //
 // get the native UnionDTV's fMemberTypeValidators
 //
-inline 
+inline
 RefVectorOf<DatatypeValidator>* UnionDatatypeValidator::getMemberTypeValidators() const
 {
     UnionDatatypeValidator* thisdv = (UnionDatatypeValidator*)this; // cast away constness
 
-    while (thisdv->getBaseValidator()) 
+    while (thisdv->getBaseValidator())
         thisdv = (UnionDatatypeValidator*) thisdv->getBaseValidator();
 
     return thisdv->fMemberTypeValidators;

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/24 21:23:40  tng
+ * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
+ *
  * Revision 1.1  2001/07/04 14:38:25  peiyongz
  * IDDatatypeValidator: created
  * DatatypeValidatorFactory: IDDTV enabled
@@ -69,6 +72,7 @@
 
 #include <validators/datatype/StringDatatypeValidator.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
+#include <framework/XMLRefInfo.hpp>
 
 class VALIDATORS_EXPORT IDDatatypeValidator : public StringDatatypeValidator
 {
@@ -118,7 +122,7 @@ public:
 
     //@}
 
-	void setTableOfId(RefHashTableOf<KVStringPair>* const);
+	void setIDRefList(RefHashTableOf<XMLRefInfo>* fIDRefList);
 
 private:
 
@@ -127,11 +131,11 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fTableOfId
-    //      pointer to the (global) table containning all ID(s), do not own it.
+    //  fIDRefList
+    //      we do not own it.
     //
     // -----------------------------------------------------------------------
-    RefHashTableOf<KVStringPair>  *fTableOfId; 
+    RefHashTableOf<XMLRefInfo>* fIDRefList;
 };
 
 // ---------------------------------------------------------------------------
@@ -139,7 +143,7 @@ private:
 // ---------------------------------------------------------------------------
 inline IDDatatypeValidator::IDDatatypeValidator()
 :StringDatatypeValidator()
-,fTableOfId(0)
+,fIDRefList(0)
 {
     DatatypeValidator::setType(DatatypeValidator::ID);
 }
@@ -157,9 +161,9 @@ inline DatatypeValidator* IDDatatypeValidator::newInstance(
     return (DatatypeValidator*) new IDDatatypeValidator(baseValidator, facets, enums, finalSet);
 }
 
-inline void IDDatatypeValidator::setTableOfId(RefHashTableOf<KVStringPair> * const newTableOfId)
+inline void IDDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* const newIDRefList)
 {
-    fTableOfId = newTableOfId;
+    fIDRefList = newIDRefList;
 }
 
 /**

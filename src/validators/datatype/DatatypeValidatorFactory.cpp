@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/07/24 21:23:39  tng
+ * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
+ *
  * Revision 1.18  2001/07/24 13:59:03  peiyongz
  * DoubleDTV
  *
@@ -317,7 +320,6 @@ void DatatypeValidatorFactory::resetRegistry() {
         fUserDefinedRegistry->removeAll();
     }
 
-    // TO DO: reset some primitive datatypes static - fields (ID & IDREFS)
 }
 
 

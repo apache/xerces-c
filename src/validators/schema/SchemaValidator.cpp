@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/07/24 21:23:40  tng
+ * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
+ *
  * Revision 1.9  2001/07/11 21:39:58  peiyongz
  * fix to normalizeWhiteSpace: synchronize fDatatypeBuffer with toFill.
  *
@@ -95,6 +98,11 @@
 #include <internal/XMLScanner.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
 #include <validators/datatype/InvalidDatatypeFacetException.hpp>
+#include <validators/datatype/ListDatatypeValidator.hpp>
+#include <validators/datatype/UnionDatatypeValidator.hpp>
+#include <validators/datatype/ENTITYDatatypeValidator.hpp>
+#include <validators/datatype/IDDatatypeValidator.hpp>
+#include <validators/datatype/IDREFDatatypeValidator.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
 #include <validators/schema/SchemaValidator.hpp>
 #include <validators/schema/SubstitutionGroupComparator.hpp>
@@ -306,10 +314,7 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
     //
     XMLAttDef::AttTypes            type      = attDef->getType();
     const XMLAttDef::DefAttTypes   defType   = attDef->getDefaultType();
-    const XMLCh* const             valueText = attDef->getValue();
     const XMLCh* const             fullName  = attDef->getFullName();
-    XMLBuffer enumList;
-    enumList.set(attDef->getEnumeration());
 
     //
     //  If the default type is fixed, then make sure the passed value maps
@@ -317,6 +322,7 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
     //
     if (defType == XMLAttDef::Fixed)
     {
+        const XMLCh* const valueText = attDef->getValue();
         if (XMLString::compareString(attrValue, valueText))
             emitError(XMLValid::NotSameAsFixedValue, fullName, attrValue, valueText);
     }
@@ -328,14 +334,196 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
         return;
     }
 
-    if (type == XMLAttDef::Simple) {
+    //  Check the Any Type
+    if (type == XMLAttDef::Any_Any
+     || type == XMLAttDef::Any_List
+     || type == XMLAttDef::Any_Local
+     || type == XMLAttDef::Any_Other) {
+
+        if (defType == XMLAttDef::ProcessContents_Skip) {
+            // attribute should just be bypassed,
+        }
+        else if (defType == XMLAttDef::ProcessContents_Strict
+             ||  defType == XMLAttDef::ProcessContents_Lax)
+        {
+
+            bool reportError = false;
+            bool processContentStrict = (defType == XMLAttDef::ProcessContents_Strict);
+            QName* const      attName = ((SchemaAttDef*)attDef)->getAttName();
+
+            if (attName->getURI() == getScanner()->getEmptyNamespaceId()) {
+                if (processContentStrict)
+                    reportError = true;
+            } else {
+                SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getScanner()->getURIText(attName->getURI()));
+                if (!sGrammar) {
+                    if (processContentStrict)
+                        reportError = true;
+                } else {
+                    RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
+                    if (!attRegistry) {
+                        if (processContentStrict)
+                            reportError = true;
+                    } else {
+                        SchemaAttDef* attDecl = (SchemaAttDef*) attRegistry->get(attName->getLocalPart());
+                        if (!attDecl) {
+                            if (processContentStrict)
+                                reportError = true;
+                        } else {
+                            DatatypeValidator* attDeclDV = attDecl->getDatatypeValidator();
+                            if (!attDeclDV) {
+                                if (processContentStrict)
+                                    reportError = true;
+                            }
+                            else {
+                                try {
+                                    DatatypeValidator::ValidatorType attDeclDVType = attDeclDV->getType();
+
+                                    // set up the entitydeclpool in ENTITYDatatypeValidator
+                                    // and the idreflist in ID/IDREFDatatypeValidator
+
+                                    if (attDeclDVType == DatatypeValidator::List) {
+                                        DatatypeValidator* itemDTV = ((ListDatatypeValidator*)attDeclDV)->getItemTypeDTV();
+                                        DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
+                                        if (itemDTVType == DatatypeValidator::ENTITY)
+                                            ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                                        else if (itemDTVType == DatatypeValidator::ID)
+                                            ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                                        else if (itemDTVType == DatatypeValidator::IDREF)
+                                            ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                                    }
+                                    else if (attDeclDVType == DatatypeValidator::Union) {
+                                        RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)attDeclDV)->getMemberTypeValidators();
+                                        unsigned int memberTypeNumber = memberDTV->size();
+                                        for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
+                                        {
+                                            DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
+                                            if (memberDTVType == DatatypeValidator::ENTITY)
+                                                ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                                            else if (memberDTVType == DatatypeValidator::ID)
+                                                ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                                            else if (memberDTVType == DatatypeValidator::IDREF)
+                                                ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                                        }
+                                    }
+                                    else if (attDeclDVType == DatatypeValidator::ENTITY)
+                                        ((ENTITYDatatypeValidator*)attDeclDV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                                    else if (attDeclDVType == DatatypeValidator::ID)
+                                        ((IDDatatypeValidator*)attDeclDV)->setIDRefList(getScanner()->getIDRefList());
+                                    else if (attDeclDVType == DatatypeValidator::IDREF)
+                                        ((IDREFDatatypeValidator*)attDeclDV)->setIDRefList(getScanner()->getIDRefList());
+
+                                    // now validate the attribute value
+                                    // if notation, need to bind URI to notation first
+                                    if (attDeclDVType == DatatypeValidator::NOTATION)
+                                    {
+                                        //
+                                        //  Make sure that this value maps to one of the
+                                        //  notation values in the enumList parameter. We don't have to
+                                        //  look it up in the notation pool (if a notation) because we
+                                        //  will look up the enumerated values themselves. If they are in
+                                        //  the notation pool (after the Grammar is parsed), then obviously
+                                        //  this value will be legal since it matches one of them.
+                                        //
+                                        XMLBuffer nameBuf(XMLString::stringLen(attrValue)+1);
+                                        XMLBuffer prefixBuf(XMLString::stringLen(attrValue)+1);
+                                        XMLBuffer notationBuf;
+                                        unsigned int uriId = getScanner()->resolveQName(attrValue, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
+                                        notationBuf.set(getScanner()->getURIText(uriId));
+                                        notationBuf.append(chColon);
+                                        notationBuf.append(nameBuf.getRawBuffer());
+
+                                        attDeclDV->validate(notationBuf.getRawBuffer());
+                                    }
+                                    else
+                                        attDeclDV->validate(attrValue);
+                                } catch (InvalidDatatypeValueException idve) {
+                                    emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+                                }
+                                catch (InvalidDatatypeFacetException idve) {
+                                    emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
+                                }
+                                catch (...) {
+                                    emitError(XMLValid::GenericError);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (reportError) {
+                emitError(XMLValid::AttNotDefinedForElement, fullName, XMLUni::fgZeroLenString);
+            }
+        }
+    }
+    else {
         DatatypeValidator* attDefDV = ((SchemaAttDef*) attDef)->getDatatypeValidator();
         if (!attDefDV) {
             emitError(XMLValid::NoDatatypeValidatorForAttribute, fullName);
         }
         else {
             try {
-                attDefDV->validate(attrValue);
+                DatatypeValidator::ValidatorType attDefDVType = attDefDV->getType();
+
+                // set up the entitydeclpool in ENTITYDatatypeValidator
+                // and the idreflist in ID/IDREFDatatypeValidator
+
+                if (attDefDVType == DatatypeValidator::List) {
+                    DatatypeValidator* itemDTV = ((ListDatatypeValidator*)attDefDV)->getItemTypeDTV();
+                    DatatypeValidator::ValidatorType itemDTVType = itemDTV->getType();
+                    if (itemDTVType == DatatypeValidator::ENTITY)
+                        ((ENTITYDatatypeValidator*)itemDTV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                    else if (itemDTVType == DatatypeValidator::ID)
+                        ((IDDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                    else if (itemDTVType == DatatypeValidator::IDREF)
+                        ((IDREFDatatypeValidator*)itemDTV)->setIDRefList(getScanner()->getIDRefList());
+                }
+                else if (attDefDVType == DatatypeValidator::Union) {
+                    RefVectorOf<DatatypeValidator>* memberDTV = ((UnionDatatypeValidator*)attDefDV)->getMemberTypeValidators();
+                    unsigned int memberTypeNumber = memberDTV->size();
+                    for ( unsigned int memberIndex = 0; memberIndex < memberTypeNumber; ++memberIndex)
+                    {
+                        DatatypeValidator::ValidatorType memberDTVType = memberDTV->elementAt(memberIndex)->getType();
+                        if (memberDTVType == DatatypeValidator::ENTITY)
+                            ((ENTITYDatatypeValidator*)memberDTV->elementAt(memberIndex))->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                        else if (memberDTVType == DatatypeValidator::ID)
+                            ((IDDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                        else if (memberDTVType == DatatypeValidator::IDREF)
+                            ((IDREFDatatypeValidator*)memberDTV->elementAt(memberIndex))->setIDRefList(getScanner()->getIDRefList());
+                    }
+                }
+                else if (attDefDVType == DatatypeValidator::ENTITY)
+                    ((ENTITYDatatypeValidator*)attDefDV)->setEntityDeclPool(getScanner()->getEntityDeclPool());
+                else if (attDefDVType == DatatypeValidator::ID)
+                    ((IDDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
+                else if (attDefDVType == DatatypeValidator::IDREF)
+                    ((IDREFDatatypeValidator*)attDefDV)->setIDRefList(getScanner()->getIDRefList());
+
+                // now validate the attribute value
+                // if notation, need to bind URI to notation first
+                if (attDefDVType == DatatypeValidator::NOTATION)
+                {
+                    //
+                    //  Make sure that this value maps to one of the
+                    //  notation values in the enumList parameter. We don't have to
+                    //  look it up in the notation pool (if a notation) because we
+                    //  will look up the enumerated values themselves. If they are in
+                    //  the notation pool (after the Grammar is parsed), then obviously
+                    //  this value will be legal since it matches one of them.
+                    //
+                    XMLBuffer nameBuf(XMLString::stringLen(attrValue)+1);
+                    XMLBuffer prefixBuf(XMLString::stringLen(attrValue)+1);
+                    XMLBuffer notationBuf;
+                    unsigned int uriId = getScanner()->resolveQName(attrValue, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
+                    notationBuf.set(getScanner()->getURIText(uriId));
+                    notationBuf.append(chColon);
+                    notationBuf.append(nameBuf.getRawBuffer());
+
+                    attDefDV->validate(notationBuf.getRawBuffer());
+                }
+                else
+                    attDefDV->validate(attrValue);
             } catch (InvalidDatatypeValueException idve) {
                 emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
             }
@@ -345,265 +533,6 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
             catch (...) {
                 emitError(XMLValid::GenericError);
             }
-        }
-    }
-    else {
-        //  Check the Any Type and Simple Type using datatype validator
-        if (type == XMLAttDef::Any_Any
-         || type == XMLAttDef::Any_List
-         || type == XMLAttDef::Any_Local
-         || type == XMLAttDef::Any_Other) {
-
-            if (defType == XMLAttDef::ProcessContents_Skip) {
-                // attribute should just be bypassed,
-            }
-            else if (defType == XMLAttDef::ProcessContents_Strict
-                 ||  defType == XMLAttDef::ProcessContents_Lax) {
-
-                bool reportError = false;
-                bool processContentStrict = (defType == XMLAttDef::ProcessContents_Strict);
-                QName* const      attName = ((SchemaAttDef*)attDef)->getAttName();
-
-                if (attName->getURI() == getScanner()->getEmptyNamespaceId()) {
-                    if (processContentStrict)
-                        reportError = true;
-                } else {
-                    SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getScanner()->getURIText(attName->getURI()));
-                    if (!sGrammar) {
-                        if (processContentStrict)
-                            reportError = true;
-                    } else {
-                        RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
-                        if (!attRegistry) {
-                            if (processContentStrict)
-                                reportError = true;
-                        } else {
-                            SchemaAttDef* attDecl = (SchemaAttDef*) attRegistry->get(attName->getLocalPart());
-                            if (!attDecl) {
-                                if (processContentStrict)
-                                    reportError = true;
-                            } else {
-                                DatatypeValidator* attDeclDV = attDecl->getDatatypeValidator();
-                                if (!attDeclDV) {
-                                    if (processContentStrict)
-                                        reportError = true;
-                                }
-                                else {
-                                    try {
-                                        DatatypeValidator::ValidatorType attDeclDVType = attDeclDV->getType();
-                                        type = attDecl->getType();
-                                        enumList.set(attDecl->getEnumeration());
-                                        if (type == XMLAttDef::Simple)
-                                            attDeclDV->validate(attrValue);
-                                    } catch (InvalidDatatypeValueException idve) {
-                                        emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
-                                    }
-                                    catch (InvalidDatatypeFacetException idve) {
-                                        emitError (XMLValid::DatatypeError, idve.getType(), idve.getMessage());
-                                    }
-                                    catch (...) {
-                                        emitError(XMLValid::GenericError);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (reportError) {
-                    emitError(XMLValid::AttNotDefinedForElement, fullName, XMLUni::fgZeroLenString);
-                }
-            }
-        }
-        // check the ID, IDREF, IDREFS, NMTOKEN, NMTOKENS, ENTITY, ENTITIES, NOTATION using the old methods
-
-        // See whether we are doing multiple values or not
-        const bool multipleValues =
-        (
-            (type == XMLAttDef::IDRefs)
-            || (type == XMLAttDef::Entities)
-            || (type == XMLAttDef::NmTokens)
-            || (type == XMLAttDef::Notation)
-        );
-
-        // And whether we must check for a first name char
-        const bool firstNameChar =
-        (
-            (type == XMLAttDef::ID)
-            || (type == XMLAttDef::IDRef)
-            || (type == XMLAttDef::IDRefs)
-            || (type == XMLAttDef::Entity)
-            || (type == XMLAttDef::Entities)
-            || (type == XMLAttDef::Notation)
-        );
-
-        // Some trigger flags to avoid issuing redundant errors and whatnot
-        bool sawOneValue;
-        bool alreadyCapped = false;
-
-        //
-        //  Make a copy of the text that we can mangle and get a pointer we can
-        //  move through the value
-        //
-
-        // Use a stack-based buffer, when possible...
-        XMLCh   tempBuffer[100];
-
-        XMLCh* pszTmpVal = 0;
-
-        ArrayJanitor<XMLCh> janTmpVal(0);
-
-        if (XMLString::stringLen(attrValue) < sizeof(tempBuffer) / sizeof(tempBuffer[0]))
-        {
-            XMLString::copyString(tempBuffer, attrValue);
-            pszTmpVal = tempBuffer;
-        }
-        else
-        {
-            janTmpVal.reset(XMLString::replicate(attrValue));
-            pszTmpVal = janTmpVal.get();
-        }
-
-        XMLCh* valPtr = pszTmpVal;
-
-        while (true)
-        {
-            // Reset the trigger flags
-            sawOneValue = false;
-
-            //
-            //  Make sure the first character is a valid first name char, i.e.
-            //  if its a Name value. For NmToken values we don't treat the first
-            //  char any differently.
-            //
-            if (firstNameChar)
-            {
-                // If its not, emit and error but try to keep going
-                if (!XMLReader::isFirstNameChar(*valPtr))
-                    emitError(XMLValid::AttrValNotName, fullName);
-                valPtr++;
-            }
-
-            // Make sure all the remaining chars are valid name chars
-            while (*valPtr)
-            {
-                //
-                //  If we hit a whitespace, its either a break between two
-                //  or more values, or an error if we have a single value.
-                //
-                if (XMLReader::isWhitespace(*valPtr))
-                {
-                    if (!multipleValues)
-                    {
-                        emitError(XMLValid::NoMultipleValues, fullName);
-                        return;
-                    }
-                    break;
-                }
-
-                if (!XMLReader::isNameChar(*valPtr))
-                {
-                    emitError(XMLValid::AttrValNotName, fullName);
-                    return;
-                }
-                valPtr++;
-            }
-
-            //
-            //  Cap it off at the current non-name char. If already capped,
-            //  then remember this.
-            //
-            if (!(*valPtr))
-                alreadyCapped = true;
-            *valPtr = 0;
-
-            //
-            //  If this type of attribute requires that we track reference
-            //  stuff, then handle that.
-            //
-            if ((type == XMLAttDef::ID)
-            ||  (type == XMLAttDef::IDRef)
-            ||  (type == XMLAttDef::IDRefs))
-            {
-                XMLRefInfo* find = getScanner()->getIDRefList().get(pszTmpVal);
-                if (find)
-                {
-                    if (find->getDeclared() && (type == XMLAttDef::ID))
-                        emitError(XMLValid::ReusedIDValue, pszTmpVal);
-                }
-                 else
-                {
-                    find = new XMLRefInfo(pszTmpVal);
-                    getScanner()->getIDRefList().put((void*)find->getRefName(), find);
-                }
-
-                //
-                //  Mark it declared or used, which might be redundant in some cases
-                //  but not worth checking
-                //
-                if (type == XMLAttDef::ID)
-                    find->setDeclared(true);
-                else
-                    find->setUsed(true);
-            }
-             else if ((type == XMLAttDef::Entity) || (type == XMLAttDef::Entities))
-            {
-                //
-                //  If its refering to a entity, then look up the name in the
-                //  general entity pool. If not there, then its an error. If its
-                //  not an external unparsed entity, then its an error.
-                //
-                const XMLEntityDecl* decl = getScanner()->getEntityDecl(pszTmpVal);
-                if (decl)
-                {
-                    if (!decl->isUnparsed())
-                        emitError(XMLValid::BadEntityRefAttr, fullName);
-                }
-                 else
-                {
-                    emitError
-                    (
-                        XMLValid::UnknownEntityRefAttr
-                        , fullName
-                        , pszTmpVal
-                    );
-                }
-            }
-             else if (type == XMLAttDef::Notation)
-            {
-                //
-                //  Make sure that this value maps to one of the
-                //  notation values in the enumList parameter. We don't have to
-                //  look it up in the notation pool (if a notation) because we
-                //  will look up the enumerated values themselves. If they are in
-                //  the notation pool (after the Grammar is parsed), then obviously
-                //  this value will be legal since it matches one of them.
-                //
-                XMLBuffer nameBuf;
-                XMLBuffer prefixBuf;
-                XMLBuffer notationBuf;
-                unsigned int uriId = getScanner()->resolveQName(pszTmpVal, nameBuf, prefixBuf, ElemStack::Mode_Attribute);
-                notationBuf.set(getScanner()->getURIText(uriId));
-                notationBuf.append(chColon);
-                notationBuf.append(nameBuf.getRawBuffer());
-
-                if (!XMLString::isInList(notationBuf.getRawBuffer(), enumList.getRawBuffer()))
-                    emitError(XMLValid::DoesNotMatchEnumList, fullName);
-            }
-
-            // If not doing multiple values, then we are done
-            if (!multipleValues)
-                break;
-
-            //
-            //  If we are at the end, then break out now, else move up to the
-            //  next char and update the base pointer.
-            //
-            if (alreadyCapped)
-                break;
-
-            valPtr++;
-            pszTmpVal = valPtr;
         }
     }
 }

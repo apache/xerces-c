@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.28  2001/07/24 21:23:39  tng
+ * Schema: Use DatatypeValidator for ID/IDREF/ENTITY/ENTITIES/NOTATION.
+ *
  * Revision 1.27  2001/07/13 16:56:48  tng
  * ScanId fix.
  *
@@ -308,9 +311,9 @@ public :
     XMLErrorReporter* getErrorReporter();
     bool getExitOnFirstFatal() const;
     bool getValidationConstraintFatal() const;
-    RefHashTableOf<XMLRefInfo>& getIDRefList();
+    RefHashTableOf<XMLRefInfo>* getIDRefList();
+    const RefHashTableOf<XMLRefInfo>* getIDRefList() const;
     bool getInException() const;
-    const RefHashTableOf<XMLRefInfo>& getIDRefList() const;
     bool getLastExtLocation
     (
                 XMLCh* const    sysIdToFill
@@ -336,6 +339,8 @@ public :
         const   XMLCh* const    entName
     );
     NameIdPoolEnumerator<DTDEntityDecl> getEntityEnumerator() const;
+    NameIdPool<DTDEntityDecl>* getEntityDeclPool();
+    const NameIdPool<DTDEntityDecl>* getEntityDeclPool() const;
     const XMLStringPool* getURIStringPool() const;
     XMLStringPool* getURIStringPool();
     bool getHasNoDTD() const;
@@ -902,9 +907,9 @@ inline bool XMLScanner::getValidationConstraintFatal() const
     return fValidationConstraintFatal;
 }
 
-inline RefHashTableOf<XMLRefInfo>& XMLScanner::getIDRefList()
+inline RefHashTableOf<XMLRefInfo>* XMLScanner::getIDRefList()
 {
-    return *fIDRefList;
+    return fIDRefList;
 }
 
 inline bool XMLScanner::getInException() const
@@ -912,9 +917,9 @@ inline bool XMLScanner::getInException() const
     return fInException;
 }
 
-inline const RefHashTableOf<XMLRefInfo>& XMLScanner::getIDRefList() const
+inline const RefHashTableOf<XMLRefInfo>* XMLScanner::getIDRefList() const
 {
-    return *fIDRefList;
+    return fIDRefList;
 }
 
 inline const Locator* XMLScanner::getLocator() const
@@ -996,6 +1001,16 @@ inline const DTDEntityDecl* XMLScanner::getEntityDecl(const  XMLCh* const    ent
 inline DTDEntityDecl* XMLScanner::getEntityDecl(const XMLCh* const entName)
 {
     return fEntityDeclPool->getByKey(entName);
+}
+
+inline NameIdPool<DTDEntityDecl>* XMLScanner::getEntityDeclPool()
+{
+    return fEntityDeclPool;
+}
+
+inline const NameIdPool<DTDEntityDecl>* XMLScanner::getEntityDeclPool() const
+{
+    return fEntityDeclPool;
 }
 
 inline const XMLStringPool* XMLScanner::getURIStringPool() const

@@ -370,7 +370,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
             ||  (type == XMLAttDef::IDRef)
             ||  (type == XMLAttDef::IDRefs))
             {
-                XMLRefInfo* find = getScanner()->getIDRefList().get(pszTmpVal);
+                XMLRefInfo* find = getScanner()->getIDRefList()->get(pszTmpVal);
                 if (find)
                 {
                     if (find->getDeclared() && (type == XMLAttDef::ID))
@@ -379,7 +379,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
                  else
                 {
                     find = new XMLRefInfo(pszTmpVal);
-                    getScanner()->getIDRefList().put((void*)find->getRefName(), find);
+                    getScanner()->getIDRefList()->put((void*)find->getRefName(), find);
                 }
 
                 //
