@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/01/29 19:46:40  gareth
+ * added DOMTypeInfo API
+ *
  * Revision 1.2  2002/11/04 14:50:40  tng
  * C++ Namespace Support.
  *
@@ -122,11 +125,17 @@ public :
     // -----------------------------------------------------------------------
     virtual const XMLCh* getFullName() const;
 
+    //does nothing currently
+    virtual void reset() {};
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
     unsigned int getElemId() const;
+
+    virtual const XMLCh* getDOMTypeInfoName() const;
+
+    virtual const XMLCh* getDOMTypeInfoUri() const;
 
 
     // -----------------------------------------------------------------------
@@ -172,6 +181,15 @@ inline unsigned int DTDAttDef::getElemId() const
     return fElemId;
 }
 
+inline const XMLCh* DTDAttDef::getDOMTypeInfoName() const 
+{
+    return getAttTypeString(getType());
+}
+
+inline const XMLCh* DTDAttDef::getDOMTypeInfoUri() const 
+{
+    return 0;
+}
 
 // ---------------------------------------------------------------------------
 //  DTDAttDef: Setter methods
@@ -180,6 +198,7 @@ inline void DTDAttDef::setElemId(const unsigned int newId)
 {
     fElemId = newId;
 }
+
 
 XERCES_CPP_NAMESPACE_END
 

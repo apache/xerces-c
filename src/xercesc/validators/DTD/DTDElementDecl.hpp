@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/01/29 19:46:40  gareth
+ * added DOMTypeInfo API
+ *
  * Revision 1.2  2002/11/04 14:50:40  tng
  * C++ Namespace Support.
  *
@@ -208,6 +211,9 @@ public :
     DTDAttDef* getAttDef(const XMLCh* const attName);
     ModelTypes getModelType() const;
 
+    const XMLCh* getDOMTypeInfoName() const;
+
+    const XMLCh* getDOMTypeInfoUri() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -310,6 +316,13 @@ inline DTDElementDecl::ModelTypes DTDElementDecl::getModelType() const
     return fModelType;
 }
 
+inline const XMLCh* DTDElementDecl::getDOMTypeInfoName() const {
+    return 0;
+}
+
+inline const XMLCh* DTDElementDecl::getDOMTypeInfoUri() const {
+    return 0;
+}
 
 // ---------------------------------------------------------------------------
 //  DTDElementDecl: Setter methods
