@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2005/03/17 08:22:29  amassari
+ * Fully qualify enum (jira# 1383)
+ *
  * Revision 1.26  2004/11/18 16:20:06  cargilld
  * Changes for linker problems with linux build using xlc.
  *
@@ -608,7 +611,7 @@ void GeneralAttributeCheck::initCharFlagTable()
     //  Write it out to a temp file to be read back into this source later.
     //
     FILE* outFl = fopen("ea_table.out", "wt+");
-    fprintf(outFl, "unsigned short GeneralAttributeCheck::fgElemAttTable[E_Count][A_Count] =\n{\n    {");
+    fprintf(outFl, "unsigned short GeneralAttributeCheck::fgElemAttTable[GeneralAttributeCheck::E_Count][GeneralAttributeCheck::A_Count] =\n{\n    {");
 
     //"all"
     attList[E_All][A_ID] = Att_Optional | DV_ID;
@@ -943,7 +946,7 @@ unsigned short GeneralAttributeCheck::fgElemAttTable[GeneralAttributeCheck::E_Co
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4098, 0, 0}
 };
 
-const XMLCh* GeneralAttributeCheck::fAttNames[A_Count] =
+const XMLCh* GeneralAttributeCheck::fAttNames[GeneralAttributeCheck::A_Count] =
 {
     SchemaSymbols::fgATT_ABSTRACT,
     SchemaSymbols::fgATT_ATTRIBUTEFORMDEFAULT,
