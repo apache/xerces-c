@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.5  2001/04/04 18:02:04  tng
+# Schema: include failure on Unix for XUtil.cpp.  Fixed by Pei Yong Zhang.
+#
 # Revision 1.4  2001/03/30 16:06:00  tng
 # Schema: XUtil, added by Pei Yong Zhang
 #
@@ -86,6 +89,7 @@ include ../../Makefile.incl
 
 MODULE = validators
 SUBMODULE = schema
+XML_INCL := $(XML_INCL) -I$(XERCESCROOT)/src
 
 VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	SchemaAttDef.hpp \

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/04/04 18:02:04  tng
+ * Schema: include failure on Unix for XUtil.cpp.  Fixed by Pei Yong Zhang.
+ *
  * Revision 1.1  2001/03/30 16:06:00  tng
  * Schema: XUtil, added by Pei Yong Zhang
  *
@@ -65,7 +68,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <validators/Schema/XUtil.hpp>
+#include <validators/schema/XUtil.hpp>
 #include <util/XMLString.hpp>
 #include <framework/XMLBuffer.hpp>
 #include <dom/AttrImpl.hpp>
@@ -85,7 +88,7 @@ void XUtil::copyInto(const DOM_Node &src, DOM_Node &dest)
 
     // traverse source tree
     while (place != 0)
-	{
+    {
         // copy this node
         DOM_Node node;
         short  type = place.getNodeType();
