@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.5  2003/11/15 21:18:39  neilg
  * fixes for compilation under gcc
  *
@@ -77,41 +80,43 @@
  */
 
 #include <xercesc/framework/psvi/XSTypeDefinition.hpp>
-#include <xercesc/validators/schema/ComplexTypeInfo.hpp>
-#include <xercesc/validators/schema/SchemaElementDecl.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSTypeDefinition::XSTypeDefinition(TYPE_CATEGORY            typeCategory,
-                                   XSModel*                 xsModel,
-                                   MemoryManager* const     manager ):  
-        XSObject(XSConstants::TYPE_DEFINITION, xsModel, manager),
-        fFinal(0),
-        fBaseType(0),
-        fTypeCategory(typeCategory)
+// ---------------------------------------------------------------------------
+//  XSTypeDefinition: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSTypeDefinition::XSTypeDefinition(TYPE_CATEGORY           typeCategory,
+                                   XSTypeDefinition* const xsBaseType,
+                                   XSModel* const          xsModel,
+                                   MemoryManager* const    manager)
+    : XSObject(XSConstants::TYPE_DEFINITION, xsModel, manager)
+    , fFinal(0)
+    , fBaseType(xsBaseType)
+    , fTypeCategory(typeCategory)
 {
 }
 
-// XSTypeDefinition implementation
+XSTypeDefinition::~XSTypeDefinition()
+{
+}
 
+// ---------------------------------------------------------------------------
+//  XSTypeDefinition: access methods
+// ---------------------------------------------------------------------------
 bool XSTypeDefinition::isFinal(short toTest)
 {
     if (fFinal & toTest)
-    {
         return true;
-    }
+
     return false;
 
 }
 
-short XSTypeDefinition::getFinal() const
-{
-    return fFinal;
-}
-
 bool XSTypeDefinition::derivedFrom(const XMLCh *typeNamespace, 
-                           const XMLCh *name, 
-                           short derivationMethod)
+                                   const XMLCh *name, 
+                                   short derivationMethod)
 {
     // REVISIT: review
     // REVISIT: how to check derivationMethod (note: Java doesn't check)...

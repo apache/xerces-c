@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -74,173 +77,160 @@
  */
 
 #include <xercesc/framework/psvi/XSWildcard.hpp>
-#include <xercesc/validators/schema/SchemaAttDef.hpp>
-#include <xercesc/util/ValueVectorOf.hpp>
-#include <xercesc/validators/common/ContentSpecNode.hpp>
-#include <xercesc/util/StringPool.hpp>
 #include <xercesc/framework/psvi/XSModel.hpp>
+#include <xercesc/util/ValueVectorOf.hpp>
+#include <xercesc/util/StringPool.hpp>
+#include <xercesc/validators/common/ContentSpecNode.hpp>
+#include <xercesc/validators/schema/SchemaAttDef.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSWildcard::XSWildcard(SchemaAttDef*            attWildCard,
-                       XSModel*                 xsModel,
-                       MemoryManager * const    manager):
-    fNsConstraintList(0),
-    XSObject(XSConstants::WILDCARD, xsModel, manager )
+// ---------------------------------------------------------------------------
+//  XSWildcard: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSWildcard::XSWildcard(SchemaAttDef* const  attWildCard,
+                       XSAnnotation* const  annot,
+                       XSModel* const       xsModel,
+                       MemoryManager* const manager)
+    : XSObject(XSConstants::WILDCARD, xsModel, manager)
+    , fConstraintType(NSCONSTRAINT_ANY)
+    , fProcessContents(PC_STRICT)
+    , fNsConstraintList(0)
+    , fAnnotation(annot)
 {
-    switch (attWildCard->getType())
+    XMLAttDef::AttTypes attType = attWildCard->getType();
+    if (attType == XMLAttDef::Any_Other)
     {
-        case XMLAttDef::Any_Other:
-            fConstraintType = NSCONSTRAINT_NOT;
-            break;
-        case XMLAttDef::Any_List:
-            fConstraintType = NSCONSTRAINT_DERIVATION_LIST;
-            break;
-        default:
-            //case XMLAttDef::Any_Any:
-            // REVISIT: should I issue error if not Any_Any???
-            fConstraintType = NSCONSTRAINT_ANY;
-            break;
+        fConstraintType = NSCONSTRAINT_NOT;
+        fNsConstraintList = new (manager) RefArrayVectorOf<XMLCh>(1, true, manager);
+        fNsConstraintList->addElement
+        (
+            XMLString::replicate(fXSModel->getURIStringPool()->getValueForId(
+                    attWildCard->getAttName()->getURI()), manager)
+        );
     }
-
-    switch (attWildCard->getDefaultType())
+    else if (attType == XMLAttDef::Any_List)
     {
-        case XMLAttDef::ProcessContents_Skip:
-            fProcessContents = PC_SKIP;
-            break;
-        case XMLAttDef::ProcessContents_Lax:
-            fProcessContents = PC_LAX;
-            break;
-        default:
-            //case XMLAttDef::ProcessContents_Strict:
-            // REVISIT: should I issue error if not ProcessContents_Strict???
-            fProcessContents = PC_STRICT;
-            break;
-    }
-
-    if (fConstraintType != NSCONSTRAINT_ANY ) {
+        fConstraintType = NSCONSTRAINT_DERIVATION_LIST;
         ValueVectorOf<unsigned int>* nsList = attWildCard->getNamespaceList();
-        unsigned int nsListSize = nsList->size();
-        if (nsListSize) {
-            fNsConstraintList = new (manager) RefArrayVectorOf <XMLCh> (nsListSize, true, manager);              
-            for (unsigned int i=0; i < nsListSize; i++)
+        if (nsList)
+        {
+            unsigned int nsListSize = nsList->size();
+            if (nsListSize)
             {
-                XMLCh* nameSpace = (XMLCh*) fXSModel->getURIStringPool()->getValueForId(nsList->elementAt(i));
-                fNsConstraintList->addElement(nameSpace);
+                fNsConstraintList = new (manager) RefArrayVectorOf<XMLCh>(nsListSize, true, manager);
+                for (unsigned int i=0; i < nsListSize; i++)
+                {
+                    fNsConstraintList->addElement
+                    (
+                        XMLString::replicate
+                        (
+                            fXSModel->getURIStringPool()->getValueForId
+                            (
+                                nsList->elementAt(i)
+                            )
+                            , manager
+                        )
+                    );
+                }
             }
         }
     }
 
-    // REVISIT: correct?
-    fAnnotation = getAnnotationFromModel(attWildCard);
+    XMLAttDef::DefAttTypes attDefType = attWildCard->getDefaultType();
+    if (attDefType == XMLAttDef::ProcessContents_Skip)
+        fProcessContents = PC_SKIP;
+    else if (attDefType == XMLAttDef::ProcessContents_Lax)
+        fProcessContents = PC_LAX;
 }
 
-XSWildcard::XSWildcard(ContentSpecNode*         elmWildCard,
-                       XSModel*                 xsModel,
-                       MemoryManager* const     manager):
-    fNsConstraintList(0),
-    XSObject(XSConstants::WILDCARD, xsModel, manager )
+XSWildcard::XSWildcard(const ContentSpecNode* const elmWildCard,
+                       XSAnnotation* const annot,
+                       XSModel* const xsModel,
+                       MemoryManager* const manager)
+    : XSObject(XSConstants::WILDCARD, xsModel, manager)
+    , fConstraintType(NSCONSTRAINT_ANY)
+    , fProcessContents(PC_STRICT)
+    , fNsConstraintList(0)
+    , fAnnotation(annot)
 {
-    // REVISIT:
-    // this is the right approach but need to handle getType() of
-    // choice_any... will need to step through a list to get all the names...
-    // Khaled: will update getType to have choice_any
-    switch (elmWildCard->getType())
+    ContentSpecNode::NodeTypes nodeType = elmWildCard->getType();
+    if ((nodeType & 0x0f) == ContentSpecNode::Any_Other)
     {
-        case ContentSpecNode::Any_Other:
-            fConstraintType = NSCONSTRAINT_NOT;
-            fProcessContents = PC_STRICT;
-            break;
-        case ContentSpecNode::Any_NS:
-            fConstraintType = NSCONSTRAINT_DERIVATION_LIST;
-            fProcessContents = PC_STRICT;
-            break;
-        case ContentSpecNode::Any:
-            fConstraintType = NSCONSTRAINT_ANY;
-            fProcessContents = PC_STRICT;
-            break;
-
-        case ContentSpecNode::Any_Other_Lax:
-            fConstraintType = NSCONSTRAINT_NOT;
+        fConstraintType = NSCONSTRAINT_NOT;
+        if (nodeType == ContentSpecNode::Any_Other_Lax)
             fProcessContents = PC_LAX;
-            break;
-        case ContentSpecNode::Any_NS_Lax:
-            fConstraintType = NSCONSTRAINT_DERIVATION_LIST;
+        else if (nodeType == ContentSpecNode::Any_Other_Skip)
+            fProcessContents = PC_SKIP;
+    }
+    else if ((nodeType & 0x0f) == ContentSpecNode::Any_NS)
+    {
+        fConstraintType = NSCONSTRAINT_DERIVATION_LIST;
+        if (nodeType == ContentSpecNode::Any_NS_Lax)
             fProcessContents = PC_LAX;
-            break;
-        case ContentSpecNode::Any_Lax:
-            fConstraintType = NSCONSTRAINT_ANY;
+        else if (nodeType == ContentSpecNode::Any_NS_Skip)
+            fProcessContents = PC_SKIP;
+    }
+    else if (nodeType == ContentSpecNode::Any_NS_Choice)
+    {
+        fConstraintType = NSCONSTRAINT_DERIVATION_LIST;
+        ContentSpecNode::NodeTypes anyType = elmWildCard->getFirst()->getType();
+
+        if (anyType == ContentSpecNode::Any_NS_Lax)
             fProcessContents = PC_LAX;
-            break;
+        else if (anyType == ContentSpecNode::Any_NS_Skip)
+            fProcessContents = PC_SKIP;
 
-        case ContentSpecNode::Any_Other_Skip:
-            fConstraintType = NSCONSTRAINT_NOT;
+        fNsConstraintList = new (manager) RefArrayVectorOf<XMLCh>(4, true, manager);
+        buildNamespaceList(elmWildCard);
+    }
+    // must be any
+    else
+    {
+        if (nodeType == ContentSpecNode::Any_Lax)
+            fProcessContents = PC_LAX;
+        else if (nodeType == ContentSpecNode::Any_Skip)
             fProcessContents = PC_SKIP;
-            break;
-        case ContentSpecNode::Any_NS_Skip:
-            fConstraintType = NSCONSTRAINT_DERIVATION_LIST;
-            fProcessContents = PC_SKIP;
-            break;
-        case ContentSpecNode::Any_Skip:
-            fConstraintType = NSCONSTRAINT_ANY;
-            fProcessContents = PC_SKIP;
-            break;
-
-        default:
-            // REVISIT: should I issue error???
-            // need to set something.....
-            fConstraintType = NSCONSTRAINT_ANY;
-            fProcessContents = PC_STRICT;
-            break;
     }
 
-    if (fConstraintType != NSCONSTRAINT_ANY ) {
-        fNsConstraintList = new (manager) RefArrayVectorOf <XMLCh> (1, true, manager); 
-        XMLCh* nameSpace = (XMLCh*) fXSModel->getURIStringPool()->getValueForId(elmWildCard->getElement()->getURI());
-        fNsConstraintList->addElement(nameSpace);        
+    if (fConstraintType == NSCONSTRAINT_NOT
+        || (fConstraintType == NSCONSTRAINT_DERIVATION_LIST
+            && !fNsConstraintList))
+    {
+        fNsConstraintList = new (manager) RefArrayVectorOf<XMLCh>(1, true, manager);
+        fNsConstraintList->addElement
+        (
+             XMLString::replicate(fXSModel->getURIStringPool()->getValueForId(
+                     elmWildCard->getElement()->getURI()), manager)
+        );
     }
-
-    // REVISIT: correct?
-    fAnnotation = getAnnotationFromModel(elmWildCard);
 }
 
-// XSWildcard methods
-
-
-/**
- * Namespace constraint: A constraint type: any, not, list. 
- */
-XSWildcard::NAMESPACE_CONSTRAINT XSWildcard::getConstraintType() const
+XSWildcard::~XSWildcard() 
 {
-    return fConstraintType;
+    if (fNsConstraintList) 
+        delete fNsConstraintList;
 }
 
-/**
- * Namespace constraint. For <code>constraintType</code> 
- * <code>NSCONSTRAINT_DERIVATION_LIST</code>, the list contains allowed namespaces. 
- * For <code>constraintType</code> <code>NSCONSTRAINT_NOT</code>, the 
- * list contains disallowed namespaces. 
- */
-StringList *XSWildcard::getNsConstraintList()
+// ---------------------------------------------------------------------------
+//  XSWildcard: helper methods
+// ---------------------------------------------------------------------------
+void XSWildcard::buildNamespaceList(const ContentSpecNode* const rootNode)
 {
-    return fNsConstraintList;
-}
-
-/**
- * [process contents]: one of skip, lax or strict. Valid constants values 
- * are: <code>PC_SKIP, PC_LAX, PC_STRICT</code>. 
- */
-XSWildcard::PROCESS_CONTENTS XSWildcard::getProcessContents() const
-{
-    return fProcessContents;
-}
-
-/**
- * Optional. An [annotation]. 
- */
-XSAnnotation *XSWildcard::getAnnotation()
-{
-    return fAnnotation;
+    ContentSpecNode::NodeTypes nodeType = rootNode->getType();
+    if (nodeType == ContentSpecNode::Any_NS_Choice)
+    {
+        buildNamespaceList(rootNode->getFirst());
+        buildNamespaceList(rootNode->getSecond());
+    }
+    else
+    {
+        fNsConstraintList->addElement
+        (
+            XMLString::replicate(fXSModel->getURIStringPool()->getValueForId(
+                    rootNode->getElement()->getURI()), fMemoryManager)
+        );
+    }
 }
 
 XERCES_CPP_NAMESPACE_END

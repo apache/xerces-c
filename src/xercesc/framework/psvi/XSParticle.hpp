@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.3  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -86,7 +89,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 // forward declarations
 class XSElementDeclaration;
-class XSModelGroupDefinition;
+class XSModelGroup;
 class XSWildcard;
 
 class XMLPARSER_EXPORT XSParticle : public XSObject
@@ -123,8 +126,15 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSParticle(XSModel*         xsModel,
-               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSParticle
+    (
+        TERM_TYPE              termType
+        , XSModel* const       xsModel
+        , XSObject* const      particleTerm
+        , int                  minOccurs
+        , int                  maxOccurs
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -140,13 +150,13 @@ public:
     /**
      * [min occurs]: determines the minimum number of terms that can occur. 
      */
-    unsigned int getMinOccurs() const;
+    int getMinOccurs() const;
 
     /**
      * [max occurs] determines the maximum number of terms that can occur. To 
      * query for value of unbounded use <code>maxOccursUnbounded</code>. 
      */
-    unsigned int getMaxOccurs() const;
+    int getMaxOccurs() const;
 
     /**
      * [max occurs] whether the maxOccurs value is unbounded.
@@ -157,7 +167,7 @@ public:
      * Returns the type of the [term]: one of 
      * TERM_EMPTY, TERM_ELEMENT, TERM_MODELGROUP, or TERM_WILDCARD.
      */
-    TERM_TYPE getTermType();
+    TERM_TYPE getTermType() const;
 
     /**
      * If this particle has an [element declaration] for its term,
@@ -173,7 +183,7 @@ public:
      * @returns The model group that is the [term] of this Particle
      * if and only if getTermType() == TERM_MODELGROUP.
      */ 
-    XSModelGroupDefinition *getModelGroupTerm();
+    XSModelGroup *getModelGroupTerm();
 
     /**
      * If this particle has an [wildcard] for its term,
@@ -203,8 +213,31 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    TERM_TYPE fTermType;
+    int       fMinOccurs;
+    int       fMaxOccurs;
+    XSObject* fTerm;
 };
-inline XSParticle::~XSParticle() {}
+
+inline int XSParticle::getMinOccurs() const
+{
+    return fMinOccurs;
+}
+
+inline int XSParticle::getMaxOccurs() const
+{
+    return fMaxOccurs;
+}
+
+inline bool XSParticle::getMaxOccursUnbounded() const
+{
+    return (fMaxOccurs == -1);
+}
+
+inline XSParticle::TERM_TYPE XSParticle::getTermType() const
+{
+    return fTermType;
+}
 
 XERCES_CPP_NAMESPACE_END
 

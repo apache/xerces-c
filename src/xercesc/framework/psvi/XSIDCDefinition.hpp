@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:29:53  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -89,9 +92,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 // forward declarations
 class XSAnnotation;
-
 class IdentityConstraint;
-class XMLStringPool;
 
 class XMLPARSER_EXPORT XSIDCDefinition : public XSObject
 {
@@ -123,9 +124,15 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSIDCDefinition(IdentityConstraint* identityConstraint,
-                XSModel*                xsModel,
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSIDCDefinition
+    (
+        IdentityConstraint* const identityConstraint
+        , XSIDCDefinition*  const keyIC
+        , XSAnnotation* const     headAnnot
+        , StringList* const       stringList
+        , XSModel* const          xsModel
+        , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -185,7 +192,7 @@ public:
      * forbidden otherwise (when an identity-constraint definition with [
      * identity-constraint category] equal to IC_KEY or IC_UNIQUE). 
      */
-    XSIDCDefinition *getRefKey();
+    XSIDCDefinition *getRefKey() const;
 
     /**
      * A set of [annotations]. 
@@ -213,22 +220,21 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    IdentityConstraint*     fIdentityConstraint;
-    XSIDCDefinition*        fKey;
-    StringList*             fStringList;
-    XSAnnotationList*       fXSAnnotationList;
+    IdentityConstraint* fIdentityConstraint;
+    XSIDCDefinition*    fKey;
+    StringList*         fStringList;
+    XSAnnotationList*   fXSAnnotationList;
 };
 
-inline XSIDCDefinition::~XSIDCDefinition() {
-    if (fStringList)
-    {
-        delete fStringList;
-    }
-    // don't delete fKey - deleted by XSModel
-    if (fXSAnnotationList)
-    {
-        delete fXSAnnotationList;
-    }
+
+inline StringList* XSIDCDefinition::getFieldStrs()
+{
+    return fStringList;
+}
+
+inline XSIDCDefinition* XSIDCDefinition::getRefKey() const
+{
+    return fKey;
 }
 
 XERCES_CPP_NAMESPACE_END

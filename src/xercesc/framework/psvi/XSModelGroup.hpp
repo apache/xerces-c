@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/21 17:29:53  knoaman
+ * PSVI update
+ *
  * Revision 1.3  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -120,8 +123,14 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSModelGroup(XSModel*   xsModel,
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSModelGroup
+    (
+        COMPOSITOR_TYPE compositorType
+        , XSParticleList* const particleList
+        , XSAnnotation* const annot
+        , XSModel* const xsModel
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -144,12 +153,12 @@ public:
     /**
      *  A list of [particles]. 
      */
-    XSParticleList *getParticles();
+    XSParticleList *getParticles() const;
 
     /**
      * Optional. An [annotation]. 
      */
-    XSAnnotation *getAnnotation();
+    XSAnnotation *getAnnotation() const;
 
     //@}
 
@@ -172,8 +181,25 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    COMPOSITOR_TYPE fCompositorType;
+    XSParticleList* fParticleList;
+    XSAnnotation*   fAnnotation;
 };
-inline XSModelGroup::~XSModelGroup() {}
+
+inline XSModelGroup::COMPOSITOR_TYPE XSModelGroup::getCompositor() const
+{
+    return fCompositorType;
+}
+
+inline XSParticleList* XSModelGroup::getParticles() const
+{
+    return fParticleList;
+}
+
+inline XSAnnotation* XSModelGroup::getAnnotation() const
+{
+    return fAnnotation;
+}
 
 XERCES_CPP_NAMESPACE_END
 

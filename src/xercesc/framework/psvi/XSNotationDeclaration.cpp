@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.5  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -77,20 +80,35 @@
  */
 
 #include <xercesc/framework/psvi/XSNotationDeclaration.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
 #include <xercesc/framework/XMLNotationDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSNotationDeclaration::XSNotationDeclaration(XMLNotationDecl*       xmlNotationDecl,
-                                             XSModel*               xsModel,
-                                             MemoryManager * const  manager):
-    fXMLNotationDecl(xmlNotationDecl),
-    XSObject(XSConstants::NOTATION_DECLARATION, xsModel, manager)
+// ---------------------------------------------------------------------------
+//  XSNotationDeclaration: Constructors and Destructors
+// ---------------------------------------------------------------------------
+XSNotationDeclaration::XSNotationDeclaration
+(
+    XMLNotationDecl* const  xmlNotationDecl
+    , XSAnnotation* const   annot
+    , XSModel* const        xsModel
+    , MemoryManager * const manager
+)
+    : XSObject(XSConstants::NOTATION_DECLARATION, xsModel, manager)
+    , fXMLNotationDecl(xmlNotationDecl)
+    , fAnnotation(annot)
 {
 }
 
-// Overridden XSObject methods
-const XMLCh *XSNotationDeclaration::getName() 
+XSNotationDeclaration::~XSNotationDeclaration()
+{
+}
+
+// ---------------------------------------------------------------------------
+//  XSNotationDeclaration: XSModel virtual methods
+// ---------------------------------------------------------------------------
+const XMLCh *XSNotationDeclaration::getName()
 {
     return fXMLNotationDecl->getName();
 }
@@ -102,37 +120,22 @@ const XMLCh *XSNotationDeclaration::getNamespace()
 
 XSNamespaceItem *XSNotationDeclaration::getNamespaceItem() 
 {
-    return getNamespaceItemFromHash(getNamespace());
+    return fXSModel->getNamespaceItem(getNamespace());
 }
 
-// XSNotationDeclaration methods
 
-/**
- *  The URI reference representing the system identifier for the notation 
- * declaration, if present, <code>null</code> otherwise. 
- */
+// ---------------------------------------------------------------------------
+//  XSNotationDeclaration: access methods
+// ---------------------------------------------------------------------------
 const XMLCh *XSNotationDeclaration::getSystemId()
 {
     return fXMLNotationDecl->getSystemId();
 }
 
-/**
- *  The string representing the public identifier for this notation 
- * declaration, if present; <code>null</code> otherwise. 
- */
 const XMLCh *XSNotationDeclaration::getPublicId()
 {
    return fXMLNotationDecl->getPublicId();
 }
-
-/**
- * Optional. An [annotation]. 
- */
-XSAnnotation *XSNotationDeclaration::getAnnotation()
-{
-    return getAnnotationFromModel(fXMLNotationDecl);
-}
-
 
 XERCES_CPP_NAMESPACE_END
 

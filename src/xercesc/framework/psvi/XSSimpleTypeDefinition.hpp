@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.5  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -95,7 +98,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 class XSAnnotation;
 class XSFacet;
 class XSMultiValueFacet;
-
 class DatatypeValidator;
 
 class XMLPARSER_EXPORT XSSimpleTypeDefinition : public XSTypeDefinition
@@ -205,9 +207,13 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSSimpleTypeDefinition(DatatypeValidator*   datatypeValidator,
-                           XSModel*             xsModel,
-                           MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSSimpleTypeDefinition
+    (
+        DatatypeValidator* const datatypeValidator
+        , XSAnnotation*          headAnnot
+        , XSModel* const         xsModel
+        , MemoryManager* const   manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -245,13 +251,13 @@ public:
      * non-empty sequence of simple type definitions) is available, 
      * otherwise <code>null</code>. 
      */
-    XSSimpleTypeDefinitionList *getMemberTypes();
+    XSSimpleTypeDefinitionList *getMemberTypes() const;
 
     /**
      * [facets]: get all facets defined on this type. The value is a bit 
      * combination of FACET_XXX constants of all defined facets. 
      */
-    short getDefinedFacets();
+    short getDefinedFacets() const;
 
     /**
      * Convenience method. [Facets]: check whether a facet is defined on this 
@@ -264,7 +270,7 @@ public:
     /**
      * [facets]: get all facets defined and fixed on this type.
      */
-    short getFixedFacets();
+    short getFixedFacets() const;
 
     /**
      * Convenience method. [Facets]: check whether a facet is defined and 
@@ -385,6 +391,11 @@ public:
 
     //@{
 
+    /**
+     * Complete the construction of the <code>XSComplexTypeDeclaration</code>.
+     */
+    void construct();
+
     //@}
 
 private:
@@ -395,22 +406,83 @@ private:
     XSSimpleTypeDefinition(const XSSimpleTypeDefinition&);
     XSSimpleTypeDefinition & operator=(const XSSimpleTypeDefinition &);
 
+    /**
+      * Helper method for construct
+      */
+    void processFacets();
+
 protected:
 
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    DatatypeValidator*                  fDatatypeValidator;
-    XSFacetList*                        fXSFacetList;
-    XSMultiValueFacetList*              fXSMultiValueFacetList;
-    StringList*                         fPatternList;
-    short                               fDefinedFacets;
-    short                               fFixedFacets;
-    VARIETY                             fVariety;
-    XSSimpleTypeDefinition*             fPrimitiveOrItemType;
-    XSSimpleTypeDefinitionList*         fMemberTypes;
-    XSAnnotationList*                   fXSAnnotationList;
+    short                       fDefinedFacets;
+    short                       fFixedFacets;
+    VARIETY                     fVariety;
+    DatatypeValidator*          fDatatypeValidator;
+    XSFacetList*                fXSFacetList;
+    XSMultiValueFacetList*      fXSMultiValueFacetList;
+    StringList*                 fPatternList;
+    XSSimpleTypeDefinition*     fPrimitiveOrItemType;
+    XSSimpleTypeDefinitionList* fMemberTypes;
+    XSAnnotationList*           fXSAnnotationList;
 };
+
+inline XSSimpleTypeDefinition::VARIETY XSSimpleTypeDefinition::getVariety() const
+{
+    return fVariety;
+}
+
+inline XSSimpleTypeDefinition* XSSimpleTypeDefinition::getPrimitiveType()
+{
+    if (fVariety == VARIETY_ATOMIC)
+        return fPrimitiveOrItemType;
+
+    return 0;
+}
+
+inline XSSimpleTypeDefinition* XSSimpleTypeDefinition::getItemType()
+{
+    if (fVariety == VARIETY_LIST)
+        return fPrimitiveOrItemType;
+
+    return 0;
+}
+
+inline XSSimpleTypeDefinitionList* XSSimpleTypeDefinition::getMemberTypes() const
+{
+    return fMemberTypes;
+}
+
+inline short XSSimpleTypeDefinition::getDefinedFacets() const
+{
+    return fDefinedFacets;
+}
+
+inline short XSSimpleTypeDefinition::getFixedFacets() const
+{
+    return fFixedFacets;
+}
+
+inline StringList* XSSimpleTypeDefinition::getLexicalPattern()
+{
+    return fPatternList;
+}
+
+inline XSFacetList* XSSimpleTypeDefinition::getFacets()
+{
+    return fXSFacetList;
+}
+
+inline XSMultiValueFacetList* XSSimpleTypeDefinition::getMultiValueFacets()
+{
+    return fXSMultiValueFacetList;
+}
+
+inline XSAnnotationList *XSSimpleTypeDefinition::getAnnotations()
+{
+    return fXSAnnotationList;
+}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:29:53  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -77,52 +80,25 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSFacet::XSFacet(XSSimpleTypeDefinition::FACET   facetKind,
-                 const XMLCh*                    lexicalValue,
-                 bool                            isFixed,              
-                 XSModel*                        xsModel,
-                 MemoryManager * const manager):
-            fFacetKind(facetKind),
-            fLexicalValue(lexicalValue),
-            fIsFixed(isFixed),
-            XSObject(XSConstants::FACET, xsModel, manager )
+// ---------------------------------------------------------------------------
+//  XSFacet: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSFacet::XSFacet(XSSimpleTypeDefinition::FACET facetKind,
+                 const XMLCh* const            lexicalValue,
+                 bool                          isFixed,
+                 XSAnnotation* const           annot,
+                 XSModel* const                xsModel,
+                 MemoryManager* const          manager)
+    : XSObject(XSConstants::FACET, xsModel, manager)
+    , fFacetKind(facetKind)
+    , fIsFixed(isFixed)
+    , fLexicalValue(lexicalValue)
+    , fAnnotation(annot)
 {
 }
 
-// XSFacet methods
-
-
-/**
- * @return An indication as to the facet's type; see <code>XSSimpleTypeDefinition::FACET</code>
- */
-XSSimpleTypeDefinition::FACET XSFacet::getFacetKind() const
-{   
-    return fFacetKind;
-}
-
-/**
- * @return Returns a value of a constraining facet. 
- */
-const XMLCh *XSFacet::getLexicalFacetValue()
+XSFacet::~XSFacet()
 {
-    return fLexicalValue;    
-}
-
-/**
- * Check whether a facet value is fixed. 
- */
-bool XSFacet::isFixed() const
-{
-    return fIsFixed;
-}
-
-/**
- * @return an annotation
- */
-XSAnnotation *XSFacet::getAnnotation()
-{
-    // REVISIT
-    return 0;
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -105,9 +108,13 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSNotationDeclaration(XMLNotationDecl*  xmlNotationDecl,
-                XSModel*                    xsModel,
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSNotationDeclaration
+    (
+        XMLNotationDecl*  const xmlNotationDecl
+        , XSAnnotation* const   annot
+        , XSModel* const        xsModel
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -162,7 +169,7 @@ public:
     /**
      * Optional. An [annotation]. 
      */
-    XSAnnotation *getAnnotation();
+    XSAnnotation *getAnnotation() const;
 
     //@}
 
@@ -185,9 +192,16 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    XMLNotationDecl*    fXMLNotationDecl;
+    XMLNotationDecl* fXMLNotationDecl;
+    XSAnnotation*    fAnnotation;
 };
-inline XSNotationDeclaration::~XSNotationDeclaration() {}
+
+inline XSAnnotation* XSNotationDeclaration::getAnnotation() const
+{
+    return fAnnotation;
+}
+
+
 
 XERCES_CPP_NAMESPACE_END
 

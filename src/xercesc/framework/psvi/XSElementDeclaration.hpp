@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:29:53  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -93,9 +96,7 @@ class XSAnnotation;
 class XSComplexTypeDefinition;
 class XSIDCDefinition;
 class XSTypeDefinition;
-
 class SchemaElementDecl;
-class XMLStringPool;
 
 class XMLPARSER_EXPORT XSElementDeclaration : public XSObject
 {
@@ -111,9 +112,16 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSElementDeclaration(SchemaElementDecl*     schemaElementDecl,
-                         XSModel*               xsModel,
-                         MemoryManager* const   manager = XMLPlatformUtils::fgMemoryManager);
+    XSElementDeclaration
+    (
+        SchemaElementDecl* const             schemaElementDecl
+        , XSTypeDefinition* const            typeDefinition
+        , XSElementDeclaration* const        substitutionGroupAffiliation
+        , XSAnnotation* const                annot
+        , XSNamedMap<XSIDCDefinition>* const identityConstraints
+        , XSModel* const                     xsModel
+        , MemoryManager* const               manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -164,25 +172,25 @@ public:
      * [type definition]: either a simple type definition or a complex type 
      * definition. 
      */
-    XSTypeDefinition *getTypeDefinition();
+    XSTypeDefinition *getTypeDefinition() const;
 
     /**
      * Optional. One of <code>SCOPE_GLOBAL</code>, <code>SCOPE_LOCAL</code>, 
      * or <code>SCOPE_ABSENT</code>. If the scope is local, then the 
      * <code>enclosingCTDefinition</code> is present. 
      */
-    XSConstants::SCOPE getScope();
+    XSConstants::SCOPE getScope() const;
 
     /**
      * The complex type definition for locally scoped declarations (see 
      * <code>scope</code>). 
      */
-    XSComplexTypeDefinition *getEnclosingCTDefinition();
+    XSComplexTypeDefinition *getEnclosingCTDefinition() const;
 
     /**
      * [Value constraint]: one of <code>VC_NONE, VC_DEFAULT, VC_FIXED</code>. 
      */
-    XSConstants::VALUE_CONSTRAINT getConstraintType();
+    XSConstants::VALUE_CONSTRAINT getConstraintType() const;
 
     /**
      * [Value constraint]: the actual value with respect to the [type 
@@ -198,7 +206,7 @@ public:
      * element content despite a <code>content type</code> which would 
      * otherwise require content. 
      */
-    bool getNillable();
+    bool getNillable() const;
 
     /**
      * identity-constraint definitions: a set of constraint definitions. 
@@ -209,7 +217,7 @@ public:
      * [substitution group affiliation]: optional. A top-level element 
      * definition. 
      */
-    XSElementDeclaration *getSubstitutionGroupAffiliation();
+    XSElementDeclaration *getSubstitutionGroupAffiliation() const;
 
     /**
      * Convenience method. Check if <code>exclusion</code> is a substitution 
@@ -228,7 +236,7 @@ public:
      * <code>DERIVATION_EXTENSION, DERIVATION_RESTRICTION</code>} or 
      * <code>DERIVATION_NONE</code>. 
      */
-    short getSubstitutionGroupExclusions();
+    short getSubstitutionGroupExclusions() const;
 
     /**
      * Convenience method. Check if <code>disallowed</code> is a disallowed 
@@ -249,17 +257,17 @@ public:
      * } corresponding to substitutions disallowed by this 
      * <code>XSElementDeclaration</code> or <code>DERIVATION_NONE</code>. 
      */
-    short getDisallowedSubstitutions();
+    short getDisallowedSubstitutions() const;
 
     /**
      * {abstract} A boolean. 
      */
-    bool getAbstract();
+    bool getAbstract() const;
 
     /**
      * Optional. Annotation. 
      */
-    XSAnnotation *getAnnotation();
+    XSAnnotation *getAnnotation() const;
 
     //@}
 
@@ -271,6 +279,7 @@ public:
       * Set the id to be returned on getId().
       */
     void setId(unsigned int id);
+
     //@}
 private:
 
@@ -285,14 +294,51 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    SchemaElementDecl*              fSchemaElementDecl;
-    XSTypeDefinition*               fTypeDefinition;
-    XSElementDeclaration*           fSubstitutionGroupAffiliation;
-    XSNamedMap <XSIDCDefinition>*   fIdentityConstraints;
-    short                           fDisallowedSubstitutions;
-    short                           fSubstitutionGroupExclusions;
-    unsigned int                    fId;
+    short                         fDisallowedSubstitutions;
+    short                         fSubstitutionGroupExclusions;
+    unsigned int                  fId;
+    SchemaElementDecl*            fSchemaElementDecl;
+    XSTypeDefinition*             fTypeDefinition;
+    XSElementDeclaration*         fSubstitutionGroupAffiliation;
+    XSAnnotation*                 fAnnotation;
+    XSNamedMap<XSIDCDefinition>*  fIdentityConstraints;
 };
+
+inline XSTypeDefinition* XSElementDeclaration::getTypeDefinition() const
+{
+    return fTypeDefinition;
+}
+
+inline XSNamedMap<XSIDCDefinition>* XSElementDeclaration::getIdentityConstraints()
+{
+    return fIdentityConstraints;
+}
+
+inline XSElementDeclaration* XSElementDeclaration::getSubstitutionGroupAffiliation() const
+{
+    return fSubstitutionGroupAffiliation;
+}
+
+inline short XSElementDeclaration::getSubstitutionGroupExclusions() const
+{
+    return fSubstitutionGroupExclusions;
+}
+
+inline short XSElementDeclaration::getDisallowedSubstitutions() const
+{
+    return fDisallowedSubstitutions;
+}
+
+inline XSAnnotation *XSElementDeclaration::getAnnotation() const
+{
+    return fAnnotation;
+}
+
+inline void XSElementDeclaration::setId(unsigned int id)
+{
+    fId = id;
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

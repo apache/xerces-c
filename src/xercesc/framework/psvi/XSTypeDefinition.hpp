@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.5  2003/11/15 21:19:01  neilg
  * fixes for compilation under gcc
  *
@@ -85,7 +88,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 // forward declarations
 class XSNamespaceItem;
-class ComplexTypeInfo;
 
 /**
  * This class represents a complexType or simpleType definition.
@@ -119,9 +121,13 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSTypeDefinition(TYPE_CATEGORY          typeCategory,
-                     XSModel*               xsModel,
-                     MemoryManager* const   manager = XMLPlatformUtils::fgMemoryManager);
+    XSTypeDefinition
+    (
+        TYPE_CATEGORY             typeCategory
+        , XSTypeDefinition* const xsBaseType
+        , XSModel* const          xsModel
+        , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -254,16 +260,21 @@ protected:
     //  whether this is a simpleType or complexType
     // fFinal
     //  the final properties which is set by the derived class.
-    TYPE_CATEGORY                   fTypeCategory;
-    short                           fFinal;
-    XSTypeDefinition*               fBaseType; // owned by XSModel
+    TYPE_CATEGORY     fTypeCategory;
+    short             fFinal;
+    XSTypeDefinition* fBaseType; // owned by XSModel
 };
-inline XSTypeDefinition::~XSTypeDefinition() {}
 
 inline XSTypeDefinition::TYPE_CATEGORY XSTypeDefinition::getTypeCategory() const
 {
     return fTypeCategory;
 }
+
+inline short XSTypeDefinition::getFinal() const
+{
+    return fFinal;
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/21 17:29:53  knoaman
+ * PSVI update
+ *
  * Revision 1.3  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -71,45 +74,29 @@
  */
 
 #include <xercesc/framework/psvi/XSModelGroup.hpp>
+#include <xercesc/framework/psvi/XSParticle.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSModelGroup::XSModelGroup(XSModel*         xsModel,
-                           MemoryManager * const manager):
-            XSObject(XSConstants::MODEL_GROUP, xsModel, manager )
+// ---------------------------------------------------------------------------
+//  XSModelGroup: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSModelGroup::XSModelGroup(COMPOSITOR_TYPE compositorType,
+                           XSParticleList* const particleList,
+                           XSAnnotation* const annot,
+                           XSModel* const xsModel,
+                           MemoryManager * const manager)
+    : XSObject(XSConstants::MODEL_GROUP, xsModel, manager)
+    , fCompositorType(compositorType)
+    , fParticleList(particleList)
+    , fAnnotation(annot)
 {
 }
 
-// XSModelGroup methods
-
-
-/**
- * [compositor]: one of all, choice or sequence. The valid constants 
- * values are: 
- * <code>COMPOSITOR_SEQUENCE, COMPOSITOR_CHOICE, COMPOSITOR_ALL</code>. 
- */
-XSModelGroup::COMPOSITOR_TYPE XSModelGroup::getCompositor() const
+XSModelGroup::~XSModelGroup()
 {
-    // REVISIT
-    return COMPOSITOR_SEQUENCE;
-}
-
-/**
- *  A list of [particles]. 
- */
-XSParticleList *XSModelGroup::getParticles()
-{
-    // REVISIT
-    return 0;
-}
-
-/**
- * Optional. An [annotation]. 
- */
-XSAnnotation *XSModelGroup::getAnnotation()
-{
-    // REVISIT
-    return 0;
+    if (fParticleList)
+        delete fParticleList;
 }
 
 XERCES_CPP_NAMESPACE_END

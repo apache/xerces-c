@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -74,56 +77,44 @@
  */
 
 #include <xercesc/framework/psvi/XSMultiValueFacet.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSMultiValueFacet::XSMultiValueFacet(XSSimpleTypeDefinition::FACET   facetKind,
-            StringList*                     lexicalValues,
-            bool                            isFixed,
-            XSModel*                        xsModel,
-            MemoryManager* const            manager):
-            fFacetKind(facetKind),
-            fLexicalValues(lexicalValues),
-            fIsFixed(isFixed),
-            XSObject(XSConstants::MULTIVALUE_FACET, xsModel, manager )
+// ---------------------------------------------------------------------------
+//  XSMultiValueFacet: Constructors and Destructors
+// ---------------------------------------------------------------------------
+XSMultiValueFacet::XSMultiValueFacet(XSSimpleTypeDefinition::FACET facetKind,
+                                     StringList*                   lexicalValues,
+                                     bool                          isFixed,
+                                     XSAnnotation* const           headAnnot,
+                                     XSModel* const                xsModel,
+                                     MemoryManager* const          manager)
+    : XSObject(XSConstants::MULTIVALUE_FACET, xsModel, manager)
+    , fFacetKind(facetKind)
+    , fIsFixed(isFixed)
+    , fLexicalValues(lexicalValues)
 {
+    if (headAnnot)
+    {
+        // REVISIT Size
+        fXSAnnotationList = new (manager) RefVectorOf<XSAnnotation>(3, false, manager);
+  
+        XSAnnotation* annot = headAnnot;
+        do 
+        {
+            fXSAnnotationList->addElement(annot);
+            annot = annot->getNext();
+        } while (annot);
+    }
 }
 
-// XSMultiValueFacet methods
-
-
-/**
- * @return an indication as to the facet's type; see <code>XSSimpleTypeDefinition::FACET</code>
- */
-XSSimpleTypeDefinition::FACET XSMultiValueFacet::getFacetKind() const
+XSMultiValueFacet::~XSMultiValueFacet()
 {
-    return fFacetKind;
+    if (fXSAnnotationList)
+        delete fXSAnnotationList;
 }
 
-/**
- * @return Returns the values of a constraining facet. 
- */
-StringList *XSMultiValueFacet::getLexicalFacetValues()
-{
-    return fLexicalValues; 
-}
-
-/**
- * Check whether a facet value is fixed. 
- */
-bool XSMultiValueFacet::isFixed() const
-{
-    return fIsFixed;
-}
-
-/**
- * @return the annotations
- */
-XSAnnotationList *XSMultiValueFacet::getAnnotations()
-{
-    // REVISIT
-    return 0;
-}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -89,10 +92,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 // forward declarations
 class XSAnnotation;
-
 class SchemaAttDef;
 class ContentSpecNode;
-class XMLStringPool;
 
 class XMLPARSER_EXPORT XSWildcard : public XSObject
 {
@@ -144,13 +145,21 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSWildcard(SchemaAttDef*        attWildCard, 
-               XSModel*             xsModel,
-               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSWildcard
+    (
+        SchemaAttDef* const attWildCard
+        , XSAnnotation* const annot
+        , XSModel* const xsModel
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
     
-    XSWildcard(ContentSpecNode*     elmWildCard, 
-               XSModel*             xsModel,
-               MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSWildcard
+    (
+        const ContentSpecNode* const elmWildCard
+        , XSAnnotation* const annot
+        , XSModel* const xsModel
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@}
 
@@ -186,7 +195,7 @@ public:
     /**
      * Optional. An [annotation]. 
      */
-    XSAnnotation *getAnnotation();
+    XSAnnotation *getAnnotation() const;
 
     //@}
 
@@ -204,23 +213,42 @@ private:
     XSWildcard(const XSWildcard&);
     XSWildcard & operator=(const XSWildcard &);
 
+   /**
+     * Build namespace list
+     */
+   void buildNamespaceList(const ContentSpecNode* const rootNode);
+
 protected:
 
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    NAMESPACE_CONSTRAINT            fConstraintType;
-    PROCESS_CONTENTS                fProcessContents;
-    StringList*                     fNsConstraintList;
-    XSAnnotation*                   fAnnotation;
+    NAMESPACE_CONSTRAINT fConstraintType;
+    PROCESS_CONTENTS     fProcessContents;
+    StringList*          fNsConstraintList;
+    XSAnnotation*        fAnnotation;
 };
 
-inline XSWildcard::~XSWildcard() {
-    if (fNsConstraintList) 
-    {
-        delete fNsConstraintList;
-    }
+inline XSAnnotation *XSWildcard::getAnnotation() const
+{
+    return fAnnotation;
 }
+
+inline XSWildcard::PROCESS_CONTENTS XSWildcard::getProcessContents() const
+{
+    return fProcessContents;
+}
+
+inline StringList* XSWildcard::getNsConstraintList()
+{
+    return fNsConstraintList;
+}
+
+inline XSWildcard::NAMESPACE_CONSTRAINT XSWildcard::getConstraintType() const
+{
+    return fConstraintType;
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

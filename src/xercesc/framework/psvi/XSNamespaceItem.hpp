@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -101,7 +104,6 @@ class XSElementDeclaration;
 class XSModelGroupDefinition;
 class XSNotationDeclaration;
 class XSTypeDefinition;
-
 class SchemaGrammar;
 class XSModel;
 
@@ -119,9 +121,12 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSNamespaceItem(XSModel*            xsModel,
-                    SchemaGrammar*      grammar,
-                    MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSNamespaceItem
+    (
+        XSModel* const         xsModel
+        , SchemaGrammar* const grammar
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -268,6 +273,12 @@ inline SchemaGrammar* XSNamespaceItem::getSchemaGrammar() const
 {
     return fGrammar;
 }
+
+inline XSAnnotationList* XSNamespaceItem::getAnnotations()
+{
+    return fXSAnnotationList;
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:29:53  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -74,52 +77,63 @@
  */
 
 #include <xercesc/framework/psvi/XSModelGroupDefinition.hpp>
+#include <xercesc/framework/psvi/XSParticle.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
+#include <xercesc/validators/schema/XercesGroupInfo.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSModelGroupDefinition::XSModelGroupDefinition(XSModel*              xsModel,
-                                               MemoryManager * const manager):
-            XSObject(XSConstants::MODEL_GROUP_DEFINITION, xsModel, manager )
+// ---------------------------------------------------------------------------
+//  XSModelGroupDefinition: Constructors and Destructors
+// ---------------------------------------------------------------------------
+XSModelGroupDefinition::XSModelGroupDefinition(XercesGroupInfo* const groupInfo,
+                                               XSParticle* const      groupParticle,
+                                               XSAnnotation* const    annot,
+                                               XSModel* const         xsModel,
+                                               MemoryManager* const   manager)
+    : XSObject(XSConstants::MODEL_GROUP_DEFINITION, xsModel, manager)
+    , fGroupInfo(groupInfo)
+    , fModelGroupParticle(groupParticle)
+    , fAnnotation(annot)
 {
 }
 
-// Overridden XSObject methods
+XSModelGroupDefinition::~XSModelGroupDefinition()
+{
+    if (fModelGroupParticle) // Not owned by XSModel
+        delete fModelGroupParticle;
+}
+
+// ---------------------------------------------------------------------------
+//  XSModelGroupDefinition: XSModel virtual methods
+// ---------------------------------------------------------------------------
 const XMLCh *XSModelGroupDefinition::getName() 
 {
-    // REVISIT
-    return 0;
+    return fXSModel->getURIStringPool()->getValueForId(fGroupInfo->getNameId());
 }
 
 const XMLCh *XSModelGroupDefinition::getNamespace() 
 {
-    // REVISIT
-    return 0;
+    return fXSModel->getURIStringPool()->getValueForId(fGroupInfo->getNamespaceId());
 }
 
 XSNamespaceItem *XSModelGroupDefinition::getNamespaceItem() 
 {
-    return getNamespaceItemFromHash(getNamespace());
+    return fXSModel->getNamespaceItem(getNamespace());
 }
 
-// XSModelGroupDefinition methods
-
-/**
- * A model group. 
- */
-XSModelGroup *XSModelGroupDefinition::getModelGroup()
+// ---------------------------------------------------------------------------
+//  XSModelGroupDefinition: access methods
+// ---------------------------------------------------------------------------
+XSModelGroup* XSModelGroupDefinition::getModelGroup()
 {
-    // REVISIT
+    if (fModelGroupParticle)
+        return fModelGroupParticle->getModelGroupTerm();
+
     return 0;
 }
 
-/**
- * An of [annotations]. 
- */
-XSAnnotation *XSModelGroupDefinition::getAnnotation()
-{
-    // REVISIT
-    return 0;
-}
 
 XERCES_CPP_NAMESPACE_END
 

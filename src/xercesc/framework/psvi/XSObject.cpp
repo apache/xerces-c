@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.7  2003/11/15 21:18:39  neilg
  * fixes for compilation under gcc
  *
@@ -83,21 +86,28 @@
  */
 
 #include <xercesc/framework/psvi/XSObject.hpp>
-#include <xercesc/framework/psvi/XSModel.hpp>
-#include <xercesc/framework/psvi/XSNamespaceItem.hpp>
-#include <xercesc/validators/schema/SchemaGrammar.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSObject::XSObject( XSConstants::COMPONENT_TYPE compType,
-                    XSModel*    xsModel,
-            MemoryManager* const manager ):  
-        fMemoryManager(manager),
-        fComponentType(compType),
-        fXSModel(xsModel)
+// ---------------------------------------------------------------------------
+//  XSObject: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSObject::XSObject(XSConstants::COMPONENT_TYPE compType,
+                   XSModel* const xsModel,
+                   MemoryManager* const manager)  
+    : fComponentType(compType)
+    , fXSModel(xsModel)
+    , fMemoryManager(manager)
 {
 }
 
+XSObject::~XSObject()
+{
+}
+
+// ---------------------------------------------------------------------------
+//  XSObject: Virtual interface methods
+// ---------------------------------------------------------------------------
 const XMLCh *XSObject::getName() 
 {
     return 0;
@@ -113,48 +123,11 @@ XSNamespaceItem *XSObject::getNamespaceItem()
     return 0;
 }
 
-/**
-  * Optional.  return a unique identifier for a component within this XSModel, to
-  * optimize querying.  May not be defined for all component types.
-  * @return id unique for this type of component within this XSModel
-  * or 0 to indicate that this is unsupported for this type of component.
-  */
 unsigned int XSObject::getId() const
 {
     return 0;
 }
 
-// Protected methods...
-XSAnnotation* XSObject::getAnnotationFromModel(const void* const key)
-{
-    XSNamespaceItemList* namespaceItemList = fXSModel->getNamespaceItems();
-
-    XSAnnotation* annot;
-    for (unsigned int i=0; i<namespaceItemList->size(); i++)
-    {
-        annot = namespaceItemList->elementAt(i)->getSchemaGrammar()->getAnnotation(key);
-        if (annot)
-            return annot;
-    }
-
-    return 0;
-}
-
-XSObject* XSObject::getObjectFromMap(void* key)
-{
-    return fXSModel->fXercesToXSMap->get(key);
-}
-
-void XSObject::putObjectInMap(void* key, XSObject* object)
-{
-     fXSModel->fXercesToXSMap->put(key, object);
-     fXSModel->fDeleteVector->addElement(object);
-}
-
-XSNamespaceItem* XSObject::getNamespaceItemFromHash(const XMLCh* nameSpace)
-{
-    return fXSModel->fHashNamespace->get(nameSpace);
-}
 
 XERCES_CPP_NAMESPACE_END
 

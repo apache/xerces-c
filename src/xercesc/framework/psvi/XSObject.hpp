@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.7  2003/11/15 21:18:39  neilg
  * fixes for compilation under gcc
  *
@@ -116,9 +119,12 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSObject(   XSConstants::COMPONENT_TYPE compType,
-                XSModel*    xsModel,
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSObject
+    (
+        XSConstants::COMPONENT_TYPE compType
+        , XSModel* const xsModel
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -183,10 +189,6 @@ private:
 
 protected:
 
-    XSAnnotation*   getAnnotationFromModel(const void* const key);
-    XSObject* getObjectFromMap(void* key);
-    void putObjectInMap(void* key, XSObject* object);
-    XSNamespaceItem* getNamespaceItemFromHash(const XMLCh* nameSpace);
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
@@ -194,12 +196,10 @@ protected:
     //  used for any memory allocations
     // fComponentType
     //  the type of the actual component
-    MemoryManager*              fMemoryManager;
     XSConstants::COMPONENT_TYPE fComponentType;
     XSModel*                    fXSModel;
-
+    MemoryManager*              fMemoryManager;
 };
-inline XSObject::~XSObject() {}
 
 inline XSConstants::COMPONENT_TYPE XSObject::getType() const
 {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/21 17:29:53  knoaman
+ * PSVI update
+ *
  * Revision 1.3  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -87,6 +90,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // forward declarations
 class XSAnnotation;
 class XSModelGroup;
+class XSParticle;
+class XercesGroupInfo;
 
 class XMLPARSER_EXPORT XSModelGroupDefinition : public XSObject
 {
@@ -102,8 +107,14 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSModelGroupDefinition(XSModel*              xsModel, 
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSModelGroupDefinition
+    (
+        XercesGroupInfo* const groupInfo
+        , XSParticle* const    groupParticle
+        , XSAnnotation* const  annot
+        , XSModel* const       xsModel
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -150,7 +161,7 @@ public:
     /**
      * Optional. An [annotation]. 
      */
-    XSAnnotation *getAnnotation();
+    XSAnnotation *getAnnotation() const;
 
     //@}
 
@@ -172,8 +183,17 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    XercesGroupInfo* fGroupInfo;
+    XSParticle*      fModelGroupParticle;
+    XSAnnotation*    fAnnotation;
 };
-inline XSModelGroupDefinition::~XSModelGroupDefinition() {}
+
+inline XSAnnotation* XSModelGroupDefinition::getAnnotation() const
+{
+    return fAnnotation;
+}
+
+
 
 XERCES_CPP_NAMESPACE_END
 

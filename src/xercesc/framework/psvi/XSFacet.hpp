@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:29:53  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -76,7 +79,6 @@
 #if !defined(XSFACET_HPP)
 #define XSFACET_HPP
 
-#include <xercesc/framework/psvi/XSObject.hpp>
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -92,8 +94,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 // forward declarations
 class XSAnnotation;
 
-
-
 class XMLPARSER_EXPORT XSFacet : public XSObject
 {
 public:
@@ -108,11 +108,15 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSFacet(XSSimpleTypeDefinition::FACET   facetKind,
-            const XMLCh*                    lexicalValue,
-            bool                            isFixed,
-            XSModel*                        xsModel,
-            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSFacet
+    (
+        XSSimpleTypeDefinition::FACET facetKind
+        , const XMLCh* const          lexicalValue
+        , bool                        isFixed
+        , XSAnnotation* const         annot
+        , XSModel* const              xsModel
+        , MemoryManager* const        manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -134,7 +138,7 @@ public:
     /**
      * @return Returns a value of a constraining facet. 
      */
-    const XMLCh *getLexicalFacetValue();   
+    const XMLCh *getLexicalFacetValue() const;
 
     /**
      * Check whether a facet value is fixed. 
@@ -144,7 +148,7 @@ public:
     /**
      * @return an annotation
      */
-    XSAnnotation *getAnnotation();
+    XSAnnotation *getAnnotation() const;
 
     //@}
 
@@ -167,11 +171,32 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    XSSimpleTypeDefinition::FACET   fFacetKind;
-    const XMLCh*                    fLexicalValue;
-    bool                            fIsFixed;    
+    XSSimpleTypeDefinition::FACET fFacetKind;
+    bool                          fIsFixed;
+    const XMLCh*                  fLexicalValue;
+    XSAnnotation*                 fAnnotation;
 };
-inline XSFacet::~XSFacet() {}
+
+inline XSSimpleTypeDefinition::FACET XSFacet::getFacetKind() const
+{   
+    return fFacetKind;
+}
+
+inline const XMLCh* XSFacet::getLexicalFacetValue() const
+{
+    return fLexicalValue;    
+}
+
+inline bool XSFacet::isFixed() const
+{
+    return fIsFixed;
+}
+
+inline XSAnnotation* XSFacet::getAnnotation() const
+{
+    return fAnnotation;
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

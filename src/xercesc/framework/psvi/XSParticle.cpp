@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.3  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -71,89 +74,59 @@
  */
 
 #include <xercesc/framework/psvi/XSParticle.hpp>
+#include <xercesc/framework/psvi/XSElementDeclaration.hpp>
+#include <xercesc/framework/psvi/XSModelGroup.hpp>
+#include <xercesc/framework/psvi/XSWildCard.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSParticle::XSParticle(XSModel*         xsModel,
-                       MemoryManager * const manager):
-            XSObject(XSConstants::PARTICLE, xsModel, manager )
+// ---------------------------------------------------------------------------
+//  XSParticle: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSParticle::XSParticle(TERM_TYPE            termType,
+                       XSModel* const       xsModel,
+                       XSObject* const      particleTerm,
+                       int                  minOccurs,
+                       int                  maxOccurs,
+                       MemoryManager* const manager)
+    : XSObject(XSConstants::PARTICLE, xsModel, manager)
+    , fTermType(termType)
+    , fMinOccurs(minOccurs)
+    , fMaxOccurs(maxOccurs)
+    , fTerm(particleTerm)
 {
 }
 
-// XSParticle methods
-
-
-/**
- * [min occurs]: determines the minimum number of terms that can occur. 
- */
-unsigned int XSParticle::getMinOccurs() const
+XSParticle::~XSParticle()
 {
-    // REVISIT
-    return 1;
+    if (fTerm && (fTermType == TERM_MODELGROUP))
+        delete ((XSModelGroup*) fTerm);
 }
 
-/**
- * [max occurs] determines the maximum number of terms that can occur. To 
- * query for value of unbounded use <code>maxOccursUnbounded</code>. 
- */
-unsigned int XSParticle::getMaxOccurs() const
-{
-    // REVISIT
-    return 1;
-}
-
-/**
- * [max occurs] whether the maxOccurs value is unbounded.
- */
-bool XSParticle::getMaxOccursUnbounded() const
-{
-    // REVISIT
-    return true;
-}
-
-/**
- * Returns the type of the [term]: one of 
- * TERM_EMPTY, TERM_ELEMENT, TERM_MODELGROUP, or TERM_WILDCARD.
- */
-XSParticle::TERM_TYPE XSParticle::getTermType()
-{
-    // REVISIT
-    return TERM_EMPTY;
-}
-
-/**
- * If this particle has an [element declaration] for its term,
- * this method returns that declaration; otherwise, it returns 0.
- * @returns The element declaration that is the [term] of this Particle
- * if and only if getTermType() == TERM_ELEMENT.
- */ 
+// ---------------------------------------------------------------------------
+//  XSParticle: methods
+// ---------------------------------------------------------------------------
 XSElementDeclaration *XSParticle::getElementTerm()
 {
-    // REVISIT
+    if (fTermType == TERM_ELEMENT)
+        return (XSElementDeclaration*) fTerm;
+
     return 0;
 }
 
-/**
- * If this particle has a [model group] for its term,
- * this method returns that definition; otherwise, it returns 0.
- * @returns The model group that is the [term] of this Particle
- * if and only if getTermType() == TERM_MODELGROUP.
- */ 
-XSModelGroupDefinition *XSParticle::getModelGroupTerm()
+XSModelGroup *XSParticle::getModelGroupTerm()
 {
-    // REVISIT
+    if (fTermType == TERM_MODELGROUP)
+        return (XSModelGroup*) fTerm;
+
     return 0;
 }
 
-/**
- * If this particle has an [wildcard] for its term,
- * this method returns that declaration; otherwise, it returns 0.
- * @returns The wildcard declaration that is the [term] of this Particle
- * if and only if getTermType() == TERM_WILDCARD.
- */ 
 XSWildcard *XSParticle::getWildcardTerm()
 {
-    // REVISIT
+    if (fTermType == TERM_WILDCARD)
+        return (XSWildcard*) fTerm;
+
     return 0;
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -105,11 +108,15 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSMultiValueFacet(XSSimpleTypeDefinition::FACET   facetKind,
-            StringList*                     lexicalValues,
-            bool                            isFixed,
-            XSModel*                        xsModel,
-            MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSMultiValueFacet
+    (
+        XSSimpleTypeDefinition::FACET facetKind
+        , StringList*                 lexicalValues
+        , bool                        isFixed
+        , XSAnnotation* const         headAnnot
+        , XSModel* const              xsModel
+        , MemoryManager* const        manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -164,11 +171,33 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
-    XSSimpleTypeDefinition::FACET   fFacetKind;
-    StringList*                     fLexicalValues;  // not owned by this class...
-    bool                            fIsFixed;    
+    XSSimpleTypeDefinition::FACET fFacetKind;
+    bool                          fIsFixed;
+    StringList*                   fLexicalValues;  // not owned by this class
+    XSAnnotationList*             fXSAnnotationList;
 };
-inline XSMultiValueFacet::~XSMultiValueFacet() {}
+
+
+inline XSSimpleTypeDefinition::FACET XSMultiValueFacet::getFacetKind() const
+{
+    return fFacetKind;
+}
+
+inline bool XSMultiValueFacet::isFixed() const
+{
+    return fIsFixed;
+}
+
+inline StringList *XSMultiValueFacet::getLexicalFacetValues()
+{
+    return fLexicalValues; 
+}
+
+inline XSAnnotationList *XSMultiValueFacet::getAnnotations()
+{
+    return fXSAnnotationList;
+}
+
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/21 17:34:04  knoaman
+ * PSVI update
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -81,12 +84,17 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSNamespaceItem::XSNamespaceItem(XSModel*               xsModel,
-                                 SchemaGrammar*         grammar,
-                                 MemoryManager* const   manager ):  
-        fXSModel(xsModel),
-        fGrammar(grammar),
-        fMemoryManager(manager)
+// ---------------------------------------------------------------------------
+//  XSNamespaceItem: Constructors and Destructors
+// ---------------------------------------------------------------------------
+XSNamespaceItem::XSNamespaceItem(XSModel* const       xsModel,
+                                 SchemaGrammar* const grammar,
+                                 MemoryManager* const manager)
+    : fMemoryManager(manager)
+    , fGrammar(grammar)
+    , fXSModel(xsModel)
+    , fXSAnnotationList(0)
+
 {
     // Populate XSNamedMaps by going through the components
     for (unsigned int i=0; i<XSConstants::MULTIVALUE_FACET; i++)
@@ -155,111 +163,49 @@ XSNamespaceItem::~XSNamespaceItem()
     delete fXSAnnotationList;
 }
 
-// XSNamespaceItem methods
-
-/**
- * [schema namespace]: A namespace name or <code>null</code>
- * corresponding to the target namespace of the schema document.
- */
+// ---------------------------------------------------------------------------
+//  XSNamespaceItem: access methods
+// ---------------------------------------------------------------------------
 const XMLCh *XSNamespaceItem::getSchemaNamespace()
 {
     return fGrammar->getTargetNamespace();
 }
 
-/**
- * [schema components]: a list of top-level components, i.e. element 
- * declarations, attribute declarations, etc. 
- * @param objectType The type of the declaration, i.e. 
- *   <code>ELEMENT_DECLARATION</code>, 
- *   <code>TYPE_DEFINITION</code> and any other component type that
- * may be a property of a schema component.
- * @return A list of top-level definition of the specified type in 
- *   <code>objectType</code> or <code>null</code>. 
- */
 XSNamedMap<XSObject> *XSNamespaceItem::getComponents(XSConstants::COMPONENT_TYPE objectType)
 {
     return fComponentMap[objectType -1];
 }
 
-/**
- *  [annotations]: a set of annotations.
- */
-XSAnnotationList *XSNamespaceItem::getAnnotations()
-{
-    return fXSAnnotationList;
-}
-
-/**
- * Convenience method. Returns a top-level element declaration. 
- * @param name The name of the declaration.
- * @return A top-level element declaration or <code>null</code> if such 
- *   declaration does not exist. 
- */
 XSElementDeclaration *XSNamespaceItem::getElementDeclaration(const XMLCh *name)
 {
     return (XSElementDeclaration*) fHashMap[XSConstants::ELEMENT_DECLARATION -1]->get(name);
 }
 
-/**
- * Convenience method. Returns a top-level attribute declaration. 
- * @param name The name of the declaration.
- * @return A top-level attribute declaration or <code>null</code> if such 
- *   declaration does not exist. 
- */
 XSAttributeDeclaration *XSNamespaceItem::getAttributeDeclaration(const XMLCh *name)
 {
     return (XSAttributeDeclaration*) fHashMap[XSConstants::ATTRIBUTE_DECLARATION -1]->get(name);
 }
 
-/**
- * Convenience method. Returns a top-level simple or complex type 
- * definition. 
- * @param name The name of the definition.
- * @return An <code>XSTypeDefinition</code> or <code>null</code> if such 
- *   definition does not exist. 
- */
 XSTypeDefinition *XSNamespaceItem::getTypeDefinition(const XMLCh *name)
 {
     return (XSTypeDefinition*) fHashMap[XSConstants::TYPE_DEFINITION -1]->get(name);
 }
 
-/**
- * Convenience method. Returns a top-level attribute group definition. 
- * @param name The name of the definition.
- * @return A top-level attribute group definition or <code>null</code> if 
- *   such definition does not exist. 
- */
 XSAttributeGroupDefinition *XSNamespaceItem::getAttributeGroup(const XMLCh *name)
 {
     return (XSAttributeGroupDefinition*) fHashMap[XSConstants::ATTRIBUTE_GROUP_DEFINITION -1]->get(name);
 }
 
-/**
- * Convenience method. Returns a top-level model group definition. 
- * @param name The name of the definition.
- * @return A top-level model group definition definition or 
- *   <code>null</code> if such definition does not exist. 
- */
 XSModelGroupDefinition *XSNamespaceItem::getModelGroupDefinition(const XMLCh *name)
 {
     return (XSModelGroupDefinition*) fHashMap[XSConstants::MODEL_GROUP_DEFINITION -1]->get(name);         
 }
 
-/**
- * Convenience method. Returns a top-level notation declaration. 
- * @param name The name of the declaration.
- * @return A top-level notation declaration or <code>null</code> if such 
- *   declaration does not exist. 
- */
 XSNotationDeclaration *XSNamespaceItem::getNotationDeclaration(const XMLCh *name)
 {
     return (XSNotationDeclaration*) fHashMap[XSConstants::NOTATION_DECLARATION -1]->get(name);
 }
 
-/**
- * [document location] - a list of locations URI for the documents that 
- * contributed to the XSModel.
- */
 StringList *XSNamespaceItem::getDocumentLocations()
 {
     return ((XMLSchemaDescriptionImpl*) fGrammar->getGrammarDescription())->getLocationHints();

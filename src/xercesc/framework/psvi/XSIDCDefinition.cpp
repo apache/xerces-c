@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/21 17:29:53  knoaman
+ * PSVI update
+ *
  * Revision 1.5  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -80,46 +83,55 @@
 #include <xercesc/validators/schema/identity/IC_KeyRef.hpp>
 #include <xercesc/validators/schema/identity/IC_Selector.hpp>
 #include <xercesc/validators/schema/identity/XercesXPath.hpp>
-#include <xercesc/util/StringPool.hpp>
 #include <xercesc/framework/psvi/XSModel.hpp>
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
+#include <xercesc/util/StringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSIDCDefinition::XSIDCDefinition(IdentityConstraint*    identityConstraint,
-                                 XSModel*               xsModel,
-                                 MemoryManager * const  manager):
-    fIdentityConstraint(identityConstraint),
-    fStringList(0),
-    fKey(0),
-    fXSAnnotationList(0),
-    XSObject(XSConstants::IDENTITY_CONSTRAINT, xsModel, manager )
-
+// ---------------------------------------------------------------------------
+//  XSIDCDefinition: Constructors and Destructor
+// ---------------------------------------------------------------------------
+XSIDCDefinition::XSIDCDefinition(IdentityConstraint* const identityConstraint,
+                                 XSIDCDefinition*  const   keyIC,
+                                 XSAnnotation* const       headAnnot,
+                                 StringList* const         stringList,
+                                 XSModel* const            xsModel,
+                                 MemoryManager* const      manager)
+    : XSObject(XSConstants::IDENTITY_CONSTRAINT, xsModel, manager)
+    , fIdentityConstraint(identityConstraint)
+    , fKey(keyIC)
+    , fStringList(stringList)
+    , fXSAnnotationList(0)
 {
-    unsigned int fieldCount = fIdentityConstraint->getFieldCount();
-
-    if (fieldCount) 
+    if (headAnnot)
     {
-        fStringList = new (manager) RefArrayVectorOf <XMLCh>(fieldCount, true, manager);
+        // REVISIT Size
+        fXSAnnotationList = new (manager) RefVectorOf<XSAnnotation>(3, false, manager);
 
-        for(unsigned int i=0; i<fieldCount; i++) {
-            XMLCh* expr = XMLString::replicate(fIdentityConstraint->getFieldAt(i)->getXPath()->getExpression(), manager);
-            fStringList->addElement(expr);
-        }     
-    }
-
-    if (fIdentityConstraint->getType() == IdentityConstraint::KEYREF)
-    {
-        fKey = (XSIDCDefinition*) getObjectFromMap((void*)((IC_KeyRef*) fIdentityConstraint)->getKey());
-        if (!fKey)
+        XSAnnotation* annot = headAnnot;
+        do
         {
-            fKey = new (manager) XSIDCDefinition(((IC_KeyRef*) fIdentityConstraint)->getKey(), fXSModel, manager);
-            putObjectInMap((void*) ((IC_KeyRef*) fIdentityConstraint)->getKey(), fKey);
-        }
+            fXSAnnotationList->addElement(annot);
+            annot = annot->getNext();        
+        } while (annot);
     }
+
 }
 
-// Overridden XSObject methods
+XSIDCDefinition::~XSIDCDefinition()
+{
+    if (fStringList)
+        delete fStringList;
+
+    // don't delete fKey - deleted by XSModel
+    if (fXSAnnotationList)
+        delete fXSAnnotationList;
+}
+
+// ---------------------------------------------------------------------------
+//  XSIDCDefinition: XSObject virtual methods
+// ---------------------------------------------------------------------------
 const XMLCh *XSIDCDefinition::getName() 
 {
     return fIdentityConstraint->getIdentityConstraintName();
@@ -132,14 +144,12 @@ const XMLCh *XSIDCDefinition::getNamespace()
 
 XSNamespaceItem *XSIDCDefinition::getNamespaceItem() 
 {
-    return getNamespaceItemFromHash(getNamespace());
+    return fXSModel->getNamespaceItem(getNamespace());
 }
 
-// XSIDCDefinition methods
-
-/**
- * [identity-constraint category]: one of IC_KEY, IC_KEYREF or IC_UNIQUE. 
- */
+// ---------------------------------------------------------------------------
+//  XSIDCDefinition: access methods
+// ---------------------------------------------------------------------------
 XSIDCDefinition::IC_CATEGORY XSIDCDefinition::getCategory() const
 {
     switch(fIdentityConstraint->getType()) {
@@ -157,49 +167,14 @@ XSIDCDefinition::IC_CATEGORY XSIDCDefinition::getCategory() const
     }
 }
 
-/**
- * [selector]: a restricted XPath expression. 
- */
 const XMLCh *XSIDCDefinition::getSelectorStr()
 {
     return fIdentityConstraint->getSelector()->getXPath()->getExpression();
 }
 
-/**
- * [fields]: a non-empty list of restricted XPath ([XPath]) expressions. 
- */
-StringList *XSIDCDefinition::getFieldStrs()
-{
-    return fStringList;
-}
 
-/**
- * [referenced key]: required if [identity-constraint category] is IC_KEYREF, 
- * forbidden otherwise (when an identity-constraint definition with [
- * identity-constraint category] equal to IC_KEY or IC_UNIQUE). 
- */
-XSIDCDefinition *XSIDCDefinition::getRefKey()
-{
-    return fKey;
-}
-
-/**
- * A set of [annotations]. 
- */
 XSAnnotationList *XSIDCDefinition::getAnnotations()
 {
-    if (fXSAnnotationList)
-    {
-        return fXSAnnotationList;    
-    }
-    // REVISIT Size
-    fXSAnnotationList = new (fMemoryManager) RefVectorOf <XSAnnotation> (3, false, fMemoryManager);
-    XSAnnotation* annot = getAnnotationFromModel(fIdentityConstraint);
-    while (annot)
-    {
-        fXSAnnotationList->addElement(annot);
-        annot = annot->getNext();        
-    }
     return fXSAnnotationList;
 }
 
