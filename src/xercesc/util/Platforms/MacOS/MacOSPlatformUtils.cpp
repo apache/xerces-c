@@ -825,7 +825,7 @@ XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref, MemoryManager* co
 	
 	//	If it's a relative path, pre-pend the current directory to the path.
 	//	FSPathMakeRef doesn't deal with relativity on the front of the path
-	if (*p != '/')
+	if (*p != '/' && kMaxMacStaticPathChars > pathLen)
 	{
 		//	Right justify the user path to make room for the pre-pended path
 		std::memmove(p + kMaxMacStaticPathChars - pathLen, p, pathLen);
