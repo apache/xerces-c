@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/03/31 01:21:20  andyh
+ * Element::setAttribute now checks whether the attribute node exists,
+ * and uses it if it does.  Change from  Steve Dickson
+ *
  * Revision 1.10  2000/03/11 02:17:19  chchou
  * Fix bug # 29 to have the spefified flag set correctly for AttrImpl.
  *
@@ -223,7 +227,7 @@ void ElementImpl::removeAttribute(const DOMString &nam)
     if (att != null)
     {
         attributes->removeNamedItem(nam);
-	att->setOwnerElement(null);	//DOM Level 2
+        att->setOwnerElement(null);	//DOM Level 2
         if (att->nodeRefCount == 0)
             NodeImpl::deleteIf(att);
     }
@@ -261,16 +265,17 @@ AttrImpl *ElementImpl::setAttribute(const DOMString &nam, const DOMString &val)
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    AttrImpl *newAttr = (AttrImpl *) ownerDocument->createAttribute(nam);
-    newAttr->setNodeValue(val);
-    newAttr->setOwnerElement(this);	//DOM Level 2
-    AttrImpl *oldAttr = (AttrImpl *)attributes->setNamedItem(newAttr);
-
-    if (oldAttr) {
-	oldAttr->setOwnerElement(null);	//DOM Level 2
-	if (oldAttr->nodeRefCount == 0)
-	    NodeImpl::deleteIf(oldAttr);
+    AttrImpl* newAttr = (AttrImpl*)getAttributeNode(nam);
+    if (!newAttr)
+    {
+        newAttr = (AttrImpl*)ownerDocument->createAttribute(nam);
+        attributes->setNamedItem(newAttr);
     }
+
+    newAttr->setNodeValue(val);       // Note that setNodeValue on attribute
+                                      //   nodes takes care of deleting
+                                      //   any previously existing children.
+    newAttr->setOwnerElement(this);
     return newAttr;
 };
 
