@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/01/13 19:02:23  knoaman
+ * [Bug 14390] C++ Indentifier collision with Python.
+ *
  * Revision 1.3  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -224,7 +227,7 @@ void RegxParser::processNext() {
     if (fOffset >= fStringLen) {
 
         fCharData = -1;
-        fState = T_EOF;
+        fState = REGX_T_EOF;
         return;
 	}
 
@@ -236,7 +239,7 @@ void RegxParser::processNext() {
 
 		switch (ch) {
         case chBackSlash:
-            nextState = T_BACKSOLIDUS;
+            nextState = REGX_T_BACKSOLIDUS;
 
 			if (fOffset >= fStringLen) {
 				ThrowXML(ParseException,XMLExcepts::Parser_Next1);
@@ -249,10 +252,10 @@ void RegxParser::processNext() {
                 && fOffset < fStringLen && fString[fOffset] == chOpenSquare) {
 
                 fOffset++;
-                nextState = T_XMLSCHEMA_CC_SUBTRACTION;
+                nextState = REGX_T_XMLSCHEMA_CC_SUBTRACTION;
             }
             else {
-                nextState = T_CHAR;
+                nextState = REGX_T_CHAR;
             }
             break;
         case chOpenSquare:
@@ -260,7 +263,7 @@ void RegxParser::processNext() {
                 && fOffset < fStringLen && fString[fOffset] == chColon) {
 
                 fOffset++;
-                nextState = T_POSIX_CHARCLASS_START;
+                nextState = REGX_T_POSIX_CHARCLASS_START;
                 break;
 			} // Through down
         default:
@@ -276,7 +279,7 @@ void RegxParser::processNext() {
                 }
             }
 
-			nextState = T_CHAR;
+			nextState = REGX_T_CHAR;
         }
 
         fState = nextState;
@@ -286,35 +289,35 @@ void RegxParser::processNext() {
     switch (ch) {
 
     case chPipe:
-        nextState = T_OR;
+        nextState = REGX_T_OR;
         break;
     case chAsterisk:
-        nextState = T_STAR;
+        nextState = REGX_T_STAR;
         break;
     case chPlus:
-        nextState = T_PLUS;
+        nextState = REGX_T_PLUS;
         break;
     case chQuestion:
-		nextState = T_QUESTION;
+		nextState = REGX_T_QUESTION;
 		break;
     case chCloseParen:
-        nextState = T_RPAREN;
+        nextState = REGX_T_RPAREN;
         break;
     case chPeriod:
-		nextState = T_DOT;
+		nextState = REGX_T_DOT;
 		break;
     case chOpenSquare:
-        nextState = T_LBRACKET;
+        nextState = REGX_T_LBRACKET;
         break;
     case chCaret:
-        nextState = T_CARET;
+        nextState = REGX_T_CARET;
         break;
     case chDollarSign:
-		nextState = T_DOLLAR;
+		nextState = REGX_T_DOLLAR;
 		break;
 	case chOpenParen:
         {
-		    nextState = T_LPAREN;
+		    nextState = REGX_T_LPAREN;
             if (fOffset >= fStringLen)
                 break;
 
@@ -328,19 +331,19 @@ void RegxParser::processNext() {
 
             switch (ch) {
             case chColon:
-                nextState = T_LPAREN2;
+                nextState = REGX_T_LPAREN2;
                 break;
 			case chEqual:
-                nextState = T_LOOKAHEAD;
+                nextState = REGX_T_LOOKAHEAD;
                 break;
             case chBang:
-                nextState = T_NEGATIVELOOKAHEAD;
+                nextState = REGX_T_NEGATIVELOOKAHEAD;
                 break;
             case chOpenSquare:
-                nextState = T_SET_OPERATIONS;
+                nextState = REGX_T_SET_OPERATIONS;
                 break;
             case chCloseAngle:
-                nextState = T_INDEPENDENT;
+                nextState = REGX_T_INDEPENDENT;
 				break;
             case chOpenAngle:
 				if (fOffset >= fStringLen)
@@ -349,10 +352,10 @@ void RegxParser::processNext() {
 				ch = fString[fOffset++];
 
 				if (ch == chEqual) {
-					nextState = T_LOOKBEHIND;
+					nextState = REGX_T_LOOKBEHIND;
 				}
 				else if (ch == chBang) {
-					nextState = T_NEGATIVELOOKBEHIND;
+					nextState = REGX_T_NEGATIVELOOKBEHIND;
 				}
 				else {
 					ThrowXML(ParseException,XMLExcepts::Parser_Next3);
@@ -369,18 +372,18 @@ void RegxParser::processNext() {
 				if (ch != chCloseParen)
 					ThrowXML(ParseException,XMLExcepts::Parser_Next4);
 
-				nextState = T_COMMENT;
+				nextState = REGX_T_COMMENT;
 				break;
             default:
 				if (ch == chDash || chLatin_a <= ch && ch <= chLatin_z
                     || chLatin_A <= ch && ch <= chLatin_Z) { // Options
 
                     fOffset--;
-                    nextState = T_MODIFIERS;
+                    nextState = REGX_T_MODIFIERS;
                     break;
                 }
                 else if (ch == chOpenParen) {
-                    nextState = T_CONDITION;
+                    nextState = REGX_T_CONDITION;
                     break;
                 }
                 ThrowXML(ParseException,XMLExcepts::Parser_Next2);
@@ -388,7 +391,7 @@ void RegxParser::processNext() {
         }
 		break;
 	case chBackSlash:
-        nextState = T_BACKSOLIDUS;
+        nextState = REGX_T_BACKSOLIDUS;
         if (fOffset >= fStringLen) {
 			ThrowXML(ParseException,XMLExcepts::Parser_Next1);
         }
@@ -396,7 +399,7 @@ void RegxParser::processNext() {
         fCharData = fString[fOffset++];
         break;
 	default:
-		nextState = T_CHAR;
+		nextState = REGX_T_CHAR;
 		if (RegxUtil::isHighSurrogate(ch) && fOffset < fStringLen) {
 
                 XMLCh lowCh = fString[fOffset];
@@ -419,7 +422,7 @@ Token* RegxParser::parseRegx() {
     Token* tok = parseTerm();
     Token* parentTok = 0;
 
-    while (fState == T_OR) {
+    while (fState == REGX_T_OR) {
 
         processNext();
         if (parentTok == 0) {
@@ -440,7 +443,7 @@ Token* RegxParser::parseTerm() {
 
     unsigned short state = fState;
 
-    if (state == T_OR || state == T_RPAREN || state == T_EOF) {
+    if (state == REGX_T_OR || state == REGX_T_RPAREN || state == REGX_T_EOF) {
         return fTokenFactory->createToken(Token::T_EMPTY);
     }
     else {
@@ -448,7 +451,7 @@ Token* RegxParser::parseTerm() {
 		Token* tok = parseFactor();
 		Token* concatTok = 0;
 
-		while ((state = fState) != T_OR && state != T_RPAREN && state != T_EOF)
+		while ((state = fState) != REGX_T_OR && state != REGX_T_RPAREN && state != REGX_T_EOF)
         {
             if (concatTok == 0) {
 
@@ -484,7 +487,7 @@ Token* RegxParser::processLook(const unsigned short tokType) {
 
 	Token* tok = fTokenFactory->createLook(tokType, parseRegx());
 
-    if (fState != T_RPAREN) {
+    if (fState != REGX_T_RPAREN) {
         ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
     }
 
@@ -547,7 +550,7 @@ Token* RegxParser::processStar(Token* const tok) {
 
     processNext();
 
-    if (fState == T_QUESTION) {
+    if (fState == REGX_T_QUESTION) {
 
         processNext();
         return fTokenFactory->createClosure(tok, true);
@@ -561,7 +564,7 @@ Token* RegxParser::processPlus(Token* const tok) {
 
     processNext();
 
-    if (fState == T_QUESTION) {
+    if (fState == REGX_T_QUESTION) {
 
 		processNext();
 		return fTokenFactory->createConcat(tok,
@@ -579,7 +582,7 @@ Token* RegxParser::processQuestion(Token* const tok) {
 
     Token* parentTok = fTokenFactory->createUnion();
 
-    if (fState == T_QUESTION) {
+    if (fState == REGX_T_QUESTION) {
 
         processNext();
         parentTok->addChild(fTokenFactory->createToken(Token::T_EMPTY), fTokenFactory);
@@ -601,7 +604,7 @@ Token* RegxParser::processParen() {
     int num = fNoGroups++;
     Token* tok = fTokenFactory->createParenthesis(parseRegx(),num);
 
-    if (fState != T_RPAREN)
+    if (fState != REGX_T_RPAREN)
         ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
 
     processNext();
@@ -614,7 +617,7 @@ Token* RegxParser::processParen2() {
     processNext();
     Token* tok = fTokenFactory->createParenthesis(parseRegx(), 0);
 
-    if (fState != T_RPAREN)
+    if (fState != REGX_T_RPAREN)
         ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
 
     processNext();
@@ -663,7 +666,7 @@ Token* RegxParser::processCondition() {
         case Token::T_NEGATIVELOOKBEHIND:
             break;
         case Token::T_ANCHOR:
-            if (fState != T_RPAREN)
+            if (fState != REGX_T_RPAREN)
 				ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
 			break;
         default:
@@ -684,7 +687,7 @@ Token* RegxParser::processCondition() {
         yesPattern = yesPattern->getChild(0);
     }
 
-    if (fState != T_RPAREN)
+    if (fState != REGX_T_RPAREN)
         ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
 
 	processNext();
@@ -742,7 +745,7 @@ Token* RegxParser::processModifiers() {
 		processNext();
         tok = fTokenFactory->createModifierGroup(parseRegx(),add,mask);
 
-        if (fState != T_RPAREN)
+        if (fState != REGX_T_RPAREN)
             ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
 
         processNext();
@@ -767,7 +770,7 @@ Token* RegxParser::processIndependent() {
 
 	Token* tok = fTokenFactory->createLook(Token::T_INDEPENDENT, parseRegx());
 
-	if (fState != T_RPAREN)
+	if (fState != REGX_T_RPAREN)
 		ThrowXML(ParseException,XMLExcepts::Parser_Factor1);
 
     processNext();
@@ -842,22 +845,22 @@ Token* RegxParser::parseFactor() {
 
     switch (fState) {
 
-    case T_CARET:
+    case REGX_T_CARET:
         return processCaret();
-    case T_DOLLAR:
+    case REGX_T_DOLLAR:
         return processDollar();
-    case T_LOOKAHEAD:
+    case REGX_T_LOOKAHEAD:
         return processLook(Token::T_LOOKAHEAD);
-    case T_NEGATIVELOOKAHEAD:
+    case REGX_T_NEGATIVELOOKAHEAD:
         return processLook(Token::T_NEGATIVELOOKAHEAD);
-    case T_LOOKBEHIND:
+    case REGX_T_LOOKBEHIND:
         return processLook(Token::T_LOOKBEHIND);
-    case T_NEGATIVELOOKBEHIND:
+    case REGX_T_NEGATIVELOOKBEHIND:
         return processLook(Token::T_NEGATIVELOOKBEHIND);
-    case T_COMMENT:
+    case REGX_T_COMMENT:
         processNext();
         return fTokenFactory->createToken(Token::T_EMPTY);
-    case T_BACKSOLIDUS:
+    case REGX_T_BACKSOLIDUS:
         switch(fCharData) {
         case chLatin_A:
             return processBacksolidus_A();
@@ -880,13 +883,13 @@ Token* RegxParser::parseFactor() {
 
 	switch(fState) {
 
-    case T_STAR:
+    case REGX_T_STAR:
         return processStar(tok);
-    case T_PLUS:
+    case REGX_T_PLUS:
         return processPlus(tok);
-    case T_QUESTION:
+    case REGX_T_QUESTION:
         return processQuestion(tok);
-    case T_CHAR:
+    case REGX_T_CHAR:
 		if (fCharData == chOpenCurly) {
 
             int offset = fOffset;
@@ -978,25 +981,25 @@ Token* RegxParser::parseAtom() {
 
     switch(fState) {
 
-    case T_LPAREN:
+    case REGX_T_LPAREN:
         return processParen();
-    case T_LPAREN2:
+    case REGX_T_LPAREN2:
         return processParen2();
-    case T_CONDITION:
+    case REGX_T_CONDITION:
         return processCondition();
-    case T_MODIFIERS:
+    case REGX_T_MODIFIERS:
         return processModifiers();
-    case T_INDEPENDENT:
+    case REGX_T_INDEPENDENT:
         return processIndependent();
-    case T_DOT:
+    case REGX_T_DOT:
         processNext();
         tok = fTokenFactory->getDot();
         break;
-    case T_LBRACKET:
+    case REGX_T_LBRACKET:
         return parseCharacterClass(true);
-    case T_SET_OPERATIONS:
+    case REGX_T_SET_OPERATIONS:
         return parseSetOperations();
-    case T_BACKSOLIDUS:
+    case REGX_T_BACKSOLIDUS:
 		switch(fCharData) {
 
         case chLatin_d:
@@ -1068,7 +1071,7 @@ Token* RegxParser::parseAtom() {
 
         processNext();
         break;
-    case T_CHAR:
+    case REGX_T_CHAR:
         tok = fTokenFactory->createChar(fCharData);
         processNext();
         break;
@@ -1085,7 +1088,7 @@ RangeToken* RegxParser::processBacksolidus_pP(const XMLInt32 ch) {
     bool positive = (ch == chLatin_p);
 
     processNext();
-	if (fState != T_CHAR)
+	if (fState != REGX_T_CHAR)
 		ThrowXML(ParseException,XMLExcepts::Parser_Atom2);
 
     RangeToken* tok = 0;
@@ -1152,7 +1155,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
     RangeToken* tok = 0;
     bool nRange = false;
 
-	if (fState == T_CHAR && fCharData == chCaret) {
+	if (fState == REGX_T_CHAR && fCharData == chCaret) {
 
         nRange = true;
         processNext();
@@ -1173,16 +1176,16 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
 
     bool firstLoop = true;
 
-    while (fState != T_EOF) {
+    while (fState != REGX_T_EOF) {
 
-        if (fState == T_CHAR && fCharData == chCloseSquare && !firstLoop)
+        if (fState == REGX_T_CHAR && fCharData == chCloseSquare && !firstLoop)
 			break;
 
         bool end = false;
         XMLInt32 ch = fCharData;
 
         firstLoop = false;
-        if (fState == T_BACKSOLIDUS) {
+        if (fState == REGX_T_BACKSOLIDUS) {
 
             switch(ch) {
             case chLatin_d:
@@ -1220,8 +1223,8 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
             default:
                 ch = decodeEscaped();
 			}
-        } // end if T_BACKSOLIDUS
-        else if (fState == T_POSIX_CHARCLASS_START) {
+        } // end if REGX_T_BACKSOLIDUS
+        else if (fState == REGX_T_POSIX_CHARCLASS_START) {
 
             int nameEnd = XMLString::indexOf(fString, chColon, fOffset);
 
@@ -1260,17 +1263,17 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
         processNext();
 		if (!end) {
 
-            if (fState != T_CHAR || fCharData != chDash) {
+            if (fState != REGX_T_CHAR || fCharData != chDash) {
                 tok->addRange(ch, ch);
             }
             else {
 
                 processNext();
 
-                if (fState == T_EOF)
+                if (fState == REGX_T_EOF)
                     ThrowXML(ParseException,XMLExcepts::Parser_CC2);
 
-                if (fState == T_CHAR && fCharData == chCloseSquare) {
+                if (fState == REGX_T_CHAR && fCharData == chCloseSquare) {
 
                     tok->addRange(ch, ch);
                     tok->addRange(chDash, chDash);
@@ -1279,7 +1282,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
 
                     XMLInt32 rangeEnd = fCharData;
 
-                    if (fState == T_BACKSOLIDUS) {
+                    if (fState == REGX_T_BACKSOLIDUS) {
                         rangeEnd = decodeEscaped();
                     }
 
@@ -1290,12 +1293,12 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
         }
 
         if (isSet(RegularExpression::SPECIAL_COMMA)
-            && fState == T_CHAR && fCharData == chComma) {
+            && fState == REGX_T_CHAR && fCharData == chComma) {
             processNext();
         }
     } // end while fState
 
-	if (fState == T_EOF) {
+	if (fState == REGX_T_EOF) {
         ThrowXML(ParseException,XMLExcepts::Parser_CC2);
 	}
 
@@ -1318,19 +1321,19 @@ RangeToken* RegxParser::parseSetOperations() {
 
     RangeToken* tok = parseCharacterClass(false);
 
-    while (fState != T_RPAREN) {
+    while (fState != REGX_T_RPAREN) {
 
-		if (fState == T_CHAR
+		if (fState == REGX_T_CHAR
             && (fCharData == chDash || fCharData == chAmpersand)
-            || fState == T_PLUS) {
+            || fState == REGX_T_PLUS) {
 
             processNext();
-            if (fState != T_LBRACKET)
+            if (fState != REGX_T_LBRACKET)
                 ThrowXML(ParseException,XMLExcepts::Parser_Ope1);
 
             RangeToken* tok2 = parseCharacterClass(false);
 
-            if (fState == T_PLUS) {
+            if (fState == REGX_T_PLUS) {
                 tok->mergeRanges(tok2);
             }
             else if (fCharData == chDash) {
@@ -1391,7 +1394,7 @@ Token* RegxParser::getTokenForShorthand(const XMLInt32 ch) {
 
 XMLInt32 RegxParser::decodeEscaped() {
 
-    if (fState != T_BACKSOLIDUS)
+    if (fState != REGX_T_BACKSOLIDUS)
 		ThrowXML(ParseException,XMLExcepts::Parser_Next1);
 
     XMLInt32 ch = fCharData;
@@ -1415,7 +1418,7 @@ XMLInt32 RegxParser::decodeEscaped() {
 	case chLatin_x:
 		{
 			processNext();
-			if (fState != T_CHAR) {
+			if (fState != REGX_T_CHAR) {
 				ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
 			}
 			if (fCharData == chOpenCurly) {
@@ -1425,7 +1428,7 @@ XMLInt32 RegxParser::decodeEscaped() {
 
 				do {
 					processNext();
-					if (fState != T_CHAR)
+					if (fState != REGX_T_CHAR)
 						ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
 
 					if ((v1 = hexChar(fCharData)) < 0)
@@ -1444,13 +1447,13 @@ XMLInt32 RegxParser::decodeEscaped() {
 			}
 			else {
 				int v1 = 0;
-				if (fState != T_CHAR || (v1 = hexChar(fCharData)) < 0)
+				if (fState != REGX_T_CHAR || (v1 = hexChar(fCharData)) < 0)
 					ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
 
 				int uv = v1;
 
 				processNext();
-				if (fState != T_CHAR || (v1 = hexChar(fCharData)) < 0)
+				if (fState != REGX_T_CHAR || (v1 = hexChar(fCharData)) < 0)
 					ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
 
 				ch = uv*16 + v1;
@@ -1465,7 +1468,7 @@ XMLInt32 RegxParser::decodeEscaped() {
 			for (int i=0; i< 4; i++) {
 
 				processNext();
-				if (fState != T_CHAR || (v1 = hexChar(fCharData)) < 0)
+				if (fState != REGX_T_CHAR || (v1 = hexChar(fCharData)) < 0)
 					ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
 
 				uv = (i == 0) ? v1 : uv*16 + v1;
@@ -1482,7 +1485,7 @@ XMLInt32 RegxParser::decodeEscaped() {
 			for (int i=0; i< 6; i++) {
 
 				processNext();
-				if (fState != T_CHAR || (v1 = hexChar(fCharData)) < 0)
+				if (fState != REGX_T_CHAR || (v1 = hexChar(fCharData)) < 0)
 					ThrowXML(ParseException,XMLExcepts::Parser_Descape1);
 
 				uv = (i == 0) ? v1 : uv*16 + v1;

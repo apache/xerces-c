@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/01/13 19:02:23  knoaman
+ * [Bug 14390] C++ Indentifier collision with Python.
+ *
  * Revision 1.3  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -168,7 +171,7 @@ Token* ParserForXMLSchema::processParen() {
     processNext();
     Token* retTok = getTokenFactory()->createParenthesis(parseRegx(), 0);
 
-    if (getState() != T_RPAREN) {
+    if (getState() != REGX_T_RPAREN) {
         ThrowXML(ParseException, XMLExcepts::Parser_Factor1);
     }
 
@@ -185,7 +188,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
     RangeToken* tok = 0;
     bool isNRange = false;
 
-    if (getState() == T_CHAR && getCharData() == chCaret) {
+    if (getState() == REGX_T_CHAR && getCharData() == chCaret) {
 
         isNRange = true;
         processNext();
@@ -200,10 +203,10 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
     int type;
     bool firstLoop = true;
 
-    while ( (type = getState()) != T_EOF) {
+    while ( (type = getState()) != REGX_T_EOF) {
 
         // single range | from-to-range | subtraction
-        if (type == T_CHAR && getCharData() == chCloseSquare && !firstLoop) {
+        if (type == REGX_T_CHAR && getCharData() == chCloseSquare && !firstLoop) {
 
             if (isNRange) {
 
@@ -216,7 +219,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
         XMLInt32 ch = getCharData();
         bool     end = false;
 
-        if (type == T_BACKSOLIDUS) {
+        if (type == REGX_T_BACKSOLIDUS) {
 
             switch(ch) {
             case chLatin_d:
@@ -258,8 +261,8 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
             default:
                 ch = decodeEscaped();
             }
-        } // end if T_BACKSOLIDUS
-        else if (type == T_XMLSCHEMA_CC_SUBTRACTION && !firstLoop) {
+        } // end if REGX_T_BACKSOLIDUS
+        else if (type == REGX_T_XMLSCHEMA_CC_SUBTRACTION && !firstLoop) {
 
             if (isNRange) {
 
@@ -270,17 +273,17 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
             RangeToken* rangeTok = parseCharacterClass(false);
             tok->subtractRanges(rangeTok);
 
-            if (getState() != T_CHAR || getCharData() != chCloseSquare) {
+            if (getState() != REGX_T_CHAR || getCharData() != chCloseSquare) {
                 ThrowXML(ParseException,XMLExcepts::Parser_CC5);
             }
             break;
-        } // end if T_XMLSCHEMA...
+        } // end if REGX_T_XMLSCHEMA...
 
         processNext();
 
         if (!end) {
 
-            if (type == T_CHAR) {
+            if (type == REGX_T_CHAR) {
 
                 if (ch == chOpenSquare)
                     ThrowXML(ParseException,XMLExcepts::Parser_CC6);
@@ -289,21 +292,21 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
                     ThrowXML(ParseException,XMLExcepts::Parser_CC7);
             }
 
-            if (getState() != T_CHAR || getCharData() != chDash) {
+            if (getState() != REGX_T_CHAR || getCharData() != chDash) {
                 tok->addRange(ch, ch);
             }
             else {
 
                 processNext();
-                if ((type = getState()) == T_EOF)
+                if ((type = getState()) == REGX_T_EOF)
                     ThrowXML(ParseException,XMLExcepts::Parser_CC2);
 
-                if (type == T_CHAR && getCharData() == chCloseSquare) {
+                if (type == REGX_T_CHAR && getCharData() == chCloseSquare) {
 
                     tok->addRange(ch, ch);
                     tok->addRange(chDash, chDash);
                 }
-                else if (type == T_XMLSCHEMA_CC_SUBTRACTION) {
+                else if (type == REGX_T_XMLSCHEMA_CC_SUBTRACTION) {
                     tok->addRange(ch, ch);
                     tok->addRange(chDash, chDash);
                 }
@@ -311,7 +314,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
 
                     XMLInt32 rangeEnd = getCharData();
 
-                    if (type == T_CHAR) {
+                    if (type == REGX_T_CHAR) {
 
                         if (rangeEnd == chOpenSquare)
                             ThrowXML(ParseException,XMLExcepts::Parser_CC6);
@@ -320,7 +323,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
                             ThrowXML(ParseException,XMLExcepts::Parser_CC7);
                     }
 
-                    if (type == T_BACKSOLIDUS) {
+                    if (type == REGX_T_BACKSOLIDUS) {
                         rangeEnd = decodeEscaped();
                     }
 
@@ -339,7 +342,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
         firstLoop = false;
     }
 
-    if (getState() == T_EOF)
+    if (getState() == REGX_T_EOF)
         ThrowXML(ParseException,XMLExcepts::Parser_CC2);
 
     tok->sortRanges();
@@ -519,7 +522,7 @@ bool ParserForXMLSchema::checkQuestion(const int off) {
 
 XMLInt32 ParserForXMLSchema::decodeEscaped() {
 
-    if (getState() != T_BACKSOLIDUS)
+    if (getState() != REGX_T_BACKSOLIDUS)
         ThrowXML(ParseException,XMLExcepts::Parser_Next1);;
 
     XMLInt32 ch = getCharData();

@@ -86,32 +86,33 @@ public:
 	// -----------------------------------------------------------------------
     //  Public constant data
     // -----------------------------------------------------------------------
+    // Parse tokens
 	enum {
-		T_CHAR						= 0,
-		T_EOF						= 1,
-		T_OR						= 2,
-		T_STAR						= 3,
-		T_PLUS						= 4,
-		T_QUESTION					= 5,
-		T_LPAREN					= 6,
-		T_RPAREN					= 7,
-		T_DOT						= 8,
-		T_LBRACKET					= 9,
-		T_BACKSOLIDUS				= 10,
-		T_CARET						= 11,
-		T_DOLLAR					= 12,
-		T_LPAREN2					= 13,
-		T_LOOKAHEAD					= 14,
-		T_NEGATIVELOOKAHEAD			= 15,
-		T_LOOKBEHIND				= 16,
-		T_NEGATIVELOOKBEHIND		= 17,
-		T_INDEPENDENT				= 18,
-		T_SET_OPERATIONS			= 19,
-		T_POSIX_CHARCLASS_START		= 20,
-		T_COMMENT					= 21,
-		T_MODIFIERS					= 22,
-		T_CONDITION					= 23,
-		T_XMLSCHEMA_CC_SUBTRACTION	= 24
+		REGX_T_CHAR                     = 0,
+		REGX_T_EOF                      = 1,
+		REGX_T_OR                       = 2,
+		REGX_T_STAR                     = 3,
+		REGX_T_PLUS                     = 4,
+		REGX_T_QUESTION                 = 5,
+		REGX_T_LPAREN                   = 6,
+		REGX_T_RPAREN                   = 7,
+		REGX_T_DOT                      = 8,
+		REGX_T_LBRACKET                 = 9,
+		REGX_T_BACKSOLIDUS              = 10,
+		REGX_T_CARET                    = 11,
+		REGX_T_DOLLAR                   = 12,
+		REGX_T_LPAREN2                  = 13,
+		REGX_T_LOOKAHEAD                = 14,
+		REGX_T_NEGATIVELOOKAHEAD        = 15,
+		REGX_T_LOOKBEHIND               = 16,
+		REGX_T_NEGATIVELOOKBEHIND       = 17,
+		REGX_T_INDEPENDENT              = 18,
+		REGX_T_SET_OPERATIONS           = 19,
+		REGX_T_POSIX_CHARCLASS_START    = 20,
+		REGX_T_COMMENT                  = 21,
+		REGX_T_MODIFIERS                = 22,
+		REGX_T_CONDITION                = 23,
+		REGX_T_XMLSCHEMA_CC_SUBTRACTION	= 24
 	};
 
 	static const unsigned short S_NORMAL;
