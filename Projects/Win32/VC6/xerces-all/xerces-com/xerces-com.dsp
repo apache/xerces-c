@@ -64,8 +64,8 @@ InputPath=.\..\..\..\..\..\Build\Win32\xml4com\Debug\xerces-com.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_2D.dll "$(TargetDir)" 
-	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_2D.dll "$(TargetDir)" 
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_3D.dll "$(TargetDir)" 
+	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_3D.dll "$(TargetDir)" 
 	regsvr32 /s /c "$(TargetPath)" 
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
 	
@@ -143,13 +143,13 @@ InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize\xerces-com.dll
 SOURCE="$(InputPath)"
 
 BuildCmds= \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
 	regsvr32 /s /c "$(TargetPath)" \
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
 	
 
-"$(TargetDir)\xerces-c_1_2.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(TargetDir)\xerces-c_1_3.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -187,13 +187,13 @@ InputPath=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinDependency\xerces-com.d
 SOURCE="$(InputPath)"
 
 BuildCmds= \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
 	regsvr32 /s /c "$(TargetPath)" \
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
 	
 
-"$(TargetDir)\xerces-c_1_2.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(TargetDir)\xerces-c_1_3.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -233,8 +233,8 @@ SOURCE="$(InputPath)"
 BuildCmds= \
 	if "%OS%"=="" goto NOTNT \
 	if not "%OS%"=="Windows_NT" goto NOTNT \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
 	regsvr32 /s /c "$(TargetPath)" \
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
 	goto end \
@@ -243,7 +243,7 @@ BuildCmds= \
 	:end \
 	
 
-"$(TargetDir)\xerces-c_1_2.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(TargetDir)\xerces-c_1_3.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -283,8 +283,8 @@ SOURCE="$(InputPath)"
 BuildCmds= \
 	if "%OS%"=="" goto NOTNT \
 	if not "%OS%"=="Windows_NT" goto NOTNT \
-	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
-	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_3.dll $(TargetDir) \
 	regsvr32 /s /c "$(TargetPath)" \
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
 	goto end \
@@ -293,7 +293,7 @@ BuildCmds= \
 	:end \
 	
 
-"$(TargetDir)\xerces-c_1_2.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+"$(TargetDir)\xerces-c_1_3.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
    $(BuildCmds)
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"

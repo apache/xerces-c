@@ -20,7 +20,7 @@
     <li><link anchor="BuildUsingLibWWW">How can I generate Xerces-C binaries which includes the
                sample NetAccessor implementation using Libwww?</link></li>
     <li><link anchor="BuildSingleThreadedLibrary">How do I build a single threaded library on
-    		Unix platforms?</link></li>
+            Unix platforms?</link></li>
     <li><link anchor="LookForHelp">Where can I look for more help?</link></li>
   </ul>
 
@@ -369,88 +369,88 @@ gmake</source>
             </s3>
 
              <p>There are two ways to build &XercesCName;. The "From Existing" method only
-	              requires VAC++. The "From Scratch" method requires both Object Rexx and VAC++
-	              installed.</p>
+                  requires VAC++. The "From Scratch" method requires both Object Rexx and VAC++
+                  installed.</p>
 
-	      <s3 title="The &quot;From Existing&quot; Method">
-		  <ol>
-		    <li>In the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory,
-		    find and edit the VAC++ configuration file <code>project_options.icc</code>.</li>
+          <s3 title="The &quot;From Existing&quot; Method">
+          <ol>
+            <li>In the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory,
+            find and edit the VAC++ configuration file <code>project_options.icc</code>.</li>
 
-		    <li>Change the directory on the first line <code>'BASE_DIR = "..."'</code>
-		    to match the base directory of the Xerces-C sources on your system.
-		    Note that the directory path must use double backslashes <code>"\\"</code>!</li>
+            <li>Change the directory on the first line <code>'BASE_DIR = "..."'</code>
+            to match the base directory of the Xerces-C sources on your system.
+            Note that the directory path must use double backslashes <code>"\\"</code>!</li>
 
-		    <li>Save <code>project_options.icc</code></li>
+            <li>Save <code>project_options.icc</code></li>
 
-		    <li>Start the Command Line in the VAC++ folder.</li>
+            <li>Start the Command Line in the VAC++ folder.</li>
 
-		    <li>Navigate to the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory.</li>
+            <li>Navigate to the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory.</li>
 
-		    <li>Run <code>build.cmd</code>. This does a migration build.</li>
+            <li>Run <code>build.cmd</code>. This does a migration build.</li>
 
-		    <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
-		    This file should contain only informational messages, almost all complaining
-		    about constant values in comparisons.</li>
+            <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
+            This file should contain only informational messages, almost all complaining
+            about constant values in comparisons.</li>
 
-		    <li>You should now have a <code>xerces-c.dll</code> and <code>xerces-c.lib</code>.
-		    The library file is an import library for the DLL.</li>
-		  </ol>
-	      </s3>
+            <li>You should now have a <code>xerces-c.dll</code> and <code>xerces-c.lib</code>.
+            The library file is an import library for the DLL.</li>
+          </ol>
+          </s3>
 
-	      <s3 title="The &quot;From Scratch&quot; Method">
-		  <ol>
-		    <li>If you are not currently running <code>Object Rexx</code>,
-		    run the <code>SWITCHRX</code> command from a command line,
-		    answer <code>"yes"</code> to switching to <code>Object Rexx</code>, and follow the
-		    instructions to reboot. You can switch back to <code>"Classic Rexx"</code> by running
-		    <code>SWITCHRX</code> again. But you probably won't need to switch back since
-		    <code>Object Rexx</code> runs almost 100% of Classic Rexx programs.</li>
+          <s3 title="The &quot;From Scratch&quot; Method">
+          <ol>
+            <li>If you are not currently running <code>Object Rexx</code>,
+            run the <code>SWITCHRX</code> command from a command line,
+            answer <code>"yes"</code> to switching to <code>Object Rexx</code>, and follow the
+            instructions to reboot. You can switch back to <code>"Classic Rexx"</code> by running
+            <code>SWITCHRX</code> again. But you probably won't need to switch back since
+            <code>Object Rexx</code> runs almost 100% of Classic Rexx programs.</li>
 
-		    <li>In the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory,
-		    run <code>genICC.cmd</code>. This builds the VAC++ configuration files for
-		    the sources you have on your system.</li>
+            <li>In the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory,
+            run <code>genICC.cmd</code>. This builds the VAC++ configuration files for
+            the sources you have on your system.</li>
 
-		    <li>Check the generated <code>ICC</code> files to ensure that they didn't pick up some
-		    non-OS/2 platform stuff. This happens when new platform-specific directories
-		    are added to Xerces. If they did pick up new non-OS/2 stuff, either edit it out
-		    of the <code>ICC</code> file or add them to the "ignore" array in <code>genICC.cmd</code> and
-		    re-run <code>genICC</code>.</li>
+            <li>Check the generated <code>ICC</code> files to ensure that they didn't pick up some
+            non-OS/2 platform stuff. This happens when new platform-specific directories
+            are added to Xerces. If they did pick up new non-OS/2 stuff, either edit it out
+            of the <code>ICC</code> file or add them to the "ignore" array in <code>genICC.cmd</code> and
+            re-run <code>genICC</code>.</li>
 
-		    <li>Start the Command Line in the VAC++ folder.</li>
+            <li>Start the Command Line in the VAC++ folder.</li>
 
-		    <li>Navigate to the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory.</li>
+            <li>Navigate to the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code> directory.</li>
 
-		    <li>Run <code>build.cmd</code> This does a migration build.</li>
+            <li>Run <code>build.cmd</code> This does a migration build.</li>
 
-		    <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
-		    This file should contain only informational messages, almost all complaining about constant
-		    values in comparisons.</li>
+            <li>When <code>build.cmd</code> finishes, review the file <code>compiler.errors</code>.
+            This file should contain only informational messages, almost all complaining about constant
+            values in comparisons.</li>
 
-		    <li>You should now have a <code>xerces-c.dll</code> and <code>xerces-c.lib</code>.
-		    The library file is an import library for the DLL.)</li>
+            <li>You should now have a <code>xerces-c.dll</code> and <code>xerces-c.lib</code>.
+            The library file is an import library for the DLL.)</li>
 
-		  </ol>
-	      </s3>
+          </ol>
+          </s3>
 
-	     <s3 title="Packaging the Binaries">
+         <s3 title="Packaging the Binaries">
 
-		  <p>There is an <code>Object Rexx</code> program that will package the binaries and headers.
-		  (See step 1 of the "From scratch" method on how to switch to <code>Object Rexx</code>.) The
-		  <code>packageBinaries.cmd</code> file is in the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code>
-		  directory. Run <code>packageBinaries</code>, giving the source and target directories
-		  like this:</p>
+          <p>There is an <code>Object Rexx</code> program that will package the binaries and headers.
+          (See step 1 of the "From scratch" method on how to switch to <code>Object Rexx</code>.) The
+          <code>packageBinaries.cmd</code> file is in the <code>&XercesCSrcInstallDir;\Projects\OS2\VACPP40</code>
+          directory. Run <code>packageBinaries</code>, giving the source and target directories
+          like this:</p>
 
-		  <source>packageBinaries -s D:\Your\Xerces\Source -o D:\xerces_1_2_0</source>
+          <source>packageBinaries -s D:\Your\Xerces\Source -o D:\xerces_1_3_0</source>
 
-		  <p>(Match the source directory to your system; the target directory can be
-		  anything you want.)</p>
+          <p>(Match the source directory to your system; the target directory can be
+          anything you want.)</p>
 
-		  <note>If you don't want to use the <code>Object Rexx</code> program, you'll need to
-		  manually  copy the "*.hpp" and "*.c" files to an include directory.
-		  (Be sure to maintain the same directory structure that you find under
-		  <code>&XercesCSrcInstallDir;</code>.)</note>
-	</s3>
+          <note>If you don't want to use the <code>Object Rexx</code> program, you'll need to
+          manually  copy the "*.hpp" and "*.c" files to an include directory.
+          (Be sure to maintain the same directory structure that you find under
+          <code>&XercesCSrcInstallDir;</code>.)</note>
+    </s3>
     </s2>
 
     <anchor name="BuildAS400"/>
@@ -671,7 +671,7 @@ following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
     <anchor name="BuildMac"/>
     <s2 title="Building on Macintosh using CodeWarrior">
 
-    	<s3 title="Building &XercesCName; library">
+        <s3 title="Building &XercesCName; library">
             <p>The directions in this file cover installing and building
             &XercesCName; and ICU under the MacOS  using CodeWarrior.</p>
             <ol>
@@ -876,7 +876,7 @@ gmake install</source>
 
         <p>Extract Xerces-C source files from the .zip archive using WinZip, say
         in the root directory. It should create a directory like
-        '<code>\xerces-c-src_1_2_0</code>'.</p>
+        '<code>\xerces-c-src_1_3_0</code>'.</p>
 
         <p>Extract the ICU files, using WinZip, in root directory of the disk
         where you have installed Xerces-C, sources. After extraction, there
@@ -898,10 +898,10 @@ gmake install</source>
         '<code>VCVARS32.BAT</code>' or a similar file. Next at the prompt
         enter:</p>
 
-        <source>    set XERCESCROOT=\xerces-c-src_1_2_0
+        <source>    set XERCESCROOT=\xerces-c-src_1_3_0
 set ICUROOT=\icu
-cd \xerces-c-src_1_2_0\scripts
-perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t icu</source>
+cd \xerces-c-src_1_3_0\scripts
+perl packageBinaries.pl -s \xerces-c-src_1_3_0 -o \temp\xerces-c-1_3_0-win32 -t icu</source>
 
         <p>If everything is setup right and works right, then you should see a
         binary drop created in the target directory specified above. This script
@@ -922,53 +922,53 @@ perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t 
         library that you can use along with the standard &XercesCName; for writing
         VB templates or for use with IE 5.0 using JavaScript.</p>
 
-		<s3 title="Setting up your machine for COM">
-		<p>To build the COM project you will need to install the MS PlatformSDK.
-		Some of the header files we use don't come with Visual C++ 6.0. You may
-		download it from Microsoft's Website at <jump href="http://www.microsoft.com/msdownload/platformsdk/setuplauncher.htm">http://www.microsoft.com/msdownload/platformsdk/setuplauncher.htm</jump>
-		or directly FTP it from <jump href="ftp://ftp.microsoft.com/developr/PlatformSDK/April2000/Msi/WinNT/x86/InstMsi.exe">ftp://ftp.microsoft.com/developr/PlatformSDK/April2000/Msi/WinNT/x86/InstMsi.exe</jump>.</p>
+        <s3 title="Setting up your machine for COM">
+        <p>To build the COM project you will need to install the MS PlatformSDK.
+        Some of the header files we use don't come with Visual C++ 6.0. You may
+        download it from Microsoft's Website at <jump href="http://www.microsoft.com/msdownload/platformsdk/setuplauncher.htm">http://www.microsoft.com/msdownload/platformsdk/setuplauncher.htm</jump>
+        or directly FTP it from <jump href="ftp://ftp.microsoft.com/developr/PlatformSDK/April2000/Msi/WinNT/x86/InstMsi.exe">ftp://ftp.microsoft.com/developr/PlatformSDK/April2000/Msi/WinNT/x86/InstMsi.exe</jump>.</p>
 
-		<p>The installation is huge, but you don't need most of it. So you
-		may do a <em>custom install</em> by just selecting "Build Environment" and
-		choosing the required components. First select the top level Platform SDK.
-		Then click the down arrow and make all of the components unavailable. Next open the
-		"Build Environment" branch and select only the following items:</p>
-		<ul>
-		<li>Win32 API</li>
-		<li>Component Services</li>
-		<li>Web Services - Internet Explorer</li>
-		</ul>
+        <p>The installation is huge, but you don't need most of it. So you
+        may do a <em>custom install</em> by just selecting "Build Environment" and
+        choosing the required components. First select the top level Platform SDK.
+        Then click the down arrow and make all of the components unavailable. Next open the
+        "Build Environment" branch and select only the following items:</p>
+        <ul>
+        <li>Win32 API</li>
+        <li>Component Services</li>
+        <li>Web Services - Internet Explorer</li>
+        </ul>
 
-		<p><em>Important:</em> When the installation is complete you need to update VC6's
-		include path to include <code>..\platformsdk\include\atl30</code>. You do this by
-		choosing "Tools -> Options -> Directories". This path
-		should be placed <ref>second</ref> after the normal PlatformSDK include.
-		You change the order of the paths by clicking the up and down arrows.</p>
+        <p><em>Important:</em> When the installation is complete you need to update VC6's
+        include path to include <code>..\platformsdk\include\atl30</code>. You do this by
+        choosing "Tools -> Options -> Directories". This path
+        should be placed <ref>second</ref> after the normal PlatformSDK include.
+        You change the order of the paths by clicking the up and down arrows.</p>
 
-		<note>The order in which the directories appear on your path is important. Your
-		first include path should be <code>..\platformsdk\include</code>. The second one
-		should be <code>..\platformsdk\include\atl30</code>.</note>
-		</s3>
+        <note>The order in which the directories appear on your path is important. Your
+        first include path should be <code>..\platformsdk\include</code>. The second one
+        should be <code>..\platformsdk\include\atl30</code>.</note>
+        </s3>
 
-		<s3 title="Building COM module for &XercesCName;">
-		<p>Once you have set up your machine, build &XercesCName; COM module
-		by choosing the project named 'xml4com' inside the workspace. Then select your
-		build mode to be <em>xml4com - Win32 Release MinDependency</em>. Finally build the
-		project. This will produce a DLL named <code>xerces-com.dll</code> which needs
-		to be present in your path (on local machine) before you can use it.</p>
-		</s3>
+        <s3 title="Building COM module for &XercesCName;">
+        <p>Once you have set up your machine, build &XercesCName; COM module
+        by choosing the project named 'xml4com' inside the workspace. Then select your
+        build mode to be <em>xml4com - Win32 Release MinDependency</em>. Finally build the
+        project. This will produce a DLL named <code>xerces-com.dll</code> which needs
+        to be present in your path (on local machine) before you can use it.</p>
+        </s3>
 
-		<s3 title="Testing the COM module">
-		<p>There are some sample test programs in the <code>test/COMTest</code>
-		directory which show examples of navigating and searching an XML tree
-		using DOM. You need to browse the HTML files in this directory using
-		IE 5.0. Make sure that your build has worked properly, specially the
-		registration of the ActiveX controls that happens in the final step.</p>
-		<p>You may also want to check out the NIST DOM test suite at
-		<jump href="http://xw2k.sdct.itl.nist.gov/BRADY/DOM/">http://xw2k.sdct.itl.nist.gov/BRADY/DOM/</jump>.
-		You will have to modify the documents in the NIST suite to load the
-		Xerces COM object instead of the MSIE COM object.</p>
-		</s3>
+        <s3 title="Testing the COM module">
+        <p>There are some sample test programs in the <code>test/COMTest</code>
+        directory which show examples of navigating and searching an XML tree
+        using DOM. You need to browse the HTML files in this directory using
+        IE 5.0. Make sure that your build has worked properly, specially the
+        registration of the ActiveX controls that happens in the final step.</p>
+        <p>You may also want to check out the NIST DOM test suite at
+        <jump href="http://xw2k.sdct.itl.nist.gov/BRADY/DOM/">http://xw2k.sdct.itl.nist.gov/BRADY/DOM/</jump>.
+        You will have to modify the documents in the NIST suite to load the
+        Xerces COM object instead of the MSIE COM object.</p>
+        </s3>
 
     </s2>
 
@@ -1244,7 +1244,7 @@ perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t 
          <p>For Aix - </p>
          <ul>
          <li>Replace <code>xlc_r</code> and <code>xlC_r</code> libraries with
-         	<code>xlc</code> and <code>xlC</code> respectively</li>
+            <code>xlc</code> and <code>xlC</code> respectively</li>
          <li>Replace <code>makeC++SharedLib_r</code> with <code>makeC++SharedLib</code></li>
          <li>Remove the flag <code>-D_THREAD_SAFE</code></li>
          <li>Remove inclusion of any threaded library directories from the <code>LIBPATH</code></li>
@@ -1256,29 +1256,29 @@ perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t 
         <p>For Solaris -</p>
          <ul>
           <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under SOLARIS
-          	specific options in <code>Makefile.incl</code></li>
+            specific options in <code>Makefile.incl</code></li>
           <li>Remove compiler switch <code>-mt</code></li>
           <li>Remove <code>-D_REENTRANT</code> flag from the 'compile' options</li>
-	  <li>Remove inclusion of <code>-lpthread</code></li>
-	</ul>
+      <li>Remove inclusion of <code>-lpthread</code></li>
+    </ul>
 
-	<p>For Linux -</p>
+    <p>For Linux -</p>
         <ul>
          <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under LINUX
-        	specific options in <code>Makefile.incl</code></li>
-	 <li>Remove <code>-D_REENTRANT</code> flag from the 'compile' options</li>
-	 <li>Remove inclusion of <code>-lpthread</code></li>
-	</ul>
+            specific options in <code>Makefile.incl</code></li>
+     <li>Remove <code>-D_REENTRANT</code> flag from the 'compile' options</li>
+     <li>Remove inclusion of <code>-lpthread</code></li>
+    </ul>
 
 
-	<p>For HPUX -</p>
+    <p>For HPUX -</p>
         <ul>
          <li>Add <code>-DAPP_NO_THREADS</code> to define the variable under HP
-        	specific options in <code>Makefile.incl</code></li>
-	 <li>Remove inclusion of <code>-lpthread</code> and <code>-lcma</code></li>
-	 <li>Remove threading defines like <code>-D_PTHREADS_DRAFT4 ,
-	 	-DXML_USE_DCE</code></li>
-	</ul>
+            specific options in <code>Makefile.incl</code></li>
+     <li>Remove inclusion of <code>-lpthread</code> and <code>-lcma</code></li>
+     <li>Remove threading defines like <code>-D_PTHREADS_DRAFT4 ,
+        -DXML_USE_DCE</code></li>
+    </ul>
 
          </s2>
 

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/08/18 21:29:14  andyh
+ * Change version to 1.3 in preparation for upcoming Xerces 1.3
+ * and XML4C 3.3 stable releases
+ *
  * Revision 1.6  2000/08/07 20:31:34  jpolast
  * include SAX2_EXPORT module
  *
@@ -134,9 +138,9 @@
 //  These are updated for every build. They must be at the top because they
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
-#define Xerces_DLLVersionStr "1_2"
-static const char* const    gXercesVersionStr = "1_2";
-static const char* const    gXercesFullVersionStr = "1_2_0";
+#define Xerces_DLLVersionStr "1_3"
+static const char* const    gXercesVersionStr = "1_3";
+static const char* const    gXercesFullVersionStr = "1_3_0";
 static const unsigned int   gXercesMajVersion = 1;
 static const unsigned int   gXercesMinVersion = 2;
 static const unsigned int   gXercesRevision   = 0;
