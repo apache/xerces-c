@@ -858,6 +858,11 @@ static const int kMaxSubAllocationSize = 4096;   // Any request for more bytes
 
 void *         IDDocumentImpl::allocate(size_t amount)
 {
+
+     size_t sizeOfPointer = sizeof(void *);
+     if (amount%sizeOfPointer!=0)
+       amount = amount + (sizeOfPointer - (amount % sizeOfPointer));
+
     // If the request is for a largish block, hand it off to the system
     //   allocator.  The block still must be linked into the list of
     //   allocated blocks so that it will be deleted when the time comes.
@@ -884,7 +889,7 @@ void *         IDDocumentImpl::allocate(size_t amount)
             fFreePtr = 0;
             fFreeBytesRemaining = 0;
         }
-        void *retPtr = (char *)newBlock + 4;
+        void *retPtr = (char *)newBlock + sizeOfPointer;
         return retPtr;
     }
 
