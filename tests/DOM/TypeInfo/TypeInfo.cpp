@@ -93,7 +93,7 @@ public :
 
     ~XStr()
     {
-        delete [] fUnicodeForm;
+        XMLString::release(&fUnicodeForm);
     }
 
 
@@ -135,7 +135,7 @@ public :
 
     ~StrX()
     {
-        delete [] fLocalForm;
+        XMLString::release(&fLocalForm);
     }
 
 

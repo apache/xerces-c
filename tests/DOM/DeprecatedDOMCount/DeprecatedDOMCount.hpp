@@ -137,7 +137,7 @@ public :
 
     ~StrX()
     {
-        delete [] fLocalForm;
+        XMLString::release(&fLocalForm);
     }
 
 

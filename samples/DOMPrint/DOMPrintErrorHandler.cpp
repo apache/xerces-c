@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2003/02/05 18:53:22  tng
+ * [Bug 11915] Utility for freeing memory.
+ *
  * Revision 1.4  2002/12/10 15:36:36  tng
  * DOMPrint minor update: print error message to cerr.
  *
@@ -90,7 +93,7 @@ bool DOMPrintErrorHandler::handleError(const DOMError &domError)
 
     char *msg = XMLString::transcode(domError.getMessage());
     cerr<< msg <<endl;
-    delete[] msg;
+    XMLString::release(&msg);
 
     // Instructs the serializer to continue serialization if possible.
     return true;

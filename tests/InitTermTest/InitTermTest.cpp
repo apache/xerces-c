@@ -247,9 +247,9 @@ int TestInit4SAX2(const char* xmlFile, bool gDoNamespaces, bool gDoSchema, bool 
     XMLCh* fullSchemaCheckFeature = XMLString::transcode("http://apache.org/xml/features/validation/schema-full-checking");
     parser->setFeature(fullSchemaCheckFeature, gSchemaFullChecking);
 
-    delete [] doNamespaceFeature;
-    delete [] doSchemaFeature;
-    delete [] fullSchemaCheckFeature;
+    XMLString::release(&doNamespaceFeature);
+    XMLString::release(&doSchemaFeature);
+    XMLString::release(&fullSchemaCheckFeature);
 
     TESTINITPOST;
 }

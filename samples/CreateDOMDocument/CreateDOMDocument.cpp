@@ -92,7 +92,7 @@ public :
 
     ~XStr()
     {
-        delete [] fUnicodeForm;
+        XMLString::release(&fUnicodeForm);
     }
 
 
@@ -135,7 +135,7 @@ int main(int argC, char* argV[])
         cerr << "Error during Xerces-c Initialization.\n"
              << "  Exception message:"
              << pMsg;
-        delete [] pMsg;
+        XMLString::release(&pMsg);
         return 1;
     }
 

@@ -210,7 +210,7 @@
        printf("Use your own copy of the oldNodeValue if want to reference the string later\n");
 
    // delete your own replicated string when done
-   delete [] oldNodeValue;
+   XMLString::release(&amp;oldNodeValue);
 
        </source>
 
@@ -243,7 +243,7 @@
        printf("Use your own copy of the oldNodeValue if want to reference the string later\n");
 
    // delete your own replicated string when done
-   delete [] oldNodeValue;
+   XMLString::release(&amp;oldNodeValue);
 
        </source>
 
@@ -280,7 +280,7 @@
             char* message = XMLString::transcode(toCatch.getMessage());
             cout &lt;&lt; "Error during initialization! :\n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return 1;
         }
 
@@ -300,14 +300,14 @@
             char* message = XMLString::transcode(toCatch.getMessage());
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return -1;
         }
         catch (const DOMException&amp; toCatch) {
             char* message = XMLString::transcode(toCatch.msg);
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return -1;
         }
         catch (...) {
@@ -657,7 +657,7 @@
             char* message = XMLString::transcode(toCatch.getMessage());
             cout &lt;&lt; "Error during initialization! :\n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return 1;
         }
 
@@ -691,14 +691,14 @@
             char* message = XMLString::transcode(toCatch.getMessage());
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return -1;
         }
         catch (const DOMException&amp; toCatch) {
             char* message = XMLString::transcode(toCatch.msg);
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return -1;
         }
         catch (...) {
@@ -1295,14 +1295,14 @@
             char* message = XMLString::transcode(toCatch.getMessage());
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return -1;
         }
         catch (const DOMException&amp; toCatch) {
             char* message = XMLString::transcode(toCatch.msg);
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return -1;
         }
         catch (...) {
@@ -1575,27 +1575,27 @@
            </s4>
 
            <s4 title="Xerces Features">
-            <anchor name="byte-order-mark"/>           
+            <anchor name="byte-order-mark"/>
             <table>
                 <tr><th colspan="2"><em>byte-order-mark</em></th></tr>
-                <tr><th><em>true:</em></th><td> Enable the writing of the Byte-Order-Mark (BOM), in the resultant XML stream. 
+                <tr><th><em>true:</em></th><td> Enable the writing of the Byte-Order-Mark (BOM), in the resultant XML stream.
                                                 </td></tr>
                 <tr><th><em>false:</em></th><td> Disable the writing of BOM. </td></tr>
-                <tr><th><em>note:</em></th><td> The BOM is written at the beginning of the resultant XML stream, 
-                                                if and only if a DOMDocumentNode is rendered for serialization, 
+                <tr><th><em>note:</em></th><td> The BOM is written at the beginning of the resultant XML stream,
+                                                if and only if a DOMDocumentNode is rendered for serialization,
                                                 and the output encoding is among the encodings listed here (alias
                                                 acceptable),
                                                 UTF-16, UTF-16LE, UTF-16BE, UCS-4, UCS-4LE, and UCS-4BE.
-                                                
+
                                                 In the case of UTF-16/UCS-4, the system directive, ENDIANMODE_LITTLE
                                                 and ENDIANMODE_BIG (which denotes the host machine's endian mode),
-                                                is refered to determine the appropriate BOM to be written. 
+                                                is refered to determine the appropriate BOM to be written.
                 </td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>see:</em></th><td>
                 <jump href="http://www.w3.org/TR/REC-xml#sec-guessing"> XML 1.0 Appendix F </jump>
                 for more information about BOM.
-                </td></tr>                
+                </td></tr>
             </table>
            </s4>
         </s3>

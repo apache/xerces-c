@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/02/05 18:53:23  tng
+ * [Bug 11915] Utility for freeing memory.
+ *
  * Revision 1.1  2000/08/02 19:16:14  jpolast
  * initial checkin of SAX2Print
  *
@@ -89,7 +92,7 @@ public :
 
     ~StrX()
     {
-        delete [] fLocalForm;
+        XMLString::release(&fLocalForm);
     }
 
     // -----------------------------------------------------------------------

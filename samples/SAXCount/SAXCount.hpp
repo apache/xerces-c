@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/02/05 18:53:24  tng
+ * [Bug 11915] Utility for freeing memory.
+ *
  * Revision 1.5  2002/02/01 22:41:07  peiyongz
  * sane_include
  *
@@ -108,7 +111,7 @@ public :
 
     ~StrX()
     {
-        delete [] fLocalForm;
+        XMLString::release(&fLocalForm);
     }
 
     // -----------------------------------------------------------------------

@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.15  2003/02/05 18:55:20  tng
+ * [Bug 11915] Utility for freeing memory.
+ *
  * Revision 1.14  2002/11/12 17:52:12  tng
  * Test update: do not issue "Test Run Successfully" if there was an error.
  *
@@ -203,7 +206,7 @@ int  main()
         char *pMessage = XMLString::transcode(toCatch.getMessage());
         fprintf(stderr, "Error during XMLPlatformUtils::Initialize(). \n"
                         "  Message is: %s\n", pMessage);
-        delete [] pMessage;
+        XMLString::release(&pMessage);
         return -1;
     }
 

@@ -64,7 +64,7 @@ MySAX2Handler::startElement(const   XMLCh* const    uri,
 {
     char* message = XMLString::transcode(name);
     cout &lt;&lt; "I saw element: "&lt;&lt; message &lt;&lt; endl;
-    delete [] message;
+    XMLString::release(&amp;message);
 }
 
 MySAX2Handler::fatalError(const SAXParseException&amp; exception)
@@ -108,7 +108,7 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
             cout &lt;&lt; "Error during initialization! :\n"
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return 1;
         }
 
@@ -128,14 +128,14 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
             char* message = XMLString::transcode(toCatch.getMessage());
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return -1;
         }
         catch (const SAXParseException&amp; toCatch) {
             char* message = XMLString::transcode(toCatch.getMessage());
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return -1;
         }
         catch (...) {

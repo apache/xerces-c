@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2003/02/05 18:53:24  tng
+ * [Bug 11915] Utility for freeing memory.
+ *
  * Revision 1.14  2003/01/14 15:32:45  knoaman
  * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
  *
@@ -144,7 +147,7 @@ public :
 
     ~StrX()
     {
-        delete [] fLocalForm;
+        XMLString::release(&fLocalForm);
     }
 
 

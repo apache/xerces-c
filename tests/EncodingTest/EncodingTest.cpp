@@ -114,8 +114,8 @@ void ParseErrorHandler::error(const SAXParseException& e)
         systemId, e.getLineNumber(),
         e.getColumnNumber(), message);
 
-    delete [] systemId;
-    delete [] message;
+    XMLString::release(&systemId);
+    XMLString::release(&message);
     throw e;
 
 };
@@ -129,8 +129,8 @@ void ParseErrorHandler::fatalError(const SAXParseException& e)
         systemId, e.getLineNumber(),
         e.getColumnNumber(), message);
 
-    delete [] systemId;
-    delete [] message;
+    XMLString::release(&systemId);
+    XMLString::release(&message);
     throw e;
 };
 
@@ -143,8 +143,8 @@ void ParseErrorHandler::warning(const SAXParseException& e)
         systemId, e.getLineNumber(),
         e.getColumnNumber(), message);
 
-    delete [] systemId;
-    delete [] message;
+    XMLString::release(&systemId);
+    XMLString::release(&message);
     throw e;
 
 };

@@ -1670,7 +1670,7 @@ void XMLString::removeWS(XMLCh* const toConvert)
              ( *startPtr != chLF)    &&
              ( *startPtr != chHTab)  &&
              ( *startPtr != chSpace)  )
-        {           
+        {
             *retPtr++ = *startPtr;
         }
 
@@ -1750,6 +1750,23 @@ void XMLString::fixURI(const XMLCh* const str, XMLCh* const target)
     }
 }
 
+void XMLString::release(char** buf)
+{
+    delete [] *buf;
+    *buf = 0;
+}
+
+void XMLString::release(XMLCh** buf)
+{
+    delete [] *buf;
+    *buf = 0;
+}
+
+void XMLString::release(XMLByte** buf)
+{
+    delete [] *buf;
+    *buf = 0;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLString: Private static methods

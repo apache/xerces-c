@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/02/05 18:50:56  tng
+ * [Bug 11915] Utility for freeing memory.
+ *
  * Revision 1.12  2003/01/24 23:16:33  peiyongz
  * removeWS() added;
  *
@@ -239,187 +242,7 @@ class XMLUTIL_EXPORT XMLString
 {
 public:
     /* Static methods for native character mode string manipulation */
-    /** @name Conversion functions */
-    //@{
 
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * will be done
-      */
-    static void binToText
-    (
-        const   unsigned int    toFormat
-        ,       char* const     toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * will be done
-      */
-    static void binToText
-    (
-        const   unsigned int    toFormat
-        ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * will be done
-      */
-    static void binToText
-    (
-        const   unsigned long   toFormat
-        ,       char* const     toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * will be done
-      */
-    static void binToText
-    (
-        const   unsigned long   toFormat
-        ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * will be done
-      */
-    static void binToText
-    (
-        const   long            toFormat
-        ,       char* const     toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * will be done
-      */
-    static void binToText
-    (
-        const   long            toFormat
-        ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * will be done
-      */
-    static void binToText
-    (
-        const   int             toFormat
-        ,       char* const     toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    /** Converts binary data to a text string based a given radix
-      *
-      * @param toFormat The beginning of the input string to convert
-      * @param toFill The buffer that will hold the output on return. The
-      *        size of this buffer should at least be 'maxChars + 1'.
-      * @param maxChars The maximum number of output characters that can be
-      *         accepted. If the result will not fit, it is an error.
-      * @param radix The radix of the input data, based on which the conversion
-      * will be done
-      */
-    static void binToText
-    (
-        const   int             toFormat
-        ,       XMLCh* const    toFill
-        , const unsigned int    maxChars
-        , const unsigned int    radix
-    );
-
-    /**
-      * Converts a string of decimal chars to a binary value
-      *
-      * Note that leading and trailng whitespace is legal and will be ignored
-      * but the remainder must be all decimal digits.
-      *
-      * @param toConvert The string of digits to convert
-      * @param toFill    The unsigned int value to fill with the converted
-      *                  value.
-      */
-    static bool textToBin
-    (
-        const   XMLCh* const    toConvert
-        ,       unsigned int&   toFill
-    );
-
-    /**
-      * Converts a string of decimal chars to a binary value
-      *
-      * Note that leading and trailng whitespace is legal and will be ignored,
-      *
-      * Only one and either of (+,-) after the leading whitespace, before
-      * any other characters are allowed.
-      *
-      * but the remainder must be all decimal digits.
-      *
-      * @param toConvert The string of digits to convert
-      */
-    static int parseInt
-    (
-        const   XMLCh* const    toConvert
-    );
-
-    //@}
 
     /** @name String concatenation functions */
     //@{
@@ -932,7 +755,7 @@ public:
 
     //@}
 
-	    /** @name Substring function */
+    /** @name Substring function */
     //@{
     /** Create a substring of a givend string. The substring begins at the
       * specified beginIndex and extends to the character at index
@@ -971,14 +794,24 @@ public:
     /** @name Replication function */
     //@{
     /** Replicates a string
+      * NOTE: The returned buffer is dynamically allocated and is the
+      * responsibility of the caller to delete it when not longer needed.
+      * You can call XMLString::release to release this returned buffer.
+      *
       * @param toRep The string to replicate
       * @return Returns a pointer to the replicated string
+      * @see   XMLString::release(char**)
       */
     static char* replicate(const char* const toRep);
 
     /** Replicates a string
+      * NOTE: The returned buffer is dynamically allocated and is the
+      * responsibility of the caller to delete it when not longer needed.
+      * You can call XMLString::release to release this returned buffer.
+
       * @param toRep The string to replicate
       * @return Returns a pointer to the replicated string
+      * @see   XMLString::release(XMLCh**)
       */
     static XMLCh* replicate(const XMLCh* const toRep);
 
@@ -1172,10 +1005,194 @@ public:
       */
     static bool isAllWhiteSpace(const XMLCh* const toCheck);
 
+    /** Find is the string appears in the enum list
+      * @param toFind the string to be found
+      * @param enumList the list
+      * return true if found
+      */
+    static bool isInList(const XMLCh* const toFind, const XMLCh* const enumList);
+
     //@}
 
     /** @name Conversion functions */
     //@{
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
+      */
+    static void binToText
+    (
+        const   unsigned int    toFormat
+        ,       char* const     toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
+      */
+    static void binToText
+    (
+        const   unsigned int    toFormat
+        ,       XMLCh* const    toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
+      */
+    static void binToText
+    (
+        const   unsigned long   toFormat
+        ,       char* const     toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
+      */
+    static void binToText
+    (
+        const   unsigned long   toFormat
+        ,       XMLCh* const    toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
+      */
+    static void binToText
+    (
+        const   long            toFormat
+        ,       char* const     toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
+      */
+    static void binToText
+    (
+        const   long            toFormat
+        ,       XMLCh* const    toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
+      */
+    static void binToText
+    (
+        const   int             toFormat
+        ,       char* const     toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /** Converts binary data to a text string based a given radix
+      *
+      * @param toFormat The beginning of the input string to convert
+      * @param toFill The buffer that will hold the output on return. The
+      *        size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
+      */
+    static void binToText
+    (
+        const   int             toFormat
+        ,       XMLCh* const    toFill
+        , const unsigned int    maxChars
+        , const unsigned int    radix
+    );
+
+    /**
+      * Converts a string of decimal chars to a binary value
+      *
+      * Note that leading and trailng whitespace is legal and will be ignored
+      * but the remainder must be all decimal digits.
+      *
+      * @param toConvert The string of digits to convert
+      * @param toFill    The unsigned int value to fill with the converted
+      *                  value.
+      */
+    static bool textToBin
+    (
+        const   XMLCh* const    toConvert
+        ,       unsigned int&   toFill
+    );
+
+    /**
+      * Converts a string of decimal chars to a binary value
+      *
+      * Note that leading and trailng whitespace is legal and will be ignored,
+      *
+      * Only one and either of (+,-) after the leading whitespace, before
+      * any other characters are allowed.
+      *
+      * but the remainder must be all decimal digits.
+      *
+      * @param toConvert The string of digits to convert
+      */
+    static int parseInt
+    (
+        const   XMLCh* const    toConvert
+    );
 
     /** Cut leading chars from a string
       *
@@ -1192,9 +1209,11 @@ public:
       *
       * NOTE: The returned buffer is dynamically allocated and is the
       * responsibility of the caller to delete it when not longer needed.
+      * You can call XMLString::release to release this returned buffer.
       *
       * @param toTranscode The string to be transcoded
       * @return Returns the transcoded string
+      * @see   XMLString::release(XMLCh**)
       */
     static char* transcode
     (
@@ -1228,9 +1247,11 @@ public:
       *
       * NOTE: The returned buffer is dynamically allocated and is the
       * responsibility of the caller to delete it when not longer needed.
+      * You can call XMLString::release to release this returned buffer.
       *
       * @param toTranscode The string to be transcoded
       * @return Returns the transcoded string
+      * @see   XMLString::release(char**)
       */
     static XMLCh* transcode
     (
@@ -1276,13 +1297,6 @@ public:
       * @return a vector of all the tokenized string
       */
     static BaseRefVectorOf<XMLCh>* tokenizeString(const XMLCh* const tokenizeSrc);
-
-    /** Find is the string appears in the enum list
-      * @param toFind the string to be found
-      * @param enumList the list
-      * return true if found
-      */
-    static bool isInList(const XMLCh* const toFind, const XMLCh* const enumList);
 
     //@}
 
@@ -1375,6 +1389,34 @@ public:
      * @param target The target string pre-allocated to store the fixed uri
      */
     static void fixURI(const XMLCh* const str, XMLCh* const target);
+
+    //@}
+    /** @name String Memory Management functions */
+    //@{
+    /**
+     * Release the parameter char string that was allocated by the implementation (i.e.the parser).
+     *   The implementation will call operator delete[] and then turn the string to a null pointer.
+     *
+     * @param buf  The string to be deleted and become a null pointer.
+     */
+    static void release(char** buf);
+
+    /**
+     * Release the parameter XMLCh string that was allocated by the implementation (i.e.the parser).
+     *   The implementation will call operator delete[] and then turn the string to a null pointer.
+     *
+     * @param buf  The string to be deleted and become a null pointer.
+     */
+    static void release(XMLCh** buf);
+
+    /**
+     * Release the parameter XMLByte string that was allocated by the implementation (i.e.the parser).
+     *   The implementation will call operator delete[] and then turn the string to a null pointer.
+     *
+     * @param buf  The string to be deleted and become a null pointer.
+     */
+    static void release(XMLByte** buf);
+
     //@}
 
 

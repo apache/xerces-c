@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.39  2003/02/05 18:55:19  tng
+ * [Bug 11915] Utility for freeing memory.
+ *
  * Revision 1.38  2003/01/29 20:04:09  gareth
  * testing for DOMTypeInfo
  *
@@ -815,7 +818,7 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
     EXCEPTIONSTEST(docBodyLevel32->removeChild(docFirstElement), DOMException::NOT_FOUND_ERR, OK, 15);
     EXCEPTIONSTEST(docBodyLevel32->replaceChild(docTextNode11,docFirstElement ), DOMException::NOT_FOUND_ERR, OK, 16);
 
-    delete [] name;
+    XMLString::release(&name);
 
     return OK;
 
@@ -971,7 +974,7 @@ int main(int argc, char **argv)
          catch (const XMLException& toCatch) {
              char *pMessage = XMLString::transcode(toCatch.getMessage());
              fprintf(stderr, "Error during initialization! \n  %s \n", pMessage);
-             delete [] pMessage;
+             XMLString::release(&pMessage);
              return -1;
          }
 

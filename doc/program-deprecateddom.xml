@@ -282,7 +282,7 @@
             char* message = XMLString::transcode(toCatch.getMessage());
             cout &lt;&lt; "Error during initialization! :\n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return 1;
         }
 
@@ -301,7 +301,7 @@
             char* message = XMLString::transcode(toCatch.getMessage());
             cout &lt;&lt; "Exception message is: \n"
                  &lt;&lt; message &lt;&lt; "\n";
-            delete [] message;
+            XMLString::release(&amp;message);
             return -1;
         }
         catch (const DOM_DOMException&amp; toCatch) {

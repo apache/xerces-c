@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/02/05 18:53:24  tng
+ * [Bug 11915] Utility for freeing memory.
+ *
  * Revision 1.4  2000/03/02 19:53:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -102,7 +105,7 @@ public :
 
     ~StrX()
     {
-        delete [] fLocalForm;
+        XMLString::release(&fLocalForm);
     }
 
     // -----------------------------------------------------------------------

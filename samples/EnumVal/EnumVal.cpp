@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2003/02/05 18:53:23  tng
+ * [Bug 11915] Utility for freeing memory.
+ *
  * Revision 1.18  2002/11/05 21:46:19  tng
  * Explicit code using namespace in application.
  *
@@ -155,7 +158,7 @@ public :
 
     ~StrX()
     {
-        delete [] fLocalForm;
+        XMLString::release(&fLocalForm);
     }
 
 

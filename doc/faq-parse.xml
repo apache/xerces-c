@@ -585,6 +585,11 @@ catch (const XMLException&amp; toCatch) {
 
       <p>Or for example for a Win32/BCB6 build, application need to switch to Multithreaded
          runtime to avoid such memory access violation.</p>
+
+      <p>To bypass such problem, instead of calling operator delete[] directly, you can use the
+         provided function XMLString::release to delete any string that was allocated by the parser.
+         This will ensure the string is allocated and deleted by the same DLL and such assertion
+         problem should be resolved.</p>
     </a>
   </faq>
 

@@ -300,13 +300,21 @@ catch (const XMLException&amp; toCatch) {
   <faq title="Why does deleting a transcoded string result in assertion on windows?">
     <q>Why does deleting a transcoded string result in assertion on windows?</q>
     <a>
-      <p>Both your application program and the Xerces DLL must use the same *DLL* version of the
+      <p>Both your application program and the &XercesCName; DLL must use the same *DLL* version of the
          runtime library.  If either statically links to the runtime library, the
-		 problem will still occur.
+		 problem will still occur.</p>
 
-         For example, for a Win32/VC6 build, the runtime library build setting MUST
+      <p>For example, for a Win32/VC6 build, the runtime library build setting MUST
 		 be "Multithreaded DLL" for release builds and "Debug Multithreaded DLL" for
 		 debug builds.</p>
+
+      <p>Or for example for a Win32/BCB6 build, application need to switch to Multithreaded
+         runtime to avoid such memory access violation.</p>
+
+      <p>To bypass such problem, instead of calling operator delete[] directly, you can use the
+         provided function XMLString::release to delete any string that was allocated by the parser.
+         This will ensure the string is allocated and deleted by the same DLL and such assertion
+         problem should be resolved.</p>
     </a>
   </faq>
 

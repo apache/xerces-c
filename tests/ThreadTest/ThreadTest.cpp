@@ -431,7 +431,7 @@ int ThreadParser::parse(int fileNum)
         char *exceptionMessage = XMLString::transcode(e.getMessage());
         fprintf(stderr, " during parsing: %s \n Exception message is: %s \n",
             fInfo->fileName, exceptionMessage);
-        delete [] exceptionMessage;
+        XMLString::release(&exceptionMessage);
         errors = true;
     }
     catch (const DOMException& toCatch)
@@ -445,7 +445,7 @@ int ThreadParser::parse(int fileNum)
         char *exceptionMessage = XMLString::transcode(e.getMessage());
         fprintf(stderr, " during parsing: %s \n Exception message is: %s \n",
             fInfo->fileName, exceptionMessage);
-        delete [] exceptionMessage;
+        XMLString::release(&exceptionMessage);
         errors = true;
     }
     catch (...)
@@ -808,7 +808,7 @@ void clearFileInfoMemory()
         for (fileNum = 0; fileNum <gRunInfo.numInputFiles; fileNum++)
         {
             InFileInfo *fInfo = &gRunInfo.files[fileNum];
-            delete [] fInfo->uFileName;
+            XMLString::release(&fInfo->uFileName);
             delete [] fInfo->fileContent;
         }
     }

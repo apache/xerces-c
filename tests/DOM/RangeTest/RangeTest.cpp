@@ -197,7 +197,7 @@ int  main()
         char *pMessage = XMLString::transcode(toCatch.getMessage());
         fprintf(stderr, "Error during XMLPlatformUtils::Initialize(). \n"
                         "  Message is: %s\n", pMessage);
-        delete [] pMessage;
+        XMLString::release(&pMessage);
         return -1;
     }
 

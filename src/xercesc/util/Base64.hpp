@@ -84,11 +84,16 @@ public :
     /**
      * Encodes octets into Base64 data
      *
+     * NOTE: The returned buffer is dynamically allocated and is the
+     * responsibility of the caller to delete it when not longer needed.
+     * You can call XMLString::release to release this returned buffer.
+     *
      * @param inputData Binary data in XMLByte stream.
      * @param inputLength Length of the XMLByte stream.
      * @param outputLength Length of the encoded Base64 byte stream.
      * @return Encoded Base64 data in XMLByte stream,
      *      or NULL if input data can not be encoded.
+     * @see   XMLString::release(XMLByte**)
      */
     static XMLByte* encode(const XMLByte* const inputData,
                            const unsigned int   inputLength,
@@ -97,10 +102,15 @@ public :
     /**
      * Decodes Base64 data into octets
      *
+     * NOTE: The returned buffer is dynamically allocated and is the
+     * responsibility of the caller to delete it when not longer needed.
+     * You can call XMLString::release to release this returned buffer.
+     *
      * @param inputData Base64 data in XMLByte stream.
      * @param outputLength Length of decoded XMLByte stream.
      * @return Decoded binary data in XMLByte stream,
-	 *      or NULL if input data can not be decoded.
+     *      or NULL if input data can not be decoded.
+     * @see   XMLString::release(XMLByte**)
      */
     static XMLByte* decode(const XMLByte* const inputData,
                            unsigned int*        outputLength);
@@ -108,10 +118,15 @@ public :
     /**
      * Decodes Base64 data into XMLCh
      *
+     * NOTE: The returned buffer is dynamically allocated and is the
+     * responsibility of the caller to delete it when not longer needed.
+     * You can call XMLString::release to release this returned buffer.
+     *
      * @param inputData Base64 data in XMLCh stream.
      * @param outputLength Length of decoded XMLCh stream
      * @return Decoded binary data in XMLCh stream,
      *      or NULL if input data can not be decoded.
+     * @see   XMLString::release(XMLCh**)
      */
     static XMLCh* decode(const XMLCh* const inputData,
                          unsigned int*      outputLength);
