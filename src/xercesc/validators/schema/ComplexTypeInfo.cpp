@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/10/08 21:33:48  peiyongz
+ * Synchronize ContentSpec/ContentModel/FormattedModel
+ *
  * Revision 1.10  2003/09/26 18:31:05  peiyongz
  * Synchronize ContentSpecNode and formattedModel
  *
@@ -270,12 +273,8 @@ void ComplexTypeInfo::setContentSpec(ContentSpecNode* const toAdopt) {
 
     fContentSpec = toAdopt;
 
-    // reset formattedModel
-    if (fFormattedModel)
-    {
-        fMemoryManager->deallocate(fFormattedModel);
-        fFormattedModel = 0;
-    }
+    //reset Content Model
+    setContentModel(0);
 }
 
 void ComplexTypeInfo::setLocator(XSDLocator* const aLocator) {

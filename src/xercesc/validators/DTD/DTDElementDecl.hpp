@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/08 21:33:18  peiyongz
+ * Synchronize ContentSpec/ContentModel/FormattedModel
+ *
  * Revision 1.5  2003/05/16 21:43:19  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -304,6 +307,13 @@ DTDElementDecl::setContentModel(XMLContentModel* const newModelToAdopt)
 {
     delete fContentModel;
     fContentModel = newModelToAdopt;
+
+    // reset formattedModel
+    if (fFormattedModel)
+    {
+        getMemoryManager()->deallocate(fFormattedModel);
+        fFormattedModel = 0;
+    }
 }
 
 // ---------------------------------------------------------------------------

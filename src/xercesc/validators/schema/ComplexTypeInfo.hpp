@@ -536,6 +536,13 @@ ComplexTypeInfo::setContentModel(XMLContentModel* const newModelToAdopt)
 {
     delete fContentModel;
     fContentModel = newModelToAdopt;
+
+    // reset formattedModel
+    if (fFormattedModel)
+    {
+        fMemoryManager->deallocate(fFormattedModel);
+        fFormattedModel = 0;
+    }
 }
 
 
