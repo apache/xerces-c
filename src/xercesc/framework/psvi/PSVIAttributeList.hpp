@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/11/26 16:20:37  neilg
+ * more complete implementation of PSVIAttributeList; remove some problematic const-ness
+ *
  * Revision 1.2  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -124,7 +127,7 @@ public:
      * @return PSVIAttribute containing the attributes PSVI contributions;
      * null is returned if the index is out of range.
      */
-    const PSVIAttribute *getAttributePSVIAtIndex(const unsigned int index);
+    PSVIAttribute *getAttributePSVIAtIndex(const unsigned int index);
 
     /*
      * Get local part of attribute name at position index in the list.
@@ -153,7 +156,7 @@ public:
      * @param attrNamespace  namespace of the attribute
      * @return null if the attribute PSVI does not exist
      */
-    const PSVIAttribute *getAttributePSVIByName(const XMLCh *attrName
+    PSVIAttribute *getAttributePSVIByName(const XMLCh *attrName
                     , const XMLCh * attrNamespace);
 
     //@}
@@ -162,6 +165,18 @@ public:
     /** methods needed by implementation */
 
     //@{
+
+    /**
+      * returns a PSVI attribute of undetermined state and 
+      * makes that object part of the internal list.  Intended to be called
+      * during validation of an element.
+      */
+    PSVIAttribute *getPSVIAttributeToFill();
+
+    /**
+      * reset the list
+      */
+    void reset();
 
     //@}
 
@@ -179,10 +194,39 @@ private:
     // -----------------------------------------------------------------------
     // fMemoryManager
     //  handler to provide dynamically-need memory
+    // fAttrList
+    //  list of PSVIAttributes contained by this object
+    // fAttrPos
+    //  current number of valid PSVIAttributes in fAttrList
     MemoryManager*                  fMemoryManager;
     ValueVectorOf<PSVIAttribute*>*  fAttrList;
+    unsigned int                    fAttrPos;
 };
-inline PSVIAttributeList::~PSVIAttributeList() {}
+inline PSVIAttributeList::~PSVIAttributeList() 
+{
+    delete fAttrList;
+}
+
+inline PSVIAttribute *PSVIAttributeList::getPSVIAttributeToFill()
+{
+    PSVIAttribute *retAttr = 0;
+    if(fAttrPos+1 == fAttrList->size())
+    {
+        retAttr = new (fMemoryManager)PSVIAttribute(fMemoryManager);
+        fAttrList->addElement(retAttr);
+    }
+    else
+    {
+        retAttr = fAttrList->elementAt(fAttrPos);
+    }
+    fAttrPos++;
+    return retAttr;
+}
+
+inline void PSVIAttributeList::reset()
+{
+    fAttrPos = 0;
+}
 
 XERCES_CPP_NAMESPACE_END
 
