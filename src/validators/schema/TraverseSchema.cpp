@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/15 21:59:39  knoaman
+ * TraverseSchema: add attribute checking + some fixes + more error messages.
+ * More attribute cheking to come.
+ *
  * Revision 1.5  2001/05/11 21:51:19  knoaman
  * Schema updates and fixes.
  *
@@ -106,6 +110,9 @@
 #include <parsers/DOMParser.hpp>
 #include <dom/DOM_DOMException.hpp>
 #include <validators/schema/SchemaInfo.hpp>
+#include <validators/datatype/InvalidDatatypeValueException.hpp>
+#include <validators/datatype/InvalidDatatypeFacetException.hpp>
+#include <validators/schema/GeneralAttributeCheck.hpp>
 
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local declaration
@@ -196,6 +203,7 @@ TraverseSchema::TraverseSchema( const DOM_Element&      schemaRoot
     , fCurrentSchemaInfo(0)
     , fImportLocations(0)
     , fIncludeLocations(0)
+    , fAttributeCheck(0)
 {
 
 	try {
@@ -227,6 +235,8 @@ void TraverseSchema::doTraverseSchema() {
         // REVISIT: Anything to do?
         return;
     }
+
+    fAttributeCheck = GeneralAttributeCheck::instance();
 
     //Make sure namespace binding is defaulted
     DOMString rootPrefix = fSchemaRootElement.getPrefix();
@@ -309,6 +319,12 @@ void TraverseSchema::doTraverseSchema() {
 
 void TraverseSchema::traverseSchemaHeader() {
 
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+	unsigned short scope = GeneralAttributeCheck::GlobalContext;
+    fAttributeCheck->checkAttributes(fSchemaRootElement, scope, this);
+
     retrieveNamespaceMapping();
 
     fElementDefaultQualified = 
@@ -345,6 +361,12 @@ void TraverseSchema::traverseAnnotationDecl(const DOM_Element& childElem) {
   *    </include>
   */
 void TraverseSchema::traverseInclude(const DOM_Element& elem) {
+
+    // ------------------------------------------------------------------
+    // Check attributes
+    // ------------------------------------------------------------------
+    unsigned short scope = GeneralAttributeCheck::GlobalContext;
+    fAttributeCheck->checkAttributes(elem, scope, this);
 
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
@@ -499,6 +521,12 @@ void TraverseSchema::traverseInclude(const DOM_Element& elem) {
 void TraverseSchema::traverseImport(const DOM_Element& elem) {
 
     // ------------------------------------------------------------------
+    // Check attributes
+    // ------------------------------------------------------------------
+    unsigned short scope = GeneralAttributeCheck::GlobalContext;
+    fAttributeCheck->checkAttributes(elem, scope, this);
+
+    // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
     // ------------------------------------------------------------------
     if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0) {
@@ -624,6 +652,16 @@ ContentSpecNode*
 TraverseSchema::traverseChoiceSequence(const DOM_Element& elem,
                                        const int modelGroupType)
 {
+
+    // ------------------------------------------------------------------
+    // Check attributes
+    // ------------------------------------------------------------------
+    unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(elem, scope, this);
+
+    // ------------------------------------------------------------------
+    // Process contents
+    // ------------------------------------------------------------------
     DOM_Element child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
     ContentSpecNode* left = 0;
     ContentSpecNode* right = 0;
@@ -717,6 +755,19 @@ TraverseSchema::traverseChoiceSequence(const DOM_Element& elem,
   */
 int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem) 
 {
+
+    // ------------------------------------------------------------------
+    // Check attributes
+    // ------------------------------------------------------------------
+    bool topLevel = isTopLevelComponent(childElem);
+    unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
+                                      : GeneralAttributeCheck::LocalContext;    
+
+    fAttributeCheck->checkAttributes(childElem, scope, this);
+
+    // ------------------------------------------------------------------
+    // Process contents
+    // ------------------------------------------------------------------
     const XMLCh* name = getElementAttValue(childElem,SchemaSymbols::fgATT_NAME);
 
     if (XMLString::stringLen(fTargetNSURIString) != 0) {
@@ -817,6 +868,13 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidComplexTypeName, name);
         return -1;
     }
+
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+	unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext 
+                                      : GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(elem, scope, this);
 
 //    fCurrentTypeNameStack->push(XMLString::replicate(name));
 
@@ -975,6 +1033,12 @@ TraverseSchema::traverseGroupDecl(const DOM_Element& childElem) {
 ContentSpecNode*
 TraverseSchema::traverseAny(const DOM_Element& elem) {
 
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+	unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(elem, scope, this);
+
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
     // ------------------------------------------------------------------
@@ -1103,6 +1167,15 @@ TraverseSchema::traverseAll(const DOM_Element& elem) {
 	return 0;
 
     // Work in progress
+    // ------------------------------------------------------------------
+    // Check attributes
+    // ------------------------------------------------------------------
+    unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(elem, scope, this);
+
+    // ------------------------------------------------------------------
+    // Process contents
+    // ------------------------------------------------------------------
     DOM_Element child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
     if (child == 0) {
@@ -1190,15 +1263,11 @@ TraverseSchema::traverseAll(const DOM_Element& elem) {
 void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
                                            ComplexTypeInfo* const typeInfo) {
 
-    bool         topLevel = isTopLevelComponent(elem);
-    const XMLCh* name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
-    const XMLCh* ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
-    const XMLCh* defaultVal = getElementAttValue(elem, SchemaSymbols::fgATT_DEFAULT);
-    const XMLCh* fixedVal = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
-    const XMLCh* useVal = getElementAttValue(elem, SchemaSymbols::fgATT_USE);
-    bool         nameEmpty = (XMLString::stringLen(name) == 0) ? true : false;
-    bool         refEmpty = (XMLString::stringLen(ref) == 0) ? true : false;
-    DOM_Element  simpleType = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+    bool           topLevel = isTopLevelComponent(elem);
+    const XMLCh*   name = getElementAttValue(elem, SchemaSymbols::fgATT_NAME);
+    const XMLCh*   ref = getElementAttValue(elem, SchemaSymbols::fgATT_REF);
+    bool           nameEmpty = (XMLString::stringLen(name) == 0) ? true : false;
+    bool           refEmpty = (XMLString::stringLen(ref) == 0) ? true : false;
 
     if (topLevel) {
 
@@ -1217,7 +1286,20 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     if (nameEmpty && refEmpty) {
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::NoNameRefAttribute);
         return;
-    }    
+    }
+
+    // ------------------------------------------------------------------
+    // Check attributes
+    // ------------------------------------------------------------------
+    unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
+                                      : GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(elem, scope, this);
+
+
+    const XMLCh* defaultVal = getElementAttValue(elem, SchemaSymbols::fgATT_DEFAULT);
+    const XMLCh* fixedVal = getElementAttValue(elem, SchemaSymbols::fgATT_FIXED);
+    const XMLCh* useVal = getElementAttValue(elem, SchemaSymbols::fgATT_USE);
+    DOM_Element  simpleType = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
     if(XMLString::stringLen(defaultVal) != 0) {
 
@@ -1519,6 +1601,16 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem) {
         return 0;
     }
 
+    // ------------------------------------------------------------------
+    // Check attributes
+    // ------------------------------------------------------------------
+    unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
+                                      : GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(elem, scope, this);
+
+    // ------------------------------------------------------------------
+    // Process contents
+    // ------------------------------------------------------------------
     if(XMLString::stringLen(fixed) != 0 && XMLString::stringLen(deflt) != 0) {
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ElementWithFixedAndDefault);
     }
@@ -1780,6 +1872,12 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
 								   const int typeNameIndex,
                                    const int finalSet) {
 
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+	unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(contentElem, scope, this);
+
     DatatypeValidator* baseValidator = 0;
     DOM_Element        content = contentElem;
     const XMLCh*       typeName = fStringPool.getValueForId(typeNameIndex);
@@ -1844,6 +1942,14 @@ int TraverseSchema::traverseByList(const DOM_Element& rootElem,
 				  fStringPool.getValueForId(strId), baseValidator,0, true, finalSet);
 		}
     }
+    catch(const InvalidDatatypeValueException& idve) {
+        reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idve.getMessage());
+    }
+    catch (const InvalidDatatypeFacetException& idfe) {
+        reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idfe.getMessage());
+    }
     catch(...) {
         reportSchemaError(XMLUni::fgXMLErrDomain,
                           XMLErrs::DatatypeValidatorCreationError, typeName);
@@ -1856,6 +1962,12 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                                           const DOM_Element& contentElem,
 								          const int typeNameIndex,
                                           const int finalSet) {
+
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+	unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(contentElem, scope, this);
 
     DatatypeValidator* baseValidator = 0;
     DOM_Element        content = contentElem;
@@ -1909,6 +2021,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
 
         if (content.getNodeType() == DOM_Node::ELEMENT_NODE) {
 
+            fAttributeCheck->checkAttributes(contentElem, scope, this);
             facetName = content.getLocalName();
             fBuffer.set(facetName.rawBuffer(), facetName.length());
 
@@ -1997,6 +2110,14 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
                     false, finalSet);
 		}
     }
+    catch(const InvalidDatatypeValueException& idve) {
+        reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idve.getMessage());
+    }
+    catch (const InvalidDatatypeFacetException& idfe) {
+        reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idfe.getMessage());
+    }
     catch(...) {
 
         reportSchemaError(XMLUni::fgXMLErrDomain,
@@ -2012,6 +2133,12 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
                                     const DOM_Element& contentElem,
 								    const int typeNameIndex,
                                     const int finalSet) {
+
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+	unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(contentElem, scope, this);
 
     int                             size = 1;
     DOM_Element                     content = contentElem;
@@ -2116,6 +2243,14 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
 			}
 		}
     }
+    catch(const InvalidDatatypeValueException& idve) {
+        reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idve.getMessage());
+    }
+    catch (const InvalidDatatypeFacetException& idfe) {
+        reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idfe.getMessage());
+    }
     catch(...) {
         reportSchemaError(XMLUni::fgXMLErrDomain,
                           XMLErrs::DatatypeValidatorCreationError, typeName);
@@ -2159,6 +2294,12 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                                                ComplexTypeInfo* const typeInfo)
 {
     // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+	unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(contentDecl, scope, this);
+
+    // -----------------------------------------------------------------------
     // Set the content type to be simple, and initialize content spec handle
     // -----------------------------------------------------------------------
     typeInfo->setContentType(SchemaElementDecl::Simple);
@@ -2172,6 +2313,8 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::EmptySimpleTypeContent);
         throw;
     }
+
+    fAttributeCheck->checkAttributes(simpleContent, scope, this);
 
     // -----------------------------------------------------------------------
     // The content should be either "restriction" or "extension"
@@ -2292,6 +2435,8 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     
                 if (content.getNodeType() == DOM_Node::ELEMENT_NODE) {
 
+                    fAttributeCheck->checkAttributes(content, scope, this);
+
                     DOMString attValue = 
                         content.getAttribute(SchemaSymbols::fgATT_VALUE);
 
@@ -2378,6 +2523,14 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         )
                     );
 				}
+                catch(const InvalidDatatypeValueException& idve) {
+                    reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idve.getMessage());
+                }
+                catch (const InvalidDatatypeFacetException& idfe) {
+                    reportSchemaError(XMLUni::fgValidityDomain,
+                          XMLValid::DisplayErrorMessage, idfe.getMessage());
+                }
                 catch(...) {
                     reportSchemaError(XMLUni::fgXMLErrDomain,
                                       XMLErrs::DatatypeValidatorCreationError, typeName);
@@ -2449,6 +2602,12 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
                                                 ComplexTypeInfo* const typeInfo,
                                                 const bool isMixed)
 {
+    // ------------------------------------------------------------------
+    // Check attributes
+    // ------------------------------------------------------------------
+    unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(contentDecl, scope, this);
+
     // -----------------------------------------------------------------------
     // Determine whether the content is mixed, or element-only
     // Setting here overrides any setting on the complex type decl
@@ -2501,7 +2660,7 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
     // Handle the base type name 
     // -----------------------------------------------------------------------
     const XMLCh* baseName = 
-            getElementAttValue(contentDecl, SchemaSymbols::fgATT_BASE);
+            getElementAttValue(complexContent, SchemaSymbols::fgATT_BASE);
 
     if (XMLString::stringLen(baseName) == 0) {
 
@@ -2556,6 +2715,12 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
   */
 SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOM_Element& elem) {
 
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+	unsigned short scope = GeneralAttributeCheck::LocalContext;
+    fAttributeCheck->checkAttributes(elem, scope, this);
+
     // ------------------------------------------------------------------
     // First, handle any ANNOTATION declaration
     // ------------------------------------------------------------------
@@ -2589,7 +2754,7 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOM_Element& elem) {
         attDefType = XMLAttDef::ProcessContents_Lax;
     }
     else {
-        reportSchemaError(0, 0, processContents); //"Invalid 'processContents' value: '{0}'
+//        reportSchemaError(0, 0, processContents); //"Invalid 'processContents' value: '{0}'
     }
 
     // ------------------------------------------------------------------

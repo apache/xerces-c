@@ -61,9 +61,6 @@
 #if !defined(DATATYPEVALIDATORFACTORY_HPP)
 #define DATATYPEVALIDATORFACTORY_HPP
 
-#include <validators/datatype/DatatypeValidator.hpp>
-#include <util/RefVectorOf.hpp>
-
 /**
  * This class implements a factory of Datatype Validators. Internally the
  * DatatypeValidators are kept in a registry.
@@ -77,7 +74,7 @@
  * facets and registering the Datatype into registry table.
  * This implementation uses a Hahtable as a registry. The datatype validators created
  * by the factory will be deleted by the registry.
- *
+ * 
  * As the Parser parses an instance document it knows if validation needs
  * to be checked. If no validation is necesary we should not instantiate a
  * DatatypeValidatorFactory.
@@ -85,9 +82,16 @@
  */
 
 // ---------------------------------------------------------------------------
+//  Includes
+// ---------------------------------------------------------------------------
+#include <validators/datatype/DatatypeValidator.hpp>
+#include <util/RefVectorOf.hpp>
+
+// ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Local declaration
 // ---------------------------------------------------------------------------
 typedef RefHashTableOf<KVStringPair> KVStringPairHashTable;
+typedef RefHashTableOf<DatatypeValidator> DVHashTable;
 
 
 class VALIDATORS_EXPORT DatatypeValidatorFactory
@@ -134,29 +138,29 @@ public:
 
     /**
 	  * Initializes registry with primitive and derived Simple types.
-      *
-      * This method does not clear the registry to clear the registry you
+      * 
+      * This method does not clear the registry to clear the registry you 
 	  * have to call resetRegistry.
-      *
-      * The net effect of this method is to start with a the smallest set of
+      * 
+      * The net effect of this method is to start with a the smallest set of 
 	  * datatypes needed by the validator.
 	  *
-	  * If we start with DTD's, then we initialize the table to only
+	  * If we start with DTD's, then we initialize the table to only 
 	  * the 9 validators needed by DTD Validation.
 	  */
 	void initializeDTDRegistry();
 
 	/**
 	  * Initializes registry with primitive and derived Simple types.
-      *
-      * This method does not clear the registry to clear the registry you
+      * 
+      * This method does not clear the registry to clear the registry you 
 	  * have to call resetRegistry.
-      *
-      * The net effect of this method is to start with a the smallest set of
+      * 
+      * The net effect of this method is to start with a the smallest set of 
 	  * datatypes needed by the validator.
 	  *
-      * If we start with Schema's then we initialize to to full set of
-	  * validators.	
+      * If we start with Schema's then we initialize to to full set of 
+	  * validators.	  
 	  */
 	void expandRegistryToFullSchemaSet();
 
@@ -168,7 +172,7 @@ public:
     /** @name Validator Factory Functions */
     //@{
 
-    /**
+    /** 
       * Creates a new datatype validator of type baseValidator's class and
       * adds it to the registry
       *
@@ -187,9 +191,10 @@ public:
 		                                       DatatypeValidator* const,
                                                RefHashTableOf<KVStringPair>* const,
                                                const bool,
-                                               const int = 0);
+                                               const int = 0,
+                                               const bool = true);
 
-    /**
+    /** 
       * Creates a new datatype validator of type UnionDatatypeValidator and
       * adds it to the registry
       *
@@ -200,7 +205,8 @@ public:
       */
     DatatypeValidator* createDatatypeValidator(const XMLCh* const,
                                                RefVectorOf<DatatypeValidator>* const,
-                                               const int finalSet);
+                                               const int finalSet,
+                                               const bool = true);
 
 	//@}
 
@@ -221,22 +227,33 @@ private:
     //  fRegistryExpanded
     //      Indicated whether we have expanded the registry or not.
 	//		
-    //  fRegistry
-    //      This is a hashtable of dataype validators.
+    //  fUserDefinedRegistry
+    //      This is a hashtable of user defined dataype validators.
+    //
+    //  fBuiltInRegistry
+    //      This is a hashtable of built-in primitive datatype validators.
     // -----------------------------------------------------------------------
-	bool                               fRegistryExpanded;
-	RefHashTableOf<DatatypeValidator>* fRegistry;
+	int                                fRegistryExpanded;
+    RefHashTableOf<DatatypeValidator>* fUserDefinedRegistry;
+	static RefHashTableOf<DatatypeValidator>* fBuiltInRegistry;
 };
 
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Getters
 // ---------------------------------------------------------------------------
-inline DatatypeValidator*
+inline DatatypeValidator* 
 DatatypeValidatorFactory::getDatatypeValidator(const XMLCh* const dvType) const
 {
-	if (dvType && fRegistry && fRegistry->containsKey(dvType)) {
-		return fRegistry->get(dvType);
+	if (dvType) {
+
+        if (fBuiltInRegistry && fBuiltInRegistry->containsKey(dvType)) {
+		    return fBuiltInRegistry->get(dvType);
+        }
+
+        if (fUserDefinedRegistry && fUserDefinedRegistry->containsKey(dvType)) {
+		    return fUserDefinedRegistry->get(dvType);
+        }
     }
 
 	return 0;
@@ -247,7 +264,7 @@ DatatypeValidatorFactory::getDatatypeValidator(const XMLCh* const dvType) const
 // ---------------------------------------------------------------------------
 inline void DatatypeValidatorFactory::cleanUp() {
 
-	delete fRegistry;
+	delete fUserDefinedRegistry;
 }
 
 #endif

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/15 21:59:34  knoaman
+ * TraverseSchema: add attribute checking + some fixes + more error messages.
+ * More attribute cheking to come.
+ *
  * Revision 1.6  2001/05/14 17:53:48  tng
  * Schema: Update Schema URL
  *
@@ -478,7 +482,12 @@ const XMLCh SchemaSymbols::fgATT_FIXED[] =
 
 const XMLCh SchemaSymbols::fgATT_FORM[] =
 {
-    chLatin_f, chLatin_o, chLatin_r, chLatin_m,  chNull
+    chLatin_f, chLatin_o, chLatin_r, chLatin_m, chNull
+};
+
+const XMLCh SchemaSymbols::fgATT_ID[] =
+{
+    chLatin_i, chLatin_d, chNull
 };
 
 const XMLCh SchemaSymbols::fgATT_MAXOCCURS[] =
@@ -539,9 +548,19 @@ const XMLCh SchemaSymbols::fgATT_SCHEMALOCATION[] =
     chLatin_o, chLatin_n, chNull
 };
 
+const XMLCh SchemaSymbols::fgATT_SOURCE[] =
+{
+    chLatin_s, chLatin_o, chLatin_u, chLatin_r, chLatin_c, chLatin_e, chNull
+};
+
 const XMLCh SchemaSymbols::fgATT_SYSTEM[] =
 {
     chLatin_s, chLatin_y, chLatin_s, chLatin_t, chLatin_e, chLatin_m, chNull
+};
+
+const XMLCh SchemaSymbols::fgATT_PUBLIC[] =
+{
+    chLatin_p, chLatin_u, chLatin_b, chLatin_l, chLatin_i, chLatin_c, chNull
 };
 
 const XMLCh SchemaSymbols::fgATT_TARGETNAMESPACE[] =
@@ -569,6 +588,12 @@ const XMLCh SchemaSymbols::fgATT_VALUE[] =
 const XMLCh SchemaSymbols::fgATT_MIXED[] =
 {
     chLatin_m, chLatin_i, chLatin_x, chLatin_e, chLatin_d, chNull
+};
+
+const XMLCh SchemaSymbols::fgATT_VERSION[] =
+{
+    chLatin_v, chLatin_e, chLatin_r, chLatin_s, chLatin_i,
+    chLatin_o, chLatin_n, chNull
 };
 
 const XMLCh SchemaSymbols::fgATT_XPATH[] =

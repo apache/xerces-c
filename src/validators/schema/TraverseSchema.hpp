@@ -96,6 +96,7 @@ class SchemaAttDef;
 class SchemaInfo;
 class InputSource;
 class ErrorHandler;
+class GeneralAttributeCheck;
 
 
 class VALIDATORS_EXPORT TraverseSchema
@@ -494,7 +495,10 @@ private:
     SchemaInfo*                      fCurrentSchemaInfo;
     ValueVectorOf<unsigned int>*     fImportLocations;
     ValueVectorOf<unsigned int>*     fIncludeLocations;
+    GeneralAttributeCheck*           fAttributeCheck;
     static XMLStringPool             fStringPool;
+
+    friend class GeneralAttributeCheck;
 };
 
 

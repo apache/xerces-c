@@ -139,6 +139,7 @@ public :
     static const XMLCh fgATT_FINALDEFAULT[];
     static const XMLCh fgATT_FIXED[];
     static const XMLCh fgATT_FORM[];
+    static const XMLCh fgATT_ID[];
     static const XMLCh fgATT_MAXOCCURS[];
     static const XMLCh fgATT_MINOCCURS[];
     static const XMLCh fgATT_NAME[];
@@ -149,12 +150,15 @@ public :
     static const XMLCh fgATT_REF[];
     static const XMLCh fgATT_REFER[];
     static const XMLCh fgATT_SCHEMALOCATION[];
+    static const XMLCh fgATT_SOURCE[];
     static const XMLCh fgATT_SYSTEM[];
+    static const XMLCh fgATT_PUBLIC[];
     static const XMLCh fgATT_TARGETNAMESPACE[];
     static const XMLCh fgATT_TYPE[];
     static const XMLCh fgATT_USE[];
     static const XMLCh fgATT_VALUE[];
     static const XMLCh fgATT_MIXED[];
+    static const XMLCh fgATT_VERSION[];
     static const XMLCh fgATT_XPATH[];
     static const XMLCh fgATTVAL_TWOPOUNDANY[];
     static const XMLCh fgATTVAL_TWOPOUNDLOCAL[];

@@ -102,6 +102,8 @@
             <Message Id="IncludeNamespaceDifference" Text="Included schema '{0}' has a different targetNameSpace '{1}'"/>
             <Message Id="OnlyAnnotationExpected" Text="At most one &lt;annotation&gt; element is expected in the content."/>
             <Message Id="InvalidAttributeContent" Text="The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered"/>
+            <Message Id="AttributeRequired" Text="Attribute '{0}' must appear in '{1}'"/>
+            <Message Id="AttributeDisallowed" Text="Attribute '{0}' cannot appear in '{1}'"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>

@@ -55,6 +55,10 @@
 #
 #
 # $Log$
+# Revision 1.11  2001/05/15 21:59:32  knoaman
+# TraverseSchema: add attribute checking + some fixes + more error messages.
+# More attribute cheking to come.
+#
 # Revision 1.10  2001/05/11 13:27:32  tng
 # Copyright update.
 #
@@ -118,6 +122,7 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	ComplexTypeInfo.hpp \
 	SubstitutionGroupComparator.hpp \
 	SchemaInfo.hpp \
+	GeneralAttributeCheck.hpp \
 	TraverseSchema.hpp
 
 VALIDATORS_SCHEMA_CPP_PRIVHEADERS =
@@ -136,6 +141,7 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	ComplexTypeInfo.$(TO) \
 	SubstitutionGroupComparator.$(TO) \
 	SchemaInfo.$(TO) \
+	GeneralAttributeCheck.$(TO) \
 	TraverseSchema.$(TO)
 
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS)
