@@ -1575,6 +1575,7 @@
            </s4>
 
            <s4 title="Xerces Features">
+            <anchor name="byte-order-mark"/>           
             <table>
                 <tr><th colspan="2"><em>byte-order-mark</em></th></tr>
                 <tr><th><em>true:</em></th><td> Enable the writing of the Byte-Order-Mark (BOM), in the resultant XML stream. 

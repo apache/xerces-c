@@ -48,6 +48,10 @@
         <li>390: support record-oriented MVS datasets with the DOM Level 3 serialization APIs</li>
         <li>Support for Linux/390</li>
         <li>Performance: Break Scanner for different functionalities and many other performance improvement</li>
+        <li>New feature, "http://apache.org/xml/features/dom/byte-order-mark", allows user to enable
+            DOMWriter to write Byte-Order-Mark in the output XML stream, 
+            See <jump href="program-dom.html#Byte-Order-Mark">
+            Xercesc Feature: Byte Order Mark</jump> for details</li>        
       </ul>
     </s3>
 
