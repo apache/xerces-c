@@ -299,7 +299,7 @@ void XMLString::cut(        XMLCh* const    toCutFrom
                     , const unsigned int    count)
 {
     #if XML_DEBUG
-    if (count > stringLen(toCut))
+    if (count > stringLen(toCutFrom))
     {
         // <TBD> This is bad of course
     }
@@ -1480,7 +1480,7 @@ bool XMLString::isWSCollapsed(const XMLCh* const toCheck)
     bool  inSpace = false;
     while ( theChar = *startPtr )
     {
-        if ( theChar == chSpace) 
+        if ( theChar == chSpace)
         {
             if (inSpace)
                 return false;
@@ -1531,7 +1531,7 @@ void XMLString::collapseWS(XMLCh* const toConvert)
     bool  inSpace = false;
     while (startPtr < endPtr)
     {
-        if ( *startPtr == chSpace) 
+        if ( *startPtr == chSpace)
         {
             if (inSpace)
             {
