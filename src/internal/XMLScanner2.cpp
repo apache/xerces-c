@@ -850,6 +850,10 @@ void XMLScanner::scanReset(const InputSource& src)
 
         fGrammarResolver->putGrammar(XMLUni::fgZeroLenString, fGrammar);
         fValidator->setGrammar(fGrammar);
+
+        if (fValScheme == Val_Auto) {
+            fValidate = false;
+        }
     }
     else {
         // reusing grammar, thus the fGrammar must pre-exist already
@@ -904,6 +908,8 @@ void XMLScanner::scanReset(const InputSource& src)
     fInException = false;
     fStandalone = false;
     fErrorCount = 0;
+    fHasNoDTD = true;
+    fSeeXsi = false;
 
     //
     //  Handle the creation of the XML reader object for this input source.

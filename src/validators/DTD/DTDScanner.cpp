@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2001/08/02 16:54:39  tng
+ * Reset some Scanner flags in scanReset().
+ *
  * Revision 1.18  2001/07/13 16:57:11  tng
  * ScanId fix.
  *
@@ -1655,7 +1658,7 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
     // either internal/external subset
     if(!reuseGrammar) {
         if (fScanner->getValidationScheme() == XMLScanner::Val_Auto)
-            fScanner->setDoValidation(true);
+            fScanner->setDoValidation(true, false);
     }
 
 

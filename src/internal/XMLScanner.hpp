@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2001/08/02 16:54:39  tng
+ * Reset some Scanner flags in scanReset().
+ *
  * Revision 1.29  2001/08/01 19:11:01  tng
  * Add full schema constraint checking flag to the samples and the parser.
  *
@@ -451,7 +454,7 @@ public :
     //  setValidationScheme() instead.
     // -----------------------------------------------------------------------
     bool getDoValidation() const;
-    void setDoValidation(const bool validate);
+    void setDoValidation(const bool validate, const bool setValScheme = true);
 
 
     // -----------------------------------------------------------------------
@@ -1153,13 +1156,15 @@ inline bool XMLScanner::getDoValidation() const
     return fValidate;
 }
 
-inline void XMLScanner::setDoValidation(const bool validate)
+inline void XMLScanner::setDoValidation(const bool validate, const bool setValScheme)
 {
     fValidate = validate;
-    if (fValidate)
-        fValScheme = Val_Always;
-    else
-        fValScheme = Val_Never;
+    if (setValScheme) {
+        if (fValidate)
+            fValScheme = Val_Always;
+        else
+            fValScheme = Val_Never;
+    }
 }
 
 #endif
