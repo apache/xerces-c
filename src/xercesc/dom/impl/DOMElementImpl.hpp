@@ -95,6 +95,7 @@ public:
     DOMParentNode     fParent;
     DOMChildNode      fChild;
     DOMAttrMapImpl    *fAttributes;
+    DOMAttrMapImpl    *fDefaultAttributes;
     const XMLCh      *fName;
 
 public:
@@ -107,39 +108,45 @@ public:
     DOMNODE_FUNCTIONS;
 
     // Functions introduced on Element...
-    virtual const XMLCh     * getAttribute(const XMLCh *name) const;
-    virtual DOMAttr       * getAttributeNode(const XMLCh *name) const;
-    virtual DOMNodeList   * getElementsByTagName(const XMLCh *tagname) const;
-    virtual const XMLCh     * getTagName() const;
+    virtual const XMLCh*      getAttribute(const XMLCh *name) const;
+    virtual DOMAttr*          getAttributeNode(const XMLCh *name) const;
+    virtual DOMNodeList*      getElementsByTagName(const XMLCh *tagname) const;
+    virtual const XMLCh*      getTagName() const;
     virtual void              removeAttribute(const XMLCh *name);
-    virtual DOMAttr       * removeAttributeNode(DOMAttr * oldAttr);
+    virtual DOMAttr*          removeAttributeNode(DOMAttr * oldAttr);
     virtual void              setAttribute(const XMLCh *name, const XMLCh *value);
-    virtual DOMAttr       * setAttributeNode(DOMAttr *newAttr);
+    virtual DOMAttr*          setAttributeNode(DOMAttr *newAttr);
     virtual void              setReadOnly(bool readOnly, bool deep);
 
     //Introduced in DOM Level 2
-    virtual const XMLCh *     getAttributeNS(const XMLCh *namespaceURI,
-                                         const XMLCh *localName) const;
+    virtual const XMLCh*      getAttributeNS(const XMLCh *namespaceURI,
+                                             const XMLCh *localName) const;
     virtual void              setAttributeNS(const XMLCh *namespaceURI,
-                                   const XMLCh *qualifiedName,
-                                   const XMLCh *value);
+                                             const XMLCh *qualifiedName,
+                                             const XMLCh *value);
     virtual void              removeAttributeNS(const XMLCh *namespaceURI,
-                                   const XMLCh *localName);
-    virtual DOMAttr        *getAttributeNodeNS(const XMLCh *namespaceURI,
-                                         const XMLCh *localName) const;
-    virtual DOMAttr        *setAttributeNodeNS(DOMAttr *newAttr);
-    virtual DOMNodeList    *getElementsByTagNameNS(const XMLCh *namespaceURI,
-                                                  const XMLCh *localName) const;
+                                                const XMLCh *localName);
+    virtual DOMAttr*          getAttributeNodeNS(const XMLCh *namespaceURI,
+                                                 const XMLCh *localName) const;
+    virtual DOMAttr*          setAttributeNodeNS(DOMAttr *newAttr);
+    virtual DOMNodeList*      getElementsByTagNameNS(const XMLCh *namespaceURI,
+                                                     const XMLCh *localName) const;
     virtual bool              hasAttribute(const XMLCh *name) const;
     virtual bool              hasAttributeNS(const XMLCh *namespaceURI,
                                              const XMLCh *localName) const;
 
-	// default attribute helper functions
-	virtual DOMAttrMapImpl *getDefaultAttributes();
-	virtual void setupDefaultAttributes();
+    // for handling of default attribute
+    virtual DOMAttr*          setDefaultAttributeNode(DOMAttr *newAttr);
+    virtual DOMAttr*          setDefaultAttributeNodeNS(DOMAttr *newAttr);
+    virtual DOMAttrMapImpl*   getDefaultAttributes() const;
 
-   // helper function for DOM Level 3 renameNode
-   virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
+    // helper function for DOM Level 3 renameNode
+    virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
+
+protected:
+    // default attribute helper functions
+    virtual void setupDefaultAttributes();
+
 };
 
 #endif

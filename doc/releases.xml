@@ -26,6 +26,13 @@
     </tr>
 
     <tr>
+        <td>2002-07-19</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 10968] Default attributes from Schema not restored by removeAttribute.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-07-18</td>
         <td>Khaled Noaman</td>
         <td>Feature to control strict IANA encoding name.

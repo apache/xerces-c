@@ -80,20 +80,26 @@
 class DOMAttr;
 
 DOMElementImpl::DOMElementImpl(DOMDocument *ownerDoc, const XMLCh *eName)
-    : fNode(ownerDoc), fParent(ownerDoc), fAttributes(0)
+    : fNode(ownerDoc), fParent(ownerDoc), fAttributes(0), fDefaultAttributes(0)
 {
     DOMDocumentImpl *docImpl = (DOMDocumentImpl *)ownerDoc;
     fName = docImpl->fNamePool->getPooledString(eName);
     setupDefaultAttributes();
-    if (!fAttributes)
+    if (!fDefaultAttributes) {
+        fDefaultAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this);
         fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this);
+    }
+    else {
+        fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this, fDefaultAttributes);
+    }
 };
 
 
 DOMElementImpl::DOMElementImpl(const DOMElementImpl &other, bool deep)
     : fNode(other.getOwnerDocument()),
       fParent(other.getOwnerDocument()),
-      fAttributes(0)
+      fAttributes(0),
+      fDefaultAttributes(0)
 {
     fName = other.fName;
     if (deep)
@@ -104,10 +110,24 @@ DOMElementImpl::DOMElementImpl(const DOMElementImpl &other, bool deep)
         fAttributes = ((DOMAttrMapImpl *)other.getAttributes())->cloneAttrMap(this);
     }
 
-    if (!fAttributes) {
+    if (other.getDefaultAttributes())
+    {
+        fDefaultAttributes = ((DOMAttrMapImpl *)other.getDefaultAttributes())->cloneAttrMap(this);
+    }
+
+    if (!fDefaultAttributes)
         setupDefaultAttributes();
-        if (!fAttributes)
+
+    if (!fDefaultAttributes)
+        fDefaultAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this);
+
+    if (!fAttributes) {
+        if (!fDefaultAttributes) {
             fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this);
+        }
+        else {
+            fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this, fDefaultAttributes);
+        }
     }
 };
 
@@ -375,29 +395,57 @@ bool DOMElementImpl::hasAttributeNS(const XMLCh *namespaceURI,
 
 // util functions for default attributes
 // returns the default attribute map for this node from the owner document
-DOMAttrMapImpl *DOMElementImpl::getDefaultAttributes()
+DOMAttrMapImpl *DOMElementImpl::getDefaultAttributes() const
 {
-    if ((fNode.fOwnerNode == 0) || (getOwnerDocument() == 0))
-        return 0;
-
-    DOMDocument *tmpdoc = getOwnerDocument();
-    if (tmpdoc->getDoctype() == 0)
-        return 0;
-
-    DOMNode *eldef = ((DOMDocumentTypeImpl*)tmpdoc->getDoctype())->getElements()->getNamedItem(getNodeName());
-    return (eldef == 0) ? 0 : (DOMAttrMapImpl *)(eldef->getAttributes());
+    return fDefaultAttributes;
 }
 
-// resets all attributes for this node to their default values
+// initially set up the default attribute information based on doctype information
 void DOMElementImpl::setupDefaultAttributes()
 {
-    if ((fNode.fOwnerNode == 0) || (getOwnerDocument() == 0) || (getOwnerDocument()->getDoctype() == 0))
+    DOMDocument *tmpdoc = getOwnerDocument();
+    if ((fNode.fOwnerNode == 0) || (tmpdoc == 0) || (tmpdoc->getDoctype() == 0))
         return;
 
-    DOMAttrMapImpl* defAttrs = getDefaultAttributes();
+    DOMNode *eldef = ((DOMDocumentTypeImpl*)tmpdoc->getDoctype())->getElements()->getNamedItem(getNodeName());
+    DOMAttrMapImpl* defAttrs = (eldef == 0) ? 0 : (DOMAttrMapImpl *)(eldef->getAttributes());
 
     if (defAttrs)
-        fAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this, defAttrs);
+        fDefaultAttributes = new (getOwnerDocument()) DOMAttrMapImpl(this, defAttrs);
+}
+
+DOMAttr * DOMElementImpl::setDefaultAttributeNode(DOMAttr *newAttr)
+{
+    if (fNode.isReadOnly())
+        throw DOMException(
+        DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+
+    if (newAttr->getNodeType() != DOMNode::ATTRIBUTE_NODE)
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
+        // revisit.  Exception doesn't match test.
+
+    // This will throw INUSE if necessary
+    DOMAttr *oldAttr = (DOMAttr *) fDefaultAttributes->setNamedItem(newAttr);
+    fAttributes->hasDefaults(true);
+
+    return oldAttr;
+};
+
+
+DOMAttr *DOMElementImpl::setDefaultAttributeNodeNS(DOMAttr *newAttr)
+{
+    if (fNode.isReadOnly())
+        throw DOMException(
+            DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
+
+    if (newAttr -> getOwnerDocument() != this -> getOwnerDocument())
+        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
+
+    // This will throw INUSE if necessary
+    DOMAttr *oldAttr = (DOMAttr *) fDefaultAttributes->setNamedItemNS(newAttr);
+    fAttributes->hasDefaults(true);
+
+    return oldAttr;
 }
 
 void DOMElementImpl::release()
