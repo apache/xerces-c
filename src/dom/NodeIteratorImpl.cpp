@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/11/23 01:48:16  rahulj
+ * Changed 0L to 0. CC under HPUX is happy now.
+ *
  * Revision 1.2  1999/11/20 00:56:39  rahulj
  * Source files must end with an un-escaped newline.
  *
@@ -101,7 +104,7 @@ NodeIteratorImpl::NodeIteratorImpl (DOM_Node root, int whatToShow, DOM_NodeFilte
 {
 	fDetached = false;
     fRoot = root;
-    fCurrentNode = 0L;
+    fCurrentNode = 0;
     fWhatToShow = whatToShow;
     fNodeFilter = nodeFilter;
 

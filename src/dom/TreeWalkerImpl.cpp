@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:20  twl
- * Initial revision
+ * Revision 1.2  1999/11/23 01:48:17  rahulj
+ * Changed 0L to 0. CC under HPUX is happy now.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:20  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:33  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -184,7 +187,7 @@ DOM_Node TreeWalkerImpl::parentNode () {
     if (fCurrentNode.isNull()) return result;
 
     DOM_Node node = getParentNode(fCurrentNode);
-    if (node != 0L) {
+    if (node != 0) {
         fCurrentNode = node;
     }
     return node;
@@ -567,7 +570,7 @@ short TreeWalkerImpl::acceptNode (DOM_Node node) {
 	if (fDetached)
 		throw new DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
 
-    if (fNodeFilter == 0L) {
+    if (fNodeFilter == 0) {
         if ( ( fWhatToShow & (1 << (node.getNodeType() - 1))) != 0)
         {
             return DOM_NodeFilter::ACCEPT;
