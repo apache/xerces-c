@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/26 19:35:57  roddey
+ * When the /Debug output format is used, it will spit out source offset
+ * data as well now.
+ *
  * Revision 1.4  2000/01/21 23:58:06  roddey
  * Initial move away from util streams was bad. Wide char APIs didn't allow enough
  * control to do canonical output, so changed to use std short char APIs.
@@ -81,7 +85,6 @@
 #include    <internal/XMLScanner.hpp>
 #include    <validators/DTD/DTDValidator.hpp>
 #include    "ParserTest.hpp"
-
 
 
 // ---------------------------------------------------------------------------

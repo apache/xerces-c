@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/26 19:35:57  roddey
+ * When the /Debug output format is used, it will spit out source offset
+ * data as well now.
+ *
  * Revision 1.4  2000/01/25 01:02:12  roddey
  * More small fixes in the output from the recent change to get away from
  * the util/xx streams.
@@ -139,6 +143,8 @@ void TestParser::docCharacters( const   XMLCh* const    chars
         cout << "Got CHARS:\n    Bytes: "
              << length << ", CDATA?: "
              << (cdataSection ? "Yes" : "No")
+             << "\n"
+             << "    SrcOfs: " << fScanner->getSrcOffset()
              << "\n" << endl;
     }
      else if ((fOutputType == OutputType_JCCanon)
@@ -162,7 +168,8 @@ void TestParser::docComment(const XMLCh* const comment)
     {
         cout << "Got document COMMENT:\n    "
              << "Text: \"" << StrX(comment) << "\"\n"
-             << endl;
+             << "    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType == OutputType_XML)
     {
@@ -181,9 +188,10 @@ void TestParser::docPI( const   XMLCh* const    target
              << "Target: \"" << target << '"';
 
         if (XMLString::stringLen(data))
-            cout << ", Data: \"" << StrX(data) << '"';
+            cout << ", Data: \"" << StrX(data) << "\"\n";
 
-        cout << "\n" << endl;
+        cout << "    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if ((fOutputType == OutputType_XML)
           ||  (fOutputType == OutputType_JCCanon)
@@ -203,7 +211,9 @@ void TestParser::endDocument()
 {
     if (fOutputType == OutputType_Debug)
     {
-        cout << "Got ENDDOCUMENT:\n" << endl;
+        cout << "Got ENDDOCUMENT:\n"
+             << "    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType == OutputType_SunCanon)
     {
@@ -233,7 +243,8 @@ void TestParser::endElement(const   XMLElementDecl& elemDecl
                  << StrX(elemDecl.getFullName()) << endl;
         }
 
-        cout << endl;
+        cout << "    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if ((fOutputType == OutputType_XML)
           ||  (fOutputType == OutputType_JCCanon)
@@ -267,6 +278,8 @@ void TestParser::ignorableWhitespace(const  XMLCh* const    chars
         cout << "Got WHITESPACE:\n    Bytes: "
              << length << ", CDATA?: "
              << (cdataSection ? "Yes" : "No")
+             << "\n"
+             << "    SrcOfs: " << fScanner->getSrcOffset()
              << "\n" << endl;
     }
      else if (fOutputType == OutputType_XML)
@@ -334,6 +347,8 @@ TestParser::startElement(const  XMLElementDecl&         elemDecl
                  << (isEmpty ? "yes" : "no")
                  << "\n";
         }
+
+        cout << "    SrcOfs: " << fScanner->getSrcOffset() << "\n";
 
         // If any attributes, then show them
         if (attCount)
@@ -462,7 +477,8 @@ void TestParser::XMLDecl(const  XMLCh* const    versionStr
              << " Standalone:\"" << StrX(standaloneStr) << "\""
              << " Auto Encoding:\"" << StrX(autoEncStr) << "\""
              << "\n"
-             << endl;
+             << "    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType == OutputType_XML)
     {
@@ -501,7 +517,8 @@ void TestParser::attDef(const   DTDElementDecl& elemDecl
         if (XMLString::stringLen(attDef.getValue()))
             cout << ", Value: \"" << StrX(attDef.getValue()) << '"';
 
-        cout << "\n" << endl;
+        cout << "\n    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -548,7 +565,8 @@ void TestParser::doctypeComment(const XMLCh* const comment)
     {
         cout << "Got DTD COMMENT:\n    "
              << "Text: \"" << StrX(comment) << "\"\n"
-             << endl;
+             << "    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -576,7 +594,8 @@ void TestParser::doctypeDecl(const  DTDElementDecl& elemDecl
         if (XMLString::stringLen(systemId))
             cout << ", SYSTEM: " << StrX(systemId);
 
-        cout << "\n" << endl;
+        cout << "\n    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -601,7 +620,9 @@ void TestParser::doctypePI( const   XMLCh* const    target
 
         if (XMLString::stringLen(data))
             cout << ", Data: \"" << StrX(data) << '"';
-        cout << "\n" << endl;
+
+        cout << "    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -624,7 +645,9 @@ void TestParser::doctypeWhitespace( const   XMLCh* const    chars
     if (fOutputType == OutputType_Debug)
     {
         cout << "Got DTD Spaces:\n    Bytes: "
-             << length << "\n" << endl;
+             << length << "\n"
+             << "    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -647,9 +670,10 @@ void TestParser::elementDecl(const  DTDElementDecl&     decl
         if (isIgnored)
             cout << " (Ignored)";
 
-        cout << ", Content: ";
-        cout << StrX(decl.getFormattedContentModel(*fScanner->getValidator()));
-        cout << "\n" << endl;
+        cout << ", Content: "
+             << StrX(decl.getFormattedContentModel(*fScanner->getValidator()))
+             << "\n    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -671,7 +695,8 @@ void TestParser::endAttList(const DTDElementDecl& elemDecl)
     {
         cout << "Got ENDATTLIST:\n    "
              << "Name: " << StrX(elemDecl.getFullName()) << "\n"
-             << endl;
+             << "    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
@@ -687,7 +712,9 @@ void TestParser::endIntSubset()
 {
     if (fOutputType == OutputType_Debug)
     {
-        cout << "Got ENDINTSUBSET\n" << endl;
+        cout << "Got ENDINTSUBSET\n"
+             << "    SrcOfs: " << fScanner->getSrcOffset()
+             << "\n" << endl;
     }
      else if (fOutputType != OutputType_None)
     {
