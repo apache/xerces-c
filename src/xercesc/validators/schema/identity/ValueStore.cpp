@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/12/04 02:32:43  knoaman
+ * #include cleanup.
+ *
  * Revision 1.4  2002/11/04 14:47:41  tng
  * C++ Namespace Support.
  *
@@ -83,6 +86,8 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/internal/XMLScanner.hpp>
+#include <xercesc/framework/XMLValidator.hpp>
+#include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/validators/schema/identity/ValueStore.hpp>
 #include <xercesc/validators/schema/identity/IC_Field.hpp>
 #include <xercesc/validators/schema/identity/IC_KeyRef.hpp>

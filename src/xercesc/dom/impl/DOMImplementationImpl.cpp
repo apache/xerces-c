@@ -71,6 +71,7 @@
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLStringTokenizer.hpp>
 #include <xercesc/util/XMLDOMMsg.hpp>
+#include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/parsers/DOMBuilderImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

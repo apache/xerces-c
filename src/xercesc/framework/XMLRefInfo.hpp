@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/04 02:32:43  knoaman
+ * #include cleanup.
+ *
  * Revision 1.2  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -86,7 +89,7 @@
 #if !defined(XMLIDREFINFO_HPP)
 #define XMLIDREFINFO_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

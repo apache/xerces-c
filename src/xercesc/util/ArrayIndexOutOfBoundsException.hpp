@@ -61,7 +61,6 @@
 #if !defined(ARRAYINDEXOUTOFBOUNDSEXCEPTION_HPP)
 #define ARRAYINDEXOUTOFBOUNDSEXCEPTION_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

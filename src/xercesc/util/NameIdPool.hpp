@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/12/04 02:32:43  knoaman
+ * #include cleanup.
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -91,10 +94,9 @@
 #if !defined(NAMEIDPOOL_HPP)
 #define NAMEIDPOOL_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
-#include <string.h>
-#include <xercesc/util/XMLEnumerator.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <string.h>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 

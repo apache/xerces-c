@@ -4,7 +4,6 @@
 #define ERRHEADER_XMLErrs
 
 #include <xercesc/framework/XMLErrorReporter.hpp>
-#include <xercesc/util/XercesDefs.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

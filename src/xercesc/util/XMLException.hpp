@@ -61,7 +61,6 @@
 #if !defined(EXCEPTION_HPP)
 #define EXCEPTION_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>

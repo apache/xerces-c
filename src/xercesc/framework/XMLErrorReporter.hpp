@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.5  2002/12/04 02:32:43  knoaman
+  * #include cleanup.
+  *
   * Revision 1.4  2002/11/04 15:00:21  tng
   * C++ Namespace Support.
   *
@@ -115,7 +118,6 @@
 #define XMLERRORREPORTER_HPP
 
 #include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/XMLMsgLoader.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

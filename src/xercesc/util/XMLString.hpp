@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/12/04 02:32:43  knoaman
+ * #include cleanup.
+ *
  * Revision 1.8  2002/11/05 17:42:39  peiyongz
  * equals( const char* const, const char* const)
  *
@@ -207,9 +210,7 @@
 #if !defined(XMLSTRING_HPP)
 #define XMLSTRING_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
-#include <xercesc/framework/XMLBuffer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.7  2002/12/04 02:32:43  knoaman
+  * #include cleanup.
+  *
   * Revision 1.6  2002/11/27 18:05:38  tng
   * Schema Fix: cast the toEmit back to XMLErrs:Codes so that it can be caught by the Scanner properly.
   *
@@ -90,6 +93,7 @@
 #include <xercesc/framework/XMLErrorCodes.hpp>
 #include <xercesc/framework/XMLValidityCodes.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
+#include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/validators/schema/XSDErrorReporter.hpp>
 #include <xercesc/validators/schema/XSDLocator.hpp>
