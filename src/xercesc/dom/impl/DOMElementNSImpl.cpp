@@ -91,7 +91,7 @@ DOMElementNSImpl::DOMElementNSImpl(const DOMElementNSImpl &other, bool deep) :
     this->fNamespaceURI = other.fNamespaceURI;	        //DOM Level 2
     this->fLocalName = other.fLocalName;                //DOM Level 2
     this->fPrefix = other.fPrefix;
-};
+}
 
 DOMNode * DOMElementNSImpl::cloneNode(bool deep) const {
     DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ELEMENT_NS_OBJECT) DOMElementNSImpl(*this, deep);
@@ -273,7 +273,7 @@ void DOMElementNSImpl::setName(const XMLCh *namespaceURI,
             DOMNode::ELEMENT_NODE
         );
     this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.2  2002/11/04 14:58:18  tng
  * C++ Namespace Support.
  *
@@ -130,6 +133,13 @@ public:
     bool    fSawError;
     bool    fSawFatal;
     ErrorHandler* fUserErrorHandler;
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLInternalErrorHandler(const XMLInternalErrorHandler&);
+    XMLInternalErrorHandler& operator=(const XMLInternalErrorHandler&);
 };
 
 inline bool XMLInternalErrorHandler::getSawWarning() const

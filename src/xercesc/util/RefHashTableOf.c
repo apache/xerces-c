@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.13  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.12  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -641,6 +644,15 @@ template <class TVal> RefHashTableOfEnumerator<TVal>::~RefHashTableOfEnumerator(
 }
 
 
+template <class TVal> RefHashTableOfEnumerator<TVal>::
+RefHashTableOfEnumerator(const RefHashTableOfEnumerator<TVal>& toCopy) :
+    fAdopted(toCopy.fAdopted)
+    , fCurElem(toCopy.fCurElem)
+    , fCurHash(toCopy.fCurHash)
+    , fToEnum(toCopy.fToEnum)
+    , fMemoryManager(toCopy.fMemoryManager)
+{
+}
 // ---------------------------------------------------------------------------
 //  RefHashTableOfEnumerator: Enum interface
 // ---------------------------------------------------------------------------

@@ -91,10 +91,18 @@ template <class TVal> struct ValueHashTableBucketElem : public XMemory
 		: fData(value), fNext(next), fKey(key)
         {
         }
+    ValueHashTableBucketElem(){};
 
     TVal                           fData;
     ValueHashTableBucketElem<TVal>* fNext;
 	void*                          fKey;
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    ValueHashTableBucketElem(const ValueHashTableBucketElem<TVal>&);
+    ValueHashTableBucketElem<TVal>& operator=(const ValueHashTableBucketElem<TVal>&);
 };
 
 
@@ -151,6 +159,11 @@ private :
     friend class ValueHashTableOfEnumerator<TVal>;
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    ValueHashTableOf(const ValueHashTableOf<TVal>&);
+    ValueHashTableOf<TVal>& operator=(const ValueHashTableOf<TVal>&);
 
     // -----------------------------------------------------------------------
     //  Private methods
@@ -187,7 +200,7 @@ private:
 //  An enumerator for a value array. It derives from the basic enumerator
 //  class, so that value vectors can be generically enumerated.
 //
-template <class TVal> class ValueHashTableOfEnumerator : public XMLEnumerator<TVal>
+template <class TVal> class ValueHashTableOfEnumerator : public XMLEnumerator<TVal>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -213,6 +226,12 @@ public :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    ValueHashTableOfEnumerator(const ValueHashTableOfEnumerator<TVal>&);
+    ValueHashTableOfEnumerator<TVal>& operator=(const ValueHashTableOfEnumerator<TVal>&);
+
     // -----------------------------------------------------------------------
     //  Private methods
     // -----------------------------------------------------------------------

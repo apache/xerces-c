@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/01/29 11:48:47  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.3  2003/03/07 18:11:55  tng
  * Return a reference instead of void for operator=
  *
@@ -110,7 +113,7 @@ private :
     // -----------------------------------------------------------------------
     XMLDeleterFor();
     XMLDeleterFor(const XMLDeleterFor<T>&);
-    XMLDeleterFor& operator=(const XMLDeleterFor<T>&);
+    XMLDeleterFor<T>& operator=(const XMLDeleterFor<T>&);
 
 
     // -----------------------------------------------------------------------

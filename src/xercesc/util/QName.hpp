@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/09/25 15:22:34  peiyongz
  * Implementation of Serialization
  *
@@ -211,6 +214,10 @@ public :
     DECL_XSERIALIZABLE(QName)
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    QName& operator=(const QName&);
 
     // -----------------------------------------------------------------------
     //  Private instance variables

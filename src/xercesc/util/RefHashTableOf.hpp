@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.12  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -168,9 +171,18 @@ template <class TVal> struct RefHashTableBucketElem : public XMemory
         {
         }
 
+    RefHashTableBucketElem(){};
+
     TVal*                           fData;
     RefHashTableBucketElem<TVal>*   fNext;
 	void*							fKey;
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefHashTableBucketElem(const RefHashTableBucketElem<TVal>&);
+    RefHashTableBucketElem<TVal>& operator=(const RefHashTableBucketElem<TVal>&);
 };
 
 
@@ -244,6 +256,11 @@ private :
     friend class RefHashTableOfEnumerator<TVal>;
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefHashTableOf(const RefHashTableOf<TVal>&);
+    RefHashTableOf<TVal>& operator=(const RefHashTableOf<TVal>&);
 
     // -----------------------------------------------------------------------
     //  Private methods
@@ -300,7 +317,7 @@ public :
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~RefHashTableOfEnumerator();
 
-
+    RefHashTableOfEnumerator(const RefHashTableOfEnumerator<TVal>&);
     // -----------------------------------------------------------------------
     //  Enum interface
     // -----------------------------------------------------------------------
@@ -314,6 +331,11 @@ public :
     void* nextElementKey();
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefHashTableOfEnumerator<TVal>& operator=(const RefHashTableOfEnumerator<TVal>&);
+
     // -----------------------------------------------------------------------
     //  Private methods
     // -----------------------------------------------------------------------

@@ -85,6 +85,10 @@ private:
     XMLSize_t      nextFreeSlot;
     void           init(DOMDocument *doc, XMLSize_t size);
     void           checkSpace();
+    
+    // unimplemented
+    DOMNodeVector ( const DOMNodeVector& toCopy);
+    DOMNodeVector& operator= (const DOMNodeVector& other);
 
 public:
     DOMNodeVector(DOMDocument *doc);

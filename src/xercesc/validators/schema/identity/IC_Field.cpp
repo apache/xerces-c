@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/01/29 11:52:32  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.6  2003/12/16 18:41:15  knoaman
  * Make IC_Field stateless
  *
@@ -102,8 +105,8 @@ FieldMatcher::FieldMatcher(XercesXPath* const xpath,
                            FieldActivator* const fieldActivator,
                            MemoryManager* const manager)
     : XPathMatcher(xpath, (IdentityConstraint*) 0, manager)
-    , fField(aField)
     , fValueStore(valueStore)
+    , fField(aField)    
     , fFieldActivator(fieldActivator)
 {
 }
@@ -159,8 +162,8 @@ bool IC_Field::operator!= (const IC_Field& other) const {
 // ---------------------------------------------------------------------------
 //  IC_Field: Factory methods
 // ---------------------------------------------------------------------------
-XPathMatcher* IC_Field::createMatcher(ValueStore* const valueStore,
-                                      MemoryManager* const manager) {
+XPathMatcher* IC_Field::createMatcher(ValueStore* const,
+                                      MemoryManager* const) {
 
     return 0;
 }

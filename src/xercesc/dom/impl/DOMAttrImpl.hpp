@@ -128,6 +128,11 @@ public:
    virtual void removeAttrFromIDNodeMap();
 private:
     void getTextValue(DOMNode* node, XMLBuffer& buf) const;
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    DOMAttrImpl& operator=(const DOMAttrImpl&);
 };
 
 inline void DOMAttrImpl::removeAttrFromIDNodeMap()

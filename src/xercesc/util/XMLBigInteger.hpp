@@ -152,6 +152,11 @@ public:
     int intValue() const;
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    XMLBigInteger& operator=(const XMLBigInteger&);
+
 
     void setSign(int);
 

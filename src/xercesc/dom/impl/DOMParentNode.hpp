@@ -138,6 +138,10 @@ public:
     void cloneChildren(const DOMNode *other);
     DOMNode * lastChild() const;
     void lastChild(DOMNode *);
+
+private:
+    // unimplemented    
+    DOMParentNode& operator= (const DOMParentNode& other);
 };
 
 XERCES_CPP_NAMESPACE_END

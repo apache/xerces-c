@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/01/29 11:46:29  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.4  2003/12/01 23:23:25  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -220,6 +223,13 @@ public :
     virtual BinInputStream* makeStream() const;
 
     //@}
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    LocalFileInputSource(const LocalFileInputSource&);
+    LocalFileInputSource& operator=(const LocalFileInputSource&);
+
 };
 
 XERCES_CPP_NAMESPACE_END

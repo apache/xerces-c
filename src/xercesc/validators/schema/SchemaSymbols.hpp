@@ -272,6 +272,11 @@ public :
         XSD_FIXED = 4
     };
 
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SchemaSymbols();
 };
 
 XERCES_CPP_NAMESPACE_END

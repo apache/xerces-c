@@ -72,24 +72,24 @@ DOMChildNode::DOMChildNode()
 {
     this->previousSibling  = 0;
     this->nextSibling  = 0;
-};
+}
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
-DOMChildNode::DOMChildNode(const DOMChildNode &other)
+DOMChildNode::DOMChildNode(const DOMChildNode &)
 {
     // Need to break the association w/ original siblings and parent
     this->previousSibling = 0;
     this->nextSibling = 0;
-};
+}
 
 DOMChildNode::~DOMChildNode() {
-};
+}
 
 
 DOMNode * DOMChildNode::getNextSibling() const {
     return nextSibling;
-};
+}
 
 //
 //  Note:  for getParentNode and getPreviousSibling(), below, an
@@ -105,13 +105,13 @@ DOMNode * DOMChildNode::getParentNode(const DOMNode *thisNode) const
     // our ownerDocument and we don't have a parent
     DOMNodeImpl *thisNodeImpl = castToNodeImpl(thisNode);
     return thisNodeImpl->isOwned() ? thisNodeImpl->fOwnerNode : 0;
-};
+}
 
 DOMNode * DOMChildNode::getPreviousSibling(const DOMNode *thisNode) const {
     // if we are the firstChild, previousSibling actually refers to our
     // parent's lastChild, but we hide that
     return castToNodeImpl(thisNode)->isFirstChild() ? 0 : previousSibling;
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

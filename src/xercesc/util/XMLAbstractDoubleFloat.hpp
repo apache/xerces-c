@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.19  2004/01/13 19:50:56  peiyongz
  * remove parseContent()
  *
@@ -260,8 +263,7 @@ private:
 
     inline bool           isSpecialValue() const;
 
-    static int            compareSpecial(const XMLAbstractDoubleFloat* const specialValue
-                                       , const XMLAbstractDoubleFloat* const normalValue
+    static int            compareSpecial(const XMLAbstractDoubleFloat* const specialValue                                       
                                        , MemoryManager* const manager);
 
     void                  formatString();

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.14  2003/12/17 00:18:40  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -365,6 +368,11 @@ public:
     DECL_XSERIALIZABLE(SchemaGrammar)
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SchemaGrammar(const SchemaGrammar&);
+    SchemaGrammar& operator=(const SchemaGrammar&);
 
     // -----------------------------------------------------------------------
     //  Helper methods

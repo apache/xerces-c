@@ -357,6 +357,12 @@ public :
             return DOMError::DOM_SEVERITY_FATAL_ERROR;
        else return DOMError::DOM_SEVERITY_ERROR;
     }
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLErrs();
 };
 
 XERCES_CPP_NAMESPACE_END

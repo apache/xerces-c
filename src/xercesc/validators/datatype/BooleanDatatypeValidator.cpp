@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.15  2004/01/13 20:57:06  peiyongz
  * revert code back to previous version
  *
@@ -249,7 +252,7 @@ void BooleanDatatypeValidator::checkContent( const XMLCh*             const cont
 
 int BooleanDatatypeValidator::compare(const XMLCh* const lValue
                                     , const XMLCh* const rValue
-                                    , MemoryManager* const manager)
+                                    , MemoryManager* const)
 {
     // need to check by bool semantics
     // 1 == true

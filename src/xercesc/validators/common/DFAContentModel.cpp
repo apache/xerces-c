@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.10  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -254,6 +257,7 @@ DFAContentModel::DFAContentModel( const bool             dtd
     , fHeadNode(0)
     , fLeafCount(0)
     , fLeafList(0)
+    , fLeafListType(0)
     , fTransTable(0)
     , fTransTableSize(0)
     , fDTD(dtd)
@@ -280,6 +284,7 @@ DFAContentModel::DFAContentModel( const bool             dtd
     , fHeadNode(0)
     , fLeafCount(0)
     , fLeafList(0)
+    , fLeafListType(0)
     , fTransTable(0)
     , fTransTableSize(0)
     , fDTD(dtd)
@@ -321,7 +326,7 @@ DFAContentModel::~DFAContentModel()
 int
 DFAContentModel::validateContent( QName** const        children
                                 , const unsigned int   childCount
-                                , const unsigned int   emptyNamespaceId) const
+                                , const unsigned int) const
 {
     //
     //  If there are no children, then either we fail on the 0th element
@@ -431,7 +436,7 @@ DFAContentModel::validateContent( QName** const        children
 
 int DFAContentModel::validateContentSpecial(QName** const          children
                                             , const unsigned int      childCount
-                                            , const unsigned int      emptyNamespaceId
+                                            , const unsigned int
                                             , GrammarResolver*  const pGrammarResolver
                                             , XMLStringPool*    const pStringPool) const
 {
@@ -726,8 +731,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
 
         for (unsigned int leafIndex = 0; leafIndex < fLeafCount; leafIndex++)
         {
-            const QName* leaf = fLeafList[leafIndex]->getElement();
-            const int leafType = fLeafListType[leafIndex];
+            const QName* leaf = fLeafList[leafIndex]->getElement();            
             if (fDTD) {
                 if (XMLString::equals(leaf->getRawName(), elementRawName)) {
                     fLeafSorter[fSortCount++] = leafIndex;
@@ -1304,7 +1308,7 @@ ContentLeafNameTypeVector* DFAContentModel::getContentLeafNameTypeVector() const
 {
    //later change it to return the data member
 	return fLeafNameTypeVector;
-};
+}
 
 void DFAContentModel::checkUniqueParticleAttribution (SchemaGrammar*    const pGrammar,
                                                       GrammarResolver*  const pGrammarResolver,

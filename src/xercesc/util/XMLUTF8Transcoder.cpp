@@ -218,7 +218,7 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
         // first, test first byte
         if((gUTFByteIndicatorTest[trailingBytes] & *srcPtr) != gUTFByteIndicator[trailingBytes]) {
             char pos[2] = {(char)0x31, 0}; 
-            char len[2] = {(char)trailingBytes+0x31, 0};
+            char len[2] = {(char)(trailingBytes+0x31), 0};
             char byte[2] = {*srcPtr,0};
             ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len, getMemoryManager());
         }
@@ -234,8 +234,8 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
             } 
             else
             {
-                char len[2] = {(char)trailingBytes+0x31, 0};
-                char pos[2]= {(char)i+0x31, 0};
+                char len[2] = {(char)(trailingBytes+0x31), 0};
+                char pos[2]= {(char)(i+0x31), 0};
                 char byte[2] = {*srcPtr,0};
                 ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, pos, byte, len, getMemoryManager());
             }
@@ -246,7 +246,7 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
         }
         else 
         {
-            char len[2] = {(char)trailingBytes+0x31, 0};
+            char len[2] = {(char)(trailingBytes+0x31), 0};
             char byte[2] = {*srcPtr,0};
             ThrowXMLwithMemMgr3(UTFDataFormatException, XMLExcepts::UTF8_FormatError, len, byte, len, getMemoryManager());
         }
@@ -298,12 +298,12 @@ XMLUTF8Transcoder::transcodeFrom(const  XMLByte* const          srcData
             *outPtr++ = XMLCh((tmpVal >> 10) + 0xD800);
 
             //
-            //  And then the treailing char. This one accounts for no
+            //  And then the trailing char. This one accounts for no
             //  bytes eaten from the source, so set the char size for this
             //  one to be zero.
             //
             *sizePtr++ = 0;
-            *outPtr++ = XMLCh(tmpVal & 0x3FF) + 0xDC00;
+            *outPtr++ = XMLCh((tmpVal & 0x3FF) + 0xDC00);
         }
     }
 

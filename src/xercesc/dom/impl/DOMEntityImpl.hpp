@@ -130,6 +130,12 @@ public:
     virtual const XMLCh*           getVersion() const;
     virtual void                   setVersion(const XMLCh* version);
     virtual void                   setBaseURI(const XMLCh *arg);
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    DOMEntityImpl & operator = (const DOMEntityImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

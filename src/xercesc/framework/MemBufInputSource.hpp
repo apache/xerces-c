@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/01/29 11:46:29  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.6  2003/12/01 23:23:25  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -255,6 +258,12 @@ public :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    MemBufInputSource(const MemBufInputSource&);
+    MemBufInputSource& operator=(const MemBufInputSource&);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //

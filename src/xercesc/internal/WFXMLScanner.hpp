@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/10/22 20:22:30  knoaman
  * Prepare for annotation support.
  *
@@ -189,7 +192,7 @@ private :
         const   XMLCh* const    attrName
         ,       XMLBuffer&      toFill
     );
-    bool scanContent(const bool extEntity);
+    bool scanContent();
     void scanEndTag(bool& gotData);
     bool scanStartTag(bool& gotData);
     bool scanStartTagNS(bool& gotData);

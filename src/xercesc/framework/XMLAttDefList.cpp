@@ -57,6 +57,9 @@
 /**
  * $Id$
  * $Log$
+ * Revision 1.2  2004/01/29 11:46:29  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.1  2003/10/10 16:23:29  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -76,7 +79,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 IMPL_XSERIALIZABLE_NOCREATE(XMLAttDefList)
 
-void XMLAttDefList::serialize(XSerializeEngine& serEng)
+void XMLAttDefList::serialize(XSerializeEngine&)
 {
     //no data
 }

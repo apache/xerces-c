@@ -99,9 +99,9 @@ DOMBuilderImpl::DOMBuilderImpl( XMLValidator* const   valToAdopt
 AbstractDOMParser(valToAdopt, manager, gramPool)
 , fAutoValidation(false)
 , fValidation(false)
-, fErrorHandler(0)
 , fEntityResolver(0)
 , fXMLEntityResolver(0)
+, fErrorHandler(0)
 , fFilter(0)
 , fCharsetOverridesXMLEncoding(true)
 , fUserAdoptsDocument(false)
@@ -154,7 +154,7 @@ void DOMBuilderImpl::setXMLEntityResolver(XMLEntityResolver* const handler)
     }
 }
 
-void DOMBuilderImpl::setFilter(DOMBuilderFilter* const filter)
+void DOMBuilderImpl::setFilter(DOMBuilderFilter* const)
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }
@@ -485,9 +485,9 @@ DOMDocument* DOMBuilderImpl::parseURI(const char* const systemId)
         return getDocument();
 }
 
-void DOMBuilderImpl::parseWithContext(const DOMInputSource& source,
-                                      DOMNode* const contextNode,
-                                      const short action)
+void DOMBuilderImpl::parseWithContext(const DOMInputSource&,
+                                      DOMNode* const,
+                                      const short)
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }
@@ -497,11 +497,11 @@ void DOMBuilderImpl::parseWithContext(const DOMInputSource& source,
 //  DOMBuilderImpl: Implementation of the XMLErrorReporter interface
 // ---------------------------------------------------------------------------
 void DOMBuilderImpl::error( const   unsigned int                code
-                            , const XMLCh* const                msgDomain
+                            , const XMLCh* const
                             , const XMLErrorReporter::ErrTypes  errType
                             , const XMLCh* const                errorText
                             , const XMLCh* const                systemId
-                            , const XMLCh* const                publicId
+                            , const XMLCh* const
                             , const XMLSSize_t                  lineNum
                             , const XMLSSize_t                  colNum)
 {

@@ -91,6 +91,15 @@ KeyRefPair(const KeyRefPair<TKey,TValue>* toCopy) :
 {
 }
 
+template <class TKey, class TValue> KeyRefPair<TKey,TValue>::
+KeyRefPair(const KeyRefPair<TKey,TValue>& toCopy) :
+
+    fKey(toCopy.fKey)
+    , fValue(toCopy.fValue)
+{
+}
+
+
 template <class TKey, class TValue> KeyRefPair<TKey,TValue>::~KeyRefPair()
 {
 }

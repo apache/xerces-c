@@ -97,6 +97,11 @@ public :
     static const XMLCh fgSYMBOL_PRECEDING_SIBLING[];
     static const XMLCh fgSYMBOL_SELF[];
 
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XPathSymbols();
 };
 
 XERCES_CPP_NAMESPACE_END

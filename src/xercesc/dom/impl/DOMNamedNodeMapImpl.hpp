@@ -117,7 +117,10 @@ public:
     virtual DOMNode*        setNamedItemNS(DOMNode *arg);
     virtual DOMNode*        removeNamedItemNS(const XMLCh *namespaceURI,
 	                                           const XMLCh *localName);
-
+private:
+    // unimplemented
+    DOMNamedNodeMapImpl(const DOMNamedNodeMapImpl &);
+    DOMNamedNodeMapImpl & operator = (const DOMNamedNodeMapImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

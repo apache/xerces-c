@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.15  2003/11/28 19:54:31  knoaman
  * PSVIElement update
  *
@@ -252,7 +255,7 @@ private :
         const   XMLCh* const    attrName
         , const XMLCh* const    attrValue
     );
-    void scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount);
+    void scanRawAttrListforNameSpaces(int attCount);
     void parseSchemaLocation(const XMLCh* const schemaLocationStr);
     void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
     bool switchGrammar(const XMLCh* const newGrammarNameSpace);
@@ -284,7 +287,7 @@ private :
         const   XMLAttDef* const    attDef
         ,       XMLBuffer&          toFill
     );
-    bool scanContent(const bool extEntity);
+    bool scanContent();
     void scanEndTag(bool& gotData);
     bool scanStartTag(bool& gotData);
 

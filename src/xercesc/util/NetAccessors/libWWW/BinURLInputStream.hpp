@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2004/01/29 11:51:20  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.4  2004/01/15 16:07:16  amassari
  * Fix for bug#24929; patch by Michael Wuschek
  *
@@ -124,6 +127,12 @@ public :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    BinURLInputStream(const BinURLInputStream&);
+    BinURLInputStream& operator=(const BinURLInputStream&); 
+
     // -----------------------------------------------------------------------
     //  Private data members
     //

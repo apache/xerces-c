@@ -57,6 +57,9 @@
 /**
  * $Id$
  * $Log$
+ * Revision 1.2  2004/01/29 11:46:29  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.1  2003/10/14 15:16:58  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -85,7 +88,7 @@ XMLGrammarDescription::XMLGrammarDescription(MemoryManager* const memMgr)
 
 IMPL_XSERIALIZABLE_NOCREATE(XMLGrammarDescription)
 
-void XMLGrammarDescription::serialize(XSerializeEngine& serEng)
+void XMLGrammarDescription::serialize(XSerializeEngine&)
 {
     //no data
 }

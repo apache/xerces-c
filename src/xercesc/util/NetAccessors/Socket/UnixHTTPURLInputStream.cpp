@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/01/29 11:51:20  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.14  2004/01/13 16:34:21  cargilld
  * Misc memory management changes.
  *
@@ -162,6 +165,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
       : fSocket(0)
       , fBytesProcessed(0)
+      , fMemoryManager(urlSource.getMemoryManager())
 {
 
     //
@@ -222,8 +226,7 @@ UnixHTTPURLInputStream::UnixHTTPURLInputStream(const XMLURL& urlSource)
     const XMLCh*        hostName = urlSource.getHost();
     const XMLCh*        path = urlSource.getPath();
     const XMLCh*        fragment = urlSource.getFragment();
-    const XMLCh*        query = urlSource.getQuery();
-                        fMemoryManager = urlSource.getMemoryManager();
+    const XMLCh*        query = urlSource.getQuery();                        
 
     //
     //  Convert the hostName to the platform's code page for gethostbyname and

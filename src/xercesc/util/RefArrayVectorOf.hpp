@@ -88,6 +88,12 @@ public :
     void removeElementAt(const unsigned int removeAt);
     void removeLastElement();
     void cleanup();
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefArrayVectorOf(const RefArrayVectorOf<TElem>&);
+    RefArrayVectorOf<TElem>& operator=(const RefArrayVectorOf<TElem>&);
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -58,6 +58,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.2  2003/10/29 16:19:47  peiyongz
  * storeGrammar()/loadGrammar added
  *
@@ -83,7 +86,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 IMPL_XSERIALIZABLE_NOCREATE(Grammar)
 
-void Grammar::serialize(XSerializeEngine& serEng)
+void Grammar::serialize(XSerializeEngine&)
 {
     //no data
 }
@@ -115,18 +118,14 @@ Grammar* Grammar::loadGrammar(XSerializeEngine& serEng)
         DTDGrammar* dtdGrammar;
         serEng>>dtdGrammar;
         return dtdGrammar;
-        break;
     case SchemaGrammarType:
         SchemaGrammar* schemaGrammar;
         serEng>>schemaGrammar;
-        return schemaGrammar;
-        break;
+        return schemaGrammar;        
     case UnKnown:
-        return 0;
-        break;
+        return 0;        
     default: //we treat this same as UnKnown
-        return 0;
-        break;
+        return 0;        
     }
 
 }

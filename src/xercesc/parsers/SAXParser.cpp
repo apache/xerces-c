@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2004/01/29 11:46:32  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.30  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -1181,9 +1184,9 @@ void SAXParser::startEntityReference(const XMLEntityDecl& entityDecl)
 // ---------------------------------------------------------------------------
 //  SAXParser: Overrides of the DocTypeHandler interface
 // ---------------------------------------------------------------------------
-void SAXParser::attDef( const   DTDElementDecl& elemDecl
-                        , const DTDAttDef&      attDef
-                        , const bool            ignoring)
+void SAXParser::attDef( const   DTDElementDecl&
+                        , const DTDAttDef&
+                        , const bool)
 {
     // Unused by SAX DTDHandler interface at this time
 }
@@ -1195,11 +1198,11 @@ void SAXParser::doctypeComment(const XMLCh* const)
 }
 
 
-void SAXParser::doctypeDecl(const   DTDElementDecl& elemDecl
-                            , const XMLCh* const    publicId
-                            , const XMLCh* const    systemId
-                            , const bool            hasIntSubset
-                            , const bool            hasExtSubset)
+void SAXParser::doctypeDecl(const   DTDElementDecl&
+                            , const XMLCh* const
+                            , const XMLCh* const
+                            , const bool
+                            , const bool)
 {
     // Unused by SAX DTDHandler interface at this time
 }
@@ -1212,8 +1215,8 @@ void SAXParser::doctypePI(  const   XMLCh* const
 }
 
 
-void SAXParser::doctypeWhitespace(  const   XMLCh* const    chars
-                                    , const unsigned int    length)
+void SAXParser::doctypeWhitespace(  const   XMLCh* const
+                                    , const unsigned int)
 {
     // Unused by SAX DTDHandler interface at this time
 }
@@ -1244,7 +1247,7 @@ void SAXParser::endExtSubset()
 
 
 void SAXParser::entityDecl( const   DTDEntityDecl&  entityDecl
-                            , const bool            isPEDecl
+                            , const bool
                             , const bool            isIgnored)
 {
     //
@@ -1325,8 +1328,8 @@ void SAXParser::resetErrors()
 }
 
 
-void SAXParser::error(  const   unsigned int                code
-                        , const XMLCh* const                msgDomain
+void SAXParser::error(  const   unsigned int
+                        , const XMLCh* const
                         , const XMLErrorReporter::ErrTypes  errType
                         , const XMLCh* const                errorText
                         , const XMLCh* const                systemId
@@ -1384,7 +1387,7 @@ void SAXParser::resetEntities()
 InputSource*
 SAXParser::resolveEntity(   const   XMLCh* const    publicId
                             , const XMLCh* const    systemId
-                            , const XMLCh* const    baseURI)
+                            , const XMLCh* const)
 {
     // Just map to the SAX entity resolver handler
     if (fEntityResolver)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.6  2003/05/29 13:26:44  knoaman
  * Fix memory leak when using deprecated dom.
  *
@@ -142,6 +145,12 @@ public :
 
 private :
     // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    ValueStackOf(const ValueStackOf<TElem>&);
+    ValueStackOf<TElem>& operator=(const ValueStackOf<TElem>&);
+
+    // -----------------------------------------------------------------------
     //  Declare our friends
     // -----------------------------------------------------------------------
     friend class ValueStackEnumerator<TElem>;
@@ -163,7 +172,7 @@ private :
 //  An enumerator for a value stack. It derives from the basic enumerator
 //  class, so that value stacks can be generically enumerated.
 //
-template <class TElem> class ValueStackEnumerator : public XMLEnumerator<TElem>
+template <class TElem> class ValueStackEnumerator : public XMLEnumerator<TElem>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -186,6 +195,12 @@ public :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    ValueStackEnumerator(const ValueStackEnumerator<TElem>&);
+    ValueStackEnumerator<TElem>& operator=(const ValueStackEnumerator<TElem>&);
+
     // -----------------------------------------------------------------------
     //  Data Members
     //

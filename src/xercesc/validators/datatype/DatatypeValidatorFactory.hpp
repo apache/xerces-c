@@ -264,6 +264,12 @@ private:
     void cleanUp();
 
     // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DatatypeValidatorFactory(const DatatypeValidatorFactory&);
+    DatatypeValidatorFactory& operator=(const DatatypeValidatorFactory&);
+
+    // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fUserDefinedRegistry

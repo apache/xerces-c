@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.26  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.25  2004/01/13 19:50:56  peiyongz
  * remove parseContent()
  *
@@ -356,7 +359,7 @@ int XMLAbstractDoubleFloat::compareValues(const XMLAbstractDoubleFloat* const lV
     if ((lValue->isSpecialValue()) &&
         (!rValue->isSpecialValue())  )
     {
-        return compareSpecial(lValue, rValue, manager);
+        return compareSpecial(lValue, manager);
     }
     //
     // case#4: lValue normal
@@ -364,14 +367,13 @@ int XMLAbstractDoubleFloat::compareValues(const XMLAbstractDoubleFloat* const lV
     //
     else
     {
-        return (-1) * compareSpecial(rValue, lValue, manager);
+        return (-1) * compareSpecial(rValue, manager);
     }
 
     return 0;
 }
 
-int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const specialValue
-                                         , const XMLAbstractDoubleFloat* const normalValue
+int XMLAbstractDoubleFloat::compareSpecial(const XMLAbstractDoubleFloat* const specialValue                                         
                                          , MemoryManager* const manager)
 {
     switch (specialValue->fType)

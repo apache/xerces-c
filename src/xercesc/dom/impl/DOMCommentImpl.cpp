@@ -75,21 +75,21 @@ DOMCommentImpl::DOMCommentImpl(DOMDocument *ownerDoc, const XMLCh *dat)
     : fNode(ownerDoc),  fCharacterData(ownerDoc, dat)
 {
     fNode.setIsLeafNode(true);
-};
+}
 
 
-DOMCommentImpl::DOMCommentImpl(const DOMCommentImpl &other, bool deep)
+DOMCommentImpl::DOMCommentImpl(const DOMCommentImpl &other, bool)
 
     : fNode(other.fNode),
     fChild(other.fChild),
     fCharacterData(other.fCharacterData)
 {
     fNode.setIsLeafNode(true);
-};
+}
 
 
 DOMCommentImpl::~DOMCommentImpl() {
-};
+}
 
 
 
@@ -98,7 +98,7 @@ DOMNode * DOMCommentImpl::cloneNode(bool deep) const
     DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::COMMENT_OBJECT) DOMCommentImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
-};
+}
 
 
 const XMLCh * DOMCommentImpl::getNodeName() const {
@@ -164,46 +164,46 @@ DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
     }
 
     return newText;
-};
+}
 
 
-           DOMNode*         DOMCommentImpl::appendChild(DOMNode *newChild)          {return fNode.appendChild (newChild); };
-           DOMNamedNodeMap* DOMCommentImpl::getAttributes() const                   {return fNode.getAttributes (); };
-           DOMNodeList*     DOMCommentImpl::getChildNodes() const                   {return fNode.getChildNodes (); };
-           DOMNode*         DOMCommentImpl::getFirstChild() const                   {return fNode.getFirstChild (); };
-           DOMNode*         DOMCommentImpl::getLastChild() const                    {return fNode.getLastChild (); };
-     const XMLCh*           DOMCommentImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh*           DOMCommentImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode*         DOMCommentImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
-     const XMLCh*           DOMCommentImpl::getNodeValue() const                    {return fCharacterData.getNodeValue (); };
-           DOMDocument*     DOMCommentImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); };
-     const XMLCh*           DOMCommentImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode*         DOMCommentImpl::getParentNode() const                   {return fChild.getParentNode (this); };
-           DOMNode*         DOMCommentImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
-           bool             DOMCommentImpl::hasChildNodes() const                   {return fNode.hasChildNodes (); };
+           DOMNode*         DOMCommentImpl::appendChild(DOMNode *newChild)          {return fNode.appendChild (newChild); }
+           DOMNamedNodeMap* DOMCommentImpl::getAttributes() const                   {return fNode.getAttributes (); }
+           DOMNodeList*     DOMCommentImpl::getChildNodes() const                   {return fNode.getChildNodes (); }
+           DOMNode*         DOMCommentImpl::getFirstChild() const                   {return fNode.getFirstChild (); }
+           DOMNode*         DOMCommentImpl::getLastChild() const                    {return fNode.getLastChild (); }
+     const XMLCh*           DOMCommentImpl::getLocalName() const                    {return fNode.getLocalName (); }
+     const XMLCh*           DOMCommentImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); }
+           DOMNode*         DOMCommentImpl::getNextSibling() const                  {return fChild.getNextSibling (); }
+     const XMLCh*           DOMCommentImpl::getNodeValue() const                    {return fCharacterData.getNodeValue (); }
+           DOMDocument*     DOMCommentImpl::getOwnerDocument() const                {return fNode.getOwnerDocument (); }
+     const XMLCh*           DOMCommentImpl::getPrefix() const                       {return fNode.getPrefix (); }
+           DOMNode*         DOMCommentImpl::getParentNode() const                   {return fChild.getParentNode (this); }
+           DOMNode*         DOMCommentImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); }
+           bool             DOMCommentImpl::hasChildNodes() const                   {return fNode.hasChildNodes (); }
            DOMNode*         DOMCommentImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                                    {return fNode.insertBefore (newChild, refChild); };
-           void             DOMCommentImpl::normalize()                             {fNode.normalize (); };
-           DOMNode*         DOMCommentImpl::removeChild(DOMNode *oldChild)          {return fNode.removeChild (oldChild); };
+                                                                                    {return fNode.insertBefore (newChild, refChild); }
+           void             DOMCommentImpl::normalize()                             {fNode.normalize (); }
+           DOMNode*         DOMCommentImpl::removeChild(DOMNode *oldChild)          {return fNode.removeChild (oldChild); }
            DOMNode*         DOMCommentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                                    {return fNode.replaceChild (newChild, oldChild); };
+                                                                                    {return fNode.replaceChild (newChild, oldChild); }
            bool             DOMCommentImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                                    {return fNode.isSupported (feature, version); };
-           void             DOMCommentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool             DOMCommentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMCommentImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); };
-           bool             DOMCommentImpl::isEqualNode(const DOMNode* arg) const   {return fNode.isEqualNode(arg); };
+                                                                                    {return fNode.isSupported (feature, version); }
+           void             DOMCommentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); }
+           bool             DOMCommentImpl::hasAttributes() const                   {return fNode.hasAttributes(); }
+           bool             DOMCommentImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); }
+           bool             DOMCommentImpl::isEqualNode(const DOMNode* arg) const   {return fNode.isEqualNode(arg); }
            void*            DOMCommentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
-                                                                                    {return fNode.setUserData(key, data, handler); };
-           void*            DOMCommentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           const XMLCh*     DOMCommentImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
-           short            DOMCommentImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
-           const XMLCh*     DOMCommentImpl::getTextContent() const                  {return fNode.getTextContent(); };
-           void             DOMCommentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
-           const XMLCh*     DOMCommentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
-           bool             DOMCommentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
-           const XMLCh*     DOMCommentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
-           DOMNode*         DOMCommentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+                                                                                    {return fNode.setUserData(key, data, handler); }
+           void*            DOMCommentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); }
+           const XMLCh*     DOMCommentImpl::getBaseURI() const                      {return fNode.getBaseURI(); }
+           short            DOMCommentImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); }
+           const XMLCh*     DOMCommentImpl::getTextContent() const                  {return fNode.getTextContent(); }
+           void             DOMCommentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); }
+           const XMLCh*     DOMCommentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
+           bool             DOMCommentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
+           const XMLCh*     DOMCommentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
+           DOMNode*         DOMCommentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); }
 
 
 
@@ -212,19 +212,19 @@ DOMComment *DOMCommentImpl::splitText(XMLSize_t offset)
 //
 
 
-           const XMLCh*     DOMCommentImpl::getData() const                         {return fCharacterData.getData();};
-           XMLSize_t        DOMCommentImpl::getLength() const                       {return fCharacterData.getLength();};
+           const XMLCh*     DOMCommentImpl::getData() const                         {return fCharacterData.getData();}
+           XMLSize_t        DOMCommentImpl::getLength() const                       {return fCharacterData.getLength();}
            const XMLCh*     DOMCommentImpl::substringData(XMLSize_t offset, XMLSize_t count) const
-                                                                                    {return fCharacterData.substringData(this, offset, count);};
-           void             DOMCommentImpl::appendData(const XMLCh *arg)            {fCharacterData.appendData(this, arg);};
+                                                                                    {return fCharacterData.substringData(this, offset, count);}
+           void             DOMCommentImpl::appendData(const XMLCh *arg)            {fCharacterData.appendData(this, arg);}
            void             DOMCommentImpl::insertData(XMLSize_t offset, const  XMLCh *arg)
-                                                                                    {fCharacterData.insertData(this, offset, arg);};
+                                                                                    {fCharacterData.insertData(this, offset, arg);}
            void             DOMCommentImpl::deleteData(XMLSize_t offset, XMLSize_t count)
-                                                                                    {fCharacterData.deleteData(this, offset, count);};
+                                                                                    {fCharacterData.deleteData(this, offset, count);}
            void             DOMCommentImpl::replaceData(XMLSize_t offset, XMLSize_t count, const XMLCh *arg)
-                                                                                    {fCharacterData.replaceData(this, offset, count, arg);};
-           void             DOMCommentImpl::setData(const XMLCh *data)              {fCharacterData.setData(this, data);};
-           void             DOMCommentImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };
+                                                                                    {fCharacterData.replaceData(this, offset, count, arg);}
+           void             DOMCommentImpl::setData(const XMLCh *data)              {fCharacterData.setData(this, data);}
+           void             DOMCommentImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); }
 
 XERCES_CPP_NAMESPACE_END
 

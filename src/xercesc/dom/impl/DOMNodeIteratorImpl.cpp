@@ -80,28 +80,28 @@ DOMNodeIteratorImpl::DOMNodeIteratorImpl (DOMDocument* doc,
                                     unsigned long whatToShow,
                                     DOMNodeFilter* nodeFilter,
                                     bool expandEntityRef)
-:   fDetached(false),
-    fRoot(root),
-    fCurrentNode(0),
+:   fRoot(root),
+    fDocument(doc),
     fWhatToShow(whatToShow),
     fNodeFilter(nodeFilter),
-    fForward(true),
     fExpandEntityReferences(expandEntityRef),
-    fDocument(doc)
+    fDetached(false),
+    fCurrentNode(0),
+    fForward(true)    
 {
 	
 }
 
 
 DOMNodeIteratorImpl::DOMNodeIteratorImpl ( const DOMNodeIteratorImpl& toCopy)
-    :   fDetached(toCopy.fDetached),
-    fRoot(toCopy.fRoot),
-    fCurrentNode(toCopy.fCurrentNode),
+    :   fRoot(toCopy.fRoot),
+    fDocument(toCopy.fDocument),
     fWhatToShow(toCopy.fWhatToShow),
     fNodeFilter(toCopy.fNodeFilter),
-    fForward(toCopy.fForward),
     fExpandEntityReferences(toCopy.fExpandEntityReferences),
-    fDocument(toCopy.fDocument)
+    fDetached(toCopy.fDetached),
+    fCurrentNode(toCopy.fCurrentNode),
+    fForward(toCopy.fForward)
 {
 }
 

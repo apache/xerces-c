@@ -75,9 +75,9 @@ static const float gMaxFill = 0.8f;   // The maximum fraction of the total
                                     // table entries to consume before exanding.
 
 DOMNodeIDMap::DOMNodeIDMap(int initialSize, DOMDocument *doc)
+: fNumEntries(0)
+, fDoc(doc)
 {
-    fDoc = doc;
-
     for (fSizeIndex = 0; gPrimes[fSizeIndex] < initialSize; fSizeIndex++)
     {
         if (gPrimes[fSizeIndex] == 0)
@@ -89,8 +89,7 @@ DOMNodeIDMap::DOMNodeIDMap(int initialSize, DOMDocument *doc)
         }
     }
 
-    fSize = gPrimes[fSizeIndex];
-    fNumEntries = 0;
+    fSize = gPrimes[fSizeIndex];    
     fMaxEntries = (XMLSize_t)(float(fSize) * gMaxFill);
 
     //fTable = new (fDoc) DOMAttr*[fSize];
@@ -98,14 +97,14 @@ DOMNodeIDMap::DOMNodeIDMap(int initialSize, DOMDocument *doc)
     XMLSize_t i;
     for (i=0; i<fSize; i++)
         fTable[i] = 0;
-};
+}
 
 
 DOMNodeIDMap::~DOMNodeIDMap()
 {
     // don't delete - the document owns the storage.
     fTable = 0;
-};
+}
 
 
 
@@ -152,7 +151,7 @@ void DOMNodeIDMap::add(DOMAttr *attr)
     //
     fTable[currentHash] = attr;
 
-};
+}
 
 
 void DOMNodeIDMap::remove(DOMAttr *attr)
@@ -194,7 +193,7 @@ void DOMNodeIDMap::remove(DOMAttr *attr)
             currentHash = currentHash % fSize;
     }
 
-};
+}
 
 
 DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
@@ -227,7 +226,7 @@ DOMAttr *DOMNodeIDMap::find(const XMLCh *id)
             currentHash = currentHash % fSize;
     }
     return 0;  // Never gets here, but keeps some compilers happy.
-};
+}
 
 
 //
@@ -279,7 +278,7 @@ void DOMNodeIDMap::growTable()
     // delete [] oldTable;   (The document owns the storage.  The old table will just
     //                        need to leak until until the document is discarded.)
 
-};
+}
 
 
 XERCES_CPP_NAMESPACE_END

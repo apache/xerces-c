@@ -61,29 +61,29 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOMXPathException::DOMXPathException()
-: msg(0)
+: code((ExceptionCode) 0)
+, msg(0)
 {
-        code = (ExceptionCode) 0;
-};
+}
 
 
 DOMXPathException::DOMXPathException(short exCode, const XMLCh *message)
-: msg(message)
+: code((ExceptionCode) exCode)
+, msg(message)
 {
-   code = (ExceptionCode) exCode;
-};
+}
 
 
 DOMXPathException::DOMXPathException(const DOMXPathException &other)
-: msg(other.msg)
-{
-        code = other.code;
-};
+: code(other.code)
+, msg(other.msg)
+{        
+}
 
 
 DOMXPathException::~DOMXPathException()
 {
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

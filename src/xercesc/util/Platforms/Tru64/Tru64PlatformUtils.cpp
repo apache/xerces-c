@@ -467,13 +467,13 @@ public:
       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate, XMLPlatformUtils::fgMemoryManager);
     recursionCount = 0;
     tid = 0;
-  };
+  }
 
   ~RecursiveMutex()
   {
     if (pthread_mutex_destroy(&mutex))
       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, XMLPlatformUtils::fgMemoryManager);
-  };
+  }
 
   void lock()
   {
@@ -486,7 +486,7 @@ public:
       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, XMLPlatformUtils::fgMemoryManager);
     tid = pthread_self();
     recursionCount = 1;
-  };
+  }
 
 
   void unlock()
@@ -497,13 +497,13 @@ public:
     if (pthread_mutex_unlock(&mutex) != 0)
       ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock, XMLPlatformUtils::fgMemoryManager);
     tid = 0;
-  };
+  }
 };
 
 void* XMLPlatformUtils::makeMutex()
 {
   return new RecursiveMutex;
-};
+}
 
 
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
@@ -512,7 +512,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
     return;
   RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
   delete rm;
-};
+}
 
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)

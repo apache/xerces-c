@@ -101,6 +101,12 @@ public:
    // helper function for DOM Level 3 renameNode
    virtual DOMNode* rename(const XMLCh* namespaceURI, const XMLCh* name);
    void setName(const XMLCh* namespaceURI, const XMLCh* name);
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    DOMAttrNSImpl & operator = (const DOMAttrNSImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

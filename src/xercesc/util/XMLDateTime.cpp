@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.25  2004/01/29 11:48:47  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.24  2004/01/25 23:23:26  jberry
  * Step around CodeWarrior compiler warning
  *
@@ -402,8 +405,8 @@ void XMLDateTime::addDuration(XMLDateTime*             fNewDate
     fNewDate->fValue[utc] = UTC_STD;
 }
 
-int XMLDateTime::compareResult(short resultA
-                             , short resultB
+int XMLDateTime::compareResult(int resultA
+                             , int resultB
                              , bool strict)
 {
 
@@ -446,7 +449,7 @@ int XMLDateTime::compare(const XMLDateTime* const pDate1
         return XMLDateTime::compareOrder(pDate1, pDate2);
     }
 
-    short c1, c2;
+    int c1, c2;
 
     if ( pDate1->isNormalized())
     {
@@ -1540,8 +1543,8 @@ XMLCh* XMLDateTime::getDateTimeCanonicalRepresentation(MemoryManager* const memM
     // (-?) cc+yy-mm-dd'T'hh:mm:ss'Z'    ('.'s+)?
     //      2+  8       1      8   1
     //
-    int additionalLen = 0;
-    if (0 != (additionalLen = fillYearString(retPtr, CentYear)))
+    int additionalLen = fillYearString(retPtr, CentYear);
+    if(additionalLen != 0)
     {
         // very bad luck; have to resize the buffer...
         XMLCh *tmpBuf = (XMLCh*) toUse->allocate( (additionalLen+21+miliSecondsLen +2) * sizeof(XMLCh));

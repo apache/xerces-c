@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/01/29 11:52:32  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/12/17 00:18:41  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -135,9 +138,9 @@ ValueStore::~ValueStore()
 // ---------------------------------------------------------------------------
 //  ValueStore: Helper methods
 // ---------------------------------------------------------------------------
-void ValueStore::addValue(IC_Field* const field,
-                          DatatypeValidator* const dv,
-                          const XMLCh* const value) {
+void ValueStore::addValue(IC_Field* const,
+                          DatatypeValidator* const,
+                          const XMLCh* const) {
 
 }
 

@@ -123,6 +123,12 @@ public:
 protected:
     virtual void            setIgnorableWhitespace(bool ignorable);
     friend class            AbstractDOMParser;
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMTextImpl & operator = (const DOMTextImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/12/15 17:23:48  cargilld
  * psvi updates; cleanup revisits and bug fixes
  *
@@ -141,7 +144,7 @@ const XMLCh *XSIDCDefinition::getName()
 
 const XMLCh *XSIDCDefinition::getNamespace() 
 {
-    return fXSModel->getURIStringPool()->getValueForId(fIdentityConstraint->getNamespaceURI());;
+    return fXSModel->getURIStringPool()->getValueForId(fIdentityConstraint->getNamespaceURI());
 }
 
 XSNamespaceItem *XSIDCDefinition::getNamespaceItem() 

@@ -77,13 +77,13 @@ DOMNamedNodeMapImpl::DOMNamedNodeMapImpl(DOMNode *ownerNod)
 {
     this->fOwnerNode=ownerNod;
     this->fNodes = 0;
-};
+}
 
 
 
 DOMNamedNodeMapImpl::~DOMNamedNodeMapImpl()
 {
-};
+}
 
 bool DOMNamedNodeMapImpl::readOnly() {
     return castToNodeImpl(fOwnerNode)->isReadOnly();
@@ -108,7 +108,7 @@ DOMNamedNodeMapImpl *DOMNamedNodeMapImpl::cloneMap(DOMNode *ownerNod)
     }
 
     return newmap;
-};
+}
 
 
 //
@@ -181,7 +181,7 @@ int DOMNamedNodeMapImpl::findNamePoint(const XMLCh *name) const
 
     *******************/
     return -1 - i; // not-found has to be encoded.
-};
+}
 
 
 
@@ -190,7 +190,7 @@ int DOMNamedNodeMapImpl::findNamePoint(const XMLCh *name) const
 XMLSize_t DOMNamedNodeMapImpl::getLength() const
 {
     return (fNodes != 0) ? fNodes->size() : 0;
-};
+}
 
 
 
@@ -198,7 +198,7 @@ DOMNode * DOMNamedNodeMapImpl::getNamedItem(const XMLCh *name) const
 {
     int i=findNamePoint(name);
     return (i<0) ? 0 : fNodes->elementAt(i);
-};
+}
 
 
 
@@ -206,7 +206,7 @@ DOMNode * DOMNamedNodeMapImpl::item(XMLSize_t index) const
 {
     return (fNodes != 0 && index < fNodes->size()) ?
         fNodes->elementAt(index) : 0;
-};
+}
 
 
 //
@@ -232,7 +232,7 @@ DOMNode * DOMNamedNodeMapImpl::removeNamedItem(const XMLCh *name)
     castToNodeImpl(n)->fOwnerNode = fOwnerNode->getOwnerDocument();
     castToNodeImpl(n)->isOwned(false);
     return n;
-};
+}
 
 
 
@@ -280,7 +280,7 @@ DOMNode * DOMNamedNodeMapImpl::setNamedItem(DOMNode * arg)
     }
 
     return previous;
-};
+}
 
 
 void DOMNamedNodeMapImpl::setReadOnly(bool readOnl, bool deep)
@@ -293,7 +293,7 @@ void DOMNamedNodeMapImpl::setReadOnly(bool readOnl, bool deep)
             castToNodeImpl(fNodes->elementAt(i))->setReadOnly(readOnl, deep);
         }
     }
-};
+}
 
 
 //Introduced in DOM Level 2
@@ -377,7 +377,7 @@ DOMNode * DOMNamedNodeMapImpl::setNamedItemNS(DOMNode *arg)
     }
 
     return previous;
-};
+}
 
 
 // removeNamedItemNS() - Remove the named item, and return it.
@@ -448,7 +448,7 @@ DOMNode * DOMNamedNodeMapImpl::removeNamedItemAt(XMLSize_t index)
     castToNodeImpl(n)->fOwnerNode = fOwnerNode->getOwnerDocument();
     castToNodeImpl(n)->isOwned(false);
     return n;
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

@@ -654,6 +654,12 @@ public :
 
 private :
     // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XercesDOMParser(const XercesDOMParser&);
+    XercesDOMParser& operator=(const XercesDOMParser&);
+
+    // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fEntityResolver

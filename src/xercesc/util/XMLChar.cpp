@@ -8922,6 +8922,12 @@ public :
         initCharFlagTable();
         initCharFlagTable1_1();
     }
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented methods.
+    // -----------------------------------------------------------------------
+    CharFlagKicker(const CharFlagKicker&);
+    CharFlagKicker& operator=(const CharFlagKicker&);
 };
 
 static CharFlagKicker gKicker;

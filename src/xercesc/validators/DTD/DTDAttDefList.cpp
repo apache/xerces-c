@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/01/29 11:52:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/12/17 00:18:40  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -144,7 +147,7 @@ bool DTDAttDefList::isEmpty() const
 }
 
 
-XMLAttDef* DTDAttDefList::findAttDef(const  unsigned long   uriID
+XMLAttDef* DTDAttDefList::findAttDef(const  unsigned long
                                     , const XMLCh* const    attName)
 {
     // We don't use the URI, so we just look up the name
@@ -153,7 +156,7 @@ XMLAttDef* DTDAttDefList::findAttDef(const  unsigned long   uriID
 
 
 const XMLAttDef*
-DTDAttDefList::findAttDef(  const   unsigned long   uriID
+DTDAttDefList::findAttDef(  const   unsigned long
                             , const XMLCh* const    attName) const
 {
     // We don't use the URI, so we just look up the name
@@ -161,7 +164,7 @@ DTDAttDefList::findAttDef(  const   unsigned long   uriID
 }
 
 
-XMLAttDef* DTDAttDefList::findAttDef(   const   XMLCh* const    attURI
+XMLAttDef* DTDAttDefList::findAttDef(   const   XMLCh* const
                                         , const XMLCh* const    attName)
 {
     // We don't use the URI, so we just look up the name
@@ -170,7 +173,7 @@ XMLAttDef* DTDAttDefList::findAttDef(   const   XMLCh* const    attURI
 
 
 const XMLAttDef*
-DTDAttDefList::findAttDef(  const   XMLCh* const    attURI
+DTDAttDefList::findAttDef(  const   XMLCh* const
                             , const XMLCh* const    attName) const
 {
     // We don't use the URI, so we just look up the name

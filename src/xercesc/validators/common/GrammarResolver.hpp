@@ -230,6 +230,11 @@ public:
     //@}
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    GrammarResolver(const GrammarResolver&);
+    GrammarResolver& operator=(const GrammarResolver&);
 
     // -----------------------------------------------------------------------
     //  Private data members

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2004/01/29 11:48:47  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.12  2004/01/13 19:50:56  peiyongz
  * remove parseContent()
  *
@@ -178,6 +181,12 @@ protected:
 
     XMLNumber();
 
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLNumber(const XMLNumber&);
+    XMLNumber& operator=(const XMLNumber&);
 };
 
 XERCES_CPP_NAMESPACE_END

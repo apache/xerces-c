@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.26  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.25  2004/01/13 21:18:18  peiyongz
  * revert code back to previous version
  *
@@ -171,10 +174,11 @@ static const unsigned int BUF_LEN = 64;
 UnionDatatypeValidator::UnionDatatypeValidator(MemoryManager* const manager)
 :DatatypeValidator(0, 0, 0, DatatypeValidator::Union, manager)
 ,fEnumerationInherited(false)
+,fMemberTypesInherited(false)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
 ,fValidatedDatatype(0)
-,fMemberTypesInherited(false)
+
 {}
 
 UnionDatatypeValidator::~UnionDatatypeValidator()
@@ -188,10 +192,10 @@ UnionDatatypeValidator::UnionDatatypeValidator(
                       , MemoryManager* const                  manager)
 :DatatypeValidator(0, 0, finalSet, DatatypeValidator::Union, manager)
 ,fEnumerationInherited(false)
+,fMemberTypesInherited(false)
 ,fEnumeration(0)
 ,fMemberTypeValidators(0)
 ,fValidatedDatatype(0)
-,fMemberTypesInherited(false)
 {
     if ( !memberTypeValidators )
     {
@@ -214,10 +218,10 @@ UnionDatatypeValidator::UnionDatatypeValidator(
                         )
 :DatatypeValidator(baseValidator, facets, finalSet, DatatypeValidator::Union, manager)
 ,fEnumerationInherited(false)
+,fMemberTypesInherited(memberTypesInherited)
 ,fEnumeration(0)
 ,fMemberTypeValidators(memberTypeValidators)
 ,fValidatedDatatype(0)
-,fMemberTypesInherited(memberTypesInherited)
 {
     //
     // baseValidator another UnionDTV from which,

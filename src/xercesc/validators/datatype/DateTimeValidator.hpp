@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -175,9 +178,14 @@ protected:
     // to be overwritten by duration
     virtual int            compareDates(const XMLDateTime* const lValue
                                       , const XMLDateTime* const rValue
-                                      , bool                     strict);
+                                      , bool strict);
 
-    XMLDateTime* fDateTime;    //made available to derivatives
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DateTimeValidator(const DateTimeValidator&);
+    DateTimeValidator& operator=(const DateTimeValidator&);
 };
 
 XERCES_CPP_NAMESPACE_END

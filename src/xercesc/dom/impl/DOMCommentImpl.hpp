@@ -110,6 +110,11 @@ public:
     // Non standard extension for the range to work
     DOMComment* splitText(XMLSize_t offset);
 
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMCommentImpl & operator = (const DOMCommentImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

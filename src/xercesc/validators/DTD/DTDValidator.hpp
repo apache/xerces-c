@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/01/29 11:52:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.6  2002/11/07 21:58:56  tng
  * Pass elemDecl to XMLValidator::validateAttrValue so that we can include element name in error message.
  *
@@ -205,6 +208,11 @@ public:
     virtual bool handlesSchema() const;
 
 private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DTDValidator(const DTDValidator &);
+    DTDValidator& operator = (const  DTDValidator&);
 
     // -----------------------------------------------------------------------
     //  Private data members

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.18  2004/01/06 19:07:16  knoaman
  * Fix segfault when adding S4S
  *
@@ -260,10 +263,10 @@ XSModel::XSModel( XSModel *baseModel
     , fAttributeDeclarationVector(0)
     , fURIStringPool(0)
     , fXSAnnotationList(0)
-    , fHashNamespace(0)
-    , fParent(baseModel)
+    , fHashNamespace(0)    
     , fObjFactory(0)
     , fDeleteNamespace(0)
+    , fParent(baseModel)
     , fDeleteParent(true)
     , fAddedS4SGrammar(false)
 {

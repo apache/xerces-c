@@ -458,7 +458,7 @@ Iconv400Transcoder::transcodeFrom(const  XMLByte* const          srcData
     //
     if (fFixed)
     {
-        const unsigned char fillSize = (unsigned char)ucnv_getMaxCharSize(fConverter);;
+        const unsigned char fillSize = (unsigned char)ucnv_getMaxCharSize(fConverter);
         memset(charSizes, fillSize, maxChars);
     }
      else

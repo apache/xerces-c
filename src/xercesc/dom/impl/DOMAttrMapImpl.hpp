@@ -107,6 +107,13 @@ public:
 
     void reconcileDefaultAttributes(const DOMAttrMapImpl* defaults);
     void moveSpecifiedAttributes(DOMAttrMapImpl* srcmap);
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMAttrMapImpl(const DOMAttrMapImpl &);
+    DOMAttrMapImpl & operator = (const DOMAttrMapImpl &);
 };
 
 // ---------------------------------------------------------------------------

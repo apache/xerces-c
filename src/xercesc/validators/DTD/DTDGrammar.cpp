@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2004/01/29 11:52:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.15  2004/01/13 16:17:09  knoaman
  * Fo sanity, use class name to qualify method
  *
@@ -205,7 +208,7 @@ void DTDGrammar::reinitDfltEntities() {
 // -----------------------------------------------------------------------
 XMLElementDecl* DTDGrammar::findOrAddElemDecl (const   unsigned int    uriId
         , const XMLCh* const    baseName
-        , const XMLCh* const    prefixName
+        , const XMLCh* const
         , const XMLCh* const    qName
         , unsigned int          scope
         ,       bool&           wasAdded )
@@ -237,10 +240,10 @@ XMLElementDecl* DTDGrammar::findOrAddElemDecl (const   unsigned int    uriId
 }
 
 XMLElementDecl* DTDGrammar::putElemDecl (const   unsigned int    uriId
-        , const XMLCh* const    baseName
-        , const XMLCh* const    prefixName
+        , const XMLCh* const
+        , const XMLCh* const
         , const XMLCh* const    qName
-        , unsigned int          scope
+        , unsigned int
         , const bool            notDeclared)
 {
     DTDElementDecl* retVal = new (fMemoryManager) DTDElementDecl

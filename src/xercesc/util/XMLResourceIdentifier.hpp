@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/01/29 11:48:47  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.2  2003/11/25 18:16:38  knoaman
  * Documentation update. Thanks to David Cargill.
  *
@@ -233,12 +236,12 @@ inline XMLResourceIdentifier::XMLResourceIdentifier(const ResourceIdentifierType
                             , const XMLCh* const  systemId
                             , const XMLCh* const  nameSpace
                             , const XMLCh* const  publicId
-                            , const XMLCh* const  baseURI ) :
-    fResourceIdentifierType(resourceIdentifierType),
-    fSystemId(systemId),
-    fNameSpace(nameSpace),
-    fPublicId(publicId),
-    fBaseURI(baseURI)
+                            , const XMLCh* const  baseURI )
+    : fResourceIdentifierType(resourceIdentifierType)
+    , fPublicId(publicId)
+    , fSystemId(systemId)
+    , fBaseURI(baseURI)
+    , fNameSpace(nameSpace)    
 {
 }
 

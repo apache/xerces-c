@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.51  2004/01/29 11:44:27  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.50  2004/01/20 23:23:57  peiyongz
  * patch to Bug#25751
  *
@@ -1370,7 +1373,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 
     case DOMNode::DOCUMENT_TYPE_NODE:  // Not to be shown to Filter
         {
-            const DOMDocumentType *doctype = (const DOMDocumentType *)nodeToWrite;;
+            const DOMDocumentType *doctype = (const DOMDocumentType *)nodeToWrite;
 
             fFormatter->setEscapeFlags(XMLFormatter::NoEscapes);
 
@@ -1474,7 +1477,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 
 }
 
-bool DOMWriterImpl::customNodeSerialize(const DOMNode* const nodeToWrite, int level) {
+bool DOMWriterImpl::customNodeSerialize(const DOMNode* const, int) {
     return false;
 }
 
@@ -1675,7 +1678,7 @@ void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
     //  the chars done.
     //
     const XMLCh*    srcPtr = nodeValue;
-    const XMLCh*    endPtr = nodeValue +  XMLString::stringLen(nodeValue);;
+    const XMLCh*    endPtr = nodeValue +  XMLString::stringLen(nodeValue);
 
     // Set up the common part of the buffer that we build char refs into
     XMLCh tmpBuf[32];

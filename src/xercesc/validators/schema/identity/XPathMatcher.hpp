@@ -145,6 +145,11 @@ protected:
                          DatatypeValidator* const dv, const bool isNil);
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XPathMatcher(const XPathMatcher&);
+    XPathMatcher& operator=(const XPathMatcher&);
 
     // -----------------------------------------------------------------------
     //  Helper methods

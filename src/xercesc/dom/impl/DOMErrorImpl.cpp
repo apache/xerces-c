@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/01/29 11:44:26  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/12/02 14:33:13  amassari
  * Don't use the word "exception" as a variable name, as VC 7.1 complains about it
  *
@@ -142,7 +145,7 @@ void DOMErrorImpl::setLocation(DOMLocator* const location)
     fLocation = location;
 }
 
-void DOMErrorImpl::setRelatedException(void* exc) const
+void DOMErrorImpl::setRelatedException(void*) const
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }

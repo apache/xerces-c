@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -160,6 +163,12 @@ public :
 
     TElem*                          fData;
     NameIdPoolBucketElem<TElem>*    fNext;
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    NameIdPoolBucketElem(const NameIdPoolBucketElem<TElem>&);
+    NameIdPoolBucketElem<TElem>& operator=(const NameIdPoolBucketElem<TElem>&);
 };
 
 
@@ -272,7 +281,7 @@ private :
 //  An enumerator for a name id pool. It derives from the basic enumerator
 //  class, so that pools can be generically enumerated.
 //
-template <class TElem> class NameIdPoolEnumerator : public XMLEnumerator<TElem>
+template <class TElem> class NameIdPoolEnumerator : public XMLEnumerator<TElem>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------

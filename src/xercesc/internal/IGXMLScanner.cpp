@@ -99,6 +99,7 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
 
     XMLScanner(valToAdopt, grammarResolver, manager)
     , fSeeXsi(false)
+    , fGrammarType(Grammar::UnKnown)
     , fElemStateSize(16)
     , fElemState(0)
     , fContent(1023, manager)
@@ -109,6 +110,7 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fMatcherStack(0)
     , fValueStoreCache(0)
     , fFieldActivator(0)
+    , fLocationPairs(0)
     , fDTDElemNonDeclPool(0)
     , fSchemaElemNonDeclPool(0)
     , fElemCount(0)
@@ -118,7 +120,7 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fPSVIAttrList(0)
     , fModel(0)
     , fPSVIElement(0)
-    , fErrorStack(0)
+    , fErrorStack(0)        
 {
     try
     {
@@ -149,6 +151,7 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
 
     XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, grammarResolver, manager)
     , fSeeXsi(false)
+    , fGrammarType(Grammar::UnKnown)
     , fElemStateSize(16)
     , fElemState(0)
     , fContent(1023, manager)
@@ -159,6 +162,7 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fMatcherStack(0)
     , fValueStoreCache(0)
     , fFieldActivator(0)
+    , fLocationPairs(0)
     , fDTDElemNonDeclPool(0)
     , fSchemaElemNonDeclPool(0)
     , fElemCount(0)
@@ -168,7 +172,7 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fPSVIAttrList(0)
     , fModel(0)
     , fPSVIElement(0)
-    , fErrorStack(0)
+    , fErrorStack(0)       
 {
     try
     {	
@@ -244,7 +248,7 @@ void IGXMLScanner::scanDocument(const InputSource& src)
         else
         {
             // Scan content, and tell it its not an external entity
-            if (scanContent(false))
+            if (scanContent())
             {
                 // Do post-parse validation if required
                 if (fValidate)
@@ -851,7 +855,7 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
 
 //  This method will kick off the scanning of the primary content of the
 //  document, i.e. the elements.
-bool IGXMLScanner::scanContent(const bool extEntity)
+bool IGXMLScanner::scanContent()
 {
     //  Go into a loop until we hit the end of the root element, or we fall
     //  out because there is no root element.
@@ -2289,7 +2293,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     //  Make an initial pass through the list and find any xmlns attributes or
     //  schema attributes.
     if (attCount)
-      scanRawAttrListforNameSpaces(fRawAttrList, attCount);
+      scanRawAttrListforNameSpaces(attCount);
 
     //  Also find any default or fixed xmlns attributes in DTD defined for
     //  this element.
@@ -2557,8 +2561,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 // go to original Grammar again to see if element needs to be fully qualified.
                 bool errorCondition = !switchGrammar(original_uriStr) && fValidate;
                 if (errorCondition && !laxThisOne)
-                {
-                    const XMLCh* uriStr = getURIText(orgGrammarUri);
+                {                    
                     fValidator->emitError
                     (
                         XMLValid::GrammarNotFound

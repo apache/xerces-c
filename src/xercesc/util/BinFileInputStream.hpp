@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.5  2003/12/17 13:58:02  cargilld
  * Platform update for memory management so that the static memory manager (one
  * used to call Initialize) is only for static data.
@@ -142,6 +145,12 @@ public :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    BinFileInputStream(const BinFileInputStream&);
+    BinFileInputStream& operator=(const BinFileInputStream&);   
+
     // -----------------------------------------------------------------------
     //  Private data members
     //

@@ -111,6 +111,11 @@ public:
     const XMLCh*   substringData(const DOMNode *node, XMLSize_t offset, XMLSize_t count) const;
     void           releaseBuffer();
 
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMCharacterDataImpl & operator = (const DOMCharacterDataImpl &);   
 };
 
 XERCES_CPP_NAMESPACE_END

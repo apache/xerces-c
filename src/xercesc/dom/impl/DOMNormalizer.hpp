@@ -99,6 +99,9 @@ class DOMNormalizer : public XMemory {
         private:
             RefHashTableOf<XMLCh> *fPrefixHash;
             RefHashTableOf<XMLCh> *fUriHash;
+            // unimplemented
+            Scope ( const Scope& toCopy);
+            Scope& operator= (const Scope& other);
         };
 
     public:    
@@ -117,6 +120,9 @@ class DOMNormalizer : public XMemory {
     private:
         RefVectorOf<Scope> *fScopes;
         Scope *lastScopeWithBindings;
+        // unimplemented
+        InScopeNamespaces ( const InScopeNamespaces& toCopy);
+        InScopeNamespaces& operator= (const InScopeNamespaces& other);
     };
 
 public:
@@ -135,6 +141,9 @@ public:
 	static void reinitMsgLoader();
 
 private:
+    // unimplemented
+    DOMNormalizer ( const DOMNormalizer& toCopy);
+    DOMNormalizer& operator= (const DOMNormalizer& other);
 
     /**
      * Recursively normalizes a node

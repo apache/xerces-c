@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -469,6 +472,16 @@ template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::~RefHash3KeysIdPoolEnu
         delete fToEnum;
 }
 
+template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::
+RefHash3KeysIdPoolEnumerator(const RefHash3KeysIdPoolEnumerator<TVal>& toCopy) :
+    fAdoptedElems(toCopy.fAdoptedElems)
+    , fCurIndex(toCopy.fCurIndex)
+    , fToEnum(toCopy.fToEnum)
+    , fCurElem(toCopy.fCurElem)
+    , fCurHash(toCopy.fCurHash)    
+    , fMemoryManager(toCopy.fMemoryManager)
+{
+}
 
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPoolEnumerator: Enum interface

@@ -96,8 +96,8 @@ public:
 // constructors/destructors...
 inline OutOfMemoryException::OutOfMemoryException() {}
 inline OutOfMemoryException::~OutOfMemoryException() {}
-inline OutOfMemoryException::OutOfMemoryException(const OutOfMemoryException& toCopy) {}
-inline OutOfMemoryException& OutOfMemoryException::operator=(const OutOfMemoryException& toAssign) 
+inline OutOfMemoryException::OutOfMemoryException(const OutOfMemoryException&) {}
+inline OutOfMemoryException& OutOfMemoryException::operator=(const OutOfMemoryException&) 
 {
     return *this;
 }

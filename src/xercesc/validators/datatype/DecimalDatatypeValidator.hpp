@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.13  2003/12/23 21:50:36  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0,
  * only validate when required
@@ -262,6 +265,12 @@ private:
     unsigned int         fTotalDigits;
     unsigned int         fFractionDigits;
 
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DecimalDatatypeValidator(const DecimalDatatypeValidator&);
+    DecimalDatatypeValidator& operator=(const DecimalDatatypeValidator&);
 };
 
 // -----------------------------------------------------------------------

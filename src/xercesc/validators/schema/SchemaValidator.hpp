@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.24  2003/12/03 20:00:27  neilg
  * PSVI fix:  cannot allow validator to reset its element content buffer before exposing it to the application
  *
@@ -282,6 +285,12 @@ public:
     const XMLCh* getNormalizedValue() const;
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SchemaValidator(const SchemaValidator&);
+    SchemaValidator& operator=(const SchemaValidator&);
+
     // -----------------------------------------------------------------------
     //  Element Consitency Checking methods
     // -----------------------------------------------------------------------

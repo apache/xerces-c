@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/01/29 11:52:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/07/10 19:50:12  peiyongz
  * Stateless Grammar: create grammar components with grammarPool's memory Manager
  *
@@ -190,14 +193,18 @@ public:
 
 private:
     // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DTDScanner(const DTDScanner &);
+    DTDScanner& operator = (const  DTDScanner&);
+
+    // -----------------------------------------------------------------------
     //  Private DTD scanning methods. These are all in XMLValidator2.cpp
     // -----------------------------------------------------------------------
     bool checkForPERef
     (
-        const   bool    spaceRequired
-        , const bool    inLiteral
+          const bool    inLiteral
         , const bool    inMarkup
-        , const bool    throwEndOfExt = false
     );
     bool expandPERef
     (
@@ -227,7 +234,7 @@ private:
     void scanElementDecl();
     void scanEntityDecl();
     bool scanEntityDef();
-    bool scanEntityLiteral(XMLBuffer& toFill, const bool isPE);
+    bool scanEntityLiteral(XMLBuffer& toFill);
     bool scanEntityDef(DTDEntityDecl& decl, const bool isPEDecl);
     EntityExpRes scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped);
     bool scanEnumeration

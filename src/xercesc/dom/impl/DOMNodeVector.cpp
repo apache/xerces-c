@@ -77,11 +77,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 DOMNodeVector::DOMNodeVector(DOMDocument *doc)
 {
 	init(doc, 10);
-};
+}
 
 DOMNodeVector::DOMNodeVector(DOMDocument *doc, XMLSize_t size) {
 	init(doc, size);
-};
+}
 
 
 void DOMNodeVector::init(DOMDocument *doc, XMLSize_t size) {
@@ -94,18 +94,18 @@ void DOMNodeVector::init(DOMDocument *doc, XMLSize_t size) {
         data[i] = 0;
     allocatedSize = size;
     nextFreeSlot = 0;
-};
+}
 
 
 DOMNodeVector::~DOMNodeVector() {
-};
+}
 
 
 void DOMNodeVector::addElement(DOMNode *elem) {
 	checkSpace();
 	data[nextFreeSlot] = elem;
 	++nextFreeSlot;
-};
+}
 
 
 void DOMNodeVector::checkSpace() {
@@ -121,7 +121,7 @@ void DOMNodeVector::checkSpace() {
         assert(newData != 0);
         for (XMLSize_t i=0; i<allocatedSize; i++) {
             newData[i] = data[i];
-        };
+        }
         // delete [] data;  // revisit.  Can't delete!  Recycle?
         allocatedSize = newAllocatedSize;
         data = newData;
@@ -133,13 +133,13 @@ DOMNode *DOMNodeVector::elementAt(XMLSize_t index) {
     if (index >= nextFreeSlot)
         return 0;
 	return data[index];
-};
+}
 
 DOMNode *DOMNodeVector::lastElement() {
 	if (nextFreeSlot == 0)
 		return 0;
 	return data[nextFreeSlot-1];
-};
+}
 
 
 void DOMNodeVector::insertElementAt(DOMNode *elem, XMLSize_t index) {
@@ -154,7 +154,7 @@ void DOMNodeVector::insertElementAt(DOMNode *elem, XMLSize_t index) {
 	data[index] = elem;
 	++nextFreeSlot;
 
-};
+}
 
 
 void DOMNodeVector::removeElementAt(XMLSize_t index) {
@@ -163,21 +163,21 @@ void DOMNodeVector::removeElementAt(XMLSize_t index) {
 		data[i] = data[i+1];
 	}
 	--nextFreeSlot;
-};
+}
 
 void DOMNodeVector::reset() {
 	nextFreeSlot = 0;
-};
+}
 
 void DOMNodeVector::setElementAt(DOMNode *elem, XMLSize_t index) {
 	assert(index < nextFreeSlot);
 	data[index] = elem;
-};
+}
 
 
 XMLSize_t DOMNodeVector::size() {
 	return nextFreeSlot;
-};
+}
 		
 
 XERCES_CPP_NAMESPACE_END

@@ -541,8 +541,8 @@ XMLTranscoder::~XMLTranscoder()
 XMLTranscoder::XMLTranscoder(const  XMLCh* const    encodingName
                             , const unsigned int    blockSize
                             , MemoryManager* const  manager) :
-    fEncodingName(0)
-    , fBlockSize(blockSize)
+      fBlockSize(blockSize)
+    , fEncodingName(0)    
     , fMemoryManager(manager)
 {
     fEncodingName = XMLString::replicate(encodingName, fMemoryManager);
@@ -552,7 +552,7 @@ XMLTranscoder::XMLTranscoder(const  XMLCh* const    encodingName
 // ---------------------------------------------------------------------------
 //  XMLTranscoder: Protected helpers
 // ---------------------------------------------------------------------------
-void XMLTranscoder::checkBlockSize(const unsigned int toCheck)
+void XMLTranscoder::checkBlockSize(const unsigned int)
 {
 //    if (toCheck > fBlockSize)
 //        ThrowXML(TranscodingException, XMLExcepts::Trans_BadBlockSize);

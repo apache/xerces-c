@@ -114,11 +114,11 @@ static void reinitEmptyNodeList()
 //  DOMNodeImpl Functions
 // -----------------------------------------------------------------------
 DOMNodeImpl::DOMNodeImpl(DOMNode *ownerNode)
+:  fOwnerNode(ownerNode)
 {
     this->flags = 0;
-    // as long as we do not have any owner, fOwnerNode is our ownerDocument
-    fOwnerNode  = ownerNode;
-};
+    // as long as we do not have any owner, fOwnerNode is our ownerDocument    
+}
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
@@ -130,27 +130,27 @@ DOMNodeImpl::DOMNodeImpl(const DOMNodeImpl &other)
     // Need to break the association w/ original parent
     this->fOwnerNode = other.getOwnerDocument();
     this->isOwned(false);
-};
+}
 
 
 
 DOMNodeImpl::~DOMNodeImpl() {
-};
+}
 
 
-DOMNode * DOMNodeImpl::appendChild(DOMNode *newChild)
+DOMNode * DOMNodeImpl::appendChild(DOMNode *)
 {
     // Only node types that don't allow children will use this default function.
     //   Others will go to DOMParentNode::appendChild.
     throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
     return 0;
     //  return insertBefore(newChild, 0);
-};
+}
 
 
 DOMNamedNodeMap * DOMNodeImpl::getAttributes() const {
     return 0;                   // overridden in ElementImpl
-};
+}
 
 
 DOMNodeList *DOMNodeImpl::getChildNodes() const {
@@ -180,24 +180,24 @@ DOMNodeList *DOMNodeImpl::getChildNodes() const {
     }
 
     return (DOMNodeList *)gEmptyNodeList;
-};
+}
 
 
 
 DOMNode * DOMNodeImpl::getFirstChild() const {
     return 0;                   // overridden in ParentNode
-};
+}
 
 
 DOMNode * DOMNodeImpl::getLastChild() const
 {
     return 0;                   // overridden in ParentNode
-};
+}
 
 
 DOMNode * DOMNodeImpl::getNextSibling() const {
     return 0;                // overridden in ChildNode
-};
+}
 
 
 const XMLCh * DOMNodeImpl::getNodeValue() const {
@@ -234,7 +234,7 @@ DOMDocument *DOMNodeImpl::getOwnerDocument() const
         assert (fOwnerNode->getNodeType() == DOMNode::DOCUMENT_NODE);
         return  (DOMDocument *)fOwnerNode;
     }
-};
+}
 
 
 void DOMNodeImpl::setOwnerDocument(DOMDocument *doc) {
@@ -250,46 +250,46 @@ void DOMNodeImpl::setOwnerDocument(DOMDocument *doc) {
 DOMNode * DOMNodeImpl::getParentNode() const
 {
     return 0;                // overridden in ChildNode
-};
+}
 
 
 DOMNode*  DOMNodeImpl::getPreviousSibling() const
 {
     return 0;                // overridden in ChildNode
-};
+}
 
 bool DOMNodeImpl::hasChildNodes() const
 {
     return false;
-};
+}
 
 
 
-DOMNode *DOMNodeImpl::insertBefore(DOMNode *newChild, DOMNode *refChild) {
+DOMNode *DOMNodeImpl::insertBefore(DOMNode *, DOMNode *) {
     throw DOMException(DOMException::HIERARCHY_REQUEST_ERR, 0);
     return 0;
-};
+}
 
 
-DOMNode *DOMNodeImpl::removeChild(DOMNode *oldChild)
+DOMNode *DOMNodeImpl::removeChild(DOMNode *)
 {
     throw DOMException(DOMException::NOT_FOUND_ERR, 0);
     return 0;
-};
+}
 
 
-DOMNode *DOMNodeImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
+DOMNode *DOMNodeImpl::replaceChild(DOMNode *, DOMNode *)
 {
     throw DOMException(DOMException::HIERARCHY_REQUEST_ERR,0);
     return 0;
-};
+}
 
 
 
-void DOMNodeImpl::setNodeValue(const XMLCh *val)
+void DOMNodeImpl::setNodeValue(const XMLCh *)
 {
     // Default behavior is to do nothing, overridden in some subclasses
-};
+}
 
 
 
@@ -327,7 +327,7 @@ void DOMNodeImpl::setReadOnly(bool readOnl, bool deep)
 void DOMNodeImpl::normalize()
 {
     // does nothing by default, overridden by subclasses
-};
+}
 
 
 bool DOMNodeImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
@@ -351,7 +351,7 @@ const XMLCh *DOMNodeImpl::getLocalName() const
 }
 
 
-void DOMNodeImpl::setPrefix(const XMLCh *fPrefix)
+void DOMNodeImpl::setPrefix(const XMLCh *)
 {
     throw DOMException(DOMException::NAMESPACE_ERR, 0);
 }
@@ -359,16 +359,16 @@ void DOMNodeImpl::setPrefix(const XMLCh *fPrefix)
 
 bool DOMNodeImpl::hasAttributes() const {
     return 0;                   // overridden in ElementImpl
-};
+}
 
 
 
 
 
-const XMLCh *DOMNodeImpl::getXmlString()      {return XMLUni::fgXMLString;};
-const XMLCh *DOMNodeImpl::getXmlURIString()   {return XMLUni::fgXMLURIName;};
-const XMLCh *DOMNodeImpl::getXmlnsString()    {return XMLUni::fgXMLNSString;};
-const XMLCh *DOMNodeImpl::getXmlnsURIString() {return XMLUni::fgXMLNSURIName;};
+const XMLCh *DOMNodeImpl::getXmlString()      {return XMLUni::fgXMLString;}
+const XMLCh *DOMNodeImpl::getXmlURIString()   {return XMLUni::fgXMLURIName;}
+const XMLCh *DOMNodeImpl::getXmlnsString()    {return XMLUni::fgXMLNSString;}
+const XMLCh *DOMNodeImpl::getXmlnsURIString() {return XMLUni::fgXMLNSURIName;}
 
 //Return a URI mapped from the given prefix and namespaceURI as below
 //    prefix   namespaceURI    output
@@ -1029,7 +1029,7 @@ const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, unsigned int& rnBuf
 
 }
 
-void DOMNodeImpl::setTextContent(const XMLCh* textContent){
+void DOMNodeImpl::setTextContent(const XMLCh*){
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }
 
@@ -1089,7 +1089,7 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
     }
 }
 
-DOMNode*         DOMNodeImpl::getInterface(const XMLCh* feature)      {
+DOMNode*         DOMNodeImpl::getInterface(const XMLCh*)      {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     return 0;
 }

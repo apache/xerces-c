@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.25  2004/01/13 16:17:09  knoaman
  * Fo sanity, use class name to qualify method
  *
@@ -362,16 +365,16 @@ ComplexTypeInfo::ComplexTypeInfo(MemoryManager* const manager)
     , fDatatypeValidator(0)
     , fBaseComplexTypeInfo(0)
     , fContentSpec(0)
-    , fAttWildCard(0)
-    , fAttDefs(0)
+    , fAttWildCard(0)    
     , fAttList(0)
     , fElements(0)
+    , fSpecNodesToDelete(0)
+    , fAttDefs(0)
     , fContentModel(0)
     , fFormattedModel(0)
     , fContentSpecOrgURI(0)
     , fUniqueURI(0)
-    , fContentSpecOrgURISize(16)
-    , fSpecNodesToDelete(0)
+    , fContentSpecOrgURISize(16)    
     , fLocator(0)
     , fMemoryManager(manager)
 {
@@ -481,7 +484,7 @@ ComplexTypeInfo::getFormattedContentModel() const
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Helper methods
 // ---------------------------------------------------------------------------
-XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const qName
+XMLAttDef* ComplexTypeInfo::findAttr(const XMLCh* const
                                      , const unsigned int uriId
                                      , const XMLCh* const baseName
                                      , const XMLCh* const prefix

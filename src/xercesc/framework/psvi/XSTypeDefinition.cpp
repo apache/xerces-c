@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/12/24 15:25:07  cargilld
  * Improved algorithm for finding derivedFrom.
  *
@@ -102,9 +105,9 @@ XSTypeDefinition::XSTypeDefinition(TYPE_CATEGORY           typeCategory,
                                    XSModel* const          xsModel,
                                    MemoryManager* const    manager)
     : XSObject(XSConstants::TYPE_DEFINITION, xsModel, manager)
-    , fFinal(0)
-    , fBaseType(xsBaseType)
     , fTypeCategory(typeCategory)
+    , fFinal(0)
+    , fBaseType(xsBaseType)    
 {
 }
 

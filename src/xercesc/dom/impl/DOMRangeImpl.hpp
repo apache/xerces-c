@@ -203,6 +203,10 @@ private:
     DOMNode*    traverseTextNode( DOMNode *n, bool isLeft, int how );
     DOMNode*    getSelectedNode( DOMNode *container, int offset );
 
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMRangeImpl & operator = (const DOMRangeImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

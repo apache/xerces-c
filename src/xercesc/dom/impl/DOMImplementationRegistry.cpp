@@ -101,7 +101,7 @@ static void reinitDOMImplSrcVectorMutex()
 {
     delete gDOMImplSrcVectorMutex;
     gDOMImplSrcVectorMutex = 0;
-};
+}
 
 // -----------------------------------------------------------------------
 //  Get the static data

@@ -102,6 +102,12 @@ public:
     DOMNODE_FUNCTIONS;
 
     virtual void setReadOnly(bool readOnly,bool deep);
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    DOMEntityReferenceImpl & operator = (const DOMEntityReferenceImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -97,8 +97,7 @@ BinInputStream* SocketNetAccessor::makeNew(const XMLURL&  urlSource)
         {
             UnixHTTPURLInputStream* retStrm =
                 new (urlSource.getMemoryManager()) UnixHTTPURLInputStream(urlSource);
-            return retStrm;
-            break;
+            return retStrm;            
         }
 
         //

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.6  2003/05/30 16:11:45  gareth
  * Fixes so we compile under VC7.1. Patch by Alberto Massari.
  *
@@ -204,6 +207,12 @@ private :
     QName*          fElement;
     unsigned int    fPosition;
     bool            fAdopt;
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    CMLeaf(const CMLeaf&);
+    CMLeaf& operator=(const CMLeaf&);
 };
 
 

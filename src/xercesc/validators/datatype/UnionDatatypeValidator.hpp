@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.16  2003/12/23 21:50:36  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0,
  * only validate when required
@@ -318,6 +321,11 @@ public:
     void reset();
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    UnionDatatypeValidator(const UnionDatatypeValidator&);
+    UnionDatatypeValidator& operator=(const UnionDatatypeValidator&);
 
     virtual void checkContent(const XMLCh*             const content
                             ,       ValidationContext* const context

@@ -87,9 +87,10 @@ XSDDOMParser::XSDDOMParser( XMLValidator* const   valToAdopt
     , fInnerAnnotationDepth(-1)
     , fDepth(-1)
     , fUserErrorReporter(0)
-    , fUserEntityHandler(0)
-    , fAnnotationBuf(1023, manager)
+    , fUserEntityHandler(0)    
     , fURIs(0)
+    , fAnnotationBuf(1023, manager)
+
 {
     fURIs = new (manager) ValueVectorOf<unsigned int>(16, manager);
     fXSDErrorReporter.setErrorReporter(this);    
@@ -135,8 +136,7 @@ void XSDDOMParser::startAnnotation( const XMLElementDecl&       elemDecl
     for (unsigned int i=0; i < attrCount; i++) {
 
         const XMLAttr* oneAttrib = attrList.elementAt(i);
-        const XMLCh* attrValue = oneAttrib->getValue();
-        unsigned int attrURIId = oneAttrib->getURIId();
+        const XMLCh* attrValue = oneAttrib->getValue();        
 
         if (XMLString::equals(oneAttrib->getName(), XMLUni::fgXMLNSString))
             fURIs->addElement(fScanner->getPrefixId(XMLUni::fgZeroLenString));
@@ -413,9 +413,9 @@ void XSDDOMParser::startElement( const XMLElementDecl&       elemDecl
 
 
 void XSDDOMParser::endElement( const XMLElementDecl& elemDecl
-                             , const unsigned int    urlId
-                             , const bool            isRoot
-                             , const XMLCh* const    elemPrefix)
+                             , const unsigned int
+                             , const bool
+                             , const XMLCh* const)
 {
     if(fAnnotationDepth > -1)
     {
@@ -507,21 +507,17 @@ void XSDDOMParser::docComment(const XMLCh* const comment)
     }
 }
 
-void XSDDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
+void XSDDOMParser::startEntityReference(const XMLEntityDecl&)
 {
-    int i=0;
-    i++;
 }
 
-void XSDDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
+void XSDDOMParser::endEntityReference(const XMLEntityDecl&)
 {
-    int j=0;
-    j++;
 }
 
 void XSDDOMParser::ignorableWhitespace( const XMLCh* const chars
                                       , const unsigned int length
-                                      , const bool         cdataSection)
+                                      , const bool)
 {
     // Ignore chars before the root element
     if (!fWithinElement || !fIncludeIgnorableWhitespace)

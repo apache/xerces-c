@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.5  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -141,6 +144,11 @@ private :
     // -----------------------------------------------------------------------
     friend class RefStackEnumerator<TElem>;
 
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefStackOf(const RefStackOf<TElem>&);
+    RefStackOf<TElem>& operator=(const RefStackOf<TElem>&);
 
     // -----------------------------------------------------------------------
     //  Data Members
@@ -158,7 +166,7 @@ private :
 //  An enumerator for a value stack. It derives from the basic enumerator
 //  class, so that value stacks can be generically enumerated.
 //
-template <class TElem> class RefStackEnumerator : public XMLEnumerator<TElem>
+template <class TElem> class RefStackEnumerator : public XMLEnumerator<TElem>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -181,6 +189,11 @@ public :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefStackEnumerator(const RefStackEnumerator<TElem>&);
+    RefStackEnumerator<TElem>& operator=(const RefStackEnumerator<TElem>&);
     // -----------------------------------------------------------------------
     //  Data Members
     //

@@ -204,6 +204,12 @@ private:
 	Token* parseFactor();
 	Token* parseAtom();
 
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RegxParser(const RegxParser&);
+    RegxParser& operator=(const RegxParser&);
+
 	// -----------------------------------------------------------------------
     //  Private data types
     // -----------------------------------------------------------------------
@@ -230,7 +236,7 @@ private:
 	int                             fOptions;
 	int                             fOffset;
 	int                             fNoGroups;
-	int                             fParseContext;
+	unsigned short                  fParseContext;
 	int                             fStringLen;
 	unsigned short                  fState;
 	XMLInt32                        fCharData;

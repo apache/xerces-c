@@ -103,11 +103,13 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
 
     XMLScanner(valToAdopt, grammarResolver, manager)
     , fSeeXsi(false)
+    , fGrammarType(Grammar::UnKnown)
     , fElemStateSize(16)
     , fElemState(0)
     , fContent(1023, manager)
     , fEntityTable(0)
     , fRawAttrList(0)
+    , fSchemaGrammar(0)
     , fSchemaValidator(0)
     , fMatcherStack(0)
     , fValueStoreCache(0)
@@ -119,7 +121,7 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
     , fPSVIAttrList(0)
     , fModel(0)
     , fPSVIElement(0)
-    , fErrorStack(0)
+    , fErrorStack(0)       
 {
     try
     {
@@ -156,11 +158,13 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
 
     XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, grammarResolver, manager)
     , fSeeXsi(false)
+    , fGrammarType(Grammar::UnKnown)
     , fElemStateSize(16)
     , fElemState(0)
     , fContent(1023, manager)
     , fEntityTable(0)
     , fRawAttrList(0)
+    , fSchemaGrammar(0)
     , fSchemaValidator(0)
     , fMatcherStack(0)
     , fValueStoreCache(0)
@@ -172,7 +176,7 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
     , fPSVIAttrList(0)
     , fModel(0)
     , fPSVIElement(0)
-    , fErrorStack(0)
+    , fErrorStack(0)        
 {
     try
     {	
@@ -250,7 +254,7 @@ void SGXMLScanner::scanDocument(const InputSource& src)
         else
         {
             // Scan content, and tell it its not an external entity
-            if (scanContent(false))
+            if (scanContent())
             {
                 // Do post-parse validation if required
                 if (fValidate)
@@ -777,7 +781,7 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
 
 //  This method will kick off the scanning of the primary content of the
 //  document, i.e. the elements.
-bool SGXMLScanner::scanContent(const bool extEntity)
+bool SGXMLScanner::scanContent()
 {
     //  Go into a loop until we hit the end of the root element, or we fall
     //  out because there is no root element.
@@ -1247,7 +1251,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         , *fRawAttrList
         , isEmpty
     );
-    const bool gotAttrs = (attCount != 0);
 
     // save the contentleafname and currentscope before addlevel, for later use
     ContentLeafNameTypeVector* cv = 0;
@@ -1308,7 +1311,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     //  Make an initial pass through the list and find any xmlns attributes or
     //  schema attributes.
     if (attCount)
-        scanRawAttrListforNameSpaces(fRawAttrList, attCount);
+        scanRawAttrListforNameSpaces(attCount);
 
     //  Resolve the qualified name to a URI and name so that we can look up
     //  the element decl for this element. We have now update the prefix to
@@ -1504,7 +1507,6 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
                 // still Not found in specified uri
                 // go to original Grammar again to see if element needs to be fully qualified.
-                const XMLCh* uriStr = getURIText(orgGrammarUri);
                 bool errorCondition = !switchGrammar(original_uriStr) && fValidate;
                 if (errorCondition && !laxThisOne)
                 {
@@ -3623,7 +3625,7 @@ void SGXMLScanner::updateNSMap(const  XMLCh* const    attrName
     );
 }
 
-void SGXMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount)
+void SGXMLScanner::scanRawAttrListforNameSpaces(int attCount)
 {
     //  Make an initial pass through the list and find any xmlns attributes or
     //  schema attributes.
@@ -4596,7 +4598,7 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
 //  only makes any difference if the return value indicates the value was
 //  returned directly.
 SGXMLScanner::EntityExpRes
-SGXMLScanner::scanEntityRef(  const   bool    inAttVal
+SGXMLScanner::scanEntityRef(  const   bool
                             ,       XMLCh&  firstCh
                             ,       XMLCh&  secondCh
                             ,       bool&   escaped)

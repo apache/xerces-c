@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/01/29 11:52:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.13  2003/12/22 15:22:58  gareth
  * made getRootElemID const. Bug #25699
  *
@@ -283,6 +286,11 @@ private:
     // -----------------------------------------------------------------------
     void resetEntityDeclPool();
 
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DTDGrammar(const DTDGrammar &);
+    DTDGrammar& operator = (const  DTDGrammar&);
 
     // -----------------------------------------------------------------------
     //  Private data members

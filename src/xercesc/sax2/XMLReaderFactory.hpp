@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/01/29 11:46:32  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.5  2003/06/20 18:56:45  peiyongz
  * Stateless Grammar Pool :: Part I
  *
@@ -117,6 +120,13 @@ public:
                                              , XMLGrammarPool* const gramPool = 0
                                                ) ;
 	static SAX2XMLReader * createXMLReader(const XMLCh* className)  ;
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLReaderFactory(const XMLReaderFactory&);
+    XMLReaderFactory& operator=(const XMLReaderFactory&);
 };
 
 
@@ -126,7 +136,7 @@ inline SAX2XMLReader * XMLReaderFactory::createXMLReader(MemoryManager* const  m
 	return (SAX2XMLReader*)(new (manager) SAX2XMLReaderImpl(manager, gramPool));
 }
 
-inline SAX2XMLReader * XMLReaderFactory::createXMLReader(const XMLCh * className)
+inline SAX2XMLReader * XMLReaderFactory::createXMLReader(const XMLCh *)
 {	
 	throw SAXNotSupportedException();
 	// unimplemented

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -318,9 +321,22 @@ void XMLStringPool::serialize(XSerializeEngine& serEng)
     }
 }
 
-XMLStringPool::XMLStringPool(MemoryManager* const manager)
+XMLStringPool::XMLStringPool(MemoryManager* const manager) :
+    fMemoryManager(manager)
+    , fIdMap(0)
+    , fHashTable(0)
+    , fMapCapacity(64)
+    , fCurId(1)
 {
-    XMLStringPool(109, manager);
+    // Create the hash table, passing it the modulus
+    fHashTable = new (fMemoryManager) RefHashTableOf<PoolElem>(109, fMemoryManager);
+
+    // Do an initial allocation of the id map and zero it all out
+    fIdMap = (PoolElem**) fMemoryManager->allocate
+    (
+        fMapCapacity * sizeof(PoolElem*)
+    ); //new PoolElem*[fMapCapacity];
+    memset(fIdMap, 0, sizeof(PoolElem*) * fMapCapacity);
 }
 
 XERCES_CPP_NAMESPACE_END

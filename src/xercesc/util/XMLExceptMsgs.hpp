@@ -412,6 +412,11 @@ public :
       , E_HighBounds                       = 396
     };
 
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLExcepts();
 };
 
 XERCES_CPP_NAMESPACE_END

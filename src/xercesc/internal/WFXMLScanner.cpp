@@ -188,7 +188,7 @@ void WFXMLScanner::scanDocument(const InputSource& src)
         else
         {
             // Scan content, and tell it its not an external entity
-            if (scanContent(false))
+            if (scanContent())
             {
                 // That went ok, so scan for any miscellaneous stuff
                 if (!fReaderMgr.atEOF())
@@ -604,7 +604,7 @@ void WFXMLScanner::sendCharData(XMLBuffer& toSend)
 
 //  This method will kick off the scanning of the primary content of the
 //  document, i.e. the elements.
-bool WFXMLScanner::scanContent(const bool extEntity)
+bool WFXMLScanner::scanContent()
 {
     //  Go into a loop until we hit the end of the root element, or we fall
     //  out because there is no root element.
@@ -2069,7 +2069,7 @@ void WFXMLScanner::scanCharData(XMLBuffer& toUse)
 //  only makes any difference if the return value indicates the value was
 //  returned directly.
 XMLScanner::EntityExpRes
-WFXMLScanner::scanEntityRef(const bool    inAttVal
+WFXMLScanner::scanEntityRef(const bool
                             ,     XMLCh&  firstCh
                             ,     XMLCh&  secondCh
                             ,     bool&   escaped)

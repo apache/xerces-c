@@ -71,7 +71,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 DOMDocumentFragmentImpl::DOMDocumentFragmentImpl(DOMDocument *masterDoc)
     : fNode(masterDoc), fParent(masterDoc)
 {
-};
+}
 
 
 DOMDocumentFragmentImpl::DOMDocumentFragmentImpl(const DOMDocumentFragmentImpl &other,
@@ -80,12 +80,12 @@ DOMDocumentFragmentImpl::DOMDocumentFragmentImpl(const DOMDocumentFragmentImpl &
 {
     if (deep)
         castToParentImpl(this)->cloneChildren(&other);
-};
+}
 
 
 DOMDocumentFragmentImpl::~DOMDocumentFragmentImpl()
 {
-};
+}
 
 
 
@@ -94,7 +94,7 @@ DOMNode *DOMDocumentFragmentImpl::cloneNode(bool deep) const
     DOMNode* newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMDocumentImpl::DOCUMENT_FRAGMENT_OBJECT) DOMDocumentFragmentImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
-};
+}
 
 
 const XMLCh * DOMDocumentFragmentImpl::getNodeName() const {
@@ -107,13 +107,13 @@ const XMLCh * DOMDocumentFragmentImpl::getNodeName() const {
 
 short DOMDocumentFragmentImpl::getNodeType() const {
     return DOMNode::DOCUMENT_FRAGMENT_NODE;
-};
+}
 
 
 void DOMDocumentFragmentImpl::setNodeValue(const XMLCh *x)
 {
     fNode.setNodeValue(x);
-};
+}
 
 
 void DOMDocumentFragmentImpl::release()
@@ -136,43 +136,43 @@ void DOMDocumentFragmentImpl::release()
 //
 //  Delegation stubs for inherited functions.
 //
-           DOMNode*         DOMDocumentFragmentImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); };
-           DOMNamedNodeMap* DOMDocumentFragmentImpl::getAttributes() const                   {return fNode.getAttributes (); };
-           DOMNodeList*     DOMDocumentFragmentImpl::getChildNodes() const                   {return fParent.getChildNodes (); };
-           DOMNode*         DOMDocumentFragmentImpl::getFirstChild() const                   {return fParent.getFirstChild (); };
-           DOMNode*         DOMDocumentFragmentImpl::getLastChild() const                    {return fParent.getLastChild (); };
-     const XMLCh*           DOMDocumentFragmentImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh*           DOMDocumentFragmentImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode*         DOMDocumentFragmentImpl::getNextSibling() const                  {return fNode.getNextSibling (); };
-     const XMLCh*           DOMDocumentFragmentImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
-           DOMDocument*     DOMDocumentFragmentImpl::getOwnerDocument() const                {return fParent.fOwnerDocument; };
-     const XMLCh*           DOMDocumentFragmentImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode*         DOMDocumentFragmentImpl::getParentNode() const                   {return fNode.getParentNode (); };
-           DOMNode*         DOMDocumentFragmentImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };
-           bool             DOMDocumentFragmentImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
+           DOMNode*         DOMDocumentFragmentImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); }
+           DOMNamedNodeMap* DOMDocumentFragmentImpl::getAttributes() const                   {return fNode.getAttributes (); }
+           DOMNodeList*     DOMDocumentFragmentImpl::getChildNodes() const                   {return fParent.getChildNodes (); }
+           DOMNode*         DOMDocumentFragmentImpl::getFirstChild() const                   {return fParent.getFirstChild (); }
+           DOMNode*         DOMDocumentFragmentImpl::getLastChild() const                    {return fParent.getLastChild (); }
+     const XMLCh*           DOMDocumentFragmentImpl::getLocalName() const                    {return fNode.getLocalName (); }
+     const XMLCh*           DOMDocumentFragmentImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); }
+           DOMNode*         DOMDocumentFragmentImpl::getNextSibling() const                  {return fNode.getNextSibling (); }
+     const XMLCh*           DOMDocumentFragmentImpl::getNodeValue() const                    {return fNode.getNodeValue (); }
+           DOMDocument*     DOMDocumentFragmentImpl::getOwnerDocument() const                {return fParent.fOwnerDocument; }
+     const XMLCh*           DOMDocumentFragmentImpl::getPrefix() const                       {return fNode.getPrefix (); }
+           DOMNode*         DOMDocumentFragmentImpl::getParentNode() const                   {return fNode.getParentNode (); }
+           DOMNode*         DOMDocumentFragmentImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); }
+           bool             DOMDocumentFragmentImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); }
            DOMNode*         DOMDocumentFragmentImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                                             {return fParent.insertBefore (newChild, refChild); };
-           void             DOMDocumentFragmentImpl::normalize()                             {fParent.normalize (); };
-           DOMNode*         DOMDocumentFragmentImpl::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); };
+                                                                                             {return fParent.insertBefore (newChild, refChild); }
+           void             DOMDocumentFragmentImpl::normalize()                             {fParent.normalize (); }
+           DOMNode*         DOMDocumentFragmentImpl::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); }
            DOMNode*         DOMDocumentFragmentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                                             {return fParent.replaceChild (newChild, oldChild); };
+                                                                                             {return fParent.replaceChild (newChild, oldChild); }
            bool             DOMDocumentFragmentImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                                             {return fNode.isSupported (feature, version); };
-           void             DOMDocumentFragmentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool             DOMDocumentFragmentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMDocumentFragmentImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); };
-           bool             DOMDocumentFragmentImpl::isEqualNode(const DOMNode* arg) const   {return fParent.isEqualNode(arg); };
+                                                                                             {return fNode.isSupported (feature, version); }
+           void             DOMDocumentFragmentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); }
+           bool             DOMDocumentFragmentImpl::hasAttributes() const                   {return fNode.hasAttributes(); }
+           bool             DOMDocumentFragmentImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); }
+           bool             DOMDocumentFragmentImpl::isEqualNode(const DOMNode* arg) const   {return fParent.isEqualNode(arg); }
            void*            DOMDocumentFragmentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
-                                                                                             {return fNode.setUserData(key, data, handler); };
-           void*            DOMDocumentFragmentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           const XMLCh*     DOMDocumentFragmentImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
-           short            DOMDocumentFragmentImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
-           const XMLCh*     DOMDocumentFragmentImpl::getTextContent() const                  {return fNode.getTextContent(); };
-           void             DOMDocumentFragmentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
-           const XMLCh*     DOMDocumentFragmentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
-           bool             DOMDocumentFragmentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
-           const XMLCh*     DOMDocumentFragmentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
-           DOMNode*         DOMDocumentFragmentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+                                                                                             {return fNode.setUserData(key, data, handler); }
+           void*            DOMDocumentFragmentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); }
+           const XMLCh*     DOMDocumentFragmentImpl::getBaseURI() const                      {return fNode.getBaseURI(); }
+           short            DOMDocumentFragmentImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); }
+           const XMLCh*     DOMDocumentFragmentImpl::getTextContent() const                  {return fNode.getTextContent(); }
+           void             DOMDocumentFragmentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); }
+           const XMLCh*     DOMDocumentFragmentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
+           bool             DOMDocumentFragmentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
+           const XMLCh*     DOMDocumentFragmentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
+           DOMNode*         DOMDocumentFragmentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); }
 
 XERCES_CPP_NAMESPACE_END
 

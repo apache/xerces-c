@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.32  2004/01/29 11:52:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.31  2003/12/31 15:40:00  cargilld
  * Release memory when an error is encountered.
  *
@@ -331,6 +334,10 @@ DTDScanner::DTDScanner( DTDGrammar*           dtdGrammar
     , fDTDGrammar(dtdGrammar)
     , fPEntityDeclPool(0)
     , fDocTypeReaderId(0)
+    , fBufMgr(0)
+    , fReaderMgr(0)
+    , fScanner(0)
+    , fEmptyNamespaceId(0)
 {
     fPEntityDeclPool = new (fMemoryManager) NameIdPool<DTDEntityDecl>(109, 128, fMemoryManager);
 }
@@ -367,10 +374,8 @@ void DTDScanner::setScannerInfo(XMLScanner* const      owningScanner
 // ---------------------------------------------------------------------------
 //  DTDScanner: Private scanning methods
 // ---------------------------------------------------------------------------
-bool DTDScanner::checkForPERef(const  bool    spaceRequired
-                                , const bool    inLiteral
-                                , const bool    inMarkup
-                                , const bool    throwAtEndExt)
+bool DTDScanner::checkForPERef(   const bool    inLiteral
+                                , const bool    inMarkup)
 {
     bool gotSpace = false;
 
@@ -390,7 +395,7 @@ bool DTDScanner::checkForPERef(const  bool    spaceRequired
 
     while (true)
     {
-       if (!expandPERef(false, inLiteral, inMarkup, throwAtEndExt))
+       if (!expandPERef(false, inLiteral, inMarkup, false))
           fScanner->emitError(XMLErrs::ExpectedEntityRefName);
        // And skip any more spaces in the expanded value
        if (fReaderMgr->skippedSpace())
@@ -617,7 +622,7 @@ XMLAttDef*
 DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
 {
     // Check for PE ref or optional whitespace
-    checkForPERef(false, false, true);
+    checkForPERef(false, true);
 
     // Get the name of the attribute
     if (!fReaderMgr->getName(bufToUse))
@@ -672,7 +677,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
     const bool isIgnored = (decl == fDumAttDef);
 
     // Space is required here, so check for PE ref, and require space
-    if (!checkForPERef(true, false, true))
+    if (!checkForPERef(false, true))
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
 
     //
@@ -723,7 +728,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
      else if (fReaderMgr->skippedString(XMLUni::fgNotationString))
     {
         // Check for PE ref and require space
-        if (!checkForPERef(true, false, true))
+        if (!checkForPERef(false, true))
             fScanner->emitError(XMLErrs::ExpectedWhitespace);
 
         decl->setType(XMLAttDef::Notation);
@@ -754,7 +759,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
     }
 
     // Space is required here, so check for PE ref, and require space
-    if (!checkForPERef(true, false, true))
+    if (!checkForPERef(false, true))
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
 
     // And then scan for the optional default value declaration
@@ -808,7 +813,7 @@ DTDScanner::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
 void DTDScanner::scanAttListDecl()
 {
     // Space is required here, so check for a PE ref
-    if (!checkForPERef(true, false, true))
+    if (!checkForPERef(false, true))
     {
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
         fReaderMgr->skipPastChar(chCloseAngle);
@@ -1254,7 +1259,7 @@ ContentSpecNode*
 DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
 {
     // Check for a PE ref here, but don't require spaces
-    checkForPERef(false, false, true);
+    checkForPERef(false, true);
 
     // We have to check entity nesting here
     unsigned int curReader;
@@ -1317,7 +1322,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
         );
 
         // Check for a PE ref here, but don't require spaces
-        const bool gotSpaces = checkForPERef(false, false, true);
+        const bool gotSpaces = checkForPERef(false, true);
 
         // Check for a repetition character after the leaf
         const XMLCh repCh = fReaderMgr->peekNextChar();
@@ -1338,7 +1343,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
     }
 
     // Check for a PE ref here, but don't require spaces
-    checkForPERef(false, false, true);
+    checkForPERef(false, true);
 
     //
     //  Ok, the next character tells us what kind of content this particular
@@ -1418,7 +1423,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
             //
             if (fReaderMgr->lookingAtChar(chPercent))
             {
-                checkForPERef(false, false, true);
+                checkForPERef(false, true);
             }
              else if (fReaderMgr->skippedSpace())
             {
@@ -1449,7 +1454,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
              else if (fReaderMgr->skippedChar(opCh))
             {
                 // Check for a PE ref here, but don't require spaces
-                checkForPERef(false, false, true);
+                checkForPERef(false, true);
 
                 if (fReaderMgr->skippedChar(chOpenParen))
                 {
@@ -1741,7 +1746,7 @@ bool DTDScanner::scanContentSpec(DTDElementDecl& toFill)
     const unsigned int curReader = fReaderMgr->getCurrentReaderNum();
 
     // We could have a PE ref here, but don't require space
-    checkForPERef(false, false, true);
+    checkForPERef(false, true);
 
     //
     //  Now we look for a PCDATA string. If its PCDATA, then it must be a
@@ -1825,7 +1830,7 @@ void DTDScanner::scanDefaultDecl(DTDAttDef& toFill)
     //  an empty string and try to keep going.
     //
     // Check for PE ref or optional whitespace
-    checkForPERef(false, false, true);
+    checkForPERef(false, true);
 
     XMLBufBid bbValue(fBufMgr);
     if (!scanAttValue(toFill.getFullName(), bbValue.getBuffer(), toFill.getType()))
@@ -1847,7 +1852,7 @@ void DTDScanner::scanElementDecl()
     //  we don't get our whitespace, then issue and error, but try to keep
     //  going.
     //
-    if (!checkForPERef(true, false, true))
+    if (!checkForPERef(false, true))
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
 
     // Get a buffer for the element name and scan in the name
@@ -1913,7 +1918,7 @@ void DTDScanner::scanElementDecl()
     decl->setCreateReason(XMLElementDecl::Declared);
 
     // Another check for a PE ref, with at least required whitespace
-    if (!checkForPERef(true, false, true))
+    if (!checkForPERef(false, true))
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
 
     // And now scan the content model for this guy.
@@ -1924,7 +1929,7 @@ void DTDScanner::scanElementDecl()
     }
 
     // Another check for a PE ref, but we don't require whitespace here
-    checkForPERef(false, false, true);
+    checkForPERef(false, true);
 
     // And we should have the ending angle bracket
     if (!fReaderMgr->skippedChar(chCloseAngle))
@@ -1971,7 +1976,7 @@ void DTDScanner::scanEntityDecl()
     //
     if (isPEDecl)
     {
-        if (!checkForPERef(true, false, true))
+        if (!checkForPERef(false, true))
             fScanner->emitError(XMLErrs::ExpectedWhitespace);
     }
 
@@ -2042,7 +2047,7 @@ void DTDScanner::scanEntityDecl()
     //  we don't get our whitespace, then issue an error, but try to keep
     //  going.
     //
-    if (!checkForPERef(true, false, true))
+    if (!checkForPERef(false, true))
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
 
     // save the hasNoDTD status for Entity Constraint Checking
@@ -2062,7 +2067,7 @@ void DTDScanner::scanEntityDecl()
         fScanner->setHasNoDTD(true);
 
     // Space is legal (but not required) here so check for a PE ref
-    checkForPERef(false, false, true);
+    checkForPERef(false, true);
 
     // And then we have to have the closing angle bracket
     if (!fReaderMgr->skippedChar(chCloseAngle))
@@ -2273,7 +2278,7 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
 //  scanner, all such entity literals are in entity decls and therefore
 //  general entities are not expanded.
 //
-bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill, const bool isPE)
+bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill)
 {
     toFill.reset();
 
@@ -2455,7 +2460,7 @@ bool DTDScanner::scanEntityDef(DTDEntityDecl& decl, const bool isPEDecl)
         // Get a buffer for the literal
         XMLBufBid bbValue(fBufMgr);
 
-        if (!scanEntityLiteral(bbValue.getBuffer(), isPEDecl))
+        if (!scanEntityLiteral(bbValue.getBuffer()))
             return false;
 
         // Set it on the entity decl
@@ -2483,7 +2488,7 @@ bool DTDScanner::scanEntityDef(DTDEntityDecl& decl, const bool isPEDecl)
     decl.setBaseURI((lastInfo.systemId && *lastInfo.systemId) ? lastInfo.systemId : 0);
 
     // If its a PE decl, we are done
-    bool gotSpaces = checkForPERef(false, false, true);
+    bool gotSpaces = checkForPERef(false, true);
     if (isPEDecl)
     {
         //
@@ -2515,7 +2520,7 @@ bool DTDScanner::scanEntityDef(DTDEntityDecl& decl, const bool isPEDecl)
         fScanner->emitError(XMLErrs::ExpectedNDATA);
 
     // Space is required here, but try to go on if not
-    if (!checkForPERef(false, false, true))
+    if (!checkForPERef(false, true))
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
 
     // Get a name
@@ -2549,7 +2554,7 @@ bool DTDScanner::scanEnumeration( const   DTDAttDef&  attDef
     toFill.reset();
 
     // Check for PE ref but don't require space
-    checkForPERef(false, false, true);
+    checkForPERef(false, true);
 
     // If this is a notation, we need an opening paren
     if (notation)
@@ -2564,7 +2569,7 @@ bool DTDScanner::scanEnumeration( const   DTDAttDef&  attDef
     while (true)
     {
         // Space is allowed here for either type so check for PE ref
-        checkForPERef(false, false, true);
+        checkForPERef(false, true);
 
         // And then get either a name or a name token
         bool success;
@@ -2587,7 +2592,7 @@ bool DTDScanner::scanEnumeration( const   DTDAttDef&  attDef
         toFill.append(bbTmp.getRawBuffer(), bbTmp.getLen());
 
         // Space is allowed here for either type so check for PE ref
-        checkForPERef(false, false, true);
+        checkForPERef(false, true);
 
         // Check for the terminating paren
         if (fReaderMgr->skippedChar(chCloseParen))
@@ -3258,11 +3263,11 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
             }
 
             // A PE ref can happen here, but space is not required
-            checkForPERef(false, false, true);
+            checkForPERef(false, true);
 
             if (fReaderMgr->skippedString(XMLUni::fgIncludeString))
             {
-                checkForPERef(false, false, true);
+                checkForPERef(false, true);
 
                 // Check for the following open square bracket
                 if (!fReaderMgr->skippedChar(chOpenSquare))
@@ -3271,7 +3276,7 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
                 // Get the reader we started this on
                 const unsigned int orgReader = fReaderMgr->getCurrentReaderNum();
 
-                checkForPERef(false, false, true);
+                checkForPERef(false, true);
 
                 //
                 //  Recurse back to the ext subset call again, telling it its
@@ -3289,7 +3294,7 @@ void DTDScanner::scanMarkupDecl(const bool parseTextDecl)
             }
              else if (fReaderMgr->skippedString(XMLUni::fgIgnoreString))
             {
-                checkForPERef(false, false, true);
+                checkForPERef(false, true);
 
                 // Check for the following open square bracket
                 if (!fReaderMgr->skippedChar(chOpenSquare))
@@ -3430,7 +3435,7 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
         if (fReaderMgr->lookingAtChar(chPercent))
         {
             // Expand it and continue
-            checkForPERef(false, false, true);
+            checkForPERef(false, true);
         }
          else if (fReaderMgr->skippedChar(chAsterisk))
         {
@@ -3501,7 +3506,7 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
             starRequired = true;
 
             // Space is legal here so check for a PE ref, but don't require space
-            checkForPERef(false, false, true);
+            checkForPERef(false, true);
 
             // Get a name token
             if (!fReaderMgr->getName(nameBuf))
@@ -3597,7 +3602,7 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
 void DTDScanner::scanNotationDecl()
 {
     // Space is required here so check for a PE ref, and require space
-    if (!checkForPERef(true, false, true))
+    if (!checkForPERef(false, true))
     {
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
         fReaderMgr->skipPastChar(chCloseAngle);
@@ -3624,7 +3629,7 @@ void DTDScanner::scanNotationDecl()
     }
 
     // Space is required here so check for a PE ref, and require space
-    if (!checkForPERef(true, false, true))
+    if (!checkForPERef(false, true))
     {
         fScanner->emitError(XMLErrs::ExpectedWhitespace);
         fReaderMgr->skipPastChar(chCloseAngle);
@@ -3644,7 +3649,7 @@ void DTDScanner::scanNotationDecl()
     }
 
     // We can have an optional space or PE ref here
-    checkForPERef(false, false, true);
+    checkForPERef(false, true);
 
     //
     //  See if it already exists. If so, add it to the notatino decl pool.
@@ -3690,7 +3695,7 @@ void DTDScanner::scanNotationDecl()
     }
 
     // And one more optional space or PE ref
-    checkForPERef(false, false, true);
+    checkForPERef(false, true);
 
     // And skip the terminating bracket
     if (!fReaderMgr->skippedChar(chCloseAngle))

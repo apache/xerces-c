@@ -175,6 +175,12 @@ public:
      ***/
     DECL_XSERIALIZABLE(AnySimpleTypeDatatypeValidator)
 
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    AnySimpleTypeDatatypeValidator(const AnySimpleTypeDatatypeValidator&);
+    AnySimpleTypeDatatypeValidator& operator=(const AnySimpleTypeDatatypeValidator&);
 };
 
 
@@ -190,9 +196,9 @@ inline bool AnySimpleTypeDatatypeValidator::isAtomic() const {
 // ---------------------------------------------------------------------------
 //  DatatypeValidators: Compare methods
 // ---------------------------------------------------------------------------
-inline int AnySimpleTypeDatatypeValidator::compare(const XMLCh* const lValue,
-                                                   const XMLCh* const rValue
-                                                   , MemoryManager* const manager)
+inline int AnySimpleTypeDatatypeValidator::compare(const XMLCh* const,
+                                                   const XMLCh* const
+                                                   , MemoryManager* const)
 {
     return -1;
 }
@@ -201,15 +207,15 @@ inline int AnySimpleTypeDatatypeValidator::compare(const XMLCh* const lValue,
 //  DatatypeValidators: Validation methods
 // ---------------------------------------------------------------------------
 inline bool
-AnySimpleTypeDatatypeValidator::isSubstitutableBy(const DatatypeValidator* const toCheck)
+AnySimpleTypeDatatypeValidator::isSubstitutableBy(const DatatypeValidator* const)
 {
     return true;
 }
 
 inline void 
-AnySimpleTypeDatatypeValidator::validate(const XMLCh*             const content
-                                       ,       ValidationContext* const context
-                                       ,       MemoryManager*     const manager)
+AnySimpleTypeDatatypeValidator::validate(const XMLCh*             const
+                                       ,       ValidationContext* const
+                                       ,       MemoryManager*     const)
 {
     return;
 }

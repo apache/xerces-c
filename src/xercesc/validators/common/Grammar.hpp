@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/10/29 16:19:47  peiyongz
  * storeGrammar()/loadGrammar added
  *
@@ -273,6 +276,12 @@ protected :
     // -----------------------------------------------------------------------
     Grammar(){};
 
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    Grammar(const Grammar&);
+    Grammar& operator=(const Grammar&);
 };
 
 XERCES_CPP_NAMESPACE_END

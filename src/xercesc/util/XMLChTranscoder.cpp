@@ -127,7 +127,7 @@ XMLChTranscoder::transcodeTo(const  XMLCh* const    srcData
                             ,       XMLByte* const  toFill
                             , const unsigned int    maxBytes
                             ,       unsigned int&   charsEaten
-                                , const UnRepOpts   options)
+                                , const UnRepOpts)
 {
     // If debugging, make sure that the block size is legal
     #if defined(XERCES_DEBUG)
@@ -158,7 +158,7 @@ XMLChTranscoder::transcodeTo(const  XMLCh* const    srcData
 }
 
 
-bool XMLChTranscoder::canTranscodeTo(const unsigned int toCheck) const
+bool XMLChTranscoder::canTranscodeTo(const unsigned int) const
 {
     // We can handle anything
     return true;

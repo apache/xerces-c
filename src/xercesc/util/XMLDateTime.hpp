@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2004/01/29 11:48:47  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.16  2004/01/13 19:50:56  peiyongz
  * remove parseContent()
  *
@@ -253,8 +256,8 @@ private:
     // -----------------------------------------------------------------------
     // Comparison
     // -----------------------------------------------------------------------
-    static int            compareResult(short
-                                      , short
+    static int            compareResult(int
+                                      , int
                                       , bool);
 
     static void           addDuration(XMLDateTime*             pDuration

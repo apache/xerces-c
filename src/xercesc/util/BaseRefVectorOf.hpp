@@ -115,6 +115,12 @@ public :
     // -----------------------------------------------------------------------
     void ensureExtraCapacity(const unsigned int length);
 
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    BaseRefVectorOf(const BaseRefVectorOf<TElem>& copy);
+    BaseRefVectorOf& operator=(const BaseRefVectorOf<TElem>& copy);       
 
 protected:
     // -----------------------------------------------------------------------
@@ -132,7 +138,7 @@ protected:
 //  An enumerator for a vector. It derives from the basic enumerator
 //  class, so that value vectors can be generically enumerated.
 //
-template <class TElem> class BaseRefVectorEnumerator : public XMLEnumerator<TElem>
+template <class TElem> class BaseRefVectorEnumerator : public XMLEnumerator<TElem>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -145,7 +151,7 @@ public :
     );
     virtual ~BaseRefVectorEnumerator();
 
-
+    BaseRefVectorEnumerator(const BaseRefVectorEnumerator<TElem>& copy);
     // -----------------------------------------------------------------------
     //  Enum interface
     // -----------------------------------------------------------------------
@@ -155,6 +161,10 @@ public :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------        
+    BaseRefVectorEnumerator& operator=(const BaseRefVectorEnumerator<TElem>& copy);    
     // -----------------------------------------------------------------------
     //  Data Members
     //

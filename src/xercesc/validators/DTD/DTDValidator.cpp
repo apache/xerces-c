@@ -203,7 +203,7 @@ void
 DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
                                 , const XMLCh* const    attrValue
                                 , bool                  preValidation
-                                , const XMLElementDecl* elemDecl)
+                                , const XMLElementDecl*)
 {
     //
     //  Get quick refs to lost of of the stuff in the passed objects in
@@ -274,8 +274,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
         || (type == XMLAttDef::IDRefs)
     );
 
-    // Some trigger flags to avoid issuing redundant errors and whatnot
-    bool sawOneValue;
+    // Some trigger flags to avoid issuing redundant errors and whatnot    
     bool alreadyCapped = false;
 
     //
@@ -307,9 +306,6 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
 
     while (true)
     {
-        // Reset the trigger flags
-        sawOneValue = false;
-
         //
         //  Make sure the first character is a valid first name char, i.e.
         //  if its a Name value. For NmToken values we don't treat the first
@@ -459,7 +455,7 @@ DTDValidator::validateAttrValue(const   XMLAttDef*      attDef
 
 }
 
-void DTDValidator::preContentValidation(bool reuseGrammar,
+void DTDValidator::preContentValidation(bool,
                                         bool validateDefAttr)
 {
     //

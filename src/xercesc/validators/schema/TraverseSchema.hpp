@@ -426,8 +426,7 @@ private:
       * the type is a complex type
       */
     ComplexTypeInfo* getElementComplexTypeInfo(const DOMElement* const elem,
-                                               const XMLCh* const typeStr,
-                                               bool& noErrorDetected,
+                                               const XMLCh* const typeStr,                                               
                                                const XMLCh* const otherSchemaURI);
 
     /**
@@ -482,10 +481,8 @@ private:
     void processComplexContent(const DOMElement* const elem,
                                const XMLCh* const typeName,
                                const DOMElement* const childElem,
-                               ComplexTypeInfo* const typeInfo,
-                               const XMLCh* const baseRawName,
-                               const XMLCh* const baseLocalPart,
-                               const XMLCh* const baseURI,
+                               ComplexTypeInfo* const typeInfo,                               
+                               const XMLCh* const baseLocalPart,                               
                                const bool isMixed,
                                const bool isBaseAnyType = false);
 
@@ -524,10 +521,7 @@ private:
       * Process attributes of a complex type
       */
     void processAttributes(const DOMElement* const elem,
-                           const DOMElement* const attElem,
-                           const XMLCh* const baseRawName,
-                           const XMLCh* const baseLocalPart,
-                           const XMLCh* const baseURI,
+                           const DOMElement* const attElem,                           
                            ComplexTypeInfo* const typeInfo,
                            const bool isBaseAnyType = false);
 

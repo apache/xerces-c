@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.52  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.51  2003/12/30 06:01:20  neilg
  * fix segfault when validation of a union type fails
  *
@@ -327,15 +330,15 @@ SchemaValidator::SchemaValidator( XMLErrorReporter* const errReporter
 
     XMLValidator(errReporter)
     , fMemoryManager(manager)
-    , fGrammarResolver(0)
     , fSchemaGrammar(0)
-    , fTrailing(false)
-    , fSeenId(false)
+    , fGrammarResolver(0)
     , fXsiType(0)
+    , fNil(false)
     , fCurrentDatatypeValidator(0)
     , fNotationBuf(0)
     , fDatatypeBuffer(1023, manager)
-    , fNil(false)
+    , fTrailing(false)
+    , fSeenId(false)
     , fTypeStack(0)
     , fMostRecentAttrValidator(0)
     , fErrorOccurred(false)
@@ -996,7 +999,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
         ((SchemaElementDecl *)(elemDef))->setValidity(PSVIDefs::INVALID);    
 }
 
-void SchemaValidator::preContentValidation(bool reuseGrammar,
+void SchemaValidator::preContentValidation(bool,
                                            bool validateDefAttr)
 {
     //  Lets go through all the grammar in the GrammarResolver

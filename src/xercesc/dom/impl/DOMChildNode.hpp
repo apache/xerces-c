@@ -97,6 +97,12 @@ public:
     DOMNode * getNextSibling() const;
     DOMNode * getParentNode(const DOMNode *thisNode) const;
     DOMNode * getPreviousSibling(const DOMNode *thisNode) const;
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMChildNode & operator = (const DOMChildNode &);   
 };
 
 

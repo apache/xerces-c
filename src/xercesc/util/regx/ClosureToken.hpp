@@ -126,7 +126,7 @@ inline int ClosureToken::getMin() const {
 	return fMin;
 }
 
-inline Token* ClosureToken::getChild(const int index) const {
+inline Token* ClosureToken::getChild(const int) const {
 
 	return fChild;
 }

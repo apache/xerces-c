@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/01/29 11:52:32  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/11/14 22:35:09  neilg
  * changes in support of second phase of XSModel implementation; thanks to David Cargill
  *
@@ -122,6 +125,7 @@ IdentityConstraint::IdentityConstraint(const XMLCh* const identityConstraintName
     , fSelector(0)
     , fFields(0)
     , fMemoryManager(manager)
+    , fNamespaceURI(-1)
 {
     try {
         fIdentityConstraintName = XMLString::replicate(identityConstraintName, fMemoryManager);
@@ -269,24 +273,19 @@ IdentityConstraint* IdentityConstraint::loadIC(XSerializeEngine& serEng)
     case UNIQUE: 
         IC_Unique* ic_unique;
         serEng>>ic_unique;
-        return ic_unique;
-        break;
+        return ic_unique;      
     case KEY:
         IC_Key* ic_key;
         serEng>>ic_key;
         return ic_key;
-        break;
     case KEYREF: 
         IC_KeyRef* ic_keyref;
         serEng>>ic_keyref;
         return ic_keyref;
-        break;
     case UNKNOWN:
         return 0;
-        break;
     default: //we treat this same as UnKnown
         return 0;
-        break;
     }
 
 }

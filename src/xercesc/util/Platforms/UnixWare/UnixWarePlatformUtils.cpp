@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.16  2004/01/13 16:34:22  cargilld
  * Misc memory management changes.
  *
@@ -549,12 +552,12 @@ public:
 			ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotCreate, XMLPlatformUtils::fgMemoryManager);
 		recursionCount = 0;
 		tid = 0;
-	};
+	}
 
     ~RecursiveMutex() {
 		if (pthread_mutex_destroy(&mutex))
 			ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, XMLPlatformUtils::fgMemoryManager);
-	};
+	}
 
 	void lock()      {
 		if (pthread_equal(tid, pthread_self()))
@@ -566,7 +569,7 @@ public:
 			ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, XMLPlatformUtils::fgMemoryManager);
 		tid = pthread_self();
 		recursionCount = 1;
-	};
+	}
 
 
 	void unlock()    {
@@ -576,13 +579,13 @@ public:
 		if (pthread_mutex_unlock(&mutex) != 0)
 			ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotUnlock, XMLPlatformUtils::fgMemoryManager);
 		tid = 0;
-	};
+	}
 };
 
 void* XMLPlatformUtils::makeMutex()
 {
     return new RecursiveMutex;
-};
+}
 
 
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
@@ -591,7 +594,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
         return;
     RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
     delete rm;
-};
+}
 
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)

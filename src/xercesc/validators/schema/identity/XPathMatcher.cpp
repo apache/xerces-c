@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/01/29 11:52:32  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.10  2003/12/17 00:18:41  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -409,9 +412,9 @@ int XPathMatcher::isMatched() {
     return 0;
 }
 
-void XPathMatcher::matched(const XMLCh* const content,
-                           DatatypeValidator* const dv,
-                           const bool isNil) {
+void XPathMatcher::matched(const XMLCh* const,
+                           DatatypeValidator* const,
+                           const bool) {
     return;
 }
 

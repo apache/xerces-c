@@ -222,7 +222,7 @@ void DGXMLScanner::scanDocument(const InputSource& src)
         else
         {
             // Scan content, and tell it its not an external entity
-            if (scanContent(false))
+            if (scanContent())
             {
                 // Do post-parse validation if required
                 if (fValidate)
@@ -514,7 +514,7 @@ bool DGXMLScanner::scanNext(XMLPScanToken& token)
 
 //  This method will kick off the scanning of the primary content of the
 //  document, i.e. the elements.
-bool DGXMLScanner::scanContent(const bool extEntity)
+bool DGXMLScanner::scanContent()
 {
     //  Go into a loop until we hit the end of the root element, or we fall
     //  out because there is no root element.

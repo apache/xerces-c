@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/12/30 05:58:56  neilg
  * allow schema normalized values to be associated with a PSVIAttribute after it is reset
  *
@@ -87,8 +90,9 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 PSVIAttribute::PSVIAttribute( MemoryManager* const manager ):  
-        PSVIItem(manager),
-        fAttributeDecl(0)
+        PSVIItem(manager)
+        , fAttributeDecl(0)
+        , fDV(0)
 {
 }
 

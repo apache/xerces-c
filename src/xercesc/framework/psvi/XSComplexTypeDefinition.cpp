@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.11  2003/12/24 17:42:02  knoaman
  * Misc. PSVI updates
  *
@@ -184,12 +187,9 @@ XSComplexTypeDefinition::~XSComplexTypeDefinition()
 // ---------------------------------------------------------------------------
 XSConstants::DERIVATION_TYPE XSComplexTypeDefinition::getDerivationMethod() const
 {
-    switch(fComplexTypeInfo->getDerivedBy()) {
-        case SchemaSymbols::XSD_EXTENSION:
-            return XSConstants::DERIVATION_EXTENSION;
-        default:
-            return XSConstants::DERIVATION_RESTRICTION;
-    }
+    if(fComplexTypeInfo->getDerivedBy() == SchemaSymbols::XSD_EXTENSION)
+        return XSConstants::DERIVATION_EXTENSION;    
+    return XSConstants::DERIVATION_RESTRICTION;
 }
 
 bool XSComplexTypeDefinition::getAbstract() const

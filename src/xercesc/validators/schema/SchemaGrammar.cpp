@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.18  2003/11/13 23:21:19  peiyongz
  * don't serialize/deserialize fElemNonDecl
  *
@@ -279,7 +282,7 @@ XMLElementDecl* SchemaGrammar::findOrAddElemDecl (const   unsigned int    uriId
 XMLElementDecl* SchemaGrammar::putElemDecl (const   unsigned int    uriId
         , const XMLCh* const    baseName
         , const XMLCh* const    prefixName
-        , const XMLCh* const    qName
+        , const XMLCh* const
         , unsigned int          scope
         , const bool            notDeclared)
 {

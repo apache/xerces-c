@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/01/29 11:48:47  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -107,13 +110,11 @@ XMLStringTokenizer::XMLStringTokenizer( const XMLCh* const srcStr
     : fOffset(0)
     , fStringLen(XMLString::stringLen(srcStr))
     , fString(XMLString::replicate(srcStr, manager))
+    , fDelimeters(XMLString::replicate(fgDelimeters, manager))
     , fTokens(0)
     , fMemoryManager(manager)
 {
 	try {
-
-        fDelimeters = XMLString::replicate(fgDelimeters, fMemoryManager);
-
         if (fStringLen > 0) {
             fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true, fMemoryManager);
         }
@@ -133,12 +134,13 @@ XMLStringTokenizer::XMLStringTokenizer(const XMLCh* const srcStr,
     : fOffset(0)
     , fStringLen(XMLString::stringLen(srcStr))
     , fString(XMLString::replicate(srcStr, manager))
+    , fDelimeters(XMLString::replicate(delim, fMemoryManager))
     , fTokens(0)
     , fMemoryManager(manager)
 {
 	try {
 
-        fDelimeters = XMLString::replicate(delim, fMemoryManager);
+        
 
         if (fStringLen > 0) {
             fTokens = new (fMemoryManager) RefArrayVectorOf<XMLCh>(4, true, fMemoryManager);

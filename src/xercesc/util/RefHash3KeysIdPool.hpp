@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -144,12 +147,21 @@ template <class TVal> struct RefHash3KeysTableBucketElem : public XMemory
     , fKey3(key3)
     {
     }
+    
+    RefHash3KeysTableBucketElem() {};
 
     TVal*  fData;
     RefHash3KeysTableBucketElem<TVal>*   fNext;
     void*  fKey1;
     int    fKey2;
     int    fKey3;
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefHash3KeysTableBucketElem(const RefHash3KeysTableBucketElem<TVal>&);
+    RefHash3KeysTableBucketElem<TVal>& operator=(const RefHash3KeysTableBucketElem<TVal>&);
 };
 
 
@@ -221,6 +233,11 @@ private :
     friend class RefHash3KeysIdPoolEnumerator<TVal>;
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefHash3KeysIdPool(const RefHash3KeysIdPool<TVal>&);
+    RefHash3KeysIdPool<TVal>& operator=(const RefHash3KeysIdPool<TVal>&);
 
     // -----------------------------------------------------------------------
     //  Private methods
@@ -279,7 +296,7 @@ private:
 //  An enumerator for a value array. It derives from the basic enumerator
 //  class, so that value vectors can be generically enumerated.
 //
-template <class TVal> class RefHash3KeysIdPoolEnumerator : public XMLEnumerator<TVal>
+template <class TVal> class RefHash3KeysIdPoolEnumerator : public XMLEnumerator<TVal>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -290,7 +307,7 @@ public :
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     virtual ~RefHash3KeysIdPoolEnumerator();
 
-
+    RefHash3KeysIdPoolEnumerator(const RefHash3KeysIdPoolEnumerator<TVal>&);
     // -----------------------------------------------------------------------
     //  Enum interface
     // -----------------------------------------------------------------------
@@ -307,6 +324,10 @@ public :
     bool hasMoreKeys()   const;
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    RefHash3KeysIdPoolEnumerator<TVal>& operator=(const RefHash3KeysIdPoolEnumerator<TVal>&);
 
     // -----------------------------------------------------------------------
     //  Private methods

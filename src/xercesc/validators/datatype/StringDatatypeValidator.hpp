@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/12/17 00:18:39  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -173,6 +176,12 @@ protected:
     virtual void checkValueSpace(const XMLCh* const content
                         , MemoryManager* const manager);
 
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    StringDatatypeValidator(const StringDatatypeValidator&);
+    StringDatatypeValidator& operator=(const StringDatatypeValidator&);
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.11  2004/01/09 22:41:58  knoaman
  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap
  *
@@ -278,8 +281,6 @@ RangeToken* TokenFactory::createRange(const bool isNegRange){
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
-
-	return 0;
 }
 
 CharToken* TokenFactory::createChar(const XMLUInt32 ch, const bool isAnchor) {

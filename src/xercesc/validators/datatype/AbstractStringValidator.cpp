@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.21  2004/01/13 21:18:18  peiyongz
  * revert code back to previous version
  *
@@ -670,7 +673,7 @@ void AbstractStringValidator::inheritFacet()
 // -----------------------------------------------------------------------
 int AbstractStringValidator::compare(const XMLCh* const lValue
                                    , const XMLCh* const rValue
-                                   , MemoryManager*     const manager)
+                                   , MemoryManager*     const)
 {
     return XMLString::compareString(lValue, rValue);
 }
@@ -787,26 +790,26 @@ const RefArrayVectorOf<XMLCh>* AbstractStringValidator::getEnumString() const
 	return getEnumeration();
 }
 
-void AbstractStringValidator::normalizeEnumeration(MemoryManager* const manager)
+void AbstractStringValidator::normalizeEnumeration(MemoryManager* const)
 {
     // default implementation: do nothing
     return;
 }
 
-void AbstractStringValidator::normalizeContent(XMLCh* const, MemoryManager* const manager) const
+void AbstractStringValidator::normalizeContent(XMLCh* const, MemoryManager* const) const
 {
     // default implementation: do nothing
     return;
 }
 
 
-void AbstractStringValidator::checkAdditionalFacetConstraints(MemoryManager* const manager) const
+void AbstractStringValidator::checkAdditionalFacetConstraints(MemoryManager* const) const
 {
     return;
 }
 
-void AbstractStringValidator::checkAdditionalFacet(const XMLCh* const content
-                                    , MemoryManager* const manager) const
+void AbstractStringValidator::checkAdditionalFacet(const XMLCh* const
+                                    , MemoryManager* const) const
 {
     return;
 }
@@ -827,7 +830,7 @@ void AbstractStringValidator::assignAdditionalFacet( const XMLCh* const key
 }
 
 int AbstractStringValidator::getLength(const XMLCh* const content
-                                   , MemoryManager* const manager) const
+                                   , MemoryManager* const) const
 {
     return XMLString::stringLen(content);
 }

@@ -1587,7 +1587,7 @@ void IGXMLScanner::updateNSMap(const  XMLCh* const    attrName
     );
 }
 
-void IGXMLScanner::scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount)
+void IGXMLScanner::scanRawAttrListforNameSpaces(int attCount)
 {
     //  Make an initial pass through the list and find any xmlns attributes or
     //  schema attributes.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/01/29 11:52:32  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.12  2003/12/17 00:18:41  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -191,7 +194,7 @@ void XercesNodeTest::serialize(XSerializeEngine& serEng)
     }
 }
 
-XercesNodeTest::XercesNodeTest(MemoryManager* const manager)
+XercesNodeTest::XercesNodeTest(MemoryManager* const)
 :fType(UNKNOWN)
 ,fName(0)
 {
@@ -298,7 +301,7 @@ void XercesStep::serialize(XSerializeEngine& serEng)
     }
 }
 
-XercesStep::XercesStep(MemoryManager* const manager)
+XercesStep::XercesStep(MemoryManager* const)
 :fAxisType(UNKNOWN)
 ,fNodeTest(0)
 {
@@ -359,7 +362,7 @@ void XercesLocationPath::serialize(XSerializeEngine& serEng)
     }
 }
 
-XercesLocationPath::XercesLocationPath(MemoryManager* const manager)
+XercesLocationPath::XercesLocationPath(MemoryManager* const)
 :fSteps(0)
 {
 }
@@ -1417,8 +1420,6 @@ int XPathScanner::scanNumber(const XMLCh* const data,
     if (ch == chPeriod) {
 
         if (++currentOffset < endOffset) {
-
-            int start = currentOffset;
 
             ch = data[currentOffset];
 

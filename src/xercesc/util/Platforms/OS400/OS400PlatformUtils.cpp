@@ -608,12 +608,12 @@ public:
                        tid.reservedHiId = 0;
 		       tid.reservedLoId = 0;
                        tid.reservedHandle = 0;
-                     };
+                     }
 
     ~RecursiveMutex() {
 			if (pthread_mutex_destroy(&mutex))
 			    ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy, XMLPlatformUtils::fgMemoryManager);
-                      };
+                      }
 
      void lock()      {
 			  if (pthread_equal(tid, pthread_self()))
@@ -625,7 +625,7 @@ public:
 			      ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotLock, XMLPlatformUtils::fgMemoryManager);
 			  tid = pthread_self();
 			  recursionCount = 1;
-		      };
+		      }
 
 
      void unlock()    {
@@ -637,13 +637,13 @@ public:
                           tid.reservedHandle= 0;
 			  tid.reservedHiId = 0;
 			  tid.reservedLoId = 0;
-                       };
+                       }
    };
 
 void* XMLPlatformUtils::makeMutex()
 {
     return new RecursiveMutex;
-};
+}
 
 
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
@@ -652,7 +652,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
         return;
     RecursiveMutex *rm = (RecursiveMutex *)mtxHandle;
     delete rm;
-};
+}
 
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)

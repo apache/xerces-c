@@ -103,32 +103,32 @@ XERCES_CPP_NAMESPACE_BEGIN
 DOMDocumentImpl::DOMDocumentImpl(MemoryManager* const manager)
     : fNode(this),
       fParent(this),
-      fCurrentBlock(0),
+      fNodeIDMap(0),
+      fActualEncoding(0),
+      fEncoding(0),
+      fStandalone(false),
+      fVersion(0),
+      fDocumentURI(0),
       fDOMConfiguration(0),
+      fUserDataTable(0),
+      fCurrentBlock(0),      
       fFreePtr(0),
       fFreeBytesRemaining(0),
+      fRecycleNodePtr(0),
+      fRecycleBufferPtr(0),
+      fNodeListPool(0),
       fDocType(0),
       fDocElement(0),
       fNamePool(0),
-      fNormalizer(0),
-      fNodeIDMap(0),
+      fNormalizer(0),      
       fRanges(0),
       fNodeIterators(0),
-      fChanges(0),
-      fNodeListPool(0),
-      fActualEncoding(0),
-      fEncoding(0),
-      fVersion(0),
-      fStandalone(false),
-      fDocumentURI(0),
-      fUserDataTable(0),
-      fRecycleNodePtr(0),
-      fRecycleBufferPtr(0),
       fMemoryManager(manager),
+      fChanges(0),      
       errorChecking(true)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
-};
+}
 
 
 //DOM Level 2
@@ -138,28 +138,28 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
                                MemoryManager* const manager)
     : fNode(this),
       fParent(this),
-      fCurrentBlock(0),
+      fNodeIDMap(0),
+      fActualEncoding(0),
+      fEncoding(0),
+      fStandalone(false),
+      fVersion(0),
+      fDocumentURI(0),
       fDOMConfiguration(0),
+      fUserDataTable(0),
+      fCurrentBlock(0),      
       fFreePtr(0),
       fFreeBytesRemaining(0),
+      fRecycleNodePtr(0),
+      fRecycleBufferPtr(0),
+      fNodeListPool(0),
       fDocType(0),
       fDocElement(0),
       fNamePool(0),
-      fNormalizer(0),
-      fNodeIDMap(0),
+      fNormalizer(0),      
       fRanges(0),
       fNodeIterators(0),
-      fChanges(0),
-      fNodeListPool(0),
-      fActualEncoding(0),
-      fEncoding(0),
-      fVersion(0),
-      fStandalone(false),
-      fDocumentURI(0),
-      fUserDataTable(0),
-      fRecycleNodePtr(0),
-      fRecycleBufferPtr(0),
       fMemoryManager(manager),
+      fChanges(0),
       errorChecking(true)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
@@ -233,7 +233,7 @@ DOMDocumentImpl::~DOMDocumentImpl()
     //  Delete the heap for this document.  This uncerimoniously yanks the storage
     //      out from under all of the nodes in the document.  Destructors are NOT called.
     this->deleteHeap();
-};
+}
 
 
 DOMNode *DOMDocumentImpl::cloneNode(bool deep) const {
@@ -251,7 +251,7 @@ DOMNode *DOMDocumentImpl::cloneNode(bool deep) const {
 
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newdoc);
     return newdoc;
-};
+}
 
 
 const XMLCh * DOMDocumentImpl::getNodeName() const {
@@ -263,7 +263,7 @@ const XMLCh * DOMDocumentImpl::getNodeName() const {
 
 short DOMDocumentImpl::getNodeType() const {
     return DOMNode::DOCUMENT_NODE;
-};
+}
 
 
 // even though ownerDocument refers to this in this implementation
@@ -278,27 +278,27 @@ DOMAttr *DOMDocumentImpl::createAttribute(const XMLCh *nam)
     if(!nam || !isXMLName(nam))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
     return new (this, DOMDocumentImpl::ATTR_OBJECT) DOMAttrImpl(this,nam);
-};
+}
 
 
 
 DOMCDATASection *DOMDocumentImpl::createCDATASection(const XMLCh *data) {
     return new (this, DOMDocumentImpl::CDATA_SECTION_OBJECT) DOMCDATASectionImpl(this,data);
-};
+}
 
 
 
 DOMComment *DOMDocumentImpl::createComment(const XMLCh *data)
 {
     return new (this, DOMDocumentImpl::COMMENT_OBJECT) DOMCommentImpl(this, data);
-};
+}
 
 
 
 DOMDocumentFragment *DOMDocumentImpl::createDocumentFragment()
 {
     return new (this, DOMDocumentImpl::DOCUMENT_FRAGMENT_OBJECT) DOMDocumentFragmentImpl(this);
-};
+}
 
 
 
@@ -309,7 +309,7 @@ DOMDocumentType *DOMDocumentImpl::createDocumentType(const XMLCh *nam)
         DOMException::INVALID_CHARACTER_ERR, 0);
 
     return new (this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(this, nam, false);
-};
+}
 
 
 
@@ -323,7 +323,7 @@ DOMDocumentType *
         DOMException::INVALID_CHARACTER_ERR, 0);
 
     return new (this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(this, qualifiedName, publicId, systemId, false);
-};
+}
 
 
 
@@ -333,13 +333,13 @@ DOMElement *DOMDocumentImpl::createElement(const XMLCh *tagName)
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
 
     return new (this, DOMDocumentImpl::ELEMENT_OBJECT) DOMElementImpl(this,tagName);
-};
+}
 
 
 DOMElement *DOMDocumentImpl::createElementNoCheck(const XMLCh *tagName)
 {
     return new (this, DOMDocumentImpl::ELEMENT_OBJECT) DOMElementImpl(this, tagName);
-};
+}
 
 
 
@@ -351,7 +351,7 @@ DOMEntity *DOMDocumentImpl::createEntity(const XMLCh *nam)
         DOMException::INVALID_CHARACTER_ERR, 0);
 
     return new (this, DOMDocumentImpl::ENTITY_OBJECT) DOMEntityImpl(this, nam);
-};
+}
 
 
 
@@ -362,7 +362,7 @@ DOMEntityReference *DOMDocumentImpl::createEntityReference(const XMLCh *nam)
         DOMException::INVALID_CHARACTER_ERR, 0);
 
     return new (this, DOMDocumentImpl::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(this, nam);
-};
+}
 
 DOMEntityReference *DOMDocumentImpl::createEntityReferenceByParser(const XMLCh *nam)
 {
@@ -371,7 +371,7 @@ DOMEntityReference *DOMDocumentImpl::createEntityReferenceByParser(const XMLCh *
         DOMException::INVALID_CHARACTER_ERR, 0);
 
     return new (this, DOMDocumentImpl::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(this, nam, false);
-};
+}
 
 DOMNotation *DOMDocumentImpl::createNotation(const XMLCh *nam)
 {
@@ -380,7 +380,7 @@ DOMNotation *DOMDocumentImpl::createNotation(const XMLCh *nam)
         DOMException::INVALID_CHARACTER_ERR, 0);
 
     return new (this, DOMDocumentImpl::NOTATION_OBJECT) DOMNotationImpl(this, nam);
-};
+}
 
 
 
@@ -390,7 +390,7 @@ DOMProcessingInstruction *DOMDocumentImpl::createProcessingInstruction(
     if(!target || !isXMLName(target))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
     return new (this, DOMDocumentImpl::PROCESSING_INSTRUCTION_OBJECT) DOMProcessingInstructionImpl(this,target,data);
-};
+}
 
 
 
@@ -398,7 +398,7 @@ DOMProcessingInstruction *DOMDocumentImpl::createProcessingInstruction(
 DOMText *DOMDocumentImpl::createTextNode(const XMLCh *data)
 {
     return new (this, DOMDocumentImpl::TEXT_OBJECT) DOMTextImpl(this,data);
-};
+}
 
 
 DOMNodeIterator* DOMDocumentImpl::createNodeIterator (
@@ -442,21 +442,21 @@ void DOMDocumentImpl::removeNodeIterator(DOMNodeIteratorImpl* nodeIterator)
 }
 
 
-const DOMXPathExpression* DOMDocumentImpl::createExpression(const XMLCh *expression, const DOMXPathNSResolver *resolver)
+const DOMXPathExpression* DOMDocumentImpl::createExpression(const XMLCh *, const DOMXPathNSResolver *)
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     return 0;
 }
 
-const DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(DOMNode *nodeResolver)
+const DOMXPathNSResolver* DOMDocumentImpl::createNSResolver(DOMNode *)
 
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     return 0;
 }
 
-void* DOMDocumentImpl::evaluate(const XMLCh *expression, DOMNode *contextNode, const DOMXPathNSResolver *resolver, 
-                           unsigned short type, void* result) 
+void* DOMDocumentImpl::evaluate(const XMLCh *, DOMNode *, const DOMXPathNSResolver *, 
+                           unsigned short, void* ) 
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     return 0;
@@ -480,14 +480,14 @@ DOMTreeWalker* DOMDocumentImpl::createTreeWalker (DOMNode *root, unsigned long w
 DOMDocumentType *DOMDocumentImpl::getDoctype() const
 {
     return fDocType;
-};
+}
 
 
 
 DOMElement *DOMDocumentImpl::getDocumentElement() const
 {
     return fDocElement;
-};
+}
 
 
 
@@ -495,7 +495,7 @@ DOMNodeList *DOMDocumentImpl::getElementsByTagName(const XMLCh *tagname) const
 {
     // cast off the const of this because we will update the fNodeListPool
     return ((DOMDocumentImpl*)this)->getDeepNodeList(this,tagname);
-};
+}
 
 
 DOMImplementation   *DOMDocumentImpl::getImplementation() const {
@@ -526,7 +526,7 @@ DOMNode *DOMDocumentImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
         fDocType=(DOMDocumentType *)newChild;
 
     return newChild;
-};
+}
 
 
 DOMNode* DOMDocumentImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild) {
@@ -565,7 +565,7 @@ bool DOMDocumentImpl::isXMLName(const XMLCh *s)
         return XMLChar1_1::isValidName(s, XMLString::stringLen(s));
     else
         return XMLChar1_0::isValidName(s, XMLString::stringLen(s));
-};
+}
 
 
 
@@ -581,14 +581,14 @@ DOMNode *DOMDocumentImpl::removeChild(DOMNode *oldChild)
         fDocType=0;
 
     return oldChild;
-};
+}
 
 
 
 void DOMDocumentImpl::setNodeValue(const XMLCh *x)
 {
     fNode.setNodeValue(x);
-};
+}
 
 
 //Introduced in DOM Level 2
@@ -671,7 +671,7 @@ int DOMDocumentImpl::indexofQualifiedName(const XMLCh * qName)
 const XMLCh*     DOMDocumentImpl::getBaseURI() const
 {
 	  return fDocumentURI;
-};
+}
 
 
 DOMRange* DOMDocumentImpl::createRange()
@@ -746,7 +746,7 @@ bool DOMDocumentImpl::isKidOK(DOMNode *parent, DOMNode *child)
               kidOK[DOMNode::CDATA_SECTION_NODE] =
               kidOK[DOMNode::NOTATION_NODE] =
               0;
-      };
+      }
       int p=parent->getNodeType();
       int ch = child->getNodeType();
       return (kidOK[p] & 1<<ch) != 0;
@@ -760,43 +760,43 @@ void            DOMDocumentImpl::changed()
 
 int             DOMDocumentImpl::changes() const{
     return fChanges;
-};
+}
 
 
 
 //
 //    Delegation for functions inherited from DOMNode
 //
-           DOMNode*         DOMDocumentImpl::appendChild(DOMNode *newChild)          {return insertBefore(newChild, 0); };
-           DOMNamedNodeMap* DOMDocumentImpl::getAttributes() const                   {return fNode.getAttributes (); };
-           DOMNodeList*     DOMDocumentImpl::getChildNodes() const                   {return fParent.getChildNodes (); };
-           DOMNode*         DOMDocumentImpl::getFirstChild() const                   {return fParent.getFirstChild (); };
-           DOMNode*         DOMDocumentImpl::getLastChild() const                    {return fParent.getLastChild (); };
-     const XMLCh*           DOMDocumentImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh*           DOMDocumentImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode*         DOMDocumentImpl::getNextSibling() const                  {return fNode.getNextSibling (); };
-     const XMLCh*           DOMDocumentImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
-     const XMLCh*           DOMDocumentImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode*         DOMDocumentImpl::getParentNode() const                   {return fNode.getParentNode (); };
-           DOMNode*         DOMDocumentImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); };
-           bool             DOMDocumentImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
-           void             DOMDocumentImpl::normalize()                             {fParent.normalize (); };
+           DOMNode*         DOMDocumentImpl::appendChild(DOMNode *newChild)          {return insertBefore(newChild, 0); }
+           DOMNamedNodeMap* DOMDocumentImpl::getAttributes() const                   {return fNode.getAttributes (); }
+           DOMNodeList*     DOMDocumentImpl::getChildNodes() const                   {return fParent.getChildNodes (); }
+           DOMNode*         DOMDocumentImpl::getFirstChild() const                   {return fParent.getFirstChild (); }
+           DOMNode*         DOMDocumentImpl::getLastChild() const                    {return fParent.getLastChild (); }
+     const XMLCh*           DOMDocumentImpl::getLocalName() const                    {return fNode.getLocalName (); }
+     const XMLCh*           DOMDocumentImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); }
+           DOMNode*         DOMDocumentImpl::getNextSibling() const                  {return fNode.getNextSibling (); }
+     const XMLCh*           DOMDocumentImpl::getNodeValue() const                    {return fNode.getNodeValue (); }
+     const XMLCh*           DOMDocumentImpl::getPrefix() const                       {return fNode.getPrefix (); }
+           DOMNode*         DOMDocumentImpl::getParentNode() const                   {return fNode.getParentNode (); }
+           DOMNode*         DOMDocumentImpl::getPreviousSibling() const              {return fNode.getPreviousSibling (); }
+           bool             DOMDocumentImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); }
+           void             DOMDocumentImpl::normalize()                             {fParent.normalize (); }
            bool             DOMDocumentImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                                     {return fNode.isSupported (feature, version); };
-           void             DOMDocumentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool             DOMDocumentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMDocumentImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other);};
-           bool             DOMDocumentImpl::isEqualNode(const DOMNode* arg) const   {return fParent.isEqualNode(arg);};
+                                                                                     {return fNode.isSupported (feature, version); }
+           void             DOMDocumentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); }
+           bool             DOMDocumentImpl::hasAttributes() const                   {return fNode.hasAttributes(); }
+           bool             DOMDocumentImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other);}
+           bool             DOMDocumentImpl::isEqualNode(const DOMNode* arg) const   {return fParent.isEqualNode(arg);}
            void*            DOMDocumentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
-                                                                                     {return fNode.setUserData(key, data, handler); };
-           void*            DOMDocumentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           short            DOMDocumentImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
-           const XMLCh*     DOMDocumentImpl::getTextContent() const                  {return fNode.getTextContent(); };
-           void             DOMDocumentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
-           const XMLCh*     DOMDocumentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
-           bool             DOMDocumentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
-           const XMLCh*     DOMDocumentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
-           DOMNode*         DOMDocumentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+                                                                                     {return fNode.setUserData(key, data, handler); }
+           void*            DOMDocumentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); }
+           short            DOMDocumentImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); }
+           const XMLCh*     DOMDocumentImpl::getTextContent() const                  {return fNode.getTextContent(); }
+           void             DOMDocumentImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); }
+           const XMLCh*     DOMDocumentImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
+           bool             DOMDocumentImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
+           const XMLCh*     DOMDocumentImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
+           DOMNode*         DOMDocumentImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); }
 
 
 
@@ -1007,7 +1007,7 @@ void DOMDocumentImpl::setStrictErrorChecking(bool strictErrorChecking) {
     setErrorChecking(strictErrorChecking);
 }
 
-DOMNode* DOMDocumentImpl::adoptNode(DOMNode* source) {
+DOMNode* DOMDocumentImpl::adoptNode(DOMNode*) {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     return 0;
 }

@@ -463,8 +463,16 @@ protected:
     /** @name Hidden constructors */
     //@{
     DOMConfiguration() {};
-    DOMConfiguration(const DOMConfiguration &) {};
-    DOMConfiguration & operator = (const DOMConfiguration &) {return *this;};
+    //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    /** @name Unimplemented constructors and operators */
+    //@{
+    DOMConfiguration(const DOMConfiguration &);
+    DOMConfiguration & operator = (const DOMConfiguration &);
     //@}
 
 public:
@@ -518,6 +526,18 @@ public:
      * @since DOM level 3
      **/
     virtual bool canSetParameter(const XMLCh* name, const void* value) const = 0;
+
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
+    /**
+     * Destructor
+     *
+     */
+    virtual ~DOMConfiguration() {};
+    //@}
 };
 	
 XERCES_CPP_NAMESPACE_END

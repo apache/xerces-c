@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/01/29 11:51:20  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.21  2004/01/13 16:34:21  cargilld
  * Misc memory management changes.
  *
@@ -304,7 +307,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
     off_t curPos = ftell((FILE*) theFile);
     if (curPos == -1)
         ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-                 XMLExcepts::File_CouldNotGetCurPos, manger);
+                 XMLExcepts::File_CouldNotGetCurPos, manager);
 
     // Seek to the end and save that value for return
     if (fseek((FILE*) theFile, 0, SEEK_END))
@@ -543,7 +546,7 @@ void XMLPlatformUtils::platformInit()
     // mutex creation that must be broken.
     if(!atomicOpsMutex)
     {
-        atomicOpsMutex = new (fgMemoryManager) atomicOpsMutex();
+        atomicOpsMutex = new (fgMemoryManager) XMLMutex();
         if (atomicOpsMutex->fHandle == 0)
             atomicOpsMutex->fHandle = XMLPlatformUtils::makeMutex();
     }

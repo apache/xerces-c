@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.14  2003/05/16 21:36:58  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -361,6 +364,12 @@ public:
 
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLReader(const XMLReader&);
+    XMLReader& operator=(const XMLReader&);
+
     // ---------------------------------------------------------------------------
     //  Class Constants
     //

@@ -81,10 +81,10 @@ class DOMDocumentImpl;
 
 class CDOM_EXPORT DOMConfigurationImpl : public DOMConfiguration
 {
-protected:
+private:
     //unimplemented
-    DOMConfigurationImpl(const DOMConfiguration &) {};
-    DOMConfigurationImpl & operator = (const DOMConfiguration &) {return *this;};
+    DOMConfigurationImpl(const DOMConfiguration &);
+    DOMConfigurationImpl & operator = (const DOMConfiguration &);
 
 
 public:

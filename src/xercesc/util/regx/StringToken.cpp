@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.4  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -91,8 +94,8 @@ StringToken::StringToken(const unsigned short tokType,
                          const int refNo,
                          MemoryManager* const manager)
     : Token(tokType, manager)
-    , fString(XMLString::replicate(literal, manager))
     , fRefNo(refNo)
+    , fString(XMLString::replicate(literal, manager))    
     , fMemoryManager(manager)
 {
 

@@ -118,6 +118,9 @@ public:
      */
     static void addSource(DOMImplementationSource* source);
     //@}
+
+private:
+    DOMImplementationRegistry();
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -175,9 +175,10 @@ private:
                             , MemoryManager* const manager);
 
     // -----------------------------------------------------------------------
-    //  Private data members
-    //
+    //  Unimplemented methods.
     // -----------------------------------------------------------------------
+    BooleanDatatypeValidator(const BooleanDatatypeValidator&);
+    BooleanDatatypeValidator& operator=(const BooleanDatatypeValidator&);
 
 };
 

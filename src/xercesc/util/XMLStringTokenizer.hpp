@@ -164,6 +164,12 @@ public:
 
 private:
     // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLStringTokenizer(const XMLStringTokenizer&);
+    XMLStringTokenizer& operator=(const XMLStringTokenizer&);
+
+    // -----------------------------------------------------------------------
     //  CleanUp methods
     // -----------------------------------------------------------------------
 	void cleanUp();

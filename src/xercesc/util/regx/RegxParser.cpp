@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.10  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -1047,8 +1050,7 @@ Token* RegxParser::parseAtom() {
             return processBackReference();
         case chLatin_p:
         case chLatin_P:
-			{
-				int start = fOffset;
+			{				
 				tok = processBacksolidus_pP(fCharData);
 				if (tok == 0) {
 					ThrowXMLwithMemMgr(ParseException,XMLExcepts::Parser_Atom5, fMemoryManager);
@@ -1115,8 +1117,8 @@ RangeToken* RegxParser::processBacksolidus_pP(const XMLInt32 ch) {
 }
 
 
-XMLInt32 RegxParser::processCInCharacterClass(RangeToken* const tok,
-                                              const XMLInt32 ch) {
+XMLInt32 RegxParser::processCInCharacterClass(RangeToken* const,
+                                              const XMLInt32) {
 
 	return decodeEscaped();
 }
@@ -1184,8 +1186,7 @@ RangeToken* RegxParser::parseCharacterClass(const bool useNRange) {
                 break;
             case chLatin_p:
             case chLatin_P:
-				{
-					int pStart = fOffset;
+				{					
 					RangeToken* tok2 = processBacksolidus_pP(ch);
 
 					if (tok2 == 0) {

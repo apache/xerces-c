@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/01/29 11:51:20  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.3  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -130,6 +133,11 @@ public :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    BinHTTPURLInputStream(const BinHTTPURLInputStream&);
+    BinHTTPURLInputStream& operator=(const BinHTTPURLInputStream&); 
     // -----------------------------------------------------------------------
     //  Private data members
     //

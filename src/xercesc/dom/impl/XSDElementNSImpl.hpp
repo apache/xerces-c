@@ -97,6 +97,12 @@ public:
 
     XMLSSize_t getLineNo() const   { return fLineNo;   }
     XMLSSize_t getColumnNo() const { return fColumnNo; }
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    XSDElementNSImpl& operator=(const XSDElementNSImpl&);
 };
 
 XERCES_CPP_NAMESPACE_END

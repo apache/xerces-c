@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.10  2003/08/14 02:56:41  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -319,6 +322,11 @@ private :
     const XMLReader* getLastExtEntity(const XMLEntityDecl*& itsEntity) const;
     bool popReader();
 
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    ReaderMgr(const ReaderMgr&);
+    ReaderMgr& operator=(const ReaderMgr&);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -524,6 +532,12 @@ public :
     };
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    ThrowEOEJanitor(const ThrowEOEJanitor&);
+    ThrowEOEJanitor& operator=(const ThrowEOEJanitor&);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //

@@ -217,7 +217,7 @@ void AbstractDOMParser::reset()
     fDocumentAdoptedByUser = false;
     fNodeStack->removeAllElements();
     fInternalSubset.reset();
-};
+}
 
 
 void AbstractDOMParser::resetPool()
@@ -580,7 +580,7 @@ void AbstractDOMParser::parseReset(XMLPScanToken& token)
 // ---------------------------------------------------------------------------
 void AbstractDOMParser::docCharacters(  const   XMLCh* const    chars
                               , const unsigned int    length
-                              , const bool            cdataSection)
+                              , const bool cdataSection)
 {
     // Ignore chars outside of content
     if (!fWithinElement)
@@ -642,7 +642,7 @@ void AbstractDOMParser::docPI(  const   XMLCh* const    target
 }
 
 
-void AbstractDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
+void AbstractDOMParser::endEntityReference(const XMLEntityDecl&)
 {
     DOMEntityReferenceImpl *erImpl = 0;
     DOMNode* firstChild = 0;
@@ -723,10 +723,10 @@ void AbstractDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 }
 
 
-void AbstractDOMParser::endElement( const   XMLElementDecl&     elemDecl
-                           , const unsigned int        urlId
-                           , const bool                isRoot
-                           , const XMLCh* const        elemPrefix)
+void AbstractDOMParser::endElement( const   XMLElementDecl&
+                           , const unsigned int
+                           , const bool
+                           , const XMLCh* const)
 {
     fCurrentNode   = fCurrentParent;
     fCurrentParent = fNodeStack->pop();
@@ -750,7 +750,7 @@ void AbstractDOMParser::elementTypeInfo( const   XMLCh * const  typeName
 
 void AbstractDOMParser::ignorableWhitespace(const   XMLCh* const    chars
                                     , const unsigned int    length
-                                    , const bool            cdataSection)
+                                    , const bool)
 {
     // Ignore chars before the root element
     if (!fWithinElement || !fIncludeIgnorableWhitespace)
@@ -828,10 +828,6 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
     DOMElement     *elem;
     DOMElementImpl *elemImpl;
 
-    static const XMLCh XSI[] = {
-    chLatin_x, chLatin_s, chLatin_i, chNull
-    };
-
     //get the list for use in the loop
     XMLAttDefList* defAttrs = 0;
     if(elemDecl.hasAttDefs()) {
@@ -868,11 +864,9 @@ void AbstractDOMParser::startElement(const  XMLElementDecl&         elemDecl
         for (unsigned int index = 0; index < attrCount; ++index) {
             const XMLAttr* oneAttrib = attrList.elementAt(index);
             unsigned int attrURIId = oneAttrib -> getURIId();
-            namespaceURI = 0;
-            bool foundXMLNS = false;
+            namespaceURI = 0;            
             if (XMLString::equals(oneAttrib -> getName(), XMLUni::fgXMLNSString)) {   //for xmlns=...
-                attrURIId = fScanner->getXMLNSNamespaceId();
-                foundXMLNS = true;
+                attrURIId = fScanner->getXMLNSNamespaceId();                
             }
             if (attrURIId != fScanner->getEmptyNamespaceId()) {  //TagName has a prefix
                 namespaceURI = fScanner->getURIText(attrURIId);   //get namespaceURI
@@ -1109,7 +1103,7 @@ void AbstractDOMParser::attDef
 (
     const   DTDElementDecl&     elemDecl
     , const DTDAttDef&          attDef
-    , const bool                ignoring
+    , const bool
 )
 {	
     if (fDocumentType->isIntSubsetReading())
@@ -1231,8 +1225,8 @@ void AbstractDOMParser::doctypeDecl
     const   DTDElementDecl& elemDecl
     , const XMLCh* const    publicId
     , const XMLCh* const    systemId
-    , const bool            hasIntSubset
-    , const bool            hasExtSubset
+    , const bool
+    , const bool
 )
 {
     fDocumentType = (DOMDocumentTypeImpl *) fDocument->createDocumentType(elemDecl.getFullName(), publicId, systemId);
@@ -1263,7 +1257,7 @@ void AbstractDOMParser::doctypePI
 void AbstractDOMParser::doctypeWhitespace
 (
     const   XMLCh* const    chars
-    , const unsigned int    length
+    , const unsigned int
 )
 {
     if (fDocumentType->isIntSubsetReading())
@@ -1273,7 +1267,7 @@ void AbstractDOMParser::doctypeWhitespace
 void AbstractDOMParser::elementDecl
 (
     const   DTDElementDecl& decl
-    , const bool            isIgnored
+    , const bool
 )
 {
     if (fDocumentType->isIntSubsetReading())
@@ -1411,8 +1405,8 @@ void AbstractDOMParser::endExtSubset()
 void AbstractDOMParser::entityDecl
 (
     const   DTDEntityDecl&  entityDecl
-    , const bool            isPEDecl
-    , const bool            isIgnored
+    , const bool
+    , const bool
 )
 {
     DOMEntityImpl* entity = (DOMEntityImpl *) fDocument->createEntity(entityDecl.getName());
@@ -1485,7 +1479,7 @@ void AbstractDOMParser::resetDocType()
 void AbstractDOMParser::notationDecl
 (
     const   XMLNotationDecl&    notDecl
-    , const bool                isIgnored
+    , const bool
 )
 {
     DOMNotationImpl* notation = (DOMNotationImpl *)fDocument->createNotation(notDecl.getName());

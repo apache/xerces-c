@@ -75,6 +75,7 @@ template <class TKey, class TValue> class KeyRefPair : public XMemory
         KeyRefPair();
         KeyRefPair(TKey* key, TValue* value);
         KeyRefPair(const KeyRefPair<TKey,TValue>* toCopy);
+        KeyRefPair(const KeyRefPair<TKey,TValue>& toCopy);
         ~KeyRefPair();
 
 
@@ -95,6 +96,8 @@ template <class TKey, class TValue> class KeyRefPair : public XMemory
 
 
     private :
+        // unimplemented:        
+        KeyRefPair<TKey,TValue>& operator=(const KeyRefPair<TKey,TValue>&);
         // -------------------------------------------------------------------
         //  Private data members
         //

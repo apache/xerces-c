@@ -163,6 +163,11 @@ protected:
     // default attribute helper functions
     virtual void setupDefaultAttributes();
 
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    DOMElementImpl & operator = (const DOMElementImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

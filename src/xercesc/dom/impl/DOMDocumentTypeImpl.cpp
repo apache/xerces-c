@@ -116,14 +116,14 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
                                    bool heap)
     : fNode(ownerDoc),
     fParent(ownerDoc),
-    fPublicId(0),
-    fSystemId(0),
     fName(0),
-    fIntSubsetReading(false),
     fEntities(0),
     fNotations(0),
     fElements(0),
+    fPublicId(0),
+    fSystemId(0),
     fInternalSubset(0),
+    fIntSubsetReading(false),
     fIsCreatedFromHeap(heap)
 {
     if (ownerDoc) {
@@ -139,7 +139,7 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
         fNotations= new (doc) DOMNamedNodeMapImpl(this);
         fElements = new (doc) DOMNamedNodeMapImpl(this);
     }
-};
+}
 
 
 //Introduced in DOM Level 2
@@ -150,14 +150,14 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
                                    bool heap)
     : fNode(ownerDoc),
     fParent(ownerDoc),
-    fPublicId(0),
-    fSystemId(0),
     fName(0),
-    fIntSubsetReading(false),
     fEntities(0),
     fNotations(0),
     fElements(0),
-    fInternalSubset(0),
+    fPublicId(0),
+    fSystemId(0),
+    fInternalSubset(0),    
+    fIntSubsetReading(false),        
     fIsCreatedFromHeap(heap)
 {
     int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
@@ -213,21 +213,21 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
         fNotations= new (doc) DOMNamedNodeMapImpl(this);
         fElements = new (doc) DOMNamedNodeMapImpl(this);
     }
-};
+}
 
 
 DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool heap, bool deep)
     : fNode(other.fNode),
     fParent(other.fParent),
     fChild(other.fChild),
-    fPublicId(0),
-    fSystemId(0),
     fName(0),
-    fIntSubsetReading(other.fIntSubsetReading),
     fEntities(0),
     fNotations(0),
     fElements(0),
+    fPublicId(0),
+    fSystemId(0),
     fInternalSubset(0),
+    fIntSubsetReading(other.fIntSubsetReading),       
     fIsCreatedFromHeap(heap)
 {
     fName = other.fName;
@@ -299,43 +299,43 @@ void DOMDocumentTypeImpl::setOwnerDocument(DOMDocument *doc) {
 const XMLCh * DOMDocumentTypeImpl::getNodeName() const
 {
     return fName;
-};
+}
 
 
 short DOMDocumentTypeImpl::getNodeType()  const {
     return DOMNode::DOCUMENT_TYPE_NODE;
-};
+}
 
 
 DOMNamedNodeMap *DOMDocumentTypeImpl::getEntities() const
 {
     return fEntities;
-};
+}
 
 
 
 const XMLCh * DOMDocumentTypeImpl::getName() const
 {
     return fName;
-};
+}
 
 
 DOMNamedNodeMap *DOMDocumentTypeImpl::getNotations() const
 {
     return fNotations;
-};
+}
 
 
 DOMNamedNodeMap *DOMDocumentTypeImpl::getElements() const
 {
     return fElements;
-};
+}
 
 
 void DOMDocumentTypeImpl::setNodeValue(const XMLCh *val)
 {
     fNode.setNodeValue(val);
-};
+}
 
 
 void DOMDocumentTypeImpl::setReadOnly(bool readOnl, bool deep)
@@ -345,7 +345,7 @@ void DOMDocumentTypeImpl::setReadOnly(bool readOnl, bool deep)
         ((DOMNamedNodeMapImpl *)fEntities)->setReadOnly(readOnl,true);
     if (fNotations)
         ((DOMNamedNodeMapImpl *)fNotations)->setReadOnly(readOnl,true);
-};
+}
 
 
 //Introduced in DOM Level 2
@@ -444,42 +444,42 @@ void DOMDocumentTypeImpl::release()
 // Delegation for functions inherited from Node
 //
 
-           DOMNode*         DOMDocumentTypeImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); };
-           DOMNamedNodeMap* DOMDocumentTypeImpl::getAttributes() const                   {return fNode.getAttributes (); };
-           DOMNodeList*     DOMDocumentTypeImpl::getChildNodes() const                   {return fParent.getChildNodes (); };
-           DOMNode*         DOMDocumentTypeImpl::getFirstChild() const                   {return fParent.getFirstChild (); };
-           DOMNode*         DOMDocumentTypeImpl::getLastChild() const                    {return fParent.getLastChild (); };
-     const XMLCh*           DOMDocumentTypeImpl::getLocalName() const                    {return fNode.getLocalName (); };
-     const XMLCh*           DOMDocumentTypeImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); };
-           DOMNode*         DOMDocumentTypeImpl::getNextSibling() const                  {return fChild.getNextSibling (); };
-     const XMLCh*           DOMDocumentTypeImpl::getNodeValue() const                    {return fNode.getNodeValue (); };
-           DOMDocument*     DOMDocumentTypeImpl::getOwnerDocument() const                {return fParent.fOwnerDocument; };
-     const XMLCh*           DOMDocumentTypeImpl::getPrefix() const                       {return fNode.getPrefix (); };
-           DOMNode*         DOMDocumentTypeImpl::getParentNode() const                   {return fChild.getParentNode (this); };
-           DOMNode*         DOMDocumentTypeImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); };
-           bool             DOMDocumentTypeImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); };
+           DOMNode*         DOMDocumentTypeImpl::appendChild(DOMNode *newChild)          {return fParent.appendChild (newChild); }
+           DOMNamedNodeMap* DOMDocumentTypeImpl::getAttributes() const                   {return fNode.getAttributes (); }
+           DOMNodeList*     DOMDocumentTypeImpl::getChildNodes() const                   {return fParent.getChildNodes (); }
+           DOMNode*         DOMDocumentTypeImpl::getFirstChild() const                   {return fParent.getFirstChild (); }
+           DOMNode*         DOMDocumentTypeImpl::getLastChild() const                    {return fParent.getLastChild (); }
+     const XMLCh*           DOMDocumentTypeImpl::getLocalName() const                    {return fNode.getLocalName (); }
+     const XMLCh*           DOMDocumentTypeImpl::getNamespaceURI() const                 {return fNode.getNamespaceURI (); }
+           DOMNode*         DOMDocumentTypeImpl::getNextSibling() const                  {return fChild.getNextSibling (); }
+     const XMLCh*           DOMDocumentTypeImpl::getNodeValue() const                    {return fNode.getNodeValue (); }
+           DOMDocument*     DOMDocumentTypeImpl::getOwnerDocument() const                {return fParent.fOwnerDocument; }
+     const XMLCh*           DOMDocumentTypeImpl::getPrefix() const                       {return fNode.getPrefix (); }
+           DOMNode*         DOMDocumentTypeImpl::getParentNode() const                   {return fChild.getParentNode (this); }
+           DOMNode*         DOMDocumentTypeImpl::getPreviousSibling() const              {return fChild.getPreviousSibling (this); }
+           bool             DOMDocumentTypeImpl::hasChildNodes() const                   {return fParent.hasChildNodes (); }
            DOMNode*         DOMDocumentTypeImpl::insertBefore(DOMNode *newChild, DOMNode *refChild)
-                                                                                         {return fParent.insertBefore (newChild, refChild); };
-           void             DOMDocumentTypeImpl::normalize()                             {fParent.normalize (); };
-           DOMNode*         DOMDocumentTypeImpl::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); };
+                                                                                         {return fParent.insertBefore (newChild, refChild); }
+           void             DOMDocumentTypeImpl::normalize()                             {fParent.normalize (); }
+           DOMNode*         DOMDocumentTypeImpl::removeChild(DOMNode *oldChild)          {return fParent.removeChild (oldChild); }
            DOMNode*         DOMDocumentTypeImpl::replaceChild(DOMNode *newChild, DOMNode *oldChild)
-                                                                                         {return fParent.replaceChild (newChild, oldChild); };
+                                                                                         {return fParent.replaceChild (newChild, oldChild); }
            bool             DOMDocumentTypeImpl::isSupported(const XMLCh *feature, const XMLCh *version) const
-                                                                                         {return fNode.isSupported (feature, version); };
-           void             DOMDocumentTypeImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
-           bool             DOMDocumentTypeImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMDocumentTypeImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); };
+                                                                                         {return fNode.isSupported (feature, version); }
+           void             DOMDocumentTypeImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); }
+           bool             DOMDocumentTypeImpl::hasAttributes() const                   {return fNode.hasAttributes(); }
+           bool             DOMDocumentTypeImpl::isSameNode(const DOMNode* other) const  {return fNode.isSameNode(other); }
            void*            DOMDocumentTypeImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
-                                                                                         {return fNode.setUserData(key, data, handler); };
-           void*            DOMDocumentTypeImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-           const XMLCh*     DOMDocumentTypeImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
-           short            DOMDocumentTypeImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); };
-           const XMLCh*     DOMDocumentTypeImpl::getTextContent() const                  {return fNode.getTextContent(); };
-           void             DOMDocumentTypeImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
-           const XMLCh*     DOMDocumentTypeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
-           bool             DOMDocumentTypeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); };
-           const XMLCh*     DOMDocumentTypeImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); };
-           DOMNode*         DOMDocumentTypeImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+                                                                                         {return fNode.setUserData(key, data, handler); }
+           void*            DOMDocumentTypeImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); }
+           const XMLCh*     DOMDocumentTypeImpl::getBaseURI() const                      {return fNode.getBaseURI(); }
+           short            DOMDocumentTypeImpl::compareTreePosition(const DOMNode* other) const {return fNode.compareTreePosition(other); }
+           const XMLCh*     DOMDocumentTypeImpl::getTextContent() const                  {return fNode.getTextContent(); }
+           void             DOMDocumentTypeImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); }
+           const XMLCh*     DOMDocumentTypeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); }
+           bool             DOMDocumentTypeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const {return fNode.isDefaultNamespace(namespaceURI); }
+           const XMLCh*     DOMDocumentTypeImpl::lookupNamespaceURI(const XMLCh* prefix) const  {return fNode.lookupNamespaceURI(prefix); }
+           DOMNode*         DOMDocumentTypeImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); }
 
 
 bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
@@ -572,7 +572,7 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
     }
 
     return fParent.isEqualNode(arg);
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

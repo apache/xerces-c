@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.19  2003/12/24 17:42:03  knoaman
  * Misc. PSVI updates
  *
@@ -382,6 +385,9 @@ public :
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+    /**
+     * @deprecated; not actually used
+     */    
     void setElemId(unsigned int elemId);
     void setModelType(const SchemaElementDecl::ModelTypes toSet);
     void setPSVIScope(const PSVIDefs::PSVIScope toSet);
@@ -442,6 +448,12 @@ public :
     virtual XMLElementDecl::objectType  getObjectType() const;
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SchemaElementDecl(const SchemaElementDecl&);
+    SchemaElementDecl& operator=(const SchemaElementDecl&);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -518,8 +530,7 @@ private :
     int                                fEnclosingScope;
     int                                fFinalSet;
     int                                fBlockSet;
-    int                                fMiscFlags;
-    unsigned int                       fElemId;
+    int                                fMiscFlags;    
     XMLCh*                             fDefaultValue;
     ComplexTypeInfo*                   fComplexTypeInfo;
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
@@ -557,7 +568,7 @@ inline const ContentSpecNode* SchemaElementDecl::getContentSpec() const
 }
 
 inline void
-SchemaElementDecl::setContentSpec(ContentSpecNode* toAdopt)
+SchemaElementDecl::setContentSpec(ContentSpecNode*)
 {
     //Handled by complexType
 }
@@ -571,7 +582,7 @@ inline XMLContentModel* SchemaElementDecl::getContentModel()
 }
 
 inline void
-SchemaElementDecl::setContentModel(XMLContentModel* const newModelToAdopt)
+SchemaElementDecl::setContentModel(XMLContentModel* const)
 {
     //Handled by complexType
 }
@@ -816,7 +827,8 @@ inline const XMLCh* SchemaElementDecl::getDOMTypeInfoUri() const {
 inline void
 SchemaElementDecl::setElemId(unsigned int elemId)
 {
-    fElemId = elemId;
+    //there is not getElemId so this is not needed. mark deprecated.
+    //fElemId = elemId;
 }
 
 inline void

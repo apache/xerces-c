@@ -162,9 +162,9 @@ static XMLMsgLoader& gScannerMsgLoader()
 // ---------------------------------------------------------------------------
 XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
                        GrammarResolver* const grammarResolver,
-                       MemoryManager* const manager) :
-
-    fCalculateSrcOfs(false)
+                       MemoryManager* const manager)
+    : fStandardUriConformant(false)
+    , fCalculateSrcOfs(false)
     , fDoNamespaces(false)
     , fExitOnFirstFatal(true)
     , fValidationConstraintFatal(false)
@@ -180,11 +180,17 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fLoadExternalDTD(true)
     , fNormalizeData(true)
     , fErrorCount(0)
+    , fEntityExpansionLimit(0)
+    , fEntityExpansionCount(0)
     , fEmptyNamespaceId(0)
     , fUnknownNamespaceId(0)
     , fXMLNamespaceId(0)
     , fXMLNSNamespaceId(0)
     , fSchemaNamespaceId(0)
+    , fUIntPool(0)
+    , fUIntPoolRow(0)
+    , fUIntPoolCol(0)
+    , fUIntPoolRowTotal(2)
     , fScannerId(0)
     , fSequenceId(0)
     , fAttrList(0)
@@ -193,6 +199,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fEntityHandler(0)
     , fErrorReporter(0)
     , fErrorHandler(0)
+    , fPSVIHandler(0)
     , fValidationContext(0)
     , fEntityDeclPoolRetrieved(false)
     , fReaderMgr(manager)
@@ -205,8 +212,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fURIStringPool(0)
     , fRootElemName(0)
     , fExternalSchemaLocation(0)
-    , fExternalNoNamespaceSchemaLocation(0)
-    , fStandardUriConformant(false)
+    , fExternalNoNamespaceSchemaLocation(0)    
     , fSecurityManager(0)
     , fXMLVersion(XMLReader::XMLV1_0)
     , fMemoryManager(manager)
@@ -217,12 +223,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fQNameBuf(1023, manager)
     , fPrefixBuf(1023, manager)
     , fURIBuf(1023, manager)
-    , fElemStack(manager)
-    , fUIntPool(0)
-    , fUIntPoolRow(0)
-    , fUIntPoolCol(0)
-    , fUIntPoolRowTotal(2)
-    , fPSVIHandler(0)
+    , fElemStack(manager)   
 {
    commonInit();
 
@@ -238,9 +239,9 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
                           , XMLErrorReporter* const  errHandler
                           , XMLValidator* const      valToAdopt
                           , GrammarResolver* const   grammarResolver
-                          , MemoryManager* const     manager) :
-
-    fCalculateSrcOfs(false)
+                          , MemoryManager* const     manager)
+    : fStandardUriConformant(false)
+    , fCalculateSrcOfs(false)
     , fDoNamespaces(false)
     , fExitOnFirstFatal(true)
     , fValidationConstraintFatal(false)
@@ -256,11 +257,17 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
 	, fLoadExternalDTD(true)
     , fNormalizeData(true)
     , fErrorCount(0)
+    , fEntityExpansionLimit(0)
+    , fEntityExpansionCount(0)
     , fEmptyNamespaceId(0)
     , fUnknownNamespaceId(0)
     , fXMLNamespaceId(0)
     , fXMLNSNamespaceId(0)
     , fSchemaNamespaceId(0)
+    , fUIntPool(0)
+    , fUIntPoolRow(0)
+    , fUIntPoolCol(0)
+    , fUIntPoolRowTotal(2)
     , fScannerId(0)
     , fSequenceId(0)
     , fAttrList(0)
@@ -269,6 +276,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fEntityHandler(entityHandler)
     , fErrorReporter(errHandler)
     , fErrorHandler(0)
+    , fPSVIHandler(0)
     , fValidationContext(0)
     , fEntityDeclPoolRetrieved(false)
     , fReaderMgr(manager)
@@ -281,8 +289,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fURIStringPool(0)
     , fRootElemName(0)
     , fExternalSchemaLocation(0)
-    , fExternalNoNamespaceSchemaLocation(0)
-    , fStandardUriConformant(false)
+    , fExternalNoNamespaceSchemaLocation(0)    
     , fSecurityManager(0)
     , fXMLVersion(XMLReader::XMLV1_0)
     , fMemoryManager(manager)
@@ -294,11 +301,6 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fPrefixBuf(1023, manager)
     , fURIBuf(1023, manager)
     , fElemStack(manager)
-    , fUIntPool(0)
-    , fUIntPoolRow(0)
-    , fUIntPoolCol(0)
-    , fUIntPoolRowTotal(2)
-    , fPSVIHandler(0)
 {
    commonInit();
 

@@ -93,9 +93,9 @@ XercesDOMParser::XercesDOMParser( XMLValidator* const   valToAdopt
                                 , XMLGrammarPool* const gramPool):
 
 AbstractDOMParser(valToAdopt, manager, gramPool)
-, fErrorHandler(0)
 , fEntityResolver(0)
 , fXMLEntityResolver(0)
+, fErrorHandler(0)
 {
 }
 
@@ -206,8 +206,8 @@ void XercesDOMParser::resetDocumentPool()
 // ---------------------------------------------------------------------------
 //  XercesDOMParser: Implementation of the XMLErrorReporter interface
 // ---------------------------------------------------------------------------
-void XercesDOMParser::error( const   unsigned int                code
-                             , const XMLCh* const                msgDomain
+void XercesDOMParser::error( const   unsigned int
+                             , const XMLCh* const
                              , const XMLErrorReporter::ErrTypes  errType
                              , const XMLCh* const                errorText
                              , const XMLCh* const                systemId
@@ -255,7 +255,7 @@ void XercesDOMParser::resetErrors()
 InputSource*
 XercesDOMParser::resolveEntity(const XMLCh* const publicId,
                                const XMLCh* const systemId,
-                               const XMLCh* const baseURI)
+                               const XMLCh* const)
 {
     //
     //  Just map it to the SAX entity resolver. If there is not one installed,

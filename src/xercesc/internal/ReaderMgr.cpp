@@ -413,7 +413,7 @@ void ReaderMgr::cleanStackBackTo(const unsigned int readerNum)
 
 
 XMLReader* ReaderMgr::createReader( const   InputSource&        src
-                                    , const bool                xmlDecl
+                                    , const bool                
                                     , const XMLReader::RefFrom  refFrom
                                     , const XMLReader::Types    type
                                     , const XMLReader::Sources  source

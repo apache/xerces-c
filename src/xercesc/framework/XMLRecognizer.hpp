@@ -173,6 +173,12 @@ protected :
     // -----------------------------------------------------------------------
     XMLRecognizer();
     ~XMLRecognizer();
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLRecognizer(const XMLRecognizer&);    
     XMLRecognizer& operator=(const XMLRecognizer&);
 };
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.4  2003/11/06 19:28:11  knoaman
  * PSVI support for annotations.
  *
@@ -134,6 +137,7 @@ private :
     // -----------------------------------------------------------------------
     Janitor();
     Janitor(const Janitor<T>&);
+    Janitor<T>& operator=(const Janitor<T>&);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -176,6 +180,7 @@ private :
     // -----------------------------------------------------------------------
 	ArrayJanitor();
     ArrayJanitor(const ArrayJanitor<T>& copy);
+    ArrayJanitor& operator=(const ArrayJanitor<T>& copy);    
 
     // -----------------------------------------------------------------------
     //  Private data members

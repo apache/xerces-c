@@ -124,6 +124,8 @@ struct DOMDeepNodeListPoolTableBucketElem : public XMemory
     void*                                     fKey1;
     XMLCh*                                    fKey2;
     XMLCh*                                    fKey3;
+
+    ~DOMDeepNodeListPoolTableBucketElem() {};
 };
 
 
@@ -193,6 +195,11 @@ private:
     const DOMDeepNodeListPoolTableBucketElem<TVal>* findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* const key3, XMLSize_t& hashVal) const;
     void initialize(const XMLSize_t modulus);
 
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMDeepNodeListPool(const DOMDeepNodeListPool<TVal> &);
+    DOMDeepNodeListPool<TVal> & operator = (const DOMDeepNodeListPool<TVal> &);
 
     // -----------------------------------------------------------------------
     //  Data members

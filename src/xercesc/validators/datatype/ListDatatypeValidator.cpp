@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.22  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.21  2004/01/13 21:18:18  peiyongz
  * revert code back to previous version
  *
@@ -425,8 +428,8 @@ DatatypeValidator* ListDatatypeValidator::getItemTypeDTV() const
 //  Utilities
 // ---------------------------------------------------------------------------
 
-void ListDatatypeValidator::checkValueSpace(const XMLCh* const content
-                                            , MemoryManager* const manager)
+void ListDatatypeValidator::checkValueSpace(const XMLCh* const
+                                            , MemoryManager* const)
 {}
 
 int ListDatatypeValidator::getLength(const XMLCh* const content
@@ -581,8 +584,6 @@ const XMLCh* ListDatatypeValidator::getCanonicalRepresentation(const XMLCh*     
     {
         return 0;
     }
-
-
 }
 
 /***

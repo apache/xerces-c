@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/01/29 11:46:32  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.6  2003/12/02 14:33:13  amassari
  * Don't use the word "exception" as a variable name, as VC 7.1 complains about it
  *
@@ -710,6 +713,16 @@ public:
     );
 
     //@}
+
+    DefaultHandler() {};
+    virtual ~DefaultHandler() {};
+
+private:
+	// -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DefaultHandler(const DefaultHandler&);
+    DefaultHandler& operator=(const DefaultHandler&);    
 };
 
 

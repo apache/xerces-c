@@ -350,7 +350,13 @@ template <class TElem> BaseRefVectorEnumerator<TElem>::~BaseRefVectorEnumerator(
         delete fToEnum;
 }
 
-
+template <class TElem> BaseRefVectorEnumerator<TElem>::
+BaseRefVectorEnumerator(const BaseRefVectorEnumerator<TElem>& toCopy) :
+    fAdopted(toCopy.fAdopted)
+    , fCurIndex(toCopy.fCurIndex)
+    , fToEnum(toCopy.fToEnum)    
+{
+}
 // ---------------------------------------------------------------------------
 //  RefBaseRefVectorEnumerator: Enum interface
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/01/29 11:51:20  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.5  2003/12/24 15:24:13  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -121,6 +124,12 @@ public :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    UnixHTTPURLInputStream(const UnixHTTPURLInputStream&);
+    UnixHTTPURLInputStream& operator=(const UnixHTTPURLInputStream&);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //

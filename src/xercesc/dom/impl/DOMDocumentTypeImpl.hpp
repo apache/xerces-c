@@ -132,6 +132,12 @@ public:
     virtual const XMLCh *     getPublicId() const;
     virtual const XMLCh *     getSystemId() const;
     virtual const XMLCh *     getInternalSubset() const;
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------    
+    DOMDocumentTypeImpl & operator = (const DOMDocumentTypeImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

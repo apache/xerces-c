@@ -225,7 +225,8 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fComplexTypeRegistry(0)
     , fGroupRegistry(0)
     , fAttGroupRegistry(0)
-    , fSchemaInfoList(0)
+    , fIC_ElementsNS(0)
+    , fPreprocessedNodes(0)
     , fSchemaInfo(0)
     , fCurrentGroupInfo(0)
     , fCurrentAttGroupInfo(0)
@@ -237,15 +238,14 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fDeclStack(0)
     , fGlobalDeclarations(0)
     , fNonXSAttList(0)
+    , fIC_NodeListNS(0)    
+    , fIC_NamespaceDepthNS(0)
     , fNotationRegistry(0)
     , fRedefineComponents(0)
     , fIdentityConstraintNames(0)
-    , fValidSubstitutionGroups(0)
-    , fIC_NodeListNS(0)
-    , fIC_ElementsNS(0)
-    , fIC_NamespaceDepthNS(0)
-    , fParser(0)
-    , fPreprocessedNodes(0)
+    , fValidSubstitutionGroups(0)    
+    , fSchemaInfoList(0)
+    , fParser(0)    
     , fLocator(0)
     , fMemoryManager(manager)
     , fGrammarPoolMemoryManager(fGrammarResolver->getGrammarPoolMemoryManager())
@@ -1353,7 +1353,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
 
         if (child == 0) {
             // EMPTY complexType with complexContent
-            processComplexContent(elem, name, child, typeInfo, 0,0,0, isMixed);
+            processComplexContent(elem, name, child, typeInfo, 0, isMixed);
         }
         else {
 
@@ -1384,7 +1384,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
                 // We must have ....
                 // GROUP, ALL, SEQUENCE or CHOICE, followed by optional attributes
                 // Note that it's possible that only attributes are specified.
-                processComplexContent(elem, name, child, typeInfo, 0, 0, 0, isMixed);
+                processComplexContent(elem, name, child, typeInfo, 0, isMixed);
             }
         }
     }
@@ -2607,7 +2607,7 @@ TraverseSchema::traverseElementDecl(const DOMElement* const elem,
                 const XMLCh* anotherSchemaURI = checkTypeFromAnotherSchema(elem, typeStr);
 
                 // get complex type info
-                typeInfo = getElementComplexTypeInfo(elem, typeStr, noErrorFound, anotherSchemaURI);
+                typeInfo = getElementComplexTypeInfo(elem, typeStr, anotherSchemaURI);
 
                 // get simple type validtor - if not a complex type
                 if (typeInfo)
@@ -3160,7 +3160,6 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
         reportSchemaError(contentElem, XMLUni::fgXMLErrDomain, XMLErrs::SimpleTypeContentError);
     }
 
-    int                             size = 1;
     const XMLCh*                    baseTypeName = getElementAttValue(contentElem, SchemaSymbols::fgATT_MEMBERTYPES);
     DatatypeValidator*              baseValidator = 0;
     RefVectorOf<DatatypeValidator>* validators = new (fGrammarPoolMemoryManager) RefVectorOf<DatatypeValidator>(4, false, fGrammarPoolMemoryManager);
@@ -3649,7 +3648,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
     // -----------------------------------------------------------------------
     // Process attributes if any
     // -----------------------------------------------------------------------
-    processAttributes(simpleContent, content, baseName, localPart, uri, typeInfo);
+    processAttributes(simpleContent, content, typeInfo);
 
     if (XUtil::getNextSiblingElement(simpleContent) != 0) {
         reportSchemaError(simpleContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidChildInSimpleContent);
@@ -3806,8 +3805,8 @@ void TraverseSchema::traverseComplexContentDecl(const XMLCh* const typeName,
             janAnnot->get()->setNext(fAnnotation);
     }
 
-    processComplexContent(complexContent, typeName, content, typeInfo, baseName, localPart,
-                          uri, mixedContent, isBaseAnyType);
+    processComplexContent(complexContent, typeName, content, typeInfo, localPart,
+                          mixedContent, isBaseAnyType);
 
     if (XUtil::getNextSiblingElement(complexContent) != 0) {
         reportSchemaError(complexContent, XMLUni::fgXMLErrDomain, XMLErrs::InvalidChildInComplexContent);
@@ -5120,8 +5119,7 @@ TraverseSchema::getAttrDatatypeValidatorNS(const DOMElement* const elem,
 
 ComplexTypeInfo*
 TraverseSchema::getElementComplexTypeInfo(const DOMElement* const elem,
-                                          const XMLCh* const typeStr,
-                                          bool& noErrorDetected,
+                                          const XMLCh* const typeStr,                                          
                                           const XMLCh* const otherSchemaURI)
 {
     const XMLCh*         localPart = getLocalPart(typeStr);
@@ -5784,10 +5782,8 @@ void TraverseSchema::checkMinMax(ContentSpecNode* const specNode,
 void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                                            const XMLCh* const typeName,
                                            const DOMElement* const childElem,
-                                           ComplexTypeInfo* const typeInfo,
-                                           const XMLCh* const baseRawName,
-                                           const XMLCh* const baseLocalPart,
-                                           const XMLCh* const baseURI,
+                                           ComplexTypeInfo* const typeInfo,                                           
+                                           const XMLCh* const baseLocalPart,                                           
                                            const bool isMixed,
                                            const bool isBaseAnyType) {
 
@@ -6047,11 +6043,11 @@ void TraverseSchema::processComplexContent(const DOMElement* const ctElem,
                               attrNode->getLocalName());
         }
         else {
-            processAttributes(ctElem, attrNode, baseRawName, baseLocalPart, baseURI, typeInfo, isBaseAnyType);
+            processAttributes(ctElem, attrNode, typeInfo, isBaseAnyType);
         }
     }
     else if (baseTypeInfo != 0 || isBaseAnyType) {
-        processAttributes(ctElem, 0, baseRawName, baseLocalPart, baseURI, typeInfo, isBaseAnyType);
+        processAttributes(ctElem, 0, typeInfo, isBaseAnyType);
     }
 }
 
@@ -6226,10 +6222,7 @@ ComplexTypeInfo* TraverseSchema::getTypeInfoFromNS(const DOMElement* const elem,
 
 
 void TraverseSchema::processAttributes(const DOMElement* const elem,
-                                       const DOMElement* const attElem,
-                                       const XMLCh* const baseRawName,
-                                       const XMLCh* const baseLocalPart,
-                                       const XMLCh* const baseURI,
+                                       const DOMElement* const attElem,                                       
                                        ComplexTypeInfo* const typeInfo,
                                        const bool isBaseAnyType) {
 
@@ -8494,8 +8487,7 @@ void TraverseSchema::processSubstitutionGroup(const DOMElement* const elem,
                     }
                 }
 
-                XMLCh* subsElemBaseName = subsElemDecl->getBaseName();
-                int    elemURI = elemDecl->getURI();
+                XMLCh* subsElemBaseName = subsElemDecl->getBaseName();                              
                 int    subsElemURI = subsElemDecl->getURI();
                 ValueVectorOf<SchemaElementDecl*>* subsElements =
                     fValidSubstitutionGroups->get(subsElemBaseName, subsElemURI);

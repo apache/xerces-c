@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.13  2004/01/15 23:42:32  peiyongz
  * proper allignment for built-in datatype read/write
  *
@@ -159,8 +162,8 @@ XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
 ,fOutputStream(0)
 ,fBufSize(bufSize)
 ,fBufStart( (XMLByte*) fMemoryManager->allocate(bufSize))
-,fBufCur(fBufStart)
 ,fBufEnd(0)
+,fBufCur(fBufStart)
 ,fBufLoadMax(fBufStart)
 ,fStorePool(0)
 ,fLoadPool( new (fMemoryManager) ValueVectorOf<void*>(29, fMemoryManager, false))
@@ -182,8 +185,8 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
 ,fOutputStream(outStream)
 ,fBufSize(bufSize)
 ,fBufStart((XMLByte*) fMemoryManager->allocate(bufSize))
-,fBufCur(fBufStart)
 ,fBufEnd(fBufStart+bufSize)
+,fBufCur(fBufStart)
 ,fBufLoadMax(0)
 ,fStorePool( new (fMemoryManager) RefHashTableOf<XSerializedObjectId>(29, true, new HashPtr(), fMemoryManager) )
 ,fLoadPool(0)

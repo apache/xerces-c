@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2004/01/29 11:46:29  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/05/29 11:18:37  gareth
  * Added macros in so we can determine whether to do things like iostream as opposed to iostream.h and whether to use std:: or not.
  *
@@ -105,7 +108,7 @@ void StdOutFormatTarget::flush()
 
 void StdOutFormatTarget::writeChars(const XMLByte* const  toWrite
                                   , const unsigned int    count
-                                  , XMLFormatter* const   formatter)
+                                  , XMLFormatter* const)
 {
         // Surprisingly, Solaris was the only platform on which
         // required the char* cast to print out the string correctly.

@@ -155,7 +155,7 @@ XMLMsgLoader* DOMImplementationImpl::getMsgLoader4DOM()
     }
 
     return sMsgLoader4DOM;
-};
+}
 
 // -----------------------------------------------------------------------
 //  Singleton DOMImplementationImpl
@@ -193,7 +193,7 @@ DOMImplementationImpl *DOMImplementationImpl::getDOMImplementationImpl()
     }
 
     return gDomimp;
-};
+}
 
 // ------------------------------------------------------------
 // DOMImplementation Virtual interface
@@ -253,7 +253,7 @@ DOMDocument *DOMImplementationImpl::createDocument(const XMLCh *namespaceURI,
 
 
 //Introduced in DOM Level 3
-DOMImplementation* DOMImplementationImpl::getInterface(const XMLCh* feature){
+DOMImplementation* DOMImplementationImpl::getInterface(const XMLCh*){
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     return 0;
 }
@@ -300,7 +300,7 @@ bool DOMImplementation::loadDOMExceptionMsg
 // ------------------------------------------------------------
 //Introduced in DOM Level 3
 DOMBuilder* DOMImplementationImpl::createDOMBuilder(const short           mode,
-                                                    const XMLCh* const    schemaType,
+                                                    const XMLCh* const,
                                                     MemoryManager* const  manager,
                                                     XMLGrammarPool* const gramPool)
 {

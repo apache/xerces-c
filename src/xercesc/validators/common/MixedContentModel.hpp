@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.6  2003/05/16 21:43:20  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -259,18 +262,18 @@ inline ContentLeafNameTypeVector* MixedContentModel::getContentLeafNameTypeVecto
 }
 
 inline unsigned int
-MixedContentModel::getNextState(const unsigned int currentState,
-                                const unsigned int elementIndex) const {
+MixedContentModel::getNextState(const unsigned int,
+                                const unsigned int) const {
 
     return XMLContentModel::gInvalidTrans;
 }
 
 inline void MixedContentModel::checkUniqueParticleAttribution
     (
-        SchemaGrammar*    const pGrammar
-      , GrammarResolver*  const pGrammarResolver
-      , XMLStringPool*    const pStringPool
-      , XMLValidator*     const pValidator
+        SchemaGrammar*    const 
+      , GrammarResolver*  const 
+      , XMLStringPool*    const 
+      , XMLValidator*     const
       , unsigned int*     const pContentSpecOrgURI
     )
 {

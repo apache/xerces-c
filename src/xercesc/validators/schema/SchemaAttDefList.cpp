@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/12/17 00:18:40  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -110,8 +113,8 @@ SchemaAttDefList::SchemaAttDefList(RefHash2KeysTableOf<SchemaAttDef>* const list
 ,fEnum(0)
 ,fList(listToUse)
 ,fArray(0)
-,fCount(0)
 ,fSize(0)
+,fCount(0)
 {
     fEnum = new (getMemoryManager()) RefHash2KeysTableOfEnumerator<SchemaAttDef>(listToUse, false, getMemoryManager());
     fArray = (SchemaAttDef **)((getMemoryManager())->allocate( sizeof(SchemaAttDef*) << 1));
@@ -157,8 +160,8 @@ SchemaAttDefList::findAttDef(  const   unsigned long   uriID
 }
 
 
-XMLAttDef* SchemaAttDefList::findAttDef(   const   XMLCh* const    attURI
-                                        , const XMLCh* const    attName)
+XMLAttDef* SchemaAttDefList::findAttDef(   const   XMLCh* const
+                                        , const XMLCh* const)
 {
    //need numeric URI id to locate the attribute, that's how it was stored
    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Pool_InvalidId, getMemoryManager());
@@ -167,8 +170,8 @@ XMLAttDef* SchemaAttDefList::findAttDef(   const   XMLCh* const    attURI
 
 
 const XMLAttDef*
-SchemaAttDefList::findAttDef( const   XMLCh* const    attURI
-                            , const XMLCh* const    attName) const
+SchemaAttDefList::findAttDef( const   XMLCh* const
+                            , const XMLCh* const) const
 {
    //need numeric URI id to locate the attribute, that's how it was stored
    ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Pool_InvalidId, getMemoryManager());
@@ -268,11 +271,12 @@ void SchemaAttDefList::serialize(XSerializeEngine& serEng)
 }
 
 SchemaAttDefList::SchemaAttDefList(MemoryManager* const manager)
-:fEnum(0)
+: XMLAttDefList(manager)
+,fEnum(0)
 ,fList(0)
 ,fArray(0)
-,fCount(0)
 ,fSize(0)
+,fCount(0)
 {
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.10  2003/11/20 17:52:14  knoaman
  * PSVI: store element declaration (leaf nodes)
  *
@@ -298,7 +301,7 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-
+    ContentSpecNode& operator=(const ContentSpecNode&);
 
 
     // -----------------------------------------------------------------------

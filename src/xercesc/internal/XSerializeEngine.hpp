@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.12  2004/01/16 21:55:18  peiyongz
  * maintain the same size on both 32/64 bit architecture
  *
@@ -723,7 +726,8 @@ public:
 
 private:
 
-    inline XSerializedObjectId(XSerializeEngine::XSerializedObjectId_t val) { fData = val; };
+    inline XSerializedObjectId(XSerializeEngine::XSerializedObjectId_t val):
+        fData(val) { };
 
     inline XSerializeEngine::XSerializedObjectId_t getValue() const {return fData; };
 

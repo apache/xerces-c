@@ -73,10 +73,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOMParentNode::DOMParentNode(DOMDocument *ownerDoc)
-    : fOwnerDocument(ownerDoc), fChildNodeList(castToNode(this))
-{
-    fFirstChild = 0;
-};
+    : fOwnerDocument(ownerDoc), fFirstChild(0), fChildNodeList(castToNode(this))
+{    
+}
 
 // This only makes a shallow copy, cloneChildren must also be called for a
 // deep clone
@@ -87,7 +86,7 @@ DOMParentNode::DOMParentNode(const DOMParentNode &other)  :
 
     // Need to break the association w/ original kids
     this->fFirstChild = 0;
-};
+}
 
 void DOMParentNode::changed()
 {
@@ -100,13 +99,13 @@ int DOMParentNode::changes() const
 {
     DOMDocumentImpl *doc = (DOMDocumentImpl *)this->getOwnerDocument();
     return doc->changes();
-};
+}
 
 
 DOMNode * DOMParentNode::appendChild(DOMNode *newChild)
 {
     return insertBefore(newChild, 0);
-};
+}
 
 
 void DOMParentNode::cloneChildren(const DOMNode *other) {
@@ -135,18 +134,18 @@ void DOMParentNode::setOwnerDocument(DOMDocument* doc) {
 DOMNodeList *DOMParentNode::getChildNodes() const {
     const DOMNodeList *ret = &fChildNodeList;
     return (DOMNodeList *)ret;   // cast off const.
-};
+}
 
 
 DOMNode * DOMParentNode::getFirstChild() const {
     return fFirstChild;
-};
+}
 
 
 DOMNode * DOMParentNode::getLastChild() const
 {
     return lastChild();
-};
+}
 
 DOMNode * DOMParentNode::lastChild() const
 {
@@ -158,7 +157,7 @@ DOMNode * DOMParentNode::lastChild() const
     DOMChildNode *firstChild = castToChildImpl(fFirstChild);
     DOMNode *ret = firstChild->previousSibling;
     return ret;
-};
+}
 
 
 //
@@ -176,7 +175,7 @@ void DOMParentNode::lastChild(DOMNode *node) {
 bool DOMParentNode::hasChildNodes() const
 {
     return fFirstChild!=0;
-};
+}
 
 
 
@@ -301,7 +300,7 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     }
 
     return newChild;
-};
+}
 
 
 
@@ -373,7 +372,7 @@ DOMNode *DOMParentNode::removeChild(DOMNode *oldChild)
     changed();
 
     return oldChild;
-};
+}
 
 
 DOMNode *DOMParentNode::replaceChild(DOMNode *newChild, DOMNode *oldChild)
@@ -381,7 +380,7 @@ DOMNode *DOMParentNode::replaceChild(DOMNode *newChild, DOMNode *oldChild)
     insertBefore(newChild, oldChild);
     // changed() already done.
     return removeChild(oldChild);
-};
+}
 
 
 
@@ -412,11 +411,11 @@ void DOMParentNode::normalize()
         else
             if (kid->getNodeType() == DOMNode::ELEMENT_NODE)
                 kid->normalize();
-    };
+    }
 
     // changed() will have occurred when the removeChild() was done,
     // so does not have to be reissued.
-};
+}
 
 //Introduced in DOM Level 3
 

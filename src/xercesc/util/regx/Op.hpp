@@ -177,6 +177,11 @@ private:
 	// Private data members
 	XMLInt32 fCharData;
 
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    CharOp(const CharOp&);
+    CharOp& operator=(const CharOp&);
 };
 
 class XMLUTIL_EXPORT UnionOp : public Op {
@@ -202,6 +207,12 @@ public:
 private:
 	// Private Data memebers
 	RefVectorOf<Op>* fBranches;
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    UnionOp(const UnionOp&);
+    UnionOp& operator=(const UnionOp&);
 };
 
 
@@ -226,6 +237,12 @@ public:
 private:
 	// Private data members
 	const Op* fChild;
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    ChildOp(const ChildOp&);
+    ChildOp& operator=(const ChildOp&);
 };
 
 class XMLUTIL_EXPORT ModifierOp: public ChildOp {
@@ -246,6 +263,12 @@ private:
 	// Private data members
 	XMLInt32 fVal1;
 	XMLInt32 fVal2;
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    ModifierOp(const ModifierOp&);
+    ModifierOp& operator=(const ModifierOp&);
 };
 
 class XMLUTIL_EXPORT RangeOp: public Op {
@@ -264,6 +287,12 @@ public:
 private:
 	// Private data members
 	const Token* fToken;
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RangeOp(const RangeOp&);
+    RangeOp& operator=(const RangeOp&);
 };
 
 class XMLUTIL_EXPORT StringOp: public Op {
@@ -282,6 +311,12 @@ public:
 private:
 	// Private data members
 	XMLCh* fLiteral;
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    StringOp(const StringOp&);
+    StringOp& operator=(const StringOp&);
 };
 
 class XMLUTIL_EXPORT ConditionOp: public Op {
@@ -308,6 +343,12 @@ private:
 	const Op* fConditionOp;
 	const Op* fYesOp;
 	const Op* fNoOp;
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    ConditionOp(const ConditionOp&);
+    ConditionOp& operator=(const ConditionOp&);
 };
 
 // ---------------------------------------------------------------------------

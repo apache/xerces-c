@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -155,7 +158,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 int
 SimpleContentModel::validateContent(QName** const       children
                                   , const unsigned int  childCount
-                                  , const unsigned int  emptyNamespaceId) const
+                                  , const unsigned int) const
 {
     //
     //  According to the type of operation, we do the correct type of
@@ -342,7 +345,7 @@ SimpleContentModel::validateContent(QName** const       children
 
 int SimpleContentModel::validateContentSpecial(QName** const          children
                                             , const unsigned int      childCount
-                                            , const unsigned int      emptyNamespaceId
+                                            , const unsigned int
                                             , GrammarResolver*  const pGrammarResolver
                                             , XMLStringPool*    const pStringPool) const
 {

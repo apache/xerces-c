@@ -517,6 +517,12 @@ private:
     inline bool isBuiltInDV(DatatypeValidator* const);
 
     // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DatatypeValidator(const DatatypeValidator&);
+    DatatypeValidator& operator=(const DatatypeValidator&);
+
+    // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fFinalSet
@@ -742,7 +748,7 @@ inline void DatatypeValidator::setNumeric(bool numeric)
 // ---------------------------------------------------------------------------
 inline int DatatypeValidator::compare(const XMLCh* const lValue,
                                       const XMLCh* const rValue
-                                      , MemoryManager*     const manager)
+                                      , MemoryManager*     const)
 {
     return XMLString::compareString(lValue, rValue);
 }

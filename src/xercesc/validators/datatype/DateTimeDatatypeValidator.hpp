@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/12/23 21:50:36  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0,
  * only validate when required
@@ -154,6 +157,13 @@ protected:
     // -----------------------------------------------------------------------
     virtual XMLDateTime*          parse(const XMLCh* const, MemoryManager* const manager);
     virtual void                  parse(XMLDateTime* const);
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DateTimeDatatypeValidator(const DateTimeDatatypeValidator&);
+    DateTimeDatatypeValidator& operator=(const DateTimeDatatypeValidator&);
 };
 
 XERCES_CPP_NAMESPACE_END

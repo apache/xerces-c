@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/01/29 11:52:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.6  2003/11/10 21:54:51  neilg
  * implementation for new stateless means of traversing attribute definition lists
  *
@@ -194,6 +197,11 @@ public :
 private :
 
     void addAttDef(DTDAttDef *toAdd);
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DTDAttDefList(const DTDAttDefList &);
+    DTDAttDefList& operator = (const  DTDAttDefList&);
 
     // -----------------------------------------------------------------------
     //  Private data members

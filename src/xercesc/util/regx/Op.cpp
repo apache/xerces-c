@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.5  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -95,9 +98,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  Op: Constructors and Destructors
 // ---------------------------------------------------------------------------
 Op::Op(const short type, MemoryManager* const manager) 
-    : fOpType(type)
-    , fNextOp(0) 
-    , fMemoryManager(manager)
+    : fMemoryManager(manager)
+    , fOpType(type)
+    , fNextOp(0)
 {
 }
 
@@ -128,7 +131,7 @@ int Op::getRefNo() const {
     return 0; // for compilers that complain about no return value
 }
 
-const Op* Op::elementAt(int index) const {
+const Op* Op::elementAt(int) const {
 
 	ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, fMemoryManager);
     return 0; // for compilers that complain about no return value

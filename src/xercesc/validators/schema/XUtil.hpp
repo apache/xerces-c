@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.4  2002/11/04 14:49:42  tng
  * C++ Namespace Support.
  *
@@ -116,7 +119,7 @@ public:
                                                , const XMLCh* const uriStr
                                                , unsigned int        length);
 
-protected:
+private:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
@@ -124,7 +127,6 @@ protected:
 	// This class cannot be instantiated.
      XUtil() {};
 	~XUtil() {};
-
 };
 
 XERCES_CPP_NAMESPACE_END

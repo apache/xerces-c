@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.20  2003/12/23 21:50:36  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0,
  * only validate when required
@@ -204,8 +207,8 @@ DatatypeValidator::DatatypeValidator(DatatypeValidator* const baseValidator,
     , fFacets(facets)
     , fPattern(0)
     , fRegex(0)
-    , fTypeLocalName(XMLUni::fgZeroLenString)
     , fTypeName(0)
+    , fTypeLocalName(XMLUni::fgZeroLenString)
     , fTypeUri(XMLUni::fgZeroLenString)
     , fOrdered(XSSimpleTypeDefinition::ORDERED_FALSE)
     , fFinite(false)
@@ -489,144 +492,115 @@ DatatypeValidator* DatatypeValidator::loadDV(XSerializeEngine& serEng)
     case String: 
         StringDatatypeValidator* stringdv;
         serEng>>stringdv;
-        return stringdv;
-        break;
+        return stringdv;        
     case AnyURI:
         AnyURIDatatypeValidator* anyuridv;
         serEng>>anyuridv;
-        return anyuridv;
-        break;
+        return anyuridv;        
     case QName: 
         QNameDatatypeValidator* qnamedv;
         serEng>>qnamedv;
-        return qnamedv;
-        break;
+        return qnamedv;        
     case Name: 
         NameDatatypeValidator* namedv;
         serEng>>namedv;
-        return namedv;
-        break;
+        return namedv;        
     case NCName:  
         NCNameDatatypeValidator* ncnamedv;
         serEng>>ncnamedv;
-        return ncnamedv;
-        break;
+        return ncnamedv;        
     case Boolean: 
         BooleanDatatypeValidator* booleandv;
         serEng>>booleandv;
-        return booleandv;
-        break;
+        return booleandv;        
     case Float: 
         FloatDatatypeValidator* floatdv;
         serEng>>floatdv;
-        return floatdv;
-        break;
+        return floatdv;        
     case Double: 
         DoubleDatatypeValidator* doubledv;
         serEng>>doubledv;
-        return doubledv;
-        break;
+        return doubledv;        
     case Decimal: 
         DecimalDatatypeValidator* decimaldv;
         serEng>>decimaldv;
-        return decimaldv;
-        break;
+        return decimaldv;        
     case HexBinary:  
         HexBinaryDatatypeValidator* hexbinarydv;
         serEng>>hexbinarydv;
-        return hexbinarydv;
-        break;
+        return hexbinarydv;       
     case Base64Binary: 
         Base64BinaryDatatypeValidator* base64binarydv;
         serEng>>base64binarydv;
-        return base64binarydv;
-        break;
+        return base64binarydv;      
     case Duration:     
         DurationDatatypeValidator* durationdv;
         serEng>>durationdv;
         return durationdv;
-        break;
     case DateTime:       
         DateTimeDatatypeValidator* datetimedv;
         serEng>>datetimedv;
-        return datetimedv;
-        break;
+        return datetimedv; 
     case Date:          
         DateDatatypeValidator* datedv;
         serEng>>datedv;
         return datedv;
-        break;
     case Time:         
         TimeDatatypeValidator* timedv;
         serEng>>timedv;
         return timedv;
-        break;
     case MonthDay:      
         MonthDayDatatypeValidator* monthdaydv;
         serEng>>monthdaydv;
         return monthdaydv;
-        break;
     case YearMonth:     
         YearMonthDatatypeValidator* yearmonthdv;
         serEng>>yearmonthdv;
         return yearmonthdv;
-        break;
     case Year:          
         YearDatatypeValidator* yeardv;
         serEng>>yeardv;
         return yeardv;
-        break;
     case Month:        
         MonthDatatypeValidator* monthdv;
         serEng>>monthdv;
         return monthdv;
-        break;
     case Day:           
         DayDatatypeValidator* daydv;
         serEng>>daydv;
         return daydv;
-        break;
     case ID:           
         IDDatatypeValidator* iddv;
         serEng>>iddv;
         return iddv;
-        break;
     case IDREF:         
         IDREFDatatypeValidator* idrefdv;
         serEng>>idrefdv;
         return idrefdv;
-        break;
     case ENTITY:       
         ENTITYDatatypeValidator* entitydv;
         serEng>>entitydv;
         return entitydv;
-        break;
     case NOTATION:     
         NOTATIONDatatypeValidator* notationdv;
         serEng>>notationdv;
         return notationdv;
-        break;
     case List:          
         ListDatatypeValidator* listdv;
         serEng>>listdv;
         return listdv;
-        break;
     case Union:         
         UnionDatatypeValidator* uniondv;
         serEng>>uniondv;
         return uniondv;
-        break;
     case AnySimpleType:  
         AnySimpleTypeDatatypeValidator* anysimpletypedv;
         serEng>>anysimpletypedv;
         return anysimpletypedv;
-        break;
     case UnKnown:
         return 0;
-        break;
     default: //we treat this same as UnKnown
         return 0;
-        break;
     }
 
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.20  2004/01/13 16:17:09  knoaman
  * Fo sanity, use class name to qualify method
  *
@@ -704,7 +707,7 @@ void GeneralAttributeCheck::initCharFlagTable()
     attList[E_ElementGlobal][A_Default] = Att_Optional;
     attList[E_ElementGlobal][A_Final] = Att_Optional;
     attList[E_ElementGlobal][A_Fixed] = Att_Optional;
-    attList[E_ElementGlobal][A_ID] = Att_Optional | DV_ID;;
+    attList[E_ElementGlobal][A_ID] = Att_Optional | DV_ID;
     attList[E_ElementGlobal][A_Name] = Att_Required;
     attList[E_ElementGlobal][A_Nillable] = Att_Optional | DV_Boolean;
     attList[E_ElementGlobal][A_SubstitutionGroup] = Att_Optional;

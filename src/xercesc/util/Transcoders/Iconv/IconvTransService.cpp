@@ -214,7 +214,7 @@ bool IconvTransService::supportsSrcOfs() const
 //  IconvTransService: The protected virtual transcoding service API
 // ---------------------------------------------------------------------------
 XMLTranscoder*
-IconvTransService::makeNewXMLTranscoder(const   XMLCh* const            encodingName
+IconvTransService::makeNewXMLTranscoder(const   XMLCh* const
                                         ,       XMLTransService::Codes& resValue
                                         , const unsigned int            
                                         ,       MemoryManager* const)

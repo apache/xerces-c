@@ -195,17 +195,14 @@ XMLElementDecl::loadElementDecl(XSerializeEngine& serEng)
         SchemaElementDecl* schemaElementDecl;
         serEng>>schemaElementDecl;
         return schemaElementDecl;
-        break;
     case DTD:
         DTDElementDecl* dtdElementDecl;
         serEng>>dtdElementDecl;
         return dtdElementDecl;
-        break;
     case UnKnown:
          //fall through
     default:
         return 0;
-        break;
     }
 }
 

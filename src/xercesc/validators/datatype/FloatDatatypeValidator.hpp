@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/12/19 23:02:25  cargilld
  * More memory management updates.
  *
@@ -210,6 +213,12 @@ protected:
                             ,       ValidationContext* const context
                             , bool                           asBase
                             ,       MemoryManager*     const manager);
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    FloatDatatypeValidator(const FloatDatatypeValidator&);
+    FloatDatatypeValidator& operator = (const  FloatDatatypeValidator&);
 };
 
 XERCES_CPP_NAMESPACE_END

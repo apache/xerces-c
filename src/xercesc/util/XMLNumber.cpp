@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2004/01/29 11:48:47  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.4  2003/10/17 21:10:55  peiyongz
  * loadNumber() added
  *
@@ -104,7 +107,7 @@ XMLNumber::~XMLNumber()
 
 IMPL_XSERIALIZABLE_NOCREATE(XMLNumber)
 
-void XMLNumber::serialize(XSerializeEngine& serEng)
+void XMLNumber::serialize(XSerializeEngine&)
 {
     // this class has no data to serialize/de-serilize
 }

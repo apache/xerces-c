@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -134,11 +137,19 @@ template <class TVal> struct RefHash2KeysTableBucketElem : public XMemory
 		: fData(value), fNext(next), fKey1(key1), fKey2(key2)
         {
         }
+    ~RefHash2KeysTableBucketElem() {};
 
     TVal*                           fData;
     RefHash2KeysTableBucketElem<TVal>*   fNext;
 	void*							fKey1;
 	int							fKey2;
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefHash2KeysTableBucketElem(const RefHash2KeysTableBucketElem<TVal>&);
+    RefHash2KeysTableBucketElem<TVal>& operator=(const RefHash2KeysTableBucketElem<TVal>&);
 };
 
 
@@ -204,6 +215,11 @@ private :
 
     
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefHash2KeysTableOf(const RefHash2KeysTableOf<TVal>&);
+    RefHash2KeysTableOf<TVal>& operator=(const RefHash2KeysTableOf<TVal>&);
 
     // -----------------------------------------------------------------------
     //  Private methods
@@ -271,6 +287,12 @@ public :
     void nextElementKey(void*&, int&);
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefHash2KeysTableOfEnumerator(const RefHash2KeysTableOfEnumerator<TVal>&);
+    RefHash2KeysTableOfEnumerator<TVal>& operator=(const RefHash2KeysTableOfEnumerator<TVal>&);
+
     // -----------------------------------------------------------------------
     //  Private methods
     // -----------------------------------------------------------------------

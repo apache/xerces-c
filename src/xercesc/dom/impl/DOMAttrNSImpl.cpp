@@ -92,14 +92,14 @@ DOMAttrImpl(other, deep)
     this->fNamespaceURI = other.fNamespaceURI;	//DOM Level 2
     this->fLocalName = other.fLocalName;          //DOM Level 2
     this->fPrefix = other.fPrefix;
-};
+}
 
 DOMNode * DOMAttrNSImpl::cloneNode(bool deep) const
 {
     DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ATTR_NS_OBJECT) DOMAttrNSImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
-};
+}
 
 const XMLCh * DOMAttrNSImpl::getNamespaceURI() const
 {
@@ -260,7 +260,7 @@ void DOMAttrNSImpl::setName(const XMLCh* namespaceURI, const XMLCh* qualifiedNam
               DOMNode::ATTRIBUTE_NODE
           );
     this -> fNamespaceURI = (URI == 0) ? 0 : ownerDoc->getPooledString(URI);
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

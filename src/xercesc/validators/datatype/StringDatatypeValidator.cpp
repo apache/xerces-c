@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.11  2003/12/17 00:18:39  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -303,8 +306,8 @@ void StringDatatypeValidator::checkAdditionalFacet(const XMLCh* const content
     }
 }
 
-void StringDatatypeValidator::checkValueSpace(const XMLCh* const content
-                                              , MemoryManager* const manager)
+void StringDatatypeValidator::checkValueSpace(const XMLCh* const
+                                              , MemoryManager* const)
 {}
 
 /***

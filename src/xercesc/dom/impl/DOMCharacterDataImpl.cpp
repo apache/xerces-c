@@ -71,8 +71,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOMCharacterDataImpl::DOMCharacterDataImpl(DOMDocument *doc, const XMLCh *dat)
- : fDoc(0)
- , fDataBuf(0)
+ : fDataBuf(0)
+ , fDoc(0)
 {
     fDoc = (DOMDocumentImpl*)doc;
 
@@ -82,12 +82,12 @@ DOMCharacterDataImpl::DOMCharacterDataImpl(DOMDocument *doc, const XMLCh *dat)
     else
         fDataBuf->set(dat);
 
-};
+}
 
 
 DOMCharacterDataImpl::DOMCharacterDataImpl(const DOMCharacterDataImpl &other)
- : fDoc(0)
- , fDataBuf(0)
+ : fDataBuf(0)
+ , fDoc(0)
 {
     fDoc = (DOMDocumentImpl*)other.fDoc;
 
@@ -97,17 +97,17 @@ DOMCharacterDataImpl::DOMCharacterDataImpl(const DOMCharacterDataImpl &other)
     else
         fDataBuf->set(other.fDataBuf->getRawBuffer());
 
-};
+}
 
 
 DOMCharacterDataImpl::~DOMCharacterDataImpl() {
-};
+}
 
 
 const XMLCh * DOMCharacterDataImpl::getNodeValue() const
 {
     return fDataBuf->getRawBuffer();
-};
+}
 
 
 void DOMCharacterDataImpl::setNodeValue(const DOMNode *node, const XMLCh *value)
@@ -128,7 +128,7 @@ void DOMCharacterDataImpl::setNodeValue(const DOMNode *node, const XMLCh *value)
             }
         }
     }
-};
+}
 
 
 void DOMCharacterDataImpl::appendData(const DOMNode *node, const XMLCh *dat)
@@ -138,7 +138,7 @@ void DOMCharacterDataImpl::appendData(const DOMNode *node, const XMLCh *dat)
         DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
 
     fDataBuf->append(dat);
-};
+}
 
 
 void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XMLSize_t count)
@@ -201,14 +201,14 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XML
             }
         }
     }
-};
+}
 
 
 
 const XMLCh *DOMCharacterDataImpl::getData() const
 {
     return fDataBuf->getRawBuffer();
-};
+}
 
 
 //
@@ -217,7 +217,7 @@ const XMLCh *DOMCharacterDataImpl::getData() const
 XMLSize_t DOMCharacterDataImpl::getLength() const
 {
     return fDataBuf->getLen();
-};
+}
 
 
 
@@ -282,7 +282,7 @@ void DOMCharacterDataImpl::replaceData(const DOMNode *node, XMLSize_t offset, XM
 
     deleteData(node, offset, count);
     insertData(node, offset, dat);
-};
+}
 
 
 
@@ -290,7 +290,7 @@ void DOMCharacterDataImpl::replaceData(const DOMNode *node, XMLSize_t offset, XM
 void DOMCharacterDataImpl::setData(const DOMNode *node, const XMLCh *arg)
 {
     setNodeValue(node, arg);
-};
+}
 
 
 
@@ -331,7 +331,7 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t
 
     return retString;
 
-};
+}
 
 
 void DOMCharacterDataImpl::releaseBuffer() {

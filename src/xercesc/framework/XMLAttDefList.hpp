@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/01/29 11:46:29  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/11/10 21:53:54  neilg
  * add a means of statelessly traversing attribute lists.  mark the enumeration-based means as deprecated, since those are not stateless
  *
@@ -219,11 +222,12 @@ protected :
     //  Hidden constructors and operators
     // -----------------------------------------------------------------------
     XMLAttDefList(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
+private:
+    // unimplemented
     XMLAttDefList(const XMLAttDefList&);
     XMLAttDefList& operator=(const XMLAttDefList&);
 
-
-private:
     MemoryManager*      fMemoryManager;
 };
 
@@ -247,20 +251,11 @@ inline XMLAttDefList::~XMLAttDefList()
 
 
 // ---------------------------------------------------------------------------
-//  XMLAttDefList: Hidden Constructors and Operators
+//  XMLAttDefList: Protected Constructor
 // ---------------------------------------------------------------------------
 inline XMLAttDefList::XMLAttDefList(MemoryManager* const manager):
 fMemoryManager(manager)
 {
-}
-
-inline XMLAttDefList::XMLAttDefList(const XMLAttDefList&)
-{
-}
-
-inline XMLAttDefList& XMLAttDefList::operator=(const XMLAttDefList&)
-{
-    return *this;
 }
 
 XERCES_CPP_NAMESPACE_END

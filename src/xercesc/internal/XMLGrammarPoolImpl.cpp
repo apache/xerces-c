@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.17  2004/01/13 16:34:20  cargilld
  * Misc memory management changes.
  *
@@ -178,9 +181,9 @@ XMLGrammarPoolImpl::XMLGrammarPoolImpl(MemoryManager* const memMgr)
 ,fGrammarRegistry(0)
 ,fStringPool(0)
 ,fSynchronizedStringPool(0)
+,fXSModel(0)
 ,fLocked(false)
 ,fXSModelIsValid(false)
-,fXSModel(0)
 {
     fGrammarRegistry = new (memMgr) RefHashTableOf<Grammar>(29, true, memMgr);
     fStringPool = new (memMgr) XMLStringPool(109, memMgr);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -189,7 +192,7 @@ Token* ParserForXMLSchema::processParen() {
     return retTok;
 }
 
-RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
+RangeToken* ParserForXMLSchema::parseCharacterClass(const bool) {
 
     setParseContext(S_INBRACKETS);
     processNext();
@@ -256,8 +259,7 @@ RangeToken* ParserForXMLSchema::parseCharacterClass(const bool useNRange) {
                 break;
             case chLatin_p:
             case chLatin_P:
-                {
-                    int start = getOffset();
+                {                    
                     RangeToken* tok2 = processBacksolidus_pP(ch);
 
                     if (tok2 == 0) {
@@ -366,7 +368,7 @@ XMLInt32 ParserForXMLSchema::processCInCharacterClass(RangeToken* const tok,
     return -1;
 }
 
-Token* ParserForXMLSchema::processLook(const unsigned short tokType) {
+Token* ParserForXMLSchema::processLook(const unsigned short) {
 
     ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Regex_NotSupported, getMemoryManager());
     return 0; // for compilers that complain about no return value
@@ -520,7 +522,7 @@ Token* ParserForXMLSchema::getTokenForShorthand(const XMLInt32 ch) {
 // ---------------------------------------------------------------------------
 //  ParserForXMLSchema: Helper methods
 // ---------------------------------------------------------------------------
-bool ParserForXMLSchema::checkQuestion(const int off) {
+bool ParserForXMLSchema::checkQuestion(const int) {
 
     return false;
 }
@@ -560,8 +562,7 @@ XMLInt32 ParserForXMLSchema::decodeEscaped() {
         break;
     default:
 		{
-        XMLCh chString[] = {chBackSlash, ch, chNull};
-        chString[1] = ch;
+        XMLCh chString[] = {chBackSlash, ch, chNull};        
         ThrowXMLwithMemMgr1(ParseException,XMLExcepts::Parser_Process2, chString, getMemoryManager());
         }
     }

@@ -119,6 +119,9 @@ public:
     // NON-DOM: set base uri
     virtual void setBaseURI(const XMLCh *arg);
 
+private:
+    // unimplemented    
+    DOMNotationImpl& operator= (const DOMNotationImpl& other);
 };
 
 XERCES_CPP_NAMESPACE_END

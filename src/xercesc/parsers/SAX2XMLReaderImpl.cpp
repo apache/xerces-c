@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.33  2004/01/29 11:46:32  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.32  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -1251,8 +1254,8 @@ void SAX2XMLReaderImpl::doctypePI(  const   XMLCh* const
 }
 
 
-void SAX2XMLReaderImpl::doctypeWhitespace(  const   XMLCh* const    chars
-                                    , const unsigned int    length)
+void SAX2XMLReaderImpl::doctypeWhitespace(  const   XMLCh* const
+                                    , const unsigned int)
 {
     // Unused by SAX DTDHandler interface at this time
 }
@@ -1429,7 +1432,7 @@ void SAX2XMLReaderImpl::resetEntities()
 
 InputSource* SAX2XMLReaderImpl::resolveEntity(   const   XMLCh* const    publicId
                                                , const   XMLCh* const    systemId
-                                               , const   XMLCh* const    baseURI)
+                                               , const   XMLCh* const)
 {
     // Just map to the SAX entity resolver handler
     if (fEntityResolver)
@@ -1467,8 +1470,8 @@ void SAX2XMLReaderImpl::resetErrors()
 }
 
 
-void SAX2XMLReaderImpl::error(  const   unsigned int                code
-                        , const XMLCh* const                msgDomain
+void SAX2XMLReaderImpl::error(  const   unsigned int
+                        , const XMLCh* const
                         , const XMLErrorReporter::ErrTypes  errType
                         , const XMLCh* const                errorText
                         , const XMLCh* const                systemId

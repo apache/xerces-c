@@ -1785,6 +1785,10 @@ private :
     void initialize();
     void cleanUp();
 
+    // unimplemented
+    DOMParser ( const DOMParser& toCopy);
+    DOMParser& operator= (const DOMParser& other);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //

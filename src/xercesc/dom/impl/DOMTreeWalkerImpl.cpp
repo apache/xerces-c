@@ -73,21 +73,20 @@ DOMTreeWalkerImpl::DOMTreeWalkerImpl (
                                 unsigned long whatToShow,
                                 DOMNodeFilter* nodeFilter,
                                 bool expandEntityRef)
-:   fCurrentNode(root),
-    fRoot(root),
-    fWhatToShow(whatToShow),
-    fNodeFilter(nodeFilter),
+:   fWhatToShow(whatToShow),
+    fNodeFilter(nodeFilter),    
+    fCurrentNode(root),
+    fRoot(root),    
     fExpandEntityReferences(expandEntityRef)
-
 {
 }
 
 
 DOMTreeWalkerImpl::DOMTreeWalkerImpl (const DOMTreeWalkerImpl& twi)
-: fCurrentNode(twi.fCurrentNode),
-    fRoot(twi.fRoot),
-    fWhatToShow(twi.fWhatToShow),
+:   fWhatToShow(twi.fWhatToShow),
     fNodeFilter(twi.fNodeFilter),
+    fCurrentNode(twi.fCurrentNode),
+    fRoot(twi.fRoot),    
     fExpandEntityReferences(twi.fExpandEntityReferences)
 {
 }

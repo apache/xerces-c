@@ -199,6 +199,12 @@ private :
     unsigned int    fIndex;
     unsigned int    fCapacity;
     DOMDocumentImpl* fDoc;
+
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMBuffer(const DOMBuffer &);
+    DOMBuffer & operator = (const DOMBuffer &);
 };
 
 XERCES_CPP_NAMESPACE_END

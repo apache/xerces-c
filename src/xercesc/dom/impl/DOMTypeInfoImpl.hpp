@@ -121,6 +121,11 @@ public:
     const XMLCh* name;
     const XMLCh* namespaceURI;
     
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMTypeInfoImpl (const DOMTypeInfoImpl&);
+    DOMTypeInfoImpl & operator = (const DOMTypeInfoImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

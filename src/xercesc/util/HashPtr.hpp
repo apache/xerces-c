@@ -77,7 +77,12 @@ public:
 	virtual unsigned int getHashVal(const void *const key, unsigned int mod
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 	virtual bool equals(const void *const key1, const void *const key2);
-
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    HashPtr(const HashPtr&);
+    HashPtr& operator=(const HashPtr&);
 };
 
 XERCES_CPP_NAMESPACE_END

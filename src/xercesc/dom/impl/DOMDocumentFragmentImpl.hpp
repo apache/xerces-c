@@ -91,6 +91,11 @@ private:
     DOMDocumentFragmentImpl(const DOMDocumentFragmentImpl &other, bool deep);
     friend class DOMDocumentImpl;
 
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMDocumentFragmentImpl & operator = (const DOMDocumentFragmentImpl &);
+
 public:
     virtual ~DOMDocumentFragmentImpl();
 

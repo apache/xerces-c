@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.10  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -171,7 +174,7 @@ void DurationDatatypeValidator::parse(XMLDateTime* const pDate)
 
 int DurationDatatypeValidator::compareDates(const XMLDateTime* const date1
                                           , const XMLDateTime* const date2
-                                          , bool                     strict)
+                                          , bool strict)
 {
     return XMLDateTime::compare(date1, date2, strict);
 }

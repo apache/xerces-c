@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.18  2003/12/24 17:42:03  knoaman
  * Misc. PSVI updates
  *
@@ -189,14 +192,14 @@ SchemaElementDecl::SchemaElementDecl(MemoryManager* const manager) :
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fDatatypeValidator(0)
     , fEnclosingScope(Grammar::TOP_LEVEL_SCOPE)
-    , fBlockSet(0)
     , fFinalSet(0)
+    , fBlockSet(0)    
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fComplexTypeInfo(0)
-    , fXsiComplexTypeInfo(0)
-    , fXsiSimpleTypeInfo(0)
     , fAttDefs(0)
+    , fXsiComplexTypeInfo(0)
+    , fXsiSimpleTypeInfo(0)    
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
@@ -219,14 +222,14 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fDatatypeValidator(0)
     , fEnclosingScope(enclosingScope)
-    , fBlockSet(0)
     , fFinalSet(0)
+    , fBlockSet(0)    
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fComplexTypeInfo(0)
-    , fXsiComplexTypeInfo(0)
-    , fXsiSimpleTypeInfo(0)
     , fAttDefs(0)
+    , fXsiComplexTypeInfo(0)
+    , fXsiSimpleTypeInfo(0)    
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)
@@ -248,14 +251,14 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
     , fPSVIScope(PSVIDefs::SCP_ABSENT)
     , fDatatypeValidator(0)
     , fEnclosingScope(enclosingScope)
-    , fBlockSet(0)
     , fFinalSet(0)
+    , fBlockSet(0)    
     , fMiscFlags(0)
     , fDefaultValue(0)
     , fComplexTypeInfo(0)
-    , fXsiComplexTypeInfo(0)
-    , fXsiSimpleTypeInfo(0)
     , fAttDefs(0)
+    , fXsiComplexTypeInfo(0)
+    , fXsiSimpleTypeInfo(0)    
     , fIdentityConstraints(0)
     , fAttWildCard(0)
     , fSubstitutionGroupElem(0)

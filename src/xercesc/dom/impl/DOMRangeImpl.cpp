@@ -83,28 +83,29 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 DOMRangeImpl::DOMRangeImpl(DOMDocument* doc, MemoryManager* const manager)
 
-    :   fDocument(doc),
-        fStartContainer(doc),
+    :   fStartContainer(doc),     
         fStartOffset(0),
         fEndContainer(doc),
-        fEndOffset(0),
-        fDetached(false),
+        fEndOffset(0),        
         fCollapsed(true),
+        fDocument(doc),   
+        fDetached(false),
         fRemoveChild(0),
         fMemoryManager(manager)
 {
 }
 
 DOMRangeImpl::DOMRangeImpl(const DOMRangeImpl& other)
+:   fStartContainer(other.fStartContainer),
+    fStartOffset(other.fStartOffset),
+    fEndContainer(other.fEndContainer),
+    fEndOffset(other.fEndOffset),
+    fCollapsed(other.fCollapsed),
+    fDocument(other.fDocument),
+    fDetached(other.fDetached),
+    fRemoveChild(other.fRemoveChild),
+    fMemoryManager(other.fMemoryManager)
 {
-    fDocument = other.fDocument;
-    fStartContainer = other.fStartContainer;
-    fStartOffset = other.fStartOffset;
-    fEndContainer = other.fEndContainer;
-    fEndOffset = other.fEndOffset;
-    fDetached = other.fDetached;
-    fCollapsed = other.fCollapsed;
-    fRemoveChild = other.fRemoveChild;
 }
 
 DOMRangeImpl::~DOMRangeImpl()
@@ -598,8 +599,6 @@ void DOMRangeImpl::surroundContents(DOMNode* newParent)
             DOMRangeException::INVALID_NODE_TYPE_ERR, 0);
     }
 
-    DOMNode* root = (DOMNode*) getCommonAncestorContainer();
-
     DOMNode* realStart = fStartContainer;
     DOMNode* realEnd = fEndContainer;
 
@@ -1034,9 +1033,10 @@ bool DOMRangeImpl::hasLegalRootContainer(const DOMNode* node) const {
         case DOMNode::ATTRIBUTE_NODE:
         case DOMNode::DOCUMENT_NODE:
         case DOMNode::DOCUMENT_FRAGMENT_NODE:
-        return true;
+            return true;
+        default:
+            return false;
     }
-    return false;
 }
 
 bool DOMRangeImpl::isLegalContainedNode(const DOMNode* node ) const {
@@ -1049,9 +1049,10 @@ bool DOMRangeImpl::isLegalContainedNode(const DOMNode* node ) const {
        case DOMNode::ATTRIBUTE_NODE:
        case DOMNode::ENTITY_NODE:
        case DOMNode::NOTATION_NODE:
-       return false;
-   }
-   return true;
+            return false;
+       default:
+            return true;
+   }   
 }
 
 XMLSize_t DOMRangeImpl::indexOf(const DOMNode* child, const DOMNode* parent) const
@@ -1276,7 +1277,6 @@ DOMDocumentFragment* DOMRangeImpl::traverseSameContainer( int how )
     if ( fStartOffset==fEndOffset )
             return frag;
 
-    DOMNode* current = fStartContainer;
     DOMNode* cloneCurrent = 0;
 
     // Text node needs special case handling

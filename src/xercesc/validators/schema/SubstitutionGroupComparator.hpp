@@ -125,14 +125,14 @@ public:
      */
     bool isAllowedByWildcard(SchemaGrammar* const pGrammar, QName* const element, unsigned int wuri, bool wother);
 
-protected:
-
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented Ctor
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     SubstitutionGroupComparator();
-
+    SubstitutionGroupComparator(const SubstitutionGroupComparator&);
+    SubstitutionGroupComparator& operator=(const SubstitutionGroupComparator&);
+    
     // -----------------------------------------------------------------------
     //  Private data members
     //
@@ -140,7 +140,6 @@ private:
     // -----------------------------------------------------------------------
     GrammarResolver     *fGrammarResolver;
     XMLStringPool       *fStringPool;
-
 };
 
 

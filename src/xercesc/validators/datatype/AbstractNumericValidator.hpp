@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/12/23 21:50:36  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0,
  * only validate when required
@@ -162,10 +165,10 @@ protected:
 private:
 
     // -----------------------------------------------------------------------
-    //  Private data members
-    //
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-
+    AbstractNumericValidator(const AbstractNumericValidator&);
+    AbstractNumericValidator& operator=(const AbstractNumericValidator&);
 };
 
 inline void AbstractNumericValidator::init(RefArrayVectorOf<XMLCh>*  const enums

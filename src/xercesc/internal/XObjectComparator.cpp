@@ -57,6 +57,9 @@
 /*
  *
  * $Log$
+ * Revision 1.6  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.5  2003/12/17 00:18:34  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -167,8 +170,8 @@ bool XObjectComparator::isEquivalent(Grammar* const lValue
 
 }
 
-bool XObjectComparator::isBaseEquivalent(Grammar* const lValue
-                                       , Grammar* const rValue)
+bool XObjectComparator::isBaseEquivalent(Grammar* const
+                                       , Grammar* const)
 {
     return true;
 }
@@ -916,18 +919,14 @@ bool XObjectComparator::isEquivalent(IdentityConstraint* const lValue
     switch(lValue->getType())
     {
     case IdentityConstraint::UNIQUE: 
-        return isEquivalent((IC_Unique*)lValue, (IC_Unique*)rValue);
-        break;
+        return isEquivalent((IC_Unique*)lValue, (IC_Unique*)rValue);        
     case IdentityConstraint::KEY:
-        return isEquivalent((IC_Key*)lValue, (IC_Key*)rValue);
-        break;
+        return isEquivalent((IC_Key*)lValue, (IC_Key*)rValue);        
     case IdentityConstraint::KEYREF: 
-        return isEquivalent((IC_KeyRef*)lValue, (IC_KeyRef*)rValue);
-        break;
+        return isEquivalent((IC_KeyRef*)lValue, (IC_KeyRef*)rValue);        
     default: 
         //throw exception here
-        return false;
-        break;
+        return false;        
     }
   
 }

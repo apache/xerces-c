@@ -114,6 +114,12 @@ public:
     void         deleteData(XMLSize_t offset, XMLSize_t count);
     const XMLCh* substringData(XMLSize_t offset, XMLSize_t count) const;
     DOMProcessingInstruction* splitText(XMLSize_t offset);
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMProcessingInstructionImpl & operator = (const DOMProcessingInstructionImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

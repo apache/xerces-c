@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/01/29 11:48:47  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.2  2003/08/14 02:57:27  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -153,6 +156,11 @@ public:
     static void enableNELWS();
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLChar1_0();
+
     // -----------------------------------------------------------------------
     //  Static data members
     //
@@ -307,6 +315,11 @@ public:
     static bool isPublicIdChar(const XMLCh toCheck, const XMLCh toCheck2 = 0);
 
 private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLChar1_1();
+
     // -----------------------------------------------------------------------
     //  Static data members
     //

@@ -143,6 +143,12 @@ public:
 	  */
     const XMLCh *msg;
     //@}
+
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMXPathException& operator = (const DOMXPathException&);
 };
 
 XERCES_CPP_NAMESPACE_END

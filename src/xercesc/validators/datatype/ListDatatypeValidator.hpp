@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.11  2003/12/23 21:50:36  peiyongz
  * Absorb exception thrown in getCanonicalRepresentation and return 0,
  * only validate when required
@@ -285,6 +288,12 @@ private:
 // -----------------------------------------------------------------------
 
     inline void                 setContent(const XMLCh* const content);
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    ListDatatypeValidator(const ListDatatypeValidator&);
+    ListDatatypeValidator& operator=(const ListDatatypeValidator&);
 
     // -----------------------------------------------------------------------
     //  Private data members

@@ -71,14 +71,14 @@ XERCES_CPP_NAMESPACE_BEGIN
 //
 
 DOMNodeListImpl::DOMNodeListImpl(DOMNode *node)
+:   fNode(node)
 {
-    fNode = node;
 }
 
 
 DOMNodeListImpl:: ~DOMNodeListImpl()
 {
-};
+}
 
 
 
@@ -93,7 +93,7 @@ XMLSize_t DOMNodeListImpl::getLength() const{
     }
 
     return count;
-};
+}
 
 
 
@@ -105,7 +105,7 @@ DOMNode *DOMNodeListImpl::item(XMLSize_t index) const{
         return node;
     }
     return 0;
-};
+}
 
 
 XERCES_CPP_NAMESPACE_END

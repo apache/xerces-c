@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.3  2003/12/17 00:18:34  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -126,7 +129,7 @@ XSerializable* class_name::createObject(MemoryManager* manager) \
  ***/
 #define IMPL_XPROTOTYPE_NOCREATE(class_name) \
 IMPL_XPROTOTYPE_INSTANCE(class_name) \
-XSerializable* class_name::createObject(MemoryManager* manager) \
+XSerializable* class_name::createObject(MemoryManager*) \
 {return 0;}
 
 

@@ -187,7 +187,7 @@ XMLUCS4Transcoder::transcodeTo( const   XMLCh* const    srcData
                                 ,       XMLByte* const  toFill
                                 , const unsigned int    maxBytes
                                 ,       unsigned int&   charsEaten
-                                , const UnRepOpts       options)
+                                , const UnRepOpts)
 {
     // If debugging, make sure that the block size is legal
     #if defined(XERCES_DEBUG)
@@ -279,7 +279,7 @@ XMLUCS4Transcoder::transcodeTo( const   XMLCh* const    srcData
 }
 
 
-bool XMLUCS4Transcoder::canTranscodeTo(const unsigned int toCheck) const
+bool XMLUCS4Transcoder::canTranscodeTo(const unsigned int) const
 {
     // We can handle anything
     return true;

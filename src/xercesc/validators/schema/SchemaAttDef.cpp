@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.12  2003/12/24 17:42:03  knoaman
  * Misc. PSVI updates
  *
@@ -154,8 +157,8 @@ SchemaAttDef::SchemaAttDef( const XMLCh* const           prefix
     XMLAttDef(type, defType, manager)
     , fElemId(XMLElementDecl::fgInvalidElemId)
     , fDatatypeValidator(0)
-    , fMemberTypeValidator(0)
     , fAnyDatatypeValidator(0)
+    , fMemberTypeValidator(0)    
     , fNamespaceList(0)
     , fValidity(PSVIDefs::UNKNOWN)
     , fValidation(PSVIDefs::NONE)

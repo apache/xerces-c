@@ -83,14 +83,14 @@ XSDElementNSImpl::XSDElementNSImpl(DOMDocument *ownerDoc,
     , fLineNo(lineNo)
     , fColumnNo(columnNo)
 {
-};
+}
 
 XSDElementNSImpl::XSDElementNSImpl(const XSDElementNSImpl &other, bool deep) :
     DOMElementNSImpl(other, deep)
 {
     this->fLineNo = other.fLineNo;
     this->fColumnNo =other.fColumnNo;
-};
+}
 
 DOMNode * XSDElementNSImpl::cloneNode(bool deep) const {
     DOMNode* newNode = new (getOwnerDocument()) XSDElementNSImpl(*this, deep);

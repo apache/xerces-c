@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.16  2004/01/13 21:18:18  peiyongz
  * revert code back to previous version
  *
@@ -320,7 +323,7 @@ int DateTimeValidator::compareValues(const XMLNumber* const lValue
  */
 int DateTimeValidator::compareDates(const XMLDateTime* const date1
                                   , const XMLDateTime* const date2
-                                  , bool                     strict)
+                                  , bool)
 {
     return XMLDateTime::compare(date1, date2);
 }
@@ -361,7 +364,7 @@ void DateTimeValidator::setMinExclusive(const XMLCh* const value)
     fMinExclusive = parse(value, fMemoryManager);
 }
 
-void DateTimeValidator::setEnumeration(MemoryManager* const manager)
+void DateTimeValidator::setEnumeration(MemoryManager* const)
 {
 // to do: do we need to check against base value space???
 

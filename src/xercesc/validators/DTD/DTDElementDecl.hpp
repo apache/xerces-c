@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2004/01/29 11:52:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/12/12 18:35:44  peiyongz
  * getObjectType()
  *
@@ -252,6 +255,11 @@ private :
     XMLContentModel* makeContentModel() ;
     XMLCh* formatContentModel () const ;
 
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DTDElementDecl(const DTDElementDecl &);
+    DTDElementDecl& operator = (const  DTDElementDecl&);
 
     // -----------------------------------------------------------------------
     //  Private data members

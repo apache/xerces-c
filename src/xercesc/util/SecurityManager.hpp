@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.2  2003/04/22 12:53:38  neilg
  * change const static member to an enum to make MSVC happy
  *
@@ -126,8 +129,8 @@ public:
     //@{
     /** Default constructor */
     SecurityManager()
-    {
-        fEntityExpansionLimit = ENTITY_EXPANSION_LIMIT; 
+        : fEntityExpansionLimit(ENTITY_EXPANSION_LIMIT)
+    {        
     }
 
     /** Destructor */

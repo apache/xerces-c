@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.4  2003/05/16 21:43:20  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -154,6 +157,12 @@ private :
     //      unary operation. We own it.
     // -----------------------------------------------------------------------
     CMNode*     fChild;
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    CMUnaryOp(const CMUnaryOp&);
+    CMUnaryOp& operator=(const CMUnaryOp&);
 };
 
 XERCES_CPP_NAMESPACE_END

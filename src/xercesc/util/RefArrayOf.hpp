@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.5  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -165,7 +168,7 @@ private :
 //  An enumerator for a reference array. It derives from the basic enumerator
 //  class, so that value vectors can be generically enumerated.
 //
-template <class TElem> class RefArrayEnumerator : public XMLEnumerator<TElem>
+template <class TElem> class RefArrayEnumerator : public XMLEnumerator<TElem>, public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -188,6 +191,12 @@ public :
 
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    RefArrayEnumerator(const RefArrayEnumerator<TElem>&);
+    RefArrayEnumerator<TElem>& operator=(const RefArrayEnumerator<TElem>&);
+
     // -----------------------------------------------------------------------
     //  Data Members
     //

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/01/29 11:46:32  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/12/01 23:23:26  neilg
  * fix for bug 25118; thanks to Jeroen Witmond
  *
@@ -444,6 +447,16 @@ public:
         , const XMLCh* const    notationName
     );
     //@}
+
+    HandlerBase() {};
+    virtual ~HandlerBase() {};
+
+private:
+	// -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    HandlerBase(const HandlerBase&);
+    HandlerBase& operator=(const HandlerBase&);
 };
 
 

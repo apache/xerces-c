@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.11  2003/12/24 15:24:13  cargilld
  * More updates to memory management so that the static memory manager.
  *
@@ -488,6 +491,9 @@ protected :
     // -----------------------------------------------------------------------
     //  Protected helper methods
     // -----------------------------------------------------------------------
+    // As the body of this function is commented out it could be removed.
+    // However, currently all calls to it are guarded by #if defined(XERCES_DEBUG)
+    // so will leave it for now.
     void checkBlockSize(const unsigned int toCheck);
 
 

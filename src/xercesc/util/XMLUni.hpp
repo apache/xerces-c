@@ -295,6 +295,12 @@ public :
 
     // Locale
     static const char  fgXercescDefaultLocale[];
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLUni();
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.2  2003/11/06 15:30:04  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -228,6 +231,12 @@ public:
 	     */
 	     VC_FIXED                  = 2
     };
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XSConstants();
 };
 
 XERCES_CPP_NAMESPACE_END

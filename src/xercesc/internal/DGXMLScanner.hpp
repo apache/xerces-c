@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.11  2003/11/24 05:09:39  neilg
  * implement new, statless, method for detecting duplicate attributes
  *
@@ -216,7 +219,7 @@ private :
         , const XMLCh *const        attrName
         ,       XMLBuffer&          toFill
     );
-    bool scanContent(const bool extEntity);
+    bool scanContent();
     void scanEndTag(bool& gotData);
     bool scanStartTag(bool& gotData);
     bool scanStartTagNS(bool& gotData);

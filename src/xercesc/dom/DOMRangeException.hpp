@@ -153,6 +153,11 @@ public:
 
     //@}
 
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMRangeException & operator = (const DOMRangeException &);
 };
 
 XERCES_CPP_NAMESPACE_END

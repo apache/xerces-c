@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/01/29 11:52:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/12/17 00:18:40  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -163,6 +166,12 @@ public :
     DECL_XSERIALIZABLE(DTDAttDef)
 
 private :
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DTDAttDef(const DTDAttDef &);
+    DTDAttDef& operator = (const  DTDAttDef&);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //

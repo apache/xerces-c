@@ -742,6 +742,11 @@ public :
 	static inline size_t alignPointerForNewBlockAllocation(size_t ptrSize);
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLPlatformUtils();
+
     /** @name Private static methods */
     //@{
 

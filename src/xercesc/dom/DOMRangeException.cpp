@@ -65,28 +65,28 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 DOMRangeException::DOMRangeException()
 : DOMException()
+, code((RangeExceptionCode) 0)
 {
-        code = (RangeExceptionCode) 0;
-};
+}
 
 
 DOMRangeException::DOMRangeException(RangeExceptionCode exCode, const XMLCh* message)
 : DOMException(exCode, message)
+, code(exCode)
 {
-   code = exCode;
-};
+}
 
 
 DOMRangeException::DOMRangeException(const DOMRangeException &other)
 : DOMException(other)
+, code(other.code)
 {
-        code = other.code;
-};
+}
 
 
 DOMRangeException::~DOMRangeException()
 {
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

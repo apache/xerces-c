@@ -69,7 +69,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  * designed to produce hash values for XMLCh* strings.  Any hasher inheriting
  * from <code>HashBase</code> may be specified when the RefHashTableOf hashtable is constructed.
  */
- class XMLUTIL_EXPORT HashBase : public XMemory
+class XMLUTIL_EXPORT HashBase : public XMemory
 {
 
 public:
@@ -93,6 +93,16 @@ public:
       */
 	virtual bool equals(const void *const key1, const void *const key2) = 0;
 
+    virtual ~HashBase() {};
+
+    HashBase() {};
+
+private:
+	// -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    HashBase(const HashBase&);
+    HashBase& operator=(const HashBase&);    
 };
 
 XERCES_CPP_NAMESPACE_END

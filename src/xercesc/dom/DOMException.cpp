@@ -64,29 +64,28 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 DOMException::DOMException()
-: msg(0)
-{
-        code = (ExceptionCode) 0;
-};
+:  code((ExceptionCode) 0)
+,  msg(0)
+{      
+}
 
 
 DOMException::DOMException(short exCode, const XMLCh *message)
-: msg(message)
-{
-   code = (ExceptionCode) exCode;
-};
+:  code ((ExceptionCode) exCode)
+,  msg(message)
+{  
+}
 
 
 DOMException::DOMException(const DOMException &other)
-: msg(other.msg)
+:  code(other.code)
+,  msg(other.msg)
 {
-        code = other.code;
-};
-
+}
 
 DOMException::~DOMException()
 {
-};
+}
 
 XERCES_CPP_NAMESPACE_END
 

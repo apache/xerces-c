@@ -1478,6 +1478,12 @@ private :
     void initialize();
     void cleanUp();
 
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    AbstractDOMParser(const AbstractDOMParser&);
+    AbstractDOMParser& operator=(const AbstractDOMParser&);
+
 protected:
     // -----------------------------------------------------------------------
     //  Protected data members

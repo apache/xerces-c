@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/01/29 11:48:47  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.3  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -106,6 +109,15 @@ public :
     virtual bool hasMoreElements() const = 0;
     virtual TElem& nextElement() = 0;
     virtual void Reset() = 0;
+
+    XMLEnumerator() {};
+
+private:
+	// -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XMLEnumerator(const XMLEnumerator<TElem>&);
+    XMLEnumerator<TElem>& operator=(const XMLEnumerator<TElem>&);    
 };
 
 XERCES_CPP_NAMESPACE_END

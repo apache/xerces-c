@@ -123,7 +123,11 @@ public:
                                      const XMLCh *arg);
     virtual void         setData(const XMLCh *data);
 
-
+private:
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMCDATASectionImpl & operator = (const DOMCDATASectionImpl &);
 };
 
 XERCES_CPP_NAMESPACE_END

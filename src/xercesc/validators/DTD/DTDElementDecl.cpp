@@ -136,9 +136,9 @@ DTDElementDecl::~DTDElementDecl()
 //  The virtual element decl interface
 // ---------------------------------------------------------------------------
 XMLAttDef* DTDElementDecl::findAttr(const   XMLCh* const    qName
-                                    , const unsigned int    uriId
-                                    , const XMLCh* const    baseName
-                                    , const XMLCh* const    prefix
+                                    , const unsigned int
+                                    , const XMLCh* const
+                                    , const XMLCh* const
                                     , const LookupOpts      options
                                     ,       bool&           wasAdded) const
 {

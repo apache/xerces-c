@@ -164,7 +164,7 @@ DOMNormalizer::DOMNormalizer(MemoryManager* const manager)
     , fMemoryManager(manager)
 {
     fNSScope = new (fMemoryManager) InScopeNamespaces(fMemoryManager);
-};
+}
 
 DOMNormalizer::~DOMNormalizer() {
     delete fNSScope;
@@ -331,8 +331,7 @@ void DOMNormalizer::namespaceFixUp(DOMElementImpl *ele) const {
     // hp aCC complains this i is a redefinition of the i on line 283
     for(int j = 0; j < len; j++) {
         DOMAttr *at = (DOMAttr*)attrMap->item(j);
-        const XMLCh *uri = at->getNamespaceURI();
-        const XMLCh *value = at->getNodeValue();
+        const XMLCh *uri = at->getNamespaceURI();        
         const XMLCh* prefix = at->getPrefix();
 
         if(!XMLString::equals(XMLUni::fgXMLNSURIName, uri)) {

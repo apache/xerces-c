@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.7  2004/01/29 11:46:29  cargilld
+  * Code cleanup changes to get rid of various compiler diagnostic messages.
+  *
   * Revision 1.6  2003/11/28 05:14:34  neilg
   * update XMLDocumentHandler to enable stateless passing of type information for elements.  Note that this is as yet unimplemented.
   *
@@ -365,8 +368,8 @@ public:
       */
     virtual void elementTypeInfo
     (
-        const   XMLCh* const    typeName
-        , const XMLCh* const    typeURI
+        const   XMLCh* const
+        , const XMLCh* const
     ) { /* non pure virtual to permit backward compatibility of implementations.  */  };
     //@}
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.12  2003/12/31 10:38:00  amassari
  * Made virtual function checkAdditionalFacet 'const', so that it matches the declaration in a derived class
  *
@@ -279,6 +282,12 @@ private:
     void assignFacet(MemoryManager* const manager);
 
     void inspectFacet(MemoryManager* const manager);
+
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    AbstractStringValidator(const AbstractStringValidator&);
+    AbstractStringValidator& operator=(const AbstractStringValidator&);
 
     // -----------------------------------------------------------------------
     //  Private data members

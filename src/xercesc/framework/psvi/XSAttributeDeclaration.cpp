@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/01/29 11:46:30  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.11  2004/01/06 03:55:26  knoaman
  * Various PSVI fixes.
  *
@@ -119,8 +122,9 @@ XSAttributeDeclaration::XSAttributeDeclaration(SchemaAttDef* const           att
     , fAttDef(attDef)
     , fTypeDefinition(typeDef)
     , fAnnotation(annot)
+    , fId(0)
     , fScope(scope)
-    , fEnclosingCTDefinition(enclosingCTDefinition)    
+    , fEnclosingCTDefinition(enclosingCTDefinition)        
 {
 }
 

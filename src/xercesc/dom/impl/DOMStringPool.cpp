@@ -104,23 +104,24 @@ static DOMStringPoolEntry *createSPE(const XMLCh *str, DOMDocumentImpl *doc)
 
 
 DOMStringPool::DOMStringPool(int hashTableSize, DOMDocumentImpl *doc)
+:   fDoc(doc)
+,   fHashTableSize(hashTableSize)
 {
-    fDoc           = doc;          // needed to get access to the doc's storage allocator.
-    fHashTableSize = hashTableSize;
+    // needed to get access to the doc's storage allocator.
 
     //fHashTable = new (fDoc) DOMStringPoolEntry *[hashTableSize];
     void* p = doc->allocate(sizeof(DOMStringPoolEntry*) * hashTableSize);
     fHashTable = (DOMStringPoolEntry**) p;
     for (int i=0; i<fHashTableSize; i++)
         fHashTable[i] = 0;
-};
+}
 
 
 //  Destructor.    Nothing to do, since storage all belongs to the document.
 //
 DOMStringPool::~DOMStringPool()
 {
-};
+}
 
 
 const XMLCh *DOMStringPool::getPooledString(const XMLCh *in)
@@ -140,7 +141,7 @@ const XMLCh *DOMStringPool::getPooledString(const XMLCh *in)
     // This string hasn't been seen before.  Add it to the pool.
     *pspe = spe = createSPE(in, fDoc);
     return spe->fString;
-};
+}
 
 
 // -----------------------------------------------------------------------

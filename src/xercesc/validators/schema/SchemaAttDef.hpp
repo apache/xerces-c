@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.11  2003/12/24 17:42:03  knoaman
  * Misc. PSVI updates
  *
@@ -312,6 +315,12 @@ public :
     DECL_XSERIALIZABLE(SchemaAttDef)
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SchemaAttDef(const SchemaAttDef&);
+    SchemaAttDef& operator=(const SchemaAttDef&);
+
     // -----------------------------------------------------------------------
     //  Private data members
     //

@@ -171,6 +171,12 @@ public:
 
 private:
     // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SchemaInfo(const SchemaInfo&);
+    SchemaInfo& operator=(const SchemaInfo&);
+
+    // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
     void clearTopLevelComponents();

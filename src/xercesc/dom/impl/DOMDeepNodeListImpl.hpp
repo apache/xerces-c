@@ -105,6 +105,11 @@ public:
 
 private:
     DOMNode*          nextMatchingElementAfter(DOMNode *current);
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMDeepNodeListImpl(const DOMDeepNodeListImpl &);
+    DOMDeepNodeListImpl & operator = (const DOMDeepNodeListImpl &);   
 };
 
 XERCES_CPP_NAMESPACE_END

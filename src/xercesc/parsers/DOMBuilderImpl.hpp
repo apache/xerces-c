@@ -903,6 +903,12 @@ private :
     DOMBuilderFilter*           fFilter;
     bool                        fCharsetOverridesXMLEncoding;
     bool                        fUserAdoptsDocument;
+
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMBuilderImpl(const DOMBuilderImpl &);
+    DOMBuilderImpl & operator = (const DOMBuilderImpl &);
 };
 
 

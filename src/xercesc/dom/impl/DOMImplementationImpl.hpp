@@ -82,8 +82,8 @@ class DOMImplementationImpl: public XMemory,
                              public DOMImplementationSource
 {
 private:
-    DOMImplementationImpl(const DOMImplementationImpl & other) {};
-    DOMImplementationImpl & operator = (const DOMImplementationImpl & other) {return *this;};
+    DOMImplementationImpl(const DOMImplementationImpl &);
+    DOMImplementationImpl & operator = (const DOMImplementationImpl &);
 protected:
     DOMImplementationImpl() {};
 public:

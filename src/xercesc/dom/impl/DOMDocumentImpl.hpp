@@ -327,6 +327,12 @@ private:
     //Internal helper functions
     virtual DOMNode*             importNode(DOMNode *source, bool deep, bool cloningNode);
 
+    // -----------------------------------------------------------------------
+    // Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DOMDocumentImpl(const DOMDocumentImpl &);
+    DOMDocumentImpl & operator = (const DOMDocumentImpl &);
+
 private:
     // -----------------------------------------------------------------------
     //  data

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/01/29 11:52:31  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.6  2003/11/10 21:54:51  neilg
  * implementation for new stateless means of traversing attribute definition lists
  *
@@ -182,6 +185,12 @@ public :
 	SchemaAttDefList(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    SchemaAttDefList(const SchemaAttDefList&);
+    SchemaAttDefList& operator=(const SchemaAttDefList&);
+
     void addAttDef(SchemaAttDef *toAdd);
 
     // -----------------------------------------------------------------------

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.8  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -154,10 +157,10 @@ protected:
 private:
 
     // -----------------------------------------------------------------------
-    //  Private data members
-    //
-    //     Nil
+    //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
+    Base64BinaryDatatypeValidator(const Base64BinaryDatatypeValidator&);
+    Base64BinaryDatatypeValidator& operator=(const Base64BinaryDatatypeValidator&); 
 
 };
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/01/29 11:48:46  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.6  2003/09/25 22:23:25  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -186,6 +189,9 @@ public:
     DECL_XSERIALIZABLE(KVStringPair)
 
 private :
+    // unimplemented:
+       
+    KVStringPair& operator=(const KVStringPair&);
     // -----------------------------------------------------------------------
     //  Private data members
     //

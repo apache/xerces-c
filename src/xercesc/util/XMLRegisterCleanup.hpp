@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2004/01/29 11:48:47  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.2  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -180,12 +183,11 @@ public :
 	}
 
 private:
-
-    //
-    // unsupported ctor and operator
-    //
-	XMLRegisterCleanup(const XMLRegisterCleanup&)
-	{}
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+	XMLRegisterCleanup(const XMLRegisterCleanup&);
+    XMLRegisterCleanup& operator=(const XMLRegisterCleanup&);
 
 	// This is the cleanup function to be called
 	XMLCleanupFn m_cleanupFn;

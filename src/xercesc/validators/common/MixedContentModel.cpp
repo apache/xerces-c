@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/01/29 11:51:21  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.9  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -265,7 +268,7 @@ bool MixedContentModel::hasDups() const
 int
 MixedContentModel::validateContent( QName** const         children
                                   , const unsigned int    childCount
-                                  , const unsigned int    emptyNamespaceId) const
+                                  , const unsigned int) const
 {
     // must match order
     if (fOrdered) {
@@ -372,7 +375,7 @@ MixedContentModel::validateContent( QName** const         children
 
 int MixedContentModel::validateContentSpecial(QName** const           children
                                             , const unsigned int      childCount
-                                            , const unsigned int      emptyNamespaceId
+                                            , const unsigned int
                                             , GrammarResolver*  const pGrammarResolver
                                             , XMLStringPool*    const pStringPool) const
 {

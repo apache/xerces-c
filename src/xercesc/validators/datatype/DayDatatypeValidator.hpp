@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2004/01/29 11:51:22  cargilld
+ * Code cleanup changes to get rid of various compiler diagnostic messages.
+ *
  * Revision 1.7  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -140,6 +143,13 @@ protected:
     // -----------------------------------------------------------------------
     virtual XMLDateTime*          parse(const XMLCh* const, MemoryManager* const manager);
     virtual void                  parse(XMLDateTime* const);
+
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    DayDatatypeValidator(const DayDatatypeValidator&);
+    DayDatatypeValidator& operator=(const DayDatatypeValidator&);
 };
 
 XERCES_CPP_NAMESPACE_END

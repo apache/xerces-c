@@ -315,6 +315,12 @@ protected :
 
 private:
     // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    XSDDOMParser(const XSDDOMParser&);
+    XSDDOMParser& operator=(const XSDDOMParser&);
+
+    // -----------------------------------------------------------------------
     //  Private Helper methods
     // -----------------------------------------------------------------------
     void startAnnotation
