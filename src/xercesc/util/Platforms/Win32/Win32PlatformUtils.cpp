@@ -772,7 +772,7 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
                                 , const void* const newValue
                                 , const void* const toCompare)
 {
-#if defined _WIN64
+#if defined WIN64
     return ::InterlockedCompareExchangePointer(toFill, (void*)newValue, (void*)toCompare);
 #else
 
