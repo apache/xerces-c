@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/02/04 18:46:33  tng
+ * Memory leak fix in samples / test cases.
+ *
  * Revision 1.8  2002/02/01 22:34:31  peiyongz
  * sane_include
  *
@@ -121,7 +124,7 @@ int main(int argC, char* argV[])
         cerr << "Error during Xerces-c Initialization.\n"
              << "  Exception message:"
              << pMsg;
-        delete pMsg;
+        delete [] pMsg;
         return 1;
     }
 
