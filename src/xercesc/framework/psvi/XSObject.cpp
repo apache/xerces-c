@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/05/05 14:50:41  peiyongz
+ * remove inline
+ *
  * Revision 1.9  2004/05/04 19:02:40  cargilld
  * Enable IDs to work on all kinds of schema components
  *
@@ -137,7 +140,7 @@ unsigned int XSObject::getId() const
     return fId;
 }
 
-inline void XSObject::setId(unsigned int id)
+void XSObject::setId(unsigned int id)
 {
     fId = id;
 }
