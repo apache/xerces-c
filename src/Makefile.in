@@ -204,12 +204,10 @@ copy:: lib samples
 	-${MKDIR} ${BINTARGETDIR}/bin
 	-${MKDIR} ${BINTARGETDIR}/lib
 ifeq (${TRANSCODER},ICU)
-	echo -${MKDIR} ${BINTARGETDIR}/lib/icu
-	echo -${MKDIR} ${BINTARGETDIR}/lib/icu/data
-	echo -${MKDIR} ${BINTARGETDIR}/include/icu
+	echo -${MKDIR} ${BINTARGETDIR}/include/unicode
 endif
 ifeq (${MESSAGELOADER},ICU)
-	echo -${MKDIR} ${BINTARGETDIR}/include/icu
+	echo -${MKDIR} ${BINTARGETDIR}/include/unicode
 endif
 	-${MKDIR} ${BINTARGETDIR}/include
 	-${MKDIR} ${BINTARGETDIR}/include/sax
@@ -242,13 +240,13 @@ endif
 	-${CP} -Rf ${XERCESCROOT}/src/parsers/*.hpp ${BINTARGETDIR}/include/parsers
 	-${CP} -Rf ${XERCESCROOT}/src/util/*.hpp ${BINTARGETDIR}/include/util
 	-${CP} -Rf ${XERCESCROOT}/src/util/*.c ${BINTARGETDIR}/include/util
-	-${CP} -Rf ${ICUROOT}/include/* ${BINTARGETDIR}/include/icu
+	-${CP} -Rf ${ICUROOT}/include/* ${BINTARGETDIR}/include/unicode
 
 	@echo Populate the binary output directory
 	@echo Copying binary outputs ...
 	-${CP} -Rf ${XERCESCROOT}/bin/* ${BINTARGETDIR}/bin
 	-${CP} -f ${ICUROOT}/source/tools/makeconv/makeconv ${BINTARGETDIR}/bin
-	-${CP} -f ${ICUROOT}/lib/libicu-uc.* ${BINTARGETDIR}/lib
+	-${CP} -f ${ICUROOT}/lib/libicuuc.* ${BINTARGETDIR}/lib
 	-${CP} -f ${XERCESCROOT}/lib/*.a ${BINTARGETDIR}/lib
 	-${CP} -f ${XERCESCROOT}/lib/*.so ${BINTARGETDIR}/lib
 	-${CP} -f ${XERCESCROOT}/lib/*.sl ${BINTARGETDIR}/lib
@@ -261,10 +259,6 @@ ifeq (${PLATFORM},AIX)
 endif
 endif
 	-{RM} -rf ${BINTARGETDIR}/bin/obj
-
-	@echo Copy the locale files
-	-${CP} -f ${ICUROOT}/data/*.cnv ${BINTARGETDIR}/lib/icu/data/
-	-${CP} -f ${ICUROOT}/data/convrtrs.txt ${BINTARGETDIR}/lib/icu/data/
 
 	@echo Populate the samples directory
 	@echo Copying sample files ...

@@ -104,9 +104,9 @@
             <ol>
                 <li><em>ICU shared library file</em>:<br></br>
                     icuuc.dll for Windows NT/95/98, or<br></br>
-                    libicu-uc.a for AIX, or<br></br>
-                    libicu-uc.so for Solaris/Linux, or<br></br>
-                    libicu-uc.sl for HP-UX.</li>
+                    libicuuc.a for AIX, or<br></br>
+                    libicuuc.so for Solaris/Linux, or<br></br>
+                    libicuuc.sl for HP-UX.</li>
 
                 <li><em>ICU converter data shared library file:</em><br></br>
                     icudata.dll for Windows NT/95/98, or<br></br>

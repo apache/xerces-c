@@ -75,7 +75,7 @@ export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
 
       <p>If you are using the enhanced version of this parser from IBM, you will
         need to put in two additional DLLs. In the Windows build these are <code>icuuc.dll</code> and <code>icudata.dll</code> which must be available from your PATH settings. On UNIX, these
-        libraries are called <code>libicu-uc.so</code> and <code>libicudata.so</code> (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX) which must be available from your library search path.</p>
+        libraries are called <code>libicuuc.so</code> and <code>libicudata.so</code> (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX) which must be available from your library search path.</p>
 
     </a>
   </faq>

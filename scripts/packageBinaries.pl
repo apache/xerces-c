@@ -205,7 +205,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         util/Platforms/Solaris
         util/Platforms/Tandem
         util/Platforms/Win32
-	util/regx
+        util/regx
         util/Transcoders
         util/Transcoders/ICU
         util/Transcoders/Iconv
@@ -257,17 +257,13 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
         # Copy the ICU dlls and libs
-        psystem("cp -fv $ICUROOT/bin/$buildmode/icuuc.dll $targetdir/bin");
-        if (length($ICU_DATA) > 0) {
-            psystem("cp -fv $ICUROOT/data/icudata.dll $targetdir/bin");
-            psystem("cp -fv $ICUROOT/data/icudata.lib $targetdir/lib");
-        }
-        else {
-        psystem("cp -fv $ICUROOT/bin/$buildmode/icudata.dll $targetdir/bin");
-            psystem("cp -fv $ICUROOT/bin/$buildmode/icudata.lib $targetdir/lib");
-        }
+        psystem("cp -fv $ICUROOT/bin/icuuc18.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/bin/icuuc18d.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/source/data/icudt18l.dll $targetdir/bin");
+        psystem("cp -fv $ICUROOT/source/data/icudata.lib $targetdir/lib");
 
-        psystem("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
+        psystem("cp -fv $ICUROOT/lib/icuuc.lib $targetdir/lib");
+        psystem("cp -fv $ICUROOT/lib/icuucd.lib $targetdir/lib");
     }
     psystem("cp -fv $BUILDDIR/xerces-c_*.lib $targetdir/lib");
     if ($buildmode ne "Debug") {
@@ -454,7 +450,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         psystem ("mkdir $targetdir/include/unicode");
     }
     psystem ("mkdir $targetdir/include/sax");
-	psystem ("mkdir $targetdir/include/sax2");
+    psystem ("mkdir $targetdir/include/sax2");
     psystem ("mkdir $targetdir/include/framework");
     psystem ("mkdir $targetdir/include/internal");
     psystem ("mkdir $targetdir/include/parsers");
@@ -492,7 +488,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/samples/SAXCount");
     psystem ("mkdir $targetdir/samples/SAX2Count");
     psystem ("mkdir $targetdir/samples/SAXPrint");
-	psystem ("mkdir $targetdir/samples/SAX2Print");
+    psystem ("mkdir $targetdir/samples/SAX2Print");
     psystem ("mkdir $targetdir/samples/DOMCount");
     psystem ("mkdir $targetdir/samples/DOMPrint");
     psystem ("mkdir $targetdir/samples/Redirect");
@@ -544,6 +540,20 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         $ENV{'ICUROOT'} = $ENV{'XMLINSTALL'};
     }
 
+    # Copy the ICU libs for the source build
+    #
+    if (length($ICUROOT) > 0) {
+      if ($platform =~ m/AIX/i) {
+          psystem("ln -s $ICUROOT/source/data/libicudt18b.a $ICUROOT/lib/libicudata.a");
+      }
+      elsif ($platform =~ m/HP-UX/i) {
+          psystem("ln -s $ICUROOT/source/data/libicudt18b.sl $ICUROOT/lib/libicudata.sl");
+      }
+      else {
+          psystem("ln -s $ICUROOT/source/data/libicudt18b.so $ICUROOT/lib/libicudata.so");
+      }
+    }
+
     # make the source files
     print("\n\nBuild the xerces-c library ...\n");
     pchdir ("$XERCESCROOT/src");
@@ -564,8 +574,17 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     #   the eventual binary packaging, even though we are doing it in the build directory.
     #
     if (length($ICUROOT) > 0) {
-	psystem("cp -f $ICUROOT/lib/libicu-uc.* $XERCESCROOT/lib");
-	psystem("cp -f $ICUROOT/data/libicudata.* $XERCESCROOT/lib");
+	psystem("cp -f $ICUROOT/lib/libicuuc.* $XERCESCROOT/lib");
+	psystem("cp -f $ICUROOT/source/data/libicudt18b.* $XERCESCROOT/lib");
+      if ($platform =~ m/AIX/i) {
+          psystem("ln -s libicudt18b.a $XERCESCROOT/lib/libicudata.a");
+      }
+      elsif ($platform =~ m/HP-UX/i) {
+          psystem("ln -s libicudt18b.sl $XERCESCROOT/lib/libicudata.sl");
+      }
+      else {
+          psystem("ln -s libicudt18b.so $XERCESCROOT/lib/libicudata.so");
+      }
     }
 
     # Now build the samples
@@ -639,13 +658,6 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     print ("\n\nCopying binary outputs ...\n");
     psystem("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
 
-
-
-    #if (length($ICUROOT) > 0) {
-    #    psystem("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
-    #    psystem("cp -f $ICUROOT/data/libicudata.* $targetdir/lib");
-    #}
-
     psystem("cp -f $XERCESCROOT/lib/*.a $targetdir/lib");
     psystem("cp -f $XERCESCROOT/lib/*.so $targetdir/lib");
     psystem("cp -f $XERCESCROOT/lib/*.sl $targetdir/lib");
@@ -666,7 +678,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem("rm -f $targetdir/samples/SAX2Count/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
     psystem("rm -f $targetdir/samples/SAXPrint/Makefile");
-	psystem("cp -Rf $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
+    psystem("cp -Rf $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
     psystem("rm -f $targetdir/samples/SAX2Print/Makefile");
     psystem("cp -Rf $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
     psystem("rm -f $targetdir/samples/DOMCount/Makefile");
