@@ -103,6 +103,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("mkdir $targetdir");
     psystem ("mkdir $targetdir/bin");
     psystem ("mkdir $targetdir/lib");
+    psystem ("mkdir $targetdir/etc");
     psystem ("mkdir $targetdir/include");
     psystem ("mkdir $targetdir/samples");
     psystem ("mkdir $targetdir/samples/Projects");
@@ -284,6 +285,11 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         psystem("cp -fv $DEBUGBUILDDIR/xerces-c_*D.lib $targetdir/lib");
         psystem("cp -fv $DEBUGBUILDDIR/xerces*D.dll $targetdir/bin");
     }
+
+
+    # Populate the etc output directory like config.status and the map file
+    print ("\n\nCopying misc output to etc ...\n");
+    psystem("cp -fv $XERCESCROOT/Build/Win32/VC6/Release/obj/*.map $targetdir/etc");
 
 
     # Populate the samples directory
@@ -690,9 +696,10 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
     psystem("rm -rf $targetdir/bin/obj");
 
-    # Populate the etc output directory
+    # Populate the etc output directory like config.status and the map file
     print ("\n\nCopying misc output to etc ...\n");
     psystem("cp -Rf $XERCESCROOT/src/config.status $targetdir/etc");
+    psystem("cp -Rf $XERCESCROOT/obj/*.map $targetdir/etc");
 
     # Populate the samples directory
     print ("\n\nCopying sample files ...\n");
