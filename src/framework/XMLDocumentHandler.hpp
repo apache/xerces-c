@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.6  2000/02/16 20:29:20  aruna1
+  * API Doc++ summary changes in
+  *
   * Revision 1.5  2000/02/16 19:48:56  roddey
   * More documentation updates
   *
@@ -90,7 +93,9 @@ class XMLEntityDecl;
 /**
   * This abstract class provides the interface for the scanner to return
   * XML document information up to the parser as it scans through the
-  * document. The interface is very similar to org.sax.DocumentHandler, but
+  * document. 
+  * 
+  * The interface is very similar to org.sax.DocumentHandler, but
   * has some extra methods required to get all the data out.
   */
 class XMLPARSER_EXPORT XMLDocumentHandler
