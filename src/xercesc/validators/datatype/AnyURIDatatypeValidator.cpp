@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2004/01/12 23:02:18  neilg
+ * remove unused static member
+ *
  * Revision 1.10  2003/12/17 00:18:38  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -132,19 +135,6 @@
 #include <xercesc/util/OutOfMemoryException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
-
-//
-//http://www.template.com
-//
-static const XMLCh BASE_URI[] =
-{
-    chLatin_h, chLatin_t, chLatin_t, chLatin_p,
-    chColon, chForwardSlash, chForwardSlash,
-    chLatin_w, chLatin_w, chLatin_w, chPeriod,
-    chLatin_t, chLatin_e, chLatin_m, chLatin_p, chLatin_l,
-    chLatin_a, chLatin_t, chLatin_e, chPeriod,
-    chLatin_c, chLatin_o, chLatin_m, chNull
-};
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
