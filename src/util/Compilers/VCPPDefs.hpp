@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/05/28 20:59:21  tng
+ * IDOM: move operator new[] to VCPPDefs as only Windows VCPP requires its presense
+ *
  * Revision 1.9  2001/05/23 20:35:03  tng
  * IDOM: Move operator delete to VCPPDefs.hpp as only VCPP needs a matching delete operator.
  *
@@ -163,12 +166,23 @@ const char* const Xerces_DLLName = "xerces-c_" Xerces_DLLVersionStr;
 #endif
 
 // ---------------------------------------------------------------------------
-//  For IDOM: define a dummy delete to get rid of compiler warning:
+//  For IDOM: define a dummy delete to get rid of compiler warning C4291:
 //    no matching operator delete found; memory will not be freed if initialization throws an exception
 // ---------------------------------------------------------------------------
 class IDOM_Document;
 inline void operator delete(void* ptr, IDOM_Document *doc)
 {
     return;
+}
+
+// ---------------------------------------------------------------------------
+//  For IDOM: IDOM has overloaded the operator new[], VCPP is confused and gives
+//     error C2660: 'new[]' : function does not take 1 parameters
+//     thus need to define the global operator new[]
+// ---------------------------------------------------------------------------
+//define the global one
+inline void * operator new[](size_t amt)
+{
+    return ::operator new(amt);
 }
 

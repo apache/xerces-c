@@ -307,10 +307,4 @@ inline void * operator new[](size_t amt, IDOM_Document *doc)
     return p;
 }
 
-//define the global one
-inline void * operator new[](size_t amt)
-{
-    return ::operator new(amt);
-}
-
 #endif
