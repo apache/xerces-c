@@ -952,28 +952,6 @@ strictErrorChecking) = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>DOMErrorHandler*</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>getErrorHandler() const
-= 0;</font></font></td>
-</tr>
-
-<tr ALIGN=LEFT VALIGN=TOP>
-<td></td>
-
-<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>setErrorHandler(DOMErrorHandler*
-const handler) = 0;</font></font></td>
-</tr>
-
-<tr ALIGN=LEFT VALIGN=TOP>
-<td></td>
-
-<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
-
 <td><font face="Courier New,Courier"><font size=-1>DOMNode*</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>renameNode(DOMNode*
@@ -1007,32 +985,10 @@ n, const XMLCh* namespaceURI, const XMLCh* name) = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>bool</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>DOMConfiguration*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>canSetNormalizationFeature(const
+<td><font face="Courier New,Courier"><font size=-1>getDOMConfiguration(const
 XMLCh* const name, bool state) const = 0;</font></font></td>
-</tr>
-
-<tr ALIGN=LEFT VALIGN=TOP>
-<td></td>
-
-<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>setNormalizationFeature(const
-XMLCh* const name, bool state) = 0;</font></font></td>
-</tr>
-
-<tr ALIGN=LEFT VALIGN=TOP>
-<td></td>
-
-<td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>bool</font></font></td>
-
-<td><font face="Courier New,Courier"><font size=-1>getNormalizationFeature(const
-XMLCh* const name) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>

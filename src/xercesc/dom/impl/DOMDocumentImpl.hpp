@@ -90,6 +90,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 class DOMAttrImpl;
 class DOMCDATASectionImpl;
 class DOMCommentImpl;
+class DOMConfiguration;
 class DOMDeepNodeListImpl;
 class DOMDocumentFragmentImpl;
 class DOMDocumentTypeImpl;
@@ -259,14 +260,9 @@ public:
     virtual void                 setDocumentURI(const XMLCh* documentURI);
     virtual bool                 getStrictErrorChecking() const;
     virtual void                 setStrictErrorChecking(bool strictErrorChecking);
-    virtual DOMErrorHandler*     getErrorHandler() const;
-    virtual void                 setErrorHandler(DOMErrorHandler* const handler);
     virtual DOMNode*             adoptNode(DOMNode* source);
     virtual void                 normalizeDocument();
-    virtual bool                 canSetNormalizationFeature(const XMLCh* const name, bool state) const;
-    virtual void                 setNormalizationFeature(const XMLCh* const name, bool state);
-    virtual bool                 getNormalizationFeature(const XMLCh* const name) const;
-
+    virtual DOMConfiguration*    getDOMConfiguration() const;
 
     // helper functions to prevent storing userdata pointers on every node.
     void*                        setUserData(DOMNodeImpl* n,
@@ -331,7 +327,8 @@ private:
     bool                  fStandalone;
     const XMLCh*          fVersion;
     const XMLCh*          fDocumentURI;
-
+    DOMConfiguration*     fDOMConfiguration;
+    
     RefHashTableOf<DOMNodeUserDataTable>* fUserDataTable;
 
 

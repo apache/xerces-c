@@ -68,6 +68,7 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+class DOMConfiguration;
 class DOMDocumentType;
 class DOMElement;
 class DOMDocumentFragment;
@@ -83,7 +84,6 @@ class DOMNodeList;
 class DOMNotation;
 class DOMText;
 class DOMNode;
-class DOMErrorHandler;
 
 
 /**
@@ -691,31 +691,6 @@ public:
     virtual void                   setStrictErrorChecking(bool strictErrorChecking) = 0;
 
     /**
-     * This attribute allows applications to specify a
-     * <code>DOMErrorHandler</code> to be called in the event that an error
-     * is encountered while performing an operation on a document. Note that
-     * not all methods use this mechanism, see the description of each
-     * method for details.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @since DOM Level 3
-     */
-    virtual DOMErrorHandler*       getErrorHandler() const = 0;
-    /**
-     * This attribute allows applications to specify a
-     * <code>DOMErrorHandler</code> to be called in the event that an error
-     * is encountered while performing an operation on a document. Note that
-     * not all methods use this mechanism, see the description of each
-     * method for details.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @since DOM Level 3
-     */
-    virtual void                   setErrorHandler(DOMErrorHandler* const handler) = 0;
-
-    /**
      * Rename an existing node. When possible this simply changes the name of
      * the given node, otherwise this creates a new node with the specified
      * name and replaces the existing node with the new node as described
@@ -830,8 +805,7 @@ public:
     /**
      * This method acts as if the document was going through a save and load
      * cycle, putting the document in a "normal" form. The actual result
-     * depends on the features being set and governing what operations
-     * actually take place. See <code>setNormalizationFeature</code> for
+     * depends on the features being set. See <code>DOMConfiguration</code> for 
      * details.
      *
      * <p><b>"Experimental - subject to change"</b></p>
@@ -848,278 +822,16 @@ public:
      */
     virtual void                   normalizeDocument() = 0;
 
-    /**
-     * Query whether setting a feature to a specific value is supported.
-     * <br>The feature name has the same form as a DOM <code>hasFeature</code>
-     * string.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param name The name of the feature to check.
-     * @param state The requested state of the feature (<code>true</code> or
-     *   <code>false</code>).
-     * @return <code>true</code> if the feature could be successfully set to
-     *   the specified value, or <code>false</code> if the feature is not
-     *   recognized or the requested value is not supported. This does not
-     *   change the current value of the feature itself.
-     * @since DOM Level 3
-     */
-    virtual bool                   canSetNormalizationFeature(const XMLCh* const name, bool state) const = 0;
 
     /**
-     * Set the state of a feature.Need to specify the list of features.
-     * <br>Feature names are valid XML names. Implementation specific features
-     * (extensions) should choose an implementation specific prefix to avoid
-     * name collisions. The following lists feature names that are
-     * recognized by all implementations. However, it is sometimes possible
-     * for a <code>DOMDocument</code> to recognize a feature but not to support
-     * setting its value. The following list of recognized features
-     * indicates the definitions of each feature state, if setting the state
-     * to <code>true</code> or <code>false</code> must be supported or is
-     * optional and, which state is the default one:
+     * The configuration used when Document.normalizeDocument is invoked.
+     * 
+     * @return The <code>DOMConfiguration</code> from this <code>DOMDocument</code>
      *
      * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * <dl>
-     * <dt>
-     * <code>"canonical-form"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt><code>true</code></dt>
-     * <dd>[optional]Canonicalize
-     * the document according to the rules specified in . Note that this is
-     * limited to what can be represented in the DOM. In particular, there
-     * is no way to specify the order of the attributes in the DOM. </dd>
-     * <dt><code>false</code></dt>
-     * <dd>[required] (default)Do not
-     * canonicalize the document.</dd>
-     * </dl></dd>
-     * <dt><code>"cdata-sections"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt>
-     * <code>true</code></dt>
-     * <dd>[required] (default)Keep <code>CDATASection</code>
-     * nodes in the document.Name does not work really well in this case.
-     * ALH suggests renaming this to "cdata-sections". It works for both
-     * load and save.Renamed as suggested. (Telcon 27 Jan 2002).</dd>
-     * <dt>
-     * <code>false</code></dt>
-     * <dd>[optional]Transform <code>CDATASection</code> nodes
-     * in the document into <code>DOMText</code> nodes. The new
-     * <code>DOMText</code> node is then combined with any adjacent
-     * <code>DOMText</code> node.</dd>
-     * </dl></dd>
-     * <dt><code>"comments"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt><code>true</code></dt>
-     * <dd>[
-     * required] (default)Keep <code>DOMComment</code> nodes in the document.</dd>
-     * <dt>
-     * <code>false</code></dt>
-     * <dd>[required]Discard <code>Comment</code> nodes in the
-     * Document.</dd>
-     * </dl></dd>
-     * <dt><code>DOM"datatype-normalization"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt><code>true</code></dt>
-     * <dd>[
-     * required]Let the validation process do its datatype normalization
-     * that is defined in the used schema language. Note that this does not
-     * affect the DTD normalization operation which always takes place, in
-     * accordance to .We should define "datatype normalization".DTD
-     * normalization always apply because it's part of XML 1.0. Clarify the
-     * spec. (Telcon 27 Jan 2002).</dd>
-     * <dt><code>false</code></dt>
-     * <dd>[required] (default)
-     * Disable datatype normalization. The XML 1.0 attribute value
-     * normalization always occurs though.</dd>
-     * </dl></dd>
-     * <dt>
-     * <code>"discard-default-content"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt><code>true</code></dt>
-     * <dd>[required] (
-     * default)Use whatever information available to the implementation
-     * (i.e. XML schema, DTD, the <code>specified</code> flag on
-     * <code>DOMAttr</code> nodes, and so on) to decide what attributes and
-     * content should be discarded or not. Note that the
-     * <code>specified</code> flag on <code>DOMAttr</code> nodes in itself is
-     * not always reliable, it is only reliable when it is set to
-     * <code>false</code> since the only case where it can be set to
-     * <code>false</code> is if the attribute was created by the
-     * implementation. The default content won't be removed if an
-     * implementation does not have any information available.</dd>
-     * <dt><code>false</code></dt>
-     * <dd>[required]Keep all
-     * attributes and all content.</dd>
-     * </dl></dd>
-     * <dt><code>"entities"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt><code>true</code></dt>
-     * <dd>[
-     * required] (default)Keep <code>DOMEntityReference</code> and
-     * <code>DOMEntity</code> nodes in the document.</dd>
-     * <dt><code>false</code></dt>
-     * <dd>[optional]Remove
-     * all <code>DOMEntityReference</code> and <code>DOMEntity</code> nodes from
-     * the document, putting the entity expansions directly in their place.
-     * <code>DOMText</code> nodes are into "normal" form. Only
-     * <code>DOMEntityReference</code> nodes to non-defined entities are kept
-     * in the document.</dd>
-     * </dl></dd>
-     * <dt><code>"infoset"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt><code>true</code></dt>
-     * <dd>[optional]Only
-     * keep in the document the information defined in the XML Information
-     * Set .This forces the following features to <code>false</code>:
-     * <code>namespace-declarations</code>, <code>validate-if-schema</code>,
-     * <code>entities</code>, <code>cdata-sections</code>.This forces the
-     * following features to <code>true</code>:
-     * <code>datatype-normalization</code>,
-     * <code>whitespace-in-element-content</code>, <code>comments</code>.
-     * Other features are not changed unless explicity specified in the
-     * description of the features. Note that querying this feature with
-     * <code>getFeature</code> returns <code>true</code> only if the
-     * individual features specified above are appropriately set.Name
-     * doesn't work well here. ALH suggests renaming this to
-     * limit-to-infoset or match-infoset, something like that.Renamed
-     * 'infoset' (Telcon 27 Jan 2002).</dd>
-     * <dt><code>false</code></dt>
-     * <dd>Setting
-     * <code>infoset</code> to <code>false</code> has no effect.</dd>
-     * </dl></dd>
-     * <dt>
-     * <code>"namespace-declarations"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt><code>true</code></dt>
-     * <dd>[required] (
-     * default)Include namespace declaration attributes, specified or
-     * defaulted from the schema or the DTD, in the document. See also the
-     * section Declaring Namespaces in .</dd>
-     * <dt><code>false</code></dt>
-     * <dd>[optional]Discard
-     * all namespace declaration attributes. The Namespace prefixes are
-     * retained even if this feature is set to <code>false</code>.</dd>
-     * </dl></dd>
-     * <dt>
-     * <code>"normalize-characters"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt><code>true</code></dt>
-     * <dd>[optional]Perform
-     * the W3C Text Normalization of the characters  in the document. </dd>
-     * <dt>
-     * <code>false</code></dt>
-     * <dd>[required] (default)Do not perform character
-     * normalization.</dd>
-     * </dl></dd>
-     * <dt><code>"split-cdata-sections"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt><code>true</code></dt>
-     * <dd>[
-     * required] (default)Split CDATA sections containing the CDATA section
-     * termination marker ']]&gt;'. When a CDATA section is split a warning
-     * is issued.</dd>
-     * <dt><code>false</code></dt>
-     * <dd>[required]Signal an error if a
-     * <code>DOMCDATASection</code> contains an unrepresentable character.</dd>
-     * </dl></dd>
-     * <dt>
-     * <code>"validate"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt><code>true</code></dt>
-     * <dd>[optional]Require the
-     * validation against a schema (i.e. XML schema, DTD, , any other type
-     * or representation of schema) of the document as it is being
-     * normalized as defined by . If validation errors are found, or no
-     * schema was found, the error handler is notified. Note also that no
-     * datatype normalization (i.e. non-XML 1.0 normalization) is done
-     * according to the schema used unless the feature
-     * <code>datatype-normalization</code> is <code>true</code>.
-     * <code>validate-if-schema</code> and <code>validate</code> are
-     * mutually exclusive, setting one of them to <code>true</code> will set
-     * the other one to <code>false</code>. </dd>
-     * <dt><code>false</code></dt>
-     * <dd>[required] (
-     * default) Only XML 1.0 non-validating processing must be done. Note
-     * that validation might still happen if <code>validate-if-schema</code>
-     * is <code>true</code>. </dd>
-     * </dl></dd>
-     * <dt><code>"validate-if-schema"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt>
-     * <code>true</code></dt>
-     * <dd>[optional]Enable validation only if a declaration
-     * for the document element can be found (independently of where it is
-     * found, i.e. XML schema, DTD, , or any other type or representation of
-     * schema). If validation errors are found, the error handler is
-     * notified. Note also that no datatype normalization (i.e. non-XML 1.0
-     * normalization) is done according to the schema used unless the
-     * feature <code>datatype-normalization</code> is <code>true</code>.
-     * <code>validate-if-schema</code> and <code>validate</code> are
-     * mutually exclusive, setting one of them to <code>true</code> will set
-     * the other one to <code>false</code>. </dd>
-     * <dt><code>false</code></dt>
-     * <dd>[required] (default)No
-     * validation should be performed if the document has a schema. Note
-     * that validation must still happen if <code>validate</code> is
-     * <code>true</code>. </dd>
-     * </dl></dd>
-     * <dt><code>"whitespace-in-element-content"</code></dt>
-     * <dd>
-     * <dl>
-     * <dt>
-     * <code>true</code></dt>
-     * <dd>[required] (default)Keep all white spaces in the
-     * document. How does this feature interact with <code>"validate"</code>
-     * and <code>Text.isWhitespaceInElementContent</code>. </dd>
-     * <dt><code>false</code></dt>
-     * <dd>
-     * [optional]Discard white space in element content while normalizing.
-     * The implementation is expected to use the
-     * <code>isWhitespaceInElementContent</code> flag on <code>Text</code>
-     * nodes to determine if a text node should be written out or not.</dd>
-     * </dl></dd>
-     * </dl>
-     * @param name The name of the feature to set.
-     * @param state The requested state of the feature (<code>true</code> or
-     *   <code>false</code>).
-     * @exception DOMException
-     *   NOT_SUPPORTED_ERR: Raised when the feature name is recognized but the
-     *   requested value cannot be set.
-     *   <br>NOT_FOUND_ERR: Raised when the feature name is not recognized.
      * @since DOM Level 3
      */
-    virtual void                   setNormalizationFeature(const XMLCh* const name, bool state) = 0;
-
-    /**
-     * Look up the value of a feature.
-     * <br>The feature name has the same form as a DOM <code>hasFeature</code>
-     * string. The recognized features are the same as the ones defined for
-     * <code>setNormalizationFeature</code>.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @param name The name of the feature to look up.
-     * @return The current state of the feature (<code>true</code> or
-     *   <code>false</code>).
-     * @exception DOMException
-     *   NOT_FOUND_ERR: Raised when the feature name is not recognized.
-     * @since DOM Level 3
-     */
-    virtual bool                   getNormalizationFeature(const XMLCh* const name) const = 0;
-    //@}
+    virtual DOMConfiguration*      getDOMConfiguration() const = 0;
 
     // -----------------------------------------------------------------------
     // Non-standard extension

@@ -61,6 +61,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 
 #include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMConfiguration.hpp>
 #include <xercesc/dom/DOMDocumentType.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
@@ -69,6 +70,7 @@
 
 #include "DOMDocumentImpl.hpp"
 #include "DOMCasts.hpp"
+#include "DOMConfigurationImpl.hpp"
 #include "DOMDocumentTypeImpl.hpp"
 #include "DOMAttrImpl.hpp"
 #include "DOMAttrNSImpl.hpp"
@@ -111,6 +113,7 @@ DOMDocumentImpl::DOMDocumentImpl()
     : fNode(this),
       fParent(this),
       fCurrentBlock(0),
+      fDOMConfiguration(0),
       fFreePtr(0),
       fFreeBytesRemaining(0),
       fDocType(0),
@@ -142,6 +145,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
     : fNode(this),
       fParent(this),
       fCurrentBlock(0),
+      fDOMConfiguration(0),
       fFreePtr(0),
       fFreeBytesRemaining(0),
       fDocType(0),
@@ -972,14 +976,6 @@ void DOMDocumentImpl::setStrictErrorChecking(bool strictErrorChecking) {
     setErrorChecking(strictErrorChecking);
 }
 
-DOMErrorHandler* DOMDocumentImpl::getErrorHandler() const {
-    return 0;
-}
-
-void DOMDocumentImpl::setErrorHandler(DOMErrorHandler* const handler) {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-}
-
 DOMNode* DOMDocumentImpl::adoptNode(DOMNode* source) {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     return 0;
@@ -989,17 +985,11 @@ void DOMDocumentImpl::normalizeDocument() {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }
 
-bool DOMDocumentImpl::canSetNormalizationFeature(const XMLCh* const name, bool state) const {
-    return false;
-}
+DOMConfiguration* DOMDocumentImpl::getDOMConfiguration() const {
+    if(!fDOMConfiguration)
+        ((DOMDocumentImpl*)this)->fDOMConfiguration = new ((DOMDocumentImpl*)this) DOMConfigurationImpl();
 
-void DOMDocumentImpl::setNormalizationFeature(const XMLCh* const name, bool state) {
-    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-}
-
-bool DOMDocumentImpl::getNormalizationFeature(const XMLCh* const name) const {
-    throw DOMException(DOMException::NOT_FOUND_ERR, 0);
-    return false;
+    return fDOMConfiguration;
 }
 
 DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc)
@@ -1362,4 +1352,3 @@ void * DOMDocumentImpl::allocate(size_t amount, NodeObjectType type)
 }
 
 XERCES_CPP_NAMESPACE_END
-

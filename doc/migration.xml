@@ -41,7 +41,9 @@
         <anchor name="NewAPI230"/>
         <s4 title="New Public API">
             <ul>
-              <li></li>
+              <li>To support additional DOM L3 functions, the following are added:</li>
+              <li>DOMDocument: getDOMConfiguration</li>
+              <li>DOMConfiguration class for document normalization.</li>
             </ul>
         </s4>
 
@@ -55,7 +57,7 @@
         <anchor name="DeprecatedAPI230"/>
         <s4 title="Deprecated/Removed Public API">
             <ul>
-              <li></li>
+              <li>DOMDocument canSetNormalizationFeature, setNormalizationFeature, getNormalizationFeature, getErrorHandler, setErrorHandler removed</li>
             </ul>
         </s4>
 
