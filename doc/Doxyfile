@@ -230,7 +230,17 @@ EXCLUDE              =
 # EXCLUDE_PATTERNS tag to specify one or more wildcard patterns to exclude
 # certain files from those directories.
 
-EXCLUDE_PATTERNS     = *Impl.hpp
+EXCLUDE_PATTERNS     = *Impl.hpp Janitor.hpp BitOps.hpp BitSet.hpp ChildNode.hpp \
+CountedPointer.hpp DomMemDebug.hpp MemDebug.hpp DStringPool.hpp TransENameMap.hpp \
+FlagJanitor.hpp HashBase.hpp HashPtr.hpp HashXMLCh.hpp KeyValuePair.hpp \
+KVStringPair.hpp NameIdPool.hpp NodeIDMap.hpp NameNodeFilter.hpp NodeVector.hpp \
+NodeImpl.hpp CommonParentNode.hpp RefArrayOf.hpp RefHashTableOf.hpp RefStackOf.hpp \
+RefVectorOf.hpp ValueArrayOf.hpp ValueStackOf.hpp ValueVectorOf.hpp \
+XML256TableTranscoder.hpp XML88591Transcoder.hpp XMLASCIITranscoder.hpp \
+XMLBufferMgr.hpp XMLBuffer.hpp XMLChTranscoder.hpp XMLEBCDICTranscoder.hpp \
+XMLEnumerator.hpp XMLExceptMsgs.hpp XMLIBM1140Transcoder.hpp XMLMsgLoader.hpp \
+Mutexes.hpp XMLPScanToken.hpp XMLRecognizer.hpp XMLRefInfo.hpp StringPool.hpp \
+XMLUCS4Transcoder.hpp XMLUTF16Transcoder.hpp XMLUTF8Transcoder.hpp XMLWin1252Transcoder.hpp
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or 
 # directories that contain example code fragments that are included (see 
