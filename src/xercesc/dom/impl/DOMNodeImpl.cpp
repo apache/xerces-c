@@ -950,12 +950,10 @@ short DOMNodeImpl::reverseTreeOrderBitPattern(short pattern) const {
 
 const XMLCh*     DOMNodeImpl::getTextContent() const
 {
-
 	unsigned int nBufferLength = 0;
 
 	getTextContent(NULL, nBufferLength);
-	XMLCh* pzBuffer = (XMLCh*)((DOMDocumentImpl*)getOwnerDocument())->allocate(nBufferLength+1);
-
+	XMLCh* pzBuffer = (XMLCh*)((DOMDocumentImpl*)getOwnerDocument())->allocate((nBufferLength+1) * sizeof(XMLCh));
 	getTextContent(pzBuffer, nBufferLength);
 	pzBuffer[nBufferLength] = 0;
 
