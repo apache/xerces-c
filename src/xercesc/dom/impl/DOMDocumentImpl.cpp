@@ -156,7 +156,6 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fRecycleBufferPtr(0)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
-
     try {
         setDocumentType(doctype);
 
@@ -672,8 +671,8 @@ int             DOMDocumentImpl::changes() const{
                                                                                      {return fNode.isSupported (feature, version); };
            void             DOMDocumentImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMDocumentImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           bool             DOMDocumentImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other); };
-           bool             DOMDocumentImpl::isEqualNode(const DOMNode* arg)         {return fParent.isEqualNode(arg); };
+           bool             DOMDocumentImpl::isSameNode(const DOMNode* other)        {return fNode.isSameNode(other);};
+           bool             DOMDocumentImpl::isEqualNode(const DOMNode* arg)         {return fParent.isEqualNode(arg);};
            void*            DOMDocumentImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                      {return fNode.setUserData(key, data, handler); };
            void*            DOMDocumentImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
@@ -697,6 +696,7 @@ int             DOMDocumentImpl::changes() const{
 //                       just lying around naked in DocumentImpl.
 //
 //-----------------------------------------------------------------------
+
 XMLCh * DOMDocumentImpl::cloneString(const XMLCh *src)
 {
     if (!src) return 0;
@@ -869,6 +869,9 @@ const XMLCh* DOMDocumentImpl::getVersion() const {
 }
 
 void DOMDocumentImpl::setVersion(const XMLCh* version){
+    if (XMLString::compareString(version, XMLUni::fgSupportedVersion))
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+
     fVersion = cloneString(version);
 }
 
@@ -1182,7 +1185,10 @@ void DOMDocumentImpl::transferUserData(DOMNodeImpl* n1, DOMNodeImpl* n2)
 DOMNode* DOMDocumentImpl::renameNode(DOMNode* n, const XMLCh* namespaceURI, const XMLCh* name)
 {
     if (n->getOwnerDocument() != this)
-        throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
+        if (n->getNodeType() == DOCUMENT_NODE)
+            throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        else
+            throw DOMException(DOMException::WRONG_DOCUMENT_ERR, 0);
 
     switch (n->getNodeType()) {
         case ELEMENT_NODE:
