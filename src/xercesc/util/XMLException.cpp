@@ -214,7 +214,7 @@ XMLException::XMLException(const XMLException& toCopy) :
 }
 
 
-void XMLException::operator=(const XMLException& toAssign)
+XMLException& XMLException::operator=(const XMLException& toAssign)
 {
     if (this != &toAssign)
     {
@@ -232,6 +232,7 @@ void XMLException::operator=(const XMLException& toAssign)
         if (toAssign.fSrcFile)
             fSrcFile = XMLString::replicate(toAssign.fSrcFile);
     }
+    return *this;
 }
 
 

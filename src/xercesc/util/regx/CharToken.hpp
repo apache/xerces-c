@@ -91,7 +91,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     CharToken(const CharToken&);
-    void operator=(const CharToken&);
+    CharToken& operator=(const CharToken&);
 
 	// -----------------------------------------------------------------------
     //  Private data members

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/03/07 18:08:10  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.7  2003/01/31 00:30:48  jberry
  * Syntax error in declaration
  *
@@ -383,7 +386,7 @@ private :
     // -----------------------------------------------------------------------
     XMLFormatter();
     XMLFormatter(const XMLFormatter&);
-    void operator=(const XMLFormatter&);
+    XMLFormatter& operator=(const XMLFormatter&);
 
 
     // -----------------------------------------------------------------------
@@ -496,7 +499,7 @@ protected :
     // -----------------------------------------------------------------------
     XMLFormatTarget() {}
     XMLFormatTarget(const XMLFormatTarget&) {}
-    void operator=(const XMLFormatTarget&) {}
+    XMLFormatTarget& operator=(const XMLFormatTarget&) {return *this;}
 };
 
 

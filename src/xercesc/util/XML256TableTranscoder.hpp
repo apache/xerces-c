@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/03/07 18:11:55  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.2  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -148,7 +151,7 @@ private :
     // -----------------------------------------------------------------------
     XML256TableTranscoder();
     XML256TableTranscoder(const XML256TableTranscoder&);
-    void operator=(const XML256TableTranscoder&);
+    XML256TableTranscoder& operator=(const XML256TableTranscoder&);
 
 
     // -----------------------------------------------------------------------

@@ -165,7 +165,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Token(const Token&);
-    void operator=(const Token&);
+    Token& operator=(const Token&);
 
     // -----------------------------------------------------------------------
     //  Private Helper methods

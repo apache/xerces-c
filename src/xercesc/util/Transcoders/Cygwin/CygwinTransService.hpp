@@ -135,7 +135,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     CygwinTransService(const CygwinTransService&);
-    void operator=(const CygwinTransService&);
+    CygwinTransService& operator=(const CygwinTransService&);
 
     //      This is a hash table of entries which map encoding names to their
     //      Windows specific code pages. The code page allows us to create
@@ -216,7 +216,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     CygwinTranscoder(const CygwinTranscoder&);
-    void operator=(const CygwinTranscoder&);
+    CygwinTranscoder& operator=(const CygwinTranscoder&);
 
 
     // -----------------------------------------------------------------------
@@ -282,7 +282,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     CygwinLCPTranscoder(const CygwinLCPTranscoder&);
-    void operator=(const CygwinLCPTranscoder&);
+    CygwinLCPTranscoder& operator=(const CygwinLCPTranscoder&);
 };
 
 XERCES_CPP_NAMESPACE_END

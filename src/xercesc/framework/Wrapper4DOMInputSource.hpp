@@ -254,7 +254,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Wrapper4DOMInputSource(const Wrapper4DOMInputSource&);
-    void operator=(const Wrapper4DOMInputSource&);
+    Wrapper4DOMInputSource& operator=(const Wrapper4DOMInputSource&);
 
     // -----------------------------------------------------------------------
     //  Private data members

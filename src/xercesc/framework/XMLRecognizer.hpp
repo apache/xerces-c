@@ -171,7 +171,7 @@ protected :
     // -----------------------------------------------------------------------
     XMLRecognizer();
     ~XMLRecognizer();
-    void operator=(const XMLRecognizer&);
+    XMLRecognizer& operator=(const XMLRecognizer&);
 };
 
 XERCES_CPP_NAMESPACE_END

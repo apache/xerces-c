@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/03/07 18:15:50  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.2  2002/11/04 15:11:39  tng
  * C++ Namespace Support.
  *
@@ -123,7 +126,7 @@ private :
     static const XMLCh fgMyName[];
 
     LibWWWNetAccessor(const LibWWWNetAccessor&);
-    void operator=(const LibWWWNetAccessor&);
+    LibWWWNetAccessor& operator=(const LibWWWNetAccessor&);
 
 }; // LibWWWNetAccessor
 

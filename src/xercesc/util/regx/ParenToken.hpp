@@ -89,7 +89,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ParenToken(const ParenToken&);
-    void operator=(const ParenToken&);
+    ParenToken& operator=(const ParenToken&);
 
 	// -----------------------------------------------------------------------
     //  Private data members

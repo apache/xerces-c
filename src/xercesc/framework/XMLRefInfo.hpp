@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/03/07 18:08:10  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.3  2002/12/04 02:32:43  knoaman
  * #include cleanup.
  *
@@ -150,7 +153,7 @@ private :
     // -----------------------------------------------------------------------
     XMLRefInfo();
     XMLRefInfo(const XMLRefInfo&);
-    void operator=(XMLRefInfo&);
+    XMLRefInfo& operator=(XMLRefInfo&);
 
 
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/03/07 18:15:44  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.2  2002/11/04 15:10:40  tng
  * C++ Namespace Support.
  *
@@ -146,7 +149,7 @@ private :
     // -----------------------------------------------------------------------
     InMemMsgLoader();
     InMemMsgLoader(const InMemMsgLoader&);
-    void operator=(const InMemMsgLoader&);
+    InMemMsgLoader& operator=(const InMemMsgLoader&);
 
 
     // -----------------------------------------------------------------------

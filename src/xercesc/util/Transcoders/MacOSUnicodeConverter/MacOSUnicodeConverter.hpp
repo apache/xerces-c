@@ -144,7 +144,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     MacOSUnicodeConverter(const MacOSUnicodeConverter&);
-    void operator=(const MacOSUnicodeConverter&);
+    MacOSUnicodeConverter& operator=(const MacOSUnicodeConverter&);
 
     // -----------------------------------------------------------------------
     //  Private methods
@@ -211,7 +211,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     MacOSTranscoder(const MacOSTranscoder&);
-    void operator=(const MacOSTranscoder&);
+    MacOSTranscoder& operator=(const MacOSTranscoder&);
 
     // -----------------------------------------------------------------------
     //  Private members
@@ -276,7 +276,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     MacOSLCPTranscoder(const MacOSLCPTranscoder&);
-    void operator=(const MacOSLCPTranscoder&);
+    MacOSLCPTranscoder& operator=(const MacOSLCPTranscoder&);
 
     // -----------------------------------------------------------------------
     //  Private data members

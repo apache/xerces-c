@@ -137,7 +137,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     OpFactory(const OpFactory&);
-    void operator=(const OpFactory&);
+    OpFactory& operator=(const OpFactory&);
 
     // -----------------------------------------------------------------------
     //  Private data members

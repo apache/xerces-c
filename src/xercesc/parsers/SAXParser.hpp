@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/03/07 18:09:17  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.20  2003/02/04 19:27:43  knoaman
  * Performance: use global buffer to eliminate repetitive memory creation/deletion.
  *
@@ -1888,7 +1891,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     SAXParser(const SAXParser&);
-    void operator=(const SAXParser&);
+    SAXParser& operator=(const SAXParser&);
 
     // -----------------------------------------------------------------------
     //  Initialize/Cleanup methods

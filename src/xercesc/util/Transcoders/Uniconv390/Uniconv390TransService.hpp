@@ -134,7 +134,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Uniconv390TransService(const Uniconv390TransService&);
-    void operator=(const Uniconv390TransService&);
+    Uniconv390TransService& operator=(const Uniconv390TransService&);
     ICUTransService * fICUService;
     XMLLCPTranscoder* fLCPTranscoder;
     uniconvcaseconverter_t *fCaseConverter;
@@ -193,7 +193,7 @@ private :
     // -----------------------------------------------------------------------
     Uniconv390Transcoder();
     Uniconv390Transcoder(const Uniconv390Transcoder&);
-    void operator=(const Uniconv390Transcoder&);
+    Uniconv390Transcoder& operator=(const Uniconv390Transcoder&);
 
     ICUTranscoder * fICUTranscoder;
 
@@ -252,7 +252,7 @@ private :
     // -----------------------------------------------------------------------
     Uniconv390LCPTranscoder();
     Uniconv390LCPTranscoder(const Uniconv390LCPTranscoder&);
-    void operator=(const Uniconv390LCPTranscoder&);
+    Uniconv390LCPTranscoder& operator=(const Uniconv390LCPTranscoder&);
 
     ICULCPTranscoder * fICULCPTranscoder;
 

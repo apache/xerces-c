@@ -95,7 +95,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ClosureToken(const ClosureToken&);
-    void operator=(const ClosureToken&);
+    ClosureToken& operator=(const ClosureToken&);
 
 	// -----------------------------------------------------------------------
     //  Private data members

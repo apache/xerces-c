@@ -250,7 +250,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     GeneralAttributeCheck(const GeneralAttributeCheck&);
-    void operator=(const GeneralAttributeCheck&);
+    GeneralAttributeCheck& operator=(const GeneralAttributeCheck&);
 
     // -----------------------------------------------------------------------
     //  Setup methods

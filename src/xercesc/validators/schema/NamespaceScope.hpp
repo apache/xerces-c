@@ -140,7 +140,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     NamespaceScope(const NamespaceScope&);
-    void operator=(const NamespaceScope&);
+    NamespaceScope& operator=(const NamespaceScope&);
 
 
     // -----------------------------------------------------------------------

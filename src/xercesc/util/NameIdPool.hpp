@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/03/07 18:11:54  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.3  2002/12/04 02:32:43  knoaman
  * #include cleanup.
  *
@@ -200,7 +203,7 @@ private :
     //  Unused constructors and operators
     // -----------------------------------------------------------------------
     NameIdPool(const NameIdPool<TElem>&);
-    void operator=(const NameIdPool<TElem>&);
+    NameIdPool<TElem>& operator=(const NameIdPool<TElem>&);
 
 
     // -----------------------------------------------------------------------

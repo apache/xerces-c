@@ -196,7 +196,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     RegularExpression(const RegularExpression&);
-    void operator=(const RegularExpression&);
+    RegularExpression& operator=(const RegularExpression&);
 
     // -----------------------------------------------------------------------
     //  Cleanup methods

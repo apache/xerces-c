@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/03/07 18:08:10  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.3  2002/11/04 15:00:21  tng
  * C++ Namespace Support.
  *
@@ -163,7 +166,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLNotationDecl(const XMLNotationDecl&);
-    void operator=(const XMLNotationDecl&);
+    XMLNotationDecl& operator=(const XMLNotationDecl&);
 
 
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/03/07 18:08:58  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.3  2003/01/15 15:49:49  knoaman
  * Change constant declaration name to match its value.
  *
@@ -135,7 +138,7 @@ private :
     // -----------------------------------------------------------------------
     DGXMLScanner();
     DGXMLScanner(const DGXMLScanner&);
-    void operator=(const DGXMLScanner&);
+    DGXMLScanner& operator=(const DGXMLScanner&);
 
     // -----------------------------------------------------------------------
     //  XMLScanner virtual methods

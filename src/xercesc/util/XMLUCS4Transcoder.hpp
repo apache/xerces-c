@@ -120,7 +120,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLUCS4Transcoder(const XMLUCS4Transcoder&);
-    void operator=(const XMLUCS4Transcoder&);
+    XMLUCS4Transcoder& operator=(const XMLUCS4Transcoder&);
 
 
     // -----------------------------------------------------------------------

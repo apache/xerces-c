@@ -131,7 +131,7 @@ private :
     // -----------------------------------------------------------------------
     BMPattern();
     BMPattern(const BMPattern&);
-    void operator=(const BMPattern&);
+    BMPattern& operator=(const BMPattern&);
 
 		// -----------------------------------------------------------------------
 	// This method will perform a case insensitive match

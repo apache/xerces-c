@@ -87,7 +87,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ConcatToken(const ConcatToken&);
-    void operator=(const ConcatToken&);
+    ConcatToken& operator=(const ConcatToken&);
 
 	// -----------------------------------------------------------------------
     //  Private data members

@@ -93,7 +93,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     UnionToken(const UnionToken&);
-    void operator=(const UnionToken&);
+    UnionToken& operator=(const UnionToken&);
 
 	// -----------------------------------------------------------------------
     //  Private Constants

@@ -119,7 +119,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLASCIITranscoder(const XMLASCIITranscoder&);
-    void operator=(const XMLASCIITranscoder&);
+    XMLASCIITranscoder& operator=(const XMLASCIITranscoder&);
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -119,7 +119,7 @@ public:
     XMLException();
     XMLException(const char* const srcFile, const unsigned int srcLine);
     XMLException(const XMLException& toCopy);
-    void operator=(const XMLException& toAssign);
+    XMLException& operator=(const XMLException& toAssign);
 
     // -----------------------------------------------------------------------
     //  Notification that lazy data has been deleted

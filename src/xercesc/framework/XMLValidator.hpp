@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.8  2003/03/07 18:08:10  tng
+  * Return a reference instead of void for operator=
+  *
   * Revision 1.7  2002/11/07 21:59:22  tng
   * Pass elemDecl to XMLValidator::validateAttrValue so that we can include element name in error message.
   *
@@ -484,7 +487,7 @@ private :
     //  Unimplemented Constructors and Operators
     // -----------------------------------------------------------------------
     XMLValidator(const XMLValidator&);
-    void operator=(const XMLValidator&);
+    XMLValidator& operator=(const XMLValidator&);
 
 
     // -----------------------------------------------------------------------

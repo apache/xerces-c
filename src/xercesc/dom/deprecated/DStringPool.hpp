@@ -104,7 +104,7 @@ public:
 
 private:
     DStringPool(const DStringPool &other);      // Copy constructor and assignment
-    void operator = (const DStringPool &other); //  of DStringPool are not supported.
+    DStringPool& operator = (const DStringPool &other); //  of DStringPool are not supported.
 
     DStringPoolEntry **fHashTable;
     int              fHashTableSize;

@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.6  2003/03/07 18:08:10  tng
+  * Return a reference instead of void for operator=
+  *
   * Revision 1.5  2002/11/04 15:00:21  tng
   * C++ Namespace Support.
   *
@@ -235,7 +238,7 @@ private:
     //  Unimplemented constructors and destructor
     // -----------------------------------------------------------------------
     XMLEntityHandler(const XMLEntityHandler&);
-    void operator=(const XMLEntityHandler&);
+    XMLEntityHandler& operator=(const XMLEntityHandler&);
 };
 
 XERCES_CPP_NAMESPACE_END

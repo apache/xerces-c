@@ -141,7 +141,7 @@ private :
     //  Unimplemented constructors and destructor
     // -----------------------------------------------------------------------
     XSDLocator(const XSDLocator&);
-    void operator=(const XSDLocator&);
+    XSDLocator& operator=(const XSDLocator&);
 
     // -----------------------------------------------------------------------
     //  Private data members

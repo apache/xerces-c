@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/07 18:07:17  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.4  2002/11/04 15:07:34  tng
  * C++ Namespace Support.
  *
@@ -237,7 +240,7 @@ private :
     DOMLocatorImpl(const DOMLocatorImpl&);
 
     /* Assignment operator */
-    void operator=(const DOMLocatorImpl&);
+    DOMLocatorImpl& operator=(const DOMLocatorImpl&);
 
     // -----------------------------------------------------------------------
     //  Private data members

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/03/07 18:15:57  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.5  2002/11/22 14:56:47  tng
  * 390: Uniconv390 support.  Patch by Chris Larsson and Stephen Dulin.
  *
@@ -177,7 +180,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ICUTransService(const ICUTransService&);
-    void operator=(const ICUTransService&);
+    ICUTransService& operator=(const ICUTransService&);
 };
 
 
@@ -233,7 +236,7 @@ private :
     // -----------------------------------------------------------------------
     ICUTranscoder();
     ICUTranscoder(const ICUTranscoder&);
-    void operator=(const ICUTranscoder&);
+    ICUTranscoder& operator=(const ICUTranscoder&);
 
 
     // -----------------------------------------------------------------------
@@ -302,7 +305,7 @@ private :
     // -----------------------------------------------------------------------
     ICULCPTranscoder();
     ICULCPTranscoder(const ICULCPTranscoder&);
-    void operator=(const ICULCPTranscoder&);
+    ICULCPTranscoder& operator=(const ICULCPTranscoder&);
 
 
     // -----------------------------------------------------------------------

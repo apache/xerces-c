@@ -93,7 +93,7 @@ private :
     static const XMLCh sMyID[];
 
     MacOSURLAccess(const MacOSURLAccess&);
-    void operator=(const MacOSURLAccess&);
+    MacOSURLAccess& operator=(const MacOSURLAccess&);
 
 };
 

@@ -116,7 +116,7 @@ private :
     // -----------------------------------------------------------------------
     ENameMap();
     ENameMap(const ENameMap&);
-    void operator=(const ENameMap&);
+    ENameMap& operator=(const ENameMap&);
 
 
     // -----------------------------------------------------------------------
@@ -152,7 +152,7 @@ private :
     // -----------------------------------------------------------------------
     ENameMapFor();
     ENameMapFor(const ENameMapFor<TType>&);
-    void operator=(const ENameMapFor<TType>&);
+    ENameMapFor& operator=(const ENameMapFor<TType>&);
 };
 
 
@@ -177,7 +177,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     EEndianNameMapFor(const EEndianNameMapFor<TType>&);
-    void operator=(const EEndianNameMapFor<TType>&);
+    EEndianNameMapFor<TType>& operator=(const EEndianNameMapFor<TType>&);
 
 
     // -----------------------------------------------------------------------

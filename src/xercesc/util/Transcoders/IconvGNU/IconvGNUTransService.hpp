@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/03/07 18:15:57  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.2  2002/11/04 15:14:34  tng
  * C++ Namespace Support.
  *
@@ -168,7 +171,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IconvGNUWrapper(const IconvGNUWrapper&);
-    void operator=(const IconvGNUWrapper&);
+    IconvGNUWrapper& operator=(const IconvGNUWrapper&);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -248,7 +251,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IconvGNUTransService(const IconvGNUTransService&);
-    void operator=(const IconvGNUTransService&);
+    IconvGNUTransService& operator=(const IconvGNUTransService&);
 
 
     // -----------------------------------------------------------------------
@@ -317,7 +320,7 @@ private :
     // -----------------------------------------------------------------------
     IconvGNUTranscoder();
     IconvGNUTranscoder(const IconvGNUTranscoder&);
-    void operator=(const IconvGNUTranscoder&);
+    IconvGNUTranscoder& operator=(const IconvGNUTranscoder&);
 };
 
 
@@ -379,7 +382,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IconvGNULCPTranscoder(const IconvGNULCPTranscoder&);
-    void operator=(const IconvGNULCPTranscoder&);
+    IconvGNULCPTranscoder& operator=(const IconvGNULCPTranscoder&);
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/03/07 18:11:55  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.6  2003/02/04 22:11:52  peiyongz
  * bug#16784: Obsolete documentation on XMLTranscoder -- reported by
  * Colin Paul Adams, Preston Lancashire
@@ -273,7 +276,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLTransService(const XMLTransService&);
-    void operator=(const XMLTransService&);
+    XMLTransService& operator=(const XMLTransService&);
 
     // -----------------------------------------------------------------------
     //  Hidden method to enable/disable strict IANA encoding check
@@ -443,7 +446,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLTranscoder(const XMLTranscoder&);
-    void operator=(const XMLTranscoder&);
+    XMLTranscoder& operator=(const XMLTranscoder&);
 
 
     // -----------------------------------------------------------------------
@@ -521,7 +524,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLLCPTranscoder(const XMLLCPTranscoder&);
-    void operator=(const XMLLCPTranscoder&);
+    XMLLCPTranscoder& operator=(const XMLLCPTranscoder&);
 };
 
 

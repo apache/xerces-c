@@ -93,7 +93,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     UnicodeRangeFactory(const UnicodeRangeFactory&);
-    void operator=(const UnicodeRangeFactory&);
+    UnicodeRangeFactory& operator=(const UnicodeRangeFactory&);
 
     // -----------------------------------------------------------------------
     //  Helper methods

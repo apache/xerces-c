@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/07 18:15:57  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.4  2003/01/06 21:48:05  tng
  * Remove obsolete old functions transcodeXML and transcodeOne
  *
@@ -162,7 +165,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IconvTransService(const IconvTransService&);
-    void operator=(const IconvTransService&);
+    IconvTransService& operator=(const IconvTransService&);
 };
 
 
@@ -207,7 +210,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IconvLCPTranscoder(const IconvLCPTranscoder&);
-    void operator=(const IconvLCPTranscoder&);
+    IconvLCPTranscoder& operator=(const IconvLCPTranscoder&);
 };
 
 XERCES_CPP_NAMESPACE_END

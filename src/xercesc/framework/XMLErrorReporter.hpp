@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.6  2003/03/07 18:08:10  tng
+  * Return a reference instead of void for operator=
+  *
   * Revision 1.5  2002/12/04 02:32:43  knoaman
   * #include cleanup.
   *
@@ -249,7 +252,7 @@ private:
     //  Unimplemented constructors and destructor
     // -----------------------------------------------------------------------
     XMLErrorReporter(const XMLErrorReporter&);
-    void operator=(const XMLErrorReporter&);
+    XMLErrorReporter& operator=(const XMLErrorReporter&);
 };
 
 XERCES_CPP_NAMESPACE_END

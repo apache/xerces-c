@@ -130,7 +130,7 @@ private :
     // -----------------------------------------------------------------------
     CPMapEntry();
     CPMapEntry(const CPMapEntry&);
-    void operator=(const CPMapEntry&);
+    CPMapEntry& operator=(const CPMapEntry&);
 
 
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/03/07 18:15:57  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.5  2003/03/07 15:08:57  tng
  * [Bug 17571] fix building IconvFBSD (namespaces) .  Patch from Bjoern A. Zeeb.
  *
@@ -190,7 +193,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IconvFBSDCD(const IconvFBSDCD&);
-    void operator=(const IconvFBSDCD&);
+    IconvFBSDCD& operator=(const IconvFBSDCD&);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -275,7 +278,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IconvFBSDTransService(const IconvFBSDTransService&);
-    void operator=(const IconvFBSDTransService&);
+    IconvFBSDTransService& operator=(const IconvFBSDTransService&);
 
 #ifdef XML_USE_LIBICONV
 
@@ -347,7 +350,7 @@ private :
     // -----------------------------------------------------------------------
     IconvFBSDTranscoder();
     IconvFBSDTranscoder(const IconvFBSDTranscoder&);
-    void operator=(const IconvFBSDTranscoder&);
+    IconvFBSDTranscoder& operator=(const IconvFBSDTranscoder&);
 };
 
 #endif /* XML_USE_LIBICONV */
@@ -421,7 +424,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IconvFBSDLCPTranscoder(const IconvFBSDLCPTranscoder&);
-    void operator=(const IconvFBSDLCPTranscoder&);
+    IconvFBSDLCPTranscoder& operator=(const IconvFBSDLCPTranscoder&);
 };
 
 XERCES_CPP_NAMESPACE_END

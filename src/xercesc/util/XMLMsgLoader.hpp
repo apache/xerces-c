@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/07 18:11:55  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.4  2003/02/17 19:54:47  peiyongz
  * Allow set user specified error message file location in PlatformUtils::Initialize().
  *
@@ -223,7 +226,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLMsgLoader(const XMLMsgLoader&);
-    void operator=(const XMLMsgLoader&);
+    XMLMsgLoader& operator=(const XMLMsgLoader&);
 
 
     // -----------------------------------------------------------------------

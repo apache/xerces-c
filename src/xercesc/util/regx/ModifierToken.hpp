@@ -89,7 +89,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ModifierToken(const ModifierToken&);
-    void operator=(const ModifierToken&);
+    ModifierToken& operator=(const ModifierToken&);
 
 	// -----------------------------------------------------------------------
     //  Private data members

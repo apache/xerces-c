@@ -290,7 +290,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Wrapper4InputSource(const Wrapper4InputSource&);
-    void operator=(const Wrapper4InputSource&);
+    Wrapper4InputSource& operator=(const Wrapper4InputSource&);
 
     // -----------------------------------------------------------------------
     //  Private data members

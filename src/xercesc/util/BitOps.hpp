@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/03/07 18:11:54  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -130,7 +133,7 @@ protected :
     // -----------------------------------------------------------------------
     BitOps();
     BitOps(const BitOps&);
-    void operator=(const BitOps);
+    BitOps& operator=(const BitOps&);
 };
 
 XERCES_CPP_NAMESPACE_END

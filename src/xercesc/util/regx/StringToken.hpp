@@ -94,7 +94,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     StringToken(const StringToken&);
-    void operator=(const StringToken&);
+    StringToken& operator=(const StringToken&);
 
 	// -----------------------------------------------------------------------
     //  Private data members

@@ -120,7 +120,7 @@ private :
     // -----------------------------------------------------------------------
     MsgCatalogLoader();
     MsgCatalogLoader(const MsgCatalogLoader&);
-    void operator=(const MsgCatalogLoader&);
+    MsgCatalogLoader& operator=(const MsgCatalogLoader&);
 
 
     // -----------------------------------------------------------------------

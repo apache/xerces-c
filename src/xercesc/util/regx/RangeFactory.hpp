@@ -97,7 +97,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     RangeFactory(const RangeFactory&);
-    void operator=(const RangeFactory&);
+    RangeFactory& operator=(const RangeFactory&);
 };
 
 XERCES_CPP_NAMESPACE_END

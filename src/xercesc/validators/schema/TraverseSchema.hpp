@@ -151,7 +151,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     TraverseSchema(const TraverseSchema&);
-    void operator=(const TraverseSchema&);
+    TraverseSchema& operator=(const TraverseSchema&);
 
     // -----------------------------------------------------------------------
     //  Init/CleanUp methods

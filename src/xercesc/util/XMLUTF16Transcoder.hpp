@@ -121,7 +121,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLUTF16Transcoder(const XMLUTF16Transcoder&);
-    void operator=(const XMLUTF16Transcoder&);
+    XMLUTF16Transcoder& operator=(const XMLUTF16Transcoder&);
 
 
     // -----------------------------------------------------------------------

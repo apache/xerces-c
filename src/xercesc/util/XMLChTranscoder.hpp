@@ -116,7 +116,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLChTranscoder(const XMLChTranscoder&);
-    void operator=(const XMLChTranscoder&);
+    XMLChTranscoder& operator=(const XMLChTranscoder&);
 };
 
 XERCES_CPP_NAMESPACE_END

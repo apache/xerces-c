@@ -97,7 +97,7 @@ private :
     // -----------------------------------------------------------------------
     XMLIBM1140Transcoder();
     XMLIBM1140Transcoder(const XMLIBM1140Transcoder&);
-    void operator=(const XMLIBM1140Transcoder&);
+    XMLIBM1140Transcoder& operator=(const XMLIBM1140Transcoder&);
 };
 
 XERCES_CPP_NAMESPACE_END

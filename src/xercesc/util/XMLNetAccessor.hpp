@@ -120,7 +120,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLNetAccessor(const XMLNetAccessor&);
-    void operator=(const XMLNetAccessor&);
+    XMLNetAccessor& operator=(const XMLNetAccessor&);
 };
 
 MakeXMLException(NetAccessorException, XMLUTIL_EXPORT)

@@ -100,7 +100,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     RangeTokenElemMap(const RangeTokenElemMap&);
-    void operator=(const RangeTokenElemMap&);
+    RangeTokenElemMap& operator=(const RangeTokenElemMap&);
 
     // Data members
     unsigned int fCategoryId;
@@ -168,7 +168,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     RangeTokenMap(const RangeTokenMap&);
-    void operator=(const RangeTokenMap&);
+    RangeTokenMap& operator=(const RangeTokenMap&);
 
     // -----------------------------------------------------------------------
     //  Private Helpers methods

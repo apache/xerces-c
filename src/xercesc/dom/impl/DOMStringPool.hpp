@@ -97,7 +97,7 @@ public:
 
 private:
     DOMStringPool(const DOMStringPool &other);      // Copy constructor and assignment
-    void operator = (const DOMStringPool &other); //  of DOMStringPool are not supported.
+    DOMStringPool& operator = (const DOMStringPool &other); //  of DOMStringPool are not supported.
 
 
     DOMDocumentImpl     *fDoc;

@@ -93,7 +93,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ASCIIRangeFactory(const ASCIIRangeFactory&);
-    void operator=(const ASCIIRangeFactory&);
+    ASCIIRangeFactory& operator=(const ASCIIRangeFactory&);
 
     bool fRangesCreated;
     bool fKeywordsInitialized;

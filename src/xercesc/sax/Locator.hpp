@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/03/07 18:10:06  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.3  2002/11/04 14:56:26  tng
  * C++ Namespace Support.
  *
@@ -189,7 +192,7 @@ private :
     Locator(const Locator&);
 
     /* Assignment operator */
-    void operator=(const Locator&);
+    Locator& operator=(const Locator&);
 };
 
 XERCES_CPP_NAMESPACE_END

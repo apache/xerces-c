@@ -136,7 +136,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ParserForXMLSchema(const ParserForXMLSchema&);
-    void operator=(const ParserForXMLSchema&);
+    ParserForXMLSchema& operator=(const ParserForXMLSchema&);
 
     // -----------------------------------------------------------------------
     //  Private data members

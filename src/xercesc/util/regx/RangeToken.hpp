@@ -120,7 +120,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     RangeToken(const RangeToken&);
-    void operator=(const RangeToken&);
+    RangeToken& operator=(const RangeToken&);
 
     // -----------------------------------------------------------------------
     // Private Helper methods

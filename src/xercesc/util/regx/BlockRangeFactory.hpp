@@ -93,7 +93,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     BlockRangeFactory(const BlockRangeFactory&);
-    void operator=(const BlockRangeFactory&);
+    BlockRangeFactory& operator=(const BlockRangeFactory&);
 
     bool fRangesCreated;
     bool fKeywordsInitialized;

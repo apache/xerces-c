@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/03/07 18:08:10  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.5  2003/01/29 19:45:35  gareth
  * added api for DOMTypeInfo
  *
@@ -508,7 +511,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLAttDef(const XMLAttDef&);
-    void operator=(const XMLAttDef&);
+    XMLAttDef& operator=(const XMLAttDef&);
 
 
     // -----------------------------------------------------------------------

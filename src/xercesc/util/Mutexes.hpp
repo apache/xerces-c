@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/03/07 18:11:54  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -112,7 +115,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLMutex(const XMLMutex&);
-    void operator=(const XMLMutex&);
+    XMLMutex& operator=(const XMLMutex&);
 
 
     // -----------------------------------------------------------------------
@@ -150,7 +153,7 @@ private :
     // -----------------------------------------------------------------------
     XMLMutexLock();
     XMLMutexLock(const XMLMutexLock&);
-    void operator=(const XMLMutexLock&);
+    XMLMutexLock& operator=(const XMLMutexLock&);
 
 
     // -----------------------------------------------------------------------

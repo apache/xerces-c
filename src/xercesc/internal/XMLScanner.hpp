@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/03/07 18:08:58  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.16  2003/01/03 20:08:40  tng
  * New feature StandardUriConformant to force strict standard uri conformance.
  *
@@ -887,7 +890,7 @@ private :
     // -----------------------------------------------------------------------
     XMLScanner();
     XMLScanner(const XMLScanner&);
-    void operator=(const XMLScanner&);
+    XMLScanner& operator=(const XMLScanner&);
 
     // -----------------------------------------------------------------------
     //  Private helper methods

@@ -99,7 +99,7 @@ private :
     // -----------------------------------------------------------------------
     XMLEBCDICTranscoder();
     XMLEBCDICTranscoder(const XMLEBCDICTranscoder&);
-    void operator=(const XMLEBCDICTranscoder&);
+    XMLEBCDICTranscoder& operator=(const XMLEBCDICTranscoder&);
 };
 
 XERCES_CPP_NAMESPACE_END

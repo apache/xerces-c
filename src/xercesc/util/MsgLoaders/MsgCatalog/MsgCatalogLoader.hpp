@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/07 18:15:44  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.4  2002/11/05 16:54:46  peiyongz
  * Using XERCESC_NLS_HOME
  *
@@ -146,7 +149,7 @@ private :
     // -----------------------------------------------------------------------
     MsgCatalogLoader();
     MsgCatalogLoader(const MsgCatalogLoader&);
-    void operator=(const MsgCatalogLoader&);
+    MsgCatalogLoader& operator=(const MsgCatalogLoader&);
 
 
     // -----------------------------------------------------------------------

@@ -88,7 +88,7 @@ protected :
 
 private :
     XMLDeleter(const XMLDeleter&);
-    void operator=(const XMLDeleter&);
+    XMLDeleter& operator=(const XMLDeleter&);
 };
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/03/07 18:10:30  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.2  2002/11/04 14:55:45  tng
  * C++ Namespace Support.
  *
@@ -403,7 +406,7 @@ private :
     /* Copy constructor */
     ContentHandler(const ContentHandler&);
     /** Assignment operator */
-    void operator=(const ContentHandler&);
+    ContentHandler& operator=(const ContentHandler&);
 };
 
 XERCES_CPP_NAMESPACE_END

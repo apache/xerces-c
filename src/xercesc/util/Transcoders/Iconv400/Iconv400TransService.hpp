@@ -130,7 +130,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Iconv400TransService(const Iconv400TransService&);
-    void operator=(const Iconv400TransService&);
+    Iconv400TransService& operator=(const Iconv400TransService&);
 
     XMLCh toUnicodeUpper(XMLCh toupper) const;
     XMLCh toUnicodeLower(XMLCh tolower) const;
@@ -192,7 +192,7 @@ private :
     // -----------------------------------------------------------------------
     Iconv400Transcoder();
     Iconv400Transcoder(const Iconv400Transcoder&);
-    void operator=(const Iconv400Transcoder&);
+    Iconv400Transcoder& operator=(const Iconv400Transcoder&);
 
 
     // -----------------------------------------------------------------------
@@ -262,7 +262,7 @@ private :
     // -----------------------------------------------------------------------
     Iconv400LCPTranscoder();
     Iconv400LCPTranscoder(const Iconv400LCPTranscoder&);
-    void operator=(const Iconv400LCPTranscoder&);
+    Iconv400LCPTranscoder& operator=(const Iconv400LCPTranscoder&);
 
 
     // -----------------------------------------------------------------------

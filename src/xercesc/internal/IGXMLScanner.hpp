@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/07 18:08:58  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.4  2003/01/29 19:59:35  gareth
  * we now detect when elements and attributes are validated/ the result of the validation and store that information.
  *
@@ -146,7 +149,7 @@ private :
     // -----------------------------------------------------------------------
     IGXMLScanner();
     IGXMLScanner(const IGXMLScanner&);
-    void operator=(const IGXMLScanner&);
+    IGXMLScanner& operator=(const IGXMLScanner&);
 
     // -----------------------------------------------------------------------
     //  XMLScanner virtual methods

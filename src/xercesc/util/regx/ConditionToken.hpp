@@ -90,7 +90,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ConditionToken(const ConditionToken&);
-    void operator=(const ConditionToken&);
+    ConditionToken& operator=(const ConditionToken&);
 
 	// -----------------------------------------------------------------------
     //  Private data members

@@ -89,7 +89,7 @@ private :
     // -----------------------------------------------------------------------
     XMLWin1252Transcoder();
     XMLWin1252Transcoder(const XMLWin1252Transcoder&);
-    void operator=(const XMLWin1252Transcoder&);
+    XMLWin1252Transcoder& operator=(const XMLWin1252Transcoder&);
 };
 
 XERCES_CPP_NAMESPACE_END

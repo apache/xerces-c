@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/03/07 18:16:57  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.2  2002/11/04 14:54:58  tng
  * C++ Namespace Support.
  *
@@ -154,7 +157,7 @@ private :
     // -----------------------------------------------------------------------
     AllContentModel();
     AllContentModel(const AllContentModel&);
-    void operator=(const AllContentModel&);
+    AllContentModel& operator=(const AllContentModel&);
 
 
     // -----------------------------------------------------------------------

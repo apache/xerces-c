@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/03/07 18:08:58  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.3  2002/12/04 02:23:50  knoaman
  * Scanner re-organization.
  *
@@ -276,7 +279,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     ElemStack(const ElemStack&);
-    void operator=(const ElemStack&);
+    ElemStack& operator=(const ElemStack&);
 
 
     // -----------------------------------------------------------------------
@@ -453,7 +456,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     WFElemStack(const WFElemStack&);
-    void operator=(const WFElemStack&);
+    WFElemStack& operator=(const WFElemStack&);
 
 
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/07 18:15:57  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.4  2003/01/06 21:46:08  tng
  * Since 390 uses ICU or Uniconv390 TransService, change Iconv390 to use intrinsic transcoders only so as to bypass Bug 2393.
  *
@@ -155,7 +158,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Iconv390TransService(const Iconv390TransService&);
-    void operator=(const Iconv390TransService&);
+    Iconv390TransService& operator=(const Iconv390TransService&);
 };
 
 class XMLUTIL_EXPORT Iconv390LCPTranscoder : public XMLLCPTranscoder
@@ -199,7 +202,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Iconv390LCPTranscoder(const Iconv390LCPTranscoder&);
-    void operator=(const Iconv390LCPTranscoder&);
+    Iconv390LCPTranscoder& operator=(const Iconv390LCPTranscoder&);
     iconvconverter_t *converter;
 };
 

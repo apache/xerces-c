@@ -115,7 +115,7 @@ private:
     //  Unimplemented constructors and destructor
     // -----------------------------------------------------------------------
     XSDErrorReporter(const XSDErrorReporter&);
-    void operator=(const XSDErrorReporter&);
+    XSDErrorReporter& operator=(const XSDErrorReporter&);
 
     // -----------------------------------------------------------------------
     //  Private data members

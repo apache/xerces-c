@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/03/07 18:15:58  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.3  2002/11/04 15:14:34  tng
  * C++ Namespace Support.
  *
@@ -182,7 +185,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Win32TransService(const Win32TransService&);
-    void operator=(const Win32TransService&);
+    Win32TransService& operator=(const Win32TransService&);
 
     //      This is a hash table of entries which map encoding names to their
     //      Windows specific code pages. The code page allows us to create
@@ -263,7 +266,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Win32Transcoder(const Win32Transcoder&);
-    void operator=(const Win32Transcoder&);
+    Win32Transcoder& operator=(const Win32Transcoder&);
 
 
     // -----------------------------------------------------------------------
@@ -329,7 +332,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     Win32LCPTranscoder(const Win32LCPTranscoder&);
-    void operator=(const Win32LCPTranscoder&);
+    Win32LCPTranscoder& operator=(const Win32LCPTranscoder&);
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/03/07 18:09:16  tng
+ * Return a reference instead of void for operator=
+ *
  * Revision 1.17  2003/01/09 19:07:08  tng
  * [Bug 15802] Add "const" qualifier to getURIText.
  *
@@ -1658,7 +1661,7 @@ private :
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     SAX2XMLReaderImpl(const SAX2XMLReaderImpl&);
-    void operator=(const SAX2XMLReaderImpl&);
+    SAX2XMLReaderImpl& operator=(const SAX2XMLReaderImpl&);
 
     // -----------------------------------------------------------------------
     //  Initialize/Cleanup methods

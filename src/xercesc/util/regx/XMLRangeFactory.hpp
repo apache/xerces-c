@@ -93,7 +93,7 @@ private:
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     XMLRangeFactory(const XMLRangeFactory&);
-    void operator=(const XMLRangeFactory&);
+    XMLRangeFactory& operator=(const XMLRangeFactory&);
 
     bool fRangesCreated;
     bool fKeywordsInitialized;
