@@ -57,6 +57,13 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/11/21 22:38:50  neilg
+ * Enable grammar pools and grammar resolvers to manufacture
+ * XSModels.  This also cleans up handling in the
+ * parser classes by eliminating the need to tell
+ * the grammar pool that schema compoments need to be produced.
+ * Thanks to David Cargill.
+ *
  * Revision 1.20  2003/11/06 21:53:52  neilg
  * update grammar pool interface so that cacheGrammar(Grammar) can tell the caller whether the grammar was accepted.  Also fix some documentation errors.
  *
@@ -140,7 +147,6 @@
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
-
 #include <xercesc/internal/XMLGrammarPoolImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -159,8 +165,9 @@ GrammarResolver::GrammarResolver(XMLGrammarPool* const gramPool
 ,fDataTypeReg(0)
 ,fMemoryManager(manager)
 ,fGrammarPool(gramPool)
+,fXSModel(0)
+,fGrammarPoolXSModel(0)
 {
-
     fGrammarBucket = new (manager) RefHashTableOf<Grammar>(29, true,  manager);
 
     /***
@@ -180,6 +187,8 @@ GrammarResolver::GrammarResolver(XMLGrammarPool* const gramPool
     }
     fStringPool = fGrammarPool->getURIStringPool();
 
+    // REVISIT: size
+    fGrammarsToAddToXSModel = new (manager) ValueVectorOf<SchemaGrammar*> (29, manager);
 }
 
 GrammarResolver::~GrammarResolver()
@@ -195,6 +204,11 @@ GrammarResolver::~GrammarResolver()
     */
    if (!fGrammarPoolFromExternalApplication)
        delete fGrammarPool;
+
+   if (fXSModel)
+       delete fXSModel;
+   // don't delete fGrammarPoolXSModel! we don't own it!
+   delete fGrammarsToAddToXSModel;
 }
 
 // ---------------------------------------------------------------------------
@@ -319,7 +333,24 @@ GrammarResolver::getCachedGrammarEnumerator() const
 
 bool GrammarResolver::containsNameSpace( const XMLCh* const nameSpaceKey )
 {
-   return fGrammarBucket->containsKey( nameSpaceKey );
+    if (!nameSpaceKey)
+        return false;
+    if (fGrammarBucket->containsKey(nameSpaceKey))
+        return true;
+    if (fUseCachedGrammar)
+    {
+        if (fGrammarFromPool->containsKey(nameSpaceKey))
+            return true;
+
+        // Lastly, need to check in fGrammarPool        
+        XMLSchemaDescription* gramDesc = fGrammarPool->createSchemaDescription(nameSpaceKey);
+        Janitor<XMLGrammarDescription> janName(gramDesc);
+        Grammar* grammar = fGrammarPool->retrieveGrammar(gramDesc);
+        if (grammar)
+            return true;
+    }
+
+    return false;
 }
 
 void GrammarResolver::putGrammar(Grammar* const grammarToAdopt)
@@ -330,37 +361,38 @@ void GrammarResolver::putGrammar(Grammar* const grammarToAdopt)
     /***
      * the grammar will be either in the grammarpool, or in the grammarbucket
      */
-    if (fCacheGrammar)
+    if (!fCacheGrammar || !fGrammarPool->cacheGrammar(grammarToAdopt))
     {
-       if(!fGrammarPool->cacheGrammar(grammarToAdopt)) 
-       {
-            // grammar pool doesn't want it; we're stuck with looking after it
-            fGrammarBucket->put( (void*) grammarToAdopt->getGrammarDescription()->getGrammarKey(), grammarToAdopt );
+        // either we aren't caching or the grammar pool doesn't want it
+        // so we need to look after it
+        fGrammarBucket->put( (void*) grammarToAdopt->getGrammarDescription()->getGrammarKey(), grammarToAdopt );
+        if (grammarToAdopt->getGrammarType() == Grammar::SchemaGrammarType)
+        {
+            fGrammarsToAddToXSModel->addElement((SchemaGrammar*) grammarToAdopt);
         }
     }
-    else
-    {
-        fGrammarBucket->put( (void*) grammarToAdopt->getGrammarDescription()->getGrammarKey(), grammarToAdopt );
-    }
-
 }
 
 // ---------------------------------------------------------------------------
 //  GrammarResolver: methods
 // ---------------------------------------------------------------------------
 void GrammarResolver::reset() {
-   fGrammarBucket->removeAll();
+    fGrammarBucket->removeAll();
+    fGrammarsToAddToXSModel->removeAllElements();
+    delete fXSModel;
+    fXSModel = 0;
 }
 
 void GrammarResolver::resetCachedGrammar()
 {
+    //REVISIT: if the pool is locked this will fail... should throw an exception?
     fGrammarPool->clear();
-
+    // Even though fXSModel and fGrammarPoolXSModel will be invalid don't touch 
+    // them here as getXSModel will handle this.
 }
 
 void GrammarResolver::cacheGrammars()
 {
-
     RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarBucket);
     ValueVectorOf<XMLCh*> keys(8, fMemoryManager);
     unsigned int keyCount = 0;
@@ -373,6 +405,10 @@ void GrammarResolver::cacheGrammars()
         keyCount++;
     }
 
+    // PSVI: assume everything will be added, if caching fails add grammar back 
+    //       into vector
+    fGrammarsToAddToXSModel->removeAllElements();
+
     // Cache
     for (unsigned int i = 0; i < keyCount; i++) 
     {
@@ -384,8 +420,13 @@ void GrammarResolver::cacheGrammars()
         Grammar* grammar = fGrammarBucket->get(grammarKey);
         if(fGrammarPool->cacheGrammar(grammar))
         {
-            // only orphan grammar is grammar pool accepts
+            // only orphan grammar if grammar pool accepts caching of it
             fGrammarBucket->orphanKey(grammarKey);
+        }
+        else if (grammar->getGrammarType() == Grammar::SchemaGrammarType)
+        {
+            // add it back to list of grammars not in grammar pool
+            fGrammarsToAddToXSModel->addElement((SchemaGrammar*) grammar);           
         }
     }
 
@@ -396,9 +437,8 @@ void GrammarResolver::cacheGrammars()
 // ---------------------------------------------------------------------------
 void GrammarResolver::cacheGrammarFromParse(const bool aValue)
 {
-
-    fCacheGrammar = aValue;
-    fGrammarBucket->removeAll();
+    reset();
+    fCacheGrammar = aValue;    
     fGrammarBucket->setAdoptElements(!fCacheGrammar);
 }
 
@@ -406,14 +446,105 @@ Grammar* GrammarResolver::orphanGrammar(const XMLCh* const nameSpaceKey)
 {
     if (fCacheGrammar)
     {
-        fGrammarFromPool->removeKey(nameSpaceKey);
-        return fGrammarPool->orphanGrammar(nameSpaceKey);
+        Grammar* grammar = fGrammarPool->orphanGrammar(nameSpaceKey);
+        if (grammar)
+        {
+            fGrammarFromPool->removeKey(nameSpaceKey);
+            return grammar;
+        }       
+        // It failed to remove it from the grammar pool either because it
+        // didn't exist or because it is locked.
+        return 0;
     }
     else
     {
         return fGrammarBucket->orphanKey(nameSpaceKey);
     }
+}
 
+XSModel *GrammarResolver::getXSModel()
+{
+    XSModel* xsModel;
+    if (fCacheGrammar)
+    {
+        // We know if the grammarpool changed thru caching, orphaning and erasing
+        // but NOT by other mechanisms such as lockPool() or unlockPool() so it
+        // is safest to always get it.  The grammarPool XSModel will only be 
+        // regenerated if something changed and in that case it will have a new
+        // address.
+        xsModel = fGrammarPool->getXSModel();
+        if (xsModel != fGrammarPoolXSModel)
+        {
+            // we know the grammarpool XSModel has changed or this is the
+            // first call to getXSModel
+            if (!fGrammarPoolXSModel && (fGrammarsToAddToXSModel->size() == 0) &&
+                !fXSModel)
+            {
+                fGrammarPoolXSModel = xsModel;
+                return fGrammarPoolXSModel;
+            }
+            else
+            {
+                // We had previously augmented the grammar pool XSModel
+                // with our our grammars or we would like to upate it now
+                // so we have to regenerate the XSModel
+                fGrammarsToAddToXSModel->removeAllElements();
+                RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarBucket);
+                while (grammarEnum.hasMoreElements()) 
+                {
+                    Grammar& grammar = (Grammar&) grammarEnum.nextElement();
+                    if (grammar.getGrammarType() == Grammar::SchemaGrammarType)
+                        fGrammarsToAddToXSModel->addElement((SchemaGrammar*)&grammar);
+                }
+                if (fXSModel)
+                {
+                    xsModel = new (fMemoryManager) XSModel(fGrammarPoolXSModel, this, fMemoryManager);
+                    delete fXSModel;
+                    fXSModel = xsModel;
+                }
+                else
+                {
+                    fXSModel = new (fMemoryManager) XSModel(fGrammarPoolXSModel, this, fMemoryManager);   
+                }
+                fGrammarsToAddToXSModel->removeAllElements();
+                return fXSModel;
+            }       
+        }
+        else {
+            // we know that the grammar pool XSModel is the same as before
+            if (fGrammarsToAddToXSModel->size())
+            {
+                // we need to update our fXSModel with the new grammars               
+                if (fXSModel)
+                {
+                    xsModel = new (fMemoryManager) XSModel(fXSModel, this, fMemoryManager);                   
+                    fXSModel = xsModel;
+                }
+                else
+                {
+                    fXSModel = new (fMemoryManager) XSModel(fGrammarPoolXSModel, this, fMemoryManager);
+                }
+                fGrammarsToAddToXSModel->removeAllElements();
+                return fXSModel;
+            }
+            // Nothing has changed!
+            if (fXSModel)
+            {
+                return fXSModel;
+            }
+            else
+            {
+                return fGrammarPoolXSModel;
+            }
+        }
+    }
+    // Not Caching...
+    if (fGrammarsToAddToXSModel->size())
+    {      
+        xsModel = new (fMemoryManager) XSModel(fXSModel, this, fMemoryManager);
+        fXSModel = xsModel;             
+    }
+    return fXSModel; 
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -340,12 +340,10 @@ void AbstractDOMParser::setPSVIHandler(PSVIHandler* const handler)
 {
     fPSVIHandler = handler;
     if (fPSVIHandler) {
-        fScanner->setPSVIHandler(fPSVIHandler);
-        fGrammarResolver->getGrammarPool()->setPSVI(true);
+        fScanner->setPSVIHandler(fPSVIHandler);        
     }
     else {
-        fScanner->setPSVIHandler(0);
-        fGrammarResolver->getGrammarPool()->setPSVI(false);
+        fScanner->setPSVIHandler(0);        
     }
 }
 

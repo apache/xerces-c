@@ -80,6 +80,11 @@
  *    other constants and preprocessor macros are automatically generated from
  *    these three definitions.
  *
+ *    The macro XERCES_GRAMMAR_SERIALIZATION_LEVEL has been added so that during
+ *    development if users are using the latest code they can use the grammar
+ *    serialization/desialization features.  Whenever a change is made to the
+ *    serialization code this macro should be incremented.
+ *
  * Xerces User Documentation:
  *
  *  The following sections in the user documentation have examples based upon
@@ -160,6 +165,7 @@
 #define XERCES_VERSION_MINOR 4
 #define XERCES_VERSION_REVISION 0
 
+#define XERCES_GRAMMAR_SERIALIZATION_LEVEL 0
 
 /** DO NOT MODIFY BELOW THIS LINE */
 

@@ -219,6 +219,14 @@ public:
     void reset();
     void resetCachedGrammar();
 
+    /**
+     * Returns an XSModel, either from the GrammarPool or by creating one
+     */
+    XSModel*    getXSModel();
+
+
+    ValueVectorOf<SchemaGrammar*>* getGrammarsToAddToXSModel();
+
     //@}
 
 private:
@@ -241,15 +249,18 @@ private:
     //  fMemoryManager         Pluggable memory manager for dynamic memory
     //                         allocation/deallocation
     // -----------------------------------------------------------------------
-    bool                       fCacheGrammar;
-    bool                       fUseCachedGrammar;
-    bool                       fGrammarPoolFromExternalApplication;
-    XMLStringPool*             fStringPool;
-    RefHashTableOf<Grammar>*   fGrammarBucket;
-    RefHashTableOf<Grammar>*   fGrammarFromPool;
-    DatatypeValidatorFactory*  fDataTypeReg;
-    MemoryManager*             fMemoryManager;
-    XMLGrammarPool*            fGrammarPool;
+    bool                            fCacheGrammar;
+    bool                            fUseCachedGrammar;
+    bool                            fGrammarPoolFromExternalApplication;
+    XMLStringPool*                  fStringPool;
+    RefHashTableOf<Grammar>*        fGrammarBucket;
+    RefHashTableOf<Grammar>*        fGrammarFromPool;
+    DatatypeValidatorFactory*       fDataTypeReg;
+    MemoryManager*                  fMemoryManager;
+    XMLGrammarPool*                 fGrammarPool;
+    XSModel*                        fXSModel;
+    XSModel*                        fGrammarPoolXSModel;
+    ValueVectorOf<SchemaGrammar*>*  fGrammarsToAddToXSModel;
 };
 
 inline XMLStringPool* GrammarResolver::getStringPool() {
@@ -271,6 +282,11 @@ inline XMLGrammarPool* const GrammarResolver::getGrammarPool() const
 inline MemoryManager* const GrammarResolver::getGrammarPoolMemoryManager() const
 {
     return fGrammarPool->getMemoryManager();
+}
+
+inline ValueVectorOf<SchemaGrammar*>* GrammarResolver::getGrammarsToAddToXSModel()
+{
+    return fGrammarsToAddToXSModel;
 }
 
 XERCES_CPP_NAMESPACE_END

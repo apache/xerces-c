@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/11/21 22:38:50  neilg
+ * Enable grammar pools and grammar resolvers to manufacture
+ * XSModels.  This also cleans up handling in the
+ * parser classes by eliminating the need to tell
+ * the grammar pool that schema compoments need to be produced.
+ * Thanks to David Cargill.
+ *
  * Revision 1.12  2003/11/14 22:34:20  neilg
  * removed methods made unnecessary by new XSModel implementation design; thanks to David Cargill
  *
@@ -156,7 +163,7 @@ public :
       *
 	  * grammar removed from the grammar pool and owned by the caller
       *
-      * @param nameSpaceKey: Key sed to search for grammar in the grammar pool
+      * @param nameSpaceKey: Key used to search for grammar in the grammar pool
 	  *
       */
     virtual Grammar*       orphanGrammar(const XMLCh* const nameSpaceKey);  
@@ -173,16 +180,15 @@ public :
       * clear
       *
 	  * all grammars are removed from the grammar pool and deleted.
-      *
+      * @return true if the grammar pool was cleared. false if it did not.
       */
-    virtual void           clear();
+    virtual bool           clear();
         
     /**
       * lockPool
       *
 	  * When this method is called by the application, the 
       * grammar pool should stop adding new grammars to the cache.
-      *
       */
     virtual void           lockPool();
     
@@ -192,16 +198,9 @@ public :
 	  * After this method has been called, the grammar pool implementation
       * should return to its default behaviour when cacheGrammars(...) is called.
       *
+      * For PSVI support any previous XSModel that was produced will be deleted.
       */
     virtual void           unlockPool();
-
-    /**
-      * setPSVI
-      *
-      * A flag to indicate that PSVI will be performed on the schema grammars as 
-      * a PSVIHandler has been set.
-      */ 
-    virtual void            setPSVI(const bool doPSVI);
 
     //@}
 
@@ -245,8 +244,13 @@ public :
       * be a thread-safe operation.  It should return null if and only if
       * the pool is empty.
       *
-      * In this implementation, a new XSModel will be
-      * computed each this time the pool is called if the pool is not locked (and the
+      * Calling getXSModel() on an unlocked grammar pool may result in the
+      * creation of a new XSModel with the old XSModel being deleted.  The
+      * function will return a different address for the XSModel if it has
+      * changed.
+      *
+      * In this implementation, when the pool is not locked a new XSModel will be
+      * computed each this time the pool is called if the pool has changed (and the
       * previous one will be destroyed at that time).  When the lockPool()
       * method is called, an XSModel will be generated and returned whenever this method is called
       * while the pool is in the locked state.  This will be destroyed if the unlockPool()
@@ -290,7 +294,8 @@ public :
       *
       * Versioning
       *
-      *    Only binary data serialized with the current XercesC Version is supported.
+      *    Only binary data serialized with the current XercesC Version and
+      *    SerializationLevel is supported.
       *
       * Clean up
       *
@@ -320,6 +325,8 @@ public :
     friend class XTemplateComparator;
 
 private:
+
+    virtual void    createXSModel();
     // -----------------------------------------------------------------------
     /** name  Unimplemented copy constructor and operator= */
     // -----------------------------------------------------------------------
@@ -340,17 +347,14 @@ private:
     //      that can be updated in a thread-safe manner.
     // fLocked
     //      whether the pool has been locked
-    // fDoPSVI
-    //      whether PSVI will be performed
     //
     // -----------------------------------------------------------------------
     RefHashTableOf<Grammar>*            fGrammarRegistry; 
     XMLStringPool*                      fStringPool;
     XMLSynchronizedStringPool*          fSynchronizedStringPool;
-    ValueVectorOf<SchemaElementDecl*>*  fPSVIvectorElemDecls;
     XSModel*                            fXSModel;
     bool                                fLocked;
-    bool                                fDoPSVI;
+    bool                                fXSModelIsValid;
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.31  2003/11/21 22:38:50  neilg
+ * Enable grammar pools and grammar resolvers to manufacture
+ * XSModels.  This also cleans up handling in the
+ * parser classes by eliminating the need to tell
+ * the grammar pool that schema compoments need to be produced.
+ * Thanks to David Cargill.
+ *
  * Revision 1.30  2003/11/06 15:30:07  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -587,12 +594,10 @@ void SAX2XMLReaderImpl::setPSVIHandler(PSVIHandler* const handler)
 {
     fPSVIHandler = handler;
     if (fPSVIHandler) {
-        fScanner->setPSVIHandler(fPSVIHandler);
-        fGrammarResolver->getGrammarPool()->setPSVI(true);
+        fScanner->setPSVIHandler(fPSVIHandler);        
     }
     else {
-        fScanner->setPSVIHandler(0);
-        fGrammarResolver->getGrammarPool()->setPSVI(false);
+        fScanner->setPSVIHandler(0);       
     }
 }
 

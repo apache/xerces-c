@@ -56,6 +56,13 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/11/21 22:38:50  neilg
+ * Enable grammar pools and grammar resolvers to manufacture
+ * XSModels.  This also cleans up handling in the
+ * parser classes by eliminating the need to tell
+ * the grammar pool that schema compoments need to be produced.
+ * Thanks to David Cargill.
+ *
  * Revision 1.13  2003/11/14 22:34:20  neilg
  * removed methods made unnecessary by new XSModel implementation design; thanks to David Cargill
  *
@@ -117,6 +124,33 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+// private function used to update fXSModel
+void XMLGrammarPoolImpl::createXSModel()
+{
+    RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
+    if (fXSModel)
+    {
+        // Need to guarantee that we return a different address...        
+        if (grammarEnum.hasMoreElements())
+        {
+            XSModel* xsModel = new (getMemoryManager()) XSModel(this, getMemoryManager());
+            delete fXSModel;
+            fXSModel = xsModel;
+        }
+        else 
+        {
+            // its empty...
+            delete fXSModel;
+            fXSModel = 0;
+        }
+    }
+    else if (grammarEnum.hasMoreElements())
+    {
+        fXSModel = new (getMemoryManager()) XSModel(this, getMemoryManager());
+    }
+    fXSModelIsValid = true; 
+}
+
 // ---------------------------------------------------------------------------
 //  XMLGrammarPoolImpl: constructor and destructor
 // ---------------------------------------------------------------------------
@@ -126,6 +160,8 @@ XMLGrammarPoolImpl::~XMLGrammarPoolImpl()
     delete fStringPool;
     if(fSynchronizedStringPool)
         delete fSynchronizedStringPool;
+    if(fXSModel)
+        delete fXSModel;
 }
 
 XMLGrammarPoolImpl::XMLGrammarPoolImpl(MemoryManager* const memMgr)
@@ -133,9 +169,9 @@ XMLGrammarPoolImpl::XMLGrammarPoolImpl(MemoryManager* const memMgr)
 ,fGrammarRegistry(0)
 ,fStringPool(0)
 ,fSynchronizedStringPool(0)
-,fPSVIvectorElemDecls(0)
 ,fLocked(false)
-,fDoPSVI(false)
+,fXSModelIsValid(false)
+,fXSModel(0)
 {
     fGrammarRegistry = new (memMgr) RefHashTableOf<Grammar>(29, true, memMgr);
     fStringPool = new (memMgr) XMLStringPool(109, memMgr);
@@ -146,9 +182,7 @@ XMLGrammarPoolImpl::XMLGrammarPoolImpl(MemoryManager* const memMgr)
 // -----------------------------------------------------------------------
 bool XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
 {
-    if(fLocked)
-        return false;
-    if (!gramToCache )
+    if(fLocked || !gramToCache)
         return false;
 
     const XMLCh* grammarKey = gramToCache->getGrammarDescription()->getGrammarKey();
@@ -160,6 +194,8 @@ bool XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
 
     fGrammarRegistry->put((void*) grammarKey, gramToCache);
     
+    fXSModelIsValid = false;
+
     return true;
 }
 
@@ -172,12 +208,16 @@ Grammar* XMLGrammarPoolImpl::retrieveGrammar(XMLGrammarDescription* const gramDe
      * This implementation simply use GrammarKey
      */
     return fGrammarRegistry->get(gramDesc->getGrammarKey());
-    
 }
 
 Grammar* XMLGrammarPoolImpl::orphanGrammar(const XMLCh* const nameSpaceKey)
 {
-    return fGrammarRegistry->orphanKey(nameSpaceKey); 
+    if (!fLocked)
+    {
+        fXSModelIsValid = false;
+        return fGrammarRegistry->orphanKey(nameSpaceKey); 
+    }
+    return 0;
 }
 
 RefHashTableOfEnumerator<Grammar>
@@ -187,43 +227,59 @@ XMLGrammarPoolImpl::getGrammarEnumerator() const
 }
 
 
-void XMLGrammarPoolImpl::clear()
+bool XMLGrammarPoolImpl::clear()
 {
-    fGrammarRegistry->removeAll();
+    if (!fLocked)
+    {
+        fGrammarRegistry->removeAll();
+
+        fXSModelIsValid = false;
+        if (fXSModel)
+        {
+            delete fXSModel;
+            fXSModel = 0;
+        }
+        return true;
+    }
+    return false;
 }
 
 void XMLGrammarPoolImpl::lockPool()
 {
-    fLocked = true;
-    MemoryManager *memMgr = getMemoryManager();
-    if(!fSynchronizedStringPool)
+    if (!fLocked)
     {
-        fSynchronizedStringPool = new (memMgr) XMLSynchronizedStringPool(fStringPool, 109, memMgr);
-    }
-    if (fDoPSVI) 
-    {
-        fXSModel = new XSModel(this, memMgr);
+        fLocked = true;
+        MemoryManager *memMgr = getMemoryManager();
+        if(!fSynchronizedStringPool)
+        {
+            fSynchronizedStringPool = new (memMgr) XMLSynchronizedStringPool(fStringPool, 109, memMgr);
+        }
+        if (!fXSModelIsValid)
+        {
+            createXSModel();                  
+        }
     }
 }
 
 void XMLGrammarPoolImpl::unlockPool()
 {
-    fLocked = false;
-    if(fSynchronizedStringPool)
-        fSynchronizedStringPool->flushAll();
-    if (fDoPSVI) 
+    if (fLocked)
     {
-        delete fXSModel;
-        fXSModel = 0;
+        fLocked = false;
+        if(fSynchronizedStringPool)
+        {
+            fSynchronizedStringPool->flushAll();
+            // if user calls Lock again, need to have null fSynchronizedStringPool
+            delete fSynchronizedStringPool;
+            fSynchronizedStringPool = 0;
+        }
+        fXSModelIsValid = false;
+        if (fXSModel) 
+        {     
+            delete fXSModel;
+            fXSModel = 0;
+        }
     }
-}
-
-// -----------------------------------------------------------------------
-// Implementation of PSVI
-// -----------------------------------------------------------------------
-void XMLGrammarPoolImpl::setPSVI(const bool doPSVI)
-{
-    fDoPSVI = doPSVI;
 }
 
 // -----------------------------------------------------------------------
@@ -251,8 +307,14 @@ XMLSchemaDescription* XMLGrammarPoolImpl::createSchemaDescription(const XMLCh* c
 
 XSModel *XMLGrammarPoolImpl::getXSModel() 
 {
-    // REVISIT:  implement along with XSModel implementation
-    return 0;
+    if (fLocked)
+        return fXSModel;
+
+    if (fXSModelIsValid)
+        return fXSModel;
+
+    createXSModel();    
+    return fXSModel;
 }
 
 XMLStringPool *XMLGrammarPoolImpl::getURIStringPool() 
@@ -270,68 +332,45 @@ XMLStringPool *XMLGrammarPoolImpl::getURIStringPool()
  * don't serialize
  *
  *   XMLSynchronizedStringPool*  fSynchronizedStringPool;
- *   bool                        fLocked;
  */
 
 /***
- *   .not locked
  *   .non-empty gramamrRegistry
  ***/
 void XMLGrammarPoolImpl::serializeGrammars(BinOutputStream* const binOut)
 {
-    if (fLocked)
-    {
-        ThrowXML(XSerializationException, XMLExcepts::XSer_GrammarPool_Locked);
-    }
-
-    fLocked = true;
     RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
     if (!(grammarEnum.hasMoreElements())) 
-    {
-        fLocked = false;
+    {        
         ThrowXML(XSerializationException, XMLExcepts::XSer_GrammarPool_Empty);
     }
+        
+    XSerializeEngine  serEng(binOut, getMemoryManager());
 
-    try 
-    {
-        XSerializeEngine  serEng(binOut, getMemoryManager());
+    //version information
+    serEng<<gXercesMajVersion;
+    serEng<<gXercesMinVersion;
+    serEng<<gXercesRevision;
+    serEng<<(unsigned int)XERCES_GRAMMAR_SERIALIZATION_LEVEL;
 
-        //version information
-        serEng<<gXercesMajVersion;
-        serEng<<gXercesMinVersion;
-        serEng<<gXercesRevision;
+    //lock status
+    serEng<<fLocked;
 
-        //StringPool, don't use <<
-        fStringPool->serialize(serEng);
+    //StringPool, don't use <<
+    fStringPool->serialize(serEng);
 
-        /***
-         * Serialize RefHashTableOf<Grammar>*    fGrammarRegistry; 
-         ***/
-        XTemplateSerializer::storeObject(fGrammarRegistry, serEng);
-          
-    }
-    catch(...)
-    {
-        fLocked = false;
-        throw;
-    }
-
-    fLocked = false;
+    /***
+     * Serialize RefHashTableOf<Grammar>*    fGrammarRegistry; 
+     ***/
+    XTemplateSerializer::storeObject(fGrammarRegistry, serEng);
 }
 
 /***
- *   .not locked
  *   .empty stringPool
  *   .empty gramamrRegistry
  ***/
 void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
 {
-    if (fLocked)
-    {
-        ThrowXML(XSerializationException, XMLExcepts::XSer_GrammarPool_Locked);
-    }
-
-    fLocked = true;
     unsigned int stringCount = fStringPool->getStringCount();
     if (stringCount)
     {
@@ -346,7 +385,6 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
         }
         else
         {
-            fLocked = false;
             ThrowXML(XSerializationException, XMLExcepts::XSer_StringPool_NotEmpty);
         }
     }
@@ -354,30 +392,32 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
     RefHashTableOfEnumerator<Grammar> grammarEnum(fGrammarRegistry);
     if (grammarEnum.hasMoreElements()) 
     {
-        fLocked = false;
         ThrowXML(XSerializationException, XMLExcepts::XSer_GrammarPool_NotEmpty);
     }
 
+    MemoryManager *memMgr = getMemoryManager();
     try 
     {
-        XSerializeEngine  serEng(binIn, getMemoryManager());
+        XSerializeEngine  serEng(binIn, memMgr);
 
         //version information
         unsigned int  MajVer;
         unsigned int  MinVer;
         unsigned int  Revision;
+        unsigned int  SerializationLevel;
 
         serEng>>MajVer;
         serEng>>MinVer;
         serEng>>Revision;
+        serEng>>SerializationLevel;
 
         //we may change the logic once we have more
         //versions
         if ((MajVer   != gXercesMajVersion) ||
             (MinVer   != gXercesMinVersion) ||
-            (Revision != gXercesRevision)     )
+            (Revision != gXercesRevision)   ||
+            (SerializationLevel != (unsigned int) XERCES_GRAMMAR_SERIALIZATION_LEVEL))
         {
-            fLocked = false;
             XMLCh     MajVerChar[4];
             XMLCh     MinVerChar[4];
             XMLCh     RevisionChar[4];
@@ -391,6 +431,8 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
                     , MinVerChar
                     , RevisionChar);
         }
+        //lock status
+        serEng>>fLocked;
 
         //StringPool, don't use >>
         fStringPool->serialize(serEng);
@@ -403,12 +445,14 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
     }
     catch(...)
     {
+        fLocked = false; // need to unset it so we can clean it out..
         clear();  //clear all deserialized grammars
-        fLocked = false;
         throw;
     }
-
-    fLocked = false;
+    if (fLocked) 
+    {
+        createXSModel();              
+    }
 }
 
 
