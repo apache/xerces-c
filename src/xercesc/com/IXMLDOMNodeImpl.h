@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/02/12 13:49:43  amassari
+ * Updated version to 2.5
+ *
  * Revision 1.3  2003/11/21 12:05:48  amassari
  * Updated version to 2.4
  *
@@ -111,7 +114,7 @@ XERCES_CPP_NAMESPACE_USE
 
 template <class T, const IID* piid, class tihclass = CComTypeInfoHolder>
 class ATL_NO_VTABLE IXMLDOMNodeImpl:
-	public IDispatchImpl<T,piid,&LIBID_Xerces, 2, 40,tihclass>,
+	public IDispatchImpl<T,piid,&LIBID_Xerces, 2, 50,tihclass>,
 	public IIBMXMLDOMNodeIdentity,
 	public ISupportErrorInfo
 {

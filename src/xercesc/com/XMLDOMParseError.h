@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/02/12 13:49:43  amassari
+ * Updated version to 2.5
+ *
  * Revision 1.4  2003/11/21 12:05:48  amassari
  * Updated version to 2.4
  *
@@ -87,7 +90,7 @@ XERCES_CPP_NAMESPACE_USE
 
 class ATL_NO_VTABLE CXMLDOMParseError : 
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public IDispatchImpl<IXMLDOMParseError, &IID_IXMLDOMParseError, &LIBID_Xerces, 2, 40>
+	public IDispatchImpl<IXMLDOMParseError, &IID_IXMLDOMParseError, &LIBID_Xerces, 2, 50>
 {
 public:
 	CXMLDOMParseError()

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/02/12 13:49:43  amassari
+ * Updated version to 2.5
+ *
  * Revision 1.4  2003/11/21 12:05:48  amassari
  * Updated version to 2.4
  *
@@ -91,7 +94,7 @@ class ATL_NO_VTABLE CXMLHttpRequest :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CXMLHttpRequest, &CLSID_XMLHTTPRequest>,
 	public IObjectSafetyImpl<CXMLHttpRequest, INTERFACESAFE_FOR_UNTRUSTED_CALLER>,
-	public IDispatchImpl<IXMLHttpRequest, &IID_IXMLHttpRequest, &LIBID_Xerces, 2, 40>,
+	public IDispatchImpl<IXMLHttpRequest, &IID_IXMLHttpRequest, &LIBID_Xerces, 2, 50>,
 	public IObjectWithSiteImpl<CXMLHttpRequest>,
 	public ISupportErrorInfo,
 	public CWindowImpl<CXMLHttpRequest, CWindow, CWinTraits<0,0> >

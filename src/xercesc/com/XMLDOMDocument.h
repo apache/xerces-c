@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/02/12 13:49:43  amassari
+ * Updated version to 2.5
+ *
  * Revision 1.6  2003/12/02 14:33:13  amassari
  * Don't use the word "exception" as a variable name, as VC 7.1 complains about it
  *
@@ -122,7 +125,7 @@ class ATL_NO_VTABLE CXMLDOMDocument :
 	public IObjectWithSiteImpl<CXMLDOMDocument>,
 	public CProxyXMLDOMDocumentEvents< CXMLDOMDocument >,
 	public IConnectionPointContainerImpl<CXMLDOMDocument>,
-	public IProvideClassInfo2Impl<&CLSID_DOMDocument, &DIID_XMLDOMDocumentEvents, &LIBID_Xerces, 2, 40>,
+	public IProvideClassInfo2Impl<&CLSID_DOMDocument, &DIID_XMLDOMDocumentEvents, &LIBID_Xerces, 2, 50>,
 	public CWindowImpl<CXMLDOMDocument, CWindow, CWinTraits<0,0> >,
 	ErrorHandler
 {
