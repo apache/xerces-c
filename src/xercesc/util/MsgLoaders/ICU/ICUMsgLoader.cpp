@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/04 22:24:43  peiyongz
+ * Locale setting for message loader
+ *
  * Revision 1.5  2002/11/04 15:10:40  tng
  * C++ Namespace Support.
  *
@@ -112,6 +115,7 @@
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/Janitor.hpp>
 #include "ICUMsgLoader.hpp"
 
 #include "string.h"
@@ -131,7 +135,9 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
 :fLocaleBundle(0)
 ,fDomainBundle(0)
 {
-    // validation on msgDomain
+    /***
+	    Validate msgDomain
+    ***/
     if (!XMLString::equals(msgDomain, XMLUni::fgXMLErrDomain)    &&
         !XMLString::equals(msgDomain, XMLUni::fgExceptDomain)    &&
         !XMLString::equals(msgDomain, XMLUni::fgValidityDomain)   )
@@ -139,37 +145,54 @@ ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain)
         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
 
-    char tempBuf[1024];
-    memset(tempBuf, 0, sizeof tempBuf);
-	char *location  = getenv("XERCESC_RESBUND_PKG_PATH");
-
-    if (location)
-		strcpy(tempBuf, location);
-
-    strcat(tempBuf, U_FILE_SEP_STRING);
-    strcat(tempBuf, "XercescErrMsg");
-
-    UErrorCode err = U_ZERO_ERROR;
-    fLocaleBundle = ures_open(tempBuf, getenv("XERCESC_RESBUND_PKG_LOCALE"), &err);
-    if (!U_SUCCESS(err) || fLocaleBundle == NULL)
-    {
-        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
-    }
+	/***
+	     Resolve domainName
+	***/
+	int          index = XMLString::lastIndexOf(msgDomain, chForwardSlash);
+	char*   domainName = XMLString::transcode(&(msgDomain[index + 1]));
+    ArrayJanitor<char> jan1(domainName);
 
     /***
-        get the resource bundle for the domain
-        strip off path information, if any
-    ***/
-     int   index = XMLString::lastIndexOf(msgDomain, chForwardSlash);
-     char *domainName = XMLString::transcode(&(msgDomain[index + 1]));
-	 err = U_ZERO_ERROR;
-     fDomainBundle = ures_getByKey(fLocaleBundle, domainName, NULL, &err);
-     delete [] domainName;
+	     Resolve location
 
-     if (!U_SUCCESS(err) || fDomainBundle == NULL)
+	     REVISIT: another approach would be: through some system API
+		          which returns the directory of the XercescLib and
+		          that directory would be used to locate the 
+		 		  resource bundle    
+    ***/
+    char locationBuf[1024];
+    memset(locationBuf, 0, sizeof locationBuf);
+	char *nlsHome = getenv("XERCESC_NLS_HOME");
+
+    if (nlsHome)
+	{
+		strcpy(locationBuf, nlsHome);
+        strcat(locationBuf, U_FILE_SEP_STRING);
+	}
+
+    strcat(locationBuf, "XercescErrMsg");
+
+	/***
+	    Open the locale-specific resource bundle
+	***/
+    UErrorCode err = U_ZERO_ERROR;
+    fLocaleBundle = ures_open(locationBuf, XMLMsgLoader::getLocale(), &err);
+    if (!U_SUCCESS(err) || fLocaleBundle == NULL)
     {
-        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
     }
+
+	/***
+	    Open the domain specific resource bundle within
+		the locale-specific resource bundle
+	***/
+	err = U_ZERO_ERROR;
+	fDomainBundle = ures_getByKey(fLocaleBundle, domainName, NULL, &err);
+ 
+	if (!U_SUCCESS(err) || fDomainBundle == NULL)
+	{
+         XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+	}
 
 }
 

@@ -254,17 +254,19 @@ public :
     static const XMLCh fgDOMValidation[];
     static const XMLCh fgDOMWhitespaceInElementContent[];
 
-	// Introduced in DOM Level 3
-	// DOMWriter feature
-	static const XMLCh fgDOMWRTCanonicalForm[];
-	static const XMLCh fgDOMWRTDiscardDefaultContent[];
-	static const XMLCh fgDOMWRTEntities[];
-	static const XMLCh fgDOMWRTFormatPrettyPrint[];
-	static const XMLCh fgDOMWRTNormalizeCharacters[];
-	static const XMLCh fgDOMWRTSplitCdataSections[];
-	static const XMLCh fgDOMWRTValidation[];
-	static const XMLCh fgDOMWRTWhitespaceInElementContent[];
+    // Introduced in DOM Level 3
+    // DOMWriter feature
+    static const XMLCh fgDOMWRTCanonicalForm[];
+    static const XMLCh fgDOMWRTDiscardDefaultContent[];
+    static const XMLCh fgDOMWRTEntities[];
+    static const XMLCh fgDOMWRTFormatPrettyPrint[];
+    static const XMLCh fgDOMWRTNormalizeCharacters[];
+    static const XMLCh fgDOMWRTSplitCdataSections[];
+    static const XMLCh fgDOMWRTValidation[];
+    static const XMLCh fgDOMWRTWhitespaceInElementContent[];
 
+    // Locale
+    static const char  fgXercescDefaultLocale[];
 };
 
 XERCES_CPP_NAMESPACE_END

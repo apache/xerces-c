@@ -1199,5 +1199,8 @@ const XMLCh XMLUni::fgDOMWRTWhitespaceInElementContent[] =
 	chLatin_n, chLatin_t, chLatin_e, chLatin_n, chLatin_t, chNull
 };
 
+// en_US
+const char XMLUni::fgXercescDefaultLocale[] = "en_US";
+
 XERCES_CPP_NAMESPACE_END
 

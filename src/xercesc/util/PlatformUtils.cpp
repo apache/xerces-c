@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/11/04 22:24:21  peiyongz
+ * Locale setting for message loader
+ *
  * Revision 1.3  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -187,7 +190,7 @@ XMLTransService*    XMLPlatformUtils::fgTransService = 0;
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Init/term methods
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::Initialize()
+void XMLPlatformUtils::Initialize(const char* const locale)
 {
     //
     //  Effects of overflow:
@@ -261,6 +264,25 @@ void XMLPlatformUtils::Initialize()
     //  a zero pointer if this platform doesn't want to support this.
     //
     fgNetAccessor = makeNetAccessor();
+
+    /***
+     *  Locale setting for Message Loader
+     *
+     *  Noticed: The locale is set iff the Initialize() is invoked for the 
+     *           very first time, thus to ensure that each and every message 
+     *           loaders, in this process space, share the same locale.
+     *
+     *           All subsequent invocations of Initialize() have no effect on the 
+     *           message loaders, either instantiated, or to be instantiated.
+     *
+     *           To set to a different locale, client application needs to 
+     *           Terminate() (or multiple Terminate() in the case where multiple
+     *           Initialize() have been invoked before) and then followed by an
+     *           Initialize(new_locale).
+     *
+     ***/
+    XMLMsgLoader::setLocale(locale);
+
 }
 
 
@@ -317,8 +339,16 @@ void XMLPlatformUtils::Terminate()
     //
     platformTerm();
 
+    /***
+     *  de-allocate resource
+     *
+     *  refer to discussion in the Initialize()
+     ***/
+    XMLMsgLoader::setLocale(0);
+
     // And say we are no longer initialized
     gInitFlag = 0;
+
 }
 
 

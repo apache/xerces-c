@@ -158,7 +158,7 @@ public :
       *
       * Initialization <b>must</b> be called first in any client code.
       */
-    static void Initialize();
+    static void Initialize(const char* const locale = XMLUni::fgXercescDefaultLocale);
 
     /** Perform per-process parser termination
       *

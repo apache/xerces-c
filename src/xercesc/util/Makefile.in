@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.16  2002/11/04 22:28:05  peiyongz
+# Locale setting for message loader
+#
 # Revision 1.15  2002/10/22 17:53:43  peiyongz
 # Build resource bundles on Unix
 #
@@ -521,6 +524,7 @@ UTIL_CPP_OBJECTS = \
     XMLEBCDICTranscoder.$(TO) \
     XMLException.$(TO) \
     XMLFloat.$(TO) \
+    XMLMsgLoader.$(TO) \
     XMLString.$(TO) \
     XMLUCSTranscoder.$(TO) \
     XMLUTF16Transcoder.$(TO) \

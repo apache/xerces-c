@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/11/04 22:24:21  peiyongz
+ * Locale setting for message loader
+ *
  * Revision 1.2  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -161,11 +164,27 @@ public :
         , const char* const     repText4 = 0
     ) = 0;
 
+    /** @name Locale Handling  */
+    //@{
+	/**
+      * This function enables set the locale information which
+      * all concrete message loaders shall refer to during instantiation.
+      *
+      * Note: for detailed discussion, refer to PlatformUtils::initalize()
+      */
+    static void           setLocale(const char* const localeToAdopt);
+
+    /**
+      * Fr the derived to retrieve locale info during construction
+      */
+    static const char*    getLocale();
+
+    //@}
 
     // -----------------------------------------------------------------------
-    //  Getter methods
+    //  Deprecated: Getter methods
     // -----------------------------------------------------------------------
-    const XMLCh* getLanguageName() const;
+    virtual const XMLCh* getLanguageName() const;
 
 
 protected :
@@ -174,12 +193,10 @@ protected :
     // -----------------------------------------------------------------------
     XMLMsgLoader();
 
-
     // -----------------------------------------------------------------------
-    //  Protected helper methods
+    //  Deprecated: Protected helper methods
     // -----------------------------------------------------------------------
     void setLanguageName(XMLCh* const nameToAdopt);
-
 
 private :
     // -----------------------------------------------------------------------
@@ -192,12 +209,13 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fLanguage
-    //      This is the language that is represented by this instance of the
-    //      loader. The derived class must pass this through for storage and
-    //      we adopt it and delete it when we go.
+    //  fLocale
+    //      Locale info set through PlatformUtils::init().
+    //      The derived class may refer to this for locale information.
+    //
     // -----------------------------------------------------------------------
-    XMLCh*  fLanguage;
+    static char*    fLocale;
+    static XMLCh    fLanguage[];
 };
 
 
@@ -206,36 +224,14 @@ private :
 // ---------------------------------------------------------------------------
 inline XMLMsgLoader::~XMLMsgLoader()
 {
-    delete [] fLanguage;
 }
 
 
 // ---------------------------------------------------------------------------
 //  XMLMsgLoader: Hidden Constructors
 // ---------------------------------------------------------------------------
-inline XMLMsgLoader::XMLMsgLoader() :
-
-    fLanguage(0)
+inline XMLMsgLoader::XMLMsgLoader()
 {
-}
-
-
-// ---------------------------------------------------------------------------
-//  XMLMsgLoader: Getter methods
-// ---------------------------------------------------------------------------
-inline const XMLCh* XMLMsgLoader::getLanguageName() const
-{
-    return fLanguage;
-}
-
-
-// ---------------------------------------------------------------------------
-//  XMLMsgLoader: Protected helper methods
-// ---------------------------------------------------------------------------
-inline void XMLMsgLoader::setLanguageName(XMLCh* const nameToAdopt)
-{
-    delete [] fLanguage;
-    fLanguage = nameToAdopt;
 }
 
 XERCES_CPP_NAMESPACE_END
