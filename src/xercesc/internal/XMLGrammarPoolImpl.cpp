@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2004/11/08 03:57:22  peiyongz
+ * read/write Storer level
+ *
  * Revision 1.23  2004/09/29 19:27:07  cargilld
  * Fix for Jira-1217: fixing problems with getXSModel.
  *
@@ -108,6 +111,7 @@
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 #include <xercesc/util/SynchronizedStringPool.hpp>
+#include <xercesc/util/XMLUni.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -333,9 +337,6 @@ void XMLGrammarPoolImpl::serializeGrammars(BinOutputStream* const binOut)
     XSerializeEngine  serEng(binOut, this);
 
     //version information
-    serEng<<gXercesMajVersion;
-    serEng<<gXercesMinVersion;
-    serEng<<gXercesRevision;
     serEng<<(unsigned int)XERCES_GRAMMAR_SERIALIZATION_LEVEL;
 
     //lock status
@@ -387,37 +388,28 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
         XSerializeEngine  serEng(binIn, this);
 
         //version information
-        unsigned int  MajVer;
-        unsigned int  MinVer;
-        unsigned int  Revision;
-        unsigned int  SerializationLevel;
+        unsigned int  StorerLevel;
+        serEng>>StorerLevel;
+        serEng.fStorerLevel = StorerLevel;
 
-        serEng>>MajVer;
-        serEng>>MinVer;
-        serEng>>Revision;
-        serEng>>SerializationLevel;
-
-        //we may change the logic once we have more
-        //versions
-        if ((MajVer   != gXercesMajVersion) ||
-            (MinVer   != gXercesMinVersion) ||
-            (Revision != gXercesRevision)   ||
-            (SerializationLevel != (unsigned int) XERCES_GRAMMAR_SERIALIZATION_LEVEL))
+        //if the storer level is after the loader level
+        //the loader shall not read the data any more
+        if (StorerLevel > (unsigned int) XERCES_GRAMMAR_SERIALIZATION_LEVEL)
         {
-            XMLCh     MajVerChar[5];
-            XMLCh     MinVerChar[5];
-            XMLCh     RevisionChar[5];
-            XMLString::binToText(MajVer,   MajVerChar,   4, 10, memMgr);
-            XMLString::binToText(MinVer,   MinVerChar,   4, 10, memMgr);
-            XMLString::binToText(Revision, RevisionChar, 4, 10, memMgr);
+            XMLCh     StorerLevelChar[5];
+            XMLCh     LoaderLevelChar[5];
+            XMLCh     DummyChar[2] = {chNull};
+            XMLString::binToText(StorerLevel,                          StorerLevelChar,   4, 10, memMgr);
+            XMLString::binToText(XERCES_GRAMMAR_SERIALIZATION_LEVEL,   LoaderLevelChar,   4, 10, memMgr);
             
             ThrowXMLwithMemMgr3(XSerializationException
                     , XMLExcepts::XSer_BinaryData_Version_NotSupported
-                    , MajVerChar
-                    , MinVerChar
-                    , RevisionChar
+                    , StorerLevelChar
+                    , LoaderLevelChar
+                    , DummyChar
                     , memMgr);
         }
+
         //lock status
         serEng>>fLocked;
 
