@@ -170,10 +170,10 @@ sub package_sources {
       system ("chmod 755 $srctargetdir/samples/runConfigure $srctargetdir/samples/configure $srctargetdir/samples/install-sh");
       system ("chmod 755 $srctargetdir/samples/config.sub $srctargetdir/samples/config.guess");
       # To make sure that configure script is updated, run autoconf
-      chdir ("$srctargetdir/src");
-      system("autoconf");
-      chdir ("$srctargetdir/samples");
-      system("autoconf");
+      # chdir ("$srctargetdir/src");
+      # system("autoconf"); # Our configure script is special, it has OS390 and AS400 tweaks
+      # chdir ("$srctargetdir/samples");
+      # system("autoconf"); # Our configure script is special, it has OS390 and AS400 tweaks
    }
    
    # Delete the irrelevant parts before the packaging
