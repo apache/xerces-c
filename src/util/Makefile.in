@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.47  2001/10/02 16:07:45  tng
+# typo: fix extra spaces after the separator that led to make error
+#
 # Revision 1.46  2001/09/27 14:54:03  peiyongz
 # DTV Reorganization: new class
 #
@@ -353,7 +356,7 @@ UTIL_CPP_PUBHEADERS = \
     XML256TableTranscoder.hpp \
     XML88591Transcoder.hpp \
     XMLASCIITranscoder.hpp \
-    XMLNumber.hpp \    
+    XMLNumber.hpp \
     XMLBigDecimal.hpp \
     XMLBigInteger.hpp \
     XMLDouble.hpp \
