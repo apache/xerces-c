@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/20 21:32:02  peiyongz
+ * Apply MemoryManager
+ *
  * Revision 1.8  2003/01/27 21:15:56  peiyongz
  * only zero or one space allowed in between B64 character.
  *
@@ -143,6 +146,31 @@ const XMLByte Base64::base64Padding = chEqual;
 
 bool Base64::isInitialized = false;
 
+/***
+ *
+ * Memory Management Issue:
+ *
+ * . For result returned to caller, the plugged memory manager is used
+ *   if it is provided, or XMLPlatformUtils::fgMemoryManager otherwise.
+ *
+ * . For internal used, XMLPlatformUtils::fgMemoryManager is used ONLY
+ *
+ */
+
+static inline void* getMemory(MemoryManager* const allocator
+                            , unsigned int const   sizeToAllocate)
+{
+   return allocator ? allocator->allocate(sizeToAllocate)
+                    : XMLPlatformUtils::fgMemoryManager->allocate(sizeToAllocate);
+}
+
+static inline void returnMemory(MemoryManager* const allocator
+                              , void*                buffer)
+{
+    allocator ? allocator->deallocate(buffer)
+              : XMLPlatformUtils::fgMemoryManager->deallocate(buffer);
+}
+
 /**
  *     E2-9
  *
@@ -171,14 +199,15 @@ bool Base64::isInitialized = false;
 // number of quadruplets per one line ( must be >1 and <19 )
 const unsigned int Base64::quadsPerLine = 15;
 
-XMLByte* Base64::encode(const XMLByte* const inputData,
-                        const unsigned int   inputLength,
-                        unsigned int*        outputLength)
+XMLByte* Base64::encode(const XMLByte* const inputData
+                      , const unsigned int   inputLength
+                      , unsigned int*        outputLength
+                      , MemoryManager* const memMgr)
 {
     if (!isInitialized)
         init();
 
-    if (!inputData)
+    if (!inputData || !outputLength)
         return 0;
 
     int quadrupletCount = ( inputLength + 2 ) / 3;
@@ -195,7 +224,7 @@ XMLByte* Base64::encode(const XMLByte* const inputData,
 
     unsigned int inputIndex = 0;
     unsigned int outputIndex = 0;
-    XMLByte *encodedData = new XMLByte[ quadrupletCount*FOURBYTE + lineCount + 1 ];
+    XMLByte *encodedData = (XMLByte*) getMemory(memMgr, (quadrupletCount*FOURBYTE+lineCount+1) * sizeof(XMLByte));
 
     //
     // Process all quadruplet(s) except the last
@@ -261,8 +290,7 @@ XMLByte* Base64::encode(const XMLByte* const inputData,
     // write out end of string
     encodedData[ outputIndex ] = 0;
 
-    if( outputLength != 0 )
-      (*outputLength) = outputIndex;
+    *outputLength = outputIndex;
 
     return encodedData;
 }
@@ -280,7 +308,7 @@ XMLByte* Base64::encode(const XMLByte* const inputData,
 // Since decode() has track of length of the decoded data, we
 // will get this length from decode(), instead of strLen().
 //
-int Base64::getDataLength( const XMLCh* const inputData )
+int Base64::getDataLength(const XMLCh* const inputData)
 {
     unsigned int    retLen = 0;
     XMLCh* decodedData = decode(inputData, &retLen);
@@ -289,7 +317,7 @@ int Base64::getDataLength( const XMLCh* const inputData )
         return -1;
     else
     {
-        delete[] decodedData;
+        returnMemory(0, decodedData);
         return retLen;
     }
 }
@@ -318,8 +346,9 @@ int Base64::getDataLength( const XMLCh* const inputData )
  *     B64          ::= [A-Za-z0-9+/]
 */
 
-XMLByte* Base64::decode(const XMLByte* const inputData,
-                        unsigned int*        outputLength)
+XMLByte* Base64::decode(const XMLByte* const inputData
+                      , unsigned int*        decodedLength
+                      , MemoryManager* const memMgr)
 {
     if (!isInitialized)
         init();
@@ -331,8 +360,8 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
     // remove all XML whitespaces from the base64Data
     //
     int inputLength = XMLString::stringLen( (const char* const)inputData );
-    XMLByte* rawInputData = new XMLByte[ inputLength + 1 ];
-    ArrayJanitor<XMLByte> jan(rawInputData);
+    XMLByte* rawInputData = (XMLByte*) getMemory(0, (inputLength+1) * sizeof(XMLByte));
+    ArrayJanitor<XMLByte> jan(rawInputData, XMLPlatformUtils::fgMemoryManager);
 
     int inputIndex = 0;
     int rawInputLength = 0;
@@ -373,7 +402,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
 
     int rawInputIndex  = 0;
     int outputIndex    = 0;
-    XMLByte *decodedData = new XMLByte[ quadrupletCount*3 + 1 ];
+    XMLByte *decodedData = (XMLByte*) getMemory(memMgr, (quadrupletCount*3+1) * sizeof(XMLByte));
 
     //
     // Process all quadruplet(s) except the last
@@ -388,7 +417,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
             !isData( (d4 = rawInputData[ rawInputIndex++ ]) ))
         {
             // if found "no data" just return NULL
-            delete[] decodedData;
+            returnMemory(memMgr, decodedData);
             return 0;
         }
 
@@ -411,7 +440,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
         !isData( (d2 = rawInputData[ rawInputIndex++ ]) ))
     {
         // if found "no data" just return NULL
-        delete[] decodedData;
+        returnMemory(memMgr, decodedData);
         return 0;
     }
 
@@ -430,7 +459,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
             // two PAD e.g. 3c==
             if ((b2 & 0xf) != 0) // last 4 bits should be zero
             {
-                delete[] decodedData;
+                returnMemory(memMgr, decodedData);
                 return 0;
             }
 
@@ -442,7 +471,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
             b3 = base64Inverse[ d3 ];
             if (( b3 & 0x3 ) != 0 ) // last 2 bits should be zero
             {
-                delete[] decodedData;
+                returnMemory(memMgr, decodedData);
                 return 0;
             }
 
@@ -452,7 +481,7 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
         else
         {
             // an error like "3c[Pad]r", "3cdX", "3cXd", "3cXX" where X is non data
-            delete[] decodedData;
+            returnMemory(memMgr, decodedData);
             return 0;
         }
     }
@@ -468,43 +497,55 @@ XMLByte* Base64::decode(const XMLByte* const inputData,
 
     // write out the end of string
     decodedData[ outputIndex ] = 0;
-    *outputLength = outputIndex;
+    *decodedLength = outputIndex;
 
     return decodedData;
 }
 
-XMLCh* Base64::decode(const XMLCh* const inputData,
-                      unsigned int*      outputLength)
+XMLCh* Base64::decode(const XMLCh* const   inputData
+                    , unsigned int*        decodedLen
+                    , MemoryManager* const memMgr)
 {
 	if (!inputData)
 		return 0;
 
+    /***
+     *  Move input data to a XMLByte buffer
+     */
 	unsigned int srcLen = XMLString::stringLen(inputData);
-    XMLByte *toFill = new XMLByte[srcLen+1];
-    ArrayJanitor<XMLByte> janFill(toFill);
+    XMLByte *dataInByte = (XMLByte*) getMemory(0, (srcLen+1) * sizeof(XMLByte));
+    ArrayJanitor<XMLByte> janFill(dataInByte, XMLPlatformUtils::fgMemoryManager);
 
     for (unsigned int i = 0; i < srcLen; i++)
-		toFill[i] = (XMLByte)inputData[i];
+		dataInByte[i] = (XMLByte)inputData[i];
 
-	toFill[srcLen] = 0;
+	dataInByte[srcLen] = 0;
 
-	unsigned int      decodedLen = 0;
-	XMLByte *DecodedBuf = decode(toFill, &decodedLen);
+    /***
+     * Forward to the actual decoding method to do the decoding
+     */
+	*decodedLen = 0;
+	XMLByte *DecodedBuf = decode(dataInByte, decodedLen, memMgr);
 
 	if (!DecodedBuf)
 		return 0;
 
-    XMLCh *toRet = new XMLCh[decodedLen+1];
-
-    for (unsigned int j = 0; j < decodedLen; j++)
+    /***
+     * Move decoded data to a XMLCh buffer to return
+     */
+    XMLCh *toRet = (XMLCh*) getMemory(memMgr, (*decodedLen+1) * sizeof(XMLCh));
+               
+    for (unsigned int j = 0; j < *decodedLen; j++)
 		toRet[j] = (XMLCh)DecodedBuf[j];
 
-	toRet[decodedLen] = 0;
+	toRet[*decodedLen] = 0;
 
-	*outputLength = decodedLen;
-	delete[] DecodedBuf;
+    /***
+     * Release the memory allocated in the actual decoding method
+     */ 
+    returnMemory(memMgr, DecodedBuf);
 
-	return toRet;
+    return toRet;
 
 }
 

@@ -63,6 +63,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -88,16 +89,21 @@ public :
      * responsibility of the caller to delete it when not longer needed.
      * You can call XMLString::release to release this returned buffer.
      *
+     * If a memory manager is provided, ask the memory manager to de-allocate
+     * the returned buffer.
+     *
      * @param inputData Binary data in XMLByte stream.
      * @param inputLength Length of the XMLByte stream.
      * @param outputLength Length of the encoded Base64 byte stream.
+     * @param memMgr, client provided memory manager
      * @return Encoded Base64 data in XMLByte stream,
      *      or NULL if input data can not be encoded.
      * @see   XMLString::release(XMLByte**)
      */
-    static XMLByte* encode(const XMLByte* const inputData,
-                           const unsigned int   inputLength,
-                           unsigned int*        outputLength);
+    static XMLByte* encode(const XMLByte* const inputData
+                         , const unsigned int   inputLength
+                         , unsigned int*        outputLength
+                         , MemoryManager* const memMgr = 0);
 
     /**
      * Decodes Base64 data into octets
@@ -106,14 +112,19 @@ public :
      * responsibility of the caller to delete it when not longer needed.
      * You can call XMLString::release to release this returned buffer.
      *
+     * If a memory manager is provided, ask the memory manager to de-allocate
+     * the returned buffer.
+     *
      * @param inputData Base64 data in XMLByte stream.
      * @param outputLength Length of decoded XMLByte stream.
+     * @param memMgr, client provided memory manager
      * @return Decoded binary data in XMLByte stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLByte**)
      */
-    static XMLByte* decode(const XMLByte* const inputData,
-                           unsigned int*        outputLength);
+    static XMLByte* decode(const XMLByte* const inputData
+                         , unsigned int*        outputLength
+                         , MemoryManager* const memMgr = 0);
 
     /**
      * Decodes Base64 data into XMLCh
@@ -122,14 +133,19 @@ public :
      * responsibility of the caller to delete it when not longer needed.
      * You can call XMLString::release to release this returned buffer.
      *
+     * If a memory manager is provided, ask the memory manager to de-allocate
+     * the returned buffer.
+     *
      * @param inputData Base64 data in XMLCh stream.
      * @param outputLength Length of decoded XMLCh stream
+     * @param memMgr, client provided memory manager
      * @return Decoded binary data in XMLCh stream,
      *      or NULL if input data can not be decoded.
      * @see   XMLString::release(XMLCh**)
      */
-    static XMLCh* decode(const XMLCh* const inputData,
-                         unsigned int*      outputLength);
+    static XMLCh* decode(const XMLCh* const   inputData
+                       , unsigned int*        outputLength
+                       , MemoryManager* const memMgr = 0);
 
     /**
      * Get data length
@@ -141,7 +157,7 @@ public :
      * @return Length of decoded data,
 	 *      or -1 if input data can not be decoded.
      */
-    static int getDataLength(const XMLCh* const inputData );
+    static int getDataLength(const XMLCh* const inputData);
 
     //@}
 
