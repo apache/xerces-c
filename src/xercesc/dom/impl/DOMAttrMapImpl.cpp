@@ -67,6 +67,7 @@
 #include <xercesc/dom/DOMAttr.hpp>
 #include "DOMCasts.hpp"
 #include "DOMDocumentImpl.hpp"
+#include <xercesc/dom/DOMException.hpp>
 
 DOMAttrMapImpl::DOMAttrMapImpl(DOMNode *ownerNod)
 	: DOMNamedNodeMapImpl(ownerNod)
@@ -98,6 +99,23 @@ DOMAttrMapImpl *DOMAttrMapImpl::cloneAttrMap(DOMNode *ownerNode_p)
 	newmap->cloneContent(this);
 	// newmap->attrDefaults = this->attrDefaults;  // revisit
 	return newmap;
+}
+
+
+DOMNode *DOMAttrMapImpl::setNamedItem(DOMNode *arg)
+{
+    if (arg->getNodeType() != DOMNode::ATTRIBUTE_NODE)
+        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR, 0);
+
+    return DOMNamedNodeMapImpl::setNamedItem(arg);
+}
+
+DOMNode *DOMAttrMapImpl::setNamedItemNS(DOMNode* arg)
+{
+    if (arg->getNodeType() != DOMNode::ATTRIBUTE_NODE)
+        throw DOMException(DOMException::HIERARCHY_REQUEST_ERR, 0);
+
+    return DOMNamedNodeMapImpl::setNamedItemNS(arg);
 }
 
 DOMNode *DOMAttrMapImpl::removeNamedItem(const XMLCh *name)

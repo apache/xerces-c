@@ -96,6 +96,8 @@ public:
     virtual bool hasDefaults();
     virtual void hasDefaults(bool value);
 
+    virtual DOMNode *setNamedItem(DOMNode *arg);
+    virtual DOMNode *setNamedItemNS(DOMNode *arg);
     virtual DOMNode *removeNamedItem(const XMLCh *name);
     virtual DOMNode *removeNamedItemNS(const XMLCh *namespaceURI, const XMLCh *localName);
     virtual DOMNode *removeNamedItemAt(XMLSize_t index);
