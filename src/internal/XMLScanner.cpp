@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.13  2000/03/03 22:32:51  roddey
+ * Fixed a bug in SimpleContentModel that allowed an <a/> to be taken
+ * as valid for a content model of (a,b).
+ *
  * Revision 1.12  2000/03/03 01:29:32  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -1580,12 +1584,11 @@ void XMLScanner::scanEndTag(bool& gotData)
         if (res >= 0)
         {
             //
-            //  One of the elements is not valid for the content.
-            //  NOTE that if no children were provided but the
-            //  content model requires them, it comes back with
-            //  a zero value. But we cannot use that to index
-            //  the child array in this case, and have to put
-            //  out a special message.
+            //  One of the elements is not valid for the content. NOTE that
+            //  if no children were provided but the content model requires
+            //  them, it comes back with a zero value. But we cannot use that
+            //  to index the child array in this case, and have to put out a
+            //  special message.
             //
             if (!topElem->fChildCount)
             {

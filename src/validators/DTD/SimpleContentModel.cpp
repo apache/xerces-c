@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/03 22:33:00  roddey
+ * Fixed a bug in SimpleContentModel that allowed an <a/> to be taken
+ * as valid for a content model of (a,b).
+ *
  * Revision 1.3  2000/03/02 19:55:40  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -191,19 +195,29 @@ SimpleContentModel::validateContent(const   unsigned int*   childIds
         case ContentSpecNode::Sequence :
             //
             //  There must be two children and they must be the two values
-            //  we stored, in the stored order.
+            //  we stored, in the stored order. So first check the obvious
+            //  problem of an empty content, which would never be valid
+            //  in this content mode.
             //
             if (!childCount)
                 return 0;
 
+            // If we have at least one child, its got to match our first
             if ((childCount >= 1) && (childIds[0] != fFirstChild))
                 return 0;
 
-            if ((childCount >=2) && (childIds[1] != fSecondChild))
+            // If we hvae at least two children, its got to match our second
+            if ((childCount >= 2) && (childIds[1] != fSecondChild))
                 return 1;
 
+            // If we only had one (and it was valid), then too few children
+            if (childCount == 1)
+                return 1;
+
+            // And finally check for too many children
             if (childCount > 2)
                 return 2;
+
             break;
 
         default :
