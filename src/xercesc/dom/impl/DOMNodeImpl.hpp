@@ -160,6 +160,7 @@ public:
     const XMLCh*      getBaseURI() const ;
     short             compareTreePosition(const DOMNode* other) const;
     const XMLCh*      getTextContent() const ;
+    const XMLCh*      getTextContent(XMLCh* pzBuffer, unsigned int& rnBufferLength) const;
     void              setTextContent(const XMLCh* textContent) ;
     const XMLCh*      lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const ;
     bool              isDefaultNamespace(const XMLCh* namespaceURI) const ;
@@ -356,6 +357,7 @@ public: // should really be protected - ALH
     virtual const XMLCh*           getBaseURI() const ;\
     virtual short                  compareTreePosition(const DOMNode* other) const ;\
     virtual const XMLCh*           getTextContent() const ;\
+            const XMLCh*           getTextContent(XMLCh* pzBuffer, unsigned int& rnBufferLength) const;\
     virtual void                   setTextContent(const XMLCh* textContent) ;\
     virtual const XMLCh*           lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) const  ;\
     virtual bool                   isDefaultNamespace(const XMLCh* namespaceURI) const;\

@@ -908,10 +908,80 @@ short DOMNodeImpl::reverseTreeOrderBitPattern(short pattern) const {
     return pattern;
 }
 
+const XMLCh*     DOMNodeImpl::getTextContent(XMLCh* pzBuffer, unsigned int&
+rnBufferLength) const
+{
+  unsigned int nRemainingBuffer = rnBufferLength;
+  rnBufferLength = 0;
+  if (pzBuffer)
+    *pzBuffer = 0;
 
-const XMLCh*     DOMNodeImpl::getTextContent() const{
-    return 0;
+  DOMNode *thisNode = castToNode(this);
+  switch (thisNode->getNodeType()) {
+    case DOMNode::ELEMENT_NODE:
+    case DOMNode::ENTITY_NODE:
+    case DOMNode::ENTITY_REFERENCE_NODE:
+    case DOMNode::DOCUMENT_FRAGMENT_NODE:
+    {
+      DOMNode* current = thisNode->getFirstChild();
+      while (current != NULL) {
+        if (current->getNodeType() != DOMNode::COMMENT_NODE &&
+            current->getNodeType() != DOMNode::PROCESSING_INSTRUCTION_NODE)
+        {
+          if (pzBuffer) {
+            unsigned int nContentLength = nRemainingBuffer;
+            ((DOMNodeImpl*)current)->getTextContent(pzBuffer +
+rnBufferLength, nContentLength);
+            rnBufferLength += nContentLength;
+            nRemainingBuffer -= nContentLength;
+          }
+          else {
+            unsigned int nContentLength = 0;
+            ((DOMNodeImpl*)current)->getTextContent(NULL, nContentLength);
+            rnBufferLength += nContentLength;
+          }
+        }
+        current = current->getNextSibling();
+      }
+    }
+    break;
+
+    case DOMNode::ATTRIBUTE_NODE:
+    case DOMNode::TEXT_NODE:
+    case DOMNode::CDATA_SECTION_NODE:
+    case DOMNode::COMMENT_NODE:
+    case DOMNode::PROCESSING_INSTRUCTION_NODE:
+    {
+      const XMLCh* pzValue = thisNode->getNodeValue();
+      unsigned int nStrLen = XMLString::stringLen(pzValue);
+      if (pzBuffer) {
+        unsigned int nContentLength = (nRemainingBuffer >= nStrLen) ?
+nStrLen : nRemainingBuffer;
+        XMLString::copyNString(pzBuffer + rnBufferLength, pzValue,
+nContentLength);
+        rnBufferLength += nContentLength;
+        nRemainingBuffer -= nContentLength;
+      }
+      else {
+        rnBufferLength += nStrLen;
+      }
+    }
+    break;
+  }
+  return pzBuffer;
 }
+
+const XMLCh*     DOMNodeImpl::getTextContent() const
+{
+  unsigned int nBufferLength = 0;
+  getTextContent(NULL, nBufferLength);
+  XMLCh* pzBuffer = (XMLCh*)
+((DOMDocumentImpl*)getOwnerDocument())->allocate(nBufferLength+1);
+  getTextContent(pzBuffer, nBufferLength);
+  pzBuffer[nBufferLength] = 0;
+  return pzBuffer;
+}
+
 
 void             DOMNodeImpl::setTextContent(const XMLCh* textContent){
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
