@@ -1777,22 +1777,7 @@ bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFi
                         emitError(XMLErrs::Expected2ndSurrogateChar);
                     }
                      else
-                    {
-                        // Its got to at least be a valid XML character
-                        if (!XMLReader::isXMLChar(nextCh))
-                        {
-                            XMLCh tmpBuf[9];
-                            XMLString::binToText
-                            (
-                                nextCh
-                                , tmpBuf
-                                , 8
-                                , 16
-                            );
-                            emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
-                        }
                         gotLeadingSurrogate = true;
-                    }
                 }
                  else
                 {
@@ -1807,14 +1792,28 @@ bool XMLScanner::basicAttrValueScan(const XMLCh* const attrName, XMLBuffer& toFi
                         if (!gotLeadingSurrogate)
                             emitError(XMLErrs::Unexpected2ndSurrogateChar);
                     }
-                     else
+                    else
                     {
                         //
                         //  Its just a char, so make sure we were not expecting a
                         //  trailing surrogate.
                         //
-                        if (gotLeadingSurrogate)
+                        if (gotLeadingSurrogate) {
                             emitError(XMLErrs::Expected2ndSurrogateChar);
+                        }
+                        // Its got to at least be a valid XML character
+                        else if (!XMLReader::isXMLChar(nextCh))
+                        {
+                            XMLCh tmpBuf[9];
+                            XMLString::binToText
+                            (
+                                nextCh
+                                , tmpBuf
+                                , 8
+                                , 16
+                            );
+                            emitError(XMLErrs::InvalidCharacterInAttrValue, attrName, tmpBuf);
+                        }
                     }
                     gotLeadingSurrogate = false;
                 }
@@ -2640,7 +2639,7 @@ void XMLScanner::scanComment()
         {
             if (gotLeadingSurrogate)
             {
-                if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
+                if ((nextCh < 0xDC00) || (nextCh > 0xDFFF))
                     emitError(XMLErrs::Expected2ndSurrogateChar);
             }
             // Its got to at least be a valid XML character

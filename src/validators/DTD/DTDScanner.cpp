@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2001/12/17 15:39:14  knoaman
+ * Fix for surrogate pair support.
+ *
  * Revision 1.23  2001/12/14 20:21:37  knoaman
  * Add surrogate support to comments and processing instrunctions.
  *
@@ -884,7 +887,7 @@ bool DTDScanner::scanAttValue(const   XMLCh* const        attrName
             {
                 if (gotLeadingSurrogate)
                 {
-                    if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
+                    if ((nextCh < 0xDC00) || (nextCh > 0xDFFF))
                         fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
                 }
                 // Its got to at least be a valid XML character
@@ -1413,7 +1416,7 @@ void DTDScanner::scanComment()
         {
             if (gotLeadingSurrogate)
             {
-                if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
+                if ((nextCh < 0xDC00) || (nextCh > 0xDFFF))
                     fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
             }
             // Its got to at least be a valid XML character
@@ -2444,7 +2447,7 @@ bool DTDScanner::scanEntityLiteral(XMLBuffer& toFill, const bool isPE)
         {
             if (gotLeadingSurrogate)
             {
-                if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
+                if ((nextCh < 0xDC00) || (nextCh > 0xDFFF))
                     fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
             }
              else if (!XMLReader::isXMLChar(nextCh))
@@ -3685,7 +3688,7 @@ void DTDScanner::scanPI()
             {
                 if (gotLeadingSurrogate)
                 {
-                    if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
+                    if ((nextCh < 0xDC00) || (nextCh > 0xDFFF))
                         fScanner->emitError(XMLErrs::Expected2ndSurrogateChar);
                 }
                 // Its got to at least be a valid XML character

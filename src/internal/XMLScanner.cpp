@@ -2100,7 +2100,7 @@ void XMLScanner::scanPI()
             {
                 if (gotLeadingSurrogate)
                 {
-                    if ((nextCh < 0xDC00) && (nextCh > 0xDFFF))
+                    if ((nextCh < 0xDC00) || (nextCh > 0xDFFF))
                         emitError(XMLErrs::Expected2ndSurrogateChar);
                 }
                 // Its got to at least be a valid XML character
