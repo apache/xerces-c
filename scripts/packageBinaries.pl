@@ -9,7 +9,7 @@ $|=1;   # Force a flush after every print
 
 
 # Extract the source and target directories
-&Getopt('sopcxmntrjb');
+&Getopt('sopcxmntrb');
 $XERCESCROOT = $opt_s;
 $targetdir = $opt_o;
 
@@ -166,7 +166,7 @@ if ($platform eq "" )
 
         # Make the icu dlls
         pchdir ("$ICUROOT\\source\\allinone");
-        if (!$opt_j) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
+        if (!(length($opt_j) > 0)) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
 	    #For nt we ship both debug and release dlls
 	    psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD /OUT buildlog.txt");
 	    psystem("type buildlog.txt");
@@ -375,10 +375,10 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     {
         $platformname = 'Win64';
     }
-    else 
+    else
     {
-        $platformname = 'Win32';    
-    }    
+        $platformname = 'Win32';
+    }
     if (-e "$targetdir.zip") {
         print ("Deleting old target file \'$targetdir.zip\' \n");
         unlink("$targetdir.zip");
@@ -431,7 +431,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
         # Make the icu dlls
         pchdir ("$ICUROOT/source/allinone");
-        if (!$opt_j) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
+        if (!(length($opt_j) > 0)) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
 	    #For nt we ship both debug and release dlls
 	    if ($platformname eq "Win64")
 	    {
@@ -449,7 +449,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
             else
             {
                 psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD /OUT buildlog.txt");            	
-            }	    
+            }	
 	    psystem("cat buildlog.txt");
         }
 
@@ -471,7 +471,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     else
     {
         psystem( "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD /OUT buildlog.txt");
-    }	        
+    }	
 
     system("cat buildlog.txt");
 
@@ -733,7 +733,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
             $icuCompileFlags = 'CC=ecc CXX=ecc CXXFLAGS="-w -O0" CFLAGS="-w -O0"';
         } else {
             $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
-        }        
+        }
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
     }
 
@@ -853,7 +853,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/doc/html/apiDocs");
 
     # Build ICU if needed
-    if ($opt_t =~ m/icu/i && !$opt_j)
+    if ($opt_t =~ m/icu/i && !(length($opt_j) > 0))
     {
         print("\n\nBuild ICU with \'$opt_b\' bit ...\n");
         if(length($ICUROOT) == 0) {
