@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/06/04 21:01:49  jberry
+ * getErrorCount is virtual in this class reflecting derivation from SAX2XMLReader.
+ *
  * Revision 1.9  2001/06/03 19:26:19  jberry
  * Add support for querying error count following parse; enables simple parse without requiring error handler.
  *
@@ -407,7 +410,7 @@ public :
       * @return number of errors encountered during the latest
       *			parse operation.
       */
-    int getErrorCount() const;
+    virtual int getErrorCount() const;
 
     /**
       * This method returns the installed content handler.
