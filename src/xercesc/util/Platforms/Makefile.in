@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.8  2003/05/12 09:44:19  gareth
+# Port to NetBSD. Patch by Hiramatsu Yoshifumi.
+#
 # Revision 1.7  2003/03/13 22:11:28  tng
 # [Bug 17858] Support for QNX/Neutrino.  Patch from Chris McKillop.
 #
@@ -168,6 +171,9 @@ ifeq (${PLATFORM}, LINUX)
 endif
 ifeq (${PLATFORM}, FREEBSD)
     SUBMODULE = FreeBSD
+endif
+ifeq (${PLATFORM}, NETBSD)
+    SUBMODULE = NetBSD
 endif
 ifeq (${PLATFORM}, HPUX)
     SUBMODULE = HPUX

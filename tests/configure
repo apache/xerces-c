@@ -1312,6 +1312,7 @@ case "${host}" in
         *-*-nto*)       platform=QNX ;;
         *-*-linux*)     platform=LINUX ;;
         *-*-freebsd*)   platform=FREEBSD ;;
+        *-*-netbsd*)    platform=NETBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
         *-*-hp*)        platform=HPUX ;
@@ -1333,9 +1334,9 @@ esac
 compiler=${CXX}
 
 
+
+
 # prefix=${prefix}
-
-
 
 
 cxxflags=${CXXFLAGS}
@@ -1531,8 +1532,8 @@ s%@cxxflags@%$cxxflags%g
 s%@cflags@%$cflags%g
 s%@ldflags@%$ldflags%g
 s%@threads@%$threads%g
-s%@extra_libs@%$extra_libs%g
 s%@bitstobuild@%$bitstobuild%g
+s%@extra_libs@%$extra_libs%g
 
 CEOF
 EOF

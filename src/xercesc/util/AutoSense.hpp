@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/05/12 09:44:19  gareth
+ * Port to NetBSD. Patch by Hiramatsu Yoshifumi.
+ *
  * Revision 1.10  2003/03/27 16:16:43  tng
  * use __IBMCPP__ instead of __xlC__ to determine xlC compiler
  *
@@ -253,6 +256,8 @@
     #define XML_MACOS
 #elif defined(__alpha) && defined(__osf__)
     #define XML_TRU64
+#elif defined(__NetBSD__)
+    #define XML_NETBSD
 #else
     #error Code requires port to host OS!
 #endif

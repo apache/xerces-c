@@ -82,7 +82,7 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 'solaris',
+    echo "       -p <platform> (accepts 'aix', 'beos', 'linux', 'freebsd', 'netbsd', 'solaris',
                  'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
                  'ptx', 'tru64', 'macosx', 'cygwin')"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc or ecc)"
@@ -196,7 +196,7 @@ echo "Extra link options: $linkeroptions"
 # Now check if the options are correct or not, bail out if incorrect
 #
 case $platform in
-   aix | openserver | unixware | beos | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin)
+   aix | openserver | unixware | beos | linux | freebsd | netbsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx | cygwin)
        # platform has been recognized
        ;;
    *)
@@ -263,6 +263,9 @@ else
         esac
     elif test $platform = "freebsd"; then
         threadingLibs="-pthread -lc_r"
+        threadingDefines="-D_THREAD_SAFE -DXML_USE_PTHREADS"
+    elif test $platform = "netbsd"; then
+        threadingLibs="-pthread"
         threadingDefines="-D_THREAD_SAFE -DXML_USE_PTHREADS"
     elif test $platform = "aix"; then
         aix_version=`./config.guess`;
@@ -343,7 +346,7 @@ export THREADS
 
 #
 #  aix | beos | linux | hp-11 | solaris |
-#  hp-10 | freebsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
+#  hp-10 | freebsd | netbsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
 #
 if test $bitsToBuild = 64; then
     bitstobuildDefines=" -DXML_BITSTOBUILD_64 "

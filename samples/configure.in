@@ -40,6 +40,7 @@ case "${host}" in
         *-*-linux*)     platform=LINUX ;;
         *-*-nto*)       platform=QNX ;;
         *-*-freebsd*)   platform=FREEBSD ;;
+        *-*-netbsd*)    platform=NETBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
         *-*-hp*)        platform=HPUX ;

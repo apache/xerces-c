@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/05/12 09:44:19  gareth
+ * Port to NetBSD. Patch by Hiramatsu Yoshifumi.
+ *
  * Revision 1.13  2003/03/13 22:11:46  tng
  * [Bug 17858] Support for QNX/Neutrino.  Patch from Chris McKillop.
  *
@@ -416,6 +419,9 @@ typedef XMLUInt32           UCS4Ch;
   #endif
 #endif
 
+#if defined(XML_NETBSD)
+#include       <xercesc/util/Platforms/NetBSD/NetBSDDefs.hpp>
+#endif
 
 // ---------------------------------------------------------------------------
 //  According to whether the compiler suports L"" type strings, we define

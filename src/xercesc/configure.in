@@ -36,6 +36,7 @@ case "${host}" in
         *-*-nto*)       platform=QNX ;;
         *-*-linux*)     platform=LINUX ;;
         *-*-freebsd*)   platform=FREEBSD ;;
+        *-*-netbsd*)    platform=NETBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX
                       case "${host}" in
@@ -127,6 +128,7 @@ util/Platforms/BeOS/Makefile \
 util/Platforms/QNX/Makefile \
 util/Platforms/Linux/Makefile \
 util/Platforms/FreeBSD/Makefile \
+util/Platforms/NetBSD/Makefile \
 util/Platforms/HPUX/Makefile \
 util/Platforms/OS390/Makefile \
 util/Platforms/OS400/Makefile \

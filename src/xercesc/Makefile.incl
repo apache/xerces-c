@@ -373,6 +373,22 @@ SHLIBSUFFIX=.so
 LD_SONAME = -Wl,-soname,${SO_NAME}
 endif
 
+#=============== NETBSD SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, NETBSD)
+MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+ifeq (${TRANSCODER}, ICU)
+    PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -I/usr/local/include
+    ALLLIBS = ${LIBS} -L/usr/local/lib -licuuc -L${ICUROOT} -licudata -lgcc
+else
+    PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM}
+    ALLLIBS = ${LIBS}
+endif
+SHLIBSUFFIX=.so
+## Compiler switch to embed a library name
+LD_SONAME = -Wl,-soname,${SO_NAME}
+endif
+
 #=============== IRIX SPECIFIC OPTIONS ============================
 ifeq (${PLATFORM}, IRIX)
 PLATFORM_COMPILE_OPTIONS = -LANG:pch -LANG:std -O2 \

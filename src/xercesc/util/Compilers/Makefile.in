@@ -147,6 +147,9 @@ ifeq (${CXX},c++)
     ifeq (${PLATFORM},FREEBSD)
         CPP_OBJECTS = GCCDefs.$(TO)
     endif
+    ifeq (${PLATFORM},NETBSD)
+        CPP_OBJECTS = GCCDefs.$(TO)
+    endif
     ifeq (${PLATFORM},MACOSX)
         CPP_OBJECTS = GCCDefs.$(TO)
     endif
