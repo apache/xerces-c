@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/03/04 15:09:50  knoaman
+ * Fix for bug 6834.
+ *
  * Revision 1.2  2002/02/06 22:30:50  knoaman
  * Added a new attribute to store the wild card information for elements of type 'anyType'.
  *
@@ -385,6 +388,10 @@ inline SchemaElementDecl::ModelTypes SchemaElementDecl::getModelType() const
 
 inline DatatypeValidator* SchemaElementDecl::getDatatypeValidator() const
 {
+    if (fXsiComplexTypeInfo) {
+        return fXsiComplexTypeInfo->getDatatypeValidator();
+    }
+
     return fDatatypeValidator;
 }
 
