@@ -1727,6 +1727,9 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         fElemStack.addChild(elemDecl->getElementName(), true);
     }
 
+    // clear the map used to detect duplicate attributes
+    fUndeclaredAttrRegistryNS->removeAll();
+
     //  Now lets get the fAttrList filled in. This involves faulting in any
     //  defaulted and fixed attributes and normalizing the values of any that
     //  we got explicitly.

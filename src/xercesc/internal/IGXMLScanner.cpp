@@ -1733,6 +1733,10 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
     unsigned int    attCount = 0;
     unsigned int    curAttListSize = fAttrList->size();
     wasAdded = false;
+    // clear the map used to detect duplicate attributes
+    fUndeclaredAttrRegistry->removeAll();
+    fUndeclaredAttrRegistryNS->removeAll();
+
     fElemCount++;
 
     while (true)
@@ -2196,6 +2200,10 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
     // Skip any whitespace after the name
     fReaderMgr.skipPastSpaces();
+
+    // clear the map used to detect duplicate attributes
+    fUndeclaredAttrRegistry->removeAll();
+    fUndeclaredAttrRegistryNS->removeAll();
 
     //  First we have to do the rawest attribute scan. We don't do any
     //  normalization of them at all, since we don't know yet what type they

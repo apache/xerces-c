@@ -1179,6 +1179,9 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
     unsigned int    attCount = 0;
     unsigned int    curAttListSize = fAttrList->size();
     wasAdded = false;
+    // clear the map used to detect duplicate attributes
+    fUndeclaredAttrRegistry->removeAll();
+
     fElemCount++;
 
     while (true)
