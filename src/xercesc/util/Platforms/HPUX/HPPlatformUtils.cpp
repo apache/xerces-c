@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/06/24 15:55:03  peiyongz
+ * Change from James Berry( jberry@criticalpath.com)
+ *
  * Revision 1.4  2002/06/20 15:27:27  peiyongz
  * Fix to compilation error
  *
@@ -401,8 +404,7 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
 {
     if (!theFile        ||
         (toWrite <= 0 ) ||
-        !toFlush        ||
-        !*toFlush        )
+        !toFlush         )
         return;
 
     const XMLByte* tmpFlush = (const XMLByte*) toFlush;

@@ -517,8 +517,7 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
 {
     if (!theFile        ||
         (toWrite <= 0 ) ||
-        !toFlush        ||
-        !*toFlush        )
+        !toFlush         )
         return;
 
     const XMLByte* tmpFlush = (const XMLByte*) toFlush;
