@@ -832,10 +832,8 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         if ($opt_c eq "") {$opt_c = "xlc_r"; }
         if ($opt_x eq "") {$opt_x = "xlC_r"; }
 
-        $icuCompileFlags = 'CXX="$opt_x" ' .
-                           'CC="$opt_c" ' .
-                           'CFLAGS="-w -O2 -qmaxmem=-1" ' .
-                           'CXXFLAGS="-w -O2 -qmaxmem=-1" ';
+        $icu_cxxflags = '"-w -O2 -qmaxmem=-1"';
+        $icu_cflags = '"-w -O2 -qmaxmem=-1"';
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LIBPATH'}="$ICUROOT/lib:$ENV{'LIBPATH'}";
@@ -877,7 +875,8 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
             $opt_m = "inmem";
         }
 
-        $icuCompileFlags = 'CC=$opt_c CXX=$opt_x CXXFLAGS="-w +O2 +Ofltacc" CFLAGS="-w +O2 +Ofltacc"';
+        $icu_cxxflags = '"-w +O2 +Ofltacc"';
+        $icu_cflags = '"-w +O2 +Ofltacc"';
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'SHLIB_PATH'}="$ICUROOT/lib:$ENV{'SHLIB_PATH'}";
@@ -890,14 +889,16 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         $platform = "beos";
         if ($opt_c eq "") {$opt_c = "gcc";}
         if ($opt_x eq "") {$opt_x = "g++";}
-        $icuCompileFlags = 'CC=$opt_c CXX=$opt_x CXXFLAGS="-w -O" CFLAGS="-w -O"';
+        $icu_cxxflags = '"-w -O"';
+        $icu_cflags = '"-w -O"';
         psystem ("echo LIBRARY_PATH=$ENV{'LIBRARY_PATH'}");
     }
     if ($platform =~ m/Linux/i) {
         $platform = "linux";
         if ($opt_c eq "") {$opt_c = "gcc";}
         if ($opt_x eq "") {$opt_x = "g++";}
-        $icuCompileFlags = 'CC=$opt_c CXX=$opt_x CXXFLAGS="-w -O" CFLAGS="-w -O"';
+        $icu_cxxflags = '"-w -O"';
+        $icu_cflags = '"-w -O"';
 
         if ($opt_m =~ m/icu/i) {
         	$ENV{'LD_LIBRARY_PATH'}="$ICUROOT/lib:$ENV{'LD_LIBRARY_PATH'}";
@@ -917,7 +918,8 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         	$ENV{'PATH'}="$ICUROOT/bin:$ENV{'PATH'}";        	        	
         }
         
-        $icuCompileFlags = 'CC=$opt_c CXX=$opt_x CXXFLAGS="-w -O3" CFLAGS="-w -xO3"';        
+        $icu_cxxflags = '"-w -O3"';
+        $icu_cflags = '"-w -xO3"'; 
 
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
     }
@@ -940,7 +942,9 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
                 exit(-1);
             }
         }
-        $icuCompileFlags = 'CC=cc CXX=c++ CXXFLAGS="-w -0" CFLAGS="-w -0"';
+        $icu_cxxflags = '"-w -0"';
+        $icu_cflags = '"-w -0"';
+        
         # XMLINSTALL is a ptx-port-specific variable used for manipulating where the files are installed.
         if (!length($ENV{'XMLINSTALL'})) {
             print ("XMLINSTALL has not been explicitly defined. Setting it to \'$targetdir\'.\n");
@@ -1066,10 +1070,10 @@ if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeO
         } else {
         # set the 32 bit or 64 bit
             if ($opt_b eq "32") {
-                psystem ("$icuCompileFlags configure --prefix=$ICUROOT --disable-64bit-libs");
+                psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags configure --prefix=$ICUROOT --disable-64bit-libs");
             }
             else {
-                psystem ("$icuCompileFlags configure --prefix=$ICUROOT");
+                psystem ("CC=$opt_c CXX=$opt_x CXXFLAGS=$icu_cxxflags CFLAGS=$icu_cflags configure --prefix=$ICUROOT");
             }
         }
         psystem ("$MAKE clean"); # Clean up the build, may want to comment this line out!
