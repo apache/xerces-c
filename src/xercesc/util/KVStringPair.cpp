@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.7  2004/10/28 20:14:41  peiyongz
  * Data member reshuffle
  *
@@ -119,7 +122,9 @@ KVStringPair::KVStringPair(const XMLCh* const key,
 }
 
 KVStringPair::KVStringPair(const KVStringPair& toCopy)
-:fKeyAllocSize(0)
+:XSerializable(toCopy)
+,XMemory(toCopy)
+,fKeyAllocSize(0)
 ,fValueAllocSize(0)
 ,fKey(0)
 ,fValue(0)

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.14  2004/10/28 20:14:41  peiyongz
  * Data member reshuffle
  *
@@ -100,9 +103,9 @@ QName::QName(MemoryManager* const manager)
 ,fLocalPartBufSz(0)
 ,fRawNameBufSz(0)
 ,fURIId(0)
-,fRawName(0)
 ,fPrefix(0)
 ,fLocalPart(0)
+,fRawName(0)
 ,fMemoryManager(manager)
 {
 }
@@ -115,9 +118,9 @@ QName::QName( const XMLCh* const   prefix
 ,fLocalPartBufSz(0)
 ,fRawNameBufSz(0)
 ,fURIId(0)
-,fRawName(0)
 ,fPrefix(0)
 ,fLocalPart(0)
+,fRawName(0)
 ,fMemoryManager(manager)
 {
     try
@@ -145,9 +148,9 @@ QName::QName( const XMLCh* const rawName
 ,fLocalPartBufSz(0)
 ,fRawNameBufSz(0)
 ,fURIId(0)
-,fRawName(0)
 ,fPrefix(0)
 ,fLocalPart(0)
+,fRawName(0)
 ,fMemoryManager(manager)
 {
     try
@@ -177,13 +180,15 @@ QName::~QName()
 //  QName: Copy Constructors
 // ---------------------------------------------------------------------------
 QName::QName(const QName& qname)
-:fPrefixBufSz(0)
+:XSerializable(qname)
+,XMemory(qname)
+,fPrefixBufSz(0)
 ,fLocalPartBufSz(0)
 ,fRawNameBufSz(0)
 ,fURIId(0)
-,fRawName(0)
 ,fPrefix(0)
 ,fLocalPart(0)
+,fRawName(0)
 ,fMemoryManager(qname.fMemoryManager)
 {
     unsigned int newLen;

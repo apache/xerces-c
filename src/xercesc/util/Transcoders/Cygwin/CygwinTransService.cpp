@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2005/01/07 15:12:11  amassari
+ * Removed warnings
+ *
  * Revision 1.13  2004/09/08 13:56:43  peiyongz
  * Apache License Version 2.0
  *
@@ -485,22 +488,23 @@ CygwinTransService::~CygwinTransService()
 // ---------------------------------------------------------------------------
 int CygwinTransService::auxCompareString( const XMLCh* const comp1
                                          , const XMLCh* const comp2
-                                         , signed long maxChars
+                                         , signed long sMaxChars
                                          , const bool ignoreCase)
 {
     const XMLCh* args[2] = { comp1, comp2 };
     XMLCh*       firstBuf = NULL;
-    XMLCh*       secondBuf;
+    XMLCh*       secondBuf = NULL;
     unsigned int len = XMLString::stringLen( comp1);
     unsigned int otherLen = XMLString::stringLen( comp2);
     unsigned int countChar = 0;
+    unsigned int maxChars;
     int          theResult = 0;
 
     // Determine at what string index the comparison stops.
-    if ( maxChars != -1L )
+    if ( sMaxChars != -1L )
     {
-        len = ( len > maxChars ) ? maxChars : len;
-        otherLen = ( otherLen > maxChars ) ? maxChars : otherLen;
+        len = ( len > (unsigned int)sMaxChars ) ? (unsigned int)sMaxChars : len;
+        otherLen = ( otherLen > (unsigned int)sMaxChars ) ? (unsigned int)sMaxChars : otherLen;
         maxChars = ( len > otherLen ) ? otherLen : len;
     }
     else
@@ -608,7 +612,7 @@ const XMLCh* CygwinTransService::getId() const
 
 bool CygwinTransService::isSpace(const XMLCh toCheck) const
 {
-    int theCount = 0;
+    unsigned int theCount = 0;
     while ( theCount < (sizeof(gWhitespace) / sizeof(XMLCh)) )
     {
         if ( toCheck == gWhitespace[theCount] )
@@ -683,7 +687,7 @@ CygwinTransService::makeNewXMLTranscoder(const   XMLCh* const           encoding
     //  Get an upper cased copy of the encoding name, since we use a hash
     //  table and we store them all in upper case.
     //
-    int itsLen = XMLString::stringLen( encodingName) + 1;
+    unsigned int itsLen = XMLString::stringLen( encodingName) + 1;
     memcpy(
         upEncoding
         , encodingName
@@ -976,7 +980,7 @@ CygwinLCPTranscoder::~CygwinLCPTranscoder()
 //  CygwinLCPTranscoder: Implementation of the virtual transcoder interface
 // ---------------------------------------------------------------------------
 unsigned int CygwinLCPTranscoder::calcRequiredSize(const char* const srcText
-                                                   , MemoryManager* const manager)
+                                                   , MemoryManager* const /*manager*/)
 {
     if (!srcText)
         return 0;
@@ -986,7 +990,7 @@ unsigned int CygwinLCPTranscoder::calcRequiredSize(const char* const srcText
 
 
 unsigned int CygwinLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
-                                                   , MemoryManager* const manager)
+                                                   , MemoryManager* const /*manager*/)
 {
     if (!srcText)
         return 0;
@@ -1116,7 +1120,7 @@ XMLCh* CygwinLCPTranscoder::transcode(const char* const toTranscode,
 bool CygwinLCPTranscoder::transcode( const   char* const    toTranscode
                                     ,       XMLCh* const    toFill
                                     , const unsigned int    maxChars
-                                    , MemoryManager* const  manager)
+                                    , MemoryManager* const  /*manager*/)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)
@@ -1141,7 +1145,7 @@ bool CygwinLCPTranscoder::transcode( const   char* const    toTranscode
 bool CygwinLCPTranscoder::transcode( const  XMLCh* const    toTranscode
                                     ,       char* const     toFill
                                     , const unsigned int    maxBytes
-                                    , MemoryManager* const  manager)
+                                    , MemoryManager* const  /*manager*/)
 {
     // Watch for a couple of pyscho corner cases
     if (!toTranscode || !maxBytes)

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2005/01/07 15:12:11  amassari
+ * Removed warnings
+ *
  * Revision 1.5  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -137,7 +140,7 @@ int BMPattern::matches(const XMLCh* const content, int start, int limit) {
 
 		int patternIndex = patternLen;
 		int nIndex = index + 1;
-		XMLCh ch;
+		XMLCh ch = 0;
 
 		while (patternIndex > 0) {
 

@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.12  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.11  2004/11/11 01:31:54  peiyongz
  * Avoid unnecessary expansion -- patch from Christian
  *
@@ -106,8 +109,8 @@ ValueVectorOf<TElem>::ValueVectorOf(const unsigned int maxElems,
 
 template <class TElem>
 ValueVectorOf<TElem>::ValueVectorOf(const ValueVectorOf<TElem>& toCopy) :
-
-    fCallDestructor(toCopy.fCallDestructor)
+    XMemory(toCopy)
+    , fCallDestructor(toCopy.fCallDestructor)
     , fCurCount(toCopy.fCurCount)
     , fMaxCount(toCopy.fMaxCount)
     , fElemList(0)

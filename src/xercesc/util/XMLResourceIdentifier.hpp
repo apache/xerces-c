@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.10  2004/12/21 16:32:52  cargilld
  * Attempt to fix various apidoc problems.
  *
@@ -225,10 +228,10 @@ inline XMLResourceIdentifier::XMLResourceIdentifier(const ResourceIdentifierType
                             , const XMLCh* const  publicId
                             , const XMLCh* const  baseURI )
     : fResourceIdentifierType(resourceIdentifierType)
-    , fSystemId(systemId)
-    , fNameSpace(nameSpace)
     , fPublicId(publicId)
+    , fSystemId(systemId)
     , fBaseURI(baseURI)     
+    , fNameSpace(nameSpace)
 {
 }
 

@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.30  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.29  2004/10/28 20:13:35  peiyongz
  * Data member reshuffle
  *
@@ -537,7 +540,8 @@ XMLDateTime::XMLDateTime(const XMLCh* const aString,
 // -----------------------------------------------------------------------
 
 XMLDateTime::XMLDateTime(const XMLDateTime &toCopy)
-: fBufferMaxLen(0)
+: XMLNumber(toCopy)
+, fBufferMaxLen(0)
 , fBuffer(0)
 , fMemoryManager(toCopy.fMemoryManager)
 {

@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.14  2004/09/08 13:56:24  peiyongz
  * Apache License Version 2.0
  *
@@ -143,12 +146,12 @@ public:
 protected:
 
     XMLNumber();
+    XMLNumber(const XMLNumber&);
 
 private:
     // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
+    //  Unimplemented operators
     // -----------------------------------------------------------------------
-    XMLNumber(const XMLNumber&);
     XMLNumber& operator=(const XMLNumber&);
 };
 

@@ -83,7 +83,14 @@ protected :
         ,       MemoryManager* const    manager
     );
 
-    virtual int auxCompareString
+private :
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    CygwinTransService(const CygwinTransService&);
+    CygwinTransService& operator=(const CygwinTransService&);
+
+    int auxCompareString
     (
         const   XMLCh* const  comp1
         , const XMLCh* const  comp2
@@ -91,12 +98,10 @@ protected :
         , const  bool         ignoreCase
     );
 
-private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    CygwinTransService(const CygwinTransService&);
-    CygwinTransService& operator=(const CygwinTransService&);
+    static bool isAlias(const HKEY          encodingKey
+                    ,       char* const     aliasBuf = 0
+                    , const unsigned int    nameBufSz = 0);
+
 
     //      This is a hash table of entries which map encoding names to their
     //      Windows specific code pages. The code page allows us to create
@@ -105,13 +110,6 @@ private :
     //
     //      This map is shared unsynchronized among all threads of the process,
     //      which is cool since it will be read only once its initialized.
-
-
-
-    static bool isAlias(const HKEY          encodingKey
-                    ,       char* const     aliasBuf = 0
-                    , const unsigned int    nameBufSz = 0);
-
 
     RefHashTableOf<CPMapEntry>    *fCPMap;
 };

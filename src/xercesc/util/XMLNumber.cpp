@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.6  2004/09/08 13:56:24  peiyongz
  * Apache License Version 2.0
  *
@@ -59,6 +62,11 @@
 XERCES_CPP_NAMESPACE_BEGIN
 
 XMLNumber::XMLNumber()
+{}
+
+XMLNumber::XMLNumber(const XMLNumber& toCopy)
+: XSerializable(toCopy)
+, XMemory(toCopy)
 {}
 
 XMLNumber::~XMLNumber()

@@ -354,8 +354,8 @@ XMLURL::XMLURL(const char* const urlText,
 }
 
 XMLURL::XMLURL(const XMLURL& toCopy) :
-
-    fMemoryManager(toCopy.fMemoryManager)
+    XMemory(toCopy)
+    , fMemoryManager(toCopy.fMemoryManager)
     , fFragment(0)
     , fHost(0)
     , fPassword(0)
@@ -913,8 +913,8 @@ void XMLURL::parse(const XMLCh* const urlText)
 
     //
     //  The first thing we will do is to check for a file name, so that
-    //  we don't waste time thinking its a URL. If its in the form x:\
-    //  or x:/ and x is an ASCII letter, then assume that's the deal.
+    //  we don't waste time thinking its a URL. If its in the form x:\ or x:/
+    //  and x is an ASCII letter, then assume that's the deal.
     //
     if (((*urlText >= chLatin_A) && (*urlText <= chLatin_Z))
     ||  ((*urlText >= chLatin_a) && (*urlText <= chLatin_z)))
@@ -1205,8 +1205,8 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
 
     //
     //  The first thing we will do is to check for a file name, so that
-    //  we don't waste time thinking its a URL. If its in the form x:\
-    //  or x:/ and x is an ASCII letter, then assume that's the deal.
+    //  we don't waste time thinking its a URL. If its in the form x:\ or x:/ 
+    //  and x is an ASCII letter, then assume that's the deal.
     //
     if (((*urlText >= chLatin_A) && (*urlText <= chLatin_Z))
     ||  ((*urlText >= chLatin_a) && (*urlText <= chLatin_z)))

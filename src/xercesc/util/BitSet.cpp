@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.4  2004/09/08 13:56:21  peiyongz
  * Apache License Version 2.0
  *
@@ -85,8 +88,8 @@ BitSet::BitSet( const unsigned int size
 }
 
 BitSet::BitSet(const BitSet& toCopy) :
-
-    fMemoryManager(toCopy.fMemoryManager)
+    XMemory(toCopy)
+    , fMemoryManager(toCopy.fMemoryManager)
     , fBits(0)
     , fUnitLen(toCopy.fUnitLen)
 {

@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.7  2004/09/08 13:56:23  peiyongz
  * Apache License Version 2.0
  *
@@ -94,8 +97,8 @@ ValueArrayOf<TElem>::ValueArrayOf( const TElem* values
 
 template <class TElem>
 ValueArrayOf<TElem>::ValueArrayOf(const ValueArrayOf<TElem>& source) :
-
-    fSize(source.fSize)
+    XMemory(source)
+    , fSize(source.fSize)
     , fArray(0)
     , fMemoryManager(source.fMemoryManager)
 {

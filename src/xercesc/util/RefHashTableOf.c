@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.19  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.18  2004/11/19 00:50:22  cargilld
  * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
  *
@@ -634,7 +637,9 @@ template <class TVal> RefHashTableOfEnumerator<TVal>::~RefHashTableOfEnumerator(
 
 template <class TVal> RefHashTableOfEnumerator<TVal>::
 RefHashTableOfEnumerator(const RefHashTableOfEnumerator<TVal>& toCopy) :
-    fAdopted(toCopy.fAdopted)
+    XMLEnumerator<TVal>(toCopy)
+    , XMemory(toCopy)
+    , fAdopted(toCopy.fAdopted)
     , fCurElem(toCopy.fCurElem)
     , fCurHash(toCopy.fCurHash)
     , fToEnum(toCopy.fToEnum)

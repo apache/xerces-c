@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.12  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.11  2004/11/19 00:50:22  cargilld
  * Memory improvement to utility classes from Christian Will.  Remove dependency on XMemory.
  *
@@ -358,8 +361,9 @@ NameIdPoolEnumerator(NameIdPool<TElem>* const toEnum
 
 template <class TElem> NameIdPoolEnumerator<TElem>::
 NameIdPoolEnumerator(const NameIdPoolEnumerator<TElem>& toCopy) :
-
-    fCurIndex(toCopy.fCurIndex)
+    XMLEnumerator<TElem>(toCopy)
+    , XMemory(toCopy)
+    , fCurIndex(toCopy.fCurIndex)
     , fToEnum(toCopy.fToEnum)
     , fMemoryManager(toCopy.fMemoryManager)
 {

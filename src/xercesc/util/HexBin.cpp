@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.6  2004/12/10 10:37:56  cargilld
  * Fix problem with hexbin::decode and use XMLByte instead of XMLCh for output of decoding.
  *
@@ -188,7 +191,7 @@ void HexBin::init()
 
     int i;
     for ( i = 0; i < BASELENGTH; i++ )
-        hexNumberTable[i] = -1;
+        hexNumberTable[i] = (XMLByte)-1;
 
     for ( i = chDigit_9; i >= chDigit_0; i-- )
         hexNumberTable[i] = (XMLByte) (i - chDigit_0);

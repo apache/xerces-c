@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.5  2004/09/08 13:56:24  peiyongz
  * Apache License Version 2.0
  *
@@ -73,13 +76,13 @@ public :
     virtual TElem& nextElement() = 0;
     virtual void Reset() = 0;
 
-    XMLEnumerator() {};
+    XMLEnumerator() {}
+    XMLEnumerator(const XMLEnumerator<TElem>&) {}
 
 private:
 	// -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
+    //  Unimplemented operators
     // -----------------------------------------------------------------------
-    XMLEnumerator(const XMLEnumerator<TElem>&);
     XMLEnumerator<TElem>& operator=(const XMLEnumerator<TElem>&);    
 };
 

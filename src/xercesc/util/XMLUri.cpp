@@ -294,7 +294,9 @@ XMLUri::XMLUri(const XMLUri* const      baseURI
 
 //Copy constructor
 XMLUri::XMLUri(const XMLUri& toCopy)
-: fPort(-1)
+: XSerializable(toCopy)
+, XMemory(toCopy)
+, fPort(-1)
 , fScheme(0)
 , fUserInfo(0)
 , fHost(0)

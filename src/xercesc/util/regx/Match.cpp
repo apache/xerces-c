@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2005/01/07 15:12:11  amassari
+ * Removed warnings
+ *
  * Revision 1.5  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -61,7 +64,8 @@ Match::Match(MemoryManager* const manager) :
 }
 
 Match::Match(const Match& toCopy) :
-    fNoGroups(0)
+    XMemory(toCopy) 
+    , fNoGroups(0)
     , fPositionsSize(0)
     , fStartPositions(0)
     , fEndPositions(0)
@@ -70,7 +74,7 @@ Match::Match(const Match& toCopy) :
   initialize(toCopy);
 }
 
-Match& Match::operator=(const Match& toAssign){
+Match& Match::operator=(const Match& toAssign) {
   
   initialize(toAssign);
   return *this;

@@ -312,7 +312,9 @@ template <class TElem> BaseRefVectorEnumerator<TElem>::~BaseRefVectorEnumerator(
 
 template <class TElem> BaseRefVectorEnumerator<TElem>::
 BaseRefVectorEnumerator(const BaseRefVectorEnumerator<TElem>& toCopy) :
-    fAdopted(toCopy.fAdopted)
+    XMLEnumerator<TElem>(toCopy)
+    , XMemory(toCopy)
+    , fAdopted(toCopy.fAdopted)
     , fCurIndex(toCopy.fCurIndex)
     , fToEnum(toCopy.fToEnum)    
 {

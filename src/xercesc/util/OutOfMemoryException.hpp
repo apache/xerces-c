@@ -56,7 +56,7 @@ public:
 // constructors/destructors...
 inline OutOfMemoryException::OutOfMemoryException() {}
 inline OutOfMemoryException::~OutOfMemoryException() {}
-inline OutOfMemoryException::OutOfMemoryException(const OutOfMemoryException&) {}
+inline OutOfMemoryException::OutOfMemoryException(const OutOfMemoryException& other) : XMemory(other) {}
 inline OutOfMemoryException& OutOfMemoryException::operator=(const OutOfMemoryException&) 
 {
     return *this;

@@ -157,8 +157,8 @@ XMLException::XMLException( const   char* const     srcFile
 
 
 XMLException::XMLException(const XMLException& toCopy) :
-
-    fCode(toCopy.fCode)
+    XMemory(toCopy)
+    , fCode(toCopy.fCode)
     , fSrcFile(0)
     , fSrcLine(toCopy.fSrcLine)
     , fMsg(XMLString::replicate(toCopy.fMsg, toCopy.fMemoryManager))

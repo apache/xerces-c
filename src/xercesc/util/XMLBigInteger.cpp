@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2005/01/07 15:12:10  amassari
+ * Removed warnings
+ *
  * Revision 1.14  2004/09/08 13:56:24  peiyongz
  * Apache License Version 2.0
  *
@@ -284,7 +287,8 @@ XMLBigInteger::~XMLBigInteger()
 }
 
 XMLBigInteger::XMLBigInteger(const XMLBigInteger& toCopy)
-: fSign(toCopy.fSign)
+: XMemory(toCopy)
+, fSign(toCopy.fSign)
 , fMagnitude(0)
 , fRawData(0)
 , fMemoryManager(toCopy.fMemoryManager)
