@@ -55,8 +55,10 @@
  */
 
 /*
-* $Id$
-*/
+ * $Id$
+ *
+ * @author Andy Heninger, IBM
+ */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -668,7 +670,7 @@ void parseCommandLine(int argc, char **argv)
                 if (argnum >= argc)
                     throw 1;
                 gRunInfo.totalTime = atoi(argv[argnum]);
-                if (gRunInfo.numThreads < 1)
+                if (gRunInfo.totalTime < 1)
                     throw 1;
             }
             else  if (argv[argnum][0] == '-')
