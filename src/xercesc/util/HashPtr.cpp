@@ -67,7 +67,7 @@ HashPtr::~HashPtr()
 
 unsigned int HashPtr::getHashVal(const void *const key, unsigned int mod)
 {
- return ((long)key % mod);
+ return ((long)key % (unsigned long)mod);
 }
 
 bool HashPtr::equals(const void *const key1, const void *const key2)

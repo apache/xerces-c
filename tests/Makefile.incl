@@ -199,7 +199,7 @@ ifeq (${PLATFORM}, HPUX)
     CMP = -c +DAportable $(CXXFLAGS) -D_HP_UX -DHPaCC -w +z
     CC = aCC
     LINK =  ${CC} -Wl,+s ${LDFLAGS}
-    PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib
+    PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib -lpthread
     SHLIBSUFFIX=.sl
   else
     ifneq (${DEBUG}, 1)
