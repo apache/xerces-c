@@ -138,6 +138,11 @@ public:
 	Token* getGraphemePattern();
     MemoryManager* getMemoryManager() const;
 
+    // -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitTokenFactoryMutex();
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -166,7 +171,6 @@ private:
     //      Contains user created Token objects. Used for memory cleanup.
     // -----------------------------------------------------------------------
     static bool         fRangeInitialized;
-    XMLMutex            fMutex;
     RefVectorOf<Token>* fTokens;
     Token*              fEmpty;
     Token*              fLineBegin;

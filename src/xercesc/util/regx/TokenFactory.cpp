@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/10/17 16:44:34  knoaman
+ * Fix multithreading problem.
+ *
  * Revision 1.8  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -120,10 +123,58 @@
 #include <xercesc/util/regx/BlockRangeFactory.hpp>
 #include <xercesc/util/regx/RangeTokenMap.hpp>
 #include <xercesc/util/regx/RegxDefs.hpp>
+#include <xercesc/util/XMLRegisterCleanup.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+// ---------------------------------------------------------------------------
+//  Static member data initialization
+// ---------------------------------------------------------------------------
 bool TokenFactory::fRangeInitialized = false;
+
+// ---------------------------------------------------------------------------
+//  Local static data
+// ---------------------------------------------------------------------------
+static bool               sTokFactoryMutexRegistered = false;
+static XMLMutex*          sTokFactoryMutex = 0;
+static XMLRegisterCleanup tokenFactoryMutexCleanup;
+
+// ---------------------------------------------------------------------------
+//  Local, static functions
+// ---------------------------------------------------------------------------
+//  Cleanup for the TokenFactory mutex
+void TokenFactory::reinitTokenFactoryMutex()
+{
+    delete sTokFactoryMutex;
+    sTokFactoryMutex = 0;
+    sTokFactoryMutexRegistered = false;
+}
+
+//  We need to fault in this mutex. But, since its used for synchronization
+//  itself, we have to do this the low level way using a compare and swap.
+static XMLMutex& gTokenFactoryMutex()
+{
+    if (!sTokFactoryMutex)
+    {
+        XMLMutex* tmpMutex = new XMLMutex;
+        if (XMLPlatformUtils::compareAndSwap((void**)&sTokFactoryMutex, tmpMutex, 0))
+        {
+            // Someone beat us to it, so let's clean up ours
+            delete tmpMutex;
+        }
+
+        // Now lock it and try to register it
+        XMLMutexLock lock(sTokFactoryMutex);
+
+        // If we got here first, then register it and set the registered flag
+        if (!sTokFactoryMutexRegistered)
+        {
+			tokenFactoryMutexCleanup.registerCleanup(TokenFactory::reinitTokenFactoryMutex);
+            sTokFactoryMutexRegistered = true;
+        }
+    }
+    return *sTokFactoryMutex;
+}
 
 // ---------------------------------------------------------------------------
 //  TokenFactory: Constructors and Destructor
@@ -451,7 +502,7 @@ void TokenFactory::initializeRegistry() {
 
     // Use a faux scope to synchronize while we do this
     {
-        XMLMutexLock lockInit(&fMutex);
+        XMLMutexLock lockInit(&gTokenFactoryMutex());
 
         if (!fRangeInitialized) {
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/17 16:44:34  knoaman
+ * Fix multithreading problem.
+ *
  * Revision 1.5  2003/05/18 14:02:06  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -168,43 +171,49 @@ RangeTokenMap::~RangeTokenMap() {
 //  RangeTokenMap: Getter methods
 // ---------------------------------------------------------------------------
 RangeToken* RangeTokenMap::getRange(const XMLCh* const keyword,
-								   const bool complement) {
+								    const bool complement) {
 
-	if (fTokenRegistry == 0 || fRangeMap == 0 || fCategories == 0)
-		return 0;
+    if (fTokenRegistry == 0 || fRangeMap == 0 || fCategories == 0)
+        return 0;
 
     if (!fTokenRegistry->containsKey(keyword))
-		return 0;
+        return 0;
 
-	RangeTokenElemMap* elemMap = 0;
+    RangeTokenElemMap* elemMap = fTokenRegistry->get(keyword);
+    RangeToken* rangeTok = elemMap->getRangeToken(complement);
 
-	// Use a faux scope to synchronize while we do this
+    if (!rangeTok)
     {
         XMLMutexLock lockInit(&fMutex);
 
-		elemMap = fTokenRegistry->get(keyword);
-		RangeToken* rangeTok = 0;
+        // make sure that it was not created while we were locked
+        rangeTok = elemMap->getRangeToken(complement);
 
-		if (elemMap->getRangeToken() == 0) {
-		
-			unsigned int categId = elemMap->getCategoryId();
-			const XMLCh* categName = fCategories->getValueForId(categId);
-			RangeFactory* rangeFactory = fRangeMap->get(categName);
+        if (!rangeTok)
+        {
+            rangeTok = elemMap->getRangeToken();
+            if (!rangeTok)
+            {
+                unsigned int categId = elemMap->getCategoryId();
+                const XMLCh* categName = fCategories->getValueForId(categId);
+                RangeFactory* rangeFactory = fRangeMap->get(categName);
 
-			if (rangeFactory == 0)
-				return 0;
+                if (rangeFactory == 0)
+                    return 0;
 
-			rangeFactory->buildRanges();
-		}
+                rangeFactory->buildRanges();
+                rangeTok = elemMap->getRangeToken();
+            }
 
-		if (complement && ((rangeTok = elemMap->getRangeToken()) != 0)) {
-			elemMap->setRangeToken((RangeToken*)
-									RangeToken::complementRanges(rangeTok, fTokenFactory),
-									complement);
-		}
+            if (complement)
+            {
+                rangeTok = (RangeToken*) RangeToken::complementRanges(rangeTok, fTokenFactory);
+                elemMap->setRangeToken(rangeTok , complement);
+            }
+        }
     }
 
-	return (elemMap == 0) ? 0 : elemMap->getRangeToken(complement);
+    return rangeTok;
 }
 
 
