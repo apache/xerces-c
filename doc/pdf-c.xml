@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
+
+<s1 title="PDF Documentation">
+	<s2 title="PDF Documentation">
+	<p>You can get the entire &XercesCName; documentation in
+	<jump href="http://xml.apache.org/xerces-c/pdf/xerces-c++.pdf">PDF format</jump> for
+	printing and offline reference.</p>
+	<note>A word of caution! The tools to create the PDF documentation are still experimental.
+	So the resulting PDF document is not perfect. We would be glad to receive your comments on
+	<jump href="mailto:xerces-c-dev@xml.apache.org">&XercesCName; mailing list</jump>. We know,
+	for example, that links do not work properly, images are not supported yet, and the
+	shading within the document (around source code) does not print properly.</note>
+	</s2>
+</s1>
