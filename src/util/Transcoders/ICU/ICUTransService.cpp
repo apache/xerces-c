@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/01/24 20:39:47  roddey
+ * Fixed a bug introduced in the recent move to always have XMLCh be
+ * the same as wchar_t.
+ *
  * Revision 1.9  2000/01/21 23:59:06  roddey
  * Added code to deal with system configurations where XMLCh is not
  * the same size as ICU's UChar.
@@ -853,7 +857,7 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
     }
 
     // If the sizes are not the same, then copy the data over
-    if (sizeof(XMLCh) == sizeof(UChar))
+    if (sizeof(XMLCh) != sizeof(UChar))
     {
         UChar* srcPtr = targetBuf;
         XMLCh* outPtr = toFill;
