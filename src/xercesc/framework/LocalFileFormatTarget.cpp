@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2003/01/09 20:59:44  tng
+ * [Bug 15928] Output with LocalFileFormatTarget fails silently.
+ *
  * Revision 1.3  2002/11/27 18:09:25  tng
  * [Bug 13447] Performance: Using LocalFileFormatTarget with DOMWriter is very slow.
  *
@@ -71,6 +74,7 @@
 
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/IOException.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -82,6 +86,9 @@ LocalFileFormatTarget::LocalFileFormatTarget(const XMLCh* const fileName)
 , fCapacity(1023)
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName);
+
+    if (!fSource)
+        ThrowXML1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName);
 
     // Buffer is one larger than capacity, to allow for zero term
     fDataBuf = new XMLByte[fCapacity+4];
@@ -98,6 +105,9 @@ LocalFileFormatTarget::LocalFileFormatTarget(const char* const fileName)
 , fCapacity(1023)
 {
     fSource = XMLPlatformUtils::openFileToWrite(fileName);
+
+    if (!fSource)
+        ThrowXML1(IOException, XMLExcepts::File_CouldNotOpenFile, fileName);
 
     // Buffer is one larger than capacity, to allow for zero term
     fDataBuf = new XMLByte[fCapacity+4];
