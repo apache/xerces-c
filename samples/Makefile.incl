@@ -81,7 +81,7 @@ TO = o
 ifeq (${PLATFORM}, IRIX)
   ifeq (${COMPILER}, g++)
 	CMP= -c ${CXXFLAGS}
-	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic -instances=static
+	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic
 	LINK = g++ -D${PLATFORM} -fpic
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 	EXTRA_LINK_OPTIONS=-lc

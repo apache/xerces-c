@@ -109,7 +109,7 @@ RM2 = rm -f
 #=============== SOLARIS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, SOLARIS)
   ifeq (${CXX}, g++)
-    PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
+    PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
     MAKE_SHARED = ${CXX} -D${PLATFORM} -shared ${LDFLAGS}
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared ${LDFLAGS}
     ifeq (${TRANSCODER}, ICU)
@@ -147,7 +147,7 @@ ifeq (${PLATFORM}, UNIXWARE)
                   -lm -lw -lgen
     endif
   else
-    PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -instances=static \
+    PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs \
                                -D${PLATFORM} -D_REENTRANT
     MAKE_SHARED = ${CXX} -D${PLATFORM} -G ${LDFLAGS}
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
