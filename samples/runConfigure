@@ -49,9 +49,9 @@ platforms"
             'os400', 'os390', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 'qnx',
             'interix', 'mingw-msys')
             [required: no default]"
-    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc or ecc)"
+    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc, icpc or ecc)"
     echo "            [default is make default; cc for gnu make]"
-    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, aCC05, xlC_r, xlC_rv5compat, icc or ecc)"
+    echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, aCC05, xlC_r, xlC_rv5compat, icc, icpc or ecc)"
     echo "            [default is make default; g++ for gnu make]"
     echo "       -d (specifies that you want to build debug version) [default: not debug]"
     echo "       -r <thread option> can be 'pthread' or 'dce'
@@ -449,7 +449,7 @@ case $cppcompiler in
       CXXVER="v5compat"
       ;;
       
-   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx | ecc)
+   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | icpc | ICC | cxx | ecc)
       CXX="$cppcompiler"      
       ;;
 

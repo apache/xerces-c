@@ -51,7 +51,7 @@ usage()
             'os400', 'os390', 'irix', 'ptx', 'tru64', 'macosx', 'cygwin', 
             'qnx', 'interix', 'mingw-msys')
             [required; no default]"
-    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc or ecc) 
+    echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, qcc, icc, icpc or ecc) 
             [default is make default; cc for gnu make]"
     echo "       -x <C++ compiler name> (e.g. g++, CC, aCC, aCC05, xlC_r, xlC_rv5compat, QCC, 
             icc or ecc) [default is make default; g++ for gnu make]"
@@ -642,7 +642,7 @@ case $cppcompiler in
       CXXVER="v5compat"
       ;;
       
-   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx | ecc | QCC )
+   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | icpc | ICC | cxx | ecc | QCC )
       CXX="$cppcompiler"
       ;;
     
