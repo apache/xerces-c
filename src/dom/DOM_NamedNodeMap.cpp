@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/11 03:19:12  chchou
+ * Fix bug # 19, add const keyword to API
+ *
  * Revision 1.6  2000/03/02 19:53:56  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -156,7 +159,7 @@ DOM_NamedNodeMap & DOM_NamedNodeMap::operator = (const DOM_NullPtr *other)
 };
 
 
-DOM_Node DOM_NamedNodeMap::getNamedItem(const DOMString &name)
+DOM_Node DOM_NamedNodeMap::getNamedItem(const DOMString &name) const
 {
     return DOM_Node(fImpl->getNamedItem(name));
 };
@@ -174,7 +177,7 @@ DOM_Node DOM_NamedNodeMap::removeNamedItem(const DOMString &name)
 };
 
 
-DOM_Node DOM_NamedNodeMap::item(unsigned int index)
+DOM_Node DOM_NamedNodeMap::item(unsigned int index) const
 {
     return DOM_Node(fImpl->item(index));
 };

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/03/11 03:19:13  chchou
+ * Fix bug # 19, add const keyword to API
+ *
  * Revision 1.11  2000/03/02 19:53:56  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -264,7 +267,7 @@ public:
     *   <code>NamedNodeMap</code>, or <code>null</code> if that is not a valid 
     *   index.
     */
-    DOM_Node               item(unsigned int index);
+    DOM_Node               item(unsigned int index) const;
 
     /**
     * Retrieves a node specified by name.
@@ -274,7 +277,7 @@ public:
     *   <code>null</code> if it does not identify any node in 
     *   the map. 
     */
-    DOM_Node               getNamedItem(const DOMString &name);
+    DOM_Node               getNamedItem(const DOMString &name) const;
 
     /**
     * The number of nodes in the map. 

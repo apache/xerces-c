@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/03/11 03:19:13  chchou
+ * Fix bug # 19, add const keyword to API
+ *
  * Revision 1.7  2000/02/24 20:11:28  abagchi
  * Swat for removing Log from API docs
  *
@@ -193,7 +196,7 @@ class CDOM_EXPORT DOM_NodeFilter
           * @param node The node to check to see if it passes the filter or not.
           * @return A constant to determine whether the node is accepted, rejected, or skipped.
 	  */
-        virtual short acceptNode (DOM_Node node) =0;
+        virtual short acceptNode (const DOM_Node &node) const =0;
         //@}
 
     private:
