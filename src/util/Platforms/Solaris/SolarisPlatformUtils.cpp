@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/21 20:04:00  abagchi
+ * Removed the code for loadAMsgSet() when invoked with ICU
+ *
  * Revision 1.6  2000/01/19 18:10:14  abagchi
  * Removed the streaming classes and fgLibLocation
  *
@@ -231,97 +234,6 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 
 #if defined (XML_USE_ICU_TRANSCODER)
 {
-    //
-    //  We need to figure out the path to the Intl converter files.
-    //
-
-    static const char * xml4cIntlDirEnvVar = "ICU_DATA";
-    static const char * sharedLibEnvVar    = "LD_LIBRARY_PATH";
-    static const char * intlPath = 0;
-
-    char* envVal = getenv(xml4cIntlDirEnvVar);
-    //check if environment variable is set
-    if (envVal != NULL) // We have found an environment variable
-    {
-        // Store this string in the static member
-        unsigned int pathLen = strlen(envVal);
-        intlPath = new char[pathLen + 2];
-
-        strcpy((char *) intlPath, envVal);
-        if (envVal[pathLen - 1] != '/')
-        {
-            strcat((char *) intlPath, "/");
-        }
-
-        ICUTransService::setICUPath(intlPath);
-        if (intlPath != NULL) delete (char*)intlPath;
-
-        return new ICUTransService;
-    }
-
-
-    //  If we did not find the environment var, so lets try to go the auto
-    //  search route.
-    //
-    char libName[256];
-    strcpy(libName, XML4C_DLLName);
-    strcat(libName, gXML4CVersionStr);
-    strcat(libName, ".so");
-
-    char* libEnvVar = getenv(sharedLibEnvVar);
-    char* libPath = NULL;
-
-    if (libEnvVar == NULL)
-    {
-        panic( XMLPlatformUtils::Panic_NoTransService );
-    }
-
-    //
-    // Its necessary to create a copy because strtok() modifies the
-    // string as it returns tokens. We don't want to modify the string
-    // returned to by getenv().
-    //
-
-    libPath = new char[strlen(libEnvVar) + 1];
-    strcpy(libPath, libEnvVar);
-
-    // First do the searching process for the first directory listing
-    char*  allPaths = libPath;
-    char*  libPathName;
-
-    while ((libPathName = strtok(allPaths, ":")) != NULL)
-    {
-        FILE*  dummyFptr = 0;
-        allPaths = 0;
-
-        char* libfile = new char[strlen(libPathName) + strlen(libName) + 2];
-        strcpy(libfile, libPathName);
-        strcat(libfile, "/");
-        strcat(libfile, libName);
-
-        dummyFptr = (FILE *) fopen(libfile, "rb");
-        delete [] libfile;
-        if (dummyFptr != NULL)
-        {
-            fclose(dummyFptr);
-            intlPath = new char[strlen(libPathName)+ strlen("/icu/data/")+1];
-            strcpy((char *) intlPath, libPathName);
-            strcat((char *) intlPath, "/icu/data/");
-            break;
-        }
-
-    } // while
-
-    delete libPath;
-
-    ICUTransService::setICUPath(intlPath);
-
-    if (intlPath == NULL)
-    {
-        panic( XMLPlatformUtils::Panic_NoTransService );
-    }
-    if (intlPath != NULL) delete (char*)intlPath;
-
     return new ICUTransService;
 }
 #elif defined (XML_USE_ICONV_TRANSCODER)
@@ -944,5 +856,113 @@ void XMLPlatformUtils::platformInit()
      }
 
 }
+
+XMLTransService* XMLPlatformUtils::makeTransService()
+
+#if defined (XML_USE_ICU_TRANSCODER)
+{
+    //
+    //  We need to figure out the path to the Intl converter files.
+    //
+
+    static const char * xml4cIntlDirEnvVar = "ICU_DATA";
+    static const char * sharedLibEnvVar    = "LD_LIBRARY_PATH";
+    static const char * intlPath = 0;
+
+    char* envVal = getenv(xml4cIntlDirEnvVar);
+    //check if environment variable is set
+    if (envVal != NULL) // We have found an environment variable
+    {
+        // Store this string in the static member
+        unsigned int pathLen = strlen(envVal);
+        intlPath = new char[pathLen + 2];
+
+        strcpy((char *) intlPath, envVal);
+        if (envVal[pathLen - 1] != '/')
+        {
+            strcat((char *) intlPath, "/");
+        }
+
+        ICUTransService::setICUPath(intlPath);
+        if (intlPath != NULL) delete (char*)intlPath;
+
+        return new ICUTransService;
+    }
+
+
+    //  If we did not find the environment var, so lets try to go the auto
+    //  search route.
+    //
+    char libName[256];
+    strcpy(libName, XML4C_DLLName);
+    strcat(libName, gXML4CVersionStr);
+    strcat(libName, ".so");
+
+    char* libEnvVar = getenv(sharedLibEnvVar);
+    char* libPath = NULL;
+
+    if (libEnvVar == NULL)
+    {
+        panic( XMLPlatformUtils::Panic_NoTransService );
+    }
+
+    //
+    // Its necessary to create a copy because strtok() modifies the
+    // string as it returns tokens. We don't want to modify the string
+    // returned to by getenv().
+    //
+
+    libPath = new char[strlen(libEnvVar) + 1];
+    strcpy(libPath, libEnvVar);
+
+    // First do the searching process for the first directory listing
+    char*  allPaths = libPath;
+    char*  libPathName;
+
+    while ((libPathName = strtok(allPaths, ":")) != NULL)
+    {
+        FILE*  dummyFptr = 0;
+        allPaths = 0;
+
+        char* libfile = new char[strlen(libPathName) + strlen(libName) + 2];
+        strcpy(libfile, libPathName);
+        strcat(libfile, "/");
+        strcat(libfile, libName);
+
+        dummyFptr = (FILE *) fopen(libfile, "rb");
+        delete [] libfile;
+        if (dummyFptr != NULL)
+        {
+            fclose(dummyFptr);
+            intlPath = new char[strlen(libPathName)+ strlen("/icu/data/")+1];
+            strcpy((char *) intlPath, libPathName);
+            strcat((char *) intlPath, "/icu/data/");
+            break;
+        }
+
+    } // while
+
+    delete libPath;
+
+    ICUTransService::setICUPath(intlPath);
+
+    if (intlPath == NULL)
+    {
+        panic( XMLPlatformUtils::Panic_NoTransService );
+    }
+    if (intlPath != NULL) delete (char*)intlPath;
+
+    return new ICUTransService;
+}
+#elif defined (XML_USE_ICONV_TRANSCODER)
+{
+    return new IconvTransService;
+}
+#else // Use Native transcoding service
+{
+    return new IconvTransService;
+
+}
+#endif
 
 ********************* End of code attic *******************************/
