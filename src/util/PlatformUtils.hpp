@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/19 00:56:59  roddey
+ * Changes to get rid of dependence on old utils standard streams and to
+ * get rid of the fgLibLocation stuff.
+ *
  * Revision 1.2  2000/01/12 00:16:22  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -125,16 +129,9 @@ public :
     //      This is the transcoding service. This is provided by the per
     //      platform driver, so each platform can choose what implemenation
     //      it wants to use.
-    //
-    //  fgLibLocation
-    //      This is the location of the shared library or DLL. For some
-    //      platforms, it might be some fixed directory and others will
-    //      discover it dynamically. All other needed stuff is relative to
-    //      this path.
     // -----------------------------------------------------------------------
     static XMLNetAccessor*      fgNetAccessor;
     static XMLTransService*     fgTransService;
-    static const char*          fgLibLocation;
 
 
     // -----------------------------------------------------------------------
@@ -175,15 +172,6 @@ public :
         ,       XMLByte* const  toFill
     );
     static void resetFile(FileHandle theFile);
-
-
-    // -----------------------------------------------------------------------
-    //  Standard out/error support
-    // -----------------------------------------------------------------------
-    static void writeToStdErr(const char* const toWrite);
-    static void writeToStdErr(const XMLCh* const toWrite);
-    static void writeToStdOut(const XMLCh* const toWrite);
-    static void writeToStdOut(const char* const toWrite);
 
 
     // -----------------------------------------------------------------------

@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/19 00:56:59  roddey
+ * Changes to get rid of dependence on old utils standard streams and to
+ * get rid of the fgLibLocation stuff.
+ *
  * Revision 1.2  2000/01/17 23:38:06  abagchi
  * Changed string "localhost" to XMLUni::fgLocalHostString
  *
@@ -137,12 +141,6 @@ static const XMLCh gFTPString[]  =
 static const XMLCh gHTTPString[] =
 {
         chLatin_h, chLatin_t, chLatin_t, chLatin_p, chNull
-};
-
-static const XMLCh gLocalHostString[] =
-{
-        chLatin_l, chLatin_o, chLatin_c, chLatin_a, chLatin_l
-    ,   chLatin_h, chLatin_o, chLatin_s, chLatin_t, chNull
 };
 
 static TypeEntry gTypeList[XMLURL::Protocols_Count] = 

@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:04:18  twl
- * Initial revision
+ * Revision 1.2  2000/01/19 00:56:59  roddey
+ * Changes to get rid of dependence on old utils standard streams and to
+ * get rid of the fgLibLocation stuff.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:04:18  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:07  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -77,7 +81,6 @@
 #include <util/NullPointerException.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/RuntimeException.hpp>
-#include <util/TextOutputStream.hpp>
 #include <util/UnexpectedEOFException.hpp>
 #include <util/UnsupportedEncodingException.hpp>
 #include <util/UTFDataFormatException.hpp>

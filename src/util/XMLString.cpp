@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/01/19 00:56:59  roddey
+ * Changes to get rid of dependence on old utils standard streams and to
+ * get rid of the fgLibLocation stuff.
+ *
  * Revision 1.4  2000/01/12 00:16:23  roddey
  * Changes to deal with multiply nested, relative pathed, entities and to deal
  * with the new URL class changes.
@@ -86,7 +90,6 @@
 #include <util/IllegalArgumentException.hpp>
 #include <util/Janitor.hpp>
 #include <util/PlatformUtils.hpp>
-#include <util/StdOut.hpp>
 #include <util/RuntimeException.hpp>
 #include <util/TransService.hpp>
 #include <util/TranscodingException.hpp>

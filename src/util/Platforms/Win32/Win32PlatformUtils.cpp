@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/01/19 00:57:26  roddey
+ * Changes to get rid of dependence on old utils standard streams and to
+ * get rid of the fgLibLocation stuff.
+ *
  * Revision 1.6  2000/01/15 01:26:18  rahulj
  * Added support for HTTP to the parser using libWWW 5.2.8.
  * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
@@ -95,6 +99,11 @@
 #include <util/XMLUni.hpp>
 #include <windows.h>
 
+//
+//  These control which transcoding service is used by the Win32 version.
+//  They allow this to be controlled from the build process by just defining
+//  one of these values.
+//
 #if defined (XML_USE_ICU_TRANSCODER)
 	#include <util/Transcoders/ICU/ICUTransService.hpp>
 #elif defined (XML_USE_WIN32_TRANSCODER)
@@ -103,6 +112,11 @@
 	#error A transcoding service must be chosen
 #endif
 
+//
+//  These control which message loading service is used by the Win32 version.
+//  They allow this to be controlled from the build process by just defining
+//  one of these values.
+//
 #if defined (XML_USE_INMEMORY_MSGLOADER)
 	#include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 #elif defined (XML_USE_WIN32_MSGLOADER)
@@ -111,10 +125,15 @@
 	#error A message loading service must be chosen
 #endif
 
-
+//
+//  These control which network access service is used by the Win32 version.
+//  They allow this to be controlled from the build process by just defining
+//  one of these values.
+//
 #if defined (XML_USE_NETACCESSOR_LIBWWW)
     #include <util/NetAccessors/LibWWWNetAccessor.hpp>
 #endif
+
 
 
 // ---------------------------------------------------------------------------
@@ -123,139 +142,8 @@
 //  gOnNT
 //      We figure out during init if we are on NT or not. If we are, then
 //      we can avoid a lot of transcoding in our system services stuff.
-//
-//  gStdErr
-//  gStdOut
-//      The file handles for standard error and standard out. We set these
-//      up during init. Note that they can be zero if there are no std
-//      handles, 
-//
-//  gStdErrRedir
-//  gStdOutRedir
-//      These flags are set to indicate whether their respective output
-//      handles are redirected. If they are not, then we can use console
-//      APIs on NT to write Unicode straight to the output. Otherwise we have
-//      to use file APIs, and we transcode it.
 // ---------------------------------------------------------------------------
 static bool     gOnNT;
-static HANDLE   gStdErr;
-static bool     gStdErrRedir;
-static HANDLE   gStdOut;
-static bool     gStdOutRedir;
-
-
-// ---------------------------------------------------------------------------
-//  Local methods
-// ---------------------------------------------------------------------------
-static void WriteCharStrStdErr(const char* const toWrite)
-{
-    // We always just use the file APIs for these
-    DWORD written;
-    if (!::WriteFile
-    (
-        gStdErr
-        , toWrite
-        , strlen(toWrite)
-        , &written
-        , 0))
-    {
-        //
-        //  If if fails due to an invalid handle, then just assume that our
-        //  handles were disconnected and zero it out. This will prevent us
-        //  from getting called again.
-        //
-        if (::GetLastError() == ERROR_INVALID_HANDLE)
-            gStdErr = 0;
-        else
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Strm_StdErrWriteFailure);
-    }
-}
-
-
-static void WriteCharStrStdOut(const char* const toWrite)
-{
-    // We always just use the file APIs for these
-    DWORD written;
-    if (!::WriteFile
-    (
-        gStdOut
-        , toWrite
-        , strlen(toWrite)
-        , &written
-        , 0))
-    {
-        //
-        //  If if fails due to an invalid handle, then just assume that our
-        //  handles were disconnected and zero it out. This will prevent us
-        //  from getting called again.
-        //
-        if (::GetLastError() == ERROR_INVALID_HANDLE)
-            gStdOut = 0;
-        else
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Strm_StdOutWriteFailure);
-    }
-}
-
-
-static void WriteUStrStdErr(const XMLCh* const toWrite)
-{
-    //
-    //  If we are on NT and the handle is not redirected, then we can use
-    //  the console API directly to send out Unicode. Otherwise we have to
-    //  use the file APIs and transcode.
-    //
-    DWORD written;
-    if (gOnNT && !gStdErrRedir)
-    {
-        if (!::WriteConsoleW
-        (
-            gStdErr
-            , toWrite
-            , XMLString::stringLen(toWrite)
-            , &written
-            , 0))
-        {
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Strm_ConWriteFailure);
-        }
-        return;
-    }
-
-    // Oh well, got to do it the hard way
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janTmp(tmpVal);
-    WriteCharStrStdErr(tmpVal);
-}
-
-
-static void WriteUStrStdOut(const XMLCh* const toWrite)
-{
-    //
-    //  If we are on NT and the handle is not redirected, then we can use
-    //  the console API directly to send out Unicode. Otherwise we have to
-    //  use the file APIs and transcode.
-    //
-    DWORD written;
-    if (gOnNT && !gStdOutRedir)
-    {
-        if (!::WriteConsoleW
-        (
-            gStdOut
-            , toWrite
-            , XMLString::stringLen(toWrite)
-            , &written
-            , 0))
-        {
-            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::Strm_ConWriteFailure);
-        }
-        return;
-    }
-
-    // Oh well, got to do it the hard way
-    char* tmpVal = XMLString::transcode(toWrite);
-    ArrayJanitor<char> janTmp(tmpVal);
-    WriteCharStrStdOut(tmpVal);
-}
-
 
 
 // ---------------------------------------------------------------------------
@@ -434,39 +322,6 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
     if (::SetFilePointer(theFile, 0, 0, FILE_BEGIN) == 0xFFFFFFFF)
         ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotResetFile);
 }
-
-
-// ---------------------------------------------------------------------------
-//  XMLPlatformUtils: File Methods
-// ---------------------------------------------------------------------------
-void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
-{
-    // If handles never got opened, then eat the output, else output
-    if (gStdErr)
-        WriteUStrStdErr(toWrite);
-}
-
-void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
-{
-    // If handles never got opened, then eat the output, else output
-    if (gStdErr)
-        WriteCharStrStdErr(toWrite);
-}
-
-void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
-{
-    // If handles never got opened, then eat the output, else output
-    if (gStdOut)
-        WriteUStrStdOut(toWrite);
-}
-
-void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
-{
-    // If handles never got opened, then eat the output, else output
-    if (gStdOut)
-        WriteCharStrStdOut(toWrite);
-}
-
 
 
 // ---------------------------------------------------------------------------
@@ -773,9 +628,8 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 //
 //  This method is called by the platform independent part of this class
 //  during initialization. We have to create the type of net accessor that
-//  we want to use.
+//  we want to use. If none, then just return zero.
 //
-
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
 #if defined (XML_USE_NETACCESSOR_LIBWWW)
@@ -818,13 +672,6 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     //  to our DLL.
     //
 #if defined (XML_USE_ICU_TRANSCODER)
-    char tmpBuf[4096];
-    if (!::GetEnvironmentVariableA("ICU_DATA", tmpBuf, 4096))
-    {
-        strcpy(tmpBuf, fgLibLocation);
-        strcat(tmpBuf, "icu\\data\\");
-        ICUTransService::setICUPath(tmpBuf);
-    }
     return new ICUTransService;
 #elif defined (XML_USE_WIN32_TRANSCODER)
     return new Win32TransService;
@@ -842,82 +689,10 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 void XMLPlatformUtils::platformInit()
 {
     //
-    //  Lets get our own DLL path and store it. The fgLibLocation static
-    //  member must be filled in with the path to the shared Lib or DLL
-    //  so that other code can find any files relative to it.
-    //
-    HINSTANCE hmod = ::GetModuleHandleA(XML4C_DLLName);
-    if (!hmod)
-    {
-        //
-        //  If we didn't find it, its probably because its a development
-        //  build which is built as separate DLLs, so lets look for the DLL
-        //  that we are part of.
-        //
-        static const char* const privDLLName = "IXUTIL";
-        hmod = ::GetModuleHandle(privDLLName);
-
-        // If neither exists, then we give up
-        if (!hmod)
-            panic(Panic_CantFindLib);
-    }
-
-    //
-    //  Get the path to our module. We explicitly get the ASCII version here
-    //  since its stored as ASCII (or the local code page to be more specific,
-    //  so it might be EBCDIC on some platforms.)
-    //
-    char tmpBuf[MAX_PATH + 1];
-    if (!::GetModuleFileNameA(hmod, tmpBuf, MAX_PATH))
-        panic(Panic_CantFindLib);
-
-    // Find the last separator in the list and put a null in the next char
-    char* sepPtr = 0;
-    sepPtr = strrchr(tmpBuf, '\\');
-    if (sepPtr)
-        *(sepPtr+1)= 0;
-    const unsigned int pathLen = strlen(tmpBuf);
-
-    // Allocate a buffer and copy the text into it. Then store it in the static
-    char* actualBuf = new char[pathLen + 1];
-    strcpy(actualBuf, tmpBuf);
-    fgLibLocation = actualBuf;
-
-    //
     //  Figure out if we are on NT and save that flag for later use.
     //
     OSVERSIONINFO   OSVer;
     OSVer.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     ::GetVersionEx(&OSVer);
     gOnNT = (OSVer.dwPlatformId == VER_PLATFORM_WIN32_NT);
-
-    //
-    //  Ok, we have to do a little dance here to determine if we have any
-    //  standard output handles. First we open up the potentially redirected
-    //  standard handles.
-    //
-    gStdOut = ::GetStdHandle(STD_OUTPUT_HANDLE);
-    gStdErr = ::GetStdHandle(STD_ERROR_HANDLE);
-
-    //
-    //  If we got the handles, then get the console mode for them. If this
-    //  fails, then assume for the time being that they are just redirected
-    //  files.
-    //
-    //  Above, when they are actually used, if they fail because of an
-    //  invalid handle error, the gStdOut and gStdErr handles will get zeroed
-    //  out all further output will be eaten.
-    //
-    DWORD dummyParm;
-    if (gStdOut)
-    {
-        if (!::GetConsoleMode(gStdOut, &dummyParm))
-            gStdOutRedir = true;
-    }
-
-    if (gStdErr)
-    {
-        if (!::GetConsoleMode(gStdErr, &dummyParm))
-            gStdErrRedir = true;
-    }
 }

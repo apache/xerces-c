@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/19 00:56:59  roddey
+ * Changes to get rid of dependence on old utils standard streams and to
+ * get rid of the fgLibLocation stuff.
+ *
  * Revision 1.3  1999/12/18 00:18:10  roddey
  * More changes to support the new, completely orthagonal support for
  * intrinsic encodings.
@@ -97,7 +101,6 @@ static XMLMutex*    gMsgMutex = 0;
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Static Data Members
 // ---------------------------------------------------------------------------
-const char*         XMLPlatformUtils::fgLibLocation = 0;
 bool                XMLPlatformUtils::fgInitFlag = false;
 XMLNetAccessor*     XMLPlatformUtils::fgNetAccessor = 0;
 XMLTransService*    XMLPlatformUtils::fgTransService = 0;
@@ -127,10 +130,6 @@ void XMLPlatformUtils::Initialize()
     //  per-platform implementation cpp files. This one does the very low
     //  level per-platform setup. It cannot use any XML util services at all,
     //  i.e. only native services.
-    //
-    //  One important thing it does is to set the fgLibLocation string, which
-    //  can be used by any subsequent init code that needs to find stuff
-    //  relative to the lib/DLL.
     //
     platformInit();
 
@@ -164,13 +163,10 @@ void XMLPlatformUtils::Initialize()
 
     //
     //  Now lets ask the per-platform code to give us an instance of the type
-    //  of network access implementation he wants to use.
+    //  of network access implementation he wants to use. This can return
+    //  a zero pointer if this platform doesn't want to support this.
     //
     fgNetAccessor = makeNetAccessor();
-    if (!fgNetAccessor)
-    {
-        // <TBD> For now its returning a null, but later this will be required
-    }
 }
 
 
