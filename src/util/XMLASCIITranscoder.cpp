@@ -199,6 +199,7 @@ XMLASCIITranscoder::transcodeTo(const   XMLCh* const    srcData
 
         // Use the replacement char
         *outPtr++ = 0x1A;
+        srcPtr++;
     }
 
     // Set the chars we ate

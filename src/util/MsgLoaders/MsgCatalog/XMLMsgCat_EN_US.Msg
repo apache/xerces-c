@@ -237,7 +237,7 @@ $set 3
  79  String pool id was not legal
  80  Could not create a default transcoder
  81  The maximum size to xlat is larger than the declared block size
- 82  Unicode char {0} is representable in encoding {1}
+ 82  Unicode char {0} is not representable in encoding {1}
  83  Character {0} is not valid for encoding {1}
  84  The requested block size is not equal to the size set during construction
  85  An invalid multi-byte source text sequence was encountered

@@ -174,6 +174,7 @@ XML88591Transcoder::transcodeTo(const   XMLCh* const    srcData
             );
         }
         *destPtr++ = 0x1A;
+        srcPtr++;
     }
 
     // Set the chars eaten
