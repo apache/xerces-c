@@ -919,7 +919,7 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode)
         (
             fConverter
             , retBuf
-            , targetCap
+            , targetCap + 1
             , actualSrc
             , -1
             , &err
@@ -1020,7 +1020,7 @@ char* ICULCPTranscoder::transcode(const XMLCh* const toTranscode,
         (
             fConverter
             , retBuf
-            , targetCap
+            , targetCap + 1
             , actualSrc
             , -1
             , &err
