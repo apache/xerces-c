@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/10/09 20:52:43  peiyongz
+ * init():removed
+ *
  * Revision 1.8  2001/10/01 21:04:40  peiyongz
  * DTV Reorganization:fix to memory leak in compare() method.
  *
@@ -128,8 +131,6 @@ protected:
                            , const int                           finalSet
                            , const ValidatorType                 type);
 
-    inline void init(RefVectorOf<XMLCh>*           const enums);
-
 // -----------------------------------------------------------------------
 // Abstract interface from AbstractNumericFacetValidator
 // -----------------------------------------------------------------------
@@ -188,11 +189,6 @@ private:
 	 unsigned int         fFractionDigits;
 
 };
-
-void DecimalDatatypeValidator::init(RefVectorOf<XMLCh>*   const enums)
-{
-    AbstractNumericValidator::init(enums);
-}
 
 // -----------------------------------------------------------------------
 // Getter methods

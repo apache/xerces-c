@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/10/09 20:52:43  peiyongz
+ * init():removed
+ *
  * Revision 1.4  2001/10/01 21:03:55  peiyongz
  * DTV Reorganization:derived from AbstractNumericValidator
  *
@@ -137,8 +140,6 @@ protected:
                          , const int                           finalSet
                          , const ValidatorType                 type);
 
-    inline void init(RefVectorOf<XMLCh>*           const enums);
-
 // -----------------------------------------------------------------------
 // Abstract interface from AbstractNumericFacetValidator
 // -----------------------------------------------------------------------
@@ -172,11 +173,6 @@ protected:
     virtual void checkContent( const XMLCh* const content, bool asBase);
 
 };
-
-void FloatDatatypeValidator::init(RefVectorOf<XMLCh>*   const enums)
-{
-    AbstractNumericValidator::init(enums);
-}
 
 /**
   * End of file FloatDatatypeValidator.hpp
