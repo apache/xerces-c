@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/07/16 12:52:09  tng
+ * APIDocs fix: default for schema processing in DOMParser, IDOMParser, and SAXParser should be false.
+ *
  * Revision 1.17  2001/06/23 14:13:16  tng
  * Remove getScanner from the Parser headers as this is not needed and Scanner is not internal class.
  *
@@ -366,7 +369,7 @@ public :
       * schema processing. When set to false, parser will not process
       * any schema found.
       *
-      * The parser's default state is: true.
+      * The parser's default state is: false.
       *
       * @param newState The value specifying whether schema support should
       *                 be enforced or not.

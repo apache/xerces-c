@@ -509,7 +509,7 @@ public :
       * schema processing. When set to false, parser will not process
       * any schema found.
       *
-      * The parser's default state is: true.
+      * The parser's default state is: false.
       *
       * @param newState The value specifying whether schema support should
       *                 be enforced or not.
