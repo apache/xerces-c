@@ -116,15 +116,19 @@ void XMemory::operator delete(void* p, MemoryManager* manager)
 {
     assert(manager != 0);
 	
-	if (p != 0)
-	{
-		size_t headerSize = XMLPlatformUtils::alignPointerForNewBlockAllocation(
-											sizeof(MemoryManager*));
+    if (p != 0)
+    {
+        size_t headerSize = XMLPlatformUtils::alignPointerForNewBlockAllocation(sizeof(MemoryManager*));
         void* const block = (char*)p - headerSize;
-		
-		assert(*(MemoryManager**)block == manager);
-		manager->deallocate(block);
-	}
+        assert(*(MemoryManager**)block == manager);
+        /***
+         * NOTE: for compiler which can't properly trace the memory manager used in the 
+         *       placement new, we use the memory manager embedded in the memory rather 
+         *       than the one passed in
+         */ 
+        MemoryManager* pM = *(MemoryManager**)block;
+        pM->deallocate(block);
+    }
 }
 
 #endif
