@@ -1743,6 +1743,14 @@ SOURCE=..\..\..\..\..\src\validators\datatype\IDDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\datatype\IDREFDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\IDREFDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeFacetException.hpp
 # End Source File
 # Begin Source File

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/07/04 20:16:31  peiyongz
+ * IDREFDatatypeValidator
+ *
  * Revision 1.11  2001/07/04 14:38:24  peiyongz
  * IDDatatypeValidator: created
  * DatatypeValidatorFactory: IDDTV enabled
@@ -108,6 +111,7 @@
 #include <validators/datatype/HexBinaryDatatypeValidator.hpp>
 #include <validators/datatype/Base64BinaryDatatypeValidator.hpp>
 #include <validators/datatype/IDDatatypeValidator.hpp>
+#include <validators/datatype/IDREFDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -315,9 +319,9 @@ void DatatypeValidatorFactory::initializeDTDRegistry()
                        new StringDatatypeValidator());
         fBuiltInRegistry->put((void*) XMLUni::fgIDString,
                        new IDDatatypeValidator());
-/*
         fBuiltInRegistry->put((void*) XMLUni::fgIDRefString,
                        new IDREFDatatypeValidator());
+/*
         fBuiltInRegistry->put((void*) XMLUni::fgEntityString,
                        new ENTITYDatatypeValidator());
         fBuiltInRegistry->put((void*) XMLUni::fgNotationString,

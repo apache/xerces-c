@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2001/07/04 20:16:31  peiyongz
+# IDREFDatatypeValidator
+#
 # Revision 1.8  2001/07/04 15:22:55  peiyongz
 # IDDatatypeValidator
 #
@@ -112,7 +115,8 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	DecimalDatatypeValidator.hpp \
 	HexBinaryDatatypeValidator.hpp \
 	StringDatatypeValidator.hpp \
-	IDDatatypeValidator.hpp
+	IDDatatypeValidator.hpp \
+	IDREFDatatypeValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
 
@@ -126,8 +130,8 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	DecimalDatatypeValidator.$(TO) \
 	HexBinaryDatatypeValidator.$(TO) \
 	StringDatatypeValidator.$(TO) \
-	IDDatatypeValidator.$(TO)
-
+	IDDatatypeValidator.$(TO) \
+	IDREFDatatypeValidator.$(TO)
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)
 
