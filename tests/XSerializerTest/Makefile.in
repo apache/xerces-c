@@ -89,6 +89,7 @@ EXEC=	${XERCESCROOT}/bin
 OBJS=	${OUTDIR}/XSerializerTest.o ${OUTDIR}/SAXCountHandlers.o
 SRC=	${XERCESCROOT}/tests/${APP_DIR}
 EXTSRC= ${XERCESCROOT}/samples/SAXCount
+INCLUDES= -I. -I../../samples/SAXCount -I${XERCESCROOT}/include
 HEADER_FILES= ${SRC}/XSerializerTest.hpp ${EXTSRC}/SAXCountHandlers.hpp
 
 ## OS390BATCH
@@ -112,7 +113,7 @@ $(OUTDIR)/XSerializerTest.o:: ${SRC}/XSerializerTest.cpp ${HEADER_FILES}
 	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/XSerializerTest.o ${SRC}/XSerializerTest.cpp
 
 $(OUTDIR)/SAXCountHandlers.o:: ${EXTSRC}/SAXCountHandlers.cpp ${HEADER_FILES}
-	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/SAXCountHandlers.o ${SRC}/SAXCountHandlers.cpp
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/SAXCountHandlers.o ${EXTSRC}/SAXCountHandlers.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}

@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.2  2003/12/13 20:17:18  neilg
+* fix compilation errors under gcc
+*
 * Revision 1.1  2003/12/12 18:17:25  peiyongz
 * XSerializerTest
 *
@@ -227,8 +230,8 @@ static bool getAndSaveGrammar(const char* const xmlFile)
         //do emit error here so that we know serialization failure
         if (showSerializationError)
         {
-            cerr << "An error occurred during serialization\n   Message: "
-             << StrX(e.getMessage()) << endl;
+            XERCES_STD_QUALIFIER cerr << "An error occurred during serialization\n   Message: "
+             << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
         }
         retVal = false;
     }
@@ -251,8 +254,8 @@ static bool restoreGrammar()
     {
         if (showSerializationError)
         {
-            cerr << "An error occurred during de-serialization\n   Message: "
-                << StrX(e.getMessage()) << endl;
+            XERCES_STD_QUALIFIER cerr << "An error occurred during de-serialization\n   Message: "
+                << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
         }
 
         destroyParser();
