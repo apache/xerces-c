@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2001/07/19 20:45:16  tng
+ * Add some test cases in the tests folder to sanityTest.pl
+ *
  * Revision 1.2  2001/06/05 11:58:31  tng
  * Delete the document at the end for clearing the memory.
  *
@@ -551,7 +554,7 @@ int  main()
 
     };
 
-
+    printf("Test Run Successfully\n");
     return 0;
-    };
+};
 

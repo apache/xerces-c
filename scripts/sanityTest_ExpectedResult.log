@@ -776,3 +776,52 @@ ELEMENTS:
   Name: given
   Content Model: (#PCDATA)*
 
+The tree just created contains: 4 elements.
+DOM reference counted memory alloction statistics:
+    live  string handles:   0
+    total string handles:   151
+    live  string buffers:   0
+    total string buffers:   331
+    live  nodeImpls:        0
+    total nodeImpls:        55
+    live  NamedNodeMaps:    0
+    total NamedNodeMaps:    18
+DOM Memory Test.
+DOM reference counted memory alloction statistics:
+    live  string handles:   0
+    total string handles:   489
+    live  string buffers:   0
+    total string buffers:   522
+    live  nodeImpls:        0
+    total nodeImpls:        182
+    live  NamedNodeMaps:    0
+    total NamedNodeMaps:    37
+DOM reference counted memory alloction statistics:
+    live  string handles:   0
+    total string handles:   243
+    live  string buffers:   0
+    total string buffers:   274
+    live  nodeImpls:        0
+    total nodeImpls:        220
+    live  NamedNodeMaps:    0
+    total NamedNodeMaps:    34
+DOM reference counted memory alloction statistics:
+    live  string handles:   0
+    total string handles:   145
+    live  string buffers:   0
+    total string buffers:   163
+    live  nodeImpls:        0
+    total nodeImpls:        77
+    live  NamedNodeMaps:    0
+    total NamedNodeMaps:    0
+DOM reference counted memory alloction statistics:
+    live  string handles:   0
+    total string handles:   17
+    live  string buffers:   0
+    total string buffers:   17
+    live  nodeImpls:        0
+    total nodeImpls:        17
+    live  NamedNodeMaps:    0
+    total NamedNodeMaps:    2
+Test Run Successfully
+Test Run Successfully

@@ -966,6 +966,8 @@ int  main()
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
+    printf("Test Run Successfully\n");
+
     return 0;
 };
 

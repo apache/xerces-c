@@ -81,6 +81,10 @@ else {
 
 chdir "samples".$pathsep."data";
 
+#
+#  Run the samples
+#
+
 #  Run SAXCount
 system ("SAXCount");
 system ("SAXCount -v=never personal.xml");
@@ -150,5 +154,33 @@ system ("PParse -n -s personal-schema.xml");
 #  Run EnumVal
 system ("EnumVal");
 system ("EnumVal personal.xml");
+
+#  Run CreateDOMDocument
+system ("CreateDOMDocument");
+
+#
+#  Run some selected test cases
+#
+
+#  Run DOMIDTest
+system ("DOMIDTest");
+
+#  Run DOMMemTest
+system ("DOMMemTest");
+
+#  Run DOMTest
+system ("DOMTest");
+
+#  Run RangeTest
+system ("RangeTest");
+
+#  Run DOMTraversalTest
+system ("DOMTraversalTest");
+
+#  Run IRangeTest
+system ("IRangeTest");
+
+#  Run ITraversal
+system ("ITraversal");
 
 chdir "..".$pathsep."..";
