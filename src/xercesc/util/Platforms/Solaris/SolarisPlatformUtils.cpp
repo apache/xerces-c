@@ -208,7 +208,7 @@ unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile
     int curPos = tell( (int)theFile);
     if (curPos == -1)
         ThrowXMLwithMemMgr(XMLPlatformUtilsException,
-                 XMLExcepts::File_CouldNotGetSizewithMemMgr, manager);
+                 XMLExcepts::File_CouldNotGetSize, manager);
 
     return (unsigned int)curPos;
 }
@@ -306,7 +306,7 @@ void
 XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
                                    , long                  toWrite
                                    , const XMLByte* const  toFlush
-                                   , MemoryManger*  const  manager)
+                                   , MemoryManager*  const manager)
 {
     if (!theFile        ||
         (toWrite <= 0 ) ||
@@ -369,7 +369,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
 
     if (!retPath)
     {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName, manager);
+        ThrowXMLwithMemMgr(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName, manager);
     }
     return XMLString::transcode(absPath, manager);
 }

@@ -212,9 +212,10 @@ XMLException::XMLException(const XMLException& toCopy) :
     fCode(toCopy.fCode)
     , fSrcFile(0)
     , fSrcLine(toCopy.fSrcLine)
-    , fMemoryManager(toCopy.fMemoryManager)
-    , fMsg(XMLString::replicate(toCopy.fMsg, fMemoryManager))
+    , fMemoryManager(toCopy.fMemoryManager)    
 {
+    fMsg = XMLString::replicate(toCopy.fMsg, fMemoryManager);
+
     if (toCopy.fSrcFile) {
         fSrcFile = XMLString::replicate
         (
