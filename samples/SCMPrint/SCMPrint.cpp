@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2004/02/12 13:58:58  cargilld
+ * Fix build errors.
+ *
  * Revision 1.1  2004/02/11 20:53:05  peiyongz
  * SCMPrint
  *
@@ -76,8 +79,10 @@
 #include <xercesc/framework/psvi/XSParticle.hpp>
 #include <xercesc/framework/psvi/XSModelGroup.hpp>
 #if defined(XERCES_NEW_IOSTREAMS)
+#include <iostream>
 #include <fstream>
 #else
+#include <iostream.h>
 #include <fstream.h>
 #endif
 #include <stdlib.h>
