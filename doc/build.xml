@@ -12,7 +12,8 @@
     <li><link anchor="BuildMac">Building &XercesCName; on Macintosh</link></li>
     <li><link anchor="BuildICU">Building ICU</link></li>
     <li><link anchor="BuildDocs">Building the User Documentation</link></li>
-    <li><link anchor="PortingGuide">How can I port &XercesCProjectName; to my favourite platform?</link></li>
+    <li><link anchor="PortingGuide">I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?</link></li>
+    <li><link anchor="WCharT">What should I define XMLCh to be?</link></li>
     <li><link anchor="LookForHelp">Where can I look for more help?</link></li>
   </ul>
 
@@ -613,7 +614,7 @@ doc/xerces-c_book.xml ../../xml-stylebook/styles/apachexml</source>
 
 
     <anchor name="PortingGuide"/>
-    <s2 title="How can I port &XercesCProjectName; to my favourite platform?">
+    <s2 title="I wish to port &XercesCProjectName; to my favourite platform. Do you have any suggestions?">
 
       <p>All platform dependent code in &XercesCProjectName; has been
       isolated to a couple of files, which should ease the porting
@@ -690,8 +691,72 @@ doc/xerces-c_book.xml ../../xml-stylebook/styles/apachexml</source>
       <p>That is the work required in a nutshell!</p>
     </s2>
     
+
+    <anchor name="WCharT"/>
+    <s2 title="What should I define XMLCh to be?">
+
+        <p>The answer is 'it depends'. We will mention some of the
+        quirks that affect this decision. Hopefully, after reading
+        whats below, you will be able to best decide what the right
+        definition should be. We could not however, resist making a
+        suggestion. Some observations first:</p>
+
+        <ul>
+          <li>Xerces-C uses XMLCh as the fundamental type to hold
+          one Unicode character as, all processing inside Xerces-C
+          happens in Unicode.</li>
+
+          <li>Most modern C++ compilers today provide 'wchar_t' as a
+          fundamental type representing a 'wide character'. Most of them
+          define it in using a typedef. This typedef definition is not
+          consistent on all the platforms that we have come across.</li>
+
+          <li>The size of wchar_t varies among the various compilers. Its
+          either 16-bit or 32-bit. Fortunately, this only affects how
+          much memory you need, to process the XML data, while everything
+          is still in memory.</li>
+
+          <li>Again on most platforms wchar_t represents a unicode
+          character. HPUX, is one exception to this, that we know,
+          where wchar_t <em>does not</em> represent a unicode
+          character, rather its a native wide character.</li>
+
+          <li>Lastly, most OS's/compilers provide a system library to
+          manipulate wide character strings taking wchar_t and
+          wchar_t* arguments. Most applications which support
+          wide-characters make these system calls.</li>
+        </ul>
+
+        <p>Our suggestion is:</p>
+
+        <p>If your compiler defines wchar_t to represent a unicode
+        character, then define XMLCh to be wchar_t.  Such a definition
+        will allow you to pass the data returned by the parser (all
+        api's return XMLCh, which is wchar_t) directly to the
+        wide-character system api's for i/o or manipulation. This is
+        most efficient and convenient.</p>
+
+        <p>However, if your compiler defines wchar_t to be just a
+        wide-character which is not Unicode, then define XMLCh to be
+        unsigned short. For the Xerces-C parser, XMLCh is always
+        Unicode. By defining it to be unsigned short and not wchar_t,
+        the compiler will not let you accidently pass what is
+        returned, via the parser API's, directly to the wide-character
+        library calls. To use the wide-character library of functions,
+        you will have to in your application, call some transcoding
+        function which will convert it from Unicode to the native
+        wide-character form. Again, if your application desires for
+        whatever reason, you may define XMLCh to be 'unsigned
+        long'. By doing so, you have just doubled the memory required
+        to process the XML file.</p>
+
+        <p>Hopefully, you will agree that the answer 'it depends' was
+        the right one.</p>
+    </s2>
+
+
     <anchor name="LookForHelp"/>
-    <s2 title="Where to look for more help">
+    <s2 title="Where can I look for more help?">
         <p>If you have read this page, followed the instructions, and
         still cannot resolve your problem(s), there is more help. You
         can find out if others have
@@ -699,7 +764,7 @@ doc/xerces-c_book.xml ../../xml-stylebook/styles/apachexml</source>
         <jump href="http://xml-archive.webweaving.org/xml-archive-xerces/">
         &XercesCProjectName; mailing list archives</jump>.</p>
 
-        <p>If all else fails, you may ask for help by joining the
+        <p>If all else fails, you may ask for help by subscribing to the
         <jump href="mailto:&XercesCEmailAddress;">&XercesCName; mailing list</jump>.</p>
     </s2>
 
