@@ -628,6 +628,10 @@ SOURCE=..\..\..\..\..\src\xercesc\util\ValueArrayOf.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueHashTableOf.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\ValueStackOf.hpp
 # End Source File
 # Begin Source File

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/24 16:42:20  knoaman
+ * Performance fixes: eliminate mulitple calls to addRange and sort.
+ *
  * Revision 1.2  2002/02/05 13:20:06  tng
  * [Bug 5716] Can't parse with Validation more than one file.
  *
@@ -97,23 +100,23 @@
 #include <xercesc/util/regx/TokenFactory.hpp>
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/RangeTokenMap.hpp>
+#include <xercesc/util/Janitor.hpp>
+#include <string.h>
 
 
 // ---------------------------------------------------------------------------
 //  Local static functions
 // ---------------------------------------------------------------------------
-static void setupRange(RangeToken* const rangeTok,
-                       const XMLCh* const theTable) {
+static void setupRange(XMLInt32* const rangeMap,
+                       const XMLCh* const theTable,
+                       unsigned int startingIndex) {
 
     const XMLCh* pchCur = theTable;
 
     // Do the ranges first
     while (*pchCur)
     {
-        const XMLCh chLow = *pchCur++;
-        const XMLCh chHigh = *pchCur++;
-
-		rangeTok->addRange(chLow, chHigh);
+        rangeMap[startingIndex++] = *pchCur++;
     }
 
     // Skip the range terminator
@@ -121,9 +124,18 @@ static void setupRange(RangeToken* const rangeTok,
 
     // And then the singles until we hit its terminator
     while (*pchCur) {
+
         const XMLCh chSingle = *pchCur++;
-        rangeTok->addRange(chSingle, chSingle);
+        rangeMap[startingIndex++] = chSingle;
+        rangeMap[startingIndex++] = chSingle;
     }
+}
+
+static unsigned int getTableLen(const XMLCh* const theTable) {
+
+    unsigned int rangeLen = XMLString::stringLen(theTable);
+
+    return rangeLen + 2*XMLString::stringLen(theTable + rangeLen + 1);
 }
 
 // ---------------------------------------------------------------------------
@@ -156,50 +168,79 @@ void XMLRangeFactory::buildRanges() {
     TokenFactory* tokFactory = rangeTokMap->getTokenFactory();
 
     // Create space ranges
+    unsigned int wsTblLen = getTableLen(gWhitespaceChars);
     RangeToken* tok = tokFactory->createRange();
-    setupRange(tok, gWhitespaceChars);
+    XMLInt32* wsRange = new XMLInt32[wsTblLen];
+
+    tok->setRangeValues(wsRange, wsTblLen);
+    setupRange(wsRange, gWhitespaceChars, 0);
     rangeTokMap->setRangeToken(fgXMLSpace, tok);
 
     // Create digits ranges
     tok = tokFactory->createRange();
-    setupRange(tok, gDigitChars);
-    tok->sortRanges();
-    tok->compactRanges();
+    unsigned int digitTblLen = getTableLen(gDigitChars);
+    XMLInt32* digitRange = new XMLInt32[digitTblLen];
+
+    tok->setRangeValues(digitRange, digitTblLen);
+    setupRange(digitRange, gDigitChars, 0);
     rangeTokMap->setRangeToken(fgXMLDigit, tok);
 
-    // Create word ranges
-    tok = tokFactory->createRange();
-    setupRange(tok, gBaseChars);
-    setupRange(tok, gXMLChars);
-    setupRange(tok, gDigitChars);
-    tok->sortRanges();
-    tok->compactRanges();
-    rangeTokMap->setRangeToken(fgXMLWord, tok);
+    // Build word ranges
+    unsigned int baseTblLen = getTableLen(gBaseChars);
+    unsigned int ideoTblLen = getTableLen(gIdeographicChars);
+    unsigned int wordRangeLen = baseTblLen + ideoTblLen + digitTblLen;
+    XMLInt32* wordRange = new XMLInt32[wordRangeLen];
+    ArrayJanitor<XMLInt32> janWordRange(wordRange);
+
+    setupRange(wordRange, gBaseChars, 0);
+    setupRange(wordRange, gIdeographicChars, baseTblLen);
+    memcpy(wordRange + baseTblLen + ideoTblLen, digitRange, digitTblLen * sizeof(XMLInt32));
 
     // Create NameChar ranges
     tok = tokFactory->createRange();
-    setupRange(tok, gBaseChars);
-    setupRange(tok, gCombiningChars);
-    setupRange(tok, gExtenderChars);
-    setupRange(tok, gIdeographicChars);
-    setupRange(tok, gDigitChars);
-    tok->addRange(chDash, chDash);
-    tok->addRange(chColon, chColon);
-    tok->addRange(chPeriod, chPeriod);
-    tok->addRange(chUnderscore, chUnderscore);
+    unsigned int combTblLen = getTableLen(gCombiningChars);
+    unsigned int extTblLen = getTableLen(gExtenderChars);
+    unsigned int nameTblLen = wordRangeLen + combTblLen + extTblLen;
+    XMLInt32* nameRange = new XMLInt32[nameTblLen + 8];
+
+    tok->setRangeValues(nameRange, nameTblLen + 8);
+    memcpy(nameRange, wordRange, wordRangeLen * sizeof(XMLInt32));
+    setupRange(nameRange, gCombiningChars, wordRangeLen);
+    setupRange(nameRange, gExtenderChars, wordRangeLen + combTblLen);
+    nameRange[nameTblLen++] = chDash;
+    nameRange[nameTblLen++] = chDash;
+    nameRange[nameTblLen++] = chColon;
+    nameRange[nameTblLen++] = chColon;
+    nameRange[nameTblLen++] = chPeriod;
+    nameRange[nameTblLen++] = chPeriod;
+    nameRange[nameTblLen++] = chUnderscore;
+    nameRange[nameTblLen++] = chUnderscore;
     tok->sortRanges();
     tok->compactRanges();
     rangeTokMap->setRangeToken(fgXMLNameChar, tok);
 
     // Create initialNameChar ranges
     tok = tokFactory->createRange();
-    setupRange(tok, gBaseChars);
-    setupRange(tok, gXMLChars);
-    tok->addRange(chColon, chColon);
-    tok->addRange(chUnderscore, chUnderscore);
+    unsigned int initialNameTblLen = baseTblLen + ideoTblLen;
+    XMLInt32* initialNameRange = new XMLInt32[initialNameTblLen + 4];
+
+    tok->setRangeValues(initialNameRange, initialNameTblLen + 4);
+    memcpy(initialNameRange, wordRange, initialNameTblLen * sizeof(XMLInt32));
+    initialNameRange[initialNameTblLen++] = chColon;
+    initialNameRange[initialNameTblLen++] = chColon;
+    initialNameRange[initialNameTblLen++] = chUnderscore;
+    initialNameRange[initialNameTblLen++] = chUnderscore;
     tok->sortRanges();
     tok->compactRanges();
     rangeTokMap->setRangeToken(fgXMLInitialNameChar, tok);
+    
+    // Create word range
+    tok = tokFactory->createRange();
+    tok->setRangeValues(wordRange, wordRangeLen);
+    janWordRange.orphan();
+    tok->sortRanges();
+    tok->compactRanges();
+    rangeTokMap->setRangeToken(fgXMLWord, tok);
 
     fRangesCreated = true;
 }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/24 16:42:20  knoaman
+ * Performance fixes: eliminate mulitple calls to addRange and sort.
+ *
  * Revision 1.2  2002/03/18 19:29:53  knoaman
  * Change constant names to eliminate possible conflict with user defined ones.
  *
@@ -109,7 +112,7 @@ RangeToken::RangeToken(const unsigned short tokType) : Token(tokType)
     , fCompacted(false)
     , fNonMapIndex(0)
     , fElemCount(0)
-    , fMaxCount(0)
+    , fMaxCount(INITIALSIZE)
     , fMap(0)
     , fRanges(0)
     , fCaseIToken(0)
@@ -145,6 +148,27 @@ RangeToken* RangeToken::getCaseInsensitiveToken(TokenFactory* const tokFactory) 
 }
 
 // ---------------------------------------------------------------------------
+//  RangeToken: Setter methods
+// ---------------------------------------------------------------------------
+void RangeToken::setRangeValues(XMLInt32* const rangeValues, unsigned int count)
+{
+    if (fRanges) {
+
+        if (fMap) {
+            delete fMap;
+            fMap = 0;
+        }
+
+        fElemCount = 0;
+        delete [] fRanges;
+        fRanges = 0;
+    }
+
+    fElemCount = fMaxCount = count;
+    fRanges = rangeValues;
+}
+
+// ---------------------------------------------------------------------------
 //  RangeToken: Range manipulation methods
 // ---------------------------------------------------------------------------
 void RangeToken::addRange(const XMLInt32 start, const XMLInt32 end) {
@@ -166,7 +190,6 @@ void RangeToken::addRange(const XMLInt32 start, const XMLInt32 end) {
 
     if (fRanges == 0) {
 
-        fMaxCount = INITIALSIZE;
         fRanges = new XMLInt32[fMaxCount];
         fRanges[0] = val1;
         fRanges[1] = val2;
@@ -268,13 +291,7 @@ void RangeToken::compactRanges() {
         base += 2;
     }
 
-    if (base != fElemCount) {
-
-        while (fElemCount > base) {
-            fRanges[fElemCount--] = 0;
-        }
-    }
-
+    fElemCount = base;
     fCompacted = true;
 }
 

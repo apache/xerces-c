@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.5  2002/05/24 16:42:20  knoaman
+# Performance fixes: eliminate mulitple calls to addRange and sort.
+#
 # Revision 1.4  2002/04/16 20:10:48  peiyongz
 # Bug#8168: Error when attempting to build NetAccessors
 #
@@ -384,6 +387,7 @@ UTIL_CPP_PUBHEADERS = \
     UnexpectedEOFException.hpp \
     UnsupportedEncodingException.hpp \
     ValueArrayOf.hpp \
+    ValueHashTableOf.hpp \
     ValueStackOf.hpp \
     ValueVectorOf.hpp \
     XercesDefs.hpp \
@@ -434,6 +438,7 @@ C_FILES = \
     RefVectorOf.c \
     TransENameMap.c \
     ValueArrayOf.c \
+    ValueHashTableOf.c \
     ValueStackOf.c \
     ValueVectorOf.c \
     XMLDeleterFor.c
