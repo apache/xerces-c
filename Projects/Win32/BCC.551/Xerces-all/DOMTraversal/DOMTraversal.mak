@@ -4,7 +4,7 @@ BCB = $(MAKEDIR)\..
 !endif
 # ---------------------------------------------------------------------------
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
-PROJECT = $(TARGETPATH)\DOMTraversal.exe
+PROJECT = $(TARGETPATH)\DOMTraversalTest.exe
 OBJFILES = $(TARGETPATH)\obj\DOMTraversal.obj
 RESFILES = 
 MAINSOURCE = DOMTraversal.cpp

@@ -4,10 +4,11 @@ BCB = $(MAKEDIR)\..
 !endif
 # ---------------------------------------------------------------------------
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
-PROJECT = $(TARGETPATH)\RangeTest.exe
-OBJFILES = $(TARGETPATH)\obj\DOMRangeTest.obj
+PROJECT = $(TARGETPATH)\PParse.exe
+OBJFILES = $(TARGETPATH)\obj\PParse.obj \
+           $(TARGETPATH)\obj\PParseHandlers.obj
 RESFILES = 
-MAINSOURCE = DOMRangeTest.cpp
+MAINSOURCE = PParse.cpp
 RESDEPEN = $(RESFILES)
 LIBFILES = $(TARGETPATH)\xerces-bor_$(XERCESVER).lib
 IDLFILES = 
@@ -17,17 +18,17 @@ PACKAGES =
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = .;..\..\..\..\..\samples\PParse
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
 USERDEFINES = _DEBUG
 SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\tests\DOM\RangeTest;..\..\..\..\..\src
+INCLUDEPATH = ..\..\..\..\..\samples\PParse;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------
-CFLAG1 = -Od -w -Tkh30000 -X- -r- -a8 -4 -b -k -y -v -vi- -c -tWM -tWC
+CFLAG1 = -Od -w -g0 -Tkh30000 -X- -r- -a8 -4 -b -k -y -v -vi- -c -tWM -tWC
 IDLCFLAGS = -src_suffix cpp -boa
 PFLAGS = -N2$(TARGETPATH)\obj \
     -N0$(TARGETPATH)\obj -$YD -$W -$O- -v -JPHN -M

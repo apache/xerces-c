@@ -17,7 +17,9 @@ MakeBuildDirs: MakeBuildDirs.bat
 MAKEN = $(ROOT)\bin\make.exe -$(MAKEFLAGS) -f
 PROJECTNAMES = XercesLib DOMCount DOMPrint SAXCount SAXPrint SAX2Count SAX2Print \
   DOMTest DOMMemTest DOMRangeTest DOMTraversal EncodingTest InitTermTest \
-  ThreadTest MemHandlerTest XSerializerTest PSVIWriter SCMPrint
+  ThreadTest MemHandlerTest XSerializerTest PSVIWriter SCMPrint MemParse Redirect \
+  StdInParse PParse EnumVal SEnumVal CreateDOMDocument XSValueTest DeprecatedDOMCount \
+  DOMTypeInfoTest
 
 !include ..\..\..\..\version.incl
 XERCESVER=$(VER)
@@ -116,3 +118,54 @@ SCMPrint: SCMPrint\SCMPrint.mak
   cd $<
   $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
   cd ..
+
+MemParse: MemParse\MemParse.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  cd ..
+
+Redirect: Redirect\Redirect.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  cd ..
+
+StdInParse: StdInParse\StdInParse.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  cd ..
+
+PParse: PParse\PParse.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  cd ..
+
+EnumVal: EnumVal\EnumVal.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  cd ..
+
+SEnumVal: SEnumVal\SEnumVal.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  cd ..
+
+CreateDOMDocument: CreateDOMDocument\CreateDOMDocument.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  cd ..
+
+XSValueTest: XSValueTest\XSValueTest.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  cd ..
+
+DeprecatedDOMCount: DeprecatedDOMCount\DeprecatedDOMCount.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  cd ..
+
+DOMTypeInfoTest: DOMTypeInfoTest\DOMTypeInfoTest.mak
+  cd $<
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
+  cd ..
+

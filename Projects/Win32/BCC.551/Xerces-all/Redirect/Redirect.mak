@@ -4,36 +4,36 @@ BCB = $(MAKEDIR)\..
 !endif
 # ---------------------------------------------------------------------------
 TARGETPATH=..\..\..\..\..\Build\Win32\BCC.551
-PROJECT = $(TARGETPATH)\RangeTest.exe
-OBJFILES = $(TARGETPATH)\obj\DOMRangeTest.obj
+PROJECT = $(TARGETPATH)\Redirect.exe
+OBJFILES = $(TARGETPATH)\obj\Redirect.obj \
+           $(TARGETPATH)\obj\RedirectHandlers.obj
 RESFILES = 
-MAINSOURCE = DOMRangeTest.cpp
+MAINSOURCE = Redirect.cpp
 RESDEPEN = $(RESFILES)
 LIBFILES = $(TARGETPATH)\xerces-bor_$(XERCESVER).lib
 IDLFILES = 
 IDLGENFILES = 
 LIBRARIES = 
-PACKAGES = 
 SPARELIBS = 
 DEFFILE = 
 # ---------------------------------------------------------------------------
-PATHCPP = .;
+PATHCPP = .;..\..\..\..\..\samples\Redirect
 PATHASM = .;
 PATHPAS = .;
 PATHRC = .;
 USERDEFINES = _DEBUG
-SYSDEFINES = _NO_VCL;NO_STRICT;_VIS_NOLIB;_RTLDLL
-INCLUDEPATH = ..\..\..\..\..\tests\DOM\RangeTest;..\..\..\..\..\src
+SYSDEFINES = _NO_VCL;_VIS_NOLIB;_RTLDLL
+INCLUDEPATH = ..\..\..\..\..\samples\Redirect;..\..\..\..\..\src
 LIBPATH = 
 WARNINGS= 
 # ---------------------------------------------------------------------------
-CFLAG1 = -Od -w -Tkh30000 -X- -r- -a8 -4 -b -k -y -v -vi- -c -tWM -tWC
+CFLAG1 = -Od -w -Tkh30000 -X- -r- -a8 -5 -b -k -y -v -vi- -c -tWM -tWC
 IDLCFLAGS = -src_suffix cpp -boa
 PFLAGS = -N2$(TARGETPATH)\obj \
     -N0$(TARGETPATH)\obj -$YD -$W -$O- -v -JPHN -M
 RFLAGS = 
 AFLAGS = /mx /w2 /zd
-LFLAGS = -I$(TARGETPATH)\obj -ap -Tpe -x -Gn -v
+LFLAGS = -I$(TARGETPATH)\obj -D"" -ap -Tpe -x -Gn -v
 # ---------------------------------------------------------------------------
 ALLOBJ = c0x32.obj $(OBJFILES)
 ALLRES = $(RESFILES)
