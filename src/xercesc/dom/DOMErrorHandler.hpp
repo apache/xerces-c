@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/07/15 19:26:34  tng
+ * DOM L3: remove non standard resetErrors
+ *
  * Revision 1.3  2002/06/06 20:53:06  tng
  * Documentation Fix: Update the API Documentation for DOM headers
  *
@@ -137,20 +140,8 @@ public:
      * @since DOM Level 3
      */
     virtual bool handleError(const DOMError& domError) = 0;
-
-    /**
-     * Reset the Error handler object on its reuse
-     *
-     * <p>This method helps in reseting the Error handler object
-     * implementational defaults each time the Error handler is begun.</p>
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @since DOM Level 3
-     */
-     virtual void resetErrors() = 0;
-
     //@}
+
 };
 
 #endif
