@@ -530,7 +530,14 @@ public :
       * @param reuseGrammar The flag indicating whether the existing Grammar
       *                     should be reused or not for this parsing run.
       *                     If true, there cannot be any internal subset.
-      * @see Parser#parse(InputSource)
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception IDOM_DOMException A DOM exception as per DOM spec.
+      * @see InputSource#InputSource
+      * @see #setEntityResolver
+      * @see #setErrorHandler
       */
     void parse(const InputSource& source, const bool reuseGrammar = false);
 
@@ -546,7 +553,12 @@ public :
       *                     should be reused or not for this parsing run.
       *                     If true, there cannot be any internal subset.
       *
-      * @see Parser#parse(XMLCh*)
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOM_DOMException A DOM exception as per DOM spec.
+      * @see #parse(InputSource,...)
       */
     void parse(const XMLCh* const systemId, const bool reuseGrammar = false);
 
@@ -560,6 +572,13 @@ public :
       * @param reuseGrammar The flag indicating whether the existing Grammar
       *                     should be reused or not for this parsing run.
       *                     If true, there cannot be any internal subset.
+      *
+      * @exception SAXException Any SAX exception, possibly
+      *            wrapping another exception.
+      * @exception XMLException An exception from the parser or client
+      *            handler code.
+      * @exception DOM_DOMException A DOM exception as per DOM spec.
+      * @see #parse(InputSource,...)
       */
     void parse(const char* const systemId, const bool reuseGrammar = false);
 
