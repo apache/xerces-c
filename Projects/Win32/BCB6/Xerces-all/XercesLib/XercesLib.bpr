@@ -349,7 +349,11 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XSObjectFactory.obj 
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLIBM1047Transcoder.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLCanRepGroup.obj
-      ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemOutputStream.obj"/>
+      ..\..\..\..\..\Build\Win32\BCB6\obj\BinMemOutputStream.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLRegisterCleanup.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSValue.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XSAXMLScanner.obj 
+      ..\..\..\..\..\Build\Win32\BCB6\obj\IdentityConstraintHandler.obj"/>
     <RESFILES value="..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -366,7 +370,7 @@
     <DEBUGLIBPATH value="$(BCB)\lib\debug"/>
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
-    <USERDEFINES value="PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_INMEM_MESSAGELOADER;XML_USE_NETACCESSOR_WINSOCK;_DEBUG"/>
+    <USERDEFINES value="PLATFORM_WIN32;_CRTDBG_MAP_ALLOC;PROJ_XMLPARSER;PROJ_XMLUTIL;PROJ_PARSERS;PROJ_SAX4C;PROJ_SAX2;PROJ_DOM;PROJ_VALIDATORS;XML_SINGLEDLL;XML_USE_WIN32_TRANSCODER;XML_USE_INMEM_MESSAGELOADER;XML_USE_NETACCESSOR_WINSOCK;_DEBUG;PROJ_DEPRECATED_DOM"/>
     <SYSDEFINES value="NO_STRICT;_RTLDLL;USEPACKAGES"/>
     <MAINSOURCE value="Xerceslib.cpp"/>
     <INCLUDEPATH value="..\..\..\..\..\src;$(BCB)\include"/>
@@ -375,11 +379,11 @@
     <OTHERFILES value=""/>
   </MACROS>
   <OPTIONS>
-    <IDLCFLAGS value="-I..\..\..\..\..\src\xercesc -I$(BCB)\include -src_suffix cpp 
-      -DPLATFORM_WIN32 -D_CRTDBG_MAP_ALLOC -DPROJ_XMLPARSER -DPROJ_XMLUTIL 
-      -DPROJ_PARSERS -DPROJ_SAX4C -DPROJ_SAX2 -DPROJ_DOM -DPROJ_VALIDATORS 
-      -DXML_SINGLEDLL -DXML_USE_WIN32_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER 
-      -DXML_USE_NETACCESSOR_WINSOCK -D_DEBUG -boa"/>
+    <IDLCFLAGS value="-I..\..\..\..\..\src -I$(BCB)\include -src_suffix cpp -DPLATFORM_WIN32 
+      -D_CRTDBG_MAP_ALLOC -DPROJ_XMLPARSER -DPROJ_XMLUTIL -DPROJ_PARSERS 
+      -DPROJ_SAX4C -DPROJ_SAX2 -DPROJ_DOM -DPROJ_VALIDATORS -DXML_SINGLEDLL 
+      -DXML_USE_WIN32_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER 
+      -DXML_USE_NETACCESSOR_WINSOCK -D_DEBUG -DPROJ_DEPRECATED_DOM -boa"/>
     <CFLAG1 value="-WD -Od -Q -Vx -Ve -X- -r- -a8 -b -k -y -v -vi- -tWD -tWM -c"/>
     <PFLAGS value="-N2..\..\..\..\..\Build\Win32\BCB6\obj 
       -N0..\..\..\..\..\Build\Win32\BCB6\obj -$Y+ -$W -$O- -$A8 -v -JPHNE -M"/>
@@ -742,6 +746,11 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp" FORMNAME="" UNITNAME="XSObjectFactory" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLIBM1047Transcoder.cpp" FORMNAME="" UNITNAME="XMLIBM1047Transcoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\datatype\XMLCanRepGroup.cpp" FORMNAME="" UNITNAME="XMLCanRepGroup" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\BinMemOutputStream.cpp" FORMNAME="" UNITNAME="BinMemOutputStream" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\framework\psvi\XSValue.cpp" FORMNAME="" UNITNAME="XSValue" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\internal\XSAXMLScanner.cpp" FORMNAME="" UNITNAME="XSAXMLScanner" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.cpp" FORMNAME="" UNITNAME="XMLRegisterCleanup" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraintHandler.cpp" FORMNAME="" UNITNAME="IdentityConstraintHandler" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

@@ -57,6 +57,12 @@ XMLLCPTranscoder*  getDomConverter();
 static XMLLCPTranscoder* gDomConverter = 0;
 static XMLRegisterCleanup cleanupDomConverter;
 
+int DOMString::gLiveStringDataCount    = 0;
+int DOMString::gTotalStringDataCount   = 0;
+int DOMString::gLiveStringHandleCount  = 0;
+int DOMString::gTotalStringHandleCount = 0;
+
+
 XMLLCPTranscoder*  getDomConverter()
 {
     if (!gDomConverter)
@@ -310,12 +316,6 @@ DOMStringHandle *DOMStringHandle::cloneStringHandle()
 //      DOMString
 //
 //------------------------------------------------------------
-
-
-int DOMString::gLiveStringDataCount    = 0;
-int DOMString::gTotalStringDataCount   = 0;
-int DOMString::gLiveStringHandleCount  = 0;
-int DOMString::gTotalStringHandleCount = 0;
 
 
 DOMString::DOMString()

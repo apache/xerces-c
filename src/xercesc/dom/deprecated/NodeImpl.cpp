@@ -57,6 +57,10 @@ const unsigned short NodeImpl::USERDATA     = 0x1<<9;
 const unsigned short NodeImpl::HASSTRING    = 0x1<<10;
 
 
+int  NodeImpl::gLiveNodeImpls = 0;         // Counters for debug & tuning.
+int  NodeImpl::gTotalNodeImpls= 0;
+
+
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
 {
     this->flags = 0;
@@ -83,10 +87,6 @@ NodeImpl::NodeImpl(const NodeImpl &other) {
     this->ownerNode = ((NodeImpl*)&other)->getOwnerDocument();
     this->isOwned(false);
 };
-
-
-int  NodeImpl::gLiveNodeImpls = 0;         // Counters for debug & tuning.
-int  NodeImpl::gTotalNodeImpls= 0;
 
 
 
