@@ -795,7 +795,7 @@ void AbstractDOMParser::attDef
     const   DTDElementDecl&     elemDecl
     , const DTDAttDef&          attDef
     , const bool                ignoring
-	)
+)
 {	
     if (fDocumentType->isIntSubsetReading())
     {
@@ -804,13 +804,6 @@ void AbstractDOMParser::attDef
             XMLBufBid bbQName(&fBufMgr);
             XMLBuffer& attString = bbQName.getBuffer();
 
-            attString.append(chOpenAngle);
-            attString.append(chBang);
-            attString.append(XMLUni::fgAttListString);
-            attString.append(chSpace);
-            attString.append(elemDecl.getFullName());
-
-            attString.append(chSpace);
             attString.append(attDef.getFullName());
 
             // Get the type and display it
@@ -902,7 +895,6 @@ void AbstractDOMParser::attDef
                 attString.append(chDoubleQuote);
             }
 
-            attString.append(chCloseAngle);
             fDocumentType->appendInternalSubset(attString.getRawBuffer());
         }
     }
@@ -1014,6 +1006,12 @@ void AbstractDOMParser::endAttList
     const   DTDElementDecl& elemDecl
 )
 {
+    if (fDocumentType->isIntSubsetReading())
+    {
+        //print the closing angle
+        fDocumentType->appendInternalSubset(chCloseAngle);
+    }
+
 	// this section sets up default attributes.
 	// default attribute nodes are stored in a NamedNodeMap DocumentTypeImpl::elements
 	// default attribute data attached to the document is used to conform to the
@@ -1208,6 +1206,19 @@ void AbstractDOMParser::startAttList
     const   DTDElementDecl& elemDecl
 )
 {
+    if (fDocumentType->isIntSubsetReading())
+    {
+        XMLBufBid bbQName(&fBufMgr);
+        XMLBuffer& attString = bbQName.getBuffer();
+
+        attString.append(chOpenAngle);
+        attString.append(chBang);
+        attString.append(XMLUni::fgAttListString);
+        attString.append(chSpace);
+        attString.append(elemDecl.getFullName());
+
+        fDocumentType->appendInternalSubset(attString.getRawBuffer());
+    }
 }
 
 void AbstractDOMParser::startIntSubset()

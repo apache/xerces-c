@@ -370,6 +370,11 @@ void        DOMDocumentTypeImpl::appendInternalSubset(const XMLCh *value)
     internalSubset.append(value);
 }
 
+void        DOMDocumentTypeImpl::appendInternalSubset(const XMLCh toAppend)
+{
+    internalSubset.append(toAppend);
+}
+
 void DOMDocumentTypeImpl::release()
 {
     if (fNode.isOwned()) {
