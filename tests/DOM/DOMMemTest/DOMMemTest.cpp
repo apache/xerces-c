@@ -66,6 +66,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2000/04/18 01:07:28  aruna1
+ * Rectified memory leak caused by doctype-getNodeName()
+ *
  * Revision 1.20  2000/03/11 03:00:13  chchou
  * Fix bug # 18, remove set method of readonly attributes.
  * As a result, remove related test cases
@@ -1111,6 +1114,7 @@ int  main()
         DOM_DOMImplementation   impl;
         DOM_DocumentType        dt; 
         DOM_Document            doc = impl.createDocument("", "a", dt);
+        doc.getNodeName();
     }
 
     //
@@ -1126,6 +1130,7 @@ int  main()
         DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
         
         DOMString docNSURI = "http://document.namespace";
+
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
 
         TASSERT(dt.getOwnerDocument() == doc);
@@ -1134,6 +1139,7 @@ int  main()
         TASSERT(doc.getNodeType() == DOM_Node::DOCUMENT_NODE);
         TASSERT(doc.getDoctype() == dt);
         TASSERT(doc.getNodeName().equals("#document"));
+
         TASSERT(doc.getNodeValue() == 0);
         TASSERT(doc.getNamespaceURI().equals(0));
         TASSERT(doc.getPrefix().equals(0));
@@ -1149,6 +1155,7 @@ int  main()
         TASSERT(el.getPrefix().equals("foo"));
         TASSERT(el.getTagName().equals(qName));
         TASSERT(el.hasChildNodes() == false);
+
 
         //
         // Creating a second document with the same docType object should fail.
