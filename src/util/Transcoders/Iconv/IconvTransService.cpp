@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.14  2000/02/16 18:37:03  aruna1
+ * Made changes to upperCase function in Transcoding services
+ *
  * Revision 1.13  2000/02/11 03:10:19  rahulj
  * Fixed defect in compare[N]IString function. Defect and fix reported
  * by Bill Schindler from developer@bitranch.com.
@@ -262,7 +265,12 @@ IconvTransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
 
 void IconvTransService::upperCase(XMLCh* const toUpperCase) const
 {
-    towupper(*toUpperCase);
+    XMLCh* outPtr = toUpperCase;
+    while (*outPtr)
+    {
+        *outPtr = towupper(*outPtr);
+        outPtr++;
+    }
 }
 
 
