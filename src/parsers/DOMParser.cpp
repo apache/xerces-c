@@ -721,8 +721,8 @@ void DOMParser::XMLDecl(const   XMLCh* const version
 
         DOMString ver(version);
         DOMString enc(encoding);
-        DOMString std(standalone);
-        DOM_XMLDecl xmlDecl = fDocument.createXMLDecl(ver, enc, std);
+        DOMString isStd(standalone);
+        DOM_XMLDecl xmlDecl = fDocument.createXMLDecl(ver, enc, isStd);
 
         fCurrentParent.appendChild(xmlDecl);
     }
