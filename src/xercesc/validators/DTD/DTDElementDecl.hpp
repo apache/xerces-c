@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/09/20 14:47:13  amassari
+ * Mark some methods as deprecated
+ *
  * Revision 1.10  2004/09/08 13:56:50  peiyongz
  * Apache License Version 2.0
  *
@@ -192,8 +195,14 @@ public :
     DTDAttDef* getAttDef(const XMLCh* const attName);
     ModelTypes getModelType() const;
 
+    /**
+     * @deprecated
+    **/
     const XMLCh* getDOMTypeInfoName() const;
 
+    /**
+     * @deprecated
+    **/
     const XMLCh* getDOMTypeInfoUri() const;
 
     // -----------------------------------------------------------------------

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/09/20 14:47:13  amassari
+ * Mark some methods as deprecated
+ *
  * Revision 1.10  2004/09/08 13:55:58  peiyongz
  * Apache License Version 2.0
  *
@@ -281,11 +284,13 @@ public:
 
     /**
      * @return the uri part of DOM Level 3 TypeInfo
+     * @deprecated
      */
     const XMLCh* getValidatingTypeURI() const;
 
     /**
      * @return the name part of DOM Level 3 TypeInfo
+     * @deprecated
      */
     const XMLCh* getValidatingTypeName() const;
 
@@ -434,6 +439,7 @@ public:
       * to assess the validity of the value of this attribute.
       * @param datatypeValidator        DatatypeValidator used to assess the validity
       *             of this attribute's value
+      * @deprecated
       */
     void setDatatypeValidator(DatatypeValidator * datatypeValidator);
 
@@ -442,6 +448,7 @@ public:
       * validated by an XML Schema
       * @param isSchema     true indicates that this attribute was validated
       *         by an XML Schema; false indicates otherwise
+      * @deprecated
       */
     void setSchemaValidated(const bool isSchema);
 

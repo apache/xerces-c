@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/09/20 14:47:13  amassari
+ * Mark some methods as deprecated
+ *
  * Revision 1.9  2004/09/08 13:56:50  peiyongz
  * Apache License Version 2.0
  *
@@ -112,8 +115,14 @@ public :
     // -----------------------------------------------------------------------
     unsigned int getElemId() const;
 
+    /**
+     * @deprecated
+    **/
     virtual const XMLCh* getDOMTypeInfoName() const;
 
+    /**
+     * @deprecated
+    **/
     virtual const XMLCh* getDOMTypeInfoUri() const;
 
 

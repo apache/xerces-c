@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2004/09/20 14:47:13  amassari
+ * Mark some methods as deprecated
+ *
  * Revision 1.18  2004/09/08 13:56:54  peiyongz
  * Apache License Version 2.0
  *
@@ -256,18 +259,21 @@ public:
     /**
      * Returns the type name that was actually used to validate the last time validate was called
      * note - this does not mean that it fully validated sucessfully
+     * @deprecated
      **/
     const XMLCh* getMemberTypeName() const;
 
     /**
      * Returns the type uri that was actually used to validate the last time validate was called
      * note - this does not mean that it fully validated sucessfully
+     * @deprecated
      **/
     const XMLCh* getMemberTypeUri() const;
 
     /**
      * Returns true if the type that was actually used to validate the last time validate was called 
      * is anonymous
+     * @deprecated
      */
     bool getMemberTypeAnonymous() const;
 
@@ -275,6 +281,7 @@ public:
     /**
      * Returns the member DatatypeValidator used to validate the content the last time validate 
      * was called
+     * @deprecated
      */
     const DatatypeValidator* getMemberTypeValidator() const;
 

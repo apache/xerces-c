@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/09/20 14:47:13  amassari
+ * Mark some methods as deprecated
+ *
  * Revision 1.13  2004/09/08 13:56:56  peiyongz
  * Apache License Version 2.0
  *
@@ -253,6 +256,9 @@ public :
        ,const int                 uriId = -1
     );
     void setDatatypeValidator(DatatypeValidator* newDatatypeValidator);
+    /*
+     * @deprecated
+     */
     void setAnyDatatypeValidator(DatatypeValidator* newDatatypeValidator);
     void setBaseAttDecl(SchemaAttDef* const attDef);
     void setPSVIScope(const PSVIDefs::PSVIScope toSet);
