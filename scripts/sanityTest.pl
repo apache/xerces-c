@@ -190,6 +190,11 @@ system ("ThreadTest -parser=dom -n -s -v -quiet -threads 10 -time 20 personal-sc
 system ("ThreadTest -parser=sax -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
 system ("ThreadTest -parser=dom -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
 
+#  Run MemHandlerTest
+system ("MemHandlerTest");
+system ("MemHandlerTest -v=always -n -r=2 personal.xml");
+system ("MemHandlerTest -v=always -n -r=2 -s -f personal-schema.xml");
+
 chdir "..".$pathsep."..";
 
 chdir "tests".$pathsep."DOM".$pathsep."TypeInfo";
