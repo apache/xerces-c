@@ -95,11 +95,15 @@
         </tr>
         <tr>
           <td>Redhat Linux 7.2</td>
-          <td>Intel C++ Compiler v6, icc</td>
+          <td>Intel C++ Compiler v7, icc</td>
+        </tr>
+        <tr>
+          <td>Redhat Linux 8.0</td>
+          <td>gcc Compiler v3.2</td>
         </tr>
         <tr>
           <td>AIX 5.1</td>
-          <td>xlC_r 5.0.2</td>
+          <td>xlC_r 6.0.0</td>
         </tr>
         <tr>
           <td>Solaris 2.7</td>
@@ -111,7 +115,7 @@
         </tr>
         <tr>
           <td>SuSE Linux 7.2 (S390)</td>
-          <td>g++ 2.95</td>
+          <td>g++ 2.95.3</td>
         </tr>
         <tr>
           <th><em>64-bit binary</em></th>
@@ -123,11 +127,11 @@
         </tr>
         <tr>
           <td>Redhat Linux 7.2, IA64</td>
-          <td>Intel C++ Compiler v6, ecc</td>
+          <td>Intel C++ Compiler v7, ecc</td>
         </tr>
         <tr>
           <td>AIX 5.1</td>
-          <td>xlC_r 5.0.2</td>
+          <td>xlC_r 6.0.0</td>
         </tr>
         <tr>
           <td>Solaris 2.7</td>
