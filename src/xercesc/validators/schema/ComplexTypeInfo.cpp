@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2004/09/23 00:37:24  cargilld
+ * Remove unused variable and data member.
+ *
  * Revision 1.29  2004/09/16 13:32:04  amassari
  * Updated error message for UPA to also state the complex type that is failing the test
  *
@@ -336,8 +339,7 @@ ComplexTypeInfo::ComplexTypeInfo(MemoryManager* const manager)
     , fContentSpec(0)
     , fAttWildCard(0)    
     , fAttList(0)
-    , fElements(0)
-    , fSpecNodesToDelete(0)
+    , fElements(0)    
     , fAttDefs(0)
     , fContentModel(0)
     , fFormattedModel(0)
@@ -364,8 +366,7 @@ ComplexTypeInfo::~ComplexTypeInfo()
     delete fAttWildCard;
     delete fAttDefs;
     delete fAttList;
-    delete fElements;
-    //delete fSpecNodesToDelete;
+    delete fElements;    
     delete fLocator;
 
     delete fContentModel;
@@ -576,7 +577,7 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
     return newValue;
 }
 
-XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentSpecNode* const specNode)
+XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA)
 {
     ContentSpecNode* aSpecNode = new (fMemoryManager) ContentSpecNode(*fContentSpec);
     XMLContentModel* retModel = 0;
@@ -1057,8 +1058,7 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
           *
           *   fContentModel;
           *   fFormattedModel;
-          *   fLocator;
-          *   fSpecNodesToDelete
+          *   fLocator;          
           * 
           *   fContentSpecOrgURI:     start of the array
           *   fContentSpecOrgURISize: size of the array
@@ -1103,8 +1103,7 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
           *   Don't deserialize 
           *
           *   fFormattedModel;
-          *   fLocator;
-          *   fSpecNodesToDelete
+          *   fLocator;          
           * 
           *   fContentSpecOrgURI:     start of the array
           *   fContentSpecOrgURISize: size of the array
@@ -1112,8 +1111,7 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
           ***/
 
          fFormattedModel = 0;
-         fLocator = 0;
-         fSpecNodesToDelete = 0;
+         fLocator = 0;         
          fContentSpecOrgURI = 0;
          fContentSpecOrgURISize = 0;
          fUniqueURI = 0;

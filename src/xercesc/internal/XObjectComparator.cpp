@@ -17,6 +17,9 @@
 /*
  *
  * $Log$
+ * Revision 1.8  2004/09/23 00:37:24  cargilld
+ * Remove unused variable and data member.
+ *
  * Revision 1.7  2004/09/08 13:56:14  peiyongz
  * Apache License Version 2.0
  *
@@ -525,8 +528,7 @@ bool XObjectComparator::isEquivalent(ComplexTypeInfo* const lValue
   /***
     don't compare
     XMLContentModel*                   fContentModel;
-    XMLCh*                             fFormattedModel;
-    RefVectorOf<ContentSpecNode>*      fSpecNodesToDelete;
+    XMLCh*                             fFormattedModel;    
     XSDLocator*                        fLocator;
     * 
     * fContentSpecOrgURI:     start of the array

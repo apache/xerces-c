@@ -184,7 +184,7 @@ private:
     // -----------------------------------------------------------------------
     void faultInAttDefList() const;
     XMLContentModel* createChildModel(ContentSpecNode* specNode, const bool isMixed);
-    XMLContentModel* makeContentModel(const bool checkUPA = false, ContentSpecNode* const specNode = 0);
+    XMLContentModel* makeContentModel(const bool checkUPA = false);
     XMLContentModel* buildContentModel(ContentSpecNode* const specNode);
     XMLCh* formatContentModel () const ;
     ContentSpecNode* expandContentModel(ContentSpecNode* const curNode, const int minOccurs, const int maxOccurs);
@@ -214,8 +214,7 @@ private:
     ContentSpecNode*                   fContentSpec;
     SchemaAttDef*                      fAttWildCard;
     SchemaAttDefList*                  fAttList;
-    RefVectorOf<SchemaElementDecl>*    fElements;
-    RefVectorOf<ContentSpecNode>*      fSpecNodesToDelete;
+    RefVectorOf<SchemaElementDecl>*    fElements;    
     RefHash2KeysTableOf<SchemaAttDef>* fAttDefs;
     XMLContentModel*                   fContentModel;
     XMLCh*                             fFormattedModel;
