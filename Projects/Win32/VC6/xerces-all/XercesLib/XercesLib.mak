@@ -304,6 +304,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
 	-@erase "$(INTDIR)\XSAttributeUse.obj"
+	-@erase "$(INTDIR)\XSAXMLScanner.obj"
 	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
@@ -534,6 +535,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
+	"$(INTDIR)\XSAXMLScanner.obj" \
 	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\XSObjectFactory.obj" \
 	"$(INTDIR)\XTemplateComparator.obj" \
@@ -961,6 +963,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
 	-@erase "$(INTDIR)\XSAttributeUse.obj"
+	-@erase "$(INTDIR)\XSAXMLScanner.obj"	
 	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
@@ -1192,6 +1195,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
+	"$(INTDIR)\XSAXMLScanner.obj" \	
 	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\XSObjectFactory.obj" \
 	"$(INTDIR)\XTemplateComparator.obj" \
@@ -1619,6 +1623,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
 	-@erase "$(INTDIR)\XSAttributeUse.obj"
+	-@erase "$(INTDIR)\XSAXMLScanner.obj"	
 	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
@@ -1850,6 +1855,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
+	"$(INTDIR)\XSAXMLScanner.obj" \	
 	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\XSObjectFactory.obj" \
 	"$(INTDIR)\XTemplateComparator.obj" \
@@ -2276,6 +2282,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
 	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
 	-@erase "$(INTDIR)\XSAttributeUse.obj"
+	-@erase "$(INTDIR)\XSAXMLScanner.obj"	
 	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
@@ -2507,6 +2514,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLScannerResolver.obj" \
 	"$(INTDIR)\XObjectComparator.obj" \
 	"$(INTDIR)\XProtoType.obj" \
+	"$(INTDIR)\XSAXMLScanner.obj" \	
 	"$(INTDIR)\XSerializeEngine.obj" \
 	"$(INTDIR)\XSObjectFactory.obj" \
 	"$(INTDIR)\XTemplateComparator.obj" \
@@ -3744,6 +3752,12 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XObjectComparator.cpp
 SOURCE=..\..\..\..\..\src\xercesc\internal\XProtoType.cpp
 
 "$(INTDIR)\XProtoType.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSAXMLScanner.cpp
+
+"$(INTDIR)\XSAXMLScanner.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

@@ -1628,6 +1628,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\XProtoType.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSAXMLScanner.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\XSAXMLScanner.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\XSerializable.hpp
 # End Source File
 # Begin Source File

@@ -1286,6 +1286,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XProtoType.cpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XSAXMLScanner.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XSAXMLScanner.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XSObjectFactory.cpp">
 			</File>
 			<File
