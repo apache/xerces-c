@@ -75,7 +75,7 @@ void XSAXMLScanner::scanEndTag(bool& gotData)
     unsigned int uriId = fElemStack.getCurrentURI();
 
     // Make sure that its the end of the element that we expect
-    XMLCh *elemName = fElemStack.getCurrentSchemaElemName();
+    const XMLCh *elemName = fElemStack.getCurrentSchemaElemName();
     const ElemStack::StackElem* topElem = fElemStack.popTop(); 
     if (!fReaderMgr.skippedString(elemName))
     {
@@ -157,14 +157,12 @@ void XSAXMLScanner::scanEndTag(bool& gotData)
     // If we have a doc handler, tell it about the end tag
     if (fDocHandler)
     {
-        int prefixColonPos = XMLString::indexOf(elemName, chColon);
-        if (prefixColonPos == -1)
-            fPrefixBuf.reset();
-        else
-            fPrefixBuf.set(elemName, prefixColonPos);
         fDocHandler->endElement
         (
-            *topElem->fThisElement, uriId, isRoot, fPrefixBuf.getRawBuffer()
+            *topElem->fThisElement
+            , uriId
+            , isRoot
+            , topElem->fThisElement->getElementName()->getPrefix()
         );
     }
 

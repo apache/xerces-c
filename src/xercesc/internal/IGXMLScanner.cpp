@@ -942,9 +942,8 @@ void IGXMLScanner::scanEndTag(bool& gotData)
         ? fElemStack.getCurrentURI() : fEmptyNamespaceId;
 
     // these get initialized below
-    const ElemStack::StackElem* topElem = 0;
-    XMLElementDecl *tempElement = 0;
-    XMLCh *elemName = 0;
+    const ElemStack::StackElem* topElem = 0;    
+    const XMLCh *elemName = 0;
 
     // Make sure that its the end of the element that we expect
     // special case for schema validation, whose element decls,
@@ -952,14 +951,12 @@ void IGXMLScanner::scanEndTag(bool& gotData)
     if(fGrammarType == Grammar::SchemaGrammarType)
     {
         elemName = fElemStack.getCurrentSchemaElemName();
-        topElem = fElemStack.popTop(); 
-        tempElement = topElem->fThisElement; 
+        topElem = fElemStack.popTop();         
     }
     else
     {
-        topElem = fElemStack.popTop(); 
-        tempElement = topElem->fThisElement;
-        elemName = (XMLCh *)tempElement->getFullName();
+        topElem = fElemStack.popTop();         
+        elemName = topElem->fThisElement->getFullName();
     }
     if (!fReaderMgr.skippedString(elemName))
     {
@@ -1157,17 +1154,12 @@ void IGXMLScanner::scanEndTag(bool& gotData)
     // If we have a doc handler, tell it about the end tag
     if (fDocHandler)
     {
-        int prefixColonPos = XMLString::indexOf(elemName, chColon);
-        if (prefixColonPos == -1)
-            fPrefixBuf.reset();
-        else
-            fPrefixBuf.set(elemName, prefixColonPos);
         fDocHandler->endElement
         (
             *topElem->fThisElement
             , uriId
-            , isRoot
-            , fPrefixBuf.getRawBuffer()
+            , isRoot           
+            , topElem->fThisElement->getElementName()->getPrefix()
         );
     }
 
