@@ -55,6 +55,10 @@
 # 
 #
 # $Log$
+# Revision 1.6  1999/12/17 01:28:55  rahulj
+# Merged in changes submitted for UnixWare 7 port. Platform
+# specific files are still missing.
+#
 # Revision 1.5  1999/12/14 23:53:30  rahulj
 # Removed the offending Ctrl-M's from the commit message
 # logs which was giving packaging problems.
@@ -129,6 +133,11 @@ ifeq (${PLATFORM}, IRIX)
     SUBMODULE = Platforms/IRIX
     CPP_PUBHEADERS = IRIX/IRIXDefs.hpp
     CPP_OBJECTS = IRIX/IRIXPlatformUtils.o
+endif
+ifeq (${PLATFORM}, UNIXWARE)
+    SUBMODULE = Platforms/UnixWare
+    CPP_PUBHEADERS = UnixWare/UnixWareDefs.hpp
+    CPP_OBJECTS = UnixWare/UnixWarePlatformUtils.o
 endif
 
 include ../Makefile.util.submodule

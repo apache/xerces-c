@@ -30,6 +30,9 @@ AC_CANONICAL_HOST
 dnl Platform-specific Makefile setup
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
+        *-*-sysv5*)     platform=UNIXWARE ;;
+        *-*-UnixWare*)  platform=UNIXWARE ;;
+        *-*-unixware*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;

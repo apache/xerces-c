@@ -55,6 +55,10 @@
 # 
 #
 # $Log$
+# Revision 1.8  1999/12/17 01:28:52  rahulj
+# Merged in changes submitted for UnixWare 7 port. Platform
+# specific files are still missing.
+#
 # Revision 1.7  1999/12/14 23:53:18  rahulj
 # Removed the offending Ctrl-M's from the commit message
 # logs which was giving packaging problems.
@@ -294,7 +298,6 @@ endif
 	-${CP} -f ${XERCESCROOT}/samples/runConfigure 	${BINTARGETDIR}/samples
 	-${CP} -f ${XERCESCROOT}/samples/Makefile.in	${BINTARGETDIR}/samples
 	-${CP} -f ${XERCESCROOT}/samples/Makefile.incl 	${BINTARGETDIR}/samples
-	-${CP} -f ${XERCESCROOT}/samples/Maefile	${BINTARGETDIR}/samples
 
 	-${CP} -Rf ${XERCESCROOT}/samples/data/* ${BINTARGETDIR}/samples/data
 	-${CP} -Rf ${XERCESCROOT}/samples/SAXCount/* ${BINTARGETDIR}/samples/SAXCount

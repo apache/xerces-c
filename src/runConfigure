@@ -58,6 +58,10 @@
 # 
 #
 # $Log$
+# Revision 1.12  1999/12/17 01:28:52  rahulj
+# Merged in changes submitted for UnixWare 7 port. Platform
+# specific files are still missing.
+#
 # Revision 1.11  1999/12/14 23:53:18  rahulj
 # Removed the offending Ctrl-M's from the commit message
 # logs which was giving packaging problems.
@@ -151,7 +155,7 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'irix')"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'irix', 'unixware')"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC)"
     echo "       -d (specifies that you want to build debug version)"
@@ -259,7 +263,7 @@ echo "Thread option: $thread"
 #
 
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | irix)
+   aix | linux | solaris | hp-10 | hp-11 | irix | unixware)
        # platform has been recognized
        ;;
    *)

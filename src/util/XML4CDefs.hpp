@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  1999/12/17 01:28:53  rahulj
+ * Merged in changes submitted for UnixWare 7 port. Platform
+ * specific files are still missing.
+ *
  * Revision 1.4  1999/12/16 23:47:10  rahulj
  * Updated for version 1.0.1
  *
@@ -115,6 +119,10 @@ static const unsigned int   gXML4CRevision   = 1;
 #include    <util/Platforms/Solaris/SolarisDefs.hpp>
 #endif
 
+#if defined(XML_UNIXWARE)
+#include    <util/Platforms/UnixWare/UnixWareDefs.hpp>
+#endif
+
 #if defined(XML_HPUX)
 #include    <util/Platforms/HPUX/HPUXDefs.hpp>
 #endif
@@ -163,6 +171,10 @@ static const unsigned int   gXML4CRevision   = 1;
 
 #if defined(XML_SUNCC)
 #include    <util/Compilers/SunCCDefs.hpp>
+#endif
+
+#if defined(XML_SCOCC)
+#include    <util/Compilers/SCOCCDefs.hpp>
 #endif
 
 #if defined(XML_SOLARIS_KAICC)

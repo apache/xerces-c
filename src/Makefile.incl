@@ -55,6 +55,10 @@
 # 
 #
 # $Log$
+# Revision 1.9  1999/12/17 01:28:52  rahulj
+# Merged in changes submitted for UnixWare 7 port. Platform
+# specific files are still missing.
+#
 # Revision 1.8  1999/12/14 23:53:18  rahulj
 # Removed the offending Ctrl-M's from the commit message
 # logs which was giving packaging problems.
@@ -133,23 +137,57 @@ XML_INCL    = -I$(XML_INC_DIR)
 #=============== SOLARIS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, SOLARIS)
   ifeq (${CXX}, g++)
-	PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
-	MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
-	MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
-	ifeq (${TRANSCODER}, ICU)
-		ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -lm -lw -lgen
-	else
-		ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lm -lw -lgen
-	endif
+    PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
+    ifeq (${TRANSCODER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
+                  -licu-uc -lm -lw -lgen
+    else
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
+                  -lm -lw -lgen
+    endif
   else
-	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -instances=static -features=rtti -D${PLATFORM} -D_REENTRANT
-	MAKE_SHARED = ${CXX} -D${PLATFORM} -G
-	MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
-	ifeq (${TRANSCODER}, ICU)
-		EXTRA_LINK_OPTIONS = ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib -licu-uc -lm -lw -lC -lc -lgen
-	else
-		EXTRA_LINK_OPTIONS = ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib -lm -lw -lC -lc -lgen
-	endif
+    PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -instances=static \
+                               -features=rtti -D${PLATFORM} -D_REENTRANT
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -G
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
+    ifeq (${TRANSCODER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
+                  -licu-uc -lm -lw -lC -lc -lgen
+    else
+        ALLLIBS = ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
+                  -lm -lw -lC -lc -lgen
+    endif
+  endif
+  SHLIBSUFFIX=.so
+endif
+
+#=============== UNIXWARE SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, UNIXWARE)
+  ifeq (${CXX}, g++)
+    PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
+    ifeq (${TRANSCODER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
+                  -licu-uc -lm -lw -lgen
+    else
+        ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
+                  -lm -lw -lgen
+    endif
+  else
+    PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -instances=static \
+                               -D${PLATFORM} -D_REENTRANT
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -G
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
+    ifeq (${TRANSCODER}, ICU)
+        ALLLIBS = ${LIBS} -L/usr/local/lib -L/usr/ccs/lib \
+                  -licu-uc -lm -lw -lC -lc -lgen
+    else
+        ALLLIBS = ${LIBS} -L/usr/local/lib -L/usr/ccs/lib \
+                  -lm -lw -lC -lc -lgen
+    endif
   endif
   SHLIBSUFFIX=.so
 endif
@@ -166,9 +204,9 @@ ifeq (${PLATFORM}, AIX)
 #endif
 
 ifeq (${TRANSCODER}, ICU)
-	ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licu-uc -lbsd
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licu-uc -lbsd
 else
-	ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -lbsd
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -lbsd
 endif
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
 MAKE_SHARED = makeC++SharedLib_r -p 5000
@@ -182,9 +220,9 @@ PLATFORM_COMPILE_OPTIONS = -fpic -instances=static -D${PLATFORM} -D_REENTRANT
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fpic
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fpic
 ifeq (${TRANSCODER}, ICU)
-	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -lc
+    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -lc
 else
-	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
+    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
 endif
 SHLIBSUFFIX=.so
 endif
@@ -231,9 +269,9 @@ ifeq (${PLATFORM}, HPUX)
         -D${OSVERDEFINE} +DAportable +z +inst_compiletime
     MAKE_SHARED = ${CXX} -D${PLATFORM} -b
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -b
-	ifeq (${TRANSCODER}, ICU)
+    ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -licu-uc -lCsup -lstream
-	else
+    else
         ALLLIBS = ${LIBS} -lCsup -lstream
     endif
     SHLIBSUFFIX=.sl
@@ -248,11 +286,11 @@ ifeq (${PLATFORM}, HPUX)
     endif
     MAKE_SHARED = $(CXX) $(PLATFORM_COMPILE_OPTIONS) $(XML_INCL)
     MAKE_SHARED_C = $(CC) $(PLATFORM_COMPILE_OPTIONS) $(XML_INCL)
-	ifeq (${TRANSCODER}, ICU)
+    ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -licu-uc
-	else
+    else
         ALLLIBS = ${LIBS}
-	endif
+    endif
     EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,-a,shared
     SHLIBSUFFIX=.sl
   endif

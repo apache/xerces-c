@@ -55,6 +55,10 @@
 # 
 #
 # $Log$
+# Revision 1.6  1999/12/17 01:28:52  rahulj
+# Merged in changes submitted for UnixWare 7 port. Platform
+# specific files are still missing.
+#
 # Revision 1.5  1999/12/14 23:53:17  rahulj
 # Removed the offending Ctrl-M's from the commit message
 # logs which was giving packaging problems.
@@ -130,6 +134,7 @@ ALL_OBJECTS=$(wildcard $(ALL_OBJECTS_DIR)/*.o)
 ifeq (${PLATFORM},HPUX)
   ifeq (${CXX},CC)
     ######  Start HP-UX  CC compiler specific stuff #######
+
     DUMMYEXE=$(XML_LIB_DIR)/dummyExe
     TEMPLATESOBJS=$(wildcard $(TEMPLATESREPOSITORY)/*.o)
 
@@ -144,9 +149,10 @@ ifeq (${PLATFORM},HPUX)
     all: ${THISLIB}${VER}${SHLIBSUFFIX}
   endif
 else
-## OS390BATCH
+   ## Start OS390BATCH ##
   ifeq (${OS390BATCH},1)
 all: ${BATCH_TARGET}
+   ## End OS390BATCH ##
   else
 all: ${THISLIB}${VER}${SHLIBSUFFIX}
   endif
@@ -167,9 +173,9 @@ endif
 ${THISLIB}${VER}${SHLIBSUFFIX}:	$(ALL_OBJECTS)
 	@echo Building ${THISLIB}${VER}${SHLIBSUFFIX}
 	${MAKE_SHARED} -o ${@} $^ $(TEMPLATESOBJS) $(PLATFORM_LIBRARIES) $(EXTRA_LINK_OPTIONS) $(ALLLIBS)
-## OS390
+## Start OS390 ##
 ifeq (${PLATFORM},OS390)
-## OS390BATCH
+## Start OS390BATCH ##
 ifeq (${OS390BATCH},1)
 ${BATCH_TARGET}:        $(ALL_OBJECTS)
 	@echo Building ${BATCH_TARGET}
@@ -178,6 +184,8 @@ else
 	$(CP) ${LIBNAME}${VER}${OS390SIDEDECK} ${LIB}
 endif
 endif
+
+## End OS390 and OS390BATCH
 
 
 clean:

@@ -55,6 +55,10 @@
 # 
 #
 # $Log$
+# Revision 1.5  1999/12/17 01:28:54  rahulj
+# Merged in changes submitted for UnixWare 7 port. Platform
+# specific files are still missing.
+#
 # Revision 1.4  1999/12/14 23:53:25  rahulj
 # Removed the offending Ctrl-M's from the commit message
 # logs which was giving packaging problems.
@@ -106,6 +110,7 @@ CPP_PUBHEADERS = \
 	HPCCDefs.hpp \
 	IBMVAOS2Defs.hpp \
 	IBMVAW32Defs.hpp \
+	SCOCCDefs.hpp \
 	SunCCDefs.hpp \
 	SunKaiDefs.hpp \
     MIPSproDefs.hpp \
@@ -122,6 +127,9 @@ ifeq (${CXX},CC)
     endif
     ifeq (${PLATFORM},IRIX)
         CPP_OBJECTS = MIPSproDefs.o
+    endif
+    ifeq (${PLATFORM},UNIXWARE)
+        CPP_OBJECTS = SCOCCDefs.o
     endif
 endif
 ifeq (${CXX},xlC_r)

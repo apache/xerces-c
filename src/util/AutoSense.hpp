@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.3  1999/12/17 01:28:53  rahulj
+ * Merged in changes submitted for UnixWare 7 port. Platform
+ * specific files are still missing.
+ *
  * Revision 1.2  1999/12/01 17:16:16  rahulj
  * Added support for IRIX 6.5.5 using SGI MIPSpro C++ 7.3 and 7.21 generating 32 bit objects. Changes submitted by Marc Stuessel
  *
@@ -77,14 +81,19 @@
 #if defined(_AIX)
     #define XML_AIX
     #define XML_UNIX
-#elif defined(_HP_UX) \
-||  defined(__hpux) \
-||  defined(_HPUX_SOURCE)
+#elif defined(_HP_UX) || defined(__hpux) || defined(_HPUX_SOURCE)
     #define XML_HPUX
     #define XML_UNIX
-#elif defined(SOLARIS) || defined(__SVR4)
-    #define XML_SOLARIS
-    #define XML_UNIX
+#elif defined(SOLARIS) || defined(__SVR4) || defined(UNIXWARE)
+    #if defined(UNIXWARE)
+        #define XML_UNIXWARE
+        #define XML_CSET
+        #define XML_SCOCC
+        #define XML_UNIX
+    #else
+        #define XML_SOLARIS
+        #define XML_UNIX
+    #endif
 #elif defined(__linux__)
     #define XML_LINUX
     #define XML_UNIX
@@ -103,8 +112,7 @@
     #define XML_TANDEM
     #define XML_UNIX
     #define XML_CSET
-#elif defined(_WIN32) \
-|| defined(WIN32)
+#elif defined(_WIN32) || defined(WIN32)
     #define XML_WIN32
     #ifndef WIN32
       #define WIN32
@@ -113,11 +121,11 @@
 
     // IBM VisualAge special handling
     #if defined(__32BIT__)
-    #define XML_WIN32
+        #define XML_WIN32
     #else
-    #define XML_WIN16
+        #define XML_WIN16
     #endif
-    #elif defined(__MSDXML__)
+#elif defined(__MSDXML__)
     #define XML_DOS
 
 #elif defined(macintosh)
@@ -137,7 +145,7 @@
     #define XML_BORLAND
 #elif defined(__xlC__)
     #define XML_CSET
-#elif defined(XML_SOLARIS)
+#elif defined(XML_SOLARIS) || defined(XML_UNIXWARE)
     #if defined(__SUNPRO_CC)
         #define XML_SUNCC
     #elif defined(_EDG_RUNTIME_USES_NAMESPACES)
