@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.21  2005/02/25 09:16:51  gareth
+ * Fix thread safety issues. Jira #30380. Thanks to David Bertoni.
+ *
  * Revision 1.20  2005/02/08 09:21:11  amassari
  * Removed warnings
  *
@@ -124,6 +127,7 @@
 #include <xercesc/util/RefHashTableOf.hpp>
 #endif
 
+#include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/NullPointerException.hpp>
 #include <assert.h>
 #include <new>
@@ -514,44 +518,53 @@ template <class TVal> void RefHashTableOf<TVal>::put(void* key, TVal* const valu
 // ---------------------------------------------------------------------------
 template <class TVal> void RefHashTableOf<TVal>::rehash()
 {
-    unsigned int index;
-    unsigned int oldMod = fHashModulus;
-    fHashModulus *= 2;
-    
-    RefHashTableBucketElem<TVal>** oldBucketList = fBucketList;
-    
-    fBucketList = (RefHashTableBucketElem<TVal>**) fMemoryManager->allocate
+    const unsigned int newMod = fHashModulus * 2;
+
+    RefHashTableBucketElem<TVal>** newBucketList =
+        (RefHashTableBucketElem<TVal>**) fMemoryManager->allocate
     (
-        fHashModulus * sizeof(RefHashTableBucketElem<TVal>*)
-    );//new RefHashTableBucketElem<TVal>*[fHashModulus];
-    for (index = 0; index < fHashModulus; index++)
-        fBucketList[index] = 0;
+        newMod * sizeof(RefHashTableBucketElem<TVal>*)
+    );//new RefHashTableBucketElem<TVal>*[newMod];
+
+    // Make sure the new bucket list is destroyed if an
+    // exception is thrown.
+    ArrayJanitor<RefHashTableBucketElem<TVal>*>  guard(newBucketList, fMemoryManager);
+
+    memset(newBucketList, 0, newMod * sizeof(newBucketList[0]));
     
     
     // Rehash all existing entries.
-    for (index = 0; index < oldMod; index++)
+    for (unsigned int index = 0; index < fHashModulus; index++)
     {
         // Get the bucket list head for this entry
-        RefHashTableBucketElem<TVal>* curElem = oldBucketList[index];
-        RefHashTableBucketElem<TVal>* nextElem;
+        RefHashTableBucketElem<TVal>* curElem = fBucketList[index];
+
         while (curElem)
         {
             // Save the next element before we detach this one
-            nextElem = curElem->fNext;
+            RefHashTableBucketElem<TVal>* const nextElem = curElem->fNext;
 
-            unsigned int hashVal = fHash->getHashVal(curElem->fKey, fHashModulus, fMemoryManager);
-            assert(hashVal < fHashModulus);
-            
-            RefHashTableBucketElem<TVal>* newHeadElem = fBucketList[hashVal];
-            
+            const unsigned int hashVal = fHash->getHashVal(curElem->fKey, newMod, fMemoryManager);
+            assert(hashVal < newMod);
+
+            RefHashTableBucketElem<TVal>* const newHeadElem = newBucketList[hashVal];
+
             // Insert at the start of this bucket's list.
             curElem->fNext = newHeadElem;
-            fBucketList[hashVal] = curElem;
-            
+            newBucketList[hashVal] = curElem;
+
             curElem = nextElem;
         }
     }
-            
+
+    RefHashTableBucketElem<TVal>** const oldBucketList = fBucketList;
+
+    // Everything is OK at this point, so update the
+    // member variables.
+    fBucketList = guard.release();
+    fHashModulus = newMod;
+
+    // Delete the old bucket list.
     fMemoryManager->deallocate(oldBucketList);//delete[] oldBucketList;
     
 }
