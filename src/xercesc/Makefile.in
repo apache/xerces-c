@@ -104,7 +104,8 @@ GXX = @GXX@
 
 PRODUCTNAME=xerces
 PRODUCTVERSION=${VER}
-BINTARGETDIR=${HOME}/${PRODUCTNAME}-c-${PLATFORM}-${CXX}-${PRODUCTVERSION}
+BINTARGETNAME=${PRODUCTNAME}-c-${PLATFORM}-${CXX}-${PRODUCTVERSION}
+BINTARGETDIR=${HOME}/${BINTARGETNAME}
 
 all:: lib
 
@@ -208,6 +209,7 @@ copy:: lib samples
 	-${MKDIR} ${BINTARGETDIR}
 	-${MKDIR} ${BINTARGETDIR}/bin
 	-${MKDIR} ${BINTARGETDIR}/lib
+	-${MKDIR} ${BINTARGETDIR}/include
 ifeq (${TRANSCODER},ICU)
 	echo -${MKDIR} ${BINTARGETDIR}/include/unicode
 endif
@@ -304,8 +306,7 @@ endif
 tarball:: copy
 	@echo Now package it all up using tar
 	@echo TARing up all files ...
-	${CD} ${BINTARGETDIR}/..
-	tar -cvf ${BINTARGETDIR}.tar ${BINTARGETDIR}
+	cd ${BINTARGETDIR}/..; tar -cvf ${BINTARGETDIR}.tar ${BINTARGETNAME}/
 	@echo Finally compress the files
 	@echo Compressing ${BINTARGETDIR}.tar ...
 	gzip ${BINTARGETDIR}.tar
