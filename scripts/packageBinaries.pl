@@ -384,7 +384,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 	if ( $platform =~ m/AIX/i ) { $platform = "aix"; }
         if ( $platform =~ m/ptx/i ) { $platform = "ptx"; }
 
-	system ("chmod +x runConfigure configure install-sh");
+	system ("chmod +x run* con* install-sh");
 
 	if (length($opt_r) > 0) {
         	system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
@@ -396,14 +396,14 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
         # Now build the samples
         chdir ("$XERCESCROOT/samples");
-	system ("chmod +x runConfigure configure install-sh");
+	system ("chmod +x run* con* install-sh");
         system ("runConfigure -p$platform -c$opt_c -x$opt_x");
         system ("gmake clean");	# May want to comment this line out to speed up
         system ("gmake");
 
         # Next build the tests
         chdir ("$XERCESCROOT/tests");
-	system ("chmod +x runConfigure configure install-sh");
+	system ("chmod +x run* con* install-sh");
         system ("runConfigure -p$platform -c$opt_c -x$opt_x");
         system ("gmake clean");	# May want to comment this line out to speed up
         system ("gmake");
