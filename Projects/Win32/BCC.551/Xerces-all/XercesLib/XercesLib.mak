@@ -308,6 +308,9 @@ OBJFILES = $(TARGETPATH)\obj\XercesLib.obj \
     $(TARGETPATH)\obj\XMemory.obj \
     $(TARGETPATH)\obj\DOMNormalizer.obj \
     $(TARGETPATH)\obj\MemoryManagerImpl.obj \
+    $(TARGETPATH)\obj\XMLGrammarPoolImpl.obj \
+    $(TARGETPATH)\obj\XMLDTDDescriptionImpl.obj \
+    $(TARGETPATH)\obj\XMLSchemaDescriptionImpl.obj \
     $(DEPRDOM_OBJFILES)
 RESFILES = $(TARGETPATH)\obj\Version.res
 MAINSOURCE = XercesLib.cpp

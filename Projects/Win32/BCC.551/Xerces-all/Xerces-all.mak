@@ -99,5 +99,5 @@ ThreadTest: ThreadTest\ThreadTest.mak
 
 MemHandlerTest: MemHandlerTest\MemHandlerTest.mak
   cd $<
-  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER)
+  $(MAKEN) $<.mak -DXERCESVER=$(XERCESVER) -DWITHDEPRDOM=$(WITHDEPRDOM)
   cd ..
