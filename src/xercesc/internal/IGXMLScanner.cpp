@@ -583,11 +583,11 @@ void IGXMLScanner::commonInit()
     );
     fUndeclaredAttrRegistry = new (fMemoryManager) RefHashTableOf<unsigned int>
     (
-        131, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+        7, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
     );
     fUndeclaredAttrRegistryNS = new (fMemoryManager) RefHash2KeysTableOf<unsigned int>
     (
-        131, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+        7, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
     );
     fPSVIAttrList = new (fMemoryManager) PSVIAttributeList(fMemoryManager);
 }
@@ -1141,6 +1141,8 @@ void IGXMLScanner::scanEndTag(bool& gotData)
             if (fPSVIHandler)
             {
                 fPSVIElemContext.fIsSpecified = ((SchemaValidator*) fValidator)->getIsElemSpecified();
+                if(fPSVIElemContext.fIsSpecified)
+                    fPSVIElemContext.fNormalizedValue = ((SchemaElementDecl *)topElem->fThisElement)->getDefaultValue();
             }
 
             // call matchers and de-activate context
@@ -2924,7 +2926,11 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 else 
                 {
                     if (fPSVIHandler)
+                    {
                         fPSVIElemContext.fIsSpecified = ((SchemaValidator*) fValidator)->getIsElemSpecified();
+                        if(fPSVIElemContext.fIsSpecified)
+                            fPSVIElemContext.fNormalizedValue = ((SchemaElementDecl *)elemDecl)->getDefaultValue();
+                    }
                     // note that if we're empty, won't be a current DV
                     if (fPSVIElemContext.fCurrentDV && fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
                         psviMemberType = fValidationContext->getValidatingMemberType();

@@ -142,8 +142,6 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     // PSVI handling
     if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType )
         fPSVIAttrList->reset();
-    PSVIItem::VALIDITY_STATE attrValid = PSVIItem::VALIDITY_VALID;
-    PSVIItem::ASSESSMENT_TYPE attrAssessed = PSVIItem::VALIDATION_FULL;
 
     // Keep up with how many attrs we end up with total
     unsigned int retCount = 0;
@@ -162,6 +160,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     unsigned int index;
     for (index = 0; index < attCount; index++)
     {
+        PSVIItem::VALIDITY_STATE attrValid = PSVIItem::VALIDITY_VALID;
+        PSVIItem::ASSESSMENT_TYPE attrAssessed = PSVIItem::VALIDATION_FULL;
         const KVStringPair* curPair = providedAttrs.elementAt(index);
 
         //  We have to split the name into its prefix and name parts. Then
@@ -191,7 +191,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 prefPtr = janName.get();
             }
 
-            suffPtr = prefPtr + colonInd + 1;
+            suffPtr = namePtr + colonInd + 1;
         }
         else
         {
@@ -217,6 +217,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  do normal checking and processing.
         XMLAttDef::AttTypes attType;
         DatatypeValidator *attrValidator = 0;
+        PSVIAttribute *psviAttr = 0;
         if (!isNSAttr || fGrammarType == Grammar::DTDGrammarType)
         {
             // Some checking for attribute wild card first (for schema)
@@ -593,16 +594,15 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if(actualAttDef)
                 {
 	                XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
-	                PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
+	                psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
                     DatatypeValidator * attrDataType = actualAttDef->getDatatypeValidator();
 	                XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
 	                if(attrValid != PSVIItem::VALIDITY_VALID)
 	                {
-	                    toFill->reset(
+	                    psviAttr->reset(
 	                        fRootElemName
 	                        , attrValid
 	                        , attrAssessed
-	                        , normBuf.getRawBuffer()
 	                        , validatingType
 	                        , 0
 	                        , actualAttDef->getValue()
@@ -616,11 +616,10 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 	                    XSSimpleTypeDefinition *memberType = 0;
 	                    if(validatingType->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
 	                        memberType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
-	                    toFill->reset(
+	                    psviAttr->reset(
 	                        fRootElemName
 	                        , attrValid
 	                        , attrAssessed
-	                        , normBuf.getRawBuffer()
 	                        , validatingType
 	                        , memberType
 	                        , actualAttDef->getValue()
@@ -647,16 +646,15 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
             if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType)
             {
-	            PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
+	            psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId)); 
 	            XSSimpleTypeDefinition *validatingType = (attrValidator)
                             ? (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator)
                             : 0;
                 // no attribute declarations for these...
-	            toFill->reset(
+	            psviAttr->reset(
 	                fRootElemName
 	                , PSVIItem::VALIDITY_NOTKNOWN
 	                , PSVIItem::VALIDATION_NONE
-                    , normBuf.getRawBuffer()
 	                , validatingType
 	                , 0
 	                , 0
@@ -721,6 +719,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             );
             curAttr->setSpecified(true);
         }
+        if(psviAttr)
+            psviAttr->setValue(curAttr->getValue());
             
         // Bump the count of attrs in the list
         retCount++;
@@ -851,7 +851,6 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 fRootElemName
                                 , PSVIItem::VALIDITY_INVALID
                                 , PSVIItem::VALIDATION_FULL
-                                , curDef->getValue()
                                 , defAttrType
                                 , 0
                                 , curDef->getValue()
@@ -874,7 +873,6 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 fRootElemName
                                 , PSVIItem::VALIDITY_VALID
                                 , PSVIItem::VALIDATION_FULL
-                                , curDef->getValue()
                                 , defAttrType
                                 , defAttrMemberType
                                 , curDef->getValue()
@@ -882,7 +880,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 , defAttrDecl
                                 , (defAttrMemberType)?((SchemaValidator *)fValidator)->getMostRecentAttrValidator():attrDataType
                             );
-                        }
+                        } 
+                        defAttrToFill->setValue(curDef->getValue());
                     }
                 }
 
@@ -1872,7 +1871,8 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         }
     }
     // fModel may need updating:
-    if(getPSVIHandler() && fGrammarType == Grammar::SchemaGrammarType)
+    if(getPSVIHandler())
+    //&& fGrammarType == Grammar::SchemaGrammarType)
         fModel = fGrammarResolver->getXSModel();
 }
 

@@ -1044,8 +1044,11 @@ void SGXMLScanner::scanEndTag(bool& gotData)
         else if (fPSVIElemContext.fCurrentDV && fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
             psviMemberType = fValidationContext->getValidatingMemberType();
         if (fPSVIHandler)
+        {
             fPSVIElemContext.fIsSpecified = ((SchemaValidator*) fValidator)->getIsElemSpecified();
-
+            if(fPSVIElemContext.fIsSpecified)
+                fPSVIElemContext.fNormalizedValue = ((SchemaElementDecl *)topElem->fThisElement)->getDefaultValue();
+        }
         // call matchers and de-activate context
         int oldCount = fMatcherStack->getMatcherCount();
 
@@ -1849,7 +1852,11 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             else 
             {
                 if (fPSVIHandler)
+                {
                     fPSVIElemContext.fIsSpecified = ((SchemaValidator*) fValidator)->getIsElemSpecified();
+                    if(fPSVIElemContext.fIsSpecified)
+                        fPSVIElemContext.fNormalizedValue = ((SchemaElementDecl *)elemDecl)->getDefaultValue();
+                }
                 if (fPSVIElemContext.fCurrentDV && fPSVIElemContext.fCurrentDV->getType() == DatatypeValidator::Union)
                     psviMemberType = fValidationContext->getValidatingMemberType(); 
             }
@@ -2215,7 +2222,7 @@ void SGXMLScanner::commonInit()
     );
     fUndeclaredAttrRegistryNS = new (fMemoryManager) RefHash2KeysTableOf<unsigned int>
     (
-        131, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
+        7, false, new (fMemoryManager)HashXMLCh(), fMemoryManager
     );
     fPSVIAttrList = new (fMemoryManager) PSVIAttributeList(fMemoryManager);
 }
@@ -2293,8 +2300,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     // PSVI handling
     if(getPSVIHandler())
         fPSVIAttrList->reset();
-    PSVIItem::VALIDITY_STATE attrValid = PSVIItem::VALIDITY_VALID;
-    PSVIItem::ASSESSMENT_TYPE attrAssessed = PSVIItem::VALIDATION_FULL;
 
     // Keep up with how many attrs we end up with total
     unsigned int retCount = 0;
@@ -2313,6 +2318,8 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     unsigned int index;
     for (index = 0; index < attCount; index++)
     {
+        PSVIItem::VALIDITY_STATE attrValid = PSVIItem::VALIDITY_VALID;
+        PSVIItem::ASSESSMENT_TYPE attrAssessed = PSVIItem::VALIDATION_FULL;
         const KVStringPair* curPair = providedAttrs.elementAt(index);
 
         //  We have to split the name into its prefix and name parts. Then
@@ -2342,7 +2349,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 prefPtr = janName.get();
             }
 
-            suffPtr = prefPtr + colonInd + 1;
+            suffPtr = namePtr + colonInd + 1;
         }
         else
         {
@@ -2368,6 +2375,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  do normal checking and processing.
         XMLAttDef::AttTypes attType;
         DatatypeValidator *attrValidator = 0;
+        PSVIAttribute *psviAttr = 0;
         if (!isNSAttr)
         {
             // Some checking for attribute wild card first (for schema)
@@ -2693,16 +2701,15 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if(actualAttDef)
                 {
 	                XSAttributeDeclaration *attrDecl = (XSAttributeDeclaration *)fModel->getXSObject(actualAttDef);
-	                PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
+	                psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
                     DatatypeValidator * attrDataType = actualAttDef->getDatatypeValidator();
 	                XSSimpleTypeDefinition *validatingType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrDataType);
 	                if(attrValid != PSVIItem::VALIDITY_VALID)
 	                {
-	                    toFill->reset(
+	                    psviAttr->reset(
 	                        fRootElemName
 	                        , attrValid
 	                        , attrAssessed
-	                        , normBuf.getRawBuffer()
 	                        , validatingType
 	                        , 0
 	                        , actualAttDef->getValue()
@@ -2716,11 +2723,10 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 	                    XSSimpleTypeDefinition *memberType = 0;
 	                    if(validatingType->getVariety() == XSSimpleTypeDefinition::VARIETY_UNION)
 	                        memberType = (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator);
-	                    toFill->reset(
+	                    psviAttr->reset(
 	                        fRootElemName
 	                        , attrValid
 	                        , attrAssessed
-	                        , normBuf.getRawBuffer()
 	                        , validatingType
 	                        , memberType
 	                        , actualAttDef->getValue()
@@ -2747,16 +2753,15 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 attrValidator = DatatypeValidatorFactory::getBuiltInRegistry()->get(SchemaSymbols::fgDT_ANYURI);
             if(getPSVIHandler())
             {
-                PSVIAttribute *toFill = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
+                psviAttr = fPSVIAttrList->getPSVIAttributeToFill(suffPtr, fURIStringPool->getValueForId(uriId));
 	            XSSimpleTypeDefinition *validatingType = (attrValidator)
                             ? (XSSimpleTypeDefinition *)fModel->getXSObject(attrValidator)
                             : 0;
                 // no attribute declarations for these...
-	            toFill->reset(
+	            psviAttr->reset(
 	                fRootElemName
 	                , PSVIItem::VALIDITY_NOTKNOWN
 	                , PSVIItem::VALIDATION_NONE
-                    , normBuf.getRawBuffer()
 	                , validatingType
 	                , 0
 	                , 0
@@ -2802,6 +2807,8 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             );
             curAttr->setSpecified(true);
         }
+        if(psviAttr)
+            psviAttr->setValue(curAttr->getValue());
 
         // Bump the count of attrs in the list
         retCount++;
@@ -2913,7 +2920,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 fRootElemName
                                 , PSVIItem::VALIDITY_INVALID
                                 , PSVIItem::VALIDATION_FULL
-                                , curDef->getValue()
                                 , defAttrType
                                 , 0
                                 , curDef->getValue()
@@ -2932,11 +2938,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                     ((SchemaValidator*)fValidator)->getMostRecentAttrValidator()
                                 );
                             }
-                            defAttrToFill->reset(
+                            defAttrToFill->reset
+                            (
                                 fRootElemName
                                 , PSVIItem::VALIDITY_VALID
                                 , PSVIItem::VALIDATION_FULL
-                                , curDef->getValue()
                                 , defAttrType
                                 , defAttrMemberType
                                 , curDef->getValue()
@@ -2945,6 +2951,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 , (defAttrMemberType)?((SchemaValidator *)fValidator)->getMostRecentAttrValidator():attrDataType
                             );
                         }
+                        defAttrToFill->setValue(curDef->getValue());
                     }
                 }
 
