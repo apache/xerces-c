@@ -1,0 +1,205 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
+
+<s1 title="Programming Guide">
+    <anchor name="Schema"/>
+    <s2 title="Schema Support">
+        <p>&XercesCName; contains an implementation of the W3C XML Schema
+           Language.  See <jump href="schema.html">the Schema page</jump> for details.
+         </p>
+    </s2>
+
+    <anchor name="Progressive"/>
+    <s2 title="Progressive Parsing">
+
+        <p>In addition to using the <ref>parse()</ref> method to parse an XML File.
+        You can use the other two parsing methods, <ref>parseFirst()</ref> and <ref>parseNext()</ref>
+        to do 'progressive parsing', so that you don't
+        have to depend upon throwing an exception to terminate the
+        parsing operation.
+         </p>
+         <p>
+        Calling parseFirst() will cause the DTD (both internal and
+        external subsets), and any pre-content, i.e. everything up to
+        but not including the root element, to be parsed. Subsequent calls to
+        parseNext() will cause one more pieces of markup to be parsed,
+        and spit out from the core scanning code to the parser (and
+        hence either on to you if using SAX or into the DOM tree if
+        using DOM).
+         </p>
+         <p>
+        You can quit the parse any time by just not
+        calling parseNext() anymore and breaking out of the loop. When
+        you call parseNext() and the end of the root element is the
+        next piece of markup, the parser will continue on to the end
+        of the file and return false, to let you know that the parse
+        is done. So a typical progressive parse loop will look like
+        this:</p>
+
+<source>// Create a progressive scan token
+XMLPScanToken token;
+
+if (!parser.parseFirst(xmlFile, token))
+{
+  cerr &lt;&lt; "scanFirst() failed\n" &lt;&lt; endl;
+  return 1;
+}
+
+//
+// We started ok, so lets call scanNext()
+// until we find what we want or hit the end.
+//
+bool gotMore = true;
+while (gotMore &amp;&amp; !handler.getDone())
+  gotMore = parser.parseNext(token);</source>
+
+        <p>In this case, our event handler object (named 'handler'
+        surprisingly enough) is watching form some criteria and will
+        return a status from its getDone() method. Since the handler
+        sees the SAX events coming out of the SAXParser, it can tell
+        when it finds what it wants. So we loop until we get no more
+        data or our handler indicates that it saw what it wanted to
+        see.</p>
+
+        <p>When doing non-progressive parses, the parser can easily
+        know when the parse is complete and insure that any used
+        resources are cleaned up. Even in the case of a fatal parsing
+        error, it can clean up all per-parse resources. However, when
+        progressive parsing is done, the client code doing the parse
+        loop might choose to stop the parse before the end of the
+        primary file is reached. In such cases, the parser will not
+        know that the parse has ended, so any resources will not be
+        reclaimed until the parser is destroyed or another parse is started.</p>
+
+        <p>This might not seem like such a bad thing; however, in this case,
+        the files and sockets which were opened in order to parse the
+        referenced XML entities will remain open. This could cause
+        serious problems. Therefore, you should destroy the parser instance
+        in such cases, or restart another parse immediately. In a future
+        release, a reset method will be provided to do this more cleanly.</p>
+
+        <p>Also note that you must create a scan token and pass it
+        back in on each call. This insures that things don't get done
+        out of sequence. When you call parseFirst() or parse(), any
+        previous scan tokens are invalidated and will cause an error
+        if used again. This prevents incorrect mixed use of the two
+        different parsing schemes or incorrect calls to
+        parseNext().</p>
+
+    </s2>
+
+    <anchor name="ReuseGrammar"/>
+    <s2 title="Reuse Grammar">
+
+        <p>Sometimes applications want to use the same grammar to validate various XML documents.
+           Instead of re-processing the same grammar again and again during each parse,
+           &XercesCName; provides a means to reuse the grammar in the last parse.
+        </p>
+        <p>Here is an example:</p>
+
+<source>
+
+      XercesDOMParser parser;
+
+      // this is the first parse, just usual code as you do normal parse
+      // "firstXmlFile" has a grammar (schema or DTD) specified.
+      parser.parse(firstXmlFile);
+
+      // this is the second parse, by setting second parameter to true,
+      // the parser will reuse the grammar in the last parse
+      // (i.e. the one in  "firstXmlFile")
+      // to validate the second "anotherXmlFile".  Any grammar that is
+      // specified in anotherXmlFile is IGNORED.
+      //
+      // Note: The anotherXmlFile cannot have any DTD internal subset.
+      parser.parse(anotherXmlFile, true);
+
+</source>
+
+        <p>Here is another example using SAX2 XMLReader:</p>
+
+<source>
+
+      SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+
+      // this is the first parse, just usual code as you do normal parse
+      // "firstXmlFile" has a grammar (schema or DTD) specified.
+      parser->parse(xmlFile);
+
+      // this is the second parse, by setting the feature
+      //    http://apache.org/xml/features/validation/reuse-grammar
+      // to true, the parser will reuse the grammar in the last parse
+      // (i.e. the one in  "firstXmlFile")
+      // to validate the second "anotherXmlFile".  Any grammar that is
+      // specified in anotherXmlFile is IGNORED.
+      //
+      // Note: The anotherXmlFile cannot have any DTD internal subset.
+      parser->setFeature(XMLUni::fgSAX2XercesReuseGrammar, true)
+      parser->parse(anotherXmlFile);
+
+</source>
+
+    </s2>
+
+    <anchor name="LoadableMessageText"/>
+    <s2 title="Loadable Message Text">
+
+        <p>The &XercesCName; supports loadable message text.   Although
+        the current drop just supports English, it is capable to support other
+        languages. Anyone interested in contributing any translations
+        should contact us. This would be an extremely useful
+        service.</p>
+
+        <p>In order to support the local message loading services, all the error messages
+        are captured in an XML file in the src/xercesc/NLS/ directory.
+        There is a simple program, in the Tools/NLSXlat/ directory,
+        which can spit out that text in various formats. It currently
+        supports a simple 'in memory' format (i.e. an array of
+        strings), the Win32 resource format, and the message catalog
+        format.  The 'in memory' format is intended for very simple
+        installations or for use when porting to a new platform (since
+        you can use it until you can get your own local message
+        loading support done.)</p>
+
+        <p>In the src/xercesc/util/ directory, there is an XMLMsgLoader
+        class.  This is an abstraction from which any number of
+        message loading services can be derived. Your platform driver
+        file can create whichever type of message loader it wants to
+        use on that platform.  &XercesCName; currently has versions for the in
+        memory format, the Win32 resource format, and the message
+        catalog format. An ICU one is present but not implemented
+        yet. Some of the platforms can support multiple message
+        loaders, in which case a #define token is used to control
+        which one is used. You can set this in your build projects to
+        control the message loader type used.</p>
+
+    </s2>
+
+    <anchor name="PluggableTranscoders"/>
+    <s2 title="Pluggable Transcoders">
+
+        <p>&XercesCName; also supports pluggable transcoding services. The
+        XMLTransService class is an abstract API that can be derived
+        from, to support any desired transcoding
+        service. XMLTranscoder is the abstract API for a particular
+        instance of a transcoder for a particular encoding. The
+        platform driver file decides what specific type of transcoder
+        to use, which allows each platform to use its native
+        transcoding services, or the ICU service if desired.</p>
+
+        <p>Implementations are provided for Win32 native services, ICU
+        services, and the <ref>iconv</ref> services available on many
+        Unix platforms. The Win32 version only provides native code
+        page services, so it can only handle XML code in the intrinsic
+        encodings ASCII, UTF-8, UTF-16 (Big/Small Endian), UCS4
+        (Big/Small Endian), EBCDIC code pages IBM037 and
+        IBM1140 encodings, ISO-8859-1 (aka Latin1) and Windows-1252. The ICU version
+        provides all of the encodings that ICU supports. The
+        <ref>iconv</ref> version will support the encodings supported
+        by the local system. You can use transcoders we provide or
+        create your own if you feel ours are insufficient in some way,
+        or if your platform requires an implementation that &XercesCName; does not
+        provide.</p>
+
+    </s2>
+</s1>
