@@ -526,8 +526,7 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
     while (true)
     {
         if (!::WriteFile(theFile, tmpFlush, toWrite, &bytesWritten, 0))
-            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
-          //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
 
         if (bytesWritten < (unsigned long) toWrite) //incomplete write
         {

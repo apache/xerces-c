@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/07/15 21:53:04  peiyongz
+ * CouldNotWriteToFile
+ *
  * Revision 1.5  2002/06/24 15:55:21  peiyongz
  * Change from James Berry( jberry@criticalpath.com)
  *
@@ -414,8 +417,7 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
 
         if(ferror((FILE*)theFile))
         {
-            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
-          //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
         }
 
         if (bytesWritten < toWrite) //incomplete write

@@ -456,8 +456,7 @@ XMLMacFile::write(const long byteCount, const XMLByte* const buffer)
 
     if (!mFileValid)
     {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
-        //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
     }
 
     if (gHasHFSPlusAPIs)
@@ -475,8 +474,7 @@ XMLMacFile::write(const long byteCount, const XMLByte* const buffer)
 
     if ((err != noErr && err != eofErr) || (bytesWritten != byteCount))
     {
-        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
-        //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
     }
 }
 

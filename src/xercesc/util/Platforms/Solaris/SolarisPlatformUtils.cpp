@@ -318,8 +318,7 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
 
         if(ferror((FILE*)theFile))
         {
-            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
-          //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
         }
 
         if (bytesWritten < toWrite) //incomplete write
