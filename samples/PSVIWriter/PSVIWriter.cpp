@@ -17,6 +17,9 @@
 //REVISIT
 /*
  * $Log$
+ * Revision 1.7  2005/02/23 19:07:59  cargilld
+ * Various PSVI fixes from Mike Boos.
+ *
  * Revision 1.6  2005/01/12 20:43:21  cargilld
  * Remove warning messages.
  *
@@ -233,6 +236,9 @@ int main(int argC, char* argV[])
    		handler = new PSVIWriterHandlers(0, errorFormatter);
    	else
    		handler = new PSVIWriterHandlers(psviFormatter, errorFormatter);
+
+    PSVIAdvancedHandler* advancedHandler = new PSVIAdvancedHandler(handler);
+    parser->installAdvDocHandler(advancedHandler);
 
 	parser->setPSVIHandler(handler);
     parser->setContentHandler(handler);

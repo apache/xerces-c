@@ -285,6 +285,11 @@ const XMLCh PSVIUni::fgElementDeclaration[] =
 	chLatin_p, chLatin_s, chLatin_v, chColon, chLatin_e, chLatin_l, chLatin_e, chLatin_m, chLatin_e, chLatin_n, chLatin_t, chLatin_D, chLatin_e, chLatin_c, chLatin_l, chLatin_a, chLatin_r, chLatin_a, chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
+const XMLCh PSVIUni::fgFacetFixed[] =
+{
+	chLatin_p, chLatin_s, chLatin_v, chColon, chLatin_f, chLatin_i, chLatin_x, chLatin_e, chLatin_d, chNull
+};
+
 const XMLCh PSVIUni::fgFacets[] =
 {
 	chLatin_p, chLatin_s, chLatin_v, chColon, chLatin_f, chLatin_a, chLatin_c, chLatin_e, chLatin_t, chLatin_s, chNull
@@ -298,11 +303,6 @@ const XMLCh PSVIUni::fgFields[] =
 const XMLCh PSVIUni::fgFinal[] =
 {
 	chLatin_p, chLatin_s, chLatin_v, chColon, chLatin_f, chLatin_i, chLatin_n, chLatin_a, chLatin_l, chNull
-};
-
-const XMLCh PSVIUni::fgFixed[] =
-{
-	chLatin_p, chLatin_s, chLatin_v, chColon, chLatin_f, chLatin_i, chLatin_x, chLatin_e, chLatin_d, chNull
 };
 
 const XMLCh PSVIUni::fgFundamentalFacets[] =
@@ -793,6 +793,11 @@ const XMLCh PSVIUni::fgUnknown[] =
 const XMLCh PSVIUni::fgValid[] =
 {
 	chLatin_v, chLatin_a, chLatin_l, chLatin_i, chLatin_d, chNull
+};
+
+const XMLCh PSVIUni::fgVCFixed[] =
+{
+	chLatin_f, chLatin_i, chLatin_x, chLatin_e, chLatin_d, chNull
 };
 
 const XMLCh PSVIUni::fgXMLChNull[] =

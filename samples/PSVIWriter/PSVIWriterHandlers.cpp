@@ -213,10 +213,6 @@ void PSVIWriterHandlers::startDocument() {
 	
 	writeOpen(PSVIUni::fgDocument, fAttrList);	
 	incIndent();
-	sendElementValue(PSVIUni::fgCharacterEncodingScheme, fFormatter->getEncodingName());
-	sendElementEmpty(PSVIUni::fgStandalone);
-	sendElementValue(PSVIUni::fgVersion, PSVIUni::fgOnePointZero);
-	
 	fElementChildren->push(false);
 }
 
@@ -822,7 +818,7 @@ void PSVIWriterHandlers::processFacets(XSFacetList* facets, XSMultiValueFacetLis
 				XSFacet* facet = facets->elementAt(facetCount);
 				sendIndentedElement(translateFacet(facet->getFacetKind()));
 				sendElementValue(PSVIUni::fgValue, facet->getLexicalFacetValue());
-				sendElementValue(PSVIUni::fgFixed, translateBool(facet->isFixed()));
+				sendElementValue(PSVIUni::fgFacetFixed, translateBool(facet->isFixed()));
 				processAnnotation(facet->getAnnotation());
 				sendUnindentedElement(translateFacet(facet->getFacetKind()));
 			}	
@@ -835,7 +831,7 @@ void PSVIWriterHandlers::processFacets(XSFacetList* facets, XSMultiValueFacetLis
 				for (unsigned int i=0; i < values->size(); i++) {
 					sendElementValue(PSVIUni::fgValue, values->elementAt(i));
 				}
-				sendElementValue(PSVIUni::fgFixed, translateBool(multiFacet->isFixed()));
+				sendElementValue(PSVIUni::fgFacetFixed, translateBool(multiFacet->isFixed()));
 				processAnnotations(multiFacet->getAnnotations());
 				sendUnindentedElement(translateFacet(multiFacet->getFacetKind()));
 			}	
@@ -1356,7 +1352,7 @@ const XMLCh* PSVIWriterHandlers::translateValueConstraint(XSConstants::VALUE_CON
 		case XSConstants::VALUE_CONSTRAINT_DEFAULT :
 			return PSVIUni::fgDefault;
 		case XSConstants::VALUE_CONSTRAINT_FIXED :
-			return PSVIUni::fgFixed;
+			return PSVIUni::fgVCFixed;
 		default :
 			return PSVIUni::fgUnknown;
 	}
@@ -1938,4 +1934,17 @@ void  PSVIWriterHandlers::processActualValue(PSVIItem* item)
 
     delete obj;
 
+}
+
+void PSVIAdvancedHandler::XMLDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr, const XMLCh* const standaloneStr, const XMLCh* const autoEncodingStr)
+{    
+    if (encodingStr && *encodingStr)
+        fWriterHandler->sendElementValue(PSVIUni::fgCharacterEncodingScheme, encodingStr);
+    else
+        fWriterHandler->sendElementValue(PSVIUni::fgCharacterEncodingScheme, autoEncodingStr);
+    if (standaloneStr && *standaloneStr)
+        fWriterHandler->sendElementValue(PSVIUni::fgStandalone, standaloneStr);
+	else
+        fWriterHandler->sendElementEmpty(PSVIUni::fgStandalone);
+	fWriterHandler->sendElementValue(PSVIUni::fgVersion, versionStr);        
 }

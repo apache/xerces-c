@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2005/02/23 19:07:59  cargilld
+ * Various PSVI fixes from Mike Boos.
+ *
  * Revision 1.30  2004/10/20 15:19:07  knoaman
  * Allow option of initializing static data in XMLPlatformUtils::Initialize
  *
@@ -879,9 +882,16 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
         // Set PSVI information for Ordered, Numeric, Bounded & Finite
         datatypeValidator->setOrdered(baseValidator->getOrdered());
         datatypeValidator->setNumeric(baseValidator->getNumeric());
+        RefHashTableOf<KVStringPair>* baseFacets = baseValidator->getFacets();
         if (facets  && 
-            ((facets->get(SchemaSymbols::fgELT_MININCLUSIVE) || facets->get(SchemaSymbols::fgELT_MINEXCLUSIVE)) &&
-             (facets->get(SchemaSymbols::fgELT_MAXINCLUSIVE) || facets->get(SchemaSymbols::fgELT_MAXEXCLUSIVE))))
+            ((facets->get(SchemaSymbols::fgELT_MININCLUSIVE) || 
+              facets->get(SchemaSymbols::fgELT_MINEXCLUSIVE) ||
+              (baseFacets && (baseFacets->get(SchemaSymbols::fgELT_MININCLUSIVE) || 
+                              baseFacets->get(SchemaSymbols::fgELT_MINEXCLUSIVE))))) &&
+             (facets->get(SchemaSymbols::fgELT_MAXINCLUSIVE) || 
+              facets->get(SchemaSymbols::fgELT_MAXEXCLUSIVE) || 
+              (baseFacets && ((baseFacets->get(SchemaSymbols::fgELT_MAXINCLUSIVE) || 
+                               baseFacets->get(SchemaSymbols::fgELT_MAXEXCLUSIVE))))))
         {
             datatypeValidator->setBounded(true);
         }

@@ -48,6 +48,7 @@
 #include <xercesc/framework/psvi/XSTypeDefinition.hpp>
 #include <xercesc/framework/psvi/XSWildcard.hpp>
 #include <xercesc/framework/XMLFormatter.hpp>
+#include <xercesc/framework/XMLDocumentHandler.hpp>
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
 #include <xercesc/util/ValueStackOf.hpp>
@@ -107,6 +108,7 @@ public:
     PSVIWriterHandlers(XMLFormatter* outputFormatter, XMLFormatter* errorFormatter = NULL);
     ~PSVIWriterHandlers();
     
+    friend class PSVIAdvancedHandler;
     // -----------------------------------------------------------------------
     //  Convenience Utility
     // -----------------------------------------------------------------------
@@ -278,6 +280,29 @@ protected:
 	RefVectorOf<AttrInfo>* fAttributesInfo;
 };
 
+class PSVIAdvancedHandler: public XMLDocumentHandler {
+public:
+    PSVIAdvancedHandler(PSVIWriterHandlers* writerHandler) : XMLDocumentHandler(), fWriterHandler(writerHandler) {}
+    ~PSVIAdvancedHandler() {}
+    void docCharacters(const XMLCh* const, const unsigned int, const bool) {}
+    void docComment(const XMLCh* const) {}
+    void docPI(const XMLCh* const, const XMLCh* const) {}
+    void endDocument() {}
+    void endElement(const XMLElementDecl&, const unsigned int, const bool, const XMLCh* const) {}
+    void endEntityReference(const   XMLEntityDecl&) {}
+   
+    void ignorableWhitespace(const XMLCh* const chars, const unsigned int length, const bool cdataSection) {}
+
+    void resetDocument() {}
+    void startDocument() {}
+    void startElement(const XMLElementDecl&, const unsigned int, const XMLCh* const, const RefVectorOf<XMLAttr>&
+                     ,const unsigned int, const bool, const bool) {}
+    void startEntityReference(const XMLEntityDecl&) {};
+
+    void XMLDecl(const XMLCh* const versionStr, const XMLCh* const encodingStr, const XMLCh* const standaloneStr, const XMLCh* const autoEncodingStr);    
+private:
+    PSVIWriterHandlers* fWriterHandler;
+};
 
 #endif
 

@@ -83,9 +83,9 @@ public :
     static const XMLCh fgDocumentLocation[];
     static const XMLCh fgElementDeclaration[];
     static const XMLCh fgFacets[];
+    static const XMLCh fgFacetFixed[];
     static const XMLCh fgFields[];
-    static const XMLCh fgFinal[];
-    static const XMLCh fgFixed[];
+    static const XMLCh fgFinal[];    
     static const XMLCh fgFundamentalFacets[];
     static const XMLCh fgIdentityConstraintCategory[];
     static const XMLCh fgIdentityConstraintDefinition[];
@@ -186,6 +186,7 @@ public :
     static const XMLCh fgUnique[];
     static const XMLCh fgUnknown[];
     static const XMLCh fgValid[];
+    static const XMLCh fgVCFixed[];
     static const XMLCh fgXMLChNull[];
 
 	//PSVI Element Types (Shortened)
