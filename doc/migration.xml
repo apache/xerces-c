@@ -2,13 +2,14 @@
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Migration">
-    <s2 title="Migrating from &XercesCName; &XercesCVersion160; to &XercesCName; &XercesCVersion;">
+    <s2 title="Migrating from &XercesCName; 1.7.0 to &XercesCName; &XercesCVersion;">
       <p>This document is a discussion of the technical differences between
-      &XercesCName; &XercesCVersion160; code base and the &XercesCName; &XercesCVersion;.</p>
+      &XercesCName; 1.7.0 code base and the &XercesCName; &XercesCVersion;.</p>
 
       <p>Topics discussed are:</p>
       <ul>
         <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion;</link></li>
+        <li><link anchor="LibraryChange">Library Name change in &XercesCName; &XercesCVersion;</link></li>
         <li><link anchor="DirChange">Directory change in &XercesCName; &XercesCVersion;</link></li>
         <li><link anchor="API">Public API Changes in &XercesCName; &XercesCVersion;</link></li>
         <ul>
@@ -17,129 +18,62 @@
             <li><link anchor="DeprecatedAPI">Deprecated Public API</link></li>
         </ul>
       </ul>
-    </s2>
 
     <anchor name="NewFeatures"/>
-    <s2 title="New features in &XercesCName; &XercesCVersion;">
+    <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
-        <li>Support SAX2-ext's DeclHandler.</li>
-        <li>Directory sane_include reorganization: add sub-directory 'xercesc' to src / include folder.
-            See <link anchor="DirChange">"Directory change in &XercesCName; &XercesCVersion;"</link>
-            below for detail.</li>
-        <li>More IDOM test cases - port IDOMMemTest, and merge ThreadTest and IThreadTest.</li>
-        <li>Support IconvFBSD in multi-threading environment.</li>
-        <li>Use IDOM in schema processing for faster performance.</li>
-        <li>Add Project files for BCB6.</li>
-        <li>Port to Caldera (SCO) OpenServer.</li>
-        <li>Support building with new MacOSURLAccessCF NetAccessor that doesn't require
-            Carbon but can allow Xerces to live solely within CoreServices layer.</li>
+        <li></li>
       </ul>
-    </s2>
+    </s3>
+
+    <anchor name="LibraryChange"/>
+    <s3 title="Library Name Change in &XercesCName; &XercesCVersion;">
+        <ul>
+            <li></li>
+        </ul>
+    </s3>
 
     <anchor name="DirChange"/>
-    <s2 title="Directory change in &XercesCName; &XercesCVersion;">
+    <s3 title="Directory change in &XercesCName; &XercesCVersion;">
         <ul>
-            <li>A new directory, <em>src/xercesc</em> is created to be the new parent directory of
-                all src's direct subdirectories.</li>
-            <li>And in the binary package, all the headers are distributed in <em>include/xercesc</em> directory.</li>
-            <li>Migration considerations:</li>
-            <ul>
-              <li>Windows application, <br/>
-                  either change the <em>include directories </em> setting to
-                  "..\..\..\..\..\src\<em>xercesc</em>" (Projects->settings->C/C++->Preprocessor), <br/>
-                  or <br/>
-                  change the relevant #include instances in the source/header files, accordingly, eg <br/>
-                  #include &lt;util/XMLString.hpp&gt; be changed to <br/>
-                  #include &lt;<em>xercesc</em>/util/XMLString.hpp&gt; </li>
-              <li>Unix application, <br/>
-                  either change the <em>include search path </em> in the Makefile to
-                  " -I &lt;installroot&gt;/include/<em>xercesc</em>", <br/>
-                  or <br/>
-                  change the relevant #include instances in the source/header files as shown above. </li>
-            </ul>
+            <li></li>
         </ul>
-    </s2>
+    </s3>
 
     <anchor name="API"/>
-    <s2 title="Public API Changes in &XercesCName; &XercesCVersion;">
+    <s3 title="Public API Changes in &XercesCName; &XercesCVersion;">
 
         <p>The following lists the public API changes between the &XercesCName;
-           &XercesCVersion; and the &XercesCName; &XercesCVersion; releases
+           1.7.0; and the &XercesCName; &XercesCVersion; releases
            of the parser. </p>
 
         <anchor name="NewAPI"/>
-        <s3 title="New Public API">
+        <s4 title="New Public API">
             <ul>
-              <li>Added SAX2-ext's DeclHandler class.
-                  See <jump href="api.html">the API documentation page</jump> for details.</li>
-              <li>To support SAX2-ext's DeclHandler, the following new methods are added
-                  in classes DefaultHandler and SAX2XMLReader:</li>
-              <ul>
-                <li>void DefaultHandler::elementDecl(const XMLCh* const name, const XMLCh* const model)</li>
-                <li>void DefaultHandler::attributeDecl(const XMLCh* const eName, const XMLCh* const aName,
-                    const XMLCh* const type, const XMLCh* const mode, const XMLCh* const value)</li>
-                <li>void DefaultHandler::internalEntityDecl(const XMLCh* const name, const XMLCh* const value)</li>
-                <li>void DefaultHandler::externalEntityDecl(const XMLCh* const name, const XMLCh* const publicId,
-                    const XMLCh* const systemId)</li>
-                <li>DeclHandler* SAX2XMLReader::getDeclarationHandler() const</li>
-                <li>void SAX2XMLReader::setDeclarationHandler(DeclHandler* const handler)</li>
-              </ul>
-              <li>To conform to DOM Level 2 specification, the following methods are added:</li>
-              <ul>
-                <li>DOM_Node DOM_NodeIterator::getRoot()</li>
-                <li>DOM_Node DOM_TreeWalker::getRoot()</li>
-                <li>bool DOM_Node::hasAttributes() const</li>
-                <li>bool DOM_Element::hasAttribute(const DOMString &amp;name) const</li>
-                <li>bool DOM_Element::hasAttributeNS(const DOMString &amp;namespaceURI,
-                                const DOMString &amp;localName) const</li>
-                <li>IDOM_Node* IDOM_NodeIterator::getRoot()</li>
-                <li>IDOM_Node* IDOM_TreeWalker::getRoot()</li>
-                <li>bool IDOM_Node::hasAttributes() const</li>
-                <li>bool IDOM_Element::hasAttribute(const XMLCh* name) const</li>
-                <li>bool IDOM_Element::hasAttributeNS(const XMLCh* namespaceURI,
-                                const XMLCh* localName) const</li>
-              </ul>
-              <li>To fix [Bug 5570], a copy constructor is added to DOM_Range</li>
+              <li></li>
             </ul>
-        </s3>
+        </s4>
 
         <anchor name="ModifiedAPI"/>
-        <s3 title="Modified Public API">
+        <s4 title="Modified Public API">
             <ul>
-              <li>To conform to the SAX2 specification, the namespace-prefixes feature
-                  in SAX2 is set to off as default.</li>
-              <li>To fix [Bug 6330], the Base64::encode and Base64::decode have been modified
-                  as follows</li>
-                  <ul>
-                  <li>static XMLByte* Base64::encode(const XMLByte* const inputData,
-                      const unsigned int   inputLength,
-                      unsigned int*        outputLength);</li>
-                  <li>static XMLByte* Base64::decode(const XMLByte* const inputData,
-                           unsigned int*        outputLength);</li>
-                  <li>static XMLCh* decode(const XMLCh* const inputData,
-                         unsigned int*      outputLength);</li>
-                  </ul>
-              <li>To conform to DOM Level 2 specification, the DOM_Node::supports and IDOM_Node::supports
-                  are modified to</li>
-              <ul>
-                <li>bool DOM_Node::isSupported(const DOMString &amp;feature, const DOMString &amp;version) const</li>
-                <li>bool IDOM_Node::isSupported(const XMLCh* feature, const XMLCh* version) const</li>
-              </ul>
+              <li></li>
             </ul>
-        </s3>
+        </s4>
 
         <anchor name="DeprecatedAPI"/>
-        <s3 title="Deprecated Public API">
+        <s4 title="Deprecated Public API">
             <ul>
-              <li>No Deprecated Public API in this release.</li>
+              <li></li>
             </ul>
-        </s3>
+        </s4>
 
+    </s3>
     </s2>
 
     <s2 title="Migration Archive">
 
-       <p>For migration information to &XercesCName; &XercesCVersion160; or earlier,
+       <p>For migration information to &XercesCName; 1.7.0 or earlier,
           please refer to <jump href="migrate_archive.html">Migration Archive. </jump></p>
 
     </s2>

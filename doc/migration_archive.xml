@@ -2,40 +2,154 @@
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Migration Archive">
-    <s2 title="Migrating from &XercesCName; &XercesCVersion152; to &XercesCName; &XercesCVersion160;">
-      <p>The following section is a discussion of the technical differences between
-      &XercesCName; &XercesCVersion152; code base and the &XercesCName; &XercesCVersion160; code base.</p>
-
-      <p>Topics discussed are:</p>
+    <s2 title="Migrating to earlier Releases">
       <ul>
-        <li><link anchor="NewFeatures">New features in &XercesCName; &XercesCVersion160;</link></li>
-        <li><link anchor="API">Public API Changes in &XercesCName; &XercesCVersion160;</link></li>
-        <ul>
-            <li><link anchor="NewAPI">New Public API</link></li>
-            <li><link anchor="ModifiedAPI">Modified Public API</link></li>
-            <li><link anchor="DeprecatedAPI">Deprecated Public API</link></li>
-        </ul>
+        <li><link anchor="Migrateto170">Migrating from &XercesCName; 1.6.0 to 1.7.0</link></li>
+        <li><link anchor="Migrateto160">Migrating from &XercesCName; 1.5.2 to 1.6.0</link></li>
+        <li><link anchor="Migrateto152">Migrating from &XercesCName; 1.4.0 to 1.5.2</link></li>
+        <li><link anchor="Migrateto140">Migrating from XML4C 2.x to 1.4.0</link></li>
       </ul>
     </s2>
 
-    <anchor name="NewFeatures"/>
-    <s2 title="New features in &XercesCName; &XercesCVersion160;">
+    <anchor name="Migrateto170"/>
+    <s2 title="Migrating from &XercesCName; 1.6.0 to 1.7.0">
+      <p>The following section is a discussion of the technical differences between
+      &XercesCName; 1.6.0 code base and the &XercesCName; 1.7.0 code base.</p>
+
+    <s3 title="New features in &XercesCName; 1.7.0">
+      <ul>
+        <li>Support SAX2-ext's DeclHandler.</li>
+        <li>Directory sane_include reorganization: add sub-directory 'xercesc' to src / include folder.
+            See <link anchor="DirChange2">"Directory change in &XercesCName; 1.7.0"</link>
+            below for detail.</li>
+        <li>More IDOM test cases - port IDOMMemTest, and merge ThreadTest and IThreadTest.</li>
+        <li>Support IconvFBSD in multi-threading environment.</li>
+        <li>Use IDOM in schema processing for faster performance.</li>
+        <li>Add Project files for BCB6.</li>
+        <li>Port to Caldera (SCO) OpenServer.</li>
+        <li>Support building with new MacOSURLAccessCF NetAccessor that doesn't require
+            Carbon but can allow Xerces to live solely within CoreServices layer.</li>
+      </ul>
+    </s3>
+
+    <anchor name="DirChange2"/>
+    <s3 title="Directory change in &XercesCName; 1.7.0">
+        <ul>
+            <li>A new directory, <em>src/xercesc</em> is created to be the new parent directory of
+                all src's direct subdirectories.</li>
+            <li>And in the binary package, all the headers are distributed in <em>include/xercesc</em> directory.</li>
+            <li>Migration considerations:</li>
+            <ul>
+              <li>Windows application, <br/>
+                  either change the <em>include directories </em> setting to
+                  "..\..\..\..\..\src\<em>xercesc</em>" (Projects->settings->C/C++->Preprocessor), <br/>
+                  or <br/>
+                  change the relevant #include instances in the source/header files, accordingly, eg <br/>
+                  #include &lt;util/XMLString.hpp&gt; be changed to <br/>
+                  #include &lt;<em>xercesc</em>/util/XMLString.hpp&gt; </li>
+              <li>Unix application, <br/>
+                  either change the <em>include search path </em> in the Makefile to
+                  " -I &lt;installroot&gt;/include/<em>xercesc</em>", <br/>
+                  or <br/>
+                  change the relevant #include instances in the source/header files as shown above. </li>
+            </ul>
+        </ul>
+    </s3>
+
+    <s3 title="Public API Changes in &XercesCName; 1.7.0">
+
+        <p>The following lists the public API changes between the &XercesCName;
+           1.7.0 and the &XercesCName; 1.7.0 releases
+           of the parser. </p>
+
+        <s4 title="New Public API">
+            <ul>
+              <li>Added SAX2-ext's DeclHandler class.
+                  See <jump href="api.html">the API documentation page</jump> for details.</li>
+              <li>To support SAX2-ext's DeclHandler, the following new methods are added
+                  in classes DefaultHandler and SAX2XMLReader:</li>
+              <ul>
+                <li>void DefaultHandler::elementDecl(const XMLCh* const name, const XMLCh* const model)</li>
+                <li>void DefaultHandler::attributeDecl(const XMLCh* const eName, const XMLCh* const aName,
+                    const XMLCh* const type, const XMLCh* const mode, const XMLCh* const value)</li>
+                <li>void DefaultHandler::internalEntityDecl(const XMLCh* const name, const XMLCh* const value)</li>
+                <li>void DefaultHandler::externalEntityDecl(const XMLCh* const name, const XMLCh* const publicId,
+                    const XMLCh* const systemId)</li>
+                <li>DeclHandler* SAX2XMLReader::getDeclarationHandler() const</li>
+                <li>void SAX2XMLReader::setDeclarationHandler(DeclHandler* const handler)</li>
+              </ul>
+              <li>To conform to DOM Level 2 specification, the following methods are added:</li>
+              <ul>
+                <li>DOM_Node DOM_NodeIterator::getRoot()</li>
+                <li>DOM_Node DOM_TreeWalker::getRoot()</li>
+                <li>bool DOM_Node::hasAttributes() const</li>
+                <li>bool DOM_Element::hasAttribute(const DOMString &amp;name) const</li>
+                <li>bool DOM_Element::hasAttributeNS(const DOMString &amp;namespaceURI,
+                                const DOMString &amp;localName) const</li>
+                <li>IDOM_Node* IDOM_NodeIterator::getRoot()</li>
+                <li>IDOM_Node* IDOM_TreeWalker::getRoot()</li>
+                <li>bool IDOM_Node::hasAttributes() const</li>
+                <li>bool IDOM_Element::hasAttribute(const XMLCh* name) const</li>
+                <li>bool IDOM_Element::hasAttributeNS(const XMLCh* namespaceURI,
+                                const XMLCh* localName) const</li>
+              </ul>
+              <li>To fix [Bug 5570], a copy constructor is added to DOM_Range</li>
+            </ul>
+        </s4>
+
+        <s4 title="Modified Public API">
+            <ul>
+              <li>To conform to the SAX2 specification, the namespace-prefixes feature
+                  in SAX2 is set to off as default.</li>
+              <li>To fix [Bug 6330], the Base64::encode and Base64::decode have been modified
+                  as follows</li>
+                  <ul>
+                  <li>static XMLByte* Base64::encode(const XMLByte* const inputData,
+                      const unsigned int   inputLength,
+                      unsigned int*        outputLength);</li>
+                  <li>static XMLByte* Base64::decode(const XMLByte* const inputData,
+                           unsigned int*        outputLength);</li>
+                  <li>static XMLCh* decode(const XMLCh* const inputData,
+                         unsigned int*      outputLength);</li>
+                  </ul>
+              <li>To conform to DOM Level 2 specification, the DOM_Node::supports and IDOM_Node::supports
+                  are modified to</li>
+              <ul>
+                <li>bool DOM_Node::isSupported(const DOMString &amp;feature, const DOMString &amp;version) const</li>
+                <li>bool IDOM_Node::isSupported(const XMLCh* feature, const XMLCh* version) const</li>
+              </ul>
+            </ul>
+        </s4>
+
+        <s4 title="Deprecated Public API">
+            <ul>
+              <li>No Deprecated Public API in this release.</li>
+            </ul>
+        </s4>
+
+    </s3>
+    </s2>
+
+    <anchor name="Migrateto160"/>
+    <s2 title="Migrating from &XercesCName; 1.5.2 to 1.6.0">
+      <p>The following section is a discussion of the technical differences between
+      &XercesCName; 1.5.2 code base and the &XercesCName; 1.6.0 code base.</p>
+
+    <s3 title="New features in &XercesCName; 1.6.0">
       <ul>
         <li>Full Schema support is available in this release.
             See <jump href="schema.html">the Schema page</jump> for details.</li>
         <li>New sample SEnumVal to show how to enumerate the markup decls in a Schema Grammar is added.</li>
       </ul>
-    </s2>
+    </s3>
 
-    <anchor name="API"/>
-    <s2 title="Public API Changes in &XercesCName; &XercesCVersion160;">
+    <s3 title="Public API Changes in &XercesCName; 1.6.0">
 
         <p>The following lists the public API changes between the &XercesCName;
-           &XercesCVersion152; and the &XercesCName; &XercesCVersion160; releases
+           1.5.2 and the &XercesCName; 1.6.0 releases
            of the parser. </p>
 
-        <anchor name="NewAPI"/>
-        <s3 title="New Public API">
+        <s4 title="New Public API">
             <ul>
               <li>It should not be a fatal error if a schema InputSource is not found.
                   Add the following new methods:</li>
@@ -76,126 +190,33 @@
                 <li>QName* XMLAttr::getAttName() const</li>
               </ul>
             </ul>
-        </s3>
+        </s4>
 
-        <anchor name="ModifiedAPI"/>
-        <s3 title="Modified Public API">
+        <s4 title="Modified Public API">
             <ul>
               <li>To support attribute constraint checking, the constant values in XMLAttDef::DefAttTypes have been re-ordered.</li>
             </ul>
-        </s3>
+        </s4>
 
-        <anchor name="DeprecatedAPI"/>
-        <s3 title="Deprecated Public API">
+        <s4 title="Deprecated Public API">
             <ul>
               <li>Root Element check is moved from XMLValidator to XMLScanner.  Thus XMLValidator::checkRootElement() is deprecated.</li>
             </ul>
-        </s3>
+        </s4>
 
+    </s3>
     </s2>
 
-    <s2 title="Migrating from &XercesCName; &XercesCVersion140; to &XercesCName; &XercesCVersion152;">
+    <anchor name="Migrateto152"/>
+    <s2 title="Migrating from &XercesCName; 1.4.0 to 1.5.2">
       <p>The following section is a discussion of the technical differences between
-      &XercesCName; &XercesCVersion140; code base and the &XercesCName; &XercesCVersion152; code base.</p>
+      &XercesCName; 1.4.0 code base and the &XercesCName; 1.5.2 code base.</p>
 
-      <p>Topics discussed are:</p>
-      <ul>
-        <li><link anchor="GenImprovements2">General Improvements</link></li>
-        <ul>
-            <li><link anchor="Compliance2">Compliance</link></li>
-            <li><link anchor="BugFixes2">Bug Fixes</link></li>
-            <li><link anchor="Speed2">Speed</link></li>
-        </ul>
-        <li><link anchor="Changes2">Changes required to migrate to &XercesCName; &XercesCVersion152;</link></li>
-        <ul>
-            <li><link anchor="Reorganization2">Validator directory Reorganization</link></li>
-            <li><link anchor="DTDValidator2">DTDValidator</link></li>
-        </ul>
-        <li><link anchor="NewFeatures2">New features in &XercesCName; &XercesCVersion152;</link></li>
-        <ul>
-            <li><link anchor="Schema2">Schema Subset Support</link></li>
-            <li><link anchor="IDOM2">Experimental IDOM</link></li>
-        </ul>
-      </ul>
-    </s2>
-
-    <anchor name="GenImprovements2"/>
-    <s2 title="General Improvements">
-
-        <p>The new version is improved in many ways. Some general improvements
-        are: significantly better conformance to the XML spec, cleaner
-        internal architecture, many bug fixes, and faster speed.</p>
-
-        <anchor name="Compliance2"/>
-        <s3 title="Compliance">
-            <p>Except for a couple of the very obscure (mostly related to
-            the 'standalone' mode), this version should be quite compliant
-            to <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump>. It also
-            tracks the latest changes to DOM, SAX and Namespace Specification.
-            We have more than a thousand tests, some collected from various
-            public sources and some IBM generated, which are used to do
-            regression testing. The C++ parser is now passing all but a
-            handful of them.</p>
-        </s3>
-
-        <anchor name="BugFixes2"/>
-        <s3 title="Bug Fixes">
-            <p>This version has many bug fixes since last release.
-            Some of these were reported by users and some were brought up by
-            way of the conformance testing.</p>
-        </s3>
-
-        <anchor name="Speed2"/>
-        <s3 title="Speed">
-            <p>Much work was done to speed up this version. Some of the
-            new features, such as experimental IDOM ended
-            up eating up some of these gains, but overall the new version
-            is significantly faster than previous versions, even while doing
-            more.</p>
-        </s3>
-    </s2>
-
-
-    <anchor name="Changes2"/>
-    <s2 title="Changes required to migrate to &XercesCName; &XercesCVersion152;">
-
-        <p>There are some architectural changes between the &XercesCName;
-           &XercesCVersion140; and the &XercesCName; &XercesCVersion152; releases
-           of the parser, and as a result, some code has undergone restructuring
-           as shown below. </p>
-
-        <anchor name="Reorganization2"/>
-        <s3 title="Validator directory Reorganization">
-            <ul>
-              <li>common content model files such as DFAContentModel ...
-                  are moved to a new directory called src/validators/common</li>
-              <li>DTD related files are moved to a new directory called src/validators/DTD</li>
-              <li>new directory src/validators/Datatype is created to store all datatype validators</li>
-              <li>new directory src/validators/schema is created to store Schema related files</li>
-            </ul>
-        </s3>
-
-        <anchor name="DTDValidator2"/>
-        <s3 title="DTDValidator">
-            <p> DTDValidator was design to scan, validate and store the DTD in &XercesCName; &XercesCVersion140;
-                or earlier. In &XercesCName; &XercesCVersion152;, this process is broken down into three components:
-            </p>
-            <ul>
-              <li>new class DTDScanner - to scan the DTD</li>
-              <li>new class DTDGrammar - to store the DTD Grammar</li>
-              <li>DTDValidator - to validate the DTD only</li>
-            </ul>
-        </s3>
-
-    </s2>
-
-    <anchor name="NewFeatures2"/>
-    <s2 title="New features in &XercesCName; &XercesCVersion152;">
+    <s3 title="New features in &XercesCName; 1.5.2">
         <p>Schema subset support and an experimental IDOM are available
            in this release.
         </p>
-        <anchor name="Schema2"/>
-        <s3 title="Schema Subset Support">
+        <s4 title="Schema Subset Support">
             <ul>
               <li>New function "setDoSchema" is added to DOM/SAX parser.</li>
               <li>New feature "http://apache.org/xml/features/validation/schema" is recognized by SAX2XMLReader.</li>
@@ -207,95 +228,64 @@
             <p>
                See <jump href="schema.html">the Schema page</jump> for details.
             </p>
-        </s3>
+        </s4>
 
-        <anchor name="IDOM2"/>
-        <s3 title="Experimental IDOM">
+        <s4 title="Experimental IDOM">
            <p>The experimental IDOM API is a new design of the C++ DOM API. If you would like
               to migrate from DOM to the experimental IDOM, please refer to
               <jump href="program-idom.html">
               IDOM programming guide.</jump> Please note that this experimental IDOM API is only
               a prototype and is subject to change.
            </p>
-        </s3>
+        </s4>
 
+    </s3>
+
+    <s3 title="Changes required to migrate to &XercesCName; 1.5.2">
+
+        <p>There are some architectural changes between the &XercesCName;
+           1.4.0 and the &XercesCName; 1.5.2 releases
+           of the parser, and as a result, some code has undergone restructuring
+           as shown below. </p>
+
+        <s4 title="Validator directory Reorganization">
+            <ul>
+              <li>common content model files such as DFAContentModel ...
+                  are moved to a new directory called src/validators/common</li>
+              <li>DTD related files are moved to a new directory called src/validators/DTD</li>
+              <li>new directory src/validators/Datatype is created to store all datatype validators</li>
+              <li>new directory src/validators/schema is created to store Schema related files</li>
+            </ul>
+        </s4>
+
+        <s4 title="DTDValidator">
+            <p> DTDValidator was design to scan, validate and store the DTD in &XercesCName; 1.4.0
+                or earlier. In &XercesCName; 1.5.2, this process is broken down into three components:
+            </p>
+            <ul>
+              <li>new class DTDScanner - to scan the DTD</li>
+              <li>new class DTDGrammar - to store the DTD Grammar</li>
+              <li>DTDValidator - to validate the DTD only</li>
+            </ul>
+        </s4>
+
+    </s3>
     </s2>
 
-    <s2 title="Migrating from XML4C 2.x to &XercesCName; &XercesCVersion140;">
+    <anchor name="Migrateto140"/>
+    <s2 title="Migrating from XML4C 2.x to &XercesCName; 1.4.0">
        <p>The following section is a discussion of the technical differences between
-       XML4C 2.x code base and the new &XercesCName; &XercesCVersion140; code base.</p>
+       XML4C 2.x code base and the new &XercesCName; 1.4.0 code base.</p>
 
-       <p>Topics discussed are:</p>
-       <ul>
-        <li><link anchor="GenImprovements">General Improvements</link></li>
-        <ul>
-            <li><link anchor="Compliance">Compliance</link></li>
-            <li><link anchor="BugFixes">Bug Fixes</link></li>
-            <li><link anchor="Speed">Speed</link></li>
-        </ul>
-        <li><link anchor="Summary">Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesCVersion140;</link></li>
-        <li><link anchor="Samples">The Samples</link></li>
-        <li><link anchor="ParserClasses">Parser Classes</link></li>
-        <li><link anchor="DOMLevel2">DOM Level 2 support</link></li>
-        <li><link anchor="Progressive">Progressive Parsing</link></li>
-        <li><link anchor="Namespace">Namespace support</link></li>
-        <li><link anchor="MovedToSrcFramework">Moved Classes to src/framework</link></li>
-        <li><link anchor="LoadableMessageText">Loadable Message Text</link></li>
-        <li><link anchor="PluggableValidators">Pluggable Validators</link></li>
-        <li><link anchor="PluggableTranscoders">Pluggable Transcoders</link></li>
-        <li><link anchor="UtilReorg">Util directory Reorganization</link></li>
-        <ul>
-            <li><link anchor="UtilPlatform">util - The platform independent utility stuff</link></li>
-        </ul>
-       </ul>
-    </s2>
+    <s3 title="Summary of changes required to migrate from XML4C 2.x to &XercesCName; 1.4.0">
 
-
-    <anchor name="GenImprovements"/>
-    <s2 title="General Improvements">
-
-        <p>The new version is improved in many ways. Some general improvements
-        are: significantly better conformance to the XML spec, cleaner
-        internal architecture, many bug fixes, and faster speed.</p>
-
-        <anchor name="Compliance"/>
-        <s3 title="Compliance">
-            <p>Except for a couple of the very obscure (mostly related to
-            the 'standalone' mode), this version should be quite compliant.
-            We have more than a thousand tests, some collected from various
-            public sources and some IBM generated, which are used to do
-            regression testing. The C++ parser is now passing all but a
-            handful of them.</p>
-        </s3>
-
-        <anchor name="BugFixes"/>
-        <s3 title="Bug Fixes">
-            <p>This version has many bug fixes with regard to XML4C version 2.x.
-            Some of these were reported by users and some were brought up by
-            way of the conformance testing.</p>
-        </s3>
-
-        <anchor name="Speed"/>
-        <s3 title="Speed">
-            <p>Much work was done to speed up this version. Some of the
-            new features, such as namespaces, and conformance checks ended
-            up eating up some of these gains, but overall the new version
-            is significantly faster than previous versions, even while doing
-            more.</p>
-        </s3>
-    </s2>
-
-
-    <anchor name="Summary"/>
-    <s2 title="Summary of changes required to migrate from XML4C 2.x to &XercesCName; &XercesCVersion140;">
-
-        <p>As mentioned, there are some major architectural changes
-        between the 2.3.x and &XercesCName; &XercesCVersion140; releases
+        <p>There are some major architectural changes
+        between the 2.3.x and &XercesCName; 1.4.0 releases
         of the parser, and as a result the code has undergone
         significant restructuring. The list below mentions the public
         api's which existed in 2.3.x and no longer exist in
-        &XercesCName; &XercesCVersion140;. It also mentions the
-        &XercesCName; &XercesCVersion140; api which will give you the
+        &XercesCName; 1.4.0. It also mentions the
+        &XercesCName; 1.4.0 api which will give you the
         same functionality.  Note: This list is not exhaustive. The
         API docs (and ultimately the header files) supplement this
         information.</p>
@@ -376,12 +366,11 @@
             </ul>
         </ul>
 
-    </s2>
+    </s3>
 
 
 
-    <anchor name="Samples"/>
-    <s2 title="The Samples">
+    <s3 title="The Samples">
 
         <p>The sample programs no longer use any of the unsupported
         util/xxx classes. They only existed to allow us to write
@@ -403,11 +392,10 @@
            <li>StdInParse - Demonstrates use of the standard in input source</li>
            <li>EnumVal - Shows how to enumerate the markup decls in a DTD Validator</li>
         </ol>
-    </s2>
+    </s3>
 
 
-    <anchor name="ParserClasses"/>
-    <s2 title="Parser Classes">
+    <s3 title="Parser Classes">
 
         <p>In the XML4C 2.x code base, there were the following parser
         classes (in the src/parsers/ source directory):
@@ -453,122 +441,10 @@
         cleaned up for you automatically upon exit since you don't have to
         allocate it anymore.</p>
 
-    </s2>
+    </s3>
 
 
-    <anchor name="DOMLevel2"/>
-    <s2 title="DOM Level 2 support">
-
-        <p>Experimental early support for some parts of the DOM level
-        2 specification have been added. These address some of the
-        shortcomings in our DOM implementation,
-        such as a simple, standard mechanism for tree traversal.</p>
-
-    </s2>
-
-
-    <anchor name="Progressive"/>
-    <s2 title="Progressive Parsing">
-
-        <p>The new parser classes support, in addition to the
-        <ref>parse()</ref> method, two new parsing methods,
-        <ref>parseFirst()</ref> and <ref>parseNext()</ref>.  These are
-        designed to support 'progressive parsing', so that you don't
-        have to depend upon throwing an exception to terminate the
-        parsing operation. Calling parseFirst() will cause the DTD (or
-        in the future, Schema) to be parsed (both internal and
-        external subsets) and any pre-content, i.e. everything up to
-        but not including the root element. Subsequent calls to
-        parseNext() will cause one more pieces of markup to be parsed,
-        and spit out from the core scanning code to the parser (and
-        hence either on to you if using SAX or into the DOM tree if
-        using DOM.) You can quit the parse any time by just not
-        calling parseNext() anymore and breaking out of the loop. When
-        you call parseNext() and the end of the root element is the
-        next piece of markup, the parser will continue on to the end
-        of the file and return false, to let you know that the parse
-        is done. So a typical progressive parse loop will look like
-        this:</p>
-
-<source>// Create a progressive scan token
-XMLPScanToken token;
-
-if (!parser.parseFirst(xmlFile, token))
-{
-  cerr &lt;&lt; "scanFirst() failed\n" &lt;&lt; endl;
-  return 1;
-}
-
-//
-// We started ok, so lets call scanNext()
-// until we find what we want or hit the end.
-//
-bool gotMore = true;
-while (gotMore &amp;&amp; !handler.getDone())
-  gotMore = parser.parseNext(token);</source>
-
-        <p>In this case, our event handler object (named 'handler'
-        surprisingly enough) is watching form some criteria and will
-        return a status from its getDone() method. Since the handler
-        sees the SAX events coming out of the SAXParser, it can tell
-        when it finds what it wants. So we loop until we get no more
-        data or our handler indicates that it saw what it wanted to
-        see.</p>
-
-        <p>When doing non-progressive parses, the parser can easily
-        know when the parse is complete and insure that any used
-        resources are cleaned up. Even in the case of a fatal parsing
-        error, it can clean up all per-parse resources. However, when
-        progressive parsing is done, the client code doing the parse
-        loop might choose to stop the parse before the end of the
-        primary file is reached. In such cases, the parser will not
-        know that the parse has ended, so any resources will not be
-        reclaimed until the parser is destroyed or another parse is started.</p>
-
-        <p>This might not seem like such a bad thing; however, in this case,
-        the files and sockets which were opened in order to parse the
-        referenced XML entities will remain open. This could cause
-        serious problems. Therefore, you should destroy the parser instance
-        in such cases, or restart another parse immediately. In a future
-        release, a reset method will be provided to do this more cleanly.</p>
-
-        <p>Also note that you must create a scan token and pass it
-        back in on each call. This insures that things don't get done
-        out of sequence. When you call parseFirst() or parse(), any
-        previous scan tokens are invalidated and will cause an error
-        if used again. This prevents incorrect mixed use of the two
-        different parsing schemes or incorrect calls to
-        parseNext().</p>
-
-    </s2>
-
-
-    <anchor name="Namespace"/>
-    <s2 title="Namespace support">
-
-        <p>The C++ parser now supports namespaces. With current XML
-        interfaces (SAX/DOM) this doesn't mean very much because these
-        APIs are incapable of passing on the namespace information.
-        However, if you are using our internal APIs to write your own
-        parsers, you can make use of this new information. Since the
-        internal event APIs must be able to now support both namespace
-        and non-namespace information, they have more
-        parameters. These allow namespace information to be passed
-        along.</p>
-
-        <p>Most of the samples now have a new command line parameter
-        to turn on namespace support. You turn on namespaces like
-        this:</p>
-
-<source>SAXParser myParser;
-// Tell it whether to do namespace
-myParser.setDoNamespaces(true);</source>
-    </s2>
-
-
-
-    <anchor name="MovedToSrcFramework"/>
-    <s2 title="Moved Classes to src/framework">
+    <s3 title="Moved Classes to src/framework">
 
         <p>Some of the classes previously in the src/internal/
         directory have been moved to their more correct location in
@@ -584,111 +460,16 @@ myParser.setDoNamespaces(true);</source>
         to rename some of the names of the classes, if you used any of
         the ones whose names were changed.</p>
 
-    </s2>
+    </s3>
 
-
-    <anchor name="LoadableMessageText"/>
-    <s2 title="Loadable Message Text">
-
-        <p>The system now supports loadable message text, instead of
-        having it hard coded into the program. The current drop still
-        just supports English, but it can now support other
-        languages. Anyone interested in contributing any translations
-        should contact us. This would be an extremely useful
-        service.</p>
-
-        <p>In order to support the local message loading services, we
-        have created a pretty flexible framework for supporting
-        loadable text. Firstly, there is now an XML file, in the
-        src/NLS/ directory, which contains all of the error messages.
-        There is a simple program, in the Tools/NLSXlat/ directory,
-        which can spit out that text in various formats. It currently
-        supports a simple 'in memory' format (i.e. an array of
-        strings), the Win32 resource format, and the message catalog
-        format.  The 'in memory' format is intended for very simple
-        installations or for use when porting to a new platform (since
-        you can use it until you can get your own local message
-        loading support done.)</p>
-
-        <p>In the src/util/ directory, there is now an XMLMsgLoader
-        class.  This is an abstraction from which any number of
-        message loading services can be derived. Your platform driver
-        file can create whichever type of message loader it wants to
-        use on that platform.  We currently have versions for the in
-        memory format, the Win32 resource format, and the message
-        catalog format. An ICU one is present but not implemented
-        yet. Some of the platforms can support multiple message
-        loaders, in which case a #define token is used to control
-        which one is used. You can set this in your build projects to
-        control the message loader type used.</p>
-
-        <p>Both the Java and C++ parsers emit the same messages for an XML error
-        since they are being taken from the same message file.</p>
-
-    </s2>
-
-
-    <anchor name="PluggableValidators"/>
-    <s2 title="Pluggable Validators">
-
-        <p>In a preliminary move to support Schemas, and to make them
-        first class citizens just like DTDs, the system has been
-        reworked internally to make validators completely pluggable.
-        So now the DTD validator code is under the src/validators/DTD/
-        directory, with a future Schema validator probably going into
-        the src/validators. The core scanner architecture now works
-        completely in terms of the framework/XMLValidator abstract
-        interface and knows almost nothing about DTDs or Schemas. For
-        now, if you don't pass in a validator to the parsers, they
-        will just create a DTDValidator. This means that,
-        theoretically, you could write your own validator. But we
-        would not encourage this for a while, until the semantics of
-        the XMLValidator interface are completely worked out and
-        proven to handle DTD and Schema cleanly.</p>
-
-    </s2>
-
-
-    <anchor name="PluggableTranscoders"/>
-    <s2 title="Pluggable Transcoders">
-
-        <p>Another abstract framework added in the src/util/ directory
-        is to support pluggable transcoding services. The
-        XMLTransService class is an abstract API that can be derived
-        from, to support any desired transcoding
-        service. XMLTranscoder is the abstract API for a particular
-        instance of a transcoder for a particular encoding. The
-        platform driver file decides what specific type of transcoder
-        to use, which allows each platform to use its native
-        transcoding services, or the ICU service if desired.</p>
-
-        <p>Implementations are provided for Win32 native services, ICU
-        services, and the <ref>iconv</ref> services available on many
-        Unix platforms. The Win32 version only provides native code
-        page services, so it can only handle XML code in the intrinsic
-        encodings ASCII, UTF-8, UTF-16 (Big/Small Endian), UCS4
-        (Big/Small Endian), EBCDIC code pages IBM037 and
-        IBM1140 encodings, ISO-8859-1 (aka Latin1) and Windows-1252. The ICU version
-        provides all of the encodings that ICU supports. The
-        <ref>iconv</ref> version will support the encodings supported
-        by the local system. You can use transcoders we provide or
-        create your own if you feel ours are insufficient in some way,
-        or if your platform requires an implementation that we do not
-        provide.</p>
-
-    </s2>
-
-
-    <anchor name="UtilReorg"/>
-    <s2 title="Util directory Reorganization">
+    <s3 title="Util directory Reorganization">
 
         <p>The src/util directory was becoming somewhat of a dumping
         ground of platform and compiler stuff. So we reworked that
         directory to better spread things out. The new scheme is:
         </p>
 
-        <anchor name="UtilPlatform"/>
-        <s3 title="util - The platform independent utility stuff">
+        <s4 title="util - The platform independent utility stuff">
             <ul>
                 <li>MsgLoaders - Holds the msg loader implementations</li>
                 <ol>
@@ -714,7 +495,7 @@ myParser.setDoNamespaces(true);</source>
                     <li>Win32</li>
                 </ol>
             </ul>
-        </s3>
+        </s4>
 
         <p>This organization makes things much easier to understand.
         And it makes it easier to find which files you need and which
@@ -725,6 +506,7 @@ myParser.setDoNamespaces(true);</source>
         ICU headers. The rest of the system works only in terms of the
         abstraction APIs.</p>
 
+    </s3>
     </s2>
 
 </s1>

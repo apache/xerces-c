@@ -25,7 +25,7 @@ PROJECT_NAME         = Xerces-C++
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER       = v1.7.0
+PROJECT_NUMBER       = v2.0.0
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute)
 # base path where the generated documentation will be put.
@@ -205,7 +205,7 @@ ENABLED_SECTIONS     =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                = ../src/xercesc/dom ../src/xercesc/idom ../src/xercesc/framework ../src/xercesc/sax ../src/xercesc/parsers ../src/xercesc/util ../src/xercesc/sax2
+INPUT                = ../src/xercesc/dom ../src/xercesc/framework ../src/xercesc/sax ../src/xercesc/parsers ../src/xercesc/util ../src/xercesc/sax2
 
 # If the value of the INPUT tag contains directories, you can use the
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp
@@ -230,13 +230,16 @@ EXCLUDE              =
 # EXCLUDE_PATTERNS tag to specify one or more wildcard patterns to exclude
 # certain files from those directories.
 
-EXCLUDE_PATTERNS     = *Impl.hpp Janitor.hpp BitOps.hpp BitSet.hpp ChildNode.hpp \
-CountedPointer.hpp DomMemDebug.hpp MemDebug.hpp DStringPool.hpp TransENameMap.hpp \
-IDCasts.hpp IDChildNode.hpp IDDeepNodeListPool.hpp IDDOMImplementation.hpp \
-IDNodeIDMap.hpp IDNodeVector.hpp IDParentNode.hpp IDStringPool.hpp \
+EXCLUDE_PATTERNS     = *Impl.hpp DOM_*.hpp DOMParser.hpp \
+ChildNode.hpp DOM.hpp DomMemDebug.hpp MemDebug.hpp DStringPool.hpp \
+NodeIDMap.hpp NameNodeFilter.hpp NodeVector.hpp DOMString.hpp ParentNode.hpp \
+DOMCasts.hpp DOMChildNode.hpp DOMDeepNodeListPool.hpp \
+DOMNodeIDMap.hpp DOMNodeVector.hpp DOMParentNode.hpp DOMStringPool.hpp \
+NameIdPool.hpp KVStringPair.hpp Janitor.hpp BitOps.hpp BitSet.hpp \
+CountedPointer.hpp  TransENameMap.hpp \
 FlagJanitor.hpp HashBase.hpp HashPtr.hpp HashXMLCh.hpp KeyValuePair.hpp \
 KVStringPair.hpp NameIdPool.hpp NodeIDMap.hpp NameNodeFilter.hpp NodeVector.hpp \
-NodeImpl.hpp CommonParentNode.hpp RefArrayOf.hpp RefHash*.hpp RefStackOf.hpp \
+RefArrayOf.hpp RefHash*.hpp RefStackOf.hpp \
 RefVectorOf.hpp ValueArrayOf.hpp ValueStackOf.hpp ValueVectorOf.hpp \
 XML256TableTranscoder.hpp XML88591Transcoder.hpp XMLASCIITranscoder.hpp \
 XMLBufferMgr.hpp XMLBuffer.hpp XMLChTranscoder.hpp XMLEBCDICTranscoder.hpp \
