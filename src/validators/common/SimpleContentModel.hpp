@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/10/03 15:08:45  tng
+ * typo fix: remove the extra space which may confuse some compilers while constructing the qname.
+ *
  * Revision 1.10  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -233,12 +236,12 @@ SimpleContentModel::SimpleContentModel( const bool                        dtd
     if (firstChild)
         fFirstChild = new QName(firstChild);
     else
-        fFirstChild = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+        fFirstChild = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 
     if (secondChild)
         fSecondChild = new QName(secondChild);
     else
-        fSecondChild = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+        fSecondChild = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
 
 inline SimpleContentModel::~SimpleContentModel()

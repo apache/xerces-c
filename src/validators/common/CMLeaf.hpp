@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/10/03 15:08:45  tng
+ * typo fix: remove the extra space which may confuse some compilers while constructing the qname.
+ *
  * Revision 1.4  2001/05/11 13:27:16  tng
  * Copyright update.
  *
@@ -176,7 +179,7 @@ inline CMLeaf::CMLeaf(    QName* const          element
     , fPosition(position)
 {
     if (!element)
-        fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+        fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
     else
         fElement = new QName(element);
 }
