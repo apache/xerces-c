@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2005/03/17 11:07:04  gareth
+ * Updated doc to refect real behaviour with adoptBuffer.
+ *
  * Revision 1.9  2004/09/28 02:14:13  cargilld
  * Add support for validating annotations.
  *
@@ -135,7 +138,8 @@ public :
       *                         in the buffer.
       * @param  bufId           A fake system id for the buffer.
       * @param  adoptBuffer     Indicates whether this object should adopt
-      *                         the buffer (i.e. make a copy of it) or just
+      *                         the buffer (i.e. become responsible for 
+      * deletion) or just
       *                         use it in place.
       * @param  manager         Pointer to the memory manager to be used to
       *                         allocate objects.
