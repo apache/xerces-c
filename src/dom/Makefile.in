@@ -97,6 +97,8 @@ DOM_CPP_PUBHEADERS = \
 	DOM_NodeList.hpp \
 	DOM_Notation.hpp \
 	DOM_ProcessingInstruction.hpp \
+	DOM_Range.hpp \
+	DOM_RangeException.hpp \
 	DOM_Text.hpp \
 	DOM_TreeWalker.hpp \
 	DOM_XMLDecl.hpp
@@ -131,6 +133,7 @@ DOM_CPP_PRIVHEADERS =  \
 	NotationImpl.hpp \
 	ParentNode.hpp \
 	ProcessingInstructionImpl.hpp \
+	RangeImpl.hpp \
 	RefCountedImpl.hpp \
 	TextImpl.hpp \
 	TreeWalkerImpl.hpp \
@@ -169,6 +172,8 @@ DOM_CPP_OBJECTS = \
 	DOM_TreeWalker.$(TO) \
 	DOM_Notation.$(TO) \
 	DOM_ProcessingInstruction.$(TO) \
+	DOM_Range.$(TO) \
+	DOM_RangeException.$(TO) \
 	DOM_Text.$(TO) \
 	DOM_XMLDecl.$(TO) \
 	DStringPool.$(TO) \
@@ -191,6 +196,7 @@ DOM_CPP_OBJECTS = \
 	NotationImpl.$(TO) \
 	ParentNode.$(TO) \
 	ProcessingInstructionImpl.$(TO) \
+	RangeImpl.$(TO) \
 	RefCountedImpl.$(TO) \
 	TextImpl.$(TO) \
 	TreeWalkerImpl.$(TO) \

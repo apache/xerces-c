@@ -1064,6 +1064,22 @@ SOURCE=..\..\..\..\..\src\dom\DOM_ProcessingInstruction.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\dom\DOM_Range.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\DOM_Range.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\DOM_RangeException.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\DOM_RangeException.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\dom\DOM_Text.cpp
 # End Source File
 # Begin Source File
@@ -1233,6 +1249,14 @@ SOURCE=..\..\..\..\..\src\dom\ProcessingInstructionImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\dom\ProcessingInstructionImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\RangeImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\RangeImpl.hpp
 # End Source File
 # Begin Source File
 

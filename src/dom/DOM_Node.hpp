@@ -55,42 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2000/04/25 20:29:33  aruna1
- * DOM_XMLDecl type node introduced to get the information of the
- * XML Declaration in a document and store it part of the tree
- *
- * Revision 1.8  2000/04/19 02:26:16  aruna1
- * Full support for DOM_EntityReference, DOM_Entity and DOM_DocumentType introduced
- *
- * Revision 1.7  2000/03/11 02:17:19  chchou
- * Fix bug # 29 to have the spefified flag set correctly for AttrImpl.
- *
- * Revision 1.6  2000/03/02 19:53:56  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/24 20:11:28  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.4  2000/02/17 17:47:25  andyh
- * Update Doc++ API comments
- * NameSpace update to track W3C
- * Changes were made by Chih Hsiang Chou
- *
- * Revision 1.3  2000/02/06 07:47:30  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  2000/01/05 01:16:07  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:59  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:44:19  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 #ifndef DOM_Node_HEADER_GUARD_
@@ -661,6 +626,7 @@ protected:
     friend class DOM_NodeList;
     friend class DOMParser;
     friend class DOM_Entity;
+    friend class RangeImpl;
 
 };
 

@@ -55,43 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.9  2000/05/09 00:22:31  andyh
- * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
- * allocated memory; memory leak checking tools will no longer report
- * that leaks exist.  (DOM GetElementsByTagID temporarily removed
- * as part of this.)
- *
- * Revision 1.8  2000/04/25 20:29:33  aruna1
- * DOM_XMLDecl type node introduced to get the information of the
- * XML Declaration in a document and store it part of the tree
- *
- * Revision 1.7  2000/03/24 21:26:32  abagchi
- * Added getElementById() from patch submitted by Jeff Lewis
- *
- * Revision 1.6  2000/03/02 19:53:55  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.5  2000/02/06 07:47:28  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.4  2000/02/04 01:49:29  aruna1
- * TreeWalker and NodeIterator changes
- *
- * Revision 1.3  2000/01/05 01:16:07  andyh
- * DOM Level 2 core, namespace support added.
- *
- * Revision 1.2  1999/11/23 01:48:14  rahulj
- * Changed 0L to 0. CC under HPUX is happy now.
- *
- * Revision 1.1.1.1  1999/11/09 01:08:50  twl
- * Initial checkin
- *
- * Revision 1.4  1999/11/08 20:44:15  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -282,4 +246,10 @@ DOM_XMLDecl DOM_Document::createXMLDecl(const DOMString& version, const DOMStrin
 {
     return DOM_XMLDecl( ((DocumentImpl *)fImpl)->createXMLDecl(version, encoding, standalone));
 }
+
+DOM_Range    DOM_Document::createRange() 
+{
+    return DOM_Range( ((DocumentImpl *)fImpl)->createRange() );
+}
+
 

@@ -270,6 +270,19 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
         }
     }
     changed();
+    
+    if (this->getOwnerDocument() != null) {
+        typedef RefVectorOf<RangeImpl> RangeImpls;
+        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
+        if ( ranges != null) {
+            unsigned int sz = ranges->size();
+            if (sz != 0) {
+                for (unsigned int i =0; i<sz; i++) {
+                    ranges->elementAt(i)->updateRangeForInsertedNode(newInternal);
+                }
+            }
+        }
+    }
 
     return newInternal;
 };
@@ -287,48 +300,63 @@ NodeImpl *THIS_CLASS::removeChild(NodeImpl *oldChild)
 {
     if (readOnly())
         throw DOM_DOMException(
-          DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-      
-      if (oldChild != null && oldChild->getParentNode() != this)
-          throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
-
-      ChildNode * oldInternal = (ChildNode *) oldChild;
-
-      // Patch tree past oldChild
-      ChildNode *prev = oldInternal->previousSibling;
-      ChildNode *next = oldInternal->nextSibling;
-
-      if (oldInternal != firstChild)
-          prev->nextSibling = next;
-      else {
-          oldInternal->firstChild(false);
-          firstChild = next;
-          if (next != null) {
-              next->firstChild(true);
-          }
-      }
-
-      if (next != null)         // oldInternal != lastChild
-          next->previousSibling = prev;
-      else {
-          if (firstChild != null) {
-              // store lastChild as previous sibling of first child
-              firstChild->previousSibling = prev;
-          }
-      }
-      
-      // Remove oldChild's references to tree
-      oldInternal->ownerNode = ownerDocument;
-      oldInternal->owned(false);
-      oldInternal->nextSibling = null;
-      oldInternal->previousSibling = null;
-
-      changed();
-
-      return oldInternal;
+        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+    
+    if (oldChild != null && oldChild->getParentNode() != this)
+        throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
+    
+    //fix other ranges for change before deleting the node
+    if (this->getOwnerDocument() !=  null  ) {
+        typedef RefVectorOf<RangeImpl> RangeImpls;
+        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
+        if (ranges != null) {
+            unsigned int sz = ranges->size();
+            if (sz != 0) {
+                for (unsigned int i =0; i<sz; i++) {
+                    if (ranges->elementAt(i) != null) 
+                        ranges->elementAt(i)->updateRangeForDeletedNode(oldChild);
+                }
+            }
+        }
+    }
+    
+    ChildNode * oldInternal = (ChildNode *) oldChild;
+    
+    // Patch tree past oldChild
+    ChildNode *prev = oldInternal->previousSibling;
+    ChildNode *next = oldInternal->nextSibling;
+    
+    if (oldInternal != firstChild)
+        prev->nextSibling = next;
+    else {
+        oldInternal->firstChild(false);
+        firstChild = next;
+        if (next != null) {
+            next->firstChild(true);
+        }
+    }
+    
+    if (next != null)         // oldInternal != lastChild
+        next->previousSibling = prev;
+    else {
+        if (firstChild != null) {
+            // store lastChild as previous sibling of first child
+            firstChild->previousSibling = prev;
+        }
+    }
+    
+    // Remove oldChild's references to tree
+    oldInternal->ownerNode = ownerDocument;
+    oldInternal->owned(false);
+    oldInternal->nextSibling = null;
+    oldInternal->previousSibling = null;
+    
+    changed();
+    
+    return oldInternal;
 };
-  
-  
+
+
 NodeImpl *THIS_CLASS::replaceChild(NodeImpl *newChild, NodeImpl *oldChild)
 {
     insertBefore(newChild, oldChild);

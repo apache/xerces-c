@@ -64,6 +64,7 @@
 #include "TextImpl.hpp"
 #include "CharacterDataImpl.hpp"
 #include "DStringPool.hpp"
+#include "RangeImpl.hpp"
 
 static DOMString *gText;   // will be lazily initialized to point to "#text"
 
@@ -114,15 +115,30 @@ TextImpl *TextImpl::splitText(unsigned int offset)
 	unsigned int len = data.length();
     if (offset >= len)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
-                
+               
     TextImpl *newText = 
                 (TextImpl *) getOwnerDocument()->createTextNode(
                         data.substringData(offset, data.length() - offset));
+
     NodeImpl *parent = getParentNode();
     if (parent != null)
         parent->insertBefore(newText, getNextSibling());
 
     data = data.substringData(0, offset);
+
+    if (this->getOwnerDocument() != null) {
+        typedef RefVectorOf<RangeImpl> RangeImpls;
+        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
+        if (ranges != null) {
+            unsigned int sz = ranges->size();
+            if (sz != 0) {
+                for (unsigned int i =0; i<sz; i++) {
+                    ranges->elementAt(i)->updateSplitInfo( this, newText);
+                }
+            }
+        }
+    }
+
     return newText;
 };
 

@@ -60,6 +60,8 @@
 
 #include "CharacterDataImpl.hpp"
 #include "DOM_DOMException.hpp"
+#include "RangeImpl.hpp"
+#include "DocumentImpl.hpp"
 
 
 CharacterDataImpl::CharacterDataImpl(DocumentImpl *ownerDoc,
@@ -92,6 +94,19 @@ void CharacterDataImpl::setNodeValue(const DOMString &value)
         throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR,
                                null);
     data = value.clone();
+
+    if (this->getOwnerDocument() != null) {
+        typedef RefVectorOf<RangeImpl> RangeImpls;
+        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
+        if (ranges != null) {
+            unsigned int sz = ranges->size();
+            if (sz != 0) {
+                for (unsigned int i =0; i<sz; i++) {
+                    ranges->elementAt(i)->receiveReplacedText( this);
+                }
+            }
+        }
+    }
 };
 
 
@@ -115,6 +130,19 @@ void CharacterDataImpl::deleteData(unsigned int offset, unsigned int count)
     //       when parameter values are bad.
     //  
     data.deleteData(offset, count);
+
+    if (this->getOwnerDocument() != null) {
+        typedef RefVectorOf<RangeImpl> RangeImpls;
+        RangeImpls* ranges = this->getOwnerDocument()->getRanges();
+        if (ranges != null) {
+            unsigned int sz = ranges->size();
+            if (sz != 0) {
+                for (unsigned int i =0; i<sz; i++) {
+                    ranges->elementAt(i)->updateRangeForDeletedText( (DOM_Node&)*this, offset, count);
+                }
+            }
+        }
+    }
 };
 
 

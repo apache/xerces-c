@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -53,34 +53,38 @@
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
-//
-//  This file is part of the internal implementation of the C++ XML DOM.
-//  It should NOT be included or used directly by application programs.
-//
-//  Applications should include the file <dom/DOM.hpp> for the entire
-//  DOM API, or DOM_*.hpp for individual DOM classes, where the class
-//  name is substituded for the *.
-//
-
+ 
 /*
- * $Id$
+ * $Log$
+ * Revision 1.1  2000/07/28 01:33:31  aruna1
+ * DOM Level 2 Range feature introduced
+ *
  */
 
-/**
- * If we could use multiple inheritance ChildAndParentNode would simply inherit
- * both from ChildNode and ParentNode. In this case it only inherits from
- * ChildNode and all the code of ParentNode is "duplicated" here
- */
+#include "DOM_RangeException.hpp"
 
-#include "ChildAndParentNode.hpp"
-#include "DOM_DOMException.hpp"
-#include "TextImpl.hpp"
-#include "DocumentImpl.hpp"
-#include "RangeImpl.hpp"
 
-#define THIS_CLASS ChildAndParentNode
-#define PARENT_CLASS ChildNode
+DOM_RangeException::DOM_RangeException()
+: DOM_DOMException()
+{
+        code = (RangeExceptionCode) 0;
+};
 
-#include "CommonParentNode.cpp"
 
+DOM_RangeException::DOM_RangeException(RangeExceptionCode exCode, const DOMString &message) 
+: DOM_DOMException(exCode, message) 
+{
+   code = exCode;
+};
+
+
+DOM_RangeException::DOM_RangeException(const DOM_RangeException &other) 
+: DOM_DOMException(other)
+{
+        code = other.code;
+};
+
+
+DOM_RangeException::~DOM_RangeException() 
+{
+};

@@ -62,6 +62,7 @@
 #include "DOM_DOMException.hpp"
 #include "DocumentImpl.hpp"
 #include "TextImpl.hpp"
+#include "RangeImpl.hpp"
 
 #define THIS_CLASS ParentNode
 #define PARENT_CLASS NodeImpl

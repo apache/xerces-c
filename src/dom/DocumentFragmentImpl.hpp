@@ -87,6 +87,7 @@ public:
     virtual short getNodeType();
     virtual bool isDocumentFragmentImpl();
     virtual void setNodeValue(const DOMString &);
+   
 };
 
 #endif

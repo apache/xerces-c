@@ -99,9 +99,11 @@ class NodeFilterImpl;
 class DOM_DOMImplementation;
 class DOMString;
 class NodeIDMap;
+class RangeImpl;
 
 typedef RefVectorOf<NodeIteratorImpl> NodeIterators;
 typedef RefVectorOf<TreeWalkerImpl> TreeWalkers;
+typedef RefVectorOf<RangeImpl> RangeImpls;
 
 
 class CDOM_EXPORT DocumentImpl: public ParentNode {
@@ -120,8 +122,11 @@ private:
     NodeIterators               *iterators;
     TreeWalkers                 *treeWalkers;
 	RefHashTableOf<void>		*userData;
+    RangeImpls                  *ranges;
+
     friend class NodeIteratorImpl;
     friend class TreeWalkerImpl;
+    friend class RangeImpl;
    	friend class DOMParser;
 
 public:
@@ -164,6 +169,10 @@ public:
     virtual XMLDeclImpl*        createXMLDecl(const DOMString& version, const DOMString& encoding, const DOMString& standalone);
     virtual void*				getUserData();
     virtual void				setUserData(void* value);
+    virtual RangeImpl*          createRange();
+    virtual RangeImpls*         getRanges();  //non-standard api
+    virtual void                removeRange(RangeImpl* range); //non-standard api
+
 
 	// helper functions to prevent storing userdata pointers on every node.
     virtual void setUserData(NodeImpl* n, void* data);

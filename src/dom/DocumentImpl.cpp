@@ -89,17 +89,20 @@
 #include "NodeIDMap.hpp"
 #include "DOM_Document.hpp"
 #include <util/HashPtr.hpp>
+#include "RangeImpl.hpp"
+#include "DOM_Document.hpp"
 
 DocumentImpl::DocumentImpl()
     : ParentNode(this)
 {
-    docType=null;
-    docElement=null;
-    namePool = new DStringPool(257);
-    iterators = 0L;
+    docType     = null;
+    docElement  = null;
+    namePool    = new DStringPool(257);
+    iterators   = 0L;
     treeWalkers = 0L;
-    fNodeIDMap = 0;
-	userData = 0;
+    fNodeIDMap  = 0;
+	userData    = 0;
+    ranges      = 0;
 
 };
 
@@ -116,11 +119,12 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
 	
     docElement=null;
     appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
-    namePool = new DStringPool(257);
-    iterators = 0;
+    namePool    = new DStringPool(257);
+    iterators   = 0;
     treeWalkers = 0;
-    fNodeIDMap = 0;
-	userData = 0;
+    fNodeIDMap  = 0;
+	userData    = 0;
+    ranges      = 0;
 }
 
 void DocumentImpl::setDocumentType(DocumentTypeImpl *doctype)
@@ -157,6 +161,11 @@ DocumentImpl::~DocumentImpl()
     if (treeWalkers != 0L) {
         // The data in the vector is pointers owned by smart pointers, and will be cleaned up when they go away.
         delete treeWalkers;
+    }
+
+    if (ranges != 0L) {
+        delete ranges;
+        ranges = 0;
     }
     
 	if (userData)
@@ -696,6 +705,38 @@ XMLDeclImpl* DocumentImpl::createXMLDecl(const DOMString& version, const DOMStri
     return new XMLDeclImpl(this, version, encoding, standalone);
 }
 
+RangeImpl* DocumentImpl::createRange()
+{
+
+    RangeImpl* range = new RangeImpl(DOM_Document(this));
+
+    if (ranges == 0L) {
+        ranges = new RangeImpls(1, false);
+    }
+    ranges->addElement(range);
+    return range;
+}
+
+RangeImpls* DocumentImpl::getRanges()
+{
+    return ranges;
+}
+
+void DocumentImpl::removeRange(RangeImpl* range) 
+{
+    if (ranges != null) {
+        unsigned int sz = ranges->size();
+        if (sz !=0) {
+            for (unsigned int i =0; i<sz; i++) {
+                if (ranges->elementAt(i) == range) {
+                    ranges->removeElementAt(i);
+                    delete range;
+                    break;
+                }
+            }
+        }
+    }
+}
 
 /** Uses the kidOK lookup table to check whether the proposed
     tree structure is legal.
@@ -727,7 +768,7 @@ bool DocumentImpl::isKidOK(NodeImpl *parent, NodeImpl *child)
               1 << DOM_Node::CDATA_SECTION_NODE |
               1 << DOM_Node::ENTITY_REFERENCE_NODE |
               1 << DOM_Node::XML_DECL_NODE;
-          
+
           kidOK[DOM_Node::ATTRIBUTE_NODE] = 
               1 << DOM_Node::TEXT_NODE |
               1 << DOM_Node::ENTITY_REFERENCE_NODE;

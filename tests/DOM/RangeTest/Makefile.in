@@ -56,16 +56,17 @@
 #
 # $Id$
 #
+#
 
-DOMIDTest_DIR=DOM/DOMIDTest
-DOMMemTest_DIR=DOM/DOMMemTest
-DOMTest_DIR=DOM/DOMTest
-Traversal_DIR=DOM/Traversal
-ThreadTest_DIR=ThreadTest
-EncodingTest_DIR=EncodingTest
-DOMRange_DIR=DOM/RangeTest
-
-LIB_DIR=${XERCESCROOT}/lib
+###################################################################
+#                    IMPORTANT NOTE                               #
+###################################################################
+# If you are going to do the OS390BATCH build, make sure you have #
+# the OS390BATCH environment variable set.                        #
+#                                                                 #
+#   export OS390BATCH=1                                           #
+#                                                                 #
+###################################################################
 
 PLATFORM = @platform@
 COMPILER = @compiler@
@@ -73,62 +74,44 @@ CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
 OSVER = @osver@
+LIBS = @libs@
+CC = @compiler@
 
-ifeq (${PLATFORM},HPUX)
-  ifeq (${OSVER}, HPUX10)
-      all:	threadtest encodingtest traversal
-  else
-      all:	domtest threadtest encodingtest traversal
-  endif
+include ../../../version.incl
+include ../../Makefile.incl
+
+APP_NAME=RangeTest
+APP_DIR=DOM/RangeTest
+
+OUTDIR= ${XERCESCROOT}/tests/${APP_DIR}
+EXEC=	${XERCESCROOT}/bin
+OBJS=	${OUTDIR}/RangeTest.o
+SRC=	${XERCESCROOT}/tests/${APP_DIR}
+HEADER_FILES=
+INCLUDE = ${INCLUDES}
+
+## OS390BATCH
+ifeq (${OS390BATCH},1)
+BATCH_TARGET= "//'${LOADMOD}(${APP_NAME})'"
+all: makedir ${BATCH_TARGET}
 else
-    all:	domidtest dommemtest domtest threadtest encodingtest traversal rangetest
+all: makedir ${EXEC}/${APP_NAME}
 endif
 
-domidtest:
-	@echo Building "DOMIDTest"
-	cd $(DOMIDTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+makedir:
+	-mkdir -p $(OUTDIR)
 
-dommemtest:
-	@echo Building "DOMMemTest"
-	cd $(DOMMemTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+${EXEC}/${APP_NAME}: ${OBJS}
+	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} 
 
-domtest:
-	@echo Building "DOMTest"
-	cd $(DOMTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+${BATCH_TARGET}: ${OBJS}
+	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} 
 
-threadtest:
-	@echo Building "ThreadTest"
-	cd $(ThreadTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
-
-encodingtest:
-	@echo Building "EncodingTest"
-	cd $(EncodingTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
-
-traversal:
-	@echo Building "Traversal"
-	cd $(Traversal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
-
-rangetest:
-	@echo Building "Range"
-	cd $(DOMRange_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
+$(OUTDIR)/RangeTest.o: ${SRC}/RangeTest.cpp ${HEADER_FILES}
+	${CC} ${CMP} $(INCLUDE) -o $(OUTDIR)/RangeTest.o ${SRC}/RangeTest.cpp
 
 clean:
-	cd $(DOMIDTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(ThreadTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(EncodingTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(Traversal_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMRange_DIR) && $(MAKE) $@ && cd ..
+	rm -f ${OBJS} ${EXEC}/${APP_NAME}
 
-distclean:
-	cd $(DOMIDTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(ThreadTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(EncodingTest_DIR) && $(MAKE) $@ && cd ..
-	cd $(Traversal_DIR) && $(MAKE) $@ && cd ..
-	cd $(DOMRange_DIR) && $(MAKE) $@ && cd ..
-	rm -f Makefile config.cache config.log config.status
-	rm -f *~ core
-
+distclean:	clean
+	rm -f Makefile

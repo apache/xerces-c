@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ *
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -54,33 +54,90 @@
  * <http://www.apache.org/>.
  */
 
-//
-//  This file is part of the internal implementation of the C++ XML DOM.
-//  It should NOT be included or used directly by application programs.
-//
-//  Applications should include the file <dom/DOM.hpp> for the entire
-//  DOM API, or DOM_*.hpp for individual DOM classes, where the class
-//  name is substituded for the *.
-//
-
 /*
  * $Id$
  */
 
-/**
- * If we could use multiple inheritance ChildAndParentNode would simply inherit
- * both from ChildNode and ParentNode. In this case it only inherits from
- * ChildNode and all the code of ParentNode is "duplicated" here
- */
+#ifndef DOM_Range_HEADER_GUARD_
+#define DOM_Range_HEADER_GUARD_
 
-#include "ChildAndParentNode.hpp"
-#include "DOM_DOMException.hpp"
-#include "TextImpl.hpp"
-#include "DocumentImpl.hpp"
-#include "RangeImpl.hpp"
+#include <util/XercesDefs.hpp>
+#include <dom/DOM_Node.hpp>
+#include <dom/DOMString.hpp>
+#include <dom/DOM_DocumentFragment.hpp>
 
-#define THIS_CLASS ChildAndParentNode
-#define PARENT_CLASS ChildNode
+class RangeImpl;
 
-#include "CommonParentNode.cpp"
+//class RangeImpl;
 
+class CDOM_EXPORT DOM_Range {
+public:
+
+    enum CompareHow {
+        START_TO_START  = 0,
+        START_TO_END    = 1,
+        END_TO_END      = 2,
+        END_TO_START    = 3
+    };
+
+    //c'tor & d'tor
+    DOM_Range();
+    ~DOM_Range();
+
+    
+    DOM_Range & operator = (const DOM_Range &other);
+    DOM_Range & operator = (const DOM_NullPtr *other);
+    bool operator != (const DOM_Range & other) const;
+    bool operator == (const DOM_Range & other) const;
+    bool operator != (const DOM_NullPtr * other) const;
+    bool operator == (const DOM_NullPtr * other) const;
+
+    //getter functions
+    DOM_Node& getStartContainer();
+    unsigned int getStartOffset();
+    DOM_Node& getEndContainer();
+    unsigned int getEndOffset();
+    bool getCollapsed();
+    const DOM_Node& getCommonAncestorContainer();
+
+    //setter functions
+    void setStart(DOM_Node parent, unsigned int offset);
+    void setEnd(DOM_Node parent, unsigned int offset);
+
+    void setStartBefore(DOM_Node refNode);
+    void setStartAfter(DOM_Node refNode);
+    void setEndBefore(DOM_Node refNode);
+    void setEndAfter(DOM_Node refNode);
+   
+    //misc functions
+    void collapse(bool toStart);
+    void selectNode(DOM_Node node);
+    void selectNodeContents(DOM_Node node);
+
+    //Functions related to comparing range Boundrary-Points
+    short compareBoundaryPoints(CompareHow how, const DOM_Range& range);
+    void deleteContents();
+    DOM_DocumentFragment extractContents();
+    DOM_DocumentFragment cloneContents();
+    void insertNode(DOM_Node& node);
+    //Misc functions
+    void surroundContents(DOM_Node node);
+    DOM_Range cloneRange();
+    DOMString toString();
+    void detach();
+
+    
+     
+
+protected:
+
+    DOM_Range(RangeImpl *);
+    RangeImpl   *fImpl;
+
+    friend class DOM_Document;
+};
+
+
+
+
+#endif

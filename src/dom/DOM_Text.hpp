@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/07/28 01:33:31  aruna1
+ * DOM Level 2 Range feature introduced
+ *
  * Revision 1.7  2000/03/24 01:30:50  chchou
  * Fix bug #8 to support ignorable whitespace text nodes
  *
@@ -211,6 +214,7 @@ protected:
     DOM_Text(TextImpl *);
 
     friend class DOM_Document;
+    friend class RangeImpl;
 
 
 
