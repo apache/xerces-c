@@ -160,7 +160,7 @@ distclean::	clean
 	${MAKE} -C deprecated $@
 
 install::
-	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)
-	$(CP) $(DOM_CPP_PUBHEADERS) $(DOM_C_FILES) $(PREFIX_INCLUDE)/$(MODULE)
+	-mkdir -p $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)
+	$(CP) $(DOM_CPP_PUBHEADERS) $(DOM_C_FILES) $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)
 	${MAKE} -C impl $@
 	${MAKE} -C deprecated $@

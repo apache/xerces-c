@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.14  2002/09/17 21:24:01  peiyongz
+# RPM for Xerces2.1.0, patch from Thomas Woerner (thomas@linux.de)
+#
 # Revision 1.13  2002/08/19 19:38:17  tng
 # [Bug 11771] Linux specific IconvGNU transcoder.  Patch from Vasily Tchekalkin.
 #
@@ -612,8 +615,8 @@ endif
 
 
 install::
-	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)
-	$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(PREFIX_INCLUDE)/$(MODULE)
+	-mkdir -p $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)
+	$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)
 	${MAKE} -C Platforms $@
 	${MAKE} -C Transcoders/$(TRANSCODERMODULE) $@
 	${MAKE} -C MsgLoaders/$(MESSAGELOADERMODULE) $@

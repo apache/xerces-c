@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.7  2002/09/17 21:23:13  peiyongz
+# RPM for Xerces2.1.0, patch from Thomas Woerner (thomas@linux.de)
+#
 # Revision 1.6  2002/07/26 16:49:27  tng
 # [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
 #
@@ -217,5 +220,5 @@ distclean::	clean
 	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/,$(FRAMEWORK_CPP_PUBHEADERS))
 
 install::
-	-mkdir -p $(PREFIX_INCLUDE)/$(MODULE)
-	$(CP) $(FRAMEWORK_CPP_PUBHEADERS) $(FRAMEWORK_C_FILES) $(PREFIX_INCLUDE)/$(MODULE)
+	-mkdir -p $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)
+	$(CP) $(FRAMEWORK_CPP_PUBHEADERS) $(FRAMEWORK_C_FILES) $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)
