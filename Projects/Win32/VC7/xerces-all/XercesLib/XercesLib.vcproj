@@ -415,6 +415,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLInteger.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLMsgLoader.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLMsgLoader.hpp">
 			</File>
 			<File
@@ -929,6 +932,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\internal\CharTypeTables.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\DGXMLScanner.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\DGXMLScanner.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\ElemStack.cpp">
 			</File>
 			<File
@@ -941,10 +950,25 @@
 				RelativePath="..\..\..\..\..\src\xercesc\internal\IANAEncodings.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\IGXMLScanner.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\IGXMLScanner.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\ReaderMgr.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\SGXMLScanner.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\SGXMLScanner.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.cpp">
@@ -957,6 +981,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\VecAttributesImpl.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\WFXMLScanner.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLInternalErrorHandler.hpp">
@@ -974,7 +1004,10 @@
 				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLScanner.hpp">
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLScanner2.cpp">
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\XMLScannerResolver.hpp">
 			</File>
 		</Filter>
 		<Filter
