@@ -41,4 +41,5 @@ group xerces_validators =
     BASE_DIR "\\src\\validators\\schema\\NamespaceScope.cpp",
     BASE_DIR "\\src\\validators\\schema\\ComplexTypeInfo.cpp",
     BASE_DIR "\\src\\validators\\schema\\GeneralAttributeCheck.cpp",
+    BASE_DIR "\\src\\validators\\schema\\XercesGroupInfo.cpp",
     BASE_DIR "\\src\\validators\\schema\\TraverseSchema.cpp"
