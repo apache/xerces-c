@@ -56,8 +56,12 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:26  peiyongz
- * Initial revision
+ * Revision 1.2  2002/05/03 15:33:57  peiyongz
+ * Bug#7261: Remove obsolete define in UnixWareDefs.hpp  - patch from
+ * Martin Kalen.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:26  peiyongz
+ * sane_include
  *
  * Revision 1.4  2000/03/02 19:55:32  roddey
  * This checkin includes many changes done while waiting for the
@@ -84,7 +88,5 @@
 #define ENDIANMODE_LITTLE
 typedef void* FileHandle;
 
-#ifndef UNIXWARE
-#define UNIXWARE
-#endif
+
 
