@@ -97,7 +97,7 @@ sub package_sources {
    system("cp -Rf $XERCESCROOT/* $srctargetdir");
 
    chdir ("$srctargetdir/doc");
-   # system ("doxygen");
+   system ("doxygen");
 
    # Now create the User documentation from the XML sources
    if (length($ICUROOT) > 0) {
