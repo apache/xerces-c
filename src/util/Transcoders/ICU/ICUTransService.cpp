@@ -55,82 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.20  2000/06/01 23:26:36  abagchi
- * Added  && !defined(XML_PTX)
- *
- * Revision 1.19  2000/05/11 23:13:31  rahulj
- * Works with latest revision of ICU which provides a hard
- * linked data DLL. i.e. icudata.dll will be loaded when xerces-c is
- * loaded.
- *
- * Revision 1.18  2000/04/12 18:41:28  roddey
- * Fixed a small 'one off' problem in the calls to ICU.
- *
- * Revision 1.17  2000/04/07 01:02:00  roddey
- * Fixed an error message so that it indicated the correct radix for the rep
- * token. Get all of the basic output formatting functionality in place for
- * at least ICU and Win32 transcoders.
- *
- * Revision 1.16  2000/03/18 00:00:03  roddey
- * Initial updates for two way transcoding support
- *
- * Revision 1.15  2000/03/02 19:55:34  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.14  2000/02/10 21:28:53  aruna1
- * Problem solved for converting UChar to XMLCh. This problem showed up on solaris as UChar was != XMLCh
- *
- * Revision 1.13  2000/02/06 07:48:32  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.12  2000/01/25 22:49:56  roddey
- * Moved the supportsSrcOfs() method from the individual transcoder to the
- * transcoding service, where it should have been to begin with.
- *
- * Revision 1.11  2000/01/25 19:19:07  roddey
- * Simple addition of a getId() method to the xcode and netacess abstractions to
- * allow each impl to give back an id string.
- *
- * Revision 1.10  2000/01/24 20:39:47  roddey
- * Fixed a bug introduced in the recent move to always have XMLCh be
- * the same as wchar_t.
- *
- * Revision 1.9  2000/01/21 23:59:06  roddey
- * Added code to deal with system configurations where XMLCh is not
- * the same size as ICU's UChar.
- *
- * Revision 1.8  2000/01/19 23:21:11  abagchi
- * Made this file compatible with ICU 1.4
- *
- * Revision 1.7  2000/01/19 00:58:07  roddey
- * Update to support new ICU 1.4 release.
- *
- * Revision 1.6  1999/12/18 00:22:32  roddey
- * Changes to support the new, completely orthagonal, transcoder architecture.
- *
- * Revision 1.5  1999/12/15 19:43:45  roddey
- * Now implements the new transcoding abstractions, with separate interface
- * classes for XML transcoders and local code page transcoders.
- *
- * Revision 1.4  1999/12/07 23:08:41  roddey
- * Add in code to test for some control characters and report them as whitespace.
- * ICU is not doing this currently, so we need to do it until they get that fixed.
- *
- * Revision 1.3  1999/11/18 20:16:52  abagchi
- * Now works with ICU 1.3.1
- *
- * Revision 1.2  1999/11/17 22:36:41  rahulj
- * Code works with ICU transcoding service
- *
- * Revision 1.1.1.1  1999/11/09 01:06:07  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:33  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 
@@ -1058,7 +983,7 @@ bool ICULCPTranscoder::transcode(const  char* const     toTranscode
         (
             fConverter
             , targetBuf
-            , maxChars
+            , maxChars + 1
             , toTranscode
             , srcLen
             , &err
