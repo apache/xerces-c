@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.10  2003/03/09 17:05:01  peiyongz
+  * PanicHandler
+  *
   * Revision 1.9  2003/01/13 16:13:37  knoaman
   * We should load the validation message set.
   *
@@ -134,7 +137,7 @@ static XMLMsgLoader* getErrMsgLoader()
     {
         XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
         if (!t)
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
         else {
             if (XMLPlatformUtils::compareAndSwap((void **)&gErrMsgLoader, t, 0) != 0)
             {
@@ -157,7 +160,7 @@ static XMLMsgLoader* getValidMsgLoader()
     {
         XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
         if (!t)
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
         else {
             if (XMLPlatformUtils::compareAndSwap((void **)&gValidMsgLoader, t, 0) != 0)
             {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/03/09 17:02:20  peiyongz
+ * PanicHandler
+ *
  * Revision 1.3  2003/03/07 18:15:57  tng
  * Return a reference instead of void for operator=
  *
@@ -340,7 +343,7 @@ CygwinTransService::CygwinTransService()
             , KEY_READ
             , &encodingKey))
         {
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+            XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
         }
 
         //
@@ -368,7 +371,7 @@ CygwinTransService::CygwinTransService()
                 , (unsigned char*)&CPId
                 , &theSize) != ERROR_SUCCESS)
             {
-                XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+                XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
             }
 
             //
@@ -387,7 +390,7 @@ CygwinTransService::CygwinTransService()
                     , (unsigned char*)&IEId
                     , &theSize) != ERROR_SUCCESS)
                 {
-                    XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+                    XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
                 }
 
                 CPMapEntry* newEntry = new CPMapEntry(nameBuf, CPId, IEId);
@@ -433,7 +436,7 @@ CygwinTransService::CygwinTransService()
             , KEY_READ
             , &encodingKey))
         {
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+            XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
         }
 
         //

@@ -95,6 +95,7 @@
 #include <xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp>
 #include <xercesc/util/Platforms/MacOS/MacCarbonFile.hpp>
 #include <xercesc/util/Platforms/MacOS/MacPosixFile.hpp>
+#include <xercesc/util/PanicHandler.hpp>
 
 #if (defined(XML_USE_INMEMORY_MSGLOADER) || defined(XML_USE_INMEM_MESSAGELOADER))
    #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
@@ -182,27 +183,11 @@ bool gUsePosixFiles			= false;
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: The panic method
 // ---------------------------------------------------------------------------
-void
-XMLPlatformUtils::panic(const PanicReasons reason)
+void 
+XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 {
-    const char* reasonStr = "Unknown reason";
-    if (reason == Panic_NoTransService)
-        reasonStr = "Could not load a transcoding service";
-    else if (reason == Panic_NoDefTranscoder)
-        reasonStr = "Could not load a local code page transcoder";
-    else if (reason == Panic_CantFindLib)
-        reasonStr = "Could not find the xerces-c DLL";
-    else if (reason == Panic_UnknownMsgDomain)
-        reasonStr = "Unknown message domain";
-    else if (reason == Panic_CantLoadMsgDomain)
-        reasonStr = "Cannot load message domain";
-    else if (reason == Panic_SynchronizationErr)
-        reasonStr = "A system synchronization error occurred";
-    else if (reason == Panic_SystemInit)
-        reasonStr = "Failed to complete platform dependent initialization";
-    else
-        reasonStr = "Unknown error source";
-
+    const char* reasonStr = PanicHandler::getPanicReasonString(reason);
+    
     //
     //  The default handling of panics is not very friendly.
     //	To replace it with something more friendly, you'll need to:

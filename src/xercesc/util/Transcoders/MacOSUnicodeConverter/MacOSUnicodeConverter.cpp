@@ -256,7 +256,7 @@ int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
 	{
 		//	For some reason there is no platform utils available
 		//	where we expect it. Bail.
-		XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+		XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
 		return 0;
 	}
 #endif
@@ -381,7 +381,7 @@ int MacOSUnicodeConverter::compareNIString( const   XMLCh* const    comp1
 	{
 		//	For some reason there is no platform utils available
 		//	where we expect it. Bail.
-		XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+		XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
 		return 0;
 	}
 #endif

@@ -69,6 +69,7 @@
 #include    <xercesc/util/Janitor.hpp>
 #include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/util/XMLUniDefs.hpp>
+#include    <xercesc/util/PanicHandler.hpp>
 #include    <stdio.h>
 #include    <stdlib.h>
 #include    <errno.h>
@@ -159,7 +160,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 
     catch(...)
     {
-        panic( XMLPlatformUtils::Panic_CantLoadMsgDomain );
+        panic( PanicHandler::Panic_CantLoadMsgDomain );
     }
     return retVal;
 }
@@ -167,24 +168,32 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: The panic method
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::panic(const PanicReasons reason)
+void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 {
+	
+    if (fgUserPanicHandler)
+    {
+    	fgUserPanicHandler->panic(reason);
+    }
+ 	
     //
     //  We just print a message and exit, Note we are currently dependent on
     // the number of reasons being under 10 for this teo work
     //
+    else
     {
-struct reason_code
- {
-    char reason_char;
-    char endofstring;
- }
- reason_code;
- reason_code.reason_char = '0';
- reason_code.endofstring = '\0';
- reason_code.reason_char = reason_code.reason_char + reason;
- send_message((char*)&reason_code,GENERAL_PANIC_MESSAGE,'e');
-}
+        struct reason_code
+        {
+            char reason_char;
+            char endofstring;
+        }reason_code;
+
+        reason_code.reason_char = '0';
+        reason_code.endofstring = '\0';
+        reason_code.reason_char = reason_code.reason_char + reason;
+        send_message((char*)&reason_code,GENERAL_PANIC_MESSAGE,'e');
+    }
+
 }
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File Methods
@@ -652,7 +661,7 @@ void XMLPlatformUtils::platformInit()
 		delete gAtomicOpMutex;
 		gAtomicOpMutex = 0;
 
-        panic( XMLPlatformUtils::Panic_SystemInit );
+        panic( PanicHandler::Panic_SystemInit );
 	}
 }
 
@@ -748,14 +757,14 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
     // Currently its supported only in the kernel mode
 
     if (pthread_mutex_lock( gAtomicOpMutex))
-        panic(XMLPlatformUtils::Panic_SynchronizationErr);
+        panic(PanicHandler::Panic_SynchronizationErr);
 
     void *retVal = *toFill;
     if (*toFill == toCompare)
               *toFill = (void *)newValue;
 
     if (pthread_mutex_unlock( gAtomicOpMutex))
-        panic(XMLPlatformUtils::Panic_SynchronizationErr);
+        panic(PanicHandler::Panic_SynchronizationErr);
 
     return retVal;
 }

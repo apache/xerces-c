@@ -78,6 +78,7 @@
 #include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/util/XMLUni.hpp>
 #include    <xercesc/util/XMLUniDefs.hpp>
+#include    <xercesc/util/PanicHandler.hpp>
 
 //
 //  These control which transcoding service is used by the Tru64 version.
@@ -153,7 +154,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
   }
   catch(...)
   {
-    panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+    panic(PanicHandler::Panic_CantLoadMsgDomain);
   }
   return retVal;
 }
@@ -184,27 +185,9 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: The panic method
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::panic(const PanicReasons reason)
+void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 {
-  const char* reasonStr = "Unknown reason";
-  if (reason == Panic_NoTransService)
-    reasonStr = "Could not load a transcoding service";
-  else if (reason == Panic_NoDefTranscoder)
-    reasonStr = "Could not load a local code page transcoder";
-  else if (reason == Panic_CantFindLib)
-    reasonStr = "Could not find the xerces-c DLL";
-  else if (reason == Panic_UnknownMsgDomain)
-    reasonStr = "Unknown message domain";
-  else if (reason == Panic_CantLoadMsgDomain)
-    reasonStr = "Cannot load message domain";
-  else if (reason == Panic_SynchronizationErr)
-    reasonStr = "Cannot synchronize system or mutex";
-  else if (reason == Panic_SystemInit)
-    reasonStr = "Cannot initialize the system or mutex";
-
-  fprintf(stderr, "%s\n", reasonStr);
-
-  exit(-1);
+    fgUserPanicHandler? fgUserPanicHandler->panic(reason) : fgDefaultPanicHandler->panic(reason);	
 }
 
 // ---------------------------------------------------------------------------
@@ -534,7 +517,7 @@ void XMLPlatformUtils::platformInit()
   if (pthread_mutex_init(gAtomicOpMutex, NULL)) {
 	delete gAtomicOpMutex;
 	gAtomicOpMutex = 0;
-    panic( XMLPlatformUtils::Panic_SystemInit );
+    panic( PanicHandler::Panic_SystemInit );
   }
 }
 
@@ -637,14 +620,14 @@ void* XMLPlatformUtils::compareAndSwap (void** toFill,
   // Currently its supported only in the kernel mode
 
   if (pthread_mutex_lock( gAtomicOpMutex))
-    panic(XMLPlatformUtils::Panic_SynchronizationErr);
+    panic(PanicHandler::Panic_SynchronizationErr);
 
   void *retVal = *toFill;
   if (*toFill == toCompare)
     *toFill = (void *)newValue;
 
   if (pthread_mutex_unlock( gAtomicOpMutex))
-    panic(XMLPlatformUtils::Panic_SynchronizationErr);
+    panic(PanicHandler::Panic_SynchronizationErr);
 
   return retVal;
 }
@@ -654,12 +637,12 @@ int XMLPlatformUtils::atomicIncrement(int &location)
   //return (int)atomic_add_32_nv( (uint32_t*)&location, 1);
 
   if (pthread_mutex_lock( gAtomicOpMutex))
-    panic(XMLPlatformUtils::Panic_SynchronizationErr);
+    panic(PanicHandler::Panic_SynchronizationErr);
 
   int tmp = ++location;
 
   if (pthread_mutex_unlock( gAtomicOpMutex))
-    panic(XMLPlatformUtils::Panic_SynchronizationErr);
+    panic(PanicHandler::Panic_SynchronizationErr);
 
   return tmp;
 }
@@ -668,12 +651,12 @@ int XMLPlatformUtils::atomicDecrement(int &location)
   //return (int)atomic_add_32_nv( (uint32_t*)&location, -1);
 
   if (pthread_mutex_lock( gAtomicOpMutex))
-    panic(XMLPlatformUtils::Panic_SynchronizationErr);
+    panic(PanicHandler::Panic_SynchronizationErr);
 	
   int tmp = --location;
 
   if (pthread_mutex_unlock( gAtomicOpMutex))
-    panic(XMLPlatformUtils::Panic_SynchronizationErr);
+    panic(PanicHandler::Panic_SynchronizationErr);
 
   return tmp;
 }

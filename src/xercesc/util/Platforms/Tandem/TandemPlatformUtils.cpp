@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/03/09 17:00:11  peiyongz
+ * PanicHandler
+ *
  * Revision 1.6  2003/02/05 18:29:27  tng
  * [Bug 13437] Incorrect memory management in XXXPlatformUtils.cpp.
  *
@@ -103,6 +106,7 @@
 #include    <xercesc/util/PlatformUtils.hpp>
 #include    <xercesc/util/RuntimeException.hpp>
 #include    <xercesc/util/Janitor.hpp>
+#include    <xercesc/util/PanicHandler.hpp>
 #include    <stdio.h>
 #include    <stdlib.h>
 #include    <errno.h>
@@ -147,42 +151,14 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     }
     catch(...)
     {
-        panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+        panic(PanicHandler::Panic_CantLoadMsgDomain);
     }
     return retVal;
 }
 
-void XMLPlatformUtils::panic(const PanicReasons reason)
+void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 {
-    const char* reasonStr = "Unknown reason";
-    switch (reason)
-    {
-    case Panic_NoTransService:
-        reasonStr = "Could not load a transcoding service";
-        break;
-    case Panic_NoDefTranscoder:
-        reasonStr = "Could not load a local code page transcoder";
-        break;
-    case Panic_CantFindLib:
-        reasonStr = "Could not find the xerces-c DLL";
-        break;
-    case Panic_UnknownMsgDomain:
-        reasonStr = "Unknown message domain";
-        break;
-    case Panic_CantLoadMsgDomain:
-        reasonStr = "Cannot load message domain";
-        break;
-    case Panic_SynchronizationErr:
-        reasonStr = "Cannot synchronize system or mutex";
-        break;
-    case Panic_SystemInit:
-        reasonStr = "Cannot initialize the system or mutex";
-        break;
-    }
-
-    fprintf(stderr, "Xerces Panic Error: %s\n", reasonStr);
-
-    exit(-1);
+    fgUserPanicHandler? fgUserPanicHandler->panic(reason) : fgDefaultPanicHandler->panic(reason);	
 }
 
 // ---------------------------------------------------------------------------

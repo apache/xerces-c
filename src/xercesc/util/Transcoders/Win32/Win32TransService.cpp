@@ -298,7 +298,7 @@ Win32TransService::Win32TransService()
             , KEY_READ
             , &encodingKey))
         {
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+            XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
         }
 
         //
@@ -326,7 +326,7 @@ Win32TransService::Win32TransService()
                 , (unsigned char*)&CPId
                 , &theSize) != ERROR_SUCCESS)
             {
-                XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+                XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
             }
 
             //
@@ -345,7 +345,7 @@ Win32TransService::Win32TransService()
                     , (unsigned char*)&IEId
                     , &theSize) != ERROR_SUCCESS)
                 {
-                    XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+                    XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
                 }
 
                 CPMapEntry* newEntry = new CPMapEntry(nameBuf, CPId, IEId);
@@ -391,7 +391,7 @@ Win32TransService::Win32TransService()
             , KEY_READ
             , &encodingKey))
         {
-            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_NoTransService);
+            XMLPlatformUtils::panic(PanicHandler::Panic_NoTransService);
         }
 
         //

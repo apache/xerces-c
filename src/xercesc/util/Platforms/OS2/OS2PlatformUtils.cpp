@@ -75,6 +75,7 @@
 #include    <xercesc/util/Janitor.hpp>
 #include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/util/XMLUniDefs.hpp>
+#include    <xercesc/util/PanicHandler.hpp>
 
 #include    <stdio.h>
 #include    <stdlib.h>
@@ -478,37 +479,9 @@ int XMLPlatformUtils::atomicDecrement(int& location)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: The panic method
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::panic(const PanicReasons reason)
+void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 {
-    const char* reasonStr = "Unknown reason";
-    switch (reason)
-    {
-    case Panic_NoTransService:
-        reasonStr = "Could not load a transcoding service";
-        break;
-    case Panic_NoDefTranscoder:
-        reasonStr = "Could not load a local code page transcoder";
-        break;
-    case Panic_CantFindLib:
-        reasonStr = "Could not find the xerces-c DLL";
-        break;
-    case Panic_UnknownMsgDomain:
-        reasonStr = "Unknown message domain";
-        break;
-    case Panic_CantLoadMsgDomain:
-        reasonStr = "Cannot load message domain";
-        break;
-    case Panic_SynchronizationErr:
-        reasonStr = "Cannot synchronize system or mutex";
-        break;
-    case Panic_SystemInit:
-        reasonStr = "Cannot initialize the system or mutex";
-        break;
-    }
-
-    fprintf(stderr, "%s\n", reasonStr);
-
-    exit(-1);
+    fgUserPanicHandler? fgUserPanicHandler->panic(reason) : fgDefaultPanicHandler->panic(reason);	
 }
 
 

@@ -86,6 +86,7 @@
 #include    <xercesc/util/Janitor.hpp>
 #include    <xercesc/util/XMLString.hpp>
 #include    <xercesc/util/XMLUniDefs.hpp>
+#include    <xercesc/util/PanicHandler.hpp>
 
 #if defined (XML_USE_ICU_TRANSCODER)
     #include <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
@@ -163,7 +164,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 
     catch(...)
     {
-         panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+         panic(PanicHandler::Panic_CantLoadMsgDomain);
     }
     return retVal;
 }
@@ -171,27 +172,9 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: The panic method
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::panic(const PanicReasons reason)
+void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 {
-    const char* reasonStr = "Unknown reason";
-    if (reason == Panic_NoTransService)
-        reasonStr = "Could not load a transcoding service";
-    else if (reason == Panic_NoDefTranscoder)
-        reasonStr = "Could not load a local code page transcoder";
-    else if (reason == Panic_CantFindLib)
-        reasonStr = "Could not find the xerces-c DLL";
-    else if (reason == Panic_UnknownMsgDomain)
-        reasonStr = "Unknown message domain";
-    else if (reason == Panic_CantLoadMsgDomain)
-        reasonStr = "Cannot load message domain";
-    else if (reason == Panic_SynchronizationErr)
-        reasonStr = "Cannot synchronize system or mutex";
-    else if (reason == Panic_SystemInit)
-        reasonStr = "Cannot initialize the system or mutex";
-
-    fprintf(stderr, "%s\n", reasonStr);
-
-    exit(-1);
+    fgUserPanicHandler? fgUserPanicHandler->panic(reason) : fgDefaultPanicHandler->panic(reason);	
 }
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/09 17:03:25  peiyongz
+ * PanicHandler
+ *
  * Revision 1.4  2002/12/31 18:42:54  tng
  * [Bug 15608] IconvLCPTranscoder::transcode() is wrong at wcstombs() usage.
  *
@@ -230,7 +233,7 @@ IconvGNUWrapper::IconvGNUWrapper ( iconv_t    cd_from,
       fCDTo(cd_to), fCDFrom(cd_from)
 {
     if (fCDFrom == (iconv_t) -1 || fCDTo == (iconv_t) -1) {
-    XMLPlatformUtils::panic (XMLPlatformUtils::Panic_NoTransService);
+    XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
     }
 }
 
@@ -482,7 +485,7 @@ IconvGNUTransService::IconvGNUTransService()
     if (gIconvMutex == NULL) {
         gIconvMutex = new XMLMutex;
         if (gIconvMutex == NULL)
-            XMLPlatformUtils::panic (XMLPlatformUtils::Panic_NoTransService);
+            XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
     }
 #endif
 
@@ -545,7 +548,7 @@ IconvGNUTransService::IconvGNUTransService()
         }
 
     if (fUnicodeCP == NULL || cdTo() == (iconv_t)-1 || cdFrom() == (iconv_t)-1)
-        XMLPlatformUtils::panic (XMLPlatformUtils::Panic_NoTransService);
+        XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
 }
 
 IconvGNUTransService::~IconvGNUTransService()

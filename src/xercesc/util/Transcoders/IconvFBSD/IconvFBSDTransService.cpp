@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/03/09 17:02:57  peiyongz
+ * PanicHandler
+ *
  * Revision 1.10  2003/03/07 15:08:57  tng
  * [Bug 17571] fix building IconvFBSD (namespaces) .  Patch from Bjoern A. Zeeb.
  *
@@ -356,7 +359,7 @@ IconvFBSDCD::IconvFBSDCD ( iconv_t    cd_from,
       fCDTo(cd_to), fCDFrom(cd_from)
 {
     if (fCDFrom == (iconv_t) -1 || fCDTo == (iconv_t) -1) {
-    XMLPlatformUtils::panic (XMLPlatformUtils::Panic_NoTransService);
+    XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
     }
 }
 
@@ -611,7 +614,7 @@ IconvFBSDTransService::IconvFBSDTransService()
     if (gIconvMutex == NULL) {
         gIconvMutex = new XMLMutex;
         if (gIconvMutex == NULL)
-            XMLPlatformUtils::panic (XMLPlatformUtils::Panic_NoTransService);
+            XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
     }
 #endif
 
@@ -674,7 +677,7 @@ IconvFBSDTransService::IconvFBSDTransService()
     }
 
     if (fUnicodeCP == NULL || cdTo() == (iconv_t)-1 || cdFrom() == (iconv_t)-1)
-    XMLPlatformUtils::panic (XMLPlatformUtils::Panic_NoTransService);
+    XMLPlatformUtils::panic (PanicHandler::Panic_NoTransService);
 }
 #endif /* XML_USE_LIBICONV */
 
