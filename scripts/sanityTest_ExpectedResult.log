@@ -6,6 +6,7 @@ Options:
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Defaults to off.
     -s          Enable schema processing. Defaults to off.
+    -f          Enable full schema constraint checking. Defaults to off.
 
 This program prints the number of elements, attributes,
 white spaces and other non-white space characters in the input file.
@@ -26,6 +27,7 @@ Options:
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing.
     -s          Enable schema processing.
+    -f          Enable full schema constraint checking.
     -x=XXX      Use a particular encoding for output (LATIN1*).
     -?          Show this help
 
@@ -161,6 +163,8 @@ Options:
     -n          Disable namespace processing. Defaults to on.
     -s          Disable schema processing. Defaults to on.
 
+    -f          Enable full schema constraint checking processing. Defaults to off.
+
 This program prints the number of elements, attributes,
 white spaces and other non-white space characters in the input file.
 
@@ -180,6 +184,10 @@ Options:
     -v=xxx      Validation scheme [always | never | auto*]
     -e          Expand Namespace Alias with URI's.
     -x=XXX      Use a particular encoding for output (LATIN1*).
+    -s          Disable schema processing. Defaults to on.
+
+    -f          Enable full schema constraint checking processing. Defaults to off.
+
     -?          Show this help
 
   * = Default if not provided explicitly
@@ -365,7 +373,7 @@ attributes in the given XML file.
 personal.xml:{timing removed}(37 elems, 12 attrs, 0 spaces, 268 chars)
 
 Usage:
-    DOMCount [-v -n] {XML file}
+    DOMCount [options] <XML file>
 
 This program invokes the XML4C DOM parser, builds
 the DOM tree, and then prints the number of elements
@@ -375,6 +383,7 @@ Options:
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Defaults to off.
     -s          Enable schema processing. Defaults to off.
+    -f          Enable full schema constraint checking. Defaults to off.
 
   * = Default if not provided explicitly
 
@@ -383,7 +392,7 @@ personal.xml:{timing removed}(37 elems).
 personal.xml:{timing removed}(37 elems).
 personal-schema.xml:{timing removed}(37 elems).
 
-Usage: DOMPrint [options] file
+Usage: DOMPrint [options] <XML file>
 
 This program invokes the Xerces-C DOM parser and builds the DOM
 tree. It then traverses the DOM tree and prints the contents
@@ -395,6 +404,7 @@ Options:
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Default is off.
     -s          Enable schema processing. Default is off.
+    -f          Enable full schema constraint checking. Defaults to off.
     -x=XXX      Use a particular encoding for output. Default is
                 the same encoding as the input XML file. UTF-8 if
                 input XML file has not XML declaration.
@@ -538,7 +548,7 @@ The parser has intrinsic support for the following encodings:
 
 
 Usage:
-    IDOMCount [-v -n] {XML file}
+    IDOMCount [options] <XML file>
 
 This program invokes the XML4C DOM parser, builds
 the DOM tree, and then prints the number of elements
@@ -547,8 +557,8 @@ found in the input XML file.
 Options:
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Defaults to off.
-
     -s          Enable schema processing. Defaults to off.
+    -f          Enable full schema constraint checking. Defaults to off.
 
   * = Default if not provided explicitly
 
@@ -557,7 +567,7 @@ personal.xml:{timing removed}(37 elems).
 personal.xml:{timing removed}(37 elems).
 personal-schema.xml:{timing removed}(37 elems).
 
-Usage: IDOMPrint [options] file
+Usage: IDOMPrint [options] <XML file>
 
 This program invokes the Xerces-C IDOM parser and builds the IDOM
 tree. It then traverses the DOM tree and prints the contents
@@ -569,6 +579,7 @@ Options:
     -v=xxx      Validation scheme [always | never | auto*]
     -n          Enable namespace processing. Default is off.
     -s          Enable schema processing. Default is off.
+    -f          Enable full schema constraint checking. Defaults is off.
     -x=XXX      Use a particular encoding for output. Default is
                 the same encoding as the input XML file. UTF-8 if
                 input XML file has not XML declaration.
@@ -724,6 +735,7 @@ Options:
       -v=xxx        - Validation scheme [always | never | auto*]
       -n            - Enable namespace processing [default is off]
       -s            - Enable schema processing [default is off]
+      -f            - Enable full schema constraint checking [default is off]
       -?            - Show this help (must be the only parameter)
 
   * = Default if not provided explicitly
