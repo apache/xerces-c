@@ -3008,6 +3008,10 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMProcessingInstruction.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMPSVITypeInfo.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMRange.hpp
 # End Source File
 # Begin Source File
