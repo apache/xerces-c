@@ -1033,6 +1033,14 @@ SOURCE=..\..\..\..\..\src\dom\DOM_TreeWalker.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\dom\DOM_XMLDecl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\DOM_XMLDecl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\dom\DomMemDebug.cpp
 # End Source File
 # Begin Source File
@@ -1194,6 +1202,14 @@ SOURCE=..\..\..\..\..\src\dom\TreeWalkerImpl.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\dom\TreeWalkerImpl.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\XMLDeclImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\dom\XMLDeclImpl.hpp
 # End Source File
 # End Group
 # Begin Group "validators"
