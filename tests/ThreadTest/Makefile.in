@@ -108,7 +108,7 @@ ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
 $(OUTDIR)/ThreadTest.o:: ${SRC}/ThreadTest.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/ThreadTest.o ${SRC}/ThreadTest.cpp
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/ThreadTest.o ${SRC}/ThreadTest.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}

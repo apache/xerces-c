@@ -91,7 +91,6 @@ EXEC=	${XERCESCROOT}/bin
 OBJS=	${OUTDIR}/InitTermTest.o
 SRC=	${XERCESCROOT}/tests/${APP_DIR}
 HEADER_FILES=${SRC}/InitTermTest.hpp
-INCLUDE = ${INCLUDES}
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
@@ -110,7 +109,7 @@ ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
 $(OUTDIR)/InitTermTest.o:: ${SRC}/InitTermTest.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDE) -o $(OUTDIR)/InitTermTest.o ${SRC}/InitTermTest.cpp
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/InitTermTest.o ${SRC}/InitTermTest.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}

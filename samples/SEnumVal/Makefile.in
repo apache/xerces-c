@@ -1,37 +1,37 @@
 #
 # The Apache Software License, Version 1.1
-# 
+#
 # Copyright (c) 2001 The Apache Software Foundation.  All rights
 # reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
-# 
+#
 # 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer. 
-# 
+#    notice, this list of conditions and the following disclaimer.
+#
 # 2. Redistributions in binary form must reproduce the above copyright
 #    notice, this list of conditions and the following disclaimer in
 #    the documentation and/or other materials provided with the
 #    distribution.
-# 
+#
 # 3. The end-user documentation included with the redistribution,
-#    if any, must include the following acknowledgment:  
+#    if any, must include the following acknowledgment:
 #       "This product includes software developed by the
 #        Apache Software Foundation (http://www.apache.org/)."
 #    Alternately, this acknowledgment may appear in the software itself,
 #    if and wherever such third-party acknowledgments normally appear.
-# 
+#
 # 4. The names "Xerces" and "Apache Software Foundation" must
 #    not be used to endorse or promote products derived from this
-#    software without prior written permission. For written 
+#    software without prior written permission. For written
 #    permission, please contact apache\@apache.org.
-# 
+#
 # 5. Products derived from this software may not be called "Apache",
 #    nor may "Apache" appear in their name, without prior written
 #    permission of the Apache Software Foundation.
-# 
+#
 # THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
 # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
 # OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,16 +45,19 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 # ====================================================================
-# 
+#
 # This software consists of voluntary contributions made by many
 # individuals on behalf of the Apache Software Foundation, and was
 # originally based on software copyright (c) 2001, International
 # Business Machines, Inc., http://www.ibm.com .  For more information
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
-# 
+#
 # $Id$
 # $Log$
+# Revision 1.6  2002/08/19 15:13:38  tng
+# [Bug 11229] bogus -I statements order in CXXFLAGS.
+#
 # Revision 1.5  2002/07/26 16:36:32  tng
 # [Bug 2681] Can't build with gcc/g++ not named 'gcc'/'g++'.  Patch from Jonathan Lennox.
 #
@@ -113,17 +116,17 @@ makedir::
 	-mkdir -p $(OUTDIR)
 
 ${EXEC}/${APP_NAME}:: ${OBJS}
-	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} 
+	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 ${BATCH_TARGET}:: ${OBJS}
-	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} 
+	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
-## SOLARIS 
+## SOLARIS
 ifeq (${PLATFORM}, SOLARIS)
 $(OUTDIR)/SEnumVal.o:: ${SRC}/SEnumVal.cpp ${HEADER_FILES}
-	${CC} ${CMP} -ptr${OUTDIR} $(INCLUDES) -o $(OUTDIR)/SEnumVal.o ${SRC}/SEnumVal.cpp
+	${CC} ${INCLUDES} ${CMP} -ptr${OUTDIR} -o $(OUTDIR)/SEnumVal.o ${SRC}/SEnumVal.cpp
 else
 $(OUTDIR)/SEnumVal.o:: ${SRC}/SEnumVal.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/SEnumVal.o ${SRC}/SEnumVal.cpp
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/SEnumVal.o ${SRC}/SEnumVal.cpp
 endif
 
 clean::

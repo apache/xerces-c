@@ -105,7 +105,7 @@ ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
 $(OUTDIR)/CreateDOMDocument.o:: ${SRC}/CreateDOMDocument.cpp
-	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/CreateDOMDocument.o ${SRC}/CreateDOMDocument.cpp
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/CreateDOMDocument.o ${SRC}/CreateDOMDocument.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}

@@ -108,7 +108,7 @@ ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
 $(OUTDIR)/EncodingTest.o:: ${SRC}/EncodingTest.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/EncodingTest.o ${SRC}/EncodingTest.cpp
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/EncodingTest.o ${SRC}/EncodingTest.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}

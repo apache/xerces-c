@@ -90,7 +90,6 @@ EXEC=	${XERCESCROOT}/bin
 OBJS=	${OUTDIR}/RangeTest.o
 SRC=	${XERCESCROOT}/tests/${APP_DIR}
 HEADER_FILES=
-INCLUDE = ${INCLUDES}
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
@@ -110,7 +109,7 @@ ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
 $(OUTDIR)/RangeTest.o:: ${SRC}/RangeTest.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDE) -o $(OUTDIR)/RangeTest.o ${SRC}/RangeTest.cpp
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/RangeTest.o ${SRC}/RangeTest.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}

@@ -106,10 +106,10 @@ ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
 $(OUTDIR)/StdInParse.o:: ${SRC}/StdInParse.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/StdInParse.o ${SRC}/StdInParse.cpp
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/StdInParse.o ${SRC}/StdInParse.cpp
 
 $(OUTDIR)/StdInParseHandlers.o:: ${SRC}/StdInParseHandlers.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/StdInParseHandlers.o ${SRC}/StdInParseHandlers.cpp
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/StdInParseHandlers.o ${SRC}/StdInParseHandlers.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}

@@ -90,7 +90,6 @@ EXEC=	${XERCESCROOT}/bin
 OBJS=	${OUTDIR}/Traversal.o
 SRC=	${XERCESCROOT}/tests/${APP_DIR}
 HEADER_FILES=
-INCLUDE = ${INCLUDES}
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
@@ -109,7 +108,7 @@ ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
 $(OUTDIR)/Traversal.o:: ${SRC}/Traversal.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDE) -o $(OUTDIR)/Traversal.o ${SRC}/Traversal.cpp
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/Traversal.o ${SRC}/Traversal.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}
