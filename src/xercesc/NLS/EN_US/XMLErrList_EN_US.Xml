@@ -729,6 +729,7 @@
             <Message Id="DateTime_dur_inv_b4T"        Text="Duration has invalid stuff before 'T'! '{0}' "/>
             <Message Id="DateTime_dur_NoTimeAfterT"   Text="Duration has no time elements after 'T'! '{0}' "/>
             <Message Id="DateTime_dur_NoElementAtAll" Text="Duration shall have at least element ! '{0}' "/>
+            <Message Id="DateTime_dur_inv_seconds"    Text="Duration shall have at least one digit after the . ! '{0}' "/>
             <Message Id="DateTime_date_incomplete"    Text="Incomplete Date ! '{0}' "/>
             <Message Id="DateTime_date_invalid"       Text="Invalid Date ! '{0}' "/>
             <Message Id="DateTime_time_incomplete"    Text="Incomplete Time ! '{0}' "/>

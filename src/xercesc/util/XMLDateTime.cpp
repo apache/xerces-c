@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/11/28 20:39:27  peiyongz
+ * Schema Errata: E2-23 seconds part shall have at least one digit after the dot
+ *                           if it appears.
+ *
  * Revision 1.3  2002/11/06 22:22:21  peiyongz
  * Schema-Errata: E2-12: gMonth
  *
@@ -859,8 +863,25 @@ void XMLDateTime::parseDuration()
         {
             //scan seconds
             int mlsec = indexOf (fStart, end, MILISECOND_SEPARATOR);
+
+            /***
+             * Schema Errata: E2-23
+             * at least one digit must follow the decimal point if it appears. 
+             * That is, the value of the seconds component must conform 
+             * to the following pattern: [0-9]+(.[0-9]+)? 
+             */
             if ( mlsec != NOT_FOUND )
             {
+                /***
+                 * make usure there is something after the '.' and before the end.
+                 */
+                if ( mlsec+1 == end )
+                {
+                    ThrowXML1(SchemaDateTimeException
+                            , XMLExcepts::DateTime_dur_inv_seconds
+                            ,fBuffer);
+                }
+
                 fValue[Second]     = negate * parseInt(fStart, mlsec);
                 fValue[MiliSecond] = negate * parseInt(mlsec+1, end);
             }

@@ -713,49 +713,50 @@ $set 3
 311  Duration has invalid stuff before 'T'! '{0}' 
 312  Duration has no time elements after 'T'! '{0}' 
 313  Duration shall have at least element ! '{0}' 
-314  Incomplete Date ! '{0}' 
-315  Invalid Date ! '{0}' 
-316  Incomplete Time ! '{0}' 
-317  Invalid Time ! '{0}' 
-318  ms shall be present once '.' is present ! '{0}' 
-319  Incomplete YearMonth! '{0}' 
-320  Year separator is missing or misplaced ! '{0}' 
-321  Year must have 'CCYY' format ! '{0}' 
-322  Invalid leading zero in year! '{0}' 
-323  no month in YearMonth ! '{0}' 
-324  TimeZone is expected ! '{0}' 
-325  Expecting nothing after 'Z'! '{0}' 
-326  Invalid TimeZone! '{0}' 
-327  The year (0000) is an illegal year value! '{0}' 
-328  The month must have values 1 to 12! '{0}' 
-329  The day must have values 1 to 31! '{0}' 
-330  Hour must have values 0-23! '{0}' 
-331  Minute must have values 0-59! '{0}' 
-332  Second must have values 0-60! '{0}' 
-333  Minute must have values 0-59! '{0}' 
-334  NSCompat: The namespace of '{0}' is not allowed by wildcard in base
-335  The occurrence range of '{0}' is not a valid restriction of base element's range
-336  NameAndTypeOK: The Element name/uri in restriction does not match that of corresponding base element
-337  NameAndTypeOK: Element '{0}' is nillable in the restriction, while it's not in the base
-338  NameAndTypeOK: Element '{0}' is either not fixed, or is not fixed with the same value as in the base
-339  NameAndTypeOK: The disallowed substitutions, for element '{0}', are not a superset of those of the base element
-340  NameAndTypeOK: Element '{0}' has a type that does not derive from that of the base
-341  NameAndTypeOK: Derived element '{0}' has fewer Identity Constraints than base element '{1}'
-342  NameAndTypeOK: Derived element '{0}' has an Identity Constraint that does not appear on base element '{1}'
-343  RecurseAsIfGroup: Element '{0}' belongs to a group of a variety different from that of the base
-344  Occurrence range of group is not a valid restriction of occurrence range of base group
-345  Recurse: There is not a complete functional mapping between the particles
-346  Forbidden restriction of 'any': Choice,Seq,All,Elt
-347  Forbidden restriction of 'all': Choice,Seq,Elt
-348  Forbidden restriction of 'choice': All,Seq,Leaf
-349  Forbidden restriction of 'sequence': Elt
-350  Wildcard's occurrence range not a restriction of base wildcard's range
-351  Wildcard is not a subset of corresponding wildcard in base
-352  Group's occurrence range not a restriction of base wildcard's range
-353  RecurseUnordered: There is not a complete functional mapping between the particles
-354  MapAndSum: There is not a complete functional mapping between the particles
-355  Particle derivation: Invalid content spec node type
-356  NodeIDMap overflows and exceeds the largest available size
+314  Duration shall have at least one digit after the . ! '{0}' 
+315  Incomplete Date ! '{0}' 
+316  Invalid Date ! '{0}' 
+317  Incomplete Time ! '{0}' 
+318  Invalid Time ! '{0}' 
+319  ms shall be present once '.' is present ! '{0}' 
+320  Incomplete YearMonth! '{0}' 
+321  Year separator is missing or misplaced ! '{0}' 
+322  Year must have 'CCYY' format ! '{0}' 
+323  Invalid leading zero in year! '{0}' 
+324  no month in YearMonth ! '{0}' 
+325  TimeZone is expected ! '{0}' 
+326  Expecting nothing after 'Z'! '{0}' 
+327  Invalid TimeZone! '{0}' 
+328  The year (0000) is an illegal year value! '{0}' 
+329  The month must have values 1 to 12! '{0}' 
+330  The day must have values 1 to 31! '{0}' 
+331  Hour must have values 0-23! '{0}' 
+332  Minute must have values 0-59! '{0}' 
+333  Second must have values 0-60! '{0}' 
+334  Minute must have values 0-59! '{0}' 
+335  NSCompat: The namespace of '{0}' is not allowed by wildcard in base
+336  The occurrence range of '{0}' is not a valid restriction of base element's range
+337  NameAndTypeOK: The Element name/uri in restriction does not match that of corresponding base element
+338  NameAndTypeOK: Element '{0}' is nillable in the restriction, while it's not in the base
+339  NameAndTypeOK: Element '{0}' is either not fixed, or is not fixed with the same value as in the base
+340  NameAndTypeOK: The disallowed substitutions, for element '{0}', are not a superset of those of the base element
+341  NameAndTypeOK: Element '{0}' has a type that does not derive from that of the base
+342  NameAndTypeOK: Derived element '{0}' has fewer Identity Constraints than base element '{1}'
+343  NameAndTypeOK: Derived element '{0}' has an Identity Constraint that does not appear on base element '{1}'
+344  RecurseAsIfGroup: Element '{0}' belongs to a group of a variety different from that of the base
+345  Occurrence range of group is not a valid restriction of occurrence range of base group
+346  Recurse: There is not a complete functional mapping between the particles
+347  Forbidden restriction of 'any': Choice,Seq,All,Elt
+348  Forbidden restriction of 'all': Choice,Seq,Elt
+349  Forbidden restriction of 'choice': All,Seq,Leaf
+350  Forbidden restriction of 'sequence': Elt
+351  Wildcard's occurrence range not a restriction of base wildcard's range
+352  Wildcard is not a subset of corresponding wildcard in base
+353  Group's occurrence range not a restriction of base wildcard's range
+354  RecurseUnordered: There is not a complete functional mapping between the particles
+355  MapAndSum: There is not a complete functional mapping between the particles
+356  Particle derivation: Invalid content spec node type
+357  NodeIDMap overflows and exceeds the largest available size
 
 
 $set 4

@@ -730,6 +730,7 @@ en_US {
 		"Duration has invalid stuff before 'T'! '{0}'  " ,
 		"Duration has no time elements after 'T'! '{0}'  " ,
 		"Duration shall have at least element ! '{0}'  " ,
+		"Duration shall have at least one digit after the . ! '{0}'  " ,
 		"Incomplete Date ! '{0}'  " ,
 		"Invalid Date ! '{0}'  " ,
 		"Incomplete Time ! '{0}'  " ,
