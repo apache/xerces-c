@@ -869,7 +869,8 @@ const XMLCh* DOMDocumentImpl::getVersion() const {
 }
 
 void DOMDocumentImpl::setVersion(const XMLCh* version){
-    if (XMLString::compareString(version, XMLUni::fgSupportedVersion))
+    if (XMLString::stringLen(version) &&
+        XMLString::compareString(version, XMLUni::fgSupportedVersion))
         throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 
     fVersion = cloneString(version);
