@@ -270,6 +270,18 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+{
+    const char* tmpFileName = XMLString::transcode(fileName);
+    ArrayJanitor<char> janText((char*)tmpFileName);
+    return fopen( tmpFileName , "wb" );
+}
+
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+{
+    return fopen( fileName , "wb" );
+}
+
 unsigned int
 XMLPlatformUtils::readFileBuffer(FileHandle              theFile
                                , const unsigned int      toRead
@@ -287,6 +299,42 @@ XMLPlatformUtils::readFileBuffer(FileHandle              theFile
     return (unsigned int) noOfItemsRead;
 }
 
+void
+XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
+                                   , long                  toWrite
+                                   , const XMLByte* const  toFlush)                                   
+{
+    if (!theFile        ||
+        (toWrite <= 0 ) ||
+        !toFlush        ||
+        !*toFlush        )
+        return;
+
+    const XMLByte* tmpFlush = (const XMLByte*) toFlush;
+    unsigned long  bytesWritten = 0;
+
+    while (true)
+    {
+        fwrite(theFile, tmpFlush, toWrite, &bytesWritten, 0);
+
+        if(ferror((FILE*)theFile))
+        {
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+          //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+        }
+
+        if (bytesWritten < (unsigned long) toWrite) //incomplete write
+        {
+            tmpFlush+=bytesWritten;
+            toWrite-=bytesWritten;
+            bytesWritten=0;
+        }
+        else
+            return;
+    }
+
+    return;
+}
 
 void XMLPlatformUtils::resetFile(FileHandle theFile)
 {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/06/19 22:00:57  peiyongz
+ * DOM3:DOMSave Interface support: openFiletoWrite(), writeBuffertoFile()
+ *
  * Revision 1.2  2002/05/21 20:31:47  tng
  * Minor update: Remove obsolete code
  *
@@ -357,6 +360,17 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+{
+    const char* tmpFileName = XMLString::transcode(fileName);
+    ArrayJanitor<char> janText((char*)tmpFileName);
+    return fopen( tmpFileName , "wb" );
+}
+
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+{
+    return fopen( fileName , "wb" );
+}
 
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
@@ -380,6 +394,42 @@ XMLPlatformUtils::readFileBuffer(       FileHandle      theFile
     return (unsigned int) noOfItemsRead;
 }
 
+void
+XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
+                                   , long                  toWrite
+                                   , const XMLByte* const  toFlush)                                   
+{
+    if (!theFile        ||
+        (toWrite <= 0 ) ||
+        !toFlush        ||
+        !*toFlush        )
+        return;
+
+    const XMLByte* tmpFlush = (const XMLByte*) toFlush;
+    unsigned long  bytesWritten = 0;
+
+    while (true)
+    {
+        fwrite(theFile, tmpFlush, toWrite, &bytesWritten, 0);
+
+        if(ferror((FILE*)theFile))
+        {
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+          //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+        }
+
+        if (bytesWritten < (unsigned long) toWrite) //incomplete write
+        {
+            tmpFlush+=bytesWritten;
+            toWrite-=bytesWritten;
+            bytesWritten=0;
+        }
+        else
+            return;
+    }
+
+    return;
+}
 
 void XMLPlatformUtils::resetFile(FileHandle theFile)
 {

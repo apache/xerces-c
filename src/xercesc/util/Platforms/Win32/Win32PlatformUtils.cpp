@@ -347,6 +347,121 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+{
+    FileHandle retVal = ::CreateFileA
+    (
+        fileName
+        , GENERIC_WRITE
+        , 0              // no shared write
+        , 0
+        , CREATE_ALWAYS
+        , FILE_FLAG_WRITE_THROUGH
+        , 0
+    );
+
+    if (retVal == INVALID_HANDLE_VALUE)
+        return 0;
+
+    return retVal;
+}
+
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+{
+    // Watch for obvious wierdness
+    if (!fileName)
+        return 0;
+
+    //  Ok, this might look stupid but its a semi-expedient way to deal
+    //  with a thorny problem. Shift-JIS and some other Asian encodings
+    //  are fundamentally broken and map both the backslash and the Yen
+    //  sign to the same code point. Transcoders have to pick one or the
+    //  other to map '\' to Unicode and tend to choose the Yen sign. 
+    //
+    //  Unicode Yen or Won signs as directory separators will fail.
+    //
+    //  So, we will check this path name for Yen or won signs and, if they are
+    //  there, we'll replace them with slashes.  
+    //
+    //  A further twist:  we replace Yen and Won with forward slashes rather 
+    //   than back slashes.  Either form of slash will work as a directory
+    //   separator.  On Win 95 and 98, though, Unicode back-slashes may
+    //   fail to transode back to 8-bit 0x5C with some Unicode converters
+    //   to  some of the problematic code pages.  Forward slashes always
+    //   transcode correctly back to 8 bit char * form.
+    //
+    XMLCh *tmpUName = 0;
+    const XMLCh *nameToOpen = fileName;
+    
+    const XMLCh* srcPtr = fileName;
+    while (*srcPtr)
+    {
+        if (*srcPtr == chYenSign ||
+            *srcPtr == chWonSign)
+            break;
+        srcPtr++;
+    }
+    
+    //
+    //  If we found a yen, then we have to create a temp file name. Else
+    //  go with the file name as is and save the overhead.
+    //
+    if (*srcPtr)
+    {
+        tmpUName = XMLString::replicate(fileName);
+        
+        XMLCh* tmpPtr = tmpUName;
+        while (*tmpPtr)
+        {
+            if (*tmpPtr == chYenSign ||
+                *tmpPtr == chWonSign)
+                *tmpPtr = chForwardSlash;
+            tmpPtr++;
+        }
+        nameToOpen = tmpUName;
+    }
+    FileHandle retVal = 0;
+    if (gOnNT)
+    {
+        retVal = ::CreateFileW
+            (
+            nameToOpen
+            , GENERIC_WRITE
+            , 0              // no shared write
+            , 0
+            , CREATE_ALWAYS
+            , FILE_FLAG_WRITE_THROUGH
+            , 0
+            );
+    }
+    else
+    {
+        //
+        //  We are Win 95 / 98.  Take the Unicode file name back to (char *)
+        //    so that we can open it.
+        //
+        char* tmpName = XMLString::transcode(nameToOpen);
+        retVal = ::CreateFileA
+            (
+            tmpName
+            , GENERIC_WRITE
+            , 0              // no shared write
+            , 0
+            , CREATE_ALWAYS
+            , FILE_FLAG_WRITE_THROUGH
+            , 0
+            );
+        delete [] tmpName;
+    }
+
+    if (tmpUName)  
+        delete [] tmpUName;
+    
+    if (retVal == INVALID_HANDLE_VALUE)
+        return 0;
+    
+    return retVal;
+}
 
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
@@ -395,6 +510,38 @@ XMLPlatformUtils::readFileBuffer(       FileHandle      theFile
     return (unsigned int)bytesRead;
 }
 
+void
+XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
+                                   , long                  toWrite
+                                   , const XMLByte* const  toFlush)                                   
+{
+    if (!theFile        ||
+        (toWrite <= 0 ) ||
+        !toFlush        ||
+        !*toFlush        )
+        return;
+
+    const XMLByte* tmpFlush = (const XMLByte*) toFlush;
+    unsigned long  bytesWritten = 0;
+
+    while (true)
+    {
+        if (!::WriteFile(theFile, tmpFlush, toWrite, &bytesWritten, 0))
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotReadFromFile);
+          //ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+
+        if (bytesWritten < (unsigned long) toWrite) //incomplete write
+        {
+            tmpFlush+=bytesWritten;
+            toWrite-=bytesWritten;
+            bytesWritten=0;
+        }
+        else
+            return;
+    }
+
+    return;
+}
 
 void XMLPlatformUtils::resetFile(FileHandle theFile)
 {

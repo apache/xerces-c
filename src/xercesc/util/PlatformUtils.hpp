@@ -249,6 +249,30 @@ public :
       */
     static FileHandle openFile(const XMLCh* const fileName);
 
+    /** Open a named file to write
+      *
+      * This must be implemented by the per-platform driver, which should
+      * use local file services to open passed file. If it fails, a
+      * null handle pointer should be returned.
+      *
+      * @param fileName The string containing the name of the file
+      *
+      * @return The file handle of the opened file
+      */
+    static FileHandle openFileToWrite(const char* const fileName);
+
+    /** Open a named file to write
+      *
+      * This must be implemented by the per-platform driver, which should
+      * use local file services to open the passed file. If it fails, a
+      * null handle pointer should be returned.
+      *
+      * @param fileName The string containing the name of the file
+      *
+      * @return The file handle of the opened file
+      */
+    static FileHandle openFileToWrite(const XMLCh* const fileName);
+
     /** Opens the standard input as a file
       *
       * This must be implemented by the per-platform driver, which should
@@ -280,6 +304,27 @@ public :
                 FileHandle      theFile
         , const unsigned int    toRead
         ,       XMLByte* const  toFill
+    );
+
+    /** Writes the buffer to the file
+      *
+      * This must be implemented by the per-platform driver, which should
+      * use local file services to write up to 'toWrite' bytes of data to
+      * the passed file. Unless exception raised by local file services,
+      * 'toWrite' bytes of data is to be written to the passed file.
+      *
+      * @param theFile The file handle to be written to.
+      * @param toWrite The maximum number of byte to write from the current
+      * position
+      * @param toFlush The byte buffer to flush
+      *
+      * @return void
+      */
+    static void writeBufferToFile
+    (
+          FileHandle     const  theFile
+        , long                  toWrite
+        , const XMLByte* const  toFlush
     );
 
     /** Resets the file handle
