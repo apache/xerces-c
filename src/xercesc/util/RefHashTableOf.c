@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2002/07/11 18:49:53  knoaman
+ * Add setAdoptElements method.
+ * Rename removeBucketElemSafe to orphanKey.
+ *
  * Revision 1.4  2002/07/05 11:31:04  tng
  * Fix typo.
  *
@@ -226,6 +230,60 @@ template <class TVal> void RefHashTableOf<TVal>::removeAll()
     }
 }
 
+// This method returns the data associated with a key. The key entry is deleted. The caller
+// now owns the returned data (case of hashtable adopting the data).
+// This function is called by transferElement so that the undeleted data can be transferred
+// to a new key which will own that data.
+template <class TVal> TVal* RefHashTableOf<TVal>::
+orphanKey(const void* const key)
+{
+    // Hash the key
+    TVal* retVal = 0;
+    unsigned int hashVal = fHash->getHashVal(key, fHashModulus);
+    if (hashVal > fHashModulus)
+        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
+
+    //
+    //  Search the given bucket for this key. Keep up with the previous
+    //  element so we can patch around it.
+    //
+    RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
+    RefHashTableBucketElem<TVal>* lastElem = 0;
+
+    while (curElem)
+    {
+        if (fHash->equals(key, curElem->fKey))
+        {
+            if (!lastElem)
+            {
+                // It was the first in the bucket
+                fBucketList[hashVal] = curElem->fNext;
+            }
+             else
+            {
+                // Patch around the current element
+                lastElem->fNext = curElem->fNext;
+            }
+
+            retVal = curElem->fData;
+
+            // Delete the current element
+            delete curElem;
+            break;
+        }
+
+        // Move both pointers upwards
+        lastElem = curElem;
+        curElem = curElem->fNext;
+    }
+
+    // We never found that key
+    if (!retVal)
+        ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
+
+    return retVal;
+}
+
 //
 // cleanup():
 //   similar to destructor
@@ -270,12 +328,7 @@ template <class TElem> void RefHashTableOf<TElem>::reinitialize(HashBase* hashBa
 // whatever key2 has originally will be purged (if adopted)
 template <class TElem> void RefHashTableOf<TElem>::transferElement(const void* const key1, void* key2)
 {
-    TElem* data = get(key1);
-
-    unsigned int hashVal;
-    removeBucketElemSafe(key1, hashVal);
-
-    put(key2, data);
+    put(key2, orphanKey(key1));
 }
 
 
@@ -301,6 +354,15 @@ get(const void* const key) const
     return findIt->fData;
 }
 
+
+// ---------------------------------------------------------------------------
+//  RefHashTableOf: Getters
+// ---------------------------------------------------------------------------
+template <class TVal>
+void RefHashTableOf<TVal>::setAdoptElements(const bool aValue)
+{
+    fAdoptedElems = aValue;
+}
 
 // ---------------------------------------------------------------------------
 //  RefHashTableOf: Putters
@@ -424,59 +486,6 @@ removeBucketElem(const void* const key, unsigned int& hashVal)
     ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
 }
 
-
-// This is same as removeBucketElem except that it does not delete the data
-//   even it is adopted
-// This function is called by transferElement so that the undeleted data can be transferred
-//   the key2 will own this data.
-template <class TVal> void RefHashTableOf<TVal>::
-removeBucketElemSafe(const void* const key, unsigned int& hashVal)
-{
-    // Hash the key
-    hashVal = fHash->getHashVal(key, fHashModulus);
-    if (hashVal > fHashModulus)
-        ThrowXML(RuntimeException, XMLExcepts::HshTbl_BadHashFromKey);
-
-    //
-    //  Search the given bucket for this key. Keep up with the previous
-    //  element so we can patch around it.
-    //
-    RefHashTableBucketElem<TVal>* curElem = fBucketList[hashVal];
-    RefHashTableBucketElem<TVal>* lastElem = 0;
-
-    while (curElem)
-    {
-        if (fHash->equals(key, curElem->fKey))
-        {
-            if (!lastElem)
-            {
-                // It was the first in the bucket
-                fBucketList[hashVal] = curElem->fNext;
-            }
-             else
-            {
-                // Patch around the current element
-                lastElem->fNext = curElem->fNext;
-            }
-
-            // even if we adopted the elements, do not delete the data
-            // if (fAdoptedElems)
-            //    delete curElem->fData;
-
-            // Delete the current element
-            delete curElem;
-
-            return;
-        }
-
-        // Move both pointers upwards
-        lastElem = curElem;
-        curElem = curElem->fNext;
-    }
-
-    // We never found that key
-    ThrowXML(NoSuchElementException, XMLExcepts::HshTbl_NoSuchKeyExists);
-}
 
 
 // ---------------------------------------------------------------------------
