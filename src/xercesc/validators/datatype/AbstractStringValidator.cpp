@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/02/22 18:28:26  peiyongz
+ * Schema Errata E2-35 Length, minLength and maxLength in different derivation steps.
+ *
  * Revision 1.9  2003/01/27 19:24:17  peiyongz
  * normalize Base64 data before checking against enumeration.
  *
@@ -385,24 +388,53 @@ void AbstractStringValidator::inspectFacetBase()
     /***
                 Non coexistence of derived' length and base'    (minLength | maxLength)
                                    base'    length and derived' (minLength | maxLength)
+
+     E2-35
+     It is an ·error· for both length and either of minLength or maxLength to be members of {facets},
+     unless they are specified in different derivation steps in which case the following must be true: 
+     the {value} of minLength <= the {value} of length <= the {value} of maxLength   
     ***/
 
-    // check 4.3.1.c1 error: length & (base.maxLength | base.minLength)
+    // error: length > base.maxLength 
+    //        length < base.minLength
     if ((thisFacetsDefined & DatatypeValidator::FACET_LENGTH) !=0)
     {
-        if ((baseFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) !=0)
-            ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
-        else if ((baseFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0)
-            ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
+        if (((baseFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
+             (thisLength > baseMaxLength)                                   )
+        {
+            REPORT_FACET_ERROR(thisLength
+                             , baseMaxLength
+                             , XMLExcepts::FACET_Len_baseMaxLen)
+        }
+        
+        if (((baseFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0) &&
+             (thisLength < baseMinLength)                                   )
+        {
+            REPORT_FACET_ERROR(thisLength
+                             , baseMinLength
+                             , XMLExcepts::FACET_Len_baseMinLen)
+        }
     }
 
-    // check 4.3.1.c1 error: base.length & (maxLength | minLength)
+    // error: baseLength > maxLength 
+    //        baseLength < minLength
     if ((baseFacetsDefined & DatatypeValidator::FACET_LENGTH) !=0)
     {
-        if ((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) !=0)
-            ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_maxLen);
-        else if ((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0)
-            ThrowXML(InvalidDatatypeFacetException, XMLExcepts::FACET_Len_minLen);
+        if (((thisFacetsDefined & DatatypeValidator::FACET_MAXLENGTH) !=0) &&
+             (baseLength > thisMaxLength)                                   )
+        {
+            REPORT_FACET_ERROR(thisMaxLength
+                             , baseLength
+                             , XMLExcepts::FACET_maxLen_baseLen)
+        }
+        
+        if (((thisFacetsDefined & DatatypeValidator::FACET_MINLENGTH) !=0) &&
+             (baseLength < thisMinLength)                                   )
+        {
+            REPORT_FACET_ERROR(thisMinLength
+                             , baseLength
+                             , XMLExcepts::FACET_minLen_baseLen)
+        }
     }
 
     // check 4.3.1.c2 error: length != base.length
