@@ -95,7 +95,6 @@ class DatatypeValidatorFactory;
 class QName;
 class ComplexTypeInfo;
 class XMLAttDef;
-class ContentSpecNode;
 class NamespaceScope;
 class SchemaAttDef;
 class InputSource;
@@ -705,80 +704,6 @@ private:
                           ValueVectorOf<SchemaInfo*>* const infoList);
 
     // -----------------------------------------------------------------------
-    //  Particle Derivation Checking methods
-    // -----------------------------------------------------------------------
-    void checkParticleDerivation();
-    void checkParticleDerivationOk(ContentSpecNode* const curNode,
-                                   const int derivedScope,
-                                   ContentSpecNode* const baseNode,
-                                   const int baseScope,
-                                   const ComplexTypeInfo* const baseInfo = 0);
-    ContentSpecNode* checkForPointlessOccurrences(ContentSpecNode* const specNode,
-                                                  const ContentSpecNode::NodeTypes nodeType,
-                                                  ValueVectorOf<ContentSpecNode*>* const nodes);
-    void gatherChildren(const ContentSpecNode::NodeTypes parentNodeType,
-                        ContentSpecNode* const specNode,
-                        ValueVectorOf<ContentSpecNode*>* const nodes);
-    bool isOccurrenceRangeOK(const int min1, const int max1, const int min2, const int max2);
-    void checkNSCompat(const ContentSpecNode* const derivedSpecNode,
-                       const ContentSpecNode* const baseSpecNode);
-    bool wildcardEltAllowsNamespace(const ContentSpecNode* const baseSpecNode,
-                                    const unsigned int derivedURI);
-    void checkNameAndTypeOK(const ContentSpecNode* const derivedSpecNode,
-                            const int derivedScope,
-                            const ContentSpecNode* const baseSpecNode,
-                            const int baseScope,
-                            const ComplexTypeInfo* const baseInfo = 0);
-    SchemaElementDecl* findElement(const int scope,
-                                   const unsigned int uriIndex,
-                                   const XMLCh* const name,
-                                   SchemaGrammar* const grammar,
-                                   const ComplexTypeInfo* const typeInfo = 0);
-    void checkICRestriction(const SchemaElementDecl* const derivedElemDecl,
-                            const SchemaElementDecl* const baseElemDecl,
-                            const XMLCh* const derivedElemName,
-                            const XMLCh* const baseElemName);
-    void checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
-                      const SchemaElementDecl* const baseElemDecl,
-                      const XMLCh* const derivedElemName);
-    void checkRecurseAsIfGroup(ContentSpecNode* const derivedSpecNode,
-                               const int derivedScope,
-                               const ContentSpecNode* const baseSpecNode,
-                               const int baseScope,
-                               ValueVectorOf<ContentSpecNode*>* const nodes,
-                               const ComplexTypeInfo* const baseInfo);
-    void checkRecurse(const ContentSpecNode* const derivedSpecNode,
-                      const int derivedScope,
-                      ValueVectorOf<ContentSpecNode*>* const derivedNodes,
-                      const ContentSpecNode* const baseSpecNode,
-                      const int baseScope,
-                      ValueVectorOf<ContentSpecNode*>* const baseNodes,
-                      const ComplexTypeInfo* const baseInfo,
-                      const bool toLax = false);
-    void checkNSSubset(const ContentSpecNode* const derivedSpecNode,
-                       const ContentSpecNode* const baseSpecNode);
-    bool isWildCardEltSubset(const ContentSpecNode* const derivedSpecNode,
-                             const ContentSpecNode* const baseSpecNode);
-    void checkNSRecurseCheckCardinality(const ContentSpecNode* const derivedSpecNode,
-                                        ValueVectorOf<ContentSpecNode*>* const derivedNodes,
-                                        const int derivedScope,
-                                        ContentSpecNode* const baseSpecNode);
-    void checkRecurseUnordered(const ContentSpecNode* const derivedSpecNode,
-                               ValueVectorOf<ContentSpecNode*>* const derivedNodes, 
-                               const int derivedScope,
-                               ContentSpecNode* const baseSpecNode, 
-                               ValueVectorOf<ContentSpecNode*>* const baseNodes, 
-                               const int baseScope,
-                               const ComplexTypeInfo* const baseInfo);
-    void checkMapAndSum(const ContentSpecNode* const derivedSpecNode,
-                        ValueVectorOf<ContentSpecNode*>* const derivedNodes, 
-                        const int derivedScope,
-                        ContentSpecNode* const baseSpecNode, 
-                        ValueVectorOf<ContentSpecNode*>* const baseNodes, 
-                        const int baseScope,
-                        const ComplexTypeInfo* const baseInfo);
-
-    // -----------------------------------------------------------------------
     //  Private constants
     // -----------------------------------------------------------------------
     enum
@@ -1016,18 +941,6 @@ inline void TraverseSchema::getRedefineNewTypeName(const XMLCh* const oldTypeNam
     for (int i=0; i < redefineCounter; i++) {
         newTypeName.append(SchemaSymbols::fgRedefIdentifier);
     }
-}
-
-inline bool
-TraverseSchema::isOccurrenceRangeOK(const int min1, const int max1,
-                                    const int min2, const int max2) {
-
-    if (min1 >= min2 &&
-        (max2 == SchemaSymbols::UNBOUNDED || 
-         (max1 != SchemaSymbols::UNBOUNDED && max1 <= max2))) {
-        return true;
-    }
-    return false;
 }
 
 #endif

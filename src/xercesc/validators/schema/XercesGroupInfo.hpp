@@ -79,6 +79,7 @@
 //  Forward Declarations
 // ---------------------------------------------------------------------------
 class ContentSpecNode;
+class XSDLocator;
 
 
 class VALIDATORS_EXPORT XercesGroupInfo
@@ -93,11 +94,13 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    int                 getScope() const;
-    unsigned int        elementCount() const;
-    ContentSpecNode*    getContentSpec() const;
-    SchemaElementDecl*  elementAt(const unsigned int index);
-    const SchemaElementDecl*  elementAt(const unsigned int index) const;
+    int                      getScope() const;
+    unsigned int             elementCount() const;
+    ContentSpecNode*         getContentSpec() const;
+    SchemaElementDecl*       elementAt(const unsigned int index);
+    const SchemaElementDecl* elementAt(const unsigned int index) const;
+    XSDLocator*              getLocator() const;
+    XercesGroupInfo*         getBaseGroup() const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
@@ -105,11 +108,8 @@ public:
     void setScope(const int other);
     void setContentSpec(ContentSpecNode* const other);
     void addElement(SchemaElementDecl* const toAdd);
-
-	// -----------------------------------------------------------------------
-    //  Query methods
-    // -----------------------------------------------------------------------
-    bool containsElement(const SchemaElementDecl* const elem);
+    void setLocator(XSDLocator* const aLocator);
+    void setBaseGroup(XercesGroupInfo* const baseGroup);
 
 private:
     // -----------------------------------------------------------------------
@@ -124,6 +124,8 @@ private:
     int                             fScope;
     ContentSpecNode*                fContentSpec;
     RefVectorOf<SchemaElementDecl>* fElements;
+    XercesGroupInfo*                fBaseGroup; // redefine by restriction
+    XSDLocator*                     fLocator;
 };
 
 // ---------------------------------------------------------------------------
@@ -156,6 +158,16 @@ XercesGroupInfo::elementAt(const unsigned int index) const {
     return fElements->elementAt(index);
 }
 
+inline XSDLocator* XercesGroupInfo::getLocator() const {
+
+    return fLocator;
+}
+
+inline XercesGroupInfo* XercesGroupInfo::getBaseGroup() const {
+
+    return fBaseGroup;
+}
+
 // ---------------------------------------------------------------------------
 //  XercesGroupInfo: Setter methods
 // ---------------------------------------------------------------------------}
@@ -171,24 +183,13 @@ inline void XercesGroupInfo::setContentSpec(ContentSpecNode* const other) {
 
 inline void XercesGroupInfo::addElement(SchemaElementDecl* const elem) {
 
-    fElements->addElement(elem);
+    if (!fElements->containsElement(elem))
+        fElements->addElement(elem);
 }
 
+inline void XercesGroupInfo::setBaseGroup(XercesGroupInfo* const baseGroup) {
 
-// ---------------------------------------------------------------------------
-//  XercesGroupInfo: Query methods
-// ---------------------------------------------------------------------------}
-inline bool XercesGroupInfo::containsElement(const SchemaElementDecl* const elem) {
-
-    unsigned int elemSize = fElements->size();
-
-    for (unsigned int i=0; i < elemSize; i++) {
-        if (fElements->elementAt(i) == elem) {
-            return true;
-        }
-    }
-
-    return false;
+    fBaseGroup = baseGroup;
 }
 
 #endif

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:03  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/25 20:25:32  knoaman
+ * Move particle derivation checking from TraverseSchema to SchemaValidator.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:03  peiyongz
+ * sane_include
  *
  * Revision 1.38  2001/11/30 22:19:15  peiyongz
  * cleanUp function made member function
@@ -1190,6 +1193,7 @@ inline void XMLScanner::setErrorReporter(XMLErrorReporter* const errHandler)
 inline void XMLScanner::setErrorHandler(ErrorHandler* const handler)
 {
     fErrorHandler = handler;
+    fSchemaValidator->setErrorHandler(handler);
 }
 
 inline void XMLScanner::setEntityHandler(XMLEntityHandler* const entityHandler)
@@ -1206,6 +1210,7 @@ inline void XMLScanner::setEntityResolver(EntityResolver* const handler)
 inline void XMLScanner::setExitOnFirstFatal(const bool newValue)
 {
     fExitOnFirstFatal = newValue;
+    fSchemaValidator->setExitOnFirstFatal(newValue);
 }
 
 inline void XMLScanner::setValidationConstraintFatal(const bool newValue)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/03/25 20:25:32  knoaman
+ * Move particle derivation checking from TraverseSchema to SchemaValidator.
+ *
  * Revision 1.5  2002/02/26 14:26:10  tng
  * [Bug 6672] SAXValidator results in an access violation when validating against schema with empty element that has default value.
  *
@@ -170,6 +173,8 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/validators/schema/SchemaValidator.hpp>
 #include <xercesc/validators/schema/SubstitutionGroupComparator.hpp>
+#include <xercesc/validators/schema/XercesGroupInfo.hpp>
+#include <xercesc/validators/schema/XSDLocator.hpp>
 
 // ---------------------------------------------------------------------------
 //  SchemaValidator: Constructors and Destructor
@@ -827,6 +832,26 @@ void SchemaValidator::preContentValidation(bool reuseGrammar)
             {
                 ComplexTypeInfo& curTypeInfo = complexTypeEnum.nextElement();
                 curTypeInfo.checkUniqueParticleAttribution(&sGrammar, fGrammarResolver, getScanner()->getURIStringPool(), this);
+                checkParticleDerivation(&sGrammar, &curTypeInfo);
+            }
+
+            RefHashTableOf<XercesGroupInfo>* groupInfoRegistry = sGrammar.getGroupInfoRegistry();
+            RefHashTableOfEnumerator<XercesGroupInfo> groupEnum(groupInfoRegistry);
+
+            while (groupEnum.hasMoreElements()) {
+
+                XercesGroupInfo& curGroup = groupEnum.nextElement();
+                XercesGroupInfo* baseGroup = curGroup.getBaseGroup();
+
+                if (baseGroup) {
+                    try {
+                        checkParticleDerivationOk(&sGrammar, curGroup.getContentSpec(), curGroup.getScope(),
+                                                  baseGroup->getContentSpec(), baseGroup->getScope());
+                    }
+                    catch (const XMLException& excep) {
+                        fSchemaErrorReporter.emitError(XMLErrs::DisplayErrorMessage, XMLUni::fgXMLErrDomain, curGroup.getLocator(), excep.getMessage());
+					}
+                }
             }
         }
     }
@@ -934,5 +959,821 @@ void SchemaValidator::normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* co
         fTrailing = true;
 
     fDatatypeBuffer.append(toFill.getRawBuffer());
+}
+
+
+// ---------------------------------------------------------------------------
+//  SchemaValidator: Particle Derivation Checking
+// ---------------------------------------------------------------------------
+void SchemaValidator::checkParticleDerivation(SchemaGrammar* const currentGrammar,
+                                              const ComplexTypeInfo* const curTypeInfo) {
+
+    ComplexTypeInfo* baseTypeInfo = 0;
+    ContentSpecNode* curSpecNode = 0;
+
+    if (curTypeInfo->getDerivedBy() == SchemaSymbols::RESTRICTION
+        && ((baseTypeInfo = curTypeInfo->getBaseComplexTypeInfo()) != 0)
+        && ((curSpecNode = curTypeInfo->getContentSpec()) != 0)) {
+
+        try {
+            checkParticleDerivationOk(currentGrammar, curSpecNode,
+                                      curTypeInfo->getScopeDefined(),
+                                      baseTypeInfo->getContentSpec(),
+                                      baseTypeInfo->getScopeDefined(), baseTypeInfo);
+        }
+        catch (const XMLException& excep) {
+            fSchemaErrorReporter.emitError(XMLErrs::DisplayErrorMessage, XMLUni::fgXMLErrDomain, curTypeInfo->getLocator(), excep.getMessage());
+        }
+    }
+}
+
+void SchemaValidator::checkParticleDerivationOk(SchemaGrammar* const aGrammar,
+                                                ContentSpecNode* const curNode,
+                                                const int derivedScope,
+                                                ContentSpecNode* const baseNode,
+                                                const int baseScope,
+                                                const ComplexTypeInfo* const baseInfo) {
+
+    // Check for pointless occurrences of all, choice, sequence.  The result is
+    // the contentspec which is not pointless. If the result is a non-pointless
+    // group, Vector is filled  in with the children of interest
+    if (!curNode || !baseNode)
+        return;
+
+    ContentSpecNode* curSpecNode = curNode;
+    ContentSpecNode* baseSpecNode = baseNode;
+    ValueVectorOf<ContentSpecNode*> curVector(8);
+    ValueVectorOf<ContentSpecNode*> baseVector(8);
+    ContentSpecNode::NodeTypes curNodeType = curSpecNode->getType();
+    ContentSpecNode::NodeTypes baseNodeType = baseSpecNode->getType();
+
+    if (curNodeType == ContentSpecNode::Sequence ||
+        curNodeType == ContentSpecNode::Choice ||
+        curNodeType == ContentSpecNode::All) {
+        curSpecNode = checkForPointlessOccurrences(curSpecNode, curNodeType, &curVector);
+    }
+
+    if (baseNodeType == ContentSpecNode::Sequence ||
+        baseNodeType == ContentSpecNode::Choice ||
+        baseNodeType == ContentSpecNode::All) {
+        baseSpecNode = checkForPointlessOccurrences(baseSpecNode, baseNodeType, &baseVector);
+    }
+
+    curNodeType = curSpecNode->getType();
+    baseNodeType = baseSpecNode->getType();
+
+    switch (curNodeType & 0x0f) {
+    case ContentSpecNode::Leaf:
+        {
+            switch (baseNodeType & 0x0f) {
+            case ContentSpecNode::Leaf:
+                {
+                    checkNameAndTypeOK(aGrammar, curSpecNode, derivedScope, baseSpecNode, baseScope, baseInfo);
+                    return;
+                }
+            case ContentSpecNode::Any:
+            case ContentSpecNode::Any_Other:
+            case ContentSpecNode::Any_NS:
+                {
+                    checkNSCompat(curSpecNode, baseSpecNode);
+                    return;
+                }
+            case ContentSpecNode::Choice:
+            case ContentSpecNode::Sequence:
+            case ContentSpecNode::All:
+                {
+                    checkRecurseAsIfGroup(aGrammar, curSpecNode, derivedScope,
+                                          baseSpecNode, baseScope, &baseVector, baseInfo);
+                    return;
+                }
+            default:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                }
+            }		
+        }
+    case ContentSpecNode::Any:
+    case ContentSpecNode::Any_Other:
+    case ContentSpecNode::Any_NS:
+        {
+            switch (baseNodeType & 0x0f) {
+            case ContentSpecNode::Any:
+            case ContentSpecNode::Any_Other:
+            case ContentSpecNode::Any_NS:
+                {
+                     checkNSSubset(curSpecNode, baseSpecNode);
+                     return;
+                }
+            case ContentSpecNode::Choice:
+            case ContentSpecNode::Sequence:
+            case ContentSpecNode::All:
+            case ContentSpecNode::Leaf:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes1);
+                }
+            default:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                }
+            }
+        }
+    case ContentSpecNode::All:
+        {
+            switch (baseNodeType & 0x0f) {
+            case ContentSpecNode::Any:
+            case ContentSpecNode::Any_Other:
+            case ContentSpecNode::Any_NS:
+                {
+                    checkNSRecurseCheckCardinality(aGrammar, curSpecNode, &curVector, derivedScope, baseSpecNode);
+                    return;
+                }
+            case ContentSpecNode::All:
+                {
+                    checkRecurse(aGrammar, curSpecNode, derivedScope, &curVector,
+                                 baseSpecNode, baseScope, &baseVector, baseInfo);
+                    return;
+                }
+            case ContentSpecNode::Choice:
+            case ContentSpecNode::Sequence:
+            case ContentSpecNode::Leaf:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes2);
+                }
+            default:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                }
+            }
+        }
+    case ContentSpecNode::Choice:
+        {
+            switch (baseNodeType & 0x0f) {
+            case ContentSpecNode::Any:
+            case ContentSpecNode::Any_Other:
+            case ContentSpecNode::Any_NS:
+                {
+                    checkNSRecurseCheckCardinality(aGrammar, curSpecNode, &curVector, derivedScope, baseSpecNode);
+                    return;
+                }
+            case ContentSpecNode::Choice:
+                {
+                    checkRecurse(aGrammar, curSpecNode, derivedScope, &curVector,
+                                 baseSpecNode, baseScope, &baseVector, baseInfo, true);
+                    return;
+                }
+            case ContentSpecNode::All:
+            case ContentSpecNode::Sequence:
+            case ContentSpecNode::Leaf:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes3);
+                }
+            default:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                }
+            }
+        }
+    case ContentSpecNode::Sequence:
+        {
+            switch (baseNodeType & 0x0f) {
+            case ContentSpecNode::Any:
+            case ContentSpecNode::Any_Other:
+            case ContentSpecNode::Any_NS:
+                {
+                    checkNSRecurseCheckCardinality(aGrammar, curSpecNode, &curVector, derivedScope, baseSpecNode);
+                    return;
+                }
+            case ContentSpecNode::All:
+                {
+                    checkRecurseUnordered(aGrammar, curSpecNode, &curVector, derivedScope,
+                                          baseSpecNode, &baseVector, baseScope, baseInfo);
+                    return;
+                }
+            case ContentSpecNode::Sequence:
+                {
+                    checkRecurse(aGrammar, curSpecNode, derivedScope, &curVector,
+                                 baseSpecNode, baseScope, &baseVector, baseInfo);
+                    return;
+                }
+            case ContentSpecNode::Choice:
+                {
+                    checkMapAndSum(aGrammar, curSpecNode, &curVector, derivedScope,
+                                   baseSpecNode, &baseVector, baseScope, baseInfo);
+                    return;
+                }
+            case ContentSpecNode::Leaf:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_ForbiddenRes4);
+                }
+            default:
+                {
+                    ThrowXML(RuntimeException, XMLExcepts::PD_InvalidContentType);
+                }
+            }
+        }
+    }
+}
+
+ContentSpecNode*
+SchemaValidator::checkForPointlessOccurrences(ContentSpecNode* const specNode,
+                                              const ContentSpecNode::NodeTypes nodeType,
+                                              ValueVectorOf<ContentSpecNode*>* const nodes) {
+
+    ContentSpecNode* rightNode = specNode->getSecond();
+    int min = specNode->getMinOccurs();
+    int max = specNode->getMaxOccurs();
+
+    if (!rightNode) {
+
+         gatherChildren(nodeType, specNode->getFirst(), nodes);
+
+         if (nodes->size() == 1 && min == 1 && max == 1) {
+            return nodes->elementAt(0);
+        }
+
+        return specNode;
+    }
+
+    gatherChildren(nodeType, specNode->getFirst(), nodes);
+    gatherChildren(nodeType, rightNode, nodes);
+
+    return specNode;
+}
+
+void SchemaValidator::gatherChildren(const ContentSpecNode::NodeTypes parentNodeType,
+                                    ContentSpecNode* const specNode,
+                                    ValueVectorOf<ContentSpecNode*>* const nodes) {
+
+    if (!specNode) {
+        return;
+    }
+
+    int min = specNode->getMinOccurs();
+    int max = specNode->getMaxOccurs();
+    ContentSpecNode::NodeTypes nodeType = specNode->getType();
+    ContentSpecNode* rightNode = specNode->getSecond();
+
+    if (nodeType == ContentSpecNode::Leaf ||
+        (nodeType & 0x0f) == ContentSpecNode::Any ||
+        (nodeType & 0x0f) == ContentSpecNode::Any_NS ||
+        (nodeType & 0x0f) == ContentSpecNode::Any_Other) {
+        nodes->addElement(specNode);
+    }
+    else if (min !=1 || max != 1) {
+        nodes->addElement(specNode);
+    }
+    else if (!rightNode) {
+        gatherChildren(nodeType, specNode->getFirst(), nodes);
+    }
+    else if (parentNodeType == nodeType) {
+
+        gatherChildren(nodeType, specNode->getFirst(), nodes);
+        gatherChildren(nodeType, rightNode, nodes);
+    }
+    else {
+        nodes->addElement(specNode);
+    }
+}
+
+void
+SchemaValidator::checkNSCompat(const ContentSpecNode* const derivedSpecNode,
+                               const ContentSpecNode* const baseSpecNode) {
+
+    // check Occurrence ranges
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_OccurRangeE,
+                  derivedSpecNode->getElement()->getLocalPart());
+    }
+
+    // check wildcard subset
+    if (!wildcardEltAllowsNamespace(baseSpecNode, derivedSpecNode->getElement()->getURI())) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_NSCompat1,
+                  derivedSpecNode->getElement()->getLocalPart());
+    }
+}
+
+bool
+SchemaValidator::wildcardEltAllowsNamespace(const ContentSpecNode* const baseSpecNode,
+                                            const unsigned int derivedURI) {
+
+    ContentSpecNode::NodeTypes nodeType = baseSpecNode->getType();
+
+    if ((nodeType & 0x0f) == ContentSpecNode::Any) {
+        return true;
+    }
+
+    unsigned int baseURI = baseSpecNode->getElement()->getURI();
+
+    if ((nodeType & 0x0f) == ContentSpecNode::Any_NS) {
+        if (derivedURI == baseURI) {
+           return true;
+        }
+    }
+    else { // must be ANY_OTHER
+        if (derivedURI != baseURI && derivedURI != getScanner()->getEmptyNamespaceId()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void
+SchemaValidator::checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
+                                    const ContentSpecNode* const derivedSpecNode,
+                                    const int derivedScope,
+                                    const ContentSpecNode* const baseSpecNode,
+                                    const int baseScope,
+                                    const ComplexTypeInfo* const baseInfo) {
+
+    unsigned int derivedURI = derivedSpecNode->getElement()->getURI();
+    unsigned int baseURI = baseSpecNode->getElement()->getURI();
+    const XMLCh* derivedName = derivedSpecNode->getElement()->getLocalPart();
+    const XMLCh* baseName = baseSpecNode->getElement()->getLocalPart();
+
+    if (XMLString::compareString(derivedName, baseName) || derivedURI != baseURI) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_NameTypeOK1);
+    }
+
+	// case of mixed complex types with attributes only
+    if (derivedURI == XMLElementDecl::fgPCDataElemId) {
+        return;
+    }
+
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_OccurRangeE, derivedName);
+    }
+
+    SchemaGrammar* aGrammar = currentGrammar;
+    const XMLCh* schemaURI = getScanner()->getURIStringPool()->getValueForId(derivedURI);
+
+    if (derivedURI != getScanner()->getEmptyNamespaceId()) {
+        aGrammar= (SchemaGrammar*) fGrammarResolver->getGrammar(schemaURI);
+    }
+
+    if (!aGrammar) { //something is wrong
+        return;
+    }
+
+    SchemaElementDecl* derivedElemDecl = findElement(derivedScope, derivedURI, derivedName, aGrammar);
+
+    if (!derivedElemDecl) {
+        return;
+    }
+
+    SchemaElementDecl* baseElemDecl =
+        findElement(baseScope, baseURI, baseName, aGrammar, baseInfo);
+
+    if (!baseElemDecl) {
+        return;
+    }
+
+    int derivedFlags = derivedElemDecl->getMiscFlags();
+    int baseFlags = baseElemDecl->getMiscFlags();
+
+    if (((baseFlags & SchemaSymbols::NILLABLE) == 0) &&
+		((derivedFlags & SchemaSymbols::NILLABLE) != 0)) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK2, derivedName);
+    }
+
+    const XMLCh* derivedDefVal = derivedElemDecl->getDefaultValue();
+    const XMLCh* baseDefVal = baseElemDecl->getDefaultValue();
+
+    if (baseDefVal && (baseFlags & SchemaSymbols::FIXED) != 0 &&
+        ((derivedFlags & SchemaSymbols::FIXED) == 0 ||
+         XMLString::compareString(derivedDefVal, baseDefVal))) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK3, derivedName);
+    }
+
+    int derivedBlockSet = derivedElemDecl->getBlockSet();
+    int baseBlockSet = baseElemDecl->getBlockSet();
+
+    if ((derivedBlockSet & baseBlockSet) != baseBlockSet) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK4, derivedName);
+    }
+
+    // check identity constraints
+    checkICRestriction(derivedElemDecl, baseElemDecl, derivedName, baseName);
+
+    // check that the derived element's type is derived from the base's.
+    checkTypesOK(derivedElemDecl, baseElemDecl, derivedName);
+}
+
+SchemaElementDecl*
+SchemaValidator::findElement(const int scope, const unsigned int uriIndex,
+                             const XMLCh* const name,
+                             SchemaGrammar* const grammar,
+                             const ComplexTypeInfo* const typeInfo) {
+
+    // check for element at given scope first
+    SchemaElementDecl* elemDecl = (SchemaElementDecl*) grammar->getElemDecl(uriIndex, name, 0, scope);
+
+    // if not found, check at global scope
+    if (!elemDecl) {
+
+        elemDecl = (SchemaElementDecl*)
+            grammar->getElemDecl(uriIndex, name, 0, Grammar::TOP_LEVEL_SCOPE);
+
+        // if still not found, and base is specified, look it up there
+        if (!elemDecl && typeInfo) {
+
+            const ComplexTypeInfo* baseInfo = typeInfo;
+
+            while (baseInfo) {
+
+                elemDecl = (SchemaElementDecl*)
+                    grammar->getElemDecl(uriIndex, name, 0, baseInfo->getScopeDefined());
+
+                if (elemDecl) {
+                   break;
+                }
+
+                baseInfo = baseInfo->getBaseComplexTypeInfo();
+            }
+        }
+    }
+
+    return elemDecl;
+}
+
+void
+SchemaValidator::checkICRestriction(const SchemaElementDecl* const derivedElemDecl,
+                                   const SchemaElementDecl* const baseElemDecl,
+                                   const XMLCh* const derivedElemName,
+                                   const XMLCh* const baseElemName) {
+
+    // REVIST - need to get more clarification
+    unsigned int derivedICCount = derivedElemDecl->getIdentityConstraintCount();
+    unsigned int baseICCount = baseElemDecl->getIdentityConstraintCount();
+
+    if (derivedICCount > baseICCount) {
+        ThrowXML2(RuntimeException, XMLExcepts::PD_NameTypeOK6, derivedElemName, baseElemName);
+    }
+
+    for (unsigned int i=0; i < derivedICCount; i++) {
+
+        bool found = false;
+        IdentityConstraint* ic= derivedElemDecl->getIdentityConstraintAt(i);
+
+        for (unsigned int j=0; j < baseICCount; j++) {
+            if (*ic == *(baseElemDecl->getIdentityConstraintAt(j))) {
+
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            ThrowXML2(RuntimeException, XMLExcepts::PD_NameTypeOK7, derivedElemName, baseElemName);
+        }
+    }
+}
+
+void
+SchemaValidator::checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
+                              const SchemaElementDecl* const baseElemDecl,
+                              const XMLCh* const derivedElemName) {
+
+    SchemaElementDecl::ModelTypes baseType = baseElemDecl->getModelType();
+
+    if (baseType == SchemaElementDecl::Any) {
+        return;
+    }
+
+    ComplexTypeInfo* rInfo = derivedElemDecl->getComplexTypeInfo();
+    ComplexTypeInfo* bInfo = baseElemDecl->getComplexTypeInfo();
+
+    if (derivedElemDecl->getModelType() == SchemaElementDecl::Simple) {
+
+        if (baseType != SchemaElementDecl::Simple) {
+            ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName);
+        }
+
+        if (!rInfo) {
+
+            DatatypeValidator* bDV = baseElemDecl->getDatatypeValidator();
+
+            if (bInfo || bDV == 0 ||
+				!bDV->isSubstitutableBy(derivedElemDecl->getDatatypeValidator())) {
+                ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName);
+            }
+
+            return;
+        }
+    }
+
+    if (rInfo == bInfo)
+        return;
+
+    for (; rInfo && rInfo != bInfo; rInfo = rInfo->getBaseComplexTypeInfo()) {
+        if (rInfo->getDerivedBy() != SchemaSymbols::RESTRICTION) {
+
+            rInfo = 0;
+            break;
+        }
+    }
+
+    if (!rInfo) {
+        ThrowXML1(RuntimeException, XMLExcepts::PD_NameTypeOK5, derivedElemName);
+    }
+}
+
+void
+SchemaValidator::checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
+                                       ContentSpecNode* const derivedSpecNode,
+                                       const int derivedScope,
+                                       const ContentSpecNode* const baseSpecNode,
+                                       const int baseScope,
+                                       ValueVectorOf<ContentSpecNode*>* const baseNodes,
+                                       const ComplexTypeInfo* const baseInfo) {
+
+    ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();
+    ValueVectorOf<ContentSpecNode*> derivedNodes(1);
+    bool toLax = false;
+
+    //Treat the element as if it were in a group of the same variety as base
+    ContentSpecNode derivedGroupNode(baseType, derivedSpecNode, 0, false);
+
+    derivedNodes.addElement(derivedSpecNode);
+
+    if (baseSpecNode->getType() == ContentSpecNode::Choice) {
+        toLax = true;
+    }
+
+    checkRecurse(currentGrammar, &derivedGroupNode, derivedScope, &derivedNodes,
+                 baseSpecNode, baseScope, baseNodes, baseInfo, toLax);
+}
+
+void
+SchemaValidator::checkRecurse(SchemaGrammar* const currentGrammar,
+                              const ContentSpecNode* const derivedSpecNode,
+                              const int derivedScope,
+                              ValueVectorOf<ContentSpecNode*>* const derivedNodes,
+                              const ContentSpecNode* const baseSpecNode,
+                              const int baseScope,
+                              ValueVectorOf<ContentSpecNode*>* const baseNodes,
+                              const ComplexTypeInfo* const baseInfo,
+                              const bool toLax) {
+
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_Recurse1);
+    }
+
+    // check for mapping of children
+    XMLExcepts::Codes codeToThrow = XMLExcepts::NoError;
+    unsigned int count1= derivedNodes->size();
+    unsigned int count2= baseNodes->size();
+    unsigned int current = 0;
+
+    for (unsigned int i=0; i<count1; i++) {
+
+        bool matched = false;
+
+        for (unsigned int j = current; j < count2; j++) {
+
+            ContentSpecNode* baseNode = baseNodes->elementAt(j);
+            current++;
+
+            try {
+
+                checkParticleDerivationOk(currentGrammar, derivedNodes->elementAt(i),
+                                          derivedScope, baseNode, baseScope, baseInfo);
+                matched = true;
+                break;
+            }
+            catch(const XMLException&) {
+                if (!toLax && baseNode->getMinTotalRange()) {
+                    break;
+                }
+            }
+        }
+
+        // did not find a match
+        if (!matched) {
+
+            codeToThrow = XMLExcepts::PD_Recurse2;
+            break;
+        }
+    }
+
+    // Now, see if there are some elements in the base we didn't match up
+    // in case of Sequence or All
+    if (!toLax && codeToThrow == XMLExcepts::NoError) {
+        for (unsigned int j = current; j < count2; j++) {
+            if (baseNodes->elementAt(j)->getMinTotalRange()) { //!emptiable
+
+                codeToThrow =  XMLExcepts::PD_Recurse2;
+                break;
+            }
+        }
+    }
+
+    if (codeToThrow != XMLExcepts::NoError) {
+        ThrowXML(RuntimeException, codeToThrow);
+    }
+}
+
+void SchemaValidator::checkNSSubset(const ContentSpecNode* const derivedSpecNode,
+                                    const ContentSpecNode* const baseSpecNode) {
+
+    // check Occurrence ranges
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_NSSubset1);
+    }
+
+    if (!isWildCardEltSubset(derivedSpecNode, baseSpecNode)) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_NSSubset2);
+    }
+}
+
+bool
+SchemaValidator::isWildCardEltSubset(const ContentSpecNode* const derivedSpecNode,
+                                     const ContentSpecNode* const baseSpecNode) {
+
+    ContentSpecNode::NodeTypes baseType = baseSpecNode->getType();
+
+    if ((baseType & 0x0f) == ContentSpecNode::Any) {
+        return true;
+    }
+
+    ContentSpecNode::NodeTypes derivedType = derivedSpecNode->getType();
+    unsigned int baseURI = baseSpecNode->getElement()->getURI();
+    unsigned int derivedURI = derivedSpecNode->getElement()->getURI();
+
+    if (((derivedType & 0x0f) == ContentSpecNode::Any_Other) &&
+        ((baseType & 0x0f) == ContentSpecNode::Any_Other) &&
+        baseURI == derivedURI) {
+        return true;
+    }
+
+    if ((derivedType & 0x0f) == ContentSpecNode::Any_NS) {
+
+        if (((baseType & 0x0f) == ContentSpecNode::Any_NS) &&
+            baseURI == derivedURI) {
+            return true;
+        }
+
+        if (((baseType & 0x0f) == ContentSpecNode::Any_Other) &&
+            baseURI != derivedURI) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void
+SchemaValidator::checkNSRecurseCheckCardinality(SchemaGrammar* const currentGrammar,
+                                                const ContentSpecNode* const derivedSpecNode,
+                                                ValueVectorOf<ContentSpecNode*>* const derivedNodes,
+                                                const int derivedScope,
+                                                ContentSpecNode* const baseSpecNode) {
+
+    // Implement total range check
+    int derivedMin = derivedSpecNode->getMinTotalRange();
+    int derivedMax = derivedSpecNode->getMaxTotalRange();
+
+    // check Occurrence ranges
+    if (!isOccurrenceRangeOK(derivedMin, derivedMax, baseSpecNode->getMinOccurs(),
+                              baseSpecNode->getMaxOccurs())) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_NSRecurseCheckCardinality1);
+    }
+
+    // Check that each member of the group is a valid restriction of the wildcard
+    unsigned int nodesCount = derivedNodes->size();
+
+    for (unsigned int i = 0; i < nodesCount; i++) {
+        checkParticleDerivationOk(currentGrammar, derivedNodes->elementAt(i), derivedScope, baseSpecNode, -1);
+    }
+}
+
+void
+SchemaValidator::checkRecurseUnordered(SchemaGrammar* const currentGrammar,
+                                       const ContentSpecNode* const derivedSpecNode,
+                                       ValueVectorOf<ContentSpecNode*>* const derivedNodes,
+                                       const int derivedScope,
+                                       ContentSpecNode* const baseSpecNode,
+                                       ValueVectorOf<ContentSpecNode*>* const baseNodes,
+                                       const int baseScope,
+                                       const ComplexTypeInfo* const baseInfo) {
+
+    // check Occurrence ranges
+    if (!isOccurrenceRangeOK(derivedSpecNode->getMinOccurs(), derivedSpecNode->getMaxOccurs(),
+                             baseSpecNode->getMinOccurs(), baseSpecNode->getMaxOccurs())) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_Recurse1);
+    }
+
+    XMLExcepts::Codes  codeToThrow = XMLExcepts::NoError;
+    unsigned int       derivedCount= derivedNodes->size();
+    unsigned int       baseCount = baseNodes->size();
+    bool*              foundIt = new bool[baseCount];
+    ArrayJanitor<bool> janFoundIt(foundIt);
+
+    for (unsigned k=0; k < baseCount; k++) {
+        foundIt[k] = false;
+    }
+
+    // check for mapping of children
+    for (unsigned int i = 0; i < derivedCount; i++) {
+
+        ContentSpecNode* derivedNode = derivedNodes->elementAt(i);
+        bool matched = false;
+
+        for (unsigned int j = 0; j < baseCount; j++) {
+
+            try {
+
+                checkParticleDerivationOk(currentGrammar, derivedNode, derivedScope,
+                                          baseNodes->elementAt(j), baseScope, baseInfo);
+
+                if (foundIt[j]) {
+                    break;
+                }
+
+                foundIt[j] = true;
+                matched = true;
+                break;
+            }
+            catch (const XMLException&) {
+            }
+        }
+
+        // didn't find a match.
+        if (!matched) {
+
+	        codeToThrow = XMLExcepts::PD_RecurseUnordered;
+            break;
+        }
+    }
+
+    // For all unmapped particles in base, check to see it it's emptiable or not
+    if (codeToThrow == XMLExcepts::NoError) {
+        for (unsigned int j=0; j < baseCount; j++) {
+            if (!foundIt[j] && baseNodes->elementAt(j)->getMinTotalRange()) {
+
+	            codeToThrow = XMLExcepts::PD_RecurseUnordered;
+                break;
+            }
+        }
+    }
+
+    if (codeToThrow != XMLExcepts::NoError) {
+        ThrowXML(RuntimeException, codeToThrow);
+    }
+}
+
+void
+SchemaValidator::checkMapAndSum(SchemaGrammar* const currentGrammar,
+                                const ContentSpecNode* const derivedSpecNode,
+                                ValueVectorOf<ContentSpecNode*>* const derivedNodes,
+                                const int derivedScope,
+                                ContentSpecNode* const baseSpecNode,
+                                ValueVectorOf<ContentSpecNode*>* const baseNodes,
+                                const int baseScope,
+                                const ComplexTypeInfo* const baseInfo) {
+
+    // check Occurrence ranges
+    int derivedCount = derivedNodes->size();
+    int baseCount = baseNodes->size();
+    int derivedMin = derivedSpecNode->getMinOccurs() * derivedCount;
+    int derivedMax = derivedSpecNode->getMaxOccurs();
+
+    if (derivedMax != SchemaSymbols::UNBOUNDED) {
+        derivedMax *= derivedCount;
+    }
+
+    if (!isOccurrenceRangeOK(derivedMin, derivedMax, baseSpecNode->getMinOccurs(),
+                             baseSpecNode->getMaxOccurs())) {
+        ThrowXML(RuntimeException, XMLExcepts::PD_Recurse1);
+    }
+
+    // check for mapping of children
+    for (int i = 0; i < derivedCount; i++) {
+
+        ContentSpecNode* derivedNode = derivedNodes->elementAt(i);
+        bool matched = false;
+
+        for (int j = 0; j < baseCount && !matched; j++) {
+
+            try {
+
+                checkParticleDerivationOk(currentGrammar, derivedNode, derivedScope,
+                                          baseNodes->elementAt(j), baseScope, baseInfo);
+                matched = true;
+            }
+            catch (const XMLException&) {
+            }
+        }
+
+        // didn't find a match.
+        if (!matched) {
+	        ThrowXML(RuntimeException, XMLExcepts::PD_MapAndSum);
+        }
+    }
+
 }
 

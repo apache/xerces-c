@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:50  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/25 20:25:32  knoaman
+ * Move particle derivation checking from TraverseSchema to SchemaValidator.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:50  peiyongz
+ * sane_include
  *
  * Revision 1.2  2001/08/24 20:36:37  knoaman
  * Add support for <redefine>.
@@ -72,6 +75,7 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/validators/schema/XercesGroupInfo.hpp>
 #include <xercesc/validators/common/ContentSpecNode.hpp>
+#include <xercesc/validators/schema/XSDLocator.hpp>
 
 // ---------------------------------------------------------------------------
 //  XercesGroupInfo: Constructors and Destructor
@@ -80,6 +84,8 @@ XercesGroupInfo::XercesGroupInfo()
     : fScope(-1)
     , fContentSpec(0)
     , fElements(0)
+    , fBaseGroup(0)
+    , fLocator(0)
 {
     fElements = new RefVectorOf<SchemaElementDecl>(4, false);
 }
@@ -89,6 +95,19 @@ XercesGroupInfo::~XercesGroupInfo()
 {
     delete fElements;
     delete fContentSpec;
+    delete fLocator;
+}
+
+
+// ---------------------------------------------------------------------------
+//  XercesGroupInfo: Constructors and Destructor
+// ---------------------------------------------------------------------------
+void XercesGroupInfo::setLocator(XSDLocator* const aLocator) {
+
+    if (fLocator)
+        delete fLocator;
+
+    fLocator = aLocator;
 }
 
 /**

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:47  peiyongz
- * Initial revision
+ * Revision 1.2  2002/03/25 20:25:32  knoaman
+ * Move particle derivation checking from TraverseSchema to SchemaValidator.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:47  peiyongz
+ * sane_include
  *
  * Revision 1.8  2001/11/13 13:25:08  tng
  * Deprecate function XMLValidator::checkRootElement.
@@ -94,9 +97,11 @@
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
+#include <xercesc/validators/common/ContentSpecNode.hpp>
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/validators/schema/SchemaElementDecl.hpp>
 #include <xercesc/validators/schema/SchemaGrammar.hpp>
+#include <xercesc/validators/schema/XSDErrorReporter.hpp>
 
 //
 //  This is a derivative of the abstract validator interface. This class
@@ -177,6 +182,91 @@ public:
     // -----------------------------------------------------------------------
     void normalizeWhiteSpace(DatatypeValidator* dV, const XMLCh* const value, XMLBuffer& toFill);
 
+    // -----------------------------------------------------------------------
+    //  Particle Derivation Checking methods
+    // -----------------------------------------------------------------------
+    void checkParticleDerivation(SchemaGrammar* const currentGrammar,
+                                 const ComplexTypeInfo* const typeInfo);
+    void checkParticleDerivationOk(SchemaGrammar* const currentGrammar,
+                                   ContentSpecNode* const curNode,
+                                   const int derivedScope,
+                                   ContentSpecNode* const baseNode,
+                                   const int baseScope,
+                                   const ComplexTypeInfo* const baseInfo = 0);
+    ContentSpecNode* checkForPointlessOccurrences(ContentSpecNode* const specNode,
+                                                  const ContentSpecNode::NodeTypes nodeType,
+                                                  ValueVectorOf<ContentSpecNode*>* const nodes);
+    void gatherChildren(const ContentSpecNode::NodeTypes parentNodeType,
+                        ContentSpecNode* const specNode,
+                        ValueVectorOf<ContentSpecNode*>* const nodes);
+    bool isOccurrenceRangeOK(const int min1, const int max1, const int min2, const int max2);
+    void checkNSCompat(const ContentSpecNode* const derivedSpecNode,
+                       const ContentSpecNode* const baseSpecNode);
+    bool wildcardEltAllowsNamespace(const ContentSpecNode* const baseSpecNode,
+                                    const unsigned int derivedURI);
+    void checkNameAndTypeOK(SchemaGrammar* const currentGrammar,
+                            const ContentSpecNode* const derivedSpecNode,
+                            const int derivedScope,
+                            const ContentSpecNode* const baseSpecNode,
+                            const int baseScope,
+                            const ComplexTypeInfo* const baseInfo = 0);
+    SchemaElementDecl* findElement(const int scope,
+                                   const unsigned int uriIndex,
+                                   const XMLCh* const name,
+                                   SchemaGrammar* const grammar,
+                                   const ComplexTypeInfo* const typeInfo = 0);
+    void checkICRestriction(const SchemaElementDecl* const derivedElemDecl,
+                            const SchemaElementDecl* const baseElemDecl,
+                            const XMLCh* const derivedElemName,
+                            const XMLCh* const baseElemName);
+    void checkTypesOK(const SchemaElementDecl* const derivedElemDecl,
+                      const SchemaElementDecl* const baseElemDecl,
+                      const XMLCh* const derivedElemName);
+    void checkRecurseAsIfGroup(SchemaGrammar* const currentGrammar,
+                               ContentSpecNode* const derivedSpecNode,
+                               const int derivedScope,
+                               const ContentSpecNode* const baseSpecNode,
+                               const int baseScope,
+                               ValueVectorOf<ContentSpecNode*>* const nodes,
+                               const ComplexTypeInfo* const baseInfo);
+    void checkRecurse(SchemaGrammar* const currentGrammar,
+                      const ContentSpecNode* const derivedSpecNode,
+                      const int derivedScope,
+                      ValueVectorOf<ContentSpecNode*>* const derivedNodes,
+                      const ContentSpecNode* const baseSpecNode,
+                      const int baseScope,
+                      ValueVectorOf<ContentSpecNode*>* const baseNodes,
+                      const ComplexTypeInfo* const baseInfo,
+                      const bool toLax = false);
+    void checkNSSubset(const ContentSpecNode* const derivedSpecNode,
+                       const ContentSpecNode* const baseSpecNode);
+    bool isWildCardEltSubset(const ContentSpecNode* const derivedSpecNode,
+                             const ContentSpecNode* const baseSpecNode);
+    void checkNSRecurseCheckCardinality(SchemaGrammar* const currentGrammar,
+                                        const ContentSpecNode* const derivedSpecNode,
+                                        ValueVectorOf<ContentSpecNode*>* const derivedNodes,
+                                        const int derivedScope,
+                                        ContentSpecNode* const baseSpecNode);
+    void checkRecurseUnordered(SchemaGrammar* const currentGrammar,
+                               const ContentSpecNode* const derivedSpecNode,
+                               ValueVectorOf<ContentSpecNode*>* const derivedNodes, 
+                               const int derivedScope,
+                               ContentSpecNode* const baseSpecNode, 
+                               ValueVectorOf<ContentSpecNode*>* const baseNodes, 
+                               const int baseScope,
+                               const ComplexTypeInfo* const baseInfo);
+    void checkMapAndSum(SchemaGrammar* const currentGrammar,
+                        const ContentSpecNode* const derivedSpecNode,
+                        ValueVectorOf<ContentSpecNode*>* const derivedNodes, 
+                        const int derivedScope,
+                        ContentSpecNode* const baseSpecNode, 
+                        ValueVectorOf<ContentSpecNode*>* const baseNodes, 
+                        const int baseScope,
+                        const ComplexTypeInfo* const baseInfo);
+
+    void setErrorHandler(ErrorHandler* const handler);
+    void setExitOnFirstFatal(const bool newValue);
+
 private:
     // -----------------------------------------------------------------------
     //  Private data members
@@ -205,6 +295,9 @@ private:
     //
     //  fTrailing
     //      Previous chunk had a trailing space
+    //
+    //  fSchemaErrorReporter
+    //      Report schema process errors
     // -----------------------------------------------------------------------
     SchemaGrammar* fSchemaGrammar;
     GrammarResolver* fGrammarResolver;
@@ -215,6 +308,7 @@ private:
 
     XMLBuffer fDatatypeBuffer;
     bool fTrailing;
+    XSDErrorReporter fSchemaErrorReporter;
 };
 
 
@@ -263,6 +357,31 @@ inline bool SchemaValidator::handlesDTD() const
 inline bool SchemaValidator::handlesSchema() const
 {
     return true;
+}
+
+// ---------------------------------------------------------------------------
+//  SchemaValidator: Particle derivation checking
+// ---------------------------------------------------------------------------
+inline bool
+SchemaValidator::isOccurrenceRangeOK(const int min1, const int max1,
+                                     const int min2, const int max2) {
+
+    if (min1 >= min2 &&
+        (max2 == SchemaSymbols::UNBOUNDED || 
+         (max1 != SchemaSymbols::UNBOUNDED && max1 <= max2))) {
+        return true;
+    }
+    return false;
+}
+
+inline void SchemaValidator::setErrorHandler(ErrorHandler* const handler) {
+
+    fSchemaErrorReporter.setErrorHandler(handler);
+}
+
+inline void SchemaValidator::setExitOnFirstFatal(const bool newValue) {
+
+    fSchemaErrorReporter.setExitOnFirstFatal(newValue);
 }
 
 #endif

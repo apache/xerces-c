@@ -1042,8 +1042,12 @@ void XMLScanner::initValidator(XMLValidator* theValidator) {
     theValidator->setScannerInfo(this, &fReaderMgr, &fBufMgr);
     theValidator->setErrorReporter(fErrorReporter);
 
-    if (theValidator->handlesSchema())
+    if (theValidator->handlesSchema()) {
+
         ((SchemaValidator*) theValidator)->setGrammarResolver(fGrammarResolver);
+        ((SchemaValidator*) theValidator)->setErrorHandler(fErrorHandler);
+        ((SchemaValidator*) theValidator)->setExitOnFirstFatal(fExitOnFirstFatal);
+    }
 }
 
 void XMLScanner::resetEntityDeclPool() {
