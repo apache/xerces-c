@@ -154,6 +154,7 @@ sub package_sources {
    system("$RM -rf $srctargetdir/include");
    system("$RM -rf $srctargetdir/doc/*.zip");
 
+   system("$RM -rf $srctargetdir/samples/Projects/OS2");
    system("$RM -rf $srctargetdir/Projects/OS2");
    system("$RM -rf $srctargetdir/Projects/Win32/BCB4");
    system("$RM -rf $srctargetdir/Projects/Win32/BCB5");
