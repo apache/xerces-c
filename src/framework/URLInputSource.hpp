@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/26 18:56:02  roddey
+ * Needed to include XMLURL.hpp so that it compiles standalone.
+ *
  * Revision 1.2  2000/01/15 01:26:16  rahulj
  * Added support for HTTP to the parser using libWWW 5.2.8.
  * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.
@@ -79,6 +82,7 @@
 #if !defined(URLINPUTSOURCE_HPP)
 #define URLINPUTSOURCE_HPP
 
+#include <util/XMLURL.hpp>
 #include <sax/InputSource.hpp>
 
 
