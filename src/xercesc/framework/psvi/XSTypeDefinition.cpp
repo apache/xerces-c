@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/24 15:25:07  cargilld
+ * Improved algorithm for finding derivedFrom.
+ *
  * Revision 1.8  2003/12/15 17:23:48  cargilld
  * psvi updates; cleanup revisits and bug fixes
  *
@@ -86,6 +89,7 @@
  */
 
 #include <xercesc/framework/psvi/XSTypeDefinition.hpp>
+#include <xercesc/framework/psvi/XSModel.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -123,22 +127,15 @@ bool XSTypeDefinition::isFinal(short toTest)
 bool XSTypeDefinition::derivedFrom(const XMLCh *typeNamespace, 
                                    const XMLCh *name)
 {    
-    // REVISIT: review
-    // look up object... ask Neil...
     if (!name)
         return false;
 
-    XSTypeDefinition* type = this;
+    XSTypeDefinition* type = fXSModel->getTypeDefinition(name, typeNamespace);
+    
+    if (!type)
+        return false;
 
-    while (type)
-    {
-        if (XMLString::equals(type->getName(), name) &&
-            XMLString::equals(type->getNamespace(), typeNamespace))
-            return true;
-        type = type->getBaseType();
-    }
-
-    return false;
+    return derivedFromType(type);
 }
 
 XERCES_CPP_NAMESPACE_END
