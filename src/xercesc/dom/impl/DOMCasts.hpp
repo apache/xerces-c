@@ -75,6 +75,18 @@
 //  a second overloaded set that took and returned const arguements.
 //
 
+//
+//	Note that using offsetof, or taking the offset of an object member at
+//	a 0 address, is now undefined in C++. And gcc now warns about this behavior.
+//	This is because doing do so is unreliable for some types of objects.
+//		See: http://gcc.gnu.org/ml/gcc/2004-06/msg00227.html
+//		   : http://gcc.gnu.org/ml/gcc-bugs/2000-03/msg00805.html
+//  The casting code below works around gcc's warnings by using a dummy
+//	pointer, which the compiler cannot tell is null. The defeats the warning,
+//	but also masks the potential problem.
+//	The gcc option -Wno-invalid-offsetof may also be used to turn off this warning.
+//
+
 #include "DOMElementImpl.hpp"
 #include "DOMTextImpl.hpp"
 
@@ -105,13 +117,15 @@ static inline DOMChildNode *castToChildImpl(const DOMNode *p) {
 
 
 static inline DOMNode *castToNode(const DOMParentNode *p ) {
-    int parentOffset = (char *)&(((DOMElementImpl *)0)->fParent) - (char *)0;
+	DOMElementImpl* dummy = 0;
+    size_t parentOffset = (char *)&(dummy->fParent) - (char *)dummy;
     char *retPtr = (char *)p - parentOffset;
     return (DOMNode *)retPtr;
 }
 
 static inline DOMNode *castToNode(const DOMNodeImpl *p) {
-    int nodeImplOffset = (char *)&(((DOMElementImpl *)0)->fNode) - (char *)0;
+	DOMElementImpl* dummy = 0;
+    size_t nodeImplOffset = (char *)&(dummy->fNode) - (char *)dummy;
     char *retPtr = (char *)p - nodeImplOffset;
     return (DOMNode *)retPtr;
 }
@@ -119,8 +133,9 @@ static inline DOMNode *castToNode(const DOMNodeImpl *p) {
 
 static inline DOMNodeImpl *castToNodeImpl(const DOMParentNode *p)
 {
-    int nodeImplOffset = (char *)&(((DOMElementImpl *)0)->fNode) - (char *)0;
-    int parentOffset = (char *)&(((DOMElementImpl *)0)->fParent) - (char *)0;
+	DOMElementImpl* dummy = 0;
+    size_t nodeImplOffset = (char *)&(dummy->fNode) - (char *)dummy;
+    size_t parentOffset = (char *)&(dummy->fParent) - (char *)dummy;
     char *retPtr = (char *)p - parentOffset + nodeImplOffset;
     return (DOMNodeImpl *)retPtr;
 }
