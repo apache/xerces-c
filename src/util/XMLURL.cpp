@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/03/24 00:29:36  rahulj
+ * While composing the full path, also consider the port number
+ * of the base URL.
+ *
  * Revision 1.10  2000/03/23 01:02:38  roddey
  * Updates to the XMLURL class to correct a lot of parsing problems
  * and to add support for the port number. Updated the URL tests
@@ -770,6 +774,7 @@ void XMLURL::conglomerateWithBase(const XMLURL& baseURL)
             fUser = XMLString::replicate(baseURL.fUser);
         if (baseURL.fPassword)
             fPassword = XMLString::replicate(baseURL.fPassword);
+        fPortNum = baseURL.fPortNum;
     }
 
     // If we have a path and its absolute, then we are done
