@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2001/03/14 13:18:21  tng
+ * typo: should use fKey1
+ *
  * Revision 1.1  2001/02/27 18:24:00  tng
  * Schema: Add utility RefHash2KeysTableOf.
  *
@@ -294,7 +297,7 @@ removeBucketElem(const void* const key1, const int key2, unsigned int& hashVal)
 
     while (curElem)
     {
-        if (fHash->equals(key1, curElem->fKey) && (key2==curElem->fKey2))
+        if (fHash->equals(key1, curElem->fKey1) && (key2==curElem->fKey2))
         {
             if (!lastElem)
             {
