@@ -815,11 +815,15 @@ ComplexType:
 Name:			family
 Model Type:		Simple
 Create Reason:	Declared
+ComplexType:
+	TypeName:	,C3
 Base Datatype:		string
 --------------------------------------------
 Name:			given
 Model Type:		Simple
 Create Reason:	Declared
+ComplexType:
+	TypeName:	,C4
 Base Datatype:		string
 --------------------------------------------
 Name:			email
@@ -832,7 +836,7 @@ Model Type:		Empty
 Create Reason:	Declared
 Content Model:	EMPTY
 ComplexType:
-	TypeName:	,C3
+	TypeName:	,C5
 Attributes:
 	Name:			href
 	Type:			CDATA
@@ -846,7 +850,7 @@ Model Type:		Empty
 Create Reason:	Declared
 Content Model:	EMPTY
 ComplexType:
-	TypeName:	,C4
+	TypeName:	,C6
 Attributes:
 	Name:			subordinates
 	Type:			IDREFS
