@@ -725,10 +725,14 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         psystem ("echo SHLIB_PATH=$ENV{'SHLIB_PATH'}");
     }
     if ($platform =~ m/Linux/i) {
-        $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
         $platform = "linux";
         if ($opt_c eq "") {$opt_c = "gcc";}
         if ($opt_x eq "") {$opt_x = "g++";}
+        if ($opt_x eq "ecc") {
+            $icuCompileFlags = 'CC=ecc CXX=ecc CXXFLAGS="-w -O" CFLAGS="-w -O"';
+        } else {
+            $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
+        }        
         psystem ("echo LD_LIBRARY_PATH=$ENV{'LD_LIBRARY_PATH'}");
     }
 
