@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/10/23 23:05:03  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.3  2001/05/23 13:11:37  tng
  * IDOM: Memory fix.
  *
@@ -73,14 +76,15 @@
 #include "IDOM_DOMException.hpp"
 #include "IDDocumentImpl.hpp"
 #include "IDDocumentTypeImpl.hpp"
-#include <util/XMLDeleterFor.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLUniDefs.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 
 //
 //  Static constants.  These are lazily initialized on first usage.
 //                     (Static constructors can not be safely used because
 //                      of order of initialization dependencies.)
+
 
 static IDDOMImplementation    *gDomimp;   // Points to the singleton instance
                                             //  of DOMImplementation that is returnedreturned
@@ -121,6 +125,15 @@ IDDOMImplementation & IDDOMImplementation::operator = (const IDDOMImplementation
 };
 
 
+// -----------------------------------------------------------------------
+//  Reset the singleton IDDOMImplementation
+// -----------------------------------------------------------------------
+static void reinitImplementation()
+{
+	delete gDomimp;
+	gDomimp = 0;
+}
+
 //  getImplementation()  - Always returns the same singleton instance, which
 //                         is lazily created on the first call.  Note that
 //                         DOM_Implementation must be thread-safe because
@@ -130,6 +143,8 @@ IDDOMImplementation & IDDOMImplementation::operator = (const IDDOMImplementation
 //                         used concurrently by different threads.
 //
 IDOM_DOMImplementation *IDDOMImplementation::getImplementation() {
+	static XMLRegisterCleanup implementationCleanup;
+
     if (gDomimp == 0)
     {
         IDDOMImplementation *t = new IDDOMImplementation;
@@ -139,11 +154,7 @@ IDOM_DOMImplementation *IDDOMImplementation::getImplementation() {
         }
         else
         {
-
-            XMLPlatformUtils::registerLazyData
-                (
-                new XMLDeleterFor<IDDOMImplementation>(gDomimp)
-                );
+			implementationCleanup.registerCleanup(reinitImplementation);
         }
 
     }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/10/23 23:09:32  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.13  2001/05/11 13:26:27  tng
  * Copyright update.
  *
@@ -127,6 +130,7 @@
 #include <util/XMLUni.hpp>
 #include <internal/XMLReader.hpp>
 #include <util/RuntimeException.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -139,6 +143,21 @@
 static XMLMutex*                gSyncMutex = 0;
 static RefVectorOf<XMLDeleter>* gLazyData;
 static short                    gInitFlag = 0;
+
+// ---------------------------------------------------------------------------
+//  Global data
+//
+//	gXMLCleanupList
+//		This is a list of cleanup functions to be called on 
+//		XMLPlatformUtils::Terminate.  Their function is to reset static
+//		data in classes that use it.
+//
+//	gXMLCleanupListMutex
+//		This is a mutex that will be used to synchronise access to the global
+//		static data cleanup list
+// ---------------------------------------------------------------------------
+XMLRegisterCleanup*	gXMLCleanupList = 0;
+XMLMutex*			gXMLCleanupListMutex = 0;
 
 
 // ---------------------------------------------------------------------------
@@ -175,6 +194,9 @@ void XMLPlatformUtils::Initialize()
 
     // Create the local sync mutex
     gSyncMutex = new XMLMutex;
+
+	// Create the mutex for the static data cleanup list
+	gXMLCleanupListMutex = new XMLMutex;
 
     // Create the array for saving lazily allocated objects to be deleted at termination
     gLazyData= new RefVectorOf<XMLDeleter>(512);
@@ -251,6 +273,17 @@ void XMLPlatformUtils::Terminate()
     delete gSyncMutex;
     gSyncMutex = 0;
 
+	// Clean up statically allocated, lazily cleaned data in each class
+	// that has registered for it.
+	// Note that calling doCleanup() also unregisters the cleanup
+	// function, so that we are chewing the list down to nothing here
+	while (gXMLCleanupList)
+		gXMLCleanupList->doCleanup();
+
+	// Clean up the mutex for accessing gXMLCleanupList
+	delete gXMLCleanupListMutex;
+	gXMLCleanupListMutex = 0;
+
     //
     //  And do platform termination. This cannot do use any XML services
     //  at all, it can only clean up local stuff. It it reports an error,
@@ -259,7 +292,7 @@ void XMLPlatformUtils::Terminate()
     platformTerm();
 
     // And say we are no longer initialized
-    gInitFlag = false;
+    gInitFlag = 0;
 }
 
 

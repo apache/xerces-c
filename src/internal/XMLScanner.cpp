@@ -68,8 +68,8 @@
 #include <util/RefVectorOf.hpp>
 #include <util/RuntimeException.hpp>
 #include <util/UnexpectedEOFException.hpp>
-#include <util/XMLDeleterFor.hpp>
 #include <util/XMLMsgLoader.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
 #include <util/XMLURL.hpp>
@@ -96,6 +96,8 @@
 // ---------------------------------------------------------------------------
 static XMLUInt32       gScannerId;
 static XMLMsgLoader*   gMsgLoader;
+static bool            sRegistered = false;
+static XMLMutex*       sScannerMutex = 0;
 
 // ---------------------------------------------------------------------------
 //  Local const data
@@ -114,37 +116,52 @@ static const XMLCh gApos[] = { chLatin_a, chLatin_p, chLatin_o, chLatin_s, chNul
 //  Local, static functions
 // ---------------------------------------------------------------------------
 
+// -----------------------------------------------------------------------
+//  Cleanup for the message loader
+// -----------------------------------------------------------------------
+static void reinitMsgLoader()
+{
+	delete gMsgLoader;
+	gMsgLoader = 0;
+}
+
+// -----------------------------------------------------------------------
+//  Cleanup for the scanner mutex
+// -----------------------------------------------------------------------
+static void reinitScannerMutex()
+{
+    delete sScannerMutex;
+    sScannerMutex = 0;
+    sRegistered = false;
+}
+
 //
 //  We need to fault in this mutex. But, since its used for synchronization
 //  itself, we have to do this the low level way using a compare and swap.
 //
 static XMLMutex& gScannerMutex()
 {
-    static bool      registered = false;
-    static XMLMutex* scannerMutex = 0;
-    if (!scannerMutex)
+    static XMLRegisterCleanup scannerMutexCleanup;
+    if (!sScannerMutex)
     {
         XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&scannerMutex, tmpMutex, 0))
+        if (XMLPlatformUtils::compareAndSwap((void**)&sScannerMutex, tmpMutex, 0))
         {
             // Someone beat us to it, so let's clean up ours
             delete tmpMutex;
         }
 
         // Now lock it and try to register it
-        XMLMutexLock lock(scannerMutex);
+        XMLMutexLock lock(sScannerMutex);
 
         // If we got here first, then register it and set the registered flag
-        if (!registered)
+        if (!sRegistered)
         {
-            XMLPlatformUtils::registerLazyData
-            (
-                new XMLDeleterFor<XMLMutex>(scannerMutex)
-            );
-            registered = true;
+			scannerMutexCleanup.registerCleanup(reinitScannerMutex);
+            sRegistered = true;
         }
     }
-    return *scannerMutex;
+    return *sScannerMutex;
 }
 
 
@@ -840,6 +857,8 @@ void XMLScanner::scanReset(XMLPScanToken& token)
 //
 void XMLScanner::commonInit()
 {
+	static XMLRegisterCleanup cleanupMsgLoader;
+
     //
     //  We have to do a little init that involves statics, so we have to
     //  use the mutex to protect it.
@@ -855,10 +874,7 @@ void XMLScanner::commonInit()
                 XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
 
             // Register this object to be cleaned up at termination
-            XMLPlatformUtils::registerLazyData
-            (
-                new XMLDeleterFor<XMLMsgLoader>(gMsgLoader)
-            );
+			cleanupMsgLoader.registerCleanup(reinitMsgLoader);
         }
 
         // And assign ourselves the next available scanner id

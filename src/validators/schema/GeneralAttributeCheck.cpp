@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/10/23 23:14:55  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.8  2001/10/16 17:01:58  knoaman
  * Extra constraint checking.
  *
@@ -96,7 +99,7 @@
 #include <framework/XMLErrorCodes.hpp>
 #include <validators/schema/TraverseSchema.hpp>
 #include <util/PlatformUtils.hpp>
-#include <util/XMLDeleterFor.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 #include <validators/datatype/DatatypeValidatorFactory.hpp>
 
 // ---------------------------------------------------------------------------
@@ -775,17 +778,24 @@ void GeneralAttributeCheck::cleanUp() {
 //  GeneralAttributeCheck: Instance methods
 // ---------------------------------------------------------------------------
 GeneralAttributeCheck* GeneralAttributeCheck::instance() {
+	static XMLRegisterCleanup instanceCleanup;
 
     if (!fInstance) {
 
         fInstance = new GeneralAttributeCheck();
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<GeneralAttributeCheck>(fInstance)
-        );
+		instanceCleanup.registerCleanup(reinitInstance);
     }
 
     return fInstance;
+}
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void 
+GeneralAttributeCheck::reinitInstance() {
+	delete fInstance;
+	fInstance = 0;
 }
 
 // ---------------------------------------------------------------------------

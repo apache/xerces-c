@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/10/23 23:04:38  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.9  2000/05/09 00:22:31  andyh
  * Memory Cleanup.  XMLPlatformUtils::Terminate() deletes all lazily
  * allocated memory; memory leak checking tools will no longer report
@@ -121,13 +124,14 @@
 #include "DocumentImpl.hpp"
 #include "DocumentTypeImpl.hpp"
 #include "DStringPool.hpp"
-#include <util/XMLDeleterFor.hpp>
 #include <util/PlatformUtils.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 
 //
 //  Static constants.  These are lazily initialized on first usage.
 //                     (Static constructors can not be safely used because
 //                      of order of initialization dependencies.)
+
 
 static DOM_DOMImplementation    *gDomimp;   // Points to the singleton instance
                                             //  of DOMImplementation that is returned
@@ -167,6 +171,13 @@ DOM_DOMImplementation & DOM_DOMImplementation::operator = (const DOM_DOMImplemen
     return *this;
 };
 
+// -----------------------------------------------------------------------
+//  Reset the singleton DOM_DOMImplementation
+// -----------------------------------------------------------------------
+static void reinitImplementation() {
+	delete gDomimp;
+	gDomimp = 0;
+}
 
 //  getImplementation()  - Always returns the same singleton instance, which
 //                         is lazily created on the first call.  Note that
@@ -177,6 +188,8 @@ DOM_DOMImplementation & DOM_DOMImplementation::operator = (const DOM_DOMImplemen
 //                         used concurrently by different threads.
 //
 DOM_DOMImplementation &DOM_DOMImplementation::getImplementation() {
+	static XMLRegisterCleanup implementationCleanup;
+
     if (gDomimp == 0)
     {
         DOM_DOMImplementation *t = new DOM_DOMImplementation;
@@ -186,17 +199,12 @@ DOM_DOMImplementation &DOM_DOMImplementation::getImplementation() {
         }
         else
         {
-            
-            XMLPlatformUtils::registerLazyData
-                (
-                new XMLDeleterFor<DOM_DOMImplementation>(gDomimp)
-                );
+			implementationCleanup.registerCleanup(reinitImplementation);
         }
         
     }
     return *gDomimp;
 };
-
 
 bool  DOM_DOMImplementation::hasFeature(const DOMString &feature,  const DOMString &version) 
 {

@@ -147,6 +147,11 @@ public:
                          const unsigned short elemContext,
                          TraverseSchema* const schema);
 
+	// -----------------------------------------------------------------------
+    //  Notification that lazy data has been deleted
+    // -----------------------------------------------------------------------
+	static void reinitInstance();
+
 private:
     // -----------------------------------------------------------------------
     //  Constructor and destructors

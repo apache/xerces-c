@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/10/23 23:10:00  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.15  2000/09/22 18:31:41  andyh
  * HPUX PlatformUtils - Removed incorrect use of ArrayJanitor on a local array.
  * Patch submitted by "Torbjörn Bäckström" <torbjorn.backstrom@teleteknik.goteborg.se>
@@ -748,6 +751,8 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 void XMLPlatformUtils::platformTerm()
 {
-    // We don't have any termination requirements at this time
+    // delete the mutex we created
+	closeMutex(atomicOpsMutex.fHandle);
+	atomicOpsMutex.fHandle = 0;
 }
 

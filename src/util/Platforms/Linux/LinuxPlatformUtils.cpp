@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/10/23 23:10:48  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.19  2001/05/11 12:03:40  tng
  * Need to add header <linux/limits> for definition of PATH_MAX
  *
@@ -731,6 +734,8 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 void XMLPlatformUtils::platformTerm()
 {
-    // We don't have any termination requirements at this time
+    // delete the mutex we created
+	closeMutex(atomicOpsMutex.fHandle);
+	atomicOpsMutex.fHandle = 0;
 }
 

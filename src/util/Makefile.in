@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.48  2001/10/23 23:09:32  peiyongz
+# [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+#
 # Revision 1.47  2001/10/02 16:07:45  tng
 # typo: fix extra spaces after the separator that led to make error
 #
@@ -371,6 +374,7 @@ UTIL_CPP_PUBHEADERS = \
     XMLFloat.hpp \
     XMLMsgLoader.hpp \
     XMLNetAccessor.hpp \
+    XMLRegisterCleanup.hpp \
     XMLString.hpp \
     XMLUCS4Transcoder.hpp \
     XMLUri.hpp \

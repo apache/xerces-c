@@ -64,9 +64,9 @@
 // ---------------------------------------------------------------------------
 #include <util/Mutexes.hpp>
 #include <util/PlatformUtils.hpp>
-#include <util/XMLDeleterFor.hpp>
 #include <util/XMLException.hpp>
 #include <util/XMLMsgLoader.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 #include <util/XMLString.hpp>
 #include <util/XMLUniDefs.hpp>
 #include <util/XMLUni.hpp>
@@ -90,8 +90,23 @@ static const XMLCh  gDefErrMsg[] =
 
 
 // ---------------------------------------------------------------------------
+//  Local, static data
+// ---------------------------------------------------------------------------
+static XMLMsgLoader* sLoader = 0;
+static XMLMutex* sMsgMutex = 0;
+
+// ---------------------------------------------------------------------------
 //  Local, static functions
 // ---------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------
+//  Reinitialise the message mutex
+// -----------------------------------------------------------------------
+static void reinitMsgMutex()
+{
+	delete sMsgMutex;
+	sMsgMutex = 0;
+}
 
 //
 //  We need to fault in this mutex. But, since its used for synchronization
@@ -99,26 +114,23 @@ static const XMLCh  gDefErrMsg[] =
 //
 static XMLMutex& gMsgMutex()
 {
-    static XMLMutex* msgMutex = 0;
-    if (!msgMutex)
+	static XMLRegisterCleanup msgMutexCleanup;
+    if (!sMsgMutex)
     {
         XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&msgMutex, tmpMutex, 0))
+        if (XMLPlatformUtils::compareAndSwap((void**)&sMsgMutex, tmpMutex, 0))
         {
             // Some other thread beat us to it, so let's clean up ours.
             delete tmpMutex;
         }
         else
         {
-            // This is the real mutex.  Register it for deletion at Termination.
-            XMLPlatformUtils::registerLazyData
-                (
-                new XMLDeleterFor<XMLMutex>(msgMutex)
-                );
+            // This is the real mutex.  Register it for cleanup at Termination.
+			msgMutexCleanup.registerCleanup(reinitMsgMutex);
         }
         
     }
-    return *msgMutex;
+    return *sMsgMutex;
 }
 
 
@@ -126,6 +138,15 @@ static XMLMutex& gMsgMutex()
 // ---------------------------------------------------------------------------
 //  Local methods
 // ---------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------
+//  Reinitialise the message loader
+// -----------------------------------------------------------------------
+static void reinitMsgLoader()
+{
+	delete sLoader;
+	sLoader = 0;
+}
 
 //
 //  This method is a lazy evaluator for the message loader for exception
@@ -136,29 +157,24 @@ static XMLMutex& gMsgMutex()
 //
 static XMLMsgLoader& gGetMsgLoader()
 {
+	static XMLRegisterCleanup msgLoaderCleanup;
+
     // Fault it in on first request
-    static XMLMsgLoader* gLoader = 0;
-    if (!gLoader)
+    if (!sLoader)
     {
-        gLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgExceptDomain);
-        if (!gLoader)
+        sLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgExceptDomain);
+        if (!sLoader)
             XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
 
         //
-        // Register this XMLMsgLoader for deletion at Termination.
+        // Register this XMLMsgLoader for cleanup at Termination.
         //
-        XMLPlatformUtils::registerLazyData
-            (
-            new XMLDeleterFor<XMLMsgLoader>(gLoader)
-            );
-        
+        msgLoaderCleanup.registerCleanup(reinitMsgLoader);
     }
     
     // We got it, so return it
-    return *gLoader;
+    return *sLoader;
 }
-
-
 
 // ---------------------------------------------------------------------------
 //  XMLException: Virtual destructor

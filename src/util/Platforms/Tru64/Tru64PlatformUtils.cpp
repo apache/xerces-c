@@ -178,8 +178,11 @@ void XMLPlatformUtils::platformInit()
 
   gAtomicOpMutex = new pthread_mutex_t;	
 
-  if (pthread_mutex_init(gAtomicOpMutex, NULL))
+  if (pthread_mutex_init(gAtomicOpMutex, NULL)) {
+	delete gAtomicOpMutex;
+	gAtomicOpMutex = 0;
     panic( XMLPlatformUtils::Panic_SystemInit );
+  }
 }
 
 
@@ -706,5 +709,7 @@ FileHandle XMLPlatformUtils::openStdInHandle()
 
 void XMLPlatformUtils::platformTerm()
 {
-    // We don't have any termination requirements at this time
+	pthread_mutex_destroy(gAtomicOpMutex);
+	delete gAtomicOpMutex;
+	gAtomicOpMutex = 0;
 }

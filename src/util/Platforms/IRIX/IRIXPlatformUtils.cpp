@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/10/23 23:10:20  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.12  2001/09/04 19:05:44  peiyongz
  * Patch to support IRIX's sproc(), from Christopher Just
  *
@@ -658,7 +661,9 @@ void XMLPlatformUtils::platformInit()
 
 void XMLPlatformUtils::platformTerm()
 {
-    // We don't have any termination requirements at this time
+    // delete the mutex we created
+	closeMutex(atomicOpsMutex.fHandle);
+	atomicOpsMutex.fHandle = 0;
 }
 
 void* XMLPlatformUtils::makeMutex()

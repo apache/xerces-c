@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2001/10/23 23:14:22  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.23  2001/09/25 16:00:03  peiyongz
  * DTV Reorganization: Create native NameDTV and NCNameDTV
  *
@@ -158,8 +161,7 @@
 #include <validators/datatype/AnyURIDatatypeValidator.hpp>
 #include <validators/datatype/AnySimpleTypeDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
-#include <util/XMLDeleterFor.hpp>
-
+#include <util/XMLRegisterCleanup.hpp>
 
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Local const data
@@ -341,21 +343,29 @@ void DatatypeValidatorFactory::resetRegistry() {
 }
 
 
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void DatatypeValidatorFactory::reinitRegistry() {
+	delete fBuiltInRegistry;
+	fBuiltInRegistry = 0;
+	fRegistryExpanded = 0;
+}
+
 // ---------------------------------------------------------------------------
 //  DatatypeValidatorFactory: Registry initialization methods
 // ---------------------------------------------------------------------------
 void DatatypeValidatorFactory::initializeDTDRegistry()
 {
+	static XMLRegisterCleanup builtInRegistryCleanup;
+
 	if (fRegistryExpanded)
 		return;
 
     if (fBuiltInRegistry == 0) {
 
         fBuiltInRegistry = new RefHashTableOf<DatatypeValidator>(109);
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<DVHashTable>(fBuiltInRegistry)
-        );
+		builtInRegistryCleanup.registerCleanup(reinitRegistry);
     }
 
 

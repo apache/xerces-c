@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/10/23 23:13:41  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.3  2001/07/16 21:28:25  knoaman
  * fix bug - no delete for the static instance in destructor.
  *
@@ -88,8 +91,8 @@
 #include <util/regx/TokenFactory.hpp>
 #include <util/regx/RangeFactory.hpp>
 #include <util/PlatformUtils.hpp>
-#include <util/XMLDeleterFor.hpp>
 #include <util/XMLExceptMsgs.hpp>
+#include <util/XMLRegisterCleanup.hpp>
 
 // ---------------------------------------------------------------------------
 //  Static member data initialization
@@ -268,17 +271,23 @@ void RangeTokenMap::initializeRegistry() {
 //  RangeTokenMap: Instance methods
 // ---------------------------------------------------------------------------
 RangeTokenMap* RangeTokenMap::instance() {
+	static XMLRegisterCleanup instanceCleanup;
 
 	if (!fInstance) {
 
 		fInstance = new RangeTokenMap();
-        XMLPlatformUtils::registerLazyData
-        (
-            new XMLDeleterFor<RangeTokenMap>(fInstance)
-        );
+		instanceCleanup.registerCleanup(reinitInstance);
 	}
 	
     return (fInstance);
+}
+
+// -----------------------------------------------------------------------
+//  Notification that lazy data has been deleted
+// -----------------------------------------------------------------------
+void RangeTokenMap::reinitInstance() {
+	delete fInstance;
+	fInstance = 0;
 }
 
 /**

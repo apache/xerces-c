@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/10/23 23:13:09  peiyongz
+ * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
+ *
  * Revision 1.9  2001/02/09 14:40:02  tng
  * Update support for SCO UnixWare 7 (gcc).  Tested under UnixWare 7.1.1 with gcc version 2.95.2 19991024 (release) with gmake 3.79.1.  Updated by Martin Kalen.
  *
@@ -727,6 +730,8 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 void XMLPlatformUtils::platformTerm()
 {
-    // We don't have any termination requirements at this time
+    // delete the mutex we created
+	closeMutex(atomicOpsMutex.fHandle);
+	atomicOpsMutex.fHandle = 0;
 }
 
