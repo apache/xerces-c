@@ -262,6 +262,30 @@ FileHandle XMLPlatformUtils::openFile(const char* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFileToWrite(const XMLCh* const fileName)
+{
+    const char* tmpFileName = XMLString::transcode(fileName);
+    ArrayJanitor<char> janText((char*)tmpFileName);
+
+    return openFileToWrite(tmpFileName);
+}
+
+FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName)
+{
+    char errno_id[7];
+    errno = 0;
+    FileHandle retVal = (FILE*)fopen( fileName , "wb" );
+
+    if (retVal == NULL)
+    {
+     send_message((char*)fileName,FILE_OPEN_PROBLEMS,'d');
+     convert_errno(errno_id,errno);
+     send_message(NULL,errno_id,'d');
+        return 0;
+    }
+
+    return retVal;
+}
 
 unsigned int
 XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
@@ -277,6 +301,40 @@ XMLPlatformUtils::readFileBuffer(  FileHandle      theFile
     return (unsigned int)noOfItemsRead;
 }
 
+void
+XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
+                                   , long                  toWrite
+                                   , const XMLByte* const  toFlush)                                   
+{
+    if (!theFile        ||
+        (toWrite <= 0 ) ||
+        !toFlush         )
+        return;
+
+    const XMLByte* tmpFlush = (const XMLByte*) toFlush;
+    size_t bytesWritten = 0;
+
+    while (true)
+    {
+        bytesWritten=fwrite(tmpFlush, sizeof(XMLByte), toWrite, (FILE*)theFile);
+
+        if(ferror((FILE*)theFile))
+        {
+            ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotWriteToFile);
+        }
+
+        if (bytesWritten < toWrite) //incomplete write
+        {
+            tmpFlush+=bytesWritten;
+            toWrite-=bytesWritten;
+            bytesWritten=0;
+        }
+        else
+            return;
+    }
+
+    return;
+}
 
 void XMLPlatformUtils::resetFile(FileHandle theFile)
 {
