@@ -61,7 +61,6 @@
 
 #ifndef OS400SETDEFS_H
 #define OS400SETDEFS_H 
-#include <util/XercesDefs.hpp>
 
 // ---------------------------------------------------------------------------
 // Define these away for this platform
@@ -73,7 +72,9 @@
 // ---------------------------------------------------------------------------
 // Indicate that we do not support native bools
 // ---------------------------------------------------------------------------
-#define NO_NATIVE_BOOL
+#if !defined(__BOOL__)
+  #define NO_NATIVE_BOOL
+#endif
 
 
 // ---------------------------------------------------------------------------
