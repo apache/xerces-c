@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.15  2003/11/06 15:30:07  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -470,7 +473,7 @@ void DecimalDatatypeValidator::setEnumeration()
         {
             for ( i = 0; i < enumLength; i++)
             {
-                numBase->checkContent(fStrEnumeration->elementAt(i), false);
+                numBase->checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false);
             }
         }
         catch (XMLException&)
@@ -486,7 +489,7 @@ void DecimalDatatypeValidator::setEnumeration()
     //
     for ( i = 0; i < enumLength; i++)
     {
-        checkContent(fStrEnumeration->elementAt(i), false);
+        checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false);
     }
 
     fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true, fMemoryManager);
@@ -502,13 +505,15 @@ void DecimalDatatypeValidator::setEnumeration()
 // -----------------------------------------------------------------------
 // Abstract interface from AbstractNumericValidator
 // -----------------------------------------------------------------------
-void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
+void DecimalDatatypeValidator::checkContent(const XMLCh*             const content
+                                           ,      ValidationContext* const context
+                                           ,      bool                     asBase)
 {
 
     //validate against base validator if any
     DecimalDatatypeValidator *pBase = (DecimalDatatypeValidator*) this->getBaseValidator();
     if (pBase)
-        pBase->checkContent(content, true);
+        pBase->checkContent(content, context, true);
 
     int thisFacetsDefined = getFacetsDefined();
 

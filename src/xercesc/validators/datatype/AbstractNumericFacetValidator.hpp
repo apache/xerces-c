@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.8  2003/10/17 21:13:24  peiyongz
  * loadNumber() moved to XMLNumber
  *
@@ -151,8 +154,9 @@ protected:
     virtual int  compareValues(const XMLNumber* const lValue
                              , const XMLNumber* const rValue) = 0;
 
-    virtual void checkContent(const XMLCh* const content
-                            , bool               asBase) = 0;
+    virtual void checkContent(const XMLCh*             const content
+                            ,       ValidationContext* const context
+                            , bool                           asBase) = 0;
 
 // -----------------------------------------------------------------------
 // Setter methods

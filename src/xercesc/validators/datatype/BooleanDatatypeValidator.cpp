@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.9  2003/10/07 19:39:03  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -176,13 +179,15 @@ BooleanDatatypeValidator::BooleanDatatypeValidator(
     }// End of facet setting
 }
 
-void BooleanDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
+void BooleanDatatypeValidator::checkContent( const XMLCh*             const content
+                                           ,       ValidationContext* const context
+                                           ,       bool                     asBase)
 {
 
     //validate against base validator if any
     BooleanDatatypeValidator *pBaseValidator = (BooleanDatatypeValidator*) this->getBaseValidator();
     if (pBaseValidator !=0)
-        pBaseValidator->checkContent(content, true);
+        pBaseValidator->checkContent(content, context, true);
 
     // we check pattern first
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )

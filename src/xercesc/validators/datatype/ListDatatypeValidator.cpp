@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.11  2003/10/01 16:32:41  neilg
  * improve handling of out of memory conditions, bug #23415.  Thanks to David Cargill.
  *
@@ -207,37 +210,41 @@ int ListDatatypeValidator::compare(const XMLCh* const lValue
 
 }
 
-void ListDatatypeValidator::validate( const XMLCh* const content)
+void ListDatatypeValidator::validate( const XMLCh*             const content
+                                    ,       ValidationContext* const context)
 {
     setContent(content);
     BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
     Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
-    checkContent(tokenVector, content, false);
+    checkContent(tokenVector, content, context, false);
 }
 
-void ListDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
+void ListDatatypeValidator::checkContent( const XMLCh*             const content
+                                         ,      ValidationContext* const context
+                                         ,      bool                     asBase)
 {
     setContent(content);
     BaseRefVectorOf<XMLCh>* tokenVector = XMLString::tokenizeString(content);
     Janitor<BaseRefVectorOf<XMLCh> > janName(tokenVector);
-    checkContent(tokenVector, content, asBase);
+    checkContent(tokenVector, content, context, asBase);
 }
 
 //
 // here content is a list of items
 //
-void ListDatatypeValidator::checkContent( BaseRefVectorOf<XMLCh>* tokenVector
-                                        , const XMLCh* const content
-                                        , bool asBase)
+void ListDatatypeValidator::checkContent(       BaseRefVectorOf<XMLCh>*       tokenVector
+                                        , const XMLCh*                  const content
+                                        ,       ValidationContext*      const context
+                                        ,       bool                          asBase)
 {
     DatatypeValidator* bv = getBaseValidator();
 
     if (bv->getType() == DatatypeValidator::List)
-        ((ListDatatypeValidator*)bv)->checkContent(tokenVector, content, true);
+        ((ListDatatypeValidator*)bv)->checkContent(tokenVector, content, context, true);
     else
     {   // the ultimate itemType DTV
         for (unsigned int i = 0; i < tokenVector->size(); i++)
-            bv->validate(tokenVector->elementAt(i));
+            bv->validate(tokenVector->elementAt(i), context);
     }
 
     int thisFacetsDefined = getFacetsDefined();
@@ -435,7 +442,7 @@ void ListDatatypeValidator::inspectFacetBase()
                     try
                     {
                         for ( int j = 0; j < tokenNumber; j++)
-                            getBaseValidator()->validate(tempList->elementAt(j));
+                            getBaseValidator()->validate(tempList->elementAt(j), (ValidationContext*)0);
                     }
                     catch(const OutOfMemoryException&)
                     {
@@ -450,7 +457,7 @@ void ListDatatypeValidator::inspectFacetBase()
                     delete tempList;
 
                     // enum shall pass this->checkContent() as well.
-                    checkContent(getEnumeration()->elementAt(i), false);
+                    checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false);
                 }
             }
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.5  2003/10/02 19:21:06  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -204,7 +207,9 @@ protected:
 // Abstract interface from AbstractNumericValidator
 // -----------------------------------------------------------------------
 
-    virtual void checkContent( const XMLCh* const content, bool asBase);
+    virtual void checkContent(const XMLCh*             const content
+                            ,       ValidationContext* const context
+                            , bool                           asBase);
 
 };
 

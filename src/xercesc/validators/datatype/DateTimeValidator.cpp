@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.10  2003/10/02 19:21:06  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -141,9 +144,10 @@ DateTimeValidator::DateTimeValidator(
     //do not invoke init() here !!!
 }
 
-void DateTimeValidator::validate(const XMLCh* const content)
+void DateTimeValidator::validate(const XMLCh*             const content
+                               ,       ValidationContext* const context)
 {
-    checkContent(content, false);
+    checkContent(content, context, false);
 }
 
 int DateTimeValidator::compare(const XMLCh* const value1
@@ -186,14 +190,15 @@ void DateTimeValidator::checkAdditionalFacetConstraints() const
 void DateTimeValidator::checkAdditionalFacetConstraintsBase() const
 {}
 
-void DateTimeValidator::checkContent(const XMLCh* const content
-                                   , bool               asBase)
+void DateTimeValidator::checkContent(const XMLCh*             const content
+                                   ,       ValidationContext* const context
+                                   ,       bool                     asBase)
 {
 
     //validate against base validator if any
     DateTimeValidator *pBaseValidator = (DateTimeValidator*) this->getBaseValidator();
     if (pBaseValidator)
-        pBaseValidator->checkContent(content, true);
+        pBaseValidator->checkContent(content, context, true);
 
     int thisFacetsDefined = getFacetsDefined();
 

@@ -117,7 +117,11 @@ public:
      * is not valid.
      */
 
-	void validate(const XMLCh* const content);
+	virtual void validate
+                 (
+                  const XMLCh*             const content
+                ,       ValidationContext* const context = 0
+                  );
 
     //@}
 
@@ -157,7 +161,9 @@ public:
 
 private:
 
-    void checkContent(const XMLCh* const content, bool asBase);
+    virtual void checkContent(const XMLCh*             const content
+                            ,       ValidationContext* const context
+                            , bool                           asBase);
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -199,9 +205,10 @@ inline DatatypeValidator* BooleanDatatypeValidator::newInstance
     return (DatatypeValidator*) new (manager) BooleanDatatypeValidator(this, facets, enums, finalSet, manager);
 }
 
-inline void BooleanDatatypeValidator::validate( const XMLCh* const content)
+inline void BooleanDatatypeValidator::validate( const XMLCh*             const content
+                                              ,       ValidationContext* const context)
 {
-    checkContent(content, false);
+    checkContent(content, context, false);
 }
 
 XERCES_CPP_NAMESPACE_END

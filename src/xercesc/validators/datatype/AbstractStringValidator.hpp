@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.9  2003/09/29 21:47:35  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -160,7 +163,11 @@ public:
      * is not valid.
      */
 
-	virtual void validate(const XMLCh* const content);
+	virtual void validate
+                 (
+                  const XMLCh*             const content
+                ,       ValidationContext* const context = 0
+                  );
 
     //@}
 
@@ -215,7 +222,9 @@ protected:
 
     virtual void inheritFacet();
 
-    virtual void checkContent(const XMLCh* const content, bool asBase);
+    virtual void checkContent(const XMLCh*             const content
+                            ,       ValidationContext* const context
+                            , bool                           asBase);
 
     /*
      **  Base64BinaryDatatypeValidator to overwrite

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.6  2003/10/02 19:21:06  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -114,9 +117,10 @@ AbstractNumericValidator::AbstractNumericValidator(
     //do not invoke init() here !!!
 }
 
-void AbstractNumericValidator::validate(const XMLCh* const content)
+void AbstractNumericValidator::validate(const XMLCh*             const content
+                                       ,      ValidationContext* const context)
 {
-    checkContent(content, false);
+    checkContent(content, context, false);
 }
 
 void AbstractNumericValidator::boundsCheck(const XMLNumber* const theData)

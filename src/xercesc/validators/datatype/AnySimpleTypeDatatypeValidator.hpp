@@ -119,7 +119,11 @@ public:
 	   * @param  content   A string containing the content to be validated
 	   *
 	   */
-	void validate(const XMLCh* const content);
+	virtual void validate
+                 (
+                  const XMLCh*             const content
+                ,       ValidationContext* const context = 0
+                  );
 
     /**
       * Checks whether a given type can be used as a substitute
@@ -198,8 +202,9 @@ AnySimpleTypeDatatypeValidator::isSubstitutableBy(const DatatypeValidator* const
     return true;
 }
 
-inline void
-AnySimpleTypeDatatypeValidator::validate(const XMLCh* const content)
+inline void 
+AnySimpleTypeDatatypeValidator::validate(const XMLCh*             const content
+                                       ,       ValidationContext* const context)
 {
     return;
 }

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.6  2003/09/30 18:17:53  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -148,13 +151,14 @@ int NameDatatypeValidator::compare(const XMLCh* const lValue
     return ( XMLString::equals(lValue, rValue)? 0 : -1);
 }
 
-void NameDatatypeValidator::validate(const XMLCh* const content)
+void NameDatatypeValidator::validate(const XMLCh*             const content
+                                   ,       ValidationContext* const context)
 {
     // use StringDatatypeValidator (which in turn, invoke
     // the baseValidator) to validate content against
     // facets if any.
     //
-    StringDatatypeValidator::validate(content);
+    StringDatatypeValidator::validate(content, context);
 
     return;
 }

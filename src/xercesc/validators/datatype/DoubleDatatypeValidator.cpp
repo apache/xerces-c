@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.8  2003/11/06 15:30:07  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -236,7 +239,7 @@ void  DoubleDatatypeValidator::setEnumeration()
         {
             for ( i = 0; i < enumLength; i++)
             {
-                numBase->checkContent(fStrEnumeration->elementAt(i), false);
+                numBase->checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false);
             }
         }
         catch (XMLException&)
@@ -253,7 +256,7 @@ void  DoubleDatatypeValidator::setEnumeration()
     //
     for ( i = 0; i < enumLength; i++)
     {
-        checkContent(fStrEnumeration->elementAt(i), false);
+        checkContent(fStrEnumeration->elementAt(i), (ValidationContext*)0, false);
     }
 
     fEnumeration = new (fMemoryManager) RefVectorOf<XMLNumber>(enumLength, true, fMemoryManager);
@@ -269,13 +272,15 @@ void  DoubleDatatypeValidator::setEnumeration()
 // Abstract interface from AbstractNumericValidator
 // -----------------------------------------------------------------------
 
-void DoubleDatatypeValidator::checkContent( const XMLCh* const content, bool asBase)
+void DoubleDatatypeValidator::checkContent(const XMLCh*             const content
+                                          ,      ValidationContext* const context
+                                          ,      bool                     asBase)
 {
 
     //validate against base validator if any
     DoubleDatatypeValidator *pBase = (DoubleDatatypeValidator*) this->getBaseValidator();
     if (pBase)
-        pBase->checkContent(content, true);
+        pBase->checkContent(content, context, true);
 
     // we check pattern first
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )

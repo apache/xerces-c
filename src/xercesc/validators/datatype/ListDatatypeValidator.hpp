@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.7  2003/09/30 21:31:30  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -169,7 +172,11 @@ public:
      * is not valid.
      */
 
-	void validate(const XMLCh* const content);
+	virtual void validate
+                 (
+                  const XMLCh*             const content
+                ,       ValidationContext* const context = 0
+                  );
 
     //@}
 
@@ -235,13 +242,17 @@ protected:
 
     virtual void inheritFacet();
 
-    void checkContent(const XMLCh* const content, bool asBase);
+    virtual void checkContent(const XMLCh*             const content
+                            ,       ValidationContext* const context
+                            , bool                           asBase);
 
 private:
 
-    void checkContent(BaseRefVectorOf<XMLCh>* tokenVector
-                    , const XMLCh* const  content
-                    , bool asBase);
+    void checkContent(      BaseRefVectorOf<XMLCh>*        tokenVector
+                    , const XMLCh*                  const  content
+                    ,       ValidationContext*      const  context
+                    ,       bool                           asBase
+                    );
 
     bool valueSpaceCheck(BaseRefVectorOf<XMLCh>* tokenVector
                        , const XMLCh* const  enumStr) const;

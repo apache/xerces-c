@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.5  2003/09/30 18:17:53  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -148,7 +151,11 @@ public:
      * is not valid.
      */
 
-	virtual void validate(const XMLCh* const content);
+	virtual void validate
+                 (
+                  const XMLCh*             const content
+                ,       ValidationContext* const context = 0
+                  );
 
     //@}
 
@@ -164,6 +171,7 @@ public:
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
+    //deprecated
     inline void setIDRefList(RefHashTableOf<XMLRefInfo>* fIDRefList);
 
     /***
@@ -189,25 +197,19 @@ protected:
 
 private:
 
-    void addIdRef(const XMLCh* const content);
-
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fIDRefList
-    //      we do not own it.
     //
     // -----------------------------------------------------------------------
-    RefHashTableOf<XMLRefInfo>* fIDRefList;
 
 };
 
 // -----------------------------------------------------------------------
 // Validation methods
 // -----------------------------------------------------------------------
-inline void IDREFDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* newIDRefList)
+inline void IDREFDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* )
 {
-    fIDRefList = newIDRefList;
 }
 
 XERCES_CPP_NAMESPACE_END

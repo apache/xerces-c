@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.11  2003/10/07 19:39:03  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -204,7 +207,11 @@ public:
      * is not valid.
      */
 
-	void validate(const XMLCh* const content);
+	virtual void validate
+                 (
+                  const XMLCh*             const content
+                ,       ValidationContext* const context = 0
+                  );
 
     /**
       * Checks whether a given type can be used as a substitute
@@ -289,7 +296,9 @@ public:
 
 private:
 
-    void checkContent(const XMLCh* const content, bool asBase);
+    virtual void checkContent(const XMLCh*             const content
+                            ,       ValidationContext* const context
+                            , bool                           asBase);
 
     void init(DatatypeValidator*            const baseValidator
             , RefHashTableOf<KVStringPair>* const facets
@@ -334,9 +343,10 @@ inline DatatypeValidator* UnionDatatypeValidator::newInstance
     return (DatatypeValidator*) new (manager) UnionDatatypeValidator(this, facets, enums, finalSet, manager, fMemberTypeValidators, true);
 }
 
-inline void UnionDatatypeValidator::validate( const XMLCh* const content)
+inline void UnionDatatypeValidator::validate( const XMLCh*             const content
+                                           ,        ValidationContext* const context)
 {
-    checkContent(content, false);
+    checkContent(content, context, false);
 }
 
 inline void UnionDatatypeValidator::cleanUp()

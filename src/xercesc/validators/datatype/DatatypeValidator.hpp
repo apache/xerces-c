@@ -69,6 +69,7 @@
 #include <xercesc/validators/schema/SchemaSymbols.hpp>
 #include <xercesc/internal/XSerializable.hpp>
 #include <xercesc/framework/psvi/XSSimpleTypeDefinition.hpp>
+#include <xercesc/framework/ValidationContext.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -253,7 +254,11 @@ public:
 	   * @param  content   A string containing the content to be validated
 	   *
 	   */
-	virtual void validate(const XMLCh* const content) = 0;
+	virtual void validate
+                 (
+                  const XMLCh*             const content
+                ,       ValidationContext* const context = 0
+                  ) = 0;
 
     /**
       * Checks whether a given type can be used as a substitute

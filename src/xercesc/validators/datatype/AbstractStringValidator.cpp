@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.15  2003/10/17 21:13:43  peiyongz
  * using XTemplateSerializer
  *
@@ -554,9 +557,9 @@ void AbstractStringValidator::inspectFacetBase()
         for ( ; i < enumLength; i++)
         {
             // ask parent do a complete check
-            pBaseValidator->checkContent(getEnumeration()->elementAt(i), false);
+            pBaseValidator->checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false);
             // enum shall pass this->checkContent() as well.
-            checkContent(getEnumeration()->elementAt(i), false);
+            checkContent(getEnumeration()->elementAt(i), (ValidationContext*)0, false);
         }
     }
 
@@ -639,18 +642,21 @@ int AbstractStringValidator::compare(const XMLCh* const lValue
     return XMLString::compareString(lValue, rValue);
 }
 
-void AbstractStringValidator::validate( const XMLCh* const content)
+void AbstractStringValidator::validate( const XMLCh*             const content
+                                      ,       ValidationContext* const context )
 {
-    checkContent(content, false);
+    checkContent(content, context, false);
 }
 
-void AbstractStringValidator::checkContent( const XMLCh* const content, bool asBase)
+void AbstractStringValidator::checkContent( const XMLCh*             const content
+                                          ,       ValidationContext* const context
+                                          ,       bool                     asBase)
 {
 
     //validate against base validator if any
     AbstractStringValidator *pBaseValidator = (AbstractStringValidator*) this->getBaseValidator();
     if (pBaseValidator)
-        pBaseValidator->checkContent(content, true);
+        pBaseValidator->checkContent(content, context, true);
 
     int thisFacetsDefined = getFacetsDefined();
 

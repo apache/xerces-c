@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.15  2003/10/31 22:17:11  peiyongz
  * solve ownership
  *
@@ -283,7 +286,7 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
                     // since there are no other facets for Union, parent
                     // checking is good enough.
                     //
-                    baseValidator->validate(getEnumeration()->elementAt(i));
+                    baseValidator->validate(getEnumeration()->elementAt(i), (ValidationContext*)0);
 
                 }
             }
@@ -327,12 +330,14 @@ void UnionDatatypeValidator::init(DatatypeValidator*            const baseValida
 // 3) the natvie Union DTV (the top level DTV) would invoke
 //        memberTypeValidator to validate
 //
-void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBase)
+void UnionDatatypeValidator::checkContent(const XMLCh*             const content
+                                        ,       ValidationContext* const context
+                                        ,       bool                     asBase)
 {
 
     DatatypeValidator* bv = getBaseValidator();
     if (bv)
-        ((UnionDatatypeValidator*)bv)->checkContent(content, true);
+        ((UnionDatatypeValidator*)bv)->checkContent(content, context, true);
     else
     {   // 3) native union type
         // check content against each member type validator in Union
@@ -346,7 +351,7 @@ void UnionDatatypeValidator::checkContent(const XMLCh* const content, bool asBas
 
             try
             {
-                fMemberTypeValidators->elementAt(i)->validate(content);
+                fMemberTypeValidators->elementAt(i)->validate(content, context);
                 memTypeValid = true;
                 
                 //set the validator of the type actually used to validate the content

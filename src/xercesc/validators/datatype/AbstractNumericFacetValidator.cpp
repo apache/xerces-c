@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2003/11/12 20:32:03  peiyongz
+ * Statless Grammar: ValidationContext
+ *
  * Revision 1.15  2003/10/17 21:13:43  peiyongz
  * using XTemplateSerializer
  *
@@ -154,7 +157,7 @@ const int AbstractNumericFacetValidator::INDETERMINATE = 2;
 {                                                             \
     try                                                       \
 {                                                             \
-        numBase->checkContent(val->getRawData(), false);      \
+        numBase->checkContent(val->getRawData(), (ValidationContext*)0, false);      \
 }                                                             \
     catch ( XMLException& )                                   \
 {                                                             \
