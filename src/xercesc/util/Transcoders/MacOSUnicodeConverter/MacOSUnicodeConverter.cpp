@@ -71,9 +71,8 @@
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/Platforms/MacOS/MacOSPlatformUtils.hpp>
 
-#if defined(XML_METROWERKS) // || (__GNUC__ >= 3)
+#if defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
 	// Only used under metrowerks.
-	// In ProjectBuilder, the system wchar.h header is missing, which causes this to fail.
 	#include <cwctype>
 #endif
 
@@ -94,6 +93,8 @@
     #include <CodeFragments.h>
     #include <UnicodeConverter.h>
     #include <UnicodeUtilities.h>
+    #include <CFCharacterSet.h>
+    #include <CFString.h>
 #endif
 
 
@@ -103,7 +104,7 @@
 
 //	TempUniBuf is used for cases where we need a temporary conversion due to
 //	a mismatch between UniChar (the 16-bit type that the Unicode converter uses)
-//	and wchar_t (the type the compiler uses to represent a Unicode character).
+//	and XMLCH (the type that Xerces uses to represent a Unicode character).
 //	In the case of Metrowerks, these are the same size. For ProjectBuilder, they
 //	used to differ, but they are now the same since XMLCh is now always fixed
 //	as a 16 bit character, rather than floating with wchar_t as it used to.
@@ -123,7 +124,7 @@ static const XMLCh gMyServiceId[] =
 };
 
 //	Detect a mismatch in unicode character size.
-const bool kUniSizeMismatch = sizeof(XMLCh) != sizeof(UniChar);
+#define UNICODE_SIZE_MISMATCH (sizeof(XMLCh) != sizeof(UniChar))
 
 
 // ---------------------------------------------------------------------------
@@ -190,7 +191,7 @@ int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
 			std::size_t passCnt1;
 			std::size_t passCnt2;
 			
-			if (kUniSizeMismatch)
+			if (UNICODE_SIZE_MISMATCH)
 			{
 				passCnt1 = std::min(cnt1, kTempUniBufCount);
 				passCnt2 = std::min(cnt2, kTempUniBufCount);
@@ -313,7 +314,7 @@ int MacOSUnicodeConverter::compareNIString( const   XMLCh* const    comp1
 			std::size_t passCnt1;
 			std::size_t passCnt2;
 			
-			if (kUniSizeMismatch)
+			if (UNICODE_SIZE_MISMATCH)
 			{
 				passCnt1 = std::min(cnt1, kTempUniBufCount);
 				passCnt2 = std::min(cnt2, kTempUniBufCount);
@@ -392,24 +393,18 @@ const XMLCh* MacOSUnicodeConverter::getId() const
 
 bool MacOSUnicodeConverter::isSpace(const XMLCh toCheck) const
 {
-#if defined(XML_METROWERKS) // || (__GNUC__ >= 3)
+#if TARGET_API_MAC_CARBON
+
+   //	Return true if the specified character is in the set.
+   CFCharacterSetRef wsSet = CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline);
+   return CFCharacterSetIsCharacterMember(wsSet, toCheck);
+
+#elif defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
+
 	// Use this if there's a reasonable c library available.
 	// ProjectBuilder currently has no support for iswspace ;(
     return (std::iswspace(toCheck) != 0);
-#elif defined(__APPLE__) || true
-	// This looks fairly good, assuming we're on an ascii compiler.
-	// We'll use this under ProjectBuilder for now.
-	return (toCheck == L' ');
-#elif 0
-	// This is okay but probably kind of slow for what we need
-    UCCharPropertyValue propValue = 0;
-    
-    OSStatus status = UCGetCharProperty(
-                            reinterpret_cast<const UniChar*>(&toCheck),
-                            1,					// size of toCheck in UniChars, right? Not bytes???
-                            kUCCharPropTypeGenlCategory,
-                            &propValue);
-    return (status == noErr) && (propValue == kUCGenlCatSeparatorSpace);
+
 #endif
 }
 
@@ -464,24 +459,26 @@ bool MacOSUnicodeConverter::supportsSrcOfs() const
 
 void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase) const
 {
-#if defined(XML_METROWERKS) // || (__GNUC__ >= 3)
+#if TARGET_API_MAC_CARBON
+
+   // If we're targeting carbon, use the CFString conversion to uppercase
+   CFMutableStringRef cfString = CFStringCreateMutableWithExternalCharactersNoCopy(
+        NULL,
+        (UniChar*)toUpperCase,
+        XMLString::stringLen(toUpperCase),
+        0,
+        kCFAllocatorNull);
+   CFStringUppercase(cfString, NULL);
+   CFRelease(cfString);
+   
+#elif defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
+
 	// Use this if there's a reasonable c library available.
 	// Metrowerks does this reasonably
 	wchar_t c;
 	for (XMLCh* p = (XMLCh*)toUpperCase; ((c = *p) != 0); )
 		*p++ = std::towupper(c);
-#elif defined(__APPLE__) || true
-	// This might work, assuming we're on an ascii compiler.
-	// We'll use this under ProjectBuilder for now.
-	// Note that this only handles the ascii portion of the
-	// string, leaving all other characters in original case.
-	XMLCh c;
-	for (XMLCh* p = (XMLCh*)toUpperCase; ((c = *p) != 0); )
-	{
-		if (c >= 'a' && c <= 'z')
-			c += 'A' - 'a';
-		*p++ = c;
-	}
+
 #else
 	#error Sorry, no support for upperCase
 #endif
@@ -490,24 +487,26 @@ void MacOSUnicodeConverter::upperCase(XMLCh* const toUpperCase) const
 
 void MacOSUnicodeConverter::lowerCase(XMLCh* const toLowerCase) const
 {
-#if defined(XML_METROWERKS) // || (__GNUC__ >= 3)
+#if TARGET_API_MAC_CARBON
+
+   // If we're targeting carbon, use the CFString conversion to uppercase
+   CFMutableStringRef cfString = CFStringCreateMutableWithExternalCharactersNoCopy(
+        NULL,
+        (UniChar*)toLowerCase,
+        XMLString::stringLen(toLowerCase),
+        0,
+        kCFAllocatorNull);
+   CFStringLowercase(cfString, NULL);
+   CFRelease(cfString);
+   
+#elif defined(XML_METROWERKS) || (__GNUC__ >= 3 && _GLIBCPP_USE_WCHAR_T)
+
 	// Use this if there's a reasonable c library available.
 	// Metrowerks does this reasonably
 	wchar_t c;
 	for (XMLCh* p = (XMLCh*)toLowerCase; ((c = *p) != 0); )
 		*p++ = std::towlower(c);
-#elif defined(__APPLE__) || true
-	// This might work, assuming we're on an ascii compiler.
-	// We'll use this under ProjectBuilder for now.
-	// Note that this only handles the ascii portion of the
-	// string, leaving all other characters in original case.
-	XMLCh c;
-	for (XMLCh* p = (XMLCh*)toLowerCase; ((c = *p) != 0); )
-	{
-		if (c >= 'A' && c <= 'Z')
-			c += 'a' - 'A';
-		*p++ = c;
-	}
+
 #else
 	#error Sorry, no support for lowerCase
 #endif
@@ -661,7 +660,7 @@ MacOSTranscoder::transcodeFrom(  const  XMLByte* const			srcData
 	//	XMLCh. We lied about the max buffer length above in
 	//	order to leave room in our output buffer. So we know
 	//	we're in good shape here to just convert in place.
-	if (kUniSizeMismatch)
+	if (UNICODE_SIZE_MISMATCH)
 		CopyUniCharsToXMLChs(reinterpret_cast<UniChar* const>(toFill), toFill, charsProduced, maxChars);
 		    	
     bytesEaten = bytesConsumed;
@@ -708,7 +707,7 @@ MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
 		//	Setup source buffer as needed to accomodate a unicode
 		//	character size mismatch.
 		TempUniBuf	buf;
-		if (kUniSizeMismatch)
+		if (UNICODE_SIZE_MISMATCH)
 		{
 			passCnt = std::min(srcCnt, kTempUniBufCount);
 			passSrc = CopyXMLChsToUniChars(src, buf, passCnt, kTempUniBufCount);
@@ -947,7 +946,7 @@ MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 		//	Setup source buffer as needed to accomodate a unicode
 		//	character size mismatch.
 		TempUniBuf	iBuf;
-		if (kUniSizeMismatch)
+		if (UNICODE_SIZE_MISMATCH)
 		{
 			passCnt = std::min(srcCnt, kTempUniBufCount);
 			passSrc = CopyXMLChsToUniChars(src, iBuf, passCnt, kTempUniBufCount);
@@ -1024,7 +1023,7 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText)
 		//	Setup source buffer as needed to accomodate a unicode
 		//	character size mismatch.
 		TempUniBuf	iBuf;
-		if (kUniSizeMismatch)
+		if (UNICODE_SIZE_MISMATCH)
 		{
 			passCnt = std::min(srcCnt, kTempUniBufCount);
 			passSrc = CopyXMLChsToUniChars(src, iBuf, passCnt, kTempUniBufCount);
@@ -1221,7 +1220,7 @@ MacOSLCPTranscoder::transcode( 		 const   char* const	toTranscode
 
 	//	If we have a size mismatch, then convert from UniChar to
 	//	XMLCh in place within the output buffer.
-	if (kUniSizeMismatch)
+	if (UNICODE_SIZE_MISMATCH)
 		CopyUniCharsToXMLChs(reinterpret_cast<UniChar* const>(toFill), toFill, charsProduced, maxChars);
 		    
     //	Zero terminate the output string
@@ -1270,7 +1269,7 @@ MacOSLCPTranscoder::transcode( 		const   XMLCh* const    toTranscode
 		//	Setup source buffer as needed to accomodate a unicode
 		//	character size mismatch.
 		TempUniBuf	buf;
-		if (kUniSizeMismatch)
+		if (UNICODE_SIZE_MISMATCH)
 		{
 			passCnt = std::min(srcCnt, kTempUniBufCount);
 			passSrc = CopyXMLChsToUniChars(src, buf, passCnt, kTempUniBufCount);
