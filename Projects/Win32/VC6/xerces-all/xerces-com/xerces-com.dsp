@@ -58,11 +58,14 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\Debug
+TargetDir=\xml-xerces\c\Build\Win32\xml4com\Debug
 TargetPath=\xml-xerces\c\Build\Win32\xml4com\Debug\xerces-com.dll
 InputPath=\xml-xerces\c\Build\Win32\xml4com\Debug\xerces-com.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_2.dll $(TargetDir) 
+	copy ..\..\..\..\..\Build\Win32\VC6\Debug\xerces-c_1_2.dll $(TargetDir) 
 	regsvr32 /s /c "$(TargetPath)" 
 	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
 	
@@ -134,14 +137,23 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseMinSize
+TargetDir=\xml-xerces\c\Build\Win32\xml4com\ReleaseMinSize
 TargetPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseMinSize\xerces-com.dll
 InputPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseMinSize\xerces-com.dll
 SOURCE="$(InputPath)"
 
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	regsvr32 /s /c "$(TargetPath)" 
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
+BuildCmds= \
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
+	regsvr32 /s /c "$(TargetPath)" \
+	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
 	
+
+"$(TargetDir)\xerces-c_1_2.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+
+"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "xml4com - Win32 Release MinDependency"
@@ -213,20 +225,29 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\..\..\..\..\Build\Win32\VC6\Release"
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinSize
+TargetDir=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinSize
 TargetPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinSize\xerces-com.dll
 InputPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinSize\xerces-com.dll
 SOURCE="$(InputPath)"
 
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	if "%OS%"=="" goto NOTNT 
-	if not "%OS%"=="Windows_NT" goto NOTNT 
-	regsvr32 /s /c "$(TargetPath)" 
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
-	goto end 
-	:NOTNT 
-	echo Warning : Cannot register Unicode DLL on Windows 95 
-	:end 
+BuildCmds= \
+	if "%OS%"=="" goto NOTNT \
+	if not "%OS%"=="Windows_NT" goto NOTNT \
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
+	regsvr32 /s /c "$(TargetPath)" \
+	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
+	goto end \
+	:NOTNT \
+	echo Warning : Cannot register Unicode DLL on Windows 95 \
+	:end \
 	
+
+"$(TargetDir)\xerces-c_1_2.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+
+"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "xml4com - Win32 Unicode Release MinDependency"
@@ -254,20 +275,29 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib shlwapi.lib xerces-c_1.lib /nologo /subsystem:windows /dll /machine:I386
 # Begin Custom Build - Performing registration
 OutDir=.\..\..\..\..\..\Build\Win32\xml4com\ReleaseUMinDependency
+TargetDir=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinDependency
 TargetPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinDependency\xerces-com.dll
 InputPath=\xml-xerces\c\Build\Win32\xml4com\ReleaseUMinDependency\xerces-com.dll
 SOURCE="$(InputPath)"
 
-"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	if "%OS%"=="" goto NOTNT 
-	if not "%OS%"=="Windows_NT" goto NOTNT 
-	regsvr32 /s /c "$(TargetPath)" 
-	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" 
-	goto end 
-	:NOTNT 
-	echo Warning : Cannot register Unicode DLL on Windows 95 
-	:end 
+BuildCmds= \
+	if "%OS%"=="" goto NOTNT \
+	if not "%OS%"=="Windows_NT" goto NOTNT \
+	echo copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
+	copy ..\..\..\..\..\Build\Win32\VC6\Release\xerces-c_1_2.dll $(TargetDir) \
+	regsvr32 /s /c "$(TargetPath)" \
+	echo regsvr32 exec. time > "$(OutDir)\regsvr32.trg" \
+	goto end \
+	:NOTNT \
+	echo Warning : Cannot register Unicode DLL on Windows 95 \
+	:end \
 	
+
+"$(TargetDir)\xerces-c_1_2.dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
+
+"$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+   $(BuildCmds)
 # End Custom Build
 
 !ENDIF 
