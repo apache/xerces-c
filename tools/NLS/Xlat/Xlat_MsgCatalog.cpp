@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/05/05 15:36:14  amassari
+ * The XercesMessages_xx.Msg file was created with a lowercase extension
+ *
  * Revision 1.9  2003/04/14 08:41:00  gareth
  * Xlat now works under linux - Big thanks to Neil Graham (I no longer have to find a windows box). Still slight problems working with glibc before 2.2.4 (If you mess up the parameters it seg faults due to handling of wprintf)
  *
@@ -217,7 +220,7 @@ void MsgCatFormatter::startOutput(  const   XMLCh* const    locale
     XMLCh *tmpBuf = new XMLCh[bufSize + 1];
     tmpBuf[0] = 0;
     XMLCh *tmpXMLStr = XMLString::transcode("XercesMessages_");
-    XMLCh *tmpXMLStr2 = XMLString::transcode(".msg");
+    XMLCh *tmpXMLStr2 = XMLString::transcode(".Msg");
 
     XMLString::catString(tmpBuf, outPath);
     XMLString::catString(tmpBuf, tmpXMLStr );
