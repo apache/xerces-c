@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/11/15 17:09:23  peiyongz
+ * catch(...) only. (the invoker need to cath XMLException to display proper message)
+ *
  * Revision 1.2  2001/11/14 22:02:25  peiyongz
  * rethrow exception with original error message.
  *
@@ -69,7 +72,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/TimeDatatypeValidator.hpp>
-#include <util/SchemaDateTimeException.hpp>
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
@@ -109,11 +111,6 @@ XMLDateTime* TimeDatatypeValidator::parse(const XMLCh* const content)
     try
     {
         pRetDate->parseTime();
-    }
-    catch (const XMLException &e)
-    {
-        delete pRetDate;
-        ThrowXML1(SchemaDateTimeException, XMLExcepts::RethrowError, e.getMessage());
     }
     catch (...)
     {
