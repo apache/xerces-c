@@ -70,18 +70,29 @@ LocalFileInputSource::LocalFileInputSource( const   XMLCh* const basePath
                                             , const XMLCh* const relativePath)
 {
     //
-    //  Weave the two paths together in order to base the relative one
-    //  off of the base one. Assume that the base path is a full path to
-    //  a real file, so we throw off the name right off the bat.
+    //  If the relative part is really relative, then weave it together
+    //  with the base path. If not, just take the relative path as the
+    //  entire path.
     //
-    XMLCh* tmpBuf = XMLPlatformUtils::weavePaths(basePath, relativePath);
-    setSystemId(tmpBuf);
-    delete [] tmpBuf;
+    if (XMLPlatformUtils::isRelative(relativePath))
+    {
+        XMLCh* tmpBuf = XMLPlatformUtils::weavePaths(basePath, relativePath);
+        setSystemId(tmpBuf);
+        delete [] tmpBuf;
+    }
+     else
+    {
+        setSystemId(relativePath);
+    }
 }
 
 LocalFileInputSource::LocalFileInputSource(const XMLCh* const filePath)
 {
-    // Complete the path before storing it
+    //
+    //  If the path is relative, then complete it acording to the current
+    //  working directory rules of the current platform. Else, just take
+    //  it as is.
+    //
     if (XMLPlatformUtils::isRelative(filePath))
     {
         XMLCh* tmpBuf = XMLPlatformUtils::getFullPath(filePath);
