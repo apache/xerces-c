@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.11  2004/11/11 01:31:54  peiyongz
+ * Avoid unnecessary expansion -- patch from Christian
+ *
  * Revision 1.10  2004/09/08 13:56:23  peiyongz
  * Apache License Version 2.0
  *
@@ -281,7 +284,7 @@ ensureExtraCapacity(const unsigned int length)
 {
     unsigned int newMax = fCurCount + length;
 
-    if (newMax < fMaxCount)
+    if (newMax <= fMaxCount)
         return;
 
     // Avoid too many reallocations by expanding by a percentage

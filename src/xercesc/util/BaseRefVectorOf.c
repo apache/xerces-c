@@ -264,7 +264,7 @@ ensureExtraCapacity(const unsigned int length)
 {
     unsigned int newMax = fCurCount + length;
 
-    if (newMax < fMaxCount)
+    if (newMax <= fMaxCount)
         return;
 
     // Avoid too many reallocations by providing a little more space
