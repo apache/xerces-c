@@ -354,6 +354,14 @@ SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLChTranscoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLChTranscoder.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLEBCDICTranscoder.cpp
 # End Source File
 # Begin Source File
