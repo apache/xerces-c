@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/27 16:44:59  neilg
+ * implement isSpecified; thanks to Pete Lloyd
+ *
  * Revision 1.5  2003/11/27 06:10:32  neilg
  * PSVIAttribute implementation
  *
@@ -340,6 +343,11 @@ inline PSVIItem::VALIDITY_STATE PSVIItem::getValidity() const
     return fValidityState;
 }
 inline PSVIItem::ASSESSMENT_TYPE PSVIItem::getValidationAttempted() const
+inline bool PSVIItem::getIsSchemaSpecified() const
+{
+    return fIsSpecified;
+}
+
 {
     return fAssessmentType;
 }
