@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/10/16 16:29:34  tng
+ * Schema: Fix Typo
+ *
  * Revision 1.2  2001/10/09 21:17:41  peiyongz
  * . macro to simplify code
  * .save get***() to temp vars.
@@ -84,7 +87,7 @@ const int AbstractNumericFacetValidator::INDETERMINATE = 2;
   ThrowXML2(InvalidDatatypeFacetException               \
           , except_code                                 \
           , value2                                      \
-          , value1);                            
+          , value1);
 
 
 #define  FROM_BASE_VALUE_SPACE(val, facetFlag, except_code)   \
@@ -158,7 +161,7 @@ void AbstractNumericFacetValidator::init(RefVectorOf<XMLCh>* const enums)
     fStrEnumeration = enums; // save the literal value
     Janitor<RefVectorOf<XMLCh> >    janStrEnum(fStrEnumeration);
 
-    if (enums)   
+    if (enums)
     {
         setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
     }
@@ -286,7 +289,7 @@ void AbstractNumericFacetValidator::assignFacet()
 //
 void AbstractNumericFacetValidator::inspectFacet()
 {
-   
+
     int thisFacetsDefined = getFacetsDefined();
     XMLNumber *thisMaxInclusive = getMaxInclusive();
     XMLNumber *thisMaxExclusive = getMaxExclusive();
@@ -363,7 +366,7 @@ void AbstractNumericFacetValidator::inspectFacet()
         }
     }
 
-    checkAdditionalFacetConstraints();  
+    checkAdditionalFacetConstraints();
 
 }// end of inspectFacet()
 
@@ -382,7 +385,7 @@ void AbstractNumericFacetValidator::inspectFacetBase()
     if ( (!thisFacetsDefined && !fEnumeration) ||
          !numBase           )
         return;
-    
+
     int baseFacetsDefined = numBase->getFacetsDefined();
 
     XMLNumber *thisMaxInclusive = getMaxInclusive();
@@ -413,10 +416,10 @@ void AbstractNumericFacetValidator::inspectFacetBase()
 
     if ((thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
     {
-        if ((baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) 
+        if ((baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0)
         {
-            int result = compareValues(thisMaxInclusive, baseMaxInclusive);           
-        
+            int result = compareValues(thisMaxInclusive, baseMaxInclusive);
+
             if (((baseFixed & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
                  (result != 0 ))
             {
@@ -434,7 +437,7 @@ void AbstractNumericFacetValidator::inspectFacetBase()
 
         }
 
-        if ((baseFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) 
+        if ((baseFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0)
         {
             int result = compareValues(thisMaxInclusive, baseMaxExclusive);
             if (result != -1 )
@@ -446,7 +449,7 @@ void AbstractNumericFacetValidator::inspectFacetBase()
         }
 
 
-        if ((baseFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0) 
+        if ((baseFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0)
         {
             int result = compareValues(thisMaxInclusive, baseMinInclusive);
             if (result == -1 || result == INDETERMINATE)
@@ -457,7 +460,7 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             }
         }
 
-        if ((baseFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) 
+        if ((baseFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0)
         {
             int result = compareValues(thisMaxInclusive, baseMinExclusive);
             if (result != 1 )
@@ -483,12 +486,12 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMaxExclusive, baseMaxExclusive);
 
             if (((baseFixed & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
-                 (result != 0 ))                
+                 (result != 0 ))
             {
                 REPORT_FACET_ERROR(baseMaxExclusive
                                  , thisMaxExclusive
                                  , XMLExcepts::FACET_maxExcl_base_fixed)
-             }                    
+             }
 
             if (result == 1 || result == INDETERMINATE)
             {
@@ -503,7 +506,7 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMaxExclusive, baseMaxInclusive);
             if (result == 1 || result == INDETERMINATE)
             {
-                REPORT_FACET_ERROR(baseMaxExclusive
+                REPORT_FACET_ERROR(baseMaxInclusive
                                  , thisMaxExclusive
                                  , XMLExcepts::FACET_maxExcl_base_maxIncl)
             }
@@ -545,15 +548,15 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMinExclusive, baseMinExclusive);
 
             if (((baseFixed & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
-                 (result != 0 ))                
+                 (result != 0 ))
             {
                 REPORT_FACET_ERROR(baseMinExclusive
                                  , thisMinExclusive
                                  , XMLExcepts::FACET_minExcl_base_fixed)
             }
-       
+
             if (result == -1 || result == INDETERMINATE)
-            {                  
+            {
                 REPORT_FACET_ERROR(baseMinExclusive
                                  , thisMinExclusive
                                  , XMLExcepts::FACET_minExcl_base_minExcl)
@@ -609,12 +612,12 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMinInclusive, baseMinInclusive);
 
             if (((baseFixed & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
-                 (result != 0 ))                
+                 (result != 0 ))
             {
                 REPORT_FACET_ERROR(baseMinInclusive
                                  , thisMinInclusive
                                  , XMLExcepts::FACET_minIncl_base_fixed)
-            }                   
+            }
 
             if (result == -1 || result == INDETERMINATE)
             {
@@ -704,67 +707,67 @@ void AbstractNumericFacetValidator::inspectFacetBase()
 void AbstractNumericFacetValidator::inheritFacet()
 {
 
-    AbstractNumericFacetValidator* numBase = (AbstractNumericFacetValidator*) getBaseValidator();         
+    AbstractNumericFacetValidator* numBase = (AbstractNumericFacetValidator*) getBaseValidator();
     if (!numBase)
         return;
 
     int thisFacetsDefined = getFacetsDefined();
     int baseFacetsDefined = numBase->getFacetsDefined();
 
-    // inherit enumeration          
-    if ((( baseFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0) &&          
-        (( thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) == 0))              
-    {          
-        fEnumeration = numBase->fEnumeration;              
-        fEnumerationInherited = true;              
-        setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);              
+    // inherit enumeration
+    if ((( baseFacetsDefined & DatatypeValidator::FACET_ENUMERATION) != 0) &&
+        (( thisFacetsDefined & DatatypeValidator::FACET_ENUMERATION) == 0))
+    {
+        fEnumeration = numBase->fEnumeration;
+        fEnumerationInherited = true;
+        setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
     }
 
-    // inherit maxInclusive          
-    if ((( baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&         
-        (( thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&              
-        (( thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )              
-    {          
+    // inherit maxInclusive
+    if ((( baseFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
+        (( thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&
+        (( thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )
+    {
         fMaxInclusive = numBase->getMaxInclusive();
-        fMaxInclusiveInherited = true;              
+        fMaxInclusiveInherited = true;
         setFacetsDefined(DatatypeValidator::FACET_MAXINCLUSIVE);
     }
 
-    // inherit maxExclusive         
-    if ((( baseFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&          
-        (( thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&              
-        (( thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )              
-    {          
+    // inherit maxExclusive
+    if ((( baseFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
+        (( thisFacetsDefined & DatatypeValidator::FACET_MAXEXCLUSIVE) == 0) &&
+        (( thisFacetsDefined & DatatypeValidator::FACET_MAXINCLUSIVE) == 0) )
+    {
         fMaxExclusive = numBase->getMaxExclusive();
-        fMaxExclusiveInherited = true;              
-        setFacetsDefined(DatatypeValidator::FACET_MAXEXCLUSIVE);              
+        fMaxExclusiveInherited = true;
+        setFacetsDefined(DatatypeValidator::FACET_MAXEXCLUSIVE);
     }
 
-    // inherit minExclusive          
-    if ((( baseFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&          
+    // inherit minExclusive
+    if ((( baseFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
         (( thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) &&
-        (( thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) == 0) )              
-    {          
+        (( thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) == 0) )
+    {
         fMinInclusive = numBase->getMinInclusive();
-        fMinInclusiveInherited = true;             
-        setFacetsDefined(DatatypeValidator::FACET_MININCLUSIVE);              
+        fMinInclusiveInherited = true;
+        setFacetsDefined(DatatypeValidator::FACET_MININCLUSIVE);
     }
-    
-    // inherit minExclusive          
-    if ((( baseFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&          
-        (( thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) &&              
-        (( thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) == 0) )              
-    {          
+
+    // inherit minExclusive
+    if ((( baseFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
+        (( thisFacetsDefined & DatatypeValidator::FACET_MINEXCLUSIVE) == 0) &&
+        (( thisFacetsDefined & DatatypeValidator::FACET_MININCLUSIVE) == 0) )
+    {
         fMinExclusive = numBase->getMinExclusive();
-        fMinExclusiveInherited = true;             
-        setFacetsDefined(DatatypeValidator::FACET_MINEXCLUSIVE);              
+        fMinExclusiveInherited = true;
+        setFacetsDefined(DatatypeValidator::FACET_MINEXCLUSIVE);
     }
-          
+
     inheritAdditionalFacet();
 
     // inherit "fixed" option
     setFixed(getFixed() | numBase->getFixed());
-          
+
 }
 
 /**
