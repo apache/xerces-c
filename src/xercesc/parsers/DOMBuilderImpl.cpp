@@ -205,9 +205,9 @@ void DOMBuilderImpl::setFeature(const XMLCh* const name, const bool state)
     {
     	  setValidationSchemaFullChecking(state);
     }
-    else if ((XMLString::compareIString(name, XMLUni::fgXercesResetDocumentPool) == 0) && state)
+    else if ((XMLString::compareIString(name, XMLUni::fgXercesAdoptDOMDocument) == 0) && state)
     {
-    	  resetDocumentPool();
+    	  adoptDocument();
     }
 
     else if (XMLString::compareIString(name, XMLUni::fgXercesLoadExternalDTD) == 0)
@@ -332,6 +332,10 @@ bool DOMBuilderImpl::canSetFeature(const XMLCh* const name, const bool state)
     return false;
 }
 
+
+// ---------------------------------------------------------------------------
+//  DOMBuilderImpl: Non standard extension
+// ---------------------------------------------------------------------------
 void DOMBuilderImpl::setProperty(const XMLCh* const name, void* value)
 {
 	if (XMLString::compareIString(name, XMLUni::fgXercesSchemaExternalSchemaLocation) == 0)
@@ -357,6 +361,17 @@ void* DOMBuilderImpl::getProperty(const XMLCh* const name) const
     else
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
     return 0;
+}
+
+void DOMBuilderImpl::release()
+{
+    DOMBuilderImpl* builder = (DOMBuilderImpl*) this;
+    delete builder;
+}
+
+void DOMBuilderImpl::resetDocumentPool()
+{
+    resetPool();
 }
 
 

@@ -376,6 +376,9 @@ public:
       * by the DOMInputSource parameter. This API is borrowed from the
       * SAX Parser interface.
       *
+      * The parser owns the returned DOMDocument.  It will be deleted
+      * when the parser is released.
+      *
       * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param source A const reference to the DOMInputSource object which
@@ -393,6 +396,7 @@ public:
       * @see DOMInputSource#DOMInputSource
       * @see #setEntityResolver
       * @see #setErrorHandler
+      * @see resetDocumentPool
       * @since DOM Level 3
       */
     virtual DOMDocument* parse(const DOMInputSource& source) = 0;
@@ -402,6 +406,9 @@ public:
       *
       * This method invokes the parsing process on the XML file specified by
       * the Unicode string parameter 'systemId'.
+      *
+      * The parser owns the returned DOMDocument.  It will be deleted
+      * when the parser is released.
       *
       * <p><b>"Experimental - subject to change"</b></p>
       *
@@ -418,6 +425,7 @@ public:
       * @exception DOMException A DOM exception as per DOM spec.
       *
       * @see #parse(DOMInputSource,...)
+      * @see resetDocumentPool
       * @since DOM Level 3
       */
     virtual DOMDocument* parseURI(const XMLCh* const systemId) = 0;
@@ -427,6 +435,9 @@ public:
       *
       * This method invokes the parsing process on the XML file specified by
       * the native char* string parameter 'systemId'.
+      *
+      * The parser owns the returned DOMDocument.  It will be deleted
+      * when the parser is released.
       *
       * <p><b>"Experimental - subject to change"</b></p>
       *
@@ -443,6 +454,7 @@ public:
       * @exception DOMException A DOM exception as per DOM spec.
       *
       * @see #parse(DOMInputSource,...)
+      * @see resetDocumentPool
       */
     virtual DOMDocument* parseURI(const char* const systemId) = 0;
 
@@ -533,6 +545,40 @@ public:
       *     the requested property.
       */
     virtual void setProperty(const XMLCh* const name, void* value) = 0 ;
+
+    /**
+     * Called to indicate that this DOMBuilder is no longer in use
+     * and that the implementation may relinquish any resources associated with it.
+     *
+     * Access to a released object will lead to unexpected result.
+     */
+    virtual void              release() = 0;
+
+    /** Reset the documents vector pool and release all the associated memory
+      * back to the system.
+      *
+      * When parsing a document using a DOM parser, all memory allocated
+      * for a DOM tree is associated to the DOM document.
+      *
+      * If you do multiple parse using the same DOM parser instance, then
+      * multiple DOM documents will be generated and saved in a vector pool.
+      * All these documents (and thus all the allocated memory)
+      * won't be deleted until the parser instance is destroyed.
+      *
+      * If you don't need these DOM documents anymore and don't want to
+      * destroy the DOM parser instance at this moment, then you can call this method
+      * to reset the document vector pool and release all the allocated memory
+      * back to the system.
+      *
+      * It is an error to call this method if you are in the middle of a
+      * parse (e.g. in the mid of a progressive parse).
+      *
+      * @exception IOException An exception from the parser if this function
+      *            is called when a parse is in progress.
+      *
+      */
+    virtual void              resetDocumentPool() = 0;
+
     //@}
 
 };
