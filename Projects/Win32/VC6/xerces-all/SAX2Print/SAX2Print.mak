@@ -52,6 +52,7 @@ CLEAN :
 !ENDIF 
 	-@erase "$(INTDIR)\SAX2Print.obj"
 	-@erase "$(INTDIR)\SAX2PrintHandlers.obj"
+	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(OUTDIR)\SAX2Print.exe"
 	-@erase "$(OUTDIR)\SAX2Print.ilk"
@@ -105,6 +106,7 @@ LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:cons
 LINK32_OBJS= \
 	"$(INTDIR)\SAX2Print.obj" \
 	"$(INTDIR)\SAX2PrintHandlers.obj" \
+	"$(INTDIR)\SAX2FilterHandlers.obj" \
 	"$(OUTDIR)\xerces-c_2.lib"
 
 "$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -137,6 +139,7 @@ CLEAN :
 !ENDIF 
 	-@erase "$(INTDIR)\SAX2Print.obj"
 	-@erase "$(INTDIR)\SAX2PrintHandlers.obj"
+	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(OUTDIR)\SAX2Print.exe"
@@ -192,6 +195,7 @@ LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /version:1.0 /subsystem:con
 LINK32_OBJS= \
 	"$(INTDIR)\SAX2Print.obj" \
 	"$(INTDIR)\SAX2PrintHandlers.obj" \
+	"$(INTDIR)\SAX2FilterHandlers.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib"
 
 "$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -224,6 +228,7 @@ CLEAN :
 !ENDIF 
 	-@erase "$(INTDIR)\SAX2Print.obj"
 	-@erase "$(INTDIR)\SAX2PrintHandlers.obj"
+	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(OUTDIR)\SAX2Print.exe"
@@ -279,6 +284,7 @@ LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2D.lib /version:1.0 /subsystem:con
 LINK32_OBJS= \
 	"$(INTDIR)\SAX2Print.obj" \
 	"$(INTDIR)\SAX2PrintHandlers.obj" \
+	"$(INTDIR)\SAX2FilterHandlers.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib"
 
 "$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -311,6 +317,7 @@ CLEAN :
 !ENDIF 
 	-@erase "$(INTDIR)\SAX2Print.obj"
 	-@erase "$(INTDIR)\SAX2PrintHandlers.obj"
+	-@erase "$(INTDIR)\SAX2FilterHandlers.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(OUTDIR)\SAX2Print.exe"
 	-@erase "$(OUTDIR)\SAX2Print.ilk"
@@ -364,6 +371,7 @@ LINK32_FLAGS=kernel32.lib user32.lib xerces-c_2.lib /version:1.0 /subsystem:cons
 LINK32_OBJS= \
 	"$(INTDIR)\SAX2Print.obj" \
 	"$(INTDIR)\SAX2PrintHandlers.obj" \
+	"$(INTDIR)\SAX2FilterHandlers.obj" \
 	"$(OUTDIR)\xerces-c_2.lib"
 
 "$(OUTDIR)\SAX2Print.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -434,6 +442,12 @@ LINK32_OBJS= \
    cd "..\SAX2Print"
 
 !ENDIF 
+
+SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2FilterHandlers.cpp
+
+"$(INTDIR)\SAX2FilterHandlers.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
 
 SOURCE=..\..\..\..\..\samples\SAX2Print\SAX2Print.cpp
 
