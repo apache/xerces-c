@@ -2302,6 +2302,21 @@ void XMLScanner::scanCDSection()
             }
         }
 
+        if (fValidate) {
+            // And see if the current element is a 'Children' style content model
+            const ElemStack::StackElem* topElem = fElemStack.topElement();
+
+            // Get the character data opts for the current element
+            XMLElementDecl::CharDataOpts charOpts = topElem->fThisElement->getCharDataOpts();
+
+            if (charOpts != XMLElementDecl::AllCharData)
+            {
+                // They definitely cannot handle any type of char data
+                fValidator->emitError(XMLValid::NoCharDataInCM);
+            }
+        }
+
+
         // Add it to the buffer
         bbCData.append(nextCh);
     }
@@ -2897,12 +2912,12 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
     }
 
     //
-    // XML 1.0 Section 2.9
+    // XML 1.0 Section 4.1
     //  If we are a standalone document, then it has to have been declared
-    //  in the internal subset. Keep going though.
+    //  in the internal subset.
     //
-    if (fStandalone && !decl->getDeclaredInIntSubset() && fValidate)
-        fValidator->emitError(XMLValid::IllegalRefInStandalone, bbName.getRawBuffer());
+    if (fStandalone && !decl->getDeclaredInIntSubset())
+        emitError(XMLErrs::IllegalRefInStandalone, bbName.getRawBuffer());
 
     if (decl->isExternal())
     {
