@@ -213,6 +213,7 @@
             <Message Id="Mutex_CouldNotLock" Text="Could not lock mutex"/>
             <Message Id="Mutex_CouldNotUnlock" Text="Could not unlock mutex"/>
             <Message Id="Mutex_CouldNotDestroy" Text="Could not destroy mutex"/>
+            <Message Id="NetAcc_InternalError" Text="Error on {0} NetAccessor. Msg: {1}"/>
             <Message Id="Pool_ElemAlreadyExists" Text="The element {0} already exists"/>
             <Message Id="Pool_BadHashFromKey" Text="Hashing the key returned an invalid bad hash value"/>
             <Message Id="Pool_InvalidId" Text="The passed id is not valid for this pool"/>
