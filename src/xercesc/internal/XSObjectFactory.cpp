@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/03/05 16:28:21  knoaman
+ * PSVI: prohibited attributes should not be part of attribute use. Patch by Mike Boos.
+ *
  * Revision 1.20  2004/02/05 18:09:53  cargilld
  * Fix a seg fault with PSVI and set basetype of anysimpletype to be anytype.
  *
@@ -676,9 +679,12 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
                 else
                     xsAttDecl = addOrFind(&attDef, xsModel, xsObj);
 
-                XSAttributeUse* attUse = createXSAttributeUse(xsAttDecl, xsModel);
-                xsAttList->addElement(attUse);
-                processAttUse(&attDef, attUse);
+                if (attDef.getDefaultType() != XMLAttDef::Prohibited) {
+
+                    XSAttributeUse* attUse = createXSAttributeUse(xsAttDecl, xsModel);
+                    xsAttList->addElement(attUse);
+                    processAttUse(&attDef, attUse);
+                }
             }
         }
 
@@ -858,7 +864,7 @@ XSObjectFactory::createXSAttGroupDefinition(XercesAttGroupInfo* const attGroupIn
             else
                 xsAttDecl = addOrFind(attDef, xsModel);
 
-            if (xsAttDecl) // just for sanity
+            if (xsAttDecl && (attDef->getDefaultType() != XMLAttDef::Prohibited)) // just for sanity
             {
                 XSAttributeUse* attUse = createXSAttributeUse(xsAttDecl, xsModel);
                 xsAttList->addElement(attUse);
