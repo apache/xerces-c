@@ -654,6 +654,9 @@ MacOSTranscoder::transcodeFrom(  const  XMLByte* const			srcData
     	&bytesConsumed,
     	&bytesProduced,
     	reinterpret_cast<UniCharArrayPtr>(toFill));
+		
+	if (status == kTECUsedFallbacksStatus)
+		status = noErr;
     	
     if (status != noErr)
     {
@@ -739,6 +742,12 @@ MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
 					&bytesProduced,
 					toFill + totalCharsProduced);
 				
+		if (status == kTECUsedFallbacksStatus)
+			status = noErr;
+    	
+		if (UNICODE_SIZE_MISMATCH && status == kTECOutputBufferFullStatus)
+			status = noErr;
+
 		std::size_t charsConsumed = bytesConsumed / sizeof(UniChar);
 		
 		src		+= charsConsumed;
