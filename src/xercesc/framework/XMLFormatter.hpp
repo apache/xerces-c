@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:52  peiyongz
- * Initial revision
+ * Revision 1.2  2002/06/21 19:31:23  peiyongz
+ * getTranscoder() added;
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:52  peiyongz
+ * sane_include
  *
  * Revision 1.7  2000/10/17 19:25:38  andyh
  * XMLFormatTarget, removed version of writeChars with no length.  Can not be
@@ -185,6 +188,7 @@ public:
     // -----------------------------------------------------------------------
     const XMLCh* getEncodingName() const;
 
+    inline const XMLTranscoder*   getTranscoder() const;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -339,6 +343,10 @@ inline const XMLCh* XMLFormatter::getEncodingName() const
     return fOutEncoding;
 }
 
+inline const XMLTranscoder* XMLFormatter::getTranscoder() const
+{
+    return fXCoder;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLFormatter: Setter methods
