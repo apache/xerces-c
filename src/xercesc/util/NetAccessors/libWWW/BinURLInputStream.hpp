@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2004/01/15 16:07:16  amassari
+ * Fix for bug#24929; patch by Michael Wuschek
+ *
  * Revision 1.3  2003/05/17 05:54:18  knoaman
  * Update NetAccessors to use the memory manager.
  *
@@ -89,8 +92,6 @@
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/BinInputStream.hpp>
 
-XERCES_CPP_NAMESPACE_BEGIN
-
 //
 // Forward reference the libWWW constructs here, so as to avoid including
 // any of the libWWW headers in this file. Just being careful in isolating
@@ -99,6 +100,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 struct _HTAnchor;
 
+XERCES_CPP_NAMESPACE_BEGIN
 
 //
 // This class implements the BinInputStream interface specified by the XML
