@@ -881,7 +881,7 @@ MacOSLCPTranscoder::calcRequiredSize(const char* const srcText)
 		;
 
 	OSStatus status;
-	for (status = kTECOutputBufferFullStatus; status == kTECOutputBufferFullStatus; )
+	for (status = noErr; status == noErr && srcCnt > 0; )
 	{
 	    ByteCount	bytesConsumed = 0;
 	    ByteCount	bytesProduced = 0;
@@ -905,6 +905,9 @@ MacOSLCPTranscoder::calcRequiredSize(const char* const srcText)
 		src		+= bytesConsumed;
 		srcCnt	-= bytesConsumed;
 		totalCharsProduced += bytesProduced / sizeof(UniChar);
+
+		if (status == kTECOutputBufferFullStatus || status == kTECUsedFallbacksStatus)
+			status = noErr;
 
 		options |= kUnicodeKeepInfoMask;
 	}
@@ -986,7 +989,7 @@ MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
 
 		totalBytesProduced += bytesProduced;
 
-		if (status == kTECOutputBufferFullStatus)
+		if (status == kTECOutputBufferFullStatus || status == kTECUsedFallbacksStatus)
 			status = noErr;
 
 		options |= kUnicodeKeepInfoMask;
@@ -1095,7 +1098,7 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
 		src		+= charsConsumed;
 		srcCnt	-= charsConsumed;
 
-		if (status == kTECOutputBufferFullStatus)
+		if (status == kTECOutputBufferFullStatus || status == kTECUsedFallbacksStatus)
 			status = noErr;
 
 		options |= kUnicodeKeepInfoMask;
@@ -1201,7 +1204,7 @@ MacOSLCPTranscoder::transcode(const char* const srcText,
 		src		+= bytesConsumed;
 		srcCnt  -= bytesConsumed;
 
-		if (status == kTECOutputBufferFullStatus)
+		if (status == kTECOutputBufferFullStatus || status == kTECUsedFallbacksStatus)
 			status = noErr;
 			
 		options |= kUnicodeKeepInfoMask;
@@ -1281,6 +1284,9 @@ MacOSLCPTranscoder::transcode( 		 const   char* const	toTranscode
     //	Zero terminate the output string
     toFill[charsProduced] = L'\0';
 
+	if (status == kTECUsedFallbacksStatus)
+		status = noErr;
+
 	return (status == noErr);
 }
 
@@ -1356,6 +1362,12 @@ MacOSLCPTranscoder::transcode( 		const   XMLCh* const    toTranscode
 		
 		totalCharsProduced += bytesProduced;
 			
+		if (status == kTECUsedFallbacksStatus)
+			status = noErr;
+			
+		if (UNICODE_SIZE_MISMATCH && status == kTECOutputBufferFullStatus)
+			status = noErr;
+
 		options |= kUnicodeKeepInfoMask;
 	}
 			
