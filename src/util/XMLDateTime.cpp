@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/09 20:41:45  peiyongz
+ * Fix: compilation error on Solaris and AIX.
+ *
  * Revision 1.1  2001/11/07 19:16:03  peiyongz
  * DateTime Port
  *
@@ -122,12 +125,12 @@ static const int DAY_DEFAULT   = 15;
 // see 3.2.6 duration W3C schema datatype specs
 //
 // the dates are in format: {CCYY,MM,DD, H, S, M, MS, timezone}  
-const int XMLDateTime::DATETIMES[4][TOTAL_SIZE] = 
+const int DATETIMES[][XMLDateTime::TOTAL_SIZE] = 
 {
-    {1696, 9, 1, 0, 0, 0, 0, UTC_STD},     
-	{1697, 2, 1, 0, 0, 0, 0, UTC_STD},
-	{1903, 3, 1, 0, 0, 0, 0, UTC_STD},
-	{1903, 7, 1, 0, 0, 0, 0, UTC_STD}
+    {1696, 9, 1, 0, 0, 0, 0, XMLDateTime::UTC_STD},     
+	{1697, 2, 1, 0, 0, 0, 0, XMLDateTime::UTC_STD},
+	{1903, 3, 1, 0, 0, 0, 0, XMLDateTime::UTC_STD},
+	{1903, 7, 1, 0, 0, 0, 0, XMLDateTime::UTC_STD}
 };
 
 // ---------------------------------------------------------------------------

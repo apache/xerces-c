@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/09 20:41:45  peiyongz
+ * Fix: compilation error on Solaris and AIX.
+ *
  * Revision 1.1  2001/11/07 19:16:03  peiyongz
  * DateTime Port
  *
@@ -82,6 +85,27 @@ public:
         EQUAL         = 0,
         GREATER_THAN  = 1,
         INDETERMINATE = 2
+    };
+
+	enum valueIndex
+    {
+        CentYear   = 0,
+        Month      ,
+        Day        ,
+        Hour       ,
+        Minute     ,
+        Second     ,
+        MiliSecond ,
+        utc        ,
+        TOTAL_SIZE   
+    };
+
+    enum utcType 
+    {
+        UTC_UNKNOWN = 0,
+        UTC_STD        ,          // set in parse() or normalize()
+        UTC_POS        ,          // set in parse()
+        UTC_NEG                   // set in parse()
     };
 
     // -----------------------------------------------------------------------
@@ -153,35 +177,12 @@ private:
     // Constant data
     // -----------------------------------------------------------------------
 	//
-	enum valueIndex
-    {
-        CentYear   = 0,
-        Month      = 1,
-        Day        = 2,
-        Hour       = 3,
-        Minute     = 4,
-        Second     = 5,
-        MiliSecond = 6,
-        utc        = 7,
-        TOTAL_SIZE = 8   
-    };
-
     enum timezoneIndex 
     {
         hh = 0,
-        mm = 1,
-        TIMEZONE_ARRAYSIZE = 2
+        mm ,
+        TIMEZONE_ARRAYSIZE
     };
-
-    enum utcType 
-    {
-        UTC_UNKNOWN = 0,
-        UTC_STD = 1,          // set in parse() or normalize()
-        UTC_POS = 2,          // set in parse()
-        UTC_NEG = 3           // set in parse()
-    };
-
-    static const int      DATETIMES[4][TOTAL_SIZE];
 
     // -----------------------------------------------------------------------
     // Comparison 
@@ -235,7 +236,7 @@ private:
     // locator and converter
     // -----------------------------------------------------------------------
 
-    int                   findUTCSign(int start);
+    int                   findUTCSign(const int start);
 
     int                   indexOf(const int start
                                 , const int end
