@@ -73,7 +73,6 @@
 #include <util/RefVectorOf.hpp>
 #include <util/RefHashTableOf.hpp>
 #include <util/RefHash2KeysTableOf.hpp>
-#include <framework/XMLBuffer.hpp>
 #include <dom/DOM_Element.hpp>
 
 // ---------------------------------------------------------------------------
@@ -253,11 +252,12 @@ private:
 
     // datatype validators
     enum {
+        DT_String,
+        DT_Token,
         DT_AnyURI,
         DT_ID,
         DT_NonNegInt,
         DT_QName,
-        DT_Token,
         DT_Boolean,
 
         // add XPath
@@ -284,7 +284,6 @@ private:
     AttributeInfo**                                fAttributes;
     DatatypeValidator**                            fValidators;
     RefHash2KeysTableOf<RefVectorOfAttributeInfo>* fElementMap;
-    XMLBuffer                                      fBuffer;
     static GeneralAttributeCheck* fInstance;
 };
 

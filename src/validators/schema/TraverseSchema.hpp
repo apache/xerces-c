@@ -173,7 +173,9 @@ private:
                                         const int finalSet,
                                         int baseRefContext);
     QName*              traverseElementDecl(const DOM_Element& childElem, bool& toDelete);
-    XMLCh*              traverseNotationDecl(const DOM_Element& childElem);
+    const XMLCh*        traverseNotationDecl(const DOM_Element& childElem);
+    const XMLCh*        traverseNotationDecl(const XMLCh* const name,
+                                             const XMLCh* const uriStr);
     ContentSpecNode*    traverseChoiceSequence(const DOM_Element& elemDecl,
                                                const int modelGroupType);
     ContentSpecNode*    traverseAny(const DOM_Element& anyDecl);
@@ -699,6 +701,7 @@ private:
     RefHash2KeysTableOf<XMLCh>*             fGlobalAttributes;
     RefHash2KeysTableOf<XMLCh>*             fGlobalGroups;
     RefHash2KeysTableOf<XMLCh>*             fGlobalAttGroups;
+    RefHash2KeysTableOf<XMLCh>*             fNotationRegistry;
     RefHash2KeysTableOf<XMLCh>*             fRedefineComponents;
     RefHash2KeysTableOf<SchemaElementDecl>* fSubstitutionGroups;
     RefHash2KeysTableOf<ElemVector>*        fValidSubstitutionGroups;
@@ -721,12 +724,9 @@ inline const XMLCh* TraverseSchema::getPrefix(const XMLCh* const rawName) {
         return XMLUni::fgZeroLenString;
     }
 
-    fBuffer.set(rawName, colonIndex + 1);
-    XMLString::subString(fBuffer.getRawBuffer(), rawName, 0, colonIndex);
+    fBuffer.set(rawName, colonIndex);
 
-    unsigned int nameId = fStringPool->addOrFind(fBuffer.getRawBuffer());
-
-    return fStringPool->getValueForId(nameId);
+    return fStringPool->getValueForId(fStringPool->addOrFind(fBuffer.getRawBuffer()));
 }
 
 inline const XMLCh* TraverseSchema::getLocalPart(const XMLCh* const rawName) {
@@ -743,14 +743,10 @@ inline const XMLCh* TraverseSchema::getLocalPart(const XMLCh* const rawName) {
     }
     else {
 
-        fBuffer.set(rawName, rawNameLen - colonIndex);
-        XMLString::subString(fBuffer.getRawBuffer(), rawName,
-                             colonIndex + 1, rawNameLen);
+        fBuffer.set(rawName + colonIndex + 1, rawNameLen - colonIndex - 1);
     }
 
-    unsigned int nameId = fStringPool->addOrFind(fBuffer.getRawBuffer());
-
-    return fStringPool->getValueForId(nameId);
+    return fStringPool->getValueForId(fStringPool->addOrFind(fBuffer.getRawBuffer()));
 }
 
 inline bool
@@ -828,9 +824,7 @@ inline const XMLCh* TraverseSchema::genAnonTypeName(const XMLCh* const prefix) {
     fBuffer.set(prefix);
     fBuffer.append(anonCountStr);
 
-    int anonTypeId = fStringPool->addOrFind(fBuffer.getRawBuffer());
-
-    return fStringPool->getValueForId(anonTypeId);
+    return fStringPool->getValueForId(fStringPool->addOrFind(fBuffer.getRawBuffer()));
 }
 
 inline int TraverseSchema::resetCurrentTypeNameStack(const int value) {
@@ -870,7 +864,7 @@ inline void TraverseSchema::getRedefineNewTypeName(const XMLCh* const oldTypeNam
     newTypeName.set(oldTypeName);
 
     for (int i=0; i < redefineCounter; i++) {
-        fBuffer.append(SchemaSymbols::fgRedefIdentifier);
+        newTypeName.append(SchemaSymbols::fgRedefIdentifier);
     }
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/10/15 19:29:26  knoaman
+ * Add support for <notation> declaration.
+ *
  * Revision 1.6  2001/09/18 14:41:56  knoaman
  * Add support for <annotation>.
  *
@@ -202,11 +205,11 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Base_R] = 
         new AttributeInfo(SchemaSymbols::fgATT_BASE, Att_Required,
-                          0, 0);
+                          0, DT_QName);
 
     fAttributes[Att_Base_N] = 
         new AttributeInfo(SchemaSymbols::fgATT_BASE, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_QName);
 
     fAttributes[Att_Block_N] =
         new AttributeInfo(SchemaSymbols::fgATT_BLOCK, Att_Optional_NoDefault,
@@ -222,7 +225,7 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Default_N] =
         new AttributeInfo(SchemaSymbols::fgATT_DEFAULT, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_String);
 
     fAttributes[Att_Element_FD_D] =
         new AttributeInfo(SchemaSymbols::fgATT_ELEMENTFORMDEFAULT, Att_Optional_Default,
@@ -242,7 +245,7 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Fixed_N] =
         new AttributeInfo(SchemaSymbols::fgATT_FIXED, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_String);
 
     fAttributes[Att_Fixed_D] =
         new AttributeInfo(SchemaSymbols::fgATT_FIXED, Att_Optional_Default,
@@ -258,7 +261,7 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_ItemType_N] =
         new AttributeInfo(SchemaSymbols::fgATT_ITEMTYPE, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_QName);
 
     fAttributes[Att_MaxOccurs_D] =
         new AttributeInfo(SchemaSymbols::fgATT_MAXOCCURS, Att_Optional_Default,
@@ -314,11 +317,11 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Ref_R] =
         new AttributeInfo(SchemaSymbols::fgATT_REF, Att_Required,
-                          0, 0);
+                          0, DT_QName);
 
     fAttributes[Att_Refer_R] =
         new AttributeInfo(SchemaSymbols::fgATT_REFER, Att_Required,
-                          0, 0);
+                          0, DT_QName);
 
     fAttributes[Att_Schema_L_R] =
         new AttributeInfo(SchemaSymbols::fgATT_SCHEMALOCATION, Att_Required,
@@ -330,15 +333,15 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Source_N] =
         new AttributeInfo(SchemaSymbols::fgATT_SOURCE, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_AnyURI);
 
     fAttributes[Att_Substitution_G_N] =
         new AttributeInfo(SchemaSymbols::fgATT_SUBSTITUTIONGROUP, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_QName);
 
     fAttributes[Att_System_N] =
         new AttributeInfo(SchemaSymbols::fgATT_SYSTEM, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_AnyURI);
         
     fAttributes[Att_Target_N_N] =
         new AttributeInfo(SchemaSymbols::fgATT_TARGETNAMESPACE, Att_Optional_NoDefault,
@@ -346,7 +349,7 @@ void GeneralAttributeCheck::setUpAttributes() {
 
     fAttributes[Att_Type_N] =
         new AttributeInfo(SchemaSymbols::fgATT_TYPE, Att_Optional_NoDefault,
-                          0, 0);
+                          0, DT_QName);
 
     fAttributes[Att_Use_D] =
         new AttributeInfo(SchemaSymbols::fgATT_USE, Att_Optional_Default,
@@ -491,6 +494,14 @@ void GeneralAttributeCheck::mapElements() {
     attList = new RefVectorOf<AttributeInfo>(1, false);
     attList->addElement(fAttributes[Att_ID_N]);
     fElementMap->put((void*) SchemaSymbols::fgELT_ANNOTATION, prefixContext, attList);
+
+    // element "notation" - global
+    attList = new RefVectorOf<AttributeInfo>(4, false);
+    attList->addElement(fAttributes[Att_ID_N]);
+    attList->addElement(fAttributes[Att_Name_R]);
+    attList->addElement(fAttributes[Att_Public_R]);
+    attList->addElement(fAttributes[Att_System_N]);
+    fElementMap->put((void*) SchemaSymbols::fgELT_NOTATION, prefixContext, attList);
 
     // element "attribute" - local ref
     prefixContext = localRefPrefix;
@@ -741,12 +752,6 @@ void GeneralAttributeCheck::mapElements() {
 
     // element "field" - local name
 
-    // element "notation" - local name
-
-    // element "appinfo" - local name
-
-    // element "documentation" - local name
-
 }
 
 // ---------------------------------------------------------------------------
@@ -828,6 +833,7 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 
     unsigned int           size = elemAttrs->size();
     RefHashTableOf<XMLCh>  attNameList(5);
+    XMLBuffer              aBuffer(128);
 
     for (unsigned int i=0; i< size; i++) {
 
@@ -843,8 +849,8 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 
             if (attValueLen > 0) {
 
-                fBuffer.set(attValue.rawBuffer(), attValueLen);
-                validate(attName, fBuffer.getRawBuffer(),
+                aBuffer.set(attValue.rawBuffer(), attValueLen);
+                validate(attName, aBuffer.getRawBuffer(),
                          attInfo->getValidatorIndex(), schema);
             }
             else {
@@ -872,8 +878,8 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
 
         // Bypass attributes that start with xml 
         DOMString attName = attribute.getNodeName();
-        fBuffer.set(attName.rawBuffer(), attName.length());
-        XMLCh* tmpName = fBuffer.getRawBuffer();
+        aBuffer.set(attName.rawBuffer(), attName.length());
+        XMLCh* tmpName = aBuffer.getRawBuffer();
 
         if ((*tmpName == chLatin_X || *tmpName == chLatin_x)
            && (*(tmpName+1) == chLatin_M || *(tmpName+1) == chLatin_m)
@@ -882,11 +888,11 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
         }
 
         attName = attribute.getLocalName();
-        fBuffer.set(attName.rawBuffer(), attName.length());
+        aBuffer.set(attName.rawBuffer(), attName.length());
 
-        if (!attNameList.containsKey(fBuffer.getRawBuffer())) {
+        if (!attNameList.containsKey(aBuffer.getRawBuffer())) {
             schema->reportSchemaError(XMLUni::fgXMLErrDomain,
-                XMLErrs::AttributeDisallowed, fBuffer.getRawBuffer(), contextStr, elemName);
+                XMLErrs::AttributeDisallowed, aBuffer.getRawBuffer(), contextStr, elemName);
         }
     }
 }
@@ -963,9 +969,8 @@ void GeneralAttributeCheck::validate(const XMLCh* const attName,
     }
 
     if (isInvalid) {
-              schema->reportSchemaError(XMLUni::fgXMLErrDomain, 
-                                      XMLErrs::InvalidAttValue,
-                                      attValue, attName);
+        schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue,
+                                  attValue, attName);
     }
 }
 
