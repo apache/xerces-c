@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/09/27 12:56:23  tng
+ * [Bug 12740] Extra include.  By Peter Volchek.
+ *
  * Revision 1.2  2002/05/27 18:42:14  tng
  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
  *
@@ -136,7 +139,6 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/framework/XMLRecognizer.hpp>
 #include <xercesc/framework/XMLBuffer.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
 
 class InputSource;
 class BinInputStream;
