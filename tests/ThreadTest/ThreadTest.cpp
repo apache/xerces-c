@@ -1028,11 +1028,6 @@ int main (int argc, char **argv)
 
     delete mainParser;
 
-    if (errors) {
-        clearFileInfoMemory();
-        exit(1);
-    }
-
     //
     //  Fire off the requested number of parallel threads
     //
