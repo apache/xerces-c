@@ -61,6 +61,7 @@
 #include "DOMDocumentTypeImpl.hpp"
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMException.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 #include "DOMNamedNodeMapImpl.hpp"
 #include "DOMDocumentImpl.hpp"
@@ -115,8 +116,30 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
     internalSubset(0),
     fIsCreatedFromHeap(heap)
 {
-    if (DOMDocumentImpl::indexofQualifiedName(qualifiedName) < 0)
+    int index = DOMDocumentImpl::indexofQualifiedName(qualifiedName);
+    if (index < 0)
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
+    else if (index > 0)
+    {
+        // we have to make sure the qualifiedName has correct prefix and localName
+        // although we don't really to store them separately
+        XMLCh* newName;
+        XMLCh temp[4000];
+        if (index >= 3999)
+            newName = new XMLCh[XMLString::stringLen(qualifiedName)+1];
+        else
+            newName = temp;
+
+        XMLString::copyNString(newName, qualifiedName, index);
+        newName[index] = chNull;
+
+        // Before we carry on, we should check if the prefix or localName are valid XMLName
+        if (!DOMDocumentImpl::isXMLName(newName) || !DOMDocumentImpl::isXMLName(qualifiedName+index+1))
+            throw DOMException(DOMException::NAMESPACE_ERR, 0);
+
+        if (index >= 3999)
+            delete[] newName;
+    }
 
     if (ownerDoc) {
         DOMDocumentImpl *docImpl = (DOMDocumentImpl *)ownerDoc;
