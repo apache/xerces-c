@@ -1,0 +1,26 @@
+Xerces-c status  8-Nov-99
+
+This drop of Xerces-c is based on a development version of the IBM XML4C
+version 3.0 code base.  
+
+It is a snapshot of development work in progress, and is known
+to contain incompletely implemented features and bugs.  
+This code base (8-Nov-99) builds on Linux and Windows.
+
+The code base is newer than that last released on IBM's alphaworks
+site, and includes these new features.
+
+
+o  Namespace support
+o  Core and Traversal from DOM Level 2
+o  Better conformance to XML specifications
+o  Ability to use for any transcoding service
+o  Restructured in preparation for Schema support.
+
+To do
+
+o  More of DOM level 2, including Events and Ranges.
+o  More platforms supported.
+o  Schema, as it becomes better defined by the W3C.
+o  Tuning
+o  Improved build structure

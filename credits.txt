@@ -1,0 +1,24 @@
+The following people (in alphabetical order) have contributed to the
+development and ports of the XML4C source code, which was submitted to
+the Apache Software Foundation.
+
+
+Andy Clark
+Andy Heninger
+Andy Levine 
+Anupam Bagchi
+Arundhati Bhowmick
+Chih Hsiang Chou
+Dean Roddey
+Gereon Steffens 
+Glenn Marcy
+John Bellardo 
+Michael Ottati 
+Mike Pogue
+Paul Ferguson 
+Rahul Jain
+Ralf Pfeiffer
+Roger Webster
+Steven Rosenthal
+Ted Leung
+Tom Watson

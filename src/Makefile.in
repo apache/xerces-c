@@ -1,0 +1,315 @@
+#
+# The Apache Software License, Version 1.1
+# 
+# Copyright (c) 1999 The Apache Software Foundation.  All rights 
+# reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer. 
+# 
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:  
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+# 
+# 4. The names "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written 
+#    permission, please contact apache\@apache.org.
+# 
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+# 
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+# 
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+# 
+#
+# $Log$
+# Revision 1.1  1999/11/09 01:02:54  twl
+# Initial revision
+#
+# Revision 1.4  1999/11/08 22:36:39  anupam
+# Removed the overrided definition of XML4CROOT
+#
+# Revision 1.3  1999/11/08 20:44:09  rahul
+# Swat for adding in Product name and CVS comment log variable.
+#
+#
+
+###################################################################
+#                    IMPORTANT NOTE                               #
+###################################################################
+# Before you try to run the Makefile, make sure you have two      #
+# environment variables set.                                      #
+#                                                                 #
+#   export XML4CROOT=<the directory where you installed XML4C>    #
+#   export ICUROOT=<the directory where you installed ICU>        #
+#                                                                 #
+# Also, to enable debugging, you must type:                       #
+#   export DEBUG=1                                                #
+# To disable debugging, you must type:                            #
+#   unset DEBUG                                                   #
+###################################################################
+#MACROS defining commands
+MKDIR=mkdir
+CP=cp
+CD=cd
+RM=rm
+CHMODE=chmod
+
+UTIL_DIR = util
+SAX_DIR = sax
+INTERNAL_DIR = internal
+FRAMEWORK_DIR = framework
+DOM_DIR = dom
+PARSERS_DIR = parsers
+VALIDATORS_DTD_DIR = validators/DTD
+ALL_OBJECTS_DIR = ${XML4CROOT}/obj
+LIB_DIR = ${XML4CROOT}/lib
+
+LIB = ${XML4CROOT}/lib
+LIBNAME = libIXXML4C
+THISLIB = ${LIB}/${LIBNAME}
+VER = 3_0
+
+ALL_OBJECTS = $(wildcard ${ALL_OBJECTS_DIR}/*.o)
+
+#all these setting come from the arguments passed in to runConfigure.
+PLATFORM = @platform@
+COMPILER = @compiler@
+PREFIX = @prefix@
+MESSAGELOADER=@messageloader@
+TRANSCODER=@transcoder@
+
+PRODUCTNAME=xerces
+PRODUCTVERSION=${VER}
+BINTARGETDIR=${HOME}/${PRODUCTNAME}-c-${PLATFORM}-${COMPILER}-${PRODUCTVERSION}
+
+all: Prepare Util Sax Internal Framework Parsers Dom Validators ${THISLIB}${VER}${SHLIBSUFFIX}
+
+compile: Prepare Util Sax Internal Framework Parsers Dom Validators
+
+lib: compile ${THISLIB}${VER}${SHLIBSUFFIX}
+
+Prepare:
+	@echo Preparing the directory structure for a build ...
+	-${MKDIR} -p ${ALL_OBJECTS_DIR}
+	-${MKDIR} -p ${LIB_DIR}
+	${CD} $(UTIL_DIR) ; $(MAKE) includes ; ${CD} ..
+	${CD} $(SAX_DIR) ; $(MAKE) includes ; ${CD} ..
+	${CD} $(INTERNAL_DIR) ; $(MAKE) includes ; ${CD} ..
+	${CD} $(FRAMEWORK_DIR) ; $(MAKE) includes ; ${CD} ..
+	${CD} $(PARSERS_DIR) ; $(MAKE) includes ; ${CD} ..
+	${CD} $(VALIDATORS_DTD_DIR) ; $(MAKE) includes ; ${CD} ../..
+	${CD} $(DOM_DIR) ; $(MAKE) includes ; ${CD} ..
+
+Util:
+	@echo Building "util"
+	${CD} $(UTIL_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+
+Sax:
+	@echo Building "sax"
+	${CD} $(SAX_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+
+Internal:
+	@echo Building "internal"
+	${CD} $(INTERNAL_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+
+Framework:
+	@echo Building "framework"
+	${CD} $(FRAMEWORK_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+
+Parsers:
+	@echo Building "parsers"
+	${CD} $(PARSERS_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+
+Dom:
+	@echo Building "dom"
+	${CD} $(DOM_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ..
+
+Validators:
+	@echo Building "validators"
+	${CD} $(VALIDATORS_DTD_DIR) ; $(MAKE) $(MAKE_FLAGS) ; ${CD} ../..
+
+${THISLIB}${VER}${SHLIBSUFFIX}:
+	@echo Building ${THISLIB}${VER}${SHLIBSUFFIX}
+	${CD} $(ALL_OBJECTS_DIR) ; $(MAKE) -k $(MAKE_FLAGS) ; ${CD} ..
+
+install:
+	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(SAX_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(INTERNAL_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(FRAMEWORK_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
+	${CD} $(ALL_OBJECTS_DIR) && $(MAKE) $@ && ${CD} ..
+
+clean:
+	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(SAX_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(INTERNAL_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(FRAMEWORK_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
+	${CD} $(ALL_OBJECTS_DIR) && $(MAKE) $@ && ${CD} ..
+
+distclean:
+	${CD} $(UTIL_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(SAX_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(INTERNAL_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(FRAMEWORK_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(PARSERS_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(DOM_DIR) && $(MAKE) $@ && ${CD} ..
+	${CD} $(VALIDATORS_DTD_DIR) && $(MAKE) $@ && ${CD} ../..
+	${CD} $(ALL_OBJECTS_DIR) && $(MAKE) $@ && ${CD} ..
+	rm -f Makefile config.cache config.log config.status
+	rm -f *~ core
+
+#docs: 
+
+samples:
+	${CD} ../samples; ${MAKE}; ${CD} ../src
+
+copy: lib samples
+	@echo Make the target directory and its main subdirectories
+	-${MKDIR} ${BINTARGETDIR}
+	-${MKDIR} ${BINTARGETDIR}/bin
+	-${MKDIR} ${BINTARGETDIR}/lib
+ifeq (${TRANSCODER},ICU)
+	echo -${MKDIR} ${BINTARGETDIR}/lib/icu
+	echo -${MKDIR} ${BINTARGETDIR}/lib/icu/data
+	echo -${MKDIR} ${BINTARGETDIR}/include/icu
+endif
+ifeq (${MESSAGELOADER},ICU)
+	echo -${MKDIR} ${BINTARGETDIR}/include/icu
+endif
+	-${MKDIR} ${BINTARGETDIR}/include
+	-${MKDIR} ${BINTARGETDIR}/include/sax
+	-${MKDIR} ${BINTARGETDIR}/include/framework
+	-${MKDIR} ${BINTARGETDIR}/include/internal
+	-${MKDIR} ${BINTARGETDIR}/include/parsers
+	-${MKDIR} ${BINTARGETDIR}/include/util
+	-${MKDIR} ${BINTARGETDIR}/include/dom
+
+	-${MKDIR} ${BINTARGETDIR}/samples
+	-${MKDIR} ${BINTARGETDIR}/samples/data
+	-${MKDIR} ${BINTARGETDIR}/samples/SAXCount
+	-${MKDIR} ${BINTARGETDIR}/samples/SAXPrint
+	-${MKDIR} ${BINTARGETDIR}/samples/DOMCount
+	-${MKDIR} ${BINTARGETDIR}/samples/DOMPrint
+	-${MKDIR} ${BINTARGETDIR}/samples/Redirect
+	-${MKDIR} ${BINTARGETDIR}/samples/MemParse
+	-${MKDIR} ${BINTARGETDIR}/doc
+	-${MKDIR} ${BINTARGETDIR}/doc/apiDocs
+
+	@echo Populate the include output directory
+	@echo Copying headers files ...
+	-${CP} -Rf ${XML4CROOT}/src/sax/*.hpp ${BINTARGETDIR}/include/sax
+	-${CP} -Rf ${XML4CROOT}/src/framework/*.hpp ${BINTARGETDIR}/include/framework
+	-${CP} -Rf ${XML4CROOT}/src/dom/DOM*.hpp ${BINTARGETDIR}/include/dom
+	-${CP} -Rf ${XML4CROOT}/src/internal/*.hpp ${BINTARGETDIR}/include/internal
+	-${CP} -Rf ${XML4CROOT}/src/internal/*.c ${BINTARGETDIR}/include/internal
+	-${CP} -Rf ${XML4CROOT}/src/parsers/*.hpp ${BINTARGETDIR}/include/parsers
+	-${CP} -Rf ${XML4CROOT}/src/util/*.hpp ${BINTARGETDIR}/include/util
+	-${CP} -Rf ${XML4CROOT}/src/util/*.c ${BINTARGETDIR}/include/util
+	-${CP} -Rf ${ICUROOT}/include/* ${BINTARGETDIR}/include/icu
+
+	@echo Populate the binary output directory
+	@echo Copying binary outputs ...
+	-${CP} -Rf ${XML4CROOT}/bin/* ${BINTARGETDIR}/bin
+	-${CP} -f ${ICUROOT}/source/tools/makeconv/makeconv ${BINTARGETDIR}/bin
+	-${CP} -f ${ICUROOT}/lib/libicu-uc.* ${BINTARGETDIR}/lib
+	-${CP} -f ${XML4CROOT}/lib/*.a ${BINTARGETDIR}/lib
+	-${CP} -f ${XML4CROOT}/lib/*.so ${BINTARGETDIR}/lib
+	-${CP} -f ${XML4CROOT}/lib/*.sl ${BINTARGETDIR}/lib
+
+	-{RM} -rf ${BINTARGETDIR}/bin/obj
+
+	@echo Copy the locale files
+	-${CP} -f ${ICUROOT}/data/*.cnv ${BINTARGETDIR}/lib/icu/data/
+	-${CP} -f ${ICUROOT}/data/convrtrs.txt ${BINTARGETDIR}/lib/icu/data/
+
+	@echo Populate the samples directory
+	@echo Copying sample files ...
+	-${CP} -f ${XML4CROOT}/samples/config.guess 	${BINTARGETDIR}/samples
+	-${CP} -f ${XML4CROOT}/samples/config.h.in 	${BINTARGETDIR}/samples
+	-${CP} -f ${XML4CROOT}/samples/config.sub 	${BINTARGETDIR}/samples
+	-${CP} -f ${XML4CROOT}/samples/configure	${BINTARGETDIR}/samples
+	-${CP} -f ${XML4CROOT}/samples/configure.in	${BINTARGETDIR}/samples
+	-${CP} -f ${XML4CROOT}/samples/install-sh	${BINTARGETDIR}/samples
+	-${CP} -f ${XML4CROOT}/samples/runConfigure 	${BINTARGETDIR}/samples
+	-${CP} -f ${XML4CROOT}/samples/Makefile.in	${BINTARGETDIR}/samples
+	-${CP} -f ${XML4CROOT}/samples/Makefile.incl 	${BINTARGETDIR}/samples
+	-${CP} -f ${XML4CROOT}/samples/Maefile	${BINTARGETDIR}/samples
+
+	-${CP} -Rf ${XML4CROOT}/samples/data/* ${BINTARGETDIR}/samples/data
+	-${CP} -Rf ${XML4CROOT}/samples/SAXCount/* ${BINTARGETDIR}/samples/SAXCount
+	-${CP} -Rf ${XML4CROOT}/samples/SAXPrint/* ${BINTARGETDIR}/samples/SAXPrint
+	-${CP} -Rf ${XML4CROOT}/samples/DOMCount/* ${BINTARGETDIR}/samples/DOMCount
+	-${CP} -Rf ${XML4CROOT}/samples/DOMPrint/* ${BINTARGETDIR}/samples/DOMPrint
+	-${CP} -Rf ${XML4CROOT}/samples/Redirect/* ${BINTARGETDIR}/samples/Redirect
+	-${CP} -Rf ${XML4CROOT}/samples/MemParse/* ${BINTARGETDIR}/samples/MemParse
+
+	@echo Populate the docs directory
+	@echo Copying documentation ..
+	-${CP} -Rf ${XML4CROOT}/doc/* ${BINTARGETDIR}/doc
+	-${CP} -Rf ${XML4CROOT}/doc/apiDocs/* ${BINTARGETDIR}/doc/apiDocs
+	-${CP} ${XML4CROOT}/Readme.html ${BINTARGETDIR}
+	-${CP} ${XML4CROOT}/doc/license.html ${BINTARGETDIR}
+
+	@echo Change the directory permissions
+	-{CHMODE} 644 `find ${BINTARGETDIR} -type f`
+	-{CHMODE} 755 ${BINTARGETDIR}/bin/* ${BINTARGETDIR}/lib/*.sl ${BINTARGETDIR}/lib/*.so ${BINTARGETDIR}/lib/*.a
+	-{CHMODE} +x ${BINTARGETDIR}/samples/runConfigure ${BINTARGETDIR}/samples/configure ${BINTARGETDIR}/samples/install-sh
+	-{CHMODE} +x ${BINTARGETDIR}/samples/config.sub ${BINTARGETDIR}/samples/config.guess ${BINTARGETDIR}/samples/config.status
+	-{CHMODE} 755 `find ${BINTARGETDIR} -type d`
+
+tarball: copy
+	@echo Now package it all up using tar
+	@echo TARing up all files ...
+	${CD} ${BINTARGETDIR}/..
+	tar -cvf ${BINTARGETDIR}.tar ${BINTARGETDIR}
+	@echo Finally compress the files
+	@echo Compressing ${BINTARGETDIR}.tar ...
+	gzip ${BINTARGETDIR}.tar
+
+zip: copy
+	${CD} ${BINTARGETDIR}/..
+	@echo ZIPping up all files ...
+	zip -r ${BINTARGETDIR}.zip ${BINTARGETDIR}
+
+
+package_bin: zip tarball
+

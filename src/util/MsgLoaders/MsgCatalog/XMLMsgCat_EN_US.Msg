@@ -1,0 +1,244 @@
+$quote "
+$set 1
+  2  Notation '{0}' has already been declared
+  3  Attribute '{0}' has already been declared
+  4  Encoding ({0}, from XMLDecl or manually set) contradicts the auto-sensed encoding, ignoring it
+  5  Element '{0}' was referenced in a content model but never declared
+  6  Element '{0}' was referenced in an attlist but never declared
+  9  Expected comment or CDATA
+ 10  Expected an attribute name
+ 11  Expected a notation name
+ 12  Repetition of individual elements is not legal for mixed content models
+ 13  Bad default attribute declaration
+ 14  Expected default attribute declaration, assuming #IMPLIED  
+ 15  Attribute list syntax error
+ 16  Expected equal sign
+ 17  Duplication attribute name
+ 18  Bad ID for xml:lang attribute
+ 19  Expected an element name
+ 20  Must start with an XMLDecl
+ 21  Comments must start with <!--
+ 22  Invalid document structure
+ 23  Expected a 'version=', 'encoding=', or 'standalone='
+ 24  Bad XML version string
+ 25  Unsupported XML version
+ 26  Unterminated XML decl
+ 27  Bad XML encoding declaration
+ 28  Bad standalone declaration
+ 29  Unterminated comment
+ 30  Processing instruction name expected
+ 31  Unterminated processing instruction
+ 32  Invalid character
+ 33  Unexpected text before root element
+ 34  Unterminated start tag
+ 35  Expected an attribute value
+ 36  Unterminated end tag
+ 37  Expected attribute type (CDATA, ID, NMTOKEN, ..),
+ 38  Expected end of tag '{0}'
+ 39  Expected tag name, comment, PI, or other markup
+ 40  Not valid after content
+ 41  Expected comment
+ 42  Expected comment or processing instruction
+ 43  Expected whitespace
+ 44  No root element in DOCTYPE
+ 45  Expected quoted string
+ 46  Expected public id
+ 47  Invalid character in public id
+ 48  Unterminated DOCTYPE declaration
+ 49  Invalid character in internal subset
+ 50  Expected CDATA section
+ 51  Invalid initial name character
+ 52  Invalid name character
+ 53  Unexpected whitespace
+ 54  Invalid character in attribute value
+ 55  Expected a markup declaration
+ 56  Text declaration not legal here
+ 57  Conditional section in internal subset
+ 58  Expected parameter entity name
+ 59  Unterminated entity declaration
+ 60  Invalid character reference
+ 61  Unterminated character reference
+ 62  Expected entity name for reference
+ 63  Entity '{0}' was not found
+ 64  Unparsed entitty references not valid here
+ 65  Unterminated entity reference
+ 66  Recursive entity expansion
+ 67  Partial markup in entity value
+ 68  Unterminated element declaration
+ 69  Expected content specification expression
+ 70  Expected asterisk
+ 71  Unterminated Content model
+ 72  Expected system id
+ 73  Expected system or public id
+ 74  Unterminated notation declaration
+ 75  Expected ',', '|', or ')' characters
+ 76  Expected '|' or ')' characters
+ 77  Expected ',' or ')' characters or close parenthesis
+ 78  Expected enumeration value
+ 79  Expected | enumeration separator, or closing paren
+ 80  Unterminated entity literal
+ 81  There are more end tags than start tags
+ 82  Reference to external declaration in standalone document. Entity={0}
+ 83  Expected an open parenthesis
+ 84  The attribute '{0}' is already used in element '{1}'
+ 85  A '<' character cannot be used in an attribute value, except through <
+ 86  A leading surrogate character was not followed by a legal second character
+ 87  Expected ']]>' to end a conditional section
+ 88  Expected INCLUDE or IGNORE here
+ 89  Expected [ to follow INCLUDE or IGNORE
+ 90  Expected a TextDecl here: <?xml ....
+ 91  Expected a XMLDecl here: <?xml ....
+ 92  Unexpected end of entity {0}
+ 93  A PE propogated out of the int/ext subset, discarding extra text
+ 94  An extra ] character was found an ignored
+ 95  PE refs are not allowed inside markup in the internal subset
+ 96  An entity propogated out of the content section into Miscellaneous
+ 97  Expected &# to be followed by a numeric character value
+ 98  Expected an open bracket ('[') here
+ 99  The sequence ']]>' is not allowed in character data
+100  Illegal sequence '--' in comment
+101  Unterminated CDATA section
+102  Expected NDATA
+103  NDATA is not legal for parameter entities
+104  Hex radix character refs must use 'x', not 'X'
+105  '{0}' has already been set. Ignoring redundant setting
+106  The XMLDecl strings must be in the order: version, encoding, standalone
+107  External entities cannot be referred to from attribute values
+108  The XML or Text decl must start with '<?xml ', not '<?XML '
+109  Expected a literal entity value or PUBLIC/SYSTEM id
+110  '{0}' is not a valid digit for the indicated radix
+111  The input ended before all started tags were ended. Last tag started was '{0}'
+112  The content model for element '{0}' is ambiguous
+113  Nested CDATA sections are not allowed
+114  The prefix '{0}' has not been mapped to any URI
+115  The start and the end tag were in the different entities
+116  The main XML document cannot be empty
+117  CDATA is not allowed outside the root element
+118  Only numeric character entities or special character entities are legal here
+119  Got an unexpected trailing surrogate character
+120  No processing instruction starts with 'xml'
+121  The XML or Text declaration must start at line/column 1/1
+122  The 'version=' string is required in an XMLDecl
+123  The 'standalone=' string is only allowed in the main XML entity
+124  When namespaces are enabled, a name can have only one colon character
+125  When namespaces are enabled, the colon cannot be the first or last character
+126  Colons are not allowed in this name when namespaces are enabled
+127  A system exception occured during processing
+128  An exception occured! Type:{0}, Message:{1}
+129  Unexpected end of file exception. Message: {0}
+
+
+$set 3
+  2  Unknown element '{0}'
+  3  Attribute '{0}' not defined
+  4  Notation '{0}' was referenced but never declared
+  5  Root element different from DOCTYPE
+  6  Required attribute '{0}' was not provided
+  7  Element '{0}' is not valid for content model: '{1}'
+  8  ID attributes must be #IMPLIED or #REQUIRED
+  9  This type of attribute cannot have an empty value
+ 10  Element '{0}' has already been declared
+ 11  Element '{0}' has more than one ID attribute
+ 12  ID '{0}' has already been used
+ 13  ID attribute '{0}' was referenced but never declared
+ 14  Attribute '{0}' refers to an unknown notation '{1}'
+ 15  Element '{0}' was used in the DOCTYPE but never declared
+ 16  Empty content not valid for content model: '{0}'
+ 17  Attribute '{{0}}{1}' is not declared for element '{2}'
+ 18  Attributes of type ENTITY/ENTITIES must refer to an external, unparsed entity
+ 19  Attribute '{0}' refers to an unknown entity '{1}'
+ 20  Not enough elements to match content model : '{0}'
+ 21  No character data is allowed by content model
+ 22  Attribute '{0}' does not match its defined enumeration or notation list
+ 23  The values for attribute '{0}' must be names or name tokens
+ 24  Attribute '{0}' does not support multiple values
+ 25  Attribute '{0}' has a value that does not match its #FIXED value
+ 26  Element types cannot be duplicated in Mixed content models
+
+
+$set 2
+  2  The index is beyond the array bounds  
+  3  The new size is less than the old one
+  4  The bit index was beyond the set size
+  5  The pointer has not been set
+  6  The enumerator contains no more elements
+  7  Could not open file: {0}
+  8  Could not query the current file position
+  9  Could not close the file
+ 10  Could not seek to end of file
+ 11  Could not seek to required position in file
+ 12  Could not duplicate the handle
+ 13  Could not read data from file
+ 14  Could not reset file to beginning
+ 15  Could not acertain the file size
+ 16  Could not determine base pathname of the file
+ 17  The hash modulus cannot be zero
+ 18  Hashing the key returned an invalid bad hash value
+ 19  The key '{0}' could not be found in the hash table
+ 20  Could not create mutex
+ 21  Could not close mutex
+ 22  Could not lock mutex
+ 23  Could not unlock mutex
+ 24  Could not destroy mutex
+ 25  The element {0} already exists
+ 26  Hashing the key returned an invalid bad hash value
+ 27  The passed id is not valid for this pool
+ 28  The modulus value cannot be zero
+ 29  The index is past the top of stack
+ 30  The stack is empty, cannot access members
+ 31  The target buffer cannot have a max size of zero
+ 32  The given radix is not supported. Use 2, 8, 10, or 16
+ 33  The target buffer is too small to accept the results
+ 34  The start index is past the end of the string
+ 35  Could not write to standard err
+ 36  Could not write to standard out
+ 37  Could not write to console
+ 38  String pool id was not legal
+ 39  The URL was not correctly formed
+ 40  The URL used an unsupported protocol
+ 41  Unsupported URL protocol: '{0}'
+ 42  Only localhost is supported at this time
+ 43  No protocol prefix present
+ 44  Expected // after protocol
+ 45  % must be followed by two hex digits
+ 46  Unterminated host component
+ 47  The passed index is past the end of the vector
+ 48  Parse may not be called while parsing
+ 49  A DOCTYPE was seen but the installed validator does not understand DTDs
+ 50  Could not open DTD file '{0}'
+ 51  Could not open external entity '{0}'
+ 52  The end of input was not expected
+ 53  The index given was beyond the max attribute index
+ 54  The element stack is empty
+ 55  The element stack index given was beyond the stack top
+ 56  The element stack was already empty when a pop request occured
+ 57  A parent operation was requested, but only one element is on the stack
+ 58  The indicated reader id was never found
+ 59  The auto encoding enum has an unknown value
+ 60  Could not create a converter for encoding: {0}
+ 61  Could not decode first line of entity: {0}
+ 62  End of input was hit in the middle of a multibyte sequence
+ 63  This encoding ({0})should have had a transcoder
+ 64  Invalid second byte of a UTF-8 character sequence
+ 65  Invalid surrogate character found in UTF-8 data
+ 66  The primary document entity could not be opened. Id={0}
+ 67  Unbalanced start/end tags found, cannot continue
+ 68  The passed AttTypes value is not known
+ 69  The passed DefAttTypes value is not known
+ 70  The buffer manager cannot provide any more buffers
+ 71  The passed buffer was not found in this manager's pool
+ 72  The passed recognizer encoding was not known
+ 73  The block of XML data could not be transcoded
+ 74  Could not create a default transcoder
+ 75  The binary operation node had a unary node type
+ 76  The content type must be mixed or children
+ 77  PCDATA nodes are not valid here
+ 78  The {0} operation is invalid for the spec type
+ 79  The unary operation node had a binary node type
+ 80  Unknown content model type
+ 81  Unknown content spec type
+ 82  The element id was invalid
+ 83  When reusing the validator, no internal subset is allowed
+ 84  The call to scanNext() is illegal at this time
+
+

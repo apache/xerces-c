@@ -1,0 +1,328 @@
+#
+# The Apache Software License, Version 1.1
+# 
+# Copyright (c) 1999 The Apache Software Foundation.  All rights 
+# reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer. 
+# 
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:  
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+# 
+# 4. The names "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written 
+#    permission, please contact apache\@apache.org.
+# 
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+# 
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+# 
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+# 
+#
+# $Log$
+# Revision 1.1  1999/11/09 01:02:55  twl
+# Initial revision
+#
+# Revision 1.4  1999/11/08 20:44:09  rahul
+# Swat for adding in Product name and CVS comment log variable.
+#
+#
+
+###################################################################
+#                    IMPORTANT NOTE                               #
+###################################################################
+# Before you try to run the Makefile, make sure you have set      #
+# the following environment variables properly.                   #
+#                                                                 #
+# export XML4CROOT=<the directory where you installed XML4C>      #
+#                                                                 #
+# In case you intend to use either the ICU transcoder or the      #
+# ICU message loader, you must set ICUROOT correctly.             #
+# export ICUROOT=<the directory where you installed ICU>          #
+#                                                                 #
+# For netaccessor, if you intend to use libwww, then you must     #
+# also set another environment variable called LIBWWWROOT         #
+# export LIBWWWROOT=<the directory where you installed libwww>    #
+###################################################################
+
+###################################################################
+#         SPECIAL INSTRUCTIONS FOR OS/390 BATCH MODE              #
+###################################################################
+# If you are going to do the OS390BATCH build, make sure you have #
+# the OS390BATCH environment variable set.                        #
+#                                                                 #
+#   export OS390BATCH=1                                           #
+#                                                                 #
+# Also, search for the LOADMOD variable and set it to your        #
+# LOADMOD dataset. Make sure you have at least UPDATE access to   #
+# the dataset.                                                    #
+###################################################################
+
+ALL:    all
+
+ALL_OBJECTS_DIR = ${XML4CROOT}/obj
+
+XML_BUILD_OPTIONS = ${CXXFLAGS}
+
+####################### PLATFORM DEPENDENCIES #####################
+
+#=============== SOLARIS SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, SOLARIS)
+  ifeq (${COMPILER}, g++)
+	PLATFORM_CPP_COMPILER = g++
+	PLATFORM_C_COMPILER = gcc
+	PLATFORM_LIBRARIES=-L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
+	PLATFORM_COMPILE_OPTIONS = -fPIC -instances=static -D${PLATFORM} -D_REENTRANT
+	MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -shared
+	MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -shared
+	EXTRA_LINK_OPTIONS = -lm -lw -lgen
+  else
+	PLATFORM_CPP_COMPILER = CC
+	PLATFORM_C_COMPILER = cc
+	PLATFORM_LIBRARIES=-L/usr/local/SUNWspro/lib -L/usr/ccs/lib
+	PLATFORM_COMPILE_OPTIONS = -KPIC -mt -xs -instances=static -features=rtti -D${PLATFORM} -D_REENTRANT
+	MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -G
+	MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -G
+	EXTRA_LINK_OPTIONS = -lm -lw -lC -lc -lgen
+  endif
+  SHLIBSUFFIX=.so
+endif
+
+#================= AIX SPECIFIC OPTIONS ===========================
+ifeq (${PLATFORM}, AIX)
+PLATFORM_CPP_COMPILER = xlC_r
+PLATFORM_C_COMPILER = xlc_r
+ifdef ICUROOT
+  PLATFORM_LIBRARIES=-L/usr/lpp/xlC/lib -L${ICUROOT}/lib
+  EXTRA_LINK_OPTIONS = -licu-uc -lbsd
+else
+  PLATFORM_LIBRARIES=-L/usr/lpp/xlC/lib
+  EXTRA_LINK_OPTIONS = -lbsd
+endif
+PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
+MAKE_SHARED = makeC++SharedLib_r -p 5000
+MAKE_SHARED_C = makeC++SharedLib_r -p 5000
+SHLIBSUFFIX=.a
+endif
+
+#=============== LINUX SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, LINUX)
+PLATFORM_CPP_COMPILER = g++
+PLATFORM_C_COMPILER = gcc
+PLATFORM_LIBRARIES=-L/usr/lib -L/usr/local/lib -L/usr/ccs/lib
+PLATFORM_COMPILE_OPTIONS = -fpic -instances=static -D${PLATFORM} -D_REENTRANT
+MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -shared -fpic
+MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -shared -fpic
+EXTRA_LINK_OPTIONS = -lc
+SHLIBSUFFIX=.so
+endif
+
+#=============== OS2 SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, OS/2)
+PLATFORM_CPP_COMPILER = icc
+PLATFORM_C_COMPILER = icc
+PLATFORM_LIBRARIES= CPPOM30.LIB os2386.lib mmpm2.lib
+PLATFORM_COMPILE_OPTIONS = /C+ /Gd- /Ge- /Gm+ /Gs- /Re /J+  /Ms /Sm /Sn /Ss+
+MAKE_SHARED = ilink /nofree
+MAKE_SHARED_C = ilink /nofree
+EXTRA_LINK_OPTIONS = /map /nod /noe /noi /packcode /packdata /exepack /align:4
+SHLIBSUFFIX= .dll
+ifneq (${DEBUG}, 1)
+XML_BUILD_OPTIONS = -2
+endif
+endif
+
+#================= HP SPECIFIC OPTIONS ===========================
+#ifeq (${PLATFORM}, HPUX)
+#  ifeq (${COMPILER}, aCC)
+#    PLATFORM_CPP_COMPILER = aCC
+#    PLATFORM_C_COMPILER = aCC
+#    PLATFORM_LIBRARIES=-L/opt/aCC/lib -L/usr/ccs/lib
+#    PLATFORM_COMPILE_OPTIONS = $(COMPILESWITCH) -D_HP_UX -DHPaCC -D_PTHREADS_DRAFT4 \
+#        +DAportable -w +z +inst_compiletime
+#    MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -b
+#    MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -b
+#    EXTRA_LINK_OPTIONS = -lcma -lCsup -lstream
+#    SHLIBSUFFIX=.sl
+#  else
+#    ifneq (${DEBUG}, 1)
+#      XML_BUILD_OPTIONS = -w +O1
+#    endif
+#    PLATFORM_CPP_COMPILER = CC
+#    PLATFORM_C_COMPILER = cc
+#    PLATFORM_LIBRARIES= -L${ICUROOT}/lib -L/opt/CC/lib -L/usr/lib
+#    TEMPLATESREPOSITORY = ${ALL_OBJECTS_DIR}/ptrepository
+#    COMMON_COMPILE_OPTIONS = $(COMPILESWITCH) -D_HP_UX -DXML4C_TMPLSINC \
+#        -D_PTHREADS_DRAFT4 +DAportable -w +eh +z -z +a1
+#    ifeq ($(MODULE), dom)
+#      PLATFORM_COMPILE_OPTIONS  = -DDOM_PROJ $(COMMON_COMPILE_OPTIONS)
+#    else
+#      PLATFORM_COMPILE_OPTIONS  = $(COMMON_COMPILE_OPTIONS) -ptr${TEMPLATESREPOSITORY}
+#    endif
+#    ALLINCLUDES= -I$(XML4CROOT)/src -I$(ICUROOT)/include
+#    MAKE_SHARED = $(PLATFORM_CPP_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
+#    MAKE_SHARED_C = $(PLATFORM_C_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
+#    ALLLIBS = -licu-uc -lcma -lm
+#    EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,-a,shared
+#    SHLIBSUFFIX=.sl
+#  endif
+#endif
+
+ifeq (${PLATFORM}, HPUX)
+
+  OSVERDEFINE=HPUX11
+  ifeq (${OSVER}, HPUX10)
+    OSVERDEFINE=HPUX10
+  endif
+
+  ifeq (${COMPILER}, aCC)
+    PLATFORM_CPP_COMPILER = aCC
+    PLATFORM_C_COMPILER = aCC
+    PLATFORM_COMPILE_OPTIONS = $(COMPILESWITCH) -D_HP_UX -DHPaCC \
+        -D_PTHREADS_DRAFT4 -D${OSVERDEFINE} +DAportable -w +z \
+        +inst_compiletime
+    MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -b
+    MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -b
+    ALLLIBS = -lcma -lCsup -lstream
+    SHLIBSUFFIX=.sl
+  else
+    ifneq (${DEBUG}, 1)
+      XML_BUILD_OPTIONS = -w +O1
+    endif
+    PLATFORM_CPP_COMPILER = CC
+    PLATFORM_C_COMPILER = cc
+ifdef ICUROOT
+    PLATFORM_LIBRARIES= -L${ICUROOT}/lib
+endif
+    TEMPLATESREPOSITORY = ${ALL_OBJECTS_DIR}/ptrepository
+    COMMON_COMPILE_OPTIONS = $(COMPILESWITCH) -D_HP_UX -DXML4C2_TMPLSINC \
+        -D_PTHREADS_DRAFT4 -D${OSVERDEFINE} +DAportable -w +eh +z -z +a1
+    ifeq ($(MODULE), dom)
+      PLATFORM_COMPILE_OPTIONS  = -DDOM_PROJ $(COMMON_COMPILE_OPTIONS)
+    else
+      PLATFORM_COMPILE_OPTIONS  = $(COMMON_COMPILE_OPTIONS) -ptr${TEMPLATESREPOSITORY}
+    endif
+ifdef ICUROOT
+    ALLINCLUDES=-I$(XML4CROOT)/src/com/ibm/xml -I$(XML4CROOT)/src -I$(ICUROOT)/include
+else
+    ALLINCLUDES=-I$(XML4CROOT)/src/com/ibm/xml -I$(XML4CROOT)/src
+endif
+    MAKE_SHARED = $(PLATFORM_CPP_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
+    MAKE_SHARED_C = $(PLATFORM_C_COMPILER) $(PLATFORM_COMPILE_OPTIONS) $(ALLINCLUDES)
+    ALLLIBS = -licu-uc -lcma -lm
+    EXTRA_LINK_OPTIONS = -b -Wl,+s -Wl,-a,shared
+    SHLIBSUFFIX=.sl
+  endif
+endif
+
+
+#================ OS/390 SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, OS390)
+PLATFORM_CPP_COMPILER = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++
+PLATFORM_C_COMPILER = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" cc
+PLATFORM_LIBRARIES=
+## OS390BATCH
+ifeq (${OS390BATCH},1)
+PLATFORM_COMPILE_OPTIONS =-Wc,dll,expo -W0,"langlvl(extended)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -DOS390BATCH
+else
+PLATFORM_COMPILE_OPTIONS =-Wc,dll,expo -W0,"langlvl(extended)" -D${PLATFORM} -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
+endif
+MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -D${PLATFORM} -W l,dll
+MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -D${PLATFORM} -W l,dll
+## OS390BATCH
+ifeq (${OS390BATCH},1)
+LOADMOD = USERID.LOAD
+LOADEXP = USERID.EXP
+ALLLIBS = "//'${LOADEXP}(ICUUC)'"
+else
+ALLLIBS = ${ICUROOT}/lib/libicu-uc.x
+endif
+EXTRA_LINK_OPTIONS =
+SHLIBSUFFIX=.dll
+OS390SIDEDECK=.x
+ifneq (${DEBUG}, 1)
+  XML_BUILD_OPTIONS = -2
+endif
+endif
+
+###################### STANDARD TOOLS #############################
+CP = -cp -fp
+RM = -rm -f
+CAT = cat
+AR = ar -cqv
+CD = cd
+CC1 = ${PLATFORM_CPP_COMPILER} ${PLATFORM_COMPILE_OPTIONS}
+JUST_CC = ${PLATFORM_C_COMPILER} -D${PLATFORM}
+ECHO = echo
+CREATE_DEPENDS_FILE = echo "" > depends
+MAKE_DEPEND = ${CC1} -E -xM
+
+########################## DIRECTORIES ############################
+XML_LIB_DIR = $(XML4CROOT)/lib
+XML_INC_DIR = $(XML4CROOT)/include
+ifeq (${MESSAGELOADER}, ICU)
+    INTL_INC_DIR1 = $(ICUROOT)/include
+endif
+ifeq (${TRANSCODER}, ICU)
+    INTL_INC_DIR1 = $(ICUROOT)/include
+endif
+
+#################### COMPILE/LINK FLAGS ###########################
+ifeq (${MESSAGELOADER}, ICU)
+    XML_INCL = -I. -I$(XML_INC_DIR) -I$(INTL_INC_DIR1)
+else
+    ifeq (${TRANSCODER}, ICU)
+        XML_INCL = -I. -I$(XML_INC_DIR) -I$(INTL_INC_DIR1)
+    else
+        XML_INCL = -I. -I$(XML_INC_DIR)
+    endif
+endif
+
+##################### HELPER MACROS ###############################
+DEPFILE = depends
+LINKLIB = $(XML_LIB_DIR)
+
+######################### SUFFIX RULES ############################
+.SUFFIXES:
+.SUFFIXES: .cpp .c .o
+
+.cpp.o:
+	$(CC1) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)
+
+.c.o:
+	$(JUST_CC) -c $(XML_BUILD_OPTIONS) $(XML_DEF) $(XML_INCL) $(EXTRA_COMPILE_OPTIONS) -o $(@) $(<)

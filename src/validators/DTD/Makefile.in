@@ -1,0 +1,153 @@
+#
+# The Apache Software License, Version 1.1
+# 
+# Copyright (c) 1999 The Apache Software Foundation.  All rights 
+# reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer. 
+# 
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:  
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+# 
+# 4. The names "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written 
+#    permission, please contact apache\@apache.org.
+# 
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+# 
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+# 
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+# 
+#
+# $Log$
+# Revision 1.1  1999/11/09 01:03:42  twl
+# Initial revision
+#
+# Revision 1.3  1999/11/08 20:45:43  rahul
+# Swat for adding in Product name and CVS comment log variable.
+#:
+#
+
+PLATFORM = @platform@
+COMPILER = @compiler@
+CXXFLAGS = @cxxflags@
+CFLAGS = @cflags@
+PREFIX = @prefix@
+LDFLAGS = @ldflags@
+LIBS = @libs@
+OSVER = @osver@
+USELIBWWW = @uselibwww@
+MESSAGELOADER = @messageloader@
+TRANSCODER = @transcoder@
+
+include ../../Makefile.incl
+
+MODULE = validators
+SUBMODULE = DTD
+
+VALIDATORS_DTD_CPP_PUBHEADERS = \
+	CMBinaryOp.hpp \
+	CMLeaf.hpp \
+	CMNode.hpp \
+	CMStateSet.hpp \
+	CMUnaryOp.hpp \
+	ContentSpecNode.hpp \
+	DFAContentModel.hpp \
+	DTDAttDef.hpp \
+	DTDAttDefList.hpp \
+	DTDElementDecl.hpp \
+	DTDEntityDecl.hpp \
+	DTDValidator.hpp \
+	DocTypeHandler.hpp \
+	MixedContentModel.hpp \
+	SimpleContentModel.hpp
+
+VALIDATORS_DTD_CPP_PRIVHEADERS = 
+
+VALIDATORS_DTD_C_FILES = 
+
+VALIDATORS_DTD_CPP_OBJECTS = \
+	CMBinaryOp.o \
+	CMUnaryOp.o \
+	ContentSpecNode.o \
+	DFAContentModel.o \
+	DTDAttDef.o \
+	DTDAttDefList.o \
+	DTDElementDecl.o \
+	DTDValidator.o \
+	DTDValidator2.o \
+	MixedContentModel.o \
+	SimpleContentModel.o
+
+all:	includes $(VALIDATORS_DTD_CPP_OBJECTS) publish
+
+includes:	pubheaders $(VALIDATORS_DTD_C_FILES)
+
+pubheaders:
+	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	$(CP) $(VALIDATORS_DTD_CPP_PUBHEADERS) $(VALIDATORS_DTD_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+
+publish:
+	-mkdir -p ${ALL_OBJECTS_DIR}
+	$(CP) $(VALIDATORS_DTD_CPP_OBJECTS) $(ALL_OBJECTS_DIR)
+
+# this may generate unnecessary dependencies, but it makes life easier
+depend: includes
+	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
+
+clean:
+	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."
+	$(RM) $(VALIDATORS_DTD_CPP_OBJECTS)
+
+distclean:	clean
+	$(RM) Makefile $(DEPFILE)
+	@echo "Removing all $(MODULE)/$(SUBMODULE) header files ..."
+	@for file in $(VALIDATORS_DTD_CPP_PUBHEADERS); do \
+	rm -f $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/$$file; \
+	done
+	@for file in $(VALIDATORS_DTD_C_FILES); do \
+	rm -f $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/$$file; \
+	done
+	@echo "Removing all $(MODULE)/$(SUBMODULE) object files ..."
+	@for file in $(VALIDATORS_DTD_CPP_OBJECTS); do \
+	rm -f $(ALL_OBJECTS_DIR)/$$file; \
+	done
+
+install:
+	-mkdir -p $(PREFIX)/$(MODULE)/$(SUBMODULE)
+	$(CP) $(VALIDATORS_DTD_CPP_PUBHEADERS) $(VALIDATORS_DTD_C_FILES) $(PREFIX)/$(MODULE)/$(SUBMODULE)
