@@ -1645,6 +1645,7 @@ bool XMLUri::isURIString(const XMLCh* const uricString)
         return false;
 
     const XMLCh* tmpStr = uricString;
+
     while (*tmpStr)
     {
         if (isReservedOrUnreservedCharacter(*tmpStr))            
@@ -2541,6 +2542,37 @@ bool XMLUri::processPath(const XMLCh* const pathStr,
     } //if (pathStrLen...)
 
     return true;
+}
+
+/***
+ * [Bug7698]: filenames with embedded spaces in schemaLocation strings not handled properly
+ *
+ * This method is called when Scanner/TraverseSchema knows that the URI reference is
+ * for local file.
+ *
+ ***/ 
+void XMLUri::normalizeURI(const XMLCh*     const systemURI,
+                                XMLBuffer&       normalizedURI)
+{
+    const XMLCh* pszSrc = systemURI;
+
+    normalizedURI.reset();
+
+    while (*pszSrc) {
+
+        if ((*(pszSrc) == chPercent)
+        &&  (*(pszSrc+1) == chDigit_2)
+        &&  (*(pszSrc+2) == chDigit_0))
+        {
+            pszSrc += 3;
+            normalizedURI.append(chSpace);
+        }
+        else 
+        {
+            normalizedURI.append(*pszSrc);
+            pszSrc++;
+        }
+    }
 }
 
 /***

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2004/05/25 18:11:47  peiyongz
+ * normalizeURI() added
+ *
  * Revision 1.16  2004/01/12 22:01:02  cargilld
  * Minor performance change for handling reserved and unreserved characters.
  *
@@ -147,6 +150,7 @@
 #include <xercesc/util/XMLString.hpp>
 
 #include <xercesc/internal/XSerializable.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -418,6 +422,10 @@ public:
      */
     static bool isValidURI( bool haveBaseURI
                           , const XMLCh* const uriStr);
+
+
+    static void normalizeURI(const XMLCh*     const systemURI,
+                                   XMLBuffer&       normalizedURI);
 
     /***
      * Support for Serialization/De-serialization
