@@ -126,6 +126,10 @@ int  NodeImpl::gTotalNodeImpls= 0;
 
 
 NodeImpl::~NodeImpl() {
+	if (getUserData())
+	{
+		setUserData(null);
+	}
     NodeImpl::gLiveNodeImpls--;
 };
 

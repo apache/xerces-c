@@ -750,14 +750,20 @@ bool DocumentImpl::isKidOK(NodeImpl *parent, NodeImpl *child)
 
 void DocumentImpl::setUserData(NodeImpl* n, void* data)
 {
-	if (!userData)
+	if (!userData && data)
 		userData = new RefHashTableOf<void>(29, false, new HashPtr());
-	userData->put((void*)n,data);
+	if (!data && userData)
+		userData->removeKey((void*)n);
+	else
+		userData->put((void*)n,data);
 }
 
 void* DocumentImpl::getUserData(NodeImpl* n)
 {
-	return userData->get((void*)n);
+	if (userData)
+		return userData->get((void*)n);
+	else
+		return null;
 }
 
 void* DocumentImpl::getUserData()
