@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2005/04/01 17:36:25  dbertoni
+ * Fix for Jira issue XERCESC-1389.
+ *
  * Revision 1.5  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -67,8 +70,8 @@ XMLCh* RegxUtil::decomposeToSurrogates(XMLInt32 ch,
 XMLCh* RegxUtil::stripExtendedComment(const XMLCh* const expression,
                                       MemoryManager* const manager) {
 
-    XMLCh* buffer = (manager) ? XMLString::replicate(expression)
-                              : XMLString::replicate(expression, manager);
+    XMLCh* buffer = (manager) ? XMLString::replicate(expression, manager)
+                              : XMLString::replicate(expression);
 
     if (buffer)
     {

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2005/04/01 17:36:25  dbertoni
+ * Fix for Jira issue XERCESC-1389.
+ *
  * Revision 1.23  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -1613,7 +1616,7 @@ void RegularExpression::prepare() {
 		if (fFixedString != 0) {
 
 			fBMPattern = new (fMemoryManager) BMPattern(fFixedString, 256,
-									   isSet(fixedOpts, IGNORE_CASE));
+									   isSet(fixedOpts, IGNORE_CASE), fMemoryManager);
 		}
 	}
 }
