@@ -1009,13 +1009,8 @@ void IGXMLScanner::scanEndTag(bool& gotData)
             }
         }
 
-        // reset xsi:type ComplexTypeInfo
-        if (fGrammarType == Grammar::SchemaGrammarType) {
-            ((SchemaElementDecl*)topElem->fThisElement)->setXsiComplexTypeInfo(0);
-            if (!isRoot)
-                ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->setXsiComplexTypeInfo(
-                     ((SchemaValidator*)fValidator)->getCurrentTypeInfo());
 
+        if (fGrammarType == Grammar::SchemaGrammarType) {
             // call matchers and de-activate context
             int oldCount = fMatcherStack->getMatcherCount();
 
@@ -1064,7 +1059,9 @@ void IGXMLScanner::scanEndTag(bool& gotData)
             }
         }
     }
-
+    if(!isRoot && fGrammarType == Grammar::SchemaGrammarType)
+        ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromElement(topElem->fThisElement, fGrammarType);
+    
     // If we have a doc handler, tell it about the end tag
     if (fDocHandler)
     {
@@ -1075,6 +1072,14 @@ void IGXMLScanner::scanEndTag(bool& gotData)
             , isRoot
             , fPrefixBuf.getRawBuffer()
         );
+    }
+
+    // reset xsi:type ComplexTypeInfo
+    if (fGrammarType == Grammar::SchemaGrammarType) {
+        ((SchemaElementDecl*)topElem->fThisElement)->reset();
+        if (!isRoot)
+            ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
+                setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
     }
 
     // If this was the root, then done with content
@@ -1799,6 +1804,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
                             // XML 1.0 Section 2.9
                             // Document is standalone, so attributes must not be defaulted.
                             fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef.getFullName(), elemDecl->getFullName());
+
                         }
                     }
                 }
@@ -2056,6 +2062,9 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     //  generic element decl object. We tell him to fault one in if he does
     //  not find it.
     bool wasAdded = false;
+    bool errorBeforeElementFound = false;
+    bool laxBeforeElementFound = false;
+
     const XMLCh* nameRawBuf = &qnameRawBuf[prefixColonPos + 1];
     const XMLCh* original_uriStr = fGrammar->getTargetNamespace();
     unsigned orgGrammarUri = fURIStringPool->getId(original_uriStr);
@@ -2074,14 +2083,18 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         if (!elemDecl && (orgGrammarUri != uriId)) {
             // not found, switch to the specified grammar
             const XMLCh* uriStr = getURIText(uriId);
-            if (!switchGrammar(uriStr) && fValidate && !laxThisOne)
+            bool errorCondition = !switchGrammar(uriStr) && fValidate;
+            if (errorCondition && !laxThisOne)
             {
                 fValidator->emitError
                 (
                     XMLValid::GrammarNotFound
                     ,uriStr
                 );
+                errorBeforeElementFound = true;
             }
+            else if(errorCondition)
+                laxBeforeElementFound = true;
 
             elemDecl = fGrammar->getElemDecl
             (
@@ -2113,13 +2126,17 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                                , currentScope
                            );
 
-                if (elemDecl && elemDecl->getCreateReason() != XMLElementDecl::JustFaultIn && fValidate) {
+                bool errorCondition = elemDecl && elemDecl->getCreateReason() != XMLElementDecl::JustFaultIn;
+                if (errorCondition && fValidate) {
                     fValidator->emitError
                     (
                         XMLValid::ElementNotUnQualified
                         , elemDecl->getFullName()
                     );
+                    errorBeforeElementFound = true;
                 }
+                else if(errorCondition) 
+                    laxBeforeElementFound = true;
             }
         }
 
@@ -2153,14 +2170,18 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
         if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
             //not found, switch grammar and try globalNS
-            if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate && !laxThisOne)
+            bool errorCondition = !switchGrammar(XMLUni::fgZeroLenString) && fValidate;
+            if (errorCondition && !laxThisOne)
             {
                 fValidator->emitError
                 (
                     XMLValid::GrammarNotFound
                   , XMLUni::fgZeroLenString
                 );
+                errorBeforeElementFound = true;
             }
+            else if(errorCondition)
+                laxBeforeElementFound = true;
 
             elemDecl = fGrammar->getElemDecl
             (
@@ -2184,14 +2205,21 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             if (!elemDecl && orgGrammarUri != fEmptyNamespaceId) {
                 // still Not found in specified uri
                 // go to original Grammar again to see if element needs to be fully qualified.
-                if (!switchGrammar(original_uriStr) && fValidate && !laxThisOne)
+                const XMLCh* uriStr = getURIText(orgGrammarUri);
+                bool errorCondition = !switchGrammar(original_uriStr) && fValidate;
+                if (errorCondition && !laxThisOne)
+
+                if (errorCondition && !laxThisOne)
                 {
                     fValidator->emitError
                     (
                         XMLValid::GrammarNotFound
                         ,original_uriStr
                     );
+                    errorBeforeElementFound = true;
                 }
+                else if(errorCondition)
+                    laxBeforeElementFound = true;
 
                 elemDecl = fGrammar->getElemDecl
                            (
@@ -2207,6 +2235,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                         XMLValid::ElementNotQualified
                         , elemDecl->getFullName()
                     );
+                    errorBeforeElementFound = true;
                 }
             }
         }
@@ -2233,6 +2262,9 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             fValidate = false;
             fElemStack.setValidationFlag(fValidate);
         }
+        else if(fGrammarType == Grammar::SchemaGrammarType && fValidate) {
+            ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
+        }
 
         // If validating then emit an error
         if (fValidate)
@@ -2246,10 +2278,20 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 XMLValid::ElementNotDefined
                 , elemDecl->getFullName()
             );
+
+            if(fGrammarType == Grammar::SchemaGrammarType) 
+                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
         }
     }
     else
     {
+        if(!laxBeforeElementFound && fGrammarType == Grammar::SchemaGrammarType) {
+            if (fValidate) {
+                ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
+                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::VALID);
+            }
+        }
+
         // If its not marked declared and validating, then emit an error
         if (!elemDecl->isDeclared()) {
             if (laxThisOne) {
@@ -2257,19 +2299,31 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 fElemStack.setValidationFlag(fValidate);
             }
 
-             if (fValidate)
+            if (fValidate)
             {
                 fValidator->emitError
                 (
                     XMLValid::ElementNotDefined
                     , elemDecl->getFullName()
                 );
+
+                if(fGrammarType == Grammar::SchemaGrammarType) {
+                    ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+                    ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
+                }
             }
         }
 
-        if (fGrammarType == Grammar::SchemaGrammarType)
+        if (fGrammarType == Grammar::SchemaGrammarType) {
             ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
+            ((SchemaElementDecl*)elemDecl)->setXsiSimpleTypeInfo(0);
+        }
     }
+
+    if(errorBeforeElementFound && fGrammarType == Grammar::SchemaGrammarType) {
+        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+    }
+
 
     //  Now we can update the element stack to set the current element
     //  decl. We expanded the stack above, but couldn't store the element
@@ -2298,13 +2352,25 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     XMLBuffer prefixBuf(comma+1);
                     prefixBuf.append(typeName, comma);
                     const XMLCh* uriStr = prefixBuf.getRawBuffer();
-                    if (!switchGrammar(uriStr) && fValidate && !laxThisOne)
+
+                    bool errorCondition = !switchGrammar(uriStr) && fValidate;
+                    if (errorCondition && !laxThisOne)
                     {
                         fValidator->emitError
                         (
                             XMLValid::GrammarNotFound
                             , prefixBuf.getRawBuffer()
                         );
+
+                        if(fGrammarType == Grammar::SchemaGrammarType) 
+                            ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+
+                    }
+                    else if(errorCondition) {
+                        if(fGrammarType == Grammar::SchemaGrammarType) {
+                            ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::NONE);
+                            ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::UNKNOWN);
+                        }
                     }
                 }
             }
@@ -2336,6 +2402,10 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             //  XMLValidator::checkRootElement
             if (fValidatorFromUser && !fValidator->checkRootElement(elemDecl->getId()))
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
+
+            if(fGrammarType == Grammar::SchemaGrammarType) 
+                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+
         }
     }
     else if (parentValidation)
@@ -2417,15 +2487,12 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     , elemDecl->getFullName()
                     , elemDecl->getFormattedContentModel()
                 );
+                if(fGrammarType == Grammar::SchemaGrammarType) 
+                    ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+
             }
 
             if (fGrammarType == Grammar::SchemaGrammarType) {
-
-                // reset xsi:type ComplexTypeInfo
-                ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
-                if (!isRoot)
-                    ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->setXsiComplexTypeInfo(
-                         ((SchemaValidator*)fValidator)->getCurrentTypeInfo());
 
                 // call matchers and de-activate context
                 int oldCount = fMatcherStack->getMatcherCount();
@@ -2475,6 +2542,10 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             }
         }
 
+        if(!isRoot && fGrammarType == Grammar::SchemaGrammarType)
+           ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromElement(elemDecl, fGrammarType);
+
+
         // If we have a doc handler, tell it about the end tag
         if (fDocHandler)
         {
@@ -2485,6 +2556,14 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 , isRoot
                 , fPrefixBuf.getRawBuffer()
             );
+        }
+
+        // reset xsi:type ComplexTypeInfo
+        if (fGrammarType == Grammar::SchemaGrammarType) {
+            ((SchemaElementDecl*)elemDecl)->reset();
+            if (!isRoot)
+                ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
+                    setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
         }
 
         // If the elem stack is empty, then it was an empty root

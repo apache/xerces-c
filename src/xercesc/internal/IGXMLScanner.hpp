@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/01/29 19:59:35  gareth
+ * we now detect when elements and attributes are validated/ the result of the validation and store that information.
+ *
  * Revision 1.3  2003/01/15 15:49:49  knoaman
  * Change constant declaration name to match its value.
  *
@@ -75,6 +78,7 @@
 #include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/util/KVStringPair.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
+#include <xercesc/validators/schema/SchemaElementDecl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
