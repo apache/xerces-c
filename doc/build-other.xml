@@ -445,7 +445,8 @@ gmake </source>
 			
 			<ul>
 				<li>In general, the Mac OS X command line build follows the generic unix
-				build instructions. You need to set your XERCESCROOT environment variable,
+				build instructions. You need to set your XERCESCROOT environment variable
+				(the full path up to the Xerces-C++ src directory, but not including 'src'),
 				<code>./runConfigure</code>, and <code>make</code>. Be sure to heed warnings
 				under "special instructions" below regarding which tools must be used to unpack
 				archives: gnutar is your friend.
