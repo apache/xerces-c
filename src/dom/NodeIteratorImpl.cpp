@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/11/01 01:26:30  andyh
+ * DOM NodeIterator bug fix - iterators would sometimes continue beyond
+ * their starting (root) node.  Fix from Tinny Ng.
+ *
  * Revision 1.10  2000/07/17 23:00:16  jpolast
  * bug fix for SHOW_ELEMENT flag incorrectly being retreived.
  * contributed by Grace Yan and Joe Kesselman.
@@ -339,26 +343,27 @@ DOM_Node NodeIteratorImpl::nextNode (DOM_Node node, bool visitChildren) {
             return result;
         }
     }
-
+    
     // if hasSibling, return sibling
-    result = node.getNextSibling();
-    if (! result.isNull()) return result;
-
-
-    // return parent's 1st sibling.
-    DOM_Node parent = node.getParentNode();
-    while (!parent.isNull() && parent != fRoot) {
-        result = parent.getNextSibling();
-        if (!result.isNull()) {
-            return result;
-        } else {
-            parent = parent.getParentNode();
-        }
-
-    } // while (parent != null && parent != fRoot) {
-
+    if (node != fRoot) {
+        result = node.getNextSibling();
+        if (! result.isNull()) return result;
+        
+        
+        // return parent's 1st sibling.
+        DOM_Node parent = node.getParentNode();
+        while (!parent.isNull() && parent != fRoot) {
+            result = parent.getNextSibling();
+            if (!result.isNull()) {
+                return result;
+            } else {
+                parent = parent.getParentNode();
+            }
+            
+        } // while (parent != null && parent != fRoot) {
+    }
     // end of list, return null
-		DOM_Node aNull;
+    DOM_Node aNull;
     return aNull;
 }
 
