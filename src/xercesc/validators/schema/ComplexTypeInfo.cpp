@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2003/12/16 17:18:50  peiyongz
+ * don't expand ContextSpecNode when deserilized
+ *
  * Revision 1.20  2003/11/20 18:05:16  knoaman
  * PSVI: Use a copy of the content spec node when creating the content model.
  *
@@ -959,13 +962,6 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
 
         serEng<<fBaseComplexTypeInfo;
         serEng<<fContentSpec;
-        // we need to save a flag to specify
-        // if this content spce has been expanded or not
-        if (fContentModel)
-            serEng<<true;
-        else
-            serEng<<false;
-
         serEng<<fAttWildCard;
         serEng<<fAttList;
 
@@ -1013,18 +1009,6 @@ void ComplexTypeInfo::serialize(XSerializeEngine& serEng)
 
         serEng>>fBaseComplexTypeInfo;
         serEng>>fContentSpec;
-
-        //read the expanded flag
-        bool expanded = false;
-        serEng>>expanded;
-        if (expanded)
-        {
-            fContentModel = buildContentModel(fContentSpec);
-        }
-        //else
-        // if contentSpec has NOT been expanded yet,
-        // leave the building to makeContentModel
-
         serEng>>fAttWildCard;
         serEng>>fAttList;
 
