@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/09/06 00:24:16  andyh
+ * Clean up misc compiler warnings
+ *
  * Revision 1.6  2000/07/07 22:16:50  jpolast
  * remove old put(value) function.  use put(key,value) instead.
  *
@@ -188,6 +191,9 @@ template <class TVal> void RefHashTableOf<TVal>::removeAll()
             nextElem = curElem->fNext;
 
             // If we adopted the data, then delete it too
+            //    (Note:  the userdata hash table instance has data type of void *. 
+            //    This will generate compiler warnings here on some platforms, but they
+            //    can be ignored since fAdoptedElements is false.
             if (fAdoptedElems)
                 delete curElem->fData;
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/09/06 00:24:15  andyh
+ * Clean up misc compiler warnings
+ *
  * Revision 1.6  2000/03/02 19:54:38  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -112,9 +115,11 @@ public:
 
 
 
-private :
+protected :
     // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
+    //  Unimplemented constructors and operators.  (These ought to be private,
+    //                                  but that produces spurious compiler warnings
+    //                                  on some platforms.)
     // -----------------------------------------------------------------------
     BitOps();
     BitOps(const BitOps&);

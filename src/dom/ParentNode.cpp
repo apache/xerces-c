@@ -68,5 +68,3 @@
 #define PARENT_CLASS NodeImpl
 
 #include "CommonParentNode.cpp"
-
- 
