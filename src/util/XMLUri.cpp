@@ -599,6 +599,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     // port is everything after ":"
 
     XMLCh* portStr = new XMLCh[end+1];
+    ArrayJanitor<XMLCh> portName(portStr);
     start = index;
     int port = -1;
 
