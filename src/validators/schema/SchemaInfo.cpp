@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/07/09 14:29:43  knoaman
+ * Fixes for import/include declarations
+ *
  * Revision 1.2  2001/05/11 13:27:36  tng
  * Copyright update.
  *
@@ -78,14 +81,12 @@ SchemaInfo::SchemaInfo(const bool elemDefaultQualified,
                        const bool attrDefaultQualified,
                        const int blockDefault,
                        const int finalDefault,
-                       const int scope,
                        XMLCh* const schemaURL,
                        const DOM_Element& root,
                        SchemaInfo* const nextRoot,
                        SchemaInfo* const prevRoot)
     : fElementDefaultQualified(elemDefaultQualified)
     , fAttributeDefaultQualified(attrDefaultQualified)
-    , fCurrentScope(scope)
     , fBlockDefault(blockDefault)
     , fFinalDefault(finalDefault)
     , fCurrentSchemaURL(XMLString::replicate(schemaURL))

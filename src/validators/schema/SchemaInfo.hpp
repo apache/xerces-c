@@ -89,7 +89,6 @@ public:
                const bool attrDefaultQualified,
                const int blockDefault,
                const int finalDefault,
-               const int scope,
                XMLCh* const schemaURL,
                const DOM_Element& root,
                SchemaInfo* const nextRoot,
@@ -106,7 +105,6 @@ public:
     DOM_Element getRoot() const;
     int         getBlockDefault() const;
     int         getFinalDefault() const;
-    int         getCurrentScope() const;
     bool        isElementDefaultQualified() const;
     bool        isAttributeDefaultQualified() const;
 
@@ -121,7 +119,6 @@ private:
     // -----------------------------------------------------------------------
     bool               fElementDefaultQualified;
     bool               fAttributeDefaultQualified;
-    int                fCurrentScope;
     int                fBlockDefault;
     int                fFinalDefault;
     XMLCh*             fCurrentSchemaURL;
@@ -152,11 +149,6 @@ inline int SchemaInfo::getBlockDefault() const {
 inline int SchemaInfo::getFinalDefault() const {
 
     return fFinalDefault;
-}
-
-inline int SchemaInfo::getCurrentScope() const {
-
-    return fCurrentScope;
 }
 
 inline XMLCh* SchemaInfo::getCurrentSchemaURL() const {

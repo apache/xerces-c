@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2001/07/09 14:29:44  knoaman
+ * Fixes for import/include declarations
+ *
  * Revision 1.25  2001/06/25 12:51:58  knoaman
  * Add constraint checking on elements in complex types to prevent same
  * element names from having different definitions - use substitueGroups.
@@ -442,7 +445,7 @@ void TraverseSchema::traverseSchemaHeader() {
     fBlockDefault = defaultVal != 0 ? parseBlockSet(defaultVal) : 0;
     fFinalDefault = finalVal != 0 ? parseFinalSet(finalVal) : 0;
 
-    fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
+//    fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
 }
 
 
@@ -566,7 +569,6 @@ void TraverseSchema::traverseInclude(const DOM_Element& elem) {
                                        fAttributeDefaultQualified,
                                        fBlockDefault,
                                        fFinalDefault,
-                                       fCurrentScope,
                                        fCurrentSchemaURL,
                                        fSchemaRootElement,
                                        0, 0);
@@ -586,7 +588,6 @@ void TraverseSchema::traverseInclude(const DOM_Element& elem) {
                                    fAttributeDefaultQualified,
                                    fBlockDefault,
                                    fFinalDefault,
-                                   fCurrentScope,
                                    fCurrentSchemaURL,
                                    fSchemaRootElement,
                                    fCurrentSchemaInfo->getNext(),
@@ -632,6 +633,30 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
     }
 
     // ------------------------------------------------------------------
+    // Handle 'namespace' attribute
+    // ------------------------------------------------------------------
+    const XMLCh* nameSpace = getElementAttValue(elem, SchemaSymbols::fgATT_NAMESPACE);
+
+    if (!XMLString::compareString(nameSpace, fTargetNSURIString)) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::Import_1_1);
+        return;
+    }
+
+    if (!XMLString::stringLen(nameSpace)
+        && fTargetNSURI == (int) fStringPool.getId(XMLUni::fgZeroLenString)) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::Import_1_2);
+        return;
+    }
+
+    SchemaGrammar* importedGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(nameSpace);
+
+    if (importedGrammar) {
+        return;
+    }
+
+    // ------------------------------------------------------------------
     // Get 'schemaLocation' attribute
     // ------------------------------------------------------------------
     const XMLCh* schemaLocation =
@@ -659,9 +684,6 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
     if (locationsContain(fImportLocations, locationId)) {
         return;
     }
-
-    const XMLCh* nameSpace = getElementAttValue(elem, SchemaSymbols::fgATT_NAMESPACE);
-    SchemaGrammar* importedGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(nameSpace);
 
     // ------------------------------------------------------------------
     // Parse input source
@@ -709,9 +731,7 @@ void TraverseSchema::traverseImport(const DOM_Element& elem) {
             }
             else {
 
-                if (importedGrammar == 0) {
-                    importedGrammar = new SchemaGrammar();
-                }
+                importedGrammar = new SchemaGrammar();
 
                 TraverseSchema traverseSchema(root, fURIStringPool, importedGrammar,
                                               fGrammarResolver, fScanner, fValidator,
@@ -4747,7 +4767,6 @@ InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
 void TraverseSchema::restoreSchemaInfo() {
 
     setCurrentSchemaURL(fCurrentSchemaInfo->getCurrentSchemaURL());
-    fCurrentScope = fCurrentSchemaInfo->getCurrentScope();
     fElementDefaultQualified = fCurrentSchemaInfo->isElementDefaultQualified();
     fAttributeDefaultQualified = fCurrentSchemaInfo->isAttributeDefaultQualified();
     fBlockDefault = fCurrentSchemaInfo->getBlockDefault();

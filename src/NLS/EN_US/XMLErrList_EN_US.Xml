@@ -109,6 +109,9 @@
             <Message Id="NoCircularDefinition" Text="No circular definitions are allowed: '{0}'"/>
             <Message Id="DuplicateGlobalType" Text="Global {0}: '{1}' declared more than once or also declared as {2}"/>
             <Message Id="WS_CollapseExpected" Text="Invalid value '{0}' for facet 'whiteSpace'. Value should be 'collapse'."/>
+            <Message Id="Import_1_1" Text="The namespace of an &lt;import&gt; element must be different from the targetNamespace of the &lt;import&gt;ing schema"/>
+            <Message Id="Import_1_2" Text="If the namespace on an &lt;import&gt; element is not present, the &lt;import&gt;ing schema must have a targetNamespace"/>
+            <Message Id="ElemIDValueConstraint" Text="Element '{0}' must not have a value constraint:'{1}' as its type is derived from ID"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>
