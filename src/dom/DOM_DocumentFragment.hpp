@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/06 07:47:29  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.2  1999/12/21 07:47:06  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/06 07:48:06  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.4  2000/01/12 20:44:50  roddey
  * Ooops, I checked in the URL.cpp file with a L"localhost" style string in it. This is not legal for
  * some of our compilers, so a new string was added XMLUni and used in its place.

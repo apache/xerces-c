@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/06 07:48:34  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.5  2000/01/25 22:49:58  roddey
  * Moved the supportsSrcOfs() method from the individual transcoder to the
  * transcoding service, where it should have been to begin with.

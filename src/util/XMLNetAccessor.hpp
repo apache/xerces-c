@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/06 07:48:06  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.5  2000/01/25 19:19:07  roddey
  * Simple addition of a getId() method to the xcode and netacess abstractions to
  * allow each impl to give back an id string.

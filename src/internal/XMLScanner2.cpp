@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.10  2000/02/06 07:47:54  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.9  2000/01/28 19:09:19  roddey
  * The API is no in place to allow client code to make sense of start/end entity
  * ref calls from attribute values. So supress them for now.

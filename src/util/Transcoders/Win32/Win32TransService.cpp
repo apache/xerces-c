@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/02/06 07:48:34  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.7  2000/01/25 23:14:19  roddey
  * Borland does not support wcsupr(), but does support _wcsupr(). Since VC++ does also,
  * _wcsupr() was used in order to have the both work with the same transcoding code.

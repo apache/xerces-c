@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/06 07:47:56  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.3  2000/01/20 19:10:08  roddey
  * Added protected get/set methods for doc and cur node members. Some people
  * had been writing DOMParser derivatives and touching these directly, so when they

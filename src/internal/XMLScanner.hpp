@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/06 07:47:54  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.4  2000/01/24 20:40:43  roddey
  * Exposed the APIs to get to the byte offset in the source XML buffer. This stuff
  * is not tested yet, but I wanted to get the API changes in now so that the API

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:01:14  twl
- * Initial revision
+ * Revision 1.2  2000/02/06 07:48:41  rahulj
+ * Year 2K copyright swat.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:01:14  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:42:05  rahul
  * Swat for adding in Product name and CVS comment log variable.

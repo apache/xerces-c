@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/02/06 07:48:06  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.5  2000/01/27 23:32:17  roddey
  * There is now an official URL for the magic "xmlns" prefix. So I updated our code
  * to use this new URL, instead of the proprietary one we used previously.

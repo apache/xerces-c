@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/02/06 07:48:22  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.3  2000/01/05 22:00:22  aruna1
  * Modified message 'set' attribute reading sequence. Removed dependencies on  hard coded constants
  *

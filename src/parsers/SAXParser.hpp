@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/06 07:47:56  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.2  1999/12/15 19:57:48  roddey
  * Got rid of redundant 'const' on boolean return value. Some compilers choke
  * on this and its useless.

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.4  2000/02/06 07:47:49  rahulj
+  * Year 2K copyright swat.
+  *
   * Revision 1.3  1999/12/08 00:15:06  roddey
   * Some small last minute fixes to get into the 3.0.1 build that is going to be
   * going out anyway for platform fixes.

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.2  2000/02/06 07:48:06  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.1  2000/01/15 01:26:17  rahulj
  * Added support for HTTP to the parser using libWWW 5.2.8.
  * Renamed URL.[ch]pp to XMLURL.[ch]pp and like wise for the class name.

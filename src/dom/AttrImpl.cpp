@@ -2,7 +2,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/02/06 07:47:27  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.4  2000/02/03 23:07:27  andyh
  * Add several new functions from Robert Weir to DOMString.
  *

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/06 07:48:39  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.2  2000/01/19 00:59:06  roddey
  * Get rid of dependence on old utils output streams.
  *

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.13  2000/02/06 07:47:27  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.12  2000/02/05 01:19:19  andyh
  * Add more DOMString tests.  Fix limit test error in DOMString::insertData()
  * Andy Heninger  heninger@us.ibm.com

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/06 07:48:02  rahulj
+ * Year 2K copyright swat.
+ *
  * Revision 1.2  1999/12/02 19:42:35  roddey
  * Got rid of attempts to fancy/schmanzy lazy eval mutex implementation and just
  * force anyone who needs a global/static mutex to lazy eval that themselves.
