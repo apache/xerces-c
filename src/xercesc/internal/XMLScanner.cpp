@@ -1745,14 +1745,16 @@ void XMLScanner::setURIStringPool(XMLStringPool* const stringPool)
  *   otherwise it is allowed.
  *
  ***/
-void XMLScanner::checkInternalDTD(bool hasExtSubset, const XMLCh* const sysId)
+void XMLScanner::checkInternalDTD(bool hasExtSubset
+                                 ,const XMLCh* const sysId
+                                 ,const XMLCh* const pubId)
 {
     if (fToCacheGrammar)
         ThrowXMLwithMemMgr(RuntimeException, XMLExcepts::Val_CantHaveIntSS, fMemoryManager);
 
     if (fUseCachedGrammar && hasExtSubset )
     {
-        InputSource* sysIdSrc = resolveSystemId(sysId);
+        InputSource* sysIdSrc = resolveSystemId(sysId, pubId);
         Janitor<InputSource> janSysIdSrc(sysIdSrc);
         Grammar* grammar = fGrammarResolver->getGrammar(sysIdSrc->getSystemId());
 

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2004/12/03 19:40:30  cargilld
+ * Change call to resolveEntity to pass in public id so that only one call to resolveEntity is needed (a follow-on to Alberto's fix).
+ *
  * Revision 1.14  2004/09/08 13:56:13  peiyongz
  * Apache License Version 2.0
  *
@@ -150,7 +153,8 @@ private :
     virtual void scanDocTypeDecl();
     virtual void scanReset(const InputSource& src);
     virtual void sendCharData(XMLBuffer& toSend);
-    virtual InputSource* resolveSystemId(const XMLCh* const sysId); 
+    virtual InputSource* resolveSystemId(const XMLCh* const sysId
+                                        ,const XMLCh* const pubId); 
 
     // -----------------------------------------------------------------------
     //  Private helper methods

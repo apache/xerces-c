@@ -1376,7 +1376,7 @@ void IGXMLScanner::scanDocTypeDecl()
         // Eat the opening square bracket
         fReaderMgr.getNextChar();
 
-        checkInternalDTD(hasExtSubset, sysId);
+        checkInternalDTD(hasExtSubset, sysId, pubId);
 
         //  And try to scan the internal subset. If we fail, try to recover
         //  by skipping forward tot he close angle and returning.
@@ -1425,7 +1425,8 @@ void IGXMLScanner::scanDocTypeDecl()
         Janitor<InputSource> janSrc(srcUsed);
         if (fUseCachedGrammar)
         {
-            srcUsed = resolveSystemId(sysId);
+            srcUsed = resolveSystemId(sysId, pubId);
+            janSrc.reset(srcUsed);
             Grammar* grammar = fGrammarResolver->getGrammar(srcUsed->getSystemId());
 
             if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) {
@@ -1470,7 +1471,7 @@ void IGXMLScanner::scanDocTypeDecl()
         {
             // And now create a reader to read this entity
             XMLReader* reader;
-            if(srcUsed!=0)
+            if (srcUsed) {
                 reader = fReaderMgr.createReader
                         (
                             *srcUsed
@@ -1480,7 +1481,8 @@ void IGXMLScanner::scanDocTypeDecl()
                             , XMLReader::Source_External
                             , fCalculateSrcOfs
                         );
-            else
+            }
+            else {
                 reader = fReaderMgr.createReader
                         (
                             sysId
@@ -1492,7 +1494,8 @@ void IGXMLScanner::scanDocTypeDecl()
                             , srcUsed
                             , fCalculateSrcOfs
                         );
-
+                janSrc.reset(srcUsed);
+            }
             //  If it failed then throw an exception
             if (!reader)
                 ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId(), fMemoryManager);

@@ -2053,7 +2053,8 @@ void WFXMLScanner::scanCharData(XMLBuffer& toUse)
     sendCharData(toUse);
 }
 
-InputSource* WFXMLScanner::resolveSystemId(const XMLCh* const)
+InputSource* WFXMLScanner::resolveSystemId(const XMLCh* const
+                                          ,const XMLCh* const pubId)
 {
     return 0;
 }

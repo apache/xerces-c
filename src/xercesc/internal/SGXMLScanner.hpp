@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2004/12/03 19:40:30  cargilld
+ * Change call to resolveEntity to pass in public id so that only one call to resolveEntity is needed (a follow-on to Alberto's fix).
+ *
  * Revision 1.21  2004/09/27 21:04:38  knoaman
  * Update SGXMLScanner to allow access of data and methods to XSAXMLScanner
  *
@@ -280,7 +283,8 @@ private :
     );
     virtual void scanDocTypeDecl();
     virtual void sendCharData(XMLBuffer& toSend);
-    virtual InputSource* resolveSystemId(const XMLCh* const sysId);
+    virtual InputSource* resolveSystemId(const XMLCh* const sysId
+                                        ,const XMLCh* const pubId);
 
     // -----------------------------------------------------------------------
     //  Private helper methods

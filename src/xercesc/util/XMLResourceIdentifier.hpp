@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/12/03 19:40:32  cargilld
+ * Change call to resolveEntity to pass in public id so that only one call to resolveEntity is needed (a follow-on to Alberto's fix).
+ *
  * Revision 1.7  2004/09/26 01:06:31  cargilld
  * Fix documentation generation problem.  Replace <pre> with <code>.  Patch from James Littlejohn.
  *
@@ -210,10 +213,10 @@ inline XMLResourceIdentifier::XMLResourceIdentifier(const ResourceIdentifierType
                             , const XMLCh* const  publicId
                             , const XMLCh* const  baseURI )
     : fResourceIdentifierType(resourceIdentifierType)
-    , fPublicId(publicId)
     , fSystemId(systemId)
-    , fBaseURI(baseURI)
-    , fNameSpace(nameSpace)    
+    , fNameSpace(nameSpace)
+    , fPublicId(publicId)
+    , fBaseURI(baseURI)     
 {
 }
 

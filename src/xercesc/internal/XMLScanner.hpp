@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.44  2004/12/03 19:40:30  cargilld
+ * Change call to resolveEntity to pass in public id so that only one call to resolveEntity is needed (a follow-on to Alberto's fix).
+ *
  * Revision 1.43  2004/10/12 21:33:05  peiyongz
  * Change attribute number threshold to 100
  *
@@ -728,7 +731,8 @@ protected:
     virtual void sendCharData(XMLBuffer& toSend) = 0;
 
     //return owned by the caller
-    virtual InputSource* resolveSystemId(const XMLCh* const sysId) {return 0;};
+    virtual InputSource* resolveSystemId(const XMLCh* const sysId
+                                        ,const XMLCh* const pubId) {return 0;};
 
     // -----------------------------------------------------------------------
     //  Protected scanning methods
@@ -744,7 +748,7 @@ protected:
     // -----------------------------------------------------------------------
     //  Private helper methods
     // -----------------------------------------------------------------------
-    void checkInternalDTD(bool hasExtSubset, const XMLCh* const sysId);
+    void checkInternalDTD(bool hasExtSubset, const XMLCh* const sysId, const XMLCh* const pubId);
     void checkIDRefs();
     bool isLegalToken(const XMLPScanToken& toCheck);
     XMLTokens senseNextToken(unsigned int& orgReader);

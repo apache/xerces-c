@@ -925,7 +925,7 @@ void DGXMLScanner::scanDocTypeDecl()
         // Eat the opening square bracket
         fReaderMgr.getNextChar();
 
-        checkInternalDTD(hasExtSubset, sysId);
+        checkInternalDTD(hasExtSubset, sysId, pubId);
 
         //  And try to scan the internal subset. If we fail, try to recover
         //  by skipping forward tot he close angle and returning.
@@ -974,7 +974,8 @@ void DGXMLScanner::scanDocTypeDecl()
         Janitor<InputSource> janSrc(srcUsed);
         if (fUseCachedGrammar)
         {
-            srcUsed = resolveSystemId(sysId);
+            srcUsed = resolveSystemId(sysId, pubId);
+            janSrc.reset(srcUsed);
             Grammar* grammar = fGrammarResolver->getGrammar(srcUsed->getSystemId());
 
             if (grammar && grammar->getGrammarType() == Grammar::DTDGrammarType) {
@@ -1021,7 +1022,7 @@ void DGXMLScanner::scanDocTypeDecl()
         {
             // And now create a reader to read this entity
             XMLReader* reader;
-            if(srcUsed!=0)
+            if(srcUsed) {
                 reader = fReaderMgr.createReader
                         (
                             *srcUsed
@@ -1031,7 +1032,8 @@ void DGXMLScanner::scanDocTypeDecl()
                             , XMLReader::Source_External
                             , fCalculateSrcOfs
                         );
-            else
+            }
+            else {
                 reader = fReaderMgr.createReader
                         (
                             sysId
@@ -1043,7 +1045,8 @@ void DGXMLScanner::scanDocTypeDecl()
                             , srcUsed
                             , fCalculateSrcOfs
                         );
-
+                janSrc.reset(srcUsed);
+            }
             //  If it failed then throw an exception
             if (!reader)
                 ThrowXMLwithMemMgr1(RuntimeException, XMLExcepts::Gen_CouldNotOpenDTD, srcUsed->getSystemId(), fMemoryManager);
@@ -2470,7 +2473,8 @@ void DGXMLScanner::scanAttrListforNameSpaces(RefVectorOf<XMLAttr>* theAttrList, 
     }
 }
 
-InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
+InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId
+                                          ,const XMLCh* const pubId)
 {
     //Normalize sysId 
     XMLBufBid nnSys(&fBufMgr);
@@ -2493,7 +2497,7 @@ InputSource* DGXMLScanner::resolveSystemId(const XMLCh* const sysId)
         ReaderMgr::LastExtEntityInfo lastInfo;
         fReaderMgr.getLastExtEntityInfo(lastInfo);
         XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
-                            expSysId.getRawBuffer(), 0, XMLUni::fgZeroLenString, lastInfo.systemId);
+                            expSysId.getRawBuffer(), 0, pubId, lastInfo.systemId);
         srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
     else

@@ -3671,7 +3671,8 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
         fModel = fGrammarResolver->getXSModel();
 }
 
-InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
+InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId
+                                          ,const XMLCh* const pubId)
 {
     //Normalize sysId 
     XMLBufBid nnSys(&fBufMgr);
@@ -3694,7 +3695,7 @@ InputSource* SGXMLScanner::resolveSystemId(const XMLCh* const sysId)
         ReaderMgr::LastExtEntityInfo lastInfo;
         fReaderMgr.getLastExtEntityInfo(lastInfo);
         XMLResourceIdentifier resourceIdentifier(XMLResourceIdentifier::ExternalEntity,
-                            expSysId.getRawBuffer(), 0, XMLUni::fgZeroLenString, lastInfo.systemId);
+                            expSysId.getRawBuffer(), 0, pubId, lastInfo.systemId);
         srcToFill = fEntityHandler->resolveEntity(&resourceIdentifier);
     }
     else
