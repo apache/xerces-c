@@ -126,6 +126,28 @@ $set 1
 127  A system exception occured during processing
 128  An exception occured! Type:{0}, Message:{1}
 129  Unexpected end of file exception. Message: {0}
+130  No validator for datatype {0}
+131  Incorrect datatype: {0}
+132  {0} is not a datatype.
+133  The content attribute must be 'textOnly' if you specify a type attribute.
+134  {0} is unsupported
+135  Nested Element decls only allowed in elementOnly content
+136  Element references only allowed in mixed or elementOnly content
+137  {0} only allowed in elementOnly content.
+138  {0} not allowed if the order is all.
+139  Datatype qualifiers can only be used if you specify a type attribute.
+140  The datatype qualifier {0} is not supported.
+141  Error: {0} content must be one of element, group, modelGroupRef. Saw {1}
+142  Unknown base type {0} for type {1}.
+143  Can only have one of type and ref attributes.
+144  Cannot have child content for an element declaration that has a ref attribute
+145  Incorrect type for {0}'s default value: {1}
+146  Illegal content {0} in attribute group
+147  Value of {0} is not an integer.
+148  Datatype error: {0}.
+149  The type of the element has already been declared.
+150  Schema error: {0}.
+151  UnexpectedError
 
 
 $set 2
@@ -154,6 +176,23 @@ $set 2
  24  Attribute '{0}' does not support multiple values
  25  Attribute '{0}' has a value, '{1}', that does not match its #FIXED value, '{2}'
  26  Element types cannot be duplicated in Mixed content models
+ 27  {0} is not a boolean.
+ 28  {0} is not a decimal.
+ 29  Facets are inconsistent with base type.
+ 30  Illegal value {0} for facet {1}.
+ 31  Illegal Facet for decimal type.
+ 32  Unknown Facet: {0}.
+ 33  Invalid value for Enum constant: {0}.
+ 34  {0} is out of bounds:[ {1} {3} X  {4} {2} ].
+ 35  {0} is not one of the specified enum values.
+ 36  {0} is not an integer.
+ 37  Illegal Facet for Integer type.
+ 38  {0} is not a double.
+ 39  Illegal Facet for Real type.
+ 40  Scale Facet must be less than or equal to Precision Facet
+ 41  {0} has exceeded the precision Facet {1}
+ 42  {0} has execeed the scale Facet {1}
+ 43  {0} is not a float.
 
 
 $set 3

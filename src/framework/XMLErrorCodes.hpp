@@ -140,9 +140,31 @@ public :
       , SysException                       = 127
       , XMLException                       = 128
       , UnexpectedEOF                      = 129
-      , E_HighBounds                       = 130
-      , V_LowBounds                        = 131
-      , V_HighBounds                       = 132
+      , NoValidatorFor                     = 130
+      , IncorrectDatatype                  = 131
+      , NotADatatype                       = 132
+      , TextOnlyContentWithType            = 133
+      , FeatureUnsupported                 = 134
+      , NestedOnlyInElemOnly               = 135
+      , EltRefOnlyInMixedElemOnly          = 136
+      , OnlyInEltContent                   = 137
+      , OrderIsAll                         = 138
+      , DatatypeWithType                   = 139
+      , DatatypeQualUnsupported            = 140
+      , GroupContentRestricted             = 141
+      , UnknownBaseDatatype                = 142
+      , OneOfTypeRefArchRef                = 143
+      , NoContentForRef                    = 144
+      , IncorrectDefaultType               = 145
+      , IllegalAttContent                  = 146
+      , ValueNotInteger                    = 147
+      , DatatypeError                      = 148
+      , TypeAlreadySet                     = 149
+      , GenericError                       = 150
+      , UnexpectedError                    = 151
+      , E_HighBounds                       = 152
+      , V_LowBounds                        = 153
+      , V_HighBounds                       = 154
     };
 
     static bool isFatal(const XMLErrs::Codes toCheck)

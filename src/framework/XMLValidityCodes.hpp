@@ -37,11 +37,28 @@ public :
       , NoMultipleValues                   = 24
       , NotSameAsFixedValue                = 25
       , RepElemInMixed                     = 26
-      , V_HighBounds                       = 27
-      , W_LowBounds                        = 28
-      , W_HighBounds                       = 29
-      , E_LowBounds                        = 30
-      , E_HighBounds                       = 31
+      , NotBoolean                         = 27
+      , NotDecimal                         = 28
+      , FacetsInconsistent                 = 29
+      , IllegalFacetValue                  = 30
+      , IllegalDecimalFacet                = 31
+      , UnknownFacet                       = 32
+      , InvalidEnumValue                   = 33
+      , OutOfBounds                        = 34
+      , NotAnEnumValue                     = 35
+      , NotInteger                         = 36
+      , IllegalIntegerFacet                = 37
+      , NotReal                            = 38
+      , IllegalRealFacet                   = 39
+      , ScaleLargerThanPrecision           = 40
+      , PrecisionExceeded                  = 41
+      , ScaleExceeded                      = 42
+      , NotFloat                           = 43
+      , V_HighBounds                       = 44
+      , W_LowBounds                        = 45
+      , W_HighBounds                       = 46
+      , E_LowBounds                        = 47
+      , E_HighBounds                       = 48
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

@@ -136,6 +136,28 @@
             <Message Id="SysException" Text="A system exception occured during processing"/>
             <Message Id="XMLException" Text="An exception occured! Type:{0}, Message:{1}"/>
             <Message Id="UnexpectedEOF" Text="Unexpected end of file exception. Message: {0}"/>
+            <Message Id="NoValidatorFor" Text="No validator for datatype {0}"/>
+            <Message Id="IncorrectDatatype" Text="Incorrect datatype: {0}"/>
+            <Message Id="NotADatatype" Text="{0} is not a datatype."/>
+            <Message Id="TextOnlyContentWithType" Text="The content attribute must be 'textOnly' if you specify a type attribute."/>
+            <Message Id="FeatureUnsupported" Text="{0} is unsupported"/>
+            <Message Id="NestedOnlyInElemOnly" Text="Nested Element decls only allowed in elementOnly content"/>
+            <Message Id="EltRefOnlyInMixedElemOnly" Text="Element references only allowed in mixed or elementOnly content"/>
+            <Message Id="OnlyInEltContent" Text="{0} only allowed in elementOnly content."/>
+            <Message Id="OrderIsAll" Text="{0} not allowed if the order is all."/>
+            <Message Id="DatatypeWithType" Text="Datatype qualifiers can only be used if you specify a type attribute."/>
+            <Message Id="DatatypeQualUnsupported" Text="The datatype qualifier {0} is not supported."/>
+            <Message Id="GroupContentRestricted" Text="Error: {0} content must be one of element, group, modelGroupRef. Saw {1}"/>
+            <Message Id="UnknownBaseDatatype" Text="Unknown base type {0} for type {1}."/>
+            <Message Id="OneOfTypeRefArchRef" Text="Can only have one of type and ref attributes."/>
+            <Message Id="NoContentForRef" Text="Cannot have child content for an element declaration that has a ref attribute"/>
+            <Message Id="IncorrectDefaultType" Text="Incorrect type for {0}'s default value: {1}"/>
+            <Message Id="IllegalAttContent" Text="Illegal content {0} in attribute group"/>
+            <Message Id="ValueNotInteger" Text="Value of {0} is not an integer."/> 
+            <Message Id="DatatypeError" Text="Datatype error: {0}."/>
+            <Message Id="TypeAlreadySet" Text="The type of the element has already been declared."/>
+            <Message Id="GenericError" Text="Schema error: {0}."/>
+            <Message Id="UnexpectedError" Text="UnexpectedError"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XMLValidity">
@@ -165,6 +187,23 @@
             <Message Id="NoMultipleValues" Text="Attribute '{0}' does not support multiple values"/>
             <Message Id="NotSameAsFixedValue" Text="Attribute '{0}' has a value, '{1}', that does not match its #FIXED value, '{2}'"/>
             <Message Id="RepElemInMixed" Text="Element types cannot be duplicated in Mixed content models"/>
+            <Message Id="NotBoolean" Text="{0} is not a boolean."/>
+            <Message Id="NotDecimal" Text="{0} is not a decimal."/>
+            <Message Id="FacetsInconsistent" Text="Facets are inconsistent with base type."/>
+            <Message Id="IllegalFacetValue" Text="Illegal value {0} for facet {1}."/>
+            <Message Id="IllegalDecimalFacet" Text="Illegal Facet for decimal type."/>
+            <Message Id="UnknownFacet" Text="Unknown Facet: {0}."/>
+            <Message Id="InvalidEnumValue" Text="Invalid value for Enum constant: {0}."/>
+            <Message Id="OutOfBounds" Text="{0} is out of bounds:[ {1} {3} X  {4} {2} ]."/>
+            <Message Id="NotAnEnumValue" Text="{0} is not one of the specified enum values."/>
+            <Message Id="NotInteger" Text="{0} is not an integer."/>
+            <Message Id="IllegalIntegerFacet" Text="Illegal Facet for Integer type."/>
+            <Message Id="NotReal" Text="{0} is not a double."/>
+            <Message Id="IllegalRealFacet" Text="Illegal Facet for Real type."/>
+            <Message Id="ScaleLargerThanPrecision" Text="Scale Facet must be less than or equal to Precision Facet"/>
+            <Message Id="PrecisionExceeded" Text="{0} has exceeded the precision Facet {1}"/>
+            <Message Id="ScaleExceeded" Text="{0} has execeed the scale Facet {1}"/>
+            <Message Id="NotFloat" Text="{0} is not a float."/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">
