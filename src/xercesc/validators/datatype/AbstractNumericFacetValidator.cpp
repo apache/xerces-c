@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/02/03 16:34:35  peiyongz
+ * fix to misplaced derived and base value in error message.
+ *
  * Revision 1.10  2003/02/02 23:55:40  peiyongz
  * getFormattedString() added to return original and converted value.
  *
@@ -459,15 +462,15 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             if (((baseFixed & DatatypeValidator::FACET_MAXINCLUSIVE) != 0) &&
                  (result != 0 ))
             {
-                REPORT_FACET_ERROR(baseMaxInclusive
-                                 , thisMaxInclusive
+                REPORT_FACET_ERROR(thisMaxInclusive
+                                 , baseMaxInclusive
                                  , XMLExcepts::FACET_maxIncl_base_fixed)
             }
 
             if (result == 1 || result == INDETERMINATE)
             {
-                REPORT_FACET_ERROR(baseMaxInclusive
-                                 , thisMaxInclusive
+                REPORT_FACET_ERROR(thisMaxInclusive
+                                 , baseMaxInclusive
                                  , XMLExcepts::FACET_maxIncl_base_maxIncl)
             }
 
@@ -478,8 +481,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMaxInclusive, baseMaxExclusive);
             if (result != -1 )
             {
-                REPORT_FACET_ERROR(baseMaxExclusive
-                                 , thisMaxInclusive
+                REPORT_FACET_ERROR(thisMaxInclusive
+                                 , baseMaxExclusive
                                  , XMLExcepts::FACET_maxIncl_base_maxExcl)
             }
         }
@@ -490,8 +493,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMaxInclusive, baseMinInclusive);
             if (result == -1 || result == INDETERMINATE)
             {
-                REPORT_FACET_ERROR(baseMinInclusive
-                                 , thisMaxInclusive
+                REPORT_FACET_ERROR(thisMaxInclusive
+                                 , baseMinInclusive
                                  , XMLExcepts::FACET_maxIncl_base_minIncl)
             }
         }
@@ -501,8 +504,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMaxInclusive, baseMinExclusive);
             if (result != 1 )
             {
-                REPORT_FACET_ERROR(baseMinExclusive
-                                 , thisMaxInclusive
+                REPORT_FACET_ERROR(thisMaxInclusive
+                                 , baseMinExclusive
                                  , XMLExcepts::FACET_maxIncl_base_minExcl)
             }
         }
@@ -524,15 +527,15 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             if (((baseFixed & DatatypeValidator::FACET_MAXEXCLUSIVE) != 0) &&
                  (result != 0 ))
             {
-                REPORT_FACET_ERROR(baseMaxExclusive
-                                 , thisMaxExclusive
+                REPORT_FACET_ERROR(thisMaxExclusive
+                                 , baseMaxExclusive
                                  , XMLExcepts::FACET_maxExcl_base_fixed)
              }
 
             if (result == 1 || result == INDETERMINATE)
             {
-                REPORT_FACET_ERROR(baseMaxExclusive
-                                 , thisMaxExclusive
+                REPORT_FACET_ERROR(thisMaxExclusive
+                                 , baseMaxExclusive
                                  , XMLExcepts::FACET_maxExcl_base_maxExcl)
             }
 
@@ -564,8 +567,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMaxExclusive, baseMaxInclusive);
             if (result == 1 || result == INDETERMINATE)
             {
-                REPORT_FACET_ERROR(baseMaxInclusive
-                                 , thisMaxExclusive
+                REPORT_FACET_ERROR(thisMaxExclusive
+                                 , baseMaxInclusive
                                  , XMLExcepts::FACET_maxExcl_base_maxIncl)
             }
         }
@@ -575,8 +578,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMaxExclusive, baseMinExclusive);
             if (result != 1)
             {
-                REPORT_FACET_ERROR(baseMinExclusive
-                                 , thisMaxExclusive
+                REPORT_FACET_ERROR(thisMaxExclusive
+                                 , baseMinExclusive
                                  , XMLExcepts::FACET_maxExcl_base_minExcl)
             }
         }
@@ -586,8 +589,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMaxExclusive, baseMinInclusive);
             if (result != 1)
             {
-                REPORT_FACET_ERROR(baseMinInclusive
-                                 , thisMaxExclusive
+                REPORT_FACET_ERROR(thisMaxExclusive
+                                 , baseMinInclusive
                                  , XMLExcepts::FACET_maxExcl_base_minIncl)
             }
         }
@@ -608,15 +611,15 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             if (((baseFixed & DatatypeValidator::FACET_MINEXCLUSIVE) != 0) &&
                  (result != 0 ))
             {
-                REPORT_FACET_ERROR(baseMinExclusive
-                                 , thisMinExclusive
+                REPORT_FACET_ERROR(thisMinExclusive
+                                 , baseMinExclusive
                                  , XMLExcepts::FACET_minExcl_base_fixed)
             }
 
             if (result == -1 || result == INDETERMINATE)
             {
-                REPORT_FACET_ERROR(baseMinExclusive
-                                 , thisMinExclusive
+                REPORT_FACET_ERROR(thisMinExclusive
+                                 , baseMinExclusive
                                  , XMLExcepts::FACET_minExcl_base_minExcl)
             }
 
@@ -650,8 +653,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMinExclusive, baseMaxInclusive);
             if (result == 1 || result == INDETERMINATE)
             {
-                REPORT_FACET_ERROR(baseMaxInclusive
-                                 , thisMinExclusive
+                REPORT_FACET_ERROR(thisMinExclusive
+                                 , baseMaxInclusive
                                  , XMLExcepts::FACET_minExcl_base_maxIncl)
             }
         }
@@ -661,8 +664,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMinExclusive, baseMinInclusive);
             if (result == -1 || result == INDETERMINATE)
             {
-                REPORT_FACET_ERROR(baseMinInclusive
-                                 , thisMinExclusive
+                REPORT_FACET_ERROR(thisMinExclusive
+                                 , baseMinInclusive
                                  , XMLExcepts::FACET_minExcl_base_minIncl)
             }
         }
@@ -672,8 +675,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMinExclusive, baseMaxExclusive);
             if (result != -1)
             {
-                REPORT_FACET_ERROR(baseMaxExclusive
-                                 , thisMinExclusive
+                REPORT_FACET_ERROR(thisMinExclusive
+                                 , baseMaxExclusive
                                  , XMLExcepts::FACET_minExcl_base_maxExcl)
             }
         }
@@ -696,15 +699,15 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             if (((baseFixed & DatatypeValidator::FACET_MININCLUSIVE) != 0) &&
                  (result != 0 ))
             {
-                REPORT_FACET_ERROR(baseMinInclusive
-                                 , thisMinInclusive
+                REPORT_FACET_ERROR(thisMinInclusive
+                                 , baseMinInclusive
                                  , XMLExcepts::FACET_minIncl_base_fixed)
             }
 
             if (result == -1 || result == INDETERMINATE)
             {
-                REPORT_FACET_ERROR(baseMinInclusive
-                                 , thisMinInclusive
+                REPORT_FACET_ERROR(thisMinInclusive
+                                 , baseMinInclusive
                                  , XMLExcepts::FACET_minIncl_base_minIncl)
             }
         }
@@ -714,8 +717,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMinInclusive, baseMaxInclusive);
             if (result == 1 || result == INDETERMINATE)
             {
-                REPORT_FACET_ERROR(baseMaxInclusive
-                                 , thisMinInclusive
+                REPORT_FACET_ERROR(thisMinInclusive
+                                 , baseMaxInclusive
                                  , XMLExcepts::FACET_minIncl_base_maxIncl)
             }
         }
@@ -725,8 +728,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMinInclusive, baseMinExclusive);
             if (result != 1)
             {
-                REPORT_FACET_ERROR(baseMinExclusive
-                                 , thisMinInclusive
+                REPORT_FACET_ERROR(thisMinInclusive
+                                 , baseMinExclusive
                                  , XMLExcepts::FACET_minIncl_base_minExcl)
             }
         }
@@ -736,8 +739,8 @@ void AbstractNumericFacetValidator::inspectFacetBase()
             int result = compareValues(thisMinInclusive, baseMaxExclusive);
             if (result != -1)
             {
-                REPORT_FACET_ERROR(baseMaxExclusive
-                                 , thisMinInclusive
+                REPORT_FACET_ERROR(thisMinInclusive
+                                 , baseMaxExclusive
                                  , XMLExcepts::FACET_minIncl_base_maxExcl)
             }
         }
