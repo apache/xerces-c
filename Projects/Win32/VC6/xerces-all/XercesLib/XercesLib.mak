@@ -289,6 +289,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
 	-@erase "$(INTDIR)\XMLBuffer.obj"
 	-@erase "$(INTDIR)\XMLBufferMgr.obj"
+	-@erase "$(INTDIR)\XMLChar.obj"
 	-@erase "$(INTDIR)\XMLChTranscoder.obj"
 	-@erase "$(INTDIR)\XMLContentModel.obj"
 	-@erase "$(INTDIR)\XMLDateTime.obj"
@@ -438,6 +439,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLASCIITranscoder.obj" \
 	"$(INTDIR)\XMLBigDecimal.obj" \
 	"$(INTDIR)\XMLBigInteger.obj" \
+	"$(INTDIR)\XMLChar.obj" \
 	"$(INTDIR)\XMLChTranscoder.obj" \
 	"$(INTDIR)\XMLDateTime.obj" \
 	"$(INTDIR)\XMLDouble.obj" \
@@ -944,6 +946,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
 	-@erase "$(INTDIR)\XMLBuffer.obj"
 	-@erase "$(INTDIR)\XMLBufferMgr.obj"
+	-@erase "$(INTDIR)\XMLChar.obj"
 	-@erase "$(INTDIR)\XMLChTranscoder.obj"
 	-@erase "$(INTDIR)\XMLContentModel.obj"
 	-@erase "$(INTDIR)\XMLDateTime.obj"
@@ -1094,6 +1097,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLASCIITranscoder.obj" \
 	"$(INTDIR)\XMLBigDecimal.obj" \
 	"$(INTDIR)\XMLBigInteger.obj" \
+	"$(INTDIR)\XMLChar.obj" \
 	"$(INTDIR)\XMLChTranscoder.obj" \
 	"$(INTDIR)\XMLDateTime.obj" \
 	"$(INTDIR)\XMLDouble.obj" \
@@ -1600,6 +1604,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
 	-@erase "$(INTDIR)\XMLBuffer.obj"
 	-@erase "$(INTDIR)\XMLBufferMgr.obj"
+	-@erase "$(INTDIR)\XMLChar.obj"
 	-@erase "$(INTDIR)\XMLChTranscoder.obj"
 	-@erase "$(INTDIR)\XMLContentModel.obj"
 	-@erase "$(INTDIR)\XMLDateTime.obj"
@@ -1750,6 +1755,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLASCIITranscoder.obj" \
 	"$(INTDIR)\XMLBigDecimal.obj" \
 	"$(INTDIR)\XMLBigInteger.obj" \
+	"$(INTDIR)\XMLChar.obj" \
 	"$(INTDIR)\XMLChTranscoder.obj" \
 	"$(INTDIR)\XMLDateTime.obj" \
 	"$(INTDIR)\XMLDouble.obj" \
@@ -2255,6 +2261,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLBigInteger.obj"
 	-@erase "$(INTDIR)\XMLBuffer.obj"
 	-@erase "$(INTDIR)\XMLBufferMgr.obj"
+	-@erase "$(INTDIR)\XMLChar.obj"
 	-@erase "$(INTDIR)\XMLChTranscoder.obj"
 	-@erase "$(INTDIR)\XMLContentModel.obj"
 	-@erase "$(INTDIR)\XMLDateTime.obj"
@@ -2405,6 +2412,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLASCIITranscoder.obj" \
 	"$(INTDIR)\XMLBigDecimal.obj" \
 	"$(INTDIR)\XMLBigInteger.obj" \
+	"$(INTDIR)\XMLChar.obj" \
 	"$(INTDIR)\XMLChTranscoder.obj" \
 	"$(INTDIR)\XMLDateTime.obj" \
 	"$(INTDIR)\XMLDouble.obj" \
@@ -3166,6 +3174,12 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLBigDecimal.cpp
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLBigInteger.cpp
 
 "$(INTDIR)\XMLBigInteger.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLChar.cpp
+
+"$(INTDIR)\XMLString.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 

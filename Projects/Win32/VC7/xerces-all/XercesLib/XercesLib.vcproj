@@ -364,6 +364,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLBigInteger.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLChar.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMLChar.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XMLChTranscoder.cpp">
 			</File>
 			<File

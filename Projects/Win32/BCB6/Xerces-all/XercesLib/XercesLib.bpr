@@ -58,6 +58,7 @@
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLASCIITranscoder.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLBigDecimal.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLBigInteger.obj
+      ..\..\..\..\..\Build\Win32\BCB6\obj\XMLChar.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLChTranscoder.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDateTime.obj
       ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDouble.obj
@@ -394,6 +395,7 @@
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLASCIITranscoder.cpp" FORMNAME="" UNITNAME="XMLASCIITranscoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLBigDecimal.cpp" FORMNAME="" UNITNAME="XMLBigDecimal" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLBigInteger.cpp" FORMNAME="" UNITNAME="XMLBigInteger" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLChar.cpp" FORMNAME="" UNITNAME="XMLChar" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLChTranscoder.cpp" FORMNAME="" UNITNAME="XMLChTranscoder" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLDateTime.cpp" FORMNAME="" UNITNAME="XMLDateTime" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="..\..\..\..\..\src\xercesc\util\XMLDouble.cpp" FORMNAME="" UNITNAME="XMLDouble" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>

@@ -779,6 +779,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLBigInteger.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLChar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLChar.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\XMLChTranscoder.cpp
 # End Source File
 # Begin Source File

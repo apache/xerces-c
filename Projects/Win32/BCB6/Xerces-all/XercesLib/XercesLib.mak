@@ -68,6 +68,7 @@ OBJFILES = ..\..\..\..\..\Build\Win32\BCB6\obj\XercesLib.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLASCIITranscoder.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLBigDecimal.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLBigInteger.obj \
+    ..\..\..\..\..\Build\Win32\BCB6\obj\XMLChar.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLChTranscoder.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDateTime.obj \
     ..\..\..\..\..\Build\Win32\BCB6\obj\XMLDouble.obj \
