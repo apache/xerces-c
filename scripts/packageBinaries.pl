@@ -1356,7 +1356,7 @@ sub change_windows_makefile_for_ICU() {
         if ($msgloader)
         {
             $line =~ s/XML_USE_WIN32_MSGLOADER/XML_USE_ICU_MESSAGELOADER/g;
-            $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader/MsgLoders\\ICU\\ICUMsgLoader/g;
+            $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader/MsgLoaders\\ICU\\ICUMsgLoader/g;
             $line =~ s/Win32MsgLoader/ICUMsgLoader/g;             
         }
                     
