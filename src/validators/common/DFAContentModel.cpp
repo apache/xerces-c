@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/06/07 21:08:20  tng
+ * Fix unsigned/signed warning from Linux.  By Pei Yong Zhang.
+ *
  * Revision 1.10  2001/05/28 20:52:44  tng
  * Schema: move static data gInvalidTrans, gEOCFakeId, gEpsilonFakeId to XMLContentModel for others to access
  *
@@ -531,7 +534,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
      * We are *assuming* that each element appears in at least one leaf.
      **/
     // don't forget to delete it
-    unsigned int *fLeafSorter = new unsigned int[fLeafCount + fElemMapSize];
+    int *fLeafSorter = new int[fLeafCount + fElemMapSize];
     unsigned int fSortCount = 0;
 
     for (unsigned int elemIndex = 0; elemIndex < fElemMapSize; elemIndex++)
@@ -670,7 +673,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
             } // for leafIndex
 #endif
             // Optimization(Jan, 2001)
-            unsigned int leafIndex = fLeafSorter[sorterIndex++];
+            int leafIndex = fLeafSorter[sorterIndex++];
 
             while (leafIndex != -1)
             {
