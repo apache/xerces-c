@@ -12,6 +12,77 @@
     </tr>
 
     <tr>
+        <td>2002-02-18</td>
+        <td>PeiYong Zhang</td>
+        <td>Fix: Add code for ContentSpecNode::All in formatNode().
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-18</td>
+        <td>James Berry</td>
+        <td>Add support for building with new MacOSURLAccessCF NetAccessor that doesn't
+            require Carbon but can allow Xerces to live soley within CoreServices layer.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-17</td>
+        <td>James Berry</td>
+        <td>[Bug 6092] stricmp and strnicmp not present in FreeBSD.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-17</td>
+        <td>James Berry</td>
+        <td>Update Mac OS projects to reflect "sane includes" changes.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-15</td>
+        <td>Tinny Ng</td>
+        <td>Add IDOM to API documentation.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-15</td>
+        <td>PeiYong Zhang</td>
+        <td>Base64 interface redefined for conversion in XMLByte.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-14</td>
+        <td>PeiYong Zhang</td>
+        <td>Add getEnumString to DatatypeValidator.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-13</td>
+        <td>Khaled Noaman</td>
+        <td>Add constraint checking for the extension of an 'all' content model.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-13</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 4581] erroneous static cast in programming examples.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-02-13</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 6336] Output of XMLString::transcode not freed?
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-02-13</td>
         <td>Khaled Noaman</td>
         <td>Update samples to use SAX2 features/properties constants from XMLUni.
