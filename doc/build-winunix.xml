@@ -86,6 +86,41 @@
     </a>
     </faq>
 
+    <faq title="Building &XercesCName; on Windows using Borland C++Builder">
+    <q>Building &XercesCName; on Windows using Borland C++Builder</q>
+    <a>
+        <p>&XercesCName; comes with Borland C++Builder projects to help you 
+		build &XercesCName;. The following describes the steps you need to build 
+		&XercesCName;.</p>  
+
+        <s3 title="Building &XercesCName; library">
+		   <p> The library and demo projects are all contained in the Xerces-all project group:
+		   </p>
+
+           <ul>
+		       <li> xerces-c-src1_5_1\Projects\Win32\BCB5\Xerces-all\Xerces-all.bpg </li>
+    	   </ul>
+
+		   <p> Each project in the group refers a directory belog \Xerces-all.  
+		       For example, the XercesLib project files are contained in the directory
+           </p>
+
+           <ul>
+    	       <li> xerces-c-src1_5_1\Projects\Win32\BCB5\Xerces-all\XercesLib </li>
+		   </ul>
+    
+           <p> To build any project, open the project manager.  Double click on the project
+            name.  Then select "Project|Build" from the menu.  For example, double click
+            on XercesLib.dll in the manager.  Then select "Project|Build XercesLib" from
+            the menu.
+
+            Once the library has been built, include XercesLib.lib with in application's
+            project and place XercesLib.dll somewhere in your path.
+           </p>
+
+        </s3>
+    </a>
+    </faq>
 
     <faq title="Building &XercesCName; on UNIX platforms">
     <q>Building &XercesCName; on UNIX platforms</q>
