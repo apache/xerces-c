@@ -82,6 +82,7 @@ public:
 
     //c'tor & d'tor
     DOM_Range();
+    DOM_Range(const DOM_Range& other);
     ~DOM_Range();
 
     

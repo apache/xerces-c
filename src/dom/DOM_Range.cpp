@@ -77,6 +77,12 @@ DOM_Range::DOM_Range(RangeImpl* impl)
     RefCountedImpl::addRef(fImpl);
 }
 
+DOM_Range::DOM_Range(const DOM_Range& other)
+{
+    fImpl = other.fImpl;
+    RefCountedImpl::addRef(fImpl);
+}
+
 DOM_Range::~DOM_Range()
 {
     RefCountedImpl::removeRef (this->fImpl);
