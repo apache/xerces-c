@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/04/10 22:42:53  roddey
+ * Extended the buffer reuse to the QName field, to further increase
+ * performance of attribute heavy applications.
+ *
  * Revision 1.5  2000/03/02 19:54:24  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -347,14 +351,16 @@ private :
     //  fPrefix
     //  fPrefixBufSz
     //      The prefix that was applied to this attribute's name, and the
-    //      current size of the buffer (minus one, where the null is.) It
-    //      really does not matter technically but it might be required
-    //      for pratical reasons, to recreate the original document for
-    //      instance.
+    //      current size of the buffer (minus one for the null.) Prefixes
+    //      really don't matter technically but it might be required for
+    //      pratical reasons, to recreate the original document for instance.
     //
     //  fQName
+    //  fQNameBufSz
     //      This is the QName form of the name, which is faulted in (from the
-    //      prefix and name) upon request.
+    //      prefix and name) upon request. The size field indicates the
+    //      current size of the buffer (minus one for the null.) It will be
+    //      zero until fauled in.
     //
     //  fSpecified
     //      True if this attribute appeared in the element; else, false if
@@ -377,6 +383,7 @@ private :
     XMLCh*              fPrefix;
     unsigned int        fPrefixBufSz;
     XMLCh*              fQName;
+    unsigned int        fQNameBufSz;
     bool                fSpecified;
     XMLAttDef::AttTypes fType;
     XMLCh*              fValue;
