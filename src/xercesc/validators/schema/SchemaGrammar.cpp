@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/11/05 16:38:08  peiyongz
+ * serialize DatatypeValidatorFactory first
+ *
  * Revision 1.12  2003/10/29 16:22:30  peiyongz
  * serialize/deserialize substitutiongroup
  *
@@ -345,6 +348,9 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
 
     if (serEng.isStoring())
     {
+        //serialize DatatypeValidatorFactory first
+        fDatatypeRegistry.serialize(serEng);
+
         /***
          *
          * Serialize RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
@@ -384,7 +390,6 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
          ***/
         XTemplateSerializer::storeObject(fValidSubstitutionGroups, serEng);
 
-        fDatatypeRegistry.serialize(serEng);
         serEng.writeString(fTargetNamespace);
         serEng<<fValidated;
         serEng<<fGramDesc;
@@ -392,6 +397,8 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
     }
     else
     {
+        fDatatypeRegistry.serialize(serEng);
+
         /***
          *
          * Deserialize RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
@@ -431,7 +438,6 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
          ***/
         XTemplateSerializer::loadObject(&fValidSubstitutionGroups, 29, true, serEng);
 
-        fDatatypeRegistry.serialize(serEng);
         serEng.readString(fTargetNamespace);
         serEng>>fValidated;
 
