@@ -217,33 +217,33 @@ $set 3
  59  The modulus value cannot be zero
  60  The indicated reader id was never found
  61  The auto encoding enum has an unknown value
- 62  Could not create a converter for encoding: {0}
- 63  Could not decode first line of entity: {0}
- 64  End of input was hit in the middle of a multibyte sequence
- 65  The current transcoding service does not support source offset information
- 66  EBCDIC files must provide an encoding= string
- 67  The primary document entity could not be opened. Id={0}
- 68  Unbalanced start/end tags found, cannot continue
- 69  The call to scanNext() is illegal at this time
- 70  The index is past the top of stack
- 71  The stack is empty, cannot access members
- 72  The target buffer cannot have a max size of zero
- 73  The given radix is not supported. Use 2, 8, 10, or 16
- 74  The target buffer is too small to accept the results
- 75  The start index is past the end of the string
- 76  The represented value overflowed the output binary result
- 77  Could not write to standard err
- 78  Could not write to standard out
- 79  Could not write to console
- 80  String pool id was not legal
- 81  Could not create a default transcoder
- 82  The maximum size to xlat is larger than the declared block size
- 83  Unicode char {0} is representable in encoding {1}
- 84  Character {0} is not valid for encoding {1}
- 85  The requested block size is not equal to the size set during construction
- 86  An invalid multi-byte source text sequence was encountered
- 87  {0} is not a valid value for encoding {1}
- 88  Leading surrogate was not followed by trailing
+ 62  Could not decode first line of entity: {0}
+ 63  End of input was hit in the middle of a multibyte sequence
+ 64  The current transcoding service does not support source offset information
+ 65  EBCDIC files must provide an encoding= string
+ 66  The primary document entity could not be opened. Id={0}
+ 67  Unbalanced start/end tags found, cannot continue
+ 68  The call to scanNext() is illegal at this time
+ 69  The index is past the top of stack
+ 70  The stack is empty, cannot access members
+ 71  The target buffer cannot have a max size of zero
+ 72  The given radix is not supported. Use 2, 8, 10, or 16
+ 73  The target buffer is too small to accept the results
+ 74  The start index is past the end of the string
+ 75  The represented value overflowed the output binary result
+ 76  Could not write to standard err
+ 77  Could not write to standard out
+ 78  Could not write to console
+ 79  String pool id was not legal
+ 80  Could not create a default transcoder
+ 81  The maximum size to xlat is larger than the declared block size
+ 82  Unicode char {0} is representable in encoding {1}
+ 83  Character {0} is not valid for encoding {1}
+ 84  The requested block size is not equal to the size set during construction
+ 85  An invalid multi-byte source text sequence was encountered
+ 86  {0} is not a valid value for encoding {1}
+ 87  Leading surrogate was not followed by trailing
+ 88  Could not create a converter for encoding: {0}
  89  The URL was not correctly formed
  90  The URL used an unsupported protocol
  91  Unsupported URL protocol: '{0}'

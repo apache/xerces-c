@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.12  2000/03/28 19:43:18  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.11  2000/03/17 23:59:53  roddey
  * Initial updates for two way transcoding support
  *
@@ -318,8 +322,8 @@ XMLReader::XMLReader(const  XMLCh* const            pubId
     {
         ThrowXML1
         (
-            RuntimeException
-            , XMLExcepts::Reader_CantCreateCvtrFor
+            TranscodingException
+            , XMLExcepts::Trans_CantCreateCvtrFor
             , fEncodingStr
         );
     }
@@ -413,8 +417,8 @@ bool XMLReader::refreshCharBuffer()
         {
             ThrowXML1
             (
-                RuntimeException
-                , XMLExcepts::Reader_CantCreateCvtrFor
+                TranscodingException
+                , XMLExcepts::Trans_CantCreateCvtrFor
                 , fEncodingStr
             );
         }
@@ -1316,7 +1320,7 @@ bool XMLReader::setEncoding(const XMLCh* const newEncoding)
     );
 
     if (!fTranscoder)
-        ThrowXML1(RuntimeException, XMLExcepts::Reader_CantCreateCvtrFor, fEncodingStr);
+        ThrowXML1(TranscodingException, XMLExcepts::Trans_CantCreateCvtrFor, fEncodingStr);
 
     // Update the base encoding member with the new base encoding found
     fEncoding = newBaseEncoding;

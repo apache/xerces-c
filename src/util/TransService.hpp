@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/03/28 19:43:19  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.9  2000/03/17 23:59:54  roddey
  * Initial updates for two way transcoding support
  *
@@ -150,6 +154,13 @@ public :
     XMLTranscoder* makeNewTranscoderFor
     (
         const   XMLCh* const            encodingName
+        ,       XMLTransService::Codes& resValue
+        , const unsigned int            blockSize
+    );
+
+    XMLTranscoder* makeNewTranscoderFor
+    (
+        const   char* const             encodingName
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
     );

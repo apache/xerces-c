@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/28 19:43:13  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.4  2000/03/02 19:54:03  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -150,7 +154,6 @@ void NodeVector::insertElementAt(NodeImpl *elem, unsigned int index) {
 	unsigned int i;
 
 	assert(index <= nextFreeSlot);
-	assert(index >= 0);
 
 	checkSpace();
 	for (i=nextFreeSlot; i>index; --i) {
@@ -163,7 +166,6 @@ void NodeVector::insertElementAt(NodeImpl *elem, unsigned int index) {
 
 
 void NodeVector::removeElementAt(unsigned int index) {
-	assert (index >= 0);
 	assert(index < nextFreeSlot);
 	for (unsigned int i=index; i<nextFreeSlot-1; ++i) {
 		data[i] = data[i+1];
@@ -176,7 +178,6 @@ void NodeVector::reset() {
 };
 
 void NodeVector::setElementAt(NodeImpl *elem, unsigned int index) {
-	assert(index >= 0);
 	assert(index < nextFreeSlot);
 	data[index] = elem;
 };

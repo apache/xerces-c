@@ -291,6 +291,8 @@ XMLUTF8Transcoder::transcodeTo( const   XMLCh* const    srcData
         //  32 bit value, because it could be a surrogate pair.
         //
         XMLUInt32 curVal = *srcPtr;
+        if (!curVal)
+            break;
 
         //
         //  If its a leading surrogate, then lets see if we have the trailing
@@ -363,17 +365,17 @@ XMLUTF8Transcoder::transcodeTo( const   XMLCh* const    srcData
         outPtr += encodedBytes;
         switch(encodedBytes)
         {
-            case 6 : --*outPtr = XMLByte((curVal | 0x80UL) & 0xBFUL);
+            case 6 : *--outPtr = XMLByte((curVal | 0x80UL) & 0xBFUL);
                      curVal >>= 6;
-            case 5 : --*outPtr = XMLByte((curVal | 0x80UL) & 0xBFUL);
+            case 5 : *--outPtr = XMLByte((curVal | 0x80UL) & 0xBFUL);
                      curVal >>= 6;
-            case 4 : --*outPtr = XMLByte((curVal | 0x80UL) & 0xBFUL);
+            case 4 : *--outPtr = XMLByte((curVal | 0x80UL) & 0xBFUL);
                      curVal >>= 6;
-            case 3 : --*outPtr = XMLByte((curVal | 0x80UL) & 0xBFUL);
+            case 3 : *--outPtr = XMLByte((curVal | 0x80UL) & 0xBFUL);
                      curVal >>= 6;
-            case 2 : --*outPtr = XMLByte((curVal | 0x80UL) & 0xBFUL);
+            case 2 : *--outPtr = XMLByte((curVal | 0x80UL) & 0xBFUL);
                      curVal >>= 6;
-            case 1 : --*outPtr = XMLByte
+            case 1 : *--outPtr = XMLByte
                      (
                         curVal | gFirstByteMark[encodedBytes]
                      );

@@ -56,79 +56,81 @@
 
 /*
  * $Log$
- * Revision 1.4  2000/03/28 19:43:21  roddey
+ * Revision 1.1  2000/03/28 19:43:17  roddey
  * Fixes for signed/unsigned warnings. New work for two way transcoding
  * stuff.
  *
- * Revision 1.3  2000/03/02 19:55:15  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/06 07:48:22  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.1.1.1  1999/11/09 01:07:20  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:27  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
  */
 
-
-#if !defined(INMEMMSGLOADER_HPP)
-#define INMEMMSGLOADER_HPP
+#if !defined(XMLFORMATTER_HPP)
+#define XMLFORMATTER_HPP
 
 #include <util/XercesDefs.hpp>
-#include <util/XMLMsgLoader.hpp>
 
-//
-//  This is a simple in memory message loader implementation. For those
-//  folks who just want a single language and want something very fast and
-//  efficient, can basically just provide a couple of arrays of Unicode
-//  strings that can be looked up by the message id.
-//
-class XMLUTIL_EXPORT InMemMsgLoader : public XMLMsgLoader
+class XMLFormatTarget;
+class XMLTranscoder;
+
+/**
+ *  This class provides the basic formatting capabilities that are required
+ *  to turn the Unicode based XML data from the parsers into a form that can
+ *  be used on non-Unicode based systems, i.e. into local or generic text
+ *  encodings.
+ *
+ *  A number of flags are provided to control whether various optional
+ *  formatting operations are performed.
+ */
+class XMLPARSER_EXPORT XMLFormatter
 {
-public :
+public:
     // -----------------------------------------------------------------------
-    //  Public Constructors and Destructor
+    //  Class types
     // -----------------------------------------------------------------------
-    InMemMsgLoader(const XMLCh* const msgDomain);
-    ~InMemMsgLoader();
+    enum EscapeFlags
+    {
+        NoEscapes
+        , StdEscapes
+        , FailEscapes
+        , AllEscapes
+    };
 
 
     // -----------------------------------------------------------------------
-    //  Implementation of the virtual message loader API
+    //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    virtual bool loadMsg
+    XMLFormatter
     (
-        const   XMLMsgLoader::XMLMsgId  msgToLoad
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
+        const   XMLCh* const            outEncoding
+        , const EscapeFlags             escapeFlags
+        ,       XMLFormatTarget* const  target
     );
 
-    virtual bool loadMsg
+    XMLFormatter
     (
-        const   XMLMsgLoader::XMLMsgId  msgToLoad
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        , const XMLCh* const            repText1
-        , const XMLCh* const            repText2 = 0
-        , const XMLCh* const            repText3 = 0
-        , const XMLCh* const            repText4 = 0
+        const   char* const             outEncoding
+        , const EscapeFlags             escapeFlags
+        ,       XMLFormatTarget* const  target
     );
 
-    virtual bool loadMsg
+    ~XMLFormatter();
+
+
+    // -----------------------------------------------------------------------
+    //  Formatting methods
+    // -----------------------------------------------------------------------
+    void formatBuf
     (
-        const   XMLMsgLoader::XMLMsgId  msgToLoad
-        ,       XMLCh* const            toFill
-        , const unsigned int            maxChars
-        , const char* const             repText1
-        , const char* const             repText2 = 0
-        , const char* const             repText3 = 0
-        , const char* const             repText4 = 0
+        const   XMLCh* const    toFormat
+        , const unsigned int    count
+    );
+
+    XMLFormatter& operator<<
+    (
+        const   XMLCh* const    toFormat
+    );
+
+    XMLFormatter& operator<<
+    (
+        const   char* const     toFormat
     );
 
 
@@ -136,18 +138,72 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    InMemMsgLoader();
-    InMemMsgLoader(const InMemMsgLoader&);
-    void operator=(const InMemMsgLoader&);
+    XMLFormatter();
+    XMLFormatter(const XMLFormatter&);
+    void operator=(const XMLFormatter&);
 
 
     // -----------------------------------------------------------------------
-    //  Private data members
+    //  Private class constants
+    // -----------------------------------------------------------------------
+    enum Constants
+    {
+        kTmpBufSize     = 8192
+    };
+
+
+    // -----------------------------------------------------------------------
+    //  Private, non-virtual methods
     //
-    //  fMsgDomain
-    //      This is the message domain that we are for loading message from.
+    //  fEscapeFlags
+    //      The escape flags we were told to use in formatting. These are
+    //      defaults set in the ctor, which can be overridden on a particular
+    //      call.
+    //
+    //  fOutEncoding
+    //      This the name of the output encoding. Saved mainly for meaningful
+    //      error messages.
+    //
+    //  fTarget
+    //      This is the target object for the formatting operation.
+    //
+    //  fXCoder
+    //      This the transcoder that we will use. It is created using the
+    //      encoding name we were told to use.
     // -----------------------------------------------------------------------
-    XMLCh*  fMsgDomain;
+    EscapeFlags         fEscapeFlags;
+    XMLCh*              fOutEncoding;
+    XMLFormatTarget*    fTarget;
+    XMLTranscoder*      fXCoder;
+    XMLByte             fTmpBuf[kTmpBufSize + 1];
+};
+
+
+class XMLPARSER_EXPORT XMLFormatTarget
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    virtual ~XMLFormatTarget() {}
+
+
+    // -----------------------------------------------------------------------
+    //  Virtual interface
+    // -----------------------------------------------------------------------
+    virtual void writeChars
+    (
+        const   XMLByte* const  toWrite
+    ) = 0;
+
+
+protected :
+    // -----------------------------------------------------------------------
+    //  Hidden constructors and operators
+    // -----------------------------------------------------------------------
+    XMLFormatTarget() {}
+    XMLFormatTarget(const XMLFormatTarget&) {}
+    void operator=(const XMLFormatTarget&) {}
 };
 
 #endif

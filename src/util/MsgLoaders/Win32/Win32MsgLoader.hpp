@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/28 19:43:23  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.3  2000/03/02 19:55:19  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -99,14 +103,14 @@ public :
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int            maxChars
     );
 
     virtual bool loadMsg
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int            maxChars
         , const XMLCh* const            repText1
         , const XMLCh* const            repText2 = 0
         , const XMLCh* const            repText3 = 0
@@ -117,7 +121,7 @@ public :
     (
         const   XMLMsgLoader::XMLMsgId  msgToLoad
         ,       XMLCh* const            toFill
-        , const unsigned long           maxChars
+        , const unsigned int            maxChars
         , const char* const             repText1
         , const char* const             repText2 = 0
         , const char* const             repText3 = 0

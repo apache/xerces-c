@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.17  2000/03/28 19:43:24  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.16  2000/03/13 21:48:04  abagchi
  * Changed XML_GNUG to XML_GCC
  *
@@ -293,7 +297,7 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const char* const srcText)
 
     const unsigned int retVal = ::mbstowcs(NULL, srcText, 0);
 
-    if (retVal == -1)
+    if (retVal == ~0)
         return 0;
     return retVal;
 }
@@ -323,7 +327,7 @@ unsigned int IconvLCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     const unsigned int retVal = ::wcstombs(NULL, wideCharBuf, 0);
     delete [] allocatedArray;
 
-    if (retVal == -1)
+    if (retVal == ~0)
         return 0;
     return retVal;
 }

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/28 19:43:14  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.6  2000/03/24 01:30:50  chchou
  * Fix bug #8 to support ignorable whitespace text nodes
  *
@@ -112,45 +116,46 @@ TextImpl::~TextImpl()
 
 bool TextImpl::isTextImpl() 
 {
-        return true;
+    return true;
 };
 
 
 NodeImpl *TextImpl::cloneNode(bool deep)
 {
-        return ownerDocument->createTextNode(value);
+    return ownerDocument->createTextNode(value);
 };
 
 
 TextImpl *TextImpl::splitText(unsigned int offset)
 {
-        if (readOnly)
-                throw DOM_DOMException(
-        DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-	unsigned int len = value.length();  //assert(value.length() >= 0)
-        if (offset < 0 || offset >= len)
+    if (readOnly)
+    {
+        throw DOM_DOMException(
+            DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+    }
+	unsigned int len = value.length();
+    if (offset >= len)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, null);
                 
-        TextImpl *newText = 
+    TextImpl *newText = 
                 (TextImpl *) ownerDocument->createTextNode(
                         value.substringData(offset, value.length() - offset));
-        NodeImpl *parent = getParentNode();
-        if (parent != null)
-                parent->insertBefore(newText, getNextSibling());
+    NodeImpl *parent = getParentNode();
+    if (parent != null)
+        parent->insertBefore(newText, getNextSibling());
 
-        value = value.substringData(0, offset);
-
-        return newText;
+    value = value.substringData(0, offset);
+    return newText;
 };
 
 
 bool TextImpl::isIgnorableWhitespace()
 {
-        return fIgnorableWhitespace;
+    return fIgnorableWhitespace;
 }
 
 
 void TextImpl::setIgnorableWhitespace(bool ignorable)
 {
-        fIgnorableWhitespace = ignorable;
+    fIgnorableWhitespace = ignorable;
 }

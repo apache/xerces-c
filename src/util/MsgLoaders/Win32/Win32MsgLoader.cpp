@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/28 19:43:23  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.3  2000/03/02 19:55:18  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -145,7 +149,7 @@ Win32MsgLoader::~Win32MsgLoader()
 //
 bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars)
+                            , const unsigned int            maxChars)
 {
     // In case we error return, and they don't check it...
     toFill[0] = 0;
@@ -202,7 +206,7 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars
+                            , const unsigned int            maxChars
                             , const XMLCh* const            repText1
                             , const XMLCh* const            repText2
                             , const XMLCh* const            repText3
@@ -220,7 +224,7 @@ bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
 
 bool Win32MsgLoader::loadMsg(const  XMLMsgLoader::XMLMsgId  msgToLoad
                             ,       XMLCh* const            toFill
-                            , const unsigned long           maxChars
+                            , const unsigned int            maxChars
                             , const char* const             repText1
                             , const char* const             repText2
                             , const char* const             repText3

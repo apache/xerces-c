@@ -229,7 +229,6 @@
             <Message Id="Pool_ZeroModulus" Text="The modulus value cannot be zero"/>
             <Message Id="RdrMgr_ReaderIdNotFound" Text="The indicated reader id was never found"/>
             <Message Id="Reader_BadAutoEncoding" Text="The auto encoding enum has an unknown value"/>
-            <Message Id="Reader_CantCreateCvtrFor" Text="Could not create a converter for encoding: {0}"/>
             <Message Id="Reader_CouldNotDecodeFirstLine" Text="Could not decode first line of entity: {0}"/>
             <Message Id="Reader_EOIInMultiSeq" Text="End of input was hit in the middle of a multibyte sequence"/>
             <Message Id="Reader_SrcOfsNotSupported" Text="The current transcoding service does not support source offset information"/>
@@ -256,6 +255,7 @@
             <Message Id="Trans_BadSrcSeq" Text="An invalid multi-byte source text sequence was encountered"/>
             <Message Id="Trans_BadSrcCP" Text="{0} is not a valid value for encoding {1}"/>
             <Message Id="Trans_BadTrailingSurrogate" Text="Leading surrogate was not followed by trailing"/>
+            <Message Id="Trans_CantCreateCvtrFor" Text="Could not create a converter for encoding: {0}"/>
             <Message Id="URL_MalformedURL" Text="The URL was not correctly formed"/>
             <Message Id="URL_UnsupportedProto" Text="The URL used an unsupported protocol"/>
             <Message Id="URL_UnsupportedProto1" Text="Unsupported URL protocol: '{0}'"/>

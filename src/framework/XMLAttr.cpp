@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.5  2000/03/28 19:43:16  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.4  2000/03/02 19:54:24  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -183,7 +187,7 @@ void XMLAttr::setName(  const   unsigned int    uriId
     unsigned int newLen;
 
     newLen = XMLString::stringLen(attrName);
-    if (!fNameBufSz | (newLen > fNameBufSz))
+    if (!fNameBufSz || (newLen > fNameBufSz))
     {
         delete [] fName;
         fNameBufSz = newLen + 8;

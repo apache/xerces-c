@@ -58,6 +58,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <util/Janitor.hpp>
 #include <util/RefHashTableOf.hpp>
 #include <util/XML88591Transcoder.hpp>
 #include <util/XMLASCIITranscoder.hpp>
@@ -151,6 +152,17 @@ XMLTransService::~XMLTransService()
 // ---------------------------------------------------------------------------
 //  XLMTranscoder: Non-virtual API
 // ---------------------------------------------------------------------------
+XMLTranscoder*
+XMLTransService::makeNewTranscoderFor(  const   char* const             encodingName
+                                        ,       XMLTransService::Codes& resValue
+                                        , const unsigned int            blockSize)
+{
+    XMLCh* tmpName = XMLString::transcode(encodingName);
+    ArrayJanitor<XMLCh> janName(tmpName);
+
+    return makeNewTranscoderFor(tmpName, resValue, blockSize);
+}
+
 XMLTranscoder*
 XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encodingName
                                         ,       XMLTransService::Codes& resValue

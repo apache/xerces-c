@@ -56,6 +56,10 @@
 
 /**
   * $Log$
+  * Revision 1.6  2000/03/28 19:43:17  roddey
+  * Fixes for signed/unsigned warnings. New work for two way transcoding
+  * stuff.
+  *
   * Revision 1.5  2000/03/02 19:54:25  roddey
   * This checkin includes many changes done while waiting for the
   * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -311,13 +315,13 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
 XMLValidator::XMLValidator(XMLErrorReporter* const errReporter) :
 
     fBufMgr(0)
-    , fEmptyNamespaceId(-1)
+    , fEmptyNamespaceId(~0)
     , fErrorReporter(errReporter)
-    , fGlobalNamespaceId(-1)
+    , fGlobalNamespaceId(~0)
     , fReaderMgr(0)
     , fScanner(0)
-    , fUnknownNamespaceId(-1)
-    , fXMLNamespaceId(-1)
-    , fXMLNSNamespaceId(-1)
+    , fUnknownNamespaceId(~0)
+    , fXMLNamespaceId(~0)
+    , fXMLNSNamespaceId(~0)
 {
 }

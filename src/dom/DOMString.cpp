@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/03/28 19:43:13  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.14  2000/03/02 19:53:52  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -658,7 +662,7 @@ DOMString& DOMString::operator +=(XMLCh ch)
 XMLCh     DOMString::charAt(unsigned int index) const
 {
     XMLCh retCh = 0;
-    if (fHandle != 0  && index >= 0 &&  index < fHandle->fLength)
+    if ((fHandle != 0) && (index < fHandle->fLength))
         retCh = fHandle->fDSData->fData[index];
     return retCh;
 };

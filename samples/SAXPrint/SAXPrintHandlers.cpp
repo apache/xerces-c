@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/28 19:43:11  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.4  2000/03/02 19:53:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -88,14 +92,29 @@
 // ---------------------------------------------------------------------------
 //  SAXPrintHandlers: Constructors and Destructor
 // ---------------------------------------------------------------------------
-SAXPrintHandlers::SAXPrintHandlers(const bool doEscapes) :
-
-    fDoEscapes(doEscapes)
+SAXPrintHandlers::SAXPrintHandlers( const   char* const encodingName
+                                    , const bool        doEscapes) :
+    fFormatter
+    (
+        encodingName
+        , (doEscapes ? XMLFormatter::StdEscapes : XMLFormatter::NoEscapes)
+        , this
+    )
 {
 }
 
 SAXPrintHandlers::~SAXPrintHandlers()
 {
+}
+
+
+// ---------------------------------------------------------------------------
+//  SAXPrintHandlers: Overrides of the output formatter target interface
+// ---------------------------------------------------------------------------
+void SAXPrintHandlers::writeChars(const XMLByte* const toWrite)
+{
+    // For this one, just dump them to the standard output
+    cout << toWrite;
 }
 
 
@@ -153,46 +172,7 @@ void SAXPrintHandlers::notationDecl(                                            
 void SAXPrintHandlers::characters(const     XMLCh* const    chars
                                   , const   unsigned int    length)
 {
-    // Transcode to UTF-8 for portable display
-    StrX tmpXCode(chars);
-    const char* tmpText = tmpXCode.localForm();
-
-    //
-    //  If we were asked to escape special chars, then do that. Else just
-    //  display it as normal text.
-    //
-    if (fDoEscapes)
-    {
-        for (unsigned int index = 0; index < length; index++)
-        {
-            switch (tmpText[index])
-            {
-            case chAmpersand :
-                cout << "&amp;";
-                break;
-
-            case chOpenAngle :
-                cout << "&lt;";
-                break;
-
-            case chCloseAngle:
-                cout << "&gt;";
-                break;
-
-            case chDoubleQuote :
-                cout << "&quot;";
-                break;
-
-            default:
-                cout << tmpText[index];
-                break;
-            }
-        }
-    }
-     else
-    {
-        cout << tmpText;
-    }
+    fFormatter.formatBuf(chars, length);
 }
 
 
@@ -202,22 +182,22 @@ void SAXPrintHandlers::endDocument()
 
 void SAXPrintHandlers::endElement(const XMLCh* const name)
 {
-    cout << "</" << StrX(name) << ">";
+    fFormatter << "</" << name << ">";
 }
 
 void SAXPrintHandlers::ignorableWhitespace( const   XMLCh* const chars
                                             ,const  unsigned int length)
 {
-    cout << StrX(chars);
+    fFormatter.formatBuf(chars, length);
 }
 
 void SAXPrintHandlers::processingInstruction(const  XMLCh* const target
                                             , const XMLCh* const data)
 {
-    cout << "<?" << StrX(target);
+    fFormatter << "<?" << target;
     if (data)
-        cout << " " << StrX(data);
-    cout << "?>\n";
+        fFormatter << " " << data;
+    fFormatter << "?>\n";
 }
 
 void SAXPrintHandlers::startDocument()
@@ -227,15 +207,13 @@ void SAXPrintHandlers::startDocument()
 void SAXPrintHandlers::startElement(const   XMLCh* const    name
                                     ,       AttributeList&  attributes)
 {
-    cout << "<" << StrX(name);
+    fFormatter << "<" << name;
     unsigned int len = attributes.getLength();
 
     for (unsigned int index = 0; index < len; index++)
     {
-        cout << " " << StrX(attributes.getName(index)) << "=\"";
-		cout << StrX(attributes.getValue(index)) << "\"";
+        fFormatter << " " << attributes.getName(index) << "=\""
+		           << attributes.getValue(index) << "\"";
     }
-    cout << ">";
+    fFormatter << ">";
 }
-
-

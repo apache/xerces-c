@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/28 19:43:11  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.6  2000/03/03 01:29:31  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -89,6 +93,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/PlatformUtils.hpp>
+#include <util/TransService.hpp>
 #include <parsers/SAXParser.hpp>
 #include "SAXPrint.hpp"
 
@@ -109,13 +114,18 @@
 //      Indicates whether the validating or non-validating parser should be
 //      used. Defaults to validating, -NV overrides.
 //
+//  encodingName
+//      The encoding we are to output in. If not set on the command line,
+//      then it is defaulted to UTF-8.
+//
 //  xmlFile
 //      The path to the file to parser. Set via command line.
 // ---------------------------------------------------------------------------
-static bool     doEscapes       = true;
-static bool     doNamespaces    = false;
-static bool     doValidation    = false;
-static char*    xmlFile         = 0;
+static bool             doEscapes       = true;
+static bool             doNamespaces    = false;
+static bool             doValidation    = false;
+static const char*      encodingName    = "UTF-8";
+static char*            xmlFile         = 0;
 
 
 
@@ -131,6 +141,7 @@ static void usage()
          <<  "     -NoEscape   Don't escape special characters in output\n"
          <<  "     -v          Invoke the Validating SAX Parser.\n"
          <<  "     -n          Enable namespace processing.\n"
+         <<  "     -x=XXX      Use a particular transcoder for output.\n"
          <<  "     -?          Show this help\n"
          <<  endl;
 }
@@ -186,6 +197,11 @@ int main(int argC, char* argV[])
         {
             doNamespaces = true;
         }
+         else if (!strncmp(argV[parmInd], "-x=", 3))
+        {
+            // Get out the encoding name
+            encodingName = &argV[parmInd][3];
+        }
          else if (!strcmp(argV[parmInd], "-NoEscape"))
         {
             doEscapes = false;
@@ -218,22 +234,21 @@ int main(int argC, char* argV[])
 
     //
     //  Create the handler object and install it as the document and error
-    //  handler for the parser.
+    //  handler for the parser. Then parse the file and catch any exceptions
+    //  that propogate out
     //
-    SAXPrintHandlers handler(doEscapes);
-    parser.setDocumentHandler(&handler);
-    parser.setErrorHandler(&handler);
-
-    // Parse the file and catch any exceptions that propogate out
     try
     {
+        SAXPrintHandlers handler(encodingName, doEscapes);
+        parser.setDocumentHandler(&handler);
+        parser.setErrorHandler(&handler);
+
         parser.parse(xmlFile);
     }
 
     catch (const XMLException& toCatch)
     {
-        cerr << "\nFile not found: '" << xmlFile << "'\n"
-             << "Exception message is: \n"
+        cerr << "\nAn error occured\n  Error: "
              << StrX(toCatch.getMessage())
              << "\n" << endl;
         return -1;

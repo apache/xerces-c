@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/03/28 19:43:12  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.3  2000/03/02 19:53:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -74,15 +78,29 @@
 
 
 #include    <sax/HandlerBase.hpp>
+#include    <framework/XMLFormatter.hpp>
 
-class SAXPrintHandlers : public HandlerBase
+class SAXPrintHandlers : public HandlerBase, private XMLFormatTarget
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors
     // -----------------------------------------------------------------------
-    SAXPrintHandlers(const bool doEscapes);
+    SAXPrintHandlers
+    (
+        const   char* const     encodingName
+        , const bool            doEscapes
+    );
     ~SAXPrintHandlers();
+
+
+    // -----------------------------------------------------------------------
+    //  Implementations of the format target interface
+    // -----------------------------------------------------------------------
+    void writeChars
+    (
+        const   XMLByte* const  toWrite
+    );
 
 
     // -----------------------------------------------------------------------
@@ -144,9 +162,10 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fDoEscapes
-    //      Indicates whether characters should be escaped via char refs if
-    //      they would normally be in that place in a legal XML file.
+    //  fFormatter
+    //      This is the formatter object that is used to output the data
+    //      to the target. It is set up to format to the standard output
+    //      stream.
     // -----------------------------------------------------------------------
-    bool    fDoEscapes;
+    XMLFormatter    fFormatter;
 };

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/28 19:43:25  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.4  2000/03/02 19:55:37  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -98,7 +102,7 @@ public :
     CMLeaf
     (
         const   unsigned int    elemId
-        , const unsigned int    position = (unsigned int)-1
+        , const unsigned int    position = ~0
     );
     ~CMLeaf();
 

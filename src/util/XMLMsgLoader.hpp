@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/28 19:43:20  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.4  2000/03/02 19:54:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -122,31 +126,31 @@ public :
     // -----------------------------------------------------------------------
     virtual bool loadMsg
     (
-        const   XMLMsgId            msgToLoad
-        ,       XMLCh* const        toFill
-        , const unsigned long       maxChars
+        const   XMLMsgId        msgToLoad
+        ,       XMLCh* const    toFill
+        , const unsigned int    maxChars
     ) = 0;
 
     virtual bool loadMsg
     (
-        const   XMLMsgId            msgToLoad
-        ,       XMLCh* const        toFill
-        , const unsigned long       maxChars
-        , const XMLCh* const        repText1
-        , const XMLCh* const        repText2 = 0
-        , const XMLCh* const        repText3 = 0
-        , const XMLCh* const        repText4 = 0
+        const   XMLMsgId        msgToLoad
+        ,       XMLCh* const    toFill
+        , const unsigned int    maxChars
+        , const XMLCh* const    repText1
+        , const XMLCh* const    repText2 = 0
+        , const XMLCh* const    repText3 = 0
+        , const XMLCh* const    repText4 = 0
     ) = 0;
 
     virtual bool loadMsg
     (
-        const   XMLMsgId            msgToLoad
-        ,       XMLCh* const        toFill
-        , const unsigned long       maxChars
-        , const char* const         repText1
-        , const char* const         repText2 = 0
-        , const char* const         repText3 = 0
-        , const char* const         repText4 = 0
+        const   XMLMsgId        msgToLoad
+        ,       XMLCh* const    toFill
+        , const unsigned int    maxChars
+        , const char* const     repText1
+        , const char* const     repText2 = 0
+        , const char* const     repText3 = 0
+        , const char* const     repText4 = 0
     ) = 0;
 
 

@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/28 19:43:25  roddey
+ * Fixes for signed/unsigned warnings. New work for two way transcoding
+ * stuff.
+ *
  * Revision 1.4  2000/03/08 23:52:34  roddey
  * Got rid of the use of -1 to represent an invalid transition state,
  * and just created a const value that is unsigned. This should make
@@ -757,7 +761,7 @@ bool DFAContentModel::isAmbiguous() const
 
 
 //
-//  kInvalidTrans is used to represent bad transitions in the transition table
+//  gInvalidTrans is used to represent bad transitions in the transition table
 //  entry for each state. So each entry is initialized to that value. This
 //  method creates a new entry and initializes it.
 //

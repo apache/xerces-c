@@ -140,6 +140,10 @@ SOURCE=..\..\..\..\..\src\framework\XMLEntityDecl.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\framework\XMLFormatter.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\framework\XMLNotationDecl.cpp
 # End Source File
 # Begin Source File
@@ -217,6 +221,10 @@ SOURCE=..\..\..\..\..\src\framework\XMLErrorCodes.hpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\framework\XMLErrorReporter.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\framework\XMLFormatter.hpp
 # End Source File
 # Begin Source File
 
