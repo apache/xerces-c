@@ -72,3 +72,7 @@
 #define PROJ_DOM 1
 #define PROJ_PARSERS 1
 #define PROJ_VALIDATORS 1
+
+//  A couple of defines to allow /usr/include/unistd.h to compile
+#define __dead2
+#define __pure2
