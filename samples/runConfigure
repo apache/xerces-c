@@ -1,10 +1,8 @@
 #!/bin/sh
-
-
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -70,7 +68,7 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'unixware', 'linux', 'solaris',
+    echo "       -p <platform> (accepts 'aix', 'unixware', 'linux', 'freebsd', 'solaris',
 'hp-10', 'hp-11', 'os400', 'irix', 'ptx', 'tru64', 'macosx')"
     echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
     echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
@@ -178,7 +176,7 @@ fi
 
 # Now check if the options are correct or not, bail out if incorrect
 case $platform in
-   aix | unixware | linux | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx)
+   aix | unixware | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx)
        # platform has been recognized
        ;;
    *)
@@ -245,6 +243,10 @@ elif test $platform = "ptx"; then
 ./configure --prefix=$XMLINSTALL
 else
 ./configure
+fi
+# exit if configure failed
+if test $? != 0; then
+  exit 1
 fi
 
 echo

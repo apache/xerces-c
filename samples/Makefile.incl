@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -176,6 +176,21 @@ LINK =  g++ -D${PLATFORM} -fpic
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 EXTRA_LINK_OPTIONS=-lc
 SHLIBSUFFIX=.so
+endif
+
+#=============== FREEBSD SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, FREEBSD)
+  CMP= -c ${CXXFLAGS}
+  CC= g++ -c -D${PLATFORM} -fPIC
+  LINK = g++ -D${PLATFORM} -fPIC
+  ifdef ICUROOT
+    PLATFORM_LIB_LINK_OPTIONS=-L$(ICUROOT)
+    EXTRA_LINK_OPTIONS=-licudata -lstdc++ -pthread
+  else
+    PLATFORM_LIB_LINK_OPTIONS=
+    EXTRA_LINK_OPTIONS=-lstdc++ -pthread
+  endif
+  SHLIBSUFFIX=.so
 endif
 
 #================= HP SPECIFIC OPTIONS ===========================

@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.16  2001/11/29 18:25:18  tng
+# FreeBSD support by Michael Huedepohl.
+#
 # Revision 1.15  2001/07/06 17:12:02  tng
 # Automatic build of single-threaded library.  By Martin Kalen.
 #
@@ -133,6 +136,9 @@ ifeq (${PLATFORM}, AIX)
 endif
 ifeq (${PLATFORM}, LINUX)
     SUBMODULE = Linux
+endif
+ifeq (${PLATFORM}, FREEBSD)
+    SUBMODULE = FreeBSD
 endif
 ifeq (${PLATFORM}, HPUX)
     SUBMODULE = HPUX

@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -254,6 +254,20 @@ endif
 SHLIBSUFFIX=.so
 endif
 
+#=============== FREEBSD SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, FREEBSD)
+MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fPIC ${LDFLAGS}
+ifeq (${TRANSCODER}, ICU)
+    PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -I/usr/local/include
+    ALLLIBS = ${LIBS} -L/usr/local/lib -licuuc -L${ICUROOT} -licudata -lgcc
+else
+    PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM}
+    ALLLIBS = ${LIBS}
+endif
+SHLIBSUFFIX=.so
+endif
+
 #=============== IRIX SPECIFIC OPTIONS ============================
 ifeq (${PLATFORM}, IRIX)
 PLATFORM_COMPILE_OPTIONS = -LANG:pch -LANG:std -O2 \
@@ -404,6 +418,9 @@ ifeq (${PLATFORM}, OS400)
 CP = -cp -fph
 else
 CP = -cp -fp
+endif
+ifeq (${PLATFORM}, FREEBSD)
+CP = -cp -p
 endif
 RM = -rm -f
 CAT = cat

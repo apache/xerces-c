@@ -1254,6 +1254,7 @@ case "${host}" in
         *-*-UnixWare*)  platform=UNIXWARE ;;
         *-*-unixware*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
+	*-*-freebsd*)	platform=FREEBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX
                       case "${host}" in
@@ -1285,7 +1286,7 @@ cc=${CC}
 
 
 
-prefix_include=${PREFIX}/include/xercesc
+prefix_include='${PREFIX}/include/xercesc'
 
 
 
@@ -1444,6 +1445,7 @@ util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
 util/Platforms/AIX/Makefile \
 util/Platforms/Linux/Makefile \
+util/Platforms/FreeBSD/Makefile \
 util/Platforms/HPUX/Makefile \
 util/Platforms/OS390/Makefile \
 util/Platforms/OS400/Makefile \
@@ -1585,6 +1587,7 @@ util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
 util/Platforms/AIX/Makefile \
 util/Platforms/Linux/Makefile \
+util/Platforms/FreeBSD/Makefile \
 util/Platforms/HPUX/Makefile \
 util/Platforms/OS390/Makefile \
 util/Platforms/OS400/Makefile \

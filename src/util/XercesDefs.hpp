@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2001/11/29 18:25:18  tng
+ * FreeBSD support by Michael Huedepohl.
+ *
  * Revision 1.17  2001/11/23 17:19:33  tng
  * Change from 1.5.2 to 1.6.0
  *
@@ -218,6 +221,10 @@ const unsigned int   gXercesRevision   = 0;
 
 #if defined(XML_LINUX)
 #include    <util/Platforms/Linux/LinuxDefs.hpp>
+#endif
+
+#if defined(XML_FREEBSD)
+#include    <util/Platforms/FreeBSD/FreeBSDDefs.hpp>
 #endif
 
 #if defined(XML_OS390)

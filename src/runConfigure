@@ -2,7 +2,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -78,7 +78,7 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris',
+    echo "       -p <platform> (accepts 'aix', 'linux', 'freebsd', 'solaris',
             'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx', 'tru64', 'macosx' )"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc, c++)"
@@ -202,7 +202,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | irix | unixware | os400 | ptx | tru64 | macosx)
+   aix | linux | freebsd | solaris | hp-10 | hp-11 | irix | unixware | os400 | ptx | tru64 | macosx)
        # platform has been recognized
        ;;
    *)
@@ -262,6 +262,9 @@ else
                exit ${ERROR_EXIT_CODE};;
         esac
         fi
+    elif test $platform = "freebsd"; then
+	threadingLibs="-pthread -lc_r"
+	threadingDefines="-D_THREAD_SAFE -DXML_USE_PTHREADS"
     elif test $platform = "aix"; then
         aix_version=`./config.guess`;
         echo Found host system to be $aix_version
@@ -347,12 +350,12 @@ TRANSCODER=NATIVE
 if test $transcoder; then
 case $transcoder in
    icu)
-       if test -z $ICUROOT; then
+       if test ${ICUROOT}o = "o"; then
            echo '***Error*** ICUROOT environment variable not defined. Exiting...';
            exit ${ERROR_EXIT_CODE};
        fi
        transcodingDefines="-DXML_USE_ICU_TRANSCODER -I${ICUROOT}/include";
-       transcodingLibs="-L${ICUROOT}/lib -L${ICUROOT}/data";
+       transcodingLibs="-L${ICUROOT} -L${ICUROOT}/lib -L${ICUROOT}/data";
        TRANSCODER=ICU;;
    Iconv400)
        transcodingDefines="-DXML_USE_ICONV400_TRANSCODER" ;
@@ -382,7 +385,7 @@ msgloaderDefines="-DXML_USE_INMEM_MESSAGELOADER"
 if test $msgloader ; then
 case $msgloader in
    icu)
-       if test -z $ICUROOT ; then
+       if test ${ICUROOT}o = "o" ; then
            echo '***Error*** ICUROOT environment variable not defined. Exiting...';
            exit ${ERROR_EXIT_CODE};
        fi
@@ -522,6 +525,11 @@ elif test $platform = "ptx"; then
 else
 sh ./configure $configureoptions
 fi
+# exit if configure failed
+if test $? != 0; then
+  exit 1
+fi
+
 echo
 echo In future, you may also directly type the following commands to create the Makefiles.
 echo

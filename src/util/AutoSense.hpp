@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/11/29 18:25:18  tng
+ * FreeBSD support by Michael Huedepohl.
+ *
  * Revision 1.20  2001/05/11 13:26:26  tng
  * Copyright update.
  *
@@ -157,6 +160,9 @@
     #define XML_UNIX
 #elif defined(__linux__)
     #define XML_LINUX
+    #define XML_UNIX
+#elif defined(__FreeBSD__)
+    #define XML_FREEBSD
     #define XML_UNIX
 #elif defined(IRIX) || defined(__sgi)
     #define XML_IRIX

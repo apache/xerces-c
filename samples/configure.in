@@ -36,6 +36,7 @@ case "${host}" in
         *-*-*unixware*)  platform=UNIXWARE ;;
         *-*-sysv5uw7*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
+	*-*-freebsd*)	platform=FREEBSD ;;
         *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
         *-*-hp*)        platform=HPUX ;
