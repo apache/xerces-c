@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/11/27 21:26:55  peiyongz
+ * Schema Errat E2-24 Duration 'T': allow SchemaDateTimeException be
+ * propogated to client.
+ *
  * Revision 1.2  2002/11/04 14:53:28  tng
  * C++ Namespace Support.
  *
@@ -194,14 +198,13 @@ void DateTimeValidator::checkContent(const XMLCh* const content
     if (asBase)
         return;
 
-    try
+
     {
         // the derived classes' parse() method constructs an
         // XMLDateTime object anc invokes appropriate XMLDateTime's
         // parser to parse the content.
         XMLDateTime *theDate = parse(content);
         Janitor<XMLDateTime> jname(theDate);
-
         int result;
 
         // must be < MaxExclusive
@@ -266,14 +269,8 @@ void DateTimeValidator::checkContent(const XMLCh* const content
             if (i == enumLength)
                 ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
         }
-    }
-    catch (...)
-    {
-            ThrowXML1(InvalidDatatypeValueException, XMLExcepts::VALUE_NotIn_Enumeration, content);
-            // new error message needed here
-            //("Value '"+content+	"' is not legal value for current datatype. " +e.getMessage() );
-    }
 
+    }
 }
 
 //
