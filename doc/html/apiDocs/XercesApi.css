@@ -12,4 +12,10 @@ DIV.ah { background-color: black; margin-bottom: 3; margin-top: 3 }
 TD.md { background-color: #f2f2ff }
 DIV.groupHeader { margin-left: 16; margin-top: 12; margin-bottom: 6; font-weight: bold }
 DIV.groupText { margin-left: 16; font-style: italic; font-size: smaller }
-
+FONT.keyword       { color: #008000 }
+FONT.keywordtype   { color: #604020 }
+FONT.keywordflow   { color: #e08000 }
+FONT.comment       { color: #800000 }
+FONT.preprocessor  { color: #806020 }
+FONT.stringliteral { color: #002080 }
+FONT.charliteral   { color: #008080 }
