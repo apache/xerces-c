@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/03/10 15:27:29  tng
+ * XML1.0 Errata E38
+ *
  * Revision 1.17  2003/03/07 18:08:58  tng
  * Return a reference instead of void for operator=
  *
@@ -451,6 +454,7 @@ public :
     bool isUsingCachedGrammarInParse() const;
     bool getCalculateSrcOfs() const;
     Grammar* getRootGrammar() const;
+    XMLReader::XMLVersion getXMLVersion() const;
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -834,6 +838,9 @@ protected:
     //
     //  fStandardUriConformant
     //      This flag controls whether we force conformant URI
+    //
+    //  fXMLVersion
+    //      Enum to indicate if the main doc is XML 1.1 or XML 1.0 conformant    
     // -----------------------------------------------------------------------
     bool                        fStandardUriConformant;
     bool                        fCalculateSrcOfs;
@@ -883,6 +890,7 @@ protected:
     XMLCh*                      fRootElemName;
     XMLCh*                      fExternalSchemaLocation;
     XMLCh*                      fExternalNoNamespaceSchemaLocation;
+    XMLReader::XMLVersion       fXMLVersion;    
 
 private :
     // -----------------------------------------------------------------------
@@ -1124,6 +1132,11 @@ inline Grammar* XMLScanner::getRootGrammar() const
 inline bool XMLScanner::getStandardUriConformant() const
 {
     return fStandardUriConformant;
+}
+
+inline XMLReader::XMLVersion XMLScanner::getXMLVersion() const
+{
+	return fXMLVersion;
 }
 
 // ---------------------------------------------------------------------------

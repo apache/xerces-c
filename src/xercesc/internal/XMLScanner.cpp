@@ -207,6 +207,7 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fExternalSchemaLocation(0)
     , fExternalNoNamespaceSchemaLocation(0)
     , fStandardUriConformant(false)
+    , fXMLVersion(XMLReader::XMLV1_0)
 {
    commonInit();
 
@@ -262,6 +263,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fExternalSchemaLocation(0)
     , fExternalNoNamespaceSchemaLocation(0)
     , fStandardUriConformant(false)
+    , fXMLVersion(XMLReader::XMLV1_0)
 {
    commonInit();
 
@@ -1321,12 +1323,18 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
         {
             if (XMLString::equals(rawValue, XMLUni::fgVersion1_1)) {
                 if (type == Decl_XML) {
+                	fXMLVersion = XMLReader::XMLV1_1;
                     fReaderMgr.setXMLVersion(XMLReader::XMLV1_1);
                 }
+                else {
+            	    if (fXMLVersion != XMLReader::XMLV1_1)
+            	        emitError(XMLErrs::UnsupportedXMLVersion, rawValue);                
+            	}
             }
             else if (XMLString::equals(rawValue, XMLUni::fgVersion1_0)) {
                 if (type == Decl_XML) {
-                    fReaderMgr.setXMLVersion(XMLReader::XMLV1_0);
+                	fXMLVersion = XMLReader::XMLV1_0;
+                    fReaderMgr.setXMLVersion(XMLReader::XMLV1_0);                    
                 }
             }
             else

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2003/03/10 15:28:07  tng
+ * XML1.0 Errata E38
+ *
  * Revision 1.23  2003/02/05 22:07:09  tng
  * [Bug 3111] Problem with LexicalHandler::startDTD() and LexicalHandler::endDTD().
  *
@@ -3798,8 +3801,11 @@ void DTDScanner::scanTextDecl()
         }
 
         // If its not our supported version, issue an error but continue
-        if (!XMLString::equals(bbVersion.getRawBuffer(), XMLUni::fgVersion1_0) &&
-            !XMLString::equals(bbVersion.getRawBuffer(), XMLUni::fgVersion1_1))
+        if (XMLString::equals(bbVersion.getRawBuffer(), XMLUni::fgVersion1_1)) {
+            if (fScanner->getXMLVersion() != XMLReader::XMLV1_1)
+        	    fScanner->emitError(XMLErrs::UnsupportedXMLVersion, bbVersion.getRawBuffer());
+        }
+        else if (!XMLString::equals(bbVersion.getRawBuffer(), XMLUni::fgVersion1_0))
             fScanner->emitError(XMLErrs::UnsupportedXMLVersion, bbVersion.getRawBuffer());
     }
 
