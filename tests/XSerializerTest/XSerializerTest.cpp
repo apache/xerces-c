@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.8  2004/03/06 21:57:54  peiyongz
+* Make each test case run with distinct (de)serialization context, memMgr/gramPool/Parser
+*
 * Revision 1.7  2004/01/14 18:58:57  peiyongz
 * XSerializerTest documentation updated
 *
@@ -114,19 +117,11 @@ static char                         localeStr[64];
 // ---------------------------------------------------------------------------
 //  parsing components
 // ---------------------------------------------------------------------------
-static SAX2XMLReader*           parser      = 0;
-static MemoryManager*           myMemMgr    = 0;
-static XMLGrammarPool*          myGramPool  = 0;
 static XSerializerHandlers*     handler     = 0;
-static BinInputStream*          myIn        = 0;
-static BinOutputStream*         myOut       = 0;
-
-static bool                     serializeGrammarOK = true;
-static const int                BufSize     = 1024;
 
 /***
 *
-*   This program is a variation of SAXCount.
+*   This program is a variation of SAX2Count.
 *
 *   Whenever a file is served, it does the following:
 *
@@ -138,6 +133,27 @@ static const int                BufSize     = 1024;
 *   . validates the instance against the deserialized grammar if validation is on.
 *
 ***/
+
+#include <stdio.h>
+
+static 
+void parseCase(const char* const xmlFile);
+
+static 
+bool parseOne(BinOutputStream*    outStream
+            , const char* const  xmlFile);
+
+static 
+void parseTwo(BinInputStream*     inStream
+            , const char* const  xmlFile);
+
+static 
+void parseFile(SAX2XMLReader* const parser
+             , const char* const xmlFile);
+
+static 
+SAX2XMLReader* getParser(XMLGrammarPool* const theGramPool
+                       , bool                  setHandler);
 
 // ---------------------------------------------------------------------------
 //  Local helper methods
@@ -163,239 +179,6 @@ void usage()
             "    -?          Show this help.\n\n"
             "  * = Default if not provided explicitly.\n"
          << XERCES_STD_QUALIFIER endl;
-}
-
-static void init()
-{
-    //
-    //  Create our SAX handler object and install it on the parser, as the
-    //  document and error handler.
-    //
-    if (!handler)
-        handler = new XSerializerHandlers();
-
-}
-
-static void cleanUp()
-{
-    if (handler)
-        delete handler;
-
-    if (myIn)
-        delete myIn;
-
-    if (myOut)
-        delete myOut;
-
-}
-
-static BinOutputStream* getOutputStream()
-{
-    if (!myOut)
-    {
-        myOut = new BinMemOutputStream(BufSize);
-    }
-
-    ((BinMemOutputStream*)myOut)->reset();
-
-    return myOut;
-}
-
-static BinInputStream* getInputStream()
-{
-    if (!myOut)
-    {
-        XERCES_STD_QUALIFIER cerr << "DEserialization has to be done after serialization\n";
-        exit(-1);
-    }
-
-    //BinMemInputStream can not refer to a different data once
-    //it is instantiated, so we delete it and have a new one.
-    if (myIn)
-    {
-        delete myIn;
-        myIn = 0;
-    }
-
-    //make it to refer to the binary data saved in the myOut
-    //but the data still belong to myOut
-    myIn = new BinMemInputStream( ((BinMemOutputStream*)myOut)->getRawBuffer()
-                                , ((BinMemOutputStream*)myOut)->getSize()
-                                , BinMemInputStream::BufOpt_Reference
-                                );
-    return myIn;
-}
-
-static void getParser(bool setHandler)
-{
-
-    myMemMgr       = new MemoryManagerImpl();
-    myGramPool     = new XMLGrammarPoolImpl(myMemMgr);
-
-    parser = XMLReaderFactory::createXMLReader(myMemMgr, myGramPool);
-
-    parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
-    parser->setFeature(XMLUni::fgXercesSchema, doSchema);
-    parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
-    parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, namespacePrefixes);
-
-    if (valScheme == SAX2XMLReader::Val_Auto)
-    {
-        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
-        parser->setFeature(XMLUni::fgXercesDynamic, true);
-    }
-    if (valScheme == SAX2XMLReader::Val_Never)
-    {
-        parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
-    }
-    if (valScheme == SAX2XMLReader::Val_Always)
-    {
-        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
-        parser->setFeature(XMLUni::fgXercesDynamic, false);
-    }
-
-    if (setHandler)
-    {
-        parser->setContentHandler(handler);
-        parser->setErrorHandler(handler);
-    }
-    else
-    {
-        parser->setContentHandler(0);
-        parser->setErrorHandler(0);
-    }
-}
-
-static void destroyParser()
-{
-    //the order is important
-    delete parser;
-    delete myGramPool;
-    delete myMemMgr;
-}
-
-// parse the instance document and
-// build a grammar from parsing
-//return false if no grammar built
-static bool getAndSaveGrammar(const char* const xmlFile)
-{
-    bool    retVal = true;
-    getParser(false);  //don't emit error
-
-    parser->setFeature(XMLUni::fgXercesCacheGrammarFromParse, true);
-
-    try
-    {
-        parser->parse(xmlFile);
-    }
-    catch (...)
-    {
-        //do nothing
-        // it could be instance document is invalid
-        // but the grammar is fine
-    }
-
-    try
-    {
-        myGramPool->serializeGrammars(getOutputStream());
-    }
-    catch(const XSerializationException& e)
-    {
-        //do emit error here so that we know serialization failure
-        XERCES_STD_QUALIFIER cerr << "An error occurred during serialization\n   Message: "
-            << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
-
-        retVal = false;
-    }
-
-    destroyParser();
-    return retVal;
-}
-
-static bool restoreGrammar()
-{
-    bool    retVal = true;
-    getParser(true);  //emit error
-
-    try
-    {
-        myGramPool->deserializeGrammars(getInputStream());
-    }
-    catch(const XSerializationException& e)
-    {
-        XERCES_STD_QUALIFIER cerr << "An error occurred during de-serialization\n   Message: "
-                << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
-
-        destroyParser();
-        retVal = false;
-    }
-
-    //parser to be used by parseing file
-    return retVal;
-}
-
-static void parseFile(const char* const xmlFile)
-{
-    //
-    //  Get the starting time and kick off the parse of the indicated
-    //  file. Catch any exceptions that might propogate out of it.
-    //
-    unsigned long duration;
-
-    //reset error count first
-    handler->resetErrors();
-
-    try
-    {
-        const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
-        parser->parse(xmlFile);
-        const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
-        duration = endMillis - startMillis;
-    }
-    catch (const XMLException& e)
-    {
-        XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
-            << "Exception message is:  \n"
-            << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
-        errorOccurred = true;
-    }
-    catch (...)
-    {
-        XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
-        errorOccurred = true;
-    }
-
-    // Print out the stats that we collected and time taken
-    if (!handler->getSawErrors())
-    {
-        XERCES_STD_QUALIFIER cout << xmlFile << ": " << duration << " ms ("
-            << handler->getElementCount() << " elems, "
-            << handler->getAttrCount() << " attrs, "
-            << handler->getSpaceCount() << " spaces, "
-            << handler->getCharacterCount() << " chars)" << XERCES_STD_QUALIFIER endl;
-    }
-    else
-        errorOccurred = true;
-
-}
-
-static void parseCase(const char* const xmlFile)
-{
-
-    //if we can successfully getAndSaveGrammar and
-    // restoreGrammar, then parse using the cached Grammar
-    if (getAndSaveGrammar(xmlFile) && restoreGrammar())
-    {
-        parser->setFeature(XMLUni::fgXercesUseCachedGrammarInParse, true);
-    }
-    else //otherwise, do a normal parsing
-    {
-        getParser(true);
-    }
-
-    parseFile(xmlFile);
-    destroyParser();
-
 }
 
 // ---------------------------------------------------------------------------
@@ -515,7 +298,6 @@ int main(int argC, char* argV[])
             XMLPlatformUtils::recognizeNEL(recognizeNEL);
         }
 
-        init();
     }
 
     catch (const XMLException& toCatch)
@@ -571,8 +353,6 @@ int main(int argC, char* argV[])
     if (doList)
         fin.close();
 
-    cleanUp();
-
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
@@ -580,6 +360,221 @@ int main(int argC, char* argV[])
         return 4;
     else
         return 0;
+
+}
+
+// ---------------------------------------------------------------------------
+//  Serialization/Deserialization
+// ---------------------------------------------------------------------------
+static const int BufSize = 1024;
+ 
+static void parseCase(const char* const xmlFile)
+{
+    //
+    //  Create our SAX handler object and install it on the parser, as the
+    //  document and error handler.
+    //
+    if (!handler)
+        handler = new XSerializerHandlers();
+
+    BinOutputStream* myOut = new BinMemOutputStream(BufSize);
+    Janitor<BinOutputStream> janOut(myOut);
+
+    if (!parseOne(myOut, xmlFile))
+        return;
+
+    BinInputStream*  myIn  = new BinMemInputStream(
+                                                   ((BinMemOutputStream*)myOut)->getRawBuffer()
+                                                 , ((BinMemOutputStream*)myOut)->getSize()
+                                                 , BinMemInputStream::BufOpt_Reference
+                                                  );
+    Janitor<BinInputStream> janIn(myIn);
+
+    parseTwo(myIn, xmlFile);
+
+}
+
+static 
+bool parseOne(BinOutputStream*    outStream
+            , const char* const   xmlFile)
+{
+    //we don't use janitor here
+    MemoryManager*  theMemMgr   = new MemoryManagerImpl();
+    XMLGrammarPool* theGramPool = new XMLGrammarPoolImpl(theMemMgr);
+    SAX2XMLReader*  theParser   = getParser(theGramPool, false);  //don't emit error
+    bool            retVal      = true;
+
+    theParser->setFeature(XMLUni::fgXercesCacheGrammarFromParse, true);
+
+    //scan instance document and cache grammar
+    try
+    {
+        theParser->parse(xmlFile);
+    }
+    catch (...)
+    {
+        //do nothing, it could be an invalid instance document, but the grammar is fine
+    }
+
+    //serialize the grammar pool
+    try
+    {
+        theGramPool->serializeGrammars(outStream);
+    }
+    catch (const XSerializationException& e)
+    {
+        //do emit error here so that we know serialization failure
+        XERCES_STD_QUALIFIER cerr << "An error occurred during serialization\n   Message: "
+            << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+
+        retVal = false;
+    }
+
+    catch (...)
+    {
+        //do emit error here so that we know serialization failure
+        XERCES_STD_QUALIFIER cerr << "An error occurred during serialization\n" << XERCES_STD_QUALIFIER endl;
+
+        retVal = false;
+    }
+
+    //the order is important
+    delete theParser;
+    delete theGramPool;
+    delete theMemMgr;
+
+    return retVal;
+}
+
+static 
+void parseTwo(BinInputStream*     inStream
+            , const char* const   xmlFile)
+{
+    //we don't use janitor here
+    MemoryManager*  theMemMgr   = new MemoryManagerImpl();
+    XMLGrammarPool* theGramPool = new XMLGrammarPoolImpl(theMemMgr);
+    bool            errorSeen   = false;
+
+    //de-serialize grammar pool
+    try
+    {
+        theGramPool->deserializeGrammars(inStream);
+    }
+
+    catch(const XSerializationException& e)
+    {
+        XERCES_STD_QUALIFIER cerr << "An error occurred during de-serialization\n   Message: "
+            << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
+
+        errorSeen = true;
+    }
+
+    catch (...)
+    {
+        //do emit error here so that we know serialization failure
+        XERCES_STD_QUALIFIER cerr << "An error occurred during de-serialization\n" << XERCES_STD_QUALIFIER endl;
+
+        errorSeen = true;
+    }
+
+    if (!errorSeen)
+    {
+        SAX2XMLReader*  theParser   = getParser(theGramPool, true); //set the handler
+
+        theParser->setFeature(XMLUni::fgXercesUseCachedGrammarInParse, true);
+        parseFile(theParser, xmlFile);
+        delete theParser;
+    }
+
+    //the order is important
+    delete theGramPool;
+    delete theMemMgr;
+
+    return;
+}
+
+static SAX2XMLReader* getParser(XMLGrammarPool* const theGramPool
+                              , bool                  setHandler)
+{
+    SAX2XMLReader* parser = XMLReaderFactory::createXMLReader(theGramPool->getMemoryManager(), theGramPool);
+
+    parser->setFeature(XMLUni::fgSAX2CoreNameSpaces, doNamespaces);
+    parser->setFeature(XMLUni::fgXercesSchema, doSchema);
+    parser->setFeature(XMLUni::fgXercesSchemaFullChecking, schemaFullChecking);
+    parser->setFeature(XMLUni::fgSAX2CoreNameSpacePrefixes, namespacePrefixes);
+
+    if (valScheme == SAX2XMLReader::Val_Auto)
+    {
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+        parser->setFeature(XMLUni::fgXercesDynamic, true);
+    }
+    if (valScheme == SAX2XMLReader::Val_Never)
+    {
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, false);
+    }
+    if (valScheme == SAX2XMLReader::Val_Always)
+    {
+        parser->setFeature(XMLUni::fgSAX2CoreValidation, true);
+        parser->setFeature(XMLUni::fgXercesDynamic, false);
+    }
+
+    if (setHandler)
+    {
+        parser->setContentHandler(handler);
+        parser->setErrorHandler(handler);
+    }
+    else
+    {
+        parser->setContentHandler(0);
+        parser->setErrorHandler(0);
+    }
+
+    return parser;
+}
+
+static void parseFile(SAX2XMLReader* const parser
+                    , const char* const xmlFile)
+{
+    //
+    //  Get the starting time and kick off the parse of the indicated
+    //  file. Catch any exceptions that might propogate out of it.
+    //
+    unsigned long duration;
+
+    //reset error count first
+    handler->resetErrors();
+
+    try
+    {
+        const unsigned long startMillis = XMLPlatformUtils::getCurrentMillis();
+        parser->parse(xmlFile);
+        const unsigned long endMillis = XMLPlatformUtils::getCurrentMillis();
+        duration = endMillis - startMillis;
+    }
+    catch (const XMLException& e)
+    {
+        XERCES_STD_QUALIFIER cerr << "\nError during parsing: '" << xmlFile << "'\n"
+            << "Exception message is:  \n"
+            << StrX(e.getMessage()) << "\n" << XERCES_STD_QUALIFIER endl;
+        errorOccurred = true;
+    }
+    catch (...)
+    {
+        XERCES_STD_QUALIFIER cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+        errorOccurred = true;
+    }
+
+    // Print out the stats that we collected and time taken
+    if (!handler->getSawErrors())
+    {
+        XERCES_STD_QUALIFIER cout << xmlFile << ": " << duration << " ms ("
+            << handler->getElementCount() << " elems, "
+            << handler->getAttrCount() << " attrs, "
+            << handler->getSpaceCount() << " spaces, "
+            << handler->getCharacterCount() << " chars)" << XERCES_STD_QUALIFIER endl;
+    }
+    else
+        errorOccurred = true;
 
 }
 
