@@ -423,13 +423,13 @@ void XMLUri::initialize(const XMLUri* const baseURI
     // get a trimmed version of uriSpec
     // uriSpec will NO LONGER be used in this function.
     //
-    XMLCh* trimedUriSpec = XMLString::replicate(uriSpec, fMemoryManager);
-    XMLString::trim(trimedUriSpec);
-    ArrayJanitor<XMLCh> janName(trimedUriSpec, fMemoryManager);
-    int trimedUriSpecLen = XMLString::stringLen(trimedUriSpec);
+    XMLCh* trimmedUriSpec = XMLString::replicate(uriSpec, fMemoryManager);
+    XMLString::trim(trimmedUriSpec);
+    ArrayJanitor<XMLCh> janName(trimmedUriSpec, fMemoryManager);
+    int trimmedUriSpecLen = XMLString::stringLen(trimmedUriSpec);
 
     if ( !baseURI &&
-        (!trimedUriSpec || trimedUriSpecLen == 0))
+        (!trimmedUriSpec || trimmedUriSpecLen == 0))
     {
         ThrowXML1(MalformedURLException
                , XMLExcepts::XMLNUM_URI_Component_Empty
@@ -437,7 +437,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
     }
 
 	// just make a copy of the base if spec is empty
-	if (!trimedUriSpec || trimedUriSpecLen == 0)
+	if (!trimmedUriSpec || trimmedUriSpecLen == 0)
     {
         initialize(*baseURI);
         return;
@@ -449,10 +449,10 @@ void XMLUri::initialize(const XMLUri* const baseURI
 	// Check for scheme, which must be before `/', '?' or '#'. 
 	// Also handle names with DOS drive letters ('D:'), 
 	// so 1-character schemes are not allowed.
-        int colonIdx = XMLString::indexOf(trimedUriSpec, chColon);
-        int slashIdx = XMLString::indexOf(trimedUriSpec, chForwardSlash);
-        int queryIdx = XMLString::indexOf(trimedUriSpec, chQuestion);
-        int fragmentIdx = XMLString::indexOf(trimedUriSpec, chPound);
+        int colonIdx = XMLString::indexOf(trimmedUriSpec, chColon);
+        int slashIdx = XMLString::indexOf(trimmedUriSpec, chForwardSlash);
+        int queryIdx = XMLString::indexOf(trimmedUriSpec, chQuestion);
+        int fragmentIdx = XMLString::indexOf(trimmedUriSpec, chPound);
 
         if ((colonIdx < 2) ||
             (colonIdx > slashIdx && slashIdx != -1) ||
@@ -468,12 +468,12 @@ void XMLUri::initialize(const XMLUri* const baseURI
         else
         {
             foundScheme = true;
-            initializeScheme(trimedUriSpec);
+            initializeScheme(trimmedUriSpec);
             index = XMLString::stringLen(fScheme)+1;
         }
 
     // It's an error if we stop here
-    if (index == trimedUriSpecLen || (foundScheme && (trimedUriSpec[index] == chPound)))
+    if (index == trimmedUriSpecLen || (foundScheme && (trimmedUriSpec[index] == chPound)))
     {
         ThrowXML1(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Empty
@@ -483,12 +483,12 @@ void XMLUri::initialize(const XMLUri* const baseURI
 	// two slashes means generic URI syntax, so we get the authority
     XMLCh* authUriSpec = (XMLCh*) fMemoryManager->allocate
     (
-        (trimedUriSpecLen+1) * sizeof(XMLCh)
-    );//new XMLCh[trimedUriSpecLen+1];
+        (trimmedUriSpecLen+1) * sizeof(XMLCh)
+    );//new XMLCh[trimmedUriSpecLen+1];
     ArrayJanitor<XMLCh> authName(authUriSpec, fMemoryManager);
-    XMLString::subString(authUriSpec, trimedUriSpec, index, trimedUriSpecLen);
+    XMLString::subString(authUriSpec, trimmedUriSpec, index, trimmedUriSpecLen);
 
-    if (((index+1) < trimedUriSpecLen) &&
+    if (((index+1) < trimmedUriSpecLen) &&
         XMLString::startsWith(authUriSpec, DOUBLE_SLASH))
     {
         index += 2;
@@ -496,9 +496,9 @@ void XMLUri::initialize(const XMLUri* const baseURI
 
         // get authority - everything up to path, query or fragment
         XMLCh testChar;
-        while (index < trimedUriSpecLen)
+        while (index < trimmedUriSpecLen)
         {
-            testChar = trimedUriSpec[index];
+            testChar = trimmedUriSpec[index];
             if (testChar == chForwardSlash ||
                 testChar == chQuestion     ||
                 testChar == chPound         )
@@ -513,26 +513,26 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // host to empty string
         if (index > startPos)
         {
-            XMLString::subString(authUriSpec, trimedUriSpec, startPos, index);
+            XMLString::subString(authUriSpec, trimmedUriSpec, startPos, index);
             initializeAuthority(authUriSpec);
         }
         else
         {
             //fHost = 0;
-            setHost(0);
+            setHost(XMLUni::fgZeroLenString);
         }
     }
 
     // we need to check if index has exceed the lenght or not
-    if (index >= trimedUriSpecLen)
+    if (index >= trimmedUriSpecLen)
         return;
 
     XMLCh* pathUriSpec = (XMLCh*) fMemoryManager->allocate
     (
-        (trimedUriSpecLen+1) * sizeof(XMLCh)
-    );//new XMLCh[trimedUriSpecLen+1];
+        (trimmedUriSpecLen+1) * sizeof(XMLCh)
+    );//new XMLCh[trimmedUriSpecLen+1];
     ArrayJanitor<XMLCh> pathUriSpecName(pathUriSpec, fMemoryManager);
-    XMLString::subString(pathUriSpec, trimedUriSpec, index, trimedUriSpecLen);
+    XMLString::subString(pathUriSpec, trimmedUriSpec, index, trimmedUriSpecLen);
 
 	initializePath(pathUriSpec);
 
@@ -609,7 +609,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         XMLCh* basePath = XMLString::replicate(baseURI->getPath(), fMemoryManager);
         ArrayJanitor<XMLCh> basePathName(basePath, fMemoryManager);
 
-        int bufLen = trimedUriSpecLen+XMLString::stringLen(fPath)+XMLString::stringLen(basePath)+1;
+        int bufLen = trimmedUriSpecLen+XMLString::stringLen(fPath)+XMLString::stringLen(basePath)+1;
         XMLCh* path = (XMLCh*) fMemoryManager->allocate(bufLen * sizeof(XMLCh));//new XMLCh[bufLen];
         ArrayJanitor<XMLCh> pathName(path, fMemoryManager);
         path[0] = 0;
@@ -755,7 +755,7 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     }
     else
     {
-        XMLString::copyString(userinfo, XMLUni::fgZeroLenString);
+        userinfo = 0;
     }
 
     //
@@ -1176,6 +1176,8 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
     if(newUserInfo && *newUserInfo) {
         fUserInfo = XMLString::replicate(newUserInfo, fMemoryManager);
     }
+    else 
+        fUserInfo = 0;
 
 }
 
@@ -1193,7 +1195,7 @@ void XMLUri::setHost(const XMLCh* const newHost)
         return;
     }
 
-    if (!isWellFormedAddress(newHost))
+    if ( *newHost && !isWellFormedAddress(newHost))
     {
         ThrowXML2(MalformedURLException
                 , XMLExcepts::XMLNUM_URI_Component_Not_Conformant
@@ -1278,9 +1280,9 @@ void XMLUri::setPath(const XMLCh* const newPath)
     }
     else
     {
-      initializePath(newPath);
+        initializePath(newPath);
     }
-  }
+}
 
 //
 // fragment = *uric
@@ -2026,21 +2028,21 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
 {
     // get a trimmed version of uriStr
     // uriStr will NO LONGER be used in this function.
-    const XMLCh* trimedUriSpec = uriStr;
+    const XMLCh* trimmedUriSpec = uriStr;
 
-    while (XMLChar1_0::isWhitespace(*trimedUriSpec))
-        trimedUriSpec++;
+    while (XMLChar1_0::isWhitespace(*trimmedUriSpec))
+        trimmedUriSpec++;
 
-    int trimedUriSpecLen = XMLString::stringLen(trimedUriSpec);
+    int trimmedUriSpecLen = XMLString::stringLen(trimmedUriSpec);
 
-    while (trimedUriSpecLen) {
-        if (XMLChar1_0::isWhitespace(trimedUriSpec[trimedUriSpecLen-1]))
-            trimedUriSpecLen--;
+    while (trimmedUriSpecLen) {
+        if (XMLChar1_0::isWhitespace(trimmedUriSpec[trimmedUriSpecLen-1]))
+            trimmedUriSpecLen--;
         else
             break;
     }
 
-    if (trimedUriSpecLen == 0)
+    if (trimmedUriSpecLen == 0)
     {
         if (!baseURI)
             return false;
@@ -2054,10 +2056,10 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
     // Check for scheme, which must be before `/', '?' or '#'. 
     // Also handle names with DOS drive letters ('D:'), 
     // so 1-character schemes are not allowed.
-    int colonIdx = XMLString::indexOf(trimedUriSpec, chColon);
-    int slashIdx = XMLString::indexOf(trimedUriSpec, chForwardSlash);
-    int queryIdx = XMLString::indexOf(trimedUriSpec, chQuestion);
-    int fragmentIdx = XMLString::indexOf(trimedUriSpec, chPound);
+    int colonIdx = XMLString::indexOf(trimmedUriSpec, chColon);
+    int slashIdx = XMLString::indexOf(trimmedUriSpec, chForwardSlash);
+    int queryIdx = XMLString::indexOf(trimmedUriSpec, chQuestion);
+    int fragmentIdx = XMLString::indexOf(trimmedUriSpec, chPound);
 
     if ((colonIdx < 2) ||
         (colonIdx > slashIdx && slashIdx != -1) ||
@@ -2070,19 +2072,19 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
     }
     else
     {
-        if (!processScheme(trimedUriSpec, index))
+        if (!processScheme(trimmedUriSpec, index))
             return false;
         foundScheme = true;
         ++index;
     }
 
     // It's an error if we stop here
-    if (index == trimedUriSpecLen || (foundScheme && (trimedUriSpec[index] == chPound)))
+    if (index == trimmedUriSpecLen || (foundScheme && (trimmedUriSpec[index] == chPound)))
         return false;
 
 	// two slashes means generic URI syntax, so we get the authority
-    const XMLCh* authUriSpec = trimedUriSpec +  index;
-    if (((index+1) < trimedUriSpecLen) &&
+    const XMLCh* authUriSpec = trimmedUriSpec +  index;
+    if (((index+1) < trimmedUriSpecLen) &&
         XMLString::startsWith(authUriSpec, DOUBLE_SLASH))
     {
         index += 2;
@@ -2090,9 +2092,9 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
 
         // get authority - everything up to path, query or fragment
         XMLCh testChar;
-        while (index < trimedUriSpecLen)
+        while (index < trimmedUriSpecLen)
         {
-            testChar = trimedUriSpec[index];
+            testChar = trimmedUriSpec[index];
             if (testChar == chForwardSlash ||
                 testChar == chQuestion     ||
                 testChar == chPound         )
@@ -2107,15 +2109,15 @@ bool XMLUri::isValidURI(const XMLUri* const baseURI
         // host to empty string
         if (index > startPos)
         {
-            if (!processAuthority(trimedUriSpec + startPos, index - startPos))
+            if (!processAuthority(trimmedUriSpec + startPos, index - startPos))
                 return false;
         }
     }
 
     // we need to check if index has exceed the length or not
-    if (index < trimedUriSpecLen)
+    if (index < trimmedUriSpecLen)
     {
-        if (!processPath(trimedUriSpec + index, trimedUriSpecLen - index, foundScheme))
+        if (!processPath(trimmedUriSpec + index, trimmedUriSpecLen - index, foundScheme))
             return false;
     }
 
