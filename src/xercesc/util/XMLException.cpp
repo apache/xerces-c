@@ -95,7 +95,7 @@ static const XMLCh  gDefErrMsg[] =
 // ---------------------------------------------------------------------------
 static XMLMsgLoader* sMsgLoader = 0;
 static XMLRegisterCleanup msgLoaderCleanup;
-
+static bool sScannerMutexRegistered = false;
 static XMLMutex* sMsgMutex = 0;
 static XMLRegisterCleanup msgMutexCleanup;
 
@@ -109,21 +109,16 @@ static XMLRegisterCleanup msgMutexCleanup;
 //
 static XMLMutex& gMsgMutex()
 {
-
-    if (!sMsgMutex)
+    if (!sScannerMutexRegistered)
     {
-        XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&sMsgMutex, tmpMutex, 0))
-        {
-            // Some other thread beat us to it, so let's clean up ours.
-            delete tmpMutex;
-        }
-        else
-        {
-            // This is the real mutex.  Register it for cleanup at Termination.
-			msgMutexCleanup.registerCleanup(XMLException::reinitMsgMutex);
-        }
+        XMLMutexLock lockInit(XMLPlatformUtils::fgAtomicMutex);
 
+        if (!sScannerMutexRegistered)
+        {
+            sMsgMutex = new XMLMutex;
+            msgMutexCleanup.registerCleanup(XMLException::reinitMsgMutex);
+            sScannerMutexRegistered = true;
+        }
     }
 
     return *sMsgMutex;
@@ -135,21 +130,23 @@ static XMLMutex& gMsgMutex()
 //
 static XMLMsgLoader& gGetMsgLoader()
 {
-
-    // Lock the message loader mutex and load the text
-	XMLMutexLock lockInit(&gMsgMutex());
-
-    // Fault it in on first request
     if (!sMsgLoader)
     {
-        sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgExceptDomain);
-        if (!sMsgLoader)
-            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
+        // Lock the message loader mutex and load the text
+	    XMLMutexLock lockInit(&gMsgMutex());
 
-        //
-        // Register this XMLMsgLoader for cleanup at Termination.
-        //
-        msgLoaderCleanup.registerCleanup(XMLException::reinitMsgLoader);
+        // Fault it in on first request
+        if (!sMsgLoader)
+        {
+            sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgExceptDomain);
+            if (!sMsgLoader)
+                XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
+
+            //
+            // Register this XMLMsgLoader for cleanup at Termination.
+            //
+            msgLoaderCleanup.registerCleanup(XMLException::reinitMsgLoader);
+        }
     }
 
     // We got it, so return it
@@ -353,8 +350,9 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
 // -----------------------------------------------------------------------
 void XMLException::reinitMsgMutex()
 {
-	delete sMsgMutex;
-	sMsgMutex = 0;
+    delete sMsgMutex;
+    sMsgMutex = 0;
+    sScannerMutexRegistered = false;
 }
 
 // -----------------------------------------------------------------------
@@ -362,8 +360,8 @@ void XMLException::reinitMsgMutex()
 // -----------------------------------------------------------------------
 void XMLException::reinitMsgLoader()
 {
-	delete sMsgLoader;
-	sMsgLoader = 0;
+    delete sMsgLoader;
+    sMsgLoader = 0;
 }
 
 XERCES_CPP_NAMESPACE_END

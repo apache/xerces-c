@@ -71,6 +71,7 @@ class XMLMsgLoader;
 class XMLNetAccessor;
 class XMLTransService;
 class MemoryManager;
+class XMLMutex;
 
 //
 //  For internal use only
@@ -161,6 +162,8 @@ public :
       *   there is no reason, nor facility, to override it.
       */
     static MemoryManager*       fgArrayMemoryManager;
+
+    static XMLMutex*            fgAtomicMutex;
     
     //@}
 

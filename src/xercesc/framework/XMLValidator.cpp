@@ -56,6 +56,9 @@
 
 /**
   * $Log$
+  * Revision 1.7  2004/01/09 04:39:56  knoaman
+  * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap.
+  *
   * Revision 1.6  2003/12/24 15:24:13  cargilld
   * More updates to memory management so that the static memory manager.
   *
@@ -158,14 +161,11 @@ static XMLMutex& gValidatorMutex()
 {
     if (!sMsgMutex)
     {
-        XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&sMsgMutex, tmpMutex, 0))
+        XMLMutexLock lockInit(XMLPlatformUtils::fgAtomicMutex);
+
+        if (!sMsgMutex)
         {
-            // Someone beat us to it, so let's clean up ours
-            delete tmpMutex;
-        }
-        else
-        {
+            sMsgMutex = new XMLMutex;
             validatorMutexCleanup.registerCleanup(XMLValidator::reinitMsgMutex);
         }
     }
@@ -175,22 +175,23 @@ static XMLMutex& gValidatorMutex()
 
 static XMLMsgLoader& getMsgLoader()
 {
-
-	// Lock the mutex
-	XMLMutexLock lockInit(&gValidatorMutex());
-
     if (!sMsgLoader)
-	{
-		sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
-		if (!sMsgLoader)
-			XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
+    {
+	    // Lock the mutex
+	    XMLMutexLock lockInit(&gValidatorMutex());
 
-        //
-        // Register this XMLMsgLoader for cleanup at Termination.
-        //
-        msgLoaderCleanup.registerCleanup(XMLValidator::reinitMsgLoader);
-	
-	}
+        if (!sMsgLoader)
+		{
+		    sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
+		    if (!sMsgLoader)
+			    XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
+
+            //
+            // Register this XMLMsgLoader for cleanup at Termination.
+            //
+            msgLoaderCleanup.registerCleanup(XMLValidator::reinitMsgLoader);
+        }
+    }
 
     return *sMsgLoader;
 }

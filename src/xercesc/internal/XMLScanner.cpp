@@ -122,23 +122,14 @@ void XMLScanner::reinitScannerMutex()
 //
 static XMLMutex& gScannerMutex()
 {
-
-    if (!sScannerMutex)
+    if (!sRegistered)
     {
-        XMLMutex* tmpMutex = new XMLMutex;
-        if (XMLPlatformUtils::compareAndSwap((void**)&sScannerMutex, tmpMutex, 0))
-        {
-            // Someone beat us to it, so let's clean up ours
-            delete tmpMutex;
-        }
+        XMLMutexLock lockInit(XMLPlatformUtils::fgAtomicMutex);
 
-        // Now lock it and try to register it
-        XMLMutexLock lock(sScannerMutex);
-
-        // If we got here first, then register it and set the registered flag
         if (!sRegistered)
         {
-			scannerMutexCleanup.registerCleanup(XMLScanner::reinitScannerMutex);
+            sScannerMutex = new XMLMutex;
+            scannerMutexCleanup.registerCleanup(XMLScanner::reinitScannerMutex);
             sRegistered = true;
         }
     }
@@ -147,17 +138,20 @@ static XMLMutex& gScannerMutex()
 
 static XMLMsgLoader& gScannerMsgLoader()
 {
-    XMLMutexLock lockInit(&gScannerMutex());
-
-    // If we haven't loaded our message yet, then do that
     if (!gMsgLoader)
     {
-        gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
-        if (!gMsgLoader)
-            XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
+        XMLMutexLock lockInit(&gScannerMutex());
 
-        // Register this object to be cleaned up at termination
-        cleanupMsgLoader.registerCleanup(XMLScanner::reinitMsgLoader);
+        // If we haven't loaded our message yet, then do that
+        if (!gMsgLoader)
+        {
+            gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
+            if (!gMsgLoader)
+                XMLPlatformUtils::panic(PanicHandler::Panic_CantLoadMsgDomain);
+
+            // Register this object to be cleaned up at termination
+            cleanupMsgLoader.registerCleanup(XMLScanner::reinitMsgLoader);
+        }
     }
 
     return *gMsgLoader;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/01/09 04:39:56  knoaman
+ * Use a global static mutex for locking when creating local static mutexes instead of compareAndSwap.
+ *
  * Revision 1.16  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -230,6 +233,7 @@ MemoryManager*          XMLPlatformUtils::fgMemoryManager = 0;
 MemoryManagerArrayImpl  gArrayMemoryManager;
 MemoryManager*          XMLPlatformUtils::fgArrayMemoryManager = &gArrayMemoryManager;
 bool                    XMLPlatformUtils::fgMemMgrAdopted = true;
+XMLMutex*               XMLPlatformUtils::fgAtomicMutex = 0;
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Init/term methods
@@ -302,6 +306,7 @@ void XMLPlatformUtils::Initialize(const char*          const locale
 
 	// Create the mutex for the static data cleanup list
     gXMLCleanupListMutex = new XMLMutex;
+    fgAtomicMutex = new XMLMutex;
 
     //
     //  Ask the per-platform code to make the desired transcoding service for
@@ -385,6 +390,10 @@ void XMLPlatformUtils::Terminate()
     // Clean up the sync mutex
     delete gSyncMutex;
     gSyncMutex = 0;
+
+    // Clean up mutex
+    delete fgAtomicMutex;
+    fgAtomicMutex = 0;
 
 	// Clean up statically allocated, lazily cleaned data in each class
 	// that has registered for it.
