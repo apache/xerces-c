@@ -448,6 +448,14 @@ SOURCE=..\..\..\..\..\src\xercesc\util\CountedPointer.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\util\DOMInputSourceWrapper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\util\DOMInputSourceWrapper.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\util\EmptyStackException.hpp
 # End Source File
 # Begin Source File
