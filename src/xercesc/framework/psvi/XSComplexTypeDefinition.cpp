@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/10/15 11:15:44  cargilld
+ * Fix for jira bug 1234.  Infinite loop in XSComplexTypeDefinition::derviedFromType.
+ *
  * Revision 1.13  2004/09/08 13:56:08  peiyongz
  * Apache License Version 2.0
  *
@@ -225,9 +228,11 @@ bool XSComplexTypeDefinition::derivedFromType(const XSTypeDefinition * const anc
         return false;
 
     XSTypeDefinition* type = this;
+    XSTypeDefinition* lastType = 0;  // anytype has a basetype of anytype so will have infinite loop...
 
-    while (type && (type != ancestorType))
+    while (type && (type != ancestorType) && (type != lastType))
     {
+        lastType = type;
         type = type->getBaseType();
     }
 
