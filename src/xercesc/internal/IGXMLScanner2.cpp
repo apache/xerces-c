@@ -124,7 +124,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     // know what's best.  REVISIT:  don't modify grammar at all; eliminate
     // this step...
     ComplexTypeInfo *currType = 0;
-    if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
+    if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType && fValidate)
         currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
     const bool hasDefs = (currType && fValidate)
             ? currType->resetDefs()
@@ -245,11 +245,14 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         //if schema, see if we should lax or skip the validation of this attribute
                         if (anyAttributeValidation(attWildCard, uriId, skipThisOne, laxThisOne)) {
 
-                            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
-                            if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
-                                RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
-                                if (attRegistry) {
-                                    attDefForWildCard = attRegistry->get(suffPtr);
+                            if(!skipThisOne)
+                            {
+                                SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
+                                if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+                                    RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
+                                    if (attRegistry) {
+                                        attDefForWildCard = attRegistry->get(suffPtr);
+                                    }
                                 }
                             }
                         }
@@ -307,10 +310,9 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             //  Find this attribute within the parent element. We pass both
             //  the uriID/name and the raw QName buffer, since we don't know
             //  how the derived validator and its elements store attributes.
-            if (!attDef) {
-                if(fGrammarType == Grammar::SchemaGrammarType) 
-                    attDef = ((SchemaElementDecl *)elemDecl)->getAttDef( suffPtr , uriId);
-                else 
+            else
+            {
+                if(fGrammarType == Grammar::DTDGrammarType) 
                     attDef = ((DTDElementDecl *)elemDecl)->getAttDef ( namePtr);
             } 
 
@@ -484,7 +486,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     }
                 }
 
-                if (fValidate && !skipThisOne) {
+                if (fValidate ) {
                     fValidator->validateAttrValue
                     (
                         attDefForWildCard

@@ -2786,11 +2786,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             if(fGrammarType == Grammar::SchemaGrammarType)
             {
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-                if (getPSVIHandler())
-                {
-                    // REVISIT:                
-                    // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
-                }
             }
         }
     }

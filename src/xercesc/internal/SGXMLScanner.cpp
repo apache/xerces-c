@@ -2272,7 +2272,9 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     //  Ask the element to clear the 'provided' flag on all of the att defs
     //  that it owns, and to return us a boolean indicating whether it has
     //  any defs.
-    ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+    ComplexTypeInfo *currType = (fValidate)
+                ?((SchemaValidator*)fValidator)->getCurrentTypeInfo()
+                :0;
     const bool hasDefs = (currType && fValidate) 
             ? currType->resetDefs()
             : elemDecl->resetDefs();
@@ -2391,11 +2393,14 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         //if schema, see if we should lax or skip the validation of this attribute
                         if (anyAttributeValidation(attWildCard, uriId, skipThisOne, laxThisOne)) {
 
-                            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
-                            if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
-                                RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
-                                if (attRegistry) {
-                                    attDefForWildCard = attRegistry->get(suffPtr);
+                            if(!skipThisOne)
+                            {
+                                SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(getURIText(uriId));
+                                if (sGrammar && sGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+                                    RefHashTableOf<XMLAttDef>* attRegistry = sGrammar->getAttributeDeclRegistry();
+                                    if (attRegistry) {
+                                        attDefForWildCard = attRegistry->get(suffPtr);
+                                    }
                                 }
                             }
                         }
@@ -2442,13 +2447,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         }
                     }
                 }
-            }
-
-            //  Find this attribute within the parent element. We pass both
-            //  the uriID/name and the raw QName buffer, since we don't know
-            //  how the derived validator and its elements store attributes.
-            if (!attDef) {
-                attDef = ((SchemaElementDecl *)elemDecl)->getAttDef(suffPtr, uriId);
             }
 
             // now need to prepare for duplicate detection
@@ -2595,7 +2593,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     }
                 }
 
-                if (fValidate && !skipThisOne) {
+                if (fValidate ) {
                     fValidator->validateAttrValue
                     (
                         attDefForWildCard
