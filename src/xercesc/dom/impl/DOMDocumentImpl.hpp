@@ -375,25 +375,23 @@ private:
 
 XERCES_CPP_NAMESPACE_END
 
-XERCES_CPP_NAMESPACE_USE
-
 // ---------------------------------------------------------------------------
 //
 //  Operator new.  Global overloaded version, lets any object be allocated on
 //                 the heap owned by a document.
 //
 // ---------------------------------------------------------------------------
-inline void * operator new(size_t amt, DOMDocument *doc, DOMDocumentImpl::NodeObjectType type)
+inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl::NodeObjectType type)
 {
     // revist.  Probably should be a checked cast.
-    void *p = ((DOMDocumentImpl *)doc)->allocate(amt, type);
+    void *p = ((XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl *)doc)->allocate(amt, type);
     return p;
 }
 
-inline void * operator new(size_t amt, DOMDocument *doc)
+inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc)
 {
     // revist.  Probably should be a checked cast.
-    void *p = ((DOMDocumentImpl *)doc)->allocate(amt);
+    void *p = ((XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl *)doc)->allocate(amt);
     return p;
 }
 
@@ -403,11 +401,11 @@ inline void * operator new(size_t amt, DOMDocument *doc)
 //    no matching operator delete found; memory will not be freed if initialization throws an exception
 // ---------------------------------------------------------------------------
 #if _MSC_VER >= 1200 /* VC++ 6.0 */
-inline void operator delete(void* ptr, DOMDocument *doc)
+inline void operator delete(void* ptr, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc)
 {
     return;
 }
-inline void operator delete(void* ptr, DOMDocument *doc, DOMDocumentImpl::NodeObjectType type)
+inline void operator delete(void* ptr, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl::NodeObjectType type)
 {
     return;
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/11/05 21:44:21  tng
+ * Do not code using namespace in a global header.
+ *
  * Revision 1.8  2002/11/04 14:40:12  tng
  * C++ Namespace Support.
  *
@@ -414,7 +417,6 @@ typedef XMLUInt32           UCS4Ch;
 
     namespace XERCES_CPP_NAMESPACE { }
     namespace xercesc = XERCES_CPP_NAMESPACE;
-    XERCES_CPP_NAMESPACE_USE
 #else
     #define XERCES_CPP_NAMESPACE_BEGIN
     #define XERCES_CPP_NAMESPACE_END
