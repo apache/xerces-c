@@ -30,6 +30,188 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     </tr>
 
     <tr>
+        <td>2003-01-30</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 3041] wrong PLATFORM_IMPORT in MVSCPPDefs.hpp.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-29</td>
+        <td>Gareth Reakes</td>
+        <td>Partial PSVI Support.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-29</td>
+        <td>Gareth Reakes</td>
+        <td>DOM L3: DOMTypeInfo and an associated test case.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-29</td>
+        <td>Lenny Hoffman</td>
+        <td>[Bug 6271] Invalid Precondition Test.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-29</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 15787] Reduce array size to reduce memory footprint.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-28</td>
+        <td>PeiYong Zhang</td>
+        <td>[Bug 13694]: Allow Xerces to write the BOM to XML files.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-23</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 16188] Consistent crashes with BCB6.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-23</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 16277] Readme should make note of threaded library problems in BCB6.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-16</td>
+        <td>David Bertoni</td>
+        <td>[Bug 16151] Memory leak in DTDScanner with ill-formed DTD declaration.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-13</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-13</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 14390] C++ Indentifier collision with Python.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-13</td>
+        <td>Khaled Noaman</td>
+        <td>[Bug 14469] Validator doesn't enforce xsd:key.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-10</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 13909] Use of non standard mbstowcs feature.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-10</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 14545] samples/Makefile.incl has bad -L for linux.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-10</td>
+        <td>Alberto Massari</td>
+        <td>[Bug 14912] crashes inside UnionDatatypeValidator::isSubstitutableBy.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-10</td>
+        <td>Albert Strasheim</td>
+        <td>[Bug 5854] Patches and .spec file for rpm creation of 2.2.0.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-09</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 14955] error validating parser.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-09</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 15928] Output with LocalFileFormatTarget fails silently.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-09</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 15371] Fix documentation.   The default of schema processing shoud be false.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-09</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 15372] DOMBuilder::parseFromURI ignores result of handleErrors.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-09</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 15802] Add "const" qualifier to getURIText.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-09</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 15427] DOMWriter dose not flush the output stream.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-09</td>
+        <td>Colin Adams</td>
+        <td>[Bug 15796] surroundContents seg-faults.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2003-01-03</td>
+        <td>Tinny Ng</td>
+        <td>New feature StandardUriConformant to force strict standard uri conformance.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-31</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 15590] BeOSDefs.hpp has wrong case in CVS.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-31</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 15608] IconvLCPTranscoder::transcode() is wrong at wcstombs() usage.
+        </td>
+    </tr>
+
+    <tr>
         <td>2002-12-30</td>
         <td>Gareth Reakes</td>
         <td>Added isDocumentAdopted API and recognize feature fgXercesUserAdoptsDOMDocument in
@@ -104,8 +286,9 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
             <br/>4. E1-16
             <br/>5. E1-20
             <br/>6. E1-21
-            <br/>7. E1-23
-            <br/>8. E1-27
+            <br/>7. E1-22
+            <br/>8. E1-23
+            <br/>9. E1-27
         </td>
     </tr>
 
@@ -142,6 +325,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
             <br/>6. Allow creating/setting of XMLAttr using a rawname (i.e. 'prefix:localpart').
             <br/>7. Enable/disable calculation of src offset.
             <br/>8. No need to use temporary buffer to hold namespace value in SAX2XMLReaderImpl.
+            <br/>9. Eliminate unnecessary condition in compareNString.
         </td>
     </tr>
 
@@ -158,6 +342,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
             <br/>6. Use XMLRecognizer::Encodings enum to make new transcode, faster than comparing the encoding string every time.
             <br/>7. Reduce some instruction counts in XMLUTF8Transcoder.
             <br/>8. [Bug 13447] Using LocalFileFormatTarget with DOMWriter is very slow.
+            <br/>9. Define fGlobalDeclarations as an array of ValueVectorOf to avoid string comparison.
         </td>
     </tr>
 
@@ -282,13 +467,6 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
         <td>2002-11-22</td>
         <td>Chris Larsson and Stephen Dulin</td>
         <td>390: Uniconv390 support.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-11-21</td>
-        <td>Jennifer Schachter</td>
-        <td>Implemented copy constructor and operator =.
         </td>
     </tr>
 
@@ -424,13 +602,6 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
         <td>2002-11-12</td>
         <td>Tinny Ng</td>
         <td>DOM Message: introduce a new message domain, XMLDOMMsg, for DOM Messages.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-11-06</td>
-        <td>PeiYong Zhang</td>
-        <td>Samples Update: add command line option for "locale".
         </td>
     </tr>
 
@@ -657,13 +828,6 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
         <td>2002-09-17</td>
         <td>Thomas Woerner</td>
         <td>RPM for Linux.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-09-16</td>
-        <td>Tinny Ng</td>
-        <td>DOM Fix: we should check if the prefix or localName are valid XMLName.
         </td>
     </tr>
 
