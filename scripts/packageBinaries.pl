@@ -121,8 +121,8 @@ if ($platform eq "" )
     psystem ("mkdir $targetdir\\include\\xercesc");
     psystem ("mkdir $targetdir\\samples");
     psystem ("mkdir $targetdir\\samples\\Projects");
-    #REVISIT: to change to /Win64 if necessary
-    psystem ("mkdir $targetdir\\samples\\Projects\\Win32");
+    psystem ("mkdir $targetdir\\samples\\Projects\\Win64");
+    psystem ("mkdir $targetdir\\samples\\Projects\\Win64\Nmake");
     psystem ("mkdir $targetdir\\samples\\data");
     psystem ("mkdir $targetdir\\samples\\SAXCount");
     psystem ("mkdir $targetdir\\samples\\SAX2Count");
@@ -263,7 +263,7 @@ if ($platform eq "" )
     psystem("del  $targetdir\\include\\xercesc\\dom\\deprecated\\DS*.hpp");
 
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
-        psystem("xcopy /y $ICUROOT\\include\\* $targetdir\\include");
+        psystem("xcopy /s /y $ICUROOT\\include\\* $targetdir\\include");
     }
 
     #
@@ -306,40 +306,40 @@ if ($platform eq "" )
     # Populate the samples directory
     print ("\n \nCopying sample files ...\n");
     psystem("copy $XERCESCROOT\\version.incl $targetdir");
-    psystem("xcopy /y $XERCESCROOT\\samples\\Projects\\* $targetdir\\samples\\Projects");
+    psystem("xcopy /s /y $XERCESCROOT\\samples\\Projects\\* $targetdir\\samples\\Projects");
 
-    psystem("xcopy /y $XERCESCROOT\\samples\\SAXCount\\* $targetdir\\samples\\SAXCount");
-    psystem("del /f $targetdir\\samples\\SAXCount\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\SAX2Count\\* $targetdir\\samples\\SAX2Count");
-    psystem("del /f $targetdir\\samples\\SAX2Count\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\SAXPrint\\* $targetdir\\samples\\SAXPrint");
-    psystem("del /f $targetdir\\samples\\SAXPrint\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\SAX2Print\\* $targetdir\\samples\\SAX2Print");
-    psystem("del /f $targetdir\\samples\\SAX2Print\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\DOMCount\\* $targetdir\\samples\\DOMCount");
-    psystem("del /f $targetdir\\samples\\DOMCount\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\DOMPrint\\* $targetdir\\samples\\DOMPrint");
-    psystem("del /f $targetdir\\samples\\DOMPrint\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\Redirect\\* $targetdir\\samples\\Redirect");
-    psystem("del /f $targetdir\\samples\\Redirect\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\MemParse\\* $targetdir\\samples\\MemParse");
-    psystem("del /f $targetdir\\samples\\MemParse\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\PParse\\* $targetdir\\samples\\PParse");
-    psystem("del /f $targetdir\\samples\\PParse\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\StdInParse\\* $targetdir\\samples\\StdInParse");
-    psystem("del /f $targetdir\\samples\\StdInParse\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\EnumVal\\* $targetdir\\samples\\EnumVal");
-    psystem("del /f $targetdir\\samples\\EnumVal\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\SEnumVal\\* $targetdir\\samples\\SEnumVal");
-    psystem("del /f $targetdir\\samples\\SEnumVal\\Makefile");
-    psystem("xcopy /y $XERCESCROOT\\samples\\CreateDOMDocument\\* $targetdir\\samples\\CreateDOMDocument");
-    psystem("del /f $targetdir\\samples\\CreateDOMDocument\\Makefile");
+    psystem("copy /y $XERCESCROOT\\samples\\SAXCount\\* $targetdir\\samples\\SAXCount");
+    psystem("del /f $targetdir\\samples\\SAXCount\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\SAX2Count\\* $targetdir\\samples\\SAX2Count");
+    psystem("del /f $targetdir\\samples\\SAX2Count\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\SAXPrint\\* $targetdir\\samples\\SAXPrint");
+    psystem("del /f $targetdir\\samples\\SAXPrint\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\SAX2Print\\* $targetdir\\samples\\SAX2Print");
+    psystem("del /f $targetdir\\samples\\SAX2Print\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\DOMCount\\* $targetdir\\samples\\DOMCount");
+    psystem("del /f $targetdir\\samples\\DOMCount\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\DOMPrint\\* $targetdir\\samples\\DOMPrint");
+    psystem("del /f $targetdir\\samples\\DOMPrint\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\Redirect\\* $targetdir\\samples\\Redirect");
+    psystem("del /f $targetdir\\samples\\Redirect\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\MemParse\\* $targetdir\\samples\\MemParse");
+    psystem("del /f $targetdir\\samples\\MemParse\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\PParse\\* $targetdir\\samples\\PParse");
+    psystem("del /f $targetdir\\samples\\PParse\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\StdInParse\\* $targetdir\\samples\\StdInParse");
+    psystem("del /f $targetdir\\samples\\StdInParse\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\EnumVal\\* $targetdir\\samples\\EnumVal");
+    psystem("del /f $targetdir\\samples\\EnumVal\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\SEnumVal\\* $targetdir\\samples\\SEnumVal");
+    psystem("del /f $targetdir\\samples\\SEnumVal\\Makefile.in");
+    psystem("copy /y $XERCESCROOT\\samples\\CreateDOMDocument\\* $targetdir\\samples\\CreateDOMDocument");
+    psystem("del /f $targetdir\\samples\\CreateDOMDocument\\Makefile.in");
 
-    psystem("xcopy /y $XERCESCROOT\\samples\\data\\* $targetdir\\samples\\data");
+    psystem("copy /y $XERCESCROOT\\samples\\data\\* $targetdir\\samples\\data");
 
     # Populate the docs directory
     print ("\n \nCopying documentation ...\n");
-    psystem("xcopy /y $XERCESCROOT\\doc\\* $targetdir\\doc");
+    psystem("xcopy /s /y $XERCESCROOT\\doc\\* $targetdir\\doc");
     psystem("copy $XERCESCROOT\\Readme.html $targetdir");
     psystem("copy $XERCESCROOT\\credits.txt $targetdir");
     psystem("copy $XERCESCROOT\\LICENSE.txt $targetdir");
