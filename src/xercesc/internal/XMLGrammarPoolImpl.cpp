@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/09 13:54:25  neilg
+ * modify grammar pool implementation to that, once locked, a thread-safe StringPool is used
+ *
  * Revision 1.5  2003/09/16 18:30:54  neilg
  * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
  *
@@ -96,12 +99,16 @@ XMLGrammarPoolImpl::~XMLGrammarPoolImpl()
 {
     delete fGrammarRegistry;
     delete fStringPool;
+    if(fSynchronizedStringPool)
+        delete fSynchronizedStringPool;
 }
 
 XMLGrammarPoolImpl::XMLGrammarPoolImpl(MemoryManager* const memMgr)
 :XMLGrammarPool(memMgr)
 ,fGrammarRegistry(0)
 ,fStringPool(0)
+,fSynchronizedStringPool(0)
+,fLocked(false)
 {
     fGrammarRegistry = new (memMgr) RefHashTableOf<Grammar>(29, true, memMgr);
     fStringPool = new (memMgr) XMLStringPool(109, memMgr);
@@ -157,12 +164,19 @@ void XMLGrammarPoolImpl::clear()
 
 void XMLGrammarPoolImpl::lockPool()
 {
-    //This implementation does NOT provide thread safety mechanism
+    fLocked = true;
+    if(!fSynchronizedStringPool)
+    {
+        MemoryManager *memMgr = getMemoryManager();
+        fSynchronizedStringPool = new (memMgr) XMLSynchronizedStringPool(fStringPool, 109, memMgr);
+    }
 }
 
 void XMLGrammarPoolImpl::unlockPool()
 {
-    //This implementation does NOT provide thread safety mechanism
+    fLocked = false;
+    if(fSynchronizedStringPool)
+        fSynchronizedStringPool->flushAll();
 }
 
 // -----------------------------------------------------------------------
@@ -190,6 +204,8 @@ XMLSchemaDescription* XMLGrammarPoolImpl::createSchemaDescription(const XMLCh* c
 
 inline XMLStringPool *XMLGrammarPoolImpl::getURIStringPool() 
 {
+    if(fLocked)
+        return fSynchronizedStringPool;
     return fStringPool;
 }
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/10/09 13:54:25  neilg
+ * modify grammar pool implementation to that, once locked, a thread-safe StringPool is used
+ *
  * Revision 1.5  2003/09/16 18:30:54  neilg
  * make Grammar pool be responsible for creating and owning URI string pools.  This is one more step towards having grammars be independent of the parsers involved in their creation
  *
@@ -82,6 +85,7 @@
 
 #include <xercesc/framework/XMLGrammarPool.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
+#include <xercesc/util/SynchronizedStringPool.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -226,10 +230,17 @@ private:
 	//    container
     // fStringPool
     //    grammars need a string pool for URI -> int mappings
+    // fSynchronizedStringPool
+    //      When the grammar pool is locked, provide a string pool
+    //      that can be updated in a thread-safe manner.
+    // fLocked
+    //      whether the pool has been locked
     //
     // -----------------------------------------------------------------------
     RefHashTableOf<Grammar>* fGrammarRegistry; 
     XMLStringPool         * fStringPool;
+    XMLSynchronizedStringPool * fSynchronizedStringPool;
+    bool                    fLocked;
 
 };
 
