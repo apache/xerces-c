@@ -359,6 +359,7 @@ Win32TransService::Win32TransService()
     //  values we stored for the original.
     //
     subIndex = 0;
+    char aliasBuf[nameBufSz + 1];
     while (true)
     {
         // Get the name of the next key
@@ -392,12 +393,12 @@ Win32TransService::Win32TransService()
         //  then construct a new one with the new name and the aliased
         //  ids.
         //
-        if (isAlias(encodingKey, nameBuf, nameBufSz))
+        if (isAlias(encodingKey, aliasBuf, nameBufSz))
         {
-            const unsigned int srcLen = strlen(nameBuf);
-            const unsigned int targetLen = ::mbstowcs(0, nameBuf, srcLen);
+            const unsigned int srcLen = strlen(aliasBuf);
+            const unsigned int targetLen = ::mbstowcs(0, aliasBuf, srcLen);
             XMLCh* uniAlias = new XMLCh[targetLen + 1];
-            ::mbstowcs(uniAlias, nameBuf, srcLen);
+            ::mbstowcs(uniAlias, aliasBuf, srcLen);
             uniAlias[targetLen] = 0;
             _wcsupr(uniAlias);
 
@@ -405,16 +406,25 @@ Win32TransService::Win32TransService()
             CPMapEntry* aliasedEntry = fCPMap->get(uniAlias);
             if (aliasedEntry)
             {
+                const unsigned int srcLen = strlen(nameBuf);
+                const unsigned int targetLen = ::mbstowcs(0, nameBuf, srcLen);
+                XMLCh* uniName = new XMLCh[targetLen + 1];
+                ::mbstowcs(uniName, nameBuf, srcLen);
+                uniName[targetLen] = 0;
+                _wcsupr(uniName);
+
                 //
                 //  If the name is actually different, then take it.
                 //  Otherwise, don't take it. They map aliases that are
                 //  just different case.
                 //
-                if (::wcscmp(uniAlias, aliasedEntry->getEncodingName()))
+                if (::wcscmp(uniName, aliasedEntry->getEncodingName()))
                 {
-                    CPMapEntry* newEntry = new CPMapEntry(uniAlias, aliasedEntry->getWinCP(), aliasedEntry->getIEEncoding());
+                    CPMapEntry* newEntry = new CPMapEntry(uniName, aliasedEntry->getWinCP(), aliasedEntry->getIEEncoding());
                     fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
                 }
+
+                delete [] uniName;
             }
             delete [] uniAlias;
         }
