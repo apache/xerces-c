@@ -17,6 +17,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2004/10/26 14:49:27  peiyongz
+ * Reset buffer/Provide position info for debugging
+ *
  * Revision 1.19  2004/09/08 13:56:14  peiyongz
  * Apache License Version 2.0
  *
@@ -155,6 +158,7 @@ XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
 ,fGrammarPool(gramPool)
 ,fInputStream(inStream)
 ,fOutputStream(0)
+,fBufCount(0)
 ,fBufSize(bufSize)
 ,fBufStart( (XMLByte*) gramPool->getMemoryManager()->allocate(bufSize))
 ,fBufEnd(0)
@@ -178,6 +182,7 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
 ,fGrammarPool(gramPool)
 ,fInputStream(0)
 ,fOutputStream(outStream)
+,fBufCount(0)
 ,fBufSize(bufSize)
 ,fBufStart((XMLByte*) gramPool->getMemoryManager()->allocate(bufSize))
 ,fBufEnd(fBufStart+bufSize)
@@ -187,6 +192,8 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
 ,fLoadPool(0)
 ,fObjectCount(0)
 {
+    resetBuffer();
+
     //initialize store pool
     fStorePool->put(0, new (gramPool->getMemoryManager()) XSerializedObjectId(fgNullObjectTag));
 
@@ -202,6 +209,7 @@ XSerializeEngine::XSerializeEngine(BinInputStream*         inStream
 ,fGrammarPool(0)
 ,fInputStream(inStream)
 ,fOutputStream(0)
+,fBufCount(0)
 ,fBufSize(bufSize)
 ,fBufStart( (XMLByte*) manager->allocate(bufSize))
 ,fBufEnd(0)
@@ -225,6 +233,7 @@ XSerializeEngine::XSerializeEngine(BinOutputStream*        outStream
 ,fGrammarPool(0)
 ,fInputStream(0)
 ,fOutputStream(outStream)
+,fBufCount(0)
 ,fBufSize(bufSize)
 ,fBufStart((XMLByte*) manager->allocate(bufSize))
 ,fBufEnd(fBufStart+bufSize)
@@ -644,13 +653,23 @@ void XSerializeEngine::readString(XMLByte*&  toRead
 }
 
 // ---------------------------------------------------------------------------
-//  Insertion
+//  Insertion & Extraction
 // ---------------------------------------------------------------------------
+
 XSerializeEngine& XSerializeEngine::operator<<(XMLCh xch)
 { 
     checkAndFlushBuffer(sizeof(XMLCh));
 
     *(XMLCh*)fBufCur = xch; 
+    fBufCur += sizeof(XMLCh); 
+    return *this; 
+}
+
+XSerializeEngine& XSerializeEngine::operator>>(XMLCh& xch)
+{ 
+    checkAndFillBuffer(sizeof(XMLCh));
+
+    xch = *(XMLCh*)fBufCur; 
     fBufCur += sizeof(XMLCh); 
     return *this; 
 }
@@ -664,6 +683,15 @@ XSerializeEngine& XSerializeEngine::operator<<(XMLByte by)
     return *this; 
 }
 
+XSerializeEngine& XSerializeEngine::operator>>(XMLByte& by)
+{ 
+    checkAndFillBuffer(sizeof(XMLByte));
+
+    by = *(XMLByte*)fBufCur; 
+    fBufCur += sizeof(XMLByte); 
+    return *this; 
+}
+
 XSerializeEngine& XSerializeEngine::operator<<(bool b)
 { 
     checkAndFlushBuffer(sizeof(bool));
@@ -673,9 +701,23 @@ XSerializeEngine& XSerializeEngine::operator<<(bool b)
     return *this; 
 }
 
+XSerializeEngine& XSerializeEngine::operator>>(bool& b)
+{ 
+    checkAndFillBuffer(sizeof(bool));
+
+    b = *(bool*)fBufCur; 
+    fBufCur += sizeof(bool); 
+    return *this; 
+}
+
 XSerializeEngine& XSerializeEngine::operator<<(char ch)
 { 
     return XSerializeEngine::operator<<((XMLByte)ch); 
+}
+
+XSerializeEngine& XSerializeEngine::operator>>(char& ch)
+{ 
+    return XSerializeEngine::operator>>((XMLByte&)ch); 
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(short sh)
@@ -684,6 +726,16 @@ XSerializeEngine& XSerializeEngine::operator<<(short sh)
 
     allignBufCur();
     *(short*)fBufCur = sh; 
+    fBufCur += sizeof(short); 
+    return *this; 
+}
+
+XSerializeEngine& XSerializeEngine::operator>>(short& sh)
+{ 
+    checkAndFillBuffer(allignAdjust()+sizeof(short));
+
+    allignBufCur();
+    sh = *(short*)fBufCur; 
     fBufCur += sizeof(short); 
     return *this; 
 }
@@ -698,12 +750,32 @@ XSerializeEngine& XSerializeEngine::operator<<(int i)
     return *this;     
 }
 
+XSerializeEngine& XSerializeEngine::operator>>(int& i)
+{ 
+    checkAndFillBuffer(allignAdjust()+sizeof(int));
+
+    allignBufCur();
+    i = *(int*)fBufCur; 
+    fBufCur += sizeof(int); 
+    return *this; 
+}
+
 XSerializeEngine& XSerializeEngine::operator<<(unsigned int ui)
 { 
     checkAndFlushBuffer(allignAdjust()+sizeof(unsigned int));
 
     allignBufCur();
     *(unsigned int*)fBufCur = ui; 
+    fBufCur += sizeof(unsigned int); 
+    return *this; 
+}
+
+XSerializeEngine& XSerializeEngine::operator>>(unsigned int& ui)
+{ 
+    checkAndFillBuffer(allignAdjust()+sizeof(unsigned int));
+
+    allignBufCur();
+    ui = *(unsigned int*)fBufCur; 
     fBufCur += sizeof(unsigned int); 
     return *this; 
 }
@@ -718,12 +790,32 @@ XSerializeEngine& XSerializeEngine::operator<<(long l)
     return *this; 
 }
 
+XSerializeEngine& XSerializeEngine::operator>>(long& l)
+{ 
+    checkAndFillBuffer(allignAdjust()+sizeof(long));
+
+    allignBufCur();
+    l = *(long*)fBufCur; 
+    fBufCur += sizeof(long); 
+    return *this; 
+}
+
 XSerializeEngine& XSerializeEngine::operator<<(unsigned long ul)
 { 
     checkAndFlushBuffer(allignAdjust()+sizeof(unsigned long));
 
     allignBufCur();
     *(unsigned long*)fBufCur = ul; 
+    fBufCur += sizeof(unsigned long); 
+    return *this; 
+}
+
+XSerializeEngine& XSerializeEngine::operator>>(unsigned long& ul)
+{ 
+    checkAndFillBuffer(allignAdjust()+sizeof(unsigned long));
+
+    allignBufCur();
+    ul = *(unsigned long*)fBufCur; 
     fBufCur += sizeof(unsigned long); 
     return *this; 
 }
@@ -738,101 +830,6 @@ XSerializeEngine& XSerializeEngine::operator<<(float f)
     return *this;
 }
 
-XSerializeEngine& XSerializeEngine::operator<<(double d)
-{ 
-    checkAndFlushBuffer(allignAdjust()+sizeof(double));
-
-    allignBufCur();
-    *(double*)fBufCur = *(double*)&d; 
-    fBufCur += sizeof(double); 
-    return *this; 
-}
-
-// ---------------------------------------------------------------------------
-//  Extraction
-// ---------------------------------------------------------------------------
-XSerializeEngine& XSerializeEngine::operator>>(XMLCh& xch)
-{ 
-    checkAndFillBuffer(sizeof(XMLCh));
-
-    xch = *(XMLCh*)fBufCur; 
-    fBufCur += sizeof(XMLCh); 
-    return *this; 
-}
-
-XSerializeEngine& XSerializeEngine::operator>>(XMLByte& by)
-{ 
-    checkAndFillBuffer(sizeof(XMLByte));
-
-    by = *(XMLByte*)fBufCur; 
-    fBufCur += sizeof(XMLByte); 
-    return *this; 
-}
-
-XSerializeEngine& XSerializeEngine::operator>>(bool& b)
-{ 
-    checkAndFillBuffer(sizeof(bool));
-
-    b = *(bool*)fBufCur; 
-    fBufCur += sizeof(bool); 
-    return *this; 
-}
-
-XSerializeEngine& XSerializeEngine::operator>>(char& ch)
-{ 
-    return XSerializeEngine::operator>>((XMLByte&)ch); 
-}
-
-XSerializeEngine& XSerializeEngine::operator>>(short& sh)
-{ 
-    checkAndFillBuffer(allignAdjust()+sizeof(short));
-
-    allignBufCur();
-    sh = *(short*)fBufCur; 
-    fBufCur += sizeof(short); 
-    return *this; 
-}
-
-XSerializeEngine& XSerializeEngine::operator>>(int& i)
-{ 
-    checkAndFillBuffer(allignAdjust()+sizeof(int));
-
-    allignBufCur();
-    i = *(int*)fBufCur; 
-    fBufCur += sizeof(int); 
-    return *this; 
-}
-
-XSerializeEngine& XSerializeEngine::operator>>(unsigned int& ui)
-{ 
-    checkAndFillBuffer(allignAdjust()+sizeof(unsigned int));
-
-    allignBufCur();
-    ui = *(unsigned int*)fBufCur; 
-    fBufCur += sizeof(unsigned int); 
-    return *this; 
-}
-
-XSerializeEngine& XSerializeEngine::operator>>(long& l)
-{ 
-    checkAndFillBuffer(allignAdjust()+sizeof(long));
-
-    allignBufCur();
-    l = *(long*)fBufCur; 
-    fBufCur += sizeof(long); 
-    return *this; 
-}
-
-XSerializeEngine& XSerializeEngine::operator>>(unsigned long& ul)
-{ 
-    checkAndFillBuffer(allignAdjust()+sizeof(unsigned long));
-
-    allignBufCur();
-    ul = *(unsigned long*)fBufCur; 
-    fBufCur += sizeof(unsigned long); 
-    return *this; 
-}
-
 XSerializeEngine& XSerializeEngine::operator>>(float& f)
 { 
     checkAndFillBuffer(allignAdjust()+sizeof(float));
@@ -840,6 +837,16 @@ XSerializeEngine& XSerializeEngine::operator>>(float& f)
     allignBufCur();
     *(float*)&f = *(float*)fBufCur; 
     fBufCur += sizeof(float); 
+    return *this; 
+}
+
+XSerializeEngine& XSerializeEngine::operator<<(double d)
+{ 
+    checkAndFlushBuffer(allignAdjust()+sizeof(double));
+
+    allignBufCur();
+    *(double*)fBufCur = *(double*)&d; 
+    fBufCur += sizeof(double); 
     return *this; 
 }
 
@@ -937,6 +944,8 @@ void XSerializeEngine::fillBuffer()
     ensureLoading();
     ensureLoadBuffer();
  
+    resetBuffer();
+
     int bytesRead = fInputStream->readBytes(fBufStart, fBufSize);
 
     /***
@@ -960,6 +969,7 @@ void XSerializeEngine::fillBuffer()
 
     ensureLoadBuffer();
 
+    fBufCount++;
 }
 
 /***
@@ -976,7 +986,10 @@ void XSerializeEngine::flushBuffer()
     fOutputStream->writeBytes(fBufStart, fBufSize);
     fBufCur = fBufStart;
 
+    resetBuffer();
     ensureStoreBuffer();
+
+    fBufCount++;
 }
 
 inline void XSerializeEngine::checkAndFlushBuffer(int bytesNeedToWrite)
@@ -1047,6 +1060,11 @@ inline void XSerializeEngine::ensureBufferLen(int bufferLen) const
                    , XMLExcepts::XSer_Inv_Buffer_Len
                    )
 
+}
+
+inline void XSerializeEngine::resetBuffer()
+{
+    memset(fBufStart, 0, fBufSize * sizeof(XMLByte));
 }
 
 // ---------------------------------------------------------------------------

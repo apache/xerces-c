@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/10/26 14:49:27  peiyongz
+ * Reset buffer/Provide position info for debugging
+ *
  * Revision 1.18  2004/09/08 13:56:14  peiyongz
  * Apache License Version 2.0
  *
@@ -595,6 +598,23 @@ public:
            XSerializeEngine& operator>>(double&);
            XSerializeEngine& operator>>(bool&);
 
+    /***
+      *
+      *  Getters
+      *
+      ***/
+    inline 
+    const unsigned long   getBufSize()    const; 
+
+    inline 
+    const unsigned long   getBufCur()     const; 
+
+    inline 
+    const unsigned long   getBufCurAccumulated()     const; 
+
+    inline 
+    const unsigned long   getBufCount()     const; 
+
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
@@ -633,6 +653,8 @@ private:
            void           flushBuffer();
 
            void           pumpCount();
+
+    inline void           resetBuffer();
 
     /***
       *   
@@ -710,12 +732,16 @@ private:
     BinInputStream*  const                 fInputStream;
     BinOutputStream* const                 fOutputStream;
 
+    unsigned long                          fBufCount;
+
     //buffer
     const unsigned long                    fBufSize;
 	XMLByte* const                         fBufStart;
 	XMLByte* const                         fBufEnd; 
     XMLByte*                               fBufCur;
     XMLByte*                               fBufLoadMax; 
+
+
 
     /***
      *   Map for storing object
@@ -838,6 +864,30 @@ inline void XSerializeEngine::readString(XMLByte*&      toRead)
     int  dummyBufferLen;
     int  dummyDataLen;
     readString(toRead, dummyBufferLen, dummyDataLen);
+}
+
+inline 
+const unsigned long XSerializeEngine::getBufSize() const
+{
+    return fBufSize;
+}
+
+inline 
+const unsigned long XSerializeEngine::getBufCur() const
+{
+    return (fBufCur-fBufStart);
+}
+
+inline 
+const unsigned long XSerializeEngine::getBufCurAccumulated() const
+{
+    return (fBufCount - isStoring() ? 0: 1)* fBufSize + (fBufCur-fBufStart);
+}
+
+inline 
+const unsigned long XSerializeEngine::getBufCount() const
+{
+    return fBufCount;
 }
 
 /***
