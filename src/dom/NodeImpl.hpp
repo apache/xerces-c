@@ -126,6 +126,7 @@ public:
     static const unsigned short IGNORABLEWS;
     static const unsigned short SETVALUE;
     static const unsigned short ID_ATTR;
+	static const unsigned short USERDATA;
 
     void *userData;
 
@@ -279,6 +280,13 @@ public: // should really be protected - ALH
         flags = (value ? flags | ID_ATTR : flags & ~ID_ATTR);
     }
     
+    inline bool userdata() const {
+        return (flags & USERDATA) != 0;
+    }
+
+    inline void userdata(bool value) {
+        flags = (value ? flags | USERDATA : flags & ~USERDATA);
+    }
 };
 
 

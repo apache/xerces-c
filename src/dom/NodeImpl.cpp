@@ -88,6 +88,7 @@ const unsigned short NodeImpl::SPECIFIED    = 0x1<<5;
 const unsigned short NodeImpl::IGNORABLEWS  = 0x1<<6;
 const unsigned short NodeImpl::SETVALUE     = 0x1<<7;
 const unsigned short NodeImpl::ID_ATTR      = 0x1<<8;
+const unsigned short NodeImpl::USERDATA     = 0x1<<9;
 
 
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc)
@@ -126,7 +127,7 @@ int  NodeImpl::gTotalNodeImpls= 0;
 
 
 NodeImpl::~NodeImpl() {
-	if (getUserData())
+	if (userdata())
 	{
 		setUserData(null);
 	}
@@ -294,7 +295,7 @@ NodeImpl*  NodeImpl::getPreviousSibling()
 
 void *NodeImpl::getUserData()
 {
-	return getOwnerDocument()->getUserData(this);
+	return (userdata()) ? getOwnerDocument()->getUserData(this) : null;
 };  
 
 
@@ -375,6 +376,10 @@ void NodeImpl::setReadOnly(bool readOnl, bool deep)
 void NodeImpl::setUserData(void * val)
 {
 	getOwnerDocument()->setUserData(this, val);
+	if (val)
+		userdata(true);
+	else
+		userdata(false);
 };  
 
 

@@ -768,10 +768,14 @@ void* DocumentImpl::getUserData(NodeImpl* n)
 
 void* DocumentImpl::getUserData()
 {
-	return getUserData(this);
+	return (userdata()) ? getUserData(this) : null;
 }
 
 void DocumentImpl::setUserData(void* val)
 {
 	setUserData(this, val);
+	if (val)
+		userdata(true);
+	else
+		userdata(false);
 };  
