@@ -358,12 +358,12 @@ ifeq (${PLATFORM}, HPUX)
   ifeq (${CXX}, aCC)
     PLATFORM_COMPILE_OPTIONS = -D_HP_UX -DHPaCC \
         -D${OSVERDEFINE} +DAportable +Z
-    MAKE_SHARED = ${CXX} -D${PLATFORM} -b ${LDFLAGS}
-    MAKE_SHARED_C = ${CC} -D${PLATFORM} -b ${LDFLAGS}
+    MAKE_SHARED = ${CXX} -D${PLATFORM} -b -Wl,+s ${LDFLAGS}
+    MAKE_SHARED_C = ${CC} -D${PLATFORM} -b -Wl,+s ${LDFLAGS}
     ifeq (${TRANSCODER}, ICU)
-        ALLLIBS = ${LIBS} -licuuc -licudata -lCsup -lstream
+        ALLLIBS = ${LIBS} -licuuc -licudata
     else
-        ALLLIBS = ${LIBS} -lCsup -lstream
+        ALLLIBS = ${LIBS}
     endif
     SHLIBSUFFIX=.sl
   else
