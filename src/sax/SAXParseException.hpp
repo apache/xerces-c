@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/09 19:24:49  abagchi
+ * Inserted documentation for constructors and destructors
+ *
  * Revision 1.2  2000/02/06 07:47:58  rahulj
  * Year 2K copyright swat.
  *
@@ -87,16 +90,6 @@ class Locator;
   *
   * <p>Since this exception is a subclass of SAXException, it
   * inherits the ability to wrap another exception.</p>
-  *
-  * $Log$
-  * Revision 1.2  2000/02/06 07:47:58  rahulj
-  * Year 2K copyright swat.
-  *
-  * Revision 1.1.1.1  1999/11/09 01:07:47  twl
-  * Initial checkin
-  *
-  * Revision 1.2  1999/11/08 20:45:02  rahul
-  * Swat for adding in Product name and CVS comment log variable.
   *
   * @see SAXException#SAXException
   * @see Locator#Locator
@@ -150,14 +143,30 @@ public:
         , const unsigned int    columnNumber
     );
 
+  /**
+    * Copy constructor
+    *
+    * @param toCopy The object to be copied
+    */
     SAXParseException(const SAXParseException& toCopy);
 
-    /** Destructor */
+    /**
+      * Destructor
+      */
     ~SAXParseException();
 
     //@}
 
+    /** @name Assignment operator */
+    //@{
+   /**
+    * Assignment operator
+    *
+    * @param toAssign The object to be copied through assignment
+    *
+    */
     SAXParseException& operator=(const SAXParseException& toAssign);
+    //@}
 
     /** @name Getter methods */
     //@{
