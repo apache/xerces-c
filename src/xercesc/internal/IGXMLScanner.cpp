@@ -1130,8 +1130,9 @@ void IGXMLScanner::scanEndTag(bool& gotData)
 
     // reset xsi:type ComplexTypeInfo
     if (fGrammarType == Grammar::SchemaGrammarType) {
+        // REVISIT XXX:  should not be necessary
         ((SchemaElementDecl*)topElem->fThisElement)->reset();
-        if (!isRoot)
+        if (!isRoot && false)
             ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
                 setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
     }
@@ -1882,6 +1883,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
     //  would have have gotten faulted in anyway.
     if (elemDecl->hasAttDefs())
     {
+        // N.B.:  this assumes DTD validation.
         XMLAttDefList& attDefList = elemDecl->getAttDefList();
         while (attDefList.hasMoreElements())
         {
@@ -2070,14 +2072,17 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
     bool laxThisOne = false;
 
     if (!isRoot && fGrammarType == Grammar::SchemaGrammarType) {
-        SchemaElementDecl* tempElement = (SchemaElementDecl*) fElemStack.topElement()->fThisElement;
-        SchemaElementDecl::ModelTypes modelType = tempElement->getModelType();
+        // schema validator will have correct type
+        ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+        SchemaElementDecl::ModelTypes modelType = (currType)
+                ? ((SchemaElementDecl::ModelTypes)currType->getContentType())
+                : SchemaElementDecl::Simple;
 
         if ((modelType == SchemaElementDecl::Mixed_Simple)
           ||  (modelType == SchemaElementDecl::Mixed_Complex)
           ||  (modelType == SchemaElementDecl::Children))
         {
-            cm = tempElement->getContentModel();
+            cm = currType->getContentModel();
             cv = cm->getContentLeafNameTypeVector();
             currentScope = fElemStack.getCurrentScope();
         }
@@ -2122,7 +2127,8 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             , Grammar::TOP_LEVEL_SCOPE
         );
         // may have not been declared:
-        elemDecl = fDTDElemNonDeclPool->getByKey(rawQName);
+        if(!elemDecl)
+            elemDecl = fDTDElemNonDeclPool->getByKey(rawQName);
         if (elemDecl) {
             if (elemDecl->hasAttDefs()) {
                 XMLAttDefList& attDefList = elemDecl->getAttDefList();
@@ -2496,7 +2502,8 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             }
         }
 
-        if (fGrammarType == Grammar::SchemaGrammarType) {
+        // REVISIT:  XXX not necessary
+        if (fGrammarType == Grammar::SchemaGrammarType && false) {
             ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
             ((SchemaElementDecl*)elemDecl)->setXsiSimpleTypeInfo(0);
         }
@@ -2521,7 +2528,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         fValidator->validateElement(elemDecl);
 
     if (fGrammarType == Grammar::SchemaGrammarType) {
-        ComplexTypeInfo* typeinfo = ((SchemaElementDecl*)elemDecl)->getComplexTypeInfo();
+        ComplexTypeInfo* typeinfo = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
         if (typeinfo) {
             currentScope = typeinfo->getScopeDefined();
 
@@ -2742,8 +2749,9 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
         // reset xsi:type ComplexTypeInfo
         if (fGrammarType == Grammar::SchemaGrammarType) {
+            // REVISIT XXX:  should not be necessary
             ((SchemaElementDecl*)elemDecl)->reset();
-            if (!isRoot)
+            if (!isRoot && false)
                 ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
                     setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
         }

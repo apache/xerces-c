@@ -110,10 +110,17 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                           ,       XMLElementDecl*             elemDecl
                           ,       RefVectorOf<XMLAttr>&       toFill)
 {
-    //  Ask the element to clear the 'provided' flag on all of the att defs
+    //  If doing DTD's, Ask the element to clear the 'provided' flag on all of the att defs
     //  that it owns, and to return us a boolean indicating whether it has
-    //  any defs.
-    const bool hasDefs = elemDecl->resetDefs();
+    //  any defs.  If schemas are being validated, the complexType
+    // at the top of the SchemaValidator's stack will
+    // know what's best.  REVISIT:  don't modify grammar at all...
+    ComplexTypeInfo *currType = 0;
+    if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType)
+        currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+    const bool hasDefs = (currType && fValidate)
+            ? currType->resetDefs()
+            : elemDecl->resetDefs();
 
     //  If there are no expliclitily provided attributes and there are no
     //  defined attributes for the element, the we don't have anything to do.
@@ -201,17 +208,21 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             XMLAttDef* attDefForWildCard = 0;
             XMLAttDef*  attDef = 0;
 
-            if (fGrammarType == Grammar::SchemaGrammarType) {
+            if (fGrammarType == Grammar::SchemaGrammarType && currType) {
 
                 //retrieve the att def
-                attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, uriId);
+                // currType must be non-null for schema grammars
+                attDef = currType->getAttDef(suffPtr, uriId);
 
                 // if not found or faulted in - check for a matching wildcard attribute
                 // if no matching wildcard attribute, check (un)qualifed cases and flag
                 // appropriate errors
                 if (!attDef || (attDef->getCreateReason() == XMLAttDef::JustFaultIn)) {
 
-                    SchemaAttDef* attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
+                    SchemaAttDef* attWildCard = currType->getAttWildCard();
+                    if(!attWildCard)
+                        // check explicitly-set wildcard
+                        attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
 
                     if (attWildCard) {
                         //if schema, see if we should lax or skip the validation of this attribute
@@ -229,7 +240,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     else {
                         // not found, see if the attDef should be qualified or not
                         if (uriId == fEmptyNamespaceId) {
-                            attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, fURIStringPool->getId(fGrammar->getTargetNamespace()));
+                            attDef = currType->getAttDef(suffPtr
+                                            , fURIStringPool->getId(fGrammar->getTargetNamespace()));
                             if (fValidate
                                 && attDef
                                 && attDef->getCreateReason() != XMLAttDef::JustFaultIn) {
@@ -245,7 +257,8 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             }
                         }
                         else {
-                            attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, fEmptyNamespaceId);
+                            attDef = currType->getAttDef(suffPtr
+                                            , fEmptyNamespaceId);
                             if (fValidate
                                 && attDef
                                 && attDef->getCreateReason() != XMLAttDef::JustFaultIn) {
@@ -521,7 +534,9 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         // Check after all specified attrs are scanned
         // (1) report error for REQUIRED attrs that are missing (V_TAGc)
         // (2) add default attrs if missing (FIXED and NOT_FIXED)
-        XMLAttDefList& attDefList = elemDecl->getAttDefList();
+        XMLAttDefList &attDefList = (fGrammarType == Grammar::SchemaGrammarType)
+                ? (((SchemaValidator*)fValidator)->getCurrentTypeInfo()->getAttDefList())
+                : (elemDecl->getAttDefList());
         while (attDefList.hasMoreElements())
         {
             // Get the current att def, for convenience and its def type
@@ -1031,7 +1046,21 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
         const ElemStack::StackElem* topElem = fElemStack.topElement();
 
         // Get the character data opts for the current element
-        XMLElementDecl::CharDataOpts charOpts = topElem->fThisElement->getCharDataOpts();
+        XMLElementDecl::CharDataOpts charOpts = XMLElementDecl::AllCharData;
+        if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType) 
+        {
+            // And see if the current element is a 'Children' style content model
+            ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+            if(currType) 
+            {
+                SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
+                if(modelType == SchemaElementDecl::Children) 
+                    charOpts = XMLElementDecl::SpacesOk;
+                else if(modelType == SchemaElementDecl::Empty) 
+                    charOpts = XMLElementDecl::NoCharData; 
+            } 
+        } else // DTD grammar
+            charOpts = topElem->fThisElement->getCharDataOpts();
 
         if (charOpts == XMLElementDecl::NoCharData)
         {
@@ -1058,9 +1087,10 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                 }
                 else
                 {
+                    SchemaValidator *schemaValidator = (SchemaValidator *)fValidator;
                     if (fNormalizeData) {
 
-                        DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                        DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                         if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
                         {
                             // normalize the character according to schema whitespace facet
@@ -1074,7 +1104,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                     }
 
                     // tell the schema validation about the character data for checkContent later
-                    ((SchemaValidator*) fValidator)->setDatatypeBuffer(rawBuf);
+                    schemaValidator->setDatatypeBuffer(rawBuf);
 
                     // call all active identity constraints
                     if (fMatcherStack->getMatcherCount())
@@ -1099,9 +1129,10 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                 }
                 else
                 {
+                    SchemaValidator *schemaValidator = (SchemaValidator*)fValidator;
                     if (fNormalizeData) {
 
-                        DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                        DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                         if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
                         {
                             // normalize the character according to schema whitespace facet
@@ -1115,7 +1146,7 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
                     }
 
                     // tell the schema validation about the character data for checkContent later
-                    ((SchemaValidator*) fValidator)->setDatatypeBuffer(rawBuf);
+                    schemaValidator->setDatatypeBuffer(rawBuf);
 
                     // call all active identity constraints
                     if (fMatcherStack->getMatcherCount())
@@ -2069,10 +2100,24 @@ void IGXMLScanner::scanCDSection()
     //  characters specially here.
     bool            emittedError = false;
     bool    gotLeadingSurrogate = false;
+    const ElemStack::StackElem* topElem = fElemStack.topElement();
 
     // Get the character data opts for the current element
-    const ElemStack::StackElem* topElem = fElemStack.topElement();
-    XMLElementDecl::CharDataOpts charOpts = topElem->fThisElement->getCharDataOpts();
+    XMLElementDecl::CharDataOpts charOpts = XMLElementDecl::AllCharData;
+    if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType) 
+    {
+        // And see if the current element is a 'Children' style content model
+        ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+        if(currType) 
+        {
+            SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
+            if(modelType == SchemaElementDecl::Children) 
+                charOpts = XMLElementDecl::SpacesOk;
+            else if(modelType == SchemaElementDecl::Empty) 
+                charOpts = XMLElementDecl::NoCharData; 
+        } 
+    } else // DTD grammar
+        charOpts = topElem->fThisElement->getCharDataOpts();
 
     while (true)
     {
@@ -2115,7 +2160,7 @@ void IGXMLScanner::scanCDSection()
 
                 if (fNormalizeData)
                 {
-                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                    DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                     if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
                     {
                         // normalize the character according to schema whitespace facet
@@ -2130,7 +2175,7 @@ void IGXMLScanner::scanCDSection()
                 if (fValidate) {
 
                     // tell the schema validation about the character data for checkContent later
-                    ((SchemaValidator*) fValidator)->setDatatypeBuffer(bbCData.getRawBuffer());
+                    ((SchemaValidator*)fValidator)->setDatatypeBuffer(bbCData.getRawBuffer());
 
                     if (charOpts != XMLElementDecl::AllCharData)
                     {
@@ -2408,7 +2453,21 @@ void IGXMLScanner::scanCharData(XMLBuffer& toUse)
             if (topElem->fThisElement->isExternal()) {
 
                 // Get the character data opts for the current element
-                XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
+                XMLElementDecl::CharDataOpts charOpts = XMLElementDecl::AllCharData;
+                if(fGrammar->getGrammarType() == Grammar::SchemaGrammarType) 
+                {
+                    // And see if the current element is a 'Children' style content model
+                    ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+                    if(currType) 
+                    {
+                        SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
+                        if(modelType == SchemaElementDecl::Children) 
+                            charOpts = XMLElementDecl::SpacesOk;
+                        else if(modelType == SchemaElementDecl::Empty) 
+                            charOpts = XMLElementDecl::NoCharData; 
+                    } 
+                } else // DTD grammar
+                    charOpts = topElem->fThisElement->getCharDataOpts();
 
                 if (charOpts == XMLElementDecl::SpacesOk)  // => Element Content
                 {

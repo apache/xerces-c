@@ -1060,8 +1060,10 @@ void SGXMLScanner::scanEndTag(bool& gotData)
 
 
     // reset xsi:type ComplexTypeInfo
+    // REVISIT mutability!
     ((SchemaElementDecl*)topElem->fThisElement)->reset();
-    if (!isRoot)
+    // XXX
+    if (!isRoot && false)
         ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
             setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
 
@@ -1150,15 +1152,17 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
     int currentScope = Grammar::TOP_LEVEL_SCOPE;
     bool laxThisOne = false;
     if (!isRoot) {
-
-        SchemaElementDecl* tempElement = (SchemaElementDecl*) fElemStack.topElement()->fThisElement;
-        SchemaElementDecl::ModelTypes modelType = tempElement->getModelType();
+        // schema validator will have correct type
+        ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+        SchemaElementDecl::ModelTypes modelType = (currType)
+                ? ((SchemaElementDecl::ModelTypes)currType->getContentType())
+                : SchemaElementDecl::Simple;
 
         if ((modelType == SchemaElementDecl::Mixed_Simple)
           ||  (modelType == SchemaElementDecl::Mixed_Complex)
           ||  (modelType == SchemaElementDecl::Children))
         {
-            cm = tempElement->getContentModel();
+            cm = currType->getContentModel();
             cv = cm->getContentLeafNameTypeVector();
             currentScope = fElemStack.getCurrentScope();
         }
@@ -1492,6 +1496,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             }
         }
 
+        // XXX REVISIT:  should not be necessary
         ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
         ((SchemaElementDecl*)elemDecl)->setXsiSimpleTypeInfo(0);
     }
@@ -1515,7 +1520,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         fValidator->validateElement(elemDecl);
 
 
-    ComplexTypeInfo* typeinfo = ((SchemaElementDecl*)elemDecl)->getComplexTypeInfo();
+    ComplexTypeInfo* typeinfo = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
     if (typeinfo) {
         currentScope = typeinfo->getScopeDefined();
 
@@ -1646,6 +1651,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             const int res = fValidator->checkContent(elemDecl, 0, 0);
             if (res >= 0)
             {
+                // REVISIT:  in the case of xsi:type, this may
+                // return the wrong string...
                 fValidator->emitError
                 (
                     XMLValid::ElementNotValidForContent
@@ -1717,8 +1724,9 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         }
 
         // reset xsi:type ComplexTypeInfo
+        // REVISIT XXX; should not be necessary
         ((SchemaElementDecl*)elemDecl)->reset();
-        if (!isRoot)
+        if (!isRoot && false)
             ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
                 setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
 
@@ -2014,7 +2022,10 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
     //  Ask the element to clear the 'provided' flag on all of the att defs
     //  that it owns, and to return us a boolean indicating whether it has
     //  any defs.
-    const bool hasDefs = elemDecl->resetDefs();
+    ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+    const bool hasDefs = (currType && fValidate) 
+            ? currType->resetDefs()
+            : elemDecl->resetDefs();
 
     //  If there are no expliclitily provided attributes and there are no
     //  defined attributes for the element, the we don't have anything to do.
@@ -2102,17 +2113,20 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             XMLAttDef* attDefForWildCard = 0;
             XMLAttDef*  attDef = 0;
 
-            if (fGrammarType == Grammar::SchemaGrammarType) {
+            if (fGrammarType == Grammar::SchemaGrammarType && currType) {
 
                 //retrieve the att def
-                attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, uriId);
+                attDef = currType->getAttDef(suffPtr, uriId);
 
                 // if not found or faulted in - check for a matching wildcard attribute
                 // if no matching wildcard attribute, check (un)qualifed cases and flag
                 // appropriate errors
                 if (!attDef || (attDef->getCreateReason() == XMLAttDef::JustFaultIn)) {
 
-                    SchemaAttDef* attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
+                    SchemaAttDef* attWildCard = currType->getAttWildCard();
+                    if(!attWildCard)
+                        // check explicitly-set wildcard
+                        attWildCard = ((SchemaElementDecl*)elemDecl)->getAttWildCard();
 
                     if (attWildCard) {
                         //if schema, see if we should lax or skip the validation of this attribute
@@ -2130,7 +2144,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     else {
                         // not found, see if the attDef should be qualified or not
                         if (uriId == fEmptyNamespaceId) {
-                            attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, fURIStringPool->getId(fGrammar->getTargetNamespace()));
+                            attDef = currType->getAttDef(suffPtr, fURIStringPool->getId(fGrammar->getTargetNamespace()));
                             if (fValidate
                                 && attDef
                                 && attDef->getCreateReason() != XMLAttDef::JustFaultIn) {
@@ -2144,7 +2158,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             }
                         }
                         else {
-                            attDef = ((SchemaElementDecl*)elemDecl)->getAttDef(suffPtr, fEmptyNamespaceId);
+                            attDef = currType->getAttDef(suffPtr, fEmptyNamespaceId);
                             if (fValidate
                                 && attDef
                                 && attDef->getCreateReason() != XMLAttDef::JustFaultIn) {
@@ -2390,7 +2404,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         // Check after all specified attrs are scanned
         // (1) report error for REQUIRED attrs that are missing (V_TAGc)
         // (2) add default attrs if missing (FIXED and NOT_FIXED)
-        XMLAttDefList& attDefList = elemDecl->getAttDefList();
+        XMLAttDefList& attDefList = ((SchemaValidator*)fValidator)->getCurrentTypeInfo()->getAttDefList();
         while (attDefList.hasMoreElements())
         {
             // Get the current att def, for convenience and its def type
@@ -2853,12 +2867,22 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
         const XMLCh* const rawBuf = toSend.getRawBuffer();
         const unsigned int len = toSend.getLen();
 
-        // And see if the current element is a 'Children' style content model
-        const ElemStack::StackElem* topElem = fElemStack.topElement();
-
         // Get the character data opts for the current element
-        XMLElementDecl::CharDataOpts charOpts = topElem->fThisElement->getCharDataOpts();
+        XMLElementDecl::CharDataOpts charOpts = XMLElementDecl::AllCharData;
+        // And see if the current element is a 'Children' style content model
+        ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+        if(currType) 
+        {
+            SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
+            if(modelType == SchemaElementDecl::Children) 
+                charOpts = XMLElementDecl::SpacesOk;
+            else if(modelType == SchemaElementDecl::Empty) 
+                charOpts = XMLElementDecl::NoCharData; 
+        } 
 
+        // should not be necessary once PSVI method on element decls
+        // are removed
+        const ElemStack::StackElem *topElem = fElemStack.topElement();
         if (charOpts == XMLElementDecl::NoCharData)
         {
             // They definitely cannot handle any type of char data
@@ -2884,7 +2908,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
 
                 if (fNormalizeData)
                 {
-                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                    DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                     if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
                     {
                         // normalize the character according to schema whitespace facet
@@ -2897,7 +2921,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
                 }
 
                 // tell the schema validation about the character data for checkContent later
-                ((SchemaValidator*) fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
+                ((SchemaValidator*)fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
 
                 // call all active identity constraints
                 if (fMatcherStack->getMatcherCount())
@@ -2922,7 +2946,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
 
                 if (fNormalizeData)
                 {
-                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                    DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                     if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
                     {
                         // normalize the character according to schema whitespace facet
@@ -2935,7 +2959,7 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
                 }
 
                 // tell the schema validation about the character data for checkContent later
-                ((SchemaValidator*) fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
+                ((SchemaValidator*)fValidator)->setDatatypeBuffer(toFill.getRawBuffer());
 
                 // call all active identity constraints
                 if (fMatcherStack->getMatcherCount())
@@ -3634,8 +3658,20 @@ void SGXMLScanner::scanCDSection()
     bool    gotLeadingSurrogate = false;
 
     // Get the character data opts for the current element
+    XMLElementDecl::CharDataOpts charOpts = XMLElementDecl::AllCharData;
+    // And see if the current element is a 'Children' style content model
+    ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+    if(currType) 
+    {
+        SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
+        if(modelType == SchemaElementDecl::Children) 
+            charOpts = XMLElementDecl::SpacesOk;
+        else if(modelType == SchemaElementDecl::Empty) 
+            charOpts = XMLElementDecl::NoCharData; 
+    } 
+
+    // should not be necessary when PSVI on element decl removed
     const ElemStack::StackElem* topElem = fElemStack.topElement();
-    XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
 
     while (true)
     {
@@ -3677,7 +3713,7 @@ void SGXMLScanner::scanCDSection()
 
                 if (fNormalizeData)
                 {
-                    DatatypeValidator* tempDV = ((SchemaElementDecl*) topElem->fThisElement)->getDatatypeValidator();
+                    DatatypeValidator* tempDV = ((SchemaValidator*) fValidator)->getCurrentDatatypeValidator();
                     if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
                     {
                         // normalize the character according to schema whitespace facet
@@ -3690,7 +3726,7 @@ void SGXMLScanner::scanCDSection()
                 }
 
                 // tell the schema validation about the character data for checkContent later
-                ((SchemaValidator*) fValidator)->setDatatypeBuffer(bbCData.getRawBuffer());
+                ((SchemaValidator*)fValidator)->setDatatypeBuffer(bbCData.getRawBuffer());
 
                 if (charOpts != XMLElementDecl::AllCharData)
                 {
@@ -3958,7 +3994,15 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
             if (topElem->fThisElement->isExternal()) {
 
                 // Get the character data opts for the current element
-                XMLElementDecl::CharDataOpts charOpts =  topElem->fThisElement->getCharDataOpts();
+                XMLElementDecl::CharDataOpts charOpts = XMLElementDecl::AllCharData;
+                // And see if the current element is a 'Children' style content model
+                ComplexTypeInfo *currType = ((SchemaValidator*)fValidator)->getCurrentTypeInfo();
+                if(currType) 
+                {
+                    SchemaElementDecl::ModelTypes modelType = (SchemaElementDecl::ModelTypes) currType->getContentType(); 
+                    if(modelType == SchemaElementDecl::Children) 
+                        charOpts = XMLElementDecl::SpacesOk;
+                } 
 
                 if (charOpts == XMLElementDecl::SpacesOk)  // => Element Content
                 {
