@@ -102,11 +102,11 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
-#if (__BORLANDC__ < 0x550)
+#if (__BORLANDC__ < 0x540)
 typedef unsigned short  XMLCh;
 #else
 typedef wchar_t  XMLCh;
-#endif (__BORLANDC__ < 0x550)
+#endif (__BORLANDC__ < 0x540)
 
 // ---------------------------------------------------------------------------
 //  Define our version of a strict UTF16 character
@@ -142,3 +142,4 @@ typedef int             XMLInt32;
 //  does not use the versioning stuff.
 // ---------------------------------------------------------------------------
 const char* const Xerces_DLLName = "XercesLib";
+
