@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2004/04/07 15:26:45  peiyongz
+ * code cleaning
+ *
  * Revision 1.9  2004/04/01 22:05:32  peiyongz
  * invoke DOMException with Memory Manager
  *
@@ -151,8 +154,6 @@ void DOMErrorImpl::setLocation(DOMLocator* const location)
 void DOMErrorImpl::setRelatedException(void*) const
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-    //pending: if default value is 0
-    //throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, XMLPlatformUtils::fgMemoryManager);
 }
 
 XERCES_CPP_NAMESPACE_END

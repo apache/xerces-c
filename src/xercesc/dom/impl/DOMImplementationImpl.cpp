@@ -240,8 +240,6 @@ DOMDocumentType *DOMImplementationImpl::createDocumentType(const XMLCh *qualifie
     // assume XML 1.0 since we do not know its version yet.
     if(!XMLChar1_0::isValidName(qualifiedName, XMLString::stringLen(qualifiedName)))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR, 0);
-        //pending: if default value is 0
-        //throw DOMException(DOMException::INVALID_CHARACTER_ERR, 0, XMLPlatformUtils::fgMemoryManager);
 
     //to do: do we need to create with user's memorymanager???
     DOMDocumentTypeImpl* docType = new DOMDocumentTypeImpl(0, qualifiedName, publicId, systemId, true);
@@ -259,8 +257,7 @@ DOMDocument *DOMImplementationImpl::createDocument(const XMLCh *namespaceURI,
 //Introduced in DOM Level 3
 DOMImplementation* DOMImplementationImpl::getInterface(const XMLCh*){
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-    //pending: if default value is 0
-    //throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, XMLPlatformUtils::fgMemoryManager);
+
     return 0;
 }
 
@@ -325,8 +322,7 @@ DOMWriter* DOMImplementationImpl::createDOMWriter(MemoryManager* const manager)
 DOMInputSource* DOMImplementationImpl::createDOMInputSource()
 {
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
-    //pending: if default value is 0
-    //throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0, XMLPlatformUtils::fgMemoryManager);
+
     return 0;
 }
 

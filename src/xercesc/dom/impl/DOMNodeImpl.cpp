@@ -391,18 +391,12 @@ const XMLCh* DOMNodeImpl::mapPrefix(const XMLCh *prefix,
         if (XMLString::equals(namespaceURI, XMLUni::fgXMLURIName))
             return XMLUni::fgXMLURIName;
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
-        //pending: if default value is 0
-        //throw DOMException(DOMException::NAMESPACE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     } else if (nType == DOMNode::ATTRIBUTE_NODE && XMLString::equals(prefix, XMLUni::fgXMLNSString)) {
         if (XMLString::equals(namespaceURI, XMLUni::fgXMLNSURIName))
             return XMLUni::fgXMLNSURIName;
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
-        //pending: if default value is 0
-        //throw DOMException(DOMException::NAMESPACE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     } else if (namespaceURI == 0 || *namespaceURI == 0) {
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
-        //pending: if default value is 0
-        //throw DOMException(DOMException::NAMESPACE_ERR, 0, XMLPlatformUtils::fgMemoryManager);
     } else
         return namespaceURI;
     return namespaceURI;
