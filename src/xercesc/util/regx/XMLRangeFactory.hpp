@@ -54,9 +54,6 @@ private:
     // -----------------------------------------------------------------------
     XMLRangeFactory(const XMLRangeFactory&);
     XMLRangeFactory& operator=(const XMLRangeFactory&);
-
-    bool fRangesCreated;
-    bool fKeywordsInitialized;
 };
 
 XERCES_CPP_NAMESPACE_END

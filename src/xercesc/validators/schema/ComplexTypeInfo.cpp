@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2004/10/20 15:19:07  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.30  2004/09/23 00:37:24  cargilld
  * Remove unused variable and data member.
  *
@@ -204,6 +207,7 @@
 #include <xercesc/validators/schema/XSDLocator.hpp>
 #include <xercesc/internal/XTemplateSerializer.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -233,6 +237,11 @@ void ComplexTypeInfo::reinitAnyType() {
     delete sAnyTypeMutex;
     sAnyTypeMutex = 0;
     sAnyTypeMutexRegistered = false;
+}
+
+void XMLInitializer::initializeAnyType()
+{
+    ComplexTypeInfo::getAnyType(1);
 }
 
 ComplexTypeInfo* ComplexTypeInfo::getAnyType(unsigned int emptyNSId)

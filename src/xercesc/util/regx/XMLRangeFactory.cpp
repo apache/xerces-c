@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/10/20 15:18:49  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.6  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -111,9 +114,7 @@ static unsigned int getTableLen(const XMLCh* const theTable) {
 // ---------------------------------------------------------------------------
 //  XMLRangeFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLRangeFactory::XMLRangeFactory() :
-   fRangesCreated(false)
- , fKeywordsInitialized(false)
+XMLRangeFactory::XMLRangeFactory()
 {
 
 }
@@ -149,6 +150,9 @@ void XMLRangeFactory::buildRanges() {
     setupRange(wsRange, gWhitespaceChars, 0);
     rangeTokMap->setRangeToken(fgXMLSpace, tok);
 
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgXMLSpace, tok , true);
+
     // Create digits ranges
     tok = tokFactory->createRange();
     unsigned int digitTblLen = getTableLen(gDigitChars);
@@ -160,6 +164,9 @@ void XMLRangeFactory::buildRanges() {
     tok->setRangeValues(digitRange, digitTblLen);
     setupRange(digitRange, gDigitChars, 0);
     rangeTokMap->setRangeToken(fgXMLDigit, tok);
+
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgXMLDigit, tok , true);
 
     // Build word ranges
     unsigned int baseTblLen = getTableLen(gBaseChars);
@@ -201,6 +208,9 @@ void XMLRangeFactory::buildRanges() {
     tok->compactRanges();
     rangeTokMap->setRangeToken(fgXMLNameChar, tok);
 
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgXMLNameChar, tok , true);
+
     // Create initialNameChar ranges
     tok = tokFactory->createRange();
     unsigned int initialNameTblLen = baseTblLen + ideoTblLen;
@@ -219,6 +229,9 @@ void XMLRangeFactory::buildRanges() {
     tok->compactRanges();
     rangeTokMap->setRangeToken(fgXMLInitialNameChar, tok);
 
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgXMLInitialNameChar, tok , true);
+
     // Create word range
     tok = tokFactory->createRange();
     tok->setRangeValues(wordRange, wordRangeLen);
@@ -226,6 +239,9 @@ void XMLRangeFactory::buildRanges() {
     tok->sortRanges();
     tok->compactRanges();
     rangeTokMap->setRangeToken(fgXMLWord, tok);
+
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgXMLWord, tok , true);
 
     fRangesCreated = true;
 }

@@ -16,6 +16,9 @@
 #
 #
 # $Log$
+# Revision 1.45  2004/10/20 15:18:35  knoaman
+# Allow option of initializing static data in XMLPlatformUtils::Initialize
+#
 # Revision 1.44  2004/09/08 13:56:22  peiyongz
 # Apache License Version 2.0
 #
@@ -532,6 +535,7 @@ UTIL_CPP_PUBHEADERS = \
 	XMLFloat.hpp \
 	XMLIBM1047Transcoder.hpp \
 	XMLIBM1140Transcoder.hpp \
+	XMLInitializer.hpp \
 	XMLInteger.hpp \
 	XMLMsgLoader.hpp \
 	XMLNetAccessor.hpp \
@@ -610,6 +614,7 @@ UTIL_CPP_OBJECTS = \
 	XMLFloat.$(TO) \
 	XMLIBM1047Transcoder.$(TO) \
 	XMLIBM1140Transcoder.$(TO) \
+	XMLInitializer.$(TO) \
 	XMLMsgLoader.$(TO) \
 	XMLNumber.$(TO) \
 	XMLRegisterCleanup.$(TO) \

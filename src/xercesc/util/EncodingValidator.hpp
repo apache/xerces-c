@@ -77,6 +77,7 @@ private:
     // -----------------------------------------------------------------------
     ValueHashTableOf<bool>*   fEncodingRegistry;
     static EncodingValidator* fInstance;
+    friend class XMLInitializer;
 };
 
 XERCES_CPP_NAMESPACE_END

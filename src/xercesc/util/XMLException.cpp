@@ -29,6 +29,7 @@
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -94,6 +95,14 @@ static XMLMsgLoader& gGetMsgLoader()
 
     // We got it, so return it
     return *sMsgLoader;
+}
+
+void XMLInitializer::initializeExceptionMsgLoader()
+{
+    sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgExceptDomain);
+    if (sMsgLoader) {
+        msgLoaderCleanup.registerCleanup(XMLException::reinitMsgLoader);
+    }
 }
 
 // ---------------------------------------------------------------------------

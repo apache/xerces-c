@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2004/10/20 15:18:35  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.18  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -152,6 +155,7 @@
 #include <xercesc/util/RuntimeException.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/DefaultPanicHandler.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/internal/MemoryManagerImpl.hpp>
 #include <xercesc/internal/MemoryManagerArrayImpl.hpp>
 
@@ -204,7 +208,8 @@ XMLMutex*               XMLPlatformUtils::fgAtomicMutex = 0;
 void XMLPlatformUtils::Initialize(const char*          const locale 
                                 , const char*          const nlsHome
                                 ,       PanicHandler*  const panicHandler
-                                ,       MemoryManager* const memoryManager)
+                                ,       MemoryManager* const memoryManager
+                                ,       bool                 toInitStatics)
 {
     //
     //  Effects of overflow:
@@ -316,6 +321,9 @@ void XMLPlatformUtils::Initialize(const char*          const locale
     XMLMsgLoader::setLocale(locale);
     XMLMsgLoader::setNLSHome(nlsHome);
 
+    if (toInitStatics) {
+        XMLInitializer::InitializeAllStaticData();
+    }
 }
 
 

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/10/20 15:18:49  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.13  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -99,46 +102,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-// ---------------------------------------------------------------------------
-//  Static member data initialization
-// ---------------------------------------------------------------------------
-bool TokenFactory::fRangeInitialized = false;
-
-// ---------------------------------------------------------------------------
-//  Local static data
-// ---------------------------------------------------------------------------
-static bool               sTokFactoryMutexRegistered = false;
-static XMLMutex*          sTokFactoryMutex = 0;
-static XMLRegisterCleanup tokenFactoryMutexCleanup;
-
-// ---------------------------------------------------------------------------
-//  Local, static functions
-// ---------------------------------------------------------------------------
-//  Cleanup for the TokenFactory mutex
-void TokenFactory::reinitTokenFactoryMutex()
-{
-    delete sTokFactoryMutex;
-    sTokFactoryMutex = 0;
-    sTokFactoryMutexRegistered = false;
-}
-
-//  We need to fault in this mutex. But, since its used for synchronization
-//  itself, we have to do this the low level way using a compare and swap.
-static XMLMutex& gTokenFactoryMutex()
-{
-    if (!sTokFactoryMutexRegistered)
-    {
-        XMLMutexLock lock(XMLPlatformUtils::fgAtomicMutex);
-
-        if (!sTokFactoryMutexRegistered)
-        {
-            sTokFactoryMutex = new XMLMutex;
-            tokenFactoryMutexCleanup.registerCleanup(TokenFactory::reinitTokenFactoryMutex);
-            sTokFactoryMutexRegistered = true;
-        }
-    }
-    return *sTokFactoryMutex;
-}
 
 // ---------------------------------------------------------------------------
 //  TokenFactory: Constructors and Destructor
@@ -298,10 +261,6 @@ ConditionToken* TokenFactory::createCondition(const int refNo,
 RangeToken* TokenFactory::getRange(const XMLCh* const keyword,
                                    const bool complement) {
 
-    if (!fRangeInitialized) {
-		initializeRegistry();
-	}
-
 	return RangeTokenMap::instance()->getRange(keyword, complement);
 }
 
@@ -409,7 +368,6 @@ Token* TokenFactory::getCombiningCharacterSequence() {
 
 //    static final String viramaString =
 
-
 Token* TokenFactory::getGraphemePattern() {
 
 	if (fGrapheme == 0) {
@@ -452,50 +410,6 @@ Token* TokenFactory::getGraphemePattern() {
 	}
 
 	return fGrapheme;
-}
-
-// ---------------------------------------------------------------------------
-//  TokenFactory - Helper methods
-// ---------------------------------------------------------------------------
-void TokenFactory::initializeRegistry() {
-
-    if (!fRangeInitialized)
-    {
-        XMLMutexLock lockInit(&gTokenFactoryMutex());
-
-        if (!fRangeInitialized) {
-
-            RangeTokenMap::instance()->initializeRegistry();
-
-            // Add categories
-            RangeTokenMap::instance()->addCategory(fgXMLCategory);
-            RangeTokenMap::instance()->addCategory(fgASCIICategory);
-            RangeTokenMap::instance()->addCategory(fgUnicodeCategory);
-            RangeTokenMap::instance()->addCategory(fgBlockCategory);
-
-        	// Add xml range factory
-            RangeFactory* rangeFact = new XMLRangeFactory();
-            RangeTokenMap::instance()->addRangeMap(fgXMLCategory, rangeFact);
-            rangeFact->initializeKeywordMap();
-
-            // Add ascii range factory
-            rangeFact = new ASCIIRangeFactory();
-            RangeTokenMap::instance()->addRangeMap(fgASCIICategory, rangeFact);
-            rangeFact->initializeKeywordMap();
-
-            // Add unicode range factory
-            rangeFact = new UnicodeRangeFactory();
-            RangeTokenMap::instance()->addRangeMap(fgUnicodeCategory, rangeFact);
-            rangeFact->initializeKeywordMap();
-
-            // Add block range factory
-            rangeFact = new BlockRangeFactory();
-            RangeTokenMap::instance()->addRangeMap(fgBlockCategory, rangeFact);
-            rangeFact->initializeKeywordMap();
-
-            fRangeInitialized = true;
-        }
-    }
 }
 
 /*

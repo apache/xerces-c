@@ -54,9 +54,6 @@ private:
     // -----------------------------------------------------------------------
     BlockRangeFactory(const BlockRangeFactory&);
     BlockRangeFactory& operator=(const BlockRangeFactory&);
-
-    bool fRangesCreated;
-    bool fKeywordsInitialized;
 };
 
 XERCES_CPP_NAMESPACE_END

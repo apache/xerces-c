@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2004/10/20 15:19:07  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.24  2004/09/30 13:14:28  amassari
  * Fix jira#1280 - Borland leaks memory if break or continue are used inside a catch block
  *
@@ -155,6 +158,7 @@
 #include <xercesc/validators/schema/TraverseSchema.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/validators/datatype/DatatypeValidatorFactory.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
 
@@ -206,6 +210,12 @@ ValueHashTableOf<unsigned short>* GeneralAttributeCheck::fFacetsMap = 0;
 DatatypeValidator*                GeneralAttributeCheck::fNonNegIntDV = 0;
 DatatypeValidator*                GeneralAttributeCheck::fBooleanDV = 0;
 DatatypeValidator*                GeneralAttributeCheck::fAnyURIDV = 0;
+
+void XMLInitializer::initializeGeneralAttrCheckMap()
+{
+    GeneralAttributeCheck *obj = new GeneralAttributeCheck();
+    delete obj;
+}
 
 
 // ---------------------------------------------------------------------------

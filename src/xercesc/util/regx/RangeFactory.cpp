@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/10/20 15:18:49  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.3  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -61,7 +64,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  RangeFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-RangeFactory::RangeFactory() {
+RangeFactory::RangeFactory() :
+   fRangesCreated(false)
+ , fKeywordsInitialized(false)
+{
 
 }
 

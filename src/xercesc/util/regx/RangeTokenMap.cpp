@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/10/20 15:18:49  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.11  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -85,11 +88,15 @@
 #include <xercesc/util/regx/RangeToken.hpp>
 #include <xercesc/util/regx/RegxDefs.hpp>
 #include <xercesc/util/regx/TokenFactory.hpp>
-#include <xercesc/util/regx/RangeFactory.hpp>
+#include <xercesc/util/regx/XMLRangeFactory.hpp>
+#include <xercesc/util/regx/ASCIIRangeFactory.hpp>
+#include <xercesc/util/regx/UnicodeRangeFactory.hpp>
+#include <xercesc/util/regx/BlockRangeFactory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/StringPool.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -130,6 +137,17 @@ static XMLMutex& getRangeTokMapMutex()
 // ---------------------------------------------------------------------------
 RangeTokenMap* RangeTokenMap::fInstance = 0;
 
+void XMLInitializer::initializeRangeTokenMap()
+{
+    RangeTokenMap::fInstance = new RangeTokenMap();
+    if (RangeTokenMap::fInstance)
+    {
+        rangeTokMapInstanceCleanup.registerCleanup(RangeTokenMap::reinitInstance);
+        RangeTokenMap::fInstance->initializeRegistry();
+        RangeTokenMap::fInstance->buildTokenRanges();
+    }
+}
+
 
 // ---------------------------------------------------------------------------
 //  RangeTokenElemMap: Constructors and Destructor
@@ -151,12 +169,21 @@ RangeTokenElemMap::~RangeTokenElemMap()
 //  RangeTokenMap: Constructors and Destructor
 // ---------------------------------------------------------------------------
 RangeTokenMap::RangeTokenMap() :
-    fRegistryInitialized(false)
-    , fTokenRegistry(0)
+    fTokenRegistry(0)
     , fRangeMap(0)
     , fCategories(0)
-    , fTokenFactory(0) {
-
+    , fTokenFactory(0)
+{
+    try {
+        fTokenRegistry = new RefHashTableOf<RangeTokenElemMap>(109);
+        fRangeMap = new RefHashTableOf<RangeFactory>(29);
+        fCategories = new XMLStringPool(109);
+        fTokenFactory = new TokenFactory();
+    }
+    catch(...) {
+        cleanUp();
+        throw;
+    }
 }
 
 RangeTokenMap::~RangeTokenMap() {
@@ -169,6 +196,7 @@ RangeTokenMap::~RangeTokenMap() {
 
     delete fCategories;
     fCategories = 0;
+
     delete fTokenFactory;
     fTokenFactory = 0;
 }
@@ -178,9 +206,6 @@ RangeTokenMap::~RangeTokenMap() {
 // ---------------------------------------------------------------------------
 RangeToken* RangeTokenMap::getRange(const XMLCh* const keyword,
 								    const bool complement) {
-
-    if (fTokenRegistry == 0 || fRangeMap == 0 || fCategories == 0)
-        return 0;
 
     if (!fTokenRegistry->containsKey(keyword))
         return 0;
@@ -197,24 +222,25 @@ RangeToken* RangeTokenMap::getRange(const XMLCh* const keyword,
 
         if (!rangeTok)
         {
-            rangeTok = elemMap->getRangeToken();
-            if (!rangeTok)
+            unsigned int categId = elemMap->getCategoryId();
+            const XMLCh* categName = fCategories->getValueForId(categId);
+            RangeFactory* rangeFactory = fRangeMap->get(categName);
+
+            if (rangeFactory)
             {
-                unsigned int categId = elemMap->getCategoryId();
-                const XMLCh* categName = fCategories->getValueForId(categId);
-                RangeFactory* rangeFactory = fRangeMap->get(categName);
-
-                if (rangeFactory == 0)
-                    return 0;
-
                 rangeFactory->buildRanges();
-                rangeTok = elemMap->getRangeToken();
-            }
+                rangeTok = elemMap->getRangeToken(complement);
 
-            if (complement)
-            {
-                rangeTok = (RangeToken*) RangeToken::complementRanges(rangeTok, fTokenFactory, fTokenRegistry->getMemoryManager());
-                elemMap->setRangeToken(rangeTok , complement);
+                // see if we are complementing an existing range
+                if (!rangeTok && complement)
+                {
+                    rangeTok = elemMap->getRangeToken();
+                    if (rangeTok)
+                    {
+                        rangeTok = (RangeToken*) RangeToken::complementRanges(rangeTok, fTokenFactory, fTokenRegistry->getMemoryManager());
+                        elemMap->setRangeToken(rangeTok , complement);
+                    }
+                }
             }
         }
     }
@@ -228,22 +254,17 @@ RangeToken* RangeTokenMap::getRange(const XMLCh* const keyword,
 // ---------------------------------------------------------------------------
 void RangeTokenMap::addCategory(const XMLCh* const categoryName) {
 
-    if (fCategories)
-	    fCategories->addOrFind(categoryName);
+    fCategories->addOrFind(categoryName);
 }
 
 void RangeTokenMap::addRangeMap(const XMLCh* const categoryName,
                                 RangeFactory* const rangeFactory) {
 
-    if (fRangeMap)
-	    fRangeMap->put((void*)categoryName, rangeFactory);
+    fRangeMap->put((void*)categoryName, rangeFactory);
 }
 
 void RangeTokenMap::addKeywordMap(const XMLCh* const keyword,
                                  const XMLCh* const categoryName) {
-
-    if (fCategories == 0 || fTokenRegistry == 0)
-        return;
 
 	unsigned int categId = fCategories->getId(categoryName);
 
@@ -270,9 +291,6 @@ void RangeTokenMap::addKeywordMap(const XMLCh* const keyword,
 void RangeTokenMap::setRangeToken(const XMLCh* const keyword,
                                   RangeToken* const tok,const bool complement) {
 
-    if (fTokenRegistry == 0)
-		return;
-
 	if (fTokenRegistry->containsKey(keyword)) {
         fTokenRegistry->get(keyword)->setRangeToken(tok, complement);
     }
@@ -287,21 +305,48 @@ void RangeTokenMap::setRangeToken(const XMLCh* const keyword,
 // ---------------------------------------------------------------------------
 void RangeTokenMap::initializeRegistry() {
 
-    if (!fRegistryInitialized)
-    {
-        XMLMutexLock lockInit(&fMutex);
+    // Add categories
+    fCategories->addOrFind(fgXMLCategory);
+    fCategories->addOrFind(fgASCIICategory);
+    fCategories->addOrFind(fgUnicodeCategory);
+    fCategories->addOrFind(fgBlockCategory);
 
-        if (!fRegistryInitialized)
-        {
-            fTokenFactory = new TokenFactory();
-            fTokenRegistry = new RefHashTableOf<RangeTokenElemMap>(109);
-            fRangeMap = new RefHashTableOf<RangeFactory>(29);
-            fCategories = new XMLStringPool(109);
-            fRegistryInitialized = true;
-        }
-    }
+    // Add xml range factory
+    RangeFactory* rangeFact = new XMLRangeFactory();
+    fRangeMap->put((void*)fgXMLCategory, rangeFact);
+    rangeFact->initializeKeywordMap();
+
+    // Add ascii range factory
+    rangeFact = new ASCIIRangeFactory();
+    fRangeMap->put((void*)fgASCIICategory, rangeFact);
+    rangeFact->initializeKeywordMap();
+
+    // Add unicode range factory
+    rangeFact = new UnicodeRangeFactory();
+    fRangeMap->put((void*)fgUnicodeCategory, rangeFact);
+    rangeFact->initializeKeywordMap();
+
+    // Add block range factory
+    rangeFact = new BlockRangeFactory();
+    fRangeMap->put((void*)fgBlockCategory, rangeFact);
+    rangeFact->initializeKeywordMap();
 }
 
+void RangeTokenMap::buildTokenRanges()
+{
+    // Build ranges */
+    RangeFactory* rangeFactory = fRangeMap->get(fgXMLCategory);
+    rangeFactory->buildRanges();
+
+    rangeFactory = fRangeMap->get(fgASCIICategory);
+    rangeFactory->buildRanges();
+
+    rangeFactory = fRangeMap->get(fgUnicodeCategory);
+    rangeFactory->buildRanges();
+
+    rangeFactory = fRangeMap->get(fgBlockCategory);
+    rangeFactory->buildRanges();
+}
 
 // ---------------------------------------------------------------------------
 //  RangeTokenMap: Instance methods
@@ -316,10 +361,29 @@ RangeTokenMap* RangeTokenMap::instance()
         {
             fInstance = new RangeTokenMap();
             rangeTokMapInstanceCleanup.registerCleanup(RangeTokenMap::reinitInstance);
+            fInstance->initializeRegistry();
         }
     }
 
     return (fInstance);
+}
+
+// ---------------------------------------------------------------------------
+//  RangeTokenMap: helper methods
+// ---------------------------------------------------------------------------
+void RangeTokenMap::cleanUp()
+{
+    delete fTokenRegistry;
+    fTokenRegistry = 0;
+
+    delete fRangeMap;
+    fRangeMap = 0;
+
+    delete fCategories;
+    fCategories = 0;
+
+    delete fTokenFactory;
+    fTokenFactory = 0;
 }
 
 // -----------------------------------------------------------------------
@@ -329,7 +393,6 @@ void RangeTokenMap::reinitInstance() {
 
     delete fInstance;
     fInstance = 0;
-    TokenFactory::fRangeInitialized = false;
 }
 
 XERCES_CPP_NAMESPACE_END

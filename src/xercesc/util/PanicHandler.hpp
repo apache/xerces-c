@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/10/20 15:18:35  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.7  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -85,6 +88,7 @@ public:
         , Panic_CantLoadMsgDomain
         , Panic_SynchronizationErr
         , Panic_SystemInit
+        , Panic_AllStaticInitErr
 
         , PanicReasons_Count
     };

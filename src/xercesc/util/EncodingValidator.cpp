@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/10/20 15:18:35  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.7  2004/09/08 13:56:21  peiyongz
  * Apache License Version 2.0
  *
@@ -46,6 +49,7 @@
 #include <xercesc/internal/IANAEncodings.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -79,6 +83,14 @@ static XMLMutex& getEncValMutex()
         }
     }
     return *sEncValMutex;
+}
+
+void XMLInitializer::initializeEncodingValidator()
+{
+    EncodingValidator::fInstance = new EncodingValidator();
+    if (EncodingValidator::fInstance) {
+        instanceCleanup.registerCleanup(EncodingValidator::reinitInstance);
+    }
 }
 
 // ---------------------------------------------------------------------------

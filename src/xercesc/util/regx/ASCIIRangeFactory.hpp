@@ -54,9 +54,6 @@ private:
     // -----------------------------------------------------------------------
     ASCIIRangeFactory(const ASCIIRangeFactory&);
     ASCIIRangeFactory& operator=(const ASCIIRangeFactory&);
-
-    bool fRangesCreated;
-    bool fKeywordsInitialized;
 };
 
 XERCES_CPP_NAMESPACE_END

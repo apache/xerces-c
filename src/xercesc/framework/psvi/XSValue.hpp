@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/10/20 15:18:20  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.13  2004/10/13 19:23:34  peiyongz
  * using ValueHashTableOf to reduce footprint
  *
@@ -424,6 +427,12 @@ private:
                );
 
     static ValueHashTableOf<DataType>*    fDataTypeRegistry;
+
+    // -----------------------------------------------------------------------
+    //  static helper methods
+    // -----------------------------------------------------------------------
+    static void initializeRegistry();
+    friend class XMLInitializer;
 
     // -----------------------------------------------------------------------
     //  data members

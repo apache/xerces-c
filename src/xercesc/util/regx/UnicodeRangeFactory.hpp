@@ -59,9 +59,6 @@ private:
     //  Helper methods
     // -----------------------------------------------------------------------
     unsigned short getUniCategory(const unsigned short type);
-
-    bool fRangesCreated;
-    bool fKeywordsInitialized;
 };
 
 XERCES_CPP_NAMESPACE_END

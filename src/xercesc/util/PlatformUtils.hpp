@@ -164,7 +164,8 @@ public :
     static void Initialize(const char*          const locale = XMLUni::fgXercescDefaultLocale
                          , const char*          const nlsHome = 0
                          ,       PanicHandler*  const panicHandler = 0
-                         ,       MemoryManager* const memoryManager = 0);
+                         ,       MemoryManager* const memoryManager = 0
+                         ,       bool                 toInitStatics = false);
 
     /** Perform per-process parser termination
       *

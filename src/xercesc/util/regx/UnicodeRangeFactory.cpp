@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2004/10/20 15:18:49  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.5  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -125,9 +128,7 @@ const XMLCh uniCategNames[][UNICATEGSIZE] =
 // ---------------------------------------------------------------------------
 //  UnicodeRangeFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-UnicodeRangeFactory::UnicodeRangeFactory() :
-   fRangesCreated(false)
- , fKeywordsInitialized(false)
+UnicodeRangeFactory::UnicodeRangeFactory()
 {
 }
 
@@ -150,6 +151,7 @@ void UnicodeRangeFactory::buildRanges() {
     RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
     TokenFactory* tokFactory = rangeTokMap->getTokenFactory();
 	RangeToken* ranges[UNICATEGSIZE];
+    RangeToken* tok;
 
     for (int i=0; i < UNICATEGSIZE; i++) {
         ranges[i] = tokFactory->createRange();
@@ -159,21 +161,23 @@ void UnicodeRangeFactory::buildRanges() {
 
         unsigned short charType = XMLUniCharacter::getType(j);
 
-		ranges[charType]->addRange(j, j);
-		charType = getUniCategory(charType);
-		ranges[charType]->addRange(j, j);
+        ranges[charType]->addRange(j, j);
+        charType = getUniCategory(charType);
+        ranges[charType]->addRange(j, j);
     }
 
-	ranges[XMLUniCharacter::UNASSIGNED]->addRange(0x10000, Token::UTF16_MAX);
+    ranges[XMLUniCharacter::UNASSIGNED]->addRange(0x10000, Token::UTF16_MAX);
 
-	for (int k=0; k < UNICATEGSIZE; k++) {
+    for (int k=0; k < UNICATEGSIZE; k++) {
+        tok = (RangeToken*) RangeToken::complementRanges(ranges[k], tokFactory);
         rangeTokMap->setRangeToken(uniCategNames[k], ranges[k]);
+        rangeTokMap->setRangeToken(uniCategNames[k], tok , true);
     }
 
     // Create all range
-	RangeToken* tok = tokFactory->createRange();
-	tok->addRange(0, Token::UTF16_MAX);
-	rangeTokMap->setRangeToken(fgUniAll, tok);
+    tok = tokFactory->createRange();
+    tok->addRange(0, Token::UTF16_MAX);
+    rangeTokMap->setRangeToken(fgUniAll, tok);
 
     // Create alpha range
     tok = tokFactory->createRange();
@@ -194,10 +198,23 @@ void UnicodeRangeFactory::buildRanges() {
     tok->addRange(chUnderscore, chUnderscore);
     rangeTokMap->setRangeToken(fgUniIsWord, tok);
 
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgUniIsWord, tok , true);
+
     // Create assigned range
     tok = ranges[XMLUniCharacter::UNASSIGNED];
     rangeTokMap->setRangeToken(fgUniAssigned,(RangeToken*)RangeToken::complementRanges(tok,
 		          tokFactory, tokFactory->getMemoryManager()));
+
+    // Create space range
+    tok = tokFactory->createRange();
+    tok->mergeRanges(ranges[XMLUniCharacter::SPACE_SEPARATOR]);
+    tok->mergeRanges(ranges[XMLUniCharacter::LINE_SEPARATOR]);
+    //tok->mergeRanges(ranges[XMLUniCharacter::PARAGRAPH_SEPARATOR]);
+    rangeTokMap->setRangeToken(fgUniIsSpace, tok);
+
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgUniIsSpace, tok , true);
 
     fRangesCreated = true;
 }
@@ -216,11 +233,12 @@ void UnicodeRangeFactory::initializeKeywordMap() {
         rangeTokMap->addKeywordMap(uniCategNames[k], fgUnicodeCategory);
     }
 
-	rangeTokMap->addKeywordMap(fgUniAll, fgUnicodeCategory);
+    rangeTokMap->addKeywordMap(fgUniAll, fgUnicodeCategory);
     rangeTokMap->addKeywordMap(fgUniIsAlpha, fgUnicodeCategory);
     rangeTokMap->addKeywordMap(fgUniIsAlnum, fgUnicodeCategory);
     rangeTokMap->addKeywordMap(fgUniIsWord, fgUnicodeCategory);
     rangeTokMap->addKeywordMap(fgUniAssigned, fgUnicodeCategory);
+    rangeTokMap->addKeywordMap(fgUniIsSpace, fgUnicodeCategory);
 
     fKeywordsInitialized = true;
 }
@@ -230,7 +248,6 @@ void UnicodeRangeFactory::initializeKeywordMap() {
 // ---------------------------------------------------------------------------
 unsigned short UnicodeRangeFactory::getUniCategory(const unsigned short type)
 {
-
     switch(type) {
     case XMLUniCharacter::UPPERCASE_LETTER:
     case XMLUniCharacter::LOWERCASE_LETTER:
@@ -245,17 +262,17 @@ unsigned short UnicodeRangeFactory::getUniCategory(const unsigned short type)
     case XMLUniCharacter::DECIMAL_DIGIT_NUMBER:
     case XMLUniCharacter::LETTER_NUMBER:
     case XMLUniCharacter::OTHER_NUMBER:
-		return CHAR_NUMBER;
+        return CHAR_NUMBER;
     case XMLUniCharacter::SPACE_SEPARATOR:
     case XMLUniCharacter::LINE_SEPARATOR:
     case XMLUniCharacter::PARAGRAPH_SEPARATOR:
-		return CHAR_SEPARATOR;
+        return CHAR_SEPARATOR;
     case XMLUniCharacter::CONTROL:
     case XMLUniCharacter::FORMAT:
     case XMLUniCharacter::SURROGATE:
     case XMLUniCharacter::PRIVATE_USE:
     case XMLUniCharacter::UNASSIGNED:
-		return CHAR_OTHER;
+        return CHAR_OTHER;
     case XMLUniCharacter::CONNECTOR_PUNCTUATION:
     case XMLUniCharacter::DASH_PUNCTUATION:
     case XMLUniCharacter::START_PUNCTUATION:
@@ -263,12 +280,12 @@ unsigned short UnicodeRangeFactory::getUniCategory(const unsigned short type)
     case XMLUniCharacter::OTHER_PUNCTUATION:
     case XMLUniCharacter::INITIAL_PUNCTUATION:
     case XMLUniCharacter::FINAL_PUNCTUATION:
-		return CHAR_PUNCTUATION;
+        return CHAR_PUNCTUATION;
     case XMLUniCharacter::MATH_SYMBOL:
     case XMLUniCharacter::CURRENCY_SYMBOL:
     case XMLUniCharacter::MODIFIER_SYMBOL:
     case XMLUniCharacter::OTHER_SYMBOL:
-		return CHAR_SYMBOL;
+        return CHAR_SYMBOL;
     }
 
     return 0;

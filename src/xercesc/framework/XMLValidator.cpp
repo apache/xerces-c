@@ -16,6 +16,9 @@
 
 /**
   * $Log$
+  * Revision 1.9  2004/10/20 15:18:20  knoaman
+  * Allow option of initializing static data in XMLPlatformUtils::Initialize
+  *
   * Revision 1.8  2004/09/08 13:55:59  peiyongz
   * Apache License Version 2.0
   *
@@ -100,6 +103,7 @@
 #include <xercesc/framework/XMLValidator.hpp>
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/internal/XMLScanner.hpp>
@@ -159,7 +163,15 @@ static XMLMsgLoader& getMsgLoader()
     return *sMsgLoader;
 }
 
+void XMLInitializer::initializeValidatorMsgLoader()
+{
+    sMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgValidityDomain);
 
+    // Register this XMLMsgLoader for cleanup at Termination.
+    if (sMsgLoader) {
+        msgLoaderCleanup.registerCleanup(XMLValidator::reinitMsgLoader);
+    }
+}
 
 // ---------------------------------------------------------------------------
 //  XMLValidator: Error emitting methods

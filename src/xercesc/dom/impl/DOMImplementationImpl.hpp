@@ -44,6 +44,7 @@ class DOMImplementationImpl: public XMemory,
 private:
     DOMImplementationImpl(const DOMImplementationImpl &);
     DOMImplementationImpl & operator = (const DOMImplementationImpl &);
+    friend class XMLInitializer;
 protected:
     DOMImplementationImpl() {};
 public:

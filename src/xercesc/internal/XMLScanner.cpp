@@ -30,6 +30,7 @@
 #include <xercesc/util/UnexpectedEOFException.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/framework/URLInputSource.hpp>
 #include <xercesc/framework/XMLDocumentHandler.hpp>
@@ -115,6 +116,22 @@ static XMLMsgLoader& gScannerMsgLoader()
     }
 
     return *gMsgLoader;
+}
+
+void XMLInitializer::initializeScannerMsgLoader()
+{
+    gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
+
+    // Register this object to be cleaned up at termination
+    if (gMsgLoader) {
+        cleanupMsgLoader.registerCleanup(XMLScanner::reinitMsgLoader);
+    }
+
+    sScannerMutex = new XMLMutex;
+    if (sScannerMutex) {
+        scannerMutexCleanup.registerCleanup(XMLScanner::reinitScannerMutex);
+        sRegistered = true;
+    }
 }
 
 // ---------------------------------------------------------------------------

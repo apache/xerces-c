@@ -35,6 +35,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 #include <stdio.h>
 #include <assert.h>
 
@@ -71,6 +72,14 @@ static void reinitEmptyNodeList()
 
     delete gEmptyNodeListMutex;
     gEmptyNodeListMutex = 0;
+}
+
+void XMLInitializer::initializeEmptyNodeList()
+{
+    gEmptyNodeList = new DOMNodeListImpl(0);
+    if (gEmptyNodeList) {
+        emptyNodeListCleanup.registerCleanup(reinitEmptyNodeList);
+    }
 }
 
 // -----------------------------------------------------------------------

@@ -19,6 +19,7 @@
  */
 
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
@@ -95,6 +96,21 @@ XMLMutex& getDOMImplSrcVectorMutex()
     }
 
     return *gDOMImplSrcVectorMutex;
+}
+
+void XMLInitializer::initializeDOMImplementationRegistry()
+{
+    // mutex
+    gDOMImplSrcVectorMutex = new XMLMutex;
+    if (gDOMImplSrcVectorMutex) {
+        cleanupDOMImplSrcVectorMutex.registerCleanup(reinitDOMImplSrcVectorMutex);
+    }
+
+    // vector
+    gDOMImplSrcVector = new RefVectorOf<DOMImplementationSource>(3, false);
+    if (gDOMImplSrcVector) {
+        cleanupDOMImplSrcVector.registerCleanup(reinitDOMImplSrcVector);
+    }
 }
 
 

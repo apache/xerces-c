@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2004/10/20 15:19:07  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.20  2004/09/08 13:56:50  peiyongz
  * Apache License Version 2.0
  *
@@ -94,6 +97,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/validators/DTD/DTDGrammar.hpp>
 #include <xercesc/validators/DTD/XMLDTDDescriptionImpl.hpp>
 
@@ -112,6 +116,33 @@ static XMLRegisterCleanup entityPoolRegistryCleanup;
 //  DTDGrammar: Static member data
 // ---------------------------------------------------------------------------
 NameIdPool<DTDEntityDecl>* DTDGrammar::fDefaultEntities = 0;
+
+void XMLInitializer::initializeDTDGrammarDfltEntities()
+{
+    DTDGrammar::fDefaultEntities = new NameIdPool<DTDEntityDecl>(11, 12);
+
+    // Add the default entity entries for the character refs that must
+    // always be present. We indicate that they are from the internal
+    // subset. They aren't really, but they have to look that way so
+    // that they are still valid for use within a standalone document.
+    //
+    // We also mark them as special char entities, which allows them
+    // to be used in places whether other non-numeric general entities
+    // cannot.
+    //
+    if (DTDGrammar::fDefaultEntities)
+    {
+        DTDGrammar::fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgAmp, chAmpersand, true, true));
+        DTDGrammar::fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgLT, chOpenAngle, true, true));
+        DTDGrammar::fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgGT, chCloseAngle, true, true));
+        DTDGrammar::fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgQuot, chDoubleQuote, true, true));
+        DTDGrammar::fDefaultEntities->put(new DTDEntityDecl(XMLUni::fgApos, chSingleQuote, true, true));
+
+        // register cleanup method
+        entityPoolRegistryCleanup.registerCleanup(DTDGrammar::reinitDfltEntities);
+        sEntityPoolMutexRegistered = true;
+    }
+}
 
 //---------------------------------------------------------------------------
 //  DTDGrammar: Constructors and Destructor

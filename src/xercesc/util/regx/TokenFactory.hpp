@@ -111,16 +111,6 @@ private:
     TokenFactory& operator=(const TokenFactory&);
 
     // -----------------------------------------------------------------------
-    //  Private Helpers methods
-    // -----------------------------------------------------------------------
-    /*
-     *  Initializes the registry with a set of commonly used RangeToken
-     *  objects.
-     */
-    void initializeRegistry();
-    friend class RangeTokenMap;
-
-    // -----------------------------------------------------------------------
     //  Private data members
     //
     //  fRangeInitialized
@@ -130,7 +120,6 @@ private:
     //  fToken
     //      Contains user created Token objects. Used for memory cleanup.
     // -----------------------------------------------------------------------
-    static bool         fRangeInitialized;
     RefVectorOf<Token>* fTokens;
     Token*              fEmpty;
     Token*              fLineBegin;

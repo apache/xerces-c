@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/10/20 15:18:49  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.6  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -340,9 +343,7 @@ const XMLInt32 blockRanges[] =
 // ---------------------------------------------------------------------------
 //  BlockRangeFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-BlockRangeFactory::BlockRangeFactory() :
-   fRangesCreated(false)
- , fKeywordsInitialized(false)
+BlockRangeFactory::BlockRangeFactory()
 {
 
 }
@@ -385,6 +386,8 @@ void BlockRangeFactory::buildRanges() {
             foundPrivate = true;
         }
         rangeTokMap->setRangeToken(fgBlockNames[i], tok);
+        tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+        rangeTokMap->setRangeToken(fgBlockNames[i], tok , true);
     }
 
     fRangesCreated = true;

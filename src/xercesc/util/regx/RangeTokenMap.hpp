@@ -138,8 +138,10 @@ private:
      *  Initializes the registry with a set of commonly used RangeToken
      *  objects.
      */
-     void initializeRegistry();
-	 friend class TokenFactory;
+    void initializeRegistry();
+    void buildTokenRanges();
+    void cleanUp();
+	friend class TokenFactory;
 
     // -----------------------------------------------------------------------
     //  Private data members
@@ -161,14 +163,15 @@ private:
     //
     //  fMutex
     //      A mutex object for synchronization
-    // -----------------------------------------------------------------------
-    bool                               fRegistryInitialized;	
+    // -----------------------------------------------------------------------	
     RefHashTableOf<RangeTokenElemMap>* fTokenRegistry;
     RefHashTableOf<RangeFactory>*      fRangeMap;
 	XMLStringPool*                     fCategories;
     TokenFactory*                      fTokenFactory;
     XMLMutex                           fMutex;
     static RangeTokenMap*              fInstance;
+
+    friend class XMLInitializer;
 };
 
 // ---------------------------------------------------------------------------

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2004/10/20 15:19:07  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.29  2004/09/13 21:38:34  peiyongz
  * getBuiltInBaseValidator
  *
@@ -225,6 +228,7 @@
 #include <xercesc/validators/datatype/DurationDatatypeValidator.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 #include <xercesc/util/HashPtr.hpp>
@@ -346,6 +350,15 @@ void DatatypeValidatorFactory::reinitRegistry() {
     delete sBuiltInRegistryMutex;
     sBuiltInRegistryMutex = 0;
     sBuiltInRegistryMutexRegistered = false;
+}
+
+void XMLInitializer::initializeDVFactory()
+{
+    DatatypeValidatorFactory *dvFactory = new DatatypeValidatorFactory();
+    if (dvFactory) {
+        dvFactory->expandRegistryToFullSchemaSet();
+        delete dvFactory;
+    }
 }
 
 // ---------------------------------------------------------------------------

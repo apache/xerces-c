@@ -27,6 +27,7 @@
 #include <xercesc/dom/DOMDocumentType.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLChar.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
@@ -117,6 +118,14 @@ XMLMsgLoader* DOMImplementationImpl::getMsgLoader4DOM()
     return sMsgLoader4DOM;
 }
 
+void XMLInitializer::initializeMsgLoader4DOM()
+{
+    sMsgLoader4DOM = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLDOMMsgDomain);
+    if (sMsgLoader4DOM) {
+        msgLoader4DOMCleanup.registerCleanup(reinitMsgLoader4DOM);
+    }
+}
+
 // -----------------------------------------------------------------------
 //  Singleton DOMImplementationImpl
 // -----------------------------------------------------------------------
@@ -153,6 +162,14 @@ DOMImplementationImpl *DOMImplementationImpl::getDOMImplementationImpl()
     }
 
     return gDomimp;
+}
+
+void XMLInitializer::initializeDOMImplementationImpl()
+{
+    gDomimp = new DOMImplementationImpl;
+    if (gDomimp) {
+        implementationCleanup.registerCleanup(reinitImplementation);
+    }
 }
 
 // ------------------------------------------------------------

@@ -278,8 +278,11 @@ DatatypeValidatorFactory::getBuiltInRegistry() {
 // ---------------------------------------------------------------------------
 inline void DatatypeValidatorFactory::cleanUp() {
 
-	delete fUserDefinedRegistry;
-	fUserDefinedRegistry = 0;
+    if (fUserDefinedRegistry)
+    {
+	    delete fUserDefinedRegistry;
+	    fUserDefinedRegistry = 0;
+    }
 }
 
 XERCES_CPP_NAMESPACE_END

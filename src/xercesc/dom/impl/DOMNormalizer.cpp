@@ -23,6 +23,7 @@
 
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLInitializer.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLString.hpp>
@@ -114,6 +115,15 @@ static XMLMsgLoader& gNormalizerMsgLoader()
     return *gMsgLoader;
 }
 
+void XMLInitializer::initializeDOMNormalizerMsgLoader()
+{
+    gMsgLoader = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLErrDomain);
+
+    // Register this object to be cleaned up at termination
+    if (gMsgLoader) {
+        cleanupMsgLoader.registerCleanup(DOMNormalizer::reinitMsgLoader);
+    }
+}
 
 DOMNormalizer::DOMNormalizer(MemoryManager* const manager) 
     : fDocument(0)

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/10/20 15:18:49  knoaman
+ * Allow option of initializing static data in XMLPlatformUtils::Initialize
+ *
  * Revision 1.4  2004/09/08 13:56:47  peiyongz
  * Apache License Version 2.0
  *
@@ -65,9 +68,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ASCIIRangeFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-ASCIIRangeFactory::ASCIIRangeFactory() :
-   fRangesCreated(false)
- , fKeywordsInitialized(false)
+ASCIIRangeFactory::ASCIIRangeFactory()
 {
 }
 
@@ -93,24 +94,33 @@ void ASCIIRangeFactory::buildRanges() {
     // Create space ranges
     RangeToken* tok = tokFactory->createRange();
     tok->addRange(chHTab, chHTab);
-	tok->addRange(chLF, chLF);
-	tok->addRange(chFF, chFF);
-	tok->addRange(chCR, chCR);
-	tok->addRange(chSpace, chSpace);
-	rangeTokMap->setRangeToken(fgASCIISpace, tok);
+    tok->addRange(chLF, chLF);
+    tok->addRange(chFF, chFF);
+    tok->addRange(chCR, chCR);
+    tok->addRange(chSpace, chSpace);
+    rangeTokMap->setRangeToken(fgASCIISpace, tok);
+
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgASCIISpace, tok , true);
 
     // Create digits ranges
     tok = tokFactory->createRange();
     tok->addRange(chDigit_0, chDigit_9);
     rangeTokMap->setRangeToken(fgASCIIDigit, tok);
 
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgASCIIDigit, tok , true);
+
     // Create word ranges
     tok = tokFactory->createRange();
     tok->addRange(chDigit_0, chDigit_9);
-	tok->addRange(chLatin_A, chLatin_Z);
+    tok->addRange(chLatin_A, chLatin_Z);
     tok->addRange(chUnderscore, chUnderscore);
-	tok->addRange(chLatin_a, chLatin_z);
+    tok->addRange(chLatin_a, chLatin_z);
     rangeTokMap->setRangeToken(fgASCIIWord, tok);
+
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgASCIIWord, tok , true);
 
     // Create xdigit ranges
     tok = tokFactory->createRange();
@@ -119,10 +129,16 @@ void ASCIIRangeFactory::buildRanges() {
     tok->addRange(chLatin_a, chLatin_a);
     rangeTokMap->setRangeToken(fgASCIIXDigit, tok);
 
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgASCIIXDigit, tok , true);
+
     // Create ascii ranges
     tok = tokFactory->createRange();
     tok->addRange(0x00, 0x7F);
     rangeTokMap->setRangeToken(fgASCII, tok);
+
+    tok = (RangeToken*) RangeToken::complementRanges(tok, tokFactory);
+    rangeTokMap->setRangeToken(fgASCII, tok , true);
 
     fRangesCreated = true;
 }
@@ -135,7 +151,7 @@ void ASCIIRangeFactory::initializeKeywordMap() {
     if (fKeywordsInitialized)
         return;
 
-	RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
+    RangeTokenMap* rangeTokMap = RangeTokenMap::instance();
 
     rangeTokMap->addKeywordMap(fgASCIISpace, fgASCIICategory);
     rangeTokMap->addKeywordMap(fgASCIIDigit, fgASCIICategory);
