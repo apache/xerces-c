@@ -505,7 +505,6 @@ const XMLCh* DOMNodeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI,
 
     switch (type) {
     case DOMNode::ELEMENT_NODE: {
-        const XMLCh* ns = thisNode->getNamespaceURI(); // to flip out children
         return lookupNamespacePrefix(namespaceURI, useDefault, (DOMElement*)thisNode);
     }
     case DOMNode::DOCUMENT_NODE:{
@@ -923,9 +922,6 @@ bool DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) const{
                 return true;
             }
         }
-
-        const XMLCh *ns = getNamespaceURI();
-        const XMLCh *prefix = getPrefix();
 
         if (thisNode->hasAttributes()) {
             DOMElement *elem = (DOMElement *)thisNode;
