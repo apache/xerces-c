@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2003/06/02 15:18:08  neilg
+ * fix for bug #20092; thanks to Berin Lautenbach
+ *
  * Revision 1.5  2003/05/21 21:08:04  knoaman
  * gcc 2.95.x is generating an internal error for some template definitions, so
  * we use the default memory manger in such cases.
@@ -118,7 +121,11 @@ RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
     initialize(modulus);
 
     // create default hasher
+#if defined (XML_GCC_VERSION) && (XML_GCC_VERSION < 29600)
+		 fHash = new HashXMLCh();
+#else
     fHash = new (fMemoryManager) HashXMLCh();
+#endif
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them
