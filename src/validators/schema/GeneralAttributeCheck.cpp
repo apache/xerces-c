@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/12/13 18:08:39  knoaman
+ * Fix for bug 5410.
+ *
  * Revision 1.14  2001/11/19 18:26:31  knoaman
  * no message
  *
@@ -958,12 +961,60 @@ GeneralAttributeCheck::checkAttributes(const DOM_Element& elem,
             continue;
         }
 
+
+        // for attributes with namespace prefix
         attName = attribute.getLocalName();
         aBuffer.set(attName.rawBuffer(), attName.length());
 
-        if (!attNameList.containsKey(aBuffer.getRawBuffer())) {
+        DOMString attrURI = attribute.getNamespaceURI();
+
+        if (attrURI != 0 && attrURI.length() != 0) {
+
+            // attributes with schema namespace are not allowed
+            // and not allowed on "documentation" and "appInfo"
+            if (attrURI.equals(SchemaSymbols::fgURI_SCHEMAFORSCHEMA) ||
+                !XMLString::compareString(elemName, SchemaSymbols::fgELT_APPINFO) ||
+                !XMLString::compareString(elemName, SchemaSymbols::fgELT_DOCUMENTATION)) {
+
+                schema->reportSchemaError(XMLUni::fgXMLErrDomain,
+                    XMLErrs::AttributeDisallowed, tmpName, contextStr, elemName);
+            } else {
+
+                // Try for a "lax" validation
+                XMLBuffer tmpBuf(128);
+
+                tmpBuf.set(attrURI.rawBuffer(), attrURI.length());
+                DatatypeValidator* dv = schema->getDatatypeValidator(tmpBuf.getRawBuffer(), aBuffer.getRawBuffer());
+
+                if (dv) {
+
+                    DOMString attrVal = attribute.getNodeValue();
+                    tmpBuf.set(attrVal.rawBuffer(), attrVal.length());
+
+                    try {
+                        dv->validate(tmpBuf.getRawBuffer());
+                    }
+                    catch(const XMLException& excep) {
+                        schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DisplayErrorMessage, excep.getMessage());
+                    }
+                    catch(...) {
+                        schema->reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue, tmpBuf.getRawBuffer(), tmpName);
+                    }
+                }
+                // REVISIT:
+                // If no dv found, store attribute info for a "lax" validation
+                // after schema traversal ?? - KN
+            }
+
+            continue;
+        }
+
+        tmpName = aBuffer.getRawBuffer();
+
+        // check whether this attribute is allowed
+        if (!attNameList.containsKey(tmpName)) {
             schema->reportSchemaError(XMLUni::fgXMLErrDomain,
-                XMLErrs::AttributeDisallowed, aBuffer.getRawBuffer(), contextStr, elemName);
+                XMLErrs::AttributeDisallowed, tmpName, contextStr, elemName);
         }
     }
 }
