@@ -81,6 +81,7 @@ DOM/DOMTest/Makefile \
 IDom/IDOMTest/Makefile \
 DOM/DOMIDTest/Makefile \
 DOM/DOMMemTest/Makefile \
+IDom/IDOMMemTest/Makefile \
 DOM/Traversal/Makefile \
 IDom/ITraversal/Makefile \
 EncodingTest/Makefile \
