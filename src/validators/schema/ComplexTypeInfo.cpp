@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2001/12/17 21:38:59  tng
+ * Fix dangling pointer.
+ *
  * Revision 1.24  2001/11/21 14:30:13  knoaman
  * Fix for UPA checking.
  *
@@ -388,7 +391,7 @@ XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentS
     else {
         aSpecNode = convertContentSpecTree(fContentSpec, checkUPA);
         if (aSpecNode != fContentSpec) {
-            if (aSpecNode == fContentSpec->getFirst() && !fAdoptContentSpec)
+            if (!fAdoptContentSpec && (aSpecNode == fContentSpec->getFirst()))
                 fAdoptContentSpec = false;
             else
                 fAdoptContentSpec = true;
