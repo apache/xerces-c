@@ -102,6 +102,11 @@ public:
       */
     short getWSFacet () const;
 
+    /**
+      * Returns whether the type is atomic or not
+      */
+    virtual bool isAtomic() const;
+
     //@}
 
     // -----------------------------------------------------------------------
@@ -165,6 +170,11 @@ public:
 inline short AnySimpleTypeDatatypeValidator::getWSFacet() const {
 
     return DatatypeValidator::PRESERVE;
+}
+
+inline bool AnySimpleTypeDatatypeValidator::isAtomic() const {
+
+    return false;
 }
 
 
