@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/03/12 20:45:46  peiyongz
+ * format string for value converted to Zero.
+ *
  * Revision 1.10  2003/03/10 20:55:58  peiyongz
  * Schema Errata E2-40 double/float
  *
@@ -226,6 +229,10 @@ void XMLAbstractDoubleFloat::formatString()
         break;
     case NaN:
         XMLString::catString(fFormattedString, XMLUni::fgNaNString);
+        break;
+    default:
+        // its zero
+        XMLString::catString(fFormattedString, XMLUni::fgPosZeroString);
         break;
     }
 
