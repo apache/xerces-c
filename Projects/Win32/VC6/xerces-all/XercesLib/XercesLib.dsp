@@ -1455,6 +1455,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\BinMemOutputStream.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\BinMemOutputStream.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\CharTypeTables.hpp
 # End Source File
 # Begin Source File
