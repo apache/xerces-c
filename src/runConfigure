@@ -58,6 +58,11 @@
 #
 #
 # $Log$
+# Revision 1.20  2000/02/15 23:22:28  rahulj
+# Added -L icu/data when ICU transcoding service is used. The data
+# shared library file sits in the data directory and not in the usual
+# lib directory.
+#
 # Revision 1.19  2000/02/09 22:14:15  abagchi
 # AS/400 changes
 #
@@ -371,7 +376,7 @@ case $transcoder in
            exit ${ERROR_EXIT_CODE};
        fi
        transcodingDefines="-DXML_USE_ICU_TRANSCODER -I${ICUROOT}/include";
-       transcodingLibs="-L${ICUROOT}/lib";
+       transcodingLibs="-L${ICUROOT}/lib -L${ICUROOT}/data";
        TRANSCODER=ICU;;
    Iconv400)
        transcodingDefines="-DXML_USE_ICONV400_TRANSCODER" ;
