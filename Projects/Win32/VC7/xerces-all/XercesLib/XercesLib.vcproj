@@ -169,6 +169,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\CountedPointer.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\DefaultPanicHandler.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\DefaultPanicHandler.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\EmptyStackException.hpp">
 			</File>
 			<File
@@ -249,6 +255,12 @@
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\NullPointerException.hpp">
 			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\PanicHandler.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\PanicHandler.hpp">
+			</File>			
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\PlatformUtils.cpp">
 			</File>
