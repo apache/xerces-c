@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:59  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:59  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:44:19  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -290,12 +293,12 @@ class  CDOM_EXPORT DOM_Node {
     DOM_NamedNodeMap  getAttributes() const;
 
     /**
-     * Gets the <code>Document</code> object associated with this node.
+     * Gets the <code>DOM_Document</code> object associated with this node.
      *
      * This is also
-     * the <code>Document</code> object used to create new nodes. When this
-     * node is a <code>Document</code> or a <code>DocumentType</code>,
-     * which is not used with any <code>Document</code> yet, this is
+     * the <code>DOM_Document</code> object used to create new nodes. When this
+     * node is a <code>DOM_Document</code> or a <code>DOM_DocumentType</code>
+     * which is not used with any <code>DOM_Document</code> yet, this is
      * <code>null</code>.
      */
     DOM_Document      getOwnerDocument() const;
@@ -359,7 +362,8 @@ class  CDOM_EXPORT DOM_Node {
      *   the node to insert is one of this node's ancestors.
      *   <br>WRONG_DOCUMENT_ERR: Raised if <code>newChild</code> was created
      *   from a different document than the one that created this node.
-     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
+     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node or the node being
+     *   inserted is readonly.
      *   <br>NOT_FOUND_ERR: Raised if <code>refChild</code> is not a child of
      *   this node.
      */
@@ -371,6 +375,10 @@ class  CDOM_EXPORT DOM_Node {
      * Replaces the child node <code>oldChild</code> with <code>newChild</code>
      * in the list of children, and returns the <code>oldChild</code> node.
      *
+     * If <CODE>newChild</CODE> is a <CODE>DOM_DocumentFragment</CODE> object,
+     * <CODE>oldChild</CODE> is replaced by all of the <CODE>DOM_DocumentFragment</CODE>
+     * children, which are inserted in the same order.
+     *
      * If the <code>newChild</code> is already in the tree, it is first removed.
      * @param newChild The new node to put in the child list.
      * @param oldChild The node being replaced in the list.
@@ -381,7 +389,7 @@ class  CDOM_EXPORT DOM_Node {
      *   the node to put in is one of this node's ancestors.
      *   <br>WRONG_DOCUMENT_ERR: Raised if <code>newChild</code> was created
      *   from a different document than the one that created this node.
-     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
+     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node or the new node is readonly.
      *   <br>NOT_FOUND_ERR: Raised if <code>oldChild</code> is not a child of
      *   this node.
      */
@@ -416,7 +424,8 @@ class  CDOM_EXPORT DOM_Node {
      *   the node to append is one of this node's ancestors.
      *   <br>WRONG_DOCUMENT_ERR: Raised if <code>newChild</code> was created
      *   from a different document than the one that created this node.
-     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
+     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node or the node being
+     *   appended is readonly.
      */
     DOM_Node        appendChild(const DOM_Node &newChild);
 
@@ -492,6 +501,24 @@ class  CDOM_EXPORT DOM_Node {
     //@{
 
     /**
+     * Puts all <CODE>DOM_Text</CODE>
+     * nodes in the full depth of the sub-tree underneath this <CODE>DOM_Node</CODE>, 
+     * including attribute nodes, into a "normal" form where only markup (e.g., 
+     * tags, comments, processing instructions, CDATA sections, and entity 
+     * references) separates <CODE>DOM_Text</CODE>
+     * nodes, i.e., there are no adjacent <CODE>DOM_Text</CODE>
+     * nodes. This can be used to ensure that the DOM view of a document is the 
+     * same as if it were saved and re-loaded, and is useful when operations 
+     * (such as XPointer lookups) that depend on a particular document tree 
+     * structure are to be used.
+     * <P><B>Note:</B> In cases where the document contains <CODE>DOM_CDATASections</CODE>, 
+     * the normalize operation alone may not be sufficient, since XPointers do 
+     * not differentiate between <CODE>DOM_Text</CODE>
+     * nodes and <CODE>DOM_CDATASection</CODE> nodes.</P>
+     */
+    void              normalize();
+
+    /**
      * Tests whether the DOM implementation implements a specific
      * feature and that feature is supported by this node.
      * @param feature The string of the feature to test. This is the same
@@ -509,31 +536,22 @@ class  CDOM_EXPORT DOM_Node {
 
     /**
      * Get the <em>namespace URI</em> of
-     * this node, or <code>null</code> if it is unspecified. When this node is
-     * of any type other than <code>ELEMENT_NODE</code> and
-     * <code>ATTRIBUTE_NODE</code>, this is always <code>null</code> and
-     * setting it has no effect.
+     * this node, or <code>null</code> if it is unspecified.
      * <p>
      * This is not a computed value that is the result of a namespace lookup
      * based on an examination of the namespace declarations in scope. It is
      * merely the namespace URI given at creation time.
      * <p>
-     * For nodes created with a DOM Level 1 method, such as
-     * <code>createElement</code> from the <code>DOM_Document</code> interface,
-     * this is <code>null</code>.
+     * For nodes of any type other than <CODE>ELEMENT_NODE</CODE> and 
+     * <CODE>ATTRIBUTE_NODE</CODE> and nodes created with a DOM Level 1 method, 
+     * such as <CODE>createElement</CODE> from the <CODE>Document</CODE>
+     * interface, this is always <CODE>null</CODE>.
      */
     DOMString         getNamespaceURI() const;
 
     /**
      * Get the <em>namespace prefix</em>
-     * of this node, or <code>null</code> if it is unspecified. When this node
-     * is of any type other than <code>ELEMENT_NODE</code> and
-     * <code>ATTRIBUTE_NODE</code> this is always <code>null</code> and
-     * setting it has no effect.
-     * <p>
-     * For nodes created with a DOM Level 1 method, such as
-     * <code>createElement</code> from the <code>DOM_Document</code> interface,
-     * this is <code>null</code>.
+     * of this node, or <code>null</code> if it is unspecified.
      */
     DOMString         getPrefix() const;
 
@@ -542,27 +560,38 @@ class  CDOM_EXPORT DOM_Node {
      * <p>
      * For nodes created with a DOM Level 1 method, such as
      * <code>createElement</code> from the <code>DOM_Document</code> interface,
-     * and for nodes of any type other than <code>ELEMENT_NODE</code> and
-     * <code>ATTRIBUTE_NODE</code> this is the same as the
-     * <code>nodeName</code> attribute.
+     * it is null.
      */
     DOMString         getLocalName() const;
 
     /**
-     * Get the <em>namespace prefix</em> of this node.
+     * Set the <em>namespace prefix</em> of this node.
      * <p>
-     * Note that setting this attribute changes the <code>nodeName</code>
-     * attribute, which holds the <em>qualified name</em>,
-     * as well as the <code>tagName</code> and
-     * <code>name</code> attributes of the <code>Element</code> and
-     * <code>Attr</code> interfaces, when applicable.
+     * Note that setting this attribute, when permitted, changes 
+     * the <CODE>nodeName</CODE> attribute, which holds the <EM>qualified 
+     * name</EM>, as well as the <CODE>tagName</CODE> and <CODE>name</CODE> 
+     * attributes of the <CODE>DOM_Element</CODE> and <CODE>DOM_Attr</CODE>
+     * interfaces, when applicable.
+     * <p>
+     * Note also that changing the prefix of an 
+     * attribute, that is known to have a default value, does not make a new 
+     * attribute with the default value and the original prefix appear, since the 
+     * <CODE>namespaceURI</CODE> and <CODE>localName</CODE> do not change.
      *
      * @param prefix The prefix of this node.
      * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified prefix contains
-     *                          an invalid character.
+     *                          an illegal character.
      * <br>
      *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
+     * <br>
+     *   NAMESPACE_ERR: Raised if the specified <CODE>prefix</CODE> is 
+     *       malformed, if the specified prefix is "xml" and the 
+     *       <CODE>namespaceURI</CODE> of this node is different from 
+     *       "http://www.w3.org/XML/1998/namespace", if specified prefix is 
+     *       "xmlns" and the <CODE>namespaceURI</CODE> is neither 
+     *       <CODE>null</CODE> nor an empty string, or if the 
+     *       <CODE>localName</CODE> is <CODE>null</CODE>.
      */
     void              setPrefix(const DOMString &prefix);
 

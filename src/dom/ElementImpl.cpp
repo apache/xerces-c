@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:08  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/11/30 21:16:25  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -78,7 +81,6 @@
 #include "ElementDefinitionImpl.hpp"
 #include "NamedNodeMapImpl.hpp"
 #include "NodeVector.hpp"
-#include "TextImpl.hpp"
 
 
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc, const DOMString &nam) :
@@ -180,37 +182,6 @@ DOMString ElementImpl::getTagName()
 bool ElementImpl::isElementImpl()
 {
     return true;
-};
-
-
-void ElementImpl::normalize()
-{
-    NodeImpl *kid, *next;
-    for (kid = getFirstChild(); kid != null; kid = next)
-    {
-        next = kid->getNextSibling();
-        
-        // If kid and next are both Text nodes (but _not_ CDATASection,
-        // which is a subclass of Text), they can be merged.
-        if (next != null && 
-            kid->isTextImpl()   && !(kid->isCDATASectionImpl())  && 
-            next->isTextImpl()  && !(next->isCDATASectionImpl()) )
-        {
-            ((TextImpl *) kid)->appendData(((TextImpl *) next)->getData());
-            removeChild(next);
-            if (next->nodeRefCount == 0)
-                deleteIf(next);
-            next = kid; // Don't advance; there might be another.
-        }
-        
-        // Otherwise it might be an Element, which is handled recursively  
-        else
-            if (kid->isElementImpl())
-                ((ElementImpl *) kid)->normalize();
-    };
-    
-    // changed() will have occurred when the removeChild() was done,
-    // so does not have to be reissued.
 };
 
 
@@ -323,8 +294,6 @@ void ElementImpl::setReadOnly(bool readOnl, bool deep)
 DOMString ElementImpl::getAttributeNS(const DOMString &namespaceURI,
 	const DOMString &localName)
 {
-    if (namespaceURI == null || namespaceURI.length() == 0)
-	return getAttribute(localName);
     static DOMString *emptyString = 0;
     AttrImpl * attr=(AttrImpl *)(attributes->getNamedItemNS(namespaceURI, localName));
     return (attr==null) ? DStringPool::getStaticString("", &emptyString) : attr->getValue();
@@ -334,10 +303,6 @@ DOMString ElementImpl::getAttributeNS(const DOMString &namespaceURI,
 void ElementImpl::setAttributeNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName, const DOMString &value)
 {
-    if (namespaceURI == null || namespaceURI.length() == 0) {
-	setAttribute(qualifiedName, value);
-	return;
-    }
     if (readOnly)
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
@@ -358,10 +323,6 @@ void ElementImpl::setAttributeNS(const DOMString &namespaceURI,
 void ElementImpl::removeAttributeNS(const DOMString &namespaceURI,
 	const DOMString &localName)
 {
-    if (namespaceURI == null || namespaceURI.length() == 0) {
-	removeAttribute(localName);
-	return;
-    }
     if (readOnly)
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
@@ -380,16 +341,12 @@ void ElementImpl::removeAttributeNS(const DOMString &namespaceURI,
 AttrImpl *ElementImpl::getAttributeNodeNS(const DOMString &namespaceURI,
 	const DOMString &localName)
 {
-    if (namespaceURI == null || namespaceURI.length() == 0)
-	return getAttributeNode(localName);
     return (AttrImpl *)(attributes->getNamedItemNS(namespaceURI, localName));
 }
 
 
 AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
 {
-    if (newAttr && newAttr ->getNamespaceURI() == null)
-	return setAttributeNode(newAttr);
     if (readOnly)
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);

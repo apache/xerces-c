@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:08  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/11/30 21:16:25  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -119,13 +122,15 @@ DocumentImpl::DocumentImpl(const DOMString &namespaceURI,
 : NodeImpl(null, namespaceURI, qualifiedName, DOM_Node::DOCUMENT_NODE, false, null)
 {
     if (doctype != null && doctype->getOwnerDocument() != null)
-        throw DOM_DOMException(
+        throw DOM_DOMException(	//one doctype can belong to only one DocumentImpl
 	    DOM_DOMException::WRONG_DOCUMENT_ERR, null);
     docType=doctype;
     if (doctype != null)
 	doctype -> setOwnerDocument(this);
     docElement=null;
     namePool = new DStringPool(257);
+    iterators = 0L;
+    treeWalkers = 0L;
 }
 
 
@@ -341,114 +346,6 @@ DeepNodeListImpl *DocumentImpl::getElementsByTagName(const DOMString &tagname)
 
 
 
-
-NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
-{
-    NodeImpl *newnode=null;
-
-    switch (source->getNodeType())
-    {
-    case DOM_Node::ELEMENT_NODE :
-        {
-            ElementImpl *newelement = createElement(source->getNodeName());
-            NamedNodeMapImpl *srcattr=source->getAttributes();
-            if(srcattr!=null)
-                for(int i=0;i<srcattr->getLength();++i)
-                    newelement->setAttributeNode(
-                    (AttrImpl *)importNode(srcattr->item(i),true));
-                newnode=newelement;
-        }
-        break;
-    case DOM_Node::ATTRIBUTE_NODE :
-        newnode = createAttribute(source->getNodeName());
-        // Kids carry value
-        break;
-    case DOM_Node::TEXT_NODE :
-        newnode = createTextNode(source->getNodeValue());
-        break;
-    case DOM_Node::CDATA_SECTION_NODE :
-        newnode = createCDATASection(source->getNodeValue());
-        break;
-    case DOM_Node::ENTITY_REFERENCE_NODE :
-        newnode = createEntityReference(source->getNodeName());
-        deep=false; // ????? Right Thing?
-        // Value implied by doctype, so we should not copy it
-        // -- instead, refer to local doctype, if any.
-        break;
-    case DOM_Node::ENTITY_NODE :
-        {
-            EntityImpl *srcentity=(EntityImpl *)source;
-            EntityImpl *newentity = createEntity(source->getNodeName());
-            newentity->setPublicId(srcentity->getPublicId());
-            newentity->setSystemId(srcentity->getSystemId());
-            newentity->setNotationName(srcentity->getNotationName());
-            // Kids carry additional value
-            newnode=newentity;
-        }
-        break;
-    case DOM_Node::PROCESSING_INSTRUCTION_NODE :
-        newnode = createProcessingInstruction(source->getNodeName(), source->getNodeValue());
-        break;
-    case DOM_Node::COMMENT_NODE :
-        newnode = createComment(source->getNodeValue());
-        break;
-    case DOM_Node::DOCUMENT_TYPE_NODE :
-        {
-            DocumentTypeImpl *srcdoctype = (DocumentTypeImpl *)source;
-            DocumentTypeImpl *newdoctype = createDocumentType(source->getNodeName());
-            // Values are on NamedNodeMaps
-            NamedNodeMapImpl *smap=srcdoctype->getEntities();
-            NamedNodeMapImpl *tmap=newdoctype->getEntities();
-            if(smap!=null)
-                for(int i=0;i<smap->getLength();++i)
-                    tmap->setNamedItem(importNode(smap->item(i),true));
-                smap=srcdoctype->getNotations();
-                tmap=newdoctype->getNotations();
-                if(smap!=null)
-                    for(int i=0;i<smap->getLength();++i)
-                        tmap->setNamedItem(
-                        importNode(smap->item(i),true));
-                    // NOTE: At this time, the DOM definition of DocumentType
-                    // doesn't cover Elements and their Attributes. domimpl's
-                    // extentions in that area will not be preserved, even if
-                    // copying from domimpl to domimpl. We could special-case
-                    // that here. Arguably we should. Consider. ?????
-                    newnode=newdoctype;
-        }
-        break;
-    case DOM_Node::DOCUMENT_FRAGMENT_NODE :
-        newnode = createDocumentFragment();
-        // No name, kids carry value
-        break;
-    case DOM_Node::NOTATION_NODE :
-        {
-            NotationImpl *srcnotation=(NotationImpl *)source;
-            NotationImpl *newnotation = createNotation(source->getNodeName());
-            newnotation->setPublicId(srcnotation->getPublicId());
-            newnotation->setSystemId(srcnotation->getSystemId());
-            // Kids carry additional value
-            newnode=newnotation;
-            // No name, no value
-            break;
-        }
-
-    case DOM_Node::DOCUMENT_NODE : // Document can't be child of Document
-    default:                                                // Unknown node type
-        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
-    }
-
-    // If deep, replicate and attach the kids.
-    if (deep)
-        for (NodeImpl *srckid = source->getFirstChild(); srckid != null; srckid = srckid->getNextSibling())
-        {
-            newnode->appendChild(importNode(srckid, true));
-        }
-
-    return newnode;
-};
-
-
-
 NodeImpl *DocumentImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild)
 {
     // Only one such child permitted
@@ -546,11 +443,106 @@ void DocumentImpl::unreferenced()
 
 //Introduced in DOM Level 2
 
+NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
+{
+    NodeImpl *newnode=null;
+
+    switch (source->getNodeType())
+    {
+    case DOM_Node::ELEMENT_NODE :
+        {
+            ElementImpl *newelement;
+	    if (source->getLocalName() == null)
+		newelement = createElement(source->getNodeName());
+	    else
+		newelement = createElementNS(source->getNamespaceURI(), source->getNodeName());
+            NamedNodeMapImpl *srcattr=source->getAttributes();
+            if(srcattr!=null)
+                for(int i=0;i<srcattr->getLength();++i)
+		{
+		    AttrImpl *attr = (AttrImpl *) srcattr->item(i);
+		    if (attr -> getSpecified())	//not a default attribute
+			if (attr -> getLocalName() == null)
+			    newelement->setAttributeNode((AttrImpl *)importNode(attr, true));
+			else
+			    newelement->setAttributeNodeNS((AttrImpl *)importNode(attr, true));
+		}
+            newnode=newelement;
+        }
+        break;
+    case DOM_Node::ATTRIBUTE_NODE :
+	if (source->getLocalName() == null)
+	    newnode = createAttribute(source->getNodeName());
+	else
+	    newnode = createAttributeNS(source->getNamespaceURI(), source->getNodeName());
+	deep = true;
+        // Kids carry value
+        break;
+    case DOM_Node::TEXT_NODE :
+        newnode = createTextNode(source->getNodeValue());
+        break;
+    case DOM_Node::CDATA_SECTION_NODE :
+        newnode = createCDATASection(source->getNodeValue());
+        break;
+    case DOM_Node::COMMENT_NODE :
+        newnode = createComment(source->getNodeValue());
+        break;
+    case DOM_Node::ENTITY_REFERENCE_NODE :
+        newnode = createEntityReference(source->getNodeName());
+        deep=false; // ????? Right Thing?
+        // Value implied by doctype, so we should not copy it
+        // -- instead, refer to local doctype, if any.
+        break;
+    case DOM_Node::ENTITY_NODE :
+        {
+            EntityImpl *srcentity=(EntityImpl *)source;
+            EntityImpl *newentity = createEntity(source->getNodeName());
+            newentity->setPublicId(srcentity->getPublicId());
+            newentity->setSystemId(srcentity->getSystemId());
+            newentity->setNotationName(srcentity->getNotationName());
+            // Kids carry additional value
+            newnode=newentity;
+        }
+        break;
+    case DOM_Node::PROCESSING_INSTRUCTION_NODE :
+        newnode = createProcessingInstruction(source->getNodeName(), source->getNodeValue());
+        break;
+    case DOM_Node::DOCUMENT_FRAGMENT_NODE :
+        newnode = createDocumentFragment();
+        // No name, kids carry value
+        break;
+    case DOM_Node::NOTATION_NODE :
+        {
+            NotationImpl *srcnotation=(NotationImpl *)source;
+            NotationImpl *newnotation = createNotation(source->getNodeName());
+            newnotation->setPublicId(srcnotation->getPublicId());
+            newnotation->setSystemId(srcnotation->getSystemId());
+            // Kids carry additional value
+            newnode=newnotation;
+            // No name, no value
+            break;
+        }
+
+    case DOM_Node::DOCUMENT_NODE : // Document can't be child of Document
+    case DOM_Node::DOCUMENT_TYPE_NODE :
+    default:                       // Unknown node type
+        throw DOM_DOMException(DOM_DOMException::NOT_SUPPORTED_ERR, null);
+    }
+
+    // If deep, replicate and attach the kids.
+    if (deep)
+        for (NodeImpl *srckid = source->getFirstChild(); srckid != null; srckid = srckid->getNextSibling())
+        {
+            newnode->appendChild(importNode(srckid, true));
+        }
+
+    return newnode;
+};
+
+
 ElementImpl *DocumentImpl::createElementNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName)
 {
-    if (namespaceURI == null || namespaceURI.length() == 0)
-	return createElement(qualifiedName);
     if(!isXMLName(qualifiedName))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     //DOMString pooledTagName = this->namePool->getPooledString(qualifiedName);
@@ -561,8 +553,6 @@ ElementImpl *DocumentImpl::createElementNS(const DOMString &namespaceURI,
 AttrImpl *DocumentImpl::createAttributeNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName)
 {
-    if (namespaceURI == null || namespaceURI.length() == 0)
-	return createAttribute(qualifiedName);
     if(!isXMLName(qualifiedName))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     return new AttrImpl(this, namespaceURI, qualifiedName); 
@@ -572,8 +562,6 @@ AttrImpl *DocumentImpl::createAttributeNS(const DOMString &namespaceURI,
 DeepNodeListImpl *DocumentImpl::getElementsByTagNameNS(const DOMString &namespaceURI,
 	const DOMString &localName)
 {
-    if (namespaceURI == null || namespaceURI.length() == 0)
-	return getElementsByTagName(localName);
     return new DeepNodeListImpl(this, namespaceURI, localName);
 }
 

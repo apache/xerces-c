@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:08  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/11/30 21:16:25  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -316,6 +319,9 @@ void NamedNodeMapImpl::reconcileDefaults()
 //
 NodeImpl * NamedNodeMapImpl::removeNamedItem(const DOMString &name)
 {
+    if (readOnly)
+	throw DOM_DOMException(
+	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     int i=findNamePoint(name);
     if(i<0)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
@@ -328,6 +334,9 @@ NodeImpl * NamedNodeMapImpl::removeNamedItem(const DOMString &name)
 	    if (n->isAttrImpl() && d->isAttrImpl()) {	//DOM Level 2
 		d = d->cloneNode(true); //copy d and ownerElement of n
 		((AttrImpl *) d)->setOwnerElement(((AttrImpl *) n)->getOwnerElement());
+		d->namespaceURI = n->namespaceURI == null ? null : n->namespaceURI.clone();
+		d->prefix = n->prefix == null ? null : n->prefix.clone();
+		d->localName = n->localName == null ? null : n->localName.clone();
 	    }
             nodes->setElementAt(d, i);
 	} else
@@ -483,11 +492,47 @@ int NamedNodeMapImpl::findNamePoint(const DOMString &namespaceURI,
 NodeImpl *NamedNodeMapImpl::getNamedItemNS(const DOMString &namespaceURI,
 	const DOMString &localName)
 {
-    if (namespaceURI == null || namespaceURI.length() == 0)
-	return getNamedItem(localName);
     int i = findNamePoint(namespaceURI, localName);
     return i < 0 ? null : nodes -> elementAt(i);
 }
+
+
+//
+// setNamedItemNS()  Put the item into the NamedNodeList by name.
+//                  If an item with the same name already was
+//                  in the list, replace it.  Return the old
+//                  item, if there was one.
+//                  Caller is responsible for arranging for
+//                  deletion of the old item if its ref count is
+//                  zero.
+//
+NodeImpl * NamedNodeMapImpl::setNamedItemNS(NodeImpl *arg)
+{
+    if(arg->getOwnerDocument()!=ownerDoc)
+        throw DOM_DOMException(DOM_DOMException::WRONG_DOCUMENT_ERR,null);   
+    if (readOnly)
+	throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+    if (arg->owned)
+        throw DOM_DOMException(DOM_DOMException::INUSE_ATTRIBUTE_ERR,null);
+    
+    arg->owned = true;
+    int i=findNamePoint(arg->getNamespaceURI(), arg->getLocalName());
+    NodeImpl *previous=null;
+    if(i>=0) {
+        previous = nodes->elementAt(i);
+        nodes->setElementAt(arg,i);
+    } else {
+        i=-1-i; // Insert point (may be end of list)
+        if(null==nodes)
+            nodes=new NodeVector();
+        nodes->insertElementAt(arg,i);
+    }
+    ++changes;
+    if (previous != null)
+        previous->owned = false;
+
+    return previous;
+};
 
 
 // removeNamedItemNS() - Remove the named item, and return it.
@@ -496,24 +541,25 @@ NodeImpl *NamedNodeMapImpl::getNamedItemNS(const DOMString &namespaceURI,
 //                      we can't do it here because the caller would
 //                      never see the returned node.
 NodeImpl *NamedNodeMapImpl::removeNamedItemNS(const DOMString &namespaceURI,
-	const DOMString &name)
+	const DOMString &localName)
 {
     if (readOnly)
 	throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    if (namespaceURI == null || namespaceURI.length() == 0)
-	return removeNamedItem(name);
-    int i = findNamePoint(namespaceURI, name);
+    int i = findNamePoint(namespaceURI, localName);
     if (i < 0)
 	throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR, null);
     NodeImpl * n = nodes -> elementAt(i);   //node to be removed or replaced
     //find if n has a default value defined in DTD, if so replace n in nodes
     //by its corresponding default value node, otherwise remove n from nodes
     NodeImpl * d;
-    if (defaults != null && (d = defaults->getNamedItemNS(namespaceURI, name)) != null) {
+    if (defaults != null && (d = defaults->getNamedItemNS(namespaceURI, localName)) != null) {
 	if (n->isAttrImpl() && d->isAttrImpl()) {
 	    d = d->cloneNode(true); //copy d and ownerElement of n
 	    ((AttrImpl *) d)->setOwnerElement(((AttrImpl *) n)->getOwnerElement());
+	    d->namespaceURI = n->namespaceURI == null ? null : n->namespaceURI.clone();
+	    d->prefix = n->prefix == null ? null : n->prefix.clone();
+	    d->localName = n->localName == null ? null : n->localName.clone();
 	}
         nodes -> setElementAt(d, i);	//replace n in nodes by d
     } else

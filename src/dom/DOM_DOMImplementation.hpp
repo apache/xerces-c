@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:57  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:57  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:15  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -118,8 +121,9 @@ class CDOM_EXPORT DOM_DOMImplementation {
  /**
    * Test if the DOM implementation implements a specific feature.
    *
-   * @param feature The package name of the feature to test. This
-   *   implemenation supports XML, but does not support HTML.
+   * @param feature The string of the feature to test (case-insensitive). The legal 
+   *        values are defined throughout this specification. The string must be 
+   *        an <EM>XML name</EM> (see also Compliance).
    * @param version This is the version number of the package name to test.  
    *   In Level 1, this is the string "1.0". If the version is not specified, 
    *   supporting any version of the  feature will cause the method to return 
@@ -144,11 +148,11 @@ class CDOM_EXPORT DOM_DOMImplementation {
     /** @name Functions introduced in DOM Level 2. */
     //@{
     /**
-     * Creates an empty <code>DocumentType</code> node.
+     * Creates an empty <code>DOM_DocumentType</code> node.
      * Entity declarations and notations are not made available.
      * Entity reference expansions and default attribute additions
      * do not occur. It is expected that a future version of the DOM
-     * will provide a way for populating a <code>DocumentType</code>.
+     * will provide a way for populating a <code>DOM_DocumentType</code>.
      * @param qualifiedName The <em>qualified name</em>
      * of the document type to be created.
      * @param publicID The external subset public identifier.
@@ -162,7 +166,7 @@ class CDOM_EXPORT DOM_DOMImplementation {
 	const DOMString &internalSubset);
 
     /**
-     * Creates an XML <code>Document</code> object of the specified type
+     * Creates an XML <code>DOM_Document</code> object of the specified type
      * with its document element.
      * @param namespaceURI The <em>namespace URI</em> of
      * the document element to create, or <code>null</code>.

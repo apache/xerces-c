@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/12/03 00:11:23  andyh
  * Added DOMString.clone() to node parameters in and out of the DOM,
  * where they had been missed.
@@ -163,12 +166,6 @@ DOM_NodeList DOM_Element::getElementsByTagName(const DOMString &name) const
 {
         return DOM_NodeList(((ElementImpl *)fImpl)->getElementsByTagName(name));
 
-};
-
-
-void      DOM_Element::normalize()
-{
-        ((ElementImpl *)fImpl)->normalize();
 };
 
 

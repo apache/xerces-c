@@ -59,8 +59,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:12  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:08  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:12  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:29  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -83,7 +86,7 @@ class NodeVector;
 class DocumentImpl;
 class NodeImpl;
 
-class NamedNodeMapImpl {
+class CDOM_EXPORT NamedNodeMapImpl {
 private:
     NodeVector       *nodes;
     DocumentImpl     *ownerDoc;   
@@ -123,8 +126,9 @@ public:
 	const DOMString &localName);
     virtual NodeImpl        *getNamedItemNS(const DOMString &namespaceURI,
 	const DOMString &localName);
+    virtual NodeImpl        *setNamedItemNS(NodeImpl *arg);
     virtual NodeImpl        *removeNamedItemNS(const DOMString &namespaceURI,
-	const DOMString &name);
+	const DOMString &localName);
 };
 
 #endif

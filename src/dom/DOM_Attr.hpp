@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:48  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:06  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:48  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:13  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -209,7 +212,7 @@ public:
     DOM_Element     getOwnerElement() const;
     //@}
 
-private:
+protected:
     DOM_Attr(AttrImpl *attr);
 
     friend class DOM_Element;

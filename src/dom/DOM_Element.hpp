@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/12/21 07:47:06  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -188,8 +191,8 @@ public:
   /**
    * Retrieves an <code>DOM_Attr</code> node by name.
    *
-   * @param name The name of the attribute to retrieve.
-   * @return The <code>DOM_Attr</code> node with the specified attribute name or 
+   * @param name The name (<CODE>nodeName</CODE>) of the attribute to retrieve.
+   * @return The <code>DOM_Attr</code> node with the specified name (<CODE>nodeName</CODE>) or 
    *   <code>null</code> if there is no such attribute.
    */
   DOM_Attr        getAttributeNode(const DOMString &name) const;
@@ -227,7 +230,7 @@ public:
    * @param value Value to set in string form.
    * @exception DOMException
    *   INVALID_CHARACTER_ERR: Raised if the specified name contains an 
-   *   invalid character.
+   *   illegal character.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
    void             setAttribute(const DOMString &name, 
@@ -235,11 +238,11 @@ public:
    /**
     * Adds a new attribute. 
     * 
-    * If an attribute with that name is already present 
+    * If an attribute with that name (<CODE>nodeName</CODE>) is already present 
     * in the element, it is replaced by the new one.
     * @param newAttr The <code>DOM_Attr</code> node to add to the attribute list.
     * @return If the <code>newAttr</code> attribute replaces an existing 
-    *   attribute with the same name, the  previously existing 
+    *   attribute, the replaced
     *   <code>DOM_Attr</code> node is returned, otherwise <code>null</code> is 
     *   returned.
     * @exception DOMException
@@ -257,11 +260,14 @@ public:
    /** @name Functions which modify the Element. */
    //@{
   /**
-   * Removes the specified attribute.
+   * Removes the specified attribute node.
+   * If the removed <CODE>DOM_Attr</CODE>
+   *   has a default value it is immediately replaced. The replacing attribute 
+   *   has the same namespace URI and local name, as well as the original prefix, 
+   *   when applicable.
    *
    * @param oldAttr The <code>DOM_Attr</code> node to remove from the attribute 
-   *   list. If the removed <code>DOM_Attr</code> has a default value it is 
-   *   immediately replaced.
+   *   list.
    * @return The <code>DOM_Attr</code> node that was removed.
    * @exception DOMException
    *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
@@ -271,24 +277,13 @@ public:
   DOM_Attr        removeAttributeNode(DOM_Attr oldAttr);
 
   /**
-   * Puts all <code>Text</code> nodes in the full depth of the sub-tree 
-   * underneath this <code>DOM_Element</code> into a "normal" form.
-    
-   * In the "normal" form  
-   * markup (e.g., tags, comments, processing instructions, CDATA sections, 
-   * and entity references) separates <code>Text</code> nodes, i.e., there 
-   * are no adjacent <code>Text</code> nodes.  This can be used to ensure 
-   * that the DOM view of a document is the same as if it were saved and 
-   * re-loaded, and is useful when operations (such as XPointer lookups) that 
-   * depend on a particular document tree structure are to be used.
-   */
-  void              normalize();
-
-  /**
    * Removes an attribute by name. 
    *
-   * If the removed attribute has a default 
-   * value it is immediately replaced.
+   * If the removed attribute 
+   *   is known to have a default value, an attribute immediately appears 
+   *   containing the default value as well as the corresponding namespace URI, 
+   *   local name, and prefix when applicable.<BR>To remove an attribute by local 
+   *   name and namespace URI, use the <CODE>removeAttributeNS</CODE> method.
    * @param name The name of the attribute to remove.
    * @exception DOMException
    *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
@@ -303,8 +298,7 @@ public:
    * Retrieves an attribute value by local name and namespace URI.
    *
    * @param namespaceURI The <em>namespace URI</em> of
-   *    the attribute to retrieve. When it is <code>null</code> or an empty
-   *    string, this method behaves like <code>getAttribute</code>.
+   *    the attribute to retrieve.
    * @param localName The <em>local name</em> of the
    *    attribute to retrieve.
    * @return The <code>DOM_Attr</code> value as a string, or an empty string if
@@ -314,10 +308,15 @@ public:
 	const DOMString &localName) const;
 
   /**
-   * Adds a new attribute. If an attribute with the same local name and
-   * namespace URI is already present in the element, its prefix is changed
-   * to be that of the <code>qualifiedName</code> parameter,
-   * and its value is changed to be that of the <code>value</code> parameter.
+   * Adds a new attribute. If the given 
+   *   <CODE>namespaceURI</CODE> is <CODE>null</CODE> or an empty string and the 
+   *   <CODE>qualifiedName</CODE> has a prefix that is "xml", the new attribute 
+   *   is bound to the predefined namespace 
+   *   "http://www.w3.org/XML/1998/namespace". 
+   *   If an attribute with the same local name and namespace URI is already 
+   *   present on the element, its prefix is changed to be the prefix part of the 
+   *   <CODE>qualifiedName</CODE>, and its value is changed to be the 
+   *   <CODE>value</CODE> parameter. 
    * This value is a simple string, it is
    * not parsed as it is being set. So any markup (such as syntax to be
    * recognized as an entity reference) is treated as literal text, and
@@ -329,15 +328,24 @@ public:
    * <code>setAttributeNode</code> to assign it as the value of an
    * attribute.
    * @param namespaceURI The <em>namespace URI</em> of
-   *    the attribute to create or alter. When it is <code>null</code> or an empty
-   *    string, this method behaves like <code>setAttribute</code>.
+   *    the attribute to create or alter.
    * @param localName The <em>local name</em> of the
    *    attribute to create or alter.
    * @param value The value to set in string form.
    * @exception DOMException
-   *   INVALID_CHARACTER_ERR: Raised if the specified name contains an 
-   *   invalid character.
+   *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains an 
+   *   illegal character.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
+   * <br>
+   *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
+   *         malformed, if the <CODE>qualifiedName</CODE> has a prefix that is 
+   *         "xml" and the <CODE>namespaceURI</CODE> is neither <CODE>null</CODE> 
+   *         nor an empty string nor "http://www.w3.org/XML/1998/namespace", or 
+   *         if the <CODE>qualifiedName</CODE> has a prefix that is "xmlns" but 
+   *         the <CODE>namespaceURI</CODE> is neither <CODE>null</CODE> nor an 
+   *         empty string, or if if the <CODE>qualifiedName</CODE> has a prefix 
+   *         different from "xml" and "xmlns" and the <CODE>namespaceURI</CODE> 
+   *         is <CODE>null</CODE> or an empty string.
    */
    void             setAttributeNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName, const DOMString &value);
@@ -345,10 +353,12 @@ public:
   /**
    * Removes an attribute by local name and namespace URI. If the
    * removed attribute has a default value it is immediately replaced.
+   * The replacing attribute has the same namespace URI and local name, as well as 
+   * the original prefix.<BR>HTML-only DOM implementations do not need to 
+   * implement this method.
    *
    * @param namespaceURI The <em>namespace URI</em> of
-   *    the attribute to remove. When it is <code>null</code> or an empty
-   *    string, this method behaves like <code>removeAttribute</code>.
+   *    the attribute to remove.
    * @param localName The <em>local name</em> of the
    *    attribute to remove.
    * @exception DOMException
@@ -361,8 +371,7 @@ public:
    * Retrieves an <code>DOM_Attr</code> node by local name and namespace URI.
    *
    * @param namespaceURI The <em>namespace URI</em> of
-   *    the attribute to retrieve. When it is <code>null</code> or an empty
-   *    string, this method behaves like <code>getAttributeNode</code>.
+   *    the attribute to retrieve.
    * @param localName The <em>local name</em> of the
    *    attribute to retrieve.
    * @return The <code>DOM_Attr</code> node with the specified attribute local
@@ -377,11 +386,9 @@ public:
     * If an attribute with that local name and namespace URI is already present 
     * in the element, it is replaced by the new one.
     * @param newAttr The <code>DOM_Attr</code> node to add to the attribute list.
-    *    When the node has no <code>namespaceURI</code>, this method behaves like
-    *    <code>setAttributeNode</code>.
     * @return If the <code>newAttr</code> attribute replaces an existing
     *    attribute with the same <em>local name</em> and <em>namespace URI</em>,
-    *    the previously existing <code>DOM_Attr</code> node is
+    *    the replaced <code>DOM_Attr</code> node is
     *    returned, otherwise <code>null</code> is returned.
     * @exception DOMException
     *   WRONG_DOCUMENT_ERR: Raised if <code>newAttr</code> was created from a 
@@ -402,8 +409,7 @@ public:
    *
    * @param namespaceURI The <em>namespace URI</em> of
    *    the elements to match on. The special value "*" matches all
-   *    namespaces. When it is <code>null</code> or an empty string, this
-   *    method behaves like <code>getElementsByTagName</code>.
+   *    namespaces.
    * @param localName The <em>local name</em> of the
    *    elements to match on. The special value "*" matches all local names.
    * @return A new <code>DOM_NodeList</code> object containing all the matched
@@ -414,7 +420,7 @@ public:
 
   //@}
 
-protected:
+  protected:
      DOM_Element(ElementImpl *impl);
 
      friend class DOM_Document;

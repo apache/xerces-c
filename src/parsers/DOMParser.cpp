@@ -61,8 +61,11 @@
  *  are created and added to the DOM tree.
  *
  * $Log$
- * Revision 1.1  1999/11/09 01:07:49  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:11  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:07:49  twl
+ * Initial checkin
  *
  * Revision 1.7  1999/11/08 20:44:52  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -470,9 +473,10 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
     DOM_Element elem;
     if (fScanner -> getDoNamespaces()) {    //DOM Level 2, doNamespaces on
         unsigned int globalNSid = fValidator -> getGlobalNamespaceId();
+	unsigned int xmlnsNSid = fValidator -> getXMLNSNamespaceId();
 	XMLBuffer buf;
 	DOMString namespaceURI = 0;
-        if (urlId != globalNSid) {	//TagName has prefix
+        if (urlId != globalNSid) {	//TagName has a prefix
 	    fValidator -> getURIText(urlId, buf);   //get namespaceURI
 	    namespaceURI = DOMString(buf.getRawBuffer());
 	}
@@ -481,7 +485,8 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
 	    const XMLAttr* oneAttrib = attrList.elementAt(index);
 	    unsigned int attrURIId = oneAttrib -> getURIId();
 	    namespaceURI = 0;
-	    if (attrURIId != globalNSid) {	//Attribute Name has prefix
+	    if (attrURIId != globalNSid && attrURIId != xmlnsNSid) {
+		//Attribute Name has a prefix != "xmlns"
 		fValidator -> getURIText(attrURIId, buf);   //get namespaceURI
 		namespaceURI = DOMString(buf.getRawBuffer());
 	    }

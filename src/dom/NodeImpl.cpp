@@ -56,6 +56,9 @@
 
 /**
 * $Log$
+* Revision 1.4  2000/01/05 01:16:08  andyh
+* DOM Level 2 core, namespace support added.
+*
 * Revision 1.3  1999/12/03 00:11:23  andyh
 * Added DOMString.clone() to node parameters in and out of the DOM,
 * where they had been missed.
@@ -85,6 +88,7 @@
 #include "stdio.h"
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
+#include "TextImpl.hpp"
 
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
                    const DOMString &nam,  short nTyp,
@@ -123,33 +127,30 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 {
     // Do we want to add isLeafNode to this? How about initial value?
     this->ownerDocument=ownerDoc;
-    this->name=qualifiedName.clone();
-    
-    this->namespaceURI=namespaceURI.clone();
 
-    // Look in the qualified name parameter for a colon.
-    //  If found, break out the prefix and local name parts.
-    //    (bug:  check for well formed names.)
-    XMLCh  *qNameP   = this->name.rawBuffer();
-    int    qNameLen = this->name.length();
-    int index;
-    for (index=0; index<qNameLen; index++)
-    {
-        if (qNameP[index] == chColon)
-        {
-            this->prefix = this->name.substringData(0, index);
-            int len = this->name.length() - index - 1;
-            this->localName = this->name.substringData(index+1, len);
-            break;
-        }
+    //Check if qualifiedName = prefix:localName, name or malformed
+    this->name = qualifiedName.clone();
+    XMLCh *qNameP = this->name.rawBuffer();
+    int qNameLen = this->name.length();	//note: qNameP[qNameLen] may not be 0
+    int index = -1, count = 0;
+    for (int i = 0; i < qNameLen; ++i)
+	if (*qNameP++ == chColon) {
+	    index = i;
+	    ++count;	//number of ':' found
+	}
+    if (qNameLen == 0 || count > 1 || index == 0 || index == qNameLen-1)
+	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+
+    if (count == 0) {	//count == 0 && index == -1
+	this -> prefix = null;
+	this -> localName = this -> name;
+    } else {	//count == 1 && 0 < index < qNameLen-1
+	this -> prefix = this->name.substringData(0, index);
+	this -> localName = this->name.substringData(index+1, qNameLen-index-1);
     }
 
-    if (this->prefix == null)
-    {
-        // The search for a colon, above, in the qualified name failed.
-        // the localname is the whole name, and there is no prefix part.
-        this->localName = this->name;
-    }
+    const DOMString& URI = mapPrefix(prefix, namespaceURI, nTyp);
+    this -> namespaceURI = URI == null ? null : URI.clone();
 
     this->nType=nTyp;
     this->isLeafNode=isLeafNod;
@@ -374,7 +375,7 @@ bool NodeImpl::hasChildNodes()
 
 
 NodeImpl *NodeImpl::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
-    if (readOnly)
+    if (readOnly || newChild -> readOnly)
         throw DOM_DOMException(
         DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
@@ -646,37 +647,119 @@ tree structure is legal.
       // return getNodeName();
   };    
   
-  //Introduced in DOM Level 2
+//Introduced in DOM Level 2
   
-  bool NodeImpl::supports(const DOMString &feature, const DOMString &version)
-  {
-      return false;   //must be overriden by each subclass
-  }
-  
-  DOMString NodeImpl::getNamespaceURI()
-  {
-      return namespaceURI;
-  }
-  
-  DOMString NodeImpl::getPrefix()
-  {
-      return prefix;
-  }
-  
-  DOMString NodeImpl::getLocalName()
-  {
-      return localName;
-  }
-  
-  void NodeImpl::setPrefix(const DOMString &prefix)
-  {
-      if (readOnly)
-          throw DOM_DOMException(
-          DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-      if (isAttrImpl() || isElementImpl()) {
-          name = this -> prefix = prefix;
-          name = name + chColon + localName;    //nodeName is changed too
-          //what to do if namespaceURI is null?
-      }
-      
-  }
+void NodeImpl::normalize()
+{
+    NodeImpl *kid, *next;
+    for (kid = getFirstChild(); kid != null; kid = next)
+    {
+        next = kid->getNextSibling();
+        
+        // If kid and next are both Text nodes (but _not_ CDATASection,
+        // which is a subclass of Text), they can be merged.
+        if (next != null && 
+            kid->isTextImpl()   && !(kid->isCDATASectionImpl())  && 
+            next->isTextImpl()  && !(next->isCDATASectionImpl()) )
+        {
+            ((TextImpl *) kid)->appendData(((TextImpl *) next)->getData());
+            removeChild(next);
+            if (next->nodeRefCount == 0)
+                deleteIf(next);
+            next = kid; // Don't advance; there might be another.
+        }
+        
+        // Otherwise it might be an Element, which is handled recursively  
+        else
+            if (kid->isElementImpl())
+                kid->normalize();
+    };
+    
+    // changed() will have occurred when the removeChild() was done,
+    // so does not have to be reissued.
+};
+
+
+bool NodeImpl::supports(const DOMString &feature, const DOMString &version)
+{
+    return false;   //must be overriden by each subclass
+}
+
+DOMString NodeImpl::getNamespaceURI()
+{
+    return namespaceURI;
+}
+
+DOMString NodeImpl::getPrefix()
+{
+    return prefix;
+}
+
+DOMString NodeImpl::getLocalName()
+{
+    return localName;
+}
+
+
+void NodeImpl::setPrefix(const DOMString &prefix)
+{
+    static const DOMString xml("xml");
+    static const DOMString xmlURI("http://www.w3.org/XML/1998/namespace");
+    static const DOMString xmlns("xmlns");
+
+    if (readOnly)
+	throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+    if(prefix != null && !DocumentImpl::isXMLName(prefix))
+        throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
+    if (localName == null)  //if not Element or Attr node
+	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+
+    if (prefix == null || prefix.length() == 0) {
+	this -> prefix = null;
+	name = localName;
+	return;
+    }
+
+    XMLCh *p = prefix.rawBuffer();
+    for (int i = prefix.length(); --i >= 0;)
+	if (*p++ == chColon)	//prefix is malformed
+	    throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+    if (prefix.equals(xml) && !namespaceURI.equals(xmlURI) ||
+	prefix.equals(xmlns) && namespaceURI != null && namespaceURI.length() != 0)
+	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+
+    name = this -> prefix = prefix;
+    name = name + chColon + localName;    //nodeName is changed too
+}
+
+//Return a URI mapped from the given prefix and namespaceURI as below
+//	prefix	namespaceURI		output
+//---------------------------------------------------
+//	"xml"	null, "" or xmlURI	xmlURI
+//	"xml"	otherwise		NAMESPACE_ERR
+//	"xmlns"	null or ""		namespaceURI (nType = ATTRIBUTE_NODE only)
+//	"xmlns"	otherwise		NAMESPACE_ERR (nType = ATTRIBUTE_NODE only)
+//	else	any			namesapceURI
+const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
+	const DOMString &namespaceURI, short nType)
+{
+    //The constants below are duplicates of those in setPrefix().
+    //However, there is a static initializer problem if they are
+    //defined outside of each function.  Need to work on this later.
+    static const DOMString xml("xml");
+    static const DOMString xmlURI("http://www.w3.org/XML/1998/namespace");
+    static const DOMString xmlns("xmlns");
+
+    if (prefix == null)
+	return namespaceURI;
+    if (prefix.equals(xml)) {
+	if (namespaceURI == null || namespaceURI.length() == 0 || namespaceURI.equals(xmlURI))
+	    return xmlURI;
+	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+    } else if (nType == DOM_Node::ATTRIBUTE_NODE && prefix.equals(xmlns)) {
+	if (namespaceURI == null || namespaceURI.length() == 0)
+	    return namespaceURI;
+	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
+    } else
+	return namespaceURI;
+}

@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:08  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/12/21 07:47:07  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -183,11 +186,15 @@ public:
     virtual void        unreferenced();
 
     //Introduced in DOM Level 2
-    virtual bool supports(const DOMString &feature, const DOMString &version);
-    virtual DOMString         getNamespaceURI();
-    virtual DOMString         getPrefix();
-    virtual DOMString         getLocalName();
-    virtual void              setPrefix(const DOMString &prefix);
+    virtual void	normalize();
+    virtual bool	supports(const DOMString &feature, const DOMString &version);
+    virtual DOMString	getNamespaceURI();
+    virtual DOMString   getPrefix();
+    virtual DOMString   getLocalName();
+    virtual void        setPrefix(const DOMString &prefix);
+    //Utility, not part of DOM Level 2 API
+    static const DOMString&	mapPrefix(const DOMString &prefix,
+	const DOMString &namespaceURI, short nType);
 };
 
 

@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:08  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/12/21 07:47:06  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -148,7 +151,6 @@ public:
     virtual DocumentTypeImpl    *getDoctype();
     virtual ElementImpl         *getDocumentElement();
     virtual DeepNodeListImpl    *getElementsByTagName(const DOMString & tagname);
-    virtual NodeImpl            *importNode(NodeImpl *source, bool deep);
     virtual NodeImpl            *insertBefore(NodeImpl *newChild, NodeImpl *refChild);
     static  bool                isXMLName(const DOMString & s);
     virtual void                referenced();
@@ -159,6 +161,7 @@ public:
     static  TreeWalkerImpl*     createTreeWalker(DOM_Node root, short whatToShow, DOM_NodeFilter filter, NodeFilterImpl* fi);
 
     //Introduced in DOM Level 2
+    virtual NodeImpl            *importNode(NodeImpl *source, bool deep);
     virtual ElementImpl         *createElementNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName);
     virtual AttrImpl            *createAttributeNS(const DOMString &namespaceURI,

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/11/30 21:16:25  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -159,10 +162,6 @@ DOM_DocumentType DOM_DOMImplementation::createDocumentType(const DOMString &qual
 	const DOMString &publicID, const DOMString &systemID,
 	const DOMString &internalSubset)
 {
-    if (!DocumentImpl::isXMLName(qualifiedName))
-        throw DOM_DOMException(
-        DOM_DOMException::INVALID_CHARACTER_ERR, null);
-    
     return DOM_DocumentType(new DocumentTypeImpl(qualifiedName, publicID, systemID, internalSubset));
 }
 

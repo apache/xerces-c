@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:50  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:06  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:50  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:14  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -138,7 +141,7 @@ public:
     ~DOM_Comment();
     //@}
 
-private:
+protected:
     DOM_Comment(CommentImpl *comment);
 
     friend class DOM_Document;

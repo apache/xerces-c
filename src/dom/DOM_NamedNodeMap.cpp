@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:59  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:59  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:18  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -177,8 +180,13 @@ DOM_Node DOM_NamedNodeMap::getNamedItemNS(const DOMString &namespaceURI,
     return DOM_Node(fImpl->getNamedItemNS(namespaceURI, localName));
 }
 
-DOM_Node DOM_NamedNodeMap::removeNamedItemNS(const DOMString &namespaceURI,
-	const DOMString &name)
+DOM_Node DOM_NamedNodeMap::setNamedItemNS(DOM_Node arg)
 {
-    return DOM_Node(fImpl->removeNamedItemNS(namespaceURI, name));
+    return DOM_Node(fImpl->setNamedItemNS(arg.fImpl));
+}
+
+DOM_Node DOM_NamedNodeMap::removeNamedItemNS(const DOMString &namespaceURI,
+	const DOMString &localName)
+{
+    return DOM_Node(fImpl->removeNamedItemNS(namespaceURI, localName));
 }

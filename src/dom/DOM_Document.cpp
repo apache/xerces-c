@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/11/23 01:48:14  rahulj
  * Changed 0L to 0. CC under HPUX is happy now.
  *
@@ -229,9 +232,9 @@ DOM_NodeList DOM_Document::getElementsByTagName(const DOMString &tagname) const 
 
 //Introduced in DOM Level 2
 
-DOM_Node DOM_Document::importNode(const DOM_Node &source, bool deep)
+DOM_Node DOM_Document::importNode(const DOM_Node &importedNode, bool deep)
 {
-	return DOM_Node(((DocumentImpl *)fImpl)->importNode(source.fImpl, deep));
+	return DOM_Node(((DocumentImpl *)fImpl)->importNode(importedNode.fImpl, deep));
 };
 
 

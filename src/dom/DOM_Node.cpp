@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/12/03 00:11:23  andyh
  * Added DOMString.clone() to node parameters in and out of the DOM,
  * where they had been missed.
@@ -278,6 +281,12 @@ void            DOM_Node::setUserData(void *p)
 
 
 //Introduced in DOM Level 2
+
+void              DOM_Node::normalize()
+{
+    fImpl->normalize();
+};
+
 
 bool              DOM_Node::supports(const DOMString &feature,
 	                       const DOMString &version) const

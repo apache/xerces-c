@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:04  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:08  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:04  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:22  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -154,14 +157,15 @@ class CDOM_EXPORT DOM_Text: public DOM_CharacterData {
     //@{
 
     /**
-     * Breaks this <code>Text</code> node into two Text nodes at the specified 
+     * Breaks this node into two nodes at the specified 
      * offset, keeping both in the tree as siblings. 
      *
      * This node then only 
      * contains all the content up to the <code>offset</code> point. And a new 
-     * <code>Text</code> node, which is inserted as the next sibling of  this 
+     * node of the same nodeType, which is inserted as the next sibling of this 
      * node, contains all the content at and after the <code>offset</code> 
-     * point.
+     * point. When the <code>offset</code> is equal to the lenght of this node,
+     * the new node has no data.
      * @param offset The offset at which to split, starting from 0.
      * @return The new <code>Text</code> node.
      * @exception DOMException

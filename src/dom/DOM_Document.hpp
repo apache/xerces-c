@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/12/21 07:47:06  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -210,7 +213,7 @@ public:
     * @return A <code>DOM_Element</code> that reference the new element.
     * @exception DOMException
     *   INVALID_CHARACTER_ERR: Raised if the specified name contains an
-    *   invalid character.
+    *   illegal character.
     */
     DOM_Element     createElement(const DOMString &tagName);
 
@@ -225,7 +228,11 @@ public:
     *
     * @param tagName The name of the element type to instantiate, as
     *    a null-terminated unicode string.
-    * @return A <code>DOM_Element</code> that reference the new element.
+    * @return A new <CODE>DOM_Element</CODE> 
+    *        object with the <CODE>nodeName</CODE> attribute set to 
+    *        <CODE>tagName</CODE>, and <CODE>localName</CODE>, 
+    *        <CODE>prefix</CODE>, and <CODE>namespaceURI</CODE> set to 
+    *        <CODE>null</CODE>.
     */
     DOM_Element     createElement(const XMLCh *tagName);
 
@@ -298,7 +305,7 @@ public:
     * @return A <code>DOM_ProcessingInstruction</code> that references the newly
     *  created PI node.
     * @exception DOMException
-    *   INVALID_CHARACTER_ERR: Raised if an invalid character is specified.
+    *   INVALID_CHARACTER_ERR: Raised if an illegal character is specified.
     */
     DOM_ProcessingInstruction createProcessingInstruction(const DOMString &target,
         const DOMString &data);
@@ -311,11 +318,14 @@ public:
      * <code>Attr</code> instance can then be attached to an Element
      * using the <code>DOMElement::setAttribute()</code> method.
      * @param name The name of the attribute.
-     * @return A <code>DOM_Attr</code> that references the newly
-     *  created Attr.
+     * @return A new <CODE>DOM_Attr</CODE> 
+     *       object with the <CODE>nodeName</CODE> attribute set to 
+     *       <CODE>name</CODE>, and <CODE>localName</CODE>, <CODE>prefix</CODE>, 
+     *       and <CODE>namespaceURI</CODE> set to 
+     *       <CODE>null</CODE>.
      * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified name contains an
-     *   invalid character.
+     *   illegal character.
      */
     DOM_Attr     createAttribute(const DOMString &name);
 
@@ -328,7 +338,7 @@ public:
      *  created EntityReference node.
      * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified name contains an
-     *   invalid character.
+     *   illegal character.
      */
     DOM_EntityReference    createEntityReference(const DOMString &name);
 
@@ -405,44 +415,72 @@ public:
     //@{
 
     /**
-      *  Import a copy of a node from another document into this document.
-      *  The source node, which may belong to a different document, is
-      *  copied, with the copy belonging to this document.  The copy
-      *  is not placed into the document (the parent node is null).
-      *
-      * @param deep If true, recursively import the subtree under the specified
-      *  node; if flase, import only the node itself (and its attributes, if
-      *  if is a DOM_Element.
-      * @return The newly created copy of the source node, belonging to this document
-      */
-    DOM_Node            importNode(const DOM_Node &source, bool deep);
+     * Imports a node from another document to this document. 
+     * The returned node has no parent (<CODE>parentNode</CODE> is 
+     * <CODE>null</CODE>). The source node is not altered or removed from the 
+     * original document; this method creates a new copy of the source 
+     * node.<BR>For all nodes, importing a node creates a node object owned by 
+     * the importing document, with attribute values identical to the source 
+     * node's <CODE>nodeName</CODE> and <CODE>nodeType</CODE>, plus the 
+     * attributes related to namespaces (prefix and namespaces URI).
+     *
+     * @param importedNode The node to import.
+     * @param deep If <CODE>true</CODE>, recursively import the subtree under the 
+     *      specified node; if <CODE>false</CODE>, import only the node itself, 
+     *      as explained above. This does not apply to <CODE>Attr</CODE>, 
+     *      <CODE>EntityReference</CODE>, and <CODE>Notation</CODE> nodes.
+     * @return The imported node that belongs to this <CODE>Document</CODE>.
+     * @exception DOMException
+     *   NOT_SUPPORTED_ERR: Raised if the type of node being imported is 
+     *                      not supported.
+     */
+    DOM_Node            importNode(const DOM_Node &importedNode, bool deep);
 
     /**
-     * Creates an element of the given qualified name and namespace URI.
+     * Creates an element of the given qualified name and 
+     * namespace URI. If the given <CODE>namespaceURI</CODE> is <CODE>null</CODE> 
+     * or an empty string and the <CODE>qualifiedName</CODE> has a prefix that is 
+     * "xml", the created element is bound to the predefined namespace 
+     * "http://www.w3.org/XML/1998/namespace".
      * @param namespaceURI The <em>namespace URI</em> of
-     *   the element to create. When it is <code>null</code> or an empty
-     *   string, this method behaves like <code>createElement</code>.
+     *   the element to create.
      * @param qualifiedName The <em>qualified name</em>
      *   of the element type to instantiate.
      * @return A new <code>DOM_Element</code> object.
      * @exception DOMException
-     *   INVALID_CHARACTER_ERR: Raised if the specified name contains
-     *                          an invalid character.
+     *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
+     *                          an illegal character.
+     * <br>
+     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
+     *       malformed, or if the <CODE>qualifiedName</CODE> has a prefix that is 
+     *       "xml" and the <CODE>namespaceURI</CODE> is neither <CODE>null</CODE> 
+     *       nor an empty string nor "http://www.w3.org/XML/1998/namespace".
      */
     DOM_Element         createElementNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName);
 
     /**
-     * Creates an attribute of the given qualified name and namespace URI.
+     * Creates an attribute of the given qualified name and 
+     * namespace URI. If the given <CODE>namespaceURI</CODE> is <CODE>null</CODE> 
+     * or an empty string and the <CODE>qualifiedName</CODE> has a prefix that is 
+     * "xml", the created attribute is bound to the predefined namespace 
+     * "http://www.w3.org/XML/1998/namespace".
      * @param namespaceURI The <em>namespace URI</em> of
-     *   the attribute to create. When it is <code>null</code> or an empty
-     *   string, this method behaves like <code>createAttribute</code>.
+     *   the attribute to create.
      * @param qualifiedName The <em>qualified name</em>
      *   of the attribute type to instantiate.
      * @return A new <code>DOM_Attr</code> object.
      * @exception DOMException
-     *   INVALID_CHARACTER_ERR: Raised if the specified name contains
-     *                          an invalid character.
+     *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
+     *                          an illegal character.
+     * <br>
+     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
+     *       malformed, if the <CODE>qualifiedName</CODE> has a prefix that is 
+     *       "xml" and the <CODE>namespaceURI</CODE> is neither <CODE>null</CODE> 
+     *       nor an empty string nor "http://www.w3.org/XML/1998/namespace", or 
+     *       if the <CODE>qualifiedName</CODE> has a prefix that is "xmlns" but 
+     *       the <CODE>namespaceURI</CODE> is neither <CODE>null</CODE> nor an 
+     *       empty string.
      */
     DOM_Attr            createAttributeNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName);
@@ -454,8 +492,7 @@ public:
      * preorder traversal of the <code>Document</code> tree.
      * @param namespaceURI The <em>namespace URI</em> of
      *   the elements to match on. The special value "*" matches all
-     *   namespaces. When it is <code>null</code> or an empty string, this
-     *   method behaves like <code>getElementsByTagName</code>.
+     *   namespaces.
      * @param localName The <em>local name</em> of the
      *   elements to match on. The special value "*" matches all local names.
      * @return A new <code>DOM_NodeList</code> object containing all the matched
@@ -465,9 +502,14 @@ public:
 	const DOMString &localName) const;
 
     /**
-     * Returns the <code>Element</code> whose ID is given by <code>elementId</code>.
+     * Returns the <code>DOM_Element</code> whose ID is given by <code>elementId</code>.
      * If no such element exists, returns <code>null</code>.
      * Behavior is not defined if more than one element has this <code>ID</code>.
+     * <P><B>Note:</B> The DOM implementation must have information that says 
+     * which attributes are of type ID. Attributes with the name "ID" are not of 
+     * type ID unless so defined. Implementations that do not know whether 
+     * attributes are of type ID or not are expected to return 
+     * <CODE>null</CODE>.</P>
      * @param elementId The unique <code>id</code> value for an element.
      * @return The matching element.
      */

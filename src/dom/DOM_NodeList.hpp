@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:02  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:08  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:02  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:20  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -190,7 +193,7 @@ public:
     int       getLength() const;
     //@}
 
-private:
+protected:
     DOM_NodeList(NodeListImpl *impl);
 
     friend class DOM_Document;

@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:52  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:52  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:16  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -151,7 +154,8 @@ public:
 
   /**
    * This function returns a  <code>NamedNodeMap</code> containing the general entities, both 
-   * external and internal, declared in the DTD. Duplicates are discarded. 
+   * external and internal, declared in the DTD. Parameter entities are not contained.
+   * Duplicates are discarded. 
    * <p>
    * Note: this functionality is not implemented in the initial release
    * of the parser, and the returned NamedNodeMap will be empty.
@@ -191,7 +195,7 @@ public:
     DOMString     getInternalSubset() const;
     //@}
 
-private:
+protected:
     DOM_DocumentType(DocumentTypeImpl *);
 
     friend class DOM_Document;

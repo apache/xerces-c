@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:59  twl
- * Initial revision
+ * Revision 1.2  2000/01/05 01:16:07  andyh
+ * DOM Level 2 core, namespace support added.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:59  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:18  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -160,7 +163,7 @@ public:
     //@{
 
     /**
-    * Adds a node using its <code>nodeName</code>. 
+    * Adds a node using its <code>nodeName</code> attribute. 
     *
     * <br>As the <code>nodeName</code> attribute is used to derive the name 
     * which the node must be stored under, multiple nodes of certain types 
@@ -170,8 +173,8 @@ public:
     *   accessible using the value of the <code>nodeName</code> attribute of 
     *   the node. If a node with that name is already present in the map, it 
     *   is replaced by the new one.
-    * @return If the new <code>Node</code> replaces an existing node with the 
-    *   same name  the previously existing <code>Node</code> is returned, 
+    * @return If the new <code>Node</code> replaces an existing node the
+    *   replaced <code>Node</code> is returned, 
     *   otherwise <code>null</code> is returned.
     * @exception DOMException
     *   WRONG_DOCUMENT_ERR: Raised if <code>arg</code> was created from a 
@@ -206,9 +209,9 @@ public:
     /**
     * Retrieves a node specified by name.
     *
-    * @param name Name of a node to retrieve.
-    * @return A <code>Node</code> (of any type) with the specified name, or 
-    *   null <code>DOM_Node</code> if the specified name did not identify any node in 
+    * @param name The <code>nodeName</code> of a node to retrieve.
+    * @return A <code>DOM_Node</code> (of any type) with the specified <code>nodeName</code>, or 
+    *   <code>null</code> if it does not identify any node in 
     *   the map. 
     */
     DOM_Node               getNamedItem(const DOMString &name);
@@ -230,12 +233,15 @@ public:
     *
     * If the removed node is an 
     * <code>Attr</code> with a default value it is immediately replaced.
-    * @param name The name of a node to remove.
+    * @param name The <code>nodeName</code> of a node to remove.
     * @return The node removed from the map or <code>null</code> if no node 
     *   with such a name exists.
     * @exception DOMException
     *   NOT_FOUND_ERR: Raised if there is no node named <code>name</code> in 
     *   the map.
+    * <br>
+    *   NO_MODIFICATION_ALLOWED_ERR: Raised if this <code>NamedNodeMap</code>
+    *   is readonly.
     */
     DOM_Node               removeNamedItem(const DOMString &name);
 
@@ -247,28 +253,50 @@ public:
      * Retrieves a node specified by local name and namespace URI.
      *
      * @param namespaceURI The <em>namespace URI</em> of
-     *    the node to retrieve. When it is <code>null</code> or an empty
-     *    string, this method behaves like <code>getNamedItem</code>.
+     *    the node to retrieve.
      * @param localName The <em>local name</em> of the node to retrieve.
      * @return A <code>DOM_Node</code> (of any type) with the specified
-     *    name, or <code>null</code> if the specified name did not
+     *    local name and namespace URI, or <code>null</code> if they do not
      *    identify any node in the map.
      */
     DOM_Node               getNamedItemNS(const DOMString &namespaceURI,
 	const DOMString &localName);
 
     /**
+     * Adds a node using its <CODE>namespaceURI</CODE> and <CODE>localName</CODE>.
+     * @param arg A node to store in a named node map. The node will later be 
+     *       accessible using the value of the <CODE>namespaceURI</CODE> and 
+     *       <CODE>localName</CODE> attribute of the node. If a node with those 
+     *       namespace URI and local name is already present in the map, it is 
+     *       replaced by the new one.
+     * @return If the new <code>Node</code> replaces an existing node the
+     *   replaced <code>Node</code> is returned, 
+     *   otherwise <code>null</code> is returned.
+     * @exception DOMException
+     *   WRONG_DOCUMENT_ERR: Raised if <code>arg</code> was created from a 
+     *   different document than the one that created the 
+     *   <code>NamedNodeMap</code>.
+     *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this 
+     *   <code>NamedNodeMap</code> is readonly.
+     *   <br>INUSE_ATTRIBUTE_ERR: Raised if <code>arg</code> is an 
+     *   <code>Attr</code> that is already an attribute of another 
+     *   <code>Element</code> object. The DOM user must explicitly clone 
+     *   <code>Attr</code> nodes to re-use them in other elements.
+     */
+    DOM_Node               setNamedItemNS(DOM_Node arg);
+
+    /**
      * Removes a node specified by local name and namespace URI.
      *
      * @param namespaceURI The <em>namespace URI</em> of
-     *    the node to remove. When it is <code>null</code> or an empty
-     *    string, this method behaves like <code>removeNamedItem</code>.
-     * @param name The <em>local name</em> of the
+     *    the node to remove.
+     * @param localName The <em>local name</em> of the
      *    node to remove. When this <code>DOM_NamedNodeMap</code> contains the
      *    attributes attached to an element, as returned by the attributes
      *    attribute of the <code>DOM_Node</code> interface, if the removed
      *    attribute is known to have a default value, an attribute
-     *    immediately appears containing the default value.
+     *    immediately appears containing the default value
+     *    as well as the corresponding namespace URI, local name, and prefix.
      * @return The node removed from the map if a node with such a local name
      *    and namespace URI exists.
      * @exception DOMException
@@ -279,11 +307,11 @@ public:
      *   is readonly.
      */
     DOM_Node               removeNamedItemNS(const DOMString &namespaceURI,
-	const DOMString &name);
+	const DOMString &localName);
 
     //@}
 
- private:
+ protected:
 
     DOM_NamedNodeMap(NamedNodeMapImpl *impl);
 

@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/05 01:16:08  andyh
+ * DOM Level 2 core, namespace support added.
+ *
  * Revision 1.2  1999/12/21 07:47:07  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -108,7 +111,6 @@ public:
     virtual NamedNodeMapImpl * getAttributes();
     virtual DeepNodeListImpl * getElementsByTagName(const DOMString &tagname);
     virtual DOMString getTagName();
-    virtual void normalize();
     virtual void removeAttribute(const DOMString &name);
     virtual AttrImpl * removeAttributeNode(AttrImpl * oldAttr);
     virtual void setAttribute(const DOMString &name, const DOMString &value);
