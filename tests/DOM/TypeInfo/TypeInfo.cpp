@@ -633,7 +633,7 @@ bool TypeInfo::testAnys() {
     DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ANYSIMPLETYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
 
-    DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    DOMTYPEINFOTEST(testEle->getTypeInfo(), X("anyTestPartialType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
     DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
@@ -881,7 +881,6 @@ int main(int argc, char **argv)
         XERCES_STD_QUALIFIER cout << "DOMTypeInfo test at line " << __LINE__ << "was not carried out" << XERCES_STD_QUALIFIER endl;
 
     delete ti.parser;
-
 
     //lets do the same for the just schema scanner
     try {
