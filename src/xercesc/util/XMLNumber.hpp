@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2003/10/02 19:18:12  peiyongz
+ * enum NumberType
+ *
  * Revision 1.8  2003/09/23 18:16:07  peiyongz
  * Inplementation for Serialization/Deserialization
  *
@@ -107,6 +110,14 @@ public:
         EQUAL         = 0,
         GREATER_THAN  = 1,
         INDETERMINATE = 2
+    };
+
+    enum NumberType {
+        Float,
+        Double,
+        BigDecimal,
+        DateTime,
+        UnKnown
     };
 
     virtual ~XMLNumber();
