@@ -108,6 +108,8 @@ public :
       */
     void operator delete(void* p);
 
+     //The HP compiler is complaining about duplicate overloading of delete
+#if !defined(XML_HPUX)
     /**
       * This method provide a matching delete for the placement new
       *
@@ -115,6 +117,7 @@ public :
       * @param memMgr An appliation's memory manager
       */
     void operator delete(void* p, MemoryManager* memMgr);
+#endif
 
     //@}
 
