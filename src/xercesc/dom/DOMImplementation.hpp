@@ -62,6 +62,8 @@
  */
 
 #include <xercesc/dom/DOMImplementationLS.hpp>
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMRangeException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -241,10 +243,7 @@ public:
      * Create a completely empty document that has neither a root element or a doctype node.
      */
     virtual DOMDocument *createDocument() = 0;
-    //@}
 
-    /** @name Non-standard extension */
-    //@{
     /**
      * Non-standard extension
      *
@@ -253,6 +252,42 @@ public:
      *     Application code should NOT delete it.
      */
     static DOMImplementation *getImplementation();
+
+    /**
+     * Non-standard extension
+     *
+     *  Load the default error text message for DOMException.
+      * @param msgToLoad The DOM ExceptionCode id to be processed
+      * @param toFill    The buffer that will hold the output on return. The
+      *         size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars  The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @return <code>true</code> if the message is successfully loaded
+     */
+    static bool loadDOMExceptionMsg
+    (
+        const   DOMException::ExceptionCode  msgToLoad
+        ,       XMLCh* const                 toFill
+        , const unsigned int                 maxChars
+    );
+
+    /**
+     * Non-standard extension
+     *
+     *  Load the default error text message for DOMRangeException.
+      * @param msgToLoad The DOM RangeExceptionCode id to be processed
+      * @param toFill    The buffer that will hold the output on return. The
+      *         size of this buffer should at least be 'maxChars + 1'.
+      * @param maxChars  The maximum number of output characters that can be
+      *         accepted. If the result will not fit, it is an error.
+      * @return <code>true</code> if the message is successfully loaded
+     */
+    static bool loadDOMExceptionMsg
+    (
+        const   DOMRangeException::RangeExceptionCode  msgToLoad
+        ,       XMLCh* const                           toFill
+        , const unsigned int                           maxChars
+    );
     //@}
 
 };

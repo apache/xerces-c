@@ -70,6 +70,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLStringTokenizer.hpp>
+#include <xercesc/util/XMLDOMMsg.hpp>
 #include <xercesc/parsers/DOMBuilderImpl.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -81,12 +82,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 //                     (Static constructors can not be safely used because
 //                      of order of initialization dependencies.)
 // ------------------------------------------------------------
-
-
-static DOMImplementationImpl    *gDomimp;   // Points to the singleton instance
-                                            //  of DOMImplementation that is returnedreturned
-                                            //  by any call to getImplementation().
-
 static const XMLCh  gXML[] =      // Points to "XML"
         {chLatin_X, chLatin_M, chLatin_L, chNull};
 
@@ -108,8 +103,45 @@ static const XMLCh  gLS[] =     // Points to "LS"
 
 
 // -----------------------------------------------------------------------
-//  Reset the singleton DOMImplementationImpl
+//  Message Loader for DOM
 // -----------------------------------------------------------------------
+static XMLMsgLoader             *gMsgLoader4DOM;   // Points to the singleton instance
+
+static void reinitMsgLoader4DOM()
+{
+	delete gMsgLoader4DOM;
+	gMsgLoader4DOM = 0;
+}
+
+XMLMsgLoader* getMsgLoader4DOM() {
+	static XMLRegisterCleanup msgLoader4DOMCleanup;
+
+    if (gMsgLoader4DOM == 0)
+    {
+        XMLMsgLoader* t = XMLPlatformUtils::loadMsgSet(XMLUni::fgXMLDOMMsgDomain);
+        if (!t)
+            XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+        else {
+            if (XMLPlatformUtils::compareAndSwap((void **)&gMsgLoader4DOM, t, 0) != 0)
+            {
+                delete t;
+            }
+            else
+            {
+                msgLoader4DOMCleanup.registerCleanup(reinitMsgLoader4DOM);
+            }
+        }
+    }
+    return gMsgLoader4DOM;
+};
+
+// -----------------------------------------------------------------------
+//  Singleton DOMImplementationImpl
+// -----------------------------------------------------------------------
+static DOMImplementationImpl    *gDomimp;   // Points to the singleton instance
+                                            //  of DOMImplementation that is returnedreturned
+                                            //  by any call to getImplementation().
+
 static void reinitImplementation()
 {
 	delete gDomimp;
@@ -182,7 +214,6 @@ bool  DOMImplementationImpl::hasFeature(const  XMLCh * feature,  const  XMLCh * 
 
 
 //Introduced in DOM Level 2
-
 DOMDocumentType *DOMImplementationImpl::createDocumentType(const XMLCh *qualifiedName,
 	const XMLCh * publicId, const XMLCh *systemId)
 {
@@ -199,16 +230,16 @@ DOMDocument *DOMImplementationImpl::createDocument(const XMLCh *namespaceURI,
 }
 
 
-// Non-standard extension
-DOMDocument *DOMImplementationImpl::createDocument()
-{
-        return new DOMDocumentImpl();
-}
-
 //Introduced in DOM Level 3
 DOMImplementation* DOMImplementationImpl::getInterface(const XMLCh* feature){
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
     return 0;
+}
+
+// Non-standard extension
+DOMDocument *DOMImplementationImpl::createDocument()
+{
+        return new DOMDocumentImpl();
 }
 
 //
@@ -218,6 +249,28 @@ DOMImplementation* DOMImplementationImpl::getInterface(const XMLCh* feature){
 DOMImplementation *DOMImplementation::getImplementation()
 {
     return (DOMImplementation*) DOMImplementationImpl::getDOMImplementationImpl();
+}
+
+bool DOMImplementation::loadDOMExceptionMsg
+(
+    const   DOMException::ExceptionCode  msgToLoad
+    ,       XMLCh* const                 toFill
+    , const unsigned int                 maxChars
+)
+{
+    // load the text, the msgToLoad+XMLDOMMsgs::F_LowBounds is the corresponding XMLDOMMsg Code
+    return getMsgLoader4DOM()->loadMsg(msgToLoad+XMLDOMMsg::F_LowBounds, toFill, maxChars);
+}
+
+bool DOMImplementation::loadDOMExceptionMsg
+(
+    const   DOMRangeException::RangeExceptionCode  msgToLoad
+    ,       XMLCh* const                           toFill
+    , const unsigned int                           maxChars
+)
+{
+    // load the text, the XMLDOMMsgs::F_HighBounds-msgToLoad is the corresponding XMLDOMMsg Code
+    return getMsgLoader4DOM()->loadMsg(XMLDOMMsg::F_HighBounds-msgToLoad, toFill, maxChars);
 }
 
 // ------------------------------------------------------------
