@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.11  2001/11/23 16:17:46  tng
+# Remove -lC for Solaris build.
+#
 # Revision 1.10  2001/10/18 18:16:47  tng
 # Use opt2 on AIX platform.
 #
@@ -221,7 +224,7 @@ fi
 	;;
 
    cc | CC)
-       standardLibFlags="-L/usr/lib -L/usr/ccs/lib -lC";;
+       standardLibFlags="-L/usr/lib -L/usr/ccs/lib";;
 
    acc | aCC)
        standardLibFlags="";;
