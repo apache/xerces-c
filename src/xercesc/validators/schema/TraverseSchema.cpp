@@ -1607,9 +1607,36 @@ TraverseSchema::traverseGroupDecl(const DOMElement* const elem,
             unsigned int rdfNameIndex = fStringPool->addOrFind(fBuffer.getRawBuffer());
 
             if (fCurrentGroupStack->containsElement(rdfNameIndex))
-                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, name);
+            {
+                reportSchemaError(aLocator, XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, name);                
+            }
             else
-                groupInfo->setBaseGroup(fGroupRegistry->get(fBuffer.getRawBuffer()));
+            {
+                XercesGroupInfo* baseGroup = fGroupRegistry->get(fBuffer.getRawBuffer());
+                if (baseGroup)
+                {
+                    groupInfo->setBaseGroup(baseGroup);
+                }
+                else
+                {
+                    fBuffer.set(name);
+                    fBuffer.append(SchemaSymbols::fgRedefIdentifier);
+                    SchemaInfo* saveInfo  = fSchemaInfo;
+                    DOMElement* groupElem = fSchemaInfo->getTopLevelComponent(SchemaInfo::C_Group,
+                        SchemaSymbols::fgELT_GROUP, fBuffer.getRawBuffer(), &fSchemaInfo);
+
+                    if (groupElem != 0) {
+                        baseGroup = traverseGroupDecl(groupElem);
+                        groupInfo->setBaseGroup(baseGroup);
+                        fSchemaInfo = saveInfo;
+                    }
+                    else
+                    {
+                        reportSchemaError(aLocator, XMLUni::fgXMLErrDomain, XMLErrs::DeclarationNotFound,
+                        SchemaSymbols::fgELT_GROUP, fTargetNSURIString, fBuffer.getRawBuffer());
+                    }
+                }              
+            }
         }
     }
 
