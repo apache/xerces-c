@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:02:14  twl
- * Initial revision
+ * Revision 1.2  2000/01/12 00:29:49  roddey
+ * Changes for the new URL and InputSource changes.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:02:14  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:42:25  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -71,7 +74,6 @@
 #include    <util/PlatformUtils.hpp>
 #include    <util/XMLString.hpp>
 #include    <util/URL.hpp>
-#include    <internal/URLInputSource.hpp>
 #include    <internal/XMLScanner.hpp>
 #include    <validators/DTD/DTDValidator.hpp>
 #include    "ParserTest.hpp"
@@ -190,8 +192,7 @@ int main(int argC, char** argV)
 
     try
     {
-        URLInputSource src(urlPath);
-        scanner.scanDocument(src);
+        scanner.scanDocument(urlPath);
     }
 
     catch(const XMLException& toCatch)
@@ -200,6 +201,5 @@ int main(int argC, char** argV)
                 << toCatch.getMessage()
                 << EndLn;
     }
-
     return 0;
 }
