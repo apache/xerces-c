@@ -94,6 +94,7 @@ const XMLCh chDoubleQuote           = 0x22;
 const XMLCh chEqual                 = 0x3D;
 const XMLCh chForwardSlash          = 0x2F;
 const XMLCh chGrave                 = 0x60;
+const XMLCh chNEL                   = 0x85;
 const XMLCh chOpenAngle             = 0x3C;
 const XMLCh chOpenCurly             = 0x7B;
 const XMLCh chOpenParen             = 0x28;

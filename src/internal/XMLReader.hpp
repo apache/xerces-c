@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/05/03 18:42:51  knoaman
+ * Added new option to the parsers so that the NEL (0x85) char can be treated as a newline character.
+ *
  * Revision 1.14  2001/01/25 19:16:58  tng
  * const should be used instead of static const.  Fixed by Khaled Noaman.
  *
@@ -118,6 +121,7 @@
 #include <util/XMLUniDefs.hpp>
 #include <framework/XMLRecognizer.hpp>
 #include <framework/XMLBuffer.hpp>
+#include <util/XMLUniDefs.hpp>
 
 class InputSource;
 class BinInputStream;
@@ -138,7 +142,6 @@ const XMLByte   gXMLCharMask                = 0x40;
 const XMLByte   gWhitespaceCharMask         = 0x80;
 
 
-
 // ---------------------------------------------------------------------------
 //  Instances of this class are used to manage the content of entities. The
 //  scanner maintains a stack of these, one for each entity (this means entity
@@ -151,6 +154,12 @@ const XMLByte   gWhitespaceCharMask         = 0x80;
 //  methods.
 //
 //  This is NOT to be derived from.
+//
+//  Note: We have added support for handling 390 NEL character as a whitespace.
+//  Since the option is turned on, we will not be able to modify the
+//  corresponding value of NEL (0x85) in the fgCharCharsTable. As a result,
+//  everytime we use the fgCharChars table and the NEL option is turned on,
+//  we will use the value of chLF in the fgCharCharsTable instead.
 // ---------------------------------------------------------------------------
 class XMLPARSER_EXPORT XMLReader
 {
@@ -203,6 +212,11 @@ public:
     static bool isXMLLetter(const XMLCh toCheck);
     static bool isXMLChar(const XMLCh toCheck);
     static bool isWhitespace(const XMLCh toCheck);
+
+    /**
+      * Return the value of fgNEL flag.
+      */
+    static bool isNELRecognized();
 
 
     // -----------------------------------------------------------------------
@@ -319,6 +333,11 @@ private:
         , const XMLCh           toCheck
     );
 
+
+    /**
+      * Method to enable NEL char to be treated as white space char.
+      */
+    static void enableNELWS();
 
     // -----------------------------------------------------------------------
     //  Private helper methods
@@ -517,8 +536,15 @@ private:
     //      The character characteristics table. Bits in each byte, represent
     //      the characteristics of each character. It is generated via some
     //      code and then hard coded into the cpp file for speed.
+    //
+    //  fNEL
+    //      Flag to respresents whether NEL whitespace recognition is enabled
+    //      or disabled
     // -----------------------------------------------------------------------
     static const XMLByte    fgCharCharsTable[0x10000];
+    static bool             fNEL;
+
+    friend class XMLPlatformUtils;
 };
 
 
@@ -527,17 +553,19 @@ private:
 // ---------------------------------------------------------------------------
 inline bool XMLReader::isBaseChar(const XMLCh toCheck)
 {
-    return (fgCharCharsTable[toCheck] & gBaseCharMask) != 0;
+    return ((fgCharCharsTable[toCheck] & gBaseCharMask) != 0);
 }
 
 inline bool XMLReader::isNameChar(const XMLCh toCheck)
 {
-    return (fgCharCharsTable[toCheck] & gNameCharMask) != 0;
+    return ((fgCharCharsTable[toCheck] & gNameCharMask) != 0);
 }
 
 inline bool XMLReader::isPlainContentChar(const XMLCh toCheck)
 {
-    return ((fgCharCharsTable[toCheck] & gPlainContentCharMask) != 0);
+    return (fNEL && (toCheck == chNEL))
+        ? ((fgCharCharsTable[chLF] & gPlainContentCharMask) != 0)
+        : ((fgCharCharsTable[toCheck] & gPlainContentCharMask) != 0);
 }
 
 
@@ -548,7 +576,9 @@ inline bool XMLReader::isSpecialCharDataChar(const XMLCh toCheck)
 
 inline bool XMLReader::isSpecialStartTagChar(const XMLCh toCheck)
 {
-    return ((fgCharCharsTable[toCheck] & gSpecialStartTagCharMask) != 0);
+    return (fNEL && (toCheck == chNEL))
+        ? ((fgCharCharsTable[chLF] & gSpecialStartTagCharMask) != 0)
+        : ((fgCharCharsTable[toCheck] & gSpecialStartTagCharMask) != 0);
 }
 
 inline bool XMLReader::isXMLChar(const XMLCh toCheck)
@@ -564,9 +594,10 @@ inline bool XMLReader::isXMLLetter(const XMLCh toCheck)
 
 inline bool XMLReader::isWhitespace(const XMLCh toCheck)
 {
-    return ((fgCharCharsTable[toCheck] & gWhitespaceCharMask) != 0);
+    return (fNEL && (toCheck == chNEL))
+        ? ((fgCharCharsTable[chLF] & gWhitespaceCharMask) != 0)
+        : ((fgCharCharsTable[toCheck] & gWhitespaceCharMask) != 0);
 }
-
 
 // ---------------------------------------------------------------------------
 //  XMLReader: Buffer management methods
@@ -635,7 +666,10 @@ inline XMLReader::Types XMLReader::getType() const
     return fType;
 }
 
+inline bool XMLReader::isNELRecognized() {
 
+    return fNEL;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLReader: Setter methods
@@ -750,14 +784,16 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
             //
             if (fCharIndex < fCharsAvail)
             {
-                if (fCharBuf[fCharIndex] == chLF)
+                if (fCharBuf[fCharIndex] == chLF
+                    || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
                     fCharIndex++;
             }
              else
             {
                 if (refreshCharBuffer())
                 {
-                    if (fCharBuf[fCharIndex] == chLF)
+                    if (fCharBuf[fCharIndex] == chLF
+                        || (fNEL && (fCharBuf[fCharIndex] == chNEL)))
                         fCharIndex++;
                 }
             }
@@ -770,8 +806,10 @@ inline bool XMLReader::getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten)
         fCurCol = 1;
         fCurLine++;
     }
-     else if (chGotten == chLF)
+     else if (chGotten == chLF
+              || (fNEL && (chGotten == chNEL)))
     {
+        chGotten = chLF;
         fCurLine++;
         fCurCol = 1;
     }

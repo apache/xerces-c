@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/05/03 18:43:01  knoaman
+ * Added new option to the parsers so that the NEL (0x85) char can be treated as a newline character.
+ *
  * Revision 1.11  2001/02/07 17:46:34  billsch
  * Rearranged statements in Initialize() so that platformInit() is called
  * before an XMLMutex is created.
@@ -119,6 +122,8 @@
 #include <util/XMLString.hpp>
 #include <util/XMLNetAccessor.hpp>
 #include <util/XMLUni.hpp>
+#include <internal/XMLReader.hpp>
+#include <util/RuntimeException.hpp>
 
 
 // ---------------------------------------------------------------------------
@@ -306,3 +311,34 @@ void XMLPlatformUtils::cleanupLazyData()
     delete gLazyData;
     gLazyData = 0;
 }
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: NEL Character Handling
+// ---------------------------------------------------------------------------
+void XMLPlatformUtils::recognizeNEL(bool state) {
+
+    //Make sure initialize has been called
+    if (gInitFlag == 0) {
+        return;
+    }
+
+    if (state) {
+
+        if (!XMLReader::isNELRecognized()) {
+            XMLReader::enableNELWS();
+        }
+    }
+    else {
+
+        if (XMLReader::isNELRecognized()) {
+            ThrowXML(RuntimeException, XMLExcepts::NEL_RepeatedCalls);
+        }
+    }
+}
+
+
+bool XMLPlatformUtils::isNELRecognized() {
+
+    return XMLReader::isNELRecognized();
+}
+

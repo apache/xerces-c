@@ -515,6 +515,23 @@ public :
 
     //@}
 
+    /** @name NEL Character Handling  */
+    //@{
+	/**
+      * This function enables the recognition of NEL char as whitespace chars
+      * which is disabled by default.
+      * It is only called once per process. Once it is set, any subsequent calls
+      * will result in exception being thrown.
+      *
+      * Note: Turning this option on will make the parser non complicant.
+      */
+    static void recognizeNEL(bool state);
+
+    /**
+      * Return the value of fgNEL flag.
+      */
+    static bool isNELRecognized();
+    //@}
 
     //
     //  For internal use only.
@@ -576,6 +593,8 @@ private :
       * parser or utilities services!
       */
     static void platformTerm();
+
+    //@}
 };
 
 
