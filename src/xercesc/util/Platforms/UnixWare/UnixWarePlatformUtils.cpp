@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2005/01/13 12:36:02  amassari
+ * Support for UnixWare 7.1.1 (jira# 1148)
+ *
  * Revision 1.18  2004/09/08 13:56:43  peiyongz
  * Apache License Version 2.0
  *
@@ -240,7 +243,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: The panic method
 // ---------------------------------------------------------------------------
-void XMLPlatformUtils::panic(const PanicReasons reason)
+void XMLPlatformUtils::panic(const PanicHandler::PanicReasons reason)
 {
     fgUserPanicHandler? fgUserPanicHandler->panic(reason) : fgDefaultPanicHandler->panic(reason);
 }

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2005/01/13 12:36:02  amassari
+ * Support for UnixWare 7.1.1 (jira# 1148)
+ *
  * Revision 1.6  2004/09/08 13:56:32  peiyongz
  * Apache License Version 2.0
  *
@@ -85,7 +88,7 @@
 //  Indicate that we support C++ namespace
 //  Do not define it if the compile cannot handle C++ namespace
 // ---------------------------------------------------------------------------
-// #define XERCES_HAS_CPP_NAMESPACE
+#define XERCES_HAS_CPP_NAMESPACE
 
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
@@ -126,6 +129,11 @@ typedef int             XMLInt32;
 #define XERCES_DEBUG
 #endif
 
+#define XERCES_NEW_IOSTREAMS
+#define XERCES_STD_NAMESPACE
+
+int stricmp(const char* const str1, const char* const  str2);
+int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);
 
 // ---------------------------------------------------------------------------
 //  The name of the DLL that is built by the CC version of the system.

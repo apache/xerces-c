@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2005/01/13 12:36:01  amassari
+ * Support for UnixWare 7.1.1 (jira# 1148)
+ *
  * Revision 1.17  2004/12/16 03:21:39  cargilld
  * Fix 390 build.
  *
@@ -312,6 +315,8 @@
 #elif defined(__MWERKS__)
     #define XML_METROWERKS
 #elif defined(__OS400__)
+#elif defined(XML_UNIXWARE)
+    #define XML_SCOCC
 #else
     #error Code requires port to current development environment
 #endif
