@@ -88,9 +88,9 @@
         relevant platforms and compilers.</p>
 
         <table>
-            <tr><td><em>Operating System</em></td><td><em>Compiler</em></td></tr>
+            <tr><td><em>Operating System</em></td><td><em>C++, C Compilers</em></td></tr>
             <tr><td>Redhat Linux 6.1</td><td>g++, gcc (egcs)</td></tr>
-            <tr><td>AIX 4.3.3  and higher</td><td>xlC_r, xlc_r</td></tr>
+            <tr><td>AIX 4.2.1  and higher</td><td>xlC_r, xlc_r</td></tr>
             <tr><td>Solaris 2.6</td><td>CC, cc</td></tr>
             <tr><td>HP-UX 10.2</td><td>CC, cc</td></tr>
             <tr><td>HP-UX 11</td><td>aCC, cc</td></tr>
