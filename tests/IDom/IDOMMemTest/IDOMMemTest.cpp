@@ -938,7 +938,6 @@ void IDOMNSTests()
 
         TASSERT(!XMLString::compareString(el->getTagName(), tempStr3));
         TASSERT(el->hasChildNodes() == false);
-        delete doc;
 
 
         //
@@ -958,6 +957,7 @@ void IDOMNSTests()
             TASSERT(false);  // Wrong exception thrown.
         }
 
+        delete doc;
         // Creating a document with null NamespaceURI and DocumentType
         doc = impl->createDocument(tempStr2, tempStr3, 0);
 
