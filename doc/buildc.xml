@@ -19,6 +19,8 @@
     <li><link anchor="WCharT">What should I define XMLCh to be?</link></li>
     <li><link anchor="BuildUsingLibWWW">How can I generate Xerces-C binaries which includes the
                sample NetAccessor implementation using Libwww?</link></li>
+    <li><link anchor="BuildSingleThreadedLibrary">How do build a single threaded library on
+    		Unix platforms?</link></li>
     <li><link anchor="LookForHelp">Where can I look for more help?</link></li>
   </ul>
 
@@ -392,6 +394,7 @@ gmake</source>
 
     <anchor name="BuildAS400"/>
     <s2 title="Building on AS/400">
+
             <p>The following addresses the requirements and build of
            &XercesCName; natively on the AS/400.
             </p>
@@ -607,7 +610,7 @@ following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
     <anchor name="BuildMac"/>
     <s2 title="Building on Macintosh using CodeWarrior">
 
-        <s3 title="Building &XercesCName; library">
+    	<s3 title="Building &XercesCName; library">
             <p>The directions in this file cover installing and building
             &XercesCName; and ICU under the MacOS  using CodeWarrior.</p>
             <ol>
@@ -680,6 +683,7 @@ following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
 
     <anchor name="BuildICU"/>
     <s2 title="How to Build ICU">
+
         <p>As mentioned earlier, &XercesCName; may be built in stand-alone mode using
         native encoding support and also using ICU where you get support over 180
         different encodings. ICU stands for International Components for Unicode and is an
@@ -779,7 +783,7 @@ gmake install</source>
         <p>To simplify the builds, we use the bundled perl script
         'packageBinary.pl'. It requires some setup, but once it is done,
         repeating it becomes easy. Here's how we do it.</p>
-        
+
         <p>Prerequisites:</p>
         <ul>
         <li>Perl 5.004 or higher</li>
@@ -796,7 +800,7 @@ gmake install</source>
         <li>Build ICU.</li>
         <li>Build Xerces-C with ICU.</li>
         </ol>
-        
+
         <p></p>
 
         <p>Download Xerces-C from <jump href="http://xml.apache.org/xerces-c/dist">
@@ -806,18 +810,18 @@ gmake install</source>
         href="http://oss.software.ibm.com/developerworks/opensource/icu/project/download/index.html">http://oss.software.ibm.com/developerworks/opensource/icu/project/download/index.html</jump>
         </p>
 
-        
+
         <p>For Windows</p>
-        
+
         <p>Extract Xerces-C source files from the .zip archive using WinZip, say
         in the root directory. It should create a directory like
         '<code>\xerces-c-src_1_2_0</code>'.</p>
-        
+
         <p>Extract the ICU files, using WinZip, in root directory of the disk
         where you have installed Xerces-C, sources. After extraction, there
         should be a new directory '<code>\icu</code>' which contains all the ICU
         source files.</p>
-        
+
         <p>There are two options to build Xerces-C with ICU. One is to use the
         MSDEV GUI environment, and the other is to invoke the compiler from the
         command line.</p>
@@ -845,7 +849,7 @@ perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t 
 
         <p>For a description of options available, you can enter:</p>
           <source>perl packageBinaries.pl</source>
-        
+
     </s2>
 
     <anchor name="BuildCOM"/>
@@ -899,7 +903,7 @@ perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t 
 		using DOM. You need to browse the HTML files in this directory using
 		IE 5.0. Make sure that your build has worked properly, specially the
 		registration of the ActiveX controls that happens in the final step.</p>
-		<p>You may also want to check out the NIST DOM test suite at 
+		<p>You may also want to check out the NIST DOM test suite at
 		<jump href="http://xw2k.sdct.itl.nist.gov/BRADY/DOM/">http://xw2k.sdct.itl.nist.gov/BRADY/DOM/</jump>.
 		You will have to modify the documents in the NIST suite to load the
 		Xerces COM object instead of the MSIE COM object.</p>
@@ -1169,9 +1173,58 @@ perl packageBinaries.pl -s \xerces-c-src_1_2_0 -o \temp\xerces-c-1_2_0-win32 -t 
 
     </s2>
 
+    <anchor name="BuildSingleThreadedLibrary"/>
+        <s2 title="How do build a single threaded library on Unix platforms?">
+
+         <p>To make a single threaded library on Unix platforms you might have to update
+         one or more of <code>Makefile.incl, Makefile.in, runConfigure</code> scripts.
+         The following steps for each platform guides you to create a single threaded
+         library for Xerces project:</p>
+
+         <p>For Aix - </p>
+         <ul>
+         <li>Replace <code>xlc_r</code> and <code>xlC_r</code> libraries with
+         	<code>xlc</code> and <code>xlC</code> respectively</li>
+         <li>Replace <code>makeC++SharedLib_r</code> with <code>makeC++SharedLib</code></li>
+         <li>Remove the flag <code>-D_THREAD_SAFE</code></li>
+         <li>Remove inclusion to any threaded libarries from the <code>LIBPATH</code></li>
+         <li>Remove inclusion of <code>-lpthreads</code> and <code>-lpthread_compat</code></li>
+         <li>Add <code>-DAPP_NO_THREADS</code> to define the variable  under AIX specific options
+                  in <code>Makefile.incl</code></li>
+         </ul>
+
+        <p>For Solaris -</p>
+         <ul>
+          <li>Add <code>-DAPP_NO_THREADS</code> to define the variable  under SOLARIS
+          	specific options in <code>Makefile.incl</code></li>
+          <li>Remove compiler switches like <code>-mt</code></li>
+          <li>Remove <code>-D_REENTRANT</code> flag from compile options</li>
+	  <li>Remove inclusion of <code>-lpthread</code></li>
+	</ul>
+
+	<p>For Linux -</p>
+        <ul>
+        <li>Add <code>-DAPP_NO_THREADS</code> to define the variable  under LINUX
+        	specific options in <code>Makefile.incl</code></li>
+	 <li>Remove <code>-D_REENTRANT</code> flag from compile options</li>
+	 <li>Remove inclusion of <code>-lpthread</code></li>
+	</ul>
+
+
+	<p>For HPUX -</p>
+        <ul>
+        <li>Add <code>-DAPP_NO_THREADS</code> to define the variable  under HP
+        	specific options in <code>Makefile.incl</code></li>
+	<li>Remove inclusion of <code>-lpthread</code> and <code>-lcma</code></li>
+	 <li>Remove threading defines like <code>-D_PTHREADS_DRAFT4 -DXML_USE_DCE</code></li>
+	</ul>
+
+         </s2>
+
 
     <anchor name="LookForHelp"/>
     <s2 title="Where can I look for more help?">
+
         <p>If you have read this page, followed the instructions, and
         still cannot resolve your problem(s), there is more help. You
         can find out if others have
