@@ -99,8 +99,8 @@ usage()
             'iconv' [default: inmem]"
     echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 
             'native' [default: socket]"
-    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390', 
-             'Uniconv390', 'IconvFBSD', 'IconvGNU' or 'native'
+    echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Uniconv390',  
+             'IconvFBSD', 'IconvGNU' or 'native'
              [default: native]"
     echo "       -r <thread option> can be 'pthread' or 'dce' 
              (AIX, HP-11, and Solaris) or  'sproc' (IRIX) or 'none'

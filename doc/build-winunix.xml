@@ -325,8 +325,8 @@ Usage: runConfigure "options"
             'iconv' [default: inmem]
        -n &lt;net accessor&gt; can be 'fileonly', 'libwww', 'socket' or 
             'native' [default: socket]
-       -t &lt;transcoder&gt; can be 'icu', 'Iconv400', 'Iconv390', 
-             'Uniconv390', 'IconvFBSD', 'IconvGNU' or 'native'
+       -t &lt;transcoder&gt; can be 'icu', 'Iconv400', 'Uniconv390', 
+             'IconvFBSD', 'IconvGNU' or 'native'
              [default: native]
        -r &lt;thread option&gt;  can be 'pthread' or 'dce' 
              (AIX, HP-11, and Solaris) or  'sproc' (IRIX) or 'none'
