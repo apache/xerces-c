@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/21 18:14:55  knoaman
+ * Defer creation of spec node.
+ *
  * Revision 1.9  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -565,7 +568,7 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
         }
         else {
 
-            bool isRetAdopted = false;
+            bool isRetAdopted = toAdoptSpecNode;
 
             if (minOccurs > 1) {
 
@@ -580,15 +583,11 @@ ContentSpecNode* ComplexTypeInfo::expandContentModel(ContentSpecNode* const spec
                 isRetAdopted = true;
             }
 
-            ContentSpecNode* optional = 0;
-            if (isRetAdopted)
-                optional = new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, false);
-            else
-                optional = new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, toAdoptSpecNode);
-
             int counter = maxOccurs-minOccurs;
 
             if (counter > 0) {
+
+                ContentSpecNode* optional = new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, false);
 
                 retNode = new ContentSpecNode(ContentSpecNode::Sequence,
 					                          retNode, optional, isRetAdopted, true);
