@@ -476,8 +476,7 @@ bool XMLReader::refreshCharBuffer()
                 if ((fCharBuf[startInd] == chUnicodeMarker)
                 ||  (fCharBuf[startInd] == chSwappedUnicodeMarker))
                 {
-                    XMLCh chTmp;
-                    getNextChar(chTmp);
+                    fCharIndex++;
                 }
             }
         }
