@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/12/10 05:14:00  neilg
+ * fix seg fault caused when a complex type had simple content; we were not processing the complex type itself, only its base
+ *
  * Revision 1.8  2003/12/01 20:41:25  neilg
  * fix for infinite loop between XSComplexTypeDefinitions and XSElementDeclarations; from David Cargill
  *
@@ -437,9 +440,10 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
         if (elemDecl->getSubstitutionGroupElem())
             xsSubElem = addOrFind(elemDecl->getSubstitutionGroupElem(), xsModel);
 
-        // defer checking for complextypeinfo until later as it could
+        // defer checking for complexTypeInfo until later as it could
         // eventually need this elemement
-        if (elemDecl->getDatatypeValidator())
+        // but don't check simple type unless no complexTypeInfo present
+        if (!elemDecl->getComplexTypeInfo() && elemDecl->getDatatypeValidator())
             xsType = addOrFind(elemDecl->getDatatypeValidator(), xsModel);
 
         unsigned int count = elemDecl->getIdentityConstraintCount();
@@ -495,7 +499,7 @@ XSObjectFactory::addOrFind(SchemaElementDecl* const elemDecl,
         );
         putObjectInMap(elemDecl, xsObj, xsModel);
 
-        if (!xsType && elemDecl->getComplexTypeInfo())
+        if (elemDecl->getComplexTypeInfo())
         {
             xsType = addOrFind(elemDecl->getComplexTypeInfo(), xsModel);
             xsObj->setTypeDefinition(xsType);
