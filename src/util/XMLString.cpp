@@ -699,6 +699,46 @@ bool XMLString::isValidEncName(const XMLCh* const name)
     return true;
 }
 
+/**
+  * isValidQName
+  *
+  * [6]  QName ::=  (Prefix ':')? LocalPart 
+  * [7]  Prefix ::=  NCName 
+  * [8]  LocalPart ::=  NCName 
+  *
+  */
+bool XMLString::isValidQName(const XMLCh* const name)
+{
+    if (!name)
+        return false;
+
+    int strLen = XMLString::stringLen(name);
+    if (strLen == 0)
+        return false;
+
+    int colonPos = XMLString::indexOf(name, chColon);
+    if ((colonPos == 0) ||         // ":abcd"
+        (colonPos == strLen-1))    // "abcd:"
+        return false;
+
+    //
+    // prefix
+    //
+    if (colonPos != -1)
+    {
+        XMLCh *prefix = new XMLCh[colonPos+1];
+        XMLString::subString(prefix, name, 0, colonPos-1);
+        ArrayJanitor<XMLCh> janName(prefix);
+        if (XMLString::isValidNCName(prefix)==false)
+            return false;
+    }
+
+    //
+    // LocalPart
+    //
+    return XMLString::isValidNCName(name+colonPos+1);
+}
+
 bool XMLString::isAlpha(XMLCh const theChar)
 {
     if ((( theChar >= chLatin_a ) && ( theChar <= chLatin_z )) ||

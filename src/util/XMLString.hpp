@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2001/07/06 20:27:57  peiyongz
+ * isValidaQName()
+ *
  * Revision 1.24  2001/07/04 14:38:20  peiyongz
  * IDDatatypeValidator: created
  * DatatypeValidatorFactory: IDDTV enabled
@@ -1046,6 +1049,13 @@ public:
       * @return Returns true if name is EncName valid, otherwise false
       */
     static bool isValidEncName(const XMLCh* const name);  
+
+    /**
+      * Checks whether an name is a valid QName.
+      * @param name The string to check its QName validity
+      * @return Returns true if name is QName valid, otherwise false
+      */
+    static bool isValidQName(const XMLCh* const name);  
 
     /**
       * Checks whether a character is within [a-zA-Z].
