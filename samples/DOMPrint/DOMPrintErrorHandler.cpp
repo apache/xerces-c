@@ -57,6 +57,9 @@
 /* 
  * $Id$
  * $Log$
+ * Revision 1.2  2002/06/11 19:46:28  peiyongz
+ * Display error message received from the serializer.
+ *
  * Revision 1.1  2002/05/29 21:19:50  peiyongz
  * DOM3 DOMWriter/DOMWriterFilter
  *
@@ -65,10 +68,18 @@
 
 #include "DOMPrintErrorHandler.hpp"
 
+#include <iostream.h>
+#include <xercesc/dom/impl/DOMErrorImpl.hpp>
+#include <xercesc/util/XMLString.hpp>
+
 bool DOMPrintErrorHandler::handleError(const DOMError &domError)
 {
-	// hummm, I will leave it to the serializer if the 
-	// serialization shall be aborted or not.
-	return true;
+    // Display whatever error message passed from the serializer
+    char *msg = XMLString::transcode(((DOMErrorImpl&)domError).getMessage());
+    cout<<msg<<endl;
+    delete[] msg;
+
+    // Instructs the serializer to continue serialization if possible.
+    return true;
 }
 
