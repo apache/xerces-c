@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2002/07/04 15:35:15  tng
+ * DOM L3: Test DOMDocument::renameNode
+ *
  * Revision 1.23  2002/06/27 18:42:16  tng
  * DOM L3: Test DOMNode::isSameNode and DOMNode::isEqualNode
  *
@@ -156,6 +159,8 @@
 XMLCh tempStr[4000];
 XMLCh tempStr2[4000];
 XMLCh tempStr3[4000];
+XMLCh tempStr4[4000];
+XMLCh tempStr5[4000];
 
 //DOMUserDataHandler
 myUserDataHandler userhandler;
@@ -734,25 +739,25 @@ bool DOMTest::testAttr(DOMDocument* document)
 
     if (XMLString::compareString(tempStr, attributeNode->getName()))
     {
-        printf("Warning!!! DOMAttr's 'getName' method failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMAttr's 'getName' method failed to work properly!\n");
         OK = false;
     }
 
     XMLString::transcode("testAttribute's value", tempStr, 3999);
     if (XMLString::compareString(tempStr, attributeNode->getNodeValue()))
     {
-        printf("Warning!!! DOMAttr's 'getNodeValue' method failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMAttr's 'getNodeValue' method failed to work properly!\n");
         OK = false;
     }
     if (! T ==attributeNode->getSpecified())
     {
-        printf("Warning!!! DOMAttr's 'getSpecified' method failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMAttr's 'getSpecified' method failed to work properly!\n");
         OK = false;
     }
 
     if (XMLString::compareString(tempStr, attributeNode->getValue()))
     {
-        printf("Warning!!! DOMAttr's 'getValue' method failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMAttr's 'getValue' method failed to work properly!\n");
         OK = false;
     }
 
@@ -761,14 +766,14 @@ bool DOMTest::testAttr(DOMDocument* document)
     attributeNode->setNodeValue(tempStr);   /// LEAK!!!!!
     if (XMLString::compareString(tempStr, attributeNode->getNodeValue()))
     {
-        printf("Warning!!! DOMAttr's 'setNodeValue' method failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMAttr's 'setNodeValue' method failed to work properly!\n");
         OK = false;
     }
 
     attributeNode->setValue(XMLUni::fgZeroLenString);
     if (XMLString::compareString(XMLUni::fgZeroLenString, attributeNode->getValue()))
     {
-        printf("Warning!!! DOMAttr's 'setValue' to '0' method failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMAttr's 'setValue' to '0' method failed to work properly!\n");
         OK = false;
     }
 
@@ -776,7 +781,7 @@ bool DOMTest::testAttr(DOMDocument* document)
     attributeNode->setValue(tempStr);
     if (XMLString::compareString(tempStr, attributeNode->getValue()))
     {
-        printf("Warning!!! DOMAttr's 'setValue' method failed to work properly!");
+        fprintf(stderr, "Warning!!! DOMAttr's 'setValue' method failed to work properly!");
         OK = false;
     }
 
@@ -952,6 +957,210 @@ bool DOMTest::testAttr(DOMDocument* document)
         OK = false;
     }
 
+    // Test renameNode
+    XMLString::transcode("http://nsa", tempStr4, 3999);
+    XMLString::transcode("aa", tempStr5, 3999);
+    XMLString::transcode("pnsa:aa", tempStr3, 3999);
+
+    // create the attribute
+    DOMAttr* renameTestAttribute = document->createAttribute(tempStr5);
+    DOMAttr* renameTestAttributeNS = document->createAttributeNS(tempStr4, tempStr3);
+
+    // create the owner element and append the attribute node
+    DOMElement* renameTestElement = document->createElement(tempStr5);
+    renameTestElement->setAttributeNode(renameTestAttribute);
+    renameTestElement->setAttributeNode(renameTestAttributeNS);
+
+    // set up the userdata
+    renameTestAttribute->setUserData(tempStr5, (void*) document, &userhandler);
+    renameTestAttributeNS->setUserData(tempStr4, (void*) document, 0);
+
+    // set up the node value
+    renameTestAttribute->setNodeValue(tempStr5);
+    renameTestAttributeNS->setNodeValue(tempStr4);
+
+    XMLString::transcode("http://nsb", tempStr, 3999);
+    XMLString::transcode("bb", tempStr2, 3999);
+    XMLString::transcode("pnsb:bb", tempStr3, 3999);
+
+    // start the rename tests
+    // rename the NS Attribute
+    DOMAttr* renameTest = (DOMAttr*) document->renameNode(renameTestAttributeNS, tempStr, tempStr3);
+    // test the name
+    if (XMLString::compareString(tempStr, renameTest->getNamespaceURI()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr2, renameTest->getLocalName()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr3, renameTest->getNodeName()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the child / nodevalue
+    if (XMLString::compareString(tempStr4, renameTest->getNodeValue()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr4, renameTest->getFirstChild()->getNodeValue()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the owner element
+    if (!renameTestElement->getAttributeNodeNS(tempStr, tempStr2)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestElement->getAttributeNodeNS(tempStr4, tempStr5)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test user data
+    void* renamedocument = renameTest->getUserData(tempStr4);
+    if (document != renamedocument) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test isSame and isEqual
+    if (!renameTestAttributeNS->isEqualNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (!renameTestAttributeNS->isSameNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+
+    // rename the Attribute (null namespace)
+    renameTest = (DOMAttr*) document->renameNode(renameTestAttribute, 0, tempStr2);
+    // test the name
+    if (renameTest->getNamespaceURI())
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTest->getLocalName())
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr2, renameTest->getNodeName()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the child / nodevalue
+    if (XMLString::compareString(tempStr5, renameTest->getNodeValue()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr5, renameTest->getFirstChild()->getNodeValue()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the owner element
+    if (!renameTestElement->getAttributeNode(tempStr2)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestElement->getAttributeNode(tempStr5)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test user data
+    renamedocument = renameTest->getUserData(tempStr5);
+    if (document != renamedocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    // test isSame and isEqual
+    if (!renameTestAttribute->isEqualNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (!renameTestAttribute->isSameNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+
+    // rename the Attribute (with namespace)
+    renameTest = (DOMAttr*) document->renameNode(renameTestAttribute, tempStr, tempStr3);
+    // test the name
+    if (XMLString::compareString(tempStr, renameTest->getNamespaceURI()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr2, renameTest->getLocalName()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr3, renameTest->getNodeName()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the child / nodevalue
+    if (XMLString::compareString(tempStr5, renameTest->getNodeValue()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr5, renameTest->getFirstChild()->getNodeValue()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestAttribute->getFirstChild())
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the owner element
+    if (!renameTestElement->getAttributeNodeNS(tempStr, tempStr2)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestElement->getAttributeNodeNS(0, tempStr2)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestElement->getAttributeNode(tempStr2)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test user data
+    renamedocument = renameTest->getUserData(tempStr5);
+    if (document != renamedocument) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test userdatahandler
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_RENAMED, tempStr5, document, renameTestAttribute, renameTest, __LINE__);
+    // test isSame and isEqual
+    // a new node is created here, so both isSame and isEqual are not compared
+    if (renameTestAttribute->isEqualNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestAttribute->isSameNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+
     if (! OK)
         printf("\n*****The DOMAttr* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -1111,6 +1320,9 @@ bool DOMTest::testCDATASection(DOMDocument* document)
         OK = false;
     }
 
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 204 );
+
     if (! OK)
         printf("\n*****The DOMCDATASection* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -1137,7 +1349,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     XMLString::transcode("dBodyLevel31'sChildTextNode11", tempStr, 3999);
     if (XMLString::compareString(tempStr, charData->getData()))
     {
-        printf("Warning!!! DOMCharacterData's 'getData' failed to work properly!\n This may corrupt other DOMCharacterData tests!!!*****\n");
+        fprintf(stderr, "Warning!!! DOMCharacterData's 'getData' failed to work properly!\n This may corrupt other DOMCharacterData tests!!!*****\n");
         OK = false;
     }
 
@@ -1154,7 +1366,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
 
     if (XMLString::compareString(tempStr, charData->getData()))
     {
-        printf("Warning!!! DOMCharacterData's 'appendData' failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMCharacterData's 'appendData' failed to work properly!\n");
         OK = false;
     }
     //  printf("This node's appended data is: " + charData->getData());
@@ -1163,7 +1375,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     charData->deleteData(10, 100);
     if (XMLString::compareString(tempStr, charData->getData()))
     {
-        printf("Warning!!! DOMCharacterData's 'deleteData' failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMCharacterData's 'deleteData' failed to work properly!\n");
         OK = false;
     }
     //  printf("This node's partially deleted data is: " + charData->getData());
@@ -1171,7 +1383,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     unsigned int length = 10;
     if (!(length == charData->getLength()))
     {
-        printf("Warning!!! DOMCharacterData's 'getLength' failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMCharacterData's 'getLength' failed to work properly!\n");
         OK = false;
     }
     //  printf("This node's data length is: " + charData->getLength());
@@ -1181,7 +1393,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     charData->insertData(5, tempStr2);
     if (XMLString::compareString(tempStr, charData->getData()))
     {
-        printf("Warning!!! DOMCharacterData's 'insertData' failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMCharacterData's 'insertData' failed to work properly!\n");
         OK = false;
     }
     //  printf("This node's updated with insert data is: " + charData->getData());
@@ -1191,7 +1403,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     charData->replaceData(15, 10, tempStr2);
     if (XMLString::compareString(tempStr, charData->getData()))
     {
-        printf("Warning!!! DOMCharacterData's 'replaceData' failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMCharacterData's 'replaceData' failed to work properly!\n");
         OK = false;
     }
     //  printf("This node's updated with replacement data is: " +charData->getData());
@@ -1200,7 +1412,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     charData->setData(tempStr);
     if (XMLString::compareString(tempStr, charData->getData()))
     {
-        printf("Warning!!! DOMCharacterData's 'setData' failed to work properly!");
+        fprintf(stderr, "Warning!!! DOMCharacterData's 'setData' failed to work properly!");
         OK = false;
     }
     //  printf("This node's new data via setData: " + charData->getData());
@@ -1208,7 +1420,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     XMLString::transcode("123456789D123456789E123456789", tempStr, 3999);
     if (XMLString::compareString(tempStr, charData->substringData(30, 30)))
     {
-        printf("Warning!!! DOMCharacterData's 'substringData' failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMCharacterData's 'substringData' failed to work properly!\n");
         OK = false;
     }
     //  printf("Using subString 30,30 you get:");  charData->substringData(30,30)).print();
@@ -1216,7 +1428,7 @@ bool DOMTest::testCharacterData(DOMDocument* document)
     XMLString::transcode("New data A123456789B12345", tempStr, 3999);
     if (XMLString::compareString(tempStr, charData->substringData(0, 25)))
     {
-        printf("Warning!!! DOMCharacterData's 'substringData' failed to work properly!\n");
+        fprintf(stderr, "Warning!!! DOMCharacterData's 'substringData' failed to work properly!\n");
         OK = false;
     }
     //  printf("Using subString 0,25 you get: ");   charData->substringData(0,25)).print();
@@ -1368,6 +1580,9 @@ bool DOMTest::testCharacterData(DOMDocument* document)
         OK = false;
     }
 
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 205 );
+
     if (!OK)
         printf("\n*****The DOMCharacterData method calls listed above failed, all others worked correctly.*****\n");
     charData->setData(resetData); // reset node to original data
@@ -1396,7 +1611,6 @@ bool DOMTest::testChildNodeList(DOMDocument* document)
     XMLString::transcode("dBodyLevel23", tempStr, 3999);
     if (XMLString::compareString(tempStr, node2->getNodeName()))
         OK = false;
-
 
     if (!OK)
         printf("\n*****The ChildNodeList method calls listed above failed, all others worked correctly.*****\n");
@@ -1552,6 +1766,9 @@ bool DOMTest::testComment(DOMDocument* document)
         OK = false;
     }
 
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 206 );
+
     if (!OK)
         printf("\n*****The DOMComment* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -1633,13 +1850,13 @@ bool DOMTest::testDocument(DOMDocument* document)
 
     if (XMLString::compareString(checkDocType->getNodeName(),docType->getNodeName() ))
     {
-        printf("Warning!!! DOMDocument's 'getDocType method failed!\n" );
+        fprintf(stderr, "Warning!!! DOMDocument's 'getDocType method failed!\n" );
         OK = false;
     }
 
     if (XMLString::compareString(checkDocType->getNodeValue(), docType->getNodeValue()))
     {
-        printf("Warning!!! DOMDocument's 'getDocType method failed!\n" );
+        fprintf(stderr, "Warning!!! DOMDocument's 'getDocType method failed!\n" );
         OK = false;
     }
 
@@ -1649,7 +1866,7 @@ bool DOMTest::testDocument(DOMDocument* document)
         ?  checkDocType->getNodeValue(), docType->getNodeValue())       // If both have value nodes test those value nodes for equality
         : (checkDocType->getNodeValue() == 0 && docType->getNodeValue() == 0))) // If one node doesn't have a value node make sure both don't
     {
-        printf("Warning!!! DOMDocument's 'getDocType method failed!\n" );
+        fprintf(stderr, "Warning!!! DOMDocument's 'getDocType method failed!\n" );
         OK = false;
     }
     */
@@ -1662,7 +1879,7 @@ bool DOMTest::testDocument(DOMDocument* document)
     if (!(!XMLString::compareString(rootElement->getNodeName(), document->getDocumentElement()->getNodeName()) &&        // Compares node names for equality
          check))
     {
-        printf("Warning!!! DOMDocument's 'getDocumentElement' method failed!\n" );
+        fprintf(stderr, "Warning!!! DOMDocument's 'getDocumentElement' method failed!\n" );
         OK = false;
     }
 
@@ -1676,7 +1893,7 @@ bool DOMTest::testDocument(DOMDocument* document)
         XMLString::transcode(elementNames[i], tempStr, 3999);
         if (XMLString::compareString(tempStr, n->getNodeName()))
         {
-            printf("Comparison of this document's elements failed at element number %d at line %i \n", i, __LINE__);
+            fprintf(stderr, "Comparison of this document's elements failed at element number %d at line %i \n", i, __LINE__);
             OK = false;
             break;
         }
@@ -1686,7 +1903,7 @@ bool DOMTest::testDocument(DOMDocument* document)
     //
     //if (document->equals(document->getImplementation()))
     //{
-    //  printf("Warning!!! DOMDocument's 'getImplementation' method failed!\n" );
+    //  fprintf(stderr, "Warning!!! DOMDocument's 'getImplementation' method failed!\n" );
     //  OK = false;
     //}
 
@@ -1708,7 +1925,7 @@ bool DOMTest::testDocument(DOMDocument* document)
         XMLString::transcode(newElementNames[i], tempStr, 3999);
         if (XMLString::compareString(tempStr, n->getNodeName()))
         {
-            printf("Comparison of new document's elements failed at element number %d at line %i \n", i, __LINE__);
+            fprintf(stderr, "Comparison of new document's elements failed at element number %d at line %i \n", i, __LINE__);
             OK = false;
             break;
         }
@@ -1727,7 +1944,7 @@ bool DOMTest::testDocument(DOMDocument* document)
         XMLString::transcode(elementNames[i], tempStr, 3999);
         if (XMLString::compareString(tempStr, n->getNodeName()))
         {
-            printf("Comparison of restored document's elements failed at element number %d at line %i \n", i, __LINE__);
+            fprintf(stderr, "Comparison of restored document's elements failed at element number %d at line %i \n", i, __LINE__);
             OK = false;
             break;
         }
@@ -1753,7 +1970,7 @@ bool DOMTest::testDocument(DOMDocument* document)
     result = treeCompare(node, node2); // Deep clone test comparison of document cloneNode
     if (!result)
     {
-        printf("Warning!!! Deep clone of the document failed!\n");
+        fprintf(stderr, "Warning!!! Deep clone of the document failed!\n");
         OK = false;
     }
 
@@ -1880,6 +2097,9 @@ bool DOMTest::testDocument(DOMDocument* document)
         OK = false;
     }
 
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 207 );
+
     if (!OK)
         printf("\n*****The DOMDocument* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -1932,6 +2152,9 @@ bool DOMTest::testDocumentFragment(DOMDocument* document)
         OK = false;
     }
 
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 208 );
+
     if (!OK)
         printf("\n*****The DOMDocumentFragment* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -1974,7 +2197,7 @@ bool DOMTest::testDocumentType(DOMDocument* document)
     docNotationMap = docType->getNotations();
     if (XMLString::compareString(tempStr, docNotationMap->item(0)->getNodeName()))
     {
-        printf("Warning!!! DOMDocumentType's 'getNotations' failed!\n");
+        fprintf(stderr, "Warning!!! DOMDocumentType's 'getNotations' failed!\n");
         OK = false;
     }
     //  doc->appendChild(newDocumentTypeImpl);//!! Throws a HIERARCHY_REQUEST_ERR    *******
@@ -2107,6 +2330,9 @@ bool DOMTest::testDocumentType(DOMDocument* document)
         OK = false;
     }
 
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 209 );
+
     if (!OK)
         printf("\n*****The DOMDocumentType* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -2162,10 +2388,8 @@ bool DOMTest::testDOMImplementation(DOMDocument* document)
     }
 
 
-// For debugging*****       printf("All DOMImplementation method calls worked correctly.\n");
     if (!OK)
         fprintf(stderr, "\n*****The DOMImplementation method calls listed above failed, all others worked correctly.*****\n");
-//  printf("");
     return OK;
 };
 
@@ -2191,7 +2415,6 @@ bool DOMTest::testElement(DOMDocument* document)
 
     DOMNamedNodeMap* nodeMap;
     bool OK = true;
-// For debugging*****   printf("\n          testElement's outputs:\n");
     node = document->getDocumentElement(); // node gets doc's firstElement
     node2 = node->cloneNode(true);
     // Check nodes for equality, both their name and value or lack thereof
@@ -2247,8 +2470,8 @@ bool DOMTest::testElement(DOMDocument* document)
         XMLString::transcode(attributeCompare[k], tempStr, 3999);
         if (XMLString::compareString(tempStr, n->getNodeName())))
         {
-            printf("Warning!!! Comparison of firstElement's attributes failed at line %i.\n", __LINE__);
-            printf("   This failure can be a result of DOMElement's 'setValue' and/or 'setAttributeNode' and/or 'getAttributes' failing.\n");
+            fprintf(stderr, "Warning!!! Comparison of firstElement's attributes failed at line %i.\n", __LINE__);
+            fprintf(stderr, "   This failure can be a result of DOMElement's 'setValue' and/or 'setAttributeNode' and/or 'getAttributes' failing.\n");
             OK = false;
             break;
         }
@@ -2260,7 +2483,7 @@ bool DOMTest::testElement(DOMDocument* document)
     int size = nodeMap->getLength();
     if (size != 2)
     {
-        printf("DOMElement* Tests Failure 001\n");
+        fprintf(stderr, "DOMElement* Tests Failure 001\n");
         OK = false;
     };
     DOMNode* rem = element->setAttributeNode(newAttributeNode);
@@ -2269,7 +2492,7 @@ bool DOMTest::testElement(DOMDocument* document)
     size = nodeMap->getLength();
     if (size != 3)
     {
-        printf("DOMElement* Tests Failure 002\n");
+        fprintf(stderr, "DOMElement* Tests Failure 002\n");
         OK = false;
     };
 
@@ -2280,7 +2503,7 @@ bool DOMTest::testElement(DOMDocument* document)
     DOMAttr* fetchedAttr = (DOMAttr*) abc12;
     if (fetchedAttr != newAttributeNode)
     {
-        printf("DOMElement* Tests Failure 003\n");
+        fprintf(stderr, "DOMElement* Tests Failure 003\n");
         OK = false;
     };
 
@@ -2289,7 +2512,7 @@ bool DOMTest::testElement(DOMDocument* document)
     fetchedAttr = element->getAttributeNode(tempStr);
     if (fetchedAttr != newAttributeNode)
     {
-        printf("DOMElement* Tests Failure 004\n");
+        fprintf(stderr, "DOMElement* Tests Failure 004\n");
         OK = false;
     };
 
@@ -2305,9 +2528,9 @@ bool DOMTest::testElement(DOMDocument* document)
         XMLString::transcode(elementNames[i], tempStr, 3999);
         if (XMLString::compareString(tempStr, n->getNodeName()))
         {
-            printf("Warning!!! Comparison of DOMElement's 'getElementsByTagName' "
+            fprintf(stderr, "Warning!!! Comparison of DOMElement's 'getElementsByTagName' "
                             "and/or 'item' failed at element number %d at line %i \n", i, __LINE__ );
-            printf("\n");
+            fprintf(stderr, "\n");
             OK = false;
             break;
         }
@@ -2334,7 +2557,7 @@ bool DOMTest::testElement(DOMDocument* document)
             XMLString::transcode(textCompare[j], tempStr, 3999);
             if (XMLString::compareString(tempStr, n->getNodeValue()))
             {
-                printf("Warning!!! Comparison of original text nodes via DOMNode*  'getChildNodes' & DOMNodeList 'item'\n"
+                fprintf(stderr, "Warning!!! Comparison of original text nodes via DOMNode*  'getChildNodes' & DOMNodeList 'item'\n"
                     "     failed at text node: #%d at line %i \n     ", j, __LINE__ );
                 OK = false;
                 break;
@@ -2350,7 +2573,7 @@ bool DOMTest::testElement(DOMDocument* document)
     DOMNode*  n = text2->item(0);
     if (XMLString::compareString(tempStr, n->getNodeValue()))
     {
-        printf("Warning!!! Comparison of concatenated text nodes created by DOMElement's 'normalize' failed!\n");
+        fprintf(stderr, "Warning!!! Comparison of concatenated text nodes created by DOMElement's 'normalize' failed!\n");
         OK = false;
     }
 
@@ -2486,6 +2709,227 @@ bool DOMTest::testElement(DOMDocument* document)
         fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
         OK = false;
     }
+
+    // Test renameNode
+    XMLString::transcode("http://nsa", tempStr4, 3999);
+    XMLString::transcode("aa", tempStr5, 3999);
+    XMLString::transcode("pnsa:aa", tempStr3, 3999);
+
+    // create the element
+    DOMElement* renameTestElement = document->createElement(tempStr5);
+    DOMElement* renameTestElementNS = document->createElementNS(tempStr4, tempStr3);
+
+    // create the parent
+    DOMElement* renameTestParent = document->createElement(tempStr5);
+    renameTestParent->appendChild(renameTestElement);
+    renameTestParent->appendChild(renameTestElementNS);
+
+    // set up the userdata
+    renameTestElement->setUserData(tempStr5, (void*) document, &userhandler);
+    renameTestElementNS->setUserData(tempStr4, (void*) document, 0);
+
+    // append a text node as child
+    DOMText* renameTestText = document->createTextNode(tempStr5);
+    DOMText* renameTestTextNS = document->createTextNode(tempStr4);
+    renameTestElement->appendChild(renameTestText);
+    renameTestElementNS->appendChild(renameTestTextNS);
+
+    XMLString::transcode("http://nsb", tempStr, 3999);
+    XMLString::transcode("bb", tempStr2, 3999);
+    XMLString::transcode("pnsb:bb", tempStr3, 3999);
+
+    // set up some attributes
+    DOMAttr* renameTestAttribute = document->createAttribute(tempStr5);
+    DOMAttr* renameTestAttributeNS = document->createAttributeNS(tempStr4, tempStr3);
+    renameTestElement->setAttributeNode(renameTestAttribute);
+    renameTestElementNS->setAttributeNodeNS(renameTestAttributeNS);
+
+    // start the rename tests
+    // rename the NS Element
+    DOMElement* renameTest = (DOMElement*) document->renameNode(renameTestElementNS, tempStr, tempStr3);
+    // test the name
+    if (XMLString::compareString(tempStr, renameTest->getNamespaceURI()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr2, renameTest->getLocalName()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr3, renameTest->getNodeName()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the child / nodevalue
+    if (XMLString::compareString(tempStr4, renameTest->getFirstChild()->getNodeValue()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the attribute
+    if (!renameTest->getAttributeNodeNS(tempStr4, tempStr2))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the owner element
+    if (renameTestParent->getElementsByTagNameNS(tempStr, tempStr2)->getLength() != 1) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestParent->getElementsByTagNameNS(tempStr4, tempStr5)->getLength() != 0) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test user data
+    void* renamedocument = renameTest->getUserData(tempStr4);
+    if (document != renamedocument) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test isSame and isEqual
+    if (!renameTestElementNS->isEqualNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (!renameTestElementNS->isSameNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+
+    // rename the Element (null namespace)
+    renameTest = (DOMElement*) document->renameNode(renameTestElement, 0, tempStr2);
+    // test the name
+    if (renameTest->getNamespaceURI())
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTest->getLocalName())
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr2, renameTest->getNodeName()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the child / nodevalue
+    if (XMLString::compareString(tempStr5, renameTest->getFirstChild()->getNodeValue()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the attribute
+    if (!renameTest->getAttributeNode(tempStr5))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the owner element
+    if (renameTestParent->getElementsByTagName(tempStr2)->getLength() != 1) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestParent->getElementsByTagName(tempStr5)->getLength() != 0) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test user data
+    renamedocument = renameTest->getUserData(tempStr5);
+    if (document != renamedocument) {
+        fprintf(stderr, "'set/getUserData' in line %i does not work\n", __LINE__);
+        OK = false;
+    }
+    // test isSame and isEqual
+    if (!renameTestElement->isEqualNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (!renameTestElement->isSameNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+
+    // rename the Element (with namespace)
+    renameTest = (DOMElement*) document->renameNode(renameTestElement, tempStr, tempStr3);
+    // test the name
+    if (XMLString::compareString(tempStr, renameTest->getNamespaceURI()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr2, renameTest->getLocalName()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (XMLString::compareString(tempStr3, renameTest->getNodeName()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the child / nodevalue
+    if (XMLString::compareString(tempStr5, renameTest->getFirstChild()->getNodeValue()))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestElement->getFirstChild())
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the attribute
+    if (!renameTest->getAttributeNode(tempStr5))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestElement->getAttributeNode(tempStr5))
+    {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test the owner element
+    // the nodelist should be 2 items as we have to count the renameTestElementNS as well
+    if (renameTestParent->getElementsByTagNameNS(tempStr, tempStr2)->getLength() != 2) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestParent->getElementsByTagNameNS(0, tempStr2)->getLength() != 0) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestParent->getElementsByTagName(tempStr2)->getLength() != 0) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test user data
+    renamedocument = renameTest->getUserData(tempStr5);
+    if (document != renamedocument) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    // test userdatahandler
+    USERDATAHANDLERTEST(userhandler, DOMUserDataHandler::NODE_RENAMED, tempStr5, document, renameTestElement, renameTest, __LINE__);
+    // test isSame and isEqual
+    // a new node is created here, so both isSame and isEqual are not compared
+    if (renameTestElement->isEqualNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    if (renameTestElement->isSameNode(renameTest)) {
+        fprintf(stderr, "renameNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
 
     if (!OK)
         printf("\n*****The DOMElement* method calls listed above failed, all others worked correctly.*****\n");
@@ -2642,6 +3086,9 @@ bool DOMTest::testEntity(DOMDocument* document)
         OK = false;
     }
 
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 210 );
+
     if (!OK)
         printf("\n*****The DOMEntity* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -2797,6 +3244,9 @@ bool DOMTest::testEntityReference(DOMDocument* document)
         OK = false;
     }
 
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 211 );
+
     if (!OK)
         printf("\n*****The DOMEntityReference* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -2828,7 +3278,7 @@ bool DOMTest::testNode(DOMDocument* document)
     }
     else
     {
-        printf("'cloneNode' did not successfully clone this whole node tree (deep)!\n");
+        fprintf(stderr, "'cloneNode' did not successfully clone this whole node tree (deep)!\n");
         OK = false;
     }
     //!! The following gives a did not clone successfully message*********
@@ -2837,11 +3287,11 @@ bool DOMTest::testNode(DOMDocument* document)
     result = treeCompare(node, node2);
     if (!result)
     {
-        //printf("'cloneNode' did not successfully clone this whole node tree (deep)!\n");
+        //fprintf(stderr, "'cloneNode' did not successfully clone this whole node tree (deep)!\n");
     }
     else
     {
-        printf("'cloneNode' was supposed to fail here, either it or 'treeCompare' failed!!!\n");
+        fprintf(stderr, "'cloneNode' was supposed to fail here, either it or 'treeCompare' failed!!!\n");
         OK = false;
     }
     // Deep clone test also in testDocument
@@ -3124,6 +3574,9 @@ bool DOMTest::testNotation(DOMDocument* document)
         OK = false;
     }
 
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 212 );
+
     if (!OK)
         printf("\n*****The DOMNotation* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
@@ -3151,7 +3604,7 @@ bool DOMTest::testPI(DOMDocument* document)
         ? !XMLString::compareString(pI->getNodeValue(), pI2->getNodeValue())      // If both have value nodes test those value nodes for equality
         :(pI->getNodeValue() == 0 && pI2->getNodeValue() == 0)))// If one node doesn't have a value node make sure both don't
     {
-        printf("'cloneNode' did not clone the DOMEntity* node correctly\n");
+        fprintf(stderr, "'cloneNode' did not clone the DOMEntity* node correctly\n");
         OK = false;
     }
     // Deep clone test comparison is in testNode & testDocument
@@ -3160,7 +3613,7 @@ bool DOMTest::testPI(DOMDocument* document)
     XMLString::transcode("This is #document's processing instruction", tempStr, 3999);
     if (XMLString::compareString(tempStr, pI->getData()))
     {
-        printf("Warning!!! PI's 'getData' failed!\n");
+        fprintf(stderr, "Warning!!! PI's 'getData' failed!\n");
         OK = false;
     }
 
@@ -3168,13 +3621,13 @@ bool DOMTest::testPI(DOMDocument* document)
     pI->setData(tempStr);
     if (XMLString::compareString(tempStr, pI->getData()))
     {
-        printf("Warning!!! PI's 'setData' failed!\n");
+        fprintf(stderr, "Warning!!! PI's 'setData' failed!\n");
         OK = false;
     }
     XMLString::transcode("dTargetProcessorChannel", tempStr, 3999);
     if (XMLString::compareString(tempStr, pI->getTarget()))
     {
-        printf("Warning!!! PI's 'getTarget' failed!\n");
+        fprintf(stderr, "Warning!!! PI's 'getTarget' failed!\n");
         OK = false;
     }
 
@@ -3304,6 +3757,9 @@ bool DOMTest::testPI(DOMDocument* document)
         OK = false;
     }
 
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 213 );
+
     if (!OK)
         printf("\n*****The PI method calls listed above failed, all others worked correctly.*****\n");
 
@@ -3345,14 +3801,14 @@ bool DOMTest::testText(DOMDocument* document)
     XMLString::transcode("dBodyLevel31'sChildTextNo", tempStr, 3999);
     if (XMLString::compareString(tempStr, text->getNodeValue()))
         {
-            printf("First part of DOMText's split text failed!\n" );
+            fprintf(stderr, "First part of DOMText's split text failed!\n" );
             OK = false;
         }
     // Three original text nodes were concatenated by 'normalize' in testElement
     XMLString::transcode("de11dBodyLevel31'sChildTextNode12dBodyLevel31'sChildTextNode13", tempStr, 3999);
     if (XMLString::compareString(tempStr, text->getNextSibling()->getNodeValue()))
         {
-            printf("The second part of DOMText's split text failed!\n") ;
+            fprintf(stderr, "The second part of DOMText's split text failed!\n") ;
             OK = false;
         }
 
@@ -3486,6 +3942,9 @@ bool DOMTest::testText(DOMDocument* document)
         fprintf(stderr, "isEqualNode failed in line %i\n", __LINE__);
         OK = false;
     }
+
+    // Test rename, should throw exception
+    EXCEPTIONSTEST(document->renameNode(userTest, 0, tempStr2), DOMException::NOT_SUPPORTED_ERR, OK, 214 );
 
     if (!OK)
         printf("\n*****The DOMText* method calls listed above failed, all others worked correctly.*****\n");
