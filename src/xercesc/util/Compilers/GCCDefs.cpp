@@ -57,8 +57,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:18  peiyongz
- * Initial revision
+ * Revision 1.2  2002/11/18 20:38:11  tng
+ * [Bug 14612] GCCDefs clashes with cygwin's string.h for stricmp and strnicmp.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:18  peiyongz
+ * sane_include
  *
  * Revision 1.4  2000/07/29 05:41:00  jberry
  * Fixups for Mac OS
@@ -79,7 +82,6 @@
  *
  */
 
-
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -87,6 +89,8 @@
 #include <strings.h>
 #include <string.h>
 
+
+#ifndef __CYGWIN__
 
 int stricmp(const char* const str1, const char* const  str2) 
 {
@@ -100,3 +104,5 @@ int strnicmp(const char* const str1, const char* const  str2, const unsigned int
 
 	return strncasecmp( str1, str2, (size_t)count);
 }
+
+#endif // ! __CYGWIN__

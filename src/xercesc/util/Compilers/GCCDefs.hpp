@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/11/18 20:38:11  tng
+ * [Bug 14612] GCCDefs clashes with cygwin's string.h for stricmp and strnicmp.
+ *
  * Revision 1.5  2002/11/04 14:45:20  tng
  * C++ Namespace Support.
  *
@@ -214,9 +217,12 @@ inline char tolower(const char toLower)
 }
 #endif
 
+#ifndef __CYGWIN__
+
 int stricmp(const char* const str1, const char* const  str2);
 int strnicmp(const char* const str1, const char* const  str2, const unsigned int count);
 
+#endif // ! __CYGWIN__
 
 
 // ---------------------------------------------------------------------------
