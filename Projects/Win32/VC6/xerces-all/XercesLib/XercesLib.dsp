@@ -317,14 +317,6 @@ SOURCE=..\..\..\..\..\src\util\StringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\TextOutputStream.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\util\TextOutputStream.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\TranscodingException.hpp
 # End Source File
 # Begin Source File
