@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/06/03 19:26:20  jberry
+ * Add support for querying error count following parse; enables simple parse without requiring error handler.
+ *
  * Revision 1.15  2001/05/11 13:26:22  tng
  * Copyright update.
  *
@@ -270,6 +273,18 @@ public :
       * @see #setDoSchema
       */
     bool getDoSchema() const;
+
+    /** Get error count from the last parse operation.
+      *
+      * This method returns the error count from the last parse
+      * operation. Note that this count is actually stored in the
+      * scanner, so this method simply returns what the
+      * scanner reports.
+      *
+      * @return number of errors encountered during the latest
+      *			parse operation.
+      */
+    int getErrorCount() const;
 
     /**
       * This method returns the state of the parser's namespace

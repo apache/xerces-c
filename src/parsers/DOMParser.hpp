@@ -234,6 +234,19 @@ public :
       */
     bool getDoSchema() const;
 
+    /** Get error count from the last parse operation.
+      *
+      * This method returns the error count from the last parse
+      * operation. Note that this count is actually stored in the
+      * scanner, so this method simply returns what the
+      * scanner reports.
+      *
+      * @return number of errors encountered during the latest
+      *			parse operation.
+      *
+      */
+    int getErrorCount() const;
+
     /** Get the 'do namespaces' flag
       *
       * This method returns the state of the parser's namespace processing
@@ -326,7 +339,6 @@ public :
       *
       */
     bool getToCreateXMLDeclTypeNode() const;
-
 
     //@}
 

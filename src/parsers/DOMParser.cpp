@@ -186,6 +186,11 @@ bool DOMParser::getDoSchema() const
     return fScanner->getDoSchema();
 }
 
+int DOMParser::getErrorCount() const
+{
+    return fScanner->getErrorCount();
+}
+
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Setter methods

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2001/06/03 19:26:19  jberry
+ * Add support for querying error count following parse; enables simple parse without requiring error handler.
+ *
  * Revision 1.12  2001/05/11 13:26:21  tng
  * Copyright update.
  *
@@ -344,6 +347,11 @@ XMLValidator* SAX2XMLReaderImpl::getValidator() const
 // ---------------------------------------------------------------------------
 //  SAX2XMLReader Interface
 // ---------------------------------------------------------------------------
+int SAX2XMLReaderImpl::getErrorCount() const
+{
+    return fScanner->getErrorCount();
+}
+
 void SAX2XMLReaderImpl::setContentHandler(ContentHandler* const handler)
 {
 	fDocHandler = handler;

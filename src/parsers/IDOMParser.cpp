@@ -193,6 +193,12 @@ bool IDOMParser::getDoSchema() const
     return fScanner->getDoSchema();
 }
 
+int IDOMParser::getErrorCount() const
+{
+    return fScanner->getErrorCount();
+}
+
+
 
 // ---------------------------------------------------------------------------
 //  IDOMParser: Setter methods

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/06/03 19:26:19  jberry
+ * Add support for querying error count following parse; enables simple parse without requiring error handler.
+ *
  * Revision 1.8  2001/05/11 13:26:21  tng
  * Copyright update.
  *
@@ -393,6 +396,18 @@ public :
 
     /** @name Getter methods */
     //@{
+
+    /** Get error count from the last parse operation.
+      *
+      * This method returns the error count from the last parse
+      * operation. Note that this count is actually stored in the
+      * scanner, so this method simply returns what the
+      * scanner reports.
+      *
+      * @return number of errors encountered during the latest
+      *			parse operation.
+      */
+    int getErrorCount() const;
 
     /**
       * This method returns the installed content handler.

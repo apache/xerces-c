@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/06/03 19:26:20  jberry
+ * Add support for querying error count following parse; enables simple parse without requiring error handler.
+ *
  * Revision 1.19  2001/05/11 13:26:22  tng
  * Copyright update.
  *
@@ -314,6 +317,11 @@ SAXParser::ValSchemes SAXParser::getValidationScheme() const
 bool SAXParser::getDoSchema() const
 {
     return fScanner->getDoSchema();
+}
+
+int SAXParser::getErrorCount() const
+{
+    return fScanner->getErrorCount();
 }
 
 
