@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/07/30 14:48:38  peiyongz
+ * Allow default value
+ *
  * Revision 1.4  2003/05/16 21:36:55  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -168,7 +171,7 @@ public :
         const   XMLByte* const  srcDocBytes
         , const unsigned int    byteCount
         , const XMLCh* const    bufId
-        , const bool            adoptBuffer// = false
+        , const bool            adoptBuffer = false
         , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
