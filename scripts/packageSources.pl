@@ -141,6 +141,7 @@ sub package_sources {
 
    # Delete the irrelevant parts before the packaging
    system("$RM -f $srctargetdir/CMVC.GON");
+   system("$RM -f $srctargetdir/KEYS");
    system("$RM -rf $srctargetdir/*.\$??");
    system("$RM -rf $srctargetdir/*.o");
    system("$RM -rf $srctargetdir/Build");
