@@ -40,15 +40,11 @@
 
   <document id="releases"    label="Releases"     source="releases.xml"/>
   <document id="feedback"    label="Feedback"     source="feedback.xml"/>
-
-  <separator/>
-
-  <document id="pdf"         label="PDF Document" source="pdf-c.xml"/>
+  <document id="bug-todo"    label="Bug-Todo"     source="bug-todo.xml"/>
 
   <separator/>
 
   <external href="http://&XercesDistDir;/"                        label="Download"/>
   <external href="http://xml.apache.org/websrc/cvsweb.cgi/xml-xerces/c/"     label="CVS Repository"/>
   <external href="http://archive.covalent.net "                   label="Mail Archive"/>
-  <external href="./bug-todo.html"                               label="Bugs &amp; To Do List"/>
 </book>

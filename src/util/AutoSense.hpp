@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/01/26 21:59:25  tng
+ * Change bug-todo list to xml format.  Other documentation fixes.
+ *
  * Revision 1.16  2000/10/09 18:15:43  jberry
  * Modify sensing of Mac OS X.
  * PR:
@@ -199,10 +202,10 @@
 //  This section attempts to autodetect the compiler being used. It will set
 //  up Xerces specific defines that can be used by the rest of the code.
 // ---------------------------------------------------------------------------
-#if defined(_MSC_VER)
-    #define XML_VISUALCPP
-#elif defined(__BORLANDC__)
+#if defined(__BORLANDC__)
     #define XML_BORLAND
+#elif defined(_MSC_VER)
+    #define XML_VISUALCPP
 #elif defined(__xlC__)
     #define XML_CSET
 #elif defined(XML_SOLARIS) || defined(XML_UNIXWARE)
@@ -225,7 +228,7 @@
     #elif (__cplusplus == 199707 || __cplusplus == 199711)
         #define XML_HPUX_aCC
     #endif
-#elif defined(XML_IRIX)
+#elif defined(XML_IRIX) || defined(__sgi)
     #define XML_MIPSPRO_CC
 #elif defined(XML_PTX)
     #define XML_PTX_CC
@@ -242,8 +245,8 @@
         #define XML_IBMVAOS2
         #if (__IBMC__ >= 400 || __IBMCPP__ >= 400)
             #define XML_IBMVA4_OS2
-        #endif 
-    #endif   
+        #endif
+    #endif
 #elif defined(XML_TRU64) && defined(__DECCXX)
     #define XML_DECCXX
 #elif defined(__MWERKS__)

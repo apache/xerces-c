@@ -13,9 +13,68 @@
     </tr>
 
     <tr>
+        <td >2001-01-26</td>
+        <td >Walker Curtis</td>
+        <td >Undefined symbol error when building a single threaded version of the xerces lib on irix.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-25</td>
+        <td >Arnaud LeHors</td>
+        <td >Added a flag to turn off error checking in the DOM, this is primarily
+             used while building the DOM from the parser to get better performance.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-25</td>
+        <td >Khaled Noaman</td>
+        <td >Let users add their encoding to the intrinsic mapping table.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-25</td>
+        <td >Khaled Noaman</td>
+        <td >const should be used instead of static const.  And other clean up bug fixes.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-24</td>
+        <td >Arnaud LeHors</td>
+        <td >Fixed replaceChild to handle the case where a node is replaced
+             by itself. Cleaned up insertBefore.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-24</td>
+        <td >Tinny Ng</td>
+        <td >Guard the use of '-ptr${OUTDIR}' in EnumVal/Makefile.in
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-22</td>
+        <td >Curt Arnold.</td>
+        <td >Loads winsock dynamically.
+        </td>
+    </tr>
+
+    <tr>
+        <td >2001-01-19</td>
+        <td >Curt Arnold.</td>
+        <td >COM various updates: updated the GUID's so both can coexist,
+             better error reporting and fixed a new minor bugs.
+        </td>
+    </tr>
+
+    <tr>
         <td >2001-01-18</td>
         <td >Bill Schindler</td>
-        <td >Spell check, fix typos, fix grammar, readability editing, clean up formatting,
+        <td >FAQ spell check, fix typos, fix grammar, readability editing, clean up formatting,
              re-organize so related topics appear together.
         </td>
     </tr>
@@ -56,28 +115,28 @@
     </tr>
 
     <tr>
-        <td >2001/01/17</td>
+        <td >2001-01-17</td>
         <td >Tinny Ng</td>
         <td >Access violations and stack overflows in insertBefore.
         </td>
     </tr>
 
     <tr>
-        <td >2001/01/15</td>
+        <td >2001-01-15</td>
         <td >David Bertoni</td>
         <td >Performance Patches.
         </td>
     </tr>
 
     <tr>
-        <td >2001/01/12</td>
+        <td >2001-01-12</td>
         <td >Tinny Ng</td>
         <td >Fix style-ibm.zip for documentation generation.
         </td>
     </tr>
 
     <tr>
-        <td >2001/01/12</td>
+        <td >2001-01-12</td>
         <td >Tinny Ng</td>
         <td >Remove the two obsolete file: stylesheets\Copy of book2project.xsl and
              stylesheets\Copy of document2html.xsl in style-apachexml.jar
@@ -85,21 +144,21 @@
     </tr>
 
     <tr>
-        <td >2001/01/12</td>
+        <td >2001-01-12</td>
         <td >Tinny Ng</td>
         <td >Documentation Enhancement: explain values of Val_Scheme.
         </td>
     </tr>
 
     <tr>
-        <td >2001/01/12</td>
+        <td >2001-01-12</td>
         <td >Tinny Ng</td>
         <td >Documentation Enhancement: Add list of SAX2 feature strings that are supported.
         </td>
     </tr>
 
     <tr>
-        <td >2001/01/04</td>
+        <td >2001-01-04</td>
         <td >Khaled Noaman</td>
         <td >Assertion `size > 0' failure when cloning a node if the last attributes
              has been removed.
@@ -107,35 +166,35 @@
     </tr>
 
     <tr>
-        <td >2000/12/28</td>
+        <td >2000-12-28</td>
         <td >James Berry</td>
         <td >Omit include carbon.h in favor of specific include files.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/28</td>
+        <td >2000-12-28</td>
         <td >James Berry</td>
         <td >Add or modify cvs header in various files.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/28</td>
+        <td >2000-12-28</td>
         <td >James Berry</td>
         <td >Eliminate compiler warning in RangeImpl.cpp.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/28</td>
+        <td >2000-12-28</td>
         <td >James Berry</td>
         <td >Replace include of Carbon.h with specific include files.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/28</td>
+        <td >2000-12-28</td>
         <td >James Berry</td>
         <td >Move away from include of Carbon.h; include only needed files instead.
              Fix bug in parsing of upwardly relative paths under classic (thanks to Lawrence You).
@@ -143,7 +202,7 @@
     </tr>
 
     <tr>
-        <td >2000/12/22</td>
+        <td >2000-12-22</td>
         <td >Tinny Ng</td>
         <td >XMLUni::fgEmptyString which is defined as "EMPTY" is incorrectly used as
              an empty string; in fact XMLUni::fgZeroLenString should be used instead.
@@ -151,28 +210,28 @@
     </tr>
 
     <tr>
-        <td >2000/12/22</td>
+        <td >2000-12-22</td>
         <td >Tinny Ng</td>
         <td >Add the new header LexicalHandler.hpp to Makefile.in.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/22</td>
+        <td >2000-12-22</td>
         <td >Murray Cumming</td>
         <td >removes '-instances=static' from the Linux link sections.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/22</td>
+        <td >2000-12-22</td>
         <td >David Bertoni</td>
         <td >SAX2-ext's LexicalHandler support.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/14</td>
+        <td >2000-12-14</td>
         <td >Tinny Ng</td>
         <td >Better instruction for using packageBinaries.pl.  Use symbol XercesCInstallDir
              and XercesCSrcInstallDir instead of hardcoding the Xerces version number in the file.
@@ -180,77 +239,77 @@
     </tr>
 
     <tr>
-        <td >2000/12/14</td>
+        <td >2000-12-14</td>
         <td >Tinny Ng</td>
         <td >Fix API document generation warning: "Warning: end of member group without matching begin".
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/14</td>
+        <td >2000-12-14</td>
         <td >Tinny Ng</td>
         <td >Add RangeTest as part of the xerces-all MSVC++ workspace.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/12</td>
+        <td >2000-12-12</td>
         <td >Gareth Reakes</td>
         <td >null pointer bug.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/08</td>
+        <td >2000-12-08</td>
         <td >Tinny Ng</td>
         <td >Entity Reference cleanup dumping core if the last entity reference is deleted.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/06</td>
+        <td >2000-12-06</td>
         <td >Tinny Ng</td>
         <td >fix the link to FAQ.
         </td>
     </tr>
 
     <tr>
-        <td >2000/12/06</td>
+        <td >2000-12-06</td>
         <td >Tinny Ng</td>
         <td >further fixes to Range, and update RangeTest.cpp with more test coverage.
         </td>
     </tr>
 
     <tr>
-        <td >2000/11/30</td>
+        <td >2000-11-30</td>
         <td >Bill Schindler</td>
         <td >Spell check, fix typos, fix grammar, readability editing, clean up formatting.
         </td>
     </tr>
 
     <tr>
-        <td >2000/11/30</td>
+        <td >2000-11-30</td>
         <td >Bill Schindler</td>
         <td >Remove dead code (old StdOut and StdErr functions); minor clean-up.
         </td>
     </tr>
 
     <tr>
-        <td >2000/11/30</td>
+        <td >2000-11-30</td>
         <td >Tinny Ng</td>
         <td >patch to fix a number of Range problems.  See mail of 11/21/2000.
         </td>
     </tr>
 
     <tr>
-        <td >2000/11/30</td>
+        <td >2000-11-30</td>
         <td >Tinny Ng</td>
         <td >DOM_Text::splitText(), fix off by one error in the test for index too big error.
         </td>
     </tr>
 
     <tr>
-        <td >2000/11/30</td>
+        <td >2000-11-30</td>
         <td >Tinny Ng</td>
         <td >reuseValidator - fix bugs (spurious errors) that occured on reuse due to
              pools already containing some items.
@@ -258,7 +317,7 @@
     </tr>
 
     <tr>
-        <td >2000/11/08</td>
+        <td >2000-11-08</td>
         <td >Andrei Smirnov</td>
         <td >Build updates for Solaris 2.8 64 bit.
         </td>
@@ -544,7 +603,7 @@
         <td >HPUX - Incorrect use of Array Janitor in Platform Utils removed.</td>
     </tr>
     <tr>
-        <td >2000/09/21</td>
+        <td >2000-09-21</td>
         <td >Arundhati Bhowmick</td>
         <td >DOMPrint - DTD internal subset, printing of attribute value enumerations was broken.</td>
     </tr>
