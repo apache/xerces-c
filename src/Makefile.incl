@@ -244,9 +244,9 @@ endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
-PLATFORM_COMPILE_OPTIONS = -fpic -D${PLATFORM} -D_REENTRANT
-MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fpic
-MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fpic
+PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
+MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fPIC
+MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fPIC
 ifeq (${TRANSCODER}, ICU)
     ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -licudata -lc
 else
