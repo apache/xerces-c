@@ -227,12 +227,6 @@ private:
     // -----------------------------------------------------------------------
     void cleanUp();
 
-    /**
-     * helper method to set the uri to the schema uri and name to tName for the DatatypeValidator 
-     * tName in ref.
-     */
-    void setDatatypeName(RefHashTableOf<DatatypeValidator>* reg, const XMLCh* tName);
-
     // -----------------------------------------------------------------------
     //  Private data members
     //
