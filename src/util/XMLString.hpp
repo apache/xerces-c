@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.7  2000/02/16 18:51:52  roddey
+ * Fixed some facts in the docs and reformatted the docs to stay within
+ * a reasonable line width.
+ *
  * Revision 1.6  2000/02/16 17:07:07  abagchi
  * Added API docs
  *
@@ -90,7 +94,8 @@
 class XMLLCPTranscoder;
 
 /**
-  * Class for representing native character strings and handling common string operations
+  * Class for representing native character strings and handling common string
+  * operations
   *
   * This class is Unicode compliant. This class is designed primarily
   * for internal use, but due to popular demand, it is being made
@@ -99,7 +104,6 @@ class XMLLCPTranscoder;
   * class are <i>static functions</i>.
   *
   */
-
 class XMLUTIL_EXPORT XMLString
 {
 public:
@@ -112,7 +116,8 @@ public:
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return
       * @param maxChars The maximum number of charcters to convert
-      * @param radix The radix of the input data, based on which the conversion will be done
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
       */
     static void binToText
     (
@@ -127,7 +132,8 @@ public:
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return
       * @param maxChars The maximum number of charcters to convert
-      * @param radix The radix of the input data, based on which the conversion will be done
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
       */
     static void binToText
     (
@@ -142,7 +148,8 @@ public:
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return
       * @param maxChars The maximum number of charcters to convert
-      * @param radix The radix of the input data, based on which the conversion will be done
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
       */
     static void binToText
     (
@@ -157,7 +164,8 @@ public:
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return
       * @param maxChars The maximum number of charcters to convert
-      * @param radix The radix of the input data, based on which the conversion will be done
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
       */
     static void binToText
     (
@@ -172,7 +180,8 @@ public:
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return
       * @param maxChars The maximum number of charcters to convert
-      * @param radix The radix of the input data, based on which the conversion will be done
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
       */
     static void binToText
     (
@@ -187,7 +196,8 @@ public:
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return
       * @param maxChars The maximum number of charcters to convert
-      * @param radix The radix of the input data, based on which the conversion will be done
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
       */
     static void binToText
     (
@@ -202,7 +212,8 @@ public:
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return
       * @param maxChars The maximum number of charcters to convert
-      * @param radix The radix of the input data, based on which the conversion will be done
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
       */
     static void binToText
     (
@@ -217,7 +228,8 @@ public:
       * @param toFormat The beginning of the input string to convert
       * @param toFill The buffer that will hold the output on return
       * @param maxChars The maximum number of charcters to convert
-      * @param radix The radix of the input data, based on which the conversion will be done
+      * @param radix The radix of the input data, based on which the conversion
+      * will be done
       */
     static void binToText
     (
@@ -230,15 +242,18 @@ public:
 
     /** @name String concatenation functions */
     //@{
-    /**    Concatenates two strings.
-      * <code>catString</code> appends <code>src</code> to <code>target</code> and
-      * terminates the resulting string with a null character. The initial character of
-      * <code>src</code> overwrites the terminating character of <code>target</code>.
-      * No overflow checking is performed when strings are copied or appended.
-      * The behavior of <code>catString</code> is undefined if source and destination
-      * strings overlap.
+    /** Concatenates two strings.
       *
-      *    @param target Null-terminated destination string
+      * <code>catString</code> appends <code>src</code> to <code>target</code> and
+      * terminates the resulting string with a null character. The initial character
+      * of <code>src</code> overwrites the terminating character of <code>target
+      * </code>.
+      *
+      * No overflow checking is performed when strings are copied or appended.
+      * The behavior of <code>catString</code> is undefined if source and
+      * destination strings overlap.
+      *
+      * @param target Null-terminated destination string
       * @param src Null-terminated source string
       */
     static void catString
@@ -247,7 +262,8 @@ public:
         , const char* const     src
     );
 
-    /**    Concatenates two strings.
+    /** Concatenates two strings.
+      *
       * <code>catString</code> appends <code>src</code> to <code>target</code> and
       * terminates the resulting string with a null character. The initial character of
       * <code>src</code> overwrites the terminating character of <code>target</code>.
@@ -267,10 +283,13 @@ public:
 
     /** @name String comparison functions */
     //@{
-    /** Lexicographically compares lowercase versions of <code>str1</code> and <code>str2</code> and returns a value indicating their relationship. 
+    /** Lexicographically compares lowercase versions of <code>str1</code> and
+      * <code>str2</code> and returns a value indicating their relationship.
       * @param str1 Null-terminated string to compare
       * @param str2 Null-terminated string to compare
-      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *
+      * @return The return value indicates the relation of <code>str1</code> to
+      * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
       *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
       *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
@@ -281,10 +300,12 @@ public:
         , const char* const     str2
     );
 
-    /** Lexicographically compares lowercase versions of <code>str1</code> and <code>str2</code> and returns a value indicating their relationship. 
+    /** Lexicographically compares lowercase versions of <code>str1</code> and
+      * <code>str2</code> and returns a value indicating their relationship.
       * @param str1 Null-terminated string to compare
       * @param str2 Null-terminated string to compare
-      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      * @return The return value indicates the relation of <code>str1</code> to
+      * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
       *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
       *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
@@ -296,11 +317,15 @@ public:
     );
 
 
-    /** Lexicographically compares, at most, the first count characters in <code>str1</code> and <code>str2</code> and returns a value indicating the relationship between the substrings.
+    /** Lexicographically compares, at most, the first count characters in
+      * <code>str1</code> and <code>str2</code> and returns a value indicating the
+      * relationship between the substrings.
       * @param str1 Null-terminated string to compare
       * @param str2 Null-terminated string to compare
       * @param count The number of characters to compare
-      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *
+      * @return The return value indicates the relation of <code>str1</code> to
+      * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
       *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
       *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
@@ -312,11 +337,15 @@ public:
         , const unsigned int    count
     );
 
-    /** Lexicographically compares, at most, the first count characters in <code>str1</code> and <code>str2</code> and returns a value indicating the relationship between the substrings.
+    /** Lexicographically compares, at most, the first count characters in
+      * <code>str1</code> and <code>str2</code> and returns a value indicating
+      * the relationship between the substrings.
       * @param str1 Null-terminated string to compare
       * @param str2 Null-terminated string to compare
       * @param count The number of characters to compare
-      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *
+      * @return The return value indicates the relation of <code>str1</code> to
+      * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
       *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
       *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
@@ -329,11 +358,15 @@ public:
     );
 
 
-    /** Lexicographically compares, at most, the first count characters in <code>str1</code> and <code>str2</code> without regard to case and returns a value indicating the relationship between the substrings.
+    /** Lexicographically compares, at most, the first count characters in
+      * <code>str1</code> and <code>str2</code> without regard to case and
+      * returns a value indicating the relationship between the substrings.
+      *
       * @param str1 Null-terminated string to compare
       * @param str2 Null-terminated string to compare
       * @param count The number of characters to compare
-      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      * @return The return value indicates the relation of <code>str1</code> to
+      * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
       *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
       *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
@@ -345,11 +378,16 @@ public:
         , const unsigned int    count
     );
 
-    /** Lexicographically compares, at most, the first count characters in <code>str1</code> and <code>str2</code> without regard to case and returns a value indicating the relationship between the substrings.
+    /** Lexicographically compares, at most, the first count characters in
+      * <code>str1</code> and <code>str2</code> without regard to case and
+      * returns a value indicating the relationship between the substrings.
+      *
       * @param str1 Null-terminated string to compare
       * @param str2 Null-terminated string to compare
       * @param count The number of characters to compare
-      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *
+      * @return The return value indicates the relation of <code>str1</code> to
+      * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
       *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
       *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
@@ -361,10 +399,14 @@ public:
         , const unsigned int    count
     );
 
-    /** Lexicographically compares <code>str1</code> and <code>str2</code> and returns a value indicating their relationship. 
+    /** Lexicographically compares <code>str1</code> and <code>str2</code> and
+      * returns a value indicating their relationship.
+      *
       * @param str1 Null-terminated string to compare
       * @param str2 Null-terminated string to compare
-      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      *
+      * @return The return value indicates the relation of <code>str1</code> to
+      * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
       *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
       *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
@@ -375,10 +417,13 @@ public:
         , const char* const     str2
     );
 
-    /** Lexicographically compares <code>str1</code> and <code>str2</code> and returns a value indicating their relationship. 
+    /** Lexicographically compares <code>str1</code> and <code>str2</code> and
+      * returns a value indicating their relationship.
+      *
       * @param str1 Null-terminated string to compare
       * @param str2 Null-terminated string to compare
-      * @return The return value indicates the relation of <code>str1</code> to <code>str2</code> as follows
+      * @return The return value indicates the relation of <code>str1</code> to
+      * <code>str2</code> as follows
       *  Less than 0 means <code>str1</code> is less than <code>str2</code>
       *  Equal to 0 means <code>str1</code> is identical to <code>str2</code> 
       *  Greater than 0 means <code>str1</code> is more than <code>str2</code> 
@@ -392,40 +437,49 @@ public:
 
     /** @name String copy functions */
     //@{
-    /* Copies <code>src</code>, including the terminating null character, to the location specified by <code>target</code>.
-     *
-     * No overflow checking is performed when strings are copied or appended. The behavior 
-     * of strcpy is undefined if the source and destination strings overlap.
-     * @param target Destination string
-     * @param src Null-terminated source string
-     */
+    /** Copies <code>src</code>, including the terminating null character, to the
+      * location specified by <code>target</code>.
+      *
+      * No overflow checking is performed when strings are copied or appended.
+      * The behavior of strcpy is undefined if the source and destination strings
+      * overlap.
+      *
+      * @param target Destination string
+      * @param src Null-terminated source string
+      */
     static void copyString
     (
                 char* const     target
         , const char* const     src
     );
 
-    /* Copies <code>src</code>, including the terminating null character, to the location specified by <code>target</code>.
-     *
-     * No overflow checking is performed when strings are copied or appended. The behavior 
-     * of <code>copyString</code> is undefined if the source and destination strings overlap.
-     * @param target Destination string
-     * @param src Null-terminated source string
-     */
+    /** Copies <code>src</code>, including the terminating null character, to
+      *   the location specified by <code>target</code>.
+      *
+      * No overflow checking is performed when strings are copied or appended.
+      * The behavior of <code>copyString</code> is undefined if the source and
+      * destination strings overlap.
+      *
+      * @param target Destination string
+      * @param src Null-terminated source string
+      */
     static void copyString
     (
                 XMLCh* const    target
         , const XMLCh* const    src
     );
 
-    /* Copies <code>src</code>, upto a fixed number of characters, to the location specified by <code>target</code>.
-     *
-     * No overflow checking is performed when strings are copied or appended. The behavior 
-     * of <code>copyNString</code> is undefined if the source and destination strings overlap.
-     * @param target Destination string
-     * @param src Null-terminated source string
-     * @param maxChars The maximum number of characters to copy
-     */
+    /** Copies <code>src</code>, upto a fixed number of characters, to the
+      * location specified by <code>target</code>.
+      *
+      * No overflow checking is performed when strings are copied or appended.
+      * The behavior of <code>copyNString</code> is undefined if the source and
+      * destination strings overlap.
+      *
+      * @param target Destination string
+      * @param src Null-terminated source string
+      * @param maxChars The maximum number of characters to copy
+      */
     static bool copyNString
     (
                 XMLCh* const    target
@@ -460,11 +514,13 @@ public:
         , const unsigned int    hashModulus
     );
 
-    /** Hashes a string given a modulus taking a maximum number of characters as the limit
+    /** Hashes a string given a modulus taking a maximum number of characters
+      * as the limit
       *
       * @param toHash The string to hash
       * @param numChars The maximum number of characters to consider for hashing
       * @param hashModulus The divisor to be used for hashing
+      *
       * @return Returns the hash value
       */
     static unsigned int hashN
@@ -483,7 +539,8 @@ public:
       *
       * @param toSearch The string to search
       * @param ch The character to search within the string
-      * @return If found, returns the index of the character within the string, else returns -1.
+      * @return If found, returns the index of the character within the string,
+      * else returns -1.
       */
     static int indexOf(const char* const toSearch, const char ch);
 
@@ -492,7 +549,8 @@ public:
       *
       * @param toSearch The string to search
       * @param ch The character to search within the string
-      * @return If found, returns the index of the character within the string, else returns -1.
+      * @return If found, returns the index of the character within the string,
+      * else returns -1.
       */
     static int indexOf(const XMLCh* const toSearch, const XMLCh ch);
 
@@ -501,7 +559,8 @@ public:
       *
       * @param toSearch The string to search
       * @param ch The character to search within the string
-      * @return If found, returns the index of the character within the string, else returns -1.
+      * @return If found, returns the index of the character within the string,
+      * else returns -1.
       */
     static int lastIndexOf(const char* const toSearch, const char ch);
 
@@ -510,17 +569,20 @@ public:
       *
       * @param toSearch The string to search
       * @param ch The character to search within the string
-      * @return If found, returns the index of the character within the string, else returns -1.
+      * @return If found, returns the index of the character within the string,
+      * else returns -1.
       */
     static int lastIndexOf(const XMLCh* const toSearch, const XMLCh ch);
 
     /**
-      * Provides the index of the last occurance of a character within a string starting backward from a given index
+      * Provides the index of the last occurance of a character within a string
+      * starting backward from a given index
       *
       * @param toSearch The string to search
       * @param chToFInd The character to search within the string
       * @param fromIndex The index to start backward search from
-      * @return If found, returns the index of the character within the string, else returns -1.
+      * @return If found, returns the index of the character within the string,
+      * else returns -1.
       */
     static int lastIndexOf
     (
@@ -530,12 +592,14 @@ public:
     );
 
     /**
-      * Provides the index of the last occurance of a character within a string starting backward from a given index
+      * Provides the index of the last occurance of a character within a string
+      * starting backward from a given index
       *
       * @param toSearch The string to search
       * @param chToFInd The character to search within the string
       * @param fromIndex The index to start backward search from
-      * @return If found, returns the index of the character within the string, else returns -1.
+      * @return If found, returns the index of the character within the string,
+      * else returns -1.
       */
     static int lastIndexOf
     (
@@ -566,7 +630,8 @@ public:
     /** Tells if the sub-string appears within a string at the beginning
       * @param toTest The string to test
       * @param prefix The sub-string that needs to be checked
-      * @return Returns true if the sub-string was found at the beginning of <code>toTest</code>, else false
+      * @return Returns true if the sub-string was found at the beginning of
+      * <code>toTest</code>, else false
       */
     static bool startsWith
     (
@@ -577,7 +642,8 @@ public:
     /** Tells if the sub-string appears within a string at the beginning
       * @param toTest The string to test
       * @param prefix The sub-string that needs to be checked
-      * @return Returns true if the sub-string was found at the beginning of <code>toTest</code>, else false
+      * @return Returns true if the sub-string was found at the beginning of
+      * <code>toTest</code>, else false
       */
     static bool startsWith
     (
@@ -585,10 +651,13 @@ public:
         , const XMLCh* const    prefix
     );
 
-    /** Tells if the sub-string appears within a string at the beginning without regard to case
+    /** Tells if the sub-string appears within a string at the beginning
+      * without regard to case
+      *
       * @param toTest The string to test
       * @param prefix The sub-string that needs to be checked
-      * @return Returns true if the sub-string was found at the beginning of <code>toTest</code>, else false
+      * @return Returns true if the sub-string was found at the beginning of
+      * <code>toTest</code>, else false
       */
     static bool startsWithI
     (
@@ -596,10 +665,14 @@ public:
         , const char* const     prefix
     );
 
-    /** Tells if the sub-string appears within a string at the beginning without regard to case
+    /** Tells if the sub-string appears within a string at the beginning
+      * without regard to case
+      *
       * @param toTest The string to test
       * @param prefix The sub-string that needs to be checked
-      * @return Returns true if the sub-string was found at the beginning of <code>toTest</code>, else false
+      *
+      * @return Returns true if the sub-string was found at the beginning
+      * of <code>toTest</code>, else false
       */
     static bool startsWithI
     (
@@ -610,7 +683,8 @@ public:
     /** Tells if a string has any occurance of another string within itself
       * @param toSearch The string to be searched
       * @param searchList The sub-string to be searched within the string
-      * @return Returns the pointer to the location where the sub-string was found, else returns 0
+      * @return Returns the pointer to the location where the sub-string was
+      * found, else returns 0
       */
     static const XMLCh* findAny
     (
@@ -621,7 +695,8 @@ public:
     /** Tells if a string has any occurance of another string within itself
       * @param toSearch The string to be searched
       * @param searchList The sub-string to be searched within the string
-      * @return Returns the pointer to the location where the sub-string was found, else returns 0
+      * @return Returns the pointer to the location where the sub-string was
+      * found, else returns 0
       */
     static XMLCh* findAny
     (
@@ -689,25 +764,27 @@ public:
     );
 
     /** Trims off extra space characters from the end of the string
-      * @param toTrim The string to be trimmed. On return this contains the trimmed string
+      * @param toTrim The string to be trimmed. On return this contains the
+      * trimmed string
       */
     static void trim(char* const toTrim);
 
     /** Trims off extra space characters from the end of the string
-      * @param toTrim The string to be trimmed. On return this contains the trimmed string
+      * @param toTrim The string to be trimmed. On return this contains
+      * the trimmed string
       */
     static void trim(XMLCh* const toTrim);
     //@}
 
     /** @name Formatting functions */
     //@{
-    /** Format a Uniform Resource Indicator
-      * If there is a URI, then format out the full name in the <code>{uri}name</code>
-      * form. Otherwise, just set it to the same thing as the base name.
+    /** Creates a UName from a URI and base name. It is in the form
+      * {url}name, and is commonly used internally to represent fully
+      * qualified names when namespaces are enabled.
       *
-      * @param pszURI The URI path
-      * @param pszName The URI name
-      * @return Returns the complete formatted URI
+      * @param pszURI The URI part of the name
+      * @param pszName The base part of the name
+      * @return Returns the complete formatted UName
       */
     static XMLCh* makeUName
     (
@@ -716,10 +793,11 @@ public:
     );
 
     /**
-      * Internal function to perform token replacement for URI's. <b>Not for general use.</b>
+      * Internal function to perform token replacement for strings.
       *
       * @param errText The text where the replacement is to be done
-      * @param maxChars The maximum number of characters to consider for replacement
+      * @param maxChars The maximum number of characters to consider for
+      * replacement
       * @param text1 Replacement text-one
       * @param text2 Replacement text-two
       * @param text3 Replacement text-three
