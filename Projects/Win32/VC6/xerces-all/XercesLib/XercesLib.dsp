@@ -588,14 +588,6 @@ SOURCE=..\..\..\..\..\src\util\StringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\StringTokenizer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\util\StringTokenizer.hpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\..\..\..\..\src\util\TranscodingException.hpp
 # End Source File
 # Begin Source File
@@ -733,6 +725,14 @@ SOURCE=..\..\..\..\..\src\util\XMLString.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\XMLString.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLStringTokenizer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLStringTokenizer.hpp
 # End Source File
 # Begin Source File
 

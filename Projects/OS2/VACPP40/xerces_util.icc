@@ -24,6 +24,7 @@ group xerces_util =
     BASE_DIR "\\src\\util\\XMLException.cpp",
     BASE_DIR "\\src\\util\\XMLIBM1140Transcoder.cpp",
     BASE_DIR "\\src\\util\\XMLString.cpp",
+    BASE_DIR "\\src\\util\\XMLStringTokenizer.cpp",
     BASE_DIR "\\src\\util\\XMLUCSTranscoder.cpp",
     BASE_DIR "\\src\\util\\XMLUni.cpp",
     BASE_DIR "\\src\\util\\XMLURL.cpp",

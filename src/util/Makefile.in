@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.38  2001/06/11 15:15:45  knoaman
+# StringTokenizer renamed to XMLStringTokenizer.
+#
 # Revision 1.37  2001/06/06 13:13:58  tng
 # Fix regression where TRANSCODERMODULE is not assigned if TRANSCODE == NATIVE.
 #
@@ -309,7 +312,7 @@ UTIL_CPP_PUBHEADERS = \
     RefVectorOf.hpp \
     RuntimeException.hpp \
     StringPool.hpp \
-    StringTokenizer.hpp \
+    XMLStringTokenizer.hpp \
     TransENameMap.hpp \
     TransService.hpp \
     TranscodingException.hpp \
@@ -378,7 +381,7 @@ UTIL_CPP_OBJECTS = \
     PlatformUtils.$(TO) \
     QName.$(TO) \
     StringPool.$(TO) \
-    StringTokenizer.$(TO) \
+    XMLStringTokenizer.$(TO) \
     XMLURL.$(TO) \
     TransService.$(TO) \
     XML256TableTranscoder.$(TO) \

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.20  2001/06/11 15:17:22  knoaman
+ * StringTokenizer renamed to XMLStringTokenizer.
+ *
  * Revision 1.19  2001/06/07 14:38:02  knoaman
  * Bypass for now generating an error message in case of ID/IDREF/Entity(s)
  * datatype validators is not found. Currently taken care of by the validator.
@@ -129,7 +132,7 @@
 #include <util/RefHashTableOf.hpp>
 #include <util/Janitor.hpp>
 #include <util/KVStringPair.hpp>
-#include <util/StringTokenizer.hpp>
+#include <util/XMLStringTokenizer.hpp>
 #include <util/QName.hpp>
 #include <validators/schema/XUtil.hpp>
 #include <validators/common/GrammarResolver.hpp>
@@ -2302,7 +2305,7 @@ int TraverseSchema::traverseByUnion(const DOM_Element& rootElem,
     }
     else { //base was provided - get proper validator.
 
-        StringTokenizer unionMembers(baseTypeName);
+        XMLStringTokenizer unionMembers(baseTypeName);
         int             tokCount = unionMembers.countTokens();
 
         for (int i = 0; i < tokCount; i++) {
@@ -2889,14 +2892,14 @@ SchemaAttDef* TraverseSchema::traverseAnyAttribute(const DOM_Element& elem) {
     }
     else {
 
-        StringTokenizer tokenizer(nameSpace);
+        XMLStringTokenizer tokenizer(nameSpace);
         XMLCh separator = chNull;
 
         attType = XMLAttDef::Any_List;
 
         // Will be using '|' as a separator to construct enumeration string.
-        // When the data is retrieved, a StringTokenizer construction with a delimeter
-        // string of "|" sould be used.
+        // When the data is retrieved, a XMLStringTokenizer construction with
+        // a delimeter string of "|" sould be used.
         while (tokenizer.hasMoreTokens()) {
 
             const XMLCh* token = tokenizer.nextToken();
@@ -3300,7 +3303,6 @@ bool TraverseSchema::isTopLevelComponent(const DOM_Element& elem) {
     fBuffer.set(parentName.rawBuffer(), parentName.length());
     XMLCh* nameStr = fBuffer.getRawBuffer();
 
-
     return (XMLString::endsWith(nameStr, SchemaSymbols::fgELT_SCHEMA))
             || (XMLString::endsWith(nameStr, SchemaSymbols::fgELT_REDEFINE));
 }
@@ -3362,7 +3364,7 @@ int TraverseSchema::parseBlockSet(const XMLCh* const blockStr) {
     }
 
     int             blockSet = 0;
-    StringTokenizer tokenizer(blockStr);
+    XMLStringTokenizer tokenizer(blockStr);
 
     while (tokenizer.hasMoreTokens()) {
 
@@ -3433,7 +3435,7 @@ int TraverseSchema::parseFinalSet(const XMLCh* const finalStr) {
     }
 
     int             finalSet = 0;
-    StringTokenizer tokenizer(finalStr);
+    XMLStringTokenizer tokenizer(finalStr);
 
     while (tokenizer.hasMoreTokens()) {
 
