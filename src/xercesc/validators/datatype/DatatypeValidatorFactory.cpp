@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/12/02 13:25:51  gareth
+ * Fix for bug #12188. Create NMTOKEN, ID, IDREF, ENTITY, NAME, NCNAME with appropriate base types. Some reordering of creation was required where dependencies resulted.
+ *
  * Revision 1.6  2002/11/21 23:43:19  peiyongz
  * Schema Errata: E2-25 language
  *
@@ -425,10 +428,6 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                            new AnyURIDatatypeValidator());
             fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_QNAME,
                            new QNameDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NAME,
-                           new NameDatatypeValidator());
-            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NCNAME,
-                           new NCNameDatatypeValidator());
 
             fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DATETIME,
                            new DateTimeDatatypeValidator());
@@ -456,21 +455,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 
             RefHashTableOf<KVStringPair>* facets = new RefHashTableOf<KVStringPair>(3);
 
-            // Create 'NMTOKEN' datatype validator
-            facets->put((void*) SchemaSymbols::fgELT_PATTERN ,
-                            new KVStringPair(SchemaSymbols::fgELT_PATTERN,fgTokPattern));
-            facets->put((void*) SchemaSymbols::fgELT_WHITESPACE,
-                            new KVStringPair(SchemaSymbols::fgELT_WHITESPACE, SchemaSymbols::fgWS_COLLAPSE));
-
-            createDatatypeValidator(XMLUni::fgNmTokenString,
-                            getDatatypeValidator(SchemaSymbols::fgDT_STRING),facets, 0, false, 0, false);
-
-            // Create 'NMTOKENS' datatype validator
-            createDatatypeValidator(XMLUni::fgNmTokensString,
-        	                 getDatatypeValidator(XMLUni::fgNmTokenString), 0, 0, true, 0, false);
-
             // Create 'normalizedString' datatype validator
-            facets = new RefHashTableOf<KVStringPair>(3);
             facets->put((void*) SchemaSymbols::fgELT_WHITESPACE,
                         new KVStringPair(SchemaSymbols::fgELT_WHITESPACE, SchemaSymbols::fgWS_REPLACE));
 
@@ -480,13 +465,33 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
 
             // Create 'token' datatype validator
             facets = new RefHashTableOf<KVStringPair>(3);
-
             facets->put((void*) SchemaSymbols::fgELT_WHITESPACE,
                         new KVStringPair(SchemaSymbols::fgELT_WHITESPACE, SchemaSymbols::fgWS_COLLAPSE));
 
             createDatatypeValidator(SchemaSymbols::fgDT_TOKEN,
                           getDatatypeValidator(SchemaSymbols::fgDT_NORMALIZEDSTRING),
                           facets, 0, false, 0, false);
+
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NAME,
+                           new NameDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_TOKEN), 0, 0, 0));
+            fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NCNAME,
+                           new NCNameDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_TOKEN), 0, 0, 0));
+
+
+            // Create 'NMTOKEN' datatype validator
+            facets = new RefHashTableOf<KVStringPair>(3);
+
+            facets->put((void*) SchemaSymbols::fgELT_PATTERN ,
+                            new KVStringPair(SchemaSymbols::fgELT_PATTERN,fgTokPattern));
+            facets->put((void*) SchemaSymbols::fgELT_WHITESPACE,
+                            new KVStringPair(SchemaSymbols::fgELT_WHITESPACE, SchemaSymbols::fgWS_COLLAPSE));
+
+            createDatatypeValidator(XMLUni::fgNmTokenString,
+                            getDatatypeValidator(SchemaSymbols::fgDT_TOKEN),facets, 0, false, 0, false);
+
+            // Create 'NMTOKENS' datatype validator
+            createDatatypeValidator(XMLUni::fgNmTokensString,
+        	                 getDatatypeValidator(XMLUni::fgNmTokenString), 0, 0, true, 0, false);
 
             // Create 'language' datatype validator
             facets = new RefHashTableOf<KVStringPair>(3);
@@ -646,12 +651,22 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         fUserDefinedRegistry = new RefHashTableOf<DatatypeValidator>(29);
 
     if (!getDatatypeValidator(XMLUni::fgIDRefsString)) {
-        fUserDefinedRegistry->put((void*) XMLUni::fgIDString,
+        /*        fUserDefinedRegistry->put((void*) XMLUni::fgIDString,
                            new IDDatatypeValidator());
         fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString,
                            new IDREFDatatypeValidator());
         fUserDefinedRegistry->put((void*) XMLUni::fgEntityString,
                            new ENTITYDatatypeValidator());
+        */
+
+
+        fUserDefinedRegistry->put((void*) XMLUni::fgIDString,
+                           new IDDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0));
+        fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString,
+                           new IDREFDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0));
+        fUserDefinedRegistry->put((void*) XMLUni::fgEntityString,
+                           new ENTITYDatatypeValidator(getDatatypeValidator(SchemaSymbols::fgDT_NCNAME), 0, 0, 0));
+        
 
         // Create 'IDREFS' datatype validator
     	 createDatatypeValidator(XMLUni::fgIDRefsString,
