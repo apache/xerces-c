@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.4  1999/12/21 00:16:20  aruna1
+# ICUROOT reference removed from samples
+#
 # Revision 1.3  1999/12/20 23:54:12  aruna1
 # "transcoder information checked instead of ICUROOT"
 #
@@ -84,7 +87,6 @@ COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
-TRANSCODER = @transcoder@
 
 include ../Makefile.incl
 

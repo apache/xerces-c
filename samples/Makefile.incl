@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.6  1999/12/21 00:16:12  aruna1
+# ICUROOT reference removed from samples
+#
 # Revision 1.5  1999/12/20 23:53:58  aruna1
 # "transcoder information checked instead of ICUROOT"
 #
@@ -80,15 +83,8 @@ LIBNAME=xerces-c
 THISLIB=${LIB_DIR}/${LIBNAME}
 VER=1_0
 
-ifeq (${TRANSCODER}, ICU)
-   ICU_LIB_DIR=${ICUROOT}/lib
-   ICU_LIBNAME=icu-uc
-   LIBRARY_NAMES=-l${ICU_LIBNAME} -l${LIBNAME}${VER}
-   LIBRARY_SEARCH_PATHS=-L${ICU_LIB_DIR} -L${LIB_DIR}
-else
-   LIBRARY_NAMES=-l${LIBNAME}${VER}
-   LIBRARY_SEARCH_PATHS=-L${LIB_DIR}
-endif
+LIBRARY_NAMES=-l${LIBNAME}${VER}
+LIBRARY_SEARCH_PATHS=-L${LIB_DIR}
 
 ####################### PLATFORM DEPENDENCIES #####################
 
