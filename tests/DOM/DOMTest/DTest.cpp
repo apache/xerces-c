@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.28  2002/08/16 19:22:29  tng
+ * Test DOM L3 lookupNamespacePrefix, lookupNamespaceURI support.   Added by Gareth Reakes.
+ *
  * Revision 1.27  2002/08/16 16:03:02  tng
  * [Bug 11360] Release user data using handler.
  *
@@ -162,6 +165,43 @@
         fprintf(stderr, "DOMUserDataHandler::handler's dst does not work in line %i\n", uline); \
         OK = false; \
     }
+
+#define LOOKUPNSTEST(thisNode, prefix, uri, pass, line) \
+    prefixResult = XMLString::compareString(thisNode->lookupNamespacePrefix(uri, false), prefix); \
+    prefixResult2 = XMLString::compareString(thisNode->lookupNamespacePrefix(uri, true), prefix); \
+    uriResult = XMLString::compareString(thisNode->lookupNamespaceURI(prefix), uri); \
+    if(pass) { \
+        if(prefixResult != 0) { \
+        fprintf(stderr, "DOMNode::lookupNamespacePrefix does not work in line %i\n", line); \
+        OK = false; \
+        } \
+        if(prefixResult2 != 0) { \
+        fprintf(stderr, "DOMNode::lookupNamespacePrefix does not work in line %i\n", line); \
+        OK = false; \
+        } \
+            if(uriResult != 0) { \
+        fprintf(stderr, "DOMNode::lookupNamespaceURI does not work in line %i\n", line); \
+        OK = false;\
+            } \
+        } \
+    else { \
+        if(prefixResult == 0) { \
+        fprintf(stderr, "DOMNode::lookupNamespacePrefix does not work in line %i\n", line); \
+        OK = false; \
+        } \
+        if(prefixResult2 == 0) { \
+        fprintf(stderr, "DOMNode::lookupNamespacePrefix does not work in line %i\n", line); \
+        OK = false; \
+        } \
+            if(uriResult == 0) { \
+        fprintf(stderr, "DOMNode::lookupNamespaceURI does not work in line %i\n", line); \
+        OK = false; \
+            } \
+        } \
+
+int prefixResult;
+int prefixResult2;
+int uriResult;
 
 #define COMPARETREEPOSITIONTEST(thisNode, otherNode, position, line) \
     myposition = thisNode->compareTreePosition(otherNode); \
@@ -507,6 +547,108 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
 
     COMPARETREEPOSITIONTEST(docNotation, docFirstElement, DOMNode::TREE_POSITION_DISCONNECTED, __LINE__);
 
+
+    //now do some lookupNamespaceURI and lookupNamespacePrefix
+    //first lets add some attributes
+    XMLString::transcode("http://www.w3.org/2000/xmlns/", tempStr, 3999);
+    XMLString::transcode("xmlns:pre1", tempStr2, 3999);
+    XMLString::transcode("pre1URI", tempStr3, 3999);
+    XMLString::transcode("pre1", tempStr4, 3999);
+
+    DOMAttr *attr1 = doc->createAttributeNS(tempStr, tempStr2);
+    attr1->setValue(tempStr3);
+    docFirstElement->setAttributeNodeNS(attr1);
+
+
+    LOOKUPNSTEST(docProcessingInstruction, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel24, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel23, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel21, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel31, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel32, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docCDATASection, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docFirstElement, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docReferenceEntity, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docFirstElementAttr, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(doc, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docNotation, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(docTextNode2, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docTextNode4, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docComment, tempStr4, tempStr3, true, __LINE__);
+
+    XMLString::transcode("xmlns:pre2", tempStr2, 3999);
+    XMLString::transcode("pre2URI", tempStr3, 3999);
+    XMLString::transcode("pre2", tempStr4, 3999);
+
+    DOMAttr *attr2 = doc->createAttributeNS(tempStr, tempStr2);
+    attr2->setValue(tempStr3);
+    docBodyLevel21->setAttributeNodeNS(attr2);
+
+
+    LOOKUPNSTEST(docProcessingInstruction, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(docBodyLevel24, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(docBodyLevel23, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(docBodyLevel21, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel31, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel32, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docCDATASection, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(docFirstElement, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(docReferenceEntity, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(docFirstElementAttr, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(doc, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(docNotation, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(docComment, tempStr4, tempStr3, false, __LINE__);
+    LOOKUPNSTEST(docTextNode2, tempStr4, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docTextNode4, tempStr4, tempStr3, false, __LINE__);
+
+
+    XMLString::transcode("xmlns", tempStr2, 3999);
+    XMLString::transcode("default", tempStr3, 3999);
+    XMLString::transcode("", tempStr4, 3999);
+
+
+    DOMAttr *attr3 = doc->createAttributeNS(tempStr, tempStr2);
+    attr3->setValue(tempStr3);
+    docFirstElement->setAttributeNodeNS(attr3);
+
+    LOOKUPNSTEST(docProcessingInstruction, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel24, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel23, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel21, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel31, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docBodyLevel32, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docCDATASection, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docFirstElement, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docReferenceEntity, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docFirstElementAttr, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(doc, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docComment, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docTextNode2, 0, tempStr3, true, __LINE__);
+    LOOKUPNSTEST(docTextNode4, 0, tempStr3, true, __LINE__);
+
+    //this has to be done separately because negative lookup is the same as default ns lookup!!!
+
+    prefixResult = XMLString::compareString(docNotation->lookupNamespacePrefix(tempStr3, false), 0);
+    prefixResult2 = XMLString::compareString(docNotation->lookupNamespacePrefix(tempStr3, true), 0);
+
+    uriResult = XMLString::compareString(docNotation->lookupNamespaceURI(0), 0);
+    if(prefixResult != 0) {
+        fprintf(stderr, "DOMNode::lookupNamespacePrefix does not work in line %i\n", __LINE__);
+        OK = false;
+    }
+    if(prefixResult2 != 0) {
+        fprintf(stderr, "DOMNode::lookupNamespacePrefix does not work in line %i\n", __LINE__);
+        OK = false;
+    }
+    if(uriResult != 0) {
+        fprintf(stderr, "DOMNode::lookupNamespacePrefix does not work in line %i\n", __LINE__);
+        OK = false;
+    }
+
+
+    docFirstElement->removeAttributeNode(attr1);
+    docBodyLevel21->removeAttributeNode(attr2);
+    docFirstElement->removeAttributeNode(attr3);
 
 //***********Following are for errorTests
     DOMDocumentFragment* docDocFragment = doc->createDocumentFragment();
