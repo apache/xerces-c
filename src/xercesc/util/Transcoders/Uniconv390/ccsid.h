@@ -62,7 +62,7 @@
  *****************************************************************/
  
 #define _AE_MAX_CODESET_NAME_LENGTH    40
-#define _AE_NUM_OF_CODESETS   591
+#define _AE_NUM_OF_CODESETS   584
 
 struct ccsid_mapping {
    char NAME[_AE_MAX_CODESET_NAME_LENGTH];
@@ -600,7 +600,6 @@ struct ccsid_mapping CCSID_MAPPING[_AE_NUM_OF_CODESETS] =
 {"MS932", 943}, 
 {"MSKANJI", 943}, 
 {"PCK", 943}, 
-{"PCMULTILINGUAL850+EURO", 858}, 
 {"R8", 1051}, 
 {"ROMAN8", 1051}, 
 {"SHIFTJIS", 943}, 
