@@ -43,6 +43,18 @@
          </ul>
        </s2>
 
+       <anchor name="interpretation"/>
+       <s2 title="Interpretation of Areas that are Unclear or Implementation-Dependent">
+         <ul>
+            <li>We have interpreted the specs as requiring &lt;keyref&gt; Identity Constraints to refer to 
+                &lt;key&gt; or &lt;unique&gt; identity constraints within the scope of the elements to which 
+                the &lt;keyref&gt; is attached. This interpretation is at variance with the Schema Primer, which 
+                contains an example with a &lt;keyref&gt; declared on an element used inside the element of its 
+                corresponding &lt;key&gt;.
+            </li>  
+         </ul>
+       </s2>
+
        <anchor name="usage"/>
        <s2 title="Usage">
 
