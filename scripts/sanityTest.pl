@@ -85,21 +85,25 @@ chdir "samples".$pathsep."data";
 system ("SAXCount");
 system ("SAXCount -v=never personal.xml");
 system ("SAXCount personal.xml");
+system ("SAXCount -n -s personal-schema.xml");
 
 #  Run SAXPrint
 system ("SAXPrint");
 system ("SAXPrint -v=never personal.xml");
 system ("SAXPrint personal.xml");
+system ("SAXPrint -n -s personal-schema.xml");
 
 #  Run SAX2Count
 system ("SAX2Count");
 system ("SAX2Count -v=never personal.xml");
 system ("SAX2Count personal.xml");
+system ("SAX2Count personal-schema.xml");
 
 #  Run SAX2Print
 system ("SAX2Print");
 system ("SAX2Print -v=never personal.xml");
 system ("SAX2Print personal.xml");
+system ("SAX2Print personal-schema.xml");
 
 #  Run MemParse
 system ("MemParse");
@@ -113,19 +117,23 @@ system ("Redirect personal.xml");
 system ("DOMCount");
 system ("DOMCount -v=never personal.xml");
 system ("DOMCount personal.xml");
+system ("DOMCount -n -s personal-schema.xml");
 
 #  Run DOMPrint
 system ("DOMPrint");
 system ("DOMPrint -v=never personal.xml");
 system ("DOMPrint personal.xml");
+system ("DOMPrint -n -s personal-schema.xml");
 
 #  Run StdInParse
 system ("StdInParse < personal.xml");
 system ("StdInParse -v=never < personal.xml");
+system ("StdInParse -n -s < personal-schema.xml");
 
 #  Run PParse
 system ("PParse");
 system ("PParse personal.xml");
+system ("PParse -n -s personal-schema.xml");
 
 #  Run EnumVal
 system ("EnumVal");
