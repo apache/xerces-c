@@ -62,14 +62,14 @@
  */
 
 /**
-  * Introduced in DOM Level 3
-  *
   * This interface permits a DOM implementer to supply one or more
   * implementations, based upon requested features. Each implemented
   * <code>DOMImplementationSource</code> object is listed in the
   * binding-specific list of available sources so that its
   * <code>DOMImplementation</code> objects are made available.
-  * <p>See also the <a href='http://www.w3.org/2001/10/WD-DOM-Level-3-Core-20011017'>Document Object Model (DOM) Level 3 Core Specification</a>.
+  * <p>See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-Core-20020409'>Document Object Model (DOM) Level 3 Core Specification</a>.
+  *
+  * @since DOM Level 3
   */
 
 class DOMImplementation;
@@ -80,12 +80,11 @@ protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
-    /** @name Constructors */
+    /** @name Hidden constructors */
     //@{
-
-    /** Default constructor */
     DOMImplementationSource() {};
-
+    DOMImplementationSource(const DOMImplementationSource &other) {};
+    DOMImplementationSource & operator = (const DOMImplementationSource &other) {return *this;};
     //@}
 
 
@@ -103,20 +102,22 @@ public:
     //@}
 
     // -----------------------------------------------------------------------
-    //  Virtual DOMImplementationSource interface */
+    //  Virtual DOMImplementationSource interface
     // -----------------------------------------------------------------------
-    /** @name Virtual DOMImplementationSource interface */
+    /** @name Functions introduced in DOM Level 3 */
     //@{
     /**
+     * A method to request a DOM implementation.
+     *
      * <p><b>"Experimental - subject to change"</b></p>
      *
-     * A method to request a DOM implementation.
      * @param features A string that specifies which features are required.
      *   This is a space separated list in which each feature is specified
      *   by its name optionally followed by a space and a version number.
      *   This is something like: "XML 1.0 Traversal Events 2.0"
      * @return An implementation that has the desired features, or
      *   <code>null</code> if this source has none.
+     * @since DOM Level 3
      */
     virtual DOMImplementation* getDOMImplementation(const XMLCh* features) const = 0;
     //@}

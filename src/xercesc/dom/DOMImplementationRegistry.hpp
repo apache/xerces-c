@@ -62,8 +62,6 @@
  */
 
 /**
-  * Introduced in DOM Level 3
-  *
   * This class holds the list of registered DOMImplementations.  Implementation
   * or application can register DOMImplementationSource to the registry, and
   * then can query DOMImplementation based on a list of requested features.
@@ -73,6 +71,7 @@
   *
   * @see DOMImplementation
   * @see DOMImplementationSource
+  * @since DOM Level 3
   */
 
 class DOMImplementation;
@@ -82,15 +81,15 @@ class CDOM_EXPORT DOMImplementationRegistry
 {
 public:
     // -----------------------------------------------------------------------
-    //  Static DOMImplementationRegistry interface */
+    //  Static DOMImplementationRegistry interface
     // -----------------------------------------------------------------------
-    /** @name Static DOMImplementationRegistry interface */
+    /** @name Functions introduced in DOM Level 3 */
     //@{
     /**
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * Return the first registered implementation that has the desired features,
      * or null if none is found.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param features A string that specifies which features are required.
      *                 This is a space separated list in which each feature is
@@ -99,18 +98,21 @@ public:
      *                 This is something like: "XML 1.0 Traversal Events 2.0"
      * @return An implementation that has the desired features, or
      *   <code>null</code> if this source has none.
+     * @since DOM Level 3
      */
     static DOMImplementation* getDOMImplementation(const XMLCh* features);
 
     /**
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
      * Register an implementation.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
      *
      * @param source   A DOMImplementation Source object to be added to the registry.
      *                 The registry does NOT adopt the source object.  Users still own it.
+     * @since DOM Level 3
      */
     static void addSource(DOMImplementationSource* source);
+    //@}
 };
 
 #endif

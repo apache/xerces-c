@@ -69,90 +69,107 @@ class DOMElement;
 
 
 /**
-* The <code>DOMAttr</code> class refers to an attribute of an XML element.
-*
-* Typically the allowable values for the
-* attribute are defined in a documenttype definition.
-* <p><code>DOMAttr</code> objects inherit the <code>DOM_Node</code>  interface, but
-* since attributes are not actually child nodes of the elements they are associated with, the
-* DOM does not consider them part of the document  tree.  Thus, the
-* <code>DOM_Node</code> attributes <code>parentNode</code>,
-* <code>previousSibling</code>, and <code>nextSibling</code> have a  null
-* value for <code>DOMAttr</code> objects. The DOM takes the  view that
-* attributes are properties of elements rather than having a  separate
-* identity from the elements they are associated with;  this should make it
-* more efficient to implement such features as default attributes associated
-* with all elements of a  given type.  Furthermore, attribute nodes
-* may not be immediate children of a <code>DocumentFragment</code>. However,
-* they can be associated with <code>Element</code> nodes contained within a
-* <code>DocumentFragment</code>. In short, users of the DOM
-* need to be aware that  <code>Attr</code> nodes have some things in  common
-* with other objects inheriting the <code>Node</code> interface, but they
-* also are quite distinct.
-*
-*/
+ * The <code>DOMAttr</code> class refers to an attribute of an XML element.
+ *
+ * Typically the allowable values for the
+ * attribute are defined in a documenttype definition.
+ * <p><code>DOMAttr</code> objects inherit the <code>DOMNode</code>  interface, but
+ * since attributes are not actually child nodes of the elements they are associated with, the
+ * DOM does not consider them part of the document  tree.  Thus, the
+ * <code>DOMNode</code> attributes <code>parentNode</code>,
+ * <code>previousSibling</code>, and <code>nextSibling</code> have a  null
+ * value for <code>DOMAttr</code> objects. The DOM takes the  view that
+ * attributes are properties of elements rather than having a  separate
+ * identity from the elements they are associated with;  this should make it
+ * more efficient to implement such features as default attributes associated
+ * with all elements of a  given type.  Furthermore, attribute nodes
+ * may not be immediate children of a <code>DOMDocumentFragment</code>. However,
+ * they can be associated with <code>DOMElement</code> nodes contained within a
+ * <code>DOMDocumentFragment</code>. In short, users of the DOM
+ * need to be aware that  <code>DOMAttr</code> nodes have some things in  common
+ * with other objects inheriting the <code>DOMNode</code> interface, but they
+ * also are quite distinct.
+ *
+ * @since DOM Level 1
+ */
 class CDOM_EXPORT DOMAttr: public DOMNode {
-
 protected:
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
     DOMAttr() {};
     DOMAttr(const DOMAttr &other) {};
     DOMAttr & operator = (const DOMAttr &other) {return *this;};
-
+    //@}
 
 public:
-  /** @name Destructor */
-  //@{
-	
-  /**
-    * Destructor.  The object being destroyed is a reference to the Attribute
-    * "node", not the underlying attribute itself.
-    *
-    */
-    virtual ~DOMAttr() {};
-	//@}
-
-  /** @name Getter functions */
-  //@{
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
     /**
-    * Returns the name of this attribute.
-    */
+     * Destructor
+     *
+     */
+    virtual ~DOMAttr() {};
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Virtual DOMAttr interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 1 */
+    //@{
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    /**
+     * Returns the name of this attribute.
+     * @since DOM Level 1
+     */
     virtual const XMLCh *       getName() const = 0;
 
     /**
-    *
-    * Returns true if the attribute received its value explicitly in the
-    * XML document, or if a value was assigned programatically with
-    * the setValue function.  Returns false if the attribute value
-    * came from the default value declared in the document's DTD.
-    */
+     *
+     * Returns true if the attribute received its value explicitly in the
+     * XML document, or if a value was assigned programatically with
+     * the setValue function.  Returns false if the attribute value
+     * came from the default value declared in the document's DTD.
+     * @since DOM Level 1
+     */
     virtual bool            getSpecified() const = 0;
 
     /**
-	* Returns the value of the attribute.
-	*
-    * The value of the attribute is returned as a string.
-    * Character and general entity references are replaced with their values.
-    */
+     * Returns the value of the attribute.
+     *
+     * The value of the attribute is returned as a string.
+     * Character and general entity references are replaced with their values.
+     * @since DOM Level 1
+     */
     virtual const XMLCh *       getValue() const = 0;
 
-	//@}
-  /** @name Setter functions */
-  //@{
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
     /**
-	* Sets the value of the attribute.  A text node with the unparsed contents
-    * of the string will be created.
-	*
-    * @param value The value of the DOM attribute to be set
-    */
+     * Sets the value of the attribute.  A text node with the unparsed contents
+     * of the string will be created.
+     *
+     * @param value The value of the DOM attribute to be set
+     * @since DOM Level 1
+     */
     virtual void            setValue(const XMLCh *value) = 0;
-	//@}
+    //@}
 
     /** @name Functions introduced in DOM Level 2. */
     //@{
     /**
-     * The <code>DOM_Element</code> node this attribute is attached to or
+     * The <code>DOMElement</code> node this attribute is attached to or
      * <code>null</code> if this attribute is not in use.
      *
+     * @since DOM Level 2
      */
     virtual DOMElement     *getOwnerElement() const = 0;
     //@}

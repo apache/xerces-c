@@ -67,43 +67,61 @@ class DOMNode;
 
 
 /**
- * The <code>NodeList</code> interface provides the abstraction of an ordered
- * collection of nodes.  NodeLists are created by DOM_Document::getElementsByTagName(),
- * DOM_Node::getChildNodes(),
+ * The <code>DOMNodeList</code> interface provides the abstraction of an ordered
+ * collection of nodes.  DOMNodeLists are created by DOMDocument::getElementsByTagName(),
+ * DOMNode::getChildNodes(),
  *
- * <p>The items in the <code>NodeList</code> are accessible via an integral
+ * <p>The items in the <code>DOMNodeList</code> are accessible via an integral
  * index, starting from 0.
  *
- * NodeLists are "live", in that any changes to the document tree are immediately
- * reflected in any NodeLists that may have been created for that tree.
+ * DOMNodeLists are "live", in that any changes to the document tree are immediately
+ * reflected in any DOMNodeLists that may have been created for that tree.
  */
 
 class  CDOM_EXPORT DOMNodeList {
 protected:
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
     DOMNodeList() {};
     DOMNodeList(const DOMNodeList &other) {};
     DOMNodeList & operator = (const DOMNodeList &other) {return *this;};
+    //@}
 
 public:
-    /** @name Destructor. */
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
     //@{
+    /**
+     * Destructor
+     *
+     */
     virtual ~DOMNodeList()  {};
     //@}
 
-
-
-    /** @name Get functions. */
+    // -----------------------------------------------------------------------
+    //  Virtual DOMNodeList interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 1 */
     //@{
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
     /**
-     * Returns the <code>index</code>th item in the collection.
+     * Returns the <code>index</code> item in the collection.
      *
      * If <code>index</code> is greater than or equal to the number of nodes in
      * the list, this returns <code>null</code>.
      *
      * @param index Index into the collection.
      * @return The node at the <code>index</code>th position in the
-     *   <code>NodeList</code>, or <code>null</code> if that is not a valid
+     *   <code>DOMNodeList</code>, or <code>null</code> if that is not a valid
      *   index.
+     * @since DOM Level 1
      */
     virtual DOMNode  *item(XMLSize_t index) = 0;
 
@@ -111,6 +129,7 @@ public:
      * Returns the number of nodes in the list.
      *
      * The range of valid child node indices is 0 to <code>length-1</code> inclusive.
+     * @since DOM Level 1
      */
     virtual XMLSize_t getLength() = 0;
     //@}

@@ -79,7 +79,7 @@ protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
-    /** @name Constructors */
+    /** @name Hidden constructors */
     //@{
 
         DOMImplementation() {};                                      // no plain constructor
@@ -102,9 +102,9 @@ public:
     //@}
 
     // -----------------------------------------------------------------------
-    // DOMImplementation interface
+    // Virtual DOMImplementation interface
     // -----------------------------------------------------------------------
-    /** @name Virtual DOMImplementation interface */
+    /** @name Functions introduced in DOM Level 1 */
     //@{
     /**
      * Test if the DOM implementation implements a specific feature.
@@ -120,24 +120,28 @@ public:
      *   method to return <code>true</code>.
      * @return <code>true</code> if the feature is implemented in the
      *   specified version, <code>false</code> otherwise.
+     * @since DOM Level 1
      */
     virtual bool  hasFeature(const XMLCh *feature,  const XMLCh *version) = 0;
+    //@}
 
-
+    // -----------------------------------------------------------------------
+    // Functions introduced in DOM Level 2
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 2 */
+    //@{
     /**
-     * Introduced in DOM Level 2
-     *
-     * Creates an empty <code>DocumentType</code> node. Entity declarations
+     * Creates an empty <code>DOMDocumentType</code> node. Entity declarations
      * and notations are not made available. Entity reference expansions and
      * default attribute additions do not occur. It is expected that a
      * future version of the DOM will provide a way for populating a
-     * <code>DocumentType</code>.
+     * <code>DOMDocumentType</code>.
      * @param qualifiedName The qualified name of the document type to be
      *   created.
      * @param publicId The external subset public identifier.
      * @param systemId The external subset system identifier.
-     * @return A new <code>DocumentType</code> node with
-     *   <code>Node.ownerDocument</code> set to <code>null</code>.
+     * @return A new <code>DOMDocumentType</code> node with
+     *   <code>ownerDocument</code> set to <code>null</code>.
      * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name
      *   contains an illegal character.
@@ -156,9 +160,7 @@ public:
                                                  const XMLCh *systemId) = 0;
 
     /**
-     * Introduced in DOM Level 2
-     *
-     * Creates a DOM Document object of the specified type with its document
+     * Creates a DOMDocument object of the specified type with its document
      * element.
      * @param namespaceURI The namespace URI of the document element to
      *   create.
@@ -166,9 +168,9 @@ public:
      *   created.
      * @param doctype The type of document to be created or <code>null</code>.
      *   When <code>doctype</code> is not <code>null</code>, its
-     *   <code>Node.ownerDocument</code> attribute is set to the document
+     *   <code>ownerDocument</code> attribute is set to the document
      *   being created.
-     * @return A new <code>Document</code> object.
+     * @return A new <code>DOMDocument</code> object.
      * @exception DOMException
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name
      *   contains an illegal character.
@@ -207,20 +209,23 @@ public:
     /**
      * Non-standard extension
      *
+     * Create a completely empty document that has neither a root element or a doctype node.
+     */
+    virtual DOMDocument *createDocument() = 0;
+    //@}
+
+    /** @name Non-standard extension */
+    //@{
+    /**
+     * Non-standard extension
+     *
      *  Factory method for getting a DOMImplementation object.
      *     The DOM implementation retains ownership of the returned object.
      *     Application code should NOT delete it.
      */
     static DOMImplementation *getImplementation();
-
-    /**
-     * Non-standard extension
-     *
-     * Create a completely empty document that has neither a root element or a doctype node.
-     */
-    virtual DOMDocument *createDocument() = 0;
-
     //@}
+
 };
 
 #endif

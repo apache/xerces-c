@@ -73,25 +73,44 @@ class DOMRange;
 class CDOM_EXPORT DOMDocumentRange {
 
 protected:
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
     DOMDocumentRange() {};
     DOMDocumentRange(const DOMDocumentRange &other) {};
     DOMDocumentRange & operator = (const DOMDocumentRange &other) {return *this;};
+    //@}
 
 public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
+    /**
+     * Destructor
+     *
+     */
     virtual ~DOMDocumentRange() {};
+    //@}
 
-  /** @name Factory methods to create new nodes for the Document */
-  //@{
-
+    // -----------------------------------------------------------------------
+    //  Virtual DOMDocumentRange interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 2 */
+    //@{
     /**
 	  * To create the range  consisting of boundary-points and offset of the
-      * selected contents
-      *
-      * @return The initial state of the Range such that both the boundary-points
-      * are positioned at the beginning of the corresponding DOMDOcument, before
-      * any content. The range returned can only be used to select content
-      * associated with this document, or with documentFragments and Attrs for
-      * which this document is the ownerdocument
+     * selected contents
+     *
+     * @return The initial state of the Range such that both the boundary-points
+     * are positioned at the beginning of the corresponding DOMDOcument, before
+     * any content. The range returned can only be used to select content
+     * associated with this document, or with documentFragments and Attrs for
+     * which this document is the ownerdocument
+     * @since DOM Level 2
 	  */
     virtual DOMRange    *createRange() = 0;
 

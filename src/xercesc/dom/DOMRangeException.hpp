@@ -64,31 +64,42 @@
 #include <xercesc/dom/DOMException.hpp>
 
 /**
-  * Encapsulate range related DOM error or warning. DOM level 2 implementation.
-  *
-  * <p> The DOM will create and throw an instance of DOMRangeException
-  * when an error condition in range is detected.  Exceptions can occur
-  * when an application directly manipulates the range elements in DOM document
-  * tree that is produced by the parser.
-  *
-  * <p>Unlike the other classes in the C++ DOM API, DOMRangeException
-  * is NOT a reference to an underlying implementation class, and
-  * does not provide automatic memory management.  Code that catches
-  * a DOM Range exception is responsible for deleting it, or otherwise
-  * arranging for its disposal.
-  *
-  */
+ * Range operations may throw a <code>DOMRangeException</code> as specified in
+ * their method descriptions.
+ * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113'>Document Object Model (DOM) Level 2 Traversal and Range Specification</a>.
+ * @since DOM Level 2
+ */
 class CDOM_EXPORT DOMRangeException  : public DOMException {
 public:
-    /** @name Enumerators for DOM Range Exceptions */
+    // -----------------------------------------------------------------------
+    //  Class Types
+    // -----------------------------------------------------------------------
+    /** @name Public Contants */
     //@{
+    /**
+     * Enumerators for DOM Range Exceptions
+     *
+     * <p><code>BAD_BOUNDARYPOINTS_ERR:</code>
+     * If the boundary-points of a Range do not meet specific requirements.</p>
+     *
+     * <p><code>INVALID_NODE_TYPE_ERR:</code>
+     * If the container of an boundary-point of a Range is being set to either
+     * a node of an invalid type or a node with an ancestor of an invalid
+     * type.</p>
+     *
+     * @since DOM Level 2
+     */
         enum RangeExceptionCode {
                 BAD_BOUNDARYPOINTS_ERR  = 1,
                 INVALID_NODE_TYPE_ERR   = 2
         };
     //@}
+
 public:
-    /** @name Constructors and assignment operator */
+    // -----------------------------------------------------------------------
+    //  Constructors
+    // -----------------------------------------------------------------------
+    /** @name Constructors */
     //@{
     /**
       * Default constructor for DOMRangeException.
@@ -110,26 +121,33 @@ public:
       * @param other The object to be copied.
       */
     DOMRangeException(const DOMRangeException &other);
-
     //@}
+
+    // -----------------------------------------------------------------------
+    //  Destructors
+    // -----------------------------------------------------------------------
     /** @name Destructor. */
     //@{
 	 /**
-	  * Destructor for DOMRangeException.  Applications are responsible
-      * for deleting DOMRangeException objects that they catch after they
-      * have completed their exception processing.
+	  * Destructor for DOMRangeException.
 	  *
 	  */
     virtual ~DOMRangeException();
     //@}
 
-    /** @name Public variables. */
-     //@{
+public:
+    // -----------------------------------------------------------------------
+    //  Class Types
+    // -----------------------------------------------------------------------
+    /** @name Public variables */
+    //@{
 	 /**
 	  * A code value, from the set defined by the RangeExceptionCode enum,
-      * indicating the type of error that occured.
+     * indicating the type of error that occured.
+     *
+     * @since DOM Level 2
 	  */
-   RangeExceptionCode   code;
+    RangeExceptionCode   code;
 
     //@}
 

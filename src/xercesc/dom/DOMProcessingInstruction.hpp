@@ -67,27 +67,52 @@
 
 
 /**
- * The <code>ProcessingInstruction</code> interface represents a  "processing
+ * The <code>DOMProcessingInstruction</code> interface represents a  "processing
  * instruction", used in XML as a way to keep processor-specific information
  * in the text of the document.
+ *
+ * @since DOM Level 1
  */
 class  CDOM_EXPORT DOMProcessingInstruction: public DOMNode {
 protected:
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
     DOMProcessingInstruction() {};
-
     DOMProcessingInstruction(const DOMProcessingInstruction &other) {};
     DOMProcessingInstruction & operator = (const DOMProcessingInstruction &other) {return *this;};
+    //@}
 
 public:
-    virtual ~DOMProcessingInstruction() {};
-
-    /** @name Get functions. */
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
     //@{
+    /**
+     * Destructor
+     *
+     */
+    virtual ~DOMProcessingInstruction() {};
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Virtual DOMProcessingInstruction interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 1 */
+    //@{
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
     /**
      * The target of this processing instruction.
      *
      * XML defines this as being the
      * first token following the markup that begins the processing instruction.
+     *
+     * @since DOM Level 1
      */
     virtual const XMLCh *        getTarget() const = 0;
 
@@ -99,20 +124,22 @@ public:
      * preceding the <code>?&gt;</code>.
      * @exception DOMException
      *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
+     * @since DOM Level 1
      */
     virtual const XMLCh *        getData() const = 0;
 
-    //@}
-    /** @name Set functions. */
-    //@{
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
     /**
-    * Sets the content of this processing instruction.
-    *
-    * This is from the first non
-    * white space character after the target to the character immediately
-    * preceding the <code>?&gt;</code>.
-    * @param data The string containing the processing instruction
-    */
+     * Sets the content of this processing instruction.
+     *
+     * This is from the first non
+     * white space character after the target to the character immediately
+     * preceding the <code>?&gt;</code>.
+     * @param data The string containing the processing instruction
+     * @since DOM Level 1
+     */
     virtual void             setData(const XMLCh * data) = 0;
     //@}
 

@@ -1,3 +1,6 @@
+#ifndef DOMWriterFilter_HEADER_GUARD_
+#define DOMWriterFilter_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -57,6 +60,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/06/06 20:53:07  tng
+ * Documentation Fix: Update the API Documentation for DOM headers
+ *
  * Revision 1.5  2002/06/04 14:24:04  peiyongz
  * Make DOMWriterFilter pure abstract class w/o implementing any method
  * and data
@@ -77,85 +83,110 @@
 
 /**
  *
- *  Introduced in DOM Level 3
+ * DOMWriterFilter.hpp: interface for the DOMWriterFilter class.
+ *
+ * DOMWriterFilter provide applications the ability to examine nodes
+ * as they are being serialized.
+ *
+ * DOMWriterFilter lets the application decide what nodes should be
+ * serialized or not.
+ *
+ * The DOMDocument, DOMDocumentType, DOMNotation, and DOMEntity nodes are not passed
+ * to the filter.
+ *
+ * @since DOM Level 3
  */
 
-//////////////////////////////////////////////////////////////////////
-// DOMWriterFilter.hpp: interface for the DOMWriterFilter class.
-//
-// DOMWriterFilter provide applications the ability to examine nodes
-// as they are being serialized.
-//
-// DOMWriterFilter lets the application decide what nodes should be
-// serialized or not.
-//
-// The Document, DocumentType, Notation, and Entity nodes are not passed
-// to the filter.
-//
-//////////////////////////////////////////////////////////////////////
-
-#ifndef DOMWriterFilter_HEADER_GUARD_
-#define DOMWriterFilter_HEADER_GUARD_
 
 #include <xercesc/dom/DOMNodeFilter.hpp>
 
 class CDOM_EXPORT DOMWriterFilter : public DOMNodeFilter {
+protected :
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
+    DOMWriterFilter() {};
+    DOMWriterFilter(const DOMWriterFilter &other) {};
+    DOMWriterFilter & operator = (const DOMWriterFilter &other) {return *this;};
+    //@}
+
+
 public:
-
-    /** @name Destructors */
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
     //@{
-	virtual ~DOMWriterFilter(){};
+    /**
+     * Destructor
+     *
+     */
+    virtual ~DOMWriterFilter() {};
     //@}
 
-	/** @ Interface from DOMNodeFilter, 
-	 *    to be implemented by implementation (derived class) 
-	 */
+    // -----------------------------------------------------------------------
+    //  Virtual DOMWriterFilter interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 3 */
     //@{
-	virtual short acceptNode(const DOMNode* node) const = 0;
-    //@}
+	 /**
+     * Interface from <code>DOMNodeFilter</code>,
+     * to be implemented by implementation (derived class)
+     */
+    virtual short acceptNode(const DOMNode* node) const = 0;
 
-	/** @ Getter and Settter
-	 *
+    /**
+     * Tells the DOMWriter what types of nodes to show to the filter.
+     * See <code>DOMNodeFilter</code> for definition of the constants.
+     * The constant SHOW_ATTRIBUTE is meaningless here, attribute nodes will
+     * never be passed to a DOMWriterFilter.
+     *
      *  <p><b>"Experimental - subject to change"</b></p>
-	 */
-    //@{
-	virtual unsigned long getWhatToShow() const =0;
+     *
+     * @return The constants of what types of nodes to show.
+     * @see   setWhatToShow
+     * @since DOM Level 3
+     */
+    virtual unsigned long getWhatToShow() const =0;
 
-	virtual void          setWhatToShow(unsigned long toShow) =0;
-    //@}
-
-protected:
-    /** @name Constructors */
-    //@{
-	DOMWriterFilter(){};
+    /**
+     * Set what types of nodes are to be presented.
+     * See <code>DOMNodeFilter</code> for definition of the constants.
+     *
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param toShow The constants of what types of nodes to show.
+     * @see   getWhatToShow
+     * @since DOM Level 3
+     */
+    virtual void          setWhatToShow(unsigned long toShow) =0;
     //@}
 
 private:
-	// unimplemented copy ctor and assignement operator
-	DOMWriterFilter(const DOMWriterFilter&);
-	DOMWriterFilter & operator = (const DOMWriterFilter&);
 
     // -----------------------------------------------------------------------
     //  Private data members
     //
-	//  fWhatToShow
-	//      
-	//      The whatToShow mask.
-    //      Tells the DOMWriter what types of nodes to show to the filter.
-	//      See NodeFilter for definition of the constants.
-	//      The constants
-	//      SHOW_ATTRIBUTE,
-	//      SHOW_DOCUMENT,
-	//      SHOW_DOCUMENT_TYPE,
-	//      SHOW_NOTATION, and
-	//      SHOW_DOCUMENT_FRAGMENT are meaningless here,
-	//      Entity nodes are not passed to the filter.
+    //  fWhatToShow
     //
-	//      Those nodes will never be passed to a DOMWriterFilter.
-	//
-	//   Derived class shall add this data member:
-	//
-	//   unsigned long fWhatToShow;   
+    //      The whatToShow mask.
+    //      Tells the DOMWriter what types of nodes to show to the filter.
+    //      See NodeFilter for definition of the constants.
+    //      The constants
+    //      SHOW_ATTRIBUTE,
+    //      SHOW_DOCUMENT,
+    //      SHOW_DOCUMENT_TYPE,
+    //      SHOW_NOTATION, and
+    //      SHOW_DOCUMENT_FRAGMENT are meaningless here,
+    //      Entity nodes are not passed to the filter.
+    //
+    //      Those nodes will never be passed to a DOMWriterFilter.
+    //
+    //   Derived class shall add this data member:
+    //
+    //   unsigned long fWhatToShow;
     // -----------------------------------------------------------------------
 
 };

@@ -67,51 +67,55 @@
 
 
 /**
- * The <code>Text</code> interface inherits from <code>CharacterData</code>
+ * The <code>DOMText</code> interface inherits from <code>DOMCharacterData</code>
  * and represents the textual content (termed character data in XML) of an
- * <code>Element</code> or <code>Attr</code>. If there is no markup inside
+ * <code>DOMElement</code> or <code>DOMAttr</code>. If there is no markup inside
  * an element's content, the text is contained in a single object
- * implementing the <code>Text</code> interface that is the only child of
+ * implementing the <code>DOMText</code> interface that is the only child of
  * the element. If there is markup, it is parsed into the information items
- * (elements, comments, etc.) and <code>Text</code> nodes that form the list
+ * (elements, comments, etc.) and <code>DOMText</code> nodes that form the list
  * of children of the element.
  * <p>When a document is first made available via the DOM, there is only one
- * <code>Text</code> node for each block of text. Users may create adjacent
- * <code>Text</code> nodes that represent the contents of a given element
+ * <code>DOMText</code> node for each block of text. Users may create adjacent
+ * <code>DOMText</code> nodes that represent the contents of a given element
  * without any intervening markup, but should be aware that there is no way
  * to represent the separations between these nodes in XML or HTML, so they
  * will not (in general) persist between DOM editing sessions. The
- * <code>normalize()</code> method on <code>Node</code> merges any such
- * adjacent <code>Text</code> objects into a single node for each block of
+ * <code>normalize()</code> method on <code>DOMNode</code> merges any such
+ * adjacent <code>DOMText</code> objects into a single node for each block of
  * text.
  * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>Document Object Model (DOM) Level 2 Core Specification</a>.
  */
 class CDOM_EXPORT DOMText: public DOMCharacterData {
-
-    protected:
-    /** @name Constructors and assignment operator */
+protected:
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
     //@{
-        DOMText() {};
-
-        DOMText(const DOMText &other) {};
-
-        DOMText & operator = (const DOMText &other) {return *this;};
-     //@}
-
-    public:
-    /** @name Destructor. */
-    //@{
-	 /**
-	  * Destructor for DOMText. The object being destroyed is the reference
-      * object, not the underlying Comment node itself.
-	  *
-	  */
-        virtual ~DOMText() {};
+    DOMText() {};
+    DOMText(const DOMText &other) {};
+    DOMText & operator = (const DOMText &other) {return *this;};
     //@}
 
-    /** @name Functions to modify the Text node. */
+public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
     //@{
+    /**
+     * Destructor
+     *
+     */
+    virtual ~DOMText() {};
+    //@}
 
+    // -----------------------------------------------------------------------
+    //  Virtual DOMText interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 1 */
+    //@{
     /**
      * Breaks this node into two nodes at the specified <code>offset</code>,
      * keeping both in the tree as siblings. After being split, this node
@@ -128,13 +132,18 @@ class CDOM_EXPORT DOMText: public DOMCharacterData {
      *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater
      *   than the number of 16-bit units in <code>data</code>.
      *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
+     * @since DOM Level 1
      */
     virtual DOMText *splitText(XMLSize_t offset) = 0;
     //@}
 
-    /** @name Non-standard (not defined by the DOM specification) functions. */
+    // -----------------------------------------------------------------------
+    // Non-standard extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard extension */
     //@{
     /**
+     * Non-standard extension
      *
      * Return true if this node contains ignorable whitespaces only.
      * @return True if this node contains ignorable whitespaces only.

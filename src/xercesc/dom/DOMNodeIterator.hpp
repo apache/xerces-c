@@ -64,88 +64,142 @@
 #include "DOMNodeFilter.hpp"
 #include "DOMNode.hpp"
 
-class DOMNodeIteratorImpl;
-
 /**
- * NodeIterators are used to step through a set of nodes
- * e.g. the set of nodes in a NodeList, the document subtree governed by
- * a particular node, the results of a query, or any other set of nodes.
- * The set of nodes to be iterated is determined by the implementation
- * of the NodeIterator. DOM Level 2 specifies a single NodeIterator
- * implementation for document-order traversal of a document
- * subtree. Instances of these iterators are created by calling
- * <code>DocumentTraversal.createNodeIterator()</code>.
- *
+ * <code>DOMNodeIterators</code> are used to step through a set of nodes, e.g.
+ * the set of nodes in a <code>DOMNodeList</code>, the document subtree
+ * governed by a particular <code>DOMNode</code>, the results of a query, or
+ * any other set of nodes. The set of nodes to be iterated is determined by
+ * the implementation of the <code>DOMNodeIterator</code>. DOM Level 2
+ * specifies a single <code>DOMNodeIterator</code> implementation for
+ * document-order traversal of a document subtree. Instances of these
+ * <code>DOMNodeIterators</code> are created by calling
+ * <code>DOMDocumentTraversal</code><code>.createNodeIterator()</code>.
+ * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113'>Document Object Model (DOM) Level 2 Traversal and Range Specification</a>.
+ * @since DOM Level 2
  */
 class CDOM_EXPORT DOMNodeIterator
 {
-    protected:
-        DOMNodeIterator() {};
-        DOMNodeIterator(const DOMNodeIterator &other) {};
-        DOMNodeIterator & operator = (const DOMNodeIterator &other) {return *this;};
+protected:
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
+    DOMNodeIterator() {};
+    DOMNodeIterator(const DOMNodeIterator &other) {};
+    DOMNodeIterator & operator = (const DOMNodeIterator &other) {return *this;};
+    //@}
 
-    public:
-        /** @name Get functions. */
-        //@{
-        /**
-         * The <code>root</code> node of the <code>NodeIterator</code>, as specified
-         * when it was created.
-         */
-        virtual DOMNode*          getRoot() = 0;
-        /**
-          * Return which node types are presented via the iterator.
-          * The available set of constants is defined in the DOMNodeFilter interface.
-          *
-          */
-        virtual unsigned long       getWhatToShow() = 0;
+public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
+    /**
+     * Destructor
+     *
+     */
+    virtual ~DOMNodeIterator() {};
+    //@}
 
-        /**
-          * Return The filter used to screen nodes.
-          *
-          */
-        virtual DOMNodeFilter*     getFilter() = 0;
+    // -----------------------------------------------------------------------
+    //  Virtual DOMNodeFilter interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 2 */
+    //@{
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    /**
+     * The <code>root</code> node of the <code>DOMNodeIterator</code>, as specified
+     * when it was created.
+     * @since DOM Level 2
+     */
+    virtual DOMNode*          getRoot() = 0;
+    /**
+     * Return which node types are presented via the iterator.
+     * This attribute determines which node types are presented via the
+     * <code>DOMNodeIterator</code>. The available set of constants is defined
+     * in the <code>DOMNodeFilter</code> interface.  Nodes not accepted by
+     * <code>whatToShow</code> will be skipped, but their children may still
+     * be considered. Note that this skip takes precedence over the filter,
+     * if any.
+     * @since DOM Level 2
+     *
+     */
+    virtual unsigned long       getWhatToShow() = 0;
 
-        /**
-          * Return the expandEntityReferences flag.
-          * The value of this flag determines whether the children of entity reference
-          * nodes are visible to the DOMNodeFilter. If false, they will be skipped over.
-          *
-          */
-        virtual bool getExpandEntityReferences() = 0;
+    /**
+     * The <code>DOMNodeFilter</code> used to screen nodes.
+     *
+     * @since DOM Level 2
+     */
+    virtual DOMNodeFilter*     getFilter() = 0;
 
-        /**
-          * Returns the next node in the set and advances the position of the iterator
-          * in the set. After a DOMNodeIterator is created, the first call to nextNode()
-          * returns the first node in the set.
-          *
-          * @exception DOMException
-          *   INVALID_STATE_ERR: Raised if this method is called after the
-          *   <code>detach</code> method was invoked.
-          */
-        virtual DOMNode*           nextNode() = 0;
+    /**
+     * Return the expandEntityReferences flag.
+     * The value of this flag determines whether the children of entity
+     * reference nodes are visible to the <code>DOMNodeIterator</code>. If
+     * false, these children  and their descendants will be rejected. Note
+     * that this rejection takes precedence over <code>whatToShow</code> and
+     * the filter. Also note that this is currently the only situation where
+     * <code>DOMNodeIterators</code> may reject a complete subtree rather than
+     * skipping individual nodes.
+     * <br>
+     * <br> To produce a view of the document that has entity references
+     * expanded and does not expose the entity reference node itself, use
+     * the <code>whatToShow</code> flags to hide the entity reference node
+     * and set <code>expandEntityReferences</code> to true when creating the
+     * <code>DOMNodeIterator</code>. To produce a view of the document that has
+     * entity reference nodes but no entity expansion, use the
+     * <code>whatToShow</code> flags to show the entity reference node and
+     * set <code>expandEntityReferences</code> to false.
+     *
+     * @since DOM Level 2
+     */
+    virtual bool getExpandEntityReferences() = 0;
 
-        /**
-          * Returns the previous node in the set and moves the position of the iterator
-          * backwards in the set.
-          *
-          * @exception DOMException
-          *   INVALID_STATE_ERR: Raised if this method is called after the
-          *   <code>detach</code> method was invoked.
-          */
-        virtual DOMNode*           previousNode() = 0;
-        //@}
+    // -----------------------------------------------------------------------
+    //  Query methods
+    // -----------------------------------------------------------------------
+    /**
+     * Returns the next node in the set and advances the position of the
+     * <code>DOMNodeIterator</code> in the set. After a
+     * <code>DOMNodeIterator</code> is created, the first call to
+     * <code>nextNode()</code> returns the first node in the set.
+     * @return The next <code>DOMNode</code> in the set being iterated over, or
+     *   <code>null</code> if there are no more members in that set.
+     * @exception DOMException
+     *   INVALID_STATE_ERR: Raised if this method is called after the
+     *   <code>detach</code> method was invoked.
+     * @since DOM Level 2
+     */
+    virtual DOMNode*           nextNode() = 0;
 
-        /** @name Detaching functions. */
-        //@{
-        /**
-          * Detaches the iterator from the set which it iterated over, releasing any
-          * computational resources and placing the iterator in the INVALID state. After
-          * <code>detach</code> has been invoked, calls to <code>nextNode</code> or
-          * <code>previousNode</code> will raise the exception INVALID_STATE_ERR.
-          *
-          */
-        virtual void                 detach() = 0;
-        //@}
+    /**
+     * Returns the previous node in the set and moves the position of the
+     * <code>DOMNodeIterator</code> backwards in the set.
+     * @return The previous <code>DOMNode</code> in the set being iterated over,
+     *   or <code>null</code> if there are no more members in that set.
+     * @exception DOMException
+     *   INVALID_STATE_ERR: Raised if this method is called after the
+     *   <code>detach</code> method was invoked.
+     * @since DOM Level 2
+     */
+    virtual DOMNode*           previousNode() = 0;
+
+    /**
+     * Detaches the <code>DOMNodeIterator</code> from the set which it iterated
+     * over, releasing any computational resources and placing the
+     * <code>DOMNodeIterator</code> in the INVALID state. After
+     * <code>detach</code> has been invoked, calls to <code>nextNode</code>
+     * or <code>previousNode</code> will raise the exception
+     * INVALID_STATE_ERR.
+     * @since DOM Level 2
+     */
+    virtual void                 detach() = 0;
+    //@}
 };
 
 #endif

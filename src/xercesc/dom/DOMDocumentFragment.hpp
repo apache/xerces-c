@@ -67,55 +67,68 @@
 
 
 /**
- * <code>DocumentFragment</code> is a "lightweight" or "minimal"
- * <code>Document</code> object.
+ * OMDocumentFragment is a "lightweight" or "minimal"
+ * DOMDocument object.
  *
  * It is very common to want to be able to
  * extract a portion of a document's tree or to create a new fragment of a
  * document. Imagine implementing a user command like cut or rearranging a
  * document by moving fragments around. It is desirable to have an object
- * which can hold such fragments and it is quite natural to use a Node for
- * this purpose. While it is true that a <code>Document</code> object could
- * fulfil this role,  a <code>Document</code> object can potentially be a
+ * which can hold such fragments and it is quite natural to use a DOMNode for
+ * this purpose. While it is true that a <code>DOMDocument</code> object could
+ * fulfil this role,  a <code>DOMDocument</code> object can potentially be a
  * heavyweight  object, depending on the underlying implementation. What is
  * really needed for this is a very lightweight object.
- * <code>DocumentFragment</code> is such an object.
+ * <code>DOMDocumentFragment</code> is such an object.
  * <p>Furthermore, various operations -- such as inserting nodes as children
- * of another <code>Node</code> -- may take <code>DocumentFragment</code>
+ * of another <code>DOMNode</code> -- may take <code>DOMDocumentFragment</code>
  * objects as arguments;  this results in all the child nodes of the
- * <code>DocumentFragment</code>  being moved to the child list of this node.
- * <p>The children of a <code>DocumentFragment</code> node are zero or more
+ * <code>DOMDocumentFragment</code>  being moved to the child list of this node.
+ * <p>The children of a <code>DOMDocumentFragment</code> node are zero or more
  * nodes representing the tops of any sub-trees defining the structure of the
- * document. <code>DocumentFragment</code> nodes do not need to be
+ * document. <code>DOMDocumentFragment</code> nodes do not need to be
  * well-formed XML documents (although they do need to follow the rules
  * imposed upon well-formed XML parsed entities, which can have multiple top
- * nodes).  For example, a <code>DocumentFragment</code> might have only one
- * child and that child node could be a <code>Text</code> node. Such a
+ * nodes).  For example, a <code>DOMDocumentFragment</code> might have only one
+ * child and that child node could be a <code>DOMText</code> node. Such a
  * structure model  represents neither an HTML document nor a well-formed XML
  * document.
- * <p>When a <code>DocumentFragment</code> is inserted into a
- * <code>Document</code> (or indeed any other <code>Node</code> that may take
- * children) the children of the <code>DocumentFragment</code> and not the
- * <code>DocumentFragment</code>  itself are inserted into the
- * <code>Node</code>. This makes the <code>DocumentFragment</code> very
+ * <p>When a <code>DOMDocumentFragment</code> is inserted into a
+ * <code>DOMDocument</code> (or indeed any other <code>DOMNode</code> that may take
+ * children) the children of the <code>DOMDocumentFragment</code> and not the
+ * <code>DOMDocumentFragment</code>  itself are inserted into the
+ * <code>DOMNode</code>. This makes the <code>DOMDocumentFragment</code> very
  * useful when the user wishes to create nodes that are siblings; the
- * <code>DocumentFragment</code> acts as the parent of these nodes so that the
- *  user can use the standard methods from the <code>Node</code>  interface,
+ * <code>DOMDocumentFragment</code> acts as the parent of these nodes so that the
+ *  user can use the standard methods from the <code>DOMNode</code>  interface,
  * such as <code>insertBefore()</code> and  <code>appendChild()</code>.
+ *
+ * @since DOM Level 1
  */
 
 class CDOM_EXPORT DOMDocumentFragment: public DOMNode {
-
 protected:
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
     DOMDocumentFragment() {};
     DOMDocumentFragment(const DOMDocumentFragment &other) {};
     DOMDocumentFragment & operator = (const DOMDocumentFragment &other) {return *this;};
+    //@}
+
+public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
     /** @name Destructor */
     //@{
-	
-public:
+    /**
+     * Destructor
+     *
+     */
     virtual ~DOMDocumentFragment() {};
-
 	//@}
 
 };

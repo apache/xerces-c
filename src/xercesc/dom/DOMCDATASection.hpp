@@ -67,28 +67,63 @@
 
 
 /**
- * <code>DOM_CDataSection</code> objects refer to the data from an
- * XML CDATA section.  These are used to escape blocks of text containing  characters
- * that would otherwise be regarded as markup.
+ * CDATA sections are used to escape blocks of text containing characters that
+ * would otherwise be regarded as markup. The only delimiter that is
+ * recognized in a CDATA section is the "]]&gt;" string that ends the CDATA
+ * section. CDATA sections cannot be nested. Their primary purpose is for
+ * including material such as XML fragments, without needing to escape all
+ * the delimiters.
+ * <p>The <code>data</code> attribute of the <code>DOMText</code> node holds
+ * the text that is contained by the CDATA section. Note that this may
+ * contain characters that need to be escaped outside of CDATA sections and
+ * that, depending on the character encoding ("charset") chosen for
+ * serialization, it may be impossible to write out some characters as part
+ * of a CDATA section.
+ * <p>The <code>DOMCDATASection</code> interface inherits from the
+ * <code>DOMCharacterData</code> interface through the <code>DOMText</code>
+ * interface. Adjacent <code>DOMCDATASection</code> nodes are not merged by use
+ * of the <code>normalize</code> method of the <code>DOMNode</code> interface.
+ * Because no markup is recognized within a <code>DOMCDATASection</code>,
+ * character numeric references cannot be used as an escape mechanism when
+ * serializing. Therefore, action needs to be taken when serializing a
+ * <code>DOMCDATASection</code> with a character encoding where some of the
+ * contained characters cannot be represented. Failure to do so would not
+ * produce well-formed XML.One potential solution in the serialization
+ * process is to end the CDATA section before the character, output the
+ * character using a character reference or entity reference, and open a new
+ * CDATA section for any further characters in the text node. Note, however,
+ * that some code conversion libraries at the time of writing do not return
+ * an error or exception when a character is missing from the encoding,
+ * making the task of ensuring that data is not corrupted on serialization
+ * more difficult.
+ * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>Document Object Model (DOM) Level 2 Core Specification</a>.
  *
- * <p>Note that the string data associated with the CDATA section may
- * contain characters that need to be escaped when appearing in an
- * XML document outside of a CDATA section.
- * <p> The <code>DOMCDATASection</code> class inherits from the
- * <code>DOM_CharacterData</code> class through the <code>Text</code>
- * interface. Adjacent CDATASection nodes are not merged by use
- * of the Element.normalize() method.
+ * @since DOM Level 1
  */
 class CDOM_EXPORT DOMCDATASection: public DOMText {
 protected:
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
     DOMCDATASection() {};
     DOMCDATASection(const DOMCDATASection &other) {};
     DOMCDATASection & operator = (const DOMCDATASection &other) {return *this;};
-
+    //@}
 
 public:
-
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
+    /**
+     * Destructor
+     *
+     */
     virtual ~DOMCDATASection() {};
+    //@}
 
 };
 #endif

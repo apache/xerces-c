@@ -1,3 +1,6 @@
+#ifndef DOMWriter_HEADER_GUARD_
+#define DOMWriter_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -57,6 +60,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/06/06 20:53:07  tng
+ * Documentation Fix: Update the API Documentation for DOM headers
+ *
  * Revision 1.4  2002/06/03 22:33:21  peiyongz
  * DOMWriter: constants moved to XMLUni
  *
@@ -72,8 +78,6 @@
  */
 
 /**
- *
- *  Introduced in DOM Level 3
  *
  * DOMWriter provides an API for serializing (writing) a DOM document out in
  * an XML document. The XML data is written to an output stream, the type of
@@ -107,7 +111,7 @@
  * unrepresentable characters in a CDATA section are reported as errors. The
  * error is not recoverable - there is no mechanism for supplying
  * alternative characters and continuing with the serialization. All other
- * node types (Element, Text, etc.) are serialized to their corresponding
+ * node types (DOMElement, DOMText, etc.) are serialized to their corresponding
  * XML source form.
  * <p> Within the character data of a document (outside of markup), any
  * characters that cannot be represented directly are replaced with
@@ -286,12 +290,12 @@
  * (default) Don't pretty-print the result. </dd>
  * </dl></dd>
  * </dl>
- * <p>See also the <a href='http://www.w3.org/TR/2001/WD-DOM-Level-3-ASLS-20011025'>Document Object Model (DOM) Level 3 Abstract Schemas and Load
+ * <p>See also the <a href='http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409'>Document Object Model (DOM) Level 3 Abstract Schemas and Load
  * and Save Specification</a>.
+ *
+ * @since DOM Level 3
  */
 
-#ifndef DOMWriter_HEADER_GUARD_
-#define DOMWriter_HEADER_GUARD_
 
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMWriterFilter.hpp>
@@ -299,23 +303,45 @@
 #include <xercesc/framework/XMLFormatter.hpp>
 
 class CDOM_EXPORT DOMWriter {
+protected :
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
+    DOMWriter() {};
+    DOMWriter(const DOMWriter &other) {};
+    DOMWriter & operator = (const DOMWriter &other) {return *this;};
+    //@}
+
+
 public:
-
-	/** @name Destructor */
-	//@{
-	/**
-      * Destructor.
-     */
-    virtual ~DOMWriter(){};
- 	//@}
-
- 	/** @name Query */
- 	//@{
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
     /**
-     *  <p><b>"Experimental - subject to change"</b></p>
+     * Destructor
      *
+     */
+    virtual ~DOMWriter() {};
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Virtual DOMWriter interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 3 */
+    //@{
+    // -----------------------------------------------------------------------
+    //  Feature methods
+    // -----------------------------------------------------------------------
+    /**
      * Query whether setting a feature to a specific value is supported.
      * <br>The feature name has the same form as a DOM hasFeature string.
+     *
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param featName The feature name, which is a DOM has-feature style string.
      * @param state The requested state of the feature (<code>true</code> or
      *   <code>false</code>).
@@ -323,20 +349,18 @@ public:
      *   the specified value, or <code>false</code> if the feature is not
      *   recognized or the requested value is not supported. The value of
      *   the feature itself is not changed.
+     * @since DOM Level 3
      */
     virtual bool           canSetFeature(const XMLCh* const featName
                                        , bool               state) const = 0;
- 	//@}
-
- 	/** @name setter */
- 	//@{
     /**
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
      * Set the state of a feature.
      * <br>The feature name has the same form as a DOM hasFeature string.
      * <br>It is possible for a <code>DOMWriter</code> to recognize a feature
      * name but to be unable to set its value.
+     *
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param featName The feature name.
      * @param state The requested state of the feature (<code>true</code> or
      *   <code>false</code>).
@@ -345,14 +369,35 @@ public:
      *   recognizes the feature name but cannot set the requested value.
      *   <br>Raise a NOT_FOUND_ERR When the <code>DOMWriter</code> does not
      *   recognize the feature name.
+     * @see   getFeature
+     * @since DOM Level 3
      */
     virtual void            setFeature(const XMLCh* const featName
                                      , bool               state) = 0;
 
     /**
+     * Look up the value of a feature.
+     * <br>The feature name has the same form as a DOM hasFeature string
+     * @param featName The feature name, which is a string with DOM has-feature
+     *   syntax.
+     * @return The current state of the feature (<code>true</code> or
+     *   <code>false</code>).
+     * @exception DOMException
+     *   Raise a NOT_FOUND_ERR When the <code>DOMWriter</code> does not
+     *   recognize the feature name.
+     *
      *  <p><b>"Experimental - subject to change"</b></p>
      *
-     *  The character encoding in which the output will be written.
+     * @see   setFeature
+     * @since DOM Level 3
+     */
+    virtual bool               getFeature(const XMLCh* const featName) const = 0;
+
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
+    /**
+     * The character encoding in which the output will be written.
      * <br> The encoding to use when writing is determined as follows: If the
      * encoding attribute has been set, that value will be used.If the
      * encoding attribute is <code>null</code> or empty, but the item to be
@@ -360,13 +405,17 @@ public:
      * neither of the above provides an encoding name, a default encoding of
      * "UTF-8" will be used.
      * <br>The default value is <code>null</code>.
-     */
-     virtual void           setEncoding(const XMLCh* const encoding) = 0;
-
-    /**
+     *
      *  <p><b>"Experimental - subject to change"</b></p>
      *
-     *  The end-of-line sequence of characters to be used in the XML being
+     * @param encoding    The character encoding in which the output will be written.
+     * @see   getEncoding
+     * @since DOM Level 3
+     */
+    virtual void           setEncoding(const XMLCh* const encoding) = 0;
+
+    /**
+     * The end-of-line sequence of characters to be used in the XML being
      * written out. The only permitted values are these:
      * <dl>
      * <dt><code>null</code></dt>
@@ -386,62 +435,106 @@ public:
      * character (#xA). </dd>
      * </dl>
      * <br>The default value for this attribute is <code>null</code>.
-     */
-     virtual void          setNewLine(const XMLCh* const newLine) = 0;
-
-    /**
+     *
      *  <p><b>"Experimental - subject to change"</b></p>
      *
-     *  The error handler that will receive error notifications during
+     * @param newLine      The end-of-line sequence of characters to be used.
+     * @see   getNewLine
+     * @since DOM Level 3
+     */
+    virtual void          setNewLine(const XMLCh* const newLine) = 0;
+
+    /**
+     * The error handler that will receive error notifications during
      * serialization. The node where the error occured is passed to this
      * error handler, any modification to nodes from within an error
      * callback should be avoided since this will result in undefined,
      * implementation dependent behavior.
-     */
-     virtual void         setErrorHandler(DOMErrorHandler *errorHandler) = 0;
-
-	 virtual void         setFilter(DOMWriterFilter *filter) = 0;
-
-	//@}
-
-	/** @name Getter functions */
-    //@{
-    /**
+     *
      *  <p><b>"Experimental - subject to change"</b></p>
      *
-     * Look up the value of a feature.
-     * <br>The feature name has the same form as a DOM hasFeature string
-     * @param featName The feature name, which is a string with DOM has-feature
-     *   syntax.
-     * @return The current state of the feature (<code>true</code> or
-     *   <code>false</code>).
-     * @exception DOMException
-     *   Raise a NOT_FOUND_ERR When the <code>DOMWriter</code> does not
-     *   recognize the feature name.
+     * @param errorHandler The error handler to be used.
+     * @see   getErrorHandler
+     * @since DOM Level 3
      */
-     virtual bool               getFeature(const XMLCh* const featName) const = 0;
+    virtual void         setErrorHandler(DOMErrorHandler *errorHandler) = 0;
 
+    /**
+     * When the application provides a filter, the serializer will call out
+     * to the filter before serializing each Node. Attribute nodes are never
+     * passed to the filter. The filter implementation can choose to remove
+     * the node from the stream or to terminate the serialization early.
+     *
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param filter       The writer filter to be used.
+     * @see   getFilter
+     * @since DOM Level 3
+     */
+    virtual void         setFilter(DOMWriterFilter *filter) = 0;
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    /**
+     * Return the character encoding in which the output will be written.
+     *
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return The character encoding used.
+     * @see   setEncoding
+     * @since DOM Level 3
+     */
      virtual const XMLCh*       getEncoding() const = 0;
 
-     virtual const XMLCh*       getNewLine() const = 0;
-
-     virtual DOMErrorHandler*   getErrorHandler() const = 0;
-
-     virtual DOMWriterFilter*   getFilter() const = 0;
-
-    //@}
-
-    /** @name Write function */
-    //@{
     /**
+     * Return the end-of-line sequence of characters to be used in the XML being
+     * written out.
+     *
      *  <p><b>"Experimental - subject to change"</b></p>
      *
+     * @return             The end-of-line sequence of characters to be used.
+     * @see   setNewLine
+     * @since DOM Level 3
+     */
+     virtual const XMLCh*       getNewLine() const = 0;
+
+    /**
+     * Return the error handler that will receive error notifications during
+     * serialization.
+     *
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return             The error handler to be used.
+     * @see   setErrorHandler
+     * @since DOM Level 3
+     */
+     virtual DOMErrorHandler*   getErrorHandler() const = 0;
+
+    /**
+     * Return the WriterFilter used.
+     *
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return             The writer filter used.
+     * @see   setFilter
+     * @since DOM Level 3
+     */
+     virtual DOMWriterFilter*   getFilter() const = 0;
+
+    // -----------------------------------------------------------------------
+    //  Write methods
+    // -----------------------------------------------------------------------
+    /**
      * Write out the specified node as described above in the description of
      * <code>DOMWriter</code>. Writing a Document or Entity node produces a
      * serialized form that is well formed XML. Writing other node types
      * produces a fragment of text in a form that is not fully defined by
      * this document, but that should be useful to a human for debugging or
      * diagnostic purposes.
+     *
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param destination The destination for the data to be written.
      * @param nodeToWrite The <code>Document</code> or <code>Entity</code> node to
      *   be written. For other node types, something sensible should be
@@ -453,47 +546,31 @@ public:
      *   This exception will be raised in response to any sort of IO or system
      *   error that occurs while writing to the destination. It may wrap an
      *   underlying system exception.
+     * @since DOM Level 3
      */
     virtual bool       writeNode(XMLFormatTarget* const destination
                                , const DOMNode         &nodeToWrite) = 0;
 
     /**
-     *  <p><b>"Experimental - subject to change"</b></p>
-     *
-     *  Serialize the specified node as described above in the description of
+     * Serialize the specified node as described above in the description of
      * <code>DOMWriter</code>. The result of serializing the node is
      * returned as a string. Writing a Document or Entity node produces a
      * serialized form that is well formed XML. Writing other node types
      * produces a fragment of text in a form that is not fully defined by
      * this document, but that should be useful to a human for debugging or
      * diagnostic purposes.
+     *
+     *  <p><b>"Experimental - subject to change"</b></p>
+     *
      * @param nodeToWrite  The node to be written.
      * @return  Returns the serialized data, or <code>null</code> in case a
      *   failure occured and the failure wasn't canceled by the error
      *   handler.
-     * @exception DOMException
-     *    DOMSTRING_SIZE_ERR: The resulting string is too long to fit in a
-     *   <code>XMLCh*</code>.
+     * @since DOM Level 3
      */
     virtual XMLCh*     writeToString(const DOMNode &nodeToWrite) = 0;
 
     //@}
-
-protected:
-
-    /** @name default constructors */
-    //@{
-    /**
-     * The default constructor
-     */
-    DOMWriter(){};
-    //@}
-
-private:
-
-	/** unimplemented copy ctor and assignment operator */
-    DOMWriter(const DOMWriter&);
-    DOMWriter & operator = (const DOMWriter&);
 
 };
 

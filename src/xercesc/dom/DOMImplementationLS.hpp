@@ -1,3 +1,6 @@
+#ifndef DOMImplementationLS_HEADER_GUARD_
+#define DOMImplementationLS_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -56,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/06/06 20:53:06  tng
+ * Documentation Fix: Update the API Documentation for DOM headers
+ *
  * Revision 1.3  2002/05/30 19:24:48  knoaman
  * documentation update
  *
@@ -68,9 +74,6 @@
  */
 
 
-#ifndef DOMIMPLEMENTATIONLS_HPP
-#define DOMIMPLEMENTATIONLS_HPP
-
 #include <xercesc/util/XercesDefs.hpp>
 
 class DOMBuilder;
@@ -79,8 +82,6 @@ class DOMInputSource;
 
 
 /**
-  * Introduced in DOM Level 3
-  *
   * <p><code>DOMImplementationLS</code> contains the factory methods for
   * creating objects that implement the <code>DOMBuilder</code> (parser) and
   * <code>DOMWriter</code> (serializer) interfaces.</p>
@@ -90,6 +91,8 @@ class DOMInputSource;
   * Implementations supporting the Load and Save feature must implement the
   * DOMImplementationLS interface on whatever object implements the
   * DOMImplementation interface.</p>
+  *
+  * @since DOM Level 3
   */
 class CDOM_EXPORT DOMImplementationLS
 {
@@ -97,14 +100,12 @@ protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
-    /** @name Constructors */
+    /** @name Hidden constructors */
     //@{
-
-    /** Default constructor */
     DOMImplementationLS() {};
-
+    DOMImplementationLS(const DOMImplementationLS &other) {};
+    DOMImplementationLS & operator = (const DOMImplementationLS &other) {return *this;};
     //@}
-
 
 public:
     // -----------------------------------------------------------------------
@@ -112,90 +113,99 @@ public:
     // -----------------------------------------------------------------------
     /** @name Destructor */
     //@{
-  /**
-    * Destructor
-    *
-    */
+    /**
+     * Destructor
+     *
+     */
     virtual ~DOMImplementationLS() {};
     //@}
 
-    
     // -----------------------------------------------------------------------
     //  Public constants
     // -----------------------------------------------------------------------
+    /** @name Public constants */
+    //@{
+    /**
+     * Create a synchronous or an asynchronous <code>DOMBuilder</code>.
+     * @see createDOMBuilder(const short mode, const XMLCh* const schemaType)
+     * @since DOM Level 3
+     *
+     */
     enum
     {
         MODE_SYNCHRONOUS = 1,
         MODE_ASYNCHRONOUS = 2
     };
+    //@}
 
     // -----------------------------------------------------------------------
-    /** @name Virtual DOMImplementation LS interface */
+    // Virtual DOMImplementation LS interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 3 */
     //@{
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * <p>Create a new DOMBuilder. The newly constructed parser may then be
-    * configured by means of its setFeature method, and used to parse
-    * documents by means of its parse method.</p>
-    *
-    * @param mode The mode argument is either <code>MODE_SYNCHRONOUS</code> or
-    * <code>MODE_ASYNCHRONOUS</code>, if mode is <code>MODE_SYNCHRONOUS</code>
-    * then the <code>DOMBuilder</code> that is created will operate in
-    * synchronous mode, if it's <code>MODE_ASYNCHRONOUS</code> then the
-    * <code>DOMBuilder</code> that is created will operate in asynchronous
-    * mode.
-    * @param schemaType An absolute URI representing the type of the schema
-    * language used during the load of a Document using the newly created
-    * <code>DOMBuilder</code>. Note that no lexical checking is done on the
-    * absolute URI. In order to create a DOMBuilder for any kind of schema
-    * types (i.e. the DOMBuilder will be free to use any schema found), use
-    * the value <code>null</code>.
-    * @return The newly created <code>DOMBuilder<code> object. This
-    * <code>DOMBuilder</code> is either synchronous or asynchronous depending
-    * on the value of the <code>mode<code> argument.
-    * @exception DOMException NOT_SUPPORTED_ERR: Raised if the requested mode
-    * or schema type is not supported.
-    *
-    * @see DOMBuilder
-    */
+    // -----------------------------------------------------------------------
+    //  Factory create methods
+    // -----------------------------------------------------------------------
+    /**
+     * Create a new DOMBuilder. The newly constructed parser may then be
+     * configured by means of its setFeature method, and used to parse
+     * documents by means of its parse method.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param mode The mode argument is either <code>MODE_SYNCHRONOUS</code> or
+     * <code>MODE_ASYNCHRONOUS</code>, if mode is <code>MODE_SYNCHRONOUS</code>
+     * then the <code>DOMBuilder</code> that is created will operate in
+     * synchronous mode, if it's <code>MODE_ASYNCHRONOUS</code> then the
+     * <code>DOMBuilder</code> that is created will operate in asynchronous
+     * mode.
+     * @param schemaType An absolute URI representing the type of the schema
+     * language used during the load of a DOMDocument using the newly created
+     * <code>DOMBuilder</code>. Note that no lexical checking is done on the
+     * absolute URI. In order to create a DOMBuilder for any kind of schema
+     * types (i.e. the DOMBuilder will be free to use any schema found), use
+     * the value <code>null</code>.
+     * @return The newly created <code>DOMBuilder<code> object. This
+     * <code>DOMBuilder</code> is either synchronous or asynchronous depending
+     * on the value of the <code>mode<code> argument.
+     * @exception DOMException NOT_SUPPORTED_ERR: Raised if the requested mode
+     * or schema type is not supported.
+     *
+     * @see DOMBuilder
+     * @since DOM Level 3
+     */
     virtual DOMBuilder* createDOMBuilder(const short mode,
                                          const XMLCh* const schemaType) = 0;
 
 
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * <p>Create a new DOMWriter. DOMWriters are used to serialize a DOM tree
-    * back into an XML document.</p>
-    *
-    * @return The newly created <code>DOMWriter<code> object.
-    *
-    * @see DOMWriter
-    */
+    /**
+     * Create a new DOMWriter. DOMWriters are used to serialize a DOM tree
+     * back into an XML document.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return The newly created <code>DOMWriter<code> object.
+     *
+     * @see DOMWriter
+     * @since DOM Level 3
+     */
     virtual DOMWriter* createDOMWriter() = 0;
 
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * <p>Create a new "empty" DOMInputSource.</p>
-    *
-    * @return The newly created <code>DOMInputSource<code> object.
-    *
-    * @see DOMInputSource
-    */
+    /**
+     * Create a new "empty" DOMInputSource.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return The newly created <code>DOMInputSource<code> object.
+     * @exception DOMException NOT_SUPPORTED_ERR: Raised if this function is not
+     * supported by implementation
+     *
+     * @see DOMInputSource
+     * @since DOM Level 3
+     */
     virtual DOMInputSource* createDOMInputSource() = 0;
 
     //@}
-
-
-private:
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    DOMImplementationLS(const DOMImplementationLS&);
-    DOMImplementationLS& operator=(const DOMImplementationLS&);
-
 };
 
 

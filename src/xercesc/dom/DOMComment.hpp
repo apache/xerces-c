@@ -65,23 +65,39 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMCharacterData.hpp"
 
-
 /**
- * Class to refer to XML comment nodes in the DOM.
+ * This interface inherits from <code>CharacterData</code> and represents the
+ * content of a comment, i.e., all the characters between the starting '
+ * <code>&lt;!--</code>' and ending '<code>--&gt;</code>'.
+ * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113'>Document Object Model (DOM) Level 2 Core Specification</a>.
  *
- * <P>The string value contains all of the characters between
- * the starting '<code>&lt;!--</code>' and ending '<code>--&gt;</code>'.
+ * @since DOM Level 1
  */
 class CDOM_EXPORT DOMComment: public DOMCharacterData {
 
 protected:
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
     DOMComment() {};
     DOMComment(const DOMComment &other) {};
     DOMComment & operator = (const DOMComment &other) {return *this;};
+    //@}
 
 public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
+    /**
+     * Destructor
+     *
+     */
     virtual ~DOMComment() {};
-
+    //@}
 };
 
 #endif

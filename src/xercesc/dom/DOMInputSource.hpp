@@ -1,3 +1,6 @@
+#ifndef DOMInputSource_HEADER_GUARD_
+#define DOMInputSource_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -56,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/06/06 20:53:06  tng
+ * Documentation Fix: Update the API Documentation for DOM headers
+ *
  * Revision 1.2  2002/05/30 19:24:48  knoaman
  * documentation update
  *
@@ -65,16 +71,12 @@
  */
 
 
-#ifndef DOMINPUTSOURCE_HPP
-#define DOMINPUTSOURCE_HPP
-
 #include <xercesc/util/XercesDefs.hpp>
 
 class BinInputStream;
 
 
 /**
-  * Introduced in DOM Level 3
   * This interface represents a single input source for an XML entity.
   *
   * <p>This interface allows an application to encapsulate information about
@@ -98,6 +100,7 @@ class BinInputStream;
   *
   * @see DOMBuilder#parse
   * @see DOMEntityResolver#resolveEntity
+  * @since DOM Level 3
   */
 class CDOM_EXPORT DOMInputSource
 {
@@ -105,14 +108,12 @@ protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
-    /** @name Constructors */
+    /** @name Hidden constructors */
     //@{
-
-    /** Default constructor */
     DOMInputSource() {};
-
+    DOMInputSource(const DOMInputSource &other) {};
+    DOMInputSource & operator = (const DOMInputSource &other) {return *this;};
     //@}
-
 
 public:
     // -----------------------------------------------------------------------
@@ -120,187 +121,183 @@ public:
     // -----------------------------------------------------------------------
     /** @name Destructor */
     //@{
-  /**
-    * Destructor
-    *
-    */
+    /**
+     * Destructor
+     *
+     */
     virtual ~DOMInputSource() {};
     //@}
 
-
     // -----------------------------------------------------------------------
-    /** @name Virtual input source interface */
+    //  Virtual DOMInputSource interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 3 */
     //@{
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Makes the byte stream for this input source.
-    *
-    * <p>The derived class must create and return a binary input stream of an
-    * appropriate type for its kind of data source. The returned stream must
-    * be dynamically allocated and becomes the parser's property.
-    * </p>
-    *
-    * @see BinInputStream
-    */
+    /**
+     * Makes the byte stream for this input source.
+     *
+     * <p>The derived class must create and return a binary input stream of an
+     * appropriate type for its kind of data source. The returned stream must
+     * be dynamically allocated and becomes the parser's property.
+     * </p>
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see BinInputStream
+     * @since DOM Level 3
+     */
     virtual BinInputStream* makeStream() const = 0;
 
-    //@}
-
-
     // -----------------------------------------------------------------------
-    /** @name Getter methods */
-    //@{
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * An input source can be set to force the parser to assume a particular
-    * encoding for the data that input source reprsents, via the setEncoding()
-    * method. This method returns name of the encoding that is to be forced.
-    * If the encoding has never been forced, it returns a null pointer.
-    *
-    * @return The forced encoding, or null if none was supplied.
-    * @see #setEncoding
-    */
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    /**
+     * An input source can be set to force the parser to assume a particular
+     * encoding for the data that input source reprsents, via the setEncoding()
+     * method. This method returns name of the encoding that is to be forced.
+     * If the encoding has never been forced, it returns a null pointer.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return The forced encoding, or null if none was supplied.
+     * @see #setEncoding
+     * @since DOM Level 3
+     */
     virtual const XMLCh* getEncoding() const = 0;
 
 
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the public identifier for this input source.
-    *
-    * @return The public identifier, or null if none was supplied.
-    * @see #setPublicId
-    */
+    /**
+     * Get the public identifier for this input source.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return The public identifier, or null if none was supplied.
+     * @see #setPublicId
+     * @since DOM Level 3
+     */
     virtual const XMLCh* getPublicId() const = 0;
 
 
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the system identifier for this input source.
-    *
-    * <p>If the system ID is a URL, it will be fully resolved.</p>
-    *
-    * @return The system identifier.
-    * @see #setSystemId
-    */
+    /**
+     * Get the system identifier for this input source.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * <p>If the system ID is a URL, it will be fully resolved.</p>
+     *
+     * @return The system identifier.
+     * @see #setSystemId
+     * @since DOM Level 3
+     */
     virtual const XMLCh* getSystemId() const = 0;
 
 
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the base URI to be used for resolving relative URIs to absolute
-    * URIs. If the baseURI is itself a relative URI, the behavior is
-    * implementation dependent.
-    *
-    * @return The base URI.
-    * @see #setBaseURI
-    */
+    /**
+     * Get the base URI to be used for resolving relative URIs to absolute
+     * URIs. If the baseURI is itself a relative URI, the behavior is
+     * implementation dependent.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return The base URI.
+     * @see #setBaseURI
+     * @since DOM Level 3
+     */
     virtual const XMLCh* getBaseURI() const = 0;
 
 
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the flag that indicates if the parser should issue fatal error if this input source
-    * is not found.
-    *
-    * @return True if the parser should issue fatal error if this input source is not found.
-    *         False if the parser issue warning message instead.
-    * @see #setIssueFatalErrorIfNotFound
-    */
+    /**
+     * Get the flag that indicates if the parser should issue fatal error if this input source
+     * is not found.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return True if the parser should issue fatal error if this input source is not found.
+     *         False if the parser issue warning message instead.
+     * @see #setIssueFatalErrorIfNotFound
+     * @since DOM Level 3
+     */
     virtual const bool getIssueFatalErrorIfNotFound() const = 0;
 
-    //@}
-
-
     // -----------------------------------------------------------------------
-    /** @name Setter methods */
-    //@{
-
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the encoding which will be required for use with the XML text read
-    * via a stream opened by this input source.
-    *
-    * <p>This is usually not set, allowing the encoding to be sensed in the
-    * usual XML way. However, in some cases, the encoding in the file is known
-    * to be incorrect because of intermediate transcoding, for instance
-    * encapsulation within a MIME document.
-    *
-    * @param encodingStr The name of the encoding to force.
-    */
+    //  Setter methods
+    // -----------------------------------------------------------------------
+    /**
+     * Set the encoding which will be required for use with the XML text read
+     * via a stream opened by this input source.
+     *
+     * <p>This is usually not set, allowing the encoding to be sensed in the
+     * usual XML way. However, in some cases, the encoding in the file is known
+     * to be incorrect because of intermediate transcoding, for instance
+     * encapsulation within a MIME document.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param encodingStr The name of the encoding to force.
+     * @since DOM Level 3
+     */
     virtual void setEncoding(const XMLCh* const encodingStr) = 0;
 
 
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the public identifier for this input source.
-    *
-    * <p>The public identifier is always optional: if the application writer
-    * includes one, it will be provided as part of the location information.</p>
-    *
-    * @param publicId The public identifier as a string.
-    * @see #getPublicId
-    */
+    /**
+     * Set the public identifier for this input source.
+     *
+     * <p>The public identifier is always optional: if the application writer
+     * includes one, it will be provided as part of the location information.</p>
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param publicId The public identifier as a string.
+     * @see #getPublicId
+     * @since DOM Level 3
+     */
     virtual void setPublicId(const XMLCh* const publicId) = 0;
 
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the system identifier for this input source.
-    *
-    * <p>The system id is always required. The public id may be used to map
-    * to another system id, but the system id must always be present as a fall
-    * back.</p>
-    *
-    * <p>If the system ID is a URL, it must be fully resolved.</p>
-    *
-    * @param systemId The system identifier as a string.
-    * @see #getSystemId
-    */
+    /**
+     * Set the system identifier for this input source.
+     *
+     * <p>The system id is always required. The public id may be used to map
+     * to another system id, but the system id must always be present as a fall
+     * back.</p>
+     *
+     * <p>If the system ID is a URL, it must be fully resolved.</p>
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param systemId The system identifier as a string.
+     * @see #getSystemId
+     * @since DOM Level 3
+     */
     virtual void setSystemId(const XMLCh* const systemId) = 0;
 
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the base URI to be used for resolving relative URIs to absolute
-    * URIs. If the baseURI is itself a relative URI, the behavior is
-    * implementation dependent.
-    *
-    * @param baseURI The base URI.
-    * @see #getBaseURI
-    */
+    /**
+     * Set the base URI to be used for resolving relative URIs to absolute
+     * URIs. If the baseURI is itself a relative URI, the behavior is
+     * implementation dependent.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param baseURI The base URI.
+     * @see #getBaseURI
+     * @since DOM Level 3
+     */
     virtual void setBaseURI(const XMLCh* const baseURI) = 0;
 
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Indicates if the parser should issue fatal error if this input source
-    * is not found.  If set to false, the parser issue warning message instead.
-    *
-    * @param  flag True if the parser should issue fatal error if this input source is not found.
-    *               If set to false, the parser issue warning message instead.  (Default: true)
-    *
-    * @see #getIssueFatalErrorIfNotFound
-    */
+    /**
+     * Indicates if the parser should issue fatal error if this input source
+     * is not found.  If set to false, the parser issue warning message instead.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param  flag True if the parser should issue fatal error if this input source is not found.
+     *               If set to false, the parser issue warning message instead.  (Default: true)
+     *
+     * @see #getIssueFatalErrorIfNotFound
+     * @since DOM Level 3
+     */
     virtual void setIssueFatalErrorIfNotFound(const bool flag) = 0;
 
     //@}
-
-
-private:
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    DOMInputSource(const DOMInputSource&);
-    void operator=(const DOMInputSource&);
-
 };
 
 

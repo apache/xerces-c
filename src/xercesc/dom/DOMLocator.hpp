@@ -1,3 +1,6 @@
+#ifndef DOMLocator_HEADER_GUARD_
+#define DOMLocator_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -56,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/06/06 20:53:06  tng
+ * Documentation Fix: Update the API Documentation for DOM headers
+ *
  * Revision 1.3  2002/05/30 19:24:48  knoaman
  * documentation update
  *
@@ -67,173 +73,174 @@
  *
  */
 
-
-#ifndef DOMLOCATOR_HPP
-#define DOMLOCATOR_HPP
-
 #include <xercesc/util/XercesDefs.hpp>
 
 class DOMNode;
 
 
 /**
-  * Introduced in DOM Level 3
-  *
-  * DOMLocator is an interface that describes a location (e.g. where an error
+  * DOMLocator is an interface that describes a location. (e.g. where an error
   * occured).
   *
   * @see DOMError#DOMError
+  * @since DOM Level 3
   */
 
 class CDOM_EXPORT DOMLocator
 {
 protected:
-    /** @name Constructors */
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
     //@{
-
-    /** Default constructor */
     DOMLocator() {};
-
+    DOMLocator(const DOMLocator &other) {};
+    DOMLocator & operator = (const DOMLocator &other) {return *this;};
     //@}
 
 public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
     /** @name Destructor */
     //@{
-
-    /** Desctructor */
-    virtual ~DOMLocator()
-    {
-    }
-
+    /**
+     * Destructor
+     *
+     */
+    virtual ~DOMLocator() {};
     //@}
 
-    /** @name Get function */
+    // -----------------------------------------------------------------------
+    //  Virtual DOMLocator interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 3 */
     //@{
-
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the line number where the error occured. The value is -1 if there is
-    * no line number available.
-    *
-    * @see #setLineNumber
-    */
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    /**
+     * Get the line number where the error occured. The value is -1 if there is
+     * no line number available.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see #setLineNumber
+     * @since DOM Level 3
+     */
     virtual XMLSSize_t getLineNumber() const = 0;
 
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the column number where the error occured. The value is -1 if there
-    * is no column number available.
-    *
-    * @see #setColumnNumber
-    */
+    /**
+     * Get the column number where the error occured. The value is -1 if there
+     * is no column number available.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see #setColumnNumber
+     * @since DOM Level 3
+     */
     virtual XMLSSize_t getColumnNumber() const = 0;
 
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the byte or character offset into the input source, if we're parsing
-    * a file or a byte stream then this will be the byte offset into that
-    * stream, but if a character media is parsed then the offset will be the
-    * character offset. The value is -1 if there is no offset available.
-    *
-    * @see #setOffset
-    */
+    /**
+     * Get the byte or character offset into the input source, if we're parsing
+     * a file or a byte stream then this will be the byte offset into that
+     * stream, but if a character media is parsed then the offset will be the
+     * character offset. The value is -1 if there is no offset available.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see #setOffset
+     * @since DOM Level 3
+     */
     virtual XMLSSize_t getOffset() const = 0;
 
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the DOM Node where the error occured, or <code>null</code> if there
-    * is no node available.
-    *
-    * @see #setErrorNode
-    */
+    /**
+     * Get the DOMNode where the error occured, or <code>null</code> if there
+     * is no node available.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see #setErrorNode
+     * @since DOM Level 3
+     */
     virtual DOMNode* getErrorNode() const = 0;
 
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Get the URI where the error occured, or <code>null</code> if there is no
-    * URI available.
-    *
-    * @see #setURI
-    */
+    /**
+     * Get the URI where the error occured, or <code>null</code> if there is no
+     * URI available.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see #setURI
+     * @since DOM Level 3
+     */
     virtual const XMLCh* getURI() const = 0;
 
-    //@}
-
-
-   /** @name Set function */
-    //@{
-
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the line number of the error
-    *
-    * @param lineNumber the line number to set
-    *
-    * @see #getLinNumner
-    */
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
+    /**
+     * Set the line number of the error
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param lineNumber the line number to set
+     *
+     * @see #getLinNumner
+     * @since DOM Level 3
+     */
     virtual void setLineNumber(const XMLSSize_t lineNumber) = 0;
 
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the column number of the error
-    *
-    * @param columnNumber the column number to set.
-    *
-    * @see #getColumnNumner
-    */
+    /**
+     * Set the column number of the error
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param columnNumber the column number to set.
+     *
+     * @see #getColumnNumner
+     * @since DOM Level 3
+     */
     virtual void setColumnNumber(const XMLSSize_t columnNumber) = 0;
 
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the byte/character offset.
-    *
-    * @param offset the byte/characte offset to set.
-    *
-    * @see #getOffset
-    */
+    /**
+     * Set the byte/character offset.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param offset the byte/characte offset to set.
+     *
+     * @see #getOffset
+     * @since DOM Level 3
+     */
     virtual void setOffset(const XMLSSize_t offset) = 0;
 
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the DOM Node where the error occured
-    *
-    * @param errorNode the DOM Node to set
-    *
-    * @see #getErrorNode
-    */
+    /**
+     * Set the DOMNode where the error occured
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param errorNode the DOMNode to set
+     *
+     * @see #getErrorNode
+     * @since DOM Level 3
+     */
     virtual void setErrorNode(DOMNode* const errorNode) = 0;
 
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set the URI where the error occured
-    *
-    * @param uri the URI to set.
-    *
-    * @see #getURI
-    */
+    /**
+     * Set the URI where the error occured
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param uri the URI to set.
+     *
+     * @see #getURI
+     * @since DOM Level 3
+     */
     virtual void setURI(const XMLCh* const uri) = 0;
 
     //@}
-
-
-private :
-    /* Unimplemented constructors and operators */
-
-    /* Copy constructor */
-    DOMLocator(const DOMLocator&);
-
-    /* Assignment operator */
-    void operator=(const DOMLocator&);
 };
 
 #endif

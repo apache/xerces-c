@@ -76,9 +76,6 @@
 #include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMEntity.hpp>
 #include <xercesc/dom/DOMEntityReference.hpp>
-#include <xercesc/dom/DOMEntityResolver.hpp>
-#include <xercesc/dom/DOMError.hpp>
-#include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMNamedNodeMap.hpp>
@@ -100,6 +97,9 @@
 // Introduced in DOM Level 3
 // Experimental - subject to change
 #include <xercesc/dom/DOMBuilder.hpp>
+#include <xercesc/dom/DOMEntityResolver.hpp>
+#include <xercesc/dom/DOMError.hpp>
+#include <xercesc/dom/DOMErrorHandler.hpp>
 #include <xercesc/dom/DOMImplementationLS.hpp>
 #include <xercesc/dom/DOMImplementationRegistry.hpp>
 #include <xercesc/dom/DOMImplementationSource.hpp>

@@ -1,37 +1,40 @@
+#ifndef DOMEntityResolver_HEADER_GUARD_
+#define DOMEntityResolver_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +48,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/06/06 20:53:06  tng
+ * Documentation Fix: Update the API Documentation for DOM headers
+ *
  * Revision 1.2  2002/05/30 19:24:48  knoaman
  * documentation update
  *
@@ -65,16 +71,11 @@
  */
 
 
-#ifndef DOMENTITYRESOLVER_HPP
-#define DOMENTITYRESOLVER_HPP
-
 #include <xercesc/util/XercesDefs.hpp>
 
 class DOMInputSource;
 
 /**
-  * Introduced in DOM Level 3
-  *
   * DOMEntityResolver provides a way for applications to redirect references
   * to external entities.
   *
@@ -93,65 +94,80 @@ class DOMInputSource;
   *
   * @see DOMBuilder#setEntityResolver
   * @see DOMInputSource#DOMInputSource
+  * @since DOM Level 3
   */
 class CDOM_EXPORT DOMEntityResolver
 {
 protected:
-    /** @name Constructors */
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
     //@{
-
-    /** Default Constructor */
     DOMEntityResolver() {};
-
+    DOMEntityResolver(const DOMEntityResolver &other) {};
+    DOMEntityResolver & operator = (const DOMEntityResolver &other) {return *this;};
     //@}
 
 public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
     /** @name Destructor */
     //@{
-
-    /** Destructor */
+    /**
+     * Destructor
+     *
+     */
     virtual ~DOMEntityResolver() {};
-
     //@}
 
-    /** @name The DOMEntityResolver interface */
+    // -----------------------------------------------------------------------
+    //  Virtual DOMEntityResolver interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 2 */
     //@{
-
-  /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Allow the application to resolve external entities.
-    *
-    * <p>The DOMBuilder will call this method before opening any external
-    * entity except the top-level document entity (including the
-    * external DTD subset, external entities referenced within the
-    * DTD, and external entities referenced within the document
-    * element): the application may request that the DOMBuilder resolve
-    * the entity itself, that it use an alternative URI, or that it
-    * use an entirely different input source.</p>
-    *
-    * <p>Application writers can use this method to redirect external
-    * system identifiers to secure and/or local URIs, to look up
-    * public identifiers in a catalogue, or to read an entity from a
-    * database or other input source (including, for example, a dialog
-    * box).</p>
-    *
-    * <p>If the system identifier is a URL, the DOMBuilder parser must
-    * resolve it fully before reporting it to the application.</p>
-    *
-    * @param publicId The public identifier of the external entity
-    *        being referenced, or null if none was supplied.
-    * @param systemId The system identifier of the external entity
-    *        being referenced.
-    * @param baseURI The absolute base URI of the resource being parsed, or
-    *        <code>null</code> if there is no base URI.
-    * @return A DOMInputSource object describing the new input source,
-    *         or <code>null</code> to request that the parser open a regular
-    *         URI connection to the system identifier.
-    * @exception DOMSystemException Any DOMSystemException exception, possibly
-    *            wrapping another exception.
-    * @see DOMInputSource#DOMInputSource
-    */
+    /**
+     * Allow the application to resolve external entities.
+     *
+     * <p>The DOMBuilder will call this method before opening any external
+     * entity except the top-level document entity (including the
+     * external DTD subset, external entities referenced within the
+     * DTD, and external entities referenced within the document
+     * element): the application may request that the DOMBuilder resolve
+     * the entity itself, that it use an alternative URI, or that it
+     * use an entirely different input source.</p>
+     *
+     * <p>Application writers can use this method to redirect external
+     * system identifiers to secure and/or local URIs, to look up
+     * public identifiers in a catalogue, or to read an entity from a
+     * database or other input source (including, for example, a dialog
+     * box).</p>
+     *
+     * <p>If the system identifier is a URL, the DOMBuilder parser must
+     * resolve it fully before reporting it to the application.</p>
+     *
+     * <p> The returned DOMInputSource is owned by the DOMBuilder which is
+     *     responsible to clean up the memory.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param publicId The public identifier of the external entity
+     *        being referenced, or null if none was supplied.
+     * @param systemId The system identifier of the external entity
+     *        being referenced.
+     * @param baseURI The absolute base URI of the resource being parsed, or
+     *        <code>null</code> if there is no base URI.
+     * @return A DOMInputSource object describing the new input source,
+     *         or <code>null</code> to request that the parser open a regular
+     *         URI connection to the system identifier.
+     *         The returned DOMInputSource is owned by the DOMBuilder which is
+     *         responsible to clean up the memory.
+     * @exception DOMSystemException Any DOMSystemException exception, possibly
+     *            wrapping another exception.
+     * @see DOMInputSource#DOMInputSource
+     * @since DOM Level 3
+     */
     virtual DOMInputSource* resolveEntity
     (
         const   XMLCh* const    publicId
@@ -160,15 +176,6 @@ public:
     ) = 0;
 
     //@}
-
-private :
-    /* Unimplemented constructors and operators */
-    
-    /* Copy constructor */
-    DOMEntityResolver(const DOMEntityResolver&);
-
-    /* Assignment operator */
-    void operator=(const DOMEntityResolver&);
 
 };
 

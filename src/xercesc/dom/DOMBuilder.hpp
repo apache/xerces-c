@@ -1,3 +1,6 @@
+#ifndef DOMBuilder_HEADER_GUARD_
+#define DOMBuilder_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -59,9 +62,6 @@
  *
  */
 
-#ifndef DOMBUILDER_HPP
-#define DOMBUILDER_HPP
-
 
 #include <xercesc/util/XercesDefs.hpp>
 
@@ -72,34 +72,74 @@ class DOMBuilderFilter;
 class DOMNode;
 class DOMDocument;
 
- /**
-  * Introduced in DOM Level 3
-  *
-  * DOMBuilder provides an API for parsing XML documents and building the
-  * corresponding DOM document tree. A DOMBuilder instance is obtained from
-  * the DOMImplementationLS interface by invoking its createDOMBuilder method.
-  * This implementation also allows the applications to install an error and
-  * an entity handler (useful extensions to the DOM specification).
-  *
-  */
+/**
+ * DOMBuilder provides an API for parsing XML documents and building the
+ * corresponding DOM document tree. A DOMBuilder instance is obtained from
+ * the DOMImplementationLS interface by invoking its createDOMBuilder method.
+ * This implementation also allows the applications to install an error and
+ * an entity handler (useful extensions to the DOM specification).
+ *
+ * @since DOM Level 3
+ *
+ */
 class CDOM_EXPORT DOMBuilder
 {
 protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
     // -----------------------------------------------------------------------
-    /** @name Constructors */
+    /** @name Hidden constructors */
     //@{
-
-    /** Default constructor */
     DOMBuilder() {};
-
+    DOMBuilder(const DOMBuilder &other) {};
+    DOMBuilder & operator = (const DOMBuilder &other) {return *this;};
     //@}
 
-public :
+public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
+    /**
+     * Destructor
+     *
+     */
+    virtual ~DOMBuilder() {};
+    //@}
+
     // -----------------------------------------------------------------------
     //  Class types
     // -----------------------------------------------------------------------
+    /** @name Public Constants */
+    //@{
+    /**
+     * Action types for use in parseWithContext.
+     *
+     * <p> <code>ACTION_REPLACE</code>:
+     * Replace the context node with the result of parsing the input source.
+     * For this action to work the context node must be an
+     * <code>DOMElement</code>, <code>DOMText</code>, <code>DOMCDATASection</code>,
+     * <code>DOMComment</code>, <code>DOMProcessingInstruction</code>, or
+     * <code>DOMEntityReference</code> node.</p>
+     *
+     * <p> <code>ACTION_APPEND</code>:
+     * Append the result of parsing the input source to the context node. For
+     * this action to work, the context node must be an <code>DOMElement</code>.</p>
+     *
+     * <p> <code>ACTION_INSERT_AFTER</code>:
+     * Insert the result of parsing the input source after the context node.
+     * For this action to work the context nodes parent must be an
+     * <code>DOMElement</code>.</p>
+     *
+     * <p> <code>ACTION_INSERT_BEFORE</code>:
+     * Insert the result of parsing the input source before the context node.
+     * For this action to work the context nodes parent must be an
+     * <code>DOMElement</code>.</p>
+     *
+     * @see parseWithContext(...)
+     * @since DOM Level 3
+     */
     enum ActionType
     {
         ACTION_REPLACE            = 1,
@@ -107,112 +147,100 @@ public :
         ACTION_INSERT_AFTER       = 3,
         ACTION_INSERT_BEFORE      = 4
     };
-
-    // -----------------------------------------------------------------------
-    //  All constructors are hidden, just the destructor is available
-    // -----------------------------------------------------------------------
-    /** @name Destructor */
-    //@{
-  /**
-    * Destructor
-    *
-    */
-    virtual ~DOMBuilder() {};
     //@}
 
+    // -----------------------------------------------------------------------
+    //  Virtual DOMBuilder interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 3 */
+    //@{
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
 
-    /** @name Getter methods */
-    //@{
-
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Get a pointer to the error handler
       *
       * This method returns the installed error handler. If no handler
       * has been installed, then it will be a zero pointer.
       *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
       * @return The pointer to the installed error handler object.
+      * @since DOM Level 3
       */
     virtual DOMErrorHandler* getErrorHandler() = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Get a const pointer to the error handler
       *
       * This method returns the installed error handler.  If no handler
       * has been installed, then it will be a zero pointer.
       *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
       * @return A const pointer to the installed error handler object.
+      * @since DOM Level 3
       */
     virtual const DOMErrorHandler* getErrorHandler() const = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Get a pointer to the entity resolver
       *
       * This method returns the installed entity resolver.  If no resolver
       * has been installed, then it will be a zero pointer.
       *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
       * @return The pointer to the installed entity resolver object.
+      * @since DOM Level 3
       */
     virtual DOMEntityResolver* getEntityResolver() = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Get a const pointer to the entity resolver
       *
       * This method returns the installed entity resolver. If no resolver
       * has been installed, then it will be a zero pointer.
       *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
       * @return A const pointer to the installed entity resolver object.
+      * @since DOM Level 3
       */
     virtual const DOMEntityResolver* getEntityResolver() const = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Get a pointer to the application filter
       *
       * This method returns the installed application filter. If no filter
       * has been installed, then it will be a zero pointer.
       *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
       * @return The pointer to the installed application filter.
+      * @since DOM Level 3
       */
     virtual DOMBuilderFilter* getFilter() = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Get a const pointer to the application filter
       *
       * This method returns the installed application filter. If no filter
       * has been installed, then it will be a zero pointer.
       *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
       * @return A const pointer to the installed application filter
+      * @since DOM Level 3
       */
     virtual const DOMBuilderFilter* getFilter() const = 0;
-
-    //@}
-
 
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-
-    /** @name Setter methods */
-    //@{
-
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Set the error handler
       *
       * This method allows applications to install their own error handler
@@ -221,16 +249,17 @@ public :
       * <i>Any previously set handler is merely dropped, since the parser
       * does not own them.</i>
       *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
       * @param handler  A const pointer to the user supplied error
       *                 handler.
       *
       * @see #getErrorHandler
+      * @since DOM Level 3
       */
     virtual void setErrorHandler(DOMErrorHandler* const handler) = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Set the entity resolver
       *
       * This method allows applications to install their own entity
@@ -241,16 +270,17 @@ public :
       * <i>Any previously set resolver is merely dropped, since the parser
       * does not own them.</i>
       *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
       * @param handler  A const pointer to the user supplied entity
       *                 resolver.
       *
       * @see #getEntityResolver
+      * @since DOM Level 3
       */
     virtual void setEntityResolver(DOMEntityResolver* const handler) = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Set the application filter
       *
       * When the application provides a filter, the parser will call out to
@@ -263,29 +293,26 @@ public :
       * <i>Any previously set filter is merely dropped, since the parser
       * does not own them.</i>
       *
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
       * @param filter  A const pointer to the user supplied application
       *                filter.
       *
       * @see #getFilter
+      * @since DOM Level 3
       */
     virtual void setFilter(DOMBuilderFilter* const filter) = 0;
-
-    //@}
-
 
     // -----------------------------------------------------------------------
     //  Feature methods
     // -----------------------------------------------------------------------
-    /** @name Feature methods */
-    //@{
-
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Set the state of a feature
       *
       * It is possible for a DOMBuilder to recognize a feature name but to be
       * unable to set its value.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param name  The feature name.
       * @param state The requested state of the feature (true or false).
@@ -297,29 +324,31 @@ public :
       *
       * @see #setFeature
       * @see #canSetFeature
+      * @since DOM Level 3
       */
     virtual void setFeature(const XMLCh* const name, const bool state) = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Look up the value of a feature.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param name The feature name.
       * @return The current state of the feature (true or false)
       * @exception DOMException
       *     NOT_FOUND_ERR: Raised when the DOMBuilder does not recognize
-      *     the feature name. 
+      *     the feature name.
       *
       * @see #getFeature
       * @see #canSetFeature
+      * @since DOM Level 3
       */
     virtual bool getFeature(const XMLCh* const name) = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Query whether setting a feature to a specific value is supported.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param name  The feature name.
       * @param state The requested state of the feature (true or false).
@@ -330,25 +359,21 @@ public :
       *
       * @see #getFeature
       * @see #setFeature
+      * @since DOM Level 3
       */
     virtual bool canSetFeature(const XMLCh* const name, const bool state) = 0;
-
-    //@}
 
     // -----------------------------------------------------------------------
     //  Parsing methods
     // -----------------------------------------------------------------------
-    /** @name Parsing methods */
-    //@{
-
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Parse via an input source object
       *
       * This method invokes the parsing process on the XML file specified
       * by the DOMInputSource parameter. This API is borrowed from the
       * SAX Parser interface.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param source A const reference to the DOMInputSource object which
       *               points to the XML file to be parsed.
@@ -356,7 +381,7 @@ public :
       *                     should be reused or not for this parsing run.
       *                     If true, there cannot be any internal subset.
       * @return If the DOMBuilder is a synchronous DOMBuilder the newly created
-      *         and populated Document is returned. If the DOMBuilder is
+      *         and populated DOMDocument is returned. If the DOMBuilder is
       *         asynchronous then <code>null</code> is returned since the
       *         document object is not yet parsed when this method returns.
       * @exception SAXException Any SAX exception, possibly
@@ -368,16 +393,17 @@ public :
       * @see DOMInputSource#DOMInputSource
       * @see #setEntityResolver
       * @see #setErrorHandler
+      * @since DOM Level 3
       */
     virtual DOMDocument* parse(const DOMInputSource& source, const bool reuseGrammar = false) = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Parse via a file path or URL
       *
       * This method invokes the parsing process on the XML file specified by
       * the Unicode string parameter 'systemId'.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param systemId A const XMLCh pointer to the Unicode string which
       *                 contains the path to the XML file to be parsed.
@@ -385,7 +411,7 @@ public :
       *                     should be reused or not for this parsing run.
       *                     If true, there cannot be any internal subset.
       * @return If the DOMBuilder is a synchronous DOMBuilder the newly created
-      *         and populated Document is returned. If the DOMBuilder is
+      *         and populated DOMDocument is returned. If the DOMBuilder is
       *         asynchronous then <code>null</code> is returned since the
       *         document object is not yet parsed when this method returns.
       * @exception SAXException Any SAX exception, possibly
@@ -395,16 +421,17 @@ public :
       * @exception DOMException A DOM exception as per DOM spec.
       *
       * @see #parse(DOMInputSource,...)
+      * @since DOM Level 3
       */
     virtual DOMDocument* parseURI(const XMLCh* const systemId, const bool reuseGrammar = false) = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Parse via a file path or URL (in the local code page)
       *
       * This method invokes the parsing process on the XML file specified by
       * the native char* string parameter 'systemId'.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param systemId A const char pointer to a native string which
       *                 contains the path to the XML file to be parsed.
@@ -412,7 +439,7 @@ public :
       *                     should be reused or not for this parsing run.
       *                     If true, there cannot be any internal subset.
       * @return If the DOMBuilder is a synchronous DOMBuilder the newly created
-      *         and populated Document is returned. If the DOMBuilder is
+      *         and populated DOMDocument is returned. If the DOMBuilder is
       *         asynchronous then <code>null</code> is returned since the
       *         document object is not yet parsed when this method returns.
       * @exception SAXException Any SAX exception, possibly
@@ -426,8 +453,6 @@ public :
     virtual DOMDocument* parseURI(const char* const systemId, const bool reuseGrammar = false) = 0;
 
     /**
-      * <p><b>"Experimental - subject to change"</b></p>
-      *
       * Parse via an input source object
       *
       * This method invokes the parsing process on the XML file specified
@@ -435,6 +460,8 @@ public :
       * existing document at the position specified with the contextNode
       * and action arguments. When parsing the input stream the context node
       * is used for resolving unbound namespace prefixes.
+      *
+      * <p><b>"Experimental - subject to change"</b></p>
       *
       * @param source A const reference to the DOMInputSource object which
       *               points to the XML file to be parsed.
@@ -451,6 +478,7 @@ public :
       *     this method.
       *     <br>NO_MODIFICATION_ALLOWED_ERR: Raised if the context node is
       *     readonly.
+      * @since DOM Level 3
       */
     virtual void parseWithContext
     (
@@ -458,13 +486,8 @@ public :
         ,       DOMNode* const contextNode
         , const short action
     ) = 0;
+    //@}
 
-private :
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    DOMBuilder(const DOMBuilder&);
-    void operator=(const DOMBuilder&);
 };
 
 

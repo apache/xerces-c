@@ -70,29 +70,47 @@ class DOMTreeWalker;
 
 
 /**
- * <code>DocumentTraversal</code> contains methods that create
- * <code>NodeIterators</code> and <code>TreeWalkers</code> to traverse a
+ * <code>DOMDocumentTraversal</code> contains methods that create
+ * <code>DOMNodeIterators</code> and <code>DOMTreeWalkers</code> to traverse a
  * node and its children in document order (depth first, pre-order
  * traversal, which is equivalent to the order in which the start tags occur
  * in the text representation of the document). In DOMs which support the
- * Traversal feature, <code>DocumentTraversal</code> will be implemented by
- * the same objects that implement the Document interface.
+ * Traversal feature, <code>DOMDocumentTraversal</code> will be implemented by
+ * the same objects that implement the DOMDocument interface.
  * <p>See also the <a href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113'>Document Object Model (DOM) Level 2 Traversal and Range Specification</a>.
  * @since DOM Level 2
  */
 class CDOM_EXPORT DOMDocumentTraversal {
 
 protected:
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
+    //@{
     DOMDocumentTraversal() {};
     DOMDocumentTraversal(const DOMDocumentTraversal &other) {};
     DOMDocumentTraversal & operator = (const DOMDocumentTraversal &other) {return *this;};
+    //@}
 
 public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
+    /** @name Destructor */
+    //@{
+    /**
+     * Destructor
+     *
+     */
     virtual ~DOMDocumentTraversal() {};
+    //@}
 
-  /** @name Factory methods to create new nodes for the Document */
-  //@{
-
+    // -----------------------------------------------------------------------
+    //  Virtual DOMDocumentRange interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 2 */
+    //@{
     /**
      * Creates a NodeIterator object.   (DOM2)
      *
@@ -100,7 +118,7 @@ public:
      * document subtree governed by a particular node, the results of a query, or any other set of nodes.
      * The set of nodes to be iterated is determined by the implementation of the NodeIterator. DOM Level 2
      * specifies a single NodeIterator implementation for document-order traversal of a document subtree.
-     * Instances of these iterators are created by calling <code>DocumentTraversal.createNodeIterator()</code>.
+     * Instances of these iterators are created by calling <code>DOMDocumentTraversal.createNodeIterator()</code>.
      *
      * To produce a view of the document that has entity references expanded and does not
      * expose the entity reference node itself, use the <code>whatToShow</code> flags to hide the entity
@@ -114,13 +132,14 @@ public:
      * @param filter The filter used to screen nodes
      * @param entityReferenceExpansion The value of this flag determines whether the children of entity reference nodes are
      *                   visible to the iterator. If false, they will be skipped over.
+     * @since DOM Level 2
      */
 
     virtual DOMNodeIterator *createNodeIterator(DOMNode         *root,
                                                    unsigned long    whatToShow,
                                                    DOMNodeFilter* filter,
                                                    bool             entityReferenceExpansion) = 0;
-     /**
+    /**
      * Creates a TreeWalker object.   (DOM2)
      *
      * TreeWalker objects are used to navigate a document tree or subtree using the view of the document defined
@@ -130,7 +149,7 @@ public:
      * Omitting nodes from the logical view of a subtree can result in a structure that is substantially different from
      * the same subtree in the complete, unfiltered document. Nodes that are siblings in the TreeWalker view may
      * be children of different, widely separated nodes in the original view. For instance, consider a Filter that skips
-     * all nodes except for Text nodes and the root node of a document. In the logical view that results, all text
+     * all nodes except for DOMText nodes and the root node of a document. In the logical view that results, all text
      * nodes will be siblings and appear as direct children of the root node, no matter how deeply nested the
      * structure of the original document.
      *
@@ -147,6 +166,7 @@ public:
      * @param filter The filter used to screen nodes
      * @param entityReferenceExpansion The value of this flag determines whether the children of entity reference nodes are
      *                   visible to the tree-walker. If false, they will be skipped over.
+     * @since DOM Level 2
      */
 
     virtual DOMTreeWalker  *createTreeWalker(DOMNode        *root,

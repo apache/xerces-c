@@ -1,37 +1,40 @@
+#ifndef DOMErrorHandler_HEADER_GUARD_
+#define DOMErrorHandler_HEADER_GUARD_
+
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +48,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/06/06 20:53:06  tng
+ * Documentation Fix: Update the API Documentation for DOM headers
+ *
  * Revision 1.2  2002/05/30 19:24:48  knoaman
  * documentation update
  *
@@ -65,17 +71,11 @@
  */
 
 
-#ifndef DOMERRORHANDLER_HPP
-#define DOMERRORHANDLER_HPP
-
 #include <xercesc/util/XercesDefs.hpp>
 
 class DOMError;
 
-
 /**
-  * Introduced in DOM Level 3
-  *
   * Basic interface for DOM error handlers.
   *
   * <p>DOMErrorHandler is a callback interface that the DOM implementation
@@ -86,68 +86,71 @@ class DOMError;
   * implement this interface.</p>
   *
   * @see DOMBuilder#setErrorHandler
+  * @since DOM Level 3
   */
 
 class CDOM_EXPORT DOMErrorHandler
 {
 protected:
-    /** @name Constructors */
+    // -----------------------------------------------------------------------
+    //  Hidden constructors
+    // -----------------------------------------------------------------------
+    /** @name Hidden constructors */
     //@{
-
-    /** Default constructor */
     DOMErrorHandler() {};
-
+    DOMErrorHandler(const DOMErrorHandler &other) {};
+    DOMErrorHandler & operator = (const DOMErrorHandler &other) {return *this;};
     //@}
 
 public:
+    // -----------------------------------------------------------------------
+    //  All constructors are hidden, just the destructor is available
+    // -----------------------------------------------------------------------
     /** @name Destructor */
     //@{
-
-    /** Desctructor */
-    virtual ~DOMErrorHandler()
-    {
-    }
-
+    /**
+     * Destructor
+     *
+     */
+    virtual ~DOMErrorHandler() {};
     //@}
 
-    /** @name The error handler interface */
+    // -----------------------------------------------------------------------
+    //  Virtual DOMErrorHandler interface
+    // -----------------------------------------------------------------------
+    /** @name Functions introduced in DOM Level 3 */
     //@{
-   /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * This method is called on the error handler when an error occures.
-    *
-    * @param domError The error object that describes the error, this object
-    *                 may be reused by the DOM implementation across multiple
-    *                 calls to the handleEvent method.
-    * @return If the handleError method returns <code>true</code> the DOM
-    *         implementation should continue as if the error didn't happen
-    *         when possible, if the method returns <code>false</code> then the
-    *         DOM implementation should stop the current processing when
-    *         possible.
-    */
+    /**
+     * This method is called on the error handler when an error occures.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @param domError The error object that describes the error, this object
+     *                 may be reused by the DOM implementation across multiple
+     *                 calls to the handleEvent method.
+     * @return If the handleError method returns <code>true</code> the DOM
+     *         implementation should continue as if the error didn't happen
+     *         when possible, if the method returns <code>false</code> then the
+     *         DOM implementation should stop the current processing when
+     *         possible.
+     *
+     * @since DOM Level 3
+     */
     virtual bool handleError(const DOMError& domError) = 0;
 
-   /**
-    * Reset the Error handler object on its reuse
-    *
-    * <p>This method helps in reseting the Error handler object
-    * implementational defaults each time the Error handler is begun.</p>
-    *
-    */
-    virtual void resetErrors() = 0;
+    /**
+     * Reset the Error handler object on its reuse
+     *
+     * <p>This method helps in reseting the Error handler object
+     * implementational defaults each time the Error handler is begun.</p>
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @since DOM Level 3
+     */
+     virtual void resetErrors() = 0;
 
     //@}
-
-private :
-    /* Unimplemented constructors and operators */
-    
-    /* Copy constructor */
-    DOMErrorHandler(const DOMErrorHandler&);
-
-    /* Assignment operator */
-    void operator=(const DOMErrorHandler&);
-    
 };
 
 #endif
