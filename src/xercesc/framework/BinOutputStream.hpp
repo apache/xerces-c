@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/12/16 17:17:25  peiyongz
+ * typo fixed
+ *
  * Revision 1.1  2003/09/18 18:29:58  peiyongz
  * Interface: Binary Output Stream
  *
@@ -79,7 +82,7 @@ public :
     virtual ~BinOutputStream();
 
     // -----------------------------------------------------------------------
-    //  The virtual input stream interface
+    //  The virtual output stream interface
     // -----------------------------------------------------------------------
     virtual unsigned int curPos() const = 0;
 
