@@ -3,11 +3,24 @@
 
 <s1 title="Programming Guide">
 
+  <s2 title="DOM Programming Guide">
+    <p>The DOM API is based on the
+      <jump href="ApacheDOMC++Binding.html">Apache Recommended DOM C++ binding</jump>.</p>
+    <p>Read the <jump href="program-dom.html">DOM Programming Guide</jump> document
+      or jump directly to:</p>
+    <ul>
+      <li><jump href="program-dom.html#Objectives">Design Objectives</jump></li>
+      <li><jump href="program-dom.html#ConstructXercesDOMParser">Constructing a XercesDOMParser</jump></li>
+      <li><jump href="program-dom.html#UsingDOMAPI">Using DOM API</jump></li>
+      <li><jump href="program-dom.html#Deprecated">Deprecated - Java-like DOM</jump></li>
+    </ul>
+  </s2>
+
   <s2 title="SAX Programming Guide">
     <p>Read the <jump href="program-sax.html">SAX Programming Guide</jump> document
       or jump directly to:</p>
     <ul>
-      <li><jump href="program-sax.html#ConstructParser">Constructing a parser</jump></li>
+      <li><jump href="program-sax.html#ConstructParser">Constructing a SAXParser</jump></li>
       <li><jump href="program-sax.html#UsingSAX1API">Using the SAX API</jump></li>
     </ul>
   </s2>
@@ -23,42 +36,16 @@
     </ul>
   </s2>
 
-  <s2 title="DOM Programming Guide">
-    <p>Read the <jump href="program-dom.html">DOM Programming Guide</jump> document
+  <s2 title="Other Features">
+    <p>Read the <jump href="program-others.html">&XercesCName; Programming Guide</jump> document
       or jump directly to:</p>
     <ul>
-      <li><jump href="program-dom.html#JAVAandCPP">Comparison of Java and C++ DOM's</jump></li>
-      <ul>
-        <li><jump href="program-dom.html#AccessAPI">Accessing the API from application code</jump></li>
-        <li><jump href="program-dom.html#ClassNames">Class Names</jump></li>
-        <li><jump href="program-dom.html#ObjMemMgmt">Objects and Memory Management</jump></li>
-      </ul>
-      <li><jump href="program-dom.html#DOMString">DOMString</jump></li>
-      <ul>
-        <li><jump href="program-dom.html#EqualityTesting">Equality Testing</jump></li>
-      </ul>
-      <li><jump href="program-dom.html#Downcasting">Downcasting</jump></li>
-      <li><jump href="program-dom.html#Subclassing">Subclassing</jump></li>
+      <li><jump href="program-others.html#Schema">Schema Support</jump></li>
+      <li><jump href="program-others.html#Progressive">Progressive Parsing</jump></li>
+      <li><jump href="program-others.html#ReuseGrammar">Reuse Grammar</jump></li>
+      <li><jump href="program-others.html#LoadableMessageText">Loadable Message Text</jump></li>
+      <li><jump href="program-others.html#PluggableTranscoders">Pluggable Transcoders</jump></li>
     </ul>
   </s2>
 
-  <s2 title="Experimental IDOM Programming Guide">
-    <p>Read the <jump href="program-idom.html">Experimental IDOM Programming Guide</jump> document
-      or jump directly to:</p>
-    <ul>
-      <li><jump href="program-idom.html#ConstructIDOMParser">Constructing a parser</jump></li>
-      <li><jump href="program-idom.html#DOMandIDOM">Comparison of C++ DOM and IDOM</jump></li>
-      <ul>
-        <li><jump href="program-idom.html#Motivation">Motivation behind new design</jump></li>
-        <li><jump href="program-idom.html#IDOMClassNames">Class Names</jump></li>
-        <li><jump href="program-idom.html#IDOMObjMgmt">Objects Management</jump></li>
-        <li><jump href="program-idom.html#IDOMMemMgmt">Memory Management</jump></li>
-          <ul>
-            <li><jump href="program-idom.html#IDOMMemImplicit">Implicit Object Deletion</jump></li>
-            <li><jump href="program-idom.html#IDOMMemExplicit">Explicit Object Deletion</jump></li>
-          </ul>
-        <li><jump href="program-idom.html#DOMStringXMCh">DOMString vs. XMLCh</jump></li>
-      </ul>
-    </ul>
-  </s2>
 </s1>
