@@ -57,6 +57,14 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/10/09 21:00:54  peiyongz
+ * . init() take 1 arg,
+ * . make inspectFacetBase() virtual to allow ListDTV provide its own method,
+ * . reorganize init() into assignFacet(), inspectFacet(), inspectFacetBase() and
+ * inheritFacet() to improve mantainability.
+ * . macro to simplify code
+ * . save get***() to temp vars
+ *
  * Revision 1.4  2001/09/27 13:51:25  peiyongz
  * DTV Reorganization: ctor/init created to be used by derived class
  *
@@ -128,9 +136,7 @@ protected:
                           , const int                           finalSet
                           , const ValidatorType                 type);
 
-    void init(DatatypeValidator*            const baseValidator
-            , RefHashTableOf<KVStringPair>* const facets
-            , RefVectorOf<XMLCh>*           const enums);
+    void init(RefVectorOf<XMLCh>*           const enums);
 
     //
     // Abstract interface
@@ -147,6 +153,11 @@ protected:
     virtual void checkValueSpace(const XMLCh* const content) = 0;
 
     virtual int  getLength(const XMLCh* const content) const = 0;
+
+    //
+    //   to Allow ListDTV to overwrite
+    //
+    virtual void inspectFacetBase();
 
 // -----------------------------------------------------------------------
 // Getter methods
@@ -175,6 +186,12 @@ protected:
 private:
 
     void checkContent(const XMLCh* const content, bool asBase);
+
+    void assignFacet();
+
+    void inspectFacet();
+
+    void inheritFacet();
 
     // -----------------------------------------------------------------------
     //  Private data members
