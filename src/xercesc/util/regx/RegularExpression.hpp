@@ -154,18 +154,16 @@ private:
                        const int start, const int limit, const int noClosures);
             bool nextCh(XMLInt32& ch, int& offset, const short direction);
             
-            bool      fAdoptMatch;
-            int       fStart;
-            int       fLimit;
-            int       fLength;    // fLimit - fStart
-            int       fSize;
-            int       fStringMaxLen;
-            int*      fOffsets;
-            Match*    fMatch;
-            XMLCh*    fString;
+            bool           fAdoptMatch;
+            int            fStart;
+            int            fLimit;
+            int            fLength;    // fLimit - fStart
+            int            fSize;
+            int            fStringMaxLen;
+            int*           fOffsets;
+            Match*         fMatch;
+            const XMLCh*   fString;
             MemoryManager* fMemoryManager;
-
-            friend class Janitor<Context>;
     };
 
     // -----------------------------------------------------------------------

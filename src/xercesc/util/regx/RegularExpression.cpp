@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2005/04/05 18:18:34  knoaman
+ * Performance: do not make a copy of the expression to match.
+ *
  * Revision 1.24  2005/04/01 17:36:25  dbertoni
  * Fix for Jira issue XERCESC-1389.
  *
@@ -168,10 +171,8 @@ RegularExpression::Context::Context(MemoryManager* const manager) :
 
 RegularExpression::Context::~Context()
 {
-	if (fOffsets)
+    if (fOffsets)
         fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
-
-    fMemoryManager->deallocate(fString);//delete [] fString;
 
 	if (fAdoptMatch)
 		delete fMatch;
@@ -186,19 +187,8 @@ void RegularExpression::Context::reset(const XMLCh* const string
                                        , const int limit
                                        , const int noClosures)
 {
-    if (stringLen > fStringMaxLen || !fString) {
-
-        fStringMaxLen = stringLen;
-
-        if (fString)
-            fMemoryManager->deallocate(fString);
-
-        fString = XMLString::replicate(string, fMemoryManager);
-    }
-    else {
-        memcpy(fString, string, (stringLen + 1) * sizeof(XMLCh));
-    }
-
+    fString = string;
+    fStringMaxLen = stringLen;
 	fStart = start;
 	fLimit = limit;
 	fLength = fLimit - fStart;	
