@@ -381,7 +381,7 @@ void    DOMStringTests()
         TASSERT(offEnd.equals("string."));
 
         EXCEPTION_TEST(srcString.substringData(-1, 10), DOM_DOMException::INDEX_SIZE_ERR);
-        EXCEPTION_TEST(srcString.substringData(26, 1), DOM_DOMException::INDEX_SIZE_ERR);
+        EXCEPTION_TEST(srcString.substringData(27, 1), DOM_DOMException::INDEX_SIZE_ERR);
 
         srcString.insertData(0, "x");   // Changing the source should not alter previously
         //   extracted substrings.

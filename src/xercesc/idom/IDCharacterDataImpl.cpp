@@ -135,7 +135,7 @@ void IDCharacterDataImpl::deleteData(const IDOM_Node *node, unsigned int offset,
     //
 
     unsigned int len = XMLString::stringLen(this->fData);
-    if (offset >= len || offset < 0 || count < 0)
+    if (offset > len || offset < 0 || count < 0)
         throw IDOM_DOMException(IDOM_DOMException::INDEX_SIZE_ERR, 0);
 
 
@@ -213,7 +213,7 @@ void IDCharacterDataImpl::insertData(const IDOM_Node *node, unsigned int offset,
     //
 
     unsigned int len = XMLString::stringLen(this->fData);
-    if (offset >= len || offset < 0)
+    if (offset > len || offset < 0)
         throw IDOM_DOMException(IDOM_DOMException::INDEX_SIZE_ERR, 0);
 
     unsigned int datLen = XMLString::stringLen(dat);
@@ -275,7 +275,7 @@ const XMLCh * IDCharacterDataImpl::substringData(const IDOM_Node *node, unsigned
 
     unsigned int len = XMLString::stringLen(fData);
 
-    if (offset >= len || offset < 0 || count < 0)
+    if (offset > len || offset < 0 || count < 0)
         throw IDOM_DOMException(IDOM_DOMException::INDEX_SIZE_ERR, 0);
 
 

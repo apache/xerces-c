@@ -115,7 +115,7 @@ IDOM_Text *IDTextImpl::splitText(unsigned int offset)
             IDOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
     }
     unsigned int len = XMLString::stringLen(fCharacterData.fData);
-    if (offset > len)
+    if (offset > len || offset < 0)
         throw IDOM_DOMException(IDOM_DOMException::INDEX_SIZE_ERR, 0);
 
     IDOM_Text *newText =

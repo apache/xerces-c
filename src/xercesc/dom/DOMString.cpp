@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/03/15 13:54:41  tng
+ * Issue DOMException::INDEX_SIZE_ERR if count is greater than length, equal to length is ok.
+ *
  * Revision 1.3  2002/03/14 22:09:36  tng
  * IDOM Fix: Issue IDOM_DOMException::INDEX_SIZE_ERR if count or offset is negative.
  *
@@ -798,12 +801,8 @@ DOMString DOMString::clone() const
 void DOMString::deleteData(unsigned int offset, unsigned int delLength)
 {
     unsigned int stringLen = this->length();
-    if (offset >= stringLen || offset < 0 || delLength < 0)
+    if (offset > stringLen || offset < 0 || delLength < 0)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
-
-    if (delLength == 0)
-        return;
-
 
     // Cap the value of delLength to avoid trouble with overflows
     //  in the following length computations.
@@ -814,6 +813,10 @@ void DOMString::deleteData(unsigned int offset, unsigned int delLength)
     //   of the string, cut it back to stop at the end of string.
     if (offset + delLength >= stringLen)
         delLength = stringLen - offset;
+
+    if (delLength == 0)
+        return;
+
 
     unsigned int newStringLength = stringLen - delLength;
     if (fHandle->fDSData->fRefCount > 1 && offset+delLength < stringLen)
@@ -1163,11 +1166,8 @@ int DOMString::compareString(const DOMString &other) const
 
 DOMString DOMString::substringData(unsigned int offset, unsigned int count) const
 {
-    if (count == 0)
-        return DOMString();
-
     unsigned int thisLen = length();
-    if (offset >= thisLen || offset < 0 || count < 0)
+    if (offset > thisLen || offset < 0 || count < 0)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
 
     // Cap count to the string length to eliminate overflow
@@ -1180,6 +1180,9 @@ DOMString DOMString::substringData(unsigned int offset, unsigned int count) cons
     //   of the source string.
     if (offset + count >= thisLen)
         count = thisLen - offset;
+
+    if (count == 0)
+        return DOMString();
 
     // If the substring starts at the beginning of the original string
     //   we do not need to copy the data, but can set up a new
