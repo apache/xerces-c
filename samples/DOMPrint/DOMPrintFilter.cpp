@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/06/04 14:22:51  peiyongz
+ * Implement setter/getter from DOMWriterFilter
+ *
  * Revision 1.2  2002/06/03 22:40:07  peiyongz
  * *** empty log message ***
  *
@@ -80,7 +83,7 @@ static const XMLCh  element_link[]=
 };
 
 DOMPrintFilter::DOMPrintFilter(unsigned long whatToShow)
-:DOMWriterFilter(whatToShow)
+:fWhatToShow(whatToShow)
 {}
 
 short DOMPrintFilter::acceptNode(const DOMNode* node) const

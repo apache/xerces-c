@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/06/04 14:22:51  peiyongz
+ * Implement setter/getter from DOMWriterFilter
+ *
  * Revision 1.2  2002/06/03 22:40:07  peiyongz
  * *** empty log message ***
  *
@@ -90,10 +93,16 @@ public:
 	virtual short acceptNode(const DOMNode*) const;
     //@{
 
+	virtual unsigned long getWhatToShow() const {return fWhatToShow;};
+
+	virtual void          setWhatToShow(unsigned long toShow) {fWhatToShow = toShow;};
+
 private:
 	// unimplemented copy ctor and assignement operator
 	DOMPrintFilter(const DOMPrintFilter&);
 	DOMPrintFilter & operator = (const DOMPrintFilter&);
+
+	unsigned long fWhatToShow;   
 
 };
 
