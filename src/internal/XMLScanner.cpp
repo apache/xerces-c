@@ -3295,7 +3295,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             for (unsigned int j = 0; j < count; j++) {
 
                 XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
-                matcher->startElement(*elemDecl, *fAttrList, attCount);
+                matcher->startElement(*elemDecl, uriId, fPrefixBuf.getRawBuffer(), *fAttrList, attCount);
             }
         }
     }
