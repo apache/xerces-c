@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/10/15 18:56:02  knoaman
+ * [Bug 13604] while loop never terminates.
+ *
  * Revision 1.2  2002/03/18 19:29:53  knoaman
  * Change constant names to eliminate possible conflict with user defined ones.
  *
@@ -693,13 +696,13 @@ int RegularExpression::match(Context* const context, const Op* const operations
 		case Op::O_ANCHOR:
 			if (!matchAnchor(context, tmpOp->getData(), offset))
 				return -1;
-			tmpOp->getNextOp();
+			tmpOp = tmpOp->getNextOp();
 			break;
 		case Op::O_BACKREFERENCE:
 			if (!matchBackReference(context, tmpOp->getData(), offset,
 									direction, ignoreCase))
 				return -1;
-			tmpOp->getNextOp();
+			tmpOp = tmpOp->getNextOp();
 			break;
 		case Op::O_STRING:
 			if (!matchString(context, tmpOp->getLiteral(), offset, direction,
