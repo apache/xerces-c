@@ -675,11 +675,11 @@ following line near the bottom: <code>s%@DEFS@%$DEFS%g</code>.
         <p>As mentioned earlier, &XercesCName; may be built in stand-alone mode using
         native encoding support and also using ICU where you get support for 100's
         of encodings. ICU stands for International Components for Unicode and is an
-        open source distribution from IBM. You can get
-        <jump href="http://www10.software.ibm.com/developerworks/opensource/icu/project/">ICU libraries</jump> from
-        <jump href="http://www.ibm.com/developerWorks">IBM's developerWorks site</jump>
+        open source distribution from IBM. You can get 
+        <jump href="http://oss.software.ibm.com/icu/">ICU libraries</jump> from
+        <jump href="http://oss.software.ibm.com/developerworks/opensource/">IBM's developerWorks site</jump>
         or go to the ICU
-        <jump href="http://www10.software.ibm.com/developerworks/opensource/icu/project/download/index.html">download page</jump>
+        <jump href="http://oss.software.ibm.com/icu/download/index.html">download page</jump>
         directly.</p>
         <s3 title="Buiding ICU for &XercesCName;">
             <p>You can find generic instructions to build ICU in the ICU documentation.
