@@ -82,7 +82,7 @@ EXTRA_LIBS = @extra_libs@
 include ../../../version.incl
 include ../../Makefile.incl
 
-APP_NAME=TypeInfo
+APP_NAME=DOMTypeInfoTest
 APP_DIR=DOM/TypeInfo
 
 OUTDIR= ${XERCESCROOT}/tests/${APP_DIR}
@@ -93,7 +93,7 @@ HEADER_FILES=${SRC}/TypeInfo.hpp
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET= "//'${LOADMOD}(${APP_NAME})'"
+BATCH_TARGET= "//'${LOADMOD}(TYPEINFO)'"
 all:: makedir ${BATCH_TARGET}
 else
 all:: makedir ${EXEC}/${APP_NAME}

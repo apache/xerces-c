@@ -193,7 +193,7 @@ system ("ThreadTest -parser=dom -n -s -f -v -quiet -threads 10 -time 20 personal
 chdir "..".$pathsep."..";
 
 chdir "tests".$pathsep."DOM".$pathsep."TypeInfo";
-system ("TypeInfo");
+system ("DOMTypeInfoTest");
 
 chdir "..".$pathsep."..";
 
