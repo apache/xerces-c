@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2001/07/10 21:09:31  tng
+ * Give proper error messsage when scanning external id.
+ *
  * Revision 1.24  2001/07/09 13:42:08  tng
  * Partial Markup in Parameter Entity is validity constraint and thus should be just error, not fatal error.
  *
@@ -483,16 +486,6 @@ public :
     bool checkXMLDecl(bool startWithAngle);
 
 private :
-    // -----------------------------------------------------------------------
-    //  Private class types
-    // -----------------------------------------------------------------------
-    enum IDTypes
-    {
-        IDType_Public
-        , IDType_External
-        , IDType_Either
-    };
-
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------

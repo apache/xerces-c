@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2001/07/10 21:09:39  tng
+ * Give proper error messsage when scanning external id.
+ *
  * Revision 1.15  2001/07/10 20:56:17  tng
  * Should check the first char of PI Target Name.
  *
@@ -1678,7 +1681,6 @@ void DTDScanner::scanDocTypeDecl(const bool reuseGrammar)
         // Get the external subset id
         if (!scanId(bbPubId.getBuffer(), bbSysId.getBuffer(), IDType_External))
         {
-            fScanner->emitError(XMLErrs::ExpectedSystemOrPublicId);
             fReaderMgr->skipPastChar(chCloseAngle);
             return;
         }
@@ -2803,6 +2805,11 @@ void DTDScanner::scanExtSubsetDecl(const bool inIncludeSect)
 //
 //  This method will scan for an id, either public or external.
 //
+//
+// [75] ExternalID ::= 'SYSTEM' S SystemLiteral
+//                     | 'PUBLIC' S PubidLiteral S SystemLiteral
+// [83] PublicID ::= 'PUBLIC' S PubidLiteral
+//
 bool DTDScanner::scanId(          XMLBuffer&  pubIdToFill
                             ,       XMLBuffer&  sysIdToFill
                             , const IDTypes     whatKind)
@@ -2815,6 +2822,7 @@ bool DTDScanner::scanId(          XMLBuffer&  pubIdToFill
     //  Check first for the system id first. If we find it, and system id
     //  is one of the legal values, then lets try to scan it.
     //
+    // 'SYSTEM' S SystemLiteral
     if (fReaderMgr->skippedString(XMLUni::fgSysIDString))
     {
         // If they were looking for a public id, then we failed
@@ -2835,9 +2843,16 @@ bool DTDScanner::scanId(          XMLBuffer&  pubIdToFill
         return scanSystemLiteral(sysIdToFill);
     }
 
-    // See if we have a public id string. If not, we are done and found nothing
-    if (!fReaderMgr->skippedString(XMLUni::fgPubIDString))
+    // Now scan for public id
+    // 'PUBLIC' S PubidLiteral S SystemLiteral
+    //  or
+    // 'PUBLIC' S PubidLiteral
+
+    // If we don't have any public id string => Error
+    if (!fReaderMgr->skippedString(XMLUni::fgPubIDString)) {
+        fScanner->emitError(XMLErrs::ExpectedSystemOrPublicId);
         return false;
+    }
 
     //
     //  So following this we must have whitespace, a public literal, whitespace,
@@ -2857,10 +2872,7 @@ bool DTDScanner::scanId(          XMLBuffer&  pubIdToFill
     }
 
     if (!scanPublicLiteral(pubIdToFill))
-    {
-        fScanner->emitError(XMLErrs::ExpectedPublicId);
         return false;
-    }
 
     // If they wanted a public id, then this is all
     if (whatKind == IDType_Public)
@@ -2909,14 +2921,8 @@ bool DTDScanner::scanId(          XMLBuffer&  pubIdToFill
     }
 
     if (!scanSystemLiteral(sysIdToFill))
-    {
-        // Its only an error to not have it if we are doing an external
-        if (whatKind == IDType_External)
-        {
-            fScanner->emitError(XMLErrs::ExpectedSystemId);
             return false;
-        }
-    }
+
     return true;
 }
 
@@ -3651,8 +3657,10 @@ bool DTDScanner::scanPublicLiteral(XMLBuffer& toFill)
 
     // Get the next char which must be a single or double quote
     XMLCh quoteCh;
-    if (!fReaderMgr->skipIfQuote(quoteCh))
+    if (!fReaderMgr->skipIfQuote(quoteCh)) {
+        fScanner->emitError(XMLErrs::ExpectedQuotedString);
         return false;
+    }
 
     while (true)
     {
@@ -3699,11 +3707,12 @@ bool DTDScanner::scanSystemLiteral(XMLBuffer& toFill)
 
     // Get the next char which must be a single or double quote
     XMLCh quoteCh;
-    if (!fReaderMgr->skipIfQuote(quoteCh))
+    if (!fReaderMgr->skipIfQuote(quoteCh)) {
+        fScanner->emitError(XMLErrs::ExpectedQuotedString);
         return false;
+    }
 
-    bool retVal = true;
-    while (retVal)
+    while (true)
     {
         const XMLCh nextCh = fReaderMgr->getNextChar();
 
@@ -3717,7 +3726,7 @@ bool DTDScanner::scanSystemLiteral(XMLBuffer& toFill)
 
         toFill.append(nextCh);
     }
-    return retVal;
+    return true;
 }
 
 
