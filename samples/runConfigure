@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.10  2000/04/03 19:27:38  abagchi
+# Included changes for SGI IRIX 6.5
+#
 # Revision 1.9  2000/02/19 00:21:04  abagchi
 # Changed AS400 to AS400-OS400
 #
@@ -136,11 +139,12 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'os400')"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'os400' 'irix')"
     echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
     echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -h (get help on the above commands)"
+    echo "       -z <extra compiler options>"
 }
 
 ERROR_EXIT_CODE=1
@@ -182,7 +186,7 @@ debug=off                # by default debug is off
 transcoder=native        # by default use native transcoder
 msgloader=iconv          # by default use native transcoder
 netaccessor=fileonly     # by default use fileonly
-
+compileroptions=""
 for i in $*
    do
    case $i in
@@ -197,6 +201,9 @@ for i in $*
 
    -d)
         debug=on; shift;;
+
+   -z)
+        compileroptions="$compileroptions $2"; shift 2;;
 
    -h)
         usage
@@ -225,7 +232,7 @@ fi
 
 # Now check if the options are correct or not, bail out if incorrect
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | os400)
+   aix | linux | solaris | hp-10 | hp-11 | os400 | irix)
        # platform has been recognized
        ;;
    *)
@@ -248,7 +255,11 @@ case $cppcompiler in
 
    cc | CC)
        LDFLAGS="-lC"; export LDFLAGS
-       LIBS="-L/usr/lib -L/usr/ccs/lib"; export LIBS ;;
+       if test $platform = "irix"; then
+          LIBS=""; export LIBS
+       else
+          LIBS="-L/usr/lib -L/usr/ccs/lib"; export LIBS
+       fi ;;
 
    acc | aCC)
        LDFLAGS="-lC"; export LDFLAGS
@@ -262,8 +273,8 @@ case $cppcompiler in
 esac
 
 # Set the extra C and C++ compiler flags
-CXXFLAGS="$debugflag $compileroption"; export CXXFLAGS
-CFLAGS="$debugflag $compileroption"; export CFLAGS
+CXXFLAGS="$compileroptions $debugflag $compileroption"; export CXXFLAGS
+CFLAGS="$compileroptions $debugflag $compileroption"; export CFLAGS
 
 echo
 rm -f config.cache

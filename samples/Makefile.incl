@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.14  2000/04/03 19:27:38  abagchi
+# Included changes for SGI IRIX 6.5
+#
 # Revision 1.13  2000/03/02 01:51:30  aruna1
 # Sun CC 5.0 related changes
 #
@@ -115,6 +118,24 @@ LIBRARY_SEARCH_PATHS=-L${LIB_DIR}
 
 TO = o
 ####################### PLATFORM DEPENDENCIES #####################
+
+#=============== IRIX SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, IRIX)
+  ifeq (${COMPILER}, g++)
+	CMP= -c ${CXXFLAGS}
+	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic -instances=static
+	LINK = g++ -D${PLATFORM} -fpic
+	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+	EXTRA_LINK_OPTIONS=-lc
+  else
+	CMP= -c ${CXXFLAGS}
+	CC= CC -c -D${PLATFORM} -LANG:pch -LANG:std -O2 -D_REENTRANT -I/usr/local/include
+	LINK =  CC -D${PLATFORM}
+	PLATFORM_LIB_LINK_OPTIONS=
+	EXTRA_LINK_OPTIONS=
+  endif
+  SHLIBSUFFIX=.so
+endif
 
 #=============== SOLARIS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, SOLARIS)

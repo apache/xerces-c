@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.22  2000/04/03 19:26:54  abagchi
+# Included changes for SGI IRIX 6.5
+#
 # Revision 1.21  2000/03/17 19:28:49  abagchi
 # Now generates object files in platform-specific directories
 #
@@ -315,9 +318,9 @@ PLATFORM_COMPILE_OPTIONS = -LANG:pch -LANG:std -O2 \
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
 ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lib32 -lC -licu-uc -licudata
+    ALLLIBS = ${LIBS} -lC -licu-uc -licudata
 else
-    ALLLIBS = ${LIBS} -L/usr/lib32 -lC
+    ALLLIBS = ${LIBS} -lC
 endif
 SHLIBSUFFIX=.so
 endif

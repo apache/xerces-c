@@ -56,6 +56,9 @@
 #
 #
 # $Log$
+# Revision 1.25  2000/04/03 19:26:53  abagchi
+# Included changes for SGI IRIX 6.5
+#
 # Revision 1.24  2000/03/20 23:48:50  rahulj
 # Added Socket based NetAccessor. This will enable one to
 # use HTTP URL's for system id's. Default build options do
@@ -193,7 +196,7 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'unixware', 'os400' )"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11', 'unixware', 'os400', 'irix' )"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc)"
     echo "       -d (specifies that you want to build debug version)"
@@ -325,7 +328,11 @@ if test $debug = "off"; then
         echo "NATIVE OS400 BUILD"
          debugflag="";
       else
-      debugflag="-O";
+        if test $platform = "irix"; then
+           debugflag="-O2";
+        else
+         debugflag="-O";
+        fi
     fi
  else
        echo "OVERRIDE FOR OS400 ON AIX"

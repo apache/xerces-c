@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/04/03 19:27:19  abagchi
+ * Included changes for SGI IRIX 6.5
+ *
  * Revision 1.8  2000/03/02 21:10:36  abagchi
  * Added empty function platformTerm()
  *
@@ -95,7 +98,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 
-#ifndef APP_NO_THREADS
+#if !defined(APP_NO_THREADS)
 #include    <pthread.h>
 #endif
 
@@ -103,7 +106,7 @@
 #include    <stdio.h>
 #include    <stdlib.h>
 #include    <errno.h>
-#include    <libgen.h>
+#include    <sys/param.h>
 #include    <sys/timeb.h>
 #include    <string.h>
 #include    <util/PlatformUtils.hpp>
@@ -112,7 +115,6 @@
 #include    <util/Mutexes.hpp>
 #include    <util/XMLString.hpp>
 #include    <util/XMLUni.hpp>
-
 
 #if defined(XML_USE_ICU_TRANSCODER)
     #include <util/Transcoders/ICU/ICUTransService.hpp>
@@ -124,10 +126,14 @@
 
 #if defined(XML_USE_ICU_MESSAGELOADER)
     #include <util/MsgLoaders/ICU/ICUMsgLoader.hpp>
-
 #else
     // Same as -DXML_USE_INMEM_MESSAGELOADER
     #include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
+#endif
+
+
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    #include <util/NetAccessors/Socket/SocketNetAccessor.hpp>
 #endif
 
 
@@ -169,39 +175,18 @@ static void WriteUStrStdOut( const XMLCh* const toWrite)
 
 XMLNetAccessor* XMLPlatformUtils::makeNetAccessor()
 {
+#if defined (XML_USE_NETACCESSOR_SOCKET)
+    return new SocketNetAccessor();
+#else
     return 0;
+#endif
 }
-
-
-// -----------------------------------------------------------------------
-//  Standard out/error support
-// -----------------------------------------------------------------------
-
-void XMLPlatformUtils::writeToStdErr(const char* const toWrite)
-{
-    WriteCharStr(stderr, toWrite);
-}
-void XMLPlatformUtils::writeToStdErr(const XMLCh* const toWrite)
-{
-    WriteUStrStdErr(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const XMLCh* const toWrite)
-{
-    WriteUStrStdOut(toWrite);
-}
-void XMLPlatformUtils::writeToStdOut(const char* const toWrite)
-{
-    WriteCharStr(stdout, toWrite);
-}
-
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
 
 static XMLMutex atomicOpsMutex;
-
-
 
 void XMLPlatformUtils::platformInit()
 {
@@ -211,74 +196,113 @@ void XMLPlatformUtils::platformInit()
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
     atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+}
 
-    // Here you would also set the fgLibLocation global variable
-    // XMLPlatformUtils::fgLibLocation is the variable to be set
 
-    static const char*  sharedLibEnvVar = "LD_LIBRARY_PATH";
-    char*               libraryPath = 0;
-    char                libName[256];
+XMLCh* XMLPlatformUtils::weavePaths(const   XMLCh* const    basePath
+                                    , const XMLCh* const    relativePath)
 
-    // Construct the library name from the global variables
+{
+    // Create a buffer as large as both parts and empty it
+    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath)
+                              + XMLString::stringLen(relativePath)
+                              + 2];
+    *tmpBuf = 0;
 
-    strcpy(libName, Xerces_DLLName);
-    strcat(libName, gXercesVersionStr);
-    strcat(libName, ".so");
-
-    char* libEnvVar = getenv(sharedLibEnvVar);
-    char* libPath = NULL;
-
-    if (libEnvVar == NULL)
+    //
+    //  If we have no base path, then just take the relative path as
+    //  is.
+    //
+    if (!basePath)
     {
-        panic(XMLPlatformUtils::Panic_CantFindLib);
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
     }
 
-    //
-    // Its necessary to create a copy because strtok() modifies the
-    // string as it returns tokens. We don't want to modify the string
-    // returned to by getenv().
-    //
-
-    libPath = new char[strlen(libEnvVar) + 1];
-    strcpy(libPath, libEnvVar);
-
-
-    // First do the searching process for the first directory listing
-
-    char*  allPaths = libPath;
-    char*  libPathName;
-
-    while ((libPathName = strtok(allPaths, ":")) != NULL)
+    if (!*basePath)
     {
-        FILE*  dummyFptr = 0;
-        allPaths = 0;
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
 
-        char* libfile = new char[strlen(libPathName) + strlen(libName) + 2];
-        strcpy(libfile, libPathName);
-        strcat(libfile, "/");
-        strcat(libfile, libName);
-
-        dummyFptr = (FILE *) fopen(libfile, "rb");
-        delete [] libfile;
-        if (dummyFptr != NULL)
+    const XMLCh* basePtr = basePath + (XMLString::stringLen(basePath) - 1);
+    if ((*basePtr != chForwardSlash)
+    &&  (*basePtr != chBackSlash))
+    {
+        while ((basePtr >= basePath)
+        &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
         {
-            fclose(dummyFptr);
-            libraryPath = new char[strlen(libPathName)+1];
-            strcpy((char *) libraryPath, libPathName);
+            basePtr--;
+        }
+    }
+
+    // There is no relevant base path, so just take the relative part
+    if (basePtr < basePath)
+    {
+        XMLString::copyString(tmpBuf, relativePath);
+        return tmpBuf;
+    }
+
+    // After this, make sure the buffer gets handled if we exit early
+    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+
+    //
+    //  We have some path part, so we need to check to see if we ahve to
+    //  weave any of the parts together.
+    //
+    const XMLCh* pathPtr = relativePath;
+    while (true)
+    {
+        // If it does not start with some period, then we are done
+        if (*pathPtr != chPeriod)
             break;
+
+        unsigned int periodCount = 1;
+        pathPtr++;
+        if (*pathPtr == chPeriod)
+        {
+            pathPtr++;
+            periodCount++;
         }
 
-    } // while
+        // Has to be followed by a \ or / or the null to mean anything
+        if ((*pathPtr != chForwardSlash) && (*pathPtr != chBackSlash)
+        &&  *pathPtr)
+        {
+            break;
+        }
+        if (*pathPtr)
+            pathPtr++;
 
-    delete libPath;
+        // If its one period, just eat it, else move backwards in the base
+        if (periodCount == 2)
+        {
+            basePtr--;
+            while ((basePtr >= basePath)
+            &&     ((*basePtr != chForwardSlash) && (*basePtr != chBackSlash)))
+            {
+                basePtr--;
+            }
 
-    XMLPlatformUtils::fgLibLocation = libraryPath;
-
-    if (XMLPlatformUtils::fgLibLocation == NULL)
-    {
-        panic(XMLPlatformUtils::Panic_CantFindLib);
+            // The base cannot provide enough levels, so its in error/
+            if (basePtr < basePath)
+                ThrowXML(XMLPlatformUtilsException,
+                         XMLExcepts::File_BasePathUnderflow);
+        }
     }
 
+    // Copy the base part up to the base pointer
+    XMLCh* bufPtr = tmpBuf;
+    const XMLCh* tmpPtr = basePath;
+    while (tmpPtr <= basePtr)
+        *bufPtr++ = *tmpPtr++;
+
+    // And then copy on the rest of our path
+    XMLString::copyString(bufPtr, pathPtr);
+
+    // Orphan the buffer and return it
+    janBuf.orphan();
+    return tmpBuf;
 }
 
 
@@ -322,61 +346,16 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 XMLTransService* XMLPlatformUtils::makeTransService()
 {
 #if defined (XML_USE_ICU_TRANSCODER)
-    //
-    //  We need to figure out the path to the Intl converter files.
-    //
-
-    static const char * icuDataEnvVar   = "ICU_DATA";
-    char *              intlPath        = 0;
-
-    char* envVal = getenv(icuDataEnvVar);
-
-    // Check if environment variable is set...
-    if (envVal != NULL)
-    {
-        unsigned int pathLen = strlen(envVal);
-        intlPath = new char[pathLen + 2];
-
-        strcpy((char *) intlPath, envVal);
-        if (envVal[pathLen - 1] != '/')
-        {
-            strcat((char *) intlPath, "/");
-        }
-
-        ICUTransService::setICUPath(intlPath);
-        delete intlPath;
-
-        return new ICUTransService;
-    }
-
-    //
-    //  If the environment variable ICU_DATA is not set, assume that the
-    //  converter files are stored relative to the Xerces-C library.
-    //
-
-    unsigned int  lent = strlen(XMLPlatformUtils::fgLibLocation) +
-                         strlen("/icu/data/") + 1;
-    intlPath = new char[lent];
-    strcpy(intlPath, XMLPlatformUtils::fgLibLocation);
-    strcat(intlPath, "/icu/data/");
-
-    ICUTransService::setICUPath(intlPath);
-    delete intlPath;
-
+    // Use ICU transcoding services.
+    // same as -DXML_USE_ICU_MESSAGELOADER
     return new ICUTransService;
-
-
 #else
-
     // Use native transcoding services.
     // same as -DXML_USE_INMEM_MESSAGELOADER
     return new IconvTransService;
 
 #endif
-
-} // XMLPlatformUtils::makeTransService
-
-
+}
 
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: The panic method
@@ -400,7 +379,7 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
         reasonStr = "Cannot initialize the system or mutex";
 
     fprintf(stderr, "%s\n", reasonStr);
-    
+
     exit(-1);
 }
 
@@ -408,6 +387,7 @@ void XMLPlatformUtils::panic(const PanicReasons reason)
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: File Methods
 // ---------------------------------------------------------------------------
+
 unsigned int XMLPlatformUtils::curFilePos(FileHandle theFile)
 {
     int curPos = ftell( (FILE*)theFile);
@@ -452,7 +432,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile)
     return (unsigned int)retVal;
 }
 
-FileHandle XMLPlatformUtils::openFile(const unsigned short* const fileName)
+FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName)
 {
     const char* tmpFileName = XMLString::transcode(fileName);
     ArrayJanitor<char> janText((char*)tmpFileName);
@@ -463,12 +443,21 @@ FileHandle XMLPlatformUtils::openFile(const unsigned short* const fileName)
     return retVal;
 }
 
+FileHandle XMLPlatformUtils::openFile(const char* const fileName)
+{
+    FileHandle retVal = (FILE*)fopen( fileName , "rb" );
+
+    if (retVal == NULL)
+        return 0;
+    return retVal;
+}
 
 
 FileHandle XMLPlatformUtils::openStdInHandle()
 {
-    return (FileHandle) fdopen(dup(0), "rb");
+        return (FileHandle)fdopen(dup(0), "rb");
 }
+
 
 
 unsigned int
@@ -509,8 +498,7 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 
 }
 
-
-XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
+XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
 
     //
@@ -522,23 +510,17 @@ XMLCh* XMLPlatformUtils::getBasePath(const XMLCh* const srcPath)
     ArrayJanitor<char> janText(newSrc);
 
     // Use a local buffer that is big enough for the largest legal path
-    // Note #1186: dirName() is not thread safe.
-    char* tmpPath = dirname(newSrc);
-    if (!tmpPath)
+    char *absPath = new char[1024];
+    // get the absolute path
+    char* retPath = realpath(newSrc, absPath);
+    ArrayJanitor<char> janText2(retPath);
+
+    if (!retPath)
     {
-        ThrowXML(XMLPlatformUtilsException,
-                 XMLExcepts::File_CouldNotGetBasePathName);
+        ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);
     }
-
-    char* newXMLString = new char [strlen(tmpPath) +2];
-    ArrayJanitor<char> newJanitor(newXMLString);
-    strcpy(newXMLString, tmpPath);
-    strcat(newXMLString , "/");
-
-    // Return a copy of the path, in Unicode format
-    return XMLString::transcode(newXMLString);
+    return XMLString::transcode(absPath);
 }
-
 
 bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 {
@@ -581,7 +563,6 @@ void* XMLPlatformUtils::makeMutex()
     return (void*)(mutex);
 
 }
-
 
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
@@ -656,6 +637,10 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 
 #else // #if !defined (APP_NO_THREADS)
 
+void XMLPlatformUtils::platformInit()
+{
+}
+
 void* XMLPlatformUtils::makeMutex()
 {
         return 0;
@@ -694,7 +679,6 @@ int XMLPlatformUtils::atomicDecrement(int &location)
 }
 
 #endif // APP_NO_THREADS
-
 
 void XMLPlatformUtils::platformTerm()
 {
