@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -231,11 +231,11 @@ XMLFormatter::XMLFormatter( const   XMLCh* const            outEncoding
 
 XMLFormatter::~XMLFormatter()
 {
-    delete fAposRef;
-    delete fAmpRef;
-    delete fGTRef;
-    delete fLTRef;
-    delete fQuoteRef;
+    delete [] fAposRef;
+    delete [] fAmpRef;
+    delete [] fGTRef;
+    delete [] fLTRef;
+    delete [] fQuoteRef;
 
     delete [] fOutEncoding;
     delete fXCoder;
@@ -479,7 +479,7 @@ const XMLByte* XMLFormatter::getAposRef(unsigned int & count)
     );
     fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
     fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-   
+
     ((XMLFormatter*)this)->fAposRef = new XMLByte[outBytes + 4];
     memcpy(fAposRef, fTmpBuf, outBytes + 4);
     count = fAposLen = outBytes;
@@ -506,7 +506,7 @@ const XMLByte* XMLFormatter::getAmpRef(unsigned int & count)
     );
     fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
     fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-   
+
     ((XMLFormatter*)this)->fAmpRef = new XMLByte[outBytes + 4];
     memcpy(fAmpRef, fTmpBuf, outBytes + 4);
     count = fAmpLen = outBytes;
@@ -533,7 +533,7 @@ const XMLByte* XMLFormatter::getGTRef(unsigned int & count)
     );
     fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
     fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-   
+
     ((XMLFormatter*)this)->fGTRef = new XMLByte[outBytes + 4];
     memcpy(fGTRef, fTmpBuf, outBytes + 4);
     count = fGTLen = outBytes;
@@ -560,7 +560,7 @@ const XMLByte* XMLFormatter::getLTRef(unsigned int & count)
     );
     fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
     fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-   
+
     ((XMLFormatter*)this)->fLTRef = new XMLByte[outBytes + 4];
     memcpy(fLTRef, fTmpBuf, outBytes + 4);
     count = fLTLen = outBytes;
@@ -587,7 +587,7 @@ const XMLByte* XMLFormatter::getQuoteRef(unsigned int & count)
     );
     fTmpBuf[outBytes] = 0; fTmpBuf[outBytes + 1] = 0;
     fTmpBuf[outBytes + 2] = 0; fTmpBuf[outBytes + 3] = 0;
-   
+
     ((XMLFormatter*)this)->fQuoteRef = new XMLByte[outBytes + 4];
     memcpy(fQuoteRef, fTmpBuf, outBytes + 4);
     count = fQuoteLen = outBytes;
