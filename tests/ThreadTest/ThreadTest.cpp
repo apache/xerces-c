@@ -137,7 +137,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 
     pthread_t tId;
     //thread_t tId;
-#if defined(HPUX) && defined(XML_USE_DCE)
+#if defined(_HP_UX) && defined(XML_USE_DCE)
     x = pthread_create( &tId, pthread_attr_default,  (pthreadfunc)func,  param);
 #else
     pthread_attr_t attr;

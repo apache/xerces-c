@@ -58,6 +58,13 @@
 # 
 #
 # $Log$
+# Revision 1.3  2000/02/26 07:20:18  rahulj
+#  - The threading tests now work on HPUX.
+#  - Under HPUX 10.20 we do no build DOMMemTest and DOMTest.
+#    It crashes the compiler.
+#  - One could not write more worse makefiles than what exists for the
+#    tests. Hopefully, I will get bugged enough to fix them oneday.
+#
 # Revision 1.2  2000/02/06 07:48:34  rahulj
 # Year 2K copyright swat.
 #
@@ -74,9 +81,10 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11')"
-    echo "       -c <C compiler name> (e.g. gcc or xlc)"
-    echo "       -x <C++ compiler name> (e.g. g++ or xlC)"
+    echo "       -c <C compiler name> (e.g. gcc or xlc_r)"
+    echo "       -x <C++ compiler name> (e.g. g++ or xlC_r)"
     echo "       -d (specifies that you want to build debug version)"
+    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
     echo "       -h (get help on the above commands)"
 }
 
@@ -128,6 +136,9 @@ for i in $*
    -x)
         cppcompiler=$2; shift 2;;
 
+   -r)
+        thread=$2; shift 2;;
+
    -d)
         debug=on; shift;;
 
@@ -144,9 +155,11 @@ echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
 echo "C Compiler: $ccompiler"
 echo "C++ Compiler: $cppcompiler"
+echo "Thread option: $thread"
+
 if test $debug = "off"; then
     echo "Debug is OFF"
-    debugflag="-w -O";
+    debugflag="-O";
 else
     echo "Debug is ON"
     debugflag="-g";
@@ -163,34 +176,72 @@ case $platform in
 esac
 
 # Set the C compiler and C++ compiler environment variables
-CC=$ccompiler; export CC
-CXX=$cppcompiler; export CXX
 
 case $cppcompiler in
    xlC | xlc | xlC_r | xlc_r)
-       LDFLAGS="-lC"; export LDFLAGS
-       LIBS="-L/usr/lpp/xlC/lib"; export LIBS ;;
+       standardLibFlags="-L/usr/lpp/xlC/lib -lC";;
 
    g++ | c++)
-       LDFLAGS="-lc"; export LDFLAGS
-       LIBS="-L/usr/local/lib"; export LIBS ;;
+       standardLibFlags="-L/usr/local/lib -lc";;
 
    cc | CC)
-       LDFLAGS="-lC"; export LDFLAGS
-       LIBS="-L/usr/lib -L/usr/ccs/lib"; export LIBS ;;
+       standardLibFlags="-L/usr/lib -L/usr/ccs/lib -lC";;
 
    acc | aCC)
-       LDFLAGS="-lC"; export LDFLAGS
-       LIBS="-L/usr/lib -L/opt/aCC/lib"; export LIBS ;;
+       standardLibFlags="-L/usr/lib -L/opt/aCC/lib -lC";;
 
    *)
       echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..."
       ;;
 esac
 
-# Set the extra C and C++ compiler flags
-CXXFLAGS="$debugflag $compileroption"; export CXXFLAGS
-CFLAGS="$debugflag $compileroption"; export CFLAGS
+CC=$ccompiler
+export CC
+
+CXX=$cppcompiler
+export CXX
+
+
+#
+# Check for the threading option only for hp-11
+#
+
+threadingLibs="-lpthread"
+if test $platform = "hp-11"; then
+    if test $thread; then
+    case $thread in
+       pthread)
+           ;;
+
+       dce)
+           threadingLibs="-lcma";
+           threadingDefines="-D_PTHREADS_DRAFT4 -DXML_USE_DCE" ;;
+
+       *)
+           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+           exit ${ERROR_EXIT_CODE};;
+    esac
+    fi
+elif test $platform = "aix"; then
+    threadingLibs="-lpthreads_compat -lpthreads"
+elif test $platform = "hp-10"; then
+    threadingLibs="-lcma"
+    threadingDefines="-DXML_USE_DCE"
+fi
+
+#
+# Set the extra C and C++ compiler flags before invoking configure.
+#
+
+CXXFLAGS="$debugflag $compileroption $threadingDefines"
+export CXXFLAGS
+
+CFLAGS="$debugflag $compileroption $threadingDefines"
+export CFLAGS
+
+LIBS="$threadingLibs $standardLibFlags"
+export LIBS
+
 
 echo
 rm -f config.cache

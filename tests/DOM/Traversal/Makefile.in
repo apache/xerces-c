@@ -55,6 +55,13 @@
 # 
 #
 # $Log$
+# Revision 1.2  2000/02/26 07:20:19  rahulj
+#  - The threading tests now work on HPUX.
+#  - Under HPUX 10.20 we do no build DOMMemTest and DOMTest.
+#    It crashes the compiler.
+#  - One could not write more worse makefiles than what exists for the
+#    tests. Hopefully, I will get bugged enough to fix them oneday.
+#
 # Revision 1.1  2000/02/18 23:01:01  abagchi
 # Initial checkin
 #
@@ -82,6 +89,9 @@ COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+OSVER = @osver@
+LIBS = @libs@
+CC = @compiler@
 
 include ../../Makefile.incl
 
