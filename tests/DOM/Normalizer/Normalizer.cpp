@@ -449,7 +449,7 @@ int main(int argc, char **argv) {
     delete tmpTrue;
     delete tmpFalse;
 
-
+    return 0;
 }
 
 
