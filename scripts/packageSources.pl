@@ -104,16 +104,35 @@ sub package_sources {
    	change_documentation_entities("$srctargetdir/doc/entities.ent");
    }
 
-   system("java -classpath \"../tools/jars/stylebook-1.0-b2.jar;../tools/jars/xalan-0.19.2.jar;../tools/jars/xerces-1.0.1.jar\" org.apache.stylebook.StyleBook \"targetDirectory=$srctargetdir/doc/html\" xerces-c_book.xml ../tools/jars/style-apachexml.jar");
-
    if ($platform =~ m/Windows/) {
       $RM = "rm";
       system("$RM -rf *.obj");
       system("$RM -rf *.dep");
       system("$RM -rf *.mak");
       system("$RM -rf Makefile");
+      system("java -classpath \"../tools/jars/stylebook-1.0-b2.jar;../tools/jars/xalan-0.19.2.jar;../tools/jars/xerces-1.0.1.jar\" org.apache.stylebook.StyleBook \"targetDirectory=$srctargetdir/doc/html\" xerces-c_book.xml ../tools/jars/style-apachexml.jar");
+
    }
    else {   # all UNIX flavors
+      chdir("$srctargetdir/tools/jars");
+	  system("mkdir styles");
+	  chdir("styles");
+      system("unzip ../style-apachexml.jar");
+      system("chmod 755 META-INF dtd graphics resources stylesheets");
+	  chdir("$srctargetdir");
+      open(CDOCS, "<createdocs.bat") || die("Could not edit createdocs.bat");
+	  open(UNIXCDOCS, ">createdocs.sh") || die("Could not create createdocs.sh");
+	  while($line = <CDOCS>) {
+	  	  $line =~ s/\;/:/g;
+		  $line =~ s/jars\/style-apachexml.jar/jars\/styles/g;
+		  print UNIXCDOCS $line;
+	  }
+	  close(CDOCS);
+	  close(UNIXCDOCS);
+      system("sh createdocs.sh");
+	  unlink("createdocs.sh");
+	  system("\\rm -rf $srctargetdir/tools/jars/styles");
+	  
       $RM = "\\rm";
       system("find $srctargetdir -name \"*.o\" -print -exec rm -f {} \\;");
       system("find $srctargetdir -name \"core\" -print -exec rm -f {} \\;");
