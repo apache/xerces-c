@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2004/01/06 18:52:15  knoaman
+ * Reset list of grammars after building XSModel
+ *
  * Revision 1.23  2003/12/31 02:36:03  neilg
  * Even if the resolver has no grammars, since all schema
  * processors are aware of the schema-for-schemas, an XSModel
@@ -554,6 +557,7 @@ XSModel *GrammarResolver::getXSModel()
     if (fGrammarsToAddToXSModel->size())
     {      
         xsModel = new (fMemoryManager) XSModel(fXSModel, this, fMemoryManager);
+        fGrammarsToAddToXSModel->removeAllElements();
         fXSModel = xsModel;             
     }
     else
