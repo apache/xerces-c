@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- *
+ * 
  * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
+ *    notice, this list of conditions and the following disclaimer. 
+ * 
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- *
+ * 
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:
+ *    if any, must include the following acknowledgment:  
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- *
+ * 
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written
+ *    software without prior written permission. For written 
  *    permission, please contact apache\@apache.org.
- *
+ * 
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- *
+ * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 2001, International
@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/12/11 15:10:14  tng
+ * More changes to IconvFBSDTransService.  Allow using "old" TransServece implementation (via '-t native' option to runConfigure) or
+ * to employ libiconv (it is a part of FreeBSD ports-collection) services.  By Max Gotlib.
+ *
  * Revision 1.1  2001/12/03 14:45:11  tng
  * FreeBSD native transcoder (IconvFBSD) added by Max Gotlib.
  *
@@ -66,7 +70,171 @@
 
 #include <util/TransService.hpp>
 
+#ifdef XML_USE_LIBICONV
+
+#  include <util/Mutexes.hpp>
+#  include <iconv.h>
+
+// ---------------------------------------------------------------------------
+//  Libiconv wrapper (low-level conversion utilities collection)
+// ---------------------------------------------------------------------------
+
+class XMLUTIL_EXPORT IconvFBSDCD
+{
+public:
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    IconvFBSDCD
+    (
+	iconv_t		cd_from,
+	iconv_t		cd_to,
+	size_t		uchsize,
+	unsigned int	ubo
+    );
+    virtual ~IconvFBSDCD();
+
+    // Convert "native unicode" character into XMLCh
+    void	mbcToXMLCh (const char *mbc, XMLCh *toRet) const;
+
+    // Convert XMLCh into "native unicode" character 
+    void	xmlChToMbc (XMLCh xch, char *mbc) const;
+
+    // Return uppercase equivalent for XMLCh
+    XMLCh 	toUpper (const XMLCh ch) const;
+
+    // Check if passed characters belongs to the :space: class
+    virtual bool isSpace(const XMLCh toCheck) const;
+    
+    // Allocate internal buffer space, large enough to hold 'cnt'
+    // XMLCh characters, and fill it with data, supplyed in the array
+    // of "native unicode" characters.
+    XMLCh*	xmlFromMbs
+    (
+	const char*	str,
+	size_t		cnt
+    );
+
+    // Fill array of XMLCh characters with data, supplyed in the array
+    // of "native unicode" characters.
+    XMLCh*	mbsToXML (
+	const char*	mbs_str,
+	size_t		mbs_cnt,
+	XMLCh*		xml_str,
+	size_t		xml_cnt
+    ) const;
+
+    // Allocate internal buffer space, large enough to hold 'cnt'
+    // "native unicode" characters, and fill it with data, supplyed
+    // in the array of XMLCh characters.
+    char*	mbsFromXML
+    (
+	const XMLCh*	str,
+	size_t		cnt
+    );
+
+    // Fill array of "native unicode" characters with data, supplyed
+    // in the array of XMLCh characters.
+    char*	xmlToMbs
+    (
+	const XMLCh*	xml_str,
+	size_t		xml_cnt,
+	char*		mbs_str,
+	size_t		mbs_cnt
+    ) const;
+
+    // Wrapper aroung the iconv() for transcoding from the local charset
+    size_t	iconvFrom
+    (
+	const char	*fromPtr,
+	size_t		*fromLen,
+	char		**toPtr,
+	size_t		toLen
+    ) const;
+
+    // Wrapper aroung the iconv() for transcoding to the local charset
+    size_t	iconvTo
+    (
+	const char	*fromPtr,
+	size_t		*fromLen,
+	char		**toPtr,
+	size_t		toLen
+    ) const;
+
+    // Private data accessors
+    inline iconv_t	cdTo () const { return fCDTo; }
+    inline iconv_t	cdFrom () const { return fCDFrom; }
+    inline size_t	uChSize () const { return fUChSize; }
+    inline unsigned int	UBO () const { return fUBO; }
+
+protected:
+
+    // Hiden defaull constructor
+    IconvFBSDCD();
+
+    // Private data accessors
+    inline void	setCDTo (iconv_t cd) { fCDTo = cd; }
+    inline void	setCDFrom (iconv_t cd) { fCDFrom = cd; }
+    inline void	setUChSize (size_t sz) { fUChSize = sz; }
+    inline void	setUBO (unsigned int u) { fUBO = u; }
+    inline void	setTmpXMLBuf (XMLCh* b, size_t s) {
+	fTmpXMLBuf = b; fTmpXMLSize = s;
+    }
+    
+private:
+    // -----------------------------------------------------------------------
+    //  Unimplemented constructors and operators
+    // -----------------------------------------------------------------------
+    IconvFBSDCD(const IconvFBSDCD&);
+    void operator=(const IconvFBSDCD&);
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fTmpXMLBuf
+    //      Temporary buffer for holding arrays of XMLCh characters
+    //  fTmpXMLSize
+    //      Size of the XMLCh temporary buffer
+    //  fTmpUBuf
+    //      Temporary buffer for holding arrays of "native unicode" characters
+    //  fTmpUSize
+    //      Size of the "native unicode" temporary buffer
+    //  fCDTo
+    //	    Characterset conversion descriptor TO the local-host encoding
+    //  fCDFrom
+    //	    Characterset conversion descriptor FROM the local-host encoding
+    //  fTmpUSize
+    //      Size of the "native unicode" temporary buffer
+    //  fUChSize
+    //      Sizeof the "native unicode" character in bytes
+    //  fUBO
+    //      "Native unicode" characters byte order
+    //  fMutex
+    //      We have to synchronize threaded calls to the converter.
+    // -----------------------------------------------------------------------
+    XMLCh*	fTmpXMLBuf;
+    size_t	fTmpXMLSize;
+    char*	fTmpUBuf;
+    size_t	fTmpUSize;
+    size_t	fUChSize;
+    unsigned int fUBO;
+    iconv_t	fCDTo;
+    iconv_t	fCDFrom;
+    mutable XMLMutex	fMutex;
+};
+
+#endif /* XML_USE_LIBICONV */
+
+
+
+// ---------------------------------------------------------------------------
+//  FreeBSD-specific Transcoding Service implementation
+// ---------------------------------------------------------------------------
+
 class XMLUTIL_EXPORT IconvFBSDTransService : public XMLTransService
+#ifdef XML_USE_LIBICONV
+, IconvFBSDCD
+#endif
 {
 public :
     // -----------------------------------------------------------------------
@@ -113,39 +281,56 @@ protected :
         , const unsigned int            blockSize
     );
 
-
+    
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     IconvFBSDTransService(const IconvFBSDTransService&);
     void operator=(const IconvFBSDTransService&);
+
+#ifdef XML_USE_LIBICONV
+
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fLocalCP
+    //      Local (host) character set name
+    //  fUnicodeCP
+    //      Unicode encoding schema name
+    // -----------------------------------------------------------------------
+    const char*	fUnicodeCP;
+
+#endif /* XML_USE_LIBICONV */
 };
 
 
+#ifdef XML_USE_LIBICONV
+//----------------------------------------------------------------------------
+// Implementation of the transcoders for arbitrary input characterset is
+// supported ONLY through libiconv interface
+//----------------------------------------------------------------------------
 
-
-class XMLUTIL_EXPORT IconvFBSDTranscoder : public XMLTranscoder
+class XMLUTIL_EXPORT IconvFBSDTranscoder : public XMLTranscoder, IconvFBSDCD
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    IconvFBSDTranscoder(const XMLCh* const encodingName, const unsigned int blockSize);
+    IconvFBSDTranscoder(const	XMLCh* const	encodingName
+			, const unsigned int	blockSize
+			,	iconv_t		cd_from
+			,	iconv_t		cd_to
+			,	size_t		uchsize
+			,	unsigned int	ubo
+    );
     ~IconvFBSDTranscoder();
 
 
     // -----------------------------------------------------------------------
     //  Implementation of the virtual transcoder interface
     // -----------------------------------------------------------------------
-    virtual XMLCh transcodeOne
-    (
-        const   XMLByte* const  srcData
-        , const unsigned int    srcBytes
-        ,       unsigned int&   bytesEaten
-    );
-
-    virtual unsigned int transcodeXML
+    virtual unsigned int transcodeFrom
     (
         const   XMLByte* const          srcData
         , const unsigned int            srcCount
@@ -155,24 +340,67 @@ public :
         ,       unsigned char* const    charSizes
     );
 
+    virtual unsigned int transcodeTo
+    (
+        const   XMLCh* const	srcData
+        , const unsigned int	srcCount
+        ,       XMLByte* const	toFill
+        , const unsigned int	maxBytes
+        ,       unsigned int&	charsEaten
+        , const UnRepOpts	options
+    );
+
+    virtual bool canTranscodeTo
+    (
+        const   unsigned int	toCheck
+    )   const;
 
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
+    IconvFBSDTranscoder();
     IconvFBSDTranscoder(const IconvFBSDTranscoder&);
     void operator=(const IconvFBSDTranscoder&);
 };
 
+#endif /* XML_USE_LIBICONV */
 
+
+// ---------------------------------------------------------------------------
+//  FreeBSD-specific XMLCh <-> local (host) characterset transcoder
+// ---------------------------------------------------------------------------
 
 class XMLUTIL_EXPORT IconvFBSDLCPTranscoder : public XMLLCPTranscoder
+#ifdef XML_USE_LIBICONV
+, IconvFBSDCD
+#endif
 {
 public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
+#ifdef XML_USE_LIBICONV
+
+    IconvFBSDLCPTranscoder
+    (
+	iconv_t		from,
+	iconv_t		to,
+	size_t		uchsize,
+	unsigned int	ubo
+    );
+
+protected:
+    IconvFBSDLCPTranscoder();	// Unimplemented
+
+public:
+    
+#else /* !XML_USE_LIBICONV */
+
     IconvFBSDLCPTranscoder();
+
+#endif /* XML_USE_LIBICONV */
+
     ~IconvFBSDLCPTranscoder();
 
 

@@ -376,10 +376,12 @@ case $transcoder in
        transcodingDefines="-DXML_USE_ICONV390_TRANSCODER" ;
        TRANSCODER=Iconv390 ;;
    IconvFBSD)
-       TRANSCODER=IconvFBSD ;;
+       TRANSCODER=IconvFBSD ;
+       transcodingDefines="-DXML_USE_LIBICONV -I/usr/local/include" ;;
    native)
-       ;;
-
+       if test $platform = "freebsd"; then
+           TRANSCODER=IconvFBSD ;
+       fi ;;
    *)
       echo "I do not recognize the transcoder option '$transcoder'. Please type '${0} -h' for help."
       exit ${ERROR_EXIT_CODE};;
