@@ -169,7 +169,7 @@ static bool                     gDoCreate              = false;
 
 static char*                    goutputfile            = 0;
 // options for DOMWriter's features
-static const XMLCh*             gOutputEncoding        = 0;
+static XMLCh*                   gOutputEncoding        = 0;
 
 static bool                     gSplitCdataSections    = true;
 static bool                     gDiscardDefaultContent = true;
@@ -564,7 +564,7 @@ int main(int argC, char* argV[])
     // And call the termination method
     XMLPlatformUtils::Terminate();
 
-    delete (void *)gOutputEncoding;        // const problems.
+    XMLString::release(&gOutputEncoding);
 
     return retval;
 }
