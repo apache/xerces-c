@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/05/18 17:04:45  knoaman
+ * Typo fix.
+ *
  * Revision 1.9  2001/05/18 16:51:39  knoaman
  * Added circular check for complexType + more error messages.
  *
@@ -3948,8 +3951,8 @@ TraverseSchema::expandContentModel(ContentSpecNode* const specNode,
         XMLCh tmpMinStr[128];
         XMLCh tmpMaxStr[128];
 
-        XMLString::binToText(minOccurs, tmpMinStr, 255, 10);
-        XMLString::binToText(maxOccurs, tmpMaxStr, 255, 10);
+        XMLString::binToText(minOccurs, tmpMinStr, 127, 10);
+        XMLString::binToText(maxOccurs, tmpMaxStr, 127, 10);
 
         if (maxOccurs < 1) {
             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttValue,
