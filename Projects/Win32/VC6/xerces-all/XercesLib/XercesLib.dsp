@@ -374,6 +374,14 @@ SOURCE=..\..\..\..\..\src\util\XMLExceptMsgs.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\util\XMLIBM1047Transcoder.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\XMLIBM1047Transcoder.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\util\XMLMsgLoader.hpp
 # End Source File
 # Begin Source File
