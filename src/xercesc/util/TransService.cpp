@@ -144,7 +144,7 @@ XMLTransService::XMLTransService()
         }
         else
         {
-            mappingsCleanup.registerCleanup(reinitMappingsRecognizer);
+            mappingsRecognizerCleanup.registerCleanup(reinitMappingsRecognizer);
         }
     }
 }
