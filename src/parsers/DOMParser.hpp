@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/20 19:10:08  roddey
+ * Added protected get/set methods for doc and cur node members. Some people
+ * had been writing DOMParser derivatives and touching these directly, so when they
+ * were made private this broke some people's code.
+ *
  * Revision 1.2  1999/12/15 19:57:48  roddey
  * Got rid of redundant 'const' on boolean return value. Some compilers choke
  * on this and its useless.
@@ -266,6 +271,20 @@ public :
     );
 
 
+protected :
+    // -----------------------------------------------------------------------
+    //  Protected getter methods
+    // -----------------------------------------------------------------------
+    DOM_Node getCurrentNode();
+
+
+    // -----------------------------------------------------------------------
+    //  Protected setter methods
+    // -----------------------------------------------------------------------
+    void setCurrentNode(DOM_Node toSet);
+    void setDocument(DOM_Document toSet);
+
+
 private :
     // -----------------------------------------------------------------------
     //  Private data members
@@ -406,6 +425,29 @@ inline const XMLScanner& DOMParser::getScanner() const
 inline void DOMParser::setExpandEntityReferences(const bool expand)
 {
     fExpandEntityReferences = expand;
+}
+
+
+// ---------------------------------------------------------------------------
+//  DOMParser: Protected getter methods
+// ---------------------------------------------------------------------------
+inline DOM_Node DOMParser::getCurrentNode()
+{
+    return fCurrentNode;
+}
+
+
+// ---------------------------------------------------------------------------
+//  DOMParser: Protected setter methods
+// ---------------------------------------------------------------------------
+inline void DOMParser::setCurrentNode(DOM_Node toSet)
+{
+    fCurrentNode = toSet;
+}
+
+inline void DOMParser::setDocument(DOM_Document toSet)
+{
+    fDocument = toSet;
 }
 
 #endif
