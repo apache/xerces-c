@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.23  2002/12/10 13:34:07  tng
+ * Pretty-format print: also indent PI/comment that appear inside the root element.
+ *
  * Revision 1.22  2002/12/09 11:46:08  gareth
  * More pretty pretty print feature. Patch by Kevin King. Closes bug #13840.
  *
@@ -189,39 +192,39 @@ static bool  featuresSupported[] = {
 // default end-of-line sequence
 static const XMLCh  gEOLSeq[] =
 {
-	chLF, chNull
+    chLF, chNull
 };
 
 //UTF-8
 static const XMLCh  gUTF8[] =
 {
-	chLatin_U, chLatin_T, chLatin_F, chDash, chDigit_8, chNull
+    chLatin_U, chLatin_T, chLatin_F, chDash, chDigit_8, chNull
 };
 
 //</
 static const XMLCh  gEndElement[] =
 {
-	chOpenAngle, chForwardSlash, chNull
+    chOpenAngle, chForwardSlash, chNull
 };
 
 //?>
 static const XMLCh  gEndPI[] =
 {
-	chQuestion, chCloseAngle, chNull
+    chQuestion, chCloseAngle, chNull
 };
 
 //<?
 static const XMLCh  gStartPI[] =
 {
-	chOpenAngle, chQuestion, chNull
+    chOpenAngle, chQuestion, chNull
 };
 
 //<?xml version="
 static const XMLCh  gXMLDecl_VersionInfo[] =
 {
-	chOpenAngle, chQuestion, chLatin_x,     chLatin_m,  chLatin_l,  chSpace,
-	chLatin_v,   chLatin_e,  chLatin_r,     chLatin_s,  chLatin_i,  chLatin_o,
-	chLatin_n,   chEqual,    chDoubleQuote, chNull
+    chOpenAngle, chQuestion, chLatin_x,     chLatin_m,  chLatin_l,  chSpace,
+    chLatin_v,   chLatin_e,  chLatin_r,     chLatin_s,  chLatin_i,  chLatin_o,
+    chLatin_n,   chEqual,    chDoubleQuote, chNull
 };
 
 static const XMLCh gXMLDecl_ver10[] =
@@ -232,14 +235,14 @@ static const XMLCh gXMLDecl_ver10[] =
 //encoding="
 static const XMLCh  gXMLDecl_EncodingDecl[] =
 {
-	chLatin_e,  chLatin_n,  chLatin_c,  chLatin_o,      chLatin_d, chLatin_i,
+    chLatin_e,  chLatin_n,  chLatin_c,  chLatin_o,      chLatin_d, chLatin_i,
     chLatin_n,  chLatin_g,  chEqual,    chDoubleQuote,  chNull
 };
 
 //" standalone="
 static const XMLCh  gXMLDecl_SDDecl[] =
 {
-	chLatin_s, chLatin_t, chLatin_a,   chLatin_n,    chLatin_d,   chLatin_a,
+    chLatin_s, chLatin_t, chLatin_a,   chLatin_n,    chLatin_d,   chLatin_a,
     chLatin_l, chLatin_o, chLatin_n,   chLatin_e,    chEqual,     chDoubleQuote,
     chNull
 };
@@ -247,19 +250,19 @@ static const XMLCh  gXMLDecl_SDDecl[] =
 //"
 static const XMLCh  gXMLDecl_separator[] =
 {
-	chDoubleQuote, chSpace, chNull
+    chDoubleQuote, chSpace, chNull
 };
 
 //?>
 static const XMLCh  gXMLDecl_endtag[] =
 {
-	chQuestion, chCloseAngle,  chNull
+    chQuestion, chCloseAngle,  chNull
 };
 
 //<![CDATA[
 static const XMLCh  gStartCDATA[] =
 {
-	chOpenAngle, chBang,    chOpenSquare, chLatin_C, chLatin_D,
+    chOpenAngle, chBang,    chOpenSquare, chLatin_C, chLatin_D,
     chLatin_A,   chLatin_T, chLatin_A,    chOpenSquare, chNull
 };
 
@@ -322,52 +325,52 @@ static const XMLCh  gNotation[] =
 // Unrecognized node type
 static const XMLCh  gUnrecognizedNodeType[] =
 {
-	chLatin_U, chLatin_n, chLatin_r, chLatin_e, chLatin_c, chLatin_o,
+    chLatin_U, chLatin_n, chLatin_r, chLatin_e, chLatin_c, chLatin_o,
     chLatin_g, chLatin_n, chLatin_i, chLatin_z, chLatin_e, chLatin_d,
-	chSpace,   chLatin_N, chLatin_o, chLatin_d, chLatin_e, chSpace,
-	chLatin_T, chLatin_y, chLatin_p, chLatin_e, chNull
+    chSpace,   chLatin_N, chLatin_o, chLatin_d, chLatin_e, chSpace,
+    chLatin_T, chLatin_y, chLatin_p, chLatin_e, chNull
 };
 
 // nested cdata
 static const XMLCh  gNestedCdata[] =
 {
-	chLatin_N, chLatin_e, chLatin_s, chLatin_t, chLatin_e, chLatin_d,
+    chLatin_N, chLatin_e, chLatin_s, chLatin_t, chLatin_e, chLatin_d,
     chLatin_C, chLatin_D, chLatin_a, chLatin_t, chLatin_a, chNull
 };
 
 // Unrepresentable char
 static const XMLCh  gUnrepresentableChar[] =
 {
-	chLatin_U, chLatin_n, chLatin_r, chLatin_e, chLatin_p, chLatin_r,
+    chLatin_U, chLatin_n, chLatin_r, chLatin_e, chLatin_p, chLatin_r,
     chLatin_e, chLatin_s, chLatin_e, chLatin_n, chLatin_t, chLatin_a,
-	chLatin_b, chLatin_l, chLatin_e, chSpace,   chLatin_C, chLatin_h,
-	chLatin_a, chLatin_r, chNull
+    chLatin_b, chLatin_l, chLatin_e, chSpace,   chLatin_C, chLatin_h,
+    chLatin_a, chLatin_r, chNull
 };
 
 //Feature
 static const XMLCh  gFeature[] =
 {
-	chLatin_F, chLatin_e, chLatin_a, chLatin_t, chLatin_u, chLatin_r,
+    chLatin_F, chLatin_e, chLatin_a, chLatin_t, chLatin_u, chLatin_r,
     chLatin_e, chSpace,   chNull
 };
 
 // Can not be set to
 static const XMLCh  gCantSet[] =
 {
-	chSpace,   chLatin_C, chLatin_a, chLatin_n, chSpace, chLatin_n, chLatin_o,
+    chSpace,   chLatin_C, chLatin_a, chLatin_n, chSpace, chLatin_n, chLatin_o,
     chLatin_t, chSpace,   chLatin_b, chLatin_e, chSpace, chLatin_s,
     chLatin_e, chLatin_t, chSpace,   chLatin_t, chLatin_o, chSpace, chNull
 };
 
 static const XMLCh  gTrue[] =
 {
-	chSingleQuote, chLatin_t, chLatin_r, chLatin_u, chLatin_e,
+    chSingleQuote, chLatin_t, chLatin_r, chLatin_u, chLatin_e,
     chSingleQuote, chLF,      chNull
 };
 
 static const XMLCh  gFalse[] =
 {
-	chSingleQuote, chLatin_f, chLatin_a, chLatin_l, chLatin_s,
+    chSingleQuote, chLatin_f, chLatin_a, chLatin_l, chLatin_s,
     chLatin_e,     chSingleQuote, chLF, chNull
 };
 
@@ -390,23 +393,23 @@ static const XMLCh  gFalse[] =
 fFormatter->setUnRepFlags(XMLFormatter::UnRep_Fail);                 \
 try                                                                  \
 {                                                                    \
-     action;                                                         \
-}                                                                 \
+    action;                                                          \
+}                                                                    \
 catch(TranscodingException const &e)                                 \
 {                                                                    \
     if ( !reportError(nodeToWrite                                    \
                     , DOMError::DOM_SEVERITY_FATAL_ERROR             \
                     , e.getMessage())                       ||       \
-         forceToRethrow                                      )       \
+          forceToRethrow)                                            \
         throw;                                                       \
 }
 
 DOMWriterImpl::~DOMWriterImpl()
 {
-	delete [] fEncoding;
-	delete [] fNewLine;
+    delete [] fEncoding;
+    delete [] fNewLine;
 
-	// we don't own/adopt error handler and filter
+    // we don't own/adopt error handler and filter
 }
 
 DOMWriterImpl::DOMWriterImpl()
@@ -425,17 +428,17 @@ DOMWriterImpl::DOMWriterImpl()
     // set features to default setting
     //
     setFeature(CANONICAL_FORM_ID,                false);
-	setFeature(DISCARD_DEFAULT_CONTENT_ID,       true );
-	setFeature(ENTITIES_ID,                      true );
-	setFeature(FORMAT_PRETTY_PRINT_ID,	         false);
-	setFeature(NORMALIZE_CHARACTERS_ID,          false);
-	setFeature(SPLIT_CDATA_SECTIONS_ID,          true );
-	setFeature(VALIDATION_ID,                    false);
-	setFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID, true );
+    setFeature(DISCARD_DEFAULT_CONTENT_ID,       true );
+    setFeature(ENTITIES_ID,                      true );
+    setFeature(FORMAT_PRETTY_PRINT_ID,             false);
+    setFeature(NORMALIZE_CHARACTERS_ID,          false);
+    setFeature(SPLIT_CDATA_SECTIONS_ID,          true );
+    setFeature(VALIDATION_ID,                    false);
+    setFeature(WHITESPACE_IN_ELEMENT_CONTENT_ID, true );
 }
 
 bool DOMWriterImpl::canSetFeature(const XMLCh* const featName
-          						, bool               state) const
+                                  , bool               state) const
 {
     int featureId = INVALID_FEATURE_ID;
     return checkFeature(featName, false, featureId) ? canSetFeature(featureId, state) : false;
@@ -447,22 +450,22 @@ void DOMWriterImpl::setFeature(const XMLCh* const featName
     int featureId = INVALID_FEATURE_ID;
     checkFeature(featName, true, featureId);
 
-	if (!canSetFeature(featureId, state))
+    if (!canSetFeature(featureId, state))
     {
         XMLCh  tmpbuf[256];
         XMLString::copyString(tmpbuf, gFeature);
         XMLString::catString(tmpbuf, featName);
         XMLString::catString(tmpbuf, gCantSet);
         XMLString::catString(tmpbuf, state? gTrue : gFalse);
-		throw DOMException(DOMException::NOT_SUPPORTED_ERR, tmpbuf);
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, tmpbuf);
     }
     else
         setFeature(featureId, state);
 
-	//
-	// canonical-form and format-pretty-print can not be both set to true
-	// meaning set canonical-form true will automatically set
-	// format-pretty-print to false and vise versa.
+    //
+    // canonical-form and format-pretty-print can not be both set to true
+    // meaning set canonical-form true will automatically set
+    // format-pretty-print to false and vise versa.
     //
     if ((featureId == CANONICAL_FORM_ID) && state)
         setFeature(FORMAT_PRETTY_PRINT_ID, false);
@@ -483,44 +486,44 @@ bool DOMWriterImpl::getFeature(const XMLCh* const featName) const
 // we don't check the validity of the encoding set
 void DOMWriterImpl::setEncoding(const XMLCh* const encoding)
 {
-	delete [] fEncoding;
-	fEncoding = XMLString::replicate(encoding);
+    delete [] fEncoding;
+    fEncoding = XMLString::replicate(encoding);
 }
 
 const XMLCh* DOMWriterImpl::getEncoding() const
 {
-	return fEncoding;
+    return fEncoding;
 }
 
 void DOMWriterImpl::setNewLine(const XMLCh* const newLine)
 {
-	delete [] fNewLine;
-	fNewLine = XMLString::replicate(newLine);
+    delete [] fNewLine;
+    fNewLine = XMLString::replicate(newLine);
 }
 
 const XMLCh* DOMWriterImpl::getNewLine() const
 {
-	return fNewLine;
+    return fNewLine;
 }
 
 void DOMWriterImpl::setErrorHandler(DOMErrorHandler *errorHandler)
 {
-	fErrorHandler = errorHandler;
+    fErrorHandler = errorHandler;
 }
 
 DOMErrorHandler* DOMWriterImpl::getErrorHandler() const
 {
-	return fErrorHandler;
+    return fErrorHandler;
 }
 
 void DOMWriterImpl::setFilter(DOMWriterFilter *filter)
 {
-	fFilter = filter;
+    fFilter = filter;
 }
 
 DOMWriterFilter* DOMWriterImpl::getFilter() const
 {
-	return fFilter;
+    return fFilter;
 }
 
 //
@@ -529,8 +532,8 @@ DOMWriterFilter* DOMWriterImpl::getFilter() const
 bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
                             , const DOMNode         &nodeToWrite)
 {
-	//init session vars
-	initSession(&nodeToWrite);
+    //init session vars
+    initSession(&nodeToWrite);
 
     try
     {
@@ -549,45 +552,45 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
     {
         Janitor<XMLFormatter> janName(fFormatter);
         processNode(&nodeToWrite);
-	}
+    }
 
-	//
-	// The serialize engine (processNode) throws an exception to abort
-	// serialization if
-	//
-	//   . A fatal error occurs which renters the output ill-formed, or
-	//   . Instructed by the application's error handler
-	//
-	catch (const TranscodingException&)
-	{
-		return false;
-	}
+    //
+    // The serialize engine (processNode) throws an exception to abort
+    // serialization if
+    //
+    //   . A fatal error occurs which renters the output ill-formed, or
+    //   . Instructed by the application's error handler
+    //
+    catch (const TranscodingException&)
+    {
+        return false;
+    }
 
-	catch (const DOMException&)
-	{
-		return false;
-	}
+    catch (const DOMException&)
+    {
+        return false;
+    }
 
-	//
-	// DOMSystemException
+    //
+    // DOMSystemException
     // This exception will be raised in response to any sort of IO or system
     // error that occurs while writing to the destination. It may wrap an
     // underlying system exception.
-	//
-	//catch (RuntimeException const &)
-	catch (...)
-	{
-		// REVISIT generate a DOMSystemException wrapping the underlying
-		//         exception.
-		throw;
-	}
+    //
+    //catch (RuntimeException const &)
+    catch (...)
+    {
+        // REVISIT generate a DOMSystemException wrapping the underlying
+        //         exception.
+        throw;
+    }
 
-	//
-	// true if node was successfully serialized and
-	// false in case a failure occured and the
-	// failure wasn't canceled by the error handler.
-	//
-	return ((fErrorCount == 0)? true : false);
+    //
+    // true if node was successfully serialized and
+    // false in case a failure occured and the
+    // failure wasn't canceled by the error handler.
+    //
+    return ((fErrorCount == 0)? true : false);
 }
 
 //
@@ -596,26 +599,26 @@ bool DOMWriterImpl::writeNode(XMLFormatTarget* const destination
 //
 XMLCh* DOMWriterImpl::writeToString(const DOMNode &nodeToWrite)
 {
-	MemBufFormatTarget  destination;
-	bool retVal;
+    MemBufFormatTarget  destination;
+    bool retVal;
 
-   // XMLCh is unicode, assume fEncoding as UTF-16
-   XMLCh* tempEncoding = fEncoding;
-   fEncoding = (XMLCh*) XMLUni::fgUTF16EncodingString;
+    // XMLCh is unicode, assume fEncoding as UTF-16
+    XMLCh* tempEncoding = fEncoding;
+    fEncoding = (XMLCh*) XMLUni::fgUTF16EncodingString;
 
-	try
-	{
-		retVal = writeNode(&destination, nodeToWrite);
-	}
-	catch (...)
-	{
-		//
-		// there is a possibility that memeory allocation
-		// exception thrown in XMLBuffer class
-		//
-      fEncoding = tempEncoding;
-		return 0;
-	}
+    try
+    {
+        retVal = writeNode(&destination, nodeToWrite);
+    }
+    catch (...)
+    {
+        //
+        // there is a possibility that memeory allocation
+        // exception thrown in XMLBuffer class
+        //
+        fEncoding = tempEncoding;
+        return 0;
+    }
 
     fEncoding = tempEncoding;
     return (retVal ? XMLString::replicate((XMLCh*) destination.getRawBuffer()) : 0);
@@ -633,15 +636,15 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
  *            from the document) that value will be used.
  *     If neither of the above provides an encoding name, a default encoding of
  *            "UTF-8" will be used.
- */	
-	fEncodingUsed = gUTF8;
+ */
+    fEncodingUsed = gUTF8;
 
-	if (fEncoding && *fEncoding)
-	{
-		fEncodingUsed = fEncoding;
-	}
-	else
-	{
+    if (fEncoding && *fEncoding)
+    {
+        fEncodingUsed = fEncoding;
+    }
+    else
+    {
         const DOMDocument *docu = (nodeToWrite->getNodeType() == DOMNode::DOCUMENT_NODE)?
                             (const DOMDocument*)nodeToWrite : nodeToWrite->getOwnerDocument();
         if (docu)
@@ -664,26 +667,26 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
         }
     }
 
-/**
- *  The end-of-line sequence of characters to be used in the XML being
- *  written out. The only permitted values are these:
- *     . null
- *
- *  Use a default end-of-line sequence. DOM implementations should choose
- * the default to match the usual convention for text files in the
- * environment being used. Implementations must choose a default
- * sequence that matches one of those allowed by  2.11 "End-of-Line
- * Handling".
- *
- *    CR    The carriage-return character (#xD)
- *    CR-LF The carriage-return and line-feed characters (#xD #xA)
- *    LF    The line-feed character (#xA)
- *
- *  The default value for this attribute is null
- */
-	fNewLineUsed = (fNewLine && *fNewLine)? fNewLine : gEOLSeq;
+    /**
+     *  The end-of-line sequence of characters to be used in the XML being
+     *  written out. The only permitted values are these:
+     *     . null
+     *
+     *  Use a default end-of-line sequence. DOM implementations should choose
+     * the default to match the usual convention for text files in the
+     * environment being used. Implementations must choose a default
+     * sequence that matches one of those allowed by  2.11 "End-of-Line
+     * Handling".
+     *
+     *    CR    The carriage-return character (#xD)
+     *    CR-LF The carriage-return and line-feed characters (#xD #xA)
+     *    LF    The line-feed character (#xA)
+     *
+     *  The default value for this attribute is null
+     */
+    fNewLineUsed = (fNewLine && *fNewLine)? fNewLine : gEOLSeq;
 
-	fErrorCount = 0;	
+    fErrorCount = 0;
 }
 
 //
@@ -732,10 +735,10 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 
     switch (nodeToWrite->getNodeType())
     {
-	case DOMNode::TEXT_NODE:
+    case DOMNode::TEXT_NODE:
         {
-			if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
-				break;
+            if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
+                break;
 
             //skip ws if pretty print
             if (getFeature(FORMAT_PRETTY_PRINT_ID))
@@ -743,33 +746,36 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                 if(XMLString::isAllWhiteSpace(nodeValue))
                     break;
             }
-             
-			setURCharRef();      // character data
+
+            setURCharRef();      // character data
             fFormatter->formatBuf(nodeValue, lent, XMLFormatter::CharEscapes);
             break;
         }
 
-	case DOMNode::PROCESSING_INSTRUCTION_NODE:
+    case DOMNode::PROCESSING_INSTRUCTION_NODE:
         {
-			if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
-				break;
+            if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
+                break;
 
-			TRY_CATCH_THROW
-			(
-				*fFormatter << XMLFormatter::NoEscapes << gStartPI << nodeName;
-				if (lent > 0)
-				{
-					*fFormatter << chSpace << nodeValue;
-				}
-				*fFormatter << gEndPI;
-				,true
-			)
+            printNewLine();
+            printIndent(level);
+
+            TRY_CATCH_THROW
+            (
+                *fFormatter << XMLFormatter::NoEscapes << gStartPI << nodeName;
+                if (lent > 0)
+                {
+                    *fFormatter << chSpace << nodeValue;
+                }
+                *fFormatter << gEndPI;
+                ,true
+            )
             break;
         }
 
-	case DOMNode::DOCUMENT_NODE: // Not to be shown to Filter
+    case DOMNode::DOCUMENT_NODE: // Not to be shown to Filter
         {
-			setURCharRef();
+            setURCharRef();
             const DOMDocument *docu = (const DOMDocument*)nodeToWrite;
 
             //[23] XMLDecl      ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
@@ -781,7 +787,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             // present in the original XML instance document or not.
             //
             const XMLCh* versionNo = (docu->getVersion()) ? docu->getVersion() : gXMLDecl_ver10;
-			*fFormatter << gXMLDecl_VersionInfo << versionNo << gXMLDecl_separator;
+            *fFormatter << gXMLDecl_VersionInfo << versionNo << gXMLDecl_separator;
 
             // use the encoding resolved in initSession()
             *fFormatter << gXMLDecl_EncodingDecl << fEncodingUsed << gXMLDecl_separator;
@@ -790,104 +796,94 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             *fFormatter << gXMLDecl_SDDecl << st << gXMLDecl_separator;
 
             *fFormatter << gXMLDecl_endtag;
-            printNewLine();
 
             DOMNode *child = nodeToWrite->getFirstChild();
             while( child != 0)
             {
                 processNode(child, level);
-                printNewLine();
                 child = child->getNextSibling();
             }
             break;
         }
 
-	case DOMNode::ELEMENT_NODE:
+    case DOMNode::ELEMENT_NODE:
         {
-            level++;
+            DOMNodeFilter::FilterAction filterAction = checkFilter(nodeToWrite);
 
-            //Add an extra blank line for level 0 nodes 
-            if(level == 0)   
-                printNewLine();
+            if ( filterAction == DOMNodeFilter::FILTER_REJECT)
+                break;
 
-            printNewLine();  
+            printNewLine();
+            printIndent(level);
 
             //track the line number the current node begins on
             int nodeLine = fCurrentLine;
 
-			DOMNodeFilter::FilterAction filterAction = checkFilter(nodeToWrite);
-			
-			if ( filterAction == DOMNodeFilter::FILTER_REJECT)
+            if ( filterAction == DOMNodeFilter::FILTER_ACCEPT)
             {
-               level--;
-				break;
-            }
-
-			if ( filterAction == DOMNodeFilter::FILTER_ACCEPT)
-			{
-                printIndent(level); 
-
-				//           this element    attributes   child elements
+                //           this element    attributes   child elements
                 // accept        yes             yes           yes
-				// skip          no              no            yes
-				//
-				TRY_CATCH_THROW
-				(
-				// The name has to be representable without any escapes
+                // skip          no              no            yes
+                //
+                TRY_CATCH_THROW
+                (
+                // The name has to be representable without any escapes
                     *fFormatter  << XMLFormatter::NoEscapes
                                  << chOpenAngle << nodeName;
-			        ,true
-			    )
+                    ,true
+                )
 
-				// Output any attributes on this element
-				setURCharRef();
-				DOMNamedNodeMap *attributes = nodeToWrite->getAttributes();
-				int attrCount = attributes->getLength();
+                // Output any attributes on this element
+                setURCharRef();
+                DOMNamedNodeMap *attributes = nodeToWrite->getAttributes();
+                int attrCount = attributes->getLength();
 
-				bool discard = getFeature(DISCARD_DEFAULT_CONTENT_ID);
-				for (int i = 0; i < attrCount; i++)
-				{
-					DOMNode  *attribute = attributes->item(i);
+                bool discard = getFeature(DISCARD_DEFAULT_CONTENT_ID);
+                for (int i = 0; i < attrCount; i++)
+                {
+                    DOMNode  *attribute = attributes->item(i);
 
-					// Not to be shown to Filter
+                    // Not to be shown to Filter
 
-					//
-					//"discard-default-content"
-					//	true
-					//	[required] (default)
-					//	Use whatever information available to the implementation
-					//  (i.e. XML schema, DTD, the specified flag on Attr nodes,
-					//  and so on) to decide what attributes and content should be
-					//  discarded or not.
-					//  Note that the specified flag on Attr nodes in itself is
-					//  not always reliable, it is only reliable when it is set
-					//  to false since the only case where it can be set to false
-					//  is if the attribute was created by the implementation.
-					//  The default content won't be removed if an implementation
-					//  does not have any information available.
-					//	false
-					//	[required]
-					//	Keep all attributes and all content.
-					//
-					if (discard && !((DOMAttr*)attribute )->getSpecified())
-						continue;
-					//
-					//  Again the name has to be completely representable. But the
-					//  attribute can have refs and requires the attribute style
-					//  escaping.
-					//
+                    //
+                    //"discard-default-content"
+                    //    true
+                    //    [required] (default)
+                    //    Use whatever information available to the implementation
+                    //  (i.e. XML schema, DTD, the specified flag on Attr nodes,
+                    //  and so on) to decide what attributes and content should be
+                    //  discarded or not.
+                    //  Note that the specified flag on Attr nodes in itself is
+                    //  not always reliable, it is only reliable when it is set
+                    //  to false since the only case where it can be set to false
+                    //  is if the attribute was created by the implementation.
+                    //  The default content won't be removed if an implementation
+                    //  does not have any information available.
+                    //    false
+                    //    [required]
+                    //    Keep all attributes and all content.
+                    //
+                    if (discard && !((DOMAttr*)attribute )->getSpecified())
+                        continue;
+                    //
+                    //  Again the name has to be completely representable. But the
+                    //  attribute can have refs and requires the attribute style
+                    //  escaping.
+                    //
 
-					*fFormatter  << XMLFormatter::NoEscapes
+                    *fFormatter  << XMLFormatter::NoEscapes
                                  << chSpace << attribute->getNodeName()
                                  << chEqual << chDoubleQuote
                                  << XMLFormatter::AttrEscapes
                                  << attribute->getNodeValue()
                                  << XMLFormatter::NoEscapes
                                  << chDoubleQuote;
-				} // end of for
-			} // end of FILTER_ACCEPT
+                } // end of for
+            } // end of FILTER_ACCEPT
 
-			// FILTER_SKIP may start from here
+            level++;
+
+            // FILTER_SKIP may start from here
 
             //
             //  Test for the presence of children, which includes both
@@ -898,8 +894,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
             {
                 // There are children. Close start-tag, and output children.
                 // No escapes are legal here
-				if (filterAction == DOMNodeFilter::FILTER_ACCEPT)
-					*fFormatter << XMLFormatter::NoEscapes << chCloseAngle;
+                if (filterAction == DOMNodeFilter::FILTER_ACCEPT)
+                    *fFormatter << XMLFormatter::NoEscapes << chCloseAngle;
+
+                if(level == 1)
+                    printNewLine();
 
                 while( child != 0)
                 {
@@ -907,8 +906,10 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                     child = child->getNextSibling();
                 }
 
-				if (filterAction == DOMNodeFilter::FILTER_ACCEPT)
-				{
+                level--;
+
+                if (filterAction == DOMNodeFilter::FILTER_ACCEPT)
+                {
                     //if we are not on the same line as when we started
                     //this node then print a new line and indent
                     if(nodeLine != fCurrentLine)
@@ -916,68 +917,68 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                         printNewLine();
                         printIndent(level);
                     }
-					TRY_CATCH_THROW
-					(
+                    TRY_CATCH_THROW
+                    (
                          *fFormatter << XMLFormatter::NoEscapes << gEndElement
                                      << nodeName << chCloseAngle;
                         ,true
-	                )
+                    )
 
                     //for level 1 nodes that span multiple lines, add an extra blank line
-                    if(nodeLine != fCurrentLine && level == 1)
+                    if(nodeLine != fCurrentLine && (level == 1 || level==0) )
                         printNewLine();
-                    
-				}
+
+                }
             }
             else
             {
+                level--;
+
                 //
                 //  There were no children. Output the short form close of
                 //  the element start tag, making it an empty-element tag.
                 //
-				if (filterAction == DOMNodeFilter::FILTER_ACCEPT)
-				{
-					TRY_CATCH_THROW
+                if (filterAction == DOMNodeFilter::FILTER_ACCEPT)
+                {
+                    TRY_CATCH_THROW
                     (
-					    *fFormatter << XMLFormatter::NoEscapes << chForwardSlash << chCloseAngle;
-				       , true
-				    )
-				}
+                        *fFormatter << XMLFormatter::NoEscapes << chForwardSlash << chCloseAngle;
+                       , true
+                    )
+                }
             }
 
-            level--;
- 
             break;
         }
 
-	case DOMNode::ENTITY_REFERENCE_NODE:
-		{
-			//"entities"
-			//true
-			//[required] (default)
-			//Keep EntityReference and Entity nodes in the document.
+    case DOMNode::ENTITY_REFERENCE_NODE:
+        {
+            //"entities"
+            //true
+            //[required] (default)
+            //Keep EntityReference and Entity nodes in the document.
 
-			//false
-			//[optional]
-			//Remove all EntityReference and Entity nodes from the document,
-			//       putting the entity expansions directly in their place.
-			//       Text nodes are into "normal" form.
-			//Only EntityReference nodes to non-defined entities are kept in the document.
+            //false
+            //[optional]
+            //Remove all EntityReference and Entity nodes from the document,
+            //       putting the entity expansions directly in their place.
+            //       Text nodes are into "normal" form.
+            //Only EntityReference nodes to non-defined entities are kept in the document.
 
-			if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
-				break;
+            if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
+                break;
 
-			if (getFeature(ENTITIES_ID))
-			{
-				TRY_CATCH_THROW
-				(
-					*fFormatter << XMLFormatter::NoEscapes << chAmpersand
+            if (getFeature(ENTITIES_ID))
+            {
+                TRY_CATCH_THROW
+                (
+                    *fFormatter << XMLFormatter::NoEscapes << chAmpersand
                                 << nodeName << chSemiColon;
-				    , true
-				)
-			}
-			else
-			{
+                    , true
+                )
+            }
+            else
+            {
                 // check if the referenced entity is defined or not
                 if (nodeToWrite->getOwnerDocument()->getDoctype()->getEntities()->getNamedItem(nodeName))
                 {
@@ -995,11 +996,11 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                    (
                         *fFormatter<<XMLFormatter::NoEscapes<<chAmpersand<<nodeName<<chSemiColon;
                         , true
-				    )
+                    )
                 }
-			}
-			break;
-		}
+            }
+            break;
+        }
 
         //
         //  feature:split_cdata_sections     occurence of ]]>   unrep-char
@@ -1007,19 +1008,19 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
         //          true                        split            split
         //          false                       fails            fails
         //
-	case DOMNode::CDATA_SECTION_NODE:
-		{
-			if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
-				break;
+    case DOMNode::CDATA_SECTION_NODE:
+        {
+            if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
+                break;
 
-			if (getFeature(SPLIT_CDATA_SECTIONS_ID))
-			{
+            if (getFeature(SPLIT_CDATA_SECTIONS_ID))
+            {
                 // it is fairly complicated and we process this
                 // in a separate function.
                 procCdataSection(nodeValue, nodeToWrite);
-			}
-			else
-			{
+            }
+            else
+            {
                 // search for "]]>"
                 if (XMLString::patternMatch((XMLCh* const) nodeValue, gEndCDATA) != -1)
                 {
@@ -1032,124 +1033,129 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
                     // transcoder throws exception for unrep chars
                     *fFormatter << XMLFormatter::NoEscapes << gStartCDATA << nodeValue << gEndCDATA;
                    , true
-			    )
+                )
             }
 
             break;
-		}
+        }
 
-	case DOMNode::COMMENT_NODE:
+    case DOMNode::COMMENT_NODE:
         {
-			if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
-				break;
+            if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
+                break;
 
-			TRY_CATCH_THROW
-			(
+        printNewLine();
+        printIndent(level);
+
+            TRY_CATCH_THROW
+            (
                 *fFormatter << XMLFormatter::NoEscapes << gStartComment
                 << nodeValue << gEndComment;
-			    , true
-			)
-			break;
+                , true
+            )
+            break;
         }
 
-	case DOMNode::DOCUMENT_TYPE_NODE:  // Not to be shown to Filter
-		{
+    case DOMNode::DOCUMENT_TYPE_NODE:  // Not to be shown to Filter
+        {
             const DOMDocumentType *doctype = (const DOMDocumentType *)nodeToWrite;;
 
-			fFormatter->setEscapeFlags(XMLFormatter::NoEscapes);
-            TRY_CATCH_THROW
-			(
-    			*fFormatter << gStartDoctype << nodeName;
+            fFormatter->setEscapeFlags(XMLFormatter::NoEscapes);
 
-    			const XMLCh  *id = doctype->getPublicId();
+            printNewLine();
+            printIndent(level);
+            TRY_CATCH_THROW
+            (
+                *fFormatter << gStartDoctype << nodeName;
+
+                const XMLCh  *id = doctype->getPublicId();
                 if (id && *id)
-				{
+                {
                     *fFormatter << chSpace << gPublic << id << chDoubleQuote;
 
-					id = doctype->getSystemId();
-					if (id && *id)
-					{
-						*fFormatter << chSpace << chDoubleQuote << id << chDoubleQuote;
-					}		
-					else
-					{
-						//
+                    id = doctype->getSystemId();
+                    if (id && *id)
+                    {
+                        *fFormatter << chSpace << chDoubleQuote << id << chDoubleQuote;
+                    }
+                    else
+                    {
+                        //
                         // 4.2.2 External Entities
                         // [Definition: If the entity is not internal,
-						//           it is an external entity, declared as follows:]
-						// External Entity Declaration
-						// [75] ExternalID ::= 'SYSTEM' S SystemLiteral
-						//                   | 'PUBLIC' S PubidLiteral S SystemLiteral
-						//
+                        //           it is an external entity, declared as follows:]
+                        // External Entity Declaration
+                        // [75] ExternalID ::= 'SYSTEM' S SystemLiteral
+                        //                   | 'PUBLIC' S PubidLiteral S SystemLiteral
+                        //
                         reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, gUnrecognizedNodeType);
                         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
-						// systemLiteral not found
-					}
-				}
-				else
-				{
-					id = doctype->getSystemId();
-					if (id && *id)
-					{
-						*fFormatter << chSpace << gSystem << id << chDoubleQuote;
-					}
-				}
+                        // systemLiteral not found
+                    }
+                }
+                else
+                {
+                    id = doctype->getSystemId();
+                    if (id && *id)
+                    {
+                        *fFormatter << chSpace << gSystem << id << chDoubleQuote;
+                    }
+                }
 
-				id = doctype->getInternalSubset();
-				if (id && *id)
-				{
-					*fFormatter << chSpace << chOpenSquare << id << chCloseSquare;
-				}
+                id = doctype->getInternalSubset();
+                if (id && *id)
+                {
+                    *fFormatter << chSpace << chOpenSquare << id << chCloseSquare;
+                }
 
-				*fFormatter << chCloseAngle;
-				, true
+                *fFormatter << chCloseAngle;
+                , true
 
-			) // end of TRY_CATCH_THROW
+            ) // end of TRY_CATCH_THROW
 
-			break;
+            break;
         }
 
-	case DOMNode::ENTITY_NODE:  // Not to be shown to Filter
+    case DOMNode::ENTITY_NODE:  // Not to be shown to Filter
         {
-			//
-			// REVISIT: how does the feature "entities" impact
-			// entity node?
-			//
+            //
+            // REVISIT: how does the feature "entities" impact
+            // entity node?
+            //
+            printNewLine();
+            printIndent(level);
+            fFormatter->setEscapeFlags(XMLFormatter::NoEscapes);
+            *fFormatter << gStartEntity    << nodeName;
 
-			fFormatter->setEscapeFlags(XMLFormatter::NoEscapes);
-			*fFormatter << gStartEntity	<< nodeName;
+            const XMLCh * id = ((const DOMEntity*)nodeToWrite)->getPublicId();
+            if (id)
+                *fFormatter << gPublic << id << chDoubleQuote;
 
-			const XMLCh * id = ((const DOMEntity*)nodeToWrite)->getPublicId();
-			if (id)
-				*fFormatter << gPublic << id << chDoubleQuote;
+            id = ((const DOMEntity*)nodeToWrite)->getSystemId();
+            if (id)
+                *fFormatter << gSystem << id << chDoubleQuote;
 
-			id = ((const DOMEntity*)nodeToWrite)->getSystemId();
-			if (id)
-				*fFormatter << gSystem << id << chDoubleQuote;
-
-			id = ((const DOMEntity*)nodeToWrite)->getNotationName();
-			if (id)
-				*fFormatter << gNotation << id << chDoubleQuote;
+            id = ((const DOMEntity*)nodeToWrite)->getNotationName();
+            if (id)
+                *fFormatter << gNotation << id << chDoubleQuote;
 
             *fFormatter << chCloseAngle;
 
-            printNewLine();
-
-			break;
+            break;
         }
 
-	default:
-    	/***
-		    This is an implementation specific behaviour, we abort serialization
-			once unrecognized node type encountered.
-	     ***/
+    default:
+        /***
+            This is an implementation specific behaviour, we abort serialization
+            once unrecognized node type encountered.
+         ***/
         {
             reportError(nodeToWrite, DOMError::DOM_SEVERITY_FATAL_ERROR, gUnrecognizedNodeType);
             throw DOMException(DOMException::NOT_FOUND_ERR, 0);
-			// UnreognizedNodeType;
-		}
+            // UnreognizedNodeType;
+        }
 
-		break;
+        break;
     }
 
 }
@@ -1158,16 +1164,16 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite, int level)
 //
 DOMNodeFilter::FilterAction DOMWriterImpl::checkFilter(const DOMNode* const node) const
 {
-	if (!fFilter ||
+    if (!fFilter ||
         ((fFilter->getWhatToShow() & (1 << (node->getNodeType() - 1))) == 0))
-		return DOMNodeFilter::FILTER_ACCEPT;
+        return DOMNodeFilter::FILTER_ACCEPT;
 
-	//
-	// if and only if there is a filter, and it is interested
-	// in the node type, then we pass the node to the filter
-	// for examination
-	//
-	return (DOMNodeFilter::FilterAction) fFilter->acceptNode(node);
+    //
+    // if and only if there is a filter, and it is interested
+    // in the node type, then we pass the node to the filter
+    // for examination
+    //
+    return (DOMNodeFilter::FilterAction) fFilter->acceptNode(node);
 }
 
 
@@ -1207,7 +1213,7 @@ bool DOMWriterImpl::checkFeature(const XMLCh* const featName
     if (featureId == INVALID_FEATURE_ID)
     {
         if (toThrow)
-            throw DOMException(DOMException::NOT_FOUND_ERR, featName);			
+            throw DOMException(DOMException::NOT_FOUND_ERR, featName);
 
         return false;
     }
@@ -1273,13 +1279,13 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
         if (endTagPos == 0)
         {
             TRY_CATCH_THROW
-           (
+            (
                 *fFormatter << XMLFormatter::NoEscapes << gStartCDATA << gEndCDATA;
                 , true
             )
         }
         else
-        {       
+        {
             procUnrepCharInCdataSection(curPtr, nodeToWrite);
         }
 
@@ -1354,16 +1360,16 @@ void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
             // Update the source pointer to our new spot
             srcPtr = tmpPtr;
         }
-         else
+        else
         {
-             //
-             //  We hit something unrepresentable. So continue forward doing
-             //  char refs until we hit something representable again or the
-             //  end of input.
-             //
+            //
+            //  We hit something unrepresentable. So continue forward doing
+            //  char refs until we hit something representable again or the
+            //  end of input.
+            //
 
-             // one warning for consective unrep chars
-             reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, gUnrepresentableChar);
+            // one warning for consective unrep chars
+            reportError(nodeToWrite, DOMError::DOM_SEVERITY_WARNING, gUnrepresentableChar);
 
             while (srcPtr < endPtr)
             {
@@ -1389,13 +1395,11 @@ void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
             }
         }
     }
-
-
 }
 
 void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 {
-    processNode(nodeToWrite, -1);
+    processNode(nodeToWrite, 0);
 }
 
 bool DOMWriterImpl::canSetFeature(const int featureId
@@ -1404,7 +1408,7 @@ bool DOMWriterImpl::canSetFeature(const int featureId
     return featuresSupported[2*featureId + (val? 0: 1)];
 }
 
-void DOMWriterImpl::printNewLine() 
+void DOMWriterImpl::printNewLine()
 {
     if (getFeature(FORMAT_PRETTY_PRINT_ID))
     {
