@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/06/18 21:33:57  peiyongz
+ * Memory leak fix: to addlevel(), by Erik Rydgren.
+ *
  * Revision 1.13  2001/06/12 19:08:27  peiyongz
  * Memory leak: fixed by Erik Rydgren
  *
@@ -180,6 +183,13 @@ unsigned int ElemStack::addLevel()
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
     }
+    else 
+    {     
+        // Cleanup the old element before reuse
+        unsigned int childCount = fStack[fStackTop]->fChildCount;
+        for (unsigned int childIndex = 0; childIndex < childCount; ++childIndex)    
+            delete fStack[fStackTop]->fChildren[childIndex];
+    }
 
     // Set up the new top row
     fStack[fStackTop]->fThisElement = 0;
@@ -212,6 +222,13 @@ ElemStack::addLevel(XMLElementDecl* const toSet, const unsigned int readerNum)
         fStack[fStackTop]->fChildren = 0;
         fStack[fStackTop]->fMapCapacity = 0;
         fStack[fStackTop]->fMap = 0;
+    }
+    else 
+    {     
+        // Cleanup the old element before reuse
+        unsigned int childCount = fStack[fStackTop]->fChildCount;
+        for (unsigned int childIndex = 0; childIndex < childCount; ++childIndex)    
+            delete fStack[fStackTop]->fChildren[childIndex];
     }
 
     // Set up the new top row
