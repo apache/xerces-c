@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.7  2000/05/10 01:13:52  abagchi
+# Now detects AIX version and introduces -lpthreads_compat accordingly
+#
 # Revision 1.6  2000/04/12 20:33:08  abagchi
 # Included some more PTX changes
 #
@@ -241,7 +244,14 @@ if test $platform = "hp-11"; then
     esac
     fi
 elif test $platform = "aix"; then
-    threadingLibs="-lpthreads_compat -lpthreads"
+    aix_version=`./config.guess`;
+    echo Found host system to be $aix_version
+    case $aix_version in
+       *4.3*)
+          threadingLibs="-lpthreads_compat -lpthreads";;
+       *)
+          threadingLibs="-lpthreads";;
+    esac
 elif test $platform = "ptx"; then
     threadingLibs=" "
 elif test $platform = "hp-10"; then
