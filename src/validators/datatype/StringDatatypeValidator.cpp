@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/10/09 20:54:35  peiyongz
+ * init(): take 1 arg.
+ *
  * Revision 1.16  2001/09/27 13:51:25  peiyongz
  * DTV Reorganization: ctor/init created to be used by derived class
  *
@@ -132,7 +135,7 @@ StringDatatypeValidator::StringDatatypeValidator(
 :AbstractStringValidator(baseValidator, facets, finalSet, DatatypeValidator::String)
 ,fWhiteSpace(DatatypeValidator::PRESERVE)
 {
-    init(baseValidator, facets, enums);
+    init(enums);
 }
 
 StringDatatypeValidator::~StringDatatypeValidator()

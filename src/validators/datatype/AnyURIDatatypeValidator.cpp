@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/10/09 20:53:58  peiyongz
+ * init(): take 1 arg.
+ *
  * Revision 1.8  2001/10/02 18:59:29  peiyongz
  * Invalid_Facet_Tag to display the tag name
  *
@@ -129,7 +132,7 @@ AnyURIDatatypeValidator::AnyURIDatatypeValidator(
 {
     try
     {
-        init(baseValidator, facets, enums);
+        init(enums);
     }
     catch (...)
     { 
