@@ -29,7 +29,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 /**
- * OMDocumentFragment is a "lightweight" or "minimal"
+ * DOMDocumentFragment is a "lightweight" or "minimal"
  * DOMDocument object.
  *
  * It is very common to want to be able to
