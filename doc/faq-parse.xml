@@ -921,7 +921,7 @@ catch (const XMLException&amp; toCatch) {
 
   <faq title="Why do I get compilation error when compiling &XercesCName; on FreeBSD with native transcoder?">
 
-    <q>Why do I get compilation error when compiling &XercesCName; on FreeBSD with transcoder?</q>
+    <q>Why do I get compilation error when compiling &XercesCName; on FreeBSD with native transcoder?</q>
 
     <a>
        <p>You may get the following compilation errors when compiling &XercesCName; with native transcoder on
