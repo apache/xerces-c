@@ -60,6 +60,7 @@
  */
 
 #include "DOMAttrMapImpl.hpp"
+#include "DOMAttrImpl.hpp"
 #include "DOMNamedNodeMapImpl.hpp"
 #include "DOMNodeImpl.hpp"
 #include "DOMElementImpl.hpp"
@@ -101,40 +102,100 @@ DOMAttrMapImpl *DOMAttrMapImpl::cloneAttrMap(DOMNode *ownerNode_p)
 
 DOMNode *DOMAttrMapImpl::removeNamedItem(const XMLCh *name)
 {
-	DOMNode* removed = DOMNamedNodeMapImpl::removeNamedItem(name);
+    DOMNode* removed = DOMNamedNodeMapImpl::removeNamedItem(name);
 
-	// Replace it if it had a default value
-	// (DOM spec level 1 - Element Interface)
-	if (hasDefaults() && (removed != 0))
-	{
-		DOMAttrMapImpl* defAttrs = ((DOMElementImpl*)fOwnerNode)->getDefaultAttributes();
-		DOMAttr* attr = (DOMAttr*)(defAttrs->getNamedItem(name));
-		if (attr != 0)
-		{
-			DOMAttr* newAttr = (DOMAttr*)attr->cloneNode(true);
-			setNamedItem(newAttr);
-		}
-	}
+    // Replace it if it had a default value
+    // (DOM spec level 1 - Element Interface)
+    if (hasDefaults() && (removed != 0))
+    {
+        DOMAttrMapImpl* defAttrs = ((DOMElementImpl*)fOwnerNode)->getDefaultAttributes();
+        DOMAttr* attr = (DOMAttr*)(defAttrs->getNamedItem(name));
+        if (attr != 0)
+        {
+            DOMAttr* newAttr = (DOMAttr*)attr->cloneNode(true);
+            setNamedItem(newAttr);
+        }
+    }
 
-	return removed;
+    return removed;
 }
 
 DOMNode *DOMAttrMapImpl::removeNamedItemNS(const XMLCh *namespaceURI, const XMLCh *localName)
 {
-	DOMNode* removed = DOMNamedNodeMapImpl::removeNamedItemNS(namespaceURI, localName);
+    DOMNode* removed = DOMNamedNodeMapImpl::removeNamedItemNS(namespaceURI, localName);
 
-	// Replace it if it had a default value
-	// (DOM spec level 2 - Element Interface)
-	if (hasDefaults() && (removed != 0))
-	{
-		DOMAttrMapImpl* defAttrs = ((DOMElementImpl*)fOwnerNode)->getDefaultAttributes();
-		DOMAttr* attr = (DOMAttr*)(defAttrs->getNamedItemNS(namespaceURI, localName));
-		if (attr != 0)
-		{
-			DOMAttr* newAttr = (DOMAttr*)attr->cloneNode(true);
-			setNamedItem(newAttr);
-		}
-	}
+    // Replace it if it had a default value
+    // (DOM spec level 2 - Element Interface)
 
-	return removed;
+    if (hasDefaults() && (removed != 0))
+    {
+        DOMAttrMapImpl* defAttrs = ((DOMElementImpl*)fOwnerNode)->getDefaultAttributes();
+        DOMAttr* attr = (DOMAttr*)(defAttrs->getNamedItemNS(namespaceURI, localName));
+        if (attr != 0)
+        {
+            DOMAttr* newAttr = (DOMAttr*)attr->cloneNode(true);
+            setNamedItemNS(newAttr);
+        }
+    }
+
+    return removed;
 }
+
+/**
+ * Get this AttributeMap in sync with the given "defaults" map.
+ * @param defaults The default attributes map to sync with.
+ */
+void DOMAttrMapImpl::reconcileDefaultAttributes(const DOMAttrMapImpl* defaults) {
+
+    // remove any existing default
+    XMLSize_t nsize = getLength();
+    for (XMLSSize_t i = nsize - 1; i >= 0; i--) {
+        DOMAttr* attr = (DOMAttr*)item(i);
+        if (!attr->getSpecified()) {
+            removeNamedItemAt(i);
+        }
+    }
+
+    hasDefaults(false);
+
+    // add the new defaults
+    if (defaults) {
+        hasDefaults(true);
+
+        if (nsize == 0) {
+            cloneContent(defaults);
+        }
+        else {
+            XMLSize_t dsize = defaults->getLength();
+            for (XMLSize_t n = 0; n < dsize; n++) {
+                DOMAttr* attr = (DOMAttr*)defaults->item(n);
+
+                DOMAttr* newAttr = (DOMAttr*)attr->cloneNode(true);
+                setNamedItemNS(newAttr);
+                DOMAttrImpl* newAttrImpl = (DOMAttrImpl*) newAttr;
+                newAttrImpl->setSpecified(false);
+            }
+        }
+    }
+} // reconcileDefaults()
+
+
+/**
+ * Move specified attributes from the given map to this one
+ */
+void DOMAttrMapImpl::moveSpecifiedAttributes(DOMAttrMapImpl* srcmap) {
+    XMLSize_t nsize = srcmap->getLength();
+
+    for (XMLSSize_t i = nsize - 1; i >= 0; i--) {
+        DOMAttr* attr = (DOMAttr*)srcmap->item(i);
+        if (attr->getSpecified()) {
+            srcmap->removeNamedItemAt(i);
+        }
+
+        if (attr->getLocalName())
+            setNamedItemNS(attr);
+        else
+            setNamedItem(attr);
+    }
+} // moveSpecifiedAttributes(AttributeMap):void
+

@@ -80,24 +80,27 @@ class DOMNamedNodeMap;
 class CDOM_EXPORT DOMAttrMapImpl : public DOMNamedNodeMapImpl
 {
 private:
-	//  bool attrDefaults;    // revisit.  Move up to the owning element level.
+    bool attrDefaults;
 
 public:
-	DOMAttrMapImpl(DOMNode *ownerNod);
+    DOMAttrMapImpl(DOMNode *ownerNod);
 
     // revisit.  This "copy" constructor is used for cloning an Element with Attributes,
     //                and for setting up default attributes.  It's probably not right
     //                for one or the other or both.
-	DOMAttrMapImpl(DOMNode *ownerNod, const DOMNamedNodeMapImpl *defaults);
-	DOMAttrMapImpl();
+    DOMAttrMapImpl(DOMNode *ownerNod, const DOMNamedNodeMapImpl *defaults);
+    DOMAttrMapImpl();
 
     virtual ~DOMAttrMapImpl();
-	virtual DOMAttrMapImpl *cloneAttrMap(DOMNode *ownerNode);
-	virtual bool hasDefaults();
-	virtual void hasDefaults(bool value);
+    virtual DOMAttrMapImpl *cloneAttrMap(DOMNode *ownerNode);
+    virtual bool hasDefaults();
+    virtual void hasDefaults(bool value);
 
     virtual DOMNode *removeNamedItem(const XMLCh *name);
     virtual DOMNode *removeNamedItemNS(const XMLCh *namespaceURI, const XMLCh *localName);
+
+    void reconcileDefaultAttributes(const DOMAttrMapImpl* defaults);
+    void moveSpecifiedAttributes(DOMAttrMapImpl* srcmap);
 };
 
 // ---------------------------------------------------------------------------
@@ -106,15 +109,12 @@ public:
 
 inline bool DOMAttrMapImpl::hasDefaults()
 {
-    //   revisit.   Put a flag on the element for this value.
-	// return attrDefaults;
-    return false;
+    return attrDefaults;
 }
 
 inline void DOMAttrMapImpl::hasDefaults(bool value)
 {
-    //   revisit.  Put a flag on the Element for this value.
-	//  attrDefaults = value;
+    attrDefaults = value;
 }
 
 
