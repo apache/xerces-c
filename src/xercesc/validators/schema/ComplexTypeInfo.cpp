@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/10/21 10:23:53  amassari
+ * When creating a new list of attributes, use the assigned memory manager
+ *
  * Revision 1.14  2003/10/17 21:17:12  peiyongz
  * using XTemplateSerializer
  *
@@ -307,7 +310,7 @@ XMLAttDefList& ComplexTypeInfo::getAttDefList() const
         if (!fAttDefs)
             faultInAttDefList();
 
-        ((ComplexTypeInfo*)this)->fAttList = new (fMemoryManager) SchemaAttDefList(fAttDefs);
+        ((ComplexTypeInfo*)this)->fAttList = new (fMemoryManager) SchemaAttDefList(fAttDefs, fMemoryManager);
     }
 
     // Reset it before we return it

@@ -184,7 +184,7 @@ XMLAttDefList& DTDElementDecl::getAttDefList() const
         if (!fAttDefs)
             faultInAttDefList();
 
-        ((DTDElementDecl*)this)->fAttList = new (getMemoryManager()) DTDAttDefList(fAttDefs);
+        ((DTDElementDecl*)this)->fAttList = new (getMemoryManager()) DTDAttDefList(fAttDefs,getMemoryManager());
     }
 
     // Reset it before we return it
