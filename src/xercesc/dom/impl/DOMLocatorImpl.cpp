@@ -56,12 +56,15 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/05/24 14:02:07  knoaman
+ * Fix complilation error.
+ *
  * Revision 1.1  2002/05/23 15:47:24  knoaman
  * DOM L3 core - support for DOMError, DOMErrorHandler and DOMLocator
  *
  */
 
-#include <xercesc/dom/impl/DOMLocatorImpl.hpp>
+#include "DOMLocatorImpl.hpp"
 
 // ---------------------------------------------------------------------------
 //  DOMLocatorImpl: Constructors and Destructor
