@@ -810,6 +810,7 @@ void XMLScanner::scanReset(const InputSource& src)
     // Reset some status flags
     fInException = false;
     fStandalone = false;
+    fErrorCount = 0;
 
     //
     //  Handle the creation of the XML reader object for this input source.

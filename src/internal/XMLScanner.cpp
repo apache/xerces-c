@@ -948,7 +948,7 @@ void XMLScanner::resetURIStringPool() {
 void XMLScanner::emitError(const XMLErrs::Codes toEmit)
 {
     //	Bump the error count
-    ++fErrorCount;
+    incrementErrorCount();
 
     if (fErrorReporter)
     {
@@ -999,8 +999,8 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
                             , const XMLCh* const        text4)
 {
     //	Bump the error count
-    ++fErrorCount;
-
+    incrementErrorCount();
+    
     if (fErrorReporter)
     {
         //
@@ -1053,7 +1053,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
                             , const char* const         text4)
 {
     //	Bump the error count
-    ++fErrorCount;
+    incrementErrorCount();
 
     if (fErrorReporter)
     {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/06/04 20:59:29  jberry
+ * Add method incrementErrorCount for use by validator. Make sure to reset error count in _both_ the scanReset methods.
+ *
  * Revision 1.20  2001/06/03 19:21:40  jberry
  * Add support for tracking error count during parse; enables simple parse without requiring error handler.
  *
@@ -407,6 +410,11 @@ public :
     void setValidationScheme(const ValSchemes newScheme);
     void setValidator(XMLValidator* const valToAdopt);
     void setDoSchema(const bool doSchema);
+
+    // -----------------------------------------------------------------------
+    //  Mutator methods
+    // -----------------------------------------------------------------------
+    void incrementErrorCount(void);			// For use by XMLValidator
 
     // -----------------------------------------------------------------------
     //  Deprecated methods as of 3.2.0. Use getValidationScheme() and
@@ -1061,6 +1069,15 @@ inline void XMLScanner::setValidator(XMLValidator* const valToAdopt)
 inline void XMLScanner::setDoSchema(const bool doSchema)
 {
     fDoSchema = doSchema;
+}
+
+
+// ---------------------------------------------------------------------------
+//  XMLScanner: Mutator methods
+// ---------------------------------------------------------------------------
+inline void XMLScanner::incrementErrorCount()
+{
+    ++fErrorCount;
 }
 
 
