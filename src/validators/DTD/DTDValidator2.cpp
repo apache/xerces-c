@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.17  2000/05/12 15:45:09  andyh
+ * Bug fix - A PE ref appearing at the start of a skipped conditional section
+ * was incorrectly being processed rather than ignored.  Fix from Dean Roddey.
+ *
  * Revision 1.16  2000/05/11 23:11:35  andyh
  * Add missing validity checks for stand-alone documents, character range
  * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
@@ -3073,8 +3077,6 @@ void DTDValidator::scanMarkupDecl(const bool parseTextDecl)
                 // Check for the following open square bracket
                 if (!getReaderMgr()->skippedChar(chOpenSquare))
                     getScanner()->emitError(XMLErrs::ExpectedINCLUDEBracket);
-
-                checkForPERef(false, false, true);
 
                 // And scan over the ignored part
                 scanIgnoredSection();
