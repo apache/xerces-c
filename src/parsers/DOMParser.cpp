@@ -1066,7 +1066,18 @@ void DOMParser::entityDecl
 	entity->setSystemId(entityDecl.getSystemId());
 	entity->setNotationName(entityDecl.getNotationName());
 
-	fDocumentType->entities->setNamedItem( entity ); 
+    EntityImpl *previousDef = (EntityImpl *)
+	    fDocumentType->entities->setNamedItem( entity ); 
+
+    //
+    //  If this new entity node is replacing an entity node that was already
+    //    in the entities named node map (happens if documents redefine the
+    //    predefined entited such as lt), we need to delete the original
+    //    entitiy node, assuming no-one else was referencing it.
+    //
+    if (previousDef != 0 && previousDef->nodeRefCount == 0)
+    	        NodeImpl::deleteIf(previousDef);
+
 
 	if (fDocumentType->isIntSubsetReading())
 	{
