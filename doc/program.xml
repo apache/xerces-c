@@ -15,6 +15,7 @@
       <li><link anchor="ConstructParser2">Constructing an XML Reader</link></li>
       <li><link anchor="UsingSAX2API">Using the SAX2 API</link></li>
       <li><link anchor="SAX2Features">Supported Features</link></li>
+      <li><link anchor="SAX2Properties">Supported Properties</link></li>
     </ul>
     <li><link anchor="DOMProgGuide">DOM Programming Guide</link></li>
     <ul>
@@ -294,8 +295,10 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
     <s3 title="Xerces SAX2 Supported Features">
 
        <p>The behavior of the SAX2XMLReader is dependant on the values of the following features.
-       All of the features below can be set using the <code>SAX2XMLReader::setFeature(XMLCh*,bool)</code> function.
-       None of these features can be modified in the middle of a parse, or an exception will be thrown.</p>
+       All of the features below can be set using the function <code>SAX2XMLReader::setFeature(cons XMLCh* const, const bool)</code>.
+       And can be queried using the function <code>bool SAX2XMLReader::getFeature(const XMLCh* const)</code>.
+       </p>
+       <p>None of these features can be modified in the middle of a parse, or an exception will be thrown.</p>
 
         <table>
             <tr><td colspan="2"><em>http://xml.org/sax/features/namespaces</em></td></tr>
@@ -362,6 +365,58 @@ MySAX2Handler::fatalError(const SAXParseException&amp; exception)
             </td></tr>
             <tr><td><em>true:</em></td><td> The parser will reuse grammar information from previous parses in subsequent parses. </td></tr>
             <tr><td><em>false:</em></td><td> The parser will not reuse any grammar information. (default)</td></tr>
+        </table>
+
+    </s3>
+
+    <anchor name="SAX2Properties"/>
+    <s3 title="Xerces SAX2 Supported Properties">
+
+       <p>The behavior of the SAX2XMLReader is dependant on the values of the following properties.
+       All of the properties below can be set using the function <code>SAX2XMLReader::setProperty(const XMLCh* const, void*)</code>.
+       pointer to a correct type.  Please check the column "Value Type" below
+       to learn exactly what type of property value each property expects for processing.
+       Passing a void pointer that was initialized with a wrong type will lead to unexpected result.
+       If the same property is set more than once, the last one takes effect.</p>
+
+       <p>Property values can be queried using the function <code>void* SAX2XMLReader::getFeature(const XMLCh* const)</code>.
+        The parser owns the returned pointer, and the memory allocated for the returned pointer will
+        be destroyed when the parser is deleted.  To ensure assessiblity of the returned information after
+        the parser is deleted, callers need to copy and store the returned information somewhere else.
+        Since the returned pointer is a generic void pointer, check the column "Value Type" below to learn
+        exactly what type of object each property returns for replication.</p>
+
+       <p>None of these properties can be modified in the middle of a parse, or an exception will be thrown.</p>
+
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/properties/schema/external-schemaLocation</em></td></tr>
+            <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
+                        the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
+                        instance document is only a hint; it does not mandate that these attributes
+                        must be used to locate schemas.  This property allows the user to specify a list
+                        of schemas to use.  If the targetNamespace of a schema specified using this
+                        method matches the targetNamespace of a schema occuring in the instance document
+                        in the schemaLocation attribute, the schema specified by the user using this
+                        method will be used (i.e., the instance document's schemaLocation attribute
+                        will be effectively ignored).</td></tr>
+            <tr><td><em>Value</em></td><td> The syntax is the same as for schemaLocation attributes
+                             in instance documents: e.g, "http://www.example.com file_name.xsd".
+                             The user can specify more than one XML Schema in the list.</td></tr>
+            <tr><td><em>Value Type</em></td><td> XMLCh* </td></tr>
+        </table>
+
+        <p/>
+        <table>
+            <tr><td colspan="2"><em>http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation</em></td></tr>
+            <tr><td><em>Description</em></td><td> The XML Schema Recommendation explicitly states that
+                        the inclusion of schemaLocation/ noNamespaceSchemaLocation attributes in the
+                        instance document is only a hint; it does not mandate that these attributes
+                        must be used to locate schemas.  This property allows the user to specify the
+                        no target namespace XML Schema Location externally.  If specified, the instance
+                        document's noNamespaceSchemaLocation attribute will be effectively ignored.</td></tr>
+            <tr><td><em>Value</em></td><td> The syntax is the same as for the noNamespaceSchemaLocation
+                        attribute that may occur in an instance document: e.g."file_name.xsd".</td></tr>
+            <tr><td><em>Value Type</em></td><td> XMLCh* </td></tr>
         </table>
 
     </s3>
