@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/05/31 17:50:26  knoaman
+ * small modification to XMLBigInteger::toString.
+ *
  * Revision 1.4  2001/05/18 20:17:57  tng
  * Schema: More exception messages in XMLBigDecimal/XMLBigInteger/DecimalDatatypeValidator.  By Pei Yong Zhang.
  *
@@ -333,7 +336,8 @@ XMLCh*  XMLBigInteger::toString() const
     // Add the leading sign here    
     int strLen = XMLString::stringLen(fMagnitude);
     XMLCh* retBuf = new XMLCh[strLen+2];
-    (fSign == 1)? retBuf[0] = chPlus : retBuf[0] = chDash;
+    
+    retBuf[0] = (fSign == 1) ? chPlus : chDash;
     XMLString::moveChars(&(retBuf[1]), &(fMagnitude[0]), strLen);
     retBuf[strLen+1] = chNull;
 
