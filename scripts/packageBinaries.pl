@@ -104,6 +104,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     mkdir ($targetdir . "/samples/data", "0644");
     mkdir ($targetdir . "/samples/SAXCount", "0644");
     mkdir ($targetdir . "/samples/SAXPrint", "0644");
+	mkdir ($targetdir . "/samples/SAX2Print", "0644");
     mkdir ($targetdir . "/samples/DOMCount", "0644");
     mkdir ($targetdir . "/samples/DOMPrint", "0644");
     mkdir ($targetdir . "/samples/Redirect", "0644");
@@ -166,6 +167,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     
     @headerDirectories =
      qw'sax
+		sax2
         framework
         dom
         internal
@@ -261,6 +263,8 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     system("rm -f $targetdir/samples/SAXCount/Makefile");
     system("cp -Rfv $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
     system("rm -f $targetdir/samples/SAXPrint/Makefile");
+	system("cp -Rfv $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
+    system("rm -f $targetdir/samples/SAX2Print/Makefile");
     system("cp -Rfv $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
     system("rm -f $targetdir/samples/DOMCount/Makefile");
     system("cp -Rfv $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
@@ -386,6 +390,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         system ("mkdir $targetdir/include/unicode");
     }
     system ("mkdir $targetdir/include/sax");
+	system ("mkdir $targetdir/include/sax2");
     system ("mkdir $targetdir/include/framework");
     system ("mkdir $targetdir/include/internal");
     system ("mkdir $targetdir/include/parsers");
@@ -418,6 +423,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system ("mkdir $targetdir/samples/data");
     system ("mkdir $targetdir/samples/SAXCount");
     system ("mkdir $targetdir/samples/SAXPrint");
+	system ("mkdir $targetdir/samples/SAX2Print");
     system ("mkdir $targetdir/samples/DOMCount");
     system ("mkdir $targetdir/samples/DOMPrint");
     system ("mkdir $targetdir/samples/Redirect");
@@ -505,6 +511,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     # Populate the include output directory
     print ("\n\nCopying headers files ...\n");
     system("cp -Rf $XERCESCROOT/src/sax/*.hpp $targetdir/include/sax");
+	system("cp -Rf $XERCESCROOT/src/sax2/*.hpp $targetdir/include/sax2");
     system("cp -Rf $XERCESCROOT/src/framework/*.hpp $targetdir/include/framework");
     system("cp -Rf $XERCESCROOT/src/dom/D*.hpp $targetdir/include/dom");
     
@@ -571,6 +578,8 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system("rm -f $targetdir/samples/SAXCount/Makefile");
     system("cp -Rf $XERCESCROOT/samples/SAXPrint/* $targetdir/samples/SAXPrint");
     system("rm -f $targetdir/samples/SAXPrint/Makefile");
+	system("cp -Rf $XERCESCROOT/samples/SAX2Print/* $targetdir/samples/SAX2Print");
+    system("rm -f $targetdir/samples/SAX2Print/Makefile");
     system("cp -Rf $XERCESCROOT/samples/DOMCount/* $targetdir/samples/DOMCount");
     system("rm -f $targetdir/samples/DOMCount/Makefile");
     system("cp -Rf $XERCESCROOT/samples/DOMPrint/* $targetdir/samples/DOMPrint");
