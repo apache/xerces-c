@@ -17,6 +17,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.14  2005/02/25 09:38:23  gareth
+* Fix for compile under gcc 4. Patch by Scott Cantor.
+*
 * Revision 1.13  2004/12/23 16:11:21  cargilld
 * Various XSValue updates: use ulong for postiveInteger; reset date fields to zero; modifty XSValueTest to test the returned value from getActualValue.
 *
@@ -6657,8 +6660,9 @@ int main(int, char* )
 
     catch (const XMLException& toCatch)
     {
+        StrX msg(toCatch.getMessage());
         XERCES_STD_QUALIFIER cerr << "Error during initialization! Message:\n"
-            << StrX(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+            << msg << XERCES_STD_QUALIFIER endl;
         return 1;
     }    
 
