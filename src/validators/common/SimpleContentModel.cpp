@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/11/28 16:46:20  tng
+ * Schema fix: Check for invalid URI index first.
+ *
  * Revision 1.10  2001/11/21 14:30:13  knoaman
  * Fix for UPA checking.
  *
@@ -493,10 +496,12 @@ void SimpleContentModel::checkUniqueParticleAttribution
     unsigned int orgURIIndex = 0;
 
     orgURIIndex = fFirstChild->getURI();
-    fFirstChild->setURI(pContentSpecOrgURI[orgURIIndex]);
+    if (orgURIIndex != XMLContentModel::gEOCFakeId)
+        fFirstChild->setURI(pContentSpecOrgURI[orgURIIndex]);
 
     orgURIIndex = fSecondChild->getURI();
-    fSecondChild->setURI(pContentSpecOrgURI[orgURIIndex]);
+    if (orgURIIndex != XMLContentModel::gEOCFakeId)
+        fSecondChild->setURI(pContentSpecOrgURI[orgURIIndex]);
 
     // only possible violation is when it's a choice
     if (fOp == ContentSpecNode::Choice) {
