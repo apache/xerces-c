@@ -144,15 +144,19 @@ bool NodeImpl::isEntityReference()       {return false;};
 bool NodeImpl::isTextImpl()              {return false;};
 
 
-void NodeImpl::changed() {}     // overridden in subclasses
+void NodeImpl::changed() {
+    // we do not actually store this information on every node, we only
+    // have a global indicator on the Document. Doing otherwise cost us too
+    // much for little gain.
+    getDocument()->changed();
+}
 
 int NodeImpl::changes()
 {
-        // overridden in subclasses
-//        throw new RuntimeException(
-//                  "changes() called on a NodeImpl or one of its subclasses" +
-//                  "which doesn't really implement it");
-    return 0;
+    // we do not actually store this information on every node, we only
+    // have a global indicator on the Document. Doing otherwise cost us too
+    // much for little gain.
+    return getDocument()->changes();
 };  
 
 

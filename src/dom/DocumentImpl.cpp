@@ -103,7 +103,7 @@ DocumentImpl::DocumentImpl()
     fNodeIDMap  = 0;
 	userData    = 0;
     ranges      = 0;
-
+    fChanges = 0;
 };
 
 
@@ -125,6 +125,7 @@ DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
     fNodeIDMap  = 0;
 	userData    = 0;
     ranges      = 0;
+    fChanges = 0;
 }
 
 void DocumentImpl::setDocumentType(DocumentTypeImpl *doctype)
@@ -816,3 +817,18 @@ void DocumentImpl::setUserData(void* val)
 	else
 		hasUserData(false);
 };  
+
+/**
+ * Denotes that this node has changed.
+ */
+void DocumentImpl::changed() {
+    fChanges++;
+}
+
+/**
+ * Returns the number of changes to this node.
+ */
+int DocumentImpl::changes() {
+    return fChanges;
+}
+

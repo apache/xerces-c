@@ -65,8 +65,6 @@ THIS_CLASS::THIS_CLASS(DocumentImpl *ownerDoc)
 {
     this->ownerDocument = ownerDoc;
     this->firstChild = null;
-
-    fChanges = 0;
 };  
 
 // This only makes a shallow copy, cloneChildren must also be called for a
@@ -78,8 +76,6 @@ THIS_CLASS::THIS_CLASS(const THIS_CLASS &other)
 
     // Need to break the association w/ original kids
     this->firstChild = null;
-
-    fChanges = 0;
 };
 
 
@@ -108,21 +104,6 @@ void THIS_CLASS::setOwnerDocument(DocumentImpl *doc) {
         child->setOwnerDocument(doc);
     }
 }
-
-
-void THIS_CLASS::changed()
-{
-    ++fChanges;
-    NodeImpl *parentNode = getParentNode();
-    if (parentNode != null) {
-        parentNode->changed();
-    }
-};  
-
-int THIS_CLASS::changes()
-{
-    return fChanges;
-};  
 
 
 NodeListImpl *THIS_CLASS::getChildNodes() {

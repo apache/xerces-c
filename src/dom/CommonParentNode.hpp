@@ -85,17 +85,12 @@ public:
 
     ChildNode                *firstChild;
 
-    int fChanges;
-
 public:
     THIS_CLASS(DocumentImpl *ownerDocument);
     THIS_CLASS(const THIS_CLASS &other);
     
     virtual DocumentImpl * getOwnerDocument();
     virtual void setOwnerDocument(DocumentImpl *doc);
-
-    virtual int changes();
-    virtual void changed();
 
     virtual NodeListImpl *getChildNodes();
     virtual NodeImpl * getFirstChild();
