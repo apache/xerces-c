@@ -4338,7 +4338,7 @@ void TraverseSchema::preprocessChildren(const IDOM_Element* const root) {
 }
 
 
-IDOM_Element* TraverseSchema::checkContent(const IDOM_Element* rootElem,
+IDOM_Element* TraverseSchema::checkContent(const IDOM_Element* const rootElem,
                                            IDOM_Element* const contentElem,
                                            const bool isEmpty) {
 
@@ -6325,7 +6325,7 @@ int TraverseSchema::getMaxTotalRange(const ContentSpecNode* const specNode) {
     return max;
 }
 
-void TraverseSchema::checkFixedFacet(const IDOM_Element* elem,
+void TraverseSchema::checkFixedFacet(const IDOM_Element* const elem,
                                      const XMLCh* const facetName,
                                      const DatatypeValidator* const baseDV,
                                      unsigned int& flags)
