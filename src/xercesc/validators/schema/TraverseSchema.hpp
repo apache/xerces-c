@@ -755,6 +755,7 @@ private:
     ValueVectorOf<unsigned int>*                   fCurrentGroupStack;
     ValueVectorOf<unsigned int>*                   fIC_NamespaceDepth;
     ValueVectorOf<SchemaElementDecl*>*             fIC_Elements;
+    ValueVectorOf<const DOMElement*>*              fDeclStack;
     GeneralAttributeCheck                          fAttributeCheck;
     RefHash2KeysTableOf<XMLCh>*                    fGlobalDeclarations;
     RefHash2KeysTableOf<XMLCh>*                    fNotationRegistry;
@@ -762,7 +763,7 @@ private:
     RefHash2KeysTableOf<IdentityConstraint>*       fIdentityConstraintNames;
     RefHash2KeysTableOf<SchemaElementDecl>*        fSubstitutionGroups;
     RefHash2KeysTableOf<ElemVector>*               fValidSubstitutionGroups;
-    RefHashTableOf<ValueVectorOf<DOMElement*> >* fIC_NodeListNS;
+    RefHashTableOf<ValueVectorOf<DOMElement*> >*   fIC_NodeListNS;
     RefHashTableOf<ElemVector>*                    fIC_ElementsNS;
     RefHashTableOf<ValueVectorOf<unsigned int> >*  fIC_NamespaceDepthNS;
     XSDDOMParser*                                  fParser;

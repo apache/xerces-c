@@ -215,6 +215,7 @@ TraverseSchema::TraverseSchema( DOMElement* const    schemaRoot
     , fCurrentGroupStack(0)
     , fIC_NamespaceDepth(0)
     , fIC_Elements(0)
+    , fDeclStack(0)
     , fGlobalDeclarations(0)
     , fNotationRegistry(0)
     , fRedefineComponents(0)
@@ -1489,7 +1490,7 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
     XercesAttGroupInfo* saveAttGroupInfo = fCurrentAttGroupInfo;
     XercesAttGroupInfo* attGroupInfo = new XercesAttGroupInfo();
 
-    fAttGroupRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)), attGroupInfo);
+    fDeclStack->addElement(elem);
     fCurrentAttGroupInfo = attGroupInfo;
 
     for (; content !=0; content = XUtil::getNextSiblingElement(content)) {
@@ -1525,8 +1526,14 @@ TraverseSchema::traverseAttributeGroupDecl(const DOMElement* const elem,
     }
 
     // ------------------------------------------------------------------
+    // Pop declaration
+    // ------------------------------------------------------------------
+    fDeclStack->removeElementAt(fDeclStack->size() - 1);
+
+    // ------------------------------------------------------------------
     // Restore old attGroupInfo
     // ------------------------------------------------------------------
+    fAttGroupRegistry->put((void*) fStringPool->getValueForId(fStringPool->addOrFind(name)), attGroupInfo);
     fCurrentAttGroupInfo = saveAttGroupInfo;
 
     // ------------------------------------------------------------------
@@ -6482,17 +6489,6 @@ TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
     }
     else {
 
-        // circular check
-        DOMNode* parentElem = elem->getParentNode();
-
-        if (XMLString::equals(parentElem->getLocalName(), SchemaSymbols::fgELT_ATTRIBUTEGROUP)
-            && XMLString::equals(((DOMElement*) parentElem)->getAttribute(SchemaSymbols::fgATT_NAME), localPart)
-            && !XMLString::equals(parentElem->getParentNode()->getLocalName(), SchemaSymbols::fgELT_REDEFINE)) {
-
-            reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoCircularAttGroup);
-            return 0;
-        }
-
         attGroupInfo = fAttGroupRegistry->get(localPart);
     }
 
@@ -6503,6 +6499,13 @@ TraverseSchema::processAttributeGroupRef(const DOMElement* const elem,
             SchemaSymbols::fgELT_ATTRIBUTEGROUP, localPart, &fSchemaInfo);
 
         if (attGroupElem != 0) {
+
+            // circular attribute check
+            if (fDeclStack->containsElement(attGroupElem)) {
+
+                reportSchemaError(elem, XMLUni::fgXMLErrDomain, XMLErrs::NoCircularDefinition, refName);
+                return 0;
+            }
 
             attGroupInfo = traverseAttributeGroupDecl(attGroupElem, typeInfo, true);
 
@@ -7718,6 +7721,7 @@ void TraverseSchema::init() {
     fSchemaInfoList = new RefHash2KeysTableOf<SchemaInfo>(29);
     fPreprocessedNodes = new RefHashTableOf<SchemaInfo>(29, false, new HashPtr());
     fLocator = new XSDLocator();
+    fDeclStack = new ValueVectorOf<const DOMElement*>(16);
 }
 
 void TraverseSchema::cleanUp() {
@@ -7730,6 +7734,7 @@ void TraverseSchema::cleanUp() {
     delete fRedefineComponents;
     delete fIdentityConstraintNames;
     delete fSubstitutionGroups;
+    delete fDeclStack;
     delete fIC_ElementsNS;
     delete fIC_NamespaceDepthNS;
     delete fIC_NodeListNS;
