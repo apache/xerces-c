@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/07/16 18:15:00  tng
+ * [Bug 6070] warning unused variable in HandlerBase.hpp
+ *
  * Revision 1.3  2002/06/06 20:39:16  tng
  * Document Fix: document that the returned object from resolveEntity is owned by the parser
  *
@@ -436,8 +439,8 @@ public:
 // ---------------------------------------------------------------------------
 //  HandlerBase: Inline default implementations
 // ---------------------------------------------------------------------------
-inline void HandlerBase::characters(const   XMLCh* const    chars
-                                    , const unsigned int    length)
+inline void HandlerBase::characters(const   XMLCh* const
+                                    , const unsigned int)
 {
 }
 
@@ -445,11 +448,11 @@ inline void HandlerBase::endDocument()
 {
 }
 
-inline void HandlerBase::endElement(const XMLCh* const name)
+inline void HandlerBase::endElement(const XMLCh* const)
 {
 }
 
-inline void HandlerBase::error(const SAXParseException& exception)
+inline void HandlerBase::error(const SAXParseException&)
 {
 }
 
@@ -459,20 +462,20 @@ inline void HandlerBase::fatalError(const SAXParseException& exception)
 }
 
 inline void
-HandlerBase::ignorableWhitespace(   const   XMLCh* const chars
-                                    , const unsigned int length)
+HandlerBase::ignorableWhitespace(   const   XMLCh* const
+                                    , const unsigned int)
 {
 }
 
-inline void HandlerBase::notationDecl(  const   XMLCh* const name
-                                        , const XMLCh* const publicId
-                                        , const XMLCh* const systemId)
+inline void HandlerBase::notationDecl(  const   XMLCh* const
+                                        , const XMLCh* const
+                                        , const XMLCh* const)
 {
 }
 
 inline void
-HandlerBase::processingInstruction( const   XMLCh* const target
-                                    , const XMLCh* const data)
+HandlerBase::processingInstruction( const   XMLCh* const
+                                    , const XMLCh* const)
 {
 }
 
@@ -489,21 +492,21 @@ inline void HandlerBase::resetDocType()
 }
 
 inline InputSource*
-HandlerBase::resolveEntity( const   XMLCh* const publicId
-                            , const XMLCh* const systemId)
+HandlerBase::resolveEntity( const   XMLCh* const
+                            , const XMLCh* const)
 {
     return 0;
 }
 
 inline void
-HandlerBase::unparsedEntityDecl(const   XMLCh* const name
-                                , const XMLCh* const publicId
-                                , const XMLCh* const systemId
-                                , const XMLCh* const notationName)
+HandlerBase::unparsedEntityDecl(const   XMLCh* const
+                                , const XMLCh* const
+                                , const XMLCh* const
+                                , const XMLCh* const)
 {
 }
 
-inline void HandlerBase::setDocumentLocator(const Locator* const locator)
+inline void HandlerBase::setDocumentLocator(const Locator* const)
 {
 }
 
@@ -512,12 +515,12 @@ inline void HandlerBase::startDocument()
 }
 
 inline void
-HandlerBase::startElement(  const   XMLCh* const    name
-                            ,       AttributeList&  attributes)
+HandlerBase::startElement(  const   XMLCh* const
+                            ,       AttributeList&)
 {
 }
 
-inline void HandlerBase::warning(const SAXParseException& exception)
+inline void HandlerBase::warning(const SAXParseException&)
 {
 }
 
