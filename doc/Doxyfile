@@ -205,7 +205,7 @@ ENABLED_SECTIONS     =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                = ../src/xercesc/dom ../src/xercesc/framework ../src/xercesc/sax ../src/xercesc/parsers ../src/xercesc/util ../src/xercesc/sax2
+INPUT                = ../src/xercesc/dom ../src/xercesc/idom ../src/xercesc/framework ../src/xercesc/sax ../src/xercesc/parsers ../src/xercesc/util ../src/xercesc/sax2
 
 # If the value of the INPUT tag contains directories, you can use the
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp
@@ -232,6 +232,8 @@ EXCLUDE              =
 
 EXCLUDE_PATTERNS     = *Impl.hpp Janitor.hpp BitOps.hpp BitSet.hpp ChildNode.hpp \
 CountedPointer.hpp DomMemDebug.hpp MemDebug.hpp DStringPool.hpp TransENameMap.hpp \
+IDCasts.hpp IDChildNode.hpp IDDeepNodeListPool.hpp IDDOMImplementation.hpp \
+IDNodeIDMap.hpp IDNodeVector.hpp IDParentNode.hpp IDStringPool.hpp \
 FlagJanitor.hpp HashBase.hpp HashPtr.hpp HashXMLCh.hpp KeyValuePair.hpp \
 KVStringPair.hpp NameIdPool.hpp NodeIDMap.hpp NameNodeFilter.hpp NodeVector.hpp \
 NodeImpl.hpp CommonParentNode.hpp RefArrayOf.hpp RefHash*.hpp RefStackOf.hpp \
