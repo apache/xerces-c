@@ -32,7 +32,7 @@
     </li>
 
      <li>
-        <code>DOMDocument</code>: set/getActualEncoding, set/getEncoding, set/getVersion, set/getStandalone, set/getDocumentURI.
+        <code>DOMDocument</code>: set/getActualEncoding, set/getEncoding, set/getVersion, set/getStandalone, set/getDocumentURI, renameNode
     </li>
     <li>
         <code>DOMEntity</code>: set/getActualEncoding, set/getEncoding, set/getVersion
@@ -41,7 +41,7 @@
         <code>DOMErrorHandler</code>, <code>DOMError</code>, <code>DOMLocator</code>
     </li>
     <li>
-        <code>DOMNode</code>: set/getUserData
+        <code>DOMNode</code>: set/getUserData, isSameNode, isEqualNode
     </li>
     <li>
         <code>DOMUserDataHandler</code>
