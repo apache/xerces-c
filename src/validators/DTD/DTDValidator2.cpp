@@ -147,17 +147,21 @@ bool DTDValidator::checkForPERef(const  bool    spaceRequired
     }
 
     // If the next char is a percent, then expand the PERef
-    if (getReaderMgr()->skippedChar(chPercent))
-    {
-        if (!expandPERef(false, inLiteral, inMarkup, throwAtEndExt))
-            getScanner()->emitError(XMLErrs::ExpectedEntityRefName);
-    }
+    if (!getReaderMgr()->skippedChar(chPercent))
+       return gotSpace;
 
-    // And skip any more spaces in the expanded value
-    if (getReaderMgr()->skippedSpace())
+    while (true)
     {
-        getReaderMgr()->skipPastSpaces();
-        gotSpace = true;
+       if (!expandPERef(false, inLiteral, inMarkup, throwAtEndExt))
+          getScanner()->emitError(XMLErrs::ExpectedEntityRefName);
+       // And skip any more spaces in the expanded value
+       if (getReaderMgr()->skippedSpace())
+       {
+          getReaderMgr()->skipPastSpaces();
+          gotSpace = true;
+       }
+       if (!getReaderMgr()->skippedChar(chPercent))
+          break;
     }
     return gotSpace;
 }
