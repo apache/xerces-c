@@ -16,6 +16,9 @@
 #
 #
 # $Log$
+# Revision 1.8  2005/04/05 09:21:57  gareth
+# Fix for jira 1397. *Much* nicer make output. Thanks to Axel Weib.
+#
 # Revision 1.7  2004/09/08 13:56:50  peiyongz
 # Apache License Version 2.0
 #
@@ -136,12 +139,14 @@ all::	includes $(VALIDATORS_DTD_CPP_OBJECTS)
 includes::	pubheaders $(VALIDATORS_DTD_C_FILES)
 
 pubheaders::
-	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
-	$(CP) $(VALIDATORS_DTD_CPP_PUBHEADERS) $(VALIDATORS_DTD_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	$Qmkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	@echo "  (CP)  $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)"
+	$Q$(CP) $(VALIDATORS_DTD_CPP_PUBHEADERS) $(VALIDATORS_DTD_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
 
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
-	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
+	@echo "  (DEP)"
+	$Q$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
 clean::
 	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."

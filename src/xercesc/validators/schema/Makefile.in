@@ -16,6 +16,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2005/04/05 09:21:57  gareth
+# Fix for jira 1397. *Much* nicer make output. Thanks to Axel Weib.
+#
 # Revision 1.11  2004/09/08 13:56:56  peiyongz
 # Apache License Version 2.0
 #
@@ -188,12 +191,14 @@ identity::
 	${MAKE} -C identity
 
 pubheaders::
-	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
-	$(CP) $(VALIDATORS_SCHEMA_CPP_PUBHEADERS) $(VALIDATORS_SCHEMA_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	$Qmkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	@echo "  (CP)  $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)"
+	$Q$(CP) $(VALIDATORS_SCHEMA_CPP_PUBHEADERS) $(VALIDATORS_SCHEMA_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
 
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
-	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
+	@echo "  (DEP)"
+	$Q$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
 clean::
 	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."

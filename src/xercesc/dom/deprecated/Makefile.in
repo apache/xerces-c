@@ -172,29 +172,31 @@ DOM_DEPRECATED_CPP_OBJECTS = \
 
 
 all::	includes $(DOM_DEPRECATED_CPP_OBJECTS)
-	@echo "move objects to" ${XML_OBJ_DEPDOM_DIR}
-	$(MV) $(addprefix $(XML_OBJ_DIR)/,$(DOM_DEPRECATED_CPP_OBJECTS)) ${XML_OBJ_DEPDOM_DIR}
+	@echo "copy objects to" ${XML_OBJ_DEPDOM_DIR}
+	$Q$(CP) $(addprefix $(XML_OBJ_DIR)/,$(DOM_DEPRECATED_CPP_OBJECTS)) ${XML_OBJ_DEPDOM_DIR}
 
 includes::	pubheaders $(DOM_DEPRECATED_C_FILES)
 
 pubheaders::
-	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
-	$(CP) $(DOM_DEPRECATED_CPP_PUBHEADERS) $(DOM_DEPRECATED_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	$Qmkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	@echo "  (CP)  $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)"
+	$Q$(CP) $(DOM_DEPRECATED_CPP_PUBHEADERS) $(DOM_DEPRECATED_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
 
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
-	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
+	@echo "  (DEP)"
+	$Q$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
 clean::
 	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."
-	$(RM2) $(addprefix $(XML_OBJ_DEPDOM_DIR)/,$(DOM_DEPRECATED_CPP_OBJECTS))
+	$Q$(RM2) $(addprefix $(XML_OBJ_DEPDOM_DIR)/,$(DOM_DEPRECATED_CPP_OBJECTS))
 
 distclean:: clean
 	$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE)/$(SUBMODULE) header files ..."
-	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(DOM_DEPRECATED_CPP_PUBHEADERS))
+	$Q$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(DOM_DEPRECATED_CPP_PUBHEADERS))
 
 install::
-	-mkdir -p $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
+	$Qmkdir -p $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
 	$(CP) $(DOM_DEPRECATED_CPP_PUBHEADERS) $(DOM_DEPRECATED_C_FILES) $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
 

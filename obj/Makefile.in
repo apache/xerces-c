@@ -52,19 +52,6 @@ BATCH_TARGET = "//'${LOADMOD}(IXM4C55)'"
 BATCH_EXP = "//'${LOADEXP}(IXM4C55)'"
 DEPDOM_TARGET = "//'${LOADMOD}(IXMDD55)'"
 endif
-ifneq (${PLATFORM}, OS400)
-ifeq (${PLATFORM}, CYGWIN)
-CYGNAME=cygxerces-c
-CYGDEPDOM=cygxerces-depdom
-endif
-LIBNAME=libxerces-c
-LINK_LIBNAME=xerces-c
-LIBDEPDOM=libxerces-depdom
-else
-LIBNAME=libxercesc
-LINK_LIBNAME=xercesc
-LIBDEPDOM=libxercesdepdom
-endif
 
 ALL_OBJECTS=$(wildcard $(PLATFORM)/*.o)
 # obj/<platform>/depdom/*.o
@@ -221,13 +208,14 @@ else
 	-rm -f ${FQ_SO_DEPDOM}
 	-rm -f ${FQ_LINK_DEPDOM}	
 endif
+	-rm -f *.map
 
 
 distclean:	clean
 	-rm -f Makefile
-	-rm -rf $(XML_OBJ_DIR)
+	-rm -Rf $(XML_OBJ_DIR)
 ifneq ($(strip $(TEMPLATESREPOSITORY)),)
-	-rm -rf $(TEMPLATESREPOSITORY)
+	-rm -Rf $(TEMPLATESREPOSITORY)
 endif
 
 

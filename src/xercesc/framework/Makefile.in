@@ -16,6 +16,9 @@
 #
 #
 # $Log$
+# Revision 1.18  2005/04/05 09:21:56  gareth
+# Fix for jira 1397. *Much* nicer make output. Thanks to Axel Weib.
+#
 # Revision 1.17  2004/09/08 13:55:57  peiyongz
 # Apache License Version 2.0
 #
@@ -212,12 +215,14 @@ psvi::
 	${MAKE} -C psvi 
 
 pubheaders::
-	-mkdir -p $(XML_INC_DIR)/$(MODULE)
-	$(CP) $(FRAMEWORK_CPP_PUBHEADERS) $(FRAMEWORK_C_FILES) $(XML_INC_DIR)/$(MODULE)
+	$Qmkdir -p $(XML_INC_DIR)/$(MODULE)
+	@echo "  (CP)  $(XML_INC_DIR)/$(MODULE)"
+	$Q$(CP) $(FRAMEWORK_CPP_PUBHEADERS) $(FRAMEWORK_C_FILES) $(XML_INC_DIR)/$(MODULE)
 
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
-	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
+	@echo "  (DEP)"
+	$Q$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
 clean::
 	@echo "Making clean in $(MODULE) ..."

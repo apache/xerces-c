@@ -76,59 +76,59 @@ endif
 
 Prepare::
 	@echo Preparing the directory structure for a build ...
-	-${MKDIR} -p ${XML_OBJ_DIR}
-	-${MKDIR} -p ${XML_OBJ_DEPDOM_DIR}
-	-${MKDIR} -p ${XML_LIB_DIR}
-	${MAKE} -C $(UTIL_DIR) includes
-	${MAKE} -C $(SAX_DIR) includes
-	${MAKE} -C $(SAX2_DIR) includes
-	${MAKE} -C $(INTERNAL_DIR) includes
-	${MAKE} -C $(FRAMEWORK_DIR) includes
-	${MAKE} -C $(PARSERS_DIR) includes
-	${MAKE} -C $(VALIDATORS_DIR) includes
-	${MAKE} -C $(DOM_DIR) includes
+	$Q${MKDIR} -p ${XML_OBJ_DIR}
+	$Q${MKDIR} -p ${XML_OBJ_DEPDOM_DIR}
+	$Q${MKDIR} -p ${XML_LIB_DIR}
+	$Q${MAKE} -s -C $(UTIL_DIR) includes
+	$Q${MAKE} -s -C $(SAX_DIR) includes
+	$Q${MAKE} -s -C $(SAX2_DIR) includes
+	$Q${MAKE} -s -C $(INTERNAL_DIR) includes
+	$Q${MAKE} -s -C $(FRAMEWORK_DIR) includes
+	$Q${MAKE} -s -C $(PARSERS_DIR) includes
+	$Q${MAKE} -s -C $(VALIDATORS_DIR) includes
+	$Q${MAKE} -s -C $(DOM_DIR) includes
 
 Util::
 	@echo Building "util"
-	${MAKE} -C $(UTIL_DIR) $(MAKE_FLAGS)
+	$Q${MAKE} -s -C $(UTIL_DIR) $(MAKE_FLAGS)
 
 Sax::
 	@echo Building "sax"
-	${MAKE} -C $(SAX_DIR) $(MAKE_FLAGS)
+	$Q${MAKE} -s -C $(SAX_DIR) $(MAKE_FLAGS)
 
 
 Internal::
 	@echo Building "internal"
-	${MAKE} -C $(INTERNAL_DIR) $(MAKE_FLAGS)
+	$Q${MAKE} -s -C $(INTERNAL_DIR) $(MAKE_FLAGS)
 
 Framework::
 	@echo Building "framework"
-	${MAKE} -C $(FRAMEWORK_DIR) $(MAKE_FLAGS)
+	$Q${MAKE} -s -C $(FRAMEWORK_DIR) $(MAKE_FLAGS)
 
 Parsers::
 	@echo Building "parsers"
-	${MAKE} -C $(PARSERS_DIR) $(MAKE_FLAGS)
+	$Q${MAKE} -s -C $(PARSERS_DIR) $(MAKE_FLAGS)
 
 Sax2::
 	@echo Building "sax2"
-	${MAKE} -C $(SAX2_DIR) $(MAKE_FLAGS)
+	$Q${MAKE} -s -C $(SAX2_DIR) $(MAKE_FLAGS)
 
 Dom::
 	@echo Building "dom"
-	${MAKE} -C $(DOM_DIR) $(MAKE_FLAGS)
+	$Q${MAKE} -s -C $(DOM_DIR) $(MAKE_FLAGS)
 
 Validators::
 	@echo Building "validators"
-	${MAKE} -C $(VALIDATORS_DIR) $(MAKE_FLAGS)
+	$Q${MAKE} -s -C $(VALIDATORS_DIR) $(MAKE_FLAGS)
 
 ifeq (${PLATFORM},CYGWIN)
 ${FQ_SO_NAME}:: compile
 	@echo Building ${FQ_SO_NAME}
-	${MAKE} -C $(XML_OBJ) -k $(MAKE_FLAGS)
+	$Q${MAKE} -s -C $(XML_OBJ) -k $(MAKE_FLAGS)
 else
 ${FQ_REAL_NAME}:: compile
-	@echo Building ${FQ_REAL_NAME}
-	${MAKE} -C $(XML_OBJ) -k $(MAKE_FLAGS)
+	@echo toplevel Building ${FQ_REAL_NAME}
+	$Q${MAKE} -C $(XML_OBJ) -k $(MAKE_FLAGS)
 endif
 
 install::

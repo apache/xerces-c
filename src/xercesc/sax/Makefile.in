@@ -68,12 +68,14 @@ all::	includes $(SAX_CPP_OBJECTS)
 includes::	pubheaders $(SAX_C_FILES)
 
 pubheaders::
-	-mkdir -p $(XML_INC_DIR)/$(MODULE)
-	$(CP) $(SAX_CPP_PUBHEADERS) $(SAX_C_FILES) $(XML_INC_DIR)/$(MODULE)
+	$Qmkdir -p $(XML_INC_DIR)/$(MODULE)
+	@echo "  (CP)  $(XML_INC_DIR)/$(MODULE)"
+	$Q$(CP) $(SAX_CPP_PUBHEADERS) $(SAX_C_FILES) $(XML_INC_DIR)/$(MODULE)
 
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
-	$(MAKE_DEPEND) $(XML_INCL) *.cpp > $(DEPFILE)
+	@echo "  (DEP)"
+	$Q$(MAKE_DEPEND) $(XML_INCL) *.cpp > $(DEPFILE)
 
 clean::
 	@echo "Making clean in $(MODULE) ..."

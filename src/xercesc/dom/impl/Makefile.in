@@ -132,24 +132,27 @@ all::	includes $(DOM_IMPL_CPP_OBJECTS)
 includes::	pubheaders $(DOM_IMPL_C_FILES)
 
 pubheaders::
-	-mkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
-	$(CP) $(DOM_IMPL_CPP_PUBHEADERS) $(DOM_IMPL_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	$Qmkdir -p $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
+	@echo "  (CP)  $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)"
+	$Q$(CP) $(DOM_IMPL_CPP_PUBHEADERS) $(DOM_IMPL_C_FILES) $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)
 
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
-	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
+	@echo "  (DEP)"
+	$Q$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
 clean::
 	@echo "Making clean in $(MODULE)/$(SUBMODULE) ..."
-	$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(DOM_IMPL_CPP_OBJECTS))
+	$Q$(RM2) $(addprefix $(XML_OBJ_DIR)/,$(DOM_IMPL_CPP_OBJECTS))
 
 distclean::	clean
-	$(RM) Makefile $(DEPFILE)
+	$Q$(RM) Makefile $(DEPFILE)
 	@echo "Removing all $(MODULE)/$(SUBMODULE) header files ..."
 ifneq ($(strip $(DOM_IMPL_CPP_PUBHEADERS)),)
-	$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(DOM_IMPL_CPP_PUBHEADERS))
+	$Q$(RM2) $(addprefix $(XML_INC_DIR)/$(MODULE)/$(SUBMODULE)/,$(DOM_IMPL_CPP_PUBHEADERS))
 endif
 
 install::
-	-mkdir -p $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
-	$(CP) $(DOM_IMPL_CPP_PUBHEADERS) $(DOM_IMPL_C_FILES) $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
+	$Qmkdir -p $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)
+	@echo "  (CP)"
+	$Q$(CP) $(DOM_IMPL_CPP_PUBHEADERS) $(DOM_IMPL_C_FILES) $(DESTDIR)$(PREFIX_INCLUDE)/$(MODULE)/$(SUBMODULE)

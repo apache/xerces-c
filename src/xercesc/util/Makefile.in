@@ -16,6 +16,9 @@
 #
 #
 # $Log$
+# Revision 1.46  2005/04/05 09:21:56  gareth
+# Fix for jira 1397. *Much* nicer make output. Thanks to Axel Weib.
+#
 # Revision 1.45  2004/10/20 15:18:35  knoaman
 # Allow option of initializing static data in XMLPlatformUtils::Initialize
 #
@@ -686,13 +689,15 @@ regx::
 
 
 pubheaders::
-	-mkdir -p $(XML_INC_DIR)/$(MODULE)
-	$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(XML_INC_DIR)/$(MODULE)
+	$Qmkdir -p $(XML_INC_DIR)/$(MODULE)
+	@echo "  (CP)  $(XML_INC_DIR)/$(MODULE)"
+	$Q$(CP) $(UTIL_CPP_PUBHEADERS) $(C_FILES) $(XML_INC_DIR)/$(MODULE)
 
 
 # this may generate unnecessary dependencies, but it makes life easier
 depend:: includes
-	$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
+	@echo "  (DEP)"
+	$Q$(MAKE_DEPEND) $(XML_INCL)  *.cpp > $(DEPFILE)
 
 
 clean::
