@@ -7,19 +7,19 @@
 CFG=XercesLib - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "XercesLib.mak".
-!MESSAGE
+!MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE
+!MESSAGE 
 !MESSAGE NMAKE /f "XercesLib.mak" CFG="XercesLib - Win32 Debug"
-!MESSAGE
+!MESSAGE 
 !MESSAGE Possible choices for configuration are:
-!MESSAGE
+!MESSAGE 
 !MESSAGE "XercesLib - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "XercesLib - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE
+!MESSAGE 
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -84,7 +84,7 @@ LINK32=link.exe
 # ADD LINK32 kernel32.lib user32.lib advapi32.lib ws2_32.lib /nologo /base:"0x12000000" /version:1.4 /subsystem:windows /dll /debug /machine:I386 /out:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1_4D.dll" /implib:"..\..\..\..\..\Build\Win32\VC6\Debug/xerces-c_1D.lib" /pdbtype:sept
 # SUBTRACT LINK32 /pdb:none
 
-!ENDIF
+!ENDIF 
 
 # Begin Target
 
@@ -288,6 +288,14 @@ SOURCE=..\..\..\..\..\src\util\regx\RangeToken.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\util\regx\RangeToken.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RangeTokenMap.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\regx\RangeTokenMap.hpp
 # End Source File
 # Begin Source File
 
@@ -1788,6 +1796,22 @@ SOURCE=..\..\..\..\..\src\validators\schema\SchemaValidator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\schema\SchemaValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SubstitutionGroupComparator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\SubstitutionGroupComparator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\TraverseSchema.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\schema\TraverseSchema.hpp
 # End Source File
 # Begin Source File
 

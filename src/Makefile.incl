@@ -114,7 +114,7 @@ ifeq (${PLATFORM}, SOLARIS)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared ${LDFLAGS}
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
-                  -licu-uc -licudata -lm -lgen
+                  -licuuc -licudata -lm -lgen
     else
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
                   -lm  -lgen
@@ -126,7 +126,7 @@ ifeq (${PLATFORM}, SOLARIS)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G ${LDFLAGS}
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
-                  -licu-uc -licudata -lc -lgen
+                  -licuuc -licudata -lc -lgen
     else
         ALLLIBS = -mt ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
                   -lc -lgen
@@ -143,7 +143,7 @@ ifeq (${PLATFORM}, UNIXWARE)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
-                  -licu-uc -licudata -lm -lw -lgen
+                  -licuuc -licudata -lm -lw -lgen
     else
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
                   -lm -lw -lgen
@@ -155,7 +155,7 @@ ifeq (${PLATFORM}, UNIXWARE)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/local/lib -L/usr/ccs/lib \
-                  -licu-uc -licudata -lm -lw -lC -lc -lgen
+                  -licuuc -licudata -lm -lw -lC -lc -lgen
     else
         ALLLIBS = ${LIBS} -L/usr/local/lib -L/usr/ccs/lib \
                   -lm -lw -lC -lc -lgen
@@ -171,7 +171,7 @@ PLATFORM_CPP_COMPILER = c++
 PLATFORM_C_COMPILER = cc
 ifeq (${TRANSCODER}, ICU)
   PLATFORM_COMPILE_OPTIONS = -KPIC -Kthread -D${PLATFORM}
-  ALLLIBS = ${LIBS} -L${ICUROOT}/lib -lm -lgen -licu-uc
+  ALLLIBS = ${LIBS} -L${ICUROOT}/lib -lm -lgen -licuuc
 else
   PLATFORM_COMPILE_OPTIONS = -KPIC -Kthread -D${PLATFORM}
   ALLLIBS = ${LIBS} -lm -lgen
@@ -189,13 +189,13 @@ ifeq (${PLATFORM}, AIX)
 #PLATFORM_CPP_COMPILER = xlC_r
 #PLATFORM_C_COMPILER = xlc_r
 #ifdef ICUROOT
-#  ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -L${ICUROOT}/lib -licu-uc -licudata -lbsd
+#  ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -L${ICUROOT}/lib -licuuc -licudata -lbsd
 #else
 #  ALLLIBS = -L/usr/lpp/xlC/lib -lbsd
 #endif
 
 ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licu-uc -licudata
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc -licudata
 else
     ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib
 endif
@@ -231,7 +231,7 @@ SHLIBSUFFIX=.o
 endif
 ifeq (${TRANSCODER}, ICU)
 ifeq (${SYSOVR},OS400)
-EXTRA_LINK_OPTIONS = -licu-uc -licudata -lbsd
+EXTRA_LINK_OPTIONS = -licuuc -licudata -lbsd
 else
 EXTRA_LINK_OPTIONS = -lQZUUC
 endif
@@ -248,7 +248,7 @@ PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fPIC
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fPIC
 ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -licudata -lc
+    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lc
 else
     ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
 endif
@@ -263,7 +263,7 @@ PLATFORM_COMPILE_OPTIONS = -LANG:pch -LANG:std -O2 \
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
 ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -lC -licu-uc -licudata
+    ALLLIBS = ${LIBS} -lC -licuuc -licudata
 else
     ALLLIBS = ${LIBS} -lC
 endif
@@ -301,7 +301,7 @@ ifeq (${PLATFORM}, HPUX)
     MAKE_SHARED = ${CXX} -D${PLATFORM} -b
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -b
     ifeq (${TRANSCODER}, ICU)
-        ALLLIBS = ${LIBS} -licu-uc -licudata -lCsup -lstream
+        ALLLIBS = ${LIBS} -licuuc -licudata -lCsup -lstream
     else
         ALLLIBS = ${LIBS} -lCsup -lstream
     endif
@@ -318,7 +318,7 @@ ifeq (${PLATFORM}, HPUX)
     MAKE_SHARED = $(CXX) $(PLATFORM_COMPILE_OPTIONS) $(XML_INCL)
     MAKE_SHARED_C = $(CC) $(PLATFORM_COMPILE_OPTIONS) $(XML_INCL)
     ifeq (${TRANSCODER}, ICU)
-        ALLLIBS = ${LIBS} -licu-uc -licudata
+        ALLLIBS = ${LIBS} -licuuc -licudata
     else
         ALLLIBS = ${LIBS}
     endif
@@ -346,7 +346,7 @@ ifeq (${TRANSCODER}, ICU)
     ifeq (${OS390BATCH},1)
 	ALLLIBS = "//'${LOADEXP}(IXMICUUC)'"
     else
-	ALLLIBS = ${ICUROOT}/lib/libicu-uc.x
+	ALLLIBS = ${ICUROOT}/lib/libicuuc.x
     endif
 else
 	ALLLIBS =
@@ -364,7 +364,7 @@ ifeq (${PLATFORM}, TRU64)
     MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
     PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
     ifeq (${TRANSCODER}, ICU)
-      ALLLIBS = ${LIBS} -licu-uc -licudata -lc -lrt
+      ALLLIBS = ${LIBS} -licuuc -licudata -lc -lrt
     else
       ALLLIBS = ${LIBS} -lc -lrt
     endif
@@ -372,7 +372,7 @@ ifeq (${PLATFORM}, TRU64)
     MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -ptr ${XERCESCROOT}/.cxx_repository
     PLATFORM_COMPILE_OPTIONS = -D${PLATFORM} -ptr ${XERCESCROOT}/.cxx_repository
     ifeq (${TRANSCODER}, ICU)
-	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -licudata -lc -lrt
+	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licuuc -licudata -lc -lrt
     else
 	ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc -lrt
     endif
