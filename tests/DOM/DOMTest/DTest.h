@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/09/23 18:27:48  tng
+ * DOM L3: Test baseURI.   Added by Gareth Reakes and Thomas Ford.
+ *
  * Revision 1.7  2002/06/12 18:31:17  tng
  * DOM L3: test the DOMUserDataHandler and set/getUserData
  *
@@ -150,6 +153,8 @@ bool testNotation(DOMDocument* document);
 bool testPI(DOMDocument* document);
 bool testText(DOMDocument* document);
 bool treeCompare(DOMNode* node, DOMNode* node2);
+
+bool testBaseURI(void);
 
 };
 

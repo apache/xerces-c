@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?proc-inst-1 'foo' ?>
 <personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:noNamespaceSchemaLocation='personal.xsd'>
 
-  <person id="Big.Boss" >
-    <name><family>Boss</family> <given>Big</given></name>
+  <person id="Big.Boss">
+    <name xml:base="foo/bar"><family  xml:base="bar/bar">Boss</family> <given xml:base="car/bar">Big</given><?proc-inst-2 'foobar' ?></name>
     <email>chief@foo.com</email>
     <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
   </person>
 
-  <person id="one.worker">
-    <name><family>Worker</family> <given>One</given></name>
+  <person id="one.worker" xml:base="/auto/bar">
+    <name xml:base="/car/foo/"><family xml:base="bar/bar">Worker</family> <given>One</given></name>
     <email>one@foo.com</email>
     <link manager="Big.Boss"/>
   </person>
 
-  <person id="two.worker">
-    <name><family>Worker</family> <given>Two</given></name>
+  <person id="two.worker" xml:base="http://www.example.com/car/car">
+    <name xml:base="/bar/foo/"><family xml:base="foo/bar">Worker</family> <given>Two</given></name>
     <email>two@foo.com</email>
     <link manager="Big.Boss"/>
   </person>

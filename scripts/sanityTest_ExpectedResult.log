@@ -122,22 +122,22 @@ The parser has intrinsic support for the following encodings:
   </person>
 
 </personnel><?xml version="1.0" encoding="LATIN1"?>
-<personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
+<?proc-inst-1 'foo' ?><personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
 
   <person id="Big.Boss" contr="false">
-    <name><family>Boss</family> <given>Big</given></name>
+    <name xml:base="foo/bar"><family xml:base="bar/bar">Boss</family> <given xml:base="car/bar">Big</given><?proc-inst-2 'foobar' ?></name>
     <email>chief@foo.com</email>
     <link subordinates="one.worker two.worker three.worker four.worker five.worker"></link>
   </person>
 
-  <person id="one.worker" contr="false">
-    <name><family>Worker</family> <given>One</given></name>
+  <person id="one.worker" xml:base="/auto/bar" contr="false">
+    <name xml:base="/car/foo/"><family xml:base="bar/bar">Worker</family> <given>One</given></name>
     <email>one@foo.com</email>
     <link manager="Big.Boss"></link>
   </person>
 
-  <person id="two.worker" contr="false">
-    <name><family>Worker</family> <given>Two</given></name>
+  <person id="two.worker" xml:base="http://www.example.com/car/car" contr="false">
+    <name xml:base="/bar/foo/"><family xml:base="foo/bar">Worker</family> <given>Two</given></name>
     <email>two@foo.com</email>
     <link manager="Big.Boss"></link>
   </person>
@@ -291,22 +291,22 @@ The parser has intrinsic support for the following encodings:
   </person>
 
 </personnel><?xml version="1.0" encoding="LATIN1"?>
-<personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
+<?proc-inst-1 'foo' ?><personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
 
   <person id="Big.Boss" contr="false">
-    <name><family>Boss</family> <given>Big</given></name>
+    <name xml:base="foo/bar"><family xml:base="bar/bar">Boss</family> <given xml:base="car/bar">Big</given><?proc-inst-2 'foobar' ?></name>
     <email>chief@foo.com</email>
     <link subordinates="one.worker two.worker three.worker four.worker five.worker"></link>
   </person>
 
-  <person id="one.worker" contr="false">
-    <name><family>Worker</family> <given>One</given></name>
+  <person id="one.worker" xml:base="/auto/bar" contr="false">
+    <name xml:base="/car/foo/"><family xml:base="bar/bar">Worker</family> <given>One</given></name>
     <email>one@foo.com</email>
     <link manager="Big.Boss"></link>
   </person>
 
-  <person id="two.worker" contr="false">
-    <name><family>Worker</family> <given>Two</given></name>
+  <person id="two.worker" xml:base="http://www.example.com/car/car" contr="false">
+    <name xml:base="/bar/foo/"><family xml:base="foo/bar">Worker</family> <given>Two</given></name>
     <email>two@foo.com</email>
     <link manager="Big.Boss"></link>
   </person>
@@ -563,22 +563,23 @@ The parser has intrinsic support for the following encodings:
 
 </personnel>
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?proc-inst-1 'foo' ?>
 <personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
 
   <person contr="false" id="Big.Boss">
-    <name><family>Boss</family> <given>Big</given></name>
+    <name xml:base="foo/bar"><family xml:base="bar/bar">Boss</family> <given xml:base="car/bar">Big</given><?proc-inst-2 'foobar' ?></name>
     <email>chief@foo.com</email>
     <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
   </person>
 
-  <person contr="false" id="one.worker">
-    <name><family>Worker</family> <given>One</given></name>
+  <person contr="false" id="one.worker" xml:base="/auto/bar">
+    <name xml:base="/car/foo/"><family xml:base="bar/bar">Worker</family> <given>One</given></name>
     <email>one@foo.com</email>
     <link manager="Big.Boss"/>
   </person>
 
-  <person contr="false" id="two.worker">
-    <name><family>Worker</family> <given>Two</given></name>
+  <person contr="false" id="two.worker" xml:base="http://www.example.com/car/car">
+    <name xml:base="/bar/foo/"><family xml:base="foo/bar">Worker</family> <given>Two</given></name>
     <email>two@foo.com</email>
     <link manager="Big.Boss"/>
   </person>
