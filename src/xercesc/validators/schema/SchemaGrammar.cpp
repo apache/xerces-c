@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.18  2003/11/13 23:21:19  peiyongz
+ * don't serialize/deserialize fElemNonDecl
+ *
  * Revision 1.17  2003/11/12 20:35:31  peiyongz
  * Stateless Grammar: ValidationContext
  *
@@ -379,6 +382,7 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
     /***
      * don't serialize NamespaceScope*    fNamespaceScope;
      *                 ValidationContext* fValidationContext;
+     *                                    fElemNonDeclPool
      ***/
 
     Grammar::serialize(serEng);
@@ -391,13 +395,10 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         /***
          *
          * Serialize RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
-         * Serialize RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
          * Serialize RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
          *
         ***/
         XTemplateSerializer::storeObject(fElemDeclPool, serEng);
-        //todo: will fElemNonDeclPool data be removed
-        XTemplateSerializer::storeObject(fElemNonDeclPool, serEng);
         XTemplateSerializer::storeObject(fGroupElemDeclPool, serEng);
 
         /***
@@ -442,13 +443,10 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
         /***
          *
          * Deserialize RefHash3KeysIdPool<SchemaElementDecl>* fElemDeclPool;
-         * Deserialize RefHash3KeysIdPool<SchemaElementDecl>* fElemNonDeclPool;
          * Deserialize RefHash3KeysIdPool<SchemaElementDecl>* fGroupElemDeclPool;
          *
         ***/
         XTemplateSerializer::loadObject(&fElemDeclPool, 109, true, 128, serEng);
-        //todo: will fElemNonDeclPool data be removed
-        XTemplateSerializer::loadObject(&fElemNonDeclPool, 109, true, 128, serEng);
         XTemplateSerializer::loadObject(&fGroupElemDeclPool, 109, true, 128, serEng);
 
         /***
@@ -468,8 +466,8 @@ void SchemaGrammar::serialize(XSerializeEngine& serEng)
 
         XTemplateSerializer::loadObject(&fAttributeDeclRegistry, 29, true, serEng);
         XTemplateSerializer::loadObject(&fComplexTypeRegistry, 29, true, serEng);
-        XTemplateSerializer::loadObject(&fGroupInfoRegistry, 29, true, serEng);
-        XTemplateSerializer::loadObject(&fAttGroupInfoRegistry, 29, true, serEng);
+        XTemplateSerializer::loadObject(&fGroupInfoRegistry, 13, true, serEng);
+        XTemplateSerializer::loadObject(&fAttGroupInfoRegistry, 13, true, serEng);
        
         /***
          * Deserialize RefHash2KeysTableOf<ElemVector>*       fValidSubstitutionGroups;
