@@ -9,28 +9,28 @@
 # are met:
 #
 # 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
+#	notice, this list of conditions and the following disclaimer.
 #
 # 2. Redistributions in binary form must reproduce the above copyright
-#    notice, this list of conditions and the following disclaimer in
-#    the documentation and/or other materials provided with the
-#    distribution.
+#	notice, this list of conditions and the following disclaimer in
+#	the documentation and/or other materials provided with the
+#	distribution.
 #
 # 3. The end-user documentation included with the redistribution,
-#    if any, must include the following acknowledgment:
-#       "This product includes software developed by the
-#        Apache Software Foundation (http://www.apache.org/)."
-#    Alternately, this acknowledgment may appear in the software itself,
-#    if and wherever such third-party acknowledgments normally appear.
+#	if any, must include the following acknowledgment:
+#	   "This product includes software developed by the
+#	    Apache Software Foundation (http://www.apache.org/)."
+#	Alternately, this acknowledgment may appear in the software itself,
+#	if and wherever such third-party acknowledgments normally appear.
 #
 # 4. The names "Xerces" and "Apache Software Foundation" must
-#    not be used to endorse or promote products derived from this
-#    software without prior written permission. For written
-#    permission, please contact apache\@apache.org.
+#	not be used to endorse or promote products derived from this
+#	software without prior written permission. For written
+#	permission, please contact apache\@apache.org.
 #
 # 5. Products derived from this software may not be called "Apache",
-#    nor may "Apache" appear in their name, without prior written
-#    permission of the Apache Software Foundation.
+#	nor may "Apache" appear in their name, without prior written
+#	permission of the Apache Software Foundation.
 #
 # THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
 # WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.41  2003/12/01 22:16:56  neilg
+# change spaces to tabs, as suggested in bug 25084
+#
 # Revision 1.40  2003/11/25 03:46:44  neilg
 # enable 1047 transcoder to build on Unix
 #
@@ -409,11 +412,11 @@ THREADS = @threads@
 MODULE = util
 
 ifeq (${TRANSCODER},NATIVE)
-    ifeq (${PLATFORM},MACOSX)
-        TRANSCODERMODULE=MacOSUnicodeConverter
-    else
-        TRANSCODERMODULE=Iconv
-    endif
+	ifeq (${PLATFORM},MACOSX)
+	    TRANSCODERMODULE=MacOSUnicodeConverter
+	else
+	    TRANSCODERMODULE=Iconv
+	endif
 else
 	ifeq (${TRANSCODER},ICU)
 	   TRANSCODERMODULE=ICU
@@ -424,23 +427,23 @@ else
 		ifeq (${TRANSCODER},Iconv390)
 		   TRANSCODERMODULE=Iconv390
 		else
-		    ifeq (${TRANSCODER},IconvFBSD)
+			ifeq (${TRANSCODER},IconvFBSD)
 			TRANSCODERMODULE=IconvFBSD
-		    else
-                       ifeq (${TRANSCODER},Cygwin)
-                           TRANSCODERMODULE=Cygwin
-                       else
-  		    	    ifeq (${TRANSCODER},IconvGNU)
-			        TRANSCODERMODULE=IconvGNU
-			    else
-          		        ifeq (${TRANSCODER},Uniconv390)
-        			    TRANSCODERMODULE=Uniconv390
-        		        else
-        		            TRANSCODERMODULE=Iconv
-          		        endif
-  		            endif
-  		        endif
-		    endif
+			else
+	                   ifeq (${TRANSCODER},Cygwin)
+	                       TRANSCODERMODULE=Cygwin
+	                   else
+  				    ifeq (${TRANSCODER},IconvGNU)
+				    TRANSCODERMODULE=IconvGNU
+				else
+	      		        ifeq (${TRANSCODER},Uniconv390)
+	    			    TRANSCODERMODULE=Uniconv390
+	    		        else
+	    		            TRANSCODERMODULE=Iconv
+	      		        endif
+  			        endif
+  			    endif
+			endif
 		endif
 	   endif
 	endif
@@ -451,13 +454,13 @@ ifeq (${MESSAGELOADER},ICU)
    MESSAGELOADERMODULE=ICU
 else
   ifeq (${MESSAGELOADER},MSGFILE)
-      MESSAGELOADERMODULE=MsgFile
+	  MESSAGELOADERMODULE=MsgFile
   else
    ifeq (${MESSAGELOADER},ICONV)
-      MESSAGELOADERMODULE=MsgCatalog
-      MSG_DIR=${XERCESCROOT}/msg
+	  MESSAGELOADERMODULE=MsgCatalog
+	  MSG_DIR=${XERCESCROOT}/msg
    else
-      MESSAGELOADERMODULE=InMemory
+	  MESSAGELOADERMODULE=InMemory
    endif
   endif
 endif
@@ -465,7 +468,7 @@ endif
 NETACCESSORMODULE=FileOnly
 
 ifeq (${NETACCESSOR},NATIVE)
-    NETACCESSORMODULE=MacOSURLAccessCF
+	NETACCESSORMODULE=MacOSURLAccessCF
 else
 	ifeq (${NETACCESSOR},Socket)
 	  NETACCESSORMODULE=Socket
@@ -479,180 +482,180 @@ endif
 include ../Makefile.incl
 
 UTIL_CPP_PUBHEADERS = \
-    ArrayIndexOutOfBoundsException.hpp \
-    AutoSense.hpp \
-    BaseRefVectorOf.hpp \
-    Base64.hpp \
-    BinFileInputStream.hpp \
-    BinInputStream.hpp \
-    BinMemInputStream.hpp \
-    BitOps.hpp \
-    BitSet.hpp \
-    CountedPointer.hpp \
-    DefaultPanicHandler.hpp \
-    EmptyStackException.hpp \
-    EncodingValidator.hpp \
-    FlagJanitor.hpp \
-    HashBase.hpp \
-    HashCMStateSet.hpp \
-    HashPtr.hpp \
-    HashXMLCh.hpp \
-    HexBin.hpp \
-    IllegalArgumentException.hpp \
-    InvalidCastException.hpp \
-    IOException.hpp \
-    Janitor.hpp \
-    KeyRefPair.hpp \
-    KeyValuePair.hpp \
-    KVStringPair.hpp \
-    Mutexes.hpp \
-    NameIdPool.hpp \
-    NoSuchElementException.hpp \
-    NullPointerException.hpp \
-    NumberFormatException.hpp \
-    OutOfMemoryException.hpp \
-    PanicHandler.hpp \
-    ParseException.hpp \
-    PlatformUtils.hpp \
-    QName.hpp \
-    RefArrayOf.hpp \
-    RefArrayVectorOf.hpp \
-    RefHashTableOf.hpp \
-    RefHash2KeysTableOf.hpp \
-    RefHash3KeysIdPool.hpp \
-    RefStackOf.hpp \
-    RefVectorOf.hpp \
-    RuntimeException.hpp \
-    SchemaDateTimeException.hpp \
-    SecurityManager.hpp \
-    StringPool.hpp \
-    SynchronizedStringPool.hpp \
-    TranscodingException.hpp \
-    TransENameMap.hpp \
-    TransService.hpp \
-    UnexpectedEOFException.hpp \
-    UnsupportedEncodingException.hpp \
-    UTFDataFormatException.hpp \
-    ValueArrayOf.hpp \
-    ValueHashTableOf.hpp \
-    ValueStackOf.hpp \
-    ValueVectorOf.hpp \
-    XercesDefs.hpp \
-    XercesVersion.hpp \
-    XMemory.hpp \
-    XMLAbstractDoubleFloat.hpp \
-    XMLASCIITranscoder.hpp \
-    XMLBigDecimal.hpp \
-    XMLBigInteger.hpp \
-    XMLChar.hpp \
-    XMLChTranscoder.hpp \
-    XMLDateTime.hpp \
-    XMLDeleterFor.hpp \
-    XMLDOMMsg.hpp \
-    XMLDouble.hpp \
-    XMLEBCDICTranscoder.hpp \
-    XMLEntityResolver.hpp \
-    XMLEnumerator.hpp \
-    XMLException.hpp \
-    XMLExceptMsgs.hpp \
-    XMLFloat.hpp \
-    XMLIBM1047Transcoder.hpp \
-    XMLIBM1140Transcoder.hpp \
-    XMLInteger.hpp \
-    XMLMsgLoader.hpp \
-    XMLNetAccessor.hpp \
-    XMLNumber.hpp \
-    XMLRegisterCleanup.hpp \
-    XMLResourceIdentifier.hpp \
-    XMLString.hpp \
-    XMLStringTokenizer.hpp \
-    XMLUCS4Transcoder.hpp \
-    XMLUni.hpp \
-    XMLUniDefs.hpp \
-    XMLUri.hpp \
-    XMLURL.hpp \
-    XMLUTF16Transcoder.hpp \
-    XMLUTF8Transcoder.hpp \
-    XMLWin1252Transcoder.hpp \
-    XML256TableTranscoder.hpp \
-    XML88591Transcoder.hpp
+	ArrayIndexOutOfBoundsException.hpp \
+	AutoSense.hpp \
+	BaseRefVectorOf.hpp \
+	Base64.hpp \
+	BinFileInputStream.hpp \
+	BinInputStream.hpp \
+	BinMemInputStream.hpp \
+	BitOps.hpp \
+	BitSet.hpp \
+	CountedPointer.hpp \
+	DefaultPanicHandler.hpp \
+	EmptyStackException.hpp \
+	EncodingValidator.hpp \
+	FlagJanitor.hpp \
+	HashBase.hpp \
+	HashCMStateSet.hpp \
+	HashPtr.hpp \
+	HashXMLCh.hpp \
+	HexBin.hpp \
+	IllegalArgumentException.hpp \
+	InvalidCastException.hpp \
+	IOException.hpp \
+	Janitor.hpp \
+	KeyRefPair.hpp \
+	KeyValuePair.hpp \
+	KVStringPair.hpp \
+	Mutexes.hpp \
+	NameIdPool.hpp \
+	NoSuchElementException.hpp \
+	NullPointerException.hpp \
+	NumberFormatException.hpp \
+	OutOfMemoryException.hpp \
+	PanicHandler.hpp \
+	ParseException.hpp \
+	PlatformUtils.hpp \
+	QName.hpp \
+	RefArrayOf.hpp \
+	RefArrayVectorOf.hpp \
+	RefHashTableOf.hpp \
+	RefHash2KeysTableOf.hpp \
+	RefHash3KeysIdPool.hpp \
+	RefStackOf.hpp \
+	RefVectorOf.hpp \
+	RuntimeException.hpp \
+	SchemaDateTimeException.hpp \
+	SecurityManager.hpp \
+	StringPool.hpp \
+	SynchronizedStringPool.hpp \
+	TranscodingException.hpp \
+	TransENameMap.hpp \
+	TransService.hpp \
+	UnexpectedEOFException.hpp \
+	UnsupportedEncodingException.hpp \
+	UTFDataFormatException.hpp \
+	ValueArrayOf.hpp \
+	ValueHashTableOf.hpp \
+	ValueStackOf.hpp \
+	ValueVectorOf.hpp \
+	XercesDefs.hpp \
+	XercesVersion.hpp \
+	XMemory.hpp \
+	XMLAbstractDoubleFloat.hpp \
+	XMLASCIITranscoder.hpp \
+	XMLBigDecimal.hpp \
+	XMLBigInteger.hpp \
+	XMLChar.hpp \
+	XMLChTranscoder.hpp \
+	XMLDateTime.hpp \
+	XMLDeleterFor.hpp \
+	XMLDOMMsg.hpp \
+	XMLDouble.hpp \
+	XMLEBCDICTranscoder.hpp \
+	XMLEntityResolver.hpp \
+	XMLEnumerator.hpp \
+	XMLException.hpp \
+	XMLExceptMsgs.hpp \
+	XMLFloat.hpp \
+	XMLIBM1047Transcoder.hpp \
+	XMLIBM1140Transcoder.hpp \
+	XMLInteger.hpp \
+	XMLMsgLoader.hpp \
+	XMLNetAccessor.hpp \
+	XMLNumber.hpp \
+	XMLRegisterCleanup.hpp \
+	XMLResourceIdentifier.hpp \
+	XMLString.hpp \
+	XMLStringTokenizer.hpp \
+	XMLUCS4Transcoder.hpp \
+	XMLUni.hpp \
+	XMLUniDefs.hpp \
+	XMLUri.hpp \
+	XMLURL.hpp \
+	XMLUTF16Transcoder.hpp \
+	XMLUTF8Transcoder.hpp \
+	XMLWin1252Transcoder.hpp \
+	XML256TableTranscoder.hpp \
+	XML88591Transcoder.hpp
 
 UTIL_CPP_PRIVHEADERS =
 
 C_FILES = \
-    BaseRefVectorOf.c \
-    CountedPointer.c \
-    FlagJanitor.c \
-    Janitor.c \
-    KeyRefPair.c \
-    KeyValuePair.c \
-    NameIdPool.c \
-    RefArrayOf.c \
-    RefArrayVectorOf.c \
-    RefHashTableOf.c \
-    RefHash2KeysTableOf.c \
-    RefHash3KeysIdPool.c \
-    RefStackOf.c \
-    RefVectorOf.c \
-    TransENameMap.c \
-    ValueArrayOf.c \
-    ValueHashTableOf.c \
-    ValueStackOf.c \
-    ValueVectorOf.c \
-    XMLDeleterFor.c \
-    LogicalPath.c
+	BaseRefVectorOf.c \
+	CountedPointer.c \
+	FlagJanitor.c \
+	Janitor.c \
+	KeyRefPair.c \
+	KeyValuePair.c \
+	NameIdPool.c \
+	RefArrayOf.c \
+	RefArrayVectorOf.c \
+	RefHashTableOf.c \
+	RefHash2KeysTableOf.c \
+	RefHash3KeysIdPool.c \
+	RefStackOf.c \
+	RefVectorOf.c \
+	TransENameMap.c \
+	ValueArrayOf.c \
+	ValueHashTableOf.c \
+	ValueStackOf.c \
+	ValueVectorOf.c \
+	XMLDeleterFor.c \
+	LogicalPath.c
 
 UTIL_CPP_OBJECTS = \
-    Base64.$(TO) \
-    BinFileInputStream.$(TO) \
-    BinInputStream.$(TO) \
-    BinMemInputStream.$(TO) \
-    BitSet.$(TO) \
-    DefaultPanicHandler.$(TO) \
-    EncodingValidator.$(TO) \
-    HashPtr.$(TO) \
-    HashXMLCh.$(TO) \
-    HeaderDummy.$(TO) \
-    HexBin.$(TO) \
-    KVStringPair.$(TO) \
-    Mutexes.$(TO) \
-    PanicHandler.$(TO) \
-    PlatformUtils.$(TO) \
-    QName.$(TO) \
-    StringPool.$(TO) \
-    SynchronizedStringPool.$(TO) \
-    TransService.$(TO) \
-    XMemory.$(TO) \
-    XMLAbstractDoubleFloat.$(TO) \
-    XMLASCIITranscoder.$(TO) \
-    XMLBigDecimal.$(TO) \
-    XMLBigInteger.$(TO) \
-    XMLChar.$(TO) \
-    XMLChTranscoder.$(TO) \
-    XMLDateTime.$(TO) \
-    XMLDouble.$(TO) \
-    XMLEBCDICTranscoder.$(TO) \
-    XMLException.$(TO) \
-    XMLFloat.$(TO) \
-    XMLIBM1047Transcoder.$(TO) \
-    XMLIBM1140Transcoder.$(TO) \
-    XMLMsgLoader.$(TO) \
-    XMLNumber.$(TO) \
-    XMLString.$(TO) \
-    XMLStringTokenizer.$(TO) \
-    XMLUCSTranscoder.$(TO) \
-    XMLUni.$(TO) \
-    XMLUri.$(TO) \
-    XMLURL.$(TO) \
-    XMLUTF16Transcoder.$(TO) \
-    XMLUTF8Transcoder.$(TO) \
-    XMLWin1252Transcoder.$(TO) \
-    XML256TableTranscoder.$(TO) \
-    XML88591Transcoder.$(TO)
+	Base64.$(TO) \
+	BinFileInputStream.$(TO) \
+	BinInputStream.$(TO) \
+	BinMemInputStream.$(TO) \
+	BitSet.$(TO) \
+	DefaultPanicHandler.$(TO) \
+	EncodingValidator.$(TO) \
+	HashPtr.$(TO) \
+	HashXMLCh.$(TO) \
+	HeaderDummy.$(TO) \
+	HexBin.$(TO) \
+	KVStringPair.$(TO) \
+	Mutexes.$(TO) \
+	PanicHandler.$(TO) \
+	PlatformUtils.$(TO) \
+	QName.$(TO) \
+	StringPool.$(TO) \
+	SynchronizedStringPool.$(TO) \
+	TransService.$(TO) \
+	XMemory.$(TO) \
+	XMLAbstractDoubleFloat.$(TO) \
+	XMLASCIITranscoder.$(TO) \
+	XMLBigDecimal.$(TO) \
+	XMLBigInteger.$(TO) \
+	XMLChar.$(TO) \
+	XMLChTranscoder.$(TO) \
+	XMLDateTime.$(TO) \
+	XMLDouble.$(TO) \
+	XMLEBCDICTranscoder.$(TO) \
+	XMLException.$(TO) \
+	XMLFloat.$(TO) \
+	XMLIBM1047Transcoder.$(TO) \
+	XMLIBM1140Transcoder.$(TO) \
+	XMLMsgLoader.$(TO) \
+	XMLNumber.$(TO) \
+	XMLString.$(TO) \
+	XMLStringTokenizer.$(TO) \
+	XMLUCSTranscoder.$(TO) \
+	XMLUni.$(TO) \
+	XMLUri.$(TO) \
+	XMLURL.$(TO) \
+	XMLUTF16Transcoder.$(TO) \
+	XMLUTF8Transcoder.$(TO) \
+	XMLWin1252Transcoder.$(TO) \
+	XML256TableTranscoder.$(TO) \
+	XML88591Transcoder.$(TO)
 
 
 all:: includes $(UTIL_CPP_OBJECTS) platforms transcoders \
-      messageloaders compilers netaccessors regx
+	  messageloaders compilers netaccessors regx
 
 includes:: pubheaders $(C_FILES)
 	${MAKE} -C Platforms $@
