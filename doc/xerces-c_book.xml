@@ -52,6 +52,7 @@
      <hidden   id="program-sax"           source="program-sax.xml"/>
      <hidden   id="program-sax2"          source="program-sax2.xml"/>
      <hidden   id="program-dom"           source="program-dom.xml"/>
+     <hidden   id="dom3"                  source="dom3.xml"/>
      <hidden   id="program-deprecateddom" source="program-deprecateddom.xml"/>
      <hidden   id="schema"                source="schema.xml"/>
      <hidden   id="program-others"        source="program-others.xml"/>

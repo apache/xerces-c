@@ -194,6 +194,14 @@ int main (int argc, char* args[]) {
 
        </s3>
     </s2>
+    <anchor name="DOM3"/>
+    <s2 title="DOM Level 3 Support in &XercesCName;">
+      <p>The &XercesCName; &XercesCVersion; contains a partial implementation of the W3C
+         Document Object Model Level 3.  This implementation is experimental.    See the document
+         <jump href="dom3.html"> DOM Level 3 Support</jump> for details.
+      </p>
+    </s2>
+
     <anchor name="Deprecated"/>
     <s2 title="Deprecated - Java-like DOM">
       <p>Earlier, &XercesCName; has provided a set of C++ DOM interfaces that is

@@ -5,24 +5,17 @@
 
     <s2 title="&XercesCName; Version &XercesCVersion;">
 
-        <p>&XercesCName; is a validating XML parser written in a portable subset of C++.
-        &XercesCName; makes it easy to give your application the ability to read and write
-        <jump href="http://www.w3.org/XML/">XML</jump> data.
-        A shared library is provided for parsing, generating, manipulating, and validating XML
-        documents.
+        <p>&XercesCName; is a validating XML parser written in a portable subset of
+        C++.   &XercesCName; makes it easy to give your application the ability to read and write
+        <jump href="http://www.w3.org/XML/">XML</jump> data.    A shared
+        library is provided for parsing, generating, manipulating, and validating XML documents.
         </p>
         <p>&XercesCName; is faithful to the
         <jump href="http://www.w3.org/TR/REC-xml">XML 1.0</jump> recommendation
-        and associated standards (
-        <jump href="http://www.w3.org/TR/REC-DOM-Level-1/">DOM 1.0</jump>,
-        <jump href="http://www.w3.org/TR/DOM-Level-2-Core/">DOM 2.0</jump>.
-        <jump href="http://sax.sourceforge.net/?selected=sax1">SAX 1.0</jump>,
-        <jump href="http://sax.sourceforge.net/">SAX 2.0</jump>,
-        <jump href="http://www.w3.org/TR/REC-xml-names/">Namespaces</jump>, and
-        <jump href="http://www.w3.org/XML/Schema.html">W3C's XML Schema recommendation version 1.0</jump>.)
+        and many associated standards (see <link anchor="Features">Features</link> below).
         </p>
-        <p>The parser provides high performance, modularity, and scalability.
-        Source code, samples and API documentation are provided with the parser. For
+        <p>The parser provides high performance, modularity, and scalability.    Source
+        code, samples and API documentation are provided with the parser.   For
         portability, care has been taken to make minimal use of templates,
         no RTTI, no C++ namespaces and minimal use of #ifdefs.</p>
 
@@ -42,16 +35,35 @@
         </ul>
     </s2>
 
+    <anchor name="Features"/>
     <s2 title="Features">
         <ul>
-            <li>Conforms to <jump href="http://www.w3.org/TR/REC-xml">XML Spec 1.0</jump></li>
-            <li>Tracking of latest
-            <jump href="http://www.w3.org/TR/REC-DOM-Level-1/">DOM (Level 1.0)</jump>,
-            <jump href="http://www.w3.org/TR/DOM-Level-2-Core/">DOM (Level 2.0)</jump>,
-            <jump href="http://sax.sourceforge.net/">SAX/SAX2</jump>,
-            <jump href="http://www.w3.org/TR/REC-xml-names/">Namespace</jump>, and
-            <jump href="http://www.w3.org/XML/Schema.html">W3C's XML Schema recommendation version 1.0</jump>
-            specifications.</li>
+            <li>Conforms to</li>
+            <ul>
+               <li><jump href="http://www.w3.org/TR/2000/REC-xml-20001006">
+                   XML 1.0 (Second Edition)</jump>, W3C Recommendation of October 6, 2000</li>
+               <li><jump href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/">
+                   DOM Level 1 Specification</jump>, W3C Recommendation of October 1, 1998</li>
+               <li><jump href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/">
+                   DOM Level 2 Core Specification</jump>, W3C Recommendation of November 13, 2000</li>
+               <li><jump href="http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113/">
+                   DOM Level 2 Traversal and Range Specification</jump>,
+                   W3C Recommendation of November 13, 2000</li>
+               <li><jump href="http://sax.sourceforge.net/">SAX 1.0 and SAX 2.0</jump></li>
+               <li><jump href="http://www.w3.org/TR/1999/REC-xml-names-19990114/">
+                   Namespaces in XML</jump>, W3C Recommendation of January 14, 1999</li>
+               <li><jump href="http://www.w3.org/TR/2001/REC-xmlschema-1-20010502/">
+                   XML Schema Part 1: Structure</jump>, W3C Recommendation 2 May 2001</li>
+               <li><jump href="http://www.w3.org/TR/2001/REC-xmlschema-2-20010502/">
+                   XML Schema Part 2: Datatypes</jump>, W3C Recommendation 2 May 2001</li>
+            </ul>
+            <li>Contains a partial implementation of the
+            <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-Core-20020409/">
+            DOM Level 3.0 Core Specification</jump>, W3C Working Draft of 09 April 2002 and
+            <jump href="http://www.w3.org/TR/2002/WD-DOM-Level-3-ASLS-20020409/">
+            DOM Level 3.0 Load and Save Specification</jump>, W3C Working Draft of 09 April 2002.
+            This implementation is experimental.
+            See <jump href="dom3.html">DOM Level 3 Support</jump> for details.</li>
             <li>Source code, samples, and documentation is provided.</li>
             <li>Programmatic generation and validation of XML</li>
             <li>Pluggable catalogs, validators and encodings</li>
@@ -61,33 +73,49 @@
     </s2>
 
     <s2 title="Platforms with Binaries">
-        <ul>
-            <li>Win32 using MSVC 6.0 SP3</li>
-            <li>Linux (RedHat 7.2) using g++ 2.96</li>
-            <li>Solaris 2.6 using Forte C++ Version 6 Update 2</li>
-            <li>AIX 4.3 using xlC_r 5.0.2</li>
-            <li>HP-UX 11 using aCC A.03.13 with pthreads</li>
-        </ul>
+      <table>
+        <tr>
+          <td><em>Operating System</em></td>
+          <td><em>Compiler</em></td>
+        </tr>
+        <tr>
+          <td><em>32-bit binary</em></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Windows NT 4.0 SP5/2000</td>
+          <td>MSVC 6.0 SP3</td>
+        </tr>
+        <tr>
+          <td>Redhat Linux 7.2</td>
+          <td>g++ 3.1</td>
+        </tr>
+        <tr>
+          <td>AIX 4.3</td>
+          <td>xlC_r 5.0.2</td>
+        </tr>
+        <tr>
+          <td>Solaris 2.6</td>
+          <td>Forte C++ Version 6 Update 2</td>
+        </tr>
+        <tr>
+          <td>HP-UX 11.0</td>
+          <td>aCC A.03.13 with pthreads</td>
+        </tr>
+        <tr>
+          <td><em>64-bit binary</em></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>AIX 5.1</td>
+          <td>xlC_r 5.0.2</td>
+        </tr>
+        <tr>
+          <td>HP-UX 11.0</td>
+          <td>aCC A.03.13 with pthreads</td>
+        </tr>
+      </table>
     </s2>
-
-    <s2 title="Digital Signatures">
-        <p>The distributions of &XercesCName; Version &XercesCVersion; have been digitally signed
-           (using GPG). There is an accompanyiny distribution.asc file in the same directory with each
-           distribution. Here is the <jump href="http://xml.apache.org/xerces-c/keys/KEYS">KEYS file</jump>.
-        </p>
-        <p>Always test available signatures, e.g.</p>
-            <source>
-            pgpk -a KEYS
-            pgpv &XercesCSrcInstallDir;.tar.gz.asc
-            -- or --
-            pgp -ka KEYS
-            pgp &XercesCSrcInstallDir;.tar.gz.asc
-            -- or --
-            gpg --import KEYS
-            gpg --verify &XercesCSrcInstallDir;.tar.gz.asc
-            </source>
-    </s2>
-
 
     <s2 title="Other ports...">
         <ul>
@@ -101,6 +129,13 @@
             <li>UnixWare</li>
             <li>and more!</li>
         </ul>
+    </s2>
+
+    <s2 title='License Information'>
+       <p>The &XercesCName; Version &XercesCVersion; is available in both source distribution and
+          binary distribution.   Both &XercesCName; are made available under the
+          <jump href='http://xml.apache.org/LICENSE'>Apache Software License</jump>.
+       </p>
     </s2>
 
 </s1>

@@ -296,18 +296,28 @@ catch (const XMLException&amp; toCatch) {
     </a>
   </faq>
 
-  <faq title="Can I use Xerces to perform write validation">
+  <faq title="Can &XercesCName; create an XML skeleton based on a DTD">
 
-    <q>Can I use Xerces to perform "write validation" (which is having an
-      appropriate DTD and being able to add elements to the DOM whilst validating
-      against the DTD)? Is there a function that I have totally missed that creates
+    <q>Is there a function that I have totally missed that creates
       an XML file from a DTD, (obviously with the values missing, a skeleton, as it
-      were.)</q>
+      were)?</q>
 
     <a>
 
-      <p>The answers are: "No" and "No." Write Validation is a commonly requested
-        feature, but &XercesCName; does not have it yet.</p>
+      <p>No.  This is not supported.</p>
+
+    </a>
+  </faq>
+
+  <faq title="Can I use &XercesCName; to perform write validation">
+
+    <q>Can I use &XercesCName; to perform "write validation" (which is having an
+      appropriate Grammar and being able to add elements to the DOM whilst validating
+      against the grammar)?</q>
+
+    <a>
+
+      <p>No.  This is not supported.</p>
 
       <p>The best you can do for now is to create the DOM document, write it back
         as XML and re-parse it.</p>
@@ -322,60 +332,28 @@ catch (const XMLException&amp; toCatch) {
 
     <a>
 
-      <p>No. This is a frequently requested feature, but at this time it is not
-        possible to feed XML data from the DOM directly back to the DTD validator. The
-        best option for now is to generate XML source from the DOM and feed that back
+      <p>No. The best option for now is to generate XML source from the DOM and feed that back
         into the parser.</p>
 
     </a>
   </faq>
 
-  <faq title="How to write out a DOM tree into an XML file?">
-     <q>How to write out a DOM tree into an XML file?</q>
+  <faq title="How to write out a DOM tree into a string or an XML file?">
+     <q>How to write out a DOM tree into a string or an XML file?</q>
      <a>
-      <p>This feature is not yet available in the parser. Take a look at the DOMPrint sample
-         for an example on parsing  XML file, then writing it out back to the screen. You
-         can use that code.</p>
+      <p>Please make sure you are using &XercesCName; &XercesCVersion; or up.</p>
+
+      <p>You can use
+         the DOMWriter::writeToString, or DOMWriter::writeNode to serialize a DOM tree.
+         Please refer to the sample DOMPrint or the API documentation for more details of
+         DOMWriter.</p>
     </a>
   </faq>
 
-  <faq title="Why DOM_Node::cloneNode() does not clone the pointer assigned to a DOM_Node via DOM_Node::setUserData()?">
-    <q>Why DOM_Node::cloneNode() does not clone the pointer assigned to a DOM_Node via DOM_Node::setUserData()?</q>
+  <faq title="Why DOMNode::cloneNode() does not clone the pointer assigned to a DOMNode via DOMNode::setUserData()?">
+    <q>Why DOMNode::cloneNode() does not clone the pointer assigned to a DOMNode via DOMNode::setUserData()?</q>
     <a>
-      <p>There are several possible options for how cloneNode should handle userData:
-      </p>
-      <ul>
-      <li>
-          1) Copy the pointer. May be a Very Bad Idea if you really wanted the data
-           associated with a particular node object.
-      </li>
-      <li>
-          2) Clone the object being pointed at. Maybe a Very Bad Idea if that object,
-          in turn, wasn't designed to be cloned at this time.
-      </li>
-      <li>
-          3) A complex call-back API has been proposed which would allow the userData
-          object to tell the DOM which of these three options should be taken, but
-          that would require that only objects implementing that API be registered as
-          userData. That doesn't seem to be a good option.
-      </li>
-      <li>
-          4) Do nothing. This is by far the lowest-overhead and safest choice. And
-          since cloneNode is a DOM operation, and userData is _not_ defined by the
-          standard DOM API, one can make a very strong case for this being the "most
-          correct" option.
-      </li>
-      </ul>
-      <p>
-          We chose (4), very deliberately. If you want one of the others, you can
-          implement it by creating your own wrapper operation for cloneNode() and
-          calling that.
-      </p>
-      <p>
-          NOTE that userData should be considered a non-portable, experimental feature
-          of the Xerces DOM. It may evaporate entirely in favor of a scheme based on
-          the DOM Level 3 "node key" mechanism, when that becomes officially
-          available.
+      <p>&XercesCName; supports the DOMNode::userData specified in
       </p>
     </a>
   </faq>
@@ -587,7 +565,7 @@ catch (const XMLException&amp; toCatch) {
   <faq title="Why does deleting a transcoded string result in assertion on windows?">
     <q>Why does deleting a transcoded string result in assertion on windows?</q>
     <a>
-      <p>Both your application program and the Xerces DLL must use the same *DLL* version of the
+      <p>Both your application program and the &XercesCName; DLL must use the same *DLL* version of the
          runtime library.  If either statically links to the runtime library, the
 		 problem will still occur.
 
@@ -605,7 +583,7 @@ catch (const XMLException&amp; toCatch) {
          code page. If this is not true, you must transcode the text yourself. You
          can do this using local transcoding support on your OS, such as Iconv on
          Unix or IBM's ICU package. However, if your transcoding needs are simple,
-         you can achieve some better portability by using the Xerces parser's
+         you can achieve some better portability by using the &XercesCName; parser's
          transcoder wrappers. You get a transcoder like this:
        </p>
        <ul>
@@ -720,7 +698,18 @@ catch (const XMLException&amp; toCatch) {
          validation is turned off.
       </p>
 
-      <p>To ignore the DTD, the only way to get around this is to install an EntityResolver
+      <p>To ignore the DTD, with &XercesCName; &XercesCVersion; or up, you can call
+         <code>setLoadExternalDTD(false)</code> (or
+         <code>setFeature(XMLUni::fgSAX2XercesLoadExternalDTD, false)</code>
+         to disable the loading of external DTD.   The parser will then ignore
+         any external DTD completely if the validationScheme is set to Val_Never.
+      </p>
+
+      <p>Note: This flag is ignored if the validationScheme is set to Val_Always or Val_Auto.
+      </p>
+
+      <p>To ignore the DTD in earlier version of &XercesCName;, the
+         only way to get around this is to install an EntityResolver
          (see the Redirect sample for an example of how this is done), and reset the
          DTD file to "".
       </p>

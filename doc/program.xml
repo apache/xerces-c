@@ -12,6 +12,7 @@
       <li><jump href="program-dom.html#Objectives">Design Objectives</jump></li>
       <li><jump href="program-dom.html#ConstructXercesDOMParser">Constructing a XercesDOMParser</jump></li>
       <li><jump href="program-dom.html#UsingDOMAPI">Using DOM API</jump></li>
+      <li><jump href="program-dom.html#DOM3">DOM Level 3 Support in &XercesCName; </jump></li>
       <li><jump href="program-dom.html#Deprecated">Deprecated - Java-like DOM</jump></li>
     </ul>
   </s2>
