@@ -5,8 +5,8 @@
 
 <s2 title="&XercesCName; Future Releases Plan">
 <p>This document highlights the release plan for &XercesCName;.</p>
-<s3 title="Current Status"><p>&XercesCName; 2.1.0 - released on August 26, 2002.</p></s3>
-<s3 title="Next Target Release"><p>&XercesCName; 2.2.0 - plan to be released by the end of this year.</p></s3>
+<s3 title="Current Status"><p>&XercesCName; 2.2.0 - released on February 6, 2003.</p></s3>
+<s3 title="Next Target Release"><p>&XercesCName; 2.3.0 - plan to be released by the Fall of 2003.</p></s3>
 <s3 title="&XercesCName; Features list">
 <p> The following table lists the TODO items for &XercesCName;.  It does not include fixing
 bugs that are opened in Bugzilla; unless such Bugzilla bug involves a major development
@@ -16,79 +16,23 @@ Those features that have 'Complete' status will be included in the 'Next Target 
 </p>
 <table>
     <tr>
-        <td>Features</td>
-        <td>Development Volunteer</td>
-        <td>Target Date</td>
-        <td>Status</td>
+        <th>Features</th>
+        <th>Development Volunteer</th>
+        <th>Target Date</th>
+        <th>Status</th>
     </tr>
 
     <tr>
         <td>More DOM Level 3 Core Support</td>
-        <td>Gareth Reakes</td>
         <td></td>
         <td></td>
-    </tr>
-
-    <tr>
-        <td>ICU Message Loader</td>
-        <td>PeiYong Zhang</td>
-        <td>November</td>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td>Message Catalog Message Loader</td>
-        <td>PeiYong Zhang</td>
-        <td>November</td>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td>XML 1.1</td>
-        <td>PeiYong Zhang</td>
-        <td>December</td>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td>Schema 1.0 Errata - Datatypes</td>
-        <td>PeiYong Zhang</td>
-        <td>November</td>
-        <td></td>
-    </tr>
-
-    <tr>
-        <td>Schema 1.0 Errata - Structures</td>
-        <td>Khaled Noaman</td>
-        <td>December</td>
         <td></td>
     </tr>
 
     <tr>
         <td>Selectable Component Build (Xerces-C++ Lite)</td>
-        <td>Khaled Noaman</td>
-        <td>November</td>
         <td></td>
-    </tr>
-
-    <tr>
-        <td>Break XMLScanner for better performance</td>
-        <td>Khaled Noaman</td>
-        <td>November</td>
         <td></td>
-    </tr>
-
-    <tr>
-        <td>Use C++ namespace</td>
-        <td>Tinny Ng</td>
-        <td>November</td>
-        <td>Complete</td>
-    </tr>
-
-    <tr>
-        <td>DOM Messages</td>
-        <td>Tinny Ng</td>
-        <td>November</td>
         <td></td>
     </tr>
 

@@ -134,16 +134,20 @@
 
             <ol>
                 <li><em>ICU shared library file</em>:<br></br>
-                    icuuc.dll for Windows NT/2000, or<br></br>
-                    libicuuc.a for AIX, or<br></br>
-                    libicuuc.so for Solaris/Linux, or<br></br>
-                    libicuuc.sl for HP-UX.</li>
+                    icuuc*.dll for Windows NT/2000, or<br></br>
+                    libicuuc*.a for AIX, or<br></br>
+                    libicuuc*.so for Solaris/Linux, or<br></br>
+                    libicuuc*.sl for HP-UX.</li>
 
                 <li><em>ICU converter data shared library file:</em><br></br>
-                    icudata.dll for Windows NT/2000, or<br></br>
-                    libicudata.a for AIX, or<br></br>
-                    libicudata.so for Solaris/Linux, or<br></br>
-                    libicudata.sl for HP-UX.</li>
+                    icudt*.dll for Windows NT/2000, or<br></br>
+                    libicudt*.a for AIX, or<br></br>
+                    libicudt*.so for Solaris/Linux, or<br></br>
+                    libicudt*.sl for HP-UX.</li>
+
+                <li><em>The &XercesCName; Message file:</em><br></br>
+                    XercesMessages_en_US.res.</li>
+
             </ol>
         </a>
     </faq>

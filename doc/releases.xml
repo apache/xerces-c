@@ -17,16 +17,81 @@
     </p>
 </s2>
 
-<s2 title="Release Information of &XercesCName; &XercesCVersion;: December 24, 2002">
+<s2 title="Release Information of &XercesCName; &XercesCVersion;: February 6, 2003">
 <p> Here is the list of <jump href=
 "http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=RESOLVED&amp;bug_status=VERIFIED&amp;bug_status=CLOSED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfield=resolution&amp;chfieldfrom=08%2F28%2F02&amp;chfieldto=Now&amp;chfieldvalue=fixed&amp;product=Xerces-C%2B%2B&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;newqueryname=&amp;order=bugs.bug_id">
 fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &XercesCVersion;.
 </p>
 <table>
     <tr>
-        <td>Date</td>
-        <td>Contributor</td>
-        <td>Description</td>
+        <th>Date</th>
+        <th>Contributor</th>
+        <th>Description</th>
+    </tr>
+
+    <tr>
+        <td>2002-12-30</td>
+        <td>Gareth Reakes</td>
+        <td>Added isDocumentAdopted API and recognize feature fgXercesUserAdoptsDOMDocument in
+            DOMBuilder::getFeature/canSetFeature.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-24</td>
+        <td>Tinny Ng</td>
+        <td>Build with ICU 2.4.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-24</td>
+        <td>Tinny Ng</td>
+        <td>[Bug 15160] TrueCoverage build fails in Window.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-23</td>
+        <td>Khaled Noaman</td>
+        <td>New public api to various parsers to return the src offset within the input source.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-20</td>
+        <td>Tinny Ng</td>
+        <td>XML 1.1
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-19</td>
+        <td>Peter A. Volchek</td>
+        <td>Schema: get/set methods to see if the represented type is anonymous.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-18</td>
+        <td>Gareth Reakes</td>
+        <td>[Bug 13438] Mismatched new[]/delete in template vector class.  Added new abstract base class
+        BaseRefVectorOf from which both RefVectorOf and the new class RefArrayVectorOf inherit from it.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-18</td>
+        <td>Jennifer Schachter</td>
+        <td>New Regx functionality - tokenize and replace.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-16</td>
+        <td>James Berry</td>
+        <td>[Bug 14805] Mac OS transcoder should return pointer to zero length string (rather than NULL) on receipt of zero length input.
+        </td>
     </tr>
 
     <tr>
@@ -54,6 +119,14 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
             <br/>4. E2-23 seconds part shall have at least one digit after the dot if it appears.
             <br/>5. E2-24 Duration 'T': allow SchemaDateTimeException be propogated to client.
             <br/>6. E2-25 language.
+        </td>
+    </tr>
+
+    <tr>
+        <td>2002-12-13</td>
+        <td>Khaled Noaman</td>
+        <td>Performance: Scanner Reorganization.  Create
+            XMLScannerResolver, WFXMLScanner, IGXMLScanner, DGXMLScanner, and SGXMLScanner.
         </td>
     </tr>
 
@@ -105,7 +178,7 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
     <tr>
         <td>2002-12-06</td>
         <td>Kevin King</td>
-        <td>[BUg 13840] DOMWriter: more pretty-print format feature.
+        <td>[Bug 13840] DOMWriter: more pretty-print format feature.
         </td>
     </tr>
 
@@ -127,14 +200,6 @@ fixed bugzilla bugs</jump> that are resolved in this release, &XercesCName; &Xer
         <td>2002-12-06</td>
         <td>Tinny Ng</td>
         <td>[Bug 9697] Make GrammarResolver to be exportable.
-        </td>
-    </tr>
-
-    <tr>
-        <td>2002-12-04</td>
-        <td>Khaled Noaman</td>
-        <td>Performance: Scanner Reorganization.  Create
-            XMLScannerResolver, WFXMLScanner, IGXMLScanner, DGXMLScanner, and SGXMLScanner.
         </td>
     </tr>
 

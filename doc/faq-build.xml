@@ -130,9 +130,14 @@
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/fastxmlparser/lib # (Solaris, Linux)
 export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
 
-      <p>If you are using the enhanced version of this parser from IBM, you will
-        need to put in two additional DLLs. In the Windows build these are <code>icuuc.dll</code> and <code>icudata.dll</code> which must be available from your PATH settings. On UNIX, these
-        libraries are called <code>libicuuc.so</code> and <code>libicudata.so</code> (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX) which must be available from your library search path.</p>
+      <p>If you are using the XML4C parser from IBM, you will
+        need to put in two additional DLLs. In the Windows build these are <code>icuuc*.dll</code> and <code>icudt*.dll</code> which must be available from your PATH settings. On UNIX, these
+        libraries are called <code>libicuuc*.so</code> and <code>libicudt*.so</code> (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX) which must be available from your library search path.</p>
+
+      <p>If the parser is built with icu message loader (as mentioned above), or message
+        catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
+        the directory, $XERCESCROOT/msg, where the message files reside.
+      </p>
 
     </a>
   </faq>
@@ -293,11 +298,11 @@ catch (const XMLException&amp; toCatch) {
   <faq title="Cannot load message domain, Xerces Panic Error">
     <q>"Cannot load message domain, Xerces Panic Error"?</q>
     <a>
-      <p>If the parser is built with icu message loader (like IBM XML4C binaries), or message 
+      <p>If the parser is built with icu message loader (like IBM XML4C binaries), or message
          catalog loader, you need an environment variable, XERCESC_NLS_HOME to point to
          the directory, $XERCESCROOT/msg, where the message files reside.
       </p>
     </a>
   </faq>
-  
+
 </faqs>
