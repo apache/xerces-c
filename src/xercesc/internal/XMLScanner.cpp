@@ -782,6 +782,13 @@ void XMLScanner::initValidator(XMLValidator* theValidator) {
 //  These methods are called whenever the scanner wants to emit an error.
 //  It handles getting the message loaded, doing token replacement, etc...
 //  and then calling the error handler, if its installed.
+bool XMLScanner::emitErrorWillThrowException(const XMLErrs::Codes toEmit)
+{
+    if (XMLErrs::isFatal(toEmit) && fExitOnFirstFatal && !fInException)
+        return true;
+    return false;
+}
+
 void XMLScanner::emitError(const XMLErrs::Codes toEmit)
 {
     // Bump the error count if it is not a warning
@@ -820,7 +827,7 @@ void XMLScanner::emitError(const XMLErrs::Codes toEmit)
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XMLErrs::isFatal(toEmit) && fExitOnFirstFatal && !fInException)
+    if (emitErrorWillThrowException(toEmit))
         throw toEmit;
 }
 
@@ -867,7 +874,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XMLErrs::isFatal(toEmit) && fExitOnFirstFatal && !fInException)
+    if (emitErrorWillThrowException(toEmit))
         throw toEmit;
 }
 
@@ -914,7 +921,7 @@ void XMLScanner::emitError( const   XMLErrs::Codes    toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if (XMLErrs::isFatal(toEmit) && fExitOnFirstFatal && !fInException)
+    if (emitErrorWillThrowException(toEmit))
         throw toEmit;
 }
 

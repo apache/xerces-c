@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2003/12/31 15:40:00  cargilld
+ * Release memory when an error is encountered.
+ *
  * Revision 1.30  2003/12/17 00:18:40  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -1322,7 +1325,13 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
         if (tmpNode != curNode)
         {
             if (gotSpaces)
+            {
+                if (fScanner->emitErrorWillThrowException(XMLErrs::UnexpectedWhitespace))
+                {
+                    delete tmpNode;
+                }
                 fScanner->emitError(XMLErrs::UnexpectedWhitespace);
+            }
             fReaderMgr->getNextChar();
             curNode = tmpNode;
         }
@@ -1447,7 +1456,15 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                     curReader = fReaderMgr->getCurrentReaderNum();
 
                     // Recurse to handle this new guy
-                    ContentSpecNode* subNode = scanChildren(elemDecl, bufToUse);
+                    ContentSpecNode* subNode;
+                    try {
+                        subNode = scanChildren(elemDecl, bufToUse);
+                    }
+                    catch (const XMLErrs::Codes)
+                    {
+                        delete headNode;
+                        throw;
+                    }
 
                     // If it failed, we are done, clean up here and return failure
                     if (!subNode)
@@ -1542,6 +1559,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
              else
             {
                 // Cannot be valid
+                delete headNode;  // emitError may do a throw so need to clean-up first
                 if (opCh == chComma)
                 {
                     fScanner->emitError(XMLErrs::ExpectedChoiceOrCloseParen);
@@ -1553,8 +1571,7 @@ DTDScanner::scanChildren(const DTDElementDecl& elemDecl, XMLBuffer& bufToUse)
                         XMLErrs::ExpectedSeqOrCloseParen
                         , elemDecl.getFullName()
                     );
-                }
-                delete headNode;
+                }                
                 return 0;
             }
         }
@@ -3421,6 +3438,10 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
             //  Tell them they can't have reps in mixed model, but eat
             //  it and keep going if we are allowed to.
             //
+            if (fScanner->emitErrorWillThrowException(XMLErrs::NoRepInMixed))
+            {
+                delete headNode;
+            }
             fScanner->emitError(XMLErrs::NoRepInMixed);
         }
          else if (fReaderMgr->skippedSpace())
@@ -3446,7 +3467,13 @@ bool DTDScanner::scanMixed(DTDElementDecl& toFill)
                     starSkipped = false;
 
                     if (starRequired)
+                    {
+                        if (fScanner->emitErrorWillThrowException(XMLErrs::UnterminatedContentModel))
+                        {
+                            delete headNode;
+                        }
                         fScanner->emitError(XMLErrs::ExpectedAsterisk);
+                    }
                 }
 
                 //

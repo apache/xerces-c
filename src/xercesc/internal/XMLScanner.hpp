@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.32  2003/12/31 15:40:00  cargilld
+ * Release memory when an error is encountered.
+ *
  * Revision 1.31  2003/11/28 21:18:32  knoaman
  * Make use of canonical representation in PSVIElement
  *
@@ -429,6 +432,7 @@ public :
     // -----------------------------------------------------------------------
     //  Error emitter methods
     // -----------------------------------------------------------------------
+    bool emitErrorWillThrowException(const XMLErrs::Codes toEmit);
     void emitError(const XMLErrs::Codes toEmit);
     void emitError
     (

@@ -70,6 +70,7 @@
 #include <xercesc/util/TransService.hpp>
 #include <xercesc/util/XMLEBCDICTranscoder.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/Janitor.hpp>
 
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -1321,6 +1322,9 @@ void XMLReader::doInitDecode()
                 {
                     fCharsAvail = 0;
                     fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
                     ThrowXMLwithMemMgr1
                     (
                         TranscodingException
@@ -1397,6 +1401,9 @@ void XMLReader::doInitDecode()
                 {
                     fCharsAvail = 0;
                     fRawBufIndex = 0;
+                    fMemoryManager->deallocate(fPublicId);
+                    fMemoryManager->deallocate(fEncodingStr);
+                    ArrayJanitor<XMLCh> janValue(fSystemId, fMemoryManager);
                     ThrowXMLwithMemMgr1
                     (
                         TranscodingException
@@ -1514,6 +1521,9 @@ void XMLReader::doInitDecode()
 
         default :
             // It should never be anything else here
+            fMemoryManager->deallocate(fPublicId);
+            fMemoryManager->deallocate(fEncodingStr);                    
+            fMemoryManager->deallocate(fSystemId);
             ThrowXMLwithMemMgr(TranscodingException, XMLExcepts::Reader_BadAutoEncoding, fMemoryManager);
             break;
     }

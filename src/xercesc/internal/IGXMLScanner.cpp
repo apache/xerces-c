@@ -1371,7 +1371,14 @@ void IGXMLScanner::scanDocTypeDecl()
         // this will break getRootElemId on DTDGrammar when
         // cached grammars are in use, but 
         // why would one use this anyway???
-        ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+        try {
+            ((DTDGrammar*)fGrammar)->setRootElemId(fGrammar->putElemDecl(rootDecl));
+        }
+        catch(const XMLException&)
+        {
+            delete rootDecl;
+            throw;
+        }
     } else
     {
         // attach this to the undeclared element pool so that it gets deleted
