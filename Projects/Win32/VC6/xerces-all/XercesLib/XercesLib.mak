@@ -282,6 +282,7 @@ CLEAN :
 	-@erase "$(INTDIR)\UnionDatatypeValidator.obj"
 	-@erase "$(INTDIR)\UnionToken.obj"
 	-@erase "$(INTDIR)\URLInputSource.obj"
+	-@erase "$(INTDIR)\ValidationContextImpl.obj"
 	-@erase "$(INTDIR)\ValueStore.obj"
 	-@erase "$(INTDIR)\ValueStoreCache.obj"
 	-@erase "$(INTDIR)\vc60.idb"
@@ -571,6 +572,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
+	"$(INTDIR)\ValidationContextImpl.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
@@ -1035,6 +1037,7 @@ CLEAN :
 	-@erase "$(INTDIR)\UnionDatatypeValidator.obj"
 	-@erase "$(INTDIR)\UnionToken.obj"
 	-@erase "$(INTDIR)\URLInputSource.obj"
+	-@erase "$(INTDIR)\ValidationContextImpl.obj"
 	-@erase "$(INTDIR)\ValueStore.obj"
 	-@erase "$(INTDIR)\ValueStoreCache.obj"
 	-@erase "$(INTDIR)\vc60.idb"
@@ -1326,6 +1329,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
+	"$(INTDIR)\ValidationContextImpl.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
@@ -1790,6 +1794,7 @@ CLEAN :
 	-@erase "$(INTDIR)\UnionDatatypeValidator.obj"
 	-@erase "$(INTDIR)\UnionToken.obj"
 	-@erase "$(INTDIR)\URLInputSource.obj"
+	-@erase "$(INTDIR)\ValidationContextImpl.obj"
 	-@erase "$(INTDIR)\ValueStore.obj"
 	-@erase "$(INTDIR)\ValueStoreCache.obj"
 	-@erase "$(INTDIR)\vc60.idb"
@@ -2081,6 +2086,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
+	"$(INTDIR)\ValidationContextImpl.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
@@ -2545,6 +2551,7 @@ CLEAN :
 	-@erase "$(INTDIR)\UnionDatatypeValidator.obj"
 	-@erase "$(INTDIR)\UnionToken.obj"
 	-@erase "$(INTDIR)\URLInputSource.obj"
+	-@erase "$(INTDIR)\ValidationContextImpl.obj"
 	-@erase "$(INTDIR)\ValueStore.obj"
 	-@erase "$(INTDIR)\ValueStoreCache.obj"
 	-@erase "$(INTDIR)\vc60.idb"
@@ -2835,6 +2842,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\MemoryManagerImpl.obj" \
 	"$(INTDIR)\ReaderMgr.obj" \
 	"$(INTDIR)\SGXMLScanner.obj" \
+	"$(INTDIR)\ValidationContextImpl.obj" \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
@@ -4052,6 +4060,12 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp
 SOURCE=..\..\..\..\..\src\xercesc\internal\SGXMLScanner.cpp
 
 "$(INTDIR)\SGXMLScanner.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\ValidationContextImpl.cpp
+
+"$(INTDIR)\ValidationContextImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
