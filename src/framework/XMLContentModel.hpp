@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/05/28 20:53:35  tng
+ * Schema: move static data gInvalidTrans, gEOCFakeId, gEpsilonFakeId to XMLContentModel for others to access
+ *
  * Revision 1.10  2001/05/11 13:25:31  tng
  * Copyright update.
  *
@@ -117,6 +120,25 @@ class XMLStringPool;
 class XMLPARSER_EXPORT XMLContentModel
 {
 public:
+    // ---------------------------------------------------------------------------
+    //  Public static data
+    //
+    //  gInvalidTrans
+    //      This value represents an invalid transition in each line of the
+    //      transition table.
+    //
+    //  gEOCFakeId
+    //  gEpsilonFakeId
+    //      We have to put in a couple of special CMLeaf nodes to represent
+    //      special values, using fake element ids that we know won't conflict
+    //      with real element ids.
+    //
+    //
+    // ---------------------------------------------------------------------------
+    static const unsigned int   gInvalidTrans;
+    static const unsigned int   gEOCFakeId;
+    static const unsigned int   gEpsilonFakeId;
+
     // -----------------------------------------------------------------------
     //  Constructors are hidden, only the virtual Destructor is exposed
     // -----------------------------------------------------------------------

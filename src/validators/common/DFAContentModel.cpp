@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/05/28 20:52:44  tng
+ * Schema: move static data gInvalidTrans, gEOCFakeId, gEpsilonFakeId to XMLContentModel for others to access
+ *
  * Revision 1.9  2001/05/11 13:27:18  tng
  * Copyright update.
  *
@@ -126,24 +129,6 @@
 #include <validators/schema/SubstitutionGroupComparator.hpp>
 #include <util/RefHashTableOf.hpp>
 
-// ---------------------------------------------------------------------------
-//  Local static data
-//
-//  gInvalidTrans
-//      This value represents an invalid transition in each line of the
-//      transition table.
-//
-//  gEOCFakeId
-//  gEpsilonFakeId
-//      We have to put in a couple of special CMLeaf nodes to represent
-//      special values, using fake element ids that we know won't conflict
-//      with real element ids.
-//
-//
-// ---------------------------------------------------------------------------
-static const unsigned int   gInvalidTrans   = 0xFFFFFFFF;
-static const unsigned int   gEOCFakeId      = 0xFFFFFFF1;
-static const unsigned int   gEpsilonFakeId  = 0xFFFFFFF2;
 
 // ---------------------------------------------------------------------------
 //  DFAContentModel: Constructors and Destructor
@@ -228,7 +213,7 @@ DFAContentModel::validateContent( QName** const        children
             if (fDTD) {
                 if (!XMLString::compareString(inElem->getRawName(), curElem->getRawName())) {
                     nextState = fTransTable[curState][elemIndex];
-                    if (nextState != gInvalidTrans)
+                    if (nextState != XMLContentModel::gInvalidTrans)
                         break;
                 }
             }
@@ -239,7 +224,7 @@ DFAContentModel::validateContent( QName** const        children
                     if ((inElem->getURI() == curElem->getURI()) &&
                     (!XMLString::compareString(inElem->getLocalPart(), curElem->getLocalPart()))) {
                         nextState = fTransTable[curState][elemIndex];
-                        if (nextState != gInvalidTrans)
+                        if (nextState != XMLContentModel::gInvalidTrans)
                             break;
                     }
                 }
@@ -248,7 +233,7 @@ DFAContentModel::validateContent( QName** const        children
                     unsigned int uri = inElem->getURI();
                     if ((uri == emptyNamespaceId) || (uri == curElem->getURI())) {
                         nextState = fTransTable[curState][elemIndex];
-                        if (nextState != gInvalidTrans)
+                        if (nextState != XMLContentModel::gInvalidTrans)
                             break;
                     }
                 }
@@ -257,7 +242,7 @@ DFAContentModel::validateContent( QName** const        children
                     if (curElem->getURI() == emptyNamespaceId)
                     {
                         nextState = fTransTable[curState][elemIndex];
-                        if (nextState != gInvalidTrans)
+                        if (nextState != XMLContentModel::gInvalidTrans)
                             break;
                     }
                 }
@@ -265,7 +250,7 @@ DFAContentModel::validateContent( QName** const        children
                 {
                     if (inElem->getURI() != curElem->getURI()) {
                         nextState = fTransTable[curState][elemIndex];
-                        if (nextState != gInvalidTrans)
+                        if (nextState != XMLContentModel::gInvalidTrans)
                             break;
                     }
                 }
@@ -273,7 +258,7 @@ DFAContentModel::validateContent( QName** const        children
         }//for elemIndex
 
         // If "nextState" is -1, we found a match, but the transition is invalid
-        if (nextState == gInvalidTrans)
+        if (nextState == XMLContentModel::gInvalidTrans)
             return childIndex;
 
         // If we didn't find it, then obviously not valid
@@ -333,7 +318,7 @@ int DFAContentModel::validateContentSpecial(QName** const          children
                 if (comparator.isEquivalentTo(inElem, curElem) )
                 {
                     nextState = fTransTable[curState][elemIndex];
-                    if (nextState != gInvalidTrans)
+                    if (nextState != XMLContentModel::gInvalidTrans)
                         break;
                 }
 
@@ -344,7 +329,7 @@ int DFAContentModel::validateContentSpecial(QName** const          children
                 if ((uri == emptyNamespaceId) || (uri == curElem->getURI()))
                 {
                     nextState = fTransTable[curState][elemIndex];
-                    if (nextState != gInvalidTrans)
+                    if (nextState != XMLContentModel::gInvalidTrans)
                         break;
                 }
             }
@@ -353,7 +338,7 @@ int DFAContentModel::validateContentSpecial(QName** const          children
                 if (curElem->getURI() == emptyNamespaceId)
                 {
                     nextState = fTransTable[curState][elemIndex];
-                    if (nextState != gInvalidTrans)
+                    if (nextState != XMLContentModel::gInvalidTrans)
                         break;
                 }
             }
@@ -362,14 +347,14 @@ int DFAContentModel::validateContentSpecial(QName** const          children
                 if (inElem->getURI() != curElem->getURI())
                 {
                     nextState = fTransTable[curState][elemIndex];
-                    if (nextState != gInvalidTrans)
+                    if (nextState != XMLContentModel::gInvalidTrans)
                         break;
                 }
             }
         }//for elemIndex
 
         // If "nextState" is -1, we found a match, but the transition is invalid
-        if (nextState == gInvalidTrans)
+        if (nextState == XMLContentModel::gInvalidTrans)
             return childIndex;
 
         // If we didn't find it, then obviously not valid
@@ -425,7 +410,7 @@ void DFAContentModel::buildDFA(ContentSpecNode* const curNode)
     //  DFA state position and count the number of such leafs, which is left
     //  in the fLeafCount member.
     //
-    QName* qname = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, gEOCFakeId);
+    QName* qname = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLContentModel::gEOCFakeId);
     CMLeaf* nodeEOC = new CMLeaf(qname);
     CMNode* nodeOrgContent = buildSyntaxTree(curNode);
     fHeadNode = new CMBinaryOp
@@ -955,7 +940,7 @@ unsigned int* DFAContentModel::makeDefStateList() const
 {
     unsigned int* retArray = new unsigned int[fElemMapSize];
     for (unsigned int index = 0; index < fElemMapSize; index++)
-        retArray[index] = gInvalidTrans;
+        retArray[index] = XMLContentModel::gInvalidTrans;
     return retArray;
 }
 
@@ -1001,7 +986,7 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
         //  Put this node in the leaf list at the current index if its
         //  a non-epsilon leaf.
         //
-        if (((CMLeaf*)nodeCur)->getElement()->getURI() != gEpsilonFakeId)
+        if (((CMLeaf*)nodeCur)->getElement()->getURI() != XMLContentModel::gEpsilonFakeId)
         {
             fLeafList[newIndex] = (CMLeaf*)nodeCur;
             fLeafListType[newIndex] = ContentSpecNode::Leaf;
