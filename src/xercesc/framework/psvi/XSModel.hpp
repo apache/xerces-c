@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/15 21:18:39  neilg
+ * fixes for compilation under gcc
+ *
  * Revision 1.5  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -294,7 +297,7 @@ private:
     XSModel & operator=(const XSModel &);
 
 protected:
-    friend XSObject;
+    friend class XSObject;
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------

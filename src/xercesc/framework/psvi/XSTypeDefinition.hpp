@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/15 21:19:01  neilg
+ * fixes for compilation under gcc
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -256,6 +259,11 @@ protected:
     XSTypeDefinition*               fBaseType; // owned by XSModel
 };
 inline XSTypeDefinition::~XSTypeDefinition() {}
+
+inline XSTypeDefinition::TYPE_CATEGORY XSTypeDefinition::getTypeCategory() const
+{
+    return fTypeCategory;
+}
 
 XERCES_CPP_NAMESPACE_END
 

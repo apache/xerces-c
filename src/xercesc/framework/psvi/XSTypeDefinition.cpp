@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/11/15 21:18:39  neilg
+ * fixes for compilation under gcc
+ *
  * Revision 1.4  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -90,11 +93,6 @@ XSTypeDefinition::XSTypeDefinition(TYPE_CATEGORY            typeCategory,
 }
 
 // XSTypeDefinition implementation
-inline XSTypeDefinition::TYPE_CATEGORY XSTypeDefinition::getTypeCategory() const
-{
-    return fTypeCategory;
-}
-
 
 bool XSTypeDefinition::isFinal(short toTest)
 {

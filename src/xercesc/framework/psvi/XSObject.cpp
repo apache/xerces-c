@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/15 21:18:39  neilg
+ * fixes for compilation under gcc
+ *
  * Revision 1.6  2003/11/14 22:47:53  neilg
  * fix bogus log message from previous commit...
  *
@@ -103,11 +106,6 @@ const XMLCh *XSObject::getName()
 const XMLCh *XSObject::getNamespace() 
 {
     return 0;
-}
-
-inline XSConstants::COMPONENT_TYPE XSObject::getType() const
-{
-    return fComponentType;
 }
 
 XSNamespaceItem *XSObject::getNamespaceItem() 
