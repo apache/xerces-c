@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/08/28 19:20:54  tng
+ * Schema: xsi:type support
+ *
  * Revision 1.13  2001/08/21 16:06:11  tng
  * Schema: Unique Particle Attribution Constraint Checking.
  *
@@ -105,6 +108,7 @@
 #include <framework/XMLDocumentHandler.hpp>
 #include <internal/XMLReader.hpp>
 #include <internal/XMLScanner.hpp>
+#include <validators/datatype/DatatypeValidatorFactory.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
 #include <validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <validators/datatype/ListDatatypeValidator.hpp>
@@ -187,11 +191,12 @@ int SchemaValidator::checkContent (XMLElementDecl* const elemDecl
             XMLContentModel* elemCM = elemDecl->getContentModel();
 
             // Ask it to validate and return its return
-            int result = elemCM->validateContent(children, childCount, getScanner()->getEmptyNamespaceId());
+            unsigned int emptyNS = getScanner()->getEmptyNamespaceId();
+            int result = elemCM->validateContent(children, childCount, emptyNS);
             if (result != -1) {
                 result = elemCM->validateContentSpecial(children
                                                       , childCount
-                                                      , getScanner()->getEmptyNamespaceId()
+                                                      , emptyNS
                                                       , fGrammarResolver
                                                       , getScanner()->getURIStringPool());
             }
@@ -307,6 +312,12 @@ void SchemaValidator::faultInAttr (XMLAttr&    toFill, const XMLAttDef&  attDef)
 
 void SchemaValidator::reset()
 {
+    fTrailing = false;
+    delete fXsiType;
+    fXsiType = 0;
+    fXsiTypeValidator = 0;
+    fNil = false;
+    fDatatypeBuffer.reset();
 }
 
 bool SchemaValidator::requiresNamespaces() const
@@ -550,7 +561,94 @@ void SchemaValidator::validateAttrValue (const   XMLAttDef* attDef
 
 void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 {
-    if (!fXsiType) {
+    if (fXsiType) {
+        // handle "xsi:type" right here
+        unsigned int uri = fXsiType->getURI();
+        const XMLCh* localPart = fXsiType->getLocalPart();
+
+        if (uri != XMLElementDecl::fgInvalidElemId || uri != XMLElementDecl::fgPCDataElemId) {
+            // retrieve Grammar for the uri
+            const XMLCh* uriStr = getScanner()->getURIText(uri);
+            SchemaGrammar* sGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(uriStr);
+
+            if (!sGrammar || sGrammar->getGrammarType() != Grammar::SchemaGrammarType) {
+                // Grammar not found
+                emitError(XMLValid::GrammarNotFound, uriStr);
+            }
+            else {
+                // retrieve complexType registry and DatatypeValidator registry
+                RefHashTableOf<ComplexTypeInfo>* complexTypeRegistry = sGrammar->getComplexTypeRegistry();
+                DatatypeValidatorFactory* dataTypeReg = sGrammar->getDatatypeRegistry();
+
+                if (!complexTypeRegistry || !dataTypeReg)
+                    emitError(XMLValid::BadXsiType, fXsiType->getRawName());
+                else {
+                    // retrieve the typeInfo specified in xsi:type
+                    XMLBuffer aBuffer;
+                    aBuffer.set(uriStr);
+                    aBuffer.append(chComma);
+                    aBuffer.append(localPart);
+                    ComplexTypeInfo* typeInfo = complexTypeRegistry->get(aBuffer.getRawBuffer());
+
+                    if (typeInfo) {
+                        // typeInfo is found
+                        if (typeInfo->getAbstract())
+                            emitError(XMLValid::NoAbstractInXsiType, aBuffer.getRawBuffer());
+
+                        ComplexTypeInfo* destType = ((SchemaElementDecl*)elemDef)->getComplexTypeInfo();
+                        ComplexTypeInfo* tempType = typeInfo;
+                        if (destType) {
+                            while (tempType) {
+                                if (!XMLString::compareString(tempType->getTypeName(), destType->getTypeName()))
+                                    break;
+                                tempType = tempType->getBaseComplexTypeInfo();
+                            }
+                            if (!tempType)
+                                emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                            else {
+                                int derivationMethod = typeInfo->getDerivedBy();
+                                if ((((SchemaElementDecl*)elemDef)->getBlockSet() & derivationMethod) != 0)
+                                    emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                            }
+                        }
+                        else {
+                            // if the original type is a simple type, check derivation ok.
+                            DatatypeValidator* ancestorValidator = ((SchemaElementDecl*)elemDef)->getDatatypeValidator();
+                            if (ancestorValidator && !ancestorValidator->isSubstitutableBy(fXsiTypeValidator)) {
+                                // the type is not derived from ancestor
+                                emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                            }
+                        }
+                    }
+                    else {
+                        // typeInfo not found
+                        if (!XMLString::compareString(uriStr, SchemaSymbols::fgURI_SCHEMAFORSCHEMA))
+                            fXsiTypeValidator = dataTypeReg->getDatatypeValidator(localPart);
+                        else
+                            fXsiTypeValidator = dataTypeReg->getDatatypeValidator(aBuffer.getRawBuffer());
+
+                        if (!fXsiTypeValidator)
+                            emitError(XMLValid::BadXsiType, fXsiType->getRawName());
+                        else {
+                            DatatypeValidator* ancestorValidator = ((SchemaElementDecl*)elemDef)->getDatatypeValidator();
+                            if (ancestorValidator && !ancestorValidator->isSubstitutableBy(fXsiTypeValidator)) {
+                                // the type is not derived from ancestor
+                                emitError(XMLValid::NonDerivedXsiType, fXsiType->getRawName(), elemDef->getFullName());
+                            }
+                            else {
+                                // the type is derived from ancestor
+                                if (((SchemaElementDecl*)elemDef)->getBlockSet() == SchemaSymbols::RESTRICTION)
+                                    emitError(XMLValid::NoSubforBlock, fXsiType->getRawName(), elemDef->getFullName());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        delete fXsiType;
+        fXsiType = 0;
+    }
+    else {
         //
         // xsi:type was not specified...
         // If the corresponding type is abstract, detect an error
@@ -559,7 +657,7 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
 
         if (typeInfo) {
             if (typeInfo->getAbstract()) {
-                emitError(XMLValid::XsiTypeAbstract, elemDef->getFullName());
+                emitError(XMLValid::NoUseAbstractType, elemDef->getFullName());
             }
         }
     }
@@ -569,8 +667,12 @@ void SchemaValidator::validateElement(const   XMLElementDecl*  elemDef)
     //
     int miscFlags = ((SchemaElementDecl*)elemDef)->getMiscFlags();
     if ((miscFlags & SchemaSymbols::ABSTRACT) != 0) {
-        emitError(XMLValid::SchemaAbstractError, elemDef->getFullName());
+        emitError(XMLValid::NoDirectUseAbstractElement, elemDef->getFullName());
     }
+
+    //
+    // Check whether this element allows Nillable
+    //
     if (fNil && (miscFlags & SchemaSymbols::NILLABLE) == 0 ) {
         fNil = false;
         emitError(XMLValid::NillNotAllowed, elemDef->getFullName());

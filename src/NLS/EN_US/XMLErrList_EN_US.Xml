@@ -116,7 +116,7 @@
             <Message Id="EmptyComplexRestrictionDerivation" Text="The content of complexType is EMPTY, but base is not empty or does not have emptiable particle."/>
             <Message Id="MixedOrElementOnly" Text="The content type of the base type:'{0}' and derived type:'{1}' must both be mixed or element-only."/>
             <Message Id="InvalidContentRestriction" Text="The content type is not a valid restriction of the content type of the base."/>
-            <Message Id="ForbiddenDerivation" Text="Derivation by extension or restriction is forbiden by either the base type '{0}' or the schema"/> 
+            <Message Id="ForbiddenDerivation" Text="Derivation by extension or restriction is forbiden by either the base type '{0}' or the schema"/>
             <Message Id="AtomicItemType" Text="The {item type definition} must have {variety} of atomic or union (where all member types must be atomic)"/>
             <Message Id="MemberTypeNoUnion" Text="The {member type definitions} must all have {variety} of atomic or list"/>
             <Message Id="GroupContentError" Text="The group:'0' must contain (all | choice | sequence)"/>
@@ -349,8 +349,6 @@
             <Message Id="NoDatatypeValidatorForSimpleType" Text="This element {0} has a simpletype but no datatypevalidator was found."/>
             <Message Id="GrammarNotFound" Text="There is no Grammar for uri: {0}."/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
-            <Message Id="XsiTypeAbstract" Text="Element {0} is declared with a type that is abstract.  Use xsi:type to specify a non-abstract type"/>
-            <Message Id="SchemaAbstractError" Text="A member of abstract element {0} substitution group must be specified"/>
             <Message Id="NillNotAllowed" Text="xsi:nil must not be specified for the element {0} with nillable equals false"/>
             <Message Id="NilAttrNotEmpty" Text="Element {0} with attribute xsi:nil=true must be empty"/>
             <Message Id="FixedDifferentFromActual" Text="Content of element '{0}' is different from the fixed attribute value in the element's schema declaration."/>
@@ -366,6 +364,12 @@
             <Message Id="PartialMarkupInPE" Text="Partial markup in parameter entity replacement text."/>
             <Message Id="DatatypeValidationFailure" Text="Failed to validate '{0}'"/>
             <Message Id="UniqueParticleAttributionFail" Text="'{0}' and '{1}' violate the Unique Particle Attribution rule"/>
+            <Message Id="NoAbstractInXsiType" Text="Abstract type '{0}' should not be used in xsi:type"/>
+            <Message Id="NoDirectUseAbstractElement" Text="A member of abstract element {0} substitution group must be specified"/>
+            <Message Id="NoUseAbstractType" Text="Element {0} is declared with a type that is abstract.  Use xsi:type to specify a non-abstract type"/>
+            <Message Id="BadXsiType" Text="Unresolved type '{0}' found in xsi:type handling"/>
+            <Message Id="NonDerivedXsiType" Text="Type '{0}' that is used in xsi:type is not derived from the type of element '{1}'"/>
+            <Message Id="NoSubforBlock" Text="Element '{0}' has blocking constraint and does not permit substitution"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">

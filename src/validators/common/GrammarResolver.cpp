@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2001/08/28 19:20:54  tng
+ * Schema: xsi:type support
+ *
  * Revision 1.4  2001/07/24 18:33:13  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -134,6 +137,7 @@ void GrammarResolver::removeGrammar( const XMLCh* const nameSpaceKey ) {
 
 void GrammarResolver::reset() {
    fGrammarRegistry->removeAll();
+   fStringPool.flushAll();
    if (fDataTypeReg) {
       fDataTypeReg->resetRegistry();
    }

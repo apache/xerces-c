@@ -912,6 +912,12 @@ void XMLScanner::scanReset(const InputSource& src)
     fHasNoDTD = true;
     fSeeXsi = false;
 
+    // Reset the validators
+    fDTDValidator->reset();
+    fSchemaValidator->reset();
+    if (fValidatorFromUser)
+        fValidator->reset();
+
     //
     //  Handle the creation of the XML reader object for this input source.
     //  This will provide us with transcoding and basic lexing services.

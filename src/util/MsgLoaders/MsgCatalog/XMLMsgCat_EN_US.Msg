@@ -336,23 +336,27 @@ $set 2
  70  This element {0} has a simpletype but no datatypevalidator was found.
  71  There is no Grammar for uri: {0}.
  72  {0}
- 73  Element {0} is declared with a type that is abstract.  Use xsi:type to specify a non-abstract type
- 74  A member of abstract element {0} substitution group must be specified
- 75  xsi:nil must not be specified for the element {0} with nillable equals false
- 76  Element {0} with attribute xsi:nil=true must be empty
- 77  Content of element '{0}' is different from the fixed attribute value in the element's schema declaration.
- 78  No datatypevalidator was found for this attribute {0}.
- 79  Schema error during parsing
- 80  Element '{0}' should be qualified
- 81  Element '{0}' should be un-qualified
- 82  Reference to external entity declaration '{0}' is not allowed in a standalone document.
- 83  Attribute '{0}' for element '{1}' has a default value and must be specified in a standalone document.
- 84  Attribute '{0}' must not be changed by normalization in a standalone document.
- 85  White space must not occur between externally declared elements with element content in a standalone document.
- 86  Entity '{0}' was not found
- 87  Partial markup in parameter entity replacement text.
- 88  Failed to validate '{0}'
- 89  '{0}' and '{1}' violate the Unique Particle Attribution rule
+ 73  xsi:nil must not be specified for the element {0} with nillable equals false
+ 74  Element {0} with attribute xsi:nil=true must be empty
+ 75  Content of element '{0}' is different from the fixed attribute value in the element's schema declaration.
+ 76  No datatypevalidator was found for this attribute {0}.
+ 77  Schema error during parsing
+ 78  Element '{0}' should be qualified
+ 79  Element '{0}' should be un-qualified
+ 80  Reference to external entity declaration '{0}' is not allowed in a standalone document.
+ 81  Attribute '{0}' for element '{1}' has a default value and must be specified in a standalone document.
+ 82  Attribute '{0}' must not be changed by normalization in a standalone document.
+ 83  White space must not occur between externally declared elements with element content in a standalone document.
+ 84  Entity '{0}' was not found
+ 85  Partial markup in parameter entity replacement text.
+ 86  Failed to validate '{0}'
+ 87  '{0}' and '{1}' violate the Unique Particle Attribution rule
+ 88  Abstract type '{0}' should not be used in xsi:type
+ 89  A member of abstract element {0} substitution group must be specified
+ 90  Element {0} is declared with a type that is abstract.  Use xsi:type to specify a non-abstract type
+ 91  Unresolved type '{0}' found in xsi:type handling
+ 92  Type '{0}' that is used in xsi:type is not derived from the type of element '{1}'
+ 93  Element '{0}' has blocking constraint and does not permit substitution
 
 
 $set 3
