@@ -88,6 +88,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
+    bool                containsTypeWithId() const;
     unsigned int        attributeCount() const;
     unsigned int        anyAttributeCount() const; 
     SchemaAttDef*       attributeAt(const unsigned int index);
@@ -99,6 +100,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
+    void setTypeWithId(const bool other);
     void addAttDef(SchemaAttDef* const toAdd, const bool toClone = false);
     void addAnyAttDef(SchemaAttDef* const toAdd, const bool toClone = false);
     void setCompleteWildCard(SchemaAttDef* const toSet);
@@ -118,6 +120,7 @@ private:
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
+    bool                       fTypeWithId;
     RefVectorOf<SchemaAttDef>* fAttributes;
     RefVectorOf<SchemaAttDef>* fAnyAttributes;
     SchemaAttDef*              fCompleteWildCard;
@@ -126,6 +129,11 @@ private:
 // ---------------------------------------------------------------------------
 //  XercesAttGroupInfo: Getter methods
 // ---------------------------------------------------------------------------
+inline bool XercesAttGroupInfo::containsTypeWithId() const {
+
+    return fTypeWithId;
+}
+
 inline unsigned int XercesAttGroupInfo::attributeCount() const {
 
     if (fAttributes) {
@@ -193,6 +201,11 @@ XercesAttGroupInfo::getCompleteWildCard() const {
 // ---------------------------------------------------------------------------
 //  XercesAttGroupInfo: Setter methods
 // ---------------------------------------------------------------------------
+inline void XercesAttGroupInfo::setTypeWithId(const bool other) {
+
+    fTypeWithId = other;
+}
+
 inline void XercesAttGroupInfo::addAttDef(SchemaAttDef* const toAdd,
                                              const bool toClone) {
 

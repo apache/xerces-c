@@ -157,7 +157,8 @@
             <Message Id="PD_EmptyBase" Text="The complexType has content, while base is empty"/>
             <Message Id="AttUseCorrect" Text="The {value constraint} of an attribue ref is not fixed or different from the fixed {value constraint} of '{0}'"/>
             <Message Id="AttDeclPropCorrect3" Text="The {type definition} for attribute '{0}={1}' is or is derived from ID, and must not have {value constraint}"/>
-            <Message Id="AttDeclPropCorrect5" Text="More than one attribute derived from type ID cannot appear in the same complex type definition"/>
+            <Message Id="AttDeclPropCorrect5" Text="More than one attribute derived from type ID cannot appear in the same complex type - '{0}' ignored"/>
+            <Message Id="AttGrpPropCorrect3" Text="More than one attribute derived from type ID cannot appear in the same attribute group - '{0}' ignored"/>
             <Message Id="InvalidTargetNSValue" Text="'' is not a legal value for the targetNamespace attribute; the attribute must be absent or contain a nonempty value"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>

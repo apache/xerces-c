@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/11/20 15:57:04  knoaman
+ * Add check for multiple attributes with type derived from ID.
+ *
  * Revision 1.2  2001/08/09 15:23:17  knoaman
  * add support for <anyAttribute> declaration.
  *
@@ -74,7 +77,8 @@
 //  XercesAttGroupInfo: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XercesAttGroupInfo::XercesAttGroupInfo()
-    : fAttributes(0)
+    : fTypeWithId(false)
+    , fAttributes(0)
     , fAnyAttributes(0)
     , fCompleteWildCard(0)
 {

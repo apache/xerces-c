@@ -930,14 +930,7 @@ TraverseSchema::traverseChoiceSequence(const DOM_Element& elem,
 int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem,
                                            int baseRefContext)
 {
-    // ------------------------------------------------------------------
-    // Check attributes
-    // ------------------------------------------------------------------
     bool topLevel = isTopLevelComponent(childElem);
-    unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
-                                      : GeneralAttributeCheck::LocalContext;
-
-    fAttributeCheck.checkAttributes(childElem, scope, this);
 
     // ------------------------------------------------------------------
     // Process contents
@@ -971,6 +964,14 @@ int TraverseSchema::traverseSimpleTypeDecl(const DOM_Element& childElem,
     if (fDatatypeRegistry->getDatatypeValidator(fullName)!= 0) {
         return fullTypeNameId;
     }
+
+    // ------------------------------------------------------------------
+    // Check attributes
+    // ------------------------------------------------------------------
+    unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
+                                      : GeneralAttributeCheck::LocalContext;
+
+    fAttributeCheck.checkAttributes(childElem, scope, this);
 
     // Circular constraint checking
     if (fCurrentTypeNameStack->containsElement(fullTypeNameId)){
@@ -1070,13 +1071,6 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
         return -1;
     }
 
-    // -----------------------------------------------------------------------
-    // Check Attributes
-    // -----------------------------------------------------------------------
-    unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
-                                      : GeneralAttributeCheck::LocalContext;
-    fAttributeCheck.checkAttributes(elem, scope, this);
-
     // ------------------------------------------------------------------
     // Check if the type has already been registered
     // ------------------------------------------------------------------
@@ -1095,6 +1089,16 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
         }
     }
 
+    // -----------------------------------------------------------------------
+    // Check Attributes
+    // -----------------------------------------------------------------------
+    unsigned short scope = (topLevel) ? GeneralAttributeCheck::GlobalContext
+                                      : GeneralAttributeCheck::LocalContext;
+    fAttributeCheck.checkAttributes(elem, scope, this);
+
+    // -----------------------------------------------------------------------
+    // Create a new instance
+    // -----------------------------------------------------------------------
     ComplexTypeInfo* typeInfo = new ComplexTypeInfo();
     int previousScope = fCurrentScope;
     fCurrentScope = fScopeCount++;
@@ -2012,6 +2016,31 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
         }
     }
 
+    // check for multiple attributes with type derived from ID
+    if (!topLevel && ofTypeID) {
+
+        if (fCurrentAttGroupInfo) {
+
+            if (fCurrentAttGroupInfo->containsTypeWithId()) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttGrpPropCorrect3, name);
+                return;
+            }
+
+            fCurrentAttGroupInfo->setTypeWithId(true);
+        }
+        else {
+
+            if (typeInfo->containsAttWithTypeId()) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect5, name);
+                return;
+            }
+
+            typeInfo->setAttWithTypeId(true);
+        }
+    }
+
     // create SchemaAttDef
     SchemaAttDef* attDef = new SchemaAttDef(XMLUni::fgZeroLenString, name, uriIndex, attType);
 
@@ -2051,15 +2080,6 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
         bool toClone = false;
 
         if (typeInfo) {
-
-            if (ofTypeID) {
-
-                if (typeInfo->containsAttWithTypeId()) {
-                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect5);
-                }
-
-                typeInfo->setAttWithTypeId(ofTypeID);
-            }
 
             toClone = true;
             typeInfo->addAttDef(attDef);
@@ -5036,10 +5056,36 @@ void TraverseSchema::processAttributeDeclRef(const DOM_Element& elem,
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttUseCorrect, refName);
     }
 
+    DatatypeValidator* attDV = refAttDef->getDatatypeValidator();
+
+    //check for multiple attributes with type derived from ID
+    if (attDV && attDV->getType() == DatatypeValidator::ID) {
+
+        if (fCurrentAttGroupInfo) {
+
+            if (fCurrentAttGroupInfo->containsTypeWithId()) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttGrpPropCorrect3, refName);
+                return;
+            }
+
+            fCurrentAttGroupInfo->setTypeWithId(true);
+        }
+        else {
+
+            if (typeInfo->containsAttWithTypeId()) {
+
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect5, refName);
+                return;                
+            }
+
+            typeInfo->setAttWithTypeId(true);
+        }
+    }
+
     bool required = (XMLString::compareString(useAttr,SchemaSymbols::fgATTVAL_REQUIRED) == 0);
     bool prohibited = (XMLString::compareString(useAttr,SchemaSymbols::fgATTVAL_PROHIBITED) == 0);
     QName* attQName = refAttDef->getAttName();
-    DatatypeValidator* attDV = refAttDef->getDatatypeValidator();
     SchemaAttDef* attDef = new SchemaAttDef(attQName->getPrefix(),
                                             attQName->getLocalPart(),
                                             attQName->getURI(),
@@ -5105,15 +5151,6 @@ void TraverseSchema::processAttributeDeclRef(const DOM_Element& elem,
     bool toClone = false;
 
     if (typeInfo) {
-
-        if (attDV && attDV->getType() == DatatypeValidator::ID) {
-
-            if (typeInfo->containsAttWithTypeId()) {
-                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect5);
-            }
-
-            typeInfo->setAttWithTypeId(true);
-        }
 
         toClone = true;
         typeInfo->addAttDef(attDef);
@@ -6533,6 +6570,7 @@ void TraverseSchema::copyAttGroupAttributes(XercesAttGroupInfo* const fromAttGro
         SchemaAttDef* attDef = fromAttGroup->attributeAt(i);
         QName* attName = attDef->getAttName();
         const XMLCh* localPart = attName->getLocalPart();
+        DatatypeValidator* attDV = attDef->getDatatypeValidator();
 
         if (typeInfo) {
 
@@ -6542,12 +6580,12 @@ void TraverseSchema::copyAttGroupAttributes(XercesAttGroupInfo* const fromAttGro
                 continue;
             }
 
-            DatatypeValidator* attDV = attDef->getDatatypeValidator();
-
             if (attDV && attDV->getType() == DatatypeValidator::ID) {
 
                 if (typeInfo->containsAttWithTypeId()) {
-                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect5);
+
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttDeclPropCorrect5, localPart);
+                    continue;
                 }
 
                 typeInfo->setAttWithTypeId(true);
@@ -6565,6 +6603,17 @@ void TraverseSchema::copyAttGroupAttributes(XercesAttGroupInfo* const fromAttGro
 
                 reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::DuplicateAttribute, localPart);
                 continue;
+            }
+
+            if (attDV && attDV->getType() == DatatypeValidator::ID) {
+
+                if (toAttGroup->containsTypeWithId()) {
+
+                    reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttGrpPropCorrect3, localPart);
+                    continue; 
+                }
+
+                toAttGroup->setTypeWithId(true);
             }
 
             toAttGroup->addAttDef(attDef, true);
