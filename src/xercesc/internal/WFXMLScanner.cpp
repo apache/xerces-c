@@ -1496,26 +1496,28 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
         );
     }
 
-    // check for duplicate namespace attributes:
-    // by checking for qualified names with the same local part and with prefixes 
-    // which have been bound to namespace names that are identical. 
-    XMLAttr* loopAttr;
-    XMLAttr* curAtt;
-    for (unsigned int attrIndex=0; attrIndex < attCount-1; attrIndex++) {
-        loopAttr = fAttrList->elementAt(attrIndex);
-        for (unsigned int curAttrIndex = attrIndex+1; curAttrIndex < attCount; curAttrIndex++) {
-            curAtt = fAttrList->elementAt(curAttrIndex);
-            if (curAtt->getURIId() == loopAttr->getURIId() &&
-                XMLString::equals(curAtt->getName(), loopAttr->getName())) {
-                emitError
-                ( 
-                    XMLErrs::AttrAlreadyUsedInSTag
-                        , curAtt->getName()
-                        , elemDecl->getFullName()
-                );
+    if(attCount) {
+        // check for duplicate namespace attributes:
+        // by checking for qualified names with the same local part and with prefixes 
+        // which have been bound to namespace names that are identical. 
+        XMLAttr* loopAttr;
+        XMLAttr* curAtt;
+        for (unsigned int attrIndex=0; attrIndex < attCount-1; attrIndex++) {
+            loopAttr = fAttrList->elementAt(attrIndex);
+            for (unsigned int curAttrIndex = attrIndex+1; curAttrIndex < attCount; curAttrIndex++) {
+                curAtt = fAttrList->elementAt(curAttrIndex);
+                if (curAtt->getURIId() == loopAttr->getURIId() &&
+                    XMLString::equals(curAtt->getName(), loopAttr->getName())) {
+                    emitError
+                    ( 
+                        XMLErrs::AttrAlreadyUsedInSTag
+                            , curAtt->getName()
+                            , elemDecl->getFullName()
+                    );
+                }
             }
-        }
-    }  
+        }  
+    }
 
     // Resolve the qualified name to a URI.
     unsigned int uriId = resolvePrefix
