@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/18 13:36:41  tng
+ * Schema: Catch RegularExpression exception and NumberFormatException
+ *
  * Revision 1.3  2001/05/18 13:23:43  tng
  * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
  *
@@ -460,8 +463,15 @@ void Base64BinaryDatatypeValidator::checkContent( const XMLCh* const content, bo
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 ) 
     {
         // lazy construction
-        if (getRegex() ==0)
-            setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+        if (getRegex() ==0) {
+            try {
+                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+            }
+            catch (XMLException &e)
+            {
+                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+            }
+        }
 
         if (getRegex()->matches(content) ==false)
         {

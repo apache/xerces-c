@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/18 13:36:47  tng
+ * Schema: Catch RegularExpression exception and NumberFormatException
+ *
  * Revision 1.3  2001/05/18 13:23:49  tng
  * Schema: Exception messages in DatatypeValidator.  By Pei Yong Zhang.
  *
@@ -459,8 +462,15 @@ void HexBinaryDatatypeValidator::checkContent( const XMLCh* const content, bool 
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 ) 
     {
         // lazy construction
-        if (getRegex() ==0)
-            setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+        if (getRegex() ==0) {
+            try {
+                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+            }
+            catch (XMLException &e)
+            {
+                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+            }
+        }
 
         if (getRegex()->matches(content) ==false)
         {

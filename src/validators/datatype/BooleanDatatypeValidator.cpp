@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/18 13:36:44  tng
+ * Schema: Catch RegularExpression exception and NumberFormatException
+ *
  * Revision 1.2  2001/05/11 13:27:26  tng
  * Copyright update.
  *
@@ -130,8 +133,15 @@ void BooleanDatatypeValidator::checkContent( const XMLCh* const content, bool as
     if ( (getFacetsDefined() & DatatypeValidator::FACET_PATTERN ) != 0 )
     {
         // lazy construction
-        if (getRegex() ==0)
-            setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+        if (getRegex() ==0) {
+            try {         
+                setRegex(new RegularExpression(getPattern(), SchemaSymbols::fgRegEx_XOption));
+            }
+            catch (XMLException &e)
+            {
+                ThrowXML1(InvalidDatatypeValueException, XMLExcepts::RethrowError, e.getMessage());
+            }
+        }
 
         if (getRegex()->matches(content) ==false)
         {
