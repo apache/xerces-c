@@ -103,6 +103,8 @@ EXIT
   CALL SysMkDir targetdir || "\samples\SAX2Print"
   CALL SysMkDir targetdir || "\samples\DOMCount"
   CALL SysMkDir targetdir || "\samples\DOMPrint"
+  CALL SysMkDir targetdir || "\samples\IDOMCount"
+  CALL SysMkDir targetdir || "\samples\IDOMPrint"
   CALL SysMkDir targetdir || "\samples\Redirect"
   CALL SysMkDir targetdir || "\samples\MemParse"
   CALL SysMkDir targetdir || "\samples\PParse"
@@ -138,6 +140,8 @@ EXIT
                 "SAX2Print", ,
                 "DOMCount", ,
                 "DOMPrint", ,
+                "IDOMCount", ,
+                "IDOMPrint", ,
                 "Redirect", ,
                 "MemParse", ,
                 "PParse", ,
@@ -187,6 +191,7 @@ EXIT
 			  "sax2", ,
               "framework", ,
               "dom", ,
+              "idom", ,
               "internal", ,
               "parsers", ,
               "util", ,
@@ -226,6 +231,9 @@ EXIT
       trgfn = targetdir || "\include\" || dir || "\" || Filespec('N', f.i)
       IF srcfn~pos("\dom\") > 0 THEN
         IF srcfn~pos("Impl.hpp") > 0 | srcfn~pos("\dom\DS") > 0 THEN
+          ITERATE
+      IF srcfn~pos("\idom\") > 0 THEN
+        IF srcfn~pos("Impl.hpp") > 0 | srcfn~pos("\idom\IDS") > 0 THEN
           ITERATE
       'copy' srcfn trgfn '> nul'
     END

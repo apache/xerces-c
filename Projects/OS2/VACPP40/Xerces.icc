@@ -1,5 +1,6 @@
 include "project_options.icc"
 include "xerces_dom.icc"
+include "xerces_idom.icc"
 include "xerces_framework.icc"
 include "xerces_internal.icc"
 include "xerces_parsers.icc"
@@ -15,11 +16,12 @@ option
    target "xerces-c.dll"
    {
     source type("cpp") xerces_dom
+    source type("cpp") xerces_idom
     source type("cpp") xerces_framework
     source type("cpp") xerces_internal
     source type("cpp") xerces_parsers
     source type("cpp") xerces_sax
-	source type("cpp") xerces_sax2
+    source type("cpp") xerces_sax2
     source type("cpp") xerces_util
     source type("cpp") xerces_validators
     source type("cpp") xerces_os2

@@ -13,5 +13,6 @@ option project_options =
     opt(tune, "pentium"),
     incl(searchpath, BASE_DIR "\\src"),
     incl(searchpath, BASE_DIR "\\src\\dom"),
+    incl(searchpath, BASE_DIR "\\src\\idom"),
     define("XML_USE_INMEMORY_MSGLOADER", 1),
     define("XML_USE_ICONV_TRANSCODER", 1)
