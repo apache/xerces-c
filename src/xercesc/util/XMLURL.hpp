@@ -158,6 +158,7 @@ public:
     const XMLCh* getQuery() const;
     const XMLCh* getURLText() const;
     const XMLCh* getUser() const;
+    MemoryManager* getMemoryManager() const;
 
 
     // -----------------------------------------------------------------------
@@ -311,6 +312,11 @@ inline const XMLCh* XMLURL::getURLText() const
         ((XMLURL*)this)->buildFullText();
 
     return fURLText;
+}
+
+inline MemoryManager* XMLURL::getMemoryManager() const
+{
+    return fMemoryManager;
 }
 
 MakeXMLException(MalformedURLException, XMLUTIL_EXPORT)
