@@ -73,9 +73,7 @@ COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
-OSVER = @osver@
-LIBS = @libs@
-CC = @compiler@
+LDFLAGS = @ldflags@
 
 include ../../../version.incl
 include ../../Makefile.incl
@@ -93,25 +91,25 @@ INCLUDE = ${INCLUDES}
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
 BATCH_TARGET= "//'${LOADMOD}(IRANGTST)'"
-all: makedir ${BATCH_TARGET}
+all:: makedir ${BATCH_TARGET}
 else
-all: makedir ${EXEC}/${APP_NAME}
+all:: makedir ${EXEC}/${APP_NAME}
 endif
 
-makedir:
+makedir::
 	-mkdir -p $(OUTDIR)
 
-${EXEC}/${APP_NAME}: ${OBJS}
+${EXEC}/${APP_NAME}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
-${BATCH_TARGET}: ${OBJS}
+${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS}
 
-$(OUTDIR)/IRangeTest.o: ${SRC}/IRangeTest.cpp ${HEADER_FILES}
+$(OUTDIR)/IRangeTest.o:: ${SRC}/IRangeTest.cpp ${HEADER_FILES}
 	${CC} ${CMP} $(INCLUDE) -o $(OUTDIR)/IRangeTest.o ${SRC}/IRangeTest.cpp
 
-clean:
+clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}
 
-distclean:	clean
+distclean::	clean
 	rm -f Makefile

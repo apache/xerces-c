@@ -1303,11 +1303,14 @@ echo "$ac_t""$host" 1>&6
 
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
+        *-*-sysv5*)     platform=UNIXWARE ;;
+        *-*-UnixWare*)  platform=UNIXWARE ;;
+        *-*-*unixware*)  platform=UNIXWARE ;;
+        *-*-sysv5uw7*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
-        *-*-*unixware*)     platform=UNIXWARE ;;
-        *-*-sysv5uw7*)     platform=UNIXWARE ;;
+	*-*-freebsd*)	platform=FREEBSD ;;
+        *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
-        *-sequent-*)    platform=PTX ;;
         *-*-hp*)        platform=HPUX ;
                         case "${host}" in
                             *-*-hpux11*)  osver=HPUX11;;
@@ -1315,15 +1318,18 @@ case "${host}" in
                             *)            osver=HPUX11;;
                         esac;;
         *-*-mvs*)       platform=OS390 ;;
+        *-*-os400*)     platform=OS400 ;;
+        *-*-OS400*)     platform=OS400 ;;
+		*-*-osf*)	platform=TRU64 ;;
         *-apple-*)		platform=MACOSX ;;
         *)              platform=UNKNOWN ;;
 esac
 
 
-
 compiler=${CXX}
 
 
+# prefix=${prefix}
 
 
 cxxflags=${CXXFLAGS}
@@ -1332,8 +1338,7 @@ cxxflags=${CXXFLAGS}
 cflags=${CFLAGS}
 
 
-libs=${LIBS}
-
+ldflags=${LDFLAGS}
 
 
 trap '' 1 2 15
@@ -1507,11 +1512,10 @@ s%@host_cpu@%$host_cpu%g
 s%@host_vendor@%$host_vendor%g
 s%@host_os@%$host_os%g
 s%@platform@%$platform%g
-s%@osver@%$osver%g
 s%@compiler@%$compiler%g
 s%@cxxflags@%$cxxflags%g
 s%@cflags@%$cflags%g
-s%@libs@%$libs%g
+s%@ldflags@%$ldflags%g
 
 CEOF
 EOF

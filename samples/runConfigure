@@ -73,8 +73,9 @@ usage()
     echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
     echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
-    echo "       -h (get help on the above commands)"
+    echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
+    echo "       -h (get help on the above commands)"
 }
 
 ERROR_EXIT_CODE=1
@@ -99,16 +100,23 @@ if test $1 = "-h"; then
    exit ${ERROR_EXIT_CODE}
 fi
 
-# Get the command line parameters
+# Check the command line parameters
 if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+getoptErr=`getopt p:c:x:dm:n:t:r:l:z:h $*`
 else
-set -- `getopts p:c:x:dm:n:t:r:l:z:h `$*``
+getoptErr=`getopts p:c:x:dm:n:t:r:l:z:h `$*``
 fi
 if [ $? != 0 ]
    then
    usage
    exit ${ERROR_EXIT_CODE}
+fi
+
+# Now get the command line parameters
+if test -x /usr/bin/getopt; then
+set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+else
+set --`getopts p:c:x:dm:n:t:r:l:z:h `$*``
 fi
 
 # Set up the default values for each parameter
@@ -163,6 +171,24 @@ echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
 echo "C Compiler: $ccompiler"
 echo "C++ Compiler: $cppcompiler"
+echo "Extra compile options: $compileroptions"
+echo "Extra link options: $linkeroptions"
+
+#
+# Now check if the options are correct or not, bail out if incorrect
+#
+case $platform in
+   aix | unixware | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx)
+       # platform has been recognized
+       ;;
+   *)
+      echo "I do not recognize the platform '$platform'. Please type '${0} -h' for help."
+      exit ${ERROR_EXIT_CODE};;
+esac
+
+#
+# Enable debugging or not...
+#
 if test $debug = "off"; then
     echo "Debug is OFF"
     if test $platform = "os400"; then
@@ -179,63 +205,37 @@ else
     debugflag="-g";
 fi
 
-# Now check if the options are correct or not, bail out if incorrect
-case $platform in
-   aix | unixware | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx)
-       # platform has been recognized
-       ;;
-   *)
-      echo "I do not recognize the platform '$platform'. Please type '${0} -h' for help."
-      exit ${ERROR_EXIT_CODE};;
-esac
-
+#
 # Set the C compiler and C++ compiler environment variables
-CC=$ccompiler; export CC
-CXX=$cppcompiler; export CXX
-
+#
 case $cppcompiler in
-   xlC* | xlc*)
-      #the compiler knows better about this stuff
-      #LDFLAGS="-lC"; export LDFLAGS
-      #LIBS="-L/usr/lpp/xlC/lib"; export LIBS
-       ;;
+   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx)
+      ;;
 
-   g++ | c++)
-       LDFLAGS="-lc"; export LDFLAGS
-if test $platform = "ptx"; then
-	if test -z $XMLINSTALL; then
-		XMLINSTALL=$ICUROOT
-	fi
-       LIBS="-L$XMLINSTALL/lib";
-else
-       LIBS="-L/usr/local/lib";
-fi
-	export LIBS ;;
-
-   cc | CC)
-       LDFLAGS="-lC"; export LDFLAGS
-       if test $platform = "irix"; then
-          LIBS=""; export LIBS
-       else
-          LIBS="-L/usr/lib -L/usr/ccs/lib"; export LIBS
-       fi ;;
-
-   acc | aCC)
-       LDFLAGS="-lC"; export LDFLAGS
-       LIBS="-L/usr/lib -L/opt/aCC/lib"; export LIBS ;;
-
-   icc | ICC)
-       ;;
-	cxx)
-		;;
    *)
       echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..."
       ;;
 esac
 
+CC="$ccompiler"
+export CC
+
+CXX="$cppcompiler"
+export CXX
+
+#
 # Set the extra C and C++ compiler flags
-CXXFLAGS="$compileroptions $debugflag $compileroption"; export CXXFLAGS
-CFLAGS="$compileroptions $debugflag $compileroption"; export CFLAGS
+#
+CXXFLAGS="$compileroptions $debugflag"; export CXXFLAGS
+CFLAGS="$compileroptions $debugflag"; export CFLAGS
+
+# gcc crashes if optimisation is turned on in a Tru64 environment
+if [ $platform = "tru64" -a $CXX = "g++" ]; then
+    CXXFLAGS=`echo $CXXFLAGS | sed -e 's/-O[0-9]*//g'`
+    CFLAGS=`echo $CXXFLAGS | sed -e 's/-O[0-9]*//g'`
+    export CXXFLAGS CFLAGS
+fi
+
 LDFLAGS="$linkeroptions"; export LDFLAGS
 
 echo

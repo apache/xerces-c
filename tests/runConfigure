@@ -1,10 +1,8 @@
 #!/bin/sh
-
-
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -56,49 +54,11 @@
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
 #
+
 #
-# $Log$
-# Revision 1.12  2001/12/05 16:49:53  tng
-# Fix runConfigure which can run into infinite loop with invalid argument  By Edward Avis.
+# $Id$
 #
-# Revision 1.11  2001/11/23 16:17:46  tng
-# Remove -lC for Solaris build.
-#
-# Revision 1.10  2001/10/18 18:16:47  tng
-# Use opt2 on AIX platform.
-#
-# Revision 1.9  2001/06/09 18:06:50  jberry
-# Add MacOS build support for tests
-#
-# Revision 1.8  2001/02/13 13:10:50  tng
-# Update samples/tests files for on UnixWare 7.1.1 with gcc 2.95.  Add UNIXWARE platform defines to Makefile.incl, add recognition of sysv5uw7 to configure.in, and add unixware as recognized platform to runConfigure.  Updated by Hiram Clawson.
-#
-# Revision 1.7  2000/05/10 01:13:52  abagchi
-# Now detects AIX version and introduces -lpthreads_compat accordingly
-#
-# Revision 1.6  2000/04/12 20:33:08  abagchi
-# Included some more PTX changes
-#
-# Revision 1.5  2000/04/04 20:10:16  abagchi
-# Added PTX support
-#
-# Revision 1.4  2000/02/29 02:19:11  rahulj
-# No more compilation errors under HPUX 11.0. We do not build
-# DOMMemTest as it crashes the aCC compiler.
-#
-# Revision 1.3  2000/02/26 07:20:18  rahulj
-#  - The threading tests now work on HPUX.
-#  - Under HPUX 10.20 we do no build DOMMemTest and DOMTest.
-#    It crashes the compiler.
-#  - One could not write more worse makefiles than what exists for the
-#    tests. Hopefully, I will get bugged enough to fix them oneday.
-#
-# Revision 1.2  2000/02/06 07:48:34  rahulj
-# Year 2K copyright swat.
-#
-# Revision 1.1  2000/01/31 22:21:53  aruna1
-# initial checkin
-#
+
 #
 # runConfigure : This script will run the "configure" script for the appropriate platform
 # Only supported platforms are recognized
@@ -108,11 +68,14 @@ usage()
     echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
-    echo "       -p <platform> (accepts 'aix', 'unixware', 'linux', 'solaris', 'hp-10', 'hp-11', 'ptx', 'macosx')"
-    echo "       -c <C compiler name> (e.g. gcc or xlc_r)"
-    echo "       -x <C++ compiler name> (e.g. g++ or xlC_r)"
+    echo "       -p <platform> (accepts 'aix', 'unixware', 'linux', 'freebsd', 'solaris',
+'hp-10', 'hp-11', 'os400', 'irix', 'ptx', 'tru64', 'macosx')"
+    echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
+    echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
-    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
+    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris) or 'sproc' (only on IRIX) or 'none'"
+    echo "       -l <extra linker options>"
+    echo "       -z <extra compiler options>"
     echo "       -h (get help on the above commands)"
 }
 
@@ -138,12 +101,23 @@ if test $1 = "-h"; then
    exit ${ERROR_EXIT_CODE}
 fi
 
-# Get the command line parameters
-set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+# Check the command line parameters
+if test -x /usr/bin/getopt; then
+getoptErr=`getopt p:c:x:dm:n:t:r:l:z:h $*`
+else
+getoptErr=`getopts p:c:x:dm:n:t:r:l:z:h `$*``
+fi
 if [ $? != 0 ]
    then
    usage
    exit ${ERROR_EXIT_CODE}
+fi
+
+# Now get the command line parameters
+if test -x /usr/bin/getopt; then
+set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+else
+set -- `getopts p:c:x:dm:n:t:r:l:z:h `$*``
 fi
 
 # Set up the default values for each parameter
@@ -151,10 +125,11 @@ debug=off                # by default debug is off
 transcoder=native        # by default use native transcoder
 msgloader=iconv          # by default use native transcoder
 netaccessor=fileonly     # by default use fileonly
-
-for i in $*
+thread=pthread           # by default use POSIX threads
+compileroptions=""
+while [ $# -gt 0 ]
    do
-   case $i in
+   case $1 in
    -p)
         platform=$2; shift 2;;
 
@@ -164,11 +139,17 @@ for i in $*
    -x)
         cppcompiler=$2; shift 2;;
 
+   -d)
+        debug=on; shift;;
+
    -r)
         thread=$2; shift 2;;
 
-   -d)
-        debug=on; shift;;
+   -z)
+        compileroptions="$compileroptions $2"; shift 2;;
+
+   -l)
+        linkeroptions="$linkeroptions $2"; shift 2;;
 
    -h)
         usage
@@ -184,29 +165,26 @@ for i in $*
    esac
 done
 
+if test $platform = "aix"; then
+      if test ! -n "$ccompiler" -o ! -n "$cppcompiler"; then
+              ccompiler=xlc
+              cppcompiler=xlC
+      fi
+fi
+
 echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
 echo "C Compiler: $ccompiler"
 echo "C++ Compiler: $cppcompiler"
+echo "Extra compile options: $compileroptions"
+echo "Extra link options: $linkeroptions"
 echo "Thread option: $thread"
 
-if test $debug = "off"; then
-    echo "Debug is OFF"
-    if test $platform = "irix"; then
-       debugflag="-O2";
-    elif test $platform = "aix"; then
-       debugflag="-O2";
-    else
-    debugflag="-O";
-    fi
-else
-    echo "Debug is ON"
-    debugflag="-g";
-fi
-
+#
 # Now check if the options are correct or not, bail out if incorrect
+#
 case $platform in
-   aix | unixware | linux | solaris | hp-10 | hp-11 | ptx | macosx)
+   aix | unixware | linux | freebsd | solaris | hp-10 | hp-11 | os400 | irix | ptx | tru64 | macosx)
        # platform has been recognized
        ;;
    *)
@@ -214,108 +192,181 @@ case $platform in
       exit ${ERROR_EXIT_CODE};;
 esac
 
-# Set the C compiler and C++ compiler environment variables
-
-case $cppcompiler in
-   xlC | xlc | xlC_r | xlc_r)
-       standardLibFlags="-L/usr/lpp/xlC/lib -lC";;
-
-   g++ | c++)
-if test $platform = "ptx"; then
-	if test -z $XMLINSTALL; then
-		XMLINSTALL=$ICUROOT
-	fi	
-       standardLibFlags="-L${XMLINSTALL}/lib -lc";
+#
+# Enable debugging or not...
+#
+if test $debug = "off"; then
+    echo "Debug is OFF"
+    if test $platform = "os400"; then
+    debugflag="-O";
+    elif test $platform = "irix"; then
+       debugflag="-w -O2";
+    elif test $platform = "aix"; then
+       debugflag="-w -O2";
+    else
+    debugflag="-w -O";
+    fi
 else
-       standardLibFlags="-L/usr/local/lib -lc";
+    echo "Debug is ON"
+    debugflag="-g";
 fi
-	;;
 
-   cc | CC)
-       standardLibFlags="-L/usr/lib -L/usr/ccs/lib";;
+#
+# Check for the threading option
+#
+if test $thread = "none"; then
+    THREADS=none
+    threadingLibs=""
+    threadingDefines="-DAPP_NO_THREADS -DXML_USE_NO_THREADS"
+else
+    THREADS=pthread
+    threadingDefines="-DXML_USE_PTHREADS"
+    threadingLibs="-lpthread"
+    if test $platform = "hp-11"; then
+        if test $thread; then
+        case $thread in
+           pthread)
+               ;;
+           dce)
+               THREADS=dce ;
+               threadingLibs="-lcma" ;
+               threadingDefines="-D_PTHREADS_DRAFT4 -D_THREAD_SAFE -DXML_USE_DCE" ;;
+           *)
+               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help." ;
+               exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    elif test $platform = "freebsd"; then
+	threadingLibs="-pthread -lc_r"
+	threadingDefines="-D_THREAD_SAFE -DXML_USE_PTHREADS"
+    elif test $platform = "aix"; then
+        aix_version=`./config.guess`;
+        echo Found host system to be $aix_version
+        case $aix_version in
+           *4.3*)
+              ## Linkflags control the use of libpthreads on AIX
+              threadingLibs="-lpthreads_compat";;
+           *)
+              threadingLibs="-lpthreads";;
+        esac
+        if test $thread; then
+        case $thread in
+           pthread)
+               ;;
+           dce)
+               THREADS=dce ;
+               threadingDefines="-DXML_USE_DCE"
+               case $aix_version in
+                  *4.3*)
+                     ## Linkflags control the use of libpthreads on AIX
+                     threadingLibs="-ldcelibc_r -ldcepthreads -lpthreads_compat";;
+                  *)
+                     threadingLibs="-lC_r -lC -ldcelibc_r -ldcepthreads";;
+               esac
+               ;;
+           *)
+               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help." ;
+               exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    elif test $platform = "ptx"; then
+        threadingLibs=" "
+        if test -z $XMLINSTALL; then
+            XMLINSTALL=$ICUROOT         ## use either the -C or the -P option now.
+        fi
+    elif test $platform = "hp-10"; then
+        THREADS=dce
+        threadingLibs="-lcma"
+        threadingDefines="-DXML_USE_DCE"
+    elif test $platform = "unixware"; then
+        threadingLibs="" ## Linkflags control the use of threads on UnixWare
+    elif test $platform = "solaris"; then
+        if test $thread; then
+        case $thread in
+           pthread)
+               ;;
+           dce)
+               THREADS=dce ;
+               threadingLibs="-ldce";
+               threadingDefines="-DXML_USE_DCE";;
+           *)
+               echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+               exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    elif test $platform = "irix"; then
+        if test $thread; then
+        case $thread in
+        pthread)
+            ;;
 
-   acc | aCC)
-       standardLibFlags="";;
+        sproc)
+            threadingLibs=" ";
+            threadingDefines="-DXML_USE_SPROC" ;;
+        *)
+           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+            exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    fi
+fi
+
+export THREADS
+
+#
+# Set the C compiler and C++ compiler environment variables
+#
+case $cppcompiler in
+   xlC* | xlc* | g++ | c++ | cc | CC | aCC | icc | ICC | cxx)
+      ;;
 
    *)
       echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..."
       ;;
 esac
 
-CC=$ccompiler
+CC="$ccompiler"
 export CC
 
-CXX=$cppcompiler
+CXX="$cppcompiler"
 export CXX
 
-
 #
-# Check for the threading option only for hp-11
+# Set the extra C and C++ compiler flags
 #
+CXXFLAGS="$compileroptions $debugflag $threadingDefines"; export CXXFLAGS
+CFLAGS="$compileroptions $debugflag $threadingDefines"; export CFLAGS
 
-threadingLibs="-lpthread"
-if test $platform = "hp-11"; then
-    if test $thread; then
-    case $thread in
-       pthread)
-           ;;
-
-       dce)
-           threadingLibs="-lcma";
-           threadingDefines="-D_PTHREADS_DRAFT4 -DXML_USE_DCE" ;;
-
-       *)
-           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
-           exit ${ERROR_EXIT_CODE};;
-    esac
-    fi
-elif test $platform = "aix"; then
-    aix_version=`./config.guess`;
-    echo Found host system to be $aix_version
-    case $aix_version in
-       *4.3*)
-          threadingLibs="-lpthreads_compat -lpthreads";;
-       *)
-          threadingLibs="-lpthreads";;
-    esac
-elif test $platform = "ptx"; then
-    threadingLibs=" "
-elif test $platform = "hp-10"; then
-    threadingLibs="-lcma"
-    threadingDefines="-DXML_USE_DCE"
-elif test $platform = "unixware"; then
-    threadingLibs="-pthread"
-    threadingDefines="-pthread"
+# gcc crashes if optimisation is turned on in a Tru64 environment
+if [ $platform = "tru64" -a $CXX = "g++" ]; then
+    CXXFLAGS=`echo $CXXFLAGS | sed -e 's/-O[0-9]*//g'`
+    CFLAGS=`echo $CXXFLAGS | sed -e 's/-O[0-9]*//g'`
+    export CXXFLAGS CFLAGS
 fi
 
-#
-# Set the extra C and C++ compiler flags before invoking configure.
-#
-
-CXXFLAGS="$debugflag $compileroption $threadingDefines"
-export CXXFLAGS
-
-CFLAGS="$debugflag $compileroption $threadingDefines"
-export CFLAGS
-
-LIBS="$threadingLibs $standardLibFlags"
-export LIBS
-
-if test $platform = "ptx"; then
-if test ${XMLINSTALL}o = "o"; then
-XMLINSTALL = /usr/local; export XMLINSTALL
-fi
-fi
+LDFLAGS="$linkeroptions"; export LDFLAGS
+LIBS="$threadingLibs"; export LIBS
 
 echo
 rm -f config.cache
 rm -f config.log
 rm -f config.status
+if test $platform = "os400"; then
+./configure --host AS400-OS400
+elif test $platform = "ptx"; then
+./configure --prefix=$XMLINSTALL
+else
 ./configure
+fi
+# exit if configure failed
+if test $? != 0; then
+  exit 1
+fi
 
 echo
 echo In future, you may also directly type the following commands to create the Makefiles.
 echo
+echo export THREADS=\"$THREADS\"
 echo export CC=$CC
 echo export CXX=$CXX
 echo export CXXFLAGS=$CXXFLAGS
@@ -326,7 +377,7 @@ echo configure
 
 echo
 echo If the result of the above commands look OK to you, go to the directory
-echo ${XERCESCROOT}/tests and type \"gmake\" to make the XERCES-C system.
+echo ${XERCESCROOT}/tests and type \"gmake\" to make the test cases.
 
 exit 0;
 

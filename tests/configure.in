@@ -1,7 +1,3 @@
-# $Id$
-#
-#
-
 dnl Process this file with autoconf to produce a configure script
 AC_INIT(DOM/DOMTest/DTest.h)
 
@@ -35,11 +31,14 @@ AC_CANONICAL_HOST
 dnl Platform-specific Makefile setup
 case "${host}" in
         *-*-solaris*)   platform=SOLARIS ;;
+        *-*-sysv5*)     platform=UNIXWARE ;;
+        *-*-UnixWare*)  platform=UNIXWARE ;;
+        *-*-*unixware*)  platform=UNIXWARE ;;
+        *-*-sysv5uw7*)  platform=UNIXWARE ;;
         *-*-linux*)     platform=LINUX ;;
-        *-*-*unixware*)     platform=UNIXWARE ;;
-        *-*-sysv5uw7*)     platform=UNIXWARE ;;
+	*-*-freebsd*)	platform=FREEBSD ;;
+        *-*-irix*)      platform=IRIX ;;
         *-*-aix*)       platform=AIX ;;
-        *-sequent-*)    platform=PTX ;;
         *-*-hp*)        platform=HPUX ;
                         case "${host}" in
                             *-*-hpux11*)  osver=HPUX11;;
@@ -47,15 +46,18 @@ case "${host}" in
                             *)            osver=HPUX11;;
                         esac;;
         *-*-mvs*)       platform=OS390 ;;
+        *-*-os400*)     platform=OS400 ;;
+        *-*-OS400*)     platform=OS400 ;;
+		*-*-osf*)	platform=TRU64 ;;
         *-apple-*)		platform=MACOSX ;;
         *)              platform=UNKNOWN ;;
 esac
 AC_SUBST(platform)
-AC_SUBST(osver)
 
 compiler=${CXX}
 AC_SUBST(compiler)
 
+# prefix=${prefix}
 AC_SUBST(prefix)
 
 cxxflags=${CXXFLAGS}
@@ -64,9 +66,8 @@ AC_SUBST(cxxflags)
 cflags=${CFLAGS}
 AC_SUBST(cflags)
 
-libs=${LIBS}
-AC_SUBST(libs)
-
+ldflags=${LDFLAGS}
+AC_SUBST(ldflags)
 
 dnl output the Makefiles
 AC_OUTPUT([Makefile \

@@ -1,7 +1,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -53,59 +53,74 @@
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
 #
-
 #
 # $Id$
 #
 
 ################## LIBRARY NAMES AND DIRECTORIES ##################
 
+ifeq (${SYSOVR},OS400)
+PLATFORM = OS400
+endif
 INCLUDES= -I. -I${XERCESCROOT}/include
 LIB_DIR=${XERCESCROOT}/lib
+ifneq (${PLATFORM},OS400)
 LIBNAME=xerces-c
+else
+LIBNAME=xercesc
+endif
 THISLIB=${LIB_DIR}/${LIBNAME}
 
 LIBRARY_NAMES=-l${LIBNAME}${VER}
 LIBRARY_SEARCH_PATHS=-L${LIB_DIR}
 
+TO = o
 ####################### PLATFORM DEPENDENCIES #####################
+
+#=============== IRIX SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, IRIX)
+  ifeq (${COMPILER}, g++)
+	CMP= -c ${CXXFLAGS}
+	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic -instances=static
+	LINK = g++ -D${PLATFORM} -fpic
+	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+	EXTRA_LINK_OPTIONS=-lc
+  else
+	CMP= -c ${CXXFLAGS}
+	CC= CC -c -D${PLATFORM} -LANG:pch -LANG:std -O2 -D_REENTRANT -I/usr/local/include
+	LINK =  CC -D${PLATFORM}
+	PLATFORM_LIB_LINK_OPTIONS=
+	EXTRA_LINK_OPTIONS=
+  endif
+  SHLIBSUFFIX=.so
+endif
 
 #=============== SOLARIS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, SOLARIS)
   ifeq (${COMPILER}, g++)
 	CMP= -c ${CXXFLAGS}
 	CC= g++ -c -D${PLATFORM} -D_REENTRANT -fpic
-	LINK = g++ -D${PLATFORM} -fpic
+ LINK = g++ -D${PLATFORM} -fpic ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 	EXTRA_LINK_OPTIONS=-lc
   else
 	CMP= -c ${CXXFLAGS}
 	CC= CC -c -D${PLATFORM} -D_REENTRANT -pic
-	LINK =  CC -D${PLATFORM}
+ LINK =  CC -D${PLATFORM} ${LDFLAGS}
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib
 	EXTRA_LINK_OPTIONS=-lc -lgen
   endif
   SHLIBSUFFIX=.so
 endif
 
-#================= AIX SPECIFIC OPTIONS ===========================
-ifeq (${PLATFORM}, AIX)
-CMP= -c ${CXXFLAGS} -qnotempinc
-CC=xlC_r -D${PLATFORM}
-LINK =  ${CC}
-PLATFORM_LIB_LINK_OPTIONS=-L/usr/lpp/xlC/lib
-EXTRA_LINK_OPTIONS=-lC
-SHLIBSUFFIX=.a
-endif
-
 #=============== UNIXWARE SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, UNIXWARE)
-CMP= -O2 -c ${CXXFLAGS} -pthread
-CC= g++ -O2 -c -D${PLATFORM} -D_REENTRANT -fpic
-LINK =  g++ -O2 -D${PLATFORM} -fpic  -pthread
-PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
-EXTRA_LINK_OPTIONS=-lc -lsocket
-SHLIBSUFFIX=.so
+  CMP= -O2 -c ${CXXFLAGS} -pthread
+  CC= g++ -O2 -c -D${PLATFORM} -D_REENTRANT -fpic -pthread
+  LINK = g++ -D${PLATFORM} -fpic -pthread
+  EXTRA_LINK_OPTIONS=-lc -lsocket
+  PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+  SHLIBSUFFIX=.so
 endif
 
 #================= PTX SPECIFIC OPTIONS ===========================
@@ -119,10 +134,38 @@ PLATFORM_C_COMPILER = cc
 PLATFORM_LIBRARIES =
 PLATFORM_COMPILE_OPTIONS = -KPIC -Kthread -DPTX
 MAKE_SHARED = ${PLATFORM_CPP_COMPILER} -DPTX -G
-MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -DPTX -G
+MAKE_SHARED_C = ${PLATFORM_C_COMPILER} -DPTX  -G
 PLATFORM_LIB_LINK_OPTIONS=-L/usr/local/lib -L${XMLINSTALL}/lib
 EXTRA_LINK_OPTIONS=-lm -lgen
 SHLIBSUFFIX=.so
+endif
+
+#================= AIX SPECIFIC OPTIONS ===========================
+ifeq (${PLATFORM}, AIX)
+CMP= -c ${CXXFLAGS} -qnotempinc
+CC=${COMPILER} -D${PLATFORM}
+LINK =  ${COMPILER}
+# the compiler knows about this two
+# PLATFORM_LIB_LINK_OPTIONS=-L/usr/lpp/xlC/lib
+# EXTRA_LINK_OPTIONS=-lC
+SHLIBSUFFIX=.a
+endif
+
+#=============== OS400 SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, OS400)
+ifeq (${SYSOVR},OS400)
+MYCC = cross compiler path here
+TO = qwobj
+else
+MYCC = icc
+LINK =  ${CC} -v
+endif
+CMP= -c -DOS400 ${CXXFLAGS}
+CXX = $(MYCC)
+CC = $(MYCC)
+#INCLUDES    += -I${ICUROOT}/include
+SHLIBSUFFIX=.a
+EXTRA_LINK_OPTIONS=-q OPTION='*DUPPROC *DUPVAR'
 endif
 
 #=============== LINUX SPECIFIC OPTIONS =========================
@@ -135,25 +178,39 @@ EXTRA_LINK_OPTIONS=-lc
 SHLIBSUFFIX=.so
 endif
 
+#=============== FREEBSD SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, FREEBSD)
+  CMP= -c ${CXXFLAGS}
+  CC= g++ -c -D${PLATFORM} -fPIC
+  LINK = g++ -D${PLATFORM} -fPIC
+  ifdef ICUROOT
+    PLATFORM_LIB_LINK_OPTIONS=-L$(ICUROOT)
+    EXTRA_LINK_OPTIONS=-licudata -lstdc++ -pthread
+  else
+    PLATFORM_LIB_LINK_OPTIONS=
+    EXTRA_LINK_OPTIONS=-lstdc++ -pthread
+  endif
+  SHLIBSUFFIX=.so
+endif
+
 #================= HP SPECIFIC OPTIONS ===========================
 ifeq (${PLATFORM}, HPUX)
-
-  OSVERDEFINE=HPUX11
-  ifeq (${OSVER}, HPUX10)
-    OSVERDEFINE=HPUX10
-  endif
-
   ifeq (${COMPILER}, aCC)
-    CMP = -c $(CXXFLAGS) -D$(OSVERDEFINE) -D_HP_UX -DHPaCC +DAportable -w +z
+    CMP = -c $(CXXFLAGS) -D_HP_UX -DHPaCC +DAportable -w +z
+    CC = aCC
     LINK =  ${CC} -Wl,+s
     PLATFORM_LIB_LINK_OPTIONS=-L/opt/aCC/lib -L/usr/ccs/lib
     SHLIBSUFFIX=.sl
   else
+    ifneq (${DEBUG}, 1)
+      CXXFLAGS = -w +O1
+    endif
     APPL_NAME = $(notdir $(shell pwd))
     TEMPLATESDIR = $(XERCESCROOT)/bin/obj/$(APPL_NAME)/ptrepository
-    COMMON_CMP = $(CXXFLAGS) -D_HP_UX -DHPCC -D$(OSVERDEFINE) +DAportable -w \
-                 +eh +z -z +a1 -ptr$(TEMPLATESDIR)
+    COMMON_CMP = $(CXXFLAGS) -D_HP_UX -DHPCC +DAportable -w +eh +z -z \
+        -ptr$(TEMPLATESDIR)
     CMP = -c $(COMMON_CMP)
+    CC = CC
     LINK =  ${CC} $(COMMON_CMP) -Wl,+s
     PLATFORM_LIB_LINK_OPTIONS=-L/opt/CC/lib -L/usr/lib
     SHLIBSUFFIX=.sl
@@ -177,18 +234,19 @@ endif
 # Also,                                                           #
 #                                                                 #
 #   export LOADMOD=USERID.LOAD                                    #
-#   export LOADEXP=USERID.EXP                                     #
+#   export LOADEXP=SYS1.SIXMEXP or &hlq.SIXMEXP                   #
 #                                                                 #
-# to specify your LOADMOD and the definition sidedeck dataset.    #
+# to specify your LOADMOD and the IXM4C31 definition sidedeck     #
+# dataset.  													  #
 ###################################################################
 
 ifeq (${PLATFORM}, OS390)
 CMP= -c -DOS390 ${CXXFLAGS}
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -DOS390BATCH
+CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -DOPEN_THREADS -D_XOPEN_SOURCE_EXTENDED -DOS390BATCH
 else
-CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -D_OPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
+CC = _CXX_CXXSUFFIX="cpp" _CXX_STEPS="-1" c++ -W0,"langlvl(extended)" -DOS390 -DOPEN_THREADS -D_XOPEN_SOURCE_EXTENDED
 endif
 LINK =  ${CC}
 PLATFORM_LIB_LINK_OPTIONS=
@@ -204,6 +262,17 @@ endif
 LIBRARY_SEARCH_PATHS=
 endif
 
+
+#=============== TRU64 SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, TRU64)
+CMP= -c ${CXXFLAGS}
+CC = ${COMPILER} -c -D${PLATFORM}
+LINK = ${COMPILER} -D${PLATFORM}
+PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
+SHLIBSUFFIX=.so
+endif
+
+
 #=============== MacOS SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, MACOSX)
 	CMP= -c ${CXXFLAGS}
@@ -212,4 +281,3 @@ ifeq (${PLATFORM}, MACOSX)
 	PLATFORM_LIB_LINK_OPTIONS=-L/usr/lib -L/usr/local/lib
 	SHLIBSUFFIX=.dylib
 endif
-

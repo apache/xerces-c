@@ -77,67 +77,66 @@ COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
-OSVER = @osver@
 
 ifeq (${PLATFORM},HPUX)
   ifeq (${OSVER}, HPUX10)
-      all:	threadtest ithreadtest encodingtest traversal itraversal
+      all::	threadtest ithreadtest encodingtest traversal itraversal
   else
-      all:	domidtest dommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest inittermtest
+      all::	domidtest dommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest inittermtest
   endif
 else
-    all:	domidtest dommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest inittermtest
+    all::	domidtest dommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest inittermtest
 endif
 
-domidtest:
+domidtest::
 	@echo Building "DOMIDTest"
 	cd $(DOMIDTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-dommemtest:
+dommemtest::
 	@echo Building "DOMMemTest"
 	cd $(DOMMemTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-domtest:
+domtest::
 	@echo Building "DOMTest"
 	cd $(DOMTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-idomtest:
+idomtest::
 	@echo Building "IDOMTest"
 	cd $(IDOMTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-threadtest:
+threadtest::
 	@echo Building "ThreadTest"
 	cd $(ThreadTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-ithreadtest:
+ithreadtest::
 	@echo Building "IThreadTest"
 	cd $(IThreadTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-encodingtest:
+encodingtest::
 	@echo Building "EncodingTest"
 	cd $(EncodingTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-traversal:
+traversal::
 	@echo Building "Traversal"
 	cd $(Traversal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-itraversal:
+itraversal::
 	@echo Building "ITraversal"
 	cd $(ITraversal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-rangetest:
+rangetest::
 	@echo Building "Range"
 	cd $(DOMRange_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-irangetest:
+irangetest::
 	@echo Building "Range"
 	cd $(IDOMRange_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-inittermtest:
+inittermtest::
 	@echo Building "InitTermTest"
 	cd $(InitTermTest_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-clean:
+clean::
 	cd $(DOMIDTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMTest_DIR) && $(MAKE) $@ && cd ..
@@ -151,7 +150,7 @@ clean:
 	cd $(IDOMRange_DIR) && $(MAKE) $@ && cd ..
 	cd $(InitTermTest_DIR) && $(MAKE) $@ && cd ..
 
-distclean:
+distclean::
 	cd $(DOMIDTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMMemTest_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMTest_DIR) && $(MAKE) $@ && cd ..

@@ -116,16 +116,23 @@ if test $1 = "-h"; then
    exit ${ERROR_EXIT_CODE}
 fi
 
-# Get the command line parameters
+# Check the command line parameters
 if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:dm:n:t:r:l:z:P:C:h $*`
+getoptErr=`getopt p:c:x:dm:n:t:r:l:z:P:C:h $*`
 else
-set -- `getopts p:c:x:dm:n:t:r:l:z:P:C:h `$*``
+getoptErr=`getopts p:c:x:dm:n:t:r:l:z:P:C:h `$*``
 fi
 if [ $? != 0 ]
    then
    usage
    exit ${ERROR_EXIT_CODE}
+fi
+
+# Now get the command line parameters
+if test -x /usr/bin/getopt; then
+set -- `getopt p:c:x:dm:n:t:r:l:z:P:C:h $*`
+else
+set -- `getopts p:c:x:dm:n:t:r:l:z:P:C:h `$*``
 fi
 
 # Set up the default values for each parameter

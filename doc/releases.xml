@@ -55,6 +55,14 @@
     </tr>
 
     <tr>
+        <td>2001-12-06</td>
+        <td>Tinny Ng</td>
+        <td>Make the runConfigure and associated config*, Makefile* in folders tests,
+            samples and src more consistent.
+        </td>
+    </tr>
+
+    <tr>
         <td>2001-12-05</td>
         <td>Khaled Noaman</td>
         <td>[Bug 1236] Incorrect NMTOKENS attribute normalization.
@@ -72,6 +80,13 @@
         <td>2001-12-05</td>
         <td>Edward Avis</td>
         <td>Fix runConfigure which can run into infinite loop with invalid argument
+        </td>
+    </tr>
+
+    <tr>
+        <td>2001-12-05</td>
+        <td>Tinny Ng</td>
+        <td>Generate linker map for certain platforms
         </td>
     </tr>
 
