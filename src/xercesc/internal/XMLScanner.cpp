@@ -1340,7 +1340,7 @@ void XMLScanner::scanXMLDecl(const DeclTypes type)
     while (true)
     {
         // Skip any spaces
-        const unsigned int spaceCount = fReaderMgr.skipPastSpaces();
+        const unsigned int spaceCount = fReaderMgr.skipPastSpacesInDecl();
 
         // If we are looking at a question mark, then break out
         if (fReaderMgr.lookingAtChar(chQuestion))
@@ -2170,10 +2170,10 @@ void XMLScanner::scanComment()
 //  just makes the calling code cleaner by eating whitespace.
 bool XMLScanner::scanEq()
 {
-    fReaderMgr.skipPastSpaces();
+    fReaderMgr.skipPastSpacesInDecl();
     if (fReaderMgr.skippedChar(chEqual))
     {
-        fReaderMgr.skipPastSpaces();
+        fReaderMgr.skipPastSpacesInDecl();
         return true;
     }
     return false;

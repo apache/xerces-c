@@ -504,6 +504,7 @@ en_US {
 		"The indicated reader id was never found " ,
 		"The auto encoding enum has an unknown value " ,
 		"Could not decode first line of entity: {0} " ,
+		"XMLDecl or TextDecl can not have NEL or lsep: {0} " ,
 		"End of input was hit in the middle of a multibyte sequence " ,
 		"The current transcoding service does not support source offset information " ,
 		"EBCDIC files must provide an encoding= string " ,

@@ -56,6 +56,12 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/06/03 15:38:27  peiyongz
+ * XML1.1:  The characters #x85 and #x2028 cannot be reliably recognized
+ * and translated until an entity's encoding declaration (if present) has been
+ * read. Therefore, it is a fatal error to use them within the XML declaration or
+ * text declaration.
+ *
  * Revision 1.11  2004/01/29 11:46:30  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -218,6 +224,7 @@ public :
     bool skipIfQuote(XMLCh& chGotten);
     void skipPastChar(const XMLCh toSkip);
     bool skipPastSpaces();
+    bool skipPastSpacesInDecl();
     void skipToChar(const XMLCh toSkipTo);
     bool skippedChar(const XMLCh toSkip);
     bool skippedSpace();

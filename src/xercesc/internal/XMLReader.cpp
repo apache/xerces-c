@@ -924,6 +924,107 @@ bool XMLReader::skipSpaces(bool& skippedSomething)
     return false;
 }
 
+/***
+ * XML1.1
+ *
+ * 2.11 End-of-Line Handling
+ *  ...
+ *   The characters #x85 and #x2028 cannot be reliably recognized and translated 
+ *   until an entity's encoding declaration (if present) has been read. 
+ *   Therefore, it is a fatal error to use them within the XML declaration or 
+ *   text declaration. 
+ *
+***/
+bool XMLReader::skipSpacesInDecl(bool& skippedSomething)
+{
+    // Remember the current line and column
+    XMLSSize_t    orgLine = fCurLine;
+    XMLSSize_t    orgCol  = fCurCol;
+
+    //  We enter a loop where we skip over spaces until we hit the end of
+    //  this reader or a non-space value. The return indicates whether we
+    //  hit the non-space (true) or the end (false).
+    while (true)
+    {
+        // Loop through the current chars in the buffer
+        while (fCharIndex < fCharsAvail)
+        {
+            //  See if its a white space char. If so, then process it. Else
+            //  we've hit a non-space and need to return.
+            if (isWhitespace(fCharBuf[fCharIndex]))
+            {
+                // Get the current char out of the buffer and eat it
+                XMLCh curCh = fCharBuf[fCharIndex++];
+
+                //  Ok, we've got some whitespace here. So we have to store
+                //  it. But we have to normalize it and update the line and
+                //  column info along the way.
+                if (curCh == chCR)
+                {
+                    fCurCol = 1;
+                    fCurLine++;
+
+                    //  If not already internalized, then convert it to an
+                    //  LF and eat any following LF.
+                    if (fSource == Source_External)
+                    {
+                        if ((fCharIndex < fCharsAvail) || refreshCharBuffer())
+                        {
+                            if (fCharBuf[fCharIndex] == chLF
+                                || ((fCharBuf[fCharIndex] == chNEL) && fNEL))
+                                fCharIndex++;
+                        }
+                    }
+                }
+                else if (curCh == chLF)                   
+                {
+                    fCurCol = 1;
+                    fCurLine++;
+                }
+                else if (curCh == chNEL || curCh == chLineSeparator)
+                {
+                    if (fXMLVersion == XMLVersion::XMLV1_1)
+                    {
+                        ThrowXMLwithMemMgr1
+                        (
+                            TranscodingException
+                          , XMLExcepts::Reader_NelLsepinDecl
+                          , fSystemId
+                          , fMemoryManager
+                        );
+                    }
+                    else //XMLVersion::XMLV1_0
+                    {
+                        if (fNEL)
+                        {
+                            fCurCol = 1;
+                            fCurLine++;
+                        }
+                    }
+                }
+                else
+                {
+                    fCurCol++;
+                }
+            }
+            else
+            {
+                skippedSomething = (orgLine != fCurLine) || (orgCol != fCurCol);
+                return true;
+            }
+        }
+
+        //  We've eaten up the current buffer, so lets try to reload it. If
+        //  we don't get anything new, then break out. If we do, then we go
+        //  back to the top to keep getting spaces.
+        if (!refreshCharBuffer())
+            break;
+    }
+
+    // We never hit any non-space and ate up the whole reader
+    skippedSomething = (orgLine != fCurLine) || (orgCol != fCurCol);
+    return false;
+}
 
 bool XMLReader::skippedChar(const XMLCh toSkip)
 {

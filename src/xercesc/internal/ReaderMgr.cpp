@@ -310,6 +310,29 @@ bool ReaderMgr::skipPastSpaces()
     return (tmpFlag || skippedSomething);
 }
 
+bool ReaderMgr::skipPastSpacesInDecl()
+{
+    bool skippedSomething = false;
+    bool tmpFlag;
+    while (true)
+    {
+        //
+        //  Skip all the spaces in the current reader. If it returned because
+        //  it hit a non-space, break out. Else we have to pop another entity
+        //  and keep going.
+        //
+        if (fCurReader->skipSpacesInDecl(tmpFlag))
+            break;
+
+        if (tmpFlag)
+            skippedSomething = true;
+
+        // Try to pop another enitity. If we can't then we are done
+        if (!popReader())
+            break;
+    }
+    return (tmpFlag || skippedSomething);
+}
 
 void ReaderMgr::skipQuotedString(const XMLCh quoteCh)
 {

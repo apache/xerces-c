@@ -503,6 +503,7 @@
             <Message Id="RdrMgr_ReaderIdNotFound" Text="The indicated reader id was never found"/>
             <Message Id="Reader_BadAutoEncoding" Text="The auto encoding enum has an unknown value"/>
             <Message Id="Reader_CouldNotDecodeFirstLine" Text="Could not decode first line of entity: {0}"/>
+            <Message Id="Reader_NelLsepinDecl" Text="XMLDecl or TextDecl can not have NEL or lsep: {0}"/>            
             <Message Id="Reader_EOIInMultiSeq" Text="End of input was hit in the middle of a multibyte sequence"/>
             <Message Id="Reader_SrcOfsNotSupported" Text="The current transcoding service does not support source offset information"/>
             <Message Id="Reader_EncodingStrRequired" Text="EBCDIC files must provide an encoding= string"/>
