@@ -969,6 +969,206 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLWin1252Transcoder.hpp
 # Begin Group "framework"
 
 # PROP Default_Filter ""
+# Begin Group "psvi"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttribute.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttribute.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttributeList.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttributeList.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIElement.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIElement.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIHandler.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIItem.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIItem.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAnnotation.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAnnotation.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeDeclaration.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeDeclaration.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeGroupDefinition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeGroupDefinition.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeUse.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeUse.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSComplexTypeDefinition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSComplexTypeDefinition.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSConstants.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSElementDeclaration.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSElementDeclaration.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSFacet.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSFacet.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSIDCDefinition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSIDCDefinition.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSModel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSModel.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroup.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroup.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroupDefinition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroupDefinition.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNamedMap.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNamespaceItem.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNamespaceItem.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNotationDeclaration.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNotationDeclaration.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSObject.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSObject.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSParticle.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSParticle.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSSimpleTypeDefinition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSSimpleTypeDefinition.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.hpp
+# End Source File
+# End Group
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileFormatTarget.cpp
@@ -3151,11 +3351,11 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathEvaluator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathException.hpp
 # End Source File
 # Begin Source File
 

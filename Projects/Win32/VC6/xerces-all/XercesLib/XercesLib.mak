@@ -158,6 +158,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMTreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\DOMTypeInfoImpl.obj"
 	-@erase "$(INTDIR)\DOMWriterImpl.obj"
+	-@erase "$(INTDIR)\DOMXPathException.obj"
 	-@erase "$(INTDIR)\DoubleDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DStringPool.obj"
 	-@erase "$(INTDIR)\DTDAttDef.obj"
@@ -230,6 +231,10 @@ CLEAN :
 	-@erase "$(INTDIR)\ParserForXMLSchema.obj"
 	-@erase "$(INTDIR)\PlatformUtils.obj"
 	-@erase "$(INTDIR)\ProcessingInstructionImpl.obj"
+	-@erase "$(INTDIR)\PSVIAttribute.obj"
+	-@erase "$(INTDIR)\PSVIAttributeList.obj"
+	-@erase "$(INTDIR)\PSVIElement.obj"
+	-@erase "$(INTDIR)\PSVIItem.obj"
 	-@erase "$(INTDIR)\QName.obj"
 	-@erase "$(INTDIR)\QNameDatatypeValidator.obj"
 	-@erase "$(INTDIR)\RangeFactory.obj"
@@ -339,10 +344,29 @@ CLEAN :
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
+	-@erase "$(INTDIR)\XSAnnotation.obj"
+	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
+	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
+	-@erase "$(INTDIR)\XSAttributeUse.obj"
+	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
 	-@erase "$(INTDIR)\XSDErrorReporter.obj"
 	-@erase "$(INTDIR)\XSDLocator.obj"
+	-@erase "$(INTDIR)\XSElementDeclaration.obj"
+	-@erase "$(INTDIR)\XSFacet.obj"
+	-@erase "$(INTDIR)\XSIDCDefinition.obj"
+	-@erase "$(INTDIR)\XSModel.obj"
+	-@erase "$(INTDIR)\XSModelGroup.obj"
+	-@erase "$(INTDIR)\XSModelGroupDefinition.obj"
+	-@erase "$(INTDIR)\XSMultiValueFacet.obj"
+	-@erase "$(INTDIR)\XSNamespaceItem.obj"
+	-@erase "$(INTDIR)\XSNotationDeclaration.obj"
+	-@erase "$(INTDIR)\XSObject.obj"
+	-@erase "$(INTDIR)\XSParticle.obj"
+	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSWildcard.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
@@ -442,6 +466,29 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLUTF16Transcoder.obj" \
 	"$(INTDIR)\XMLUTF8Transcoder.obj" \
 	"$(INTDIR)\XMLWin1252Transcoder.obj" \
+	"$(INTDIR)\PSVIAttribute.obj" \
+	"$(INTDIR)\PSVIAttributeList.obj" \
+	"$(INTDIR)\PSVIElement.obj" \
+	"$(INTDIR)\PSVIItem.obj" \
+	"$(INTDIR)\XSAnnotation.obj" \
+	"$(INTDIR)\XSAttributeDeclaration.obj" \
+	"$(INTDIR)\XSAttributeGroupDefinition.obj" \
+	"$(INTDIR)\XSAttributeUse.obj" \
+	"$(INTDIR)\XSComplexTypeDefinition.obj" \
+	"$(INTDIR)\XSElementDeclaration.obj" \
+	"$(INTDIR)\XSFacet.obj" \
+	"$(INTDIR)\XSIDCDefinition.obj" \
+	"$(INTDIR)\XSModel.obj" \
+	"$(INTDIR)\XSModelGroup.obj" \
+	"$(INTDIR)\XSModelGroupDefinition.obj" \
+	"$(INTDIR)\XSMultiValueFacet.obj" \
+	"$(INTDIR)\XSNamespaceItem.obj" \
+	"$(INTDIR)\XSNotationDeclaration.obj" \
+	"$(INTDIR)\XSObject.obj" \
+	"$(INTDIR)\XSParticle.obj" \
+	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
+	"$(INTDIR)\XSTypeDefinition.obj" \
+	"$(INTDIR)\XSWildcard.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
 	"$(INTDIR)\LocalFileInputSource.obj" \
 	"$(INTDIR)\MemBufFormatTarget.obj" \
@@ -668,6 +715,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLDeclImpl.obj" \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
+	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
 "$(OUTDIR)\xerces-c_2_3_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -802,6 +850,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMTreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\DOMTypeInfoImpl.obj"
 	-@erase "$(INTDIR)\DOMWriterImpl.obj"
+	-@erase "$(INTDIR)\DOMXPathException.obj"
 	-@erase "$(INTDIR)\DoubleDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DStringPool.obj"
 	-@erase "$(INTDIR)\DTDAttDef.obj"
@@ -848,7 +897,7 @@ CLEAN :
 	-@erase "$(INTDIR)\Match.obj"
 	-@erase "$(INTDIR)\MemBufFormatTarget.obj"
 	-@erase "$(INTDIR)\MemBufInputSource.obj"
-	-@erase "$(INTDIR)\MemoryManagerArrayImpl.obj"	
+	-@erase "$(INTDIR)\MemoryManagerArrayImpl.obj"
 	-@erase "$(INTDIR)\MemoryManagerImpl.obj"
 	-@erase "$(INTDIR)\MixedContentModel.obj"
 	-@erase "$(INTDIR)\ModifierToken.obj"
@@ -874,6 +923,10 @@ CLEAN :
 	-@erase "$(INTDIR)\ParserForXMLSchema.obj"
 	-@erase "$(INTDIR)\PlatformUtils.obj"
 	-@erase "$(INTDIR)\ProcessingInstructionImpl.obj"
+	-@erase "$(INTDIR)\PSVIAttribute.obj"
+	-@erase "$(INTDIR)\PSVIAttributeList.obj"
+	-@erase "$(INTDIR)\PSVIElement.obj"
+	-@erase "$(INTDIR)\PSVIItem.obj"
 	-@erase "$(INTDIR)\QName.obj"
 	-@erase "$(INTDIR)\QNameDatatypeValidator.obj"
 	-@erase "$(INTDIR)\RangeFactory.obj"
@@ -984,10 +1037,29 @@ CLEAN :
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
+	-@erase "$(INTDIR)\XSAnnotation.obj"
+	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
+	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
+	-@erase "$(INTDIR)\XSAttributeUse.obj"
+	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
 	-@erase "$(INTDIR)\XSDErrorReporter.obj"
 	-@erase "$(INTDIR)\XSDLocator.obj"
+	-@erase "$(INTDIR)\XSElementDeclaration.obj"
+	-@erase "$(INTDIR)\XSFacet.obj"
+	-@erase "$(INTDIR)\XSIDCDefinition.obj"
+	-@erase "$(INTDIR)\XSModel.obj"
+	-@erase "$(INTDIR)\XSModelGroup.obj"
+	-@erase "$(INTDIR)\XSModelGroupDefinition.obj"
+	-@erase "$(INTDIR)\XSMultiValueFacet.obj"
+	-@erase "$(INTDIR)\XSNamespaceItem.obj"
+	-@erase "$(INTDIR)\XSNotationDeclaration.obj"
+	-@erase "$(INTDIR)\XSObject.obj"
+	-@erase "$(INTDIR)\XSParticle.obj"
+	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSWildcard.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
@@ -1088,6 +1160,29 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLUTF16Transcoder.obj" \
 	"$(INTDIR)\XMLUTF8Transcoder.obj" \
 	"$(INTDIR)\XMLWin1252Transcoder.obj" \
+	"$(INTDIR)\PSVIAttribute.obj" \
+	"$(INTDIR)\PSVIAttributeList.obj" \
+	"$(INTDIR)\PSVIElement.obj" \
+	"$(INTDIR)\PSVIItem.obj" \
+	"$(INTDIR)\XSAnnotation.obj" \
+	"$(INTDIR)\XSAttributeDeclaration.obj" \
+	"$(INTDIR)\XSAttributeGroupDefinition.obj" \
+	"$(INTDIR)\XSAttributeUse.obj" \
+	"$(INTDIR)\XSComplexTypeDefinition.obj" \
+	"$(INTDIR)\XSElementDeclaration.obj" \
+	"$(INTDIR)\XSFacet.obj" \
+	"$(INTDIR)\XSIDCDefinition.obj" \
+	"$(INTDIR)\XSModel.obj" \
+	"$(INTDIR)\XSModelGroup.obj" \
+	"$(INTDIR)\XSModelGroupDefinition.obj" \
+	"$(INTDIR)\XSMultiValueFacet.obj" \
+	"$(INTDIR)\XSNamespaceItem.obj" \
+	"$(INTDIR)\XSNotationDeclaration.obj" \
+	"$(INTDIR)\XSObject.obj" \
+	"$(INTDIR)\XSParticle.obj" \
+	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
+	"$(INTDIR)\XSTypeDefinition.obj" \
+	"$(INTDIR)\XSWildcard.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
 	"$(INTDIR)\LocalFileInputSource.obj" \
 	"$(INTDIR)\MemBufFormatTarget.obj" \
@@ -1314,6 +1409,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLDeclImpl.obj" \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
+	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
 "$(OUTDIR)\xerces-c_2_3_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -1448,6 +1544,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMTreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\DOMTypeInfoImpl.obj"
 	-@erase "$(INTDIR)\DOMWriterImpl.obj"
+	-@erase "$(INTDIR)\DOMXPathException.obj"
 	-@erase "$(INTDIR)\DoubleDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DStringPool.obj"
 	-@erase "$(INTDIR)\DTDAttDef.obj"
@@ -1520,6 +1617,10 @@ CLEAN :
 	-@erase "$(INTDIR)\ParserForXMLSchema.obj"
 	-@erase "$(INTDIR)\PlatformUtils.obj"
 	-@erase "$(INTDIR)\ProcessingInstructionImpl.obj"
+	-@erase "$(INTDIR)\PSVIAttribute.obj"
+	-@erase "$(INTDIR)\PSVIAttributeList.obj"
+	-@erase "$(INTDIR)\PSVIElement.obj"
+	-@erase "$(INTDIR)\PSVIItem.obj"
 	-@erase "$(INTDIR)\QName.obj"
 	-@erase "$(INTDIR)\QNameDatatypeValidator.obj"
 	-@erase "$(INTDIR)\RangeFactory.obj"
@@ -1630,10 +1731,29 @@ CLEAN :
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
+	-@erase "$(INTDIR)\XSAnnotation.obj"
+	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
+	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
+	-@erase "$(INTDIR)\XSAttributeUse.obj"
+	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
 	-@erase "$(INTDIR)\XSDErrorReporter.obj"
 	-@erase "$(INTDIR)\XSDLocator.obj"
+	-@erase "$(INTDIR)\XSElementDeclaration.obj"
+	-@erase "$(INTDIR)\XSFacet.obj"
+	-@erase "$(INTDIR)\XSIDCDefinition.obj"
+	-@erase "$(INTDIR)\XSModel.obj"
+	-@erase "$(INTDIR)\XSModelGroup.obj"
+	-@erase "$(INTDIR)\XSModelGroupDefinition.obj"
+	-@erase "$(INTDIR)\XSMultiValueFacet.obj"
+	-@erase "$(INTDIR)\XSNamespaceItem.obj"
+	-@erase "$(INTDIR)\XSNotationDeclaration.obj"
+	-@erase "$(INTDIR)\XSObject.obj"
+	-@erase "$(INTDIR)\XSParticle.obj"
+	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSWildcard.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
@@ -1734,6 +1854,29 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLUTF16Transcoder.obj" \
 	"$(INTDIR)\XMLUTF8Transcoder.obj" \
 	"$(INTDIR)\XMLWin1252Transcoder.obj" \
+	"$(INTDIR)\PSVIAttribute.obj" \
+	"$(INTDIR)\PSVIAttributeList.obj" \
+	"$(INTDIR)\PSVIElement.obj" \
+	"$(INTDIR)\PSVIItem.obj" \
+	"$(INTDIR)\XSAnnotation.obj" \
+	"$(INTDIR)\XSAttributeDeclaration.obj" \
+	"$(INTDIR)\XSAttributeGroupDefinition.obj" \
+	"$(INTDIR)\XSAttributeUse.obj" \
+	"$(INTDIR)\XSComplexTypeDefinition.obj" \
+	"$(INTDIR)\XSElementDeclaration.obj" \
+	"$(INTDIR)\XSFacet.obj" \
+	"$(INTDIR)\XSIDCDefinition.obj" \
+	"$(INTDIR)\XSModel.obj" \
+	"$(INTDIR)\XSModelGroup.obj" \
+	"$(INTDIR)\XSModelGroupDefinition.obj" \
+	"$(INTDIR)\XSMultiValueFacet.obj" \
+	"$(INTDIR)\XSNamespaceItem.obj" \
+	"$(INTDIR)\XSNotationDeclaration.obj" \
+	"$(INTDIR)\XSObject.obj" \
+	"$(INTDIR)\XSParticle.obj" \
+	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
+	"$(INTDIR)\XSTypeDefinition.obj" \
+	"$(INTDIR)\XSWildcard.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
 	"$(INTDIR)\LocalFileInputSource.obj" \
 	"$(INTDIR)\MemBufFormatTarget.obj" \
@@ -1960,6 +2103,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLDeclImpl.obj" \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
+	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
 "$(OUTDIR)\xerces-c_2_3_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -2094,6 +2238,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMTreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\DOMTypeInfoImpl.obj"
 	-@erase "$(INTDIR)\DOMWriterImpl.obj"
+	-@erase "$(INTDIR)\DOMXPathException.obj"
 	-@erase "$(INTDIR)\DoubleDatatypeValidator.obj"
 	-@erase "$(INTDIR)\DStringPool.obj"
 	-@erase "$(INTDIR)\DTDAttDef.obj"
@@ -2166,6 +2311,10 @@ CLEAN :
 	-@erase "$(INTDIR)\ParserForXMLSchema.obj"
 	-@erase "$(INTDIR)\PlatformUtils.obj"
 	-@erase "$(INTDIR)\ProcessingInstructionImpl.obj"
+	-@erase "$(INTDIR)\PSVIAttribute.obj"
+	-@erase "$(INTDIR)\PSVIAttributeList.obj"
+	-@erase "$(INTDIR)\PSVIElement.obj"
+	-@erase "$(INTDIR)\PSVIItem.obj"
 	-@erase "$(INTDIR)\QName.obj"
 	-@erase "$(INTDIR)\QNameDatatypeValidator.obj"
 	-@erase "$(INTDIR)\RangeFactory.obj"
@@ -2275,10 +2424,29 @@ CLEAN :
 	-@erase "$(INTDIR)\XPathMatcher.obj"
 	-@erase "$(INTDIR)\XPathMatcherStack.obj"
 	-@erase "$(INTDIR)\XPathSymbols.obj"
+	-@erase "$(INTDIR)\XSAnnotation.obj"
+	-@erase "$(INTDIR)\XSAttributeDeclaration.obj"
+	-@erase "$(INTDIR)\XSAttributeGroupDefinition.obj"
+	-@erase "$(INTDIR)\XSAttributeUse.obj"
+	-@erase "$(INTDIR)\XSComplexTypeDefinition.obj"
 	-@erase "$(INTDIR)\XSDDOMParser.obj"
 	-@erase "$(INTDIR)\XSDElementNSImpl.obj"
 	-@erase "$(INTDIR)\XSDErrorReporter.obj"
 	-@erase "$(INTDIR)\XSDLocator.obj"
+	-@erase "$(INTDIR)\XSElementDeclaration.obj"
+	-@erase "$(INTDIR)\XSFacet.obj"
+	-@erase "$(INTDIR)\XSIDCDefinition.obj"
+	-@erase "$(INTDIR)\XSModel.obj"
+	-@erase "$(INTDIR)\XSModelGroup.obj"
+	-@erase "$(INTDIR)\XSModelGroupDefinition.obj"
+	-@erase "$(INTDIR)\XSMultiValueFacet.obj"
+	-@erase "$(INTDIR)\XSNamespaceItem.obj"
+	-@erase "$(INTDIR)\XSNotationDeclaration.obj"
+	-@erase "$(INTDIR)\XSObject.obj"
+	-@erase "$(INTDIR)\XSParticle.obj"
+	-@erase "$(INTDIR)\XSSimpleTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSTypeDefinition.obj"
+	-@erase "$(INTDIR)\XSWildcard.obj"
 	-@erase "$(INTDIR)\XUtil.obj"
 	-@erase "$(INTDIR)\YearDatatypeValidator.obj"
 	-@erase "$(INTDIR)\YearMonthDatatypeValidator.obj"
@@ -2379,6 +2547,29 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLUTF16Transcoder.obj" \
 	"$(INTDIR)\XMLUTF8Transcoder.obj" \
 	"$(INTDIR)\XMLWin1252Transcoder.obj" \
+	"$(INTDIR)\PSVIAttribute.obj" \
+	"$(INTDIR)\PSVIAttributeList.obj" \
+	"$(INTDIR)\PSVIElement.obj" \
+	"$(INTDIR)\PSVIItem.obj" \
+	"$(INTDIR)\XSAnnotation.obj" \
+	"$(INTDIR)\XSAttributeDeclaration.obj" \
+	"$(INTDIR)\XSAttributeGroupDefinition.obj" \
+	"$(INTDIR)\XSAttributeUse.obj" \
+	"$(INTDIR)\XSComplexTypeDefinition.obj" \
+	"$(INTDIR)\XSElementDeclaration.obj" \
+	"$(INTDIR)\XSFacet.obj" \
+	"$(INTDIR)\XSIDCDefinition.obj" \
+	"$(INTDIR)\XSModel.obj" \
+	"$(INTDIR)\XSModelGroup.obj" \
+	"$(INTDIR)\XSModelGroupDefinition.obj" \
+	"$(INTDIR)\XSMultiValueFacet.obj" \
+	"$(INTDIR)\XSNamespaceItem.obj" \
+	"$(INTDIR)\XSNotationDeclaration.obj" \
+	"$(INTDIR)\XSObject.obj" \
+	"$(INTDIR)\XSParticle.obj" \
+	"$(INTDIR)\XSSimpleTypeDefinition.obj" \
+	"$(INTDIR)\XSTypeDefinition.obj" \
+	"$(INTDIR)\XSWildcard.obj" \
 	"$(INTDIR)\LocalFileFormatTarget.obj" \
 	"$(INTDIR)\LocalFileInputSource.obj" \
 	"$(INTDIR)\MemBufFormatTarget.obj" \
@@ -2605,6 +2796,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLDeclImpl.obj" \
 	"$(INTDIR)\DOMException.obj" \
 	"$(INTDIR)\DOMRangeException.obj" \
+	"$(INTDIR)\DOMXPathException.obj" \
 	"$(INTDIR)\Version.res"
 
 "$(OUTDIR)\xerces-c_2_3_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -3295,6 +3487,144 @@ SOURCE=..\..\..\..\..\src\xercesc\util\XMLWin1252Transcoder.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttribute.cpp
+
+"$(INTDIR)\PSVIAttribute.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIAttributeList.cpp
+
+"$(INTDIR)\PSVIAttributeList.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIElement.cpp
+
+"$(INTDIR)\PSVIElement.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\PSVIItem.cpp
+
+"$(INTDIR)\PSVIItem.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAnnotation.cpp
+
+"$(INTDIR)\XSAnnotation.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeDeclaration.cpp
+
+"$(INTDIR)\XSAttributeDeclaration.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeGroupDefinition.cpp
+
+"$(INTDIR)\XSAttributeGroupDefinition.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSAttributeUse.cpp
+
+"$(INTDIR)\XSAttributeUse.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSComplexTypeDefinition.cpp
+
+"$(INTDIR)\XSComplexTypeDefinition.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSElementDeclaration.cpp
+
+"$(INTDIR)\XSElementDeclaration.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSFacet.cpp
+
+"$(INTDIR)\XSFacet.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSIDCDefinition.cpp
+
+"$(INTDIR)\XSIDCDefinition.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSModel.cpp
+
+"$(INTDIR)\XSModel.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroup.cpp
+
+"$(INTDIR)\XSModelGroup.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSModelGroupDefinition.cpp
+
+"$(INTDIR)\XSModelGroupDefinition.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSMultiValueFacet.cpp
+
+"$(INTDIR)\XSMultiValueFacet.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNamespaceItem.cpp
+
+"$(INTDIR)\XSNamespaceItem.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSNotationDeclaration.cpp
+
+"$(INTDIR)\XSNotationDeclaration.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSObject.cpp
+
+"$(INTDIR)\XSObject.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSParticle.cpp
+
+"$(INTDIR)\XSParticle.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSSimpleTypeDefinition.cpp
+
+"$(INTDIR)\XSSimpleTypeDefinition.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSTypeDefinition.cpp
+
+"$(INTDIR)\XSTypeDefinition.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\framework\psvi\XSWildcard.cpp
+
+"$(INTDIR)\XSWildcard.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileFormatTarget.cpp
 
 "$(INTDIR)\LocalFileFormatTarget.obj" : $(SOURCE) "$(INTDIR)"
@@ -3438,11 +3768,13 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp
 "$(INTDIR)\IGXMLScanner2.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.cpp
 
 "$(INTDIR)\MemoryManagerArrayImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
-	
+
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp
 
 "$(INTDIR)\MemoryManagerImpl.obj" : $(SOURCE) "$(INTDIR)"
@@ -4646,6 +4978,12 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMException.cpp
 SOURCE=..\..\..\..\..\src\xercesc\dom\DOMRangeException.cpp
 
 "$(INTDIR)\DOMRangeException.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathException.cpp
+
+"$(INTDIR)\DOMXPathException.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
