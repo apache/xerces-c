@@ -190,6 +190,21 @@ static void formatNode( const   ContentSpecNode* const      curNode
             if (parentType != curType)
                 bufToFill.append(chCloseParen);
             break;
+
+        case ContentSpecNode::All :
+            if (parentType != curType)
+			{
+                bufToFill.append(chLatin_A);
+                bufToFill.append(chLatin_l);
+                bufToFill.append(chLatin_l);
+                bufToFill.append(chOpenParen);
+			}
+            formatNode(first, curType, bufToFill);
+            bufToFill.append(chComma);
+            formatNode(second, curType, bufToFill);
+            if (parentType != curType)
+                bufToFill.append(chCloseParen);
+            break;
     }
 }
 
