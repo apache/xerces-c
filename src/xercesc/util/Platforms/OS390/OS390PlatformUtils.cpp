@@ -301,8 +301,8 @@ static FileHandleImpl* openRead(char* tmpFileName)
         optionBufferSize += (strlen(pathobj.getfopenParms()) + 1);
      }
 
-     char* optionBuffer = (char*) fgMemoryManager->allocate(optionBufferSize * sizeof(char));//new char[optionBufferSize];
-     ArrayJanitor<char> janText((char*)optionBuffer, fgMemoryManager);
+     char* optionBuffer = (char*) XMLPlatformUtils::fgMemoryManager->allocate(optionBufferSize * sizeof(char));//new char[optionBufferSize];
+     ArrayJanitor<char> janText((char*)optionBuffer, XMLPlatformUtils::fgMemoryManager);
      strcpy(optionBuffer,"rb");
 
      // Build the options buffer
@@ -360,11 +360,11 @@ static FileHandleImpl* openRead(char* tmpFileName)
     //     path/path2/filename.ext  => //path.path2.ext(filename)
     //     path/path2/filename      => //path.path2.filename
 
-    char* datasetName = (char*) fgMemoryManager->allocate
+    char* datasetName = (char*) XMLPlatformUtils::fgMemoryManager->allocate
     (
         (strlen(tmpFileName) + 5) * sizeof(char)
     );//new char[ strlen(tmpFileName) + 5 ];
-    ArrayJanitor<char> janText1((char*)datasetName, fgMemoryManager);
+    ArrayJanitor<char> janText1((char*)datasetName, XMLPlatformUtils::fgMemoryManager);
     char *datasetPos = datasetName, *tmpPos = tmpFileName;
 
     // We are in EBCDIC mode here
@@ -502,8 +502,8 @@ static FileHandleImpl* openWrite(char* tmpFileName)
     if (pathobj.getfopenParms())
        optionBufferSize += (strlen(pathobj.getfopenParms()) + 1);
 
-    char* optionBuffer = (char*) fgMemoryManager->allocate((optionBufferSize) * sizeof(char));//new char[optionBufferSize];
-    ArrayJanitor<char> janText((char*)optionBuffer, fgMemoryManager);
+    char* optionBuffer = (char*) XMLPlatformUtils::fgMemoryManager->allocate((optionBufferSize) * sizeof(char));//new char[optionBufferSize];
+    ArrayJanitor<char> janText((char*)optionBuffer, XMLPlatformUtils::fgMemoryManager);
     strcpy(optionBuffer,"wb");
 
     // Build the options buffer
