@@ -104,6 +104,7 @@ if ($platform =~ m/Windows/) {
         mkdir ($targetdir . "/samples/MemParse", "0644");
         mkdir ($targetdir . "/samples/PParse", "0644");
         mkdir ($targetdir . "/samples/StdInParse", "0644");
+        mkdir ($targetdir . "/samples/EnumVal", "0644");
         mkdir ($targetdir . "/doc", "0644");
         mkdir ($targetdir . "/doc/apiDocs", "0644");
         mkdir ($targetdir . "/bin/icu", "0644");
@@ -189,6 +190,12 @@ if ($platform =~ m/Windows/) {
         print "Executing: nmake -f StdInParse.mak all CFG=\"StdInParse - $platformname $buildmode\"";
         system("nmake -f StdInParse.mak all CFG=\"StdInParse - $platformname $buildmode\"");
 
+        # Make the EnumVal sample
+        chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/EnumVal");
+        system "nmake -f EnumVal.mak clean CFG=\"EnumVal - $platformname $buildmode\"";
+        print "Executing: nmake -f EnumVal.mak all CFG=\"EnumVal - $platformname $buildmode\"";
+        system("nmake -f EnumVal.mak all CFG=\"EnumVal - $platformname $buildmode\"");
+
 		if (length($ICUROOT) > 0) {
 			# run makeconv now
 			chdir ("$ICUROOT/data");
@@ -247,6 +254,7 @@ if ($platform =~ m/Windows/) {
         system("cp -Rfv $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
         system("cp -Rfv $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
         system("cp -Rfv $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
+        system("cp -Rfv $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
         system("cp -Rfv $XERCESCROOT/samples/data/* $targetdir/samples/data");
 
         # Populate the docs directory
@@ -351,6 +359,7 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         system ("mkdir $targetdir/samples/MemParse");
         system ("mkdir $targetdir/samples/PParse");
         system ("mkdir $targetdir/samples/StdInParse");
+        system ("mkdir $targetdir/samples/EnumVal");
         system ("mkdir $targetdir/doc");
         system ("mkdir $targetdir/doc/apiDocs");
 
@@ -456,6 +465,7 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         system("cp -Rf $XERCESCROOT/samples/MemParse/* $targetdir/samples/MemParse");
         system("cp -Rf $XERCESCROOT/samples/PParse/* $targetdir/samples/PParse");
         system("cp -Rf $XERCESCROOT/samples/StdInParse/* $targetdir/samples/StdInParse");
+        system("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
 
         # Populate the docs directory
         print ("\n\nCopying documentation ...\n");
