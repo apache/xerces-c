@@ -1771,6 +1771,28 @@ void XMLString::removeWS(XMLCh* const toConvert
     return;
 }
 
+void XMLString::removeChar(const XMLCh*     const srcString
+                         , const XMLCh&           toRemove
+                         ,       XMLBuffer&       dstBuffer)
+{
+    const XMLCh* pszSrc = srcString;
+
+    dstBuffer.reset();
+
+    while (*pszSrc) 
+    {
+        if (*pszSrc == toRemove) 
+        { 
+            pszSrc++;
+        }
+        else 
+        {
+            dstBuffer.append(*pszSrc);
+            pszSrc++;
+        }
+    }
+}
+
 /**
  * Fixes a platform dependent absolute path filename to standard URI form.
  * 1. Windows: fix 'x:' to 'file:///x:' and convert any backslash to forward slash

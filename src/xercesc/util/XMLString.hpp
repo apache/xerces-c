@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2004/05/25 18:11:32  peiyongz
+ * removeChar() added
+ *
  * Revision 1.24  2004/03/10 17:35:17  amassari
  * Fix documentation for binToText (bug# 9207)
  *
@@ -257,6 +260,7 @@
 #define XMLSTRING_HPP
 
 #include <xercesc/util/BaseRefVectorOf.hpp>
+#include <xercesc/framework/XMLBuffer.hpp>
 #include <xercesc/framework/MemoryManager.hpp>
 #include <string.h>
 
@@ -1490,6 +1494,16 @@ public:
       */
     static void removeWS(XMLCh* const toConvert
     , MemoryManager*       const manager = XMLPlatformUtils::fgMemoryManager);
+
+
+    /** Remove character
+      * @param srcString The string 
+      *        toRemove  The character needs to be removed from the string
+      *        dstBuffer The buffer containning the result
+      */
+    static void removeChar(const XMLCh*     const srcString
+                         , const XMLCh&           toRemove
+                         ,       XMLBuffer&       dstBuffer);
 
     /**
      * Fixes a platform dependent absolute path filename to standard URI form.
