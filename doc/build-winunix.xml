@@ -150,6 +150,10 @@
           <td>HP-UX 11.0</td>
           <td>aCC A.03.13 with pthreads</td>
         </tr>
+        <tr>
+          <td>Solaris 2.7</td>
+          <td>Forte C++ Version 6 Update 2</td>
+        </tr>
       </table>
 
         <p>If you are not using any of these compilers, you are taking a calculated risk
@@ -223,20 +227,22 @@ autoconf</source>
 runConfigure: Helper script to run "configure" for one of the supported platforms
 Usage: runConfigure "options"
        where options may be any of the following:
-       -p &lt;platform&gt; (accepts 'aix', 'linux', 'solaris',
-            'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx', 'tru64', 'macosx' )
-       -c &lt;C compiler name&gt; (e.g. gcc, cc, xlc_r, icc)
-       -x &lt;C++ compiler name&gt; (e.g. g++, CC, xlC_r, icc, c++)
+       -p &lt;platform&gt; (accepts 'aix', 'linux', 'freebsd', 'solaris',
+            'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
+            'ptx', 'tru64', 'macosx')
+       -c &lt;C compiler name&gt; (e.g. gcc, cc, xlc_r, icc or ecc)
+       -x &lt;C++ compiler name&gt; (e.g. g++, CC, xlC_r, icc or ecc)
        -d (specifies that you want to build debug version)
        -m &lt;message loader&gt; can be 'inmem', 'icu', 'MsgFile' or 'iconv'
        -n &lt;net accessor&gt; can be 'fileonly', 'libwww', 'socket' or 'native'
-       -t &lt;transcoder&gt; can be 'icu', 'Iconv400', 'Iconv390' or 'native'
-       -r &lt;thread option&gt; can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris) or 'sproc' (only on IRIX) or 'none'
+       -t &lt;transcoder&gt; can be 'icu', 'Iconv400', 'Iconv390', 'IconvFBSD' or 'native'
+       -r &lt;thread option&gt; can be 'pthread' or 'dce' (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'
+       -b &lt;bitsToBuild&gt; (accepts '64', '32')
        -l &lt;extra linker options&gt;
        -z &lt;extra compiler options&gt;
        -P &lt;install-prefix&gt;
        -C &lt;any one extra configure options&gt;
-       -h (to get help on the above commands)
+       -h (get help on the above commands)
 </source>
 
             <note>&XercesCName; can be built as either a standalone library or as a library
@@ -253,24 +259,25 @@ Generating makefiles with the following options ...
 Platform: linux
 C Compiler: gcc
 C++ Compiler: g++
-Extra compile options:
-Extra link options:
 Message Loader: inmem
 Net Accessor: socket
 Transcoder: native
 Thread option: pthread
+bitsToBuild option: 32
+Extra compile options:
+Extra link options:
 Extra configure options:
 Debug is OFF
 
 creating cache ./config.cache
 checking for gcc... gcc
-checking whether the C compiler (gcc  -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET ) works... yes
-checking whether the C compiler (gcc  -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET ) is a cross-compiler... no
+checking whether the C compiler (gcc   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET       ) works... yes
+checking whether the C compiler (gcc   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET       ) is a cross-compiler... no
 checking whether we are using GNU C... yes
 checking whether gcc accepts -g... yes
 checking for c++... g++
-checking whether the C++ compiler (g++  -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET ) works... yes
-checking whether the C++ compiler (g++  -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET ) is a cross-compiler... no
+checking whether the C++ compiler (g++   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET      ) works... yes
+checking whether the C++ compiler (g++   -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET      ) is a cross-compiler... yes
 checking whether we are using GNU C++... yes
 checking whether g++ accepts -g... yes
 checking for a BSD compatible install... /usr/bin/install -c
@@ -287,16 +294,19 @@ creating util/Transcoders/ICU/Makefile
 creating util/Transcoders/Iconv/Makefile
 creating util/Transcoders/Iconv390/Makefile
 creating util/Transcoders/Iconv400/Makefile
+creating util/Transcoders/IconvFBSD/Makefile
 creating util/Transcoders/MacOSUnicodeConverter/Makefile
 creating util/Platforms/Makefile
 creating util/Platforms/Solaris/Makefile
 creating util/Platforms/AIX/Makefile
 creating util/Platforms/Linux/Makefile
+creating util/Platforms/FreeBSD/Makefile
 creating util/Platforms/HPUX/Makefile
 creating util/Platforms/OS390/Makefile
 creating util/Platforms/OS400/Makefile
 creating util/Platforms/IRIX/Makefile
 creating util/Platforms/PTX/Makefile
+creating util/Platforms/OpenServer/Makefile
 creating util/Platforms/UnixWare/Makefile
 creating util/Platforms/Tru64/Makefile
 creating util/Platforms/MacOS/Makefile
@@ -307,23 +317,28 @@ creating util/MsgLoaders/MsgCatalog/Makefile
 creating util/MsgLoaders/MsgFile/Makefile
 creating util/NetAccessors/Socket/Makefile
 creating util/NetAccessors/libWWW/Makefile
-creating util/NetAccessors/MacOSURLAccess/Makefile
+creating util/NetAccessors/MacOSURLAccessCF/Makefile
 creating util/regx/Makefile
 creating validators/Makefile
 creating validators/common/Makefile
 creating validators/datatype/Makefile
 creating validators/DTD/Makefile
 creating validators/schema/Makefile
+creating validators/schema/identity/Makefile
 creating framework/Makefile
 creating dom/Makefile
+creating dom/impl/Makefile
+creating dom/deprecated/Makefile
 creating parsers/Makefile
 creating internal/Makefile
 creating sax/Makefile
 creating sax2/Makefile
-creating ../obj/Makefile
+creating ../../obj/Makefile
 
-Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
-Still cannot resolve it? Find out if someone else had the same problem before.
+Having build problems?
+Read instructions at http://xml.apache.org/xerces-c/build.html
+Still cannot resolve it?
+Find out if someone else had the same problem before.
 Go to http://marc.theaimsgroup.com/?l=xerces-c-dev
 
 In future, you may also directly type the following commands to create the Makefiles.
@@ -332,11 +347,12 @@ export TRANSCODER="NATIVE"
 export MESSAGELOADER="INMEM"
 export NETACCESSOR="Socket"
 export THREADS="pthread"
+export BITSTOBUILD="32"
 export CC="gcc"
 export CXX="g++"
-export CXXFLAGS=" -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET"
-export CFLAGS=" -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET"
-export LDFLAGS=""
+export CXXFLAGS=" -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET "
+export CFLAGS=" -w -O -DXML_USE_NATIVE_TRANSCODER -DXML_USE_INMEM_MESSAGELOADER -DXML_USE_PTHREADS -DXML_USE_NETACCESSOR_SOCKET "
+export LDFLAGS=" "
 export LIBS=" -lpthread "
 configure
 
@@ -377,15 +393,20 @@ gmake</source>
 
          </p>
 <source>
+runConfigure: Helper script to run "configure" for one of the supported platforms
 Usage: runConfigure "options"
        where options may be any of the following:
-       -p &lt;platform&gt; (accepts 'aix', 'unixware', 'linux', 'solaris',
-'hp-10', 'hp-11', 'os400', 'irix', 'ptx', 'tru64', 'macosx')
-       -c &lt;C compiler name&gt; (e.g. gcc, xlc or icc)
-       -x &lt;C++ compiler name&gt; (e.g. g++, xlC, or icc)
+       -p &lt;platform&gt; (accepts 'aix', 'linux', 'freebsd', 'solaris',
+                 'hp-10', 'hp-11', 'openserver', 'unixware', 'os400', 'irix',
+                 'ptx', 'tru64', 'macosx')
+       -c &lt;C compiler name&gt; (e.g. gcc, cc, xlc_r, icc or ecc)
+       -x &lt;C++ compiler name&gt; (e.g. g++, CC, xlC_r, icc or ecc)
        -d (specifies that you want to build debug version)
-       -h (get help on the above commands)
+       -r &lt;thread option&gt; can be 'pthread' or 'dce' (AIX, HP-11, and Solaris) or 'sproc' (IRIX) or 'none'
+       -b &lt;bitsToBuild&gt; (accepts '64', '32')
+       -l &lt;extra linker options&gt;
        -z &lt;extra compiler options&gt;
+       -h (get help on the above commands)
 </source>
 
          <note><em>NOTE:</em>The code samples in this section assume that you are working on the Linux binary drop.

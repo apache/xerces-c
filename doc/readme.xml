@@ -114,6 +114,10 @@
           <td>HP-UX 11.0</td>
           <td>aCC A.03.13 with pthreads</td>
         </tr>
+        <tr>
+          <td>Solaris 2.7</td>
+          <td>Forte C++ Version 6 Update 2</td>
+        </tr>
       </table>
     </s2>
 
