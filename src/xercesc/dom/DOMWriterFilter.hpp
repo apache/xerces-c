@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/06/04 14:24:04  peiyongz
+ * Make DOMWriterFilter pure abstract class w/o implementing any method
+ * and data
+ *
  * Revision 1.4  2002/06/03 22:34:53  peiyongz
  * DOMWriterFilter: setter provided, and allows any SHOW setting
  *
@@ -115,16 +119,15 @@ public:
      *  <p><b>"Experimental - subject to change"</b></p>
 	 */
     //@{
-	unsigned long getWhatToShow() const {return fWhatToShow;};
+	virtual unsigned long getWhatToShow() const =0;
 
-	void          setWhatToShow(unsigned long toShow) {fWhatToShow = toShow;};
+	virtual void          setWhatToShow(unsigned long toShow) =0;
     //@}
 
 protected:
     /** @name Constructors */
     //@{
-	DOMWriterFilter(unsigned long whatToShow = DOMNodeFilter::SHOW_ALL)
-		:fWhatToShow(whatToShow){};
+	DOMWriterFilter(){};
     //@}
 
 private:
@@ -150,8 +153,10 @@ private:
     //
 	//      Those nodes will never be passed to a DOMWriterFilter.
 	//
+	//   Derived class shall add this data member:
+	//
+	//   unsigned long fWhatToShow;   
     // -----------------------------------------------------------------------
-	unsigned long fWhatToShow;   
 
 };
 
