@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 # 
 # $Log$
+# Revision 1.5  2000/02/05 00:04:47  abagchi
+# Made sure all targets are prepended with :: instead of single :
+#
 # Revision 1.4  1999/12/21 19:54:44  rahulj
 # Added Apache license and version tags.
 #
@@ -88,24 +91,24 @@ HEADER_FILES=
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
 BATCH_TARGET= "//'${LOADMOD}(${APP_NAME})'"
-all: makedir ${BATCH_TARGET}
+all:: makedir ${BATCH_TARGET}
 else
-all: makedir ${EXEC}/${APP_NAME}
+all:: makedir ${EXEC}/${APP_NAME}
 endif
 
-makedir:
+makedir::
 	-mkdir -p $(OUTDIR)
 
-${EXEC}/${APP_NAME}: ${OBJS}
+${EXEC}/${APP_NAME}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} 
-${BATCH_TARGET}: ${OBJS}
+${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} 
 
-$(OUTDIR)/EnumVal.o: ${SRC}/EnumVal.cpp ${HEADER_FILES}
+$(OUTDIR)/EnumVal.o:: ${SRC}/EnumVal.cpp ${HEADER_FILES}
 	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/EnumVal.o ${SRC}/EnumVal.cpp
 
-clean:
+clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}
 
-distclean:	clean
+distclean::	clean
 	rm -f Makefile

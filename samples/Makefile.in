@@ -55,6 +55,9 @@
 # 
 #
 # $Log$
+# Revision 1.6  2000/02/05 00:04:38  abagchi
+# Made sure all targets are prepended with :: instead of single :
+#
 # Revision 1.5  2000/01/18 23:27:30  rahulj
 # Modified makefile for the new sample: CreateDOMDocument.
 #
@@ -91,50 +94,50 @@ CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
 
-all:	saxprint saxcount domprint domcount redirect memparse pparse stdinparse enumval createdomdocument
+all::	saxprint saxcount domprint domcount redirect memparse pparse stdinparse enumval createdomdocument
 
-saxprint:
+saxprint::
 	@echo Building "SAXPrint"
 	cd $(SAXPrint_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-saxcount:
+saxcount::
 	@echo Building "SAXCount"
 	cd $(SAXCount_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-domprint:
+domprint::
 	@echo Building "DOMPrint"
 	cd $(DOMPrint_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-domcount:
+domcount::
 	@echo Building "DOMCount"
 	cd $(DOMCount_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-memparse:
+memparse::
 	@echo Building "MemParse"
 	cd $(MemParse_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-redirect:
+redirect::
 	@echo Building "Redirect"
 	cd $(Redirect_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-pparse:
+pparse::
 	@echo Building "PParse"
 	cd $(PParse_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-stdinparse:
+stdinparse::
 	@echo Building "StdInParse"
 	cd $(StdInParse_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-enumval:
+enumval::
 	@echo Building "EnumVal"
 	cd $(EnumVal_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
-createdomdocument:
+createdomdocument::
 	@echo Building "CreateDOMDocument"
 	cd $(CreateDOMDocument_DIR) ; $(MAKE) $(MAKE_FLAGS) ; cd ..
 
 
-clean:
+clean::
 	cd $(SAXPrint_DIR) && $(MAKE) $@ && cd ..
 	cd $(SAXCount_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMPrint_DIR) && $(MAKE) $@ && cd ..
@@ -146,7 +149,7 @@ clean:
 	cd $(EnumVal_DIR) && $(MAKE) $@ && cd ..
 	cd $(CreateDOMDocument_DIR) && $(MAKE) $@ && cd ..
 
-distclean:
+distclean::
 	cd $(SAXPrint_DIR) && $(MAKE) $@ && cd ..
 	cd $(SAXCount_DIR) && $(MAKE) $@ && cd ..
 	cd $(DOMPrint_DIR) && $(MAKE) $@ && cd ..
