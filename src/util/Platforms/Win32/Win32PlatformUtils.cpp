@@ -71,7 +71,11 @@
 #include <windows.h>
 
 #ifdef _DEBUG
-#include <crtdbg.h>
+ #ifdef _MSC_VER
+    #include <crtdbg.h>
+ #else
+    #include <assert.h>
+ #endif
 #endif
 
 //
@@ -623,11 +627,13 @@ XMLPlatformUtils::compareAndSwap(       void**      toFill
                                 , const void* const toCompare)
 {
     //
-    //  Windows supports InterlockedCompareExchange only on Windows 98,
-    //  NT 4.0, and newer. Not on Win 95. So we are back to using assembler.
-    //  (But only if building with MSVC.)
+    //  InterlockedCompareExchange is only supported on Windows 98,
+    //  Windows NT 4.0, and newer -- not on Windows 95...
+    //  If you are willing to give up Win95 support change this to #if 0
+    //  otherwise we are back to using assembler.
+    //  (But only if building with compilers that support inline assembler.)
     //
-    #if defined(_MSC_VER)
+    #if defined(_MSC_VER) || defined(__BCPLUSPLUS__)
 
     void*   result;
     __asm
@@ -743,7 +749,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
 void XMLPlatformUtils::platformInit()
 {
 
-#if 0 && _DEBUG
+#if 0 && defined(_DEBUG)
     //  Enable this code for memeory leak testing
     
    // Send all reports to STDOUT
