@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/10/17 21:09:03  peiyongz
+ * renaming methods
+ *
  * Revision 1.6  2003/10/14 15:18:20  peiyongz
  * getMemoryManager()
  *
@@ -388,7 +391,7 @@ public:
       *                   false : otherwise
       *
       ***/
-           bool           needToWriteTemplateObject(void* const templateObjectToWrite);
+           bool           needToStoreObject(void* const templateObjectToWrite);
 
     /***
       *
@@ -401,11 +404,11 @@ public:
       *                   false : otherwise
       *
       ***/
-           bool           needToReadTemplateObject(void**       templateObjectToRead);
+           bool           needToLoadObject(void**       templateObjectToRead);
 
     /***
       *
-      *  In the case of needToReadTemplateObject() return true, the client
+      *  In the case of needToLoadObject() return true, the client
       *  application needs to instantiate an expected template object, and
       *  register the address to the engine.
       *
@@ -415,7 +418,7 @@ public:
       *  Return:  
       *
       ***/
-           void           registerTemplateObject(void* const templateObjectToRegister);
+           void           registerObject(void* const templateObjectToRegister);
 
     static const bool toReadBufferLen;
 

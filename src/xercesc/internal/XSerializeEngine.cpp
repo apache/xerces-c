@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/10/17 21:09:03  peiyongz
+ * renaming methods
+ *
  * Revision 1.6  2003/10/07 19:38:31  peiyongz
  * API for Template_Class Object Serialization/Deserialization
  *
@@ -1005,7 +1008,7 @@ inline void XSerializeEngine::ensureBufferLen(int bufferLen) const
  *  to notifiy the client application code to store the template object.
  *
  ***/
-bool XSerializeEngine::needToWriteTemplateObject(void* const  templateObjectToWrite)
+bool XSerializeEngine::needToStoreObject(void* const  templateObjectToWrite)
 {
     ensureStoring(); //don't ensurePointer here !!!
 
@@ -1031,7 +1034,7 @@ bool XSerializeEngine::needToWriteTemplateObject(void* const  templateObjectToWr
 
 }
 
-bool XSerializeEngine::needToReadTemplateObject(void**  templateObjectToRead)
+bool XSerializeEngine::needToLoadObject(void**  templateObjectToRead)
 {
     ensureLoading();
 
@@ -1044,7 +1047,7 @@ bool XSerializeEngine::needToReadTemplateObject(void**  templateObjectToRead)
         /***
          * what follows fgTemplateObjTag is the actual template object
          * We need the client application to create a template object
-         * and register it through registerTemplateObject(), and deserialize
+         * and register it through registerObject(), and deserialize
          * template object
          ***/
         return true;
@@ -1060,7 +1063,7 @@ bool XSerializeEngine::needToReadTemplateObject(void**  templateObjectToRead)
 
 }
 
-void XSerializeEngine::registerTemplateObject(void*  const templateObjectToRegister)
+void XSerializeEngine::registerObject(void*  const templateObjectToRegister)
 {
     ensureLoading();
     addLoadPool(templateObjectToRegister);
