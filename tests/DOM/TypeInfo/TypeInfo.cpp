@@ -525,18 +525,26 @@ bool TypeInfo::testUnions() {
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
     testAttr = testEle->getAttributeNodeNS(0, X("testAttr"));
     DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("decimalDerivedType"), X(""), __LINE__);
-
-    testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
-    testAttr = testEle->getAttributeNodeNS(0, X("testAttr"));
+    testAttr = testEle->getAttributeNodeNS(0, X("testAttr2"));
     DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
     testAttr = testEle->getAttributeNodeNS(0, X("testAttr"));
+    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("stringDerivedType"), X(""), __LINE__);
+    testAttr = testEle->getAttributeNodeNS(0, X("testAttr2"));
+    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("decimalDerivedType"), X(""), __LINE__);
+
+    testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
+    testAttr = testEle->getAttributeNodeNS(0, X("testAttr"));
     DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("decimal"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    testAttr = testEle->getAttributeNodeNS(0, X("testAttr2"));
+    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("string"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getNextSibling()->getNextSibling();
     testAttr = testEle->getAttributeNodeNS(0, X("testAttr"));
     DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("string"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+    testAttr = testEle->getAttributeNodeNS(0, X("testAttr2"));
+    DOMTYPEINFOTEST(testAttr->getTypeInfo(), X("decimal"), SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     return passed;
 
@@ -636,6 +644,12 @@ bool TypeInfo::testAnys() {
     testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr2"));
     DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
+    testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr3"));
+    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_STRING, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+
+    testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr4"));
+    DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_INTEGER, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
+
     DOMTYPEINFOTEST(testEle->getTypeInfo(), SchemaSymbols::fgATTVAL_ANYTYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     testEle = (DOMElement *)testEle->getFirstChild()->getNextSibling();
@@ -651,14 +665,14 @@ bool TypeInfo::testAnys() {
     testEle = (DOMElement *)back->getNextSibling()->getNextSibling();
     back = testEle;
 
-    testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr3"));
+    testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr5"));
     DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ANYSIMPLETYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     //anyTestAttr2
     testEle = (DOMElement *)back->getNextSibling()->getNextSibling();
     back = testEle;
 
-    testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr3"));
+    testAttr = testEle->getAttributeNodeNS(X("http://www.secondSchema"), X("attr5"));
     DOMTYPEINFOTEST(testAttr->getTypeInfo(), SchemaSymbols::fgDT_ANYSIMPLETYPE, SchemaSymbols::fgURI_SCHEMAFORSCHEMA, __LINE__);
 
     //anyTestMissing

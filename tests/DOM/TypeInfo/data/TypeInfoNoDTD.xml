@@ -105,10 +105,10 @@ xsi:noNamespaceSchemaLocation="hello"
   <testEle >hello</testEle>
   <testEle >200</testEle>
   <testEle >abcdefg</testEle>
-  <testEle2 testAttr="50" />
-  <testEle2 testAttr="hello" />
-  <testEle2 testAttr="200" />
-  <testEle2 testAttr="abcdefg" />
+  <testEle2 testAttr="50" testAttr2="hello"  />
+  <testEle2 testAttr="hello" testAttr2="50" />
+  <testEle2 testAttr="200" testAttr2="abcdefg" />
+  <testEle2 testAttr="abcdefg" testAttr2="200" />
 </unionTest>
 <anonymousTest partNum="50">
   <quantity>50</quantity>
@@ -137,13 +137,13 @@ xsi:noNamespaceSchemaLocation="hello"
   <xhtml:fakeTag2 />
   <ss:realTag1 >la</ss:realTag1>
 </anyTestPartial>
-<anyTest ss:attr1="string" ss:attr2="2" >
+<anyTest ss:attr1="string" ss:attr2="2" ss:attr3="string" ss:attr4="2">
   <ss:realTag2 >la</ss:realTag2>
   <ss:realTag3 >la</ss:realTag3>
   <ss:notRealTag >la</ss:notRealTag>
 </anyTest>
-<anyTestAttr1 ss:attr3="2" />
-<anyTestAttr2 ss:attr3="2" />
+<anyTestAttr1 ss:attr5="2" />
+<anyTestAttr2 ss:attr5="2" />
 <anyTestMissing />
 <invalidTest simple="abcd" invalid="asdas" >
   <simple >abcd</simple>

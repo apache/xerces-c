@@ -315,6 +315,7 @@
     <xs:element name="testEle2" maxOccurs="4" >
       <xs:complexType >
          <xs:attribute name="testAttr" type="unionTestType" />
+         <xs:attribute name="testAttr2" type="unionTestType" />
       </xs:complexType>
     </xs:element>
   </xs:sequence>
