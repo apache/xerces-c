@@ -983,7 +983,7 @@ bool XMLReader::skipSpacesInDecl(bool& skippedSomething)
                 }
                 else if (curCh == chNEL || curCh == chLineSeparator)
                 {
-                    if (fXMLVersion == XMLVersion::XMLV1_1)
+                    if (fXMLVersion == XMLV1_1)
                     {
                         ThrowXMLwithMemMgr1
                         (
@@ -993,7 +993,7 @@ bool XMLReader::skipSpacesInDecl(bool& skippedSomething)
                           , fMemoryManager
                         );
                     }
-                    else //XMLVersion::XMLV1_0
+                    else //XMLV1_0
                     {
                         if (fNEL)
                         {
