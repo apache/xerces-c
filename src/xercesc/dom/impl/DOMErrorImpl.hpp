@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/14 18:06:53  gareth
+ * Updated DOMError to http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html.
+ *
  * Revision 1.5  2003/03/07 18:07:17  tng
  * Return a reference instead of void for operator=
  *
@@ -78,7 +81,8 @@
 #define DOMERRORIMPL_HPP
 
 #include <xercesc/dom/DOMError.hpp>
-
+#include <iostream.h>
+#include <xercesc/util/XMLString.hpp>
 XERCES_CPP_NAMESPACE_BEGIN
 
 
@@ -103,6 +107,15 @@ public:
         const short severity
         , const XMLCh* const message
         , DOMLocator* const location
+    );
+
+    DOMErrorImpl
+    (
+        const short severity
+        , const XMLCh* type
+        , const XMLCh* message
+        , void* relatedData 
+        , bool adoptRelatedData = false
     );
 
     /** Desctructor */
@@ -144,6 +157,10 @@ public:
      */
     virtual void* getRelatedException() const;
 
+    virtual const XMLCh* getType() const;
+
+    virtual void* getRelatedData() const;
+
     //@}
 
 
@@ -178,10 +195,6 @@ public:
     virtual void setLocation(DOMLocator* const location);
 
    /**
-    * <p><b>"Experimental - subject to change"</b></p>
-    *
-    * Set whether the location is owned by DOMError or not
-    *
     * @param value <code>true</code> if DOMLocator is owned and should be
     *              deleted, <code>false</code> otherwise.
     */
@@ -198,6 +211,15 @@ public:
      */
     virtual void setRelatedException(void* exception) const;
 
+    virtual void setType(const XMLCh* type);
+
+    virtual void setRelatedData(void* relatedData);
+
+    /**
+     * @param value <code>true</code> if RelatedData is owned and should be
+     *              deleted, <code>false</code> otherwise.
+     */
+    void setAdoptRelatedData(bool adoptRelatedData);
     //@}
 
 
@@ -220,15 +242,27 @@ private :
     //      The type of the error.
     //
     //  fMessage
-    //      The error message
+    //      The error message.
     //
     //  fLocation
-    //      The location info of the error
+    //      The location info of the error.
+    //
+    //  fType
+    //      The type of the error.
+    //
+    //  fRelatedData
+    //      The data related to this error.
+    //
+    //  fAdoptRelatedData
+    //      Indicates whether we own the fRelatedData object or not.
     // -----------------------------------------------------------------------
     bool         fAdoptLocation;
     short        fSeverity;
     const XMLCh* fMessage;
     DOMLocator*  fLocation;
+    const XMLCh* fType;
+    void*        fRelatedData;
+    bool         fAdoptRelatedData;
 };
 
 // ---------------------------------------------------------------------------
@@ -254,6 +288,16 @@ inline void* DOMErrorImpl::getRelatedException() const
     return 0;
 }
 
+inline const XMLCh* DOMErrorImpl::getType() const 
+{
+    return fType;
+}
+
+inline void* DOMErrorImpl::getRelatedData() const 
+{
+    return fRelatedData;
+}
+
 // ---------------------------------------------------------------------------
 //  DOMLocatorImpl: Setter methods
 // ---------------------------------------------------------------------------
@@ -272,6 +316,19 @@ inline void DOMErrorImpl::setAdoptLocation(const bool value)
     fAdoptLocation = value;
 }
 
+inline void DOMErrorImpl::setType(const XMLCh* type)
+{
+    fType = type;
+}
+
+inline void DOMErrorImpl::setRelatedData(void* relatedData)
+{
+    fRelatedData = relatedData;
+}
+
+inline void DOMErrorImpl::setAdoptRelatedData(bool adoptRelatedData) {
+    fAdoptRelatedData = adoptRelatedData;
+}
 
 XERCES_CPP_NAMESPACE_END
 

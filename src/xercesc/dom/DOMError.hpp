@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/14 18:06:53  gareth
+ * Updated DOMError to http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html.
+ *
  * Revision 1.8  2003/03/07 19:59:04  tng
  * [Bug 11692] Unimplement the hidden constructors and assignment operator to remove warnings from gcc.
  *
@@ -201,6 +204,36 @@ public:
      */
     virtual void* getRelatedException() const = 0;
 
+    /**
+     * A <code>XMLCh*</code> indicating which related data is expected in 
+     * relatedData. Users should refer to the specification of the error
+     * in order to find its <code>XMLCh*</code> type and relatedData
+     * definitions if any.
+     *
+     * Note: As an example, [DOM Level 3 Load and Save] does not keep the
+     * [baseURI] property defined on a Processing Instruction information item.
+     * Therefore, the DOMBuilder generates a SEVERITY_WARNING with type 
+     * "infoset-baseURI" and the lost [baseURI] property represented as a
+     * DOMString in the relatedData attribute.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see   setType
+     * @since DOM Level 3
+     */
+    virtual const XMLCh* getType() const = 0;
+
+    /**
+     * The related DOMError.type dependent data if any.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see   setRelatedData
+     * @since DOM Level 3
+     */
+    virtual void* getRelatedData() const = 0;
+
+
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
@@ -247,6 +280,35 @@ public:
      * @since DOM Level 3
      */
     virtual void setRelatedException(void* exception) const = 0;
+
+    /**
+     * A <code>XMLCh*</code> indicating which related data is expected in 
+     * relatedData. Users should refer to the specification of the error
+     * in order to find its <code>XMLCh*</code> type and relatedData
+     * definitions if any.
+     *
+     * Note: As an example, [DOM Level 3 Load and Save] does not keep the
+     * [baseURI] property defined on a Processing Instruction information item.
+     * Therefore, the DOMBuilder generates a SEVERITY_WARNING with type 
+     * "infoset-baseURI" and the lost [baseURI] property represented as a
+     * DOMString in the relatedData attribute.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see   getType
+     * @since DOM Level 3
+     */
+    virtual void setType(const XMLCh* type) = 0;
+
+    /**
+     * The related DOMError.type dependent data if any.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see   getRelatedData
+     * @since DOM Level 3
+     */
+    virtual void setRelatedData(void* relatedData) = 0;
 
     //@}
 

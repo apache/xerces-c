@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/14 18:06:53  gareth
+ * Updated DOMError to http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html.
+ *
  * Revision 1.4  2002/11/04 15:07:34  tng
  * C++ Namespace Support.
  *
@@ -85,6 +88,9 @@ fAdoptLocation(false)
 , fSeverity(severity)
 , fMessage(0)
 , fLocation(0)
+, fType(0)
+, fRelatedData(0)
+, fAdoptRelatedData(false)
 {
 }
 
@@ -95,13 +101,34 @@ fAdoptLocation(false)
 , fSeverity(severity)
 , fMessage(message)
 , fLocation(location)
+, fType(0)
+, fRelatedData(0)
+, fAdoptRelatedData(false)
 {
+}
+
+DOMErrorImpl::DOMErrorImpl(const short severity,
+                           const XMLCh* type,
+                           const XMLCh* message,
+                           void* relatedData,
+                           bool adoptRelatedData) :
+fAdoptLocation(false)
+, fSeverity(severity)
+, fMessage(message)
+, fLocation(0)
+, fType(type)
+, fRelatedData(relatedData)
+, fAdoptRelatedData(adoptRelatedData)
+{
+
 }
 
 DOMErrorImpl::~DOMErrorImpl()
 {
     if (fAdoptLocation)
         delete fLocation;
+    if(fAdoptRelatedData)
+        delete fRelatedData;
 }
 
 // ---------------------------------------------------------------------------
