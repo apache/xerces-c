@@ -69,33 +69,57 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+
+//  Calculate alignment required by platform.
+//	Total size of our header must match platform
+//	architecture-specific alignment, in order
+//	that the returned block ptr (which follows our
+//	header), maintains block/structure alignment.
+inline size_t
+CalculateBlockHeaderSize()
+{
+	//	Macro XML_NEW_BLOCK_ALIGNMENT may be defined
+	//	as needed to calculate alignment on a per-architecture
+	//	basis.
+	#ifdef XML_NEW_BLOCK_ALIGNMENT
+		size_t alignment = XML_NEW_BLOCK_ALIGNMENT;
+	#else
+		size_t alignment = std::max(sizeof(void*), sizeof(double));
+	#endif
+	
+	size_t headerUsage = sizeof(MemoryManager*);
+	return (headerUsage + (alignment - headerUsage % alignment));
+}
+
 void* XMemory::operator new(size_t size)
 {
+	size_t headerSize = CalculateBlockHeaderSize();
     void* const block = XMLPlatformUtils::fgMemoryManager->allocate
         (
-	        size + sizeof(MemoryManager*)
+	        headerSize + size
         );
-
     *(MemoryManager**)block = XMLPlatformUtils::fgMemoryManager;
 
-    return (char*)block + sizeof(MemoryManager*);
+    return (char*)block + headerSize;
 }
 
 void* XMemory::operator new(size_t size, MemoryManager* manager)
 {
     assert(manager != 0);
-
-    void* const block = manager->allocate(size + sizeof(MemoryManager*));
+	
+	size_t headerSize = CalculateBlockHeaderSize();
+    void* const block = manager->allocate(headerSize + size);
     *(MemoryManager**)block = manager;
 
-    return (char*)block + sizeof(MemoryManager*);
+    return (char*)block + headerSize;
 }
 
 void XMemory::operator delete(void* p)
 {
     if (p != 0)
     {
-        void* const block = (char*)p - sizeof(MemoryManager*);
+		size_t headerSize = CalculateBlockHeaderSize();
+        void* const block = (char*)p - headerSize;
 
         MemoryManager* const manager = *(MemoryManager**)block;
         assert(manager != 0);
@@ -105,13 +129,16 @@ void XMemory::operator delete(void* p)
 
 void XMemory::operator delete(void* p, MemoryManager* manager)
 {
-    assert(p != 0 && manager != 0);
-    assert
-    (
-        *(MemoryManager**)((char*)p - sizeof(MemoryManager*)) == manager
-    );
-
-    manager->deallocate((char*)p - sizeof(MemoryManager*));
+    assert(manager != 0);
+	
+	if (p != 0)
+	{
+		size_t headerSize = CalculateBlockHeaderSize();
+        void* const block = (char*)p - headerSize;
+		
+		assert(*(MemoryManager**)block == manager);
+		manager->deallocate(block);
+	}
 }
 
 XERCES_CPP_NAMESPACE_END
