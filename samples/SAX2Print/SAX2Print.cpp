@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/09 22:20:38  jpolast
+ * updates for changes to sax2 core functionality.
+ *
  * Revision 1.1  2000/08/02 19:16:14  jpolast
  * initial checkin of SAX2Print
  *
@@ -94,7 +97,7 @@
 static const char*              encodingName    = "LATIN1";
 static XMLFormatter::UnRepFlags unRepFlags      = XMLFormatter::UnRep_CharRef;
 static char*                    xmlFile         = 0;
-static SAXParser::ValSchemes    valScheme       = SAXParser::Val_Auto;
+static SAX2XMLReader::ValSchemes valScheme      = SAX2XMLReader::Val_Auto;
 static bool						expandNamespaces= false ;
 
 
@@ -170,11 +173,11 @@ int main(int argC, char* argV[])
             const char* const parm = &argV[parmInd][3];
 
             if (!strcmp(parm, "never"))
-                valScheme = SAXParser::Val_Never;
+                valScheme = SAX2XMLReader::Val_Never;
             else if (!strcmp(parm, "auto"))
-                valScheme = SAXParser::Val_Auto;
+                valScheme = SAX2XMLReader::Val_Auto;
             else if (!strcmp(parm, "always"))
-                valScheme = SAXParser::Val_Always;
+                valScheme = SAX2XMLReader::Val_Always;
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
@@ -232,16 +235,16 @@ int main(int argC, char* argV[])
     //  the command line, set it to validate or not.
     //
     SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
-	if (valScheme == SAXParser::Val_Auto)
+	if (valScheme == SAX2XMLReader::Val_Auto)
 	{
 	  parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), true);
 	  parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/dynamic"), true);
 	}
-    if (valScheme == SAXParser::Val_Never)
+    if (valScheme == SAX2XMLReader::Val_Never)
 	{
 	  parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), false);
 	}
-	if (valScheme == SAXParser::Val_Always)
+	if (valScheme == SAX2XMLReader::Val_Always)
 	{
 	  parser->setFeature(XMLString::transcode("http://xml.org/sax/features/validation"), true);
 	  parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/dynamic"), false);

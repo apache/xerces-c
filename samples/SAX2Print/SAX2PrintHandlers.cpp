@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/09 22:20:38  jpolast
+ * updates for changes to sax2 core functionality.
+ *
  * Revision 1.1  2000/08/02 19:16:14  jpolast
  * initial checkin of SAX2Print
  *
@@ -216,7 +219,11 @@ void SAX2PrintHandlers::endElement(const XMLCh* const uri,
     // No escapes are legal here
     fFormatter << XMLFormatter::NoEscapes << gEndElement ;
 	if ( fExpandNS )
-		fFormatter << uri << chColon << localname << chCloseAngle;
+	{
+		if (XMLString::compareIString(uri,XMLUni::fgEmptyString) != 0)
+				fFormatter  << uri << chColon;
+		fFormatter << localname << chCloseAngle;
+	}
 	else
 		fFormatter << qname << chCloseAngle;
 }
@@ -246,13 +253,17 @@ void SAX2PrintHandlers::startDocument()
 
 void SAX2PrintHandlers::startElement(const   XMLCh* const    uri,
 									const   XMLCh* const    localname,
-									const   XMLCh* const    qname
-                                    ,       Attributes&		attributes)
+									const   XMLCh* const    qname,
+                                    const   Attributes&		attributes)
 {
     // The name has to be representable without any escapes
     fFormatter  << XMLFormatter::NoEscapes << chOpenAngle ;
 	if ( fExpandNS )
-		fFormatter << uri << chColon << localname ;
+	{
+		if (XMLString::compareIString(uri,XMLUni::fgEmptyString) != 0)
+				fFormatter  << uri << chColon;
+		fFormatter << localname ;
+	}
 	else
 		fFormatter << qname ;
 
@@ -266,7 +277,11 @@ void SAX2PrintHandlers::startElement(const   XMLCh* const    uri,
         //
         fFormatter  << XMLFormatter::NoEscapes << chSpace ;
 		if ( fExpandNS )
-			fFormatter  << attributes.getURI(index) << chColon << attributes.getLocalName(index) ;
+		{
+			if (XMLString::compareIString(attributes.getURI(index),XMLUni::fgEmptyString) != 0)
+				fFormatter  << attributes.getURI(index) << chColon;
+			fFormatter  << attributes.getLocalName(index) ;
+		}
 		else
 			fFormatter  << attributes.getQName(index) ;
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/09 22:20:39  jpolast
+ * updates for changes to sax2 core functionality.
+ *
  * Revision 1.1  2000/08/02 19:16:14  jpolast
  * initial checkin of SAX2Print
  *
@@ -116,8 +119,8 @@ public:
 
     void startElement(	const   XMLCh* const    uri,
 						const   XMLCh* const    localname,
-						const   XMLCh* const    qname
-							, Attributes&		attributes);
+						const   XMLCh* const    qname,
+					    const   Attributes&		attributes);
 
 
 
