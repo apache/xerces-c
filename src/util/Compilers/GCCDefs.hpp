@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/14 02:08:29  abagchi
+ * Sorry GCC does not support long strings
+ *
  * Revision 1.5  2000/01/14 01:55:09  abagchi
  * Added XML_LSTRSUPPORT
  *
@@ -87,9 +90,9 @@
 //#define NO_NATIVE_BOOL
 
 // ---------------------------------------------------------------------------
-//  GCC supports "L" for long strings. So we define ...
+//  GCC does not support "L" for long strings. So we do nothing.
 // ---------------------------------------------------------------------------
-#define XML_LSTRSUPPORT
+// #define XML_LSTRSUPPORT
 
 
 // ---------------------------------------------------------------------------
