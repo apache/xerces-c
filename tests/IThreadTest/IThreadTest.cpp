@@ -370,7 +370,6 @@ ThreadParser::ThreadParser()
 
 ThreadParser::~ThreadParser()
 {
-    delete fDoc;
     delete fSAXParser;
     delete fDOMParser;
 }
@@ -388,8 +387,6 @@ int ThreadParser::parse(int fileNum)
 {
     MemBufInputSource *mbis = 0;
     InFileInfo        *fInfo = &gRunInfo.files[fileNum];
-    delete fDoc;
-    fDoc = 0;
 
     fCheckSum = 0;
 

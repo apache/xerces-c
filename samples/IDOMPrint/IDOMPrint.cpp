@@ -513,7 +513,6 @@ int main(int argC, char* argV[])
             retval = 3;
         }
 
-        delete doc;
         delete formatTarget;
         delete gFormatter;
     }

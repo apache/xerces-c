@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/10/03 15:49:01  tng
+ * [Bug 3867] IDOM_Element::getElementsByTagName() threading problem.
+ *
  * Revision 1.6  2001/08/09 16:52:59  tng
  * [Bug 2947]  IDOM segfault calling getElementsByTagName() using a DOM_Document().
  *
@@ -85,7 +88,6 @@
 #include <limits.h>
 
 static const XMLCh kAstr[] = {chAsterisk, chNull};
-IDDeepNodeListPool<IDDeepNodeListImpl>* IDDeepNodeListImpl::fNodeListPool = 0;
 
 IDDeepNodeListImpl::IDDeepNodeListImpl(const IDOM_Node *rootNode,
                                        const XMLCh *tagName)
@@ -123,43 +125,6 @@ IDDeepNodeListImpl::IDDeepNodeListImpl(const IDOM_Node *rootNode,
 IDDeepNodeListImpl::~IDDeepNodeListImpl()
 {
 }
-
-
-IDOM_NodeList *IDDeepNodeListImpl::getDeepNodeList(const IDOM_Node *rootNode, const XMLCh *tagName)
-{
-    if(!fNodeListPool) {
-        fNodeListPool = new ((IDDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument())) IDDeepNodeListPool<IDDeepNodeListImpl>(109);
-    }
-
-    IDDeepNodeListImpl* retList = fNodeListPool->getByKey(rootNode, tagName, 0);
-    if (!retList) {
-        // the pool will adopt the IDDeepNodeListImpl
-        int id = fNodeListPool->put((void*) rootNode, (XMLCh*) tagName, 0, new IDDeepNodeListImpl(rootNode, tagName));
-        retList = fNodeListPool->getById(id);
-    }
-
-    return retList;
-}
-
-
-IDOM_NodeList *IDDeepNodeListImpl::getDeepNodeList(const IDOM_Node *rootNode,     //DOM Level 2
-                                                   const XMLCh *namespaceURI,
-                                                   const XMLCh *localName)
-{
-    if(!fNodeListPool) {
-        fNodeListPool = new ((IDDocumentImpl *)(castToNodeImpl(rootNode)->getOwnerDocument())) IDDeepNodeListPool<IDDeepNodeListImpl>(109);
-    }
-
-    IDDeepNodeListImpl* retList = fNodeListPool->getByKey(rootNode, localName, namespaceURI);
-    if (!retList) {
-        // the pool will adopt the IDDeepNodeListImpl
-        int id = fNodeListPool->put((void*) rootNode, (XMLCh*) localName, (XMLCh*) namespaceURI, new IDDeepNodeListImpl(rootNode, namespaceURI, localName));
-        retList = fNodeListPool->getById(id);
-    }
-
-    return retList;
-}
-
 
 unsigned int IDDeepNodeListImpl::getLength()
 {

@@ -78,6 +78,7 @@
 #include "IDOM_Document.hpp"
 #include "IDNodeImpl.hpp"
 #include "IDParentNode.hpp"
+#include "IDDeepNodeListPool.hpp"
 
 
 class IDAttrImpl;
@@ -284,6 +285,19 @@ public:
     XMLCh       * cloneString(const XMLCh *src);
     const XMLCh * getPooledString(const XMLCh *src);
     void          deleteHeap();
+
+
+    // Factory methods for getting/creating node lists.
+    // Because nothing is ever deleted, the implementation caches and recycles
+    //  previously used instances of IDDeepNodeList
+    //
+    IDOM_NodeList *getDeepNodeList(const IDOM_Node *rootNode, const XMLCh *tagName);
+    IDOM_NodeList *getDeepNodeList(const IDOM_Node *rootNode,	//DOM Level 2
+			                            const XMLCh *namespaceURI,
+                                     const XMLCh *localName);
+
+private:
+    IDDeepNodeListPool<IDDeepNodeListImpl> *fNodeListPool;
 };
 
 //

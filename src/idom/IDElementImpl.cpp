@@ -164,7 +164,8 @@ IDOM_NamedNodeMap *IDElementImpl::getAttributes() const
 
 IDOM_NodeList *IDElementImpl::getElementsByTagName(const XMLCh *tagname) const
 {
-    return IDDeepNodeListImpl::getDeepNodeList(this,tagname);
+    IDDocumentImpl *docImpl = (IDDocumentImpl *)getOwnerDocument();
+    return docImpl->getDeepNodeList(this,tagname);
 };
 
 
@@ -329,7 +330,8 @@ IDOM_Attr *IDElementImpl::setAttributeNodeNS(IDOM_Attr *newAttr)
 IDOM_NodeList *IDElementImpl::getElementsByTagNameNS(const XMLCh *namespaceURI,
 	const XMLCh *localName) const
 {
-    return IDDeepNodeListImpl::getDeepNodeList(this, namespaceURI, localName);
+    IDDocumentImpl *docImpl = (IDDocumentImpl *)getOwnerDocument();;
+    return docImpl->getDeepNodeList(this, namespaceURI, localName);
 }
 
 // DOM_NamedNodeMap UTILITIES

@@ -122,6 +122,7 @@ IDDocumentImpl::IDDocumentImpl()
     fUserData    = 0;
     fRanges      = 0;
     fChanges     = 0;
+    fNodeListPool = 0;
 };
 
 
@@ -145,6 +146,7 @@ IDDocumentImpl::IDDocumentImpl(const XMLCh *fNamespaceURI,
     fUserData    = 0;
     fRanges      = 0;
     fChanges     = 0;
+    fNodeListPool = 0;
 }
 
 void IDDocumentImpl::setDocumentType(IDOM_DocumentType *doctype)
@@ -404,7 +406,8 @@ IDOM_Element *IDDocumentImpl::getDocumentElement() const
 
 IDOM_NodeList *IDDocumentImpl::getElementsByTagName(const XMLCh *tagname) const
 {
-    return IDDeepNodeListImpl::getDeepNodeList(this,tagname);
+    // cast off the const of this because we will update the fNodeListPool
+    return ((IDDocumentImpl*)this)->getDeepNodeList(this,tagname);
 };
 
 
@@ -635,7 +638,8 @@ IDOM_Attr *IDDocumentImpl::createAttributeNS(const XMLCh *fNamespaceURI,
 IDOM_NodeList *IDDocumentImpl::getElementsByTagNameNS(const XMLCh *fNamespaceURI,
 	const XMLCh *fLocalName)  const
 {
-    return IDDeepNodeListImpl::getDeepNodeList(this, fNamespaceURI, fLocalName);
+    // cast off the const of this because we will update the fNodeListPool
+    return ((IDDocumentImpl*)this)->getDeepNodeList(this, fNamespaceURI, fLocalName);
 }
 
 
@@ -933,3 +937,38 @@ void    IDDocumentImpl::deleteHeap()
     }
 
 }
+
+IDOM_NodeList *IDDocumentImpl::getDeepNodeList(const IDOM_Node *rootNode, const XMLCh *tagName)
+{
+    if(!fNodeListPool) {
+        fNodeListPool = new IDDeepNodeListPool<IDDeepNodeListImpl>(109, false);
+    }
+
+    IDDeepNodeListImpl* retList = fNodeListPool->getByKey(rootNode, tagName, 0);
+    if (!retList) {
+        int id = fNodeListPool->put((void*) rootNode, (XMLCh*) tagName, 0, new (this) IDDeepNodeListImpl(rootNode, tagName));
+        retList = fNodeListPool->getById(id);
+    }
+
+    return retList;
+}
+
+
+IDOM_NodeList *IDDocumentImpl::getDeepNodeList(const IDOM_Node *rootNode,     //DOM Level 2
+                                                   const XMLCh *namespaceURI,
+                                                   const XMLCh *localName)
+{
+    if(!fNodeListPool) {
+        fNodeListPool = new (this) IDDeepNodeListPool<IDDeepNodeListImpl>(109, false);
+    }
+
+    IDDeepNodeListImpl* retList = fNodeListPool->getByKey(rootNode, localName, namespaceURI);
+    if (!retList) {
+        // the pool will adopt the IDDeepNodeListImpl
+        int id = fNodeListPool->put((void*) rootNode, (XMLCh*) localName, (XMLCh*) namespaceURI, new (this) IDDeepNodeListImpl(rootNode, namespaceURI, localName));
+        retList = fNodeListPool->getById(id);
+    }
+
+    return retList;
+}
+

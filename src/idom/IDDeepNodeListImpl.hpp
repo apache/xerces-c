@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/10/03 15:49:01  tng
+ * [Bug 3867] IDOM_Element::getElementsByTagName() threading problem.
+ *
  * Revision 1.3  2001/06/04 14:55:32  tng
  * IDOM: Add IRange and IDeepNodeList Support.
  *
@@ -80,7 +83,6 @@
 //
 
 #include <util/XercesDefs.hpp>
-#include "IDDeepNodeListPool.hpp"
 #include "IDOM_NodeList.hpp"
 
 class IDOM_Node;
@@ -100,30 +102,17 @@ private:
     bool		            fMatchAllURI;
     bool                fMatchURIandTagname; //match both namespaceURI and tagName
 
-private:
+public:
     IDDeepNodeListImpl(const IDOM_Node *rootNode, const XMLCh *tagName);
     IDDeepNodeListImpl(const IDOM_Node *rootNode,	//DOM Level 2
 	                    const XMLCh *namespaceURI,
                        const XMLCh *localName);
-    IDOM_Node *        nextMatchingElementAfter(IDOM_Node *current);
-
-public:
-    // Factory methods for getting/creating node lists.
-    // Because nothing is ever deleted, the implementation caches and recycles
-    //  previously used instances of IDDeepNodeList
-    //
-    static IDOM_NodeList *getDeepNodeList(const IDOM_Node *rootNode, const XMLCh *tagName);
-    static IDOM_NodeList *getDeepNodeList(const IDOM_Node *rootNode,	//DOM Level 2
-			                            const XMLCh *namespaceURI,
-                                     const XMLCh *localName);
-
-private:
-    static IDDeepNodeListPool<IDDeepNodeListImpl> *fNodeListPool;
-
-public:
     virtual             ~IDDeepNodeListImpl();
     virtual unsigned int getLength();
     virtual IDOM_Node   *item(unsigned int index);
+
+private:
+    IDOM_Node *        nextMatchingElementAfter(IDOM_Node *current);
 };
 
 #endif
