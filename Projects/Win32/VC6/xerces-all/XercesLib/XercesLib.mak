@@ -27,6 +27,10 @@ NULL=
 NULL=nul
 !ENDIF 
 
+CPP=$(CPP)
+MTL=midl.exe
+RSC=rc.exe
+
 !IF  "$(CFG)" == "XercesLib - Win32 Release"
 
 OUTDIR=.\..\..\..\..\..\Build\Win32\VC6\Release
@@ -302,12 +306,14 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLDateTime.obj"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
 	-@erase "$(INTDIR)\XMLDouble.obj"
+	-@erase "$(INTDIR)\XMLDTDDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLEBCDICTranscoder.obj"
 	-@erase "$(INTDIR)\XMLElementDecl.obj"
 	-@erase "$(INTDIR)\XMLEntityDecl.obj"
 	-@erase "$(INTDIR)\XMLException.obj"
 	-@erase "$(INTDIR)\XMLFloat.obj"
 	-@erase "$(INTDIR)\XMLFormatter.obj"
+	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
@@ -317,6 +323,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
+	-@erase "$(INTDIR)\XMLSchemaDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
 	-@erase "$(INTDIR)\XMLUCSTranscoder.obj"
@@ -349,42 +356,8 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=$(CPP)
 CPP_PROJ=/G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-MTL=midl.exe
 MTL_PROJ=/D "NDEBUG" /mktyplib203 /o "NUL" /win32 
-RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc" 
@@ -498,6 +471,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
+	"$(INTDIR)\XMLGrammarPoolImpl.obj" \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
@@ -559,6 +533,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DTDGrammar.obj" \
 	"$(INTDIR)\DTDScanner.obj" \
 	"$(INTDIR)\DTDValidator.obj" \
+	"$(INTDIR)\XMLDTDDescriptionImpl.obj" \
 	"$(INTDIR)\FieldActivator.obj" \
 	"$(INTDIR)\FieldValueMap.obj" \
 	"$(INTDIR)\IC_Field.obj" \
@@ -588,6 +563,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XercesAttGroupInfo.obj" \
 	"$(INTDIR)\XercesElementWildcard.obj" \
 	"$(INTDIR)\XercesGroupInfo.obj" \
+	"$(INTDIR)\XMLSchemaDescriptionImpl.obj" \
 	"$(INTDIR)\XSDDOMParser.obj" \
 	"$(INTDIR)\XSDErrorReporter.obj" \
 	"$(INTDIR)\XSDLocator.obj" \
@@ -790,7 +766,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMCharacterDataImpl.obj"
 	-@erase "$(INTDIR)\DOMChildNode.obj"
 	-@erase "$(INTDIR)\DOMCommentImpl.obj"
-	-@erase "$(INTDIR)\DOMConfigurationImpl.obj" 
+	-@erase "$(INTDIR)\DOMConfigurationImpl.obj"
 	-@erase "$(INTDIR)\DOMDeepNodeListImpl.obj"
 	-@erase "$(INTDIR)\DOMDocumentFragmentImpl.obj"
 	-@erase "$(INTDIR)\DOMDocumentImpl.obj"
@@ -973,12 +949,14 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLDateTime.obj"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
 	-@erase "$(INTDIR)\XMLDouble.obj"
+	-@erase "$(INTDIR)\XMLDTDDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLEBCDICTranscoder.obj"
 	-@erase "$(INTDIR)\XMLElementDecl.obj"
 	-@erase "$(INTDIR)\XMLEntityDecl.obj"
 	-@erase "$(INTDIR)\XMLException.obj"
 	-@erase "$(INTDIR)\XMLFloat.obj"
 	-@erase "$(INTDIR)\XMLFormatter.obj"
+	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
@@ -988,6 +966,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
+	-@erase "$(INTDIR)\XMLSchemaDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
 	-@erase "$(INTDIR)\XMLUCSTranscoder.obj"
@@ -1021,42 +1000,8 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=$(CPP)
 CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-MTL=midl.exe
 MTL_PROJ=/D "_DEBUG" /mktyplib203 /o "NUL" /win32 
-RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc" 
@@ -1170,6 +1115,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
+	"$(INTDIR)\XMLGrammarPoolImpl.obj" \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
@@ -1231,6 +1177,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DTDGrammar.obj" \
 	"$(INTDIR)\DTDScanner.obj" \
 	"$(INTDIR)\DTDValidator.obj" \
+	"$(INTDIR)\XMLDTDDescriptionImpl.obj" \
 	"$(INTDIR)\FieldActivator.obj" \
 	"$(INTDIR)\FieldValueMap.obj" \
 	"$(INTDIR)\IC_Field.obj" \
@@ -1260,6 +1207,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XercesAttGroupInfo.obj" \
 	"$(INTDIR)\XercesElementWildcard.obj" \
 	"$(INTDIR)\XercesGroupInfo.obj" \
+	"$(INTDIR)\XMLSchemaDescriptionImpl.obj" \
 	"$(INTDIR)\XSDDOMParser.obj" \
 	"$(INTDIR)\XSDErrorReporter.obj" \
 	"$(INTDIR)\XSDLocator.obj" \
@@ -1645,12 +1593,14 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLDateTime.obj"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
 	-@erase "$(INTDIR)\XMLDouble.obj"
+	-@erase "$(INTDIR)\XMLDTDDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLEBCDICTranscoder.obj"
 	-@erase "$(INTDIR)\XMLElementDecl.obj"
 	-@erase "$(INTDIR)\XMLEntityDecl.obj"
 	-@erase "$(INTDIR)\XMLException.obj"
 	-@erase "$(INTDIR)\XMLFloat.obj"
 	-@erase "$(INTDIR)\XMLFormatter.obj"
+	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
@@ -1660,6 +1610,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
+	-@erase "$(INTDIR)\XMLSchemaDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
 	-@erase "$(INTDIR)\XMLUCSTranscoder.obj"
@@ -1693,42 +1644,8 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=$(CPP)
 CPP_PROJ=/MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-MTL=midl.exe
 MTL_PROJ=/D "_DEBUG" /mktyplib203 /o "NUL" /win32 
-RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc" 
@@ -1842,6 +1759,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
+	"$(INTDIR)\XMLGrammarPoolImpl.obj" \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
@@ -1903,6 +1821,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DTDGrammar.obj" \
 	"$(INTDIR)\DTDScanner.obj" \
 	"$(INTDIR)\DTDValidator.obj" \
+	"$(INTDIR)\XMLDTDDescriptionImpl.obj" \
 	"$(INTDIR)\FieldActivator.obj" \
 	"$(INTDIR)\FieldValueMap.obj" \
 	"$(INTDIR)\IC_Field.obj" \
@@ -1932,6 +1851,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XercesAttGroupInfo.obj" \
 	"$(INTDIR)\XercesElementWildcard.obj" \
 	"$(INTDIR)\XercesGroupInfo.obj" \
+	"$(INTDIR)\XMLSchemaDescriptionImpl.obj" \
 	"$(INTDIR)\XSDDOMParser.obj" \
 	"$(INTDIR)\XSDErrorReporter.obj" \
 	"$(INTDIR)\XSDLocator.obj" \
@@ -2155,7 +2075,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMNodeIteratorImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeListImpl.obj"
 	-@erase "$(INTDIR)\DOMNodeVector.obj"
-	-@erase "$(INTDIR)\DOMNormalizer.obj"	
+	-@erase "$(INTDIR)\DOMNormalizer.obj"
 	-@erase "$(INTDIR)\DOMNotationImpl.obj"
 	-@erase "$(INTDIR)\DOMParentNode.obj"
 	-@erase "$(INTDIR)\DOMParser.obj"
@@ -2316,12 +2236,14 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLDateTime.obj"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
 	-@erase "$(INTDIR)\XMLDouble.obj"
+	-@erase "$(INTDIR)\XMLDTDDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLEBCDICTranscoder.obj"
 	-@erase "$(INTDIR)\XMLElementDecl.obj"
 	-@erase "$(INTDIR)\XMLEntityDecl.obj"
 	-@erase "$(INTDIR)\XMLException.obj"
 	-@erase "$(INTDIR)\XMLFloat.obj"
 	-@erase "$(INTDIR)\XMLFormatter.obj"
+	-@erase "$(INTDIR)\XMLGrammarPoolImpl.obj"
 	-@erase "$(INTDIR)\XMLIBM1140Transcoder.obj"
 	-@erase "$(INTDIR)\XMLMsgLoader.obj"
 	-@erase "$(INTDIR)\XMLNotationDecl.obj"
@@ -2331,6 +2253,7 @@ CLEAN :
 	-@erase "$(INTDIR)\XMLRecognizer.obj"
 	-@erase "$(INTDIR)\XMLScanner.obj"
 	-@erase "$(INTDIR)\XMLScannerResolver.obj"
+	-@erase "$(INTDIR)\XMLSchemaDescriptionImpl.obj"
 	-@erase "$(INTDIR)\XMLString.obj"
 	-@erase "$(INTDIR)\XMLStringTokenizer.obj"
 	-@erase "$(INTDIR)\XMLUCSTranscoder.obj"
@@ -2364,42 +2287,8 @@ CLEAN :
 "$(INTDIR)" :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
-CPP=$(CPP)
 CPP_PROJ=/MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-MTL=midl.exe
 MTL_PROJ=/D "NDEBUG" /mktyplib203 /o "NUL" /win32 
-RSC=rc.exe
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/o"$(OUTDIR)\XercesLib.bsc" 
@@ -2513,6 +2402,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\VecAttributesImpl.obj" \
 	"$(INTDIR)\VecAttrListImpl.obj" \
 	"$(INTDIR)\WFXMLScanner.obj" \
+	"$(INTDIR)\XMLGrammarPoolImpl.obj" \
 	"$(INTDIR)\XMLReader.obj" \
 	"$(INTDIR)\XMLScanner.obj" \
 	"$(INTDIR)\XMLScannerResolver.obj" \
@@ -2574,6 +2464,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DTDGrammar.obj" \
 	"$(INTDIR)\DTDScanner.obj" \
 	"$(INTDIR)\DTDValidator.obj" \
+	"$(INTDIR)\XMLDTDDescriptionImpl.obj" \
 	"$(INTDIR)\FieldActivator.obj" \
 	"$(INTDIR)\FieldValueMap.obj" \
 	"$(INTDIR)\IC_Field.obj" \
@@ -2603,6 +2494,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XercesAttGroupInfo.obj" \
 	"$(INTDIR)\XercesElementWildcard.obj" \
 	"$(INTDIR)\XercesGroupInfo.obj" \
+	"$(INTDIR)\XMLSchemaDescriptionImpl.obj" \
 	"$(INTDIR)\XSDDOMParser.obj" \
 	"$(INTDIR)\XSDErrorReporter.obj" \
 	"$(INTDIR)\XSDLocator.obj" \
@@ -2713,6 +2605,36 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -3545,6 +3467,12 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\WFXMLScanner.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLGrammarPoolImpl.cpp
+
+"$(INTDIR)\XMLGrammarPoolImpl.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\XMLReader.cpp
 
 "$(INTDIR)\XMLReader.obj" : $(SOURCE) "$(INTDIR)"
@@ -3911,6 +3839,12 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDValidator.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\XMLDTDDescriptionImpl.cpp
+
+"$(INTDIR)\XMLDTDDescriptionImpl.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\FieldActivator.cpp
 
 "$(INTDIR)\FieldActivator.obj" : $(SOURCE) "$(INTDIR)"
@@ -4085,6 +4019,12 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesGroupInfo.cpp
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XMLSchemaDescriptionImpl.cpp
+
+"$(INTDIR)\XMLSchemaDescriptionImpl.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
 SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XSDDOMParser.cpp
 
 "$(INTDIR)\XSDDOMParser.obj" : $(SOURCE) "$(INTDIR)"
@@ -4155,6 +4095,7 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMCommentImpl.cpp
 
 "$(INTDIR)\DOMCommentImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
+
 
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMConfigurationImpl.cpp
 
@@ -4274,7 +4215,8 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNormalizer.cpp
 
 "$(INTDIR)\DOMNormalizer.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
-	
+
+
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMNotationImpl.cpp
 
 "$(INTDIR)\DOMNotationImpl.obj" : $(SOURCE) "$(INTDIR)"
