@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/09/23 18:16:07  peiyongz
+ * Inplementation for Serialization/Deserialization
+ *
  * Revision 1.10  2003/08/14 02:57:27  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -352,6 +355,63 @@ int XMLBigDecimal::toCompare(const XMLBigDecimal& other) const
             return -1 * lSign;
         else
             return 0;
+    }
+
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XMLBigDecimal)
+
+XMLBigDecimal::XMLBigDecimal(MemoryManager* const manager)
+: fSign(0)
+, fTotalDigits(0)
+, fScale(0)
+, fRawDataLen(0)
+, fRawData(0)
+, fIntVal(0)
+, fMemoryManager(manager)
+{
+}
+
+void XMLBigDecimal::serialize(XSerializeEngine& serEng)
+{
+    //REVISIT: may not need to call base since it does nothing
+    XMLNumber::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        serEng<<fSign;
+        serEng<<fTotalDigits;
+        serEng<<fScale;
+        serEng<<fRawDataLen;
+
+        serEng.write(fRawData, fRawDataLen);
+
+        int intValLen = XMLString::stringLen(fIntVal);
+        serEng<<intValLen;
+
+        serEng.write(fIntVal, intValLen);
+
+    }
+    else
+    {
+        serEng>>fSign;
+        serEng>>fTotalDigits;
+        serEng>>fScale;
+        serEng>>fRawDataLen;
+
+        fRawData = (XMLCh*) fMemoryManager->allocate(fRawDataLen+1);
+        serEng.read(fRawData, fRawDataLen);
+        fRawData[fRawDataLen] = 0;
+
+        int intValLen = 0;
+        serEng>>intValLen;
+        fIntVal = (XMLCh*) fMemoryManager->allocate(intValLen+1);
+        serEng.read(fIntVal, intValLen);
+        fIntVal[intValLen] = 0;
     }
 
 }

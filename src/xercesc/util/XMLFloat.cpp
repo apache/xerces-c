@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/09/23 18:16:07  peiyongz
+ * Inplementation for Serialization/Deserialization
+ *
  * Revision 1.11  2003/05/16 06:01:53  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -235,6 +238,22 @@ void XMLFloat::checkBoundary(const XMLCh* const strValue)
             fDataConverted = true;
         }
     }
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XMLFloat)
+
+XMLFloat::XMLFloat(MemoryManager* const manager)
+:XMLAbstractDoubleFloat(manager)
+{
+}
+
+void XMLFloat::serialize(XSerializeEngine& serEng)
+{
+    XMLAbstractDoubleFloat::serialize(serEng);
 }
 
 XERCES_CPP_NAMESPACE_END

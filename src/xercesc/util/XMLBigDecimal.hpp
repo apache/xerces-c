@@ -128,6 +128,13 @@ public:
      */
     void setDecimalValue(const XMLCh* const strValue);
 
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLBigDecimal)
+
+    XMLBigDecimal(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
 private:
     void  parseBigDecimal( const XMLCh* const strValue
                          , unsigned int       strValueLen);

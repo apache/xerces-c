@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/09/23 18:16:07  peiyongz
+ * Inplementation for Serialization/Deserialization
+ *
  * Revision 1.13  2003/05/18 14:02:05  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -178,6 +181,11 @@ public:
     virtual int           getSign() const;
 
     MemoryManager*        getMemoryManager() const;
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLAbstractDoubleFloat)
 
 protected:
 

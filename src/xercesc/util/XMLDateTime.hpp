@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/09/23 18:16:07  peiyongz
+ * Inplementation for Serialization/Deserialization
+ *
  * Revision 1.9  2003/08/14 02:57:27  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -204,6 +207,11 @@ public:
 
     static int            compareOrder(const XMLDateTime* const
                                      , const XMLDateTime* const);
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLDateTime)
 
 private:
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/09/23 18:16:07  peiyongz
+ * Inplementation for Serialization/Deserialization
+ *
  * Revision 1.7  2003/05/15 19:07:46  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -89,11 +92,12 @@
 #ifndef XMLNUMBER_HPP
 #define XMLNUMBER_HPP
 
+#include <xercesc/internal/XSerializable.hpp>
 #include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLUTIL_EXPORT XMLNumber : public XMemory
+class XMLUTIL_EXPORT XMLNumber : public XSerializable, public XMemory
 {
 public:
 
@@ -144,6 +148,11 @@ public:
 	 *
 	 */
     virtual int        getSign() const = 0;
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLNumber)
 
 protected:
 

@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2003/09/23 18:16:07  peiyongz
+ * Inplementation for Serialization/Deserialization
+ *
  * Revision 1.5  2003/05/16 06:01:53  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -138,6 +141,13 @@ public:
 
     inline static int            compareValues(const XMLFloat* const lValue
                                              , const XMLFloat* const rValue);
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(XMLFloat)
+
+    XMLFloat(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
 protected:
 

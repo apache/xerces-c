@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/09/23 18:16:07  peiyongz
+ * Inplementation for Serialization/Deserialization
+ *
  * Revision 1.13  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -423,5 +426,54 @@ void XMLAbstractDoubleFloat::normalizeZero(XMLCh* const inData)
 
     return;
 } 
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_NOCREATE(XMLAbstractDoubleFloat)
+
+void XMLAbstractDoubleFloat::serialize(XSerializeEngine& serEng)
+{
+    //REVISIT: may not need to call base since it does nothing
+    XMLNumber::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        serEng << fValue;
+        serEng << fType;
+        serEng << fDataConverted;
+        serEng << fSign;
+
+        int rawDataLen = XMLString::stringLen(fRawData);
+        serEng << rawDataLen;
+        serEng.write(fRawData, rawDataLen);
+
+        // Do not serialize fFormattedString
+
+    }
+    else
+    {
+        serEng >> fValue;
+
+        int type = 0;
+        serEng >> type;
+        fType = (LiteralType) type;
+
+        serEng >> fDataConverted;
+        serEng >> fSign;
+
+        int rawDataLen = 0;
+        serEng >> rawDataLen;
+        fRawData = (XMLCh*) fMemoryManager->allocate(rawDataLen+1);
+        serEng.read(fRawData, rawDataLen);
+        fRawData[rawDataLen] = 0;
+
+        // Set it to 0 force it to re-format if needed
+        fFormattedString = 0;
+
+    }
+
+}
 
 XERCES_CPP_NAMESPACE_END

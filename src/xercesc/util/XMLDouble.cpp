@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/09/23 18:16:07  peiyongz
+ * Inplementation for Serialization/Deserialization
+ *
  * Revision 1.10  2003/05/16 06:01:53  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -216,6 +219,22 @@ void XMLDouble::checkBoundary(const XMLCh* const strValue)
 
     }
 
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XMLDouble)
+
+XMLDouble::XMLDouble(MemoryManager* const manager)
+:XMLAbstractDoubleFloat(manager)
+{
+}
+
+void XMLDouble::serialize(XSerializeEngine& serEng)
+{
+    XMLAbstractDoubleFloat::serialize(serEng);
 }
 
 XERCES_CPP_NAMESPACE_END

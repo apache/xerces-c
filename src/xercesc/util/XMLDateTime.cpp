@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/09/23 18:16:07  peiyongz
+ * Inplementation for Serialization/Deserialization
+ *
  * Revision 1.13  2003/08/14 02:57:27  knoaman
  * Code refactoring to improve performance of validation.
  *
@@ -1429,6 +1432,63 @@ int XMLDateTime::parseIntYear(const int end) const
     bool negative = (fBuffer[0] == chDash);
     int  yearVal = parseInt((negative ? 1 : 0), end);
     return ( negative ? (-1) * yearVal : yearVal );
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(XMLDateTime)
+
+void XMLDateTime::serialize(XSerializeEngine& serEng)
+{
+    //REVISIT: may not need to call base since it does nothing
+    XMLNumber::serialize(serEng);
+
+    if (serEng.isStoring())
+    {
+        for (int i = 0; i < TOTAL_SIZE; i++)
+        {
+            serEng<<fValue[i];
+        }
+
+        for (int i = 0; i < TIMEZONE_ARRAYSIZE; i++)
+        {
+            serEng<<fTimeZone[i];
+        }
+
+        serEng<<fStart;
+        serEng<<fEnd;
+        serEng<<fBufferMaxLen;
+
+        int bufferLen = XMLString::stringLen(fBuffer);
+        serEng<<bufferLen;
+        serEng.write(fBuffer, bufferLen);
+    }
+    else
+    {
+        for (int i = 0; i < TOTAL_SIZE; i++)
+        {
+            serEng>>fValue[i];
+        }
+
+        for (int i = 0; i < TIMEZONE_ARRAYSIZE; i++)
+        {
+            serEng>>fTimeZone[i];
+        }
+
+        serEng>>fStart;
+        serEng>>fEnd;
+        serEng>>fBufferMaxLen;
+
+        fBuffer = (XMLCh*) fMemoryManager->allocate(fBufferMaxLen+1);
+
+        int bufferLen = 0;
+        serEng>>bufferLen;
+        serEng.read(fBuffer, bufferLen);
+        fBuffer[bufferLen] = 0;
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END
