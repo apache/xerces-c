@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2003/12/17 00:01:44  peiyongz
+ * getSize()
+ *
  * Revision 1.1  2003/12/16 16:56:51  peiyongz
  * BinMemOutputStream
  *
@@ -124,6 +127,11 @@ void BinMemOutputStream::reset()
 }
 
 unsigned int BinMemOutputStream::curPos() const
+{
+    return fIndex;
+}
+
+unsigned int BinMemOutputStream::getSize() const
 {
     return fIndex;
 }
