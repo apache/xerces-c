@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/06/03 22:34:53  peiyongz
+ * DOMWriterFilter: setter provided, and allows any SHOW setting
+ *
  * Revision 1.1  2002/05/28 22:38:55  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
@@ -64,30 +67,4 @@
 
 #include <xercesc/dom/DOMWriterFilter.hpp>
 
-//
-// An inplementation (derived class) may allow any node type 
-// to be shown to it, but as the specs says, certain node types 
-// shall NEVER be shown to DOMWriterFilter.
-//
-static const unsigned long NOT_TO_SHOW_NODES = 
-~(DOMNodeFilter::SHOW_ATTRIBUTE          |     
-  DOMNodeFilter::SHOW_ENTITY             |      
-  DOMNodeFilter::SHOW_DOCUMENT           |      
-  DOMNodeFilter::SHOW_DOCUMENT_TYPE      |      
-  DOMNodeFilter::SHOW_DOCUMENT_FRAGMENT  |      
-  DOMNodeFilter::SHOW_NOTATION
-);
-
-//
-// We ensure that any of the above mentioned node type is not
-// in the whatToShow.
-//
-DOMWriterFilter::DOMWriterFilter(unsigned long toShowMask)
-:fWhatToShow(toShowMask & NOT_TO_SHOW_NODES)
-{}
-
-bool DOMWriterFilter::showNode(const DOMNode *const node) const
-{
-   return ((fWhatToShow & (1 << (node->getNodeType() - 1))) != 0);  
-}
 

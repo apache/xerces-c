@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/06/03 22:34:53  peiyongz
+ * DOMWriterFilter: setter provided, and allows any SHOW setting
+ *
  * Revision 1.3  2002/05/31 20:59:40  peiyongz
  * Add "introduced in DOM3"
  *
@@ -76,8 +79,9 @@
 //////////////////////////////////////////////////////////////////////
 // DOMWriterFilter.hpp: interface for the DOMWriterFilter class.
 //
-// DOMWriterFilters provide applications the ability to examine nodes
+// DOMWriterFilter provide applications the ability to examine nodes
 // as they are being serialized.
+//
 // DOMWriterFilter lets the application decide what nodes should be
 // serialized or not.
 //
@@ -99,22 +103,28 @@ public:
 	virtual ~DOMWriterFilter(){};
     //@}
 
-	/** @ interface from DOMNodeFilter,
-	      to be implemented by implementation (derived class) */
+	/** @ Interface from DOMNodeFilter, 
+	 *    to be implemented by implementation (derived class) 
+	 */
     //@{
 	virtual short acceptNode(const DOMNode* node) const = 0;
     //@}
 
-	/** @Query */
+	/** @ Getter and Settter
+	 *
+     *  <p><b>"Experimental - subject to change"</b></p>
+	 */
     //@{
-	bool   showNode(const DOMNode* const) const;
+	unsigned long getWhatToShow() const {return fWhatToShow;};
+
+	void          setWhatToShow(unsigned long toShow) {fWhatToShow = toShow;};
     //@}
 
 protected:
-
     /** @name Constructors */
     //@{
-	DOMWriterFilter(unsigned long toShowMask = DOMNodeFilter::SHOW_ALL);
+	DOMWriterFilter(unsigned long whatToShow = DOMNodeFilter::SHOW_ALL)
+		:fWhatToShow(whatToShow){};
     //@}
 
 private:
@@ -122,22 +132,27 @@ private:
 	DOMWriterFilter(const DOMWriterFilter&);
 	DOMWriterFilter & operator = (const DOMWriterFilter&);
 
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+	//  fWhatToShow
+	//      
+	//      The whatToShow mask.
+    //      Tells the DOMWriter what types of nodes to show to the filter.
+	//      See NodeFilter for definition of the constants.
+	//      The constants
+	//      SHOW_ATTRIBUTE,
+	//      SHOW_DOCUMENT,
+	//      SHOW_DOCUMENT_TYPE,
+	//      SHOW_NOTATION, and
+	//      SHOW_DOCUMENT_FRAGMENT are meaningless here,
+	//      Entity nodes are not passed to the filter.
+    //
+	//      Those nodes will never be passed to a DOMWriterFilter.
 	//
-	// The whatToShow mask.
-	//
-    // Tells the DOMWriter what types of nodes to show to the filter.
-	// See NodeFilter for definition of the constants.
-	// The constants
-	// SHOW_ATTRIBUTE,
-	// SHOW_DOCUMENT,
-	// SHOW_DOCUMENT_TYPE,
-	// SHOW_NOTATION, and
-	// SHOW_DOCUMENT_FRAGMENT are meaningless here,
-	// those nodes will never be passed to a DOMWriterFilter.
-	//
-	// Entity nodes are not passed to the filter.
+    // -----------------------------------------------------------------------
+	unsigned long fWhatToShow;   
 
-	const unsigned long fWhatToShow;
 };
 
 #endif
