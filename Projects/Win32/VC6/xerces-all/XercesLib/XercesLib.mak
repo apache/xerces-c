@@ -120,6 +120,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMCharacterDataImpl.obj"
 	-@erase "$(INTDIR)\DOMChildNode.obj"
 	-@erase "$(INTDIR)\DOMCommentImpl.obj"
+	-@erase "$(INTDIR)\DOMConfigurationImpl.obj"
 	-@erase "$(INTDIR)\DOMDeepNodeListImpl.obj"
 	-@erase "$(INTDIR)\DOMDocumentFragmentImpl.obj"
 	-@erase "$(INTDIR)\DOMDocumentImpl.obj"
@@ -1260,6 +1261,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMCharacterDataImpl.obj" \
 	"$(INTDIR)\DOMChildNode.obj" \
 	"$(INTDIR)\DOMCommentImpl.obj" \
+	"$(INTDIR)\DOMConfigurationImpl.obj" \
 	"$(INTDIR)\DOMDeepNodeListImpl.obj" \
 	"$(INTDIR)\DOMDocumentFragmentImpl.obj" \
 	"$(INTDIR)\DOMDocumentImpl.obj" \
@@ -1448,6 +1450,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMCharacterDataImpl.obj"
 	-@erase "$(INTDIR)\DOMChildNode.obj"
 	-@erase "$(INTDIR)\DOMCommentImpl.obj"
+	-@erase "$(INTDIR)\DOMConfigurationImpl.obj"
 	-@erase "$(INTDIR)\DOMDeepNodeListImpl.obj"
 	-@erase "$(INTDIR)\DOMDocumentFragmentImpl.obj"
 	-@erase "$(INTDIR)\DOMDocumentImpl.obj"
@@ -1924,6 +1927,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMCharacterDataImpl.obj" \
 	"$(INTDIR)\DOMChildNode.obj" \
 	"$(INTDIR)\DOMCommentImpl.obj" \
+	"$(INTDIR)\DOMConfigurationImpl.obj" \
 	"$(INTDIR)\DOMDeepNodeListImpl.obj" \
 	"$(INTDIR)\DOMDocumentFragmentImpl.obj" \
 	"$(INTDIR)\DOMDocumentImpl.obj" \
@@ -2112,6 +2116,7 @@ CLEAN :
 	-@erase "$(INTDIR)\DOMCharacterDataImpl.obj"
 	-@erase "$(INTDIR)\DOMChildNode.obj"
 	-@erase "$(INTDIR)\DOMCommentImpl.obj"
+	-@erase "$(INTDIR)\DOMConfigurationImpl.obj"
 	-@erase "$(INTDIR)\DOMDeepNodeListImpl.obj"
 	-@erase "$(INTDIR)\DOMDocumentFragmentImpl.obj"
 	-@erase "$(INTDIR)\DOMDocumentImpl.obj"
@@ -2587,6 +2592,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\DOMCharacterDataImpl.obj" \
 	"$(INTDIR)\DOMChildNode.obj" \
 	"$(INTDIR)\DOMCommentImpl.obj" \
+	"$(INTDIR)\DOMConfigurationImpl.obj" \
 	"$(INTDIR)\DOMDeepNodeListImpl.obj" \
 	"$(INTDIR)\DOMDocumentFragmentImpl.obj" \
 	"$(INTDIR)\DOMDocumentImpl.obj" \
@@ -4112,6 +4118,11 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMChildNode.cpp
 SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMCommentImpl.cpp
 
 "$(INTDIR)\DOMCommentImpl.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\impl\DOMConfigurationImpl.cpp
+
+"$(INTDIR)\DOMConfigurationImpl.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
