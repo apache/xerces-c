@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/10/19 11:09:11  cargilld
+ * More fixes to derviedFromType.
+ *
  * Revision 1.10  2004/10/15 21:32:54  cargilld
  * Fix similar problem to that in jira bug 1234.  Infinite loop in XSSimpleTypeDefinition::derviedFromType.
  *
@@ -231,10 +234,20 @@ bool XSSimpleTypeDefinition::derivedFromType(const XSTypeDefinition * const ance
     if (!ancestorType)
         return false;
 
-    if (ancestorType->getTypeCategory() == XSTypeDefinition::COMPLEX_TYPE)
-        return false;
+    XSTypeDefinition* type;   
 
-    XSTypeDefinition* type = this;
+    if (ancestorType->getTypeCategory() == XSTypeDefinition::COMPLEX_TYPE)
+    {
+        type = (XSTypeDefinition*) ancestorType;
+        if (ancestorType == type->getBaseType())
+        {
+            // ancestor is anytype
+            return true;
+        }
+        return false;
+    }
+
+    type = this;
     XSTypeDefinition* lastType = 0;  // anysimple type has a base type of anytype
                                      // anytype has a basetype of anytype so will have infinite loop...
 
