@@ -84,13 +84,13 @@
 						Gareth<br />
 						Alberto [VMWare (Red Hat 9, Red Hat 7.3) and I can add more]<br />
 						Scott Cantor [test]<br />
-						David [w/ xlC]
+						cargilld [w/ xlC]
 					</li>
 					<li>Solaris - Scott Cantor [test]</li>
 					<li>Cygwin - Neil</li>
 					<li>MingGW - Alberto</li>
-					<li>AIX - David</li>
-					<li>OS390 - David</li>
+					<li>AIX - cargilld</li>
+					<li>OS390 - cargilld</li>
 				<ol>
 			</td>
 		</tr>
@@ -149,13 +149,13 @@
 		<tr>
 			<td>11</td>
 			<td>Audit/Update of XML Schema support.</td>
-			<td>David</td>
+			<td>cargilld</td>
 		</tr>
 		
 		<tr>
 			<td>12</td>
 			<td>Const signature changes. [783, 1153, 1223]</td>
-			<td>David</td>
+			<td>cargilld</td>
 		</tr>
 
 		<tr>
@@ -209,7 +209,7 @@
 		<tr>
 			<td>26</td>
 			<td>Audit/Potential removal of all deprecated methods</td>
-			<td>David</td>
+			<td>cargilld</td>
 		</tr>
 																																	 
 	</table>
