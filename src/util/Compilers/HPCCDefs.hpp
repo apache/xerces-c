@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/03/29 00:41:07  aruna1
+ * Modified bool warnings for HP CC
+ *
  * Revision 1.9  2000/03/02 19:55:08  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -106,7 +109,15 @@
 // Indicate that we do not support native bools
 // ---------------------------------------------------------------------------
 #if defined(XML_HPUX_CC)
-#define NO_NATIVE_BOOL
+#ifndef bool
+#define bool char
+#endif
+#ifndef true
+ #define  true     1
+#endif
+#ifndef false
+ #define false 0
+#endif
 #endif
 
 
