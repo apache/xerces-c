@@ -1,46 +1,120 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE s1 SYSTEM "./dtd/document.dtd">
 <s1 title="Schema">
-    <s2 title="Status">
-        <p>
-        Schema is not supported in Xerces-C yet.  However work is in progress to port
-        the Schema Support from Xerces-J to Xerces-C.
-        </p>
+       <s2 title="Disclaimer">
+		<p>Schema is not fully supported in Xerces-C yet.  But an
+               experimental implementation of a subset of the W3C XML
+               Schema language is now available for review in the latest
+               <jump href="http://xml.apache.org/dist/xerces-c/nightly/">
+               nightly build</jump>.  You should not consider this
+               implementation complete or correct.   The limitations of
+               this implementation are detailed below.  Please read this
+               document before using this nightly build package.
+               </p>
+       </s2>
+       <s2 title="Introduction">
+               <p>The nightly build package contains an implementation
+               of a subset of the W3C XML Schema Language as specified
+               in the 2 May 2001 Recommendation for <jump
+               href="http://www.w3.org/TR/xmlschema-1/">Structures</jump>
+               and <jump href="http://www.w3.org/TR/xmlschema-2/">
+               Datatypes</jump>. The parsers contained in this package are
+               able to read and validate XML documents with the grammar specified
+               in either DTD or XML Schema format.
+               </p>
+               <p>We intend to update this package until it implements all
+               the functionality of the current XML Schema Recommendation.
+               If you are interested in a particular unimplemented feature, or
+               if you have any feedback on the implementation design,
+               we welcome your input to the <jump href="mailto:&XercesCEmailAddress;">
+               Xerces-C mailing list &XercesCEmailAddress; </jump> .
+               </p>
+       </s2>
+       <s2 title="Limitations">
+               <p>The XML Schema implementation in the nightly build package is a
+               subset of the features defined in the 2 May 2001 XML Schema Recommendation.
+               </p>
+       </s2>
+       <s2 title='Features/Datatypes Supported'>
+               <ul>
+                       <li>Partial Simple type support </li>
+                       <ul>
+                               <li> Yes: atomic simple type </li>
+                               <li> No: union and list </li>
+                       </ul>
+                       <li>Partial Complex type suppport </li>
+                       <ul>
+                                <li> Yes: choice, sequence </li>
+                                <li> No: group, all </li>
+                       </ul>
+                       <li>Element and Attribute Declaration </li>
+                       <ul>
+                                <li> No: any/anyAttribute </li>
+                       </ul>
+                       <li>SubsitutionGroup</li>
+                       <li>Subset of Built-in Datatypes</li>
+                       <ul>
+                                <li>Primitive Datatypes: string, boolean, decimal, hexbinary, base64binary</li>
+                                <li>Derived Datatypes: integer</li>
+                       </ul>
+                       <li>xsi Markup</li>
+                       <ul>
+                                <li>Yes: xsi:nil</li>
+                                <li>Yes: xsi:schemaLocation and xsi:noNamespaceSchemaLocation</li>
+                                <li>No: xsi:type</li>
+                       </ul>
+               </ul>
+               <p>Other features in the Schema recommendation such as "include/import",
+               "identity constraints" and others which are not mentioned above, are not supported
+               yet.  But development is continue and we target to implement all the
+               features of the current XML Schema Recommendation before end of this year.
+               Please note that the date is tentative and subject to change.
+               </p>
+       </s2>
 
-        <p>
-        We will first have a Schema Subset release in the summer, and then a full
-        Schema PR (Proposed Recommendation) release in the fall.  The Schema Subset
-        release will have the following minimal Schema support:
-        </p>
-
-        <ul>
-            <li>Partial Simple Type Support (Yes: atomic simple type. No:  union and list)</li>
-            <li>Partial Complex Type Support (Yes: choice, sequence. No:   group, all)</li>
-            <li>Element and Attribute Declaration (No: any/anyAttribute)</li>
-            <li>Substitution groups</li>
-            <li>Subset of pre-defined Datatypes:</li>
-            <ul>
-                <li>Primitive datatypes: string, boolean, decimal, binary</li>
-                <li>Derived datatypes: CDATA, integer</li>
-            </ul>
-        </ul>
-
-        <p>
-        Anything not mentioned above will be available in the Schema PR release later.
-        </p>
-
-        <p>
-        Please note that the dates are tentative and subject to change.  There is a
-        dependency on the Schema PR implementation in Xerces-J which is still under
-        development, and a dependency on the status of Schema PR moving to Recommendation.
-        </p>
-
-        <p>
-        If anyone would like to volunteer to help out with the schema port, that would
-        be great.  Please post to <jump href="mailto:xerces-c-dev@xml.apache.org">
-        Xerces-C-dev mailing list</jump>.
-        </p>
-
-    </s2>
-
+       <s2 title="Other Limitations">
+               <p>The schema must be specified by the xsi:schemaLocation or
+               xsi:noNamespaceSchemaLocation attribute on the root
+               element of the document. The xsi prefix must be bound to the
+               Schema document instance namespace, as specified by the
+               Recommendation. See the sample provided in the Usage section.
+               </p>
+       </s2>
+       <s2 title="Usage">
+               <p>XML document specifies the XML Schema grammar location in the
+               xsi:schemaLocation attribute attached to the root / top-level element.
+               Here is an example with no target namspace:
+               </p>
+<source>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:noNamespaceSchemaLocation='personal.xsd'&gt;
+...
+&lt;/personnel&gt;
+</source>
+               <p>Please see the sample file, 'samples/data/personal-schema.xml' for
+               further detail.  And review the sample file 'samples/data/personal.xsd'
+               for an example of an XML Schema grammar.
+               </p>
+               <p>Here is an example how to turn on schema processing in DOMParser
+               (default is off).  Note that you must also turn on namespace support
+               (default is off) for schema processing.
+               </p>
+<source>// Instantiate the DOM parser.
+DOMParser parser;
+parser.setDoNamespaces(true);
+parser.setDoSchema(true);
+parser.parse(xmlFile);
+</source>
+               <p>Usage in SAXParser is similar, please refer to the
+               sample program 'samples/SAXCount/SAXCount.cpp' for further reference.
+               </p>
+               <p>Here is an example how to turn on schema processing in SAX2XMLReader
+               (default is on).  Note that namespace must be on (default is on) as well.
+               </p>
+<source>SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+parser->setFeature(XMLString::transcode("http://xml.org/sax/features/namespaces"), true);
+parser->setFeature(XMLString::transcode("http://apache.org/xml/features/validation/schema"), true);
+parser->parse(xmlFile);
+</source>
+       </s2>
 </s1>
