@@ -354,6 +354,16 @@ public :
       */
     bool getLoadExternalDTD() const;
 
+    /** Get the 'create comment node' flag
+      *
+      * This method returns the flag that specifies whether the parser is
+      * creating comment nodes in the DOM tree being produced.
+      *
+      * @return  The state of the create comment node flag.
+      * @see #setCreateCommentNodes
+      */
+    bool  getCreateCommentNodes()const;
+
     //@}
 
 
@@ -372,10 +382,6 @@ public :
       * specification.
       *
       * The parser's default state is: false.
-      *
-      * This flag is ignored by the underlying scanner if the installed
-      * validator indicates that namespace constraints should be
-      * enforced.
       *
       * @param newState The value specifying whether NameSpace rules should
       *                 be enforced or not.
@@ -405,17 +411,21 @@ public :
     /**
       * This method allows users to set the parser's behaviour when it
       * encounters a validtion constraint error. If set to true, and the
-      * the parser is set to exit when it encounter the first fatal error,
-      * the parser will exit at the first encounter. If false, then it will
+      * the parser will treat validation error as fatal and will exit depends on the
+      * state of "getExitOnFirstFatalError". If false, then it will
       * report the error and continue processing.
+      *
+      * Note: setting this true does not mean the validation error will be printed with
+      * the word "Fatal Error".   It is still printed as "Error", but the parser
+      * will exit if "setExitOnFirstFatalError" is set to true.
       *
       * <p>The default value is 'false'.</p>
       *
-      * @param newState The value specifying whether the parser should
-      *                 continue or exit when it encounters a validation
-      *                 constraint error.
+      * @param newState If true, the parser will exit if "setExitOnFirstFatalError"
+      *                 is set to true.
       *
       * @see #getValidationConstraintFatal
+      * @see #setExitOnFirstFatalError
       */
     void setValidationConstraintFatal(const bool newState);
 
@@ -505,6 +515,8 @@ public :
       * any schema found.
       *
       * The parser's default state is: false.
+      *
+      * Note: If set to true, namespace processing must also be turned on.
       *
       * @param newState The value specifying whether schema support should
       *                 be enforced or not.
@@ -606,6 +618,18 @@ public :
       * @see #setValidationScheme
       */
     void setLoadExternalDTD(const bool newState);
+
+     /** Set the 'create comment nodes' flag
+      *
+      * This method allows the user to specify whether the parser should
+      * create comment nodes in the DOM tree being produced.
+      * <p>The default value is 'true'.
+      *
+      * @param create The new state of the create comment nodes
+      *               flag.
+      * @see #getCreateCommentNodes
+      */
+    void setCreateCommentNodes(const bool create);
 
     //@}
 
@@ -1267,7 +1291,7 @@ private :
     //  fDocument
     //      The root document object, filled with the document contents.
     //
-    //  fCreateEntityReferenceNode
+    //  fCreateEntityReferenceNodes
     //      Indicates whether entity reference nodes should be created.
     //
     //  fIncludeIgnorableWhitespace
@@ -1296,6 +1320,9 @@ private :
     //  fDocumentVector
     //      Store all the previous fDocument(s) (thus not the current fDocument)
     //      created in this parser.  It is destroyed when the parser is destructed.
+    //
+    //  fCreateCommentNodes
+    //      Indicates whether comment nodes should be created.
     // -----------------------------------------------------------------------
     bool                          fCreateEntityReferenceNodes;
     bool                          fIncludeIgnorableWhitespace;
@@ -1310,6 +1337,7 @@ private :
     ValueStackOf<DOMNode*>*       fNodeStack;
     DOMDocumentTypeImpl*          fDocumentType;
     RefVectorOf<DOMDocumentImpl>* fDocumentVector;
+    bool                          fCreateCommentNodes;
 };
 
 
@@ -1341,6 +1369,11 @@ inline XMLScanner* AbstractDOMParser::getScanner() const
     return fScanner;
 }
 
+inline bool AbstractDOMParser::getCreateCommentNodes() const
+{
+    return fCreateCommentNodes;
+}
+
 // ---------------------------------------------------------------------------
 //  AbstractDOMParser: Setter methods
 // ---------------------------------------------------------------------------
@@ -1357,6 +1390,11 @@ inline void AbstractDOMParser::setCreateEntityReferenceNodes(const bool create)
 inline void AbstractDOMParser::setIncludeIgnorableWhitespace(const bool include)
 {
     fIncludeIgnorableWhitespace = include;
+}
+
+inline void AbstractDOMParser::setCreateCommentNodes(const bool create)
+{
+    fCreateCommentNodes = create;
 }
 
 

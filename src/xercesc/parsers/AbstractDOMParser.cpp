@@ -113,6 +113,7 @@ AbstractDOMParser::AbstractDOMParser(XMLValidator* const valToAdopt) :
 , fNodeStack(0)
 , fDocumentType(0)
 , fDocumentVector(0)
+, fCreateCommentNodes(true)
 {
     //
     //  Create a scanner and tell it what validator to use. Then set us
@@ -483,9 +484,11 @@ void AbstractDOMParser::docCharacters(  const   XMLCh* const    chars
 
 void AbstractDOMParser::docComment(const XMLCh* const comment)
 {
-    DOMComment *dcom = fDocument->createComment(comment);
-    fCurrentParent->appendChild(dcom);
-    fCurrentNode = dcom;
+    if (fCreateCommentNodes) {
+        DOMComment *dcom = fDocument->createComment(comment);
+        fCurrentParent->appendChild(dcom);
+        fCurrentNode = dcom;
+    }
 }
 
 
