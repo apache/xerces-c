@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/06/03 22:35:54  peiyongz
+ * constants changed
+ *
  * Revision 1.3  2002/05/31 21:01:06  peiyongz
  * move printing of XMLDecl into the processNode().
  *
@@ -76,6 +79,7 @@
 
 #include <xercesc/framework/MemBufFormatTarget.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/TranscodingException.hpp>
 #include <xercesc/util/Janitor.hpp>
 
@@ -283,22 +287,22 @@ DOMWriterImpl::DOMWriterImpl()
 {
 	fFeatures = new RefHashTableOf<KVStringPair>(9, true);
 
-	fFeatures->put((void*)CanonicalForm,
-		            new KVStringPair(CanonicalForm, gFalse));
-	fFeatures->put((void*)DiscardDefaultContent, 
-		            new KVStringPair(DiscardDefaultContent, gTrue));
-	fFeatures->put((void*)Entities,
-		            new KVStringPair(Entities, gTrue));
-	fFeatures->put((void*)FormatPrettyPrint,
-		            new KVStringPair(FormatPrettyPrint, gFalse));
-	fFeatures->put((void*)NormalizeCharacters,
-                    new KVStringPair(NormalizeCharacters, gFalse));
-	fFeatures->put((void*)SplitCdataSections,
-		            new KVStringPair(SplitCdataSections, gTrue));
-	fFeatures->put((void*)Validation,
-		            new KVStringPair(Validation, gFalse));
-	fFeatures->put((void*)WhitespaceInElementContent, 
-		            new KVStringPair(WhitespaceInElementContent, gTrue));
+	fFeatures->put((void*)XMLUni::fgDOMWRTCanonicalForm,
+		            new KVStringPair(XMLUni::fgDOMWRTCanonicalForm, gFalse));
+	fFeatures->put((void*)XMLUni::fgDOMWRTDiscardDefaultContent, 
+		            new KVStringPair(XMLUni::fgDOMWRTDiscardDefaultContent, gTrue));
+	fFeatures->put((void*)XMLUni::fgDOMWRTEntities,
+		            new KVStringPair(XMLUni::fgDOMWRTEntities, gTrue));
+	fFeatures->put((void*)XMLUni::fgDOMWRTFormatPrettyPrint,
+		            new KVStringPair(XMLUni::fgDOMWRTFormatPrettyPrint, gFalse));
+	fFeatures->put((void*)XMLUni::fgDOMWRTNormalizeCharacters,
+                    new KVStringPair(XMLUni::fgDOMWRTNormalizeCharacters, gFalse));
+	fFeatures->put((void*)XMLUni::fgDOMWRTSplitCdataSections,
+		            new KVStringPair(XMLUni::fgDOMWRTSplitCdataSections, gTrue));
+	fFeatures->put((void*)XMLUni::fgDOMWRTValidation,
+		            new KVStringPair(XMLUni::fgDOMWRTValidation, gFalse));
+	fFeatures->put((void*)XMLUni::fgDOMWRTWhitespaceInElementContent, 
+		            new KVStringPair(XMLUni::fgDOMWRTWhitespaceInElementContent, gTrue));
 
 }
 //
@@ -311,15 +315,15 @@ bool DOMWriterImpl::canSetFeature(const XMLCh* const featName
 	if ((!featName) || (!fFeatures->get(featName)))
 		return false;
 
-	if ((XMLString::compareString(featName, CanonicalForm)==0) && state)
+	if ((XMLString::compareString(featName, XMLUni::fgDOMWRTCanonicalForm)==0) && state)
 		return false;        
-	else if ((XMLString::compareString(featName, FormatPrettyPrint)==0) && state)
+	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTFormatPrettyPrint)==0) && state)
 		return false;        
-	else if ((XMLString::compareString(featName, NormalizeCharacters)==0) && state)
+	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTNormalizeCharacters)==0) && state)
 		return false;
-	else if ((XMLString::compareString(featName, Validation)==0) && state)
+	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTValidation)==0) && state)
 		return false;
-	else if ((XMLString::compareString(featName, WhitespaceInElementContent)==0) && !state)
+	else if ((XMLString::compareString(featName, XMLUni::fgDOMWRTWhitespaceInElementContent)==0) && !state)
 		return false;        
 	else
 		return true;
@@ -665,7 +669,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 				DOMNamedNodeMap *attributes = nodeToWrite->getAttributes();
 				int attrCount = attributes->getLength();
 
-				bool discard = getFeature(DiscardDefaultContent);
+				bool discard = getFeature(XMLUni::fgDOMWRTDiscardDefaultContent);
 				for (int i = 0; i < attrCount; i++)
 				{
 					DOMNode  *attribute = attributes->item(i);
@@ -773,7 +777,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			if (checkFilter(nodeToWrite) != DOMNodeFilter::FILTER_ACCEPT)
 				break;
 
-			if (getFeature(Entities))
+			if (getFeature(XMLUni::fgDOMWRTEntities))
 			{
 				TRY_CATCH_THROW
 				(
@@ -806,7 +810,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			    , true
 			)
 
-			if (getFeature(SplitCdataSections))
+			if (getFeature(XMLUni::fgDOMWRTSplitCdataSections))
 			{ 
 				setURCharRef();
 				*fFormatter << nodeValue;
@@ -952,11 +956,19 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 
 }
 
+//
+//
 DOMNodeFilter::FilterAction DOMWriterImpl::checkFilter(const DOMNode* const node) const
 {
-	if (!fFilter || (fFilter->showNode(node) == false))
+	if (!fFilter ||
+        ((fFilter->getWhatToShow() & (1 << (node->getNodeType() - 1))) == 0))
 		return DOMNodeFilter::FILTER_ACCEPT;
 
+	//
+	// if and only if there is a filter, and it is interested 
+	// in the node type, then we pass the node to the filter 
+	// for examination
+	//
 	return (DOMNodeFilter::FilterAction) fFilter->acceptNode(node);
 }
 
