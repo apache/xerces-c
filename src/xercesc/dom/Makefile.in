@@ -121,9 +121,7 @@ DOM_C_FILES =
 
 DOM_CPP_OBJECTS = \
 	DOMException.$(TO) \
-	DOMRangeException.$(TO) \
-	DOMWriter.$(TO) \
-	DOMWriterFilter.$(TO)
+	DOMRangeException.$(TO) 
 
 all::	includes $(DOM_CPP_OBJECTS) impl deprecated
 
