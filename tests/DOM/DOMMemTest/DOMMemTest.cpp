@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -75,6 +75,7 @@
 #include <util/PlatformUtils.hpp>
 #include <util/XMLException.hpp>
 #include <util/XMLString.hpp>
+#include <util/XMLUniDefs.hpp>
 
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
@@ -120,7 +121,7 @@ void tassert(bool c, char *file, int line)
 void    DOMStringTests()
 {
     DomMemDebug     entryMemState, exitMemState;
-    
+
     //
     //  Test 1.  Basic operations on a simple string.
     //
@@ -131,29 +132,27 @@ void    DOMStringTests()
         TASSERT(foo.length() == 3);
         TASSERT(foo.equals(foo));
         TASSERT(foo != 0);
-        TASSERT(foo.charAt(0) == 'f');
-        TASSERT(foo.charAt(2) == 'p');
-        TASSERT(foo.charAt(3) == 0);
+        TASSERT(foo.charAt(0) == chLatin_f);
+        TASSERT(foo.charAt(2) == chLatin_p);
+        TASSERT(foo.charAt(3) == chNull);
     }
     TESTEPILOG
-        
+
         //
         //  Construct from XMLCh *
         //
         TESTPROLOG
     {
-        //  ToDo - this test will fail on EBCDIC machines.  !!
-        
-        XMLCh a[] = {'H', 'e', 'l', 'l', 'o', 0};
+        XMLCh a[] = {chLatin_H, chLatin_e, chLatin_l, chLatin_l, chLatin_o, chNull}; // Unicode "Hello"
         DOMString x(a);
         DOMString y = "Hello";
         TASSERT(x.equals(y));
-        
+
         DOMString z(a+2, 3);
         TASSERT(z.equals("llo"));
     }
     TESTEPILOG
-        
+
         //
         //  Test 2.  Empty strings shouldn't leave anything lying around
         //
@@ -165,16 +164,16 @@ void    DOMStringTests()
         a = 0;
         TASSERT(a==0);
         TASSERT((a!=0) == false);
-        
+
         DOMString c(0);
         TASSERT(c==0);
         TASSERT(c==a);
     }
     TESTEPILOG
-        
-        
+
+
         //
-        //  Test 3.   Clones should be equal. 
+        //  Test 3.   Clones should be equal.
         TESTPROLOG;
     {
         DOMString a = "hello";
@@ -187,8 +186,8 @@ void    DOMStringTests()
         TASSERT(a.equals(""));
     }
     TESTEPILOG
-        
-        
+
+
         //
         //  Test 4.  Copy construction and assignemnt
         //
@@ -204,11 +203,11 @@ void    DOMStringTests()
         TASSERT(a==c);
         TASSERT(a==d);
         TASSERT(a!=e);
-        // printf ("   test04 should have 1 handle, 1 buffer here.  "); 
+        // printf ("   test04 should have 1 handle, 1 buffer here.  ");
     }
     TESTEPILOG
-        
-        
+
+
         //
         // Test 5  AppendData, degenerate cases.
         //
@@ -216,15 +215,15 @@ void    DOMStringTests()
     {
         DOMString a;
         DOMString b = "Test 05";
-        
+
         a.appendData(b);
         TASSERT(a.equals(b));
         TASSERT(a!=b);
         TASSERT(a.equals("Test 05"));
     };
     TESTEPILOG
-        
-        
+
+
         //
         //  Test 6  Append data, degenerate case 2
         //
@@ -232,7 +231,7 @@ void    DOMStringTests()
     {
         DOMString a;
         DOMString b = "Test 06";
-        
+
         b.appendData(a);
         TASSERT(!a.equals(b));
         TASSERT(a!=b);
@@ -240,8 +239,8 @@ void    DOMStringTests()
         TASSERT(a==0);
     }
     TESTEPILOG
-        
-        
+
+
         //
         //  Test 7  Append Data, Common case, no extra space in original buffer.
         //          Also, operator +=, which is a convenience alias for appendData.
@@ -250,32 +249,32 @@ void    DOMStringTests()
     {
         DOMString a = "Test 07";
         DOMString b = "append";
-        
+
         a.appendData(b);
         TASSERT(a.equals("Test 07append"));
         TASSERT(b.equals("append"));
-        
+
         a.appendData((XMLCh)0x31);
         TASSERT(a.equals("Test 07append1"));
-        
+
         XMLCh  s[] = {0x32, 0x33, 0x00};
         a.appendData(s);
         TASSERT(a.equals("Test 07append123"));
-        
+
         a = "Test 07a ";
         a += b;
         TASSERT(a.equals("Test 07a append"));
-        
+
         a += (XMLCh)0x31;
         TASSERT(a.equals("Test 07a append1"));
-        
+
         a += s;
         TASSERT(a.equals("Test 07a append123"));
-        
+
     }
     TESTEPILOG
-        
-        
+
+
         //
         //  Test 8 Append Data, with plenty of extra space in buffer.
         //
@@ -285,7 +284,7 @@ void    DOMStringTests()
         a.reserve(100);
         DOMString b("Test 08");
         DOMString c("append");
-        
+
         TASSERT(a != 0);  // (The String object has an identity, even if no contents)
         TASSERT(a.length() == 0);
         a.appendData(b);
@@ -298,9 +297,9 @@ void    DOMStringTests()
         TASSERT(c.equals("append"));
     };
     TESTEPILOG
-        
-        
-        
+
+
+
         //
         //  Test 9 Append Data, with plenty of extra space in buffer, but with
         //                      a clone, so that the original buffer can not be modified.
@@ -311,13 +310,13 @@ void    DOMStringTests()
         a.reserve(100);
         DOMString b("Test 09");
         DOMString c("append");
-        
+
         TASSERT(a.length() == 0);
         a.appendData(b);
         TASSERT(a.equals(b));
         TASSERT(a.equals("Test 09"));
         TASSERT(a != b);
-        
+
         DOMString d = a.clone();
         TASSERT(a.equals("Test 09"));
         TASSERT(b.equals("Test 09"));
@@ -325,7 +324,7 @@ void    DOMStringTests()
         TASSERT(a != b);
         TASSERT(a != d);
         TASSERT(b != d);
-        
+
         a.appendData(c);
         TASSERT(a.equals("Test 09append"));
         TASSERT(b.equals("Test 09"));
@@ -333,8 +332,8 @@ void    DOMStringTests()
         TASSERT(d.equals("Test 09"));
     };
     TESTEPILOG;
-    
-    
+
+
     //
     // Test 10   DOMString Operator +
     //
@@ -344,25 +343,25 @@ void    DOMStringTests()
         DOMString b("DOMString ");
         XMLCh     s[] = {0x58, 0x4d, 0x4c, 0x20, 0x00};   // Unicode "XML "
         XMLCh     Z   = 0x5A;                             // Unicode 'Z'
-        
+
         a = b + b;
         TASSERT(a.equals("DOMString DOMString "));
-        
+
         a = b + s;
         TASSERT(a.equals("DOMString XML "));
-        
+
         a = s + b;
         TASSERT(a.equals("XML DOMString "));
-        
+
         a = b + Z;
         TASSERT(a.equals("DOMString Z"));
-        
+
         a = Z + b;
         TASSERT(a.equals("ZDOMString "));
     }
     TESTEPILOG;
-    
-    
+
+
     //
     // Test 11   DOMString::subStringData(unsigned int offset, unsigned int count)
     //
@@ -370,33 +369,33 @@ void    DOMStringTests()
     {
         DOMString srcString("This is the source string.");
         //                   01234567890123456789012345
-        
+
         DOMString This = srcString.substringData(0,4);
         DOMString is   = srcString.substringData(5,2);
         DOMString dot  = srcString.substringData(25,1);
         DOMString offEnd = srcString.substringData(19, 1000);
-        
+
         TASSERT(This.equals("This"));
         TASSERT(is  .equals("is"));
         TASSERT(dot .equals("."));
         TASSERT(offEnd.equals("string."));
-        
+
         EXCEPTION_TEST(srcString.substringData(-1, 10), DOM_DOMException::INDEX_SIZE_ERR);
         EXCEPTION_TEST(srcString.substringData(26, 1), DOM_DOMException::INDEX_SIZE_ERR);
-        
+
         srcString.insertData(0, "x");   // Changing the source should not alter previously
         //   extracted substrings.
-        
+
         TASSERT(This.equals("This"));
         TASSERT(is  .equals("is"));
         TASSERT(dot .equals("."));
         TASSERT(offEnd.equals("string."));
         TASSERT(srcString.equals("xThis is the source string."));
-        
+
     }
     TESTEPILOG;
-    
-    
+
+
     //
     // Test 12   DOMString::insertData(unsigned int offset, DOMString &src)
     //
@@ -404,32 +403,32 @@ void    DOMStringTests()
     {
         DOMString aString("This is a string.");
         //                 01234567890123456
-        
+
         aString.insertData(17, " Added at end.");
         TASSERT(aString.equals("This is a string. Added at end."));
-        
+
         aString = "This is a string.";
         EXCEPTION_TEST(aString.insertData(18, "x"), DOM_DOMException::INDEX_SIZE_ERR);
         TASSERT(aString.equals("This is a string."));
-        
+
         aString = 0;
         aString.reserve(100);
         aString.appendData("This is a string.");
         aString.insertData(17, " Added at end.");
         TASSERT(aString.equals("This is a string. Added at end."));
-        
+
         aString.insertData(0, "So ");
         TASSERT(aString.equals("So This is a string. Added at end."));
-        
+
         aString.insertData(2, "x");
         TASSERT(aString.equals("Sox This is a string. Added at end."));
-        
+
         EXCEPTION_TEST(aString.substringData(-1, 1), DOM_DOMException::INDEX_SIZE_ERR);
-        
-        
+
+
     }
     TESTEPILOG;
-    
+
 
 	//
 	// Minimal test of DOMString::transcode()
@@ -458,16 +457,16 @@ void    DOMStringTests()
         greeting.appendData(greeting);
         TASSERT(greeting.equals("hellohello"));
 
- 
+
         // Test DOMString.insertData, when source string is the same as the destination.
         //   Implementation forces creation of a new buffer.
-        //                            
+        //
         DOMString greeting2("Hello              ");
         //                   0123456789012345678
         greeting2.deleteData(5, 14);    // Leave unused space at end of buffer.
         TASSERT(greeting2.equals("Hello"));
 
-        greeting2.insertData(2, greeting2); 
+        greeting2.insertData(2, greeting2);
         TASSERT(greeting2.equals("HeHellollo"));
 
 
@@ -475,9 +474,9 @@ void    DOMStringTests()
         DOMString greeting3("Hello              ");
         //                   0123456789012345678
         greeting3.deleteData(5, 14);    // Leave unused space at end of buffer.
-        TASSERT(greeting3.equals("Hello"));  
+        TASSERT(greeting3.equals("Hello"));
 
-        greeting3.insertData(2, "ByeBye"); 
+        greeting3.insertData(2, "ByeBye");
         TASSERT(greeting3.equals("HeByeByello"));
 
     }
@@ -643,7 +642,7 @@ void DOMBasicTests()
     }
     TESTEPILOG;
 
-    
+
     //
     //  Doc03 - Create a small document tree
     //
@@ -671,11 +670,11 @@ void DOMBasicTests()
             DOM_Attr        attr01  = doc.createAttribute("Attr01");
             rootEl.setAttributeNode(attr01);
         }
-        
+
         TESTPROLOG;
         {
             DOM_Attr attr02 = doc.createAttribute("Attr01");
-            rootEl.setAttributeNode(attr02);  
+            rootEl.setAttributeNode(attr02);
         }
         TESTEPILOG
     };
@@ -691,7 +690,7 @@ void DOMBasicTests()
         DOM_Attr        attr01  = doc.createAttribute("Attr02");
         rootEl.setAttributeNode(attr01);
         DOM_Attr        attr02 = doc.createAttribute("Attr02");
-        rootEl.setAttributeNode(attr02);  
+        rootEl.setAttributeNode(attr02);
     }
     TESTEPILOG;
 
@@ -755,7 +754,7 @@ void DOMBasicTests()
     //  Notation01
     //
     TESTPROLOG;
-    { 
+    {
         DOM_Document        doc = DOM_Document::createDocument();
         DOM_DocumentType    dt  = doc.createDocumentType("DocType_for_Notation01");
         doc.appendChild(dt);
@@ -771,7 +770,7 @@ void DOMBasicTests()
         nt1 = 0;
 		DOM_Node abc6 = notationMap.getNamedItem("Notation01");
         nt2 = (DOM_Notation &) abc6;
-      
+
 
     }
     TESTEPILOG;
@@ -808,7 +807,7 @@ void DOMBasicTests()
     {
         DOM_Document    doc1 = DOM_Document::createDocument();
         DOM_Document    doc2 = DOM_Document::createDocument();
-        
+
         DOM_Element     el1  = doc1.createElement("abc");
         doc1.appendChild(el1);
         TASSERT(el1.getParentNode() != 0);
@@ -878,7 +877,7 @@ void DOMBasicTests()
     TESTEPILOG;
 
 
- 
+
     //
     //  Name validity checking.
     //
@@ -910,9 +909,9 @@ void DOMBasicTests()
         DOM_Document        doc = DOM_Document::createDocument();
         DOM_Element el = doc.createElement("NodeList01");
         doc.appendChild(el);
-        
+
         DOM_Element n1, n2, n3;
-        
+
         n1 = n2 = n3 = el;
         TASSERT(n1 == n2);
         TASSERT(n1 == n3);
@@ -925,7 +924,7 @@ void DOMBasicTests()
 
 
     //
-    //  Cloning of a node with attributes. Regression test for a ref counting 
+    //  Cloning of a node with attributes. Regression test for a ref counting
     //  bug in attributes of cloned nodes that occured when the "owned" flag
     //  was not set in the clone.
     //
@@ -1015,7 +1014,7 @@ void DOMNSTests()
         TASSERT(impl.hasFeature("Traversal", "") == true);
     }
 
-    
+
     TESTPROLOG;
     {
         DOM_DOMImplementation  impl;
@@ -1048,13 +1047,13 @@ void DOMNSTests()
     TESTPROLOG;
     {
         DOM_DOMImplementation impl;
-        
+
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
-        
+
         DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
-        
+
         TASSERT(dt != 0);
         TASSERT(dt.getNodeType() == DOM_Node::DOCUMENT_TYPE_NODE);
         TASSERT(dt.getNodeName().equals(qName));
@@ -1065,7 +1064,7 @@ void DOMNSTests()
         TASSERT(dt.getSystemId().equals(sysId));
         TASSERT(dt.getInternalSubset().equals(0));
         TASSERT(dt.getOwnerDocument() == 0);
-        
+
         DOM_NamedNodeMap nnm = dt.getEntities();
         TASSERT(nnm.getLength() == 0);
         nnm = dt.getNotations();
@@ -1089,14 +1088,14 @@ void DOMNSTests()
         TASSERT(dt.getOwnerDocument() == 0);
 
         // Creating a DocumentType with invalid or malformed qName should fail.
-        EXCEPTION_TEST(impl.createDocumentType("<docName", pubId, sysId), DOM_DOMException::INVALID_CHARACTER_ERR);     
-        EXCEPTION_TEST(impl.createDocumentType(":docName", pubId, sysId), DOM_DOMException::NAMESPACE_ERR);     
-        EXCEPTION_TEST(impl.createDocumentType("docName:", pubId, sysId), DOM_DOMException::NAMESPACE_ERR);     
-        EXCEPTION_TEST(impl.createDocumentType("doc::Name", pubId, sysId), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(impl.createDocumentType("<docName", pubId, sysId), DOM_DOMException::INVALID_CHARACTER_ERR);
+        EXCEPTION_TEST(impl.createDocumentType(":docName", pubId, sysId), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(impl.createDocumentType("docName:", pubId, sysId), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(impl.createDocumentType("doc::Name", pubId, sysId), DOM_DOMException::NAMESPACE_ERR);
         EXCEPTION_TEST(impl.createDocumentType("doc:N:ame", pubId, sysId), DOM_DOMException::NAMESPACE_ERR);
     }
     TESTEPILOG;
-    
+
 
     //
     //  DOMImplementation::CreateDocument
@@ -1106,7 +1105,7 @@ void DOMNSTests()
         // memory leaks in the real test.
 
         DOM_DOMImplementation   impl;
-        DOM_DocumentType        dt; 
+        DOM_DocumentType        dt;
         DOM_Document            doc = impl.createDocument("", "a", dt);
         doc.getNodeName();
     }
@@ -1114,15 +1113,15 @@ void DOMNSTests()
     //
     TESTPROLOG;
     {
-        
+
         DOM_DOMImplementation impl;
-        
+
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
-        
+
         DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
-        
+
         DOMString docNSURI = "http://document.namespace";
 
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
@@ -1174,7 +1173,7 @@ void DOMNSTests()
         // Namespace tests of createDocument are covered by createElementNS below
     }
     TESTEPILOG;
-    
+
 
 
 
@@ -1183,16 +1182,16 @@ void DOMNSTests()
     //
     TESTPROLOG;
     {
-        
+
         // Set up an initial (root element only) document.
-        // 
+        //
         DOM_DOMImplementation impl;
-        
+
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
         DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
-        
+
         DOMString docNSURI = "http://document.namespace";
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
         DOM_Element rootEl = doc.getDocumentElement();
@@ -1227,16 +1226,16 @@ void DOMNSTests()
         TASSERT(elc.getTagName().equals("elc"));
 
         // Badly formed qualified name
-        EXCEPTION_TEST(doc.createElementNS("http://nsa", "<a"), DOM_DOMException::INVALID_CHARACTER_ERR);     
-        EXCEPTION_TEST(doc.createElementNS("http://nsa", ":a"), DOM_DOMException::NAMESPACE_ERR);     
-        EXCEPTION_TEST(doc.createElementNS("http://nsa", "a:"), DOM_DOMException::NAMESPACE_ERR);     
-        EXCEPTION_TEST(doc.createElementNS("http://nsa", "a::a"), DOM_DOMException::NAMESPACE_ERR);     
-        EXCEPTION_TEST(doc.createElementNS("http://nsa", "a:a:a"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(doc.createElementNS("http://nsa", "<a"), DOM_DOMException::INVALID_CHARACTER_ERR);
+        EXCEPTION_TEST(doc.createElementNS("http://nsa", ":a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createElementNS("http://nsa", "a:"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createElementNS("http://nsa", "a::a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createElementNS("http://nsa", "a:a:a"), DOM_DOMException::NAMESPACE_ERR);
 
         // xml:a must have namespaceURI == "http://www.w3.org/XML/1998/namespace"
         DOMString xmlURI = "http://www.w3.org/XML/1998/namespace";
         TASSERT(doc.createElementNS(xmlURI, "xml:a").getNamespaceURI().equals(xmlURI));
-        EXCEPTION_TEST(doc.createElementNS("http://nsa", "xml:a"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(doc.createElementNS("http://nsa", "xml:a"), DOM_DOMException::NAMESPACE_ERR);
         EXCEPTION_TEST(doc.createElementNS("", "xml:a"), DOM_DOMException::NAMESPACE_ERR);
         EXCEPTION_TEST(doc.createElementNS(0,  "xml:a"), DOM_DOMException::NAMESPACE_ERR);
 
@@ -1279,14 +1278,14 @@ void DOMNSTests()
         elem = doc.createElementNS(xmlURI, "foo:a");
         elem.setPrefix("xml");
         elem = doc.createElementNS("http://nsa", "foo:a");
-        EXCEPTION_TEST(elem.setPrefix("xml"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(elem.setPrefix("xml"), DOM_DOMException::NAMESPACE_ERR);
         //However, there is no restriction on prefix xmlns
         elem.setPrefix("xmlns");
         //Also an element can not have a prefix with namespaceURI == null or ""
         elem = doc.createElementNS(0, "a");
-        EXCEPTION_TEST(elem.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(elem.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);
         elem = doc.createElementNS("", "a");
-        EXCEPTION_TEST(elem.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(elem.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);
 
         //Only prefix of Element and Attribute can be changed
         EXCEPTION_TEST(doc.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);
@@ -1303,16 +1302,16 @@ void DOMNSTests()
     //
     TESTPROLOG;
     {
-        
+
         // Set up an initial (root element only) document.
-        // 
+        //
         DOM_DOMImplementation impl;
-        
+
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
         DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
-        
+
         DOMString docNSURI = "http://document.namespace";
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
         DOM_Element rootEl = doc.getDocumentElement();
@@ -1346,31 +1345,31 @@ void DOMNSTests()
         TASSERT(attrc.getOwnerElement() == 0);
 
         // Badly formed qualified name
-        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "<a"), DOM_DOMException::INVALID_CHARACTER_ERR);     
-        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", ":a"), DOM_DOMException::NAMESPACE_ERR);     
-        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "a:"), DOM_DOMException::NAMESPACE_ERR);     
-        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "a::a"), DOM_DOMException::NAMESPACE_ERR);     
-        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "a:a:a"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "<a"), DOM_DOMException::INVALID_CHARACTER_ERR);
+        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", ":a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "a:"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "a::a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "a:a:a"), DOM_DOMException::NAMESPACE_ERR);
 
         // xml:a must have namespaceURI == "http://www.w3.org/XML/1998/namespace"
         DOMString xmlURI = "http://www.w3.org/XML/1998/namespace";
         TASSERT(doc.createAttributeNS(xmlURI, "xml:a").getNamespaceURI().equals(xmlURI));
-        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "xml:a"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "xml:a"), DOM_DOMException::NAMESPACE_ERR);
         EXCEPTION_TEST(doc.createAttributeNS("", "xml:a"), DOM_DOMException::NAMESPACE_ERR);
         EXCEPTION_TEST(doc.createAttributeNS(0,  "xml:a"), DOM_DOMException::NAMESPACE_ERR);
 
         //unlike Element, xmlns must have namespaceURI == "http://www.w3.org/2000/xmlns/"
         DOMString xmlnsURI = "http://www.w3.org/2000/xmlns/";
         TASSERT(doc.createAttributeNS(xmlnsURI, "xmlns").getNamespaceURI().equals(xmlnsURI));
-        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "xmlns"), DOM_DOMException::NAMESPACE_ERR);     
-        EXCEPTION_TEST(doc.createAttributeNS(xmlURI, "xmlns"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "xmlns"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createAttributeNS(xmlURI, "xmlns"), DOM_DOMException::NAMESPACE_ERR);
         EXCEPTION_TEST(doc.createAttributeNS("", "xmlns"), DOM_DOMException::NAMESPACE_ERR);
         EXCEPTION_TEST(doc.createAttributeNS(0,  "xmlns"), DOM_DOMException::NAMESPACE_ERR);
 
         //unlike Element, xmlns:a must have namespaceURI == "http://www.w3.org/2000/xmlns/"
         TASSERT(doc.createAttributeNS(xmlnsURI, "xmlns:a").getNamespaceURI().equals(xmlnsURI));
-        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);     
-        EXCEPTION_TEST(doc.createAttributeNS(xmlURI, "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(doc.createAttributeNS("http://nsa", "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);
+        EXCEPTION_TEST(doc.createAttributeNS(xmlURI, "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);
         EXCEPTION_TEST(doc.createAttributeNS("", "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);
         EXCEPTION_TEST(doc.createAttributeNS(0,  "xmlns:a"), DOM_DOMException::NAMESPACE_ERR);
 
@@ -1412,10 +1411,10 @@ void DOMNSTests()
         EXCEPTION_TEST(attr.setPrefix("xmlns"), DOM_DOMException::NAMESPACE_ERR);
         //Also an attribute can not have a prefix with namespaceURI == null or ""
         attr = doc.createAttributeNS(0, "a");
-        EXCEPTION_TEST(attr.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);     
+        EXCEPTION_TEST(attr.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);
         attr = doc.createAttributeNS("", "a");
-        EXCEPTION_TEST(attr.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);     
-        
+        EXCEPTION_TEST(attr.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);
+
         //Only prefix of Element and Attribute can be changed
         EXCEPTION_TEST(doc.setPrefix("foo"), DOM_DOMException::NAMESPACE_ERR);
 
@@ -1430,16 +1429,16 @@ void DOMNSTests()
     //
     TESTPROLOG;
     {
-        
+
         // Set up an initial (root element only) document.
-        // 
+        //
         DOM_DOMImplementation impl;
-        
+
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
         DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
-        
+
         DOMString docNSURI = "http://document.namespace";
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
         DOM_Element rootEl = doc.getDocumentElement();
@@ -1447,19 +1446,19 @@ void DOMNSTests()
         //
         // Populate the document
         //
-        DOM_Element ela = doc.createElementNS("http://nsa", "a:ela");  
+        DOM_Element ela = doc.createElementNS("http://nsa", "a:ela");
         rootEl.appendChild(ela);
-        DOM_Element elb = doc.createElementNS("http://nsb", "elb");   
+        DOM_Element elb = doc.createElementNS("http://nsb", "elb");
         rootEl.appendChild(elb);
-        DOM_Element elc = doc.createElementNS("",           "elc");  
+        DOM_Element elc = doc.createElementNS("",           "elc");
         rootEl.appendChild(elc);
         DOM_Element eld = doc.createElementNS("http://nsa", "d:ela");
         rootEl.appendChild(eld);
-        DOM_Element ele = doc.createElementNS("http://nse", "elb");   
+        DOM_Element ele = doc.createElementNS("http://nse", "elb");
         rootEl.appendChild(ele);
 
 
-        // 
+        //
         // Access with DOM Level 1 getElementsByTagName
         //
 
@@ -1489,7 +1488,7 @@ void DOMNSTests()
         nl = doc.getElementsByTagNameNS(0, "elc");
         TASSERT(nl.getLength() == 1);
         TASSERT(nl.item(0) == elc);
-       
+
         nl = doc.getElementsByTagNameNS("http://nsa", "ela");
         TASSERT(nl.getLength() == 2);
         TASSERT(nl.item(0) == ela);
@@ -1533,7 +1532,7 @@ void DOMNSTests()
         nl = doc.getElementsByTagNameNS("*", "*");
         DOM_NodeList nla = ela.getElementsByTagNameNS("*", "*");
 
-        TASSERT(nl.getLength() == 6); 
+        TASSERT(nl.getLength() == 6);
         TASSERT(nla.getLength() == 0);
 
         rootEl.removeChild(elc);
@@ -1554,14 +1553,14 @@ void DOMNSTests()
     {
 
         // Set up an initial (root element only) document.
-        // 
+        //
         DOM_DOMImplementation impl;
-        
+
         DOMString qName = "foo:docName";
         DOMString pubId = "pubId";
         DOMString sysId = "http://sysId";
         DOM_DocumentType dt = impl.createDocumentType(qName, pubId, sysId);
-        
+
         DOMString docNSURI = "http://document.namespace";
         DOM_Document doc = impl.createDocument(docNSURI, qName, dt);
         DOM_Element rootEl = doc.getDocumentElement();
@@ -1569,15 +1568,15 @@ void DOMNSTests()
         //
         // Create a set of attributes and hang them on the root element.
         //
-        DOM_Attr attra = doc.createAttributeNS("http://nsa", "a:attra");  
+        DOM_Attr attra = doc.createAttributeNS("http://nsa", "a:attra");
         rootEl.setAttributeNodeNS(attra);
-        DOM_Attr attrb = doc.createAttributeNS("http://nsb", "attrb");   
+        DOM_Attr attrb = doc.createAttributeNS("http://nsb", "attrb");
         rootEl.setAttributeNodeNS(attrb);
-        DOM_Attr attrc = doc.createAttributeNS("",           "attrc");  
+        DOM_Attr attrc = doc.createAttributeNS("",           "attrc");
         rootEl.setAttributeNodeNS(attrc);
         DOM_Attr attrd = doc.createAttributeNS("http://nsa", "d:attra");
         rootEl.setAttributeNodeNS(attrd);
-        DOM_Attr attre = doc.createAttributeNS("http://nse", "attrb");   
+        DOM_Attr attre = doc.createAttributeNS("http://nse", "attrb");
         rootEl.setAttributeNodeNS(attre);
 
         //
@@ -1607,7 +1606,7 @@ void DOMNSTests()
     TESTEPILOG;
 
     //
-    // 
+    //
     //
 
 }
@@ -1631,8 +1630,8 @@ int  main()
         delete [] pMessage;
         return -1;
     }
-    
-    
+
+
     DOMStringTests();
     DOMBasicTests();
     DOMNSTests();
