@@ -56,6 +56,9 @@
 
  /*
   * $Log$
+  * Revision 1.3  2003/11/17 18:12:00  neilg
+  * PSVIAttributeList needs to be included by PSVIHandler.  Thanks to Pete Lloyd for the patch
+  *
   * Revision 1.2  2003/09/22 15:03:06  neilg
   * clearly the local name of an element should be a string, not an XMLElementDecl...
   *
@@ -69,7 +72,7 @@
 #define PSVIHANDLER_HPP
 
 #include <xercesc/framework/psvi/PSVIElement.hpp>
-#include <xercesc/framework/psvi/PSVIAttribute.hpp>
+#include <xercesc/framework/psvi/PSVIAttributeList.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
