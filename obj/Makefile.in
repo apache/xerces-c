@@ -55,6 +55,11 @@
 # 
 #
 # $Log$
+# Revision 1.4  1999/11/24 23:21:42  rahulj
+# Now works under HPUX 10.20 with CC and aCC, with ICU and native
+distclean target now remove and remaining Makefile(s)
+clean target now removes the template repository directory
+#
 # Revision 1.3  1999/11/23 01:59:16  rahulj
 # Code now works under HPUX 11. Tested inmemory message loader.
 Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
@@ -86,6 +91,7 @@ CXX = @cxx@
 PREFIX = @prefix@
 LDFLAGS = @ldflags@
 LIBS = @libs@
+OSVER = @osver@
 
 include ../src/Makefile.incl
 
@@ -164,12 +170,24 @@ else
 endif
 endif
 
+
 clean:
 	@echo "Making clean in obj ..."
 	-rm -f $(ALL_OBJECTS) ${THISLIB}${VER}${SHLIBSUFFIX}
+ifneq ($strip $(TEMPLATESREPOSITORY)),)
+	-rm -f $(TEMPLATESREPOSITORY)/*.o
+	-rm -f $(TEMPLATESREPOSITORY)/*.c
+	-rm -f $(TEMPLATESREPOSITORY)/*.cs
+	-rm -f $(TEMPLATESREPOSITORY)/*.he
+endif
+
 
 distclean:	clean
 	rm -f Makefile
+ifneq ($strip $(TEMPLATESREPOSITORY)),)
+	-rm -rf $(TEMPLATESREPOSITORY)
+endif
+
 
 install:
 ifeq (${OS390BATCH},1)

@@ -58,6 +58,11 @@
 # 
 #
 # $Log$
+# Revision 1.6  1999/11/24 23:21:42  rahulj
+# Now works under HPUX 10.20 with CC and aCC, with ICU and native
+distclean target now remove and remaining Makefile(s)
+clean target now removes the template repository directory
+#
 # Revision 1.5  1999/11/23 01:59:33  rahulj
 # Code now works under HPUX 11. Tested inmemory message loader.
 Revamped makefiles. Builds with both DCE threads as well as pthread libraries.
@@ -262,13 +267,13 @@ TRANSCODER=NATIVE
 if test $transcoder; then
 case $transcoder in
    icu)
-       if test -z $ICUROOT ; then
+       if test -z $ICUROOT; then
            echo '***Error*** ICUROOT environment variable not defined. Exiting...';
            exit -1;
        fi
-       transcodingDefine="-DXML_USE_ICU_TRANSCODER -I${ICUROOT}/include" ;
+       transcodingDefines="-DXML_USE_ICU_TRANSCODER -I${ICUROOT}/include";
        transcodingLibs="-L${ICUROOT}/lib -licu-uc";
-       TRANSCODER=ICU ;;
+       TRANSCODER=ICU;;
 
    native)
        ;;
@@ -286,7 +291,7 @@ export TRANSCODER
 # Now check for the message loader
 #
 
-MESSAGELOADER=INMEM;         # By default use in-memory
+MESSAGELOADER=INMEM         # By default use in-memory
 msgloaderDefines="-DXML_USE_INMEM_MESSAGELOADER"
 
 if test $msgloader ; then
@@ -307,7 +312,7 @@ case $msgloader in
        msgloaderDefines="-DXML_USE_ICONV_MESSAGELOADER" ;;
 
    *)
-      echo "I do not recognize the message loader option '$msgloader'. Please type '${0} -h' for help."
+      echo "I do not recognize the message loader option '$msgloader'. Please type '${0} -h' for help.";
       exit -1;;
 esac
 fi
@@ -342,7 +347,7 @@ case $netaccessor in
 esac
 fi
 
-export USELIBWWW;
+export USELIBWWW
 
 
 
