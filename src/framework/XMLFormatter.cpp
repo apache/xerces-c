@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/05/15 22:31:12  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.5  2000/04/07 01:01:55  roddey
  * Fixed an error message so that it indicated the correct radix for the rep
  * token. Get all of the basic output formatting functionality in place for
@@ -90,7 +93,7 @@
 #include <util/TranscodingException.hpp>
 #include <util/XMLExceptMsgs.hpp>
 #include <framework/XMLFormatter.hpp>
-#include <memory.h>
+#include <string.h>
 
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /**
  *  $Log$
+ *  Revision 1.5  2000/05/15 22:31:12  andyh
+ *  Replace #include<memory.h> with <string.h> everywhere.
+ *
  *  Revision 1.4  2000/03/02 19:54:25  roddey
  *  This checkin includes many changes done while waiting for the
  *  1.1.0 code to be finished. I can't list them all here, but a list is
@@ -84,7 +87,6 @@
 #include <util/XMLString.hpp>
 #include <util/XMLUni.hpp>
 #include <framework/XMLRecognizer.hpp>
-#include <memory.h>
 #include <string.h>
 
 

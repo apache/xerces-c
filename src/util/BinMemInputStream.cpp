@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/05/15 22:31:20  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.3  2000/03/02 19:54:38  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -77,7 +80,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/BinMemInputStream.hpp>
-#include <memory.h>
 #include <string.h>
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/05/15 22:31:15  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.5  2000/03/02 19:54:28  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -83,7 +86,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <memory.h>
 #include <string.h>
 #include <util/EmptyStackException.hpp>
 #include <util/NoSuchElementException.hpp>

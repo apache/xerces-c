@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/05/15 22:31:32  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.4  2000/03/18 00:00:05  roddey
  * Initial updates for two way transcoding support
  *
@@ -79,7 +82,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <memory.h>
 #include <string.h>
 #include <util/RuntimeException.hpp>
 #include <framework/XMLElementDecl.hpp>

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/05/15 22:31:06  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.4  2000/03/02 19:53:40  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -85,7 +88,7 @@
 #include "DOMTreeErrorReporter.hpp"
 #include <iostream.h>
 #include <stdlib.h>
-#include <memory.h>
+#include <string.h>
 #include <dom/DOMString.hpp>
 
 // Global streaming operator for DOMString is defined in DOMPrint.cpp

@@ -61,7 +61,7 @@
 #include <util/TranscodingException.hpp>
 #include <util/XML88591Transcoder.hpp>
 #include <util/XMLString.hpp>
-#include <memory.h>
+#include <string.h>
 
 
 

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/05/15 22:31:11  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.3  2000/02/06 07:47:47  rahulj
  * Year 2K copyright swat.
  *
@@ -78,7 +81,6 @@
 #include <util/RuntimeException.hpp>
 #include <util/XMLString.hpp>
 #include <framework/XMLBuffer.hpp>
-#include <memory.h>
 #include <string.h>
 
 

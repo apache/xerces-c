@@ -60,7 +60,7 @@
 // ---------------------------------------------------------------------------
 #include <util/BitOps.hpp>
 #include <util/XMLChTranscoder.hpp>
-#include <memory.h>
+#include <string.h>
 
 
 

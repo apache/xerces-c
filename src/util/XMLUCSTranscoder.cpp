@@ -61,7 +61,7 @@
 #include <util/BitOps.hpp>
 #include <util/XMLUCS4Transcoder.hpp>
 #include <util/TranscodingException.hpp>
-#include <memory.h>
+#include <string.h>
 
 
 

@@ -62,7 +62,7 @@
 #include <util/TranscodingException.hpp>
 #include <util/XML256TableTranscoder.hpp>
 #include <util/XMLString.hpp>
-#include <memory.h>
+#include <string.h>
 
 
 

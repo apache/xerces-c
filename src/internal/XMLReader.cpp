@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/05/15 22:31:15  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.14  2000/05/11 23:11:33  andyh
  * Add missing validity checks for stand-alone documents, character range
  * and Well-formed parsed entities.  Changes contributed by Sean MacRoibeaird
@@ -135,7 +138,7 @@
 #include <internal/CharTypeTables.hpp>
 #include <internal/XMLReader.hpp>
 #include <internal/XMLScanner.hpp>
-#include "memory.h"
+#include <string.h>
 
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/05/15 22:31:22  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.8  2000/03/23 01:02:38  roddey
  * Updates to the XMLURL class to correct a lot of parsing problems
  * and to add support for the port number. Updated the URL tests
@@ -97,7 +100,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <memory.h>
 #include <string.h>
 #include <util/ArrayIndexOutOfBoundsException.hpp>
 #include <util/IllegalArgumentException.hpp>

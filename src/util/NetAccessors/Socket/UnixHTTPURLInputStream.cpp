@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/05/15 22:31:28  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.3  2000/03/24 01:30:32  rahulj
  * Connect to the port specified in the URL, rather than the default
  * one.
@@ -81,7 +84,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <memory.h>
 
 #include <iostream.h>
 #include <unistd.h>

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/05/15 22:31:29  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.3  2000/03/24 00:32:15  rahulj
  * Connect to the port specified in the URL, rather than the default one.
  *
@@ -83,7 +86,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <memory.h>
 
 #include <util/XMLNetAccessor.hpp>
 #include <util/NetAccessors/WinSock/BinHTTPURLInputStream.hpp>

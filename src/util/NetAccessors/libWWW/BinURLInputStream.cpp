@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/05/15 22:31:31  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.2  2000/02/26 07:56:36  rahulj
  * Fixed the license header as pointed out by Bill Schindler <developer@bitranch.com>
  *
@@ -73,7 +76,6 @@
  */
 
 #include <string.h>
-#include <memory.h>
 
 #include <WWWInit.h>
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/05/15 22:31:18  andyh
+ * Replace #include<memory.h> with <string.h> everywhere.
+ *
  * Revision 1.10  2000/04/12 22:58:30  roddey
  * Added support for 'auto validate' mode.
  *
@@ -114,6 +117,7 @@
 #include <internal/XMLScanner.hpp>
 #include <parsers/SAXParser.hpp>
 #include <validators/DTD/DTDValidator.hpp>
+#include <string.h>
 
 
 // ---------------------------------------------------------------------------
