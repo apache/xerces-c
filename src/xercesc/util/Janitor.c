@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/11/06 19:28:11  knoaman
+ * PSVI support for annotations.
+ *
  * Revision 1.4  2003/05/21 03:34:52  jberry
  * Cast away CodeWarrior complaint of casting away const if we're holding a const obj
  *
@@ -161,8 +164,15 @@ Janitor<T>::release()
 
 template <class T> void Janitor<T>::reset(T* p)
 {
-	delete fData;
-	fData = p;
+    if (fData)
+        delete fData;
+
+    fData = p;
+}
+
+template <class T> bool Janitor<T>::isDataNull()
+{
+    return (fData == 0);
 }
 
 

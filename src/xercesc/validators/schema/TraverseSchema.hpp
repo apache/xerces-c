@@ -171,7 +171,7 @@ private:
     void                preprocessSchema(DOMElement* const schemaRoot,
                                          const XMLCh* const schemaURL);
     void                traverseSchemaHeader(const DOMElement* const schemaRoot);
-    void                traverseAnnotationDecl(const DOMElement* const childElem,
+    XSAnnotation*       traverseAnnotationDecl(const DOMElement* const childElem,
                                                const bool topLevel = false);
     void                traverseInclude(const DOMElement* const childElem);
     void                traverseImport(const DOMElement* const childElem);
@@ -182,11 +182,13 @@ private:
     void                traverseSimpleContentDecl(const XMLCh* const typeName,
                                                   const XMLCh* const qualifiedName,
                                                   const DOMElement* const contentDecl,
-                                                  ComplexTypeInfo* const typeInfo);
+                                                  ComplexTypeInfo* const typeInfo,
+                                                  Janitor<XSAnnotation>* const janAnnot);
     void                traverseComplexContentDecl(const XMLCh* const typeName,
                                                   const DOMElement* const contentDecl,
                                                   ComplexTypeInfo* const typeInfo,
-                                                  const bool isMixed);
+                                                  const bool isMixed,
+                                                  Janitor<XSAnnotation>* const janAnnot);
     DatatypeValidator*  traverseSimpleTypeDecl(const DOMElement* const childElem,
                                                const bool topLevel = true,
                                                int baseRefContext = SchemaSymbols::XSD_EMPTYSET);
@@ -197,18 +199,21 @@ private:
                                        const DOMElement* const contentElem,
                                        const XMLCh* const typeName,
                                        const XMLCh* const qualifiedName,
-                                       const int finalSet);
+                                       const int finalSet,
+                                       Janitor<XSAnnotation>* const janAnnot);
     DatatypeValidator*  traverseByRestriction(const DOMElement* const rootElem,
                                               const DOMElement* const contentElem,
                                               const XMLCh* const typeName,
                                               const XMLCh* const qualifiedName,
-                                              const int finalSet);
+                                              const int finalSet,
+                                              Janitor<XSAnnotation>* const janAnnot);
     DatatypeValidator*  traverseByUnion(const DOMElement* const rootElem,
                                         const DOMElement* const contentElem,
                                         const XMLCh* const typeName,
                                         const XMLCh* const qualifiedName,
                                         const int finalSet,
-                                        int baseRefContext);
+                                        int baseRefContext,
+                                        Janitor<XSAnnotation>* const janAnnot);
     QName*              traverseElementDecl(const DOMElement* const childElem,
                                             const bool topLevel = false);
     const XMLCh*        traverseNotationDecl(const DOMElement* const childElem);
@@ -785,6 +790,7 @@ private:
     XSDLocator*                                    fLocator;
     MemoryManager*                                 fMemoryManager;
     MemoryManager*                                 fGrammarPoolMemoryManager;
+    XSAnnotation*                                  fAnnotation;
     GeneralAttributeCheck                          fAttributeCheck;
 
     friend class GeneralAttributeCheck;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/11/06 19:28:11  knoaman
+ * PSVI support for annotations.
+ *
  * Revision 1.10  2003/10/14 15:22:28  peiyongz
  * Implementation of Serialization/Deserialization
  *
@@ -162,6 +165,7 @@ class ComplexTypeInfo;
 class NamespaceScope;
 class XercesGroupInfo;
 class XercesAttGroupInfo;
+class XSAnnotation;
 
 // ---------------------------------------------------------------------------
 //  typedef declaration
@@ -303,6 +307,43 @@ public:
         XMLElementDecl* const elemDecl
     )   const;
 
+    // -----------------------------------------------------------------------
+    // Annotation management methods
+    // -----------------------------------------------------------------------
+    /**
+      * Add annotation to the list of annotations for a given key
+      */
+    void putAnnotation(void* key, XSAnnotation* const annotation);
+
+    /**
+      * Add global annotation
+      *
+      * Note: XSAnnotation acts as a linked list
+      */
+    void addAnnotation(XSAnnotation* const annotation);
+
+    /**
+     * Retrieve the annotation that is associated with the specified key
+     *
+     * @param  key   represents a schema component object (i.e. SchemaGrammar)
+     * @return XSAnnotation associated with the key object
+     */
+    XSAnnotation* getAnnotation(const void* const key);
+
+    /**
+     * Retrieve the annotation that is associated with the specified key
+     *
+     * @param  key   represents a schema component object (i.e. SchemaGrammar)
+     * @return XSAnnotation associated with the key object
+     */
+    const XSAnnotation* getAnnotation(const void* const key) const;
+
+    /**
+      * Get global annotation
+      */
+    XSAnnotation* getAnnotation();
+    const XSAnnotation* getAnnotation() const;
+
     /***
      * Support for Serialization/De-serialization
      ***/
@@ -388,6 +429,7 @@ private:
     bool                                   fValidated;
     DatatypeValidatorFactory               fDatatypeRegistry;
     XMLSchemaDescription*                  fGramDesc;
+    RefHashTableOf<XSAnnotation>*          fAnnotations;
 };
 
 
@@ -442,6 +484,31 @@ SchemaGrammar::getValidSubstitutionGroups() const {
 inline RefHashTableOf<XMLRefInfo>* SchemaGrammar::getIDRefList() const {
 
     return fIDRefList;
+}
+
+inline XMLGrammarDescription* SchemaGrammar::getGrammarDescription() const
+{
+    return fGramDesc;
+}
+
+inline XSAnnotation* SchemaGrammar::getAnnotation(const void* const key)
+{
+    return fAnnotations->get(key);
+}
+
+inline const XSAnnotation* SchemaGrammar::getAnnotation(const void* const key) const
+{
+    return fAnnotations->get(key);
+}
+
+inline XSAnnotation* SchemaGrammar::getAnnotation()
+{
+    return fAnnotations->get(this);
+}
+
+inline const XSAnnotation* SchemaGrammar::getAnnotation() const
+{
+    return fAnnotations->get(this);
 }
 
 // -----------------------------------------------------------------------

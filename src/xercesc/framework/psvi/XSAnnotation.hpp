@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 19:28:11  knoaman
+ * PSVI support for annotations.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -106,8 +109,11 @@ public:
       *
       * @param  manager     The configurable memory manager
       */
-    XSAnnotation( 
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSAnnotation
+    (
+        const XMLCh* const contents
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     //@};
 
@@ -131,18 +137,18 @@ public:
      * @param target  A target pointer to the annotation target object, i.e. 
      *   <code>DOMDocument</code>, 
      *   <code>DOMElement</code>, 
-     *   <code>ContentHandler</code>. 
+     *   <code>ContentHandler</code>.
      * @param targetType  A target type. 
      * @return If the <code>target</code> is a recognized type that is supported by 
      *   this implementation, and the operation succeeds, return true; otherwise return false. 
      */
-    bool writeAnnotation(void *target, 
-                                   ANNOTATION_TARGET targetType);
+    bool writeAnnotation(void *target, ANNOTATION_TARGET targetType);
 
     /**
      * A text representation of annotation.
      */
-    const XMLCh *getAnnotationString();
+    const XMLCh *getAnnotationString() const;
+    XMLCh *getAnnotationString();
 
     //@}
 
@@ -150,6 +156,7 @@ public:
     // methods needed by implementation
 
     // @{
+    void setNext(XSAnnotation* const nextAnnotation);
 
     //@}
 private:
@@ -165,8 +172,19 @@ protected:
     // -----------------------------------------------------------------------
     //  data members
     // -----------------------------------------------------------------------
+    XMLCh*        fContents;
+    XSAnnotation* fNext;
 };
-inline XSAnnotation::~XSAnnotation() {}
+
+inline const XMLCh *XSAnnotation::getAnnotationString() const
+{
+    return fContents;
+}
+
+inline XMLCh *XSAnnotation::getAnnotationString()
+{
+    return fContents;
+}
 
 XERCES_CPP_NAMESPACE_END
 

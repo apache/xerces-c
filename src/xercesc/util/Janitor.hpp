@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/11/06 19:28:11  knoaman
+ * PSVI support for annotations.
+ *
  * Revision 1.3  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -117,18 +120,19 @@ public  :
     // -----------------------------------------------------------------------
     void orphan();
 
-	//	small amount of auto_ptr compatibility
-	T&	operator*() const;
-	T*	operator->() const;
-	T*	get() const;
-	T*	release();
-	void reset(T* p = 0);
+    //  small amount of auto_ptr compatibility
+    T& operator*() const;
+    T* operator->() const;
+    T* get() const;
+    T* release();
+    void reset(T* p = 0);
+    bool isDataNull();
 
 private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-	Janitor();
+    Janitor();
     Janitor(const Janitor<T>&);
 
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/11/06 19:28:11  knoaman
+ * PSVI support for annotations.
+ *
  * Revision 1.13  2003/11/05 16:38:08  peiyongz
  * serialize DatatypeValidatorFactory first
  *
@@ -143,6 +146,8 @@
 #include <xercesc/validators/schema/XercesAttGroupInfo.hpp>
 #include <xercesc/validators/schema/XMLSchemaDescriptionImpl.hpp>
 #include <xercesc/util/OutOfMemoryException.hpp>
+#include <xercesc/util/HashPtr.hpp>
+#include <xercesc/framework/psvi/XSAnnotation.hpp>
 
 #include <xercesc/internal/XTemplateSerializer.hpp>
 
@@ -168,6 +173,7 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     , fValidated(false)
     , fDatatypeRegistry(manager)
     , fGramDesc(0)
+    , fAnnotations(0)
 {
     //
     //  Init all the pool members.
@@ -188,6 +194,12 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
 
         //REVISIT: use grammarPool to create
         fGramDesc = new (fMemoryManager) XMLSchemaDescriptionImpl(XMLUni::fgXMLNSURIName, fMemoryManager);
+
+        // Create annotation table
+        fAnnotations = new (fMemoryManager) RefHashTableOf<XSAnnotation>
+        (
+            29, true, new (fMemoryManager) HashPtr(), fMemoryManager
+        );
 
         //
         //  Call our own reset method. This lets us have the pool setup stuff
@@ -289,6 +301,7 @@ void SchemaGrammar::reset()
         fElemNonDeclPool->removeAll();
     fGroupElemDeclPool->removeAll();
     fNotationDeclPool->removeAll();
+    fAnnotations->removeAll();
     fValidated = false;
 }
 
@@ -310,7 +323,7 @@ void SchemaGrammar::cleanUp()
     delete fValidSubstitutionGroups;
     delete fIDRefList;
     delete fGramDesc;
-
+    delete fAnnotations;
 }
 
 void SchemaGrammar::setGrammarDescription(XMLGrammarDescription* gramDesc)
@@ -326,9 +339,22 @@ void SchemaGrammar::setGrammarDescription(XMLGrammarDescription* gramDesc)
     fGramDesc = (XMLSchemaDescription*) gramDesc;
 }
 
-XMLGrammarDescription* SchemaGrammar::getGrammarDescription() const
+// ---------------------------------------------------------------------------
+//  SchemaGrammar: Helper methods
+// ---------------------------------------------------------------------------
+void SchemaGrammar::putAnnotation(void* key, XSAnnotation* const annotation)
 {
-    return fGramDesc;
+    fAnnotations->put(key, annotation);
+}
+
+void SchemaGrammar::addAnnotation(XSAnnotation* const annotation)
+{
+    XSAnnotation* lAnnot = fAnnotations->get(this);
+	
+    if (lAnnot)
+        lAnnot->setNext(annotation);
+    else
+        fAnnotations->put(this, annotation);
 }
 
 /***

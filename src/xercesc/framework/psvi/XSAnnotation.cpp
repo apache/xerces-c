@@ -56,18 +56,33 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/11/06 19:28:11  knoaman
+ * PSVI support for annotations.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
  */
 
 #include <xercesc/framework/psvi/XSAnnotation.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XSAnnotation::XSAnnotation( MemoryManager * const manager):
-            XSObject(XSConstants::ANNOTATION, manager )
+XSAnnotation::XSAnnotation(const XMLCh* const content,
+                           MemoryManager * const manager):
+    XSObject(XSConstants::ANNOTATION, manager)
+    , fContents(XMLString::replicate(content, manager))
+    , fNext(0)
 {
+}
+
+XSAnnotation::~XSAnnotation()
+{
+    fMemoryManager->deallocate(fContents);
+
+    if (fNext)
+        delete fNext;
 }
 
 // XSAnnotation methods
@@ -94,14 +109,15 @@ bool XSAnnotation::writeAnnotation(void *target,
     return false;
 }
 
-/**
- * A text representation of annotation.
- */
-const XMLCh *XSAnnotation::getAnnotationString()
+void XSAnnotation::setNext(XSAnnotation* const nextAnnotation)
 {
-    // REVISIT
-    return 0;
+    if (fNext)
+        fNext->setNext(nextAnnotation);
+    else
+        fNext = nextAnnotation;
 }
+
+
 
 XERCES_CPP_NAMESPACE_END
 
