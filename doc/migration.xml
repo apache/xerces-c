@@ -85,7 +85,7 @@
               </ul>
               <li>Added a non-standard extension DOMImplementation::loadDOMExceptionMsg to load the
               default error message for the corresponding DOMException code.</li>
-              <li>XMLUri: Added a constructor and a set method to allow creating/setting of
+              <li>XMLAttr: Added a constructor and a set method to allow creating/setting of
               XMLAttr using a rawname.</li>
               <li>Added XMLUri::getUriText to return the URI as a string specification.</li>
               <li>Add XMLString::fixURI to transform an absolute path filename to standard URI form.</li>
@@ -98,6 +98,22 @@
                       http://apache.org/xml/features/standard-uri-conformant</li>
                 </ul>
               <li>Add XMLURL::hasInvalidChar() to indicate if the URL has invalid char as per RFC standard</li>
+              <li>To allow users to enable/disable src offset calculation,
+                  the following are added:</li>
+                <ul>
+                  <li>XercesDOMParser/DOMParser/SAXParser: get/setCalculateSrcOfs</li>
+                  <li>and DOMBuilder/SAX2XMLReader will recognize the feature
+                      http://apache.org/xml/features/calculate-src-ofst</li>
+                </ul>
+              <li>To allow users to select the scanner when scanning XML documents,
+                  the following are added:</li>
+                <ul>
+                  <li>XercesDOMParser/DOMParser/SAXParser: useScanner</li>
+                  <li>and DOMBuilder/SAX2XMLReader will recognize the property
+                      http://apache.org/xml/properties/scannerName</li>
+                </ul>
+             <li>Added getSrcOffset to XercesDOMParser/DOMParser/SAXParser/DOMBuilder/SAX2XMLReader to
+                 allow users to get the current src offset within the input source.</li>
             </ul>
         </s4>
 

@@ -548,6 +548,18 @@
             </table>
             <p/>
 
+            <anchor name="CalculateSrcOffset"/>
+            <table>
+                <tr><th colspan="2"><em>void setCalculateSrcOfs(const bool)</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable src offset calculation. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable src offset calculation. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td> If set to true, the user can inquire about
+                the current src offset within the input source. Setting it to false (default)
+                improves the performance.</td></tr>
+            </table>
+            <p/>
+
         </s3>
 
         <anchor name="XercesDOMProperties"/>
@@ -590,6 +602,25 @@
                 <tr><th><em>Value</em></th><td> The syntax is the same as for the noNamespaceSchemaLocation
                             attribute that may occur in an instance document: e.g."file_name.xsd".</td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
+            </table>
+
+            <p/>
+
+            <table>
+                <tr><th colspan="2"><em>void useScanner(const XMLCh* const)</em></th></tr>
+                <tr><th><em>Description</em></th><td> This property allows the user to specify the name of
+                            the XMLScanner to use for scanning XML documents. If not specified, the default
+                            scanner "IGXMLScanner" is used.</td></tr>
+                <tr><th><em>Value</em></th><td> The recognized scanner names are: <br/>
+                            1."WFXMLScanner" - scanner that performs well-formedness checking only.<br/>
+                            2. "DGXMLScanner" - scanner that handles XML documents with DTD grammar information.<br/>
+                            3. "SGXMLScanner" - scanner that handles XML documents with XML schema grammar information.<br/>
+			    4. "IGXMLScanner" - scanner that handles XML documents with DTD or/and XML schema grammar information.<br/>
+                            Users can use the predefined constants defined in XMLUni directly or a string that matches the value of
+                            one of those constants.</td></tr>
+                <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
+                <tr><th><em>note: </em></th><td> See <jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump>
+                for more programming details. </td></tr>
             </table>
 
             <p/>
@@ -1098,6 +1129,18 @@
             </table>
             <p/>
 
+            <anchor name="CalculateSrcOffset"/>
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/features/calculate-src-ofs</em></th></tr>
+                <tr><th><em>true:</em></th><td> Enable src offset calculation. </td></tr>
+                <tr><th><em>false:</em></th><td> Disable src offset calculation. </td></tr>
+                <tr><th><em>default:</em></th><td> false </td></tr>
+                <tr><th><em>note:</em></th><td> If set to true, the user can inquire about
+                the current src offset within the input source. Setting it to false (default)
+                improves the performance.</td></tr>
+            </table>
+            <p/>
+
             <anchor name="builder-adopts-domdocument"/>
             <table>
                 <tr><th colspan="2"><em>http://apache.org/xml/features/dom/user-adopts-DOMDocument</em></th></tr>
@@ -1172,6 +1215,26 @@
                             attribute that may occur in an instance document: e.g."file_name.xsd". </td></tr>
                 <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
             </table>
+            <p/>
+
+            <table>
+                <tr><th colspan="2"><em>http://apache.org/xml/properties/scannerName</em></th></tr>
+                <tr><th><em>Description</em></th><td> This property allows the user to specify the name of
+                            the XMLScanner to use for scanning XML documents. If not specified, the default
+                            scanner "IGXMLScanner" is used.</td></tr>
+                <tr><th><em>Value</em></th><td> The recognized scanner names are: <br/>
+                            1."WFXMLScanner" - scanner that performs well-formedness checking only.<br/>
+                            2. "DGXMLScanner" - scanner that handles XML documents with DTD grammar information.<br/>
+                            3. "SGXMLScanner" - scanner that handles XML documents with XML schema grammar information.<br/>
+			    4. "IGXMLScanner" - scanner that handles XML documents with DTD or/and XML schema grammar information.<br/>
+                            Users can use the predefined constants defined in XMLUni directly or a string that matches the value of
+                            one of those constants.</td></tr>
+                <tr><th><em>Value Type</em></th><td> XMLCh* </td></tr>
+                <tr><th><em>note: </em></th><td> See <jump href="program-others.html#UseSpecificScanner">Use Specific Scanner</jump>
+                for more programming details. </td></tr>
+            </table>
+            <p/>
+
           </s4>
         </s3>
 

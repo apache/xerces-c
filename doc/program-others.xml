@@ -474,5 +474,108 @@ public:
     }
 ..
 </source>
+
+<anchor name="UseSpecificScanner"/>
+    <s2 title="Use Specific Scanner">
+
+        <p>For performance and modularity, the &XercesCName; has implemented a mechanism
+        to allow users to specify the scanner to use when scanning an XML document.
+        Such mechanism will enable the creation of special purpose scanners that can be easily
+        plugged in.</p>
+
+        <p>&XercesCName; supports the following scanners:</p>
+
+        <s3 title="WFXMLScanner">
+
+            <p>
+            The WFXMLScanner is a non-validating scanner which performs well-formedness check only.
+            It does not do any DTD/XMLSchema processing. If the XML document contains a DOCTYPE, it
+            will be silently ignored (i.e. no warning message is issued). Similiarly, any schema
+            specific attributes (e.g. schemaLocation), will be treated as normal element attributes.
+            Setting grammar specific features/properties will have no effect on its behavior
+            (e.g. setLoadExternalDTD(true) is ignored).
+            </p>
+
+<source>
+// Create a DOM parser
+XercesDOMParser parser;
+
+// Specify scanner name
+parser.useScanner(XMLUni::fgWFScanner);
+
+// Specify other parser features, e.g.
+parser.setDoNamespaces(true);
+</source>
+
+
+        </s3>
+
+        <s3 title="DGXMLScanner">
+
+            <p>
+            The DGXMLScanner handles XML documents with DOCTYPE information. It does not do any
+            XMLSchema processing, which means that any schema specific attributes (e.g. schemaLocation),
+            will be treated as normal element attributes. Setting schema grammar specific features/properties
+            will have no effect on its behavior (e.g. setDoSchema(true) is ignored). 
+            </p>
+
+<source>
+// Create a SAX parser
+SAXParser parser;
+
+// Specify scanner name
+parser.useScanner(XMLUni::fgDGScanner);
+
+// Specify other parser features, e.g.
+parser.setLoadExternalDTD(true);
+</source>
+
+        </s3>
+
+        <s3 title="SGXMLScanner">
+
+            <p>
+            The SGXMLScanner handles XML documents with XML schema grammar information.
+            If the XML document contains a DOCTYPE, it will be ignored. Namespace and
+            schema processing features are on by default, and setting them to off has
+            not effect.
+            </p>
+
+<source>
+// Create a SAX2 parser
+SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
+
+// Specify scanner name
+parser->setProperty(XMLUni::fgXercesScannerName, XMLUni::fgSGScanner);
+
+// Specify other parser features, e.g.
+parser->setFeature(XMLUni::fgXercesSchemaFullChecking, false);
+</source>
+
+        </s3>
+
+        <s3 title="IGXMLScanner">
+
+            <p>
+            The IGXMLScanner is an integrated scanner and handles XML documents with DTD and/or
+            XML schema grammar. This is the default scanner used by the various parsers if no
+            scanner is specified.
+            </p>
+
+<source>
+// Create a DOMBuilder parser
+DOMBuilder *parser = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
+
+// Specify scanner name - This is optional as IGXMLScanner is the default
+parser->setProperty(XMLUni::fgXercesScannerName, XMLUni::fgIGScanner);
+
+// Specify other parser features, e.g.
+parser->setFeature(XMLUni::fgDOMNamespaces, doNamespaces);
+parser->setFeature(XMLUni::fgXercesSchema, doSchema);
+</source>
+
+        </s3>
+
+    </s2>
     
 </s1>
