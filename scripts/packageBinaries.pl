@@ -543,6 +543,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
             } elsif ($DevStudioVer eq "7.0") {
                 pchdir ("$ICUROOT/as_is/win32");
                 psystem("unzip msvc7.zip");
+                pchdir ("$ICUROOT/as_is/win32/vc7");
 
                 psystem("devenv /rebuild Release /out buildlog.txt /project all allinone.sln");
                 psystem("cat buildlog.txt");
