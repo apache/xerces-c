@@ -37,11 +37,11 @@ OutDir=.\..\..\..\..\..\Build\Win32\VC6\Release
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\xercesDeprecatedDOM.dll"
+ALL : "$(OUTDIR)\xerces-depdom_2_5_0.dll"
 
 !ELSE 
 
-ALL : "XercesLib - Win32 Release" "$(OUTDIR)\xercesDeprecatedDOM.dll"
+ALL : "XercesLib - Win32 Release" "$(OUTDIR)\xerces-depdom_2_5_0.dll"
 
 !ENDIF 
 
@@ -109,10 +109,10 @@ CLEAN :
 	-@erase "$(INTDIR)\TreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
-	-@erase "$(OUTDIR)\obj\xercesDeprecatedDOM.map"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOM.dll"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOM.exp"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOM.lib"
+	-@erase "$(OUTDIR)\obj\xerces-depdom_2_5_0.map"
+	-@erase "$(OUTDIR)\xerces-depdom_2.exp"
+	-@erase "$(OUTDIR)\xerces-depdom_2.lib"
+	-@erase "$(OUTDIR)\xerces-depdom_2_5_0.dll"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -161,7 +161,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesDeprecatedDOMLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2.lib /base:"0x12000000" /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xercesDeprecatedDOM.pdb" /map:"$(INTDIR)\xercesDeprecatedDOM.map" /machine:I386 /out:"$(OUTDIR)\xercesDeprecatedDOM.dll" /implib:"$(OUTDIR)\xercesDeprecatedDOM.lib" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2.lib /base:"0x12000000" /subsystem:windows /dll /incremental:no /pdb:"$(OUTDIR)\xerces-depdom_2_5_0.pdb" /map:"$(INTDIR)\xerces-depdom_2_5_0.map" /machine:I386 /out:"$(OUTDIR)\xerces-depdom_2_5_0.dll" /implib:"$(OUTDIR)\xerces-depdom_2.lib" /libpath:"..\..\..\..\..\Build\Win32\VC6\Release" 
 LINK32_OBJS= \
 	"$(INTDIR)\AttrImpl.obj" \
 	"$(INTDIR)\AttrMapImpl.obj" \
@@ -223,7 +223,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLDeclImpl.obj" \
 	"$(OUTDIR)\xerces-c_2.lib"
 
-"$(OUTDIR)\xercesDeprecatedDOM.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-depdom_2_5_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -238,11 +238,11 @@ OutDir=.\..\..\..\..\..\Build\Win32\VC6\Debug
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\xercesDeprecatedDOMD.dll"
+ALL : "$(OUTDIR)\xerces-depdom_2_5_0D.dll"
 
 !ELSE 
 
-ALL : "XercesLib - Win32 Debug" "$(OUTDIR)\xercesDeprecatedDOMD.dll"
+ALL : "XercesLib - Win32 Debug" "$(OUTDIR)\xerces-depdom_2_5_0D.dll"
 
 !ENDIF 
 
@@ -311,11 +311,11 @@ CLEAN :
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOMD.dll"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOMD.exp"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOMD.ilk"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOMD.lib"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOMD.pdb"
+	-@erase "$(OUTDIR)\xerces-depdom_2_5_0D.dll"
+	-@erase "$(OUTDIR)\xerces-depdom_2_5_0D.ilk"
+	-@erase "$(OUTDIR)\xerces-depdom_2_5_0D.pdb"
+	-@erase "$(OUTDIR)\xerces-depdom_2D.exp"
+	-@erase "$(OUTDIR)\xerces-depdom_2D.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -364,7 +364,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesDeprecatedDOMLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2D.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xercesDeprecatedDOMD.pdb" /debug /machine:I386 /out:"$(OUTDIR)\xercesDeprecatedDOMD.dll" /implib:"$(OUTDIR)\xercesDeprecatedDOMD.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2D.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-depdom_2_5_0D.pdb" /debug /machine:I386 /out:"$(OUTDIR)\xerces-depdom_2_5_0D.dll" /implib:"$(OUTDIR)\xerces-depdom_2D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win32\VC6\Debug" 
 LINK32_OBJS= \
 	"$(INTDIR)\AttrImpl.obj" \
 	"$(INTDIR)\AttrMapImpl.obj" \
@@ -426,7 +426,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLDeclImpl.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib"
 
-"$(OUTDIR)\xercesDeprecatedDOMD.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-depdom_2_5_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -441,11 +441,11 @@ OutDir=.\..\..\..\..\..\Build\Win64\VC6\Debug
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\xercesDeprecatedDOMD.dll"
+ALL : "$(OUTDIR)\xerces-depdom_2_5_0D.dll"
 
 !ELSE 
 
-ALL : "XercesLib - Win64 Debug" "$(OUTDIR)\xercesDeprecatedDOMD.dll"
+ALL : "XercesLib - Win64 Debug" "$(OUTDIR)\xerces-depdom_2_5_0D.dll"
 
 !ENDIF 
 
@@ -514,11 +514,11 @@ CLEAN :
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOMD.dll"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOMD.exp"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOMD.ilk"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOMD.lib"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOMD.pdb"
+	-@erase "$(OUTDIR)\xerces-depdom_2_5_0D.dll"
+	-@erase "$(OUTDIR)\xerces-depdom_2_5_0D.ilk"
+	-@erase "$(OUTDIR)\xerces-depdom_2_5_0D.pdb"
+	-@erase "$(OUTDIR)\xerces-depdom_2D.exp"
+	-@erase "$(OUTDIR)\xerces-depdom_2D.lib"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -567,7 +567,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesDeprecatedDOMLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2D.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xercesDeprecatedDOMD.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\xercesDeprecatedDOMD.dll" /implib:"$(OUTDIR)\xercesDeprecatedDOMD.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2D.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-depdom_2_5_0D.pdb" /debug /machine:IX86 /out:"$(OUTDIR)\xerces-depdom_2_5_0D.dll" /implib:"$(OUTDIR)\xerces-depdom_2D.lib" /pdbtype:sept /libpath:"..\..\..\..\..\Build\Win64\VC6\Debug" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\AttrImpl.obj" \
 	"$(INTDIR)\AttrMapImpl.obj" \
@@ -629,7 +629,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLDeclImpl.obj" \
 	"$(OUTDIR)\xerces-c_2D.lib"
 
-"$(OUTDIR)\xercesDeprecatedDOMD.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-depdom_2_5_0D.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<
@@ -644,11 +644,11 @@ OutDir=.\..\..\..\..\..\Build\Win64\VC6\Release
 
 !IF "$(RECURSE)" == "0" 
 
-ALL : "$(OUTDIR)\xercesDeprecatedDOM.dll"
+ALL : "$(OUTDIR)\xerces-depdom_2_5_0.dll"
 
 !ELSE 
 
-ALL : "XercesLib - Win64 Release" "$(OUTDIR)\xercesDeprecatedDOM.dll"
+ALL : "XercesLib - Win64 Release" "$(OUTDIR)\xerces-depdom_2_5_0.dll"
 
 !ENDIF 
 
@@ -716,11 +716,11 @@ CLEAN :
 	-@erase "$(INTDIR)\TreeWalkerImpl.obj"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\XMLDeclImpl.obj"
-	-@erase "$(OUTDIR)\obj\xercesDeprecatedDOM.map"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOM.dll"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOM.exp"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOM.ilk"
-	-@erase "$(OUTDIR)\xercesDeprecatedDOM.lib"
+	-@erase "$(OUTDIR)\obj\xerces-depdom_2_5_0.map"
+	-@erase "$(OUTDIR)\xerces-depdom_2.exp"
+	-@erase "$(OUTDIR)\xerces-depdom_2.lib"
+	-@erase "$(OUTDIR)\xerces-depdom_2_5_0.dll"
+	-@erase "$(OUTDIR)\xerces-depdom_2_5_0.ilk"
 
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
@@ -769,7 +769,7 @@ BSC32_FLAGS=/o"$(OUTDIR)\XercesDeprecatedDOMLib.bsc"
 BSC32_SBRS= \
 	
 LINK32=link.exe
-LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xercesDeprecatedDOM.pdb" /map:"$(INTDIR)\xercesDeprecatedDOM.map" /machine:IX86 /out:"$(OUTDIR)\xercesDeprecatedDOM.dll" /implib:"$(OUTDIR)\xercesDeprecatedDOM.lib" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
+LINK32_FLAGS=kernel32.lib user32.lib advapi32.lib ws2_32.lib xerces-c_2.lib /base:"0x12000000" /subsystem:windows /dll /incremental:yes /pdb:"$(OUTDIR)\xerces-depdom_2_5_0.pdb" /map:"$(INTDIR)\xerces-depdom_2_5_0.map" /machine:IX86 /out:"$(OUTDIR)\xerces-depdom_2_5_0.dll" /implib:"$(OUTDIR)\xerces-depdom_2.lib" /libpath:"..\..\..\..\..\Build\Win64\VC6\Release" /machine:IA64 
 LINK32_OBJS= \
 	"$(INTDIR)\AttrImpl.obj" \
 	"$(INTDIR)\AttrMapImpl.obj" \
@@ -831,7 +831,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLDeclImpl.obj" \
 	"$(OUTDIR)\xerces-c_2.lib"
 
-"$(OUTDIR)\xercesDeprecatedDOM.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
+"$(OUTDIR)\xerces-depdom_2_5_0.dll" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
   $(LINK32_FLAGS) $(LINK32_OBJS)
 <<

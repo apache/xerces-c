@@ -41,15 +41,15 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib xerces-c_2.lib"
-				OutputFile="..\..\..\..\..\Build\Win32\VC7\Release\xercesDeprecatedDOM.dll"
+				OutputFile="..\..\..\..\..\Build\Win32\VC7\Release\xerces-depdom_2_5_0.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Release"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/xercesDeprecatedDOM.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Release/xerces-depdom_2_5_0.pdb"
 				GenerateMapFile="TRUE"
-				MapFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/xercesDeprecatedDOM.map"
+				MapFileName=".\..\..\..\..\..\Build\Win32\VC7\Release\obj/xerces-depdom_2_5_0.map"
 				SubSystem="2"
 				BaseAddress="0x12000000"
-				ImportLibrary=".\..\..\..\..\..\Build\Win32\VC7\Release/xercesDeprecatedDOM.lib"/>
+				ImportLibrary=".\..\..\..\..\..\Build\Win32\VC7\Release/xerces-depdom_2.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG"
@@ -100,14 +100,14 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
 				AdditionalDependencies="ws2_32.lib xerces-c_2D.lib"
-				OutputFile="..\..\..\..\..\Build\Win32\VC7\Debug/xercesDeprecatedDOMD.dll"
+				OutputFile="..\..\..\..\..\Build\Win32\VC7\Debug/xerces-depdom_2_5_0D.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\..\..\Build\Win32\VC7\Debug"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/xercesDeprecatedDOMD.pdb"
+				ProgramDatabaseFile=".\..\..\..\..\..\Build\Win32\VC7\Debug/xerces-depdom_2_5_0D.pdb"
 				SubSystem="2"
 				BaseAddress="0x12000000"
-				ImportLibrary=".\..\..\..\..\..\Build\Win32\VC7\Debug/xercesDeprecatedDOMD.lib"/>
+				ImportLibrary=".\..\..\..\..\..\Build\Win32\VC7\Debug/xerces-depdom_2D.lib"/>
 			<Tool
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG"
