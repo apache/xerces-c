@@ -59,6 +59,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/06/07 15:38:41  tng
+ * Documentation Fix: Update the API Documentation for DOM headers
+ *
  * Revision 1.3  2002/06/06 20:53:06  tng
  * Documentation Fix: Update the API Documentation for DOM headers
  *
@@ -133,21 +136,6 @@ public:
     // -----------------------------------------------------------------------
     /** @name Functions introduced in DOM Level 3 */
     //@{
-    /**
-     * Makes the byte stream for this input source.
-     *
-     * <p>The derived class must create and return a binary input stream of an
-     * appropriate type for its kind of data source. The returned stream must
-     * be dynamically allocated and becomes the parser's property.
-     * </p>
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @see BinInputStream
-     * @since DOM Level 3
-     */
-    virtual BinInputStream* makeStream() const = 0;
-
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
@@ -204,20 +192,6 @@ public:
      * @since DOM Level 3
      */
     virtual const XMLCh* getBaseURI() const = 0;
-
-
-    /**
-     * Get the flag that indicates if the parser should issue fatal error if this input source
-     * is not found.
-     *
-     * <p><b>"Experimental - subject to change"</b></p>
-     *
-     * @return True if the parser should issue fatal error if this input source is not found.
-     *         False if the parser issue warning message instead.
-     * @see #setIssueFatalErrorIfNotFound
-     * @since DOM Level 3
-     */
-    virtual const bool getIssueFatalErrorIfNotFound() const = 0;
 
     // -----------------------------------------------------------------------
     //  Setter methods
@@ -282,6 +256,28 @@ public:
      * @since DOM Level 3
      */
     virtual void setBaseURI(const XMLCh* const baseURI) = 0;
+    //@}
+
+    // -----------------------------------------------------------------------
+    //  Non-standard Extension
+    // -----------------------------------------------------------------------
+    /** @name Non-standard Extension */
+    //@{
+
+    /**
+     * Makes the byte stream for this input source.
+     *
+     * <p>The derived class must create and return a binary input stream of an
+     * appropriate type for its kind of data source. The returned stream must
+     * be dynamically allocated and becomes the parser's property.
+     * </p>
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @see BinInputStream
+     * @since DOM Level 3
+     */
+    virtual BinInputStream* makeStream() const = 0;
 
     /**
      * Indicates if the parser should issue fatal error if this input source
@@ -293,9 +289,21 @@ public:
      *               If set to false, the parser issue warning message instead.  (Default: true)
      *
      * @see #getIssueFatalErrorIfNotFound
-     * @since DOM Level 3
      */
     virtual void setIssueFatalErrorIfNotFound(const bool flag) = 0;
+
+
+    /**
+     * Get the flag that indicates if the parser should issue fatal error if this input source
+     * is not found.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return True if the parser should issue fatal error if this input source is not found.
+     *         False if the parser issue warning message instead.
+     * @see #setIssueFatalErrorIfNotFound
+     */
+    virtual const bool getIssueFatalErrorIfNotFound() const = 0;
 
     //@}
 };
