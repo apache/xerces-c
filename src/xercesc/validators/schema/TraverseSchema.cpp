@@ -1196,21 +1196,23 @@ int TraverseSchema::traverseComplexTypeDecl(const DOMElement* const elem,
     // Process the content of the complex type declaration
     // ------------------------------------------------------------------
     try {
+
+        const XMLCh* mixedVal = getElementAttValue(elem,SchemaSymbols::fgATT_MIXED);
+        bool isMixed = false;
+
+        if ((mixedVal && *mixedVal)
+            && (XMLString::equals(SchemaSymbols::fgATTVAL_TRUE, mixedVal)
+                || XMLString::equals(fgValueOne, mixedVal))) {
+            isMixed = true;
+        }
+
         if (child == 0) {
             // EMPTY complexType with complexContent
-            processComplexContent(elem, name, child, typeInfo, 0,0,0, false);
+            processComplexContent(elem, name, child, typeInfo, 0,0,0, isMixed);
         }
         else {
 
             const XMLCh* childName = child->getLocalName();
-            const XMLCh* mixedVal = getElementAttValue(elem,SchemaSymbols::fgATT_MIXED);
-            bool isMixed = false;
-
-            if ((mixedVal && *mixedVal)
-                && (XMLString::equals(SchemaSymbols::fgATTVAL_TRUE, mixedVal)
-                    || XMLString::equals(fgValueOne, mixedVal))) {
-                isMixed = true;
-            }
 
             if (XMLString::equals(childName, SchemaSymbols::fgELT_SIMPLECONTENT)) {
 
