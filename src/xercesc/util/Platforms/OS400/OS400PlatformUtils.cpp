@@ -396,10 +396,9 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     char* newSrc = XMLString::transcode(srcPath);
      ArrayJanitor<char> janText(newSrc);
     // Use a local buffer that is big enough for the largest legal path
-    char *absPath = new char[256];
+    char absPath[PATH_MAX];
 	//get the absolute path
-    char* retPath = realpath(newSrc, absPath);	
-    ArrayJanitor<char> janText2(retPath);
+    char* retPath = realpath(newSrc, &absPath[0]);	
 	
     if (!retPath)
     {

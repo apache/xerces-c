@@ -227,10 +227,9 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     //
     char* newSrc = XMLString::transcode(srcPath);
     ArrayJanitor<char> janText(newSrc);
-    char *absPath = new char[PATH_MAX];
-    ArrayJanitor<char> janText2(absPath);
+    char absPath[PATH_MAX];
 
-    char* retPath = realpath(newSrc, absPath);
+    char* retPath = realpath(newSrc, &absPath[0]);
 
     if (!retPath) {
         ThrowXML(XMLPlatformUtilsException, XMLExcepts::File_CouldNotGetBasePathName);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/04/21 04:28:04  peiyongz
+ * performance tuning
+ *
  * Revision 1.8  2003/03/09 16:54:25  peiyongz
  * PanicHandler
  *
@@ -425,10 +428,9 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
     ArrayJanitor<char> janText(newSrc);
 
     // Use a local buffer that is big enough for the largest legal path
-    char *absPath = new char[1024];
+    char absPath[PATH_MAX];
     // get the absolute path
-    char* retPath = realpath(newSrc, absPath);
-    ArrayJanitor<char> janText2(retPath);
+    char* retPath = realpath(newSrc, &absPath[0]);
 
     if (!retPath)
     {
