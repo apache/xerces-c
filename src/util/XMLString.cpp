@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/03/23 01:02:38  roddey
+ * Updates to the XMLURL class to correct a lot of parsing problems
+ * and to add support for the port number. Updated the URL tests
+ * to test some of this new stuff.
+ *
  * Revision 1.7  2000/03/02 19:54:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -319,6 +324,30 @@ void XMLString::copyString(         char* const    target
                             , const char* const    src)
 {
     strcpy(target, src);
+}
+
+
+void XMLString::cut(        XMLCh* const    toCutFrom
+                    , const unsigned int    count)
+{
+    #if XML_DEBUG
+    if (count > stringLen(toCut))
+    {
+        // <TBD> This is bad of course
+    }
+    #endif
+
+    // If count is zero, then nothing to do
+    if (!count)
+        return;
+
+    XMLCh* targetPtr = toCutFrom;
+    XMLCh* srcPtr = toCutFrom + count;
+    while (*srcPtr)
+        *targetPtr++ = *srcPtr++;
+
+    // Cap it off at the new end
+    *targetPtr = 0;
 }
 
 
@@ -987,6 +1016,54 @@ XMLString::makeUName(const XMLCh* const pszURI, const XMLCh* const pszName)
         pszRet = replicate(pszName);
     }
     return pszRet;
+}
+
+
+bool XMLString::textToBin(const XMLCh* const toConvert, unsigned int& toFill)
+{
+    toFill = 0;
+
+    // If no string, then its a failure
+    if (!toConvert)
+        return false;
+    if (!*toConvert)
+        return false;
+
+    // Scan past any whitespace. If we hit the end, then return failure
+    const XMLCh* startPtr = toConvert;
+    while (XMLPlatformUtils::fgTransService->isSpace(*startPtr))
+        startPtr++;
+    if (!*startPtr)
+        return false;
+
+    // Start at the end and work back through any whitespace
+    const XMLCh* endPtr = toConvert + stringLen(toConvert);
+    while (XMLPlatformUtils::fgTransService->isSpace(*(endPtr - 1)))
+        endPtr--;
+
+    //
+    //  Work through what remains and convert each char to a digit. Any
+    //  space or non-digit here is now an error.
+    //
+    unsigned long tmpVal = 0;
+    while (startPtr < endPtr)
+    {
+        // If not valid decimal digit, then an error
+        if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
+            return false;
+
+        const unsigned int nextVal = (unsigned int)(*startPtr - chDigit_0);
+        tmpVal = (tmpVal * 10) + nextVal;
+
+        startPtr++;
+    }
+
+    // Make sure it didn't overflow
+    if (tmpVal > ~0UL)
+        ThrowXML(RuntimeException, XMLExcepts::Str_ConvertOverflow);
+
+    toFill = (unsigned int)tmpVal;
+    return true;
 }
 
 

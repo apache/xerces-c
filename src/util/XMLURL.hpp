@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/23 01:02:38  roddey
+ * Updates to the XMLURL class to correct a lot of parsing problems
+ * and to add support for the port number. Updated the URL tests
+ * to test some of this new stuff.
+ *
  * Revision 1.4  2000/03/02 19:54:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -191,6 +196,7 @@ public:
     const XMLCh* getHost() const;
     const XMLCh* getPassword() const;
     const XMLCh* getPath() const;
+    unsigned int getPortNum() const;
     Protocols getProtocol() const;
     const XMLCh* getProtocolName() const;
     const XMLCh* getQuery() const;
@@ -254,6 +260,10 @@ private:
     //      The path part of the URL that was parsed out, if any. If none,
     //      then its a null.
     //
+    //  fPortNum
+    //      The port that was indicated in the URL. If no port was provided
+    //      explicitly, then its left zero.
+    //
     //  fProtocol
     //      Indicates the type of the URL's source. The text of the prefix
     //      can be gotten from this.
@@ -269,14 +279,15 @@ private:
     //      made relative if needed, canonicalized, and then put back
     //      together. Its only created upon demand.
     // -----------------------------------------------------------------------
-    XMLCh*      fFragment;
-    XMLCh*      fHost;
-    XMLCh*      fPassword;
-    XMLCh*      fPath;
-    Protocols   fProtocol;
-    XMLCh*      fQuery;
-    XMLCh*      fUser;
-    XMLCh*      fURLText;
+    XMLCh*          fFragment;
+    XMLCh*          fHost;
+    XMLCh*          fPassword;
+    XMLCh*          fPath;
+    unsigned int    fPortNum;
+    Protocols       fProtocol;
+    XMLCh*          fQuery;
+    XMLCh*          fUser;
+    XMLCh*          fURLText;
 };
 
 

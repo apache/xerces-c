@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.11  2000/03/23 01:02:38  roddey
+ * Updates to the XMLURL class to correct a lot of parsing problems
+ * and to add support for the port number. Updated the URL tests
+ * to test some of this new stuff.
+ *
  * Revision 1.10  2000/03/20 23:00:46  rahulj
  * Moved the inline definition of stringLen before the first
  * use. This satisfied the HP CC compiler.
@@ -249,6 +254,22 @@ public:
         ,       XMLCh* const    toFill
         , const unsigned int    maxChars
         , const unsigned int    radix
+    );
+
+    /**
+      * Converts a string of decimal chars to a binary value
+      *
+      * Note that leading and trailng whitespace is legal and will be ignored
+      * but the remainder must be all decimal digits.
+      *
+      * @param toConvert The string of digits to convert
+      * @param toFill    The unsigned int value to fill with the converted
+      *                  value.
+      */
+    static bool textToBin
+    (
+        const   XMLCh* const    toConvert
+        ,       unsigned int&   toFill
     );
     //@}
 
@@ -747,6 +768,18 @@ public:
 
     /** @name Conversion functions */
     //@{
+
+    /** Cut leading chars from a string
+      *
+      * @param toCut The string to cut chars from
+      * @param count The count of leading chars to cut
+      */
+    static void cut
+    (
+                XMLCh* const    toCutFrom
+        , const unsigned int    count
+    );
+
     /** Transcodes a string to native code-page
       * @param toTranscode The string to be transcoded
       * @return Returns the transcoded string

@@ -243,6 +243,7 @@
             <Message Id="Str_UnknownRadix" Text="The given radix is not supported. Use 2, 8, 10, or 16"/>
             <Message Id="Str_TargetBufTooSmall" Text="The target buffer is too small to accept the results"/>
             <Message Id="Str_StartIndexPastEnd" Text="The start index is past the end of the string"/>
+            <Message Id="Str_ConvertOverflow" Text="The represented value overflowed the output binary result"/>
             <Message Id="Strm_StdErrWriteFailure" Text="Could not write to standard err"/>
             <Message Id="Strm_StdOutWriteFailure" Text="Could not write to standard out"/>
             <Message Id="Strm_ConWriteFailure" Text="Could not write to console"/>
@@ -265,6 +266,7 @@
             <Message Id="URL_UnterminatedHostComponent" Text="Unterminated host component"/>
             <Message Id="URL_RelativeBaseURL" Text="The base part of the URL cannot be relative"/>
             <Message Id="URL_BaseUnderflow" Text="The base part has too few levels to weave in relative part"/>
+            <Message Id="URL_BadPortField" Text="The port field must be a 16 bit decimal number"/>
             <Message Id="Vector_BadIndex" Text="The passed index is past the end of the vector"/>
             <Message Id="Val_InvalidElemId" Text="The element id was invalid"/>
             <Message Id="Val_CantHaveIntSS" Text="When reusing the validator, no internal subset is allowed"/>

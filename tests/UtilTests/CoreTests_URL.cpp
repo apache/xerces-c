@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.8  2000/03/23 01:02:40  roddey
+ * Updates to the XMLURL class to correct a lot of parsing problems
+ * and to add support for the port number. Updated the URL tests
+ * to test some of this new stuff.
+ *
  * Revision 1.7  2000/03/02 19:55:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -108,21 +113,36 @@ struct BasicTestEntry
 {
     const XMLCh*        orgURL;
     const XMLCh*        fullText;
-    XMLURL::Protocols   Protocol;
-    const XMLCh*        Fragment;
-    const XMLCh*        Host;
-    const XMLCh*        Path;
-    const XMLCh*        Password;
-    const XMLCh*        Query;
-    const XMLCh*        User;
+    XMLURL::Protocols   protocol;
+    unsigned int        portNum;
+    const XMLCh*        fragment;
+    const XMLCh*        host;
+    const XMLCh*        path;
+    const XMLCh*        password;
+    const XMLCh*        query;
+    const XMLCh*        user;
 };
 
-static bool checkAField(const XMLCh* const test, const XMLCh* const expected)
+static bool checkAField(const   XMLCh* const test
+                        , const XMLCh* const expected
+                        , const XMLCh* const fieldName)
 {
     if (!test && !expected)
         return true;
 
-    if ((!test || !expected) || XMLString::compareString(test, expected))
+    if (!test && expected)
+    {
+        std::wcout << L"Expected value for the " << fieldName
+                   << " field was not present" << std::endl;
+        return false;
+    }
+     else if (test && !expected)
+    {
+        std::wcout << L"The value '" << test << L"' for the " << fieldName
+                   << L" was not expected" << std::endl;
+        return false;
+    }
+     else if (XMLString::compareString(test, expected))
     {
         std::wcout  << L"Expected: " << expected << L", but got: " << test
                     << std::endl;
@@ -139,25 +159,32 @@ static bool checkBasicResult(const  XMLURL&         testURL
     //  any of them can be a null pointer, we have a little helper function
     //  that spits out the actual testing code for each one.
     //
-    if (!checkAField(testURL.getURLText(), testInfo.fullText))
+    if (!checkAField(testURL.getURLText(), testInfo.fullText, L"Full Text"))
         return false;
 
-    if (!checkAField(testURL.getFragment(), testInfo.Fragment))
+    if (!checkAField(testURL.getFragment(), testInfo.fragment, L"Fragment"))
         return false;
 
-    if (!checkAField(testURL.getHost(), testInfo.Host))
+    if (!checkAField(testURL.getHost(), testInfo.host, L"Host"))
         return false;
 
-    if (!checkAField(testURL.getPath(), testInfo.Path))
+    if (testURL.getPortNum() != testInfo.portNum)
+    {
+        std::wcout << L"Expected port number: " << testInfo.portNum
+                   << L" but got: " << testURL.getPortNum() << std::endl;
+        return false;
+    }
+
+    if (!checkAField(testURL.getPath(), testInfo.path, L"Path"))
         return false;
 
-    if (!checkAField(testURL.getPassword(), testInfo.Password))
+    if (!checkAField(testURL.getPassword(), testInfo.password, L"Password"))
         return false;
 
-    if (!checkAField(testURL.getQuery(), testInfo.Query))
+    if (!checkAField(testURL.getQuery(), testInfo.query, L"Query"))
         return false;
 
-    if (!checkAField(testURL.getUser(), testInfo.User))
+    if (!checkAField(testURL.getUser(), testInfo.user, L"User"))
         return false;
 
     return true;
@@ -168,9 +195,10 @@ static bool basicURLTest()
     static BasicTestEntry testList[] =
     {
         {
-            L"file://host@user:password/path1/path2/file.txt?query#fragment"
-            , L"file://host@user:password/path1/path2/file.txt?query#fragment"
+            L"file://user:password@host/path1/path2/file.txt?query#fragment"
+            , L"file://user:password@host/path1/path2/file.txt?query#fragment"
             , XMLURL::File
+            , 0
             , L"fragment"
             , L"host"
             , L"/path1/path2/file.txt"
@@ -182,6 +210,7 @@ static bool basicURLTest()
             L"file:///path2/file.txt?query#fragment"
             , L"file:///path2/file.txt?query#fragment"
             , XMLURL::File
+            , 0
             , L"fragment"
             , 0
             , L"/path2/file.txt"
@@ -193,6 +222,7 @@ static bool basicURLTest()
             L"#fragment"
             , L"#fragment"
             , XMLURL::Unknown
+            , 0
             , L"fragment"
             , 0
             , 0
@@ -201,9 +231,10 @@ static bool basicURLTest()
             , 0
         }
       , {
-            L"file://host@user/path1/path2/file.txt#fragment"
-            , L"file://host@user/path1/path2/file.txt#fragment"
+            L"file://user@host/path1/path2/file.txt#fragment"
+            , L"file://user@host/path1/path2/file.txt#fragment"
             , XMLURL::File
+            , 0
             , L"fragment"
             , L"host"
             , L"/path1/path2/file.txt"
@@ -212,12 +243,61 @@ static bool basicURLTest()
             , L"user"
         }
       , {
-            L"     file://host@user/path1/path2/file.txt#fragment"
-            , L"file://host@user/path1/path2/file.txt#fragment"
+            L"     file://user@host/path1/path2/file.txt#fragment"
+            , L"file://user@host/path1/path2/file.txt#fragment"
             , XMLURL::File
+            , 0
             , L"fragment"
             , L"host"
             , L"/path1/path2/file.txt"
+            , 0
+            , 0
+            , L"user"
+        }
+      , {
+            L"http://host:90/path1/path2/file.txt"
+            , L"http://host:90/path1/path2/file.txt"
+            , XMLURL::HTTP
+            , 90
+            , 0
+            , L"host"
+            , L"/path1/path2/file.txt"
+            , 0
+            , 0
+            , 0
+        }
+      , {
+            L"http://host/path1/path2/file.txt"
+            , L"http://host/path1/path2/file.txt"
+            , XMLURL::HTTP
+            , 80
+            , 0
+            , L"host"
+            , L"/path1/path2/file.txt"
+            , 0
+            , 0
+            , 0
+        }
+      , {
+            L"ftp://"
+            , L"ftp://"
+            , XMLURL::FTP
+            , 21
+            , 0
+            , 0
+            , 0
+            , 0
+            , 0
+            , 0
+        }
+      , {
+            L"ftp://user@"
+            , L"ftp://user@"
+            , XMLURL::FTP
+            , 21
+            , 0
+            , 0
+            , 0
             , 0
             , 0
             , L"user"

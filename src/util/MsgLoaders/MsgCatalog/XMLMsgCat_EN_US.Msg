@@ -231,31 +231,33 @@ $set 3
  73  The given radix is not supported. Use 2, 8, 10, or 16
  74  The target buffer is too small to accept the results
  75  The start index is past the end of the string
- 76  Could not write to standard err
- 77  Could not write to standard out
- 78  Could not write to console
- 79  String pool id was not legal
- 80  Could not create a default transcoder
- 81  The maximum size to xlat is larger than the declared block size
- 82  Unicode char {0} is representable in encoding {1}
- 83  Character {0} is not valid for encoding {1}
- 84  The requested block size is not equal to the size set during construction
- 85  An invalid multi-byte source text sequence was encountered
- 86  {0} is not a valid value for encoding {1}
- 87  Leading surrogate was not followed by trailing
- 88  The URL was not correctly formed
- 89  The URL used an unsupported protocol
- 90  Unsupported URL protocol: '{0}'
- 91  Only localhost is supported at this time
- 92  No protocol prefix present
- 93  Expected // after protocol
- 94  % must be followed by two hex digits
- 95  Unterminated host component
- 96  The base part of the URL cannot be relative
- 97  The base part has too few levels to weave in relative part
- 98  The passed index is past the end of the vector
- 99  The element id was invalid
-100  When reusing the validator, no internal subset is allowed
-101  The passed recognizer encoding was not known
+ 76  The represented value overflowed the output binary result
+ 77  Could not write to standard err
+ 78  Could not write to standard out
+ 79  Could not write to console
+ 80  String pool id was not legal
+ 81  Could not create a default transcoder
+ 82  The maximum size to xlat is larger than the declared block size
+ 83  Unicode char {0} is representable in encoding {1}
+ 84  Character {0} is not valid for encoding {1}
+ 85  The requested block size is not equal to the size set during construction
+ 86  An invalid multi-byte source text sequence was encountered
+ 87  {0} is not a valid value for encoding {1}
+ 88  Leading surrogate was not followed by trailing
+ 89  The URL was not correctly formed
+ 90  The URL used an unsupported protocol
+ 91  Unsupported URL protocol: '{0}'
+ 92  Only localhost is supported at this time
+ 93  No protocol prefix present
+ 94  Expected // after protocol
+ 95  % must be followed by two hex digits
+ 96  Unterminated host component
+ 97  The base part of the URL cannot be relative
+ 98  The base part has too few levels to weave in relative part
+ 99  The port field must be a 16 bit decimal number
+100  The passed index is past the end of the vector
+101  The element id was invalid
+102  When reusing the validator, no internal subset is allowed
+103  The passed recognizer encoding was not known
 
 

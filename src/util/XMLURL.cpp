@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.10  2000/03/23 01:02:38  roddey
+ * Updates to the XMLURL class to correct a lot of parsing problems
+ * and to add support for the port number. Updated the URL tests
+ * to test some of this new stuff.
+ *
  * Revision 1.9  2000/03/17 23:59:55  roddey
  * Initial updates for two way transcoding support
  *
@@ -126,10 +131,11 @@
 //      entry indicates the prefix for that type of URL, and the SourceTypes
 //      value it maps to.
 // ---------------------------------------------------------------------------
-struct TypeEntry
+struct ProtoEntry
 {
-    XMLURL::Protocols  protocol;
-    const XMLCh*       prefix;
+    XMLURL::Protocols   protocol;
+    const XMLCh*        prefix;
+    unsigned int        defPort;
 };
 
 
@@ -140,15 +146,14 @@ struct TypeEntry
 //      These are the strings for our prefix types. They all have to be
 //      Unicode strings all the time, so we can't just do regular strings.
 //
-//  gTypeList
-//      The list of URL types that we support
+//  gProtoList
+//      The list of URL types that we support and some info related to each
+//      one.
 //
 //  gMaxProtoLen
-//  gMaxColonPos
-//      The length of the longest protocol string and from that the maximum
-//      index at which we must see the colon.
+//      The length of the longest protocol string
 //
-//      NOTE:!!! Be sure to keep this up to date!
+//      NOTE:!!! Be sure to keep this up to date if new protocols are added!
 // ---------------------------------------------------------------------------
 static const XMLCh  gFileString[] =
 {
@@ -165,17 +170,15 @@ static const XMLCh gHTTPString[] =
         chLatin_h, chLatin_t, chLatin_t, chLatin_p, chNull
 };
 
-static TypeEntry gTypeList[XMLURL::Protocols_Count] = 
+static ProtoEntry gProtoList[XMLURL::Protocols_Count] = 
 {
-        { XMLURL::File     , gFileString }
-    ,   { XMLURL::HTTP     , gHTTPString }
-    ,   { XMLURL::FTP      , gFTPString  }
+        { XMLURL::File     , gFileString    , 0  }
+    ,   { XMLURL::HTTP     , gHTTPString    , 80 }
+    ,   { XMLURL::FTP      , gFTPString     , 21 }
 };
-static const unsigned int gTypeListSize = sizeof(gTypeList) / sizeof(gTypeList[0]);
 
 // !!! Keep these up to date with list above!
 static const unsigned int gMaxProtoLen = 4;
-
 
 
 // ---------------------------------------------------------------------------
@@ -210,10 +213,10 @@ static unsigned int xlatHexDigit(const XMLCh toXlat)
 // ---------------------------------------------------------------------------
 XMLURL::Protocols XMLURL::lookupByName(const XMLCh* const protoName)
 {
-    for (unsigned int index = 0; index < gTypeListSize; index++)
+    for (unsigned int index = 0; index < XMLURL::Protocols_Count; index++)
     {
-        if (!XMLString::compareIString(gTypeList[index].prefix, protoName))
-            return gTypeList[index].protocol;
+        if (!XMLString::compareIString(gProtoList[index].prefix, protoName))
+            return gProtoList[index].protocol;
     }
     return XMLURL::Unknown;
 }
@@ -229,6 +232,7 @@ XMLURL::XMLURL() :
     , fHost(0)
     , fPassword(0)
     , fPath(0)
+    , fPortNum(0)
     , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
@@ -243,6 +247,7 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
     , fHost(0)
     , fPassword(0)
     , fPath(0)
+    , fPortNum(0)
     , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
@@ -258,6 +263,7 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
     , fHost(0)
     , fPassword(0)
     , fPath(0)
+    , fPortNum(0)
     , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
@@ -275,6 +281,7 @@ XMLURL::XMLURL(const XMLURL&         baseURL
     , fHost(0)
     , fPassword(0)
     , fPath(0)
+    , fPortNum(0)
     , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
@@ -290,6 +297,7 @@ XMLURL::XMLURL(const  XMLURL&        baseURL
     , fHost(0)
     , fPassword(0)
     , fPath(0)
+    , fPortNum(0)
     , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
@@ -306,6 +314,7 @@ XMLURL::XMLURL(const XMLCh* const urlText) :
     , fHost(0)
     , fPassword(0)
     , fPath(0)
+    , fPortNum(0)
     , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
@@ -320,6 +329,7 @@ XMLURL::XMLURL(const char* const urlText) :
     , fHost(0)
     , fPassword(0)
     , fPath(0)
+    , fPortNum(0)
     , fProtocol(XMLURL::Unknown)
     , fQuery(0)
     , fUser(0)
@@ -336,6 +346,7 @@ XMLURL::XMLURL(const XMLURL& toCopy) :
     , fHost(XMLString::replicate(toCopy.fHost))
     , fPassword(XMLString::replicate(toCopy.fPassword))
     , fPath(XMLString::replicate(toCopy.fPath))
+    , fPortNum(toCopy.fPortNum)
     , fProtocol(toCopy.fProtocol)
     , fQuery(XMLString::replicate(toCopy.fQuery))
     , fUser(XMLString::replicate(toCopy.fUser))
@@ -391,13 +402,29 @@ bool XMLURL::operator==(const XMLURL& toCompare) const
 // ---------------------------------------------------------------------------
 //  XMLURL: Getter methods
 // ---------------------------------------------------------------------------
+unsigned int XMLURL::getPortNum() const
+{
+    //
+    //  If it was not provided explicitly, then lets return the default one
+    //  for the protocol.
+    //
+    if (!fPortNum)
+    {
+        if (fProtocol == Unknown)
+            return 0;
+        return gProtoList[fProtocol].defPort;
+    }
+    return fPortNum;
+}
+
+
 const XMLCh* XMLURL::getProtocolName() const
 {
     // Check to see if its ever been set
     if (fProtocol == Unknown)
         ThrowXML(MalformedURLException, XMLExcepts::URL_NoProtocolPresent);
 
-    return gTypeList[fProtocol].prefix;
+    return gProtoList[fProtocol].prefix;
 }
 
 
@@ -589,7 +616,7 @@ void XMLURL::buildFullText()
                            + XMLString::stringLen(fPath)
                            + XMLString::stringLen(fQuery) + 1
                            + XMLString::stringLen(fUser) + 1
-                           + 16;
+                           + 32;
 
     // Clean up the existing buffer and allocate another
     delete [] fURLText;
@@ -606,23 +633,38 @@ void XMLURL::buildFullText()
         *outPtr++ = chForwardSlash;
     }
 
+    if (fUser)
+    {
+        XMLString::copyString(outPtr, fUser);
+        outPtr += XMLString::stringLen(fUser);
+
+        if (fPassword)
+        {
+            *outPtr++ = chColon;
+            XMLString::copyString(outPtr, fPassword);
+            outPtr += XMLString::stringLen(fPassword);
+        }
+
+        *outPtr++ = chAt;
+    }
+
     if (fHost)
     {
         XMLString::copyString(outPtr, fHost);
         outPtr += XMLString::stringLen(fHost);
 
-        if (fUser)
+        //
+        //  If the port is zero, then we don't put it in. Else we need
+        //  to because it was explicitly provided.
+        //
+        if (fPortNum)
         {
-            *outPtr++ = chAt;
-            XMLString::copyString(outPtr, fUser);
-            outPtr += XMLString::stringLen(fUser);
+            *outPtr++ = chColon;
 
-            if (fPassword)
-            {
-                *outPtr++ = chColon;
-                XMLString::copyString(outPtr, fPassword);
-                outPtr += XMLString::stringLen(fPassword);
-            }
+            XMLCh tmpBuf[16];
+            XMLString::binToText(fPortNum, tmpBuf, 16, 10);
+            XMLString::copyString(outPtr, tmpBuf);
+            outPtr += XMLString::stringLen(tmpBuf);
         }
     }
 
@@ -645,6 +687,9 @@ void XMLURL::buildFullText()
         XMLString::copyString(outPtr, fFragment);
         outPtr += XMLString::stringLen(fFragment);
     }
+
+    // Cap it off in case the last op was not a string copy
+    *outPtr = 0;
 }
 
 
@@ -671,6 +716,7 @@ void XMLURL::cleanup()
     fURLText = 0;
 
     fProtocol = Unknown;
+    fPortNum = 0;
 }
 
 
@@ -804,8 +850,8 @@ void XMLURL::parse(const XMLCh* const urlText)
     //  then we skip to the host processing.
     //
     static const XMLCh listOne[]    = { chColon, chForwardSlash, chNull };
-    static const XMLCh listTwo[]    = { chAt, chForwardSlash, chNull };
-    static const XMLCh listThree[]  = { chColon, chForwardSlash, chNull };
+    static const XMLCh listTwo[]    = { chAt, chNull };
+    static const XMLCh listThree[]  = { chColon, chNull };
     static const XMLCh listFour[]   = { chForwardSlash, chNull };
     static const XMLCh listFive[]   = { chPound, chQuestion, chNull };
     static const XMLCh listSix[]    = { chPound, chNull };
@@ -849,12 +895,13 @@ void XMLURL::parse(const XMLCh* const urlText)
 
         //
         //  If we aren't at the end of the string, then there has to be a
-        //  host name at this point.
+        //  host part at this point. we will just look for the next / char
+        //  or end of string and make all of that the host for now.
         //
         if (*srcPtr)
         {
-            // Search from here for either a @ or / character
-            ptr1 = XMLString::findAny(srcPtr, listTwo);
+            // Search from here for a / character
+            ptr1 = XMLString::findAny(srcPtr, listFour);
 
             //
             //  If we found something, then the host is between where
@@ -871,74 +918,80 @@ void XMLURL::parse(const XMLCh* const urlText)
                         *ptr2++ = *srcPtr++;
                     *ptr2 = 0;
                 }
-
-                //
-                //  If we found a @, then we have to parse out a user name
-                //  and optional password.
-                //
-                if (*srcPtr == chAt)
-                {
-                    // Move up past the @ and look for a / or : character
-                    srcPtr++;
-                    ptr1 = XMLString::findAny(srcPtr, listThree);
-
-                    //
-                    //  If we found something, then the user name is between
-                    //  where we are and what we found. Else the user name
-                    //  is the rest of the string and we are done.
-                    //
-                    if (ptr1)
-                    {
-                        fUser = new XMLCh[(ptr1 - srcPtr) + 1];
-                        ptr2 = fUser;
-                        while (srcPtr < ptr1)
-                            *ptr2++ = *srcPtr++;
-                        *ptr2 = 0;
-
-                        //
-                        //  If we found a : character, then everything from
-                        //  after that to the end or a / character is the
-                        //  password.
-                        //
-                        if (*srcPtr == chColon)
-                        {
-                            srcPtr++;
-                            ptr1 = XMLString::findAny(srcPtr, listFour);
-
-                            //
-                            //  If we found one, then the password is everything
-                            //  from where we are to there. Else, the password
-                            //  is the rest of the string.
-                            //
-                            if (ptr1)
-                            {
-                                fPassword = new XMLCh[(ptr1 - srcPtr) + 1];
-                                ptr2 = fPassword;
-                                while (srcPtr < ptr1)
-                                    *ptr2++ = *srcPtr++;
-                                *ptr2 = 0;
-                            }
-                             else
-                            {
-                                fPassword = XMLString::replicate(srcPtr);
-                                return;
-                            }
-                        }
-                    }
-                     else
-                    {
-                        fUser = XMLString::replicate(srcPtr);
-                        return;
-                    }
-                }
             }
              else
             {
                 fHost = XMLString::replicate(srcPtr);
-                return;
+
+                // Update source pointer to the end
+                srcPtr += XMLString::stringLen(fHost);
             }
         }
     }
+
+    //
+    //  If there was a host part, then we have to grovel through it for
+    //  all the bits and pieces it can hold.
+    //
+    if (fHost)
+    {
+        //
+        //  Look for a '@' character, which indicates a user name. If we
+        //  find one, then everything between the start of the host data
+        //  and the character is the user name.
+        //
+        ptr1 = XMLString::findAny(fHost, listTwo);
+        if (ptr1)
+        {
+            // Get this info out as the user name
+            *ptr1 = 0;
+            fUser = XMLString::replicate(fHost);
+            ptr1++;
+
+            // And now cut these chars from the host string
+            XMLString::cut(fHost, ptr1 - fHost);
+
+            // Is there a password inside the user string?
+            ptr2 = XMLString::findAny(fUser, listThree);
+            if (ptr2)
+            {
+                // Remove it from the user name string
+                *ptr2 = 0;
+
+                // And copy out the remainder to the password field
+                ptr2++;
+                fPassword = XMLString::replicate(ptr2);
+            }
+        }
+
+        //
+        //  Ok, so now we are at the actual host name, if any. If we are
+        //  not at the end of the host data, then lets see if we have a
+        //  port trailing the 
+        //
+        ptr1 = XMLString::findAny(fHost, listThree);
+        if (ptr1)
+        {
+            // Remove it from the host name
+            *ptr1 = 0;
+
+            // Try to convert it to a numeric port value and store it
+            ptr1++;
+            if (!XMLString::textToBin(ptr1, fPortNum))
+                ThrowXML(MalformedURLException, XMLExcepts::URL_BadPortField);
+        }
+
+        // If the host ended up empty, then toss is
+        if (!*fHost)
+        {
+            delete[] fHost;
+            fHost = 0;
+        }
+    }
+
+    // If we are at the end, then we are done now
+    if (!*srcPtr)
+        return;
 
     //
     //  Next is the path part. It can be absolute, i.e. starting with a
