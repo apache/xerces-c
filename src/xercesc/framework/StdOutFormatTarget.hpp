@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/06/05 15:47:29  peiyongz
+ * operator = modified
+ *
  * Revision 1.1  2002/05/28 22:40:46  peiyongz
  * DOM3 Save Interface: DOMWriter/DOMWriterFilter
  *
@@ -87,8 +90,8 @@ private:
     // -----------------------------------------------------------------------
     //  Unimplemented methods.
     // -----------------------------------------------------------------------
-    StdOutFormatTarget(const StdOutFormatTarget& other);
-    void operator=(const StdOutFormatTarget& rhs);
+    StdOutFormatTarget(const StdOutFormatTarget&);
+    StdOutFormatTarget& operator=(const StdOutFormatTarget&);
 };
 
 #endif
