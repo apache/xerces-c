@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/02/27 14:48:51  tng
+ * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
+ *
  * Revision 1.2  2001/02/16 14:58:57  tng
  * Schema: Update Makefile, configure files, project files, and include path in
  * certain cpp files because of the move of the common Content Model files.  By Pei Yong Zhang.
@@ -820,3 +823,15 @@ int DFAContentModel::postTreeBuildInit(         CMNode* const   nodeCur
     }
     return newIndex;
 }
+
+int DFAContentModel::validateContentSpecial(  const   unsigned int*   childIds
+                                            , const unsigned int    childCount) const
+{
+	return 0;
+};
+
+ContentLeafNameTypeVector* DFAContentModel::getContentLeafNameTypeVector() const
+{
+   //later change it to return the data member
+	return 0;
+};

@@ -56,124 +56,75 @@
 
 /*
  * $Log$
- * Revision 1.2  2001/02/27 14:48:55  tng
+ * Revision 1.1  2001/02/27 14:48:46  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
- *
- * Revision 1.1  2001/02/16 14:17:29  tng
- * Schema: Move the common Content Model files that are shared by DTD
- * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
- *
- * Revision 1.3  2000/02/24 20:16:49  abagchi
- * Swat for removing Log from API docs
- *
- * Revision 1.2  2000/02/09 21:42:39  abagchi
- * Copyright swat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:45  twl
- * Initial checkin
- *
- * Revision 1.3  1999/11/08 20:45:43  rahul
- * Swat for adding in Product name and CVS comment log variable.
  *
  */
 
+#if !defined(CMANY_HPP)
+#define CMANY_HPP
 
-#if !defined(MIXEDCONTENTMODEL_HPP)
-#define MIXEDCONTENTMODEL_HPP
+#include <util/XercesDefs.hpp>
+#include <validators/common/CMNode.hpp>
 
-#include <util/ValueVectorOf.hpp>
-#include <framework/XMLContentModel.hpp>
-#include <validators/common/ContentLeafNameTypeVector.hpp>
+class CMStateSet;
 
-class ContentSpecNode;
-class DTDElementDecl;
-
-
-//
-//  MixedContentModel is a derivative of the abstract content model base
-//  class that handles the special case of mixed model elements. If an element
-//  is mixed model, it has PCDATA as its first possible content, followed
-//  by an alternation of the possible children. The children cannot have any
-//  numeration or order, so it must look like this:
-//
-//  <!ELEMENT Foo ((#PCDATA|a|b|c|)*)>
-//
-//  So, all we have to do is to keep an array of the possible children and
-//  validate by just looking up each child being validated by looking it up
-//  in the list.
-//
-class MixedContentModel : public XMLContentModel
+class CMAny : public CMNode
 {
 public :
     // -----------------------------------------------------------------------
-    //  Constructors and Destructor
+    //  Constructors
     // -----------------------------------------------------------------------
-    MixedContentModel
+    CMAny
     (
-        const   DTDElementDecl& parentElem
+        const   ContentSpecNode::NodeTypes  type
+        , const unsigned int                URI
+        , const unsigned int                position
     );
-
-    ~MixedContentModel();
-
+    ~CMAny();
 
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    bool hasDups() const;
+    unsigned int getURI() const;
 
+    unsigned int getPosition() const;
 
     // -----------------------------------------------------------------------
-    //  Implementation of the ContentModel virtual interface
+    //  Setter methods
     // -----------------------------------------------------------------------
-    virtual bool getIsAmbiguous() const;
-	virtual int validateContent
-    (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-    )   const;
+    void setPosition(const unsigned int newPosition);
 
-	virtual int validateContentSpecial
-    (
-        const   unsigned int*   childIds
-        , const unsigned int    childCount
-	) const;
+    // -----------------------------------------------------------------------
+    //  Implementation of the public CMNode virtual interface
+    // -----------------------------------------------------------------------
+    bool isNullable() const;
 
-    virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
 
-//  Onhold, until EquivClassComparator is defined
-//  void setEquivClassComparator(EquivClassComparator comparator);
+protected :
+    // -----------------------------------------------------------------------
+    //  Implementation of the protected CMNode virtual interface
+    // -----------------------------------------------------------------------
+    void calcFirstPos(CMStateSet& toSet) const;
+    void calcLastPos(CMStateSet& toSet) const;
 
 private :
     // -----------------------------------------------------------------------
-    //  Private helper methods
-    // -----------------------------------------------------------------------
-    void buildChildList
-    (
-        const   ContentSpecNode&                curNode
-        ,       ValueVectorOf<unsigned int>&    toFill
-    );
-
-
-    // -----------------------------------------------------------------------
-    //  Unimplemented constructors and operators
-    // -----------------------------------------------------------------------
-    MixedContentModel();
-    MixedContentModel(const MixedContentModel&);
-    void operator=(const MixedContentModel&);
-
-
-    // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fCount
-    //      The count of possible children in the fChildIds member.
+    //  fURI;
+    //  URI of the any content model. This value is set if the type is
+    //  of the following:
+    //  XMLContentSpec.CONTENTSPECNODE_ANY,
+    //  XMLContentSpec.CONTENTSPECNODE_ANY_OTHER.
     //
-    //  fChildIds
-    //      The list of possible children that we have to accept. This array
-    //      is allocated as large as needed in the constructor.
+	//  fPosition
+    //  Part of the algorithm to convert a regex directly to a DFA
+    //  numbers each leaf sequentially. If its -1, that means its an
+    //  epsilon node. Zero and greater are non-epsilon positions.
     // -----------------------------------------------------------------------
-    unsigned int    fCount;
-    unsigned int*   fChildIds;
+    unsigned int fURI;
+    unsigned int fPosition;
 };
 
 #endif

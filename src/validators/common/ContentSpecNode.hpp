@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
+ *
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/02/27 14:48:49  tng
+ * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
+ *
  * Revision 1.1  2001/02/16 14:17:29  tng
  * Schema: Move the common Content Model files that are shared by DTD
  * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
@@ -104,6 +107,15 @@ public :
         , OneOrMore
         , Choice
         , Sequence
+        , Any
+        , Any_Other
+        , Any_Local
+        , Any_Lax
+        , Any_Other_Lax
+        , Any_Local_Lax
+        , Any_Skip
+        , Any_Other_Skip
+        , Any_Local_Skip
 
         , UnknownType = -1
     };
@@ -120,8 +132,11 @@ public :
         ,       ContentSpecNode* const  firstToAdopt
         ,       ContentSpecNode* const  secondToAdopt
     );
-    ~ContentSpecNode();
+    ContentSpecNode(const ContentSpecNode&);
+	~ContentSpecNode();
 
+    ContentSpecNode& operator=(const ContentSpecNode&);
+    bool operator==(const ContentSpecNode&);
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -160,8 +175,7 @@ private :
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    ContentSpecNode(const ContentSpecNode&);
-    void operator=(const ContentSpecNode&);
+
 
 
     // -----------------------------------------------------------------------
@@ -225,6 +239,27 @@ ContentSpecNode::ContentSpecNode(const  NodeTypes               type
 {
 }
 
+inline
+ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
+{
+    fElemId = toCopy.getElemId();
+
+	const ContentSpecNode *tmp;
+	tmp = toCopy.getFirst();
+	if (!tmp)
+		fFirst = new ContentSpecNode(*tmp);
+    else
+        fFirst = 0;
+
+	tmp = toCopy.getSecond();
+	if (!tmp)
+		fSecond = new ContentSpecNode(*tmp);
+    else
+        fSecond = 0;
+
+    fType = toCopy.getType();
+}
+
 inline ContentSpecNode::~ContentSpecNode()
 {
     // Delete our children, which cause recursive cleanup
@@ -232,6 +267,69 @@ inline ContentSpecNode::~ContentSpecNode()
     delete fSecond;
 }
 
+/***
+    To map the SetValues(XMLContentSpec)
+***/
+inline ContentSpecNode& ContentSpecNode::operator=(const ContentSpecNode& toAssign)
+{
+	if (this == &toAssign)
+		return *this;
+
+    fElemId = toAssign.getElemId();
+
+	delete fFirst;
+	const ContentSpecNode *tmp;
+	tmp = toAssign.getFirst();
+	if (!tmp)
+		fFirst = new ContentSpecNode(*tmp);
+    else
+        fFirst = 0;
+
+	delete fSecond;
+	tmp = toAssign.getSecond();
+	if (!tmp)
+		fSecond = new ContentSpecNode(*tmp);
+    else
+        fSecond = 0;
+
+    fType = toAssign.getType();
+
+	return *this;
+}
+
+/***
+    To map the equals(XMLContentSpec)
+   To map
+***/
+inline bool ContentSpecNode::operator==(const ContentSpecNode& toCompare)
+{
+	if (this==&toCompare)
+		return true;
+/***
+	return ((fElemId == toCompare.getElemId()) &&
+			(*fFirst == *(toCompare.getFirst())) &&
+			(*fSecond == *(toCompare.getSecond())) &&
+		    (fType == toCompare.getType()));
+***/
+
+	if (fElemId != toCompare.getElemId())
+		return false;
+
+	if (fType != toCompare.getType())
+		return false;
+
+	if (((fFirst != 0) && (toCompare.getFirst() ==0)) ||
+	    ((fFirst == 0) && (toCompare.getFirst() !=0)) ||
+	    (((fFirst != 0) && (toCompare.getFirst() !=0)) && (*fFirst == *(toCompare.getFirst()))))
+		return false;
+
+	if (((fSecond != 0) && (toCompare.getSecond() ==0)) ||
+	    ((fSecond == 0) && (toCompare.getSecond() !=0)) ||
+	    (((fSecond != 0) && (toCompare.getSecond() !=0)) && (*fSecond == *(toCompare.getSecond()))))
+		return false;
+
+	return true;
+}
 
 // ---------------------------------------------------------------------------
 //  ContentSpecNode: Getter methods

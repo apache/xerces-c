@@ -54,6 +54,9 @@
 # <http://www.apache.org/>.
 #
 # $Log$
+# Revision 1.2  2001/02/27 14:48:53  tng
+# Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
+#
 # Revision 1.1  2001/02/16 14:58:57  tng
 # Schema: Update Makefile, configure files, project files, and include path in
 # certain cpp files because of the move of the common Content Model files.  By Pei Yong Zhang.
@@ -79,11 +82,13 @@ MODULE = validators
 SUBMODULE = common
 
 VALIDATORS_COMMON_CPP_PUBHEADERS = \
+	CMAny.hpp \
 	CMBinaryOp.hpp \
 	CMLeaf.hpp \
 	CMNode.hpp \
 	CMStateSet.hpp \
 	CMUnaryOp.hpp \
+	ContentLeafNameTypeVector.hpp \
 	ContentSpecNode.hpp \
 	DFAContentModel.hpp \
 	MixedContentModel.hpp \
@@ -94,8 +99,10 @@ VALIDATORS_COMMON_CPP_PRIVHEADERS =
 VALIDATORS_COMMON_C_FILES =
 
 VALIDATORS_COMMON_CPP_OBJECTS = \
+	CMAny.$(TO) \
 	CMBinaryOp.$(TO) \
 	CMUnaryOp.$(TO) \
+	ContentLeafNameTypeVector.$(TO) \
 	ContentSpecNode.$(TO) \
 	DFAContentModel.$(TO) \
 	MixedContentModel.$(TO) \

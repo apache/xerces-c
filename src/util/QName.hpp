@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/02/27 14:48:39  tng
+ * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
+ *
  * Revision 1.2  2001/02/26 21:56:16  tng
  * Schema: QName can also be constructed with rawName.
  *
@@ -181,4 +184,29 @@ private :
 
 };
 
+// ---------------------------------------------------------------------------
+//  QName: Getter methods
+// ---------------------------------------------------------------------------
+inline const XMLCh* QName::getPrefix() const
+{
+	return fPrefix;
+}
+
+inline const XMLCh* QName::getLocalPart() const
+{
+	return fLocalPart;
+}
+
+inline const int QName::getURI() const
+{
+	return fURIId;
+}
+
+// ---------------------------------------------------------------------------
+//  QName: Setter methods
+// ---------------------------------------------------------------------------
+inline void QName::setURI(const int uriId)
+{
+    fURIId = uriId;
+}
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/02/27 14:48:54  tng
+ * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
+ *
  * Revision 1.2  2001/02/16 14:58:57  tng
  * Schema: Update Makefile, configure files, project files, and include path in
  * certain cpp files because of the move of the common Content Model files.  By Pei Yong Zhang.
@@ -290,3 +293,14 @@ MixedContentModel::buildChildList(  const   ContentSpecNode&             curNode
         buildChildList(*leftNode, toFill);
     }
 }
+
+int MixedContentModel::validateContentSpecial(  const   unsigned int*   childIds
+                                            , const unsigned int    childCount) const
+{
+	return 0;
+};
+
+ContentLeafNameTypeVector* MixedContentModel::getContentLeafNameTypeVector() const
+{
+	return 0;
+};

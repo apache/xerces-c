@@ -1319,6 +1319,13 @@ SOURCE=..\..\..\..\..\src\dom\XMLDeclImpl.hpp
 # PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\common\CMAny.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\common\CMAny.hpp
+# End Source File
+# Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\common\CMBinaryOp.cpp
 # End Source File
@@ -1345,6 +1352,14 @@ SOURCE=..\..\..\..\..\src\validators\common\CMUnaryOp.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\common\CMUnaryOp.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\common\ContentLeafNameTypeVector.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\common\ContentLeafNameTypeVector.hpp
 # End Source File
 # Begin Source File
 

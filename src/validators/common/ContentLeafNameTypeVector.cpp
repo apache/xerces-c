@@ -56,30 +56,8 @@
 
 /*
  * $Log$
- * Revision 1.3  2001/02/27 14:48:47  tng
+ * Revision 1.1  2001/02/27 14:48:49  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
- *
- * Revision 1.2  2001/02/16 14:58:57  tng
- * Schema: Update Makefile, configure files, project files, and include path in
- * certain cpp files because of the move of the common Content Model files.  By Pei Yong Zhang.
- *
- * Revision 1.1  2001/02/16 14:17:29  tng
- * Schema: Move the common Content Model files that are shared by DTD
- * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
- *
- * Revision 1.3  2000/03/02 19:55:37  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/09 21:42:37  abagchi
- * Copyright swatswat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:08  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:37  rahul
- * Swat for adding in Product name and CVS comment log variable.
  *
  */
 
@@ -88,71 +66,100 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <util/XercesDefs.hpp>
-#include <util/RuntimeException.hpp>
-#include <validators/common/CMStateSet.hpp>
-#include <validators/common/CMUnaryOp.hpp>
-
+#include <validators/common/ContentLeafNameTypeVector.hpp>
 
 // ---------------------------------------------------------------------------
-//  CMUnaryOp: Constructors and Destructor
+//  ContentLeafNameTypeVector: Constructors and Destructor
 // ---------------------------------------------------------------------------
-CMUnaryOp::CMUnaryOp(   const   ContentSpecNode::NodeTypes  type
-                        ,       CMNode* const               nodeToAdopt) :
-    CMNode(type)
-    , fChild(nodeToAdopt)
+ContentLeafNameTypeVector::ContentLeafNameTypeVector()
+: fLeafNames(0)
+, fLeafTypes(0)
+, fLeafCount(0)
 {
-    // Insure that its one of the types we require
-    if ((type != ContentSpecNode::ZeroOrOne)
-    &&  (type != ContentSpecNode::ZeroOrMore)
-    &&  (type != ContentSpecNode::OneOrMore))
-    {
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnaryOpHadBinType);
-    }
 }
 
-CMUnaryOp::~CMUnaryOp()
+ContentLeafNameTypeVector::ContentLeafNameTypeVector
+       (    const unsigned int* const                names
+           ,const ContentSpecNode::NodeTypes* const  types
+           ,const unsigned int                       count
+       )
+: fLeafNames(0)
+, fLeafTypes(0)
+, fLeafCount(0)
 {
-    delete fChild;
+    setValues(names, types, count);
 }
 
-
-// ---------------------------------------------------------------------------
-//  CMUnaryOp: Getter methods
-// ---------------------------------------------------------------------------
-const CMNode* CMUnaryOp::getChild() const
+/***
+copy ctor
+***/
+ContentLeafNameTypeVector::ContentLeafNameTypeVector
+      (const ContentLeafNameTypeVector& toCopy)
+	  :fLeafNames(0)
+	  ,fLeafTypes(0)
+	  ,fLeafCount(0)
 {
-    return fChild;
+	fLeafCount=toCopy.getLeafCount();
+    init(fLeafCount);
+
+	for (unsigned int i=0; i<this->fLeafCount; i++)
+	{
+		*(fLeafNames+i)=toCopy.getLeafNameAt(i);
+		*(fLeafTypes+i)=toCopy.getLeafTypeAt(i);
+	}
 }
 
-CMNode* CMUnaryOp::getChild()
+ContentLeafNameTypeVector::~ContentLeafNameTypeVector()
 {
-    return fChild;
+    cleanUp();
 }
 
-
 // ---------------------------------------------------------------------------
-//  CMUnaryOp: Implementation of the public CMNode virtual interface
+//  ContentSpecType: Setter methods
 // ---------------------------------------------------------------------------
-bool CMUnaryOp::isNullable() const
+void ContentLeafNameTypeVector::setValues
+    (
+         const unsigned int* const                names
+        ,const ContentSpecNode::NodeTypes* const  types
+        ,const unsigned int                       count
+    )
 {
-    if (getType() == ContentSpecNode::OneOrMore)
-        return fChild->isNullable();
-    else
-        return true;
+    cleanUp();
+    init(count);
+
+	const unsigned int *tmpNames = names;
+	const ContentSpecNode::NodeTypes *tmpTypes = types;
+
+	for (unsigned int i=0; i<count; i++)
+	{
+        *(fLeafNames+i)=(*tmpNames++);
+		*(fLeafTypes+i)=(*tmpTypes++);
+	}
 }
 
-
 // ---------------------------------------------------------------------------
-//  CMUnaryOp: Implementation of the protected CMNode virtual interface
+//  ContentLeafNameTypeVector: Getter methods
 // ---------------------------------------------------------------------------
-void CMUnaryOp::calcFirstPos(CMStateSet& toSet) const
+const unsigned int ContentLeafNameTypeVector::getLeafNameAt
+       (const unsigned int pos) const
 {
-    // Its just based on our child node's first pos
-    toSet = fChild->getFirstPos();
+    if (pos >= fLeafCount)
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+
+    return *(fLeafNames+pos);
 }
 
-void CMUnaryOp::calcLastPos(CMStateSet& toSet) const
+const ContentSpecNode::NodeTypes ContentLeafNameTypeVector::getLeafTypeAt
+       (const unsigned int pos) const
 {
-    // Its just based on our child node's last pos
-    toSet = fChild->getLastPos();
+    if (pos >= fLeafCount)
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Vector_BadIndex);
+
+	return *(fLeafTypes+pos);
 }
+
+const unsigned int ContentLeafNameTypeVector::getLeafCount() const
+{
+	return fLeafCount;
+}
+

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/02/27 14:48:30  tng
+ * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
+ *
  * Revision 1.5  2000/03/02 19:54:24  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -84,6 +87,8 @@
 
 #include <util/XercesDefs.hpp>
 #include <util/RefVectorOf.hpp>
+
+class ContentLeafNameTypeVector;
 
 /**
  *  This class defines the abstract interface for all content models. All
@@ -119,6 +124,20 @@ public:
         , const unsigned int    childCount
     ) const = 0;
 
+	virtual int validateContentSpecial
+    (
+        const   unsigned int*   childIds
+        , const unsigned int    childCount
+    ) const = 0;
+
+    virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector()
+	  const = 0;
+
+//  Onhold, until EquivClassComparator is defined
+//  void setEquivClassComparator(EquivClassComparator comparator) = 0;
+
+//  Do not implement, it is NOT used in XercesJ.
+//  int whatCanGoHere(bool, InsertableElementsInfo info) = 0;
 
 protected :
     // -----------------------------------------------------------------------

@@ -56,33 +56,10 @@
 
 /*
  * $Log$
- * Revision 1.3  2001/02/27 14:48:47  tng
+ * Revision 1.1  2001/02/27 14:48:45  tng
  * Schema: Add CMAny and ContentLeafNameTypeVector, by Pei Yong Zhang
  *
- * Revision 1.2  2001/02/16 14:58:57  tng
- * Schema: Update Makefile, configure files, project files, and include path in
- * certain cpp files because of the move of the common Content Model files.  By Pei Yong Zhang.
- *
- * Revision 1.1  2001/02/16 14:17:29  tng
- * Schema: Move the common Content Model files that are shared by DTD
- * and schema from 'DTD' folder to 'common' folder.  By Pei Yong Zhang.
- *
- * Revision 1.3  2000/03/02 19:55:37  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.2  2000/02/09 21:42:37  abagchi
- * Copyright swatswat
- *
- * Revision 1.1.1.1  1999/11/09 01:03:08  twl
- * Initial checkin
- *
- * Revision 1.2  1999/11/08 20:45:37  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
  */
-
 
 // ---------------------------------------------------------------------------
 //  Includes
@@ -90,69 +67,89 @@
 #include <util/XercesDefs.hpp>
 #include <util/RuntimeException.hpp>
 #include <validators/common/CMStateSet.hpp>
-#include <validators/common/CMUnaryOp.hpp>
-
+#include <validators/common/CMAny.hpp>
 
 // ---------------------------------------------------------------------------
 //  CMUnaryOp: Constructors and Destructor
 // ---------------------------------------------------------------------------
-CMUnaryOp::CMUnaryOp(   const   ContentSpecNode::NodeTypes  type
-                        ,       CMNode* const               nodeToAdopt) :
-    CMNode(type)
-    , fChild(nodeToAdopt)
+CMAny::CMAny( const   ContentSpecNode::NodeTypes  type
+                     , const unsigned int         URI
+                     , const unsigned int         position ) :
+       CMNode(type)
+     , fURI(URI)
+     , fPosition(position)
 {
-    // Insure that its one of the types we require
-    if ((type != ContentSpecNode::ZeroOrOne)
-    &&  (type != ContentSpecNode::ZeroOrMore)
-    &&  (type != ContentSpecNode::OneOrMore))
+    if ((type != ContentSpecNode::Any)
+    &&  (type != ContentSpecNode::Any_Other)
+    &&  (type != ContentSpecNode::Any_Local))
     {
-        ThrowXML(RuntimeException, XMLExcepts::CM_UnaryOpHadBinType);
+        ThrowXML(RuntimeException, XMLExcepts::CM_BinOpHadUnaryType);
+		/***
+		ThrowXML1(RuntimeException,
+		          XMLExcepts::CM_NotValidSpecTypeForNode,
+				  "CMAny");
+        ***/
     }
+
 }
 
-CMUnaryOp::~CMUnaryOp()
+CMAny::~CMAny()
 {
-    delete fChild;
 }
 
-
 // ---------------------------------------------------------------------------
-//  CMUnaryOp: Getter methods
+//  Getter methods
 // ---------------------------------------------------------------------------
-const CMNode* CMUnaryOp::getChild() const
+unsigned int CMAny::getURI() const
 {
-    return fChild;
+	return fURI;
 }
 
-CMNode* CMUnaryOp::getChild()
+unsigned int CMAny::getPosition() const
 {
-    return fChild;
+    return fPosition;
 }
 
+// ---------------------------------------------------------------------------
+//  Setter methods
+// ---------------------------------------------------------------------------
+void CMAny::setPosition(const unsigned int newPosition)
+{
+    fPosition = newPosition;
+}
 
 // ---------------------------------------------------------------------------
-//  CMUnaryOp: Implementation of the public CMNode virtual interface
+//  Implementation of public CMNode virtual interface
 // ---------------------------------------------------------------------------
-bool CMUnaryOp::isNullable() const
+bool CMAny::isNullable() const
 {
-    if (getType() == ContentSpecNode::OneOrMore)
-        return fChild->isNullable();
+    // Leaf nodes are never nullable unless its an epsilon node
+    return (fPosition == -1);
+}
+
+// ---------------------------------------------------------------------------
+//  Implementation of protected CMNode virtual interface
+// ---------------------------------------------------------------------------
+void CMAny::calcFirstPos(CMStateSet& toSet) const
+{
+    // If we are an epsilon node, then the first pos is an empty set
+    if (fPosition == -1)
+        toSet.zeroBits();
     else
-        return true;
+    // Otherwise, its just the one bit of our position
+        toSet.setBit(fPosition);
+
+	return;
 }
 
-
-// ---------------------------------------------------------------------------
-//  CMUnaryOp: Implementation of the protected CMNode virtual interface
-// ---------------------------------------------------------------------------
-void CMUnaryOp::calcFirstPos(CMStateSet& toSet) const
+void CMAny::calcLastPos(CMStateSet& toSet) const
 {
-    // Its just based on our child node's first pos
-    toSet = fChild->getFirstPos();
-}
+    // If we are an epsilon node, then the last pos is an empty set
+    if (fPosition == -1)
+        toSet.zeroBits();
+    // Otherwise, its just the one bit of our position
+    else
+        toSet.setBit(fPosition);
 
-void CMUnaryOp::calcLastPos(CMStateSet& toSet) const
-{
-    // Its just based on our child node's last pos
-    toSet = fChild->getLastPos();
+	return;
 }
