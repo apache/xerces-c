@@ -87,6 +87,7 @@
 #include <dom/NodeIDMap.hpp>
 
 #include <validators/DTD/ContentSpecNode.hpp>
+#include <validators/DTD/DTDAttDefList.hpp>
 
 // ---------------------------------------------------------------------------
 //  DOMParser: Constructors and Destructor
@@ -615,26 +616,27 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
 
             attr->setSpecified(oneAttrib->getSpecified());
         }
-    } else {    //DOM Level 1
-        elem = fDocument.createElement(elemDecl.getFullName());
-        ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
-        for (unsigned int index = 0; index < attrCount; ++index) {
-            const XMLAttr* oneAttrib = attrList.elementAt(index);
-            AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
-            attr->setSpecified(oneAttrib->getSpecified());
+    } 
+	else {    //DOM Level 1
+			elem = fDocument.createElement(elemDecl.getFullName());
+			ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
+			for (unsigned int index = 0; index < attrCount; ++index) {
+				const XMLAttr* oneAttrib = attrList.elementAt(index);
+				AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
+				attr->setSpecified(oneAttrib->getSpecified());
 
-            // Attributes of type ID.  If this is one, add it to the hashtable of IDs
-            //   that is constructed for use by GetElementByID().
-            //
-            if (oneAttrib->getType()==XMLAttDef::ID)
-            {
-                if (docImpl->fNodeIDMap == 0)
-                    docImpl->fNodeIDMap = new NodeIDMap(500);
-                docImpl->fNodeIDMap->add(attr);
-                attr->idAttr(true);
-            }
+				// Attributes of type ID.  If this is one, add it to the hashtable of IDs
+				//   that is constructed for use by GetElementByID().
+				//
+				if (oneAttrib->getType()==XMLAttDef::ID)
+				{
+					if (docImpl->fNodeIDMap == 0)
+						docImpl->fNodeIDMap = new NodeIDMap(500);
+					docImpl->fNodeIDMap->add(attr);
+					attr->idAttr(true);
+				}
 
-        }
+		}
     }
     
     //If the node type is entityRef then set the readOnly flag to false before appending node
@@ -954,6 +956,54 @@ void DOMParser::endAttList
 	if (fOldDocTypeHandler)
 	{
 		fOldDocTypeHandler->endAttList(elemDecl);
+	}
+
+	// this section sets up default attributes.
+	// default attribute nodes are stored in a NamedNodeMap DocumentTypeImpl::elements
+	// default attribute data attached to the document is used to conform to the
+	// DOM spec regarding creating element nodes & removing attributes with default values
+	// see DocumentTypeImpl
+	if (elemDecl.hasAttDefs())
+	{		
+		XMLAttDefList* defAttrs = &elemDecl.getAttDefList();
+		XMLAttDef* attr = 0;
+		AttrImpl* insertAttr = 0;
+		DOM_Element dom_elem = fDocument.createElement(elemDecl.getFullName());
+		ElementImpl* elem = (ElementImpl*)(dom_elem.fImpl);
+
+		static const XMLCh XMLNS[] = {chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
+
+		while (defAttrs->hasMoreElements())
+		{
+			attr = &defAttrs->nextElement();
+			if (attr->getValue() != null)
+			{
+				if (fScanner->getDoNamespaces())
+				{
+					// Namespaces is turned on...
+					unsigned int attrURIId = attr->getId();
+					XMLBuffer buf;
+					DOMString namespaceURI = 0;
+					if (!XMLString::compareString(attr->getFullName(), XMLNS))    //for xmlns=...
+						attrURIId = fValidator->getXMLNSNamespaceId();
+					if (attrURIId != fValidator->getGlobalNamespaceId()) {	      //TagName has a prefix
+						fValidator->getURIText(attrURIId, buf);	                  //get namespaceURI
+						namespaceURI = DOMString(buf.getRawBuffer());
+					}
+					insertAttr = elem->setAttributeNS(namespaceURI, attr->getFullName(), attr->getValue());
+					insertAttr->setSpecified(false);
+				}
+				else
+				{
+					// Namespaces is turned off...
+					insertAttr = new AttrImpl((DocumentImpl*)fDocument.fImpl, attr->getFullName());
+					insertAttr->setValue(attr->getValue());
+					elem->setAttributeNode(insertAttr);
+					insertAttr->setSpecified(false);
+				}
+			}
+		}
+		fDocumentType->getElements()->setNamedItem(elem);
 	}
 }
 
