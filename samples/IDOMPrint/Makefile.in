@@ -88,7 +88,7 @@ HEADER_FILES=${SRC}/IDOMTreeErrorReporter.hpp
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET= "//'${LOADMOD}(${APP_NAME})'"
+BATCH_TARGET= "//'${LOADMOD}(IDOMPRNT)'"
 all:: makedir ${BATCH_TARGET}
 else
 all:: makedir ${EXEC}/${APP_NAME}

@@ -92,7 +92,7 @@ INCLUDE = ${INCLUDES}
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
-BATCH_TARGET= "//'${LOADMOD}(RANGETST)'"
+BATCH_TARGET= "//'${LOADMOD}(IRANGTST)'"
 all: makedir ${BATCH_TARGET}
 else
 all: makedir ${EXEC}/${APP_NAME}
