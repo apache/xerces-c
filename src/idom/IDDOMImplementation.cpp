@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/01/23 20:12:43  tng
+ * Update DOM/IDOM hasFeature method to correctly reflect current status.
+ *
  * Revision 1.4  2001/10/23 23:05:03  peiyongz
  * [Bug#880] patch to PlatformUtils:init()/term() and related. from Mark Weaver
  *
@@ -93,15 +96,17 @@ static IDDOMImplementation    *gDomimp;   // Points to the singleton instance
 static const XMLCh  gXML[] =      // Points to "XML"
         {chLatin_X, chLatin_M, chLatin_L, 0};
 
-static const XMLCh  gxml[] =      // Points to "xml"
-        {chLatin_x, chLatin_m, chLatin_l, 0};
 static const XMLCh  g1_0[] =     // Points to "1.0"
         {chDigit_1, chPeriod, chDigit_0, 0};
 static const XMLCh  g2_0[] =      // Points to "2.0"
         {chDigit_2, chPeriod, chDigit_0, 0};
 static const XMLCh  gTrav[] =     // Points to "Traversal"
-        {chLatin_T, chLatin_r, chLatin_a, chLatin_v, chLatin_e,chLatin_r,
+        {chLatin_T, chLatin_r, chLatin_a, chLatin_v, chLatin_e, chLatin_r,
             chLatin_s, chLatin_a, chLatin_l, 0};
+static const XMLCh  gCore[] =     // Points to "Core"
+        {chLatin_C, chLatin_o, chLatin_r, chLatin_e, 0};
+static const XMLCh  gRange[] =     // Points to "Range"
+        {chLatin_R, chLatin_a, chLatin_n, chLatin_g, chLatin_e, 0};
 
 
 IDDOMImplementation::IDDOMImplementation() {
@@ -174,16 +179,25 @@ IDOM_DOMImplementation *IDOM_DOMImplementation::getImplementation()
 
 bool  IDDOMImplementation::hasFeature(const  XMLCh * feature,  const  XMLCh * version)
 {
-    // Currently, we support only XML Level 1 version 1.0
-    if (XMLString::compareIString(feature, gXML) == 0)
-    {
-        if(version == 0 ||
-            XMLString::compareString(version, g1_0) == 0 ||
-            XMLString::compareString(version, g2_0) == 0 )
-            return true;
-    }
+    bool anyVersion = (version == 0 || XMLString::stringLen(version) == 0);
+    bool version1_0 = (XMLString::compareString(version, g1_0) == 0);
+    bool version2_0 = (XMLString::compareString(version, g2_0) == 0);
 
-    if (XMLString::compareIString(feature, gTrav) == 0)
+    // Currently, we support only XML Level 1 version 1.0
+    if (XMLString::compareIString(feature, gXML) == 0
+        && (anyVersion || version1_0 || version2_0))
+        return true;
+
+    if (XMLString::compareIString(feature, gCore) == 0
+        && (anyVersion || version1_0 || version2_0))
+        return true;
+
+    if (XMLString::compareIString(feature, gTrav) == 0
+        && (anyVersion || version2_0))
+        return true;
+
+    if (XMLString::compareIString(feature, gRange) == 0
+        && (anyVersion || version2_0))
         return true;
 
     return false;

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2002/01/23 20:13:23  tng
+ * Update DOM/IDOM hasFeature method to correctly reflect current status.
+ *
  * Revision 1.11  2001/10/25 21:47:14  peiyongz
  * Replace XMLDeleterFor with XMLRegisterCleanup
  *
@@ -141,10 +144,11 @@ static DOM_DOMImplementation    *gDomimp;   // Points to the singleton instance
                                             //  by any call to getImplementation().
 
 static DOMString                *gXML = 0;      // Points to "XML"
-static DOMString                *gxml = 0;      // Points to "xml"
 static DOMString                *g1_0 = 0;      // Points to "1.0"
 static DOMString                *g2_0 = 0;      // Points to "2.0"
-static DOMString                *gTrav = 0;     // Points to "Traversal"
+static DOMString                *gTrav  = 0;     // Points to "Traversal"
+static DOMString                *gRange = 0;     // Points to "Range"
+static DOMString                *gCore  = 0;     // Points to "Core"
 
 //
 // we define only one clean up object, if any of the above
@@ -212,45 +216,53 @@ DOM_DOMImplementation &DOM_DOMImplementation::getImplementation() {
         {
 			implementationCleanup.registerCleanup(reinitImplementation);
         }
-        
+
     }
     return *gDomimp;
 };
 
-bool  DOM_DOMImplementation::hasFeature(const DOMString &feature,  const DOMString &version) 
+bool  DOM_DOMImplementation::hasFeature(const DOMString &feature,  const DOMString &version)
 {
-    // Currently, we support only XML Level 1 version 1.0
-    // Note #965:  A true case-insensitve compare is needed here.
-    if(feature.equals(DStringPool::getStaticString("XML"
-                                                 , &gXML
-                                                 , reinitDOM_DOMImplementation
-                                                 , DOM_DOMImplementationCleanup
-                                                   )) ||
-       feature.equals(DStringPool::getStaticString("xml"
-                                                 , &gxml
-                                                 , reinitDOM_DOMImplementation
-                                                 , DOM_DOMImplementationCleanup       
-                                                 )))
-    {
-        if(version == null ||
-           version.equals(DStringPool::getStaticString("1.0"
+    bool anyVersion = (version == null || version.length() == 0);
+    bool version1_0 = version.equals(DStringPool::getStaticString("1.0"
                                                      , &g1_0
                                                      , reinitDOM_DOMImplementation
-                                                     , DOM_DOMImplementationCleanup       
-                                                     )) ||
-           version.equals(DStringPool::getStaticString("2.0"
-                                                      , &g2_0
-                                                      , reinitDOM_DOMImplementation
-                                                      , DOM_DOMImplementationCleanup                                                             
-                                                      )) )
-            return true;
-    }
-    if(feature.equals(DStringPool::getStaticString("Traversal"
-                                                  , &gTrav
-                                                  , reinitDOM_DOMImplementation
-                                                  , DOM_DOMImplementationCleanup       
-                                                  )))
+                                                     , DOM_DOMImplementationCleanup));
+    bool version2_0 = version.equals(DStringPool::getStaticString("2.0"
+                                                     , &g2_0
+                                                     , reinitDOM_DOMImplementation
+                                                     , DOM_DOMImplementationCleanup));
+
+    // case-insensitive compare
+    if(!XMLString::compareIString(feature.rawBuffer(), DStringPool::getStaticString("XML"
+                                                           , &gXML
+                                                           , reinitDOM_DOMImplementation
+                                                           , DOM_DOMImplementationCleanup).rawBuffer())
+       && (anyVersion || version1_0 || version2_0))
         return true;
+
+    if(!XMLString::compareIString(feature.rawBuffer(), DStringPool::getStaticString("Core"
+                                                           , &gCore
+                                                           , reinitDOM_DOMImplementation
+                                                           , DOM_DOMImplementationCleanup).rawBuffer())
+       && (anyVersion || version1_0 || version2_0))
+        return true;
+
+    if(!XMLString::compareIString(feature.rawBuffer(), DStringPool::getStaticString("Traversal"
+                                                           , &gTrav
+                                                           , reinitDOM_DOMImplementation
+                                                           , DOM_DOMImplementationCleanup).rawBuffer())
+       && (anyVersion || version2_0))
+        return true;
+
+    if(!XMLString::compareIString(feature.rawBuffer(), DStringPool::getStaticString("Range"
+                                                           , &gRange
+                                                           , reinitDOM_DOMImplementation
+                                                           , DOM_DOMImplementationCleanup).rawBuffer())
+       && (anyVersion || version2_0))
+        return true;
+
+
     return false;
 }
 
@@ -278,18 +290,21 @@ DOM_Document DOM_DOMImplementation::createDocument(const DOMString &namespaceURI
 void DOM_DOMImplementation::reinitDOM_DOMImplementation() {
 
     delete gXML;
-    gXML = 0; 
-
-    delete gxml;
-    gxml = 0; 
+    gXML = 0;
 
     delete g1_0;
-    g1_0 = 0; 
+    g1_0 = 0;
 
     delete g2_0;
-    g2_0 = 0; 
+    g2_0 = 0;
 
     delete gTrav;
-    gTrav = 0;  
+    gTrav = 0;
+
+    delete gRange;
+    gRange = 0;
+
+    delete gCore;
+    gCore = 0;
 
 }
