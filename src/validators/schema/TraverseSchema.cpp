@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/06/05 15:21:15  knoaman
+ * Display error when attribute type is not found.
+ *
  * Revision 1.16  2001/06/05 13:59:54  knoaman
  * Fixes to include and import.
  *
@@ -1533,6 +1536,10 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
             }
 
             attType = XMLAttDef::Simple;
+        }
+
+        if (!dv) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::TypeNotFound, typeURI, localPart);
         }
     }
 
