@@ -89,13 +89,13 @@
   #error A transcoding service must be chosen
 #endif
 
-  defined(XML_USE_INMEMORY_MSGLOADER)
+  #if defined(XML_USE_INMEMORY_MSGLOADER)
   #include  <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 #else
   #error A message loading service must be chosen
 #endif
 
-#if defined(__IBMCPP__)
+#if defined(XML_IBMVAOS2)
 #include    <builtin.h>
 #endif
 #include    <OS2.h>
@@ -377,7 +377,7 @@ unsigned long XMLPlatformUtils::getCurrentMillis()
 // -----------------------------------------------------------------------
 void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 {
-#if defined(__MT__)
+#if ! defined(APP_NO_THREADS)
     if (mtxHandle == NULL)
       return;
 
@@ -390,7 +390,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
 
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 {
-#if defined(__MT__)
+#if ! defined(APP_NO_THREADS)
     if (mtxHandle == NULL)
       return;
 
@@ -403,7 +403,7 @@ void XMLPlatformUtils::lockMutex(void* const mtxHandle)
 
 void* XMLPlatformUtils::makeMutex()
 {
-#if defined(__MT__)
+#if ! defined(APP_NO_THREADS)
     HMTX hRet; // Mutex Handle
 
     if (DosCreateMutexSem(NULL, &hRet, 0, FALSE))
@@ -416,7 +416,7 @@ void* XMLPlatformUtils::makeMutex()
 
 void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
 {
-#if defined(__MT__)
+#if ! defined(APP_NO_THREADS)
     if (mtxHandle == NULL)
        return;
 
@@ -436,7 +436,7 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill
                                        , const void* const newValue
                                        , const void* const toCompare )
 {
-#if defined(__IBMCPP__)
+#if defined(XML_IBMVA4_OS2)
     return (void *)__smp_cmpxchg4((unsigned int *)toFill,
                                   (unsigned int)newValue,
                                   (unsigned int)toCompare);
@@ -472,7 +472,7 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill
 // -----------------------------------------------------------------------
 int XMLPlatformUtils::atomicIncrement(int& location)
 {
-#if defined(__IBMCPP__)
+#if defined(XML_IBMVA4_OS2)
     return __smp_inc4(&location);
 #elif defined(__GNUG__)
     __asm__ __volatile__ ("lock; incl %0" : "=m" (location) : );
@@ -484,7 +484,7 @@ int XMLPlatformUtils::atomicIncrement(int& location)
 
 int XMLPlatformUtils::atomicDecrement(int& location)
 {
-#if defined(__IBMCPP__)
+#if defined(XML_IBMVA4_OS2)
     return __smp_dec4(&location);
 #elif defined(__GNUG__)
     __asm__ __volatile__ ("lock; decl %0" : "=m" (location) : );

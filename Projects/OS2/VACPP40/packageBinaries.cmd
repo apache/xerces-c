@@ -56,6 +56,7 @@ IF targetdir = '' | sourcedir = '' THEN
 CALL MakeTargetDirectories targetdir
 CALL CopyHeaderFiles targetdir, sourcedir
 CALL CopyBinaries targetdir, sourcedir
+CALL CopySamples targetdir, sourcedir
 
 EXIT
 
@@ -94,9 +95,12 @@ EXIT
   CALL SysMkDir targetdir || "\samples"
   CALL SysMkDir targetdir || "\samples\Projects"
   CALL SysMkDir targetdir || "\samples\Projects\OS2"
+  CALL SysMkDir targetdir || "\samples\Projects\OS2\VACPP40"
   CALL SysMkDir targetdir || "\samples\data"
   CALL SysMkDir targetdir || "\samples\SAXCount"
+  CALL SysMkDir targetdir || "\samples\SAX2Count"
   CALL SysMkDir targetdir || "\samples\SAXPrint"
+  CALL SysMkDir targetdir || "\samples\SAX2Print"
   CALL SysMkDir targetdir || "\samples\DOMCount"
   CALL SysMkDir targetdir || "\samples\DOMPrint"
   CALL SysMkDir targetdir || "\samples\Redirect"
@@ -108,6 +112,50 @@ EXIT
   CALL SysMkDir targetdir || "\doc"
   CALL SysMkDir targetdir || "\doc\html"
   CALL SysMkDir targetdir || "\doc\html\apiDocs"
+
+  RETURN
+
+  /*------------------------------- CopySamples -------------------------------
+ */
+::routine CopySamples
+  USE ARG targetdir, sourcedir
+
+  project = "\samples\Projects\OS2\VACPP40"
+
+  /* Copy the project files */
+  srcSpec = sourcedir || project || "\*"
+  CALL SysFileTree srcSpec, 'F.', 'FO'
+  DO i = 1 TO f.0
+    srcfn = f.i
+    trgfn = targetdir || project || "\" || Filespec('N', f.i)
+    'copy' srcfn trgfn '> nul'
+  END
+
+  samples = .array~of( ,
+                "SAXCount", ,
+                "SAX2Count", ,
+                "SAXPrint", ,
+                "SAX2Print", ,
+                "DOMCount", ,
+                "DOMPrint", ,
+                "Redirect", ,
+                "MemParse", ,
+                "PParse", ,
+                "StdInParse", ,
+                "EnumVal", ,
+                "CreateDOMDocument" ,
+                )
+
+  /* Copy the sample code */
+  DO sample OVER samples
+   srcSpec = sourcedir || "\samples\" || sample || "\*.?pp"
+   CALL SysFileTree srcSpec, 'F.', 'FO'
+   DO i = 1 TO f.0
+     srcfn = f.i
+     trgfn = targetdir || "\samples\" || sample ||  "\" || Filespec('N', f.i)
+     'copy' srcfn trgfn '> nul'
+   END
+  END
 
   RETURN
 
@@ -136,6 +184,7 @@ EXIT
 
   hdirs = .array~of( ,
               "sax", ,
+			  "sax2", ,
               "framework", ,
               "dom", ,
               "internal", ,

@@ -1,6 +1,7 @@
 group xerces_internal =
     BASE_DIR "\\src\\internal\\ElemStack.cpp",
     BASE_DIR "\\src\\internal\\ReaderMgr.cpp",
+	BASE_DIR "\\src\\internal\\VecAttributesImpl.cpp",
     BASE_DIR "\\src\\internal\\VecAttrListImpl.cpp",
     BASE_DIR "\\src\\internal\\XMLReader.cpp",
     BASE_DIR "\\src\\internal\\XMLScanner.cpp",

@@ -1,5 +1,6 @@
 group xerces_dom =
     BASE_DIR "\\src\\dom\\AttrImpl.cpp",
+	BASE_DIR "\\src\\dom\\AttrMapImpl.cpp",
     BASE_DIR "\\src\\dom\\AttrNSImpl.cpp",
     BASE_DIR "\\src\\dom\\CDATASectionImpl.cpp",
     BASE_DIR "\\src\\dom\\CharacterDataImpl.cpp",
@@ -31,6 +32,8 @@ group xerces_dom =
     BASE_DIR "\\src\\dom\\DOM_NodeList.cpp",
     BASE_DIR "\\src\\dom\\DOM_Notation.cpp",
     BASE_DIR "\\src\\dom\\DOM_ProcessingInstruction.cpp",
+	BASE_DIR "\\src\\dom\\DOM_Range.cpp",
+    BASE_DIR "\\src\\dom\\DOM_RangeException.cpp",
     BASE_DIR "\\src\\dom\\DOM_Text.cpp",
     BASE_DIR "\\src\\dom\\DOM_TreeWalker.cpp",
     BASE_DIR "\\src\\dom\\DOM_XMLDecl.cpp",
@@ -49,6 +52,7 @@ group xerces_dom =
     BASE_DIR "\\src\\dom\\NotationImpl.cpp",
     BASE_DIR "\\src\\dom\\ParentNode.cpp",
     BASE_DIR "\\src\\dom\\ProcessingInstructionImpl.cpp",
+	BASE_DIR "\\src\\dom\\RangeImpl.cpp",
     BASE_DIR "\\src\\dom\\RefCountedImpl.cpp",
     BASE_DIR "\\src\\dom\\TextImpl.cpp",
     BASE_DIR "\\src\\dom\\TreeWalkerImpl.cpp",

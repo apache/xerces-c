@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/09/21 00:54:18  aruna1
+ * OS2 related changes given by Bill Schindler
+ *
  * Revision 1.14  2000/08/01 18:26:02  aruna1
  * Tru64 support added
  *
@@ -221,18 +224,15 @@
     #define XML_MVSCPP
 #elif defined(EXM_OS390) && defined(__cplusplus)
     #define XML_MVSCPP
-#elif defined(__IBMCPP__)
+#elif defined(__IBMC__) || defined(__IBMCPP__)
     #if defined(XML_WIN32)
         #define XML_IBMVAW32
     #elif defined(XML_OS2)
         #define XML_IBMVAOS2
-    #endif
-#elif defined(__IBMC__)
-    #if defined(XML_WIN32)
-        #define XML_IBMVAW32
-    #elif defined(XML_OS2)
-        #define XML_IBMVAOS2
-    #endif
+        #if (__IBMC__ >= 400 || __IBMCPP__ >= 400)
+            #define XML_IBMVA4_OS2
+        #endif 
+    #endif   
 #elif defined(XML_TRU64) && defined(__DECCXX)
     #define XML_DECCXX
 #elif defined(__MWERKS__)

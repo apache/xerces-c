@@ -13,6 +13,10 @@ echo making PParse
 vacbld PParse.icc
 echo making Redirect
 vacbld Redirect.icc
+echo making SAX2Count
+vacbld SAX2Count.icc
+echo making SAX2Print
+vacbld SAX2Print.icc
 echo making SAXCount
 vacbld SAXCount.icc
 echo making SAXPrint
