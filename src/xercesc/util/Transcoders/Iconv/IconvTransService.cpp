@@ -382,7 +382,7 @@ bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
     wideCharBuf[wLent] = 0x00;
 
     // Ok, go ahead and try the transcoding. If it fails, then ...
-    size_t mblen ::wcstombs(toFill, wideCharBuf, maxBytes);
+    size_t mblen = ::wcstombs(toFill, wideCharBuf, maxBytes);
     if (mblen == -1)
     {
         delete [] allocatedArray;
