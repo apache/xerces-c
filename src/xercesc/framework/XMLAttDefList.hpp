@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/10 21:53:54  neilg
+ * add a means of statelessly traversing attribute lists.  mark the enumeration-based means as deprecated, since those are not stateless
+ *
  * Revision 1.6  2003/10/20 11:47:30  gareth
  * Constructor take memory manager and get method for it.
  *
@@ -135,6 +138,10 @@ public:
     // -----------------------------------------------------------------------
     //  The virtual interface
     // -----------------------------------------------------------------------
+
+    /** 
+     * @deprecated This method is not thread-safe.
+     */
     virtual bool hasMoreElements() const = 0;
     virtual bool isEmpty() const = 0;
     virtual XMLAttDef* findAttDef
@@ -157,8 +164,31 @@ public:
         const   XMLCh* const        attURI
         , const XMLCh* const        attName
     )   const = 0;
+
+    /** 
+     * @deprecated This method is not thread-safe.
+     */
     virtual XMLAttDef& nextElement() = 0;
+
+    /** 
+     * @deprecated This method is not thread-safe.
+     */
     virtual void Reset() = 0;
+
+    /**
+     * return total number of attributes in this list
+     */
+    virtual unsigned int getAttDefCount() const = 0;
+
+    /**
+     * return attribute at the index-th position in the list.
+     */
+    virtual XMLAttDef &getAttDef(unsigned int index) = 0;
+
+    /**
+     * return attribute at the index-th position in the list.
+     */
+    virtual const XMLAttDef &getAttDef(unsigned int index) const = 0;
 
     /***
      * Support for Serialization/De-serialization
