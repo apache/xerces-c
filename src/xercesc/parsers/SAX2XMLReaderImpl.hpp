@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2004/12/10 10:52:16  cargilld
+ * Make setInputBufferSize virtual.  Fix from Christian Will.
+ *
  * Revision 1.28  2004/10/04 11:30:51  amassari
  * As start/endPrefixMapping doesn't use the XMLBufMgr variable, we need only one XMLBuffer
  *
@@ -1058,7 +1061,7 @@ public :
       *
       * @param bufferSize The maximum input buffer size
       */
-    void setInputBufferSize(const size_t bufferSize);
+    virtual void setInputBufferSize(const size_t bufferSize);
 
     //@}
 

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2004/12/10 10:52:16  cargilld
+ * Make setInputBufferSize virtual.  Fix from Christian Will.
+ *
  * Revision 1.12  2004/09/30 14:07:43  peiyongz
  * setInputBufferSize
  *
@@ -936,7 +939,7 @@ public:
       *
       * @param bufferSize The maximum input buffer size
       */
-    void setInputBufferSize(const size_t bufferSize) {};
+    virtual void setInputBufferSize(const size_t bufferSize) {};
 
     //@}
 
