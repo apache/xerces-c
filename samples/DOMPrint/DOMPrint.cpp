@@ -428,6 +428,13 @@ int main(int argC, char* argV[])
         errorsOccured = true;
     }
 
+    catch (...)
+    {
+        cerr << "An error occured during parsing\n " << endl;
+        errorsOccured = true;
+    }
+
+
     // If the parse was successful, output the document data from the DOM tree
     if (!errorsOccured)
     {

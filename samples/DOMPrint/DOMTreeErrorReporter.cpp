@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/08/24 22:36:22  andyh
+ * Fix DOMPrint crash when input xml file is not found.
+ *
  * Revision 1.5  2000/05/15 22:31:06  andyh
  * Replace #include<memory.h> with <string.h> everywhere.
  *
@@ -108,6 +111,10 @@ void DOMTreeErrorReporter::error(const SAXParseException& toCatch)
 		 << "\", line " << toCatch.getLineNumber()
 		 << ", column " << toCatch.getColumnNumber()
          << "\n   Message: " << DOMString(toCatch.getMessage()) << endl;
+    throw SAXParseException(toCatch);  // Copy the 'toCatch' object before throwing - 
+                                       //   otherwise we would be throwing a reference to
+                                       //   a local object that gets destroyed before
+                                       //   the catch.
 }
 
 void DOMTreeErrorReporter::fatalError(const SAXParseException& toCatch)
@@ -116,6 +123,7 @@ void DOMTreeErrorReporter::fatalError(const SAXParseException& toCatch)
 		 << "\", line " << toCatch.getLineNumber()
 		 << ", column " << toCatch.getColumnNumber()
          << "\n   Message: " << DOMString(toCatch.getMessage()) << endl;
+    throw SAXParseException(toCatch);
 }
 
 void DOMTreeErrorReporter::resetErrors()
