@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/15 18:08:44  peiyongz
+ * Fix to potential leakage in strEnumeration
+ *
  * Revision 1.1  2001/07/24 13:59:03  peiyongz
  * DoubleDTV
  *
@@ -113,12 +116,11 @@ void DoubleDatatypeValidator::init(DatatypeValidator*            const baseValid
     {
         XMLCh* key;
         XMLCh* value;
-        RefVectorOf<XMLCh>*             fStrEnumeration = 0; // save the literal value
+        RefVectorOf<XMLCh>*             fStrEnumeration = enums; // save the literal value
         Janitor<RefVectorOf<XMLCh> >    janStrEnum(fStrEnumeration);
 
         if (enums)
         {
-            fStrEnumeration = enums;
             setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
         }
 

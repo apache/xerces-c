@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/15 18:08:44  peiyongz
+ * Fix to potential leakage in strEnumeration
+ *
  * Revision 1.11  2001/07/17 21:30:12  peiyongz
  * bug fix: numBase->getMinInclusive()->toString()
  *
@@ -141,12 +144,11 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
     {
         XMLCh* key;
         XMLCh* value;
-        RefVectorOf<XMLCh>*             fStrEnumeration = 0; // save the literal value
+        RefVectorOf<XMLCh>*             fStrEnumeration = enums; // save the literal value
         Janitor<RefVectorOf<XMLCh> >    janStrEnum(fStrEnumeration);
 
         if (enums)
         {
-            fStrEnumeration = enums;
             setFacetsDefined(DatatypeValidator::FACET_ENUMERATION);
         }
 
