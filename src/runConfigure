@@ -436,7 +436,7 @@ if test $platform = "os400"; then
 elif test $platform = "ptx"; then
 ./configure --prefix=$XMLINSTALL
 else
-./configure
+./configure $configureoptions
 fi
 echo
 echo In future, you may also directly type the following commands to create the Makefiles.
