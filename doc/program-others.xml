@@ -2,6 +2,29 @@
 <!DOCTYPE s1 SYSTEM "sbk:/style/dtd/document.dtd">
 
 <s1 title="Programming Guide">
+    <anchor name="Macro"/>
+    <s2 title="Version Macro">
+        <p>&XercesCName; has defined a numeric preprocessor macro, _XERCES_VERSION, for users to
+           introduce into their code to perform conditional compilation where the
+           version of Xerces is detected in order to enable or disable version
+          specific capabilities. For example,
+         </p>
+<source>
+       #if _XERCES_VERSION >= 20304
+         // code specific to Xerces-C++ version 2.3.4
+       #else
+         // old code here...
+       #endif
+</source>
+        <p>The minor and revision (patch level) numbers have two digits of resolution
+           which means that '3' becomes '03' and '4' becomes '04' in this example.
+        </p>
+        <p>There are also other string macro, or constants to represent the Xerces-C++ version.
+           Please refer to the header xercesc/util/XercesVersion.hpp for further details.
+        </p>
+    </s2>
+
+
     <anchor name="Schema"/>
     <s2 title="Schema Support">
         <p>&XercesCName; contains an implementation of the W3C XML Schema
@@ -154,7 +177,7 @@ for (int i=0; i&lt; 3; i++)
     parser.parse(xmlFile);
 
 // This will flush the grammar pool
-parser.resetCachedGrammarPool(); 
+parser.resetCachedGrammarPool();
 </source>
 
 <source>
@@ -180,7 +203,7 @@ parser->parse(xmlFile2);
            <ul>
               <li>When caching/reusing DTD grammars, no internal subset is allowed.</li>
               <li>When preparsing grammars with caching option enabled, if a grammar, in the
-              result set, already exists in the pool (same NS for schema or same system 
+              result set, already exists in the pool (same NS for schema or same system
               id for DTD), the entire set will not be cached.</li>
               <li>When parsing an XML document with the grammar caching option enabled, the
               reuse option is also automatically enabled. We will only parse a grammar if it

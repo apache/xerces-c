@@ -72,6 +72,7 @@
     <p>Read the <jump href="program-others.html">&XercesCName; Programming Guide</jump> document
       or jump directly to:</p>
     <ul>
+      <li><jump href="program-others.html#Macro">Version Macros</jump></li>
       <li><jump href="program-others.html#Schema">Schema Support</jump></li>
       <li><jump href="program-others.html#Progressive">Progressive Parsing</jump></li>
       <li><jump href="program-others.html#GrammarCache">Preparsing Grammar and Grammar Caching</jump></li>
