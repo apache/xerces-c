@@ -119,8 +119,12 @@ SOURCE=..\..\..\..\..\src\util\MsgLoaders\InMemory\CppErrMsgs_EN_US.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\MsgLoaders\Win32\Win32MsgLoader.Cpp
+SOURCE=..\..\..\..\..\src\util\MsgLoaders\Win32\Win32MsgLoader.cpp
 # ADD CPP /Ze
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\util\MsgLoaders\Win32\Win32MsgLoader.hpp
 # End Source File
 # End Group
 # Begin Group "Transcoders"
