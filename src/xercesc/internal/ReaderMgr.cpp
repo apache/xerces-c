@@ -578,6 +578,107 @@ XMLReader* ReaderMgr::createReader( const   XMLCh* const        sysId
 }
 
 
+XMLReader* ReaderMgr::createReader( const   XMLCh* const        baseURI
+                                    , const XMLCh* const        sysId
+                                    , const XMLCh* const        pubId
+                                    , const bool                xmlDecl
+                                    , const XMLReader::RefFrom  refFrom
+                                    , const XMLReader::Types    type
+                                    , const XMLReader::Sources  source
+                                    ,       InputSource*&       srcToFill)
+{
+    // Create a buffer for expanding the system id
+    XMLBuffer expSysId;
+
+    //
+    //  Allow the entity handler to expand the system id if they choose
+    //  to do so.
+    //
+    if (fEntityHandler)
+    {
+        if (!fEntityHandler->expandSystemId(sysId, expSysId))
+            expSysId.set(sysId);
+    }
+     else
+    {
+        expSysId.set(sysId);
+    }
+
+    // Call the entity resolver interface to get an input source
+    srcToFill = 0;
+    if (fEntityHandler)
+    {
+        srcToFill = fEntityHandler->resolveEntity
+        (
+            pubId
+            , expSysId.getRawBuffer()
+        );
+    }
+
+    //
+    //  If they didn't create a source via the entity resolver, then we
+    //  have to create one on our own.
+    //
+    if (!srcToFill)
+    {
+        LastExtEntityInfo lastInfo;
+        getLastExtEntityInfo(lastInfo);
+
+        try
+        {
+            XMLURL urlTmp((!baseURI || !*baseURI) ? lastInfo.systemId : baseURI, expSysId.getRawBuffer());
+
+            if (urlTmp.isRelative())
+            {
+                ThrowXML
+                (
+                    MalformedURLException
+                    , XMLExcepts::URL_NoProtocolPresent
+                );
+            }
+            srcToFill = new URLInputSource(urlTmp);
+        }
+
+        catch(const MalformedURLException&)
+        {
+            // Its not a URL, so lets assume its a local file name.
+            srcToFill = new LocalFileInputSource
+            (
+                lastInfo.systemId
+                , expSysId.getRawBuffer()
+            );
+        }
+    }
+
+    // Put a janitor on the input source
+    Janitor<InputSource> janSrc(srcToFill);
+
+    //
+    //  Now call the other version with the input source that we have, and
+    //  return the resulting reader.
+    //
+    XMLReader* retVal = createReader
+    (
+        *srcToFill
+        , xmlDecl
+        , refFrom
+        , type
+        , source
+    );
+
+    // Either way, we can release the input source now
+    janSrc.orphan();
+
+    // If it failed for any reason, then return zero.
+    if (!retVal)
+        return 0;
+
+    // Give this reader the next available reader number and return it
+    retVal->setReaderNum(fNextReaderNum++);
+    return retVal;
+}
+
+
 XMLReader*
 ReaderMgr::createIntEntReader(  const   XMLCh* const        sysId
                                 , const XMLReader::RefFrom  refFrom

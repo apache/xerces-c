@@ -925,7 +925,7 @@ void XMLScanner::scanReset(const InputSource& src)
         fValidator = fDTDValidator;
         fValidator->setGrammar(fGrammar);
     }
- 
+
     if (fValScheme == Val_Auto) {
         fValidate = false;
     }
@@ -2920,7 +2920,8 @@ XMLScanner::scanEntityRef(  const   bool    inAttVal
         InputSource* srcUsed;
         XMLReader* reader = fReaderMgr.createReader
         (
-            decl->getSystemId()
+            decl->getBaseURI()
+            , decl->getSystemId()
             , decl->getPublicId()
             , false
             , XMLReader::RefFrom_NonLiteral

@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:51  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/22 19:27:41  tng
+ * [Bug 11448] DomCount has problems with XHTML1.1 DTD.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:51  peiyongz
+ * sane_include
  *
  * Revision 1.6  2000/02/24 20:00:23  abagchi
  * Swat for removing Log from API docs
@@ -114,7 +117,7 @@ public:
 
     /** @name Constructors */
     //@{
-    
+
     /**
       *  Deafult Constructor
       */
@@ -128,7 +131,7 @@ public:
     (
         const   XMLCh* const    entName
     );
-    
+
     /**
       * Constructor with a const entity name and value
       *
@@ -175,7 +178,7 @@ public:
     /** Get the 'declared in internal subset' flag
       *
       * Gets the state of the flag which indicates whether the entity was
-      * declared in the internal or external subset. Some structural 
+      * declared in the internal or external subset. Some structural
       * description languages might not have an internal subset concept, in
       * which case this will always return false.
       */
@@ -206,7 +209,7 @@ public:
     //@{
 
     /**
-      * Gets the pool id of this entity. Validators maintain all decls in 
+      * Gets the pool id of this entity. Validators maintain all decls in
       * pools, from which they can be quickly extracted via id.
       */
     unsigned int getId() const;
@@ -235,6 +238,11 @@ public:
       * so this method should never return a null pointers.
       */
     const XMLCh* getSystemId() const;
+
+    /**
+      * Gets the base URI for this entity.
+      */
+    const XMLCh* getBaseURI() const;
 
     /**
       * This method returns the value of an internal entity. If this is not
@@ -314,6 +322,14 @@ public:
     void setSystemId(const XMLCh* const newId);
 
     /**
+     *  This method will set a new baseURI on this entity. This will
+     *  then control the URI used to resolve the relative system Id.
+     *
+     *  @param  newId     The new base URI to give to the entity.
+     */
+    void setBaseURI(const XMLCh* const newId);
+
+    /**
      *  This method will set a new value for this entity. This is only
      *  valid if the entity is to be an internal entity. By setting this
      *  field, you are indicating that the entity is internal.
@@ -383,6 +399,10 @@ private :
     //  fValueLen
     //      The entity's value and length, which is only valid if its an
     //      internal style entity.
+    //
+    //  fBaseURI
+    //      The base URI of the entity.   According to XML InfoSet, such value
+    //      is the URI where it is declared (NOT referenced).
     // -----------------------------------------------------------------------
     unsigned int    fId;
 	XMLCh*          fName;
@@ -391,6 +411,7 @@ private :
     XMLCh*          fSystemId;
     XMLCh*          fValue;
     unsigned int    fValueLen;
+    XMLCh*          fBaseURI;
 };
 
 
@@ -420,6 +441,11 @@ inline const XMLCh* XMLEntityDecl::getPublicId() const
 inline const XMLCh* XMLEntityDecl::getSystemId() const
 {
     return fSystemId;
+}
+
+inline const XMLCh* XMLEntityDecl::getBaseURI() const
+{
+    return fBaseURI;
 }
 
 inline const XMLCh* XMLEntityDecl::getValue() const
@@ -469,6 +495,12 @@ inline void XMLEntityDecl::setSystemId(const XMLCh* const newId)
 {
     delete [] fSystemId;
     fSystemId = XMLString::replicate(newId);
+}
+
+inline void XMLEntityDecl::setBaseURI(const XMLCh* const newId)
+{
+    delete [] fBaseURI;
+    fBaseURI = XMLString::replicate(newId);
 }
 
 inline void XMLEntityDecl::setValue(const XMLCh* const newValue)

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/08/22 19:29:13  tng
+ * [Bug 11448] DomCount has problems with XHTML1.1 DTD.
+ *
  * Revision 1.9  2002/08/19 14:40:31  tng
  * Fix: public id / system id in entity decl should be null if empty
  *
@@ -360,7 +363,8 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
         InputSource* srcUsed;
         XMLReader* reader = fReaderMgr->createReader
         (
-            decl->getSystemId()
+            decl->getBaseURI()
+            , decl->getSystemId()
             , decl->getPublicId()
             , false
             , inLiteral ? XMLReader::RefFrom_Literal : XMLReader::RefFrom_NonLiteral
@@ -1989,7 +1993,8 @@ DTDScanner::scanEntityRef(XMLCh& firstCh, XMLCh& secondCh, bool& escaped)
         InputSource* srcUsed;
         XMLReader* reader = fReaderMgr->createReader
         (
-            decl->getSystemId()
+            decl->getBaseURI()
+            , decl->getSystemId()
             , decl->getPublicId()
             , false
             , XMLReader::RefFrom_NonLiteral
@@ -2264,11 +2269,15 @@ bool DTDScanner::scanEntityDef(DTDEntityDecl& decl, const bool isPEDecl)
     if (!scanId(bbPubId.getBuffer(), bbSysId.getBuffer(), IDType_External))
         return false;
 
+    ReaderMgr::LastExtEntityInfo lastInfo;
+    fReaderMgr->getLastExtEntityInfo(lastInfo);
+
     // Fill in the id fields of the decl with the info we got
     const XMLCh* publicId = bbPubId.getRawBuffer();
-    const XMLCh* systemId = bbSysId.getRawBuffer();        
+    const XMLCh* systemId = bbSysId.getRawBuffer();
     decl.setPublicId((*publicId) ? publicId : 0);
     decl.setSystemId((*systemId) ? systemId : 0);
+    decl.setBaseURI((*lastInfo.systemId) ? lastInfo.systemId : 0);
 
     // If its a PE decl, we are done
     bool gotSpaces = checkForPERef(false, false, true);
@@ -3339,11 +3348,15 @@ void DTDScanner::scanNotationDecl()
         // Fill in a new notation declaration and add it to the pool
         const XMLCh* publicId = bbPubId.getRawBuffer();
         const XMLCh* systemId = bbSysId.getRawBuffer();
+        ReaderMgr::LastExtEntityInfo lastInfo;
+        fReaderMgr->getLastExtEntityInfo(lastInfo);
+
         decl = new XMLNotationDecl
         (
             bbName.getRawBuffer()
             , (*publicId) ? publicId : 0
             , (*systemId) ? systemId : 0
+            , (*lastInfo.systemId) ? lastInfo.systemId : 0
         );
         fDTDGrammar->putNotationDecl(decl);
     }

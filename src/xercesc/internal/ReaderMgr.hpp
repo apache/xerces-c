@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/08/22 19:28:11  tng
+ * [Bug 11448] DomCount has problems with XHTML1.1 DTD.
+ *
  * Revision 1.2  2002/05/27 18:42:14  tng
  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
  *
@@ -214,6 +217,17 @@ public :
     XMLReader* createReader
     (
         const   XMLCh* const        sysId
+        , const XMLCh* const        pubId
+        , const bool                xmlDecl
+        , const XMLReader::RefFrom  refFrom
+        , const XMLReader::Types    type
+        , const XMLReader::Sources  source
+        ,       InputSource*&       srcToFill
+    );
+    XMLReader* createReader
+    (
+        const   XMLCh* const        baseURI
+        , const XMLCh* const        sysId
         , const XMLCh* const        pubId
         , const bool                xmlDecl
         , const XMLReader::RefFrom  refFrom

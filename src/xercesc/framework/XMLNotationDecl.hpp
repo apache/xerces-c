@@ -1,37 +1,37 @@
 /*
  * The Apache Software License, Version 1.1
- * 
+ *
  * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
  * reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
- * 
+ *    notice, this list of conditions and the following disclaimer.
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:  
+ *    if any, must include the following acknowledgment:
  *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowledgment may appear in the software itself,
  *    if and wherever such third-party acknowledgments normally appear.
- * 
+ *
  * 4. The names "Xerces" and "Apache Software Foundation" must
  *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written 
+ *    software without prior written permission. For written
  *    permission, please contact apache\@apache.org.
- * 
+ *
  * 5. Products derived from this software may not be called "Apache",
  *    nor may "Apache" appear in their name, without prior written
  *    permission of the Apache Software Foundation.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -45,7 +45,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
  * originally based on software copyright (c) 1999, International
@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:52  peiyongz
- * Initial revision
+ * Revision 1.2  2002/08/22 19:27:41  tng
+ * [Bug 11448] DomCount has problems with XHTML1.1 DTD.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:52  peiyongz
+ * sane_include
  *
  * Revision 1.5  2000/03/02 19:54:25  roddey
  * This checkin includes many changes done while waiting for the
@@ -111,6 +114,7 @@ public:
         const   XMLCh* const    notName
         , const XMLCh* const    pubId
         , const XMLCh* const    sysId
+        , const XMLCh* const    baseURI = 0
     );
     //@}
 
@@ -127,6 +131,7 @@ public:
     const XMLCh* getName() const;
     const XMLCh* getPublicId() const;
     const XMLCh* getSystemId() const;
+    const XMLCh* getBaseURI() const;
 
 
     // -----------------------------------------------------------------------
@@ -139,6 +144,7 @@ public:
     );
     void setPublicId(const XMLCh* const newId);
     void setSystemId(const XMLCh* const newId);
+    void setBaseURI(const XMLCh* const newId);
 
 
     // -----------------------------------------------------------------------
@@ -176,11 +182,15 @@ private :
     //
     //  fSystemId
     //      The text of the notation's system id, if any.
+    //
+    //  fBaseURI
+    //      The text of the notation's base URI
     // -----------------------------------------------------------------------
     unsigned int    fId;
 	XMLCh*          fName;
     XMLCh*          fPublicId;
     XMLCh*          fSystemId;
+    XMLCh*          fBaseURI;
 };
 
 
@@ -207,6 +217,11 @@ inline const XMLCh* XMLNotationDecl::getSystemId() const
     return fSystemId;
 }
 
+inline const XMLCh* XMLNotationDecl::getBaseURI() const
+{
+    return fBaseURI;
+}
+
 
 // -----------------------------------------------------------------------
 //  Setter methods
@@ -226,6 +241,12 @@ inline void XMLNotationDecl::setSystemId(const XMLCh* const newId)
 {
     delete [] fSystemId;
     fSystemId = XMLString::replicate(newId);
+}
+
+inline void XMLNotationDecl::setBaseURI(const XMLCh* const newId)
+{
+    delete [] fBaseURI;
+    fBaseURI = XMLString::replicate(newId);
 }
 
 
