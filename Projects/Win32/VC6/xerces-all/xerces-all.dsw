@@ -348,6 +348,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "XSerializerTest"=".\XSerializerTest\XSerializerTest.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "MemHandlerTest"=".\MemHandlerTest\MemHandlerTest.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -440,6 +455,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name ThreadTest
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name XSerializerTest
+    End Project Dependency    
     Begin Project Dependency
     Project_Dep_Name MemHandlerTest
     End Project Dependency
