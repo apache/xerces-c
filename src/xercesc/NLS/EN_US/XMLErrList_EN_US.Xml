@@ -545,7 +545,7 @@
             <Message Id="Parser_Factor5" Text="A back reference or an anchor or a lookahead or a lookbehind is expected in a conditional pattern"/>
             <Message Id="Parser_Factor6" Text="There are more than three choices in a conditional group"/>
             <Message Id="Parser_Atom1" Text="A character in U+0040-U+005f must follow \c"/>
-            <Message Id="Parser_Atom2" Text="A Category character or '{' is required"/>
+            <Message Id="Parser_Atom2" Text="A '{' is required before a category character."/>
             <Message Id="Parser_Atom3" Text="A property name is not closed by '}'"/>
             <Message Id="Parser_Atom4" Text="Unexpected meta character"/>
             <Message Id="Parser_Atom5" Text="Unknown property"/>

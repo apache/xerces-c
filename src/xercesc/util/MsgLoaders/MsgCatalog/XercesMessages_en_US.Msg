@@ -529,7 +529,7 @@ $set 3
 122  A back reference or an anchor or a lookahead or a lookbehind is expected in a conditional pattern
 123  There are more than three choices in a conditional group
 124  A character in U+0040-U+005f must follow \c
-125  A Category character or '{' is required
+125  A '{' is required before a category character.
 126  A property name is not closed by '}'
 127  Unexpected meta character
 128  Unknown property

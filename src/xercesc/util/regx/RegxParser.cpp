@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/03/04 16:36:17  knoaman
+ * RegEx: fix for character category escape
+ *
  * Revision 1.4  2003/01/13 19:02:23  knoaman
  * [Bug 14390] C++ Indentifier collision with Python.
  *
@@ -1085,57 +1088,23 @@ Token* RegxParser::parseAtom() {
 
 RangeToken* RegxParser::processBacksolidus_pP(const XMLInt32 ch) {
 
-    bool positive = (ch == chLatin_p);
-
     processNext();
-	if (fState != REGX_T_CHAR)
-		ThrowXML(ParseException,XMLExcepts::Parser_Atom2);
 
-    RangeToken* tok = 0;
+    if (fState != REGX_T_CHAR || fCharData != chOpenCurly)
+        ThrowXML(ParseException,XMLExcepts::Parser_Atom2);
 
-	switch(fCharData) {
+    int nameStart = fOffset;
+    int nameEnd = XMLString::indexOf(fString,chCloseCurly,nameStart);
 
-    case chLatin_L:
-		tok = fTokenFactory->getRange(fgUniLetter, !positive);
-		break;
-    case chLatin_M:
-		tok = fTokenFactory->getRange(fgUniMark, !positive);
-		break;
-    case chLatin_N:
-		tok = fTokenFactory->getRange(fgUniNumber, !positive);
-		break;
-    case chLatin_Z:
-		tok = fTokenFactory->getRange(fgUniSeparator, !positive);
-		break;
-    case chLatin_C:
-		tok = fTokenFactory->getRange(fgUniControl, !positive);
-		break;
-    case chLatin_P:
-		tok = fTokenFactory->getRange(fgUniPunctuation, !positive);
-		break;
-    case chLatin_S:
-		tok = fTokenFactory->getRange(fgUniSymbol, !positive);
-		break;
-    case chOpenCurly:
-		{
-			int nameStart = fOffset;
-			int nameEnd = XMLString::indexOf(fString,chCloseCurly,nameStart);
+    if (nameEnd < 0)
+        ThrowXML(ParseException,XMLExcepts::Parser_Atom3);
+    
+    fOffset = nameEnd + 1;
+    XMLCh* rangeName = new XMLCh[(nameEnd - nameStart) + 1];
+    ArrayJanitor<XMLCh> janRangeName(rangeName);
+    XMLString::subString(rangeName, fString, nameStart, nameEnd);
 
-			if (nameEnd < 0)
-				ThrowXML(ParseException,XMLExcepts::Parser_Atom3);
-
-			fOffset = nameEnd + 1;
-			XMLCh* rangeName = new XMLCh[(nameEnd - nameStart) + 1];
-			ArrayJanitor<XMLCh> janRangeName(rangeName);
-			XMLString::subString(rangeName, fString, nameStart, nameEnd);
-			tok = fTokenFactory->getRange(rangeName, !positive);
-		}
-		break;
-	default:
-		ThrowXML(ParseException,XMLExcepts::Parser_Atom2);
-	}
-
-    return tok;
+    return  fTokenFactory->getRange(rangeName, !(ch == chLatin_p));
 }
 
 

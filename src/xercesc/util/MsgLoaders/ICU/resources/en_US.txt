@@ -546,7 +546,7 @@ en_US {
 		"A back reference or an anchor or a lookahead or a lookbehind is expected in a conditional pattern " ,
 		"There are more than three choices in a conditional group " ,
 		"A character in U+0040-U+005f must follow \c " ,
-		"A Category character or '{' is required " ,
+		"A '{' is required before a category character. " ,
 		"A property name is not closed by '}' " ,
 		"Unexpected meta character " ,
 		"Unknown property " ,
