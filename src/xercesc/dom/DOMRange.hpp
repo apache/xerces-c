@@ -85,15 +85,15 @@ public:
 
     //getter functions
     virtual DOMNode* getStartContainer() const = 0;
-    virtual DOMSize_t getStartOffset() const = 0;
+    virtual XMLSize_t getStartOffset() const = 0;
     virtual DOMNode* getEndContainer() const = 0;
-    virtual DOMSize_t getEndOffset() const = 0;
+    virtual XMLSize_t getEndOffset() const = 0;
     virtual bool getCollapsed() const = 0;
     virtual const DOMNode* getCommonAncestorContainer() const = 0;
 
     //setter functions
-    virtual void setStart(const DOMNode *parent, DOMSize_t offset) = 0;
-    virtual void setEnd(const DOMNode *parent, DOMSize_t offset) = 0;
+    virtual void setStart(const DOMNode *parent, XMLSize_t offset) = 0;
+    virtual void setEnd(const DOMNode *parent, XMLSize_t offset) = 0;
 
     virtual void setStartBefore(const DOMNode *refNode) = 0;
     virtual void setStartAfter(const DOMNode *refNode) = 0;

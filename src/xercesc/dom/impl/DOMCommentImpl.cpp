@@ -138,15 +138,15 @@ short DOMCommentImpl::getNodeType() const {
 
 
      const XMLCh * DOMCommentImpl::getData() const                  {return fCharacterData.getData();};
-     DOMSize_t  DOMCommentImpl::getLength() const                {return fCharacterData.getLength();};
-     const XMLCh * DOMCommentImpl::substringData(DOMSize_t offset, DOMSize_t count) const
+     XMLSize_t  DOMCommentImpl::getLength() const                {return fCharacterData.getLength();};
+     const XMLCh * DOMCommentImpl::substringData(XMLSize_t offset, XMLSize_t count) const
                                                                 {return fCharacterData.substringData(this, offset, count);};
      void          DOMCommentImpl::appendData(const XMLCh *arg)     {fCharacterData.appendData(this, arg);};
-     void          DOMCommentImpl::insertData(DOMSize_t offset, const  XMLCh *arg)
+     void          DOMCommentImpl::insertData(XMLSize_t offset, const  XMLCh *arg)
                                                                 {fCharacterData.insertData(this, offset, arg);};
-     void          DOMCommentImpl::deleteData(DOMSize_t offset, DOMSize_t count)
+     void          DOMCommentImpl::deleteData(XMLSize_t offset, XMLSize_t count)
                                                                 {fCharacterData.deleteData(this, offset, count);};
-     void          DOMCommentImpl::replaceData(DOMSize_t offset, DOMSize_t count, const XMLCh *arg)
+     void          DOMCommentImpl::replaceData(XMLSize_t offset, XMLSize_t count, const XMLCh *arg)
                                                                 {fCharacterData.replaceData(this, offset, count, arg);};
      void          DOMCommentImpl::setData(const XMLCh *data)       {fCharacterData.setData(this, data);};
      void          DOMCommentImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };

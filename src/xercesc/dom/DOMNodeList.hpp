@@ -105,14 +105,14 @@ public:
      *   <code>NodeList</code>, or <code>null</code> if that is not a valid
      *   index.
      */
-    virtual DOMNode  *item(DOMSize_t index) = 0;
+    virtual DOMNode  *item(XMLSize_t index) = 0;
 
     /**
      * Returns the number of nodes in the list.
      *
      * The range of valid child node indices is 0 to <code>length-1</code> inclusive.
      */
-    virtual DOMSize_t getLength() = 0;
+    virtual XMLSize_t getLength() = 0;
     //@}
 };
 

@@ -129,7 +129,7 @@ class CDOM_EXPORT DOMText: public DOMCharacterData {
      *   than the number of 16-bit units in <code>data</code>.
      *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      */
-    virtual DOMText *splitText(DOMSize_t offset) = 0;
+    virtual DOMText *splitText(XMLSize_t offset) = 0;
     //@}
 
     /** @name Non-standard (not defined by the DOM specification) functions. */

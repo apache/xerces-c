@@ -137,7 +137,7 @@ public:
     *   <code>NamedNodeMap</code>, or <code>null</code> if that is not a valid
     *   index.
     */
-    virtual DOMNode     *item(DOMSize_t index) const = 0;
+    virtual DOMNode     *item(XMLSize_t index) const = 0;
 
     /**
     * Retrieves a node specified by name.
@@ -155,7 +155,7 @@ public:
     * The range of valid child node indices is
     * 0 to <code>length-1</code> inclusive.
     */
-    virtual DOMSize_t   getLength() const = 0;
+    virtual XMLSize_t   getLength() const = 0;
 
     //@}
     /** @name Functions to change the node collection. */

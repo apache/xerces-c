@@ -78,29 +78,29 @@ class DOMNode;
 
 class CDOM_EXPORT DOMDeepNodeListImpl: public DOMNodeList {
 private:
-    const DOMNode          *fRootNode;
-    const XMLCh        *fTagName;
-    bool                fMatchAll;
-    int                 fChanges;
-    DOMNode          *fCurrentNode;
-    DOMSize_t        fCurrentIndexPlus1;
+    const DOMNode*   fRootNode;
+    const XMLCh*     fTagName;
+    bool             fMatchAll;
+    int              fChanges;
+    DOMNode*         fCurrentNode;
+    XMLSize_t        fCurrentIndexPlus1;
 
     //DOM Level 2
-    const XMLCh *       fNamespaceURI;
-    bool		            fMatchAllURI;
-    bool                fMatchURIandTagname; //match both namespaceURI and tagName
+    const XMLCh*     fNamespaceURI;
+    bool		         fMatchAllURI;
+    bool             fMatchURIandTagname; //match both namespaceURI and tagName
 
 public:
     DOMDeepNodeListImpl(const DOMNode *rootNode, const XMLCh *tagName);
     DOMDeepNodeListImpl(const DOMNode *rootNode,	//DOM Level 2
 	                    const XMLCh *namespaceURI,
                        const XMLCh *localName);
-    virtual             ~DOMDeepNodeListImpl();
-    virtual DOMSize_t getLength();
-    virtual DOMNode   *item(DOMSize_t index);
+    virtual          ~DOMDeepNodeListImpl();
+    virtual XMLSize_t getLength();
+    virtual DOMNode*  item(XMLSize_t index);
 
 private:
-    DOMNode *        nextMatchingElementAfter(DOMNode *current);
+    DOMNode*          nextMatchingElementAfter(DOMNode *current);
 };
 
 #endif

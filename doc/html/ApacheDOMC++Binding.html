@@ -35,12 +35,12 @@ to unsigned 16 bit type holding utf-16 values, null terminated.</font></li>
 </ul>
 
 <li>
-<font color="#000000">DOMSize_t is an implementation-dependent unsigned
+<font color="#000000">XMLSize_t is an implementation-dependent unsigned
 integral type</font></li>
 
 <ul>
 <li>
-<font color="#000000">typedef size_t DOMSize_t</font></li>
+<font color="#000000">typedef size_t XMLSize_t</font></li>
 </ul>
 
 <li>
@@ -1137,7 +1137,7 @@ DOMNodeList</font></font>
 
 <td><font face="Courier New,Courier"><font size=-1>DOMNode*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>item(DOMSize_t index)
+<td><font face="Courier New,Courier"><font size=-1>item(XMLSize_t index)
 = 0;</font></font></td>
 </tr>
 
@@ -1146,7 +1146,7 @@ DOMNodeList</font></font>
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>DOMSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getLength() = 0;</font></font></td>
 </tr>
@@ -1207,7 +1207,7 @@ arg) = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>DOMNode*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>item(DOMSize_t index)
+<td><font face="Courier New,Courier"><font size=-1>item(XMLSize_t index)
 const = 0;</font></font></td>
 </tr>
 
@@ -1227,7 +1227,7 @@ name) const = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>DOMSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getLength() const =
 0;</font></font></td>
@@ -1330,7 +1330,7 @@ DOMCharacterData : public DOMNode</font></font>
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>DOMSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getLength() const =
 0;</font></font></td>
@@ -1343,8 +1343,8 @@ DOMCharacterData : public DOMNode</font></font>
 
 <td><font face="Courier New,Courier"><font size=-1>const XMLCh*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>substringData(DOMSize_t
-offset, DOMSize_t count) const = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>substringData(XMLSize_t
+offset, XMLSize_t count) const = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -1365,7 +1365,7 @@ arg) = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>insertData(DOMSize_t
+<td><font face="Courier New,Courier"><font size=-1>insertData(XMLSize_t
 offset, const XMLCh* arg) = 0;</font></font></td>
 </tr>
 
@@ -1376,8 +1376,8 @@ offset, const XMLCh* arg) = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>deleteData(DOMSize_t
-offset, DOMSize_t count) = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>deleteData(XMLSize_t
+offset, XMLSize_t count) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -1387,8 +1387,8 @@ offset, DOMSize_t count) = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>replaceData(DOMSize_t
-offset, DOMSize_t count, const XMLCh* arg) = 0;</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>replaceData(XMLSize_t
+offset, XMLSize_t count, const XMLCh* arg) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -1766,7 +1766,7 @@ DOMText : DOMCharacterData</font></font>
 
 <td><font face="Courier New,Courier"><font size=-1>DOMText*</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>splitText(DOMSize_t
+<td><font face="Courier New,Courier"><font size=-1>splitText(XMLSize_t
 offset) = 0;</font></font></td>
 </tr>
 
@@ -2981,7 +2981,7 @@ const = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>DOMSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getStartOffset() const
 = 0;</font></font></td>
@@ -3003,7 +3003,7 @@ const = 0;</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>virtual</font></font></td>
 
-<td><font face="Courier New,Courier"><font size=-1>DOMSize_t</font></font></td>
+<td><font face="Courier New,Courier"><font size=-1>XMLSize_t</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>getEndOffset() const
 = 0;</font></font></td>
@@ -3039,7 +3039,7 @@ const = 0;</font></font></td>
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>setStart(const DOMNode*
-parent, DOMSize_t offset) = 0;</font></font></td>
+parent, XMLSize_t offset) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>
@@ -3050,7 +3050,7 @@ parent, DOMSize_t offset) = 0;</font></font></td>
 <td><font face="Courier New,Courier"><font size=-1>void</font></font></td>
 
 <td><font face="Courier New,Courier"><font size=-1>setEnd(const DOMNode*
-parent, DOMSize_t offset) = 0;</font></font></td>
+parent, XMLSize_t offset) = 0;</font></font></td>
 </tr>
 
 <tr ALIGN=LEFT VALIGN=TOP>

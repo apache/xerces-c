@@ -117,7 +117,7 @@ public:
    * This may have the value
    * zero, i.e., <code>CharacterData</code> nodes may be empty.
    */
-  virtual DOMSize_t       getLength() const = 0;
+  virtual XMLSize_t       getLength() const = 0;
   /**
    * Extracts a range of data from the node.
    *
@@ -131,8 +131,8 @@ public:
    *   than the number of characters in <code>data</code>, or if the
    *   specified <code>count</code> is negative.
    */
-  virtual const XMLCh *     substringData(DOMSize_t offset,
-                                   DOMSize_t count) const = 0;
+  virtual const XMLCh *     substringData(XMLSize_t offset,
+                                   XMLSize_t count) const = 0;
     //@}
     /** @name Functions that set or change data. */
     //@{
@@ -156,7 +156,7 @@ public:
    *   than the number of characters in <code>data</code>.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  virtual void               insertData(DOMSize_t offset, const  XMLCh *arg) = 0;
+  virtual void               insertData(XMLSize_t offset, const  XMLCh *arg) = 0;
   /**
    * Remove a range of characters from the node.
    *
@@ -173,8 +173,8 @@ public:
    *   specified <code>count</code> is negative.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  virtual void               deleteData(DOMSize_t offset,
-                                DOMSize_t count) = 0;
+  virtual void               deleteData(XMLSize_t offset,
+                                XMLSize_t count) = 0;
   /**
    * Replace the characters starting at the specified character offset with
    * the specified string.
@@ -193,8 +193,8 @@ public:
    *   specified <code>count</code> is negative.
    *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
    */
-  virtual void               replaceData(DOMSize_t offset,
-                                 DOMSize_t count,
+  virtual void               replaceData(XMLSize_t offset,
+                                 XMLSize_t count,
                                  const XMLCh *arg) = 0;
 
   /**

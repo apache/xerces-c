@@ -96,13 +96,13 @@ public:
 
     // Functions from DOMCharacterData
     virtual void          appendData(const  XMLCh *data);
-    virtual void          deleteData(DOMSize_t offset, DOMSize_t count);
+    virtual void          deleteData(XMLSize_t offset, XMLSize_t count);
     virtual const XMLCh * getData() const;
-    virtual DOMSize_t  getLength() const;
-    virtual void          insertData(DOMSize_t offset, const XMLCh * data);
-    virtual void          replaceData(DOMSize_t offset, DOMSize_t count, const XMLCh * data);
+    virtual XMLSize_t  getLength() const;
+    virtual void          insertData(XMLSize_t offset, const XMLCh * data);
+    virtual void          replaceData(XMLSize_t offset, XMLSize_t count, const XMLCh * data);
     virtual void          setData(const XMLCh * arg);
-    virtual const XMLCh * substringData(DOMSize_t offset, DOMSize_t count) const;
+    virtual const XMLCh * substringData(XMLSize_t offset, XMLSize_t count) const;
 
 };
 

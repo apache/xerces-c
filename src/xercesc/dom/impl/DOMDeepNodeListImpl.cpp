@@ -105,7 +105,7 @@ DOMDeepNodeListImpl::~DOMDeepNodeListImpl()
 {
 }
 
-DOMSize_t DOMDeepNodeListImpl::getLength()
+XMLSize_t DOMDeepNodeListImpl::getLength()
 {
     // Reset cache to beginning of list
     item(0);
@@ -127,9 +127,9 @@ DOMSize_t DOMDeepNodeListImpl::getLength()
 // irrelevant ones.  Doing so in a really useful manner would seem
 // to involve a tree-walk in its own right, or maintaining our data
 // in a parallel tree.
-DOMNode *DOMDeepNodeListImpl::item(DOMSize_t index)
+DOMNode *DOMDeepNodeListImpl::item(XMLSize_t index)
 {
-    DOMSize_t currentIndexPlus1 = fCurrentIndexPlus1;
+    XMLSize_t currentIndexPlus1 = fCurrentIndexPlus1;
     DOMNode *currentNode = fCurrentNode;
 
     if (castToParentImpl(fRootNode)->changes() != fChanges)

@@ -116,15 +116,15 @@ bool DOMCDATASectionImpl::isIgnorableWhitespace() const
 //  splitText.   revist - factor into a common function for use
 //                             here and in DOMTextImpl
 //
-DOMText *DOMCDATASectionImpl::splitText(DOMSize_t offset)
+DOMText *DOMCDATASectionImpl::splitText(XMLSize_t offset)
 {
     if (fNode.isReadOnly())
     {
         throw DOMException(
             DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
     }
-    DOMSize_t len = XMLString::stringLen(fCharacterData.fData);
-    if (offset > len)
+    XMLSize_t len = XMLString::stringLen(fCharacterData.fData);
+    if (offset > len || offset < 0)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
 
     DOMText *newText =
@@ -143,9 +143,9 @@ DOMText *DOMCDATASectionImpl::splitText(DOMSize_t offset)
     if (this->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
         if (ranges != 0) {
-            DOMSize_t sz = ranges->size();
+            XMLSize_t sz = ranges->size();
             if (sz != 0) {
-                for (DOMSize_t i =0; i<sz; i++) {
+                for (XMLSize_t i =0; i<sz; i++) {
                     ranges->elementAt(i)->updateSplitInfo( this, newText, offset);
                 }
             }
@@ -194,15 +194,15 @@ DOMText *DOMCDATASectionImpl::splitText(DOMSize_t offset)
 
 
      const XMLCh * DOMCDATASectionImpl::getData() const                  {return fCharacterData.getData();};
-     DOMSize_t  DOMCDATASectionImpl::getLength() const                {return fCharacterData.getLength();};
-     const XMLCh * DOMCDATASectionImpl::substringData(DOMSize_t offset, DOMSize_t count) const
+     XMLSize_t  DOMCDATASectionImpl::getLength() const                {return fCharacterData.getLength();};
+     const XMLCh * DOMCDATASectionImpl::substringData(XMLSize_t offset, XMLSize_t count) const
                                                                 {return fCharacterData.substringData(this, offset, count);};
      void          DOMCDATASectionImpl::appendData(const XMLCh *arg)     {fCharacterData.appendData(this, arg);};
-     void          DOMCDATASectionImpl::insertData(DOMSize_t offset, const  XMLCh *arg)
+     void          DOMCDATASectionImpl::insertData(XMLSize_t offset, const  XMLCh *arg)
                                                                 {fCharacterData.insertData(this, offset, arg);};
-     void          DOMCDATASectionImpl::deleteData(DOMSize_t offset, DOMSize_t count)
+     void          DOMCDATASectionImpl::deleteData(XMLSize_t offset, XMLSize_t count)
                                                                 {fCharacterData.deleteData(this, offset, count);};
-     void          DOMCDATASectionImpl::replaceData(DOMSize_t offset, DOMSize_t count, const XMLCh *arg)
+     void          DOMCDATASectionImpl::replaceData(XMLSize_t offset, XMLSize_t count, const XMLCh *arg)
                                                                 {fCharacterData.replaceData(this, offset, count, arg);};
      void          DOMCDATASectionImpl::setData(const XMLCh *data)       {fCharacterData.setData(this, data);};
      void          DOMCDATASectionImpl::setNodeValue(const XMLCh  *nodeValue)   {fCharacterData.setNodeValue (this, nodeValue); };

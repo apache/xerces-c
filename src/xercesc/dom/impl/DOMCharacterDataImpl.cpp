@@ -100,9 +100,9 @@ void DOMCharacterDataImpl::setNodeValue(const DOMNode *node, const XMLCh *value)
     if (node->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
         if (ranges != 0) {
-            DOMSize_t sz = ranges->size();
+            XMLSize_t sz = ranges->size();
             if (sz != 0) {
-                for (DOMSize_t i =0; i<sz; i++) {
+                for (XMLSize_t i =0; i<sz; i++) {
                     ranges->elementAt(i)->receiveReplacedText((DOMNode*)node);
                 }
             }
@@ -125,7 +125,7 @@ void DOMCharacterDataImpl::appendData(const DOMNode *node, const XMLCh *dat)
 };
 
 
-void DOMCharacterDataImpl::deleteData(const DOMNode *node, DOMSize_t offset, DOMSize_t count)
+void DOMCharacterDataImpl::deleteData(const DOMNode *node, XMLSize_t offset, XMLSize_t count)
 {
     if (castToNodeImpl(node)->isReadOnly())
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
@@ -134,7 +134,7 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, DOMSize_t offset, DOM
     //       when parameter values are bad.
     //
 
-    DOMSize_t len = XMLString::stringLen(this->fData);
+    XMLSize_t len = XMLString::stringLen(this->fData);
     if (offset > len || offset < 0 || count < 0)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
 
@@ -150,7 +150,7 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, DOMSize_t offset, DOM
     if (offset + count >= len)
         count = len - offset;
 
-    DOMSize_t newLen = len - count;
+    XMLSize_t newLen = len - count;
 
     XMLCh* newString;
     XMLCh temp[4000];
@@ -174,9 +174,9 @@ void DOMCharacterDataImpl::deleteData(const DOMNode *node, DOMSize_t offset, DOM
     if (node->getOwnerDocument() != 0) {
         Ranges* ranges = ((DOMDocumentImpl *)node->getOwnerDocument())->getRanges();
         if (ranges != 0) {
-            DOMSize_t sz = ranges->size();
+            XMLSize_t sz = ranges->size();
             if (sz != 0) {
-                for (DOMSize_t i =0; i<sz; i++) {
+                for (XMLSize_t i =0; i<sz; i++) {
                     ranges->elementAt(i)->updateRangeForDeletedText( (DOMNode*)node, offset, count);
                 }
             }
@@ -195,14 +195,14 @@ const XMLCh *DOMCharacterDataImpl::getData() const
 //
 //  getCharDataLength - return the length of the character data string.
 //
-DOMSize_t DOMCharacterDataImpl::getLength() const
+XMLSize_t DOMCharacterDataImpl::getLength() const
 {
     return XMLString::stringLen(fData);
 };
 
 
 
-void DOMCharacterDataImpl::insertData(const DOMNode *node, DOMSize_t offset, const XMLCh *dat)
+void DOMCharacterDataImpl::insertData(const DOMNode *node, XMLSize_t offset, const XMLCh *dat)
 {
     if (castToNodeImpl(node)->isReadOnly())
         throw DOMException(
@@ -212,13 +212,13 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, DOMSize_t offset, con
     //       when parameter values are bad.
     //
 
-    DOMSize_t len = XMLString::stringLen(this->fData);
+    XMLSize_t len = XMLString::stringLen(this->fData);
     if (offset > len || offset < 0)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0);
 
-    DOMSize_t datLen = XMLString::stringLen(dat);
+    XMLSize_t datLen = XMLString::stringLen(dat);
 
-    DOMSize_t newLen = len + datLen;
+    XMLSize_t newLen = len + datLen;
 
     XMLCh* newString;
     XMLCh temp[4000];
@@ -239,7 +239,7 @@ void DOMCharacterDataImpl::insertData(const DOMNode *node, DOMSize_t offset, con
 
 
 
-void DOMCharacterDataImpl::replaceData(const DOMNode *node, DOMSize_t offset, DOMSize_t count,
+void DOMCharacterDataImpl::replaceData(const DOMNode *node, XMLSize_t offset, XMLSize_t count,
                                     const XMLCh *dat)
 {
     if (castToNodeImpl(node)->isReadOnly())
@@ -264,8 +264,8 @@ void DOMCharacterDataImpl::setData(const DOMNode *node, const XMLCh *arg)
 
 
 
-const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, DOMSize_t offset,
-                                           DOMSize_t count) const
+const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, XMLSize_t offset,
+                                           XMLSize_t count) const
 {
 
     // Note: the C++ XMLCh * operation throws the correct DOMExceptions
@@ -273,7 +273,7 @@ const XMLCh * DOMCharacterDataImpl::substringData(const DOMNode *node, DOMSize_t
     //
 
 
-    DOMSize_t len = XMLString::stringLen(fData);
+    XMLSize_t len = XMLString::stringLen(fData);
 
     if (offset > len || offset < 0 || count < 0)
         throw DOMException(DOMException::INDEX_SIZE_ERR, 0);

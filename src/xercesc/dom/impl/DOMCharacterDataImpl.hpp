@@ -92,16 +92,16 @@ public:
     const          XMLCh * getNodeValue() const;
     void           setNodeValue(const XMLCh * value);
     void           appendData(const DOMNode *node, const  XMLCh *data);
-    void           deleteData(const DOMNode *node, DOMSize_t offset, DOMSize_t count);
-    const XMLCh *  getData() const;
-    DOMSize_t   getLength() const;
-    void           insertData(const DOMNode *node, DOMSize_t offset, const XMLCh * data);
-    void           replaceData(const DOMNode *node, DOMSize_t offset, DOMSize_t count, const XMLCh * data);
+    void           deleteData(const DOMNode *node, XMLSize_t offset, XMLSize_t count);
+    const XMLCh*   getData() const;
+    XMLSize_t      getLength() const;
+    void           insertData(const DOMNode *node, XMLSize_t offset, const XMLCh * data);
+    void           replaceData(const DOMNode *node, XMLSize_t offset, XMLSize_t count, const XMLCh * data);
     void           setData(const DOMNode *node, const XMLCh * arg);
     void           setNodeValue(const DOMNode *node, const XMLCh *value);
 
 
-    const XMLCh *  substringData(const DOMNode *node, DOMSize_t offset, DOMSize_t count) const;
+    const XMLCh*   substringData(const DOMNode *node, XMLSize_t offset, XMLSize_t count) const;
 
 };
 
