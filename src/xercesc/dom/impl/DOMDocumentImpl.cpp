@@ -118,6 +118,7 @@ DOMDocumentImpl::DOMDocumentImpl()
       fNamePool(0),
       fNodeIDMap(0),
       fRanges(0),
+      fNodeIterators(0),
       fChanges(0),
       fNodeListPool(0),
       fActualEncoding(0),
@@ -148,6 +149,7 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fNamePool(0),
       fNodeIDMap(0),
       fRanges(0),
+      fNodeIterators(0),
       fChanges(0),
       fNodeListPool(0),
       fActualEncoding(0),
@@ -206,6 +208,9 @@ DOMDocumentImpl::~DOMDocumentImpl()
 
     if (fRanges)
         fRanges->cleanup();
+
+    if (fNodeIterators)
+        fNodeIterators->cleanup();
 
     if (fUserDataTable)
         fUserDataTable->cleanup();
@@ -386,12 +391,49 @@ DOMText *DOMDocumentImpl::createTextNode(const XMLCh *data)
 DOMNodeIterator* DOMDocumentImpl::createNodeIterator (
           DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
 {
-    return new (this) DOMNodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
+    if (!root) {
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        return 0;
+    }
+
+    DOMNodeIteratorImpl* nodeIterator = new (this) DOMNodeIteratorImpl(this, root, whatToShow, filter, entityReferenceExpansion);
+
+    if (fNodeIterators == 0L) {
+        fNodeIterators = new (this) NodeIterators(1, false);
+    }
+    fNodeIterators->addElement(nodeIterator);
+
+    return nodeIterator;
 }
 
 
+NodeIterators* DOMDocumentImpl::getNodeIterators() const
+{
+    return fNodeIterators;
+}
+
+void DOMDocumentImpl::removeNodeIterator(DOMNodeIteratorImpl* nodeIterator)
+{
+    if (fNodeIterators != 0) {
+        XMLSize_t sz = fNodeIterators->size();
+        if (sz !=0) {
+            for (XMLSize_t i =0; i<sz; i++) {
+                if (fNodeIterators->elementAt(i) == nodeIterator) {
+                    fNodeIterators->removeElementAt(i);
+                    break;
+                }
+            }
+        }
+    }
+}
+
 DOMTreeWalker* DOMDocumentImpl::createTreeWalker (DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
 {
+    if (!root) {
+        throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+        return 0;
+    }
+
     return new (this) DOMTreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
 }
 

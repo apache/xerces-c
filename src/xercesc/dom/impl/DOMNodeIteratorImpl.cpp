@@ -75,25 +75,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-DOMNodeIteratorImpl::DOMNodeIteratorImpl ()
-: fDetached(false),
-    fNodeFilter(0)
-{
-}	
-
-DOMNodeIteratorImpl::~DOMNodeIteratorImpl ()
-{
-	fDetached = false;
-}
-
-
-void DOMNodeIteratorImpl::detach ()
-{
-	fDetached = true;
-}
-
-
-DOMNodeIteratorImpl::DOMNodeIteratorImpl (
+DOMNodeIteratorImpl::DOMNodeIteratorImpl (DOMDocument* doc,
                                     DOMNode* root,
                                     unsigned long whatToShow,
                                     DOMNodeFilter* nodeFilter,
@@ -104,7 +86,8 @@ DOMNodeIteratorImpl::DOMNodeIteratorImpl (
     fWhatToShow(whatToShow),
     fNodeFilter(nodeFilter),
     fForward(true),
-    fExpandEntityReferences(expandEntityRef)
+    fExpandEntityReferences(expandEntityRef),
+    fDocument(doc)
 {
 	
 }
@@ -117,7 +100,8 @@ DOMNodeIteratorImpl::DOMNodeIteratorImpl ( const DOMNodeIteratorImpl& toCopy)
     fWhatToShow(toCopy.fWhatToShow),
     fNodeFilter(toCopy.fNodeFilter),
     fForward(toCopy.fForward),
-    fExpandEntityReferences(toCopy.fExpandEntityReferences)
+    fExpandEntityReferences(toCopy.fExpandEntityReferences),
+    fDocument(toCopy.fDocument)
 {
 }
 
@@ -130,8 +114,22 @@ DOMNodeIteratorImpl& DOMNodeIteratorImpl::operator= (const DOMNodeIteratorImpl& 
     fForward                = other.fForward;
     fDetached               = other.fDetached;
     fExpandEntityReferences = other.fExpandEntityReferences;
+    fDocument               = other.fDocument;
     return *this;
 }
+
+DOMNodeIteratorImpl::~DOMNodeIteratorImpl ()
+{
+	fDetached = false;
+}
+
+
+void DOMNodeIteratorImpl::detach ()
+{
+	fDetached = true;
+   ((DOMDocumentImpl *)fDocument)->removeNodeIterator(this);
+}
+
 
 DOMNode* DOMNodeIteratorImpl::getRoot() {
     return fRoot;

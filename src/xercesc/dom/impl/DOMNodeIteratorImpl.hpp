@@ -88,6 +88,9 @@ class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
         // The root.
         DOMNode* fRoot;
 
+        // The Document used to create this iterator
+        DOMDocument* fDocument;
+
         // The whatToShow mask.
         unsigned long fWhatToShow;
 
@@ -120,12 +123,10 @@ class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
         //  </pre>
         bool fForward;
 
-    protected:
-        DOMNodeIteratorImpl ();
-
     public:
         virtual ~DOMNodeIteratorImpl ();
         DOMNodeIteratorImpl (
+            DOMDocument* fDocument,
             DOMNode* root,
             unsigned long whatToShow,
             DOMNodeFilter* nodeFilter,
@@ -145,12 +146,12 @@ class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
         virtual void detach ();
 
         virtual void release();
+        void removeNode (DOMNode* node);
 
     private:
         DOMNode* matchNodeOrParent (DOMNode* node);
         DOMNode* nextNode (DOMNode* node, bool visitChildren);
         DOMNode* previousNode (DOMNode* node);
-        void removeNode (DOMNode* node);
         bool acceptNode (DOMNode* node);
 
 };

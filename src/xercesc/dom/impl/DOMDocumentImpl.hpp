@@ -112,6 +112,7 @@ class DOMStringPool;
 class DOMBuffer;
 
 typedef RefVectorOf<DOMRangeImpl>        Ranges;
+typedef RefVectorOf<DOMNodeIteratorImpl>     NodeIterators;
 typedef KeyRefPair<void, DOMUserDataHandler> DOMUserDataRecord;
 typedef RefHashTableOf<DOMUserDataRecord> DOMNodeUserDataTable;
 typedef RefStackOf<DOMNode>               DOMNodePtr;
@@ -190,7 +191,9 @@ public:
 
     virtual DOMRange*            createRange();
     virtual Ranges*              getRanges() const;  //non-standard api
+    virtual NodeIterators*       getNodeIterators() const;  //non-standard api
     virtual void                 removeRange(DOMRangeImpl* range); //non-standard api
+    virtual void                 removeNodeIterator(DOMNodeIteratorImpl* nodeIterator); //non-standard api
 
 
     //
@@ -367,6 +370,7 @@ private:
     DOMStringPool*        fNamePool;
 
     Ranges*               fRanges;
+    NodeIterators*        fNodeIterators;
 
     int                   fChanges;
     bool                  errorChecking;    // Bypass error checking.

@@ -65,6 +65,7 @@
 #include "DOMDocumentImpl.hpp"
 #include "DOMNodeListImpl.hpp"
 #include "DOMRangeImpl.hpp"
+#include "DOMNodeIteratorImpl.hpp"
 #include "DOMParentNode.hpp"
 #include "DOMCasts.hpp"
 
@@ -310,8 +311,20 @@ DOMNode *DOMParentNode::removeChild(DOMNode *oldChild)
     if (oldChild != 0 && oldChild->getParentNode() != castToNode(this))
         throw DOMException(DOMException::NOT_FOUND_ERR, 0);
 
-    //fix other ranges for change before deleting the node
     if (this->getOwnerDocument() !=  0  ) {
+        //notify iterators
+        NodeIterators* nodeIterators = ((DOMDocumentImpl *)this->getOwnerDocument())->getNodeIterators();
+        if (nodeIterators != 0) {
+            XMLSize_t sz = nodeIterators->size();
+            if (sz != 0) {
+                for (XMLSize_t i =0; i<sz; i++) {
+                    if (nodeIterators->elementAt(i) != 0)
+                        nodeIterators->elementAt(i)->removeNode(oldChild);
+                }
+            }
+        }
+
+        //fix other ranges for change before deleting the node
         Ranges* ranges = ((DOMDocumentImpl *)this->getOwnerDocument())->getRanges();
         if (ranges != 0) {
             XMLSize_t sz = ranges->size();
