@@ -804,7 +804,31 @@ void DOMParser::attDef
                 
             case XMLAttDef::Enumeration :
                 attString.appendData(chSpace);
-                attString.appendData(XMLUni::fgEnumerationString);
+                //  attString.appendData(XMLUni::fgEnumerationString);
+                const XMLCh* enumString = attDef.getEnumeration();
+                int length = XMLString::stringLen(enumString);
+                if (length > 0) {
+                    
+                    DOMString anotherEnumString;
+                    
+                    anotherEnumString.appendData(chOpenParen );
+                    for(int i=0; i<length; i++) {
+                        if (enumString[i] == chSpace)
+                            anotherEnumString.appendData(chPipe);
+                        else
+                            anotherEnumString.appendData(enumString[i]);
+                    }
+                    anotherEnumString.appendData(chCloseParen);
+                    attString.appendData(anotherEnumString);
+
+                    enumString = attDef.getValue();
+                    if ( enumString != 0) {
+                        attString.appendData(chSpace);
+                        attString.appendData(chDoubleQuote);
+                        attString.appendData(XMLString::transcode(attDef.getValue()));
+                        attString.appendData(chDoubleQuote);
+                    }
+                }
                 break;
             }
             //get te default types of the attlist
