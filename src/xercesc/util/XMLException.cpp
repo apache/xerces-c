@@ -230,12 +230,13 @@ XMLException& XMLException::operator=(const XMLException& toAssign)
 {
     if (this != &toAssign)
     {
-        fMemoryManager = toAssign.fMemoryManager;
+        //use the original memory manager to deallocate
         fMemoryManager->deallocate(fSrcFile);
         fSrcFile = 0;
         fMemoryManager->deallocate(fMsg);
         fMsg = 0;
 
+        fMemoryManager = toAssign.fMemoryManager;
         fSrcLine = toAssign.fSrcLine;
         fCode = toAssign.fCode;
 
