@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2003/12/29 16:45:06  knoaman
+ * PSVI: add whitespace facet if missing
+ *
  * Revision 1.14  2003/12/29 16:15:41  knoaman
  * More PSVI updates
  *
@@ -895,7 +898,7 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
     // NOTE: XSFacetList is not owned by XSModel!
     int definedFacets = 0;
     int fixedFacets = 0;
-    XSFacetList* xsFacetList = 0;
+    XSFacetList* xsFacetList = new (fMemoryManager) RefVectorOf<XSFacet>(4, true, fMemoryManager);
     XSMultiValueFacetList* xsMultiFacetList = 0;
     StringList* patternList = 0;
     bool isFixed = false;
@@ -926,8 +929,6 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
     RefHashTableOf<KVStringPair>* facets = dv->getFacets();
     if (facets)
     {
-        xsFacetList = new (fMemoryManager) RefVectorOf<XSFacet>(10, true, fMemoryManager);
-
         // NOTE: Don't need to add facet to "ObjectMap -> getObjectFromMap/putObjectInMap);
         RefHashTableOfEnumerator<KVStringPair> e(facets, false, fMemoryManager);
         while (e.hasMoreElements())
@@ -1023,6 +1024,21 @@ void XSObjectFactory::processFacets(DatatypeValidator* const dv,
             if (isFixed) 
                 fixedFacets |= facetType;
         }
+    }
+
+    // add whistespace facet if missing
+    if (!(definedFacets & XSSimpleTypeDefinition::FACET_WHITESPACE))
+    {
+        xsFacetList->addElement
+        (
+            new (fMemoryManager) XSFacet
+            (
+                XSSimpleTypeDefinition::FACET_WHITESPACE
+                , dv->getWSstring(dv->getWSFacet())
+                , false, 0, xsModel, fMemoryManager
+            )
+        );
+        definedFacets |= XSSimpleTypeDefinition::FACET_WHITESPACE;
     }
 
     xsST->setFacetInfo(definedFacets, fixedFacets, xsFacetList, xsMultiFacetList, patternList);
