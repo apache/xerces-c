@@ -63,7 +63,6 @@
 
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/KVStringPair.hpp>
-#include <xercesc/dom/DOMString.hpp>
 #include <xercesc/util/regx/RegularExpression.hpp>
 
 /**
