@@ -82,7 +82,7 @@
 
 #if defined (XML_USE_ICONV400_TRANSCODER)
     #include <util/Transcoders/Iconv400/Iconv400TransService.hpp>
-	extern "C" void cleanupDefaultConverter();
+	void cleanupDefaultConverter();
 #elif defined (XML_USE_ICU_TRANSCODER)
     #include <util/Transcoders/ICU/ICUTransService.hpp>
 #else
