@@ -174,8 +174,8 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
 
       <ol>
 
-        <li>The directory <code>src/util/Platforms</code> contains the
-        platform sensitive files while <code>src/util/Compilers</code> contains
+        <li>The directory <code>src/xercesc/util/Platforms</code> contains the
+        platform sensitive files while <code>src/xercesc/util/Compilers</code> contains
         all development environment sensitive files. Each operating
         system has a file of its own and each development environment
         has another one of its own too.

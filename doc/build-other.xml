@@ -84,7 +84,7 @@ ICUROOT - (optional if using ICU)  &lt;the path of your ICU includes&gt;
 
          <p>To configure the make files for an iSeries build do the following under Qsh:</p>
 <source>qsh:
-cd &lt;full path to &XercesCName;&gt;/src
+cd &lt;full path to &XercesCName;&gt;/src/xercesc
 runConfigure -p os400 -x icc -c icc -m inmem -t Iconv400</source>
 
          <p>Troubleshooting:</p>
@@ -105,7 +105,7 @@ DLTPGM &lt;OUTPUTDIR library&gt;/CONFT*</source>
         <p><em>Build</em></p>
 
 <source>qsh:
-cd &lt;full path to &XercesCName;&gt;/src
+cd &lt;full path to &XercesCName;&gt;/src/xercesc
 gmake</source>
 
          <p>The above gmake should result in a service program being created
@@ -170,14 +170,14 @@ qar -cuv &XercesCUnixLib;.a *.o
          to the source:</p>
 
          <ul>
-         <li>src/dom/DocumentImpl.cpp</li>
-         <li>src/dom/DocumentImpl.hpp</li>
-         <li>src/idom/IDDocumentImpl.cpp</li>
-         <li>src/idom/IDDocumentImpl.hpp</li>
-         <li>src/validators/common/ContentSpecNode.hpp</li>
+         <li>src/xercesc/dom/DocumentImpl.cpp</li>
+         <li>src/xercesc/dom/DocumentImpl.hpp</li>
+         <li>src/xercesc/idom/IDDocumentImpl.cpp</li>
+         <li>src/xercesc/idom/IDDocumentImpl.hpp</li>
+         <li>src/xercesc/validators/common/ContentSpecNode.hpp</li>
          </ul>
 
-         <p>Update  the following routines in src/dom/DocumentImpl.cpp as follows:</p>
+         <p>Update  the following routines in src/xercesc/dom/DocumentImpl.cpp as follows:</p>
 <source>
  void DocumentImpl::setUserData(NodeImpl* n, void* data)
  {
@@ -210,7 +210,7 @@ qar -cuv &XercesCUnixLib;.a *.o
  }
 </source>
 
-         <p>To update src/dom/DoumentImpl.hpp as follows:</p>
+         <p>To update src/xercesc/dom/DoumentImpl.hpp as follows:</p>
 
 <source>
  #ifdef __OS400__
@@ -221,7 +221,7 @@ qar -cuv &XercesCUnixLib;.a *.o
  #endif
 </source>
 
-          <p>Update  the following routines in src/idom/IDDocumentImpl.cpp as follows:</p>
+          <p>Update  the following routines in src/xercesc/idom/IDDocumentImpl.cpp as follows:</p>
 <source>
  void IDDocumentImpl::setUserData(IDOM_Node* n, void* data)
  {
@@ -256,7 +256,7 @@ qar -cuv &XercesCUnixLib;.a *.o
  }
 </source>
 
-          <p>To update src/idom/IDDocumentImpl.hpp:</p>
+          <p>To update src/xercesc/idom/IDDocumentImpl.hpp:</p>
 <source>
  #ifdef __OS400__
     RefHashTableOf&lt;char&gt;        *fUserData;
@@ -279,7 +279,7 @@ qar -cuv &XercesCUnixLib;.a *.o
           <li>Make sure you have created a binding directory (symbolic link)
           in the file system so that you can bind the &XercesCName; service program
           to the ICU service program and specify that on the <code>EXTRA_LINK_OPTIONS</code>
-          in <code>src/Makefile.incl</code> (usually the default is a link
+          in <code>src/xercesc/Makefile.incl</code> (usually the default is a link
           in <code>/usr/local/lib</code>).</li>
          </ol>
 

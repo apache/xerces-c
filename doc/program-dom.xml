@@ -21,7 +21,7 @@
 
 <source>
 // C++
-#include &lt;dom/DOM.hpp></source>
+#include &lt;xercesc/dom/DOM.hpp></source>
 
 <source>// Java
 import org.w3c.dom.*</source>

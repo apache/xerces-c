@@ -222,7 +222,7 @@ catch (const XMLException&amp; toCatch) {
 }</source>
 
       <p>This initializes the &XercesCProjectName; system and sets its internal
-        variables. Note that you must the include <code>util/PlatformUtils.hpp</code> file for this to work.</p>
+        variables. Note that you must the include <code>xercesc/util/PlatformUtils.hpp</code> file for this to work.</p>
 
     </a>
   </faq>

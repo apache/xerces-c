@@ -65,7 +65,7 @@ catch (const XMLException&amp; toCatch) {
 }</source>
 
       <p>This initializes the &XercesCProjectName; system and sets its internal
-        variables. Note that you must the include <code>util/PlatformUtils.hpp</code> file for this to work.</p>
+        variables. Note that you must the include <code>xercesc/util/PlatformUtils.hpp</code> file for this to work.</p>
 
     </a>
   </faq>
@@ -429,7 +429,7 @@ catch (const XMLException&amp; toCatch) {
         platforms.</p>
 
       <p>To address the need to make remote connections to resources specified
-        using additional protocols, ftp for example, &XercesCName; provides the <code>NetAccessor</code> interface. The header file is <code>src/util/XMLNetAccessor.hpp</code>. This interface allows you to plug in your own implementation of URL
+        using additional protocols, ftp for example, &XercesCName; provides the <code>NetAccessor</code> interface. The header file is <code>src/xercesc/util/XMLNetAccessor.hpp</code>. This interface allows you to plug in your own implementation of URL
         networking code into the &XercesCName; parser.</p>
 
     </a>

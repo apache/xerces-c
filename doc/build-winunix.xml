@@ -205,10 +205,10 @@
             a set of portable scripts (configure) that you can run on all
             other platforms without actually having the autoconf tool installed
             everywhere. In all probability the autoconf-generated script
-            (called <code>configure</code>) is already in your <code>src</code>
+            (called <code>configure</code>) is already in your <code>src/xercesc</code>
             directory. If not, type:</p>
 
-<source>cd $XERCESCROOT/src
+<source>cd $XERCESCROOT/src/xercesc
 autoconf</source>
 
             <p>This generates a shell-script called <code>configure</code>. It is tempting to run
@@ -349,7 +349,7 @@ export LIBS=" -lpthread "
 configure
 
 If the result of the above commands look OK to you, go to the directory
-$HOME/&XercesCSrcInstallDir;/src and type "gmake" to make the XERCES-C system.</source>
+$HOME/&XercesCSrcInstallDir;/src/xercesc and type "gmake" to make the XERCES-C system.</source>
 
 <note>The error message concerning <code>conf.h</code>
 is NOT an indication of a problem. This code has been inserted to make it

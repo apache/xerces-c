@@ -7,7 +7,7 @@
         <a>
 
            <p>The version string for &XercesCName; is in one of the header files. Look
-           inside the file <code>src/util/XercesDefs.hpp</code> or, in the binary distribution, look in <code>include/utils/XercesDefs.hpp</code>. Search for the static variable <code>gXercesFullVersionStr</code> and look at its definition. (It is usually a string like "1_4_0" or
+           inside the file <code>src/xercesc/util/XercesDefs.hpp</code> or, in the binary distribution, look in <code>include/xercesc/utils/XercesDefs.hpp</code>. Search for the static variable <code>gXercesFullVersionStr</code> and look at its definition. (It is usually a string like "1_4_0" or
            something similar). This is the version of &XercesCName; you are using.</p>
 
            <p>If you don't have the header files, you have to find the version

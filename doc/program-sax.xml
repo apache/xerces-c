@@ -71,7 +71,7 @@
         called when XML constructs are recognized, and ErrorHandler
         which is called when an error occurs. The header files for the
         various SAX handler classes are in
-        '&lt;&XercesCInstallDir;>/include/sax'</p>
+        '&lt;&XercesCInstallDir;>/include/xercesc/sax'</p>
 
       <p>As a convenience, &XercesCName; provides the class
         HandlerBase, which is a single class which is publicly derived
@@ -86,7 +86,7 @@
         additional examples of how to write handler classes.</p>
 
       <p>This is the header file MySAXHandler.hpp:</p>
-<source>#include &lt;sax/HandlerBase.hpp>
+<source>#include &lt;xercesc/sax/HandlerBase.hpp>
 
 class MySAXHandler : public HandlerBase {
 public:

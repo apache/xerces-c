@@ -36,6 +36,10 @@ tar -xvf &XercesCInstallDir;-linux.tar</source>
         which contains the &XercesCName; distribution. You will need to add the
         &XercesCInstallDir;-linux/bin directory to your PATH environment variable:</p>
 
+        <note>On Solaris, you may need to use <code>gtar</code> instead of tar.  See
+        <jump href="faq-distrib.html#faq-11">FAQ</jump> for more information.</note>
+
+
         <p>For Bourne Shell, K Shell or Bash, type: </p>
 <source>export PATH="$PATH:$HOME/&XercesCInstallDir;-linux/bin"</source>
 		<p>For C Shell, type:</p>
