@@ -61,6 +61,7 @@ CLEAN :
 	-@erase "$(INTDIR)\BinHTTPURLInputStream.obj"
 	-@erase "$(INTDIR)\BinInputStream.obj"
 	-@erase "$(INTDIR)\BinMemInputStream.obj"
+	-@erase "$(INTDIR)\BinMemOutputStream.obj"
 	-@erase "$(INTDIR)\BinOutputStream.obj"
 	-@erase "$(INTDIR)\BitSet.obj"
 	-@erase "$(INTDIR)\BlockRangeFactory.obj"
@@ -401,6 +402,37 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/G6 /MD /Za /W3 /GX /O2 /Ob2 /I "..\..\..\..\..\src" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 MTL_PROJ=/D "NDEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -537,6 +569,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLSchemaDescription.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\BinFileOutputStream.obj" \
+	"$(INTDIR)\BinMemOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
@@ -791,6 +824,7 @@ CLEAN :
 	-@erase "$(INTDIR)\BinHTTPURLInputStream.obj"
 	-@erase "$(INTDIR)\BinInputStream.obj"
 	-@erase "$(INTDIR)\BinMemInputStream.obj"
+	-@erase "$(INTDIR)\BinMemOutputStream.obj"
 	-@erase "$(INTDIR)\BinOutputStream.obj"
 	-@erase "$(INTDIR)\BitSet.obj"
 	-@erase "$(INTDIR)\BlockRangeFactory.obj"
@@ -1133,6 +1167,37 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/G6 /MDd /Za /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 MTL_PROJ=/D "_DEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -1269,6 +1334,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLSchemaDescription.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\BinFileOutputStream.obj" \
+	"$(INTDIR)\BinMemOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
@@ -1523,6 +1589,7 @@ CLEAN :
 	-@erase "$(INTDIR)\BinHTTPURLInputStream.obj"
 	-@erase "$(INTDIR)\BinInputStream.obj"
 	-@erase "$(INTDIR)\BinMemInputStream.obj"
+	-@erase "$(INTDIR)\BinMemOutputStream.obj"
 	-@erase "$(INTDIR)\BinOutputStream.obj"
 	-@erase "$(INTDIR)\BitSet.obj"
 	-@erase "$(INTDIR)\BlockRangeFactory.obj"
@@ -1865,6 +1932,37 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\src" /D "WIN64" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_SAX2" /D "_DEBUG" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 MTL_PROJ=/D "_DEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "_DEBUG" 
 BSC32=bscmake.exe
@@ -2001,6 +2099,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLSchemaDescription.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\BinFileOutputStream.obj" \
+	"$(INTDIR)\BinMemOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
@@ -2255,6 +2354,7 @@ CLEAN :
 	-@erase "$(INTDIR)\BinHTTPURLInputStream.obj"
 	-@erase "$(INTDIR)\BinInputStream.obj"
 	-@erase "$(INTDIR)\BinMemInputStream.obj"
+	-@erase "$(INTDIR)\BinMemOutputStream.obj"
 	-@erase "$(INTDIR)\BinOutputStream.obj"
 	-@erase "$(INTDIR)\BitSet.obj"
 	-@erase "$(INTDIR)\BlockRangeFactory.obj"
@@ -2596,6 +2696,37 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP_PROJ=/MD /W3 /GX /O2 /I "..\..\..\..\..\src" /D "WIN64" /D "NDEBUG" /D "PLATFORM_WIN32" /D "_CRTDBG_MAP_ALLOC" /D "PROJ_XMLPARSER" /D "PROJ_XMLUTIL" /D "PROJ_PARSERS" /D "PROJ_SAX4C" /D "PROJ_SAX2" /D "PROJ_DOM" /D "PROJ_VALIDATORS" /D "XML_SINGLEDLL" /D "WIN32" /D "_WINDOWS" /D "XML_USE_WIN32_TRANSCODER" /D "XML_USE_WIN32_MSGLOADER" /D "XML_USE_NETACCESSOR_WINSOCK" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+
+.c{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.obj::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.c{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cpp{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
+.cxx{$(INTDIR)}.sbr::
+   $(CPP) @<<
+   $(CPP_PROJ) $< 
+<<
+
 MTL_PROJ=/D "NDEBUG" /mktyplib203 /o "NUL" /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\Version.res" /d "NDEBUG" 
 BSC32=bscmake.exe
@@ -2732,6 +2863,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\XMLSchemaDescription.obj" \
 	"$(INTDIR)\XMLValidator.obj" \
 	"$(INTDIR)\BinFileOutputStream.obj" \
+	"$(INTDIR)\BinMemOutputStream.obj" \
 	"$(INTDIR)\DGXMLScanner.obj" \
 	"$(INTDIR)\ElemStack.obj" \
 	"$(INTDIR)\IGXMLScanner.obj" \
@@ -2957,36 +3089,6 @@ LINK32_OBJS= \
 <<
 
 !ENDIF 
-
-.c{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.obj::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.c{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cpp{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
-
-.cxx{$(INTDIR)}.sbr::
-   $(CPP) @<<
-   $(CPP_PROJ) $< 
-<<
 
 
 !IF "$(NO_EXTERNAL_DEPS)" != "1"
@@ -3948,6 +4050,12 @@ SOURCE=..\..\..\..\..\src\xercesc\framework\XMLValidator.cpp
 SOURCE=..\..\..\..\..\src\xercesc\internal\BinFileOutputStream.cpp
 
 "$(INTDIR)\BinFileOutputStream.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\BinMemOutputStream.cpp
+
+"$(INTDIR)\BinMemOutputStream.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
 
