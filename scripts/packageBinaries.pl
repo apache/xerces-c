@@ -72,8 +72,14 @@ $platform = <PLATFORM>;
 chomp($platform);
 close (PLATFORM);
 
+#set platform variable if on windows 64bit
+my $return_code = system( "ls" );
+if ($return_code != 0)
+{  $platform = "win64bit";
+}
+
 #Fix the backslashes on the Windows platform
-if ($platform ne "")
+if ($platform ne "win64bit")
 {
     $XERCESCROOT =~ s/\\/\//g;
     $ICUROOT =~ s/\\/\//g;
@@ -95,7 +101,7 @@ $buildmode = "Release";         # Universally, why do you want to package Debug 
 #   Compiler:     Intel's cl and/or ecl
 #   cygwin:       Not Available
 #
-if ($platform eq "" )
+if ($platform eq "win64bit" )
 {
     if ($opt_x ne "" && $opt_x ne "cl" && $opt_x ne "ecl")
     {
