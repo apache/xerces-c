@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2003/10/17 21:13:05  peiyongz
+ * Implement Serialization/Deserialization
+ *
  * Revision 1.16  2003/05/18 14:02:07  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -226,6 +229,8 @@
 #include <xercesc/validators/datatype/DurationDatatypeValidator.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
+
+#include <xercesc/internal/XTemplateSerializer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -878,6 +883,34 @@ DatatypeValidator* DatatypeValidatorFactory::createDatatypeValidator
     }
 
     return datatypeValidator;
+}
+
+/***
+ * Support for Serialization/De-serialization
+ ***/
+
+IMPL_XSERIALIZABLE_TOCREATE(DatatypeValidatorFactory)
+
+void DatatypeValidatorFactory::serialize(XSerializeEngine& serEng)
+{
+      
+    // Need not to serialize static data member, fBuiltInRegistry
+
+    if (serEng.isStoring())
+    {
+        /***
+         * Serialize RefHashTableOf<DatatypeValidator>
+         ***/
+        XTemplateSerializer::storeObject(fUserDefinedRegistry, serEng);
+    }
+    else
+    {
+        /***
+         * Deserialize RefHashTableOf<DatatypeValidator>
+         ***/
+        XTemplateSerializer::loadObject(&fUserDefinedRegistry, 29, true, serEng);
+    }
+
 }
 
 XERCES_CPP_NAMESPACE_END

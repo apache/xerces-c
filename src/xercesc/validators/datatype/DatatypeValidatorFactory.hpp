@@ -87,6 +87,8 @@
 #include <xercesc/validators/datatype/DatatypeValidator.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
 
+#include <xercesc/internal/XSerializable.hpp>
+
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
@@ -97,7 +99,7 @@ typedef RefHashTableOf<DatatypeValidator> DVHashTable;
 typedef RefArrayVectorOf<XMLCh> XMLChRefVector;
 
 
-class VALIDATORS_EXPORT DatatypeValidatorFactory : public XMemory
+class VALIDATORS_EXPORT DatatypeValidatorFactory : public XSerializable, public XMemory
 {
 public:
 
@@ -236,6 +238,11 @@ public:
     //  Notification that lazy data has been deleted
     // -----------------------------------------------------------------------
     static void reinitRegistry();
+
+    /***
+     * Support for Serialization/De-serialization
+     ***/
+    DECL_XSERIALIZABLE(DatatypeValidatorFactory)
 
 private:
     // -----------------------------------------------------------------------
