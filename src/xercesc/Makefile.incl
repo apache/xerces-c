@@ -241,7 +241,7 @@ else
 endif
 
 ifeq (${MESSAGELOADER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc24 -licudata24 -lXercesMessages
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licuuc24 -licudata24 -lXercesMessages23
 endif
 
 PLATFORM_COMPILE_OPTIONS = -qnotempinc -D_THREAD_SAFE
