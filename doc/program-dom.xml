@@ -896,7 +896,7 @@
            Wraps a SAX InputSource object to a DOMInputSource.
            </p>
            <source>
-    #include &lt;xercesc/framework/WrapperInputSource.hpp>
+    #include &lt;xercesc/framework/Wrapper4InputSource.hpp>
     #include &lt;xercesc/framework/LocalFileInputSource.hpp>
 
     DOMInputSource* MyEntityResolver::resolveEntity(const XMLCh* const publicId,
