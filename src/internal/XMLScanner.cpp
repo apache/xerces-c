@@ -822,6 +822,20 @@ bool XMLScanner::scanNext(XMLPScanToken& token)
             // If we hit the end, then do the miscellaneous part
             if (!gotData)
             {
+                // Do post-parse validation if required
+                if (fValidate)
+                {
+                    //
+                    //  We handle ID reference semantics at this level since
+                    //  its required by XML 1.0.
+                    //
+                    checkIDRefs();
+
+                    // Then allow the validator to do any extra stuff it wants
+                    fValidator->postParseValidation();
+                }
+
+                // That went ok, so scan for any miscellaneous stuff
                 scanMiscellaneous();
 
                 if (fValidate)
