@@ -288,7 +288,7 @@ void RangeImpl::setEndBefore(DOM_Node& refNode)
     
     fEndContainer = refNode.getParentNode();
     unsigned int i = 0;
-    for (DOM_Node n = refNode; n!=null; n = n.getPreviousSibling(), i++);
+    for (DOM_Node n = refNode; n!=null; n = n.getPreviousSibling(), i++) ;
 
     if (i< 1)
         fEndOffset = 0;
@@ -314,7 +314,7 @@ void RangeImpl::setEndAfter(DOM_Node& refNode)
     
     fEndContainer = refNode.getParentNode();
     unsigned int i = 0;
-    for (DOM_Node n = refNode; n!=null; n = n.getPreviousSibling(), i++);
+    for (DOM_Node n = refNode; n!=null; n = n.getPreviousSibling(), i++) ;
 
     if (i ==0)
         fEndOffset = 0;
@@ -1189,7 +1189,7 @@ DOM_DocumentFragment RangeImpl::traverseContents(TraversalType trvType)
             DOM_Node endNode = fEndContainer.getFirstChild();
             for (unsigned int i = 0; 
                 i <= fEndOffset-2; 
-                i++, endNode = endNode.getNextSibling());
+                i++, endNode = endNode.getNextSibling()) ;
             
             if (cloneParent == null)
                 cloneParent = root.cloneNode(false);
