@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/07/29 05:36:37  jberry
+ * Fix misspelling in Mac OS port
+ *
  * Revision 1.3  2000/07/19 18:20:12  andyh
  * Macintosh port: fix problems with yesterday's code checkin.  A couple
  * of the changes were mangled or missed.
@@ -190,7 +193,7 @@ static const unsigned int   gXercesRevision   = 0;
 #endif
 
 #if defined(XML_MACOS) || defined(XML_MACOSX)
-#include	<util/Platforms/MaxOS/MacOSDefs.hpp>
+#include	<util/Platforms/MacOS/MacOSDefs.hpp>
 #endif
 
 #if defined(XML_AS400)
