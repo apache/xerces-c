@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/08/24 20:36:37  knoaman
+ * Add support for <redefine>.
+ *
  * Revision 1.1  2001/07/24 18:33:46  knoaman
  * Added support for <group> + extra constraint checking for complexType
  *
@@ -65,6 +68,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/schema/XercesGroupInfo.hpp>
+#include <validators/common/ContentSpecNode.hpp>
 
 // ---------------------------------------------------------------------------
 //  XercesGroupInfo: Constructors and Destructor
@@ -81,6 +85,7 @@ XercesGroupInfo::XercesGroupInfo()
 XercesGroupInfo::~XercesGroupInfo()
 {
     delete fElements;
+    delete fContentSpec;
 }
 
 /**

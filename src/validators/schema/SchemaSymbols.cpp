@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/24 20:36:37  knoaman
+ * Add support for <redefine>.
+ *
  * Revision 1.11  2001/08/24 17:12:02  knoaman
  * Add support for anySimpleType.
  * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -1060,6 +1063,11 @@ const XMLCh SchemaSymbols::fgDT_ANYSIMPLETYPE[] =
 const XMLCh SchemaSymbols::fgRegEx_XOption[] =
 {
     chLatin_X, chNull
+};
+
+const XMLCh SchemaSymbols::fgRedefIdentifier[] =
+{
+    chUnderscore, chLatin_r, chLatin_d, chLatin_f, chLatin_n, chNull
 };
 
 const int SchemaSymbols::fgINT_MIN_VALUE = 0x80000000;

@@ -183,11 +183,9 @@ private:
                                                bool& toAdoptSpecNode);
     ContentSpecNode*    traverseAny(const DOM_Element& anyDecl);
     ContentSpecNode*    traverseAll(const DOM_Element& allElem);
-    XercesGroupInfo*    traverseGroupDecl(const DOM_Element& childElem,
-                                       bool& toAdoptSpecNode);
+    XercesGroupInfo*    traverseGroupDecl(const DOM_Element& childElem);
     XercesGroupInfo*    traverseGroupDeclNS(const XMLCh* const uriStr,
-                                            const XMLCh* const groupName,
-                                            bool& toAdoptSpecNode);
+                                            const XMLCh* const groupName);
     XercesAttGroupInfo* traverseAttributeGroupDecl(const DOM_Element& elem,
                                                     ComplexTypeInfo* const typeInfo);
     XercesAttGroupInfo* traverseAttributeGroupDeclNS(const XMLCh* const uriStr,
@@ -199,7 +197,7 @@ private:
     // -----------------------------------------------------------------------
     void reportSchemaError(const XMLCh* const msgDomain, const int errorCode);
     void reportSchemaError(const XMLCh* const msgDomain,
-                           const int errorCode,
+                           const int errorCode, 
                            const XMLCh* const text1,
                            const XMLCh* const text2 = 0,
                            const XMLCh* const text3 = 0,
@@ -223,13 +221,13 @@ private:
       * Parameters:
       *   rootElem - top element for a given type declaration
       *   contentElem - content must be annotation? or some other simple content
-      *   isEmpty: - true if (annotation?, smth_else), false if (annotation?)
+      *   isEmpty: - true if (annotation?, smth_else), false if (annotation?) 
       *
       * Check for Annotation if it is present, traverse it. If a sibling is
       * found and it is not an annotation return it, otherwise return 0.
       * Used by traverseSimpleTypeDecl.
       */
-    DOM_Element checkContent(const DOM_Element& rootElem,
+    DOM_Element checkContent(const DOM_Element& rootElem, 
                              const DOM_Element& contentElem,
                              const bool isEmpty);
 
@@ -286,6 +284,10 @@ private:
     DOM_Element getTopLevelComponentByName(const XMLCh* const compCategory,
                                            const XMLCh* const name);
 
+    DOM_Element getTopLevelComponentByName(const XMLCh* const compCategory,
+                                           const XMLCh* const name,
+                                           SchemaInfo* const currentInfo);
+
     const XMLCh* resolvePrefixToURI(const XMLCh* const prefix);
 
     /**
@@ -328,8 +330,7 @@ private:
       * Process a 'ref' on a group
       */
     XercesGroupInfo* processGroupRef(const DOM_Element& elem,
-                                     const XMLCh* const refName,
-                                     bool& toAdoptScpecNode);
+                                     const XMLCh* const refName);
 
     /**
       * Process a 'ref' on a attributeGroup
@@ -486,7 +487,7 @@ private:
       */
     InputSource* resolveSchemaLocation(const XMLCh* const loc);
 
-    void restoreSchemaInfo();
+    void restoreSchemaInfo(SchemaInfo* const toRestore);
     int  resetCurrentTypeNameStack(const int);
 
     /**
@@ -497,7 +498,7 @@ private:
 
     /**
       * Used by emptiableMixedContent to get the 'particle'
-      * minimum/maximum total range.
+      * minimum/maximum total range. 
       */
     int getMinTotalRange(const ContentSpecNode* const specNode);
     int getMaxTotalRange(const ContentSpecNode* const specNode);
@@ -531,7 +532,7 @@ private:
       * Attribute wild card intersection.
       *
       * Note:
-      *    The first parameter will be the result of the intersection, so
+      *    The first parameter will be the result of the intersection, so 
       *    we need to make sure that first parameter is a copy of the
       *    actual attribute definition we need to intersect with.
       *
@@ -545,7 +546,7 @@ private:
       * Attribute wild card union.
       *
       * Note:
-      *    The first parameter will be the result of the union, so
+      *    The first parameter will be the result of the union, so 
       *    we need to make sure that first parameter is a copy of the
       *    actual attribute definition we need to intersect with.
       *
@@ -580,6 +581,74 @@ private:
                           const SchemaAttDef* const childAttWildCard);
 
     bool isAnyType(const XMLCh* const typeName);
+
+    bool openRedefinedSchema(const DOM_Element& redefineElem);
+
+    /**
+      * The purpose of this method is twofold:
+      * 1. To find and appropriately modify all information items
+      * in redefinedSchema with names that are redefined by children of
+      * redefineElem.
+      * 2.  To make sure the redefine element represented by
+      * redefineElem is valid as far as content goes and with regard to
+      * properly referencing components to be redefined.
+      *
+      *	No traversing is done here!
+      * This method also takes actions to find and, if necessary, modify
+      * the names of elements in <redefine>'s in the schema that's being
+      * redefined.
+      */
+    void renameRedefinedComponents(const DOM_Element& redefineElem,
+                                   SchemaInfo* const redefiningSchemaInfo,
+                                   SchemaInfo* const redefinedSchemaInfo);
+
+    /**
+      * This method returns true if the redefine component is valid, and if
+      * it was possible to revise it correctly.
+      */
+    bool validateRedefineNameChange(const DOM_Element& redefineChildElem,
+                                    const XMLCh* const redefineChildElemName,
+                                    const XMLCh* const redefineChildDeclName,
+                                    const int redefineNameCounter,
+                                    SchemaInfo* const redefiningSchemaInfo);
+
+	/**
+      * This function looks among the children of 'redefineChildElem' for a 
+      * component of type 'redefineChildComponentName'. If it finds one, it
+      * evaluates whether its ref attribute contains a reference to
+      * 'refChildTypeName'. If it does, it returns 1 + the value returned by
+      * calls to itself on all other children.  In all other cases it returns
+      * 0 plus the sum of the values returned by calls to itself on 
+      * redefineChildElem's children. It also resets the value of ref so that
+      * it will refer to the renamed type from the schema being redefined.
+      */
+    int changeRedefineGroup(const DOM_Element& redefineChildElem,
+                            const XMLCh* const redefineChildComponentName,
+                            const XMLCh* const redefineChildTypeName,
+                            const int redefineNameCounter);
+
+    /** This simple function looks for the first occurrence of a
+      * 'redefineChildTypeName' item in the redefined schema and appropriately
+      * changes the value of its name. If it turns out that what we're looking
+      * for is in a <redefine> though, then we just rename it--and it's
+      * reference--to be the same.
+      */
+    void fixRedefinedSchema(SchemaInfo* const redefinedSchemaInfo,
+                            const XMLCh* const redefineChildComponentName,
+                            const XMLCh* const redefineChildTypeName,
+                            const int redefineNameCounter);
+
+    void getRedefineNewTypeName(const XMLCh* const oldTypeName,
+                                const int redefineCounter,
+                                XMLBuffer& newTypeName);
+
+    /**
+      * This purpose of this method is threefold:
+      * 1. To extract the schema information of included/redefined schema.
+      * 2. Rename redefined components.
+      * 3. Process components of included/redefined schemas
+      */
+    void preprocessRedefineInclude(SchemaInfo* const currSchemaInfo);
 
     // -----------------------------------------------------------------------
     //  Private constants
@@ -645,19 +714,20 @@ private:
     RefHashTableOf<ComplexTypeInfo>*        fComplexTypeRegistry;
     RefHashTableOf<XercesGroupInfo>*        fGroupRegistry;
     RefHashTableOf<XercesAttGroupInfo>*     fAttGroupRegistry;
+    RefHashTableOf<SchemaInfo>*             fIncludeLocations;
     SchemaInfo*                             fSchemaInfoRoot;
     SchemaInfo*                             fCurrentSchemaInfo;
     XercesGroupInfo*                        fCurrentGroupInfo;
     XercesAttGroupInfo*                     fCurrentAttGroupInfo;
     ComplexTypeInfo*                        fCurrentComplexType;
     ValueVectorOf<unsigned int>*            fImportLocations;
-    ValueVectorOf<unsigned int>*            fIncludeLocations;
     ValueVectorOf<unsigned int>*            fCurrentTypeNameStack;
     ValueVectorOf<unsigned int>*            fCurrentGroupStack;
     GeneralAttributeCheck*                  fAttributeCheck;
     RefHash2KeysTableOf<XMLCh>*             fGlobalTypes;
     RefHash2KeysTableOf<XMLCh>*             fGlobalGroups;
     RefHash2KeysTableOf<XMLCh>*             fGlobalAttGroups;
+    RefHash2KeysTableOf<XMLCh>*             fRedefineComponents;
     RefHash2KeysTableOf<SchemaElementDecl>* fSubstitutionGroups;
     RefHash2KeysTableOf<ElemVector>*        fValidSubstitutionGroups;
     RefVectorOf<SchemaElementDecl>*         fRefElements;
@@ -727,7 +797,7 @@ TraverseSchema::isValidRefDeclaration(const DOM_Element& elem) {
              || elem.getAttribute(SchemaSymbols::fgATT_BLOCK).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_FINAL).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_TYPE).length() != 0
-             || elem.getAttribute(SchemaSymbols::fgATT_DEFAULT).length() != 0
+             || elem.getAttribute(SchemaSymbols::fgATT_DEFAULT).length() != 0 
              || elem.getAttribute(SchemaSymbols::fgATT_FIXED).length() != 0
              || elem.getAttribute(SchemaSymbols::fgATT_SUBSTITUTIONGROUP).length() != 0);
 }
@@ -754,7 +824,7 @@ const XMLCh* TraverseSchema::getElementAttValue(const DOM_Element& elem,
         }
 
         unsigned int elemId = fStringPool->addOrFind(bufValue);
-        return fStringPool->getValueForId(elemId);
+        return fStringPool->getValueForId(elemId);  
     }
 
     return 0;
@@ -765,7 +835,7 @@ inline bool TraverseSchema::isBaseFromAnotherSchema(const XMLCh* const baseURI)
     if (XMLString::compareString(baseURI,fTargetNSURIString) != 0
         && XMLString::compareString(baseURI, SchemaSymbols::fgURI_SCHEMAFORSCHEMA) != 0
         && XMLString::stringLen(baseURI) != 0) {
-        //REVISIT, !!!! a hack: for schema that has no
+        //REVISIT, !!!! a hack: for schema that has no 
         //target namespace, e.g. personal-schema.xml
         return true;
     }
@@ -811,7 +881,7 @@ inline int TraverseSchema::resetCurrentTypeNameStack(const int value) {
     return value;
 }
 
-inline void
+inline void 
 TraverseSchema::copyWildCardData(const SchemaAttDef* const srcWildCard,
                                  SchemaAttDef* const destWildCard) {
 
@@ -828,6 +898,17 @@ TraverseSchema::isAnyType(const XMLCh* const typeName) {
 
     return (!XMLString::compareString(uri, SchemaSymbols::fgURI_SCHEMAFORSCHEMA)
             && !XMLString::compareString(localPart, SchemaSymbols::fgATTVAL_ANYTYPE));
+}
+
+inline void TraverseSchema::getRedefineNewTypeName(const XMLCh* const oldTypeName,
+                                                   const int redefineCounter,
+                                                   XMLBuffer& newTypeName) {
+
+    newTypeName.set(oldTypeName);
+
+    for (int i=0; i < redefineCounter; i++) {
+        fBuffer.append(SchemaSymbols::fgRedefIdentifier);
+    }
 }
 
 #endif

@@ -240,6 +240,7 @@ public :
     static const XMLCh fgDT_NORMALIZEDSTRING[];
     static const XMLCh fgDT_ANYSIMPLETYPE[];
     static const XMLCh fgRegEx_XOption[];
+    static const XMLCh fgRedefIdentifier[];
     static const int   fgINT_MIN_VALUE;
     static const int   fgINT_MAX_VALUE;
 
@@ -261,8 +262,8 @@ public :
     };
 
     enum {
-        UNBOUNDED = -2,
-        INFINITY = -1,
+        INFINITY = -2,
+        UNBOUNDED = -1,
         NILLABLE = 1,
         ABSTRACT = 2,
         FIXED = 4
