@@ -110,7 +110,7 @@ sub package_sources {
       system("$RM -rf *.dep");
       system("$RM -rf *.mak");
       system("$RM -rf Makefile");
-      system("java -classpath \"../tools/jars/stylebook-1.0-b2.jar;../tools/jars/xalan-0.19.2.jar;../tools/jars/xerces-1.0.1.jar\" org.apache.stylebook.StyleBook \"targetDirectory=$srctargetdir/doc/html\" xerces-c_book.xml ../tools/jars/style-apachexml.jar");
+      system("java -classpath \"../tools/jars/stylebook-1.0-b2.jar;../tools/jars/xalan.jar;../tools/jars/xerces.jar\" org.apache.stylebook.StyleBook \"targetDirectory=$srctargetdir/doc/html\" xerces-c_book.xml ../tools/jars/style-apachexml.jar");
 
    }
    else {   # all UNIX flavors
@@ -132,7 +132,7 @@ sub package_sources {
       system("sh createdocs.sh");
 	  unlink("createdocs.sh");
 	  system("\\rm -rf $srctargetdir/tools/jars/styles");
-	  
+
       $RM = "\\rm";
       system("find $srctargetdir -name \"*.o\" -print -exec rm -f {} \\;");
       system("find $srctargetdir -name \"core\" -print -exec rm -f {} \\;");

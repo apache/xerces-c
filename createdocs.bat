@@ -1,1 +1,1 @@
-java -classpath "tools/jars/stylebook-1.0-b2.jar;tools/jars/xalan-0.19.2.jar;tools/jars/xerces-1.0.1.jar" org.apache.stylebook.StyleBook "targetDirectory=doc/html" doc/xerces-c_book.xml tools/jars/style-apachexml.jar
+java -classpath "tools/jars/stylebook-1.0-b2.jar;tools/jars/xalan.jar;tools/jars/xerces.jar" org.apache.stylebook.StyleBook "targetDirectory=doc/html" doc/xerces-c_book.xml tools/jars/style-apachexml.jar
