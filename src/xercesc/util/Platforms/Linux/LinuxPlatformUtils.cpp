@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/02/05 18:27:34  tng
+ * [Bug 13437] Incorrect memory management in LinuxPlatformUtils.cpp.  Fixed by Adam Zell.
+ *
  * Revision 1.10  2002/12/02 19:16:46  tng
  * [Bug 14723] Memory leak in atomicOpsMutex.  Patch from Adam Zell.
  *
@@ -678,7 +681,7 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
             ThrowXML(XMLPlatformUtilsException,
                      XMLExcepts::Mutex_CouldNotDestroy);
         }
-        delete mtxHandle;
+        delete (pthread_mutex_t*) mtxHandle;
     }
 }
 
