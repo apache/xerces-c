@@ -72,6 +72,47 @@
 #include <xercesc/dom/DOM.hpp>
 #include <iostream.h>
 
+// ---------------------------------------------------------------------------
+//  This is a simple class that lets us do easy (though not terribly efficient)
+//  trancoding of char* data to XMLCh data.
+// ---------------------------------------------------------------------------
+class XStr
+{
+public :
+    // -----------------------------------------------------------------------
+    //  Constructors and Destructor
+    // -----------------------------------------------------------------------
+    XStr(const char* const toTranscode)
+    {
+        // Call the private transcoding method
+        fUnicodeForm = XMLString::transcode(toTranscode);
+    }
+
+    ~XStr()
+    {
+        delete [] fUnicodeForm;
+    }
+
+
+    // -----------------------------------------------------------------------
+    //  Getter methods
+    // -----------------------------------------------------------------------
+    const XMLCh* unicodeForm() const
+    {
+        return fUnicodeForm;
+    }
+
+private :
+    // -----------------------------------------------------------------------
+    //  Private data members
+    //
+    //  fUnicodeForm
+    //      This is the Unicode XMLCh format of the string.
+    // -----------------------------------------------------------------------
+    XMLCh*   fUnicodeForm;
+};
+
+#define X(str) XStr(str).unicodeForm()
 
 
 // ---------------------------------------------------------------------------
@@ -121,61 +162,47 @@ int main(int argC, char* argV[])
         //     <developedBy>Apache Software Foundation</developedBy>
         // </company>
 
-        XMLCh tempStr[4000];
-        XMLString::transcode("company", tempStr, 3999);
-
         DOMImplementation* impl =  DOMImplementation::getImplementation();
 
         DOMDocument* doc = impl->createDocument(
                     0,                    // root element namespace URI.
-                    tempStr,            // root element name
+                    X("company"),         // root element name
                     0);                   // document type object (DTD).
 
         DOMElement* rootElem = doc->getDocumentElement();
 
-        XMLString::transcode("product", tempStr, 3999);
-        DOMElement*  prodElem = doc->createElement(tempStr);
+        DOMElement*  prodElem = doc->createElement(X("product"));
         rootElem->appendChild(prodElem);
 
-        XMLString::transcode("Xerces-C", tempStr, 3999);
-        DOMText*    prodDataVal = doc->createTextNode(tempStr);
+        DOMText*    prodDataVal = doc->createTextNode(X("Xerces-C"));
         prodElem->appendChild(prodDataVal);
 
-        XMLString::transcode("category", tempStr, 3999);
-        DOMElement*  catElem = doc->createElement(tempStr);
+        DOMElement*  catElem = doc->createElement(X("category"));
         rootElem->appendChild(catElem);
 
-        XMLCh tempStr2[4000];
-        XMLString::transcode("idea", tempStr, 3999);
-        XMLString::transcode("great", tempStr2, 3999);
-        catElem->setAttribute(tempStr, tempStr2);
+        catElem->setAttribute(X("idea"), X("great"));
 
-        XMLString::transcode("XML Parsing Tools", tempStr, 3999);
-        DOMText*    catDataVal = doc->createTextNode(tempStr);
+        DOMText*    catDataVal = doc->createTextNode(X("XML Parsing Tools"));
         catElem->appendChild(catDataVal);
 
-        XMLString::transcode("developedBy", tempStr, 3999);
-        DOMElement*  devByElem = doc->createElement(tempStr);
+        DOMElement*  devByElem = doc->createElement(X("developedBy"));
         rootElem->appendChild(devByElem);
 
-        XMLString::transcode("Apache Software Foundation", tempStr, 3999);
-        DOMText*    devByDataVal = doc->createTextNode(tempStr);
+        DOMText*    devByDataVal = doc->createTextNode(X("Apache Software Foundation"));
         devByElem->appendChild(devByDataVal);
 
         //
         // Now count the number of elements in the above DOM tree.
         //
 
-        XMLString::transcode("*", tempStr, 3999);
-        unsigned int elementCount = doc->getElementsByTagName(tempStr)->getLength();
+        unsigned int elementCount = doc->getElementsByTagName(X("*"))->getLength();
         cout << "The tree just created contains: " << elementCount
              << " elements." << endl;
 
-        //
-        //  The DOM document and its contents are reference counted, and need
-        //  no explicit deletion.
-        //
-    }
+        delete doc;
+
+   }
+
     XMLPlatformUtils::Terminate();
     return 0;
 }
