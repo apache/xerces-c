@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/11/23 16:20:16  knoaman
+ * PSVI: pass scope and enclosing type during construction.
+ *
  * Revision 1.5  2003/11/21 17:29:53  knoaman
  * PSVI update
  *
@@ -120,6 +123,8 @@ public:
         , XSAnnotation* const                annot
         , XSNamedMap<XSIDCDefinition>* const identityConstraints
         , XSModel* const                     xsModel
+        , XSConstants::SCOPE                 elemScope = XSConstants::SCOPE_ABSENT
+        , XSComplexTypeDefinition* const     enclosingTypeDefinition = 0
         , MemoryManager* const               manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -297,8 +302,10 @@ protected:
     short                         fDisallowedSubstitutions;
     short                         fSubstitutionGroupExclusions;
     unsigned int                  fId;
+    XSConstants::SCOPE            fScope;
     SchemaElementDecl*            fSchemaElementDecl;
     XSTypeDefinition*             fTypeDefinition;
+    XSComplexTypeDefinition*      fEnclosingTypeDefinition;
     XSElementDeclaration*         fSubstitutionGroupAffiliation;
     XSAnnotation*                 fAnnotation;
     XSNamedMap<XSIDCDefinition>*  fIdentityConstraints;
@@ -337,6 +344,16 @@ inline XSAnnotation *XSElementDeclaration::getAnnotation() const
 inline void XSElementDeclaration::setId(unsigned int id)
 {
     fId = id;
+}
+
+inline XSConstants::SCOPE XSElementDeclaration::getScope() const
+{
+    return fScope;
+}
+
+inline XSComplexTypeDefinition *XSElementDeclaration::getEnclosingCTDefinition() const
+{
+    return fEnclosingTypeDefinition;
 }
 
 

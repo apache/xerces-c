@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/11/23 16:20:16  knoaman
+ * PSVI: pass scope and enclosing type during construction.
+ *
  * Revision 1.6  2003/11/21 17:29:53  knoaman
  * PSVI update
  *
@@ -100,14 +103,18 @@ XSElementDeclaration::XSElementDeclaration
     , XSAnnotation* const                annot
     , XSNamedMap<XSIDCDefinition>* const identityConstraints
     , XSModel* const                     xsModel
+    , XSConstants::SCOPE                 elemScope
+    , XSComplexTypeDefinition* const     enclosingTypeDefinition
     , MemoryManager* const               manager
 )
     : XSObject(XSConstants::ELEMENT_DECLARATION, xsModel, manager)
     , fDisallowedSubstitutions(0)
     , fSubstitutionGroupExclusions(0)
     , fId(0)
+    , fScope(elemScope)
     , fSchemaElementDecl(schemaElementDecl)
     , fTypeDefinition(typeDefinition)
+    , fEnclosingTypeDefinition(enclosingTypeDefinition)
     , fSubstitutionGroupAffiliation(substitutionGroupAffiliation)
     , fIdentityConstraints(identityConstraints)
 {
@@ -171,20 +178,6 @@ unsigned int XSElementDeclaration::getId() const
 // ---------------------------------------------------------------------------
 //  XSElementDeclaration: access methods
 // ---------------------------------------------------------------------------
-XSConstants::SCOPE XSElementDeclaration::getScope() const
-{
-    if (fSchemaElementDecl->getEnclosingScope() == Grammar::TOP_LEVEL_SCOPE)
-        return XSConstants::SCOPE_GLOBAL;
-    else
-        return XSConstants::SCOPE_LOCAL;
-}
-
-XSComplexTypeDefinition *XSElementDeclaration::getEnclosingCTDefinition() const
-{
-    // REVISIT
-    return 0;
-}
-
 XSConstants::VALUE_CONSTRAINT XSElementDeclaration::getConstraintType() const
 {
     if (fSchemaElementDecl->getMiscFlags() & SchemaSymbols::XSD_FIXED)
