@@ -529,7 +529,7 @@ void DOMString::appendData(const DOMString &other)
         //  existing string, either because there is not space in
         //  the buffer, or because the buffer is being shared with
         //  some other string.  So, make a new buffer.
-        DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength);
+        DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength+1);
         XMLCh *newP = newBuf->fData;
         XMLCh *oldP = fHandle->fDSData->fData;
         unsigned int i;
@@ -560,7 +560,7 @@ void DOMString::appendData(XMLCh ch)
 
 	if (fHandle == 0)
 	{
-		fHandle = DOMStringHandle::createNewStringHandle(1);
+		fHandle = DOMStringHandle::createNewStringHandle(2);
 		newLength = 1;
 	}
 	else
@@ -573,7 +573,7 @@ void DOMString::appendData(XMLCh ch)
         //  existing string, either because there is not space in
         //  the buffer, or because the buffer is being shared with
         //  some other string.  So, make a new buffer.
-        DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength);
+        DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength+1);
         XMLCh *newP = newBuf->fData;
         XMLCh *oldP = fHandle->fDSData->fData;
         unsigned int i;
@@ -669,7 +669,7 @@ void DOMString::deleteData(unsigned int offset, unsigned int delLength)
         //  and there's another string handle using the buffer so
         //  we need to make a new buffer before moving characters
         //  around.
-        DOMStringData *newBuf = DOMStringData::allocateBuffer(newStringLength);
+        DOMStringData *newBuf = DOMStringData::allocateBuffer(newStringLength+1);
         XMLCh *newP = newBuf->fData;
         XMLCh *oldP = fHandle->fDSData->fData;
         unsigned int i;
@@ -816,7 +816,7 @@ void DOMString::insertData(unsigned int offset, const DOMString &src)
         //  some other string.
         //  So, make a new buffer.
 
-        DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength);
+        DOMStringData *newBuf = DOMStringData::allocateBuffer(newLength+1);
         XMLCh *newP  = newBuf->fData;
         XMLCh *oldP   = fHandle->fDSData->fData;
         unsigned int i;
@@ -892,6 +892,7 @@ const XMLCh *DOMString::rawBuffer() const
     if (fHandle)
     {
         retP = fHandle->fDSData->fData;
+        retP[fHandle->fLength]=0;
     }
     return retP;
 };
@@ -907,39 +908,7 @@ char *DOMString::transcode() const
     }
 
     // We've got some data
-    // DOMStrings are not always null terminated, so we may need to
-    // copy to another buffer first in order to null terminate it for
-    // use as input to the transcoding routines..
-    //
-    XMLCh* DOMStrData = fHandle->fDSData->fData;
-
-    const unsigned int localBufLen = 1000;
-    XMLCh localBuf[localBufLen];
-    XMLCh *allocatedBuf = 0;
-    XMLCh *srcP;
-
-    if (DOMStrData[fHandle->fLength] == 0)
-    {
-        // The data in the DOMString itself happens to be null terminated.
-        //  Just use it in place.
-        srcP = DOMStrData;
-    }
-    else if (fHandle->fLength < localBufLen-1)
-    {
-        // The data is not null terminated, but does fit in the
-        //  local buffer (fast allocation).  Copy it over, and add
-        //  the null termination,
-        memcpy(localBuf, DOMStrData, fHandle->fLength * sizeof(XMLCh));
-        srcP = localBuf;
-        srcP[fHandle->fLength] = 0;
-    }
-    else
-    {
-        // The data is too big for the local buffer.  Heap allocate one.
-        allocatedBuf = srcP = new XMLCh[fHandle->fLength + 1];
-        memcpy(allocatedBuf, DOMStrData, fHandle->fLength * sizeof(XMLCh));
-        srcP[fHandle->fLength] = 0;
-    }
+    const XMLCh* srcP = rawBuffer();
 
     //
     //  Find out how many output chars we need and allocate a buffer big enough
@@ -960,7 +929,6 @@ char *DOMString::transcode() const
             // <TBD> We should throw something here?
         }
     }
-    delete [] allocatedBuf;   // which will be null if we didn't allocate one.
 
     // Cap it off and return it
     retP[charsNeeded] = 0;
@@ -977,42 +945,7 @@ char *DOMString::transcode(MemoryManager* const manager) const
     }
 
     // We've got some data
-    // DOMStrings are not always null terminated, so we may need to
-    // copy to another buffer first in order to null terminate it for
-    // use as input to the transcoding routines..
-    //
-    XMLCh* DOMStrData = fHandle->fDSData->fData;
-
-    const unsigned int localBufLen = 1000;
-    XMLCh localBuf[localBufLen];
-    XMLCh *allocatedBuf = 0;
-    XMLCh *srcP;
-
-    if (DOMStrData[fHandle->fLength] == 0)
-    {
-        // The data in the DOMString itself happens to be null terminated.
-        //  Just use it in place.
-        srcP = DOMStrData;
-    }
-    else if (fHandle->fLength < localBufLen-1)
-    {
-        // The data is not null terminated, but does fit in the
-        //  local buffer (fast allocation).  Copy it over, and add
-        //  the null termination,
-        memcpy(localBuf, DOMStrData, fHandle->fLength * sizeof(XMLCh));
-        srcP = localBuf;
-        srcP[fHandle->fLength] = 0;
-    }
-    else
-    {
-        // The data is too big for the local buffer.  Heap allocate one.
-        allocatedBuf = srcP = (XMLCh*) manager->allocate
-        (
-            (fHandle->fLength + 1) * sizeof(XMLCh)
-        );//new XMLCh[fHandle->fLength + 1];
-        memcpy(allocatedBuf, DOMStrData, fHandle->fLength * sizeof(XMLCh));
-        srcP[fHandle->fLength] = 0;
-    }
+    const XMLCh* srcP = rawBuffer();
 
     //
     //  Find out how many output chars we need and allocate a buffer big enough
@@ -1033,9 +966,6 @@ char *DOMString::transcode(MemoryManager* const manager) const
             // <TBD> We should throw something here?
         }
     }
-
-    if (allocatedBuf)
-	    manager->deallocate(allocatedBuf);//delete [] allocatedBuf;   // which will be null if we didn't allocate one.
 
     // Cap it off and return it
     retP[charsNeeded] = 0;
