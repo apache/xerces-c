@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/03 19:09:38  knoaman
+ * Support Warning/Error/FatalError messaging.
+ * Validity constraints errors are treated as errors, with the ability by user to set
+ * validity constraints as fatal errors.
+ *
  * Revision 1.3  2000/03/02 19:55:53  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -80,7 +85,7 @@ enum MsgTypes
 {
     MsgType_Warning
     , MsgType_Error
-    , MsgType_Validity
+    , MsgType_FatalError
 
     , MsgTypes_Count
 };

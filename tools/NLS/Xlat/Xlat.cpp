@@ -57,6 +57,11 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/05/03 19:09:36  knoaman
+ * Support Warning/Error/FatalError messaging.
+ * Validity constraints errors are treated as errors, with the ability by user to set
+ * validity constraints as fatal errors.
+ *
  * Revision 1.7  2000/03/18 00:00:58  roddey
  * Improved error reporting
  *
@@ -129,7 +134,7 @@ const XMLCh* typePrefixes[MsgTypes_Count] =
 {
     L"W_"
     , L"E_"
-    , L"V_"
+    , L"F_"
 };
 
 
@@ -598,20 +603,17 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 }
                  else if (typeName.equals(L"Error"))
                 {
-                    if (!XMLString::compareString(domainStr.rawBuffer(), XMLUni::fgValidityDomain))
-                    {
-                        type = MsgType_Validity;
-                        typeGotten[2] = true;
-                    }
-                     else
-                    {
-                        type = MsgType_Error;
-                        typeGotten[1] = true;
-                    }
+                    type = MsgType_Error;
+                    typeGotten[1] = true;
+                }
+                 else if (typeName.equals(L"FatalError"))
+                {
+                    type = MsgType_FatalError;
+                    typeGotten[2] = true;
                 }
                  else
                 {
-                    wprintf(L"Expected a Warning or Errornode\n\n");
+                    wprintf(L"Expected a Warning, Error, or FatalError node\n\n");
                     throw ErrReturn_SrcFmtError;
                 }
 
@@ -680,7 +682,7 @@ extern "C" int wmain(int argC, XMLCh** argV)
                     outHeader
                     , L"    static bool isFatal(const %s::Codes toCheck)\n"
                       L"    {\n"
-                      L"        return ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds));\n"
+                      L"        return ((toCheck >= F_LowBounds) && (toCheck <= F_HighBounds));\n"
                       L"    }\n\n"
                     , errNameSpace
                 );
@@ -698,9 +700,9 @@ extern "C" int wmain(int argC, XMLCh** argV)
                 fwprintf
                 (
                     outHeader
-                    , L"    static bool isValid(const %s::Codes toCheck)\n"
+                    , L"    static bool isError(const %s::Codes toCheck)\n"
                       L"    {\n"
-                      L"        return ((toCheck >= V_LowBounds) && (toCheck <= V_HighBounds));\n"
+                      L"        return ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds));\n"
                       L"    }\n\n"
                     , errNameSpace
                 );
@@ -712,10 +714,10 @@ extern "C" int wmain(int argC, XMLCh** argV)
                       L"    {\n"
                       L"       if ((toCheck >= W_LowBounds) && (toCheck <= W_HighBounds))\n"
                       L"           return XMLErrorReporter::ErrType_Warning;\n"
-                      L"       else if ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds))\n"
+                      L"       else if ((toCheck >= F_LowBounds) && (toCheck <= F_HighBounds))\n"
                       L"            return XMLErrorReporter::ErrType_Fatal;\n"
-                      L"       else if ((toCheck >= V_LowBounds) && (toCheck <= V_HighBounds))\n"
-                      L"            return XMLErrorReporter::ErrType_Invalid;\n"
+                      L"       else if ((toCheck >= E_LowBounds) && (toCheck <= E_HighBounds))\n"
+                      L"            return XMLErrorReporter::ErrType_Error;\n"
                       L"       return XMLErrorReporter::ErrTypes_Unknown;\n"
                       L"    }\n"
                     , errNameSpace

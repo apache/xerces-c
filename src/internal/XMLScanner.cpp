@@ -157,8 +157,11 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
     , fDocTypeHandler(0)
     , fDoNamespaces(false)
     , fEntityHandler(0)
+    , fEntityResolver(0)
     , fErrorReporter(0)
+    , fErrorHandler(0)
     , fExitOnFirstFatal(true)
+    , fValidationConstraintFatal(false)
     , fIDRefList(0)
     , fInException(false)
     , fRawAttrList(0)
@@ -199,8 +202,11 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fDocTypeHandler(docTypeHandler)
     , fDoNamespaces(false)
     , fEntityHandler(entityHandler)
+    , fEntityResolver(0)
     , fErrorReporter(errHandler)
+    , fErrorHandler(0)
     , fExitOnFirstFatal(true)
+    , fValidationConstraintFatal(false)
     , fIDRefList(0)
     , fInException(false)
     , fRawAttrList(0)
@@ -889,7 +895,7 @@ void XMLScanner::resetEntityDeclPool() {
     fEntityDeclPool->put(new DTDEntityDecl(gApos, chSingleQuote, true, true));
 }
 
-void XMLScanner::resetURIPool() {
+void XMLScanner::resetURIStringPool() {
     fURIStringPool->flushAll();
 
     fEmptyNamespaceId   = fURIStringPool->addOrFind(XMLUni::fgZeroLenString);
@@ -1535,11 +1541,10 @@ void XMLScanner::scanEndTag(bool& gotData)
         return;
     }
 
-    unsigned int elemId;
-    unsigned int uriId = 0;
+    unsigned int uriId = fEmptyNamespaceId;
+    XMLBufBid bbName(&fBufMgr);
     if (fDoNamespaces)
     {
-        XMLBufBid bbName(&fBufMgr);
         XMLBufBid bbPrefix(&fBufMgr);
         uriId = resolveQName
         (
@@ -1548,25 +1553,6 @@ void XMLScanner::scanEndTag(bool& gotData)
             , bbPrefix.getBuffer()
             , ElemStack::Mode_Element
         );
-
-        //
-        //  Ask the grammar for the element id for the {uri}name we got. He owns
-        //  the element decl pool.
-        //
-        //  It should be found in the current grammar, no need to switch grammar.
-        //  If not found, it is an error (unbalanced element)
-
-        elemId = fGrammar->getElemId
-        (
-            uriId
-            , bbName.getBuffer().getRawBuffer()
-            , qnameBuf.getRawBuffer()
-            , 0
-        );
-    }
-     else
-    {
-        elemId = fGrammar->getElemId(fEmptyNamespaceId, 0, qnameBuf.getRawBuffer(), 0);
     }
 
     //
@@ -1579,22 +1565,37 @@ void XMLScanner::scanEndTag(bool& gotData)
     //
     const ElemStack::StackElem* topElem = fElemStack.popTop();
 
+    // See if it was the root element, to avoid multiple calls below
+    const bool isRoot = fElemStack.isEmpty();
+
     // Make sure that its the end of the element that we expect
-    if (topElem->fThisElement->getId() != elemId)
-    {
-        emitError
-        (
-            XMLErrs::ExpectedEndOfTagX
-            , topElem->fThisElement->getFullName()
-        );
+    XMLElementDecl* tempElement = topElem->fThisElement;
+    if (fDoNamespaces) {
+        if ((tempElement->getURI() != uriId) ||
+            (XMLString::compareString(tempElement->getBaseName(), bbName.getRawBuffer())))
+        {
+            emitError
+            (
+                XMLErrs::ExpectedEndOfTagX
+                , topElem->fThisElement->getFullName()
+            );
+        }
     }
+    else {
+        if (XMLString::compareString(tempElement->getFullName(), qnameBuf.getRawBuffer()))
+        {
+            emitError
+            (
+                XMLErrs::ExpectedEndOfTagX
+                , topElem->fThisElement->getFullName()
+            );
+        }
+    }
+
 
     // Make sure we are back on the same reader as where we started
     if (topElem->fReaderNum != fReaderMgr.getCurrentReaderNum())
         emitError(XMLErrs::PartialTagMarkupError);
-
-    // See if it was the root element, to avoid multiple calls below
-    const bool isRoot = fElemStack.isEmpty();
 
     // Skip optional whitespace
     fReaderMgr.skipPastSpaces();
@@ -1628,7 +1629,7 @@ void XMLScanner::scanEndTag(bool& gotData)
     {
         int res = fValidator->checkContent
         (
-            topElem->fThisElement->getId()
+            topElem->fThisElement
             , topElem->fChildren
             , topElem->fChildCount
         );
@@ -1660,19 +1661,10 @@ void XMLScanner::scanEndTag(bool& gotData)
             }
              else
             {
-                // Find the element decl for the evil spawn
-                XMLElementDecl* decl = fGrammar->getElemDecl
-                (
-                    topElem->fChildren[res]->getURI()
-                  , topElem->fChildren[res]->getLocalPart()
-                  , topElem->fChildren[res]->getRawName()
-                  , 0
-                );
-
                 fValidator->emitError
                 (
                     XMLValid::ElementNotValidForContent
-                    , decl->getFullName()
+                    , topElem->fChildren[res]->getRawName()
                     , topElem->fThisElement->getFormattedContentModel()
                 );
             }
@@ -1682,17 +1674,22 @@ void XMLScanner::scanEndTag(bool& gotData)
     // If this was the root, then done with content
     gotData = !isRoot;
 
-    if (gotData && fDoNamespaces) {
-        // Restore the grammar
-        const ElemStack::StackElem* topElem2 = fElemStack.topElement();
-        XMLBuffer bufURI;
-        getURIText(topElem2->fThisElement->getURI(), bufURI);
-        if (!switchGrammar(bufURI.getRawBuffer()) && fValidate)
-            fValidator->emitError
-            (
-                XMLValid::GrammarNotFound
-                , bufURI.getRawBuffer()
-            );
+    if (gotData) {
+        if (fDoNamespaces) {
+            // Restore the grammar
+            const ElemStack::StackElem* topElem2 = fElemStack.topElement();
+            XMLBuffer bufURI;
+            getURIText(topElem2->fThisElement->getURI(), bufURI);
+            if (!switchGrammar(bufURI.getRawBuffer()) && fValidate)
+                fValidator->emitError
+                (
+                    XMLValid::GrammarNotFound
+                    , bufURI.getRawBuffer()
+                );
+        }
+
+        // Restore the validation flag
+        fValidate = fElemStack.getValidationFlag();
     }
 }
 
@@ -2067,14 +2064,14 @@ bool XMLScanner::scanStartTag(bool& gotData)
     //
     //  We tell him to fault in a decl if he does not find one.
     //
-    bool wasAdded;
+    bool wasAdded = false;
     XMLElementDecl* elemDecl = fGrammar->findOrAddElemDecl
     (
         fEmptyNamespaceId
         , 0
         , 0
         , fQNameBuf.getRawBuffer()
-        , 0
+        , Grammar::TOP_LEVEL_SCOPE
         , wasAdded
     );
 
@@ -2124,6 +2121,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
 
     // Expand the element stack and add the new element
     fElemStack.addLevel(elemDecl, fReaderMgr.getCurrentReaderNum());
+    fElemStack.setValidationFlag(fValidate);
 
     //
     //  If this is the first element and we are validating, check the root
@@ -2258,6 +2256,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
             //  not validating of course it will not be at first, but we will
             //  fault it into the pool (to avoid lots of redundant errors.)
             //
+            wasAdded = false;
             XMLAttDef* attDef = elemDecl->findAttr
             (
                 fAttNameBuf.getRawBuffer()
@@ -2386,7 +2385,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
                 {
                     fValidator->validateAttrValue
                     (
-                        *attDef
+                        attDef
                         , fAttValueBuf.getRawBuffer()
                     );
                 }
@@ -2568,7 +2567,7 @@ bool XMLScanner::scanStartTag(bool& gotData)
         // If validating, then insure that its legal to have no content
         if (fValidate)
         {
-            const int res = fValidator->checkContent(elemDecl->getId(), 0, 0);
+            const int res = fValidator->checkContent(elemDecl, 0, 0);
             if (res >= 0)
             {
                 fValidator->emitError
@@ -2681,12 +2680,28 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     );
     const bool gotAttrs = (attCount != 0);
 
+    // save the contentleafname and currentscope before addlevel, for later use
+    ContentLeafNameTypeVector* cv = 0;
+    int currentScope = Grammar::TOP_LEVEL_SCOPE;
+    if (!isRoot && fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+        SchemaElementDecl* tempElement = (SchemaElementDecl*) fElemStack.topElement()->fThisElement;
+        SchemaElementDecl::ModelTypes modelType = tempElement->getModelType();
+
+        if ((modelType == SchemaElementDecl::Mixed)
+          ||  (modelType == SchemaElementDecl::Children))
+        {
+            cv = tempElement->getContentModel()->getContentLeafNameTypeVector();
+            currentScope = fElemStack.getCurrentScope();
+        }
+    }
+
     //
     //  Now, since we might have to update the namespace map for this element,
     //  but we don't have the element decl yet, we just tell the element stack
     //  to expand up to get ready.
     //
     fElemStack.addLevel();
+    fElemStack.setValidationFlag(fValidate);
 
     //
     //  Make an initial pass through the list and find any xmlns attributes or
@@ -2703,9 +2718,9 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         XMLElementDecl* elemDecl = fGrammar->getElemDecl
         (
             fEmptyNamespaceId
-            , fNameBuf.getRawBuffer()
-            , fQNameBuf.getRawBuffer()
             , 0
+            , fQNameBuf.getRawBuffer()
+            , Grammar::TOP_LEVEL_SCOPE
         );
         if (elemDecl) {
             if (elemDecl->hasAttDefs()) {
@@ -2743,6 +2758,13 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
             , ElemStack::Mode_Element
         );
 
+    //if schema, check if we should lax or skip the validation of this element
+    bool laxThisOne = false;
+    if (cv) {
+        QName element(fPrefixBuf.getRawBuffer(), fNameBuf.getRawBuffer(), uriId);
+        laxThisOne = laxElementValidation(&element, cv);
+    }
+
     //
     //  Look up the element now in the grammar. This will get us back a
     //  generic element decl object. We tell him to fault one in if he does
@@ -2754,7 +2776,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     if (uriId != fEmptyNamespaceId) {
         XMLBuffer bufURI;
         getURIText(uriId, bufURI);
-        if (!switchGrammar(bufURI.getRawBuffer()) && fValidate)
+        if (!switchGrammar(bufURI.getRawBuffer()) && fValidate && !laxThisOne)
         {
             fValidator->emitError
             (
@@ -2762,15 +2784,25 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                 , bufURI.getRawBuffer()
             );
         }
-        elemDecl = fGrammar->findOrAddElemDecl
-        (
-            uriId
-            , fNameBuf.getRawBuffer()
-            , fPrefixBuf.getRawBuffer()
-            , fQNameBuf.getRawBuffer()
-            , 0
-            , wasAdded
-        );
+        elemDecl = fGrammar->getElemDecl
+                   (
+                      uriId
+                    , fNameBuf.getRawBuffer()
+                    , fQNameBuf.getRawBuffer()
+                    , currentScope
+                    );
+        if (!elemDecl) {
+            // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
+            elemDecl = fGrammar->findOrAddElemDecl
+            (
+                uriId
+                , fNameBuf.getRawBuffer()
+                , fPrefixBuf.getRawBuffer()
+                , fQNameBuf.getRawBuffer()
+                , Grammar::TOP_LEVEL_SCOPE
+                , wasAdded
+            );
+        }
     }
     else
     {
@@ -2782,12 +2814,23 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                       uriId
                     , fNameBuf.getRawBuffer()
                     , fQNameBuf.getRawBuffer()
-                    , 0
+                    , currentScope
                     );
+
+        if (!elemDecl) {
+            // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
+            elemDecl = fGrammar->getElemDecl
+                       (
+                          uriId
+                        , fNameBuf.getRawBuffer()
+                        , fQNameBuf.getRawBuffer()
+                        , Grammar::TOP_LEVEL_SCOPE
+                        );
+        }
 
         if (!elemDecl)
         {
-            if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate)
+            if (!switchGrammar(XMLUni::fgZeroLenString) && fValidate && !laxThisOne)
             {
                 fValidator->emitError
                 (
@@ -2795,15 +2838,27 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
                     , XMLUni::fgZeroLenString
                 );
             }
-            elemDecl = fGrammar->findOrAddElemDecl
-            (
-                uriId
-                , fNameBuf.getRawBuffer()
-                , fPrefixBuf.getRawBuffer()
-                , fQNameBuf.getRawBuffer()
-                , 0
-                , wasAdded
-            );
+
+            elemDecl = fGrammar->getElemDecl
+                       (
+                          uriId
+                        , fNameBuf.getRawBuffer()
+                        , fQNameBuf.getRawBuffer()
+                        , currentScope
+                        );
+
+            if (!elemDecl) {
+                // if not found, then it may be a reference, try TOP_LEVEL_SCOPE
+                elemDecl = fGrammar->findOrAddElemDecl
+                (
+                    uriId
+                    , fNameBuf.getRawBuffer()
+                    , fPrefixBuf.getRawBuffer()
+                    , fQNameBuf.getRawBuffer()
+                    , Grammar::TOP_LEVEL_SCOPE
+                    , wasAdded
+                );
+            }
         }
     }
 
@@ -2813,11 +2868,16 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //
     if (wasAdded)
     {
+        if (laxThisOne) {
+            fValidate = false;
+            fElemStack.setValidationFlag(fValidate);
+        }
+
         // If validating then emit an error
         if (fValidate)
         {
             // This is to tell the reuse Validator that this element was
-            // faulted-in, was not an element in the validator pool originally
+            // faulted-in, was not an element in the grammar pool originally
             elemDecl->setCreateReason(XMLElementDecl::JustFaultIn);
 
             fValidator->emitError
@@ -2848,12 +2908,22 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         }
     }
 
+    //  Validate the element
+    if (fValidate)
+        fValidator->validateElement(elemDecl);
+
     //
     //  Now we can update the element stack to set the current element
     //  decl. We expanded the stack above, but couldn't store the element
     //  decl because we didn't know it yet.
     //
     fElemStack.setElement(elemDecl, fReaderMgr.getCurrentReaderNum());
+    if (fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
+        ComplexTypeInfo* typeinfo = ((SchemaElementDecl*)elemDecl)->getComplexTypeInfo();
+        if (typeinfo)
+            currentScope = typeinfo->getScopeDefined();
+        fElemStack.setCurrentScope(currentScope);
+    }
 
     //
     //  If this is the first element and we are validating, check the root
@@ -2903,7 +2973,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         // If validating, then insure that its legal to have no content
         if (fValidate)
         {
-            const int res = fValidator->checkContent(elemDecl->getId(), 0, 0);
+            const int res = fValidator->checkContent(elemDecl, 0, 0);
             if (res >= 0)
             {
                 fValidator->emitError

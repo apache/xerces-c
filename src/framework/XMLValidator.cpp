@@ -56,6 +56,11 @@
 
 /**
   * $Log$
+  * Revision 1.8  2001/05/03 19:08:58  knoaman
+  * Support Warning/Error/FatalError messaging.
+  * Validity constraints errors are treated as errors, with the ability by user to set
+  * validity constraints as fatal errors.
+  *
   * Revision 1.7  2001/03/21 21:56:02  tng
   * Schema: Add Schema Grammar, Schema Validator, and split the DTDValidator into DTDValidator, DTDScanner, and DTDGrammar.
   *
@@ -193,7 +198,8 @@ void XMLValidator::emitError(const XMLValid::Codes toEmit)
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if ((XMLValid::isValid(toEmit) || XMLValid::isFatal(toEmit))
+    if (((XMLValid::isError(toEmit) && fScanner->getValidationConstraintFatal())
+         || XMLValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
     &&  !fScanner->getInException())
     {
@@ -248,7 +254,8 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if ((XMLValid::isValid(toEmit) || XMLValid::isFatal(toEmit))
+    if (((XMLValid::isError(toEmit) && fScanner->getValidationConstraintFatal())
+         || XMLValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
     &&  !fScanner->getInException())
     {
@@ -303,7 +310,8 @@ void XMLValidator::emitError(const  XMLValid::Codes toEmit
     }
 
     // Bail out if its fatal an we are to give up on the first fatal error
-    if ((XMLValid::isValid(toEmit) || XMLValid::isFatal(toEmit))
+    if (((XMLValid::isError(toEmit) && fScanner->getValidationConstraintFatal())
+         || XMLValid::isFatal(toEmit))
     &&  fScanner->getExitOnFirstFatal()
     &&  !fScanner->getInException())
     {

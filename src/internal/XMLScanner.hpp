@@ -56,6 +56,11 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/05/03 19:09:09  knoaman
+ * Support Warning/Error/FatalError messaging.
+ * Validity constraints errors are treated as errors, with the ability by user to set
+ * validity constraints as fatal errors.
+ *
  * Revision 1.14  2001/04/19 18:16:59  tng
  * Schema: SchemaValidator update, and use QName in Content Model
  *
@@ -266,6 +271,7 @@ public :
     const XMLErrorReporter* getErrorReporter() const;
     XMLErrorReporter* getErrorReporter();
     bool getExitOnFirstFatal() const;
+    bool getValidationConstraintFatal() const;
     RefHashTableOf<XMLRefInfo>& getIDRefList();
     bool getInException() const;
     const RefHashTableOf<XMLRefInfo>& getIDRefList() const;
@@ -293,6 +299,8 @@ public :
         const   XMLCh* const    entName
     );
     NameIdPoolEnumerator<DTDEntityDecl> getEntityEnumerator() const;
+    const XMLStringPool* getURIStringPool() const;
+    XMLStringPool* getURIStringPool();
 
     // -----------------------------------------------------------------------
     //  Getter methods
@@ -374,6 +382,7 @@ public :
     void setErrorReporter(XMLErrorReporter* const errHandler);
     void setErrorHandler(ErrorHandler* const handler);
     void setExitOnFirstFatal(const bool newValue);
+    void setValidationConstraintFatal(const bool newValue);
     void setValidationScheme(const ValSchemes newScheme);
     void setValidator(XMLValidator* const valToAdopt);
     void setDoSchema(const bool doSchema);
@@ -457,7 +466,7 @@ private :
     void commonInit();
     void initValidator();
     void resetEntityDeclPool();
-    void resetURIPool();
+    void resetURIStringPool();
 
 
     // -----------------------------------------------------------------------
@@ -509,20 +518,12 @@ private :
         const   XMLCh* const    attrName
         , const XMLCh* const    attrValue
     );
-    void validateAttrValue
-    (
-        const   XMLCh* const            valueText
-        , const XMLAttDef::AttTypes     type
-        , const XMLAttDef::DefAttTypes  defType
-        , const XMLCh* const            defText
-        , const XMLCh* const            fullName
-        , const XMLCh* const            enumList
-    );
     void scanRawAttrListforNameSpaces(const RefVectorOf<KVStringPair>* theRawAttrList, int attCount);
     void parseSchemaLocation(const XMLCh* const schemaLocationStr);
     void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
     bool switchGrammar(int newGrammarNameSpaceIndex);
     bool switchGrammar(const XMLCh* const newGrammarNameSpace);
+    bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv);
 
     // -----------------------------------------------------------------------
     //  Private scanning methods
@@ -625,6 +626,10 @@ private :
     //      This indicates whether we bail out on the first fatal XML error
     //      or not. It defaults to true, which is the strict XML way, but it
     //      can be changed.
+    //
+    //  fValidationConstraintFatal
+    //      This indicates whether we treat validation constraint errors as
+    //      fatal errors or not. It defaults to false, but it can be changed.
     //
     //  fIDRefList
     //      This is a list of XMLRefInfo objects. This member lets us do all
@@ -739,6 +744,7 @@ private :
     XMLErrorReporter*           fErrorReporter;
     ErrorHandler*               fErrorHandler;
     bool                        fExitOnFirstFatal;
+    bool                        fValidationConstraintFatal;
     RefHashTableOf<XMLRefInfo>* fIDRefList;
     bool                        fInException;
     RefVectorOf<KVStringPair>*  fRawAttrList;
@@ -825,6 +831,11 @@ inline XMLErrorReporter* XMLScanner::getErrorReporter()
 inline bool XMLScanner::getExitOnFirstFatal() const
 {
     return fExitOnFirstFatal;
+}
+
+inline bool XMLScanner::getValidationConstraintFatal() const
+{
+    return fValidationConstraintFatal;
 }
 
 inline RefHashTableOf<XMLRefInfo>& XMLScanner::getIDRefList()
@@ -917,6 +928,17 @@ inline DTDEntityDecl* XMLScanner::getEntityDecl(const XMLCh* const entName)
 {
     return fEntityDeclPool->getByKey(entName);
 }
+
+inline const XMLStringPool* XMLScanner::getURIStringPool() const
+{
+    return fURIStringPool;
+}
+
+inline XMLStringPool* XMLScanner::getURIStringPool()
+{
+    return fURIStringPool;
+}
+
 // ---------------------------------------------------------------------------
 //  XMLScanner: Setter methods
 // ---------------------------------------------------------------------------
@@ -936,7 +958,7 @@ inline void XMLScanner::setDoNamespaces(const bool doNamespaces)
     if (fDoNamespaces) {
         if (!fURIStringPool) {
             fURIStringPool = new XMLStringPool();
-            resetURIPool();
+            resetURIStringPool();
         }
     }
 }
@@ -965,6 +987,11 @@ inline void XMLScanner::setEntityResolver(EntityResolver* const handler)
 inline void XMLScanner::setExitOnFirstFatal(const bool newValue)
 {
     fExitOnFirstFatal = newValue;
+}
+
+inline void XMLScanner::setValidationConstraintFatal(const bool newValue)
+{
+    fValidationConstraintFatal = newValue;
 }
 
 inline void XMLScanner::setValidationScheme(const ValSchemes newScheme)

@@ -164,6 +164,11 @@ bool DOMParser::getExitOnFirstFatalError() const
     return fScanner->getExitOnFirstFatal();
 }
 
+bool DOMParser::getValidationConstraintFatal() const
+{
+    return fScanner->getValidationConstraintFatal();
+}
+
 DOMParser::ValSchemes DOMParser::getValidationScheme() const
 {
     const XMLScanner::ValSchemes scheme = fScanner->getValidationScheme();
@@ -219,6 +224,11 @@ void DOMParser::setEntityResolver(EntityResolver* const handler)
 void DOMParser::setExitOnFirstFatalError(const bool newState)
 {
     fScanner->setExitOnFirstFatal(newState);
+}
+
+void DOMParser::setValidationConstraintFatal(const bool newState)
+{
+    fScanner->setValidationConstraintFatal(newState);
 }
 
 void DOMParser::setValidationScheme(const ValSchemes newScheme)

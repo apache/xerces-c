@@ -56,6 +56,11 @@
 
  /*
   * $Log$
+  * Revision 1.10  2001/05/03 19:08:56  knoaman
+  * Support Warning/Error/FatalError messaging.
+  * Validity constraints errors are treated as errors, with the ability by user to set
+  * validity constraints as fatal errors.
+  *
   * Revision 1.9  2000/12/14 18:49:57  tng
   * Fix API document generation warning: "Warning: end of member group without matching begin"
   *
@@ -119,7 +124,7 @@ public:
     enum ErrTypes
     {
         ErrType_Warning
-        , ErrType_Invalid
+        , ErrType_Error
         , ErrType_Fatal
 
         , ErrTypes_Unknown

@@ -260,6 +260,19 @@ public :
       */
     bool getExitOnFirstFatalError() const;
 
+    /**
+      * This method returns the state of the parser's
+      * validation-constraint-fatal flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         set validation constraint errors as fatal, false 
+      *         otherwise.
+      *
+      * @see #setValidationContraintFatal
+      */
+    bool getValidationConstraintFatal() const;
+    //@}
+
     /** Get the 'expand entity references' flag.
       * DEPRECATED Use getCreateEntityReferenceNodes() instead.
       *
@@ -395,6 +408,23 @@ public :
       * @see #getExitOnFirstFatalError
       */
     void setExitOnFirstFatalError(const bool newState);
+
+    /**
+      * This method allows users to set the parser's behaviour when it
+      * encounters a validtion constraint error. If set to true, and the
+      * the parser is set to exit when it encounter the first fatal error, 
+      * the parser will exit at the first encounter. If false, then it will
+      * report the error and continue processing.
+      *
+      * <p>The default value is 'false'.</p>
+      *
+      * @param newState The value specifying whether the parser should
+      *                 continue or exit when it encounters a validation
+      *                 constraint error.
+      *
+      * @see #getValidationConstraintFatal
+      */
+    void setValidationConstraintFatal(const bool newState);
 
     /** Set the 'expand entity references' flag
       *
