@@ -577,6 +577,7 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
         , theEntry->getWinCP()
         , theEntry->getIEEncoding()
         , blockSize
+        , manager
     );
 }
 
@@ -600,9 +601,10 @@ Win32TransService::makeNewXMLTranscoder(const   XMLCh* const            encoding
 Win32Transcoder::Win32Transcoder(const  XMLCh* const    encodingName
                                 , const unsigned int    winCP
                                 , const unsigned int    ieCP
-                                , const unsigned int    blockSize) :
+                                , const unsigned int    blockSize
+                                , MemoryManager* const manager) :
 
-    XMLTranscoder(encodingName, blockSize)
+    XMLTranscoder(encodingName, blockSize, manager)
     , fIECP(ieCP)
     , fWinCP(winCP)
 {

@@ -171,7 +171,8 @@ public :
 	    const XMLCh* const		encodingName,
 	    TextToUnicodeInfo		textToUnicodeInfo,
 	    UnicodeToTextInfo		unicodeToTextInfo,
-	    const unsigned int		blockSize
+	    const unsigned int		blockSize,
+	    MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
 		);
     ~MacOSTranscoder();
 

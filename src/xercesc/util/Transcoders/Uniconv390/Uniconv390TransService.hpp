@@ -154,6 +154,7 @@ public :
         const   XMLCh* const        encodingName
         ,        uniconvconverter_t* const   toAdopt
         , const unsigned int        blockSize
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     ~Uniconv390Transcoder();
 

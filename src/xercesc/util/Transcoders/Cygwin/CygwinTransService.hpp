@@ -179,7 +179,8 @@ public :
         const   XMLCh* const    encodingName
         , const unsigned int    winCP
         , const unsigned int    ieCP
-        , const unsigned int    blockSize);
+        , const unsigned int    blockSize
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager);
     ~CygwinTranscoder();
 
 

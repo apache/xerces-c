@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/17 16:32:17  knoaman
+ * Memory manager implementation : transcoder update.
+ *
  * Revision 1.7  2003/05/16 14:04:46  neilg
  * fix compilation error
  *
@@ -224,7 +227,10 @@ CPMapEntry::CPMapEntry( const   char* const     encodingName
     // Transcode the name to Unicode and store that copy
     const unsigned int srcLen = strlen(encodingName);
     const unsigned int targetLen = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, encodingName, srcLen, NULL, 0);
-    fEncodingName = new XMLCh[targetLen + 1];
+    fEncodingName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+    (
+        (targetLen + 1) * sizeof(XMLCh)
+    );//new XMLCh[targetLen + 1];
     ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, encodingName, srcLen, (LPWSTR)fEncodingName, targetLen);
     fEncodingName[targetLen] = 0;
 
@@ -243,7 +249,7 @@ CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
     , fCPId(cpId)
     , fIEId(ieId)
 {
-    fEncodingName = XMLString::replicate(encodingName);
+		fEncodingName = XMLString::replicate(encodingName, XMLPlatformUtils::fgMemoryManager);
 
     //
     //  Upper case it because we are using a hash table and need to be
@@ -255,7 +261,7 @@ CPMapEntry::CPMapEntry( const   XMLCh* const    encodingName
 
 CPMapEntry::~CPMapEntry()
 {
-    delete [] fEncodingName;
+    XMLPlatformUtils::fgMemoryManager->deallocate(fEncodingName);//delete [] fEncodingName;
 }
 
 
@@ -457,7 +463,10 @@ CygwinTransService::CygwinTransService()
         {
             const unsigned int srcLen = strlen(aliasBuf);
             const unsigned int targetLen = ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, aliasBuf, srcLen, NULL, 0);
-            XMLCh* uniAlias = new XMLCh[targetLen + 1];
+            XMLCh* uniAlias = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+            (
+                (targetLen + 1) * sizeof(XMLCh)
+            );//new XMLCh[targetLen + 1];
             ::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, aliasBuf, srcLen, (LPWSTR)uniAlias, targetLen);
             uniAlias[targetLen] = 0;
             ::LCMapStringW( gLocaleId, LCMAP_UPPERCASE, (LPCWSTR)uniAlias, targetLen, (LPWSTR)uniAlias, targetLen);
@@ -477,7 +486,7 @@ CygwinTransService::CygwinTransService()
                     fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
                 }
             }
-            delete [] uniAlias;
+            XMLPlatformUtils::fgMemoryManager->deallocate(uniAlias);//delete [] uniAlias;
         }
 
         // And now close the subkey handle and bump the subkey index
@@ -551,8 +560,14 @@ int CygwinTransService::auxCompareString( const XMLCh* const comp1
     if ( ignoreCase )
     {
         // Copy const parameter strings (plus terminating nul) into locals.
-        firstBuf = new XMLCh[ ++len];
-        secondBuf = new XMLCh[ ++otherLen];
+        firstBuf = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        (
+            (++len) * sizeof(XMLCh)
+        );//new XMLCh[ ++len];
+        secondBuf = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        (
+            (++otherLen) * sizeof(XMLCh)
+        );//new XMLCh[ ++otherLen];
         memcpy( firstBuf, comp1, len * sizeof(XMLCh));
         memcpy( secondBuf, comp2, otherLen * sizeof(XMLCh));
 
@@ -579,8 +594,8 @@ int CygwinTransService::auxCompareString( const XMLCh* const comp1
     // Clean-up buffers, equivalent to if ( ignoreCase )
     if ( firstBuf )
     {
-        delete [] firstBuf;
-        delete [] secondBuf;
+        XMLPlatformUtils::fgMemoryManager->deallocate(firstBuf);//delete [] firstBuf;
+        XMLPlatformUtils::fgMemoryManager->deallocate(secondBuf);//delete [] secondBuf;
     }
 
     return theResult;
@@ -719,6 +734,7 @@ CygwinTransService::makeNewXMLTranscoder(const   XMLCh* const           encoding
         , theEntry->getWinCP()
         , theEntry->getIEEncoding()
         , blockSize
+        , manager
     );
 }
 
@@ -742,9 +758,10 @@ CygwinTransService::makeNewXMLTranscoder(const   XMLCh* const           encoding
 CygwinTranscoder::CygwinTranscoder(const  XMLCh* const    encodingName
                                 , const unsigned int    winCP
                                 , const unsigned int    ieCP
-                                , const unsigned int    blockSize) :
+                                , const unsigned int    blockSize
+                                , MemoryManager* const manager) :
 
-    XMLTranscoder(encodingName, blockSize)
+    XMLTranscoder(encodingName, blockSize, manager)
     , fIECP(ieCP)
     , fWinCP(winCP)
 {

@@ -84,13 +84,16 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  When XMLCh and ICU's UChar are not the same size, we have to do a temp
 //  conversion of all strings. These local helper methods make that easier.
 //
-static UChar* convertToUChar(   const   XMLCh* const    toConvert
-                                , const unsigned int    srcLen = 0)
+static UChar* convertToUChar( const   XMLCh* const toConvert
+                            , const unsigned int   srcLen = 0)
 {
     const unsigned int actualLen = srcLen
                                    ? srcLen : XMLString::stringLen(toConvert);
 
-    UChar* tmpBuf = new UChar[srcLen + 1];
+    UChar* tmpBuf = (UChar*) XMLPlatformUtils::fgMemoryManager->allocate
+    (
+        (srcLen + 1) * sizeof(UChar)
+    );//new UChar[srcLen + 1];
     const XMLCh* srcPtr = toConvert;
     UChar* outPtr = tmpBuf;
     while (*srcPtr)
@@ -326,7 +329,7 @@ Iconv400TransService::makeNewXMLTranscoder(  const   XMLCh* const            enc
         resValue = XMLTransService::UnsupportedEncoding;
         return 0;
     }
-    return new (manager) Iconv400Transcoder(encodingName, converter, blockSize);
+    return new (manager) Iconv400Transcoder(encodingName, converter, blockSize, manager);
 }
 
 
@@ -335,18 +338,19 @@ Iconv400TransService::makeNewXMLTranscoder(  const   XMLCh* const            enc
 // ---------------------------------------------------------------------------
 //  IconvTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-Iconv400Transcoder::Iconv400Transcoder(const  XMLCh* const        encodingName
-                            ,       UConverter* const   toAdopt
-                            , const unsigned int        blockSize) :
+Iconv400Transcoder::Iconv400Transcoder( const XMLCh* const         encodingName
+                                      ,       UConverter* const    toAdopt
+                                      , const unsigned int         blockSize
+                                      ,       MemoryManager* const manager) :
 
-    XMLTranscoder(encodingName, blockSize)
+    XMLTranscoder(encodingName, blockSize, manager)
     , fConverter(toAdopt)
     , fFixed(false)
     , fSrcOffsets(0)
 {
     // If there is a block size, then allocate our source offset array
     if (blockSize)
-        fSrcOffsets = new long[blockSize];
+        fSrcOffsets = (long*) manager->allocate(blockSize * sizeof(long));//new long[blockSize];
 
     // Remember if its a fixed size encoding
     fFixed = (ucnv_getMaxCharSize(fConverter) == ucnv_getMinCharSize(fConverter));
@@ -354,7 +358,7 @@ Iconv400Transcoder::Iconv400Transcoder(const  XMLCh* const        encodingName
 
 Iconv400Transcoder::~Iconv400Transcoder()
 {
-    delete [] fSrcOffsets;
+    getMemoryManager()->deallocate(fSrcOffsets);//delete [] fSrcOffsets;
 
     // If there is a converter, ask Iconv400 to clean it up
     if (fConverter)
@@ -392,7 +396,10 @@ Iconv400Transcoder::transcodeFrom(const  XMLByte* const          srcData
     if (sizeof(XMLCh) == sizeof(UChar))
         startTarget = (UChar*)toFill;
      else
-        startTarget = new UChar[maxChars];
+        startTarget = (UChar*) getMemoryManager()->allocate
+        (
+            maxChars * sizeof(UChar)
+        );//new UChar[maxChars];
     UChar* orgTarget = startTarget;
 
     //
@@ -416,7 +423,7 @@ Iconv400Transcoder::transcodeFrom(const  XMLByte* const          srcData
     if ((err != U_ZERO_ERROR) && (err != U_INDEX_OUTOFBOUNDS_ERROR))
     {
         if (orgTarget != (UChar*)toFill)
-            delete [] orgTarget;
+            getMemoryManager()->deallocate(orgTarget);//delete [] orgTarget;
 
         if (fFixed)
         {
@@ -494,7 +501,7 @@ Iconv400Transcoder::transcodeFrom(const  XMLByte* const          srcData
             *outPtr++ = XMLCh(*startTarget++);
 
         // And delete the temp buffer
-        delete [] orgTarget;
+        getMemoryManager()->deallocate(orgTarget);//delete [] orgTarget;
     }
 
     // Return the chars we put into the target buffer
@@ -526,7 +533,7 @@ Iconv400Transcoder::transcodeTo( const   XMLCh* const    srcData
         tmpBufPtr = convertToUChar(srcData, srcCount);
         srcPtr = tmpBufPtr;
     }
-    ArrayJanitor<UChar> janTmpBuf(tmpBufPtr);
+    ArrayJanitor<UChar> janTmpBuf(tmpBufPtr, XMLPlatformUtils::fgMemoryManager);
 
     //
     //  Set the appropriate callback so that it will either fail or use

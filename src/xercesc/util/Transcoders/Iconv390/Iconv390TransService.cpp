@@ -378,7 +378,10 @@ unsigned int Iconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     wchar_t*      wideCharBuf = 0;
 
     if (wLent >= gTempBuffArraySize)
-        wideCharBuf = allocatedArray = new wchar_t[wLent + 1];
+        wideCharBuf = allocatedArray = (wchar_t*) XMLPlatformUtils::fgMemoryManager->allocate
+        (
+            (wLent + 1) * sizeof(wLent + 1)
+        );//new wchar_t[wLent + 1];
     else
         wideCharBuf = tmpWideCharArr;
 
@@ -389,7 +392,7 @@ unsigned int Iconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText)
     wideCharBuf[wLent] = 0x00;
 
     const unsigned int retVal = ::wcstombs(NULL, wideCharBuf, 0);
-    delete [] allocatedArray;
+    XMLPlatformUtils::fgMemoryManager->deallocate(allocatedArray);//delete [] allocatedArray;
 
     if (retVal == -1)
         return 0;
@@ -568,11 +571,11 @@ XMLCh* Iconv390LCPTranscoder::transcode(const char* const toTranscode,
          retCode = iconv(converter->fIconv390Descriptor, &tmpInPtr, &inByteLeft, &tmpOutPtr, &outByteLeft);
         }
         if (retCode == -1) {
-            delete [] retVal;
+            manager->deallocate(retVal);//delete [] retVal;
             return 0;
         }
         retVal[len] = 0x00;
-        delete [] allocatedArray;
+        manager->deallocate(allocatedArray);//delete [] allocatedArray;
     }
     else
     {

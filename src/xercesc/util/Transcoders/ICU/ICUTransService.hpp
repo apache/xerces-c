@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/17 16:32:17  knoaman
+ * Memory manager implementation : transcoder update.
+ *
  * Revision 1.7  2003/05/15 18:47:03  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -200,6 +203,7 @@ public :
         const   XMLCh* const        encodingName
         ,       UConverter* const   toAdopt
         , const unsigned int        blockSize
+        , MemoryManager* const      manager = XMLPlatformUtils::fgMemoryManager
     );
     ~ICUTranscoder();
 

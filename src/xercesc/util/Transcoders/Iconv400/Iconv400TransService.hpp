@@ -151,9 +151,10 @@ public :
     // -----------------------------------------------------------------------
     Iconv400Transcoder
     (
-        const   XMLCh* const        encodingName
-        ,       UConverter* const   toAdopt
-        , const unsigned int        blockSize
+        const   XMLCh* const      encodingName
+        ,       UConverter* const toAdopt
+        , const unsigned int      blockSize
+        , MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
     );
     ~Iconv400Transcoder();
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/17 16:32:18  knoaman
+ * Memory manager implementation : transcoder update.
+ *
  * Revision 1.4  2003/05/15 18:47:05  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -286,6 +289,7 @@ public :
   		,	iconv_t		cd_to
   		,	size_t		uchsize
   		,	unsigned int	ubo
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     ~IconvGNUTranscoder();
 

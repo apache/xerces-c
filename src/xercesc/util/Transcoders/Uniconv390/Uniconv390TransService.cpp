@@ -500,7 +500,7 @@ DBGPRINTF3("makeNewXMLTranscoder() encoding=%s blocksize=%d\n",localname,blockSi
 
    if (gViewTranscoder)
       printf("IXM1003I XML - Using Unicode Services - %s\n",localname);
-   return new (manager) Uniconv390Transcoder(encodingName, tconv, blockSize);
+   return new (manager) Uniconv390Transcoder(encodingName, tconv, blockSize, manager);
 }
 
 
@@ -519,8 +519,9 @@ DBGPRINTF3("makeNewXMLTranscoder() encoding=%s blocksize=%d\n",localname,blockSi
 // ---------------------------------------------------------------------------
 Uniconv390Transcoder::Uniconv390Transcoder(const  XMLCh* const        encodingName
                             ,        uniconvconverter_t * const   toAdopt
-                            , const unsigned int        blockSize) :
-    XMLTranscoder(encodingName, blockSize)
+                            , const unsigned int        blockSize
+                            , MemoryManager* const manager) :
+    XMLTranscoder(encodingName, blockSize, manager)
     , fConverter(toAdopt)
 {
 }
@@ -688,10 +689,10 @@ DBGPRINTF1("Uniconv390LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
    if (!*srcText)
       return 0;
 
-   char * result = transcode(srcText);
+   char * result = transcode(srcText, XMLPlatformUtils::fgMemoryManager);
    if (result) {
       thesize = strlen(result);
-      delete [] result;
+      XMLPlatformUtils::fgMemoryManager->deallocate(result);//delete [] result;
    }
    return thesize;
 }
@@ -706,10 +707,10 @@ DBGPRINTF1("Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText)
    if (!*srcText)
       return 0;
 
-   XMLCh * result = transcode(srcText);
+   XMLCh * result = transcode(srcText, XMLPlatformUtils::fgMemoryManager);
    if (result) {
       thesize = getWideCharLength(result);
-      delete [] result;
+      XMLPlatformUtils::fgMemoryManager->deallocate(result);//delete [] result;
    }
 
 DBGPRINTF2("Uniconv390LCPTranscoder::calcRequiredSize(const char* const srcText) %d  \n",thesize);
