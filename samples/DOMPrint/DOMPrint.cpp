@@ -60,37 +60,37 @@
 
 // ---------------------------------------------------------------------------
 //  This sample program invokes the XercesDOMParser to build a DOM tree for
-//  the specified input file. It then invokes DOMWriter::writeNode() to 
+//  the specified input file. It then invokes DOMWriter::writeNode() to
 //  serialize the resultant DOM tree back to XML stream.
 //
 //  Note:
-//  Application needs to provide its own implementation of 
-//		   DOMErrorHandler (in this sample, the DOMPrintErrorHandler), 
-//		   if it would like to receive notification from the serializer 
+//  Application needs to provide its own implementation of
+//		   DOMErrorHandler (in this sample, the DOMPrintErrorHandler),
+//		   if it would like to receive notification from the serializer
 //		   in the case any error occurs during the serialization.
 //
-//  Application needs to provide its own implementation of 
-//		   DOMWriterFilter (in this sample, the DOMPrintFilter), 
-//		   if it would like to filter out certain part of the DOM 
-//		   representation, but must be aware that thus may render the 
+//  Application needs to provide its own implementation of
+//		   DOMWriterFilter (in this sample, the DOMPrintFilter),
+//		   if it would like to filter out certain part of the DOM
+//		   representation, but must be aware that thus may render the
 //		   resultant XML stream invalid.
 //
-//  Application may choose any combination of characters as the 
-//		   end of line sequence to be used in the resultant XML stream, 
-//		   but must be aware that thus may render the resultant XML 
+//  Application may choose any combination of characters as the
+//		   end of line sequence to be used in the resultant XML stream,
+//		   but must be aware that thus may render the resultant XML
 //		   stream ill formed.
 //
-//  Application may choose a particular encoding name in which 
-//		   the output XML stream would be, but must be aware that if 
-//		   characters, unrepresentable in the encoding specified, appearing 
-//		   in markups, may force the serializer to terminate serialization 
+//  Application may choose a particular encoding name in which
+//		   the output XML stream would be, but must be aware that if
+//		   characters, unrepresentable in the encoding specified, appearing
+//		   in markups, may force the serializer to terminate serialization
 //		   prematurely, and thus no complete serialization would be done.
 //
-//  Application shall query the serializer first, before set any 
+//  Application shall query the serializer first, before set any
 //           feature/mode(true, false), or be ready to catch exception if this
 //           feature/mode is not supported by the serializer.
 //
-//  Application needs to clean up the filter, error handler and 
+//  Application needs to clean up the filter, error handler and
 //		   format target objects created for the serialization.
 //
 //   Limitations:
@@ -113,6 +113,7 @@
 #include <xercesc/dom/DOMWriter.hpp>
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
+#include <xercesc/framework/LocalFileFormatTarget.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/util/XMLUni.hpp>
 
@@ -169,6 +170,7 @@ static bool                     gDoSchema              = false;
 static bool                     gSchemaFullChecking    = false;
 static bool                     gDoCreate              = true;
 
+static char*                    goutputfile            = 0;
 // options for DOMWriter's features
 static const XMLCh*             gOutputEncoding        = 0;
 static const XMLCh*             gMyEOLSequence         = 0;
@@ -201,6 +203,7 @@ void usage()
             "                the same encoding as the input XML file. UTF-8 if\n"
             "                input XML file has not XML declaration.\n"
             "    -weol=xxx   Set the end of line sequence. Default set by DOMWriter\n"
+            "    -wfile=xxx  write to a file instead of stdout\n"
             "    -wscs=xxx   Enable/Disable split-cdata-sections.      Default on  \n"
             "    -wddc=xxx   Enable/Disable discard-default-content.   Default on  \n"
             "    -wflt=xxx   Enable/Disable filtering.                 Default off \n"
@@ -301,7 +304,11 @@ int main(int argC, char* argV[])
         {
              // Get out the encoding name
              gOutputEncoding = XMLString::transcode( &(argV[parmInd][6]) );
-        }			
+        }
+         else if (!strncmp(argV[parmInd], "-wfile=", 7))
+        {
+             goutputfile =  &(argV[parmInd][7]);
+        }
          else if (!strncmp(argV[parmInd], "-weol=", 6))
         {
              // Get out the end of line
@@ -488,7 +495,11 @@ int main(int argC, char* argV[])
 			// StdOutFormatTarget prints the resultant XML stream
 			// to stdout once it receives any thing from the serializer.
 			//
-			XMLFormatTarget *myFormTarget = new StdOutFormatTarget();
+      XMLFormatTarget *myFormTarget;
+      if (goutputfile)
+         myFormTarget = new LocalFileFormatTarget(goutputfile);
+      else
+         myFormTarget = new StdOutFormatTarget();
 
 			// get the DOM representation
 			DOMNode                     *doc = parser->getDocument();
