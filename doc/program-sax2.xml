@@ -340,7 +340,7 @@ void MySAX2Handler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>XMLUni Predefined Constant:</em></th><td> fgXercesUseCachedGrammarInParse </td></tr>
                 <tr><th><em>note:</em></th><td>If http://apache.org/xml/features/validation/cache-grammarFromParse is enabled,
-                this feature is set to true automatically. Any setting to this feature by the users is a no-op.</td></tr>
+                this feature is set to true automatically and any setting to this feature by the user is a no-op.</td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="cache-grammar">http://apache.org/xml/features/validation/cache-grammarFromParse</link>
                 </td></tr>

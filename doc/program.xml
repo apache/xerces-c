@@ -24,11 +24,12 @@
       before using the API, and terminate it after you are done. This
       is achieved by the following code:</p>
 <source>
+#include &lt;xercesc/util/PlatformUtils.hpp&gt;
+// Other include files, declarations, and non-&XercesCName; initializations.
+XERCES_CPP_NAMESPACE_USE 
+  
 int main(int argc, char* argv[])
 {
-  #include &lt;xercesc/util/PlatformUtils.hpp&gt;
-  // Other include files, declarations, and non-&XercesCName; initializations.
-
   try {
     XMLPlatformUtils::Initialize();
   }

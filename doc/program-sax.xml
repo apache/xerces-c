@@ -313,8 +313,8 @@ void MySAXHandler::fatalError(const SAXParseException&amp; exception)
                 <tr><th><em>false:</em></th><td>Parse the schema grammar.</td></tr>
                 <tr><th><em>default:</em></th><td> false </td></tr>
                 <tr><th><em>note:</em></th><td>The getter function for this method is called isUsingCachedGrammarInParse.</td></tr>
-                <tr><th><em>note:</em></th><td>If the grammar caching option is enabled, this option is set to true automatically.
-                Any setting to this option by the users is a no-op.</td></tr>
+                <tr><th><em>note:</em></th><td>If the grammar caching option is enabled, this option is set to true automatically
+                and any setting to this option by the user is a no-op.</td></tr>
                 <tr><th><em>see:</em></th><td>
                 <link anchor="cache-grammar">cacheGrammarFromParse</link>
                 </td></tr>
