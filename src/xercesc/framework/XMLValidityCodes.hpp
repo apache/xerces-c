@@ -122,11 +122,12 @@ public :
       , IC_DuplicateKey                    = 105
       , IC_KeyRefOutOfScope                = 106
       , IC_KeyNotFound                     = 107
-      , E_HighBounds                       = 108
-      , W_LowBounds                        = 109
-      , W_HighBounds                       = 110
-      , F_LowBounds                        = 111
-      , F_HighBounds                       = 112
+      , NonWSContent                       = 108
+      , E_HighBounds                       = 109
+      , W_LowBounds                        = 110
+      , W_HighBounds                       = 111
+      , F_LowBounds                        = 112
+      , F_HighBounds                       = 113
     };
 
     static bool isFatal(const XMLValid::Codes toCheck)

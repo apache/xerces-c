@@ -423,6 +423,7 @@
             <Message Id="IC_DuplicateKey" Text="Duplicate key value declared for identity constraint of element '{0}'."/>
             <Message Id="IC_KeyRefOutOfScope" Text="The keyref '{0}' refers to a key/unique that is out of scope."/>
             <Message Id="IC_KeyNotFound" Text="The key for identity constraint of element '{0}' is not found."/>
+            <Message Id="NonWSContent" Text="Non-whitespace characters are not allowed in schema elements other than 'appinfo' and 'documentation'."/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4CErrors">

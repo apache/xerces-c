@@ -410,6 +410,7 @@ $set 2
 105  Duplicate key value declared for identity constraint of element '{0}'.
 106  The keyref '{0}' refers to a key/unique that is out of scope.
 107  The key for identity constraint of element '{0}' is not found.
+108  Non-whitespace characters are not allowed in schema elements other than 'appinfo' and 'documentation'.
 
 
 $set 3
