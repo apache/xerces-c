@@ -54,31 +54,7 @@
 # <http://www.apache.org/>.
 #
 #
-# $Log$
-# Revision 1.7  2000/02/06 07:47:25  rahulj
-# Year 2K copyright swat.
-#
-# Revision 1.6  2000/02/05 00:05:07  abagchi
-# Made sure all targets are prepended with :: instead of single :
-#
-# Revision 1.5  2000/01/21 22:25:53  abagchi
-# OS390 Change: changed the batch target name to 8 characters
-#
-# Revision 1.4  1999/12/21 00:17:04  aruna1
-# ICUROOT reference removed from samples
-#
-# Revision 1.3  1999/12/20 23:55:20  aruna1
-# "transcoder information checked instead of ICUROOT"
-#
-# Revision 1.2  1999/11/12 20:35:02  rahulj
-# Replaced XML4CROOT with XERCESCROOT.
-#
-# Revision 1.1.1.1  1999/11/09 01:09:26  twl
-# Initial checkin
-#
-# Revision 1.2  1999/11/08 20:43:42  rahul
-# Swat for adding in Product name and CVS comment log variable.
-#
+# $Id$
 #
 
 ###################################################################
@@ -97,6 +73,7 @@ CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
 
+include ../../obj/version.incl
 include ../Makefile.incl
 
 APP_NAME=StdInParse
