@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2001/07/19 18:43:18  peiyongz
+ * fix: detect null poiniter in enumerator's ctor.
+ *
  * Revision 1.8  2001/06/04 13:45:04  tng
  * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
  *
@@ -100,6 +103,7 @@
 #include <util/RefHashTableOf.hpp>
 #endif
 
+#include <util/NullPointerException.hpp>
 
 // ---------------------------------------------------------------------------
 //  RefHashTableOf: Constructors and Destructor
@@ -366,6 +370,9 @@ template <class TVal> RefHashTableOfEnumerator<TVal>::
 RefHashTableOfEnumerator(RefHashTableOf<TVal>* const toEnum, const bool adopt)
 	: fAdopted(adopt), fCurElem(0), fCurHash((unsigned int)-1), fToEnum(toEnum)
 {
+    if (!toEnum)  
+        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);        
+
     //
     //  Find the next available bucket element in the hash table. If it
     //  comes back zero, that just means the table is empty.

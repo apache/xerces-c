@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2001/07/19 18:43:18  peiyongz
+ * fix: detect null poiniter in enumerator's ctor.
+ *
  * Revision 1.3  2001/06/04 13:45:04  tng
  * The "hash" argument clashes with STL hash.  Fixed by Pei Yong Zhang.
  *
@@ -75,6 +78,7 @@
 #include <util/RefHash3KeysIdPool.hpp>
 #endif
 
+#include <util/NullPointerException.hpp>
 
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Constructors and Destructor
@@ -388,6 +392,9 @@ template <class TVal> RefHash3KeysIdPoolEnumerator<TVal>::
 RefHash3KeysIdPoolEnumerator(RefHash3KeysIdPool<TVal>* const toEnum, const bool adopt)
 	: fAdoptedElems(adopt), fCurIndex(0), fToEnum(toEnum)
 {
+    if (!toEnum)  
+        ThrowXML(NullPointerException, XMLExcepts::CPtr_PointerIsZero);        
+
     //
     //  Find the next available bucket element in the pool. We use the id
     //  array since its very easy to enumerator through by just maintaining
