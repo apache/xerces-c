@@ -776,6 +776,7 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
     if (fFragment || !baseURL.fFragment)
         return true;
     fFragment = XMLString::replicate(baseURL.fFragment);
+    return true;
 }
 
 
