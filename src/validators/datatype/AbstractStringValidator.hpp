@@ -57,6 +57,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/11/15 16:08:15  peiyongz
+ * checkContent() made virtual to allow ListDTV participate in the building of
+ * its own (in AbstractStringValidator's init())
+ *
  * Revision 1.6  2001/10/11 19:32:12  peiyongz
  * Allow derived to overwrite inheritFacet()
  *
@@ -164,6 +168,8 @@ protected:
 
     virtual void inheritFacet();
 
+    virtual void checkContent(const XMLCh* const content, bool asBase);
+
 // -----------------------------------------------------------------------
 // Getter methods
 // -----------------------------------------------------------------------
@@ -189,8 +195,6 @@ protected:
     inline void                 setEnumeration(RefVectorOf<XMLCh>*, bool);
 
 private:
-
-    void checkContent(const XMLCh* const content, bool asBase);
 
     void assignFacet();
 
