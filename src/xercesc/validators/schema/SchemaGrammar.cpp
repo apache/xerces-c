@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/21 21:35:31  knoaman
+ * Pass the memory manager.
+ *
  * Revision 1.5  2003/05/18 14:02:08  knoaman
  * Memory manager implementation: pass per instance manager.
  *
@@ -146,11 +149,11 @@ SchemaGrammar::SchemaGrammar(MemoryManager* const manager) :
     //  <TBD> Investigate what the optimum values would be for the various
     //  pools.
     //
-    fElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109, 128, fMemoryManager);
+    fElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109, true, 128, fMemoryManager);
 
     try {
-        fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, 128, fMemoryManager);
-        fGroupElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109, false);
+        fElemNonDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(29, true, 128, fMemoryManager);
+        fGroupElemDeclPool = new (fMemoryManager) RefHash3KeysIdPool<SchemaElementDecl>(109, false, 128, fMemoryManager);
         fNotationDeclPool = new (fMemoryManager) NameIdPool<XMLNotationDecl>(109, 128, fMemoryManager);
         fIDRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(29, fMemoryManager);
         fDatatypeRegistry.expandRegistryToFullSchemaSet();
