@@ -84,7 +84,8 @@ public:
 	static bool isWordChar(const XMLCh);
 	static bool isLowSurrogate(const XMLCh ch);
 	static bool isHighSurrogate(const XMLCh ch);
-	static XMLCh* decomposeToSurrogates(XMLInt32 ch);
+	static XMLCh* decomposeToSurrogates(XMLInt32 ch,
+                                        MemoryManager* const manager);
 	static XMLCh* stripExtendedComment(const XMLCh* const expression,
                                        MemoryManager* const manager = 0);
 

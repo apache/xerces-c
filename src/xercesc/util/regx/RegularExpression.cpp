@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2003/05/16 00:03:10  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.8  2003/05/15 18:42:54  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -149,7 +152,7 @@ RangeToken*          RegularExpression::fWordRange = 0;
 // ---------------------------------------------------------------------------
 //  RegularExpression::Context: Constructors and Destructor
 // ---------------------------------------------------------------------------
-RegularExpression::Context::Context() :
+RegularExpression::Context::Context(MemoryManager* const manager) :
     fInUse(false)
 	, fAdoptMatch(false)
     , fStart(0)
@@ -159,13 +162,14 @@ RegularExpression::Context::Context() :
 	, fOffsets(0)
 	, fMatch(0)
 	, fString(0)
+    , fMemoryManager(manager)
 {
 }
 
 RegularExpression::Context::~Context()
 {
-	delete [] fOffsets;
-    delete [] fString;
+	fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
+    fMemoryManager->deallocate(fString);//delete [] fString;
 
 	if (fAdoptMatch)
 		delete fMatch;
@@ -178,8 +182,8 @@ void RegularExpression::Context::reset(const XMLCh* const string
                                        , const int start, const int limit
                                        , const int noClosures)
 {
-    delete [] fString;
-    fString = XMLString::replicate(string);
+    fMemoryManager->deallocate(fString);//delete [] fString;
+    fString = XMLString::replicate(string, fMemoryManager);
 	fStart = start;
 	fLimit = limit;
 	fLength = fLimit - fStart;
@@ -190,8 +194,9 @@ void RegularExpression::Context::reset(const XMLCh* const string
 
 	if (fOffsets == 0 || fSize != noClosures) {
 
-		delete [] fOffsets;
-		fOffsets = new int[noClosures];
+		if (fOffsets)
+            fMemoryManager->deallocate(fOffsets);//delete [] fOffsets;
+		fOffsets = (int*) fMemoryManager->allocate(noClosures * sizeof(int));//new int[noClosures];
 	}
 
 	fSize = noClosures;
@@ -245,12 +250,14 @@ RegularExpression::RegularExpression(const char* const pattern)
 	 fOperations(0),
 	 fTokenTree(0),
 	 fFirstChar(0),
-     fTokenFactory(0)
+     fOpFactory(XMLPlatformUtils::fgMemoryManager),
+     fTokenFactory(0),
+     fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
 	try {
 
-		XMLCh* tmpBuf = XMLString::transcode(pattern);
-        ArrayJanitor<XMLCh> janBuf(tmpBuf);
+		XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
+        ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
 		setPattern(tmpBuf);
 	}
 	catch (...) {
@@ -274,14 +281,17 @@ RegularExpression::RegularExpression(const char* const pattern,
 	 fFixedString(0),
 	 fOperations(0),
 	 fTokenTree(0),
-	 fFirstChar(0)
+	 fFirstChar(0),
+     fOpFactory(XMLPlatformUtils::fgMemoryManager),
+     fTokenFactory(0),
+     fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
 	try {
 
-		XMLCh* tmpBuf = XMLString::transcode(pattern);
-		ArrayJanitor<XMLCh> janBuf(tmpBuf);
-		XMLCh* tmpOptions = XMLString::transcode(options);
-		ArrayJanitor<XMLCh> janOps(tmpOptions);
+		XMLCh* tmpBuf = XMLString::transcode(pattern, fMemoryManager);
+		ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
+		XMLCh* tmpOptions = XMLString::transcode(options, fMemoryManager);
+		ArrayJanitor<XMLCh> janOps(tmpOptions, fMemoryManager);
 		setPattern(tmpBuf, tmpOptions);
 	}
 	catch (...) {
@@ -305,7 +315,10 @@ RegularExpression::RegularExpression(const XMLCh* const pattern)
 	 fFixedString(0),
 	 fOperations(0),
 	 fTokenTree(0),
-	 fFirstChar(0)
+	 fFirstChar(0),
+     fOpFactory(XMLPlatformUtils::fgMemoryManager),
+     fTokenFactory(0),
+     fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
 	try {
 
@@ -332,7 +345,10 @@ RegularExpression::RegularExpression(const XMLCh* const pattern,
 	 fFixedString(0),
 	 fOperations(0),
 	 fTokenTree(0),
-	 fFirstChar(0)
+	 fFirstChar(0),
+     fOpFactory(XMLPlatformUtils::fgMemoryManager),
+     fTokenFactory(0),
+     fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
 	try {
 
@@ -356,12 +372,13 @@ RegularExpression::~RegularExpression() {
 void RegularExpression::setPattern(const XMLCh* const pattern,
 								   const XMLCh* const options) {
 
-    fTokenFactory = new TokenFactory();
+    fTokenFactory = new (fMemoryManager) TokenFactory(fMemoryManager);
 	fOptions = parseOptions(options);
-	fPattern = XMLString::replicate(pattern);
+	fPattern = XMLString::replicate(pattern, fMemoryManager);
 
 	RegxParser* regxParser = isSet(fOptions, XMLSCHEMA_MODE)
-		? new ParserForXMLSchema(XMLPlatformUtils::fgMemoryManager) : new RegxParser(XMLPlatformUtils::fgMemoryManager);
+		? new (fMemoryManager) ParserForXMLSchema(fMemoryManager) 
+        : new (fMemoryManager) RegxParser(fMemoryManager);
 
     if (regxParser) {
         regxParser->setTokenFactory(fTokenFactory);
@@ -378,32 +395,32 @@ void RegularExpression::setPattern(const XMLCh* const pattern,
 // ---------------------------------------------------------------------------
 bool RegularExpression::matches(const char* const expression) {
 
-    XMLCh* tmpBuf = XMLString::transcode(expression);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+    XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
 	return matches(tmpBuf, 0, XMLString::stringLen(tmpBuf), 0);
 }
 
 bool RegularExpression::matches(const char* const expression,
 								const int start, const int end) {
 
-	XMLCh* tmpBuf = XMLString::transcode(expression);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+	XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
 	return matches(tmpBuf, start, end, 0);
 }
 
 bool RegularExpression::matches(const char* const expression,
 								Match* const match)				{
 
-	XMLCh* tmpBuf = XMLString::transcode(expression);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+	XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
 	return matches(tmpBuf, 0, XMLString::stringLen(tmpBuf), match);
 }
 
 bool RegularExpression::matches(const char* const expression, const int start,
                                 const int end, Match* const pMatch)				{
 
-	XMLCh* tmpBuf = XMLString::transcode(expression);
-    ArrayJanitor<XMLCh> janBuf(tmpBuf);
+	XMLCh* tmpBuf = XMLString::transcode(expression, fMemoryManager);
+    ArrayJanitor<XMLCh> janBuf(tmpBuf, fMemoryManager);
 	return matches(tmpBuf, start, end, pMatch);
 }
 
@@ -442,10 +459,10 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 		XMLMutexLock lockInit(&fMutex);
 
 		if (fContext == 0)
-			fContext = new Context();
+			fContext = new (fMemoryManager) Context(fMemoryManager);
 
 		if (fContext->fInUse) {
-			context = new Context();
+			context = new (fMemoryManager) Context(fMemoryManager);
 			tmpContext = context;
 		}
 		else {
@@ -465,7 +482,7 @@ bool RegularExpression::matches(const XMLCh* const expression, const int start,
 	}
 	else if (fHasBackReferences) {
 
-		lMatch = new Match();
+		lMatch = new (fMemoryManager) Match(fMemoryManager);
 		lMatch->setNoGroups(fNoGroups);
 		adoptMatch = true;
 	}
@@ -669,7 +686,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
   if (fOperations == 0)
 	  prepare();
 
-  RefArrayVectorOf<XMLCh>* tokenStack = new RefArrayVectorOf<XMLCh>(16, true);
+  RefArrayVectorOf<XMLCh>* tokenStack = new (fMemoryManager) RefArrayVectorOf<XMLCh>(16, true);
 
   Context* context = 0;
   Context* tmpContext = 0;
@@ -680,10 +697,10 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
  	   XMLMutexLock lockInit(&fMutex);
 
  	   if (fContext == 0)
- 	     fContext = new Context();
+ 	     fContext = new (fMemoryManager) Context(fMemoryManager);
 
  	   if (fContext->fInUse) {
- 	     context = new Context();
+ 	     context = new (fMemoryManager) Context(fMemoryManager);
  	     tmpContext = context;
  	   }
  	   else {
@@ -699,7 +716,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
   bool adoptMatch = false;
 
   if (subEx || fHasBackReferences) {
-    lMatch = new Match();
+    lMatch = new (fMemoryManager) Match(fMemoryManager);
     adoptMatch = true;
     lMatch->setNoGroups(fNoGroups);
   }
@@ -726,7 +743,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
 
       if (subEx){
         subEx->addElement(lMatch);
-        lMatch = new Match(*(context->fMatch));
+        lMatch = new (fMemoryManager) Match(*(context->fMatch));
         adoptMatch = true;
         
         context->fAdoptMatch = adoptMatch;
@@ -743,7 +760,7 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
           break;  
         }
 
-        token = new XMLCh[1];
+        token = (XMLCh*) fMemoryManager->allocate(sizeof(XMLCh));//new XMLCh[1];
         token[0] = chNull;
 
         // When you tokenize using zero string, will return each
@@ -753,10 +770,13 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
         if (!XMLString::equals(fPattern, &chNull)) 
           tokenStack->addElement(token); 
         else
-            delete[] token;
+            fMemoryManager->deallocate(token);//delete[] token;
 
       } else {
-        token = new XMLCh[matchStart + 1 - tokStart];
+        token = (XMLCh*) fMemoryManager->allocate
+        (
+            (matchStart + 1 - tokStart) * sizeof(XMLCh)
+        );//new XMLCh[matchStart + 1 - tokStart];
         XMLString::subString(token, expression, tokStart, matchStart);
         tokenStack->addElement(token);
       } 
@@ -772,18 +792,21 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
   XMLCh* token;
  
   if (matchStart == tokStart + 1){
-    token = new XMLCh[1];
+    token = (XMLCh*) fMemoryManager->allocate(sizeof(XMLCh));//new XMLCh[1];
     token[0] = chNull;
   
   } else {
-    token = new XMLCh[strLength + 1 - tokStart];
+    token = (XMLCh*) fMemoryManager->allocate
+    (
+        (strLength + 1 - tokStart) * sizeof(XMLCh)
+    );//new XMLCh[strLength + 1 - tokStart];
     XMLString::subString(token, expression, tokStart, strLength);
   }  
 
   if (!XMLString::equals(fPattern, &chNull)) 
     tokenStack->addElement(token);
   else
-    delete[] token;
+    fMemoryManager->deallocate(token);//delete[] token;
 
   return tokenStack;
 
@@ -836,7 +859,7 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
 		ThrowXML(RuntimeException, XMLExcepts::Regex_RepPatMatchesZeroString);
   }
       
-  RefVectorOf<Match> *subEx = new RefVectorOf<Match>(10, true);
+  RefVectorOf<Match> *subEx = new (fMemoryManager) RefVectorOf<Match>(10, true);
 	  Janitor<RefVectorOf<Match> > janSubEx(subEx);
 
   //Call to tokenize with Match vector so that we keep track of the locations
@@ -1459,8 +1482,7 @@ const XMLCh* RegularExpression::subInExp(const XMLCh* const repString,
   
   XMLBuffer newString;                   
   
-  XMLCh *indexStr = new XMLCh[2];                   //holds the string rep of a 
-        ArrayJanitor<XMLCh> indexJan(indexStr);     //digit
+  XMLCh indexStr[2]; //holds the string rep of a 
 
   indexStr[1] = chNull;
   int index = -1;
@@ -1550,28 +1572,28 @@ void RegularExpression::prepare() {
 		fFixedStringOnly = true;
 
 		if (fOperations->getOpType() == Op::O_STRING) {
-			delete [] fFixedString;
-			fFixedString = XMLString::replicate(fOperations->getLiteral());
+			fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
+			fFixedString = XMLString::replicate(fOperations->getLiteral(), fMemoryManager);
 		}
 		else{
 			
 			XMLInt32 ch = fOperations->getData();
 
 			if ( ch >= 0x10000) { // add as constant
-				delete [] fFixedString;
-				fFixedString = RegxUtil::decomposeToSurrogates(ch);
+				fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
+				fFixedString = RegxUtil::decomposeToSurrogates(ch, fMemoryManager);
 			}
 			else {
 
-				XMLCh* dummyStr = new XMLCh[2];
+				XMLCh* dummyStr = (XMLCh*) fMemoryManager->allocate(2 * sizeof(XMLCh));//new XMLCh[2];
 				dummyStr[0] = (XMLCh) fOperations->getData();
 				dummyStr[1] = chNull;
-				delete [] fFixedString;
+				fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
 				fFixedString = dummyStr;
 			}
 		}
 
-		fBMPattern = new BMPattern(fFixedString, 256,
+		fBMPattern = new (fMemoryManager) BMPattern(fFixedString, 256,
 								  isSet(fOptions, IGNORE_CASE));
 	}
 	else if (!isSet(fOptions, XMLSCHEMA_MODE) &&
@@ -1580,20 +1602,20 @@ void RegularExpression::prepare() {
 		int fixedOpts = 0;
 		Token* tok = fTokenTree->findFixedString(fOptions, fixedOpts);
 
-		delete [] fFixedString;
+		fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
 
 		fFixedString = (tok == 0) ? 0
-			: XMLString::replicate(tok->getString());
+			: XMLString::replicate(tok->getString(), fMemoryManager);
 
 		if (fFixedString != 0 && XMLString::stringLen(fFixedString) < 2) {
 
-			delete [] fFixedString;
+			fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
 			fFixedString = 0;
 		}
 		
 		if (fFixedString != 0) {
 
-			fBMPattern = new BMPattern(fFixedString, 256,
+			fBMPattern = new (fMemoryManager) BMPattern(fFixedString, 256,
 									   isSet(fixedOpts, IGNORE_CASE));
 		}
 	}

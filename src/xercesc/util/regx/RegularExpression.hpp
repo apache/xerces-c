@@ -168,7 +168,7 @@ private:
     class XMLUTIL_EXPORT Context : public XMemory
     {
         public :
-            Context();
+            Context(MemoryManager* const manager);
             ~Context();
 
             inline const XMLCh* getString() const { return fString; }
@@ -185,6 +185,7 @@ private:
             int*      fOffsets;
             Match*    fMatch;
             XMLCh*    fString;
+            MemoryManager* fMemoryManager;
 
             friend class Janitor<Context>;
     };
@@ -314,6 +315,7 @@ private:
     OpFactory          fOpFactory;
     XMLMutex           fMutex;
     TokenFactory*      fTokenFactory;
+    MemoryManager*     fMemoryManager;
 };
 
 
@@ -322,8 +324,8 @@ private:
   // ---------------------------------------------------------------------------
   inline void RegularExpression::cleanUp() {
 
-      delete [] fPattern;
-      delete [] fFixedString;
+      fMemoryManager->deallocate(fPattern);//delete [] fPattern;
+      fMemoryManager->deallocate(fFixedString);//delete [] fFixedString;
       delete fContext;
       delete fBMPattern;
       delete fTokenFactory;

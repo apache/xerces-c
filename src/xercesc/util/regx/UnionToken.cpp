@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 00:03:10  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:17:01  tng
  * C++ Namespace Support.
  *
@@ -179,9 +182,9 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
 
         if (ch >= 0x10000) {
 
-            XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch);
+            XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch, XMLPlatformUtils::fgMemoryManager);
             stringBuf.append(chSurrogate);
-            delete [] chSurrogate;
+            XMLPlatformUtils::fgMemoryManager->deallocate(chSurrogate);//delete [] chSurrogate;
         }
         else {
             stringBuf.append((XMLCh) ch);
@@ -200,9 +203,9 @@ void UnionToken::addChild(Token* const child, TokenFactory* const tokFactory) {
 
         if (ch >= 0x10000) {
 
-            XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch);
+            XMLCh* chSurrogate = RegxUtil::decomposeToSurrogates(ch, XMLPlatformUtils::fgMemoryManager);
             stringBuf.append(chSurrogate);
-            delete [] chSurrogate;
+            XMLPlatformUtils::fgMemoryManager->deallocate(chSurrogate);//delete [] chSurrogate;
         }
         else {
             stringBuf.append((XMLCh) ch);

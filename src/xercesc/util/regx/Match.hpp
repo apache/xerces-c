@@ -79,7 +79,7 @@ public:
 	// -----------------------------------------------------------------------
   //  Public Constructors and Destructor
   // -----------------------------------------------------------------------
-	Match();
+	Match(MemoryManager* const manager);
 	
   /**
   * Copy constructor
@@ -131,6 +131,7 @@ private:
 	int fPositionsSize;
 	int* fStartPositions;
 	int* fEndPositions;
+    MemoryManager* fMemoryManager;
 };
 
 /**

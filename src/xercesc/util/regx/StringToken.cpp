@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/16 00:03:10  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -82,10 +85,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 StringToken::StringToken(const unsigned short tokType,
                          const XMLCh* const literal,
-                         const int refNo)
+                         const int refNo,
+                         MemoryManager* const manager)
     : Token(tokType)
-    , fString(XMLString::replicate(literal))
+    , fString(XMLString::replicate(literal, manager))
     , fRefNo(refNo)
+    , fMemoryManager(manager)
 {
 
 }
@@ -93,7 +98,7 @@ StringToken::StringToken(const unsigned short tokType,
 
 StringToken::~StringToken() {
 
-	delete [] fString;
+	fMemoryManager->deallocate(fString);//delete [] fString;
 }
 
 XERCES_CPP_NAMESPACE_END

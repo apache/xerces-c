@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 00:03:10  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/12/18 13:01:02  gareth
  * New functionality - tokenize and replace. Fixed REVISIT for case insensitive match. Patch by Jennifer Schachter.
  *
@@ -77,23 +80,30 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/regx/Match.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  Match: Constructors and Destructors
 // ---------------------------------------------------------------------------
-Match::Match() : fNoGroups(0),
-				 fPositionsSize(0),
-				 fStartPositions(0),
-				 fEndPositions(0) {
+Match::Match(MemoryManager* const manager) :
+    fNoGroups(0)
+    , fPositionsSize(0)
+    , fStartPositions(0)
+    , fEndPositions(0)
+    , fMemoryManager(manager)
+{
 
 }
 
-Match::Match(const Match& toCopy) : fNoGroups(0),
-				                            fPositionsSize(0),
-				                            fStartPositions(0),
-				                            fEndPositions(0){
+Match::Match(const Match& toCopy) :
+    fNoGroups(0)
+    , fPositionsSize(0)
+    , fStartPositions(0)
+    , fEndPositions(0)
+    , fMemoryManager(0)
+{
   initialize(toCopy);
 }
 
@@ -118,8 +128,8 @@ void Match::setNoGroups(const int n) {
 
 		cleanUp();
 		fPositionsSize = n;
-		fStartPositions = new int[n];
-		fEndPositions = new int[n];
+		fStartPositions = (int*) fMemoryManager->allocate(n * sizeof(int));//new int[n];
+		fEndPositions = (int*) fMemoryManager->allocate(n * sizeof(int));//new int[n];
 	}
 
 	fNoGroups = n;
@@ -138,7 +148,8 @@ void Match::initialize(const Match &toCopy){
 
   //do not copy over value of fPositionSize as it is irrelevant to the 
   //state of the Match
-   
+
+  fMemoryManager = toCopy.fMemoryManager;
   int toCopySize = toCopy.getNoGroups();
   setNoGroups(toCopySize);
 
@@ -151,8 +162,8 @@ void Match::initialize(const Match &toCopy){
 
 void Match::cleanUp() {
 
-	delete [] fStartPositions;
-	delete [] fEndPositions;
+	fMemoryManager->deallocate(fStartPositions);//delete [] fStartPositions;
+	fMemoryManager->deallocate(fEndPositions);//delete [] fEndPositions;
 
 	fStartPositions = 0;
 	fEndPositions = 0;

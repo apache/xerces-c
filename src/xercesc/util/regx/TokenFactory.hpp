@@ -90,7 +90,7 @@ public:
 	// -----------------------------------------------------------------------
     //  Constructors and destructors
     // -----------------------------------------------------------------------
-    TokenFactory();
+    TokenFactory(MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     ~TokenFactory();
 
     // -----------------------------------------------------------------------
@@ -181,6 +181,7 @@ private:
     Token*              fDot;
     Token*              fCombiningChar;
     Token*              fGrapheme;
+    MemoryManager*      fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

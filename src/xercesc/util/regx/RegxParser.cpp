@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/16 00:03:10  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/05/15 18:42:55  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -1054,8 +1057,8 @@ Token* RegxParser::parseAtom() {
                 }
                 else {
 
-                    XMLCh* surrogateStr = RegxUtil::decomposeToSurrogates(ch);
-				    ArrayJanitor<XMLCh> janSurrogate(surrogateStr);
+                    XMLCh* surrogateStr = RegxUtil::decomposeToSurrogates(ch, fMemoryManager);
+				    ArrayJanitor<XMLCh> janSurrogate(surrogateStr, fMemoryManager);
 				    tok = fTokenFactory->createString(surrogateStr);
                 }
             }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/16 00:03:10  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/03/04 21:11:12  knoaman
  * [Bug 17516] Thread safety problems in ../util/ and ../util/regx.
  *
@@ -119,8 +122,8 @@ bool TokenFactory::fRangeInitialized = false;
 // ---------------------------------------------------------------------------
 //  TokenFactory: Constructors and Destructor
 // ---------------------------------------------------------------------------
-TokenFactory::TokenFactory() :
-    fTokens(new RefVectorOf<Token> (16, true))
+TokenFactory::TokenFactory(MemoryManager* const manager) :
+    fTokens(new (manager) RefVectorOf<Token> (16, true))
     , fEmpty(0)
     , fLineBegin(0)
     , fLineBegin2(0)
@@ -135,6 +138,7 @@ TokenFactory::TokenFactory() :
     , fDot(0)
     , fCombiningChar(0)
     , fGrapheme(0)
+    , fMemoryManager(manager)
 {
 
 }
@@ -153,7 +157,7 @@ Token* TokenFactory::createToken(const unsigned short tokType) {
 	if (tokType == Token::T_EMPTY && fEmpty != 0)
 		return fEmpty;
 
-	Token* tmpTok = new Token(tokType);
+	Token* tmpTok = new (fMemoryManager) Token(tokType);
 
 	if (tokType == Token::T_EMPTY) {
 		fEmpty = tmpTok;
@@ -168,7 +172,7 @@ Token* TokenFactory::createToken(const unsigned short tokType) {
 ParenToken* TokenFactory::createLook(const unsigned short tokType,
 									 Token* const token) {
 
-	ParenToken* tmpTok = new ParenToken(tokType, token, 0);
+	ParenToken* tmpTok = new (fMemoryManager) ParenToken(tokType, token, 0);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -177,7 +181,7 @@ ParenToken* TokenFactory::createLook(const unsigned short tokType,
 ParenToken* TokenFactory::createParenthesis(Token* const token,
 											const int noGroups) {
 
-	ParenToken* tmpTok = new ParenToken(Token::T_PAREN, token, noGroups);
+	ParenToken* tmpTok = new (fMemoryManager) ParenToken(Token::T_PAREN, token, noGroups);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -186,8 +190,8 @@ ParenToken* TokenFactory::createParenthesis(Token* const token,
 ClosureToken* TokenFactory::createClosure(Token* const token,
 										  bool isNonGreedy) {
 
-	ClosureToken* tmpTok = isNonGreedy ? new ClosureToken(Token::T_NONGREEDYCLOSURE, token)
-									   : new ClosureToken(Token::T_CLOSURE, token);
+	ClosureToken* tmpTok = isNonGreedy ? new (fMemoryManager) ClosureToken(Token::T_NONGREEDYCLOSURE, token)
+									   : new (fMemoryManager) ClosureToken(Token::T_CLOSURE, token);
 	
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -196,7 +200,7 @@ ClosureToken* TokenFactory::createClosure(Token* const token,
 ConcatToken* TokenFactory::createConcat(Token* const token1,
                                         Token* const token2) {
 
-    ConcatToken* tmpTok = new ConcatToken(token1, token2);
+    ConcatToken* tmpTok = new (fMemoryManager) ConcatToken(token1, token2);
 	
     fTokens->addElement(tmpTok);
     return tmpTok;
@@ -204,8 +208,8 @@ ConcatToken* TokenFactory::createConcat(Token* const token1,
 
 UnionToken* TokenFactory::createUnion(const bool isConcat) {
 
-	UnionToken* tmpTok = isConcat ? new UnionToken(Token::T_CONCAT)
-								  : new UnionToken(Token::T_UNION);
+	UnionToken* tmpTok = isConcat ? new (fMemoryManager) UnionToken(Token::T_CONCAT)
+								  : new (fMemoryManager) UnionToken(Token::T_UNION);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -214,8 +218,8 @@ UnionToken* TokenFactory::createUnion(const bool isConcat) {
 RangeToken* TokenFactory::createRange(const bool isNegRange){
 
 
-	RangeToken* tmpTok = isNegRange ? new RangeToken(Token::T_NRANGE)
-								   : new RangeToken(Token::T_RANGE);
+	RangeToken* tmpTok = isNegRange ? new (fMemoryManager) RangeToken(Token::T_NRANGE)
+								   : new (fMemoryManager) RangeToken(Token::T_RANGE);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -225,8 +229,8 @@ RangeToken* TokenFactory::createRange(const bool isNegRange){
 
 CharToken* TokenFactory::createChar(const XMLUInt32 ch, const bool isAnchor) {
 
-	CharToken* tmpTok = isAnchor ? new CharToken(Token::T_ANCHOR, ch)
-								: new CharToken(Token::T_CHAR, ch);
+	CharToken* tmpTok = isAnchor ? new (fMemoryManager) CharToken(Token::T_ANCHOR, ch)
+								: new (fMemoryManager) CharToken(Token::T_CHAR, ch);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -234,7 +238,7 @@ CharToken* TokenFactory::createChar(const XMLUInt32 ch, const bool isAnchor) {
 
 StringToken* TokenFactory::createBackReference(const int noRefs) {
 
-	StringToken* tmpTok = new StringToken(Token::T_BACKREFERENCE, 0, noRefs);
+	StringToken* tmpTok = new (fMemoryManager) StringToken(Token::T_BACKREFERENCE, 0, noRefs, fMemoryManager);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -242,7 +246,7 @@ StringToken* TokenFactory::createBackReference(const int noRefs) {
 
 StringToken* TokenFactory::createString(const XMLCh* const literal) {
 
-	StringToken* tmpTok = new StringToken(Token::T_STRING, literal, 0);
+	StringToken* tmpTok = new (fMemoryManager) StringToken(Token::T_STRING, literal, 0, fMemoryManager);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -252,7 +256,7 @@ ModifierToken* TokenFactory::createModifierGroup(Token* const child,
                                                  const int add,
                                                  const int mask) {
 
-	ModifierToken* tmpTok = new ModifierToken(child, add, mask);
+	ModifierToken* tmpTok = new (fMemoryManager) ModifierToken(child, add, mask);
 
 	fTokens->addElement(tmpTok);
 	return tmpTok;
@@ -263,7 +267,7 @@ ConditionToken* TokenFactory::createCondition(const int refNo,
                                               Token* const yesFlow,
                                               Token* const noFlow) {
 
-	ConditionToken* tmpTok = new ConditionToken(refNo, condition, yesFlow,
+	ConditionToken* tmpTok = new (fMemoryManager) ConditionToken(refNo, condition, yesFlow,
                                                 noFlow);
 	fTokens->addElement(tmpTok);
 	return tmpTok;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/16 00:03:10  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/05/15 18:42:55  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -84,9 +87,10 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-XMLCh* RegxUtil::decomposeToSurrogates(XMLInt32 ch) {
+XMLCh* RegxUtil::decomposeToSurrogates(XMLInt32 ch,
+                                       MemoryManager* const manager) {
 
-	XMLCh* pszStr = new XMLCh[3];
+	XMLCh* pszStr = (XMLCh*) manager->allocate(3 *  sizeof(XMLCh));//new XMLCh[3];
 
 	ch -= 0x10000;
 	pszStr[0] = XMLCh((ch >> 10) + 0xD800);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/16 00:03:10  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:17:00  tng
  * C++ Namespace Support.
  *
@@ -179,9 +182,9 @@ XMLInt32 CharOp::getData() const {
 // ---------------------------------------------------------------------------
 //  UnionOp: Constructors and Destuctors
 // ---------------------------------------------------------------------------
-UnionOp::UnionOp(const short type, const int size)
+UnionOp::UnionOp(const short type, const int size, MemoryManager* const manager)
     : Op(type)
-      , fBranches(new RefVectorOf<Op> (size, false)) {
+      , fBranches(new (manager) RefVectorOf<Op> (size, false)) {
 
 }
 
