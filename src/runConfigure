@@ -222,6 +222,8 @@ if test $debug = "off"; then
          debugflag="";
       elif test $platform = "irix"; then
          debugflag="-O2";
+      elif test $platform = "aix"; then
+         debugflag="-O2";
       else
          debugflag="-O";
       fi

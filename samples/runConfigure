@@ -137,7 +137,7 @@ while [ $# -gt 0 ]
    -z)
         compileroptions="$compileroptions $2"; shift 2;;
 
-   -l)  
+   -l)
         linkeroptions=$2; shift 2;;
 
    -h)
@@ -164,6 +164,10 @@ if test $debug = "off"; then
     echo "Debug is OFF"
     if test $platform = "os400"; then
     debugflag="-O";
+    elif test $platform = "irix"; then
+       debugflag="-w -O2";
+    elif test $platform = "aix"; then
+       debugflag="-w -O2";
     else
     debugflag="-w -O";
     fi

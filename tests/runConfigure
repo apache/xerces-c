@@ -58,6 +58,9 @@
 #
 #
 # $Log$
+# Revision 1.10  2001/10/18 18:16:47  tng
+# Use opt2 on AIX platform.
+#
 # Revision 1.9  2001/06/09 18:06:50  jberry
 # Add MacOS build support for tests
 #
@@ -178,7 +181,13 @@ echo "Thread option: $thread"
 
 if test $debug = "off"; then
     echo "Debug is OFF"
+    if test $platform = "irix"; then
+       debugflag="-O2";
+    elif test $platform = "aix"; then
+       debugflag="-O2";
+    else
     debugflag="-O";
+    fi
 else
     echo "Debug is ON"
     debugflag="-g";
