@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/06/27 17:39:50  knoaman
+ * Fix for bug #2353.
+ *
  * Revision 1.14  2001/06/19 16:45:08  tng
  * Add installAdvDocHandler to SAX2XMLReader as the code is there already.
  *
@@ -511,6 +514,16 @@ void SAX2XMLReaderImpl::setEntityResolver(EntityResolver* const resolver)
         fScanner->setEntityHandler(0);
         fScanner->setEntityResolver(0);
     }
+}
+
+void SAX2XMLReaderImpl::setExitOnFirstFatalError(const bool newState)
+{
+    fScanner->setExitOnFirstFatal(newState);
+}
+
+void SAX2XMLReaderImpl::setValidationConstraintFatal(const bool newState)
+{
+    fScanner->setValidationConstraintFatal(newState);
 }
 
 void SAX2XMLReaderImpl::parse (const   InputSource&    source)

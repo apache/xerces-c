@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/06/27 17:39:52  knoaman
+ * Fix for bug #2353.
+ *
  * Revision 1.11  2001/06/19 16:45:08  tng
  * Add installAdvDocHandler to SAX2XMLReader as the code is there already.
  *
@@ -450,6 +453,29 @@ public :
       */
     virtual LexicalHandler* getLexicalHandler() const ;
 
+    /**
+      * This method returns the state of the parser's
+      * exit-on-First-Fatal-Error flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         exit on the first fatal error, false otherwise.
+      *
+      * @see #setExitOnFirstFatalError
+      */
+    virtual bool getExitOnFirstFatalError() const;
+
+    /**
+      * This method returns the state of the parser's
+      * validation-constraint-fatal flag.
+      *
+      * @return true, if the parser is currently configured to
+      *         set validation constraint errors as fatal, false
+      *         otherwise.
+      *
+      * @see #setValidationContraintFatal
+      */
+    virtual bool getValidationConstraintFatal() const;
+
     /** @name Implementation of SAX 2.0 interface's. */
     //@{
     /**
@@ -560,6 +586,40 @@ public :
     * @see HandlerBase#HandlerBase
     */
     virtual void setLexicalHandler(LexicalHandler* const handler) ;
+
+    /**
+      * This method allows users to set the parser's behaviour when it
+      * encounters the first fatal error. If set to true, the parser
+      * will exit at the first fatal error. If false, then it will
+      * report the error and continue processing.
+      *
+      * <p>The default value is 'true' and the parser exits on the
+      * first fatal error.</p>
+      *
+      * @param newState The value specifying whether the parser should
+      *                 continue or exit when it encounters the first
+      *                 fatal error.
+      *
+      * @see #getExitOnFirstFatalError
+      */
+    virtual void setExitOnFirstFatalError(const bool newState);
+
+    /**
+      * This method allows users to set the parser's behaviour when it
+      * encounters a validtion constraint error. If set to true, and the
+      * the parser is set to exit when it encounter the first fatal error,
+      * the parser will exit at the first encounter. If false, then it will
+      * report the error and continue processing.
+      *
+      * <p>The default value is 'false'.</p>
+      *
+      * @param newState The value specifying whether the parser should
+      *                 continue or exit when it encounters a validation
+      *                 constraint error.
+      *
+      * @see #getValidationConstraintFatal
+      */
+    virtual void setValidationConstraintFatal(const bool newState);
 
   /**
     * Set the state of any feature in a SAX2 XMLReader.
@@ -1197,5 +1257,14 @@ inline LexicalHandler* SAX2XMLReaderImpl::getLexicalHandler() const
    return fLexicalHandler;
 }
 
+inline bool SAX2XMLReaderImpl::getExitOnFirstFatalError() const
+{
+    return fScanner->getExitOnFirstFatal();
+}
+
+inline bool SAX2XMLReaderImpl::getValidationConstraintFatal() const
+{
+    return fScanner->getValidationConstraintFatal();
+}
 
 #endif
