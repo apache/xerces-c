@@ -22,7 +22,6 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #define MY_XP_CPLUSPLUS
-#include    "OS400PlatformUtils.hpp"
 #include    <pthread.h>
 #include    <xercesc/util/PlatformUtils.hpp>
 #include    <xercesc/util/RuntimeException.hpp>
@@ -38,8 +37,13 @@
 #include    <mimchint.h>
 #include    <string.h>
 #include    <qmhsndpm.h>
+#include    <qmhrtvm.h>
+#include    <qusec.h>
+#include    <unistd.h>
+#include    <string.h>
 #include    <except.h>
-#include <mih/cmpswp.h>
+#include    <mih/cmpswp.h>
+#include    "OS400PlatformUtils.hpp"
 #include    <xercesc/util/OutOfMemoryException.hpp>
 
 #if defined (XML_USE_ICONV400_TRANSCODER)
@@ -115,8 +119,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
     XMLMsgLoader* retVal;
     try
     {
-#if defined(XML_USE_MSGFILE_MESSAGELOADER)
-        #include <xercesc/util/MsgLoaders/MsgFile/MsgLoader.hpp>
+#if defined(XML_USE_MSGFILE_MESSAGELOADER)        
         retVal = new MsgCatalogLoader(msgDomain);
 #elif defined (XML_USE_ICU_MESSAGELOADER)
 	retVal = new ICUMsgLoader(msgDomain);
@@ -212,8 +215,6 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
     return (unsigned int)retVal;
 }
 
-#include <qmhrtvm.h>
-#include <qusec.h>
 FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
                                       , MemoryManager* const manager)
 {   char errno_id[7];
@@ -343,9 +344,7 @@ void XMLPlatformUtils::resetFile(FileHandle theFile
 to no be important that we convert the name to the real path we will
 only verify that the path exists  - note that this may make AS/400 output a different error for the pathname but customer should
 be able to determine what the name is suppose to be*/
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
+
 char *realpath(const char *file_name, char *resolved_name)
 {
  if (file_name== NULL)

@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2004/09/23 21:44:13  cargilld
+ * Fixes to build on OS400.  Thanks to Patrick Townsend and Jay Hansen.
+ *
  * Revision 1.3  2004/09/08 13:56:45  peiyongz
  * Apache License Version 2.0
  *
@@ -47,6 +50,7 @@
 #include <iconv_cnv.hpp>
 #include <qmhrtvm.h>
 #include <qusec.h>
+#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/Platforms/OS400/OS400PlatformUtils.hpp>
 #include <iconv.h>
 #include <errno.h>

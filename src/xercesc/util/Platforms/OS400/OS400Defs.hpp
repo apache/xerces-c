@@ -16,6 +16,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2004/09/23 21:44:13  cargilld
+ * Fixes to build on OS400.  Thanks to Patrick Townsend and Jay Hansen.
+ *
  * Revision 1.2  2004/09/08 13:56:41  peiyongz
  * Apache License Version 2.0
  *
@@ -29,9 +32,6 @@
  * Initial checkin
  *
  */
-
-
-#include <xercesc/util/XercesDefs.hpp>
 
 
 // ---------------------------------------------------------------------------
