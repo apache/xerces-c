@@ -66,6 +66,10 @@
 
 /**
  * $Log$
+ * Revision 1.12  2000/02/05 01:19:19  andyh
+ * Add more DOMString tests.  Fix limit test error in DOMString::insertData()
+ * Andy Heninger  heninger@us.ibm.com
+ *
  * Revision 1.11  2000/02/03 23:07:28  andyh
  * Add several new functions from Robert Weir to DOMString.
  *
@@ -418,6 +422,76 @@ int  main()
         TASSERT(a.equals("ZDOMString "));
     }
     TESTEPILOG;
+
+
+    //
+    // Test 11   DOMString::subStringData(unsigned int offset, unsigned int count)
+    //
+    TESTPROLOG;
+    {
+        DOMString srcString("This is the source string.");
+        //                   01234567890123456789012345
+
+        DOMString This = srcString.substringData(0,4);
+        DOMString is   = srcString.substringData(5,2);
+        DOMString dot  = srcString.substringData(25,1);
+        DOMString offEnd = srcString.substringData(19, 1000);
+
+        TASSERT(This.equals("This"));
+        TASSERT(is  .equals("is"));
+        TASSERT(dot .equals("."));
+        TASSERT(offEnd.equals("string."));
+
+        EXCEPTION_TEST(srcString.substringData(-1, 10), DOM_DOMException::INDEX_SIZE_ERR);
+        EXCEPTION_TEST(srcString.substringData(26, 1), DOM_DOMException::INDEX_SIZE_ERR);
+
+        srcString.insertData(0, "x");   // Changing the source should not alter previously
+                                        //   extracted substrings.
+
+        TASSERT(This.equals("This"));
+        TASSERT(is  .equals("is"));
+        TASSERT(dot .equals("."));
+        TASSERT(offEnd.equals("string."));
+        TASSERT(srcString.equals("xThis is the source string."));
+
+    }
+    TESTEPILOG;
+
+
+    //
+    // Test 12   DOMString::insertData(unsigned int offset, DOMString &src)
+    //
+    TESTPROLOG;
+    {
+        DOMString aString("This is a string.");
+        //                 01234567890123456
+
+        aString.insertData(17, " Added at end.");
+        TASSERT(aString.equals("This is a string. Added at end."));
+
+        aString = "This is a string.";
+        EXCEPTION_TEST(aString.insertData(18, "x"), DOM_DOMException::INDEX_SIZE_ERR);
+        TASSERT(aString.equals("This is a string."));
+
+        aString = 0;
+        aString.reserve(100);
+        aString.appendData("This is a string.");
+        aString.insertData(17, " Added at end.");
+        TASSERT(aString.equals("This is a string. Added at end."));
+
+        aString.insertData(0, "So ");
+        TASSERT(aString.equals("So This is a string. Added at end."));
+
+        aString.insertData(2, "x");
+        TASSERT(aString.equals("Sox This is a string. Added at end."));
+
+        EXCEPTION_TEST(aString.substringData(-1, 1), DOM_DOMException::INDEX_SIZE_ERR);
+
+
+    }
+    TESTEPILOG;
+
+
 
 
 
@@ -976,6 +1050,16 @@ int  main()
 
     //
     //  DOMImplementation::CreateDocument
+    {
+        // Preflight the operations that will lazily create DOMStrings
+        // in the implementation.  This prevents incorrect reports of
+        // memory leaks in the real test.
+
+        DOM_DOMImplementation   impl;
+        DOM_DocumentType        dt; 
+        DOM_Document            doc = impl.createDocument("", "a", dt);
+    }
+
     //
     TESTPROLOG;
     {

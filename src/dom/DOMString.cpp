@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.12  2000/02/05 01:19:19  andyh
+ * Add more DOMString tests.  Fix limit test error in DOMString::insertData()
+ * Andy Heninger  heninger@us.ibm.com
+ *
  * Revision 1.11  2000/02/04 05:06:29  andyh
  * Change all DOMString offsets and lengths form signed to unsigned
  * Other misc. cleanups.
@@ -814,7 +818,7 @@ bool DOMString::equals(const XMLCh *other) const
 void DOMString::insertData(unsigned int offset, const DOMString &src)
 {
     unsigned int origStrLength = this->length();
-    if (offset >= origStrLength)
+    if (offset > origStrLength)
         throw DOM_DOMException(DOM_DOMException::INDEX_SIZE_ERR, 0);
     
     if (fHandle == 0)
