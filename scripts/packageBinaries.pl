@@ -417,6 +417,44 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         unlink("$targetdir.zip");
     }
 
+    #
+    # AUTODETECT VISUAL STUDIO VERSION
+    #
+
+    $msc_response= `cl 2>&1`;
+
+    print "$ENV{PATH}\n";
+
+    chomp($msc_response);
+    print "-----------------------\n";
+    print "Detected: $msc_response\n";
+
+    $msc_response =~ /Version *([0-9.]+)/;
+    $msc_full_version = $1;
+    $msc_response =~ /Version *([0-9]+)\./;
+    $msc_major_version = $1;
+    $msc_response =~ /Version *[0-9]+\.([0-9]+)\./;
+    $msc_minor_version = $1;
+
+    print "-----------------------\n";
+    print "msc_full_version  =$msc_full_version\n";
+    print "msc_major_version =$msc_major_version\n";
+    print "msc_minor_version =$msc_minor_version\n";
+    print "-----------------------\n";
+
+    $DevStudioVer = "6.0"; #default
+    $VCBuildDir = "VC6"; #default
+    if ($msc_major_version eq "12") {
+        print "Configuring environment for Visual Studio 6.0\n";
+        $DevStudioVer = "6.0";
+    } elsif ($msc_major_version eq "13") {
+        print "Configuring environment for Visual Studio .NET\n";
+        $DevStudioVer = "7.0";
+        $VCBuildDir = "VC7"; #default
+    }
+    print "DevStudioVer =$DevStudioVer\n";
+    print "VCBuildDir   =$VCBuildDir\n";
+
     # Make the target directory and its main subdirectories
     psystem ("mkdir $targetdir");
     psystem ("mkdir $targetdir/bin");
@@ -427,7 +465,11 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("mkdir $targetdir/samples");
     psystem ("mkdir $targetdir/samples/Projects");
     psystem ("mkdir $targetdir/samples/Projects/Win32");
+    if ($DevStudioVer eq "6.0") {
     psystem ("mkdir $targetdir/samples/Projects/Win32/VC6");
+    } elsif ($DevStudioVer eq "7.0") {
+        psystem ("mkdir $targetdir/samples/Projects/Win32/VC7");
+    }
     psystem ("mkdir $targetdir/samples/data");
     psystem ("mkdir $targetdir/samples/SAXCount");
     psystem ("mkdir $targetdir/samples/SAX2Count");
@@ -449,7 +491,11 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     # If 'FileOnly' NetAccessor has been specified, then the project files have to be
     # changed.
     if ($opt_n =~ m/fileonly/i) {
-        changeWindowsProjectForFileOnlyNA("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
+        if ($DevStudioVer eq "6.0") {
+            changeWindowsProjectForFileOnlyNA("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
+        } elsif ($DevStudioVer eq "7.0") {
+            changeWindowsProjectForFileOnlyNA_VC7("$XERCESCROOT/Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj");
+        }
     }
 
 
@@ -464,27 +510,38 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         psystem ("del /s /f *.dep *.ncb *.plg *.opt");
 
         # Make the icu dlls
-        pchdir ("$ICUROOT/source/allinone");
         if (!(length($opt_j) > 0)) {   # Optionally suppress ICU build, to speed up overlong builds while debugging.
-	    #For nt we ship both debug and release dlls
-	    if ($platformname eq "Win64")
-	    {
-                psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /USEENV /REBUILD /OUT buildlog.txt");
+            #we ship both debug and release dlls
+            if ($DevStudioVer eq "6.0") {
+                pchdir ("$ICUROOT/source/allinone");
+                if ($platformname eq "Win64")
+                {
+                    psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /USEENV /REBUILD /OUT buildlog.txt");
+                }
+                else
+                {
+                    psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD /OUT buildlog.txt");            	
+                }
+                psystem("cat buildlog.txt");
+                if ($platformname eq "Win64")
+                {
+                    psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /USEENV /REBUILD /OUT buildlog.txt");
+                }
+                else
+                {
+                    psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD /OUT buildlog.txt");            	
+                }	
+                psystem("cat buildlog.txt");
+            } elsif ($DevStudioVer eq "7.0") {
+                pchdir ("$ICUROOT/as_is/win32");
+                psystem("unzip msvc7.zip");
+
+                psystem("devenv /rebuild Release /out buildlog.txt /project all allinone.sln");
+                psystem("cat buildlog.txt");
+
+                psystem("devenv /rebuild debug /out buildlog.txt /project all allinone.sln");
+                psystem("cat buildlog.txt");
             }
-            else
-            {
-                psystem("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD /OUT buildlog.txt");            	
-            }
-	    psystem("cat buildlog.txt");
-	    if ($platformname eq "Win64")
-	    {
-                psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /USEENV /REBUILD /OUT buildlog.txt");
-            }
-            else
-            {
-                psystem("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD /OUT buildlog.txt");            	
-            }	
-	    psystem("cat buildlog.txt");
         }
 
         $transcoder = 0;
@@ -499,7 +556,11 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
             $msgloader = 1;
         }
 
-        change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp", $transcoder , $msgloader);
+        if ($DevStudioVer eq "6.0") {
+            change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp", $transcoder , $msgloader);
+        } elsif ($DevStudioVer eq "7.0") {
+            change_windows_project_for_ICU_VC7("$XERCESCROOT/Projects/Win32/VC7/xerces-all/XercesLib/XercesLib.vcproj", $transcoder , $msgloader);
+        }
     }
 
 
@@ -509,28 +570,35 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("del /s /f *.dep *.ncb *.plg *.opt");
 
     # Make all files in the Xerces-C system including libraries, samples and tests
-    pchdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all");
-    if ($platformname eq "Win64")
-    {
-        psystem( "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /USEENV /REBUILD /OUT buildlog.txt");
+    pchdir ("$XERCESCROOT/Projects/Win32/$VCBuildDir/xerces-all");
+    if ($DevStudioVer eq "6.0") {
+        if ($platformname eq "Win64")
+        {
+            psystem( "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /USEENV /REBUILD /OUT buildlog.txt");
+        }
+        else
+        {
+            psystem( "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD /OUT buildlog.txt");
+        }	
+    } elsif ($DevStudioVer eq "7.0") {
+        psystem( "devenv /rebuild Release /out buildlog.txt /project all xerces-all.sln");
     }
-    else
-    {
-        psystem( "msdev xerces-all.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD /OUT buildlog.txt");
-    }	
-
     system("cat buildlog.txt");
 
     # Build the debug xerces dll.  Both debug and release DLLs
     #   are in the standard binary distribution of Xerces.
     if ($buildmode ne "Debug") {
-        if ($platformname eq "Win64")
-        {
-            psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $platformname Debug\" /USEENV /REBUILD /OUT buildlog.txt");
-        }
-        else
-        {
-            psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $platformname Debug\" /REBUILD /OUT buildlog.txt");        	
+        if ($DevStudioVer eq "6.0") {
+            if ($platformname eq "Win64")
+            {
+                psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $platformname Debug\" /USEENV /REBUILD /OUT buildlog.txt");
+            }
+            else
+            {
+                psystem("msdev xerces-all.dsw /MAKE \"XercesLib - $platformname Debug\" /REBUILD /OUT buildlog.txt");        	
+            }
+        } elsif ($DevStudioVer eq "7.0") {
+            psystem( "devenv /rebuild debug /out buildlog.txt /project XercesLib xerces-all.sln");
         }
         system("cat buildlog.txt");
     }
@@ -544,7 +612,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
     # Decide where you want the build copied from
     pchdir ($targetdir);
-    $BUILDDIR = $XERCESCROOT . "/Build/Win32/VC6/" . $buildmode;
+    $BUILDDIR = $XERCESCROOT . "/Build/Win32/$VCBuildDir/" . $buildmode;
     print "\nBuild is being copied from \'" . $BUILDDIR . "\'";
 
     # Populate the include output directory
@@ -650,7 +718,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     }
     psystem("cp -fv $BUILDDIR/xerces-c_*.lib $targetdir/lib");
     if ($buildmode ne "Debug") {
-        $DEBUGBUILDDIR = "$XERCESCROOT/Build/Win32/VC6/Debug";
+        $DEBUGBUILDDIR = "$XERCESCROOT/Build/Win32/$VCBuildDir/Debug";
         psystem("cp -fv $DEBUGBUILDDIR/xerces-c_*D.lib $targetdir/lib");
         psystem("cp -fv $DEBUGBUILDDIR/xerces-c*D.dll $targetdir/bin");
     }
@@ -658,13 +726,13 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 
     # Populate the etc output directory like config.status and the map file
     print ("\n\nCopying misc output to etc ...\n");
-    psystem("cp -fv $XERCESCROOT/Build/Win32/VC6/Release/obj/*.map $targetdir/etc");
+    psystem("cp -fv $XERCESCROOT/Build/Win32/$VCBuildDir/Release/obj/*.map $targetdir/etc");
 
 
     # Populate the samples directory
     print ("\n\nCopying sample files ...\n");
     psystem("cp $XERCESCROOT/version.incl $targetdir");
-    psystem("cp -Rfv $XERCESCROOT/samples/Projects/Win32/VC6/* $targetdir/samples/Projects/Win32/VC6");
+    psystem("cp -Rfv $XERCESCROOT/samples/Projects/Win32/$VCBuildDir/* $targetdir/samples/Projects/Win32/$VCBuildDir");
 
     psystem("cp -Rfv $XERCESCROOT/samples/SAXCount/* $targetdir/samples/SAXCount");
     psystem("rm -f $targetdir/samples/SAXCount/Makefile");
@@ -1367,6 +1435,45 @@ sub change_windows_makefile_for_ICU() {
     unlink ($thefiledotbak);
 }
 
+sub change_windows_project_for_ICU_VC7() {
+    my ($thefile, $transcoder, $msgloader) = @_;
+    print "\nConverting Windows Xerces library project ($thefile) for ICU usage...";
+    my $thefiledotbak = $thefile . ".bak";
+    rename ($thefile, $thefiledotbak);
+
+    open (FIZZLE, $thefiledotbak);
+    open (FIZZLEOUT, ">$thefile");
+    while ($line = <FIZZLE>) {
+        if ($line =~ /Release\|Win32/) {
+            $icuuc = "icuucd";
+            }
+        if ($line =~ /Debug\|Win32/) {
+            $icuuc = "icuuc";
+            }
+        $line =~ s/AdditionalIncludeDirectories=\"([^"]*)/AdditionalIncludeDirectories=\"$ICUROOT\\include;$1/;
+        $line =~ s/AdditionalLibraryDirectories=\"([^"]*)/AdditionalLibraryDirectories=\"$ICUROOT\\lib;$ICUROOT\\source\\data;$1/;
+        $line =~ s/AdditionalDependencies=\"([^"]*)/AdditionalDependencies=\"$icuuc.lib icudata.lib $1/;
+
+        if ($transcoder) {
+            $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
+            $line =~ s/Transcoders\\Win32\\Win32TransService.cpp/Transcoders\\ICU\\ICUTransService.cpp/g;
+            $line =~ s/Transcoders\\Win32\\Win32TransService.hpp/Transcoders\\ICU\\ICUTransService.hpp/g;
+        }
+
+        if ($msgloader)
+        {
+            $line =~ s/XML_USE_WIN32_MSGLOADER/XML_USE_ICU_MESSAGELOADER/g;
+            $line =~ s/MsgLoaders\\Win32\\Win32MsgLoader/MsgLoaders\\ICU\\ICUMsgLoader/g;
+            $line =~ s/Win32MsgLoader/ICUMsgLoader/g;
+        }
+
+        print FIZZLEOUT $line;
+    }
+    close (FIZZLEOUT);
+    close (FIZZLE);
+    unlink ($thefiledotbak);
+}
+
 #
 # This subroutine is used to munge the XercesLib project file to remove all
 # traces of WinSock based NetAccessor. Once no NetAccessor is specified, the
@@ -1411,7 +1518,60 @@ sub changeWindowsProjectForFileOnlyNA() {
         # From the remaining lines, remove any references to the #defines and
         # the WinSock library.
         $aline =~ s/\/D \"XML_USE_NETACCESSOR_WINSOCK\" //g;  # "
-        $aline =~ s/wsock32.lib //g;
+        if ($aline =~ /( )+ws2_32.lib( )*\"/) { # end of line
+          $aline =~ s/( )+ws2_32.lib( )*\"/\"/g;
+        } else { # beginning or middle of line
+          $aline =~ s/ws2_32.lib( )*//g;
+        }
+
+        print PROJFILEOUT $aline;
+    }
+    close (PROJFILEOUT);
+    close (PROJFILEIN);
+    unlink ($thefiledotbak);
+}
+
+sub changeWindowsProjectForFileOnlyNA_VC7() {
+    my ($thefile) = @_;
+    print "\nConfiguring Xerces library project ($thefile) for FileOnly NetAccessor...\n";
+    my $thefiledotbak = $thefile . ".bak";
+    rename ($thefile, $thefiledotbak);
+
+    open (PROJFILEIN, $thefiledotbak);
+    open (PROJFILEOUT, ">$thefile");
+
+    while ($aline = <PROJFILEIN>) {
+        # By skipping over lines between the NetAccessors group
+        # we can references to the WinSock based NetAccessor files.
+        if ($aline =~ m/^# Begin Group \"NetAccessors\"/g) {
+            # ...found it. Write out the line as a place holder. Also...
+            print PROJFILEOUT $aline;
+            # ...preserve the next two lines.
+            $aline = <PROJFILEIN>;
+            print PROJFILEOUT $aline;
+            $aline = <PROJFILEIN>;
+            print PROJFILEOUT $aline;
+            # Skip over the lines till you hit the WinSock NetAccessor 'End Group'.
+            while ($aline = <PROJFILEIN>) { # read the next line
+                last if ($aline =~ m/^# End Group/g);
+            }
+            # We need to preserve the 'End Group' line. The last statement of the
+            # enclosing while loop prints it out.
+        }
+
+        # From the remaining lines, remove any references to the #defines and
+        # the WinSock library.
+        if ($aline =~ /\;XML_USE_NETACCESSOR_WINSOCK/) { # end or middle of line
+          $aline =~ s/\;XML_USE_NETACCESSOR_WINSOCK//g;
+        } else { # beginning of line
+          $aline =~ s/\XML_USE_NETACCESSOR_WINSOCK\;*//g;
+        }
+
+        if ($aline =~ /\s+ws2_32\.lib\s*\"/) { # end of line
+          $aline =~ s/\s+ws2_32\.lib\s*\"/\"/g;
+        } else { # beginning or middle of line
+          $aline =~ s/ws2_32\.lib\s*//g;
+        }
 
         print PROJFILEOUT $aline;
     }
