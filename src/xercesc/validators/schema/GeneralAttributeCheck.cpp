@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/01/17 15:35:57  knoaman
+ * Fix for attribute checking of schema declarations.
+ *
  * Revision 1.11  2003/01/15 18:33:11  knoaman
  * Make sure that the namespace of schema declarations is the schema namespace.
  *
@@ -426,15 +429,17 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
             continue;
         }
 
-        const XMLCh* attrVal = attribute->getNodeValue();
-
         if (fgElemAttTable[elemContext][attNameId] & Att_Mask) {
 
             attList[attNameId] = 1;
-
-            if (attrVal && *attrVal) {
-                validate(elem, attName, attrVal, fgElemAttTable[elemContext][attNameId] & DV_Mask, schema);
-            }
+            validate
+            (
+                elem
+                , attName
+                , attribute->getNodeValue()
+                , fgElemAttTable[elemContext][attNameId] & DV_Mask
+                , schema
+            );
         }
         else {
             schema->reportSchemaError(elem, XMLUni::fgXMLErrDomain,
