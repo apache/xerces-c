@@ -176,6 +176,21 @@ public:
     virtual DOMElement     *getOwnerElement() const = 0;
     //@}
 
+    /** @name Functions introduced in DOM Level 3. */
+    //@{
+    /**
+     * Returns whether this attribute is known to be of type ID or not. 
+     * When it is and its value is unique, the ownerElement of this attribute 
+     * can be retrieved using getElementById on Document.
+     *
+     * <p><b>"Experimental - subject to change"</b></p>
+     *
+     * @return <code>bool</code> stating if this <code>DOMAttr</code> is an ID
+     * @since DOM level 3
+     */
+    virtual bool            isId() const = 0;
+    //@}
+
 };
 
 XERCES_CPP_NAMESPACE_END

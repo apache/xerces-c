@@ -273,6 +273,11 @@ void DOMAttrImpl::release()
 }
 
 
+bool DOMAttrImpl::isId() const {
+    return fNode.isIdAttr();
+}
+
+
 DOMNode* DOMAttrImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
 {
     DOMElement* el = getOwnerElement();

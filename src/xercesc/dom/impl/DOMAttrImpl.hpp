@@ -103,6 +103,7 @@ public:
     virtual const XMLCh * getValue() const;
     virtual void setSpecified(bool arg);
     virtual void setValue(const XMLCh * value);
+    virtual bool isId() const;
 
     //Introduced in DOM Level 2
     DOMElement *getOwnerElement() const;
