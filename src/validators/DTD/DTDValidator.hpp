@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/09 21:42:38  abagchi
+ * Copyright swatswat
+ *
  * Revision 1.2  2000/01/12 23:52:48  roddey
  * These are trivial changes required to get the C++ and Java versions
  * of error messages more into sync. Mostly it was where the Java version

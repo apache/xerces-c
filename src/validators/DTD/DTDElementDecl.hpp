@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  * 
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights 
  * reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/02/09 21:42:37  abagchi
+ * Copyright swatswat
+ *
  * Revision 1.2  1999/11/23 01:51:04  rahulj
  * Cannot use class qualifier in class defn. CC under HPUX is happy.
  *
