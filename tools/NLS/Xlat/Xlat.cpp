@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/18 00:00:58  roddey
+ * Improved error reporting
+ *
  * Revision 1.6  2000/03/03 01:29:36  roddey
  * Added a scanReset()/parseReset() method to the scanner and
  * parsers, to allow for reset after early exit from a progressive parse.
@@ -238,14 +241,27 @@ static bool parseParms(const int argC, XMLCh** argV)
 
 static void parseError(const XMLException& toCatch)
 {
-    wprintf(L"Parse Error:\n   ERROR: %s\n\n", toCatch.getMessage());
+    wprintf
+    (
+        L"Exception\n   (Line.File):%d.%s\n   ERROR: %s\n\n"
+        , toCatch.getSrcLine()
+        , toCatch.getSrcFile()
+        , toCatch.getMessage()
+    );
     throw ErrReturn_ParseErr;
 }
 
 
 static void parseError(const SAXParseException& toCatch)
 {
-    wprintf(L"Parse Error:\n   SAX ERROR: %s\n\n", toCatch.getMessage());
+    wprintf
+    (
+        L"SAX Parse Error:\n   (Line.Col.SysId): %d.%d.%s\n   ERROR: %s\n\n"
+        , toCatch.getLineNumber()
+        , toCatch.getColumnNumber()
+        , toCatch.getSystemId()
+        , toCatch.getMessage()
+    );
     throw ErrReturn_ParseErr;
 }
 
