@@ -22,7 +22,7 @@
     <RELEASELIBPATH value="$(BCB)\lib\release"/>
     <LINKER value="ilink32"/>
     <USERDEFINES value="_DEBUG"/>
-    <SYSDEFINES value="_NO_VCL;_VIS_NOLIB"/>
+    <SYSDEFINES value="_NO_VCL;_VIS_NOLIB;_RTLDLL"/>
     <MAINSOURCE value="SAX2Print.cpp"/>
     <INCLUDEPATH value="..\..\..\..\..\samples\SAX2Print;..\..\..\..\..\src;$(BCB)\include"/>
     <LIBPATH value="..\..\..\..\..\samples\SAX2Print;$(BCB)\lib"/>
@@ -41,7 +41,7 @@
   <LINKER>
     <ALLOBJ value="c0x32.obj $(OBJFILES)"/>
     <ALLRES value="$(RESFILES)"/>
-    <ALLLIB value="$(LIBFILES) import32.lib cw32mt.lib"/>
+    <ALLLIB value="$(LIBFILES) import32.lib cw32mti.lib"/>
   </LINKER>
   <IDEOPTIONS>
 [Version Info]
