@@ -899,7 +899,7 @@ XMLParsePathToFSRef_Classic(const XMLCh* const pathName, FSRef& ref, MemoryManag
             err = FSpMakeFSRef(&spec, &ref);
     }
 
-    // ref now refers to the a parent directory: parse the rest of the path
+    // ref now refers to the parent directory: parse the rest of the path
     while (err == noErr && *p)
     {
         switch (*p)

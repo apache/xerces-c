@@ -104,6 +104,8 @@ XMLUTIL_EXPORT XMLCh*	XMLCreateFullPathFromFSSpec(const FSSpec& startingSpec,
 
 //	Convert from path to FSRef/FSSpec
 //	You retain ownership of the pathName.
+//	Note: in the general case, these routines will fail if the specified file
+//	      does not exist when the routine is called.
 XMLUTIL_EXPORT bool	XMLParsePathToFSRef(const XMLCh* const pathName, FSRef& ref,
                             MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 XMLUTIL_EXPORT bool	XMLParsePathToFSSpec(const XMLCh* const pathName, FSSpec& spec,
@@ -136,7 +138,6 @@ extern bool gHasHFSPlusAPIs;
 extern bool gHasFSPathAPIs;
 extern bool gPathAPIsUsePosixPaths;
 extern bool gHasMPAPIs;
-extern bool gMacOSX;
 extern bool gUsePosixFiles;
 
 XERCES_CPP_NAMESPACE_END
