@@ -232,7 +232,7 @@ public:
       * We will provide a default behavior that should be redefined at the
       * children level, if necessary (i.e. boolean case).
       */
-    int compare(const XMLCh* const value1, const XMLCh* const value2);
+    virtual int compare(const XMLCh* const value1, const XMLCh* const value2);
 
     //@}
 

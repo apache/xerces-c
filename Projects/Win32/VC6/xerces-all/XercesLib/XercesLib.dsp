@@ -1767,6 +1767,14 @@ SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeValueException.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\datatype\ListDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\ListDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\datatype\NOTATIONDatatypeValidator.cpp
 # End Source File
 # Begin Source File

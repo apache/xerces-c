@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.13  2001/07/11 21:37:15  peiyongz
+# ListDatatypeDTV
+#
 # Revision 1.12  2001/07/06 20:21:46  peiyongz
 # QNameDTV & ENTITYDTV enabled
 #
@@ -129,6 +132,7 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	NOTATIONDatatypeValidator.hpp \
 	ENTITYDatatypeValidator.hpp \
 	QNameDatatypeValidator.hpp \
+	ListDatatypeValidator.hpp \
 	IDREFDatatypeValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
@@ -147,6 +151,7 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	NOTATIONDatatypeValidator.$(TO) \
 	ENTITYDatatypeValidator.$(TO) \
 	QNameDatatypeValidator.$(TO) \
+	ListDatatypeValidator.$(TO) \
 	IDREFDatatypeValidator.$(TO)
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)

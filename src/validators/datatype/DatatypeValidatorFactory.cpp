@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2001/07/11 21:37:18  peiyongz
+ * ListDatatypeDTV
+ *
  * Revision 1.14  2001/07/06 20:21:58  peiyongz
  * QNameDTV & ENTITYDTV enabled
  *
@@ -121,6 +124,7 @@
 #include <validators/datatype/NOTATIONDatatypeValidator.hpp>
 #include <validators/datatype/ENTITYDatatypeValidator.hpp>
 #include <validators/datatype/QNameDatatypeValidator.hpp>
+#include <validators/datatype/ListDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -643,8 +647,7 @@ DatatypeValidatorFactory::createDatatypeValidator(const XMLCh* const typeName,
 	DatatypeValidator* datatypeValidator = 0;
 
     if (derivedByList) {
-
-        //TO DO
+        datatypeValidator = new ListDatatypeValidator(baseValidator, facets, enums, finalSet);
     }
     else {
 
