@@ -56,6 +56,16 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/22 18:15:16  neilg
+ * The PanicHandler interface should not inherit from XMemory.
+ * The reason for this is that the default implementation does not
+ * allocate memory dynamically and if such an inheritance relation existed,
+ * a user would have to be very careful about installing a memory
+ * handler on their own PanicHandler before handing it to the
+ * XMLPlatformUtils::Initialize() method, since otherwise
+ * the (uninitialized) XMLPlatformUtils::fgMemoryManager would be used
+ * upon construction of their PanicHandler implementation.
+ *
  * Revision 1.3  2003/05/15 19:04:35  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -91,7 +101,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   *
   */
 
-class XMLUTIL_EXPORT PanicHandler : public XMemory
+class XMLUTIL_EXPORT PanicHandler 
 {
 public:
 
