@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.37  2001/06/06 13:13:58  tng
+# Fix regression where TRANSCODERMODULE is not assigned if TRANSCODE == NATIVE.
+#
 # Revision 1.36  2001/06/05 19:35:51  jberry
 # Add support for Mac OS X command line configuration and build.
 #
@@ -216,7 +219,9 @@ MODULE = util
 ifeq (${TRANSCODER},NATIVE)
 	ifeq (${PLATFORM},MACOSX)
 		TRANSCODERMODULE=MacOSUnicodeConverter
-	endif
+       else
+               TRANSCODERMODULE=Iconv
+       endif
 else
 	ifeq (${TRANSCODER},ICU)
 	   TRANSCODERMODULE=ICU
