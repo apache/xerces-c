@@ -1,0 +1,17 @@
+BASE_DIR = "I:\\Xerces\\source\\xml-xerces\\c"
+
+option project_options =
+    gen(unreferenced, "yes"),
+    link(linkwithmultithreadlib, "yes"),
+    link(map, "Yes"),
+    link(dllinitinstance, "yes"),
+    link(pmtype, "vio"),
+    link(stub, "No"),
+    link(exportall, "yes"),
+    opt(inline, "yes"),
+    opt(level, "2"),
+    opt(tune, "pentium"),
+    incl(searchpath, BASE_DIR "\\src"),
+    incl(searchpath, BASE_DIR "\\src\\dom"),
+    define("XML_USE_INMEMORY_MSGLOADER", 1),
+    define("XML_USE_ICONV_TRANSCODER", 1)

@@ -1,0 +1,16 @@
+group xerces_framework =
+    BASE_DIR "\\src\\framework\\LocalFileInputSource.cpp",
+    BASE_DIR "\\src\\framework\\MemBufInputSource.cpp",
+    BASE_DIR "\\src\\framework\\StdInInputSource.cpp",
+    BASE_DIR "\\src\\framework\\URLInputSource.cpp",
+    BASE_DIR "\\src\\framework\\XMLAttDef.cpp",
+    BASE_DIR "\\src\\framework\\XMLAttr.cpp",
+    BASE_DIR "\\src\\framework\\XMLBuffer.cpp",
+    BASE_DIR "\\src\\framework\\XMLBufferMgr.cpp",
+    BASE_DIR "\\src\\framework\\XMLContentModel.cpp",
+    BASE_DIR "\\src\\framework\\XMLElementDecl.cpp",
+    BASE_DIR "\\src\\framework\\XMLEntityDecl.cpp",
+    BASE_DIR "\\src\\framework\\XMLFormatter.cpp",
+    BASE_DIR "\\src\\framework\\XMLNotationDecl.cpp",
+    BASE_DIR "\\src\\framework\\XMLRecognizer.cpp",
+    BASE_DIR "\\src\\framework\\XMLValidator.cpp"

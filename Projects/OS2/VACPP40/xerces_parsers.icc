@@ -1,0 +1,3 @@
+group xerces_parsers =
+    BASE_DIR "\\src\\parsers\\DOMParser.cpp",
+    BASE_DIR "\\src\\parsers\\SAXParser.cpp"
