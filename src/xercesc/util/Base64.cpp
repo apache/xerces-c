@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/02/18 16:07:38  peiyongz
+ * fix: "i" redefined on line 428 reported by compilers on some UNIX platforms
+ *
  * Revision 1.2  2002/02/15 21:36:56  peiyongz
  * Interface redefined for conversion in XMLByte
  *
@@ -425,8 +428,8 @@ XMLCh* Base64::decode(const XMLCh* const inputData,
 
     XMLCh *toRet = new XMLCh[decodedLen+1];
 
-    for (unsigned int i = 0; i < decodedLen; i++)
-		toRet[i] = (XMLCh)DecodedBuf[i];
+    for (unsigned int j = 0; j < decodedLen; j++)
+		toRet[j] = (XMLCh)DecodedBuf[j];
 
 	toRet[decodedLen] = 0;
 
