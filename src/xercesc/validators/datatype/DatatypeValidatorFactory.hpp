@@ -255,6 +255,7 @@ DatatypeValidatorFactory::getDatatypeValidator(const XMLCh* const dvType) const
 inline void DatatypeValidatorFactory::cleanUp() {
 
 	delete fUserDefinedRegistry;
+	fUserDefinedRegistry = 0;
 }
 
 #endif

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/05/08 12:25:30  tng
+ * Schema Fix: re-add the ID, IDREF ... datatype validators only if they were not there.
+ *
  * Revision 1.3  2002/05/07 20:00:07  tng
  * Schema Fix: No need to re-add the ID, IDREF ... datatype validators if the fUserDefinedRegistry already exists.
  *
@@ -633,9 +636,10 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
     //   and cannot be shared across threads
     // So instead of storing them in the static fBuiltInRegistry,
     //   store them in local data fUserDefinedRegistry
-    if (fUserDefinedRegistry == 0) {
+    if (fUserDefinedRegistry == 0)
         fUserDefinedRegistry = new RefHashTableOf<DatatypeValidator>(29);
 
+    if (!getDatatypeValidator(XMLUni::fgIDRefsString)) {
         fUserDefinedRegistry->put((void*) XMLUni::fgIDString,
                            new IDDatatypeValidator());
         fUserDefinedRegistry->put((void*) XMLUni::fgIDRefString,
