@@ -2962,7 +2962,7 @@ TraverseSchema::traverseByList(const DOMElement* const rootElem,
             // create & register validator for "generated" type
             try {
                 newDV = fDatatypeRegistry->createDatatypeValidator(
-                    qualifiedName, baseValidator, 0, 0, true, finalSet, true, fMemoryManager );
+                    qualifiedName, baseValidator, 0, 0, true, finalSet, true, fGrammarPoolMemoryManager);
             }
             catch (const XMLException& excep) {
                 reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -3227,7 +3227,7 @@ TraverseSchema::traverseByRestriction(const DOMElement* const rootElem,
             fSchemaGrammar->putAnnotation(enums, janEnumAnnot.release());
 
         try {
-            newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, baseValidator, facets, enums, false, finalSet, true, fMemoryManager);
+            newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, baseValidator, facets, enums, false, finalSet, true, fGrammarPoolMemoryManager);
         }
         catch (const XMLException& excep) {
             reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -3362,7 +3362,7 @@ TraverseSchema::traverseByUnion(const DOMElement* const rootElem,
     janValidators.orphan();
 
     try {
-        newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, validators, finalSet, true, fMemoryManager);
+        newDV = fDatatypeRegistry->createDatatypeValidator(qualifiedName, validators, finalSet, true, fGrammarPoolMemoryManager);
     }
     catch (const XMLException& excep) {
         reportSchemaError(contentElem, XMLUni::fgValidityDomain, XMLValid::DisplayErrorMessage, excep.getMessage());
@@ -3725,7 +3725,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         (
                             qualifiedName,
                             typeInfo->getBaseDatatypeValidator(),
-                            facets, enums, false, 0, true, fMemoryManager
+                            facets, enums, false, 0, true, fGrammarPoolMemoryManager
                         );
                     simpleDV->setAnonymous();
                     typeInfo->setDatatypeValidator(simpleDV);
