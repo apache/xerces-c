@@ -74,7 +74,7 @@
 #include <dom/DOM_Element.hpp>
 #include <framework/XMLBuffer.hpp>
 #include <validators/schema/SchemaSymbols.hpp>
-#include <util/RefStackOf.hpp>
+#include <util/ValueVectorOf.hpp>
 
 // ---------------------------------------------------------------------------
 //  Forward Declarations
@@ -93,6 +93,9 @@ class XMLAttDef;
 class ContentSpecNode;
 class NamespaceScope;
 class SchemaAttDef;
+class SchemaInfo;
+class InputSource;
+class ErrorHandler;
 
 
 class VALIDATORS_EXPORT TraverseSchema
@@ -111,33 +114,20 @@ public:
         , XMLValidator* const     xmlValidator
         , const XMLCh* const      schemaURL
         , EntityResolver* const   entityResolver
+        , ErrorHandler* const     errorHandler
     );
-    TraverseSchema
-    (
-          const DOM_Element&      schemaRoot
-        , XMLStringPool* const    stringPool
-        , SchemaGrammar* const    schemaGrammar
-        , GrammarResolver* const  grammarResolver
-        , XMLScanner* const       xmlScanner
-        , XMLValidator* const     xmlValidator
-        , const XMLCh* const      schemaURL
-    );
-    TraverseSchema
-	(
-          const DOM_Element&      schemaRoot
-        , XMLStringPool* const    stringPool
-        , SchemaGrammar* const    schemaGrammar
-        , GrammarResolver* const  grammarResolver
-		, XMLScanner* const       xmlScanner
-        , XMLValidator* const     xmlValidator
-    );
+
 	~TraverseSchema();
+
+    // -----------------------------------------------------------------------
+    //  Setter methods
+    // -----------------------------------------------------------------------
+    void setCurrentSchemaURL(const XMLCh* const urlStr);
 
 private:
     // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
-    TraverseSchema();
     TraverseSchema(const TraverseSchema&);
     void operator=(const TraverseSchema&);
 
@@ -153,6 +143,7 @@ private:
 	  * Traverse the Schema DOM tree
       */
     void             doTraverseSchema();
+    void             traverseSchemaHeader();
     void             traverseAnnotationDecl(const DOM_Element& childElem);
     void             traverseInclude(const DOM_Element& childElem);
     void             traverseImport(const DOM_Element& childElem);
@@ -466,6 +457,17 @@ private:
 
     void defaultComplexTypeInfo(ComplexTypeInfo* const typeInfo);
 
+    /**
+      * Resolve a schema location attribute value to an input source.
+      * Caller to delete the returned object.
+      */
+    InputSource* resolveSchemaLocation(const XMLCh* const loc);
+
+    bool locationsContain(const ValueVectorOf<unsigned int>* const locations,
+                          const unsigned int locationId);
+
+    void restoreSchemaInfo();
+
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
@@ -485,6 +487,7 @@ private:
     GrammarResolver*                 fGrammarResolver;
     SchemaGrammar*                   fSchemaGrammar;
     EntityResolver*                  fEntityResolver;
+    ErrorHandler*                    fErrorHandler;
     XMLStringPool*                   fURIStringPool;
     XMLBuffer                        fBuffer;
     XMLValidator*                    fValidator;
@@ -492,18 +495,21 @@ private:
     NamespaceScope*                  fNamespaceScope;
     RefHashTableOf<XMLAttDef>*       fAttributeDeclRegistry;
 	RefHashTableOf<ComplexTypeInfo>* fComplexTypeRegistry;
-    RefStackOf<XMLCh>*               fCurrentTypeNameStack;
+    SchemaInfo*                      fSchemaInfoRoot;
+    SchemaInfo*                      fCurrentSchemaInfo;
+    ValueVectorOf<unsigned int>*     fImportLocations;
+    ValueVectorOf<unsigned int>*     fIncludeLocations;
     static XMLStringPool             fStringPool;
 };
 
-// ---------------------------------------------------------------------------
-//  TraverseSchema: CleanUp methods
-// ---------------------------------------------------------------------------
-inline void TraverseSchema::cleanUp() {
 
-    delete [] fTargetNSURIString;
+// ---------------------------------------------------------------------------
+//  TraverseSchema: Setter methods
+// ---------------------------------------------------------------------------
+inline void TraverseSchema::setCurrentSchemaURL(const XMLCh* const urlStr) {
+
     delete [] fCurrentSchemaURL;
-    delete fCurrentTypeNameStack;
+    fCurrentSchemaURL = XMLString::replicate(urlStr);
 }
 
 // ---------------------------------------------------------------------------
@@ -617,6 +623,21 @@ inline const XMLCh* TraverseSchema::genAnonTypeName(const XMLCh* const prefix,
     int anonTypeId = fStringPool.addOrFind(fBuffer.getRawBuffer());
 
     return fStringPool.getValueForId(anonTypeId);
+}
+
+inline bool
+TraverseSchema::locationsContain(const ValueVectorOf<unsigned int>* const locations,
+                                 const unsigned int locationId) {
+
+    unsigned int locSize = locations->size();
+
+    for (unsigned int i=0; i < locSize; i++) {
+        if (locations->elementAt(i) == locationId) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 #endif

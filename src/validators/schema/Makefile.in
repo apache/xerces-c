@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.9  2001/05/10 16:33:15  knoaman
+# Traverse Schema Part III + error messages.
+#
 # Revision 1.8  2001/05/03 20:34:42  tng
 # Schema: SchemaValidator update
 #
@@ -111,6 +114,7 @@ VALIDATORS_SCHEMA_CPP_PUBHEADERS = \
 	NamespaceScope.hpp \
 	ComplexTypeInfo.hpp \
 	SubstitutionGroupComparator.hpp \
+	SchemaInfo.hpp \
 	TraverseSchema.hpp
 
 VALIDATORS_SCHEMA_CPP_PRIVHEADERS =
@@ -128,6 +132,7 @@ VALIDATORS_SCHEMA_CPP_OBJECTS = \
 	NamespaceScope.$(TO) \
 	ComplexTypeInfo.$(TO) \
 	SubstitutionGroupComparator.$(TO) \
+	SchemaInfo.$(TO) \
 	TraverseSchema.$(TO)
 
 all::	includes $(VALIDATORS_SCHEMA_CPP_OBJECTS)

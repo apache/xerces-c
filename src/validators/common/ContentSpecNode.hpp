@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2001/05/10 16:33:08  knoaman
+ * Traverse Schema Part III + error messages.
+ *
  * Revision 1.5  2001/05/03 20:34:39  tng
  * Schema: SchemaValidator update
  *
@@ -140,6 +143,8 @@ public :
         const   NodeTypes               type
         ,       ContentSpecNode* const  firstToAdopt
         ,       ContentSpecNode* const  secondToAdopt
+        , const bool                    adoptFirst = true
+        , const bool                    adoptSecond = true
     );
     ContentSpecNode(const ContentSpecNode&);
 	~ContentSpecNode();
@@ -206,6 +211,8 @@ private :
     ContentSpecNode*    fFirst;
     ContentSpecNode*    fSecond;
     NodeTypes           fType;
+    bool                fAdoptFirst;
+    bool                fAdoptSecond;
 };
 
 // ---------------------------------------------------------------------------
@@ -296,6 +303,8 @@ inline ContentSpecNode::ContentSpecNode() :
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
+    , fAdoptFirst(true)
+    , fAdoptSecond(true)
 {
     fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
@@ -307,6 +316,8 @@ ContentSpecNode::ContentSpecNode(QName* const element) :
     , fFirst(0)
     , fSecond(0)
     , fType(ContentSpecNode::Leaf)
+    , fAdoptFirst(true)
+    , fAdoptSecond(true)
 {
     if (!element)
         fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
@@ -317,12 +328,16 @@ ContentSpecNode::ContentSpecNode(QName* const element) :
 inline
 ContentSpecNode::ContentSpecNode(const  NodeTypes               type
                                 ,       ContentSpecNode* const  firstAdopt
-                                ,       ContentSpecNode* const  secondAdopt) :
+                                ,       ContentSpecNode* const  secondAdopt
+                                , const bool                    adoptFirst
+                                , const bool                    adoptSecond) :
 
     fElement(0)
     , fFirst(firstAdopt)
     , fSecond(secondAdopt)
     , fType(type)
+    , fAdoptFirst(adoptFirst)
+    , fAdoptSecond(adoptSecond)
 {
     fElement = new QName (XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
@@ -354,8 +369,14 @@ ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
 inline ContentSpecNode::~ContentSpecNode()
 {
     // Delete our children, which cause recursive cleanup
-    delete fFirst;
-    delete fSecond;
+    if (fAdoptFirst) {
+		delete fFirst;
+    }
+
+    if (fAdoptSecond) { 
+		delete fSecond;
+    }
+
     delete fElement;
 }
 

@@ -56,8 +56,8 @@
 
 /*
  * $Log$
- * Revision 1.2  2001/05/03 20:34:41  tng
- * Schema: SchemaValidator update
+ * Revision 1.3  2001/05/10 16:33:12  knoaman
+ * Traverse Schema Part III + error messages.
  *
  * Revision 1.1  2001/04/19 17:43:14  knoaman
  * More schema implementation classes.
@@ -76,6 +76,7 @@
 // ---------------------------------------------------------------------------
 ComplexTypeInfo::ComplexTypeInfo()
     : fAbstract(false)
+    , fAdoptContentSpec(true)
     , fDerivedBy(0)
     , fBlockSet(0)
     , fFinalSet(0)
@@ -96,7 +97,11 @@ ComplexTypeInfo::ComplexTypeInfo()
 ComplexTypeInfo::~ComplexTypeInfo()
 {
     delete [] fTypeName;
-    delete fContentSpec;
+    
+	if (fAdoptContentSpec) {
+        delete fContentSpec;
+    }
+
     delete fAttDefs;
     delete fAttList;
 }

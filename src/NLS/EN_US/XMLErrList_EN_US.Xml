@@ -56,7 +56,8 @@
             <Message Id="InvalidComplexTypeFinalValue" Text="The 'final' attribute values of a complexType must be #all | list(restriction,extension); {0} was found"/>
             <Message Id="AttributeDefaultFixedValue" Text="An attribute cannot have both 'fixed' and 'default' present at the same time - default used"/>
             <Message Id="NotOptionalDefaultAttValue" Text="If default and use are both present, use must have the value 'optional'."/>
-            <Message Id="AttributeWithNameRef" Text="Attribute name:{0} has also a ref defined - name ignored"/>
+            <Message Id="LocalAttributeWithNameRef" Text="Local attribute:{0} has also a ref defined - name ignored"/>
+            <Message Id="GlobalAttributeWithNameRef" Text="Global attribute:'{0}' cannot have a ref defined"/>
             <Message Id="DuplicateAttribute" Text="Error: Attribute '{0}' declared more than once in the same scope- ignoring"/>
             <Message Id="AttributeWithTypeAndSimpleType" Text="Attribute declarations may not contain both a type and a simpleType declaration"/>
             <Message Id="AttributeSimpleTypeNotFound" Text="SimpleType ({0}:{1}) for attribute: {2} not found"/>
@@ -87,11 +88,20 @@
             <Message Id="DuplicateElementDeclaration" Text="Duplicate element decl in the same scope: {0}"/>
             <Message Id="InvalidElementBlockValue" Text="The 'block' attribute values of an element must be #all | list(substitution,restriction,extension); {0} was found"/>
             <Message Id="InvalidElementFinalValue" Text="The 'final' attribute values of an element must be #all | list(restriction,extension); {0} was found"/>
+            <Message Id="InvalidElementNillableValue" Text="The 'nillable' attribute values of an element must be true | false; '{0}' was found"/>
+            <Message Id="InvalidElementAbstractValue" Text="The 'abstract' attribute values of an element must be true | false; '{0}' was found"/>
             <Message Id="AttributeRefContentError" Text="Ref is present, and simpleType/form/type found"/>
             <Message Id="DuplicateRefAttribute" Text="Duplicate reference attribute {0}:{1} in complexType"/>
             <Message Id="ForbiddenDerivationByRestriction" Text="Derivation by restriction is forbidden by either the base type '{0}' or the schema"/>
             <Message Id="ForbiddenDerivationByExtension" Text="Derivation by extension is forbidden by either the base type '{0}' or the schema"/>
             <Message Id="BaseNotComplexType" Text="The base type specified in the complexContent element must be a complexType"/>
+            <Message Id="ImportNoSchemaLocation" Text="A schemaLocation attribute must be specified on an 'import' element."/>
+            <Message Id="ImportNamespaceDifference" Text="Imported schema '{0}' has a different targetNameSpace '{1}' from what's declared '{2}'"/>
+            <Message Id="ImportRootError" Text="Could not get the doc root for imported Schema: {0}"/>
+            <Message Id="IncludeNoSchemaLocation" Text="A schemaLocation attribute must be specified on an 'include' element."/>
+            <Message Id="IncludeNamespaceDifference" Text="Included schema '{0}' has a different targetNameSpace '{1}'"/>
+            <Message Id="OnlyAnnotationExpected" Text="At most one &lt;annotation&gt; element is expected in the content."/>
+            <Message Id="InvalidAttributeContent" Text="The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>

@@ -56,8 +56,8 @@
 
 /*
  * $Log$
- * Revision 1.1  2001/05/03 19:18:06  knoaman
- * TraverseSchema Part II.
+ * Revision 1.2  2001/05/10 16:33:17  knoaman
+ * Traverse Schema Part III + error messages.
  *
  */
 
@@ -93,6 +93,7 @@
 #include <framework/URLInputSource.hpp>
 #include <parsers/DOMParser.hpp>
 #include <dom/DOM_DOMException.hpp>
+#include <validators/schema/SchemaInfo.hpp>
 
 // ---------------------------------------------------------------------------
 //  TraverseSchema: Local declaration
@@ -154,7 +155,8 @@ TraverseSchema::TraverseSchema( const DOM_Element&      schemaRoot
                               , XMLScanner* const       xmlScanner
                               , XMLValidator* const     xmlValidator
                               , const XMLCh* const      schemaURL
-                              , EntityResolver* const   entityResolver)
+                              , EntityResolver* const   entityResolver
+                              , ErrorHandler* const     errorHandler)
     : fElementDefaultQualified(false)
     , fAttributeDefaultQualified(false)
     , fTargetNSURI(-1)
@@ -171,98 +173,17 @@ TraverseSchema::TraverseSchema( const DOM_Element&      schemaRoot
     , fGrammarResolver(grammarResolver)
     , fSchemaGrammar(schemaGrammar)
     , fEntityResolver(entityResolver)
+    , fErrorHandler(errorHandler)
     , fURIStringPool(uriStringPool)
     , fValidator(xmlValidator)
     , fScanner(xmlScanner)
     , fNamespaceScope(0)
     , fAttributeDeclRegistry(0)
     , fComplexTypeRegistry(0)
-    , fCurrentTypeNameStack(0)
-{
-
-	try {
-		doTraverseSchema();
-    }
-    catch(...) {
-
-        cleanUp();
-        throw;
-    }
-}
-
-
-TraverseSchema::TraverseSchema( const DOM_Element&      schemaRoot
-                              , XMLStringPool* const    stringPool
-                              , SchemaGrammar* const    schemaGrammar
-                              , GrammarResolver* const  grammarResolver
-                              , XMLScanner* const       xmlScanner
-                              , XMLValidator* const     xmlValidator
-                              , const XMLCh* const      schemaURL)
-    : fElementDefaultQualified(false)
-    , fAttributeDefaultQualified(false)
-    , fTargetNSURI(-1)
-    , fCurrentScope(Grammar::TOP_LEVEL_SCOPE)
-    , fSimpleTypeAnonCount(0)
-    , fComplexTypeAnonCount(0)
-    , fFinalDefault(0)
-    , fBlockDefault(0)
-    , fScopeCount(0)
-    , fSchemaRootElement(schemaRoot)
-    , fTargetNSURIString(0)
-    , fCurrentSchemaURL(XMLString::replicate(schemaURL))
-    , fDatatypeRegistry(0)
-    , fGrammarResolver(grammarResolver)
-    , fSchemaGrammar(schemaGrammar)
-    , fEntityResolver(0)
-    , fURIStringPool(stringPool)
-    , fValidator(xmlValidator)
-    , fScanner(xmlScanner)
-    , fNamespaceScope(0)
-    , fAttributeDeclRegistry(0)
-    , fComplexTypeRegistry(0)
-    , fCurrentTypeNameStack(0)
-{
-
-	try {
-		doTraverseSchema();
-    }
-    catch(...) {
-
-        cleanUp();
-        throw;
-    }
-}
-
-
-TraverseSchema::TraverseSchema( const DOM_Element&      schemaRoot
-                              , XMLStringPool* const    stringPool
-                              , SchemaGrammar* const    schemaGrammar
-                              , GrammarResolver* const  grammarResolver
-                              , XMLScanner* const       xmlScanner
-                              , XMLValidator* const     xmlValidator)
-    : fElementDefaultQualified(false)
-    , fAttributeDefaultQualified(false)
-    , fTargetNSURI(-1)
-    , fCurrentScope(Grammar::TOP_LEVEL_SCOPE)
-    , fSimpleTypeAnonCount(0)
-    , fComplexTypeAnonCount(0)
-    , fFinalDefault(0)
-    , fBlockDefault(0)
-    , fScopeCount(0)
-    , fSchemaRootElement(schemaRoot)
-    , fTargetNSURIString(0)
-    , fCurrentSchemaURL(0)
-    , fDatatypeRegistry(0)
-    , fGrammarResolver(grammarResolver)
-    , fSchemaGrammar(schemaGrammar)
-    , fEntityResolver(0)
-    , fURIStringPool(stringPool)
-    , fValidator(xmlValidator)
-    , fScanner(xmlScanner)
-    , fNamespaceScope(0)
-    , fAttributeDeclRegistry(0)
-    , fComplexTypeRegistry(0)
-    , fCurrentTypeNameStack(0)
+    , fSchemaInfoRoot(0)
+    , fCurrentSchemaInfo(0)
+    , fImportLocations(0)
+    , fIncludeLocations(0)
 {
 
 	try {
@@ -289,7 +210,6 @@ void TraverseSchema::doTraverseSchema() {
 
     fDatatypeRegistry = fGrammarResolver->getDatatypeRegistry();
     fDatatypeRegistry->expandRegistryToFullSchemaSet();
-    fCurrentTypeNameStack = new RefStackOf<XMLCh>(16, true);
 
 	if (fSchemaRootElement.isNull()) {
         // REVISIT: Anything to do?
@@ -365,6 +285,18 @@ void TraverseSchema::doTraverseSchema() {
                                      fSchemaGrammar);
     } // end else
 
+	traverseSchemaHeader();
+
+    // process children nodes
+    processChildren(fSchemaRootElement);
+
+    // Handle identity constraints
+    // TO DO
+}
+
+
+void TraverseSchema::traverseSchemaHeader() {
+
     retrieveNamespaceMapping();
 
     fElementDefaultQualified = 
@@ -380,11 +312,7 @@ void TraverseSchema::doTraverseSchema() {
     fBlockDefault = defaultVal != 0 ? parseBlockSet(defaultVal) : 0;
     fFinalDefault = finalVal != 0 ? parseFinalSet(finalVal) : 0;
 
-    // process children nodes
-    processChildren(fSchemaRootElement);
-
-    // Handle identity constraints
-    // TO DO
+    fCurrentScope = Grammar::TOP_LEVEL_SCOPE;
 }
 
 
@@ -393,47 +321,60 @@ void TraverseSchema::traverseAnnotationDecl(const DOM_Element& childElem) {
     //TO DO
 }
 
-void TraverseSchema::traverseInclude(const DOM_Element& childElem) {
 
-    //TO DO - work in progress
+/**
+  * Traverse include
+  *
+  *    <include 
+  *        id = ID 
+  *        schemaLocation = anyURI 
+  *        {any attributes with non-schema namespace . . .}>
+  *        Content: (annotation?)
+  *    </include>
+  */
+void TraverseSchema::traverseInclude(const DOM_Element& elem) {
+
     // ------------------------------------------------------------------
-    // Get 'schemLocation' attribute
+    // First, handle any ANNOTATION declaration
+    // ------------------------------------------------------------------
+    if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
+    }
+
+    // ------------------------------------------------------------------
+    // Get 'schemaLocation' attribute
     // ------------------------------------------------------------------
     const XMLCh* schemaLocation = 
-            getElementAttValue(childElem,SchemaSymbols::fgATT_SCHEMALOCATION);
+            getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION);
 
     if (XMLString::stringLen(schemaLocation) == 0) {
-        reportSchemaError(0, 0); //'A schemaLocation attribute must be specified on an 'include' element."
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IncludeNoSchemaLocation);
+        return;
     }
-    
+
     // ------------------------------------------------------------------
-	// Create an input source
-    // ------------------------------------------------------------------
-    InputSource* srcToFill = 0;
-
-    if (fEntityResolver){
-        srcToFill = fEntityResolver->resolveEntity(0, schemaLocation);
-    }
-
-	//  If they didn't create a source via the entity resolver, then we
-    //  have to create one on our own.
-    try {
-
-        XMLURL urlTmp(fCurrentSchemaURL, schemaLocation);
-
-        if (urlTmp.isRelative()) {
-            ThrowXML(MalformedURLException,
-                     XMLExcepts::URL_NoProtocolPresent);
-        }
-
-        srcToFill = new URLInputSource(urlTmp);
-    }
-    catch(const MalformedURLException&) {
-        // Its not a URL, so lets assume its a local file name.
-        srcToFill = new LocalFileInputSource(fCurrentSchemaURL,schemaLocation);
-    }
-
+	// Resolve schema location
+    // ------------------------------------------------------------------    
+    InputSource*         srcToFill = resolveSchemaLocation(schemaLocation);
     Janitor<InputSource> janSrc(srcToFill);
+
+	// Nothing to do
+    if (!srcToFill) {
+        return;
+    }
+
+	const XMLCh* includeURL = srcToFill->getSystemId();
+    unsigned int locationId = fURIStringPool->addOrFind(includeURL);
+
+    if (fIncludeLocations == 0) {
+        fIncludeLocations = new ValueVectorOf<unsigned int>(8);
+    }
+
+    if (locationsContain(fIncludeLocations, locationId)) {
+        return;
+    }
+
+    fIncludeLocations->addElement(locationId);
 
     // ------------------------------------------------------------------
 	// Parse input source
@@ -442,7 +383,7 @@ void TraverseSchema::traverseInclude(const DOM_Element& childElem) {
 
     parser.setValidationScheme(DOMParser::Val_Never);
     parser.setDoNamespaces(true);
-//    parser.setErrorHandler(fErrorHandler);
+    parser.setErrorHandler(fErrorHandler);
     parser.setEntityResolver(fEntityResolver);
 
     try {
@@ -462,7 +403,7 @@ void TraverseSchema::traverseInclude(const DOM_Element& childElem) {
     }
 
     // ------------------------------------------------------------------
-	// Get root element
+    // Get root element
     // ------------------------------------------------------------------
     DOM_Document document = parser.getDocument();
 
@@ -478,19 +419,178 @@ void TraverseSchema::traverseInclude(const DOM_Element& childElem) {
             if (XMLString::stringLen(targetNSURIString) != 0
                 && XMLString::compareString(targetNSURIString, 
                                             fTargetNSURIString) != 0){
-                reportSchemaError(0,0);
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IncludeNamespaceDifference,
+                                  schemaLocation, targetNSURIString);
             }
             else {
+
+                // --------------------------------------------------------
+                // Save current schema information
+                // --------------------------------------------------------
+                if (fSchemaInfoRoot == 0) {
+
+                    fSchemaInfoRoot = 
+                        new SchemaInfo(fElementDefaultQualified,
+                                       fAttributeDefaultQualified,
+                                       fBlockDefault,
+                                       fFinalDefault,
+                                       fCurrentScope,
+                                       fCurrentSchemaURL,
+                                       fSchemaRootElement,
+									   0, 0);
+                    fCurrentSchemaInfo = fSchemaInfoRoot;
+                }
+
+                // --------------------------------------------------------
+                // Update schema information with included schema
+                // --------------------------------------------------------
+                fSchemaRootElement = root;
+                setCurrentSchemaURL(includeURL);
+                traverseSchemaHeader();
+
+                // and now we'd better save this stuff!  
+                fCurrentSchemaInfo = 
+					new SchemaInfo(fElementDefaultQualified,
+                                   fAttributeDefaultQualified, 
+                                   fBlockDefault,
+                                   fFinalDefault, 
+                                   fCurrentScope,
+                                   fCurrentSchemaURL,
+                                   fSchemaRootElement,
+                                   fCurrentSchemaInfo->getNext(),
+                                   fCurrentSchemaInfo);
+
+                (fCurrentSchemaInfo->getPrev())->setNext(fCurrentSchemaInfo);
+                processChildren(fSchemaRootElement);
+
+                // --------------------------------------------------------
+                // Restore old schema information
+                // --------------------------------------------------------
+                fCurrentSchemaInfo = fCurrentSchemaInfo->getPrev();
+                restoreSchemaInfo();
             }
         }
     }
-    
 }
 
-void TraverseSchema::traverseImport(const DOM_Element& childElem) {
+/**
+  * Traverse import
+  *
+  *    <import
+  *        id = ID
+  *        namespace = anyURI
+  *        schemaLocation = anyURI
+  *        {any attributes with non-schema namespace . . .}>
+  *        Content: (annotation?)
+  *    </import>
+  */
+void TraverseSchema::traverseImport(const DOM_Element& elem) {
 
-    //TO DO
+    // ------------------------------------------------------------------
+    // First, handle any ANNOTATION declaration
+    // ------------------------------------------------------------------
+    if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
+    }
+
+    // ------------------------------------------------------------------
+    // Get 'schemaLocation' attribute
+    // ------------------------------------------------------------------
+    const XMLCh* schemaLocation = 
+            getElementAttValue(elem, SchemaSymbols::fgATT_SCHEMALOCATION);
+
+    if (XMLString::stringLen(schemaLocation) == 0) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ImportNoSchemaLocation);
+        return;
+    }
+
+    // ------------------------------------------------------------------
+	// Resolve schema location
+    // ------------------------------------------------------------------    
+    InputSource*         srcToFill = resolveSchemaLocation(schemaLocation);
+    Janitor<InputSource> janSrc(srcToFill);
+
+	// Nothing to do
+    if (!srcToFill) {
+        return;
+    }
+
+	const XMLCh* importURL = srcToFill->getSystemId();
+    unsigned int locationId = fURIStringPool->addOrFind(importURL);
+
+    if (fImportLocations == 0) {
+        fImportLocations = new ValueVectorOf<unsigned int>(8);
+    }
+
+    if (locationsContain(fImportLocations, locationId)) {
+        return;
+    }
+
+    fImportLocations->addElement(locationId);
+
+    const XMLCh* nameSpace = getElementAttValue(elem, SchemaSymbols::fgATT_NAMESPACE);
+    SchemaGrammar* importedGrammar = (SchemaGrammar*) fGrammarResolver->getGrammar(nameSpace);
+
+    if (importedGrammar == 0) {
+        importedGrammar = new SchemaGrammar();
+    }
+
+    // ------------------------------------------------------------------
+	// Parse input source
+    // ------------------------------------------------------------------
+    DOMParser parser;
+
+    parser.setValidationScheme(DOMParser::Val_Never);
+    parser.setDoNamespaces(true);
+    parser.setErrorHandler(fErrorHandler);
+    parser.setEntityResolver(fEntityResolver);
+
+    try {
+        parser.parse(*srcToFill);
+    }
+    catch (const XMLException& e) {
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::XMLException,
+                          e.getType(), e.getMessage());
+    }
+    catch (const DOM_DOMException& e) {
+        throw e;
+    }
+    catch (...) {
+
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::UnexpectedError);
+        throw;
+    }
+
+    // ------------------------------------------------------------------
+    // Get root element
+    // ------------------------------------------------------------------
+    DOM_Document document = parser.getDocument();
+
+	if (!document.isNull()) {
+
+        DOM_Element root = document.getDocumentElement();
+
+        if (!root.isNull()) {
+
+            const XMLCh* targetNSURIString = 
+                getElementAttValue(root,SchemaSymbols::fgATT_TARGETNAMESPACE);
+
+            if (XMLString::compareString(targetNSURIString, nameSpace) != 0) {
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ImportNamespaceDifference,
+                                  schemaLocation, targetNSURIString, nameSpace);
+            }
+            else {
+                TraverseSchema traverseSchema(root, fURIStringPool, importedGrammar,
+                                              fGrammarResolver, fScanner, fValidator,
+											  importURL, fEntityResolver, fErrorHandler);
+            }
+         }
+         else {
+             reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::ImportRootError, schemaLocation);
+         }
+    }
 }
+
 
 void TraverseSchema::traverseRedefine(const DOM_Element& childElem) {
 
@@ -539,7 +639,7 @@ TraverseSchema::traverseChoiceSequence(const DOM_Element& elem,
         } 
         else if (childName.equals(SchemaSymbols::fgELT_GROUP)) {
 
-            contentSpecNode = traverseGroupDecl(child);
+            contentSpecNode = 0/*traverseGroupDecl(child)*/;
 
             if (contentSpecNode == 0) 
                 continue;
@@ -699,7 +799,7 @@ int TraverseSchema::traverseComplexTypeDecl(const DOM_Element& elem) {
         name = genAnonTypeName(fgAnonCNamePrefix, fComplexTypeAnonCount);
     }
    
-    if (!isValidNCName(name)) {
+    if (!XMLString::isValidNCName(name)) {
 
 		//REVISIT - Should we return or continue and save type with wrong name?
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidComplexTypeName, name);
@@ -867,7 +967,7 @@ TraverseSchema::traverseAny(const DOM_Element& elem) {
     // First, handle any ANNOTATION declaration
     // ------------------------------------------------------------------
     if (checkContent(elem, XUtil::getFirstChildElement(elem), true) != 0) {
-//        reportSchemaError("<any> elements can contain at most one <annotation> element in their children");
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::OnlyAnnotationExpected);
     }
 
     // ------------------------------------------------------------------
@@ -973,11 +1073,84 @@ TraverseSchema::traverseAny(const DOM_Element& elem) {
     return retSpecNode;
 }
 
-ContentSpecNode*
-TraverseSchema::traverseAll(const DOM_Element& allElem) {
 
-    // TO DO
-    return 0;
+/**
+  *  Traverse all
+  *
+  *     <all 
+  *        id = ID 
+  *        maxOccurs = 1 : 1
+  *        minOccurs = (0 | 1) : 1
+  *        {any attributes with non-schema namespace . . .}>
+  *        Content: (annotation?, element*)
+  *     </all>
+  */
+ContentSpecNode*
+TraverseSchema::traverseAll(const DOM_Element& elem) {
+
+	return 0;
+
+    // Work in progress
+    DOM_Element child = checkContent(elem, XUtil::getFirstChildElement(elem), true);
+
+    if (child == 0) {
+        return 0;
+    }
+
+    ContentSpecNode* left = 0;
+    RefVectorOf<ContentSpecNode>* allChildren = 0;
+
+    for (; child != 0; child = XUtil::getNextSiblingElement(child)) {
+
+        ContentSpecNode* contentSpecNode = 0;
+	    bool seeParticle = false;
+        DOMString childName = child.getLocalName();
+
+        if (childName.equals(SchemaSymbols::fgELT_ELEMENT)) {
+
+            QName* eltQName = traverseElementDecl(child);
+            Janitor<QName> janQName(eltQName);
+
+            if (eltQName == 0) {
+                continue;
+            }
+
+            contentSpecNode = new ContentSpecNode(eltQName);
+            seeParticle = true;
+        } 
+        else {
+            fBuffer.set(childName.rawBuffer(), childName.length()); 
+            reportSchemaError(0, 0, fBuffer.getRawBuffer()); //Content of all group is restricted to elements only. '{0}' encountered and ignored."
+        }
+
+        if (seeParticle) {
+            contentSpecNode = expandContentModel(contentSpecNode, child);
+        }
+
+        if (contentSpecNode != 0) {
+
+            if (allChildren == 0) {
+                allChildren = new RefVectorOf<ContentSpecNode>(32, false);
+            }
+
+            allChildren->addElement(contentSpecNode);
+        }
+    }
+
+    if (!allChildren || allChildren->size() == 0) {
+        return 0;
+    }
+
+    try {
+//        left = allCalcWrapper(allChildren);
+    }
+    catch(...) {
+
+        delete allChildren;
+        reportSchemaError(0, 0); //"The size of the &lt;all&gt; declaration is too large for this parser and elements using it will not validate correctly"
+    }
+
+    return left;
 }
 
 /**
@@ -992,7 +1165,7 @@ TraverseSchema::traverseAll(const DOM_Element& allElem) {
   *         ref = QName 
   *         type = QName 
   *         use = optional | prohibited | required : optional
-  *         value = string>
+  >
   *         Content: (annotation? , simpleType?)
   *       <attribute/>
   * 
@@ -1015,9 +1188,18 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     bool         refEmpty = (XMLString::stringLen(ref) == 0) ? true : false;
     DOM_Element  simpleType = checkContent(elem, XUtil::getFirstChildElement(elem), true);
 
-    if (nameEmpty && topLevel) {
-        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::TopLevelNoNameAttribute);
-        return;
+    if (topLevel) {
+
+        if (nameEmpty) {
+
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::TopLevelNoNameAttribute);
+            return;
+        }
+        else {
+            if (!refEmpty) {
+                reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::GlobalAttributeWithNameRef, name);
+            }
+        }
     }
 
     if (nameEmpty && refEmpty) {
@@ -1045,7 +1227,7 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     if (nameEmpty || (!refEmpty && !topLevel)) {
 
 		if (!nameEmpty) {
-            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::AttributeWithNameRef, name);
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::LocalAttributeWithNameRef, name);
         }
 
         processAttributeDeclRef(elem, simpleType, typeInfo, ref, useVal);
@@ -1053,7 +1235,8 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     }
 
     // processing 'name'
-    if (!isValidNCName(name)) {
+    if (!XMLString::isValidNCName(name) 
+        || XMLString::compareString(name, XMLUni::fgXMLNSString) == 0) {
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttributeName, name);
         return;
@@ -1088,6 +1271,21 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
     const XMLCh* typeAttr = getElementAttValue(elem, SchemaSymbols::fgATT_TYPE);
     DatatypeValidator*  dv = 0;
     XMLAttDef::AttTypes attType;
+	DOMString contentName;
+
+	while (simpleType != 0) {
+
+        contentName = simpleType.getLocalName();
+		fBuffer.set(contentName.rawBuffer(), contentName.length());
+
+        if (XMLString::compareString(SchemaSymbols::fgELT_SIMPLETYPE,
+			                         fBuffer.getRawBuffer()) == 0) {
+            break;
+        }
+            
+        reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidAttributeContent, fBuffer.getRawBuffer());
+        simpleType = XUtil::getNextSiblingElement(simpleType);
+    }
 
     if (simpleType != 0) {
 
@@ -1103,6 +1301,7 @@ void TraverseSchema::traverseAttributeDecl(const DOM_Element& elem,
             dv = fDatatypeRegistry->getDatatypeValidator(
 			                       fStringPool.getValueForId(datatypeSymbol));
         }
+
     }
     else if (XMLString::stringLen(typeAttr) == 0) {
 
@@ -1326,7 +1525,7 @@ QName* TraverseSchema::traverseElementDecl(const DOM_Element& elem) {
     }
 
     // Name is notEmpty
-	if (!isValidNCName(name)) {
+	if (!XMLString::isValidNCName(name)) {
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidElementName, name);
         return 0;
     }
@@ -1689,7 +1888,6 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
 
 	// Get facets if any existing
     RefHashTableOf<KVStringPair>*  facets = 0;
-    Janitor<KVStringPairHashTable> janFacets(0);
     XMLBuffer                      enumData;
     XMLBuffer                      pattern;
     DOMString                      facetName;
@@ -1708,9 +1906,7 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
             int          attValueLen = attValue.length();
 
             if (facets == 0) {
-
                 facets = new RefHashTableOf<KVStringPair>(29, true);
-                janFacets.reset(facets);
             }
 
             if (XMLString::compareString(facetStr, 
@@ -1784,16 +1980,16 @@ int TraverseSchema::traverseByRestriction(const DOM_Element& rootElem,
         if (newValidator == 0) {
 
             int strId = fStringPool.addOrFind(qualifiedName);
-            if (fDatatypeRegistry->createDatatypeValidator
+            fDatatypeRegistry->createDatatypeValidator
 				   (fStringPool.getValueForId(strId), baseValidator, facets,
-                    false, finalSet) != 0) {
-                janFacets.orphan();
-			}
+                    false, finalSet);
 		}
     }
     catch(...) {
+
         reportSchemaError(XMLUni::fgXMLErrDomain,
                           XMLErrs::DatatypeValidatorCreationError, typeName);
+        return -1;
     }
 
     return fStringPool.addOrFind(qualifiedName);
@@ -2065,7 +2261,6 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
             // Build up the facet info
             // ---------------------------------------------------------------
             RefHashTableOf<KVStringPair>*  facets = 0;
-            Janitor<KVStringPairHashTable> janFacets(0);
             XMLBuffer                      enumData;
             XMLBuffer                      pattern;
             const XMLCh*                   facetName;
@@ -2089,9 +2284,7 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                         content.getAttribute(SchemaSymbols::fgATT_VALUE);
 
                     if (facets == 0) {
-
                         facets = new RefHashTableOf<KVStringPair>(29, true);
-                        janFacets.reset(facets);
                     }
 
                     fBuffer.set(attValue.rawBuffer(), attValue.length());
@@ -2172,10 +2365,6 @@ void TraverseSchema::traverseSimpleContentDecl(const XMLCh* const typeName,
                             facets, false, 0
                         )
                     );
-
-					if (typeInfo->getDatatypeValidator() != 0) {
-                        janFacets.orphan();
-                    }
 				}
                 catch(...) {
                     reportSchemaError(XMLUni::fgXMLErrDomain,
@@ -2473,15 +2662,18 @@ void TraverseSchema::retrieveNamespaceMapping() {
 
         fBuffer.set(attName.rawBuffer(), attName.length());
         int nameId = fStringPool.addOrFind(fBuffer.getRawBuffer());
+        const XMLCh* name = fStringPool.getValueForId(nameId);
 
-		// starts with 'xmlns:'
-		if (XMLString::startsWith(fBuffer.getRawBuffer(), fgXMLNS_Str)) {
+        // starts with 'xmlns:'
+        if (XMLString::startsWith(name, fgXMLNS_Str)) {
 
-            const XMLCh* prefix = getPrefix(fStringPool.getValueForId(nameId));
-            DOMString attValue = attribute.getNodeValue();
+            XMLCh prefix[256];
+            int offsetIndex = XMLString::indexOf(name, chColon);
+			DOMString attValue = attribute.getNodeValue();
 
+            XMLString::subString(prefix, name, offsetIndex + 1, XMLString::stringLen(name));
             fBuffer.set(attValue.rawBuffer(), attValue.length());
-            fNamespaceScope->addPrefix( prefix,
+            fNamespaceScope->addPrefix(prefix,
                         fURIStringPool->addOrFind(fBuffer.getRawBuffer()));
         }
         else if (attName.equals(XMLUni::fgXMLNSString)) { // == 'xmlns'
@@ -2530,8 +2722,7 @@ void TraverseSchema::processChildren(const DOM_Element& root) {
         } 
         else if (name.equals(SchemaSymbols::fgELT_REDEFINE)) {
 
-            //fRedefineSucceeded = true; // presume worked until proven failed.
-            traverseRedefine(child); 
+
         } 
 		else
             break;
@@ -3326,12 +3517,27 @@ TraverseSchema::createSchemaElementDecl(const DOM_Element& elem,
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidElementFinalValue, final);
     }
 
-    if (elem.getAttribute(SchemaSymbols::fgATT_NILLABLE).equals(SchemaSymbols::fgATTVAL_TRUE)) {
-        elementMiscFlags += SchemaSymbols::NILLABLE;
+    const XMLCh* nillable = getElementAttValue(elem, SchemaSymbols::fgATT_NILLABLE);
+    const XMLCh* abstract = getElementAttValue(elem, SchemaSymbols::fgATT_ABSTRACT);
+
+    if (nillable) {
+
+        if (XMLString::compareString(nillable, SchemaSymbols::fgATTVAL_TRUE) == 0) {
+            elementMiscFlags += SchemaSymbols::NILLABLE;
+        }
+        else if (XMLString::compareString(nillable, SchemaSymbols::fgATTVAL_FALSE) != 0) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidElementNillableValue, nillable);
+        }
     }
 
-    if (elem.getAttribute(SchemaSymbols::fgATT_ABSTRACT).equals(SchemaSymbols::fgATTVAL_TRUE)) {
-        elementMiscFlags += SchemaSymbols::ABSTRACT;
+    if (abstract) {
+
+        if (XMLString::compareString(abstract, SchemaSymbols::fgATTVAL_TRUE) == 0) {
+            elementMiscFlags += SchemaSymbols::ABSTRACT;
+        }
+        else if (XMLString::compareString(abstract, SchemaSymbols::fgATTVAL_FALSE) != 0) {
+            reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::InvalidElementAbstractValue, abstract);
+        }
     }
 
     const XMLCh* prefix = getPrefix(name);
@@ -3443,38 +3649,6 @@ void TraverseSchema::processAttributeDeclRef(const DOM_Element& elem,
 }
 
 
-/**
-  * isValidNCName
-  *
-  *    NCName::= (Letter | '_') (NCNameChar)*
-  *    NCNameChar ::= Letter | Digit | '.' | '-' | '_'
-  *                   | CombiningChar | Extender
-  */
-bool TraverseSchema::isValidNCName(const XMLCh* const name) {
-
-    if (XMLString::stringLen(name) == 0
-        || XMLString::indexOf(name, chColon) != -1) {
-        return false;
-    }
-
-    const XMLCh* tempName = name;
-    XMLCh firstChar = *tempName++;
-
-    if (!XMLReader::isXMLLetter(firstChar) && firstChar != chUnderscore) {
-
-        return false;
-    }
-
-    while(*tempName) {
-
-        if (!XMLReader::isNameChar(*tempName++)) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 ContentSpecNode*
 TraverseSchema::expandContentModel(ContentSpecNode* const specNode,
                                    const DOM_Element& elem) {
@@ -3552,7 +3726,7 @@ TraverseSchema::expandContentModel(ContentSpecNode* const specNode,
 
         for (int i=0; i < (int)(minOccurs-1); i++) {
             retNode = new ContentSpecNode(ContentSpecNode::Sequence,
-                                          saveNode, retNode);
+                                          saveNode, retNode, false);
         }
     }
     else {
@@ -3566,28 +3740,31 @@ TraverseSchema::expandContentModel(ContentSpecNode* const specNode,
 
             for (int i=0; i < (int)(maxOccurs-minOccurs-1); i++) {
                 retNode = new ContentSpecNode(ContentSpecNode::Sequence,
-                                              retNode, optional);
+                                              retNode, optional, true, false);
             }
         }
         else {
 
             for (int i=0; i < (int)(minOccurs-1); i++) {
                 retNode = new ContentSpecNode(ContentSpecNode::Sequence,
-                                              retNode, saveNode);
+                                              retNode, saveNode, true, false);
             }
 
             ContentSpecNode* optional = 
-                new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0);
+                new ContentSpecNode(ContentSpecNode::ZeroOrOne, saveNode, 0, false);
 
             for (int j=0; j < (int)(maxOccurs-minOccurs); j++) {
+
+                bool toAdopt = (j == 0) ? true : false;
                 retNode = new ContentSpecNode(ContentSpecNode::Sequence,
-                                              retNode, optional);
+                                              retNode, optional, true, toAdopt);
             }
         }
     }
 
     return retNode;
 }
+
 
 void TraverseSchema::processComplexContent(const XMLCh* const typeName,
                                            const DOM_Element& childElem,
@@ -3610,8 +3787,8 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
 
 		if (childName.equals(SchemaSymbols::fgELT_GROUP)) {
 
-            specNode = expandContentModel(traverseGroupDecl(childElem), 
-                                          childElem);
+//            specNode = expandContentModel(traverseGroupDecl(childElem), 
+//                                          childElem);
             attrNode = XUtil::getNextSiblingElement(childElem);
         }
         else if (childName.equals(SchemaSymbols::fgELT_SEQUENCE)) {
@@ -3702,18 +3879,17 @@ void TraverseSchema::processComplexContent(const XMLCh* const typeName,
 
             // Compose the final content model by concatenating the base and
             // the current in sequence
-            if (baseSpecNode != 0) {
-                baseSpecNode = new ContentSpecNode(*baseSpecNode);
-            }
-
             if (typeInfo->getContentSpec() == 0) {
+
                 typeInfo->setContentSpec(baseSpecNode);
+                typeInfo->setAdoptContentSpec(false);
             }
             else if (baseSpecNode != 0) {
 
                 typeInfo->setContentSpec( 
-                    new ContentSpecNode(ContentSpecNode::Sequence,baseSpecNode,
-                                        typeInfo->getContentSpec()));
+                    new ContentSpecNode(ContentSpecNode::Sequence, baseSpecNode,
+                                        typeInfo->getContentSpec(), false,
+                                        typeInfo->getAdoptContentSpec()));
             }
         }
     }
@@ -4105,6 +4281,62 @@ void TraverseSchema::reportSchemaError(const XMLCh* const msgDomain,
     }
 }
 
+InputSource* TraverseSchema::resolveSchemaLocation(const XMLCh* const loc) {
+    
+    // ------------------------------------------------------------------
+	// Create an input source
+    // ------------------------------------------------------------------
+    InputSource* srcToFill = 0;
+
+    if (fEntityResolver){
+        srcToFill = fEntityResolver->resolveEntity(XMLUni::fgZeroLenString,
+                                                   loc);
+    }
+
+	//  If they didn't create a source via the entity resolver, then we
+    //  have to create one on our own.
+    try {
+
+        XMLURL urlTmp(fCurrentSchemaURL, loc);
+
+        if (urlTmp.isRelative()) {
+            ThrowXML(MalformedURLException,
+                     XMLExcepts::URL_NoProtocolPresent);
+        }
+
+        srcToFill = new URLInputSource(urlTmp);
+    }
+    catch(const MalformedURLException&) {
+        // Its not a URL, so lets assume its a local file name.
+        srcToFill = new LocalFileInputSource(fCurrentSchemaURL,loc);
+    }
+
+    return srcToFill;
+}
+
+
+void TraverseSchema::restoreSchemaInfo() {
+
+    fCurrentSchemaURL = fCurrentSchemaInfo->getCurrentSchemaURL();
+    fCurrentScope = fCurrentSchemaInfo->getCurrentScope();
+    fElementDefaultQualified = fCurrentSchemaInfo->isElementDefaultQualified();
+    fAttributeDefaultQualified = fCurrentSchemaInfo->isAttributeDefaultQualified();
+    fBlockDefault = fCurrentSchemaInfo->getBlockDefault();
+    fFinalDefault = fCurrentSchemaInfo->getFinalDefault();
+    fSchemaRootElement = fCurrentSchemaInfo->getRoot();
+}
+
+// ---------------------------------------------------------------------------
+//  TraverseSchema: CleanUp methods
+// ---------------------------------------------------------------------------
+void TraverseSchema::cleanUp() {
+
+    delete [] fTargetNSURIString;
+    delete [] fCurrentSchemaURL;
+    delete fSchemaInfoRoot;
+    delete fImportLocations;
+    delete fIncludeLocations;
+}
 /**
   * End of file TraverseSchema.cpp
   */

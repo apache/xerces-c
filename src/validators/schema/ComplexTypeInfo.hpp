@@ -97,28 +97,30 @@ public:
 	// -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    bool                          getAbstract() const;
-    int                           getDerivedBy() const;
-    int                           getBlockSet() const;
-    int                           getFinalSet() const;
-    int                           getScopeDefined() const;
-    unsigned int                  getElementId() const;
-	int                           getContentType() const;
-    XMLCh*                        getTypeName() const;
-    DatatypeValidator*            getBaseDatatypeValidator() const;
-    DatatypeValidator*            getDatatypeValidator() const;
-    ComplexTypeInfo*              getBaseComplexTypeInfo() const;
-    ContentSpecNode*              getContentSpec() const;
-    const SchemaAttDef*           getAttDef(const XMLCh* const baseName, 
-                                            const int uriId) const;
-    SchemaAttDef*                 getAttDef(const XMLCh* const baseName,
-                                            const int uriId);
-    XMLAttDefList&                getAttDefList() const;
+    bool                getAbstract() const;
+    bool                getAdoptContentSpec() const;
+    int                 getDerivedBy() const;
+    int                 getBlockSet() const;
+    int                 getFinalSet() const;
+    int                 getScopeDefined() const;
+    unsigned int        getElementId() const;
+	int                 getContentType() const;
+    XMLCh*              getTypeName() const;
+    DatatypeValidator*  getBaseDatatypeValidator() const;
+    DatatypeValidator*  getDatatypeValidator() const;
+    ComplexTypeInfo*    getBaseComplexTypeInfo() const;
+    ContentSpecNode*    getContentSpec() const;
+    const SchemaAttDef* getAttDef(const XMLCh* const baseName,
+                                  const int uriId) const;
+    SchemaAttDef*       getAttDef(const XMLCh* const baseName,
+                                  const int uriId);
+    XMLAttDefList&      getAttDefList() const;
 
 	// -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
     void setAbstract(const bool isAbstract);
+    void setAdoptContentSpec(const bool toAdopt);
     void setDerivedBy(const int derivedBy);
     void setBlockSet(const int blockSet);
     void setFinalSet(const int finalSet);
@@ -166,6 +168,7 @@ private:
     //  Private data members
     // -----------------------------------------------------------------------
     bool                               fAbstract;
+    bool                               fAdoptContentSpec;
     int                                fDerivedBy;
     int                                fBlockSet;
     int                                fFinalSet;
@@ -187,6 +190,11 @@ private:
 inline bool ComplexTypeInfo::getAbstract() const {
 
     return fAbstract;
+}
+
+inline bool ComplexTypeInfo::getAdoptContentSpec() const {
+
+    return fAdoptContentSpec;
 }
 
 inline int ComplexTypeInfo::getDerivedBy() const {
@@ -267,9 +275,14 @@ inline SchemaAttDef* ComplexTypeInfo::getAttDef(const XMLCh* const baseName,
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Setter methods
 // ---------------------------------------------------------------------------
-inline void  ComplexTypeInfo::setAbstract(const bool isAbstract) {
+inline void ComplexTypeInfo::setAbstract(const bool isAbstract) {
 
     fAbstract = isAbstract;
+}
+
+inline void ComplexTypeInfo::setAdoptContentSpec(const bool toAdopt) {
+
+    fAdoptContentSpec = toAdopt;
 }
 
 inline void ComplexTypeInfo::setDerivedBy(const int derivedBy) {
