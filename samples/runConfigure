@@ -74,6 +74,7 @@ usage()
     echo "       -c <C compiler name> (e.g. gcc, xlc or icc)"
     echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
+    echo "       -b <bitsToBuild> (accepts '64', '32')"    
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -h (get help on the above commands)"
@@ -103,9 +104,9 @@ fi
 
 # Check the command line parameters
 if test -x /usr/bin/getopt; then
-getoptErr=`getopt p:c:x:dm:n:t:r:l:z:h $*`
+getoptErr=`getopt p:c:x:dm:n:t:r:l:b:z:h $*`
 else
-getoptErr=`getopts p:c:x:dm:n:t:r:l:z:h `$*``
+getoptErr=`getopts p:c:x:dm:n:t:r:l:b:z:h `$*``
 fi
 if [ $? != 0 ]
    then
@@ -115,14 +116,15 @@ fi
 
 # Now get the command line parameters
 if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+set -- `getopt p:c:x:dm:n:t:r:l:b:z:h $*`
 else
-set --`getopts p:c:x:dm:n:t:r:l:z:h `$*``
+set --`getopts p:c:x:dm:n:t:r:l:b:z:h `$*``
 fi
 
 # Set up the default values for each parameter
 debug=off                # by default debug is off
 compileroptions=""
+bitsToBuild=32           # by default 32 bit build assumed
 while [ $# -gt 0 ]
    do
    case $1 in
@@ -137,6 +139,9 @@ while [ $# -gt 0 ]
 
    -d)
         debug=on; shift;;
+        
+   -b)
+        bitsToBuild=$2; shift 2;;                  
 
    -z)
         compileroptions="$compileroptions $2"; shift 2;;
@@ -169,6 +174,7 @@ echo "Generating makefiles with the following options ..."
 echo "Platform: $platform"
 echo "C Compiler: $ccompiler"
 echo "C++ Compiler: $cppcompiler"
+echo "bitsToBuild option: $bitsToBuild"
 echo "Extra compile options: $compileroptions"
 echo "Extra link options: $linkeroptions"
 
@@ -222,13 +228,53 @@ CXX="$cppcompiler"
 export CXX
 
 #
+# Check for the bitsToBuild option
+#
+
+#
+#  aix | linux | hp-11 | solaris | 
+#  hp-10 | freebsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
+#
+if test $bitsToBuild = 64; then
+    bitstobuildDefines=" -DXML_BITSTOBUILD_64 " 
+    if test $platform; then
+        case $platform in
+           solaris)
+              bitstobuildDefines=" $bitstobuildDefines -xarch=v9 " ;;
+           aix)
+              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
+           hp-11)
+              bitstobuildDefines=" $bitstobuildDefines +DD64 " ;;
+           linux)
+              bitstobuildDefines=" $bitstobuildDefines " ;;
+           *)
+            ;;
+        esac
+    fi
+elif test $bitsToBuild = 32; then
+    bitstobuildDefines=" "
+else
+    echo "I do not recognize the bitsToBuild '$bitsToBuild'. Please type '${0} -h' for help."
+    exit ${ERROR_EXIT_CODE};
+fi
+
+#
+# to export in case it is needed in Makefile.in/Makefine.incl
+#
+BITSTOBUILD=$bitsToBuild
+export BITSTOBUILD
+
+#
 # Set the extra C and C++ compiler flags
 #
 # include the user defined CXXFLAGS/CFLAGS first in case they have
 # set an platform spefic flags
 #
-CXXFLAGS="$CXXFLAGS $compileroptions $debugflag"; export CXXFLAGS
-CFLAGS="$CFLAGS $compileroptions $debugflag"; export CFLAGS
+CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $bitstobuildDefines"; 
+export CXXFLAGS
+
+CFLAGS="$CFLAGS $compileroptions $debugflag $bitstobuildDefines"; 
+export CFLAGS
 
 # gcc crashes if optimisation is turned on in a Tru64 environment
 if [ $platform = "tru64" -a $CXX = "g++" ]; then
@@ -237,7 +283,7 @@ if [ $platform = "tru64" -a $CXX = "g++" ]; then
     export CXXFLAGS CFLAGS
 fi
 
-LDFLAGS="$LDFLAGS $linkeroptions"; export LDFLAGS
+LDFLAGS="$LDFLAGS $linkeroptions $bitstobuildDefines"; export LDFLAGS
 
 echo
 rm -f config.cache
@@ -263,6 +309,7 @@ echo export CXX=$CXX
 echo export CXXFLAGS=$CXXFLAGS
 echo export CFLAGS=$CFLAGS
 echo export LIBS=$LIBS
+echo export BITSTOBUILD=$BITSTOBUILD
 echo export LDFLAGS=$LDFLAGS
 echo configure
 

@@ -74,6 +74,7 @@ usage()
     echo "       -x <C++ compiler name> (e.g. g++, xlC, or icc)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -r <thread option> can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris) or 'sproc' (only on IRIX) or 'none'"
+    echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -h (get help on the above commands)"
@@ -103,9 +104,9 @@ fi
 
 # Check the command line parameters
 if test -x /usr/bin/getopt; then
-getoptErr=`getopt p:c:x:dm:n:t:r:l:z:h $*`
+getoptErr=`getopt p:c:x:dm:n:t:r:b:l:z:h $*`
 else
-getoptErr=`getopts p:c:x:dm:n:t:r:l:z:h `$*``
+getoptErr=`getopts p:c:x:dm:n:t:r:b:l:z:h `$*``
 fi
 if [ $? != 0 ]
    then
@@ -115,9 +116,9 @@ fi
 
 # Now get the command line parameters
 if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+set -- `getopt p:c:x:dm:n:t:r:b:l:z:h $*`
 else
-set -- `getopts p:c:x:dm:n:t:r:l:z:h `$*``
+set -- `getopts p:c:x:dm:n:t:r:b:l:z:h `$*``
 fi
 
 # Set up the default values for each parameter
@@ -127,6 +128,8 @@ msgloader=iconv          # by default use native transcoder
 netaccessor=fileonly     # by default use fileonly
 thread=pthread           # by default use POSIX threads
 compileroptions=""
+bitsToBuild=32            # by default 32 bit build assumed
+
 while [ $# -gt 0 ]
    do
    case $1 in
@@ -144,6 +147,9 @@ while [ $# -gt 0 ]
 
    -r)
         thread=$2; shift 2;;
+
+   -b)
+        bitsToBuild=$2; shift 2;;           
 
    -z)
         compileroptions="$compileroptions $2"; shift 2;;
@@ -179,6 +185,7 @@ echo "C++ Compiler: $cppcompiler"
 echo "Extra compile options: $compileroptions"
 echo "Extra link options: $linkeroptions"
 echo "Thread option: $thread"
+echo "bitsToBuild option: $bitsToBuild"
 
 #
 # Now check if the options are correct or not, bail out if incorrect
@@ -314,6 +321,43 @@ fi
 export THREADS
 
 #
+# Check for the bitsToBuild option
+#
+
+#
+#  aix | linux | hp-11 | solaris | 
+#  hp-10 | freebsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
+#
+if test $bitsToBuild = 64; then
+    bitstobuildDefines=" -DXML_BITSTOBUILD_64 " 
+    if test $platform; then
+        case $platform in
+           solaris)
+              bitstobuildDefines=" $bitstobuildDefines -xarch=v9 " ;;
+           aix)
+              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
+           hp-11)
+              bitstobuildDefines=" $bitstobuildDefines +DD64 " ;;
+           linux)
+              bitstobuildDefines=" $bitstobuildDefines " ;;
+           *)
+            ;;
+        esac
+    fi
+elif test $bitsToBuild = 32; then
+    bitstobuildDefines=" "
+else
+    echo "I do not recognize the bitsToBuild '$bitsToBuild'. Please type '${0} -h' for help."
+    exit ${ERROR_EXIT_CODE};
+fi
+
+#
+# to export in case it is needed in Makefile.in/Makefine.incl
+#
+BITSTOBUILD=$bitsToBuild
+export BITSTOBUILD
+
+#
 # Set the C compiler and C++ compiler environment variables
 #
 case $cppcompiler in
@@ -368,8 +412,11 @@ fi
 # include the user defined CXXFLAGS/CFLAGS first in case they have
 # set an platform spefic flags
 #
-CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $threadingDefines $transcodingDefines"; export CXXFLAGS
-CFLAGS="$CFLAGS $compileroptions $debugflag $threadingDefines $transcodingDefines"; export CFLAGS
+CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $threadingDefines $transcodingDefines $bitstobuildDefines"; 
+export CXXFLAGS
+
+CFLAGS="$CFLAGS $compileroptions $debugflag $threadingDefines $transcodingDefines $bitstobuildDefines"; 
+export CFLAGS
 
 # gcc crashes if optimisation is turned on in a Tru64 environment
 if [ $platform = "tru64" -a $CXX = "g++" ]; then
@@ -378,7 +425,7 @@ if [ $platform = "tru64" -a $CXX = "g++" ]; then
     export CXXFLAGS CFLAGS
 fi
 
-LDFLAGS="$LDFLAGS $linkeroptions"; export LDFLAGS
+LDFLAGS="$LDFLAGS $linkeroptions $bitstobuildDefines"; export LDFLAGS
 EXTRA_LIBS="$threadingLibs $transcodingLibs"; export EXTRA_LIBS
 
 echo
@@ -407,6 +454,7 @@ echo export CXXFLAGS=$CXXFLAGS
 echo export CFLAGS=$CFLAGS
 echo export EXTRA_LIBS=$EXTRA_LIBS
 echo export LDFLAGS=$LDFLAGS
+echo export BITSTOBUILD=$BITSTOBUILD
 echo configure
 
 echo

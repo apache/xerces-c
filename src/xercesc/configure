@@ -1321,6 +1321,7 @@ netaccessor=${NETACCESSOR}
 
 threads=${THREADS}
 
+bitstobuild=${BITSTOBUILD}
 
 trap '' 1 2 15
 cat > confcache <<\EOF
@@ -1536,6 +1537,7 @@ s%@libs@%$libs%g
 s%@uselibwww@%$uselibwww%g
 s%@messageloader@%$messageloader%g
 s%@transcoder@%$transcoder%g
+s%@bitstobuild@%$bitstobuild%g
 s%@netaccessor@%$netaccessor%g
 s%@threads@%$threads%g
 

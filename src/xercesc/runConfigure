@@ -71,6 +71,7 @@
 # LDFLAGS
 # CXXFLAGS
 # TRANSCODER
+# BITSTOBUILD
 #
 
 usage()
@@ -96,6 +97,7 @@ usage()
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -P <install-prefix>"
+    echo "       -b <bitsToBuild> (accepts '64', '32')"
     echo "       -C <any one extra configure options>"
     echo "       -h (to get help on the above commands)"
 }
@@ -124,9 +126,9 @@ fi
 
 # Check the command line parameters
 if test -x /usr/bin/getopt; then
-getoptErr=`getopt p:c:x:dm:n:t:r:l:z:P:C:h $*`
+getoptErr=`getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
 else
-getoptErr=`getopts p:c:x:dm:n:t:r:l:z:P:C:h `$*``
+getoptErr=`getopts p:c:x:dm:n:t:r:b:l:z:P:C:h `$*``
 fi
 if [ $? != 0 ]
    then
@@ -136,9 +138,9 @@ fi
 
 # Now get the command line parameters
 if test -x /usr/bin/getopt; then
-set -- `getopt p:c:x:dm:n:t:r:l:z:P:C:h $*`
+set -- `getopt p:c:x:dm:n:t:r:b:l:z:P:C:h $*`
 else
-set -- `getopts p:c:x:dm:n:t:r:l:z:P:C:h `$*``
+set -- `getopts p:c:x:dm:n:t:r:b:l:z:P:C:h `$*``
 fi
 
 # Set up the default values for each parameter
@@ -148,6 +150,7 @@ msgloader=inmem          # by default use inmem message loader
 netaccessor=socket       # by default use socket (can do HTTP URL's)
 thread=pthread           # by default use POSIX threads
 configureoptions=""
+bitsToBuild=32            # by default 32 bit build assumed
 
 while [ $# -gt 0 ]
    do
@@ -175,6 +178,9 @@ while [ $# -gt 0 ]
 
    -r)
         thread=$2; shift 2;;
+        
+   -b)
+        bitsToBuild=$2; shift 2;;           
 
    -l)
         linkeroptions="$linkeroptions $2"; shift 2;;
@@ -212,6 +218,7 @@ echo "Message Loader: $msgloader"
 echo "Net Accessor: $netaccessor"
 echo "Transcoder: $transcoder"
 echo "Thread option: $thread"
+echo "bitsToBuild option: $bitsToBuild"
 echo "Extra configure options: $configureoptions"
 
 
@@ -370,6 +377,42 @@ fi
 
 export THREADS
 
+#
+# Check for the bitsToBuild option
+#
+
+#
+#  aix | linux | hp-11 | solaris | 
+#  hp-10 | freebsd | irix | openserver | unixware | os400 | ptx | tru64 | macosx
+#
+if test $bitsToBuild = 64; then
+    bitstobuildDefines=" -DXML_BITSTOBUILD_64 " 
+    if test $platform; then
+        case $platform in
+           solaris)
+              bitstobuildDefines=" $bitstobuildDefines -xarch=v9 " ;;
+           aix)
+              bitstobuildDefines=" $bitstobuildDefines -q64 -qwarn64 " ;;
+           hp-11)
+              bitstobuildDefines=" $bitstobuildDefines +DD64 " ;;
+           linux)
+              bitstobuildDefines=" $bitstobuildDefines " ;;
+           *)
+            ;;
+        esac
+    fi
+elif test $bitsToBuild = 32; then
+    bitstobuildDefines=" "
+else
+    echo "I do not recognize the bitsToBuild '$bitsToBuild'. Please type '${0} -h' for help."
+    exit ${ERROR_EXIT_CODE};
+fi
+
+#
+# to export in case it is needed in Makefile.in/Makefine.incl
+#
+BITSTOBUILD=$bitsToBuild
+export BITSTOBUILD
 
 #
 # Now check for what kind of transcoding service is desired.
@@ -499,7 +542,7 @@ case $netaccessor in
            echo "netaccessor option '$netaccessor' is supported on 'macosx' only."
            exit ${ERROR_EXIT_CODE}
        fi
-
+       
        ;;
 
    *)
@@ -538,10 +581,10 @@ export CXX
 # include the user defined CXXFLAGS/CFLAGS first in case they have
 # set an platform spefic flags
 #
-CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+CXXFLAGS="$CXXFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines $bitstobuildDefines"
 export CXXFLAGS
 
-CFLAGS="$CFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines"
+CFLAGS="$CFLAGS $compileroptions $debugflag $transcodingDefines $msgloaderDefines $threadingDefines $netaccessorDefines "
 export CFLAGS
 
 # gcc crashes if optimisation is turned on in a Tru64 environment
@@ -581,6 +624,7 @@ echo export TRANSCODER=\"$TRANSCODER\"
 echo export MESSAGELOADER=\"$MESSAGELOADER\"
 echo export NETACCESSOR=\"$NETACCESSOR\"
 echo export THREADS=\"$THREADS\"
+echo export BITSTOBUILD=\"$BITSTOBUILD\"
 echo export CC=\"$CC\"
 echo export CXX=\"$CXX\"
 echo export CXXFLAGS=\"$CXXFLAGS\"

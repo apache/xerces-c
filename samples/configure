@@ -1293,6 +1293,8 @@ cflags=${CFLAGS}
 
 ldflags=${LDFLAGS}
 
+bitstobuild=${BITSTOBUILD}
+
 
 trap '' 1 2 15
 cat > confcache <<\EOF
@@ -1472,6 +1474,7 @@ s%@compiler@%$compiler%g
 s%@cxxflags@%$cxxflags%g
 s%@cflags@%$cflags%g
 s%@ldflags@%$ldflags%g
+s%@bitstobuild@%$bitstobuild%g
 
 CEOF
 EOF

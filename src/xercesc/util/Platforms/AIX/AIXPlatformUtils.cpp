@@ -573,7 +573,12 @@ void* XMLPlatformUtils::compareAndSwap ( void**      toFill ,
                     const void* const newValue ,
                     const void* const toCompare)
 {
+#if defined (XML_BITSTOBUILD_64)
+    boolean_t boolVar = compare_and_swaplp((atomic_l)toFill, (long*)&toCompare, (long)newValue );
+#else
     boolean_t boolVar = compare_and_swap((atomic_p)toFill, (int *)&toCompare, (int)newValue );
+#endif
+
     return (void *)toCompare;
 }
 

@@ -1343,6 +1343,7 @@ ldflags=${LDFLAGS}
 
 threads=${THREADS}
 
+bitstobuild=${BITSTOBUILD}
 
 extra_libs=${EXTRA_LIBS}
 
@@ -1524,6 +1525,7 @@ s%@cflags@%$cflags%g
 s%@ldflags@%$ldflags%g
 s%@threads@%$threads%g
 s%@extra_libs@%$extra_libs%g
+s%@bitstobuild@%$bitstobuild%g
 
 CEOF
 EOF

@@ -67,6 +67,9 @@ AC_SUBST(cflags)
 ldflags=${LDFLAGS}
 AC_SUBST(ldflags)
 
+bitstobuild=${BITSTOBUILD}
+AC_SUBST(bitstobuild)
+
 dnl output the Makefiles
 AC_OUTPUT([Makefile \
 SAXCount/Makefile \

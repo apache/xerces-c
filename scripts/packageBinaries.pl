@@ -9,7 +9,7 @@ $|=1;   # Force a flush after every print
 
 
 # Extract the source and target directories
-&Getopt('sopcxmntrj');
+&Getopt('sopcxmntrjb');
 $XERCESCROOT = $opt_s;
 $targetdir = $opt_o;
 
@@ -25,7 +25,8 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
     print ("    -n <net accessor> can be 'fileonly' or 'socket' \(default\)\n");
     print ("    -t <transcoder> can be 'icu' or 'native' \(default\)\n");
     print ("    -r <thread option> can be 'pthread' \(default\)or 'dce' (only used on HP-11)\n");
-    print ("    -j suppress building of ICU (speeds up builds when debugging)\n");
+    print ("    -b <bitsToBuild> (accepts '64', '32')\n");
+    print ("    -j suppress building of ICU (speeds up builds when debugging)\n");   
     print ("    -h to get help on these commands\n\n");
     print ("Example: Under unix's\n");
     print ("    perl packageBinaries.pl -s \$HOME/xerces-c-src_1_7_0");
@@ -375,7 +376,8 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     }
     if ($opt_t eq "") {$opt_t = "native";  # Native transcoding service.
     }
-
+    if ($opt_b eq "") {$opt_b = "32";      # bitstobuild.
+    }
 
     # Set defaults for platform-specific options.
     if ($platform =~ m/AIX/i) {
@@ -584,9 +586,9 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("chmod +x run* con* install-sh");
 
     if (length($opt_r) > 0) {
-        psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
+        psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r -b$opt_b");
     } else {
-        psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t");
+        psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -b$opt_b");
     }
 
     psystem ("gmake clean");     # May want to comment this line out to speed up
@@ -638,7 +640,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     print("\n\nBuild the samples ...\n");
     pchdir ("$XERCESCROOT/samples");
     psystem ("chmod +x run* con* install-sh");
-    psystem ("runConfigure -p$platform -c$opt_c -x$opt_x");
+    psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -b$opt_b");
     psystem ("gmake clean");     # May want to comment this line out to speed up
     psystem ("gmake");
 
@@ -646,7 +648,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     print("\n\nBuild the tests ...\n");
     pchdir ("$XERCESCROOT/tests");
     psystem ("chmod +x run* con* install-sh");
-    psystem ("runConfigure -p$platform -c$opt_c -x$opt_x");
+    psystem ("runConfigure -p$platform -c$opt_c -x$opt_x -b$opt_b");
     psystem ("gmake clean");     # May want to comment this line out to speed up
     psystem ("gmake");
 

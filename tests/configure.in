@@ -72,6 +72,9 @@ AC_SUBST(ldflags)
 threads=${THREADS}
 AC_SUBST(threads)
 
+bitstobuild=${BITSTOBUILD}
+AC_SUBST(bitstobuild)
+
 extra_libs=${EXTRA_LIBS}
 AC_SUBST(extra_libs)
 

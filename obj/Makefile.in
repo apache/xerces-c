@@ -75,6 +75,7 @@ LDFLAGS = @ldflags@
 LIBS = @libs@
 OSVER = @osver@
 TRANSCODER = @transcoder@
+BITSTOBUILD = @bitstobuild@
 
 include ../version.incl
 include ../src/xercesc/Makefile.incl

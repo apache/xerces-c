@@ -79,6 +79,7 @@ CFLAGS = @cflags@
 PREFIX = @prefix@
 THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
+BITSTOBUILD = @bitstobuild@
 
 ifeq (${PLATFORM},HPUX)
   ifeq (${OSVER}, HPUX10)

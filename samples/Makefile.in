@@ -80,6 +80,7 @@ COMPILER = @compiler@
 CXXFLAGS = @cxxflags@
 CFLAGS = @cflags@
 PREFIX = @prefix@
+BITSTOBUILD = @bitstobuild@
 
 all::	saxprint sax2print saxcount sax2count domprint domcount idomprint idomcount redirect memparse pparse stdinparse enumval senumval createdomdocument
 
