@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2005/04/04 15:11:38  cargilld
+ * Fix a problem where illegal qualified names were not reported as errors.  Also store the colon position when searching for a qualified name to avoid looking it up again.
+ *
  * Revision 1.21  2005/03/22 20:43:27  cargilld
  * Check in Christian's patches for Xercesc-1369 and 1370.
  *
@@ -233,7 +236,7 @@ public:
 
     bool isXMLLetter(const XMLCh toCheck) const;
     bool isFirstNameChar(const XMLCh toCheck) const;
-    bool isNameChar(const XMLCh toCheck) const;
+    bool isNameChar(const XMLCh toCheck) const;    
     bool isPlainContentChar(const XMLCh toCheck) const;
     bool isSpecialStartTagChar(const XMLCh toCheck) const;
     bool isXMLChar(const XMLCh toCheck) const;
@@ -302,6 +305,7 @@ public:
     //  Scanning methods
     // -----------------------------------------------------------------------
     bool getName(XMLBuffer& toFill, const bool token);
+    bool getQName(XMLBuffer& toFill, int* colonPosition);
     bool getNextChar(XMLCh& chGotten);
     bool getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten);
     void movePlainContentChars(XMLBuffer &dest);

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2005/04/04 15:11:38  cargilld
+ * Fix a problem where illegal qualified names were not reported as errors.  Also store the colon position when searching for a qualified name to avoid looking it up again.
+ *
  * Revision 1.16  2005/03/09 16:07:11  amassari
  * Protected getSrcOffset to avoid crashing when parsing has finished; updated documentation
  *
@@ -183,6 +186,7 @@ public :
     // -----------------------------------------------------------------------
     bool atEOF() const;
     bool getName(XMLBuffer& toFill);
+    bool getQName(XMLBuffer& toFill, int* colonPosition);
     bool getNameToken(XMLBuffer& toFill);
     XMLCh getNextChar();
     bool getNextCharIfNot(const XMLCh chNotToGet, XMLCh& chGotten);
@@ -390,6 +394,12 @@ inline bool ReaderMgr::getName(XMLBuffer& toFill)
 {
     toFill.reset();
     return fCurReader->getName(toFill, false);
+}
+
+inline bool ReaderMgr::getQName(XMLBuffer& toFill, int *colonPosition)
+{
+    toFill.reset();
+    return fCurReader->getQName(toFill, colonPosition);
 }
 
 inline bool ReaderMgr::getNameToken(XMLBuffer& toFill)

@@ -1097,7 +1097,8 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
 
     //  The current position is after the open bracket, so we need to read in
     //  in the element name.
-    if (!fReaderMgr.getName(fQNameBuf))
+    int colonPosition;
+    if (!fReaderMgr.getQName(fQNameBuf, &colonPosition))
     {
         emitError(XMLErrs::ExpectedElementName);
         fReaderMgr.skipToChar(chOpenAngle);
@@ -1182,7 +1183,8 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
         {
             //  Assume its going to be an attribute, so get a name from
             //  the input.
-            if (!fReaderMgr.getName(fAttNameBuf))
+            int colonPosition;
+            if (!fReaderMgr.getQName(fAttNameBuf, &colonPosition))
             {
                 emitError(XMLErrs::ExpectedAttrName);
                 fReaderMgr.skipPastChar(chCloseAngle);
@@ -1320,27 +1322,6 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
                 );
                 curAtt->setSpecified(true);
                 fAttrNameHashList->setElementAt(attNameHash, attCount);
-            }
-
-            // Make sure that the name is basically well formed for namespace
-            //  enabled rules. It either has no colons, or it has one which
-            //  is neither the first or last char.
-            const int colonFirst = XMLString::indexOf(attNameRawBuf, chColon);
-            if (colonFirst != -1)
-            {
-                const int colonLast = XMLString::lastIndexOf(attNameRawBuf, chColon);
-
-                if (colonFirst != colonLast)
-                {
-                    emitError(XMLErrs::TooManyColonsInName);
-                    continue;
-                }
-                else if ((colonFirst == 0)
-                      ||  (colonLast == (int)fAttNameBuf.getLen() - 1))
-                {
-                    emitError(XMLErrs::InvalidColonPos);
-                    continue;
-                }
             }
 
             // Map prefix to namespace

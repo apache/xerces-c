@@ -192,7 +192,8 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
 
     //  The current position is after the open bracket, so we need to read in
     //  in the element name.
-    if (!fReaderMgr.getName(fQNameBuf))
+    int prefixColonPos;
+    if (!fReaderMgr.getQName(fQNameBuf, &prefixColonPos))
     {
         emitError(XMLErrs::ExpectedElementName);
         fReaderMgr.skipToChar(chOpenAngle);
@@ -263,9 +264,8 @@ bool XSAXMLScanner::scanStartTag(bool& gotData)
 
     //  Resolve the qualified name to a URI and name so that we can look up
     //  the element decl for this element. We have now update the prefix to
-    //  namespace map so we should get the correct element now.
-    int prefixColonPos = -1;
-    unsigned int uriId = resolveQName
+    //  namespace map so we should get the correct element now.    
+    unsigned int uriId = resolveQNameWithColon
     (
         qnameRawBuf, fPrefixBuf, ElemStack::Mode_Element, prefixColonPos
     );
@@ -612,7 +612,7 @@ void XSAXMLScanner::scanRawAttrListforNameSpaces(int attCount)
         {
             const XMLCh* valuePtr = curPair->getValue();
 
-            updateNSMap(rawPtr, valuePtr);
+            updateNSMap(rawPtr, valuePtr, fRawAttrColonList[index]);
 
             // if the schema URI is seen in the the valuePtr, set the boolean seeXsi
             if (XMLString::equals(valuePtr, SchemaSymbols::fgURI_XSI)) {

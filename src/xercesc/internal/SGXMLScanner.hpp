@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2005/04/04 15:11:38  cargilld
+ * Fix a problem where illegal qualified names were not reported as errors.  Also store the colon position when searching for a qualified name to avoid looking it up again.
+ *
  * Revision 1.23  2004/12/14 16:16:36  cargilld
  * Fix for xercesc-684: Add accessor to XMLScanner to get the current grammar type.
  *
@@ -209,7 +212,20 @@ protected:
     );
     void resizeElemState();
 
-
+    void updateNSMap
+    (
+        const   XMLCh* const    attrName
+        , const XMLCh* const    attrValue
+        , const int             colonPosition
+    );
+    void resizeRawAttrColonList();
+    unsigned int resolveQNameWithColon
+    (
+        const   XMLCh* const        qName
+        ,       XMLBuffer&          prefixBufToFill
+        , const short               mode
+        , const int                 prefixColonPos
+    );
     // -----------------------------------------------------------------------
     //  Data members
     //
@@ -252,6 +268,8 @@ protected:
     XMLBuffer                               fContent;
     ValueHashTableOf<XMLCh>*                fEntityTable;
     RefVectorOf<KVStringPair>*              fRawAttrList;
+    unsigned int                            fRawAttrColonListSize;
+    int*                                    fRawAttrColonList;
     SchemaGrammar*                          fSchemaGrammar;
     SchemaValidator*                        fSchemaValidator;
     IdentityConstraintHandler*              fICHandler;

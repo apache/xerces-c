@@ -61,6 +61,8 @@ IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
     , fElemState(0)
     , fContent(1023, manager)
     , fRawAttrList(0)
+    , fRawAttrColonListSize(32)
+    , fRawAttrColonList(0)
     , fDTDValidator(0)
     , fSchemaValidator(0)
     , fDTDGrammar(0)
@@ -111,6 +113,8 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
     , fElemState(0)
     , fContent(1023, manager)
     , fRawAttrList(0)
+    , fRawAttrColonListSize(32)
+    , fRawAttrColonList(0)    
     , fDTDValidator(0)
     , fSchemaValidator(0)
     , fDTDGrammar(0)
@@ -516,6 +520,10 @@ void IGXMLScanner::commonInit()
     //  And we need one for the raw attribute scan. This just stores key/
     //  value string pairs (prior to any processing.)
     fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32, true, fMemoryManager);
+    fRawAttrColonList = (int*) fMemoryManager->allocate
+    (
+        fRawAttrColonListSize * sizeof(int)
+    );
 
     //  Create the Validator and init them
     fDTDValidator = new (fMemoryManager) DTDValidator();
@@ -550,6 +558,7 @@ void IGXMLScanner::cleanUp()
 {
     fMemoryManager->deallocate(fElemState); //delete [] fElemState;
     delete fRawAttrList;
+    fMemoryManager->deallocate(fRawAttrColonList);
     delete fDTDValidator;
     delete fSchemaValidator;
     delete fICHandler;
@@ -625,7 +634,8 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
         {
             //  Assume its going to be an attribute, so get a name from
             //  the input.
-            if (!fReaderMgr.getName(fAttNameBuf))
+            int colonPosition;
+            if (!fReaderMgr.getQName(fAttNameBuf, &colonPosition))
             {
                 emitError(XMLErrs::ExpectedAttrName);
                 fReaderMgr.skipPastChar(chCloseAngle);
@@ -710,27 +720,6 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                 }
             }
 
-            //  Make sure that the name is basically well formed for namespace
-            //  enabled rules. It either has no colons, or it has one which
-            //  is neither the first or last char.
-            const int colonFirst = XMLString::indexOf(curAttNameBuf, chColon);
-            if (colonFirst != -1)
-            {
-                const int colonLast = XMLString::lastIndexOf(chColon, curAttNameBuf, fAttNameBuf.getLen());
-
-                if (colonFirst != colonLast)
-                {
-                    emitError(XMLErrs::TooManyColonsInName);
-                    continue;
-                }
-                else if ((colonFirst == 0)
-                      ||  (colonLast == (int)fAttNameBuf.getLen() - 1))
-                {
-                    emitError(XMLErrs::InvalidColonPos);
-                    continue;
-                }
-            }
-
             //  And now lets add it to the passed collection. If we have not
             //  filled it up yet, then we use the next element. Else we add
             //  a new one.
@@ -745,9 +734,9 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                     , fAttValueBuf.getLen()
                     , fMemoryManager
                 );
-                toFill.addElement(curPair);
+                toFill.addElement(curPair);                
             }
-             else
+            else
             {
                 curPair = toFill.elementAt(attCount);                
                 curPair->set
@@ -756,8 +745,14 @@ IGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                     fAttNameBuf.getLen(),
                     fAttValueBuf.getRawBuffer(),
                     fAttValueBuf.getLen()
-                );
+                );                
             }
+
+            if (attCount >= fRawAttrColonListSize) {
+                resizeRawAttrColonList();
+            }
+            fRawAttrColonList[attCount] = colonPosition;
+            
 
             // And bump the count of attributes we've gotten
             attCount++;
@@ -1244,8 +1239,10 @@ void IGXMLScanner::scanDocTypeDecl()
 
     //  Get a name from the input, which should be the name of the root
     //  element of the upcoming content.
-    fReaderMgr.getName(bbRootName.getBuffer());
-    if (bbRootName.isEmpty())
+    int  colonPosition;
+    bool validName = fDoNamespaces ? fReaderMgr.getQName(bbRootName.getBuffer(), &colonPosition) :
+                                     fReaderMgr.getName(bbRootName.getBuffer());
+    if (!validName)
     {
         emitError(XMLErrs::NoRootElemInDOCTYPE);
         fReaderMgr.skipPastChar(chCloseAngle);
@@ -2125,7 +2122,8 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
     //  The current position is after the open bracket, so we need to read in
     //  in the element name.
-    if (!fReaderMgr.getName(fQNameBuf))
+    int prefixColonPos;
+    if (!fReaderMgr.getQName(fQNameBuf, &prefixColonPos))
     {
         emitError(XMLErrs::ExpectedElementName);
         fReaderMgr.skipToChar(chOpenAngle);
@@ -2252,10 +2250,9 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
     //  Resolve the qualified name to a URI and name so that we can look up
     //  the element decl for this element. We have now update the prefix to
-    //  namespace map so we should get the correct element now.
-    int prefixColonPos = -1;
+    //  namespace map so we should get the correct element now.   
     const XMLCh* qnameRawBuf = fQNameBuf.getRawBuffer();
-    unsigned int uriId = resolveQName
+    unsigned int uriId = resolveQNameWithColon
     (
         qnameRawBuf
         , fPrefixBuf
@@ -2967,15 +2964,25 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 }
 
 
+
 unsigned int
 IGXMLScanner::resolveQName(const   XMLCh* const qName
                            ,       XMLBuffer&   prefixBuf
                            , const short        mode
                            ,       int&         prefixColonPos)
 {
-    //  Lets split out the qName into a URI and name buffer first. The URI
-    //  can be empty.
     prefixColonPos = XMLString::indexOf(qName, chColon);
+    return resolveQNameWithColon(qName, prefixBuf, mode, prefixColonPos);
+}
+
+unsigned int 
+IGXMLScanner::resolveQNameWithColon(const   XMLCh* const qName
+                                    ,       XMLBuffer&   prefixBuf
+                                    , const short        mode
+                                    , const int          prefixColonPos)
+{
+    //  Lets split out the qName into a URI and name buffer first. The URI
+    //  can be empty.    
     if (prefixColonPos == -1)
     {
         //  Its all name with no prefix, so put the whole thing into the name
@@ -3047,6 +3054,26 @@ void IGXMLScanner::resizeElemState() {
     fElemState = newElemState;
     fElemStateSize = newSize;
 }
+
+void IGXMLScanner::resizeRawAttrColonList() {
+
+    unsigned int newSize = fRawAttrColonListSize * 2;
+    int* newRawAttrColonList = (int*) fMemoryManager->allocate
+    (
+        newSize * sizeof(int)
+    ); //new int[newSize];
+
+    // Copy the existing values
+    unsigned int index = 0;
+    for (; index < fRawAttrColonListSize; index++)
+        newRawAttrColonList[index] = fRawAttrColonList[index];
+
+    // Delete the old array and udpate our members
+    fMemoryManager->deallocate(fRawAttrColonList); //delete [] fRawAttrColonList;
+    fRawAttrColonList = newRawAttrColonList;
+    fRawAttrColonListSize = newSize;
+}
+
 
 // ---------------------------------------------------------------------------
 //  IGXMLScanner: Grammar preparsing

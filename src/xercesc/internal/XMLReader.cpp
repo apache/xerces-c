@@ -408,6 +408,7 @@ unsigned int XMLReader::getSrcOffset() const
     }
 
     if( fCharIndex < fCharsAvail ) {
+ 
         return (fSrcOfsBase + fCharOfsBuf[fCharIndex]);
     }
 
@@ -591,7 +592,7 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
             return false;
     }
 
-    unsigned int fCharIndex_start = fCharIndex;
+    unsigned int charIndex_start = fCharIndex;
 
     //  Lets check the first char for being a first name char. If not, then
     //  what's the point in living mannnn? Just give up now. We only do this
@@ -658,10 +659,10 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
         }
 
         // we have to copy the accepted character(s), and update column
-        if (fCharIndex != fCharIndex_start)
+        if (fCharIndex != charIndex_start)
         {
-            fCurCol += fCharIndex - fCharIndex_start;
-            toFill.append(&fCharBuf[fCharIndex_start], fCharIndex - fCharIndex_start);
+            fCurCol += fCharIndex - charIndex_start;
+            toFill.append(&fCharBuf[charIndex_start], fCharIndex - charIndex_start);
         }
 
         // something is wrong if there is still something in the buffer
@@ -670,12 +671,169 @@ bool XMLReader::getName(XMLBuffer& toFill, const bool token)
              !refreshCharBuffer())
             break;
 
-        fCharIndex_start = fCharIndex;
+        charIndex_start = fCharIndex;
     }
 
     return !toFill.isEmpty();
 }
 
+bool XMLReader::getQName(XMLBuffer& toFill, int* colonPosition)
+{
+    //  Ok, first lets see if we have chars in the buffer. If not, then lets
+    //  reload.
+    if (fCharIndex == fCharsAvail)
+    {
+        if (!refreshCharBuffer())
+            return false;
+    }
+
+    unsigned int charIndex_start = fCharIndex;
+    *colonPosition = -1;
+    bool checkNextCharacterForFirstNCName = false;
+
+    //  Lets check the first char for being a first name char. If not, then
+    //  what's the point in living mannnn? Just give up now. We only do this
+    //  if its a name and not a name token that they want.
+    if (fXMLVersion == XMLV1_1 && ((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F))) {
+        // make sure one more char is in the buffer, the transcoder
+        // should put only a complete surrogate pair into the buffer
+        assert(fCharIndex+1 < fCharsAvail);
+        if ((fCharBuf[fCharIndex+1] < 0xDC00) || (fCharBuf[fCharIndex+1] > 0xDFFF))
+            return false;
+
+        // Looks ok, so lets eat it
+        fCharIndex += 2;
+    }
+    else {
+        if (!isFirstNameChar(fCharBuf[fCharIndex]))
+            return false;
+        if (fCharBuf[fCharIndex] == chColon)
+            return false;
+        // Looks ok, so lets eat it
+        fCharIndex ++;
+    }
+
+    //  And now we loop until we run out of data in this reader or we hit
+    //  a non-name char.
+    while (true)
+    {
+        if (checkNextCharacterForFirstNCName) {
+            checkNextCharacterForFirstNCName = false;
+            if (fXMLVersion == XMLV1_1) {
+                if ( !((fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F)) )
+                {
+                    if (!isFirstNameChar(fCharBuf[fCharIndex]))
+                        return false;
+                    if (fCharBuf[fCharIndex] == chColon)
+                        return false;
+                    fCharIndex++;
+                }                
+            }
+            else {
+                if (!isFirstNameChar(fCharBuf[fCharIndex]))
+                    return false;
+                if (fCharBuf[fCharIndex] == chColon)
+                    return false;
+                fCharIndex++;
+            }
+
+        }
+
+        if (fXMLVersion == XMLV1_1)
+        {
+            while (fCharIndex < fCharsAvail)
+            {
+                //  Check the current char and take it if its a name char. Else
+                //  break out.
+                if ( (fCharBuf[fCharIndex] >= 0xD800) && (fCharBuf[fCharIndex] <= 0xDB7F) )
+                {
+                    // make sure one more char is in the buffer, the transcoder
+                    // should put only a complete surrogate pair into the buffer
+                    assert(fCharIndex+1 < fCharsAvail);
+                    if ( (fCharBuf[fCharIndex+1] < 0xDC00) ||
+                         (fCharBuf[fCharIndex+1] > 0xDFFF)  )
+                        break;
+                    fCharIndex += 2;
+
+                } 
+                else
+                {
+                    if (!isNameChar(fCharBuf[fCharIndex]))
+                        break;
+                    if (fCharBuf[fCharIndex] == chColon) {
+                        if (*colonPosition != -1) {
+                            return false;
+                        }
+                        // update the buffer to get the colon Offset position
+                        fCurCol += fCharIndex - charIndex_start;
+                        toFill.append(&fCharBuf[charIndex_start], fCharIndex - charIndex_start);
+                        charIndex_start = fCharIndex;
+                        *colonPosition = toFill.getLen();
+                        if (fCharIndex + 1 < fCharsAvail) {
+                            fCharIndex++;
+                            if (!isFirstNameChar(fCharBuf[fCharIndex]))
+                                return false;
+                            if (fCharBuf[fCharIndex] == chColon)
+                                return false;
+                        }
+                        else {
+                            checkNextCharacterForFirstNCName = true;
+                        }                                                
+                    }
+                    fCharIndex++;
+                }
+            }
+        }
+        else // XMLV1_0
+        {
+            while (fCharIndex < fCharsAvail)
+            {
+                if (!isNameChar(fCharBuf[fCharIndex]))
+                    break;
+                if (fCharBuf[fCharIndex] == chColon) {
+                    if (*colonPosition != -1) {
+                        return false;
+                    }
+                    // update the buffer to get the colon Offset position
+                    fCurCol += fCharIndex - charIndex_start;
+                    toFill.append(&fCharBuf[charIndex_start], fCharIndex - charIndex_start);
+                    charIndex_start = fCharIndex;
+                    *colonPosition = toFill.getLen();
+                    if (fCharIndex + 1 < fCharsAvail) {
+                        fCharIndex++;
+                        if (!isFirstNameChar(fCharBuf[fCharIndex]))
+                            return false;
+                        if (fCharBuf[fCharIndex] == chColon)
+                            return false;
+                    }
+                    else {
+                        checkNextCharacterForFirstNCName = true;
+                    }                    
+                }
+                fCharIndex++;
+            }
+        }
+
+        // we have to copy the accepted character(s), and update column
+        if (fCharIndex != charIndex_start)
+        {
+            fCurCol += fCharIndex - charIndex_start;
+            toFill.append(&fCharBuf[charIndex_start], fCharIndex - charIndex_start);
+        }
+
+        // something is wrong if there is still something in the buffer
+        // or if we don't get no more, then break out.
+        if ((fCharIndex < fCharsAvail) ||
+             !refreshCharBuffer())
+            break;
+
+        charIndex_start = fCharIndex;
+    }
+    
+    if (checkNextCharacterForFirstNCName)
+        return false;
+    return !toFill.isEmpty();
+}
 
 bool XMLReader::getSpaces(XMLBuffer& toFill)
 {

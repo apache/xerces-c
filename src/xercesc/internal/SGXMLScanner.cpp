@@ -66,6 +66,8 @@ SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
     , fContent(1023, manager)
     , fEntityTable(0)
     , fRawAttrList(0)
+    , fRawAttrColonListSize(32)
+    , fRawAttrColonList(0)
     , fSchemaGrammar(0)
     , fSchemaValidator(0)
     , fICHandler(0)
@@ -119,6 +121,8 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
     , fContent(1023, manager)
     , fEntityTable(0)
     , fRawAttrList(0)
+    , fRawAttrColonListSize(32)
+    , fRawAttrColonList(0)
     , fSchemaGrammar(0)
     , fSchemaValidator(0)
     , fICHandler(0)
@@ -556,7 +560,8 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
         {
             //  Assume its going to be an attribute, so get a name from
             //  the input.
-            if (!fReaderMgr.getName(fAttNameBuf))
+            int colonPosition;
+            if (!fReaderMgr.getQName(fAttNameBuf, &colonPosition))
             {
                 emitError(XMLErrs::ExpectedAttrName);
                 fReaderMgr.skipPastChar(chCloseAngle);
@@ -641,27 +646,6 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                 }
             }
 
-            //  Make sure that the name is basically well formed for namespace
-            //  enabled rules. It either has no colons, or it has one which
-            //  is neither the first or last char.
-            const int colonFirst = XMLString::indexOf(curAttNameBuf, chColon);
-            if (colonFirst != -1)
-            {
-                const int colonLast = XMLString::lastIndexOf(chColon, curAttNameBuf, fAttNameBuf.getLen());
-
-                if (colonFirst != colonLast)
-                {
-                    emitError(XMLErrs::TooManyColonsInName);
-                    continue;
-                }
-                else if ((colonFirst == 0)
-                      ||  (colonLast == (int)fAttNameBuf.getLen() - 1))
-                {
-                    emitError(XMLErrs::InvalidColonPos);
-                    continue;
-                }
-            }
-
             //  And now lets add it to the passed collection. If we have not
             //  filled it up yet, then we use the next element. Else we add
             //  a new one.
@@ -689,6 +673,10 @@ SGXMLScanner::rawAttrScan(const   XMLCh* const                elemName
                     , fAttValueBuf.getLen()
                 );
             }
+            if (attCount >= fRawAttrColonListSize) {
+                resizeRawAttrColonList();
+            }
+            fRawAttrColonList[attCount] = colonPosition;
 
             // And bump the count of attributes we've gotten
             attCount++;
@@ -1091,7 +1079,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
     //  The current position is after the open bracket, so we need to read in
     //  in the element name.
-    if (!fReaderMgr.getName(fQNameBuf))
+    int prefixColonPos;
+    if (!fReaderMgr.getQName(fQNameBuf, &prefixColonPos))
     {
         emitError(XMLErrs::ExpectedElementName);
         fReaderMgr.skipToChar(chOpenAngle);
@@ -1179,9 +1168,8 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
     //  Resolve the qualified name to a URI and name so that we can look up
     //  the element decl for this element. We have now update the prefix to
-    //  namespace map so we should get the correct element now.
-    int prefixColonPos = -1;
-    unsigned int uriId = resolveQName
+    //  namespace map so we should get the correct element now.    
+    unsigned int uriId = resolveQNameWithColon
     (
         qnameRawBuf
         , fPrefixBuf
@@ -1818,9 +1806,18 @@ SGXMLScanner::resolveQName(const   XMLCh* const qName
                            , const short        mode
                            ,       int&         prefixColonPos)
 {
-    //  Lets split out the qName into a URI and name buffer first. The URI
-    //  can be empty.
     prefixColonPos = XMLString::indexOf(qName, chColon);
+    return resolveQNameWithColon(qName, prefixBuf, mode, prefixColonPos);
+}
+
+unsigned int 
+SGXMLScanner::resolveQNameWithColon(const   XMLCh* const qName
+                                    ,       XMLBuffer&   prefixBuf
+                                    , const short        mode
+                                    , const int          prefixColonPos)
+{
+    //  Lets split out the qName into a URI and name buffer first. The URI
+    //  can be empty.    
     if (prefixColonPos == -1)
     {
         //  Its all name with no prefix, so put the whole thing into the name
@@ -1992,6 +1989,10 @@ void SGXMLScanner::commonInit()
     //  And we need one for the raw attribute scan. This just stores key/
     //  value string pairs (prior to any processing.)
     fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32, true, fMemoryManager);
+    fRawAttrColonList = (int*) fMemoryManager->allocate
+    (
+        fRawAttrColonListSize * sizeof(int)
+    );
 
     //  Create the Validator and init them
     fSchemaValidator = new (fMemoryManager) SchemaValidator(0, fMemoryManager);
@@ -2026,6 +2027,7 @@ void SGXMLScanner::cleanUp()
     delete fSchemaGrammar;
     delete fEntityTable;
     delete fRawAttrList;
+    fMemoryManager->deallocate(fRawAttrColonList);
     delete fSchemaValidator;
     delete fICHandler;
     delete fElemNonDeclPool;
@@ -2059,6 +2061,25 @@ void SGXMLScanner::resizeElemState() {
     fMemoryManager->deallocate(fElemState); //delete [] fElemState;
     fElemState = newElemState;
     fElemStateSize = newSize;
+}
+
+void SGXMLScanner::resizeRawAttrColonList() {
+
+    unsigned int newSize = fRawAttrColonListSize * 2;
+    int* newRawAttrColonList = (int*) fMemoryManager->allocate
+    (
+        newSize * sizeof(int)
+    ); //new int[newSize];
+
+    // Copy the existing values
+    unsigned int index = 0;
+    for (; index < fRawAttrColonListSize; index++)
+        newRawAttrColonList[index] = fRawAttrColonList[index];
+
+    // Delete the old array and udpate our members
+    fMemoryManager->deallocate(fRawAttrColonList); //delete [] fRawAttrColonList;
+    fRawAttrColonList = newRawAttrColonList;
+    fRawAttrColonListSize = newSize;
 }
 
 //  This method is called from scanStartTag() to build up the list of
@@ -2128,7 +2149,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         // use a stack-based buffer when possible.
         XMLCh tempBuffer[100];
 
-        const int colonInd = XMLString::indexOf(namePtr, chColon);
+        const int colonInd = fRawAttrColonList[index];
         const XMLCh* prefPtr = XMLUni::fgZeroLenString;
         const XMLCh* suffPtr = XMLUni::fgZeroLenString;
         if (colonInd != -1)
@@ -3320,6 +3341,13 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
 void SGXMLScanner::updateNSMap(const  XMLCh* const    attrName
                               , const XMLCh* const    attrValue)
 {
+    updateNSMap(attrName, attrValue, XMLString::indexOf(attrName, chColon));
+}
+
+void SGXMLScanner::updateNSMap(const  XMLCh* const    attrName
+                              , const XMLCh* const    attrValue
+                              , const int colonOfs)
+{
     // We need a buffer to normalize the attribute value into
     XMLBufBid bbNormal(&fBufMgr);
     XMLBuffer& normalBuf = bbNormal.getBuffer();
@@ -3339,8 +3367,7 @@ void SGXMLScanner::updateNSMap(const  XMLCh* const    attrName
     //        2. if xxx is xml, then yyy must match XMLUni::fgXMLURIName, and vice versa
     //        3. yyy is not XMLUni::fgXMLNSURIName
     //        4. if xxx is not null, then yyy cannot be an empty string.
-    const XMLCh* prefPtr = XMLUni::fgZeroLenString;
-    const int colonOfs = XMLString::indexOf(attrName, chColon);
+    const XMLCh* prefPtr = XMLUni::fgZeroLenString;    
     if (colonOfs != -1) {
         prefPtr = &attrName[colonOfs + 1];
 
@@ -3381,7 +3408,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(int attCount)
     //  schema attributes.
     //  When we find one, send it off to be used to update the element stack's
     //  namespace mappings.
-    int index = 0;
+    int index;
     for (index = 0; index < attCount; index++)
     {
         // each attribute has the prefix:suffix="value"
@@ -3395,7 +3422,7 @@ void SGXMLScanner::scanRawAttrListforNameSpaces(int attCount)
         {
             const XMLCh* valuePtr = curPair->getValue();
 
-            updateNSMap(rawPtr, valuePtr);
+            updateNSMap(rawPtr, valuePtr, fRawAttrColonList[index]);
 
             // if the schema URI is seen in the the valuePtr, set the boolean seeXsi
             if (XMLString::equals(valuePtr, SchemaSymbols::fgURI_XSI)) {
@@ -4411,7 +4438,8 @@ SGXMLScanner::scanEntityRef(  const   bool
 
     // Expand it since its a normal entity ref
     XMLBufBid bbName(&fBufMgr);
-    if (!fReaderMgr.getName(bbName.getBuffer()))
+    int colonPosition;
+    if (!fReaderMgr.getQName(bbName.getBuffer(), &colonPosition))
     {
         emitError(XMLErrs::ExpectedEntityRefName);
         return EntityExp_Failed;

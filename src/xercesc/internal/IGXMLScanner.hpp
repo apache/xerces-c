@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2005/04/04 15:11:37  cargilld
+ * Fix a problem where illegal qualified names were not reported as errors.  Also store the colon position when searching for a qualified name to avoid looking it up again.
+ *
  * Revision 1.25  2004/12/14 16:16:36  cargilld
  * Fix for xercesc-684: Add accessor to XMLScanner to get the current grammar type.
  *
@@ -240,7 +243,13 @@ private :
     void updateNSMap
     (
         const   XMLCh* const    attrName
+        , const XMLCh* const    attrValue        
+    );
+    void updateNSMap
+    (
+        const   XMLCh* const    attrName
         , const XMLCh* const    attrValue
+        , const int             colonPosition
     );
     void scanRawAttrListforNameSpaces(int attCount);
     void parseSchemaLocation(const XMLCh* const schemaLocationStr);
@@ -256,6 +265,15 @@ private :
     void resizeElemState();
     void processSchemaLocation(XMLCh* const schemaLoc);
 
+    void resizeRawAttrColonList();
+
+    unsigned int resolveQNameWithColon
+    (
+        const   XMLCh* const        qName
+        ,       XMLBuffer&          prefixBufToFill
+        , const short               mode
+        , const int                 prefixColonPos
+    );
     // -----------------------------------------------------------------------
     //  Private scanning methods
     // -----------------------------------------------------------------------
@@ -347,6 +365,8 @@ private :
     unsigned int*                           fElemState;
     XMLBuffer                               fContent;
     RefVectorOf<KVStringPair>*              fRawAttrList;
+    unsigned int                            fRawAttrColonListSize;
+    int*                                    fRawAttrColonList;
     DTDValidator*                           fDTDValidator;
     SchemaValidator*                        fSchemaValidator;
     DTDGrammar*                             fDTDGrammar;

@@ -786,8 +786,10 @@ void DGXMLScanner::scanDocTypeDecl()
 
     //  Get a name from the input, which should be the name of the root
     //  element of the upcoming content.
-    fReaderMgr.getName(bbRootName.getBuffer());
-    if (bbRootName.isEmpty())
+    int  colonPosition;
+    bool validName = fDoNamespaces ? fReaderMgr.getQName(bbRootName.getBuffer(), &colonPosition) :
+                                     fReaderMgr.getName(bbRootName.getBuffer());
+    if (!validName)
     {
         emitError(XMLErrs::NoRootElemInDOCTYPE);
         fReaderMgr.skipPastChar(chCloseAngle);
@@ -1094,7 +1096,11 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
 
     //  Get the QName. In this case, we are not doing namespaces, so we just
     //  use it as is and don't have to break it into parts.
-    if (!fReaderMgr.getName(fQNameBuf))
+
+    int  colonPosition;
+    bool validName = fDoNamespaces ? fReaderMgr.getQName(fQNameBuf, &colonPosition) :
+                                     fReaderMgr.getName(fQNameBuf);
+    if (!validName)
     {
         emitError(XMLErrs::ExpectedElementName);
         fReaderMgr.skipToChar(chOpenAngle);
@@ -1244,7 +1250,10 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
         {
             //  Assume its going to be an attribute, so get a name from
             //  the input.
-            if (!fReaderMgr.getName(fAttNameBuf))
+    
+            validName = fDoNamespaces ? fReaderMgr.getQName(fAttNameBuf, &colonPosition) :
+                                        fReaderMgr.getName(fAttNameBuf);                
+            if (!validName)            
             {
                 emitError(XMLErrs::ExpectedAttrName);
                 fReaderMgr.skipPastChar(chCloseAngle);
@@ -1469,30 +1478,6 @@ bool DGXMLScanner::scanStartTag(bool& gotData)
                         , false
                         , elemDecl
                     );
-                }
-            }
-
-            if (fDoNamespaces)
-            {
-                //  Make sure that the name is basically well formed for namespace
-                //  enabled rules. It either has no colons, or it has one which
-                //  is neither the first or last char.
-                const int colonFirst = XMLString::indexOf(fAttNameBuf.getRawBuffer(), chColon);
-                if (colonFirst != -1)
-                {
-                    const int colonLast = XMLString::lastIndexOf(fAttNameBuf.getRawBuffer(), chColon);
-
-                    if (colonFirst != colonLast)
-                    {
-                        emitError(XMLErrs::TooManyColonsInName);
-                        continue;
-                    }
-                    else if ((colonFirst == 0)
-                          ||  (colonLast == (int)fAttNameBuf.getLen() - 1))
-                    {
-                        emitError(XMLErrs::InvalidColonPos);
-                        continue;
-                    }
                 }
             }
 
@@ -3163,7 +3148,11 @@ DGXMLScanner::scanEntityRef(  const   bool    inAttVal
 
     // Expand it since its a normal entity ref
     XMLBufBid bbName(&fBufMgr);
-    if (!fReaderMgr.getName(bbName.getBuffer()))
+
+    int  colonPosition;
+    bool validName = fDoNamespaces ? fReaderMgr.getQName(bbName.getBuffer(), &colonPosition) :
+                                     fReaderMgr.getName(bbName.getBuffer()); 
+    if (!validName)    
     {
         emitError(XMLErrs::ExpectedEntityRefName);
         return EntityExp_Failed;

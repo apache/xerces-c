@@ -143,7 +143,7 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         // use a stack-based buffer when possible.
         XMLCh tempBuffer[100];
 
-        const int colonInd = XMLString::indexOf(namePtr, chColon);
+        const int colonInd = fRawAttrColonList[index];
         const XMLCh* prefPtr = XMLUni::fgZeroLenString;
         const XMLCh* suffPtr = XMLUni::fgZeroLenString;
         if (colonInd != -1)
@@ -1488,6 +1488,13 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
 void IGXMLScanner::updateNSMap(const  XMLCh* const    attrName
                             , const XMLCh* const    attrValue)
 {
+    updateNSMap(attrName, attrValue, XMLString::indexOf(attrName, chColon));
+}
+
+void IGXMLScanner::updateNSMap(const  XMLCh* const    attrName
+                            , const XMLCh* const    attrValue
+                            , const int colonOfs)
+{
     // We need a buffer to normalize the attribute value into
     XMLBufBid bbNormal(&fBufMgr);
     XMLBuffer& normalBuf = bbNormal.getBuffer();
@@ -1507,8 +1514,7 @@ void IGXMLScanner::updateNSMap(const  XMLCh* const    attrName
     //        2. if xxx is xml, then yyy must match XMLUni::fgXMLURIName, and vice versa
     //        3. yyy is not XMLUni::fgXMLNSURIName
     //        4. if xxx is not null, then yyy cannot be an empty string.
-    const XMLCh* prefPtr = XMLUni::fgZeroLenString;
-    const int colonOfs = XMLString::indexOf(attrName, chColon);
+    const XMLCh* prefPtr = XMLUni::fgZeroLenString;    
     if (colonOfs != -1) {
         prefPtr = &attrName[colonOfs + 1];
 
@@ -1563,7 +1569,7 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(int attCount)
         {
             const XMLCh* valuePtr = curPair->getValue();
 
-            updateNSMap(rawPtr, valuePtr);
+            updateNSMap(rawPtr, valuePtr, fRawAttrColonList[index]);
 
             // if the schema URI is seen in the the valuePtr, set the boolean seeXsi
             if (XMLString::equals(valuePtr, SchemaSymbols::fgURI_XSI)) {
@@ -1585,7 +1591,7 @@ void IGXMLScanner::scanRawAttrListforNameSpaces(int attCount)
             const KVStringPair* curPair = fRawAttrList->elementAt(index);
             const XMLCh* rawPtr = curPair->getKey();
             const XMLCh* prefPtr = XMLUni::fgZeroLenString;
-            int   colonInd = XMLString::indexOf(rawPtr, chColon);
+            int   colonInd = fRawAttrColonList[index];
 
             if (colonInd != -1) {
 
@@ -2857,7 +2863,10 @@ IGXMLScanner::scanEntityRef(  const   bool    inAttVal
 
     // Expand it since its a normal entity ref
     XMLBufBid bbName(&fBufMgr);
-    if (!fReaderMgr.getName(bbName.getBuffer()))
+    int  colonPosition;
+    bool validName = fDoNamespaces ? fReaderMgr.getQName(bbName.getBuffer(), &colonPosition) :
+                                     fReaderMgr.getName(bbName.getBuffer());
+    if (!validName)    
     {
         emitError(XMLErrs::ExpectedEntityRefName);
         return EntityExp_Failed;
