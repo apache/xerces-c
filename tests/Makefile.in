@@ -65,7 +65,6 @@ IDOMTest_DIR=IDom/IDOMTest
 Traversal_DIR=DOM/Traversal
 ITraversal_DIR=IDom/ITraversal
 ThreadTest_DIR=ThreadTest
-IThreadTest_DIR=IThreadTest
 EncodingTest_DIR=EncodingTest
 DOMRange_DIR=DOM/RangeTest
 IDOMRange_DIR=IDom/IRangeTest
@@ -83,12 +82,12 @@ EXTRA_LIBS = @extra_libs@
 
 ifeq (${PLATFORM},HPUX)
   ifeq (${OSVER}, HPUX10)
-      all::	bindir threadtest ithreadtest encodingtest traversal itraversal
+      all::	bindir threadtest encodingtest traversal itraversal
   else
-      all::	bindir domidtest dommemtest idommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest inittermtest
+      all::	bindir domidtest dommemtest idommemtest domtest idomtest threadtest encodingtest traversal itraversal rangetest irangetest inittermtest
   endif
 else
-    all::	bindir domidtest dommemtest idommemtest domtest idomtest threadtest ithreadtest encodingtest traversal itraversal rangetest irangetest inittermtest
+    all::	bindir domidtest dommemtest idommemtest domtest idomtest threadtest encodingtest traversal itraversal rangetest irangetest inittermtest
 endif
 
 bindir::
@@ -117,10 +116,6 @@ idomtest::
 threadtest::
 	@echo Building "ThreadTest"
 	${MAKE} -C $(ThreadTest_DIR) $(MAKE_FLAGS)
-
-ithreadtest::
-	@echo Building "IThreadTest"
-	${MAKE} -C $(IThreadTest_DIR) $(MAKE_FLAGS)
 
 encodingtest::
 	@echo Building "EncodingTest"
@@ -153,7 +148,6 @@ clean::
 	${MAKE} -C $(DOMTest_DIR) $@
 	${MAKE} -C $(IDOMTest_DIR) $@
 	${MAKE} -C $(ThreadTest_DIR) $@
-	${MAKE} -C $(IThreadTest_DIR) $@
 	${MAKE} -C $(EncodingTest_DIR) $@
 	${MAKE} -C $(Traversal_DIR) $@
 	${MAKE} -C $(ITraversal_DIR) $@
@@ -168,7 +162,6 @@ distclean::
 	${MAKE} -C $(DOMTest_DIR) $@
 	${MAKE} -C $(IDOMTest_DIR) $@
 	${MAKE} -C $(ThreadTest_DIR) $@
-	${MAKE} -C $(IThreadTest_DIR) $@
 	${MAKE} -C $(EncodingTest_DIR) $@
 	${MAKE} -C $(Traversal_DIR) $@
 	${MAKE} -C $(ITraversal_DIR) $@

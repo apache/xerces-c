@@ -65,13 +65,15 @@
 #include <string.h>
 #include <xercesc/parsers/SAXParser.hpp>
 #include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/parsers/IDOMParser.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 
 #include <xercesc/dom/DOM.hpp>
+#include <xercesc/idom/IDOM.hpp>
 
-
+void clearFileInfoMemory();
 
 //------------------------------------------------------------------------------
 //
@@ -85,7 +87,7 @@
 
 
 
-typedef void (*ThreadFunc)(void *);
+typedef DWORD (WINAPI *ThreadFunc)(void *);
 
 class ThreadFuncs           // This class isolates OS dependent threading
 {                           //   functions from the rest of ThreadTest program.
@@ -96,13 +98,26 @@ public:
 
 void ThreadFuncs::startThread(ThreadFunc func, void *param)
 {
-    unsigned long x;
-    x = _beginthread(func, 0x10000, param);
-    if (x == -1)
+    HANDLE  tHandle;
+    DWORD   threadID;
+
+    tHandle = CreateThread(0,          // Security Attributes,
+                           0x10000,    // Stack Size,
+                           func,       // Starting Address.
+                           param,      // Parmeters
+                           0,          // Creation Flags,
+                           &threadID); // Thread ID (Can not be null on 95/98)
+
+    if (tHandle == 0)
     {
         fprintf(stderr, "Error starting thread.  Errno = %d\n", errno);
+        clearFileInfoMemory();
         exit(-1);
     }
+
+    // Set the priority of the working threads low, so that the UI of the running system will
+    //   remain responsive.
+    SetThreadPriority(tHandle, THREAD_PRIORITY_IDLE);
 }
 
 
@@ -155,6 +170,7 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
     if (x == -1)
     {
         fprintf(stderr, "Error starting thread.  Errno = %d\n", errno);
+        clearFileInfoMemory();
         exit(-1);
     }
 
@@ -177,6 +193,8 @@ void ThreadFuncs::startThread(ThreadFunc func, void *param)
 struct InFileInfo
 {
     char    *fileName;
+    XMLCh   *uFileName;      // When doing an in-memory parse, avoid transcoding file name
+                             //    each time through.
     char    *fileContent;    // If doing an in-memory parse, this field points
                              //   to an allocated string containing the entire file
                              //   contents.  Otherwise it's 0.
@@ -200,12 +218,17 @@ struct RunInfo
 {
     bool        quiet;
     bool        verbose;
+    bool        stopNow;
     int         numThreads;
     bool        validating;
     bool        dom;
+    bool        idom;
     bool        reuseParser;
     bool        inMemory;
     bool        dumpOnErr;
+    bool        doSchema;
+    bool        schemaFullChecking;
+    bool        doNamespaces;
     int         totalTime;
     int         numInputFiles;
     InFileInfo  files[MAXINFILES];
@@ -261,6 +284,8 @@ private:
     int           fCheckSum;
     SAXParser*    fSAXParser;
     DOMParser*    fDOMParser;
+    IDOMParser*   fIDOMParser;
+    IDOM_Document * fDoc;
 
 
 public:                               //  This is the API used by the rest of the test program
@@ -280,12 +305,17 @@ public:                               //  This is the API used by the rest of th
     void domPrint();                   //   including any children.  Default (no param)
                                        //   version dumps the entire document.
 
+    void idomPrint(const IDOM_Node *node); // Dump out the contents of a node,
+    void idomPrint();                  //   including any children.  Default (no param)
+                                       //   version dumps the entire document.
+
 private:
     ThreadParser(const ThreadParser &); // No copy constructor
     const ThreadParser & operator =(const ThreadParser &); // No assignment.
 
     void  addToCheckSum(const XMLCh *chars, int len=-1);
     void  domCheckSum(const DOM_Node &);
+    void  idomCheckSum(const IDOM_Node *);
 
 
 public:                               // Not really public,
@@ -300,15 +330,15 @@ public:                               // Not really public,
 
     void warning(const SAXParseException& exception)     {
         fprintf(stderr, "*** Warning ");
-        throw;};
+        throw exception;};
 
     void error(const SAXParseException& exception)       {
         fprintf(stderr, "*** Error ");
-        throw;};
+        throw exception;};
 
     void fatalError(const SAXParseException& exception)  {
         fprintf(stderr, "***** Fatal error ");
-        throw;};
+        throw exception;};
 };
 
 
@@ -321,17 +351,34 @@ ThreadParser::ThreadParser()
 {
     fSAXParser = 0;
     fDOMParser = 0;
+    fIDOMParser = 0;
+    fDoc       = 0;
     if (gRunInfo.dom) {
         // Set up to use a DOM parser
         fDOMParser = new DOMParser;
         fDOMParser->setDoValidation(gRunInfo.validating);
+        fDOMParser->setDoSchema(gRunInfo.doSchema);
+        fDOMParser->setValidationSchemaFullChecking(gRunInfo.schemaFullChecking);
+        fDOMParser->setDoNamespaces(gRunInfo.doNamespaces);
         fDOMParser->setErrorHandler(this);
+    }
+    else if (gRunInfo.idom) {
+        // Set up to use a DOM parser
+        fIDOMParser = new IDOMParser;
+        fIDOMParser->setDoValidation(gRunInfo.validating);
+        fIDOMParser->setDoSchema(gRunInfo.doSchema);
+        fIDOMParser->setValidationSchemaFullChecking(gRunInfo.schemaFullChecking);
+        fIDOMParser->setDoNamespaces(gRunInfo.doNamespaces);
+        fIDOMParser->setErrorHandler(this);
     }
     else
     {
         // Set up to use a SAX parser.
         fSAXParser = new SAXParser;
         fSAXParser->setDoValidation(gRunInfo.validating);
+        fSAXParser->setDoSchema(gRunInfo.doSchema);
+        fSAXParser->setValidationSchemaFullChecking(gRunInfo.schemaFullChecking);
+        fSAXParser->setDoNamespaces(gRunInfo.doNamespaces);
         fSAXParser->setDocumentHandler(this);
         fSAXParser->setErrorHandler(this);
     }
@@ -344,6 +391,7 @@ ThreadParser::~ThreadParser()
 {
      delete fSAXParser;
      delete fDOMParser;
+     delete fIDOMParser;
 }
 
 //------------------------------------------------------------------------
@@ -356,13 +404,14 @@ int ThreadParser::parse(int fileNum)
 {
     MemBufInputSource *mbis = 0;
     InFileInfo        *fInfo = &gRunInfo.files[fileNum];
+    bool              errors = false;
 
     fCheckSum = 0;
 
     if (gRunInfo.inMemory) {
         mbis = new  MemBufInputSource((const XMLByte *) fInfo->fileContent,
                                        fInfo->fileSize,
-                                       fInfo->fileName,
+                                       fInfo->uFileName,
                                        false);
     }
 
@@ -376,6 +425,15 @@ int ThreadParser::parse(int fileNum)
                 fDOMParser->parse(fInfo->fileName);
             DOM_Document doc = fDOMParser->getDocument();
             domCheckSum(doc);
+        }
+        else if (gRunInfo.idom) {
+            // Do a IDOM parse
+            if (gRunInfo.inMemory)
+                fIDOMParser->parse(*mbis);
+            else
+                fIDOMParser->parse(fInfo->fileName);
+            fDoc = fIDOMParser->getDocument();
+            idomCheckSum(fDoc);
         }
         else
         {
@@ -392,10 +450,38 @@ int ThreadParser::parse(int fileNum)
         char *exceptionMessage = XMLString::transcode(e.getMessage());
         fprintf(stderr, " during parsing: %s \n Exception message is: %s \n",
             fInfo->fileName, exceptionMessage);
-        delete exceptionMessage;
+        delete [] exceptionMessage;
+        errors = true;
+    }
+    catch (const DOM_DOMException& toCatch)
+    {
+        fprintf(stderr, " during parsing: %s \n DOMException code is: %i \n",
+            fInfo->fileName, toCatch.code);
+        errors = true;
+    }
+    catch (const IDOM_DOMException& toCatch)
+    {
+        fprintf(stderr, " during parsing: %s \n IDOMException code is: %i \n",
+            fInfo->fileName, toCatch.code);
+        errors = true;
+    }
+    catch (const SAXParseException& e)
+    {
+        char *exceptionMessage = XMLString::transcode(e.getMessage());
+        fprintf(stderr, " during parsing: %s \n Exception message is: %s \n",
+            fInfo->fileName, exceptionMessage);
+        delete [] exceptionMessage;
+        errors = true;
+    }
+    catch (...)
+    {
+        fprintf(stderr, "Unexpected exception during parsing\n");
+        errors = true;
     }
 
     delete mbis;
+    if (errors)
+        return 0;  // if errors occurred, return zero as if checksum = 0;
     return fCheckSum;
 }
 
@@ -514,6 +600,65 @@ void ThreadParser::domCheckSum(const DOM_Node &node)
 }
 
 
+void ThreadParser::idomCheckSum(const IDOM_Node *node)
+{
+    const XMLCh        *s;
+    IDOM_Node          *child;
+    IDOM_NamedNodeMap  *attributes;
+
+    switch (node->getNodeType() )
+    {
+    case IDOM_Node::ELEMENT_NODE:
+        {
+            s = node->getNodeName();   // the element name
+
+            attributes = node->getAttributes();  // Element's attributes
+            int numAttributes = attributes->getLength();
+            int i;
+            for (i=0; i<numAttributes; i++)
+                idomCheckSum(attributes->item(i));
+
+            addToCheckSum(s);          // Content and Children
+            for (child=node->getFirstChild(); child!=0; child=child->getNextSibling())
+                idomCheckSum(child);
+
+            break;
+        }
+
+
+    case IDOM_Node::ATTRIBUTE_NODE:
+        {
+            s = node->getNodeName();  // The attribute name
+            addToCheckSum(s);
+            s = node->getNodeValue();  // The attribute value
+            if (s != 0)
+                addToCheckSum(s);
+            break;
+        }
+
+
+    case IDOM_Node::TEXT_NODE:
+    case IDOM_Node::CDATA_SECTION_NODE:
+        {
+            s = node->getNodeValue();
+            addToCheckSum(s);
+            break;
+        }
+
+    case IDOM_Node::ENTITY_REFERENCE_NODE:
+    case IDOM_Node::DOCUMENT_NODE:
+        {
+            // For entity references and the document, nothing is dirctly
+            //  added to the checksum, but we do want to process the chidren nodes.
+            //
+            for (child=node->getFirstChild(); child!=0; child=child->getNextSibling())
+                idomCheckSum(child);
+            break;
+        }
+    }
+}
+
+
 //
 // Recompute the checksum.  Meaningful only for DOM, will tell us whether
 //  a failure is transient, or whether the DOM data is permanently corrupted.
@@ -524,6 +669,10 @@ int ThreadParser::reCheck()
         fCheckSum = 0;
         DOM_Document doc = fDOMParser->getDocument();
         domCheckSum(doc);
+    }
+    else if (gRunInfo.idom) {
+        fCheckSum = 0;
+        idomCheckSum(fDoc);
     }
     return fCheckSum;
 }
@@ -604,7 +753,83 @@ void ThreadParser::domPrint(const DOM_Node &node)
     }
 }
 
+void ThreadParser::idomPrint()
+{
+    printf("Begin IDOMPrint ...\n");
+    if (gRunInfo.idom)
+        idomPrint(fIDOMParser->getDocument());
+    printf("End IDOMPrint\n");
+}
 
+static void printString(const XMLCh *str)
+{
+    char *s = XMLString::transcode(str);
+    printf("%s", s);
+    delete s;
+}
+
+
+void ThreadParser::idomPrint(const IDOM_Node *node)
+{
+
+    IDOM_Node          *child;
+    IDOM_NamedNodeMap  *attributes;
+
+    switch (node->getNodeType() )
+    {
+    case IDOM_Node::ELEMENT_NODE:
+        {
+            printf("<");
+            printString(node->getNodeName());   // the element name
+
+            attributes = node->getAttributes();  // Element's attributes
+            int numAttributes = attributes->getLength();
+            int i;
+            for (i=0; i<numAttributes; i++) {
+                idomPrint(attributes->item(i));
+            }
+            printf(">");
+
+            for (child=node->getFirstChild(); child!=0; child=child->getNextSibling())
+                idomPrint(child);
+
+            printf("</");
+            printString(node->getNodeName());
+            printf(">");
+            break;
+        }
+
+
+    case IDOM_Node::ATTRIBUTE_NODE:
+        {
+            printf(" ");
+            printString(node->getNodeName());   // The attribute name
+            printf("= \"");
+            printString(node->getNodeValue());  // The attribute value
+            printf("\"");
+            break;
+        }
+
+
+    case IDOM_Node::TEXT_NODE:
+    case IDOM_Node::CDATA_SECTION_NODE:
+        {
+            printString(node->getNodeValue());
+            break;
+        }
+
+    case IDOM_Node::ENTITY_REFERENCE_NODE:
+    case IDOM_Node::DOCUMENT_NODE:
+        {
+            // For entity references and the document, nothing is dirctly
+            //  printed, but we do want to process the chidren nodes.
+            //
+            for (child=node->getFirstChild(); child!=0; child=child->getNextSibling())
+                idomPrint(child);
+            break;
+        }
+    }
+}
 
 
 //----------------------------------------------------------------------
@@ -625,7 +850,11 @@ void parseCommandLine(int argc, char **argv)
     gRunInfo.verbose = false;
     gRunInfo.numThreads = 2;
     gRunInfo.validating = false;
+    gRunInfo.doSchema = false;
+    gRunInfo.schemaFullChecking = false;
+    gRunInfo.doNamespaces = false;
     gRunInfo.dom = false;
+    gRunInfo.idom = false;
     gRunInfo.reuseParser = false;
     gRunInfo.inMemory = false;
     gRunInfo.dumpOnErr = false;
@@ -643,8 +872,40 @@ void parseCommandLine(int argc, char **argv)
                 gRunInfo.verbose = true;
             else if (strcmp(argv[argnum], "-v") == 0)
                 gRunInfo.validating = true;
-            else if (strcmp(argv[argnum], "-dom") == 0)
+            else if (strcmp(argv[argnum], "-s") == 0)
+                gRunInfo.doSchema = true;
+            else if (strcmp(argv[argnum], "-f") == 0)
+                gRunInfo.schemaFullChecking = true;
+            else if (strcmp(argv[argnum], "-n") == 0)
+                gRunInfo.doNamespaces = true;
+            else if (!strncmp(argv[argnum], "-parser=", 8)) {
+                const char* const parm = &argv[argnum][8];
+
+                if (!strcmp(parm, "dom")) {
+                    gRunInfo.dom = true;
+                    gRunInfo.idom = false;
+                }
+                else if (!strcmp(parm, "idom")) {
+                    gRunInfo.idom = true;
+                    gRunInfo.dom = false;
+                }
+                else if (!strcmp(parm, "sax")) {
+                    gRunInfo.idom = false;
+                    gRunInfo.dom = false;
+                }
+                else
+                    throw 1;
+            }
+            else if (strcmp(argv[argnum], "-dom") == 0) {
+                if (gRunInfo.idom == true)
+                    throw 1;
                 gRunInfo.dom = true;
+            }
+            else if (strcmp(argv[argnum], "-idom") == 0) {
+                if (gRunInfo.dom == true)
+                    throw 1;
+                gRunInfo.idom = true;
+            }
             else if (strcmp(argv[argnum], "-reuse") == 0)
                 gRunInfo.reuseParser = true;
             else if (strcmp(argv[argnum], "-dump") == 0)
@@ -702,7 +963,9 @@ void parseCommandLine(int argc, char **argv)
     {
         fprintf(stderr, "usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile...\n"
             "     -v             Use validating parser.  Non-validating is default. \n"
-            "     -dom           Use a DOM parser.  Default is SAX. \n"
+            "     -n             Enable namespace processing. Defaults to off.\n"
+            "     -s             Enable schema processing. Defaults to off.\n"
+            "     -parser=xxx    Parser Type [dom | idom | sax].  Default is SAX. \n"
             "     -quiet         Suppress periodic status display. \n"
             "     -verbose       Display extra messages. \n"
             "     -reuse         Retain and reuse parser.  Default creates new for each parse.\n"
@@ -737,9 +1000,11 @@ void ReadFilesIntoMemory()
         for (fileNum = 0; fileNum <gRunInfo.numInputFiles; fileNum++)
         {
             InFileInfo *fInfo = &gRunInfo.files[fileNum];
+            fInfo->uFileName = XMLString::transcode(fInfo->fileName);
             fileF = fopen( fInfo->fileName, "rb" );
             if (fileF == 0) {
                 fprintf(stderr, "Can not open file \"%s\".\n", fInfo->fileName);
+                clearFileInfoMemory();
                 exit(-1);
             }
             fseek(fileF, 0, SEEK_END);
@@ -749,10 +1014,26 @@ void ReadFilesIntoMemory()
             t = fread(fInfo->fileContent, 1, fInfo->fileSize, fileF);
             if (t != fInfo->fileSize) {
                 fprintf(stderr, "Error reading file \"%s\".\n", fInfo->fileName);
+                clearFileInfoMemory();
                 exit(-1);
             }
             fclose(fileF);
             fInfo->fileContent[fInfo->fileSize] = 0;
+        }
+    }
+}
+
+void clearFileInfoMemory()
+{
+    int     fileNum;
+
+    if (gRunInfo.inMemory)
+    {
+        for (fileNum = 0; fileNum <gRunInfo.numInputFiles; fileNum++)
+        {
+            InFileInfo *fInfo = &gRunInfo.files[fileNum];
+            delete [] fInfo->uFileName;
+            delete [] fInfo->fileContent;
         }
     }
 }
@@ -765,17 +1046,15 @@ void ReadFilesIntoMemory()
 //               Run in an infinite loop, parsing each of the documents
 //               given on the command line in turn.
 //
-//               There is no return from this fuction, and no graceful
-//               thread termination.  Threads are stuck running here
-//               until the OS shuts them down as a consequence of the
-//               main thread of the process (which never calls this
-//               function) exiting.
-//
 //----------------------------------------------------------------------
 
+#ifdef PLATFORM_WIN32
+unsigned long WINAPI threadMain (void *param)
+#else
 extern "C" {
 
 void threadMain (void *param)
+#endif
 {
     ThreadInfo   *thInfo = (ThreadInfo *)param;
     ThreadParser *thParser = 0;
@@ -789,8 +1068,16 @@ void threadMain (void *param)
     // Each time through this loop, one file will be parsed and its checksum
     // computed and compared with the precomputed value for that file.
     //
-    while (true)
+    while (gRunInfo.stopNow == false)
     {
+        //
+        // wait until my heartbeat is set to false
+        //
+        while (true) {
+            if (thInfo->fHeartBeat == false)
+                break;
+        }
+
 
         if (thParser == 0)
             thParser = new ThreadParser;
@@ -817,9 +1104,14 @@ void threadMain (void *param)
             // Revisit - let the loop continue to run?
             int secondTryCheckSum = thParser->reCheck();
             fprintf(stderr, "   Retry checksum is %x\n", secondTryCheckSum);
-            if (gRunInfo.dumpOnErr)
-                thParser->domPrint();
+            if (gRunInfo.dumpOnErr) {
+               if (gRunInfo.dom)
+                  thParser->domPrint();
+               if (gRunInfo.idom)
+                  thParser->idomPrint();
+            }
             fflush(stdout);
+            clearFileInfoMemory();
             exit(-1);
         }
 
@@ -833,8 +1125,14 @@ void threadMain (void *param)
         thInfo->fHeartBeat = true;
         thInfo->fParses++;
     }
-}
 
+    delete thParser;
+#ifdef PLATFORM_WIN32
+    return 0;
+#else
+    return;
+}
+#endif
 }
 
 
@@ -902,19 +1200,30 @@ int main (int argc, char **argv)
         gRunInfo.files[n].checkSum = cksum;
         if (gRunInfo.verbose )
             printf("%x\n", cksum);
-        if (gRunInfo.dumpOnErr && errors)
-            mainParser->domPrint();
+        if (gRunInfo.dumpOnErr && errors) {
+           if (gRunInfo.dom)
+              mainParser->domPrint();
+           if (gRunInfo.idom)
+              mainParser->idomPrint();
+        }
 
     }
-    if (errors)
+
+    delete mainParser;
+
+    if (errors) {
+        clearFileInfoMemory();
         exit(1);
+    }
 
     //
     //  Fire off the requested number of parallel threads
     //
 
-    if (gRunInfo.numThreads == 0)
+    if (gRunInfo.numThreads == 0) {
+        clearFileInfoMemory();
         exit(0);
+    }
 
     gThreadInfo = new ThreadInfo[gRunInfo.numThreads];
 
@@ -936,32 +1245,51 @@ int main (int argc, char **argv)
     while (gRunInfo.totalTime == 0 || gRunInfo.totalTime > elapsedSeconds)
     {
         ThreadFuncs::Sleep(1000);
+
+        char c = '+';
+        int threadNum;
+        for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
+        {
+            if (gThreadInfo[threadNum].fHeartBeat == false)
+            {
+                c = '.';
+                break;
+            };
+        }
+
         if (gRunInfo.quiet == false && gRunInfo.verbose == false)
         {
-            char c = '+';
-            int threadNum;
-            for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
-            {
-                if (gThreadInfo[threadNum].fHeartBeat == false)
-                {
-                    c = '.';
-                    break;
-                };
-            }
             fputc(c, stdout);
             fflush(stdout);
-            if (c == '+')
-                for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
-                    gThreadInfo[threadNum].fHeartBeat = false;
         }
+
+        if (c == '+')
+            for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
+                gThreadInfo[threadNum].fHeartBeat = false;
+
         elapsedSeconds = (XMLPlatformUtils::getCurrentMillis() - startTime) / 1000;
     };
 
     //
     //  Time's up, we are done.  (We only get here if this was a timed run)
     //  Tally up the total number of parses completed by each of the threads.
-    //  To Do:  Run the main thread at higher priority, so that the worker threads
-    //    won't make much progress while we are adding up the results.
+    //
+    gRunInfo.stopNow = true;      // set flag, which will cause worker threads to stop.
+
+    //
+    //  Make sure all threads are done before terminate
+    //
+    for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++) {
+        while (gThreadInfo[threadNum].fHeartBeat == false) {
+            ThreadFuncs::Sleep(1000);
+        }
+        if (gRunInfo.verbose)
+            printf("Thread #%d: is finished \n", threadNum);
+
+    }
+
+    //
+    //  We are done!   Count the number of parse and terminate the program
     //
     double totalParsesCompleted = 0;
     for (threadNum=0; threadNum < gRunInfo.numThreads; threadNum++)
@@ -973,9 +1301,13 @@ int main (int argc, char **argv)
     double parsesPerMinute = totalParsesCompleted / (double(gRunInfo.totalTime) / double(60));
     printf("\n%8.1f parses per minute.", parsesPerMinute);
 
-    //  The threads are still running; we just return
-    //   and leave it to the operating sytem to kill them.
-    //
+    XMLPlatformUtils::Terminate();
+
+    clearFileInfoMemory();
+
+    delete [] gThreadInfo;
+
+    printf("Test Run Successfully\n");
 
     return 0;
 }

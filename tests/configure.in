@@ -88,8 +88,7 @@ EncodingTest/Makefile \
 DOM/RangeTest/Makefile \
 IDom/IRangeTest/Makefile \
 InitTermTest/Makefile \
-ThreadTest/Makefile \
-IThreadTest/Makefile])
+ThreadTest/Makefile])
 
 echo
 echo Having build problems? Read instructions at http://xml.apache.org/xerces-c/build.html
