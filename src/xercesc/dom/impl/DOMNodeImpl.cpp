@@ -68,6 +68,13 @@
 #include "DOMAttrImpl.hpp"
 #include "DOMCasts.hpp"
 #include "DOMDocumentImpl.hpp"
+#include "DOMCDATASectionImpl.hpp"
+#include "DOMEntityReferenceImpl.hpp"
+#include "DOMEntityImpl.hpp"
+#include "DOMProcessingInstructionImpl.hpp"
+#include "DOMCommentImpl.hpp"
+#include "DOMDocumentFragmentImpl.hpp"
+#include "DOMNotationImpl.hpp"
 
 #include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/dom/DOMException.hpp>
@@ -908,42 +915,135 @@ short DOMNodeImpl::reverseTreeOrderBitPattern(short pattern) const {
     return pattern;
 }
 
-const XMLCh*     DOMNodeImpl::getTextContent(XMLCh* pzBuffer, unsigned int&
-rnBufferLength) const
-{
-  unsigned int nRemainingBuffer = rnBufferLength;
-  rnBufferLength = 0;
-  if (pzBuffer)
-    *pzBuffer = 0;
+/***
+ *
+ *   Excerpt from http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030226/core.html#Node3-textContent
+ *
+ *   textContent of type DOMString, introduced in DOM Level 3 
+ *   
+ *   This attribute returns the text content of this node and its descendants. When it is defined 
+ *   to be null, setting it has no effect. 
+ *   
+ *   When set, any possible children this node may have are removed and replaced by a single Text node 
+ *   containing the string this attribute is set to. 
+ *
+ *   On getting, no serialization is performed, the returned string does not contain any markup. 
+ *   No whitespace normalization is performed, the returned string does not contain the element content 
+ *   whitespaces Fundamental Interfaces. 
+ *
+ *   Similarly, on setting, no parsing is performed either, the input string is taken as pure textual content.
+ *
+ *   The string returned is made of the text content of this node depending on its type, 
+ *   as defined below: 
+ *
+ *       Node type                                           Content          
+ *   ====================       ========================================================================
+ *     ELEMENT_NODE               concatenation of the textContent attribute value of every child node, 
+ *     ENTITY_NODE			      excluding COMMENT_NODE and PROCESSING_INSTRUCTION_NODE nodes. 
+ *     ENTITY_REFERENCE_NODE	  This is the empty string if the node has no children. 
+ *     DOCUMENT_FRAGMENT_NODE 
+ *    --------------------------------------------------------------------------------------------------
+ *     ATTRIBUTE_NODE
+ *     TEXT_NODE
+ *     CDATA_SECTION_NODE
+ *     COMMENT_NODE, 
+ *     PROCESSING_INSTRUCTION_NODE   nodeValue 
+ *    --------------------------------------------------------------------------------------------------
+ *     DOCUMENT_NODE, 
+ *     DOCUMENT_TYPE_NODE, 
+ *     NOTATION_NODE                 null 
+ *
+ ***/
 
-  DOMNode *thisNode = castToNode(this);
-  switch (thisNode->getNodeType()) {
-    case DOMNode::ELEMENT_NODE:
+const XMLCh*     DOMNodeImpl::getTextContent() const
+{
+
+	unsigned int nBufferLength = 0;
+
+	getTextContent(NULL, nBufferLength);
+	XMLCh* pzBuffer = (XMLCh*)((DOMDocumentImpl*)getOwnerDocument())->allocate(nBufferLength+1);
+
+	getTextContent(pzBuffer, nBufferLength);
+	pzBuffer[nBufferLength] = 0;
+
+	return pzBuffer;
+
+}
+
+const XMLCh*    DOMNodeImpl::getTextContent(XMLCh* pzBuffer, unsigned int& rnBufferLength) const
+{
+
+	unsigned int nRemainingBuffer = rnBufferLength;
+	rnBufferLength = 0;
+
+	if (pzBuffer)   
+		*pzBuffer = 0;
+
+	DOMNode *thisNode = castToNode(this);
+
+	switch (thisNode->getNodeType())
+	{
+	case DOMNode::ELEMENT_NODE:
     case DOMNode::ENTITY_NODE:
     case DOMNode::ENTITY_REFERENCE_NODE:
     case DOMNode::DOCUMENT_FRAGMENT_NODE:
     {
-      DOMNode* current = thisNode->getFirstChild();
-      while (current != NULL) {
-        if (current->getNodeType() != DOMNode::COMMENT_NODE &&
-            current->getNodeType() != DOMNode::PROCESSING_INSTRUCTION_NODE)
-        {
-          if (pzBuffer) {
-            unsigned int nContentLength = nRemainingBuffer;
-            ((DOMNodeImpl*)current)->getTextContent(pzBuffer +
-rnBufferLength, nContentLength);
-            rnBufferLength += nContentLength;
-            nRemainingBuffer -= nContentLength;
-          }
-          else {
-            unsigned int nContentLength = 0;
-            ((DOMNodeImpl*)current)->getTextContent(NULL, nContentLength);
-            rnBufferLength += nContentLength;
-          }
-        }
-        current = current->getNextSibling();
-      }
+		DOMNode* current = thisNode->getFirstChild();
+		DOMNodeImpl* nodeImpl;
+
+		while (current != NULL) 
+		{
+			if (current->getNodeType() != DOMNode::COMMENT_NODE &&
+				current->getNodeType() != DOMNode::PROCESSING_INSTRUCTION_NODE)
+			{
+				switch (current->getNodeType())
+				{
+				case DOMNode::ELEMENT_NODE:
+					nodeImpl = &(((DOMElementImpl*)current)->fNode);
+				case DOMNode::ATTRIBUTE_NODE:       
+					nodeImpl = &(((DOMAttrImpl*)current)->fNode);
+				case DOMNode::TEXT_NODE:        
+					nodeImpl = &(((DOMTextImpl*)current)->fNode);
+				case DOMNode::CDATA_SECTION_NODE:
+					nodeImpl = &(((DOMCDATASectionImpl*)current)->fNode);
+				case DOMNode::ENTITY_REFERENCE_NODE:
+					nodeImpl = &(((DOMEntityReferenceImpl*)current)->fNode);
+				case DOMNode::ENTITY_NODE:
+					nodeImpl = &(((DOMEntityImpl*)current)->fNode);
+				case DOMNode::PROCESSING_INSTRUCTION_NODE:
+					nodeImpl = &(((DOMProcessingInstructionImpl*)current)->fNode);
+				case DOMNode::COMMENT_NODE:
+					nodeImpl = &(((DOMCommentImpl*)current)->fNode);
+				case DOMNode::DOCUMENT_NODE:        
+					nodeImpl = &(((DOMDocumentImpl*)current)->fNode);
+				case DOMNode::DOCUMENT_TYPE_NODE:
+					nodeImpl = &(((DOMDocumentTypeImpl*)current)->fNode);
+				case DOMNode::DOCUMENT_FRAGMENT_NODE:
+					nodeImpl = &(((DOMDocumentFragmentImpl*)current)->fNode);
+				case DOMNode::NOTATION_NODE:
+					nodeImpl = &(((DOMNotationImpl*)current)->fNode);
+				}
+
+				if (pzBuffer)
+				{
+					unsigned int nContentLength = nRemainingBuffer;
+					nodeImpl->getTextContent(pzBuffer + rnBufferLength, nContentLength);
+					rnBufferLength += nContentLength;
+					nRemainingBuffer -= nContentLength;
+				}
+				else 
+				{
+					unsigned int nContentLength = 0;
+					nodeImpl->getTextContent(NULL, nContentLength);
+					rnBufferLength += nContentLength;
+				}
+			}
+
+			current = current->getNextSibling();
+
+		}
     }
+
     break;
 
     case DOMNode::ATTRIBUTE_NODE:
@@ -952,38 +1052,40 @@ rnBufferLength, nContentLength);
     case DOMNode::COMMENT_NODE:
     case DOMNode::PROCESSING_INSTRUCTION_NODE:
     {
-      const XMLCh* pzValue = thisNode->getNodeValue();
-      unsigned int nStrLen = XMLString::stringLen(pzValue);
-      if (pzBuffer) {
-        unsigned int nContentLength = (nRemainingBuffer >= nStrLen) ?
-nStrLen : nRemainingBuffer;
-        XMLString::copyNString(pzBuffer + rnBufferLength, pzValue,
-nContentLength);
-        rnBufferLength += nContentLength;
-        nRemainingBuffer -= nContentLength;
-      }
-      else {
-        rnBufferLength += nStrLen;
-      }
+		const XMLCh* pzValue = thisNode->getNodeValue();
+		unsigned int nStrLen = XMLString::stringLen(pzValue);
+
+		if (pzBuffer) 
+		{
+			unsigned int nContentLength = (nRemainingBuffer >= nStrLen) ? nStrLen : nRemainingBuffer;
+			XMLString::copyNString(pzBuffer + rnBufferLength, pzValue, nContentLength);
+			rnBufferLength += nContentLength;
+			nRemainingBuffer -= nContentLength;
+		}
+		else 
+		{
+			rnBufferLength += nStrLen;
+		}
+
     }
+
     break;
-  }
-  return pzBuffer;
+
+	/***
+         DOCUMENT_NODE
+		 DOCUMENT_TYPE_NODE
+		 NOTATION_NODE
+	***/
+	default:
+
+		break;
+	}
+
+	return pzBuffer;
+
 }
 
-const XMLCh*     DOMNodeImpl::getTextContent() const
-{
-  unsigned int nBufferLength = 0;
-  getTextContent(NULL, nBufferLength);
-  XMLCh* pzBuffer = (XMLCh*)
-((DOMDocumentImpl*)getOwnerDocument())->allocate(nBufferLength+1);
-  getTextContent(pzBuffer, nBufferLength);
-  pzBuffer[nBufferLength] = 0;
-  return pzBuffer;
-}
-
-
-void             DOMNodeImpl::setTextContent(const XMLCh* textContent){
+void DOMNodeImpl::setTextContent(const XMLCh* textContent){
     throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
 }
 

@@ -83,8 +83,11 @@ class    DocumentImpl;
 
 
 class CDOM_EXPORT DOMProcessingInstructionImpl: public DOMProcessingInstruction {
-private:
+public:
     DOMNodeImpl   fNode;
+
+private:
+
     DOMChildNode  fChild;
     // use fCharacterData to store its data so that those character utitlites can be used
     DOMCharacterDataImpl   fCharacterData;

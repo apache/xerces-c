@@ -78,8 +78,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 class CDOM_EXPORT DOMDocumentFragmentImpl: public DOMDocumentFragment {
-private:
+public:
     DOMNodeImpl     fNode;
+private:
+
     DOMParentNode   fParent;
 
 
