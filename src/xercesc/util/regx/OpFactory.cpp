@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2004/02/16 10:11:28  amassari
+ * Fixed warning with gcc 3.3
+ *
  * Revision 1.7  2003/12/17 00:18:37  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -91,8 +94,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/regx/OpFactory.hpp>
 #include <xercesc/util/regx/Op.hpp>
+#include <xercesc/util/regx/OpFactory.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
