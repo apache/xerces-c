@@ -1457,6 +1457,9 @@
 					RelativePath="..\..\..\..\..\src\xercesc\validators\schema\NamespaceScope.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\src\xercesc\validators\schema\PSVIDefs.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\src\xercesc\validators\schema\SchemaAttDef.cpp">
 				</File>
 				<File

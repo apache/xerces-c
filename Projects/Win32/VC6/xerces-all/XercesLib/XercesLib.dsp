@@ -1958,6 +1958,10 @@ SOURCE=..\..\..\..\..\src\xercesc\validators\schema\NamespaceScope.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\PSVIDefs.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaAttDef.cpp
 # End Source File
 # Begin Source File
