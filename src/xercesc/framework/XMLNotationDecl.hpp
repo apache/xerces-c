@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2004/02/15 19:37:16  amassari
+ * Removed cause for warnings in VC 7.1
+ *
  * Revision 1.11  2003/11/21 22:34:46  neilg
  * More schema component model implementation, thanks to David Cargill.
  * In particular, this cleans up and completes the XSModel, XSNamespaceItem,
@@ -166,7 +169,7 @@ public:
     const XMLCh* getPublicId() const;
     const XMLCh* getSystemId() const;
     const XMLCh* getBaseURI() const;
-    const unsigned int getNameSpaceId() const;
+    unsigned int getNameSpaceId() const;
     MemoryManager* getMemoryManager() const;
 
 
@@ -249,7 +252,7 @@ inline const XMLCh* XMLNotationDecl::getName() const
     return fName;
 }
 
-inline const unsigned int XMLNotationDecl::getNameSpaceId() const
+inline unsigned int XMLNotationDecl::getNameSpaceId() const
 {
     return fNameSpaceId;
 }

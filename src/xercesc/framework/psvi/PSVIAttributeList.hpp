@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/02/15 19:37:16  amassari
+ * Removed cause for warnings in VC 7.1
+ *
  * Revision 1.6  2003/12/20 06:19:38  neilg
  * store name/namespace of corresponding attribute in PSVIAttributeList; not all PSVIAttributes have XSAttributeDeclarations
  *
@@ -126,7 +129,7 @@ public:
      * Get the number of attributes whose PSVI contributions
      * are contained in this list.
      */
-    const unsigned int getLength() const;
+    unsigned int getLength() const;
 
     /*
      * Get the PSVI contribution of attribute at position i

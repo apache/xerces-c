@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2004/02/15 19:37:16  amassari
+ * Removed cause for warnings in VC 7.1
+ *
  * Revision 1.6  2003/12/30 16:48:16  neilg
  * some indices in the PSVIAttributeList were 1 off
  *
@@ -95,7 +98,7 @@ PSVIAttributeList::PSVIAttributeList( MemoryManager* const manager ):
  * Get the number of attributes whose PSVI contributions
  * are contained in this list.
  */
-const unsigned int PSVIAttributeList::getLength() const
+unsigned int PSVIAttributeList::getLength() const
 {
     return fAttrPos;
 }

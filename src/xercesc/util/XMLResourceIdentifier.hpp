@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2004/02/15 19:37:16  amassari
+ * Removed cause for warnings in VC 7.1
+ *
  * Revision 1.4  2004/02/13 14:28:30  cargilld
  * Fix for bug 26900 (remove virtual on destructor)
  *
@@ -179,7 +182,7 @@ public:
     // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-    const ResourceIdentifierType getResourceIdentifierType() const;
+    ResourceIdentifierType getResourceIdentifierType() const;
     const XMLCh* getPublicId()          const;
     const XMLCh* getSystemId()          const;
     const XMLCh* getSchemaLocation()    const;
@@ -205,7 +208,7 @@ private :
 
 };
 
-inline const XMLResourceIdentifier::ResourceIdentifierType XMLResourceIdentifier::getResourceIdentifierType() const 
+inline XMLResourceIdentifier::ResourceIdentifierType XMLResourceIdentifier::getResourceIdentifierType() const 
 {
     return fResourceIdentifierType;
 }
