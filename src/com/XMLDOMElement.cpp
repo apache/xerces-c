@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2000/07/07 00:14:12  jpolast
+ * bug fix
+ *
  * Revision 1.3  2000/06/19 20:05:58  rahulj
  * Changes for increased conformance and stability. Submitted by
  * Curt.Arnold@hyprotech.com. Verified by Joe Polastre.
@@ -104,14 +107,13 @@ STDMETHODIMP CXMLDOMElement::getAttribute(BSTR name, VARIANT  *pVal)
 	V_VT(pVal) = VT_EMPTY;
 
 	DOMString a = element.getAttribute(name);
-	if(a.length() > 0) {
-		try {
-			V_VT(pVal)   = VT_BSTR;
-			V_BSTR(pVal) = SysAllocString(a.rawBuffer());
-		}
-		catch(...) {
-			return E_FAIL;
-		}
+
+	try {
+		V_VT(pVal)   = VT_BSTR;
+		V_BSTR(pVal) = SysAllocString(a.rawBuffer());
+	}
+	catch(...) {
+		return E_FAIL;
 	}
 	
 	return S_OK;
