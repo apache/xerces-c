@@ -16,6 +16,16 @@
 			settings = {
 			};
 		};
+//000
+//001
+//002
+//003
+//004
+//020
+//021
+//022
+//023
+//024
 		0249A660FF388D4511CA2CEA = {
 			isa = PBXExecutableFileReference;
 			path = DOMPrint;
@@ -79,6 +89,16 @@
 				);
 			};
 		};
+//020
+//021
+//022
+//023
+//024
+//080
+//081
+//082
+//083
+//084
 		08FB7793FE84155DC02AAC07 = {
 			buildStyles = (
 				32D0C9130081428B7F000001,
@@ -86,7 +106,7 @@
 			);
 			isa = PBXProject;
 			mainGroup = 08FB7794FE84155DC02AAC07;
-			projectDirPath = .;
+			projectDirPath = "";
 			targets = (
 				08FB779FFE84155DC02AAC07,
 			);
@@ -133,8 +153,6 @@
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 			};
-			conditionalBuildSettings = {
-			};
 			dependencies = (
 			);
 			isa = PBXToolTarget;
@@ -176,6 +194,16 @@
 			isa = PBXRezBuildPhase;
 			name = "ResourceManager Resources";
 		};
+//080
+//081
+//082
+//083
+//084
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
 		1AB674ADFE9D54B511CA2CBB = {
 			children = (
 				0249A660FF388D4511CA2CEA,
@@ -184,6 +212,16 @@
 			name = Products;
 			refType = 4;
 		};
+//1A0
+//1A1
+//1A2
+//1A3
+//1A4
+//320
+//321
+//322
+//323
+//324
 		32D0C9130081428B7F000001 = {
 			buildRules = (
 			);
