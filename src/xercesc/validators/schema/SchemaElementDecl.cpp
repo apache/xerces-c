@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:46  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/06 22:30:50  knoaman
+ * Added a new attribute to store the wild card information for elements of type 'anyType'.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:46  peiyongz
+ * sane_include
  *
  * Revision 1.18  2002/01/02 15:20:22  tng
  * Schema Fix: should not store a temp value as the key in the element pool and the attribute pool.
@@ -144,6 +147,7 @@ SchemaElementDecl::SchemaElementDecl() :
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
     , fIdentityConstraints(0)
+    , fAttWildCard(0)
 {
 }
 
@@ -166,6 +170,7 @@ SchemaElementDecl::SchemaElementDecl(const XMLCh* const                  prefix
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
     , fIdentityConstraints(0)
+    , fAttWildCard(0)
 {
     setElementName(prefix, localPart, uriId);
 }
@@ -187,6 +192,7 @@ SchemaElementDecl::SchemaElementDecl(const QName* const                  element
     , fXsiComplexTypeInfo(0)
     , fAttDefs(0)
     , fIdentityConstraints(0)
+    , fAttWildCard(0)
 {
     setElementName(elementName);
 }
@@ -198,6 +204,7 @@ SchemaElementDecl::~SchemaElementDecl()
     delete [] fTypeFromAnotherSchemaURI;
     delete fAttDefs;
     delete fIdentityConstraints;
+    delete fAttWildCard;
 }
 
 
