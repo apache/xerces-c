@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2000/03/28 23:22:17  aruna1
+ * Modified return statements in functions  to avoid warnings on HP.
+ *
  * Revision 1.6  2000/03/02 19:54:05  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -411,11 +414,8 @@ DOM_Node TreeWalkerImpl::getParentNode (DOM_Node node) {
 
     if (accept == DOM_NodeFilter::FILTER_ACCEPT)
         return newNode;
-    else
-    {
-        return getParentNode(newNode);
-    }
 
+    return getParentNode(newNode);
 
 }
 
@@ -462,10 +462,7 @@ DOM_Node TreeWalkerImpl::getNextSibling (DOM_Node node) {
         }
         return fChild;
     }
-    else
-    {
-        return getNextSibling(newNode);
-    }
+    return getNextSibling(newNode);
 
 }
 
@@ -511,10 +508,7 @@ DOM_Node TreeWalkerImpl::getPreviousSibling (DOM_Node node) {
         }
         return fChild;
     }
-    else
-    {
-        return getPreviousSibling(newNode);
-    }
+    return getPreviousSibling(newNode);
 
 }
 
@@ -546,10 +540,7 @@ DOM_Node TreeWalkerImpl::getFirstChild (DOM_Node node) {
     {
         return getFirstChild(newNode);
     }
-    else
-    {
-        return getNextSibling(newNode);
-    }
+    return getNextSibling(newNode);
 }
 
 
@@ -580,10 +571,7 @@ DOM_Node TreeWalkerImpl::getLastChild (DOM_Node node) {
     {
         return getLastChild(newNode);
     }
-    else
-    {
-        return getPreviousSibling(newNode);
-    }
+    return getPreviousSibling(newNode);
 
 
 }
