@@ -1060,11 +1060,11 @@ void XMLPlatformUtils::closeMutex(void* const mtxHandle)
    ThrowXML(XMLPlatformUtilsException, XMLExcepts::Mutex_CouldNotDestroy);
     }
     if ( (pthread_mutex_t*)mtxHandle)
-        delete mtxHandle;
+        delete (pthread_mutex_t*) mtxHandle;
     } // __isPosixOn
     else {
     if ( (int*)mtxHandle)
-        delete mtxHandle;
+        delete (int*) mtxHandle;
     }
 }
 void XMLPlatformUtils::lockMutex(void* const mtxHandle)
