@@ -189,8 +189,7 @@ public:
      * If the removed node is an
      * <code>DOMAttr</code> with a default value it is immediately replaced.
      * @param name The <code>nodeName</code> of a node to remove.
-     * @return The node removed from the map or <code>null</code> if no node
-     *   with such a name exists.
+     * @return The node removed from the map if a node with such a name exists.
      * @exception DOMException
      *   NOT_FOUND_ERR: Raised if there is no node named <code>name</code> in
      *   the map.
@@ -202,7 +201,7 @@ public:
     virtual DOMNode    *removeNamedItem(const XMLCh *name) = 0;
     //@}
 
-    /** @name Functions introduced in DOM Level 1 */
+    /** @name Functions introduced in DOM Level 2 */
     //@{
     /**
      * Retrieves a node specified by local name and namespace URI.
