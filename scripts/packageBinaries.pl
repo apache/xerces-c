@@ -134,7 +134,9 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         # Make the icu dlls
         chdir ("$ICUROOT/source/allinone");
         print "Executing: msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD inside $ICUROOT/source/allinone";
-        system("msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD");
+        #For nt we ship both debug and release dlls
+        system("msdev allinone.dsw /MAKE \"all - $platformname Release\" /REBUILD");
+        system("msdev allinone.dsw /MAKE \"all - $platformname Debug\" /REBUILD");
         
         change_windows_project_for_ICU("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib/XercesLib.dsp");
     }
@@ -651,10 +653,10 @@ sub change_windows_project_for_ICU() {
     open (FIZZLE, $thefiledotbak);
     open (FIZZLEOUT, ">$thefile");
     while ($line = <FIZZLE>) {
-        $line =~ s/\/D "PROJ_XMLPARSER"/\/I \"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\include" \/D "PROJ_XMLPARSER"/g;
+        $line =~ s/\/D "PROJ_XMLPARSER"/\/I \"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\include" \/D "PROJ_XMLPARSER"/g;
         $line =~ s/XML_USE_WIN32_TRANSCODER/XML_USE_ICU_TRANSCODER/g;
-        $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Release" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\data"/g;
-        $line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Debug" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\data"/g;
+        $line =~ s/Debug\/xerces-c_1D.lib"/Debug\/xerces-c_1D.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Debug" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\data"/g;
+        $line =~ s/Release\/xerces-c_1.lib"/Release\/xerces-c_1.lib" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\lib\\Release" \/libpath:"\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\\.\.\\icu\\data"/g;
         $line =~ s/user32\.lib/user32\.lib icuuc\.lib icudata\.lib/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService\.cpp/Transcoders\\ICU\\ICUTransService\.cpp/g;
         $line =~ s/Transcoders\\Win32\\Win32TransService\.hpp/Transcoders\\ICU\\ICUTransService\.hpp/g;
