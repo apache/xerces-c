@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.21  2003/12/20 06:21:34  neilg
+ * fix canonical representation production
+ *
  * Revision 1.20  2003/12/17 00:18:35  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -498,6 +501,15 @@ void XMLAbstractDoubleFloat::normalizeDecimalPoint(char* const toNormal)
 XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         const rawData
                                                         ,       MemoryManager* const memMgr)
 {
+    // before anything, let's look for special tokens since that
+    // breaks the calls to parse below.
+    if(XMLString::equals(rawData, XMLUni::fgNegINFString)
+            || XMLString::equals(rawData, XMLUni::fgPosINFString)
+            || XMLString::equals(rawData, XMLUni::fgNaNString))
+    {
+        return XMLString::replicate(rawData, memMgr);
+    }
+
     int    strLen = XMLString::stringLen(rawData);
     XMLCh* manStr = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
     ArrayJanitor<XMLCh> janManStr(manStr, memMgr);
@@ -507,10 +519,11 @@ XMLCh* XMLAbstractDoubleFloat::getCanonicalRepresentation(const XMLCh*         c
     XMLCh* expStr = (XMLCh*) memMgr->allocate((strLen + 1) * sizeof(XMLCh));
     ArrayJanitor<XMLCh> janExp(expStr, memMgr);
 
+    XMLCh* retBuffer = (XMLCh*) memMgr->allocate((strLen + 8) * sizeof(XMLCh));
+    retBuffer[0] = 0;
+
     int sign, totalDigits, fractDigits;
     int expValue = 0;
-
-    XMLCh* retBuffer = (XMLCh*) memMgr->allocate((strLen + 8) * sizeof(XMLCh));
 
     const XMLCh* ePosition = XMLString::findAny(rawData, expSign);
 
