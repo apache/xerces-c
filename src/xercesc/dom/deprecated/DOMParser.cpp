@@ -682,11 +682,15 @@ void DOMParser::docPI(  const   XMLCh* const    target
 }
 
 
-void DOMParser::endEntityReference(const XMLEntityDecl& /*entDecl*/)
+void DOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 {
     if (fCreateEntityReferenceNodes == true)
     {
         if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
+		    // stick the parsed content of this entity reference into the entity definition node
+		    EntityImpl* entity = (EntityImpl*)fDocumentType->entities->getNamedItem(entDecl.getName());
+		    entity->setEntityRef((EntityReferenceImpl*)fCurrentParent.fImpl);
+
             ((DOM_EntityReference&)fCurrentParent).fImpl->setReadOnly(true, true);
         }
         fCurrentParent = fNodeStack->pop();
@@ -868,13 +872,6 @@ void DOMParser::startEntityReference(const XMLEntityDecl& entDecl)
         fNodeStack->push(fCurrentParent);
         fCurrentParent = er;
         fCurrentNode = er;
-
-		// this entityRef needs to be stored in Entity map too.
-        // We'd decide later whether the entity nodes should be created by a
-        // separated method in parser or not. For now just stick it in if
-        // the ref nodes are created
-		EntityImpl* entity = (EntityImpl*)fDocumentType->entities->getNamedItem(entName);
-		entity->setEntityRef((EntityReferenceImpl*)er.fImpl);
 
     }
 }

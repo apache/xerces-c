@@ -44,10 +44,9 @@ private:
     DOMString systemId;
     DOMString notationName;
 
-    EntityReferenceImpl*	refEntity;
-	void	cloneEntityRefTree();
+	void setEntityRef(EntityReferenceImpl*);
 
-	friend class DOMParser;
+    friend class DOMParser;
 
 public:
     EntityImpl(DocumentImpl*, const DOMString &eName);
@@ -63,16 +62,6 @@ public:
     virtual void        setNotationName(const DOMString &arg);
     virtual void        setPublicId(const DOMString &arg);
     virtual void        setSystemId(const DOMString &arg);
-
-    virtual NodeImpl*	getFirstChild();
-	virtual NodeImpl*   getLastChild();
-	virtual NodeListImpl* getChildNodes();
-	virtual bool		hasChildNodes();
-	virtual NodeImpl*   item(unsigned int index);
-
-	//DOM Level 2 additions. Non standard functions
-	virtual void		setEntityRef(EntityReferenceImpl*);
-	virtual EntityReferenceImpl*	getEntityRef() const;
 };
 
 XERCES_CPP_NAMESPACE_END

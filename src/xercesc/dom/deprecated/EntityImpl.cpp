@@ -27,13 +27,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 
 
 EntityImpl::EntityImpl(DocumentImpl *ownerDoc, const DOMString &eName)
-   : ParentNode(ownerDoc),
-	refEntity(0)
-
+   : ParentNode(ownerDoc)
 {
     name        = eName.clone();
     setReadOnly(true, true);
-};
+}
 
 
 EntityImpl::EntityImpl(const EntityImpl &other, bool deep)
@@ -46,126 +44,75 @@ EntityImpl::EntityImpl(const EntityImpl &other, bool deep)
     systemId        = other.systemId.clone();
     notationName    = other.notationName.clone();
 
-    RefCountedImpl::removeRef(refEntity);
-    refEntity       = other.refEntity;	
-    RefCountedImpl::addRef(other.refEntity);
-
     setReadOnly(true, true);
-};
+}
 
 
 EntityImpl::~EntityImpl() {
-};
+}
 
 
 NodeImpl *EntityImpl::cloneNode(bool deep)
 {
     return new (getOwnerDocument()->getMemoryManager()) EntityImpl(*this, deep);
-};
+}
 
 
 DOMString EntityImpl::getNodeName() {
     return name;
-};
+}
 
 
 short EntityImpl::getNodeType() {
     return DOM_Node::ENTITY_NODE;
-};
+}
 
 
 DOMString EntityImpl::getNotationName()
 {
     return notationName;
-};
+}
 
 
 DOMString EntityImpl::getPublicId() {
     return publicId;
-};
+}
 
 
 DOMString EntityImpl::getSystemId()
 {
     return systemId;
-};
+}
 
 
 void EntityImpl::setNotationName(const DOMString &arg)
 {
     notationName = arg;
-};
+}
 
 
 void EntityImpl::setPublicId(const DOMString &arg)
 {
     publicId = arg;
-};
+}
 
 
 void EntityImpl::setSystemId(const DOMString &arg)
 {
     systemId = arg;
-};
-
-void		EntityImpl::setEntityRef(EntityReferenceImpl* other)
-{
-   RefCountedImpl::removeRef(refEntity);
-	refEntity = other;
-   RefCountedImpl::addRef(other);
 }
 
-EntityReferenceImpl*		EntityImpl::getEntityRef() const
+void EntityImpl::setEntityRef(EntityReferenceImpl* refEntity)
 {
-	return refEntity;
-}
+    if (firstChild != 0)
+        return;
 
-void	EntityImpl::cloneEntityRefTree()
-{
-	//lazily clone the entityRef tree to this entity
-	if (firstChild != 0)
-		return;
+    if (!refEntity)
+        return;
 
-	if (!refEntity)
-		return;
-
-   setReadOnly(false, true);
+    setReadOnly(false, true);
 	this->cloneChildren(*refEntity);
-   setReadOnly(true, true);
-}
-
-NodeImpl * EntityImpl::getFirstChild()
-{
-    cloneEntityRefTree();
-	return firstChild;
-};
-
-NodeImpl*   EntityImpl::getLastChild()
-{
-	cloneEntityRefTree();
-	return lastChild();
-}
-
-NodeListImpl* EntityImpl::getChildNodes()
-{
-	cloneEntityRefTree();
-	return this;
-
-}
-
-bool EntityImpl::hasChildNodes()
-{
-	cloneEntityRefTree();
-	return firstChild!=null;
-}
-
-NodeImpl* EntityImpl::item(unsigned int index)
-{
-	cloneEntityRefTree();
-    ChildNode *node = firstChild;
-    for(unsigned int i=0; i<index && node!=null; ++i)
-        node = node->nextSibling;
-    return node;
+    setReadOnly(true, true);
 }
 
 XERCES_CPP_NAMESPACE_END

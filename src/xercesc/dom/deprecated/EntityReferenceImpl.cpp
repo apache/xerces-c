@@ -96,9 +96,7 @@ EntityReferenceImpl::EntityReferenceImpl(DocumentImpl *ownerDoc,
             if (ownerDoc->getDoctype()->getEntities()) {
                 EntityImpl* entity = (EntityImpl*)ownerDoc->getDoctype()->getEntities()->getNamedItem(entityName);
                 if (entity) {
-                    EntityReferenceImpl* refEntity = entity->getEntityRef();
-                    if (refEntity)
-                        cloneChildren(*refEntity);
+                    cloneChildren(*entity);
                 }
             }
         }
