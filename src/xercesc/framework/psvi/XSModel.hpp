@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/10/10 18:37:51  neilg
+ * update XSModel and XSObject interface so that IDs can be used to query components in XSModels, and so that those IDs can be recovered from components
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -83,6 +86,8 @@ XERCES_CPP_NAMESPACE_BEGIN
  */
 
 // forward declarations
+class Grammar;
+class XMLGrammarPool;
 class XSAnnotation;
 class XSAttributeDeclaration;
 class XSAttributeGroupDefinition;
@@ -102,12 +107,26 @@ public:
     //@{
 
     /**
-      * The default constructor 
+      * The constructor to be used wen a grammar pool contains all needed info
       *
+      * @param grammarPool  the grammar pool containing the underlying data structures
       * @param  manager     The configurable memory manager
       */
-    XSModel( 
-                MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+    XSModel( XMLGrammarPool *grammarPool
+                , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
+
+    /**
+      * The constructor to be used when the XSModel must represent all
+      * components in the union of an existing XSModel and a newly-created
+      * Grammar
+      *
+      * @param baseModel  the XSModel upon which this one is based
+      * @param  grammar  the newly-created grammar whose components are to be merged
+      * @param  manager     The configurable memory manager
+      */
+    XSModel( XSModel *baseModel
+                , Grammar *grammar
+                , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
 
     //@};
 
@@ -231,6 +250,18 @@ public:
      */
     XSNotationDeclaration *getNotationDeclaration(const XMLCh *name
             , const XMLCh *compNamespace);
+
+    /**
+      * Optional.  Return a component given a component type and a unique Id.  
+      * May not be supported for all component types.
+      * @param compId unique Id of the component within its type
+      * @param compType type of the component
+      * @return the component of the given type with the given Id, or 0
+      * if no such component exists or this is unsupported for
+      * this type of component.
+      */
+    XSObject *getXSObjectById(unsigned int  compId
+                , XSConstants::COMPONENT_TYPE compType);
 
     // @}
 

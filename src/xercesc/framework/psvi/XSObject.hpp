@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/10/10 18:37:51  neilg
+ * update XSModel and XSObject interface so that IDs can be used to query components in XSModels, and so that those IDs can be recovered from components
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -133,6 +136,14 @@ public:
      * otherwise.
      */
     virtual XSNamespaceItem *getNamespaceItem();
+
+    /**
+      * Optional.  Return a unique identifier for a component within this XSModel, to
+      * optimize querying.  May not be defined for all types of component.
+      * @return id unique for this type of component within this XSModel or 0
+      *     to indicate that this is not supported for this type of component.
+      */
+    virtual unsigned int getId() const;
 
     //@}
 
