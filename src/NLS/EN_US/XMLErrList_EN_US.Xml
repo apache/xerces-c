@@ -68,7 +68,7 @@
             <Message Id="GlobalElementWithRef" Text="Globally-declared element {0} cannot have a ref attribute - ref ignored"/>
             <Message Id="ElementWithTypeAndAnonType" Text="Element {0} has a type attribute and an annoymous type child"/>
             <Message Id="DatatypeValidationFailure" Text="Failed to validate '{0}'"/>
-            <Message Id="NotSimpleOrMixedElement" Text="Element {0} has a fixed or default value and must have a mixed or simple content model"/>
+            <Message Id="NotSimpleOrMixedElement" Text="Element {0} has a fixed or default value and must have a mixed simple or simple content model"/>
             <Message Id="DisallowedSimpleTypeExtension" Text="The simpleType {0} that {1} uses has a value of 'final' which does not permit extension"/>
             <Message Id="InvalidSimpleContentBase" Text="The type '{0}' specified as the base in the simpleContent element must not have complexContent"/>
             <Message Id="InvalidComplexTypeBase" Text="The type '{0}' is a simple type. It cannot be used in a derivation by RESTRICTION for a complexType"/>
@@ -88,8 +88,7 @@
             <Message Id="DuplicateElementDeclaration" Text="Duplicate element decl in the same scope: {0}"/>
             <Message Id="InvalidElementBlockValue" Text="The 'block' attribute values of an element must be #all | list(substitution,restriction,extension); {0} was found"/>
             <Message Id="InvalidElementFinalValue" Text="The 'final' attribute values of an element must be #all | list(restriction,extension); {0} was found"/>
-            <Message Id="InvalidElementNillableValue" Text="The 'nillable' attribute values of an element must be true | false; '{0}' was found"/>
-            <Message Id="InvalidElementAbstractValue" Text="The 'abstract' attribute values of an element must be true | false; '{0}' was found"/>
+            <Message Id="InvalidAttValue" Text="Invalid value '{0}' for attribute: '{1}'."/>
             <Message Id="AttributeRefContentError" Text="Ref is present, and simpleType/form/type found"/>
             <Message Id="DuplicateRefAttribute" Text="Duplicate reference attribute {0}:{1} in complexType"/>
             <Message Id="ForbiddenDerivationByRestriction" Text="Derivation by restriction is forbidden by either the base type '{0}' or the schema"/>
@@ -104,6 +103,8 @@
             <Message Id="InvalidAttributeContent" Text="The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered"/>
             <Message Id="AttributeRequired" Text="Attribute '{0}' must appear in '{1}'"/>
             <Message Id="AttributeDisallowed" Text="Attribute '{0}' cannot appear in '{1}'"/>
+            <Message Id="InvalidMin2MaxOccurs" Text="Value of minOccurs '{0}' must not be greater than value of maxOccurs '{1}'"/>
+            <Message Id="AnyAttributeContentError" Text="'anyAttribute' elements can contain at most one 'annotation' element in their children"/>
             <Message Id="DisplayErrorMessage" Text="{0}"/>
         </Error>
         <FatalError>

@@ -58,7 +58,7 @@ $set 1
  59  Globally-declared element {0} cannot have a ref attribute - ref ignored
  60  Element {0} has a type attribute and an annoymous type child
  61  Failed to validate '{0}'
- 62  Element {0} has a fixed or default value and must have a mixed or simple content model
+ 62  Element {0} has a fixed or default value and must have a mixed simple or simple content model
  63  The simpleType {0} that {1} uses has a value of 'final' which does not permit extension
  64  The type '{0}' specified as the base in the simpleContent element must not have complexContent
  65  The type '{0}' is a simple type. It cannot be used in a derivation by RESTRICTION for a complexType
@@ -78,147 +78,148 @@ $set 1
  79  Duplicate element decl in the same scope: {0}
  80  The 'block' attribute values of an element must be #all | list(substitution,restriction,extension); {0} was found
  81  The 'final' attribute values of an element must be #all | list(restriction,extension); {0} was found
- 82  The 'nillable' attribute values of an element must be true | false; '{0}' was found
- 83  The 'abstract' attribute values of an element must be true | false; '{0}' was found
- 84  Ref is present, and simpleType/form/type found
- 85  Duplicate reference attribute {0}:{1} in complexType
- 86  Derivation by restriction is forbidden by either the base type '{0}' or the schema
- 87  Derivation by extension is forbidden by either the base type '{0}' or the schema
- 88  The base type specified in the complexContent element must be a complexType
- 89  A schemaLocation attribute must be specified on an 'import' element.
- 90  Imported schema '{0}' has a different targetNameSpace '{1}' from what's declared '{2}'
- 91  Could not get the doc root for imported Schema: {0}
- 92  A schemaLocation attribute must be specified on an 'include' element.
- 93  Included schema '{0}' has a different targetNameSpace '{1}'
- 94  At most one <annotation> element is expected in the content.
- 95  The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered
- 96  Attribute '{0}' must appear in '{1}'
- 97  Attribute '{0}' cannot appear in '{1}'
- 98  {0}
-101  Expected comment or CDATA
-102  Expected an attribute name
-103  Expected a notation name
-104  Repetition of individual elements is not legal for mixed content models
-105  Bad default attribute declaration
-106  Expected default attribute declaration, assuming #IMPLIED 
-107  Attribute list syntax error
-108  Expected equal sign
-109  Duplication attribute name
-110  Bad ID, '{0}', for xml:lang attribute
-111  Expected an element name
-112  Must start with an XMLDecl
-113  Comments must start with <!--
-114  Invalid document structure
-115  Expected a 'version=', 'encoding=', or 'standalone='
-116  Bad XML version string
-117  Unsupported XML version, '{0}'
-118  Unterminated XML decl
-119  Bad XML encoding declaration, '{0}'
-120  Bad standalone declaration
-121  Unterminated comment
-122  Processing instruction name expected
-123  Unterminated processing instruction
-124  Invalid character (Unicode: 0x{0})
-125  Unexpected text before root element
-126  Unterminated start tag, '{0}'
-127  Expected an attribute value
-128  Unterminated end tag
-129  Expected type (CDATA, ID, NMTOKEN, ..), for attribute '{0}' of element '{1}'
-130  Expected end of tag '{0}'
-131  Expected tag name, comment, PI, or other markup
-132  Not valid after content
-133  Expected comment
-134  Expected comment or processing instruction
-135  Expected whitespace
-136  No root element in DOCTYPE
-137  Expected quoted string
-138  Expected public id
-139  Invalid character in public id (Unicode: 0x{0})
-140  Unterminated DOCTYPE declaration
-141  Invalid character in internal subset (Unicode: 0x{0})
-142  Expected CDATA section
-143  Invalid initial name character
-144  Invalid name character
-145  Unexpected whitespace
-146  Invalid character in attribute value (Unicode: 0x{0})
-147  Expected a markup declaration
-148  Text declaration not legal here
-149  Conditional section in internal subset
-150  Expected parameter entity name
-151  Unterminated entity declaration, '{0}'
-152  Invalid character reference
-153  Unterminated character reference
-154  Expected entity name for reference
-155  Entity '{0}' was not found
-156  Unparsed entitty references, '{0}', not valid here
-157  Unterminated entity reference
-158  Recursive entity expansion
-159  Partial markup in entity value
-160  Unterminated element declaration, '{0}'
-161  Expected content specification expression for element '{0}'
-162  Expected asterisk
-163  Unterminated Content model
-164  Expected system id
-165  Expected system or public id
-166  Unterminated notation declaration
-167  Expected ',', '|', or ')' characters
-168  Expected '|' or ')' characters
-169  Expected ',' or ')' characters or close parenthesis in content model of element '{0}'
-170  Expected enumeration value for attribute '{0}'
-171  Expected | enumeration separator, or closing paren
-172  Unterminated entity literal
-173  There are more end tags than start tags
-174  Reference to external declaration in standalone document. Entity={0}
-175  Expected an open parenthesis
-176  The attribute '{0}' is already used in element '{1}'
-177  A '<' character cannot be used in attribute '{0}', except through &lt;
-178  A leading surrogate character was not followed by a legal second character
-179  Expected ']]>' to end a conditional section
-180  Expected INCLUDE or IGNORE here
-181  Expected [ to follow INCLUDE or IGNORE
-182  Expected a TextDecl here: <?xml ....
-183  Expected a XMLDecl here: <?xml ....
-184  Unexpected end of entity {0}
-185  A PE propogated out of the int/ext subset, discarding extra text
-186  An extra ] character was found an ignored
-187  PE refs are not allowed inside markup in the internal subset
-188  An entity propogated out of the content section into Miscellaneous
-189  Expected &# to be followed by a numeric character value
-190  Expected an open bracket ('[') here
-191  The sequence ']]>' is not allowed in character data
-192  Illegal sequence '--' in comment
-193  Unterminated CDATA section
-194  Expected NDATA
-195  NDATA is not legal for parameter entities
-196  Hex radix character refs must use 'x', not 'X'
-197  '{0}' has already been set. Ignoring redundant setting
-198  The XMLDecl strings must be in the order: version, encoding, standalone
-199  External entities cannot be referred to from attribute values
-200  The XML or Text decl must start with '<?xml ', not '<?XML '
-201  Expected a literal entity value or PUBLIC/SYSTEM id
-202  '{0}' is not a valid digit for the indicated radix
-203  The input ended before all started tags were ended. Last tag started was '{0}'
-204  The content model for element '{0}' is ambiguous
-205  Nested CDATA sections are not allowed
-206  The prefix '{0}' has not been mapped to any URI
-207  The start and the end tag were in the different entities
-208  The main XML document cannot be empty
-209  CDATA is not allowed outside the root element
-210  Only numeric character entities or special character entities are legal here
-211  Got an unexpected trailing surrogate character
-212  No processing instruction starts with 'xml'
-213  The XML or Text declaration must start at line/column 1/1
-214  The 'version=' string is required in an XMLDecl
-215  The 'standalone=' string is only allowed in the main XML entity
-216  When namespaces are enabled, a name can have only one colon character
-217  When namespaces are enabled, the colon cannot be the first or last character
-218  Colons are not allowed in this name when namespaces are enabled
-219  A system exception occured during processing
-220  An exception occured! Type:{0}, Message:{1}
-221  Unexpected end of file exception. Message: {0}
-222  UnexpectedError
-223  The schemaLocation attribute does not contain pairs of values.
-224  Internal error: don't have a GrammarResolver for TraverseSchema
+ 82  Invalid value '{0}' for attribute: '{1}'.
+ 83  Ref is present, and simpleType/form/type found
+ 84  Duplicate reference attribute {0}:{1} in complexType
+ 85  Derivation by restriction is forbidden by either the base type '{0}' or the schema
+ 86  Derivation by extension is forbidden by either the base type '{0}' or the schema
+ 87  The base type specified in the complexContent element must be a complexType
+ 88  A schemaLocation attribute must be specified on an 'import' element.
+ 89  Imported schema '{0}' has a different targetNameSpace '{1}' from what's declared '{2}'
+ 90  Could not get the doc root for imported Schema: {0}
+ 91  A schemaLocation attribute must be specified on an 'include' element.
+ 92  Included schema '{0}' has a different targetNameSpace '{1}'
+ 93  At most one <annotation> element is expected in the content.
+ 94  The 'atribute' content must be (annotation?, simpleType?); '{0}' encountered
+ 95  Attribute '{0}' must appear in '{1}'
+ 96  Attribute '{0}' cannot appear in '{1}'
+ 97  Value of minOccurs '{0}' must not be greater than value of maxOccurs '{1}'
+ 98  'anyAttribute' elements can contain at most one 'annotation' element in their children
+ 99  {0}
+102  Expected comment or CDATA
+103  Expected an attribute name
+104  Expected a notation name
+105  Repetition of individual elements is not legal for mixed content models
+106  Bad default attribute declaration
+107  Expected default attribute declaration, assuming #IMPLIED 
+108  Attribute list syntax error
+109  Expected equal sign
+110  Duplication attribute name
+111  Bad ID, '{0}', for xml:lang attribute
+112  Expected an element name
+113  Must start with an XMLDecl
+114  Comments must start with <!--
+115  Invalid document structure
+116  Expected a 'version=', 'encoding=', or 'standalone='
+117  Bad XML version string
+118  Unsupported XML version, '{0}'
+119  Unterminated XML decl
+120  Bad XML encoding declaration, '{0}'
+121  Bad standalone declaration
+122  Unterminated comment
+123  Processing instruction name expected
+124  Unterminated processing instruction
+125  Invalid character (Unicode: 0x{0})
+126  Unexpected text before root element
+127  Unterminated start tag, '{0}'
+128  Expected an attribute value
+129  Unterminated end tag
+130  Expected type (CDATA, ID, NMTOKEN, ..), for attribute '{0}' of element '{1}'
+131  Expected end of tag '{0}'
+132  Expected tag name, comment, PI, or other markup
+133  Not valid after content
+134  Expected comment
+135  Expected comment or processing instruction
+136  Expected whitespace
+137  No root element in DOCTYPE
+138  Expected quoted string
+139  Expected public id
+140  Invalid character in public id (Unicode: 0x{0})
+141  Unterminated DOCTYPE declaration
+142  Invalid character in internal subset (Unicode: 0x{0})
+143  Expected CDATA section
+144  Invalid initial name character
+145  Invalid name character
+146  Unexpected whitespace
+147  Invalid character in attribute value (Unicode: 0x{0})
+148  Expected a markup declaration
+149  Text declaration not legal here
+150  Conditional section in internal subset
+151  Expected parameter entity name
+152  Unterminated entity declaration, '{0}'
+153  Invalid character reference
+154  Unterminated character reference
+155  Expected entity name for reference
+156  Entity '{0}' was not found
+157  Unparsed entitty references, '{0}', not valid here
+158  Unterminated entity reference
+159  Recursive entity expansion
+160  Partial markup in entity value
+161  Unterminated element declaration, '{0}'
+162  Expected content specification expression for element '{0}'
+163  Expected asterisk
+164  Unterminated Content model
+165  Expected system id
+166  Expected system or public id
+167  Unterminated notation declaration
+168  Expected ',', '|', or ')' characters
+169  Expected '|' or ')' characters
+170  Expected ',' or ')' characters or close parenthesis in content model of element '{0}'
+171  Expected enumeration value for attribute '{0}'
+172  Expected | enumeration separator, or closing paren
+173  Unterminated entity literal
+174  There are more end tags than start tags
+175  Reference to external declaration in standalone document. Entity={0}
+176  Expected an open parenthesis
+177  The attribute '{0}' is already used in element '{1}'
+178  A '<' character cannot be used in attribute '{0}', except through &lt;
+179  A leading surrogate character was not followed by a legal second character
+180  Expected ']]>' to end a conditional section
+181  Expected INCLUDE or IGNORE here
+182  Expected [ to follow INCLUDE or IGNORE
+183  Expected a TextDecl here: <?xml ....
+184  Expected a XMLDecl here: <?xml ....
+185  Unexpected end of entity {0}
+186  A PE propogated out of the int/ext subset, discarding extra text
+187  An extra ] character was found an ignored
+188  PE refs are not allowed inside markup in the internal subset
+189  An entity propogated out of the content section into Miscellaneous
+190  Expected &# to be followed by a numeric character value
+191  Expected an open bracket ('[') here
+192  The sequence ']]>' is not allowed in character data
+193  Illegal sequence '--' in comment
+194  Unterminated CDATA section
+195  Expected NDATA
+196  NDATA is not legal for parameter entities
+197  Hex radix character refs must use 'x', not 'X'
+198  '{0}' has already been set. Ignoring redundant setting
+199  The XMLDecl strings must be in the order: version, encoding, standalone
+200  External entities cannot be referred to from attribute values
+201  The XML or Text decl must start with '<?xml ', not '<?XML '
+202  Expected a literal entity value or PUBLIC/SYSTEM id
+203  '{0}' is not a valid digit for the indicated radix
+204  The input ended before all started tags were ended. Last tag started was '{0}'
+205  The content model for element '{0}' is ambiguous
+206  Nested CDATA sections are not allowed
+207  The prefix '{0}' has not been mapped to any URI
+208  The start and the end tag were in the different entities
+209  The main XML document cannot be empty
+210  CDATA is not allowed outside the root element
+211  Only numeric character entities or special character entities are legal here
+212  Got an unexpected trailing surrogate character
+213  No processing instruction starts with 'xml'
+214  The XML or Text declaration must start at line/column 1/1
+215  The 'version=' string is required in an XMLDecl
+216  The 'standalone=' string is only allowed in the main XML entity
+217  When namespaces are enabled, a name can have only one colon character
+218  When namespaces are enabled, the colon cannot be the first or last character
+219  Colons are not allowed in this name when namespaces are enabled
+220  A system exception occured during processing
+221  An exception occured! Type:{0}, Message:{1}
+222  Unexpected end of file exception. Message: {0}
+223  UnexpectedError
+224  The schemaLocation attribute does not contain pairs of values.
+225  Internal error: don't have a GrammarResolver for TraverseSchema
 
 
 $set 2
