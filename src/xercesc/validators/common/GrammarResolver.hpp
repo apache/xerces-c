@@ -147,6 +147,8 @@ public:
      */
     bool containsNameSpace( const XMLCh* const nameSpaceKey );
 
+    inline XMLGrammarPool* const getGrammarPool() const;
+
     //@}
 
     /** @name Setter methods */
@@ -242,6 +244,11 @@ inline XMLStringPool* GrammarResolver::getStringPool() {
 inline void GrammarResolver::useCachedGrammarInParse(const bool aValue)
 {
     fUseCachedGrammar = aValue;
+}
+
+inline XMLGrammarPool* const GrammarResolver::getGrammarPool() const
+{
+    return fGrammarPool;
 }
 
 XERCES_CPP_NAMESPACE_END
