@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/01/15 23:42:32  peiyongz
+ * proper allignment for built-in datatype read/write
+ *
  * Revision 1.10  2003/12/17 00:18:34  cargilld
  * Update to memory management so that the static memory manager (one used to call Initialize) is only for static data.
  *
@@ -543,6 +546,10 @@ private:
     inline void            Assert(bool  toEval
                                 , const XMLExcepts::Codes toThrow)  const;
 
+    inline size_t          allignAdjust()                           const;
+
+    inline void            allignBufCur();
+
     // Make XTemplateSerializer friend of XSerializeEngine so that
     // we can call lookupStorePool and lookupLoadPool in the case of
     // annotations.
@@ -670,6 +677,36 @@ inline void XSerializeEngine::Assert(bool toEval
         ThrowXMLwithMemMgr(XSerializationException, toThrow, fMemoryManager);  
     }
 
+}
+
+// For the following built-in datatype, we assume
+// the same allignment requirement
+//
+// short    unsigned short
+// int      unsigned long
+// long     unsigned long
+// float
+// double
+//
+// Based on the current position (fBufCur), calculated the needed size
+// to read/write
+//
+inline size_t XSerializeEngine::allignAdjust() const
+{
+	#ifdef XML_PLATFORM_NEW_BLOCK_ALIGNMENT
+		size_t alignment = XML_PLATFORM_NEW_BLOCK_ALIGNMENT;
+	#else
+		size_t alignment = (sizeof(void*) >= sizeof(double)) ? sizeof(void*) : sizeof(double);
+	#endif
+	
+	size_t remainder = (long) fBufCur % alignment;	
+	return (remainder == 0) ? 0 : (alignment - remainder);
+}
+
+// Adjust the fBufCur
+inline void XSerializeEngine::allignBufCur()
+{
+    fBufCur+=allignAdjust();
 }
 
 /***

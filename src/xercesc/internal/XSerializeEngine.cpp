@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2004/01/15 23:42:32  peiyongz
+ * proper allignment for built-in datatype read/write
+ *
  * Revision 1.12  2004/01/13 16:34:20  cargilld
  * Misc memory management changes.
  *
@@ -642,8 +645,9 @@ XSerializeEngine& XSerializeEngine::operator<<(char ch)
 
 XSerializeEngine& XSerializeEngine::operator<<(short sh)
 { 
-    checkAndFlushBuffer(sizeof(short));
+    checkAndFlushBuffer(allignAdjust()+sizeof(short));
 
+    allignBufCur();
     *(short*)fBufCur = sh; 
     fBufCur += sizeof(short); 
     return *this; 
@@ -651,18 +655,29 @@ XSerializeEngine& XSerializeEngine::operator<<(short sh)
 
 XSerializeEngine& XSerializeEngine::operator<<(int i)
 { 
-    return XSerializeEngine::operator<<((long)i); 
+    checkAndFlushBuffer(allignAdjust()+sizeof(int));
+
+    allignBufCur();
+    *(int*)fBufCur = i; 
+    fBufCur += sizeof(int); 
+    return *this;     
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(unsigned int ui)
 { 
-    return XSerializeEngine::operator<<((unsigned long)ui); 
+    checkAndFlushBuffer(allignAdjust()+sizeof(unsigned int));
+
+    allignBufCur();
+    *(unsigned int*)fBufCur = ui; 
+    fBufCur += sizeof(unsigned int); 
+    return *this; 
 }
 
 XSerializeEngine& XSerializeEngine::operator<<(long l)
 { 
-    checkAndFlushBuffer(sizeof(long));
+    checkAndFlushBuffer(allignAdjust()+sizeof(long));
 
+    allignBufCur();
     *(long*)fBufCur = l; 
     fBufCur += sizeof(long); 
     return *this; 
@@ -670,8 +685,9 @@ XSerializeEngine& XSerializeEngine::operator<<(long l)
 
 XSerializeEngine& XSerializeEngine::operator<<(unsigned long ul)
 { 
-    checkAndFlushBuffer(sizeof(unsigned long));
+    checkAndFlushBuffer(allignAdjust()+sizeof(unsigned long));
 
+    allignBufCur();
     *(unsigned long*)fBufCur = ul; 
     fBufCur += sizeof(unsigned long); 
     return *this; 
@@ -679,8 +695,9 @@ XSerializeEngine& XSerializeEngine::operator<<(unsigned long ul)
 
 XSerializeEngine& XSerializeEngine::operator<<(float f)
 { 
-    checkAndFlushBuffer(sizeof(float));
+    checkAndFlushBuffer(allignAdjust()+sizeof(float));
 
+    allignBufCur();
     *(float*)fBufCur = *(float*)&f; 
     fBufCur += sizeof(float); 
     return *this;
@@ -688,8 +705,9 @@ XSerializeEngine& XSerializeEngine::operator<<(float f)
 
 XSerializeEngine& XSerializeEngine::operator<<(double d)
 { 
-    checkAndFlushBuffer(sizeof(double));
+    checkAndFlushBuffer(allignAdjust()+sizeof(double));
 
+    allignBufCur();
     *(double*)fBufCur = *(double*)&d; 
     fBufCur += sizeof(double); 
     return *this; 
@@ -698,22 +716,6 @@ XSerializeEngine& XSerializeEngine::operator<<(double d)
 // ---------------------------------------------------------------------------
 //  Extraction
 // ---------------------------------------------------------------------------
-/***
-XSerializeEngine& operator>>(XSerializeEngine& serEng
-                           , XSerializable*& serObj)
-{
-    serObj = serEng.read(0); 
-    return serEng; 
-}
-
-XSerializeEngine& operator>>(XSerializeEngine& serEng
-                           , const XSerializable*& serObj)
-{
-    serObj = serEng.read(0); 
-    return serEng; 
-}
-***/
-
 XSerializeEngine& XSerializeEngine::operator>>(XMLCh& xch)
 { 
     checkAndFillBuffer(sizeof(XMLCh));
@@ -748,8 +750,9 @@ XSerializeEngine& XSerializeEngine::operator>>(char& ch)
 
 XSerializeEngine& XSerializeEngine::operator>>(short& sh)
 { 
-    checkAndFillBuffer(sizeof(short));
+    checkAndFillBuffer(allignAdjust()+sizeof(short));
 
+    allignBufCur();
     sh = *(short*)fBufCur; 
     fBufCur += sizeof(short); 
     return *this; 
@@ -757,18 +760,29 @@ XSerializeEngine& XSerializeEngine::operator>>(short& sh)
 
 XSerializeEngine& XSerializeEngine::operator>>(int& i)
 { 
-    return XSerializeEngine::operator>>((long&)i); 
+    checkAndFillBuffer(allignAdjust()+sizeof(int));
+
+    allignBufCur();
+    i = *(int*)fBufCur; 
+    fBufCur += sizeof(int); 
+    return *this; 
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(unsigned int& ui)
 { 
-    return XSerializeEngine::operator>>((unsigned long&)ui); 
+    checkAndFillBuffer(allignAdjust()+sizeof(unsigned int));
+
+    allignBufCur();
+    ui = *(unsigned int*)fBufCur; 
+    fBufCur += sizeof(unsigned int); 
+    return *this; 
 }
 
 XSerializeEngine& XSerializeEngine::operator>>(long& l)
 { 
-    checkAndFillBuffer(sizeof(long));
+    checkAndFillBuffer(allignAdjust()+sizeof(long));
 
+    allignBufCur();
     l = *(long*)fBufCur; 
     fBufCur += sizeof(long); 
     return *this; 
@@ -776,8 +790,9 @@ XSerializeEngine& XSerializeEngine::operator>>(long& l)
 
 XSerializeEngine& XSerializeEngine::operator>>(unsigned long& ul)
 { 
-    checkAndFillBuffer(sizeof(unsigned long));
+    checkAndFillBuffer(allignAdjust()+sizeof(unsigned long));
 
+    allignBufCur();
     ul = *(unsigned long*)fBufCur; 
     fBufCur += sizeof(unsigned long); 
     return *this; 
@@ -785,8 +800,9 @@ XSerializeEngine& XSerializeEngine::operator>>(unsigned long& ul)
 
 XSerializeEngine& XSerializeEngine::operator>>(float& f)
 { 
-    checkAndFillBuffer(sizeof(float));
+    checkAndFillBuffer(allignAdjust()+sizeof(float));
 
+    allignBufCur();
     *(float*)&f = *(float*)fBufCur; 
     fBufCur += sizeof(float); 
     return *this; 
@@ -794,8 +810,9 @@ XSerializeEngine& XSerializeEngine::operator>>(float& f)
 
 XSerializeEngine& XSerializeEngine::operator>>(double& d)
 { 
-    checkAndFillBuffer(sizeof(double));
+    checkAndFillBuffer(allignAdjust()+sizeof(double));
 
+    allignBufCur();
     *(double*)&d = *(double*)fBufCur; 
     fBufCur += sizeof(double); 
     return *this; 
