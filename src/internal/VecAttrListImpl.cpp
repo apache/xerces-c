@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.5  2000/03/13 20:19:11  rahulj
+ * Fixed #54. Changed self-assignment to now use the parameter value.
+ * Reported by Helmut Eiken <H.Eiken@cli.de>
+ *
  * Revision 1.4  2000/03/02 19:54:29  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -204,7 +208,7 @@ void VecAttrListImpl::setVector(const   RefVectorOf<XMLAttr>* const srcVec
     if (fAdopt)
         delete (RefVectorOf<XMLAttr>*)fVector;
 
-    fAdopt = fAdopt;
+    fAdopt = adopt;
     fCount = count;
     fVector = srcVec;
 }
