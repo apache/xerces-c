@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -446,14 +446,17 @@ XMLURL& XMLURL::operator=(const XMLURL& toAssign)
     cleanup();
 
     // And copy his stuff
+    fMemoryManager = toAssign.fMemoryManager;
     fFragment = XMLString::replicate(toAssign.fFragment, fMemoryManager);
     fHost = XMLString::replicate(toAssign.fHost, fMemoryManager);
     fPassword = XMLString::replicate(toAssign.fPassword, fMemoryManager);
     fPath = XMLString::replicate(toAssign.fPath, fMemoryManager);
+    fPortNum = toAssign.fPortNum;
     fProtocol = toAssign.fProtocol;
     fQuery = XMLString::replicate(toAssign.fQuery, fMemoryManager);
     fUser = XMLString::replicate(toAssign.fUser, fMemoryManager);
     fURLText = XMLString::replicate(toAssign.fURLText, fMemoryManager);
+    fHasInvalidChar = toAssign.fHasInvalidChar;
 
     return *this;
 }
@@ -822,6 +825,7 @@ void XMLURL::cleanup()
 
     fProtocol = Unknown;
     fPortNum = 0;
+    fHasInvalidChar = false;
 }
 
 
@@ -1053,7 +1057,7 @@ void XMLURL::parse(const XMLCh* const urlText)
                     fMemoryManager->deallocate(fHost);//delete [] fHost;
                     fHost = (XMLCh*) fMemoryManager->allocate
                     (
-                        (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+                        ((ptr1 - srcPtr) + 1) * sizeof(XMLCh)
                     );//new XMLCh[(ptr1 - srcPtr) + 1];
                     ptr2 = fHost;
                     while (srcPtr < ptr1)
@@ -1174,7 +1178,7 @@ void XMLURL::parse(const XMLCh* const urlText)
         fMemoryManager->deallocate(fPath);//delete [] fPath;
         fPath = (XMLCh*) fMemoryManager->allocate
         (
-            (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+            ((ptr1 - srcPtr) + 1) * sizeof(XMLCh)
         );//new XMLCh[(ptr1 - srcPtr) + 1];
         ptr2 = fPath;
         while (srcPtr < ptr1)
@@ -1210,7 +1214,7 @@ void XMLURL::parse(const XMLCh* const urlText)
     {
         fQuery = (XMLCh*) fMemoryManager->allocate
         (
-            (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+            ((ptr1 - srcPtr) + 1) * sizeof(XMLCh)
         );//new XMLCh[(ptr1 - srcPtr) + 1];
         ptr2 = fQuery;
         while (srcPtr < ptr1)
@@ -1336,7 +1340,7 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
                 {
                     xmlURL.fHost = (XMLCh*) xmlURL.fMemoryManager->allocate
                     (
-                        (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+                        ((ptr1 - srcPtr) + 1) * sizeof(XMLCh)
                     );//new XMLCh[(ptr1 - srcPtr) + 1];
                     ptr2 = xmlURL.fHost;
                     while (srcPtr < ptr1)
@@ -1446,7 +1450,7 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
     {
         xmlURL.fPath = (XMLCh*) xmlURL.fMemoryManager->allocate
         (
-            (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+            ((ptr1 - srcPtr) + 1) * sizeof(XMLCh)
         );//new XMLCh[(ptr1 - srcPtr) + 1];
         ptr2 = xmlURL.fPath;
         while (srcPtr < ptr1)
@@ -1480,7 +1484,7 @@ bool XMLURL::parse(const XMLCh* const urlText, XMLURL& xmlURL)
     {
         xmlURL.fQuery = (XMLCh*) xmlURL.fMemoryManager->allocate
         (
-            (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+            ((ptr1 - srcPtr) + 1) * sizeof(XMLCh)
         );//new XMLCh[(ptr1 - srcPtr) + 1];
         ptr2 = xmlURL.fQuery;
         while (srcPtr < ptr1)
