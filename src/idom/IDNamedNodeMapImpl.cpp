@@ -368,7 +368,9 @@ IDOM_Node * IDNamedNodeMapImpl::setNamedItemNS(IDOM_Node *arg)
         previous = fNodes->elementAt(i);
         fNodes->setElementAt(arg,i);
     } else {
-        i=-1-i; // Insert point (may be end of list)
+        i=findNamePoint(arg->getNodeName()); // Insert point (may be end of list)
+        if (i<0)
+          i = -1 - i;
         if(0==fNodes)
             fNodes=new (doc) IDNodeVector(doc);
         fNodes->insertElementAt(arg,i);

@@ -385,7 +385,9 @@ NodeImpl * NamedNodeMapImpl::setNamedItemNS(NodeImpl *arg)
         previous = nodes->elementAt(i);
         nodes->setElementAt(arg,i);
     } else {
-        i=-1-i; // Insert point (may be end of list)
+        i=findNamePoint(arg->getNodeName()); // Insert point (may be end of list)
+        if (i<0)
+          i = -1 - i;
         if(null==nodes)
             nodes=new NodeVector();
         nodes->insertElementAt(arg,i);
