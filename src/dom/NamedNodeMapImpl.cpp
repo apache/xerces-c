@@ -319,13 +319,22 @@ int NamedNodeMapImpl::findNamePoint(const DOMString &namespaceURI,
 {
     if (nodes == null)
 	return -1;
-   // Linear search
+    // This is a linear search through the same nodes Vector.
+    // The Vector is sorted on the DOM Level 1 nodename.
+    // The DOM Level 2 NS keys are namespaceURI and Localname, 
+    // so we must linear search thru it.
+    // In addition, to get this to work with nodes without any namespace
+    // (namespaceURI and localNames are both null) we then use the nodeName
+    // as a secondary key.
     int i, len = nodes -> size();
     for (i = 0; i < len; ++i) {
 	NodeImpl *node = nodes -> elementAt(i);
 	if (! node -> getNamespaceURI().equals(namespaceURI))	//URI not match
 	    continue;
-	if (node -> getLocalName().equals(localName))	//both match
+        DOMString nLocalName = node->getLocalName();
+	if (nLocalName.equals(localName)
+            ||
+            (nLocalName == null && localName.equals(node->getNodeName())))
 	    return i;
     }
     return -1;	//not found
