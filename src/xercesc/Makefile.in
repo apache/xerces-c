@@ -67,6 +67,17 @@
 #     export ICUROOT=<the directory where you installed ICU>      #
 #                                                                 #
 ###################################################################
+#all these setting come from the arguments passed in to runConfigure.
+PLATFORM = @platform@
+CC  = @cc@
+CXX = @cxx@
+PREFIX = @prefix@
+MESSAGELOADER=@messageloader@
+TRANSCODER=@transcoder@
+
+GCC = @GCC@
+GXX = @GXX@
+
 #MACROS defining commands
 MKDIR=mkdir
 CP=cp
@@ -90,17 +101,6 @@ LIBNAME = libxerces-c
 ifeq (${PLATFORM},CYGWIN)
 CYGNAME = cygxerces-c
 endif
-
-#all these setting come from the arguments passed in to runConfigure.
-PLATFORM = @platform@
-CC  = @cc@
-CXX = @cxx@
-PREFIX = @prefix@
-MESSAGELOADER=@messageloader@
-TRANSCODER=@transcoder@
-
-GCC = @GCC@
-GXX = @GXX@
 
 PRODUCTNAME=xerces
 PRODUCTVERSION=${VER}
@@ -208,100 +208,105 @@ copy:: lib samples
 	@echo Make the target directory and its main subdirectories
 	-${MKDIR} ${BINTARGETDIR}
 	-${MKDIR} ${BINTARGETDIR}/bin
+	-${MKDIR} ${BINTARGETDIR}/etc
 	-${MKDIR} ${BINTARGETDIR}/lib
-	-${MKDIR} ${BINTARGETDIR}/include
-ifeq (${TRANSCODER},ICU)
-	echo -${MKDIR} ${BINTARGETDIR}/include/unicode
-endif
 ifeq (${MESSAGELOADER},ICU)
-	echo -${MKDIR} ${BINTARGETDIR}/include/unicode
+	-${MKDIR} ${BINTARGETDIR}/msg
 endif
-	-${MKDIR} ${BINTARGETDIR}/include/xercesc
-	-${MKDIR} ${BINTARGETDIR}/include/xercesc/sax
-	-${MKDIR} ${BINTARGETDIR}/include/xercesc/sax2
-	-${MKDIR} ${BINTARGETDIR}/include/xercesc/framework
-	-${MKDIR} ${BINTARGETDIR}/include/xercesc/internal
-	-${MKDIR} ${BINTARGETDIR}/include/xercesc/parsers
-	-${MKDIR} ${BINTARGETDIR}/include/xercesc/util
-	-${MKDIR} ${BINTARGETDIR}/include/xercesc/dom
-
+ifeq (${MESSAGELOADER},ICONV)
+	-${MKDIR} ${BINTARGETDIR}/msg
+endif
+	-${MKDIR} ${BINTARGETDIR}/include
 	-${MKDIR} ${BINTARGETDIR}/samples
-	-${MKDIR} ${BINTARGETDIR}/samples/data
-	-${MKDIR} ${BINTARGETDIR}/samples/SAXCount
-	-${MKDIR} ${BINTARGETDIR}/samples/SAXPrint
-	-${MKDIR} ${BINTARGETDIR}/samples/DOMCount
-	-${MKDIR} ${BINTARGETDIR}/samples/DOMPrint
-	-${MKDIR} ${BINTARGETDIR}/samples/Redirect
-	-${MKDIR} ${BINTARGETDIR}/samples/MemParse
 	-${MKDIR} ${BINTARGETDIR}/doc
-	-${MKDIR} ${BINTARGETDIR}/doc/apiDocs
+	-${MKDIR} ${BINTARGETDIR}/doc/html
 
 	@echo Populate the include output directory
 	@echo Copying headers files ...
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/sax/*.hpp ${BINTARGETDIR}/include/xercesc/sax
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/sax2/*.hpp ${BINTARGETDIR}/include/xercesc/sax2
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/framework/*.hpp ${BINTARGETDIR}/include/xercesc/framework
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/dom/DOM*.hpp ${BINTARGETDIR}/include/xercesc/dom
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/dom/deprecated/DOM*.hpp ${BINTARGETDIR}/include/xercesc/dom/deprecated
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/internal/*.hpp ${BINTARGETDIR}/include/xercesc/internal
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/internal/*.c ${BINTARGETDIR}/include/xercesc/internal
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/parsers/*.hpp ${BINTARGETDIR}/include/xercesc/parsers
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/util/*.hpp ${BINTARGETDIR}/include/xercesc/util
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/util/*.c ${BINTARGETDIR}/include/xercesc/util
-	-${CP} -Rf ${XERCESCROOT}/src/xercesc/validators/*.hpp ${BINTARGETDIR}/include/xercesc/validators
-	-${CP} -Rf ${ICUROOT}/include/* ${BINTARGETDIR}/include/unicode
+	-${CP} -Rf ${XERCESCROOT}/include/* ${BINTARGETDIR}/include
+ifeq (${TRANSCODER},ICU)
+	-${CP} -Rf ${ICUROOT}/include/* ${BINTARGETDIR}/include
+else
+   ifeq (${MESSAGELOADER},ICU)
+	-${CP} -Rf ${ICUROOT}/include/* ${BINTARGETDIR}/include
+   endif
+endif
 
 	@echo Populate the binary output directory
 	@echo Copying binary outputs ...
 	-${CP} -Rf ${XERCESCROOT}/bin/* ${BINTARGETDIR}/bin
-	-${CP} -f ${ICUROOT}/source/tools/makeconv/makeconv ${BINTARGETDIR}/bin
-	-${CP} -f ${ICUROOT}/lib/libicuuc.* ${BINTARGETDIR}/lib
-	-${CP} -f ${XERCESCROOT}/lib/*.a ${BINTARGETDIR}/lib
-	-${CP} -f ${XERCESCROOT}/lib/*.so ${BINTARGETDIR}/lib
-	-${CP} -f ${XERCESCROOT}/lib/*.sl ${BINTARGETDIR}/lib
+	-${CP} -Rf ${XERCESCROOT}/src/xercesc/config.status ${BINTARGETDIR}/etc
+	-${CP} -Rf ${XERCESCROOT}/bin/obj/*.map ${BINTARGETDIR}/etc
+	-${CP} -Rf ${XERCESCROOT}/lib/${REAL_NAME} ${BINTARGETDIR}/lib
+	-${CD} ${BINTARGETDIR}/lib; ln -s ${REAL_NAME} ${SO_NAME}; ln -s ${REAL_NAME} ${LINK_NAME}
+ifeq (${TRANSCODER},ICU)
+	-${CP} -Rf ${ICUROOT}/lib/libicudata24.0.so ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicudata.so.24.0 ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicudata.sl.24.0 ${BINTARGETDIR}/lib
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata24.0.so' -exec ln -s {} libicudata.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata24.0.so' -exec ln -s {} libicudata24.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.24.0' -exec ln -s {} libicudata.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.24.0' -exec ln -s {} libicudata.so.24 \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.24.0' -exec ln -s {} libicudata.sl \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.24.0' -exec ln -s {} libicudata.sl.24 \;
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc24.0.so ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc.so.24.0 ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc.sl.24.0 ${BINTARGETDIR}/lib
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc24.0.so' -exec ln -s {} libicuuc.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc24.0.so' -exec ln -s {} libicuuc24.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.24.0' -exec ln -s {} libicuuc.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.24.0' -exec ln -s {} libicuuc.so.24 \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.24.0' -exec ln -s {} libicuuc.sl \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.24.0' -exec ln -s {} libicuuc.sl.24 \;
+else
+   ifeq (${MESSAGELOADER},ICU)
+	-${CP} -Rf ${ICUROOT}/lib/libicudata24.0.so ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicudata.so.24.0 ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicudata.sl.24.0 ${BINTARGETDIR}/lib
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata24.0.so' -exec ln -s {} libicudata.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata24.0.so' -exec ln -s {} libicudata24.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.24.0' -exec ln -s {} libicudata.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.so.24.0' -exec ln -s {} libicudata.so.24 \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.24.0' -exec ln -s {} libicudata.sl \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicudata.sl.24.0' -exec ln -s {} libicudata.sl.24 \;
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc24.0.so ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc.so.24.0 ${BINTARGETDIR}/lib
+	-${CP} -Rf ${ICUROOT}/lib/libicuuc.sl.24.0 ${BINTARGETDIR}/lib
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc24.0.so' -exec ln -s {} libicuuc.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc24.0.so' -exec ln -s {} libicuuc24.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.24.0' -exec ln -s {} libicuuc.so \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.so.24.0' -exec ln -s {} libicuuc.so.24 \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.24.0' -exec ln -s {} libicuuc.sl \;
+	-${CD} ${BINTARGETDIR}/lib; find . -name 'libicuuc.sl.24.0' -exec ln -s {} libicuuc.sl.24 \;
+   endif
+endif
+ifeq (${MESSAGELOADER},ICU)
+	-${CP} -f ${XERCESCROOT}/msg/*.res ${BINTARGETDIR}/msg
+endif
 ifeq (${MESSAGELOADER},ICONV)
-ifeq (${PLATFORM},SOLARIS)
-	-${CP} -f ${XERCESCROOT}/lib/msg/*.cat ${BINTARGETDIR}/lib/msg
+	-${CP} -f ${XERCESCROOT}/msg/*.cat ${BINTARGETDIR}/msg
 endif
-ifeq (${PLATFORM},AIX)
-	-${CP} -f ${XERCESCROOT}/lib/msg/*.cat ${BINTARGETDIR}/lib/msg
-endif
-endif
-	-{RM} -rf ${BINTARGETDIR}/bin/obj
+	-${RM} -rf ${BINTARGETDIR}/bin/obj
 
 	@echo Populate the samples directory
 	@echo Copying sample files ...
-	-${CP} -f ${XERCESCROOT}/samples/config.guess 	${BINTARGETDIR}/samples
-	-${CP} -f ${XERCESCROOT}/samples/config.h.in 	${BINTARGETDIR}/samples
-	-${CP} -f ${XERCESCROOT}/samples/config.sub 	${BINTARGETDIR}/samples
-	-${CP} -f ${XERCESCROOT}/samples/configure	${BINTARGETDIR}/samples
-	-${CP} -f ${XERCESCROOT}/samples/configure.in	${BINTARGETDIR}/samples
-	-${CP} -f ${XERCESCROOT}/samples/install-sh	${BINTARGETDIR}/samples
-	-${CP} -f ${XERCESCROOT}/samples/runConfigure 	${BINTARGETDIR}/samples
-	-${CP} -f ${XERCESCROOT}/samples/Makefile.in	${BINTARGETDIR}/samples
-	-${CP} -f ${XERCESCROOT}/samples/Makefile.incl 	${BINTARGETDIR}/samples
-
-	-${CP} -Rf ${XERCESCROOT}/samples/data/* ${BINTARGETDIR}/samples/data
-	-${CP} -Rf ${XERCESCROOT}/samples/SAXCount/* ${BINTARGETDIR}/samples/SAXCount
-	-${CP} -Rf ${XERCESCROOT}/samples/SAXPrint/* ${BINTARGETDIR}/samples/SAXPrint
-	-${CP} -Rf ${XERCESCROOT}/samples/DOMCount/* ${BINTARGETDIR}/samples/DOMCount
-	-${CP} -Rf ${XERCESCROOT}/samples/DOMPrint/* ${BINTARGETDIR}/samples/DOMPrint
-	-${CP} -Rf ${XERCESCROOT}/samples/Redirect/* ${BINTARGETDIR}/samples/Redirect
-	-${CP} -Rf ${XERCESCROOT}/samples/MemParse/* ${BINTARGETDIR}/samples/MemParse
+	-${CP} -Rf ${XERCESCROOT}/samples/* 	${BINTARGETDIR}/samples
+	-${RM2} `find ${BINTARGETDIR}/samples -name Makefile`
 
 	@echo Populate the docs directory
 	@echo Copying documentation ..
-	-${CP} -Rf ${XERCESCROOT}/doc/* ${BINTARGETDIR}/doc
-	-${CP} -Rf ${XERCESCROOT}/doc/apiDocs/* ${BINTARGETDIR}/doc/apiDocs
-	-${CP} ${XERCESCROOT}/Readme.html ${BINTARGETDIR}
-	-${CP} ${XERCESCROOT}/doc/license.html ${BINTARGETDIR}
+	-${CP} -f ${XERCESCROOT}/doc/index.html ${BINTARGETDIR}/doc
+	-${CP} -Rf ${XERCESCROOT}/doc/html/* ${BINTARGETDIR}/doc/html
+	-${CP} -f ${XERCESCROOT}/*.html ${BINTARGETDIR}
+	-${CP} -f ${XERCESCROOT}/*.txt ${BINTARGETDIR}
+	-${CP} -f ${XERCESCROOT}/version.incl ${BINTARGETDIR}
 
 	@echo Change the directory permissions
-	-{CHMODE} 644 `find ${BINTARGETDIR} -type f`
-	-{CHMODE} 755 ${BINTARGETDIR}/bin/* ${BINTARGETDIR}/lib/*.sl ${BINTARGETDIR}/lib/*.so ${BINTARGETDIR}/lib/*.a
-	-{CHMODE} +x ${BINTARGETDIR}/samples/runConfigure ${BINTARGETDIR}/samples/configure ${BINTARGETDIR}/samples/install-sh
-	-{CHMODE} +x ${BINTARGETDIR}/samples/config.sub ${BINTARGETDIR}/samples/config.guess ${BINTARGETDIR}/samples/config.status
-	-{CHMODE} 755 `find ${BINTARGETDIR} -type d`
+	-${CHMODE} 644 `find ${BINTARGETDIR} -type f`
+	-${CHMODE} 755 ${BINTARGETDIR}/bin/* ${BINTARGETDIR}/lib/*
+	-${CHMODE} +x ${BINTARGETDIR}/samples/runConfigure ${BINTARGETDIR}/samples/configure ${BINTARGETDIR}/samples/install-sh
+	-${CHMODE} +x ${BINTARGETDIR}/samples/config.sub ${BINTARGETDIR}/samples/config.guess ${BINTARGETDIR}/samples/config.status
+	-${CHMODE} 755 `find ${BINTARGETDIR} -type d`
 
 tarball:: copy
 	@echo Now package it all up using tar
