@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/01/22 01:38:32  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.8  2000/01/20 20:37:25  andyh
  * Remove DEVENV_VCPP preprocessor variable everywhere.
  * It was obsolete, left over from an earlier configuration system.
@@ -1212,18 +1215,30 @@ int  main()
         //
         // Create a set of attributes and hang them on the root element.
         //
-        DOM_Element ela = doc.createAttrNS("http://nsa", "a:ela");  
-        rootEl.appendChild(ela);
-        DOM_Element elb = doc.createElementNS("http://nsb", "elb");   
-        rootEl.appendChild(elb);
-        DOM_Element elc = doc.createElementNS("",           "elc");  
-        rootEl.appendChild(elc);
-        DOM_Element eld = doc.createElementNS("http://nsa", "d:ela");
-        rootEl.appendChild(eld);
-        DOM_Element ele = doc.createElementNS("http://nse", "elb");   
-        rootEl.appendChild(ele);
+        DOM_Attr attra = doc.createAttributeNS("http://nsa", "a:attra");  
+        rootEl.setAttributeNodeNS(attra);
+        DOM_Attr attrb = doc.createAttributeNS("http://nsb", "attrb");   
+        rootEl.setAttributeNodeNS(attrb);
+        DOM_Attr attrc = doc.createAttributeNS("",           "attrc");  
+        rootEl.setAttributeNodeNS(attrc);
+        DOM_Attr attrd = doc.createAttributeNS("http://nsa", "d:attra");
+        rootEl.setAttributeNodeNS(attrd);
+        DOM_Attr attre = doc.createAttributeNS("http://nse", "attrb");   
+        rootEl.setAttributeNodeNS(attre);
 
 
+        //
+        // Check that the attribute nodes were created with the correct properties.
+        //
+        TASSERT(attra.getNodeName().equals("a.attra"));
+        TASSERT(attra.getNamespaceURI().equals("http://nsa"));
+        TASSERT(attra.getLocalName().equals("attra"));
+        TASSERT(attra.getName().equals("a.attra"));
+        TASSERT(attra.getNodeType() == DOM_Node::ATTRIBUTE_NODE);
+        TASSERT(attra.getNodeValue().equals(""));
+        TASSERT(attra.getPrefix().equals("a"));
+        TASSERT(attra.getSpecified() == true);
+        TASSERT(attra.getValue().equals(""));
 
     }
     TESTEPILOG;

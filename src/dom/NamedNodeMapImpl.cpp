@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/22 01:38:30  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.5  2000/01/08 00:09:28  andyh
  * Correcf failures in DOMTest with entity references and read-only nodes.
  * Correct reference counting problem NamedNodeMap.
@@ -260,11 +263,11 @@ NodeImpl * NamedNodeMapImpl::getNamedItem(const DOMString &name)
 
 
 
-NodeImpl * NamedNodeMapImpl::item(int index)
+NodeImpl * NamedNodeMapImpl::item(unsigned long index)
 {
     reconcileDefaults();
-    return (nodes != null && index < nodes->size()) ?
-        (NodeImpl *) (nodes->elementAt(index)) : null;
+    return (nodes != null && index < (unsigned long) nodes->size()) ?
+        (NodeImpl *) (nodes->elementAt((int) index)) : null;
 };
 
 
@@ -485,10 +488,10 @@ void NamedNodeMapImpl::setReadOnly(bool readOnl, bool deep)
 
 /** Export this object to a different document docImpl.
  */
-NamedNodeMapImpl *NamedNodeMapImpl::export(DocumentImpl *docImpl)
+NamedNodeMapImpl *NamedNodeMapImpl::exportNode(DocumentImpl *docImpl)
 {
     bool deep = true;
-    NamedNodeMapImpl *newdefs = defaults == null ? null : defaults->export(docImpl);
+    NamedNodeMapImpl *newdefs = defaults == null ? null : defaults->exportNode(docImpl);
     NamedNodeMapImpl *newmap = new NamedNodeMapImpl(docImpl, newdefs);
     if (nodes != null)
     {

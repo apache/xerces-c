@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/22 01:38:29  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.2  2000/01/05 01:16:07  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -200,7 +203,7 @@ public:
     *   <code>NamedNodeMap</code>, or <code>null</code> if that is not a valid 
     *   index.
     */
-    DOM_Node               item(int index);
+    DOM_Node               item(unsigned long index);
 
     //@}
     /** @name Get functions. */

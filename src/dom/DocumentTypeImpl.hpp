@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/22 01:38:30  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.3  2000/01/08 00:09:28  andyh
  * Correcf failures in DOMTest with entity references and read-only nodes.
  * Correct reference counting problem NamedNodeMap.
@@ -130,7 +133,7 @@ public:
     virtual DOMString     getInternalSubset();
     //internal use only
     virtual void setOwnerDocument(DocumentImpl *docImpl);
-    virtual DocumentTypeImpl *export(DocumentImpl *docImpl, bool deep);
+    virtual DocumentTypeImpl *exportNode(DocumentImpl *docImpl, bool deep);
 };
 
 #endif

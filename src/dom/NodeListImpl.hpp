@@ -58,6 +58,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/22 01:38:30  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.2  1999/12/21 07:47:07  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -94,7 +97,7 @@ protected:
     NodeListImpl();
 public:
     virtual             ~NodeListImpl();
-    virtual NodeImpl *  item(int index) = 0;
+    virtual NodeImpl *  item(unsigned long index) = 0;
     virtual int         getLength() = 0;
 };
 

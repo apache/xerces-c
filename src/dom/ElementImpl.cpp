@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/22 01:38:30  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.3  2000/01/05 01:16:08  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -103,8 +106,8 @@ NodeImpl(ownerDoc, nam, DOM_Node::ELEMENT_NODE, false, null)
 
 //DOM Level 2
 ElementImpl::ElementImpl(DocumentImpl *ownerDoc,
-    const DOMString &namespaceURI, const DOMString &qualifiedName) :
-NodeImpl(ownerDoc, namespaceURI, qualifiedName, DOM_Node::ELEMENT_NODE, false, null)
+    const DOMString &fNamespaceURI, const DOMString &qualifiedName) :
+NodeImpl(ownerDoc, fNamespaceURI, qualifiedName, DOM_Node::ELEMENT_NODE, false, null)
 {
     
     // If there is an ElementDefintion, set its Attributes up as
@@ -291,24 +294,24 @@ void ElementImpl::setReadOnly(bool readOnl, bool deep)
 
 
 //Introduced in DOM Level 2
-DOMString ElementImpl::getAttributeNS(const DOMString &namespaceURI,
-	const DOMString &localName)
+DOMString ElementImpl::getAttributeNS(const DOMString &fNamespaceURI,
+	const DOMString &fLocalName)
 {
     static DOMString *emptyString = 0;
-    AttrImpl * attr=(AttrImpl *)(attributes->getNamedItemNS(namespaceURI, localName));
+    AttrImpl * attr=(AttrImpl *)(attributes->getNamedItemNS(fNamespaceURI, fLocalName));
     return (attr==null) ? DStringPool::getStaticString("", &emptyString) : attr->getValue();
 }
 
 
-void ElementImpl::setAttributeNS(const DOMString &namespaceURI,
-	const DOMString &qualifiedName, const DOMString &value)
+void ElementImpl::setAttributeNS(const DOMString &fNamespaceURI,
+	const DOMString &qualifiedName, const DOMString &fValue)
 {
     if (readOnly)
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    AttrImpl *newAttr = (AttrImpl *) ownerDocument->createAttributeNS(namespaceURI, qualifiedName);
-    newAttr->setNodeValue(value);
+    AttrImpl *newAttr = (AttrImpl *) ownerDocument->createAttributeNS(fNamespaceURI, qualifiedName);
+    newAttr->setNodeValue(fValue);
     newAttr->setOwnerElement(this);
     AttrImpl *oldAttr = (AttrImpl *)attributes->setNamedItem(newAttr);
 
@@ -320,14 +323,14 @@ void ElementImpl::setAttributeNS(const DOMString &namespaceURI,
 }
 
 
-void ElementImpl::removeAttributeNS(const DOMString &namespaceURI,
-	const DOMString &localName)
+void ElementImpl::removeAttributeNS(const DOMString &fNamespaceURI,
+	const DOMString &fLocalName)
 {
     if (readOnly)
         throw DOM_DOMException(
 	    DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
     
-    AttrImpl *att = (AttrImpl *) attributes->getNamedItemNS(namespaceURI, localName);
+    AttrImpl *att = (AttrImpl *) attributes->getNamedItemNS(fNamespaceURI, fLocalName);
     // Remove it (and let the NamedNodeMap recreate the default, if any)
     if (att != null) {
         attributes->removeNamedItemNS(namespaceURI, localName);
@@ -338,10 +341,10 @@ void ElementImpl::removeAttributeNS(const DOMString &namespaceURI,
 }
 
 
-AttrImpl *ElementImpl::getAttributeNodeNS(const DOMString &namespaceURI,
-	const DOMString &localName)
+AttrImpl *ElementImpl::getAttributeNodeNS(const DOMString &fNamespaceURI,
+	const DOMString &fLocalName)
 {
-    return (AttrImpl *)(attributes->getNamedItemNS(namespaceURI, localName));
+    return (AttrImpl *)(attributes->getNamedItemNS(fNamespaceURI, fLocalName));
 }
 
 
@@ -374,9 +377,9 @@ AttrImpl *ElementImpl::setAttributeNodeNS(AttrImpl *newAttr)
 }
 
 
-DeepNodeListImpl *ElementImpl::getElementsByTagNameNS(const DOMString &namespaceURI,
-	const DOMString &localName)
+DeepNodeListImpl *ElementImpl::getElementsByTagNameNS(const DOMString &fNamespaceURI,
+	const DOMString &fLocalName)
 {
-    return new DeepNodeListImpl(this,namespaceURI, localName);
+    return new DeepNodeListImpl(this,fNamespaceURI, fLocalName);
 }
 

@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:09:01  twl
- * Initial revision
+ * Revision 1.2  2000/01/22 01:38:29  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:09:01  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:44:20  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -142,7 +145,7 @@ bool DOM_NodeList::operator != (const DOM_NullPtr *nullPtr) const
 
 
 
-DOM_Node  DOM_NodeList::item(int index) const
+DOM_Node  DOM_NodeList::item(unsigned long index) const
 {
     return DOM_Node(fImpl->item(index));
 };

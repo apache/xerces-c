@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/22 01:38:29  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.2  1999/12/21 07:47:06  robweir
  * Patches to support Xalan, where we need to create a
  * "special" DOM with subclassed Nodes.
@@ -103,6 +106,7 @@ private:
     //DOM Level 2
     DOMString		namespaceURI;
     bool		matchAllURI;
+    bool                matchURIandTagname; //match both namespaceURI and tagName
     
 public:
                         DeepNodeListImpl(NodeImpl *rootNode, const DOMString &tagName);
@@ -110,7 +114,7 @@ public:
 			    const DOMString &namespaceURI, const DOMString &localName);
     virtual             ~DeepNodeListImpl();
     virtual int         getLength();
-    virtual NodeImpl    *item(int index);
+    virtual NodeImpl    *item(unsigned long index);
 private:
     virtual NodeImpl    *nextMatchingElementAfter(NodeImpl *current);
     virtual void        unreferenced();

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/22 01:38:29  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.2  2000/01/05 01:16:07  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -160,7 +163,7 @@ DOM_Node DOM_NamedNodeMap::removeNamedItem(const DOMString &name)
 };
 
 
-DOM_Node DOM_NamedNodeMap::item(int index)
+DOM_Node DOM_NamedNodeMap::item(unsigned long index)
 {
     return DOM_Node(fImpl->item(index));
 };

@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/22 01:38:30  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.3  2000/01/05 01:16:08  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -175,7 +178,7 @@ public:
     virtual bool        hasChildNodes();
     virtual NodeImpl    *insertBefore(NodeImpl *newChild, NodeImpl *refChild);
     static  bool        isKidOK(NodeImpl *parent, NodeImpl *child);
-    virtual NodeImpl    *item(int index);
+    virtual NodeImpl    *item(unsigned long index);
     virtual void        referenced();
     virtual NodeImpl    * removeChild(NodeImpl *oldChild);
     virtual NodeImpl    *replaceChild(NodeImpl *newChild, NodeImpl *oldChild);

@@ -59,6 +59,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/22 01:38:30  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.3  2000/01/08 00:09:28  andyh
  * Correcf failures in DOMTest with entity references and read-only nodes.
  * Correct reference counting problem NamedNodeMap.
@@ -122,7 +125,7 @@ public:
     virtual int             findNamePoint(const DOMString &name);
     virtual int             getLength();
     virtual NodeImpl        *getNamedItem(const DOMString &name);
-    virtual NodeImpl        *item(int index);
+    virtual NodeImpl        *item(unsigned long index);
     virtual void            removeAll();
     virtual NodeImpl        *removeNamedItem(const DOMString &name);
     static  void            removeRef(NamedNodeMapImpl *);
@@ -130,7 +133,7 @@ public:
     virtual void            setReadOnly(bool readOnly, bool deep);
 
     //Introduced in DOM Level 2
-    virtual NamedNodeMapImpl *export(DocumentImpl *docImpl);
+    virtual NamedNodeMapImpl *exportNode(DocumentImpl *docImpl);
     virtual int             findNamePoint(const DOMString &namespaceURI,
 	const DOMString &localName);
     virtual NodeImpl        *getNamedItemNS(const DOMString &namespaceURI,

@@ -56,6 +56,9 @@
 
 /**
 * $Log$
+* Revision 1.8  2000/01/22 01:38:30  andyh
+* Remove compiler warnings in DOM impl classes
+*
 * Revision 1.7  2000/01/19 21:39:19  andyh
 * DOM L2, fix problems with new style createDocument.
 *
@@ -137,9 +140,10 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 
 //Introduced in DOM Level 2
 NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
-                   const DOMString &namespaceURI, const DOMString &qualifiedName, short nTyp,
+                   const DOMString &fNamespaceURI, const DOMString &qualifiedName, short nTyp,
                    bool isLeafNod, const DOMString &initValue)
 {
+    static const DOMString xmlns("xmlns");  //need to revisit static initializer
     // Do we want to add isLeafNode to this? How about initial value?
     this->ownerDocument=ownerDoc;
 
@@ -157,6 +161,9 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
     if (count == 0) {	//count == 0 && index == -1
+        if (nType == DOM_Node::ATTRIBUTE_NODE && this->name.equals(xmlns) &&
+            fNamespaceURI != null && fNamespaceURI.length() != 0)
+	    throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 	this -> prefix = null;
 	this -> localName = this -> name;
     } else {	//count == 1 && 0 < index < qNameLen-1
@@ -164,7 +171,7 @@ NodeImpl::NodeImpl(DocumentImpl *ownerDoc,
 	this -> localName = this->name.substringData(index+1, qNameLen-index-1);
     }
 
-    const DOMString& URI = mapPrefix(prefix, namespaceURI, nTyp);
+    const DOMString& URI = mapPrefix(prefix, fNamespaceURI, nTyp);
     this -> namespaceURI = URI == null ? DOMString(null) : URI.clone();
 
     this->nType=nTyp;
@@ -536,9 +543,9 @@ tree structure is legal.
   
   
   
-  NodeImpl *NodeImpl::item(int index) {
+  NodeImpl *NodeImpl::item(unsigned long index) {
       NodeImpl *node = firstChild;
-      for(int i=0; i<index && node!=null; ++i)
+      for(unsigned long i=0; i<index && node!=null; ++i)
           node = node->nextSibling;
       return node;
   };
@@ -716,7 +723,7 @@ DOMString NodeImpl::getLocalName()
 }
 
 
-void NodeImpl::setPrefix(const DOMString &prefix)
+void NodeImpl::setPrefix(const DOMString &fPrefix)
 {
     static const DOMString xml("xml");
     static const DOMString xmlURI("http://www.w3.org/XML/1998/namespace");
@@ -724,26 +731,26 @@ void NodeImpl::setPrefix(const DOMString &prefix)
 
     if (readOnly)
 	throw DOM_DOMException(DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
-    if(prefix != null && !DocumentImpl::isXMLName(prefix))
+    if(fPrefix != null && !DocumentImpl::isXMLName(fPrefix))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     if (localName == null)  //if not Element or Attr node
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
-    if (prefix == null || prefix.length() == 0) {
+    if (fPrefix == null || fPrefix.length() == 0) {
 	this -> prefix = null;
 	name = localName;
 	return;
     }
 
-    XMLCh *p = prefix.rawBuffer();
-    for (int i = prefix.length(); --i >= 0;)
+    XMLCh *p = fPrefix.rawBuffer();
+    for (int i = fPrefix.length(); --i >= 0;)
 	if (*p++ == chColon)	//prefix is malformed
 	    throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
-    if (prefix.equals(xml) && !namespaceURI.equals(xmlURI) ||
-	prefix.equals(xmlns) && namespaceURI != null && namespaceURI.length() != 0)
+    if (fPrefix.equals(xml) && !namespaceURI.equals(xmlURI) ||
+	fPrefix.equals(xmlns) && namespaceURI != null && namespaceURI.length() != 0)
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
 
-    name = this -> prefix = prefix;
+    name = this -> prefix = fPrefix;
     name = name + chColon + localName;    //nodeName is changed too
 }
 
@@ -752,7 +759,7 @@ void NodeImpl::setPrefix(const DOMString &prefix)
 //---------------------------------------------------
 //	"xml"	null, "" or xmlURI	xmlURI
 //	"xml"	otherwise		NAMESPACE_ERR
-//	"xmlns"	null or ""		namespaceURI (nType = ATTRIBUTE_NODE only)
+//	"xmlns"	null or "" or xmlnsURI	xmlnsURI (nType = ATTRIBUTE_NODE only)
 //	"xmlns"	otherwise		NAMESPACE_ERR (nType = ATTRIBUTE_NODE only)
 //	else	any			namesapceURI
 const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
@@ -764,6 +771,7 @@ const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
     static const DOMString xml("xml");
     static const DOMString xmlURI("http://www.w3.org/XML/1998/namespace");
     static const DOMString xmlns("xmlns");
+    static const DOMString xmlnsURI("http://www.w3.org/2000/xmlns/");
 
     if (prefix == null)
 	return namespaceURI;
@@ -772,8 +780,8 @@ const DOMString& NodeImpl::mapPrefix(const DOMString &prefix,
 	    return xmlURI;
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     } else if (nType == DOM_Node::ATTRIBUTE_NODE && prefix.equals(xmlns)) {
-	if (namespaceURI == null || namespaceURI.length() == 0)
-	    return namespaceURI;
+	if (namespaceURI == null || namespaceURI.length() == 0 || namespaceURI.equals(xmlnsURI))
+	    return xmlnsURI;
 	throw DOM_DOMException(DOM_DOMException::NAMESPACE_ERR, null);
     } else
 	return namespaceURI;

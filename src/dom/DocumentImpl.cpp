@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.6  2000/01/22 01:38:30  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.5  2000/01/19 21:39:19  andyh
  * DOM L2, fix problems with new style createDocument.
  *
@@ -128,7 +131,7 @@ DocumentImpl::DocumentImpl(): NodeImpl(null,
 
 
 //DOM Level 2
-DocumentImpl::DocumentImpl(const DOMString &namespaceURI,
+DocumentImpl::DocumentImpl(const DOMString &fNamespaceURI,
 	const DOMString &qualifiedName, DocumentTypeImpl *doctype)
 : NodeImpl(null, null, DStringPool::getStaticString("#document", &nam), DOM_Node::DOCUMENT_NODE, false, null)
 {
@@ -141,7 +144,7 @@ DocumentImpl::DocumentImpl(const DOMString &namespaceURI,
 	appendChild(doctype);
     }
     docElement=null;
-    appendChild(createElementNS(namespaceURI, qualifiedName));  //root element
+    appendChild(createElementNS(fNamespaceURI, qualifiedName));  //root element
     namePool = new DStringPool(257);
     iterators = 0L;
     treeWalkers = 0L;
@@ -173,7 +176,7 @@ NodeImpl *DocumentImpl::cloneNode(bool deep) {
     if (deep)
         for (NodeImpl *n=getFirstChild(); n!=null; n=n->getNextSibling()) {
 	    if (n -> isDocumentTypeImpl()) {
-		DocumentTypeImpl *doctype = ((DocumentTypeImpl *)n) -> export(newdoc, true);
+		DocumentTypeImpl *doctype = ((DocumentTypeImpl *)n) -> exportNode(newdoc, true);
 		newdoc -> appendChild(doctype);
 		newdoc -> docType = doctype;
 	    } else if (n -> isElementImpl()) {
@@ -568,29 +571,29 @@ NodeImpl *DocumentImpl::importNode(NodeImpl *source, bool deep)
 };
 
 
-ElementImpl *DocumentImpl::createElementNS(const DOMString &namespaceURI,
+ElementImpl *DocumentImpl::createElementNS(const DOMString &fNamespaceURI,
 	const DOMString &qualifiedName)
 {
     if(!isXMLName(qualifiedName))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
     //DOMString pooledTagName = this->namePool->getPooledString(qualifiedName);
-    return new ElementImpl(this, namespaceURI, qualifiedName);
+    return new ElementImpl(this, fNamespaceURI, qualifiedName);
 }
 
 
-AttrImpl *DocumentImpl::createAttributeNS(const DOMString &namespaceURI,
+AttrImpl *DocumentImpl::createAttributeNS(const DOMString &fNamespaceURI,
 	const DOMString &qualifiedName)
 {
     if(!isXMLName(qualifiedName))
         throw DOM_DOMException(DOM_DOMException::INVALID_CHARACTER_ERR,null);
-    return new AttrImpl(this, namespaceURI, qualifiedName); 
+    return new AttrImpl(this, fNamespaceURI, qualifiedName); 
 }
 
 
-DeepNodeListImpl *DocumentImpl::getElementsByTagNameNS(const DOMString &namespaceURI,
-	const DOMString &localName)
+DeepNodeListImpl *DocumentImpl::getElementsByTagNameNS(const DOMString &fNamespaceURI,
+	const DOMString &fLocalName)
 {
-    return new DeepNodeListImpl(this, namespaceURI, localName);
+    return new DeepNodeListImpl(this, fNamespaceURI, fLocalName);
 }
 
 

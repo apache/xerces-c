@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:08:42  twl
- * Initial revision
+ * Revision 1.2  2000/01/22 01:38:29  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
+ * Revision 1.1.1.1  1999/11/09 01:08:42  twl
+ * Initial checkin
  *
  * Revision 1.3  1999/11/08 20:44:23  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -82,20 +85,22 @@ DeepNodeListImpl::DeepNodeListImpl(NodeImpl *rootNod, const DOMString &tagNam)
     matchAll = tagName.equals(DStringPool::getStaticString("*", &kAstr));
     this->namespaceURI = null;	//DOM Level 2
     this->matchAllURI = false;	//DOM Level 2
+    this->matchURIandTagname = false;	//DOM Level 2
 };
 
 
 //DOM Level 2
 DeepNodeListImpl::DeepNodeListImpl(NodeImpl *rootNod,
-    const DOMString &namespaceURI, const DOMString &localName)
+    const DOMString &fNamespaceURI, const DOMString &localName)
 {
     changes = 0;
     this->rootNode = rootNod;
     this->tagName = localName;
     nodes=new NodeVector();
     matchAll = tagName.equals(DStringPool::getStaticString("*", &kAstr));
-    this->namespaceURI = namespaceURI;
-    this->matchAllURI = namespaceURI.equals(DStringPool::getStaticString("*", &kAstr));
+    this->namespaceURI = fNamespaceURI;
+    this->matchAllURI = fNamespaceURI.equals(DStringPool::getStaticString("*", &kAstr));
+    this->matchURIandTagname = true;
 };
 
 
@@ -124,7 +129,7 @@ int DeepNodeListImpl::getLength()
 // irrelevant ones.  Doing so in a really useful manner would seem
 // to involve a tree-walk in its own right, or maintaining our data
 // in a parallel tree.
-NodeImpl *DeepNodeListImpl::item(int index)
+NodeImpl *DeepNodeListImpl::item(unsigned long index)
 {
     NodeImpl *thisNode;
     
@@ -134,8 +139,8 @@ NodeImpl *DeepNodeListImpl::item(int index)
         changes=rootNode->changes;
     }
     
-    if(index<nodes->size())      // In the cache
-        return nodes->elementAt(index);
+    if(index< (unsigned long) nodes->size())      // In the cache
+        return nodes->elementAt((int) index);
     else                        // Not yet seen
     {
         if(nodes->size()==0)     // Pick up where we left off
@@ -143,7 +148,7 @@ NodeImpl *DeepNodeListImpl::item(int index)
         else
             thisNode=nodes->lastElement();
 
-        while(thisNode!=null && index>=nodes->size() && thisNode!=null)
+        while(thisNode!=null && index >= (unsigned long) nodes->size() && thisNode!=null)
         {
             thisNode=nextMatchingElementAfter(thisNode);
             if(thisNode!=null)
@@ -195,7 +200,7 @@ NodeImpl *DeepNodeListImpl::nextMatchingElementAfter(NodeImpl *current)
         // Have we found an Element with the right tagName?
         // ("*" matches anything.)
         if (current != null && current != rootNode && current->isElementImpl()) {
-	    if (namespaceURI == null) {	//DOM Level 1
+	    if (!matchURIandTagname) {	//DOM Level 1
 		if (matchAll || ((ElementImpl *)current)->getTagName().equals(tagName))
 		    return current;
 	    } else {	//DOM Level 2

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/22 01:38:30  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.3  2000/01/08 00:09:28  andyh
  * Correcf failures in DOMTest with entity references and read-only nodes.
  * Correct reference counting problem NamedNodeMap.
@@ -98,10 +101,10 @@ DocumentTypeImpl::DocumentTypeImpl(DocumentImpl *ownerDoc, const DOMString &dtNa
 
 //Introduced in DOM Level 2
 DocumentTypeImpl::DocumentTypeImpl(const DOMString &qualifiedName,
-    const DOMString &publicID, const DOMString &systemID,
-    const DOMString &internalSubset)
+    const DOMString &fPublicID, const DOMString &fSystemID,
+    const DOMString &fInternalSubset)
 : NodeImpl(null, qualifiedName, DOM_Node::DOCUMENT_TYPE_NODE, false, null),
-    publicID(publicID), systemID(systemID), internalSubset(internalSubset)
+    publicID(fPublicID), systemID(fSystemID), internalSubset(fInternalSubset)
 {
     entities = new NamedNodeMapImpl(null,null);
     notations= new NamedNodeMapImpl(null,null);
@@ -231,7 +234,7 @@ void DocumentTypeImpl::setOwnerDocument(DocumentImpl *docImpl)
 
 /** Export this node to a different document docImpl.
  */
-DocumentTypeImpl *DocumentTypeImpl::export(DocumentImpl *docImpl, bool deep)
+DocumentTypeImpl *DocumentTypeImpl::exportNode(DocumentImpl *docImpl, bool deep)
 {
     DocumentTypeImpl *doctype;
     if (localName != null) {	//true if namespace involved, i.e. DOM Level 2 and after
@@ -243,9 +246,9 @@ DocumentTypeImpl *DocumentTypeImpl::export(DocumentImpl *docImpl, bool deep)
 	delete doctype -> entities;
 	delete doctype -> notations;
 	delete doctype -> elements;
-	doctype -> entities = entities -> export(docImpl);
-	doctype -> notations = notations -> export(docImpl);
-	doctype -> elements = elements -> export(docImpl);
+	doctype -> entities = entities -> exportNode(docImpl);
+	doctype -> notations = notations -> exportNode(docImpl);
+	doctype -> elements = elements -> exportNode(docImpl);
     }
     return doctype;
 }

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/22 01:38:29  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.2  2000/01/05 01:16:08  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -183,7 +186,7 @@ public:
      *   <code>NodeList</code>, or <code>null</code> if that is not a valid 
      *   index.
      */
-    DOM_Node  item(int index) const;
+    DOM_Node  item(unsigned long index) const;
 
     /**
      * Returns the number of nodes in the list. 

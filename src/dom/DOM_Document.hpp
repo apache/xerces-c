@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.4  2000/01/22 01:38:29  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.3  2000/01/05 01:16:07  andyh
  * DOM Level 2 core, namespace support added.
  *
@@ -460,11 +463,15 @@ public:
 	const DOMString &qualifiedName);
 
     /**
-     * Creates an attribute of the given qualified name and 
-     * namespace URI. If the given <CODE>namespaceURI</CODE> is <CODE>null</CODE> 
-     * or an empty string and the <CODE>qualifiedName</CODE> has a prefix that is 
-     * "xml", the created attribute is bound to the predefined namespace 
-     * "http://www.w3.org/XML/1998/namespace".
+     * Creates an attribute of the given qualified name and namespace
+     * URI. If the given <code>namespaceURI</code> is <code>null</code> or
+     * an empty string and the <code>qualifiedName</code> has a prefix that is
+     * "xml", the created attribute is bound to the predefined namespace
+     * "http://www.w3.org/XML/1998/namespace". If
+     * the given <code>namespaceURI</code> is <code>null</code> or an empty
+     * string and the <code>qualifiedName</code> has a prefix that is "xmlns",
+     * the created attribute is bound to the predefined namespace
+     * "http://www.w3.org/2000/xmlns/".
      * @param namespaceURI The <em>namespace URI</em> of
      *   the attribute to create.
      * @param qualifiedName The <em>qualified name</em>
@@ -474,13 +481,18 @@ public:
      *   INVALID_CHARACTER_ERR: Raised if the specified qualified name contains
      *                          an illegal character.
      * <br>
-     *   NAMESPACE_ERR: Raised if the <CODE>qualifiedName</CODE> is 
-     *       malformed, if the <CODE>qualifiedName</CODE> has a prefix that is 
-     *       "xml" and the <CODE>namespaceURI</CODE> is neither <CODE>null</CODE> 
-     *       nor an empty string nor "http://www.w3.org/XML/1998/namespace", or 
-     *       if the <CODE>qualifiedName</CODE> has a prefix that is "xmlns" but 
-     *       the <CODE>namespaceURI</CODE> is neither <CODE>null</CODE> nor an 
-     *       empty string.
+     *   NAMESPACE_ERR: Raised if the <code>qualifiedName</code> is
+     * malformed, if the <code>qualifiedName</code> has a prefix that is
+     * "xml" and the <code>namespaceURI</code> is neither
+     * <code>null</code> nor an empty string nor
+     * "http://www.w3.org/XML/1998/namespace", or if the
+     * <code>qualifiedName</code> has a prefix that is
+     * "xmlns" and the <code>namespaceURI</code> is neither
+     * <code>null</code> nor an empty string nor
+     * "http://www.w3.org/2000/xmlns/", or if the
+     * <code>qualifiedName</code> is "xmlns" but the
+     * <code>namespaceURI</code> is neither <code>null</code> nor an
+     * empty string.
      */
     DOM_Attr            createAttributeNS(const DOMString &namespaceURI,
 	const DOMString &qualifiedName);

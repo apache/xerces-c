@@ -57,6 +57,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2000/01/22 01:38:29  andyh
+ * Remove compiler warnings in DOM impl classes
+ *
  * Revision 1.2  1999/11/30 21:16:24  roddey
  * Changes to add the transcode() method to DOMString, which returns a transcoded
  * version (to local code page) of the DOM string contents. And I changed all of the
@@ -87,8 +90,8 @@ AttrImpl::AttrImpl(DocumentImpl *ownerDoc, const DOMString &aName)
 
 //DOM Level 2
 AttrImpl::AttrImpl(DocumentImpl *ownerDoc,   //DOM Level 2
-    const DOMString &namespaceURI, const DOMString &qualifiedName)
-:  NodeImpl (ownerDoc, namespaceURI, qualifiedName, DOM_Node::ATTRIBUTE_NODE, false, DOMString())
+    const DOMString &fNamespaceURI, const DOMString &qualifiedName)
+:  NodeImpl (ownerDoc, fNamespaceURI, qualifiedName, DOM_Node::ATTRIBUTE_NODE, false, DOMString())
 {
     specified = true;
     ownerElement = null;    //DOM Level 2
