@@ -629,7 +629,7 @@ public :
       * This method allows users to enable/disable src offset calculation.
       * Disabling the calculation will improve performance.
       *
-      * The parser's default state is: true.
+      * The parser's default state is: false.
       *
       * @param newState The value specifying whether we should enable or
       *                 disable src offset calculation

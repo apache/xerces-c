@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2002/12/30 20:15:51  knoaman
+ * Make calculate src offset option false by default.
+ *
  * Revision 1.16  2002/12/23 15:23:18  knoaman
  * Added a public api to various parsers to return the src offset within the input
  * source.
@@ -763,7 +766,7 @@ public :
       * This method allows users to enable/disable src offset calculation.
       * Disabling the calculation will improve performance.
       *
-      * The parser's default state is: true.
+      * The parser's default state is: false.
       *
       * @param newState The value specifying whether we should enable or
       *                 disable src offset calculation

@@ -150,7 +150,7 @@ static XMLMutex& gScannerMutex()
 // ---------------------------------------------------------------------------
 XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
 
-    fCalculateSrcOfs(true)
+    fCalculateSrcOfs(false)
     , fDoNamespaces(false)
     , fExitOnFirstFatal(true)
     , fValidationConstraintFatal(false)
@@ -204,7 +204,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
                           , XMLErrorReporter* const  errHandler
                           , XMLValidator* const      valToAdopt) :
 
-    fCalculateSrcOfs(true)
+    fCalculateSrcOfs(false)
     , fDoNamespaces(false)
     , fExitOnFirstFatal(true)
     , fValidationConstraintFatal(false)
