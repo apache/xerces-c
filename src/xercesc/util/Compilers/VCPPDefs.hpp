@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2005/01/26 14:48:14  amassari
+ * If the option /Zc:wchar_t is specified, map XMLCh to wchar_t, or trying to use wide-char Windows API will generate compiler errors (jira# 413)
+ *
  * Revision 1.11  2004/11/15 13:30:40  amassari
  * Add build target for VC7.1 to create a static library
  *
@@ -146,7 +149,11 @@
 // ---------------------------------------------------------------------------
 //  Define our version of the XML character
 // ---------------------------------------------------------------------------
+#ifdef _NATIVE_WCHAR_T_DEFINED 
+typedef wchar_t  XMLCh;
+#else
 typedef unsigned short  XMLCh;
+#endif
 
 // ---------------------------------------------------------------------------
 //  Define unsigned 16 and 32 bits integers
