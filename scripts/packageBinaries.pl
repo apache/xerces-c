@@ -585,9 +585,6 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     system("rm -f $targetdir/samples/StdInParse/Makefile");
     system("cp -Rf $XERCESCROOT/samples/EnumVal/* $targetdir/samples/EnumVal");
     system("rm -f $targetdir/samples/EnumVal/Makefile");
-    if ($platform = "solaris") {
-        system("rm -Rf $targetdir/samples/EnumVal/Templates.DB");
-    }
     system("cp -Rf $XERCESCROOT/samples/CreateDOMDocument/* $targetdir/samples/CreateDOMDocument");
     system("rm -f $targetdir/samples/CreateDOMDocument/Makefile");
     system("rm -f $targetdir/samples/Makefile");

@@ -100,7 +100,7 @@ ${BATCH_TARGET}:: ${OBJS}
 	${LINK} ${PLATFORM_LIB_LINK_OPTIONS} ${OBJS} -o $@ ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} 
 
 $(OUTDIR)/EnumVal.o:: ${SRC}/EnumVal.cpp ${HEADER_FILES}
-	${CC} ${CMP} $(INCLUDES) -o $(OUTDIR)/EnumVal.o ${SRC}/EnumVal.cpp
+	${CC} ${CMP} -ptr${OUTDIR} $(INCLUDES) -o $(OUTDIR)/EnumVal.o ${SRC}/EnumVal.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}
