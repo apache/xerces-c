@@ -132,6 +132,8 @@ public:
     XMLContentModel*         getContentModel(const bool checkUPA = false);
     const XMLCh*             getFormattedContentModel ()   const;
     XSDLocator*              getLocator() const;
+    const XMLCh*             getTypeLocalName() const;
+    const XMLCh*             getTypeUri() const;
 
     /**
      * returns true if this type is anonymous
@@ -222,6 +224,8 @@ private:
     unsigned int                       fElementId;
     int                                fContentType;
     XMLCh*                             fTypeName;
+    XMLCh*                             fTypeLocalName;
+    XMLCh*                             fTypeUri;
     DatatypeValidator*                 fBaseDatatypeValidator;
     DatatypeValidator*                 fDatatypeValidator;
     ComplexTypeInfo*                   fBaseComplexTypeInfo;
@@ -303,7 +307,6 @@ inline unsigned int ComplexTypeInfo::elementCount() const {
 }
 
 inline XMLCh* ComplexTypeInfo::getTypeName() const {
-
     return fTypeName;
 }
 
@@ -394,6 +397,33 @@ inline bool ComplexTypeInfo::getAnonymous() const {
     return fAnonymous;
 }
 
+inline const XMLCh* ComplexTypeInfo::getTypeLocalName() const 
+{
+    if(!fTypeLocalName) {
+        int index = XMLString::indexOf(fTypeName, chComma);
+        int length = XMLString::stringLen(fTypeName);
+        XMLCh *tName = new XMLCh[length - index + 1];
+        XMLString::subString(tName, fTypeName, index + 1, length);
+        ((ComplexTypeInfo *)this)->fTypeLocalName = tName;
+    }
+
+    return fTypeLocalName;
+}
+
+inline const XMLCh* ComplexTypeInfo::getTypeUri() const
+{
+    
+    if(!fTypeUri) {
+        int index = XMLString::indexOf(fTypeName, chComma);
+        int length = XMLString::stringLen(fTypeName);
+        XMLCh *uri = new XMLCh[index + 1];
+        XMLString::subString(uri, fTypeName, 0, index);
+        ((ComplexTypeInfo *)this)->fTypeUri = uri;
+    }
+
+   return fTypeUri;
+}
+
 // ---------------------------------------------------------------------------
 //  ComplexTypeInfo: Setter methods
 // ---------------------------------------------------------------------------
@@ -450,9 +480,9 @@ ComplexTypeInfo::setContentType(const int contentType) {
 
 inline void ComplexTypeInfo::setTypeName(const XMLCh* const typeName) {
 
-    if (fTypeName != 0) {
-        delete [] fTypeName;
-    }
+    delete [] fTypeName;
+    delete [] fTypeLocalName;
+    delete [] fTypeLocalName;
 
     fTypeName = XMLString::replicate(typeName);
 }

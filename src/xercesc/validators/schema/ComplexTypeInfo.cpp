@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/01/29 19:57:30  gareth
+ * API to retrive local and uri part of the type name
+ *
  * Revision 1.5  2002/12/19 14:04:05  gareth
  * get/set methods to see if the represented type is anonymous. Patch by Peter Volchek.
  *
@@ -185,6 +188,8 @@ ComplexTypeInfo::ComplexTypeInfo()
     , fElementId(XMLElementDecl::fgInvalidElemId)
     , fContentType(SchemaElementDecl::Empty)
     , fTypeName(0)
+    , fTypeLocalName(0)
+    , fTypeUri(0)
     , fBaseDatatypeValidator(0)
     , fDatatypeValidator(0)
     , fBaseComplexTypeInfo(0)
@@ -209,6 +214,8 @@ ComplexTypeInfo::ComplexTypeInfo()
 ComplexTypeInfo::~ComplexTypeInfo()
 {
     delete [] fTypeName;
+    delete [] fTypeLocalName;
+    delete [] fTypeUri;
 
     if (fAdoptContentSpec) {
         delete fContentSpec;
