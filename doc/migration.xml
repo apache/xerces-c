@@ -28,8 +28,26 @@
     <anchor name="NewFeatures220"/>
     <s3 title="New features in &XercesCName; &XercesCVersion;">
       <ul>
+        <li>More DOM L3 Core Support:</li>
+        <ul>
+            <li>DOMNode: baseURI</li>
+            <li>DOMAttr: isId</li>
+            <li>DOMElement: setIdAttribute, setIdAttributeNS, setIdAttributeNode</li>
+        </ul>
+        <li>DOM Message: make use of the non-standard extension DOMImplementation::loadDOMExceptionMsg
+        to load the default error text message for the correspond Exception Code.</li>
+        <li>XML 1.1</li>
+        <li>Schema Errata</li>
         <li>C++ Namespace Support</li>
-        <li></li>
+        <li>ICU Message Loader, and Message Catalog Message Loader</li>
+        <li>New feature XMLPlatformUtils::Initialize(const char* const locale) to set
+        the locale for message loader.   See <jump href="program-others.html#SpecifylocaleforMessageLoader">
+        Specify locale for Message Loader</jump> for details</li>
+        <li>390: Uniconv390 support</li>
+        <li>390: support record-oriented MVS datasets with the DOM Level 3 serialization APIs</li>
+        <li>Support for Linux/390</li>
+        <li>RPM for Linux</li>
+        <li>Performance: Break Scanner for different functionalities and many other performance improvement</li>
       </ul>
     </s3>
 
@@ -60,16 +78,37 @@
         <anchor name="NewAPI220"/>
         <s4 title="New Public API">
             <ul>
-              <li>.</li>
+              <li>To support additional DOM L3 functions, the following are added:</li>
+              <ul>
+                  <li>DOMAttr: isId</li>
+                  <li>DOMElement: setIdAttribute, setIdAttributeNS, setIdAttributeNode</li>
+              </ul>
+              <li>Added a non-standard extension DOMImplementation::loadDOMExceptionMsg to load the
+              default error message for the corresponding DOMException code.</li>
+              <li>XMLUri: Added a constructor and a set method to allow creating/setting of
+              XMLAttr using a rawname.</li>
+              <li>Added XMLUri::getUriText to return the URI as a string specification.</li>
+              <li>Add XMLString::fixURI to transform an absolute path filename to standard URI form.</li>
+              <li>Added XMLString::equals for faster string comparison.</li>
             </ul>
         </s4>
 
         <anchor name="ModifiedAPI220"/>
         <s4 title="Modified Public API">
             <ul>
-              <li> XMLPlatformUtils::Initialize() takes a parameter specifying locale
-              for message loader, with default value "en_US".
-              .</li>
+              <li>The following DOM functions are being added a const modifier.</li>
+              <ul>
+                  <li>DOMImplementation::hasFeature</li>
+                  <li>DOMNode: isSameNode, isEqualNode, compareTreePosition</li>
+              </ul>
+              <li>XMLPlatformUtils::Initialize() takes a parameter specifying locale
+              for message loader, with default value "en_US".</li>
+              <li>To fix [Bug 13641], the QName copy constructor is corrected to take
+              a reference as parameter, i.e. QName(const QName&amp; qname).</li>
+              <li>To fix [Bug 12232], the QName operator== has been added a const modified.</li>
+              <li>Move XMLUri copy constructor and operator = as public.</li>
+              <li>For validation purpose, added two more default parameters to
+              XMLValidator::validateAttrValue</li>
             </ul>
         </s4>
 
