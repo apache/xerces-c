@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.26  2004/08/31 20:50:50  peiyongz
+ * Parse/keep milisecond as double to retain precision.
+ *
  * Revision 1.25  2004/01/29 11:48:47  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -509,6 +512,18 @@ int XMLDateTime::compareOrder(const XMLDateTime* const lValue
         }
     }
 
+    if ( lTemp.fHasTime)
+    {
+        if ( lTemp.fMiliSecond < rTemp.fMiliSecond )
+        {
+            return LESS_THAN;
+        }
+        else if ( lTemp.fMiliSecond > rTemp.fMiliSecond )
+        {
+            return GREATER_THAN;
+        }
+    }
+
     return EQUAL;
 }
 
@@ -526,6 +541,8 @@ XMLDateTime::XMLDateTime(MemoryManager* const manager)
 , fEnd(0)
 , fBufferMaxLen(0)
 , fBuffer(0)
+, fMiliSecond(0)
+, fHasTime(false)
 , fMemoryManager(manager)
 {
     reset();
@@ -537,6 +554,8 @@ XMLDateTime::XMLDateTime(const XMLCh* const aString,
 , fEnd(0)
 , fBufferMaxLen(0)
 , fBuffer(0)
+, fMiliSecond(0)
+, fHasTime(false)
 , fMemoryManager(manager)
 {
     setBuffer(aString);
@@ -624,6 +643,7 @@ void XMLDateTime::parseDateTime()
     getTime();
     validateDateTime();
     normalize();
+    fHasTime = true;
 }
 
 //
@@ -651,6 +671,7 @@ void XMLDateTime::parseTime()
 
     validateDateTime();
     normalize();
+    fHasTime = true;
 }
 
 //
@@ -988,7 +1009,7 @@ void XMLDateTime::parseDuration()
                 }
 
                 fValue[Second]     = negate * parseInt(fStart, mlsec);
-                fValue[MiliSecond] = negate * parseInt(mlsec+1, end);
+                fMiliSecond        = negate * parseMiliSecond(mlsec+1, end);
             }
             else
             {
@@ -1124,17 +1145,12 @@ void XMLDateTime::getTime()
 
         if ( sign == NOT_FOUND )
         {
-            fValue[MiliSecond] = parseInt(fStart, fEnd);  //get ms between '.' and fEnd
+            fMiliSecond = parseMiliSecond(fStart, fEnd);  //get ms between '.' and fEnd
             fStart = fEnd;
         }
         else
         {
-            //to do: parseInt would eliminate any leading zeros
-            //       therefore for 12:01:01.0034
-            //       fValue[MiliSecond] would catch 34
-            //       rather than 0034
-            //
-            fValue[MiliSecond] = parseInt(fStart, sign);  //get ms between UTC sign and fEnd
+            fMiliSecond = parseMiliSecond(fStart, sign);  //get ms between UTC sign and fEnd
         }
 	}
     else if(sign == 0 || sign != fStart)
@@ -1371,7 +1387,7 @@ void XMLDateTime::validateDateTime() const
         (fValue[Hour] > 24) ||
         ((fValue[Hour] == 24) && ((fValue[Minute] !=0) ||
                                   (fValue[Second] !=0) ||
-                                  (fValue[MiliSecond] !=0))))
+                                  (fMiliSecond    !=0))))
     {
         ThrowXMLwithMemMgr1(SchemaDateTimeException
                 , XMLExcepts::DateTime_hour_invalid
@@ -1472,6 +1488,40 @@ int XMLDateTime::parseInt(const int start, const int end) const
     }
 
     return (int) retVal;
+}
+
+//
+// Note:
+//    start: pointing to the first digit after the '.'
+//    end:   pointing to one position after the last digit
+//    fStart NOT updated
+//
+double XMLDateTime::parseMiliSecond(const int start, const int end) const
+{
+
+    unsigned int  miliSecLen = (end-1) - (start-1) + 1; //to include the '.'
+    XMLCh* miliSecData = (XMLCh*) fMemoryManager->allocate( (miliSecLen + 1) * sizeof(XMLCh));
+    ArrayJanitor<XMLCh> janMili(miliSecData, fMemoryManager);
+    XMLString::copyNString(miliSecData, &(fBuffer[start-1]), miliSecLen);
+    *(miliSecData + miliSecLen) = chNull;
+
+    char *nptr = XMLString::transcode(miliSecData, fMemoryManager);
+    ArrayJanitor<char> jan(nptr, fMemoryManager);
+    int   strLen = strlen(nptr);
+    char *endptr = 0;
+    errno = 0;
+
+    //printf("milisec=<%s>\n", nptr);
+
+    double retVal = strtod(nptr, &endptr);
+
+    // check if all chars are valid char
+    if ( (endptr - nptr) != strLen)
+        ThrowXMLwithMemMgr(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars, fMemoryManager);
+
+    // we don't check underflow occurs since
+    // nothing we can do about it.
+    return retVal;
 }
 
 //

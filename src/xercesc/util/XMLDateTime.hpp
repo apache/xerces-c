@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2004/08/31 20:50:50  peiyongz
+ * Parse/keep milisecond as double to retain precision.
+ *
  * Revision 1.18  2004/08/11 16:48:55  peiyongz
  * Allow XSValue access
  *
@@ -148,7 +151,7 @@ public:
         Hour       ,
         Minute     ,
         Second     ,
-        MiliSecond ,
+        MiliSecond ,  //not to be used directly
         utc        ,
         TOTAL_SIZE
     };
@@ -322,6 +325,9 @@ private:
 
     int                   parseIntYear(const int end) const;
 
+    double                parseMiliSecond(const int start
+                                        , const int end) const;
+
     // -----------------------------------------------------------------------
     // validator and normalizer
     // -----------------------------------------------------------------------
@@ -365,6 +371,10 @@ private:
     int          fEnd;
     int          fBufferMaxLen;
     XMLCh*       fBuffer;
+
+    double       fMiliSecond;
+    bool         fHasTime;
+
     MemoryManager* fMemoryManager;
 
     friend class XSValue;
@@ -393,6 +403,8 @@ inline void XMLDateTime::reset()
     for ( int i=0; i < TOTAL_SIZE; i++ )
         fValue[i] = 0;
 
+    fMiliSecond   = 0;
+    fHasTime      = false;
     fTimeZone[hh] = fTimeZone[mm] = 0;
     fStart = fEnd = 0;
 
@@ -405,6 +417,8 @@ inline void XMLDateTime::copy(const XMLDateTime& rhs)
     for ( int i = 0; i < TOTAL_SIZE; i++ )
         fValue[i] = rhs.fValue[i];
 
+    fMiliSecond   = rhs.fMiliSecond;
+    fHasTime      = rhs.fHasTime;
     fTimeZone[hh] = rhs.fTimeZone[hh];
     fTimeZone[mm] = rhs.fTimeZone[mm];
     fStart = rhs.fStart;
