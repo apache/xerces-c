@@ -3,8 +3,7 @@
 
 <s1 title="Other Build Instructions">
     <anchor name="ICUPerl"/>
-    <s2 title="Building &XercesCName; with ICU using bundled Perl scripts">
-        <p>The following instruction is for Windows environment.  But the idea is similar on UNIX platforms.</p>
+    <s2 title="Building &XercesCName; with ICU">
         <p>&XercesCName; may be built in stand-alone mode using
         native encoding support and also using ICU where you get support over 180
         different encodings. ICU stands for International Components for Unicode and is an
@@ -20,8 +19,9 @@
         preferably with the same version. You cannot for example,
         build ICU with a threaded version of the xlC compiler and
         build &XercesCName; with a non-threaded one.</note>
-
-        <p>There are two options to build &XercesCName; with ICU. One is to use the
+        <p/>
+        <s3 title="Building on Windows">
+        <p>There are two options to build &XercesCName; with ICU on Windows. One is to use the
         MSDEV GUI environment, and the other is to invoke the compiler from the
         command line.</p>
 
@@ -62,11 +62,42 @@ perl packageBinaries.pl -s x:\&XercesCSrcInstallDir; -o x:\temp\&XercesCInstallD
 
         <p>If everything is setup right and works right, then you should see a
         binary drop created in the target directory specified above. This script
-        will build both ICU and &XercesCName;, copy the files (relevant to the binary
+        will build both ICU and &XercesCName;, and copy the files (relevant to the binary
         drop) to the target directory.</p>
 
         <p>For a description of options available, you can enter:</p>
 <source>perl packageBinaries.pl</source>
+        </s3>
+        <s3 title="Building on UNIX">
+        <p>Extract &XercesCName; source files into, say, the home directory ($HOME).
+        It should create a directory like '<code>$HOME/&XercesCSrcInstallDir;</code>'.</p>
+
+        <p>Extract the ICU files into the same directory
+        where you have installed &XercesCName;, sources. After extraction, there
+        should be a new directory '<code>$HOME/icu</code>' which contains all the ICU
+        source files.</p>
+
+        <p>Build the ICU according to the<jump href="http://oss.software.ibm.com/cvs/icu/~checkout~/icu/readme.html">
+        ICU Build instruction in ICU Readme</jump>.   Then have its dll, <code>libicuuc.so</code>
+        and <code>libicudata.so</code> (or <code>.sl</code> for HP-UX or <code>.a</code> for AIX),
+        available from your library search path.</p>
+
+        <p>Then build the &XercesCName; with ICU.  This is similar to building a standalone
+        &XercesCName; library as instructed in <jump href="build-winunix.html#UNIX">
+        "Building &XercesCName; on UNIX platforms"</jump>; except that you have to specify
+        the transcoder option <code>'-t icu'</code>.  For example:</p>
+<source>runConfigure -plinux -cgcc -xg++ -minmem -nsocket -ticu -rpthread</source>
+
+        <p>Or instead of building the ICU and &XercesCName; manually in two steps,
+        you can use the bundled perl script '<code>packageBinaries.pl</code>' which
+        will build both of them in one step.  Specify the option <code>'-t icu'</code>
+        when invoking the script.   For example:</p>
+<source>export XERCESCROOT=$HOME/&XercesCSrcInstallDir;
+export ICUROOT=$HOME/icu
+cd $HOME/&XercesCSrcInstallDir;/scripts
+perl packageBinaries.pl -s $HOME/&XercesCSrcInstallDir; -o $HOME/temp/&XercesCInstallDir;-aix -t icu</source>
+
+        </s3>
     </s2>
 
     <anchor name="WinCOM"/>
