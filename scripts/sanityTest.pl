@@ -218,17 +218,17 @@ system ("ThreadTest -parser=dom -gc -v=always -quiet -threads 10 -time 20 person
 print  ("9");
 system ("ThreadTest -parser=sax2 -gc -v=always -quiet -threads 10 -time 20 personal.xml");
 print  ("10");
-system ("ThreadTest -parser=sax -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=sax -n -s -f -v=always -quiet -threads 10 -time 20 personal-schema.xml");
 print  ("11");
-system ("ThreadTest -parser=dom -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=dom -n -s -f -v=always -quiet -threads 10 -time 20 personal-schema.xml");
 print  ("12");
-system ("ThreadTest -parser=sax2 -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=sax2 -n -s -f -v=always -quiet -threads 10 -time 20 personal-schema.xml");
 print  ("13");
-system ("ThreadTest -parser=sax -gc -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=sax -gc -n -s -f -v=always -quiet -threads 10 -time 20 personal-schema.xml");
 print  ("14");
-system ("ThreadTest -parser=dom -gc -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=dom -gc -n -s -f -v=always -quiet -threads 10 -time 20 personal-schema.xml");
 print  ("15");
-system ("ThreadTest -parser=sax2 -gc -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
+system ("ThreadTest -parser=sax2 -gc -n -s -f -v=always -quiet -threads 10 -time 20 personal-schema.xml");
 
 #  Run MemHandlerTest
 system ("MemHandlerTest");
