@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/09 22:40:15  jpolast
+ * updates for changes to sax2 core functionality.
+ *
  * Revision 1.1  2000/08/08 17:17:21  jpolast
  * initial checkin of SAX2Count
  *
@@ -111,7 +114,7 @@ public:
     // -----------------------------------------------------------------------
     //  Handlers for the SAX ContentHandler interface
     // -----------------------------------------------------------------------
-    void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, Attributes& attrs);
+    void startElement(const XMLCh* const uri, const XMLCh* const localname, const XMLCh* const qname, const Attributes& attrs);
     void characters(const XMLCh* const chars, const unsigned int length);
     void ignorableWhitespace(const XMLCh* const chars, const unsigned int length);
     void resetDocument();

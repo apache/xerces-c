@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/09 22:40:15  jpolast
+ * updates for changes to sax2 core functionality.
+ *
  * Revision 1.1  2000/08/08 17:17:20  jpolast
  * initial checkin of SAX2Count
  *
@@ -95,7 +98,7 @@ SAX2CountHandlers::~SAX2CountHandlers()
 void SAX2CountHandlers::startElement(const XMLCh* const uri
                                    , const XMLCh* const localname
                                    , const XMLCh* const qname
-                                   ,  Attributes& attrs)
+                                   , const Attributes& attrs)
 {
     fElementCount++;
     fAttrCount += attrs.getLength();

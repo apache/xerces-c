@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2000/08/09 22:40:15  jpolast
+ * updates for changes to sax2 core functionality.
+ *
  * Revision 1.1  2000/08/08 17:17:20  jpolast
  * initial checkin of SAX2Count
  *
@@ -70,7 +73,6 @@
 #include <string.h>
 #include <iostream.h>
 #include <util/PlatformUtils.hpp>
-#include <parsers/SAXParser.hpp>
 #include "SAX2CountHandlers.hpp"
 #include <sax2/XMLReaderFactory.hpp>
 #include <sax2/SAX2XMLReader.hpp>
