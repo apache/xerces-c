@@ -195,11 +195,6 @@ sub package_sources {
    # Walk through the source directory structure and delete all CVS directories
    &deleteCVSdirs($srctargetdir);
 
-   #Change the version number in the user documentation
-   &change_version_number($srctargetdir . "/doc/installation.html", $binarydirectoryname);
-   &change_version_number($srctargetdir . "/doc/programming.html", $binarydirectoryname);
-   &change_version_number($srctargetdir . "/doc/distribution.html", $binarydirectoryname);
-
    # remove the export clauses
    chdir ("$srctargetdir/doc/apiDocs");
    opendir (THISDIR, "$srctargetdir/doc/apiDocs");
@@ -230,31 +225,6 @@ sub package_sources {
    }
    print ("Done with packaging sources.\n");
 }
-
-sub change_version_number()
-{
-        my ($thefile, $version_num) = @_;
-        print "\nChanging all version numbers in file $thefile to $version_num";
-        my $thefiledotbak = $thefile . ".bak";
-        rename ($thefile, $thefiledotbak);
-
-        $dll_name = "xerces-c_" . $libraryversion;
-        $dll_name =~ tr/a-z/A-Z/;
-        my $srcversion_num = $version_num;
-        $srcversion_num =~ s/xml4c2/xerces_1/ig;
-        open (FIZZLE, $thefiledotbak);
-        open (FIZZLEOUT, ">$thefile");
-        while ($line = <FIZZLE>) {
-                $line =~ s/xml4c2srcreleasenum/$srcversion_num/ig;
-                $line =~ s/xml4c2releasenum/$version_num/ig;
-                $line =~ s/XML4C2dllname/$dll_name/ig;
-                print FIZZLEOUT $line;
-        }
-        close (FIZZLEOUT);
-        close (FIZZLE);
-        unlink ($thefiledotbak);
-}
-
 
 sub remove_export_clauses()
 {
