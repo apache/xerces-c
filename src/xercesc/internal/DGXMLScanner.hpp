@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/07/10 19:47:23  peiyongz
+ * Stateless Grammar: Initialize scanner with grammarResolver,
+ *                                creating grammar through grammarPool
+ *
  * Revision 1.6  2003/05/22 02:10:51  knoaman
  * Default the memory manager.
  *
@@ -90,7 +94,6 @@ XERCES_CPP_NAMESPACE_BEGIN
 class DTDGrammar;
 class DTDValidator;
 
-
 //  This is an integrated scanner class, which does DTD/XML Schema grammar
 //  processing.
 class XMLPARSER_EXPORT DGXMLScanner : public XMLScanner
@@ -102,6 +105,7 @@ public :
     DGXMLScanner
     (
           XMLValidator* const  valToAdopt
+        , GrammarResolver* const grammarResolver
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     DGXMLScanner
@@ -111,6 +115,7 @@ public :
         , XMLEntityHandler* const   entityHandler
         , XMLErrorReporter* const   errReporter
         , XMLValidator* const       valToAdopt
+        , GrammarResolver* const    grammarResolver
         , MemoryManager* const      manager = XMLPlatformUtils::fgMemoryManager
     );
     virtual ~DGXMLScanner();

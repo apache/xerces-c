@@ -80,9 +80,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  WFXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
 WFXMLScanner::WFXMLScanner( XMLValidator* const  valToAdopt
+                          , GrammarResolver* const grammarResolver
                           , MemoryManager* const manager) :
 
-    XMLScanner(valToAdopt, manager)
+    XMLScanner(valToAdopt, grammarResolver, manager)
     , fElementIndex(0)
     , fElements(0)
     , fEntityTable(0)
@@ -107,9 +108,10 @@ WFXMLScanner::WFXMLScanner( XMLDocumentHandler* const docHandler
                           , XMLEntityHandler* const   entityHandler
                           , XMLErrorReporter* const   errHandler
                           , XMLValidator* const       valToAdopt
+                          , GrammarResolver* const    grammarResolver
                           , MemoryManager* const      manager) :
 
-    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, manager)
+    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, grammarResolver, manager)
     , fElementIndex(0)
     , fElements(0)
     , fEntityTable(0)
@@ -814,9 +816,9 @@ bool WFXMLScanner::scanStartTag(bool& gotData)
             elemDecl = fElements->elementAt(fElementIndex);
         }
         else {
-            elemDecl = new (fMemoryManager) DTDElementDecl
+            elemDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
             (
-                fMemoryManager
+                fGrammarPoolMemoryManager
             );
             fElements->addElement(elemDecl);
         }
@@ -1141,9 +1143,9 @@ bool WFXMLScanner::scanStartTagNS(bool& gotData)
             elemDecl = fElements->elementAt(fElementIndex);
         }
         else {
-            elemDecl = new (fMemoryManager) DTDElementDecl
+            elemDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
             (
-                fMemoryManager
+                fGrammarPoolMemoryManager
             );
             fElements->addElement(elemDecl);
         }

@@ -869,8 +869,7 @@ void IGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
-    //fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
-    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
+    fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
     XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
     fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;
@@ -1428,8 +1427,7 @@ void IGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         }
                     }
 
-                    //grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();                    
-                    grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+                    grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
                     TraverseSchema traverseSchema
                     (
                         root
@@ -1600,9 +1598,7 @@ Grammar* IGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
         if (root != 0)
         {
-            //SchemaGrammar* grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
-            SchemaGrammar* grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
-
+            SchemaGrammar* grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
             TraverseSchema traverseSchema
             (
                 root

@@ -84,9 +84,11 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  DGXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
-DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt, MemoryManager* const manager) :
+DGXMLScanner::DGXMLScanner(XMLValidator* const valToAdopt
+                         , GrammarResolver* const grammarResolver
+                         , MemoryManager* const manager) :
 
-    XMLScanner(valToAdopt, manager)
+    XMLScanner(valToAdopt, grammarResolver, manager)
     , fElemStack(manager)
     , fAttrNSList(0)
     , fDTDValidator(0)
@@ -118,9 +120,10 @@ DGXMLScanner::DGXMLScanner( XMLDocumentHandler* const docHandler
                           , XMLEntityHandler* const   entityHandler
                           , XMLErrorReporter* const   errHandler
                           , XMLValidator* const       valToAdopt
+                          , GrammarResolver* const    grammarResolver
                           , MemoryManager* const      manager) :
 
-    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, manager)
+    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, grammarResolver, manager)
     , fElemStack(manager)
     , fAttrNSList(0)
     , fDTDValidator(0)
@@ -769,12 +772,12 @@ void DGXMLScanner::scanDocTypeDecl()
     //
     //  Only do this if we are not reusing the validator! If we are reusing,
     //  then look it up instead. It has to exist!
-    DTDElementDecl* rootDecl = new (fMemoryManager) DTDElementDecl
+    DTDElementDecl* rootDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
     (
         bbRootName.getRawBuffer()
         , fEmptyNamespaceId
         , DTDElementDecl::Any
-        , fMemoryManager
+        , fGrammarPoolMemoryManager
     );
 
     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
@@ -809,6 +812,7 @@ void DGXMLScanner::scanDocTypeDecl()
     (
         (DTDGrammar*) fGrammar
         , fDocTypeHandler
+        , fGrammarPoolMemoryManager
         , fMemoryManager
     );
     dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
@@ -933,12 +937,12 @@ void DGXMLScanner::scanDocTypeDecl()
                 if (rootDecl)
                     ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
                 else {
-                    rootDecl = new (fMemoryManager) DTDElementDecl
+                    rootDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
                     (
                         bbRootName.getRawBuffer()
                         , fEmptyNamespaceId
                         , DTDElementDecl::Any
-                        , fMemoryManager
+                        , fGrammarPoolMemoryManager
                     );
                     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
                     rootDecl->setExternalElemDeclaration(true);
@@ -989,7 +993,7 @@ void DGXMLScanner::scanDocTypeDecl()
             //  with an external entity. Put a janitor on it to insure it gets
             //  cleaned up. The reader manager does not adopt them.
             const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-            DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
+            DTDEntityDecl* declDTD = new (fGrammarPoolMemoryManager) DTDEntityDecl(gDTDStr, false, fGrammarPoolMemoryManager);
             declDTD->setSystemId(sysId);
             Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -1681,8 +1685,7 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     if (fValidatorFromUser)
         fValidator->reset();
 
-    //fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();   
-    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
+    fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
     XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
     fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;
@@ -1735,7 +1738,7 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     //  with an external entity. Put a janitor on it to insure it gets
     //  cleaned up. The reader manager does not adopt them.
     const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-    DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
+    DTDEntityDecl* declDTD = new (fGrammarPoolMemoryManager) DTDEntityDecl(gDTDStr, false, fGrammarPoolMemoryManager);
     declDTD->setSystemId(src.getSystemId());
     Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -1750,12 +1753,12 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     if (fDocTypeHandler) {
 
         // Create a dummy root
-        DTDElementDecl* rootDecl = new (fMemoryManager) DTDElementDecl
+        DTDElementDecl* rootDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
         (
             gDTDStr
             , fEmptyNamespaceId
             , DTDElementDecl::Any
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
         rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
         rootDecl->setExternalElemDeclaration(true);
@@ -1769,6 +1772,7 @@ Grammar* DGXMLScanner::loadDTDGrammar(const InputSource& src,
     (
         (DTDGrammar*)fGrammar
         , fDocTypeHandler
+        , fGrammarPoolMemoryManager
         , fMemoryManager
     );
     dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
@@ -2039,8 +2043,7 @@ void DGXMLScanner::scanReset(const InputSource& src)
     fGrammarResolver->cacheGrammarFromParse(fToCacheGrammar);
     fGrammarResolver->useCachedGrammarInParse(fUseCachedGrammar);
 
-    //fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
-    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
+    fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
     XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
     fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;

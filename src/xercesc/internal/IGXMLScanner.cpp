@@ -90,9 +90,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  IGXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
 IGXMLScanner::IGXMLScanner( XMLValidator* const  valToAdopt
+                          , GrammarResolver* const grammarResolver
                           , MemoryManager* const manager) :
 
-    XMLScanner(valToAdopt, manager)
+    XMLScanner(valToAdopt, grammarResolver, manager)
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
@@ -126,9 +127,10 @@ IGXMLScanner::IGXMLScanner( XMLDocumentHandler* const docHandler
                           , XMLEntityHandler* const   entityHandler
                           , XMLErrorReporter* const   errHandler
                           , XMLValidator* const       valToAdopt
+                          , GrammarResolver* const    grammarResolver
                           , MemoryManager* const      manager) :
 
-    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, manager)
+    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, grammarResolver, manager)
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
@@ -1175,12 +1177,12 @@ void IGXMLScanner::scanDocTypeDecl()
     //
     //  Only do this if we are not reusing the validator! If we are reusing,
     //  then look it up instead. It has to exist!
-    DTDElementDecl* rootDecl = new (fMemoryManager) DTDElementDecl
+    DTDElementDecl* rootDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
     (
         bbRootName.getRawBuffer()
         , fEmptyNamespaceId
         , DTDElementDecl::Any
-        , fMemoryManager
+        , fGrammarPoolMemoryManager
     );
 
     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
@@ -1215,6 +1217,7 @@ void IGXMLScanner::scanDocTypeDecl()
     (
         (DTDGrammar*) fGrammar
         , fDocTypeHandler
+        , fGrammarPoolMemoryManager
         , fMemoryManager
     );
     dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);
@@ -1339,12 +1342,12 @@ void IGXMLScanner::scanDocTypeDecl()
                 if (rootDecl)
                     ((DTDGrammar*)fGrammar)->setRootElemId(rootDecl->getId());
                 else {
-                    rootDecl = new (fMemoryManager) DTDElementDecl
+                    rootDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
                     (
                         bbRootName.getRawBuffer()
                         , fEmptyNamespaceId
                         , DTDElementDecl::Any
-                        , fMemoryManager
+                        , fGrammarPoolMemoryManager
                     );
                     rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
                     rootDecl->setExternalElemDeclaration(true);
@@ -1395,7 +1398,7 @@ void IGXMLScanner::scanDocTypeDecl()
             //  with an external entity. Put a janitor on it to insure it gets
             //  cleaned up. The reader manager does not adopt them.
             const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-            DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
+            DTDEntityDecl* declDTD = new (fGrammarPoolMemoryManager) DTDEntityDecl(gDTDStr, false, fGrammarPoolMemoryManager);
             declDTD->setSystemId(sysId);
             Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -2851,8 +2854,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
         }
     }
 
-    //fDTDGrammar = fGrammarResolver->getGrammarPool()->createDTDGrammar();
-    fDTDGrammar = new (fMemoryManager) DTDGrammar(fMemoryManager);
+    fDTDGrammar = new (fGrammarPoolMemoryManager) DTDGrammar(fGrammarPoolMemoryManager);
     XMLDTDDescription* gramDesc = fGrammarResolver->getGrammarPool()->createDTDDescription(XMLUni::fgDTDEntityString);
     fGrammarResolver->putGrammar(gramDesc, fDTDGrammar);
     fGrammar = fDTDGrammar;
@@ -2906,7 +2908,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     //  with an external entity. Put a janitor on it to insure it gets
     //  cleaned up. The reader manager does not adopt them.
     const XMLCh gDTDStr[] = { chLatin_D, chLatin_T, chLatin_D , chNull };
-    DTDEntityDecl* declDTD = new (fMemoryManager) DTDEntityDecl(gDTDStr, false, fMemoryManager);
+    DTDEntityDecl* declDTD = new (fGrammarPoolMemoryManager) DTDEntityDecl(gDTDStr, false, fGrammarPoolMemoryManager);
     declDTD->setSystemId(src.getSystemId());
     Janitor<DTDEntityDecl> janDecl(declDTD);
 
@@ -2921,12 +2923,12 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     if (fDocTypeHandler) {
 
         // Create a dummy root
-        DTDElementDecl* rootDecl = new (fMemoryManager) DTDElementDecl
+        DTDElementDecl* rootDecl = new (fGrammarPoolMemoryManager) DTDElementDecl
         (
             gDTDStr
             , fEmptyNamespaceId
             , DTDElementDecl::Any
-            , fMemoryManager
+            , fGrammarPoolMemoryManager
         );
         rootDecl->setCreateReason(DTDElementDecl::AsRootElem);
         rootDecl->setExternalElemDeclaration(true);
@@ -2940,6 +2942,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
     (
         (DTDGrammar*) fGrammar
         , fDocTypeHandler
+        , fGrammarPoolMemoryManager
         , fMemoryManager
     );
     dtdScanner.setScannerInfo(this, &fReaderMgr, &fBufMgr);

@@ -164,6 +164,7 @@ static XMLMsgLoader& gScannerMsgLoader()
 //  XMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
 XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
+                       GrammarResolver* const grammarResolver,
                        MemoryManager* const manager) :
 
     fCalculateSrcOfs(false)
@@ -199,7 +200,8 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fReaderMgr(manager)
     , fValidator(valToAdopt)
     , fValScheme(Val_Never)
-    , fGrammarResolver(0)
+    , fGrammarResolver(grammarResolver)
+    , fGrammarPoolMemoryManager(grammarResolver->getGrammarPoolMemoryManager())
     , fGrammar(0)
     , fRootGrammar(0)
     , fURIStringPool(0)
@@ -231,6 +233,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
                           , XMLEntityHandler* const  entityHandler
                           , XMLErrorReporter* const  errHandler
                           , XMLValidator* const      valToAdopt
+                          , GrammarResolver* const   grammarResolver
                           , MemoryManager* const     manager) :
 
     fCalculateSrcOfs(false)
@@ -266,7 +269,8 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fReaderMgr(manager)
     , fValidator(valToAdopt)
     , fValScheme(Val_Never)
-    , fGrammarResolver(0)
+    , fGrammarResolver(grammarResolver)
+    , fGrammarPoolMemoryManager(grammarResolver->getGrammarPoolMemoryManager())
     , fGrammar(0)
     , fRootGrammar(0)
     , fURIStringPool(0)

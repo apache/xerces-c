@@ -75,24 +75,26 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 XMLScanner*
 XMLScannerResolver::getDefaultScanner( XMLValidator* const  valToAdopt
+                                     , GrammarResolver* const grammarResolver
                                      , MemoryManager* const manager)
 {
-    return new (manager) IGXMLScanner(valToAdopt, manager);
+    return new (manager) IGXMLScanner(valToAdopt, grammarResolver, manager);
 }
 
 XMLScanner*
 XMLScannerResolver::resolveScanner( const XMLCh* const   scannerName
                                   , XMLValidator* const  valToAdopt
+                                  , GrammarResolver* const grammarResolver
                                   , MemoryManager* const manager)
 {
     if (XMLString::equals(scannerName, XMLUni::fgWFXMLScanner))
-        return new (manager) WFXMLScanner(valToAdopt, manager);
+        return new (manager) WFXMLScanner(valToAdopt, grammarResolver, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgIGXMLScanner))
-        return new (manager) IGXMLScanner(valToAdopt, manager);
+        return new (manager) IGXMLScanner(valToAdopt, grammarResolver, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgSGXMLScanner))
-        return new (manager) SGXMLScanner(valToAdopt, manager);
+        return new (manager) SGXMLScanner(valToAdopt, grammarResolver, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgDGXMLScanner))
-        return new (manager) DGXMLScanner(valToAdopt, manager);
+        return new (manager) DGXMLScanner(valToAdopt, grammarResolver, manager);
 
     // REVISIT: throw an exception or return a default one?
     return 0;
@@ -105,16 +107,17 @@ XMLScannerResolver::resolveScanner( const XMLCh* const        scannerName
                                   , XMLEntityHandler* const   entityHandler
                                   , XMLErrorReporter* const   errReporter
                                   , XMLValidator* const       valToAdopt
+                                  , GrammarResolver* const    grammarResolver
                                   , MemoryManager* const      manager)
 {
     if (XMLString::equals(scannerName, XMLUni::fgWFXMLScanner))
-        return new (manager) WFXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, manager);
+        return new (manager) WFXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, grammarResolver, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgIGXMLScanner))
-        return new (manager) IGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, manager);
+        return new (manager) IGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, grammarResolver, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgSGXMLScanner))
-        return new (manager) SGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, manager);
+        return new (manager) SGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, grammarResolver, manager);
     else if (XMLString::equals(scannerName, XMLUni::fgDGXMLScanner))
-        return new (manager) DGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, manager);
+        return new (manager) DGXMLScanner(docHandler, docTypeHandler, entityHandler, errReporter, valToAdopt, grammarResolver, manager);
 
     // REVISIT: throw an exception or return a default one?
     return 0;

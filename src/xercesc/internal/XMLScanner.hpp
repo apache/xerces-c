@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.23  2003/07/10 19:47:24  peiyongz
+ * Stateless Grammar: Initialize scanner with grammarResolver,
+ *                                creating grammar through grammarPool
+ *
  * Revision 1.22  2003/05/16 21:36:58  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -283,7 +287,7 @@
 #include <xercesc/internal/ReaderMgr.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
-
+#include <xercesc/validators/common/GrammarResolver.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -295,7 +299,6 @@ class DocTypeHandler;
 class XMLPScanToken;
 class XMLStringPool;
 class Grammar;
-class GrammarResolver;
 class XMLValidator;
 class MemoryManager;
 
@@ -368,6 +371,7 @@ public :
     XMLScanner
     (
         XMLValidator* const valToAdopt
+        , GrammarResolver* const grammarResolver
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     XMLScanner
@@ -377,6 +381,7 @@ public :
         , XMLEntityHandler* const  entityHandler
         , XMLErrorReporter* const  errReporter
         , XMLValidator* const      valToAdopt
+        , GrammarResolver* const grammarResolver
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     virtual ~XMLScanner();
@@ -551,7 +556,6 @@ public :
     void setEntityHandler(XMLEntityHandler* const docTypeHandler);
     void setErrorReporter(XMLErrorReporter* const errHandler);
     void setErrorHandler(ErrorHandler* const handler);
-    void setGrammarResolver(GrammarResolver* const grammarResolver);
     void setURIStringPool(XMLStringPool* const stringPool);
     void setExitOnFirstFatal(const bool newValue);
     void setValidationConstraintFatal(const bool newValue);
@@ -919,7 +923,8 @@ protected:
     ReaderMgr                   fReaderMgr;
     XMLValidator*               fValidator;
     ValSchemes                  fValScheme;
-    GrammarResolver*            fGrammarResolver;
+    GrammarResolver* const      fGrammarResolver;
+    MemoryManager* const        fGrammarPoolMemoryManager;
     Grammar*                    fGrammar;
     Grammar*                    fRootGrammar;
     XMLStringPool*              fURIStringPool;
@@ -1221,11 +1226,6 @@ inline void XMLScanner::setEntityHandler(XMLEntityHandler* const entityHandler)
 inline void XMLScanner::setErrorReporter(XMLErrorReporter* const errHandler)
 {
     fErrorReporter = errHandler;
-}
-
-inline void XMLScanner::setGrammarResolver(GrammarResolver* const grammarResolver)
-{
-    fGrammarResolver = grammarResolver;
 }
 
 inline void XMLScanner::setExitOnFirstFatal(const bool newValue)

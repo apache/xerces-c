@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/07/10 19:47:23  peiyongz
+ * Stateless Grammar: Initialize scanner with grammarResolver,
+ *                                creating grammar through grammarPool
+ *
  * Revision 1.7  2003/05/22 02:10:51  knoaman
  * Default the memory manager.
  *
@@ -113,6 +117,7 @@ public :
     IGXMLScanner
     (
         XMLValidator* const valToAdopt
+        , GrammarResolver* const grammarResolver
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
     IGXMLScanner
@@ -122,6 +127,7 @@ public :
         , XMLEntityHandler* const   entityHandler
         , XMLErrorReporter* const   errReporter
         , XMLValidator* const       valToAdopt
+        , GrammarResolver* const    grammarResolver
         , MemoryManager* const      manager = XMLPlatformUtils::fgMemoryManager
     );
     virtual ~IGXMLScanner();

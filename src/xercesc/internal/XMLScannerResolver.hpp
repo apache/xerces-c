@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/07/10 19:47:24  peiyongz
+ * Stateless Grammar: Initialize scanner with grammarResolver,
+ *                                creating grammar through grammarPool
+ *
  * Revision 1.3  2003/05/16 21:36:58  knoaman
  * Memory manager implementation: Modify constructors to pass in the memory manager.
  *
@@ -90,6 +94,7 @@ public:
     (
           const XMLCh* const   scannerName
         , XMLValidator* const  valToAdopt
+        , GrammarResolver* const grammarResolver
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 
@@ -101,12 +106,14 @@ public:
         , XMLEntityHandler* const   entityHandler
         , XMLErrorReporter* const   errReporter
         , XMLValidator* const       valToAdopt
+        , GrammarResolver* const    grammarResolver
         , MemoryManager* const      manager = XMLPlatformUtils::fgMemoryManager
     );
 
     static XMLScanner* getDefaultScanner
     (
           XMLValidator* const  valToAdopt
+        , GrammarResolver* const grammarResolver
         , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
     );
 

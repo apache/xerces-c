@@ -91,9 +91,10 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  SGXMLScanner: Constructors and Destructor
 // ---------------------------------------------------------------------------
 SGXMLScanner::SGXMLScanner( XMLValidator* const valToAdopt
+                          , GrammarResolver* const grammarResolver
                           , MemoryManager* const manager) :
 
-    XMLScanner(valToAdopt, manager)
+    XMLScanner(valToAdopt, grammarResolver, manager)
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
@@ -132,9 +133,10 @@ SGXMLScanner::SGXMLScanner( XMLDocumentHandler* const docHandler
                           , XMLEntityHandler* const   entityHandler
                           , XMLErrorReporter* const   errHandler
                           , XMLValidator* const       valToAdopt
+                          , GrammarResolver* const    grammarResolver
                           , MemoryManager* const      manager) :
 
-    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, manager)
+    XMLScanner(docHandler, docTypeHandler, entityHandler, errHandler, valToAdopt, grammarResolver, manager)
     , fSeeXsi(false)
     , fElemStateSize(16)
     , fElemState(0)
@@ -1878,8 +1880,7 @@ void SGXMLScanner::commonInit()
     fRawAttrList = new (fMemoryManager) RefVectorOf<KVStringPair>(32, true, fMemoryManager);
 
     // Create dummy schema grammar
-    //fSchemaGrammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
-    fSchemaGrammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+    fSchemaGrammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
 
     //  Create the Validator and init them
     fSchemaValidator = new (fMemoryManager) SchemaValidator(0, fMemoryManager);
@@ -3181,8 +3182,7 @@ void SGXMLScanner::resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* con
                         fElemStack.setValidationFlag(fValidate);
                     }
 
-                    //grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
-                    grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+                    grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
 
                     TraverseSchema traverseSchema
                     (
@@ -3335,8 +3335,7 @@ Grammar* SGXMLScanner::loadXMLSchemaGrammar(const InputSource& src,
         DOMElement* root = document->getDocumentElement();// This is what we pass to TraverserSchema
         if (root != 0)
         {
-            //SchemaGrammar* grammar = fGrammarResolver->getGrammarPool()->createSchemaGrammar();   
-            SchemaGrammar* grammar = new (fMemoryManager) SchemaGrammar(fMemoryManager);
+            SchemaGrammar* grammar = new (fGrammarPoolMemoryManager) SchemaGrammar(fGrammarPoolMemoryManager);
             TraverseSchema traverseSchema
             (
                 root
