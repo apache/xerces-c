@@ -16,6 +16,9 @@
 
  /*
   * $Log$
+  * Revision 1.9  2004/09/22 20:38:45  peiyongz
+  * provide default implementation and documentation
+  *
   * Revision 1.8  2004/09/21 16:09:37  peiyongz
   * Handle partial PSVIElement
   *
@@ -89,12 +92,23 @@ public:
         ,       PSVIElement *           elementInfo
     ) = 0;
 
+    /** 
+      * Receive notification of partial PSVI properties of an element.
+      * This callback is made right after the psviAttributes
+      * call for non-empty element. 
+      *
+      * @param  localName    The name of the element upon which start tag 
+      *                      these attributes were encountered.
+      * @param  uri          The namespace to which the element is bound
+      * @param  elementInfo  Object containing the element's partial PSVI properties
+      */
     virtual void handlePartialElementPSVI
     (
-        const   XMLCh* const            localName 
-        , const XMLCh* const            uri
-        ,       PSVIElement *           elementInfo
-    ) = 0;
+          const XMLCh*        const localName 
+        , const XMLCh*        const uri
+        ,       PSVIElement *       elementInfo
+    )
+    { }
 
     /**
       * Enables PSVI information about attributes to be passed back to the
