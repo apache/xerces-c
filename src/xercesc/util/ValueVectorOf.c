@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -97,31 +100,39 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ValueVectorOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TElem> ValueVectorOf<TElem>::
-ValueVectorOf(const unsigned int maxElems) :
+template <class TElem>
+ValueVectorOf<TElem>::ValueVectorOf(const unsigned int maxElems) :
 
     fCurCount(0)
     , fMaxCount(maxElems)
     , fElemList(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    fElemList = new TElem[fMaxCount];
+    fElemList = (TElem*) fMemoryManager->allocate
+    (
+        fMaxCount * sizeof(TElem)
+    ); //new TElem[fMaxCount];
 }
 
-template <class TElem> ValueVectorOf<TElem>::
-ValueVectorOf(const ValueVectorOf<TElem>& toCopy) :
+template <class TElem>
+ValueVectorOf<TElem>::ValueVectorOf(const ValueVectorOf<TElem>& toCopy) :
 
     fCurCount(toCopy.fCurCount)
     , fMaxCount(toCopy.fMaxCount)
     , fElemList(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    fElemList = new TElem[fMaxCount];
+    fElemList = (TElem*) fMemoryManager->allocate
+    (
+        fMaxCount * sizeof(TElem)
+    ); //new TElem[fMaxCount];
     for (unsigned int index = 0; index < fCurCount; index++)
         fElemList[index] = toCopy.fElemList[index];
 }
 
 template <class TElem> ValueVectorOf<TElem>::~ValueVectorOf()
 {
-    delete [] fElemList;
+    fMemoryManager->deallocate(fElemList); //delete [] fElemList;
 }
 
 
@@ -138,8 +149,11 @@ ValueVectorOf<TElem>::operator=(const ValueVectorOf<TElem>& toAssign)
     // Reallocate if required
     if (fMaxCount < toAssign.fCurCount)
     {
-        delete [] fElemList;
-        fElemList = new TElem[toAssign.fMaxCount];
+        fMemoryManager->deallocate(fElemList); //delete [] fElemList;
+        fElemList = (TElem*) fMemoryManager->allocate
+        (
+            toAssign.fMaxCount * sizeof(TElem)
+        ); //new TElem[toAssign.fMaxCount];
         fMaxCount = toAssign.fMaxCount;
     }
 
@@ -276,11 +290,14 @@ ensureExtraCapacity(const unsigned int length)
     if (newMax < minNewMax)
         newMax = minNewMax;
 
-    TElem* newList = new TElem[newMax];
+    TElem* newList = (TElem*) fMemoryManager->allocate
+    (
+        newMax * sizeof(TElem)
+    ); //new TElem[newMax];
     for (unsigned int index = 0; index < fCurCount; index++)
         newList[index] = fElemList[index];
 
-    delete [] fElemList;
+    fMemoryManager->deallocate(fElemList); //delete [] fElemList;
     fElemList = newList;
     fMaxCount = newMax;
 }

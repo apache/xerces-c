@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -116,7 +119,8 @@
 #if !defined(KVSTRINGPAIR_HPP)
 #define KVSTRINGPAIR_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -125,7 +129,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  a pair of strings which represent a 'key=value' type mapping. It works
 //  only in terms of XMLCh type raw strings.
 //
-class XMLUTIL_EXPORT KVStringPair
+class XMLUTIL_EXPORT KVStringPair : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -177,11 +181,35 @@ private :
     //      The amount of memory allocated for fValue.
     //
     // -----------------------------------------------------------------------
-    XMLCh*  fKey;
+    MemoryManager* fMemoryManager;
+    XMLCh*         fKey;
     unsigned long  fKeyAllocSize;
-    XMLCh*  fValue;
+    XMLCh*         fValue;
     unsigned long  fValueAllocSize;
 };
+
+// ---------------------------------------------------------------------------
+//  KVStringPair: Getters
+// ---------------------------------------------------------------------------
+inline const XMLCh* KVStringPair::getKey() const
+{
+    return fKey;
+}
+
+inline XMLCh* KVStringPair::getKey()
+{
+    return fKey;
+}
+
+inline const XMLCh* KVStringPair::getValue() const
+{
+    return fValue;
+}
+
+inline XMLCh* KVStringPair::getValue()
+{
+    return fValue;
+}
 
 XERCES_CPP_NAMESPACE_END
 

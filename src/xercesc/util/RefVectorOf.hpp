@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 19:07:45  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2002/12/17 17:17:58  gareth
  * added abstract base class BaseRefVectorOf from which both RefVectorOf and RefArrayVectorOf inherit
  * the new RefArrayVectorOf has proper destructor for array deletion
@@ -101,8 +104,6 @@
 #if !defined(REFVECTOROF_HPP)
 #define REFVECTOROF_HPP
 
-#include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
-#include <xercesc/util/XMLEnumerator.hpp>
 #include <xercesc/util/BaseRefVectorOf.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

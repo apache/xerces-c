@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 19:07:45  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/03/07 18:11:54  tng
  * Return a reference instead of void for operator=
  *
@@ -105,7 +108,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  other than flushing it completely, and because ids are assigned
 //  sequentially from 1.
 //
-class XMLUTIL_EXPORT XMLStringPool
+class XMLUTIL_EXPORT XMLStringPool : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -133,7 +136,7 @@ private :
     // -----------------------------------------------------------------------
     //  Private data types
     // -----------------------------------------------------------------------
-    class PoolElem
+    class PoolElem : public XMemory
     {
         public :
             PoolElem(const XMLCh* const string, const unsigned int id);
@@ -144,7 +147,7 @@ private :
 
             unsigned int    fId;
             XMLCh*          fString;
-
+            MemoryManager*  fMemoryManager;
     };
 
 
@@ -181,6 +184,7 @@ private :
     //      This is the counter used to assign unique ids. It is just bumped
     //      up one for each new string added.
     // -----------------------------------------------------------------------
+    MemoryManager*              fMemoryManager;
     PoolElem**                  fIdMap;
     RefHashTableOf<PoolElem>*   fHashTable;
     unsigned int                fMapCapacity;

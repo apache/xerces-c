@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/05/15 10:37:08  gareth
  * Optimization. We now resize the hash when appropriate. Patch by Nathan Codding.
  *
@@ -123,16 +126,14 @@
 #define REFHASHTABLEOF_HPP
 
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/util/XMLExceptMsgs.hpp>
-#include <xercesc/util/XMLEnumerator.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/HashXMLCh.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -148,7 +149,7 @@ template <class TVal> struct RefHashTableBucketElem;
 //  This should really be a nested class, but some of the compilers we
 //  have to support cannot deal with that!
 //
-template <class TVal> struct RefHashTableBucketElem
+template <class TVal> struct RefHashTableBucketElem : public XMemory
 {
     RefHashTableBucketElem(void* key, TVal* const value, RefHashTableBucketElem<TVal>* next)
 		: fData(value), fNext(next), fKey(key)
@@ -161,7 +162,7 @@ template <class TVal> struct RefHashTableBucketElem
 };
 
 
-template <class TVal> class RefHashTableOf
+template <class TVal> class RefHashTableOf : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -245,12 +246,13 @@ private:
 	//  fHash
 	//      The hasher for the key data type.
     // -----------------------------------------------------------------------
-    bool                                fAdoptedElems;
-    RefHashTableBucketElem<TVal>**      fBucketList;
-    unsigned int                        fHashModulus;
-    unsigned int                        fInitialModulus;
-    unsigned int                        fCount;
-	HashBase*							fHash;
+    MemoryManager*                 fMemoryManager;
+    bool                           fAdoptedElems;
+    RefHashTableBucketElem<TVal>** fBucketList;
+    unsigned int                   fHashModulus;
+    unsigned int                   fInitialModulus;
+    unsigned int                   fCount;
+    HashBase*                      fHash;
 };
 
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  compilers are too dumb to allow us to hide this class there in the Cpp
 //  file that uses it.
 //
-class ENameMap
+class ENameMap : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -87,6 +87,7 @@ public :
     virtual XMLTranscoder* makeNew
     (
         const   unsigned int    blockSize
+        , MemoryManager*  const manager
     )   const = 0;
 
 
@@ -143,7 +144,8 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of virtual factory method
     // -----------------------------------------------------------------------
-    virtual XMLTranscoder* makeNew(const unsigned int blockSize) const;
+    virtual XMLTranscoder* makeNew(const unsigned int blockSize,
+                                   MemoryManager* const manager) const;
 
 
 private :
@@ -169,7 +171,8 @@ public :
     // -----------------------------------------------------------------------
     //  Implementation of virtual factory method
     // -----------------------------------------------------------------------
-    virtual XMLTranscoder* makeNew(const unsigned int blockSize) const;
+    virtual XMLTranscoder* makeNew(const unsigned int blockSize,
+                                   MemoryManager* const manager) const;
 
 
 private :

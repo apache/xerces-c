@@ -62,14 +62,14 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
+#include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/util/XMLRegisterCleanup.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -161,8 +161,8 @@ static XMLMsgLoader& gGetMsgLoader()
 // ---------------------------------------------------------------------------
 XMLException::~XMLException()
 {
-    delete [] fMsg;
-    delete [] fSrcFile;
+    XMLPlatformUtils::fgMemoryManager->deallocate(fMsg);
+    XMLPlatformUtils::fgMemoryManager->deallocate(fSrcFile);
 }
 
 
@@ -172,8 +172,8 @@ XMLException::~XMLException()
 void XMLException::setPosition(const char* const file, const unsigned int line)
 {
     fSrcLine = line;
-    delete [] fSrcFile;
-    fSrcFile = XMLString::replicate(file);
+	XMLPlatformUtils::fgMemoryManager->deallocate(fSrcFile);
+    fSrcFile = XMLString::replicate(file, XMLPlatformUtils::fgMemoryManager);
 }
 
 
@@ -198,7 +198,7 @@ XMLException::XMLException( const   char* const     srcFile
     , fSrcLine(srcLine)
     , fMsg(0)
 {
-    fSrcFile = XMLString::replicate(srcFile);
+    fSrcFile = XMLString::replicate(srcFile, XMLPlatformUtils::fgMemoryManager);
 }
 
 
@@ -207,10 +207,15 @@ XMLException::XMLException(const XMLException& toCopy) :
     fCode(toCopy.fCode)
     , fSrcFile(0)
     , fSrcLine(toCopy.fSrcLine)
-    , fMsg(XMLString::replicate(toCopy.fMsg))
+    , fMsg(XMLString::replicate(toCopy.fMsg, XMLPlatformUtils::fgMemoryManager))
 {
-    if (toCopy.fSrcFile)
-        fSrcFile = XMLString::replicate(toCopy.fSrcFile);
+    if (toCopy.fSrcFile) {
+        fSrcFile = XMLString::replicate
+        (
+            toCopy.fSrcFile
+            , XMLPlatformUtils::fgMemoryManager
+        );
+    }
 }
 
 
@@ -218,19 +223,29 @@ XMLException& XMLException::operator=(const XMLException& toAssign)
 {
     if (this != &toAssign)
     {
-        delete [] fSrcFile;
+        XMLPlatformUtils::fgMemoryManager->deallocate(fSrcFile);
         fSrcFile = 0;
-        delete [] fMsg;
+        XMLPlatformUtils::fgMemoryManager->deallocate(fMsg);
         fMsg = 0;
 
         fSrcLine = toAssign.fSrcLine;
         fCode = toAssign.fCode;
 
-        if (toAssign.fMsg)
-            fMsg = XMLString::replicate(toAssign.fMsg);
+        if (toAssign.fMsg) {
+            fMsg = XMLString::replicate
+            (
+                toAssign.fMsg
+                , XMLPlatformUtils::fgMemoryManager
+            );
+        }
 
-        if (toAssign.fSrcFile)
-            fSrcFile = XMLString::replicate(toAssign.fSrcFile);
+        if (toAssign.fSrcFile) {
+            fSrcFile = XMLString::replicate
+            (
+                toAssign.fSrcFile
+                , XMLPlatformUtils::fgMemoryManager
+            );
+        }
     }
     return *this;
 }
@@ -252,12 +267,16 @@ void XMLException::loadExceptText(const XMLExcepts::Codes toLoad)
     // load the text
 	if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize))
 	{
-		fMsg = XMLString::replicate(gDefErrMsg);
+		fMsg = XMLString::replicate
+        (
+            gDefErrMsg
+            , XMLPlatformUtils::fgMemoryManager
+        );
 		return;
 	}
 
     // We got the text so replicate it into the message member
-    fMsg = XMLString::replicate(errText);
+    fMsg = XMLString::replicate(errText, XMLPlatformUtils::fgMemoryManager);
 }
 
 
@@ -278,12 +297,16 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
     // load the text
 	if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4))
 	{
-		fMsg = XMLString::replicate(gDefErrMsg);
+		fMsg = XMLString::replicate
+        (
+            gDefErrMsg
+            , XMLPlatformUtils::fgMemoryManager
+        );
 		return;
 	}
 
     // We got the text so replicate it into the message member
-    fMsg = XMLString::replicate(errText);
+    fMsg = XMLString::replicate(errText, XMLPlatformUtils::fgMemoryManager);
 }
 
 
@@ -304,12 +327,16 @@ XMLException::loadExceptText(const  XMLExcepts::Codes toLoad
     // load the text
 	if (!gGetMsgLoader().loadMsg(toLoad, errText, msgSize, text1, text2, text3, text4))
 	{
-		fMsg = XMLString::replicate(gDefErrMsg);
+		fMsg = XMLString::replicate
+        (
+            gDefErrMsg
+            , XMLPlatformUtils::fgMemoryManager
+        );
 		return;
 	}
 
     // We got the text so replicate it into the message member
-    fMsg = XMLString::replicate(errText);
+    fMsg = XMLString::replicate(errText, XMLPlatformUtils::fgMemoryManager);
 }
 
 // -----------------------------------------------------------------------

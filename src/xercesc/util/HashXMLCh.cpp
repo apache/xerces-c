@@ -54,7 +54,7 @@
  * <http://www.apache.org/>.
  */
 
-#include "HashXMLCh.hpp"
+#include <xercesc/util/HashXMLCh.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

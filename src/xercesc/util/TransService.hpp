@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/15 19:07:45  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/03/07 18:11:55  tng
  * Return a reference instead of void for operator=
  *
@@ -139,13 +142,14 @@
 #ifndef TRANSSERVICE_HPP
 #define TRANSSERVICE_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/framework/XMLRecognizer.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // Forward references
-class XMLPlatformUtils;
+//class XMLPlatformUtils;
 class XMLLCPTranscoder;
 class XMLTranscoder;
 class ENameMap;
@@ -162,7 +166,7 @@ class ENameMap;
 //  of transcoder objects. There are two types of transcoders, which are
 //  discussed below in the XMLTranscoder class' description.
 //
-class XMLUTIL_EXPORT XMLTransService
+class XMLUTIL_EXPORT XMLTransService : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -197,6 +201,7 @@ public :
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
+        , MemoryManager* const          manager
     );
 
     XMLTranscoder* makeNewTranscoderFor
@@ -204,6 +209,7 @@ public :
         const   char* const             encodingName
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
+        , MemoryManager* const          manager
     );
 
     XMLTranscoder* makeNewTranscoderFor
@@ -211,6 +217,7 @@ public :
         XMLRecognizer::Encodings        encodingEnum
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
+        , MemoryManager* const          manager
     );
 
 
@@ -268,6 +275,7 @@ protected :
         const   XMLCh* const            encodingName
         ,       XMLTransService::Codes& resValue
         , const unsigned int            blockSize
+        , MemoryManager* const          manager
     ) = 0;
 
 
@@ -310,7 +318,7 @@ private :
   *   format (which comes out of the parser) back out to a format that
   *   the receiving client code wants to use.
   */
-class XMLUTIL_EXPORT XMLTranscoder
+class XMLUTIL_EXPORT XMLTranscoder : public XMemory
 {
 public :
 
@@ -424,6 +432,20 @@ public :
     const XMLCh* getEncodingName() const;
 	//@}
 
+    /** @name Getter methods*/
+    //@{
+
+    /** Get the plugged-in memory manager
+      *
+      * This method returns the plugged-in memory manager user for dynamic
+      * memory allocation/deallocation.
+      *
+      * @return the plugged-in memory manager
+      */
+    MemoryManager* getMemoryManager() const;
+
+	//@}
+
 protected :
     // -----------------------------------------------------------------------
     //  Hidden constructors
@@ -432,6 +454,7 @@ protected :
     (
         const   XMLCh* const    encodingName
         , const unsigned int    blockSize
+        , MemoryManager* const  manager = XMLPlatformUtils::fgMemoryManager
     );
 
 
@@ -461,6 +484,7 @@ private :
     // -----------------------------------------------------------------------
     unsigned int    fBlockSize;
     XMLCh*          fEncodingName;
+    MemoryManager*  fMemoryManager;
 };
 
 
@@ -470,7 +494,7 @@ private :
 //  for the very common job of translating data from the client app's
 //  native code page to the internal format and vice versa.
 //
-class XMLUTIL_EXPORT XMLLCPTranscoder
+class XMLUTIL_EXPORT XMLLCPTranscoder : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -494,8 +518,12 @@ public :
     virtual unsigned int calcRequiredSize(const XMLCh* const srcText) = 0;
 
     virtual char* transcode(const XMLCh* const toTranscode) = 0;
+    virtual char* transcode(const XMLCh* const toTranscode,
+                            MemoryManager* const manager) = 0;
 
     virtual XMLCh* transcode(const char* const toTranscode) = 0;
+    virtual XMLCh* transcode(const char* const toTranscode,
+                             MemoryManager* const manager) = 0;
 
     virtual bool transcode
     (
@@ -527,6 +555,14 @@ private :
     XMLLCPTranscoder& operator=(const XMLLCPTranscoder&);
 };
 
+
+// ---------------------------------------------------------------------------
+//  XMLTranscoder: Getter methods
+// ---------------------------------------------------------------------------
+inline MemoryManager* XMLTranscoder::getMemoryManager() const
+{
+    return fMemoryManager;
+}
 
 // ---------------------------------------------------------------------------
 //  XMLTranscoder: Protected helper methods

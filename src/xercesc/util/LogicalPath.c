@@ -42,8 +42,11 @@ XMLCh* XMLPlatformUtils::weavePaths(const XMLCh* const    basePath
 
 {
     // Create a buffer as large as both parts and empty it
-    XMLCh* tmpBuf = new XMLCh[XMLString::stringLen(basePath) + 
-                              XMLString::stringLen(relativePath) + 2];
+    XMLCh* tmpBuf = (XMLCh*) fgMemoryManager->allocate
+    (
+        (XMLString::stringLen(basePath)
+         + XMLString::stringLen(relativePath) + 2) * sizeof(XMLCh)
+    );//new XMLCh[XMLString::stringLen(basePath) + XMLString::stringLen(relativePath) + 2];
     *tmpBuf = 0;
 
     //
@@ -101,9 +104,9 @@ void XMLPlatformUtils::removeDotSlash(XMLCh* const path)
     if ((!path) || (!*path))
         return;
 
-    XMLCh* srcPtr = XMLString::replicate(path);
+    XMLCh* srcPtr = XMLString::replicate(path, fgMemoryManager);
     int    srcLen = XMLString::stringLen(srcPtr);
-    ArrayJanitor<XMLCh>   janName(srcPtr);   
+    ArrayJanitor<XMLCh>   janName(srcPtr, fgMemoryManager);   
     XMLCh* tarPtr = path;
 
     while (*srcPtr)
@@ -151,11 +154,17 @@ void XMLPlatformUtils::removeDotSlash(XMLCh* const path)
 void XMLPlatformUtils::removeDotDotSlash(XMLCh* const path)
 {
     int pathLen = XMLString::stringLen(path);
-    XMLCh* tmp1 = new XMLCh [pathLen+1];
-    ArrayJanitor<XMLCh>   tmp1Name(tmp1);
+    XMLCh* tmp1 = (XMLCh*) fgMemoryManager->allocate
+    (
+        (pathLen+1) * sizeof(XMLCh)
+    );//new XMLCh [pathLen+1];
+    ArrayJanitor<XMLCh>   tmp1Name(tmp1, fgMemoryManager);
 
-    XMLCh* tmp2 = new XMLCh [pathLen+1];
-    ArrayJanitor<XMLCh>   tmp2Name(tmp2);
+    XMLCh* tmp2 = (XMLCh*) fgMemoryManager->allocate
+    (
+        (pathLen+1) * sizeof(XMLCh)
+    );//new XMLCh [pathLen+1];
+    ArrayJanitor<XMLCh>   tmp2Name(tmp2, fgMemoryManager);
 
     // remove all "<segment>/../" where "<segment>" is a complete
     // path segment not equal to ".."

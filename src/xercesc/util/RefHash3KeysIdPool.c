@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -91,13 +94,15 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  RefHash3KeysIdPool: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(
-              const unsigned int modulus
-            , const bool adoptElems
-            , const unsigned int    initSize) :
-	 fAdoptedElems(adoptElems)
+template <class TVal>
+RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
+                                            , const bool         adoptElems
+                                            , const unsigned int initSize) :
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
+    , fHash(0)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
@@ -105,7 +110,7 @@ template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(
     initialize(modulus);
 
     // create default hasher
-    fHash = new HashXMLCh();
+    fHash = new (fMemoryManager) HashXMLCh();
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them
@@ -114,18 +119,20 @@ template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(
     //
     if (!fIdPtrsCount)
         fIdPtrsCount = 256;
-    fIdPtrs = new TVal*[fIdPtrsCount];
+    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*)); //new TVal*[fIdPtrsCount];
     fIdPtrs[0] = 0;
 }
 
-template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(
-              const unsigned int modulus
-            , const bool adoptElems
-            , HashBase* hashBase
-            , const unsigned int    initSize) :
-	 fAdoptedElems(adoptElems)
+template <class TVal>
+RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
+                                            , const bool         adoptElems
+                                            , HashBase*          hashBase
+                                            , const unsigned int initSize) :
+	fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fAdoptedElems(adoptElems)
     , fBucketList(0)
     , fHashModulus(modulus)
+    , fHash(0)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
@@ -141,15 +148,18 @@ template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(
     //
     if (!fIdPtrsCount)
         fIdPtrsCount = 256;
-    fIdPtrs = new TVal*[fIdPtrsCount];
+    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*)); //new TVal*[fIdPtrsCount];
     fIdPtrs[0] = 0;
 }
 
-template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(const unsigned int modulus
-            , const unsigned int    initSize) :
-	 fAdoptedElems(true)
+template <class TVal>
+RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool( const unsigned int modulus
+                                            , const unsigned int initSize) :
+	fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fAdoptedElems(true)
     , fBucketList(0)
     , fHashModulus(modulus)
+    , fHash(0)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
@@ -158,7 +168,7 @@ template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(const unsigne
 
     // create default hasher
 
-    fHash = new HashXMLCh();
+    fHash = new (fMemoryManager) HashXMLCh();
 
     //
     //  Allocate the initial id pointers array. We don't have to zero them
@@ -167,7 +177,7 @@ template <class TVal> RefHash3KeysIdPool<TVal>::RefHash3KeysIdPool(const unsigne
     //
     if (!fIdPtrsCount)
         fIdPtrsCount = 256;
-    fIdPtrs = new TVal*[fIdPtrsCount];
+    fIdPtrs = (TVal**) fMemoryManager->allocate(fIdPtrsCount * sizeof(TVal*)); //new TVal*[fIdPtrsCount];
     fIdPtrs[0] = 0;
 }
 
@@ -177,7 +187,10 @@ template <class TVal> void RefHash3KeysIdPool<TVal>::initialize(const unsigned i
         ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
 
     // Allocate the bucket list and zero them
-    fBucketList = new RefHash3KeysTableBucketElem<TVal>*[fHashModulus];
+    fBucketList = (RefHash3KeysTableBucketElem<TVal>**) fMemoryManager->allocate
+    (
+        fHashModulus * sizeof(RefHash3KeysTableBucketElem<TVal>*)
+    ); //new RefHash3KeysTableBucketElem<TVal>*[fHashModulus];
     for (unsigned int index = 0; index < fHashModulus; index++)
         fBucketList[index] = 0;
 }
@@ -187,8 +200,8 @@ template <class TVal> RefHash3KeysIdPool<TVal>::~RefHash3KeysIdPool()
     removeAll();
 
     // Then delete the bucket list & hasher & id pointers list
-    delete [] fIdPtrs;
-    delete [] fBucketList;
+    fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
+    fMemoryManager->deallocate(fBucketList); //delete [] fBucketList;
     delete fHash;
 }
 
@@ -317,7 +330,7 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
     }
      else
     {
-        newBucket = new RefHash3KeysTableBucketElem<TVal>(key1, key2, key3, valueToAdopt, fBucketList[hashVal]);
+        newBucket = new (fMemoryManager) RefHash3KeysTableBucketElem<TVal>(key1, key2, key3, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
     }
 
@@ -329,13 +342,16 @@ RefHash3KeysIdPool<TVal>::put(void* key1, int key2, int key3, TVal* const valueT
     {
         // Create a new count 1.5 times larger and allocate a new array
         unsigned int newCount = (unsigned int)(fIdPtrsCount * 1.5);
-        TVal** newArray = new TVal*[newCount];
+        TVal** newArray = (TVal**) fMemoryManager->allocate
+        (
+            newCount * sizeof(TVal*)
+        ); //new TVal*[newCount];
 
         // Copy over the old contents to the new array
         memcpy(newArray, fIdPtrs, fIdPtrsCount * sizeof(TVal*));
 
         // Ok, toss the old array and store the new data
-        delete [] fIdPtrs;
+        fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
         fIdPtrs = newArray;
         fIdPtrsCount = newCount;
     }

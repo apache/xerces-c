@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,7 +57,7 @@
 #if !defined(HASHBASE_HPP)
 #define HASHBASE_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -68,7 +68,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  * designed to produce hash values for XMLCh* strings.  Any hasher inheriting
  * from <code>HashBase</code> may be specified when the RefHashTableOf hashtable is constructed.
  */
-class XMLUTIL_EXPORT HashBase
+ class XMLUTIL_EXPORT HashBase : public XMemory
 {
 
 public:

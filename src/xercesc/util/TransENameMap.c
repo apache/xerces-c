@@ -83,9 +83,10 @@ template <class TType> ENameMapFor<TType>::~ENameMapFor()
 //  ENameMapFor: Implementation of virtual factory method
 // ---------------------------------------------------------------------------
 template <class TType> XMLTranscoder*
-ENameMapFor<TType>::makeNew(const unsigned int blockSize) const
+ENameMapFor<TType>::makeNew(const unsigned int blockSize,
+                            MemoryManager* const manager) const
 {
-    return new TType(getKey(), blockSize);
+    return new (manager) TType(getKey(), blockSize);
 }
 
 
@@ -110,9 +111,10 @@ template <class TType> EEndianNameMapFor<TType>::~EEndianNameMapFor()
 //  ENameMapFor: Implementation of virtual factory method
 // ---------------------------------------------------------------------------
 template <class TType> XMLTranscoder*
-EEndianNameMapFor<TType>::makeNew(const unsigned int blockSize) const
+EEndianNameMapFor<TType>::makeNew(const unsigned int blockSize,
+                                  MemoryManager* const manager) const
 {
-    return new TType(getKey(), blockSize, fSwapped);
+    return new (manager) TType(getKey(), blockSize, fSwapped);
 }
 
 XERCES_CPP_NAMESPACE_END

@@ -63,15 +63,12 @@
 #define VALUEHASHTABLEOF_HPP
 
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/util/XMLExceptMsgs.hpp>
-#include <xercesc/util/XMLEnumerator.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/HashXMLCh.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -88,7 +85,7 @@ template <class TVal> struct ValueHashTableBucketElem;
 //  This should really be a nested class, but some of the compilers we
 //  have to support cannot deal with that!
 //
-template <class TVal> struct ValueHashTableBucketElem
+template <class TVal> struct ValueHashTableBucketElem : public XMemory
 {
     ValueHashTableBucketElem(void* key, const TVal& value, ValueHashTableBucketElem<TVal>* next)
 		: fData(value), fNext(next), fKey(key)
@@ -101,7 +98,7 @@ template <class TVal> struct ValueHashTableBucketElem
 };
 
 
-template <class TVal> class ValueHashTableOf
+template <class TVal> class ValueHashTableOf : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -169,9 +166,10 @@ private:
 	//  fHash
 	//      The hasher for the key data type.
     // -----------------------------------------------------------------------
+    MemoryManager*                   fMemoryManager;
     ValueHashTableBucketElem<TVal>** fBucketList;
-    unsigned int                    fHashModulus;
-	HashBase*                       fHash;
+    unsigned int                     fHashModulus;
+	HashBase*                        fHash;
 };
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2003/03/07 18:11:55  tng
  * Return a reference instead of void for operator=
  *
@@ -98,7 +101,7 @@
 #if !defined(XMLMSGLOADER_HPP)
 #define XMLMSGLOADER_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -119,7 +122,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  Msg loader derivatives are not required to be thread safe. The parser will
 //  never use a single instance in more than one thread.
 //
-class XMLUTIL_EXPORT XMLMsgLoader
+class XMLUTIL_EXPORT XMLMsgLoader : public XMemory
 {
 public :
     // -----------------------------------------------------------------------

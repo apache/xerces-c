@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/01/06 19:43:18  tng
  * New feature StandardUriConformant to force strict standard uri conformance.
  *
@@ -93,9 +96,7 @@
 #if !defined(XMLURI_HPP)
 #define XMLURI_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/XMLException.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -109,7 +110,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  *
  */
 
-class XMLUTIL_EXPORT XMLUri
+ class XMLUTIL_EXPORT XMLUri : public XMemory
 {
 public:
 
@@ -465,7 +466,6 @@ private:
     //  the memory allocated.
     //
     // -----------------------------------------------------------------------
-
     XMLCh*          fScheme;
     XMLCh*          fUserInfo;
     XMLCh*          fHost;
@@ -474,7 +474,7 @@ private:
     XMLCh*          fQueryString;
     XMLCh*          fFragment;
     XMLCh*          fURIText;
-
+    MemoryManager*  fMemoryManager;
 };
 
 // ---------------------------------------------------------------------------

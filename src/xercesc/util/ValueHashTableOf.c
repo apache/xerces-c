@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -79,21 +82,30 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  ValueHashTableOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TVal> ValueHashTableOf<TVal>::ValueHashTableOf(const unsigned int modulus, HashBase* hashBase)
-	: fBucketList(0), fHashModulus(modulus)
+template <class TVal>
+ValueHashTableOf<TVal>::ValueHashTableOf( const unsigned int modulus
+                                        , HashBase* hashBase)
+    : fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fBucketList(0)
+    , fHashModulus(modulus)
+    , fHash(0)
 {
 	initialize(modulus);
 	// set hasher
 	fHash = hashBase;
 }
 
-template <class TVal> ValueHashTableOf<TVal>::ValueHashTableOf(const unsigned int modulus)
-	: fBucketList(0), fHashModulus(modulus)
+template <class TVal>
+ValueHashTableOf<TVal>::ValueHashTableOf(const unsigned int modulus)
+	: fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fBucketList(0)
+    , fHashModulus(modulus)
+    , fHash(0)
 {
 	initialize(modulus);
 
 	// create default hasher
-	fHash = new HashXMLCh();
+	fHash = new (fMemoryManager) HashXMLCh();
 }
 
 template <class TVal> void ValueHashTableOf<TVal>::initialize(const unsigned int modulus)
@@ -102,7 +114,10 @@ template <class TVal> void ValueHashTableOf<TVal>::initialize(const unsigned int
         ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
 
     // Allocate the bucket list and zero them
-    fBucketList = new ValueHashTableBucketElem<TVal>*[fHashModulus];
+    fBucketList = (ValueHashTableBucketElem<TVal>**) fMemoryManager->allocate
+    (
+        fHashModulus * sizeof(ValueHashTableBucketElem<TVal>*)
+    ); //new ValueHashTableBucketElem<TVal>*[fHashModulus];
     for (unsigned int index = 0; index < fHashModulus; index++)
         fBucketList[index] = 0;
 }
@@ -112,7 +127,7 @@ template <class TVal> ValueHashTableOf<TVal>::~ValueHashTableOf()
     removeAll();
 
     // Then delete the bucket list & hasher
-    delete [] fBucketList;
+    fMemoryManager->deallocate(fBucketList); //delete [] fBucketList;
 	delete fHash;
 }
 
@@ -215,7 +230,7 @@ template <class TVal> void ValueHashTableOf<TVal>::put(void* key, const TVal& va
     }
      else
     {
-        newBucket = new ValueHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
+        newBucket = new (fMemoryManager) ValueHashTableBucketElem<TVal>(key, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
     }
 }

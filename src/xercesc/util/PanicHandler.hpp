@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2003/03/10 16:05:11  peiyongz
  * assignment operator
  *
@@ -69,7 +72,7 @@
 #ifndef PANICHANDLER_HPP
 #define PANICHANDLER_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -88,7 +91,7 @@ XERCES_CPP_NAMESPACE_BEGIN
   *
   */
 
-class XMLUTIL_EXPORT PanicHandler
+class XMLUTIL_EXPORT PanicHandler : public XMemory
 {
 public:
 

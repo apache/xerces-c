@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.11  2003/03/12 20:45:46  peiyongz
  * format string for value converted to Zero.
  *
@@ -121,19 +124,20 @@ static XMLCh value1[BUF_LEN+1];
 //  ctor/dtor
 // ---------------------------------------------------------------------------
 XMLAbstractDoubleFloat::XMLAbstractDoubleFloat()
-:fValue(0)
-,fType(Normal)
-,fDataConverted(false)
-,fSign(0)
-,fRawData(0)
-,fFormattedString(0)
+: fValue(0)
+, fType(Normal)
+, fDataConverted(false)
+, fSign(0)
+, fRawData(0)
+, fFormattedString(0)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
 }
 
 XMLAbstractDoubleFloat::~XMLAbstractDoubleFloat()
 {
-     delete [] fRawData;
-     delete [] fFormattedString;
+     fMemoryManager->deallocate(fRawData);//delete [] fRawData;
+     fMemoryManager->deallocate(fFormattedString);//delete [] fFormattedString;
 }
 
 void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
@@ -141,10 +145,10 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
     if ((!strValue) || (!*strValue))
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
 
-    fRawData = XMLString::replicate(strValue);   // preserve the raw data form
+    fRawData = XMLString::replicate(strValue, fMemoryManager);   // preserve the raw data form
 
-    XMLCh* tmpStrValue = XMLString::replicate(strValue);
-    ArrayJanitor<XMLCh> janTmpName(tmpStrValue);
+    XMLCh* tmpStrValue = XMLString::replicate(strValue, fMemoryManager);
+    ArrayJanitor<XMLCh> janTmpName(tmpStrValue, fMemoryManager);
     XMLString::trim(tmpStrValue);
 
     normalizeZero(tmpStrValue);
@@ -179,6 +183,7 @@ void XMLAbstractDoubleFloat::init(const XMLCh* const strValue)
 //
 XMLCh*  XMLAbstractDoubleFloat::toString() const
 {
+    // Return data using global operator new
     return XMLString::replicate(fRawData);
 }
 
@@ -210,7 +215,10 @@ void XMLAbstractDoubleFloat::formatString()
 {
 
     unsigned int rawDataLen = XMLString::stringLen(fRawData);
-    fFormattedString = new XMLCh [ rawDataLen + 8];
+    fFormattedString = (XMLCh*) fMemoryManager->allocate
+    (
+        (rawDataLen + 8) * sizeof(XMLCh)
+    );//new XMLCh [ rawDataLen + 8];
     for (unsigned int i = 0; i < rawDataLen + 8; i++)
         fFormattedString[i] = chNull;
 

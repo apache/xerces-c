@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.15  2003/04/21 20:07:05  knoaman
  * Performance: use memcpy in moveChars and replicate.
  *
@@ -229,6 +232,7 @@
 #define XMLSTRING_HPP
 
 #include <xercesc/util/BaseRefVectorOf.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 #include <string.h>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -810,6 +814,8 @@ public:
       * @see   XMLString::release(char**)
       */
     static char* replicate(const char* const toRep);
+    static char* replicate(const char* const toRep,
+                           MemoryManager* const manager);
 
     /** Replicates a string
       * NOTE: The returned buffer is dynamically allocated and is the
@@ -821,6 +827,8 @@ public:
       * @see   XMLString::release(XMLCh**)
       */
     static XMLCh* replicate(const XMLCh* const toRep);
+    static XMLCh* replicate(const XMLCh* const toRep,
+                            MemoryManager* const manager);
 
     //@}
 
@@ -1226,6 +1234,11 @@ public:
     (
         const   XMLCh* const    toTranscode
     );
+    static char* transcode
+    (
+        const   XMLCh* const         toTranscode
+        ,       MemoryManager* const manager
+    );
 
     /** Transcodes a string to native code-page
       *
@@ -1261,6 +1274,11 @@ public:
     static XMLCh* transcode
     (
         const   char* const     toTranscode
+    );
+    static XMLCh* transcode
+    (
+        const   char* const          toTranscode
+        ,       MemoryManager* const manager
     );
 
     /** Transcodes a string to native code-page
@@ -1511,6 +1529,20 @@ inline XMLCh* XMLString::replicate(const XMLCh* const toRep)
     {
         const unsigned int len = stringLen(toRep);
         ret = new XMLCh[len + 1];
+        memcpy(ret, toRep, (len + 1) * sizeof(XMLCh));
+    }
+    return ret;
+}
+
+inline XMLCh* XMLString::replicate(const XMLCh* const toRep,
+                                   MemoryManager* const manager)
+{
+    // If a null string, return a null string!
+    XMLCh* ret = 0;
+    if (toRep)
+    {
+        const unsigned int len = stringLen(toRep);
+        ret = (XMLCh*) manager->allocate((len+1) * sizeof(XMLCh)); //new XMLCh[len + 1];
         memcpy(ret, toRep, (len + 1) * sizeof(XMLCh));
     }
     return ret;

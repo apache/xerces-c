@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -202,6 +205,7 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
     return;
 }
 
+
 /**
 	 * Translates a string containing an optional minus sign followed by a
 	 * sequence of one or more digits into a BigInteger.
@@ -210,41 +214,45 @@ void XMLBigInteger::parseBigInteger(const XMLCh* const toConvert
  */
 
 XMLBigInteger::XMLBigInteger(const XMLCh* const strValue)
-:fSign(0)
-,fMagnitude(0)
-,fRawData(0)
+: fSign(0)
+, fMagnitude(0)
+, fRawData(0)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     if (!strValue)
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
 
-    XMLCh* ret_value = new XMLCh[XMLString::stringLen(strValue)+1];
-    ArrayJanitor<XMLCh> janName(ret_value);
+    XMLCh* ret_value = (XMLCh*) fMemoryManager->allocate
+    (
+       (XMLString::stringLen(strValue) + 1) * sizeof(XMLCh)
+    );//new XMLCh[XMLString::stringLen(strValue)+1];
+    ArrayJanitor<XMLCh> janName(ret_value, fMemoryManager);
 
     parseBigInteger(strValue, ret_value, fSign);
 
     if (fSign == 0)
-        fMagnitude = XMLString::replicate(XMLUni::fgZeroLenString);
+        fMagnitude = XMLString::replicate(XMLUni::fgZeroLenString, fMemoryManager);
     else
-        fMagnitude = XMLString::replicate(ret_value);
+        fMagnitude = XMLString::replicate(ret_value, fMemoryManager);
 
-	fRawData = XMLString::replicate(strValue);
-
+	fRawData = XMLString::replicate(strValue, fMemoryManager);
 }
 
 XMLBigInteger::~XMLBigInteger()
 {
-    delete[] fMagnitude;
+    fMemoryManager->deallocate(fMagnitude);//delete[] fMagnitude;
 	if (fRawData)
-		delete[] fRawData;
+		fMemoryManager->deallocate(fRawData);//delete[] fRawData;
 }
 
 XMLBigInteger::XMLBigInteger(const XMLBigInteger& toCopy)
-:fSign(toCopy.fSign)
-,fMagnitude(0)
-,fRawData(0)
+: fSign(toCopy.fSign)
+, fMagnitude(0)
+, fRawData(0)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    fMagnitude = XMLString::replicate(toCopy.fMagnitude);
-	fRawData = XMLString::replicate(toCopy.fRawData);
+    fMagnitude = XMLString::replicate(toCopy.fMagnitude, fMemoryManager);
+	fRawData = XMLString::replicate(toCopy.fRawData, fMemoryManager);
 }
 
 /**
@@ -313,7 +321,10 @@ void XMLBigInteger::multiply(const unsigned int byteToShift)
         return;
 
     int strLen = XMLString::stringLen(fMagnitude);
-    XMLCh* tmp = new XMLCh[strLen+byteToShift+1];
+    XMLCh* tmp = (XMLCh*) fMemoryManager->allocate
+    (
+        (strLen + byteToShift + 1) * sizeof(XMLCh)
+    );//new XMLCh[strLen+byteToShift+1];
     XMLString::moveChars(tmp, fMagnitude, strLen);
 
     unsigned int i = 0;
@@ -322,7 +333,7 @@ void XMLBigInteger::multiply(const unsigned int byteToShift)
 
     tmp[strLen+i] = chNull;
 
-    delete[] fMagnitude;
+    fMemoryManager->deallocate(fMagnitude);//delete[] fMagnitude;
     fMagnitude = tmp;
 }
 
@@ -336,12 +347,15 @@ void XMLBigInteger::divide(const unsigned int byteToShift)
         return;
 
     int strLen = XMLString::stringLen(fMagnitude);
-    XMLCh* tmp = new XMLCh[strLen-byteToShift+1];
+    XMLCh* tmp = (XMLCh*) fMemoryManager->allocate
+    (
+        (strLen - byteToShift + 1) * sizeof(XMLCh)
+    );//new XMLCh[strLen-byteToShift+1];
     XMLString::moveChars(tmp, fMagnitude, strLen-byteToShift);
 
     tmp[strLen-byteToShift] = chNull;
 
-    delete[] fMagnitude;
+    fMemoryManager->deallocate(fMagnitude);//delete[] fMagnitude;
     fMagnitude = tmp;
 }
 

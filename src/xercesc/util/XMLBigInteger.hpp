@@ -61,12 +61,12 @@
 #ifndef XML_BIGINTEGER_HPP
 #define XML_BIGINTEGER_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLString.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLUTIL_EXPORT XMLBigInteger
+class XMLUTIL_EXPORT XMLBigInteger : public XMemory
 {
 public:
 
@@ -166,7 +166,7 @@ private:
     int         fSign;
     XMLCh*      fMagnitude;  //null terminated
     XMLCh*      fRawData;
-
+    MemoryManager* fMemoryManager;
 };
 
 inline int XMLBigInteger::getSign() const
@@ -199,6 +199,7 @@ inline XMLCh*  XMLBigInteger::getRawData() const
 //
 inline XMLCh*  XMLBigInteger::toString() const
 {
+    // Return data using global operator new
     return XMLString::replicate(fRawData);
 }
 

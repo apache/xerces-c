@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -95,8 +98,9 @@ template <class TElem> RefArrayOf<TElem>::RefArrayOf(const unsigned int size) :
 
     fSize(size)
     , fArray(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    fArray = new TElem*[fSize];
+    fArray = (TElem**) fMemoryManager->allocate(fSize * sizeof(TElem*));//new TElem*[fSize];
     for (unsigned int index = 0; index < fSize; index++)
         fArray[index] = 0;
 }
@@ -106,8 +110,9 @@ RefArrayOf(TElem* values[], const unsigned int size) :
 
     fSize(size)
     , fArray(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    fArray = new TElem*[fSize];
+    fArray = (TElem**) fMemoryManager->allocate(fSize * sizeof(TElem*));//new TElem*[fSize];
     for (unsigned int index = 0; index < fSize; index++)
         fArray[index] = values[index];
 }
@@ -117,15 +122,16 @@ RefArrayOf(const RefArrayOf<TElem>& source) :
 
     fSize(source.fSize)
     , fArray(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    fArray = new TElem*[fSize];
+    fArray = (TElem**) fMemoryManager->allocate(fSize * sizeof(TElem*));//new TElem*[fSize];
     for (unsigned int index = 0; index < fSize; index++)
         fArray[index] = source.fArray[index];
 }
 
 template <class TElem> RefArrayOf<TElem>::~RefArrayOf()
 {
-    delete [] fArray;
+    fMemoryManager->deallocate(fArray);//delete [] fArray;
 }
 
 
@@ -157,9 +163,9 @@ operator=(const RefArrayOf<TElem>& toAssign)
     // Reallocate if not the same size
     if (toAssign.fSize != fSize)
     {
-        delete [] fArray;
+        fMemoryManager->deallocate(fArray);//delete [] fArray;
         fSize = toAssign.fSize;
-        fArray = new TElem*[fSize];
+        fArray = (TElem**) fMemoryManager->allocate(fSize * sizeof(TElem*));//new TElem*[fSize];
     }
 
     // Copy over the source elements
@@ -257,7 +263,10 @@ template <class TElem> void RefArrayOf<TElem>::resize(const unsigned int newSize
         ThrowXML(IllegalArgumentException, XMLExcepts::Array_BadNewSize);
 
     // Allocate the new array
-    TElem** newArray = new TElem*[newSize];
+    TElem** newArray = (TElem**) fMemoryManager->allocate
+    (
+        newSize * sizeof(TElem*)
+    );//new TElem*[newSize];
 
     // Copy the existing values
     unsigned int index = 0;
@@ -268,7 +277,7 @@ template <class TElem> void RefArrayOf<TElem>::resize(const unsigned int newSize
         newArray[index] = 0;
 
     // Delete the old array and udpate our members
-    delete [] fArray;
+    fMemoryManager->deallocate(fArray);//delete [] fArray;
     fArray = newArray;
     fSize = newSize;
 }

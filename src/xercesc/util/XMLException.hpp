@@ -61,6 +61,7 @@
 #if !defined(EXCEPTION_HPP)
 #define EXCEPTION_HPP
 
+#include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLExceptMsgs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/framework/XMLErrorReporter.hpp>
@@ -76,7 +77,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  string that is used to hold the name of the class, a macro is provided
 //  below via which they are all created.
 // ---------------------------------------------------------------------------
-class XMLUTIL_EXPORT XMLException
+class XMLUTIL_EXPORT XMLException : public XMemory
 {
 public:
     // -----------------------------------------------------------------------

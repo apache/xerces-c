@@ -57,7 +57,6 @@
 #if !defined(HASHXMLCH_HPP)
 #define HASHXMLCH_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/HashBase.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN

@@ -57,6 +57,9 @@
 /*
  *  $Id$
  * $Log$
+ * Revision 1.3  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2003/02/17 19:54:47  peiyongz
  * Allow set user specified error message file location in PlatformUtils::Initialize().
  *
@@ -70,6 +73,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLMsgLoader.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
@@ -98,7 +102,7 @@ void  XMLMsgLoader::setLocale(const char* const localeToAdopt)
      ***/
 	if (fLocale)
 	{
-		delete [] fLocale;
+        XMLPlatformUtils::fgMemoryManager->deallocate(fLocale);//delete [] fLocale;
 		fLocale = 0;
 	}
 
@@ -111,7 +115,7 @@ void  XMLMsgLoader::setLocale(const char* const localeToAdopt)
      */
 	if (localeToAdopt)
 	{
-		fLocale   = XMLString::replicate(localeToAdopt);
+		fLocale   = XMLString::replicate(localeToAdopt, XMLPlatformUtils::fgMemoryManager);
         XMLString::transcode(fLocale, fLanguage, 2);
         fLanguage[2] = 0;
     }
@@ -135,13 +139,13 @@ void  XMLMsgLoader::setNLSHome(const char* const nlsHomeToAdopt)
      ***/
     if (fPath)
     {
-        delete [] fPath;
+        XMLPlatformUtils::fgMemoryManager->deallocate(fPath);//delete [] fPath;
         fPath = 0;
     }
 
     if (nlsHomeToAdopt)
     {
-        fPath = XMLString::replicate(nlsHomeToAdopt);
+        fPath = XMLString::replicate(nlsHomeToAdopt, XMLPlatformUtils::fgMemoryManager);
     }
 
 }

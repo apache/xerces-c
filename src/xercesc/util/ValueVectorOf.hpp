@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:22:05  tng
  * C++ Namespace Support.
  *
@@ -94,13 +97,14 @@
 #if !defined(VALUEVECTOROF_HPP)
 #define VALUEVECTOROF_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-template <class TElem> class ValueVectorOf
+template <class TElem> class ValueVectorOf : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -162,6 +166,7 @@ private:
     unsigned int    fCurCount;
     unsigned int    fMaxCount;
     TElem*          fElemList;
+    MemoryManager*  fMemoryManager;
 };
 
 

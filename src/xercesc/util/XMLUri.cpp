@@ -242,14 +242,15 @@ static const XMLCh PATH_SEPARATORS[] =
 // ---------------------------------------------------------------------------
 // ctor# 2
 XMLUri::XMLUri(const XMLCh* const uriSpec)
-:fScheme(0)
-,fUserInfo(0)
-,fHost(0)
-,fPort(-1)
-,fPath(0)
-,fQueryString(0)
-,fFragment(0)
-,fURIText(0)
+: fScheme(0)
+, fUserInfo(0)
+, fHost(0)
+, fPort(-1)
+, fPath(0)
+, fQueryString(0)
+, fFragment(0)
+, fURIText(0)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     try {
         initialize((XMLUri *)0, uriSpec);
@@ -264,14 +265,15 @@ XMLUri::XMLUri(const XMLCh* const uriSpec)
 // ctor# 7 relative ctor
 XMLUri::XMLUri(const XMLUri* const      baseURI
                     , const XMLCh* const       uriSpec)
-:fScheme(0)
-,fUserInfo(0)
-,fHost(0)
-,fPort(-1)
-,fPath(0)
-,fQueryString(0)
-,fFragment(0)
-,fURIText(0)
+: fScheme(0)
+, fUserInfo(0)
+, fHost(0)
+, fPort(-1)
+, fPath(0)
+, fQueryString(0)
+, fFragment(0)
+, fURIText(0)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     try {
         initialize(baseURI, uriSpec);
@@ -285,6 +287,15 @@ XMLUri::XMLUri(const XMLUri* const      baseURI
 
 //Copy constructor
 XMLUri::XMLUri(const XMLUri& toCopy)
+: fScheme(0)
+, fUserInfo(0)
+, fHost(0)
+, fPort(-1)
+, fPath(0)
+, fQueryString(0)
+, fFragment(0)
+, fURIText(0)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     try {
         initialize(toCopy);
@@ -317,25 +328,25 @@ XMLUri::~XMLUri()
 
 void XMLUri::cleanUp()
 {
-    if (getScheme())
-        delete[] fScheme;
+    if (fScheme)
+        fMemoryManager->deallocate(fScheme);//delete[] fScheme;
 
-    if (getUserInfo())
-        delete[] fUserInfo;
+    if (fUserInfo)
+        fMemoryManager->deallocate(fUserInfo);//delete[] fUserInfo;
 
-    if (getHost())
-        delete[] fHost;
+    if (fHost)
+        fMemoryManager->deallocate(fHost);//delete[] fHost;
 
-    if (getPath())
-        delete[] fPath;
+    if (fPath)
+        fMemoryManager->deallocate(fPath);//delete[] fPath;
 
-    if (getQueryString())
-        delete[] fQueryString;
+    if (fQueryString)
+        fMemoryManager->deallocate(fQueryString);//delete[] fQueryString;
 
-    if (getFragment())
-        delete[] fFragment;
+    if (fFragment)
+        fMemoryManager->deallocate(fFragment);//delete[] fFragment;
 
-    delete[] fURIText;
+    fMemoryManager->deallocate(fURIText);//delete[] fURIText;
 }
 
 void XMLUri::initialize(const XMLUri& toCopy)
@@ -344,14 +355,15 @@ void XMLUri::initialize(const XMLUri& toCopy)
     // assuming that all fields from the toCopy are valid,
     // therefore need NOT to go through various setXXX() methods
     //
-    fScheme = XMLString::replicate(toCopy.getScheme());
-	fUserInfo = XMLString::replicate(toCopy.getUserInfo());
-	fHost = XMLString::replicate(toCopy.getHost());
-	fPort = toCopy.getPort();
-	fPath = XMLString::replicate(toCopy.getPath());
-	fQueryString = XMLString::replicate(toCopy.getQueryString());
-	fFragment = XMLString::replicate(toCopy.getFragment());
-    }
+    fMemoryManager = toCopy.fMemoryManager;
+    fScheme = XMLString::replicate(toCopy.fScheme, fMemoryManager);
+	fUserInfo = XMLString::replicate(toCopy.fUserInfo, fMemoryManager);
+	fHost = XMLString::replicate(toCopy.fHost, fMemoryManager);
+	fPort = toCopy.fPort;
+	fPath = XMLString::replicate(toCopy.fPath, fMemoryManager);
+	fQueryString = XMLString::replicate(toCopy.fQueryString, fMemoryManager);
+	fFragment = XMLString::replicate(toCopy.fFragment, fMemoryManager);
+}
 
 void XMLUri::initialize(const XMLUri* const baseURI
                       , const XMLCh*  const uriSpec)
@@ -360,9 +372,9 @@ void XMLUri::initialize(const XMLUri* const baseURI
     // get a trimmed version of uriSpec
     // uriSpec will NO LONGER be used in this function.
     //
-    XMLCh* trimedUriSpec = XMLString::replicate(uriSpec);
+    XMLCh* trimedUriSpec = XMLString::replicate(uriSpec, fMemoryManager);
     XMLString::trim(trimedUriSpec);
-    ArrayJanitor<XMLCh> janName(trimedUriSpec);
+    ArrayJanitor<XMLCh> janName(trimedUriSpec, fMemoryManager);
     int trimedUriSpecLen = XMLString::stringLen(trimedUriSpec);
 
     if ( !baseURI &&
@@ -412,8 +424,11 @@ void XMLUri::initialize(const XMLUri* const baseURI
 	}
 
 	// two slashes means generic URI syntax, so we get the authority
-    XMLCh* authUriSpec = new XMLCh[trimedUriSpecLen+1];
-    ArrayJanitor<XMLCh> authName(authUriSpec);
+    XMLCh* authUriSpec = (XMLCh*) fMemoryManager->allocate
+    (
+        (trimedUriSpecLen+1) * sizeof(XMLCh)
+    );//new XMLCh[trimedUriSpecLen+1];
+    ArrayJanitor<XMLCh> authName(authUriSpec, fMemoryManager);
     XMLString::subString(authUriSpec, trimedUriSpec, index, trimedUriSpecLen);
 
     if (((index+1) < trimedUriSpecLen) &&
@@ -455,8 +470,11 @@ void XMLUri::initialize(const XMLUri* const baseURI
     if (index >= trimedUriSpecLen)
         return;
 
-    XMLCh* pathUriSpec = new XMLCh[trimedUriSpecLen+1];
-    ArrayJanitor<XMLCh> pathUriSpecName(pathUriSpec);
+    XMLCh* pathUriSpec = (XMLCh*) fMemoryManager->allocate
+    (
+        (trimedUriSpecLen+1) * sizeof(XMLCh)
+    );//new XMLCh[trimedUriSpecLen+1];
+    ArrayJanitor<XMLCh> pathUriSpecName(pathUriSpec, fMemoryManager);
     XMLString::subString(pathUriSpec, trimedUriSpec, index, trimedUriSpecLen);
 
 	initializePath(pathUriSpec);
@@ -479,17 +497,17 @@ void XMLUri::initialize(const XMLUri* const baseURI
             fScheme == 0 &&
             fHost == 0)
         {
-            fScheme = XMLString::replicate(baseURI->getScheme());
-            delete [] fUserInfo;
-            fUserInfo = XMLString::replicate(baseURI->getUserInfo());
-            fHost = XMLString::replicate(baseURI->getHost());
+            fScheme = XMLString::replicate(baseURI->getScheme(), fMemoryManager);
+            fMemoryManager->deallocate(fUserInfo);//delete [] fUserInfo;
+            fUserInfo = XMLString::replicate(baseURI->getUserInfo(), fMemoryManager);
+            fHost = XMLString::replicate(baseURI->getHost(), fMemoryManager);
             fPort = baseURI->getPort();
-            delete [] fPath;
-            fPath = XMLString::replicate(baseURI->getPath());
+            fMemoryManager->deallocate(fPath);//delete [] fPath;
+            fPath = XMLString::replicate(baseURI->getPath(), fMemoryManager);
 
             if ( !fQueryString )
             {
-                fQueryString = XMLString::replicate(baseURI->getQueryString());
+                fQueryString = XMLString::replicate(baseURI->getQueryString(), fMemoryManager);
             }
             return;
         }
@@ -498,7 +516,7 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // if we found a scheme, it means absolute URI, so we're done
         if (fScheme == 0)
         {
-            fScheme = XMLString::replicate(baseURI->getScheme());
+            fScheme = XMLString::replicate(baseURI->getScheme(), fMemoryManager);
         }
         else
         {
@@ -509,9 +527,9 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // if we found a host, then we've got a network path, so we're done
         if (fHost == 0)
         {
-            delete [] fUserInfo;
-            fUserInfo = XMLString::replicate(baseURI->getUserInfo());
-            fHost = XMLString::replicate(baseURI->getHost());
+            fMemoryManager->deallocate(fUserInfo);//delete [] fUserInfo;
+            fUserInfo = XMLString::replicate(baseURI->getUserInfo(), fMemoryManager);
+            fHost = XMLString::replicate(baseURI->getHost(), fMemoryManager);
             fPort = baseURI->getPort();
         }
         else
@@ -529,18 +547,18 @@ void XMLUri::initialize(const XMLUri* const baseURI
         // if we get to this point, we need to resolve relative path
         // RFC 2396 5.2 #6
 
-        XMLCh* basePath = XMLString::replicate(baseURI->getPath());
-        ArrayJanitor<XMLCh> basePathName(basePath);
+        XMLCh* basePath = XMLString::replicate(baseURI->getPath(), fMemoryManager);
+        ArrayJanitor<XMLCh> basePathName(basePath, fMemoryManager);
 
         int bufLen = trimedUriSpecLen+XMLString::stringLen(fPath)+XMLString::stringLen(basePath)+1;
-        XMLCh* path = new XMLCh[bufLen];
-        ArrayJanitor<XMLCh> pathName(path);
+        XMLCh* path = (XMLCh*) fMemoryManager->allocate(bufLen * sizeof(XMLCh));//new XMLCh[bufLen];
+        ArrayJanitor<XMLCh> pathName(path, fMemoryManager);
         path[0] = 0;
 
-        XMLCh* tmp1 = new XMLCh[bufLen];
-        ArrayJanitor<XMLCh> tmp1Name(tmp1);
-        XMLCh* tmp2 = new XMLCh[bufLen];
-        ArrayJanitor<XMLCh> tmp2Name(tmp2);
+        XMLCh* tmp1 = (XMLCh*) fMemoryManager->allocate(bufLen * sizeof(XMLCh));//new XMLCh[bufLen];
+        ArrayJanitor<XMLCh> tmp1Name(tmp1, fMemoryManager);
+        XMLCh* tmp2 = (XMLCh*) fMemoryManager->allocate(bufLen * sizeof(XMLCh));//new XMLCh[bufLen];
+        ArrayJanitor<XMLCh> tmp2Name(tmp2, fMemoryManager);
 
         // 6a - get all but the last segment of the base URI path
         if (basePath)
@@ -629,9 +647,9 @@ void XMLUri::initialize(const XMLUri* const baseURI
         }
 
         if (getPath())
-            delete [] fPath;
+            fMemoryManager->deallocate(fPath);//delete [] fPath;
 
-        fPath = XMLString::replicate(path);
+        fPath = XMLString::replicate(path, fMemoryManager);
 
     }
 }
@@ -663,8 +681,11 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     // server = [ [ userinfo "@" ] hostport ]
 	// userinfo is everything up @,
     //
-    XMLCh* userinfo = new XMLCh[end+1];
-    ArrayJanitor<XMLCh> userName(userinfo);
+    XMLCh* userinfo = (XMLCh*) fMemoryManager->allocate
+    (
+        (end+1) * sizeof(XMLCh)
+    );//new XMLCh[end+1];
+    ArrayJanitor<XMLCh> userName(userinfo, fMemoryManager);
     index = XMLString::indexOf(&(uriSpec[start]), chAt);
 
     if ( index != -1)
@@ -682,8 +703,11 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
     // hostport = host [ ":" port ]
 	// host is everything up to ':'
     //
-	XMLCh* host = new XMLCh[end+1];
-    ArrayJanitor<XMLCh> hostName(host);
+	XMLCh* host = (XMLCh*) fMemoryManager->allocate
+    (
+        (end+1) * sizeof(XMLCh)
+    );//new XMLCh[end+1];
+    ArrayJanitor<XMLCh> hostName(host, fMemoryManager);
     index = XMLString::indexOf(&(uriSpec[start]), chColon);
 
     if ( index != -1)
@@ -700,8 +724,11 @@ void XMLUri::initializeAuthority(const XMLCh* const uriSpec)
 
     // port is everything after ":"
 
-    XMLCh* portStr = new XMLCh[end+1];
-    ArrayJanitor<XMLCh> portName(portStr);
+    XMLCh* portStr = (XMLCh*) fMemoryManager->allocate
+    (
+        (end+1) * sizeof(XMLCh)
+    );//new XMLCh[end+1];
+    ArrayJanitor<XMLCh> portName(portStr, fMemoryManager);
     int port = -1;
 
     if ((host && *host) &&   // non empty host
@@ -741,8 +768,11 @@ void XMLUri::initializeScheme(const XMLCh* const uriSpec)
     }
 	else
     {
-        XMLCh* scheme = new XMLCh[XMLString::stringLen(uriSpec)+1];
-        ArrayJanitor<XMLCh> tmpName(scheme);
+        XMLCh* scheme = (XMLCh*) fMemoryManager->allocate
+        (
+            (XMLString::stringLen(uriSpec) + 1) * sizeof(XMLCh)
+        );//new XMLCh[XMLString::stringLen(uriSpec)+1];
+        ArrayJanitor<XMLCh> tmpName(scheme, fMemoryManager);
         XMLString::subString(scheme, uriSpec, 0, (tmpPtr - uriSpec));
         setScheme(scheme);
 	}
@@ -803,10 +833,10 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
 
     if (getPath())
     {
-        delete [] fPath;
+        fMemoryManager->deallocate(fPath);//delete [] fPath;
     }
 
-    fPath = new XMLCh[index+1];
+    fPath = (XMLCh*) fMemoryManager->allocate((index+1) * sizeof(XMLCh));//new XMLCh[index+1];
     XMLString::subString(fPath, uriSpec, start, index);
 
 	// query - starts with ? and up to fragment or end
@@ -851,10 +881,13 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
 
         if (getQueryString())
         {
-            delete [] fQueryString;
+            fMemoryManager->deallocate(fQueryString);//delete [] fQueryString;
         }
 
-        fQueryString = new XMLCh[index - start + 1];
+        fQueryString = (XMLCh*) fMemoryManager->allocate
+        (
+            (index - start + 1) * sizeof(XMLCh)
+        );//new XMLCh[index - start + 1];
         XMLString::subString(fQueryString, uriSpec, start, index);
     }
 
@@ -897,12 +930,15 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
         }
 
         if (getFragment())
-            delete [] fFragment;
+            fMemoryManager->deallocate(fFragment);//delete [] fFragment;
 
         //make sure that there is something following the '#'
         if (index > start)
         {
-            fFragment = new XMLCh[index - start + 1];
+            fFragment = (XMLCh*) fMemoryManager->allocate
+            (
+                (index - start + 1) * sizeof(XMLCh)
+            );//new XMLCh[index - start + 1];
             XMLString::subString(fFragment, uriSpec, start, index);
         }
         else
@@ -942,10 +978,10 @@ void XMLUri::setScheme(const XMLCh* const newScheme)
 
     if (getScheme())
     {
-        delete [] fScheme;
+        fMemoryManager->deallocate(fScheme);//delete [] fScheme;
     }
 
-    fScheme = XMLString::replicate(newScheme);
+    fScheme = XMLString::replicate(newScheme, fMemoryManager);
     XMLString::lowerCase(fScheme);
 }
 
@@ -981,13 +1017,13 @@ void XMLUri::setUserInfo(const XMLCh* const newUserInfo)
 
     if (getUserInfo())
     {
-        delete [] fUserInfo;
+        fMemoryManager->deallocate(fUserInfo);//delete [] fUserInfo;
     }
 
     //sometimes we get passed a empty string rather than a null.
     //Other procedures rely on it being null
     if(newUserInfo && *newUserInfo) {
-        fUserInfo = XMLString::replicate(newUserInfo);
+        fUserInfo = XMLString::replicate(newUserInfo, fMemoryManager);
     }
 
 }
@@ -998,7 +1034,7 @@ void XMLUri::setHost(const XMLCh* const newHost)
         XMLString::isAllWhiteSpace(newHost))
     {
         if (getHost())
-            delete [] fHost;
+            fMemoryManager->deallocate(fHost);//delete [] fHost;
 
         fHost = 0;
         setUserInfo(0);
@@ -1017,10 +1053,10 @@ void XMLUri::setHost(const XMLCh* const newHost)
 
     if (getHost())
     {
-        delete [] fHost;
+        fMemoryManager->deallocate(fHost);//delete [] fHost;
     }
 
-    fHost = XMLString::replicate(newHost);
+    fHost = XMLString::replicate(newHost, fMemoryManager);
 }
 
 void XMLUri::setPort(int newPort)
@@ -1057,7 +1093,7 @@ void XMLUri::setPath(const XMLCh* const newPath)
     if (!newPath)
     {
         if (getPath())
-            delete [] fPath;
+            fMemoryManager->deallocate(fPath);//delete [] fPath;
 
         fPath = 0;
         setQueryString(0);
@@ -1077,7 +1113,7 @@ void XMLUri::setFragment(const XMLCh* const newFragment)
 	if ( !newFragment )
     {
         if (getFragment())
-            delete [] fFragment;
+            fMemoryManager->deallocate(fFragment);//delete [] fFragment;
 
         fFragment = 0;
 	}
@@ -1105,10 +1141,10 @@ void XMLUri::setFragment(const XMLCh* const newFragment)
     {
         if (getFragment())
         {
-            delete [] fFragment;
+            fMemoryManager->deallocate(fFragment);//delete [] fFragment;
         }
 
-        fFragment = XMLString::replicate(newFragment);
+        fFragment = XMLString::replicate(newFragment, fMemoryManager);
 	}
 }
 
@@ -1120,7 +1156,7 @@ void XMLUri::setQueryString(const XMLCh* const newQueryString)
 	if ( !newQueryString )
     {
         if (getQueryString())
-            delete [] fQueryString;
+            fMemoryManager->deallocate(fQueryString);//delete [] fQueryString;
 
         fQueryString = 0;
 	}
@@ -1149,10 +1185,10 @@ void XMLUri::setQueryString(const XMLCh* const newQueryString)
     {
         if (getQueryString())
         {
-            delete [] fQueryString;
+            fMemoryManager->deallocate(fQueryString);//delete [] fQueryString;
         }
 
-        fQueryString = XMLString::replicate(newQueryString);
+        fQueryString = XMLString::replicate(newQueryString, fMemoryManager);
 	}
 }
 
@@ -1293,8 +1329,8 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
     //
     // check length
     //
-    XMLCh* tmpAddr = XMLString::replicate(addrString);
-    ArrayJanitor<XMLCh>  janName(tmpAddr);
+    XMLCh* tmpAddr = XMLString::replicate(addrString, XMLPlatformUtils::fgMemoryManager);
+    ArrayJanitor<XMLCh>  janName(tmpAddr, XMLPlatformUtils::fgMemoryManager);
     XMLString::trim(tmpAddr);
     if ((!tmpAddr || !*tmpAddr) ||
         (XMLString::stringLen(tmpAddr) > 255) )
@@ -1317,10 +1353,13 @@ bool XMLUri::isWellFormedAddress(const XMLCh* const addrString)
     // get the second last "."
     if (lastPeriodPos + 1 == addrStrLen)
     {
-        XMLCh* tmp2 = new XMLCh[addrStrLen];
+        XMLCh* tmp2 = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+        (
+            addrStrLen * sizeof(XMLCh)
+        );//new XMLCh[addrStrLen];
         XMLString::subString(tmp2, addrString, 0, lastPeriodPos);
         lastPeriodPos = XMLString::lastIndexOf(tmp2, chPeriod);
-        delete [] tmp2;
+        XMLPlatformUtils::fgMemoryManager->deallocate(tmp2);//delete [] tmp2;
 
         if ( XMLString::isDigit(addrString[lastPeriodPos + 1]))
 			return false;
@@ -1416,8 +1455,8 @@ void XMLUri::buildFullText()
                            + 32;
 
     // Clean up the existing buffer and allocate another
-    delete [] fURIText;
-    fURIText = new XMLCh[bufSize];
+    fMemoryManager->deallocate(fURIText);//delete [] fURIText;
+    fURIText = (XMLCh*) fMemoryManager->allocate(bufSize * sizeof(XMLCh));//new XMLCh[bufSize];
     *fURIText = 0;
 
     XMLCh* outPtr = fURIText;

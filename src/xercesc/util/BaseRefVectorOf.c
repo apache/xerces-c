@@ -72,10 +72,10 @@ BaseRefVectorOf(const unsigned int maxElems, const bool adoptElems) :
     , fCurCount(0)
     , fMaxCount(maxElems)
     , fElemList(0)
-    
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     // Allocate and initialize the array
-    fElemList = new TElem*[maxElems];
+    fElemList = (TElem**) fMemoryManager->allocate(maxElems * sizeof(TElem*));//new TElem*[maxElems];
     for (unsigned int index = 0; index < maxElems; index++)
         fElemList[index] = 0;
 }
@@ -237,7 +237,7 @@ template <class TElem> void BaseRefVectorOf<TElem>::cleanup()
         for (unsigned int index = 0; index < fCurCount; index++)
             delete fElemList[index];
     }
-    delete [] fElemList;
+    fMemoryManager->deallocate(fElemList);//delete [] fElemList;
 }
 
 //
@@ -251,7 +251,7 @@ template <class TElem> void BaseRefVectorOf<TElem>::reinitialize()
     if (fElemList)
         cleanup();
 
-    fElemList = new TElem*[fMaxCount];
+    fElemList = (TElem**) fMemoryManager->allocate(fMaxCount * sizeof(TElem*));//new TElem*[fMaxCount];
     for (unsigned int index = 0; index < fMaxCount; index++)
         fElemList[index] = 0;
 
@@ -304,7 +304,10 @@ ensureExtraCapacity(const unsigned int length)
         newMax = fMaxCount + 32;
 
     // Allocate the new array and copy over the existing stuff
-    TElem** newList = new TElem*[newMax];
+    TElem** newList = (TElem**) fMemoryManager->allocate
+    (
+        newMax * sizeof(TElem*)
+    );//new TElem*[newMax];
     unsigned int index = 0;
     for (; index < fCurCount; index++)
         newList[index] = fElemList[index];
@@ -314,7 +317,7 @@ ensureExtraCapacity(const unsigned int length)
         newList[index] = 0;
 
     // Clean up the old array and update our members
-    delete [] fElemList;
+    fMemoryManager->deallocate(fElemList);//delete [] fElemList;
     fElemList = newList;
     fMaxCount = newMax;
 }

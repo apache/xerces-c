@@ -58,6 +58,8 @@
 
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -68,7 +70,7 @@ XERCES_CPP_NAMESPACE_BEGIN
  * RefArrayVectorOf to implement their own appropriate one.
  *
  */
-template <class TElem> class BaseRefVectorOf
+template <class TElem> class BaseRefVectorOf : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -116,6 +118,7 @@ protected:
     unsigned int    fCurCount;
     unsigned int    fMaxCount;
     TElem**         fElemList;
+    MemoryManager*  fMemoryManager;
 };
 
 

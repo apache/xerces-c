@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2003/03/07 18:11:54  tng
  * Return a reference instead of void for operator=
  *
@@ -87,11 +90,11 @@
 #if !defined(BININPUTSTREAM_HPP)
 #define BININPUTSTREAM_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLUTIL_EXPORT BinInputStream
+class XMLUTIL_EXPORT BinInputStream : public XMemory
 {
 public :
     // -----------------------------------------------------------------------

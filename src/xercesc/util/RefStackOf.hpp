@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 19:07:45  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -87,12 +90,8 @@
 #if !defined(REFSTACKOF_HPP)
 #define REFSTACKOF_HPP
 
-
-#include <xercesc/util/XercesDefs.hpp>
-#include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
-#include <xercesc/util/EmptyStackException.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
-#include <xercesc/util/XMLEnumerator.hpp>
+#include <xercesc/util/EmptyStackException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -103,7 +102,7 @@ XERCES_CPP_NAMESPACE_BEGIN
 template <class TElem> class RefStackEnumerator;
 
 
-template <class TElem> class RefStackOf
+template <class TElem> class RefStackOf : public XMemory
 {
 public :
     // -----------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2003/03/07 18:11:54  tng
  * Return a reference instead of void for operator=
  *
@@ -97,9 +100,9 @@
 #if !defined(NAMEIDPOOL_HPP)
 #define NAMEIDPOOL_HPP
 
+#include <xercesc/util/XMemory.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <string.h>
-
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -136,7 +139,7 @@ template <class TElem> class NameIdPoolEnumerator;
 //  lists for each bucket. Because some of the compilers we have to support
 //  are totally brain dead, it cannot be a nested class as it should be.
 //
-template <class TElem> struct NameIdPoolBucketElem
+template <class TElem> struct NameIdPoolBucketElem : public XMemory
 {
 public :
     NameIdPoolBucketElem
@@ -151,7 +154,7 @@ public :
 };
 
 
-template <class TElem> class NameIdPool
+template <class TElem> class NameIdPool : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -246,6 +249,7 @@ private :
     //      This is the modulus to use in this pool. The fBucketList array
     //      is of this size. It should be a prime number.
     // -----------------------------------------------------------------------
+    MemoryManager*                  fMemoryManager;
     NameIdPoolBucketElem<TElem>**   fBucketList;
     TElem**                         fIdPtrs;
     unsigned int                    fIdPtrsCount;

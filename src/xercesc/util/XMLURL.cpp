@@ -183,7 +183,8 @@ XMLURL::Protocols XMLURL::lookupByName(const XMLCh* const protoName)
 // ---------------------------------------------------------------------------
 XMLURL::XMLURL() :
 
-    fFragment(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
@@ -199,7 +200,8 @@ XMLURL::XMLURL() :
 XMLURL::XMLURL(const XMLCh* const    baseURL
              , const XMLCh* const    relativeURL) :
 
-    fFragment(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
@@ -224,7 +226,8 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
 XMLURL::XMLURL(const XMLCh* const    baseURL
              , const char* const     relativeURL) :
 
-    fFragment(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
@@ -235,8 +238,8 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
     , fURLText(0)
     , fHasInvalidChar(false)
 {
-    XMLCh* tmpRel = XMLString::transcode(relativeURL);
-    ArrayJanitor<XMLCh> janRel(tmpRel);
+    XMLCh* tmpRel = XMLString::transcode(relativeURL, fMemoryManager);
+    ArrayJanitor<XMLCh> janRel(tmpRel, fMemoryManager);
 	try
 	{
 		setURL(baseURL, tmpRel);
@@ -251,7 +254,8 @@ XMLURL::XMLURL(const XMLCh* const    baseURL
 XMLURL::XMLURL(const XMLURL&         baseURL
              , const XMLCh* const    relativeURL) :
 
-    fFragment(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
@@ -276,7 +280,8 @@ XMLURL::XMLURL(const XMLURL&         baseURL
 XMLURL::XMLURL(const  XMLURL&        baseURL
              , const char* const     relativeURL) :
 
-    fFragment(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
@@ -287,8 +292,8 @@ XMLURL::XMLURL(const  XMLURL&        baseURL
     , fURLText(0)
     , fHasInvalidChar(false)
 {
-    XMLCh* tmpRel = XMLString::transcode(relativeURL);
-    ArrayJanitor<XMLCh> janRel(tmpRel);
+    XMLCh* tmpRel = XMLString::transcode(relativeURL, fMemoryManager);
+    ArrayJanitor<XMLCh> janRel(tmpRel, fMemoryManager);
 	try
 	{
 		setURL(baseURL, tmpRel);
@@ -303,7 +308,8 @@ XMLURL::XMLURL(const  XMLURL&        baseURL
 
 XMLURL::XMLURL(const XMLCh* const urlText) :
 
-    fFragment(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
@@ -327,7 +333,8 @@ XMLURL::XMLURL(const XMLCh* const urlText) :
 
 XMLURL::XMLURL(const char* const urlText) :
 
-    fFragment(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fFragment(0)
     , fHost(0)
     , fPassword(0)
     , fPath(0)
@@ -338,8 +345,8 @@ XMLURL::XMLURL(const char* const urlText) :
     , fURLText(0)
     , fHasInvalidChar(false)
 {
-    XMLCh* tmpText = XMLString::transcode(urlText);
-    ArrayJanitor<XMLCh> janRel(tmpText);
+    XMLCh* tmpText = XMLString::transcode(urlText, fMemoryManager);
+    ArrayJanitor<XMLCh> janRel(tmpText, fMemoryManager);
 	try
 	{
 	    setURL(tmpText);
@@ -353,17 +360,32 @@ XMLURL::XMLURL(const char* const urlText) :
 
 XMLURL::XMLURL(const XMLURL& toCopy) :
 
-    fFragment(XMLString::replicate(toCopy.fFragment))
-    , fHost(XMLString::replicate(toCopy.fHost))
-    , fPassword(XMLString::replicate(toCopy.fPassword))
-    , fPath(XMLString::replicate(toCopy.fPath))
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fFragment(0)
+    , fHost(0)
+    , fPassword(0)
+    , fPath(0)
     , fPortNum(toCopy.fPortNum)
     , fProtocol(toCopy.fProtocol)
-    , fQuery(XMLString::replicate(toCopy.fQuery))
-    , fUser(XMLString::replicate(toCopy.fUser))
-    , fURLText(XMLString::replicate(toCopy.fURLText))
+    , fQuery(0)
+    , fUser(0)
+    , fURLText(0)
     , fHasInvalidChar(toCopy.fHasInvalidChar)
 {
+    try
+    {
+        fFragment = XMLString::replicate(toCopy.fFragment, fMemoryManager);
+        fHost = XMLString::replicate(toCopy.fHost, fMemoryManager);
+        fPassword = XMLString::replicate(toCopy.fPassword, fMemoryManager);
+        fPath = XMLString::replicate(toCopy.fPath, fMemoryManager);
+        fQuery = XMLString::replicate(toCopy.fQuery, fMemoryManager);
+        fUser = XMLString::replicate(toCopy.fUser, fMemoryManager);
+        fURLText = XMLString::replicate(toCopy.fURLText, fMemoryManager);
+    }
+    catch(...)
+    {
+        cleanup();
+    }
 }
 
 XMLURL::~XMLURL()
@@ -384,14 +406,14 @@ XMLURL& XMLURL::operator=(const XMLURL& toAssign)
     cleanup();
 
     // And copy his stuff
-    fFragment = XMLString::replicate(toAssign.fFragment);
-    fHost = XMLString::replicate(toAssign.fHost);
-    fPassword = XMLString::replicate(toAssign.fPassword);
-    fPath = XMLString::replicate(toAssign.fPath);
+    fFragment = XMLString::replicate(toAssign.fFragment, fMemoryManager);
+    fHost = XMLString::replicate(toAssign.fHost, fMemoryManager);
+    fPassword = XMLString::replicate(toAssign.fPassword, fMemoryManager);
+    fPath = XMLString::replicate(toAssign.fPath, fMemoryManager);
     fProtocol = toAssign.fProtocol;
-    fQuery = XMLString::replicate(toAssign.fQuery);
-    fUser = XMLString::replicate(toAssign.fUser);
-    fURLText = XMLString::replicate(toAssign.fURLText);
+    fQuery = XMLString::replicate(toAssign.fQuery, fMemoryManager);
+    fUser = XMLString::replicate(toAssign.fUser, fMemoryManager);
+    fURLText = XMLString::replicate(toAssign.fURLText, fMemoryManager);
 
     return *this;
 }
@@ -529,8 +551,8 @@ BinInputStream* XMLURL::makeNewStream() const
         if (!fHost || !XMLString::compareIString(fHost, XMLUni::fgLocalHostString))
         {
 
-            XMLCh* realPath = XMLString::replicate(fPath);
-            ArrayJanitor<XMLCh> basePathName(realPath);
+            XMLCh* realPath = XMLString::replicate(fPath, fMemoryManager);
+            ArrayJanitor<XMLCh> basePathName(realPath, fMemoryManager);
 
             //
             // Need to manually replace any character reference %xx first
@@ -568,7 +590,7 @@ BinInputStream* XMLURL::makeNewStream() const
             }
 
 
-            BinFileInputStream* retStrm = new BinFileInputStream(realPath);
+            BinFileInputStream* retStrm = new (fMemoryManager) BinFileInputStream(realPath);
             if (!retStrm->getIsOpen())
             {
                 delete retStrm;
@@ -632,8 +654,8 @@ void XMLURL::buildFullText()
                            + 32;
 
     // Clean up the existing buffer and allocate another
-    delete [] fURLText;
-    fURLText = new XMLCh[bufSize];
+    fMemoryManager->deallocate(fURLText);//delete [] fURLText;
+    fURLText = (XMLCh*) fMemoryManager->allocate((bufSize) * sizeof(XMLCh));//new XMLCh[bufSize];
     *fURLText = 0;
 
     XMLCh* outPtr = fURLText;
@@ -712,13 +734,13 @@ void XMLURL::buildFullText()
 //
 void XMLURL::cleanup()
 {
-    delete [] fFragment;
-    delete [] fHost;
-    delete [] fPassword;
-    delete [] fPath;
-    delete [] fQuery;
-    delete [] fUser;
-    delete [] fURLText;
+    fMemoryManager->deallocate(fFragment);//delete [] fFragment;
+    fMemoryManager->deallocate(fHost);//delete [] fHost;
+    fMemoryManager->deallocate(fPassword);//delete [] fPassword;
+    fMemoryManager->deallocate(fPath);//delete [] fPath;
+    fMemoryManager->deallocate(fQuery);//delete [] fQuery;
+    fMemoryManager->deallocate(fUser);//delete [] fUser;
+    fMemoryManager->deallocate(fURLText);//delete [] fURLText;
 
     fFragment = 0;
     fHost = 0;
@@ -758,9 +780,9 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
     &&  fFragment)
     {
         // Just in case, make sure we don't leak the user or password values
-        delete [] fUser;
+        fMemoryManager->deallocate(fUser);//delete [] fUser;
         fUser = 0;
-        delete [] fPassword;
+        fMemoryManager->deallocate(fPassword);//delete [] fPassword;
         fPassword = 0;
 
         // Copy over the protocol and port number as is
@@ -768,10 +790,10 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
         fPortNum = baseURL.fPortNum;
 
         // Replicate the base fields that are provided
-        fHost = XMLString::replicate(baseURL.fHost);
-        fUser = XMLString::replicate(baseURL.fUser);
-        fPassword = XMLString::replicate(baseURL.fPassword);
-        fPath = XMLString::replicate(baseURL.fPath);
+        fHost = XMLString::replicate(baseURL.fHost, fMemoryManager);
+        fUser = XMLString::replicate(baseURL.fUser, fMemoryManager);
+        fPassword = XMLString::replicate(baseURL.fPassword, fMemoryManager);
+        fPath = XMLString::replicate(baseURL.fPath, fMemoryManager);
         return true;
     }
 
@@ -798,16 +820,16 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
     if (baseURL.fHost)
     {
         // Just in case, make sure we don't leak a user or password field
-        delete [] fUser;
+        fMemoryManager->deallocate(fUser);//delete [] fUser;
         fUser = 0;
-        delete [] fPassword;
+        fMemoryManager->deallocate(fPassword);//delete [] fPassword;
         fPassword = 0;
-        delete [] fHost;
+        fMemoryManager->deallocate(fHost);//delete [] fHost;
         fHost = 0;
 
-        fHost = XMLString::replicate(baseURL.fHost);
-        fUser = XMLString::replicate(baseURL.fUser);
-        fPassword = XMLString::replicate(baseURL.fPassword);
+        fHost = XMLString::replicate(baseURL.fHost, fMemoryManager);
+        fUser = XMLString::replicate(baseURL.fUser, fMemoryManager);
+        fPassword = XMLString::replicate(baseURL.fPassword, fMemoryManager);
 
         fPortNum = baseURL.fPortNum;
     }
@@ -823,7 +845,7 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
     // Its a relative path, so weave them together.
     if (baseURL.fPath) {
         XMLCh* temp = XMLPlatformUtils::weavePaths(baseURL.fPath, fPath);
-        delete [] fPath;
+        fMemoryManager->deallocate(fPath);//delete [] fPath;
         fPath = temp;
     }
 
@@ -834,11 +856,11 @@ bool XMLURL::conglomerateWithBase(const XMLURL& baseURL, bool useExceptions)
     // We had no original path, so go on to deal with the query/fragment parts
     if (fQuery || !baseURL.fQuery)
         return true;
-    fQuery = XMLString::replicate(baseURL.fQuery);
+    fQuery = XMLString::replicate(baseURL.fQuery, fMemoryManager);
 
     if (fFragment || !baseURL.fFragment)
         return true;
-    fFragment = XMLString::replicate(baseURL.fFragment);
+    fFragment = XMLString::replicate(baseURL.fFragment, fMemoryManager);
 	return true;
 }
 
@@ -874,8 +896,8 @@ void XMLURL::parse(const XMLCh* const urlText)
     }
 
     // Get a copy of the URL that we can modify
-    XMLCh* srcCpy = XMLString::replicate(urlText);
-    ArrayJanitor<XMLCh> janSrcCopy(srcCpy);
+    XMLCh* srcCpy = XMLString::replicate(urlText, fMemoryManager);
+    ArrayJanitor<XMLCh> janSrcCopy(srcCpy, fMemoryManager);
 
     //
     //  Get a pointer now that we can run up thrown the source as we parse
@@ -963,8 +985,11 @@ void XMLURL::parse(const XMLCh* const urlText)
             {
                 if (ptr1 != srcPtr)
                 {
-                    delete [] fHost;
-                    fHost = new XMLCh[(ptr1 - srcPtr) + 1];
+                    fMemoryManager->deallocate(fHost);//delete [] fHost;
+                    fHost = (XMLCh*) fMemoryManager->allocate
+                    (
+                        (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+                    );//new XMLCh[(ptr1 - srcPtr) + 1];
                     ptr2 = fHost;
                     while (srcPtr < ptr1)
                         *ptr2++ = *srcPtr++;
@@ -973,8 +998,8 @@ void XMLURL::parse(const XMLCh* const urlText)
             }
              else
             {
-                delete [] fHost;
-                fHost = XMLString::replicate(srcPtr);
+                fMemoryManager->deallocate(fHost);//delete [] fHost;
+                fHost = XMLString::replicate(srcPtr, fMemoryManager);
 
                 // Update source pointer to the end
                 srcPtr += XMLString::stringLen(fHost);
@@ -1012,8 +1037,8 @@ void XMLURL::parse(const XMLCh* const urlText)
         {
             // Get this info out as the user name
             *ptr1 = 0;
-            delete [] fUser;
-            fUser = XMLString::replicate(fHost);
+            fMemoryManager->deallocate(fUser);//delete [] fUser;
+            fUser = XMLString::replicate(fHost, fMemoryManager);
             ptr1++;
 
             // And now cut these chars from the host string
@@ -1028,8 +1053,8 @@ void XMLURL::parse(const XMLCh* const urlText)
 
                 // And copy out the remainder to the password field
                 ptr2++;
-                delete [] fPassword;
-                fPassword = XMLString::replicate(ptr2);
+                fMemoryManager->deallocate(fPassword);//delete [] fPassword;
+                fPassword = XMLString::replicate(ptr2, fMemoryManager);
             }
         }
 
@@ -1072,16 +1097,19 @@ void XMLURL::parse(const XMLCh* const urlText)
     ptr1 = XMLString::findAny(srcPtr, listFive);
     if (!ptr1)
     {
-        delete [] fPath;
-        fPath = XMLString::replicate(srcPtr);
+        fMemoryManager->deallocate(fPath);//delete [] fPath;
+        fPath = XMLString::replicate(srcPtr, fMemoryManager);
         return;
     }
 
     // Everything from where we are to what we found is the path
     if (ptr1 > srcPtr)
     {
-        delete [] fPath;
-        fPath = new XMLCh[(ptr1 - srcPtr) + 1];
+        fMemoryManager->deallocate(fPath);//delete [] fPath;
+        fPath = (XMLCh*) fMemoryManager->allocate
+        (
+            (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+        );//new XMLCh[(ptr1 - srcPtr) + 1];
         ptr2 = fPath;
         while (srcPtr < ptr1)
             *ptr2++ = *srcPtr++;
@@ -1095,8 +1123,8 @@ void XMLURL::parse(const XMLCh* const urlText)
     if (*srcPtr == chPound)
     {
         srcPtr++;
-        delete [] fFragment;
-        fFragment = XMLString::replicate(srcPtr);
+        fMemoryManager->deallocate(fFragment);//delete [] fFragment;
+        fFragment = XMLString::replicate(srcPtr, fMemoryManager);
         return;
     }
 
@@ -1106,15 +1134,18 @@ void XMLURL::parse(const XMLCh* const urlText)
     //
     srcPtr++;
     ptr1 = XMLString::findAny(srcPtr, listSix);
-    delete [] fQuery;
+    fMemoryManager->deallocate(fQuery);//delete [] fQuery;
     if (!ptr1)
     {
-        fQuery = XMLString::replicate(srcPtr);
+        fQuery = XMLString::replicate(srcPtr, fMemoryManager);
         return;
     }
      else
     {
-        fQuery = new XMLCh[(ptr1 - srcPtr) + 1];
+        fQuery = (XMLCh*) fMemoryManager->allocate
+        (
+            (ptr1 - srcPtr + 1) * sizeof(XMLCh)
+        );//new XMLCh[(ptr1 - srcPtr) + 1];
         ptr2 = fQuery;
         while (srcPtr < ptr1)
             *ptr2++ = *srcPtr++;
@@ -1125,8 +1156,8 @@ void XMLURL::parse(const XMLCh* const urlText)
     if (*srcPtr == chPound)
     {
         srcPtr++;
-        delete [] fFragment;
-        fFragment = XMLString::replicate(srcPtr);
+        fMemoryManager->deallocate(fFragment);//delete [] fFragment;
+        fFragment = XMLString::replicate(srcPtr, fMemoryManager);
     }
 }
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,6 @@
 #if !defined(XMLURL_HPP)
 #define XMLURL_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLException.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -72,7 +71,7 @@ class BinInputStream;
 //  This class supports file, http, and ftp style URLs. All others are
 //  rejected
 //
-class XMLUTIL_EXPORT XMLURL
+class XMLUTIL_EXPORT XMLURL : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -236,6 +235,7 @@ private:
     //      This indicates if the URL Text contains invalid characters as per
     //      RFC 2396 standard.
     // -----------------------------------------------------------------------
+    MemoryManager*  fMemoryManager;
     XMLCh*          fFragment;
     XMLCh*          fHost;
     XMLCh*          fPassword;

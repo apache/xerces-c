@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2003/05/09 15:13:46  peiyongz
  * Deprecated toString() in XMLNumber family
  *
@@ -92,8 +95,8 @@
 #ifndef XML_DATETIME_HPP
 #define XML_DATETIME_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLNumber.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/SchemaDateTimeException.hpp>
@@ -154,7 +157,6 @@ public:
      *  Deprecated: please use getRawData
      *
      */
-
     virtual XMLCh*        toString() const;
     
     virtual XMLCh*        getRawData() const;
@@ -309,17 +311,15 @@ private:
     int          fTimeZone[TIMEZONE_ARRAYSIZE];
     int          fStart;
     int          fEnd;
-
     XMLCh*       fBuffer;
-
+    MemoryManager* fMemoryManager;
 };
 
 inline void XMLDateTime::setBuffer(const XMLCh* const aString)
 {
     reset();
-    fBuffer = XMLString::replicate(aString);
+    fBuffer = XMLString::replicate(aString, fMemoryManager);
     fEnd    = XMLString::stringLen(fBuffer);
-
 }
 
 inline void XMLDateTime::reset()
@@ -332,7 +332,7 @@ inline void XMLDateTime::reset()
 
     if (fBuffer)
     {
-        delete[] fBuffer;
+        fMemoryManager->deallocate(fBuffer);//delete[] fBuffer;
         fBuffer = 0;
     }
 
@@ -350,13 +350,12 @@ inline void XMLDateTime::copy(const XMLDateTime& rhs)
 
     if (fBuffer)
     {
-        delete[] fBuffer;
+        fMemoryManager->deallocate(fBuffer);//delete[] fBuffer;
         fBuffer = 0;
     }
 
     if (rhs.fBuffer)
-        fBuffer = XMLString::replicate(rhs.fBuffer);
-
+        fBuffer = XMLString::replicate(rhs.fBuffer, fMemoryManager);
 }
 
 inline void XMLDateTime::assertBuffer() const

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -84,17 +87,19 @@
 #if !defined(BITSET_HPP)
 #define BITSET_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLUTIL_EXPORT BitSet
+class XMLUTIL_EXPORT BitSet : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    BitSet(const unsigned int size);
+    BitSet( const unsigned int size
+          , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager);
     BitSet(const BitSet& toCopy);
     ~BitSet();
 
@@ -158,6 +163,7 @@ private :
     //  fUnitLen
     //      The length of the storage array, in storage units not bits.
     // -----------------------------------------------------------------------
+    MemoryManager*  fMemoryManager;
     unsigned long*  fBits;
     unsigned int    fUnitLen;
 };

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -61,9 +61,9 @@
 #ifndef XML_BIGDECIMAL_HPP
 #define XML_BIGDECIMAL_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLNumber.hpp>
-#include <xercesc/util/XMLBigInteger.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -150,13 +150,12 @@ private:
     //     needed for pattern matching.
     //
     // -----------------------------------------------------------------------
-
-    int          fSign;
-    unsigned int fTotalDigits;
-    unsigned int fScale;
-
-    XMLCh*       fIntVal;    
-    XMLCh*       fRawData;
+    int            fSign;
+    unsigned int   fTotalDigits;
+    unsigned int   fScale;
+    XMLCh*         fIntVal;    
+    XMLCh*         fRawData;
+    MemoryManager* fMemoryManager;
 };
 
 inline int XMLBigDecimal::getSign() const
@@ -194,6 +193,7 @@ inline const XMLCh*  XMLBigDecimal::getFormattedString() const
 //
 inline XMLCh*  XMLBigDecimal::toString() const
 {
+    // Return data using global operator new
     return XMLString::replicate(fRawData);
 }
 

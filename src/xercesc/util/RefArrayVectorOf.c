@@ -23,7 +23,7 @@ template <class TElem> RefArrayVectorOf<TElem>::~RefArrayVectorOf()
       for (unsigned int index = 0; index < fCurCount; index++)
         delete[] fElemList[index];
     }
-    delete [] fElemList;
+    fMemoryManager->deallocate(fElemList);//delete [] fElemList;
 }
 
 

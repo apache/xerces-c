@@ -392,10 +392,18 @@ public :
       * @param srcPath The path of the file for which you want the full path
       *
       * @return Returns the fully qualified path of the file name including
-      * the file name. This is dyanmically allocated and must be deleted
-      * by the caller when its no longer needed!
+      *         the file name. This is dyanmically allocated and must be
+      *         deleted  by the caller when its no longer needed! The memory
+      *         returned will beallocated using the static memory manager, if
+      *         user do not supply a memory manager. Users then need to make
+      *         sure to use either the default or user specific memory manager
+      *         to deallocate the memory.
       */
-    static XMLCh* getFullPath(const XMLCh* const srcPath);
+    static XMLCh* getFullPath
+    (
+        const XMLCh* const srcPath
+        , MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     /** Gets the current working directory 
       *
@@ -404,9 +412,16 @@ public :
       *
       * @return Returns the current working directory. 
       *         This is dyanmically allocated and must be deleted
-      *         by the caller when its no longer needed!
+      *         by the caller when its no longer needed! The memory returned
+      *         will be allocated using the static memory manager, if users
+      *         do not supply a memory manager. Users then need to make sure
+      *         to use either the default or user specific memory manager to
+      *         deallocate the memory.
       */
-    static XMLCh* getCurrentDirectory();
+    static XMLCh* getCurrentDirectory
+    (
+        MemoryManager* const manager = XMLPlatformUtils::fgMemoryManager
+    );
 
     /** Check if a charater is a slash
       *

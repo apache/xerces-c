@@ -508,6 +508,25 @@ char* XMLString::replicate(const char* const toRep)
     return ret;
 }
 
+char* XMLString::replicate( const char* const    toRep
+                          , MemoryManager* const manager)
+{
+    // If a null string, return a null string
+    if (!toRep)
+        return 0;
+
+    //
+    //  Get the len of the source and allocate a new buffer. Make sure to
+    //  account for the nul terminator.
+    //
+    const unsigned int srcLen = strlen(toRep);
+    char* ret = (char*) manager->allocate((srcLen+1) * sizeof(char)); //new char[srcLen+1];
+
+    // Copy over the text, adjusting for the size of a char
+    memcpy(ret, toRep, (srcLen+1) * sizeof(char));
+    return ret;
+}
+
 
 bool XMLString::startsWith(const char* const toTest, const char* const prefix)
 {
@@ -533,6 +552,12 @@ char* XMLString::transcode(const XMLCh* const toTranscode)
     return gTranscoder->transcode(toTranscode);
 }
 
+char* XMLString::transcode(const XMLCh* const toTranscode,
+                           MemoryManager* const manager)
+{
+    return gTranscoder->transcode(toTranscode, manager);
+}
+
 bool XMLString::transcode(  const   XMLCh* const    toTranscode
                             ,       char* const     toFill
                             , const unsigned int    maxChars)
@@ -545,6 +570,12 @@ bool XMLString::transcode(  const   XMLCh* const    toTranscode
 XMLCh* XMLString::transcode(const char* const toTranscode)
 {
     return gTranscoder->transcode(toTranscode);
+}
+
+XMLCh* XMLString::transcode(const char* const toTranscode,
+                            MemoryManager* const manager)
+{
+    return gTranscoder->transcode(toTranscode, manager);
 }
 
 bool XMLString::transcode(  const   char* const     toTranscode

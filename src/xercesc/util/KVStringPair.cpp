@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -124,7 +127,8 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 KVStringPair::KVStringPair() :
 
-    fKey(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fKey(0)
     , fKeyAllocSize(0)
     , fValue(0)
     , fValueAllocSize(0)
@@ -133,7 +137,8 @@ KVStringPair::KVStringPair() :
 
 KVStringPair::KVStringPair(const XMLCh* const key, const XMLCh* const value) :
 
-    fKey(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fKey(0)
     , fKeyAllocSize(0)
     , fValue(0)
     , fValueAllocSize(0)
@@ -143,7 +148,8 @@ KVStringPair::KVStringPair(const XMLCh* const key, const XMLCh* const value) :
 
 KVStringPair::KVStringPair(const KVStringPair& toCopy) :
 
-    fKey(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fKey(0)
     , fKeyAllocSize(0)
     , fValue(0)
     , fValueAllocSize(0)
@@ -153,32 +159,8 @@ KVStringPair::KVStringPair(const KVStringPair& toCopy) :
 
 KVStringPair::~KVStringPair()
 {
-    delete [] fKey;
-    delete [] fValue;
-}
-
-
-// ---------------------------------------------------------------------------
-//  KVStringPair: Getters
-// ---------------------------------------------------------------------------
-const XMLCh* KVStringPair::getKey() const
-{
-    return fKey;
-}
-
-XMLCh* KVStringPair::getKey()
-{
-    return fKey;
-}
-
-const XMLCh* KVStringPair::getValue() const
-{
-    return fValue;
-}
-
-XMLCh* KVStringPair::getValue()
-{
-    return fValue;
+    fMemoryManager->deallocate(fKey); //delete [] fKey;
+    fMemoryManager->deallocate(fValue); //delete [] fValue;
 }
 
 
@@ -187,28 +169,28 @@ XMLCh* KVStringPair::getValue()
 // ---------------------------------------------------------------------------
 void KVStringPair::setKey(const XMLCh* const newKey)
 {
-   const unsigned int  len = XMLString::stringLen(newKey);
+    const unsigned int  len = XMLString::stringLen(newKey);
 
     if (len >= fKeyAllocSize)
-   {
-    delete [] fKey;
+    {
+        fMemoryManager->deallocate(fKey); //delete [] fKey;
         fKeyAllocSize = len + 1;
-        fKey = new XMLCh[fKeyAllocSize];
-   }
+        fKey = (XMLCh*) fMemoryManager->allocate(fKeyAllocSize * sizeof(XMLCh)); //new XMLCh[fKeyAllocSize];
+    }
 
     XMLString::copyString(fKey, newKey);
 }
 
 void KVStringPair::setValue(const XMLCh* const newValue)
 {
-   const unsigned int  len = XMLString::stringLen(newValue);
+    const unsigned int  len = XMLString::stringLen(newValue);
 
     if (len >= fValueAllocSize)
-   {
-    delete [] fValue;
+    {
+        fMemoryManager->deallocate(fValue); //delete [] fValue;
         fValueAllocSize = len + 1;
-        fValue = new XMLCh[fValueAllocSize];
-   }
+        fValue = (XMLCh*) fMemoryManager->allocate(fValueAllocSize * sizeof(XMLCh)); //new XMLCh[fValueAllocSize];
+    }
 
     XMLString::copyString(fValue, newValue);
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.5  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -105,11 +108,12 @@
 
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLUTIL_EXPORT QName
+class XMLUTIL_EXPORT QName : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -214,6 +218,7 @@ private :
     //  fURIId
     //      The id of the URI that this attribute belongs to.
     // -----------------------------------------------------------------------
+    MemoryManager*      fMemoryManager;
     XMLCh*              fPrefix;
     unsigned int        fPrefixBufSz;
     XMLCh*              fLocalPart;
@@ -221,7 +226,6 @@ private :
     XMLCh*              fRawName;
     unsigned int        fRawNameBufSz;
     unsigned int        fURIId;
-
 };
 
 // ---------------------------------------------------------------------------

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:03  tng
  * C++ Namespace Support.
  *
@@ -85,9 +88,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/IllegalArgumentException.hpp>
-#include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/BitSet.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -109,9 +111,11 @@ const unsigned int  kGrowBy         = 1;
 // ---------------------------------------------------------------------------
 //  BitSet: Constructors and Destructor
 // ---------------------------------------------------------------------------
-BitSet::BitSet(const unsigned int size) :
+BitSet::BitSet( const unsigned int size
+              , MemoryManager* const manager) :
 
-    fBits(0)
+    fMemoryManager(manager)
+    , fBits(0)
     , fUnitLen(0)
 {
     ensureCapacity(size);
@@ -119,17 +123,21 @@ BitSet::BitSet(const unsigned int size) :
 
 BitSet::BitSet(const BitSet& toCopy) :
 
-    fBits(0)
+    fMemoryManager(toCopy.fMemoryManager)
+    , fBits(0)
     , fUnitLen(toCopy.fUnitLen)
 {
-    fBits = new unsigned long[fUnitLen];
+    fBits = (unsigned long*) fMemoryManager->allocate
+    (
+        fUnitLen * sizeof(unsigned long)
+    ); //new unsigned long[fUnitLen];
     for (unsigned int i = 0; i < fUnitLen; i++)
         fBits[i] = toCopy.fBits[i];
 }
 
 BitSet::~BitSet()
 {
-    delete [] fBits;
+    fMemoryManager->deallocate(fBits); //delete [] fBits;
 }
 
 
@@ -306,7 +314,10 @@ void BitSet::ensureCapacity(const unsigned int size)
             unitsNeeded = fUnitLen + kGrowBy;
 
         // Allocate the array, copy the old stuff, and zero the new stuff
-        unsigned long* newBits = new unsigned long[unitsNeeded];
+        unsigned long* newBits = (unsigned long*) fMemoryManager->allocate
+        (
+            unitsNeeded * sizeof(unsigned long)
+        ); //new unsigned long[unitsNeeded];
 
         unsigned int index;
         for (index = 0; index < fUnitLen; index++)
@@ -315,7 +326,7 @@ void BitSet::ensureCapacity(const unsigned int size)
         for (; index < unitsNeeded; index++)
             newBits[index] = 0;
 
-        delete [] fBits;
+        fMemoryManager->deallocate(fBits); //delete [] fBits;
         fBits = newBits;
         fUnitLen = unitsNeeded;
     }

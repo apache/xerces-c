@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.4  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -119,9 +122,10 @@ template <class TElem> NameIdPoolBucketElem<TElem>::~NameIdPoolBucketElem()
 //  NameIdPool: Constructors and Destructor
 // ---------------------------------------------------------------------------
 template <class TElem>
-NameIdPool<TElem>::NameIdPool(  const   unsigned int    hashModulus
-                                , const unsigned int    initSize) :
-    fBucketList(0)
+NameIdPool<TElem>::NameIdPool( const unsigned int hashModulus
+                             , const unsigned int initSize) :
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fBucketList(0)
     , fIdPtrs(0)
     , fIdPtrsCount(initSize)
     , fIdCounter(0)
@@ -131,7 +135,10 @@ NameIdPool<TElem>::NameIdPool(  const   unsigned int    hashModulus
         ThrowXML(IllegalArgumentException, XMLExcepts::Pool_ZeroModulus);
 
     // Allocate the bucket list and zero them
-    fBucketList = new NameIdPoolBucketElem<TElem>*[fHashModulus];
+    fBucketList = (NameIdPoolBucketElem<TElem>**) fMemoryManager->allocate
+    (
+        fHashModulus * sizeof(NameIdPoolBucketElem<TElem>*)
+    ); //new NameIdPoolBucketElem<TElem>*[fHashModulus];
     for (unsigned int index = 0; index < fHashModulus; index++)
         fBucketList[index] = 0;
 
@@ -142,7 +149,10 @@ NameIdPool<TElem>::NameIdPool(  const   unsigned int    hashModulus
     //
     if (!fIdPtrsCount)
         fIdPtrsCount = 256;
-    fIdPtrs = new TElem*[fIdPtrsCount];
+    fIdPtrs = (TElem**) fMemoryManager->allocate
+    (
+        fIdPtrsCount * sizeof(TElem*)
+    ); //new TElem*[fIdPtrsCount];
     fIdPtrs[0] = 0;
 }
 
@@ -152,11 +162,11 @@ template <class TElem> NameIdPool<TElem>::~NameIdPool()
     //  Delete the id pointers list. The stuff it points to will be cleaned
     //  up when we clean the bucket lists.
     //
-    delete [] fIdPtrs;
+    fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
 
     // Remove all elements then delete the bucket list
     removeAll();
-    delete [] fBucketList;
+    fMemoryManager->deallocate(fBucketList); //delete [] fBucketList;
 }
 
 
@@ -263,7 +273,7 @@ unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
     }
 
     // Create a new bucket element and add it to the appropriate list
-    NameIdPoolBucketElem<TElem>* newBucket = new NameIdPoolBucketElem<TElem>
+    NameIdPoolBucketElem<TElem>* newBucket = new (fMemoryManager) NameIdPoolBucketElem<TElem>
     (
         elemToAdopt
         , fBucketList[hashVal]
@@ -278,13 +288,16 @@ unsigned int NameIdPool<TElem>::put(TElem* const elemToAdopt)
     {
         // Create a new count 1.5 times larger and allocate a new array
         unsigned int newCount = (unsigned int)(fIdPtrsCount * 1.5);
-        TElem** newArray = new TElem*[newCount];
+        TElem** newArray = (TElem**) fMemoryManager->allocate
+        (
+            newCount * sizeof(TElem*)
+        ); //new TElem*[newCount];
 
         // Copy over the old contents to the new array
         memcpy(newArray, fIdPtrs, fIdPtrsCount * sizeof(TElem*));
 
         // Ok, toss the old array and store the new data
-        delete [] fIdPtrs;
+        fMemoryManager->deallocate(fIdPtrs); //delete [] fIdPtrs;
         fIdPtrs = newArray;
         fIdPtrsCount = newCount;
     }

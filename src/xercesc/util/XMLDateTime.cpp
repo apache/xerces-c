@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.9  2003/05/15 16:32:19  gareth
  * We did not allow dateTimes with a timezone due to the last seconds fix.
  *
@@ -467,17 +470,19 @@ int XMLDateTime::compareOrder(const XMLDateTime* const lValue
 XMLDateTime::~XMLDateTime()
 {
     if (fBuffer)
-        delete[] fBuffer;
+        fMemoryManager->deallocate(fBuffer);//delete[] fBuffer;
 }
 
 XMLDateTime::XMLDateTime()
-:fBuffer(0)
+: fBuffer(0)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     reset();
 }
 
 XMLDateTime::XMLDateTime(const XMLCh* const aString)
-:fBuffer(0)
+: fBuffer(0)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     setBuffer(aString);
 }
@@ -487,7 +492,8 @@ XMLDateTime::XMLDateTime(const XMLCh* const aString)
 // -----------------------------------------------------------------------
 
 XMLDateTime::XMLDateTime(const XMLDateTime &toCopy)
-:fBuffer(0)
+: fBuffer(0)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     copy(toCopy);
 }
@@ -515,6 +521,7 @@ XMLCh*  XMLDateTime::toString() const
 {
     assertBuffer();
 
+    // Return data using global operator new
     XMLCh* retBuf = XMLString::replicate(fBuffer);
     return retBuf;
 }
@@ -1361,8 +1368,11 @@ int XMLDateTime::findUTCSign (const int start)
 int XMLDateTime::parseInt(const int start, const int end) const
 {
 
-    XMLCh* strToScan = new XMLCh[end - start + 1];
-    ArrayJanitor<XMLCh>  jname(strToScan);
+    XMLCh* strToScan = (XMLCh*) fMemoryManager->allocate
+    (
+        (end - start + 1) * sizeof(XMLCh)
+    );//new XMLCh[end - start + 1];
+    ArrayJanitor<XMLCh>  jname(strToScan, fMemoryManager);
     XMLString::subString(strToScan, fBuffer, start, end);
 
     unsigned int retVal;

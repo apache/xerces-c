@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2003/05/09 15:13:46  peiyongz
  * Deprecated toString() in XMLNumber family
  *
@@ -86,11 +89,11 @@
 #ifndef XMLNUMBER_HPP
 #define XMLNUMBER_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-class XMLUTIL_EXPORT XMLNumber
+class XMLUTIL_EXPORT XMLNumber : public XMemory
 {
 public:
 
@@ -107,11 +110,11 @@ public:
     /**
      *  Deprecated: please use getRawData
      *
-	 *  Return string representation of the decimal value.
+     *  Return string representation of the decimal value.
      *  A decimal point will be included as necessary,
      *  the caller of this method is responsible for the
      *  de-allocation of the memory.
-	 */
+     */
     virtual XMLCh*     toString() const = 0;
     
 	/**

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -95,11 +98,12 @@
 #if !defined(JANITOR_HPP)
 #define JANITOR_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/XMemory.hpp>
+#include <xercesc/framework/MemoryManager.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-template <class T> class Janitor
+template <class T> class Janitor : public XMemory
 {
 public  :
     // -----------------------------------------------------------------------
@@ -139,13 +143,14 @@ private :
 
 
 
-template <class T> class ArrayJanitor
+template <class T> class ArrayJanitor : public XMemory
 {
 public  :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
     ArrayJanitor(T* const toDelete);
+    ArrayJanitor(T* const toDelete, MemoryManager* const manager);
     ~ArrayJanitor();
 
 
@@ -159,6 +164,7 @@ public  :
 	T*	get() const;
 	T*	release();
 	void reset(T* p = 0);
+	void reset(T* p, MemoryManager* const manager);
 
 private :
     // -----------------------------------------------------------------------
@@ -175,6 +181,7 @@ private :
     //      destroyed when this object is destroyed.
     // -----------------------------------------------------------------------
     T*  fData;
+    MemoryManager* fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END

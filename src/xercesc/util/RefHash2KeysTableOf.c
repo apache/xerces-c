@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -94,39 +97,61 @@ XERCES_CPP_NAMESPACE_BEGIN
 // ---------------------------------------------------------------------------
 //  RefHash2KeysTableOf: Constructors and Destructor
 // ---------------------------------------------------------------------------
-template <class TVal> RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf(const unsigned int modulus, const bool adoptElems)
-	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus)
+template <class TVal>
+RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int modulus
+                                              , const bool         adoptElems)
+    : fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+	, fAdoptedElems(adoptElems)
+    , fBucketList(0)
+    , fHashModulus(modulus)
+    , fHash(0)
 {
     initialize(modulus);
 	
 	// create default hasher
-	fHash = new HashXMLCh();
+	fHash = new (fMemoryManager) HashXMLCh();
 }
 
-template <class TVal> RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf(const unsigned int modulus, const bool adoptElems, HashBase* hashBase)
-	: fAdoptedElems(adoptElems), fBucketList(0), fHashModulus(modulus)
+template <class TVal>
+RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf( const unsigned int modulus
+                                              , const bool         adoptElems
+                                              , HashBase*          hashBase)
+	: fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fAdoptedElems(adoptElems)
+    , fBucketList(0)
+    , fHashModulus(modulus)
+    , fHash(0)
 {
 	initialize(modulus);
 	// set hasher
 	fHash = hashBase;
 }
 
-template <class TVal> RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf(const unsigned int modulus)
-	: fAdoptedElems(true), fBucketList(0), fHashModulus(modulus)
+template <class TVal>
+RefHash2KeysTableOf<TVal>::RefHash2KeysTableOf(const unsigned int modulus)
+	: fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fAdoptedElems(true)
+    , fBucketList(0)
+    , fHashModulus(modulus)
+    , fHash(0)
 {
 	initialize(modulus);
 
 	// create default hasher
-	fHash = new HashXMLCh();
+	fHash = new (fMemoryManager) HashXMLCh();
 }
 
-template <class TVal> void RefHash2KeysTableOf<TVal>::initialize(const unsigned int modulus)
+template <class TVal>
+void RefHash2KeysTableOf<TVal>::initialize(const unsigned int modulus)
 {
 	if (modulus == 0)
         ThrowXML(IllegalArgumentException, XMLExcepts::HshTbl_ZeroModulus);
 
     // Allocate the bucket list and zero them
-    fBucketList = new RefHash2KeysTableBucketElem<TVal>*[fHashModulus];
+    fBucketList = (RefHash2KeysTableBucketElem<TVal>**) fMemoryManager->allocate
+    (
+        fHashModulus * sizeof(RefHash2KeysTableBucketElem<TVal>*)
+    ); //new RefHash2KeysTableBucketElem<TVal>*[fHashModulus];
     for (unsigned int index = 0; index < fHashModulus; index++)
         fBucketList[index] = 0;
 }
@@ -136,7 +161,7 @@ template <class TVal> RefHash2KeysTableOf<TVal>::~RefHash2KeysTableOf()
     removeAll();
 
     // Then delete the bucket list & hasher
-    delete [] fBucketList;
+    fMemoryManager->deallocate(fBucketList); //delete [] fBucketList;
 	delete fHash;
 }
 
@@ -247,7 +272,7 @@ template <class TVal> void RefHash2KeysTableOf<TVal>::put(void* key1, int key2, 
     }
      else
     {
-        newBucket = new RefHash2KeysTableBucketElem<TVal>(key1, key2, valueToAdopt, fBucketList[hashVal]);
+        newBucket = new (fMemoryManager) RefHash2KeysTableBucketElem<TVal>(key1, key2, valueToAdopt, fBucketList[hashVal]);
         fBucketList[hashVal] = newBucket;
     }
 }

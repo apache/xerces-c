@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.3  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -165,6 +168,15 @@ template <class T> void Janitor<T>::reset(T* p)
 // -----------------------------------------------------------------------
 template <class T> ArrayJanitor<T>::ArrayJanitor(T* const toDelete) :
     fData(toDelete)
+    , fMemoryManager(0)
+{
+}
+
+template <class T>
+ArrayJanitor<T>::ArrayJanitor(T* const toDelete,
+                              MemoryManager* const manager) :
+    fData(toDelete)
+    , fMemoryManager(manager)
 {
 }
 
@@ -213,8 +225,31 @@ ArrayJanitor<T>::release()
 template <class T> void
 ArrayJanitor<T>::reset(T* p)
 {
-	delete [] fData;
+	if (fData) {
+
+		if (fMemoryManager)
+            fMemoryManager->deallocate(fData);
+        else
+            delete [] fData;
+    }
+
 	fData = p;
+    fMemoryManager = 0;
+}
+
+template <class T> void
+ArrayJanitor<T>::reset(T* p, MemoryManager* manager)
+{
+	if (fData) {
+
+		if (fMemoryManager)
+            fMemoryManager->deallocate(fData);
+        else
+            delete [] fData;
+    }
+
+	fData = p;
+    fMemoryManager = manager;
 }
 
 XERCES_CPP_NAMESPACE_END

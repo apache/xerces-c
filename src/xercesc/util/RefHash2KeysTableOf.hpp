@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -89,16 +92,13 @@
 #define REFHASH2KEYSTABLEOF_HPP
 
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/util/XMLExceptMsgs.hpp>
-#include <xercesc/util/XMLEnumerator.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/HashXMLCh.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -116,7 +116,7 @@ template <class TVal> struct RefHash2KeysTableBucketElem;
 //  This should really be a nested class, but some of the compilers we
 //  have to support cannot deal with that!
 //
-template <class TVal> struct RefHash2KeysTableBucketElem
+template <class TVal> struct RefHash2KeysTableBucketElem : public XMemory
 {
     RefHash2KeysTableBucketElem(void* key1, int key2, TVal* const value, RefHash2KeysTableBucketElem<TVal>* next)
 		: fData(value), fNext(next), fKey1(key1), fKey2(key2)
@@ -130,7 +130,7 @@ template <class TVal> struct RefHash2KeysTableBucketElem
 };
 
 
-template <class TVal> class RefHash2KeysTableOf
+template <class TVal> class RefHash2KeysTableOf : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -205,8 +205,9 @@ private:
 	//  fHash
 	//      The hasher for the key1 data type.
     // -----------------------------------------------------------------------
+    MemoryManager*                      fMemoryManager;
     bool                                fAdoptedElems;
-    RefHash2KeysTableBucketElem<TVal>**      fBucketList;
+    RefHash2KeysTableBucketElem<TVal>** fBucketList;
     unsigned int                        fHashModulus;
 	HashBase*							fHash;
 };

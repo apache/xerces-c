@@ -61,7 +61,6 @@
 #if !defined(XMLNETACCESSOR_HPP)
 #define XMLNETACCESSOR_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLURL.hpp>
 #include <xercesc/util/XMLException.hpp>
 
@@ -84,7 +83,7 @@ class BinInputStream;
 //  code so each platform can decide what actual implementation it wants to
 //  use.
 //
-class XMLUTIL_EXPORT XMLNetAccessor
+class XMLUTIL_EXPORT XMLNetAccessor : public XMemory
 {
 public :
     // -----------------------------------------------------------------------

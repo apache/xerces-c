@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.10  2003/05/09 15:13:46  peiyongz
  * Deprecated toString() in XMLNumber family
  *
@@ -106,6 +109,7 @@
 #define XML_ABSTRACT_DOUBLE_FLOAT_HPP
 
 #include <xercesc/util/XMLNumber.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -166,6 +170,8 @@ public:
     virtual const XMLCh*  getFormattedString() const;
 
     virtual int           getSign() const;
+
+    MemoryManager*        getMemoryManager() const;
 
 protected:
 
@@ -233,12 +239,17 @@ private:
     // otherwise it is empty.
     //
     XMLCh*                  fFormattedString;
-
+    MemoryManager*          fMemoryManager;
 };
 
 inline bool XMLAbstractDoubleFloat::isSpecialValue() const
 {
     return (fType < SpecialTypeNum);
+}
+
+inline MemoryManager* XMLAbstractDoubleFloat::getMemoryManager() const
+{
+    return fMemoryManager;
 }
 
 XERCES_CPP_NAMESPACE_END

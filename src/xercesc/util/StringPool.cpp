@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2003/05/15 19:07:45  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.2  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -91,28 +94,26 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/StringPool.hpp>
-#include <xercesc/util/XMLExceptMsgs.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <string.h>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
 // ---------------------------------------------------------------------------
 //  StringPool::PoolElem: Constructors and Destructor
 // ---------------------------------------------------------------------------
-XMLStringPool::PoolElem::PoolElem(  const   XMLCh* const string
-                                    , const unsigned int id) :
+XMLStringPool::PoolElem::PoolElem( const   XMLCh* const string
+                                 , const unsigned int id) :
     fId(id)
     , fString(0)
+    , fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
-    fString = XMLString::replicate(string);
+    fString = XMLString::replicate(string, fMemoryManager);
 }
 
 XMLStringPool::PoolElem::~PoolElem()
 {
-    delete [] fString;
+    fMemoryManager->deallocate(fString); //delete [] fString;
 }
 
 // ---------------------------------------------------------------------------
@@ -123,8 +124,8 @@ void
 XMLStringPool::PoolElem::reset(const XMLCh* const string, const unsigned int id)
 {
     fId = id;
-    delete [] fString;
-    fString = XMLString::replicate(string);
+    fMemoryManager->deallocate(fString);//delete [] fString;
+    fString = XMLString::replicate(string, fMemoryManager);
 }
 
 
@@ -134,23 +135,27 @@ XMLStringPool::PoolElem::reset(const XMLCh* const string, const unsigned int id)
 // ---------------------------------------------------------------------------
 XMLStringPool::XMLStringPool(const  unsigned int  modulus) :
 
-    fIdMap(0)
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fIdMap(0)
     , fHashTable(0)
     , fMapCapacity(64)
     , fCurId(1)
 {
     // Create the hash table, passing it the modulus
-    fHashTable = new RefHashTableOf<PoolElem>(modulus);
+    fHashTable = new (fMemoryManager) RefHashTableOf<PoolElem>(modulus);
 
     // Do an initial allocation of the id map and zero it all out
-    fIdMap = new PoolElem*[fMapCapacity];
+    fIdMap = (PoolElem**) fMemoryManager->allocate
+    (
+        fMapCapacity * sizeof(PoolElem*)
+    ); //new PoolElem*[fMapCapacity];
     memset(fIdMap, 0, sizeof(PoolElem*) * fMapCapacity);
 }
 
 XMLStringPool::~XMLStringPool()
 {
     delete fHashTable;
-    delete [] fIdMap;
+    fMemoryManager->deallocate(fIdMap); //delete [] fIdMap;
 }
 
 
@@ -218,7 +223,10 @@ unsigned int XMLStringPool::addNewEntry(const XMLCh* const newString)
     {
         // Calculate the new capacity, create a temp new map, and zero it
         const unsigned int newCap = (unsigned int)(fMapCapacity * 1.5);
-        PoolElem** newMap = new PoolElem*[newCap];
+        PoolElem** newMap = (PoolElem**) fMemoryManager->allocate
+        (
+            newCap * sizeof(PoolElem*)
+        ); //new PoolElem*[newCap];
         memset(newMap, 0, sizeof(PoolElem*) * newCap);
 
         //
@@ -228,7 +236,7 @@ unsigned int XMLStringPool::addNewEntry(const XMLCh* const newString)
         memcpy(newMap, fIdMap, sizeof(PoolElem*) * fMapCapacity);
 
         // Clean up the old map and store the new info
-        delete [] fIdMap;
+        fMemoryManager->deallocate(fIdMap); //delete [] fIdMap;
         fIdMap = newMap;
         fMapCapacity = newCap;
     }
@@ -238,7 +246,7 @@ unsigned int XMLStringPool::addNewEntry(const XMLCh* const newString)
     //  this new element in the id map at the current id index, then bump the
     //  id index.
     //
-    PoolElem* newElem = new PoolElem(newString, fCurId);
+    PoolElem* newElem = new (fMemoryManager) PoolElem(newString, fCurId);
     fHashTable->put((void*)(newElem->getKey()), newElem);
     fIdMap[fCurId] = newElem;
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -88,14 +91,14 @@
 #if !defined(REFARRAY_HPP)
 #define REFARRAY_HPP
 
-#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/XMLEnumerator.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-template <class TElem> class RefArrayOf
+template <class TElem> class RefArrayOf : public XMemory
 {
 public :
     // -----------------------------------------------------------------------
@@ -144,6 +147,7 @@ private :
     // -----------------------------------------------------------------------
 	unsigned int    fSize;
 	TElem**         fArray;
+    MemoryManager*  fMemoryManager;
 };
 
 

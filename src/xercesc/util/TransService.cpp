@@ -169,18 +169,20 @@ void XMLTransService::addEncoding(const XMLCh* const encoding,
 XMLTranscoder*
 XMLTransService::makeNewTranscoderFor(  const   char* const             encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize)
+                                        , const unsigned int            blockSize
+                                        ,       MemoryManager* const    manager)
 {
-    XMLCh* tmpName = XMLString::transcode(encodingName);
-    ArrayJanitor<XMLCh> janName(tmpName);
+    XMLCh* tmpName = XMLString::transcode(encodingName, manager);
+    ArrayJanitor<XMLCh> janName(tmpName, manager);
 
-    return makeNewTranscoderFor(tmpName, resValue, blockSize);
+    return makeNewTranscoderFor(tmpName, resValue, blockSize, manager);
 }
 
 XMLTranscoder*
 XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encodingName
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize)
+                                        , const unsigned int            blockSize
+                                        ,       MemoryManager* const    manager)
 {
     //
     // If strict IANA encoding flag is set, validate encoding name
@@ -213,7 +215,7 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
     // If we found it, then call the factory method for it
     if (ourMapping)
 	{		
-       XMLTranscoder* temp = ourMapping->makeNew(blockSize);
+       XMLTranscoder* temp = ourMapping->makeNew(blockSize, manager);
        resValue = temp ? XMLTransService::Ok : XMLTransService::InternalFailure;
        return temp;
     }
@@ -223,7 +225,7 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
     //  to the trans service to see if he can make anything of it.
     //
 
-    XMLTranscoder* temp =  makeNewXMLTranscoder(encodingName, resValue, blockSize);
+    XMLTranscoder* temp =  makeNewXMLTranscoder(encodingName, resValue, blockSize, manager);
 
     // if successful, set resValue to OK
     // if failed, the makeNewXMLTranscoder has already set the proper failing resValue
@@ -237,7 +239,8 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
 XMLTranscoder*
 XMLTransService::makeNewTranscoderFor(  XMLRecognizer::Encodings        encodingEnum
                                         ,       XMLTransService::Codes& resValue
-                                        , const unsigned int            blockSize)
+                                        , const unsigned int            blockSize
+                                        ,       MemoryManager* const    manager)
 {
     //
     // We can only make transcoder if the passed encodingEnum is under this range
@@ -251,12 +254,12 @@ XMLTransService::makeNewTranscoderFor(  XMLRecognizer::Encodings        encoding
 
     // If we found it, then call the factory method for it
     if (ourMapping)	{		
-       XMLTranscoder* temp = ourMapping->makeNew(blockSize);
+       XMLTranscoder* temp = ourMapping->makeNew(blockSize, manager);
        resValue = temp ? XMLTransService::Ok : XMLTransService::InternalFailure;
        return temp;
     }
     else {
-        XMLTranscoder* temp =  makeNewXMLTranscoder(XMLRecognizer::nameForEncoding(encodingEnum), resValue, blockSize);
+        XMLTranscoder* temp =  makeNewXMLTranscoder(XMLRecognizer::nameForEncoding(encodingEnum), resValue, blockSize, manager);
 
         // if successful, set resValue to OK
         // if failed, the makeNewXMLTranscoder has already set the proper failing resValue
@@ -532,7 +535,7 @@ bool XMLTransService::isStrictIANAEncoding()
 // ---------------------------------------------------------------------------
 XMLTranscoder::~XMLTranscoder()
 {
-    delete [] fEncodingName;
+    fMemoryManager->deallocate(fEncodingName);//delete [] fEncodingName;
 }
 
 
@@ -540,11 +543,13 @@ XMLTranscoder::~XMLTranscoder()
 //  XMLTranscoder: Hidden Constructors
 // ---------------------------------------------------------------------------
 XMLTranscoder::XMLTranscoder(const  XMLCh* const    encodingName
-                            , const unsigned int    blockSize) :
+                            , const unsigned int    blockSize
+                            , MemoryManager* const  manager) :
     fEncodingName(0)
     , fBlockSize(blockSize)
+    , fMemoryManager(manager)
 {
-    fEncodingName = XMLString::replicate(encodingName);
+    fEncodingName = XMLString::replicate(encodingName, fMemoryManager);
 }
 
 

@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.8  2003/05/15 19:07:45  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/02/06 16:11:30  peiyongz
  * Bug#16826: RefVectorOf.c has errors in strict ANSI mode,  patch from
  * David Bertoni (David_N_Bertoni@lotus.com )
@@ -126,7 +129,7 @@ template <class TElem> RefVectorOf<TElem>::~RefVectorOf()
        for (unsigned int index = 0; index < this->fCurCount; index++)
         delete this->fElemList[index];
     }
-    delete [] this->fElemList;
+    fMemoryManager->deallocate(this->fElemList);//delete [] this->fElemList;
 }
 
 

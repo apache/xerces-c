@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.3  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -89,15 +92,12 @@
 #define REFHASH3KEYSIDPOOL_HPP
 
 
-#include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NoSuchElementException.hpp>
 #include <xercesc/util/RuntimeException.hpp>
-#include <xercesc/util/XMLExceptMsgs.hpp>
-#include <xercesc/util/XMLEnumerator.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/HashBase.hpp>
 #include <xercesc/util/HashXMLCh.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -117,7 +117,7 @@ template <class TVal> struct RefHash3KeysTableBucketElem;
 //  This should really be a nested class, but some of the compilers we
 //  have to support cannot deal with that!
 //
-template <class TVal> struct RefHash3KeysTableBucketElem
+template <class TVal> struct RefHash3KeysTableBucketElem : public XMemory
 {
     RefHash3KeysTableBucketElem(
               void* key1
@@ -141,7 +141,7 @@ template <class TVal> struct RefHash3KeysTableBucketElem
 };
 
 
-template <class TVal> class RefHash3KeysIdPool
+template <class TVal> class RefHash3KeysIdPool : public XMemory
 {
 public:
     // -----------------------------------------------------------------------
@@ -246,13 +246,14 @@ private:
     //      element. So the first element is 1, the next is 2, etc... This
     //      means that this value is set to the top index of the fIdPtrs array.
     // -----------------------------------------------------------------------
+    MemoryManager*                      fMemoryManager;
     bool                                fAdoptedElems;
     RefHash3KeysTableBucketElem<TVal>** fBucketList;
     unsigned int                        fHashModulus;
-    HashBase*                       fHash;
-    TVal**                          fIdPtrs;
-    unsigned int                    fIdPtrsCount;
-    unsigned int                    fIdCounter;
+    HashBase*                           fHash;
+    TVal**                              fIdPtrs;
+    unsigned int                        fIdPtrsCount;
+    unsigned int                        fIdCounter;
 };
 
 

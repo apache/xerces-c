@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2003/05/15 19:04:35  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.6  2002/11/04 15:22:04  tng
  * C++ Namespace Support.
  *
@@ -104,7 +107,6 @@
  */
 
 #include <xercesc/util/QName.hpp>
-#include <xercesc/util/Janitor.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -112,7 +114,9 @@ XERCES_CPP_NAMESPACE_BEGIN
 //  QName: Constructors and Destructor
 // ---------------------------------------------------------------------------
 QName::QName() :
-      fPrefix(0)
+
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fPrefix(0)
     , fPrefixBufSz(0)
     , fLocalPart(0)
     , fLocalPartBufSz(0)
@@ -122,11 +126,12 @@ QName::QName() :
 {
 }
 
-QName::QName(const XMLCh* const        prefix
-           , const XMLCh* const        localPart
-           , const unsigned int        uriId
-            ) :
-      fPrefix(0)
+QName::QName( const XMLCh* const prefix
+            , const XMLCh* const localPart
+            , const unsigned int uriId) :
+
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fPrefix(0)
     , fPrefixBufSz(0)
     , fLocalPart(0)
     , fLocalPartBufSz(0)
@@ -142,17 +147,17 @@ QName::QName(const XMLCh* const        prefix
         //
         setName(prefix, localPart, uriId);
     }
-
     catch(...)
     {
         cleanUp();
     }
 }
 
-QName::QName(const XMLCh* const        rawName
-           , const unsigned int        uriId
-            ) :
-      fPrefix(0)
+QName::QName( const XMLCh* const rawName
+            , const unsigned int uriId) :
+
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fPrefix(0)
     , fPrefixBufSz(0)
     , fLocalPart(0)
     , fLocalPartBufSz(0)
@@ -168,7 +173,6 @@ QName::QName(const XMLCh* const        rawName
         //
         setName(rawName, uriId);
     }
-
     catch(...)
     {
         cleanUp();
@@ -184,7 +188,9 @@ QName::~QName()
 //  QName: Copy Constructors
 // ---------------------------------------------------------------------------
 QName::QName(const QName& qname) :
-      fPrefix(0)
+
+    fMemoryManager(XMLPlatformUtils::fgMemoryManager)
+    , fPrefix(0)
     , fPrefixBufSz(0)
     , fLocalPart(0)
     , fLocalPartBufSz(0)
@@ -196,12 +202,18 @@ QName::QName(const QName& qname) :
 
     newLen = XMLString::stringLen(qname.getLocalPart());
     fLocalPartBufSz = newLen + 8;
-    fLocalPart = new XMLCh[fLocalPartBufSz + 1];
+    fLocalPart = (XMLCh*) fMemoryManager->allocate
+    (
+        (fLocalPartBufSz + 1) * sizeof(XMLCh)
+    ); //new XMLCh[fLocalPartBufSz + 1];
     XMLString::moveChars(fLocalPart, qname.getLocalPart(), newLen + 1);
 
     newLen = XMLString::stringLen(qname.getPrefix());
     fPrefixBufSz = newLen + 8;
-    fPrefix = new XMLCh[fPrefixBufSz + 1];
+    fPrefix = (XMLCh*) fMemoryManager->allocate
+    (
+        (fPrefixBufSz + 1) * sizeof(XMLCh)
+    ); //new XMLCh[fPrefixBufSz + 1];
     XMLString::moveChars(fPrefix, qname.getPrefix(), newLen + 1);
 
     fURIId = qname.getURI();
@@ -238,11 +250,14 @@ const XMLCh* QName::getRawName() const
             //
             if (!fRawName || (neededLen > fRawNameBufSz))
             {
-                delete [] fRawName;
+                fMemoryManager->deallocate(fRawName); //delete [] fRawName;
 
                 // We have to cast off the const'ness to do this
                 ((QName*)this)->fRawNameBufSz = neededLen;
-                ((QName*)this)->fRawName = new XMLCh[neededLen + 1];
+                ((QName*)this)->fRawName = (XMLCh*) fMemoryManager->allocate
+                (
+                    (neededLen + 1) * sizeof(XMLCh)
+                ); //new XMLCh[neededLen + 1];
 
                 // Make sure its initially empty
                 *fRawName = 0;
@@ -290,11 +305,14 @@ XMLCh* QName::getRawName()
             //
             if (!fRawName || (neededLen > fRawNameBufSz))
             {
-                delete [] fRawName;
+                fMemoryManager->deallocate(fRawName); //delete [] fRawName;
 
                 // We have to cast off the const'ness to do this
                 ((QName*)this)->fRawNameBufSz = neededLen;
-                ((QName*)this)->fRawName = new XMLCh[neededLen + 1];
+                ((QName*)this)->fRawName = (XMLCh*) fMemoryManager->allocate
+                (
+                    (neededLen + 1) * sizeof(XMLCh)
+                ); //new XMLCh[neededLen + 1];
 
                 // Make sure its initially empty
                 *fRawName = 0;
@@ -342,9 +360,12 @@ void QName::setName(const XMLCh* const    rawName
     newLen = XMLString::stringLen(rawName);
     if (!fRawNameBufSz || (newLen > fRawNameBufSz))
     {
-        delete [] fRawName;
+        fMemoryManager->deallocate(fRawName); //delete [] fRawName;
         fRawNameBufSz = newLen + 8;
-        fRawName = new XMLCh[fRawNameBufSz + 1];
+        fRawName = (XMLCh*) fMemoryManager->allocate
+        (
+            (fRawNameBufSz + 1) * sizeof(XMLCh)
+        ); //new XMLCh[fRawNameBufSz + 1];
     }
     XMLString::moveChars(fRawName, rawName, newLen + 1);
 
@@ -374,9 +395,12 @@ void QName::setPrefix(const XMLCh* prefix)
     newLen = XMLString::stringLen(prefix);
     if (!fPrefixBufSz || (newLen > fPrefixBufSz))
     {
-        delete [] fPrefix;
+        fMemoryManager->deallocate(fPrefix); //delete [] fPrefix;
         fPrefixBufSz = newLen + 8;
-        fPrefix = new XMLCh[fPrefixBufSz + 1];
+        fPrefix = (XMLCh*) fMemoryManager->allocate
+        (
+            (fPrefixBufSz + 1) * sizeof(XMLCh)
+        ); //new XMLCh[fPrefixBufSz + 1];
     }
     XMLString::moveChars(fPrefix, prefix, newLen + 1);
 }
@@ -385,9 +409,12 @@ void QName::setNPrefix(const XMLCh* prefix, const unsigned int newLen)
 {
     if (!fPrefixBufSz || (newLen > fPrefixBufSz))
     {
-        delete [] fPrefix;
+        fMemoryManager->deallocate(fPrefix); //delete [] fPrefix;
         fPrefixBufSz = newLen + 8;
-        fPrefix = new XMLCh[fPrefixBufSz + 1];
+        fPrefix = (XMLCh*) fMemoryManager->allocate
+        (
+            (fPrefixBufSz + 1) * sizeof(XMLCh)
+        ); //new XMLCh[fPrefixBufSz + 1];
     }
     XMLString::moveChars(fPrefix, prefix, newLen);
     fPrefix[newLen] = chNull;
@@ -400,9 +427,12 @@ void QName::setLocalPart(const XMLCh* localPart)
     newLen = XMLString::stringLen(localPart);
     if (!fLocalPartBufSz || (newLen > fLocalPartBufSz))
     {
-        delete [] fLocalPart;
+        fMemoryManager->deallocate(fLocalPart); //delete [] fLocalPart;
         fLocalPartBufSz = newLen + 8;
-        fLocalPart = new XMLCh[fLocalPartBufSz + 1];
+        fLocalPart = (XMLCh*) fMemoryManager->allocate
+        (
+            (fLocalPartBufSz + 1) * sizeof(XMLCh)
+        ); //new XMLCh[fLocalPartBufSz + 1];
     }
     XMLString::moveChars(fLocalPart, localPart, newLen + 1);
 }
@@ -411,9 +441,12 @@ void QName::setNLocalPart(const XMLCh* localPart, const unsigned int newLen)
 {
     if (!fLocalPartBufSz || (newLen > fLocalPartBufSz))
     {
-        delete [] fLocalPart;
+        fMemoryManager->deallocate(fLocalPart); //delete [] fLocalPart;
         fLocalPartBufSz = newLen + 8;
-        fLocalPart = new XMLCh[fLocalPartBufSz + 1];
+        fLocalPart = (XMLCh*) fMemoryManager->allocate
+        (
+            (fLocalPartBufSz + 1) * sizeof(XMLCh)
+        ); //new XMLCh[fLocalPartBufSz + 1];
     }
     XMLString::moveChars(fLocalPart, localPart, newLen);
     fLocalPart[newLen] = chNull;
@@ -443,9 +476,10 @@ bool QName::operator==(const QName& qname) const
 // ---------------------------------------------------------------------------
 void QName::cleanUp()
 {
-    delete [] fLocalPart;
-    delete [] fPrefix;
-    delete [] fRawName;
+    fMemoryManager->deallocate(fLocalPart); //delete [] fLocalPart;
+    fMemoryManager->deallocate(fPrefix); //delete [] fPrefix;
+    fMemoryManager->deallocate(fRawName); //delete [] fRawName;
+    fLocalPart = fPrefix = fRawName = 0;
 }
 
 XERCES_CPP_NAMESPACE_END

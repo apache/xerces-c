@@ -54,8 +54,7 @@
  * <http://www.apache.org/>.
  */
 
-#include <xercesc/util/XercesDefs.hpp>
-#include "HashPtr.hpp"
+#include <xercesc/util/HashPtr.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 

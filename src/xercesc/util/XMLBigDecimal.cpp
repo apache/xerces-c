@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/05/15 19:07:46  knoaman
+ * Partial implementation of the configurable memory manager.
+ *
  * Revision 1.7  2003/04/29 18:13:36  peiyongz
  * cut link to XMLBigInteger, patch from Khaled Noaman
  *
@@ -108,11 +111,10 @@
 // ---------------------------------------------------------------------------
 #include <xercesc/util/XMLBigDecimal.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/XMLUniDefs.hpp>
-#include <xercesc/util/NumberFormatException.hpp>
 #include <xercesc/util/TransService.hpp>
-#include <xercesc/util/Janitor.hpp>
+#include <xercesc/util/NumberFormatException.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -133,11 +135,12 @@ XERCES_CPP_NAMESPACE_BEGIN
 **/
 
 XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue)
-:fSign(0)
-,fTotalDigits(0)
-,fScale(0)
-,fIntVal(0)
-,fRawData(0)
+: fSign(0)
+, fTotalDigits(0)
+, fScale(0)
+, fIntVal(0)
+, fRawData(0)
+, fMemoryManager(XMLPlatformUtils::fgMemoryManager)
 {
     if ((!strValue) || (!*strValue))
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_emptyString);
@@ -145,7 +148,7 @@ XMLBigDecimal::XMLBigDecimal(const XMLCh* const strValue)
     try
     {
         parseBigDecimal(strValue);
-        fRawData = XMLString::replicate(strValue);
+        fRawData = XMLString::replicate(strValue, fMemoryManager);
     }
     catch(...)
     {
@@ -162,15 +165,14 @@ XMLBigDecimal::~XMLBigDecimal()
 void XMLBigDecimal::cleanUp()
 {
     if (fIntVal)
-        delete [] fIntVal;
+        fMemoryManager->deallocate(fIntVal); //delete [] fIntVal;
 
     if (fRawData)
-        XMLString::release(&fRawData);
+        fMemoryManager->deallocate(fRawData); //XMLString::release(&fRawData);
 }
 
 void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert)
 {
-
     // Scan past any whitespace. If we hit the end, then return failure
     const XMLCh* startPtr = toConvert;
     while (XMLPlatformUtils::fgTransService->isSpace(*startPtr))
@@ -205,12 +207,15 @@ void XMLBigDecimal::parseBigDecimal(const XMLCh* const toConvert)
     if (!*startPtr)
     {
         fSign = 0;
-        fIntVal = new XMLCh[1];
+        fIntVal = (XMLCh*) fMemoryManager->allocate(sizeof(XMLCh)); //new XMLCh[1];
         fIntVal[0] = chNull;
         return;
     }
 
-    fIntVal = new XMLCh[endPtr - startPtr + 1];
+    fIntVal = (XMLCh*) fMemoryManager->allocate
+    (
+        (endPtr - startPtr + 1) * sizeof(XMLCh)
+    ); //new XMLCh[endPtr - startPtr + 1];
     XMLCh* retPtr = fIntVal;
 
     // Scan data
