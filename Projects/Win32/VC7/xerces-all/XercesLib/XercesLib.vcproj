@@ -340,6 +340,12 @@
 				RelativePath="..\..\..\..\..\src\xercesc\util\ValueVectorOf.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMemory.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\util\XMemory.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\util\XML256TableTranscoder.cpp">
 			</File>
 			<File
@@ -826,6 +832,9 @@
 				RelativePath="..\..\..\..\..\src\xercesc\framework\MemBufInputSource.hpp">
 			</File>
 			<File
+				RelativePath="..\..\..\..\..\src\xercesc\framework\MemoryManager.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\src\xercesc\framework\StdInInputSource.cpp">
 			</File>
 			<File
@@ -978,6 +987,12 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp">
