@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2004/09/23 07:10:13  amassari
+ * Removed const from variable declaration (jira#1259)
+ *
  * Revision 1.10  2004/09/08 13:56:22  peiyongz
  * Apache License Version 2.0
  *
@@ -292,7 +295,7 @@ private :
     // -----------------------------------------------------------------------
     unsigned int            fCurIndex;
     NameIdPool<TElem>*      fToEnum;
-    MemoryManager* const    fMemoryManager;
+    MemoryManager*          fMemoryManager;
 };
 
 XERCES_CPP_NAMESPACE_END
