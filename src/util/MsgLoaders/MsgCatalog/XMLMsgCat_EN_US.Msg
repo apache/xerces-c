@@ -511,7 +511,7 @@ $set 3
 150  It is an error for both length and minLength to be members of facets
 151  Value of maxLenght '{0}' must be greater than the value of minLength '{1}'
 152  Only constraining facet in boolean datatype is PATTERN
-153  Invalid Facet Tag
+153  Invalid Facet Tag '{0}'
 154  Value of Length '{0}' must be equal to the base Length '{1}'
 155  Value of minLength '{0}' must be greater than or equal to the base minLength '{1}'
 156  Value of minLength '{0}' must be less than or equal to the base maxLength '{1}'
@@ -589,51 +589,52 @@ $set 3
 228  Value '{0}' must be greater than MinExclusive '{1}' 
 229  Value '{0}' is not whitespace replaced 
 230  Value '{0}' is not a whitespace collapsed 
-231  Value '{0}' is not valida NCName 
-232  ID '{0}' is not unique 
-233  Value '{0}' is not valid ENTITY 
-234  Value '{0}' is not valid QName 
-235  NOTATION '{0}' must be a valid QName 
-236  Value '{0}' does not match any member types (of the union) 
-237  Value '{0}' is NOT a valid URI 
-238   Empty string encountered.
-239   String contains whitespaces only.
-240   More than one decimal points encountered.
-241   Invalid chars encountered.
-242   Null pointer encountered.
-243   Cannot construct URI with null/empty '{0}' 
-244   '{0}', '{1}' can only be set for a generic URI! 
-245   '{0}' contains invalid escape sequence '{1}'
-246   '{0}' contains invalid char '{1}'
-247   '{0}' can not be set to null 
-248   '{0}' is NOT conformant '{1}' 
-249   No scheme found in URI
-250   '{0}', '{1}' may not be specified if host is not specified 
-251   '{0}', '{1}' may not be specified if path is not specified 
-252   '{0}', '{1}' cannot be specified in path
-253   Port no '{0}' shall be in (0, 65535) 
-254   Value '{0}' shall be greater than the max Negative value '{1}' 
-255   Value '{0}' shall be less than the max Negative value '{1}' 
-256   Value '{0}' shall be in the range of '{1}', '{2}' 
-257   Type '{0}' is invalid: internal error 
-258   Value '{0}' shall have exponent. 
-259  A result is not set.
-260  CompactRanges - Internal Error
-261  Merge Ranges - Mismatched type
-262  SubtractRanges - Internal Error
-263  IntersectRanges - Internal Error
-264  ComplementRanges - Argument must be a RangeToken
-265  Invalid category name: {0}
-266  Keyword '{0}' not found
-267  Reference no must be more than zero
-268  Unknown option: {0}
-269  Unknown token type
-270  Failed to get RangeToken for: {0}
-271  Not supported
-272  Invalid child index
-273  Enabling the NEL option can only be called once per process.
-274  {0}
-275  operator new fails.  Possibly running Of memory
-276  Operation is not allowed
+231  Value '{0}' is not valid NCName 
+232  Value '{0}' is not valid Name 
+233  ID '{0}' is not unique 
+234  Value '{0}' is not valid ENTITY 
+235  Value '{0}' is not valid QName 
+236  NOTATION '{0}' must be a valid QName 
+237  Value '{0}' does not match any member types (of the union) 
+238  Value '{0}' is NOT a valid URI 
+239   Empty string encountered.
+240   String contains whitespaces only.
+241   More than one decimal points encountered.
+242   Invalid chars encountered.
+243   Null pointer encountered.
+244   Cannot construct URI with null/empty '{0}' 
+245   '{0}', '{1}' can only be set for a generic URI! 
+246   '{0}' contains invalid escape sequence '{1}'
+247   '{0}' contains invalid char '{1}'
+248   '{0}' can not be set to null 
+249   '{0}' is NOT conformant '{1}' 
+250   No scheme found in URI
+251   '{0}', '{1}' may not be specified if host is not specified 
+252   '{0}', '{1}' may not be specified if path is not specified 
+253   '{0}', '{1}' cannot be specified in path
+254   Port no '{0}' shall be in (0, 65535) 
+255   Value '{0}' shall be greater than the max Negative value '{1}' 
+256   Value '{0}' shall be less than the max Negative value '{1}' 
+257   Value '{0}' shall be in the range of '{1}', '{2}' 
+258   Type '{0}' is invalid: internal error 
+259   Value '{0}' shall have exponent. 
+260  A result is not set.
+261  CompactRanges - Internal Error
+262  Merge Ranges - Mismatched type
+263  SubtractRanges - Internal Error
+264  IntersectRanges - Internal Error
+265  ComplementRanges - Argument must be a RangeToken
+266  Invalid category name: {0}
+267  Keyword '{0}' not found
+268  Reference no must be more than zero
+269  Unknown option: {0}
+270  Unknown token type
+271  Failed to get RangeToken for: {0}
+272  Not supported
+273  Invalid child index
+274  Enabling the NEL option can only be called once per process.
+275  {0}
+276  operator new fails.  Possibly running Of memory
+277  Operation is not allowed
 
 
