@@ -1227,6 +1227,14 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp
 # End Source File
 # Begin Source File
@@ -3135,15 +3143,7 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathNamespace.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathNSResolver.hpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathResult.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriterFilter.hpp
 # End Source File
 # Begin Source File
 
@@ -3159,8 +3159,15 @@ SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathExpression.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathNamespace.hpp
+# End Source File
+# Begin Source File
 
-SOURCE=..\..\..\..\..\src\xercesc\dom\DOMWriterFilter.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathNSResolver.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMXPathResult.hpp
 # End Source File
 # End Group
 # Begin Source File
@@ -3169,5 +3176,3 @@ SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc
 # End Source File
 # End Target
 # End Project
-
-

@@ -3430,7 +3430,11 @@ SOURCE=..\..\..\..\..\src\xercesc\internal\IGXMLScanner2.cpp
 "$(INTDIR)\IGXMLScanner2.obj" : $(SOURCE) "$(INTDIR)"
 	$(CPP) $(CPP_PROJ) $(SOURCE)
 
+SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerArrayImpl.cpp
 
+"$(INTDIR)\MemoryManagerArrayImpl.obj" : $(SOURCE) "$(INTDIR)"
+	$(CPP) $(CPP_PROJ) $(SOURCE)
+	
 SOURCE=..\..\..\..\..\src\xercesc\internal\MemoryManagerImpl.cpp
 
 "$(INTDIR)\MemoryManagerImpl.obj" : $(SOURCE) "$(INTDIR)"
