@@ -629,14 +629,14 @@ bool XMLString::isValidNCName(const XMLCh* const name) {
 
     while(*tempName) {
 
-        if (!XMLReader::isNameChar(*tempName++)) {
+        if (*tempName == chColon || !XMLReader::isNameChar(*tempName++)) {
             return false;
         }
     }
 
     return true;
 }
-
+ 
 /**
   * isValidName
   *
@@ -646,19 +646,19 @@ bool XMLString::isValidNCName(const XMLCh* const name) {
   */
 bool XMLString::isValidName(const XMLCh* const name) {
 
-    if (!name ||
+    if (!name || 
         (XMLString::stringLen(name) == 0))
         return false;
 
     const XMLCh* tempName = name;
     XMLCh firstChar = *tempName++;
 
-    if (!XMLReader::isXMLLetter(firstChar) &&
+    if (!XMLReader::isXMLLetter(firstChar) && 
         (firstChar != chUnderscore)        &&
-        (firstChar != chColon)              )
+        (firstChar != chColon)              ) 
         return false;
 
-    while(*tempName)
+    while(*tempName) 
         if (!XMLReader::isNameChar(*tempName++))
             return false;
 
@@ -668,10 +668,10 @@ bool XMLString::isValidName(const XMLCh* const name) {
 /**
   * isValidEncName
   *
-  * [80] EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')*
+  * [80] EncName ::= [A-Za-z] ([A-Za-z0-9._] | '-')* 
   *
   */
-bool XMLString::isValidEncName(const XMLCh* const name)
+bool XMLString::isValidEncName(const XMLCh* const name) 
 {
 
     if ( ( !name) ||
@@ -702,9 +702,9 @@ bool XMLString::isValidEncName(const XMLCh* const name)
 /**
   * isValidQName
   *
-  * [6]  QName ::=  (Prefix ':')? LocalPart
-  * [7]  Prefix ::=  NCName
-  * [8]  LocalPart ::=  NCName
+  * [6]  QName ::=  (Prefix ':')? LocalPart 
+  * [7]  Prefix ::=  NCName 
+  * [8]  LocalPart ::=  NCName 
   *
   */
 bool XMLString::isValidQName(const XMLCh* const name)
