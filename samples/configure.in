@@ -69,9 +69,11 @@ AC_OUTPUT([Makefile \
 SAXCount/Makefile \
 SAX2Count/Makefile \
 DOMCount/Makefile \
+IDOMCount/Makefile \
 SAXPrint/Makefile \
 SAX2Print/Makefile \
 DOMPrint/Makefile \
+IDOMPrint/Makefile \
 MemParse/Makefile \
 Redirect/Makefile \
 PParse/Makefile \

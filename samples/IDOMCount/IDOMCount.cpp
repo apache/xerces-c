@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the Apache Software Foundation, and was
- * originally based on software copyright (c) 1999, International
+ * originally based on software copyright (c) 2001, International
  * Business Machines, Inc., http://www.ibm.com .  For more information
  * on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
@@ -64,9 +64,10 @@
 #include <util/PlatformUtils.hpp>
 #include <sax/SAXException.hpp>
 #include <sax/SAXParseException.hpp>
-#include <parsers/DOMParser.hpp>
-#include <dom/DOM_DOMException.hpp>
-#include "DOMCount.hpp"
+#include <parsers/IDOMParser.hpp>
+#include <idom/IDOM_DOMException.hpp>
+#include <idom/IDOM_Document.hpp>
+#include "IDOMCount.hpp"
 #include <string.h>
 #include <stdlib.h>
 
@@ -78,7 +79,7 @@
 //  tree for the specified input file. It then walks the tree and counts
 //  the number of elements. The element count is then printed.
 // ---------------------------------------------------------------------------
-void usage()
+static void usage()
 {
     cout << "\nUsage:\n"
             "    DOMCount [-v -n] {XML file}\n\n"
@@ -87,13 +88,40 @@ void usage()
             "found in the input XML file.\n\n"
             "Options:\n"
             "    -v=xxx      Validation scheme [always | never | auto*]\n"
-            "    -n          Enable namespace processing. Defaults to off.\n"
+            "    -n          Enable namespace processing. Defaults to off.\n\n"
             "    -s          Enable schema processing. Defaults to off.\n\n"
             "  * = Default if not provided explicitly\n\n"
          << endl;
 }
 
 
+
+// ---------------------------------------------------------------------------
+//
+//  Recursively Count up the total number of child Elements under the specified Node.
+//
+// ---------------------------------------------------------------------------
+static int countChildElements(IDOM_Node *n)
+{
+    IDOM_Node *child;
+    int count = 0;
+    for (child = n->getFirstChild(); child != 0; child=child->getNextSibling())
+    {
+        if (n->getNodeType() == IDOM_Node::ELEMENT_NODE)
+        {
+            count++;
+            count += countChildElements(child);
+        }
+    }
+    return count;
+}
+
+
+// ---------------------------------------------------------------------------
+//
+//   main
+//
+// ---------------------------------------------------------------------------
 int main(int argC, char* argV[])
 {
     // Initialize the XML4C system
@@ -116,10 +144,10 @@ int main(int argC, char* argV[])
         return 1;
     }
 
-    const char*              xmlFile = 0;
-    DOMParser::ValSchemes    valScheme = DOMParser::Val_Auto;
-    bool                     doNamespaces    = false;
-    bool                     doSchema        = false;
+    const char*               xmlFile = 0;
+    IDOMParser::ValSchemes    valScheme = IDOMParser::Val_Auto;
+    bool                      doNamespaces    = false;
+    bool                      doSchema        = false;
 
     // See if non validating dom parser configuration is requested.
     if ((argC == 2) && !strcmp(argV[1], "-?"))
@@ -141,11 +169,11 @@ int main(int argC, char* argV[])
             const char* const parm = &argV[argInd][3];
 
             if (!strcmp(parm, "never"))
-                valScheme = DOMParser::Val_Never;
+                valScheme = IDOMParser::Val_Never;
             else if (!strcmp(parm, "auto"))
-                valScheme = DOMParser::Val_Auto;
+                valScheme = IDOMParser::Val_Auto;
             else if (!strcmp(parm, "always"))
-                valScheme = DOMParser::Val_Always;
+                valScheme = IDOMParser::Val_Always;
             else
             {
                 cerr << "Unknown -v= value: " << parm << endl;
@@ -181,7 +209,7 @@ int main(int argC, char* argV[])
     xmlFile = argV[argInd];
 
     // Instantiate the DOM parser.
-    DOMParser parser;
+    IDOMParser parser;
     parser.setValidationScheme(valScheme);
     parser.setDoNamespaces(doNamespaces);
     parser.setDoSchema(doSchema);
@@ -210,7 +238,7 @@ int main(int argC, char* argV[])
              << StrX(toCatch.getMessage()) << "\n" << endl;
         return -1;
     }
-    catch (const DOM_DOMException& toCatch)
+    catch (const IDOM_DOMException& toCatch)
     {
         cerr << "\nDOM Error during parsing: '" << xmlFile << "'\n"
              << "DOMException code is:  \n"
@@ -235,8 +263,9 @@ int main(int argC, char* argV[])
     }
      else
     {
-        DOM_Document doc = parser.getDocument();
-        unsigned int elementCount = doc.getElementsByTagName("*").getLength();
+        IDOM_Document *doc = parser.getDocument();
+        //unsigned int elementCount = doc.getElementsByTagName("*").getLength();
+        unsigned int elementCount = countChildElements(doc);
 
         // Print out the stats that we collected and time taken.
         cout << xmlFile << ": " << duration << " ms ("
@@ -248,6 +277,9 @@ int main(int argC, char* argV[])
 
     return 0;
 }
+
+
+
 
 
 DOMCountErrorHandler::DOMCountErrorHandler() :
