@@ -169,8 +169,12 @@ bool	XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec, Mem
 //
 // gUsePosixFiles
 //   True if we're using XMLMacPosixFile rather than XMLMacCarbonFile.
+//
+// gUseGETCWD
+//   True if we can rely on getcwd to get the current directory path.
 //----------------------------------------------------------------------------
 bool gFileSystemCompatible	= false;
+bool gMacOSXOrBetter		= false;
 bool gHasFSSpecAPIs			= false;
 bool gHasFS2TBAPIs			= false;
 bool gHasHFSPlusAPIs		= false;
@@ -178,6 +182,7 @@ bool gHasFSPathAPIs			= false;
 bool gPathAPIsUsePosixPaths	= false;
 bool gHasMPAPIs				= false;
 bool gUsePosixFiles			= false;
+bool gUseGETCWD				= false;
 
 
 // ---------------------------------------------------------------------------
@@ -352,8 +357,13 @@ XMLCh* XMLPlatformUtils::getCurrentDirectory(MemoryManager* const manager)
 {
 	//	Get a newly allocated path to the current directory
 	FSSpec spec;
+
+	//  Parse to path to determine current directory: this allows the
+	//  path parsing routines to determine best way to find the current
+	//  directory.
+	XMLCh curDirPath[] = { '.', 0 };
 	XMLCh* path =
-		(noErr == FSMakeFSSpec(0, 0, NULL, &spec))
+		(XMLParsePathToFSSpec(curDirPath, spec, manager))
 			? XMLCreateFullPathFromFSSpec(spec, manager)
 			: NULL;
 			
@@ -525,6 +535,11 @@ XMLPlatformUtils::platformInit()
 
 	//	Detect available functions
 	
+	//  Check whether we're on OS X
+	gMacOSXOrBetter			= noErr == Gestalt(gestaltSystemVersion, &value)
+							  && value >= 0x00001000
+							  ;
+	
     //	Look for file system services
     if (noErr == Gestalt(gestaltFSAttr, &value))
     {
@@ -551,9 +566,15 @@ XMLPlatformUtils::platformInit()
 	#if __MSL__ && (__MSL__ < 0x08000 || _MSL_CARBON_FILE_APIS)
 	gUsePosixFiles			= false;
 	#else
-	gUsePosixFiles			= noErr == Gestalt(gestaltSystemVersion, &value)
-							  && value >= 0x00001000
-							  ;
+	gUsePosixFiles			= gMacOSXOrBetter;
+	#endif
+	
+	//  Determine whether to use getcwd or not. We use it only if we're not using MSL,
+	//  and we're on a Mac OS X system.
+	#if __MSL__
+	gUseGETCWD				= false;
+	#else
+	gUseGETCWD				= gMacOSXOrBetter;
 	#endif
 
     //	Look for MP
@@ -808,25 +829,37 @@ XMLParsePathToFSRef_X(const XMLCh* const pathName, FSRef& ref, MemoryManager* co
 	{
 		//	Right justify the user path to make room for the pre-pended path
 		std::memmove(p + kMaxMacStaticPathChars - pathLen, p, pathLen);
+		*p = '\0';
 				
 		//	Get the current directory
-        FSSpec spec;
-		if (err == noErr)
-			err = FSMakeFSSpec(0, 0, NULL, &spec);
-        if (err == noErr)
-            err = FSpMakeFSRef(&spec, &ref);
-		
-		//	Get pathname to the current directory
-		if (err == noErr)
-			err = FSRefMakePath(&ref, reinterpret_cast<UInt8*>(p), kMaxMacStaticPathChars - pathLen - 1);	// leave room for one '/'
-		std::size_t prefixLen = std::strlen(p);
-			
-		//	Now munge the two paths back together
-		if (err == noErr)
+		if (gUseGETCWD)
 		{
-			p[prefixLen++] = '/';
-			std::memmove(p + prefixLen, p + kMaxMacStaticPathChars - pathLen, pathLen);
+			//	Get current directory path, leaving room for one '/' after
+			if (err == noErr)
+				getcwd(p, kMaxMacStaticPathChars - pathLen - 1);
 		}
+		else
+		{
+			//	Get current directory path, leaving room for one '/' after
+
+			//	We quiz the carbon file manager for the current directory.
+			//	Note that carbon defaults its concept of the current directory
+			//  to the location of the executable.
+	        FSSpec spec;
+			if (err == noErr)
+				err = FSMakeFSSpec(0, 0, NULL, &spec);
+	        if (err == noErr)
+	            err = FSpMakeFSRef(&spec, &ref);
+			
+			//	Get current directory path, leaving room for one '/' after
+			if (err == noErr)
+				err = FSRefMakePath(&ref, reinterpret_cast<UInt8*>(p), kMaxMacStaticPathChars - pathLen - 1);
+		}
+					
+		//	Now munge the two paths back together
+		std::size_t prefixLen = std::strlen(p);
+		p[prefixLen++] = '/';
+		std::memmove(p + prefixLen, p + kMaxMacStaticPathChars - pathLen, pathLen);
 		
 		//	We now have a path from an absolute starting point
 	}
