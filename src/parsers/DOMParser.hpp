@@ -297,19 +297,6 @@ public :
       */
     bool getValidationConstraintFatal() const;
 
-    /** Get the 'expand entity references' flag.
-      * DEPRECATED Use getCreateEntityReferenceNodes() instead.
-      *
-      * This method returns the state of the parser's expand entity
-      * references flag.
-      *
-      * @return 'true' if the expand entity reference flag is set on
-      *         the parser, 'false' otherwise.
-      *
-      * @see #setExpandEntityReferences
-      */
-    bool getExpandEntityReferences() const;
-
     /** Get the 'include entity references' flag
       *
       * This flag  specifies whether the parser is
@@ -448,22 +435,6 @@ public :
       * @see #getValidationConstraintFatal
       */
     void setValidationConstraintFatal(const bool newState);
-
-    /** Set the 'expand entity references' flag
-      *
-      * DEPRECATED.  USE setCreateEntityReferenceNodes instead.
-      * This method allows the user to specify whether the parser should
-      * expand all entity reference nodes. When the 'do expansion' flag is
-      * true, the DOM tree does not have any entity reference nodes. It is
-      * replaced by the sub-tree representing the replacement text of the
-      * entity. When the 'do expansion' flag is false, the DOM tree
-      * contains an extra entity reference node, whose children is the
-      * sub tree of the replacement text.
-      *
-      * @param expand The new state of the expand entity reference
-      *               flag.
-      */
-    void setExpandEntityReferences(const bool expand);
 
      /** Set the 'include entity references' flag
       *
@@ -1169,7 +1140,38 @@ public :
 
     /** @name Deprecated Methods */
     //@{
+    /** Set the 'expand entity references' flag
+      *
+      * DEPRECATED.  USE setCreateEntityReferenceNodes instead.
+      * This method allows the user to specify whether the parser should
+      * expand all entity reference nodes. When the 'do expansion' flag is
+      * true, the DOM tree does not have any entity reference nodes. It is
+      * replaced by the sub-tree representing the replacement text of the
+      * entity. When the 'do expansion' flag is false, the DOM tree
+      * contains an extra entity reference node, whose children is the
+      * sub tree of the replacement text.
+      *
+      * @param expand The new state of the expand entity reference
+      *               flag.
+      */
+    void setExpandEntityReferences(const bool expand);
+
+    /** Get the 'expand entity references' flag.
+      * DEPRECATED Use getCreateEntityReferenceNodes() instead.
+      *
+      * This method returns the state of the parser's expand entity
+      * references flag.
+      *
+      * @return 'true' if the expand entity reference flag is set on
+      *         the parser, 'false' otherwise.
+      *
+      * @see #setExpandEntityReferences
+      */
+    bool getExpandEntityReferences() const;
+
     /**
+      * DEPRECATED Use getValidationScheme() instead
+      *
       * This method returns the state of the parser's validation
       * handling flag which controls whether validation checks
       * are enforced or not.
@@ -1178,10 +1180,13 @@ public :
       *         do validation, false otherwise.
       *
       * @see #setDoValidation
+      * @see #getValidationScheme
       */
     bool getDoValidation() const;
 
     /**
+      * DEPRECATED Use setValidationScheme(const ValSchemes newScheme) instead
+      *
       * This method allows users to enable or disable the parser's validation
       * checks.
       *
@@ -1193,6 +1198,7 @@ public :
       *                 input XML document.
       *
       * @see #getDoValidation
+      * @see #setValidationScheme
       */
     void setDoValidation(const bool newState);
 
