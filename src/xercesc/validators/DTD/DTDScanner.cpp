@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.22  2003/01/20 22:01:38  tng
+ * Need to check text decl when expanding PE
+ *
  * Revision 1.21  2003/01/16 21:30:14  tng
  * [Bug 16151] Memory leak in DTDScanner with ill-formed DTD declaration.  Fix by David Bertoni.
  *
@@ -497,6 +500,11 @@ bool DTDScanner::expandPERef( const   bool    scanExternal
             // If we have an entity handler, tell it we are ending this entity
             if (entHandler)
                 entHandler->endInputSource(*srcUsed);
+        }
+        else {
+            // If it starts with the XML string, then parse a text decl
+            if (fScanner->checkXMLDecl(true))
+                scanTextDecl();
         }
     }
      else
