@@ -243,11 +243,12 @@ public :
       , Regex_InvalidChildIndex            = 232
       , NEL_RepeatedCalls                  = 233
       , RethrowError                       = 234
-      , E_HighBounds                       = 235
-      , W_LowBounds                        = 236
-      , W_HighBounds                       = 237
-      , F_LowBounds                        = 238
-      , F_HighBounds                       = 239
+      , Out_Of_Memory                      = 235
+      , E_HighBounds                       = 236
+      , W_LowBounds                        = 237
+      , W_HighBounds                       = 238
+      , F_LowBounds                        = 239
+      , F_HighBounds                       = 240
     };
 
 };

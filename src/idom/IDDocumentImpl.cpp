@@ -885,7 +885,16 @@ void *         IDDocumentImpl::allocate(size_t amount)
     //   allocated blocks so that it will be deleted when the time comes.
     if (amount > kMaxSubAllocationSize)
     {
-        void *newBlock = new char[amount + sizeof(void *)];
+        void* newBlock = 0;
+        try {
+            newBlock = new char[amount + sizeof(void *)];
+        }
+        catch (...) {
+            ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
+        }
+        if (!newBlock)
+           ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
+
         if (fCurrentBlock)
         {
             *(void **)newBlock = *(void **)fCurrentBlock;
@@ -907,7 +916,16 @@ void *         IDDocumentImpl::allocate(size_t amount)
     {
         // Request doesn't fit in the current block.
         //   Get a new one from the system allocator.
-        void *newBlock = new char[kHeapAllocSize];
+        void* newBlock = 0;
+        try {
+            newBlock = new char[kHeapAllocSize];
+        }
+        catch (...) {
+            ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
+        }
+        if (!newBlock)
+           ThrowXML(RuntimeException, XMLExcepts::Out_Of_Memory);
+
         *(void **)newBlock = fCurrentBlock;
         fCurrentBlock = newBlock;
         fFreePtr = (char *)newBlock + sizeof(void *);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/05/31 16:09:35  tng
+ * IDOM: Error checking if operator new fails
+ *
  * Revision 1.6  2001/05/29 20:06:36  tng
  * IDOM: fix wrong void* p cast
  *
@@ -113,7 +116,7 @@ static IDStringPoolEntry *createSPE(const XMLCh *str, IDDocumentImpl *doc)
     //  Compute size to allocate.  Note that there's 1 char of string declared in the
     //       struct, so we don't need to add one again to account for the trailing null.
     //
-    size_t sizeToAllocate = sizeof(IDStringPoolEntry) + XMLString::stringLen(str-1)*sizeof(XMLCh);
+    size_t sizeToAllocate = sizeof(IDStringPoolEntry) + XMLString::stringLen(str)*sizeof(XMLCh);
     IDStringPoolEntry *newSPE = (IDStringPoolEntry *)doc->allocate(sizeToAllocate);
     newSPE->fNext = 0;
     XMLCh * nonConstStr = (XMLCh *)newSPE->fString;

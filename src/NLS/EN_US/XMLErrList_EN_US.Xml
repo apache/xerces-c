@@ -556,6 +556,7 @@
             <Message Id="Regex_InvalidChildIndex" Text="Invalid child index"/>
             <Message Id="NEL_RepeatedCalls" Text="Enabling the NEL option can only be called once per process."/>
             <Message Id="RethrowError" Text="{0}"/>
+            <Message Id="Out_Of_Memory" Text="operator new fails.  Possibly running Of memory"/>
         </Error>
     </MsgDomain>
     <MsgDomain Domain="http://apache.org/xml/messages/XML4JErrors">

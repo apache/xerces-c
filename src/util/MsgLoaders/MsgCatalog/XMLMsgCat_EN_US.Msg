@@ -542,5 +542,6 @@ $set 3
 232  Invalid child index
 233  Enabling the NEL option can only be called once per process.
 234  {0}
+235  operator new fails.  Possibly running Of memory
 
 
