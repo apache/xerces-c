@@ -664,7 +664,8 @@ public:
      * and that the implementation may relinquish any resources associated with it and
      * its associated children.
      *
-     * If this is a document, any nodes it owns are also released.
+     * If this is a document, any nodes it owns (created by DOMDocument::createXXXX())
+     * are also released.
      *
      * Access to a released object will lead to unexpected result.
      *
