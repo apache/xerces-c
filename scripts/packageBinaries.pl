@@ -318,12 +318,12 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         system ("mkdir $targetdir");
         system ("mkdir $targetdir/bin");
         system ("mkdir $targetdir/lib");
+        system ("mkdir $targetdir/include");
 	if (length($ICUROOT) > 0) {
 		system ("mkdir $targetdir/lib/icu");
 		system ("mkdir $targetdir/lib/icu/data");
 		system ("mkdir $targetdir/include/icu");
 	}
-        system ("mkdir $targetdir/include");
         system ("mkdir $targetdir/include/sax");
         system ("mkdir $targetdir/include/framework");
         system ("mkdir $targetdir/include/internal");

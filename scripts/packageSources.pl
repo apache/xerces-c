@@ -22,7 +22,7 @@ $OUTPUTDIR = $opt_o;
 if (!length($XERCESCROOT) || !length($OUTPUTDIR)) {
         print ("Usage is: packageSources -o<output_directory>\n");
         print ("Example: perl packageSources.pl -od:\\xerces-c_1_0_0d01\n");
-        print ("         perl packageSources.pl -o\$HOME/xerces-c_1_0_0d01");
+        print ("         perl packageSources.pl -o\$HOME/xerces-c_1_0_0d01\n");
         exit(-1);
 }
 
