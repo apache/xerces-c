@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/04/19 00:04:33  roddey
+ * Don't allow spaces before PI target. Bug #42
+ *
  * Revision 1.14  2000/04/12 22:58:28  roddey
  * Added support for 'auto validate' mode.
  *
@@ -1730,8 +1733,16 @@ void XMLScanner::scanPI()
     const XMLCh* namePtr = 0;
     const XMLCh* targetPtr = 0;
 
-    // And skip any subsequent spaces before the name
-    fReaderMgr.skipPastSpaces();
+    //
+    //  If there are any spaces here, then warn about it. If we aren't in
+    //  'first error' mode, then we'll come back and can easily pick up
+    //  again by just skipping them.
+    //
+    if (fReaderMgr.lookingAtSpace())
+    {
+        emitError(XMLErrs::PINameExpected);
+        fReaderMgr.skipPastSpaces();
+    }
 
     // Get a buffer for the PI name and scan it in
     XMLBufBid bbName(&fBufMgr);

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/04/19 00:04:22  roddey
+ * Don't allow spaces before PI target. Bug #42
+ *
  * Revision 1.14  2000/04/10 23:02:00  roddey
  * Allow an empty DOCTYPE declaration, with just the root name.
  *
@@ -3427,8 +3430,16 @@ void DTDValidator::scanPI()
     const XMLCh* namePtr = 0;
     const XMLCh* targetPtr = 0;
 
-    // And skip any subsequent spaces before the name
-    getReaderMgr()->skipPastSpaces();
+    //
+    //  If there are any spaces here, then warn about it. If we aren't in
+    //  'first error' mode, then we'll come back and can easily pick up
+    //  again by just skipping them.
+    //
+    if (getReaderMgr()->lookingAtSpace())
+    {
+        getScanner()->emitError(XMLErrs::PINameExpected);
+        getReaderMgr()->skipPastSpaces();
+    }
 
     // Get a buffer for the PI name and scan it in
     XMLBufBid bbName(getBufMgr());
