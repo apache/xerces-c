@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/02/07 17:46:34  billsch
+ * Rearranged statements in Initialize() so that platformInit() is called
+ * before an XMLMutex is created.
+ *
  * Revision 1.10  2000/07/25 20:55:23  jpolast
  * use gInitFlag as a reference to the number of times
  * Initialized was called.  this way, the terminate routines are
@@ -148,16 +152,10 @@ void XMLPlatformUtils::Initialize()
     //  like processes that cannot keep up with whether they have initialized
     //  us yet or not.
     //
-	gInitFlag++;
+    gInitFlag++;
 
     if (gInitFlag > 1)
-	    return;
-	
-    // Create the local sync mutex
-    gSyncMutex = new XMLMutex;
-
-    // Create the array for saving lazily allocated objects to be deleted at termination
-    gLazyData= new RefVectorOf<XMLDeleter>(512);
+      return;
 
     //
     //  Call the platform init method, which is implemented in each of the
@@ -166,6 +164,12 @@ void XMLPlatformUtils::Initialize()
     //  i.e. only native services.
     //
     platformInit();
+
+    // Create the local sync mutex
+    gSyncMutex = new XMLMutex;
+
+    // Create the array for saving lazily allocated objects to be deleted at termination
+    gLazyData= new RefVectorOf<XMLDeleter>(512);
 
     //
     //  Ask the per-platform code to make the desired transcoding service for
