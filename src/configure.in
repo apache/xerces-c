@@ -93,6 +93,7 @@ util/Makefile \
 util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
+util/Transcoders/Iconv400/Makefile \
 util/Platforms/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
