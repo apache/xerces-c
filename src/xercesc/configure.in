@@ -32,6 +32,7 @@ case "${host}" in
         *-*-sysv5*)     platform=UNIXWARE ;;
         *-*-UnixWare*)  platform=UNIXWARE ;;
         *-*-unixware*)  platform=UNIXWARE ;;
+        *-*-beos*)      platform=BEOS ;;
         *-*-linux*)     platform=LINUX ;;
         *-*-freebsd*)   platform=FREEBSD ;;
         *-*-irix*)      platform=IRIX ;;
@@ -121,6 +122,7 @@ util/Transcoders/MacOSUnicodeConverter/Makefile \
 util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
 util/Platforms/AIX/Makefile \
+util/Platforms/BeOS/Makefile \
 util/Platforms/Linux/Makefile \
 util/Platforms/FreeBSD/Makefile \
 util/Platforms/HPUX/Makefile \

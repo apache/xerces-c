@@ -179,6 +179,16 @@ SHLIBSUFFIX=.a
 EXTRA_LINK_OPTIONS=-q OPTION='*DUPPROC *DUPVAR' ${EXTRA_LIBS}
 endif
 
+#=============== BEOS SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, BEOS)
+CMP= -c ${CXXFLAGS}
+CC= ${COMPILER} -c -D${PLATFORM} -DAPP_NO_THREADS -fpic
+LINK =  ${COMPILER} -D${PLATFORM} -fpic ${LDFLAGS}
+PLATFORM_LIB_LINK_OPTIONS=-L/boot/develop/lib/x86 -L/boot/home/config/lib
+EXTRA_LINK_OPTIONS=-lbe ${EXTRA_LIBS}
+SHLIBSUFFIX=.so
+endif
+
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
 CMP= -c ${CXXFLAGS}

@@ -243,6 +243,7 @@ if ($platform eq "win64bit" )
         util\\Platforms
         util\\Platforms\\AIX
         util\\Platforms\\HPUX
+        util\\Platforms\\BeOS
         util\\Platforms\\Linux
         util\\Platforms\\MacOS
         util\\Platforms\\OS2
@@ -636,6 +637,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         util/Platforms
         util/Platforms/AIX
         util/Platforms/HPUX
+        util/Platforms/BeOS
         util/Platforms/Linux
         util/Platforms/MacOS
         util/Platforms/OS2
@@ -794,7 +796,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
 #
 #  UNIX builds happen here ...
 #
-if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
+if ( ($platform =~ m/AIX/i)   || ($platform =~ m/HP-UX/i) || ($platform =~ m/BeOS/i) ||
      ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) || ($platform =~ m/ptx/i) ) {
 
     # Echo the current PATH to see what compiler it picks up
@@ -858,6 +860,13 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
         psystem ("echo SHLIB_PATH=$ENV{'SHLIB_PATH'}");
     }
+    if ($platform =~ m/BeOS/i) {
+        $platform = "beos";
+        if ($opt_c eq "") {$opt_c = "gcc";}
+        if ($opt_x eq "") {$opt_x = "g++";}
+        $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"';
+        psystem ("echo LIBRARY_PATH=$ENV{'LIBRARY_PATH'}");
+    }    
     if ($platform =~ m/Linux/i) {
         $platform = "linux";
         if ($opt_c eq "") {$opt_c = "gcc";}

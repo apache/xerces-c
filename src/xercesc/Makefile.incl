@@ -299,6 +299,22 @@ RM2 = -del
 
 endif
 
+#=============== BEOS SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, BEOS)
+PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -DAPP_NO_THREADS
+MAKE_SHARED = ${CXX} -D${PLATFORM} -nostart -fPIC ${LDFLAGS}
+MAKE_SHARED_C = ${CC} -D${PLATFORM} -nostart -fPIC ${LDFLAGS}
+ifeq (${TRANSCODER}, ICU)
+    ALLLIBS = ${LIBS} -L/boot/develop/lib/x86 -L/boot/home/config/lib -lbe -licuuc -licudata
+else
+    ALLLIBS = ${LIBS} -L/boot/develop/lib/x86 -L/boot/home/config/lib -lbe
+endif
+EXTRA_LINK_OPTIONS = -Xlinker -Map -Xlinker $(XML_OBJ)/${SO_NAME}.map
+SHLIBSUFFIX=.so
+## Compiler switch to embed a library name
+LD_SONAME = -Wl,-soname,${SO_NAME}
+endif
+
 #=============== LINUX SPECIFIC OPTIONS =========================
 ifeq (${PLATFORM}, LINUX)
 PLATFORM_COMPILE_OPTIONS = -fPIC -D${PLATFORM} -D_REENTRANT
