@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  2002/02/01 22:21:53  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:50:38  tng
+ * [Bug 6114] Memory leaks on iDOM getElementsByTagName().
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:53  peiyongz
+ * sane_include
  *
  * Revision 1.1  2001/06/04 14:55:32  tng
  * IDOM: Add IRange and IDeepNodeList Support.
@@ -220,8 +223,8 @@ template <class TVal> void IDDeepNodeListPool<TVal>::removeAll()
                 delete curElem->fData;
 
             // Then delete the current element and move forward
-            delete[] curElem->fKey2;
-            delete[] curElem->fKey3;
+            delete [] curElem->fKey2;
+            delete [] curElem->fKey3;
 
             delete curElem;
             curElem = nextElem;
@@ -234,6 +237,17 @@ template <class TVal> void IDDeepNodeListPool<TVal>::removeAll()
     // Reset the id counter
     fIdCounter = 0;
 }
+
+template <class TVal> void IDDeepNodeListPool<TVal>::cleanup()
+{
+    removeAll();
+
+    // Then delete the bucket list & hasher & id pointers list
+    delete [] fIdPtrs;
+    delete [] fBucketList;
+    delete fHash;
+}
+
 
 
 // ---------------------------------------------------------------------------
@@ -352,8 +366,24 @@ findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* con
     IDDeepNodeListPoolTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-		if (fHash->equals(key1, curElem->fKey1) && (!XMLString::compareString(key2, curElem->fKey2)) && (!XMLString::compareString(key3, curElem->fKey3)))
+        //key2 and key3 are XMLCh*, compareString takes null pointer vs zero len string the same
+        //but we need them to be treated as different keys in this case
+        if (fHash->equals(key1, curElem->fKey1) && (!XMLString::compareString(key2, curElem->fKey2)) && (!XMLString::compareString(key3, curElem->fKey3))) {
+            if (!key2 || !curElem->fKey2) {
+                if (key2 || curElem->fKey2) {
+                    curElem = curElem->fNext;
+                    continue;
+                }
+            }
+            if (!key3 || !curElem->fKey3) {
+                if (key3 || curElem->fKey3) {
+                    curElem = curElem->fNext;
+                    continue;
+                }
+            }
+
             return curElem;
+        }
 
         curElem = curElem->fNext;
     }
@@ -372,62 +402,25 @@ findBucketElem(const void* const key1, const XMLCh* const key2, const XMLCh* con
     const IDDeepNodeListPoolTableBucketElem<TVal>* curElem = fBucketList[hashVal];
     while (curElem)
     {
-        if (fHash->equals(key1, curElem->fKey1) && (!XMLString::compareString(key2, curElem->fKey2)) && (!XMLString::compareString(key3, curElem->fKey3)))
+        //key2 and key3 are XMLCh*, compareString takes null pointer vs zero len string the same
+        //but we need them to be treated as different keys in this case
+        if (fHash->equals(key1, curElem->fKey1) && (!XMLString::compareString(key2, curElem->fKey2)) && (!XMLString::compareString(key3, curElem->fKey3))) {
+            if (!key2 || !curElem->fKey2) {
+                if (key2 || curElem->fKey2) {
+                    curElem = curElem->fNext;
+                    continue;
+                }
+            }
+            if (!key3 || !curElem->fKey3) {
+                if (key3 || curElem->fKey3) {
+                    curElem = curElem->fNext;
+                    continue;
+                }
+            }
             return curElem;
+        }
 
         curElem = curElem->fNext;
     }
     return 0;
 }
-
-
-// ---------------------------------------------------------------------------
-//  IDDeepNodeListPoolEnumerator: Constructors and Destructor
-// ---------------------------------------------------------------------------
-template <class TVal> IDDeepNodeListPoolEnumerator<TVal>::
-IDDeepNodeListPoolEnumerator(IDDeepNodeListPool<TVal>* const toEnum, const bool adopt)
-	: fAdoptedElems(adopt), fCurIndex(0), fToEnum(toEnum)
-{
-    //
-    //  Find the next available bucket element in the pool. We use the id
-    //  array since its very easy to enumerator through by just maintaining
-    //  an index. If the id counter is zero, then its empty and we leave the
-    //  current index to zero.
-    //
-    if (toEnum->fIdCounter)
-        fCurIndex = 1;
-}
-
-template <class TVal> IDDeepNodeListPoolEnumerator<TVal>::~IDDeepNodeListPoolEnumerator()
-{
-    if (fAdoptedElems)
-        delete fToEnum;
-}
-
-
-// ---------------------------------------------------------------------------
-//  IDDeepNodeListPoolEnumerator: Enum interface
-// ---------------------------------------------------------------------------
-template <class TVal> bool IDDeepNodeListPoolEnumerator<TVal>::hasMoreElements() const
-{
-    // If our index is zero or past the end, then we are done
-    if (!fCurIndex || (fCurIndex > fToEnum->fIdCounter))
-        return false;
-    return true;
-}
-
-template <class TVal> TVal& IDDeepNodeListPoolEnumerator<TVal>::nextElement()
-{
-    // If our index is zero or past the end, then we are done
-    if (!fCurIndex || (fCurIndex > fToEnum->fIdCounter))
-        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
-
-    // Return the current element and bump the index
-    return *fToEnum->fIdPtrs[fCurIndex++];
-}
-
-template <class TVal> void IDDeepNodeListPoolEnumerator<TVal>::Reset()
-{
-    fCurIndex = 0;
-}
-
