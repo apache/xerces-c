@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/10/11 19:32:27  peiyongz
+ * To overwrite inheritFacet()
+ *
  * Revision 1.8  2001/10/09 20:56:21  peiyongz
  * inherit from AbstractStringValidator instead of DatatypeValidator to reuse
  * the code.
@@ -185,6 +188,8 @@ protected:
     // Overwrite AbstractStringValidator's 
     //
     virtual void inspectFacetBase();
+
+    virtual void inheritFacet();
 
 private:
 

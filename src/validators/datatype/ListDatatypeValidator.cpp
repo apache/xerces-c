@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/10/11 19:32:27  peiyongz
+ * To overwrite inheritFacet()
+ *
  * Revision 1.7  2001/10/09 20:56:21  peiyongz
  * inherit from AbstractStringValidator instead of DatatypeValidator to reuse
  * the code.
@@ -425,6 +428,18 @@ void ListDatatypeValidator::inspectFacetBase()
     }
 
 }// End of inspectFacetBase()
+
+void ListDatatypeValidator::inheritFacet()
+{    
+
+    //iff the base validator is List, then we inherit
+    //
+    if (getBaseValidator()->getType() == DatatypeValidator::List)
+    {
+        AbstractStringValidator::inheritFacet();
+    }    
+       
+}
 
 /**
   * End of file ListDatatypeValidator.cpp
