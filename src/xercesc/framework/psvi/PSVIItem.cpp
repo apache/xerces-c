@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/09/17 17:45:37  neilg
+ * remove spurious inlines; hopefully this will make Solaris/AIX compilers happy.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -78,7 +81,7 @@ PSVIItem::PSVIItem( MemoryManager* const manager ):
 {
 }
 
-inline void PSVIItem::reset(
+void PSVIItem::reset(
             const XMLCh* const validationContext
             , const XMLCh* const normalizedValue
             , const VALIDITY_STATE validityState

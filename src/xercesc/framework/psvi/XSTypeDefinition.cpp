@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2003/09/17 17:45:37  neilg
+ * remove spurious inlines; hopefully this will make Solaris/AIX compilers happy.
+ *
  * Revision 1.1  2003/09/16 14:33:36  neilg
  * PSVI/schema component model classes, with Makefile/configuration changes necessary to build them
  *
@@ -73,19 +76,19 @@ XSTypeDefinition::XSTypeDefinition( TYPE_CATEGORY typeCategory,
 }
 
 // overloaded XSObject methods
-inline const XMLCh *XSTypeDefinition::getName() 
+const XMLCh *XSTypeDefinition::getName() 
 {
     // REVISIT
     return 0;
 }
 
-inline const XMLCh *XSTypeDefinition::getNamespace() 
+const XMLCh *XSTypeDefinition::getNamespace() 
 {
     // REVISIT
     return 0;
 }
 
-inline XSNamespaceItem *XSTypeDefinition::getNamespaceItem() 
+XSNamespaceItem *XSTypeDefinition::getNamespaceItem() 
 {
     //REVISIT
     return 0;
