@@ -217,15 +217,15 @@ endif
 ifeq (${MESSAGELOADER},ICU)
 	echo -${MKDIR} ${BINTARGETDIR}/include/unicode
 endif
-	-${MKDIR} ${BINTARGETDIR}/include
-	-${MKDIR} ${BINTARGETDIR}/include/sax
-	-${MKDIR} ${BINTARGETDIR}/include/sax2
-	-${MKDIR} ${BINTARGETDIR}/include/framework
-	-${MKDIR} ${BINTARGETDIR}/include/internal
-	-${MKDIR} ${BINTARGETDIR}/include/parsers
-	-${MKDIR} ${BINTARGETDIR}/include/util
-	-${MKDIR} ${BINTARGETDIR}/include/dom
-	-${MKDIR} ${BINTARGETDIR}/include/idom
+	-${MKDIR} ${BINTARGETDIR}/include/xercesc
+	-${MKDIR} ${BINTARGETDIR}/include/xercesc/sax
+	-${MKDIR} ${BINTARGETDIR}/include/xercesc/sax2
+	-${MKDIR} ${BINTARGETDIR}/include/xercesc/framework
+	-${MKDIR} ${BINTARGETDIR}/include/xercesc/internal
+	-${MKDIR} ${BINTARGETDIR}/include/xercesc/parsers
+	-${MKDIR} ${BINTARGETDIR}/include/xercesc/util
+	-${MKDIR} ${BINTARGETDIR}/include/xercesc/dom
+	-${MKDIR} ${BINTARGETDIR}/include/xercesc/idom
 
 	-${MKDIR} ${BINTARGETDIR}/samples
 	-${MKDIR} ${BINTARGETDIR}/samples/data
@@ -242,17 +242,17 @@ endif
 
 	@echo Populate the include output directory
 	@echo Copying headers files ...
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/sax/*.hpp ${BINTARGETDIR}/include/sax
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/sax2/*.hpp ${BINTARGETDIR}/include/sax2
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/framework/*.hpp ${BINTARGETDIR}/include/framework
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/dom/DOM*.hpp ${BINTARGETDIR}/include/dom
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/idom/IDOM*.hpp ${BINTARGETDIR}/include/idom
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/internal/*.hpp ${BINTARGETDIR}/include/internal
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/internal/*.c ${BINTARGETDIR}/include/internal
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/parsers/*.hpp ${BINTARGETDIR}/include/parsers
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/util/*.hpp ${BINTARGETDIR}/include/util
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/util/*.c ${BINTARGETDIR}/include/util
-	-${CP} -Rf ${XERCESCROOT}/src/xerces/validators/*.hpp ${BINTARGETDIR}/include/validators
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/sax/*.hpp ${BINTARGETDIR}/include/xercesc/sax
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/sax2/*.hpp ${BINTARGETDIR}/include/xercesc/sax2
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/framework/*.hpp ${BINTARGETDIR}/include/xercesc/framework
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/dom/DOM*.hpp ${BINTARGETDIR}/include/xercesc/dom
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/idom/IDOM*.hpp ${BINTARGETDIR}/include/xercesc/idom
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/internal/*.hpp ${BINTARGETDIR}/include/xercesc/internal
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/internal/*.c ${BINTARGETDIR}/include/xercesc/internal
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/parsers/*.hpp ${BINTARGETDIR}/include/xercesc/parsers
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/util/*.hpp ${BINTARGETDIR}/include/xercesc/util
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/util/*.c ${BINTARGETDIR}/include/xercesc/util
+	-${CP} -Rf ${XERCESCROOT}/src/xerces/validators/*.hpp ${BINTARGETDIR}/include/xercesc/validators
 	-${CP} -Rf ${ICUROOT}/include/* ${BINTARGETDIR}/include/unicode
 
 	@echo Populate the binary output directory
