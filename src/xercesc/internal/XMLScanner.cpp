@@ -540,7 +540,26 @@ void XMLScanner::scanReset(XMLPScanToken& token)
     fErrorCount = 0;
 }
 
-
+void XMLScanner::setParseSettings(XMLScanner* const refScanner)
+{
+    setDocHandler(refScanner->getDocHandler());
+    setDocTypeHandler(refScanner->getDocTypeHandler());
+    setErrorHandler(refScanner->getErrorHandler());
+    setErrorReporter(refScanner->getErrorReporter());
+    setEntityHandler(refScanner->getEntityHandler());
+    setDoNamespaces(refScanner->getDoNamespaces());
+    setDoSchema(refScanner->getDoSchema());
+    setCalculateSrcOfs(refScanner->getCalculateSrcOfs());
+    setExitOnFirstFatal(refScanner->getExitOnFirstFatal());
+    setValidationConstraintFatal(refScanner->getValidationConstraintFatal());
+    setValidationSchemaFullChecking(refScanner->getValidationSchemaFullChecking());
+    cacheGrammarFromParse(refScanner->isCachingGrammarFromParse());
+    useCachedGrammarInParse(refScanner->isUsingCachedGrammarInParse());
+    setLoadExternalDTD(refScanner->getLoadExternalDTD());
+    setNormalizeData(refScanner->getNormalizeData());
+    setExternalSchemaLocation(refScanner->getExternalSchemaLocation());
+    setExternalNoNamespaceSchemaLocation(refScanner->getExternalNoNamespaceSchemaLocation());
+}
 
 // ---------------------------------------------------------------------------
 //  XMLScanner: Private helper methods.

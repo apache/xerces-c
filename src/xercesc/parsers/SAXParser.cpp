@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2002/12/27 16:16:51  knoaman
+ * Set scanner options and handlers.
+ *
  * Revision 1.11  2002/12/23 15:23:18  knoaman
  * Added a public api to various parsers to return the src offset within the input
  * source.
@@ -553,11 +556,11 @@ void SAXParser::useScanner(const XMLCh* const scannerName)
 
     if (tempScanner) {
 
-        // REVISIT: need to set scanner options and handlers
+        tempScanner->setParseSettings(fScanner);
+        tempScanner->setGrammarResolver(fGrammarResolver);
+        tempScanner->setURIStringPool(fURIStringPool);
         delete fScanner;
         fScanner = tempScanner;
-        fScanner->setGrammarResolver(fGrammarResolver);
-        fScanner->setURIStringPool(fURIStringPool);
     }
 }
 

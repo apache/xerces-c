@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2002/12/27 16:16:51  knoaman
+ * Set scanner options and handlers.
+ *
  * Revision 1.14  2002/12/11 22:14:54  knoaman
  * Performance: no need to use temporary buffer to hold namespace value.
  *
@@ -1488,7 +1491,7 @@ void SAX2XMLReaderImpl::setProperty(const XMLCh* const name, void* value)
 
         if (tempScanner) {
 
-            // REVISIT: set scanner options and handlers
+            tempScanner->setParseSettings(fScanner);
             tempScanner->setGrammarResolver(fGrammarResolver);
             tempScanner->setURIStringPool(fURIStringPool);
             delete fScanner;

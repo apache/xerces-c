@@ -383,11 +383,11 @@ void DOMParser::useScanner(const XMLCh* const scannerName)
 
     if (tempScanner) {
 
-        // REVISIT: need to set scanner options and handlers
+        tempScanner->setParseSettings(fScanner);
+        tempScanner->setGrammarResolver(fGrammarResolver);
+        tempScanner->setURIStringPool(fURIStringPool);
         delete fScanner;
         fScanner = tempScanner;
-        fScanner->setGrammarResolver(fGrammarResolver);
-        fScanner->setURIStringPool(fURIStringPool);
     }
 }
 

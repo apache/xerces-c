@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2002/12/27 16:16:51  knoaman
+ * Set scanner options and handlers.
+ *
  * Revision 1.14  2002/12/20 22:09:56  tng
  * XML 1.1
  *
@@ -408,6 +411,8 @@ public :
     XMLEntityHandler* getEntityHandler();
     const XMLErrorReporter* getErrorReporter() const;
     XMLErrorReporter* getErrorReporter();
+    const ErrorHandler* getErrorHandler() const;
+    ErrorHandler* getErrorHandler();
     bool getExitOnFirstFatal() const;
     bool getValidationConstraintFatal() const;
     RefHashTableOf<XMLRefInfo>* getIDRefList();
@@ -527,6 +532,7 @@ public :
     void setLoadExternalDTD(const bool loadDTD);
     void setNormalizeData(const bool normalizeData);
     void setCalculateSrcOfs(const bool newValue);
+    void setParseSettings(XMLScanner* const refScanner);
 
     // -----------------------------------------------------------------------
     //  Mutator methods
@@ -577,7 +583,7 @@ public :
 
     // -----------------------------------------------------------------------
     //  Grammar preparsing methods
-    // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------    
     Grammar* loadGrammar
     (
         const   XMLCh* const    systemId
@@ -932,6 +938,16 @@ inline const XMLErrorReporter* XMLScanner::getErrorReporter() const
 inline XMLErrorReporter* XMLScanner::getErrorReporter()
 {
     return fErrorReporter;
+}
+
+inline const ErrorHandler* XMLScanner::getErrorHandler() const
+{
+    return fErrorHandler;
+}
+
+inline ErrorHandler* XMLScanner::getErrorHandler()
+{
+    return fErrorHandler;
 }
 
 inline bool XMLScanner::getExitOnFirstFatal() const
