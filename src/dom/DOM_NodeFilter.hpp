@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2000/05/11 00:07:38  abagchi
+ * Removed tables. It was confusing doxygen
+ *
  * Revision 1.8  2000/03/11 03:19:13  chchou
  * Fix bug # 19, add const keyword to API
  *
@@ -105,13 +108,13 @@ class NodeFilterImpl;
  * Filters are objects that know how to "filter out" nodes. If a
  * <code>DOM_NodeIterator</code> or <code>DOM_TreeWalker</code> is given a
  * filter, it applies the filter before it returns the next node.
- * 
+ *
  * If the filter says to accept the node, the iterator returns it; otherwise, the
  * iterator looks for the next node and pretends that the node that was rejected
  * was not there.
  *
  *  The DOM does not provide any filters. Filter is just an interface that users can
- *  implement to provide their own filters. 
+ *  implement to provide their own filters.
  *
  *  Filters do not need to know how to iterate, nor do they need to know anything
  *  about the data structure that is being iterated. This makes it very easy to write
@@ -127,27 +130,27 @@ class CDOM_EXPORT DOM_NodeFilter
     public:
 	/** @name Enumerators for Node Filter */
         //@{
-	/**
+	/*
 	  *		<table><tr><td>FILTER_ACCEPT</td>
-          *            <td>Accept the node. Navigation methods defined for
-          *                NodeIterator or TreeWalker will return this node.</td>
+      *            <td>Accept the node. Navigation methods defined for
+      *                NodeIterator or TreeWalker will return this node.</td>
 	  *			</tr>
 	  *			<tr><td>
-          *               FILTER_REJECT</td>
-          *               <td>Reject the node. Navigation methods defined for
-          *               NodeIterator or TreeWalker will not return this
-          *               node. For TreeWalker, the children of this node will
-          *               also be rejected. Iterators treat this as a synonym
-          *               for FILTER_SKIP.</td>
+      *               FILTER_REJECT</td>
+      *               <td>Reject the node. Navigation methods defined for
+      *               NodeIterator or TreeWalker will not return this
+      *               node. For TreeWalker, the children of this node will
+      *               also be rejected. Iterators treat this as a synonym
+      *               for FILTER_SKIP.</td>
 	  *			</tr>
 	  *			<tr><td>FILTER_SKIP</td>
-          *              <td>Reject the node. Navigation methods defined for
-          *                  NodeIterator or TreeWalker will not return this
-          *                  node. For both NodeIterator and Treewalker, the
-          *                  children of this node will still be considered.</td>
+      *              <td>Reject the node. Navigation methods defined for
+      *                  NodeIterator or TreeWalker will not return this
+      *                  node. For both NodeIterator and Treewalker, the
+      *                  children of this node will still be considered.</td>
  	  *			</tr>
 	  *		</table>
-          *
+      *
 	  */
         enum FilterAction {FILTER_ACCEPT, FILTER_REJECT, FILTER_SKIP};
         enum ShowType {
