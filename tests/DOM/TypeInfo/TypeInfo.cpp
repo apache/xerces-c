@@ -894,7 +894,7 @@ int main(int argc, char **argv)
         ti.doc = ti.parser->getDocument();
     }
     catch (...) {
-        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
+        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfoNoDTD.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
         delete ti.parser;
         return false;
     }
@@ -925,7 +925,7 @@ int main(int argc, char **argv)
         ti.doc = ti.parser->getDocument();
     }
     catch (...) {
-        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
+        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfoJustDTD.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
         delete ti.parser;
         return false;
     }
@@ -949,7 +949,7 @@ int main(int argc, char **argv)
         ti.doc = ti.parser->getDocument();
     }
     catch (...) {
-        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
+        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfoJustDTD.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
         delete ti.parser;
         return false;
     }
@@ -972,7 +972,7 @@ int main(int argc, char **argv)
         ti.doc = ti.parser->getDocument();
     }
     catch (...) {
-        XERCES_STD_QUALIFIER cerr << "parsing data/TypeInfo.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
+        XERCES_STD_QUALIFIER cerr << "parsing data/combined.xml failed at line" <<  __LINE__ << XERCES_STD_QUALIFIER endl;
         delete ti.parser;
         return false;
     }
