@@ -49,7 +49,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=$(CPP)
-CPP_PROJ=/G5 /MD /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\include" /D "PROJ_SAX2PRINT" /D "_DEBUG" /D "WIN32" /D "WIN64" /D "_CONSOLE" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+CPP_PROJ= /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..\..\..\include" /D "PROJ_SAX2PRINT" /D "_DEBUG" /D "WIN32" /D "WIN64" /D "_CONSOLE" /D "PLATFORM_WIN32" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
