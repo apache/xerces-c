@@ -64,6 +64,8 @@
 // ---------------------------------------------------------------------------
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <errno.h>
 #include <xercesc/util/ArrayIndexOutOfBoundsException.hpp>
 #include <xercesc/util/IllegalArgumentException.hpp>
 #include <xercesc/util/NumberFormatException.hpp>
@@ -1322,104 +1324,79 @@ bool XMLString::textToBin(const XMLCh* const toConvert, unsigned int& toFill)
     toFill = 0;
 
     // If no string, then its a failure
-    if (!toConvert)
-        return false;
-    if (!*toConvert)
+    if ((!toConvert) || (!*toConvert))
         return false;
 
-    // Scan past any whitespace. If we hit the end, then return failure
-    const XMLCh* startPtr = toConvert;
-    while (XMLPlatformUtils::fgTransService->isSpace(*startPtr))
-        startPtr++;
-    if (!*startPtr)
-        return false;
+	XMLCh* trimmedStr = XMLString::replicate(toConvert);
+	ArrayJanitor<XMLCh> jan1(trimmedStr);
+	XMLString::trim(trimmedStr);
+    unsigned int trimmedStrLen = XMLString::stringLen(trimmedStr);
 
-    // Start at the end and work back through any whitespace
-    const XMLCh* endPtr = toConvert + stringLen(toConvert);
-    while (XMLPlatformUtils::fgTransService->isSpace(*(endPtr - 1)))
-        endPtr--;
+	if ( !trimmedStrLen )
+		return false;
 
-    //
-    //  Work through what remains and convert each char to a digit. Any
-    //  space or non-digit here is now an error.
-    //
-    unsigned long tmpVal = 0;
-    while (startPtr < endPtr)
-    {
-        // If not valid decimal digit, then an error
-        if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
-            return false;
+	// we don't allow '-' sign
+	if (XMLString::indexOf(trimmedStr, chDash, 0) != -1)
+		return false;
 
-        const unsigned int nextVal = (unsigned int)(*startPtr - chDigit_0);
-        tmpVal = (tmpVal * 10) + nextVal;
+	//the errno set by previous run is NOT automatically cleared
+	errno = 0;
 
-        startPtr++;
-    }
+	char *nptr = XMLString::transcode(trimmedStr);
+    ArrayJanitor<char> jan2(nptr);
 
-    // Make sure it didn't overflow
-    if (tmpVal > ~0UL)
-        ThrowXML(RuntimeException, XMLExcepts::Str_ConvertOverflow);
+    char *endptr;
+	 //
+     // REVISIT: conversion of (unsigned long) to (unsigned int)
+	 //          may truncate value on IA64
+    toFill = (unsigned int) strtoul(nptr, &endptr, 10);
 
-    toFill = (unsigned int)tmpVal;
+	// check if all chars are valid char
+	// check if overflow/underflow occurs
+	if ( ( (endptr - nptr) != trimmedStrLen) ||
+         (errno == ERANGE)                      )
+		return false;
+
     return true;
 }
 
 int XMLString::parseInt(const XMLCh* const toConvert)
 {
-    // If no string, then its a failure
-    if ((!toConvert) ||
-        (!*toConvert))
+    // If no string, or empty string, then it is a failure
+    if ((!toConvert) || (!*toConvert))
         ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_null_ptr);
 
-    // Scan past any whitespace. If we hit the end, then return failure
-    const XMLCh* startPtr = toConvert;
-    while (XMLPlatformUtils::fgTransService->isSpace(*startPtr))
-        startPtr++;
+	XMLCh* trimmedStr = XMLString::replicate(toConvert);
+	ArrayJanitor<XMLCh> jan1(trimmedStr);
+	XMLString::trim(trimmedStr);
+    unsigned int trimmedStrLen = XMLString::stringLen(trimmedStr);
 
-    if (!*startPtr)
-        ThrowXML(NumberFormatException, XMLExcepts::CM_UnaryOpHadBinType);
-        //ThrowXML(NumberFormatException, XMLExcepts::XMLINT_Invalid);
+	if ( !trimmedStrLen )
+        ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_null_ptr);
 
-    // Start at the end and work back through any whitespace
-    const XMLCh* endPtr = toConvert + XMLString::stringLen(toConvert);
-    while (XMLPlatformUtils::fgTransService->isSpace(*(endPtr - 1)))
-        endPtr--;
+	//the errno set by previous run is NOT automatically cleared
+	errno = 0;
 
-    //
-    //  Work through what remains and convert each char to a digit.
-    //
-    int signValue = 1;
+	char *nptr = XMLString::transcode(trimmedStr);
+    ArrayJanitor<char> jan2(nptr);
 
-    //
-    // '+' or '-' is allowed only at the first position
-    //
-    if (*startPtr == chDash)
-    {
-        signValue = -1;
-        startPtr++;  // skip the '-'
-    }
-    else if (*startPtr == chPlus)
-        startPtr++;  // skip the '+'
+    char *endptr;
+    long retVal = strtol(nptr, &endptr, 10);
 
-    unsigned long tmpVal = 0;
-    while (startPtr < endPtr)
-    {
-        // If not valid decimal digit, then an error
-        if ((*startPtr < chDigit_0) || (*startPtr > chDigit_9))
-            ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
+	// check if all chars are valid char
+	if ( (endptr - nptr) != trimmedStrLen)
+		ThrowXML(NumberFormatException, XMLExcepts::XMLNUM_Inv_chars);
 
-        const unsigned int nextVal = (unsigned int)(*startPtr - chDigit_0);
-        tmpVal = (tmpVal * 10) + nextVal;
-
-        startPtr++;
-    }
-
-    // Make sure it didn't overflow
-    if (tmpVal > ~0UL)
+	// check if overflow/underflow occurs
+    if (errno == ERANGE)
         ThrowXML(NumberFormatException, XMLExcepts::Str_ConvertOverflow);
 
-    return (int) signValue*tmpVal;
+	 //
+     // REVISIT: conversion of (long) to (int)
+	 //          may truncate value on IA64
+	return (int) retVal;
 }
+
 
 void XMLString::trim(XMLCh* const toTrim)
 {
