@@ -239,7 +239,7 @@ void test(char* xmlFile) {
                 </ul>
               <li>To support DOMWriter, the following PlatformUtils functions are added</li>
                 <ul>
-                   <li></li>
+                   <li>openFileToWrite, writeBufferToFile</li>
                 </ul>
               <li>To have Apache Recommended DOM C++ Binding, the following are added (see
                   <jump href="ApacheDOMC++Binding.html">Apache Recommended DOM C++ binding).</jump></li>
