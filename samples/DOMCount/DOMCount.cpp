@@ -55,40 +55,7 @@
  */
 
 /*
- * $Log$
- * Revision 1.8  2000/06/16 20:25:23  rahulj
- * Add the -v=always option to force validation checking. Need this
- * option for running the conformance tests.
- *
- * Revision 1.7  2000/05/31 18:42:31  rahulj
- * 'Auto' validation is the default processing mode.
- *
- * Revision 1.6  2000/03/03 01:29:29  roddey
- * Added a scanReset()/parseReset() method to the scanner and
- * parsers, to allow for reset after early exit from a progressive parse.
- * Added calls to new Terminate() call to all of the samples. Improved
- * documentation in SAX and DOM parsers.
- *
- * Revision 1.5  2000/03/02 19:53:39  roddey
- * This checkin includes many changes done while waiting for the
- * 1.1.0 code to be finished. I can't list them all here, but a list is
- * available elsewhere.
- *
- * Revision 1.4  2000/02/11 02:32:46  abagchi
- * Removed StrX::transcode
- *
- * Revision 1.3  2000/02/06 07:47:17  rahulj
- * Year 2K copyright swat.
- *
- * Revision 1.2  1999/11/12 02:13:40  rahulj
- * It now validates when the -v option is specified.
- *
- * Revision 1.1.1.1  1999/11/09 01:09:52  twl
- * Initial checkin
- *
- * Revision 1.8  1999/11/08 20:43:34  rahul
- * Swat for adding in Product name and CVS comment log variable.
- *
+ * $Id$
  */
 
 // ---------------------------------------------------------------------------
@@ -98,6 +65,7 @@
 #include <sax/SAXException.hpp>
 #include <sax/SAXParseException.hpp>
 #include <parsers/DOMParser.hpp>
+#include <dom/DOM_DOMException.hpp>
 #include "DOMCount.hpp"
 #include <string.h>
 #include <stdlib.h>
@@ -233,6 +201,20 @@ int main(int argC, char* argV[])
              << "Exception message is:  \n"
              << StrX(toCatch.getMessage()) << "\n" << endl;
         return -1;
+    }
+    catch (const DOM_DOMException& toCatch)
+    {
+        cerr << "\nError during parsing: '" << xmlFile << "'\n"
+             << "Exception message is:  \n"
+             << toCatch.msg.transcode() << "\n" << endl;
+        XMLPlatformUtils::Terminate();
+        return 4;
+    }
+    catch (...)
+    {
+       cerr << "\nUnexpected exception during parsing: '" << xmlFile << "'\n";
+        XMLPlatformUtils::Terminate();
+        return 4;
     }
 
     //
