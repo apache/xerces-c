@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/06/26 19:28:25  tng
+ * [Bug 2119] DOMString::print() should use DOMString::transcode() for transcoding.
+ *
  * Revision 1.20  2001/05/11 13:25:19  tng
  * Copyright update.
  *
@@ -967,24 +970,12 @@ void DOMString::print() const
 
     if (len > 0)
     {
-        XMLCh *p = fHandle->fDSData->fData;
-
-        // Copy the data from the DOMString buffer into another buffer.
-        //  This is only required because the data in the DOMString buffer
-        //  may not be null terminated, but we need the null here.
-		XMLCh* buffer = new XMLCh[len+1];
-        unsigned int i;
-		for (i=0; i<len; i++)
-		   buffer[i] = p[i];
-		buffer[len] = 0;
-
         // Transcode from Unicode to char * in whatever the system local code page is.
-        char *pc = XMLString::transcode(buffer);
+        char *pc = transcode();
         fputs(pc, stdout);
 
-        delete [] buffer;
         delete [] pc;
-    };
+    }
 };
 
 
