@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2005/03/09 16:07:09  amassari
+ * Protected getSrcOffset to avoid crashing when parsing has finished; updated documentation
+ *
  * Revision 1.2  2005/01/06 21:39:44  amassari
  * Removed warnings
  *
@@ -473,6 +476,7 @@ public :
 
     /**
       * Returns the current src offset within the input source.
+      * To be used only while parsing is in progress.
       *
       * @return offset within the input source
       */

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2005/03/09 16:07:10  amassari
+ * Protected getSrcOffset to avoid crashing when parsing has finished; updated documentation
+ *
  * Revision 1.30  2005/02/25 11:31:07  amassari
  * Performance improvements by David Bertoni (jira# 1343)
  *
@@ -729,6 +732,7 @@ public :
 
     /**
       * Returns the current src offset within the input source.
+      * To be used only while parsing is in progress.
       *
       * @return offset within the input source
       */

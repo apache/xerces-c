@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2005/03/09 16:07:11  amassari
+ * Protected getSrcOffset to avoid crashing when parsing has finished; updated documentation
+ *
  * Revision 1.15  2005/02/08 09:21:11  amassari
  * Removed warnings
  *
@@ -412,7 +415,7 @@ inline bool ReaderMgr::getThrowEOE() const
 
 inline unsigned int ReaderMgr::getSrcOffset() const
 {
-    return fCurReader->getSrcOffset();
+    return fCurReader? fCurReader->getSrcOffset() : 0;
 }
 
 inline bool ReaderMgr::lookingAtChar(const XMLCh chToCheck)

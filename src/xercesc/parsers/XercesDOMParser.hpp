@@ -195,6 +195,7 @@ public :
 
     /**
      * Returns the current src offset within the input source.
+     * To be used only while parsing is in progress.
      *
      * @return offset within the input source
      */

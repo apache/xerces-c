@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.38  2005/03/09 16:07:10  amassari
+ * Protected getSrcOffset to avoid crashing when parsing has finished; updated documentation
+ *
  * Revision 1.37  2004/12/07 19:45:43  knoaman
  * An option to ignore a cached DTD grammar when a document contains an
  * internal and external subset.
@@ -657,6 +660,7 @@ public :
 
     /**
      * Returns the current src offset within the input source.
+     * To be used only while parsing is in progress.
      *
      * @return offset within the input source
      */
