@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/07/18 20:05:31  knoaman
+ * Add a new feature to control strict IANA encoding name.
+ *
  * Revision 1.2  2002/04/09 15:44:00  knoaman
  * Add lower case string support.
  *
@@ -253,6 +256,12 @@ private :
     XMLTransService(const XMLTransService&);
     void operator=(const XMLTransService&);
 
+    // -----------------------------------------------------------------------
+    //  Hidden method to enable/disable strict IANA encoding check
+    //  Caller: XMLPlatformUtils
+    // -----------------------------------------------------------------------
+    void strictIANAEncoding(const bool newState);
+    bool isStrictIANAEncoding();
 
     // -----------------------------------------------------------------------
     //  Hidden init method for platform utils to call

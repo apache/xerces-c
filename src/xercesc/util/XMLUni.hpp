@@ -230,6 +230,7 @@ public :
     static const XMLCh fgXercesUserAdoptsDOMDocument[];
     static const XMLCh fgXercesCacheGrammarFromParse[];
     static const XMLCh fgXercesUseCachedGrammarInParse[];
+    static const XMLCh fgXercesStrictIANAEncoding[];
 
     // SAX2 features/properties names
     static const XMLCh fgSAX2CoreValidation[];

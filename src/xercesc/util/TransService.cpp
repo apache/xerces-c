@@ -74,6 +74,7 @@
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLUni.hpp>
 #include <xercesc/util/TransENameMap.hpp>
+#include <xercesc/util/EncodingValidator.hpp>
 
 
 
@@ -137,7 +138,7 @@ static XMLCh                        gDisallowPre[] =
 {
         chLatin_I, chLatin_B, chLatin_M, chNull
 };
-
+static bool gStrictIANAEncoding = false;
 
 
 // ---------------------------------------------------------------------------
@@ -185,6 +186,18 @@ XMLTransService::makeNewTranscoderFor(  const   XMLCh* const            encoding
                                         ,       XMLTransService::Codes& resValue
                                         , const unsigned int            blockSize)
 {
+    //
+    // If strict IANA encoding flag is set, validate encoding name
+    //
+    if (gStrictIANAEncoding)
+    {
+        if (!EncodingValidator::instance()->isValidEncoding(encodingName))
+        {
+            resValue = XMLTransService::UnsupportedEncoding;               
+            return 0;
+        }
+    }
+
     //
     //  First try to find it in our list of mappings to intrinsically
     //  supported encodings. We have to upper case the passed encoding
@@ -521,4 +534,17 @@ void XMLTransService::initTransService()
     //
     gMappings->put((void*)XMLUni::fgWin1252EncodingString, new ENameMapFor<XMLWin1252Transcoder>(XMLUni::fgWin1252EncodingString));
 
+}
+
+// ---------------------------------------------------------------------------
+//  XLMTransService: IANA encoding setting
+// ---------------------------------------------------------------------------
+void XMLTransService::strictIANAEncoding(const bool newState)
+{
+    gStrictIANAEncoding = newState;
+}
+
+bool XMLTransService::isStrictIANAEncoding()
+{
+    return gStrictIANAEncoding;
 }

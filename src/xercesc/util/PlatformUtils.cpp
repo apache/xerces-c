@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:11  peiyongz
- * Initial revision
+ * Revision 1.2  2002/07/18 20:05:31  knoaman
+ * Add a new feature to control strict IANA encoding name.
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:11  peiyongz
+ * sane_include
  *
  * Revision 1.16  2001/10/25 21:52:28  peiyongz
  * XMLDeleterFor related functions and data are removed.
@@ -356,5 +359,27 @@ void XMLPlatformUtils::recognizeNEL(bool state) {
 bool XMLPlatformUtils::isNELRecognized() {
 
     return XMLReader::isNELRecognized();
+}
+
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: IANA Encoding checking setting
+// ---------------------------------------------------------------------------
+void XMLPlatformUtils::strictIANAEncoding(const bool state) {
+
+    //Make sure initialize has been called
+    if (gInitFlag == 0) {
+        return;
+    }
+
+    fgTransService->strictIANAEncoding(state);
+}
+
+
+bool XMLPlatformUtils::isStrictIANAEncoding() {
+
+    if (gInitFlag)
+        return fgTransService->isStrictIANAEncoding();
+
+    return false;
 }
 

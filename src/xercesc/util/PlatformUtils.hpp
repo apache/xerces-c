@@ -578,6 +578,26 @@ public :
     static bool isNELRecognized();
     //@}
 
+    /** @name Strict IANA Encoding Checking */
+    //@{
+	/**
+      * This function enables/disables strict IANA encoding names checking.
+      *
+      * The strict checking is disabled by default.
+      *
+      * @param state If true, a strict IANA encoding name check is performed,
+      *              otherwise, no checking.
+      *
+      */
+    static void strictIANAEncoding(const bool state);
+
+    /**
+      * Returns whether a strict IANA encoding name check is enabled or
+      * disabled.
+      */
+    static bool isStrictIANAEncoding();
+    //@}
+
 
 private :
     /** @name Private static methods */
