@@ -403,7 +403,7 @@ ComplexTypeInfo::elementAt(const unsigned int index) const {
 
 inline XMLContentModel* ComplexTypeInfo::getContentModel(const bool checkUPA)
 {
-    if (!fContentModel)
+    if (!fContentModel && fContentSpec)
         fContentModel = makeContentModel(checkUPA);
 
     return fContentModel;

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2004/07/22 15:00:54  knoaman
+ * Eliminate the need to create a temporary content model when performing UPA checking
+ *
  * Revision 1.26  2004/01/29 11:52:31  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -396,7 +399,7 @@ ComplexTypeInfo::~ComplexTypeInfo()
     delete fAttDefs;
     delete fAttList;
     delete fElements;
-    delete fSpecNodesToDelete;
+    //delete fSpecNodesToDelete;
     delete fLocator;
 
     delete fContentModel;
@@ -554,16 +557,12 @@ void ComplexTypeInfo::checkUniqueParticleAttribution (SchemaGrammar*    const pG
                                                       XMLStringPool*    const pStringPool,
                                                       XMLValidator*     const pValidator)
 {
-    if (fContentSpec) {
-        ContentSpecNode* specNode = new (fMemoryManager) ContentSpecNode(*fContentSpec);
-        XMLContentModel* cm = makeContentModel(true, specNode);
-
-        if (cm) {
-            cm->checkUniqueParticleAttribution(pGrammar, pGrammarResolver, pStringPool, pValidator, fContentSpecOrgURI);
-            delete cm;
+    if (fContentSpec && !fContentModel)
+    {
+        fContentModel = makeContentModel(true);
+        if (fContentModel) {
+            fContentModel->checkUniqueParticleAttribution(pGrammar, pGrammarResolver, pStringPool, pValidator, fContentSpecOrgURI);
         }
-
-        fSpecNodesToDelete->removeAllElements();
     }
 }
 
@@ -613,31 +612,20 @@ XMLCh* ComplexTypeInfo::formatContentModel() const
 
 XMLContentModel* ComplexTypeInfo::makeContentModel(const bool checkUPA, ContentSpecNode* const specNode)
 {
-    if ((specNode || fContentSpec) && !fSpecNodesToDelete) {
-        fSpecNodesToDelete = new (fMemoryManager) RefVectorOf<ContentSpecNode>(8, true, fMemoryManager);
-    }
-
-    // expand the content spec first
-    ContentSpecNode* aSpecNode = specNode;
+    ContentSpecNode* aSpecNode = new (fMemoryManager) ContentSpecNode(*fContentSpec);
     XMLContentModel* retModel = 0;
-    if (aSpecNode) {
 
+    if (checkUPA) {
         fContentSpecOrgURI = (unsigned int*) fMemoryManager->allocate
         (
             fContentSpecOrgURISize * sizeof(unsigned int)
         ); //new unsigned int[fContentSpecOrgURISize];
-        aSpecNode = convertContentSpecTree(aSpecNode, checkUPA);
-        retModel = buildContentModel(aSpecNode);
-        fSpecNodesToDelete->addElement(aSpecNode);
-    }
-    else {
-        // building content model for the complex type
-        aSpecNode = new (fMemoryManager) ContentSpecNode(*fContentSpec);
-        aSpecNode = convertContentSpecTree(aSpecNode, checkUPA);
-        retModel = buildContentModel(aSpecNode);
-        delete aSpecNode;
     }
 
+    aSpecNode = convertContentSpecTree(aSpecNode, checkUPA);
+    retModel = buildContentModel(aSpecNode);
+
+    delete aSpecNode;
     return retModel;
 }
 
@@ -803,12 +791,14 @@ ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
     // When checking Unique Particle Attribution, rename leaf elements
     if (checkUPA) {
         if (curNode->getElement()) {
+            if (fUniqueURI == fContentSpecOrgURISize) {
+                resizeContentSpecOrgURI();
+            }
+
             fContentSpecOrgURI[fUniqueURI] = curNode->getElement()->getURI();
             curNode->getElement()->setURI(fUniqueURI);
             fUniqueURI++;
         }
-        if (fUniqueURI == fContentSpecOrgURISize)
-            resizeContentSpecOrgURI();
     }
 
     // Get the spec type of the passed node
