@@ -113,13 +113,44 @@
         compilers we have tested &XercesCName; on. The following table lists the
         relevant platforms and compilers.</p>
 
-        <table>
-            <tr><td><em>Operating System</em></td><td><em>C++, C Compilers</em></td></tr>
-            <tr><td>Redhat Linux 7.2</td><td>g++, gcc (egcs)</td></tr>
-            <tr><td>AIX 4.3</td><td>xlC_r, xlc_r</td></tr>
-            <tr><td>Solaris 2.6</td><td>CC, cc</td></tr>
-            <tr><td>HP-UX 11</td><td>aCC, cc</td></tr>
-        </table>
+      <table>
+        <tr>
+          <td><em>Operating System</em></td>
+          <td><em>Compiler</em></td>
+        </tr>
+        <tr>
+          <td><em>32-bit binary</em></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Redhat Linux 7.2</td>
+          <td>g++ 3.1</td>
+        </tr>
+        <tr>
+          <td>AIX 5.1</td>
+          <td>xlC_r 5.0.2</td>
+        </tr>
+        <tr>
+          <td>Solaris 2.7</td>
+          <td>Forte C++ Version 6 Update 2</td>
+        </tr>
+        <tr>
+          <td>HP-UX 11.0</td>
+          <td>aCC A.03.13 with pthreads</td>
+        </tr>
+        <tr>
+          <td><em>64-bit binary</em></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>AIX 5.1</td>
+          <td>xlC_r 5.0.2</td>
+        </tr>
+        <tr>
+          <td>HP-UX 11.0</td>
+          <td>aCC A.03.13 with pthreads</td>
+        </tr>
+      </table>
 
         <p>If you are not using any of these compilers, you are taking a calculated risk
         by exploring new grounds. Your effort in making &XercesCName; work on this

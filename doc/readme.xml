@@ -83,7 +83,7 @@
           <td></td>
         </tr>
         <tr>
-          <td>Windows NT 4.0 SP5/2000</td>
+          <td>Windows NT 4.0 SP5</td>
           <td>MSVC 6.0 SP3</td>
         </tr>
         <tr>
@@ -91,11 +91,11 @@
           <td>g++ 3.1</td>
         </tr>
         <tr>
-          <td>AIX 4.3</td>
+          <td>AIX 5.1</td>
           <td>xlC_r 5.0.2</td>
         </tr>
         <tr>
-          <td>Solaris 2.6</td>
+          <td>Solaris 2.7</td>
           <td>Forte C++ Version 6 Update 2</td>
         </tr>
         <tr>

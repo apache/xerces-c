@@ -51,8 +51,8 @@
         execute your application using &XercesCName;. In case you're using the
         binary build of &XercesCName; make sure that the OS and compiler are
         the same version as the ones used to build the binary (please refer to
-        <jump href="faq-distrib.html#faq-1">FAQ: What compilers are being used
-        on the supported platforms?</jump>).  Different OS and
+        <jump href="faq-distrib.html#faq-1">FAQ: What platforms / compilers are
+        being used to build the binary distribution kits?</jump>).  Different OS and
         compiler versions might cause unresolved linking problems or compilation
         errors. If the versions are different, rebuild the &XercesCName; library on
         your system before building your application. If you're using ICU (which is
@@ -73,8 +73,8 @@
 
       <p>In case you're using the binary build of &XercesCName; make sure that the
         OS and compiler are the same version as the ones used to build the binary
-        (please refer to <jump href="faq-distrib.html#faq-1">FAQ: What compilers are
-        being used on the supported platforms?</jump>).  Different OS and
+        (please refer to <jump href="faq-distrib.html#faq-1">FAQ: What platforms / compilers
+        are being used to build the binary distribution kits?</jump>).  Different OS and
         compiler versions might cause unresolved linking problems or compilation
         errors. If the versions are different, rebuild the &XercesCName; library on
         your system before building your application. If you're using ICU (which is
@@ -194,9 +194,9 @@ export SHLIB_PATH=$SHLIB_PATH:$HOME/fastxmlparser/lib # (HP-UX)</source>
     </a>
   </faq>
 
-  <faq title="Why does my multi-threaded application crash on Solaris?">
+  <faq title="Why does my multi-threaded application crash on Solaris 2.6?">
 
-    <q>Why does my multi-threaded application crash on Solaris?</q>
+    <q>Why does my multi-threaded application crash on Solaris 2.6?</q>
 
     <a>
 

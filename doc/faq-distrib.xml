@@ -3,9 +3,9 @@
 
 <faqs title="Distributing &XercesCName;">
 
-  <faq title="What compilers are being used on the supported platforms?">
+  <faq title="What platforms / compilers are being used to build the binary distribution kits?">
 
-    <q>What compilers are being used on the supported platforms?</q>
+    <q>What platforms / compilers are being used to build the binary distribution kits?</q>
 
     <a>
 
@@ -18,20 +18,36 @@
           <td><em>Compiler</em></td>
         </tr>
         <tr>
-          <td>Windows NT 4.0 SP5/2000</td>
+          <td><em>32-bit binary</em></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Windows NT 4.0 SP5</td>
           <td>MSVC 6.0 SP3</td>
         </tr>
         <tr>
           <td>Redhat Linux 7.2</td>
-          <td>g++ 2.96</td>
+          <td>g++ 3.1</td>
         </tr>
         <tr>
-          <td>AIX 4.3</td>
+          <td>AIX 5.1</td>
           <td>xlC_r 5.0.2</td>
         </tr>
         <tr>
-          <td>Solaris 2.6</td>
+          <td>Solaris 2.7</td>
           <td>Forte C++ Version 6 Update 2</td>
+        </tr>
+        <tr>
+          <td>HP-UX 11.0</td>
+          <td>aCC A.03.13 with pthreads</td>
+        </tr>
+        <tr>
+          <td><em>64-bit binary</em></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>AIX 5.1</td>
+          <td>xlC_r 5.0.2</td>
         </tr>
         <tr>
           <td>HP-UX 11.0</td>
@@ -68,9 +84,11 @@
             site. The license to use XML4C is simply to comply with
             the Apache license (because of Xerces-C) and X License (because of ICU).</p>
 
-            <p>XML4C binaries are published for Solaris 2.6 using Forte C++ 6.2
-            compiler, HPUX 11.0 using aCC, Redhat Linux 7.2 using g++ 2.96,
-            Windows NT 4.0 using MSVC 6.0 SP3, AIX 4.3 using xlC_r v5.0.2.</p>
+            <p>XML4C binaries are published for the same set of platforms / compilers
+            as Xerces-C++, see <jump href="faq-distrib.html#faq-1">FAQ:
+            What platforms / compilers are being used to build the binary distribution kits?</jump>
+            and the documentation in
+            <jump href="http://www.alphaworks.ibm.com/tech/xml4c">Alphaworks</jump>.</p>
 
         </a>
     </faq>
