@@ -221,6 +221,9 @@ int main(int argC, char* argV[])
     while (more)
     {
         char fURI[1000];
+        //initialize the array to zeros
+        memset(fURI,0,sizeof(fURI)); 
+                
         if (doList) {
             if (! fin.eof() ) {
                 fin.getline (fURI, sizeof(fURI));

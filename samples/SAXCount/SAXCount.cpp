@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.16  2001/08/15 12:41:04  tng
+* Initialize the fURI array to zeros, in case, some compilers like AIX xlC_r doesn't reset the memory.
+*
 * Revision 1.15  2001/08/08 12:12:32  tng
 * Print the file name only if doList is on.
 *
@@ -275,6 +278,9 @@ int main(int argC, char* argV[])
     while (true)
     {
         char fURI[1000];
+        //initialize the array to zeros
+        memset(fURI,0,sizeof(fURI)); 
+                
         if (doList) {
             if (! fin.eof() ) {
                 fin.getline (fURI, sizeof(fURI));
