@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.25  2004/02/17 15:53:50  neilg
+ * fix potential memory leak
+ *
  * Revision 1.24  2004/01/06 18:52:15  knoaman
  * Reset list of grammars after building XSModel
  *
@@ -546,10 +549,6 @@ XSModel *GrammarResolver::getXSModel()
             else if (fGrammarPoolXSModel)
             {
                 return fGrammarPoolXSModel;
-            }
-            else
-            {
-                fXSModel = new (fMemoryManager) XSModel(0, this, fMemoryManager);
             }
         }
     }
