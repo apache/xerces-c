@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/01/25 19:16:58  tng
+ * const should be used instead of static const.  Fixed by Khaled Noaman.
+ *
  * Revision 1.13  2000/07/25 22:33:05  aruna1
  * Char definitions in XMLUni moved to XMLUniDefs
  *
@@ -555,7 +558,7 @@ inline bool XMLReader::isXMLChar(const XMLCh toCheck)
 
 inline bool XMLReader::isXMLLetter(const XMLCh toCheck)
 {
-    static const XMLByte ourMask = gBaseCharMask | gLetterCharMask;
+    const XMLByte ourMask = gBaseCharMask | gLetterCharMask;
     return ((fgCharCharsTable[toCheck] & ourMask) != 0);
 }
 

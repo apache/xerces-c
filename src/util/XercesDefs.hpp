@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2001/01/25 19:17:06  tng
+ * const should be used instead of static const.  Fixed by Khaled Noaman.
+ *
  * Revision 1.10  2001/01/12 22:09:07  tng
  * Various update for Xerces 1.4
  *
@@ -148,11 +151,11 @@
 //  can be used by various per-compiler headers below.
 // ---------------------------------------------------------------------------
 #define Xerces_DLLVersionStr "1_4"
-static const char* const    gXercesVersionStr = "1_4";
-static const char* const    gXercesFullVersionStr = "1_4_0";
-static const unsigned int   gXercesMajVersion = 1;
-static const unsigned int   gXercesMinVersion = 4;
-static const unsigned int   gXercesRevision   = 0;
+const char* const    gXercesVersionStr = "1_4";
+const char* const    gXercesFullVersionStr = "1_4_0";
+const unsigned int   gXercesMajVersion = 1;
+const unsigned int   gXercesMinVersion = 4;
+const unsigned int   gXercesRevision   = 0;
 
 
 // ---------------------------------------------------------------------------
