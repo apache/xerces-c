@@ -279,7 +279,7 @@ char* IconvLCPTranscoder::transcode(const XMLCh* const toTranscode)
         return 0;
 
     char* retVal = 0;
-    if (toTranscode)
+    if (*toTranscode)
     {
         unsigned int  wLent = getWideCharLength(toTranscode);
 
@@ -374,8 +374,11 @@ bool IconvLCPTranscoder::transcode( const   XMLCh* const    toTranscode
 
 XMLCh* IconvLCPTranscoder::transcode(const char* const toTranscode)
 {
+    if (!toTranscode)
+        return 0;
+
     XMLCh* retVal = 0;
-    if (toTranscode)
+    if (*toTranscode)
     {
         const unsigned int len = calcRequiredSize(toTranscode);
         if (len == 0)
