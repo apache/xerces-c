@@ -9,6 +9,7 @@ IF "%1"=="framework" GOTO CD_FRAMEWORK
 IF "%1"=="internal" GOTO CD_INTERNAL
 IF "%1"=="intl" GOTO CD_INTL
 IF "%1"=="parsers" GOTO CD_PARSERS
+IF "%1"=="root" GOTO CD_ROOT
 IF "%1"=="samples" GOTO CD_SAMPLES
 IF "%1"=="sax" GOTO CD_SAX
 IF "%1"=="scripts" GOTO CD_SCRIPTS
@@ -47,6 +48,10 @@ GOTO EXIT
 
 :CD_PARSERS
 CD %XML4CRoot%\src\parsers
+GOTO EXIT
+
+:CD_ROOT
+CD %XML4CRoot%
 GOTO EXIT
 
 :CD_SAMPLES
