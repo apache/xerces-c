@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="USASCII" ?>
+
+<!ELEMENT   Encoding (#PCDATA)>
+<!ATTLIST   Encoding
+            name     CDATA #REQUIRED>
+
+<!ELEMENT   Charset  (Encoding+)>
