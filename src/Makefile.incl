@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.15  2000/02/10 21:28:02  abagchi
+# Added libicudata library
+#
 # Revision 1.14  2000/02/09 22:14:15  abagchi
 # AS/400 changes
 #
@@ -165,7 +168,7 @@ ifeq (${PLATFORM}, SOLARIS)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
-                  -licu-uc -lm -lw -lgen
+                  -licu-uc -licudata -lm -lw -lgen
     else
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
                   -lm -lw -lgen
@@ -177,7 +180,7 @@ ifeq (${PLATFORM}, SOLARIS)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
-                  -licu-uc -lm -lw -lC -lc -lgen
+                  -licu-uc -licudata -lm -lw -lC -lc -lgen
     else
         ALLLIBS = ${LIBS} -L/usr/local/SUNWspro/lib -L/usr/ccs/lib \
                   -lm -lw -lC -lc -lgen
@@ -194,7 +197,7 @@ ifeq (${PLATFORM}, UNIXWARE)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
-                  -licu-uc -lm -lw -lgen
+                  -licu-uc -licudata -lm -lw -lgen
     else
         ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib \
                   -lm -lw -lgen
@@ -206,7 +209,7 @@ ifeq (${PLATFORM}, UNIXWARE)
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -G
     ifeq (${TRANSCODER}, ICU)
         ALLLIBS = ${LIBS} -L/usr/local/lib -L/usr/ccs/lib \
-                  -licu-uc -lm -lw -lC -lc -lgen
+                  -licu-uc -licudata -lm -lw -lC -lc -lgen
     else
         ALLLIBS = ${LIBS} -L/usr/local/lib -L/usr/ccs/lib \
                   -lm -lw -lC -lc -lgen
@@ -221,13 +224,13 @@ ifeq (${PLATFORM}, AIX)
 #PLATFORM_CPP_COMPILER = xlC_r
 #PLATFORM_C_COMPILER = xlc_r
 #ifdef ICUROOT
-#  ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -L${ICUROOT}/lib -licu-uc -lbsd
+#  ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -L${ICUROOT}/lib -licu-uc -licudata -lbsd
 #else
 #  ALLLIBS = -L/usr/lpp/xlC/lib -lbsd
 #endif
 
 ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licu-uc -lbsd
+    ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -licu-uc -licudata -lbsd
 else
     ALLLIBS = ${LIBS} -L/usr/lpp/xlC/lib -lbsd
 endif
@@ -263,7 +266,7 @@ SHLIBSUFFIX=.o
 endif
 ifeq (${TRANSCODER}, ICU)
 ifeq (${SYSOVR},OS400)
-EXTRA_LINK_OPTIONS = -licu-uc -lbsd
+EXTRA_LINK_OPTIONS = -licu-uc -licudata -lbsd
 else
 EXTRA_LINK_OPTIONS = -lQZUUC
 endif
@@ -280,7 +283,7 @@ PLATFORM_COMPILE_OPTIONS = -fpic -instances=static -D${PLATFORM} -D_REENTRANT
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared -fpic
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared -fpic
 ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -lc
+    ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -licudata -lc
 else
     ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -lc
 endif
@@ -296,7 +299,7 @@ OBJ_OUT=${XERCESCROOT}/obj/
 MAKE_SHARED = ${CXX} -D${PLATFORM} -shared
 MAKE_SHARED_C = ${CC} -D${PLATFORM} -shared
 ifeq (${TRANSCODER}, ICU)
-    ALLLIBS = ${LIBS} -L/usr/lib32 -lC -licu-uc
+    ALLLIBS = ${LIBS} -L/usr/lib32 -lC -licu-uc -licudata
 else
     ALLLIBS = ${LIBS} -L/usr/lib32 -lC
 endif
@@ -334,7 +337,7 @@ ifeq (${PLATFORM}, HPUX)
     MAKE_SHARED = ${CXX} -D${PLATFORM} -b
     MAKE_SHARED_C = ${CC} -D${PLATFORM} -b
     ifeq (${TRANSCODER}, ICU)
-        ALLLIBS = ${LIBS} -licu-uc -lCsup -lstream
+        ALLLIBS = ${LIBS} -licu-uc -licudata -lCsup -lstream
     else
         ALLLIBS = ${LIBS} -lCsup -lstream
     endif
@@ -351,7 +354,7 @@ ifeq (${PLATFORM}, HPUX)
     MAKE_SHARED = $(CXX) $(PLATFORM_COMPILE_OPTIONS) $(XML_INCL)
     MAKE_SHARED_C = $(CC) $(PLATFORM_COMPILE_OPTIONS) $(XML_INCL)
     ifeq (${TRANSCODER}, ICU)
-        ALLLIBS = ${LIBS} -licu-uc
+        ALLLIBS = ${LIBS} -licu-uc -licudata
     else
         ALLLIBS = ${LIBS}
     endif
@@ -379,7 +382,7 @@ ifeq (${TRANSCODER}, ICU)
     ifeq (${OS390BATCH},1)
 	ALLLIBS = "//'${LOADEXP}(ICUUC)'"
     else
-	ALLLIBS = ${ICUROOT}/lib/libicu-uc.x
+	ALLLIBS = ${ICUROOT}/lib/libicu-uc.x ${ICUROOT}/lib/data/libicudata.x
     endif
 else
 	ALLLIBS =
