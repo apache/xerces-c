@@ -134,6 +134,7 @@ AttrImpl::AttrImpl(const AttrImpl &other, bool deep)
             {
                 *(value.str) == null;
                 delete value.str;
+                value.str = null;
             }
        }
        else
@@ -162,6 +163,7 @@ AttrImpl::~AttrImpl() {
         {
             *(value.str) == null;
             delete value.str;
+            value.str = null;
         }
     }
 }
@@ -322,6 +324,7 @@ void AttrImpl::setValue(const DOMString &newvalue)
     else {
         *x = null;
         delete x;
+        value.str = null;
     }
     hasStringValue(true);
     isSpecified(true);
