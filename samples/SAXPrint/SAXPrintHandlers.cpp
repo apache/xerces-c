@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2003/03/17 21:03:45  peiyongz
+ * Bug#17983
+ *
  * Revision 1.15  2002/02/01 22:41:17  peiyongz
  * sane_include
  *
@@ -160,6 +163,7 @@ SAXPrintHandlers::SAXPrintHandlers( const   char* const              encodingNam
     fFormatter
     (
         encodingName
+        , 0
         , this
         , XMLFormatter::NoEscapes
         , unRepFlags

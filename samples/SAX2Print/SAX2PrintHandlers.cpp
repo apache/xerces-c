@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2003/03/17 21:03:52  peiyongz
+ * Bug#17983
+ *
  * Revision 1.7  2002/05/28 20:24:15  tng
  * XMLUni::fgEmptyString which is defined as "EMPTY" is incorrectly used as an empty string, should use XMLUni::fgZeroLenString instead
  *
@@ -130,6 +133,7 @@ SAX2PrintHandlers::SAX2PrintHandlers( const   char* const              encodingN
     fFormatter
     (
         encodingName
+        , 0
         , this
         , XMLFormatter::NoEscapes
         , unRepFlags
