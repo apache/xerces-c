@@ -389,3 +389,11 @@ void DOMNodeIteratorImpl::removeNode (DOMNode* node) {
 
 }
 
+
+void DOMNodeIteratorImpl::release()
+{
+    detach();
+    DOMNodeIteratorImpl* iter = (DOMNodeIteratorImpl*) this;
+    delete iter;
+}
+

@@ -387,6 +387,8 @@ void DOMRangeImpl::detach()
             DOMException::INVALID_STATE_ERR, 0);
     }
 
+    ((DOMDocumentImpl *)fDocument)->removeRange(this);
+
     fDetached = true;
 
     //0ify nodes
@@ -833,6 +835,13 @@ const DOMNode* DOMRangeImpl::getCommonAncestorContainer() const
 {
      return commonAncestorOf(fStartContainer, fEndContainer);
 
+}
+
+void DOMRangeImpl::release()
+{
+    detach();
+    DOMRangeImpl* range = (DOMRangeImpl*) this;
+    delete range;
 }
 
 //---------------------
@@ -1458,7 +1467,9 @@ DOMNode*DOMRangeImpl::traverseFullySelected( DOMNode* n, int how )
         }
         return n;
     case DELETE_CONTENTS:
-        n->getParentNode()->removeChild(n);
+        DOMNode* rem = n->getParentNode()->removeChild(n);
+        if (rem)
+            rem->release();
         return 0;
     }
     return 0;

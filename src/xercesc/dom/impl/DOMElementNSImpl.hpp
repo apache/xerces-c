@@ -94,6 +94,7 @@ public:
     virtual const XMLCh *getPrefix() const;
     virtual const XMLCh *getLocalName() const;
     virtual void         setPrefix(const XMLCh *prefix);
+    virtual void         release();
 };
 
 #endif

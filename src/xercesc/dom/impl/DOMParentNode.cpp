@@ -63,8 +63,8 @@
 #include <xercesc/dom/DOMNode.hpp>
 
 #include "DOMDocumentImpl.hpp"
-#include "DOMRangeImpl.hpp"
 #include "DOMNodeListImpl.hpp"
+#include "DOMRangeImpl.hpp"
 #include "DOMParentNode.hpp"
 #include "DOMCasts.hpp"
 
@@ -235,9 +235,8 @@ DOMNode *DOMParentNode::insertBefore(DOMNode *newChild, DOMNode *refChild) {
     else
     {
         DOMNode *oldparent=newChild->getParentNode();
-        if(oldparent!=0) {
+        if(oldparent!=0)
             oldparent->removeChild(newChild);
-        }
 
         // Attach up
         castToNodeImpl(newChild)->fOwnerNode = castToNode(this);
@@ -384,7 +383,9 @@ void DOMParentNode::normalize()
             next->getNodeType() == DOMNode::TEXT_NODE )
         {
             ((DOMTextImpl *) kid)->appendData(((DOMTextImpl *) next)->getData());
-            removeChild(next);
+            DOMNode* rem = removeChild(next);
+            if (rem)
+                rem->release();
             next = kid; // Don't advance; there might be another.
         }
 
@@ -397,4 +398,18 @@ void DOMParentNode::normalize()
     // changed() will have occurred when the removeChild() was done,
     // so does not have to be reissued.
 };
+
+void DOMParentNode::release()
+{
+    DOMNode *kid, *next;
+    for (kid = fFirstChild; kid != 0; kid = next)
+    {
+        next = castToChildImpl(kid)->nextSibling;
+
+        // set is Owned false before releasing its child
+        castToNodeImpl(kid)->isToBeReleased(true);
+        kid->release();
+    }
+}
+
 

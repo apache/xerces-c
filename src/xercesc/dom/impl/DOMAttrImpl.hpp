@@ -74,9 +74,9 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include "DOMParentNode.hpp"
 #include "DOMNodeImpl.hpp"
+#include "DOMDocumentImpl.hpp"
 #include <xercesc/dom/DOMAttr.hpp>
 
-class DOMDocumentImpl;
 class DOMElementImpl;
 
 class CDOM_EXPORT DOMAttrImpl: public DOMAttr {

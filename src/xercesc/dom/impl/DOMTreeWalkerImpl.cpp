@@ -496,3 +496,9 @@ short DOMTreeWalkerImpl::acceptNode (DOMNode* node) {
     }
 }
 
+
+void DOMTreeWalkerImpl::release()
+{
+    DOMTreeWalkerImpl* tree = (DOMTreeWalkerImpl*) this;
+    delete tree;
+}

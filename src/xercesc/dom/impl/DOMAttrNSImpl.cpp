@@ -129,7 +129,7 @@ DOMAttrImpl(other, deep)
 
 DOMNode * DOMAttrNSImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument()) DOMAttrNSImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ATTR_NS_OBJECT) DOMAttrNSImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 };
@@ -204,3 +204,20 @@ void DOMAttrNSImpl::setPrefix(const XMLCh *prefix)
         delete[] newName;
 
 }
+
+void DOMAttrNSImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc) {
+        fParent.release();
+        doc->release(this, DOMDocumentImpl::ATTR_NS_OBJECT);
+    }
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
+

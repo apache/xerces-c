@@ -125,6 +125,7 @@ public:
     // NON-DOM
     // unlike getOwnerDocument this never returns null, even for Document nodes
     DOMDocument * getDocument() const;
+    void          release();
 
 
 public:

@@ -91,7 +91,7 @@ DOMDocumentFragmentImpl::~DOMDocumentFragmentImpl()
 
 DOMNode *DOMDocumentFragmentImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (castToNodeImpl(this)->getOwnerDocument()) DOMDocumentFragmentImpl(*this, deep);
+    DOMNode* newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMDocumentImpl::DOCUMENT_FRAGMENT_OBJECT) DOMDocumentFragmentImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 };
@@ -115,6 +115,22 @@ void DOMDocumentFragmentImpl::setNodeValue(const XMLCh *x)
     fNode.setNodeValue(x);
 };
 
+
+void DOMDocumentFragmentImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc) {
+        fParent.release();
+        doc->release(this, DOMDocumentImpl::DOCUMENT_FRAGMENT_OBJECT);
+    }
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
 
 //
 //  Delegation stubs for inherited functions.

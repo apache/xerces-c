@@ -68,10 +68,10 @@
 #include "DOMTextImpl.hpp"
 #include "DOMCharacterDataImpl.hpp"
 #include "DOMChildNode.hpp"
+#include "DOMRangeImpl.hpp"
 
 
 #include <assert.h>
-#include "DOMRangeImpl.hpp"
 
 class DOMDocument;
 
@@ -94,7 +94,7 @@ DOMTextImpl::~DOMTextImpl()
 
 DOMNode *DOMTextImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument()) DOMTextImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::TEXT_OBJECT) DOMTextImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 };
@@ -162,6 +162,20 @@ void DOMTextImpl::setIgnorableWhitespace(bool ignorable)
     fNode.ignorableWhitespace(ignorable);
 }
 
+
+void DOMTextImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc)
+        doc->release(this, DOMDocumentImpl::TEXT_OBJECT);
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
 
 //
 //  Delegation functions

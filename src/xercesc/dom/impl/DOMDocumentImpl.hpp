@@ -72,7 +72,9 @@
 
 #include <string.h>
 #include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/util/RefArrayOf.hpp>
 #include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/RefStackOf.hpp>
 #include <xercesc/util/RefHashTableOf.hpp>
 #include <xercesc/util/KeyRefPair.hpp>
 
@@ -107,16 +109,35 @@ class DOMRangeImpl;
 class DOMParentNode;
 class DOMStringPool;
 
-typedef RefVectorOf<DOMNodeIteratorImpl> NodeIterators;
-typedef RefVectorOf<DOMTreeWalkerImpl>   TreeWalkers;
 typedef RefVectorOf<DOMRangeImpl>        Ranges;
 typedef KeyRefPair<void, DOMUserDataHandler> DOMUserDataRecord;
-typedef RefHashTableOf<DOMUserDataRecord> DOMNode_UserDataTable;
+typedef RefHashTableOf<DOMUserDataRecord> DOMNodeUserDataTable;
+typedef RefStackOf<DOMNode>               DOMNodePtr;
 
 class CDOM_EXPORT DOMDocumentImpl: public DOMDocument {
 public:
     // -----------------------------------------------------------------------
-    //  Private data types
+    //  data types
+    // -----------------------------------------------------------------------
+    enum NodeObjectType {
+        ATTR_OBJECT                   = 0,
+        ATTR_NS_OBJECT                = 1,
+        CDATA_SECTION_OBJECT          = 2,
+        COMMENT_OBJECT                = 3,
+        DOCUMENT_FRAGMENT_OBJECT      = 4,
+        DOCUMENT_TYPE_OBJECT          = 5,
+        ELEMENT_OBJECT                = 6,
+        ELEMENT_NS_OBJECT             = 7,
+        ENTITY_OBJECT                 = 8,
+        ENTITY_REFERENCE_OBJECT       = 9,
+        NOTATION_OBJECT               = 10,
+        PROCESSING_INSTRUCTION_OBJECT = 11,
+        TEXT_OBJECT                   = 12
+    };
+
+
+    // -----------------------------------------------------------------------
+    //  data
     // -----------------------------------------------------------------------
 
 
@@ -128,8 +149,6 @@ public:
     DOMStringPool*        fNamePool;
     DOMNodeIDMap*         fNodeIDMap;     // for use by GetElementsById().
 
-    NodeIterators*        fIterators;
-    TreeWalkers*          fTreeWalkers;
     Ranges*               fRanges;
 
     int                   fChanges;
@@ -143,7 +162,7 @@ public:
     XMLCh*                fVersion;
     XMLCh*                fDocumentURI;
 
-    RefHashTableOf<DOMNode_UserDataTable>* fUserDataTable;
+    RefHashTableOf<DOMNodeUserDataTable>* fUserDataTable;
 
 
     // Per-Document heap Variables.
@@ -166,8 +185,8 @@ public:
     char*                 fFreePtr;
     XMLSize_t             fFreeBytesRemaining;
 
-
-
+    // To recycle the DOMNode pointer
+    RefArrayOf<DOMNodePtr>* fRecycleNodePtr;
 
     friend class DOMNodeImpl;
     friend class DOMNodeIteratorImpl;
@@ -316,9 +335,11 @@ public:
     //
 
     void*                        allocate(size_t amount);
+    void*                        allocate(size_t amount, NodeObjectType type);
     XMLCh*                       cloneString(const XMLCh *src);
     const XMLCh*                 getPooledString(const XMLCh *src);
     void                         deleteHeap();
+    void                         release(DOMNode* object, NodeObjectType type);
 
 
     // Factory methods for getting/creating node lists.
@@ -343,11 +364,34 @@ private:
 //  Operator new.  Global overloaded version, lets any object be allocated on
 //                 the heap owned by a document.
 //
+inline void * operator new(size_t amt, DOMDocument *doc, DOMDocumentImpl::NodeObjectType type)
+{
+    // revist.  Probably should be a checked cast.
+    void *p = ((DOMDocumentImpl *)doc)->allocate(amt, type);
+    return p;
+}
+
 inline void * operator new(size_t amt, DOMDocument *doc)
 {
     // revist.  Probably should be a checked cast.
     void *p = ((DOMDocumentImpl *)doc)->allocate(amt);
     return p;
 }
+
+// ---------------------------------------------------------------------------
+//  For DOM:
+//  Bypass compiler warning:
+//    no matching operator delete found; memory will not be freed if initialization throws an exception
+// ---------------------------------------------------------------------------
+#if _MSC_VER >= 1200 /* VC++ 6.0 */
+inline void operator delete(void* ptr, DOMDocument *doc)
+{
+    return;
+}
+inline void operator delete(void* ptr, DOMDocument *doc, DOMDocumentImpl::NodeObjectType type)
+{
+    return;
+}
+#endif
 
 #endif

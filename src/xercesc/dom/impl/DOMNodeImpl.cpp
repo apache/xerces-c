@@ -88,6 +88,7 @@ const unsigned short DOMNodeImpl::ID_ATTR      = 0x1<<8;
 const unsigned short DOMNodeImpl::USERDATA     = 0x1<<9;
 const unsigned short DOMNodeImpl::LEAFNODETYPE = 0x1<<10;
 const unsigned short DOMNodeImpl::CHILDNODE    = 0x1<<11;
+const unsigned short DOMNodeImpl::TOBERELEASED = 0x1<<12;
 
 // -----------------------------------------------------------------------
 //  Reset the singleton gEmptyNodeList
@@ -412,3 +413,11 @@ const XMLCh* DOMNodeImpl::mapPrefix(const XMLCh *prefix,
         return namespaceURI;
     return namespaceURI;
 }
+
+// non-standard extension
+void DOMNodeImpl::release()
+{
+    // shouldn't reach here
+    throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+}
+

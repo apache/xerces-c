@@ -89,7 +89,7 @@ DOMNotationImpl::~DOMNotationImpl()
 
 DOMNode *DOMNotationImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument()) DOMNotationImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::NOTATION_OBJECT) DOMNotationImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 };
@@ -143,7 +143,19 @@ void DOMNotationImpl::setSystemId(const XMLCh *arg)
     fSystemId = ((DOMDocumentImpl *)getOwnerDocument())->cloneString(arg);
 };
 
+void DOMNotationImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
 
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc)
+        doc->release(this, DOMDocumentImpl::NOTATION_OBJECT);
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
 
 
            DOMNode*         DOMNotationImpl::appendChild(DOMNode *newChild)          {return fNode.appendChild (newChild); };

@@ -116,7 +116,7 @@ DOMElementNSImpl::DOMElementNSImpl(const DOMElementNSImpl &other, bool deep) :
 };
 
 DOMNode * DOMElementNSImpl::cloneNode(bool deep) const {
-    DOMNode* newNode = new (getOwnerDocument()) DOMElementNSImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ELEMENT_NS_OBJECT) DOMElementNSImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -189,3 +189,20 @@ void DOMElementNSImpl::setPrefix(const XMLCh *prefix)
         delete[] newName;
 
 }
+
+void DOMElementNSImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc) {
+        fParent.release();
+        doc->release(this, DOMDocumentImpl::ELEMENT_NS_OBJECT);
+    }
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
+

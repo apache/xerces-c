@@ -94,12 +94,6 @@
 #include <xercesc/internal/XMLReader.hpp>
 #include <xercesc/util/HashPtr.hpp>
 
-
-//revisit.  These can go away once all of the include files above are really there.
-class DOMTreeWalker;
-class DOMNodeFilter;
-
-
 //
 //   Constructors.   Warning - be very careful with the ordering of initialization
 //                             of the heap.  Ordering depends on the order of declaration
@@ -119,8 +113,6 @@ DOMDocumentImpl::DOMDocumentImpl()
       fDocType(0),
       fDocElement(0),
       fNamePool(0),
-      fIterators(0L),
-      fTreeWalkers(0L),
       fNodeIDMap(0),
       fRanges(0),
       fChanges(0),
@@ -130,7 +122,8 @@ DOMDocumentImpl::DOMDocumentImpl()
       fVersion(0),
       fStandalone(false),
       fDocumentURI(0),
-      fUserDataTable(0)
+      fUserDataTable(0),
+      fRecycleNodePtr(0)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
 };
@@ -148,8 +141,6 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fDocType(0),
       fDocElement(0),
       fNamePool(0),
-      fIterators(0L),
-      fTreeWalkers(0L),
       fNodeIDMap(0),
       fRanges(0),
       fChanges(0),
@@ -159,7 +150,8 @@ DOMDocumentImpl::DOMDocumentImpl(const XMLCh *fNamespaceURI,
       fVersion(0),
       fStandalone(false),
       fDocumentURI(0),
-      fUserDataTable(0)
+      fUserDataTable(0),
+      fRecycleNodePtr(0)
 {
     fNamePool    = new (this) DOMStringPool(257, this);
     try {
@@ -201,18 +193,16 @@ DOMDocumentImpl::~DOMDocumentImpl()
     if (fNodeListPool)
         fNodeListPool->cleanup();
 
-    //  Clean up the RefVector
-    if (fIterators)
-        fIterators->cleanup();
-
-    if (fTreeWalkers)
-        fTreeWalkers->cleanup();
-
     if (fRanges)
         fRanges->cleanup();
 
     if (fUserDataTable)
         fUserDataTable->cleanup();
+
+    if (fRecycleNodePtr) {
+        fRecycleNodePtr->deleteAllElements();
+        delete fRecycleNodePtr;
+    }
 
     //  Delete the heap for this document.  This uncerimoniously yanks the storage
     //      out from under all of the nodes in the document.  Destructors are NOT called.
@@ -261,27 +251,27 @@ DOMAttr *DOMDocumentImpl::createAttribute(const XMLCh *nam)
 {
     if(!isXMLName(nam))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
-    return new (this) DOMAttrImpl(this,nam);
+    return new (this, DOMDocumentImpl::ATTR_OBJECT) DOMAttrImpl(this,nam);
 };
 
 
 
 DOMCDATASection *DOMDocumentImpl::createCDATASection(const XMLCh *data) {
-    return new (this) DOMCDATASectionImpl(this,data);
+    return new (this, DOMDocumentImpl::CDATA_SECTION_OBJECT) DOMCDATASectionImpl(this,data);
 };
 
 
 
 DOMComment *DOMDocumentImpl::createComment(const XMLCh *data)
 {
-    return new (this) DOMCommentImpl(this, data);
+    return new (this, DOMDocumentImpl::COMMENT_OBJECT) DOMCommentImpl(this, data);
 };
 
 
 
 DOMDocumentFragment *DOMDocumentImpl::createDocumentFragment()
 {
-    return new (this) DOMDocumentFragmentImpl(this);
+    return new (this, DOMDocumentImpl::DOCUMENT_FRAGMENT_OBJECT) DOMDocumentFragmentImpl(this);
 };
 
 
@@ -292,7 +282,7 @@ DOMDocumentType *DOMDocumentImpl::createDocumentType(const XMLCh *nam)
         throw DOMException(
         DOMException::INVALID_CHARACTER_ERR, 0);
 
-    return new (this) DOMDocumentTypeImpl(this, nam);
+    return new (this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(this, nam, false);
 };
 
 
@@ -306,7 +296,7 @@ DOMDocumentType *
         throw DOMException(
         DOMException::INVALID_CHARACTER_ERR, 0);
 
-    return new (this) DOMDocumentTypeImpl(this, qualifiedName, publicId, systemId);
+    return new (this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(this, qualifiedName, publicId, systemId, false);
 };
 
 
@@ -316,13 +306,13 @@ DOMElement *DOMDocumentImpl::createElement(const XMLCh *tagName)
     if(!isXMLName(tagName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
 
-    return new (this) DOMElementImpl(this,tagName);
+    return new (this, DOMDocumentImpl::ELEMENT_OBJECT) DOMElementImpl(this,tagName);
 };
 
 
 DOMElement *DOMDocumentImpl::createElementNoCheck(const XMLCh *tagName)
 {
-    return new (this) DOMElementImpl(this, tagName);
+    return new (this, DOMDocumentImpl::ELEMENT_OBJECT) DOMElementImpl(this, tagName);
 };
 
 
@@ -334,7 +324,7 @@ DOMEntity *DOMDocumentImpl::createEntity(const XMLCh *nam)
         throw DOMException(
         DOMException::INVALID_CHARACTER_ERR, 0);
 
-    return new (this) DOMEntityImpl(this, nam);
+    return new (this, DOMDocumentImpl::ENTITY_OBJECT) DOMEntityImpl(this, nam);
 };
 
 
@@ -345,7 +335,7 @@ DOMEntityReference *DOMDocumentImpl::createEntityReference(const XMLCh *nam)
         throw DOMException(
         DOMException::INVALID_CHARACTER_ERR, 0);
 
-    return new (this) DOMEntityReferenceImpl(this, nam);
+    return new (this, DOMDocumentImpl::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(this, nam);
 };
 
 
@@ -356,7 +346,7 @@ DOMNotation *DOMDocumentImpl::createNotation(const XMLCh *nam)
         throw DOMException(
         DOMException::INVALID_CHARACTER_ERR, 0);
 
-    return new (this) DOMNotationImpl(this, nam);
+    return new (this, DOMDocumentImpl::NOTATION_OBJECT) DOMNotationImpl(this, nam);
 };
 
 
@@ -366,7 +356,7 @@ DOMProcessingInstruction *DOMDocumentImpl::createProcessingInstruction(
 {
     if(!isXMLName(target))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
-    return new (this) DOMProcessingInstructionImpl(this,target,data);
+    return new (this, DOMDocumentImpl::PROCESSING_INSTRUCTION_OBJECT) DOMProcessingInstructionImpl(this,target,data);
 };
 
 
@@ -374,57 +364,22 @@ DOMProcessingInstruction *DOMDocumentImpl::createProcessingInstruction(
 
 DOMText *DOMDocumentImpl::createTextNode(const XMLCh *data)
 {
-    return new (this) DOMTextImpl(this,data);
+    return new (this, DOMDocumentImpl::TEXT_OBJECT) DOMTextImpl(this,data);
 };
 
 
 DOMNodeIterator* DOMDocumentImpl::createNodeIterator (
           DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
 {
-    // Create the node iterator implementation object.
-    // Add it to the vector of fIterators that must be synchronized when a node is deleted.
-    // The vector of fIterators is kept in the "owner document" if there is one. If there isn't one, I assume that root is the
-    // owner document.
-
-    DOMNodeIteratorImpl* iter = new (this) DOMNodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
-    DOMDocument* doc = root->getOwnerDocument();
-    DOMDocumentImpl* impl;
-
-    if (doc != 0) {
-        impl = (DOMDocumentImpl *) doc;
-    }
-    else
-        impl = (DOMDocumentImpl *) root;
-
-    if (impl->fIterators == 0L) {
-        impl->fIterators = new (this) NodeIterators(1, false);
-        impl->fIterators->addElement(iter);
-    }
-
-    return iter;
+    // create in the heap
+    return new DOMNodeIteratorImpl(root, whatToShow, filter, entityReferenceExpansion);
 }
 
 
 DOMTreeWalker* DOMDocumentImpl::createTreeWalker (DOMNode *root, unsigned long whatToShow, DOMNodeFilter* filter, bool entityReferenceExpansion)
 {
-    // See notes for createNodeIterator...
-
-    DOMTreeWalkerImpl* twi = new (this) DOMTreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
-    DOMDocument* doc = root->getOwnerDocument();
-    DOMDocumentImpl* impl;
-
-    if ( doc != 0) {
-        impl = (DOMDocumentImpl *) doc;
-    }
-    else
-        impl = (DOMDocumentImpl *) root;
-
-    if (impl->fTreeWalkers == 0L) {
-        impl->fTreeWalkers = new (this) TreeWalkers(1, false);
-        impl->fTreeWalkers->addElement(twi);
-    }
-
-    return twi;
+    // create in the heap
+    return new DOMTreeWalkerImpl(root, whatToShow, filter, entityReferenceExpansion);
 }
 
 
@@ -531,7 +486,7 @@ DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
     if(!isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
     //XMLCh * pooledTagName = this->fNamePool->getPooledString(qualifiedName);
-    return new (this) DOMElementNSImpl(this, fNamespaceURI, qualifiedName);
+    return new (this, DOMDocumentImpl::ELEMENT_NS_OBJECT) DOMElementNSImpl(this, fNamespaceURI, qualifiedName);
 }
 
 DOMElement *DOMDocumentImpl::createElementNS(const XMLCh *fNamespaceURI,
@@ -551,7 +506,7 @@ DOMAttr *DOMDocumentImpl::createAttributeNS(const XMLCh *fNamespaceURI,
 {
     if(!isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
-    return new (this) DOMAttrNSImpl(this, fNamespaceURI, qualifiedName);
+    return new (this, DOMDocumentImpl::ATTR_NS_OBJECT) DOMAttrNSImpl(this, fNamespaceURI, qualifiedName);
 }
 
 
@@ -599,7 +554,8 @@ int DOMDocumentImpl::indexofQualifiedName(const XMLCh * qName)
 DOMRange* DOMDocumentImpl::createRange()
 {
 
-    DOMRangeImpl* range = new (this) DOMRangeImpl(this);
+    // create in the heap
+    DOMRangeImpl* range = new DOMRangeImpl(this);
 
     if (fRanges == 0L) {
         fRanges = new (this) Ranges(1, false);
@@ -1068,11 +1024,11 @@ DOMNode *DOMDocumentImpl::importNode(DOMNode *source, bool deep, bool cloningDoc
 void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data, DOMUserDataHandler* handler)
 {
     void* oldData = 0;
-    DOMNode_UserDataTable* node_userDataTable = 0;
+    DOMNodeUserDataTable* node_userDataTable = 0;
 
     if (!fUserDataTable) {
         // create the table on heap so that it can be cleaned in destructor
-        fUserDataTable = new (this) RefHashTableOf<DOMNode_UserDataTable>(29, true, new HashPtr());
+        fUserDataTable = new (this) RefHashTableOf<DOMNodeUserDataTable>(29, true, new HashPtr());
     }
     else {
         node_userDataTable = fUserDataTable->get((void*)n);
@@ -1090,7 +1046,7 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
 
     if (data) {
 
-        // create the DOMNode_UserDataTable if not exists
+        // create the DOMNodeUserDataTable if not exists
         // create on the heap and adopted by the hashtable which will delete it upon removal.
         if (!node_userDataTable) {
             node_userDataTable  = new RefHashTableOf<DOMUserDataRecord>(29, true);
@@ -1112,7 +1068,7 @@ void* DOMDocumentImpl::setUserData(DOMNodeImpl* n, const XMLCh* key, void* data,
 void* DOMDocumentImpl::getUserData(const DOMNodeImpl* n, const XMLCh* key) const
 {
     if (fUserDataTable) {
-        DOMNode_UserDataTable*  node_userDataTable = fUserDataTable->get((void*)n);
+        DOMNodeUserDataTable*  node_userDataTable = fUserDataTable->get((void*)n);
 
         if (node_userDataTable) {
             DOMUserDataRecord* dataRecord = node_userDataTable->get((void*)key);
@@ -1127,7 +1083,7 @@ void* DOMDocumentImpl::getUserData(const DOMNodeImpl* n, const XMLCh* key) const
 void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHandler::DOMOperationType operation, const DOMNode* src, const DOMNode* dst) const
 {
     if (fUserDataTable) {
-        DOMNode_UserDataTable*  node_userDataTable = fUserDataTable->get((void*)n);
+        DOMNodeUserDataTable*  node_userDataTable = fUserDataTable->get((void*)n);
 
         if (node_userDataTable) {
             RefHashTableOfEnumerator<DOMUserDataRecord> userDataEnum(node_userDataTable);
@@ -1153,4 +1109,35 @@ void DOMDocumentImpl::callUserDataHandlers(const DOMNodeImpl* n, DOMUserDataHand
     }
 }
 
+
+void DOMDocumentImpl::release()
+{
+    DOMDocument* doc = (DOMDocument*) this;
+    delete doc;
+};
+
+void DOMDocumentImpl::release(DOMNode* object, NodeObjectType type)
+{
+    if (!fRecycleNodePtr)
+        fRecycleNodePtr = new RefArrayOf<DOMNodePtr> (15);
+
+    if (!fRecycleNodePtr->operator[](type))
+        fRecycleNodePtr->operator[](type) = new RefStackOf<DOMNode> (15, false);
+
+    fRecycleNodePtr->operator[](type)->push(object);
+}
+
+
+void * DOMDocumentImpl::allocate(size_t amount, NodeObjectType type)
+{
+    if (!fRecycleNodePtr)
+        return allocate(amount);
+
+    DOMNodePtr* ptr = fRecycleNodePtr->operator[](type);
+    if (!ptr || ptr->empty())
+        return allocate(amount);
+
+    return (void*) ptr->pop();
+
+}
 

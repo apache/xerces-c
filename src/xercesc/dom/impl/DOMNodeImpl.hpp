@@ -116,6 +116,7 @@ public:
     static const unsigned short USERDATA;
     static const unsigned short LEAFNODETYPE;
     static const unsigned short CHILDNODE;
+    static const unsigned short TOBERELEASED;
 
 
 public:
@@ -146,6 +147,7 @@ public:
     void              setReadOnly(bool readOnly, bool deep);
     bool              isSupported(const XMLCh *feature, const XMLCh *version) const;
     bool              hasAttributes() const;
+    void              release();
 
     static  bool      isKidOK(DOMNode *parent, DOMNode *child);
 
@@ -282,6 +284,17 @@ public: // should really be protected - ALH
     inline void setIsChildNode(bool value) {
         flags = (value ? flags | CHILDNODE : flags & ~CHILDNODE);
     }
+
+    // True if this node has to be released regardless if it has a owner or not
+    // This is true if called from fParent->release()
+    inline bool isToBeReleased() const {
+        return (flags & TOBERELEASED) != 0;
+    }
+
+    inline void isToBeReleased(bool value) {
+        flags = (value ? flags | TOBERELEASED : flags & ~TOBERELEASED);
+    }
+
 };
 
 
@@ -317,7 +330,8 @@ public: // should really be protected - ALH
     virtual       bool             hasAttributes() const ;\
     virtual       void             setPrefix(const XMLCh * prefix) ;\
     virtual       void*            setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler) ;\
-    virtual       void*            getUserData(const XMLCh* key) const
+    virtual       void*            getUserData(const XMLCh* key) const ;\
+    virtual       void             release()
 
 
 /*

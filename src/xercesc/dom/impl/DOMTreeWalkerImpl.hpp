@@ -159,6 +159,9 @@ class CDOM_EXPORT DOMTreeWalkerImpl : public DOMTreeWalker {
     // Get the expandEntity reference flag.
     virtual bool getExpandEntityReferences();
 
+    // release the resource
+    virtual void release();
+
 protected:
 
     // Internal function.

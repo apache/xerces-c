@@ -105,7 +105,7 @@ DOMEntityImpl::~DOMEntityImpl() {
 
 DOMNode *DOMEntityImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument()) DOMEntityImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ENTITY_OBJECT) DOMEntityImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 };
@@ -220,6 +220,22 @@ bool DOMEntityImpl::hasChildNodes() const
 }
 
 
+void DOMEntityImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc) {
+        fParent.release();
+        doc->release(this, DOMDocumentImpl::ENTITY_OBJECT);
+    }
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
+
 //
 //  Functions inherited from Node
 //
@@ -244,7 +260,7 @@ bool DOMEntityImpl::hasChildNodes() const
                                                                                    {return fNode.isSupported (feature, version); };
            void             DOMEntityImpl::setPrefix(const XMLCh  *prefix)         {fNode.setPrefix(prefix); };
            bool             DOMEntityImpl::hasAttributes() const                   {return fNode.hasAttributes(); };
-           void*            DOMEntityImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler) 
+           void*            DOMEntityImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                    {return fNode.setUserData(key, data, handler); };
            void*            DOMEntityImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
 

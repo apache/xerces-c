@@ -63,6 +63,7 @@
 #include "DOMCasts.hpp"
 #include "DOMDocumentImpl.hpp"
 #include <xercesc/dom/DOMNode.hpp>
+#include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 
 DOMCommentImpl::DOMCommentImpl(DOMDocument *ownerDoc, const XMLCh *dat)
@@ -89,7 +90,7 @@ DOMCommentImpl::~DOMCommentImpl() {
 
 DOMNode * DOMCommentImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument()) DOMCommentImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::COMMENT_OBJECT) DOMCommentImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 };
@@ -103,9 +104,21 @@ const XMLCh * DOMCommentImpl::getNodeName() const {
 
 short DOMCommentImpl::getNodeType() const {
     return DOMNode::COMMENT_NODE;
-};
+}
 
+void DOMCommentImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
 
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc)
+        doc->release(this, DOMDocumentImpl::COMMENT_OBJECT);
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
 
 
            DOMNode*         DOMCommentImpl::appendChild(DOMNode *newChild)          {return fNode.appendChild (newChild); };

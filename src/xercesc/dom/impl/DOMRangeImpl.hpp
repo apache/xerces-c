@@ -147,6 +147,7 @@ public:
     virtual DOMRange* cloneRange() const;
     virtual const XMLCh* toString() const;
     virtual void detach();
+    virtual void release();
 
     //getter functions
     DOMDocument*         getDocument();

@@ -94,7 +94,7 @@ DOMProcessingInstructionImpl::~DOMProcessingInstructionImpl()
 
 DOMNode *DOMProcessingInstructionImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument()) DOMProcessingInstructionImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::PROCESSING_INSTRUCTION_OBJECT) DOMProcessingInstructionImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 };
@@ -161,7 +161,19 @@ void DOMProcessingInstructionImpl::setData(const XMLCh *arg)
     fData = ((DOMDocumentImpl *)getOwnerDocument())->cloneString(arg);
 };
 
+void DOMProcessingInstructionImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
 
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc)
+        doc->release(this, DOMDocumentImpl::PROCESSING_INSTRUCTION_OBJECT);
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
 
 //
 //    Delegation stubs for inherited functions

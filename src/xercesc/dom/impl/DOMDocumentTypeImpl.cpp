@@ -68,7 +68,8 @@
 
 
 DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
-                                   const XMLCh *dtName)
+                                   const XMLCh *dtName,
+                                   bool heap)
     : fNode(ownerDoc),
     fParent(ownerDoc),
     publicId(0),
@@ -78,7 +79,8 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
     intSubsetReading(false),
     entities(0),
     notations(0),
-    elements(0)
+    elements(0),
+    fIsCreatedFromHeap(heap)
 {
     if (ownerDoc) {
         name = ((DOMDocumentImpl *)ownerDoc)->getPooledString(dtName);
@@ -99,7 +101,8 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
 DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
                                    const XMLCh *qualifiedName,
                                    const XMLCh *pubId,
-                                   const XMLCh *sysId)
+                                   const XMLCh *sysId,
+                                   bool heap)
     : fNode(ownerDoc),
     fParent(ownerDoc),
     publicId(0),
@@ -109,7 +112,8 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
     intSubsetReading(false),
     entities(0),
     notations(0),
-    elements(0)
+    elements(0),
+    fIsCreatedFromHeap(heap)
 {
     if (DOMDocumentImpl::indexofQualifiedName(qualifiedName) < 0)
         throw DOMException(DOMException::NAMESPACE_ERR, 0);
@@ -134,7 +138,7 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
 };
 
 
-DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool deep)
+DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool heap, bool deep)
     : fNode(other.fNode),
     fParent(other.fParent),
     fChild(other.fChild),
@@ -145,7 +149,8 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool 
     intSubsetReading(other.intSubsetReading),
     entities(0),
     notations(0),
-    elements(0)
+    elements(0),
+    fIsCreatedFromHeap(heap)
 {
     if ((DOMDocumentImpl *)this->fNode.getOwnerDocument()) {
         name = other.name;
@@ -196,9 +201,9 @@ DOMNode *DOMDocumentTypeImpl::cloneNode(bool deep) const
 {
     DOMNode* newNode = 0;
     if (castToNodeImpl(this)->getOwnerDocument())
-        newNode = new (castToNodeImpl(this)->getOwnerDocument()) DOMDocumentTypeImpl(*this, deep);
+        newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
     else
-        newNode = new DOMDocumentTypeImpl(*this, deep);
+        newNode = new DOMDocumentTypeImpl(*this, true, deep);
 
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
@@ -371,6 +376,26 @@ void        DOMDocumentTypeImpl::setInternalSubset(const XMLCh *value)
         XMLCh* temp = (XMLCh*) internalSubset; // cast off const
         delete [] temp;
         internalSubset = XMLString::replicate(value);
+    }
+}
+
+void DOMDocumentTypeImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+
+    if (fIsCreatedFromHeap) {
+        DOMDocumentType* docType = this;
+        delete docType;
+    }
+    else {
+        DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+        if (doc)
+            doc->release(this, DOMDocumentImpl::DOCUMENT_TYPE_OBJECT);
+        else {
+            // shouldn't reach here
+            throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+        }
     }
 }
 

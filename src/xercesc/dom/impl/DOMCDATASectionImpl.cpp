@@ -60,8 +60,8 @@
 
 #include "DOMCDATASectionImpl.hpp"
 #include "DOMNodeImpl.hpp"
-#include "DOMDocumentImpl.hpp"
 #include "DOMRangeImpl.hpp"
+#include "DOMDocumentImpl.hpp"
 #include "DOMCasts.hpp"
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
@@ -90,7 +90,7 @@ DOMCDATASectionImpl::~DOMCDATASectionImpl()
 
 DOMNode  *DOMCDATASectionImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (this->getOwnerDocument()) DOMCDATASectionImpl(*this, deep);
+    DOMNode* newNode = new (this->getOwnerDocument(), DOMDocumentImpl::CDATA_SECTION_OBJECT) DOMCDATASectionImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 };
@@ -158,7 +158,22 @@ DOMText *DOMCDATASectionImpl::splitText(XMLSize_t offset)
 };
 
 
+void DOMCDATASectionImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
 
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+
+    if (doc) {
+        fParent.release();
+        doc->release(this, DOMDocumentImpl::CDATA_SECTION_OBJECT);
+    }
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
 
 
 //

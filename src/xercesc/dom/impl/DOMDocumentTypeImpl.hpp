@@ -89,14 +89,15 @@ private:
 
 
     const XMLCh *       name;
-    DOMNamedNodeMap  *entities;
-    DOMNamedNodeMap  *notations;
-    DOMNamedNodeMap  *elements;
+    DOMNamedNodeMap*    entities;
+    DOMNamedNodeMap*    notations;
+    DOMNamedNodeMap*    elements;
     const XMLCh *       publicId;
     const XMLCh *       systemId;
-    const XMLCh *      internalSubset;
+    const XMLCh *       internalSubset;
 
-    bool			 	intSubsetReading;
+    bool			         intSubsetReading;
+    bool                fIsCreatedFromHeap;
 
     virtual void        setPublicId(const XMLCh * value);
     virtual void        setSystemId(const XMLCh * value);
@@ -106,11 +107,11 @@ private:
     friend class AbstractDOMParser;
 
 public:
-    DOMDocumentTypeImpl(DOMDocument *, const XMLCh *);
+    DOMDocumentTypeImpl(DOMDocument *, const XMLCh *, bool);
     DOMDocumentTypeImpl(DOMDocument *,
                      const XMLCh *qualifiedName,	//DOM Level 2
-                     const XMLCh *publicId, const XMLCh *systemId);
-    DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool deep=false);
+                     const XMLCh *publicId, const XMLCh *systemId, bool);
+    DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool heap, bool deep=false);
     virtual ~DOMDocumentTypeImpl();
 
     // Declare all of the functions from DOMNode.

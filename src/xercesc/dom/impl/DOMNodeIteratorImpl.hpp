@@ -143,6 +143,8 @@ class CDOM_EXPORT DOMNodeIteratorImpl : public DOMNodeIterator {
         virtual DOMNode* previousNode ();
         virtual void detach ();
 
+        virtual void release();
+
     private:
         DOMNode* matchNodeOrParent (DOMNode* node);
         DOMNode* nextNode (DOMNode* node, bool visitChildren);

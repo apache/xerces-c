@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2002/06/25 16:17:16  tng
+ * DOM L3: add release()
+ *
  * Revision 1.11  2002/06/21 19:33:12  peiyongz
  * support for feature split_cdata_section and entities revised.
  *
@@ -133,19 +136,19 @@ static const int WHITESPACE_IN_ELEMENT_CONTENT_ID = 0x7;
 //
 
 //
-// Each feature has 2 entries in this array, 
+// Each feature has 2 entries in this array,
 // the first for "true",
 // the second for "false".
 //
-static bool  featuresSupported[] = {   
+static bool  featuresSupported[] = {
     false, true,  // canonical-form
-    true,  true,  // discard-default-content              
-    true,  true,  // entity                 
-    true,  true,  // format-pretty-print            
-    false, true,  // normalize-characters           
-    true,  true,  // split-cdata-sections           
+    true,  true,  // discard-default-content
+    true,  true,  // entity
+    true,  true,  // format-pretty-print
+    false, true,  // normalize-characters
+    true,  true,  // split-cdata-sections
     false, true,  // validation
-    true,  false  // whitespace-in-element-content   
+    true,  false  // whitespace-in-element-content
 };
 
 // default end-of-line sequence
@@ -194,19 +197,19 @@ static const XMLCh gXMLDecl_ver10[] =
 //encoding="
 static const XMLCh  gXMLDecl_EncodingDecl[] =
 {
-	chLatin_e,  chLatin_n,  chLatin_c,  chLatin_o,      chLatin_d, chLatin_i, 
+	chLatin_e,  chLatin_n,  chLatin_c,  chLatin_o,      chLatin_d, chLatin_i,
     chLatin_n,  chLatin_g,  chEqual,    chDoubleQuote,  chNull
 };
 
 //" standalone="
 static const XMLCh  gXMLDecl_SDDecl[] =
 {
-	chLatin_s, chLatin_t, chLatin_a,   chLatin_n,    chLatin_d,   chLatin_a, 
-    chLatin_l, chLatin_o, chLatin_n,   chLatin_e,    chEqual,     chDoubleQuote, 
+	chLatin_s, chLatin_t, chLatin_a,   chLatin_n,    chLatin_d,   chLatin_a,
+    chLatin_l, chLatin_o, chLatin_n,   chLatin_e,    chEqual,     chDoubleQuote,
     chNull
 };
 
-//" 
+//"
 static const XMLCh  gXMLDecl_separator[] =
 {
 	chDoubleQuote, chSpace, chNull
@@ -295,7 +298,7 @@ static const XMLCh  gNestedCdata[] =
     chLatin_C, chLatin_D, chLatin_a, chLatin_t, chLatin_a, chNull
 };
 
-// Unrepresentable char 
+// Unrepresentable char
 static const XMLCh  gUnrepresentableChar[] =
 {
 	chLatin_U, chLatin_n, chLatin_r, chLatin_e, chLatin_p, chLatin_r,
@@ -304,14 +307,14 @@ static const XMLCh  gUnrepresentableChar[] =
 	chLatin_a, chLatin_r, chNull
 };
 
-//Feature 
+//Feature
 static const XMLCh  gFeature[] =
 {
 	chLatin_F, chLatin_e, chLatin_a, chLatin_t, chLatin_u, chLatin_r,
     chLatin_e, chSpace,   chNull
 };
 
-// Can not be set to 
+// Can not be set to
 static const XMLCh  gCantSet[] =
 {
 	chSpace,   chLatin_C, chLatin_a, chLatin_n, chSpace, chLatin_n, chLatin_o,
@@ -321,13 +324,13 @@ static const XMLCh  gCantSet[] =
 
 static const XMLCh  gTrue[] =
 {
-	chSingleQuote, chLatin_t, chLatin_r, chLatin_u, chLatin_e, 
+	chSingleQuote, chLatin_t, chLatin_r, chLatin_u, chLatin_e,
     chSingleQuote, chLF,      chNull
 };
 
 static const XMLCh  gFalse[] =
 {
-	chSingleQuote, chLatin_f, chLatin_a, chLatin_l, chLatin_s, 
+	chSingleQuote, chLatin_f, chLatin_a, chLatin_l, chLatin_s,
     chLatin_e,     chSingleQuote, chLF, chNull
 };
 
@@ -418,7 +421,7 @@ void DOMWriterImpl::setFeature(const XMLCh* const featName
     else
         setFeature(featureId, state);
 
-	// 
+	//
 	// canonical-form and format-pretty-print can not be both set to true
 	// meaning set canonical-form true will automatically set
 	// format-pretty-print to false and vise versa.
@@ -669,7 +672,7 @@ void DOMWriterImpl::initSession(const DOMNode* const nodeToWrite)
 //    currently we partially support this feature by adding new line to
 //    xmldecl, doctype and root element, later on we need to work on
 //    other nodes, such as element, attribute and so on.
-// 
+//
 
 // ---------------------------------------------------------------------------
 //  Stream out a DOM node, and, recursively, all of its children. This
@@ -718,10 +721,10 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 			setURCharRef();
             DOMDocument *docu = (DOMDocument*)nodeToWrite;
 
-            //[23] XMLDecl      ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>' 
+            //[23] XMLDecl      ::= '<?xml' VersionInfo EncodingDecl? SDDecl? S? '?>'
             //[24] VersionInfo  ::= S 'version' Eq ("'" VersionNum "'" | '"' VersionNum '"')
-            //[80] EncodingDecl ::= S 'encoding' Eq ('"' EncName '"' | "'" EncName  
-            //[32] SDDecl       ::= S 'standalone' Eq (("'" ('yes' | 'no') "'") | ('"' ('yes' | 'no') '"'))  
+            //[80] EncodingDecl ::= S 'encoding' Eq ('"' EncName '"' | "'" EncName
+            //[32] SDDecl       ::= S 'standalone' Eq (("'" ('yes' | 'no') "'") | ('"' ('yes' | 'no') '"'))
             //
             // We always print out the xmldecl no matter whether it is
             // present in the original XML instance document or not.
@@ -735,7 +738,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
             const XMLCh* st = (docu->getStandalone())? XMLUni::fgYesString : XMLUni::fgNoString;
             *fFormatter << gXMLDecl_SDDecl << st << gXMLDecl_separator;
 
-            *fFormatter << gXMLDecl_endtag;           
+            *fFormatter << gXMLDecl_endtag;
             printNewLine();
 
             DOMNode *child = nodeToWrite->getFirstChild();
@@ -944,7 +947,7 @@ void DOMWriterImpl::processNode(const DOMNode* const nodeToWrite)
 
                 TRY_CATCH_THROW
                 (
-                    // transcoder throws exception for unrep chars           
+                    // transcoder throws exception for unrep chars
                     *fFormatter << XMLFormatter::NoEscapes << gStartCDATA << nodeValue << gEndCDATA;
                    , true
 			    )
@@ -1148,7 +1151,7 @@ bool DOMWriterImpl::reportError(const DOMNode* const    errorNode
 }
 
 //
-// 
+//
 //
 void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
                                    , const DOMNode* const nodeToWrite)
@@ -1161,7 +1164,7 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
 
     while (endTagFound)
     {
-        endTagPos = XMLString::patternMatch(curPtr, gEndCDATA); 
+        endTagPos = XMLString::patternMatch(curPtr, gEndCDATA);
         if (endTagPos != -1)
         {
             nextPtr = curPtr + endTagPos + offset;  // skip the ']]>'
@@ -1174,7 +1177,7 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
             endTagFound = false;
         }
 
-        procUnrepCharInCdataSection(curPtr, nodeToWrite); 
+        procUnrepCharInCdataSection(curPtr, nodeToWrite);
 
         if (endTagFound)
         {
@@ -1187,7 +1190,7 @@ void DOMWriterImpl::procCdataSection(const XMLCh*   const nodeValue
 }
 
 //
-// 
+//
 //
 void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
                                               , const DOMNode* const nodeToWrite)
@@ -1284,14 +1287,21 @@ void DOMWriterImpl::procUnrepCharInCdataSection(const XMLCh*   const nodeValue
     }
 }
 
-inline bool DOMWriterImpl::canSetFeature(const int featureId
+bool DOMWriterImpl::canSetFeature(const int featureId
                                        , bool      val) const
 {
     return featuresSupported[2*featureId + (val? 0: 1)];
 }
 
-inline void DOMWriterImpl::printNewLine() const
+void DOMWriterImpl::printNewLine() const
 {
     if (getFeature(FORMAT_PRETTY_PRINT_ID))
         *fFormatter << fNewLineUsed;
 }
+
+void DOMWriterImpl::release()
+{
+    DOMWriterImpl* writer = (DOMWriterImpl*) this;
+    delete writer;
+}
+

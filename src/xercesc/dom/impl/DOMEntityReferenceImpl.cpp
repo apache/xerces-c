@@ -110,10 +110,9 @@ DOMEntityReferenceImpl::~DOMEntityReferenceImpl()
 {
 }
 
-
 DOMNode *DOMEntityReferenceImpl::cloneNode(bool deep) const
 {
-    DOMNode* newNode = new (getOwnerDocument()) DOMEntityReferenceImpl(*this, deep);
+    DOMNode* newNode = new (getOwnerDocument(), DOMDocumentImpl::ENTITY_REFERENCE_OBJECT) DOMEntityReferenceImpl(*this, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -155,6 +154,24 @@ void DOMEntityReferenceImpl::setReadOnly(bool readOnl,bool deep)
         throw DOMException(DOMException::NO_MODIFICATION_ALLOWED_ERR, 0);
     fNode.setReadOnly(readOnl,deep);
 }
+
+
+void DOMEntityReferenceImpl::release()
+{
+    if (fNode.isOwned() && !fNode.isToBeReleased())
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+
+    DOMDocumentImpl* doc = (DOMDocumentImpl*) getOwnerDocument();
+    if (doc) {
+        fParent.release();
+        doc->release(this, DOMDocumentImpl::ENTITY_REFERENCE_OBJECT);
+    }
+    else {
+        // shouldn't reach here
+        throw DOMException(DOMException::INVALID_ACCESS_ERR,0);
+    }
+}
+
 
 //
 //   Delegate functions from Node to the appropriate implementation.

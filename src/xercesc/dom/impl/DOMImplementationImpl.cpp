@@ -182,7 +182,8 @@ DOMDocumentType *DOMImplementationImpl::createDocumentType(const XMLCh *qualifie
 {
     if(!DOMDocumentImpl::isXMLName(qualifiedName))
         throw DOMException(DOMException::INVALID_CHARACTER_ERR,0);
-    return new DOMDocumentTypeImpl(0, qualifiedName, publicId, systemId);
+    DOMDocumentTypeImpl* docType = new DOMDocumentTypeImpl(0, qualifiedName, publicId, systemId, true);
+    return docType;
 }
 
 DOMDocument *DOMImplementationImpl::createDocument(const XMLCh *namespaceURI,
