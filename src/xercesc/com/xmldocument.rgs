@@ -11,7 +11,7 @@ HKCR
 	}
 	NoRemove CLSID
 	{
-		ForceRemove = '{C4775B61-ECD6-11d4-94B4-00A0CC57CBCB}' = s 'Apache Xerces Parser for COM'
+		ForceRemove {C4775B61-ECD6-11d4-94B4-00A0CC57CBCB} = s 'Apache Xerces Parser for COM'
 		{
 			ProgID = s 'Xerces.DOMDocument.2.5.0'
 			VersionIndependentProgID = s 'Xerces.DOMDocument'
