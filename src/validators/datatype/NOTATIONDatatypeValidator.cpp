@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/10/10 14:17:50  peiyongz
+ * <URI>:<LocalPart> where <URI> can be optional.
+ *
  * Revision 1.8  2001/10/09 20:46:19  peiyongz
  * NOTATION: checkContent(): <URI>:<localPart>
  *
@@ -141,13 +144,13 @@ void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
 {
     //
     //  NOTATATION: <URI>:<localPart>
-    //  both URI and localPart must be present
+    //  where URI is optional
+    //        ':' and localPart must be present
     //
     int contentLength = XMLString::stringLen(content);
     int colonPosition = XMLString::lastIndexOf(content, chColon);
 
     if ((colonPosition == -1)                ||  // no ':'
-        (colonPosition == 0 )                ||  // ':'<localPart>
         (colonPosition == contentLength - 1)  )  // <URI>':'
         ThrowXML1(InvalidDatatypeValueException
                 , XMLExcepts::VALUE_NOTATION_Invalid
@@ -156,13 +159,12 @@ void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
     // Extract URI
     XMLCh* uriPart = new XMLCh[colonPosition + 1];
     ArrayJanitor<XMLCh> jan1(uriPart);
-    XMLString::subString(uriPart, content, 0, colonPosition - 1);
+    XMLString::subString(uriPart, content, 0, colonPosition);
 
     try 
     {
         // no relative uri support here
-        XMLUri  *newURI = new XMLUri(uriPart);   
-        delete newURI;
+        XMLUri  newURI(uriPart);   
     }
     catch (...) 
     {
@@ -174,7 +176,7 @@ void NOTATIONDatatypeValidator::checkValueSpace(const XMLCh* const content)
     // Extract localpart
     XMLCh* localPart = new XMLCh[contentLength - colonPosition];
     ArrayJanitor<XMLCh> jan2(localPart);
-    XMLString::subString(localPart, content, colonPosition + 1, contentLength - 1);
+    XMLString::subString(localPart, content, colonPosition + 1, contentLength);
 
     if ( !XMLString::isValidNCName(localPart))
     {
