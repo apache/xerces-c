@@ -351,6 +351,9 @@ XMLContentModel* DTDElementDecl::createChildModel(const Grammar* grammar) const
     // Get the content spec node of the element
     const ContentSpecNode* specNode = getContentSpec();
 
+    if(!specNode)
+        ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
+
     //
     //  Do a sanity check that the node is does not have a PCDATA id. Since,
     //  if it was, it should have already gotten taken by the Mixed model.
