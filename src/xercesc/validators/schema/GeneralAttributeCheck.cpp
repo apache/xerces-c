@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2003/01/15 18:33:11  knoaman
+ * Make sure that the namespace of schema declarations is the schema namespace.
+ *
  * Revision 1.10  2002/12/10 16:58:22  knoaman
  * Schema Errata E1-16.
  *
@@ -340,8 +343,18 @@ GeneralAttributeCheck::checkAttributes(const DOMElement* const elem,
         return;
     }
 
+    const XMLCh* elemName = elem->getLocalName();
+    if (!XMLString::equals(SchemaSymbols::fgURI_SCHEMAFORSCHEMA, elem->getNamespaceURI())) {
+        schema->reportSchemaError
+        (
+            elem
+            , XMLUni::fgXMLErrDomain
+            , XMLErrs::ELTSchemaNS
+            , elemName
+        );
+    }
+
     const XMLCh*     contextStr = (isTopLevel) ? fgGlobal : fgLocal;
-    const XMLCh*     elemName = elem->getLocalName();
     DOMNamedNodeMap* eltAttrs = elem->getAttributes();
     int              attrCount = eltAttrs->getLength();
     XMLByte          attList[A_Count];

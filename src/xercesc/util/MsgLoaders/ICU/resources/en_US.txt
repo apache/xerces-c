@@ -166,6 +166,7 @@ en_US {
 		"The root element name of an XML Schema should be 'schema'. " ,
 		"Circular substitution groups are disallowed for element '{0}'. " ,
 		"For '{0}' to be a member of the substitution group set of '{1}', its {abstract} must be false. " ,
+		"The namespace of element '{0}' must be from the schema namespace. " ,
 		"E End " ,
 		"F Start " , 
 		"Expected comment or CDATA " ,
