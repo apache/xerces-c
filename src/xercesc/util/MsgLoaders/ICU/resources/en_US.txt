@@ -144,6 +144,7 @@ en_US {
 		"Could not find a declaration in the schema to be redefined corresponding to '{0}' " ,
 		"If a group child of a <redefine> element contains a group ref'ing itself, it must have exactly 1 reference. " ,
 		"If an attributeGroup of a <redefine> element contains a reference to itself, such reference must be exactly 1 " ,
+		"A <redefine> element cannot contain a child of type '{0}' " ,
 		"The declaration for notation '{0}' is invalid " ,
 		"The notation declaration '{0}:{1}' is not found " ,
 		"More than one identity constraint named '{0}'. " ,

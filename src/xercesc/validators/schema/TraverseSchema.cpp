@@ -7619,6 +7619,16 @@ bool TraverseSchema::validateRedefineNameChange(const DOMElement* const redefine
             fRedefineComponents->put((void*) SchemaSymbols::fgELT_ATTRIBUTEGROUP, fullTypeNameId, 0);
         }
     }
+    else {
+        reportSchemaError
+        (
+            redefineChildElem
+            , XMLUni::fgXMLErrDomain
+            , XMLErrs::Redefine_InvalidChild
+            , redefineChildComponentName
+        );
+        return false;
+    }
 
     return true;
 }

@@ -149,6 +149,7 @@
             <Message Id="Redefine_DeclarationNotFound" Text="Could not find a declaration in the schema to be redefined corresponding to '{0}'"/>
             <Message Id="Redefine_GroupRefCount" Text="If a group child of a &lt;redefine&gt; element contains a group ref'ing itself, it must have exactly 1 reference."/>
             <Message Id="Redefine_AttGroupRefCount" Text="If an attributeGroup of a &lt;redefine&gt; element contains a reference to itself, such reference must be exactly 1"/>
+            <Message Id="Redefine_InvalidChild" Text="A &lt;redefine&gt; element cannot contain a child of type '{0}'"/>
             <Message Id="Notation_InvalidDecl" Text="The declaration for notation '{0}' is invalid"/>
             <Message Id="Notation_DeclNotFound" Text="The notation declaration '{0}:{1}' is not found"/>
             <Message Id="IC_DuplicateDecl" Text="More than one identity constraint named '{0}'."/>
