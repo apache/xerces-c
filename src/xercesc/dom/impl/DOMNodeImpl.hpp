@@ -316,8 +316,8 @@ public: // should really be protected - ALH
     virtual       bool             isSupported(const XMLCh *feature, const XMLCh *version) const ;\
     virtual       bool             hasAttributes() const ;\
     virtual       void             setPrefix(const XMLCh * prefix) ;\
-    virtual       void*            setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler);\
-    virtual       void*            getUserData(const XMLCh* key) const;
+    virtual       void*            setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler) ;\
+    virtual       void*            getUserData(const XMLCh* key) const
 
 
 /*

@@ -124,7 +124,7 @@ public:
         NODE_CLONED               = 1,
         NODE_IMPORTED             = 2,
         NODE_DELETED              = 3,
-        NODE_RENAMED              = 4,
+        NODE_RENAMED              = 4
     };
     //@}
 
