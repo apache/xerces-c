@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2004/02/17 15:56:50  neilg
+ * fix for bug 25035; much thanks to Abe Backus
+ *
  * Revision 1.13  2004/02/04 13:26:44  amassari
  * Added support for the Interix platform (Windows Services for Unix 3.5)
  *
@@ -243,7 +246,12 @@
     #define XML_TANDEM
     #define XML_UNIX
     #define XML_CSET
-#elif defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__)
+#elif defined(__CYGWIN__)
+    #define XML_CYGWIN
+    #ifndef WIN32
+      #define WIN32
+    #endif
+#elif defined(_WIN32) || defined(WIN32)
     #define XML_WIN32
     #ifndef WIN32
       #define WIN32

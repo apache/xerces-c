@@ -139,6 +139,7 @@ util/Platforms/UnixWare/Makefile \
 util/Platforms/Tru64/Makefile \
 util/Platforms/MacOS/Makefile \
 util/Platforms/Win32/Makefile \
+util/Platforms/Cygwin/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \

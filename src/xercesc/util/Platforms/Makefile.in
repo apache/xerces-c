@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.10  2004/02/17 15:56:50  neilg
+# fix for bug 25035; much thanks to Abe Backus
+#
 # Revision 1.9  2004/02/04 13:26:44  amassari
 # Added support for the Interix platform (Windows Services for Unix 3.5)
 #
@@ -206,7 +209,7 @@ ifeq (${PLATFORM}, MACOSX)
     SUBMODULE = MacOS
 endif
 ifeq (${PLATFORM}, CYGWIN)
-    SUBMODULE = Win32
+    SUBMODULE = Cygwin
 endif
 ifeq (${PLATFORM}, INTERIX)
     SUBMODULE = Interix

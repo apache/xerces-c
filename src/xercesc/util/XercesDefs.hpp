@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2004/02/17 15:56:50  neilg
+ * fix for bug 25035; much thanks to Abe Backus
+ *
  * Revision 1.16  2004/02/04 13:26:44  amassari
  * Added support for the Interix platform (Windows Services for Unix 3.5)
  *
@@ -244,6 +247,10 @@
 // ---------------------------------------------------------------------------
 #if defined(XML_WIN32)
 #include    <xercesc/util/Platforms/Win32/Win32Defs.hpp>
+#endif
+
+#if defined(XML_CYGWIN)
+#include    <xercesc/util/Platforms/Cygwin/CygwinDefs.hpp>
 #endif
 
 #if defined(XML_AIX)
