@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.23  2001/09/25 16:00:03  peiyongz
+ * DTV Reorganization: Create native NameDTV and NCNameDTV
+ *
  * Revision 1.22  2001/08/24 17:12:01  knoaman
  * Add support for anySimpleType.
  * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -146,6 +149,8 @@
 #include <validators/datatype/NOTATIONDatatypeValidator.hpp>
 #include <validators/datatype/ENTITYDatatypeValidator.hpp>
 #include <validators/datatype/QNameDatatypeValidator.hpp>
+#include <validators/datatype/NameDatatypeValidator.hpp>
+#include <validators/datatype/NCNameDatatypeValidator.hpp>
 #include <validators/datatype/ListDatatypeValidator.hpp>
 #include <validators/datatype/UnionDatatypeValidator.hpp>
 #include <validators/datatype/DoubleDatatypeValidator.hpp>
@@ -422,7 +427,11 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                        new AnyURIDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_QNAME,
                        new QNameDatatypeValidator());
-/*
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NAME,
+                       new NameDatatypeValidator());
+        fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_NCNAME,
+                       new NCNameDatatypeValidator());
+        /*
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DURATION,
                        new DurationDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DAY,
@@ -467,6 +476,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                       facets, 0, false, 0, false);
 
         // Create 'Name' datatype validator
+        /***
         facets = new RefHashTableOf<KVStringPair>(3);
 
         facets->put((void*) SchemaSymbols::fgELT_PATTERN,
@@ -485,6 +495,7 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
         createDatatypeValidator(SchemaSymbols::fgDT_NCNAME,
                       getDatatypeValidator(SchemaSymbols::fgDT_TOKEN),
                       facets, 0, false, 0, false);
+        ***/
 
         // Create 'integer' datatype validator
         facets = new RefHashTableOf<KVStringPair>(3);
