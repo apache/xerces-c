@@ -56,6 +56,10 @@
 
 /**
  * $Log$
+ * Revision 1.8  2000/01/27 23:20:33  roddey
+ * If an entity ends on the last > of some markup, then the end of entity
+ * won't be sent because the end of entity is not sensed.
+ *
  * Revision 1.7  2000/01/25 01:04:21  roddey
  * Fixes a bogus error about ]]> in char data.
  *
@@ -882,9 +886,15 @@ XMLScanner::XMLTokens XMLScanner::senseNextToken(unsigned int& orgReader)
 {
     //
     //  Get the next character and use it to guesstimate what the next token
-    //  is going to be.
+    //  is going to be. We turn on end of entity exceptions when we do this
+    //  in order to catch the scenario where the current entity ended at
+    //  the > of some markup.
     //
-    XMLCh nextCh = fReaderMgr.peekNextChar();
+    XMLCh nextCh;
+    {
+        ThrowEOEJanitor janMgr(&fReaderMgr, true);
+        nextCh = fReaderMgr.peekNextChar();
+    }
 
     // If its not one of the special chars, then assume its char data
     if (!XMLReader::isSpecialTokenSenseChar(nextCh))
