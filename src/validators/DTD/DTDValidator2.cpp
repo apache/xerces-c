@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:03:38  twl
- * Initial revision
+ * Revision 1.2  1999/11/30 20:24:45  roddey
+ * Fixes for incorrect deletion of temporary decl objects, which would cause
+ * a double delete when the parser is deleted.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:03:38  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:45:42  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -382,19 +386,24 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
         // It already exists, so put out a warning
         getScanner()->emitError(XML4CErrs::AttListAlreadyExists, bufToUse.getRawBuffer());
 
-        // Use the dummy decl to parse into
+        // Use the dummy decl to parse into and set its name to the name we got
         if (!fDumAttDef)
+        {
             fDumAttDef = new DTDAttDef;
+            fDumAttDef->setId(fNextAttrId++);
+        }
         fDumAttDef->setName(bufToUse.getRawBuffer());
         decl = fDumAttDef;
     }
      else
     {
-        // It does not already exist so create a new one
+        //
+        //  It does not already exist so create a new one, give it the next
+        //  available unique id, and add it
+        //
         decl = new DTDAttDef(bufToUse.getRawBuffer());
-
-        // Give it the next available unique id
         decl->setId(fNextAttrId++);
+        parentElem.addAttDef(decl);
     }
 
     // Set a flag to indicate whether we are doing a dummy parse
@@ -434,8 +443,6 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
          else
         {
             getScanner()->emitError(XML4CErrs::ExpectedAttributeType);
-            if (isIgnored)
-                delete decl;
             return 0;
         }
     }
@@ -454,11 +461,7 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
 
         decl->setType(XMLAttDef::Notation);
         if (!scanEnumeration(bufToUse, true))
-        {
-            if (isIgnored)
-                delete decl;
             return 0;
-        }
 
         // Set the value as the enumeration for this decl
         decl->setEnumeration(bufToUse.getRawBuffer());
@@ -467,11 +470,7 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
     {
         decl->setType(XMLAttDef::Enumeration);
         if (!scanEnumeration(bufToUse, false))
-        {
-            if (isIgnored)
-                delete decl;
             return 0;
-        }
 
         // Set the value as the enumeration for this decl
         decl->setEnumeration(bufToUse.getRawBuffer());
@@ -479,8 +478,6 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
      else
     {
         getScanner()->emitError(XML4CErrs::ExpectedAttributeType);
-        if (isIgnored)
-            delete decl;
         return 0;
     }
 
@@ -490,10 +487,6 @@ DTDValidator::scanAttDef(DTDElementDecl& parentElem, XMLBuffer& bufToUse)
 
     // And then scan for the optional default value declaration
     scanDefaultDecl(*decl);
-
-    // Add this guy to element's attr list (if not ignoring.)
-    if (!isIgnored)
-        parentElem.addAttDef(decl);
 
     // If validating, then do a couple of validation constraints
     if (getScanner()->getDoValidation())
@@ -1646,7 +1639,6 @@ void DTDValidator::scanElementDecl()
     //  scan over the content model so use the dummy declaration that the
     //  parsing code can fill in.
     //
-    bool isNew = false;
     if (decl)
     {
         if (decl->isDeclared())
@@ -1662,16 +1654,19 @@ void DTDValidator::scanElementDecl()
     }
      else
     {
-        // Create the new empty declaration to fill in. Mark it declared
+        //
+        //  Create the new empty declaration to fill in and put it into
+        //  the decl pool.
+        //
         decl = new DTDElementDecl(bbName.getRawBuffer());
-        isNew = true;
-
-        // Put it in the element decl pool
         fElemDeclPool->put(decl);
     }
 
     // Set a flag for whether we will ignore this one
     const bool isIgnored = (decl == fDumElemDecl);
+
+    // Mark this one as being declared
+    decl->setCreateReason(XMLElementDecl::Declared);
 
     // Another check for a PE ref, with at least required whitespace
     if (!checkForPERef(true, false, true))
@@ -1681,17 +1676,11 @@ void DTDValidator::scanElementDecl()
     if (!scanContentSpec(*decl))
     {
         getReaderMgr()->skipPastChar(chCloseAngle);
-        if (isNew)
-            delete decl;
         return;
     }
 
     // Another check for a PE ref, but we don't require whitespace here
     checkForPERef(false, false, true);
-
-    // If this is not one we are ignoring, then set it declared
-    if (!isIgnored)
-        decl->setCreateReason(XMLElementDecl::Declared);
 
     // And we should have the ending angle bracket
     if (!getReaderMgr()->skippedChar(chCloseAngle))
@@ -1707,13 +1696,7 @@ void DTDValidator::scanElementDecl()
     //  if advanced callbacks are enabled.
     //
     if (fDocTypeHandler)
-    {
-        fDocTypeHandler->elementDecl
-        (
-            *decl
-            , isIgnored
-        );
-    }
+        fDocTypeHandler->elementDecl(*decl, isIgnored);
 }
 
 
@@ -1791,11 +1774,18 @@ void DTDValidator::scanEntityDecl()
         entityDecl = new DTDEntityDecl(bbName.getRawBuffer());
 
         //
-        //  Set the declaration location. The parameter indicates whether
-        //  its declared in the content/internal subset, so we do
-        //  whether its not in the external subset.
+        //  Set the declaration location. The parameter indicates whether its
+        //  declared in the content/internal subset, so we know whether or not
+        //  its in the external subset.
         //
         entityDecl->setDeclaredInIntSubset(fInternalSubset);
+
+        // Add it to the appropriate entity decl pool
+        if (isPEDecl)
+            fPEntityDeclPool->put(entityDecl);
+        else
+            fEntityDeclPool->put(entityDecl);
+
     }
 
     // Set a flag that indicates whether we are ignoring this one
@@ -1816,9 +1806,6 @@ void DTDValidator::scanEntityDecl()
     if (!scanEntityDef(*entityDecl, isPEDecl))
     {
         getReaderMgr()->skipPastChar(chCloseAngle);
-        if (!isIgnored)
-            delete entityDecl;
-
         getScanner()->emitError(XML4CErrs::ExpectedEntityValue);
         return;
     }
@@ -1834,31 +1821,11 @@ void DTDValidator::scanEntityDecl()
     }
 
     //
-    //  And add this guy to the appropriate entity decl pool, if it was
-    //  not an override of an existing entity that we just parsed into the
-    //  dummy decl.
-    //
-    if (!isIgnored)
-    {
-        if (isPEDecl)
-            fPEntityDeclPool->put(entityDecl);
-        else
-            fEntityDeclPool->put(entityDecl);
-    }
-
-    //
     //  If we have a doc type handler, then call it. But only call it for
     //  ignored elements if advanced callbacks are enabled.
     //
     if (fDocTypeHandler)
-    {
-        fDocTypeHandler->entityDecl
-        (
-            *entityDecl
-            , isPEDecl
-            , (entityDecl == fDumEntityDecl)
-        );
-    }
+        fDocTypeHandler->entityDecl(*entityDecl, isPEDecl, isIgnored);
 }
 
 
