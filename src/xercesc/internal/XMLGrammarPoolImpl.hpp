@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2003/11/14 22:34:20  neilg
+ * removed methods made unnecessary by new XSModel implementation design; thanks to David Cargill
+ *
  * Revision 1.11  2003/11/06 21:53:52  neilg
  * update grammar pool interface so that cacheGrammar(Grammar) can tell the caller whether the grammar was accepted.  Also fix some documentation errors.
  *
@@ -99,11 +102,6 @@
 #define XMLGrammarPoolImplIMPL_HPP
 
 #include <xercesc/framework/XMLGrammarPool.hpp>
-
-// PSVI includes:
-#include <xercesc/util/ValueVectorOf.hpp>
-#include <xercesc/validators/schema/SchemaElementDecl.hpp>
-#include <xercesc/framework/psvi/XSModel.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
 
@@ -205,8 +203,6 @@ public :
       */ 
     virtual void            setPSVI(const bool doPSVI);
 
-    friend void updatePSVIvectorElemIds(ValueVectorOf<SchemaElementDecl*>* PSVIvectorElemDecls, 
-            SchemaGrammar* const grammar);
     //@}
 
     // -----------------------------------------------------------------------

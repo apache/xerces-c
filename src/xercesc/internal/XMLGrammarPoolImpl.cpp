@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/11/14 22:34:20  neilg
+ * removed methods made unnecessary by new XSModel implementation design; thanks to David Cargill
+ *
  * Revision 1.12  2003/11/07 20:30:28  neilg
  * fix compilation errors on AIX and HPUX; thanks to David Cargill
  *
@@ -114,10 +117,6 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
-void updatePSVIvectorElemIds(ValueVectorOf<SchemaElementDecl*>* vectorElemDecls, 
-                             SchemaGrammar* const grammar);
-
-
 // ---------------------------------------------------------------------------
 //  XMLGrammarPoolImpl: constructor and destructor
 // ---------------------------------------------------------------------------
@@ -161,16 +160,7 @@ bool XMLGrammarPoolImpl::cacheGrammar(Grammar* const               gramToCache )
 
     fGrammarRegistry->put((void*) grammarKey, gramToCache);
     
-    if (fDoPSVI && gramToCache->getGrammarType() == Grammar::SchemaGrammarType) {
-        if (!fPSVIvectorElemDecls) {
-            // REVISIT: what should the be the initial size?
-            MemoryManager *memMgr = getMemoryManager();
-            fPSVIvectorElemDecls = new (memMgr) ValueVectorOf<SchemaElementDecl*>(64, memMgr);
-        }
-        updatePSVIvectorElemIds(fPSVIvectorElemDecls, (SchemaGrammar*) gramToCache);
-    }
     return true;
-
 }
 
 Grammar* XMLGrammarPoolImpl::retrieveGrammar(XMLGrammarDescription* const gramDesc)
@@ -234,21 +224,6 @@ void XMLGrammarPoolImpl::unlockPool()
 void XMLGrammarPoolImpl::setPSVI(const bool doPSVI)
 {
     fDoPSVI = doPSVI;
-}
-
-void updatePSVIvectorElemIds(ValueVectorOf<SchemaElementDecl*>* vectorElemDecls, 
-                             SchemaGrammar* const grammar) {
-
-    unsigned int vectorElemDeclsIndex = vectorElemDecls->size();
-    RefHash3KeysIdPoolEnumerator<SchemaElementDecl> elemEnum = grammar->getElemEnumerator();
-
-    while (elemEnum.hasMoreElements())
-    {
-        SchemaElementDecl& curElem = elemEnum.nextElement();
-        vectorElemDecls->addElement(&curElem);
-        curElem.setElemId(vectorElemDeclsIndex);
-        vectorElemDeclsIndex++;
-    }
 }
 
 // -----------------------------------------------------------------------
