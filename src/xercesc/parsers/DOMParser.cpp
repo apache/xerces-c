@@ -505,18 +505,10 @@ void DOMParser::docCharacters(  const   XMLCh* const    chars
         else
         {
             DOM_Text node = fDocument.createTextNode(DOMString(chars, length));
-			//If the node type is entityRef then set the readOnly flag to false before appending node
-			bool oldReadFlag;
-			if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-				oldReadFlag = fCurrentParent.fImpl->isReadOnly();
-				fCurrentParent.fImpl->isReadOnly(false);
-			}
-
             fCurrentParent.appendChild(node);
-			if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-				fCurrentParent.fImpl->isReadOnly(oldReadFlag);
-			}
+
             fCurrentNode = node;
+
         }
     }
 }
@@ -547,6 +539,9 @@ void DOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 {
     if (fCreateEntityReferenceNodes == true)
     {
+        if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
+            ((DOM_EntityReference&)fCurrentParent).fImpl->setReadOnly(true, true);
+        }
         fCurrentParent = fNodeStack->pop();
         fCurrentNode   = fCurrentParent;
     }
@@ -584,17 +579,7 @@ void DOMParser::ignorableWhitespace(const   XMLCh* const    chars
         DOM_Text node = fDocument.createTextNode(DOMString(chars, length));
         TextImpl *text = (TextImpl *) node.fImpl;
         text -> setIgnorableWhitespace(true);
-		//If the node type is entityRef then set the readOnly flag to false before appending node
-		bool oldReadFlag;
-		if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-			oldReadFlag = fCurrentParent.fImpl->isReadOnly();
-			fCurrentParent.fImpl->isReadOnly(false);
-		}
-
         fCurrentParent.appendChild(node);
-		if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-			fCurrentParent.fImpl->isReadOnly(oldReadFlag);
-		}
 
         fCurrentNode = node;
     }
@@ -679,39 +664,28 @@ void DOMParser::startElement(const  XMLElementDecl&         elemDecl
             attr->setSpecified(oneAttrib->getSpecified());
         }
     }
-	else {    //DOM Level 1
-			elem = fDocument.createElement(elemDecl.getFullName());
-			ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
-			for (unsigned int index = 0; index < attrCount; ++index) {
-				const XMLAttr* oneAttrib = attrList.elementAt(index);
-				AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
-				attr->setSpecified(oneAttrib->getSpecified());
+    else {    //DOM Level 1
+        elem = fDocument.createElement(elemDecl.getFullName());
+        ElementImpl *elemImpl = (ElementImpl *) elem.fImpl;
+        for (unsigned int index = 0; index < attrCount; ++index) {
+            const XMLAttr* oneAttrib = attrList.elementAt(index);
+            AttrImpl *attr = elemImpl->setAttribute(oneAttrib->getName(), oneAttrib->getValue());
+            attr->setSpecified(oneAttrib->getSpecified());
 
-				// Attributes of type ID.  If this is one, add it to the hashtable of IDs
-				//   that is constructed for use by GetElementByID().
-				//
-				if (oneAttrib->getType()==XMLAttDef::ID)
-				{
-					if (docImpl->fNodeIDMap == 0)
-						docImpl->fNodeIDMap = new NodeIDMap(500);
-					docImpl->fNodeIDMap->add(attr);
-					attr->isIdAttr(true);
-				}
-
-		}
+            // Attributes of type ID.  If this is one, add it to the hashtable of IDs
+            //   that is constructed for use by GetElementByID().
+            //
+            if (oneAttrib->getType()==XMLAttDef::ID)
+            {
+                if (docImpl->fNodeIDMap == 0)
+                    docImpl->fNodeIDMap = new NodeIDMap(500);
+                docImpl->fNodeIDMap->add(attr);
+                attr->isIdAttr(true);
+            }
+        }
     }
 
-    //If the node type is entityRef then set the readOnly flag to false before appending node
-	bool oldReadFlag;
-	if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-		oldReadFlag = fCurrentParent.fImpl->isReadOnly();
-		fCurrentParent.fImpl->isReadOnly(false);
-	}
-
     fCurrentParent.appendChild(elem);
-	if (fCurrentParent.getNodeType() == DOM_Node::ENTITY_REFERENCE_NODE) {
-		fCurrentParent.fImpl->isReadOnly(oldReadFlag);
-	}
 
     fNodeStack->push(fCurrentParent);
     fCurrentParent = elem;
@@ -730,6 +704,10 @@ void DOMParser::startEntityReference(const XMLEntityDecl& entDecl)
     {
 		DOMString entName(entDecl.getName());
         DOM_EntityReference er = fDocument.createEntityReference(entName);
+
+        //set the readOnly flag to false before appending node, will be reset in endEntityReference
+        er.fImpl->setReadOnly(false, true);
+
         fCurrentParent.appendChild(er);
         fNodeStack->push(fCurrentParent);
         fCurrentParent = er;

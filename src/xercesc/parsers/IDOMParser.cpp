@@ -545,18 +545,7 @@ void IDOMParser::docCharacters(  const   XMLCh* const    chars
         else
         {
             IDOM_Text *node = fDocument->createTextNode(chars);
-            //If the node type is entityRef then set the readOnly flag to false before appending node
-            if (fCurrentParent->getNodeType() == IDOM_Node::ENTITY_REFERENCE_NODE) {
-                IDEntityReferenceImpl *erImpl = (IDEntityReferenceImpl *) fCurrentParent;
-                bool oldReadFlag = erImpl->fNode.isReadOnly();
-                erImpl->fNode.isReadOnly(false);
-                fCurrentParent->appendChild(node);
-                erImpl->fNode.isReadOnly(oldReadFlag);
-            }
-            else
-            {
-                fCurrentParent->appendChild(node);
-			   }
+            fCurrentParent->appendChild(node);
             fCurrentNode = node;
         }
     }
@@ -590,6 +579,10 @@ void IDOMParser::endEntityReference(const XMLEntityDecl& entDecl)
 {
     if (fCreateEntityReferenceNodes == true)
     {
+        if (fCurrentParent->getNodeType() == IDOM_Node::ENTITY_REFERENCE_NODE) {
+            IDEntityReferenceImpl *erImpl = (IDEntityReferenceImpl *) fCurrentParent;
+            erImpl->setReadOnly(true, true);
+        }
         fCurrentParent = fNodeStack->pop();
         fCurrentNode   = fCurrentParent;
     }
@@ -631,19 +624,7 @@ void IDOMParser::ignorableWhitespace(const   XMLCh* const    chars
     {
         IDTextImpl *node = (IDTextImpl *)fDocument->createTextNode(chars);
         node->setIgnorableWhitespace(true);
-        //If the node type is entityRef then set the readOnly flag to false before appending node
-        if (fCurrentParent->getNodeType() == IDOM_Node::ENTITY_REFERENCE_NODE) {
-            IDEntityReferenceImpl *erImpl = (IDEntityReferenceImpl *) fCurrentParent;
-            bool oldReadFlag = erImpl->fNode.isReadOnly();
-            erImpl->fNode.isReadOnly(false);
-            fCurrentParent->appendChild(node);
-            erImpl->fNode.isReadOnly(oldReadFlag);
-        }
-
-        else
-        {
-            fCurrentParent->appendChild(node);
-        }
+        fCurrentParent->appendChild(node);
 
         fCurrentNode = node;
     }
@@ -761,20 +742,7 @@ void IDOMParser::startElement(const  XMLElementDecl&         elemDecl
         }
     }
 
-    //If the node type is entityRef then set the readOnly flag to false before appending node
-    bool oldReadFlag;
-    if (fCurrentParent->getNodeType() == IDOM_Node::ENTITY_REFERENCE_NODE) {
-        IDEntityReferenceImpl *erNode = (IDEntityReferenceImpl *)fCurrentParent;
-        oldReadFlag = erNode->fNode.isReadOnly();
-        erNode->fNode.isReadOnly(false);
-        fCurrentParent->appendChild(elem);
-        erNode->fNode.isReadOnly(oldReadFlag);
-    }
-
-    else
-    {
-        fCurrentParent->appendChild(elem);
-    }
+    fCurrentParent->appendChild(elem);
 
     fNodeStack->push(fCurrentParent);
     fCurrentParent = elem;
@@ -793,6 +761,11 @@ void IDOMParser::startEntityReference(const XMLEntityDecl& entDecl)
     {
         const XMLCh * entName = entDecl.getName();
         IDOM_EntityReference *er = fDocument->createEntityReference(entName);
+
+        //set the readOnly flag to false before appending node, will be reset in endEntityReference
+        IDEntityReferenceImpl *erImpl = (IDEntityReferenceImpl *) er;
+        erImpl->setReadOnly(false, true);
+
         fCurrentParent->appendChild(er);
         fNodeStack->push(fCurrentParent);
         fCurrentParent = er;
