@@ -74,73 +74,69 @@ class TokenFactory;
 
 class XMLUTIL_EXPORT RangeToken : public Token {
 public:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-	RangeToken(const unsigned short tokType);
-	~RangeToken();
+    RangeToken(const unsigned short tokType);
+    ~RangeToken();
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Public Constants
     // -----------------------------------------------------------------------
-	static const int MAPSIZE;
-	static const unsigned int INITIALSIZE;
+    static const int MAPSIZE;
+    static const unsigned int INITIALSIZE;
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Getter methods
     // -----------------------------------------------------------------------
-	RangeToken* getCaseInsensitiveToken(TokenFactory* const tokFactory);
+    RangeToken* getCaseInsensitiveToken(TokenFactory* const tokFactory);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
 
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Range manipulation methods
     // -----------------------------------------------------------------------
-	void addRange(const XMLInt32 start, const XMLInt32 end);
-	void mergeRanges(const Token *const tok);
-	void sortRanges();
-	void compactRanges();
-	void subtractRanges(RangeToken* const tok);
-	void intersectRanges(RangeToken* const tok);
-	static Token* complementRanges(RangeToken* const tok,
+    void addRange(const XMLInt32 start, const XMLInt32 end);
+    void mergeRanges(const Token *const tok);
+    void sortRanges();
+    void compactRanges();
+    void subtractRanges(RangeToken* const tok);
+    void intersectRanges(RangeToken* const tok);
+    static Token* complementRanges(RangeToken* const tok,
                                    TokenFactory* const tokFactory);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Match methods
     // -----------------------------------------------------------------------
-	bool match(const XMLInt32 ch);
-
-		unsigned int                fElemCount;
-
-		XMLInt32*    fRanges;
+    bool match(const XMLInt32 ch);
 
 private:
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Unimplemented constructors and operators
     // -----------------------------------------------------------------------
     RangeToken(const RangeToken&);
     void operator=(const RangeToken&);
 
-	// -----------------------------------------------------------------------
-	// Private Helper methods
-	// -----------------------------------------------------------------------
-	void createMap();
-	void expand(const unsigned int length);
+    // -----------------------------------------------------------------------
+    // Private Helper methods
+    // -----------------------------------------------------------------------
+    void createMap();
+    void expand(const unsigned int length);
 
-	// -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
     //  Private data members
-	// -----------------------------------------------------------------------
-	bool                        fSorted;
-	bool                        fCompacted;
-	int                         fNonMapIndex;
-
-    unsigned int                fMaxCount;
-	int*                        fMap;
-
-	RangeToken*                 fCaseIToken;
+    // -----------------------------------------------------------------------
+    bool         fSorted;
+    bool         fCompacted;
+    int          fNonMapIndex;
+    unsigned int fElemCount;
+    unsigned int fMaxCount;
+    int*         fMap;
+    XMLInt32*    fRanges;
+    RangeToken*  fCaseIToken;
 };
 
 
