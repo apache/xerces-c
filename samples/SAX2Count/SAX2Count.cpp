@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.21  2002/11/04 14:09:06  tng
+* [Bug 14201] use of ios::nocreate breaks build.
+*
 * Revision 1.20  2002/11/01 22:05:57  tng
 * Samples/Test update: Issue error if the list file failed to open.
 *
@@ -318,7 +321,7 @@ int main(int argC, char* argV[])
 
     // the input is a list file
     if (doList)
-        fin.open(argV[argInd],ios::nocreate);
+        fin.open(argV[argInd]);
 
     if (fin.fail()) {
         cerr <<"Cannot open the list file: " << argV[argInd] << endl;

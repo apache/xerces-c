@@ -275,7 +275,7 @@ int main(int argC, char* argV[])
 
     // the input is a list file
     if (doList)
-        fin.open(argV[argInd],ios::nocreate);
+        fin.open(argV[argInd]);
 
     if (fin.fail()) {
         cerr <<"Cannot open the list file: " << argV[argInd] << endl;
