@@ -57,6 +57,9 @@
 /*
 * $Id$
 * $Log$
+* Revision 1.4  2003/12/16 21:21:20  peiyongz
+* fix compilation error
+*
 * Revision 1.3  2003/12/16 17:16:08  peiyongz
 * . Using BinMemInputStream/BinMemOutputStream
 * . Using SAX2XMLReader
@@ -290,8 +293,8 @@ static bool getAndSaveGrammar(const char* const xmlFile)
         //do emit error here so that we know serialization failure
         if (showSerializationError)
         {
-            cerr << "An error occurred during serialization\n   Message: "
-             << StrX(e.getMessage()) << endl;
+            XERCES_STD_QUALIFIER cerr << "An error occurred during serialization\n   Message: "
+             << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
         }
         retVal = false;
     }
@@ -313,8 +316,8 @@ static bool restoreGrammar()
     {
         if (showSerializationError)
         {
-            cerr << "An error occurred during de-serialization\n   Message: "
-                << StrX(e.getMessage()) << endl;
+            XERCES_STD_QUALIFIER cerr << "An error occurred during de-serialization\n   Message: "
+                << StrX(e.getMessage()) << XERCES_STD_QUALIFIER endl;
         }
 
         destroyParser();
