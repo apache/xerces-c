@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/05/31 15:13:53  tng
+ * Fix doxygen documentation.
+ *
  * Revision 1.7  2002/05/30 16:39:06  knoaman
  * DOM L3 LS.
  *
@@ -881,9 +884,13 @@ public :
       *                 public id of the entity just parsed.
       * @param systemId A const pointer to a Unicode string representing the
       *                 system id of the entity just parsed.
+      * @param baseURI  A const pointer to a Unicode string representing the
+      *                 base URI of the entity just parsed,
+      *                 or <code>null</code> if there is no base URI.
       * @return The value returned by the SAX resolveEntity method or
       *         NULL otherwise to indicate no processing was done.
       * @see EntityResolver
+      * @see XMLEntityHandler
       */
     virtual InputSource* resolveEntity
     (

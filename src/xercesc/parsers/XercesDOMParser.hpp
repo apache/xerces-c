@@ -312,9 +312,13 @@ public :
       *                 public id of the entity just parsed.
       * @param systemId A const pointer to a Unicode string representing the
       *                 system id of the entity just parsed.
+      * @param baseURI  A const pointer to a Unicode string representing the
+      *                 base URI of the entity just parsed,
+      *                 or <code>null</code> if there is no base URI.
       * @return The value returned by the user installed resolveEntity
       *         method or NULL otherwise to indicate no processing was done.
-      * @see EntityResolver
+      * @see DOMEntityResolver
+      * @see XMLEntityHandler
       */
     virtual InputSource* resolveEntity
     (
