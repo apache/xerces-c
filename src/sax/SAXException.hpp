@@ -56,6 +56,10 @@
 
 /*
  * $Log$
+ * Revision 1.6  2000/08/02 18:04:02  jpolast
+ * include SAXNotSupportedException and
+ * SAXNotRecognizedException needed for sax2
+ *
  * Revision 1.5  2000/02/24 20:12:55  abagchi
  * Swat for removing Log from API docs
  *
@@ -197,6 +201,14 @@ private :
     //      This is the text of the error that is being thrown.
     // -----------------------------------------------------------------------
     XMLCh*  fMsg;
+};
+
+class SAXNotSupportedException : public SAXException
+{
+};
+
+class SAXNotRecognizedException : public SAXException
+{
 };
 
 #endif
