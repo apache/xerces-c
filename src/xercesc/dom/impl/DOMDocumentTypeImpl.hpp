@@ -99,7 +99,7 @@ private:
     const XMLCh *       fSystemId;
     const XMLCh *       fInternalSubset;
 
-    bool			         fIntSubsetReading;
+    bool			    fIntSubsetReading;
     bool                fIsCreatedFromHeap;
 
     virtual void        setPublicId(const XMLCh * value);
@@ -132,6 +132,9 @@ public:
     virtual const XMLCh *     getPublicId() const;
     virtual const XMLCh *     getSystemId() const;
     virtual const XMLCh *     getInternalSubset() const;
+
+    //
+    bool isOwnerDocSingleton() const;
 };
 
 XERCES_CPP_NAMESPACE_END

@@ -61,8 +61,11 @@
 #include "DOMDocumentTypeImpl.hpp"
 #include <xercesc/dom/DOMNode.hpp>
 #include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMImplementationRegistry.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
 #include <xercesc/util/XMLUniDefs.hpp>
 #include <xercesc/util/XMLChar.hpp>
+#include <xercesc/util/XMLRegisterCleanup.hpp>
 
 #include "DOMNamedNodeMapImpl.hpp"
 #include "DOMDocumentImpl.hpp"
@@ -70,12 +73,49 @@
 
 XERCES_CPP_NAMESPACE_BEGIN
 
+// ---------------------------------------------------------------------------
+//  Local static data
+// ---------------------------------------------------------------------------
+
+static DOMDocument*       sDocument = 0;
+static XMLRegisterCleanup documentCleanup;
+
+static void reinitDocument()
+{
+    if (sDocument) {
+        sDocument->release();
+        sDocument = 0;
+    }
+}
+
+static DOMDocument& gDocTypeDocument()
+{
+    if (!sDocument)
+    {
+        static const XMLCh gCoreStr[] = { chLatin_C, chLatin_o, chLatin_r, chLatin_e, chNull };
+        DOMImplementation* impl =  DOMImplementationRegistry::getDOMImplementation(gCoreStr);
+        DOMDocument* tmpDoc = impl->createDocument();                   // document type object (DTD).
+
+        if (XMLPlatformUtils::compareAndSwap((void**)&sDocument, tmpDoc, 0))
+        {
+            // Someone beat us to it, so let's clean up ours
+            delete tmpDoc;
+        }
+        else
+        {
+            documentCleanup.registerCleanup(reinitDocument);
+        }
+    }
+
+    return *sDocument;
+}
+
 
 DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
                                    const XMLCh *dtName,
                                    bool heap)
-    : fNode(ownerDoc),
-    fParent(ownerDoc),
+    : fNode(ownerDoc ? ownerDoc : &gDocTypeDocument()),
+    fParent(ownerDoc ? ownerDoc : &gDocTypeDocument()),
     fPublicId(0),
     fSystemId(0),
     fName(0),
@@ -86,18 +126,11 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
     fInternalSubset(0),
     fIsCreatedFromHeap(heap)
 {
-    if (ownerDoc) {
-        fName = ((DOMDocumentImpl *)ownerDoc)->getPooledString(dtName);
-        fEntities = new (ownerDoc) DOMNamedNodeMapImpl(this);
-        fNotations= new (ownerDoc) DOMNamedNodeMapImpl(this);
-        fElements = new (ownerDoc) DOMNamedNodeMapImpl(this);
-    }
-    else {
-        fName = XMLString::replicate(dtName);
-        fEntities = new DOMNamedNodeMapImpl(this);
-        fNotations= new DOMNamedNodeMapImpl(this);
-        fElements = new DOMNamedNodeMapImpl(this);
-    }
+    DOMDocument *doc = this->fNode.getOwnerDocument();
+    fName = ((DOMDocumentImpl *)doc)->getPooledString(dtName);
+    fEntities = new (doc) DOMNamedNodeMapImpl(this);
+    fNotations= new (doc) DOMNamedNodeMapImpl(this);
+    fElements = new (doc) DOMNamedNodeMapImpl(this);
 };
 
 
@@ -107,8 +140,8 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
                                    const XMLCh *pubId,
                                    const XMLCh *sysId,
                                    bool heap)
-    : fNode(ownerDoc),
-    fParent(ownerDoc),
+    : fNode(ownerDoc ? ownerDoc : &gDocTypeDocument()),
+    fParent(ownerDoc ? ownerDoc : &gDocTypeDocument()),
     fPublicId(0),
     fSystemId(0),
     fName(0),
@@ -129,7 +162,10 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
         XMLCh* newName;
         XMLCh temp[4000];
         if (index >= 3999)
-            newName = new XMLCh[XMLString::stringLen(qualifiedName)+1];
+            newName = (XMLCh*) XMLPlatformUtils::fgMemoryManager->allocate
+            (
+                (XMLString::stringLen(qualifiedName)+1) * sizeof(XMLCh)
+            );//new XMLCh[XMLString::stringLen(qualifiedName)+1];
         else
             newName = temp;
 
@@ -148,26 +184,16 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(DOMDocument *ownerDoc,
         }
 
         if (index >= 3999)
-            delete[] newName;
+            XMLPlatformUtils::fgMemoryManager->deallocate(newName);//delete[] newName;
     }
 
-    if (ownerDoc) {
-        DOMDocumentImpl *docImpl = (DOMDocumentImpl *)ownerDoc;
-        fPublicId = docImpl->cloneString(pubId);
-        fSystemId = docImpl->cloneString(sysId);
-        fName = ((DOMDocumentImpl *)ownerDoc)->getPooledString(qualifiedName);
-        fEntities = new (ownerDoc) DOMNamedNodeMapImpl(this);
-        fNotations= new (ownerDoc) DOMNamedNodeMapImpl(this);
-        fElements = new (ownerDoc) DOMNamedNodeMapImpl(this);
-    }
-    else {
-        fPublicId = XMLString::replicate(pubId);
-        fSystemId = XMLString::replicate(sysId);
-        fName = XMLString::replicate(qualifiedName);
-        fEntities = new DOMNamedNodeMapImpl(this);
-        fNotations= new DOMNamedNodeMapImpl(this);
-        fElements = new DOMNamedNodeMapImpl(this);
-    }
+    DOMDocument *doc = this->fNode.getOwnerDocument();
+    fPublicId = ((DOMDocumentImpl*) doc)->cloneString(pubId);
+    fSystemId = ((DOMDocumentImpl*) doc)->cloneString(sysId);
+    fName = ((DOMDocumentImpl*) doc)->getPooledString(qualifiedName);
+    fEntities = new (doc) DOMNamedNodeMapImpl(this);
+    fNotations= new (doc) DOMNamedNodeMapImpl(this);
+    fElements = new (doc) DOMNamedNodeMapImpl(this);
 };
 
 
@@ -185,59 +211,29 @@ DOMDocumentTypeImpl::DOMDocumentTypeImpl(const DOMDocumentTypeImpl &other, bool 
     fInternalSubset(0),
     fIsCreatedFromHeap(heap)
 {
-    if ((DOMDocumentImpl *)this->fNode.getOwnerDocument()) {
-        fName = other.fName;
-        if (deep)
-            fParent.cloneChildren(&other);
-        //DOM Level 2
-        fPublicId        = other.fPublicId;
-        fSystemId        = other.fSystemId;
-        fInternalSubset  = other.fInternalSubset;
-    }
-    else {
-        fName = XMLString::replicate(other.fName);
-        fPublicId = XMLString::replicate(other.fPublicId);
-        fSystemId = XMLString::replicate(other.fSystemId);
-        fInternalSubset = XMLString::replicate(other.fInternalSubset);
-    }
+    fName = other.fName;
+    if (deep)
+        fParent.cloneChildren(&other);
+    //DOM Level 2
+    fPublicId        = other.fPublicId;
+    fSystemId        = other.fSystemId;
+    fInternalSubset  = other.fInternalSubset;
 
     fEntities = ((DOMNamedNodeMapImpl *)other.fEntities)->cloneMap(this);
     fNotations= ((DOMNamedNodeMapImpl *)other.fNotations)->cloneMap(this);
     fElements = ((DOMNamedNodeMapImpl *)other.fElements)->cloneMap(this);
-
 }
 
 
 DOMDocumentTypeImpl::~DOMDocumentTypeImpl()
 {
-    if (!(castToNodeImpl(this)->getOwnerDocument())) {
-        XMLCh* temp = (XMLCh*) fName;  // cast off const
-        delete [] temp;
-
-        temp = (XMLCh*) fPublicId;  // cast off const
-        delete [] temp;
-
-        temp = (XMLCh*) fSystemId;
-        delete [] temp;
-
-        temp = (XMLCh*) fInternalSubset;
-        delete [] temp;
-
-        delete fEntities;
-        delete fNotations;
-        delete fElements;
-    }
 }
 
 
 DOMNode *DOMDocumentTypeImpl::cloneNode(bool deep) const
 {
     DOMNode* newNode = 0;
-    if (castToNodeImpl(this)->getOwnerDocument())
-        newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
-    else
-        newNode = new DOMDocumentTypeImpl(*this, true, deep);
-
+    newNode = new (castToNodeImpl(this)->getOwnerDocument(), DOMDocumentImpl::DOCUMENT_TYPE_OBJECT) DOMDocumentTypeImpl(*this, false, deep);
     fNode.callUserDataHandlers(DOMUserDataHandler::NODE_CLONED, this, newNode);
     return newNode;
 }
@@ -247,46 +243,15 @@ DOMNode *DOMDocumentTypeImpl::cloneNode(bool deep) const
  * set the ownerDocument of this node and its children
  */
 void DOMDocumentTypeImpl::setOwnerDocument(DOMDocument *doc) {
-    if (castToNodeImpl(this)->getOwnerDocument()) {
+
+    if (doc) {
+    
         fNode.setOwnerDocument(doc);
         fParent.setOwnerDocument(doc);
     }
     else {
-        if (doc) {
-            DOMDocumentImpl *docImpl = (DOMDocumentImpl *)doc;
-
-            XMLCh* temp = (XMLCh*) fPublicId; // cast off const
-            fPublicId = docImpl->cloneString(fPublicId);
-            delete [] temp;
-
-            temp = (XMLCh*) fSystemId; // cast off const
-            fSystemId = docImpl->cloneString(fSystemId);
-            delete [] temp;
-
-            temp = (XMLCh*) fInternalSubset; // cast off const
-            fInternalSubset = docImpl->cloneString(fInternalSubset);
-            delete [] temp;
-
-            temp = (XMLCh*) fName; // cast off const
-            fName = docImpl->getPooledString(fName);
-            delete [] temp;
-
-            fNode.setOwnerDocument(doc);
-            fParent.setOwnerDocument(doc);
-
-            DOMNamedNodeMap* entitiesTemp = ((DOMNamedNodeMapImpl *)fEntities)->cloneMap(this);
-            DOMNamedNodeMap* notationsTemp = ((DOMNamedNodeMapImpl *)fNotations)->cloneMap(this);
-            DOMNamedNodeMap* elementsTemp = ((DOMNamedNodeMapImpl *)fElements)->cloneMap(this);
-
-            delete fEntities;
-            delete fNotations;
-            delete fElements;
-
-            fEntities = entitiesTemp;
-            fNotations = notationsTemp;
-            fElements = elementsTemp;
-
-        }
+        fNode.setOwnerDocument(&gDocTypeDocument());
+        fParent.setOwnerDocument(&gDocTypeDocument());
     }
 }
 
@@ -369,47 +334,29 @@ bool DOMDocumentTypeImpl::isIntSubsetReading() const
 
 //set functions
 
-void        DOMDocumentTypeImpl::setPublicId(const XMLCh *value)
+void DOMDocumentTypeImpl::setPublicId(const XMLCh *value)
 {
     // revist.  Why shouldn't 0 be assigned like any other value?
     if (value == 0)
         return;
 
-    if ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
-        fPublicId = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
-    else {
-        XMLCh* temp = (XMLCh*) fPublicId; // cast off const
-        delete [] temp;
-        fPublicId = XMLString::replicate(value);
-    }
+    fPublicId = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
 }
 
-void        DOMDocumentTypeImpl::setSystemId(const XMLCh *value)
+void DOMDocumentTypeImpl::setSystemId(const XMLCh *value)
 {
     if (value == 0)
         return;
 
-    if ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
-        fSystemId = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
-    else {
-        XMLCh* temp = (XMLCh*) fSystemId; // cast off const
-        delete [] temp;
-        fSystemId = XMLString::replicate(value);
-    }
+    fSystemId = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
 }
 
-void        DOMDocumentTypeImpl::setInternalSubset(const XMLCh *value)
+void DOMDocumentTypeImpl::setInternalSubset(const XMLCh *value)
 {
     if (value == 0)
         return;
 
-    if ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())
-        fInternalSubset = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
-    else {
-        XMLCh* temp = (XMLCh*) fInternalSubset; // cast off const
-        delete [] temp;
-        fInternalSubset = XMLString::replicate(value);
-    }
+    fInternalSubset = ((DOMDocumentImpl *)castToNodeImpl(this)->getOwnerDocument())->cloneString(value);
 }
 
 void DOMDocumentTypeImpl::release()
@@ -579,6 +526,11 @@ bool DOMDocumentTypeImpl::isEqualNode(const DOMNode* arg) const
 
     return fParent.isEqualNode(arg);
 };
+
+bool DOMDocumentTypeImpl::isOwnerDocSingleton() const
+{
+    return (fIsCreatedFromHeap && (castToNodeImpl(this)->getOwnerDocument() == &gDocTypeDocument()));
+}
 
 XERCES_CPP_NAMESPACE_END
 
