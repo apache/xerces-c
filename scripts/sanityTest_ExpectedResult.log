@@ -420,183 +420,6 @@ Options:
     -v=xxx      Validation scheme [always | never | auto*].
     -n          Enable namespace processing. Default is off.
     -s          Enable schema processing. Default is off.
-    -f          Enable full schema constraint checking. Defaults to off.
-    -x=XXX      Use a particular encoding for output. Default is
-                the same encoding as the input XML file. UTF-8 if
-                input XML file has not XML declaration.
-    -?          Show this help.
-
-  * = Default if not provided explicitly.
-
-The parser has intrinsic support for the following encodings:
-    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,
-    WINDOWS-1252, IBM1140, IBM037.
-
-<?xml version="1.0" encoding="iso-8859-1"?>
-
-<!DOCTYPE personnel SYSTEM "personal.dtd">
-<!-- @version: -->
-<personnel>
-
-  <person id="Big.Boss">
-    <name><family>Boss</family> <given>Big</given></name>
-    <email>chief@foo.com</email>
-    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
-  </person>
-
-  <person id="one.worker">
-    <name><family>Worker</family> <given>One</given></name>
-    <email>one@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="two.worker">
-    <name><family>Worker</family> <given>Two</given></name>
-    <email>two@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="three.worker">
-    <name><family>Worker</family> <given>Three</given></name>
-    <email>three@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="four.worker">
-    <name><family>Worker</family> <given>Four</given></name>
-    <email>four@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="five.worker">
-    <name><family>Worker</family> <given>Five</given></name>
-    <email>five@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-</personnel>
-
-<?xml version="1.0" encoding="iso-8859-1"?>
-
-<!DOCTYPE personnel SYSTEM "personal.dtd">
-<!-- @version: -->
-<personnel>
-
-  <person id="Big.Boss">
-    <name><family>Boss</family> <given>Big</given></name>
-    <email>chief@foo.com</email>
-    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
-  </person>
-
-  <person id="one.worker">
-    <name><family>Worker</family> <given>One</given></name>
-    <email>one@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="two.worker">
-    <name><family>Worker</family> <given>Two</given></name>
-    <email>two@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="three.worker">
-    <name><family>Worker</family> <given>Three</given></name>
-    <email>three@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="four.worker">
-    <name><family>Worker</family> <given>Four</given></name>
-    <email>four@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="five.worker">
-    <name><family>Worker</family> <given>Five</given></name>
-    <email>five@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-</personnel>
-
-<?xml version="1.0" encoding="UTF-8"?>
-
-<personnel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="personal.xsd">
-
-  <person id="Big.Boss" contr="false">
-    <name><family>Boss</family> <given>Big</given></name>
-    <email>chief@foo.com</email>
-    <link subordinates="one.worker two.worker three.worker four.worker five.worker"/>
-  </person>
-
-  <person id="one.worker" contr="false">
-    <name><family>Worker</family> <given>One</given></name>
-    <email>one@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="two.worker" contr="false">
-    <name><family>Worker</family> <given>Two</given></name>
-    <email>two@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="three.worker" contr="false">
-    <name><family>Worker</family> <given>Three</given></name>
-    <email>three@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="four.worker" contr="false">
-    <name><family>Worker</family> <given>Four</given></name>
-    <email>four@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-  <person id="five.worker" contr="false">
-    <name><family>Worker</family> <given>Five</given></name>
-    <email>five@foo.com</email>
-    <link manager="Big.Boss"/>
-  </person>
-
-</personnel>
-
-
-Usage:
-    IDOMCount [options] <XML file | List file>
-
-This program invokes the IDOM parser, builds the DOM tree,
-and then prints the number of elements found in each XML file.
-
-Options:
-    -l          Indicate the input file is a List File that has a list of xml files.
-                Default to off (Input file is an XML file).
-    -v=xxx      Validation scheme [always | never | auto*].
-    -n          Enable namespace processing. Defaults to off.
-    -s          Enable schema processing. Defaults to off.
-    -f          Enable full schema constraint checking. Defaults to off.
-    -?          Show this help.
-
-  * = Default if not provided explicitly.
-
-personal.xml:{timing removed}(37 elems).
-personal.xml:{timing removed}(37 elems).
-personal-schema.xml:{timing removed}(37 elems).
-
-Usage:
-    IDOMPrint [options] <XML file>
-
-This program invokes the IDOM parser, and builds the DOM tree.
-It then traverses the DOM tree and prints the contents of the
-tree for the specified XML file.
-
-Options:
-    -e          create entity reference nodes. Default is no expansion.
-    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].
-    -v=xxx      Validation scheme [always | never | auto*].
-    -n          Enable namespace processing. Default is off.
-    -s          Enable schema processing. Default is off.
     -f          Enable full schema constraint checking. Defaults is off.
     -x=XXX      Use a particular encoding for output. Default is
                 the same encoding as the input XML file. UTF-8 if
@@ -914,65 +737,37 @@ Attributes:
 
 --------------------------------------------
 The tree just created contains: 4 elements.
-DOM reference counted memory alloction statistics:
-    live  string handles:   0
-    total string handles:   151
-    live  string buffers:   0
-    total string buffers:   331
-    live  nodeImpls:        0
-    total nodeImpls:        55
-    live  NamedNodeMaps:    0
-    total NamedNodeMaps:    18
-DOM Memory Test.
-DOM reference counted memory alloction statistics:
-    live  string handles:   0
-    total string handles:   545
-    live  string buffers:   0
-    total string buffers:   578
-    live  nodeImpls:        0
-    total nodeImpls:        183
-    live  NamedNodeMaps:    0
-    total NamedNodeMaps:    37
-DOM reference counted memory alloction statistics:
-    live  string handles:   0
-    total string handles:   239
-    live  string buffers:   0
-    total string buffers:   270
-    live  nodeImpls:        0
-    total nodeImpls:        220
-    live  NamedNodeMaps:    0
-    total NamedNodeMaps:    34
-DOM reference counted memory alloction statistics:
-    live  string handles:   0
-    total string handles:   145
-    live  string buffers:   0
-    total string buffers:   163
-    live  nodeImpls:        0
-    total nodeImpls:        77
-    live  NamedNodeMaps:    0
-    total NamedNodeMaps:    0
-DOM reference counted memory alloction statistics:
-    live  string handles:   0
-    total string handles:   17
-    live  string buffers:   0
-    total string buffers:   17
-    live  nodeImpls:        0
-    total nodeImpls:        17
-    live  NamedNodeMaps:    0
-    total NamedNodeMaps:    2
 Test Run Successfully
 Test Run Successfully
 Test Run Successfully
 Test Run Successfully
 
 Usage:
+    DeprecatedDOMCount [options] <XML file | List file>
+
+This program invokes the DOM parser, builds the DOM tree,
+and then prints the number of elements found in each XML file.
+
+Options:
+    -l          Indicate the input file is a List File that has a list of xml files.
+                Default to off (Input file is an XML file).
+    -v=xxx      Validation scheme [always | never | auto*].
+    -n          Enable namespace processing. Defaults to off.
+    -s          Enable schema processing. Defaults to off.
+    -f          Enable full schema constraint checking. Defaults to off.
+    -?          Show this help.
+
+  * = Default if not provided explicitly.
+
+personal.xml:{timing removed}(37 elems).
+personal.xml:{timing removed}(37 elems).
+personal-schema.xml:{timing removed}(37 elems).
+
+Usage:
     InitTermTest [options] <XML file>
 
 This program tests the XMLPlatformUtils::Initialize()/Terminate()
-pair by calling it a number of times.  All four parsers
-(DOMParser, IDOMParser, SAXParser and SAX2XMLReader) are invoked
-to parse the specified XML file.
-
+pair by calling it a number of times.
 Options:
     -n          Enable namespace processing. Default is off.
     -s          Enable schema processing. Default is off.
@@ -988,7 +783,7 @@ usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile..
      -n             Enable namespace processing. Defaults to off.
      -s             Enable schema processing. Defaults to off.
      -f             Enable full schema constraint checking. Defaults to off.
-     -parser=xxx    Parser Type [dom | idom | sax].  Default is SAX.
+     -parser=xxx    Parser Type [dom | sax].  Default is SAX.
      -quiet         Suppress periodic status display.
      -verbose       Display extra messages.
      -reuse         Retain and reuse parser.  Default creates new for each parse.
@@ -997,10 +792,6 @@ usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile..
      -dump          Dump DOM tree on error.
      -mem           Read files into memory once only, and parse them from there.
 
-Test Run Successfully
-Test Run Successfully
-Test Run Successfully
-Test Run Successfully
 Test Run Successfully
 Test Run Successfully
 Test Run Successfully

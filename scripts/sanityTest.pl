@@ -2,7 +2,7 @@
 #
 # The Apache Software License, Version 1.1
 #
-# Copyright (c) 1999-2001 The Apache Software Foundation.  All rights
+# Copyright (c) 1999-2002 The Apache Software Foundation.  All rights
 # reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -129,18 +129,6 @@ system ("DOMPrint -v=never personal.xml");
 system ("DOMPrint personal.xml");
 system ("DOMPrint -n -s personal-schema.xml");
 
-#  Run IDOMCount
-system ("IDOMCount");
-system ("IDOMCount -v=never personal.xml");
-system ("IDOMCount personal.xml");
-system ("IDOMCount -n -s personal-schema.xml");
-
-#  Run IDOMPrint
-system ("IDOMPrint");
-system ("IDOMPrint -v=never personal.xml");
-system ("IDOMPrint personal.xml");
-system ("IDOMPrint -n -s personal-schema.xml");
-
 #  Run StdInParse
 system ("StdInParse < personal.xml");
 system ("StdInParse -v=never < personal.xml");
@@ -166,9 +154,6 @@ system ("CreateDOMDocument");
 #  Run the test cases
 #
 
-#  Run DOMIDTest
-system ("DOMIDTest");
-
 #  Run DOMMemTest
 system ("DOMMemTest");
 
@@ -181,17 +166,11 @@ system ("RangeTest");
 #  Run DOMTraversalTest
 system ("DOMTraversalTest");
 
-#  Run IDOMMemTest
-system ("IDOMMemTest");
-
-#  Run IDOMTest
-system ("IDOMTest");
-
-#  Run IRangeTest
-system ("IRangeTest");
-
-#  Run ITraversal
-system ("ITraversal");
+#  Run DeprecatedDOMCount
+system ("DeprecatedDOMCount");
+system ("DeprecatedDOMCount -v=never personal.xml");
+system ("DeprecatedDOMCount personal.xml");
+system ("DeprecatedDOMCount -n -s personal-schema.xml");
 
 #  Run InitTestTerm
 system ("InitTermTest");
@@ -203,15 +182,11 @@ system ("InitTermTest -n -s -f personal-schema.xml");
 system ("ThreadTest");
 system ("ThreadTest -parser=sax -quiet -threads 10 -time 20 personal.xml");
 system ("ThreadTest -parser=dom -quiet -threads 10 -time 20 personal.xml");
-system ("ThreadTest -parser=idom -quiet -threads 10 -time 20 personal.xml");
 system ("ThreadTest -parser=sax -v -quiet -threads 10 -time 20 personal.xml");
 system ("ThreadTest -parser=dom -v -quiet -threads 10 -time 20 personal.xml");
-system ("ThreadTest -parser=idom -v -quiet -threads 10 -time 20 personal.xml");
 system ("ThreadTest -parser=sax -n -s -v -quiet -threads 10 -time 20 personal-schema.xml");
 system ("ThreadTest -parser=dom -n -s -v -quiet -threads 10 -time 20 personal-schema.xml");
-system ("ThreadTest -parser=idom -n -s -v -quiet -threads 10 -time 20 personal-schema.xml");
 system ("ThreadTest -parser=sax -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
 system ("ThreadTest -parser=dom -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
-system ("ThreadTest -parser=idom -n -s -f -v -quiet -threads 10 -time 20 personal-schema.xml");
 
 chdir "..".$pathsep."..";
