@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2003/05/12 09:53:54  gareth
+ * Memory leak fixes. Patch by Steven White.
+ *
  * Revision 1.5  2002/12/18 13:01:02  gareth
  * New functionality - tokenize and replace. Fixed REVISIT for case insensitive match. Patch by Jennifer Schachter.
  *
@@ -701,7 +704,6 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
  	  lMatch->setNoGroups(fNoGroups);
   }
   else if (fHasBackReferences) {
-
  	  lMatch = new Match();
  	  lMatch->setNoGroups(fNoGroups);
  	  adoptMatch = true;
@@ -730,6 +732,11 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
       if (subEx){
         subEx->addElement(lMatch);
         lMatch = new Match(*(context->fMatch));
+
+        //is this correct???
+        if (context->fAdoptMatch)
+          delete context->fMatch;
+
         context->fMatch = lMatch;
       }
   
@@ -752,7 +759,9 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
         // tokens, we ignore them and do not add them to the stack. 
         if (!XMLString::equals(fPattern, &chNull)) 
           tokenStack->addElement(token); 
-  
+        else
+            delete[] token;
+
       } else {
         token = new XMLCh[matchStart + 1 - tokStart];
         XMLString::subString(token, expression, tokStart, matchStart);
@@ -780,6 +789,8 @@ RefArrayVectorOf<XMLCh>* RegularExpression::tokenize(const XMLCh* const expressi
 
   if (!XMLString::equals(fPattern, &chNull)) 
     tokenStack->addElement(token);
+  else
+    delete[] token;
 
   return tokenStack;
 
@@ -858,13 +869,15 @@ XMLCh* RegularExpression::replace(const XMLCh* const matchString,
        
       //if there are subExpressions, then determine the string we want to 
       //substitute in.
-      if (numSubEx != 0)
-        curRepString = subInExp(replaceString, matchString, subEx->elementAt(i)); 
-    
+        if (numSubEx != 0) {
+            delete[] (XMLCh*)curRepString;
+            curRepString = subInExp(replaceString, matchString, subEx->elementAt(i));     
+        }
       result.append(curRepString);
     }
   }  
     
+  delete[] (XMLCh*)curRepString;
   return XMLString::replicate(result.getRawBuffer()); 
     
 }
