@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2004/02/13 14:28:30  cargilld
+ * Fix for bug 26900 (remove virtual on destructor)
+ *
  * Revision 1.3  2004/01/29 11:48:47  cargilld
  * Code cleanup changes to get rid of various compiler diagnostic messages.
  *
@@ -167,7 +170,7 @@ public:
                             , const XMLCh* const  baseURI = 0);
 
     /** Destructor */
-    virtual ~XMLResourceIdentifier()
+    ~XMLResourceIdentifier()
     {
     }
 
