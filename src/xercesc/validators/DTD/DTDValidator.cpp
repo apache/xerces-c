@@ -526,7 +526,7 @@ void DTDValidator::preContentValidation(bool reuseGrammar,
 
                 seenId = true;
             }
-             else if (curAttDef.getType() == XMLAttDef::Notation)
+             else if (curAttDef.getType() == XMLAttDef::Notation && curAttDef.getEnumeration())
             {
                 //
                 //  We need to verify that all of its possible values

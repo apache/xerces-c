@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2002/09/16 20:37:08  tng
+ * Infinite loop for malformed xml (e.g. simple has "XXXX") w/ setexitonfirstfatal(false).
+ *
  * Revision 1.14  2002/09/04 18:17:41  tng
  * Do not set IDREF to used during prevalidation.
  *
@@ -810,7 +813,7 @@ void SchemaValidator::preContentValidation(bool reuseGrammar,
 
                         seenId = true;
                     }
-                     else if (curAttDef.getType() == XMLAttDef::Notation)
+                     else if (curAttDef.getType() == XMLAttDef::Notation && curAttDef.getEnumeration())
                     {
                         //
                         //  We need to verify that all of its possible values

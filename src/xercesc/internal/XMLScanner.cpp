@@ -2208,11 +2208,6 @@ void XMLScanner::scanProlog()
     //  Loop through the prolog. If there is no content, this could go all
     //  the way to the end of the file.
     //
-    //  Note that we use a double loop here to avoid the overhead of the
-    //  setup/teardown of the exception handler on each loop.
-    //
-    while (true)
-    {
     try
     {
         while (true)
@@ -2292,7 +2287,12 @@ void XMLScanner::scanProlog()
              else
             {
                 emitError(XMLErrs::InvalidDocumentStructure);
-                fReaderMgr.skipPastChar(chCloseAngle);
+
+                // Watch for end of file and break out
+                if (!nextCh)
+                    break;
+                else
+                    fReaderMgr.skipPastChar(chCloseAngle);
             }
 
         }
@@ -2310,7 +2310,6 @@ void XMLScanner::scanProlog()
             XMLErrs::UnexpectedEOE
             , "in prolog"
         );
-    }
     }
 }
 
