@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -104,7 +104,7 @@ IDElementNSImpl::IDElementNSImpl(IDOM_Document *ownerDoc,
     }
 
     const XMLCh * URI = IDNodeImpl::mapPrefix(fPrefix, namespaceURI, IDOM_Node::ELEMENT_NODE);
-    this -> fNamespaceURI = URI == 0 ? XMLUni::fgZeroLenString : ((IDDocumentImpl *)ownerDoc)->getPooledString(URI);
+    this -> fNamespaceURI = (URI == 0) ? 0 : ((IDDocumentImpl *)ownerDoc)->getPooledString(URI);
 };
 
 IDElementNSImpl::IDElementNSImpl(const IDElementNSImpl &other, bool deep) :
@@ -146,7 +146,7 @@ void IDElementNSImpl::setPrefix(const XMLCh *prefix)
     if(prefix != 0 && !IDDocumentImpl::isXMLName(prefix))
         throw IDOM_DOMException(IDOM_DOMException::INVALID_CHARACTER_ERR,0);
 
-    if (fNamespaceURI == 0)
+    if (fNamespaceURI == 0 || fNamespaceURI[0] == chNull)
         throw IDOM_DOMException(IDOM_DOMException::NAMESPACE_ERR, 0);
 
     if (prefix == 0 || *prefix == 0) {

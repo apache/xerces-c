@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,17 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:21:55  peiyongz
- * Initial revision
+ * Revision 1.2  2002/02/04 21:50:17  tng
+ * Add DOM 2 Level missing functions:
+ *   1. NodeIterator::getRoot
+ *   2. TreeWalker::getRoot
+ *   3. Element::hasAttribute
+ *   4. Element::hasAttributeNS
+ *   5. Node::hasAttributes
+ *   6. Node::isSupported
+ *
+ * Revision 1.1.1.1  2002/02/01 22:21:55  peiyongz
+ * sane_include
  *
  * Revision 1.3  2001/06/04 14:55:34  tng
  * IDOM: Add IRange and IDeepNodeList Support.
@@ -93,22 +102,27 @@ IDNodeListImpl:: ~IDNodeListImpl()
 
 unsigned int IDNodeListImpl::getLength(){
     unsigned int count = 0;
-    IDOM_Node *node = castToParentImpl(fNode)->fFirstChild;
-    while(node != 0)
-    {
-        ++count;
-        node = castToChildImpl(node)->nextSibling;
+    if (fNode) {
+        IDOM_Node *node = castToParentImpl(fNode)->fFirstChild;
+        while(node != 0){
+            ++count;
+            node = castToChildImpl(node)->nextSibling;
+        }
     }
+
     return count;
 };
 
 
 
 IDOM_Node *IDNodeListImpl::item(unsigned int index){
-    IDOM_Node *node = castToParentImpl(fNode)->fFirstChild;
-    for(unsigned int i=0; i<index && node!=0; ++i)
-        node = castToChildImpl(node)->nextSibling;
-    return node;
+    if (fNode) {
+        IDOM_Node *node = castToParentImpl(fNode)->fFirstChild;
+        for(unsigned int i=0; i<index && node!=0; ++i)
+            node = castToChildImpl(node)->nextSibling;
+        return node;
+    }
+    return 0;
 };
 
 
