@@ -503,7 +503,7 @@ TraverseSchema::traverseAnnotationDecl(const DOMElement* const annotationElem,
             int annotTokenStart = XMLString::patternMatch(
                 contents, SchemaSymbols::fgELT_ANNOTATION);
 
-            if (annotTokenStart == -1) // somthing is wrong
+            if (annotTokenStart == -1) // something is wrong
                 return 0;
 
             // set annotation element
