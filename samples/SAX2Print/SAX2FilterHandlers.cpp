@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2005/02/07 13:20:40  amassari
+ * Removed warnings
+ *
  * Revision 1.1  2004/12/24 19:44:21  amassari
  * Add support for SAX2 filters (jira# 1133)
  *
@@ -72,14 +75,14 @@ public:
 
 	virtual int getIndex(const XMLCh* const uri, const XMLCh* const localPart ) const
     {
-        for(int i=0;i<size();i++)
+        for(unsigned int i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->uri,uri) && XMLString::equals(elementAt(i)->localPart,localPart))
                 return i;
         return -1;
     }
 	virtual int getIndex(const XMLCh* const qName ) const
     {
-        for(int i=0;i<size();i++)
+        for(unsigned int i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->qName,qName))
                 return i;
         return -1;
@@ -87,14 +90,14 @@ public:
 
 	virtual const XMLCh* getType(const XMLCh* const uri, const XMLCh* const localPart ) const
     {
-        for(int i=0;i<size();i++)
+        for(unsigned int i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->uri,uri) && XMLString::equals(elementAt(i)->localPart,localPart))
                 return elementAt(i)->attrType;
         return NULL;
     }
     virtual const XMLCh* getType(const XMLCh* const qName) const
     {
-        for(int i=0;i<size();i++)
+        for(unsigned int i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->qName,qName))
                 return elementAt(i)->attrType;
         return NULL;
@@ -102,14 +105,14 @@ public:
 
 	virtual const XMLCh* getValue(const XMLCh* const uri, const XMLCh* const localPart ) const
     {
-        for(int i=0;i<size();i++)
+        for(unsigned int i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->uri,uri) && XMLString::equals(elementAt(i)->localPart,localPart))
                 return elementAt(i)->value;
         return NULL;
     }
     virtual const XMLCh* getValue(const XMLCh* const qName) const
     {
-        for(int i=0;i<size();i++)
+        for(unsigned int i=0;i<size();i++)
             if(XMLString::equals(elementAt(i)->qName,qName))
                 return elementAt(i)->value;
         return NULL;
@@ -138,9 +141,9 @@ void SAX2SortAttributesFilter::startElement(const   XMLCh* const    uri,
                                     const   Attributes&		attributes)
 {
     AttrList sortedList(attributes.getLength());
-    for(int i=0;i<attributes.getLength();i++)
+    for(unsigned int i=0;i<attributes.getLength();i++)
     {
-        int j;
+        unsigned int j;
         for(j=0;j<sortedList.getLength();j++)
         {
             if(XMLString::compareString(sortedList.elementAt(j)->qName,attributes.getQName(i))>=0)
