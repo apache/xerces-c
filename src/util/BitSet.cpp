@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:04:09  twl
- * Initial revision
+ * Revision 1.2  1999/12/15 19:38:22  roddey
+ * Simple fix to bit ops comments
+ *
+ * Revision 1.1.1.1  1999/11/09 01:04:09  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:05  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -68,7 +71,6 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XML4CDefs.hpp>
 #include <util/IllegalArgumentException.hpp>
 #include <util/ArrayIndexOutOfBoundsException.hpp>
 #include <util/BitSet.hpp>
