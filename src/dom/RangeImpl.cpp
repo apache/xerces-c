@@ -61,6 +61,7 @@
 #include <util/RefVectorOf.hpp>
 #include "NodeImpl.hpp"
 #include "RangeImpl.hpp"
+#include "TextImpl.hpp"
 #include "DocumentImpl.hpp"
 #include "DOM_DOMException.hpp"
 #include "DOM_Document.hpp"
@@ -164,27 +165,52 @@ bool RangeImpl::getCollapsed() const
 
 void RangeImpl::setStartContainer(const DOM_Node& node) 
 {
+    if (fDetached)
+    {
+        throw DOM_DOMException(
+            DOM_DOMException::INVALID_STATE_ERR, null);
+    }
+
     fStartContainer = node;
 }
 
 void RangeImpl::setStartOffset(unsigned int offset) 
 {
+    if (fDetached)
+    {
+        throw DOM_DOMException(
+            DOM_DOMException::INVALID_STATE_ERR, null);
+    }
+
     fStartOffset = offset;
 }
 
 void RangeImpl::setEndContainer(const DOM_Node& node) 
 {
+    if (fDetached)
+    {
+        throw DOM_DOMException(
+            DOM_DOMException::INVALID_STATE_ERR, null);
+    }
+
     fEndContainer = node;
     
 }
 
 void RangeImpl::setEndOffset(unsigned int offset) 
 {
+    if (fDetached)
+    {
+        throw DOM_DOMException(
+            DOM_DOMException::INVALID_STATE_ERR, null);
+    }
+
     fEndOffset = offset;
 }
 
 void RangeImpl::setStart(const DOM_Node& refNode, unsigned int offset)
 {
+    validateNode(refNode);
     checkIndex(refNode, offset);
     
     fStartContainer = refNode;
@@ -207,6 +233,7 @@ void RangeImpl::setStart(const DOM_Node& refNode, unsigned int offset)
 
 void RangeImpl::setEnd(const DOM_Node& refNode, unsigned int offset)
 {
+    validateNode(refNode);
     checkIndex(refNode, offset);
             
     fEndContainer   = refNode;
@@ -229,7 +256,14 @@ void RangeImpl::setEnd(const DOM_Node& refNode, unsigned int offset)
 
 void RangeImpl::setStartBefore(const DOM_Node& refNode)
 {
-    validateNode(refNode);
+    if( fDetached) {
+        throw DOM_DOMException(
+            DOM_DOMException::INVALID_STATE_ERR, null);
+    }
+    if ( !hasLegalRootContainer(refNode) || !isLegalContainedNode(refNode)) {
+        throw DOM_RangeException(
+            DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
+    }
     
     fStartContainer = refNode.getParentNode();
    unsigned int i = 0;
@@ -258,7 +292,14 @@ void RangeImpl::setStartBefore(const DOM_Node& refNode)
 
 void RangeImpl::setStartAfter(const DOM_Node& refNode)
 {
-    validateNode(refNode);
+    if( fDetached) {
+        throw DOM_DOMException(
+            DOM_DOMException::INVALID_STATE_ERR, null);
+    }
+    if ( !hasLegalRootContainer(refNode) || !isLegalContainedNode(refNode)) {
+        throw DOM_RangeException(
+            DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
+    }
 
     fStartContainer = refNode.getParentNode();
     unsigned int i = 0;
@@ -285,7 +326,14 @@ void RangeImpl::setStartAfter(const DOM_Node& refNode)
 
 void RangeImpl::setEndBefore(const DOM_Node& refNode)
 {
-    validateNode(refNode);
+    if( fDetached) {
+        throw DOM_DOMException(
+            DOM_DOMException::INVALID_STATE_ERR, null);
+    }
+    if ( !hasLegalRootContainer(refNode) || !isLegalContainedNode(refNode)) {
+        throw DOM_RangeException(
+            DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
+    }
     
     fEndContainer = refNode.getParentNode();
     unsigned int i = 0;
@@ -313,7 +361,14 @@ void RangeImpl::setEndBefore(const DOM_Node& refNode)
 
 void RangeImpl::setEndAfter(const DOM_Node& refNode)
 {
-    validateNode(refNode);
+    if( fDetached) {
+        throw DOM_DOMException(
+            DOM_DOMException::INVALID_STATE_ERR, null);
+    }
+    if ( !hasLegalRootContainer(refNode) || !isLegalContainedNode(refNode)) {
+        throw DOM_RangeException(
+            DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
+    }
     
     fEndContainer = refNode.getParentNode();
     unsigned int i = 0;
@@ -343,6 +398,11 @@ void RangeImpl::setEndAfter(const DOM_Node& refNode)
 //-------------------------------
 void RangeImpl::detach()
 {
+    if( fDetached) {
+        throw DOM_DOMException(
+            DOM_DOMException::INVALID_STATE_ERR, null);
+    }
+
     fDetached = true;
     
     //nullify nodes
@@ -375,18 +435,12 @@ void RangeImpl::collapse(bool toStart)
 void RangeImpl::selectNode(const DOM_Node& refNode)
 {
     validateNode(refNode);
-    short type = refNode.getNodeType();
-    if (type ==  DOM_Node::ATTRIBUTE_NODE
-        || type == DOM_Node::ENTITY_NODE
-        || type == DOM_Node::NOTATION_NODE
-        || type == DOM_Node::DOCUMENT_TYPE_NODE
-        || type == DOM_Node::DOCUMENT_FRAGMENT_NODE) {
-
+    if ( !isLegalContainedNode(refNode)) {
         throw DOM_RangeException(
             DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
     }
     //First check for the text type node
-    if (type ==  DOM_Node::TEXT_NODE) 
+    if (refNode.getNodeType() ==  DOM_Node::TEXT_NODE)
     {
         //The node itself is the container.
         fStartContainer = refNode;
@@ -417,14 +471,6 @@ void RangeImpl::selectNode(const DOM_Node& refNode)
 void RangeImpl::selectNodeContents(const DOM_Node& node)
 {
     validateNode(node);
-     short type = node.getNodeType();
-    if (type == DOM_Node::ENTITY_NODE
-        || type == DOM_Node::NOTATION_NODE
-        || type == DOM_Node::DOCUMENT_TYPE_NODE) {
-
-        throw DOM_RangeException(
-            DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
-    }
     
     fStartContainer = node;
     fEndContainer = node;
@@ -463,12 +509,8 @@ void RangeImpl::surroundContents(DOM_Node& newParent)
     }
     
     int type = newParent.getNodeType();
-    if (type == DOM_Node::ATTRIBUTE_NODE
-        || type == DOM_Node::ENTITY_NODE
-        || type == DOM_Node::NOTATION_NODE
-        || type == DOM_Node::DOCUMENT_TYPE_NODE
-        || type == DOM_Node::DOCUMENT_NODE
-        || type == DOM_Node::DOCUMENT_FRAGMENT_NODE)
+    if ( !isLegalContainedNode(newParent)
+        || type == DOM_Node::DOCUMENT_TYPE_NODE)
     {
         throw DOM_RangeException(
             DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
@@ -580,190 +622,12 @@ short RangeImpl::compareBoundaryPoints(DOM_Range::CompareHow how, RangeImpl* src
 
 void RangeImpl:: deleteContents()
 {
-    if ((fStartContainer == null) || (fEndContainer == null) ) return;
-    checkReadOnly(fStartContainer, fEndContainer, fStartOffset, fEndOffset);
-    
-    if( fDetached) {
-        throw DOM_DOMException(
-            DOM_DOMException::INVALID_STATE_ERR, null);
-    }
-    
-    DOM_Node current = fStartContainer;
-    
-    // if same container, simplify case
-    if (fStartContainer == fEndContainer) {
-        if (fStartOffset == fEndOffset) { // already  collapsed
-            return; 
-        } 
-        if (fStartOffset > fEndOffset)
-            throw DOM_RangeException(DOM_RangeException::BAD_BOUNDARYPOINTS_ERR, null);
-        
-        if (fStartContainer.getNodeType() == DOM_Node::TEXT_NODE) {
-            DOMString value = fStartContainer.getNodeValue();
-            unsigned int realStart = fStartOffset;
-            unsigned int realEnd = fEndOffset;
-            
-            if (fStartOffset > value.length()) realStart = value.length()-1;
-            if (fEndOffset > value.length()) realEnd = value.length()-1;
-            
-            ((DOM_Text &)fStartContainer).deleteData(realStart, realEnd-realStart);
-            
-        } else {
-            current = fStartContainer.getFirstChild();  
-            unsigned int i = 0;
-            //move till the start offset 
-            for(i = 0; i < fStartOffset && current != null; i++) {
-                current=current.getNextSibling();
-            }
-                        
-            //delete all children after the start offset to end offset
-            for(i = 0; i < (fEndOffset-fStartOffset) && (current != null); i++) {
-                DOM_Node newCurrent = current.getNextSibling();
-                removeChild(fStartContainer, current);
-                current = newCurrent;
-            }
-        }
-        collapse(true);
-        return;
-    }
-    
-    //The case of partial selections and when start container is not the same as end one
-    bool deleteCurrent  = false;
-    
-     // initialize current for startContainer.
-    if (current.getNodeType() == DOM_Node::TEXT_NODE) {
-        ((DOM_Text &)current).deleteData(fStartOffset, current.getNodeValue().length()-fStartOffset);
-    } else {
-        current = current.getFirstChild();
-        for (unsigned int i = 0 ; i < fStartOffset && current != null; i++){
-            current = current.getNextSibling();
-        }
-        if (current == null) {
-            current = fStartContainer;
-        } else if (current != fStartContainer)
-            deleteCurrent = true;
-    }
-    
-    DOM_Node parent         = null;
-    DOM_Node next;
-    DOM_Node partialNode    = null;
-    int partialInt          = START;
-    DOM_Node startRoot      = null;
-    
-    DOM_Node root = getCommonAncestorContainer();
-    // traverse up from the startContainer...
-    // current starts as the node to delete;
-    while (current != root && current != null) {
-        
-        parent = current.getParentNode();
-        if (parent == root) {
-            if (startRoot == null)
-                startRoot = current;
-        } else {
-            if (partialNode == null) {
-                partialNode = parent;
-                partialInt = AFTER;
-            }
-        }
-        
-        if (parent != root) {
-            next = current.getNextSibling();
-            DOM_Node nextnext;
-            while (next != null)  {
-                nextnext = next.getNextSibling();
-                removeChild(parent, next);
-                next = nextnext;
-            }
-        }
-        
-        if (deleteCurrent) {
-            removeChild(parent, current);
-            deleteCurrent = false;
-        }
-        current = parent;
-    }
-    
-    DOM_Node endRoot = null;
-    // initialize current for endContainer.
-    current = fEndContainer;
-    if (current.getNodeType() == DOM_Node::TEXT_NODE) {
-        ((DOM_Text &)current).deleteData(0, fEndOffset); 
-    } else {
-        
-        if (fEndOffset == 0) { // "before"
-            current = fEndContainer;
-        }
-        else {
-            current = current.getFirstChild();
-            for(unsigned int i = 1; i < fEndOffset && current != null; i++) {
-                current=current.getNextSibling();
-            }
-            if (current==null) { // REVIST: index-out-of-range what to do?
-                current = fEndContainer.getLastChild();
-            } else 
-                if (current != fStartContainer) {
-                    deleteCurrent = true;
-                }
-                
-        }
-    }
-    
-    // traverse up from the endContainer...
-    while (current != root && current != null) {
-        
-        parent = current.getParentNode();
-        if (parent == root) {
-            if (endRoot == null)
-                endRoot = current;
-        } else {
-            if (partialNode==null) {
-                partialNode = parent;
-                partialInt = BEFORE;
-            }
-        }
-        
-        if (parent != root && parent != null) {
-            next = current.getPreviousSibling();
-            DOM_Node nextnext;
-            while (next != null) {
-                nextnext = next.getPreviousSibling();
-                removeChild(parent, next);
-                next = nextnext;
-            }
-        }
-        
-        if (deleteCurrent) {
-            removeChild(parent, current);
-            deleteCurrent = false;
-        }
-        current = parent;
-    }
-    
-    //if (endRoot == null || startRoot == null) return; //REVIST
-    current = endRoot.getPreviousSibling();
-    DOM_Node prev = null;
-    while (current != null && current != startRoot ) {
-        prev = current.getPreviousSibling();
-        parent = current.getParentNode();
-        if (parent != null) {
-            removeChild(parent, current);
-        }
-        current = prev;
-    }
-    
-    if (partialNode == null) {
-        collapse(true);
-    } else if (partialInt == AFTER) {
-        setStartAfter(partialNode);
-        setEndAfter(partialNode);
-    } else if (partialInt == BEFORE) {
-        setStartBefore(partialNode);
-        setEndBefore(partialNode);
-    }
+    traverseContents(DELETE_CONTENTS);
 }
 
 DOM_DocumentFragment RangeImpl::extractContents()
 {
+    checkReadOnly(fStartContainer, fEndContainer, fStartOffset, fEndOffset);
     return traverseContents(EXTRACT_CONTENTS);
 }
 
@@ -778,9 +642,11 @@ void RangeImpl::insertNode(DOM_Node& newNode)
 {
     if (newNode == null) return; //don't have to do anything
 
-    if (fStartContainer.getParentNode().fImpl->isReadOnly()) {
+    for (DOM_Node aNode = fStartContainer; aNode!=null; aNode = aNode.getParentNode()) {
+        if (aNode.fImpl->isReadOnly()) {
         throw DOM_DOMException(
             DOM_DOMException::NO_MODIFICATION_ALLOWED_ERR, null);
+    }
     }
     
     if (fDocument != newNode.getOwnerDocument()) {
@@ -804,8 +670,7 @@ void RangeImpl::insertNode(DOM_Node& newNode)
     if (type == DOM_Node::ATTRIBUTE_NODE
         || type == DOM_Node::ENTITY_NODE
         || type == DOM_Node::NOTATION_NODE
-        || type == DOM_Node::DOCUMENT_NODE
-        || type == DOM_Node::DOCUMENT_FRAGMENT_NODE)
+        || type == DOM_Node::DOCUMENT_NODE)
     {
         throw DOM_RangeException(
             DOM_RangeException::INVALID_NODE_TYPE_ERR, null);
@@ -870,43 +735,52 @@ DOMString RangeImpl::toString() const
     }
     
     DOM_Node node = fStartContainer;
+    DOM_Node stopNode = fEndContainer;
     
     DOMString tempString;
     if ( (fStartContainer.getNodeType() == DOM_Node::TEXT_NODE)
         || (fStartContainer.getNodeType() == DOM_Node::CDATA_SECTION_NODE) ) {
         if (fStartContainer == fEndContainer) {
-            //the substringData returns a substring from start to end all inclusive
-            //we want a substring begins at fStartOffset inclusive, but ends at fEndOffset exclusive
-            tempString.appendData(fStartContainer.getNodeValue().substringData(fStartOffset, fEndOffset-1));
+            tempString.appendData(fStartContainer.getNodeValue().substringData(fStartOffset, fEndOffset-fStartOffset));
             return tempString;
         } else {
             int length = fStartContainer.getNodeValue().length();
             tempString.appendData(fStartContainer.getNodeValue().substringData(fStartOffset, length - fStartOffset));
+            node = nextNode(node, true);
         }
-    }else if (node == fEndContainer){
-        DOM_Node anode = node.getFirstChild();
-        unsigned int i = 0;
-        for ( ;i<fStartOffset; i++)
-            anode = anode.getNextSibling();
-        for( ; ( i<fEndOffset || anode!=null); anode = anode.getNextSibling(), i++) {
-            if( (anode.getNodeType() == DOM_Node::TEXT_NODE)
-                || (anode.getNodeType() == DOM_Node::CDATA_SECTION_NODE)) {
-                tempString.appendData(anode.getNodeValue());
+    }else { //fStartContainer is not a TextNode
+        node=node.getFirstChild();
+        if (fStartOffset>0) { //find a first node within a range, specified by fStartOffset
+            unsigned int counter = 0;
+            while (counter<fStartOffset && node!=null) {
+                node=node.getNextSibling();
+                counter++;
             }
         }
-        return tempString;
+        if (node == null) {
+            node = nextNode(fStartContainer,false);
+        }
     }
-    DOM_Node root = getCommonAncestorContainer();
     
-    while (node != fEndContainer) {
-         node = nextNode(node, true);
-        if ((node == null) || (node == fEndContainer)) break;
+    if ( fEndContainer.getNodeType()!= DOM_Node.TEXT_NODE &&
+        fEndContainer.getNodeType()!= DOM_Node.CDATA_SECTION_NODE ){
+        int i=fEndOffset;
+        stopNode = fEndContainer.getFirstChild();
+        while( i>0 && stopNode!=null ){
+            --i;
+            stopNode = stopNode.getNextSibling();
+        }
+        if ( stopNode == null )
+            stopNode = nextNode( fEndContainer, false );
+    }
         
-        if (node.getNodeType() == DOM_Node::TEXT_NODE
-            ||  node.getNodeType() == DOM_Node::CDATA_SECTION_NODE
-            ) {
+    while (node != stopNode) {  //look into all kids of the Range
+        if (node == null) break;
+        if (node.getNodeType() == DOM_Node.TEXT_NODE
+            ||  node.getNodeType() == DOM_Node.CDATA_SECTION_NODE) {
             tempString.appendData(node.getNodeValue());
         }
+        node = nextNode(node, true);
     }
     
     if (fEndContainer.getNodeType() == DOM_Node::TEXT_NODE
@@ -948,6 +822,36 @@ bool RangeImpl::isAncestorOf(const DOM_Node& a, const DOM_Node& b) {
         if  (node == a) return true;
     }
     return false;
+}
+
+bool RangeImpl::hasLegalRootContainer(const DOM_Node& node) const {
+    if ( node==null )
+        return false;
+
+    DOM_Node rootContainer = node;
+    for (; rootContainer.getParentNode()!=null; rootContainer = rootContainer.getParentNode());
+    switch( rootContainer.getNodeType() ) {
+        case DOM_Node::ATTRIBUTE_NODE:
+        case DOM_Node::DOCUMENT_NODE:
+        case DOM_Node::DOCUMENT_FRAGMENT_NODE:
+        return true;
+    }
+    return false;
+}
+
+bool RangeImpl::isLegalContainedNode(const DOM_Node& node ) const {
+   if ( node==null )
+       return false;
+   switch( node.getNodeType() )
+   {
+       case DOM_Node::DOCUMENT_NODE:
+       case DOM_Node::DOCUMENT_FRAGMENT_NODE:
+       case DOM_Node::ATTRIBUTE_NODE:
+       case DOM_Node::ENTITY_NODE:
+       case DOM_Node::NOTATION_NODE:
+       return false;
+   }
+   return true;
 }
 
 unsigned short RangeImpl::indexOf(const DOM_Node& child, const DOM_Node& parent) const
@@ -1022,8 +926,6 @@ const DOM_Node RangeImpl::commonAncestorOf(const DOM_Node& pointA, const DOM_Nod
 
 void RangeImpl::checkIndex(const DOM_Node& node, unsigned int offset) const
 {
-    validateNode(node);
-
     if (offset < 0) {
         throw DOM_DOMException( DOM_DOMException::INDEX_SIZE_ERR, null );
     }
@@ -1091,12 +993,12 @@ DOM_Node RangeImpl::nextNode(const DOM_Node& node, bool visitChildren) const
 }
 
 
-/** This is the master traversal function which is used by
-*  both extractContents and cloneContents().
+/** This is the master routine invoked to visit the nodes
+*   selected by this range.  For each such node, different
+*   actions are taken depending on the value of the TraversalType argument.
 */
-DOM_DocumentFragment RangeImpl::traverseContents(TraversalType trvType)
+DOM_DocumentFragment RangeImpl::traverseContents(TraversalType how)
 {
-
     if (fDetached) 
             throw DOM_DOMException(DOM_DOMException::INVALID_STATE_ERR, null);
     
@@ -1104,285 +1006,500 @@ DOM_DocumentFragment RangeImpl::traverseContents(TraversalType trvType)
         return DOM_DocumentFragment(); // REVIST: Throw exception?
     }
     
-    DOM_DocumentFragment frag = fDocument.createDocumentFragment() ;
+    /* Traversal is accomplished by first determining the
+       relationship between the endpoints of the range.
+       For each of four significant relationships, we will
+       delegate the traversal call to a method that
+       can make appropriate assumptions.
+    */
     
+    // case 1: same container
+    if ( fStartContainer == fEndContainer )
+        return traverseSameContainer( how );
+                
+    // case 2: Child C of start container is ancestor of end container
+    for (DOM_Node node = fStartContainer.getFirstChild(); node != null; node=node.getNextSibling()) {
+        if (isAncestorOf(node, fEndContainer))
+            return traverseCommonStartContainer( node, how );
+    }
+    
+    // case 3: Child C of end container  is ancestor of start container
+    for (DOM_Node nd = fEndContainer.getFirstChild(); nd != null; nd=nd.getNextSibling()) {
+        if (isAncestorOf(nd, fStartContainer))
+             return traverseCommonEndContainer( nd, how );
+        }
+        
+    // case 4: preorder traversal of context tree.
+    // There is a common ancestor container.  Find the
+    // ancestor siblings that are children of that container.
+    DOM_Node ancestor = commonAncestorOf(fStartContainer, fEndContainer);
+    return traverseCommonAncestors( ancestor, ancestor, how );
+    }
+    
+/**
+ * Visits the nodes selected by this range when we know
+ * a-priori that the start and end containers are the same.
+ *
+ */
+DOM_DocumentFragment RangeImpl::traverseSameContainer( int how )
+{
+    DOM_DocumentFragment frag = null;
+    if ( how!=DELETE_CONTENTS)
+        frag = fDocument.createDocumentFragment();
+            
+    // If selection is empty, just return the fragment
+    if ( fStartOffset==fEndOffset )
+            return frag;
+            
     DOM_Node current = fStartContainer;
     DOM_Node cloneCurrent = null;
-    DOM_Node cloneParent = null;
-    DOM_Node partialNode = null;
-    int partialInt = START;
     
-    // if same container, simplify case
-    if (fStartContainer == fEndContainer) {
-        if (fStartOffset == fEndOffset) { // eg collapsed
-            return frag; // REVIST: what is correct re spec?
-        }
-        if (fStartContainer.getNodeType() == DOM_Node::TEXT_NODE) {
-            cloneCurrent = fStartContainer.cloneNode(false);
-            cloneCurrent.setNodeValue(
-                cloneCurrent.getNodeValue().substringData(fStartOffset, fEndOffset));
-            if (trvType == EXTRACT_CONTENTS) {
-                ((DOM_Text &)current).deleteData(fStartOffset, fEndOffset-fStartOffset);
-            }
+    // Text node needs special case handling
+    if ( fStartContainer.getNodeType()== DOM_Node::TEXT_NODE )
+    {
+        cloneCurrent = fStartContainer.cloneNode(false);
+        cloneCurrent.setNodeValue(
+            cloneCurrent.getNodeValue().substringData(fStartOffset, fEndOffset));
+        
+        // set the original text node to its new value
+        if ( how != CLONE_CONTENTS )
+            ((DOM_Text &)fStartContainer).deleteData(fStartOffset, fEndOffset-fStartOffset);
+        if ( how != DELETE_CONTENTS)
             frag.appendChild(cloneCurrent);
-        } else {
-            current = current.getFirstChild();
-            unsigned int i = 0;
-            for(i = 0; i < fStartOffset && current != null; i++) {
-                current=current.getNextSibling();
+    }
+    else {
+        // Copy nodes between the start/end offsets.
+        DOM_Node n = getSelectedNode( fStartContainer, fStartOffset );
+        int cnt = fEndOffset - fStartOffset;
+        while( cnt > 0 )
+        {
+            DOM_Node sibling = n.getNextSibling();
+            DOM_Node xferNode = traverseFullySelected( n, how );
+            if ( frag!=null )
+                frag.appendChild( xferNode );
+            --cnt;
+            n = sibling;
             }
-            unsigned int n = fEndOffset-fStartOffset;
-            for(i = 0; i < n && current != null ;i++) {
-                DOM_Node newCurrent=current.getNextSibling();
-                
-                if (trvType == CLONE_CONTENTS) {
-                    cloneCurrent = current.cloneNode(true);
-                    frag.appendChild(cloneCurrent);
-                } else
-                    if (trvType == EXTRACT_CONTENTS) {
-                        frag.appendChild(current);
-                    }
-                    current = newCurrent;
-            }
-        }
-        if (trvType == EXTRACT_CONTENTS ) {
+    }
+    
+    // Nothing is partially selected, so collapse to start point
+    if ( how != CLONE_CONTENTS )
             collapse(true);
-        }
-        return frag;
-    }
-    
-    //***** END SIMPLE CASE ****
-   
-
-    DOM_Node root = getCommonAncestorContainer();
-    DOM_Node parent = null;
-    // go up the start tree...
-    current = fStartContainer;
-
-    bool endAtRoot = false;
-    
-    //REVIST: Always clone TEXT_NODE's?
-    if (current.getNodeType() == DOM_Node::TEXT_NODE) {
-        cloneCurrent = current.cloneNode(false);
-        cloneCurrent.setNodeValue(
-            ((DOM_Text&)cloneCurrent).getNodeValue().substringData(fStartOffset, current.getNodeValue().length() - fStartOffset));
-        if (trvType == EXTRACT_CONTENTS) {
-            ((DOM_Text&)current).deleteData(fStartOffset, current.getNodeValue().length()-fStartOffset);
-        }
-    } else {
-        current = current.getFirstChild();
-        for(unsigned int i = 0; i < fStartOffset && current != null; i++) {
-            current=current.getNextSibling();
-        }
-        // current is now at the offset.
-        if (current==null) { //"after"
-            current = fStartContainer;
-        }
-        
-        if (trvType == CLONE_CONTENTS) {
-            cloneCurrent = current.cloneNode(true);
-        } else if (trvType == EXTRACT_CONTENTS ) {
-                cloneCurrent = current;
-        }
-    }
-    
-    DOM_Node startRoot = null;
-    DOM_Node endRoot = null;
-    parent = null;
-    
-
-    if (root == fEndContainer) {
-        if (fStartContainer.getParentNode() == fEndContainer) { 
-            //a unique situation when start and end are partial under the same pass
-            DOM_Node endNode = fEndContainer.getFirstChild();
-            for (unsigned int i = 0; 
-                i <= fEndOffset-2; 
-                i++, endNode = endNode.getNextSibling()) ;
-            
-            if (cloneParent == null)
-                cloneParent = root.cloneNode(false);
-            
-            cloneParent.appendChild(cloneCurrent); //clone the node from above
-            
-            for (current= current.getNextSibling(); 
-                current != null, current != endNode.getNextSibling(); 
-                current=current.getNextSibling()) {
-                if (trvType == CLONE_CONTENTS) {
-                    cloneCurrent = current.cloneNode(true);
-                    cloneParent.appendChild(cloneCurrent);
-                } else if (trvType == EXTRACT_CONTENTS) {
-                        cloneParent.appendChild(current);
-                }
-            }
-            if (trvType == EXTRACT_CONTENTS) {
-                collapse(true);
-            }
-            frag.appendChild(cloneParent);
-            return frag;
-        }
-    }
-
-    // going up in a direct line from boundary point
-    // through parents to the common ancestor,
-    // all these nodes are partially selected, and must
-    // be cloned.
-    while (current != root) {
-        parent = current.getParentNode();
-        
-        if (parent == root) {
-            cloneParent = frag;
-            startRoot = current;
-        } else {
-            //check if (parent == null) case too
-            cloneParent = parent.cloneNode(false);
-            if (partialNode==null && parent != root) {
-                partialNode = parent;
-                partialInt = AFTER;
-            }
-            
-        }
-        
-        // The children to the "right" of the "ancestor hierarchy"
-        // are "fully-selected".
-        DOM_Node next = null;
-        
-        //increment to the next sibling BEFORE doing the appendChild
-        current = current.getNextSibling();
-        //do this appendChild after the increment above.
-        cloneParent.appendChild(cloneCurrent);
-        
-        while (current != null) {
-            next = current.getNextSibling();
-            
-            if (current != null && parent != root) {
-                if (trvType == CLONE_CONTENTS) {
-                    cloneCurrent = current.cloneNode(true);
-                    cloneParent.appendChild(cloneCurrent);
-                } else
-                    if (trvType == EXTRACT_CONTENTS) {
-                        cloneParent.appendChild(current);
-                    }
-            }
-            current = next;
-        }
-        
-        current = parent;
-        cloneCurrent = cloneParent;
-    }
-    
-    // go up the end tree...
-    current = fEndContainer;
-    
-    if (current.getNodeType() == DOM_Node::TEXT_NODE) {
-        cloneCurrent = current.cloneNode(false);
-        cloneCurrent.setNodeValue(
-            (cloneCurrent.getNodeValue()).substringData(0,fEndOffset));
-        if (trvType == EXTRACT_CONTENTS) {
-            ((DOM_Text&)current).deleteData(0, fEndOffset);
-        }
-    } else {
-        if (fEndOffset == 0) { // "before"
-            current = fEndContainer;
-        }
-        else {
-            current = current.getFirstChild();
-            for(unsigned int i = 1; i < fEndOffset && current != null; i++) {
-                current=current.getNextSibling();
-            }
-            if (current==null) { // REVIST: index-out-of-range what to do?
-                current = fEndContainer.getLastChild();
-            }
-        }
-        if (trvType == CLONE_CONTENTS) {
-            cloneCurrent = current.cloneNode(true);
-        } else
-            if (trvType == EXTRACT_CONTENTS ) {
-                cloneCurrent = current;
-            }
-    }
-    
-    while (current != root && current != null) {
-        parent = current.getParentNode();
-        if (parent == root) {
-            cloneParent = frag;
-            endRoot = current;
-        } else {
-            cloneParent = parent.cloneNode(false);
-            if (partialNode==null && parent != root) {
-                partialNode = parent;
-                partialInt = BEFORE;
-            }
-        }
-        
-        DOM_Node holdCurrent = current;
-        
-        current = parent.getFirstChild();
-        
-        cloneParent.appendChild(cloneCurrent);
-        
-        DOM_Node next = null;
-        while (current != holdCurrent && current != null) {
-            next = current.getNextSibling();
-            // The leftmost children are fully-selected
-            // and are removed, and appended, not cloned.
-            if (current != null && parent != root) {
-                if (trvType == CLONE_CONTENTS) {
-                    cloneCurrent = current.cloneNode(true);
-                    cloneParent.appendChild(cloneCurrent);
-                } else
-                    if (trvType == EXTRACT_CONTENTS) {
-                        //cloneCurrent = current;
-                        cloneParent.appendChild(current);
-                    }
-            }
-            current = next;
-        }
-        
-        current = parent;
-        cloneCurrent = cloneParent;
-        
-    }
-    
-    // traverse the "fully-selected" middle...
-    DOM_Node clonedPrevious = frag.getLastChild();
-    current = endRoot.getPreviousSibling();
-    DOM_Node prev = null;
-    while (current != startRoot && current != null) {
-        prev = current.getPreviousSibling();
-        
-        if (trvType == CLONE_CONTENTS) {
-            cloneCurrent = current.cloneNode(true);
-        } else
-            if (trvType == EXTRACT_CONTENTS) {
-                cloneCurrent = current;
-            }
-            
-            frag.insertBefore(cloneCurrent, clonedPrevious);
-            
-            current = prev;
-            clonedPrevious = cloneCurrent;
-    }
-    
-    // collapse the range...
-    if (trvType == EXTRACT_CONTENTS ) {
-        if (partialNode == null) {
-            collapse(true);
-        } else
-            if (partialInt == AFTER) {
-                setStartAfter(partialNode);
-                setEndAfter(partialNode);
-            }
-            else if (partialInt == BEFORE) {
-                setStartBefore(partialNode);
-                setEndBefore(partialNode);
-            }
-    }
-
-    
     return frag;
 }
 
-void RangeImpl::checkReadOnly(DOM_Node& start, DOM_Node& end, 
+/**
+ * Visits the nodes selected by this range when we know
+ * a-priori that the start and end containers are not the
+ * same, but the start container is an ancestor of the end container
+ *
+ */
+DOM_DocumentFragment RangeImpl::traverseCommonStartContainer( DOM_Node endAncestor, int how )
+{
+    DOM_DocumentFragment frag = null;
+    if ( how!=DELETE_CONTENTS)
+        frag = fDocument.createDocumentFragment();
+    DOM_Node n = traverseRightBoundary( endAncestor, how );
+    if ( frag!=null )
+        frag.appendChild( n );
+
+    int endIdx = indexOf( endAncestor, fStartContainer );
+    int cnt = endIdx - fStartOffset;
+    if ( cnt <=0 )
+    {
+        // Collapse to just before the endAncestor, which
+        // is partially selected.
+        if ( how != CLONE_CONTENTS )
+        {
+            setEndBefore( endAncestor );
+            collapse( false );
+        }
+        return frag;
+    }
+
+    n = endAncestor.getPreviousSibling();
+    while( cnt > 0 )
+    {
+        DOM_Node sibling = n.getPreviousSibling();
+        DOM_Node xferNode = traverseFullySelected( n, how );
+        if ( frag!=null )
+            frag.insertBefore( xferNode, frag.getFirstChild() );
+        --cnt;
+        n = sibling;
+    }
+    // Collapse to just before the endAncestor, which
+    // is partially selected.
+    if ( how != CLONE_CONTENTS )
+    {
+        setEndBefore( endAncestor );
+        collapse( false );
+    }
+    return frag;
+}
+
+/**
+ * Visits the nodes selected by this range when we know
+ * a-priori that the start and end containers are not the
+ * same, but the end container is an ancestor of the start container
+ *
+ */
+DOM_DocumentFragment RangeImpl::traverseCommonEndContainer( DOM_Node startAncestor, int how )
+{
+    DOM_DocumentFragment frag = null;
+    if ( how!=DELETE_CONTENTS)
+        frag = fDocument.createDocumentFragment();
+    DOM_Node n = traverseLeftBoundary( startAncestor, how );
+    if ( frag!=null )
+        frag.appendChild( n );
+    int startIdx = indexOf( startAncestor, fEndContainer );
+    ++startIdx;  // Because we already traversed it....
+
+    int cnt = fEndOffset - startIdx;
+    n = startAncestor.getNextSibling();
+    while( cnt > 0 )
+    {
+        DOM_Node sibling = n.getNextSibling();
+        DOM_Node xferNode = traverseFullySelected( n, how );
+        if ( frag!=null )
+            frag.appendChild( xferNode );
+        --cnt;
+        n = sibling;
+    }
+
+    if ( how != CLONE_CONTENTS )
+    {
+        setStartAfter( startAncestor );
+        collapse( true );
+    }
+
+    return frag;
+}
+
+/**
+ * Visits the nodes selected by this range when we know
+ * a-priori that the start and end containers are not
+ * the same, and we also know that neither the start
+ * nor end container is an ancestor of the other.
+ */
+DOM_DocumentFragment RangeImpl::traverseCommonAncestors( DOM_Node startAncestor, DOM_Node endAncestor, int how )
+{
+    DOM_DocumentFragment frag = null;
+    if ( how!=DELETE_CONTENTS)
+        frag = fDocument.createDocumentFragment();
+
+    DOM_Node n = traverseLeftBoundary( startAncestor, how );
+    if ( frag!=null )
+        frag.appendChild( n );
+
+    DOM_Node commonParent = startAncestor.getParentNode();
+    int startOffset = indexOf( startAncestor, commonParent );
+    int endOffset = indexOf( endAncestor, commonParent );
+    ++startOffset;
+
+    int cnt = endOffset - startOffset;
+    DOM_Node sibling = startAncestor.getNextSibling();
+
+    while( cnt > 0 )
+    {
+        DOM_Node nextSibling = sibling.getNextSibling();
+        n = traverseFullySelected( sibling, how );
+        if ( frag!=null )
+            frag.appendChild( n );
+        sibling = nextSibling;
+        --cnt;
+    }
+
+    n = traverseRightBoundary( endAncestor, how );
+    if ( frag!=null )
+        frag.appendChild( n );
+
+    if ( how != CLONE_CONTENTS )
+    {
+        setStartAfter( startAncestor );
+        collapse( true );
+    }
+    return frag;
+}
+
+/**
+ * Traverses the "right boundary" of this range and
+ * operates on each "boundary node" according to the
+ * how parameter.  It is a-priori assumed
+ * by this method that the right boundary does
+ * not contain the range's start container.
+ *
+ * A "right boundary" is best visualized by thinking
+ * of a sample tree:
+ *                 A
+ *                /|\
+ *               / | \
+ *              /  |  \
+ *             B   C   D
+ *            /|\     /|\
+ *           E F G   H I J
+ *
+ * Imagine first a range that begins between the
+ * "E" and "F" nodes and ends between the
+ * "I" and "J" nodes.  The start container is
+ * "B" and the end container is "D".  Given this setup,
+ * the following applies:
+ *
+ * Partially Selected Nodes: B, D<br>
+ * Fully Selected Nodes: F, G, C, H, I
+ *
+ * The "right boundary" is the highest subtree node
+ * that contains the ending container.  The root of
+ * this subtree is always partially selected.
+ *
+ * In this example, the nodes that are traversed
+ * as "right boundary" nodes are: H, I, and D.
+ *
+ */
+DOM_Node RangeImpl::traverseRightBoundary( DOM_Node root, int how )
+{
+    DOM_Node next = getSelectedNode( fEndContainer, fEndOffset-1 );
+    bool isFullySelected = ( next!=fEndContainer );
+
+    if ( next==root )
+        return traverseNode( next, isFullySelected, false, how );
+
+    DOM_Node parent = next.getParentNode();
+    DOM_Node clonedParent = traverseNode( parent, false, false, how );
+
+    while( parent!=null )
+    {
+        while( next!=null )
+        {
+            DOM_Node prevSibling = next.getPreviousSibling();
+            DOM_Node clonedChild =
+                traverseNode( next, isFullySelected, false, how );
+            if ( how!=DELETE_CONTENTS )
+            {
+                clonedParent.insertBefore(
+                    clonedChild,
+                    clonedParent.getFirstChild()
+                );
+            }
+            isFullySelected = true;
+            next = prevSibling;
+        }
+        if ( parent==root )
+            return clonedParent;
+
+        next = parent.getPreviousSibling();
+        parent = parent.getParentNode();
+        DOM_Node clonedGrandParent = traverseNode( parent, false, false, how );
+        if ( how!=DELETE_CONTENTS )
+            clonedGrandParent.appendChild( clonedParent );
+        clonedParent = clonedGrandParent;
+
+    }
+
+    // should never occur
+    return null;
+}
+
+/**
+ * Traverses the "left boundary" of this range and
+ * operates on each "boundary node" according to the
+ * how parameter.  It is a-priori assumed
+ * by this method that the left boundary does
+ * not contain the range's end container.
+ *
+ * A "left boundary" is best visualized by thinking
+ * of a sample tree:
+ *
+ *                 A
+ *                /|\
+ *               / | \
+ *              /  |  \
+ *             B   C   D
+ *            /|\     /|\
+ *           E F G   H I J
+ *
+ * Imagine first a range that begins between the
+ * "E" and "F" nodes and ends between the
+ * "I" and "J" nodes.  The start container is
+ * "B" and the end container is "D".  Given this setup,
+ * the following applies:
+ *
+ * Partially Selected Nodes: B, D<br>
+ * Fully Selected Nodes: F, G, C, H, I
+ *
+ * The "left boundary" is the highest subtree node
+ * that contains the starting container.  The root of
+ * this subtree is always partially selected.
+ *
+ * In this example, the nodes that are traversed
+ * as "left boundary" nodes are: F, G, and B.
+ *
+ */
+DOM_Node RangeImpl::traverseLeftBoundary( DOM_Node root, int how )
+{
+    DOM_Node next = getSelectedNode( getStartContainer(), getStartOffset() );
+    bool isFullySelected = ( next!=getStartContainer() );
+
+    if ( next==root )
+        return traverseNode( next, isFullySelected, true, how );
+
+    DOM_Node parent = next.getParentNode();
+    DOM_Node clonedParent = traverseNode( parent, false, true, how );
+
+    while( parent!=null )
+    {
+        while( next!=null )
+        {
+            DOM_Node nextSibling = next.getNextSibling();
+            DOM_Node clonedChild =
+                traverseNode( next, isFullySelected, true, how );
+            if ( how!=DELETE_CONTENTS )
+                clonedParent.appendChild(clonedChild);
+            isFullySelected = true;
+            next = nextSibling;
+        }
+        if ( parent==root )
+            return clonedParent;
+
+        next = parent.getNextSibling();
+        parent = parent.getParentNode();
+        DOM_Node clonedGrandParent = traverseNode( parent, false, true, how );
+        if ( how!=DELETE_CONTENTS )
+            clonedGrandParent.appendChild( clonedParent );
+        clonedParent = clonedGrandParent;
+
+    }
+
+    // should never occur
+    return null;
+
+}
+
+/**
+ * Utility method for traversing a single node.
+ * Does not properly handle a text node containing both the
+ * start and end offsets.  Such nodes should
+ * have been previously detected and been routed to traverseTextNode.
+ *
+ */
+DOM_Node RangeImpl::traverseNode( DOM_Node n, bool isFullySelected, bool isLeft, int how )
+{
+    if ( isFullySelected )
+        return traverseFullySelected( n, how );
+    if ( n.getNodeType()== DOM_Node::TEXT_NODE )
+        return traverseTextNode( n, isLeft, how );
+    return traversePartiallySelected( n, how );
+}
+
+/**
+ * Utility method for traversing a single node when
+ * we know a-priori that the node if fully
+ * selected.
+ *
+ */
+DOM_Node RangeImpl::traverseFullySelected( DOM_Node n, int how )
+{
+    switch( how )
+    {
+    case CLONE_CONTENTS:
+        return n.cloneNode( true );
+    case EXTRACT_CONTENTS:
+        if ( n.getNodeType()== DOM_Node::DOCUMENT_TYPE_NODE )
+        {
+            throw DOM_DOMException(
+                DOM_DOMException::HIERARCHY_REQUEST_ERR, null);
+        }
+        return n;
+    case DELETE_CONTENTS:
+        n.getParentNode().removeChild(n);
+        return null;
+    }
+    return null;
+}
+
+/**
+ * Utility method for traversing a single node when
+ * we know a-priori that the node if partially
+ * selected and is not a text node.
+ *
+ */
+DOM_Node RangeImpl::traversePartiallySelected( DOM_Node n, int how )
+{
+    switch( how )
+    {
+    case DELETE_CONTENTS:
+        return null;
+    case CLONE_CONTENTS:
+    case EXTRACT_CONTENTS:
+        return n.cloneNode( false );
+    }
+    return null;
+}
+
+/**
+ * Utility method for traversing a text node that we know
+ * a-priori to be on a left or right boundary of the range.
+ * This method does not properly handle text nodes that contain
+ * both the start and end points of the range.
+ *
+ */
+DOM_Node RangeImpl::traverseTextNode( DOM_Node n, bool isLeft, int how )
+{
+    DOMString txtValue = n.getNodeValue();
+    DOMString newNodeValue;
+    DOMString oldNodeValue;
+
+    if ( isLeft )
+    {
+        int offset = getStartOffset();
+        newNodeValue = txtValue.substringData( offset , fStartContainer.getNodeValue().length());
+        oldNodeValue = txtValue.substringData( 0, offset );
+    }
+    else
+    {
+        int offset = getEndOffset();
+        newNodeValue = txtValue.substringData( 0, offset );
+        oldNodeValue = txtValue.substringData( offset , fEndContainer.getNodeValue().length() );
+    }
+
+    if ( how != CLONE_CONTENTS )
+        n.setNodeValue( oldNodeValue );
+    if ( how==DELETE_CONTENTS )
+        return null;
+    DOM_Node newNode = n.cloneNode( false );
+    newNode.setNodeValue( newNodeValue );
+    return newNode;
+}
+
+/**
+ * Utility method to retrieve a child node by index.  This method
+ * assumes the caller is trying to find out which node is
+ * selected by the given index.  Note that if the index is
+ * greater than the number of children, this implies that the
+ * first node selected is the parent node itself.
+ *
+ */
+DOM_Node RangeImpl::getSelectedNode( DOM_Node container, int offset )
+{
+    if ( container.getNodeType() == DOM_Node::TEXT_NODE )
+        return container;
+
+    // This case is an important convenience for
+    // traverseRightBoundary()
+    if ( offset<0 )
+        return container;
+
+    DOM_Node child = container.getFirstChild();
+    while( child!=null && offset > 0 )
+    {
+        --offset;
+        child = child.getNextSibling();
+    }
+    if ( child!=null )
+        return child;
+    return container;
+}
+
+void RangeImpl::checkReadOnly(DOM_Node& start, DOM_Node& end,
                               unsigned int startOffset, unsigned int endOffset)
 {
     if ((start == null) || (end == null) ) return;
@@ -1399,7 +1516,7 @@ void RangeImpl::checkReadOnly(DOM_Node& start, DOM_Node& end,
     DOM_Node sNode = start.getFirstChild();
     for(unsigned int i = 0; i<startOffset; i++)
         sNode = sNode.getNextSibling();
-    
+
     DOM_Node eNode;
     if (end.getNodeType() == DOM_Node::TEXT_NODE) {
         eNode = end; //need to check only till this node
@@ -1415,7 +1532,7 @@ void RangeImpl::checkReadOnly(DOM_Node& start, DOM_Node& end,
 
 void RangeImpl::recurseTreeAndCheck(DOM_Node& start, DOM_Node& end)
 {
-    for(DOM_Node node=start; node != null, node !=end; node=node.getNextSibling()) 
+    for(DOM_Node node=start; node != null && node !=end; node=node.getNextSibling())
     {
         if (node.fImpl->isReadOnly()) {
             throw DOM_DOMException(
@@ -1512,26 +1629,22 @@ void RangeImpl::updateRangeForDeletedNode(NodeImpl* node)
     
     if (node->getParentNode() == fEndContainer.fImpl) {
         unsigned short index = indexOf(tNode, fEndContainer);
-        if ( fEndOffset < index) {
+        if ( fEndOffset > index) {
             fEndOffset--;
         }
     }
     
     if (node->getParentNode() != fStartContainer.fImpl
-        &&  node->getParentNode() != fEndContainer.fImpl) {
+        ||  node->getParentNode() != fEndContainer.fImpl) {
         if (isAncestorOf(node, fStartContainer)) {
-            if (( node->getParentNode()->getNodeType() == DOM_Node::DOCUMENT_FRAGMENT_NODE) )
-                return; //if the node's up in the heirarchy and its parent is doc-frag ignore
             DOM_Node tpNode(node->getParentNode());
             setStartContainer( tpNode );
-            fStartOffset = indexOf( tNode, tpNode)-1;
+            fStartOffset = indexOf( tNode, tpNode);
         }
         if (isAncestorOf(node, fEndContainer)) {
-            if (( node->getParentNode()->getNodeType() == DOM_Node::DOCUMENT_FRAGMENT_NODE))
-                return;
             DOM_Node tpNode(node->getParentNode());
             setEndContainer( tpNode );
-            fEndOffset = indexOf( tNode, tpNode)-1;
+            fEndOffset = indexOf( tNode, tpNode);
         }
     }
     
@@ -1541,7 +1654,7 @@ void RangeImpl::updateRangeForInsertedNode(NodeImpl* node) {
     if (node == null) return;
     
     if (node->getParentNode() == fStartContainer.fImpl) {
-        unsigned int index = indexOf(DOM_Node(node), fStartContainer) -1;
+        unsigned int index = indexOf(DOM_Node(node), fStartContainer);
         if (index < fStartOffset) {
             fStartOffset++;
         }
@@ -1549,10 +1662,7 @@ void RangeImpl::updateRangeForInsertedNode(NodeImpl* node) {
     
     if (node->getParentNode() == fEndContainer.fImpl) {
         unsigned int index = indexOf(DOM_Node(node), fEndContainer);
-        //if index is equal then the text is inserted before the end of 
-        //range so should get included in the range
-        
-        if (index <= fEndOffset) {
+        if (index < fEndOffset) {
             fEndOffset++;
         }
     }

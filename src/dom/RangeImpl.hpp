@@ -133,7 +133,8 @@ public:
 private:
     enum TraversalType {
         EXTRACT_CONTENTS = 1,
-        CLONE_CONTENTS   = 2
+        CLONE_CONTENTS   = 2,
+        DELETE_CONTENTS  = 3
     };
 
     enum TraversePoint {
@@ -151,6 +152,8 @@ private:
     //misc functions
     void        validateNode(const DOM_Node& node) const;
     bool        isValidAncestorType(const DOM_Node& node) const; 
+    bool        hasLegalRootContainer(const DOM_Node& node) const;
+    bool        isLegalContainedNode(const DOM_Node& node ) const;
     void        checkIndex(const DOM_Node& node, unsigned int offset) const;
     static bool isAncestorOf(const DOM_Node& a, const DOM_Node& b);
     
@@ -163,6 +166,18 @@ private:
                     unsigned int starOffset, unsigned int endOffset);
     void        recurseTreeAndCheck(DOM_Node& start, DOM_Node& end);
     DOM_Node    removeChild(DOM_Node& parent, DOM_Node& child);
+
+    DOM_DocumentFragment traverseSameContainer( int how );
+    DOM_DocumentFragment traverseCommonStartContainer( DOM_Node endAncestor, int how );
+    DOM_DocumentFragment traverseCommonEndContainer( DOM_Node startAncestor, int how );
+    DOM_DocumentFragment traverseCommonAncestors( DOM_Node startAncestor, DOM_Node endAncestor, int how );
+    DOM_Node    traverseRightBoundary( DOM_Node root, int how );
+    DOM_Node    traverseLeftBoundary( DOM_Node root, int how );
+    DOM_Node    traverseNode( DOM_Node n, bool isFullySelected, bool isLeft, int how );
+    DOM_Node    traverseFullySelected( DOM_Node n, int how );
+    DOM_Node    traversePartiallySelected( DOM_Node n, int how );
+    DOM_Node    traverseTextNode( DOM_Node n, bool isLeft, int how );
+    DOM_Node    getSelectedNode( DOM_Node container, int offset );
 
    
     //private data 
