@@ -56,8 +56,11 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:06:21  twl
- * Initial revision
+ * Revision 1.2  1999/11/22 20:41:26  abagchi
+ * Changed 'intlFiles/Locales' to 'icu/data'
+ *
+ * Revision 1.1.1.1  1999/11/09 01:06:21  twl
+ * Initial checkin
  *
  * Revision 1.4  1999/11/08 20:45:33  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -695,7 +698,7 @@ XMLTransService* XMLPlatformUtils::makeTransService()
     if (!::GetEnvironmentVariableA("ICU_DATA", tmpBuf, 4096))
     {
         strcpy(tmpBuf, fgLibLocation);
-        strcat(tmpBuf, "intlFiles\\Locales\\");
+        strcat(tmpBuf, "icu\\data\\");
         ICUTransService::setICUPath(tmpBuf);
     }
     return new ICUTransService;
