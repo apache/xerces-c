@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.34  2002/11/12 17:52:01  tng
+ * Test update: do not issue "Test Run Successfully" if there was an error.
+ *
  * Revision 1.33  2002/09/23 21:00:14  tng
  * DOM L3: fix to isDefaultNamespace.  Patch from Gareth Reakes.
  *
@@ -1052,7 +1055,13 @@ int main(int argc, char **argv)
 
     XMLPlatformUtils::Terminate();
 
-    if (OK) printf("Test Run Successfully\n");
+    if (!OK) {
+        printf("Test Failed\n");
+        return 4;
+    }
+
+    printf("Test Run Successfully\n");
+
     return 0;
 };
 

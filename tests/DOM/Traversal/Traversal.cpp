@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.14  2002/11/12 17:52:12  tng
+ * Test update: do not issue "Test Run Successfully" if there was an error.
+ *
  * Revision 1.13  2002/11/05 21:47:36  tng
  * Explicit code using namespace in application.
  *
@@ -123,12 +126,16 @@
 
 XERCES_CPP_NAMESPACE_USE
 
+bool errorOccurred = false;
+
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
 void tassert(bool c, const char *file, int line)
 {
-    if (!c)
+    if (!c) {
         printf("Failure.  Line %d,   file %s\n", line, file);
+        errorOccurred = true;
+    }
 };
 
 
@@ -137,14 +144,18 @@ void tassert(bool c, const char *file, int line)
     try {                                                           \
     operation;                                                      \
     printf(" Error: no exception thrown at line %d\n", __LINE__);   \
-}                                                                   \
+    errorOccurred = true;                                           \
+    }                                                               \
     catch (DOMException &e) {                                       \
-    if (e.code != expected_exception)                       \
-    printf(" Wrong exception code: %d at line %d\n", e.code, __LINE__); \
-}                                                                 \
+    if (e.code != expected_exception) {                             \
+        printf(" Wrong exception code: %d at line %d\n", e.code, __LINE__); \
+        errorOccurred = true;                                       \
+    }                                                               \
+    }                                                               \
     catch (...)   {                                                 \
-    printf(" Wrong exception thrown at line %d\n", __LINE__);       \
-}                                                                   \
+        printf(" Wrong exception thrown at line %d\n", __LINE__);   \
+        errorOccurred = true;                                       \
+    }                                                               \
 }
 
 class  MyFilter : public DOMNodeFilter {
@@ -613,6 +624,11 @@ int  main()
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
+
+    if (errorOccurred) {
+        printf("Test Failed\n");
+        return 4;
+    }
 
     printf("Test Run Successfully\n");
     return 0;

@@ -79,12 +79,16 @@
 
 XERCES_CPP_NAMESPACE_USE
 
+bool errorOccurred = false;
+
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)
 
 void tassert(bool c, const char *file, int line)
 {
-    if (!c)
+    if (!c) {
+        errorOccurred = true;
         printf("Failure.  Line %d,   file %s\n", line, file);
+    }
 };
 
 
@@ -93,14 +97,24 @@ void tassert(bool c, const char *file, int line)
     try {                                                           \
     operation;                                                      \
     printf(" Error: no exception thrown at line %d\n", __LINE__);   \
-}                                                                   \
+    errorOccurred = true;                                           \
+    }                                                               \
+    catch (DOMRangeException &e) {                                  \
+    if (e.code != expected_exception) {                             \
+        printf(" Wrong RangeException code: %d at line %d\n", e.code, __LINE__); \
+        errorOccurred = true;                                       \
+    }                                                               \
+    }                                                               \
     catch (DOMException &e) {                                       \
-    if (e.code != expected_exception)                       \
-    printf(" Wrong exception code: %d at line %d\n", e.code, __LINE__); \
-}                                                                 \
+    if (e.code != expected_exception) {                             \
+        printf(" Wrong exception code: %d at line %d\n", e.code, __LINE__); \
+        errorOccurred = true;                                       \
+    }                                                               \
+    }                                                               \
     catch (...)   {                                                 \
-    printf(" Wrong exception thrown at line %d\n", __LINE__);       \
-}                                                                   \
+        printf(" Wrong exception thrown at line %d\n", __LINE__);   \
+        errorOccurred = true;                                       \
+    }                                                               \
 }
 //Define a bunch of XMLCh* string for comparison
 XMLCh xa[] = {chLatin_a, chNull};
@@ -962,6 +976,12 @@ int  main()
             TASSERT(!XMLString::compareString(newtestrange->getEndContainer()->getNodeName(),xfoo));
             TASSERT(!XMLString::compareString(newtestrange->toString(),xabHellocd));
 
+            // Now do some exception test
+            newrange->detach();
+            EXCEPTION_TEST(newrange->setStart( moo, 0 ), DOMException::INVALID_STATE_ERR);
+            EXCEPTION_TEST(newtestrange->setStartBefore(moo), DOMRangeException::INVALID_NODE_TYPE_ERR);
+
+
             doc->release();
             doc2->release();
             doc3->release();
@@ -970,6 +990,11 @@ int  main()
 
     // And call the termination method
     XMLPlatformUtils::Terminate();
+
+    if (errorOccurred) {
+        printf("Test Failed\n");
+        return 4;
+    }
 
     printf("Test Run Successfully\n");
 
