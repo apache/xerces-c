@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.48  2005/01/06 21:39:43  amassari
+ * Removed warnings
+ *
  * Revision 1.47  2004/12/14 16:16:36  cargilld
  * Fix for xercesc-684: Add accessor to XMLScanner to get the current grammar type.
  *
@@ -746,8 +749,8 @@ protected:
     virtual void sendCharData(XMLBuffer& toSend) = 0;
 
     //return owned by the caller
-    virtual InputSource* resolveSystemId(const XMLCh* const sysId
-                                        ,const XMLCh* const pubId) {return 0;};
+    virtual InputSource* resolveSystemId(const XMLCh* const /*sysId*/
+                                        ,const XMLCh* const /*pubId*/) {return 0;};
 
     // -----------------------------------------------------------------------
     //  Protected scanning methods

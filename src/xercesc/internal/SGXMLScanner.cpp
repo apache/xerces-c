@@ -872,7 +872,6 @@ void SGXMLScanner::scanEndTag(bool& gotData)
     // Make sure that its the end of the element that we expect
     XMLCh *elemName = fElemStack.getCurrentSchemaElemName();
     const ElemStack::StackElem* topElem = fElemStack.popTop(); 
-    XMLElementDecl *tempElement = topElem->fThisElement; 
     if (!fReaderMgr.skippedString(elemName))
     {
         emitError
@@ -2379,9 +2378,6 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if (tempDV && tempDV->getWSFacet() != DatatypeValidator::PRESERVE)
                 {
                     // normalize the attribute according to schema whitespace facet
-                    XMLBufBid bbtemp(&fBufMgr);
-                    XMLBuffer& tempBuf = bbtemp.getBuffer();
-
                     ((SchemaValidator*) fValidator)->normalizeWhiteSpace(tempDV, xsNormalized, fWSNormalizeBuf);
                     xsNormalized = fWSNormalizeBuf.getRawBuffer();
                     if (fNormalizeData && fValidate) {
@@ -3194,7 +3190,6 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
 
         // should not be necessary once PSVI method on element decls
         // are removed
-        const ElemStack::StackElem *topElem = fElemStack.topElement();
         if (charOpts == XMLElementDecl::NoCharData)
         {
             // They definitely cannot handle any type of char data

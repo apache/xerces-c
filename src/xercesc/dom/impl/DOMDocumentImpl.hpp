@@ -385,11 +385,11 @@ inline void * operator new(size_t amt, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumen
 //    no matching operator delete found; memory will not be freed if initialization throws an exception
 // ---------------------------------------------------------------------------
 #if _MSC_VER >= 1200 /* VC++ 6.0 */
-inline void operator delete(void* ptr, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc)
+inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * /*doc*/)
 {
     return;
 }
-inline void operator delete(void* ptr, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl::NodeObjectType type)
+inline void operator delete(void* /*ptr*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument * /*doc*/, XERCES_CPP_NAMESPACE_QUALIFIER DOMDocumentImpl::NodeObjectType /*type*/)
 {
     return;
 }

@@ -855,7 +855,7 @@ void XMLUri::initializePath(const XMLCh* const uriSpec)
     int index = 0;
     int start = 0;
     int end = XMLString::stringLen(uriSpec);
-    XMLCh testChar;
+    XMLCh testChar = 0;
 
     // path - everything up to query string or fragment
     if (start < end)

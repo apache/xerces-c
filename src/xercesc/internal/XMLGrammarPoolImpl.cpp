@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2005/01/06 21:39:43  amassari
+ * Removed warnings
+ *
  * Revision 1.25  2004/11/09 03:09:21  peiyongz
  * Storer_NewerThan_Loader
  *
@@ -391,7 +394,7 @@ void XMLGrammarPoolImpl::deserializeGrammars(BinInputStream* const binIn)
         //version information
         unsigned int  StorerLevel;
         serEng>>StorerLevel;
-        serEng.fStorerLevel = StorerLevel;
+        serEng.fStorerLevel = (short)StorerLevel;
 
         //if the storer level is after the loader level
         //the loader shall not read the data any more

@@ -77,7 +77,6 @@ void XSAXMLScanner::scanEndTag(bool& gotData)
     // Make sure that its the end of the element that we expect
     XMLCh *elemName = fElemStack.getCurrentSchemaElemName();
     const ElemStack::StackElem* topElem = fElemStack.popTop(); 
-    XMLElementDecl *tempElement = topElem->fThisElement; 
     if (!fReaderMgr.skippedString(elemName))
     {
         emitError

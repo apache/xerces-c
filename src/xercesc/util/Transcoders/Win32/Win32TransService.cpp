@@ -605,7 +605,7 @@ Win32Transcoder::transcodeFrom( const   XMLByte* const      srcData
         //  If we are looking at a leading byte of a multibyte sequence,
         //  then we are going to eat 2 bytes, else 1.
         //
-        const unsigned int toEat = ::IsDBCSLeadByteEx(fWinCP, *inPtr) ?
+        unsigned char toEat = ::IsDBCSLeadByteEx(fWinCP, *inPtr) ?
                                     2 : 1;
 
         // Make sure a whol char is in the source
@@ -745,7 +745,7 @@ bool Win32Transcoder::canTranscodeTo(const unsigned int toCheck) const
     if (toCheck & 0xFFFF0000)
     {
         srcBuf[0] = XMLCh((toCheck >> 10) + 0xD800);
-        srcBuf[1] = XMLCh(toCheck & 0x3FF) + 0xDC00;
+        srcBuf[1] = XMLCh((toCheck & 0x3FF) + 0xDC00);
         srcCount++;
     }
      else
@@ -803,7 +803,7 @@ Win32LCPTranscoder::~Win32LCPTranscoder()
 //  Win32LCPTranscoder: Implementation of the virtual transcoder interface
 // ---------------------------------------------------------------------------
 unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText
-                                                  , MemoryManager* const manager)
+                                                  , MemoryManager* const /*manager*/)
 {
     if (!srcText)
         return 0;
@@ -813,7 +813,7 @@ unsigned int Win32LCPTranscoder::calcRequiredSize(const char* const srcText
 
 
 unsigned int Win32LCPTranscoder::calcRequiredSize(const XMLCh* const srcText
-                                                  , MemoryManager* const manager)
+                                                  , MemoryManager* const /*manager*/)
 {
     if (!srcText)
         return 0;
@@ -947,7 +947,7 @@ XMLCh* Win32LCPTranscoder::transcode(const char* const toTranscode,
 bool Win32LCPTranscoder::transcode( const   char* const     toTranscode
                                     ,       XMLCh* const    toFill
                                     , const unsigned int    maxChars
-                                    , MemoryManager* const  manager)
+                                    , MemoryManager* const  /*manager*/)
 {
     // Check for a couple of psycho corner cases
     if (!toTranscode || !maxChars)
@@ -972,7 +972,7 @@ bool Win32LCPTranscoder::transcode( const   char* const     toTranscode
 bool Win32LCPTranscoder::transcode( const   XMLCh* const    toTranscode
                                     ,       char* const     toFill
                                     , const unsigned int    maxBytes
-                                    , MemoryManager* const  manager)
+                                    , MemoryManager* const  /*manager*/)
 {
     // Watch for a couple of pyscho corner cases
     if (!toTranscode || !maxBytes)

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2005/01/06 21:39:44  amassari
+ * Removed warnings
+ *
  * Revision 1.9  2004/09/16 13:32:04  amassari
  * Updated error message for UPA to also state the complex type that is failing the test
  *
@@ -242,7 +245,7 @@ inline void MixedContentModel::checkUniqueParticleAttribution
       , XMLStringPool*    const 
       , XMLValidator*     const
       , unsigned int*     const pContentSpecOrgURI
-      , const XMLCh*            pComplexTypeName /*= 0*/
+      , const XMLCh*            /*pComplexTypeName*/ /*= 0*/
     )
 {
     // rename back

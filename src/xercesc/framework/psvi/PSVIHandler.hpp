@@ -16,6 +16,9 @@
 
  /*
   * $Log$
+  * Revision 1.11  2005/01/06 21:39:43  amassari
+  * Removed warnings
+  *
   * Revision 1.10  2004/09/23 21:22:15  peiyongz
   * Documentation
   *
@@ -122,8 +125,7 @@ public:
           const XMLCh*        const localName 
         , const XMLCh*        const uri
         ,       PSVIElement *       elementInfo
-    )
-    { }
+    );
 
     /**
       * Enables PSVI information about attributes to be passed back to the
@@ -164,6 +166,13 @@ private:
     PSVIHandler(const PSVIHandler&);
     PSVIHandler& operator=(const PSVIHandler&);
 };
+
+inline void PSVIHandler::handlePartialElementPSVI(const XMLCh*        const /*localName*/
+                                                , const XMLCh*        const /*uri*/
+                                                ,       PSVIElement *       /*elementInfo*/
+                                                 )
+{
+}
 
 XERCES_CPP_NAMESPACE_END
 

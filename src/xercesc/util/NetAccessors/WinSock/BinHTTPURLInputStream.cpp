@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2005/01/06 21:39:44  amassari
+ * Removed warnings
+ *
  * Revision 1.9  2004/09/08 13:56:36  peiyongz
  * Apache License Version 2.0
  *
@@ -231,22 +234,22 @@ unsigned short BinHTTPURLInputStream::htons(unsigned short hostshort)
 	return (*gWShtons)(hostshort);
 }
 
-unsigned short BinHTTPURLInputStream::socket(int af,int type,int protocol)
+unsigned int BinHTTPURLInputStream::socket(int af,int type,int protocol)
 {
 	return (*gWSsocket)(af,type,protocol);
 }
 
-int BinHTTPURLInputStream::connect(unsigned short s,const sockaddr* name,int namelen)
+int BinHTTPURLInputStream::connect(unsigned int s,const sockaddr* name,int namelen)
 {
 	return (*gWSconnect)(s,name,namelen);
 }
 
-int BinHTTPURLInputStream::send(unsigned short s,const char* buf,int len,int flags)
+int BinHTTPURLInputStream::send(unsigned int s,const char* buf,int len,int flags)
 {
 	return (*gWSsend)(s,buf,len,flags);
 }
 
-int BinHTTPURLInputStream::recv(unsigned short s,char* buf,int len,int flags)
+int BinHTTPURLInputStream::recv(unsigned int s,char* buf,int len,int flags)
 {
 	return (*gWSrecv)(s,buf,len,flags);
 }

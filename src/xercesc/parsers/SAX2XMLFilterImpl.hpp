@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2005/01/06 21:39:44  amassari
+ * Removed warnings
+ *
  * Revision 1.1  2004/12/24 19:21:46  amassari
  * Add support for SAX2 filters (jira# 1133)
  *
@@ -1428,19 +1431,19 @@ inline void SAX2XMLFilterImpl::setEntityResolver(EntityResolver* const resolver)
     fEntityResolver = resolver;
 }
 
-inline void SAX2XMLFilterImpl::setLexicalHandler(LexicalHandler* const handler)
+inline void SAX2XMLFilterImpl::setLexicalHandler(LexicalHandler* const /*handler*/)
 {
 }
 
-inline void SAX2XMLFilterImpl::setDeclarationHandler(DeclHandler* const handler)
+inline void SAX2XMLFilterImpl::setDeclarationHandler(DeclHandler* const /*handler*/)
 {
 }
 
-inline void SAX2XMLFilterImpl::installAdvDocHandler(XMLDocumentHandler* const toInstall)
+inline void SAX2XMLFilterImpl::installAdvDocHandler(XMLDocumentHandler* const /*toInstall*/)
 {
 }
 
-inline bool SAX2XMLFilterImpl::removeAdvDocHandler(XMLDocumentHandler* const toRemove)
+inline bool SAX2XMLFilterImpl::removeAdvDocHandler(XMLDocumentHandler* const /*toRemove*/)
 {
     return false;
 }

@@ -788,15 +788,15 @@ void AbstractDOMParser::endElement( const   XMLElementDecl&
         fWithinElement = false;
 }
 
-void AbstractDOMParser::elementTypeInfo( const   XMLCh * const  typeName
-                           , const XMLCh *const                 typeURI)
+void AbstractDOMParser::elementTypeInfo( const XMLCh * const  /*typeName*/
+                                       , const XMLCh * const  /*typeURI*/)
 {
 }
 
 
-void AbstractDOMParser::ignorableWhitespace(const   XMLCh* const    chars
-                                    , const unsigned int    length
-                                    , const bool)
+void AbstractDOMParser::ignorableWhitespace(  const XMLCh* const    chars
+                                            , const unsigned int    length
+                                            , const bool)
 {
     // Ignore chars before the root element
     if (!fWithinElement || !fIncludeIgnorableWhitespace)

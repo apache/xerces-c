@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2005/01/06 21:39:44  amassari
+ * Removed warnings
+ *
  * Revision 1.6  2004/09/08 13:56:36  peiyongz
  * Apache License Version 2.0
  *
@@ -137,10 +140,10 @@ private :
 	inline static unsigned long inet_addr(const char* cp);
 	inline static hostent* gethostbyaddr(const char* addr,int len,int type);
 	inline static unsigned short htons(unsigned short hostshort);
-	inline static unsigned short socket(int af,int type,int protocol);
-	inline static int connect(unsigned short s,const sockaddr* name,int namelen);
-	inline static int send(unsigned short s,const char* buf,int len,int flags);
-	inline static int recv(unsigned short s,char* buf,int len,int flags);
+	inline static unsigned int socket(int af,int type,int protocol);
+	inline static int connect(unsigned int s,const sockaddr* name,int namelen);
+	inline static int send(unsigned int s,const char* buf,int len,int flags);
+	inline static int recv(unsigned int s,char* buf,int len,int flags);
 	inline static int shutdown(unsigned int s,int how);
 	inline static int closesocket(unsigned int socket);
 };

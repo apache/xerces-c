@@ -103,7 +103,7 @@ void DOMConfigurationImpl::setParameter(const XMLCh* name, const void* value) {
     DOMConfigurationFeature whichFlag;
     try {
         whichFlag = getFeatureFlag(lowerCaseName);
-    } catch(DOMException e) {
+    } catch(DOMException&) {
         // must not be a boolean parameter
         isBooleanParameter = false;
     }
@@ -143,7 +143,7 @@ const void* DOMConfigurationImpl::getParameter(const XMLCh* name) const {
     DOMConfigurationFeature whichFlag;
     try {
         whichFlag = getFeatureFlag(lowerCaseName);
-    } catch (DOMException e) {
+    } catch (DOMException&) {
         // must not be a boolean parameter
         isBooleanParameter = false;
     }
@@ -196,7 +196,7 @@ bool DOMConfigurationImpl::canSetParameter(const XMLCh* name, const void* value)
     try {
         whichFlag = getFeatureFlag(lowerCaseName);
         booleanValue = *((bool*)value);
-    } catch (DOMException e) {
+    } catch (DOMException&) {
         // must not be a boolean parameter
         isBooleanParameter = false;
     }

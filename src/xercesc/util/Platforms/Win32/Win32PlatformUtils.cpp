@@ -158,7 +158,7 @@ unsigned int XMLPlatformUtils::fileSize(FileHandle theFile
 }
 
 FileHandle XMLPlatformUtils::openFile(const char* const fileName
-                                      , MemoryManager* const manager)
+                                      , MemoryManager* const /*manager*/)
 {
     FileHandle retVal = ::CreateFileA
     (
@@ -305,7 +305,7 @@ FileHandle XMLPlatformUtils::openFile(const XMLCh* const fileName
 }
 
 FileHandle XMLPlatformUtils::openFileToWrite(const char* const fileName
-                                             , MemoryManager* const manager)
+                                             , MemoryManager* const /*manager*/)
 {
     FileHandle retVal = ::CreateFileA
     (
@@ -500,8 +500,6 @@ XMLPlatformUtils::writeBufferToFile( FileHandle     const  theFile
         else
             return;
     }
-
-    return;
 }
 
 void XMLPlatformUtils::resetFile(FileHandle theFile
@@ -558,7 +556,7 @@ XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath,
 }
 
 bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck
-                                  , MemoryManager* const manager)
+                                  , MemoryManager* const /*manager*/)
 {
     // Check for pathological case of empty path
     if (!toCheck[0])

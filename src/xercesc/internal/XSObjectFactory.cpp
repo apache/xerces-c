@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.24  2005/01/06 21:39:43  amassari
+ * Removed warnings
+ *
  * Revision 1.23  2004/09/08 13:56:14  peiyongz
  * Apache License Version 2.0
  *
@@ -584,7 +587,7 @@ XSObjectFactory::addOrFind(ComplexTypeInfo* const typeInfo,
             (typeInfo->getDatatypeValidator()))
             xsSimpleType = addOrFind(typeInfo->getDatatypeValidator(), xsModel);
         
-        unsigned int attCount;
+        unsigned int attCount=0;
         if (typeInfo->hasAttDefs())
         {
             SchemaAttDefList& attDefList = (SchemaAttDefList&) typeInfo->getAttDefList();

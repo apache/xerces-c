@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2005/01/06 21:39:44  amassari
+ * Removed warnings
+ *
  * Revision 1.13  2004/12/10 10:52:16  cargilld
  * Make setInputBufferSize virtual.  Fix from Christian Will.
  *
@@ -939,7 +942,7 @@ public:
       *
       * @param bufferSize The maximum input buffer size
       */
-    virtual void setInputBufferSize(const size_t bufferSize) {};
+    virtual void setInputBufferSize(const size_t bufferSize);
 
     //@}
 
@@ -985,6 +988,10 @@ private :
     SAX2XMLReader& operator=(const SAX2XMLReader&);
 
 };
+
+inline void SAX2XMLReader::setInputBufferSize(const size_t /*bufferSize*/) 
+{
+}
 
 XERCES_CPP_NAMESPACE_END
 
