@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.35  2002/11/21 14:24:39  gareth
+ * Tests added for isId, setIdAttribute, setIdAttributeNS, setIdAttributeNode
+ *
  * Revision 1.34  2002/11/12 17:52:01  tng
  * Test update: do not issue "Test Run Successfully" if there was an error.
  *
@@ -138,7 +141,7 @@
 #include <xercesc/util/XMLException.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
-
+#include <xercesc/dom/DOMException.hpp>
 
 #define EXCEPTIONSTEST(operation, expectedException, resultFlag, testNum) \
     {                                                               \
@@ -1532,6 +1535,30 @@ bool DOMTest::testAttr(DOMDocument* document)
         OK = false;
     }
 
+    
+
+    //isID tests
+
+    XMLString::transcode("http://nsa", tempStr4, 3999);
+    XMLString::transcode("aa", tempStr5, 3999);
+
+    DOMAttr *idAtt = document->createAttributeNS(tempStr4, tempStr5);
+    testElementNode->setAttributeNode(idAtt);
+    
+
+    if(idAtt->isID()) {
+        fprintf(stderr, "isID failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    testElementNode->setIdAttributeNode(idAtt);
+
+    if(!idAtt->isID()) {
+        fprintf(stderr, "isID failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    //clean up
+    testElementNode->removeAttributeNode(idAtt);
 
     if (! OK)
         printf("\n*****The DOMAttr* method calls listed above failed, all others worked correctly.*****\n");
@@ -3351,6 +3378,83 @@ bool DOMTest::testElement(DOMDocument* document)
     }
 
 
+    //setIdAttribute tests
+
+    XMLString::transcode("http://nsa", tempStr4, 3999);
+    XMLString::transcode("aa", tempStr5, 3999);
+
+    DOMAttr *idAtt = document->createAttributeNS(tempStr4, tempStr5);
+
+    //tests for node not being on testElementNode
+    EXCEPTIONSTEST(testElementNode->setIdAttribute(tempStr4), DOMException::NOT_FOUND_ERR, OK,  1000);
+    EXCEPTIONSTEST(testElementNode->setIdAttributeNS(tempStr4, tempStr5), DOMException::NOT_FOUND_ERR, OK,  1001);
+    EXCEPTIONSTEST(testElementNode->setIdAttributeNode(idAtt), DOMException::NOT_FOUND_ERR, OK,  1002);
+
+    //should test NO_MODIFICATION_ALLOWED_ERR but dont know how to without direct access to DOMAttrImpl.
+
+    idAtt = document->createAttributeNS(tempStr4, tempStr5);
+    idAtt->setValue(tempStr3);
+    testElementNode->setAttributeNode(idAtt);
+    testElementNode->setIdAttributeNode(idAtt);
+
+    if(!idAtt->isID()) {
+        fprintf(stderr, "setIdAttributeNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    
+    DOMElement *idEle = document->getElementById(tempStr3);
+
+    if(!idEle || !idEle->isSameNode(testElementNode)) {
+        fprintf(stderr, "setIdAttributeNode failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    testElementNode->removeAttributeNode(idAtt);
+
+    
+    XMLString::transcode("someval", tempStr3, 3999);
+    idAtt = document->createAttributeNS(tempStr4, tempStr5);
+    idAtt->setValue(tempStr3);
+    testElementNode->setAttributeNode(idAtt);
+    testElementNode->setIdAttributeNS(tempStr4, tempStr5);
+
+    if(!idAtt->isID()) {
+        fprintf(stderr, "setIdAttributeNS failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    
+    idEle = document->getElementById(tempStr3);
+
+    if(!idEle || !idEle->isSameNode(testElementNode)) {
+        fprintf(stderr, "setIdAttributeNS failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    testElementNode->removeAttributeNode(idAtt);
+    idAtt->release();
+
+
+    XMLString::transcode("somevalDif", tempStr3, 3999);
+    idAtt = document->createAttribute(tempStr5);
+    idAtt->setValue(tempStr3);
+    testElementNode->setAttributeNode(idAtt);
+    testElementNode->setIdAttribute(tempStr5);
+
+    if(!idAtt->isID()) {
+        fprintf(stderr, "setIdAttribute failed in line %i\n", __LINE__);
+        OK = false;
+    }
+    
+    idEle = document->getElementById(tempStr3);
+
+    if(!idEle || !idEle->isSameNode(testElementNode)) {
+        fprintf(stderr, "setIdAttribute failed in line %i\n", __LINE__);
+        OK = false;
+    }
+
+    testElementNode->removeAttributeNode(idAtt);
+    idAtt->release();
+    
     if (!OK)
         printf("\n*****The DOMElement* method calls listed above failed, all others worked correctly.*****\n");
     return OK;
