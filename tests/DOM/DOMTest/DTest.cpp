@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.30  2002/08/21 20:59:11  tng
+ * release the cloned document.
+ *
  * Revision 1.29  2002/08/19 19:56:08  tng
  * DOM L3: test DOMNode::isDefaultNamespace.   Added by Gareth Reakes.
  *
@@ -2310,6 +2313,7 @@ bool DOMTest::testDocument(DOMDocument* document)
         fprintf(stderr, "Warning!!! Deep clone of the document failed!\n");
         OK = false;
     }
+    node2->release();
 
     // Deep clone test comparison is also in testNode
 
