@@ -56,8 +56,12 @@
 
 /**
  * $Log$
- * Revision 1.1  1999/11/09 01:03:34  twl
- * Initial revision
+ * Revision 1.2  2000/01/20 01:57:07  rahulj
+ * Reported by marc@ist.de
+ * Removed extra 'const' qualifiers.
+ *
+ * Revision 1.1.1.1  1999/11/09 01:03:34  twl
+ * Initial checkin
  *
  * Revision 1.2  1999/11/08 20:45:40  rahul
  * Swat for adding in Product name and CVS comment log variable.
@@ -115,7 +119,7 @@ public :
     // -----------------------------------------------------------------------
     //  Setter methods
     // -----------------------------------------------------------------------
-    const void setDeclaredInIntSubset(const bool newValue);
+    void setDeclaredInIntSubset(const bool newValue);
     void setIsParameter(const bool newValue);
     void setIsSpecialChar(const bool newValue);
 
@@ -220,7 +224,7 @@ inline bool DTDEntityDecl::getIsSpecialChar() const
 // ---------------------------------------------------------------------------
 //  DTDEntityDecl: Setter methods
 // ---------------------------------------------------------------------------
-inline const void DTDEntityDecl::setDeclaredInIntSubset(const bool newValue)
+inline void DTDEntityDecl::setDeclaredInIntSubset(const bool newValue)
 {
     fDeclaredInIntSubset = newValue;
 }
