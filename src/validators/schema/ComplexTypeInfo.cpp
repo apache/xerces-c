@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.21  2001/11/07 21:12:15  tng
+ * Performance: Create QName in ContentSpecNode only if it is a leaf/Any*/PCDataNode.
+ *
  * Revision 1.20  2001/10/12 18:08:57  tng
  * make sure the second node exists before calling getType
  *
@@ -434,8 +437,10 @@ XMLContentModel* ComplexTypeInfo::createChildModel(ContentSpecNode* specNode, co
     //  Do a sanity check that the node is does not have a PCDATA id. Since,
     //  if it was, it should have already gotten taken by the Mixed model.
     //
-    if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
-        ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
+    if (specNode->getElement()) {
+        if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
+            ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
+    }
 
     //
     //  According to the type of node, we will create the correct type of
@@ -540,9 +545,11 @@ ComplexTypeInfo::convertContentSpecTree(ContentSpecNode* const curNode,
 
     // When checking Unique Particle Attribution, rename leaf elements
     if (checkUPA) {
-        fContentSpecOrgURI[fUniqueURI] = curNode->getElement()->getURI();
-        curNode->getElement()->setURI(fUniqueURI);
-        fUniqueURI++;
+        if (curNode->getElement()) {
+            fContentSpecOrgURI[fUniqueURI] = curNode->getElement()->getURI();
+            curNode->getElement()->setURI(fUniqueURI);
+            fUniqueURI++;
+        }
         if (fUniqueURI == fContentSpecOrgURISize)
             resizeContentSpecOrgURI();
     }

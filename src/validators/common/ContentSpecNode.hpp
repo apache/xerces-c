@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/11/07 21:12:15  tng
+ * Performance: Create QName in ContentSpecNode only if it is a leaf/Any*/PCDataNode.
+ *
  * Revision 1.16  2001/08/28 20:21:08  peiyongz
  * * AIX 4.2, xlC 3 rev.1 compilation error: get*() declared with external linkage
  * and called or defined before being declared as inline
@@ -230,8 +233,8 @@ private :
     //  Private Data Members
     //
     //  fElement
-    //      If the type is Leaf, then this is the qName of the element. If the URI
-    //      is fgPCDataElemId, then its a PCData node.
+    //      If the type is Leaf/Any*, then this is the qName of the element. If the URI
+    //      is fgPCDataElemId, then its a PCData node.  Else, it is zero.
     //
     //  fFirst
     //  fSecond
@@ -286,7 +289,6 @@ inline ContentSpecNode::ContentSpecNode() :
     , fMinOccurs(1)
     , fMaxOccurs(1)
 {
-    fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
 
 inline
@@ -301,9 +303,7 @@ ContentSpecNode::ContentSpecNode(QName* const element) :
     , fMinOccurs(1)
     , fMaxOccurs(1)
 {
-    if (!element)
-        fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
-    else
+    if (element)
         fElement = new QName(element);
 }
 
@@ -323,7 +323,6 @@ ContentSpecNode::ContentSpecNode(const  NodeTypes               type
     , fMinOccurs(1)
     , fMaxOccurs(1)
 {
-    fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
 }
 
 
@@ -420,7 +419,9 @@ inline bool ContentSpecNode::isSecondAdopted() const
 inline void ContentSpecNode::setElement(QName* const element)
 {
     delete fElement;
-    fElement = new QName(element);
+    fElement = 0;
+    if (element)
+        fElement = new QName(element);
 }
 
 inline void ContentSpecNode::setFirst(ContentSpecNode* const toAdopt)

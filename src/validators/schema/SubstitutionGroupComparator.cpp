@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2001/11/07 21:12:15  tng
+ * Performance: Create QName in ContentSpecNode only if it is a leaf/Any*/PCDataNode.
+ *
  * Revision 1.7  2001/10/04 15:08:56  knoaman
  * Add support for circular import.
  *
@@ -90,6 +93,12 @@
 bool SubstitutionGroupComparator::isEquivalentTo(QName* const anElement
                                                , QName* const exemplar)
 {
+    if (!anElement && !exemplar)
+        return true;
+
+    if ((!anElement && exemplar) || (anElement && !exemplar))
+        return false;
+
 
     if ((XMLString::compareString(anElement->getLocalPart(), exemplar->getLocalPart()) == 0) &&
         (anElement->getURI() == exemplar->getURI()))

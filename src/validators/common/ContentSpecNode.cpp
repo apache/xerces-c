@@ -84,7 +84,7 @@ ContentSpecNode::ContentSpecNode(const ContentSpecNode& toCopy)
     if (tempElement)
         fElement = new QName(tempElement);
     else
-        fElement = new QName(XMLUni::fgZeroLenString, XMLUni::fgZeroLenString, XMLElementDecl::fgInvalidElemId);
+        fElement = 0;
 
     const ContentSpecNode *tmp = toCopy.getFirst();
     if (tmp)

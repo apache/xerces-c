@@ -359,11 +359,13 @@ XMLContentModel* DTDElementDecl::createChildModel()
         ThrowXML(RuntimeException, XMLExcepts::CM_UnknownCMSpecType);
 
     //
-    //  Do a sanity check that the node is does not have a PCDATA id. Since,
+    //  Do a sanity check that the node does not have a PCDATA id. Since,
     //  if it was, it should have already gotten taken by the Mixed model.
     //
-    if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
-        ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
+    if (specNode->getElement()) {
+        if (specNode->getElement()->getURI() == XMLElementDecl::fgPCDataElemId)
+            ThrowXML(RuntimeException, XMLExcepts::CM_NoPCDATAHere);
+    }
 
     //
     //  According to the type of node, we will create the correct type of
