@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2000/07/10 21:20:15  jpolast
+ * bug fix for new put(key,value) function.
+ *
  * Revision 1.14  2000/07/07 22:16:56  jpolast
  * remove old put(value) function.  use put(key,value) instead.
  *
@@ -471,7 +474,7 @@ Win32TransService::Win32TransService()
                 if (::wcscmp(uniAlias, aliasedEntry->getEncodingName()))
                 {
                     CPMapEntry* newEntry = new CPMapEntry(uniAlias, aliasedEntry->getWinCP(), aliasedEntry->getIEEncoding());
-                    fCPMap->put(uniAlias, newEntry);
+                    fCPMap->put((void*)newEntry->getEncodingName(), newEntry);
                 }
             }
             delete [] uniAlias;
