@@ -954,6 +954,7 @@ usage:  threadtest [-v] [-threads nnn] [-time nnn] [-quiet] [-verbose] xmlfile..
      -time nnn      Total time to run, in seconds.  Default is forever.
      -dump          Dump DOM tree on error.
      -mem           Read files into memory once only, and parse them from there.
+     -init          Perform an initial parse of the file(s) before starting up the individual threads.
 
 1Test Run Successfully
 2Test Run Successfully

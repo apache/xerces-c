@@ -234,6 +234,7 @@ struct RunInfo
     bool        doSchema;
     bool        schemaFullChecking;
     bool        doNamespaces;
+    bool        doInitialParse;
     int         totalTime;
     int         numInputFiles;
     InFileInfo  files[MAXINFILES];
@@ -646,6 +647,7 @@ void parseCommandLine(int argc, char **argv)
     gRunInfo.doSchema = false;
     gRunInfo.schemaFullChecking = false;
     gRunInfo.doNamespaces = false;
+    gRunInfo.doInitialParse = false;
     gRunInfo.dom = false;
     gRunInfo.reuseParser = false;
     gRunInfo.inMemory = false;
@@ -682,6 +684,8 @@ void parseCommandLine(int argc, char **argv)
                 else
                     throw 1;
             }
+            else if (strcmp(argv[argnum], "-init") == 0)
+                gRunInfo.doInitialParse = true;
             else if (strcmp(argv[argnum], "-reuse") == 0)
                 gRunInfo.reuseParser = true;
             else if (strcmp(argv[argnum], "-dump") == 0)
@@ -749,7 +753,8 @@ void parseCommandLine(int argc, char **argv)
             "     -threads nnn   Number of threads.  Default is 2.\n"
             "     -time nnn      Total time to run, in seconds.  Default is forever.\n"
             "     -dump          Dump DOM tree on error.\n"
-            "     -mem           Read files into memory once only, and parse them from there.\n\n"
+            "     -mem           Read files into memory once only, and parse them from there.\n"
+            "     -init          Perform an initial parse of the file(s) before starting up the individual threads.\n\n"
             );
         exit(1);
     }
@@ -867,10 +872,9 @@ void threadMain (void *param)
         int checkSum = 0;
         checkSum = thParser->parse(docNum);
 
-        // SRD -- for the case where we skip the preparse we will have nothing
-        // to compare the first parse's results to ... so if this looks like
-        // first parser move the checkSum back into the gRunInfo data for this
-        // file.
+        // For the case where we skip the preparse we will have nothing to
+        // compare the first parse's results to ... so if this looks like first
+        // parse move the checkSum back into the gRunInfo data for this file.
 
         if (gRunInfo.files[docNum].checkSum == 0)
         {
@@ -950,52 +954,52 @@ int main (int argc, char **argv)
     //
     ReadFilesIntoMemory();
 
-    // SRD -- initialize checksums to zero so we can check first parse and if
-    // zero then we need to move first parse's checksum into array
+    // Initialize checksums to zero so we can check first parse and if
+    // zero then we need to move first parse's checksum into array. This
+    // is for the cse where we skip the initial parse.
     for (int n = 0; n < gRunInfo.numInputFiles; n++)
     {
         gRunInfo.files[n].checkSum = 0;
     }
 
-#ifdef DOINITIALPARSE
+    if (gRunInfo.doInitialParse)
+    {
     //
     // While we are still single threaded, parse each of the documents
     //  once, to check for errors, and to note the checksum.
     // Blow off the rest of the test if there are errors.
     //
-    ThreadParser *mainParser = new ThreadParser;
-    int     n;
-    bool    errors = false;
-    int     cksum;
+        ThreadParser *mainParser = new ThreadParser;
+        int     n;
+        bool    errors = false;
+        int     cksum;
 
-
-    for (n = 0; n < gRunInfo.numInputFiles; n++)
-    {
-        char *fileName = gRunInfo.files[n].fileName;
-        if (gRunInfo.verbose)
-            printf("%s checksum is ", fileName);
-
-        cksum = mainParser->parse(n);
-
-        if (cksum == 0)
+        for (n = 0; n < gRunInfo.numInputFiles; n++)
         {
-            fprintf(stderr, "An error occurred while initially parsing %s\n",
-                fileName);
-            errors = true;
-        };
+            char *fileName = gRunInfo.files[n].fileName;
+            if (gRunInfo.verbose)
+                printf("%s checksum is ", fileName);
 
-        gRunInfo.files[n].checkSum = cksum;
-        if (gRunInfo.verbose )
-            printf("%x\n", cksum);
-        if (gRunInfo.dumpOnErr && errors) {
-           if (gRunInfo.dom)
-              mainParser->domPrint();
+            cksum = mainParser->parse(n);
+
+            if (cksum == 0)
+            {
+                fprintf(stderr, "An error occurred while initially parsing %s\n",
+                    fileName);
+                errors = true;
+            };
+
+            gRunInfo.files[n].checkSum = cksum;
+            if (gRunInfo.verbose )
+                printf("%x\n", cksum);
+            if (gRunInfo.dumpOnErr && errors) {
+                if (gRunInfo.dom)
+                    mainParser->domPrint();
+            }
+
         }
-
+        delete mainParser;
     }
-
-    delete mainParser;
-#endif
 
     //
     //  Fire off the requested number of parallel threads
