@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.29  2002/08/19 19:56:08  tng
+ * DOM L3: test DOMNode::isDefaultNamespace.   Added by Gareth Reakes.
+ *
  * Revision 1.28  2002/08/16 19:22:29  tng
  * Test DOM L3 lookupNamespacePrefix, lookupNamespaceURI support.   Added by Gareth Reakes.
  *
@@ -165,6 +168,22 @@
         fprintf(stderr, "DOMUserDataHandler::handler's dst does not work in line %i\n", uline); \
         OK = false; \
     }
+
+
+#define LOOKUPDEFAULTNSTEST(thisNode, uri, pass, line) \
+    if(thisNode->isDefaultNamespace(uri)) { \
+        if(!pass) { \
+            fprintf(stderr, "DOMNode::isDefaultNamespace returned true in line %i\n", line); \
+            OK = false; \
+        } \
+    } \
+    else { \
+        if(pass) { \
+            fprintf(stderr, "DOMNode::isDefaultNamespace returned false in line %i\n", line); \
+            OK = false; \
+        } \
+    }
+
 
 #define LOOKUPNSTEST(thisNode, prefix, uri, pass, line) \
     prefixResult = XMLString::compareString(thisNode->lookupNamespacePrefix(uri, false), prefix); \
@@ -645,10 +664,66 @@ bool DOMTest::docBuilder(DOMDocument* document, XMLCh* nameIn)
         OK = false;
     }
 
+    XMLString::transcode("notset", tempStr3, 3999);
+
+    LOOKUPDEFAULTNSTEST(docProcessingInstruction, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel24, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel23, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel21, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel31, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel32, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docCDATASection, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docFirstElement, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docReferenceEntity, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docFirstElementAttr, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(doc, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docNotation, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docComment, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docTextNode2, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docTextNode4, tempStr3, false, __LINE__);
+
+
+    XMLString::transcode("default", tempStr3, 3999);
+
+    LOOKUPDEFAULTNSTEST(docProcessingInstruction, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel24, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel23, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel21, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel31, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel32, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docCDATASection, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docFirstElement, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docReferenceEntity, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docFirstElementAttr, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(doc, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docNotation, tempStr3, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docComment, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docTextNode2, tempStr3, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docTextNode4, tempStr3, true, __LINE__);
+
+    //remove the xmlns attr
+    docFirstElement->removeAttributeNode(attr3);
+
+    LOOKUPDEFAULTNSTEST(docProcessingInstruction, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel24, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel23, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel21, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel31, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docBodyLevel32, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docCDATASection, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docFirstElement, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docReferenceEntity, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docFirstElementAttr, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(doc, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docNotation, 0, false, __LINE__);
+    LOOKUPDEFAULTNSTEST(docComment, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docTextNode2, 0, true, __LINE__);
+    LOOKUPDEFAULTNSTEST(docTextNode4, 0, true, __LINE__);
+
 
     docFirstElement->removeAttributeNode(attr1);
     docBodyLevel21->removeAttributeNode(attr2);
-    docFirstElement->removeAttributeNode(attr3);
+
 
 //***********Following are for errorTests
     DOMDocumentFragment* docDocFragment = doc->createDocumentFragment();
