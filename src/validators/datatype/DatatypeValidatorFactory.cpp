@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2001/07/06 20:21:58  peiyongz
+ * QNameDTV & ENTITYDTV enabled
+ *
  * Revision 1.13  2001/07/05 20:15:25  peiyongz
  * NOTATIONDatatypeValidator
  *
@@ -116,6 +119,8 @@
 #include <validators/datatype/IDDatatypeValidator.hpp>
 #include <validators/datatype/IDREFDatatypeValidator.hpp>
 #include <validators/datatype/NOTATIONDatatypeValidator.hpp>
+#include <validators/datatype/ENTITYDatatypeValidator.hpp>
+#include <validators/datatype/QNameDatatypeValidator.hpp>
 #include <util/PlatformUtils.hpp>
 #include <util/XMLDeleterFor.hpp>
 
@@ -325,10 +330,8 @@ void DatatypeValidatorFactory::initializeDTDRegistry()
                        new IDDatatypeValidator());
         fBuiltInRegistry->put((void*) XMLUni::fgIDRefString,
                        new IDREFDatatypeValidator());
-/*
         fBuiltInRegistry->put((void*) XMLUni::fgEntityString,
                        new ENTITYDatatypeValidator());
-	    */
         fBuiltInRegistry->put((void*) XMLUni::fgNotationString,
                        new NOTATIONDatatypeValidator());
 
@@ -387,8 +390,10 @@ void DatatypeValidatorFactory::expandRegistryToFullSchemaSet()
                        new DoubleDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_ANYURI,
                        new AnyURIDatatypeValidator());
+*/
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_QNAME,
                        new QNameDatatypeValidator());
+/*
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DURATION,
                        new DurationDatatypeValidator());
         fBuiltInRegistry->put((void*) SchemaSymbols::fgDT_DAY,

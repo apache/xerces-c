@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.12  2001/07/06 20:21:46  peiyongz
+# QNameDTV & ENTITYDTV enabled
+#
 # Revision 1.11  2001/07/06 17:12:11  tng
 # Automatic build of single-threaded library.  By Martin Kalen.
 #
@@ -124,6 +127,8 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	StringDatatypeValidator.hpp \
 	IDDatatypeValidator.hpp \
 	NOTATIONDatatypeValidator.hpp \
+	ENTITYDatatypeValidator.hpp \
+	QNameDatatypeValidator.hpp \
 	IDREFDatatypeValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
@@ -140,6 +145,8 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	StringDatatypeValidator.$(TO) \
 	IDDatatypeValidator.$(TO) \
 	NOTATIONDatatypeValidator.$(TO) \
+	ENTITYDatatypeValidator.$(TO) \
+	QNameDatatypeValidator.$(TO) \
 	IDREFDatatypeValidator.$(TO)
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)

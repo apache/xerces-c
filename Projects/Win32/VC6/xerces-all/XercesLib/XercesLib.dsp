@@ -1727,6 +1727,14 @@ SOURCE=..\..\..\..\..\src\validators\datatype\DecimalDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\..\..\src\validators\datatype\ENTITYDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\ENTITYDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\..\..\src\validators\datatype\HexBinaryDatatypeValidator.cpp
 # End Source File
 # Begin Source File
@@ -1764,6 +1772,14 @@ SOURCE=..\..\..\..\..\src\validators\datatype\NOTATIONDatatypeValidator.cpp
 # Begin Source File
 
 SOURCE=..\..\..\..\..\src\validators\datatype\NOTATIONDatatypeValidator.hpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\QNameDatatypeValidator.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\..\..\src\validators\datatype\QNameDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
