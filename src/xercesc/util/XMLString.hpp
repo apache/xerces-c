@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.14  2003/02/25 16:42:31  tng
+ * [Bug 7072] Documentation for XMLString::transcode states invalid return value.
+ *
  * Revision 1.13  2003/02/05 18:50:56  tng
  * [Bug 11915] Utility for freeing memory.
  *
@@ -1231,9 +1234,7 @@ public:
       *        The size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of bytes that the output
       *         buffer can hold (not including the null, which is why
-      *         toFill should be at least maxChars+1.) If the resulting
-      *         output cannot fit into this many bytes, it is an error and
-      *         false is returned.
+      *         toFill should be at least maxChars+1.).
       * @return Returns true if successful, false if there was an error
       */
     static bool transcode
@@ -1264,9 +1265,7 @@ public:
       *        The size of this buffer should atleast be 'maxChars + 1'.
       * @param maxChars The maximum number of characters that the output
       *         buffer can hold (not including the null, which is why
-      *         toFill should be at least maxChars+1.) If the resulting
-      *         output cannot fit into this many characters, it is an error
-      *         and false is returned.
+      *         toFill should be at least maxChars+1.).
       * @return Returns true if successful, false if there was an error
       */
     static bool transcode
