@@ -179,7 +179,9 @@ void AbstractDOMParser::resetPool()
     if (fDocumentVector)
         fDocumentVector->removeAllElements();
 
-    delete fDocument;
+     if (!fDocumentAdoptedByUser)
+       delete fDocument;
+
     fDocument = 0;
 }
 
