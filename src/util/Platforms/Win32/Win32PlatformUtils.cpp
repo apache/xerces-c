@@ -56,6 +56,11 @@
 
 /**
  * $Log$
+ * Revision 1.9  2000/01/22 00:03:47  roddey
+ * Added a check for a broken pipe error on file read. This allows folks to support
+ * a pipe as an input source and not die when the other side drops the sending
+ * end of the pipe.
+ *
  * Revision 1.8  2000/01/20 20:37:25  andyh
  * Remove DEVENV_VCPP preprocessor variable everywhere.
  * It was obsolete, left over from an earlier configuration system.
@@ -317,9 +322,16 @@ XMLPlatformUtils::readFileBuffer(       FileHandle      theFile
                                 , const unsigned int    toRead
                                 ,       XMLByte* const  toFill)
 {
-    unsigned long bytesRead;
+    unsigned long bytesRead = 0;
     if (!::ReadFile(theFile, toFill, toRead, &bytesRead, 0))
-        ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotReadFromFile);
+    {
+        //
+        //  Check specially for a broken pipe error. If we get this, it just
+        //  means no more data from the pipe, so return zero.
+        //
+        if (::GetLastError() != ERROR_BROKEN_PIPE)
+            ThrowXML(XMLPlatformUtilsException, XML4CExcepts::File_CouldNotReadFromFile);
+    }
     return (unsigned int)bytesRead;
 }
 
@@ -337,9 +349,6 @@ void XMLPlatformUtils::resetFile(FileHandle theFile)
 // ---------------------------------------------------------------------------
 XMLCh* XMLPlatformUtils::getFullPath(const XMLCh* const srcPath)
 {
-    //
-    //  NOTE: THe path provided has always already been opened successfully,
-    //  so we know that its not some pathological freaky path.
     //
     //  If we are on NT, then use wide character APIs, else use ASCII APIs.
     //  We have to do it manually since we are only built in ASCII mode from
