@@ -55,7 +55,8 @@
 		<p>On UNIX platforms you must ensure that <ref>LIBPATH</ref>
 		environment variable is set properly to pick up the shared libraries at
 		runtime. (UNIX gurus will understand here that <ref>LIBPATH</ref> actually
-		translates to <em>LD_LIBRARY_PATH</em> on Solaris and Linux, <em>SHLIB_PATH</em> on HP-UX
+		translates to <em>LD_LIBRARY_PATH</em> on Solaris and Linux, <em>SHLIB_PATH</em> on HP-UX,
+		<em>DYLD_LIBRARY_PATH</em> on Mac OS X,
 		and stays as <em>LIBPATH</em> on AIX).</p>
 
 		<p>To set you LIBPATH (on AIX for example), you would type:</p>

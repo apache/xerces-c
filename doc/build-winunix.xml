@@ -250,6 +250,7 @@ nmake -f XercesLib.mak "CFG=XercesLib - Win64 Release" CPP=ecl.exe
         pertains to the system environment variable for finding libraries.
         On <em>Linux and Solaris</em>, the environment variable name is called
         <code>LD_LIBRARY_PATH</code>, on <em>AIX</em> it is <code>LIBPATH</code>,
+        on <em>Mac OS X</em> it is <code>DYLD_LIBRARY_PATH</code>,
         while on <em>HP-UX</em> it is <code>SHLIB_PATH</code>. The following
         discussion assumes you are working on Linux, but it is with subtle
         understanding that you know how to interpret it for the other UNIX flavors.</p>
