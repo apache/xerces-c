@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.31  2001/08/13 15:06:39  knoaman
+ * update <any> validation.
+ *
  * Revision 1.30  2001/08/02 16:54:39  tng
  * Reset some Scanner flags in scanReset().
  *
@@ -574,7 +577,9 @@ private :
     void resolveSchemaGrammar(const XMLCh* const loc, const XMLCh* const uri);
     bool switchGrammar(int newGrammarNameSpaceIndex);
     bool switchGrammar(const XMLCh* const newGrammarNameSpace);
-    bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv);
+    bool laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
+                              const XMLContentModel* const cm,
+                              const unsigned int parentElemDepth);
 
     // -----------------------------------------------------------------------
     //  Private scanning methods
@@ -621,6 +626,11 @@ private :
                 XMLBuffer&  toFill
         , const XMLCh       chEndChar
     );
+
+    // -----------------------------------------------------------------------
+    //  Private helper methods
+    // -----------------------------------------------------------------------
+    void resizeElemState();
 
 
 
@@ -791,6 +801,11 @@ private :
     //  fSchemaNamespaceId
     //      This is the id of the schema namespace URI.
     //
+    //  fElemState
+    //  fElemStateSize
+    //      Stores an element next state from DFA content model - used for
+    //      wildcard validation
+    //
     //  fGrammarResolver
     //      Grammar Pool that stores all the Grammar
     //
@@ -808,38 +823,44 @@ private :
     //      Use only if namespace is turned on.
     //
     // -----------------------------------------------------------------------
+    bool                        fDoNamespaces;
+    bool                        fExitOnFirstFatal;
+    bool                        fValidationConstraintFatal;
+    bool                        fInException;
+    bool                        fReuseGrammar;
+    bool                        fStandalone;
+    bool                        fHasNoDTD;
+    bool                        fValidate;
+    bool                        fValidatorFromUser;
+    bool                        fDoSchema;
+    bool                        fSchemaFullChecking;
+    bool                        fSeeXsi;
+    int                         fErrorCount;
+    unsigned int                fEmptyNamespaceId;
+    unsigned int                fUnknownNamespaceId;
+    unsigned int                fXMLNamespaceId;
+    unsigned int                fXMLNSNamespaceId;
+    unsigned int                fSchemaNamespaceId;
+    unsigned int                fElemStateSize;
+    XMLUInt32                   fScannerId;
+    XMLUInt32                   fSequenceId;
+    unsigned int*               fElemState;
     RefVectorOf<XMLAttr>*       fAttrList;
     XMLBufferMgr                fBufMgr;
     XMLDocumentHandler*         fDocHandler;
     DocTypeHandler*             fDocTypeHandler;
-    bool                        fDoNamespaces;
     ElemStack                   fElemStack;
     XMLEntityHandler*           fEntityHandler;
     EntityResolver*             fEntityResolver;
     XMLErrorReporter*           fErrorReporter;
     ErrorHandler*               fErrorHandler;
-    bool                        fExitOnFirstFatal;
-    bool                        fValidationConstraintFatal;
     RefHashTableOf<XMLRefInfo>* fIDRefList;
-    bool                        fInException;
     RefVectorOf<KVStringPair>*  fRawAttrList;
     ReaderMgr                   fReaderMgr;
-    bool                        fReuseGrammar;
-    XMLUInt32                   fScannerId;
-    XMLUInt32                   fSequenceId;
-    bool                        fStandalone;
-    bool                        fHasNoDTD;
-    bool                        fValidate;
     XMLValidator*               fValidator;
     DTDValidator*               fDTDValidator;
     SchemaValidator*            fSchemaValidator;
-    bool                        fValidatorFromUser;
     ValSchemes                  fValScheme;
-    int                         fErrorCount;
-    bool                        fDoSchema;
-    bool                        fSchemaFullChecking;
-    bool                        fSeeXsi;
-
     XMLBuffer                   fAttNameBuf;
     XMLBuffer                   fAttValueBuf;
     XMLBuffer                   fCDataBuf;
@@ -847,13 +868,6 @@ private :
     XMLBuffer                   fQNameBuf;
     XMLBuffer                   fPrefixBuf;
     XMLBuffer                   fURIBuf;
-
-    unsigned int                fEmptyNamespaceId;
-    unsigned int                fUnknownNamespaceId;
-    unsigned int                fXMLNamespaceId;
-    unsigned int                fXMLNSNamespaceId;
-    unsigned int                fSchemaNamespaceId;
-
     GrammarResolver*            fGrammarResolver;
     Grammar*                    fGrammar;
     NameIdPool<DTDEntityDecl>*  fEntityDeclPool;

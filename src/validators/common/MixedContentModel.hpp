@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/08/13 15:06:39  knoaman
+ * update <any> validation.
+ *
  * Revision 1.8  2001/05/11 13:27:19  tng
  * Copyright update.
  *
@@ -162,6 +165,9 @@ public :
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
 
+    virtual unsigned int getNextState(const unsigned int currentState,
+                                      const unsigned int elementIndex) const;
+
 private :
     // -----------------------------------------------------------------------
     //  Private helper methods
@@ -213,6 +219,13 @@ private :
 inline ContentLeafNameTypeVector* MixedContentModel::getContentLeafNameTypeVector() const
 {
 	return 0;
+}
+
+inline unsigned int 
+MixedContentModel::getNextState(const unsigned int currentState,
+                                const unsigned int elementIndex) const {
+
+    return XMLContentModel::gInvalidTrans;
 }
 
 #endif

@@ -96,6 +96,7 @@
 #include <validators/schema/SchemaSymbols.hpp>
 #include <validators/schema/SchemaGrammar.hpp>
 #include <validators/schema/TraverseSchema.hpp>
+#include <validators/schema/SubstitutionGroupComparator.hpp>
 
 
 
@@ -2757,58 +2758,86 @@ bool XMLScanner::switchGrammar(const XMLCh* const newGrammarNameSpace)
 // if skip - no validation
 // if lax - validate only if the element if found
 
-bool XMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector* cv)
+bool XMLScanner::laxElementValidation(QName* element, ContentLeafNameTypeVector* cv,
+                                      const XMLContentModel* const cm,
+                                      const unsigned int parentElemDepth)
 {
     bool skipThisOne = false;
     bool laxThisOne = false;
     unsigned int elementURI = element->getURI();
+    unsigned int currState = fElemState[parentElemDepth];
+
+    if (currState == XMLContentModel::gInvalidTrans) {
+        return laxThisOne;
+    }
+
+    SubstitutionGroupComparator comparator(fGrammarResolver, fURIStringPool);
 
     if (cv) {
-        for (unsigned int i=0; i < cv->getLeafCount(); i++) {
+        unsigned int i = 0;
+        unsigned int leafCount = cv->getLeafCount();
+
+        for (; i < leafCount; i++) {
+
             QName* fElemMap = cv->getLeafNameAt(i);
             unsigned int uri = fElemMap->getURI();
+            unsigned int nextState;
+            bool anyEncountered = false;
             ContentSpecNode::NodeTypes type = cv->getLeafTypeAt(i);
 
             if (type == ContentSpecNode::Leaf) {
-                if ((uri == elementURI)
-                   && !(XMLString::compareString(fElemMap->getLocalPart(), element->getLocalPart())))
-                    break;
-            } else if (type == ContentSpecNode::Any) {
-                break;
-            } else if (type == ContentSpecNode::Any_NS) {
-                if (uri == elementURI)
-                    break;
-            } else if (type == ContentSpecNode::Any_Other) {
-                if (uri != elementURI)
-                    break;
-            } else if (type == ContentSpecNode::Any_Skip) {
-                skipThisOne = true;
-                break;
-            } else if (type == ContentSpecNode::Any_NS_Skip) {
-                if (uri == elementURI) {
-                    skipThisOne = true;
-                    break;
+                if (((uri == elementURI)
+                      && !XMLString::compareString(fElemMap->getLocalPart(), element->getLocalPart()))
+                    || comparator.isEquivalentTo(element, fElemMap)) {
+
+                    nextState = cm->getNextState(currState, i);
+
+                    if (nextState != XMLContentModel::gInvalidTrans) { 
+                        fElemState[parentElemDepth] = nextState;
+                        break;
+                    }
                 }
-            } else if (type == ContentSpecNode::Any_Other_Skip) {
+            } else if ((type & 0x0f) == ContentSpecNode::Any) {
+                anyEncountered = true;
+            }
+            else if ((type & 0x0f) == ContentSpecNode::Any_Other) {
                 if (uri != elementURI) {
-                    skipThisOne = true;
-                    break;
+                    anyEncountered = true;
                 }
-            } else if (type == ContentSpecNode::Any_Lax) {
-                laxThisOne = true;
-                break;
-            } else if (type == ContentSpecNode::Any_NS_Lax) {
+            }
+            else if ((type & 0x0f) == ContentSpecNode::Any_NS) {
                 if (uri == elementURI) {
-                    laxThisOne = true;
-                    break;
+                    anyEncountered = true;
                 }
-            } else if (type == ContentSpecNode::Any_Other_Lax) {
-                if (uri != elementURI) {
-                    laxThisOne = true;
+            } 
+
+            if (anyEncountered) {
+
+                nextState = cm->getNextState(currState, i);
+                if (nextState != XMLContentModel::gInvalidTrans) {
+                    fElemState[parentElemDepth] = nextState;
+
+                    if (type == ContentSpecNode::Any_Skip ||
+                        type == ContentSpecNode::Any_NS_Skip ||
+                        type == ContentSpecNode::Any_Other_Skip) {
+                        skipThisOne = true;
+                    }
+                    else if (type == ContentSpecNode::Any_Lax ||
+                             type == ContentSpecNode::Any_NS_Lax ||
+                             type == ContentSpecNode::Any_Other_Lax) {
+                        laxThisOne = true;
+                    }
+
                     break;
                 }
             }
         } // for
+
+        if (i == leafCount) { // no match
+            fElemState[parentElemDepth] = XMLContentModel::gInvalidTrans;
+            return laxThisOne;
+        }
+
     } // if
 
     if (skipThisOne) {

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/08/13 15:06:38  knoaman
+ * update <any> validation.
+ *
  * Revision 1.11  2001/05/28 20:53:35  tng
  * Schema: move static data gInvalidTrans, gEOCFakeId, gEpsilonFakeId to XMLContentModel for others to access
  *
@@ -171,6 +174,9 @@ public:
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector()
 	  const = 0;
+
+    virtual unsigned int getNextState(const unsigned int currentState,
+                                      const unsigned int elementIndex) const = 0;
 
 protected :
     // -----------------------------------------------------------------------

@@ -153,38 +153,41 @@ static XMLMutex& gScannerMutex()
 // ---------------------------------------------------------------------------
 XMLScanner::XMLScanner(XMLValidator* const valToAdopt) :
 
-    fAttrList(0)
-    , fDocHandler(0)
-    , fDocTypeHandler(0)
-    , fDoNamespaces(false)
-    , fEntityHandler(0)
-    , fEntityResolver(0)
-    , fErrorReporter(0)
-    , fErrorHandler(0)
+    fDoNamespaces(false)
     , fExitOnFirstFatal(true)
     , fValidationConstraintFatal(false)
-    , fIDRefList(0)
     , fInException(false)
-    , fRawAttrList(0)
     , fReuseGrammar(false)
-    , fScannerId(0)
-    , fSequenceId(0)
     , fStandalone(false)
     , fHasNoDTD(true)
     , fValidate(false)
-    , fValidator(valToAdopt)
-    , fDTDValidator(0)
-    , fSchemaValidator(0)
     , fValidatorFromUser(false)
-    , fValScheme(Val_Never)
     , fDoSchema(false)
     , fSchemaFullChecking(false)
     , fSeeXsi(false)
+    , fErrorCount(0)
     , fEmptyNamespaceId(0)
     , fUnknownNamespaceId(0)
     , fXMLNamespaceId(0)
     , fXMLNSNamespaceId(0)
     , fSchemaNamespaceId(0)
+    , fElemStateSize(16)
+    , fScannerId(0)
+    , fSequenceId(0)
+    , fElemState(0)
+    , fAttrList(0)
+    , fDocHandler(0)
+    , fDocTypeHandler(0)
+    , fEntityHandler(0)
+    , fEntityResolver(0)
+    , fErrorReporter(0)
+    , fErrorHandler(0)
+    , fIDRefList(0)
+    , fRawAttrList(0)
+    , fValidator(valToAdopt)
+    , fDTDValidator(0)
+    , fSchemaValidator(0)
+    , fValScheme(Val_Never)
     , fGrammarResolver(0)
     , fGrammar(0)
     , fEntityDeclPool(0)
@@ -208,38 +211,41 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
                         , XMLErrorReporter* const  errHandler
                         , XMLValidator* const      valToAdopt) :
 
-    fAttrList(0)
-    , fDocHandler(docHandler)
-    , fDocTypeHandler(docTypeHandler)
-    , fDoNamespaces(false)
-    , fEntityHandler(entityHandler)
-    , fEntityResolver(0)
-    , fErrorReporter(errHandler)
-    , fErrorHandler(0)
+    fDoNamespaces(false)
     , fExitOnFirstFatal(true)
     , fValidationConstraintFatal(false)
-    , fIDRefList(0)
     , fInException(false)
-    , fRawAttrList(0)
     , fReuseGrammar(false)
-    , fScannerId(0)
-    , fSequenceId(0)
     , fStandalone(false)
     , fHasNoDTD(true)
     , fValidate(false)
-    , fValidator(valToAdopt)
-    , fDTDValidator(0)
-    , fSchemaValidator(0)
     , fValidatorFromUser(false)
-    , fValScheme(Val_Never)
     , fDoSchema(false)
     , fSchemaFullChecking(false)
     , fSeeXsi(false)
+    , fErrorCount(0)
     , fEmptyNamespaceId(0)
     , fUnknownNamespaceId(0)
     , fXMLNamespaceId(0)
     , fXMLNSNamespaceId(0)
     , fSchemaNamespaceId(0)
+    , fElemStateSize(16)
+    , fScannerId(0)
+    , fSequenceId(0)
+    , fElemState(0)
+    , fAttrList(0)
+    , fDocHandler(docHandler)
+    , fDocTypeHandler(docTypeHandler)
+    , fEntityHandler(entityHandler)
+    , fEntityResolver(0)
+    , fErrorReporter(errHandler)
+    , fErrorHandler(0)
+    , fIDRefList(0)
+    , fRawAttrList(0)
+    , fValidator(valToAdopt)
+    , fDTDValidator(0)
+    , fSchemaValidator(0)
+    , fValScheme(Val_Never)
     , fGrammarResolver(0)
     , fGrammar(0)
     , fEntityDeclPool(0)
@@ -259,6 +265,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
 
 XMLScanner::~XMLScanner()
 {
+    delete [] fElemState;
     delete fAttrList;
     delete fIDRefList;
     delete fRawAttrList;
@@ -857,6 +864,11 @@ void XMLScanner::commonInit()
         // And assign ourselves the next available scanner id
         fScannerId = ++gScannerId;
     }
+
+    //
+    //  Create the element state array
+    //
+    fElemState = new unsigned int[fElemStateSize];
 
     //
     //  Create the attribute list, which is used to store attribute values
@@ -2726,6 +2738,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
 
     // save the contentleafname and currentscope before addlevel, for later use
     ContentLeafNameTypeVector* cv = 0;
+    XMLContentModel* cm = 0;
     int currentScope = Grammar::TOP_LEVEL_SCOPE;
     if (!isRoot && fGrammar->getGrammarType() == Grammar::SchemaGrammarType) {
         SchemaElementDecl* tempElement = (SchemaElementDecl*) fElemStack.topElement()->fThisElement;
@@ -2734,7 +2747,8 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         if ((modelType == SchemaElementDecl::Mixed)
           ||  (modelType == SchemaElementDecl::Children))
         {
-            cv = tempElement->getContentModel()->getContentLeafNameTypeVector();
+            cm = tempElement->getContentModel();
+            cv = cm->getContentLeafNameTypeVector();
             currentScope = fElemStack.getCurrentScope();
         }
     }
@@ -2744,7 +2758,7 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  but we don't have the element decl yet, we just tell the element stack
     //  to expand up to get ready.
     //
-    fElemStack.addLevel();
+    unsigned int elemDepth = fElemStack.addLevel();
     fElemStack.setValidationFlag(fValidate);
 
     //
@@ -2806,7 +2820,9 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     bool laxThisOne = false;
     if (cv) {
         QName element(fPrefixBuf.getRawBuffer(), fNameBuf.getRawBuffer(), uriId);
-        laxThisOne = laxElementValidation(&element, cv);
+        // elementDepth will be > 0, as cv is only constructed if element is not
+        // root.
+        laxThisOne = laxElementValidation(&element, cv, cm, elemDepth - 1);
     }
 
     //
@@ -3015,7 +3031,15 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
         if (typeinfo)
             currentScope = typeinfo->getScopeDefined();
         fElemStack.setCurrentScope(currentScope);
+
+        // Set element next state
+        if (elemDepth >= fElemStateSize) {
+            resizeElemState();
+        }
+
+        fElemState[elemDepth] = 0;
     }
+
     fElemStack.setCurrentGrammar(fGrammar);
 
     //
@@ -3497,3 +3521,24 @@ bool XMLScanner::checkXMLDecl(bool startWithAngle) {
 }
 
 
+// ---------------------------------------------------------------------------
+//  XMLScanner: Helper methos
+// ---------------------------------------------------------------------------
+void XMLScanner::resizeElemState() {
+
+    unsigned int newSize = fElemStateSize * 2;
+    unsigned int* newElemState = new unsigned int[newSize];
+
+    // Copy the existing values
+    unsigned int index = 0;
+    for (; index < fElemStateSize; index++)
+        newElemState[index] = fElemState[index];
+
+    for (; index < newSize; index++)
+        newElemState[index] = 0;
+
+    // Delete the old array and udpate our members
+    delete [] fElemState;
+    fElemState = newElemState;
+    fElemStateSize = newSize;
+}

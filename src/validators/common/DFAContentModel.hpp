@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2001/08/13 15:06:39  knoaman
+ * update <any> validation.
+ *
  * Revision 1.9  2001/06/13 20:50:55  peiyongz
  * fIsMixed: to handle mixed Content Model
  *
@@ -107,6 +110,7 @@
 #define DFACONTENTMODEL_HPP
 
 #include <util/XercesDefs.hpp>
+#include <util/ArrayIndexOutOfBoundsException.hpp>
 #include <framework/XMLContentModel.hpp>
 #include <validators/common/ContentLeafNameTypeVector.hpp>
 
@@ -164,6 +168,9 @@ public:
     ) const;
 
     virtual ContentLeafNameTypeVector* getContentLeafNameTypeVector() const ;
+
+    virtual unsigned int getNextState(const unsigned int currentState,
+                                      const unsigned int elementIndex) const;
 
 private :
     // -----------------------------------------------------------------------
@@ -283,5 +290,21 @@ private :
     bool                    fIsMixed;
     ContentLeafNameTypeVector *fLeafNameTypeVector;
 };
+
+
+inline unsigned int
+DFAContentModel::getNextState(const unsigned int currentState,
+                              const unsigned int elementIndex) const {
+
+    if (currentState == XMLContentModel::gInvalidTrans) {
+        return XMLContentModel::gInvalidTrans;
+    }
+
+    if (currentState >= fTransTableSize || elementIndex >= fElemMapSize) {
+        ThrowXML(ArrayIndexOutOfBoundsException, XMLExcepts::Array_BadIndex);
+    }
+
+    return fTransTable[currentState][elementIndex];
+}
 
 #endif
