@@ -1088,6 +1088,13 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText)
 	
 	if (status != noErr && status != kTECPartialCharErr)
 		result.reset();
+	else if (!result.get())
+	{
+		//	No error, and no result: we probably processed a zero length
+		//	input, in which case we want a valid zero length output.
+		result.reset(new char[1]);
+		result[0] = '\0';
+	}
 	
 	return result.release();
 }
@@ -1170,6 +1177,13 @@ MacOSLCPTranscoder::transcode(const char* const srcText)
 	
 	if (status != noErr && status != kTECPartialCharErr)
 		result.reset();
+	else if (!result.get())
+	{
+		//	No error, and no result: we probably processed a zero length
+		//	input, in which case we want a valid zero length output.
+		result.reset(new XMLCh[1]);
+		result[0] = '\0';
+	}
 	
 	return result.release();
 }
