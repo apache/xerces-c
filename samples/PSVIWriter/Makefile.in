@@ -78,16 +78,16 @@ THREADS = @threads@
 EXTRA_LIBS = @extra_libs@
 PREFIX = @prefix@
 
-include ../../version.incl
+include ${XERCESCROOT}/version.incl
 include ../Makefile.incl
 
 APP_NAME=PSVIWriter
 
 OUTDIR= ${XERCESCROOT}/bin/obj/${APP_NAME}
 EXEC=	${XERCESCROOT}/bin
-OBJS=	${OUTDIR}/PSVIWriter.o ${OUTDIR}/PSVIWriterHandlers.o
+OBJS=	${OUTDIR}/PSVIWriter.o ${OUTDIR}/PSVIUni.o ${OUTDIR}/PSVIWriterHandlers.o 
 SRC=	${XERCESCROOT}/samples/${APP_NAME}
-HEADER_FILES=${SRC}/PSVIWriter.hpp ${SRC}/PSVIWriterHandlers.hpp
+HEADER_FILES=${SRC}/PSVIWriter.hpp ${SRC}/PSVIUni.hpp ${SRC}/PSVIWriterHandlers.hpp 
 
 ## OS390BATCH
 ifeq (${OS390BATCH},1)
@@ -108,11 +108,14 @@ ${BATCH_TARGET}:: ${OBJS}
 $(OUTDIR)/PSVIWriter.o:: ${SRC}/PSVIWriter.cpp ${HEADER_FILES}
 	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/PSVIWriter.o ${SRC}/PSVIWriter.cpp
 
+$(OUTDIR)/PSVIUni.o:: ${SRC}/PSVIUni.cpp ${HEADER_FILES}
+	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/PSVIUni.o ${SRC}/PSVIUni.cpp
+
 $(OUTDIR)/PSVIWriterHandlers.o:: ${SRC}/PSVIWriterHandlers.cpp ${HEADER_FILES}
 	${CC} ${INCLUDES} ${CMP} -o $(OUTDIR)/PSVIWriterHandlers.o ${SRC}/PSVIWriterHandlers.cpp
 
 clean::
 	rm -f ${OBJS} ${EXEC}/${APP_NAME}
 
-distclean::	clean
+distclean::clean
 	rm -f Makefile
