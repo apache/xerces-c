@@ -206,3 +206,12 @@ void DOMProcessingInstructionImpl::release()
            void*            DOMProcessingInstructionImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                                   {return fNode.setUserData(key, data, handler); };
            void*            DOMProcessingInstructionImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
+           const XMLCh*     DOMProcessingInstructionImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
+           short            DOMProcessingInstructionImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           const XMLCh*     DOMProcessingInstructionImpl::getTextContent() const                  {return fNode.getTextContent(); };
+           void             DOMProcessingInstructionImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
+           const XMLCh*     DOMProcessingInstructionImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             DOMProcessingInstructionImpl::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     DOMProcessingInstructionImpl::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           DOMNode*         DOMProcessingInstructionImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+

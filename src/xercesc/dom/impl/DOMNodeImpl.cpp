@@ -461,6 +461,44 @@ bool DOMNodeImpl::isEqualNode(const DOMNode* arg)
     return true;
 }
 
+const XMLCh*     DOMNodeImpl::getBaseURI() const{
+    return 0;
+}
+
+short            DOMNodeImpl::compareTreePosition(DOMNode* other){
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+const XMLCh*     DOMNodeImpl::getTextContent() const{
+    return 0;
+}
+
+void             DOMNodeImpl::setTextContent(const XMLCh* textContent){
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+}
+
+const XMLCh*     DOMNodeImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+bool             DOMNodeImpl::isDefaultNamespace(const XMLCh* namespaceURI) {
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return false;
+}
+
+const XMLCh*     DOMNodeImpl::lookupNamespaceURI(const XMLCh* prefix) {
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+DOMNode*         DOMNodeImpl::getInterface(const XMLCh* feature)      {
+    throw DOMException(DOMException::NOT_SUPPORTED_ERR, 0);
+    return 0;
+}
+
+
 // non-standard extension
 void DOMNodeImpl::release()
 {

@@ -333,6 +333,13 @@ DOMNode* DOMAttrImpl::rename(const XMLCh* namespaceURI, const XMLCh* name)
            void*            DOMAttrImpl::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                                  {return fNode.setUserData(key, data, handler); };
            void*            DOMAttrImpl::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
-
+           const XMLCh*     DOMAttrImpl::getBaseURI() const                      {return fNode.getBaseURI(); };
+           short            DOMAttrImpl::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           const XMLCh*     DOMAttrImpl::getTextContent() const                  {return fNode.getTextContent(); };
+           void             DOMAttrImpl::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
+           const XMLCh*     DOMAttrImpl::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             DOMAttrImpl::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     DOMAttrImpl::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           DOMNode*         DOMAttrImpl::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
 
 

@@ -153,6 +153,15 @@ public:
     void*             getUserData(const XMLCh* key) const;
     bool              isSameNode(const DOMNode* other);
     bool              isEqualNode(const DOMNode* arg);
+    const XMLCh*      getBaseURI() const ;
+    short             compareTreePosition(DOMNode* other) ;
+    const XMLCh*      getTextContent() const ;
+    void              setTextContent(const XMLCh* textContent) ;
+    const XMLCh*      lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) ;
+    bool              isDefaultNamespace(const XMLCh* namespaceURI) ;
+    const XMLCh*      lookupNamespaceURI(const XMLCh* prefix) ;
+    DOMNode*          getInterface(const XMLCh* feature) ;
+
 
     // Helper functions for DOM Level 3
     void              release();
@@ -336,6 +345,14 @@ public: // should really be protected - ALH
     virtual       void*            getUserData(const XMLCh* key) const ;\
     virtual       bool             isSameNode(const DOMNode* other);\
     virtual       bool             isEqualNode(const DOMNode* arg);\
+    virtual const XMLCh*           getBaseURI() const ;\
+    virtual short                  compareTreePosition(DOMNode* other) ;\
+    virtual const XMLCh*           getTextContent() const ;\
+    virtual void                   setTextContent(const XMLCh* textContent) ;\
+    virtual const XMLCh*           lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) ;\
+    virtual bool                   isDefaultNamespace(const XMLCh* namespaceURI) ;\
+    virtual const XMLCh*           lookupNamespaceURI(const XMLCh* prefix) ;\
+    virtual       DOMNode*         getInterface(const XMLCh* feature) ;\
     virtual       void             release()
 
 
@@ -374,6 +391,15 @@ public: // should really be protected - ALH
            void*            xxx::setUserData(const XMLCh* key, void* data, DOMUserDataHandler* handler)
                                                                          {return fNode.setUserData(key, data, handler); };
            void*            xxx::getUserData(const XMLCh* key) const     {return fNode.getUserData(key); };
+           const XMLCh*     xxx::getBaseURI() const                      {return fNode.getBaseURI(); };
+           short            xxx::compareTreePosition(DOMNode* other)     {return fNode.compareTreePosition(other); };
+           const XMLCh*     xxx::getTextContent() const                  {return fNode.getTextContent(); };
+           void             xxx::setTextContent(const XMLCh* textContent){fNode.setTextContent(textContent); };
+           const XMLCh*     xxx::lookupNamespacePrefix(const XMLCh* namespaceURI, bool useDefault) {return fNode.lookupNamespacePrefix(namespaceURI, useDefault); };
+           bool             xxx::isDefaultNamespace(const XMLCh* namespaceURI) {return fNode.isDefaultNamespace(namespaceURI); };
+           const XMLCh*     xxx::lookupNamespaceURI(const XMLCh* prefix) {return fNode.lookupNamespaceURI(prefix); };
+           DOMNode*         xxx::getInterface(const XMLCh* feature)      {return fNode.getInterface(feature); };
+
 
 */
 
