@@ -127,11 +127,11 @@ static UChar* convertToUChar( const   XMLCh* const    toConvert
 
 
 static XMLCh* convertToXMLCh( const UChar* const toConvert,
-                            , MemoryManager* const manager = 0)
+                            MemoryManager* const manager = 0)
 {
     const unsigned int srcLen = u_strlen(toConvert);
     XMLCh* retBuf = (manager)
-        ? (XMLCh*) manager->allocate((srcLen+1) sizeof(XMLCh))
+        ? (XMLCh*) manager->allocate((srcLen+1) * sizeof(XMLCh))
         : new XMLCh[srcLen + 1];
 
     XMLCh* outPtr = retBuf;
