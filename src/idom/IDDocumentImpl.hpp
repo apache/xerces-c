@@ -300,10 +300,23 @@ inline void * operator new(size_t amt, IDOM_Document *doc)
     return p;
 }
 
-//  Ignore compiler warning:
-//    no matching operator delete found; memory will not be freed if initialization throws an exception
-#pragma warning( push )
-#pragma warning( disable : 4291 )
+inline void * operator new[](size_t amt, IDOM_Document *doc)
+{
+    // idom_revist.  Probably should be a checked cast.
+    void *p = ((IDDocumentImpl *)doc)->allocate(amt);
+    return p;
+}
 
+//define a dummy delete to get rid of matching warning
+inline void operator delete(void* ptr, IDOM_Document *doc)
+{
+    return;
+}
+
+//define the global one
+inline void * operator new[](size_t amt)
+{
+    return ::operator new(amt);
+}
 
 #endif

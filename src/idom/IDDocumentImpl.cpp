@@ -827,7 +827,7 @@ int             IDDocumentImpl::changes() const{
 //
 //    Delegation for functions inherited from IDOM_Node
 //
-           IDOM_Node          *IDDocumentImpl::appendChild(IDOM_Node *newChild)        {return fParent.appendChild (newChild); };
+           IDOM_Node          *IDDocumentImpl::appendChild(IDOM_Node *newChild)        {return insertBefore(newChild, 0); };
            IDOM_NamedNodeMap  *IDDocumentImpl::getAttributes() const 			        {return fNode.getAttributes (); };
            IDOM_NodeList      *IDDocumentImpl::getChildNodes() const 			        {return fParent.getChildNodes (); };
            IDOM_Node          *IDDocumentImpl::getFirstChild() const 			        {return fParent.getFirstChild (); };

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/05/23 13:11:37  tng
+ * IDOM: Memory fix.
+ *
  * Revision 1.2  2001/05/11 13:25:40  tng
  * Copyright update.
  *
@@ -198,3 +201,4 @@ IDOM_Document *IDDOMImplementation::createDocument()
 {
         return new IDDocumentImpl();
 }
+

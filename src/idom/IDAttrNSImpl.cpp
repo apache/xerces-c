@@ -101,7 +101,7 @@ IDAttrImpl(ownerDoc, qualifiedName)
         XMLCh* newName;
         XMLCh temp[4000];
         if (index >= 3999)
-            newName = new XMLCh[XMLString::stringLen(qualifiedName)+1];
+            newName = new (getOwnerDocument()) XMLCh[XMLString::stringLen(qualifiedName)+1];
         else
             newName = temp;
 
@@ -110,8 +110,6 @@ IDAttrImpl(ownerDoc, qualifiedName)
         this-> fPrefix = ((IDDocumentImpl *)ownerDoc)->getPooledString(newName);
         this -> fLocalName = ((IDDocumentImpl *)ownerDoc)->getPooledString(fName+index+1);
 
-        if (index >= 3999)
-            delete newName;
     }
 
     const XMLCh * URI = xmlnsAlone ?
@@ -187,7 +185,7 @@ void IDAttrNSImpl::setPrefix(const XMLCh *prefix)
     int newQualifiedNameLen = prefixLen+1+XMLString::stringLen(fLocalName);
 
     if (newQualifiedNameLen >= 999)
-        newName = new XMLCh[newQualifiedNameLen + 1];
+        newName = new (getOwnerDocument()) XMLCh[newQualifiedNameLen + 1];
     else
         newName = temp;
 
@@ -199,7 +197,5 @@ void IDAttrNSImpl::setPrefix(const XMLCh *prefix)
     fName = ((IDDocumentImpl *)this->getOwnerDocument())->
                                            getPooledString(newName);
 
-    if (newQualifiedNameLen < 1000)
-        delete newName;
 
 }

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/23 13:11:39  tng
+ * IDOM: Memory fix.
+ *
  * Revision 1.3  2001/05/17 15:58:47  tng
  * IDOM: Add Unix build, and other idom udpates.
  *
@@ -92,7 +95,7 @@ IDNodeVector::IDNodeVector(IDOM_Document *doc, unsigned int size) {
 
 void IDNodeVector::init(IDOM_Document *doc, unsigned int size) {
 	assert(size > 0);
-	data = new IDOM_Node *[size];
+	data = new (doc) IDOM_Node *[size];
 	assert(data != 0);
 	allocatedSize = size;
 	nextFreeSlot = 0;
@@ -116,7 +119,7 @@ void IDNodeVector::checkSpace() {
                 if (grow < 50) grow = 50;
 		unsigned int newAllocatedSize = allocatedSize + grow;
         IDOM_Document *doc = data[0]->getOwnerDocument();
-		IDOM_Node **newData = new IDOM_Node *[newAllocatedSize];
+		IDOM_Node **newData = new (doc) IDOM_Node *[newAllocatedSize];
 		assert(newData != 0);
 		for (unsigned int i=0; i<allocatedSize; i++) {
 			newData[i] = data[i];

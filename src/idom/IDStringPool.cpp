@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2001/05/23 13:11:39  tng
+ * IDOM: Memory fix.
+ *
  * Revision 1.3  2001/05/17 15:58:49  tng
  * IDOM: Add Unix build, and other idom udpates.
  *
@@ -91,7 +94,7 @@
 struct IDStringPoolEntry
 {
     IDStringPoolEntry    *fNext;
-    const XMLCh          fString[1];
+    XMLCh                 fString[1];
 };
 
 
@@ -118,7 +121,7 @@ IDStringPool::IDStringPool(int hashTableSize, IDDocumentImpl *doc)
 {
     fDoc           = doc;          // needed to get access to the doc's storage allocator.
     fHashTableSize = hashTableSize;
-    fHashTable = new IDStringPoolEntry *[hashTableSize];
+    fHashTable = new (fDoc) IDStringPoolEntry *[hashTableSize];
     for (int i=0; i<fHashTableSize; i++)
         fHashTable[i] = 0;
 };

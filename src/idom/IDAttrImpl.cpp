@@ -153,17 +153,14 @@ const XMLCh * IDAttrImpl::getValue() const
     //                becuase we only allocate a new string when we have attribute
     //                values that contain entity reference nodes.  And the parser
     //                does not ever produce such a thing.
-    XMLCh* retString = new XMLCh(length+1);
+    XMLCh * retString = new (this->getOwnerDocument()) XMLCh[length+1];
     retString[0] = 0;
     for (node = fParent.fFirstChild; node != 0; node = castToChildImpl(node)->nextSibling)
     {
         XMLString::catString(retString, node->getNodeValue());
     };
 
-    IDDocumentImpl *docImpl = (IDDocumentImpl *)getOwnerDocument();
-    const XMLCh* temp = docImpl->getPooledString(retString);
-    delete retString;
-    return temp;
+    return retString;
 };
 
 
