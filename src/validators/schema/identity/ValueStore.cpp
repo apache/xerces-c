@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/12/06 17:03:37  knoaman
+ * Identity Constraint: fix for xpath expressions containing union operator(s).
+ *
  * Revision 1.2  2001/11/20 20:32:52  knoaman
  * Bypass validating element's simple content if it's empty and element is nillable.
  *
@@ -154,6 +157,11 @@ void ValueStore::append(const ValueStore* const other) {
 	    FieldValueMap* valueMap = other->fValueTuples->elementAt(i);
 
         if (!contains(valueMap)) {
+
+            if (!fValueTuples) {
+                fValueTuples = new RefVectorOf<FieldValueMap>(4);
+            }
+
             fValueTuples->addElement(new FieldValueMap(*valueMap));
         }
     }

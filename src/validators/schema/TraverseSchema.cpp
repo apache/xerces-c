@@ -3906,21 +3906,36 @@ bool TraverseSchema::traverseIdentityConstraint(IdentityConstraint* const ic,
     // Get xpath attribute
     // ------------------------------------------------------------------
     const XMLCh* xpathExpr = getElementAttValue(elem, SchemaSymbols::fgATT_XPATH, true);
+    unsigned int xpathLen = XMLString::stringLen(xpathExpr);
 
-    if (!xpathExpr || !XMLString::stringLen(xpathExpr)) {
+    if (!xpathExpr || !xpathLen) {
 
         reportSchemaError(XMLUni::fgXMLErrDomain, XMLErrs::IC_XPathExprMissing);
         return false;
     }
 
-    if (XMLString::startsWith(xpathExpr, fgForwardSlash)
-        || XMLString::startsWith(xpathExpr, fgDot)) {
-        fBuffer.set(xpathExpr);
+    fBuffer.reset();
+
+    unsigned int startIndex = 0;
+    	 
+    while (startIndex < xpathLen) {
+
+        if (!XMLString::startsWith(xpathExpr + startIndex, fgForwardSlash)
+            && !XMLString::startsWith(xpathExpr + startIndex, fgDot)) {
+            fBuffer.append(fgDotForwardSlash);
+        }
+
+        int chOffset = XMLString::indexOf(xpathExpr, chPipe, startIndex);
+
+        if (chOffset == -1)
+            break;
+
+        fBuffer.append(xpathExpr + startIndex, chOffset + 1);
+        startIndex = chOffset + 1;    
     }
-    else {
-        fBuffer.set(fgDotForwardSlash);
-        fBuffer.append(xpathExpr);
-    }
+
+    if (startIndex < xpathLen)
+        fBuffer.append(xpathExpr + startIndex);
 
     // ------------------------------------------------------------------
     // Parse xpath expression
