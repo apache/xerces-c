@@ -166,8 +166,9 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     ChildNode * newInternal= (ChildNode *)newChild;
     
     // Prevent cycles in the tree
+    // newChild cannot be ancestor of this Node, and actually cannot be this Node
     bool treeSafe=true;
-    for(NodeImpl *a=this->getParentNode();
+    for(NodeImpl *a=this;
         treeSafe && a!=null;
         a=a->getParentNode())
         treeSafe=(newInternal!=a);
@@ -178,6 +179,10 @@ NodeImpl *THIS_CLASS::insertBefore(NodeImpl *newChild, NodeImpl *refChild) {
     if (refChild!=null && refChild->getParentNode() != this)
         throw DOM_DOMException(DOM_DOMException::NOT_FOUND_ERR,null);
     
+    // refChild cannot be same as newChild
+    if(refChild==newInternal)
+        throw DOM_DOMException(DOM_DOMException::HIERARCHY_REQUEST_ERR,null);
+
     if (newInternal->isDocumentFragmentImpl())
     {
         // SLOW BUT SAFE: We could insert the whole subtree without
