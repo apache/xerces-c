@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/25 14:23:42  peiyongz
+ * DTV Reorganization: checkValueSpace()
+ *
  * Revision 1.3  2001/08/14 22:11:56  peiyongz
  * new exception message added
  *
@@ -72,8 +75,29 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/IDREFDatatypeValidator.hpp>
-#include <validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
+
+// ---------------------------------------------------------------------------
+//  Constructors and Destructor
+// ---------------------------------------------------------------------------
+IDREFDatatypeValidator::IDREFDatatypeValidator()
+:StringDatatypeValidator()
+,fIDRefList(0)
+{
+    DatatypeValidator::setType(DatatypeValidator::IDREF);
+}
+
+IDREFDatatypeValidator::~IDREFDatatypeValidator()
+{
+}
+
+DatatypeValidator* IDREFDatatypeValidator::newInstance(
+                                      RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
+                                    , const int                           finalSet)
+{
+    return (DatatypeValidator*) new IDREFDatatypeValidator(this, facets, enums, finalSet);
+}
 
 IDREFDatatypeValidator::IDREFDatatypeValidator(
                                            DatatypeValidator*            const baseValidator
@@ -99,12 +123,7 @@ IDREFDatatypeValidator::IDREFDatatypeValidator(
         int enumLength = enums->size();
         for ( int i = 0; i < enumLength; i++)
         {
-            if ( !XMLString::isValidNCName(enums->elementAt(i)))
-            {
-                ThrowXML1(InvalidDatatypeFacetException
-                        , XMLExcepts::VALUE_Invalid_NCName
-                        , enums->elementAt(i));
-            }
+            checkValueSpace(enums->elementAt(i));
         }
     }
 
@@ -119,14 +138,7 @@ void IDREFDatatypeValidator::validate(const XMLCh* const content)
     //
     StringDatatypeValidator::validate(content);
 
-    // check 3.3.9.constrain must: "NCName"
-    //
-    if ( !XMLString::isValidNCName(content))
-    {
-        ThrowXML1(InvalidDatatypeFacetException
-                , XMLExcepts::VALUE_Invalid_NCName
-                , content);
-    }
+    checkValueSpace(content);
 
     // this is different from java, since we always add, while
     // in java, it is done as told. REVISIT.
@@ -151,6 +163,20 @@ void IDREFDatatypeValidator::addIdRef(const XMLCh* const content)
     //  Mark it used
     //
     find->setUsed(true);
+}
+
+void IDREFDatatypeValidator::checkValueSpace(const XMLCh* const content)
+{
+    //
+    // 3.3.9 check must: "NCName"
+    //
+    if ( !XMLString::isValidNCName(content))
+    {
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_Invalid_NCName
+                , content);
+    }
+
 }
 
 /**

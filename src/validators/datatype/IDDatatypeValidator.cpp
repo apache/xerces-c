@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/25 14:23:42  peiyongz
+ * DTV Reorganization: checkValueSpace()
+ *
  * Revision 1.3  2001/08/14 22:11:56  peiyongz
  * new exception message added
  *
@@ -74,17 +77,29 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <validators/datatype/IDDatatypeValidator.hpp>
-#include <validators/datatype/InvalidDatatypeFacetException.hpp>
 #include <validators/datatype/InvalidDatatypeValueException.hpp>
-#include <util/NumberFormatException.hpp>
-
-static const int BUF_LEN = 64;
-static XMLCh value1[BUF_LEN+1];
-static XMLCh value2[BUF_LEN+1];
 
 // ---------------------------------------------------------------------------
 //  Constructors and Destructor
 // ---------------------------------------------------------------------------
+IDDatatypeValidator::IDDatatypeValidator()
+:StringDatatypeValidator()
+,fIDRefList(0)
+{
+    DatatypeValidator::setType(DatatypeValidator::ID);
+}
+
+IDDatatypeValidator::~IDDatatypeValidator()
+{}
+
+DatatypeValidator* IDDatatypeValidator::newInstance(
+                                      RefHashTableOf<KVStringPair>* const facets
+                                    , RefVectorOf<XMLCh>*           const enums
+                                    , const int                           finalSet)
+{
+    return (DatatypeValidator*) new IDDatatypeValidator(this, facets, enums, finalSet);
+}
+
 IDDatatypeValidator::IDDatatypeValidator(
                           DatatypeValidator*            const baseValidator
                         , RefHashTableOf<KVStringPair>* const facets
@@ -108,12 +123,7 @@ IDDatatypeValidator::IDDatatypeValidator(
         int enumLength = enums->size();
         for ( int i = 0; i < enumLength; i++)
         {
-            if ( !XMLString::isValidNCName(enums->elementAt(i)))
-            {
-                ThrowXML1(InvalidDatatypeFacetException
-                        , XMLExcepts::VALUE_Invalid_NCName
-                        , enums->elementAt(i));
-            }
+            checkValueSpace(enums->elementAt(i));
         }
     }
 
@@ -128,14 +138,7 @@ void IDDatatypeValidator::validate(const XMLCh* const content)
     //
     StringDatatypeValidator::validate(content);
 
-    // check 3.3.8.constrain must: "NCName"
-    //
-    if ( !XMLString::isValidNCName(content))
-    {
-        ThrowXML1(InvalidDatatypeFacetException
-                , XMLExcepts::VALUE_Invalid_NCName
-                , content);
-    }
+    checkValueSpace(content);
 
     // storing IDs to the global ID table
     if (fIDRefList)
@@ -164,6 +167,20 @@ void IDDatatypeValidator::addId(const XMLCh * const content)
     //  Mark it declared
     //
     find->setDeclared(true);
+}
+
+void IDDatatypeValidator::checkValueSpace(const XMLCh* const content)
+{
+    //
+    // 3.3.8 check must: "NCName"
+    //
+    if ( !XMLString::isValidNCName(content))
+    {
+        ThrowXML1(InvalidDatatypeValueException
+                , XMLExcepts::VALUE_Invalid_NCName
+                , content);
+    }
+
 }
 
 /**

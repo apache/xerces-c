@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/25 14:23:42  peiyongz
+ * DTV Reorganization: checkValueSpace()
+ *
  * Revision 1.4  2001/08/24 17:12:01  knoaman
  * Add support for anySimpleType.
  * Remove parameter 'baseValidator' from the virtual method 'newInstance'.
@@ -116,19 +119,23 @@ public:
      * is not valid.
      */
 
-	void validate(const XMLCh* const content);
+	virtual void validate(const XMLCh* const content);
 
     /**
       * Returns an instance of the base datatype validator class
 	  * Used by the DatatypeValidatorFactory.
       */
-    DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
-                                 , RefVectorOf<XMLCh>*           const enums
-                                 , const int                           finalSet);
+    virtual DatatypeValidator* newInstance(RefHashTableOf<KVStringPair>* const facets
+                                         , RefVectorOf<XMLCh>*           const enums
+                                         , const int                           finalSet);
 
     //@}
 
 	void setIDRefList(RefHashTableOf<XMLRefInfo>* fIDRefList);
+
+protected:
+
+    virtual void checkValueSpace(const XMLCh* const content);
 
 private:
 
@@ -143,28 +150,6 @@ private:
     // -----------------------------------------------------------------------
     RefHashTableOf<XMLRefInfo>* fIDRefList;
 };
-
-// ---------------------------------------------------------------------------
-//  Constructors and Destructor
-// ---------------------------------------------------------------------------
-inline IDDatatypeValidator::IDDatatypeValidator()
-:StringDatatypeValidator()
-,fIDRefList(0)
-{
-    DatatypeValidator::setType(DatatypeValidator::ID);
-}
-
-inline IDDatatypeValidator::~IDDatatypeValidator()
-{
-}
-
-inline DatatypeValidator* IDDatatypeValidator::newInstance(
-                                      RefHashTableOf<KVStringPair>* const facets
-                                    , RefVectorOf<XMLCh>*           const enums
-                                    , const int                           finalSet)
-{
-    return (DatatypeValidator*) new IDDatatypeValidator(this, facets, enums, finalSet);
-}
 
 inline void IDDatatypeValidator::setIDRefList(RefHashTableOf<XMLRefInfo>* newIDRefList)
 {
