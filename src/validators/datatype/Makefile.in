@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.8  2001/07/04 15:22:55  peiyongz
+# IDDatatypeValidator
+#
 # Revision 1.7  2001/06/27 17:09:52  tng
 # [Bug 1147] Headers install in wrong directory.  By Murray Cumming.
 #
@@ -108,7 +111,8 @@ VALIDATORS_DATATYPE_CPP_PUBHEADERS = \
 	BooleanDatatypeValidator.hpp \
 	DecimalDatatypeValidator.hpp \
 	HexBinaryDatatypeValidator.hpp \
-	StringDatatypeValidator.hpp
+	StringDatatypeValidator.hpp \
+	IDDatatypeValidator.hpp
 
 VALIDATORS_DATATYPE_CPP_PRIVHEADERS =
 
@@ -121,7 +125,8 @@ VALIDATORS_DATATYPE_CPP_OBJECTS = \
 	BooleanDatatypeValidator.$(TO) \
 	DecimalDatatypeValidator.$(TO) \
 	HexBinaryDatatypeValidator.$(TO) \
-	StringDatatypeValidator.$(TO)
+	StringDatatypeValidator.$(TO) \
+	IDDatatypeValidator.$(TO)
 
 
 all::	includes $(VALIDATORS_DATATYPE_CPP_OBJECTS)
