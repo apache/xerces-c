@@ -86,7 +86,7 @@ usage()
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
     echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
     echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390' or 'native'"
-    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris) or 'none'"
+    echo "       -r <thread option> can be 'pthread' or 'dce' (only used on aix, HP-11 and solaris) or 'sproc' (only on IRIX) or 'none'"
     echo "       -l <extra linker options>"
     echo "       -z <extra compiler options>"
     echo "       -P <install-prefix>"
@@ -136,7 +136,7 @@ netaccessor=socket       # by default use socket (can do HTTP URL's)
 thread=pthread           # by default use POSIX threads
 configureoptions=""
 
-while [ $# -gt 0 ]
+while [$# -gt 0]
    do
    case $1 in
    -p)
@@ -313,6 +313,20 @@ else
            *)
                echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
                exit ${ERROR_EXIT_CODE};;
+        esac
+        fi
+    elif test $platform = "irix"; then
+        if test $thread; then
+        case $thread in
+        pthread)
+            ;;
+
+        sproc)
+            threadingLibs=" ";
+            threadingDefines="-DXML_USE_SPROC" ;;
+        *)
+           echo "I do not recognize the thread option '$thread'. Please type '${0} -h' for help."
+            exit ${ERROR_EXIT_CODE};;
         esac
         fi
     fi

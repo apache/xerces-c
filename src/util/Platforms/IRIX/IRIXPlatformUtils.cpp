@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.12  2001/09/04 19:05:44  peiyongz
+ * Patch to support IRIX's sproc(), from Christopher Just
+ *
  * Revision 1.11  2001/01/26 15:42:00  tng
  * Undefined symbol error when building a single threaded version of the xerces lib on irix.  Fixed by Walker.
  *
@@ -105,7 +108,11 @@
 // ---------------------------------------------------------------------------
 
 #if !defined(APP_NO_THREADS)
+#ifdef XML_USE_SPROC
+#include    <ulocks.h>
+#else
 #include    <pthread.h>
+#endif
 #endif
 
 #include    <unistd.h>
@@ -537,6 +544,102 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
 #if !defined(APP_NO_THREADS)
 
+static XMLMutex atomicOpsMutex;
+
+#ifdef XML_USE_SPROC
+// ---------------------------------------------------------------------------
+//  XMLPlatformUtils: Platform init method
+// ---------------------------------------------------------------------------
+
+static char* arenaName = 0;
+static usptr_t* arena = 0;
+
+void XMLPlatformUtils::platformInit()
+{
+    //
+    // The atomicOps mutex needs to be created early.
+    // Normally, mutexes are created on first use, but there is a
+    // circular dependency between compareAndExchange() and
+    // mutex creation that must be broken.
+
+    // need a shared memory space
+    usconfig(CONF_INITUSERS, 128);
+    usconfig(CONF_INITSIZE, 16000);
+    usconfig(CONF_AUTOGROW, 1);   // Default, but we set anyway
+
+    arenaName = strdup ("/var/tmp/xerces-sharedmemXXXXXX");
+    arena = usinit (mktemp (arenaName));
+
+    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+}
+
+void XMLPlatformUtils::platformTerm()
+{
+    usdetach (arena);
+    unlink (arenaName);
+    free (arenaName);
+    // We don't have any termination requirements at this time
+}
+
+
+void* XMLPlatformUtils::makeMutex()
+{
+    if (arena) {
+        usema_t* sema = usnewsema (arena, 1);
+        if (sema && (usctlsema (sema, CS_RECURSIVEON) != -1)) {
+            return (void*)sema;
+        }
+        else
+            ThrowXML (XMLPlatformUtilsException,
+                      XMLExcepts::Mutex_CouldNotCreate);
+    }
+    else {
+        // arena==0; therefore platformInit hasn't been called. 
+        // it's important that we fail quietly here so that we don't
+        // throw an exception when trying to initizlize the 
+        // atomicOpsMutex, which we re-initizlize in platformInit anyay.
+        return 0;
+    }
+}
+
+
+void XMLPlatformUtils::closeMutex(void* const mtxHandle)
+{
+
+    if (mtxHandle != NULL) {
+        usfreesema (mtxHandle, arena);
+        // never returns anything testable for failure, so nothing
+        // to throw an exception about.
+    }
+}
+
+
+void XMLPlatformUtils::lockMutex(void* const mtxHandle)
+{
+
+    if (mtxHandle != NULL) {
+        if (uspsema (mtxHandle) != 1)
+            ThrowXML(XMLPlatformUtilsException,
+                     XMLExcepts::Mutex_CouldNotLock);
+    }
+
+}
+
+
+void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
+{
+    if (mtxHandle != NULL)
+    {
+        if (usvsema(mtxHandle) == -1)
+        {
+            ThrowXML(XMLPlatformUtilsException,
+                     XMLExcepts::Mutex_CouldNotUnlock);
+        }
+    }
+}
+
+#else
+
 // ---------------------------------------------------------------------------
 //  XMLPlatformUtils: Platform init method
 // ---------------------------------------------------------------------------
@@ -553,6 +656,10 @@ void XMLPlatformUtils::platformInit()
     atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
 }
 
+void XMLPlatformUtils::platformTerm()
+{
+    // We don't have any termination requirements at this time
+}
 
 void* XMLPlatformUtils::makeMutex()
 {
@@ -610,6 +717,7 @@ void XMLPlatformUtils::unlockMutex(void* const mtxHandle)
     }
 }
 
+#endif   // XML_USE_SPROC
 
 // -----------------------------------------------------------------------
 //  Miscellaneous synchronization methods
@@ -685,10 +793,16 @@ int XMLPlatformUtils::atomicDecrement(int &location)
     return --location;
 }
 
-#endif // APP_NO_THREADS
-
 void XMLPlatformUtils::platformTerm()
 {
     // We don't have any termination requirements at this time
 }
+
+#endif // APP_NO_THREADS
+
+//void XMLPlatformUtils::platformTerm()
+//{
+    // We don't have any termination requirements at this time
+//}
+
 
