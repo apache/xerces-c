@@ -34,7 +34,7 @@ if (!length($XERCESCROOT) || !length($targetdir) || (length($opt_h) > 0) ) {
 $ICUROOT = $ENV{'ICUROOT'};
 if (!length($ICUROOT)) {
        print "You have not defined your ICU install directory.\n";
-	   print "You must set an environment variable called ICUROOT to package ICU with XERCES-C.\n";
+	   print "To build with ICU, you must set an environment variable called ICUROOT\n";
 	   print "Proceeding to build XERCES-C without ICU...\n";
 }
 
@@ -91,7 +91,7 @@ if ($platform =~ m/Windows/) {
         mkdir ($targetdir . "/include/parsers", "0644");
         mkdir ($targetdir . "/include/util", "0644");
         mkdir ($targetdir . "/include/dom", "0644");
-        mkdir ($targetdir . "/include/icu", "0644");
+        mkdir ($targetdir . "/include/unicode", "0644");
         mkdir ($targetdir . "/include/validators", "0644");
         mkdir ($targetdir . "/samples", "0644");
         mkdir ($targetdir . "/samples/Projects", "0644");
@@ -108,47 +108,20 @@ if ($platform =~ m/Windows/) {
         mkdir ($targetdir . "/samples/EnumVal", "0644");
         mkdir ($targetdir . "/samples/CreateDOMDocument", "0644");
         mkdir ($targetdir . "/doc", "0644");
-        mkdir ($targetdir . "/doc/apiDocs", "0644");
-	if ( length($ICUROOT) > 0 ) {
-	    mkdir ($targetdir . "/bin/icu", "0644");
-	    mkdir ($targetdir . "/bin/icu/data", "0644");
-	}
+        mkdir ($targetdir . "/doc/html", "0644");
+        mkdir ($targetdir . "/doc/html/apiDocs", "0644");
 
 	if (length($ICUROOT) > 0) {
-		chdir ("$ICUROOT");
-		#Clean up all the dependency files, causes problems for nmake
-		system ("del /s /f *.dep *.ncb *.plg *.opt");
+	    print ("Building ICU from $ICUROOT ...\n");
 
-		print ("Since you have defined ICUROOT in your environment, I am building ICU too ...\n");
-		# Make the icu dll
-		chdir ("$ICUROOT/source/common");
-		# NOTE: Delete the next line if 'nmake clean' breaks the build
-		print "Executing: nmake -f common.mak clean CFG=\"common - $platformname $buildmode\"";
-		#system("nmake -f common.mak clean CFG=\"common - $platformname $buildmode\"");
-		system("msdev common.dsp /MAKE \"common - $platformname $buildmode\" /CLEAN");
-		print "Executing: nmake -f common.mak all CFG=\"common - $platformname $buildmode\"";
-		#system("nmake -f common.mak all CFG=\"common - $platformname $buildmode\"");
-		system("msdev common.dsp /MAKE \"common - $platformname $buildmode\" /REBUILD");
+	    #Clean up all the dependency files, causes problems for nmake
+	    chdir ("$ICUROOT");
+	    system ("del /s /f *.dep *.ncb *.plg *.opt");
 
-		# Make the toolutil.lib
-		if ( -e "$ICUROOT/source/tools/toolutil" ) {
-		    chdir ("$ICUROOT/source/tools/toolutil");
-		    # NOTE: Delete the next line if 'nmake clean' breaks the build
-		    #system "nmake -f makeconv.mak clean CFG=\"makeconv - $platformname $buildmode\"";
-		    system("msdev toolutil.dsp /MAKE \"toolutil - $platformname $buildmode\" /CLEAN");
-		    print "Executing: nmake -f toolutil.mak CFG=\"toolutil - $platformname $buildmode\"";
-		    #system("nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"");
-		    system("msdev toolutil.dsp /MAKE \"toolutil - $platformname $buildmode\" /REBUILD");
-		}
-
-		# Make the makeconv utility
-		chdir ("$ICUROOT/source/tools/makeconv");
-		# NOTE: Delete the next line if 'nmake clean' breaks the build
-		#system "nmake -f makeconv.mak clean CFG=\"makeconv - $platformname $buildmode\"";
-		system("msdev makeconv.dsp /MAKE \"makeconv - $platformname $buildmode\" /CLEAN");
-		print "Executing: nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"";
-		#system("nmake -f makeconv.mak CFG=\"makeconv - $platformname $buildmode\"");
-		system("msdev makeconv.dsp /MAKE \"makeconv - $platformname $buildmode\" /REBUILD");
+	    # Make the icu dlls
+	    chdir ("$ICUROOT/source/allinone");
+	    print "Executing: msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD inside $ICUROOT/source/allinone";
+	    system("msdev allinone.dsw /MAKE \"all - $platformname $buildmode\" /REBUILD");
 	}
 
         # Clean up all the dependency files, causes problems for nmake
@@ -158,107 +131,59 @@ if ($platform =~ m/Windows/) {
 
         # Make the XERCES-C dll
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/XercesLib");
-        print "Executing: nmake -f XercesLib.mak clean CFG=\"XercesLib - $platformname $buildmode\"";
-        #system("nmake -f XercesLib.mak clean CFG=\"XercesLib - $platformname $buildmode\"");
-	system("msdev XercesLib.dsp /MAKE \"XercesLib - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f XercesLib.mak all CFG=\"XercesLib - $platformname $buildmode\"";
-        #system("nmake -f XercesLib.mak all CFG=\"XercesLib - $platformname $buildmode\"");
+        print "Executing: msdev XercesLib.dsp /MAKE \"XercesLib - $platformname $buildmode\" /REBUILD";
 	system("msdev XercesLib.dsp /MAKE \"XercesLib - $platformname $buildmode\" /REBUILD");
 
         # Make the SAXCount sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/SAXCount");
-        #system "nmake -f SAXCount.mak clean CFG=\"SAXCount - $platformname $buildmode\"";
-	system("msdev SAXCount.dsp /MAKE \"SAXCount - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f SAXCount.mak all CFG=\"SAXCount - $platformname $buildmode\"";
-        #system("nmake -f SAXCount.mak all CFG=\"SAXCount - $platformname $buildmode\"");
+        print "Executing: msdev SAXCount.dsp /MAKE \"SAXCount - $platformname $buildmode\" /REBUILD";
 	system("msdev SAXCount.dsp /MAKE \"SAXCount - $platformname $buildmode\" /REBUILD");
 
         # Make the SAXPrint sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/SAXPrint");
-        #system "nmake -f SAXPrint.mak clean CFG=\"SAXPrint - $platformname $buildmode\"";
-	system("msdev SAXPrint.dsp /MAKE \"SAXPrint - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f SAXPrint.mak all CFG=\"SAXPrint - $platformname $buildmode\"";
-        #system("nmake -f SAXPrint.mak all CFG=\"SAXPrint - $platformname $buildmode\"");
+        print "Executing: msdev SAXPrint.dsp /MAKE \"SAXPrint - $platformname $buildmode\" /REBUILD";
 	system("msdev SAXPrint.dsp /MAKE \"SAXPrint - $platformname $buildmode\" /REBUILD");
 
         # Make the DOMCount sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/DOMCount");
-        #system "nmake -f DOMCount.mak clean CFG=\"DOMCount - $platformname $buildmode\"";
-        system("msdev DOMCount.dsp /MAKE \"DOMCount - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f DOMCount.mak all CFG=\"DOMCount - $platformname $buildmode\"";
-        #system("nmake -f DOMCount.mak all CFG=\"DOMCount - $platformname $buildmode\"");
+        print "Executing: msdev DOMCount.dsp /MAKE \"DOMCount - $platformname $buildmode\" /REBUILD";
 	system("msdev DOMCount.dsp /MAKE \"DOMCount - $platformname $buildmode\" /REBUILD");
 
         # Make the DOMPrint sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/DOMPrint");
-        #system "nmake -f DOMPrint.mak clean CFG=\"DOMPrint - $platformname $buildmode\"";
-	system("msdev DOMPrint.dsp /MAKE \"DOMPrint - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f DOMPrint.mak all CFG=\"DOMPrint - $platformname $buildmode\"";
-        #system("nmake -f DOMPrint.mak all CFG=\"DOMPrint - $platformname $buildmode\"");
+        print "Executing: msdev DOMPrint.dsp /MAKE \"DOMPrint - $platformname $buildmode\" /REBUILD";
 	system("msdev DOMPrint.dsp /MAKE \"DOMPrint - $platformname $buildmode\" /REBUILD");
 
         # Make the Redirect sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/Redirect");
-        #system "nmake -f Redirect.mak clean CFG=\"Redirect - $platformname $buildmode\"";
-	system("msdev Redirect.dsp /MAKE \"Redirect - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f Redirect.mak all CFG=\"Redirect - $platformname $buildmode\"";
-        #system("nmake -f Redirect.mak all CFG=\"Redirect - $platformname $buildmode\"");
+        print "Executing: msdev Redirect.dsp /MAKE \"Redirect - $platformname $buildmode\" /REBUILD";
 	system("msdev Redirect.dsp /MAKE \"Redirect - $platformname $buildmode\" /REBUILD");
 
 
         # Make the MemParse sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/MemParse");
-        #system "nmake -f MemParse.mak clean CFG=\"MemParse - $platformname $buildmode\"";
-	system("msdev MemParse.dsp /MAKE \"MemParse - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f MemParse.mak all CFG=\"MemParse - $platformname $buildmode\"";
-        #system("nmake -f MemParse.mak all CFG=\"MemParse - $platformname $buildmode\"");
+        print "Executing: msdev MemParse.dsp /MAKE \"MemParse - $platformname $buildmode\" /REBUILD";
 	system("msdev MemParse.dsp /MAKE \"MemParse - $platformname $buildmode\" /REBUILD");
 
         # Make the PParse sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/PParse");
-        #system "nmake -f PParse.mak clean CFG=\"PParse - $platformname $buildmode\"";
-	system("msdev PParse.dsp /MAKE \"PParse - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f PParse.mak all CFG=\"PParse - $platformname $buildmode\"";
-        #system("nmake -f PParse.mak all CFG=\"PParse - $platformname $buildmode\"");
+        print "Executing: msdev PParse.dsp /MAKE \"PParse - $platformname $buildmode\" /REBUILD";
 	system("msdev PParse.dsp /MAKE \"PParse - $platformname $buildmode\" /REBUILD");
 
         # Make the StdInParse sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/StdInParse");
-        #system "nmake -f StdInParse.mak clean CFG=\"StdInParse - $platformname $buildmode\"";
-	system("msdev StdInParse.dsp /MAKE \"StdInParse - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f StdInParse.mak all CFG=\"StdInParse - $platformname $buildmode\"";
-        #system("nmake -f StdInParse.mak all CFG=\"StdInParse - $platformname $buildmode\"");
+        print "Executing: msdev StdInParse.dsp /MAKE \"StdInParse - $platformname $buildmode\" /REBUILD";
 	system("msdev StdInParse.dsp /MAKE \"StdInParse - $platformname $buildmode\" /REBUILD");
 
         # Make the EnumVal sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/EnumVal");
-        #system "nmake -f EnumVal.mak clean CFG=\"EnumVal - $platformname $buildmode\"";
-	system("msdev EnumVal.dsp /MAKE \"EnumVal - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f EnumVal.mak all CFG=\"EnumVal - $platformname $buildmode\"";
-        #system("nmake -f EnumVal.mak all CFG=\"EnumVal - $platformname $buildmode\"");
+        print "Executing: msdev EnumVal.dsp /MAKE \"EnumVal - $platformname $buildmode\" /REBUILD";
 	system("msdev EnumVal.dsp /MAKE \"EnumVal - $platformname $buildmode\" /REBUILD");
 
         # Make the CreateDOMDocument sample
         chdir ("$XERCESCROOT/Projects/Win32/VC6/xerces-all/CreateDOMDocument");
-        #system "nmake -f CreateDOMDocument.mak clean CFG=\"CreateDOMDocument - $platformname $buildmode\"";
-	system("msdev CreateDOMDocument.dsp /MAKE \"CreateDOMDocument - $platformname $buildmode\" /CLEAN");
-        print "Executing: nmake -f CreateDOMDocument.mak all CFG=\"CreateDOMDocument - $platformname $buildmode\"";
-        #system("nmake -f CreateDOMDocument.mak all CFG=\"CreateDOMDocument - $platformname $buildmode\"");
+        print "Executing: msdev CreateDOMDocument.dsp /MAKE \"CreateDOMDocument - $platformname $buildmode\" /REBUILD";
 	system("msdev CreateDOMDocument.dsp /MAKE \"CreateDOMDocument - $platformname $buildmode\" /REBUILD");
-
-	if (length($ICUROOT) > 0) {
-		# run makeconv now
-		chdir ("$ICUROOT/data");
-		opendir (THISDIR, "$ICUROOT/data");
-		@allfiles = grep(!/^\.\.?$/, readdir(THISDIR));
-		@allucmfiles = grep(/\.ucm/, @allfiles);
-		closedir(THISDIR);
-		-e "$ICUROOT/bin/Release/icuuc.dll" or die " ICU build not completed so icuuc\.dll is not there";
-		system ("cp -fv $ICUROOT/bin/$buildmode/*.dll $ICUROOT/source/tools/makeconv/$buildmode");
-		foreach $ucmfile (@allucmfiles) {
-		        system ("$ICUROOT/source/tools/makeconv/$buildmode/makeconv.exe $ucmfile");
-		}
-	}
 
         # Decide where you want the build copied from
         chdir ($targetdir);
@@ -275,7 +200,7 @@ if ($platform =~ m/Windows/) {
         system ("$xcopycommand /S /C /I /R");
 
 	if (length($ICUROOT) > 0) {
-        	system("cp -Rfv $ICUROOT/include/* $targetdir/include/icu");
+             system("cp -Rfv $ICUROOT/include/* $targetdir/include");
 	}
 
         # Populate the binary output directory
@@ -283,17 +208,13 @@ if ($platform =~ m/Windows/) {
         system("cp -fv $BUILDDIR/*.dll $targetdir/bin");
         system("cp -fv $BUILDDIR/*.exe $targetdir/bin");
 	if (length($ICUROOT) > 0) {
+		# Copy the ICU dlls
 		system("cp -fv $ICUROOT/bin/$buildmode/icuuc.dll $targetdir/bin");
+		system("cp -fv $ICUROOT/data/icudata.dll $targetdir/bin");
+		# Copy the ICU libs
 		system("cp -fv $ICUROOT/lib/$buildmode/icuuc.lib $targetdir/lib");
-		system("cp -fv $ICUROOT/source/tools/makeconv/$buildmode/makeconv.exe $targetdir/bin");
 	}
         system("cp -fv $BUILDDIR/xerces-c_1.lib $targetdir/lib");
-
-        # Copy the locale files
-	if (length($ICUROOT) > 0) {
-		system("cp -fv $ICUROOT/data/*.cnv $targetdir/bin/icu/data/");
-		system("cp -fv $ICUROOT/data/convrtrs.txt $targetdir/bin/icu/data/");
-	}
 
         # Populate the samples directory
         print ("\n\nCopying sample files ...\n");
@@ -325,14 +246,17 @@ if ($platform =~ m/Windows/) {
         # Populate the docs directory
         print ("\n\nCopying documentation ...\n");
         system("cp -Rfv $XERCESCROOT/doc/* $targetdir/doc");
-        system("cp -Rfv $XERCESCROOT/doc/apiDocs/* $targetdir/doc/apiDocs");
+        # system("cp -Rfv $XERCESCROOT/doc/html/apiDocs/* $targetdir/doc/html/apiDocs");
         system("cp $XERCESCROOT/Readme.html $targetdir");
         system("cp $XERCESCROOT/credits.txt $targetdir");	
-        system("cp $XERCESCROOT/LICENSE $targetdir");
-        system("cp $XERCESCROOT/doc/license.html $targetdir");
-        system("cp $XERCESCROOT/LICENSE.txt $targetdir");
-        system("cp $XERCESCROOT/license.html $targetdir");
-        system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+        # system("cp $XERCESCROOT/LICENSE $targetdir");
+        # system("cp $XERCESCROOT/doc/license.html $targetdir");
+        # system("cp $XERCESCROOT/LICENSE.txt $targetdir");
+        # system("cp $XERCESCROOT/license.html $targetdir");
+        # system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+        system("rm -f $targetdir/doc/*.xml");
+        system("rm -f $targetdir/doc/*.ent");
+        system("rm -f $targetdir/doc/*.gif");
 
         # Now package it all up using ZIP
         chdir ("$targetdir/..");
@@ -396,9 +320,7 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         system ("mkdir $targetdir/lib");
         system ("mkdir $targetdir/include");
 	if (length($ICUROOT) > 0) {
-		system ("mkdir $targetdir/lib/icu");
-		system ("mkdir $targetdir/lib/icu/data");
-		system ("mkdir $targetdir/include/icu");
+		system ("mkdir $targetdir/include/unicode");
 	}
         system ("mkdir $targetdir/include/sax");
         system ("mkdir $targetdir/include/framework");
@@ -441,7 +363,8 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         system ("mkdir $targetdir/samples/EnumVal");
         system ("mkdir $targetdir/samples/CreateDOMDocument");
         system ("mkdir $targetdir/doc");
-        system ("mkdir $targetdir/doc/apiDocs");
+        system ("mkdir $targetdir/doc/html");
+        system ("mkdir $targetdir/doc/html/apiDocs");
 
 	if (length($ICUROOT) > 0) {
 		# First make the ICU files
@@ -477,7 +400,11 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 	if ( $platform =~ m/sunos/i ) { $platform = "solaris"; }
 	if ( $platform =~ m/AIX/ ) { $platform = "aix"; }
 
-        system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
+	if (!length($opt_r)) {
+        	system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
+	} else {
+        	system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t");
+	}
         system ("gmake clean");	# May want to comment this line out to speed up
         system ("gmake");
 
@@ -497,6 +424,7 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         system("cp -Rf $XERCESCROOT/src/internal/*.hpp $targetdir/include/internal");
         system("cp -Rf $XERCESCROOT/src/internal/*.c $targetdir/include/internal");
         system("cp -Rf $XERCESCROOT/src/parsers/*.hpp $targetdir/include/parsers");
+        system("cp -Rf $XERCESCROOT/src/parsers/*.c $targetdir/include/parsers");
         system("cp -Rf $XERCESCROOT/src/util/*.hpp $targetdir/include/util");
         system("cp -Rf $XERCESCROOT/src/util/*.c $targetdir/include/util");
 	system("cp -Rf $XERCESCROOT/src/util/Compilers/*.hpp $targetdir/include/util/Compilers");
@@ -523,27 +451,21 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 		
 	if (length($ICUROOT) > 0) {
 		print "\nICU files are being copied from \'" . $ICUROOT . "\'";
-		system("cp -Rf $ICUROOT/include/* $targetdir/include/icu");
+		system("cp -Rf $ICUROOT/include/* $targetdir/include");
 	}
 
         # Populate the binary output directory
         print ("\n\nCopying binary outputs ...\n");
         system("cp -Rf $XERCESCROOT/bin/* $targetdir/bin");
 	if (length($ICUROOT) > 0) {
-		system("cp -f $ICUROOT/source/tools/makeconv/makeconv $targetdir/bin");
 		system("cp -f $ICUROOT/lib/libicu-uc.* $targetdir/lib");
+		system("cp -f $ICUROOT/data/icudata.* $targetdir/lib");
 	}
         system("cp -f $XERCESCROOT/lib/*.a $targetdir/lib");
         system("cp -f $XERCESCROOT/lib/*.so $targetdir/lib");
         system("cp -f $XERCESCROOT/lib/*.sl $targetdir/lib");
 
         system("rm -rf $targetdir/bin/obj");
-
-	if (length($ICUROOT) > 0) {
-		# Copy the locale files
-		system("cp -f $ICUROOT/data/*.cnv $targetdir/lib/icu/data/");
-		system("cp -f $ICUROOT/data/convrtrs.txt $targetdir/lib/icu/data/");
-	}
 
         # Populate the samples directory
         print ("\n\nCopying sample files ...\n");
@@ -578,15 +500,17 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         # Populate the docs directory
         print ("\n\nCopying documentation ...\n");
         system("cp -Rf $XERCESCROOT/doc/* $targetdir/doc");
-        system("cp -Rf $XERCESCROOT/doc/apiDocs/* $targetdir/doc/apiDocs");
+        # system("cp -Rf $XERCESCROOT/doc/html/apiDocs/* $targetdir/doc/html/apiDocs");
         system("cp $XERCESCROOT/Readme.html $targetdir");
         system("cp $XERCESCROOT/credits.txt $targetdir");	
-        system("cp $XERCESCROOT/LICENSE $targetdir");
-        system("cp $XERCESCROOT/LICENSE.txt $targetdir");
-        system("cp $XERCESCROOT/license.html $targetdir");
-        system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
-
-        system("cp $XERCESCROOT/doc/license.html $targetdir");
+        # system("cp $XERCESCROOT/LICENSE $targetdir");
+        # system("cp $XERCESCROOT/LICENSE.txt $targetdir");
+        # system("cp $XERCESCROOT/license.html $targetdir");
+        # system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+        system("rm -f $targetdir/doc/*.xml");
+        system("rm -f $targetdir/doc/*.ent");
+        system("rm -f $targetdir/doc/*.gif");
+        # system("cp $XERCESCROOT/doc/license.html $targetdir");
 
         # Change the directory permissions
         system ("chmod 644 `find $targetdir -type f`");
@@ -607,7 +531,6 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
         # Finally compress the files
         print ("Compressing $platformzipname ...\n");
         system ("gzip $platformzipname");
-
 }
 
 
