@@ -73,7 +73,6 @@
 
 #include <xercesc/framework/StdOutFormatTarget.hpp>
 
-XERCES_CPP_NAMESPACE_USE
 
 void clearFileInfoMemory();
 
@@ -275,6 +274,7 @@ RunInfo         gRunInfo;
 ThreadInfo      *gThreadInfo;
 
 
+XERCES_CPP_NAMESPACE_USE
 
 //------------------------------------------------------------------------------
 //
@@ -413,7 +413,7 @@ int ThreadParser::parse(int fileNum)
                 fXercesDOMParser->parse(*mbis);
             else
                 fXercesDOMParser->parse(fInfo->fileName);
-            DOMDocument* doc = fXercesDOMParser->getDocument();
+            XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* doc = fXercesDOMParser->getDocument();
             domCheckSum(doc);
         }
         else
