@@ -496,7 +496,7 @@ public:
            for source compatibility:</p>
 
 <source>
-&XercesCNamespace;
+//use the current namespace, &XercesCNamespace;
 new &XercesCNamespace;::SAXParser();
 
 //or use the macro
