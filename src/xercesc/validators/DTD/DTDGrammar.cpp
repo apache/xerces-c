@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2003/11/12 20:32:47  peiyongz
+ * Do not serialize/deserialize fElemNonDeclPool
+ *
  * Revision 1.12  2003/11/06 15:03:45  peiyongz
  * initialize data member
  *
@@ -326,12 +329,10 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
         /***
          *
          * Serialize NameIdPool<DTDElementDecl>*       fElemDeclPool;
-         * Serialize NameIdPool<DTDElementDecl>*       fElemNonDeclPool;
          * Serialize NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
          * Serialize NameIdPool<XMLNotationDecl>*      fNotationDeclPool;
          ***/
         XTemplateSerializer::storeObject(fElemDeclPool, serEng);
-        XTemplateSerializer::storeObject(fElemNonDeclPool, serEng); //TODO: to be removed
         XTemplateSerializer::storeObject(fEntityDeclPool, serEng);
         XTemplateSerializer::storeObject(fNotationDeclPool, serEng);
 
@@ -346,12 +347,11 @@ void DTDGrammar::serialize(XSerializeEngine& serEng)
        /***
          *
          * Deserialize NameIdPool<DTDElementDecl>*       fElemDeclPool;
-         * Deserialize NameIdPool<DTDElementDecl>*       fElemNonDeclPool;
          * Deserialize NameIdPool<DTDEntityDecl>*        fEntityDeclPool;
          * Deerialize NameIdPool<XMLNotationDecl>*       fNotationDeclPool;
          ***/
         XTemplateSerializer::loadObject(&fElemDeclPool, 109, 128, serEng);
-        XTemplateSerializer::loadObject(&fElemNonDeclPool, 109, 128, serEng); //TODO: to be removed
+        fElemNonDeclPool = 0;
         XTemplateSerializer::loadObject(&fEntityDeclPool, 109, 128, serEng);
         XTemplateSerializer::loadObject(&fNotationDeclPool, 109, 128, serEng);
 
