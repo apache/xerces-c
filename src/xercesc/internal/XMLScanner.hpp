@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.26  2003/11/12 20:29:47  peiyongz
+ * Stateless Grammar: ValidationContext
+ *
  * Revision 1.25  2003/11/06 15:30:06  neilg
  * first part of PSVI/schema component model implementation, thanks to David Cargill.  This covers setting the PSVIHandler on parser objects, as well as implementing XSNotation, XSSimpleTypeDefinition, XSIDCDefinition, and most of XSWildcard, XSComplexTypeDefinition, XSElementDeclaration, XSAttributeDeclaration and XSAttributeUse.
  *
@@ -294,6 +297,7 @@
 #include <xercesc/internal/ElemStack.hpp>
 #include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include <xercesc/framework/XMLAttr.hpp>
+#include <xercesc/framework/ValidationContext.hpp>
 #include <xercesc/validators/common/GrammarResolver.hpp>
 
 XERCES_CPP_NAMESPACE_BEGIN
@@ -463,6 +467,9 @@ public :
     bool getValidationConstraintFatal() const;
     RefHashTableOf<XMLRefInfo>* getIDRefList();
     const RefHashTableOf<XMLRefInfo>* getIDRefList() const;
+
+    ValidationContext*   getValidationContext();
+
     bool getInException() const;
     /*bool getLastExtLocation
     (
@@ -694,6 +701,7 @@ protected:
     bool isLegalToken(const XMLPScanToken& toCheck);
     XMLTokens senseNextToken(unsigned int& orgReader);
     void initValidator(XMLValidator* theValidator);
+    inline void resetValidationContext();
 
     // -----------------------------------------------------------------------
     //  Data members
@@ -935,7 +943,8 @@ protected:
     XMLErrorReporter*           fErrorReporter;
     ErrorHandler*               fErrorHandler;
     PSVIHandler*                fPSVIHandler;
-    RefHashTableOf<XMLRefInfo>* fIDRefList;
+    ValidationContext           *fValidationContext;
+    bool                        fEntityDeclPoolRetrieved;
     ReaderMgr                   fReaderMgr;
     XMLValidator*               fValidator;
     ValSchemes                  fValScheme;
@@ -1069,12 +1078,23 @@ inline bool XMLScanner::getInException() const
 
 inline RefHashTableOf<XMLRefInfo>* XMLScanner::getIDRefList()
 {
-    return fIDRefList;
+    return fValidationContext->getIdRefList();
 }
 
 inline const RefHashTableOf<XMLRefInfo>* XMLScanner::getIDRefList() const
 {
-    return fIDRefList;
+    return fValidationContext->getIdRefList();
+}
+
+inline ValidationContext*  XMLScanner::getValidationContext()
+{
+    if (!fEntityDeclPoolRetrieved)
+    {
+        fValidationContext->setEntityDeclPool(getEntityDeclPool());
+        fEntityDeclPoolRetrieved = true;
+    }
+
+    return fValidationContext;
 }
 
 inline const Locator* XMLScanner::getLocator() const

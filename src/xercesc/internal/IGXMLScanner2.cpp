@@ -955,7 +955,7 @@ void IGXMLScanner::scanReset(const InputSource& src)
         fErrorReporter->resetErrors();
 
     // Clear out the id reference list
-    fIDRefList->removeAll();
+    resetValidationContext();
 
     // Reset the Root Element Name
     fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;

@@ -63,6 +63,7 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include <xercesc/internal/XMLScanner.hpp>
+#include <xercesc/internal/ValidationContextImpl.hpp>
 #include <xercesc/util/Janitor.hpp>
 #include <xercesc/util/Mutexes.hpp>
 #include <xercesc/util/RuntimeException.hpp>
@@ -198,7 +199,8 @@ XMLScanner::XMLScanner(XMLValidator* const valToAdopt,
     , fEntityHandler(0)
     , fErrorReporter(0)
     , fErrorHandler(0)
-    , fIDRefList(0)
+    , fValidationContext(0)
+    , fEntityDeclPoolRetrieved(false)
     , fReaderMgr(manager)
     , fValidator(valToAdopt)
     , fValScheme(Val_Never)
@@ -268,7 +270,8 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
     , fEntityHandler(entityHandler)
     , fErrorReporter(errHandler)
     , fErrorHandler(0)
-    , fIDRefList(0)
+    , fValidationContext(0)
+    , fEntityDeclPoolRetrieved(false)
     , fReaderMgr(manager)
     , fValidator(valToAdopt)
     , fValScheme(Val_Never)
@@ -304,7 +307,7 @@ XMLScanner::XMLScanner( XMLDocumentHandler* const  docHandler
 XMLScanner::~XMLScanner()
 {
     delete fAttrList;
-    delete fIDRefList;
+    delete fValidationContext;
     fMemoryManager->deallocate(fRootElemName);//delete [] fRootElemName;
     fMemoryManager->deallocate(fExternalSchemaLocation);//delete [] fExternalSchemaLocation;
     fMemoryManager->deallocate(fExternalNoNamespaceSchemaLocation);//delete [] fExternalNoNamespaceSchemaLocation;
@@ -733,7 +736,7 @@ void XMLScanner::commonInit()
 
     //  Create the id ref list. This is used to enforce XML 1.0 ID ref
     //  semantics, i.e. all id refs must refer to elements that exist
-    fIDRefList = new (fMemoryManager) RefHashTableOf<XMLRefInfo>(109, fMemoryManager);
+    fValidationContext = new (fMemoryManager) ValidationContextImpl(fMemoryManager);
 
     //  Create the GrammarResolver
     //fGrammarResolver = new GrammarResolver();
@@ -1728,11 +1731,12 @@ void XMLScanner::setURIStringPool(XMLStringPool* const stringPool)
 //  This method is called after the content scan to insure that all the
 //  ID/IDREF attributes match up (i.e. that all IDREFs refer to IDs.) This is
 //  an XML 1.0 rule, so we can do here in the core.
+
 void XMLScanner::checkIDRefs()
 {
     //  Iterate the id ref list. If we find any entries here which are used
     //  but not declared, then that's an error.
-    RefHashTableOfEnumerator<XMLRefInfo> refEnum(fIDRefList);
+    RefHashTableOfEnumerator<XMLRefInfo> refEnum(fValidationContext->getIdRefList());
     while (refEnum.hasMoreElements())
     {
         // Get a ref to the current element
@@ -2124,5 +2128,11 @@ XMLScanner::scanUpToWSOr(XMLBuffer& toFill, const XMLCh chEndChar)
     return toFill.getLen();
 }
 
+inline void XMLScanner::resetValidationContext()
+{
+    fValidationContext->clearIdRefList();
+    fValidationContext->setEntityDeclPool(0);
+    fEntityDeclPoolRetrieved = false;
+}
 
 XERCES_CPP_NAMESPACE_END

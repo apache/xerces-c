@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.15  2003/11/12 20:28:16  peiyongz
+# Stateless Grammar: ValidationContext
+#
 # Revision 1.14  2003/10/14 15:17:47  peiyongz
 # Implementation of Serialization/Deserialization
 #
@@ -173,6 +176,7 @@ FRAMEWORK_CPP_PUBHEADERS = \
 	StdInInputSource.hpp \
 	StdOutFormatTarget.hpp \
 	URLInputSource.hpp \
+	ValidationContext.hpp \
 	Wrapper4DOMInputSource.hpp \
 	Wrapper4InputSource.hpp \
 	XMLAttDef.hpp \

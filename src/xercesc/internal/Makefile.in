@@ -89,6 +89,7 @@ INTERNAL_CPP_PUBHEADERS = \
 	MemoryManagerImpl.hpp \
 	ReaderMgr.hpp \
 	SGXMLScanner.hpp \
+	ValidationContextImpl.hpp \
 	VecAttrListImpl.hpp \
 	VecAttributesImpl.hpp \
 	IGXMLScanner.hpp \
@@ -120,6 +121,7 @@ INTERNAL_CPP_OBJECTS = \
 	MemoryManagerImpl.$(TO) \
 	ReaderMgr.$(TO) \
 	SGXMLScanner.$(TO) \
+	ValidationContextImpl.$(TO) \
 	VecAttrListImpl.$(TO) \
 	VecAttributesImpl.$(TO) \
 	WFXMLScanner.$(TO) \

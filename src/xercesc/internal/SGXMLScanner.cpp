@@ -2414,7 +2414,7 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         for(unsigned int i=0; i<attDefList.getAttDefCount(); i++)
         {
             // Get the current att def, for convenience and its def type
-            XMLAttDef *curDef = &attDefList.getAttDef(i);
+            XMLAttDef *curDef = &attDefList.getAttDef(i);            
             const XMLAttDef::DefAttTypes defType = curDef->getDefaultType();
 
             if (!curDef->getProvided())
@@ -2784,7 +2784,7 @@ void SGXMLScanner::scanReset(const InputSource& src)
         fErrorReporter->resetErrors();
 
     // Clear out the id reference list
-    fIDRefList->removeAll();
+    resetValidationContext();
 
     // Reset IdentityConstraints
     fValueStoreCache->startDocument();

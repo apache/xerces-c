@@ -3035,7 +3035,7 @@ Grammar* IGXMLScanner::loadDTDGrammar(const InputSource& src,
         fErrorReporter->resetErrors();
 
     // Clear out the id reference list
-    fIDRefList->removeAll();
+    resetValidationContext();
     // and clear out the darned undeclared DTD element pool...
     fDTDElemNonDeclPool->removeAll();
 
