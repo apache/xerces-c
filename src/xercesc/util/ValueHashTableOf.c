@@ -56,6 +56,9 @@
 
 /**
  * $Log$
+ * Revision 1.7  2003/12/16 18:37:14  knoaman
+ * Add nextElementKey method
+ *
  * Revision 1.6  2003/05/16 06:01:52  knoaman
  * Partial implementation of the configurable memory manager.
  *
@@ -389,6 +392,22 @@ template <class TVal> TVal& ValueHashTableOfEnumerator<TVal>::nextElement()
     findNext();
 
     return saveElem->fData;
+}
+
+template <class TVal> void* ValueHashTableOfEnumerator<TVal>::nextElementKey()
+{
+    // Make sure we have an element to return
+    if (!hasMoreElements())
+        ThrowXML(NoSuchElementException, XMLExcepts::Enum_NoMoreElements);
+
+    //
+    //  Save the current element, then move up to the next one for the
+    //  next time around.
+    //
+    ValueHashTableBucketElem<TVal>* saveElem = fCurElem;
+    findNext();
+
+    return saveElem->fKey;
 }
 
 
