@@ -192,6 +192,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "SAX2Print"=".\SAX2Print\SAX2Print.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name XercesLib
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "SAXCount"=".\SAXCount\SAXCount.dsp" - Package Owner=<4>
 
 Package=<5>
