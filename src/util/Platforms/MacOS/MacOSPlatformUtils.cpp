@@ -80,13 +80,13 @@
 #include <util/Platforms/MacOS/MacOSDefs.hpp>
 #include <util/Platforms/MacOS/MacOSPlatformUtils.hpp>
 
-#if defined(XML_USE_INMEMORY_MSGLOADER)
+#if (defined(XML_USE_INMEMORY_MSGLOADER) || defined(XML_USE_INMEM_MESSAGELOADER))
    #include <util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 #endif
-#if defined(XML_USE_MACOS_UNICODECONVERTER)
+#if (defined(XML_USE_MACOS_UNICODECONVERTER) || defined(XML_USE_NATIVE_TRANSCODER))
    #include <util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp>
 #endif
-#if defined(XML_USE_NETACCESSOR_URLACCESS)
+#if (defined(XML_USE_NETACCESSOR_URLACCESS) || defined(XML_USE_NETACCESSOR_NATIVE))
    #include <util/NetAccessors/MacOSURLAccess/MacOSURLAccess.hpp>
 #endif
 
@@ -806,7 +806,7 @@ XMLPlatformUtils::platformTerm()
 XMLNetAccessor*
 XMLPlatformUtils::makeNetAccessor()
 {
-#if defined(XML_USE_NETACCESSOR_URLACCESS)
+#if (defined(XML_USE_NETACCESSOR_URLACCESS) || defined(XML_USE_NETACCESSOR_NATIVE))
 	//	Only try to use URLAccess if it's actually available
 	if (URLAccessAvailable())
 		return new MacOSURLAccess;
@@ -825,10 +825,11 @@ XMLPlatformUtils::makeNetAccessor()
 XMLMsgLoader*
 XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 {
-#if defined(XML_USE_INMEMORY_MSGLOADER)
+#if (defined(XML_USE_INMEMORY_MSGLOADER) || defined(XML_USE_INMEM_MESSAGELOADER))
     return new InMemMsgLoader(msgDomain);
 #else
     #error You must provide a message loader
+    return 0;
 #endif
 }
 
@@ -842,7 +843,7 @@ XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 XMLTransService*
 XMLPlatformUtils::makeTransService()
 {
-#if defined(XML_USE_MACOS_UNICODECONVERTER)
+#if (defined(XML_USE_MACOS_UNICODECONVERTER) || defined(XML_USE_NATIVE_TRANSCODER))
     if (MacOSUnicodeConverter::IsMacOSUnicodeConverterSupported())
         return new MacOSUnicodeConverter;
 #else

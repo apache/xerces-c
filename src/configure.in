@@ -46,7 +46,8 @@ case "${host}" in
         *-*-mvs*)       platform=OS390 ;;
         *-*-os400*)     platform=OS400 ;;
         *-*-OS400*)     platform=OS400 ;;
-        *-*-osf*)	platform=TRU64 ;;
+        *-*-osf*)		platform=TRU64 ;;
+        *-apple-*)		platform=MACOSX ;;
         *)              platform=UNKNOWN ;;
 esac
 AC_SUBST(platform)
@@ -94,6 +95,7 @@ util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
 util/Transcoders/Iconv400/Makefile \
+util/Transcoders/MacOSUnicodeConverter/Makefile \
 util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
 util/Platforms/AIX/Makefile \
@@ -105,6 +107,7 @@ util/Platforms/IRIX/Makefile \
 util/Platforms/PTX/Makefile \
 util/Platforms/UnixWare/Makefile \
 util/Platforms/Tru64/Makefile \
+util/Platforms/MacOS/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \
@@ -112,6 +115,7 @@ util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
 util/NetAccessors/libWWW/Makefile \
+util/NetAccessors/MacOSURLAccess/Makefile \
 util/regx/Makefile \
 validators/Makefile \
 validators/common/Makefile \

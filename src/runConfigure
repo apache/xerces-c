@@ -79,12 +79,12 @@ usage()
     echo "Usage: runConfigure \"options\""
     echo "       where options may be any of the following:"
     echo "       -p <platform> (accepts 'aix', 'linux', 'solaris',
-            'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx', 'tru64' )"
+            'hp-10', 'hp-11', 'unixware', 'os400', 'irix', 'ptx', 'tru64', 'macosx' )"
     echo "       -c <C compiler name> (e.g. gcc, cc, xlc_r, icc)"
     echo "       -x <C++ compiler name> (e.g. g++, CC, xlC_r, icc, c++)"
     echo "       -d (specifies that you want to build debug version)"
     echo "       -m <message loader> can be 'inmem', 'icu', 'MsgFile' or 'iconv'"
-    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket'"
+    echo "       -n <net accessor> can be 'fileonly', 'libwww', 'socket' or 'native'"
     echo "       -t <transcoder> can be 'icu', 'Iconv400', 'Iconv390' or 'native'"
     echo "       -r <thread option> can be 'pthread' or 'dce' (only used on HP-11)"
     echo "       -l <extra linker options>"
@@ -201,7 +201,7 @@ echo "Extra configure options: $configureoptions"
 #
 
 case $platform in
-   aix | linux | solaris | hp-10 | hp-11 | irix | unixware | os400 | ptx | tru64)
+   aix | linux | solaris | hp-10 | hp-11 | irix | unixware | os400 | ptx | tru64 | macosx)
        # platform has been recognized
        ;;
    *)
@@ -385,6 +385,12 @@ case $netaccessor in
        netaccessorLibs="`libwww-config --libs`"
        USELIBWWW=1;;
 
+   native)
+       NETACCESSOR=NATIVE
+       netaccessorDefines="-DXML_USE_NETACCESSOR_NATIVE"
+       netaccessorLibs=""
+       ;;
+
    *)
        echo "I do not recognize the netaccessor option '$netaccessor'. Please type '${0} -h' for help."
        exit ${ERROR_EXIT_CODE};;
@@ -462,7 +468,6 @@ echo export CXXFLAGS=\"$CXXFLAGS\"
 echo export CFLAGS=\"$CFLAGS\"
 echo export LDFLAGS=\"$LDFLAGS\"
 echo export LIBS=\"$LIBS\"
-echo export NETACCESSOR=\"$NETACCESSOR\"
 echo configure $configureoptions
 
 echo

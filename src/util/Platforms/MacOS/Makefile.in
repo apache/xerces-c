@@ -53,8 +53,7 @@
 # on the Apache Software Foundation, please see
 # <http://www.apache.org/>.
 #
-#
-# $Id$
+# $Log
 #
 
 PLATFORM = @platform@
@@ -71,72 +70,17 @@ MESSAGELOADER = @messageloader@
 TRANSCODER = @transcoder@
 
 MODULE = util
-SUBMODULE = Compilers
+SUBMODULE = Platforms/MacOS
+CXXFLAGS += -D_GNU_SOURCE -D__USE_GNU
 
-include ../../Makefile.incl
+include ../../../Makefile.incl
 
 CPP_PUBHEADERS = \
-	BorlandCDefs.hpp \
-	CSetDefs.hpp \
-	CodeWarriorDefs.hpp \
-	DECCXXDefs.hpp \
-	GCCDefs.hpp \
-	HPCCDefs.hpp \
-	IBMVAOS2Defs.hpp \
-	IBMVAW32Defs.hpp \
-	MVSCPPDefs.hpp \
-	PTXCCDefs.hpp \
-	SCOCCDefs.hpp \
-	SunCCDefs.hpp \
-	SunKaiDefs.hpp \
-	OS400SetDefs.hpp \
-        MIPSproDefs.hpp \
-	TandemCCDefs.hpp \
-	VCPPDefs.hpp
+	MacOSDefs.hpp \
+	MacOSPlatformUtils.hpp
+	
+CPP_OBJECTS = \
+	MacOSPlatformUtils.$(TO)
 
-ifeq (${CXX},CC)
-    ifeq (${PLATFORM},SOLARIS)
-        CPP_OBJECTS = SunCCDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},HPUX)
-        CPP_OBJECTS = HPCCDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},IRIX)
-        CPP_OBJECTS = MIPSproDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},UNIXWARE)
-        CPP_OBJECTS = SCOCCDefs.$(TO)
-    endif
-endif
-ifeq (${CXX},xlC_r)
-    CPP_OBJECTS = CSetDefs.$(TO)
-endif
-ifeq (${CXX},g++)
-    CPP_OBJECTS = GCCDefs.$(TO)
-endif
-ifeq (${CXX},aCC)
-	CPP_OBJECTS = HPCCDefs.$(TO)
-endif
-ifeq (${CXX},c++)
-    ifeq (${PLATFORM},OS390)
-        CPP_OBJECTS = MVSCPPDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},PTX)
-        CPP_OBJECTS = PTXCCDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},LINUX)
-        CPP_OBJECTS = GCCDefs.$(TO)
-    endif
-    ifeq (${PLATFORM},MACOSX)
-        CPP_OBJECTS = GCCDefs.$(TO)
-    endif
-endif
-ifeq (${CXX}, cxx)
-	ifeq (${PLATFORM},TRU64)
-		CPP_OBJECTS = DECCXXDefs.$(TO)
-	endif
-endif
-
-
-include ../Makefile.util.submodule
+include ../../Makefile.util.submodule
 

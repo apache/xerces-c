@@ -379,6 +379,31 @@ ifeq (${PLATFORM}, TRU64)
   endif
 endif
 
+
+#=============== MacOS SPECIFIC OPTIONS =========================
+ifeq (${PLATFORM}, MACOSX)
+	MacIncludes = 
+	MacOptions = \
+		-framework Carbon \
+		-framework CoreFoundation \
+		-framework CoreServices
+	PLATFORM_LIBRARIES= \
+		-framework Carbon \
+		-framework CoreFoundation \
+		-framework CoreServices
+	PLATFORM_COMPILE_OPTIONS = \
+		-D${PLATFORM} ${MacIncludes} ${MacOptions}
+	MAKE_SHARED = ${CXX} -D${PLATFORM} -dynamiclib
+	MAKE_SHARED_C = ${CC} -D${PLATFORM} -dynamiclib
+	ifeq (${TRANSCODER}, ICU)
+		ALLLIBS = ${LIBS} -L/usr/lib -L/usr/local/lib -L/usr/ccs/lib -licu-uc -licud ata -lc
+	else
+		ALLLIBS = ${LIBS} -L/usr/lib
+	endif
+	SHLIBSUFFIX=.dylib
+endif
+
+
 ###################### STANDARD TOOLS #############################
 ifeq (${PLATFORM}, OS400)
 CP = -cp -fph

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.14  2001/06/05 19:35:53  jberry
+# Add support for Mac OS X command line configuration and build.
+#
 # Revision 1.13  2000/08/01 18:26:07  aruna1
 # Tru64 support added
 #
@@ -147,6 +150,9 @@ ifeq (${PLATFORM}, PTX)
 endif
 ifeq (${PLATFORM}, TRU64)
 	SUBMODULE = Tru64
+endif
+ifeq (${PLATFORM}, MACOSX)
+	SUBMODULE = MacOS
 endif
 
 includes::

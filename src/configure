@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Guess values for system-dependent variables and create Makefiles.
-# Generated automatically using autoconf version 2.13
+# Generated automatically using autoconf version 2.13 
 # Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 #
 # This configure script is free software; the Free Software Foundation
@@ -1314,7 +1314,8 @@ case "${host}" in
         *-*-mvs*)       platform=OS390 ;;
         *-*-os400*)     platform=OS400 ;;
         *-*-OS400*)     platform=OS400 ;;
-        *-*-osf*)	platform=TRU64 ;;
+        *-*-osf*)		platform=TRU64 ;;
+        *-apple-*)		platform=MACOSX ;;
         *)              platform=UNKNOWN ;;
 esac
 
@@ -1474,6 +1475,7 @@ util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
 util/Transcoders/Iconv400/Makefile \
+util/Transcoders/MacOSUnicodeConverter/Makefile \
 util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
 util/Platforms/AIX/Makefile \
@@ -1485,6 +1487,7 @@ util/Platforms/IRIX/Makefile \
 util/Platforms/PTX/Makefile \
 util/Platforms/UnixWare/Makefile \
 util/Platforms/Tru64/Makefile \
+util/Platforms/MacOS/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \
@@ -1492,6 +1495,7 @@ util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
 util/NetAccessors/libWWW/Makefile \
+util/NetAccessors/MacOSURLAccess/Makefile \
 util/regx/Makefile \
 validators/Makefile \
 validators/common/Makefile \
@@ -1609,6 +1613,7 @@ util/Transcoders/ICU/Makefile \
 util/Transcoders/Iconv/Makefile \
 util/Transcoders/Iconv390/Makefile \
 util/Transcoders/Iconv400/Makefile \
+util/Transcoders/MacOSUnicodeConverter/Makefile \
 util/Platforms/Makefile \
 util/Platforms/Solaris/Makefile \
 util/Platforms/AIX/Makefile \
@@ -1620,6 +1625,7 @@ util/Platforms/IRIX/Makefile \
 util/Platforms/PTX/Makefile \
 util/Platforms/UnixWare/Makefile \
 util/Platforms/Tru64/Makefile \
+util/Platforms/MacOS/Makefile \
 util/Compilers/Makefile \
 util/MsgLoaders/InMemory/Makefile \
 util/MsgLoaders/ICU/Makefile \
@@ -1627,6 +1633,7 @@ util/MsgLoaders/MsgCatalog/Makefile \
 util/MsgLoaders/MsgFile/Makefile \
 util/NetAccessors/Socket/Makefile \
 util/NetAccessors/libWWW/Makefile \
+util/NetAccessors/MacOSURLAccess/Makefile \
 util/regx/Makefile \
 validators/Makefile \
 validators/common/Makefile \

@@ -55,6 +55,9 @@
 #
 #
 # $Log$
+# Revision 1.36  2001/06/05 19:35:51  jberry
+# Add support for Mac OS X command line configuration and build.
+#
 # Revision 1.35  2001/05/16 15:25:40  tng
 # Schema: Add Base64 and HexBin.  By Pei Yong Zhang.
 #
@@ -210,18 +213,24 @@ NETACCESSOR = @netaccessor@
 
 MODULE = util
 
-ifeq (${TRANSCODER},ICU)
-   TRANSCODERMODULE=ICU
+ifeq (${TRANSCODER},NATIVE)
+	ifeq (${PLATFORM},MACOSX)
+		TRANSCODERMODULE=MacOSUnicodeConverter
+	endif
 else
-   ifeq (${TRANSCODER},Iconv400)
-    TRANSCODERMODULE=Iconv400
-   else
-    ifeq (${TRANSCODER},Iconv390)
-       TRANSCODERMODULE=Iconv390
-    else
-       TRANSCODERMODULE=Iconv
-    endif
-   endif
+	ifeq (${TRANSCODER},ICU)
+	   TRANSCODERMODULE=ICU
+	else
+	   ifeq (${TRANSCODER},Iconv400)
+		TRANSCODERMODULE=Iconv400
+	   else
+		ifeq (${TRANSCODER},Iconv390)
+		   TRANSCODERMODULE=Iconv390
+		else
+		   TRANSCODERMODULE=Iconv
+		endif
+	   endif
+	endif
 endif
 
 ifeq (${MESSAGELOADER},ICU)
@@ -240,14 +249,19 @@ else
 endif
 
 
-ifeq (${NETACCESSOR},Socket)
-  NETACCESSORMODULE=Socket
+ifeq (${NETACCESSOR},NATIVE)
+	ifeq (${PLATFORM},MACOSX)
+	  NETACCESSORMODULE=MacOSURLAccess
+	endif
 else
-  ifeq (${NETACCESSOR},LibWWW)
-    NETACCESSORMODULE=libWWW
-  endif
+	ifeq (${NETACCESSOR},Socket)
+	  NETACCESSORMODULE=Socket
+	else
+	  ifeq (${NETACCESSOR},LibWWW)
+		NETACCESSORMODULE=libWWW
+	  endif
+	endif
 endif
-
 
 include ../Makefile.incl
 
