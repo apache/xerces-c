@@ -120,7 +120,7 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
-				RelativePath="..\..\..\..\..\samples\SAXCount\SAXCountHandlers.cpp">
+				RelativePath="..\..\..\..\..\tests\XSerializerTest\XSerializerHandlers.cpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\tests\XSerializerTest\XSerializerTest.cpp">
@@ -130,7 +130,7 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\..\..\..\..\samples\SAXCount\SAXCountHandlers.hpp">
+				RelativePath="..\..\..\..\..\tests\XSerializerTest\XSerializerHandlers.hpp">
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\tests\XSerializerTest\XSerializerTest.hpp">
