@@ -209,7 +209,7 @@ void DOMBuffer::expandCapacity(const unsigned int extraNeeded)
 {
     //not enough room. Calc new capacity and allocate new buffer
     const unsigned int newCap = (unsigned int)((fIndex + extraNeeded) * 1.25);
-    XMLCh* newBuf = new (fDoc) XMLCh[newCap+1];
+    XMLCh* newBuf = (XMLCh*) fDoc->allocate((newCap+1)*sizeof(XMLCh));
 
     // Copy over the old stuff
     memcpy(newBuf, fBuffer, fCapacity * sizeof(XMLCh));
