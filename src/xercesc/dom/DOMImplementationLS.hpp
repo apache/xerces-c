@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/30 19:24:48  knoaman
+ * documentation update
+ *
  * Revision 1.2  2002/05/30 16:39:06  knoaman
  * DOM L3 LS.
  *
@@ -76,6 +79,7 @@ class DOMInputSource;
 
 
 /**
+  * Introduced in DOM Level 3
   *
   * <p><code>DOMImplementationLS</code> contains the factory methods for
   * creating objects that implement the <code>DOMBuilder</code> (parser) and
@@ -129,6 +133,8 @@ public:
     /** @name Virtual DOMImplementation LS interface */
     //@{
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * <p>Create a new DOMBuilder. The newly constructed parser may then be
     * configured by means of its setFeature method, and used to parse
     * documents by means of its parse method.</p>
@@ -158,6 +164,8 @@ public:
 
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * <p>Create a new DOMWriter. DOMWriters are used to serialize a DOM tree
     * back into an XML document.</p>
     *
@@ -168,6 +176,8 @@ public:
     virtual DOMWriter* createDOMWriter() = 0;
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * <p>Create a new "empty" DOMInputSource.</p>
     *
     * @return The newly created <code>DOMInputSource<code> object.

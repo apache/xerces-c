@@ -981,6 +981,7 @@ const XMLCh XMLUni::fgSAX2XercesSchemaExternalNoNameSpaceSchemaLocation[] =
     ,   chLatin_t, chLatin_i, chLatin_o, chLatin_n, chNull
 };
 
+//Introduced in DOM Level 3
 const XMLCh XMLUni::fgDOMCanonicalForm[] =
 {
         chLatin_c, chLatin_a, chLatin_n, chLatin_o, chLatin_n, chLatin_i, chLatin_c

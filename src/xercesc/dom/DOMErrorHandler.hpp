@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/05/30 19:24:48  knoaman
+ * documentation update
+ *
  * Revision 1.1  2002/05/23 15:47:24  knoaman
  * DOM L3 core - support for DOMError, DOMErrorHandler and DOMLocator
  *
@@ -71,6 +74,8 @@ class DOMError;
 
 
 /**
+  * Introduced in DOM Level 3
+  *
   * Basic interface for DOM error handlers.
   *
   * <p>DOMErrorHandler is a callback interface that the DOM implementation
@@ -108,6 +113,8 @@ public:
     /** @name The error handler interface */
     //@{
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * This method is called on the error handler when an error occures.
     *
     * @param domError The error object that describes the error, this object

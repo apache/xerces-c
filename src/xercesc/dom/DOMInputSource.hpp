@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/05/30 19:24:48  knoaman
+ * documentation update
+ *
  * Revision 1.1  2002/05/29 21:28:02  knoaman
  * DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
  *
@@ -71,6 +74,7 @@ class BinInputStream;
 
 
 /**
+  * Introduced in DOM Level 3
   * This interface represents a single input source for an XML entity.
   *
   * <p>This interface allows an application to encapsulate information about
@@ -128,6 +132,8 @@ public:
     /** @name Virtual input source interface */
     //@{
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Makes the byte stream for this input source.
     *
     * <p>The derived class must create and return a binary input stream of an
@@ -146,6 +152,8 @@ public:
     /** @name Getter methods */
     //@{
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * An input source can be set to force the parser to assume a particular
     * encoding for the data that input source reprsents, via the setEncoding()
     * method. This method returns name of the encoding that is to be forced.
@@ -158,6 +166,8 @@ public:
 
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the public identifier for this input source.
     *
     * @return The public identifier, or null if none was supplied.
@@ -167,6 +177,8 @@ public:
 
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the system identifier for this input source.
     *
     * <p>If the system ID is a URL, it will be fully resolved.</p>
@@ -178,6 +190,8 @@ public:
 
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the base URI to be used for resolving relative URIs to absolute
     * URIs. If the baseURI is itself a relative URI, the behavior is
     * implementation dependent.
@@ -189,6 +203,8 @@ public:
 
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the flag that indicates if the parser should issue fatal error if this input source
     * is not found.
     *
@@ -206,6 +222,8 @@ public:
     //@{
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the encoding which will be required for use with the XML text read
     * via a stream opened by this input source.
     *
@@ -220,6 +238,8 @@ public:
 
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the public identifier for this input source.
     *
     * <p>The public identifier is always optional: if the application writer
@@ -231,13 +251,13 @@ public:
     virtual void setPublicId(const XMLCh* const publicId) = 0;
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the system identifier for this input source.
     *
-    * <p>Set the system identifier for this input source.
-    *
-    * </p>The system id is always required. The public id may be used to map
+    * <p>The system id is always required. The public id may be used to map
     * to another system id, but the system id must always be present as a fall
-    * back.
+    * back.</p>
     *
     * <p>If the system ID is a URL, it must be fully resolved.</p>
     *
@@ -247,6 +267,8 @@ public:
     virtual void setSystemId(const XMLCh* const systemId) = 0;
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the base URI to be used for resolving relative URIs to absolute
     * URIs. If the baseURI is itself a relative URI, the behavior is
     * implementation dependent.
@@ -257,6 +279,8 @@ public:
     virtual void setBaseURI(const XMLCh* const baseURI) = 0;
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Indicates if the parser should issue fatal error if this input source
     * is not found.  If set to false, the parser issue warning message instead.
     *

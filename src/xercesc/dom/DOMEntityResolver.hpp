@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/05/30 19:24:48  knoaman
+ * documentation update
+ *
  * Revision 1.1  2002/05/29 21:28:02  knoaman
  * DOM L3 LS: DOMInputSource, DOMEntityResolver, DOMImplementationLS and DOMBuilder
  *
@@ -70,6 +73,8 @@
 class DOMInputSource;
 
 /**
+  * Introduced in DOM Level 3
+  *
   * DOMEntityResolver provides a way for applications to redirect references
   * to external entities.
   *
@@ -113,6 +118,8 @@ public:
     //@{
 
   /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Allow the application to resolve external entities.
     *
     * <p>The DOMBuilder will call this method before opening any external

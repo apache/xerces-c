@@ -216,8 +216,7 @@ DOMDocument *DOMImplementationImpl::createDocument()
 }
 
 
-// DOM LS
-
+//Introduced in DOM Level 3
 DOMBuilder* DOMImplementationImpl::createDOMBuilder(const short mode,
                                                     const XMLCh* const schemaType)
 {

@@ -88,7 +88,8 @@ public:
                                             const XMLCh *qualifiedName, DOMDocumentType *doctype);
     virtual DOMDocument               *createDocument();
 
-    // DOMImplementationLS
+    // Introduced in DOM Level 3
+    // Experimental - subject to change
     virtual DOMBuilder* createDOMBuilder(const short mode,
                                          const XMLCh* const schemaType);
     virtual DOMWriter* createDOMWriter();

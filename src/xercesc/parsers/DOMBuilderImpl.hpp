@@ -67,6 +67,8 @@
 #include <xercesc/dom/DOMBuilder.hpp>
 
  /**
+  * Introduced in DOM Level 3
+  *
   * DOMBuilderImpl provides an implementation of a DOMBuilder interface.
   * A DOMBuilder instance is obtained from the DOMImplementationLS interface
   * by invoking its createDOMBuilder method.
@@ -107,7 +109,10 @@ public :
     /** @name Getter methods */
     //@{
 
-    /** Get a pointer to the error handler
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Get a pointer to the error handler
       *
       * This method returns the installed error handler. If no handler
       * has been installed, then it will be a zero pointer.
@@ -116,7 +121,10 @@ public :
       */
     DOMErrorHandler* getErrorHandler();
 
-    /** Get a const pointer to the error handler
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Get a const pointer to the error handler
       *
       * This method returns the installed error handler.  If no handler
       * has been installed, then it will be a zero pointer.
@@ -125,7 +133,10 @@ public :
       */
     const DOMErrorHandler* getErrorHandler() const;
 
-    /** Get a pointer to the entity resolver
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Get a pointer to the entity resolver
       *
       * This method returns the installed entity resolver.  If no resolver
       * has been installed, then it will be a zero pointer.
@@ -134,7 +145,10 @@ public :
       */
     DOMEntityResolver* getEntityResolver();
 
-    /** Get a const pointer to the entity resolver
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Get a const pointer to the entity resolver
       *
       * This method returns the installed entity resolver. If no resolver
       * has been installed, then it will be a zero pointer.
@@ -143,7 +157,10 @@ public :
       */
     const DOMEntityResolver* getEntityResolver() const;
 
-    /** Get a pointer to the application filter
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Get a pointer to the application filter
       *
       * This method returns the installed application filter. If no filter
       * has been installed, then it will be a zero pointer.
@@ -152,7 +169,10 @@ public :
       */
     DOMBuilderFilter* getFilter();
 
-    /** Get a const pointer to the application filter
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Get a const pointer to the application filter
       *
       * This method returns the installed application filter. If no filter
       * has been installed, then it will be a zero pointer.
@@ -171,7 +191,10 @@ public :
     /** @name Setter methods */
     //@{
 
-    /** Set the error handler
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Set the error handler
       *
       * This method allows applications to install their own error handler
       * to trap error and warning messages.
@@ -186,7 +209,10 @@ public :
       */
     void setErrorHandler(DOMErrorHandler* const handler);
 
-    /** Set the entity resolver
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Set the entity resolver
       *
       * This method allows applications to install their own entity
       * resolver. By installing an entity resolver, the applications
@@ -203,7 +229,10 @@ public :
       */
     void setEntityResolver(DOMEntityResolver* const handler);
 
-    /** Set the application filter
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Set the application filter
       *
       * When the application provides a filter, the parser will call out to
       * the filter at the completion of the construction of each Element node.
@@ -231,7 +260,10 @@ public :
     /** @name Feature methods */
     //@{
 
-    /** Set the state of a feature
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Set the state of a feature
       *
       * It is possible for a DOMBuilder to recognize a feature name but to be
       * unable to set its value.
@@ -249,7 +281,10 @@ public :
       */
     void setFeature(const XMLCh* const name, const bool state);
 
-    /** Look up the value of a feature.
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Look up the value of a feature.
       *
       * @param name The feature name.
       * @return The current state of the feature (true or false)
@@ -262,7 +297,10 @@ public :
       */
     bool getFeature(const XMLCh* const name);
 
-    /** Query whether setting a feature to a specific value is supported.
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Query whether setting a feature to a specific value is supported.
       *
       * @param name  The feature name.
       * @param state The requested state of the feature (true or false).
@@ -284,7 +322,10 @@ public :
     /** @name Parsing methods */
     //@{
 
-    /** Parse via an input source object
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Parse via an input source object
       *
       * This method invokes the parsing process on the XML file specified
       * by the DOMInputSource parameter. This API is borrowed from the
@@ -311,7 +352,10 @@ public :
       */
     DOMDocument* parse(const DOMInputSource& source, const bool reuseGrammar = false);
 
-    /** Parse via a file path or URL
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Parse via a file path or URL
       *
       * This method invokes the parsing process on the XML file specified by
       * the Unicode string parameter 'systemId'.
@@ -335,7 +379,10 @@ public :
       */
     DOMDocument* parseURI(const XMLCh* const systemId, const bool reuseGrammar = false);
 
-    /** Parse via a file path or URL (in the local code page)
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Parse via a file path or URL (in the local code page)
       *
       * This method invokes the parsing process on the XML file specified by
       * the native char* string parameter 'systemId'.
@@ -359,7 +406,10 @@ public :
       */
     DOMDocument* parseURI(const char* const systemId, const bool reuseGrammar = false);
 
-    /** Parse via an input source object
+    /**
+      * <p><b>"Experimental - subject to change"</b></p>
+      *
+      * Parse via an input source object
       *
       * This method invokes the parsing process on the XML file specified
       * by the DOMInputSource parameter, and inserts the content into an

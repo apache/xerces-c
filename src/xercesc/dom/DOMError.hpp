@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/05/30 19:24:48  knoaman
+ * documentation update
+ *
  * Revision 1.1  2002/05/23 15:47:24  knoaman
  * DOM L3 core - support for DOMError, DOMErrorHandler and DOMLocator
  *
@@ -71,6 +74,8 @@ class DOMLocator;
 
 
 /**
+  * Introduced in DOM Level 3
+  *
   * DOMError is an interface that describes an error.
   *
   * @see DOMErrorHandler#handleError
@@ -114,16 +119,22 @@ public:
     //@{
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the severity of the error
     */
     virtual short getSeverity() const = 0;
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the message describing the error that occured.
     */
     virtual const XMLCh* getMessage() const = 0;
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the location of the error
     */
     virtual DOMLocator* getLocation() const = 0;
@@ -135,6 +146,8 @@ public:
     //@{
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the severity of the error
     *
     * @param severity the type of the error to set
@@ -142,6 +155,8 @@ public:
     virtual void setSeverity(const short severity) = 0;
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the error message
     *
     * @param message the error message to set.
@@ -149,6 +164,8 @@ public:
     virtual void setMessage(const XMLCh* const message) = 0;
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the location of the error
     *
     * @param location the location of the error to set.

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/05/30 19:26:00  knoaman
+ * documentation update
+ *
  * Revision 1.2  2002/05/27 18:25:41  tng
  * To get ready for 64 bit large file, use XMLSSize_t to represent line and column number.
  *
@@ -72,6 +75,8 @@
 
 
 /**
+  * Introduced in DOM Level 3
+  *
   * Implementation of a DOMLocator interface.
   *
   * @see DOMLocator#DOMLocator
@@ -104,6 +109,8 @@ public:
     //@{
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the line number where the error occured. The value is -1 if there is
     * no line number available.
     *
@@ -112,6 +119,8 @@ public:
     virtual XMLSSize_t getLineNumber() const;
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the column number where the error occured. The value is -1 if there
     * is no column number available.
     *
@@ -120,6 +129,8 @@ public:
     virtual XMLSSize_t getColumnNumber() const;
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the byte or character offset into the input source, if we're parsing
     * a file or a byte stream then this will be the byte offset into that
     * stream, but if a character media is parsed then the offset will be the
@@ -130,6 +141,8 @@ public:
     virtual XMLSSize_t getOffset() const;
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the DOM Node where the error occured, or <code>null</code> if there
     * is no node available.
     *
@@ -138,6 +151,8 @@ public:
     virtual DOMNode* getErrorNode() const;
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the URI where the error occured, or <code>null</code> if there is no
     * URI available.
     *
@@ -152,6 +167,8 @@ public:
     //@{
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the line number of the error
     *
     * @param lineNumber the line number to set
@@ -161,6 +178,8 @@ public:
     virtual void setLineNumber(const XMLSSize_t lineNumber);
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the column number of the error
     *
     * @param columnNumber the column number to set.
@@ -170,6 +189,8 @@ public:
     virtual void setColumnNumber(const XMLSSize_t columnNumber);
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the byte/character offset.
     *
     * @param offset the byte/characte offset to set.
@@ -179,6 +200,8 @@ public:
     virtual void setOffset(const XMLSSize_t offset);
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the DOM Node where the error occured
     *
     * @param errorNode the DOM Node to set
@@ -188,12 +211,14 @@ public:
     virtual void setErrorNode(DOMNode* const errorNode);
 
    /**
-     * Set the URI where the error occured
-     *
-     * @param uri the URI to set.
-     *
-     * @see #getURI
-     */
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
+    * Set the URI where the error occured
+    *
+    * @param uri the URI to set.
+    *
+    * @see #getURI
+    */
     virtual void setURI(const XMLCh* const uri);
 
     //@}

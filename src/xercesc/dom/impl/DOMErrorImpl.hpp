@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/05/30 19:26:00  knoaman
+ * documentation update
+ *
  * Revision 1.1  2002/05/23 15:47:24  knoaman
  * DOM L3 core - support for DOMError, DOMErrorHandler and DOMLocator
  *
@@ -68,6 +71,7 @@
 #include <xercesc/dom/DOMError.hpp>
 
 /**
+  * Introduced in DOM Level 3
   * Implementation of a DOMError interface.
   *
   * @see DOMError#DOMError
@@ -98,16 +102,22 @@ public:
     //@{
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the severity of the error
     */
     virtual short getSeverity() const;
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the message describing the error that occured.
     */
     virtual const XMLCh* getMessage() const;
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Get the location of the error
     */
     virtual DOMLocator* getLocation() const;
@@ -119,6 +129,8 @@ public:
     //@{
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the severity of the error
     *
     * @param severity the type of the error to set
@@ -126,6 +138,8 @@ public:
     virtual void setSeverity(const short severity);
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the error message
     *
     * @param message the error message to set.
@@ -133,6 +147,8 @@ public:
     virtual void setMessage(const XMLCh* const message);
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set the location of the error
     *
     * @param location the location of the error to set.
@@ -140,6 +156,8 @@ public:
     virtual void setLocation(DOMLocator* const location);
 
    /**
+    * <p><b>"Experimental - subject to change"</b></p>
+    *
     * Set whether the location is owned by DOMError or not
     *
     * @param value <code>true</code> if DOMLocator is owned and should be
