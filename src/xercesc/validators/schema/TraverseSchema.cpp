@@ -4521,7 +4521,7 @@ QName* TraverseSchema::processElementDeclRef(const DOMElement* const elem,
         }
     }
 
-    if (fFullConstraintChecking && refElemDecl) {
+    if (refElemDecl) {
 
         if (fCurrentComplexType)
             fCurrentComplexType->addElement(refElemDecl);
