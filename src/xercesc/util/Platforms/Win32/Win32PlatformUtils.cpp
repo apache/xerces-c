@@ -73,7 +73,6 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <direct.h>
 
 #ifdef _DEBUG
  #ifdef _MSC_VER
@@ -628,10 +627,36 @@ bool XMLPlatformUtils::isRelative(const XMLCh* const toCheck)
 
 XMLCh* XMLPlatformUtils::getCurrentDirectory()
 {
-    char  *tempDir = getcwd(NULL, 0);
-    XMLCh *curDir = tempDir ? XMLString::transcode(tempDir) : 0;
-    free(tempDir);
-    return curDir;
+    //
+    //  If we are on NT, then use wide character APIs, else use ASCII APIs.
+    //  We have to do it manually since we are only built in ASCII mode from
+    //  the standpoint of the APIs.
+    //
+    if (gOnNT)
+    {
+        // Use a local buffer that is big enough for the largest legal path
+        const unsigned int bufSize = 1024;
+        XMLCh tmpPath[bufSize + 1];
+
+        if (!::GetCurrentDirectoryW(bufSize, (LPWSTR)tmpPath))
+            return 0;
+
+        // Return a copy of the path
+        return XMLString::replicate(tmpPath);
+    }
+     else
+    {
+        // Use a local buffer that is big enough for the largest legal path
+        const unsigned int bufSize = 511;
+        char tmpPath[511 + 1];
+
+        char* namePart = 0;
+        if (!::GetCurrentDirectoryA(bufSize, tmpPath))
+            return 0;
+
+        // Return a transcoded copy of the path
+        return XMLString::transcode(tmpPath);
+    }
 }
 
 inline bool XMLPlatformUtils::isAnySlash(XMLCh c)
