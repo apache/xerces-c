@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:19  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/30 22:20:40  peiyongz
+ * Build with ICU MsgLoader
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:19  peiyongz
+ * sane_include
  *
  * Revision 1.7  2002/01/21 14:52:25  tng
  * [Bug 5847] ICUMsgLoader can't be compiled with gcc 3.0.3 and ICU2.  And also fix the memory leak introduced by Bug 2730 fix.
@@ -99,41 +102,67 @@
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
 #include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 #include "ICUMsgLoader.hpp"
 
 #include "string.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 
 // ---------------------------------------------------------------------------
 //  Local static methods
 // ---------------------------------------------------------------------------
-static const XMLCh* mapId(  const   XMLMsgLoader::XMLMsgId   msgToLoad
-                            , const XMLCh*                   bundleType)
-{
-    static const XMLCh test[] = { 0x65, 0x66, 0 };
-    return test;
-}
-
 
 // ---------------------------------------------------------------------------
 //  Public Constructors and Destructor
 // ---------------------------------------------------------------------------
-ICUMsgLoader::ICUMsgLoader(const XMLCh* const  toLoad) :
-    fBundle(0)
-    , fBundleType((XMLCh*)toLoad)
+ICUMsgLoader::ICUMsgLoader(const XMLCh* const  msgDomain) 
+:fRootBundle(0)
+,fDomainBundle(0)
 {
-    // Ok, lets try to create the bundle now
-    UErrorCode err = U_ZERO_ERROR;
-    fBundle = new ResourceBundle(0, err);
-    if (!U_SUCCESS(err))
+    // validation on msgDomain
+    if (XMLString::compareString(msgDomain, XMLUni::fgXMLErrDomain)
+    &&  XMLString::compareString(msgDomain, XMLUni::fgExceptDomain)
+    &&  XMLString::compareString(msgDomain, XMLUni::fgValidityDomain))
     {
-        // <TBD> Need to panic again here?
+        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_UnknownMsgDomain);
     }
+
+    //
+    // we hardcode the path for "root.res" for now
+    // assuming that Makefile would copy root.res from $ICUROOT/bin to $XERCESCROOT/bin
+    //
+    char tempBuf[1024];
+    strcpy(tempBuf, getenv("XERCESCROOT"));
+    strcat(tempBuf, "/bin/root.res");
+   
+    UErrorCode err = U_ZERO_ERROR;
+    fRootBundle = ures_open(tempBuf, 0, &err);
+    if (!U_SUCCESS(err) || fRootBundle == NULL)
+    {
+        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+    }
+    
+     //strip off path information, if any
+     int   index = XMLString::lastIndexOf(msgDomain, chForwardSlash);
+     char *domainName = XMLString::transcode(&(msgDomain[index + 1]));
+
+     // get the resource bundle for the domain
+     fDomainBundle = ures_getByKey(fRootBundle, domainName, NULL, &err);
+
+     delete [] domainName;
+ 
+     if (!U_SUCCESS(err) || fDomainBundle == NULL)
+    {
+        XMLPlatformUtils::panic(XMLPlatformUtils::Panic_CantLoadMsgDomain);
+    }
+
 }
 
 ICUMsgLoader::~ICUMsgLoader()
 {
-    delete fBundle;
+    ures_close(fDomainBundle);
+    ures_close(fRootBundle);
 }
 
 
@@ -141,70 +170,38 @@ ICUMsgLoader::~ICUMsgLoader()
 //  Implementation of the virtual message loader API
 // ---------------------------------------------------------------------------
 bool ICUMsgLoader::loadMsg( const   XMLMsgLoader::XMLMsgId  msgToLoad
-                            ,       XMLCh* const            toFill
-                            , const unsigned int           maxChars)
+                          ,         XMLCh* const            toFill
+                          , const   unsigned int            maxChars)
 {
-    //
-    //  Map the passed id to the required message bundle key name. We use
-    //  a local array to map the message id to the correct string. This array
-    //  is generated from a little utility program that can kick out the
-    //  message text in a couple of different formats.
-    //
-    const XMLCh* const keyStr = mapId(msgToLoad, fBundleType);
-    if (!keyStr)
-        return false;
+    UErrorCode   err = U_ZERO_ERROR;
+    int32_t      strLen = 0;
 
-    // And now try to load that key's related message
-    UErrorCode err;
-//    UnicodeString keyVal(keyStr);
-//    const UnicodeString* msgString = fBundle->getStringEx(keyVal, err);
-//    if (!msgString)
-//        return false;
+    // Assuming array format
+    const UChar *name = ures_getStringByIndex(fDomainBundle, (int32_t)msgToLoad-1, &strLen, &err);
 
-    char* tempKeyStr = XMLString::transcode(keyStr);
-    UnicodeString msgString = fBundle->getStringEx(tempKeyStr, err);
-    delete [] tempKeyStr;
-
-    // Extract out from the UnicodeString to the passed buffer
-    const unsigned int len = msgString.length();
-    const unsigned int lesserLen = (len < maxChars) ? len : maxChars;
-
-    //
-    //  And now do the extract. This works differently according to
-    //  whether XMLCh and UChar are the same size or not.
-    //
-    UChar* startTarget;
-    if (sizeof(XMLCh) == sizeof(UChar))
-        startTarget = (UChar*)toFill;
-     else
-        startTarget = new UChar[maxChars];
-    UChar* orgTarget = startTarget;
-
-    msgString.extract
-    (
-        0
-        , lesserLen
-        , startTarget
-    );
-
-    //
-    //  If XMLCh and UChar are not the same size, then we need to copy over
-    //  the temp buffer to the new one.
-    //
-    if (sizeof(UChar) != sizeof(XMLCh))
+    if (!U_SUCCESS(err) || (name == NULL))
     {
-        XMLCh* outPtr = toFill;
-        startTarget = orgTarget;
-        for (unsigned int index = 0; index < lesserLen; index++)
-            *outPtr++ = XMLCh(*startTarget++);
-
-        // And delete the temp buffer
-        delete [] orgTarget;
+        return false;
     }
 
+    int retStrLen = strLen > maxChars ? maxChars : strLen;
 
-    // Cap it off and return success
-    toFill[lesserLen] = 0;
+    if (sizeof(UChar)==sizeof(XMLCh))
+    {
+        XMLString::moveChars(toFill, (XMLCh*)name, retStrLen);
+        toFill[retStrLen] = (XMLCh) 0;
+    }
+    else
+    {
+        XMLCh* retStr = toFill;
+        const UChar *srcPtr = name;
+
+        while (retStrLen--)
+           *retStr++ = *srcPtr++;
+
+        *retStr = 0;
+    }
+
     return true;
 }
 

@@ -56,8 +56,11 @@
 
 /*
  * $Log$
- * Revision 1.1  2002/02/01 22:22:19  peiyongz
- * Initial revision
+ * Revision 1.2  2002/09/30 22:20:40  peiyongz
+ * Build with ICU MsgLoader
+ *
+ * Revision 1.1.1.1  2002/02/01 22:22:19  peiyongz
+ * sane_include
  *
  * Revision 1.5  2002/01/21 14:52:25  tng
  * [Bug 5847] ICUMsgLoader can't be compiled with gcc 3.0.3 and ICU2.  And also fix the memory leak introduced by Bug 2730 fix.
@@ -91,7 +94,7 @@
 
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/util/XMLMsgLoader.hpp>
-#include "unicode/resbund.h"
+#include "unicode/ures.h"
 
 
 //
@@ -104,7 +107,7 @@ public :
     // -----------------------------------------------------------------------
     //  Public Constructors and Destructor
     // -----------------------------------------------------------------------
-    ICUMsgLoader(const XMLCh* const  toLoad);
+    ICUMsgLoader(const XMLCh* const  msgDomain);
     ~ICUMsgLoader();
 
 
@@ -153,15 +156,15 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     //
-    //  fBundle
-    //      This is the ICU resource bundle that we use to track messages.
+    //  fRootBundle
+    //      bundle to the 'root' of the specified locale_country
     //
-    //  fBundleType
-    //      This is the bundle that we are using. This is used to map message
-    //      ids to key values.
+    //  fDomainBundle
+    //      bundle to the resource for the corresponding domain 
+    //
     // -----------------------------------------------------------------------
-    ResourceBundle*       fBundle;
-    XMLCh*                fBundleType;
+    UResourceBundle*      fRootBundle;
+    UResourceBundle*      fDomainBundle;
 };
 
 #endif
