@@ -2721,13 +2721,17 @@ bool XMLScanner::scanStartTagNS(bool& gotData)
     //  it is too late for them to affect the prefix of this element (though
     //  technically they should.) There is no way out of this unfortunately.
     //
-    const unsigned int uriId = resolveQName
-    (
-        fQNameBuf.getRawBuffer()
-        , fNameBuf
-        , fPrefixBuf
-        , ElemStack::Mode_Element
-    );
+    //  For DTD case, there is no binding defined from name space prefixes to
+    //  name space URIs.  So we just map it to the XML URI
+    unsigned int uriId = fXMLNamespaceId;
+    if (fGrammar->getGrammarType() != Grammar::DTDGrammarType)
+        uriId = resolveQName
+        (
+            fQNameBuf.getRawBuffer()
+            , fNameBuf
+            , fPrefixBuf
+            , ElemStack::Mode_Element
+        );
 
     //
     //  Look up the element now in the validator. This will get us back a

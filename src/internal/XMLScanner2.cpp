@@ -210,7 +210,7 @@ XMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
         //  do normal checking and processing.
         //
         XMLAttDef::AttTypes attType;
-        if (!isNSAttr)
+        if (!isNSAttr || fGrammar->getGrammarType() == Grammar::DTDGrammarType)
         {
             //
             //  Find this attribute within the parent element. We pass both

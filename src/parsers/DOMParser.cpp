@@ -973,8 +973,6 @@ void DOMParser::endAttList
 		DOM_Element dom_elem = fDocument.createElement(elemDecl.getFullName());
 		ElementImpl* elem = (ElementImpl*)(dom_elem.fImpl);
 
-		static const XMLCh XMLNS[] = {chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
-
 		while (defAttrs->hasMoreElements())
         {
             attr = &defAttrs->nextElement();
@@ -984,11 +982,37 @@ void DOMParser::endAttList
                 {
                     // Namespaces is turned on...
                     //   While scanning the DTD there is no binding defined from
-                    //   name space prefixes to name space URIs.  Just set all the
-                    //   URIs to be null.
-                    insertAttr = new AttrNSImpl((DocumentImpl*)fDocument.fImpl,
-                        DOMString(0),                     // NameSpaceURI
-                        DOMString(attr->getFullName()));   // qualified name
+                    //   name space prefixes to name space URIs.
+                    //   But since there is error checking in AttrNSImpl ctor,
+                    //   if prefix exists, we still need to map it somehow
+
+                    DOMString qualifiedName = attr->getFullName();
+                    int index = DocumentImpl::indexofQualifiedName(qualifiedName);
+
+                    if (index > 0) {
+                        // there is prefix
+                        // map to XML URI for all cases except if prefix == "xmlns"
+
+                        XMLBuffer buf;
+                        fScanner->getURIText(fScanner->getXMLNamespaceId(), buf);
+
+                        static const XMLCh XMLNS[] = {
+                            chLatin_x, chLatin_m, chLatin_l, chLatin_n, chLatin_s, chNull};
+                        DOMString prefix = qualifiedName.substringData(0, index);
+
+                        if (prefix.equals(XMLNS))
+                            fScanner->getURIText(fScanner->getXMLNSNamespaceId(), buf);
+
+                        insertAttr = new AttrNSImpl((DocumentImpl*)fDocument.fImpl,
+                           DOMString(buf.getRawBuffer()),     // NameSpaceURI
+                           qualifiedName);   // qualified name
+                    }
+                    else {
+                        //   No prefix, just set all the URIs to be null.
+                        insertAttr = new AttrNSImpl((DocumentImpl*)fDocument.fImpl,
+                            DOMString(0),                     // NameSpaceURI
+                            qualifiedName);   // qualified name
+                     }
                 }
                 else
                 {
