@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/12/02 19:16:38  tng
+ * [Bug 14723] Memory leak in atomicOpsMutex.  Patch from Adam Zell.
+ *
  * Revision 1.4  2002/11/15 21:05:45  tng
  * [Bug 14598] IRIX 6.5 / g++ 3.0.4 compilation bugs.  Patch from Richard Balint
  * .
@@ -608,11 +611,16 @@ void XMLPlatformUtils::platformInit()
     arenaName = strdup ("/var/tmp/xerces-sharedmemXXXXXX");
     arena = usinit (mktemp (arenaName));
 
-    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+    if (atomicOpsMutex.fHandle == 0)
+        atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
 }
 
 void XMLPlatformUtils::platformTerm()
 {
+    // delete the mutex we created
+    closeMutex(atomicOpsMutex.fHandle);
+    atomicOpsMutex.fHandle = 0;
+
     usdetach (arena);
     unlink (arenaName);
     free (arenaName);
@@ -692,7 +700,8 @@ void XMLPlatformUtils::platformInit()
     // Normally, mutexes are created on first use, but there is a
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
-    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+    if (atomicOpsMutex.fHandle == 0)
+        atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
 }
 
 void XMLPlatformUtils::platformTerm()

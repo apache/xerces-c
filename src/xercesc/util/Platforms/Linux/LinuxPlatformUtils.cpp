@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/12/02 19:16:46  tng
+ * [Bug 14723] Memory leak in atomicOpsMutex.  Patch from Adam Zell.
+ *
  * Revision 1.9  2002/11/07 22:38:13  peiyongz
  * build -miconv on hpux and linux
  *
@@ -251,7 +254,7 @@ XMLMsgLoader* XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 #if defined (XML_USE_ICU_MESSAGELOADER)
         retVal = new ICUMsgLoader(msgDomain);
 #elif defined (XML_USE_ICONV_MESSAGELOADER)
-        retVal = new MsgCatalogLoader(msgDomain);        
+        retVal = new MsgCatalogLoader(msgDomain);
 #else
         // same as -DXML_USE_INMEM_MESSAGELOADER
         retVal = new InMemMsgLoader(msgDomain);
@@ -645,8 +648,8 @@ void XMLPlatformUtils::platformInit()
     // Normally, mutexes are created on first use, but there is a
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
-
-    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+    if (atomicOpsMutex.fHandle == 0)
+        atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
 }
 
 void* XMLPlatformUtils::makeMutex()

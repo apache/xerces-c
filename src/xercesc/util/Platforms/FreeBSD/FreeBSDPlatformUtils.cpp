@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/12/02 19:16:26  tng
+ * [Bug 14723] Memory leak in atomicOpsMutex.  Patch from Adam Zell.
+ *
  * Revision 1.5  2002/11/04 15:13:00  tng
  * C++ Namespace Support.
  *
@@ -582,8 +585,8 @@ void XMLPlatformUtils::platformInit()
     // Normally, mutexes are created on first use, but there is a
     // circular dependency between compareAndExchange() and
     // mutex creation that must be broken.
-
-    atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
+    if (atomicOpsMutex.fHandle == 0)
+        atomicOpsMutex.fHandle = XMLPlatformUtils::makeMutex();
 }
 
 void* XMLPlatformUtils::makeMutex()
