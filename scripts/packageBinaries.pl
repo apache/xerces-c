@@ -249,11 +249,11 @@ if ($platform =~ m/Windows/) {
         # system("cp -Rfv $XERCESCROOT/doc/html/apiDocs/* $targetdir/doc/html/apiDocs");
         system("cp $XERCESCROOT/Readme.html $targetdir");
         system("cp $XERCESCROOT/credits.txt $targetdir");	
-        # system("cp $XERCESCROOT/LICENSE $targetdir");
-        # system("cp $XERCESCROOT/doc/license.html $targetdir");
-        # system("cp $XERCESCROOT/LICENSE.txt $targetdir");
-        # system("cp $XERCESCROOT/license.html $targetdir");
-        # system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+        system("cp $XERCESCROOT/LICENSE.txt $targetdir");
+	if (length($ICUROOT) > 0) {
+           system("cp $XERCESCROOT/license.html $targetdir");
+           system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+	}
         system("rm -f $targetdir/doc/*.xml");
         system("rm -f $targetdir/doc/*.ent");
         system("rm -f $targetdir/doc/*.gif");
@@ -497,14 +497,14 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
         # system("cp -Rf $XERCESCROOT/doc/html/apiDocs/* $targetdir/doc/html/apiDocs");
         system("cp $XERCESCROOT/Readme.html $targetdir");
         system("cp $XERCESCROOT/credits.txt $targetdir");	
-        # system("cp $XERCESCROOT/LICENSE $targetdir");
-        # system("cp $XERCESCROOT/LICENSE.txt $targetdir");
-        # system("cp $XERCESCROOT/license.html $targetdir");
-        # system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+        system("cp $XERCESCROOT/LICENSE.txt $targetdir");
+	if (length($ICUROOT) > 0) {
+           system("cp $XERCESCROOT/license.html $targetdir");
+           system("cp $XERCESCROOT/license-IBM-public-source.html $targetdir");
+	}
         system("rm -f $targetdir/doc/*.xml");
         system("rm -f $targetdir/doc/*.ent");
         system("rm -f $targetdir/doc/*.gif");
-        # system("cp $XERCESCROOT/doc/license.html $targetdir");
 
         # Change the directory permissions
         system ("chmod 644 `find $targetdir -type f`");
