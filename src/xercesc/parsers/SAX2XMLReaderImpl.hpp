@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.27  2004/10/04 09:26:31  amassari
+ * Use an XMLStringPool+ValueStackOf(int) object to store the prefixes currently in scope, instead of a XMLBufMgr+ValueStack(XMLBuffer), that has a limitation of 32 items (jira#866)
+ *
  * Revision 1.26  2004/09/30 14:07:23  peiyongz
  * setInputBufferSize
  *
@@ -1856,7 +1859,8 @@ private :
     VecAttributesImpl		    fAttrList ;
     ContentHandler*		        fDocHandler ;
     RefVectorOf<XMLAttr>*       fTempAttrVec ;
-    RefStackOf<XMLBuffer> *     fPrefixes ;
+    XMLStringPool*              fPrefixesStorage ;
+    ValueStackOf<unsigned int>* fPrefixes ;
     ValueStackOf<unsigned int>* fPrefixCounts ;
     DTDHandler*                 fDTDHandler;
     EntityResolver*             fEntityResolver;

@@ -16,6 +16,9 @@
 
 /*
  * $Log$
+ * Revision 1.39  2004/10/04 09:26:31  amassari
+ * Use an XMLStringPool+ValueStackOf(int) object to store the prefixes currently in scope, instead of a XMLBufMgr+ValueStack(XMLBuffer), that has a limitation of 32 items (jira#866)
+ *
  * Revision 1.38  2004/09/30 14:07:23  peiyongz
  * setInputBufferSize
  *
@@ -324,6 +327,7 @@ SAX2XMLReaderImpl::SAX2XMLReaderImpl(MemoryManager* const  manager
     , fAdvDHListSize(32)
     , fDocHandler(0)
     , fTempAttrVec(0)
+    , fPrefixesStorage(0)
     , fPrefixes(0)
     , fPrefixCounts(0)
     , fDTDHandler(0)
@@ -389,7 +393,8 @@ void SAX2XMLReaderImpl::initialize()
 	// default: schema is on
 	setDoSchema(true);
 	
-	fPrefixes    = new (fMemoryManager) RefStackOf<XMLBuffer> (10, false, fMemoryManager) ;
+    fPrefixesStorage = new (fMemoryManager) XMLStringPool(109, fMemoryManager) ;
+	fPrefixes    = new (fMemoryManager) ValueStackOf<unsigned int> (30, fMemoryManager) ;
 	fTempAttrVec  = new (fMemoryManager) RefVectorOf<XMLAttr>  (10, false, fMemoryManager) ;
 	fPrefixCounts = new (fMemoryManager) ValueStackOf<unsigned int>(10, fMemoryManager) ;
 }
@@ -399,6 +404,7 @@ void SAX2XMLReaderImpl::cleanUp()
 {
     fMemoryManager->deallocate(fAdvDHList);//delete [] fAdvDHList;
     delete fScanner;
+    delete fPrefixesStorage;
     delete fPrefixes;
     delete fTempAttrVec;
     delete fPrefixCounts;
@@ -903,16 +909,10 @@ void SAX2XMLReaderImpl::resetDocument()
     // Make sure our element depth flag gets set back to zero
     fElemDepth = 0;
 
-    // Pop any prefix buffers left over from previous uses
-    while (!fPrefixCounts->empty())
-    {
-        unsigned int numPrefix = fPrefixCounts->pop();
-        for (unsigned int i = 0; i < numPrefix; i++)
-        {
-            XMLBuffer * buf = fPrefixes->pop() ;
-            fStringBuffers.releaseBuffer(*buf) ;
-        }
-    }
+    // reset prefix counters and prefix map
+    fPrefixCounts->removeAllElements();
+    fPrefixes->removeAllElements();
+    fPrefixesStorage->flushAll();
 }
 
 
@@ -989,9 +989,8 @@ startElement(   const   XMLElementDecl&         elemDecl
                     if (nsPrefix == 0)
                         nsPrefix = XMLUni::fgZeroLenString;
                     fDocHandler->startPrefixMapping(nsPrefix, nsURI);
-                    XMLBuffer &buf = fStringBuffers.bidOnBuffer();
-                    buf.set ( nsPrefix ) ;
-                    fPrefixes->push(&buf) ;
+                    unsigned int nPrefixId=fPrefixesStorage->addOrFind(nsPrefix);
+                    fPrefixes->push(nPrefixId) ;
                     numPrefix++;
                 }
                 nsURI = 0;
@@ -1038,9 +1037,8 @@ startElement(   const   XMLElementDecl&         elemDecl
                 unsigned int numPrefix = fPrefixCounts->pop();
                 for (unsigned int i = 0; i < numPrefix; ++i)
                 {
-                    XMLBuffer * buf = fPrefixes->pop() ;
-                    fDocHandler->endPrefixMapping( buf->getRawBuffer() );
-                    fStringBuffers.releaseBuffer(*buf) ;
+                    unsigned int nPrefixId = fPrefixes->pop() ;
+                    fDocHandler->endPrefixMapping( fPrefixesStorage->getValueForId(nPrefixId) );
                 }
             }
             else
@@ -1100,9 +1098,8 @@ void SAX2XMLReaderImpl::endElement( const   XMLElementDecl& elemDecl
             unsigned int numPrefix = fPrefixCounts->pop();
             for (unsigned int i = 0; i < numPrefix; i++)
             {
-                XMLBuffer * buf = fPrefixes->pop() ;
-                fDocHandler->endPrefixMapping( buf->getRawBuffer() );
-                fStringBuffers.releaseBuffer(*buf) ;
+                unsigned int nPrefixId = fPrefixes->pop() ;
+                fDocHandler->endPrefixMapping( fPrefixesStorage->getValueForId(nPrefixId) );
             }
         }
         else
