@@ -61,7 +61,10 @@
 #if (defined(XML_USE_INMEMORY_MSGLOADER) || defined(XML_USE_INMEM_MESSAGELOADER))
    #include <xercesc/util/MsgLoaders/InMemory/InMemMsgLoader.hpp>
 #endif
-#if (defined(XML_USE_MACOS_UNICODECONVERTER) || defined(XML_USE_NATIVE_TRANSCODER))
+
+#if defined(XML_USE_ICU_TRANSCODER)
+   #include <xercesc/util/Transcoders/ICU/ICUTransService.hpp>
+#elif (defined(XML_USE_MACOS_UNICODECONVERTER) || defined(XML_USE_NATIVE_TRANSCODER))
    #include <xercesc/util/Transcoders/MacOSUnicodeConverter/MacOSUnicodeConverter.hpp>
 #endif
 
@@ -623,7 +626,9 @@ XMLPlatformUtils::loadAMsgSet(const XMLCh* const msgDomain)
 XMLTransService*
 XMLPlatformUtils::makeTransService()
 {
-#if (defined(XML_USE_MACOS_UNICODECONVERTER) || defined(XML_USE_NATIVE_TRANSCODER))
+#if defined (XML_USE_ICU_TRANSCODER)
+	return new ICUTransService;
+#elif (defined(XML_USE_MACOS_UNICODECONVERTER) || defined(XML_USE_NATIVE_TRANSCODER))
     if (MacOSUnicodeConverter::IsMacOSUnicodeConverterSupported())
         return new MacOSUnicodeConverter;
 #else
