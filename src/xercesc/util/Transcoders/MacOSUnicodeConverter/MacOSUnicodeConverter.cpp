@@ -57,8 +57,8 @@
 /*
  *	$Id$
  */
-
-
+ 
+ 
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
@@ -105,29 +105,29 @@ XERCES_CPP_NAMESPACE_BEGIN
 //	Typedefs
 // ---------------------------------------------------------------------------
 
-//	TempUniBuf is used for cases where we need a temporary conversion due to
-//	a mismatch between UniChar (the 16-bit type that the Unicode converter uses)
-//	and XMLCh (the type that Xerces uses to represent a Unicode character).
-//	In the case of Metrowerks, these are the same size. For ProjectBuilder, they
-//	used to differ, but they are now the same since XMLCh is now always fixed
-//	as a 16 bit character, rather than floating with wchar_t as it used to.
-//	*** Most uses of this buffer should be removed from this code in time! ***
-//	TempUniBuf is also used for a few cases where we want to discard the
-//	output from the unicode converter.
-const std::size_t kTempUniBufCount = 256;
-typedef UniChar	TempUniBuf[kTempUniBufCount];
+//	TempBufs are used for cases where we need a temporary buffer while processing.
+const std::size_t kTempBufCount = 512;
+typedef char	TempCharBuf[kTempBufCount];
+typedef UniChar	TempUniBuf[kTempBufCount];
+typedef XMLCh	TempXMLBuf[kTempBufCount];
 
 
 // ---------------------------------------------------------------------------
 //  Local, const data
 // ---------------------------------------------------------------------------
-static const XMLCh gMyServiceId[] =
+static const XMLCh MacOSUnicodeConverter::fgMyServiceId[] =
 {
     chLatin_M, chLatin_a, chLatin_c, chLatin_O, chLatin_S, chNull
 };
 
-//	Detect a mismatch in unicode character size.
-#define UNICODE_SIZE_MISMATCH (sizeof(XMLCh) != sizeof(UniChar))
+
+static const XMLCh MacOSUnicodeConverter::fgMacLCPEncodingName[] =
+{
+        chLatin_M, chLatin_a, chLatin_c, chLatin_O, chLatin_S, chLatin_L
+    ,   chLatin_C, chLatin_P, chLatin_E, chLatin_c, chLatin_o, chLatin_d
+    ,   chLatin_i, chLatin_n, chLatin_g,  chNull
+};
+
 
 
 // ---------------------------------------------------------------------------
@@ -162,13 +162,6 @@ int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
 	if (mHasUnicodeCollation)
 	{
 		// Use the Unicode Utilities to do the compare
-
-		//	This has gotten more painful with the need to allow
-		//	conversion between different sizes of XMLCh and UniChar.
-		//	We allocate a static buffer and do multiple passes
-		//	to allow for the case where the strings being compared
-		//	are larger than the static buffer.
-
 		UCCollateOptions collateOptions =
 								kUCCollateComposeInsensitiveMask
 								| kUCCollateWidthInsensitiveMask
@@ -176,62 +169,22 @@ int MacOSUnicodeConverter::compareIString(  const XMLCh* const    comp1
 								| kUCCollatePunctuationSignificantMask
 								;
 						
-		std::size_t srcOffset = 0;
 		std::size_t cnt1 = XMLString::stringLen(comp1);
 		std::size_t cnt2 = XMLString::stringLen(comp2);
 		
-		//	Do multiple passes over source, comparing each pass.
-		//	The first pass that's not equal wins.
-		int result = 0;
-		while (result == 0 && (cnt1 || cnt2))
-		{
-			TempUniBuf buf1;
-			TempUniBuf buf2;
-			
-			const UniChar* src1;
-			const UniChar* src2;
-			
-			std::size_t passCnt1;
-			std::size_t passCnt2;
-			
-			if (UNICODE_SIZE_MISMATCH)
-			{
-				passCnt1 = std::min(cnt1, kTempUniBufCount);
-				passCnt2 = std::min(cnt2, kTempUniBufCount);
-				
-				src1 = CopyXMLChsToUniChars(comp1 + srcOffset, buf1, passCnt1, kTempUniBufCount);
-				src2 = CopyXMLChsToUniChars(comp2 + srcOffset, buf2, passCnt2, kTempUniBufCount);
-			}
-			else
-			{
-				passCnt1 = cnt1;
-				passCnt2 = cnt2;
-
-				src1 = reinterpret_cast<const UniChar*>(comp1);
-				src2 = reinterpret_cast<const UniChar*>(comp2);
-			}
-
-			//	Do the actual compare for this pass
-			Boolean equivalent = false;
-			SInt32 order = 0;
-			OSStatus status = UCCompareTextDefault(
-									collateOptions,	
-									src1,
-									passCnt1,
-									src2,
-									passCnt2,
-									&equivalent,
-									&order
-									);
+        Boolean equivalent = false;
+        SInt32 order = 0;
+        OSStatus status = UCCompareTextDefault(
+                                collateOptions,	
+                                reinterpret_cast<const UniChar*>(comp1),
+                                cnt1,
+                                reinterpret_cast<const UniChar*>(comp2),
+                                cnt2,
+                                &equivalent,
+                                &order
+                                );
 									
-			result = ((status != noErr) || equivalent) ? 0 : order;
-			
-			srcOffset += kTempUniBufCount;
-			cnt1 -= passCnt1;
-			cnt2 -= passCnt2;
-		}
-		
-		return result;
+        return ((status != noErr) || equivalent) ? 0 : order;
 	}
 #if defined(XML_METROWERKS)
 	else
@@ -278,13 +231,6 @@ int MacOSUnicodeConverter::compareNIString( const   XMLCh* const    comp1
 	if (mHasUnicodeCollation)
 	{
 		// Use the Unicode Utilities to do the compare
-
-		//	This has gotten more painful with the need to allow
-		//	conversion between different sizes of XMLCh and UniChar.
-		//	We allocate a static buffer and do multiple passes
-		//	to allow for the case where the strings being compared
-		//	are larger than the static buffer.
-
 		UCCollateOptions collateOptions =
 								kUCCollateComposeInsensitiveMask
 								| kUCCollateWidthInsensitiveMask
@@ -292,7 +238,6 @@ int MacOSUnicodeConverter::compareNIString( const   XMLCh* const    comp1
 								| kUCCollatePunctuationSignificantMask
 								;
 						
-		std::size_t srcOffset = 0;
 		std::size_t cnt1 = XMLString::stringLen(comp1);
 		std::size_t cnt2 = XMLString::stringLen(comp2);
 		
@@ -305,56 +250,19 @@ int MacOSUnicodeConverter::compareNIString( const   XMLCh* const    comp1
 		
 		//	Do multiple passes over source, comparing each pass.
 		//	The first pass that's not equal wins.
-		int result = 0;
-		while (result == 0 && (cnt1 || cnt2))
-		{
-			TempUniBuf buf1;
-			TempUniBuf buf2;
-			
-			const UniChar* src1;
-			const UniChar* src2;
-			
-			std::size_t passCnt1;
-			std::size_t passCnt2;
-			
-			if (UNICODE_SIZE_MISMATCH)
-			{
-				passCnt1 = std::min(cnt1, kTempUniBufCount);
-				passCnt2 = std::min(cnt2, kTempUniBufCount);
-				
-				src1 = CopyXMLChsToUniChars(comp1 + srcOffset, buf1, passCnt1, kTempUniBufCount);
-				src2 = CopyXMLChsToUniChars(comp2 + srcOffset, buf2, passCnt2, kTempUniBufCount);
-			}
-			else
-			{
-				passCnt1 = cnt1;
-				passCnt2 = cnt2;
-
-				src1 = reinterpret_cast<const UniChar*>(comp1);
-				src2 = reinterpret_cast<const UniChar*>(comp2);
-			}
-
-			//	Do the actual compare for this pass
-			Boolean equivalent = false;
-			SInt32 order = 0;
-			OSStatus status = UCCompareTextDefault(
-									collateOptions,	
-									src1,
-									passCnt1,
-									src2,
-									passCnt2,
-									&equivalent,
-									&order
-									);
-									
-			result = ((status != noErr) || equivalent) ? 0 : order;
-			
-			srcOffset += kTempUniBufCount;
-			cnt1 -= passCnt1;
-			cnt2 -= passCnt2;
-		}
-		
-		return result;
+        Boolean equivalent = false;
+        SInt32 order = 0;
+        OSStatus status = UCCompareTextDefault(
+                                collateOptions,	
+                                reinterpret_cast<const UniChar*>(comp1),
+                                cnt1,
+                                reinterpret_cast<const UniChar*>(comp2),
+                                cnt2,
+                                &equivalent,
+                                &order
+                                );
+                                
+        return ((status != noErr) || equivalent) ? 0 : order;
 	}
 #if defined(XML_METROWERKS)
 	else
@@ -390,7 +298,7 @@ int MacOSUnicodeConverter::compareNIString( const   XMLCh* const    comp1
 
 const XMLCh* MacOSUnicodeConverter::getId() const
 {
-    return gMyServiceId;
+    return fgMyServiceId;
 }
 
 
@@ -412,42 +320,71 @@ bool MacOSUnicodeConverter::isSpace(const XMLCh toCheck) const
 }
 
 
+TextEncoding
+MacOSUnicodeConverter::discoverLCPEncoding()
+{
+	TextEncoding encoding = 0;
+	
+    //  Ask the OS for the best text encoding for this application
+    //  We would call GetApplicationTextEncoding(), but it's available only in
+    //  Carbon (not CarbonCore), and we try to link with frameworks only in CoreServices.
+    //      encoding = GetApplicationTextEncoding();
+    
+	//	Get TextEncoding for the current Mac System Script, falling back to Mac Roman
+	if (noErr != UpgradeScriptInfoToTextEncoding(
+					smSystemScript, kTextLanguageDontCare, kTextRegionDontCare,
+					NULL, &encoding))
+		encoding = CreateTextEncoding(kTextEncodingMacRoman,
+									kTextEncodingDefaultVariant,
+									kTextEncodingDefaultFormat);
+
+	//  Traditionally, the Mac transcoder has used the current system script
+	//  as the LCP text encoding.
+	//
+	//  As of Xerces 2.6, this continues to be the case if XML_MACOS_LCP_TRADITIONAL
+	//  is defined.
+	//
+	//  Otherwise, but only for Mac OS X,  utf-8 will be used instead.
+	//  Since posix paths are utf-8 encoding on OS X, and the OS X
+	//  terminal uses utf-8 by default, this seems to make the most sense.
+	#if !defined(XML_MACOS_LCP_TRADITIONAL)
+	if (gMacOSXOrBetter)
+	{
+		//  Manufacture a text encoding for UTF8
+		encoding = CreateTextEncoding(kTextEncodingUnicodeDefault,
+									kTextEncodingDefaultVariant,
+									kUnicodeUTF8Format);
+	}
+	#endif
+	
+	return encoding;
+}
+
+
 XMLLCPTranscoder* MacOSUnicodeConverter::makeNewLCPTranscoder()
 {
 	XMLLCPTranscoder* result = NULL;
 	OSStatus status = noErr;
-	TextToUnicodeInfo textToUnicodeInfo = NULL;
-	UnicodeToTextInfo unicodeToTextInfo = NULL;
+    MemoryManager* manager = XMLPlatformUtils::fgMemoryManager;
 	
-	//	Get TextEncoding for current Mac System Script
-	TextEncoding systemTextEncoding;
-	status = UpgradeScriptInfoToTextEncoding(
-		smSystemScript, kTextLanguageDontCare, kTextRegionDontCare,
-		NULL, &systemTextEncoding);
-	
-	//	Try to create a Unicode converter from the system encoding to Unicode
-	if (status == noErr)
-		status = CreateTextToUnicodeInfoByEncoding(
-							systemTextEncoding,
-							&textToUnicodeInfo);
-							
-	//	Try to create a Unicode converter from Unicode to the system encoding
-	if (status == noErr)
-		status = CreateUnicodeToTextInfoByEncoding(
-							systemTextEncoding,
-							&unicodeToTextInfo);
-				
-	//	Clean up on error, else create our transcoder			
-	if (status != noErr)
-	{
-		if (textToUnicodeInfo != NULL)
-			DisposeTextToUnicodeInfo(&textToUnicodeInfo);
-			
-		if (unicodeToTextInfo != NULL)
-			DisposeUnicodeToTextInfo(&unicodeToTextInfo);
-	}
-	else
-		result = new MacOSLCPTranscoder(textToUnicodeInfo, unicodeToTextInfo);
+	//  Discover the text encoding to use for the LCP
+	TextEncoding lcpTextEncoding = discoverLCPEncoding();
+
+    //  We implement the LCP transcoder in terms of the XMLTranscoder.
+	//  Create an XMLTranscoder for this encoding
+	XMLTransService::Codes resValue;
+    XMLTranscoder* xmlTrans = makeNewXMLTranscoder(fgMacLCPEncodingName,
+                                resValue, kTempBufCount,
+								lcpTextEncoding, manager);
+    
+    if (xmlTrans)
+    {
+        //  Pass the XMLTranscoder over to the LPC transcoder
+        if (resValue == XMLTransService::Ok)
+            result = new MacOSLCPTranscoder(xmlTrans, manager);
+        else
+            delete xmlTrans;
+    }
 	
     return result;
 }
@@ -543,43 +480,69 @@ MacOSUnicodeConverter::makeNewXMLTranscoder(const   XMLCh* const		encodingName
 	UnicodeToTextInfo unicodeToTextInfo = NULL;
 
 	//	Map the encoding to a Mac OS Encoding value
-	TextEncoding textEncoding;
 	Str255 pasEncodingName;
 	char cEncodingName[256];
-	
-	// еее TODO: Use Transcode instead here!
 	ConvertWideToNarrow(encodingName, cEncodingName, sizeof(cEncodingName));
 	CopyCStringToPascal(cEncodingName, pasEncodingName);
 	
+	TextEncoding textEncoding = 0;
 	OSStatus status = TECGetTextEncodingFromInternetName (
 							&textEncoding,
 							pasEncodingName);
-							
-	//	Try to create a Unicode converter from the encoding to Unicode
+                            
+    //  Make a transcoder for that encoding
 	if (status == noErr)
-		status = CreateTextToUnicodeInfoByEncoding(
-							textEncoding,
-							&textToUnicodeInfo);
+		result = makeNewXMLTranscoder(encodingName, resValue, blockSize, textEncoding, manager);
+	else
+		resValue = XMLTransService::UnsupportedEncoding;
+	
+	return result;
+}
 
-	//	Try to create a Unicode converter from Unicode to the encoding
-	if (status == noErr)
-		status = CreateUnicodeToTextInfoByEncoding(
-							textEncoding,
-							&unicodeToTextInfo);
 
-	//	Now create our own encoder, passing along the unicode converters.
+XMLTranscoder*
+MacOSUnicodeConverter::makeNewXMLTranscoder(const   XMLCh* const		encodingName
+                                        ,       XMLTransService::Codes& resValue
+                                        , const unsigned int			blockSize
+										,		TextEncoding            textEncoding
+                                        ,       MemoryManager* const    manager)
+{
+    XMLTranscoder* result = NULL;
+	resValue = XMLTransService::Ok;
+    OSStatus status = noErr;
+    
+    TECObjectRef textToUnicode = NULL;
+    TECObjectRef unicodeToText = NULL;
+    
+    //  We convert to and from utf16
+    TextEncoding utf16Encoding = CreateTextEncoding(kTextEncodingUnicodeDefault,
+                                        kTextEncodingDefaultVariant,
+                                        kUnicode16BitFormat);
+
+    //  Create a TEC from our encoding to utf16
+    if (status == noErr)
+        status = TECCreateConverter(&textToUnicode, textEncoding, utf16Encoding);
+
+    //  Create a TEC from utf16 to our encoding
+    if (status == noErr)
+        status = TECCreateConverter(&unicodeToText, utf16Encoding, textEncoding);
+
 	if (status != noErr)
 	{
-		if (textToUnicodeInfo != NULL)
-			DisposeTextToUnicodeInfo(&textToUnicodeInfo);
+        //  Clean up on error
+		if (textToUnicode != NULL)
+            TECDisposeConverter(textToUnicode);
 			
-		if (unicodeToTextInfo != NULL)
-			DisposeUnicodeToTextInfo(&unicodeToTextInfo);
+		if (unicodeToText != NULL)
+            TECDisposeConverter(unicodeToText);
 
 		resValue = XMLTransService::UnsupportedEncoding;
 	}
 	else
-		result = new (manager) MacOSTranscoder(encodingName, textToUnicodeInfo, unicodeToTextInfo, blockSize, manager);
+    {
+        //  Create our transcoder, passing in the converters
+		result = new (manager) MacOSTranscoder(encodingName, textToUnicode, unicodeToText, blockSize, manager);
+    }
 	
     return result;
 }
@@ -600,23 +563,23 @@ MacOSUnicodeConverter::IsMacOSUnicodeConverterSupported(void)
 // ---------------------------------------------------------------------------
 //  MacOSTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-MacOSTranscoder::MacOSTranscoder(const  XMLCh* const encodingName
-								, TextToUnicodeInfo	 textToUnicodeInfo
-								, UnicodeToTextInfo	 unicodeToTextInfo
-                                , const unsigned int blockSize
-                                , MemoryManager* const manager) :
+MacOSTranscoder::MacOSTranscoder(const  XMLCh* const    encodingName
+								, TECObjectRef          textToUnicode
+								, TECObjectRef          unicodeToText
+                                , const unsigned int    blockSize
+                                , MemoryManager* const  manager) :
     XMLTranscoder(encodingName, blockSize, manager),
-    mTextToUnicodeInfo(textToUnicodeInfo),
-    mUnicodeToTextInfo(unicodeToTextInfo)
+    mTextToUnicode(textToUnicode),
+    mUnicodeToText(unicodeToText)
 {
 }
 
 
 MacOSTranscoder::~MacOSTranscoder()
 {
-	//	Dispose our unicode converters
-	DisposeTextToUnicodeInfo(&mTextToUnicodeInfo);
-	DisposeUnicodeToTextInfo(&mUnicodeToTextInfo);
+	//	Dispose our text encoding converters
+	TECDisposeConverter(mTextToUnicode);
+	TECDisposeConverter(mUnicodeToText);
 }
 
 
@@ -632,45 +595,33 @@ MacOSTranscoder::transcodeFrom(  const  XMLByte* const			srcData
                                 ,       unsigned int&			bytesEaten
                                 ,       unsigned char* const	charSizes)
 {
-    ByteCount	bytesConsumed = 0;
-    ByteCount	bytesProduced = 0;
+	//  Reset the tec state (since we don't know that we're part of a
+	//  larger run of text).
+	TECClearConverterContextInfo(mTextToUnicode);
+	
+    //  Do the conversion
+    ByteCount bytesConsumed = 0;
+    ByteCount bytesProduced = 0;
+    OSStatus status = TECConvertText(mTextToUnicode,
+                (ConstTextPtr) srcData,
+                srcCount,                   // inputBufferLength
+                &bytesConsumed,				// actualInputLength
+                (TextPtr) toFill,           // outputBuffer
+                maxChars * sizeof(XMLCh),	// outputBufferLength
+                &bytesProduced);			// actualOutputLength
 
-    OSStatus status = ConvertFromTextToUnicode(
-    	mTextToUnicodeInfo,
-    	srcCount,
-    	srcData,
-    	kUnicodeUseFallbacksMask
-		// | kUnicodeKeepInfoMask
-		| kUnicodeDefaultDirectionMask
-		| kUnicodeLooseMappingsMask
-		// | kUnicodeStringUnterminatedMask
-		// | kUnicodeTextRunMask
-		,									// control flags
-    	0,									// ioffset count
-    	NULL,								// ioffset array
-    	0,									// ooffset count
-    	NULL,								// ooffset array
-    	maxChars * sizeof(UniChar),			// iOutputBufLen (bytes)
-    	&bytesConsumed,
-    	&bytesProduced,
-    	reinterpret_cast<UniCharArrayPtr>(toFill));
-		
-	if (status == kTECOutputBufferFullStatus || status == kTECUsedFallbacksStatus)
-		status = noErr;
+    //  Ignorable error codes
+    if(    status == kTECUsedFallbacksStatus
+        || status == kTECOutputBufferFullStatus
+        || status == kTECPartialCharErr
+		)
+        status = noErr;
     	
     if (status != noErr)
         ThrowXML(TranscodingException, XMLExcepts::Trans_BadSrcSeq);
 	
-	std::size_t charsProduced = bytesProduced / sizeof(UniChar);
+	std::size_t charsProduced = bytesProduced / sizeof(XMLCh);
 	
-	//	If XMLCh is not same length as UniChar (previously the case under GCC)
-	//	then we need to convert the UniChar characters up to
-	//	XMLCh. We lied about the max buffer length above in
-	//	order to leave room in our output buffer. So we know
-	//	we're in good shape here to just convert in place.
-	if (UNICODE_SIZE_MISMATCH)
-		CopyUniCharsToXMLChs(reinterpret_cast<UniChar* const>(toFill), toFill, charsProduced, maxChars);
-		    	
     bytesEaten = bytesConsumed;
     return charsProduced;
 }
@@ -684,85 +635,37 @@ MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
                             ,       unsigned int&   charsEaten
                             , const UnRepOpts       options)
 {
-    ByteCount totalCharsConsumed = 0;
-    ByteCount totalCharsProduced = 0;
+	//  Reset the tec state (since we don't know that we're part of a
+	//  larger run of text).
+	TECClearConverterContextInfo(mUnicodeToText);
 	
-	const XMLCh* src	= srcData;
-	std::size_t srcCnt	= srcCount;
+    //  Do the conversion
+    ByteCount bytesConsumed = 0;
+    ByteCount bytesProduced = 0;
+    OSStatus status = TECConvertText(mUnicodeToText,
+                (ConstTextPtr) srcData,
+                srcCount * sizeof(XMLCh),   // inputBufferLength
+                &bytesConsumed,				// actualInputLength
+                (TextPtr) toFill,           // outputBuffer
+                maxBytes,                   // outputBufferLength
+                &bytesProduced);			// actualOutputLength
 
-	OptionBits controlFlags =
-		  0
-		// | kUnicodeUseFallbacksMask
-		| kUnicodeLooseMappingsMask
-		// | kUnicodeKeepInfoMask
-		// | kUnicodeStringUnterminatedMask
-		;
-		
-	if (options == UnRep_RepChar)
-		controlFlags |= kUnicodeUseFallbacksMask;
-
-	//	Do multiple passes of conversion, potentially,
-	//	in order to handle the case of a character size
-	//	mismatch.
-	OSStatus status;
-	for (status = noErr; status == noErr && srcCnt > 0; )
-	{
-	    ByteCount		bytesConsumed = 0;
-	    ByteCount		bytesProduced = 0;
-		std::size_t		passCnt = 0;
-		const UniChar*	passSrc = NULL;
-		
-		//	Setup source buffer as needed to accomodate a unicode
-		//	character size mismatch.
-		TempUniBuf	buf;
-		if (UNICODE_SIZE_MISMATCH)
-		{
-			passCnt = std::min(srcCnt, kTempUniBufCount);
-			passSrc = CopyXMLChsToUniChars(src, buf, passCnt, kTempUniBufCount);
-		}
-		else
-		{
-			passCnt = srcCnt;
-			passSrc = reinterpret_cast<const UniChar*>(src);
-		}
-
-	    status = ConvertFromUnicodeToText(
-					mUnicodeToTextInfo,
-					passCnt * sizeof(UniChar),	// src byte count
-					reinterpret_cast<const UniChar*>(passSrc),
-					controlFlags,		// control flags
-					0,					// ioffset count
-					NULL,				// ioffset array
-					0,					// ooffset count
-					NULL,				// ooffset array
-					maxBytes - totalCharsProduced,
-					&bytesConsumed,
-					&bytesProduced,
-					toFill + totalCharsProduced);
-				
-		if (status == kTECUsedFallbacksStatus)
-			status = noErr;
-    	
-		if (UNICODE_SIZE_MISMATCH && status == kTECOutputBufferFullStatus)
-			status = noErr;
-
-		std::size_t charsConsumed = bytesConsumed / sizeof(UniChar);
-		
-		src		+= charsConsumed;
-		srcCnt	-= charsConsumed;
-		
-		totalCharsConsumed += charsConsumed;
-		totalCharsProduced += bytesProduced;
-					
-		controlFlags |= kUnicodeKeepInfoMask;
-	}
-    	
+    //  Ignorable error codes
+    if(    status == kTECUsedFallbacksStatus
+        || status == kTECOutputBufferFullStatus
+        || status == kTECPartialCharErr
+		)
+        status = noErr;
+        
+    std::size_t charsConsumed = bytesConsumed / sizeof(XMLCh);
+    
+    //  Deal with errors
     if (status != noErr)
     {
     	if (status == kTECUnmappableElementErr && options == UnRep_Throw)
     	{
     		XMLCh tmpBuf[17];
-            XMLString::binToText((unsigned int)&srcData[totalCharsConsumed], tmpBuf, 16, 16);
+            XMLString::binToText((unsigned int)&srcData[charsConsumed], tmpBuf, 16, 16);
             ThrowXML2
             (
                 TranscodingException
@@ -772,9 +675,9 @@ MacOSTranscoder::transcodeTo(const  XMLCh* const    srcData
             );
     	}
     }
-    	
-    charsEaten = totalCharsConsumed;
-    return totalCharsProduced;
+	
+    charsEaten = charsConsumed;
+    return bytesProduced;
 }
 
 
@@ -798,53 +701,47 @@ MacOSTranscoder::canTranscodeTo(const unsigned int toCheck) const
         srcBuf[srcCnt++] = XMLCh(toCheck);
     }
 
+	//  Clear the converter state: we're in a new run of text
+	TECClearConverterContextInfo(mUnicodeToText);
+
     //
     //  Use a local temp buffer that would hold any sane multi-byte char
     //  sequence and try to transcode this guy into it.
     //
     char tmpBuf[64];
 
-    OSStatus status;
-	OptionBits controlFlags = kUnicodeLooseMappingsMask;
-	ByteCount bytesConsumed;
-	ByteCount bytesProduced;
+    ByteCount bytesConsumed = 0;
+    ByteCount bytesProduced = 0;
+    OSStatus status = TECConvertText(mUnicodeToText,
+                (ConstTextPtr) srcBuf,
+                srcCnt * sizeof(XMLCh),     // inputBufferLength
+                &bytesConsumed,				// actualInputLength
+                (TextPtr) tmpBuf,           // outputBuffer
+                sizeof(tmpBuf),             // outputBufferLength
+                &bytesProduced);			// actualOutputLength
 
-    status = ConvertFromUnicodeToText(
-		mUnicodeToTextInfo,
-		srcCnt * sizeof(UniChar),
-		srcBuf,
-		controlFlags,		// control flags
-		0,					// ioffset count
-		NULL,				// ioffset array
-		0,					// ooffset count
-		NULL,				// ooffset array
-		sizeof(tmpBuf),
-		&bytesConsumed,
-		&bytesProduced,
-		tmpBuf
-	);
+    std::size_t charsConsumed = bytesConsumed / sizeof(XMLCh);
 	
 	//	Return true if we transcoded the character(s)
 	//	successfully
-	return status == noErr && bytesProduced > 0;
+	return status == noErr && charsConsumed == srcCnt;
 }
 
 
 // ---------------------------------------------------------------------------
 //  MacOSLCPTranscoder: Constructors and Destructor
 // ---------------------------------------------------------------------------
-MacOSLCPTranscoder::MacOSLCPTranscoder(TextToUnicodeInfo textToUnicodeInfo, UnicodeToTextInfo unicodeToTextInfo)
- : mTextToUnicodeInfo(textToUnicodeInfo),
-   mUnicodeToTextInfo(unicodeToTextInfo)
+MacOSLCPTranscoder::MacOSLCPTranscoder(XMLTranscoder* const transcoder, MemoryManager* const manager)
+ : mTranscoder(transcoder),
+   mManager(manager)
 {
 }
 
 
 MacOSLCPTranscoder::~MacOSLCPTranscoder()
 {
-	//	Dispose our unicode converters
-	DisposeTextToUnicodeInfo(&mTextToUnicodeInfo);
-	DisposeUnicodeToTextInfo(&mUnicodeToTextInfo);
+	//	Dispose the XMLTranscoder we're using
+    delete mTranscoder;
 }
 
 
@@ -865,56 +762,37 @@ MacOSLCPTranscoder::calcRequiredSize(const char* const srcText
 {
 	if (!srcText)
 		return 0;
+		
+	//  Lock our mutex to gain exclusive access to the transcoder
+	//  since the lcp transcoders are used globally.
+	XMLMutexLock lock(&mMutex);
 
 	std::size_t totalCharsProduced = 0;
 
-	const char* src		= srcText;
-	std::size_t srcCnt	= std::strlen(src);
-	
-	OptionBits options =
-		  kUnicodeUseFallbacksMask
-		// | kUnicodeKeepInfoMask
-		| kUnicodeDefaultDirectionMask
-		| kUnicodeLooseMappingsMask
-		// | kUnicodeStringUnterminatedMask
-		// | kUnicodeTextRunMask
-		;
-
-	OSStatus status;
-	for (status = noErr; status == noErr && srcCnt > 0; )
-	{
-	    ByteCount	bytesConsumed = 0;
-	    ByteCount	bytesProduced = 0;
+	const char* src = srcText;
+	unsigned int srcCnt = std::strlen(src);
+    
+    //  Iterate over the characters, converting into a temporary buffer which we'll discard.
+    //  All this to get the size required.
+   while (srcCnt > 0)
+    {
+        TempXMLBuf tmpBuf;
+        unsigned int bytesConsumed = 0;
+		unsigned int charsProduced = mTranscoder->transcodeFrom((XMLByte*)src, srcCnt,
+														tmpBuf, kTempBufCount,
+														bytesConsumed,
+														NULL);
 		
-		TempUniBuf buf;
+        src     += bytesConsumed;
+        srcCnt  -= bytesConsumed;
 
-	    status = ConvertFromTextToUnicode(
-	    	mTextToUnicodeInfo,
-	    	srcCnt,				// src byte count
-	    	src,
-	    	options,			// control flags
-	    	0,					// ioffset count
-	    	NULL,				// ioffset array
-	    	0,					// ooffset count
-	    	NULL,				// ooffset array
-	    	kTempUniBufCount * sizeof(UniChar),
-	    	&bytesConsumed,
-	    	&bytesProduced,
-	    	buf);
-			
-		src		+= bytesConsumed;
-		srcCnt	-= bytesConsumed;
-		totalCharsProduced += bytesProduced / sizeof(UniChar);
+        totalCharsProduced += charsProduced;
+        
+        //  Bail out if nothing more was produced
+        if (charsProduced == 0)
+            break;
+    }
 
-		if (status == kTECOutputBufferFullStatus || status == kTECUsedFallbacksStatus)
-			status = noErr;
-
-		options |= kUnicodeKeepInfoMask;
-	}
-	
-	if (status != noErr && status != kTECPartialCharErr)
-		totalCharsProduced = 0;
-	
 	//	Return number of XMLCh characters required (not counting terminating NULL!)
 	return totalCharsProduced;
 }
@@ -934,72 +812,36 @@ MacOSLCPTranscoder::calcRequiredSize(const XMLCh* const srcText
 	if (!srcText)
 		return 0;
 
-	std::size_t		totalBytesProduced = 0;
+	//  Lock our mutex to gain exclusive access to the transcoder
+	//  since the lcp transcoders are used globally.
+	XMLMutexLock lock(&mMutex);
+	std::size_t     totalBytesProduced = 0;
 
-	const XMLCh*	src		= srcText;
-	std::size_t		srcCnt	= XMLString::stringLen(src);
+	const XMLCh*    src     = srcText;
+	unsigned int    srcCnt  = XMLString::stringLen(src);
+    
+    //  Iterate over the characters, converting into a temporary buffer which we'll discard.
+    //  All this to get the size required.
+   while (srcCnt > 0)
+    {
+        TempCharBuf tmpBuf;
+        unsigned int charsConsumed = 0;
+		unsigned int bytesProduced = mTranscoder->transcodeTo(src, srcCnt,
+                                            (XMLByte*)tmpBuf, kTempBufCount,
+                                            charsConsumed,
+                                            XMLTranscoder::UnRep_RepChar);
+        
+        src     += charsConsumed;
+        srcCnt  -= charsConsumed;
 
-	OptionBits options =
-		  kUnicodeUseFallbacksMask
-		| kUnicodeLooseMappingsMask
-		// | kUnicodeKeepInfoMask
-		// | kUnicodeStringUnterminatedMask
-		;
+        totalBytesProduced += bytesProduced;
+        
+        //  Bail out if nothing more was produced
+        if (bytesProduced == 0)
+            break;
+    }
 
-	OSStatus status;
-	for (status = noErr; status == noErr && srcCnt > 0; )
-	{
-	    ByteCount		bytesConsumed = 0;
-	    ByteCount		bytesProduced = 0;
-		std::size_t		passCnt = 0;
-		const UniChar*	passSrc = NULL;
-		
-		//	Setup source buffer as needed to accomodate a unicode
-		//	character size mismatch.
-		TempUniBuf	iBuf;
-		if (UNICODE_SIZE_MISMATCH)
-		{
-			passCnt = std::min(srcCnt, kTempUniBufCount);
-			passSrc = CopyXMLChsToUniChars(src, iBuf, passCnt, kTempUniBufCount);
-		}
-		else
-		{
-			passCnt = srcCnt;
-			passSrc = reinterpret_cast<const UniChar*>(src);
-		}
-		
-		TempUniBuf oBuf;
-
-	    status = ConvertFromUnicodeToText(
-	    	mUnicodeToTextInfo,
-	    	passCnt * sizeof(UniChar),	// src byte count
-	    	passSrc,			// source buffer
-	    	options,			// control flags
-	    	0,					// ioffset count
-	    	NULL,				// ioffset array
-	    	0,					// ooffset count
-	    	NULL,				// ooffset array
-			kTempUniBufCount * sizeof(UniChar),	// output buffer size in bytes
-	    	&bytesConsumed,
-	    	&bytesProduced,
-			oBuf);
-			
-		std::size_t charsConsumed = bytesConsumed / sizeof(UniChar);
-		src		+= charsConsumed;
-		srcCnt	-= charsConsumed;
-
-		totalBytesProduced += bytesProduced;
-
-		if (status == kTECOutputBufferFullStatus || status == kTECUsedFallbacksStatus)
-			status = noErr;
-
-		options |= kUnicodeKeepInfoMask;
-	}
-	
-	if (status != noErr && status != kTECPartialCharErr)
-		totalBytesProduced = 0;
-	
-	//	Return number of bytes required (not counting terminating NULL!)
+	//	Return number of characters required (not counting terminating NULL!)
 	return totalBytesProduced;
 }
 
@@ -1020,57 +862,30 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
 	if (!srcText)
 		return NULL;
 
+	//  Lock our mutex to gain exclusive access to the transcoder
+	//  since the lcp transcoders are used globally.
+	XMLMutexLock lock(&mMutex);
+
 	ArrayJanitor<char> result(0);
 	const XMLCh* src		= srcText;
-	std::size_t srcCnt		= XMLString::stringLen(src);
+	unsigned int srcCnt		= XMLString::stringLen(src);
 	std::size_t resultCnt	= 0;
 
-	OptionBits options =
-		  kUnicodeUseFallbacksMask
-		| kUnicodeLooseMappingsMask
-		// | kUnicodeKeepInfoMask
-		// | kUnicodeStringUnterminatedMask
-		;
+    //  Iterate over the characters, buffering into a local temporary
+    //  buffer, which we dump into an allocated (and reallocated, as necessary)
+    //  string for return.
+    while (srcCnt > 0)
+    {
+		//  Transcode some characters
+        TempCharBuf tmpBuf;
+        unsigned int charsConsumed = 0;
+        unsigned int bytesProduced = mTranscoder->transcodeTo(src, srcCnt,
+                                            (XMLByte*)tmpBuf, kTempBufCount,
+                                            charsConsumed,
+                                            XMLTranscoder::UnRep_RepChar);
+        src     += charsConsumed;
+        srcCnt  -= charsConsumed;
 
-	OSStatus status;
-	for (status = noErr; status == noErr && srcCnt > 0; )
-	{
-		//	Convert an (internal) buffer full of text
-	    ByteCount		bytesConsumed = 0;
-	    ByteCount		bytesProduced = 0;
-		std::size_t		passCnt = 0;
-		const UniChar*	passSrc = NULL;
-		
-		//	Setup source buffer as needed to accomodate a unicode
-		//	character size mismatch.
-		TempUniBuf	iBuf;
-		if (UNICODE_SIZE_MISMATCH)
-		{
-			passCnt = std::min(srcCnt, kTempUniBufCount);
-			passSrc = CopyXMLChsToUniChars(src, iBuf, passCnt, kTempUniBufCount);
-		}
-		else
-		{
-			passCnt = srcCnt;
-			passSrc = reinterpret_cast<const UniChar*>(src);
-		}
-		
-		TempUniBuf oBuf;
-		
-	    status = ConvertFromUnicodeToText(
-	    	mUnicodeToTextInfo,
-	    	passCnt * sizeof(UniChar),	// src byte count
-	    	passSrc,			// source buffer
-	    	options,			// control flags
-	    	0,					// ioffset count
-	    	NULL,				// ioffset array
-	    	0,					// ooffset count
-	    	NULL,				// ooffset array
-	    	kTempUniBufCount * sizeof(UniChar),
-	    	&bytesConsumed,
-	    	&bytesProduced,
-	    	oBuf);
-			
 		//	Move the data to result buffer, reallocating as needed
 		if (bytesProduced > 0)
 		{
@@ -1089,26 +904,18 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
 				result.reset(newResult.release());
 
 				//	Copy in new data
-				std::memcpy(result.get() + resultCnt, oBuf, bytesProduced);
+				std::memcpy(result.get() + resultCnt, tmpBuf, bytesProduced);
 				resultCnt = newCnt;
 				
+                //  Terminate the result
 				result[resultCnt] = '\0';					
 			}
 		}
-		
-		std::size_t charsConsumed = bytesConsumed / sizeof(UniChar);
-		src		+= charsConsumed;
-		srcCnt	-= charsConsumed;
+        else
+            break;
+    }
 
-		if (status == kTECOutputBufferFullStatus || status == kTECUsedFallbacksStatus)
-			status = noErr;
-
-		options |= kUnicodeKeepInfoMask;
-	}
-	
-	if (status != noErr && status != kTECPartialCharErr)
-		result.reset();
-	else if (!result.get())
+    if (!result.get())
 	{
 		//	No error, and no result: we probably processed a zero length
 		//	input, in which case we want a valid zero length output.
@@ -1119,7 +926,7 @@ MacOSLCPTranscoder::transcode(const XMLCh* const srcText,
         );
 		result[0] = '\0';
 	}
-	
+
 	return result.release();
 }
 
@@ -1140,45 +947,30 @@ MacOSLCPTranscoder::transcode(const char* const srcText,
 	if (!srcText)
 		return NULL;
 
+	//  Lock our mutex to gain exclusive access to the transcoder
+	//  since the lcp transcoders are used globally.
+	XMLMutexLock lock(&mMutex);
+
 	ArrayJanitor<XMLCh> result(0);
 	const char* src			= srcText;
 	std::size_t srcCnt		= std::strlen(src);
 	std::size_t resultCnt	= 0;
 
-	OptionBits options =
-		  kUnicodeUseFallbacksMask
-		// | kUnicodeKeepInfoMask
-		| kUnicodeDefaultDirectionMask
-		| kUnicodeLooseMappingsMask
-		// | kUnicodeStringUnterminatedMask
-		// | kUnicodeTextRunMask
-		;
+    //  Iterate over the characters, buffering into a local temporary
+    //  buffer, which we dump into an allocated (and reallocated, as necessary)
+    //  string for return.
+    while (srcCnt > 0)
+    {
+        //  Transcode some characters
+		TempXMLBuf tmpBuf;
+        unsigned int bytesConsumed = 0;
+		unsigned int charsProduced = mTranscoder->transcodeFrom((XMLByte*)src, srcCnt,
+												tmpBuf, kTempBufCount,
+												bytesConsumed,
+												NULL);
+        src     += bytesConsumed;
+        srcCnt  -= bytesConsumed;
 
-	OSStatus status;
-	for (status = noErr; status == noErr && srcCnt > 0; )
-	{
-		//	Convert an (internal) buffer full of text
-	    ByteCount	bytesConsumed = 0;
-	    ByteCount	bytesProduced = 0;
-		
-		TempUniBuf buf;
-
-	    status = ConvertFromTextToUnicode(
-	    	mTextToUnicodeInfo,
-	    	srcCnt,				// src byte count
-	    	src,
-	    	options,			// control flags
-	    	0,					// ioffset count
-	    	NULL,				// ioffset array
-	    	0,					// ooffset count
-	    	NULL,				// ooffset array
-	    	kTempUniBufCount * sizeof(UniChar),	// Byte count of destination buffer
-	    	&bytesConsumed,
-	    	&bytesProduced,
-	    	buf);
-		
-		std::size_t charsProduced = bytesProduced / sizeof(UniChar);
-		
 		//	Move the data to result buffer, reallocating as needed
 		if (charsProduced > 0)
 		{
@@ -1186,7 +978,7 @@ MacOSLCPTranscoder::transcode(const char* const srcText,
 			std::size_t newCnt = resultCnt + charsProduced;
 			ArrayJanitor<XMLCh> newResult
             (
-                (XMLCh*) manager->allocate((newCnt + 1) * sizeof(XMLCh))//new XMLCh[newCnt + 1]
+                (XMLCh*) manager->allocate((newCnt + 1) * sizeof(XMLCh)) //new XMLCh[newCnt + 1]
                 , manager
             );
 			if (newResult.get() != NULL)
@@ -1196,26 +988,18 @@ MacOSLCPTranscoder::transcode(const char* const srcText,
 					std::memcpy(newResult.get(), result.get(), resultCnt * sizeof(XMLCh));
 				result.reset(newResult.release());
 
-				//	Copy in new data, converting character formats as necessary
-				CopyUniCharsToXMLChs(buf, result.get() + resultCnt, charsProduced, charsProduced);
+				//	Copy in new data
+				std::memcpy(result.get() + resultCnt, tmpBuf, charsProduced * sizeof(XMLCh));
 				resultCnt = newCnt;
 				
 				result[resultCnt] = 0;			
 			}
 		}
+        else
+            break;
+    }
 
-		src		+= bytesConsumed;
-		srcCnt  -= bytesConsumed;
-
-		if (status == kTECOutputBufferFullStatus || status == kTECUsedFallbacksStatus)
-			status = noErr;
-			
-		options |= kUnicodeKeepInfoMask;
-	}
-	
-	if (status != noErr && status != kTECPartialCharErr)
-		result.reset();
-	else if (!result.get())
+    if (!result.get())
 	{
 		//	No error, and no result: we probably processed a zero length
 		//	input, in which case we want a valid zero length output.
@@ -1240,58 +1024,29 @@ MacOSLCPTranscoder::transcode( 		 const   char* const	toTranscode
     // toFill must contain space for maxChars XMLCh characters + 1 (for terminating NULL).
 
     // Check for a couple of psycho corner cases
-    if (!toTranscode || !maxChars)
+    if (!toTranscode || !maxChars || !*toTranscode)
     {
         toFill[0] = 0;
         return true;
     }
 
-    if (!*toTranscode)
-    {
-        toFill[0] = 0;
-        return true;
-    }
+	//  Lock our mutex to gain exclusive access to the transcoder
+	//  since the lcp transcoders are used globally.
+	XMLMutexLock lock(&mMutex);
 
-    ByteCount	bytesConsumed = 0;
-    ByteCount	bytesProduced = 0;
-	
-	OptionBits options =
-		  kUnicodeUseFallbacksMask
-		// | kUnicodeKeepInfoMask
-		| kUnicodeDefaultDirectionMask
-		| kUnicodeLooseMappingsMask
-		// | kUnicodeStringUnterminatedMask
-		// | kUnicodeTextRunMask
-		;
+    //  Call the transcoder to do the work
+    unsigned int srcLen = std::strlen(toTranscode);
+    unsigned int bytesConsumed = 0;
+    unsigned int charsProduced = mTranscoder->transcodeFrom((XMLByte*)toTranscode, srcLen,
+                                            toFill, maxChars,
+											bytesConsumed,
+											NULL);
 
-    OSStatus status = ConvertFromTextToUnicode(
-    	mTextToUnicodeInfo,
-    	std::strlen(toTranscode),	// src byte count
-    	toTranscode,
-    	options,				// control flags
-    	0,						// ioffset count
-    	NULL,					// ioffset array
-    	0,						// ooffset count
-    	NULL,					// ooffset array
-    	maxChars * sizeof(UniChar),
-    	&bytesConsumed,
-    	&bytesProduced,
-    	reinterpret_cast<UniChar* const>(toFill));
-		
-    std::size_t charsProduced = bytesProduced / sizeof(UniChar);
-
-	//	If we have a size mismatch, then convert from UniChar to
-	//	XMLCh in place within the output buffer.
-	if (UNICODE_SIZE_MISMATCH)
-		CopyUniCharsToXMLChs(reinterpret_cast<UniChar* const>(toFill), toFill, charsProduced, maxChars);
-		
     //	Zero terminate the output string
     toFill[charsProduced] = L'\0';
-
-	if (status == kTECUsedFallbacksStatus)
-		status = noErr;
-
-	return (status == noErr);
+    
+    //  Return true if we consumed all of the characters
+    return (bytesConsumed == srcLen);
 }
 
 
@@ -1301,85 +1056,33 @@ MacOSLCPTranscoder::transcode( 		const   XMLCh* const    toTranscode
                                     , const unsigned int    maxChars
                                     , MemoryManager* const  manager)
 {
-    //	toFill must contain space for maxChars bytes characters + 1 (for terminating NULL).
-	const XMLCh* src = toTranscode;
-	std::size_t	 srcCnt = XMLString::stringLen(src);
-	std::size_t	 totalCharsProduced = 0;
-	
-    // Watch for a few psycho corner cases
-    if (!toTranscode || !maxChars)
+    //	toFill must contain space for maxChars bytes + 1 (for terminating NULL).
+
+    // Check for a couple of psycho corner cases
+    if (!toTranscode || !maxChars || !*toTranscode)
     {
         toFill[0] = 0;
         return true;
     }
 
-	// Set up options for converter
-	OptionBits options =
-		  kUnicodeUseFallbacksMask
-		| kUnicodeLooseMappingsMask
-		// | kUnicodeKeepInfoMask
-		// | kUnicodeStringUnterminatedMask
-		;
+	//  Lock our mutex to gain exclusive access to the transcoder
+	//  since the lcp transcoders are used globally.
+	XMLMutexLock lock(&mMutex);
 
-	//	Do multiple passes of conversion, potentially,
-	//	in order to handle the case of a character size
-	//	mismatch.
-	OSStatus status;
-	for (status = noErr; status == noErr && srcCnt > 0; )
-	{
-	    ByteCount		bytesConsumed = 0;
-	    ByteCount		bytesProduced = 0;
-		std::size_t		passCnt = 0;
-		const UniChar*	passSrc = NULL;
-		
-		//	Setup source buffer as needed to accomodate a unicode
-		//	character size mismatch.
-		TempUniBuf	buf;
-		if (UNICODE_SIZE_MISMATCH)
-		{
-			passCnt = std::min(srcCnt, kTempUniBufCount);
-			passSrc = CopyXMLChsToUniChars(src, buf, passCnt, kTempUniBufCount);
-		}
-		else
-		{
-			passCnt = srcCnt;
-			passSrc = reinterpret_cast<const UniChar*>(src);
-		}
+    //  Call the transcoder to do the work
+    unsigned int srcLen = XMLString::stringLen(toTranscode);
+    unsigned int charsConsumed = 0;
+    unsigned int bytesProduced = mTranscoder->transcodeTo(toTranscode, srcLen,
+                                            (XMLByte*)toFill, maxChars,
+                                            charsConsumed,
+                                            XMLTranscoder::UnRep_RepChar);
 
-		status = ConvertFromUnicodeToText(
-			mUnicodeToTextInfo,
-			passCnt * sizeof(UniChar),	// src byte count
-			passSrc,				// src buffer
-			options,				// control flags
-			0,						// ioffset count
-			NULL,					// ioffset array
-			0,						// ooffset count
-			NULL,					// ooffset array
-			maxChars - totalCharsProduced,
-			&bytesConsumed,
-			&bytesProduced,
-			toFill + totalCharsProduced);
-			
-		std::size_t charsConsumed = bytesConsumed / sizeof(UniChar);
-
-		src		+= charsConsumed;
-		srcCnt	-= charsConsumed;
-		
-		totalCharsProduced += bytesProduced;
-			
-		if (status == kTECUsedFallbacksStatus)
-			status = noErr;
-			
-		if (UNICODE_SIZE_MISMATCH && status == kTECOutputBufferFullStatus)
-			status = noErr;
-
-		options |= kUnicodeKeepInfoMask;
-	}
-			
     //	Zero terminate the output string
-    toFill[totalCharsProduced] = '\0';
-
-	return (status == noErr);
+    toFill[bytesProduced] = '\0';
+    
+    //  Return true if we consumed all of the characters
+    return (charsConsumed == srcLen);
 }
+
 
 XERCES_CPP_NAMESPACE_END

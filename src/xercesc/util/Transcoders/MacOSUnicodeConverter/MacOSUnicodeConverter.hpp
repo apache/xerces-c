@@ -63,6 +63,7 @@
 
 #include <cstddef>
 #include <xercesc/util/TransService.hpp>
+#include <xercesc/util/Mutexes.hpp>
 
 #if defined(__APPLE__)
     //	Framework includes from ProjectBuilder
@@ -131,6 +132,14 @@ protected :
         , const unsigned int            blockSize
         ,       MemoryManager* const    manager
     );
+    virtual XMLTranscoder* makeNewXMLTranscoder
+    (
+        const   XMLCh* const            encodingName
+        ,       XMLTransService::Codes& resValue
+        , const unsigned int            blockSize
+        ,		TextEncoding			textEncoding
+        ,       MemoryManager* const    manager
+    );
 
     //	Sniff for available functionality
     static bool IsMacOSUnicodeConverterSupported(void);
@@ -139,6 +148,9 @@ protected :
 private :
 	friend class XMLPlatformUtils;
 	
+	static const XMLCh fgMyServiceId[];			// Name of the our unicode converter
+	static const XMLCh fgMacLCPEncodingName[];	// Name of the LCP transcoder we create
+
 	bool	mHasUnicodeCollation;	// True if unicode collation is available
 	
     // -----------------------------------------------------------------------
@@ -151,6 +163,10 @@ private :
     //  Private methods
     // -----------------------------------------------------------------------
 	void ConvertWideToNarrow(const XMLCh* wide, char* narrow, std::size_t maxChars);
+	
+	//  Figure out what text encoding to use for LCP transcoder
+	TextEncoding discoverLCPEncoding();
+
 };
 
 
@@ -169,8 +185,8 @@ public :
     // -----------------------------------------------------------------------
     MacOSTranscoder(
 	    const XMLCh* const		encodingName,
-	    TextToUnicodeInfo		textToUnicodeInfo,
-	    UnicodeToTextInfo		unicodeToTextInfo,
+	    TECObjectRef			textToUnicode,
+	    TECObjectRef			unicodeToText,
 	    const unsigned int		blockSize,
 	    MemoryManager* const    manager = XMLPlatformUtils::fgMemoryManager
 		);
@@ -218,8 +234,8 @@ private :
     // -----------------------------------------------------------------------
     //  Private members
     // -----------------------------------------------------------------------
-    TextToUnicodeInfo	mTextToUnicodeInfo;
-    UnicodeToTextInfo	mUnicodeToTextInfo;
+    TECObjectRef	mTextToUnicode;
+    TECObjectRef	mUnicodeToText;
 };
 
 
@@ -236,7 +252,7 @@ public :
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------
-    MacOSLCPTranscoder(TextToUnicodeInfo textToUnicodeInfo, UnicodeToTextInfo unicodeToTextInfo);
+    MacOSLCPTranscoder(XMLTranscoder* const	transcoder, MemoryManager* const manager);
     ~MacOSLCPTranscoder();
 
 
@@ -291,8 +307,9 @@ private :
     // -----------------------------------------------------------------------
     //  Private data members
     // -----------------------------------------------------------------------
-    TextToUnicodeInfo	mTextToUnicodeInfo;
-    UnicodeToTextInfo	mUnicodeToTextInfo;
+    XMLTranscoder* const	mTranscoder;
+	MemoryManager* const	mManager;
+	XMLMutex				mMutex;			// Mutex to enable rentrancy of LCP transcoder
  };
 
 XERCES_CPP_NAMESPACE_END

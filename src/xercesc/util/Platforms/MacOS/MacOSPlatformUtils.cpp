@@ -143,6 +143,9 @@ bool	XMLParsePathToFSSpec_Classic(const XMLCh* const pathName, FSSpec& spec, Mem
 //   This flag indicates whether the file system APIs meet our minimum
 //   requirements.
 //
+//  gMacOSXOrBetter
+//   The system version is >= 10.
+//
 // gHasFSSpecAPIs
 //   True if the FSSpecAPIs are available. These are required.
 //

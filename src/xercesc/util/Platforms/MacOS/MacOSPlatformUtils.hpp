@@ -132,6 +132,7 @@ const std::size_t kMaxMacStaticPathChars = 512;
 
 //	Global variables set in platformInit()
 extern bool gFileSystemCompatible;
+extern bool gMacOSXOrBetter;
 extern bool gHasFSSpecAPIs;
 extern bool gHasFS2TBAPIs;
 extern bool gHasHFSPlusAPIs;
