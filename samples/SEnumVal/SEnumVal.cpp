@@ -57,6 +57,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2003/01/14 15:32:45  knoaman
+ * [Bug 16024] SchemaSymbols.hpp conflicts C++ Builder 6 dir.h
+ *
  * Revision 1.13  2002/11/05 21:46:20  tng
  * Explicit code using namespace in application.
  *
@@ -327,13 +330,13 @@ void process(char* const xmlFile)
 			cout << "Misc. Flags:\t";
 		}
 
-        if ( mflags & SchemaSymbols::NILLABLE )
+        if ( mflags & SchemaSymbols::XSD_NILLABLE )
 			cout << "Nillable ";
 
-		if ( mflags & SchemaSymbols::ABSTRACT )
+		if ( mflags & SchemaSymbols::XSD_ABSTRACT )
 			cout << "Abstract ";
 
-		if ( mflags & SchemaSymbols::FIXED )
+		if ( mflags & SchemaSymbols::XSD_FIXED )
 			cout << "Fixed ";
 
 		if( mflags !=0 )
