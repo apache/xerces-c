@@ -518,7 +518,7 @@ int main(int argC, char* argV[])
     delete gFormatter;
     }
 
-    delete gEncodingName;
+    delete [] gEncodingName;
     //
     //  Clean up the error handler. The parser does not adopt handlers
     //  since they could be many objects or one object installed for multiple
