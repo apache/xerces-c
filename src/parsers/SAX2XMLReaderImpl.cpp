@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.17  2001/08/02 19:00:46  tng
+ * [Bug 1329] SAX2XMLReaderImpl leaks XMLBuffers.
+ *
  * Revision 1.16  2001/08/01 19:11:02  tng
  * Add full schema constraint checking flag to the samples and the parser.
  *
@@ -758,6 +761,17 @@ void SAX2XMLReaderImpl::resetDocument()
 
     // Make sure our element depth flag gets set back to zero
     fElemDepth = 0;
+
+    // Pop any prefix buffers left over from previous uses
+    while (!prefixCounts->empty())
+    {
+        unsigned int numPrefix = prefixCounts->pop();
+        for (unsigned int i = 0; i < numPrefix; i++)
+        {
+            XMLBuffer * buf = fPrefixes->pop() ;
+            fStringBuffers.releaseBuffer(*buf) ;
+        }
+    }
 }
 
 
