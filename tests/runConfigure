@@ -1,0 +1,214 @@
+#!/bin/sh
+
+
+#
+# The Apache Software License, Version 1.1
+# 
+# Copyright (c) 1999 The Apache Software Foundation.  All rights 
+# reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer. 
+# 
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 
+# 3. The end-user documentation included with the redistribution,
+#    if any, must include the following acknowledgment:  
+#       "This product includes software developed by the
+#        Apache Software Foundation (http://www.apache.org/)."
+#    Alternately, this acknowledgment may appear in the software itself,
+#    if and wherever such third-party acknowledgments normally appear.
+# 
+# 4. The names "Xerces" and "Apache Software Foundation" must
+#    not be used to endorse or promote products derived from this
+#    software without prior written permission. For written 
+#    permission, please contact apache\@apache.org.
+# 
+# 5. Products derived from this software may not be called "Apache",
+#    nor may "Apache" appear in their name, without prior written
+#    permission of the Apache Software Foundation.
+# 
+# THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+# ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+# USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+# OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+# ====================================================================
+# 
+# This software consists of voluntary contributions made by many
+# individuals on behalf of the Apache Software Foundation, and was
+# originally based on software copyright (c) 1999, International
+# Business Machines, Inc., http://www.ibm.com .  For more information
+# on the Apache Software Foundation, please see
+# <http://www.apache.org/>.
+# 
+#
+# $Log$
+# Revision 1.1  2000/01/31 22:21:53  aruna1
+# initial checkin
+#
+#
+# runConfigure : This script will run the "configure" script for the appropriate platform
+# Only supported platforms are recognized
+
+usage()
+{
+    echo "runConfigure: Helper script to run \"configure\" for one of the supported platforms"
+    echo "Usage: runConfigure \"options\""
+    echo "       where options may be any of the following:"
+    echo "       -p <platform> (accepts 'aix', 'linux', 'solaris', 'hp-10', 'hp-11')"
+    echo "       -c <C compiler name> (e.g. gcc or xlc)"
+    echo "       -x <C++ compiler name> (e.g. g++ or xlC)"
+    echo "       -d (specifies that you want to build debug version)"
+    echo "       -h (get help on the above commands)"
+}
+
+ERROR_EXIT_CODE=1
+
+if test ${1}o = "o"; then
+   usage
+   exit ${ERROR_EXIT_CODE}
+fi
+
+if test ${XERCESCROOT}o = "o"; then
+   echo ERROR : You have not set your XERCESCROOT environment variable
+   echo Though this environment variable has nothing to do with creating makefiles,
+   echo this is just a general warning to prevent you from pitfalls in future. Please
+   echo set an environment variable called XERCESCROOT to indicate where you installed
+   echo the XERCES-C files, and run this command again to proceed. See the documentation
+   echo for an example if you are still confused.
+   exit ${ERROR_EXIT_CODE}
+fi
+
+if test $1 = "-h"; then
+   usage
+   exit ${ERROR_EXIT_CODE}
+fi
+
+# Get the command line parameters
+set -- `getopt p:c:x:dm:n:t:r:l:z:h $*`
+if [ $? != 0 ]
+   then
+   usage
+   exit ${ERROR_EXIT_CODE}
+fi
+
+# Set up the default values for each parameter
+debug=off                # by default debug is off
+transcoder=native        # by default use native transcoder
+msgloader=iconv          # by default use native transcoder
+netaccessor=fileonly     # by default use fileonly
+
+for i in $*
+   do
+   case $i in
+   -p)
+        platform=$2; shift 2;;
+
+   -c)
+        ccompiler=$2; shift 2;;
+
+   -x)
+        cppcompiler=$2; shift 2;;
+
+   -d)
+        debug=on; shift;;
+
+   -h)
+        usage
+        exit ${ERROR_EXIT_CODE};;
+
+   --)
+        shift; break;;
+   esac
+done
+
+echo "Generating makefiles with the following options ..."
+echo "Platform: $platform"
+echo "C Compiler: $ccompiler"
+echo "C++ Compiler: $cppcompiler"
+if test $debug = "off"; then
+    echo "Debug is OFF"
+    debugflag="-w -O";
+else
+    echo "Debug is ON"
+    debugflag="-g";
+fi
+
+# Now check if the options are correct or not, bail out if incorrect
+case $platform in
+   aix | linux | solaris | hp-10 | hp-11)
+       # platform has been recognized
+       ;;
+   *)
+      echo "I do not recognize the platform '$platform'. Please type '${0} -h' for help."
+      exit ${ERROR_EXIT_CODE};;
+esac
+
+# Set the C compiler and C++ compiler environment variables
+CC=$ccompiler; export CC
+CXX=$cppcompiler; export CXX
+
+case $cppcompiler in
+   xlC | xlc | xlC_r | xlc_r)
+       LDFLAGS="-lC"; export LDFLAGS
+       LIBS="-L/usr/lpp/xlC/lib"; export LIBS ;;
+
+   g++ | c++)
+       LDFLAGS="-lc"; export LDFLAGS
+       LIBS="-L/usr/local/lib"; export LIBS ;;
+
+   cc | CC)
+       LDFLAGS="-lC"; export LDFLAGS
+       LIBS="-L/usr/lib -L/usr/ccs/lib"; export LIBS ;;
+
+   acc | aCC)
+       LDFLAGS="-lC"; export LDFLAGS
+       LIBS="-L/usr/lib -L/opt/aCC/lib"; export LIBS ;;
+
+   *)
+      echo "I do not recognize the C++ compiler '$cppcompiler'. Continuing anyway ..."
+      ;;
+esac
+
+# Set the extra C and C++ compiler flags
+CXXFLAGS="$debugflag $compileroption"; export CXXFLAGS
+CFLAGS="$debugflag $compileroption"; export CFLAGS
+
+echo
+rm -f config.cache
+rm -f config.log
+rm -f config.status
+./configure
+
+echo
+echo In future, you may also directly type the following commands to create the Makefiles.
+echo
+echo export CC=$CC
+echo export CXX=$CXX
+echo export CXXFLAGS=$CXXFLAGS
+echo export CFLAGS=$CFLAGS
+echo export LIBS=$LIBS
+echo export LDFLAGS=$LDFLAGS
+echo configure
+
+echo
+echo If the result of the above commands look OK to you, go to the directory
+echo ${XERCESCROOT}/tests and type \"gmake\" to make the XERCES-C system.
+
+exit 0;
+
