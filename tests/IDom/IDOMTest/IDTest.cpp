@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/02/01 22:44:24  peiyongz
+ * sane_include
+ *
  * Revision 1.3  2001/12/07 01:48:27  tng
  * [Bug 1959] setNodeValue throws exception when spec specifies NOP.
  *
@@ -77,9 +80,9 @@
 
 #include <stdio.h>
 #include "IDTest.h"
-#include <util/PlatformUtils.hpp>
-#include <util/XMLException.hpp>
-#include <util/XMLString.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLException.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 
 #define EXCEPTIONSTEST(operation, expectedException, resultFlag, testNum) \

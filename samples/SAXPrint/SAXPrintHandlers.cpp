@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.15  2002/02/01 22:41:17  peiyongz
+ * sane_include
+ *
  * Revision 1.14  2001/05/11 13:24:58  tng
  * Copyright update.
  *
@@ -114,8 +117,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XMLUniDefs.hpp>
-#include <sax/AttributeList.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/sax/AttributeList.hpp>
 #include "SAXPrint.hpp"
 
 

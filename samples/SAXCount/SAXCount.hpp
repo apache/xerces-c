@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/02/01 22:41:07  peiyongz
+ * sane_include
+ *
  * Revision 1.4  2000/03/02 19:53:47  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -82,8 +85,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream.h>
-#include <util/PlatformUtils.hpp>
-#include <parsers/SAXParser.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
 #include "SAXCountHandlers.hpp"
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/02/01 22:45:54  peiyongz
+ * sane_include
+ *
  * Revision 1.6  2000/03/02 19:55:46  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -83,9 +86,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include    <framework/XMLDocumentHandler.hpp>
-#include    <framework/XMLErrorReporter.hpp>
-#include    <validators/DTD/DocTypeHandler.hpp>
+#include    <xercesc/framework/XMLDocumentHandler.hpp>
+#include    <xercesc/framework/XMLErrorReporter.hpp>
+#include    <xercesc/validators/DTD/DocTypeHandler.hpp>
 
 
 class TestParser :

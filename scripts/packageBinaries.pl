@@ -105,6 +105,7 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     psystem ("mkdir $targetdir/lib");
     psystem ("mkdir $targetdir/etc");
     psystem ("mkdir $targetdir/include");
+    psystem ("mkdir $targetdir/include/xercesc");
     psystem ("mkdir $targetdir/samples");
     psystem ("mkdir $targetdir/samples/Projects");
     psystem ("mkdir $targetdir/samples/Projects/Win32");
@@ -223,11 +224,11 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
         validators/schema/identity';
 
     foreach $dir (@headerDirectories) {
-        $inclDir = "include/$dir";
+        $inclDir = "include/xercesc/$dir";
         if (! (-e $inclDir)) {
             psystem("mkdir $inclDir");
         }
-        $srcDir = "$XERCESCROOT/src/$dir";
+        $srcDir = "$XERCESCROOT/src/xercesc/$dir";
 
         # Weed out directories that have no files to copy, to avoid a bunch of
         # warnings from the cp command in the build output.
@@ -246,11 +247,11 @@ if ($platform =~ m/Windows/  || $platform =~ m/CYGWIN/) {
     #
     #  Remove internal implementation headers from the DOM include directory.
     #
-    psystem ("rm  $targetdir/include/dom/*Impl.hpp");
-    psystem ("rm  $targetdir/include/dom/DS*.hpp");
+    psystem ("rm  $targetdir/include/xercesc/dom/*Impl.hpp");
+    psystem ("rm  $targetdir/include/xercesc/dom/DS*.hpp");
 
-    psystem ("rm  $targetdir/include/idom/*Impl.hpp");
-    psystem ("rm  $targetdir/include/idom/IDS*.hpp");
+    psystem ("rm  $targetdir/include/xercesc/idom/*Impl.hpp");
+    psystem ("rm  $targetdir/include/xercesc/idom/IDS*.hpp");
 
 
     if ($opt_t =~ m/icu/i && length($ICUROOT) > 0) {
@@ -431,7 +432,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     if ($platform =~ m/ptx/i) {
         # Check if the patches have been applied or not
         $platform = "ptx";
-        if (!(-d "$XERCESCROOT/src/util/Platforms/PTX")) {
+        if (!(-d "$XERCESCROOT/src/xercesc/util/Platforms/PTX")) {
             print ("Error: Could not locate PTX-specific XML4C directory.\n");
             print ("    The PTX-specific patches must be applied to both XML4C and ICU before a build can succeed.\n");
             exit(-1);
@@ -475,45 +476,46 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
     psystem ("mkdir $targetdir/etc");
     psystem ("mkdir $targetdir/lib");
     psystem ("mkdir $targetdir/include");
+    psystem ("mkdir $targetdir/include/xercesc");
     if (length($ICUROOT) > 0) {
         psystem ("mkdir $targetdir/include/unicode");
     }
-    psystem ("mkdir $targetdir/include/sax");
-    psystem ("mkdir $targetdir/include/sax2");
-    psystem ("mkdir $targetdir/include/framework");
-    psystem ("mkdir $targetdir/include/internal");
-    psystem ("mkdir $targetdir/include/parsers");
-    psystem ("mkdir $targetdir/include/util");
-    psystem ("mkdir $targetdir/include/util/Compilers");
-    psystem ("mkdir $targetdir/include/util/MsgLoaders");
-    psystem ("mkdir $targetdir/include/util/MsgLoaders/ICU");
-    psystem ("mkdir $targetdir/include/util/MsgLoaders/InMemory");
-    psystem ("mkdir $targetdir/include/util/MsgLoaders/MsgCatalog");
-    psystem ("mkdir $targetdir/include/util/MsgLoaders/Win32");
-    psystem ("mkdir $targetdir/include/util/Platforms");
-    psystem ("mkdir $targetdir/include/util/Platforms/AIX");
-    psystem ("mkdir $targetdir/include/util/Platforms/HPUX");
-    psystem ("mkdir $targetdir/include/util/Platforms/Linux");
-    psystem ("mkdir $targetdir/include/util/Platforms/MacOS");
-    psystem ("mkdir $targetdir/include/util/Platforms/OS2");
-    psystem ("mkdir $targetdir/include/util/Platforms/OS390");
-    psystem ("mkdir $targetdir/include/util/Platforms/PTX");
-    psystem ("mkdir $targetdir/include/util/Platforms/Solaris");
-    psystem ("mkdir $targetdir/include/util/Platforms/Tandem");
-    psystem ("mkdir $targetdir/include/util/Platforms/Win32");
-    psystem ("mkdir $targetdir/include/util/regx");
-    psystem ("mkdir $targetdir/include/util/Transcoders");
-    psystem ("mkdir $targetdir/include/util/Transcoders/ICU");
-    psystem ("mkdir $targetdir/include/util/Transcoders/Iconv");
-    psystem ("mkdir $targetdir/include/util/Transcoders/Win32");
-    psystem ("mkdir $targetdir/include/dom");
-    psystem ("mkdir $targetdir/include/idom");
-    psystem ("mkdir $targetdir/include/validators");
-    psystem ("mkdir $targetdir/include/validators/common");
-    psystem ("mkdir $targetdir/include/validators/datatype");
-    psystem ("mkdir $targetdir/include/validators/DTD");
-    psystem ("mkdir $targetdir/include/validators/schema");
-    psystem ("mkdir $targetdir/include/validators/schema/identity");
+    psystem ("mkdir $targetdir/include/xercesc/sax");
+    psystem ("mkdir $targetdir/include/xercesc/sax2");
+    psystem ("mkdir $targetdir/include/xercesc/framework");
+    psystem ("mkdir $targetdir/include/xercesc/internal");
+    psystem ("mkdir $targetdir/include/xercesc/parsers");
+    psystem ("mkdir $targetdir/include/xercesc/util");
+    psystem ("mkdir $targetdir/include/xercesc/util/Compilers");
+    psystem ("mkdir $targetdir/include/xercesc/util/MsgLoaders");
+    psystem ("mkdir $targetdir/include/xercesc/util/MsgLoaders/ICU");
+    psystem ("mkdir $targetdir/include/xercesc/util/MsgLoaders/InMemory");
+    psystem ("mkdir $targetdir/include/xercesc/util/MsgLoaders/MsgCatalog");
+    psystem ("mkdir $targetdir/include/xercesc/util/MsgLoaders/Win32");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms/AIX");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms/HPUX");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms/Linux");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms/MacOS");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms/OS2");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms/OS390");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms/PTX");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms/Solaris");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms/Tandem");
+    psystem ("mkdir $targetdir/include/xercesc/util/Platforms/Win32");
+    psystem ("mkdir $targetdir/include/xercesc/util/regx");
+    psystem ("mkdir $targetdir/include/xercesc/util/Transcoders");
+    psystem ("mkdir $targetdir/include/xercesc/util/Transcoders/ICU");
+    psystem ("mkdir $targetdir/include/xercesc/util/Transcoders/Iconv");
+    psystem ("mkdir $targetdir/include/xercesc/util/Transcoders/Win32");
+    psystem ("mkdir $targetdir/include/xercesc/dom");
+    psystem ("mkdir $targetdir/include/xercesc/idom");
+    psystem ("mkdir $targetdir/include/xercesc/validators");
+    psystem ("mkdir $targetdir/include/xercesc/validators/common");
+    psystem ("mkdir $targetdir/include/xercesc/validators/datatype");
+    psystem ("mkdir $targetdir/include/xercesc/validators/DTD");
+    psystem ("mkdir $targetdir/include/xercesc/validators/schema");
+    psystem ("mkdir $targetdir/include/xercesc/validators/schema/identity");
     psystem ("mkdir $targetdir/samples");
     psystem ("mkdir $targetdir/samples/data");
     psystem ("mkdir $targetdir/samples/SAXCount");
@@ -576,7 +578,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
     # make the source files
     print("\n\nBuild the xerces-c library ...\n");
-    pchdir ("$XERCESCROOT/src");
+    pchdir ("$XERCESCROOT/src/xercesc");
 
 
     psystem ("chmod +x run* con* install-sh");
@@ -632,51 +634,51 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
     # Populate the include output directory
     print ("\n\nCopying headers files ...\n");
-    psystem("cp -Rf $XERCESCROOT/src/sax/*.hpp $targetdir/include/sax");
-	psystem("cp -Rf $XERCESCROOT/src/sax2/*.hpp $targetdir/include/sax2");
-    psystem("cp -Rf $XERCESCROOT/src/framework/*.hpp $targetdir/include/framework");
-    psystem("cp -Rf $XERCESCROOT/src/dom/D*.hpp $targetdir/include/dom");
-    psystem("cp -Rf $XERCESCROOT/src/idom/ID*.hpp $targetdir/include/idom");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/sax/*.hpp $targetdir/include/xercesc/sax");
+	psystem("cp -Rf $XERCESCROOT/src/xercesc/sax2/*.hpp $targetdir/include/xercesc/sax2");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/framework/*.hpp $targetdir/include/xercesc/framework");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/dom/D*.hpp $targetdir/include/xercesc/dom");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/idom/ID*.hpp $targetdir/include/xercesc/idom");
 
     psystem("cp -Rf $XERCESCROOT/version.incl $targetdir");
 
-    psystem("rm -f $targetdir/include/dom/*Impl.hpp");
-    psystem("rm -f $targetdir/include/dom/DS*.hpp");
-    psystem("rm -f $targetdir/include/idom/*Impl.hpp");
-    psystem("rm -f $targetdir/include/idom/IDS*.hpp");
-    psystem("cp -Rf $XERCESCROOT/src/internal/*.hpp $targetdir/include/internal");
-    psystem("cp -Rf $XERCESCROOT/src/internal/*.c $targetdir/include/internal");
-    psystem("cp -Rf $XERCESCROOT/src/parsers/*.hpp $targetdir/include/parsers");
-    psystem("cp -Rf $XERCESCROOT/src/parsers/*.c $targetdir/include/parsers");
-    psystem("cp -Rf $XERCESCROOT/src/util/*.hpp $targetdir/include/util");
-    psystem("cp -Rf $XERCESCROOT/src/util/*.c $targetdir/include/util");
-    psystem("cp -Rf $XERCESCROOT/src/util/Compilers/*.hpp $targetdir/include/util/Compilers");
-    psystem("cp -Rf $XERCESCROOT/src/util/MsgLoaders/*.hpp $targetdir/include/util/MsgLoaders");
-    psystem("cp -Rf $XERCESCROOT/src/util/MsgLoaders/ICU/*.hpp $targetdir/include/util/MsgLoaders/ICU");
-    psystem("cp -Rf $XERCESCROOT/src/util/MsgLoaders/InMemory/*.hpp $targetdir/include/util/MsgLoaders/InMemory");
-    psystem("cp -Rf $XERCESCROOT/src/util/MsgLoaders/MsgCatalog/*.hpp $targetdir/include/util/MsgLoaders/MsgCatalog");
-    psystem("cp -Rf $XERCESCROOT/src/util/MsgLoaders/Win32/*.hpp $targetdir/include/util/MsgLoaders/Win32");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/*.hpp $targetdir/include/util/Platforms");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/AIX/*.hpp $targetdir/include/util/Platforms/AIX");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/HPUX/*.hpp $targetdir/include/util/Platforms/HPUX");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Linux/*.hpp $targetdir/include/util/Platforms/Linux");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/MacOS/*.hpp $targetdir/include/util/Platforms/MacOS");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/OS2/*.hpp $targetdir/include/util/Platforms/OS2");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/OS390/*.hpp $targetdir/include/util/Platforms/OS390");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/PTX/*.hpp $targetdir/include/util/Platforms/PTX");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Solaris/*.hpp $targetdir/include/util/Platforms/Solaris");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Tandem/*.hpp $targetdir/include/util/Platforms/Tandem");
-    psystem("cp -Rf $XERCESCROOT/src/util/Platforms/Win32/*.hpp $targetdir/include/util/Platforms/Win32");
-    psystem("cp -Rf $XERCESCROOT/src/util/regx/*.hpp $targetdir/include/util/regx");
-    psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/*.hpp $targetdir/include/util/Transcoders");
-    psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/ICU/*.hpp $targetdir/include/util/Transcoders/ICU");
-    psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/Iconv/*.hpp $targetdir/include/util/Transcoders/Iconv");
-    psystem("cp -Rf $XERCESCROOT/src/util/Transcoders/Win32/*.hpp $targetdir/include/util/Transcoders/Win32");
-    psystem("cp -Rf $XERCESCROOT/src/validators/common/*.hpp $targetdir/include/validators/common");
-    psystem("cp -Rf $XERCESCROOT/src/validators/datatype/*.hpp $targetdir/include/validators/datatype");
-    psystem("cp -Rf $XERCESCROOT/src/validators/DTD/*.hpp $targetdir/include/validators/DTD");
-    psystem("cp -Rf $XERCESCROOT/src/validators/schema/*.hpp $targetdir/include/validators/schema");
-    psystem("cp -Rf $XERCESCROOT/src/validators/schema/identity/*.hpp $targetdir/include/validators/schema/identity");
+    psystem("rm -f $targetdir/include/xercesc/dom/*Impl.hpp");
+    psystem("rm -f $targetdir/include/xercesc/dom/DS*.hpp");
+    psystem("rm -f $targetdir/include/xercesc/idom/*Impl.hpp");
+    psystem("rm -f $targetdir/include/xercesc/idom/IDS*.hpp");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/internal/*.hpp $targetdir/include/xercesc/internal");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/internal/*.c $targetdir/include/xercesc/internal");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/parsers/*.hpp $targetdir/include/xercesc/parsers");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/parsers/*.c $targetdir/include/xercesc/parsers");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/*.hpp $targetdir/include/xercesc/util");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/*.c $targetdir/include/xercesc/util");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Compilers/*.hpp $targetdir/include/xercesc/util/Compilers");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/MsgLoaders/*.hpp $targetdir/include/xercesc/util/MsgLoaders");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/MsgLoaders/ICU/*.hpp $targetdir/include/xercesc/util/MsgLoaders/ICU");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/MsgLoaders/InMemory/*.hpp $targetdir/include/xercesc/util/MsgLoaders/InMemory");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/MsgLoaders/MsgCatalog/*.hpp $targetdir/include/xercesc/util/MsgLoaders/MsgCatalog");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/MsgLoaders/Win32/*.hpp $targetdir/include/xercesc/util/MsgLoaders/Win32");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/*.hpp $targetdir/include/xercesc/util/Platforms");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/AIX/*.hpp $targetdir/include/xercesc/util/Platforms/AIX");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/HPUX/*.hpp $targetdir/include/xercesc/util/Platforms/HPUX");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/Linux/*.hpp $targetdir/include/xercesc/util/Platforms/Linux");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/MacOS/*.hpp $targetdir/include/xercesc/util/Platforms/MacOS");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/OS2/*.hpp $targetdir/include/xercesc/util/Platforms/OS2");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/OS390/*.hpp $targetdir/include/xercesc/util/Platforms/OS390");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/PTX/*.hpp $targetdir/include/xercesc/util/Platforms/PTX");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/Solaris/*.hpp $targetdir/include/xercesc/util/Platforms/Solaris");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/Tandem/*.hpp $targetdir/include/xercesc/util/Platforms/Tandem");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Platforms/Win32/*.hpp $targetdir/include/xercesc/util/Platforms/Win32");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/regx/*.hpp $targetdir/include/xercesc/util/regx");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Transcoders/*.hpp $targetdir/include/xercesc/util/Transcoders");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Transcoders/ICU/*.hpp $targetdir/include/xercesc/util/Transcoders/ICU");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Transcoders/Iconv/*.hpp $targetdir/include/xercesc/util/Transcoders/Iconv");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/util/Transcoders/Win32/*.hpp $targetdir/include/xercesc/util/Transcoders/Win32");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/validators/common/*.hpp $targetdir/include/xercesc/validators/common");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/validators/datatype/*.hpp $targetdir/include/xercesc/validators/datatype");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/validators/DTD/*.hpp $targetdir/include/xercesc/validators/DTD");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/validators/schema/*.hpp $targetdir/include/xercesc/validators/schema");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/validators/schema/identity/*.hpp $targetdir/include/xercesc/validators/schema/identity");
 
     if (length($ICUROOT) > 0) {
         print "\nICU files are being copied from \'$ICUROOT\'";
@@ -712,7 +714,7 @@ if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
 
     # Populate the etc output directory like config.status and the map file
     print ("\n\nCopying misc output to etc ...\n");
-    psystem("cp -Rf $XERCESCROOT/src/config.status $targetdir/etc");
+    psystem("cp -Rf $XERCESCROOT/src/xercesc/config.status $targetdir/etc");
     psystem("cp -Rf $XERCESCROOT/obj/*.map $targetdir/etc");
 
     # Populate the samples directory

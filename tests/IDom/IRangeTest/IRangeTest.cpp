@@ -68,13 +68,13 @@
  */
 
 #include <stdio.h>
-#include <idom/IDOM.hpp>
-#include <util/PlatformUtils.hpp>
-#include <util/XMLException.hpp>
-#include <util/XMLString.hpp>
-#include <util/XMLUni.hpp>
-#include <util/XMLUniDefs.hpp>
-#include <idom/IDOM_Range.hpp>
+#include <xercesc/idom/IDOM.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLException.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/idom/IDOM_Range.hpp>
 
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)

@@ -69,15 +69,15 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <dom/DOM.hpp>
-#include <dom/DomMemDebug.hpp>
-#include <parsers/DOMParser.hpp>
-#include <util/PlatformUtils.hpp>
-#include <util/XMLException.hpp>
-#include <util/XMLString.hpp>
-#include <dom/DOM_Range.hpp>
-#include <dom/DOM_XMLDecl.hpp>
-#include <framework/MemBufInputSource.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/dom/DomMemDebug.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLException.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/dom/DOM_Range.hpp>
+#include <xercesc/dom/DOM_XMLDecl.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
 
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)

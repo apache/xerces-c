@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/02/01 22:36:42  peiyongz
+ * sane_include
+ *
  * Revision 1.1  2001/05/17 15:28:17  tng
  * IDOM: Add IDOMPrint and IDOMCount
  *
@@ -64,7 +67,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <sax/SAXParseException.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
 #include "IDOMTreeErrorReporter.hpp"
 #include <iostream.h>
 #include <stdlib.h>

@@ -66,18 +66,18 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/PlatformUtils.hpp>
-#include <sax/SAXException.hpp>
-#include <sax/SAXParseException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/sax/SAXException.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
 
-#include <parsers/DOMParser.hpp>
-#include <parsers/IDOMParser.hpp>
-#include <parsers/SAXParser.hpp>
-#include <sax2/SAX2XMLReader.hpp>
-#include <sax2/XMLReaderFactory.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/parsers/IDOMParser.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
+#include <xercesc/sax2/SAX2XMLReader.hpp>
+#include <xercesc/sax2/XMLReaderFactory.hpp>
 
-#include <dom/DOM_DOMException.hpp>
-#include <idom/IDOM_DOMException.hpp>
+#include <xercesc/dom/DOM_DOMException.hpp>
+#include <xercesc/idom/IDOM_DOMException.hpp>
 #include "InitTermTest.hpp"
 
 #include <string.h>

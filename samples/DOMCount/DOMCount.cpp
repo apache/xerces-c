@@ -61,11 +61,11 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/PlatformUtils.hpp>
-#include <sax/SAXException.hpp>
-#include <sax/SAXParseException.hpp>
-#include <parsers/DOMParser.hpp>
-#include <dom/DOM_DOMException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/sax/SAXException.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/dom/DOM_DOMException.hpp>
 #include "DOMCount.hpp"
 #include <string.h>
 #include <stdlib.h>

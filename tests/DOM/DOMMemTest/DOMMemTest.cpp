@@ -70,12 +70,12 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <dom/DOM.hpp>
-#include <dom/DomMemDebug.hpp>
-#include <util/PlatformUtils.hpp>
-#include <util/XMLException.hpp>
-#include <util/XMLString.hpp>
-#include <util/XMLUniDefs.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/dom/DomMemDebug.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLException.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)

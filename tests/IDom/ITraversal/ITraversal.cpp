@@ -66,6 +66,9 @@
 
 /**
  * $Log$
+ * Revision 1.5  2002/02/01 22:44:51  peiyongz
+ * sane_include
+ *
  * Revision 1.4  2001/11/23 16:18:54  tng
  * Elimiate compiler warning: Warning: String literal converted to char* in formal argument file in call to tassert(bool, char*, int).
  *
@@ -84,11 +87,11 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <idom/IDOM.hpp>
-#include <util/PlatformUtils.hpp>
-#include <util/XMLException.hpp>
-#include <util/XMLString.hpp>
-#include <util/XMLUniDefs.hpp>
+#include <xercesc/idom/IDOM.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLException.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
 
 
 #define TASSERT(c) tassert((c), __FILE__, __LINE__)

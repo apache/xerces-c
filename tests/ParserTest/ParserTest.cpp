@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.11  2002/02/01 22:45:54  peiyongz
+ * sane_include
+ *
  * Revision 1.10  2001/11/28 21:15:08  tng
  * Fix broken ParserTest.
  *
@@ -94,11 +97,11 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include    <util/PlatformUtils.hpp>
-#include    <util/XMLString.hpp>
-#include    <util/XMLURL.hpp>
-#include    <internal/XMLScanner.hpp>
-#include    <validators/DTD/DTDValidator.hpp>
+#include    <xercesc/util/PlatformUtils.hpp>
+#include    <xercesc/util/XMLString.hpp>
+#include    <xercesc/util/XMLURL.hpp>
+#include    <xercesc/internal/XMLScanner.hpp>
+#include    <xercesc/validators/DTD/DTDValidator.hpp>
 #include    "ParserTest.hpp"
 
 

@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2002/02/01 22:37:14  peiyongz
+ * sane_include
+ *
  * Revision 1.12  2001/10/25 15:18:33  tng
  * delete the parser before XMLPlatformUtils::Terminate.
  *
@@ -117,8 +120,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <parsers/SAXParser.hpp>
-#include <framework/MemBufInputSource.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
 #include "MemParse.hpp"
 
 

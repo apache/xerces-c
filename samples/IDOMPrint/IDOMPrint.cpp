@@ -78,17 +78,17 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/PlatformUtils.hpp>
-#include <util/XMLString.hpp>
-#include <util/XMLUniDefs.hpp>
-#include <framework/XMLFormatter.hpp>
-#include <util/TranscodingException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
+#include <xercesc/util/TranscodingException.hpp>
 
 
-#include <idom/IDOM_DOMException.hpp>
+#include <xercesc/idom/IDOM_DOMException.hpp>
 
-#include <parsers/IDOMParser.hpp>
-#include <idom/IDOM.hpp>
+#include <xercesc/parsers/IDOMParser.hpp>
+#include <xercesc/idom/IDOM.hpp>
 #include "IDOMTreeErrorReporter.hpp"
 #include <string.h>
 #include <stdlib.h>

@@ -63,12 +63,12 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XMLUniDefs.hpp>
-#include <util/XMLUni.hpp>
-#include <sax/AttributeList.hpp>
-#include <sax/SAXParseException.hpp>
-#include <sax/SAXException.hpp>
-#include <framework/LocalFileInputSource.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/util/XMLUni.hpp>
+#include <xercesc/sax/AttributeList.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/sax/SAXException.hpp>
+#include <xercesc/framework/LocalFileInputSource.hpp>
 #include "Redirect.hpp"
 #include <string.h>
 

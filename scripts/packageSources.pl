@@ -37,7 +37,7 @@ $XERCESCROOT =~ s/\\/\//g;
 $ICUROOT =~ s/\\/\//g;
 
 # Read the target version from the file $XERCESCROOT/src/util/XercesDefs.hpp
-$versionfile = "$XERCESCROOT/src/util/XercesDefs.hpp";
+$versionfile = "$XERCESCROOT/src/xercesc/util/XercesDefs.hpp";
 $openresult = open (VERSIONFILE, "<$versionfile");
 
 if ($openresult == 0) {

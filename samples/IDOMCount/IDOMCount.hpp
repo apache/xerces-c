@@ -61,7 +61,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <sax/ErrorHandler.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
 #include <iostream.h>
 
 class SAXParseException;

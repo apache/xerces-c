@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/02/01 22:35:01  peiyongz
+ * sane_include
+ *
  * Revision 1.5  2000/10/20 22:00:35  andyh
  * DOMCount sample Minor cleanup - rename error handler class to say that it is an error handler.
  *
@@ -81,7 +84,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <sax/ErrorHandler.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
 #include <iostream.h>
 
 class SAXParseException;

@@ -56,6 +56,9 @@
 
 /*
 * $Log$
+* Revision 1.14  2002/02/01 22:38:52  peiyongz
+* sane_include
+*
 * Revision 1.13  2001/10/29 17:02:57  tng
 * Fix typo in samples.
 *
@@ -104,9 +107,9 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "SAX2Count.hpp"
-#include <util/PlatformUtils.hpp>
-#include <sax2/SAX2XMLReader.hpp>
-#include <sax2/XMLReaderFactory.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/sax2/SAX2XMLReader.hpp>
+#include <xercesc/sax2/XMLReaderFactory.hpp>
 #include <fstream.h>
 
 // ---------------------------------------------------------------------------

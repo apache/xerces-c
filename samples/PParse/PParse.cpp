@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2002/02/01 22:37:38  peiyongz
+ * sane_include
+ *
  * Revision 1.12  2001/10/25 15:18:33  tng
  * delete the parser before XMLPlatformUtils::Terminate.
  *
@@ -130,9 +133,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/PlatformUtils.hpp>
-#include <framework/XMLPScanToken.hpp>
-#include <parsers/SAXParser.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/framework/XMLPScanToken.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
 #include "PParse.hpp"
 
 

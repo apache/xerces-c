@@ -75,6 +75,9 @@
  * to read the contents of 'personal.dtd'.
  *
  * $Log$
+ * Revision 1.7  2002/02/01 22:38:26  peiyongz
+ * sane_include
+ *
  * Revision 1.6  2001/10/25 15:18:33  tng
  * delete the parser before XMLPlatformUtils::Terminate.
  *
@@ -103,7 +106,7 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <parsers/SAXParser.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
 #include "Redirect.hpp"
 
 

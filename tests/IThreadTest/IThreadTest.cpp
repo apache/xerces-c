@@ -61,13 +61,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <parsers/SAXParser.hpp>
-#include <parsers/IDOMParser.hpp>
-#include <util/PlatformUtils.hpp>
-#include <sax/HandlerBase.hpp>
-#include <framework/MemBufInputSource.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
+#include <xercesc/parsers/IDOMParser.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
 
-#include <idom/IDOM.hpp>
+#include <xercesc/idom/IDOM.hpp>
 
 
 

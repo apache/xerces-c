@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.16  2002/02/01 22:35:51  peiyongz
+ * sane_include
+ *
  * Revision 1.15  2001/11/22 14:47:54  tng
  * Use the phrase "Grammar" instead of "Validator" in EnumVal and SEnumVal Description.
  *
@@ -109,11 +112,11 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/NameIdPool.hpp>
-#include <util/PlatformUtils.hpp>
-#include <framework/XMLValidator.hpp>
-#include <parsers/SAXParser.hpp>
-#include <validators/DTD/DTDValidator.hpp>
+#include <xercesc/util/NameIdPool.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/framework/XMLValidator.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
+#include <xercesc/validators/DTD/DTDValidator.hpp>
 #include <iostream.h>
 #include <stdlib.h>
 #include <string.h>

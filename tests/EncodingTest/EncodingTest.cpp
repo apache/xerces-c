@@ -65,17 +65,17 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/PlatformUtils.hpp>
-#include <util/XMLString.hpp>
-#include <util/XMLException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLException.hpp>
 
-#include <sax/SAXException.hpp>
-#include <sax/ErrorHandler.hpp>
-#include <sax/SAXParseException.hpp>
+#include <xercesc/sax/SAXException.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
 
 
-#include <parsers/DOMParser.hpp>
-#include <dom/DOM.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/dom/DOM.hpp>
 #include <stdio.h>
 
 static int gTestsFailed = 0;

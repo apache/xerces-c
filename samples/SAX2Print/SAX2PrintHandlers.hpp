@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/02/01 22:40:44  peiyongz
+ * sane_include
+ *
  * Revision 1.3  2000/10/10 23:55:55  andyh
  * XMLFormatter patch, contributed by Bill Schindler.  Fix problems with
  * output to multi-byte encodings.
@@ -69,8 +72,8 @@
  *
  */
 
-#include    <sax2/DefaultHandler.hpp>
-#include    <framework/XMLFormatter.hpp>
+#include    <xercesc/sax2/DefaultHandler.hpp>
+#include    <xercesc/framework/XMLFormatter.hpp>
 
 class SAX2PrintHandlers : public DefaultHandler, private XMLFormatTarget
 {

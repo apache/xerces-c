@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.6  2002/02/01 22:40:44  peiyongz
+ * sane_include
+ *
  * Revision 1.5  2001/05/11 13:24:57  tng
  * Copyright update.
  *
@@ -80,8 +83,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/XMLUniDefs.hpp>
-#include <sax2/Attributes.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/sax2/Attributes.hpp>
 #include "SAX2Print.hpp"
 
 

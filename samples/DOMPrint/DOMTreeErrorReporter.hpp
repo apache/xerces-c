@@ -57,6 +57,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2002/02/01 22:35:33  peiyongz
+ * sane_include
+ *
  * Revision 1.6  2001/05/11 13:24:53  tng
  * Copyright update.
  *
@@ -85,8 +88,8 @@
  *
  */
 
-#include <util/XercesDefs.hpp>
-#include <sax/ErrorHandler.hpp>
+#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
 #include <iostream.h>
 
 class DOMTreeErrorReporter : public ErrorHandler

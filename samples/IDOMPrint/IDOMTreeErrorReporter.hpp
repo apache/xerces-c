@@ -56,13 +56,16 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/02/01 22:36:42  peiyongz
+ * sane_include
+ *
  * Revision 1.1  2001/05/17 15:28:18  tng
  * IDOM: Add IDOMPrint and IDOMCount
  *
  */
 
-#include <util/XercesDefs.hpp>
-#include <sax/ErrorHandler.hpp>
+#include <xercesc/util/XercesDefs.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
 #include <iostream.h>
 
 

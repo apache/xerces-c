@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/02/01 22:37:14  peiyongz
+ * sane_include
+ *
  * Revision 1.4  2000/05/15 22:31:08  andyh
  * Replace #include<memory.h> with <string.h> everywhere.
  *
@@ -82,9 +85,9 @@
 // ---------------------------------------------------------------------------
 #include "MemParse.hpp"
 #include <string.h>
-#include <sax/AttributeList.hpp>
-#include <sax/SAXParseException.hpp>
-#include <sax/SAXException.hpp>
+#include <xercesc/sax/AttributeList.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/sax/SAXException.hpp>
 
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2002/02/01 22:46:28  peiyongz
+ * sane_include
+ *
  * Revision 1.8  2000/03/23 01:02:40  roddey
  * Updates to the XMLURL class to correct a lot of parsing problems
  * and to add support for the port number. Updated the URL tests
@@ -94,8 +97,8 @@
 // ---------------------------------------------------------------------------
 //  XML4C2 includes
 // ---------------------------------------------------------------------------
-#include <util/RuntimeException.hpp>
-#include <util/XMLURL.hpp>
+#include <xercesc/util/RuntimeException.hpp>
+#include <xercesc/util/XMLURL.hpp>
 #include "CoreTests.hpp"
 
 

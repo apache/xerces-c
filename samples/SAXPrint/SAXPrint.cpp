@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.19  2002/02/01 22:41:17  peiyongz
+ * sane_include
+ *
  * Revision 1.18  2001/10/29 17:02:57  tng
  * Fix typo in samples.
  *
@@ -129,9 +132,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/PlatformUtils.hpp>
-#include <util/TransService.hpp>
-#include <parsers/SAXParser.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/TransService.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
 #include "SAXPrint.hpp"
 
 

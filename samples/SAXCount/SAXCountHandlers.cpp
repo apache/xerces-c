@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/02/01 22:41:07  peiyongz
+ * sane_include
+ *
  * Revision 1.4  2001/08/02 17:10:29  tng
  * Allow DOMCount/SAXCount/IDOMCount/SAX2Count to take a file that has a list of xml file as input.
  *
@@ -79,9 +82,9 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "SAXCount.hpp"
-#include <sax/AttributeList.hpp>
-#include <sax/SAXParseException.hpp>
-#include <sax/SAXException.hpp>
+#include <xercesc/sax/AttributeList.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/sax/SAXException.hpp>
 
 
 

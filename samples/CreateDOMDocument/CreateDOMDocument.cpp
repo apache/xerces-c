@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/02/01 22:34:31  peiyongz
+ * sane_include
+ *
  * Revision 1.7  2001/10/26 11:55:46  tng
  * Nest entire test in an inner block for reference counting to recover all document storage when this block exits before XMLPlatformUtils::Terminate is called.
  *
@@ -93,9 +96,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/PlatformUtils.hpp>
-#include <util/XMLString.hpp>
-#include <dom/DOM.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/dom/DOM.hpp>
 #include <iostream.h>
 
 

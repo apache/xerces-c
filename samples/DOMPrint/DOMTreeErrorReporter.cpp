@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/02/01 22:35:33  peiyongz
+ * sane_include
+ *
  * Revision 1.9  2001/05/11 13:24:53  tng
  * Copyright update.
  *
@@ -96,12 +99,12 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <sax/SAXParseException.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
 #include "DOMTreeErrorReporter.hpp"
 #include <iostream.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dom/DOMString.hpp>
+#include <xercesc/dom/DOMString.hpp>
 
 // Global streaming operator for DOMString is defined in DOMPrint.cpp
 extern ostream& operator<<(ostream& target, const DOMString& s);

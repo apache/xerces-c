@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.13  2002/02/01 22:41:37  peiyongz
+ * sane_include
+ *
  * Revision 1.12  2001/10/25 15:18:33  tng
  * delete the parser before XMLPlatformUtils::Terminate.
  *
@@ -104,8 +107,8 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <framework/StdInInputSource.hpp>
-#include <parsers/SAXParser.hpp>
+#include <xercesc/framework/StdInInputSource.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
 #include "StdInParse.hpp"
 
 

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.8  2002/02/01 22:46:28  peiyongz
+ * sane_include
+ *
  * Revision 1.7  2000/03/02 19:55:49  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -91,10 +94,10 @@
 //  Includes
 // ---------------------------------------------------------------------------
 #include "CoreTests.hpp"
-#include <util/XMLASCIITranscoder.hpp>
-#include <util/Janitor.hpp>
-#include <util/PlatformUtils.hpp>
-#include <util/TransService.hpp>
+#include <xercesc/util/XMLASCIITranscoder.hpp>
+#include <xercesc/util/Janitor.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/TransService.hpp>
 
 
 

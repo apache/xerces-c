@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/02/01 22:37:38  peiyongz
+ * sane_include
+ *
  * Revision 1.4  2001/10/19 18:52:04  tng
  * Since PParse can take any XML file as input file, it shouldn't hardcode to expect 16 elements.
  * Change it to work similar to SAXCount which just prints the number of elements, characters, attributes ... etc.
@@ -78,7 +81,7 @@
  */
 
 
-#include    <sax/HandlerBase.hpp>
+#include    <xercesc/sax/HandlerBase.hpp>
 
 class PParseHandlers : public HandlerBase
 {

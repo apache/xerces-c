@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.10  2002/02/01 22:45:54  peiyongz
+ * sane_include
+ *
  * Revision 1.9  2001/11/28 21:15:08  tng
  * Fix broken ParserTest.
  *
@@ -94,17 +97,17 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/RefVectorOf.hpp>
-#include <util/XMLString.hpp>
-#include <util/XMLUni.hpp>
-#include <internal/XMLReader.hpp>
-#include <internal/XMLScanner.hpp>
-#include <framework/XMLAttr.hpp>
-#include <framework/XMLNotationDecl.hpp>
-#include <framework/XMLValidator.hpp>
-#include <validators/DTD/DTDAttDef.hpp>
-#include <validators/DTD/DTDElementDecl.hpp>
-#include <validators/DTD/DTDEntityDecl.hpp>
+#include <xercesc/util/RefVectorOf.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUni.hpp>
+#include <xercesc/internal/XMLReader.hpp>
+#include <xercesc/internal/XMLScanner.hpp>
+#include <xercesc/framework/XMLAttr.hpp>
+#include <xercesc/framework/XMLNotationDecl.hpp>
+#include <xercesc/framework/XMLValidator.hpp>
+#include <xercesc/validators/DTD/DTDAttDef.hpp>
+#include <xercesc/validators/DTD/DTDElementDecl.hpp>
+#include <xercesc/validators/DTD/DTDEntityDecl.hpp>
 #include "ParserTest.hpp"
 
 #include <stdlib.h>

@@ -78,17 +78,17 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <util/PlatformUtils.hpp>
-#include <util/XMLString.hpp>
-#include <util/XMLUniDefs.hpp>
-#include <framework/XMLFormatter.hpp>
-#include <util/TranscodingException.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/util/XMLUniDefs.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
+#include <xercesc/util/TranscodingException.hpp>
 
 
-#include <dom/DOM_DOMException.hpp>
+#include <xercesc/dom/DOM_DOMException.hpp>
 
-#include <parsers/DOMParser.hpp>
-#include <dom/DOM.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/dom/DOM.hpp>
 #include "DOMTreeErrorReporter.hpp"
 #include <string.h>
 #include <stdlib.h>

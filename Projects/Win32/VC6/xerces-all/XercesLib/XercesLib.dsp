@@ -102,20 +102,20 @@ SOURCE=.\IDMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Platforms\Win32\resource.h
+SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Platforms\Win32\Win32Defs.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32Defs.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Platforms\Win32\Win32PlatformUtils.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Win32PlatformUtils.cpp
 # ADD CPP /Ze
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLRegisterCleanup.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLRegisterCleanup.hpp
 # End Source File
 # End Group
 # Begin Group "MsgLoaders"
@@ -123,16 +123,16 @@ SOURCE=..\..\..\..\..\src\util\XMLRegisterCleanup.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\MsgLoaders\InMemory\CppErrMsgs_EN_US.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\InMemory\CppErrMsgs_EN_US.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\MsgLoaders\Win32\Win32MsgLoader.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.cpp
 # ADD CPP /Ze
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\MsgLoaders\Win32\Win32MsgLoader.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\MsgLoaders\Win32\Win32MsgLoader.hpp
 # End Source File
 # End Group
 # Begin Group "Transcoders"
@@ -140,12 +140,12 @@ SOURCE=..\..\..\..\..\src\util\MsgLoaders\Win32\Win32MsgLoader.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Transcoders\Win32\Win32TransService.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.cpp
 # ADD CPP /Ze
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Transcoders\Win32\Win32TransService.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Transcoders\Win32\Win32TransService.hpp
 # End Source File
 # End Group
 # Begin Group "NetAccessors"
@@ -153,21 +153,21 @@ SOURCE=..\..\..\..\..\src\util\Transcoders\Win32\Win32TransService.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.cpp
 # ADD CPP /Ze
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\NetAccessors\WinSock\BinHTTPURLInputStream.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\BinHTTPURLInputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\NetAccessors\WinSock\WinSockNetAccessor.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.cpp
 # ADD CPP /Ze
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\NetAccessors\WinSock\WinSockNetAccessor.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\NetAccessors\WinSock\WinSockNetAccessor.hpp
 # End Source File
 # End Group
 # Begin Group "regx"
@@ -175,680 +175,680 @@ SOURCE=..\..\..\..\..\src\util\NetAccessors\WinSock\WinSockNetAccessor.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ASCIIRangeFactory.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ASCIIRangeFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ASCIIRangeFactory.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ASCIIRangeFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\BlockRangeFactory.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\BlockRangeFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\BlockRangeFactory.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\BlockRangeFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\BMPattern.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\BMPattern.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\BMPattern.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\BMPattern.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\CharToken.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\CharToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\CharToken.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\CharToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ClosureToken.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ClosureToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ClosureToken.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ClosureToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ConcatToken.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ConcatToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ConcatToken.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ConcatToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ConditionToken.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ConditionToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ConditionToken.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ConditionToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\Match.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\Match.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\Match.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\Match.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ModifierToken.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ModifierToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ModifierToken.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ModifierToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\Op.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\Op.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\Op.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\Op.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\OpFactory.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\OpFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\OpFactory.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\OpFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ParenToken.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ParenToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ParenToken.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ParenToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ParserForXMLSchema.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ParserForXMLSchema.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\ParserForXMLSchema.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\ParserForXMLSchema.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RangeFactory.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RangeFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RangeFactory.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RangeFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RangeToken.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RangeToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RangeToken.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RangeToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RangeTokenMap.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RangeTokenMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RangeTokenMap.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RangeTokenMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RegularExpression.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RegularExpression.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RegularExpression.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RegularExpression.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RegxDefs.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RegxDefs.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RegxParser.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RegxParser.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RegxParser.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RegxParser.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RegxUtil.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RegxUtil.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\RegxUtil.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\RegxUtil.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\StringToken.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\StringToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\StringToken.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\StringToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\Token.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\Token.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\Token.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\Token.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\TokenFactory.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\TokenFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\TokenFactory.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\TokenFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\TokenInc.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\TokenInc.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\UnicodeRangeFactory.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\UnicodeRangeFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\UnicodeRangeFactory.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\UnicodeRangeFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\UnionToken.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\UnionToken.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\UnionToken.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\UnionToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\XMLRangeFactory.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\XMLRangeFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\XMLRangeFactory.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\XMLRangeFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\XMLUniCharacter.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\XMLUniCharacter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\regx\XMLUniCharacter.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\regx\XMLUniCharacter.hpp
 # End Source File
 # End Group
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\ArrayIndexOutOfBoundsException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\ArrayIndexOutOfBoundsException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\AutoSense.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\AutoSense.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Base64.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Base64.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Base64.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Base64.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\BinFileInputStream.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\BinFileInputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\BinFileInputStream.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\BinFileInputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\BinInputStream.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\BinInputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\BinInputStream.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\BinInputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\BinMemInputStream.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\BinMemInputStream.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\BinMemInputStream.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\BinMemInputStream.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\BitOps.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\BitOps.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\BitSet.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\BitSet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\BitSet.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\BitSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\CountedPointer.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\CountedPointer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\EmptyStackException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\EmptyStackException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\FlagJanitor.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\FlagJanitor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HashBase.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\HashBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HashCMStateSet.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\HashCMStateSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HashPtr.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\HashPtr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HashPtr.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\HashPtr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HashXMLCh.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\HashXMLCh.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HashXMLCh.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\HashXMLCh.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HeaderDummy.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\HeaderDummy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HexBin.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\HexBin.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\HexBin.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\HexBin.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\IllegalArgumentException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\IllegalArgumentException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\InvalidCastException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\InvalidCastException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\IOException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\IOException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Janitor.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Janitor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\KeyValuePair.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\KeyValuePair.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\KVStringPair.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\KVStringPair.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\KVStringPair.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\KVStringPair.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Mutexes.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Mutexes.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Mutexes.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\Mutexes.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\NameIdPool.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\NameIdPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\NoDefTranscoderException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\NoDefTranscoderException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\NoSuchElementException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\NoSuchElementException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\NullPointerException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\NullPointerException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\PlatformUtils.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\PlatformUtils.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\PlatformUtils.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\PlatformUtils.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\QName.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\QName.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\QName.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\QName.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\RefArrayOf.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\RefArrayOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\RefHash2KeysTableOf.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHash2KeysTableOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\RefHash3KeysIdPool.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHash3KeysIdPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\RefHashTableOf.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\RefHashTableOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\RefStackOf.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\RefStackOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\RefVectorOf.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\RefVectorOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\RuntimeException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\RuntimeException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\SchemaDateTimeException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\SchemaDateTimeException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\StringPool.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\StringPool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\StringPool.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\StringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\TranscodingException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\TranscodingException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\TransService.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\TransService.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\TransService.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\TransService.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\UnexpectedEOFException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\UnexpectedEOFException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\UnsupportedEncodingException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\UnsupportedEncodingException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\UTFDataFormatException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\UTFDataFormatException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\ValueArrayOf.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueArrayOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\ValueStackOf.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueStackOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\ValueVectorOf.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\ValueVectorOf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XercesDefs.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XercesDefs.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XML256TableTranscoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XML256TableTranscoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XML256TableTranscoder.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XML256TableTranscoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XML88591Transcoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XML88591Transcoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XML88591Transcoder.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XML88591Transcoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLAbstractDoubleFloat.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLAbstractDoubleFloat.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLAbstractDoubleFloat.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLAbstractDoubleFloat.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLASCIITranscoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLASCIITranscoder.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLASCIITranscoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLBigDecimal.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLBigDecimal.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLBigDecimal.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLBigDecimal.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLBigInteger.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLBigInteger.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLBigInteger.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLBigInteger.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLChTranscoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLChTranscoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLChTranscoder.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLChTranscoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLDateTime.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLDateTime.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLDateTime.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLDateTime.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLDeleterFor.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLDeleterFor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLDouble.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLDouble.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLDouble.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLDouble.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLEBCDICTranscoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLEBCDICTranscoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLEBCDICTranscoder.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLEBCDICTranscoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLEnumerator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLEnumerator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLException.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLExceptMsgs.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLExceptMsgs.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLFloat.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLFloat.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLFloat.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLFloat.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLIBM1140Transcoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLIBM1140Transcoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLIBM1140Transcoder.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLIBM1140Transcoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLInteger.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLInteger.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLMsgLoader.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLMsgLoader.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLNetAccessor.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLNetAccessor.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLNumber.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLNumber.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLNumber.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLNumber.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLString.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLString.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLString.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLString.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLStringTokenizer.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLStringTokenizer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLStringTokenizer.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLStringTokenizer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUCS4Transcoder.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUCS4Transcoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUCSTranscoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUCSTranscoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUni.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUni.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUni.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUni.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUniDefs.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUniDefs.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUri.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUri.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUri.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUri.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLURL.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLURL.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLURL.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLURL.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUTF16Transcoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUTF16Transcoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUTF16Transcoder.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUTF16Transcoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUTF8Transcoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLUTF8Transcoder.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLUTF8Transcoder.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLWin1252Transcoder.cpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLWin1252Transcoder.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\XMLWin1252Transcoder.hpp
+SOURCE=..\..\..\..\..\src\xercesc\util\XMLWin1252Transcoder.hpp
 # End Source File
 # End Group
 # Begin Group "framework"
@@ -856,159 +856,159 @@ SOURCE=..\..\..\..\..\src\util\XMLWin1252Transcoder.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\LocalFileInputSource.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileInputSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\LocalFileInputSource.Hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\LocalFileInputSource.Hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\Makefile.in
+SOURCE=..\..\..\..\..\src\xercesc\framework\Makefile.in
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\MemBufInputSource.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\MemBufInputSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\MemBufInputSource.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\MemBufInputSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\StdInInputSource.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\StdInInputSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\StdInInputSource.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\StdInInputSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\URLInputSource.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\URLInputSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\URLInputSource.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\URLInputSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLAttDef.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttDef.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLAttDef.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttDef.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLAttDefList.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttDefList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLAttr.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLAttr.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLAttr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLBuffer.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLBuffer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLBuffer.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLBuffer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLBufferMgr.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLBufferMgr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLBufferMgr.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLBufferMgr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLContentModel.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLContentModel.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLContentModel.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLContentModel.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLDocumentHandler.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLDocumentHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLElementDecl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLElementDecl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLElementDecl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLElementDecl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLEntityDecl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLEntityDecl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLEntityDecl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLEntityDecl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLEntityHandler.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLEntityHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLErrorCodes.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLErrorCodes.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLErrorReporter.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLErrorReporter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLFormatter.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLFormatter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLFormatter.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLFormatter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLNotationDecl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLNotationDecl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLNotationDecl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLNotationDecl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLPScanToken.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLPScanToken.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLRecognizer.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRecognizer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLRecognizer.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRecognizer.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLRefInfo.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLRefInfo.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\framework\XMLValidityCodes.hpp
+SOURCE=..\..\..\..\..\src\xercesc\framework\XMLValidityCodes.hpp
 # End Source File
 # End Group
 # Begin Group "internal"
@@ -1016,67 +1016,67 @@ SOURCE=..\..\..\..\..\src\framework\XMLValidityCodes.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\CharTypeTables.hpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\CharTypeTables.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\ElemStack.cpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\ElemStack.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\ElemStack.hpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\ElemStack.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\EndOfEntityException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\EndOfEntityException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\ReaderMgr.cpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\ReaderMgr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\ReaderMgr.hpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\ReaderMgr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\VecAttributesImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\VecAttributesImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\VecAttributesImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\VecAttributesImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\VecAttrListImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\VecAttrListImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\VecAttrListImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\XMLInternalErrorHandler.hpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLInternalErrorHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\XMLReader.cpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLReader.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\XMLReader.hpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLReader.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\XMLScanner.cpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScanner.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\XMLScanner.hpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScanner.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\internal\XMLScanner2.cpp
+SOURCE=..\..\..\..\..\src\xercesc\internal\XMLScanner2.cpp
 # End Source File
 # End Group
 # Begin Group "sax"
@@ -1084,63 +1084,63 @@ SOURCE=..\..\..\..\..\src\internal\XMLScanner2.cpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\AttributeList.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\AttributeList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\DocumentHandler.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\DocumentHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\DTDHandler.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\DTDHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\Dummy.cpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\Dummy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\EntityResolver.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\EntityResolver.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\ErrorHandler.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\ErrorHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\HandlerBase.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\HandlerBase.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\InputSource.cpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\InputSource.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\InputSource.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\InputSource.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\Locator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\Locator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\Parser.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\Parser.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\SAXException.cpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\SAXException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\SAXException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\SAXException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\SAXParseException.cpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\SAXParseException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax\SAXParseException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax\SAXParseException.hpp
 # End Source File
 # End Group
 # Begin Group "parsers"
@@ -1148,35 +1148,35 @@ SOURCE=..\..\..\..\..\src\sax\SAXParseException.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\parsers\DOMParser.cpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMParser.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\parsers\DOMParser.hpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\DOMParser.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\parsers\IDOMParser.cpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\IDOMParser.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\parsers\IDOMParser.hpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\IDOMParser.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\parsers\SAX2XMLReaderImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\parsers\SAX2XMLReaderImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\SAX2XMLReaderImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\parsers\SAXParser.cpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\SAXParser.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\parsers\SAXParser.hpp
+SOURCE=..\..\..\..\..\src\xercesc\parsers\SAXParser.hpp
 # End Source File
 # End Group
 # Begin Group "dom"
@@ -1184,475 +1184,475 @@ SOURCE=..\..\..\..\..\src\parsers\SAXParser.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\AttrImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\AttrImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\AttrImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\AttrImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\AttrMapImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\AttrMapImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\AttrMapImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\AttrMapImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\AttrNSImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\AttrNSImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\AttrNSImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\AttrNSImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\CDATASectionImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\CDATASectionImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\CDATASectionImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\CDATASectionImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\CharacterDataImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\CharacterDataImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\CharacterDataImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\CharacterDataImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ChildNode.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ChildNode.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ChildNode.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ChildNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\CommentImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\CommentImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\CommentImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\CommentImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DeepNodeListImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DeepNodeListImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DeepNodeListImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DeepNodeListImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DocumentFragmentImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentFragmentImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DocumentFragmentImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentFragmentImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DocumentImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DocumentImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DocumentTypeImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentTypeImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DocumentTypeImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DocumentTypeImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Attr.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Attr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Attr.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Attr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_CDATASection.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_CDATASection.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_CDATASection.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_CDATASection.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_CharacterData.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_CharacterData.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_CharacterData.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_CharacterData.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Comment.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Comment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Comment.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Comment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Document.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Document.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Document.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Document.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_DocumentFragment.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DocumentFragment.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_DocumentFragment.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DocumentFragment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_DocumentType.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DocumentType.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_DocumentType.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DocumentType.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_DOMException.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DOMException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_DOMException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DOMException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_DOMImplementation.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DOMImplementation.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_DOMImplementation.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_DOMImplementation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Element.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Element.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Element.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Element.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Entity.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Entity.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Entity.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Entity.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_EntityReference.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_EntityReference.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_EntityReference.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_EntityReference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_NamedNodeMap.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NamedNodeMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_NamedNodeMap.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NamedNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Node.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Node.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Node.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Node.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_NodeFilter.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeFilter.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_NodeFilter.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeFilter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_NodeIterator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeIterator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_NodeIterator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeIterator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_NodeList.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_NodeList.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_NodeList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Notation.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Notation.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Notation.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Notation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_ProcessingInstruction.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_ProcessingInstruction.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_ProcessingInstruction.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_ProcessingInstruction.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Range.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Range.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Range.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Range.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_RangeException.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_RangeException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_RangeException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_RangeException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Text.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Text.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_Text.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_Text.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_TreeWalker.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_TreeWalker.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_TreeWalker.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_TreeWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_XMLDecl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_XMLDecl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOM_XMLDecl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOM_XMLDecl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DomMemDebug.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DomMemDebug.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DomMemDebug.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DomMemDebug.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOMString.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMString.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOMString.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMString.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DOMStringImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DOMStringImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DStringPool.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DStringPool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\DStringPool.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\DStringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ElementDefinitionImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ElementDefinitionImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ElementDefinitionImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ElementDefinitionImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ElementImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ElementImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ElementImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ElementImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ElementNSImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ElementNSImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ElementNSImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ElementNSImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\EntityImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\EntityImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\EntityImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\EntityImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\EntityReferenceImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\EntityReferenceImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\EntityReferenceImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\EntityReferenceImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\MemDebug.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\MemDebug.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NamedNodeMapImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NamedNodeMapImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NamedNodeMapImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NamedNodeMapImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NameNodeFilter.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NameNodeFilter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeIDMap.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NodeIDMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeIDMap.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NodeIDMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NodeImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NodeImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeIteratorImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NodeIteratorImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeIteratorImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NodeIteratorImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeListImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NodeListImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeListImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NodeListImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeVector.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NodeVector.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NodeVector.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NodeVector.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NotationImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NotationImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\NotationImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\NotationImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ParentNode.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ParentNode.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ParentNode.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ParentNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ProcessingInstructionImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ProcessingInstructionImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\ProcessingInstructionImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\ProcessingInstructionImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\RangeImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\RangeImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\RangeImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\RangeImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\RefCountedImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\RefCountedImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\RefCountedImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\RefCountedImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\TextImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\TextImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\TextImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\TextImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\TreeWalkerImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\TreeWalkerImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\TreeWalkerImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\TreeWalkerImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\XMLDeclImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\XMLDeclImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\dom\XMLDeclImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\dom\XMLDeclImpl.hpp
 # End Source File
 # End Group
 # Begin Group "validators"
@@ -1663,99 +1663,99 @@ SOURCE=..\..\..\..\..\src\dom\XMLDeclImpl.hpp
 # PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\AllContentModel.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\AllContentModel.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\AllContentModel.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\AllContentModel.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\CMAny.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMAny.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\CMAny.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMAny.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\CMBinaryOp.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMBinaryOp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\CMBinaryOp.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMBinaryOp.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\CMLeaf.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMLeaf.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\CMNode.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\CMStateSet.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMStateSet.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\CMUnaryOp.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMUnaryOp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\CMUnaryOp.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\CMUnaryOp.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\ContentLeafNameTypeVector.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\ContentLeafNameTypeVector.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\ContentLeafNameTypeVector.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\ContentLeafNameTypeVector.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\ContentSpecNode.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\ContentSpecNode.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\ContentSpecNode.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\ContentSpecNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\DFAContentModel.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\DFAContentModel.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\DFAContentModel.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\DFAContentModel.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\Grammar.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\Grammar.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\GrammarResolver.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\GrammarResolver.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\GrammarResolver.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\GrammarResolver.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\MixedContentModel.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\MixedContentModel.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\MixedContentModel.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\MixedContentModel.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\SimpleContentModel.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\SimpleContentModel.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\common\SimpleContentModel.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\common\SimpleContentModel.hpp
 # End Source File
 # End Group
 # Begin Group "datatype"
@@ -1763,275 +1763,275 @@ SOURCE=..\..\..\..\..\src\validators\common\SimpleContentModel.hpp
 # PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\AbstractNumericFacetValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\AbstractNumericFacetValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\AbstractNumericFacetValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\AbstractNumericFacetValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\AbstractNumericValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\AbstractNumericValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\AbstractNumericValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\AbstractNumericValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\AbstractStringValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\AbstractStringValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\AbstractStringValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\AbstractStringValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\AnySimpleTypeDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\AnySimpleTypeDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\AnySimpleTypeDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\AnySimpleTypeDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\AnyURIDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\AnyURIDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\AnyURIDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\AnyURIDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\Base64BinaryDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\Base64BinaryDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\Base64BinaryDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\Base64BinaryDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\BooleanDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\BooleanDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\BooleanDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\BooleanDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DatatypeValidatorFactory.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DatatypeValidatorFactory.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DatatypeValidatorFactory.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DatatypeValidatorFactory.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DateDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DateDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DateDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DateDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DateTimeDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DateTimeDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DateTimeDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DateTimeDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DateTimeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DateTimeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DateTimeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DateTimeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DayDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DayDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DayDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DayDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DecimalDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DecimalDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DecimalDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DecimalDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DoubleDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DoubleDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DoubleDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DoubleDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DurationDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DurationDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\DurationDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\DurationDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\ENTITYDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\ENTITYDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\ENTITYDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\ENTITYDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\FloatDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\FloatDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\FloatDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\FloatDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\HexBinaryDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\HexBinaryDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\HexBinaryDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\HexBinaryDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\IDDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\IDDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\IDDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\IDDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\IDREFDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\IDREFDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\IDREFDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\IDREFDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeFacetException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\InvalidDatatypeFacetException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\InvalidDatatypeValueException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\InvalidDatatypeValueException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\ListDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\ListDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\ListDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\ListDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\MonthDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\MonthDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\MonthDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\MonthDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\MonthDayDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\MonthDayDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\MonthDayDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\MonthDayDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\NameDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\NameDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\NameDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\NameDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\NCNameDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\NCNameDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\NCNameDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\NCNameDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\NOTATIONDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\NOTATIONDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\NOTATIONDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\NOTATIONDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\QNameDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\QNameDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\QNameDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\QNameDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\StringDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\StringDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\StringDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\StringDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\TimeDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\TimeDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\TimeDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\TimeDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\UnionDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\UnionDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\UnionDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\UnionDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\YearDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\YearDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\YearDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\YearDatatypeValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\YearMonthDatatypeValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\YearMonthDatatypeValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\datatype\YearMonthDatatypeValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\datatype\YearMonthDatatypeValidator.hpp
 # End Source File
 # End Group
 # Begin Group "DTD"
@@ -2039,59 +2039,59 @@ SOURCE=..\..\..\..\..\src\validators\datatype\YearMonthDatatypeValidator.hpp
 # PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DocTypeHandler.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DocTypeHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDAttDef.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDAttDef.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDAttDef.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDAttDef.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDAttDefList.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDAttDefList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDAttDefList.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDAttDefList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDElementDecl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDElementDecl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDElementDecl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDElementDecl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDEntityDecl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDEntityDecl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDGrammar.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDGrammar.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDGrammar.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDGrammar.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDScanner.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDScanner.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDScanner.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDScanner.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\DTD\DTDValidator.hpp
 # End Source File
 # End Group
 # Begin Group "schema"
@@ -2102,248 +2102,248 @@ SOURCE=..\..\..\..\..\src\validators\DTD\DTDValidator.hpp
 # PROP Default_Filter "*.cpp, *.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\FieldActivator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\FieldActivator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\FieldActivator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\FieldActivator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\FieldValueMap.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\FieldValueMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\FieldValueMap.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\FieldValueMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Field.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Field.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Field.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Field.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Key.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Key.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Key.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Key.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_KeyRef.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IC_KeyRef.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_KeyRef.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IC_KeyRef.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Selector.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Selector.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Selector.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Selector.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Unique.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Unique.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IC_Unique.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IC_Unique.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IdentityConstraint.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraint.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\IdentityConstraint.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\IdentityConstraint.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\ValueStore.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\ValueStore.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\ValueStore.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\ValueStore.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\ValueStoreCache.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\ValueStoreCache.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\ValueStoreCache.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\ValueStoreCache.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\XercesXPath.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\XercesXPath.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\XercesXPath.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\XercesXPath.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\XPathException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathMatcher.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\XPathMatcher.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathMatcher.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\XPathMatcher.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathMatcherStack.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\XPathMatcherStack.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathMatcherStack.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\XPathMatcherStack.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathSymbols.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\XPathSymbols.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\identity\XPathSymbols.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\identity\XPathSymbols.hpp
 # End Source File
 # End Group
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\ComplexTypeInfo.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\ComplexTypeInfo.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\ComplexTypeInfo.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\ComplexTypeInfo.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\GeneralAttributeCheck.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\GeneralAttributeCheck.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\GeneralAttributeCheck.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\GeneralAttributeCheck.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\NamespaceScope.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\NamespaceScope.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\NamespaceScope.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\NamespaceScope.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDef.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaAttDef.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDef.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaAttDef.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDefList.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaAttDefList.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaAttDefList.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaAttDefList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaElementDecl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaElementDecl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaElementDecl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaElementDecl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaGrammar.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaGrammar.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaGrammar.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaGrammar.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaInfo.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaInfo.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaInfo.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaInfo.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaSymbols.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaSymbols.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaSymbols.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaSymbols.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaValidator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaValidator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SchemaValidator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SchemaValidator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SubstitutionGroupComparator.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SubstitutionGroupComparator.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\SubstitutionGroupComparator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\SubstitutionGroupComparator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\TraverseSchema.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\TraverseSchema.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\TraverseSchema.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\TraverseSchema.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\XercesAttGroupInfo.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesAttGroupInfo.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\XercesAttGroupInfo.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesAttGroupInfo.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\XercesElementWildcard.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesElementWildcard.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\XercesElementWildcard.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesElementWildcard.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\XercesGroupInfo.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesGroupInfo.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\XercesGroupInfo.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XercesGroupInfo.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\XUtil.cpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XUtil.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\validators\schema\XUtil.hpp
+SOURCE=..\..\..\..\..\src\xercesc\validators\schema\XUtil.hpp
 # End Source File
 # End Group
 # End Group
@@ -2352,27 +2352,27 @@ SOURCE=..\..\..\..\..\src\validators\schema\XUtil.hpp
 # PROP Default_Filter ".cpp,.hpp"
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax2\Attributes.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax2\Attributes.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax2\ContentHandler.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax2\ContentHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax2\DefaultHandler.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax2\DefaultHandler.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax2\sax2Dummy.cpp
+SOURCE=..\..\..\..\..\src\xercesc\sax2\sax2Dummy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax2\SAX2XMLReader.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax2\SAX2XMLReader.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\sax2\XMLReaderFactory.hpp
+SOURCE=..\..\..\..\..\src\xercesc\sax2\XMLReaderFactory.hpp
 # End Source File
 # End Group
 # Begin Group "idom"
@@ -2380,352 +2380,352 @@ SOURCE=..\..\..\..\..\src\sax2\XMLReaderFactory.hpp
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDAttrImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDAttrImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDAttrMapImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrMapImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDAttrMapImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrMapImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDAttrNSImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrNSImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDAttrNSImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDAttrNSImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDCasts.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDCasts.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDCDATASectionImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDCDATASectionImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDCDATASectionImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDCDATASectionImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDCharacterDataImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDCharacterDataImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDCharacterDataImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDCharacterDataImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDChildNode.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDChildNode.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDChildNode.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDChildNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDCommentImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDCommentImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDCommentImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDCommentImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDeepNodeListImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDeepNodeListImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDeepNodeListImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDeepNodeListImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDeepNodeListPool.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDeepNodeListPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDocumentFragmentImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentFragmentImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDocumentFragmentImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentFragmentImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDocumentImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDocumentImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDocumentTypeImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentTypeImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDocumentTypeImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDocumentTypeImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDOMImplementation.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDOMImplementation.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDDOMImplementation.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDDOMImplementation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDElementImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDElementImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDElementImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDElementImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDElementNSImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDElementNSImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDElementNSImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDElementNSImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDEntityImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDEntityImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDEntityImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDEntityImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDEntityReferenceImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDEntityReferenceImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDEntityReferenceImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDEntityReferenceImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNamedNodeMapImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNamedNodeMapImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNamedNodeMapImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNamedNodeMapImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNodeIDMap.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeIDMap.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNodeIDMap.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeIDMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNodeImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNodeImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNodeIteratorImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeIteratorImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNodeIteratorImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeIteratorImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNodeListImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeListImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNodeListImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeListImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNodeVector.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeVector.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNodeVector.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNodeVector.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNotationImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNotationImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDNotationImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDNotationImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_Attr.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Attr.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_CDATASection.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_CDATASection.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_CharacterData.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_CharacterData.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_Comment.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Comment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_Document.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Document.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_DocumentFragment.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_DocumentFragment.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_DocumentType.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_DocumentType.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_DOMException.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_DOMException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_DOMException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_DOMException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_DOMImplementation.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_DOMImplementation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_Element.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Element.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_Entity.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Entity.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_EntityReference.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_EntityReference.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_NamedNodeMap.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_NamedNodeMap.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_Node.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Node.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_NodeFilter.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_NodeFilter.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_NodeIterator.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_NodeIterator.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_NodeList.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_NodeList.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_Notation.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Notation.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_ProcessingInstruction.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_ProcessingInstruction.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_Range.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Range.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_RangeException.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_RangeException.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_RangeException.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_RangeException.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_Text.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_Text.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDOM_TreeWalker.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDOM_TreeWalker.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDParentNode.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDParentNode.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDParentNode.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDParentNode.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDProcessingInstructionImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDProcessingInstructionImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDProcessingInstructionImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDProcessingInstructionImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDRangeImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDRangeImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDRangeImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDRangeImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDStringPool.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDStringPool.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDStringPool.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDStringPool.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDTextImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDTextImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDTextImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDTextImpl.hpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDTreeWalkerImpl.cpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDTreeWalkerImpl.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\idom\IDTreeWalkerImpl.hpp
+SOURCE=..\..\..\..\..\src\xercesc\idom\IDTreeWalkerImpl.hpp
 # End Source File
 # End Group
 # Begin Source File
 
-SOURCE=..\..\..\..\..\src\util\Platforms\Win32\Version.rc
+SOURCE=..\..\..\..\..\src\xercesc\util\Platforms\Win32\Version.rc
 # End Source File
 # End Target
 # End Project

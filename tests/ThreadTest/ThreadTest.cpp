@@ -63,13 +63,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <parsers/SAXParser.hpp>
-#include <parsers/DOMParser.hpp>
-#include <util/PlatformUtils.hpp>
-#include <sax/HandlerBase.hpp>
-#include <framework/MemBufInputSource.hpp>
+#include <xercesc/parsers/SAXParser.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
 
-#include <dom/DOM.hpp>
+#include <xercesc/dom/DOM.hpp>
 
 
 

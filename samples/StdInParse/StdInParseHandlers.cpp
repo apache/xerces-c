@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/02/01 22:41:37  peiyongz
+ * sane_include
+ *
  * Revision 1.3  2000/03/02 19:53:50  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -77,9 +80,9 @@
 // ---------------------------------------------------------------------------
 //  Includes
 // ---------------------------------------------------------------------------
-#include <sax/AttributeList.hpp>
-#include <sax/SAXParseException.hpp>
-#include <sax/SAXException.hpp>
+#include <xercesc/sax/AttributeList.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
+#include <xercesc/sax/SAXException.hpp>
 #include "StdInParse.hpp"
 
 

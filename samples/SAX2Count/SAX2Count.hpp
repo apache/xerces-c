@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2002/02/01 22:38:52  peiyongz
+ * sane_include
+ *
  * Revision 1.2  2000/08/09 22:40:15  jpolast
  * updates for changes to sax2 core functionality.
  *
@@ -72,10 +75,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <iostream.h>
-#include <util/PlatformUtils.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include "SAX2CountHandlers.hpp"
-#include <sax2/XMLReaderFactory.hpp>
-#include <sax2/SAX2XMLReader.hpp>
+#include <xercesc/sax2/XMLReaderFactory.hpp>
+#include <xercesc/sax2/SAX2XMLReader.hpp>
 
 
 // ---------------------------------------------------------------------------

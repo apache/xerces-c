@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.4  2002/02/01 22:43:17  peiyongz
+ * sane_include
+ *
  * Revision 1.3  2000/03/02 19:55:45  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -80,8 +83,8 @@
  *
  */
 
-#include <dom/DOM.hpp>
-#include <dom/DomMemDebug.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/dom/DomMemDebug.hpp>
 
 //  define null for compatibility with original Java source code.
 #define null 0

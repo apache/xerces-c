@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.5  2002/02/01 22:46:28  peiyongz
+ * sane_include
+ *
  * Revision 1.4  2000/03/02 19:55:48  roddey
  * This checkin includes many changes done while waiting for the
  * 1.1.0 code to be finished. I can't list them all here, but a list is
@@ -79,7 +82,7 @@
 //  XML4C2 includes
 // ---------------------------------------------------------------------------
 #include "CoreTests.hpp"
-#include <util/RefHashTableOf.hpp>
+#include <xercesc/util/RefHashTableOf.hpp>
 
 
 // ---------------------------------------------------------------------------

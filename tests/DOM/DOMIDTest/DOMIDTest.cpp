@@ -57,16 +57,16 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <dom/DOM.hpp>
-#include <dom/DomMemDebug.hpp>
-#include <util/PlatformUtils.hpp>
-#include <util/XMLException.hpp>
-#include <util/XMLString.hpp>
-#include <parsers/DOMParser.hpp>
-#include <framework/MemBufInputSource.hpp>
-#include <sax/ErrorHandler.hpp>
-#include <sax/SAXException.hpp>
-#include <sax/SAXParseException.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/dom/DomMemDebug.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLException.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/parsers/DOMParser.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
+#include <xercesc/sax/SAXException.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
 
 //-------------------------------------------------------------
 //

@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2002/02/01 22:44:24  peiyongz
+ * sane_include
+ *
  * Revision 1.1  2001/08/09 19:28:47  tng
  * Port test case DOMTest to  IDOMTest
  *
@@ -69,7 +72,7 @@
  *
  */
 
-#include <idom/IDOM.hpp>
+#include <xercesc/idom/IDOM.hpp>
 
 //  define null for compatibility with original Java source code.
 #define null 0
