@@ -1059,12 +1059,9 @@ void SGXMLScanner::scanEndTag(bool& gotData)
         );
     }
 
-
-    // reset xsi:type ComplexTypeInfo
-    // REVISIT mutability!
+    // reset xsi:type ComplexTypeInfo    
     ((SchemaElementDecl*)topElem->fThisElement)->reset();
-    // XXX
-    if (!isRoot && false)
+    if (!isRoot)
         ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
             setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
 
@@ -1449,6 +1446,11 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
         }
         else if(fValidate) {
             ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
+            if (getPSVIHandler())
+            {
+                // REVISIT:
+                // PSVIElement->setValidationAttempted(PSVIItem::VALIDATION_FULL);               
+            }
         }
 
         // If validating then emit an error
@@ -1464,7 +1466,11 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                 , elemDecl->getFullName()
             );
             ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-
+            if (getPSVIHandler())
+            {
+                // REVISIT:               
+                // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+            }
         }
     }
     else
@@ -1473,6 +1479,12 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             if (fValidate) {
                 ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::VALID);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:
+                    // PSVIElement->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                    // PSVIElement->setValidity(PSVIItem::VALIDITY_VALID);
+                }
             }
         }
 
@@ -1481,6 +1493,12 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             if(elemDecl->getCreateReason() == XMLElementDecl::NoReason) {
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
                 ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:
+                    // PSVIElement->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                    // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                }
             }
             if (laxThisOne) {
                 fValidate = false;
@@ -1496,8 +1514,7 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                 );
             }
         }
-
-        // XXX REVISIT:  should not be necessary
+        
         ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
         ((SchemaElementDecl*)elemDecl)->setXsiSimpleTypeInfo(0);
     }
@@ -1505,6 +1522,11 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
 
     if(errorBeforeElementFound) {
         ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+        if (getPSVIHandler())
+        {
+            // REVISIT:        
+            // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+        }
     }
 
     //  Now we can update the element stack to set the current element
@@ -1544,12 +1566,22 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                         , prefixBuf.getRawBuffer()
                     );
                     ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:                
+                        // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                    }
 
                 }
                 else if(errorCondition) {
                     ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::NONE);
                     ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::UNKNOWN);
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:
+                        // PSVIElement->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                        // PSVIElement->setValidity(PSVIItem::VALIDITY_NOTKNOWN);
+                    }
                 }
 
             }
@@ -1576,6 +1608,11 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             if (fValidatorFromUser && !fValidator->checkRootElement(elemDecl->getId())) {
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                
+                    // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                }
             }
         }
     }
@@ -1661,6 +1698,11 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
                     , elemDecl->getFormattedContentModel()
                 );
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:               
+                    // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                }
             }
 
             // call matchers and de-activate context
@@ -1724,10 +1766,9 @@ bool SGXMLScanner::scanStartTag(bool& gotData)
             );
         }
 
-        // reset xsi:type ComplexTypeInfo
-        // REVISIT XXX; should not be necessary
+        // reset xsi:type ComplexTypeInfo        
         ((SchemaElementDecl*)elemDecl)->reset();
-        if (!isRoot && false)
+        if (!isRoot)
             ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
                 setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
 
@@ -2159,6 +2200,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                     , attDef->getFullName()
                                 );
                                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                                if (getPSVIHandler())
+                                {
+                                    // REVISIT:                
+                                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                                }
                             }
                         }
                         else {
@@ -2173,6 +2219,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                     , attDef->getFullName()
                                 );
                                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                                if (getPSVIHandler())
+                                {
+                                    // REVISIT:                
+                                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                                }
                             }
                         }
                     }
@@ -2198,9 +2249,21 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             if(!skipThisOne && fGrammarType == Grammar::SchemaGrammarType) {
                 //we may have set it to invalid already, but this is the first time we are guarenteed to have the attDef
                 if(((SchemaAttDef *)(attDef))->getValidity() != PSVIDefs::INVALID)
-                    ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::VALID);
-                    
+                {
+                    ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::VALID);                
+                }   
+                // REVISIT: need to check out value...
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                
+                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_VALID);
+                }
                 ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::FULL);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:
+                    // PSVIAttribute->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                }
             }
 
             if (wasAdded)
@@ -2238,10 +2301,21 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     , elemDecl->getFullName()
                 );
                 ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                
+                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                }
             }
             else if(errorCondition && laxThisOne) {
                 ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::NONE);
                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::UNKNOWN);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:
+                    // PSVIAttribute->setValidationAttempted(PSVIItem::VALIDATION_NONE);
+                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_NOTKNOWN);
+                }
             }
 
 
@@ -2256,6 +2330,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     , elemDecl->getFullName()
                 );
                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                
+                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                }
 
             }
             else
@@ -2421,6 +2500,12 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
             {
                 ((SchemaAttDef *)curDef)->setValidationAttempted(PSVIDefs::FULL);
                 ((SchemaAttDef *)curDef)->setValidity(PSVIDefs::VALID);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:
+                    // PSVIAttribute->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_VALID);
+                }
 
                 //the attributes is not provided
                 if (fValidate)
@@ -2436,6 +2521,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , curDef->getFullName()
                         );
                         ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
+                        if (getPSVIHandler())
+                        {
+                            // REVISIT:                
+                            // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                        }
                     }
                     else if ((defType == XMLAttDef::Default) ||
                              (defType == XMLAttDef::Fixed)  )
@@ -2446,7 +2536,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             // Document is standalone, so attributes must not be defaulted.
                             fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef->getFullName(), elemDecl->getFullName());
                             ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
-
+                            if (getPSVIHandler())
+                            {
+                                // REVISIT:                
+                                // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                            }
                         }
                     }
                 }
@@ -2499,6 +2593,11 @@ SGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                         , curDef->getFullName()
                     );
                     ((SchemaAttDef *)curDef)->setValidity(PSVIDefs::INVALID);         
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:               
+                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                    }
                 }
                 ((SchemaElementDecl *)elemDecl)->updateValidityFromAttribute((SchemaAttDef *)curDef);
             }
@@ -2574,10 +2673,15 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                     // XML 1.0, Section 2.9
                     if (fStandalone && fValidate && isAttExternal)
                     {
-                         // Can't have a standalone document declaration of "yes" if  attribute
-                         // values are subject to normalisation
-                         fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                         ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);     
+                        // Can't have a standalone document declaration of "yes" if  attribute
+                        // values are subject to normalisation
+                        fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                        ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);     
+                        if (getPSVIHandler())
+                        {
+                            // REVISIT:               
+                            // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                        }
                     }
                     nextCh = chSpace;
                 }
@@ -2613,10 +2717,15 @@ bool SGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                     {
                         if (!firstNonWS || (nextCh != chSpace) || (!*srcPtr) || fReaderMgr.getCurrentReader()->isWhitespace(*srcPtr))
                         {
-                             // Can't have a standalone document declaration of "yes" if  attribute
-                             // values are subject to normalisation
-                             fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
-                             ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
+                            // Can't have a standalone document declaration of "yes" if  attribute
+                            // values are subject to normalisation
+                            fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                            ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
+                            if (getPSVIHandler())
+                            {
+                                // REVISIT:                
+                                // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                            }
                         }
                     }
                     continue;
@@ -2894,6 +3003,11 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
             // They definitely cannot handle any type of char data
             fValidator->emitError(XMLValid::NoCharDataInCM);
             ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
+            if (getPSVIHandler())
+            {
+                // REVISIT:           
+                // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+            }
         }
         else if (fReaderMgr.getCurrentReader()->isAllSpaces(rawBuf, len))
         {
@@ -2978,6 +3092,11 @@ void SGXMLScanner::sendCharData(XMLBuffer& toSend)
             {
                 fValidator->emitError(XMLValid::NoCharDataInCM);
                 ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                
+                    // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                }
             }
         }
     }
@@ -3701,6 +3820,11 @@ void SGXMLScanner::scanCDSection()
                     // element type with element content whose element declaration was external
                     fValidator->emitError(XMLValid::NoWSForStandalone);
                     ((SchemaElementDecl *)(topElem->fThisElement))->setValidity(PSVIDefs::INVALID);
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:                
+                        // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                    }
                 }
             }
         }
@@ -3737,6 +3861,11 @@ void SGXMLScanner::scanCDSection()
                     // They definitely cannot handle any type of char data
                     fValidator->emitError(XMLValid::NoCharDataInCM);
                     ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:                
+                        // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                    }
                 }
             }
 
@@ -4015,6 +4144,11 @@ void SGXMLScanner::scanCharData(XMLBuffer& toUse)
                     //
                     fValidator->emitError(XMLValid::NoWSForStandalone);
                     ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->setValidity(PSVIDefs::INVALID);
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:                
+                        // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                    }
                 }
             }
         }
@@ -4267,6 +4401,11 @@ bool SGXMLScanner::anyAttributeValidation(SchemaAttDef* attWildCard, unsigned in
             // attribute should just be bypassed,
             skipThisOne = true;
             attWildCard->setValidationAttempted(PSVIDefs::NONE);
+            if (getPSVIHandler())
+            {
+                // REVISIT:
+                // PSVIAttribute->setValidationAttempted(PSVIItem::VALIDATION_NONE);            
+            }
         }
         else if (defType == XMLAttDef::ProcessContents_Lax) {
             laxThisOne = true;

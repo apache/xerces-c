@@ -258,6 +258,11 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 );
                                 if(fGrammarType == Grammar::SchemaGrammarType) {
                                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                                    if (getPSVIHandler())
+                                    {
+                                        // REVISIT:                                   
+                                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                                    }                                
                                 }
                             }
                         }
@@ -275,6 +280,11 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                                 );
                                 if(fGrammarType == Grammar::SchemaGrammarType) {
                                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                                    if (getPSVIHandler())
+                                    {
+                                        // REVISIT:                                   
+                                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                                    }
                                 }
                             }
                         }
@@ -300,10 +310,20 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
 
             if(!skipThisOne && fGrammarType == Grammar::SchemaGrammarType) {
                 //we may have set it to invalid already, but this is the first time we are guarenteed to have the attDef
-                if(((SchemaAttDef *)(attDef))->getValidity() != PSVIDefs::INVALID)
+                if(((SchemaAttDef *)(attDef))->getValidity() != PSVIDefs::INVALID)             
                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::VALID);
-                    
+                // REVISIT: need to check getValidity...
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                                   
+                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                }                    
                 ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::FULL);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                                   
+                    // PSVIAttribute->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                }
             }
 
             if (wasAdded)
@@ -342,11 +362,22 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 );
                 if(fGrammarType == Grammar::SchemaGrammarType) {
                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:                                   
+                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                    }
                 }
             }
             else if(errorCondition && laxThisOne && fGrammarType == Grammar::SchemaGrammarType) {
                 ((SchemaAttDef *)(attDef))->setValidationAttempted(PSVIDefs::NONE);
                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::UNKNOWN);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                                   
+                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_NOTKNOWN);
+                    // PSVIAttribute->setValidationAttempted(PSVIItem::VALIDATION_NONE);
+                }
             }
 
 
@@ -362,6 +393,11 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 );
                 if(fGrammarType == Grammar::SchemaGrammarType) {
                     ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:                                   
+                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);                       
+                    }
                 }
             }
             else
@@ -554,6 +590,12 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                 if(fGrammarType == Grammar::SchemaGrammarType) {
                     ((SchemaAttDef *)curDef)->setValidationAttempted(PSVIDefs::FULL);
                     ((SchemaAttDef *)curDef)->setValidity(PSVIDefs::VALID);
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:                                   
+                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_VALID;
+                        // PSVIAttribute->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                    }
                 }
 
                 //the attributes is not provided
@@ -570,7 +612,14 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             , curDef->getFullName()
                         );
                         if(fGrammarType == Grammar::SchemaGrammarType) 
+                        {
                             ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
+                            if (getPSVIHandler())
+                            {
+                                // REVISIT:                                   
+                                // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);                                
+                            }
+                        }
                     }
                     else if ((defType == XMLAttDef::Default) ||
                              (defType == XMLAttDef::Fixed)  )
@@ -581,7 +630,14 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                             // Document is standalone, so attributes must not be defaulted.
                             fValidator->emitError(XMLValid::NoDefAttForStandalone, curDef->getFullName(), elemDecl->getFullName());                                                        
                             if(fGrammarType == Grammar::SchemaGrammarType)
+                            {
                                 ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
+                                if (getPSVIHandler())
+                                {
+                                    // REVISIT:                                   
+                                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);                   
+                                }
+                            }
                         }
                     }
                 }
@@ -648,6 +704,12 @@ IGXMLScanner::buildAttList(const  RefVectorOf<KVStringPair>&  providedAttrs
                     if(fGrammarType == Grammar::SchemaGrammarType) {
                         ((SchemaAttDef *)(curDef))->setValidity(PSVIDefs::INVALID);
                         ((SchemaElementDecl *)elemDecl)->updateValidityFromAttribute((SchemaAttDef *)curDef);
+                        if (getPSVIHandler())
+                        {
+                            // REVISIT:                                   
+                            // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                            // new function?                            
+                        }
                     }
                 }
             }
@@ -721,13 +783,17 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                     // XML 1.0, Section 2.9
                     if (fStandalone && fValidate && isAttExternal)
                     {
-                         // Can't have a standalone document declaration of "yes" if  attribute
-                         // values are subject to normalisation
-                         fValidator->emitError(XMLValid::NoAttNormForStandalone, attDef->getFullName());
-                         if(fGrammarType == Grammar::SchemaGrammarType) {
-                             ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
-                         }
-
+                        // Can't have a standalone document declaration of "yes" if  attribute
+                        // values are subject to normalisation
+                        fValidator->emitError(XMLValid::NoAttNormForStandalone, attDef->getFullName());
+                        if(fGrammarType == Grammar::SchemaGrammarType) {
+                            ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                            if (getPSVIHandler())
+                            {
+                                // REVISIT:                                   
+                                // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID); 
+                            }
+                        }
                     }
                     nextCh = chSpace;
                 }
@@ -768,6 +834,11 @@ bool IGXMLScanner::normalizeAttValue( const   XMLAttDef* const    attDef
                             fValidator->emitError(XMLValid::NoAttNormForStandalone, attDef->getFullName());
                             if(fGrammarType == Grammar::SchemaGrammarType) {
                                 ((SchemaAttDef *)(attDef))->setValidity(PSVIDefs::INVALID);
+                                if (getPSVIHandler())
+                                {
+                                    // REVISIT:                                   
+                                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);                   
+                                }
                             }
                         }
                     }
@@ -1073,7 +1144,14 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
             // They definitely cannot handle any type of char data
             fValidator->emitError(XMLValid::NoCharDataInCM);
             if(fGrammarType == Grammar::SchemaGrammarType) 
+            {
                 ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                                   
+                    // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);                    
+                }
+            }
         }
         else if (fReaderMgr.getCurrentReader()->isAllSpaces(rawBuf, len))
         {
@@ -1166,7 +1244,14 @@ void IGXMLScanner::sendCharData(XMLBuffer& toSend)
             {
                 fValidator->emitError(XMLValid::NoCharDataInCM);
                 if(fGrammarType == Grammar::SchemaGrammarType) 
+                {
                     ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:                                   
+                        // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);                    
+                    }
+                }
             }
         }
     }
@@ -1998,12 +2083,17 @@ bool IGXMLScanner::scanAttValue(  const   XMLAttDef* const    attDef
                         // XML 1.0, Section 2.9
                         if (fStandalone && fValidate && isAttExternal)
                         {
-                             // Can't have a standalone document declaration of "yes" if  attribute
-                             // values are subject to normalisation
-                             fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
+                            // Can't have a standalone document declaration of "yes" if  attribute
+                            // values are subject to normalisation
+                            fValidator->emitError(XMLValid::NoAttNormForStandalone, attrName);
 
-                             if(fGrammarType == Grammar::SchemaGrammarType) {
-                                 ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
+                            if(fGrammarType == Grammar::SchemaGrammarType) {
+                                ((SchemaAttDef *)attDef)->setValidity(PSVIDefs::INVALID);
+                                if (getPSVIHandler())
+                                {
+                                    // REVISIT:                                   
+                                    // PSVIAttribute->setValidity(PSVIItem::VALIDITY_INVALID);
+                                }
                              }
                         }
                         nextCh = chSpace;
@@ -2147,7 +2237,14 @@ void IGXMLScanner::scanCDSection()
                     // element type with element content whose element declaration was external
                     fValidator->emitError(XMLValid::NoWSForStandalone);
                     if(fGrammarType == Grammar::SchemaGrammarType) 
+                    {
                         ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
+                        if (getPSVIHandler())
+                        {
+                            // REVISIT:                                   
+                            // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                        }
+                    }
                 }
             }
         }
@@ -2186,6 +2283,11 @@ void IGXMLScanner::scanCDSection()
                         // They definitely cannot handle any type of char data
                         fValidator->emitError(XMLValid::NoCharDataInCM);
                         ((SchemaElementDecl *)topElem->fThisElement)->setValidity(PSVIDefs::INVALID);
+                        if (getPSVIHandler())
+                        {
+                            // REVISIT:                                   
+                            // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                        }
                     }
                 }
 
@@ -2480,7 +2582,14 @@ void IGXMLScanner::scanCharData(XMLBuffer& toUse)
                     //
                     fValidator->emitError(XMLValid::NoWSForStandalone);
                     if(fGrammarType == Grammar::SchemaGrammarType) 
+                    {
                         ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->setValidity(PSVIDefs::INVALID);
+                        if (getPSVIHandler())
+                        {
+                            // REVISIT:                                   
+                            // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                        }
+                    }
                 }
             }
         }

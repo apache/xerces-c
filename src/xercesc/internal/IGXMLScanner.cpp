@@ -1131,10 +1131,9 @@ void IGXMLScanner::scanEndTag(bool& gotData)
     }
 
     // reset xsi:type ComplexTypeInfo
-    if (fGrammarType == Grammar::SchemaGrammarType) {
-        // REVISIT XXX:  should not be necessary
+    if (fGrammarType == Grammar::SchemaGrammarType) {        
         ((SchemaElementDecl*)topElem->fThisElement)->reset();
-        if (!isRoot && false)
+        if (!isRoot)
             ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
                 setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
     }
@@ -2025,7 +2024,7 @@ bool IGXMLScanner::scanStartTag(bool& gotData)
 
 //  This method is called to scan a start tag when we are processing
 //  namespaces. There are two different versions of this method, one for
-//  namespace aware processing an done for non-namespace aware processing.
+//  namespace aware processing and one for non-namespace aware processing.
 //
 //  This method is called after we've scanned the < of a start tag. So we
 //  have to get the element name, then scan the attributes, after which
@@ -2450,13 +2449,10 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             fValidate = false;
             fElemStack.setValidationFlag(fValidate);
         }
-        else if(fGrammarType == Grammar::SchemaGrammarType && fValidate) {
-            ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
-        }
-
-        // If validating then emit an error
-        if (fValidate)
+        else if (fValidate)
         {
+            // If validating then emit an error
+
             // This is to tell the reuse Validator that this element was
             // faulted-in, was not an element in the grammar pool originally
             elemDecl->setCreateReason(XMLElementDecl::JustFaultIn);
@@ -2468,7 +2464,16 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             );
 
             if(fGrammarType == Grammar::SchemaGrammarType)
-                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+            {
+                ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
+                ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);\
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                
+                    // PSVIElement->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                    // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                }
+            }
         }
     }
     else
@@ -2477,6 +2482,12 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             if (fValidate) {
                 ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::VALID);
+                if (getPSVIHandler())
+                {
+                    // REVISIT:
+                    // PSVIElement->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                    // PSVIElement->setValidity(PSVIItem::VALIDITY_VALID);
+                }
             }
         }
 
@@ -2486,6 +2497,12 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 if(fGrammarType == Grammar::SchemaGrammarType) {
                     ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
                     ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::FULL);
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:
+                        // PSVIElement->setValidationAttempted(PSVIItem::VALIDATION_FULL);
+                        // PSVIElement->setValidity(PSVIItem::VALIDATION_INVALID);
+                    }
                 }
             }
             
@@ -2493,7 +2510,7 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 fValidate = false;
                 fElemStack.setValidationFlag(fValidate);
             }
-            if (fValidate)
+            else if (fValidate)
             {
                 fValidator->emitError
                 (
@@ -2502,9 +2519,8 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 );
             }
         }
-
-        // REVISIT:  XXX not necessary
-        if (fGrammarType == Grammar::SchemaGrammarType && false) {
+       
+        if (fGrammarType == Grammar::SchemaGrammarType) {
             ((SchemaElementDecl*)elemDecl)->setXsiComplexTypeInfo(0);
             ((SchemaElementDecl*)elemDecl)->setXsiSimpleTypeInfo(0);
         }
@@ -2512,6 +2528,11 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
 
     if(errorBeforeElementFound && fGrammarType == Grammar::SchemaGrammarType) {
         ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
+        if (getPSVIHandler())
+        {
+            // REVISIT:
+            // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+        }
     }
 
 
@@ -2550,16 +2571,21 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                         (
                             XMLValid::GrammarNotFound
                             , prefixBuf.getRawBuffer()
-                        );
-
-                        if(fGrammarType == Grammar::SchemaGrammarType)
-                            ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-
+                        );                        
+                        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);                                    
+                        if (getPSVIHandler())
+                        {   
+                            // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);                        
+                        }
                     }
-                    else if(errorCondition) {
-                        if(fGrammarType == Grammar::SchemaGrammarType) {
-                            ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::NONE);
-                            ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::UNKNOWN);
+                    else if(errorCondition) {                        
+                        ((SchemaElementDecl *)(elemDecl))->setValidationAttempted(PSVIDefs::NONE);
+                        ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::UNKNOWN);
+                        if (getPSVIHandler())
+                        {
+                            // REVISIT:
+                            // PSVIElement->setValidationAttempted(PSVIItem::VALIDATION_NONE);
+                            // PSVIElement->setValidity(PSVIItem::VALIDITY_NOTKNOWN);                        
                         }
                     }
                 }
@@ -2594,8 +2620,14 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                 fValidator->emitError(XMLValid::RootElemNotLikeDocType);
 
             if(fGrammarType == Grammar::SchemaGrammarType)
+            {
                 ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-
+                if (getPSVIHandler())
+                {
+                    // REVISIT:                
+                    // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                }
+            }
         }
     }
     else if (parentValidation)
@@ -2634,7 +2666,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
             count = fMatcherStack->getMatcherCount();
 
             for (unsigned int j = 0; j < count; j++) {
-
                 XPathMatcher* matcher = fMatcherStack->getMatcherAt(j);
                 matcher->startElement(*elemDecl, uriId, fPrefixBuf.getRawBuffer(), *fAttrList, attCount);
             }
@@ -2678,8 +2709,14 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
                     , elemDecl->getFormattedContentModel()
                 );
                 if(fGrammarType == Grammar::SchemaGrammarType)
+                {
                     ((SchemaElementDecl *)(elemDecl))->setValidity(PSVIDefs::INVALID);
-
+                    if (getPSVIHandler())
+                    {
+                        // REVISIT:                
+                        // PSVIElement->setValidity(PSVIItem::VALIDITY_INVALID);
+                    }
+                }
             }
 
             if (fGrammarType == Grammar::SchemaGrammarType) {
@@ -2735,7 +2772,6 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         if(!isRoot && fGrammarType == Grammar::SchemaGrammarType)
            ((SchemaElementDecl *)fElemStack.topElement()->fThisElement)->updateValidityFromElement(elemDecl, fGrammarType);
 
-
         // If we have a doc handler, tell it about the end tag
         if (fDocHandler)
         {
@@ -2749,10 +2785,9 @@ bool IGXMLScanner::scanStartTagNS(bool& gotData)
         }
 
         // reset xsi:type ComplexTypeInfo
-        if (fGrammarType == Grammar::SchemaGrammarType) {
-            // REVISIT XXX:  should not be necessary
+        if (fGrammarType == Grammar::SchemaGrammarType) {           
             ((SchemaElementDecl*)elemDecl)->reset();
-            if (!isRoot && false)
+            if (!isRoot)
                 ((SchemaElementDecl*)(fElemStack.topElement()->fThisElement))->
                     setXsiComplexTypeInfo(((SchemaValidator*)fValidator)->getCurrentTypeInfo());
         }
