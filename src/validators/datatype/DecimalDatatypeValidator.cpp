@@ -56,6 +56,9 @@
 
 /*
  * $Log$
+ * Revision 1.9  2001/06/19 13:29:42  knoaman
+ * changed scale/precision to fractiondigits/totaldigits.
+ *
  * Revision 1.8  2001/05/29 19:49:34  tng
  * Schema: Constraint Checking Fix in datatypeValidators.  By Pei Yong Zhang.
  *
@@ -224,7 +227,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_TotalDigit, value);
 
                 setTotalDigits(val);
-                setFacetsDefined(DatatypeValidator::FACET_PRECISSION);
+                setFacetsDefined(DatatypeValidator::FACET_TOTALDIGITS);
             }
             else if (XMLString::compareString(key, SchemaSymbols::fgELT_FRACTIONDIGITS)==0)
             {
@@ -243,7 +246,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     ThrowXML1(InvalidDatatypeFacetException, XMLExcepts::FACET_NonNeg_FractDigit, value);
 
                 setFractionDigits(val);
-                setFacetsDefined(DatatypeValidator::FACET_SCALE);
+                setFacetsDefined(DatatypeValidator::FACET_FRACTIONDIGITS);
             }
             else
             {
@@ -343,8 +346,8 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                  }
 
                 // check 4.3.12.c1 must: fractionDigits <= totalDigits
-                if ( ((getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0) &&
-                     ((getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) )
+                if ( ((getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
+                     ((getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0) )
                 {
                     if ( fFractionDigits > fTotalDigits )
                     {
@@ -621,9 +624,9 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                     }
 
                     // check 4.3.11.c1 error: totalDigits > base.totalDigits
-                    if (( getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0)
+                    if (( getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0)
                     {
-                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) &&
+                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
                              ( fTotalDigits > numBase->fTotalDigits ))
                         {
                             XMLString::binToText(fTotalDigits, value1, BUF_LEN, 10);
@@ -635,10 +638,10 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                         }
                     }
 
-                   if (( getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0)
+                   if (( getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0)
                    {
                         // check question error: fractionDigits > base.fractionDigits ???
-                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0) &&
+                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
                              ( fFractionDigits > numBase->fFractionDigits ))
                         {
                             XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10);
@@ -650,7 +653,7 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
                         }
 
                         // check question error: fractionDigits > base.totalDigits ???
-                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) &&
+                        if ( (( numBase->getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
                              ( fFractionDigits > numBase->fTotalDigits ))
                         {
                             XMLString::binToText(fFractionDigits, value1, BUF_LEN, 10);
@@ -857,19 +860,19 @@ void DecimalDatatypeValidator::init(DatatypeValidator*            const baseVali
         }
 
         // inherit totalDigits         
-        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0) &&          
-            (( getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) == 0) )              
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0) &&
+            (( getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) == 0) )              
         {          
             setTotalDigits(numBase->fTotalDigits);              
-            setFacetsDefined(DatatypeValidator::FACET_PRECISSION);              
+            setFacetsDefined(DatatypeValidator::FACET_TOTALDIGITS);
         }
           
         // inherit fractionDigits          
-        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0) &&          
-            (( getFacetsDefined() & DatatypeValidator::FACET_SCALE) == 0) )              
+        if ((( numBase->getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0) &&
+            (( getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) == 0) )
         {          
             setFractionDigits(numBase->fFractionDigits);              
-            setFacetsDefined(DatatypeValidator::FACET_SCALE);              
+            setFacetsDefined(DatatypeValidator::FACET_FRACTIONDIGITS);
         }
           
     }
@@ -931,7 +934,7 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
         }
 
 
-        if ( (getFacetsDefined() & DatatypeValidator::FACET_SCALE) != 0 )
+        if ( (getFacetsDefined() & DatatypeValidator::FACET_FRACTIONDIGITS) != 0 )
         {
             if ( theData->getScale() > fFractionDigits )
             {
@@ -946,7 +949,7 @@ void DecimalDatatypeValidator::checkContent( const XMLCh* const content, bool as
             }
         }
 
-        if ( (getFacetsDefined() & DatatypeValidator::FACET_PRECISSION) != 0 )
+        if ( (getFacetsDefined() & DatatypeValidator::FACET_TOTALDIGITS) != 0 )
         {
             if ( theData->getTotalDigit() > fTotalDigits )
             {
