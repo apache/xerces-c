@@ -2202,10 +2202,6 @@ void XMLScanner::scanProlog()
         {
             const XMLCh nextCh = fReaderMgr.peekNextChar();
 
-            // An end of file is legal here between markup
-            if (!nextCh)
-                return;
-
             if (nextCh == chOpenAngle)
             {
                 //
