@@ -418,6 +418,11 @@ const XMLCh XMLUni::fgUTF16EncodingString4[] =
     chLatin_I, chLatin_B, chLatin_M, chDash, chDigit_1, chDigit_2, chDigit_0, chDigit_0, chNull
 };
 
+const XMLCh XMLUni::fgUTF16EncodingString5[] =
+{
+    chLatin_U, chLatin_T, chLatin_F, chDigit_1, chDigit_6, chNull
+};
+
 const XMLCh XMLUni::fgUTF16BEncodingString[] =
 {
     chLatin_U, chLatin_T, chLatin_F, chDash, chDigit_1, chDigit_6, chSpace, chOpenParen, chLatin_B, chLatin_E, chCloseParen, chNull
