@@ -267,11 +267,11 @@ if ($platform =~ m/Windows/) {
 }
 
 
-if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
-     ($platform =~ m/SunOS/) || ($platform =~ m/Linux/) ) {
+if ( ($platform =~ m/AIX/i)    || ($platform =~ m/HP-UX/i) ||
+     ($platform =~ m/SunOS/i) || ($platform =~ m/Linux/i) ) {
 
         # Decide on the platform specific stuff first
-        if ($platform =~ m/AIX/) {
+        if ($platform =~ m/AIX/i) {
            $icuCompileFlags = 'CXX="xlC_r -L/usr/lpp/xlC/lib" CC="xlc_r -L/usr/lpp/xlC/lib" C_FLAGS="-w -O" CXX_FLAGS="-w -O"'; 
         }
         if ($platform eq 'HP-UX') {
@@ -291,11 +291,11 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 	    $opt_r = 'dce' if ($opt_r eq '');  # By default, use dce threads if not specified
 
         }
-        if ($platform =~ m/Linux/) {
+        if ($platform =~ m/Linux/i) {
            $icuCompileFlags = 'CC=gcc CXX=g++ CXXFLAGS="-w -O" CFLAGS="-w -O"'; 
 	   $platform =~ tr/A-Z/a-z/;
         }
-        if ($platform =~ m/SunOS/) {
+        if ($platform =~ m/SunOS/i) {
            $icuCompileFlags = 'CC=cc CXX=CC CXXFLAGS="-w -O" CFLAGS="-w -O"'; 
         }
 
@@ -373,32 +373,22 @@ if ( ($platform =~ m/AIX/)    || ($platform =~ m/HP-UX/) ||
 		system ("chmod 777 install-sh");
 		print ("$icuCompileFlags configure --prefix=$ICUROOT\n");
 		system ("$icuCompileFlags configure --prefix=$ICUROOT");
-		chdir ("$ICUROOT/source/common");
 		system ("gmake clean");	# Clean up the build, may want to comment this line out!
-		system ("gmake");
-		system ("gmake install");
+		system ("gmake install"); # This will take a long time!
 
-		chdir ("$ICUROOT/source/tools/toolutil");
-		system ("gmake clean");	# Clean up the build, may want to comment this line out!
-		system ("gmake");
-		system ("gmake install");
-
-		chdir ("$ICUROOT/source/tools/makeconv");
-		system ("gmake clean");	# Clean up the build, may want to comment this line out!
-		system ("rm -rf $ICUROOT/data/*.cnv");	# This line will save you many tears, but comment it if you want
-		system ("gmake");
+		# Please check if the following needs any change in Version 1.4
 		# For the antiquated CC compiler under HPUX, we need to invoke
 		# gmake one extra time to generate the .cnv files.
-		if ( ($platform =~ m/hp-/i) && ($opt_x eq 'CC') ) {
-			system ("gmake");
-		}
+		# if ( ($platform =~ m/hp-/i) && ($opt_x eq 'CC') ) {
+		#	system ("gmake");
+		# }
 	}
 
         # make the source files
         chdir ("$XERCESCROOT/src");
 
 	if ( $platform =~ m/sunos/i ) { $platform = "solaris"; }
-	if ( $platform =~ m/AIX/ ) { $platform = "aix"; }
+	if ( $platform =~ m/AIX/i ) { $platform = "aix"; }
 
 	if (!length($opt_r)) {
         	system ("runConfigure -p$platform -c$opt_c -x$opt_x -m$opt_m -n$opt_n -t$opt_t -r$opt_r");
